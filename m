@@ -2,157 +2,102 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E48C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 320E9C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 837492077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:27:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="WxsOerES"
+	by mail.kernel.org (Postfix) with ESMTP id EC6E2207FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:28:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573813721;
+	bh=p09PBLNMgnAEXY+60gOXHO/rGEsig0DEVJFu6o6RFtE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yvsTy0cigHFan4ABQBjoi/olCIynROJnR5FYd1Rc5MpyRghhxyFuSknmPjKzFdOS3
+	 Tu6qhdkick+ZnWVKxVBec9w0vTVGKNE6AWB3khj4a0FA4xMFs/ObOZAGpN1peoYFft
+	 LWcpMVHdgcU+c3hp6ceoF4U07R5HnXh3/kw4Qqr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727540AbfKOK1t (ORCPT
+        id S1727546AbfKOK2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:27:49 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39500 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727515AbfKOK1r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:27:47 -0500
-Received: by mail-lj1-f195.google.com with SMTP id p18so10142691ljc.6
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 02:27:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=s4HMcsPs8cjZ6BAAS4T6v8josVfK505Km0iWyRPGXIo=;
-        b=WxsOerESuXKK3YeifFDCXB72E5FRI1ynKWqNQ1i+YgEoRvsiBI5fcx1tVVElOymGyM
-         5ZNggZXK1DvE59Or5JkwwVbCLVe2X2GgngiGaPxMmfeOZ5k90kBYNE1yifKK58X+u8d2
-         DzdEULL2R/aE1TfEt53OnUgVZaCApLrpF7zYY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=s4HMcsPs8cjZ6BAAS4T6v8josVfK505Km0iWyRPGXIo=;
-        b=ggdsiiKH7PHkpmvIelsVY2rAcTqtolHUupSSj3eAl8UFrtHFAceM9ZMpRemW3ZOJrV
-         31xPQkwV962KJDRAZqxTAnpH5xRkjZNXKgMCU/DXXb7u7rXSWYYwduuekd933NTIHeAC
-         t/c2LqSYevPk7c0gGg/1SKnWHySx04X3VXDtFSYOGd8y3rML2jy2lsQTG9V23Q/Kqtps
-         zTu/+KHUwaJyF1WW0EwCaw6XvnUr+b7q99AMP1kEb2+1vBYxwobpOL5Nd8NwWod3SgRa
-         csFqXnKXWq+btcsdnRzPwWbxwz0tLj9e3vthRB4wbMgfT8hDfV/FS8/ga8dbnmgFbMu7
-         Hktw==
-X-Gm-Message-State: APjAAAULcYcT9dY2OOwnyPAfiDjpeyq2vXcuWzFrX6kx2IBi+eLrg7t6
-        ha81hl/N05bTE3lX1siWNx7afQ==
-X-Google-Smtp-Source: APXvYqycJQWJcX7oryo4kxovzNzZzRKngUCqSR34tt6HBVqlZROmp7cx+h4vlIJdhrF+Aeqbx+g93Q==
-X-Received: by 2002:a2e:9712:: with SMTP id r18mr10860051lji.12.1573813664844;
-        Fri, 15 Nov 2019 02:27:44 -0800 (PST)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id f5sm3576761ljn.24.2019.11.15.02.27.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Nov 2019 02:27:43 -0800 (PST)
-Subject: Re: [PATCH 17/23] y2038: time: avoid timespec usage in settimeofday()
-To:     Arnd Bergmann <arnd@arndb.de>, Abel Vesa <abelvesa@linux.com>
-Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@kernel.org>,
-        Corey Minyard <cminyard@mvista.com>,
-        zhengbin <zhengbin13@huawei.com>,
-        Li RongQing <lirongqing@baidu.com>,
-        Linux API <linux-api@vger.kernel.org>
-References: <20191108210236.1296047-1-arnd@arndb.de>
- <20191108211323.1806194-8-arnd@arndb.de> <20191114230127.GA3580@ryzen.lan>
- <CAK8P3a3jn8GcedX=HaTFiPY+fyHPoyVUnpcX19nMZqmuUA1RzA@mail.gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <73a56955-552a-3a95-a410-3064401913f7@rasmusvillemoes.dk>
-Date:   Fri, 15 Nov 2019 11:27:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 15 Nov 2019 05:28:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727122AbfKOK2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 05:28:39 -0500
+Received: from linux-8ccs (x2f7fc5a.dyn.telefonica.de [2.247.252.90])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9A522077B;
+        Fri, 15 Nov 2019 10:28:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573813719;
+        bh=p09PBLNMgnAEXY+60gOXHO/rGEsig0DEVJFu6o6RFtE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Q0JWgTV/nsJzEluka3dQIVylZcH9wTidr41I6f4sbkfXKcDQAdWXETgcIBErT35xT
+         X0ylLxwM4V10Leln4RGo6+ytLreMZ4i4HgpMyKbsOWyd7eA/bn6UsNTsVvr0hl+hau
+         5EzQDo99gPtN1CWNgMro3OFRi4CqM0we9VXV1TrU=
+Date:   Fri, 15 Nov 2019 11:28:33 +0100
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Konstantin Khorenko <khorenko@virtuozzo.com>
+Cc:     Prarit Bhargava <prarit@redhat.com>,
+        Barret Rhoden <brho@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        linux-kernel@vger.kernel.org, David Arcari <darcari@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: Re: [PATCH 1/1] kernel/module.c: wakeup processes in module_wq on
+ module unload
+Message-ID: <20191115102832.GA1647@linux-8ccs>
+References: <20191113092950.15556-1-khorenko@virtuozzo.com>
+ <20191113092950.15556-2-khorenko@virtuozzo.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a3jn8GcedX=HaTFiPY+fyHPoyVUnpcX19nMZqmuUA1RzA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191113092950.15556-2-khorenko@virtuozzo.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/11/2019 08.58, Arnd Bergmann wrote:
-> On Fri, Nov 15, 2019 at 12:01 AM Abel Vesa <abelvesa@linux.com> wrote:
->>
->> On 19-11-08 22:12:16, Arnd Bergmann wrote:
->>> The compat_get_timeval() and timeval_valid() interfaces
->>> are deprecated and getting removed along with the definition
->>> of struct timeval itself.
->>>
->>> Change the two implementations of the settimeofday()
->>> system call to open-code these helpers and completely
->>> avoid references to timeval.
->>>
-> 
-> I'm not sure how we get to the RCU stall, but this is almost certainly another
-> symptom of a typo I had introduced in the patch, which others have also
-> reported. This is the the fix in today's linux-next:
-> 
-> --- a/kernel/time/time.c
-> +++ b/kernel/time/time.c
-> @@ -207,7 +207,7 @@ SYSCALL_DEFINE2(settimeofday, struct
-> __kernel_old_timeval __user *, tv,
->                     get_user(new_ts.tv_nsec, &tv->tv_usec))
->                         return -EFAULT;
-> 
-> -               if (tv->tv_usec > USEC_PER_SEC)
-> +               if (new_ts->tv_usec > USEC_PER_SEC)
->                         return -EINVAL;
++++ Konstantin Khorenko [13/11/19 12:29 +0300]:
+>Fix the race between load and unload a kernel module.
+>
+>sys_delete_module()
+> try_stop_module()
+>  mod->state = _GOING
+>					add_unformed_module()
+>					 old = find_module_all()
+>					 (old->state == _GOING =>
+>					  wait_event_interruptible())
+>
+>					 During pre-condition
+>					 finished_loading() rets 0
+>					 schedule()
+>					 (never gets waken up later)
+> free_module()
+>  mod->state = _UNFORMED
+>   list_del_rcu(&mod->list)
+>   (dels mod from "modules" list)
+>
+>return
+>
+>The race above leads to modprobe hanging forever on loading
+>a module.
+>
+>Error paths on loading module call wake_up_all(&module_wq) after
+>freeing module, so let's do the same on straight module unload.
+>
+>Fixes: 6e6de3dee51a ("kernel/module.c: Only return -EEXIST
+>for modules that have finished loading")
+>
+>Signed-off-by: Konstantin Khorenko <khorenko@virtuozzo.com>
 
-Hopefully not :)
+Thanks Konstantin for catching this. I've applied this to
+modules-next.
 
->                 new_ts.tv_nsec *= NSEC_PER_USEC;
+Jessica
 
-So the actual patch in next-20191115 does
-
--               if (copy_from_user(&user_tv, tv, sizeof(*tv)))
-+               if (get_user(new_ts.tv_sec, &tv->tv_sec) ||
-+                   get_user(new_ts.tv_nsec, &tv->tv_usec))
-                        return -EFAULT;
-
--               if (!timeval_valid(&user_tv))
-+               if (new_ts.tv_nsec > USEC_PER_SEC)
-                        return -EINVAL;
-
--               new_ts.tv_sec = user_tv.tv_sec;
--               new_ts.tv_nsec = user_tv.tv_usec * NSEC_PER_USEC;
-+               new_ts.tv_nsec *= NSEC_PER_USEC;
-
-But removing the "user value is < 0" check, relying on the timespec
-value being rejected later, is wrong: 1000=8*125. Multiplying by 8
-always gives a value with the low three bits clear, multiplying by 125
-is reversible. So you can take any target value with the three low bits
-clear, logic shift right by 3, multiply by 0x1cac083126e978d5 , and flip
-the top three bits as you wish to generate 8 pre-images of that target
-value. Four of those will be negative. A trivial example is 0x80..000
-(aka LONG_MIN) and its cousins 0xa0..000, 0xc0..000, 0xe0..000 which all
-become 0 and thus accepted after multiplying by NSEC_PER_USEC. But also
--858989233 (or -3689348814741906097 if long is 64 bit) become 4226200
-which isn't even a multiple of 1000 - there's 500M examples to choose
-from :)
-
-I'm pretty sure it doesn't generate worse code, gcc is smart enough to
-compile "foo > BAR || foo < 0" as if it was written "(unsigned version
-of foo)foo > BAR". And while a value of USEC_PER_SEC itself will not
-overflow and then be rejeted because the real comparison done later is
-">= NSEC_PER_SEC", I think it's clearer to say "foo >= USEC_PER_SEC ||
-foo < 0) just so the same pattern is used.
-
-Rasmus
