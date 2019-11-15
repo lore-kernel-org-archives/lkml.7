@@ -2,82 +2,109 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94929C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB000C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8142073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:35:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PApOFFak"
+	by mail.kernel.org (Postfix) with ESMTP id C775520732
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:35:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfKOUfE (ORCPT
+        id S1726910AbfKOUfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 15:35:04 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:43760 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbfKOUfE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 15:35:04 -0500
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 5BD932010688;
-        Fri, 15 Nov 2019 12:35:03 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5BD932010688
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1573850103;
-        bh=UsriIi/AR6aXXB4mccM4CzK1HsGXzB8Gu8Fw14iu8iI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PApOFFak/vFKmPamiN/zSYbG2jVi6YZDM65N+jRM0wJuGINsenwK13V9wl2tjwI87
-         jXWxVDq+ZdQbYLrTD3M6JXpZR9Pp5Dy1nbP00CHfC/RDlALC/FJP6LZBZSoL+A+5En
-         QauVIHK1hNEqsyGhsgRBLDw+v9nVfNLpvfSvscpY=
-Subject: Re: [PATCH] ima: avoid appraise error for hash calc interrupt
-To:     Patrick Callaghan <patrickc@linux.vnet.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Patrick Callaghan <patrickc@linux.ibm.com>,
-        linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
-References: <20191111192348.30535-1-patrickc@linux.ibm.com>
- <e3f520ce-a290-206d-8097-b852123357ca@linux.microsoft.com>
- <1573578841.17949.48.camel@linux.ibm.com>
- <c6a57c24-2f30-f252-0f42-8d748ede65af@linux.microsoft.com>
- <1573582344.17949.67.camel@linux.ibm.com>
- <abdf66fb39d4c8ee08e0b52c34fb81b93bd33006.camel@linux.vnet.ibm.com>
- <4e1c0c6b-a5e1-a95a-8a0b-c5a7f0a253cf@linux.microsoft.com>
- <ffb1ec9d8cf12f6366fb4eb022a5442a8edae53c.camel@linux.vnet.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <3bb7ee92-9a8f-d180-a1dc-5f737db5252d@linux.microsoft.com>
-Date:   Fri, 15 Nov 2019 12:34:59 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <ffb1ec9d8cf12f6366fb4eb022a5442a8edae53c.camel@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 15 Nov 2019 15:35:25 -0500
+Received: from mga12.intel.com ([192.55.52.136]:52619 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726549AbfKOUfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 15:35:24 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 12:35:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,309,1569308400"; 
+   d="scan'208";a="406784562"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
+  by fmsmga006.fm.intel.com with ESMTP; 15 Nov 2019 12:35:24 -0800
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     andriy.shevchenko@intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        prarit@redhat.com,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] tools/power/x86/intel-speed-select: Ignore missing config level
+Date:   Fri, 15 Nov 2019 12:35:22 -0800
+Message-Id: <20191115203522.54170-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/15/19 7:25 AM, Patrick Callaghan wrote:
+It is possible that certain config levels are not available, even
+if the max level includes the level. There can be missing levels in
+some platforms. So ignore the level when called for information dump
+for all levels and fail if specifically ask for the missing level.
 
-> Hello Laks,
-> Agreed. The assumption is that integrity_kernel_read() function does
-> not return a value greater than the fourth parameter passed to it (i.e.
-> does not read more bytes from the file than the size of the buffer
-> passed to it). I tried to validate that this assumption was true by
-> following the code but felt I could not prove it with my current
-> knowledge of the code. If this assumption is not true then I believe
-> that any code change for this problem should go into a different
-> patch.
+Here the changes is to continue reading information about other levels
+even if we fail to get information for the current level. But use the
+"processed" flag to indicate the failure. When the "processed" flag is
+not set, don't dump information about that level.
 
-I agree Patrick - not a blocker for this patch set.
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ tools/power/x86/intel-speed-select/isst-core.c    | 8 ++++----
+ tools/power/x86/intel-speed-select/isst-display.c | 3 ++-
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-thanks,
-  -lakshmi
-
+diff --git a/tools/power/x86/intel-speed-select/isst-core.c b/tools/power/x86/intel-speed-select/isst-core.c
+index 52698553de92..aa19c9998e6c 100644
+--- a/tools/power/x86/intel-speed-select/isst-core.c
++++ b/tools/power/x86/intel-speed-select/isst-core.c
+@@ -646,7 +646,6 @@ int isst_get_process_ctdp(int cpu, int tdp_level, struct isst_pkg_ctdp *pkg_dev)
+ 			     i);
+ 		ctdp_level = &pkg_dev->ctdp_level[i];
+ 
+-		ctdp_level->processed = 1;
+ 		ctdp_level->level = i;
+ 		ctdp_level->control_cpu = cpu;
+ 		ctdp_level->pkg_id = get_physical_package_id(cpu);
+@@ -654,7 +653,10 @@ int isst_get_process_ctdp(int cpu, int tdp_level, struct isst_pkg_ctdp *pkg_dev)
+ 
+ 		ret = isst_get_ctdp_control(cpu, i, ctdp_level);
+ 		if (ret)
+-			return ret;
++			continue;
++
++		pkg_dev->processed = 1;
++		ctdp_level->processed = 1;
+ 
+ 		if (ctdp_level->pbf_support) {
+ 			ret = isst_get_pbf_info(cpu, i, &ctdp_level->pbf_info);
+@@ -724,8 +726,6 @@ int isst_get_process_ctdp(int cpu, int tdp_level, struct isst_pkg_ctdp *pkg_dev)
+ 		isst_get_uncore_mem_freq(cpu, i, ctdp_level);
+ 	}
+ 
+-	pkg_dev->processed = 1;
+-
+ 	return 0;
+ }
+ 
+diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
+index c976bfe9b503..040dd09d5eee 100644
+--- a/tools/power/x86/intel-speed-select/isst-display.c
++++ b/tools/power/x86/intel-speed-select/isst-display.c
+@@ -315,7 +315,8 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
+ 	char value[256];
+ 	int i, base_level = 1;
+ 
+-	print_package_info(cpu, outf);
++	if (pkg_dev->processed)
++		print_package_info(cpu, outf);
+ 
+ 	for (i = 0; i <= pkg_dev->levels; ++i) {
+ 		struct isst_pkg_ctdp_level_info *ctdp_level;
+-- 
+2.17.2
 
