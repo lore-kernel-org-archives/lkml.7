@@ -2,145 +2,135 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA29C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C30C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7555020723
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:34:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fKK3Wr37"
+	by mail.kernel.org (Postfix) with ESMTP id 6BB142073C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:35:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbfKOMe6 (ORCPT
+        id S1727574AbfKOMfK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:34:58 -0500
-Received: from mail-eopbgr30077.outbound.protection.outlook.com ([40.107.3.77]:32401
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727272AbfKOMe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 07:34:58 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kgHDV4dniX3PRtyIeLCnUEe5K7jktosDE976qxILeAMSTuekGDLRZaFxTLuGF6jKd8O20Q01V/FNp0NxcuPrkuKMFfBh24ijvWKvZkJNkZf6qidQA1zMfQ9fdoKVyWRiT/6fC61RGm1S2EutH72nPYQA87QYtk3D2vOzxhf75HsOcG/rfuDs5wbi9a/t0coKce0vyu53NTp1Jqi6koRoNirCfkhkJ0ofB+XljuVcGenBQRL6G8/7dU0Okg1gKmRQwEOZ9aK7FULsxgR51/ObFpAZ2ZUQlEIWkV/LRh/+exzooLrzwAixxV6Va/D/NJr3dNhOLr+kUXlzgfpTB9yLJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JCsSqeTpHKGP67eGQZbd04WlSyZe7K7KWXcwiNaSVrY=;
- b=GvlCdvOnOzqKNgaFwnwfHC+3DVN0gjKwt5za5uEk/WfAMKqgskvh7rZ6zd+XlUWHRae4EkDXPNOx4c4i8NvqJ1FtFecPAA2OjNPqREly6VBr6/Ox3REWFvDsLOx+OpbLgUgfUZ4p4uhIGnFWP1RFAUS9cGnn0G9lre/lf7KVPIhR0Jr2hzkrz+QPVnRpGh++6d7823WvZ9NUCyKUx/D5mUztBKKqv5hcrIiMKnyAmHiA2C6f7BnS81uXKFMPwialfW0NWVdSJ1CBsMyZCIbrWzhx4D49cj/UmsWHGcjEI+ZWByDQ5/mBIHw0X7xET3dgCL0wsK2M/WE25WqwxvZK0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JCsSqeTpHKGP67eGQZbd04WlSyZe7K7KWXcwiNaSVrY=;
- b=fKK3Wr37Sel1btqTpW//rTpWTsEdzs/9OKbBxMK3QTc9BpOGPAJE5Yp35N9162XCB3IqbW/rYChtdB1PS55J4sUUxofim21trG90ZY9ID94UBLXqOZnBwVlqY2HnHr4MsBT6feSOKRtGWyKHZBTbkUlP68sulE4Y1xFoLRjAgVc=
-Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com (52.134.16.148) by
- VI1PR0402MB2830.eurprd04.prod.outlook.com (10.175.21.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Fri, 15 Nov 2019 12:34:13 +0000
-Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com
- ([fe80::1d41:f7cc:ffa2:270c]) by VI1PR0402MB3918.eurprd04.prod.outlook.com
- ([fe80::1d41:f7cc:ffa2:270c%6]) with mapi id 15.20.2451.027; Fri, 15 Nov 2019
- 12:34:13 +0000
-From:   Mirela Rabulea <mirela.rabulea@nxp.com>
-To:     "mchehab@kernel.org" <mchehab@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "laurent.pinchart+renesas@ideasonboard.com" 
-        <laurent.pinchart+renesas@ideasonboard.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "nicolas@ndufresne.ca" <nicolas@ndufresne.ca>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        "paul.kocialkowski@bootlin.com" <paul.kocialkowski@bootlin.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "niklas.soderlund+renesas@ragnatech.se" 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "dafna.hirschfeld@collabora.com" <dafna.hirschfeld@collabora.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Subject: Re: [EXT] Re: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG
- Encoder/Decoder
-Thread-Topic: [EXT] Re: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG
- Encoder/Decoder
-Thread-Index: AQHVlLXLzR/BR8Qmu0iHDS94ZPyJ2qd+RrWAgAATH4CAAAH2AIAC7eQAgAAIUICACuaOAA==
-Date:   Fri, 15 Nov 2019 12:34:13 +0000
-Message-ID: <1573821252.16477.56.camel@nxp.com>
-References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
-         <87d80882-b032-f332-0808-d669600f844f@xs4all.nl>
-         <1573058741.16477.18.camel@nxp.com>
-         <2ad1718b-2556-ea7c-27e0-9e60445a5b71@xs4all.nl>
-         <1573220200.16477.32.camel@nxp.com>
-         <ffbc7501-bb56-b5f2-cd43-209f099be594@xs4all.nl>
-In-Reply-To: <ffbc7501-bb56-b5f2-cd43-209f099be594@xs4all.nl>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mirela.rabulea@nxp.com; 
-x-originating-ip: [92.121.36.198]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d047e3ac-e15f-4c91-7d33-08d769c81f67
-x-ms-traffictypediagnostic: VI1PR0402MB2830:|VI1PR0402MB2830:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB2830D0FE990C2E5745BD1E228F700@VI1PR0402MB2830.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 02229A4115
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(39860400002)(366004)(136003)(376002)(54094003)(189003)(199004)(2501003)(66476007)(64756008)(229853002)(44832011)(25786009)(478600001)(8676002)(7416002)(14454004)(966005)(99286004)(186003)(7736002)(11346002)(446003)(305945005)(4326008)(86362001)(91956017)(76116006)(6436002)(81166006)(2906002)(81156014)(316002)(486006)(476003)(54906003)(110136005)(26005)(6486002)(102836004)(36756003)(2616005)(6246003)(50226002)(76176011)(8936002)(6306002)(6512007)(71200400001)(71190400001)(5660300002)(256004)(6116002)(3846002)(103116003)(66446008)(66556008)(66946007)(6506007)(66066001)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2830;H:VI1PR0402MB3918.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Wpe2Rwgqcdx97TffiheBL+tpere7t4wS9zNn+Ahp7rTOHGLmNh4IAgcHhygJCCEIanSq09r0Rz6m81ACXseiKSjkhkhivXjoHYwuM6Tba4CLNx//I/lCJp6/44d0/PFm7SfyPwZ36VycTa0NA+K+Bb2Ul2JGJIIEptnqVkC6dfUKd8PTgVrWbAxgzvZZtozmwSqgDQYZbuEbCAKrYbg4dts0VThYCUtSC1PlPjZHzERdFmT80dDMw/UKozrgkkljT50y4tGj0SH8IGUehKvTPndkEjmBKi+scbKH2xNIP3qVFR18f9lr6PYj4ir4hikCfTZnZq/UJegjJSR37KLNHNQDLcMlMN5iu4kzS2l5dNdrChNjyN6OQbwxII4WDEEb3l3VbZ8RgB3y9MOyE/MY2VqbnXOKB9WnFQ9SIPaspzts+TUI2GzP8SD5si8ie4WK
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <22084845BD3D9C439E03B5667CCDF4CE@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 15 Nov 2019 07:35:10 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38854 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727496AbfKOMfK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 07:35:10 -0500
+Received: by mail-ot1-f67.google.com with SMTP id z25so7888900oti.5;
+        Fri, 15 Nov 2019 04:35:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=weseOzPMtZu2Zkh9G1J+5ddsMGjRBKSp1rgb8MnewWI=;
+        b=Y8gMEmARIyyPz+5yibhUCCzAPO8+umg05BceZRw1lhRNI3WYVX4DoF1CpYG3mIO79c
+         6spRqeeWPCv3nLKnZjfHWVKFCbI1V/1QkpKj7r+cQ1ywtGsD9Bhe6QC5rfYqoSoVb3h3
+         rsdGDLWMsjl58Zxwl3Nn4DNWBvAnQxQMxfpcVp0NV1EOiMTlI850NHBR3C+6jh0oWYDF
+         ezTQikj6OS1Sv+fYoYPvY0cYAjc6W3Rjlzk1HphvRjRBDNy7CAc35HGRlfr2YFa8UNr0
+         9avmZa0xoj+HQgi+UFCOy+1xkRxjHQlgZ69gjNNYrulWLFSQgjFQ4uLo9/h1BqI+H6+p
+         Q2nQ==
+X-Gm-Message-State: APjAAAVEGi2hyVQP1mXyBRULe4XhdpBdwmTMgmazAmkhvw4+RZq2abJ2
+        EhilzH4vCKDUF7YNzV1fbsIxU/WVhISlQhPzARc=
+X-Google-Smtp-Source: APXvYqxQbOJhyQwpGQWBZF1hmsyHYrJBcMAR+hAoTdODxyYX/u2VKxAy7/eJUh/M6a4TbETYPv02VjN0xr9BlR4aCVA=
+X-Received: by 2002:a9d:5511:: with SMTP id l17mr2945702oth.145.1573821307279;
+ Fri, 15 Nov 2019 04:35:07 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d047e3ac-e15f-4c91-7d33-08d769c81f67
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Nov 2019 12:34:13.5247
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OJIHgTkm4DN9Yj7dJVC8lTs1w2S8pIhN7aW4XQ3A/rFPZ3mSRtGVu0gFbg1DNPV/UmIOq6ALGcLxNZwXJFIfPQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2830
+References: <20191103013645.9856-3-afaerber@suse.de> <20191111045609.7026-1-afaerber@suse.de>
+ <20191111052741.GB3176397@kroah.com> <586fa37c-6292-aca4-fa7c-73064858afaf@suse.de>
+ <20191111064040.GA3502217@kroah.com> <a88442df-dc6b-07e5-8dee-9e308bdda450@suse.de>
+ <20191112052347.GA1197504@kroah.com> <20191112072926.isjxfa4ci6akhx56@pengutronix.de>
+ <aff81b8e-f041-73a5-6a95-d308fa07842c@suse.de> <c8572f70-5550-8cee-4381-fd7de7ae5af0@baylibre.com>
+ <CAMuHMdWOWWQoJh5=07VMRhtrFR_Gc_qNhjTV4tCsvwvMn0kYfA@mail.gmail.com> <a0a6d71f-4fb7-51ce-fe33-74f9e588b791@suse.de>
+In-Reply-To: <a0a6d71f-4fb7-51ce-fe33-74f9e588b791@suse.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 15 Nov 2019 13:34:55 +0100
+Message-ID: <CAMuHMdU7EYHWRAR+s3ee4Wy6+6_MZON5xARszO7TDXZGyw8d5w@mail.gmail.com>
+Subject: Re: Sense of soc bus? (was: [PATCH] base: soc: Export
+ soc_device_to_device() helper)
+To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-realtek-soc@lists.infradead.org,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        boot-architecture@lists.linaro.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "open list:TI ETHERNET SWITCH DRIVER (CPSW)" 
+        <linux-omap@vger.kernel.org>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSGFucywNCg0KT24gVmksIDIwMTktMTEtMDggYXQgMTU6MDYgKzAxMDAsIEhhbnMgVmVya3Vp
-bCB3cm90ZToNCj4gPiBJcyB0aGVyZSBhICJnb29kIGV4YW1wbGUiIG9mIGEgdjRsIG0ybSBkcml2
-ZXIgdGhhdCBwYXNzZXMgdGhlc2UNCj4gdmltMm0uIEFsc28gZHJpdmVycy9tZWRpYS9wbGF0Zm9y
-bS9tdGstanBlZy8gKGFsdGhvdWdoIEknbSBub3Qgc3VyZQ0KPiB3aGVuDQo+IGl0IHdhcyBsYXN0
-IHRlc3RlZCB3aXRoIHY0bDItY29tcGxpYW5jZSwgc28gaXQgbWlnaHQgYmUgYSBiaXQgb3V0IG9m
-DQo+IGRhdGUpLg0KPiANCj4gPiANCj4gPiBzdHJlYW1pbmcgdGVzdHM/IFRoYXQgd291bGQgc2F2
-ZSBzb21lIHRpbWUgb24gbXkgc2lkZS4NCg0KVGhhbmtzIGEgbG90IGZvciB0aGUgZXhhbXBsZXMu
-DQpJJ20gc2VuZGluZyBfdjIgb2YgdGhlIHBhdGNoLCB3aXRoIGZpeGVzIGZvciBzdHJlYW1pbmcg
-dGVzdHMuDQpPbmUgbWVudGlvbiBoZXJlLCBJIGRyb3BwZWQgdGhlIHN1cHBvcnQgZm9yIFVTRVJQ
-VFIgYnVmZmVycywgYmFzZWQgb24NCnRoaXM6DQpodHRwczovL2x3bi5uZXQvQXJ0aWNsZXMvNDQ3
-NDM1Lw0KIlZCMl9VU0VSUFRSOiBidWZmZXJzIGFsbG9jYXRlZCBpbiB1c2VyIHNwYWNlLiBOb3Jt
-YWxseSwgb25seSBkZXZpY2VzDQp3aGljaCBjYW4gZG8gc2NhdHRlci9nYXRoZXIgSS9PIGNhbiBk
-ZWFsIHdpdGggdXNlci1zcGFjZSBidWZmZXJzLg0KSW50ZXJlc3RpbmdseSwgdmlkZW9idWYyIHN1
-cHBvcnRzIGNvbnRpZ3VvdXMgYnVmZmVycyBhbGxvY2F0ZWQgYnkgdXNlcg0Kc3BhY2U7IHRoZSBv
-bmx5IHdheSB0byBnZXQgdGhvc2UsIHRob3VnaCwgaXMgdG8gdXNlIHNvbWUgc29ydCBvZg0Kc3Bl
-Y2lhbCBtZWNoYW5pc20gbGlrZSB0aGUgb3V0LW9mLXRyZWUgQW5kcm9pZCAicG1lbSIgZHJpdmVy
-Lg0KQ29udGlndW91cyBJL08gdG8gaHVnZSBwYWdlcyBpcyBub3Qgc3VwcG9ydGVkLiINCg0KSSB3
-b25kZXIgaWYgVkIyX1VTRVJQVFIgbWFrZSBzZW5zZSB0b2dldGhlcg0Kd2l0aMKgJnZiMl9kbWFf
-Y29udGlnX21lbW9wcz8gSSBzZWUgYXQgbGVhc3QgMSBkcml2ZXIgd2l0aCB0aGlzDQpjb21iaW5h
-dGlvbiAoczVwLWpwZWcpLCBJIHdvdWxkIGJlIHN1cnByaXNlZCBpZiB0aGF0IHBhc3NlcyB0aGUN
-CnN0cmVhbWluZyB0ZXN0cy4NCg0KUmVnYXJkcywNCk1pcmVsYQ==
+Hi Andreas,
+
+On Fri, Nov 15, 2019 at 1:01 PM Andreas Färber <afaerber@suse.de> wrote:
+> Am 15.11.19 um 09:58 schrieb Geert Uytterhoeven:
+> > On Fri, Nov 15, 2019 at 9:52 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> >> On 12/11/2019 11:47, Andreas Färber wrote:
+> >>> For example, RTD1295 will support LSADC only from revision B00
+> >>> on (and it's not the first time I'm seeing such things in the industry).
+> >>> So if a user complains, it will be helpful to see that information.
+> >>>
+> >>> Referencing your Amlogic review, with all due respect for its authors,
+> >>> the common framework here just lets that information evaporate into the
+> >>> deeps of sysfs.
+> >>
+> >> Hopefully we never had the case where needed to use the soc info in drivers,
+> >> but now we have one and having such infrastructure already in-place will help.
+> >>
+> >> Renesas platforms makes a extensive usage of the soc info infrastructure to
+> >> figure out plenty of HW parameters at runtime and lower their DT changes.
+> >
+> > We do our best to use it solely for detecting quirks in early SoC revisions.
+>
+> Got a pointer? I fail to immediately understand how sysfs would help
+> drivers (as opposed to userspace) detect quirks: Parsing strings back
+> doesn't sound efficient, and I don't see you exporting any custom APIs
+> in drivers/soc/renesas/renesas-soc.c?
+
+We use soc_device_match(), inside kernel drivers.
+Exposure through sysfs is a side-effect of using soc_device_register(),
+and welcomed, as it allows the user to find out quickly which SoC and
+revision is being used.
+
+FTR, lshw (Ubuntu 18.04 has v2.18, which does seem to be the latest
+upstream version) does not parse /sys/devices/soc0/.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
