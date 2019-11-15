@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1CEC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C32C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A01022073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:35:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF1C920733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:35:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T5gTpPfM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BmJCSnph"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbfKOWfH (ORCPT
+        id S1727617AbfKOWfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 17:35:07 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35869 "EHLO
+        Fri, 15 Nov 2019 17:35:08 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38404 "EHLO
         mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726865AbfKOWeC (ORCPT
+        with ESMTP id S1727189AbfKOWeC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 15 Nov 2019 17:34:02 -0500
-Received: by mail-pl1-f195.google.com with SMTP id d7so5632997pls.3
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 14:34:00 -0800 (PST)
+Received: by mail-pl1-f195.google.com with SMTP id q18so1926213pls.5
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 14:34:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=5tCHcBKEZssfZtGLO4lrvgsi0FdvjwhVDJVSSTh6psc=;
-        b=T5gTpPfMPcBQaM1Rda0Ndn9G4cEZJwjbmnNlxXqg9buGJ/wlKso18b4SNXgJD7wEjJ
-         rOro72GB7K62gRe3juF5g9nEfWBkcsocfcJAPAukedKksQ9p/Ct99Cz7rAfD0zWrGgCT
-         t55WWai/iFvSieafgwu7rtv7uNqXlW18lIIAG+PCfV+zOwAQgcrzYQZrFYj1SAtAyGdz
-         cUv8qB5jxyGPynQ7jFkXphM8oHv+T229CnEEWm+EoVNr3J8vMlXstQwEIl4FeI/NjSH3
-         nVfEjRJCBYn8gJpA95V+ZVLMi5mzXl1i+KBtLJVt8bVqYLlL4lqi5vxI1KNbXvHMRRTV
-         JVZQ==
+        bh=CfdEn/VOoyCYVCEhBtRjG/LrGez0kXMzdfAuimisWqo=;
+        b=BmJCSnphEJxB/SJaEZ55rWx8UacuDIrgu3GGuKP9hxL0m0pDhN7q9J+QXmeNHU3a9S
+         KcLpI35v0bQ7VN2vpFI89zIEmufoawp/UX+aj0AEhPZY1Ca6qiVHFhjEj/1Q6qpfeLYh
+         gjoYQxSbf630RaEl3OM/6BIGdyMcJhAgPgaITE7CHkkMSKWyVALpX3aHE/rIyZ+534CU
+         kKKAtB/FXySeSR4aPKIGgqnJPLZz5ZmoX7PLhvXCyZfRhjY/WwB2qknR22z51CDufEry
+         KwJioKJ8hKDwJTr64gk0X3402S8pXsOhEqAEl6DeZUZcNxfDi9jgwWcFrfWjMc4Hltu1
+         UKjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=5tCHcBKEZssfZtGLO4lrvgsi0FdvjwhVDJVSSTh6psc=;
-        b=Sw1woIRnhqTxI/Ro8oOVBjg6YpL1xdHhd47++IdzlBFuprgZIIdYGKbsmm4U0ydkRe
-         nqFoHEUgsaVECWAKnyeDIwLzSOXlFJOQWyNz8DxX8SFIxRTRwKAmMn+im/VK8UgCyha4
-         tOaALUvqH3PgsOEGp8yHls07pLQnrmg3VtpGsPXh4AVJbShcTwjE+O85y8mii5sBi0Dg
-         hB1ZKkwHbIDAkaoNzvaQXEwRmULDDAhIOHfNN5Lg42q2kVx+6m6P5JVH9UgU6IJZpqPc
-         x0v9TIZqDevgAKX2nT2+JZwafTeLTkADArb/oDb654S0X8uwPrnzd9NKA8TH6I4q2qjG
-         3d9w==
-X-Gm-Message-State: APjAAAXl/KGJtW3Vo5i6/qxDPgSA1qgpPxm2OWWglG6jeJmJnfwDsTC8
-        qi1dRbfwK68jAWsQORJlJ9BH3WMeboA=
-X-Google-Smtp-Source: APXvYqwvOrQGWg4m3FQouJyEIubtEKECASGnP2QVJqCfiGFzcLOOO3tw+OVASMP7PJoPOnKieSXp8g==
-X-Received: by 2002:a17:902:8d81:: with SMTP id v1mr1565624plo.289.1573857239827;
-        Fri, 15 Nov 2019 14:33:59 -0800 (PST)
+        bh=CfdEn/VOoyCYVCEhBtRjG/LrGez0kXMzdfAuimisWqo=;
+        b=qM88xGiu9RluA0Q5JQSMxTrkZZLQQtGqNQaz4nhEfq4ynqB3ujePqfJGFf1YWbWwwo
+         Gj3Uq6p6loonu1FgXNrs640NhdR6+9Kg9zxho8ZB9wQSesJ11QV+m7wApGv7f7dlwTyO
+         AX+Rg8naYvrFMCH4WxXkgtPwMD3s5iCZfu7eVFRxC5vX/NnKeqsZMnsO/8Re50zXbr3s
+         AHIW8E6cRt5tZc5YSbz1M8dVXb3WBqy4q/ynbhJW/Dlz97UxGmNhYZmVA/OGtuopL07B
+         zsCUthMAc4kGCXA12JU8U1/Y0EziobBxnMyWeYzBYiWYItBZ9S5YXKzv2VBb64bzWeLY
+         V/Jg==
+X-Gm-Message-State: APjAAAWRsvNEfiMPF30lQpvZPW0cuymG4+SFYYJziMYu0bDcQJ2Af+Xc
+        QEj5pfvebvjWe0AA/wzPbWmOCan37AM=
+X-Google-Smtp-Source: APXvYqxV4R6yv1yepbFn8bEoumDLXUwUoXHiD99iisQY+WW8LBhAQo0WSyIWj7l+f8Q8W16cGA2Gsg==
+X-Received: by 2002:a17:90a:ca04:: with SMTP id x4mr23087371pjt.103.1573857241601;
+        Fri, 15 Nov 2019 14:34:01 -0800 (PST)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id m15sm11699724pfh.19.2019.11.15.14.33.59
+        by smtp.gmail.com with ESMTPSA id m15sm11699724pfh.19.2019.11.15.14.34.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 14:33:59 -0800 (PST)
+        Fri, 15 Nov 2019 14:34:01 -0800 (PST)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     stable@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [stable 4.19+][PATCH 03/20] mailbox: stm32_ipcc: add spinlock to fix channels concurrent access
-Date:   Fri, 15 Nov 2019 15:33:39 -0700
-Message-Id: <20191115223356.27675-3-mathieu.poirier@linaro.org>
+Subject: [stable 4.19+][PATCH 05/20] media: stm32-dcmi: fix DMA corruption when stopping streaming
+Date:   Fri, 15 Nov 2019 15:33:41 -0700
+Message-Id: <20191115223356.27675-5-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191115223356.27675-1-mathieu.poirier@linaro.org>
 References: <20191115223356.27675-1-mathieu.poirier@linaro.org>
@@ -69,137 +69,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+From: Hugues Fruchet <hugues.fruchet@st.com>
 
-commit dba9a3dfe912dc47c9dbc9ba1f5f65adbf9aea0f upstream
+commit b3ce6f6ff3c260ee53b0f2236e5fd950d46957da upstream
 
-Add spinlock protection on IPCC register update to avoid race condition.
-Without this fix, stm32_ipcc_set_bits and stm32_ipcc_clr_bits can be
-called in parallel for different channels. This results in register
-corruptions.
+Avoid call of dmaengine_terminate_all() between
+dmaengine_prep_slave_single() and dmaengine_submit() by locking
+the whole DMA submission sequence.
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Reviewed-by: Fabien Dessenne <fabien.dessenne@st.com>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Cc: stable <stable@vger.kernel.org> # 4.19+
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/mailbox/stm32-ipcc.c | 37 ++++++++++++++++++++++++++----------
- 1 file changed, 27 insertions(+), 10 deletions(-)
+ drivers/media/platform/stm32/stm32-dcmi.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/mailbox/stm32-ipcc.c b/drivers/mailbox/stm32-ipcc.c
-index ca1f993c0de3..e31322225e93 100644
---- a/drivers/mailbox/stm32-ipcc.c
-+++ b/drivers/mailbox/stm32-ipcc.c
-@@ -50,6 +50,7 @@ struct stm32_ipcc {
- 	void __iomem *reg_base;
- 	void __iomem *reg_proc;
- 	struct clk *clk;
-+	spinlock_t lock; /* protect access to IPCC registers */
- 	int irqs[IPCC_IRQ_NUM];
- 	int wkp;
- 	u32 proc_id;
-@@ -58,14 +59,24 @@ struct stm32_ipcc {
- 	u32 xmr;
+diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+index 1d9c028e52cb..d86944109cbf 100644
+--- a/drivers/media/platform/stm32/stm32-dcmi.c
++++ b/drivers/media/platform/stm32/stm32-dcmi.c
+@@ -164,6 +164,9 @@ struct stm32_dcmi {
+ 	int				errors_count;
+ 	int				overrun_count;
+ 	int				buffers_count;
++
++	/* Ensure DMA operations atomicity */
++	struct mutex			dma_lock;
  };
  
--static inline void stm32_ipcc_set_bits(void __iomem *reg, u32 mask)
-+static inline void stm32_ipcc_set_bits(spinlock_t *lock, void __iomem *reg,
-+				       u32 mask)
- {
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(lock, flags);
- 	writel_relaxed(readl_relaxed(reg) | mask, reg);
-+	spin_unlock_irqrestore(lock, flags);
- }
- 
--static inline void stm32_ipcc_clr_bits(void __iomem *reg, u32 mask)
-+static inline void stm32_ipcc_clr_bits(spinlock_t *lock, void __iomem *reg,
-+				       u32 mask)
- {
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(lock, flags);
- 	writel_relaxed(readl_relaxed(reg) & ~mask, reg);
-+	spin_unlock_irqrestore(lock, flags);
- }
- 
- static irqreturn_t stm32_ipcc_rx_irq(int irq, void *data)
-@@ -92,7 +103,7 @@ static irqreturn_t stm32_ipcc_rx_irq(int irq, void *data)
- 
- 		mbox_chan_received_data(&ipcc->controller.chans[chan], NULL);
- 
--		stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XSCR,
-+		stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XSCR,
- 				    RX_BIT_CHAN(chan));
- 
- 		ret = IRQ_HANDLED;
-@@ -121,7 +132,7 @@ static irqreturn_t stm32_ipcc_tx_irq(int irq, void *data)
- 		dev_dbg(dev, "%s: chan:%d tx\n", __func__, chan);
- 
- 		/* mask 'tx channel free' interrupt */
--		stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XMR,
-+		stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XMR,
- 				    TX_BIT_CHAN(chan));
- 
- 		mbox_chan_txdone(&ipcc->controller.chans[chan], 0);
-@@ -141,10 +152,12 @@ static int stm32_ipcc_send_data(struct mbox_chan *link, void *data)
- 	dev_dbg(ipcc->controller.dev, "%s: chan:%d\n", __func__, chan);
- 
- 	/* set channel n occupied */
--	stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XSCR, TX_BIT_CHAN(chan));
-+	stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XSCR,
-+			    TX_BIT_CHAN(chan));
- 
- 	/* unmask 'tx channel free' interrupt */
--	stm32_ipcc_clr_bits(ipcc->reg_proc + IPCC_XMR, TX_BIT_CHAN(chan));
-+	stm32_ipcc_clr_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XMR,
-+			    TX_BIT_CHAN(chan));
- 
- 	return 0;
- }
-@@ -163,7 +176,8 @@ static int stm32_ipcc_startup(struct mbox_chan *link)
+ static inline struct stm32_dcmi *notifier_to_dcmi(struct v4l2_async_notifier *n)
+@@ -314,6 +317,13 @@ static int dcmi_start_dma(struct stm32_dcmi *dcmi,
+ 		return ret;
  	}
  
- 	/* unmask 'rx channel occupied' interrupt */
--	stm32_ipcc_clr_bits(ipcc->reg_proc + IPCC_XMR, RX_BIT_CHAN(chan));
-+	stm32_ipcc_clr_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XMR,
-+			    RX_BIT_CHAN(chan));
- 
- 	return 0;
- }
-@@ -175,7 +189,7 @@ static void stm32_ipcc_shutdown(struct mbox_chan *link)
- 					       controller);
- 
- 	/* mask rx/tx interrupt */
--	stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XMR,
-+	stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XMR,
- 			    RX_BIT_CHAN(chan) | TX_BIT_CHAN(chan));
- 
- 	clk_disable_unprepare(ipcc->clk);
-@@ -208,6 +222,8 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
- 	if (!ipcc)
- 		return -ENOMEM;
- 
-+	spin_lock_init(&ipcc->lock);
++	/*
++	 * Avoid call of dmaengine_terminate_all() between
++	 * dmaengine_prep_slave_single() and dmaengine_submit()
++	 * by locking the whole DMA submission sequence
++	 */
++	mutex_lock(&dcmi->dma_lock);
 +
- 	/* proc_id */
- 	if (of_property_read_u32(np, "st,proc-id", &ipcc->proc_id)) {
- 		dev_err(dev, "Missing st,proc-id\n");
-@@ -259,9 +275,10 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
+ 	/* Prepare a DMA transaction */
+ 	desc = dmaengine_prep_slave_single(dcmi->dma_chan, buf->paddr,
+ 					   buf->size,
+@@ -322,6 +332,7 @@ static int dcmi_start_dma(struct stm32_dcmi *dcmi,
+ 	if (!desc) {
+ 		dev_err(dcmi->dev, "%s: DMA dmaengine_prep_slave_single failed for buffer phy=%pad size=%zu\n",
+ 			__func__, &buf->paddr, buf->size);
++		mutex_unlock(&dcmi->dma_lock);
+ 		return -EINVAL;
  	}
  
- 	/* mask and enable rx/tx irq */
--	stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XMR,
-+	stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XMR,
- 			    RX_BIT_MASK | TX_BIT_MASK);
--	stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XCR, XCR_RXOIE | XCR_TXOIE);
-+	stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XCR,
-+			    XCR_RXOIE | XCR_TXOIE);
+@@ -333,9 +344,12 @@ static int dcmi_start_dma(struct stm32_dcmi *dcmi,
+ 	dcmi->dma_cookie = dmaengine_submit(desc);
+ 	if (dma_submit_error(dcmi->dma_cookie)) {
+ 		dev_err(dcmi->dev, "%s: DMA submission failed\n", __func__);
++		mutex_unlock(&dcmi->dma_lock);
+ 		return -ENXIO;
+ 	}
  
- 	/* wakeup */
- 	if (of_property_read_bool(np, "wakeup-source")) {
++	mutex_unlock(&dcmi->dma_lock);
++
+ 	dma_async_issue_pending(dcmi->dma_chan);
+ 
+ 	return 0;
+@@ -717,7 +731,9 @@ static void dcmi_stop_streaming(struct vb2_queue *vq)
+ 	spin_unlock_irq(&dcmi->irqlock);
+ 
+ 	/* Stop all pending DMA operations */
++	mutex_lock(&dcmi->dma_lock);
+ 	dmaengine_terminate_all(dcmi->dma_chan);
++	mutex_unlock(&dcmi->dma_lock);
+ 
+ 	pm_runtime_put(dcmi->dev);
+ 
+@@ -1719,6 +1735,7 @@ static int dcmi_probe(struct platform_device *pdev)
+ 
+ 	spin_lock_init(&dcmi->irqlock);
+ 	mutex_init(&dcmi->lock);
++	mutex_init(&dcmi->dma_lock);
+ 	init_completion(&dcmi->complete);
+ 	INIT_LIST_HEAD(&dcmi->buffers);
+ 
 -- 
 2.17.1
 
