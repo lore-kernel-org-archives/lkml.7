@@ -2,79 +2,93 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84788C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB6FC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD282073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 459082073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:14:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t6Z61JPh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xv6inqLn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfKONNM (ORCPT
+        id S1727504AbfKONOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 08:13:12 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:42328 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727223AbfKONNM (ORCPT
+        Fri, 15 Nov 2019 08:14:30 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41751 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727223AbfKONOa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 08:13:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5qrBznl1kz5QJqxp+sQGpXhaRVzPWa1p4hJJNJZ0Jd0=; b=t6Z61JPhK9IXU/lJ4yGh3OOzK
-        gyhHKgZVsCGkNkSL6aEOaoVabBnVMo90ps+rq/SckVJEPwL+MMqAMJxsqlR4buTwGoTixGUM9whnw
-        uyZkcjTmBkgmylU2/4MUiCpK+9RQv5aTNTsPqlhjMhmKZPvuJa8zSapEmOlIGr+xt7/9EnaDU8udX
-        x43/eka0xB3lwd5bjaASiexgzw0Sr/j28On2VEk5oSWsAA0Vohci6bBvlHXlD32ST+Gjd2B+vJmJ6
-        LeVa+Ud/9AzZ5T/ErB5f2NK4pUbiA+j4sbQ1zHroKy0Qu6fNDZTFWLwTOyjdZvKjMO4OV1YNmM/I+
-        ZfIyFqKMA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iVbPS-0006G2-P6; Fri, 15 Nov 2019 13:13:10 +0000
-Date:   Fri, 15 Nov 2019 05:13:10 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 28/28] xfs: rework unreferenced inode lookups
-Message-ID: <20191115131310.GA18378@infradead.org>
-References: <20191031234618.15403-1-david@fromorbit.com>
- <20191031234618.15403-29-david@fromorbit.com>
- <20191106221846.GE37080@bfoster>
- <20191114221602.GJ4614@dread.disaster.area>
+        Fri, 15 Nov 2019 08:14:30 -0500
+Received: by mail-pf1-f194.google.com with SMTP id p26so6659840pfq.8;
+        Fri, 15 Nov 2019 05:14:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vjaotZdk3GSTT95AfoQh9M1LKSx6XuqLnLrFhIfRlF8=;
+        b=Xv6inqLn3tjxqPEIhT0bqA7kUI6M50KVcOE0EXlgtudqSBvx/8zvQeV82Sn8qcvPwp
+         HdRCXfJhmu+AfD9OYy0BR1Fxd3kOf75EzoNS++EVexy/QXuiB/QfnayTdUugc2swWVWe
+         yYtRLdDnHh5Y8KQlo6OSlCSl7nHQVnjYs7WpssCDEskTX4l+zFkO4VizUmawlgcwDnUf
+         kFwAUDFpEannJ9IU98EJscwyT+ftv9ee8+QWJhn7wXTefcVqdNKFF2qkbxp1RvG+Bxos
+         d7EaFiWByVtoMRGavoMYAeHhBZqMpFc6HPKF522foq7oWkcqwbIZcHjS10xEzgRkpFMO
+         NMvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vjaotZdk3GSTT95AfoQh9M1LKSx6XuqLnLrFhIfRlF8=;
+        b=BCvSFQxLKn1nw1bwhl41dL1iQZB8aoqRqtH3zQx+r8xbqfKWLA78tz7hzvJ/iq2o+m
+         MNDkiwbFcdeaiheIapfgJ0KnHkH0MEcpGIybCycqOM0Rq+oYWDByrlC9rFP6jqQDn89o
+         emmNljDDQ6w1cGhUkV48U2Ly0RhBG2VRIRc2WvTwtEnlBITIR9mdvigh6u2XjzmZ4VtQ
+         ypq2jnam+ZnOpQV/eXnXRwOrq+mhaCm3Wqn+5TXufFhegO+ySE5PjalvZWYLVw6ahtQi
+         HP2Wq5VjhDaqCrkdRcElAtiNvh+R93edvx6cJhohd4llEHgBV4iTptS5Go/AEw68DvDA
+         NAcg==
+X-Gm-Message-State: APjAAAWEY15wnmtoLKFw7WTyxo9a9Oz8u7zamKaEzOdlCgpQyVoSQrgQ
+        xh7LF79DWQ1jli1qOvjRdEE=
+X-Google-Smtp-Source: APXvYqwRDyFEH2e4zhdQUYBI9ZMDv4S1tacfNj9jD7sN9JQWQ8sOlpyKij2ZLBxKKRLWXm5owZlQjg==
+X-Received: by 2002:a62:ac06:: with SMTP id v6mr17066728pfe.210.1573823667863;
+        Fri, 15 Nov 2019 05:14:27 -0800 (PST)
+Received: from dahern-DO-MB.local ([2601:282:800:fd80:c9ae:cf0c:82df:2536])
+        by smtp.googlemail.com with ESMTPSA id u3sm10360008pgp.51.2019.11.15.05.14.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Nov 2019 05:14:26 -0800 (PST)
+Subject: Re: [PATCH] vrf: Fix possible NULL pointer oops when delete nic
+To:     "wangxiaogang (F)" <wangxiaogang3@huawei.com>, dsahern@kernel.org,
+        shrijeet@gmail.com, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hujunwei4@huawei.com, xuhanbing@huawei.com
+References: <60e827cb-2bba-2b7e-55dc-651103e9905f@huawei.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <fde95f03-72ee-b4e9-7f14-b98e3227f0f4@gmail.com>
+Date:   Fri, 15 Nov 2019 06:14:25 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114221602.GJ4614@dread.disaster.area>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <60e827cb-2bba-2b7e-55dc-651103e9905f@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 09:16:02AM +1100, Dave Chinner wrote:
-> > Can we tie these into the proper locking interface using flags? For
-> > example, something like xfs_ilock(ip, XFS_ILOCK_EXCL|XFS_ILOCK_NONOWNER)
-> > or xfs_ilock(ip, XFS_ILOCK_EXCL_NONOWNER) perhaps?
+On 11/14/19 11:22 PM, wangxiaogang (F) wrote:
+> From: XiaoGang Wang <wangxiaogang3@huawei.com>
 > 
-> I'd prefer not to make this part of the common locking interface -
-> it's a one off special use case, not something we want to progate
-> elsewhere into the code.
+> Recently we get a crash when access illegal address (0xc0),
+> which will occasionally appear when deleting a physical NIC with vrf.
 > 
-> Now that I think over it, I probably should have tagged this with
-> patch with [RFC]. I think we should just get rid of the mrlock
-> wrappers rather than add more, and that would simplify this a lot.
 
-Yes, killing off the mrlock wrappers would be very helpful.  The only
-thing we use them for is asserts on the locking state.  We could either
-switch to lockdep_assert_held*, or just open code the write locked bit.
-While it is a little more ugly I'd tend towards the latter given that
-the locking asserts are too useful to require lockdep builds with their
-performance impact.
+How long have you been running this test?
+
+I am wondering if this is fallout from the recent adjacency changes in
+commits 5343da4c1742 through f3b0a18bb6cb.
+
+
+
