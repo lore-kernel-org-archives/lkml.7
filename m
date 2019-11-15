@@ -7,43 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9209CC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B210C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6673D20857
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:40:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F73720857
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:40:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbfKOHk3 (ORCPT
+        id S1727296AbfKOHk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 15 Nov 2019 02:40:29 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:42606 "EHLO
+Received: from Galois.linutronix.de ([193.142.43.55]:42607 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbfKOHkZ (ORCPT
+        with ESMTP id S1727048AbfKOHkZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 15 Nov 2019 02:40:25 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iVWDK-0002ZZ-Ai; Fri, 15 Nov 2019 08:40:18 +0100
+        id 1iVWDH-0002WV-Fc; Fri, 15 Nov 2019 08:40:15 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 05F971C08AC;
-        Fri, 15 Nov 2019 08:40:18 +0100 (CET)
-Date:   Fri, 15 Nov 2019 07:40:17 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1DDFF1C08AC;
+        Fri, 15 Nov 2019 08:40:15 +0100 (CET)
+Date:   Fri, 15 Nov 2019 07:40:14 -0000
 From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf tools: Add map_groups to 'struct addr_location'
+Subject: [tip: perf/core] perf tools: Add a 'struct map_groups' pointer to
+ 'struct map_symbol'
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <tip-4qdducrm32tgrjupcp0kjh1e@git.kernel.org>
-References: <tip-4qdducrm32tgrjupcp0kjh1e@git.kernel.org>
+In-Reply-To: <tip-fzwfcnddenz1o7uj1fzw3g46@git.kernel.org>
+References: <tip-fzwfcnddenz1o7uj1fzw3g46@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157380361765.29467.9328739216463634278.tip-bot2@tip-bot2>
+Message-ID: <157380361474.29467.1693226405134802627.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,159 +60,147 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     d3a022cbdce6f361b1effbff1eb18546690592c8
-Gitweb:        https://git.kernel.org/tip/d3a022cbdce6f361b1effbff1eb18546690592c8
+Commit-ID:     08f6680e627edf913c6d6adb9bb9ecc9d57a408d
+Gitweb:        https://git.kernel.org/tip/08f6680e627edf913c6d6adb9bb9ecc9d57a408d
 Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Mon, 04 Nov 2019 09:59:48 -03:00
+AuthorDate:    Mon, 04 Nov 2019 16:02:35 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Tue, 12 Nov 2019 08:20:53 -03:00
 
-perf tools: Add map_groups to 'struct addr_location'
+perf tools: Add a 'struct map_groups' pointer to 'struct map_symbol'
 
->From there we can get al->mg->machine, so replace that field with the
-more useful 'struct map_groups' that for now we're obtaining from
-al->map->groups, and that is one thing getting into the way of maps
-being fully shareable.
+And fill it whenever we setup a a 'struct map_symbol', now we need to
+use it, next cset.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-4qdducrm32tgrjupcp0kjh1e@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-fzwfcnddenz1o7uj1fzw3g46@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/callchain.c                            |  6 ++---
- tools/perf/util/db-export.c                            | 12 ++++-----
- tools/perf/util/event.c                                |  6 ++---
- tools/perf/util/scripting-engines/trace-event-python.c |  2 +-
- tools/perf/util/symbol.h                               |  2 +-
- 5 files changed, 14 insertions(+), 14 deletions(-)
+ tools/perf/util/callchain.c              | 1 +
+ tools/perf/util/hist.c                   | 4 ++++
+ tools/perf/util/machine.c                | 3 +++
+ tools/perf/util/map_symbol.h             | 2 ++
+ tools/perf/util/unwind-libdw.c           | 1 +
+ tools/perf/util/unwind-libunwind-local.c | 1 +
+ 6 files changed, 12 insertions(+)
 
 diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 9a9b56e..89faa64 100644
+index 8f89c5a..5cefce3 100644
 --- a/tools/perf/util/callchain.c
 +++ b/tools/perf/util/callchain.c
-@@ -1119,8 +1119,8 @@ int fill_callchain_info(struct addr_location *al, struct callchain_cursor_node *
- 			goto out;
+@@ -1106,6 +1106,7 @@ int hist_entry__append_callchain(struct hist_entry *he, struct perf_sample *samp
+ int fill_callchain_info(struct addr_location *al, struct callchain_cursor_node *node,
+ 			bool hide_unresolved)
+ {
++	al->mg	= node->ms.mg;
+ 	al->map = node->ms.map;
+ 	al->sym = node->ms.sym;
+ 	al->srcline = node->srcline;
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index dec9961..0a8d72a 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -692,6 +692,7 @@ __hists__add_entry(struct hists *hists,
+ 			.ino = ns ? ns->link_info[CGROUP_NS_INDEX].ino : 0,
+ 		},
+ 		.ms = {
++			.mg	= al->mg,
+ 			.map	= al->map,
+ 			.sym	= al->sym,
+ 		},
+@@ -759,6 +760,7 @@ struct hist_entry *hists__add_entry_block(struct hists *hists,
+ 		.block_info = block_info,
+ 		.hists = hists,
+ 		.ms = {
++			.mg  = al->mg,
+ 			.map = al->map,
+ 			.sym = al->sym,
+ 		},
+@@ -893,6 +895,7 @@ iter_next_branch_entry(struct hist_entry_iter *iter, struct addr_location *al)
+ 	if (iter->curr >= iter->total)
+ 		return 0;
+ 
++	al->mg  = bi[i].to.ms.mg;
+ 	al->map = bi[i].to.ms.map;
+ 	al->sym = bi[i].to.ms.sym;
+ 	al->addr = bi[i].to.addr;
+@@ -1069,6 +1072,7 @@ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
+ 		.comm = thread__comm(al->thread),
+ 		.ip = al->addr,
+ 		.ms = {
++			.mg  = al->mg,
+ 			.map = al->map,
+ 			.sym = al->sym,
+ 		},
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 614094d..6a0f5c2 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1968,6 +1968,7 @@ static void ip__resolve_ams(struct thread *thread,
+ 
+ 	ams->addr = ip;
+ 	ams->al_addr = al.addr;
++	ams->ms.mg  = al.mg;
+ 	ams->ms.sym = al.sym;
+ 	ams->ms.map = al.map;
+ 	ams->phys_addr = 0;
+@@ -1985,6 +1986,7 @@ static void ip__resolve_data(struct thread *thread,
+ 
+ 	ams->addr = addr;
+ 	ams->al_addr = al.addr;
++	ams->ms.mg  = al.mg;
+ 	ams->ms.sym = al.sym;
+ 	ams->ms.map = al.map;
+ 	ams->phys_addr = phys_addr;
+@@ -2101,6 +2103,7 @@ static int add_callchain_ip(struct thread *thread,
+ 		iter_cycles = iter->cycles;
  	}
  
--	if (al->map->groups == &al->machine->kmaps) {
--		if (machine__is_host(al->machine)) {
-+	if (al->mg == &al->mg->machine->kmaps) {
-+		if (machine__is_host(al->mg->machine)) {
- 			al->cpumode = PERF_RECORD_MISC_KERNEL;
- 			al->level = 'k';
- 		} else {
-@@ -1128,7 +1128,7 @@ int fill_callchain_info(struct addr_location *al, struct callchain_cursor_node *
- 			al->level = 'g';
- 		}
- 	} else {
--		if (machine__is_host(al->machine)) {
-+		if (machine__is_host(al->mg->machine)) {
- 			al->cpumode = PERF_RECORD_MISC_USER;
- 			al->level = '.';
- 		} else if (perf_guest) {
-diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
-index 752227b..44b465c 100644
---- a/tools/perf/util/db-export.c
-+++ b/tools/perf/util/db-export.c
-@@ -181,7 +181,7 @@ static int db_ids_from_al(struct db_export *dbe, struct addr_location *al,
- 	if (al->map) {
- 		struct dso *dso = al->map->dso;
++	ms.mg  = al.mg;
+ 	ms.map = al.map;
+ 	ms.sym = al.sym;
+ 	srcline = callchain_srcline(&ms, al.addr);
+diff --git a/tools/perf/util/map_symbol.h b/tools/perf/util/map_symbol.h
+index f71cbe1..2964d97 100644
+--- a/tools/perf/util/map_symbol.h
++++ b/tools/perf/util/map_symbol.h
+@@ -4,10 +4,12 @@
  
--		err = db_export__dso(dbe, dso, al->machine);
-+		err = db_export__dso(dbe, dso, al->mg->machine);
- 		if (err)
- 			return err;
- 		*dso_db_id = dso->db_id;
-@@ -251,7 +251,7 @@ static struct call_path *call_path_from_sample(struct db_export *dbe,
- 		 */
- 		al.sym = node->sym;
- 		al.map = node->map;
--		al.machine = machine;
-+		al.mg  = thread->mg;
- 		al.addr = node->ip;
+ #include <linux/types.h>
  
- 		if (al.map && !al.sym)
-@@ -360,13 +360,13 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
- 	if (err)
- 		return err;
++struct map_groups;
+ struct map;
+ struct symbol;
  
--	err = db_export__machine(dbe, al->machine);
-+	err = db_export__machine(dbe, al->mg->machine);
- 	if (err)
- 		return err;
- 
--	main_thread = thread__main_thread(al->machine, thread);
-+	main_thread = thread__main_thread(al->mg->machine, thread);
- 
--	err = db_export__threads(dbe, thread, main_thread, al->machine, &comm);
-+	err = db_export__threads(dbe, thread, main_thread, al->mg->machine, &comm);
- 	if (err)
- 		goto out_put;
- 
-@@ -380,7 +380,7 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
- 		goto out_put;
- 
- 	if (dbe->cpr) {
--		struct call_path *cp = call_path_from_sample(dbe, al->machine,
-+		struct call_path *cp = call_path_from_sample(dbe, al->mg->machine,
- 							     thread, sample,
- 							     evsel);
- 		if (cp) {
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index fc1e5a9..0141b26 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -461,7 +461,7 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
- 	struct machine *machine = mg->machine;
- 	bool load_map = false;
- 
--	al->machine = machine;
-+	al->mg = mg;
- 	al->thread = thread;
- 	al->addr = addr;
- 	al->cpumode = cpumode;
-@@ -474,13 +474,13 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
- 
- 	if (cpumode == PERF_RECORD_MISC_KERNEL && perf_host) {
- 		al->level = 'k';
--		mg = &machine->kmaps;
-+		al->mg = mg = &machine->kmaps;
- 		load_map = true;
- 	} else if (cpumode == PERF_RECORD_MISC_USER && perf_host) {
- 		al->level = '.';
- 	} else if (cpumode == PERF_RECORD_MISC_GUEST_KERNEL && perf_guest) {
- 		al->level = 'g';
--		mg = &machine->kmaps;
-+		al->mg = mg = &machine->kmaps;
- 		load_map = true;
- 	} else if (cpumode == PERF_RECORD_MISC_GUEST_USER && perf_guest) {
- 		al->level = 'u';
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 93c03b3..9e05827 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -1127,7 +1127,7 @@ static void python_export_sample_table(struct db_export *dbe,
- 
- 	tuple_set_u64(t, 0, es->db_id);
- 	tuple_set_u64(t, 1, es->evsel->db_id);
--	tuple_set_u64(t, 2, es->al->machine->db_id);
-+	tuple_set_u64(t, 2, es->al->mg->machine->db_id);
- 	tuple_set_u64(t, 3, es->al->thread->db_id);
- 	tuple_set_u64(t, 4, es->comm_db_id);
- 	tuple_set_u64(t, 5, es->dso_db_id);
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index c3bd16d..0b718cc 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -107,8 +107,8 @@ struct ref_reloc_sym {
- };
- 
- struct addr_location {
--	struct machine *machine;
- 	struct thread *thread;
+ struct map_symbol {
 +	struct map_groups *mg;
  	struct map    *map;
  	struct symbol *sym;
- 	const char    *srcline;
+ };
+diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
+index 73c00d7..d2a8df0 100644
+--- a/tools/perf/util/unwind-libdw.c
++++ b/tools/perf/util/unwind-libdw.c
+@@ -81,6 +81,7 @@ static int entry(u64 ip, struct unwind_info *ui)
+ 		return -1;
+ 
+ 	e->ip	  = ip;
++	e->ms.mg  = al.mg;
+ 	e->ms.map = al.map;
+ 	e->ms.sym = al.sym;
+ 
+diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+index 6e3873d..6d53347 100644
+--- a/tools/perf/util/unwind-libunwind-local.c
++++ b/tools/perf/util/unwind-libunwind-local.c
+@@ -578,6 +578,7 @@ static int entry(u64 ip, struct thread *thread,
+ 	e.ms.sym = thread__find_symbol(thread, PERF_RECORD_MISC_USER, ip, &al);
+ 	e.ip     = ip;
+ 	e.ms.map = al.map;
++	e.ms.mg  = al.mg;
+ 
+ 	pr_debug("unwind: %s:ip = 0x%" PRIx64 " (0x%" PRIx64 ")\n",
+ 		 al.sym ? al.sym->name : "''",
