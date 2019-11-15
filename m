@@ -2,121 +2,215 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20956C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBCEC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0349920729
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF9020729
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:11:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dBDipUXF";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="F5Bctf+x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbfKOIKR (ORCPT
+        id S1727275AbfKOIL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 03:10:17 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38599 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfKOIKQ (ORCPT
+        Fri, 15 Nov 2019 03:11:29 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:56260 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfKOIL3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 03:10:16 -0500
-Received: by mail-oi1-f194.google.com with SMTP id a14so7905375oid.5
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 00:10:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZSr7cTGfOdXAXx7Uwdhh3Oh8e5ZfUnggvdAXALwWrL0=;
-        b=uHygN6QJF7BKOzQT7hflLqd8cw1Hxl3BinLraP/bI6Bo63ps5Ek9qo6j1ko0T52sKE
-         Zch9uSJMrHnvHqCb2e5Td2eZHk9+JBMzoWSt1XOhb1jUfzoJrgSH7+PnsvN9qDvKF+bG
-         tX7/l941y+T2XNUHRQz7kBbd/+1MDfkPHNv0nQlkNQXbEl6zMQHTHVmn49ugJPNMefTR
-         v5Ii4ASc0lk5jriVc2FbeBk3VAI9AFrPgXbs5MGRPDXWzKMD8jLPKkBYnso+ZQ1t1jXa
-         mGpA3NpvgKgL/4bdrl0mjU2riZrUcJbxl+DkJKh9So0E61SFA3TW+9k5Iixs3puGmKsa
-         CZqQ==
-X-Gm-Message-State: APjAAAVatmTdFn2nGhb0FJy4OEmoQ1hvk8PbJuLjNcKaJUCgWCTlCyZ+
-        Q4BwZZOz6DqUnknXuajyDmAXPHZ+0xQkbQRA493fay3T
-X-Google-Smtp-Source: APXvYqxCv94tNtW9fCNSuBgOTtlmJbNbNkU+GuiFOtEtRh3Ty+uWOrYwRpYJHN4jbhP3ZGDBhhh998rC43Zbc/QVybo=
-X-Received: by 2002:aca:4ac5:: with SMTP id x188mr6635783oia.148.1573805414147;
- Fri, 15 Nov 2019 00:10:14 -0800 (PST)
+        Fri, 15 Nov 2019 03:11:29 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 6EF6B602DD; Fri, 15 Nov 2019 08:11:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573805487;
+        bh=MsQ3g6YACKWy0VoucyyMjZwsnX2w548mSWYhWxZGYOY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=dBDipUXFSZ0loFQaYDrPgqYJwPP1llMsKdMQM0ipiq/7nSvElfQqhz132g5YvDMA8
+         xKxG4J2sTYVdZpaKIIlqUoGsg5T2ht/Tb6ixRz8Zv8hxvetRFSaIgONDwoQbNAh90B
+         TGmENXzbzE2RkAA3FvgNxfu885h6dUzRZ4mkPW4w=
+Received: from [10.206.28.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B272060F93;
+        Fri, 15 Nov 2019 08:11:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573805486;
+        bh=MsQ3g6YACKWy0VoucyyMjZwsnX2w548mSWYhWxZGYOY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=F5Bctf+x4zQ7RRvly/eEmhLcPNRxKlgSOTH/R2lyLGNfJ4eWpTTd0ZK6mgWI7JbsK
+         qDfvtni1635Ryb9UaxyXzRhoUNPorpZjki8XoPIIJYvoWxMZmH3gzsQjmE0MFJjjSr
+         L5YW8BDkZA5U78T7iA19e3A7++/7AimEsWrHDTjY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B272060F93
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v1 1/7] clk: qcom: clk-alpha-pll: Add support for Fabia
+ PLL calibration
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org
+References: <1572524473-19344-1-git-send-email-tdas@codeaurora.org>
+ <1572524473-19344-2-git-send-email-tdas@codeaurora.org>
+ <20191106003654.BCB312178F@mail.kernel.org>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <5a3f5d31-f4c2-f7c1-ba10-0c566bcbaa32@codeaurora.org>
+Date:   Fri, 15 Nov 2019 13:41:20 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <20191024153756.31861-1-geert+renesas@glider.be> <20191115061554.532d29e9@collabora.com>
-In-Reply-To: <20191115061554.532d29e9@collabora.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 15 Nov 2019 09:10:02 +0100
-Message-ID: <CAMuHMdWO=8sHn9wrEiuBGes0x_L2=Qkou=aPcHM7Mr9oDS74Qw@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Mark linux-i3c mailing list moderated
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        linux-i3c@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191106003654.BCB312178F@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
+Hi Stephen,
 
-On Fri, Nov 15, 2019 at 6:16 AM Boris Brezillon
-<boris.brezillon@collabora.com> wrote:
-> On Thu, 24 Oct 2019 17:37:56 +0200
-> Geert Uytterhoeven <geert+renesas@glider.be> wrote:
-> > The linux-i3c mailing list is moderated for non-subscribers.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Queued to i3c/next. It was actually queued 2 weeks ago but the
-> patchwork bot didn't send a notification for that one (one was sent for
-> your other patch) and I don't know why.
+Thanks for your review.
 
-It did:
+On 11/6/2019 6:06 AM, Stephen Boyd wrote:
+> Quoting Taniya Das (2019-10-31 05:21:07)
+>> diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
+>> index 055318f..8cb77ca 100644
+>> --- a/drivers/clk/qcom/clk-alpha-pll.c
+>> +++ b/drivers/clk/qcom/clk-alpha-pll.c
+>> @@ -1141,15 +1160,11 @@ static int alpha_pll_fabia_set_rate(struct clk_hw *hw, unsigned long rate,
+>>                                                  unsigned long prate)
+>>   {
+>>          struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
+>> -       u32 val, l, alpha_width = pll_alpha_width(pll);
+>> +       u32 l, alpha_width = pll_alpha_width(pll);
+>>          u64 a;
+>>          unsigned long rrate;
+>>          int ret = 0;
+>>
+>> -       ret = regmap_read(pll->clkr.regmap, PLL_MODE(pll), &val);
+>> -       if (ret)
+>> -               return ret;
+>> -
+>>          rrate = alpha_pll_round_rate(rate, prate, &l, &a, alpha_width);
+>>
+>>          /*
+> 
+> How is this diff related? Looks like it should be split off into another
+> patch to remove a useless register read.
+> 
 
------8<-----------------------------------------------------------------------------------------
-Subject: Re: [PATCH] MAINTAINERS: Mark linux-i3c mailing list moderated
-From: patchwork-bot+linux-i3c@kernel.org
-Message-Id: <157251967150.27046.1691850610457130750.git-patchwork-notify@kernel.org>
-Date: Thu, 31 Oct 2019 11:01:11 +0000
-References: <20191024153756.31861-1-geert+renesas@glider.be>
-In-Reply-To: <20191024153756.31861-1-geert+renesas@glider.be>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-X-GND-Status: LEGIT
-Received-SPF: pass (spool2: domain of kernel.org designates
-198.145.29.99 as permitted sender) client-ip=198.145.29.99;
-envelope-from=patchwork-bot+linux-i3c@kernel.org;
-helo=mail.kernel.org;
+I will split this in different patch.
 
-Hello:
+>> @@ -1167,7 +1182,66 @@ static int alpha_pll_fabia_set_rate(struct clk_hw *hw, unsigned long rate,
+>>          return __clk_alpha_pll_update_latch(pll);
+>>   }
+>>
+>> +static int alpha_pll_fabia_prepare(struct clk_hw *hw)
+>> +{
+> 
+> Why are we doing this in prepare vs. doing it at PLL configuration time?
+> Does it need to be recalibrated each time the PLL is enabled?
+> 
 
-This patch was applied to i3c/linux.git (refs/heads/i3c/next).
+In the case if PLL looses the configuration then we would encounter PLL 
+locking issues. Thus want to go ahead with prepare. In the case it is 
+calibrated it would return.
 
-On Thu, 24 Oct 2019 17:37:56 +0200 you wrote:
-> The linux-i3c mailing list is moderated for non-subscribers.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>> +       struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
+>> +       const struct pll_vco *vco;
+>> +       struct clk_hw *parent_hw;
+>> +       unsigned long cal_freq, rrate;
+>> +       u32 cal_l, regval, alpha_width = pll_alpha_width(pll);
+>> +       u64 a;
+>> +       int ret;
+>> +
+>> +       /* Check if calibration needs to be done i.e. PLL is in reset */
+>> +       ret = regmap_read(pll->clkr.regmap, PLL_MODE(pll), &regval);
+> 
+> Please use 'val' instead of 'regval' as regval almost never appears in
+> this file already.
+> 
 
+Sure, will use 'val'.
 
-Here is a summary with links:
-  - MAINTAINERS: Mark linux-i3c mailing list moderated
-    https://git.kernel.org/i3c/c/469191c7fcd069a500c2a26c49c9baef9dabf66d
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       /* Return early if calibration is not needed. */
+>> +       if (regval & PLL_RESET_N)
+>> +               return 0;
+>> +
+>> +       vco = alpha_pll_find_vco(pll, clk_hw_get_rate(hw));
+>> +       if (!vco) {
+>> +               pr_err("alpha pll: not in a valid vco range\n");
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       cal_freq = DIV_ROUND_CLOSEST((pll->vco_table[0].min_freq +
+>> +                               pll->vco_table[0].max_freq) * 54, 100);
+> 
+> Do we need to cast the first argument to a u64 to avoid overflow?
+> 
 
-You are awesome, thank you!
+No we do not need.
+
+>> +
+>> +       parent_hw = clk_hw_get_parent(hw);
+>> +       if (!parent_hw)
+>> +               return -EINVAL;
+>> +
+>> +       rrate = alpha_pll_round_rate(cal_freq, clk_hw_get_rate(parent_hw),
+>> +                                       &cal_l, &a, alpha_width);
+>> +       /*
+>> +        * Due to a limited number of bits for fractional rate programming, the
+>> +        * rounded up rate could be marginally higher than the requested rate.
+>> +        */
+>> +       if (rrate > (cal_freq + FABIA_PLL_RATE_MARGIN) || rrate < cal_freq) {
+>> +               pr_err("Call set rate on the PLL with rounded rates!\n");
+> 
+> This message is weird. Drivers shouldn't need to call set rate with
+> rounded rates. What is going on?
+> 
+
+:), my bad, copy paste from another function. I will remove this print.
+
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       /* Setup PLL for calibration frequency */
+>> +       regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL(pll), cal_l);
+>> +
+>> +       /* Bringup the pll at calibration frequency */
+> 
+> capitalize PLL.
+> 
+
+Will take care of it.
+
+>> +       ret = clk_alpha_pll_enable(hw);
+>> +       if (ret) {
+>> +               pr_err("alpha pll calibration failed\n");
+>> +               return ret;
+>> +       }
+>> +
+>> +       clk_alpha_pll_disable(hw);
+>> +
+>> +       return 0;
+>> +}
+>> +
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/pwbot
------------------------------------------------------------------------------------------>8-----
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--
