@@ -2,158 +2,146 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A844C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA839C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ECD720729
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 903B020729
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:08:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FUR4r36m"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="i+UlYqHp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbfKOOID (ORCPT
+        id S1727673AbfKOOIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 09:08:03 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39006 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727429AbfKOOID (ORCPT
+        Fri, 15 Nov 2019 09:08:49 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39686 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727642AbfKOOIo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 09:08:03 -0500
-Received: by mail-lj1-f196.google.com with SMTP id p18so10848490ljc.6
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 06:08:01 -0800 (PST)
+        Fri, 15 Nov 2019 09:08:44 -0500
+Received: by mail-qt1-f196.google.com with SMTP id t8so10922217qtc.6
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 06:08:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VHXyS4BV5OVtqBWRmRRF2YVqJlV8moIcPViTWoSzmjI=;
-        b=FUR4r36mPgKSflt6dlDzfMMMLLRk2dMxOoFSFhmSjwV3fIjHFWB/XhH0hOtwUKJzCS
-         b6/ya4RhaSn8V6RzipWU4nIDMB0o8uV/G0zsKfyz3RJOhUBeUrpboU5rXkXe/I66dmo9
-         s8Cj2GkNMPrhgyOK56WMxkY16btzG/RbnR+J7O4DlZ1Ze8I52eojK/P6xPA4HbTZmeFc
-         DTWNCEbvpOeIyoTfhRrFEx+l/pKQin9Ale4EXwUxyBWEZMKGTpM2BF5fNJueFLDvoNSU
-         PSTYizM5WddVBAEBbeWjF1lTu1UpevFe1WK/a1TzGMjP2xd33p7jjXVHa3169mcwrinc
-         uQ1Q==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8ZGdiHZxf3ZHqX3I8ydxFdLkSWkpE5WrCI0dICjPpHU=;
+        b=i+UlYqHpSoy9hrCL3gQPMJUhUw3RKIgDls07tcBvdNTrD4jl5OTOMJfNN1MASvpOc/
+         n/RUaDL07zMYWDhclWHPDZnaqTZ6YdpZfzuTyA+HrehI2Ydc75hfkUNiRgV5KLUhGbZ5
+         hwJR6j62hBrGSzy1DyO8h1zN9TlzptjO0LEx4CpgETqR3CBgJNCsKnZKRcbg5KwHic/q
+         pEIdohRRBLTVk18YHW5Vi8NX67r/lGgj0cpRlIJEz6SaDVQBInMFNoQa60kFdiQzPjma
+         xgI2yhuOWu+cTXk9NFpI3of3yS1+C6h76JgFDhrvoDw5piCzGcHI/ud3iOPSS57DuCxF
+         BfMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VHXyS4BV5OVtqBWRmRRF2YVqJlV8moIcPViTWoSzmjI=;
-        b=BT6LGIa/F9EJhEcAe/vO3TPyCm7c+Yi4RaDAESve335aFiJVb3j5IEMbfW65KP8LdS
-         g/Q5a41fZX7XPWRc02Fh2wCh7F13GdcY4xMZvLMCEXikgsPN2pCIrGlMErh43odSQjwI
-         m48z2LFYy6lhEz8rNd8udvhOygc1Ohi25OUoBFQMBv4eRQkXGfJZZamBKyJSJ3dLrKdl
-         ZhDiKvjB6U7Keijyzpf1O2zqfMGQFVIa9rlgxFvfIn/SGN4iRdUqwZlgj5B06BJoucNC
-         rjNelAANMjSv1F3ZfdVGaIHcgUaGT6N07afOpp5Yj5WHqa78D31/7LsQGcWptiWpJspA
-         l5lg==
-X-Gm-Message-State: APjAAAWAWMDpXHav+uChDckzjEcfK3v5tWAT3xHGl6AsLFK+QQ0LWFhj
-        oa/xBWHehd2f0xGHfWv+EBglqAiY4XNx/ZUljjll0g==
-X-Google-Smtp-Source: APXvYqxc11sdU/BUWFa2FbYjiioRXxs0N77ZQoFDfrZAGKJVj7SKBP7CLlyof9+uHFre4aCluKjMFSx/JyX1bU9Ibmk=
-X-Received: by 2002:a2e:7811:: with SMTP id t17mr5696893ljc.225.1573826880859;
- Fri, 15 Nov 2019 06:08:00 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8ZGdiHZxf3ZHqX3I8ydxFdLkSWkpE5WrCI0dICjPpHU=;
+        b=aQvUKKT45vOTZaOhLfOnhxD/t75CUNUaKNy89aeR3X0I1QCuQMyFDyEMBIhFsWtENz
+         BVSS17veE3rXT0Y/mT9LWbIgRWSjmC1yYJl8NiLOD31c5aXkiw9Ot5pBTQDVzEX09STc
+         Xs9mtMNJhhdToNDpgnIpAlLPowWBe6RAOjlBAqpCU6E43WO6heb08P6YbZI3IfH75dkR
+         LvMY3cV5iJl6A6hHffzeDnLKqkNnWjeiBjLl2hYRndHTCPUZbxgPYq+9w7Eyyy6dLy93
+         fysbub3vZT+Zat4HUk5SHxWxYHuRpRqNaKM2GJfHVwKCkFUpTbkSMHywapm0x4eP4rPo
+         J7Fg==
+X-Gm-Message-State: APjAAAUgHEw6+NP9QuxS1PnRMx5uSjrQfDRrek0lLw7EvJ/hjWHIX2Hg
+        cJSI7T7K718zh2NK1fi4pBHWmg==
+X-Google-Smtp-Source: APXvYqyXZJAB3M+2SHRriOZec9Rfd1hMhPGpVi3+hL/5cz80ckTUMXVgMRzWDvTX6XEGdZam3s9/QQ==
+X-Received: by 2002:ac8:661a:: with SMTP id c26mr13620771qtp.317.1573826923526;
+        Fri, 15 Nov 2019 06:08:43 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
+        by smtp.gmail.com with ESMTPSA id s21sm5382292qtc.12.2019.11.15.06.08.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 15 Nov 2019 06:08:42 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1iVcHC-0002xg-A8; Fri, 15 Nov 2019 10:08:42 -0400
+Date:   Fri, 15 Nov 2019 10:08:42 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 09/24] vfio, mm: fix get_user_pages_remote() and
+ FOLL_LONGTERM
+Message-ID: <20191115140842.GA4055@ziepe.ca>
+References: <20191115055340.1825745-1-jhubbard@nvidia.com>
+ <20191115055340.1825745-10-jhubbard@nvidia.com>
 MIME-Version: 1.0
-References: <20191115103908.27610-1-valentin.schneider@arm.com>
-In-Reply-To: <20191115103908.27610-1-valentin.schneider@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 15 Nov 2019 15:07:48 +0100
-Message-ID: <CAKfTPtBoi_5sUiGrTpYuV_u2vPkBK+caUzgaKxY3Ck3PKJXZiw@mail.gmail.com>
-Subject: Re: [PATCH v2] sched/uclamp: Fix overzealous type replacement
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <Dietmar.Eggemann@arm.com>,
-        Tejun Heo <tj@kernel.org>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Qais Yousef <qais.yousef@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115055340.1825745-10-jhubbard@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 at 11:39, Valentin Schneider
-<valentin.schneider@arm.com> wrote:
->
-> Some uclamp helpers had their return type changed from 'unsigned int' to
-> 'enum uclamp_id' by commit
->
->   0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
->
-> but it happens that some do return a value in the [0, SCHED_CAPACITY_SCALE]
-> range, which should really be unsigned int. The affected helpers are
-> uclamp_none(), uclamp_rq_max_value() and uclamp_eff_value(). Fix those up.
->
-> Note that this doesn't lead to any obj diff using a relatively recent
-> aarch64 compiler (8.3-2019.03). The current code of e.g. uclamp_eff_value()
-> properly returns an 11 bit value (bits_per(1024)) and doesn't seem to do
-> anything funny. I'm still marking this as fixing the above commit to be on
-> the safe side.
->
-> Fixes: 0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
-> Reviewed-by: Qais Yousef <qais.yousef@arm.com>
-> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+On Thu, Nov 14, 2019 at 09:53:25PM -0800, John Hubbard wrote:
+> As it says in the updated comment in gup.c: current FOLL_LONGTERM
+> behavior is incompatible with FAULT_FLAG_ALLOW_RETRY because of the
+> FS DAX check requirement on vmas.
+> 
+> However, the corresponding restriction in get_user_pages_remote() was
+> slightly stricter than is actually required: it forbade all
+> FOLL_LONGTERM callers, but we can actually allow FOLL_LONGTERM callers
+> that do not set the "locked" arg.
+> 
+> Update the code and comments accordingly, and update the VFIO caller
+> to take advantage of this, fixing a bug as a result: the VFIO caller
+> is logically a FOLL_LONGTERM user.
+> 
+> Also, remove an unnessary pair of calls that were releasing and
+> reacquiring the mmap_sem. There is no need to avoid holding mmap_sem
+> just in order to call page_to_pfn().
+> 
+> Also, move the DAX check ("if a VMA is DAX, don't allow long term
+> pinning") from the VFIO call site, all the way into the internals
+> of get_user_pages_remote() and __gup_longterm_locked(). That is:
+> get_user_pages_remote() calls __gup_longterm_locked(), which in turn
+> calls check_dax_vmas(). It's lightly explained in the comments as well.
+> 
+> Thanks to Jason Gunthorpe for pointing out a clean way to fix this,
+> and to Dan Williams for helping clarify the DAX refactoring.
+> 
+> Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Jerome Glisse <jglisse@redhat.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 > ---
-> v2 changes:
-> o Also fix uclamp_none() (Vincent)
-> o Collect reviewed-by
-> o Slightly reword changelog
-> ---
->  kernel/sched/core.c  | 6 +++---
->  kernel/sched/sched.h | 2 +-
->  2 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 513a4794ff36..3ceff1c93ef1 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -810,7 +810,7 @@ static inline unsigned int uclamp_bucket_base_value(unsigned int clamp_value)
->         return UCLAMP_BUCKET_DELTA * uclamp_bucket_id(clamp_value);
->  }
->
-> -static inline enum uclamp_id uclamp_none(enum uclamp_id clamp_id)
-> +static inline unsigned int uclamp_none(enum uclamp_id clamp_id)
+>  drivers/vfio/vfio_iommu_type1.c | 30 +++++-------------------------
+>  mm/gup.c                        | 27 ++++++++++++++++++++++-----
+>  2 files changed, 27 insertions(+), 30 deletions(-)
 
-Out of curiosity why uclamp decided to use unsigned int to manipulate
-utilization instead of unsigned long which is the type of util_avg ?
+Looks OK now  
 
->  {
->         if (clamp_id == UCLAMP_MIN)
->                 return 0;
-> @@ -853,7 +853,7 @@ static inline void uclamp_idle_reset(struct rq *rq, enum uclamp_id clamp_id,
->  }
->
->  static inline
-> -enum uclamp_id uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
-> +unsigned int uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
->                                    unsigned int clamp_value)
->  {
->         struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
-> @@ -918,7 +918,7 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
->         return uc_req;
->  }
->
-> -enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
-> +unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
->  {
->         struct uclamp_se uc_eff;
->
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 05c282775f21..280a3c735935 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -2300,7 +2300,7 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
->  #endif /* CONFIG_CPU_FREQ */
->
->  #ifdef CONFIG_UCLAMP_TASK
-> -enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
-> +unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
->
->  static __always_inline
->  unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
-> --
-> 2.22.0
->
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
