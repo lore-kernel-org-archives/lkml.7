@@ -2,117 +2,97 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E386EC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF7BC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8B5E20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:52:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aLZtKCqD"
+	by mail.kernel.org (Postfix) with ESMTP id EA8D620733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:53:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfKOWwV (ORCPT
+        id S1727206AbfKOWxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 17:52:21 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22314 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726969AbfKOWwV (ORCPT
+        Fri, 15 Nov 2019 17:53:52 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:56188 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726969AbfKOWxv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 17:52:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573858340;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XxLRwCNIqyo3k0JMi1Xi1l9F+MTU6v0lA44sbxrMUCs=;
-        b=aLZtKCqDOAvBdnAL2NFO1lXwmKa/eZLzFwp3EgUm1OERi1RT9C84EiZsrjz0OyJvTQ8nQ7
-        ljI6YR400XMjVWea9Uf4/aGUuorCjyta0ULkDzgD/pWd0mPOqExeTDDPtGMxPlS/TqXCT5
-        RVtGz1/AnVA4elm4ekAzf2g9vcVu3qk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-357-HJK_wxZNOSqc8u6YXdGSGQ-1; Fri, 15 Nov 2019 17:52:18 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 211F3DBE5;
-        Fri, 15 Nov 2019 22:52:17 +0000 (UTC)
-Received: from x1.home (ovpn-116-56.phx2.redhat.com [10.3.116.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AD06F6012E;
-        Fri, 15 Nov 2019 22:52:16 +0000 (UTC)
-Date:   Fri, 15 Nov 2019 15:52:14 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: Re: [PATCH v1 5/5] vfio/pci: Drop duplicate check for size
- parameter of memremap()
-Message-ID: <20191115155214.55e949cc@x1.home>
-In-Reply-To: <20191115180044.83659-5-andriy.shevchenko@linux.intel.com>
-References: <20191115180044.83659-1-andriy.shevchenko@linux.intel.com>
-        <20191115180044.83659-5-andriy.shevchenko@linux.intel.com>
-Organization: Red Hat
+        Fri, 15 Nov 2019 17:53:51 -0500
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iVkTJ-0005aa-9t; Fri, 15 Nov 2019 22:53:45 +0000
+Date:   Fri, 15 Nov 2019 23:53:44 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Andrei Vagin <avagin@gmail.com>
+Cc:     Adrian Reber <areber@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>
+Subject: Re: [PATCH v11 2/2] selftests: add tests for clone3() with *set_tid
+Message-ID: <20191115225343.v6x6vltvxgv54ewl@wittgenstein>
+References: <20191115123621.142252-1-areber@redhat.com>
+ <20191115123621.142252-2-areber@redhat.com>
+ <20191115222018.GB353836@gmail.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: HJK_wxZNOSqc8u6YXdGSGQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191115222018.GB353836@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 20:00:44 +0200
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+On Fri, Nov 15, 2019 at 02:20:18PM -0800, Andrei Vagin wrote:
+> On Fri, Nov 15, 2019 at 01:36:21PM +0100, Adrian Reber wrote:
+> > This tests clone3() with *set_tid to see if all desired PIDs are working
+> > as expected. The tests are trying multiple invalid input parameters as
+> > well as creating processes while specifying a certain PID in multiple
+> > PID namespaces at the same time.
+> > 
+> > Additionally this moves common clone3() test code into clone3_selftests.h.
+> > 
+> > Signed-off-by: Adrian Reber <areber@redhat.com>
+> > ---
+> > v9:
+> >  - applied all changes from Christian's review (except using the
+> >    NSpid: parsing code from selftests/pidfd/pidfd_fdinfo_test.c)
+> > 
+> > v10:
+> >  - added even more '\n' and include file fixes (Christian)
+> > 
+> > v11:
+> >  - added more return code checking at multiple places (Andrei)
+> >  - also add set_tid/set_tid_size to internal struct (Andrei)
+> 
+> I think we can add a test case to trigger the issue what I found in the
+> previous version of the kernel patch. You can find my version of this
+> test case in the attached patch.
+> 
+> nit: we need to flush stdout and stderr buffers before calling the raw
+> clone3 syscall and _exit(). Otherwise, some log messages can be lost and
+> some of them can be printed twice.
+> 
+> To trigger this issue, you can run the test and redirect its output to
+> file or pipe:
+> 
+> $ ./clone3_set_tid | cat
+> 
+> I have attached the patch to address both these problems. It is a draft
+> version and may require some work.
+> 
+> Adrian and Christian, it is up to you to decide whether we want to
+> update the current patch or to fix this on top by a separate patch.
 
-> Since memremap() returns NULL pointer for size =3D 0, there is no need
-> to duplicate this check in the callers.
->=20
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Cornelia Huck <cohuck@redhat.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/vfio/pci/vfio_pci_igd.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
->=20
-> diff --git a/drivers/vfio/pci/vfio_pci_igd.c b/drivers/vfio/pci/vfio_pci_=
-igd.c
-> index 53d97f459252..3088a33af271 100644
-> --- a/drivers/vfio/pci/vfio_pci_igd.c
-> +++ b/drivers/vfio/pci/vfio_pci_igd.c
-> @@ -75,13 +75,7 @@ static int vfio_pci_igd_opregion_init(struct vfio_pci_=
-device *vdev)
->  =09=09return -EINVAL;
->  =09}
-> =20
-> -=09size =3D le32_to_cpu(*(__le32 *)(base + 16));
-> -=09if (!size) {
-> -=09=09memunmap(base);
-> -=09=09return -EINVAL;
-> -=09}
-> -
-> -=09size *=3D 1024; /* In KB */
-> +=09size =3D le32_to_cpu(*(__le32 *)(base + 16)) * 1024; /* In KB */
-> =20
->  =09if (size !=3D OPREGION_SIZE) {
->  =09=09memunmap(base);
+If you give me a proper commit with a commit message I'll put it on top
+as another patch. :)
 
-This seems convoluted, patch 1/5 states "[t]here is no use of memremap()
-to be called with size =3D 0", which we weren't doing thanks to the check
-removed above.  So now we are potentially calling it with zero,
-apparently only to take advantage of this new behavior, and we lose the
-error granularity that previously such a condition failed with an
--EINVAL and now we fail with an -ENONMEM and cannot distinguish whether
-the OpRegion table size was empty or we just weren't able to memremap()
-it.  I don't see how this is an improvement.  Thanks,
-
-Alex
-
+Christian
