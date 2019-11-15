@@ -2,135 +2,140 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE475C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5E4C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5C912073C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F1B82073C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:05:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=unikie-com.20150623.gappssmtp.com header.i=@unikie-com.20150623.gappssmtp.com header.b="GGQXyqfA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BcvIHRMC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727658AbfKOKF1 (ORCPT
+        id S1727685AbfKOKFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:05:27 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35784 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727632AbfKOKFY (ORCPT
+        Fri, 15 Nov 2019 05:05:32 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:21739 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727661AbfKOKFa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:05:24 -0500
-Received: by mail-lj1-f195.google.com with SMTP id r7so10073832ljg.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 02:05:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=unikie-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=E3sXchnQK6r0cbCO41TzSdNyYDZO5b9qiU92SWHzyaY=;
-        b=GGQXyqfAOOdn2W+1sXwtBvsy92bU6TkWIfV4fpktp026z4PB3TSvxZ0SBhT8E7OlT6
-         Q0NPLYkSp6Ly+KCZ0MCiexwh4ckM7I+V5D/eNPIuOF+QJXEDzTa25PYbqdH3XS+QYyRT
-         xK0lc680H8iIyhT8xFqqYqJLoGbSe2S3PGPAlDbsEqKs0yKUCU1msu/kMU7uRfHP/nYE
-         EWYzNYe+dL5s9xxB5FsA14YsJeLZAShYgAhjgagOvHfMwGi47t72O4u5Nk085epZU8J1
-         w7Ms9aP3ZzLHfvR0YEPibjX+UzuHx5M3peE6Hz3bQVElSqHGtAYG8G/LqF6Zf/zBtbzB
-         fIpQ==
+        Fri, 15 Nov 2019 05:05:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573812329;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=cvfme1AzcNxoGDx6pFSOOBu1gZU4WXYpdcNR8/IWBAc=;
+        b=BcvIHRMCqW/GUBxjNEiRH+vlk3XAjVjt+WHC8g+rS8cDB0wIM1YU3+2/koizVDS3gtsRy2
+        54Px5CK0l7SM4QTOlJTllofL4gBC/5oAWNv/yBiBqHBvB2WhJq1mbrc6i1KXyd8aN+XbWk
+        Y8REs2QV/Uka0UsAOFqiBWST87GAPew=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-358-p8MXP1BqO26p13S-E-IF9Q-1; Fri, 15 Nov 2019 05:05:28 -0500
+Received: by mail-wr1-f72.google.com with SMTP id p6so7418832wrs.5
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 02:05:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version:content-transfer-encoding;
-        bh=E3sXchnQK6r0cbCO41TzSdNyYDZO5b9qiU92SWHzyaY=;
-        b=Vs8/oTD2YvLuhoT9CMaQVlxsSI539zwB4/qqNMKf8qomqEZRUIJ0cc7cJ1WdPGzcL9
-         4gOYsF/9V6Rr/+v/Kso2MBg0+MLtiDggJHfNWrhKNx2WZRYOPoH55ozJlCn6x14m1KvK
-         KX9+FVxqnZAcVJIDc5dnh6gJ5Y4CrmAdhj2/A/O20F65MWrC66dNa7lygN/ew254ymuX
-         EYtBqPsnDoQLusJ8OemOx8GAejT28p0DyxAd1pcKW9M06pJug+s7IDkEcPck6KkJan8d
-         MMFpLAMIN2VEgCnMS9BMeupEzlj8V0tNhz9eh8acmVeWI7j0PH7tiZwYC4j5ZUdxHd9G
-         PCJA==
-X-Gm-Message-State: APjAAAU5osjr0Y2SKfqc5pMWA579PQ2JTU1u5enYuR9RuFlaicviYx/Q
-        MHtDTCQ5QmUG3cSWhFkUKyZb6uFqnLfSLw==
-X-Google-Smtp-Source: APXvYqy4I4omiLNNVKrf3idEsLlQPggt3o4md59DtcnBbH4pie88Z1O31ITPk0/nYDiBggFn9sRPNA==
-X-Received: by 2002:a2e:7204:: with SMTP id n4mr9981244ljc.139.1573812318913;
-        Fri, 15 Nov 2019 02:05:18 -0800 (PST)
-Received: from GL-434 ([109.204.235.119])
-        by smtp.gmail.com with ESMTPSA id e14sm3727391ljb.75.2019.11.15.02.05.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 15 Nov 2019 02:05:18 -0800 (PST)
-From:   jouni.hogander@unikie.com (Jouni =?utf-8?Q?H=C3=B6gander?=)
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: Re: [PATCH] drivers/base: Fix memory leak in error paths
-References: <20191114121840.5585-1-jouni.hogander@unikie.com>
-        <20191115032603.GG793701@kroah.com> <878soha7tc.fsf@unikie.com>
-        <20191115082022.GB55909@kroah.com>
-Date:   Fri, 15 Nov 2019 12:05:17 +0200
-In-Reply-To: <20191115082022.GB55909@kroah.com> (Greg Kroah-Hartman's message
-        of "Fri, 15 Nov 2019 16:20:22 +0800")
-Message-ID: <8736epa202.fsf@unikie.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.2 (gnu/linux)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EPis5QKVkSwgsTfXigrJ89vkfY5SjezGgbDiy1oaViM=;
+        b=PogufvvkhD+RYScrK7Y1uICcEMYdetVtAL1RH99YIQgdlhpMVLCp6HH3B8Swb7u9Ke
+         pOvbzi4U+2d+5xOv3awqc4aYMocDkFiB2chX5p02OZeB4sZwuWuw2KUvdEvEz/bzu7vX
+         NmYMBtcnqpiVqtOAkHB28TuONimVUiWHIxp4rEXdzBsawLw7lhqnVcet2c1SYtq2iDIK
+         zDygHRifLLOj1jItwFo1j+9ILU65P4VjNns2NWlp6oo6qNmbkPDwC6sVeRO4C1q6Uqip
+         LjWsQuXKd10Lqzf1bDzYD7IL1jN1WqGZqg7EJKS8HKQzNiCBCP3cZNS+gSBC946lOQ1y
+         OZuw==
+X-Gm-Message-State: APjAAAXaVEb31V22TSVg9Uw22Wz/+spSy86AYX4eosijgwnrp6Mspbaa
+        m1++N1BBNWhQ8ybSRHAA1ylajH1CFfT6BCb8ItVihNXt6TKMaV4QcmSqzvR7LDDbkuzf83AkoiH
+        oP+jl7IjMh5B3rrJL6OBBSs5M
+X-Received: by 2002:a05:600c:2383:: with SMTP id m3mr13066100wma.66.1573812326782;
+        Fri, 15 Nov 2019 02:05:26 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyJ0wkPAdXXktIYGuABy/5WbHWbp0QmKDfIpjL6STL1VEMTvNL1sS1UrBmrDzwWEzVNKBzStg==
+X-Received: by 2002:a05:600c:2383:: with SMTP id m3mr13066061wma.66.1573812326428;
+        Fri, 15 Nov 2019 02:05:26 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:a15b:f753:1ac4:56dc? ([2001:b07:6468:f312:a15b:f753:1ac4:56dc])
+        by smtp.gmail.com with ESMTPSA id b186sm8720442wmb.21.2019.11.15.02.05.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Nov 2019 02:05:25 -0800 (PST)
+Subject: Re: [PATCH v2 06/16] x86/cpu: Clear VMX feature flag if VMX is not
+ fully enabled
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org
+References: <20191021234632.32363-1-sean.j.christopherson@intel.com>
+ <20191022000836.1907-1-sean.j.christopherson@intel.com>
+ <20191025163858.GF6483@zn.tnic> <20191114183238.GH24045@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <5aacaba0-76e2-9824-ebd4-fa510bce712d@redhat.com>
+Date:   Fri, 15 Nov 2019 11:05:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191114183238.GH24045@linux.intel.com>
+Content-Language: en-US
+X-MC-Unique: p8MXP1BqO26p13S-E-IF9Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+On 14/11/19 19:32, Sean Christopherson wrote:
+>>> +=09=09=09pr_err_once("x86/cpu: VMX disabled, IA32_FEATURE_CONTROL MSR =
+unsupported\n");
+>=20
+> My thought for having the print was to alert the user that something is
+> royally borked with their system.  There's nothing the user can do to fix
+> it per se, but it does indicate that either their hardware or the VMM
+> hosting their virtual machine is broken.  So maybe be more explicit about
+> it being a likely hardware/VMM issue?
 
->> >> This memory leak was reported by Syzkaller:
->> >>=20
->> >> BUG: memory leak unreferenced object 0xffff8880675ca008 (size 256):
->> >>   comm "netdev_register", pid 281, jiffies 4294696663 (age 6.808s)
->> >>   hex dump (first 32 bytes):
->> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
->> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
->> >>   backtrace:
->> >>     [<0000000058ca4711>] kmem_cache_alloc_trace+0x167/0x280
->> >>     [<000000002340019b>] device_add+0x882/0x1750
->> >>     [<000000001d588c3a>] netdev_register_kobject+0x128/0x380
->> >>     [<0000000011ef5535>] register_netdevice+0xa1b/0xf00
->> >>     [<000000007fcf1c99>] __tun_chr_ioctl+0x20d5/0x3dd0
->> >>     [<000000006a5b7b2b>] tun_chr_ioctl+0x2f/0x40
->> >>     [<00000000f30f834a>] do_vfs_ioctl+0x1c7/0x1510
->> >>     [<00000000fba062ea>] ksys_ioctl+0x99/0xb0
->> >>     [<00000000b1c1b8d2>] __x64_sys_ioctl+0x78/0xb0
->> >>     [<00000000984cabb9>] do_syscall_64+0x16f/0x580
->> >>     [<000000000bde033d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
->> >>     [<00000000e6ca2d9f>] 0xffffffffffffffff
->> >
->> > How is this a leak?  This is in device_add(), not removing the device.
->> > When the structure really is freed then it can be removed.
->>=20
->> In net/core/net-sysfs.c:netdev_register_kobject device_add allocates
->> dev->p. Now if register_queue_kobjects fails the error path is calling
->> device_del and dev->p is never freed. Proper fix here could be to call
->> put_device after device_del?
->
-> Hm, this sounds like you have a reference count leak here, as
-> put_device() should be properly called already in this case.  You might
-> want to look further to see where exactly the register_queue_kobjects()
-> call fails in order to see if we grabbed a reference we forgot to put
-> back on an error path.
+Yes, good idea.
 
-Ok, did some more debugging on
-this. net/core/net-sysfs.c:netdev_register_kobject is doing
-device_initialize(dev). This is in
-drivers/base/core.c:device_initialize:
+>>> +update_caps:
+>>> +=09if (!cpu_has(c, X86_FEATURE_VMX))
+>>> +=09=09return;
+>>
+>> If this test is just so we can save us the below code, I'd say remove it
+>> for the sake of having less code in that function. The test is cheap and
+>> not on a fast path so who cares if we clear an alrady cleared bit. But
+>> maybe this evolves in the later patches...
+>=20
+> I didn't want to print the "VMX disabled by BIOS..." message if VMX isn't
+> supported in the first place.  Later patches also add more code in this
+> flow, but avoiding the print message is the main motiviation.
 
- * NOTE: Use put_device() to give up your reference instead of freeing
- * @dev directly once you have called this function.
+I agree on this too.
 
-My understanding is that remaining reference on error path is taken by
-device_initialize and as instructed in the note above it should be given
-up using put_device? Tested this and it's fixing the memory leak I found
-in my Syzkaller exercise. Addition to that it seems to be fixing also
-this one:
+Paolo
 
-https://syzkaller.appspot.com/bug?id=3Df5f4af9fb9ffb3112ad6e30f717f769decdc=
-cdfc
+>>> +
+>>> +=09if ((tboot && !(msr & FEATURE_CONTROL_VMXON_ENABLED_INSIDE_SMX)) ||
+>>> +=09    (!tboot && !(msr & FEATURE_CONTROL_VMXON_ENABLED_OUTSIDE_SMX)))=
+ {
+>>> +=09=09pr_err_once("x86/cpu: VMX disabled by BIOS (TXT %s)\n",
+>>> +=09=09=09    tboot ? "enabled" : "disabled");
+>>> +=09=09clear_cpu_cap(c, X86_FEATURE_VMX);
+>>> +=09}
+>>>  }
+>>
+>> --=20
+>> Regards/Gruss,
+>>     Boris.
+>>
+>> https://people.kernel.org/tglx/notes-about-netiquette
+>=20
 
-BR,
-
-Jouni H=C3=B6gander
