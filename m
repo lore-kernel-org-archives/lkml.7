@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9846C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 030AEC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9430E20803
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE02520637
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573798942;
-	bh=5szIoT4JzoYsv4oE8NhLFcI0OGc97tKI2jysUgm1QiU=;
+	s=default; t=1573798944;
+	bh=8IG6tur10nefoM+6Nm28PPgC/jGfCZPjcJ3FKkXeoXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oaFDATQOJ3LuCAHjC1G/Ab4JYRxyvpaaMozBQ9JrWVlFGjcatbcruOvYz6G89K5gE
-	 IfETZs+ogUJhOgOhfMlToZ8e4mdH8l8eX7j7npkfVrys/Ghu6C8ZulMzj6KXRpy/hB
-	 oN4J4YmpWkdui6t5SS5SFd9JjxiVkH0bX1eX5aL8=
+	b=tE2zbrjZ/5R90SvfGpX3QFCmDJV46fVpWSmgcPg49IGE4B7xpSELejqrGA3iI0paF
+	 t+IPJXeASKtzop2RghHqVY2mzxchq0RJzatWcJl2lA/nm8V8Hy+Kj2GBMDYT6l8/IR
+	 k1ezSSMXMFaRT7/94DDkb8zz+tSdO6H1XtcmdVgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbfKOGWU (ORCPT
+        id S1727696AbfKOGWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:22:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51534 "EHLO mail.kernel.org"
+        Fri, 15 Nov 2019 01:22:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727643AbfKOGWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:22:17 -0500
+        id S1727661AbfKOGWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:22:19 -0500
 Received: from localhost (unknown [104.132.150.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EEEB2053B;
-        Fri, 15 Nov 2019 06:22:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DF7720801;
+        Fri, 15 Nov 2019 06:22:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573798936;
-        bh=5szIoT4JzoYsv4oE8NhLFcI0OGc97tKI2jysUgm1QiU=;
+        s=default; t=1573798938;
+        bh=8IG6tur10nefoM+6Nm28PPgC/jGfCZPjcJ3FKkXeoXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WWTAAkxlPJsKwmCcEzqz8F81WNPxmRHjm9gf+0QZT4rpmyhnYTy40YTlYsm9zZV10
-         5lHr1jP0keFIuVWQkkK3KkPoef4IE0iXkb3zAslMQvC4Or1JU+UFjD+2r39pAaYHq1
-         za6EFXzpz1R/6kLNRgICWhUmQfhmYeXi25Efl3vg=
+        b=xof9hdqgZLbqoc3oiVihdrCuJE7dtFge2CiKUjiE0m6dLkC/Iys6xEgXM+ffCLwyJ
+         aolTu9tWZ4TnprhrLqPGjNHi87se6lh4A5eN2srOUl1wdUbsHtr39hd82dKl9/CNqX
+         vJG0kH0Fy7EoE2MuDhmHdDtuVnmClOkTGAk/wJwY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Junaid Shahid <junaids@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.9 19/31] kvm: x86: Do not release the page inside mmu_set_spte()
-Date:   Fri, 15 Nov 2019 14:20:48 +0800
-Message-Id: <20191115062017.497957102@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+899a33dc0fa0dbaf06a6@syzkaller.appspotmail.com,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Jeremy Cline <jcline@redhat.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.9 02/31] Bluetooth: hci_ldisc: Postpone HCI_UART_PROTO_READY bit set in hci_uart_set_proto()
+Date:   Fri, 15 Nov 2019 14:20:31 +0800
+Message-Id: <20191115062010.682028342@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191115062009.813108457@linuxfoundation.org>
 References: <20191115062009.813108457@linuxfoundation.org>
@@ -60,137 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junaid Shahid <junaids@google.com>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-commit 43fdcda96e2550c6d1c46fb8a78801aa2f7276ed upstream.
+commit 56897b217a1d0a91c9920cb418d6b3fe922f590a upstream.
 
-Release the page at the call-site where it was originally acquired.
-This makes the exit code cleaner for most call sites, since they
-do not need to duplicate code between success and the failure
-label.
+task A:                                task B:
+hci_uart_set_proto                     flush_to_ldisc
+ - p->open(hu) -> h5_open  //alloc h5  - receive_buf
+ - set_bit HCI_UART_PROTO_READY         - tty_port_default_receive_buf
+ - hci_uart_register_dev                 - tty_ldisc_receive_buf
+                                          - hci_uart_tty_receive
+				           - test_bit HCI_UART_PROTO_READY
+				            - h5_recv
+ - clear_bit HCI_UART_PROTO_READY             while() {
+ - p->open(hu) -> h5_close //free h5
+				              - h5_rx_3wire_hdr
+				               - h5_reset()  //use-after-free
+                                              }
 
-Signed-off-by: Junaid Shahid <junaids@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+It could use ioctl to set hci uart proto, but there is
+a use-after-free issue when hci_uart_register_dev() fail in
+hci_uart_set_proto(), see stack above, fix this by setting
+HCI_UART_PROTO_READY bit only when hci_uart_register_dev()
+return success.
+
+Reported-by: syzbot+899a33dc0fa0dbaf06a6@syzkaller.appspotmail.com
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Reviewed-by: Jeremy Cline <jcline@redhat.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/kvm/mmu.c         |   18 +++++++-----------
- arch/x86/kvm/paging_tmpl.h |    8 +++-----
- 2 files changed, 10 insertions(+), 16 deletions(-)
 
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -2671,8 +2671,6 @@ static int mmu_set_spte(struct kvm_vcpu
- 		}
+---
+ drivers/bluetooth/hci_ldisc.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+--- a/drivers/bluetooth/hci_ldisc.c
++++ b/drivers/bluetooth/hci_ldisc.c
+@@ -653,15 +653,14 @@ static int hci_uart_set_proto(struct hci
+ 		return err;
+ 
+ 	hu->proto = p;
+-	set_bit(HCI_UART_PROTO_READY, &hu->flags);
+ 
+ 	err = hci_uart_register_dev(hu);
+ 	if (err) {
+-		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
+ 		p->close(hu);
+ 		return err;
  	}
  
--	kvm_release_pfn_clean(pfn);
--
- 	return ret;
- }
- 
-@@ -2707,9 +2705,11 @@ static int direct_pte_prefetch_many(stru
- 	if (ret <= 0)
- 		return -1;
- 
--	for (i = 0; i < ret; i++, gfn++, start++)
-+	for (i = 0; i < ret; i++, gfn++, start++) {
- 		mmu_set_spte(vcpu, start, access, 0, sp->role.level, gfn,
- 			     page_to_pfn(pages[i]), true, true);
-+		put_page(pages[i]);
-+	}
- 
++	set_bit(HCI_UART_PROTO_READY, &hu->flags);
  	return 0;
  }
-@@ -3055,6 +3055,7 @@ static int nonpaging_map(struct kvm_vcpu
- 	if (handle_abnormal_pfn(vcpu, v, gfn, pfn, ACC_ALL, &r))
- 		return r;
  
-+	r = RET_PF_RETRY;
- 	spin_lock(&vcpu->kvm->mmu_lock);
- 	if (mmu_notifier_retry(vcpu->kvm, mmu_seq))
- 		goto out_unlock;
-@@ -3062,14 +3063,11 @@ static int nonpaging_map(struct kvm_vcpu
- 	if (likely(!force_pt_level))
- 		transparent_hugepage_adjust(vcpu, &gfn, &pfn, &level);
- 	r = __direct_map(vcpu, write, map_writable, level, gfn, pfn, prefault);
--	spin_unlock(&vcpu->kvm->mmu_lock);
--
--	return r;
- 
- out_unlock:
- 	spin_unlock(&vcpu->kvm->mmu_lock);
- 	kvm_release_pfn_clean(pfn);
--	return RET_PF_RETRY;
-+	return r;
- }
- 
- 
-@@ -3593,6 +3591,7 @@ static int tdp_page_fault(struct kvm_vcp
- 	if (handle_abnormal_pfn(vcpu, 0, gfn, pfn, ACC_ALL, &r))
- 		return r;
- 
-+	r = RET_PF_RETRY;
- 	spin_lock(&vcpu->kvm->mmu_lock);
- 	if (mmu_notifier_retry(vcpu->kvm, mmu_seq))
- 		goto out_unlock;
-@@ -3600,14 +3599,11 @@ static int tdp_page_fault(struct kvm_vcp
- 	if (likely(!force_pt_level))
- 		transparent_hugepage_adjust(vcpu, &gfn, &pfn, &level);
- 	r = __direct_map(vcpu, write, map_writable, level, gfn, pfn, prefault);
--	spin_unlock(&vcpu->kvm->mmu_lock);
--
--	return r;
- 
- out_unlock:
- 	spin_unlock(&vcpu->kvm->mmu_lock);
- 	kvm_release_pfn_clean(pfn);
--	return RET_PF_RETRY;
-+	return r;
- }
- 
- static void nonpaging_init_context(struct kvm_vcpu *vcpu,
---- a/arch/x86/kvm/paging_tmpl.h
-+++ b/arch/x86/kvm/paging_tmpl.h
-@@ -499,6 +499,7 @@ FNAME(prefetch_gpte)(struct kvm_vcpu *vc
- 	mmu_set_spte(vcpu, spte, pte_access, 0, PT_PAGE_TABLE_LEVEL, gfn, pfn,
- 		     true, true);
- 
-+	kvm_release_pfn_clean(pfn);
- 	return true;
- }
- 
-@@ -650,7 +651,6 @@ static int FNAME(fetch)(struct kvm_vcpu
- 	return ret;
- 
- out_gpte_changed:
--	kvm_release_pfn_clean(pfn);
- 	return RET_PF_RETRY;
- }
- 
-@@ -799,6 +799,7 @@ static int FNAME(page_fault)(struct kvm_
- 			walker.pte_access &= ~ACC_EXEC_MASK;
- 	}
- 
-+	r = RET_PF_RETRY;
- 	spin_lock(&vcpu->kvm->mmu_lock);
- 	if (mmu_notifier_retry(vcpu->kvm, mmu_seq))
- 		goto out_unlock;
-@@ -811,14 +812,11 @@ static int FNAME(page_fault)(struct kvm_
- 			 level, pfn, map_writable, prefault);
- 	++vcpu->stat.pf_fixed;
- 	kvm_mmu_audit(vcpu, AUDIT_POST_PAGE_FAULT);
--	spin_unlock(&vcpu->kvm->mmu_lock);
--
--	return r;
- 
- out_unlock:
- 	spin_unlock(&vcpu->kvm->mmu_lock);
- 	kvm_release_pfn_clean(pfn);
--	return RET_PF_RETRY;
-+	return r;
- }
- 
- static gpa_t FNAME(get_level1_sp_gpa)(struct kvm_mmu_page *sp)
 
 
