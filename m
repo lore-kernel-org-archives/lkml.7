@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 373F8C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C9AC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 077D720637
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A7252073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:21:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573798910;
-	bh=ckjz2sH+WQCTRB2ZN/hdfAWhy/glRwsrLRvWIaMcn+I=;
+	s=default; t=1573798912;
+	bh=esbgX/tXTYhpuERAzD/3OA2d7lleqUxZQkZ/Ly8h7EI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YFJWm1kv2ujpFwrzIRRQmwrAT+jlNzWOo7PHs6ubl6o2aqzvcoslXs0tgbD6P6hfg
-	 ubYWijRGbr6B3ReXm/UP2aFOxD3BS8WmCMc1oorK5JkfOnKTKtpFjaCHV2KJBn3nVB
-	 n86qoQqYwO1PEFStdKUTvYYD2LApeTsGhcG8eu/Q=
+	b=eaKPfsJNt8Uyd/yWzwdTSIaj7pDyt7VOm/RboI7xPCncJr3WL3T5hAmfumSGNy/l0
+	 YOsFmdXWNGrLM0JEfoGOtxpEN4kbBV/mXgDMMAqGj/8WxZbx7VH4BNfjMoMY5mcHe1
+	 u2iQtjdjdfL7wCjMEEccFszS4em/FmaF1T3Crf7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbfKOGVt (ORCPT
+        id S1727476AbfKOGVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:21:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50690 "EHLO mail.kernel.org"
+        Fri, 15 Nov 2019 01:21:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727421AbfKOGVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:21:44 -0500
+        id S1727431AbfKOGVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:21:47 -0500
 Received: from localhost (unknown [104.132.150.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49D3A2053B;
-        Fri, 15 Nov 2019 06:21:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8944920728;
+        Fri, 15 Nov 2019 06:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573798903;
-        bh=ckjz2sH+WQCTRB2ZN/hdfAWhy/glRwsrLRvWIaMcn+I=;
+        s=default; t=1573798906;
+        bh=esbgX/tXTYhpuERAzD/3OA2d7lleqUxZQkZ/Ly8h7EI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U4vsBGFUGZ/EcLdkvRVdsSanz1CpHAYiTsKmhJ9BJJAeVgj6KVeMRRk7VmTd9Vrxj
-         2EecfbaaJRQ6b4kXz4M0S1m/3Stl2WydSWmXYKv+ruFcLCa+o3knRSFNSmgUipzHiR
-         N5bfx0x44U5ZxIUUE9k8J2mm7Jd8/J/P/MYS2v20=
+        b=R7pKQBj/bKvxqYREIVXfjqaCxhc60vus9Qw8lRAA5V8NeEFRGxh0GNCzJXj+L0G4N
+         3EIVLxA+xNaZEAaRq/vTUuQZe1shaLZq15rIj/yD0f9JwqoTFe6m/3oetzK09SLM4i
+         HuLIQLtueDEbXD0hqVHAS1MeKNhqoB9/IKKaF5pQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 06/20] KVM: Introduce kvm_get_arch_capabilities()
-Date:   Fri, 15 Nov 2019 14:20:35 +0800
-Message-Id: <20191115062010.043596165@linuxfoundation.org>
+        stable@vger.kernel.org, Xiaoyao Li <xiaoyao.li@linux.intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 07/20] KVM: x86: Emulate MSR_IA32_ARCH_CAPABILITIES on AMD hosts
+Date:   Fri, 15 Nov 2019 14:20:36 +0800
+Message-Id: <20191115062010.681961506@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191115062006.854443935@linuxfoundation.org>
 References: <20191115062006.854443935@linuxfoundation.org>
@@ -58,60 +62,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Extracted from commit 5b76a3cff011 "KVM: VMX: Tell the nested
-hypervisor to skip L1D flush on vmentry".  We will need this to let a
-nested hypervisor know that we have applied the mitigation for TAA.
+commit 0cf9135b773bf32fba9dd8e6699c1b331ee4b749 upstream.
 
+The CPUID flag ARCH_CAPABILITIES is unconditioinally exposed to host
+userspace for all x86 hosts, i.e. KVM advertises ARCH_CAPABILITIES
+regardless of hardware support under the pretense that KVM fully
+emulates MSR_IA32_ARCH_CAPABILITIES.  Unfortunately, only VMX hosts
+handle accesses to MSR_IA32_ARCH_CAPABILITIES (despite KVM_GET_MSRS
+also reporting MSR_IA32_ARCH_CAPABILITIES for all hosts).
+
+Move the MSR_IA32_ARCH_CAPABILITIES handling to common x86 code so
+that it's emulated on AMD hosts.
+
+Fixes: 1eaafe91a0df4 ("kvm: x86: IA32_ARCH_CAPABILITIES is always supported")
+Cc: stable@vger.kernel.org
+Reported-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Cc: Jim Mattson <jmattson@google.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 4.4: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
  arch/x86/include/asm/kvm_host.h |    1 +
- arch/x86/kvm/vmx.c              |    3 +--
- arch/x86/kvm/x86.c              |   10 ++++++++++
- 3 files changed, 12 insertions(+), 2 deletions(-)
+ arch/x86/kvm/vmx.c              |   14 --------------
+ arch/x86/kvm/x86.c              |   12 ++++++++++++
+ 3 files changed, 13 insertions(+), 14 deletions(-)
 
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -1226,6 +1226,7 @@ void kvm_vcpu_reload_apic_access_page(st
- void kvm_arch_mmu_notifier_invalidate_page(struct kvm *kvm,
- 					   unsigned long address);
+@@ -408,6 +408,7 @@ struct kvm_vcpu_arch {
+ 	u64 smbase;
+ 	bool tpr_access_reporting;
+ 	u64 ia32_xss;
++	u64 arch_capabilities;
  
-+u64 kvm_get_arch_capabilities(void);
- void kvm_define_shared_msr(unsigned index, u32 msr);
- int kvm_set_shared_msr(unsigned index, u64 val, u64 mask);
- 
+ 	/*
+ 	 * Paging state of the vcpu
 --- a/arch/x86/kvm/vmx.c
 +++ b/arch/x86/kvm/vmx.c
-@@ -5079,8 +5079,7 @@ static int vmx_vcpu_setup(struct vcpu_vm
+@@ -546,7 +546,6 @@ struct vcpu_vmx {
+ 	u64 		      msr_guest_kernel_gs_base;
+ #endif
+ 
+-	u64 		      arch_capabilities;
+ 	u64 		      spec_ctrl;
+ 
+ 	u32 vm_entry_controls_shadow;
+@@ -2866,12 +2865,6 @@ static int vmx_get_msr(struct kvm_vcpu *
+ 
+ 		msr_info->data = to_vmx(vcpu)->spec_ctrl;
+ 		break;
+-	case MSR_IA32_ARCH_CAPABILITIES:
+-		if (!msr_info->host_initiated &&
+-		    !guest_cpuid_has_arch_capabilities(vcpu))
+-			return 1;
+-		msr_info->data = to_vmx(vcpu)->arch_capabilities;
+-		break;
+ 	case MSR_IA32_SYSENTER_CS:
+ 		msr_info->data = vmcs_read32(GUEST_SYSENTER_CS);
+ 		break;
+@@ -3028,11 +3021,6 @@ static int vmx_set_msr(struct kvm_vcpu *
+ 		vmx_disable_intercept_for_msr(vmx->vmcs01.msr_bitmap, MSR_IA32_PRED_CMD,
+ 					      MSR_TYPE_W);
+ 		break;
+-	case MSR_IA32_ARCH_CAPABILITIES:
+-		if (!msr_info->host_initiated)
+-			return 1;
+-		vmx->arch_capabilities = data;
+-		break;
+ 	case MSR_IA32_CR_PAT:
+ 		if (vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_IA32_PAT) {
+ 			if (!kvm_mtrr_valid(vcpu, MSR_IA32_CR_PAT, data))
+@@ -5079,8 +5067,6 @@ static int vmx_vcpu_setup(struct vcpu_vm
  		++vmx->nmsrs;
  	}
  
--	if (boot_cpu_has(X86_FEATURE_ARCH_CAPABILITIES))
--		rdmsrl(MSR_IA32_ARCH_CAPABILITIES, vmx->arch_capabilities);
-+	vmx->arch_capabilities = kvm_get_arch_capabilities();
- 
+-	vmx->arch_capabilities = kvm_get_arch_capabilities();
+-
  	vm_exit_controls_init(vmx, vmcs_config.vmexit_ctrl);
  
+ 	/* 22.2.1, 20.8.1 */
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -995,6 +995,16 @@ static u32 emulated_msrs[] = {
+@@ -2080,6 +2080,11 @@ int kvm_set_msr_common(struct kvm_vcpu *
+ 	case MSR_AMD64_BU_CFG2:
+ 		break;
  
- static unsigned num_emulated_msrs;
- 
-+u64 kvm_get_arch_capabilities(void)
-+{
-+	u64 data;
-+
-+	rdmsrl_safe(MSR_IA32_ARCH_CAPABILITIES, &data);
-+
-+	return data;
-+}
-+EXPORT_SYMBOL_GPL(kvm_get_arch_capabilities);
-+
- static bool __kvm_valid_efer(struct kvm_vcpu *vcpu, u64 efer)
++	case MSR_IA32_ARCH_CAPABILITIES:
++		if (!msr_info->host_initiated)
++			return 1;
++		vcpu->arch.arch_capabilities = data;
++		break;
+ 	case MSR_EFER:
+ 		return set_efer(vcpu, msr_info);
+ 	case MSR_K7_HWCR:
+@@ -2354,6 +2359,12 @@ int kvm_get_msr_common(struct kvm_vcpu *
+ 	case MSR_IA32_UCODE_REV:
+ 		msr_info->data = 0x100000000ULL;
+ 		break;
++	case MSR_IA32_ARCH_CAPABILITIES:
++		if (!msr_info->host_initiated &&
++		    !guest_cpuid_has_arch_capabilities(vcpu))
++			return 1;
++		msr_info->data = vcpu->arch.arch_capabilities;
++		break;
+ 	case MSR_MTRRcap:
+ 	case 0x200 ... 0x2ff:
+ 		return kvm_mtrr_get_msr(vcpu, msr_info->index, &msr_info->data);
+@@ -7402,6 +7413,7 @@ int kvm_arch_vcpu_setup(struct kvm_vcpu
  {
- 	if (efer & EFER_FFXSR) {
+ 	int r;
+ 
++	vcpu->arch.arch_capabilities = kvm_get_arch_capabilities();
+ 	kvm_vcpu_mtrr_init(vcpu);
+ 	r = vcpu_load(vcpu);
+ 	if (r)
 
 
