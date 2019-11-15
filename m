@@ -2,172 +2,190 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC35C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B04C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 730532072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81DC02072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:46:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BGAryzbO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbfKOLpN (ORCPT
+        id S1727368AbfKOLqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 06:45:13 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53555 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727122AbfKOLpN (ORCPT
+        Fri, 15 Nov 2019 06:46:12 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24495 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727135AbfKOLqM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 06:45:13 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iVa1Z-0007QU-T6; Fri, 15 Nov 2019 12:44:25 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iVa1Q-0008K2-Ab; Fri, 15 Nov 2019 12:44:16 +0100
-Date:   Fri, 15 Nov 2019 12:44:16 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     mark.rutland@arm.com, alexandre.belloni@bootlin.com,
-        mhocko@suse.com, julien.thierry@arm.com, catalin.marinas@arm.com,
-        christoffer.dall@arm.com, dhowells@redhat.com,
-        yamada.masahiro@socionext.com, ryabinin.a.a@gmail.com,
-        glider@google.com, kvmarm@lists.cs.columbia.edu, corbet@lwn.net,
-        liuwenliang@huawei.com, daniel.lezcano@linaro.org,
-        linux@armlinux.org.uk, kasan-dev@googlegroups.com,
-        geert@linux-m68k.org, dvyukov@google.com,
-        bcm-kernel-feedback-list@broadcom.com, drjones@redhat.com,
-        vladimir.murzin@arm.com, keescook@chromium.org, arnd@arndb.de,
-        marc.zyngier@arm.com, andre.przywara@arm.com, pombredanne@nexb.com,
-        jinb.park7@gmail.com, tglx@linutronix.de, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, nico@fluxnic.net,
-        gregkh@linuxfoundation.org, ard.biesheuvel@linaro.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rob@landley.net, philip@cog.systems, akpm@linux-foundation.org,
-        thgarnie@google.com, kirill.shutemov@linux.intel.com
-Subject: Re: [PATCH v6 0/6] KASan for arm
-Message-ID: <20191115114416.ba6lmwb7q4gmepzc@pengutronix.de>
-References: <20190617221134.9930-1-f.fainelli@gmail.com>
- <20191114181243.q37rxoo3seds6oxy@pengutronix.de>
- <7322163f-e08e-a6b7-b143-e9d59917ee5b@gmail.com>
- <20191115070842.2x7psp243nfo76co@pengutronix.de>
+        Fri, 15 Nov 2019 06:46:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573818371;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp:autocrypt:autocrypt;
+        bh=yzZ0jtfn5strM3JCjjkGB7EUskXptCWUnHPIG0tX/HQ=;
+        b=BGAryzbO5ymQF1dc4+iPEA3/d14O/u+S8R5g6PItYIrolFDjksrYuxOg5BaTWCoLwilT4A
+        5qLmT3D+FTg18nJSh/yViwm4urCj8aF2b72MAPUQWxq6fQG6mkq9rXutMFN0eusxBX5+Dz
+        Ud4huzbr7+R2xWY9NnbbUlkxC4ht2LI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-218-Xc862GAZOhipUkmiDNaT7g-1; Fri, 15 Nov 2019 06:46:06 -0500
+X-MC-Unique: Xc862GAZOhipUkmiDNaT7g-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7440E1802CE3;
+        Fri, 15 Nov 2019 11:46:05 +0000 (UTC)
+Received: from [10.10.120.209] (ovpn-120-209.rdu2.redhat.com [10.10.120.209])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 673285ED37;
+        Fri, 15 Nov 2019 11:45:55 +0000 (UTC)
+Subject: Re: [Patch v2 2/2] KVM: x86: deliver KVM IOAPIC scan request to
+ target vCPUs
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mtosatti@redhat.com,
+        rkrcmar@redhat.com, vkuznets@redhat.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org
+References: <1573131223-5685-1-git-send-email-nitesh@redhat.com>
+ <1573131223-5685-3-git-send-email-nitesh@redhat.com>
+ <62be5025-374b-6837-77dd-05ab2148f295@redhat.com>
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ VujM7c/b4pps
+Organization: Red Hat Inc,
+Message-ID: <26daac23-6605-07ee-48f1-f8941fc02f64@redhat.com>
+Date:   Fri, 15 Nov 2019 06:45:52 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115070842.2x7psp243nfo76co@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 12:28:52 up  2:47, 19 users,  load average: 0.00, 0.04, 0.03
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <62be5025-374b-6837-77dd-05ab2148f295@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Mimecast-Spam-Score: 0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="ev9yP9NJVJptF3vr9kX3lQaV6rVqg1Mns"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Florian,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--ev9yP9NJVJptF3vr9kX3lQaV6rVqg1Mns
+Content-Type: multipart/mixed; boundary="8WXuoP5PpXUDATB37YahWdinwChXZKhVS";
+ protected-headers="v1"
+From: Nitesh Narayan Lal <nitesh@redhat.com>
+To: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, mtosatti@redhat.com, rkrcmar@redhat.com,
+ vkuznets@redhat.com, sean.j.christopherson@intel.com, wanpengli@tencent.com,
+ jmattson@google.com, joro@8bytes.org
+Message-ID: <26daac23-6605-07ee-48f1-f8941fc02f64@redhat.com>
+Subject: Re: [Patch v2 2/2] KVM: x86: deliver KVM IOAPIC scan request to
+ target vCPUs
+References: <1573131223-5685-1-git-send-email-nitesh@redhat.com>
+ <1573131223-5685-3-git-send-email-nitesh@redhat.com>
+ <62be5025-374b-6837-77dd-05ab2148f295@redhat.com>
+In-Reply-To: <62be5025-374b-6837-77dd-05ab2148f295@redhat.com>
 
-On 19-11-15 08:08, Marco Felsch wrote:
-> Hi Florian,
-> 
-> On 19-11-14 15:01, Florian Fainelli wrote:
-> > Hello Marco,
-> > 
-> > On 11/14/19 10:12 AM, Marco Felsch wrote:
-> > > Hi Florian,
-> > > 
-> > > first of all, many thanks for your work on this series =) I picked your
-> > > and Arnd patches to make it compilable. Now it's compiling but my imx6q
-> > > board didn't boot anymore. I debugged the code and found that the branch
-> > > to 'start_kernel' won't be reached
-> > > 
-> > > 8<------- arch/arm/kernel/head-common.S -------
-> > > ....
-> > > 
-> > > #ifdef CONFIG_KASAN
-> > >         bl      kasan_early_init
-> > > #endif
-> > > 	mov     lr, #0
-> > > 	b       start_kernel
-> > > ENDPROC(__mmap_switched)
-> > > 
-> > > ....
-> > > 8<----------------------------------------------
-> > > 
-> > > Now, I found also that 'KASAN_SHADOW_OFFSET' isn't set due to missing
-> > > 'CONFIG_KASAN_SHADOW_OFFSET' and so no '-fasan-shadow-offset=xxxxx' is
-> > > added. Can that be the reason why my board isn't booted anymore?
-> > 
-> > The latest that I have is here, though not yet submitted since I needed
-> > to solve one issue on a specific platform with a lot of memory:
-> > 
-> > https://github.com/ffainelli/linux/pull/new/kasan-v7
-> 
-> Thanks for that hint, I will try this series too :) I read that you
-> wanna prepare a v7 but didn't found it ^^
-> 
-> > Can you share your branch as well? I did not pick all of Arnd's patches
-> > since some appeared to be seemingly independent from KASan on ARM. This
-> > is the KASAN related options that are set in my configuration:
-> 
-> Of course I will push it to github and inform you shortly.
+--8WXuoP5PpXUDATB37YahWdinwChXZKhVS
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
 
-Here comes the link:
-https://github.com/medude/linux/tree/v5.4/topic/kasan-arm.v7
 
-I just applied Arnds Patche which you didn't added into your v7.
+On 11/15/19 5:26 AM, Paolo Bonzini wrote:
+> On 07/11/19 13:53, Nitesh Narayan Lal wrote:
+>> In IOAPIC fixed delivery mode instead of flushing the scan
+>> requests to all vCPUs, we should only send the requests to
+>> vCPUs specified within the destination field.
+>>
+>> This patch introduces kvm_get_dest_vcpus_mask() API which
+>> retrieves an array of target vCPUs by using
+>> kvm_apic_map_get_dest_lapic() and then based on the
+>> vcpus_idx, it sets the bit in a bitmap. However, if the above
+>> fails kvm_get_dest_vcpus_mask() finds the target vCPUs by
+>> traversing all available vCPUs. Followed by setting the
+>> bits in the bitmap.
+> Queued, thanks.  I just took the liberty of renaming the function to
+> kvm_bitmap_or_dest_vcpus.
 
-> > grep KASAN build/linux-custom/.config
-> > CONFIG_HAVE_ARCH_KASAN=y
-> > CONFIG_CC_HAS_KASAN_GENERIC=y
-> > CONFIG_KASAN=y
-> > CONFIG_KASAN_GENERIC=y
-> > CONFIG_KASAN_OUTLINE=y
-> > # CONFIG_KASAN_INLINE is not set
-> > CONFIG_KASAN_STACK=1
-> > CONFIG_TEST_KASAN=m
-> 
-> My config is:
-> 
-> CONFIG_HAVE_ARCH_KASAN=y
-> CONFIG_CC_HAS_KASAN_GENERIC=y
-> CONFIG_KASAN=y
-> CONFIG_KASAN_GENERIC=y
-> CONFIG_KASAN_OUTLINE=y
-> # CONFIG_KASAN_INLINE is not set
-> CONFIG_KASAN_STACK=1
-> # CONFIG_TEST_KASAN is not set
-> 
-> > are you using something different by any chance?
-> 
-> Unfortunately not.
+Sure, thank you.
 
-With your v7 it is working on my imx6 but unfortunately I can't run my
-gstreamer testcase. My CPU load goes to 100% after starting gstreamer
-and nothing happens.. But the test_kasan module works =) So I decided to
-check a imx6quadplus but this target did not boot.. I used another
-toolchain for the imx6quadplus gcc-9 instead of gcc-8. So it seems that
-something went wrong during compilation. Because you didn't changed
-something within the logic.
+>
+> Paolo
+>
+--=20
+Nitesh
 
-I wonder why we must not define the CONFIG_KASAN_SHADOW_OFFSET for arm.
 
-Regards,
-  Marco
+--8WXuoP5PpXUDATB37YahWdinwChXZKhVS--
 
-> Regards,
->   Marco
-> 
-> > -- 
-> > Florian
-> > 
-> 
+--ev9yP9NJVJptF3vr9kX3lQaV6rVqg1Mns
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl3Oj/AACgkQo4ZA3AYy
+ozka4hAAlgxk+Nnrf668+xD1uOLtFPhZjA3C29qtTGzZDxL6SkQj/GVVCcN42Vi9
+0wKGeZSuVkFd7DJbtn/u1WQNCSahOIzqSrJ4HNTBcqxe/X+ZaIBha9cgBFa2djvy
+GjCbKZ0ZIVEc17wprQJoICWNWqqsLxMctQWrjlVDVQbHAwV0qHqq2wdnr0TkU+Hy
+IaclxBlIMpNjVUjpdJlj2zFphXDwrMB0sTsf5c7KTqmxoSnaWVxgXeJS3HD9MLQ4
+08+jQFekiu98u5VrmnTOgrMr9mThip3gQlVs7WG5VWJHT+Q/yDjZu4r6ZDHlxB2K
+YfdMOo9vRgbk+XxaxyIa2q2T+ciar8ZK7llBkGOziTf3N6IWO5CMARpO2DV1dEZH
+Hw/OCFuOKFh7H0e06aPF3YZiX72PWPsKxLu7Yyl0l/9IC/wmU6qqa7Q5Fh5HsTwc
+T/5VBcklFsYWEEVgRXeip7XLjrDNVkv1uGRvEtkCY5crLZU23iSiDygqcFvwYlFH
+EGlw/NQw/tXiKL0nSSAA+LW7sIKLFiDJCyR+s0goT2b83qAlAKX+mqDMK5SjMg/D
+/Q26kiBtTnPrnPFOfskQ5IVYaZIpT1yAjAGBFNrXpvS1RiD7gCRqJybfFZipeVp6
+BkUAnvcsvEKqBcICiMwhErxwlHJYQCt0TYtEwyxp5oY01gbU7vs=
+=gN4K
+-----END PGP SIGNATURE-----
+
+--ev9yP9NJVJptF3vr9kX3lQaV6rVqg1Mns--
+
