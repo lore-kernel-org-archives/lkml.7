@@ -2,80 +2,111 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16618C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC66C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E038F2073C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12CDB20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:44:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DyoReDyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727625AbfKOJoa (ORCPT
+        id S1727421AbfKOJo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:44:30 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:56755 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbfKOJo3 (ORCPT
+        Fri, 15 Nov 2019 04:44:57 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54287 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbfKOJo4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:44:29 -0500
-Received: from fsav102.sakura.ne.jp (fsav102.sakura.ne.jp [27.133.134.229])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id xAF9hluQ013037;
-        Fri, 15 Nov 2019 18:43:47 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav102.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav102.sakura.ne.jp);
- Fri, 15 Nov 2019 18:43:47 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav102.sakura.ne.jp)
-Received: from [192.168.1.9] (softbank126040052248.bbtec.net [126.40.52.248])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id xAF9hfEU013011
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Fri, 15 Nov 2019 18:43:46 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: unregister_netdevice: waiting for DEV to become free (2)
-To:     =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
-        ddstreet@ieee.org, Dmitry Vyukov <dvyukov@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        bpf <bpf@vger.kernel.org>, Yonghong Song <yhs@fb.com>
-References: <00000000000056268e05737dcb95@google.com>
- <0000000000007d22100573d66078@google.com>
- <063a57ba-7723-6513-043e-ee99c5797271@I-love.SAKURA.ne.jp>
- <CAADnVQJ7BZMVSt9on4updWrWsFWq6b5J1qEGwTdGYV+BLqH7tg@mail.gmail.com>
- <87imopgere.fsf@toke.dk>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <6f69f704-b51d-c3cb-02c6-8e6eb93f4194@i-love.sakura.ne.jp>
-Date:   Fri, 15 Nov 2019 18:43:36 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <87imopgere.fsf@toke.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 15 Nov 2019 04:44:56 -0500
+Received: by mail-wm1-f66.google.com with SMTP id z26so8957775wmi.4;
+        Fri, 15 Nov 2019 01:44:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=s61crLo7rMvO8Wf80iBrPDgDwSffbeyNgj2v4Ncj5Ag=;
+        b=DyoReDyyhRBmrZaTauJCDmNm+/tlTd3FWW/ZoNYN05xqz6RvoflkhN+J91NI8ye6E4
+         5/VSJXf/6UpCZPNIno3j6M4oUR2TN3R+xG9uV6Fc3RwJcqyasO/Lqw71+d4uNVMle4Vz
+         61PGIXq+qSJkhUU3SK7GYZbuYMT0KFN7lrqURh4wg1vR0F7fedMlJ0l/3wDbguRCJI1u
+         xRYQd3W09q1P5EH2j6QOz/rYwK6YBNOTwC83douYCfnHnJNypcE64rDt8sZuHrCS+hXp
+         f8YZ1WVWZfn1vc1IoCQCk+9DvU+dANWjX92j41uXBeJfn4HWvfOSeikJG/402s4DNYv9
+         Q03w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=s61crLo7rMvO8Wf80iBrPDgDwSffbeyNgj2v4Ncj5Ag=;
+        b=M2B36gHIJUp18WQ/tOtESlB8QMI9pP7JmCDxGOQ5e0+dzIJVI+GsA1/GiI+czh0Ufs
+         NfREdOSBIQqT4FpzweWn/Y802YoP+RuSqGTKPLkDqKwWSN1uLZCep7tP8rMX7EB4t/+H
+         XcCnGw9bjtp8ZkdQleMEO5CiaWd8itbFxDgFoSmpSjKK2263lJC4IbrWQOeCkyn4p4WU
+         dPWMAEG9PFeqLiBXTr1feRCn8qIiIK/irRzOj1BOflYKEoMvWlrhr9UNFJZihD48VBbj
+         APJbYB7SMvI4O5vTRE3djQuDupyaM7q8wUirrYDBd5ndzd2XmD9Rf2NuKVIRODeMrNp7
+         uwqA==
+X-Gm-Message-State: APjAAAXs6q29fyDURtwK1hWK0ysQXLP29iC/TOn09fWAKWGP6lv+WNJi
+        NE8Ea7tblI2+VkkgRqyfJdbJuLTx
+X-Google-Smtp-Source: APXvYqyU+TVj8L3P31QRcrvtWrtvI3pOCkxyInBkWrRnjj5g3p+UdchNp9kkKhraOwu7Mnb6ySx4KQ==
+X-Received: by 2002:a7b:cc8b:: with SMTP id p11mr13682877wma.38.1573811094469;
+        Fri, 15 Nov 2019 01:44:54 -0800 (PST)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id d13sm10097783wrq.51.2019.11.15.01.44.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 Nov 2019 01:44:53 -0800 (PST)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, rkrcmar@redhat.com,
+        kvm@vger.kernel.org
+Subject: [GIT PULL] More KVM fixes for 5.4-rc8
+Date:   Fri, 15 Nov 2019 10:44:52 +0100
+Message-Id: <1573811092-12834-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello.
+Linus,
 
-syzbot is still reporting that bpf(BPF_MAP_UPDATE_ELEM) causes
-unregister_netdevice() to hang. It seems that commit 546ac1ffb70d25b5
-("bpf: add devmap, a map for storing net device references") assigned
-dtab->netdev_map[i] at dev_map_update_elem() but commit 6f9d451ab1a33728
-("xdp: Add devmap_hash map type for looking up devices by hashed index")
-forgot to assign dtab->netdev_map[idx] at __dev_map_hash_update_elem()
-when dev is newly allocated by __dev_map_alloc_node(). As far as I and
-syzbot tested, https://syzkaller.appspot.com/x/patch.diff?x=140dd206e00000
-can avoid the problem, but I don't know whether this is right location to
-assign it. Please check and fix.
+The following changes since commit 8c5bd25bf42effd194d4b0b43895c42b374e620b:
 
+  Merge tag 'for-linus' of git://git.kernel.org/pub/scm/virt/kvm/kvm (2019-11-12 13:19:15 -0800)
+
+are available in the git repository at:
+
+
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+
+for you to fetch changes up to 9cb09e7c1c9af2968d5186ef9085f05641ab65d9:
+
+  KVM: Add a comment describing the /dev/kvm no_compat handling (2019-11-15 10:14:04 +0100)
+
+----------------------------------------------------------------
+* Fixes for CONFIG_KVM_COMPAT=n
+* Two updates to the IFU erratum
+* selftests build fix
+* Brown paper bag fix
+
+----------------------------------------------------------------
+Marc Zyngier (2):
+      KVM: Forbid /dev/kvm being opened by a compat task when CONFIG_KVM_COMPAT=n
+      KVM: Add a comment describing the /dev/kvm no_compat handling
+
+Paolo Bonzini (1):
+      kvm: x86: disable shattered huge page recovery for PREEMPT_RT.
+
+Sean Christopherson (1):
+      KVM: x86/mmu: Take slots_lock when using kvm_mmu_zap_all_fast()
+
+Vitaly Kuznetsov (1):
+      selftests: kvm: fix build with glibc >= 2.30
+
+Xiaoyao Li (1):
+      KVM: X86: Reset the three MSR list number variables to 0 in kvm_init_msr_list()
+
+ arch/x86/kvm/mmu.c                       | 10 +++++++---
+ arch/x86/kvm/x86.c                       |  4 ++++
+ tools/testing/selftests/kvm/lib/assert.c |  4 ++--
+ virt/kvm/kvm_main.c                      | 15 ++++++++++++++-
+ 4 files changed, 27 insertions(+), 6 deletions(-)
