@@ -2,139 +2,193 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E095C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 513C6C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD6220732
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:41:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oFnfgMzx"
+	by mail.kernel.org (Postfix) with ESMTP id 2FFB22073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:43:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbfKOJlw (ORCPT
+        id S1727306AbfKOJnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:41:52 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44904 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfKOJlw (ORCPT
+        Fri, 15 Nov 2019 04:43:22 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:42897 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfKOJnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:41:52 -0500
-Received: by mail-wr1-f67.google.com with SMTP id f2so10205052wrs.11;
-        Fri, 15 Nov 2019 01:41:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=raVzr0tabM83QSHsfKixBwNELZO9Vyk/jj/E9lAiCR0=;
-        b=oFnfgMzxXOQxedprb3Mk34PO+0v/RYSoPBLuk85J7t79gw7Gi90N3jwImfyiwFBVZR
-         wpukRr0ql+txojQU66IGeSyxhfw60CPuVATdm1AHAVcHP/dQXo7bPGQwKnAbNNJtZ+eV
-         5q0grTb7nPGexVLjRRwpC2qyBoqLpskJ2+tYfTPFNPhuZ3QGLrI3yzhbwD1Hee+QK5uW
-         UrM/bxsLer/roM2ZXl4gW7SnHNkmFxWwPjw/5NPX1c4nNYdyrpStaohT+2nKIHNDhqW9
-         y/nPY2AlDO/mJtkdeKxxyIIpo6YbYay+LUkmmtKuRiomE59P39p3V6L1WHCsy3HobMqA
-         WkTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=raVzr0tabM83QSHsfKixBwNELZO9Vyk/jj/E9lAiCR0=;
-        b=FyfCN9FOj94EnmzNvCxoWWA5I0Uo9b4X+0dglHFPGl/8D/9sri+9rPwZzs4mwQymF3
-         EoKyWl2KWMptigRaIC1N3NmIZAd/0o+nQUQeb84HinXrP0F+7qyhnJT8HIsnTH+lZ21a
-         hoBjiypConNtceEtIez/bvi/BQOvntDzZYOic8PwpS5vW79+giW6HOBPA9h81UNxFR3e
-         B+WxkPS2TEEKu27QKMmgoZXuDwDbxNqcyVSa15tXYXeV3aG83204yBomNKSKGinWVwjw
-         kJ7j8/5WfaIedkeCoPTiuLQZoQJgB1HRO5lnlIwrbdwq2J7N2hmgisVqfbuFU6PqWDwM
-         OiBQ==
-X-Gm-Message-State: APjAAAVZCq+lus6mOJJ/tFEdFNzUOI7hjQLoCQ7KGh6qYRjVVuDqScbl
-        7xv+50EZzEUatqi2d81Z6Wk=
-X-Google-Smtp-Source: APXvYqx14cOUJJjazUVP2HLAukJO7YcUgUQgkmxMJqpI8QWaa3dfienDYjxLvA3edilyh0uFlMU+WQ==
-X-Received: by 2002:adf:fd91:: with SMTP id d17mr13829654wrr.214.1573810910077;
-        Fri, 15 Nov 2019 01:41:50 -0800 (PST)
-Received: from localhost ([46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id w81sm10504669wmg.5.2019.11.15.01.41.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 01:41:48 -0800 (PST)
-Date:   Fri, 15 Nov 2019 10:41:41 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Rob Herring <robherring2@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: linux-next: manual merge of the pwm tree with the devicetree tree
-Message-ID: <20191115094141.GA825257@ulmo>
-References: <20191115154456.244c27e4@canb.auug.org.au>
+        Fri, 15 Nov 2019 04:43:22 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iVY8E-0004Mi-Pw; Fri, 15 Nov 2019 10:43:10 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 727C81C08AC;
+        Fri, 15 Nov 2019 10:43:10 +0100 (CET)
+Date:   Fri, 15 Nov 2019 09:43:10 -0000
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/kprobes] x86/mm: Remove set_kernel_text_r[ow]()
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191111132457.819095320@infradead.org>
+References: <20191111132457.819095320@infradead.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="17pEHd4RhPHOinZp"
-Content-Disposition: inline
-In-Reply-To: <20191115154456.244c27e4@canb.auug.org.au>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Message-ID: <157381099005.29467.16858532825273379880.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the core/kprobes branch of tip:
 
---17pEHd4RhPHOinZp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Commit-ID:     1091902b2bd0075178fa9181adbc988b85a0116a
+Gitweb:        https://git.kernel.org/tip/1091902b2bd0075178fa9181adbc988b85a0116a
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Mon, 02 Sep 2019 10:16:12 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 15 Nov 2019 09:07:42 +01:00
 
-On Fri, Nov 15, 2019 at 03:44:56PM +1100, Stephen Rothwell wrote:
-> Hi all,
->=20
-> Today's linux-next merge of the pwm tree got a conflict in:
->=20
->   Documentation/devicetree/bindings/pwm/pwm-stm32.txt
->=20
-> between commit:
->=20
->   56fb34d86e87 ("dt-bindings: mfd: Convert stm32 timers bindings to json-=
-schema")
->=20
-> from the devicetree tree and commit:
->=20
->   4205e356285e ("dt-bindings: pwm-stm32: Document pinctrl sleep state")
->=20
-> from the pwm tree.
->=20
-> I fixed it up (I just deleted the file - more fixup is probably required)
-> and can carry the fix as necessary. This is now fixed as far as linux-next
-> is concerned, but any non trivial conflicts should be mentioned to your
-> upstream maintainer when your tree is submitted for merging.  You may
-> also want to consider cooperating with the maintainer of the conflicting
-> tree to minimise any particularly complex conflicts.
+x86/mm: Remove set_kernel_text_r[ow]()
 
-It should be trivial to rewrite the sleep state patch on top of the
-json-schema conversion and then take that version into the devicetree
-tree.
+With the last and only user of these functions gone (ftrace) remove
+them as well to avoid ever growing new users.
 
-Fabrice, can you resend that patch based on the devicetree tree?
+Tested-by: Alexei Starovoitov <ast@kernel.org>
+Tested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Alexei Starovoitov <ast@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20191111132457.819095320@infradead.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/include/asm/set_memory.h |  2 +--
+ arch/x86/mm/init_32.c             | 28 +-----------------------
+ arch/x86/mm/init_64.c             | 36 +------------------------------
+ 3 files changed, 66 deletions(-)
 
-Thierry
-
---17pEHd4RhPHOinZp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3OctIACgkQ3SOs138+
-s6ERjA/+MZo1LpZ+YQB6Ncd81YjhN80RZ1LbNTpoDJYuCNYW7I/66ZiccYv8gQJo
-n34kwYW4tVMMP8Apj0hfB+t3P7Z/YEwkNlK9dvVZtt2fYVjBvbldtw6FloVfbKwH
-2ygGCJ/kse/Ginus9RjWWnLKpgDEODA34oyL5Ctf6sE2+RKhMUbPmsBCC2YSM1ZI
-4Zgu5rFY4BdYRzmjbk3gCNaSCy15lotIy/lO3GGmsQvesIMiFu+r6/7qufNyLrPS
-EjpPg1/ijacFClElyd5dtDUO8LplzO5T6VIIYNji/iG5GUVw1lrlRa467zTSa6Q7
-70/F9L1YnQMEZZo/NEt+4a2oN30ZTbkX7ARcnO61xqchwXEa+NO9YU6PGGo/7Loa
-k9l24F0+FNgQNraVCnPcXCYjC1D53DFfUAjDZIGMmeVDj6eDQztZShDJ9H1ObbMQ
-yNJNDn1LgwT+tC4ONL9qcu3Z5Hhd8exk6s1vhtKNT5hYm7FMxTNDpfeqGmTpZuDB
-w61zmQ1PIyywqV/G7YH6zgQKSDuxtxqZnntobsIR0KMsm53w8Ps8QvlFGz2Cjgh8
-KOqbnFNoEjSvzMYwHsIEuetfZtxj3bv9zJGX3a45GDMSThoAEkBIIv9FRLFllAYU
-Atmwfxg+tkaqg6ePpwa9G6ZkWAYXN0sH5noud56Ravh6uhNH9Bk=
-=Ancq
------END PGP SIGNATURE-----
-
---17pEHd4RhPHOinZp--
+diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
+index 2ee8e46..64c3dce 100644
+--- a/arch/x86/include/asm/set_memory.h
++++ b/arch/x86/include/asm/set_memory.h
+@@ -81,8 +81,6 @@ int set_direct_map_invalid_noflush(struct page *page);
+ int set_direct_map_default_noflush(struct page *page);
+ 
+ extern int kernel_set_to_readonly;
+-void set_kernel_text_rw(void);
+-void set_kernel_text_ro(void);
+ 
+ #ifdef CONFIG_X86_64
+ static inline int set_mce_nospec(unsigned long pfn)
+diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
+index 930edeb..e9f239e 100644
+--- a/arch/x86/mm/init_32.c
++++ b/arch/x86/mm/init_32.c
+@@ -874,34 +874,6 @@ void arch_remove_memory(int nid, u64 start, u64 size,
+ 
+ int kernel_set_to_readonly __read_mostly;
+ 
+-void set_kernel_text_rw(void)
+-{
+-	unsigned long start = PFN_ALIGN(_text);
+-	unsigned long size = PFN_ALIGN(_etext) - start;
+-
+-	if (!kernel_set_to_readonly)
+-		return;
+-
+-	pr_debug("Set kernel text: %lx - %lx for read write\n",
+-		 start, start+size);
+-
+-	set_pages_rw(virt_to_page(start), size >> PAGE_SHIFT);
+-}
+-
+-void set_kernel_text_ro(void)
+-{
+-	unsigned long start = PFN_ALIGN(_text);
+-	unsigned long size = PFN_ALIGN(_etext) - start;
+-
+-	if (!kernel_set_to_readonly)
+-		return;
+-
+-	pr_debug("Set kernel text: %lx - %lx for read only\n",
+-		 start, start+size);
+-
+-	set_pages_ro(virt_to_page(start), size >> PAGE_SHIFT);
+-}
+-
+ static void mark_nxdata_nx(void)
+ {
+ 	/*
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index dcb9bc9..b326f14 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -1260,42 +1260,6 @@ void __init mem_init(void)
+ 
+ int kernel_set_to_readonly;
+ 
+-void set_kernel_text_rw(void)
+-{
+-	unsigned long start = PFN_ALIGN(_text);
+-	unsigned long end = PFN_ALIGN(_etext);
+-
+-	if (!kernel_set_to_readonly)
+-		return;
+-
+-	pr_debug("Set kernel text: %lx - %lx for read write\n",
+-		 start, end);
+-
+-	/*
+-	 * Make the kernel identity mapping for text RW. Kernel text
+-	 * mapping will always be RO. Refer to the comment in
+-	 * static_protections() in pageattr.c
+-	 */
+-	set_memory_rw(start, (end - start) >> PAGE_SHIFT);
+-}
+-
+-void set_kernel_text_ro(void)
+-{
+-	unsigned long start = PFN_ALIGN(_text);
+-	unsigned long end = PFN_ALIGN(_etext);
+-
+-	if (!kernel_set_to_readonly)
+-		return;
+-
+-	pr_debug("Set kernel text: %lx - %lx for read only\n",
+-		 start, end);
+-
+-	/*
+-	 * Set the kernel identity mapping for text RO.
+-	 */
+-	set_memory_ro(start, (end - start) >> PAGE_SHIFT);
+-}
+-
+ void mark_rodata_ro(void)
+ {
+ 	unsigned long start = PFN_ALIGN(_text);
