@@ -2,71 +2,154 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBF0C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E20F4C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2A32072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5DA420723
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:50:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dUOQQA7I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfKODn2 (ORCPT
+        id S1727050AbfKODuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 22:43:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41792 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726549AbfKODn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 22:43:27 -0500
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B301D20723;
-        Fri, 15 Nov 2019 03:43:26 +0000 (UTC)
-Date:   Thu, 14 Nov 2019 22:43:24 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Viktor Rosendahl (BMW)" <viktor.rosendahl@gmail.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: Re: linux-next: build warning after merge of the ftrace tree
-Message-ID: <20191114224324.108486d8@oasis.local.home>
-In-Reply-To: <20191115140213.74c5efe7@canb.auug.org.au>
-References: <20191115140213.74c5efe7@canb.auug.org.au>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 14 Nov 2019 22:50:21 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46841 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbfKODuV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 22:50:21 -0500
+Received: by mail-pl1-f193.google.com with SMTP id l4so3696200plt.13
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 19:50:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aoHM/+WaO5NdDyBd89fOija9I2bAkO5UR3LO1LNuzn0=;
+        b=dUOQQA7I7azOiR9oYN73mh4AZ7L7cneL2H8q46OW5PvCuk7dl9oV65Fc+ofLVKwnIi
+         Yy6JeJ10UHl7RfPgdOgzK+SwTxcBqZ8mj79n7+x/AWeshU0dUzIquTqScneSspZhEPoZ
+         pMpJtQLv0TFtdrkZ4M479Zl0/TRTW1wrbrXPs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aoHM/+WaO5NdDyBd89fOija9I2bAkO5UR3LO1LNuzn0=;
+        b=aDJjMaQNyCjlCjf+j0+iCnZgbPHjvUQ+KCotF5IVR78z21AnGE9Wr3xvwBCmaGSjvW
+         4Q+wZWIKz93p+0AqE/1DGvrKpKoZCS0aRDhYNcQWQbBrmB6bkNAmzCwjgSpO5OUFH/39
+         fVS2cR5ZgsBpzgvrGs+IiVR8mnREk4zc+5NiyFss5xzAQ1XLIgy+i8SCxKtB7eqrzWRX
+         9K+1yktnPKN2Re+mPVwkK0b+tyVb0dQINZCcysE/L+0U9G0z1LQecKHciHfL5yKtvEcy
+         9XGm/a2BZmkL9hPvDVwqdGcmfv/YuRZZV7HpVOG0cBeClNjhs/Db4cLJsw1XsgK+lbLx
+         glsQ==
+X-Gm-Message-State: APjAAAWbplegaCbijqRWEyhuNVkrPVnzSitVpFnsYUJnC8RoDNqa+5sn
+        tgD8QEZAF11BpBPbvzjpR9AEBA==
+X-Google-Smtp-Source: APXvYqx+X3ULKqDfunR2Ia4GXkAkz4kASd163UXphAsWQ45xDJIJVyxkDBfUOIorUFH8cV8xizrlWg==
+X-Received: by 2002:a17:902:6a88:: with SMTP id n8mr452520plk.226.1573789820467;
+        Thu, 14 Nov 2019 19:50:20 -0800 (PST)
+Received: from acourbot.tok.corp.google.com ([2401:fa00:8f:203:93d9:de4d:e834:3086])
+        by smtp.gmail.com with ESMTPSA id f7sm9900736pfa.150.2019.11.14.19.50.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 19:50:19 -0800 (PST)
+From:   Alexandre Courbot <acourbot@chromium.org>
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexandre Courbot <acourbot@chromium.org>
+Subject: [PATCH] media: hantro: make update_dpb() not leave holes in DPB
+Date:   Fri, 15 Nov 2019 12:50:13 +0900
+Message-Id: <20191115035013.145152-1-acourbot@chromium.org>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 14:02:13 +1100
-Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+update_dpb() reorders the DPB entries such as the same frame in two
+consecutive decoding requests always ends up in the same DPB slot.
 
-> Hi all,
-> 
-> After merging the ftrace tree, today's linux-next build (arm
-> multi_v7_defconfig) produced this warning:
-> 
-> In file included from kernel/trace/trace.c:52:
-> kernel/trace/trace.h:804:13: warning: 'latency_fsnotify' defined but not used [-Wunused-function]
->   804 | static void latency_fsnotify(struct trace_array *tr) { }
->       |             ^~~~~~~~~~~~~~~~
-> 
-> Introduced by commit
-> 
->   91edde2e6ae1 ("ftrace: Implement fs notification for tracing_max_latency")
-> 
-> "inline" missing :-(
-> 
+It first clears all the active flags in the DPB, and then checks whether
+the active flag is not set to decide whether an entry is a candidate for
+matching or not.
 
-Thanks for pointing that out, I'll go and fix this.
+However, this means that unused DPB entries are also candidates for
+matching, and an unused entry will match if we are testing it against a
+frame which (TopFieldOrderCount, BottomFieldOrderCount) is (0, 0).
 
+As it turns out, this happens for the very first frame of a stream, but
+it is not a problem as it would be copied to the first entry anyway.
+More concerning is that after an IDR frame the Top/BottomFieldOrderCount
+can be reset to 0, and this time update_dpb() will match the IDR frame
+to the first unused entry of the DPB (and not the entry at index 0 as
+would be expected) because the first slots will have different values.
 
--- Steve
+The Hantro driver is ok with this, but when trying to use the same
+function for another driver (MT8183) I noticed decoding artefacts caused
+by this hole in the DPB.
 
+Fix this by maintaining a list of DPB slots that are actually in use,
+instead of relying on the absence of the active flag to do so. This also
+allows us to optimize matching a bit.
+
+Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+---
+ drivers/staging/media/hantro/hantro_h264.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/staging/media/hantro/hantro_h264.c b/drivers/staging/media/hantro/hantro_h264.c
+index 568640eab3a6..2357068b0f82 100644
+--- a/drivers/staging/media/hantro/hantro_h264.c
++++ b/drivers/staging/media/hantro/hantro_h264.c
+@@ -474,14 +474,19 @@ static void update_dpb(struct hantro_ctx *ctx)
+ {
+ 	const struct v4l2_ctrl_h264_decode_params *dec_param;
+ 	DECLARE_BITMAP(new, ARRAY_SIZE(dec_param->dpb)) = { 0, };
++	DECLARE_BITMAP(in_use, ARRAY_SIZE(dec_param->dpb)) = { 0, };
+ 	DECLARE_BITMAP(used, ARRAY_SIZE(dec_param->dpb)) = { 0, };
+ 	unsigned int i, j;
+ 
+ 	dec_param = ctx->h264_dec.ctrls.decode;
+ 
+-	/* Disable all entries by default. */
+-	for (i = 0; i < ARRAY_SIZE(ctx->h264_dec.dpb); i++)
++	/* Mark entries in use before disabling them. */
++	for (i = 0; i < ARRAY_SIZE(ctx->h264_dec.dpb); i++) {
++		if (ctx->h264_dec.dpb[i].flags &
++		    V4L2_H264_DPB_ENTRY_FLAG_ACTIVE)
++			set_bit(i, in_use);
+ 		ctx->h264_dec.dpb[i].flags &= ~V4L2_H264_DPB_ENTRY_FLAG_ACTIVE;
++	}
+ 
+ 	/* Try to match new DPB entries with existing ones by their POCs. */
+ 	for (i = 0; i < ARRAY_SIZE(dec_param->dpb); i++) {
+@@ -492,18 +497,19 @@ static void update_dpb(struct hantro_ctx *ctx)
+ 
+ 		/*
+ 		 * To cut off some comparisons, iterate only on target DPB
+-		 * entries which are not used yet.
++		 * entries which are already used.
+ 		 */
+-		for_each_clear_bit(j, used, ARRAY_SIZE(ctx->h264_dec.dpb)) {
++		for_each_set_bit(j, in_use, ARRAY_SIZE(ctx->h264_dec.dpb)) {
+ 			struct v4l2_h264_dpb_entry *cdpb;
+ 
+ 			cdpb = &ctx->h264_dec.dpb[j];
+-			if (cdpb->flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE ||
+-			    !dpb_entry_match(cdpb, ndpb))
++			if (!dpb_entry_match(cdpb, ndpb))
+ 				continue;
+ 
+ 			*cdpb = *ndpb;
+ 			set_bit(j, used);
++			/* Don't reiterate on this one. */
++			clear_bit(j, in_use);
+ 			break;
+ 		}
+ 
+-- 
+2.24.0.432.g9d3f5f5b63-goog
 
