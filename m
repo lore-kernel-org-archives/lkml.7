@@ -2,141 +2,111 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8DBC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE7DC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95EA12073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:44:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QHwa1471"
+	by mail.kernel.org (Postfix) with ESMTP id B7E7F2072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:45:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573839915;
+	bh=H7+Cvy6riOyJSBuDWiGVZHG8QS021N3D0nsJUzTOrMU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WZ3kN5zrXdLCcFVTig0aqK9Z8j2/bwtpEgkuo2SQuXszgdtrzamil6GCChiy0JdZZ
+	 bwhXDP/23whVX1wds5stYPeJMmjcRUeQDgaAl+fulTAvBb3laxH7tWW6hVlEc0YHkU
+	 SUxTERt+X5wm0ZJ4LCcRyyLGzN1oxb5SyHePmYp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfKORoZ (ORCPT
+        id S1726818AbfKORpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 12:44:25 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:49488 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfKORoZ (ORCPT
+        Fri, 15 Nov 2019 12:45:15 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:34487 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfKORpO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 12:44:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Elg7Tj8yjS/b/ScYw/Zf/Uu5gZwsbcJit98EjXWYU08=; b=QHwa1471lA8KkwjDIvNIB3sRN
-        HRVpVP0oiyqHlfm/pRAycgcBULkejAuVLVsv/za4wK6oe7fFSiyCYxtA08V6Ps2efmGqKZzX//t4F
-        wEso6OHL4yD/69r4T9Ixj6snzrB8bAK5B0mDOi/RAd3rSOvmAVRe5D2Wi/JcTaFgcFg6YC/DyImFb
-        dpA0GBz6XRDZzZzod2xAc/YEpwA3OolGB0XyVpnTLSp2Oh6TJIVF9EhoRt0aYP+UHKiJwcoJDdPDf
-        VRe11Q7oVDQ3I8/F7Je+uc07+02jmIzBGR9pIe0b4Znp2ojwyXLjYMcPvsrjuh+5fJeoEcAv9ycdc
-        wexEl+qpw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iVfdX-0008VF-1i; Fri, 15 Nov 2019 17:43:59 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 91517303D9F;
-        Fri, 15 Nov 2019 18:42:47 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A520B2B130F61; Fri, 15 Nov 2019 18:43:55 +0100 (CET)
-Date:   Fri, 15 Nov 2019 18:43:55 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Doug Smythies <dsmythies@telus.net>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
-Message-ID: <20191115174355.GP4131@hirez.programming.kicks-ass.net>
-References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org>
- <20191115132520.GJ4131@hirez.programming.kicks-ass.net>
- <CAKfTPtB4UGmZ53iVRsOV+k4MiS=Dzqw2-6_sBhko0bHRMAed2g@mail.gmail.com>
- <20191115151220.GO4131@hirez.programming.kicks-ass.net>
- <CAKfTPtCg-zEysYmGSFTa4bjh0D=sf1UsT0WpeWcVrb9SLt+VZw@mail.gmail.com>
+        Fri, 15 Nov 2019 12:45:14 -0500
+Received: by mail-qt1-f196.google.com with SMTP id i17so11663851qtq.1;
+        Fri, 15 Nov 2019 09:45:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YuU96D/TDOxMsRo5MUSuzz7CtcCcjXftMIfC3UuPqHU=;
+        b=pPGEq/7QhVZhrqpLch0bLyj/72nqtgSOl/IMPgAAmVYSsb/fRFxcnszz/kWfmiVeiX
+         qK1uvlLMbsbFmDfDJppVIkeWYm2SIamy03myVeeNOFkkjpYlcLM4KGVtP8f1AlPJmFa0
+         nvyUPYX0eBdDhMhIs8O1RuIwGjSBbGQCZOewWNUZkIcuLzwRbmKlcRkfaj3BKSHfQ5iB
+         dRmWsSYTEKp8UBfBfgLcndjAG7O+1WTjfubUSepVafd69mLHoSnQTbFeCe77pu+0/fEH
+         MoHr4DovkUADP32hUfqrkedITCc0DSJ5QqqfCraZRb/B/SKet6twIAOUHUzTTxddh5Kf
+         P3wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YuU96D/TDOxMsRo5MUSuzz7CtcCcjXftMIfC3UuPqHU=;
+        b=M7485x2oL8EGheCtdG768IFJtbvY/zy4bP/lup+FM2bggu06Mu0nHZyNNCc9a7AI3j
+         7bJMc+0L61n6Nq+ce2KLkqPe9yttVN2e1zUAXj4D+GUCS5eJr6iTRNs7KWETPMOAEWPi
+         bvHmfRAXXDZY5tvRh4Le6mW6Rg3ZPrdPebW7KYiWliadUZGgQfLxzjnQJxL204nksF/S
+         bmV4Y69FjPA0+eTx0AysIn89D/czpKDMylP9BDqmvC2eOGiQiE2YabFUsxHFrylj4Sqh
+         16CC5Mz/QqCtdxc+RGYXTyVM9EIJ+vxhPrhMnruhe9ngGqxWLqWIdy0Uwe6ySL5DwtYV
+         iEpg==
+X-Gm-Message-State: APjAAAVWxxQkNgnK5PS7Zaqhj2d9A+mlBQ6J9X9nszPudYOLaovAHHTB
+        gFhxsRpGwkIE81/i9hs0f0U=
+X-Google-Smtp-Source: APXvYqxgWGBD0NsPXWgJtmgUpYkbJPfQov6z2QUrwYyNakgEJcyuhrIgXufSFdsr+gbVuvan+NoQAg==
+X-Received: by 2002:ac8:151:: with SMTP id f17mr14536642qtg.92.1573839913365;
+        Fri, 15 Nov 2019 09:45:13 -0800 (PST)
+Received: from localhost ([2620:10d:c091:480::4ef1])
+        by smtp.gmail.com with ESMTPSA id w5sm4347404qkf.43.2019.11.15.09.45.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 Nov 2019 09:45:12 -0800 (PST)
+Date:   Fri, 15 Nov 2019 09:45:10 -0800
+From:   Tejun Heo <tj@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Roman Gushchin <guro@fb.com>,
+        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 1/2] mm: memcg: switch to css_tryget() in
+ get_mem_cgroup_from_mm()
+Message-ID: <20191115174510.GQ4163745@devbig004.ftw2.facebook.com>
+References: <20191106225131.3543616-1-guro@fb.com>
+ <20191113162934.GF19372@blackbody.suse.cz>
+ <20191113170823.GA12464@castle.DHCP.thefacebook.com>
+ <20191114191657.GN20866@dhcp22.suse.cz>
+ <20191114192018.GJ4163745@devbig004.ftw2.facebook.com>
+ <20191114193340.GA24848@dhcp22.suse.cz>
+ <20191114193736.GL4163745@devbig004.ftw2.facebook.com>
+ <20191115174031.GA15216@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKfTPtCg-zEysYmGSFTa4bjh0D=sf1UsT0WpeWcVrb9SLt+VZw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191115174031.GA15216@dhcp22.suse.cz>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 04:31:35PM +0100, Vincent Guittot wrote:
+On Fri, Nov 15, 2019 at 06:40:31PM +0100, Michal Hocko wrote:
+> I am sorry but I do not follow. How can css_tryget_online provide the
+> same semantic when the css can go offline right after the tryget call
+> returns so it is effectivelly undistinguishable from the case when the
+> css was already online before the call was made. Or is my understanding
+> of what Roman's said earlier in the thread?
 
-> > @@ -7476,10 +7477,14 @@ static void update_blocked_averages(int cpu)
-> >          * list_add_leaf_cfs_rq() for details.
-> >          */
-> >         for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos) {
-> > +               bool last = cfs_rq == &rq->cfs;
-> >                 struct sched_entity *se;
-> >
-> > -               if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq))
-> > +               if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq)) {
-> >                         update_tg_load_avg(cfs_rq, 0);
-> > +                       if (last)
-> 
-> using this last make code more readable
-> 
-> > +                               decayed = true;
-> > +               }
-> >
-> >                 /* Propagate pending load changes to the parent, if any: */
-> >                 se = cfs_rq->tg->se[cpu];
-> > @@ -7490,7 +7495,7 @@ static void update_blocked_averages(int cpu)
-> >                  * There can be a lot of idle CPU cgroups.  Don't let fully
-> >                  * decayed cfs_rqs linger on the list.
-> >                  */
-> > -               if (cfs_rq_is_decayed(cfs_rq))
-> > +               if (!last && cfs_rq_is_decayed(cfs_rq))
-> >                         list_del_leaf_cfs_rq(cfs_rq);
-> 
-> Keeping root cfs in the list will not change anything now that
-> cfs_rq_util_change is in update_load_avg()
-> cfs_rq_util_change will not be called
+It's *exactly* the same semantics as opening a file and deleting it
+and keeping using it vs. deleting a file and then trying to open it.
+You can't give out a new reference when the entity's visibility is
+expected to be gone already and that's the exactly the condition that
+tryget_online avoids.  I don't know how to better explain it if the
+file analogy doesn't work.
 
-Oh but it does, since it will then keep triggering that hunk above on
-every period.
+Thanks.
 
-> >
-> >                 /* Don't need periodic decay once load/util_avg are null */
-> > @@ -7498,6 +7503,9 @@ static void update_blocked_averages(int cpu)
-> >                         done = false;
-> >         }
-> >
-> > +       if (decayed || done)
-> 
-> I'm not sure to get why you want to call cpufreq when done is true
-> which means that everything reaches 0
-> Why do you prefer to use done instead of ORing the decay of  rt, dl,
-> irq and cfs ?
-> 
-> > +               cpufreq_update_util(rq, 0);
-
-Because we don't care about the rt,dl,irq decay anywhere else either. We
-only call cpufreq_update_util() for rq->cfs changes.
-
-Also, as I argued, realistically rt,dl and cfs decay on the same edge,
-so aside from some fuzz on the first period, they're all the same. But
-even if they were not, why would we care about their exact edges here
-when we do no anywhere else.
-
-Not caring reduces the number of cpufreq_update_util() calls to one per
-period, instead of potentially many more.
-
-Doing the || done ensures never miss the all 0 case.
+-- 
+tejun
