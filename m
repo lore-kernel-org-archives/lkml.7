@@ -2,134 +2,225 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79258C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6AAC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50D5820706
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 138FB20706
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:58:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e+QjIhLz"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="u/VfCqNg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727493AbfKOB52 (ORCPT
+        id S1727506AbfKOB6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 20:57:28 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44477 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727189AbfKOB51 (ORCPT
+        Thu, 14 Nov 2019 20:58:52 -0500
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:24350 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726996AbfKOB6w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 20:57:27 -0500
-Received: by mail-lf1-f65.google.com with SMTP id z188so6671505lfa.11
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 17:57:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VhwfCvUXZdHcPjd/8gnXz63IRCXwmj0cc9MwMWk9XXQ=;
-        b=e+QjIhLz/WsEJAN12AxLkTNiXTZIBr5lqC50IVP0v3sj3Dv4Vght57Kv79N+t2D0uf
-         U+mTHNdA3WbMGdb9k6sJoOovSavYzNoubzdH8/k9oiMusB8TRlv5I8W07vZMh+xP4SNn
-         66YT/YbdoWng9ye34W9IfWIPnEeHVWKymthBeju9oAksBfbIcCppd3oKuMK5KzpzAWK9
-         gYOUlRqvPBWPnSEtGjNvz2c2Gvgsw/aSfn9s+yPjqNsGBMu6TDE2zdKdJk+awScoOZGn
-         He2vsQHPpfNKqMPSrFqqwuUWbNuD/zy/vh7AhQmMdOECtXu/kiIeXELfwO+pIPVp/1Up
-         peIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VhwfCvUXZdHcPjd/8gnXz63IRCXwmj0cc9MwMWk9XXQ=;
-        b=YAFml4s7B/WwiNrlpBiJu/4UL/hnsx2PKL2zkjddKgCaqIpjkcKkdLOzkONp9G+4OR
-         QJxx2cJLe7dlfBQknh9sa7TLGvYRe7gtudPsv6i87siDeNJSO8lJk3evBs/mqdoLFqZ5
-         uBwMBVP38ZaI8mnQgHxhITC8gQY15e7q7c1OdN7pquYcPOXE26gxVsdXW7Rh5MPS3UCy
-         2iv+ofYmkj6qn8uUTjXTLtFALg0BlgwJEvTq+WGj54Cgp0ghY4W4VHK2h1puDS67wWyU
-         H3rVjsHPYErGW4yRUftNH7u7WP1heTq2zmBwMpvO5FXKmzOdUvh2Cth5+E+qslHKTyKf
-         o0rA==
-X-Gm-Message-State: APjAAAXzKVvuucecJ/VTzAjJ03kSMa/t0aJy2cvEorjyRF/Zcpc5Zgfv
-        mFrRC0lrId5rFbbWORb50aOJlkWyNY4=
-X-Google-Smtp-Source: APXvYqz1qOY1cWE8Vi59QvBvRmmDiO65qvpBAwJtShWlFCb8fPUP7tPVw8M2P1uoObYofhL+pdmBGA==
-X-Received: by 2002:a19:3f07:: with SMTP id m7mr9468163lfa.136.1573783043837;
-        Thu, 14 Nov 2019 17:57:23 -0800 (PST)
-Received: from localhost.localdomain (57-201-94-178.pool.ukrtel.net. [178.94.201.57])
-        by smtp.gmail.com with ESMTPSA id v22sm4376394lfg.63.2019.11.14.17.57.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 17:57:22 -0800 (PST)
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     netdev@vger.kernel.org, davem@davemloft.net,
-        vinicius.gomes@intel.com
-Cc:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
-        linux-kernel@vger.kernel.org,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [net-next PATCH] taprio: don't reject same mqprio settings
-Date:   Fri, 15 Nov 2019 03:56:07 +0200
-Message-Id: <20191115015607.11291-1-ivan.khoronzhuk@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        Thu, 14 Nov 2019 20:58:52 -0500
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id xAF1wl5N018778;
+        Fri, 15 Nov 2019 10:58:47 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com xAF1wl5N018778
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1573783128;
+        bh=MfGkMN2IbJb5XyHhwrP6lykLVNJFWzuGHnINWOi1MIw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=u/VfCqNgAZ2ryBmoB9Jv9sFc9XDkq2f6xf+DY76/UkGNi6FLM+LuXO36Epg+TJj0i
+         DXGLZhv3C36cMPyxU2Yq3DPOWKYzAap1ntJNTibIO9tTPeVXWK+FpMEmYb9XN/1Dfo
+         76JE0S+7aUfXU/XT4tA2RbolmqI4F7p9Jj4YesTIoyFBwGlgL9oBjTSIKC+r9+AW/Y
+         qj4Neon8SwmlfQBwkAFGhvRH9QUBedLzjOrzUVCjNqkpa39eehBvCi7eyjbeNJNPkV
+         jwL//iK1QcFX/LvVqZUl/N6Yjp4yxCeacWaOSfrW3VCAclOzrnPW+WOO9xwqXj3vzj
+         K3tiqBJ80jImg==
+X-Nifty-SrcIP: [209.85.217.53]
+Received: by mail-vs1-f53.google.com with SMTP id b16so5312363vso.10;
+        Thu, 14 Nov 2019 17:58:47 -0800 (PST)
+X-Gm-Message-State: APjAAAW7quFv+bjDvBYkO5Q5zZMEmdlMPBupLUUOmCaAUmhA0f2H1ET9
+        oeoHX0NRXNff9Sa7MTrV/a8BJJeil3OMIEP7ook=
+X-Google-Smtp-Source: APXvYqzoiHxIN3DtMr31taloYOFUrheWfJsl6ru/IC48TmOnuxkWz7UxNg9YFnhxbeIJ5oqcXxzh8oIKrhuQ2XkNA7k=
+X-Received: by 2002:a67:f6c2:: with SMTP id v2mr2799717vso.54.1573783126397;
+ Thu, 14 Nov 2019 17:58:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191102063036.28601-1-unixbhaskar@gmail.com> <50680c37-9e85-0050-c1e1-700260a0471c@infradead.org>
+ <20191105023243.GA16635@fieldses.org> <CAK7LNARAgOEnMRYAyzbvJ-xZzFfwOMckxb=bW0-E+P1HYu5nhA@mail.gmail.com>
+ <20191106043120.GB6355@fieldses.org> <20191106044223.GA18076@Gentoo>
+ <20191106193010.GG17669@fieldses.org> <20191106223918.GB1852@Slackware>
+ <CAK7LNASvoh1k=vw6DOyTXa5xYDYNT5uH-5YWS=_95t9XwfAgTQ@mail.gmail.com> <20191109111335.GA1198@Gentoo>
+In-Reply-To: <20191109111335.GA1198@Gentoo>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 15 Nov 2019 10:58:10 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR9PrnXWhA6CCvgexpwVfeZxvHiXp_JtKH7Xb1OZDGusw@mail.gmail.com>
+Message-ID: <CAK7LNAR9PrnXWhA6CCvgexpwVfeZxvHiXp_JtKH7Xb1OZDGusw@mail.gmail.com>
+Subject: Re: [PATCH] scripts:prune-kernel:remove old kernels and modules dir
+ from system
+To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The taprio qdisc allows to set mqprio setting but only once. In case
-if mqprio settings are provided next time the error is returned as
-it's not allowed to change traffic class mapping in-flignt and that
-is normal. But if configuration is absolutely the same - no need to
-return error. It allows to provide same command couple times,
-changing only base time for instance, or changing only scheds maps,
-but leaving mqprio setting w/o modification. It more corresponds the
-message: "Changing the traffic mapping of a running schedule is not
-supported", so reject mqprio if it's really changed.
+On Sat, Nov 9, 2019 at 8:14 PM Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
+>
+> On 16:25 Sat 09 Nov 2019, Masahiro Yamada wrote:
+> >On Thu, Nov 7, 2019 at 7:39 AM Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
+> >>
+> >> On 14:30 Wed 06 Nov 2019, J. Bruce Fields wrote:
+> >> >On Wed, Nov 06, 2019 at 10:12:26AM +0530, Bhaskar Chowdhury wrote:
+> >> >> On 23:31 Tue 05 Nov 2019, J. Bruce Fields wrote:
+> >> >> >On Wed, Nov 06, 2019 at 11:53:28AM +0900, Masahiro Yamada wrote:
+> >> >> >>BTW.
+> >> >> >>Bruce,
+> >> >> >>Does the current script expect RHEL or something?
+> >> >> >>I do not see 'new-kernel-pkg' on my Ubuntu machine.
+> >> >> >
+> >> >> >I test on Fedora.  Looks like on recent Fedora that's only provided by
+> >> >> >an rpm "grubby-deprecated", which is an inauspicious name....
+> >> >> >
+> >> >> >I think maybe you're supposed to use "grubby" itself now.  Do you have
+> >> >> >that?
+> >> >> >
+> >> >> >>It would still work with 'new-kernel-pkg: command not found'
+> >> >> >>warning.
+> >> >> >>
+> >> >> >>We could bypass it if we like.
+> >> >> >>
+> >> >> >>command -v new-kernel-pkg && new-kernel-pkg --remove $f
+> >> >> >
+> >> >> >Looks like it's what updates the grub configuration, which is probably a
+> >> >> >nice thing to do if you can.
+> >> >> >
+> >> >> >--b.
+> >> >>
+> >> >> Bruce,
+> >> >>
+> >> >> Two things,
+> >> >>
+> >> >> If the system doesn't run grub , how the fallback policy???
+> >> >>
+> >> >> This binary "new-kernel-pkg" also missing in other systems too...I can
+> >> >> confirm that... i.e gentoo,slackware,
+> >> >>
+> >> >> So , you are only targeting the rpm based system????
+> >> >
+> >> >It's just what I happen to use.  If someone wants to make it work
+> >> >elsewhere that'd be great, as long as we don't break what already works.
+> >> >
+> >> >I think Debian uses grub2-mkconfig?  Might be OK for Fedora too, I
+> >> >dunno.
+> >> >
+> >> >--b.
+> >>
+> >> Okay , thanks for the input. I was trying to write something in
+> >> generalize way , that is why my code spins off.And if you see the
+> >> subject line of my very first attempt to patch written was "removing
+> >> old kernels and modules dir in selective way"... that was it.
+> >>
+> >> Now, there are plenty of distros around, not only rpm based one(yes I do
+> >> agree that ,you wrote it while using and testing on it, but that is
+> >> limited in nature),the broader user base might be using something else.
+> >>
+> >> we simply can not restrict it to certain packaging version or several
+> >> packaging versions of selected distros. We are making and building this
+> >> (worth an effort) to make it as generalized as possible.
+> >>
+> >> Importantly I was only thinking of people who put the stuff in standard
+> >> places in the FSH and use it. I might be wrong.
+> >>
+> >> As I have said it before, I was no way trying to bypass your work ,but
+> >> it seems very limited in nature to adopted. So trying to widen the
+> >> spectrum.
+> >>
+> >> I am trying to incorporating both the pole, different kind user base in
+> >> mind, like you , who don't like to be prompted for this operation and
+> >> assuming things should go well, and you are right.
+> >>
+> >> On the other hand , I am kinda guy , sometime I need to know what is
+> >> going on, so the prompting.
+> >>
+> >> Well, I have never taken into account about modifying the bootloader
+> >> config by looking at your work. Had I been, I would have done it already
+> >> and it would be extremely trivial in nature.
+> >>
+> >> Now, Grub, no doubt it's fantastic piece of software, but complexity
+> >> is paramount with it. Don't you think so???  I HAVE NOTHING AGAINST
+> >> GRUB!
+> >>
+> >> I have personally stops using it for years and using something very
+> >> rudimentary and simple and useful. That is because I know what I am
+> >> doing and my system well.
+> >>
+> >> Caveat emptor: that was me, not every one else in the wild. Grub is used
+> >> by the most distro by default,everybody knows it,but certainly not the
+> >> norm.
+> >>
+> >> I would love to give it a stab again and if you better people feel it is
+> >> necessary, but I need some concrete understanding from you,Masahiro and
+> >> Randy(who is helping me actively).
+> >>
+> >> Say, You people might come up ,
+> >>
+> >> We need these :
+> >>
+> >> a)
+> >> b)
+> >> c)
+> >>
+> >> and we don't need these:
+> >>
+> >> a)
+> >> b)
+> >> c)
+> >>
+> >>
+> >> My two cents! kindly, flame me with your thoughts.
+> >
+> >
+> >Honestly, I did not even know this script
+> >before you submitted the patch.
+> >
+> :)
+>
+> >I prune stale kernel/modules with my own script,
+> >and I guess people do similar to meet their demand.
+> >
+> I do the same.
+>
+> >I am not sure how many people are using this.
+> Only people who look up in the kernel source scripts directory , nobody
+> else for sure.
+> >If somebody is passionate to improve this script
+> >in a simple way, that is fine, but
+> >I do not want to see messy code for covering various use-cases.
+> Agreed. That is why need guideline from you people(You, Randy and Bruce
+> needs to tell me clearly), like what I mentioned, we can do
+> these and we can not do these. I am asking because you people have had more
+> exposure ,so might come up with some valid points to build up.
+> >
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
----
- net/sched/sch_taprio.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+We have two topics here.
 
-diff --git a/net/sched/sch_taprio.c b/net/sched/sch_taprio.c
-index 7cd68628c637..bd844f2cbf7a 100644
---- a/net/sched/sch_taprio.c
-+++ b/net/sched/sch_taprio.c
-@@ -1347,6 +1347,26 @@ static int taprio_parse_clockid(struct Qdisc *sch, struct nlattr **tb,
- 	return err;
- }
- 
-+static int taprio_mqprio_cmp(struct net_device *dev,
-+			     struct tc_mqprio_qopt *mqprio)
-+{
-+	int i;
-+
-+	if (mqprio->num_tc != dev->num_tc)
-+		return -1;
-+
-+	for (i = 0; i < mqprio->num_tc; i++)
-+		if (dev->tc_to_txq[i].count != mqprio->count[i] ||
-+		    dev->tc_to_txq[i].offset != mqprio->offset[i])
-+			return -1;
-+
-+	for (i = 0; i < TC_BITMASK + 1; i++)
-+		if (dev->prio_tc_map[i] != mqprio->prio_tc_map[i])
-+			return -1;
-+
-+	return 0;
-+}
-+
- static int taprio_change(struct Qdisc *sch, struct nlattr *opt,
- 			 struct netlink_ext_ack *extack)
- {
-@@ -1398,6 +1418,10 @@ static int taprio_change(struct Qdisc *sch, struct nlattr *opt,
- 	admin = rcu_dereference(q->admin_sched);
- 	rcu_read_unlock();
- 
-+	/* no changes - no new mqprio settings */
-+	if (mqprio && !taprio_mqprio_cmp(dev, mqprio))
-+		mqprio = NULL;
-+
- 	if (mqprio && (oper || admin)) {
- 		NL_SET_ERR_MSG(extack, "Changing the traffic mapping of a running schedule is not supported");
- 		err = -ENOTSUPP;
+[1]  add the interactive option
+[2]  do nice things for non-rpm systems
+
+
+They should be done by separate patches.
+
+I think [1] is easy to do in a few liners.
+
+
+For [2], I am not sure how well it goes
+until I see an actual patch.
+
 -- 
-2.20.1
-
+Best Regards
+Masahiro Yamada
