@@ -2,95 +2,83 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBDEC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76131C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F36620723
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54D7A20723
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:11:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbfKOJKj (ORCPT
+        id S1727336AbfKOJLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:10:39 -0500
-Received: from sauhun.de ([88.99.104.3]:56592 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfKOJKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:10:39 -0500
-Received: from localhost (p54B33606.dip0.t-ipconnect.de [84.179.54.6])
-        by pokefinder.org (Postfix) with ESMTPSA id 6C5462C03E3;
-        Fri, 15 Nov 2019 10:10:36 +0100 (CET)
-Date:   Fri, 15 Nov 2019 10:10:36 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] i2c: of: Populate fwnode in of_i2c_get_board_info()
-Message-ID: <20191115091035.GA2227@kunai>
-References: <20191115045049.261104-1-saravanak@google.com>
- <20191115053201.GA800105@kroah.com>
+        Fri, 15 Nov 2019 04:11:05 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:32770 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727218AbfKOJLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 04:11:04 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0F9996980AC99CA681F2;
+        Fri, 15 Nov 2019 17:11:03 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Fri, 15 Nov 2019
+ 17:10:56 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
+        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
+        <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>
+CC:     <linux-kernel@vger.kernel.org>, <oss@buserror.net>,
+        Jason Yan <yanaijie@huawei.com>
+Subject: [PATCH 5/6] powerpc/fsl_booke/64: clear the original kernel if randomized
+Date:   Fri, 15 Nov 2019 17:32:08 +0800
+Message-ID: <20191115093209.26434-6-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20191115093209.26434-1-yanaijie@huawei.com>
+References: <20191115093209.26434-1-yanaijie@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
-Content-Disposition: inline
-In-Reply-To: <20191115053201.GA800105@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The original kernel still exists in the memory, clear it now.
 
---2oS5YaxWCcQjTEyO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Cc: Scott Wood <oss@buserror.net>
+Cc: Diana Craciun <diana.craciun@nxp.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>
+---
+ arch/powerpc/mm/nohash/kaslr_booke.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-On Fri, Nov 15, 2019 at 01:32:01PM +0800, Greg Kroah-Hartman wrote:
-> On Thu, Nov 14, 2019 at 08:50:48PM -0800, Saravana Kannan wrote:
-> > This allows the of_devlink feature to work across i2c devices too. This
-> > avoid unnecessary probe deferrals of i2c devices, defers consumers of
-> > i2c devices till the i2c devices probe, and allows i2c drivers to
-> > implement sync_state() callbacks.
-> >=20
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> > The of_devlink feature is present in driver-core-next branch. It started
-> > off with [1] but it has been improving since then.
-> >=20
-> > [1] -- https://lore.kernel.org/linux-acpi/20190904211126.47518-1-sarava=
-nak@google.com/
-> >=20
-> >  drivers/i2c/i2c-core-of.c | 1 +
-> >  1 file changed, 1 insertion(+)
->=20
-> Wolfram, I can take this through my tree now if you have no objections
-> to this.
+diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c b/arch/powerpc/mm/nohash/kaslr_booke.c
+index 513f4616e92a..323fe25e8e08 100644
+--- a/arch/powerpc/mm/nohash/kaslr_booke.c
++++ b/arch/powerpc/mm/nohash/kaslr_booke.c
+@@ -377,8 +377,10 @@ notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
+ #ifdef CONFIG_PPC64
+ 	unsigned int *__run_at_load = (unsigned int *)(KERNELBASE + 0x5c);
+ 
+-	if (*__run_at_load == 1)
++	if (*__run_at_load == 1) {
++		kaslr_late_init();
+ 		return;
++	}
+ 
+ 	*__run_at_load = 1;
+ 
+-- 
+2.17.2
 
-What would be the advantage? I can also apply it today if you ack it.
-
-
---2oS5YaxWCcQjTEyO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3Oa4cACgkQFA3kzBSg
-KbaZMhAAh1UZSZZXjji5ZsU0sxQOpgTLqO0m8PDgaHqtoQ8ASGngmutKDq6R9v8M
-6ChpmmIfUHgIFdqta87XH/xhnjpP94TAr0XdIl8Aryjj2xg8+pdUOwNpxofuQmQ+
-TG7gzSlRI2MAN2+nyiaObD42FlZrOoNjiwL2nZySsPlWRoIGdfT7CO0zX41qp16l
-f4E01AhfO6Irb94O1GJXtg3/EKoN91K7B25+BhXiCiv8PE0+MFZzWZ6BprKZCpae
-oy1pHgQpJbZJM1GvPEdXTfBQu5HHDxlnL50d1auAsJaTMcch0p4nTFKmTqg+tW0N
-7szlGfwVyVBnGatSCqwZrX8GALU+7pPPDMx5KT+sh6M/a28+G2qFX/3HrATRQvat
-omMHQkVtvNll2OZzo9EWIaWvElLqay1hpTzdO5Anbwj4/6fKUWgGwj+/TF0xkj06
-xA+nLKOn3kEcO8xoBCduWvShvmQDUADnVNXj6dbM6XyF/WmRH4dEcrgItcoUjqfn
-tsF1lmSlJIHlzrUwQ77BsJj1ZTziwnwrj+aBQkqmRUYw3K+qJrmJAAyfqvoPYcT4
-uh4U2sSxAw5s1TuzZFRqDY4drnQ6Spooquq6BE6CL21yqURKfENUiF63BUrMVobp
-vAwaflgkzGCP7XtJMRP86uFd2a9gtdSTjiLA3A54Qd/gmx5FJoM=
-=PpDn
------END PGP SIGNATURE-----
-
---2oS5YaxWCcQjTEyO--
