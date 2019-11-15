@@ -4,198 +4,231 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D71C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFFCC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9441D20723
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D2B920729
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:46:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="yev1EJra";
-	dkim=pass (1024-bit key) header.d=Dell.onmicrosoft.com header.i=@Dell.onmicrosoft.com header.b="aShAzNvA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MtUCMld7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfKOAnq (ORCPT
+        id S1727222AbfKOAqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 19:43:46 -0500
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:31768 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726852AbfKOAnq (ORCPT
+        Thu, 14 Nov 2019 19:46:23 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:41403 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726852AbfKOAqX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 19:43:46 -0500
-Received: from pps.filterd (m0170391.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAF0PMlh003090
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 19:43:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : subject :
- date : message-id : content-type : content-transfer-encoding :
- mime-version; s=smtpout1; bh=7K2Hwm+ukVd95TsONa0rVDgU+xWhef+xYqvwlN6u/BQ=;
- b=yev1EJraseURJXmLucK5oHbCpfUXrQZxCw1uegZwJRIw/0kuZvqtLXf+XwBl15p7Psm/
- +wGMrjwMaV4/MUShWs71y8OPsCYKNRUF3v7FE2rTo5bNOOChOXLFp7UEBcoonO1/aPSZ
- U9xK6TDJ+idS8HVe/SOqoOdm2n2S1nOSFdsvRrW7gtMMFWybCRRvaW8hNo0isUNCAhjN
- 2WLU5nO8bkzl1DbDOaNdIWh2Lav31oXDITd2quRgcTfC+V6J7PM+wZav6EJw986OB4+I
- BW7j75KgrpYZOgDvcxobu1KIgrsXiUL7ohVkC0spfIs39Sns7jTy4j4lFADjtqiM2aZG jg== 
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0a-00154904.pphosted.com with ESMTP id 2w7pqhy4up-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 19:43:45 -0500
-Received: from pps.filterd (m0134318.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAF0SFCg039504
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 19:43:44 -0500
-Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2051.outbound.protection.outlook.com [104.47.36.51])
-        by mx0a-00154901.pphosted.com with ESMTP id 2w7qa383a4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 19:43:44 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AIgNjHIF0JuBd2VDN9txrEimYLM0y5P99iSPIyrtYzW2V93ymShekY93PvsGJUeny5LpspVGEUhLIKufpM7hGuyfs+Cx7ApsIm/iW6CjK1bRIpnFKkZN5OkV7udbQ4QGf70MjFrB9wuvvfzA+WS7gSbO/bwm9mmkosZ++5FlEKurYBlG8TZMVx4s7/JrJ6voT7nYy9NXYX/QOBm2ovLJUXTb440G9PE1jkY8RYDpWoGYkMy0Ig5S0OsKdgv6A6QCg/SihgioiQ0kFF6YEuabDWEVpHDGNAzwYKBgr4BGbdaAyra+WoIt+E/FTg4y0xmPfoDZohY2Nbd1Gsmjuz3QmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7K2Hwm+ukVd95TsONa0rVDgU+xWhef+xYqvwlN6u/BQ=;
- b=aLJplWDwZ9DWv8W8dxsSKM+awS+eFsFTzHMhHuS2KI53W5F3dC3NNiINHwBydtHYZTn57CeAJs40fhI0p7YdnUP30SSLJWzca4IWxYvtiN6u6+O1pJPIyzIbxtq8gZ0V05YmfGu9aXuwWEleKVhZIf6Y53zlclJJXCFhXUX8wQj36wRpnU8+fPNlmIep95e396gbJT5vONBHlSEAC74af+Quajg15UcPlhZPK6ZY2aJv18dmkp+kTVfdcYJ0UOm9tZXx9fTTuIDEkQ8+S22c745LzBFgcmXJvDN3khGtlBR3FPBQN6XsR9Bjp1JhTvVenLpn2oX7oqWLrDofUF+q2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
- dkim=pass header.d=dell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Dell.onmicrosoft.com;
- s=selector1-Dell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7K2Hwm+ukVd95TsONa0rVDgU+xWhef+xYqvwlN6u/BQ=;
- b=aShAzNvAUOm/Q90JdoK4bjjb4MfM4HvY36ddCZcjtvSa9ufuaFMjReIa8Y7c/Bl8VHLSRVx+uPfElgrtcEgxJvIcTkxqo9cLgemiXZIrTYZdjCUXtVBjfa9sS7IqWvK/wznUelrTRT0lXy+F8w6tqXDWkzeMgMRGaQKSR4L/fqA=
-Received: from CH2PR19MB3896.namprd19.prod.outlook.com (20.180.12.148) by
- CH2PR19MB3718.namprd19.prod.outlook.com (10.186.149.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Fri, 15 Nov 2019 00:43:42 +0000
-Received: from CH2PR19MB3896.namprd19.prod.outlook.com
- ([fe80::c039:fad0:386:9711]) by CH2PR19MB3896.namprd19.prod.outlook.com
- ([fe80::c039:fad0:386:9711%6]) with mapi id 15.20.2451.023; Fri, 15 Nov 2019
- 00:43:42 +0000
-From:   "Rafikov, Rustem" <Rustem.Rafikov@dell.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RT scheduler is suboptimal when an RT thread preempts another RT in
- terms of choosing a core to migrate
-Thread-Topic: RT scheduler is suboptimal when an RT thread preempts another RT
- in terms of choosing a core to migrate
-Thread-Index: AdWbTZf+ewnEn7UbRpSKG3VAENnpaA==
-Date:   Fri, 15 Nov 2019 00:43:42 +0000
-Message-ID: <CH2PR19MB3896AFE1D13AD88A17160860FC700@CH2PR19MB3896.namprd19.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Rustem.Rafikov@emc.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2019-11-14T22:03:25.7098256Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
- aiplabel=External Public
-x-originating-ip: [168.159.213.210]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2b726d30-89e0-47b8-b6f5-08d76964dd61
-x-ms-traffictypediagnostic: CH2PR19MB3718:
-x-microsoft-antispam-prvs: <CH2PR19MB3718A964ED8033B453D63552FC700@CH2PR19MB3718.namprd19.prod.outlook.com>
-x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 02229A4115
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(136003)(376002)(396003)(39860400002)(7502003)(199004)(189003)(66066001)(6436002)(786003)(25786009)(99286004)(52536014)(316002)(33656002)(66556008)(66476007)(71190400001)(64756008)(2501003)(66446008)(71200400001)(6916009)(26005)(3846002)(6116002)(2351001)(256004)(186003)(14444005)(5640700003)(7696005)(55016002)(76116006)(81156014)(478600001)(7736002)(9686003)(102836004)(6506007)(81166006)(5660300002)(486006)(476003)(2906002)(86362001)(8936002)(14454004)(74316002)(8676002)(305945005)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR19MB3718;H:CH2PR19MB3896.namprd19.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: dell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jzTG6pzE8KkiCgXPD/X925Cf+6STYbhVEMlg2lsjRbzvldFcyQibddrAcZUjWsW/W0Y61Lo2EVT/u6OH/PEIBMYdGqYwJu/rZWyymjcvWWjnKw8+FGGNSZ2BEtb7fbauxW/8phDeW0MS9d6FZXFKEyVRPcJk6+gZ89m0ZJ8mSKdQitoIOcS3A1WxZ7teHcYPSdxW79IVbUVKaB73o2zhtC/sNDuUTaCwcoaJerLL11KOQOjpEgD5uE4XdQiLJxvk+YM4emT6uIrxxVsd0Cv40sB2LTuTEDxVMahWmbTHtO7SCN1dF4qkS8iWGantm4X3uqTHH5uyo0iajAgAeGOm8zVgMM6XmL5bQiG9fGsX57wUws66DQP4L2wliOOsmKbjj1Lt2GM2aICGJLxcwPC5ZrP+0u4FQl/PtTdSngeHqzyIEfl8ZwjGgc0cDrE2A7Ty
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
+        Thu, 14 Nov 2019 19:46:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573778781;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=H4vVvPkB3x0L4WLxmAx03mTpE89in9HeN5HPv2q+2W8=;
+        b=MtUCMld7fed/a9tfHhyd8rJaMEJuN3AnHe7A/hB/SViOV9TSfCTx8IP9tHcz/YcO4z8rI9
+        85PS8yd0fYAjhxV6Bac805hH7tXvnuiW6DyDeaQMmCdYOisu2hbRhD5ccxBLVQpbX6GkKH
+        QwwXxEWQEJ82gEzdkLDAZZFn/nPEU6o=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-268-fGT2lxXgN9uDEucalTdP6Q-1; Thu, 14 Nov 2019 19:46:19 -0500
+Received: by mail-wr1-f70.google.com with SMTP id 92so6557561wro.14
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 16:46:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=hLdCjTGec/dDjtDlx0ZJMfLMsCTDiljq7wYu4KUhWKQ=;
+        b=B0XDNjlcSvqZ3QLE8RiAhvV5tckt2A4CLzOTCUnERtl6jJZOHB+En7CX5lc4Rqmzt5
+         IlYjytS24F8rE1iF96wRtDbP1FqKQuH2sxUX985vd9nCOWwPHAfK+hs6KPSMcOZFgB52
+         rMsLg6n1Y/JgcAvP1h6O+VTC+Re229LjxBxBeHXIdB/5cpgzjJP6bLDAMSNEX/smbxIm
+         m8O8AeAGvP8RI0y482TU7gMxdDM2TRDwyT0VMQztXmMfy1RttPT1S/rRed8PpeCnXtqb
+         YFZToRKvNfCSEka/Aes2on+K1VPVMUmX4IHZLibg8FVRdr6YrRcVErVU+1GZsu4mzS3q
+         PzNA==
+X-Gm-Message-State: APjAAAUAWfC1IUHdM8bdb+z4/rZJIkuAEenYaCplG96oiikKsAq1Ijko
+        N/gqNE3K1OJOJQQqZYs736xRYvP8UW/cr0oe7bg/zHW77ICTj/jQrJE7bbQ8LKEW7/R8YnOXHQ+
+        kQqWZm9Cl3LQnBgqxoHMO8+Bv
+X-Received: by 2002:a5d:4f09:: with SMTP id c9mr12937226wru.175.1573778777407;
+        Thu, 14 Nov 2019 16:46:17 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxXQUaXzjlPAig78IGNXSc6GbQ37rJNwRpHYq/LIj60+eqS82OLSF8ehfSXLPj2M9jNo4HTGQ==
+X-Received: by 2002:a5d:4f09:: with SMTP id c9mr12937195wru.175.1573778777125;
+        Thu, 14 Nov 2019 16:46:17 -0800 (PST)
+Received: from [192.168.3.122] (p4FF23EA2.dip0.t-ipconnect.de. [79.242.62.162])
+        by smtp.gmail.com with ESMTPSA id 4sm8813753wmd.33.2019.11.14.16.46.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Nov 2019 16:46:16 -0800 (PST)
+From:   David Hildenbrand <david@redhat.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH 2/3] mm: Introduce subsection_dev_map
+Date:   Fri, 15 Nov 2019 01:46:15 +0100
+Message-Id: <759F6C7C-C34F-433E-8909-DB76A626CF3F@redhat.com>
+References: <49786b4d-ba95-21b5-c079-46d93c2fe53f@vx.jp.nec.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "longman@redhat.com" <longman@redhat.com>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "mst@redhat.com" <mst@redhat.com>, "cai@lca.pw" <cai@lca.pw>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Oscar Salvador <osalvador@suse.de>
+In-Reply-To: <49786b4d-ba95-21b5-c079-46d93c2fe53f@vx.jp.nec.com>
+To:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+X-Mailer: iPhone Mail (17A878)
+X-MC-Unique: fGT2lxXgN9uDEucalTdP6Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: Dell.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b726d30-89e0-47b8-b6f5-08d76964dd61
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Nov 2019 00:43:42.7312
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: s8iqliJdBZAR2MG1T7txNm8cib3Ew+xegStO2c91qvVNzcTXLHFGCDM93OfnXkQejc+9N3/8/gKE/5cC4WZn4w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR19MB3718
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-14_07:2019-11-14,2019-11-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 malwarescore=0 spamscore=0 clxscore=1011
- impostorscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0 bulkscore=0
- suspectscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-1911150001
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 clxscore=1015
- impostorscore=0 phishscore=0 malwarescore=0 priorityscore=1501 spamscore=0
- bulkscore=0 adultscore=0 mlxscore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1911150001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-When an RT thread preempts another RT thread it migrates the latter one to =
-a core.=20
-The way RT scheduler chooses a core is quite suboptimal. Let me give an exa=
-mple from a "production" server with 32 total physical cores.
-There are SCHED_NORMAL threads (affined to particular core each) and 2+ gro=
-ups of RT threads (allowed to run everywhere).=20
-Scheduler trace showed that most cases RT scheduler preempts a normal prio =
-thread from a core to put evicted RT one on rather than using an idle core =
-the system had a plenty of which according the trace.
-
-I reproduced the behavior on a vanilla 4.18.0 kernel with a micro test wher=
-e I created 10 SCHED_NORMAL affined to 10 cores,
-3 RT/69 with 0xFFFFFFFF affinity and a few RT/79 threads kicking off other =
-RTs from CPUs every 5 msec.=20
-Other cores were idle but RT/69 never migrated to them.
-
-The problem seems to be in how mapping in cpupri structure is updated:
-1) Fair scheduler does not update/read from there. So we don't know if a SC=
-HED_NORMAL left a cpu. Well, that may be OK.
-2) RT scheduler uses cpupri to find a core to migrate to, but it updates it=
- incorrectly:
-- RT->RT works fine [2]
-- But RT->IDLE or RT->SCHED_NORMAL [1] is not right - in both cases it sets=
- RT_MAX(100) which is min NORMAL!
-It's totally okay to set it to RT_MAX for all of NORMALs but not for IDLE. =
-BTW - IDLE means swapper which has pri=3D120 :)
-
-See below traced with kprobes.
-
-[1] IDLE->RT/79->IDLE
-#1. <idle>-0     [001] d.h. 14717592.107294: myprobe3: (cpupri_set+0x0/0x10=
-0) cpu=3D1 newp=3D14 oldpri=3D0001
-#2. <...>-157332 [001] d... 14717592.107313: myprobe3: (cpupri_set+0x0/0x10=
-0) cpu=3D1 newp=3D64 oldpri=3D0051
-
-Decoding the output at #1 cpu=3D1 newp=3D14 oldpri=3D0001
-- cpu =3D 1 - it happens on core 1
-- newp=3D14 - the priority of a thread being scheduled in is 0x14 which is =
-RT-79 (our test thread)
-- oldpri=3D0001 - a priority of previous thread on that CPU. "1" means NORM=
-AL in 0-101 scale. This is incorrect by itself because the core was IDLE!
-Let's try to figure out why it is not '0' (IDLE) by looking at the last lin=
-e - cpu=3D1 newp=3D64 oldpri=3D0051
-- newp=3D64 says that the priority of a thread being scheduled in is 0x64 w=
-hich min NORMAL. So, it is not 140 how we could expect when switching to ID=
-LE thread.
-- oldpri=3D0051 this is 81 - priority of our RT-79 thread in 0-101 scale
 
 
-[2] RT/69->RT/79>RT/69
-#1. <...>-158253 [001] d.h. 14723119.396120: myprobe3: (cpupri_set+0x0/0x10=
-0) cpu=3D1 newp=3D14 oldpri=3D0047 #2. <...>-158254 [001] d... 14723119.396=
-122: myprobe3: (cpupri_set+0x0/0x100) cpu=3D1 newp=3D1e oldpri=3D0051 Line =
-#1 -  "cpu=3D1 newp=3D14 oldpri=3D0047"  switching to 0x14, RT-79 thread
-- old pri currently on cpu is 0x47 in 0-101 scale OR RT-69
-Line#2 - switching to 0x1e - RT-69. This is correct value of the thread bei=
-ng scheduled in!
-- oldppri=3D0051 - RT-69 in 0-101 scale
+> Am 15.11.2019 um 00:42 schrieb Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com=
+>:
+>=20
+> =EF=BB=BFOn 2019/11/14 6:26, Dan Williams wrote:
+>>> On Wed, Nov 13, 2019 at 1:22 PM David Hildenbrand <david@redhat.com> wr=
+ote:
+>>>=20
+>>>=20
+>>>=20
+>>>> Am 13.11.2019 um 22:12 schrieb Dan Williams <dan.j.williams@intel.com>=
+:
+>>>>=20
+>>>> =EF=BB=BFOn Wed, Nov 13, 2019 at 12:40 PM David Hildenbrand <david@red=
+hat.com> wrote:
+>>>> [..]
+>>>>>>>>> I'm still struggling to understand the motivation of distinguishi=
+ng
+>>>>>>>>> "active" as something distinct from "online". As long as the "onl=
+ine"
+>>>>>>>>> granularity is improved from sections down to subsections then mo=
+st
+>>>>>>>>> code paths are good to go. The others can use get_devpagemap() to
+>>>>>>>>> check for ZONE_DEVICE in a race free manner as they currently do.
+>>>>>>>>=20
+>>>>>>>> I thought we wanted to unify access if we don=E2=80=99t really car=
+e about the zone as in most pfn walkers - E.g., for zone shrinking.
+>>>>>>>=20
+>>>>>>> Agree, when the zone does not matter, which is most cases, then
+>>>>>>> pfn_online() and pfn_valid() are sufficient.
+>>>>>=20
+>>>>> Oh, and just to clarify why I proposed pfn_active(): The issue right =
+now is that a PFN that is valid but not online could be offline memory (mem=
+map not initialized) or ZONE_DEVICE. That=E2=80=98s why I wanted to have a =
+way to detect if a memmap was initialized, independent of the zone. That=E2=
+=80=98s important for generic PFN walkers.
+>>>>=20
+>>>> That's what I was debating with Toshiki [1], whether there is a real
+>>>> example of needing to distinguish ZONE_DEVICE from offline memory in a
+>>>> pfn walker. The proposed use case in this patch set of being able to
+>>>> set hwpoison on ZONE_DEVICE pages does not seem like a good idea to
+>>>> me. My suspicion is that this is a common theme and others are looking
+>>>> to do these types page manipulations that only make sense for online
+>>>> memory. If that is the case then treating ZONE_DEVICE as offline seems
+>>>> the right direction.
+>>>=20
+>>> Right. At least it would be nice to have for zone shrinking - not sure =
+about the other walkers. We would have to special-case ZONE_DEVICE handling=
+ there.
+>>>=20
+>>=20
+>> I think that's ok... It's already zone aware code whereas pfn walkers
+>> are zone unaware and should stay that way if at all possible.
+>>=20
+>>> But as I said, a subsection map for online memory is a good start, espe=
+cially to fix pfn_to_online_page(). Also, I think this might be a very good=
+ thing to have for Oscars memmap-on-memory work (I have a plan in my head I=
+ can discuss with Oscar once he has time to work on that again).
+>>=20
+>> Ok, I'll keep an eye out.
+>=20
+> I understand your point. Thanks!
+>=20
+> By the way, I found another problem about ZONE_DEVICE, which
+> is race between memmap initialization and zone shrinking.
+>=20
+> Iteration of create and destroy namespace causes the panic as below:
+>=20
+> [   41.207694] kernel BUG at mm/page_alloc.c:535!
+> [   41.208109] invalid opcode: 0000 [#1] SMP PTI
+> [   41.208508] CPU: 7 PID: 2766 Comm: ndctl Not tainted 5.4.0-rc4 #6
+> [   41.209064] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIO=
+S rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
+> [   41.210175] RIP: 0010:set_pfnblock_flags_mask+0x95/0xf0
+> [   41.210643] Code: 04 41 83 e2 3c 48 8d 04 a8 48 c1 e0 07 48 03 04 dd e=
+0 59 55 bb 48 8b 58 68 48 39 da 73 0e 48 c7 c6 70 ac 11 bb e8 1b b2 fd ff <=
+0f> 0b 48 03 58 78 48 39 da 73 e9 49 01 ca b9 3f 00 00 00 4f 8d 0c
+> [   41.212354] RSP: 0018:ffffac0d41557c80 EFLAGS: 00010246
+> [   41.212821] RAX: 000000000000004a RBX: 0000000000244a00 RCX: 000000000=
+0000000
+> [   41.213459] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffffb=
+b1197dc
+> [   41.214100] RBP: 000000000000000c R08: 0000000000000439 R09: 000000000=
+0000059
+> [   41.214736] R10: 0000000000000000 R11: ffffac0d41557b08 R12: ffff8be47=
+5ea72b0
+> [   41.215376] R13: 000000000000fa00 R14: 0000000000250000 R15: 00000000f=
+ffc0bb5
+> [   41.216008] FS:  00007f30862ab600(0000) GS:ffff8be57bc40000(0000) knlG=
+S:0000000000000000
+> [   41.216771] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   41.217299] CR2: 000055e824d0d508 CR3: 0000000231dac000 CR4: 000000000=
+00006e0
+> [   41.217934] Call Trace:
+> [   41.218225]  memmap_init_zone_device+0x165/0x17c
+> [   41.218642]  memremap_pages+0x4c1/0x540
+> [   41.218989]  devm_memremap_pages+0x1d/0x60
+> [   41.219367]  pmem_attach_disk+0x16b/0x600 [nd_pmem]
+> [   41.219804]  ? devm_nsio_enable+0xb8/0xe0
+> [   41.220172]  nvdimm_bus_probe+0x69/0x1c0
+> [   41.220526]  really_probe+0x1c2/0x3e0
+> [   41.220856]  driver_probe_device+0xb4/0x100
+> [   41.221238]  device_driver_attach+0x4f/0x60
+> [   41.221611]  bind_store+0xc9/0x110
+> [   41.221919]  kernfs_fop_write+0x116/0x190
+> [   41.222326]  vfs_write+0xa5/0x1a0
+> [   41.222626]  ksys_write+0x59/0xd0
+> [   41.222927]  do_syscall_64+0x5b/0x180
+> [   41.223264]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [   41.223714] RIP: 0033:0x7f30865d0ed8
+> [   41.224037] Code: 89 02 48 c7 c0 ff ff ff ff eb b3 0f 1f 80 00 00 00 0=
+0 f3 0f 1e fa 48 8d 05 45 78 0d 00 8b 00 85 c0 75 17 b8 01 00 00 00 0f 05 <=
+48> 3d 00 f0 ff ff 77 58 c3 0f 1f 80 00 00 00 00 41 54 49 89 d4 55
+> [   41.225920] RSP: 002b:00007fffe5d30a78 EFLAGS: 00000246 ORIG_RAX: 0000=
+000000000001
+> [   41.226608] RAX: ffffffffffffffda RBX: 000055e824d07f40 RCX: 00007f308=
+65d0ed8
+> [   41.227242] RDX: 0000000000000007 RSI: 000055e824d07f40 RDI: 000000000=
+0000004
+> [   41.227870] RBP: 0000000000000007 R08: 0000000000000007 R09: 000000000=
+0000006
+> [   41.228753] R10: 0000000000000000 R11: 0000000000000246 R12: 000000000=
+0000004
+> [   41.229419] R13: 00007f30862ab528 R14: 0000000000000001 R15: 000055e82=
+4d07f40
+>=20
+> While creating a namespace and initializing memmap, if you destroy the na=
+mespace
+> and shrink the zone, it will initialize the memmap outside the zone and
+> trigger VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn), page) in
+> set_pfnblock_flags_mask().
 
-Thanks,
-Rustem
+Does that happen with -next as well? There, we currently don=E2=80=98t shri=
+nk the ZONE_DEVICE zone anymore.
 
+>=20
+> Thanks,
+> Toshiki Fukasawa
 
