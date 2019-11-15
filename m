@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4830DC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E739C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E2D820728
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EC4320723
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:46:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbfKOQp7 (ORCPT
+        id S1727718AbfKOQpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 11:45:59 -0500
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:41440 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727615AbfKOQp6 (ORCPT
+        Fri, 15 Nov 2019 11:45:54 -0500
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:55478 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727632AbfKOQpx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 11:45:58 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TiAOFJs_1573836341;
+        Fri, 15 Nov 2019 11:45:53 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R631e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TiAOFJs_1573836341;
 Received: from e18g09479.et15sqa.tbsite.net(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0TiAOFJs_1573836341)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 16 Nov 2019 00:45:51 +0800
+          Sat, 16 Nov 2019 00:45:49 +0800
 From:   Shile Zhang <shile.zhang@linux.alibaba.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -36,9 +36,9 @@ To:     Peter Zijlstra <peterz@infradead.org>,
 Cc:     "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
         linux-kbuild@vger.kernel.org,
         Shile Zhang <shile.zhang@linux.alibaba.com>
-Subject: [RFC PATCH v4 7/7] x86/unwind/orc: remove run-time ORC unwind tables sort
-Date:   Sat, 16 Nov 2019 00:45:39 +0800
-Message-Id: <20191115164539.57930-8-shile.zhang@linux.alibaba.com>
+Subject: [RFC PATCH v4 3/7] scripts/sortextable: Remove dead code
+Date:   Sat, 16 Nov 2019 00:45:35 +0800
+Message-Id: <20191115164539.57930-4-shile.zhang@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.0.rc2
 In-Reply-To: <20191115164539.57930-1-shile.zhang@linux.alibaba.com>
 References: <20191115164539.57930-1-shile.zhang@linux.alibaba.com>
@@ -49,33 +49,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The orc_unwind and orc_unwind_ip tables are sorted in vmlinux link phase
-at build time, just remove the run-time sort.
+Remove the comment out dead code, no functional changes.
 
 Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
 ---
- arch/x86/kernel/unwind_orc.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ scripts/sortextable.h | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 332ae6530fa8..280da6fa9922 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -273,9 +273,11 @@ void __init unwind_init(void)
- 		return;
- 	}
+diff --git a/scripts/sortextable.h b/scripts/sortextable.h
+index b7e407e09f59..a2e3af7bf211 100644
+--- a/scripts/sortextable.h
++++ b/scripts/sortextable.h
+@@ -201,10 +201,6 @@ static int do_func(Elf_Ehdr *ehdr,
+ 		_r(&sort_needed_sym->st_value) -
+ 		_r(&sort_needed_sec->sh_addr);
  
--	/* Sort the .orc_unwind and .orc_unwind_ip tables: */
--	sort(__start_orc_unwind_ip, num_entries, sizeof(int), orc_sort_cmp,
--	     orc_sort_swap);
-+	/*
-+	 * Note, orc_unwind and orc_unwind_ip tables has been sorted in
-+	 * vmlinux link phase by sorttable tool at build time.
-+	 * Its ready for binary search now.
-+	 */
- 
- 	/* Initialize the fast lookup table: */
- 	lookup_num_blocks = orc_lookup_end - orc_lookup;
+-#if 0
+-	printf("sort done marker at %lx\n",
+-	       (unsigned long)((char *)sort_done_location - (char *)ehdr));
+-#endif
+ 	/* We sorted it, clear the flag. */
+ 	w(0, sort_done_location);
+ 	return 0;
 -- 
 2.24.0.rc2
 
