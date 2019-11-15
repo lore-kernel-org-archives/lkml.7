@@ -5,62 +5,62 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 316E6C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2868DC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 077442073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F26BA2073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:34:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wCXxmzT0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a5q+0xMs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbfKOWer (ORCPT
+        id S1727567AbfKOWev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 17:34:47 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40541 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727321AbfKOWeI (ORCPT
+        Fri, 15 Nov 2019 17:34:51 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38664 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727276AbfKOWeH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 17:34:08 -0500
-Received: by mail-pl1-f193.google.com with SMTP id e3so5627044plt.7
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 14:34:08 -0800 (PST)
+        Fri, 15 Nov 2019 17:34:07 -0500
+Received: by mail-pf1-f193.google.com with SMTP id c13so7336752pfp.5
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 14:34:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=SMtnKN7Gs980aMHU7BQIQVC2axVHuGxWT+FltL2atao=;
-        b=wCXxmzT0A12PK75MA7nI5jP3tzVW7exsIlZfw+O4eheNL+D7AfmnLUW8+DHy3zzCoT
-         imMdV2IXvTuA9H87PHWJW7BZ1JaN+ZUEYeS1ckOpd7oZ3DKkU8RpBCqa2RgFFtzBhNZU
-         ubWEC8OF8SNb4i33w0ag7PZ9+KXkkiLBpSiR8p8JVqGpc8do+Et/ECFqhKV6FcfSU3Nh
-         BWJl4PpK/32Mi9tIt4EMVAKhaOdIDWTuc68utfJ+H1UFMvl17WpD2yq4hpv84JrGpbIR
-         eT68K8VM6j8kNRxR3gmZWlZI61FuWTkCKyr4/74coj9MYpZ8Iqm7O94Yr4jv9UntJTk8
-         OazQ==
+        bh=XjmHZ2r/4EcW1pjM4Rd69/tyPSpvDzWdjKn2vf5w1qY=;
+        b=a5q+0xMs8tIeJh8UJ8TVx8rZWUYZ16E5HxEnB0bRUqdlVxfqcyrfWViLr9Pn7dJisY
+         VqRFpH8/EN3p18o/KhB6P43Ky8JCimROhKeXLcPYbCV9IN4oJ2CVylJtMtP7qfwro7o7
+         SxdF13uvII4gAOlurEJrm50rCXFufEWhRyX+jcjvLDDHPbDNOBjiwTeiV6mHv4gY2lCf
+         v6zbwJPxmKb/vDqIU9Wohh6rRB9E8a5QwUHIEM0ATxuwA7uLwKPIO6cIdiBE5ysfdmSV
+         afv+gI97KSg+6usaoQb/OTeraFQQt+e/l1ahp52XQnTElIh1w5nC/Zk54P7lMFFDyeem
+         GE7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=SMtnKN7Gs980aMHU7BQIQVC2axVHuGxWT+FltL2atao=;
-        b=bvWgvfBcFhUqCRXn+wVxkeqWTbaX+hNwHHyK+Jat3RCqb6rCA30LIMR5o6s31UTn/O
-         Cx+PnxEcNkQCfkELTwstrbfpbjgnWJtft1NJ3fdAJQiu8G9hEFh/MYcBqMlPnXlPzuC2
-         wQpOIFFdwcS3x23UX3BE2MKdm8/NSjRLTXAdXJKYAkD4QZ9oSh1SCxE4OUU7AsDN93+i
-         al3poqZgzUvXF5evrmc8RWen0wcsLijZNghwYVnu0IsIYPdrLIkto6C/KOIiQ5bJOQgs
-         ZtNQ8R5aqBSxmnyetY0rCyOg2of43fcjKZCoXyyIiVysbqU8/Ft8glkJhUjfbfsORguQ
-         NE2A==
-X-Gm-Message-State: APjAAAWGGBfEn2QJ7ldUGboIve7uKkSmVdPqJB2N+qwxCciCbehYVfO/
-        Ovw7JcMZDMLZX+I5JCFg6xWP9A==
-X-Google-Smtp-Source: APXvYqwuKwX6BDI8XlSYaGLwJcivbUjXwRHYUP9kUFXgyIgUSmPpiWVI8b+3JiRmUg2D6EAa5Wg8iA==
-X-Received: by 2002:a17:90a:7781:: with SMTP id v1mr22961176pjk.93.1573857247779;
-        Fri, 15 Nov 2019 14:34:07 -0800 (PST)
+        bh=XjmHZ2r/4EcW1pjM4Rd69/tyPSpvDzWdjKn2vf5w1qY=;
+        b=S+p9kivv5dSk6HrPg2gYiKxqc3HMl9JZRRslvy0pny+ZUes05NhtJ3opAqOoFLRc8S
+         gGPTZXAxReQR305Ei9lTY+whfrwu32XY/IxiqBsIgxx0YlDKyF2bFVebWY0B/QG1/6u2
+         Cf8gGC0a0eZ1SVRkObZfAjxsc0AiN2Niyd3qqOSJbsSZeQ/PE/DaiP07+S16qxbGVd1n
+         l2BT7lS1nTo2M98pO3DRwcZ8KF3s7QpGhlV2yvvfghYO2iJXmZOggt31Y09+OKfMRrkd
+         H0ddUkJNnpgorhwI37dfP0oWhBViYsfSTSrtbPene2/6zoMBX23QRqzqr2jnNxW7mseJ
+         3cEg==
+X-Gm-Message-State: APjAAAVRQ3TpWtUkc6h3AiQ+oS6qatIxGqay8LPDlrADu41/gdXpCcKL
+        3DgZ4P8RMXowsqgkih0zm0XDBDPyzMc=
+X-Google-Smtp-Source: APXvYqx5QjFoyTLodbBskheBnK+zVxbguR/K9b4TV6wtQaQaNjBS6bpq3F/W36BhzlJQbuO0lG4qiQ==
+X-Received: by 2002:a63:181f:: with SMTP id y31mr18239880pgl.186.1573857245156;
+        Fri, 15 Nov 2019 14:34:05 -0800 (PST)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id m15sm11699724pfh.19.2019.11.15.14.34.07
+        by smtp.gmail.com with ESMTPSA id m15sm11699724pfh.19.2019.11.15.14.34.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 14:34:07 -0800 (PST)
+        Fri, 15 Nov 2019 14:34:04 -0800 (PST)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     stable@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [stable 4.19+][PATCH 12/20] clk: stm32mp1: parent clocks update
-Date:   Fri, 15 Nov 2019 15:33:48 -0700
-Message-Id: <20191115223356.27675-12-mathieu.poirier@linaro.org>
+Subject: [stable 4.19+][PATCH 09/20] clk: stm32mp1: fix HSI divider flag
+Date:   Fri, 15 Nov 2019 15:33:45 -0700
+Message-Id: <20191115223356.27675-9-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191115223356.27675-1-mathieu.poirier@linaro.org>
 References: <20191115223356.27675-1-mathieu.poirier@linaro.org>
@@ -71,56 +71,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-commit 749c9e553e1f063eb132a78d80225532cbfedb80 upstream
+commit d3f2e33c875de5052e032a9eefa64c897a930ed1 upstream
 
-Fixes parent clock for axi, fdcan, sai and adc12 clocks.
+The divider of HSI (clk-hsi-div) is power of two divider.
 
-Fixes: e51d297e9a92 ("clk: stm32mp1: add Sub System clocks")
+Fixes: 9bee94e7b7da ("clk: stm32mp1: Introduce STM32MP1 clock driver")
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Cc: stable <stable@vger.kernel.org> # 4.19+
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/clk/clk-stm32mp1.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/clk/clk-stm32mp1.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/clk/clk-stm32mp1.c b/drivers/clk/clk-stm32mp1.c
-index 8e25ed62f67b..bf3b6a4c78d0 100644
+index a907555b2a3d..d602ae72eb81 100644
 --- a/drivers/clk/clk-stm32mp1.c
 +++ b/drivers/clk/clk-stm32mp1.c
-@@ -121,7 +121,7 @@ static const char * const cpu_src[] = {
- };
+@@ -1655,8 +1655,8 @@ static const struct stm32_mux_cfg ker_mux_cfg[M_LAST] = {
  
- static const char * const axi_src[] = {
--	"ck_hsi", "ck_hse", "pll2_p", "pll3_p"
-+	"ck_hsi", "ck_hse", "pll2_p"
- };
+ static const struct clock_config stm32mp1_clock_cfg[] = {
+ 	/* Oscillator divider */
+-	DIV(NO_ID, "clk-hsi-div", "clk-hsi", 0, RCC_HSICFGR, 0, 2,
+-	    CLK_DIVIDER_READ_ONLY),
++	DIV(NO_ID, "clk-hsi-div", "clk-hsi", CLK_DIVIDER_POWER_OF_TWO,
++	    RCC_HSICFGR, 0, 2, CLK_DIVIDER_READ_ONLY),
  
- static const char * const per_src[] = {
-@@ -225,19 +225,19 @@ static const char * const usart6_src[] = {
- };
- 
- static const char * const fdcan_src[] = {
--	"ck_hse", "pll3_q", "pll4_q"
-+	"ck_hse", "pll3_q", "pll4_q", "pll4_r"
- };
- 
- static const char * const sai_src[] = {
--	"pll4_q", "pll3_q", "i2s_ckin", "ck_per"
-+	"pll4_q", "pll3_q", "i2s_ckin", "ck_per", "pll3_r"
- };
- 
- static const char * const sai2_src[] = {
--	"pll4_q", "pll3_q", "i2s_ckin", "ck_per", "spdif_ck_symb"
-+	"pll4_q", "pll3_q", "i2s_ckin", "ck_per", "spdif_ck_symb", "pll3_r"
- };
- 
- static const char * const adc12_src[] = {
--	"pll4_q", "ck_per"
-+	"pll4_r", "ck_per", "pll3_q"
- };
- 
- static const char * const dsi_src[] = {
+ 	/*  External / Internal Oscillators */
+ 	GATE_MP1(CK_HSE, "ck_hse", "clk-hse", 0, RCC_OCENSETR, 8, 0),
 -- 
 2.17.1
 
