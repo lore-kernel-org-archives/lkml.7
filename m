@@ -2,102 +2,213 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F32C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B45EDC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B1D020801
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:38:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ItJshpSt"
+	by mail.kernel.org (Postfix) with ESMTP id 848EF20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:42:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727531AbfKOQij (ORCPT
+        id S1727607AbfKOQmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 11:38:39 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44608 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727543AbfKOQii (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 11:38:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573835917;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6fENKbkRp6IkVJsqfQWI1tPw8ogr4wWzSPjFy8i7mms=;
-        b=ItJshpStFRX1cWzQp3Ayyvb1GjvrfKoyYPDDPnRpAsZu7L1ncHbS+Mbw2c2abDBHh3kS41
-        INIpjmpQh2kKnqfe+D+tcGKJLD4g9vUa9W7ddsbfYK3mpXYmAM959IIUkz5/bNuci5db4m
-        l/FTqXlTvSdGluI9GuTb9U4+9wcrKbg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-281-hWEbCo_AMMG0C_3DEUsPiQ-1; Fri, 15 Nov 2019 11:38:34 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 622D1107ACFA;
-        Fri, 15 Nov 2019 16:38:33 +0000 (UTC)
-Received: from treble (ovpn-120-26.rdu2.redhat.com [10.10.120.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 98BED60FC1;
-        Fri, 15 Nov 2019 16:38:32 +0000 (UTC)
-Date:   Fri, 15 Nov 2019 10:38:30 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Fri, 15 Nov 2019 11:42:00 -0500
+Received: from mga07.intel.com ([134.134.136.100]:14355 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727537AbfKOQmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 11:42:00 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 08:41:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,308,1569308400"; 
+   d="scan'208";a="214806201"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 15 Nov 2019 08:41:55 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 15 Nov 2019 18:41:55 +0200
+Date:   Fri, 15 Nov 2019 18:41:55 +0200
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Jon Flatley <jflat@chromium.org>
+Cc:     Benson Leung <bleung@google.com>, enric.balletbo@collabora.com,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: Tree for Nov 15 (objtool)
-Message-ID: <20191115163830.g262y75w3sh535fm@treble>
-References: <20191115190525.77efdf6c@canb.auug.org.au>
- <c49752fe-4b47-2329-2cb8-caad44803e3a@infradead.org>
+        Benson Leung <bleung@chromium.org>, groeck@chromium.org,
+        sre@kernel.org, Prashant Malani <pmalani@chromium.org>
+Subject: Re: [PATCH 0/3] ChromeOS EC USB-C Connector Class
+Message-ID: <20191115164155.GH4013@kuha.fi.intel.com>
+References: <20191113031044.136232-1-jflat@chromium.org>
+ <20191113175127.GA171004@google.com>
+ <20191113182537.GC4013@kuha.fi.intel.com>
+ <CACJJ=pxba6=SR=kWO-vgqU=wkj7gnVAm62b2tcYf2K+1ucySRg@mail.gmail.com>
+ <20191114152432.GD4013@kuha.fi.intel.com>
+ <CACJJ=pywjs1=6mC7M8bOYKR3HfKx97C9jMEft7d98c6-go-Ubg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <c49752fe-4b47-2329-2cb8-caad44803e3a@infradead.org>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: hWEbCo_AMMG0C_3DEUsPiQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CACJJ=pywjs1=6mC7M8bOYKR3HfKx97C9jMEft7d98c6-go-Ubg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 08:02:30AM -0800, Randy Dunlap wrote:
-> On 11/15/19 12:05 AM, Stephen Rothwell wrote:
-> > Hi all,
-> >=20
-> > Changes since 20191114:
-> >=20
->=20
-> on x86_64:
->=20
-> already reported and Josh supplied a fix (yet unmerged),
-> but this is still around:
->=20
-> kernel/exit.o: warning: objtool: __x64_sys_exit_group()+0x14: unreachable=
- instruction
+Hi,
 
-My apologies, I have a growing backlog of objtool fixes which I hope to
-post next week.
+On Thu, Nov 14, 2019 at 01:00:42PM -0800, Jon Flatley wrote:
+> On Thu, Nov 14, 2019 at 7:24 AM Heikki Krogerus
+> <heikki.krogerus@linux.intel.com> wrote:
+> >
+> > Hi Jon,
+> >
+> > On Wed, Nov 13, 2019 at 05:09:56PM -0800, Jon Flatley wrote:
+> > > > I'll go over these tomorrow, but I have one question already. Can you
+> > > > guys influence what goes to the ACPI tables?
+> > > >
+> > > > Ideally every Type-C connector is always described in its own ACPI
+> > > > node (or DT node if DT is used). Otherwise getting the correct
+> > > > capabilities and especially connections to other devices (like the
+> > > > muxes) for every port may get difficult.
+> > >
+> > > Hey Heikki, thank you for your quick response!
+> > >
+> > > In general we do have control over the ACPI tables and over DT. The
+> > > difference for ChromeOS is that the PD implementation and policy
+> > > decisions are handled by the embedded controller. This includes
+> > > alternate mode transitions and control over the muxes. I don't believe
+> > > there is any information about port capabilities in ACPI or DT, that's
+> > > all handled by the EC. With current EC firmware we are mostly limited
+> > > to querying the EC for port capabilities and state. There may be some
+> > > exceptions to this, such as with Rockchip platforms, but even then the
+> > > EC is largely in control.
+> >
+> > The capabilities here mean things like is the port: source, sink or
+> > DRP; host, device or DRD; etc. So static information.
+> >
+> > I do understand that the EC is in control of the Port Controller (or
+> > PD controller), the muxes, the policy decisions and what have you, and
+> > that is fine. My point is that the operating system should not have to
+> > get also the hardware description from the EC. That part should always
+> > come from ACPI tables or DT, even when the components are attached to
+> > the EC instead of the host CPU. Otherwise we loose scalability for no
+> > good reason.
+> >
+> > Note. The device properties for the port capabilities are already
+> > documented in kernel:
+> > Documentation/devicetree/bindings/connector/usb-connector.txt (the
+> > same properties work in ACPI as well).
+> >
+> > > I think you raise a valid point, but such a change is probably out of
+> > > scope for this implementation.
+> >
+> > This implementation should already be made so that it works with a
+> > properly prepared ACPI tables or DT. If there are already boards that
+> > don't supply the nodes in ACPI tables for the ports, then software
+> > nodes can be used with those, but all new boards really should have a
+> > real firmware node represeting every Type-C port.
+> 
+> Hey Heikki,
+> 
+> I spoke with Benson and Prashant and you raise a good point. Moving
+> forward we should probably be describing these capabilities in ACPI.
+> We do want to support existing devices, and making changes to the ACPI
+> tables would mean firmware modifications for each and every one, which
+> is a complicated process.
+> 
+> To date the port capabilities on all ChromeOS devices have been the
+> same. I recall now that we don't (and with current firmware can't)
+> query the port capabilities from the EC; they're just hard coded into
+> the driver. In the absence of these nodes in the ACPI tables we can
+> populate these capabilities in software nodes. This would allow us to
+> support existing systems without the expensive firmware change, and I
+> think it still provides the scalability you're asking for.
+> 
+> Are you suggesting that every port on the device gets its own ACPI/DT node?
 
->=20
-> new AFAIK:
->=20
-> drivers/gpu/drm/bridge/cdns-dsi.o: warning: objtool: cdns_dsi_bridge_enab=
-le()+0x3e0: unreachable instruction
->=20
-> obj file for latter one is attached.
+Yes. Every port (or maybe I should say "connector") should always have
+its own ACPI/DT node.
 
-This seems fishy.  cdns_dsi_init_link() never returns, it always dies a
-with UD2.  I bet GCC decided that it always does a divide-by-zero, and
-so it forces a crash as a result.  Will try to dig deeper next week...
+There should also be a separate parent node for the port nodes that
+represents the USB Type-C controller part (in EC), meaning you
+probable don't want to simply make the port nodes child nodes directly
+under the root EC node (the one that has ACPI HID GOOG0004 or
+GOOG0008). The controller node is the one that is child of the root EC
+node, and the port nodes are children of the controller. The
+controller node ideally will have its own ACPI HID, but the port nodes
+themselves don't need HIDs. I guess this part is clear..
 
---=20
-Josh
+I proposed in my review (patch 3/3) that there should be actually a
+single parent controller node for every port, so that you would have
+always a controller node with a single port node for every connector,
+but that may be overkill. I was thinking about past problems where it
+is no clear which port (number) should be mapped to which port node,
+but you do not have that problem.
 
+So I think you only need a single "EC Type-C Controller" node that
+is the parent for the port nodes.
+
+I'll put here a short ASL example snippet that has nodes for two
+ports, that hopefully helps explain how I think this should be
+described in the ACPI tables:
+
+DefinitionBlock ("usbc.aml", "SSDT", 5, "GOOGLE", "USBC", 1)
+{
+    /* I'm assuming here that H_EC is the EC device. */
+    Scope (\_SB.H_EC)
+    {
+        /*
+         * This is the controller (port parent) device that communicates with
+         * the EC. It is the node that would create the device instance for the
+         * driver (drivers/platform/chrome/cros_ec_typec.c).
+         */
+        Device (USBC)
+        {
+            Name (_HID, "GOOGXXXX") /* FIXME!!!!!! */
+            Name (_DDN, "ChromeOS Embedded Controller USB Type-C Control")
+
+            /*
+             * Each connector shall have its own ACPI device entry (node),
+             * under the actual interface (controller) device.
+             */
+            Device (CON1)
+            {
+                /* Port number 1 */
+                Name (_ADR, One)
+
+                /* The port capability device properties. */
+                Name (_DSD, Package () {
+                    ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+                    Package() {
+                        Package () {"power-role", "dual"},
+                        Package () {"data-role", "dual"},
+                    },
+                })
+            }
+
+            Device (CON2)
+            {
+                /* Port number 2 */
+                Name (_ADR, Two)
+
+                Name (_DSD, Package () {
+                    ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+                    Package() {
+                        Package () {"power-role", "dual"},
+                        Package () {"data-role", "dual"},
+                    },
+                })
+            }
+        }
+    }
+}
+
+To play it safe (and be compatible with DT), the port number does not
+have to be the node address (_ADR). You can get the port number also
+from a device property as well of course.
+
+Br,
+
+-- 
+heikki
