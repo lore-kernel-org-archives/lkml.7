@@ -2,150 +2,147 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 017AAC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F714C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D974D2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3876F2073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:59:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eYrDWpE5";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="k2vJiiPV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbfKOJ7M (ORCPT
+        id S1727527AbfKOJ7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:59:12 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:41416 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727337AbfKOJ7L (ORCPT
+        Fri, 15 Nov 2019 04:59:15 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:59076 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727337AbfKOJ7O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:59:11 -0500
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iVYNU-0003Ej-4T; Fri, 15 Nov 2019 09:58:56 +0000
-Date:   Fri, 15 Nov 2019 10:58:55 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Andrei Vagin <avagin@gmail.com>, Adrian Reber <areber@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v10 1/2] fork: extend clone3() to support setting a PID
-Message-ID: <20191115095854.4vr6bgfz6ny5zbpd@wittgenstein>
-References: <20191114142707.1608679-1-areber@redhat.com>
- <20191114191538.GC171963@gmail.com>
- <20191115093419.GA25528@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191115093419.GA25528@redhat.com>
-User-Agent: NeoMutt/20180716
+        Fri, 15 Nov 2019 04:59:14 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 45F056172F; Fri, 15 Nov 2019 09:59:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573811953;
+        bh=Ii/F/tmDcx7GLOsjHqfirdwhtUrFXyfg5XVHO1ivZBg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eYrDWpE5HSfhS147tnkv13BfdPzMj13p12jhrwL3KF+J/ImPdN+5bclNeNeUNzyTB
+         efbm5cIFD/iITIzCD9AwIrMwHig8XEBh3vVeOfYF1hJ00fQnWACVzcI2qWHcKdgxir
+         Agv1cAj9LVyBSyARZcpRd/l18tTkEgmcPtPMJ5g8=
+Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3A3446172F;
+        Fri, 15 Nov 2019 09:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573811952;
+        bh=Ii/F/tmDcx7GLOsjHqfirdwhtUrFXyfg5XVHO1ivZBg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=k2vJiiPVg2EiSnjBGP5Q5Rb/NIdY5WNrlA6Ao95MXxogMRVrZlVTEJqZqvTtc59Si
+         CPx3IqvpndQQ6BT1D5voBsHURe77FgTVEIRID/k2t5OHrOAkDv20dHIoAzncWHxpov
+         /I0RNP1p+8R4bgS546tRLrDg7d2xCkmzeqG8Xxkc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3A3446172F
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v1 2/3] dt-bindings: clock: Introduce QCOM Display clock bindings
+Date:   Fri, 15 Nov 2019 15:28:48 +0530
+Message-Id: <1573811929-21695-3-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1573811929-21695-1-git-send-email-tdas@codeaurora.org>
+References: <1573811929-21695-1-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 10:34:20AM +0100, Oleg Nesterov wrote:
-> On 11/14, Andrei Vagin wrote:
-> >
-> > On Thu, Nov 14, 2019 at 03:27:06PM +0100, Adrian Reber wrote:
-> > ...
-> > > diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
-> > > index 1d500ed03c63..2e649cfa07f4 100644
-> > > --- a/include/uapi/linux/sched.h
-> > > +++ b/include/uapi/linux/sched.h
-> > ...
-> > > @@ -174,24 +186,51 @@ struct pid *alloc_pid(struct pid_namespace *ns)
-> > >  	pid->level = ns->level;
-> > >
-> > >  	for (i = ns->level; i >= 0; i--) {
-> > > -		int pid_min = 1;
-> > > +		int tid = 0;
-> > > +
-> > > +		if (set_tid_size) {
-> > > +			tid = set_tid[ns->level - i];
-> > > +			if (tid < 1 || tid >= pid_max)
-> > > +				return ERR_PTR(-EINVAL);
-> >
-> > do we need to release pids what have been allocated on previous levels?
-> 
-> Heh ;) it is really amazing that nobody noticed this! Thanks Andrei.
-> 
-> > nr = -EINVAL;
-> 
-> retval = -EINVAL;
-> 
-> > goto out_free;
+Add device tree bindings for display clock controller for
+Qualcomm Technology Inc's SC7180 SoCs.
 
-How do we feel about moving this into a separate helper like below?
-Keeps the ugliness out of alloc_pid() itself.
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+---
+ .../devicetree/bindings/clock/qcom,dispcc.yaml     |  1 +
+ include/dt-bindings/clock/qcom,dispcc-sc7180.h     | 46 ++++++++++++++++++++++
+ 2 files changed, 47 insertions(+)
+ create mode 100644 include/dt-bindings/clock/qcom,dispcc-sc7180.h
 
-Christian
+diff --git a/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml b/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
+index 1185e49..9c58e02 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
+@@ -16,6 +16,7 @@ description: |
+ properties:
+   compatible:
+     enum:
++      - qcom,sc7180-dispcc
+       - qcom,sdm845-dispcc
 
-diff --git a/kernel/pid.c b/kernel/pid.c
-index eb32668997c6..d3dfd1bbebaf 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -157,6 +157,31 @@ void free_pid(struct pid *pid)
- 	call_rcu(&pid->rcu, delayed_put_pid);
- }
- 
-+static int set_tid_next(pid_t *set_tid, size_t *size, int idx)
-+{
-+	int tid = 0;
+   clocks:
+diff --git a/include/dt-bindings/clock/qcom,dispcc-sc7180.h b/include/dt-bindings/clock/qcom,dispcc-sc7180.h
+new file mode 100644
+index 0000000..b9b51617
+--- /dev/null
++++ b/include/dt-bindings/clock/qcom,dispcc-sc7180.h
+@@ -0,0 +1,46 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2019, The Linux Foundation. All rights reserved.
++ */
 +
-+	if (*size) {
-+		tid = set_tid[idx];
-+		if (tid < 1 || tid >= pid_max)
-+			return -EINVAL;
++#ifndef _DT_BINDINGS_CLK_QCOM_DISP_CC_SC7180_H
++#define _DT_BINDINGS_CLK_QCOM_DISP_CC_SC7180_H
 +
-+		/*
-+		 * Also fail if a PID != 1 is requested and
-+		 * no PID 1 exists.
-+		 */
-+		if (tid != 1 && !tmp->child_reaper)
-+			return -EINVAL;
++#define DISP_CC_PLL0				0
++#define DISP_CC_PLL0_OUT_EVEN			1
++#define DISP_CC_MDSS_AHB_CLK			2
++#define DISP_CC_MDSS_AHB_CLK_SRC		3
++#define DISP_CC_MDSS_BYTE0_CLK			4
++#define DISP_CC_MDSS_BYTE0_CLK_SRC		5
++#define DISP_CC_MDSS_BYTE0_DIV_CLK_SRC		6
++#define DISP_CC_MDSS_BYTE0_INTF_CLK		7
++#define DISP_CC_MDSS_DP_AUX_CLK			8
++#define DISP_CC_MDSS_DP_AUX_CLK_SRC		9
++#define DISP_CC_MDSS_DP_CRYPTO_CLK		10
++#define DISP_CC_MDSS_DP_CRYPTO_CLK_SRC		11
++#define DISP_CC_MDSS_DP_LINK_CLK		12
++#define DISP_CC_MDSS_DP_LINK_CLK_SRC		13
++#define DISP_CC_MDSS_DP_LINK_DIV_CLK_SRC	14
++#define DISP_CC_MDSS_DP_LINK_INTF_CLK		15
++#define DISP_CC_MDSS_DP_PIXEL_CLK		16
++#define DISP_CC_MDSS_DP_PIXEL_CLK_SRC		17
++#define DISP_CC_MDSS_ESC0_CLK			18
++#define DISP_CC_MDSS_ESC0_CLK_SRC		19
++#define DISP_CC_MDSS_MDP_CLK			20
++#define DISP_CC_MDSS_MDP_CLK_SRC		21
++#define DISP_CC_MDSS_MDP_LUT_CLK		22
++#define DISP_CC_MDSS_NON_GDSC_AHB_CLK		23
++#define DISP_CC_MDSS_PCLK0_CLK			24
++#define DISP_CC_MDSS_PCLK0_CLK_SRC		25
++#define DISP_CC_MDSS_ROT_CLK			26
++#define DISP_CC_MDSS_ROT_CLK_SRC		27
++#define DISP_CC_MDSS_RSCC_AHB_CLK		28
++#define DISP_CC_MDSS_RSCC_VSYNC_CLK		29
++#define DISP_CC_MDSS_VSYNC_CLK			30
++#define DISP_CC_MDSS_VSYNC_CLK_SRC		31
++#define DISP_CC_XO_CLK				32
 +
-+		if (!ns_capable(tmp->user_ns, CAP_SYS_ADMIN))
-+			return -EPERM;
++/* DISP_CC GDSCR */
++#define MDSS_GDSC				0
 +
-+		(*size)--;
-+	}
-+
-+	return tid;
-+}
-+
- struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 		      size_t set_tid_size)
- {
-@@ -188,20 +213,10 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 	for (i = ns->level; i >= 0; i--) {
- 		int tid = 0;
- 
--		if (set_tid_size) {
--			tid = set_tid[ns->level - i];
--			if (tid < 1 || tid >= pid_max)
--				return ERR_PTR(-EINVAL);
--			/*
--			 * Also fail if a PID != 1 is requested and
--			 * no PID 1 exists.
--			 */
--			if (tid != 1 && !tmp->child_reaper)
--				return ERR_PTR(-EINVAL);
--			if (!ns_capable(tmp->user_ns, CAP_SYS_ADMIN))
--				return ERR_PTR(-EPERM);
--			set_tid_size--;
--		}
-+		retval = set_tid_next(set_tid, &set_tid_size, ns->level - i);
-+		if (retval < 0)
-+			goto out_free;
-+		tid = retval;
- 
- 		idr_preload(GFP_KERNEL);
- 		spin_lock_irq(&pidmap_lock);
++#endif
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
+
