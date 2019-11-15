@@ -2,100 +2,138 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0004C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBCDC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2202077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3499F20740
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:20:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vy1vJB4N"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="aA0SMJqx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbfKOMSE (ORCPT
+        id S1727472AbfKOMUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:18:04 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35089 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727413AbfKOMSC (ORCPT
+        Fri, 15 Nov 2019 07:20:07 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34885 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727306AbfKOMUG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 07:18:02 -0500
-Received: by mail-lj1-f193.google.com with SMTP id r7so10486776ljg.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 04:18:01 -0800 (PST)
+        Fri, 15 Nov 2019 07:20:06 -0500
+Received: by mail-wr1-f66.google.com with SMTP id s5so10783853wrw.2
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 04:20:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EKKyPkgTIrUgJLfJdMi3ez4CUNaFpld4hIHRZMCg8t8=;
-        b=vy1vJB4N1Afx8NhpJeEBnSR0cw/HleAoP92rEem7iYYrvxLZnzNIXlWVL5HWZV2Unq
-         VN0Oh0tPfXotXABobmT2vd2sB6RRYvHlGRi4PJBCLt8aEYiF644ZRUwGpdiRjN+bRx1R
-         xXYvYVsusGIMVYU1E53jvUhQg8Ulsuuzle+kgSYZ2GGofnQZYE4tlVffFUrAhG+YslzW
-         mt+IF3G8GGbVGJpJWrimUxPKQ9ZhqlwfJsaySAQSz9p45HEmf0Qi17HYAr18XZWDAIG/
-         AD1iM7XZ4RGsomT8OKw3stAH7P71rqqufUvrkSjGzD4Z+TzolbGjwgmn0DB0iygicw6H
-         G2hg==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=NBITj17KIDDQ/wzdId3cQD3bmEwVbK2XADeS/shNAmE=;
+        b=aA0SMJqxZ5qcVRg+Rexn4IUDhZEFaMChYd9AwPuKUGLa9qL+xmKhDupbAKhCCvks4o
+         fCOKnxLnPDDOw/51wdM8v81Q2bCibCu6/z/9U2K8fnvi42KWtW0siAoAzx4s8j7aCIuU
+         0VCQRonwNfB0R2bQvytQKWcaeM7x8H3NwFQ8mw1BEx5T1Jv+hFDLAhbPQldkreXTshHC
+         FyrGdYBd17ZKus/LpSAsH9zscydFiIwAfcr3MR190/DirJIBMCtPeNyi+z+mLd0pDAIL
+         cFepH6QXLOvJmi3sDRtfqBdqQx76aZDwfKHAm6gxOGqpdQc02xqpuX6I+NoW2YMW0877
+         kk9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EKKyPkgTIrUgJLfJdMi3ez4CUNaFpld4hIHRZMCg8t8=;
-        b=EqpOBSo4s6KkrmEML8kv0ddhwoGWMbNCzppJIxjNW6WN5YtBljaqPZ4+Q4WOKyW4Mh
-         kO0uvOrAUZ/TnVL7pmQLn6xJRBGozYkpBcQ8mUCdxeWT4jw2mtRQs3KweQZD3av0J5nx
-         WkjIO/8R4LJeTuup0MY1hIWRpZLop9ibAuYn6X9dlGpYmJHsKkUqmBdTUWsgnHSxIDL3
-         SpPmlCyWfhc2xO6YS82eapV3ZeTGoIHm+audcz1tIxZWnlAlvlFmdYJbGqrkEfcVk4ri
-         wY03tSfup5cwq6lllhs8uRpz06H5E/i/xXRu2/M+8fWPKTiS4tqSOtgddmX210elxawM
-         Cz3Q==
-X-Gm-Message-State: APjAAAULllmZBvfUan869wDEe3veoc4fcltCQk+yWMGGw+SmmsrIf9Lv
-        BGEDeZf4FlrBpxDKRMI2B1DuIt3nqGe1OQ==
-X-Google-Smtp-Source: APXvYqyc7/njB2TOHQ/xxoQ3GlfB7ZlZuoZFAdFYf7PUCmHsOp/ClIPMEE+HE5YoWIok2S22oIMusQ==
-X-Received: by 2002:a05:651c:20f:: with SMTP id y15mr4870369ljn.31.1573820280621;
-        Fri, 15 Nov 2019 04:18:00 -0800 (PST)
-Received: from centauri.lan (ua-84-217-220-205.bbcust.telenor.se. [84.217.220.205])
-        by smtp.gmail.com with ESMTPSA id c16sm331070lfp.93.2019.11.15.04.17.59
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=NBITj17KIDDQ/wzdId3cQD3bmEwVbK2XADeS/shNAmE=;
+        b=E/qduidx1caxUbGEwIz83ynLf7RUDqjfQvesKz/A/J2qomfVR3MrWbxTLLFB3n7eL3
+         eULO9oHnMZYjgUjfAMDUznbiM1IpV2AszN0ssej0cazNFfCDIU/tI7LnjtLFDt5LN2w7
+         vsoXN3NhJHh2sH+zUpmKV3SxM3Sb/21N4RulNcb7wYLAisHEVfN95syqEBGDnof+Er/E
+         TO3mhaeFD9S45vhZv3a99y57TuGkQPP3oci2s2yG/nizAU32K3htRzg8ld5DqzDMbwfu
+         qIddyMgVMzqtbpYuAvR+IlivPwlzS5xI5bq2/3pFC+fOoD4K9l+ujWV6cfjsnfXtEMC+
+         KFDQ==
+X-Gm-Message-State: APjAAAUbXViDWfFc/qcRUrNvWIfIOdadbHURdp04cbXOxUKAd/o/UfWt
+        ikT3RZDYiqEL/JdHT3qeJma2/Q==
+X-Google-Smtp-Source: APXvYqyHejg2wpDCQ5Xb/fga24iRY4A1buPXc45rZpw01kmq5mw3Gd43YdLn2qDVw5DFt6a2GDzDmA==
+X-Received: by 2002:adf:e60e:: with SMTP id p14mr15982979wrm.249.1573820404646;
+        Fri, 15 Nov 2019 04:20:04 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id y16sm11276365wro.25.2019.11.15.04.20.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 04:17:59 -0800 (PST)
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org,
-        sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org,
-        ulf.hansson@linaro.org, Niklas Cassel <niklas.cassel@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v5 4/5] arm64: defconfig: enable CONFIG_QCOM_CPR
-Date:   Fri, 15 Nov 2019 13:15:41 +0100
-Message-Id: <20191115121544.2339036-5-niklas.cassel@linaro.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191115121544.2339036-1-niklas.cassel@linaro.org>
-References: <20191115121544.2339036-1-niklas.cassel@linaro.org>
+        Fri, 15 Nov 2019 04:20:03 -0800 (PST)
+Message-ID: <5dce97f3.1c69fb81.6633c.685c@mx.google.com>
+Date:   Fri, 15 Nov 2019 04:20:03 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: linux-4.4.y
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Report-Type: boot
+X-Kernelci-Kernel: v4.4.201-21-gb0074e36d782
+In-Reply-To: <20191115062006.854443935@linuxfoundation.org>
+References: <20191115062006.854443935@linuxfoundation.org>
+Subject: Re: [PATCH 4.4 00/20] 4.4.202-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable CONFIG_QCOM_CPR.
+stable-rc/linux-4.4.y boot: 80 boots: 1 failed, 75 passed with 3 offline, 1=
+ conflict (v4.4.201-21-gb0074e36d782)
 
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.4.y/kernel/v4.4.201-21-gb0074e36d782/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.4.y=
+/kernel/v4.4.201-21-gb0074e36d782/
+
+Tree: stable-rc
+Branch: linux-4.4.y
+Git Describe: v4.4.201-21-gb0074e36d782
+Git Commit: b0074e36d782e84e6a2e08910103642762949d2b
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 41 unique boards, 17 SoC families, 13 builds out of 190
+
+Boot Regressions Detected:
+
+arm:
+
+    exynos_defconfig:
+        gcc-8:
+          exynos5422-odroidxu3:
+              lab-collabora: new failure (last pass: v4.4.201)
+
+Boot Failure Detected:
+
+arm:
+    exynos_defconfig:
+        gcc-8:
+            exynos5422-odroidxu3: 1 failed lab
+
+Offline Platforms:
+
+arm:
+
+    sunxi_defconfig:
+        gcc-8
+            sun7i-a20-bananapi: 1 offline lab
+
+    multi_v7_defconfig:
+        gcc-8
+            bcm4708-smartrg-sr400ac: 1 offline lab
+            sun7i-a20-bananapi: 1 offline lab
+
+Conflicting Boot Failure Detected: (These likely are not failures as other =
+labs are reporting PASS. Needs review.)
+
+i386:
+    i386_defconfig:
+        qemu_i386:
+            lab-baylibre: FAIL (gcc-8)
+            lab-collabora: PASS (gcc-8)
+
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index e76b42b25dd6..4385033c0a34 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -438,6 +438,7 @@ CONFIG_GPIO_PCA953X=y
- CONFIG_GPIO_PCA953X_IRQ=y
- CONFIG_GPIO_MAX77620=y
- CONFIG_POWER_AVS=y
-+CONFIG_QCOM_CPR=y
- CONFIG_ROCKCHIP_IODOMAIN=y
- CONFIG_POWER_RESET_MSM=y
- CONFIG_POWER_RESET_XGENE=y
--- 
-2.23.0
-
+For more info write to <info@kernelci.org>
