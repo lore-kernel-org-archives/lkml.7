@@ -2,117 +2,117 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E0BC33C99
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EADFC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F23420733
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A2B920733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:59:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IseQopMy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yNpKcK36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfKOW5a (ORCPT
+        id S1727137AbfKOW7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 17:57:30 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37556 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbfKOW5a (ORCPT
+        Fri, 15 Nov 2019 17:59:41 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44850 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbfKOW7k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 17:57:30 -0500
-Received: by mail-pf1-f193.google.com with SMTP id p24so7362912pfn.4;
-        Fri, 15 Nov 2019 14:57:29 -0800 (PST)
+        Fri, 15 Nov 2019 17:59:40 -0500
+Received: by mail-lj1-f196.google.com with SMTP id g3so12324480ljl.11
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 14:59:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=enZ7Qi/SyTxVExugp5p095tNoDvQ3FGNLtSzXeoV+l0=;
-        b=IseQopMywi72QKbY6yp0IHyT0I+JUBoyvgl8AZTQRv4I9Rxtpv763WWjrgWrwgPYHz
-         d+/mh2Y+Cnbne3wW8DLJCD0hjJuiRK2rY7Nl46yK3EAKg5F9X9qYmATNwzce/aE4fK7d
-         3MH/suadReznkLWUA5Wynd09oXF/r8cOm2CwshEec65J+0YbhdL55r2R/ue/9fCF3BIb
-         MZGffPQWyyL7h7zUmbeuIXA4T6K79DS39M/QhM2rFFZkI1fnlEv/zD8f1DW4vFsz0LCH
-         w7XJ3vED2ay5oQAMgY2YV1vA92yfdi/RoSIHp+gwnoe5RTSivCMRHwaqOXNV4fmJ9c6c
-         B7AA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eBmbrDGGUNK2PSi8Bx8VXe1x5gi+GmXOPHBLYTXbcxE=;
+        b=yNpKcK36NBDESa30v3iWE90W/v1jImyLysC2A7Xfx9DtVdQo/TzCz5a1mFif/k7wIT
+         kjEKnlT2rlzSdHIt1YK28dvnrraEHDulZhRB6aWCkd6a3g7lQMd4YJ5boj4DB+PdDGWK
+         srCkSJ5pX6Jl87Iqt6Dt7Rk4m3mG9zVZwN9fkmBR6cZqOdMm32Ys3R+RwqL2VgfDyvhx
+         XUYyklWda26Br2wAav+sKNFI259M3aJpBzug/PdbpF/qeSuOK7ogGGiHrd1nyFUpq9bV
+         qf/spFXoflrD1nvqij4dxDahCgPhWKTGCm/oxe4WgrV9LvHmCaxsDyOV0f6YQfgqp0b8
+         baxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=enZ7Qi/SyTxVExugp5p095tNoDvQ3FGNLtSzXeoV+l0=;
-        b=aj0ZfBa6xK22OJ/vi2oxPXJGNAhJj/xyPItjSsGjv8LJc7TlHoBiiwH1QVaIrJQduD
-         q71eoi+F8WTKYmYvYCWszouaXw6Mg7T0rtMTbVDRHybOroyAI1VvidoRa9Ffk7JPWobc
-         UilWXkAutzyT/3zULIaGf13o8HDR6uEGZMyMgHHpMha34TyJ9G7heYu2BfnKz6yi6NZw
-         2tnWhC+u+pNiZkrUPIixj1mVsqGPWooSC2FfUhSv6L8r1EvUrPC1bt6wqSWOu0+JyRKo
-         QVxmoITMeC40omlwRB0awUSBfGJ1qwa4kfXm5sFhF63RrKO2Sp29MlbLL91qgDuDNqb+
-         ZFIw==
-X-Gm-Message-State: APjAAAUlKHVVzRfQ3auRlpIkBoW/X1J+nZGUm7Ttw5/ABXZMbLI6/fa1
-        JZ3z4kXuBkj1pgf2xY70VDA=
-X-Google-Smtp-Source: APXvYqzBHMokFgazeXvVhlIsGNQptxp7MlVQCOY71io8dzJfxvHYVNf76XwBhNKBAZIJc2efUzGahw==
-X-Received: by 2002:a63:8a4a:: with SMTP id y71mr18680151pgd.396.1573858648980;
-        Fri, 15 Nov 2019 14:57:28 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id v64sm11214629pgv.67.2019.11.15.14.57.27
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eBmbrDGGUNK2PSi8Bx8VXe1x5gi+GmXOPHBLYTXbcxE=;
+        b=Yzlc/LOqmHEwMyJh24+yRgaoRpiPpLwR0TArRPoluEzJeLNnLHOIJKfiBO5TJ73Jo+
+         9pV36L/NojZRjxZV3gQjrw9/+SirkTxmcxIWZ+gFXhtmedctG0NHf1T0Lg1ORxywbS6T
+         g9zG3mnAa0JfCamZu7ChWDX0G39/VQxWhJXOXR11rCPOsE09/qqq0K3kR7Tod1BTu/BD
+         2SA1Sey5rMDXJIUUGTNWlkKq47BO+0uz0jEeBttlB21Dy3NQq2tCCQvE77sySTTCYLoS
+         YC7m5tjwkLaZWKidQHQIJBgPwhoyQxsP2NBvH4XFWR+eEsSRgOECNsQ0sTu8l4w0ww15
+         XPKg==
+X-Gm-Message-State: APjAAAWbgSiHaf3/3Sv0tSnYIeGuFfoM2wQMR/7KBnhDscjG4k7hopo+
+        J6/SPFAt2QIEzzj/zV+0mThFpQ==
+X-Google-Smtp-Source: APXvYqy8PxRdvDMTC4TAwcYm5z/n+GQ/j09ttLML2rkOcXkEOQMIvvgsO7cSKCzHA+rjMw6JCJBMvw==
+X-Received: by 2002:a05:651c:1196:: with SMTP id w22mr13064971ljo.217.1573858778674;
+        Fri, 15 Nov 2019 14:59:38 -0800 (PST)
+Received: from localhost.bredbandsbolaget (c-79c8225c.014-348-6c756e10.bbcust.telenor.se. [92.34.200.121])
+        by smtp.gmail.com with ESMTPSA id p193sm6519119lfa.18.2019.11.15.14.59.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 14:57:27 -0800 (PST)
-Date:   Fri, 15 Nov 2019 14:57:25 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     linux-input@vger.kernel.org, stable@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Cole Rogers <colerogers@disroot.org>,
-        Joe Perches <joe@perches.com>, Teika Kazura <teika@gmx.com>,
-        Alexander Mikhaylenko <exalm7659@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: synaptics - enable RMI mode for X1 Extreme 2nd
- Generation
-Message-ID: <20191115225725.GA251795@dtor-ws>
-References: <20191115221814.31903-1-lyude@redhat.com>
+        Fri, 15 Nov 2019 14:59:37 -0800 (PST)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH] firmware_loader: Fix labels with comma for builtin firmware
+Date:   Fri, 15 Nov 2019 23:59:11 +0100
+Message-Id: <20191115225911.3260-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115221814.31903-1-lyude@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 05:18:13PM -0500, Lyude Paul wrote:
-> Just got one of these for debugging some unrelated issues, and noticed
-> that Lenovo seems to have gone back to using RMI4 over smbus with
-> Synaptics touchpads on some of their new systems, particularly this one.
-> So, let's enable RMI mode for the X1 Extreme 2nd Generation.
-> 
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Cc: stable@vger.kernel.org
+Some firmware images contain a comma, such as:
+EXTRA_FIRMWARE "brcm/brcmfmac4334-sdio.samsung,gt-s7710.txt"
+as Broadcom firmware simply tags the device tree compatible
+string at the end of the firmware parameter file. And the
+compatible string contains a comma.
 
-Applied, thank you.
+This doesn't play well with gas:
 
-> ---
->  drivers/input/mouse/synaptics.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
-> index 56fae3472114..704558d449a2 100644
-> --- a/drivers/input/mouse/synaptics.c
-> +++ b/drivers/input/mouse/synaptics.c
-> @@ -177,6 +177,7 @@ static const char * const smbus_pnp_ids[] = {
->  	"LEN0096", /* X280 */
->  	"LEN0097", /* X280 -> ALPS trackpoint */
->  	"LEN009b", /* T580 */
-> +	"LEN0402", /* X1 Extreme 2nd Generation */
->  	"LEN200f", /* T450s */
->  	"LEN2054", /* E480 */
->  	"LEN2055", /* E580 */
-> -- 
-> 2.21.0
-> 
+drivers/base/firmware_loader/builtin/brcm/brcmfmac4334-sdio.samsung,gt-s7710.txt.gen.S: Assembler messages:
+drivers/base/firmware_loader/builtin/brcm/brcmfmac4334-sdio.samsung,gt-s7710.txt.gen.S:4: Error: bad instruction `_fw_brcm_brcmfmac4334_sdio_samsung,gt_s7710_txt_bin:'
+drivers/base/firmware_loader/builtin/brcm/brcmfmac4334-sdio.samsung,gt-s7710.txt.gen.S:9: Error: bad instruction `_fw_brcm_brcmfmac4334_sdio_samsung,gt_s7710_txt_name:'
+drivers/base/firmware_loader/builtin/brcm/brcmfmac4334-sdio.samsung,gt-s7710.txt.gen.S:15: Error: can't resolve `.rodata' {.rodata section} - `_fw_brcm_brcmfmac4334_sdio_samsung' {*UND* section}
+make[6]: *** [../scripts/Makefile.build:357: drivers/base/firmware_loader/builtin/brcm/brcmfmac4334-sdio.samsung,gt-s7710.txt.gen.o] Error 1
 
+We need to get rid of the comma from the labels used by the
+assembly stub generator.
+
+Replacing a comma using GNU Make subst requires a helper
+variable.
+
+Cc: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/base/firmware_loader/builtin/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/base/firmware_loader/builtin/Makefile b/drivers/base/firmware_loader/builtin/Makefile
+index 37e5ae387400..4a66888e7253 100644
+--- a/drivers/base/firmware_loader/builtin/Makefile
++++ b/drivers/base/firmware_loader/builtin/Makefile
+@@ -8,7 +8,8 @@ fwdir := $(addprefix $(srctree)/,$(filter-out /%,$(fwdir)))$(filter /%,$(fwdir))
+ obj-y  := $(addsuffix .gen.o, $(subst $(quote),,$(CONFIG_EXTRA_FIRMWARE)))
+ 
+ FWNAME    = $(patsubst $(obj)/%.gen.S,%,$@)
+-FWSTR     = $(subst /,_,$(subst .,_,$(subst -,_,$(FWNAME))))
++comma     := ,
++FWSTR     = $(subst $(comma),_,$(subst /,_,$(subst .,_,$(subst -,_,$(FWNAME)))))
+ ASM_WORD  = $(if $(CONFIG_64BIT),.quad,.long)
+ ASM_ALIGN = $(if $(CONFIG_64BIT),3,2)
+ PROGBITS  = $(if $(CONFIG_ARM),%,@)progbits
 -- 
-Dmitry
+2.21.0
+
