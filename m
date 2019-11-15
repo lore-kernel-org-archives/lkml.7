@@ -2,174 +2,120 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D29C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF8EC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC2B32073C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 035F120733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:24:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="g9AgrIO9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfKOJV3 (ORCPT
+        id S1726986AbfKOJY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:21:29 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:40484 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbfKOJV3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:21:29 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iVXnC-00019r-Ne; Fri, 15 Nov 2019 09:21:26 +0000
-To:     Olga Kornievskaia <kolga@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Subject: re: NFS: inter ssc open (memory leak detected)
-Message-ID: <3d8e949c-e266-c4f7-5179-c06ab3629418@canonical.com>
-Date:   Fri, 15 Nov 2019 09:21:26 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 15 Nov 2019 04:24:28 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:32984 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbfKOJY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 04:24:27 -0500
+Received: from zn.tnic (p200300EC2F0CC300B4C5AF24BE56B25A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:c300:b4c5:af24:be56:b25a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 533251EC0D06;
+        Fri, 15 Nov 2019 10:24:26 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1573809866;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=E5NJCPvuc3oH2wYFT9cv75IPz3w+7olilEdrf/3xSRU=;
+        b=g9AgrIO9wgjkcYp8jRyNKRcrDnssjEh83KqxdpQWp2fIdYqh9E/PcsilJGdsWdKVCN8Xf2
+        LjvjtcxyGOCbcWmiVpRKbv7FPRg6kwHcRq6ekSGPqwOzTz/sa8NMLhQHAAsSjJoyPNVgQF
+        7qJDlykU9nRi7aBcsSDXvh5o1xqDSlg=
+Date:   Fri, 15 Nov 2019 10:24:20 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Chen Yu <yu.c.chen@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        Christian Brauner <christian@brauner.io>,
+        Shakeel Butt <shakeelb@google.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 2/2][v2] x86/resctrl: Add task resctrl information display
+Message-ID: <20191115092420.GF18929@zn.tnic>
+References: <cover.1573788882.git.yu.c.chen@intel.com>
+ <5dcd6580b51342c0803db6bc27866dd569914b0d.1573788882.git.yu.c.chen@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <5dcd6580b51342c0803db6bc27866dd569914b0d.1573788882.git.yu.c.chen@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Nov 15, 2019 at 01:25:06PM +0800, Chen Yu wrote:
+> Monitoring tools that want to find out which resctrl CTRL
+> and MONITOR groups a task belongs to must currently read
+> the "tasks" file in every group until they locate the process
+> ID.
+> 
+> Add an additional file /proc/{pid}/resctrl to provide this
+> information.
+> 
+> For example:
+>  cat /proc/1193/resctrl
+> CTRL_MON:/ctrl_grp0
+> MON:/ctrl_grp0/mon_groups/mon_grp0
+> 
+> If the resctrl filesystem has not been mounted,
+> reading /proc/{pid}/resctrl returns an error:
+> cat: /proc/1193/resctrl: No such device
 
-Static analysis with Coverity has detected a memory leak in the
-following commit:
+Eww, this doesn't sound very user-friendly. How is the user supposed to
+know that the resctrl fs needs to be mounted for this to work?
 
-commit ec4b0925089826af45e99cdf78a8ac84c1d005f1
-Author: Olga Kornievskaia <kolga@netapp.com>
-Date:   Tue Oct 8 16:33:53 2019 -0400
+Why does the resctrl fs need to be mounted at all to show this?
 
-    NFS: inter ssc open
+I'm guessing if it is not mounted, you have no groups so you don't have
+to return an error - you simply return "". Right?
 
+> Tested-by: Jinshi Chen <jinshi.chen@intel.com>
+> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+> Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
 
-In function nfs42_ssc_open(), fs/nfs/nfs4file.c, analysis is as follows:
+When you send a new version which has non-trivial changes, you should
+drop those tags because they don't apply anymore. Unless those people
+have managed to review and test the new version ...
 
-   3. alloc_fn: Storage is returned from allocation function kzalloc.
-   4. var_assign: Assigning: read_name = storage returned from
-kzalloc(len, 3136U).
-336        read_name = kzalloc(len, GFP_NOFS);
+Looking at CONFIG_PROC_PID_ARCH_STATUS for an example of proc/ calling
+arch-specific functions, I guess you need to do:
 
-   5. Condition read_name == NULL, taking false branch.
-337        if (read_name == NULL)
-338                goto out;
+select CPU_RESCTRL if PROC_FS
 
-   6. noescape: Resource read_name is not freed or pointed-to in snprintf.
-339        snprintf(read_name, len, SSC_READ_NAME_BODY, read_name_gen++);
-340
-341        r_ino = nfs_fhget(ss_mnt->mnt_root->d_inode->i_sb, src_fh,
-&fattr,
-342                        NULL);
+Thx.
 
-   7. Condition IS_ERR(r_ino), taking true branch.
-343        if (IS_ERR(r_ino)) {
-344                res = ERR_CAST(r_ino);
+-- 
+Regards/Gruss,
+    Boris.
 
-   8. Jumping to label out.
-345                goto out;
-346        }
-347
-348        filep = alloc_file_pseudo(r_ino, ss_mnt, read_name, FMODE_READ,
-349                                     r_ino->i_fop);
-350        if (IS_ERR(filep)) {
-351                res = ERR_CAST(filep);
-352                goto out;
-353        }
-354        filep->f_mode |= FMODE_READ;
-355
-356        ctx = alloc_nfs_open_context(filep->f_path.dentry, filep->f_mode,
-357                                        filep);
-358        if (IS_ERR(ctx)) {
-359                res = ERR_CAST(ctx);
-360                goto out_filep;
-361        }
-362
-363        res = ERR_PTR(-EINVAL);
-364        sp = nfs4_get_state_owner(server, ctx->cred, GFP_KERNEL);
-365        if (sp == NULL)
-366                goto out_ctx;
-367
-368        ctx->state = nfs4_get_open_state(r_ino, sp);
-369        if (ctx->state == NULL)
-370                goto out_stateowner;
-371
-372        set_bit(NFS_SRV_SSC_COPY_STATE, &ctx->state->flags);
-373        set_bit(NFS_OPEN_STATE, &ctx->state->flags);
-374        memcpy(&ctx->state->open_stateid.other, &stateid->other,
-375               NFS4_STATEID_OTHER_SIZE);
-376        update_open_stateid(ctx->state, stateid, NULL, filep->f_mode);
-377
-378        nfs_file_set_open_context(filep, ctx);
-379        put_nfs_open_context(ctx);
-380
-381        file_ra_state_init(&filep->f_ra,
-filep->f_mapping->host->i_mapping);
-382        res = filep;
-383out:
-
-   CID 91575 (#1-2 of 2): Resource leak (RESOURCE_LEAK)
-
-9. leaked_storage: Variable read_name going out of scope leaks the
-storage it points to.
-
-384        return res;
-
-
-Looks like there are several return paths to out: that leak the
-allocation of read_name.
+https://people.kernel.org/tglx/notes-about-netiquette
