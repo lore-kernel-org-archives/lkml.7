@@ -2,77 +2,93 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA51C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31DAC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B28E2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:46:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="XuZiQBj9"
+	by mail.kernel.org (Postfix) with ESMTP id A27702073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbfKOOqI (ORCPT
+        id S1727749AbfKOOqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 09:46:08 -0500
-Received: from m15-114.126.com ([220.181.15.114]:50931 "EHLO m15-114.126.com"
+        Fri, 15 Nov 2019 09:46:13 -0500
+Received: from foss.arm.com ([217.140.110.172]:60466 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727427AbfKOOqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 09:46:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=BVY/ZDObYzZ2ji2Kqa
-        KXTAijZRtGn5e8CHHyokkdP88=; b=XuZiQBj9w6OlPjwtBq/zZXDnyntw4MK52A
-        rUdb6u31TMEKguXCKazax0bzVAwf4qlWBcI4EXxdz54hNRMTvzTxrGYzSYmYd5IA
-        IeLewOaSfq+nxzv96fa2sBZ/s8DTOBFI/MZgL+Qz1L1mTBmqmoM4CQ6Ixx8RFTVR
-        1Hpd0NXSY=
-Received: from 192.168.137.245 (unknown [112.10.84.253])
-        by smtp7 (Coremail) with SMTP id DsmowAAXfxNDuc5d7jmoAg--.19411S3;
-        Fri, 15 Nov 2019 22:42:13 +0800 (CST)
-From:   Xianting Tian <xianting_tian@126.com>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] sched/fair: Fix typo in function check_preempt_wakeup
-Date:   Fri, 15 Nov 2019 09:42:13 -0500
-Message-Id: <1573828933-24592-1-git-send-email-xianting_tian@126.com>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: DsmowAAXfxNDuc5d7jmoAg--.19411S3
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Wry8WFWfJF4fXw4UZw4rGrg_yoW3Wrg_Ka
-        15Zr43tw48tr1IvFyrW3yxtr1xK3y0ga4xuw4Uua4UZrsYqasxXr95AFn3GrZ3XF4UuFZ5
-        uws0gFn0vr1xCjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU0kb1UUUUUU==
-X-Originating-IP: [112.10.84.253]
-X-CM-SenderInfo: h0ld03plqjs3xldqqiyswou0bp/1tbi7RtupFpD9MVpUgAAsv
+        id S1727427AbfKOOqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 09:46:12 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 83EC031B;
+        Fri, 15 Nov 2019 06:46:12 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 479973F534;
+        Fri, 15 Nov 2019 06:46:10 -0800 (PST)
+Date:   Fri, 15 Nov 2019 14:46:08 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 13/14] arm64: disable SCS for hypervisor code
+Message-ID: <20191115144607.GH41572@lakrids.cambridge.arm.com>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191105235608.107702-1-samitolvanen@google.com>
+ <20191105235608.107702-14-samitolvanen@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105235608.107702-14-samitolvanen@google.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the typo "prempt" to "preempt"
+On Tue, Nov 05, 2019 at 03:56:07PM -0800, Sami Tolvanen wrote:
+> Filter out CC_FLAGS_SCS for code that runs at a different exception
+> level.
+> 
+> Suggested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Signed-off-by: Xianting Tian <xianting_tian@126.com>
----
- kernel/sched/fair.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Looks sound, and objdump confirms that the hyp objects are using x29's
+frame record, without using x18.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 682a754..9767eff 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6667,7 +6667,7 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
- 
- 	/*
- 	 * This is possible from callers such as attach_tasks(), in which we
--	 * unconditionally check_prempt_curr() after an enqueue (which may have
-+	 * unconditionally check_preempt_curr() after an enqueue (which may have
- 	 * lead to a throttle).  This both saves work and prevents false
- 	 * next-buddy nomination below.
- 	 */
--- 
-1.8.3.1
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 
+Mark.
+
+> ---
+>  arch/arm64/kvm/hyp/Makefile | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm64/kvm/hyp/Makefile b/arch/arm64/kvm/hyp/Makefile
+> index ea710f674cb6..17ea3da325e9 100644
+> --- a/arch/arm64/kvm/hyp/Makefile
+> +++ b/arch/arm64/kvm/hyp/Makefile
+> @@ -28,3 +28,6 @@ GCOV_PROFILE	:= n
+>  KASAN_SANITIZE	:= n
+>  UBSAN_SANITIZE	:= n
+>  KCOV_INSTRUMENT	:= n
+> +
+> +# remove the SCS flags from all objects in this directory
+> +KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_SCS), $(KBUILD_CFLAGS))
+> -- 
+> 2.24.0.rc1.363.gb1bccd3e3d-goog
+> 
