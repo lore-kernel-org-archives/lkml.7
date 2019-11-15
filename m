@@ -2,198 +2,91 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0DFC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570E5C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB29820733
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C6920733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:11:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573809101;
+	bh=evIQNpLk8qBJKQuIMbYsUKrukehN0Qvtmtyb9ZCIKWI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=csXPb4dLq/2h76/svoSRVrIxn37MZZ8xaUpTRf9/XL1FfDR5aY0+1XTfIvJn+Uheo
+	 HnMeu3qgVzTgP/cFFelkAmZfJgzax06bb8dUml7v03wPKggTCDOt1nJ20TXoGrt28R
+	 8IikHQUm580IfcbPs7H58pHcLRiSInCBTaMcMLrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfKOJLZ (ORCPT
+        id S1727447AbfKOJLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:11:25 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:32904 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727257AbfKOJLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:11:05 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 4112C8B9E5F47883C282;
-        Fri, 15 Nov 2019 17:11:03 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Fri, 15 Nov 2019
- 17:10:54 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
-        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>
-CC:     <linux-kernel@vger.kernel.org>, <oss@buserror.net>,
-        Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH 3/6] powerpc/fsl_booke/64: implement KASLR for fsl_booke64
-Date:   Fri, 15 Nov 2019 17:32:06 +0800
-Message-ID: <20191115093209.26434-4-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20191115093209.26434-1-yanaijie@huawei.com>
-References: <20191115093209.26434-1-yanaijie@huawei.com>
+        Fri, 15 Nov 2019 04:11:40 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42924 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726996AbfKOJLk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 04:11:40 -0500
+Received: by mail-oi1-f196.google.com with SMTP id x4so67104oie.9;
+        Fri, 15 Nov 2019 01:11:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GhSO1gIvMBthCcIYFaVagEQHsOd7UGLs1OedipoLMqc=;
+        b=lovYERWYyIDeDPf1W/cd2PDl/FK8oMk2Y6HdjVz8fgnehi7vmAgYoMt34tLBHdbwWu
+         Z8eJ/etk2gKpdTPekc8eJ4MQzMndzCSfrjV+nqEe4DkzPsSqop97p+UY5dqMy2BLPptN
+         UrwehvsuEU0mLjdJ90VL4HSBMOM3LHii3VisEhI5cPSDDDEMQBh1yVKigcGLgxZ8W7Us
+         aYF46VQUplDU5vnONA6gq0nLYG+Di8ot4S1YRwIezP8ZKJq5KlhHD/Tab5XGDJ65hmCX
+         frn6zyvkmA+2T4LD04xnU/J5oPcxzMxEO8QX500jMM0P3rmezjUHhSyhOy3SlI48HwvD
+         xz4g==
+X-Gm-Message-State: APjAAAVCnEKdgDxabph32vVKhB6/O7DW8bSP/W+7vY58Ne4B9WkBBr4E
+        mz+G4JpmHvk8T4ZUfhSnYYvaqjVpDl9AoCKCQMsjPMAY
+X-Google-Smtp-Source: APXvYqyWoRPYNz/S8J6cX2/Gzn9hhzRueSIqtaxfybY/4WNLjj/JZ/o5l9hXir/UzAHxM1LOv2DmGlOl8ff62y4W3Zw=
+X-Received: by 2002:aca:1101:: with SMTP id 1mr7335246oir.103.1573809099105;
+ Fri, 15 Nov 2019 01:11:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+References: <1573732820166-0.post@n7.nabble.com> <0780918b-184e-55a6-a439-06403d3777ff@infradead.org>
+In-Reply-To: <0780918b-184e-55a6-a439-06403d3777ff@infradead.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 15 Nov 2019 10:11:28 +0100
+Message-ID: <CAJZ5v0g4iqh22GwTKu51eXiqz-V9aiUwPi-_yyJykR+x0=9V5A@mail.gmail.com>
+Subject: Re: how to disable the button kernel module?
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Bruno GNUser <kernel@dantas.airpost.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Mailing List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The implementation for Freescale BookE64 is similar as BookE32. One
-difference is that Freescale BookE64 set up a TLB mapping of 1G during
-booting. Another difference is that ppc64 needs the kernel to be
-64K-aligned. So we can randomize the kernel in this 1G mapping and make
-it 64K-aligned. This can save some code to creat another TLB map at
-early boot. The disadvantage is that we only have about 1G/64K = 16384
-slots to put the kernel in.
+On Fri, Nov 15, 2019 at 6:33 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 11/14/19 4:00 AM, Bruno GNUser wrote:
+> > I realize that /button/ is a kernel built-in and therefore cannot be disabled
+> > via the /blacklist=<module_name>/ boot parameter. So I thought I'd try
+> > /initcall_blacklist=<function>/ but I cannot find an obvious module
+> > initialization function in button.c
+>
+> In what kernel version if the button driver built-in?
+> It currently can be built as a loadable module.
+>
+> The lines
+> module_driver(acpi_button_driver, acpi_button_register_driver,
+>                acpi_button_unregister_driver);
+> at the end of the source file create an init function named
+> acpi_button_driver_init.  You could try:
+>   initcall_blacklist=acpi_button_driver_init
+>
+>
+> > Please, how would one disable the /button/ module? Either using the
+> > /initcall_blacklist=foo/ or some other method is fine, as long as it does
+> > not involve recompiling the kernel.
+>
+> Any help from ACPI people?
 
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Cc: Scott Wood <oss@buserror.net>
-Cc: Diana Craciun <diana.craciun@nxp.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>
----
- arch/powerpc/Kconfig                 |  2 +-
- arch/powerpc/kernel/setup_64.c       |  4 +++-
- arch/powerpc/mm/nohash/kaslr_booke.c | 29 ++++++++++++++++++++++++++--
- 3 files changed, 31 insertions(+), 4 deletions(-)
+https://lore.kernel.org/linux-acpi/CAJZ5v0hy2QpJtnGVvOOggOzTDifD1HYosN9vf0y_=15b+M8v0Q@mail.gmail.com/T/#t
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 4c4a0fcd1674..3e563a07cb67 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -553,7 +553,7 @@ config RELOCATABLE
- 
- config RANDOMIZE_BASE
- 	bool "Randomize the address of the kernel image"
--	depends on (FSL_BOOKE && FLATMEM && PPC32)
-+	depends on (PPC_FSL_BOOK3E && FLATMEM)
- 	depends on RELOCATABLE
- 	help
- 	  Randomizes the virtual address at which the kernel image is
-diff --git a/arch/powerpc/kernel/setup_64.c b/arch/powerpc/kernel/setup_64.c
-index d2af4c228970..b7e4f1e92c7e 100644
---- a/arch/powerpc/kernel/setup_64.c
-+++ b/arch/powerpc/kernel/setup_64.c
-@@ -65,7 +65,7 @@
- #include <asm/hw_irq.h>
- #include <asm/feature-fixups.h>
- #include <asm/kup.h>
--
-+#include <mm/mmu_decl.h>
- #include "setup.h"
- 
- int spinning_secondaries;
-@@ -299,6 +299,8 @@ void __init early_setup(unsigned long dt_ptr)
- 	/* Enable early debugging if any specified (see udbg.h) */
- 	udbg_early_init();
- 
-+	kaslr_early_init(__va(dt_ptr), 0);
-+
- 	udbg_printf(" -> %s(), dt_ptr: 0x%lx\n", __func__, dt_ptr);
- 
- 	/*
-diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c b/arch/powerpc/mm/nohash/kaslr_booke.c
-index 07b036e98353..513f4616e92a 100644
---- a/arch/powerpc/mm/nohash/kaslr_booke.c
-+++ b/arch/powerpc/mm/nohash/kaslr_booke.c
-@@ -265,14 +265,14 @@ static unsigned long __init kaslr_legal_offset(void *dt_ptr, unsigned long rando
- {
- 	unsigned long koffset = 0;
- 	unsigned long start;
--	unsigned long index;
- 	unsigned long offset;
- 
-+#ifdef CONFIG_PPC32
- 	/*
- 	 * Decide which 64M we want to start
- 	 * Only use the low 8 bits of the random seed
- 	 */
--	index = random & 0xFF;
-+	unsigned long index = random & 0xFF;
- 	index %= regions.linear_sz / SZ_64M;
- 
- 	/* Decide offset inside 64M */
-@@ -287,6 +287,15 @@ static unsigned long __init kaslr_legal_offset(void *dt_ptr, unsigned long rando
- 			break;
- 		index--;
- 	}
-+#else
-+	/* Decide kernel offset inside 1G */
-+	offset = random % (SZ_1G - regions.kernel_size);
-+	offset = round_down(offset, SZ_64K);
-+
-+	start = memstart_addr;
-+	offset = memstart_addr + offset;
-+	koffset = get_usable_address(dt_ptr, start, offset);
-+#endif
- 
- 	if (koffset != 0)
- 		koffset -= memstart_addr;
-@@ -325,6 +334,7 @@ static unsigned long __init kaslr_choose_location(void *dt_ptr, phys_addr_t size
- 	else
- 		pr_warn("KASLR: No safe seed for randomizing the kernel base.\n");
- 
-+#ifdef CONFIG_PPC32
- 	ram = min_t(phys_addr_t, __max_low_memory, size);
- 	ram = map_mem_in_cams(ram, CONFIG_LOWMEM_CAM_NUM, true);
- 	linear_sz = min_t(unsigned long, ram, SZ_512M);
-@@ -332,6 +342,7 @@ static unsigned long __init kaslr_choose_location(void *dt_ptr, phys_addr_t size
- 	/* If the linear size is smaller than 64M, do not randmize */
- 	if (linear_sz < SZ_64M)
- 		return 0;
-+#endif
- 
- 	/* check for a reserved-memory node and record its cell sizes */
- 	regions.reserved_mem = fdt_path_offset(dt_ptr, "/reserved-memory");
-@@ -363,6 +374,18 @@ notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
- 	unsigned long offset;
- 	unsigned long kernel_sz;
- 
-+#ifdef CONFIG_PPC64
-+	unsigned int *__run_at_load = (unsigned int *)(KERNELBASE + 0x5c);
-+
-+	if (*__run_at_load == 1)
-+		return;
-+
-+	*__run_at_load = 1;
-+
-+	/* Setup flat device-tree pointer */
-+	initial_boot_params = dt_ptr;
-+#endif
-+
- 	kernel_sz = (unsigned long)_end - (unsigned long)_stext;
- 
- 	offset = kaslr_choose_location(dt_ptr, size, kernel_sz);
-@@ -372,6 +395,7 @@ notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
- 	kernstart_virt_addr += offset;
- 	kernstart_addr += offset;
- 
-+#ifdef CONFIG_PPC32
- 	is_second_reloc = 1;
- 
- 	if (offset >= SZ_64M) {
-@@ -381,6 +405,7 @@ notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
- 		/* Create kernel map to relocate in */
- 		create_kaslr_tlb_entry(1, tlb_virt, tlb_phys);
- 	}
-+#endif
- 
- 	/* Copy the kernel to it's new location and run */
- 	memcpy((void *)kernstart_virt_addr, (void *)_stext, kernel_sz);
--- 
-2.17.2
-
+Thanks!
