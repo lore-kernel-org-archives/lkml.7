@@ -2,166 +2,106 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 998E7C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BAAC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76C972072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5563D2072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbfKOPhL (ORCPT
+        id S1727591AbfKOPim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 10:37:11 -0500
-Received: from foss.arm.com ([217.140.110.172]:32918 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727564AbfKOPhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 10:37:11 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A421530E;
-        Fri, 15 Nov 2019 07:37:10 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B1103F534;
-        Fri, 15 Nov 2019 07:37:08 -0800 (PST)
-Date:   Fri, 15 Nov 2019 15:37:06 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 05/14] add support for Clang's Shadow Call Stack (SCS)
-Message-ID: <20191115153705.GJ41572@lakrids.cambridge.arm.com>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191105235608.107702-1-samitolvanen@google.com>
- <20191105235608.107702-6-samitolvanen@google.com>
+        Fri, 15 Nov 2019 10:38:42 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:54192 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727540AbfKOPil (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 10:38:41 -0500
+Received: (qmail 1740 invoked by uid 2102); 15 Nov 2019 10:38:40 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 15 Nov 2019 10:38:40 -0500
+Date:   Fri, 15 Nov 2019 10:38:40 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Andrey Konovalov <andreyknvl@google.com>
+cc:     linux-usb@vger.kernel.org, <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Felipe Balbi <balbi@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>
+Subject: Re: [PATCH v2 1/1] usb: gadget: add raw-gadget interface
+In-Reply-To: <92f5a2a1ba986f149aecec02d6ffe110d11dcdfd.1573824989.git.andreyknvl@google.com>
+Message-ID: <Pine.LNX.4.44L0.1911151036310.1527-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105235608.107702-6-samitolvanen@google.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 03:55:59PM -0800, Sami Tolvanen wrote:
-> This change adds generic support for Clang's Shadow Call Stack,
-> which uses a shadow stack to protect return addresses from being
-> overwritten by an attacker. Details are available here:
+On Fri, 15 Nov 2019, Andrey Konovalov wrote:
+
+> USB Raw Gadget is a kernel module that provides a userspace interface for
+> the USB Gadget subsystem. Essentially it allows to emulate USB devices
+> from userspace. Enabled with CONFIG_USB_RAW_GADGET. Raw Gadget is
+> currently a strictly debugging feature and shouldn't be used in
+> production.
 > 
->   https://clang.llvm.org/docs/ShadowCallStack.html
+> Raw Gadget is similar to GadgetFS, but provides a more low-level and
+> direct access to the USB Gadget layer for the userspace. The key
+> differences are:
 > 
-> Note that security guarantees in the kernel differ from the
-> ones documented for user space. The kernel must store addresses
-> of shadow stacks used by other tasks and interrupt handlers in
-> memory, which means an attacker capable reading and writing
-> arbitrary memory may be able to locate them and hijack control
-> flow by modifying shadow stacks that are not currently in use.
+> 1. Every USB request is passed to the userspace to get a response, while
+>    GadgetFS responds to some USB requests internally based on the provided
+>    descriptors. However note, that the UDC driver might respond to some
+>    requests on its own and never forward them to the Gadget layer.
 > 
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-> ---
->  Makefile                       |   6 ++
->  arch/Kconfig                   |  33 ++++++
->  include/linux/compiler-clang.h |   6 ++
->  include/linux/compiler_types.h |   4 +
->  include/linux/scs.h            |  57 ++++++++++
->  init/init_task.c               |   8 ++
->  kernel/Makefile                |   1 +
->  kernel/fork.c                  |   9 ++
->  kernel/sched/core.c            |   2 +
->  kernel/scs.c                   | 187 +++++++++++++++++++++++++++++++++
->  10 files changed, 313 insertions(+)
->  create mode 100644 include/linux/scs.h
->  create mode 100644 kernel/scs.c
+> 2. GadgetFS performs some sanity checks on the provided USB descriptors,
+>    while Raw Gadget allows you to provide arbitrary data as responses to
+>    USB requests.
 > 
-> diff --git a/Makefile b/Makefile
-> index b37d0e8fc61d..7f3a4c5c7dcc 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -846,6 +846,12 @@ ifdef CONFIG_LIVEPATCH
->  KBUILD_CFLAGS += $(call cc-option, -flive-patching=inline-clone)
->  endif
->  
-> +ifdef CONFIG_SHADOW_CALL_STACK
-> +CC_FLAGS_SCS	:= -fsanitize=shadow-call-stack
-> +KBUILD_CFLAGS	+= $(CC_FLAGS_SCS)
-> +export CC_FLAGS_SCS
-> +endif
+> 3. Raw Gadget provides a way to select a UDC device/driver to bind to,
+>    while GadgetFS currently binds to the first available UDC.
+> 
+> 4. Raw Gadget uses predictable endpoint names (handles) across different
+>    UDCs (as long as UDCs have enough endpoints of each required transfer
+>    type).
+> 
+> 5. Raw Gadget has ioctl-based interface instead of a filesystem-based one.
+
+...
+
+> --- /dev/null
+> +++ b/Documentation/usb/raw-gadget.rst
+
+> +Userspace interface
+> +~~~~~~~~~~~~~~~~~~~
 > +
->  # arch Makefile may override CC so keep this after arch Makefile is included
->  NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
->  
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index 5f8a5d84dbbe..5e34cbcd8d6a 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -521,6 +521,39 @@ config STACKPROTECTOR_STRONG
->  	  about 20% of all kernel functions, which increases the kernel code
->  	  size by about 2%.
->  
-> +config ARCH_SUPPORTS_SHADOW_CALL_STACK
-> +	bool
-> +	help
-> +	  An architecture should select this if it supports Clang's Shadow
-> +	  Call Stack, has asm/scs.h, and implements runtime support for shadow
-> +	  stack switching.
+> +To create a Raw Gadget instance open /sys/kernel/debug/usb/raw-gadget
+> +(debugfs should be enabled and mounted). Multiple raw-gadget instances
+
+Looks like the documentation hasn't kept up with the more recent 
+changes to the driver.
+
+> --- /dev/null
+> +++ b/drivers/usb/gadget/legacy/raw.c
+> @@ -0,0 +1,1057 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * USB Raw Gadget driver.
+> + * See Documentation/usb/raw-gadget.rst for more details.
+> + *
+> + * Andrey Konovalov <andreyknvl@gmail.com>
+> + */
 > +
-> +config SHADOW_CALL_STACK_VMAP
-> +	bool
-> +	depends on SHADOW_CALL_STACK
-> +	help
-> +	  Use virtually mapped shadow call stacks. Selecting this option
-> +	  provides better stack exhaustion protection, but increases per-thread
-> +	  memory consumption as a full page is allocated for each shadow stack.
+> +#define pr_fmt(fmt) "raw: %s: " fmt, __func__
 
-The bool needs some display text to make it selectable.
+This macro isn't used anywhere now.
 
-This should probably be below SHADOW_CALL_STACK so that when it shows up
-in menuconfig it's where you'd expect it to be.
+Alan Stern
 
-I locally hacked that in, but when building defconfig +
-SHADOW_CALL_STACK + SHADOW_CALL_STACK_VMAP, the build explodes as below:
-
-| [mark@lakrids:~/src/linux]% usellvm 9.0.0 usekorg 8.1.0 make ARCH=arm64 CROSS_COMPILE=aarch64-linux- CC=clang -j56 -s
-| arch/arm64/kernel/scs.c:28:7: error: use of undeclared identifier 'VMALLOC_START'
-|                                          VMALLOC_START, VMALLOC_END,
-|                                          ^
-| arch/arm64/kernel/scs.c:28:22: error: use of undeclared identifier 'VMALLOC_END'
-|                                          VMALLOC_START, VMALLOC_END,
-|                                                         ^
-| arch/arm64/kernel/scs.c:29:7: error: use of undeclared identifier 'SCS_GFP'
-|                                          SCS_GFP, PAGE_KERNEL,
-|                                          ^
-| arch/arm64/kernel/scs.c:29:16: error: use of undeclared identifier 'PAGE_KERNEL'
-|                                          SCS_GFP, PAGE_KERNEL,
-|                                                   ^
-| 4 errors generated.
-| scripts/Makefile.build:265: recipe for target 'arch/arm64/kernel/scs.o' failed
-| make[2]: *** [arch/arm64/kernel/scs.o] Error 1
-| scripts/Makefile.build:509: recipe for target 'arch/arm64/kernel' failed
-| make[1]: *** [arch/arm64/kernel] Error 2
-| Makefile:1655: recipe for target 'arch/arm64' failed
-| make: *** [arch/arm64] Error 2
-| make: *** Waiting for unfinished jobs....
-
-Other than that, this largely looks good to me!
-
-Thanks,
-Mark.
