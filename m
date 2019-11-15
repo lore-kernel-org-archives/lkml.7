@@ -7,49 +7,53 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C67C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655E0C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C81D420857
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 469E820857
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:41:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfKOHk1 convert rfc822-to-8bit (ORCPT
+        id S1727438AbfKOHlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 02:40:27 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:42614 "EHLO
+        Fri, 15 Nov 2019 02:41:03 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:42602 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727080AbfKOHkZ (ORCPT
+        with ESMTP id S1726017AbfKOHkY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 02:40:25 -0500
+        Fri, 15 Nov 2019 02:40:24 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iVWDL-0002a6-Bs; Fri, 15 Nov 2019 08:40:19 +0100
+        id 1iVWDF-0002VX-2p; Fri, 15 Nov 2019 08:40:13 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EA68E1C08AC;
-        Fri, 15 Nov 2019 08:40:18 +0100 (CET)
-Date:   Fri, 15 Nov 2019 07:40:18 -0000
-From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9B48E1C08AC;
+        Fri, 15 Nov 2019 08:40:12 +0100 (CET)
+Date:   Fri, 15 Nov 2019 07:40:12 -0000
+From:   "tip-bot2 for Ian Rogers" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf symbols: Stop using map->groups, we can use
- kmaps instead
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+Subject: [tip: perf/core] perf parse: Use YYABORT to clear stack after
+ failure, plugging leaks
+Cc:     Ian Rogers <irogers@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <tip-5fy66x5hr5ct9pmw84jkiwvm@git.kernel.org>
-References: <tip-5fy66x5hr5ct9pmw84jkiwvm@git.kernel.org>
+In-Reply-To: <20191109075840.181231-1-irogers@google.com>
+References: <20191109075840.181231-1-irogers@google.com>
 MIME-Version: 1.0
-Message-ID: <157380361854.29467.13535766264249404001.tip-bot2@tip-bot2>
+Message-ID: <157380361217.29467.17950612808505016356.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -60,84 +64,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     f2baa060cd766f4e585339423891e0063179d702
-Gitweb:        https://git.kernel.org/tip/f2baa060cd766f4e585339423891e0063179d702
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Mon, 04 Nov 2019 16:09:48 -03:00
+Commit-ID:     e1e9b78d3957a267346a86c8f2c433f6a332af65
+Gitweb:        https://git.kernel.org/tip/e1e9b78d3957a267346a86c8f2c433f6a332af65
+Author:        Ian Rogers <irogers@google.com>
+AuthorDate:    Fri, 08 Nov 2019 23:58:40 -08:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 12 Nov 2019 08:20:53 -03:00
+CommitterDate: Tue, 12 Nov 2019 08:34:16 -03:00
 
-perf symbols: Stop using map->groups, we can use kmaps instead
+perf parse: Use YYABORT to clear stack after failure, plugging leaks
 
-To test that that function is being called I just added a probe on that
-place, enabled it via 'perf trace' asking for at most 16 levels of
-backtraces, system wide, and then ran 'perf top' on another xterm,
-voilà:
+Using return rather than YYABORT means that the stack isn't cleared up
+following a failure. The change to YYABORT means the return value is 1
+rather than -1, but the callers just check for a result of 0 (success).
+Add missing free of a list when an error occurs in event_pmu.
 
-  # perf probe -x ~/bin/perf dso__process_kernel_symbol
-  Added new event:
-    probe_perf:dso__process_kernel_symbol (on dso__process_kernel_symbol in /home/acme/bin/perf)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe_perf:dso__process_kernel_symbol -aR sleep 1
-
-  # perf trace -e probe_perf:dso__process_kernel_symbol/max-stack=16/ --max-events=2
-  # perf trace -e probe_perf:dso__process_kernel_symbol/max-stack=16/ --max-events=2
-       0.000 :17345/17345 probe_perf:dso__process_kernel_symbol(__probe_ip: 5680224)
-                                         dso__process_kernel_symbol (/home/acme/bin/perf)
-                                         dso__load_vmlinux (/home/acme/bin/perf)
-                                         dso__load_vmlinux_path (/home/acme/bin/perf)
-                                         dso__load (/home/acme/bin/perf)
-                                         map__load (/home/acme/bin/perf)
-                                         thread__find_map (/home/acme/bin/perf)
-                                         machine__resolve (/home/acme/bin/perf)
-                                         deliver_event (/home/acme/bin/perf)
-                                         __ordered_events__flush.part.0 (/home/acme/bin/perf)
-                                         process_thread (/home/acme/bin/perf)
-                                         start_thread (/usr/lib64/libpthread-2.29.so)
-       0.064 :17345/17345 probe_perf:dso__process_kernel_symbol(__probe_ip: 5680224)
-                                         dso__process_kernel_symbol (/home/acme/bin/perf)
-                                         dso__load_vmlinux (/home/acme/bin/perf)
-                                         dso__load_vmlinux_path (/home/acme/bin/perf)
-                                         dso__load (/home/acme/bin/perf)
-                                         map__load (/home/acme/bin/perf)
-                                         thread__find_map (/home/acme/bin/perf)
-                                         machine__resolve (/home/acme/bin/perf)
-                                         deliver_event (/home/acme/bin/perf)
-                                         __ordered_events__flush.part.0 (/home/acme/bin/perf)
-                                         process_thread (/home/acme/bin/perf)
-                                         start_thread (/usr/lib64/libpthread-2.29.so)
-  #
-  # perf stat -e probe_perf:dso__process_kernel_symbol
-  ^C
-   Performance counter stats for 'system wide':
-
-           107,308      probe_perf:dso__process_kernel_symbol
-
-       8.215399813 seconds time elapsed
-  #
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-5fy66x5hr5ct9pmw84jkiwvm@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lore.kernel.org/lkml/20191109075840.181231-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/symbol-elf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/parse-events.y | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 66f4be1..16776d5 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -934,7 +934,7 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
- 		 * we still are sure to have a reference to this DSO via
- 		 * *curr_map->dso.
- 		 */
--		dsos__add(&map->groups->machine->dsos, curr_dso);
-+		dsos__add(&kmaps->machine->dsos, curr_dso);
- 		/* kmaps already got it */
- 		map__put(curr_map);
- 		dso__set_loaded(curr_dso);
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 4cac830..e2eea4e 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -284,6 +284,7 @@ PE_NAME opt_pmu_config
+ 	do {						\
+ 		parse_events_terms__delete($2);		\
+ 		parse_events_terms__delete(orig_terms);	\
++		free(list);				\
+ 		free($1);				\
+ 		free(pattern);				\
+ 		YYABORT;				\
+@@ -550,7 +551,7 @@ tracepoint_name opt_event_config
+ 	free($1.event);
+ 	if (err) {
+ 		free(list);
+-		return -1;
++		YYABORT;
+ 	}
+ 	$$ = list;
+ }
