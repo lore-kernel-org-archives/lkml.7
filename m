@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC090C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3636C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D0620803
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD0412081E
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573798960;
-	bh=acL8ZUaE2aeTjwaN9MdvXUywSSnyKB1q0nlaYzlUDWk=;
+	s=default; t=1573798962;
+	bh=R/yEUO+q2waTOvNlrvQlDw37xD7IuqRvVUN46oEIu2w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o/j7qAAAS1EBaK/BDEWktSfyW86mdtMw289BHgesNROE9asjgikMJGWDhNX1UubJ2
-	 gXBl8HOjj5PKcobxUf2KvAxDdoFRYs6cgqSyQZVTVC23s49VgTw6Pq7khWXvlMh8SM
-	 vxTqStvDooxZamUdClKSF+1MOQELFSyaDclKE0EU=
+	b=hDUedITfXEhdYzlfWNp1J2CBfv8leUWzWBKznW2WjUY8x32qhrWsiMP+oXZI93w4j
+	 2OVAKrvTNY1bZzRsfmAHLICJ7nTRegzXCmxaJVJjD+NERDjc75bluHYLXyricB4Rsm
+	 8rK0NO3wLNLftzKj/lZESnvbrYxa6VZKAnfRnvw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbfKOGWj (ORCPT
+        id S1727797AbfKOGWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:22:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51882 "EHLO mail.kernel.org"
+        Fri, 15 Nov 2019 01:22:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727734AbfKOGWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:22:30 -0500
+        id S1727725AbfKOGW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:22:28 -0500
 Received: from localhost (unknown [104.132.150.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BDDD2053B;
-        Fri, 15 Nov 2019 06:22:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0374420637;
+        Fri, 15 Nov 2019 06:22:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573798949;
-        bh=acL8ZUaE2aeTjwaN9MdvXUywSSnyKB1q0nlaYzlUDWk=;
+        s=default; t=1573798947;
+        bh=R/yEUO+q2waTOvNlrvQlDw37xD7IuqRvVUN46oEIu2w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JTqUGDSb8TmFxUC3ynzMqYg66GfiAmfwav26mE74Zc0BDoT6c09sCB7CjDiUdg51q
-         2rsu7PHnKLeDlLFcD8BknhCj3hwuNwAc8vgEUg1M4smhLxrQpSguyaKgZbLT8NTc+F
-         ED37ryh2kRcjxTpBEOaBiligxEawLhISfzwztNSE=
+        b=ppC1+6xATCY/0B63pAUn/9vsF5maHjERQpZDulcgtPe/oGlniGXbFxaDGAY+uzy1R
+         /qPBOW0VsIWUy7ZNoL5+7XMREtchEPpM1vy7QsGKWy7LRx/fOoefhCeZLf27PdUqWq
+         RSffTrI7xbd2cJMp95d3FFCZH71QTIPL6k4V+CW4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jack Pham <jackp@codeaurora.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH 4.9 04/31] usb: gadget: core: unmap request from DMA only if previously mapped
-Date:   Fri, 15 Nov 2019 14:20:33 +0800
-Message-Id: <20191115062011.038703072@linuxfoundation.org>
+        stable@vger.kernel.org, Jonas Gorski <jonas.gorski@gmail.com>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Amit Pundir <amit.pundir@linaro.org>
+Subject: [PATCH 4.9 03/31] MIPS: BCM63XX: fix switch core reset on BCM6368
+Date:   Fri, 15 Nov 2019 14:20:32 +0800
+Message-Id: <20191115062010.879739177@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191115062009.813108457@linuxfoundation.org>
 References: <20191115062009.813108457@linuxfoundation.org>
@@ -59,69 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Pham <jackp@codeaurora.org>
+From: Jonas Gorski <jonas.gorski@gmail.com>
 
-commit 31fe084ffaaf8abece14f8ca28e5e3b4e2bf97b6 upstream.
+commit 8a38dacf87180738d42b058334c951eba15d2d47 upstream.
 
-In the SG case this is already handled since a non-zero
-request->num_mapped_sgs is a clear indicator that dma_map_sg()
-had been called. While it would be nice to do the same for the
-singly mapped case by simply checking for non-zero request->dma,
-it's conceivable that 0 is a valid dma_addr_t handle. Hence add
-a flag 'dma_mapped' to struct usb_request and use this to
-determine the need to call dma_unmap_single(). Otherwise, if a
-request is not DMA mapped then the result of calling
-usb_request_unmap_request() would safely be a no-op.
+The Ethernet Switch core mask was set to 0, causing the switch core to
+be not reset on BCM6368 on boot. Provide the proper mask so the switch
+core gets reset to a known good state.
 
-Signed-off-by: Jack Pham <jackp@codeaurora.org>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Fixes: 799faa626c71 ("MIPS: BCM63XX: add core reset helper")
+Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/udc/core.c |    5 ++++-
- include/linux/usb/gadget.h    |    2 ++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ arch/mips/bcm63xx/reset.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/gadget/udc/core.c
-+++ b/drivers/usb/gadget/udc/core.c
-@@ -817,6 +817,8 @@ int usb_gadget_map_request_by_dev(struct
- 			dev_err(dev, "failed to map buffer\n");
- 			return -EFAULT;
- 		}
-+
-+		req->dma_mapped = 1;
- 	}
- 
- 	return 0;
-@@ -841,9 +843,10 @@ void usb_gadget_unmap_request_by_dev(str
- 				is_in ? DMA_TO_DEVICE : DMA_FROM_DEVICE);
- 
- 		req->num_mapped_sgs = 0;
--	} else {
-+	} else if (req->dma_mapped) {
- 		dma_unmap_single(dev, req->dma, req->length,
- 				is_in ? DMA_TO_DEVICE : DMA_FROM_DEVICE);
-+		req->dma_mapped = 0;
- 	}
- }
- EXPORT_SYMBOL_GPL(usb_gadget_unmap_request_by_dev);
---- a/include/linux/usb/gadget.h
-+++ b/include/linux/usb/gadget.h
-@@ -48,6 +48,7 @@ struct usb_ep;
-  *     by adding a zero length packet as needed;
-  * @short_not_ok: When reading data, makes short packets be
-  *     treated as errors (queue stops advancing till cleanup).
-+ * @dma_mapped: Indicates if request has been mapped to DMA (internal)
-  * @complete: Function called when request completes, so this request and
-  *	its buffer may be re-used.  The function will always be called with
-  *	interrupts disabled, and it must not sleep.
-@@ -103,6 +104,7 @@ struct usb_request {
- 	unsigned		no_interrupt:1;
- 	unsigned		zero:1;
- 	unsigned		short_not_ok:1;
-+	unsigned		dma_mapped:1;
- 
- 	void			(*complete)(struct usb_ep *ep,
- 					struct usb_request *req);
+--- a/arch/mips/bcm63xx/reset.c
++++ b/arch/mips/bcm63xx/reset.c
+@@ -119,7 +119,7 @@
+ #define BCM6368_RESET_DSL	0
+ #define BCM6368_RESET_SAR	SOFTRESET_6368_SAR_MASK
+ #define BCM6368_RESET_EPHY	SOFTRESET_6368_EPHY_MASK
+-#define BCM6368_RESET_ENETSW	0
++#define BCM6368_RESET_ENETSW	SOFTRESET_6368_ENETSW_MASK
+ #define BCM6368_RESET_PCM	SOFTRESET_6368_PCM_MASK
+ #define BCM6368_RESET_MPI	SOFTRESET_6368_MPI_MASK
+ #define BCM6368_RESET_PCIE	0
 
 
