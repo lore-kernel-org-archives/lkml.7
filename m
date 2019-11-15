@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E2CC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD419C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2856A2081E
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87AFA20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573798896;
-	bh=C7dR1W8QurBtd1kqmPyg6aORotiBHvWUlW5+2Pa41rw=;
+	s=default; t=1573798900;
+	bh=R/yEUO+q2waTOvNlrvQlDw37xD7IuqRvVUN46oEIu2w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DM9CcUuNTGNdnPrGCvrWKNMMlQGnK5a/9x3gwZEBnm16NJEBn67OOuPBCANAN6Nhl
-	 qIxxvjfgrlcJ+U3OeYfsfA6jANYXUmPkU6sA/xyukbe7kNBfx0Jo+BnBjEEhfiiAvA
-	 WjSX/BS8rF0p7oh6ck0Ze66pyLh0DIKXQ3FMLc9Y=
+	b=rc7OjuE2KyifJWh3WbamUbtjMBnSDnGLmpfTY6iW8BB58fEwSqA5aeDgv06QTLQf3
+	 k/HL6T7bR85vTZ/AMvxGZ/LopRrHLQwQ+v7OLXjaGFqXesQTqsU4jLYuveLbGAOREn
+	 48YbjUKsTNTQPtFTg3BzDQ2byWdoaivYucKQqlOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfKOGVf (ORCPT
+        id S1727386AbfKOGVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:21:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50346 "EHLO mail.kernel.org"
+        Fri, 15 Nov 2019 01:21:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727314AbfKOGVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:21:31 -0500
+        id S1727339AbfKOGVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:21:33 -0500
 Received: from localhost (unknown [104.132.150.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E1522073A;
-        Fri, 15 Nov 2019 06:21:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5155B20732;
+        Fri, 15 Nov 2019 06:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573798890;
-        bh=C7dR1W8QurBtd1kqmPyg6aORotiBHvWUlW5+2Pa41rw=;
+        s=default; t=1573798892;
+        bh=R/yEUO+q2waTOvNlrvQlDw37xD7IuqRvVUN46oEIu2w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YyHg3PaZKj17CYf1lIuYiKEGO/chpyUQrDn5eoDcSYK4EhnZ7RI4UoIE/x71WaALH
-         2socNSfLSeTuxtV/pHc3acGK1dqjF+aVjomc64kWel3ISQrWnHKDYMOzZ9tQ1u8Jwl
-         +2ONfXXSwQVbqF7YjHAirllgaqoH7WWx2tJ3Anr0=
+        b=I9dfC5DJ7MwRQDZZBbroOJqEqXenEYzbeD0N+e/lufCrrrkAGLkSNo2d9zhXfAvX/
+         Nbd96WLa8+kpxhUQIJzvNBKg3HTX49+zDPrQu3+rBZjOMiga9cHG+bsANLI++IiiGY
+         +y3P2CUyhLYTY4zK/kj8d+Tt87+wUJWuysCmoFtU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Borislav Petkov <bp@suse.de>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 19/20] x86/speculation/taa: Fix printing of TAA_MSG_SMT on IBRS_ALL CPUs
-Date:   Fri, 15 Nov 2019 14:20:48 +0800
-Message-Id: <20191115062015.634529499@linuxfoundation.org>
+        stable@vger.kernel.org, Jonas Gorski <jonas.gorski@gmail.com>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Amit Pundir <amit.pundir@linaro.org>
+Subject: [PATCH 4.4 02/20] MIPS: BCM63XX: fix switch core reset on BCM6368
+Date:   Fri, 15 Nov 2019 14:20:31 +0800
+Message-Id: <20191115062008.088360533@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191115062006.854443935@linuxfoundation.org>
 References: <20191115062006.854443935@linuxfoundation.org>
@@ -62,49 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Jonas Gorski <jonas.gorski@gmail.com>
 
-commit 012206a822a8b6ac09125bfaa210a95b9eb8f1c1 upstream.
+commit 8a38dacf87180738d42b058334c951eba15d2d47 upstream.
 
-For new IBRS_ALL CPUs, the Enhanced IBRS check at the beginning of
-cpu_bugs_smt_update() causes the function to return early, unintentionally
-skipping the MDS and TAA logic.
+The Ethernet Switch core mask was set to 0, causing the switch core to
+be not reset on BCM6368 on boot. Provide the proper mask so the switch
+core gets reset to a known good state.
 
-This is not a problem for MDS, because there appears to be no overlap
-between IBRS_ALL and MDS-affected CPUs.  So the MDS mitigation would be
-disabled and nothing would need to be done in this function anyway.
-
-But for TAA, the TAA_MSG_SMT string will never get printed on Cascade
-Lake and newer.
-
-The check is superfluous anyway: when 'spectre_v2_enabled' is
-SPECTRE_V2_IBRS_ENHANCED, 'spectre_v2_user' is always
-SPECTRE_V2_USER_NONE, and so the 'spectre_v2_user' switch statement
-handles it appropriately by doing nothing.  So just remove the check.
-
-Fixes: 1b42f017415b ("x86/speculation/taa: Add mitigation for TSX Async Abort")
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
-Reviewed-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Fixes: 799faa626c71 ("MIPS: BCM63XX: add core reset helper")
+Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/kernel/cpu/bugs.c |    4 ----
- 1 file changed, 4 deletions(-)
 
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -853,10 +853,6 @@ static void update_mds_branch_idle(void)
- 
- void arch_smt_update(void)
- {
--	/* Enhanced IBRS implies STIBP. No update required. */
--	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
--		return;
--
- 	mutex_lock(&spec_ctrl_mutex);
- 
- 	switch (spectre_v2_user) {
+---
+ arch/mips/bcm63xx/reset.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/arch/mips/bcm63xx/reset.c
++++ b/arch/mips/bcm63xx/reset.c
+@@ -119,7 +119,7 @@
+ #define BCM6368_RESET_DSL	0
+ #define BCM6368_RESET_SAR	SOFTRESET_6368_SAR_MASK
+ #define BCM6368_RESET_EPHY	SOFTRESET_6368_EPHY_MASK
+-#define BCM6368_RESET_ENETSW	0
++#define BCM6368_RESET_ENETSW	SOFTRESET_6368_ENETSW_MASK
+ #define BCM6368_RESET_PCM	SOFTRESET_6368_PCM_MASK
+ #define BCM6368_RESET_MPI	SOFTRESET_6368_MPI_MASK
+ #define BCM6368_RESET_PCIE	0
 
 
