@@ -2,105 +2,125 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D63C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108CBC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF01A20728
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE41120715
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:46:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CgSo0NTN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PUqTHT4C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbfKONqE (ORCPT
+        id S1727566AbfKONqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 08:46:04 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33783 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727249AbfKONqE (ORCPT
+        Fri, 15 Nov 2019 08:46:34 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:57842 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727249AbfKONqe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 08:46:04 -0500
-Received: by mail-qk1-f196.google.com with SMTP id 71so8123226qkl.0
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 05:46:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wFCQuQA85xWwryGtN7bWLtCWqMvfBLzKa2tYtAL7AJ4=;
-        b=CgSo0NTNilCZ9UpBcaBT8myQuQoFYxo5h+V58XxndAABs9C55u4LuPzUItpGOlj6ep
-         ao18BAsa/6UcWwseyHf0NRzSYIwH5jzJWStrm7YkezIogJr74NAx9B4el0fiAzH6ajrd
-         1aZ+Ae0Oh3qJBmT6lxUO88A/4n1+oeP5ioXxeii73CYKc9MeTf5BTRySfRUOwadDg5zj
-         kzfLpVBn7Yabje9zloMv+YZR4nzEd0tFcJxF23oFphJBS2ZdXKrduZrfpaBxJeEOntQy
-         WmHEUPmRZHuSuKEU3NOqVsD90+mgiBuHbUPxK0y+k7cC47i5sj0ZlaAOauAXPX+XvJoo
-         Ifog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wFCQuQA85xWwryGtN7bWLtCWqMvfBLzKa2tYtAL7AJ4=;
-        b=E7owfNe1hJxU8FX5cI2dMIMIsw6JvGgXVDb4Loykq930IYWyjMJoX1A1KSsKs/Rtxl
-         Ke9UJ7jFbH063GrGF5lLE4Kxc3rM5+1AZxwh48LpzP9I1XzmRpL9sua68gvKnnxOYOQA
-         QWkjt6ubhb5vFT9hXRfXJHr3QetyhUsU7fYBj4IXQuGXNBzy92Kzn4CnJWUDmuJRZcpQ
-         tcR4OuAzNbbWSyKBx02//oQzZdpvQ7U5X0nbqcBlZLE/SQMQJb0xhHDSpwsPpNW68g3i
-         DbLX9Vt7YeQ06riEF/rfhAOFxq8o6pVI1NLwgjgU4wdKTo0JV4TFCRqPPYt0F14lp3oB
-         xrww==
-X-Gm-Message-State: APjAAAWzcIeJw/BaCiK9USBT+rEf7p2u52A0jB1tZaJ5PO6tvHkIyCc9
-        e8T7FqWP9Xmx7ucQP5HS2xWfCOk=
-X-Google-Smtp-Source: APXvYqzcNMp11EFP0G06Wzv2aV49+XyU+j0nMoejGhjmqkUd4ovHzz42Zc2Ca34pxAZqkmfQbA81aw==
-X-Received: by 2002:a37:4c4a:: with SMTP id z71mr12563017qka.451.1573825563381;
-        Fri, 15 Nov 2019 05:46:03 -0800 (PST)
-Received: from [192.168.1.99] ([92.117.186.89])
-        by smtp.googlemail.com with ESMTPSA id v20sm4034817qkg.92.2019.11.15.05.46.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Nov 2019 05:46:02 -0800 (PST)
-Subject: Re: [for-next][PATCH] tracing: Add missing "inline" in stub function
- of latency_fsnotify()
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-References: <20191115082719.4f2d11a0@gandalf.local.home>
-From:   Viktor Rosendahl <viktor.rosendahl@gmail.com>
-Message-ID: <45d969e0-cb51-507c-4a43-4ad2227d31d2@gmail.com>
-Date:   Fri, 15 Nov 2019 14:46:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 15 Nov 2019 08:46:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=wC+9uuEJp26Sj5A4rHzaYFSX5ziFMg0AaRJ7JE8csaM=; b=PUqTHT4C8uDgsWsoQ004rD5AI
+        6TrCbBj9b8PF9AYXQy5mO4S+YtrhDUba9Q02j5wUf32DvVWcI+oOZBDnOGcDBSZmU+aVoO3kyB0t1
+        mrlk1xGNKhEgZsjVyqhVDgLn5eJEkt2akcwzTA4nW1jW6Ncc2Yf9smYfo12ophM02Dhl8b/EDp5uK
+        lHjuVluUavnUbUCdTwxUczBj9OSRnwTQUnbEiLOyrXf4LlZZvGLMktU5HxkMs1nEdR+a/CNa+GEr7
+        pX6C0CfDYX1hFxFDkdq9HENLAQg6Gd1oBovaTKJmptausmB/UwW8WA54eZtKHEwMXOXh2uDQeXpPw
+        7QQAtGkow==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iVbvK-0002Oo-9N; Fri, 15 Nov 2019 13:46:06 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 325083006FB;
+        Fri, 15 Nov 2019 14:44:55 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 523F72B12DAAC; Fri, 15 Nov 2019 14:46:03 +0100 (CET)
+Date:   Fri, 15 Nov 2019 14:46:03 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Doug Smythies <dsmythies@telus.net>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
+        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
+Message-ID: <20191115134603.GK4131@hirez.programming.kicks-ass.net>
+References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org>
+ <20191115095447.GU4114@hirez.programming.kicks-ass.net>
+ <CAKfTPtCTcrq1E1H8A3TL1xvALUrQ7ybPoERJ+C2O2+QXpVEZGQ@mail.gmail.com>
+ <20191115103735.GE4131@hirez.programming.kicks-ass.net>
+ <CAKfTPtDi_-h6g+rhV04XXjqpWprC2vT6hgLZSrTW5rdD54PrQA@mail.gmail.com>
+ <20191115105110.GG4131@hirez.programming.kicks-ass.net>
+ <CAKfTPtC3g4iCxvAJo9Km9fZ0fPSw5Jt9TY2+xF7kxGmOZ66gxw@mail.gmail.com>
+ <20191115130144.GA4097@hirez.programming.kicks-ass.net>
+ <CAKfTPtBrxqkoFeWkxX1J1QmhBpRfDh6nYs1wRA-WR8y15AmaYQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191115082719.4f2d11a0@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtBrxqkoFeWkxX1J1QmhBpRfDh6nYs1wRA-WR8y15AmaYQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/15/19 2:27 PM, Steven Rostedt wrote:
-
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index 90cba68c8b50..2df8aed6a8f0 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -801,7 +801,7 @@ void latency_fsnotify(struct trace_array *tr);
->   
->   #else
->   
-> -static void latency_fsnotify(struct trace_array *tr) { }
-> +static inline void latency_fsnotify(struct trace_array *tr) { }
->   
->   #endif
->   
+On Fri, Nov 15, 2019 at 02:30:58PM +0100, Vincent Guittot wrote:
+> On Fri, 15 Nov 2019 at 14:02, Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Fri, Nov 15, 2019 at 12:03:31PM +0100, Vincent Guittot wrote:
+> >
+> > > This patch does 2 things:
+> > > - fix the spurious call to cpufreq just before attaching a task
+> >
+> > Right, so that one doesn't concern me too much.
+> >
+> > > - make sure cpufreq is still called when cfs is 0 but not irq/rt or dl
+> >
+> > But per the rq->has_blocked_load logic we would mostly stop sending
+> > events once we reach all 0s.
+> >
+> > Now, most of those updates will be through _nohz_idle_balance() ->
+> > update_nohz_stats(), which are remote, which means intel_pstate is
+> > ignoring them anyway.
+> >
+> > Now the _nohz_idle_balance() -> update_blocked_averages() thing runs
+> > local, and that will update the one random idle CPU we picked to run
+> > nohz balance, but all others will be left where they were.
+> >
+> > So why does intel_pstate care... Esp. on SKL+ with per-core P state this
+> > is of dubious value.
 > 
+> Doug mentioned some periodic timers that were running on the CPUs
+> 
+> >
+> > Also, and maybe I should go read back, why do we care what the P state
+> > is when we're mostly in C states anyway? These are all idle CPUs,
+> > otherwise we wouldkn't be running update_blocked_averages() on them
+> > anyway.
+> 
+> AFAIU, there is not 100% idle but they have periodic timers that will
+> fire and run at higher P state
 
-Looks good to me.
+If it is pure timers, I don't see how those CPUs end up calling
+cpufreq_update_util().
 
-Thanks for fixing this.
-
-best regards,
-
-Viktor
+Per the above argument, only the CPU that ran nohz balance gets an
+update call, all the other CPUs that remain idle (or only serve IRQs)
+never get the call.
