@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFE8C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5BEC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39DBC20740
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 159CE20815
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:44:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AUJy6L0F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mr86IiEk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfKOSn5 (ORCPT
+        id S1727208AbfKOSn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 13:43:57 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36446 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbfKOSnx (ORCPT
+        Fri, 15 Nov 2019 13:43:58 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37419 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbfKOSn4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 13:43:53 -0500
-Received: by mail-wm1-f67.google.com with SMTP id c22so11494820wmd.1;
-        Fri, 15 Nov 2019 10:43:52 -0800 (PST)
+        Fri, 15 Nov 2019 13:43:56 -0500
+Received: by mail-wm1-f66.google.com with SMTP id b17so11485399wmj.2;
+        Fri, 15 Nov 2019 10:43:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=44lDiZC/HyWHizJUTFlT+jmrIvxAJf5o2GDXJq7Fi20=;
-        b=AUJy6L0FiPANesawRIslnabTIItR6XMOS4WHYQ3D6pc8miNDb/Z5X11gNI1eTl9q5q
-         n3GmIiY8X9Nr7Lk5icpkz585MPqmz9RqdiCLJ+JJBHr9Yfk9/vSAAugoXB1FA5L7dSqi
-         2AO3pQaBc65xkk/eh4X21dXAGMs0Nls620cHZyeBymyKKUUjHI/E+zU/NFppB9oTvxt3
-         5jyhjIxeYtTiYjsC6NiptPWC8kjJRQBCIg2oiqPBsr8M0YOQlhj3CjhgSHI4ZWL4tWyK
-         /EPJEkyZQSoNIel0I+TSbq8m8cRC/Q1U3lboURLdfxOxeVrtMYWNI5m420a24NxJGUS1
-         G9Ig==
+        bh=MFlnOn0CAyQafh0Ou2lpY54Ga03K/6YVfFICBBVyXck=;
+        b=mr86IiEkh6BMzmVhCk3kgov07rgov4gwotKNoFw+me9PSEVD86+veJHoXHDyaY8vle
+         BaSP7G7ZjnZP0j9WMGLdxvykaNUocXqaCCXUSci7TRPOeFbN8HUtxpvVemnzyHPURVFT
+         gghQLhflIrHtxfkRBv2xTBRdBYxUN7U8WGNiK6rRri+yCgTJU3ISFKtJa9W7ukJA9Yj/
+         NFbLkEWxlIfTTkh732tcDcrFebUHb9sA17rVudEFd5Y+3KdkQXfGusVgx/WMjI/EETGt
+         l5dg4b5SzcCPARD4+RHCKSuSBBE0zDEfaEn44ojlOhuEb/QFhRiIF4moOzz5ibPCQKGs
+         u31g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=44lDiZC/HyWHizJUTFlT+jmrIvxAJf5o2GDXJq7Fi20=;
-        b=h71VNfmb3RJDlZuBvdLgAc/BwfsJwsLdjuMxpFCW8KzTkFbTg2kALOEmJPpFrC5eSu
-         vMo65Q/zkNW6a4fach4RxfJfueRThKEQEZ4zvnz+yHSn2FJDETL9v9oBPYPIopXaQ7la
-         TTHZurokIKY/oDpotH3uS3JfwIk7txdRa7Z05DwuXVCj17pgtDwuoicwDFAcIXjhvQMw
-         svcNdRmDkE+6w1gtoC76X5bEr8pfCI3iobBR/yUfSgAjxdnj3LYPVbtZP7w0np99nm+C
-         jGHQ69dNE86LlkHtok5ND22NPw99lFomSSsTVB6ZCUAsSz/6+mODMMwvHIICzA0hr6hk
-         ytbg==
-X-Gm-Message-State: APjAAAU9r2k9/WMs/rZVvcYGqUPJS6rjOntzShvasmACB32+0tUUIitK
-        qx/pG0Az8srP7HwFXZqEN3IhrNQBw9Y=
-X-Google-Smtp-Source: APXvYqwsBuwArKC2zsEagHcuDz0VELwiJxoMPPhcSFoPYDNRSb2qkuibjkIOivEmh4xMhP4E639SOg==
-X-Received: by 2002:a05:600c:2041:: with SMTP id p1mr15806760wmg.11.1573843431625;
-        Fri, 15 Nov 2019 10:43:51 -0800 (PST)
+        bh=MFlnOn0CAyQafh0Ou2lpY54Ga03K/6YVfFICBBVyXck=;
+        b=bwpSiAKyUPlcYZ/AkMUqS0u70pBsPHVvmnmLCDBj/oX212ZCbSQe51ngNnFr344/om
+         T5OS4fIYLnHD4Ym8uD/nJHeX43j11QL7Z3XbRWRDTKxa6e1mtQrDzaFVznoHEo1zcBfc
+         /kIGWVoii+SftHJDH19UqkEGLfxhwoAmF+djpNORF6H0AMjIL8ZMkoRvP6/AyBgJQz7z
+         ODm7zANhuB3hGCGiT3wUgr5KCzhdKN9IQJJsTPXMBiLY4+TNwQWnV49r90Zy6oMmcOey
+         DfSQ9gOk3/zAMjDqPZGetSk/F+yALSFUaNJIQn6vkz39Bk9Dnlbpz9cbeV8bm31uxp3u
+         BfFw==
+X-Gm-Message-State: APjAAAV4LjLIL0UAL/NjhrE+p+hCy+ROgx2GySSdQyLyhqgC8dG1kgHf
+        SPo9osg57z1/pFW3Y2v9z4ExpQG8nxg=
+X-Google-Smtp-Source: APXvYqw3Oh5ANrOKWgIZchBUqjbmhrA+8Tx4boW7ZEkB/jUJhDm2lKldwdzgc97981Uz5S5BPS488g==
+X-Received: by 2002:a1c:dd06:: with SMTP id u6mr17059416wmg.109.1573843433848;
+        Fri, 15 Nov 2019 10:43:53 -0800 (PST)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id g138sm2620989wmg.11.2019.11.15.10.43.49
+        by smtp.gmail.com with ESMTPSA id g138sm2620989wmg.11.2019.11.15.10.43.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 10:43:51 -0800 (PST)
+        Fri, 15 Nov 2019 10:43:53 -0800 (PST)
 From:   Al Cooper <alcooperx@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Al Cooper <alcooperx@gmail.com>,
@@ -66,9 +66,9 @@ Cc:     Al Cooper <alcooperx@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
         Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v2 10/13] phy: usb: PHY's MDIO registers not accessible without device installed
-Date:   Fri, 15 Nov 2019 13:42:20 -0500
-Message-Id: <20191115184223.41504-11-alcooperx@gmail.com>
+Subject: [PATCH v2 11/13] phy: usb: bdc: Fix occasional failure with BDC on 7211
+Date:   Fri, 15 Nov 2019 13:42:21 -0500
+Message-Id: <20191115184223.41504-12-alcooperx@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191115184223.41504-1-alcooperx@gmail.com>
 References: <20191115184223.41504-1-alcooperx@gmail.com>
@@ -77,44 +77,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When there is no device connected and FSM is enabled, the XHCI puts
-the PHY into suspend mode.  When the PHY is put into suspend mode
-the USB LDO powers down the PHY. This causes the MDIO to be
-inaccessible and its registers reset to default. The fix is to
-disable FSM.
+The BDC "Read Transaction Size" needs to be changed from 1024
+bytes to 256 bytes to prevent occasional transaction failures.
 
 Signed-off-by: Al Cooper <alcooperx@gmail.com>
 ---
- drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ .../phy/broadcom/phy-brcm-usb-init-synopsis.c | 18 +++++++++++++++
+ drivers/phy/broadcom/phy-brcm-usb-init.h      |  1 +
+ drivers/phy/broadcom/phy-brcm-usb.c           | 23 +++++++++++++++----
+ 3 files changed, 38 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c b/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
-index bf138867efb1..fe3f653c64a7 100644
+index fe3f653c64a7..c6504649d307 100644
 --- a/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
 +++ b/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
-@@ -56,6 +56,7 @@
- #define USB_PHY_PLL_LDO_CTL		0x08
- #define   USB_PHY_PLL_LDO_CTL_AFE_CORERDY_MASK		0x00000004
- #define USB_PHY_UTMI_CTL_1		0x04
-+#define   USB_PHY_UTMI_CTL_1_POWER_UP_FSM_EN_MASK	0x00000800
- #define   USB_PHY_UTMI_CTL_1_PHY_MODE_MASK		0x0000000c
- #define   USB_PHY_UTMI_CTL_1_PHY_MODE_SHIFT		2
- #define USB_PHY_STATUS			0x20
-@@ -229,6 +230,14 @@ static void usb_init_common_7211b0(struct brcm_usb_init_params *params)
+@@ -70,6 +70,11 @@
+ #define USB_GMDIOCSR	0
+ #define USB_GMDIOGEN	4
+ 
++/* Register definitions for the BDC EC block in 7211b0 */
++#define BDC_EC_AXIRDA			0x0c
++#define   BDC_EC_AXIRDA_RTS_MASK			0xf0000000
++#define   BDC_EC_AXIRDA_RTS_SHIFT			28
++
+ 
+ static void usb_mdio_write_7211b0(struct brcm_usb_init_params *params,
+ 				  uint8_t addr, uint16_t data)
+@@ -198,6 +203,7 @@ static void usb_init_common_7211b0(struct brcm_usb_init_params *params)
+ {
+ 	void __iomem *ctrl = params->regs[BRCM_REGS_CTRL];
+ 	void __iomem *usb_phy = params->regs[BRCM_REGS_USB_PHY];
++	void __iomem *bdc_ec = params->regs[BRCM_REGS_BDC_EC];
+ 	int timeout_ms = PHY_LOCK_TIMEOUT_MS;
+ 	u32 reg;
+ 
+@@ -230,6 +236,18 @@ static void usb_init_common_7211b0(struct brcm_usb_init_params *params)
  
  	usb_init_common(params);
  
 +	/*
-+	 * Disable FSM, otherwise the PHY will auto suspend when no
-+	 * device is connected and will be reset on resume.
++	 * The BDC controller will get occasional failures with
++	 * the default "Read Transaction Size" of 6 (1024 bytes).
++	 * Set it to 4 (256 bytes).
 +	 */
-+	reg = brcm_usb_readl(usb_phy + USB_PHY_UTMI_CTL_1);
-+	reg &= ~USB_PHY_UTMI_CTL_1_POWER_UP_FSM_EN_MASK;
-+	brcm_usb_writel(reg, usb_phy + USB_PHY_UTMI_CTL_1);
++	if ((params->mode != USB_CTLR_MODE_HOST) && bdc_ec) {
++		reg = brcm_usb_readl(bdc_ec + BDC_EC_AXIRDA);
++		reg &= ~BDC_EC_AXIRDA_RTS_MASK;
++		reg |= (0x4 << BDC_EC_AXIRDA_RTS_SHIFT);
++		brcm_usb_writel(reg, bdc_ec + BDC_EC_AXIRDA);
++	}
 +
- 	usb2_eye_fix_7211b0(params);
- }
+ 	/*
+ 	 * Disable FSM, otherwise the PHY will auto suspend when no
+ 	 * device is connected and will be reset on resume.
+diff --git a/drivers/phy/broadcom/phy-brcm-usb-init.h b/drivers/phy/broadcom/phy-brcm-usb-init.h
+index 66363b04d778..570bd9d8c9ec 100644
+--- a/drivers/phy/broadcom/phy-brcm-usb-init.h
++++ b/drivers/phy/broadcom/phy-brcm-usb-init.h
+@@ -19,6 +19,7 @@ enum brcmusb_reg_sel {
+ 	BRCM_REGS_XHCI_GBL,
+ 	BRCM_REGS_USB_PHY,
+ 	BRCM_REGS_USB_MDIO,
++	BRCM_REGS_BDC_EC,
+ 	BRCM_REGS_MAX
+ };
  
+diff --git a/drivers/phy/broadcom/phy-brcm-usb.c b/drivers/phy/broadcom/phy-brcm-usb.c
+index c82d7ec15334..cc5763ace3ad 100644
+--- a/drivers/phy/broadcom/phy-brcm-usb.c
++++ b/drivers/phy/broadcom/phy-brcm-usb.c
+@@ -36,6 +36,7 @@ struct value_to_name_map {
+ struct match_chip_info {
+ 	void *init_func;
+ 	u8 required_regs[BRCM_REGS_MAX + 1];
++	u8 optional_reg;
+ };
+ 
+ static struct value_to_name_map brcm_dr_mode_to_name[] = {
+@@ -71,7 +72,7 @@ struct brcm_usb_phy_data {
+ };
+ 
+ static s8 *node_reg_names[BRCM_REGS_MAX] = {
+-	"crtl", "xhci_ec", "xhci_gbl", "usb_phy", "usb_mdio"
++	"crtl", "xhci_ec", "xhci_gbl", "usb_phy", "usb_mdio", "bdc_ec"
+ };
+ 
+ static irqreturn_t brcm_usb_phy_wake_isr(int irq, void *dev_id)
+@@ -271,6 +272,7 @@ static struct match_chip_info chip_info_7211b0 = {
+ 		BRCM_REGS_USB_MDIO,
+ 		-1,
+ 	},
++	.optional_reg = BRCM_REGS_BDC_EC,
+ };
+ 
+ static struct match_chip_info chip_info_7445 = {
+@@ -300,7 +302,8 @@ static const struct of_device_id brcm_usb_dt_ids[] = {
+ 
+ static int brcm_usb_get_regs(struct platform_device *pdev,
+ 			     enum brcmusb_reg_sel regs,
+-			     struct  brcm_usb_init_params *ini)
++			     struct  brcm_usb_init_params *ini,
++			     bool optional)
+ {
+ 	struct resource *res;
+ 
+@@ -317,7 +320,13 @@ static int brcm_usb_get_regs(struct platform_device *pdev,
+ 				return 0;
+ 		}
+ 		if (res == NULL) {
+-			dev_err(&pdev->dev, "can't get %s base address\n",
++			if (optional) {
++				dev_dbg(&pdev->dev,
++					"Optional reg %s not found\n",
++					node_reg_names[regs]);
++				return 0;
++			}
++			dev_err(&pdev->dev, "can't get %s base addr\n",
+ 				node_reg_names[regs]);
+ 			return 1;
+ 		}
+@@ -460,7 +469,13 @@ static int brcm_usb_phy_probe(struct platform_device *pdev)
+ 			break;
+ 
+ 		err = brcm_usb_get_regs(pdev, info->required_regs[x],
+-					&priv->ini);
++					&priv->ini, false);
++		if (err)
++			return -EINVAL;
++	}
++	if (info->optional_reg) {
++		err = brcm_usb_get_regs(pdev, info->optional_reg,
++					&priv->ini, true);
+ 		if (err)
+ 			return -EINVAL;
+ 	}
 -- 
 2.17.1
 
