@@ -2,110 +2,210 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 573CBC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA23C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5432072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA6920728
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:45:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oaB9WzyC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfKOMoU (ORCPT
+        id S1727881AbfKOMpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:44:20 -0500
-Received: from mga14.intel.com ([192.55.52.115]:58938 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727576AbfKOMn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 07:43:27 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 04:43:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,308,1569308400"; 
-   d="scan'208";a="257749660"
-Received: from ahunter-desktop.fi.intel.com ([10.237.72.197])
-  by FMSMGA003.fm.intel.com with ESMTP; 15 Nov 2019 04:43:26 -0800
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 03/15] perf tools: Add a function to test for kernel support for AUX area sampling
-Date:   Fri, 15 Nov 2019 14:42:13 +0200
-Message-Id: <20191115124225.5247-4-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191115124225.5247-1-adrian.hunter@intel.com>
-References: <20191115124225.5247-1-adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+        Fri, 15 Nov 2019 07:45:22 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34310 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727272AbfKOMpW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 07:45:22 -0500
+Received: by mail-wm1-f66.google.com with SMTP id j18so9996846wmk.1;
+        Fri, 15 Nov 2019 04:45:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IuuUvPE4LPSeug9SWAuaNF/jmrQAGOGNZ9g9Ry7ToRE=;
+        b=oaB9WzyCidhcS7WmkncUNaw1+Twilec9DoSikauUrM+ipjGDX+MGw5sngCARMYsyUG
+         FDjdg1s6MggFK0o6tG2aIk9AxDRek/q/Xir3pylOrt0ROE2OlWtRjNnKxYPK8GFj38tG
+         nJ6RzF5UOJpw29uZJ4Eb6b1ZfWBzDwVOtUtzegOIXrGi0s2xR1VRNBalxOWQM14tIi5a
+         fGGJmnJjyzjTKkOCW/+fI88pX4+7i1q4OkAuiptd32uA3cYWut56MJifbsvPduwymGj9
+         hjpmVYBSKlQDAdSEs4+CJVMb/0C9m8BQJtFH5E/+r4oIJ4GzJCc9GWEYw+Q35TLypjqj
+         UnBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IuuUvPE4LPSeug9SWAuaNF/jmrQAGOGNZ9g9Ry7ToRE=;
+        b=YkO+A4eZCMp8spfAqMB+8Q9EJcTdUqCM8YCf8IXitn8WJnO9GZxp+0h0Wo3tUUK+NC
+         uQZVPFqMNlnxbRPiBIf7ppkAJMhbImQxvzsCpIYieAXbCnTEMzvMACiE6YiPdfGYns0Z
+         +7m0VTh/kY/qU0qSWrowMldUFDgyZ5Ne10G6J3icDleAByK6EGoBoGdLy4XiLWmzVKWG
+         xEnAswsHaOF7ERPyWzNnJIpsVBzR6OaN0K9O9OsvIbuNyDlJ46F2Ws4T499eGXXKMOZP
+         OT3jBEUWoF/yKH2QqgxZYlgR9U+sePVkyqOZWd2XcqbUES2l15kPNG3WVpvF+j/bg0Iq
+         3yZQ==
+X-Gm-Message-State: APjAAAU1pLC2VKSjQqb8YqifP5NGWMOG/kDgYVdc72cDbqV2tCAfolcx
+        m+GaWvRzMHX23RCfGweHiCEWaGmm
+X-Google-Smtp-Source: APXvYqwPO6UCR4wROZX9g244JGWsZTNfxtKqaYGdx1ZDLz2uk+hjVaSf3qXxka4ZxCB8+l/WHnMuEQ==
+X-Received: by 2002:a7b:c08c:: with SMTP id r12mr14067285wmh.67.1573821919961;
+        Fri, 15 Nov 2019 04:45:19 -0800 (PST)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id y6sm11149915wrr.19.2019.11.15.04.45.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2019 04:45:19 -0800 (PST)
+Date:   Fri, 15 Nov 2019 13:45:17 +0100
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Kalyani Akula <kalyani.akula@xilinx.com>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kalyani Akula <kalyania@xilinx.com>,
+        Harsh Jain <harshj@xilinx.com>,
+        Sarat Chand Savitala <saratcha@xilinx.com>,
+        Mohan Marutirao Dhanawade <mohan.dhanawade@xilinx.com>
+Subject: Re: [PATCH V3 4/4] crypto: Add Xilinx AES driver
+Message-ID: <20191115124517.GA31038@Red>
+References: <1573040435-6932-1-git-send-email-kalyani.akula@xilinx.com>
+ <1573040435-6932-5-git-send-email-kalyani.akula@xilinx.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573040435-6932-5-git-send-email-kalyani.akula@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Architectures are expected to know if AUX area sampling is supported by the
-hardware. Add a function perf_can_aux_sample() which will determine whether
-the kernel supports it.
+On Wed, Nov 06, 2019 at 05:10:35PM +0530, Kalyani Akula wrote:
+> This patch adds AES driver support for the Xilinx ZynqMP SoC.
+> 
+> Signed-off-by: Kalyani Akula <kalyani.akula@xilinx.com>
+> ---
+>  drivers/crypto/Kconfig                 |  11 +
+>  drivers/crypto/Makefile                |   2 +
+>  drivers/crypto/xilinx/Makefile         |   3 +
+>  drivers/crypto/xilinx/zynqmp-aes-gcm.c | 457 +++++++++++++++++++++++++++++++++
+>  4 files changed, 473 insertions(+)
+>  create mode 100644 drivers/crypto/xilinx/Makefile
+>  create mode 100644 drivers/crypto/xilinx/zynqmp-aes-gcm.c
+> 
+> diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+> index 1fb622f..8e7d3a9 100644
+> --- a/drivers/crypto/Kconfig
+> +++ b/drivers/crypto/Kconfig
+> @@ -696,6 +696,17 @@ config CRYPTO_DEV_ROCKCHIP
+>  	help
+>  	  This driver interfaces with the hardware crypto accelerator.
+>  	  Supporting cbc/ecb chainmode, and aes/des/des3_ede cipher mode.
+> +config CRYPTO_DEV_ZYNQMP_AES
+> +	tristate "Support for Xilinx ZynqMP AES hw accelerator"
+> +	depends on ARCH_ZYNQMP || COMPILE_TEST
+> +	select CRYPTO_AES
+> +	select CRYPTO_ENGINE
+> +	select CRYPTO_AEAD
+> +	help
+> +	  Xilinx ZynqMP has AES-GCM engine used for symmetric key
+> +	  encryption and decryption. This driver interfaces with AES hw
+> +	  accelerator. Select this if you want to use the ZynqMP module
+> +	  for AES algorithms.
+>  
+>  config CRYPTO_DEV_MEDIATEK
+>  	tristate "MediaTek's EIP97 Cryptographic Engine driver"
+> diff --git a/drivers/crypto/Makefile b/drivers/crypto/Makefile
+> index afc4753..b6124b8 100644
+> --- a/drivers/crypto/Makefile
+> +++ b/drivers/crypto/Makefile
+> @@ -47,4 +47,6 @@ obj-$(CONFIG_CRYPTO_DEV_VMX) += vmx/
+>  obj-$(CONFIG_CRYPTO_DEV_BCM_SPU) += bcm/
+>  obj-$(CONFIG_CRYPTO_DEV_SAFEXCEL) += inside-secure/
+>  obj-$(CONFIG_CRYPTO_DEV_ARTPEC6) += axis/
+> +obj-$(CONFIG_CRYPTO_DEV_ZYNQMP_AES) += xilinx/
+> +
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/util/evlist.h |  1 +
- tools/perf/util/record.c | 30 ++++++++++++++++++++++++++++++
- 2 files changed, 31 insertions(+)
+Hello
 
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 13051409fd22..3655b9ebb147 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -176,6 +176,7 @@ void perf_evlist__set_id_pos(struct evlist *evlist);
- bool perf_can_sample_identifier(void);
- bool perf_can_record_switch_events(void);
- bool perf_can_record_cpu_wide(void);
-+bool perf_can_aux_sample(void);
- void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
- 			 struct callchain_param *callchain);
- int record_opts__config(struct record_opts *opts);
-diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
-index 8579505c29a4..e2321edcdd8f 100644
---- a/tools/perf/util/record.c
-+++ b/tools/perf/util/record.c
-@@ -136,6 +136,36 @@ bool perf_can_record_cpu_wide(void)
- 	return true;
- }
- 
-+/*
-+ * Architectures are expected to know if AUX area sampling is supported by the
-+ * hardware. Here we check for kernel support.
-+ */
-+bool perf_can_aux_sample(void)
-+{
-+	struct perf_event_attr attr = {
-+		.exclude_kernel = 1,
-+		/*
-+		 * Non-zero value causes the kernel to calculate the effective
-+		 * attribute size up to that byte.
-+		 */
-+		.aux_sample_size = 1,
-+	};
-+	int fd;
-+
-+	fd = sys_perf_event_open(&attr, -1, 0, -1, 0);
-+	/*
-+	 * If the kernel attribute is big enough to contain aux_sample_size
-+	 * then we assume that it is supported. We are relying on the kernel to
-+	 * validate the attribute size before anything else that could be wrong.
-+	 */
-+	if (fd == -E2BIG)
-+		return false;
-+	if (fd >= 0)
-+		close(fd);
-+
-+	return true;
-+}
-+
- void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
- 			 struct callchain_param *callchain)
- {
--- 
-2.17.1
+you insert a useless newline
 
+[...]
+> +static int zynqmp_handle_aes_req(struct crypto_engine *engine,
+> +				 void *req)
+> +{
+> +	struct aead_request *areq =
+> +				container_of(req, struct aead_request, base);
+> +	struct crypto_aead *aead = crypto_aead_reqtfm(req);
+> +	struct zynqmp_aead_tfm_ctx *tfm_ctx = crypto_aead_ctx(aead);
+> +	struct zynqmp_aead_req_ctx *rq_ctx = aead_request_ctx(areq);
+> +	struct aead_request *subreq;
+> +	int need_fallback;
+> +	int err;
+> +
+> +	need_fallback = zynqmp_fallback_check(tfm_ctx, areq);
+> +
+> +	if (need_fallback) {
+> +		subreq = aead_request_alloc(tfm_ctx->fbk_cipher, GFP_KERNEL);
+> +		if (!subreq)
+> +			return -ENOMEM;
+> +
+> +		aead_request_set_callback(subreq, areq->base.flags,
+> +					  NULL, NULL);
+> +		aead_request_set_crypt(subreq, areq->src, areq->dst,
+> +				       areq->cryptlen, areq->iv);
+> +		aead_request_set_ad(subreq, areq->assoclen);
+> +		if (rq_ctx->op == ZYNQMP_AES_ENCRYPT)
+> +			err = crypto_aead_encrypt(subreq);
+> +		else
+> +			err = crypto_aead_decrypt(subreq);
+> +		aead_request_free(subreq);
+
+Every other crypto driver which use async fallback does not use aead_request_free() (and do not allocate a new request).
+I am puzzled that you can free an async request without waiting for its completion.
+Perhaps I am wrong, but since no other driver do like that...
+
+[...]
+> +static int zynqmp_aes_aead_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	int err = -1;
+> +
+> +	if (!pdev->dev.of_node)
+> +		return -ENODEV;
+> +
+> +	aes_drv_ctx.dev = dev;
+
+You should test if dev is not already set.
+And add a comment like "this driver support only one instance".
+
+> +	aes_drv_ctx.eemi_ops = zynqmp_pm_get_eemi_ops();
+> +	if (IS_ERR(aes_drv_ctx.eemi_ops)) {
+> +		dev_err(dev, "Failed to get ZynqMP EEMI interface\n");
+> +		return PTR_ERR(aes_drv_ctx.eemi_ops);
+> +	}
+> +
+> +	err = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(ZYNQMP_DMA_BIT_MASK));
+> +	if (err < 0) {
+> +		dev_err(dev, "No usable DMA configuration\n");
+> +		return err;
+> +	}
+> +
+> +	aes_drv_ctx.engine = crypto_engine_alloc_init(dev, 1);
+> +	if (!aes_drv_ctx.engine) {
+> +		dev_err(dev, "Cannot alloc AES engine\n");
+> +		return err;
+> +	}
+> +
+> +	err = crypto_engine_start(aes_drv_ctx.engine);
+> +	if (err) {
+> +		dev_err(dev, "Cannot start AES engine\n");
+> +		return err;
+> +	}
+> +
+> +	err = crypto_register_aead(&aes_drv_ctx.alg.aead);
+> +	if (err < 0)
+> +		dev_err(dev, "Failed to register AEAD alg.\n");
+
+In case of error you didnt crypto_engine_exit()
+
+Regards
