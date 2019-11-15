@@ -2,99 +2,170 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9027AC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D71D3C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 667152072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D3E02072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:42:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qTyktsT4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfKOWkd (ORCPT
+        id S1727122AbfKOWmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 17:40:33 -0500
-Received: from mga01.intel.com ([192.55.52.88]:32679 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726953AbfKOWkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 17:40:32 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 14:40:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,309,1569308400"; 
-   d="scan'208";a="203699427"
-Received: from bpgilles-mobl1.ger.corp.intel.com (HELO localhost) ([10.251.95.141])
-  by fmsmga007.fm.intel.com with ESMTP; 15 Nov 2019 14:40:26 -0800
-Date:   Sat, 16 Nov 2019 00:40:25 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-stable@vger.kernel.org,
-        Christian Bundy <christianbundy@fraction.io>
-Subject: Re: [PATCH] tpm_tis: turn on TPM before calling tpm_get_timeouts
-Message-ID: <20191115224025.GA29389@linux.intel.com>
-References: <20191111233418.17676-1-jsnitsel@redhat.com>
- <20191112200328.GA11213@linux.intel.com>
- <CALzcddtMiSzhgZv5R6xqb1Amyk7cdY4mJdYDS86KRxH4wR_EGA@mail.gmail.com>
- <20191112202623.GB5584@ziepe.ca>
- <CALzcddtse-4bKWaA0+ns-gVKGyQzMrYWS4n1rFpbbhKLb83z7g@mail.gmail.com>
- <20191114165357.GA11107@linux.intel.com>
- <20191114165629.GC26068@ziepe.ca>
- <20191115174329.GA22029@linux.intel.com>
- <20191115183621.GD4055@ziepe.ca>
+        Fri, 15 Nov 2019 17:42:36 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:35166 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbfKOWmg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 17:42:36 -0500
+Received: by mail-qt1-f196.google.com with SMTP id n4so12543133qte.2;
+        Fri, 15 Nov 2019 14:42:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1Ljh/C9bOl+iw6pSFvN3eoLNKQmG6h31Yeu6UPqkFhQ=;
+        b=qTyktsT4cDpAQOuWRvAREFnO06PUl5P+DdqgZm+lxHqH05GZI2qSuxSrvvBPdanQoL
+         URI+YXs/LLv+nK0GkRAFNzSNYbBipDq1Hbt08kTHPTpcA92Cc+UaxSaCLIhPHQ7OMKc8
+         Cw9eqqoYH3rVjwSYxFU8rW3d0rClYqPQLkNu7UdD1JjEgK56fhBbOE9PXYG/ndHyBjlG
+         SlseIWTzGRdJ94MYa95c+aTBf0b3yDAZK2UO8zs72iuNvX+5QraLP7zU/s2aHpPoq8Xo
+         omyqG8D30tKykT7YpnQxkY4kIdYAzSkJpRaDsAdaR20562wr39KFzy83C/L9crO+tD95
+         4P8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1Ljh/C9bOl+iw6pSFvN3eoLNKQmG6h31Yeu6UPqkFhQ=;
+        b=KCXSHrrhbBy0vlgA1/EWPksFHv9GWnMMnlcb7QcKDYSpTmqU9TanBN4/bJoFfJz3dN
+         hz3Z9xF3Q96rubq1ug3ZOENRDF+45Nb35JfeqNRDZ7lGHO3MY0zLbBL1RjonlWOAB255
+         YWRtzsGRdsPckjtgdqYEekAw1rEVTiljbF1yhSijBIroqRBUV+omvVop64btVIwRhB5N
+         LGjXcyOE76U3uWTLzF7VxJNlSKJsjqnjX2IQAPU3mlCYyV2GTuN2fXRV9PULe9czrrJv
+         IVG/UDgrGLbtr+c+ZlCZqEccp4Dp8Q0VG8F7uNxMLosPYoQI2WhYfSVhsoxG0tCEXzWi
+         R02Q==
+X-Gm-Message-State: APjAAAWyyhsUAIIOBIW/0hkVaumR0Grcf3FNgUpulytqv3XvTLUUU/Ec
+        Cz/Q6Z1+KeutjfHtDBeyNwDbrKKsHkwjQgqQzz0=
+X-Google-Smtp-Source: APXvYqxS8GFDbUqv8q+wlxQKq2ZdR4dc8Hypo7Wdr47XR6xakaez1owd4zmlDuenxRAj580QV3D41WsgWMccHfyOOeQ=
+X-Received: by 2002:ac8:199d:: with SMTP id u29mr15886076qtj.93.1573857754983;
+ Fri, 15 Nov 2019 14:42:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115183621.GD4055@ziepe.ca>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191107212023.171208-1-brianvv@google.com> <20191107212023.171208-3-brianvv@google.com>
+In-Reply-To: <20191107212023.171208-3-brianvv@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 15 Nov 2019 14:42:24 -0800
+Message-ID: <CAEf4Bzbn6J79+_wK2+JtQaGRiiM9hCGyOsuE9DeSqa9ngemTWw@mail.gmail.com>
+Subject: Re: [RFC bpf-next 2/3] tools/bpf: test bpf_map_lookup_and_delete_batch()
+To:     Brian Vazquez <brianvv@google.com>
+Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Yonghong Song <yhs@fb.com>, Petar Penkov <ppenkov@google.com>,
+        Willem de Bruijn <willemb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 02:36:21PM -0400, Jason Gunthorpe wrote:
-> On Fri, Nov 15, 2019 at 07:43:29PM +0200, Jarkko Sakkinen wrote:
-> > On Thu, Nov 14, 2019 at 12:56:29PM -0400, Jason Gunthorpe wrote:
-> > > On Thu, Nov 14, 2019 at 06:55:06PM +0200, Jarkko Sakkinen wrote:
-> > > > > Would it function with the timeout values set at the beginning of
-> > > > > tpm_tis_core_init (max values)?
-> > > > 
-> > > > tpm_get_timeouts() should be replaced with:
-> > > > 
-> > > > if (tpm_chip_start()) {
-> > > > 	dev_err(dev, "Could not get TPM timeouts and durations\n");
-> > > > 	rc = -ENODEV;
-> > > > 	goto out_err;
-> > > > }
-> > > > 
-> > > > tpm_stop_chip(chip);
-> > > > 
-> > > > tpm_get_timeouts() is called by tpm_auto_startup(). Also the function
-> > > > should be moved to tpm_chip.c and converted to a static function so
-> > > > that it won't be called from random cal sites like above.
-> > > 
-> > > Careful, the design here was to allow a driver to do only
-> > > get_timeouts, then additional setup work, then do auto_startup()
-> > > 
-> > > Forcing a driver to do auto_startup too early may not be good.
-> > 
-> > All drivers always do it anyway because all drivers always call
-> > tpm_chip_register().
-> 
-> But chip_register is after the driver has done it's setup and after it
-> may have called get_timeouts
-> 
-> auto_setup should not be moved to before chip_register()
+On Thu, Nov 7, 2019 at 1:23 PM Brian Vazquez <brianvv@google.com> wrote:
+>
+> From: Yonghong Song <yhs@fb.com>
+>
+> Added four libbpf API functions to support map batch operations:
+>   . int bpf_map_delete_batch( ... )
+>   . int bpf_map_lookup_batch( ... )
+>   . int bpf_map_lookup_and_delete_batch( ... )
+>   . int bpf_map_update_batch( ... )
+>
+> Tested bpf_map_lookup_and_delete_batch() and bpf_map_update_batch()
+> functionality.
+>   $ ./test_maps
+>   ...
+>   test_map_lookup_and_delete_batch:PASS
+>   ...
+>
+> Note that I clumped uapi header sync patch, libbpf patch
+> and tests patch together considering this is a RFC patch.
+> Will do proper formating once it is out of RFC stage.
+>
+> Signed-off-by: Yonghong Song <yhs@fb.com>
+> ---
 
-I do not see any sense calling from get_timeouts() from call sites
-in the same initialization flow.
+[...]
 
-/Jarkko
+>
+> +       struct { /* struct used by BPF_MAP_*_BATCH commands */
+> +               __u64           batch;  /* input/output:
+> +                                        * input: start batch,
+> +                                        *        0 to start from beginning.
+> +                                        * output: next start batch,
+> +                                        *         0 to end batching.
+> +                                        */
+> +               __aligned_u64   keys;
+> +               __aligned_u64   values;
+> +               __u32           count;  /* input/output:
+> +                                        * input: # of elements keys/values.
+> +                                        * output: # of filled elements.
+> +                                        */
+> +               __u32           map_fd;
+> +               __u64           elem_flags;
+> +               __u64           flags;
+> +       } batch;
+> +
+
+Describe what elem_flags and flags are here?
+
+[...]
+
+> +LIBBPF_API int bpf_map_delete_batch(int fd, __u64 *batch, __u32 *count,
+> +                                   __u64 elem_flags, __u64 flags);
+> +LIBBPF_API int bpf_map_lookup_batch(int fd, __u64 *batch, void *keys,
+> +                                   void *values, __u32 *count,
+> +                                   __u64 elem_flags, __u64 flags);
+> +LIBBPF_API int bpf_map_lookup_and_delete_batch(int fd, __u64 *batch,
+> +                                              void *keys, void *values,
+> +                                              __u32 *count, __u64 elem_flags,
+> +                                              __u64 flags);
+> +LIBBPF_API int bpf_map_update_batch(int fd, void *keys, void *values,
+> +                                   __u32 *count, __u64 elem_flags,
+> +                                   __u64 flags);
+
+Should we start using the same approach as with bpf_object__open_file
+(see LIBBPF_OPTS), so that we can keep adding extra fields without
+breaking ABI? The gist is: use function arguments for mandatory fields
+(as of right now, at least), and put all the optional fields into a
+xxx_opts struct, which can be NULL. Please see
+bpf_object__open_{file,mem} for details.
+
+> +
+>  LIBBPF_API int bpf_obj_pin(int fd, const char *pathname);
+>  LIBBPF_API int bpf_obj_get(const char *pathname);
+>  LIBBPF_API int bpf_prog_attach(int prog_fd, int attachable_fd,
+> diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
+> index 86173cbb159d3..0529a770a04eb 100644
+> --- a/tools/lib/bpf/libbpf.map
+> +++ b/tools/lib/bpf/libbpf.map
+> @@ -189,6 +189,10 @@ LIBBPF_0.0.4 {
+>  LIBBPF_0.0.5 {
+>         global:
+>                 bpf_btf_get_next_id;
+> +               bpf_map_delete_batch;
+> +               bpf_map_lookup_and_delete_batch;
+> +               bpf_map_lookup_batch;
+> +               bpf_map_update_batch;
+>  } LIBBPF_0.0.4;
+
+This should be in 0.0.6 section now.
+
+>
+
+[...]
