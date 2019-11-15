@@ -5,68 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DBBC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA59C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B23520723
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9368820723
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:32:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NHudv3ny"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LZe+lZUE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfKOIbh (ORCPT
+        id S1727374AbfKOIcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 03:31:37 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34428 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfKOIbf (ORCPT
+        Fri, 15 Nov 2019 03:32:05 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37233 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfKOIcF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 03:31:35 -0500
-Received: by mail-pf1-f195.google.com with SMTP id n13so6166728pff.1;
-        Fri, 15 Nov 2019 00:31:34 -0800 (PST)
+        Fri, 15 Nov 2019 03:32:05 -0500
+Received: by mail-pl1-f194.google.com with SMTP id bb5so4135179plb.4;
+        Fri, 15 Nov 2019 00:32:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=q5lwtXD313rHZSqTsFu5Vpidw5xPFvZNMsGZjM8+wlc=;
-        b=NHudv3nyHz7Q+fs6X0XQGBlaj4WXkIqjOkTM26W0q/mer5tjJsjBBWBz8q6w4e03io
-         dVZzYUbjq+9f4RJBsqIJpkajljnPjdhC1z37Czg5pZ2+SRs4AR/y1PyUiTjoExtnPv7S
-         Dg26Ueye525NDpnN4B5XDoaTioYQ1YlCzy2AOUZ44bC8XPqgQZyYRRKFA3vmcDDAhuaE
-         BRrcomHoWkxuSNqWa9GivaMI0UR8KwwwHDM5R7lw3KKByt67b9meuxIfxJv+tgcAJUQJ
-         hR8QX9kTh2vR/sjCE6W21OF0Q6E6bfKMR3FFUEy/HsmFzJ/3ytQH+y+WYer1iT+4qAt8
-         OMWg==
+        bh=OCpyp7VlXRWKtfspUgWzs1CQ4X3tbOzNUUacTAQ1h0c=;
+        b=LZe+lZUE9hQ0aZNfcLDPsBUDHmfZCHMlwOVbI2C+0igiwcL1MTf0W975poTI0U68eB
+         pLruGRp9Rg+UyjBzHaPBZAhlQcY2u3sNvfNc98fDmx+pBAJ4Sjt6MVHCQ0hApcKbE0Uf
+         BgF81Q7dq5gh5dxlQTLrWO/jH0lwkpusB3Gq7XW4AWn1QyOGHGrmhNNbacLxDh5uergJ
+         DRipIURtIrxwBVvDeWcnZ4sOyn6mF8WzBrWhhPqNRk442OB6JYWxPLjH6GOZkqH2Aa37
+         0fiD1SMcsIUYD3RxEdroAnDxKGLbiZLvL5fvnOvzuwGll+AIZPufdYBfIG4IrkWNBN+d
+         2bEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=q5lwtXD313rHZSqTsFu5Vpidw5xPFvZNMsGZjM8+wlc=;
-        b=dBI9y+gP8zbGjoIXtGrVHR3OXLf7q3WcgrbumKCUGtV99lkKr2u7/WPRcKC5/NoOnN
-         kKjqjaj8gTdd21zpm/UYw+2+eAzGvgE18UeGY4y1ZDQJm3gfYWMIbJmXnoBo+fu8QaYm
-         n5aHYTwDZcnFHWU2+jdLN44qF57oMO6yhGP4SuPQMhZN6YNNz5vKNXHW7LN+1OYegUuu
-         mHlGrJsufE5Iq3jn6hywvj507L48dcmI8OAOVr67aH9ll7x8Phbz1VT2DcQ9PJbAdmov
-         KdU9NSwDGk2aKX4x4RCPCfU7RwpRvJDW09BNVc7AlK9wGUUJGQqDFO8SqMMKSLFwVn9T
-         wAag==
-X-Gm-Message-State: APjAAAW7Ebg++6cYxZoJjmSc/JpLZADMKoKBVjlR5bOXk8MO75o7V7yS
-        G9468lGwbpqfvsoLjgOZj80=
-X-Google-Smtp-Source: APXvYqxAkW2zAZmUz5kbEPeJkH3e1VcfN0GhpH8Dfh00dkZ0NgzY1AywWDmZHQR5RrXlG5Me3Pb+Lw==
-X-Received: by 2002:a63:e26:: with SMTP id d38mr14905201pgl.44.1573806694390;
-        Fri, 15 Nov 2019 00:31:34 -0800 (PST)
+        bh=OCpyp7VlXRWKtfspUgWzs1CQ4X3tbOzNUUacTAQ1h0c=;
+        b=WsnRKD9qFoRDgJbmEpNbTywCUddaSYV2ZqNACgS7dDO62iDo1lpIFjEl2FAJgi80h6
+         Y+uWunsZeiLxHZ8HRl3cDhyByBVVPMUuAssnqapc9LsbG70P8WRyFDH3da1ntARKy3G4
+         rsXxxQGZgOPLIkz2to2xFmLLl+JexF6GclG3B1qCC/232lZcdTY4CXGelc1DHMgiVWCK
+         cyYbB18vx+E5H8D1exadYF8yjL0OH90PcNIpy6Op7qm0BEYB7OUFZtLfyCSKmNYglE4y
+         CdIT2okd5Z7bEElx2JGFo0MIsPAOxM+RsXRWO5dnXlC0+kfLKRT4VFYOIRrcYV1c6f+9
+         reww==
+X-Gm-Message-State: APjAAAVl2Ud2UMprZQskHDJcGXo1/aREBjJK7OLg5Y49wbmFE4BCOf3U
+        dYXEUOgbZEJDAelv+rFdGlw=
+X-Google-Smtp-Source: APXvYqzGHHWHf6oK+MCJbGsnVBtLpmAG4XOJZSPBpO9E3gdQsRFrknJkZa+90QJvK9ZIXkeiY3KaiA==
+X-Received: by 2002:a17:902:ab98:: with SMTP id f24mr7023396plr.257.1573806724797;
+        Fri, 15 Nov 2019 00:32:04 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id f13sm10739924pfa.57.2019.11.15.00.31.29
+        by smtp.gmail.com with ESMTPSA id z4sm9190597pfn.80.2019.11.15.00.32.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 00:31:33 -0800 (PST)
+        Fri, 15 Nov 2019 00:32:04 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org,
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] spi: tegra20-slink: add missed clk_unprepare
-Date:   Fri, 15 Nov 2019 16:31:22 +0800
-Message-Id: <20191115083122.12278-1-hslester96@gmail.com>
+Subject: [PATCH 2/2] dmaengine: mmp_pdma: add missed of_dma_controller_free
+Date:   Fri, 15 Nov 2019 16:31:53 +0800
+Message-Id: <20191115083153.12334-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -76,44 +73,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver misses calling clk_unprepare in probe failure and remove.
-Add the calls to fix it.
+The driver calls of_dma_controller_register in probe but does not free
+it in remove.
+Add the call to fix it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/spi/spi-tegra20-slink.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/dma/mmp_pdma.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/spi/spi-tegra20-slink.c b/drivers/spi/spi-tegra20-slink.c
-index 111fffc91435..374a2a32edcd 100644
---- a/drivers/spi/spi-tegra20-slink.c
-+++ b/drivers/spi/spi-tegra20-slink.c
-@@ -1073,7 +1073,7 @@ static int tegra_slink_probe(struct platform_device *pdev)
- 	ret = clk_enable(tspi->clk);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Clock enable failed %d\n", ret);
--		goto exit_free_master;
-+		goto exit_clk_unprepare;
- 	}
+diff --git a/drivers/dma/mmp_pdma.c b/drivers/dma/mmp_pdma.c
+index 7fe494fc50d4..ad06f260e907 100644
+--- a/drivers/dma/mmp_pdma.c
++++ b/drivers/dma/mmp_pdma.c
+@@ -945,6 +945,8 @@ static int mmp_pdma_remove(struct platform_device *op)
+ 	struct mmp_pdma_phy *phy;
+ 	int i, irq = 0, irq_num = 0;
  
- 	spi_irq = platform_get_irq(pdev, 0);
-@@ -1146,6 +1146,8 @@ static int tegra_slink_probe(struct platform_device *pdev)
- 	free_irq(spi_irq, tspi);
- exit_clk_disable:
- 	clk_disable(tspi->clk);
-+exit_clk_unprepare:
-+	clk_unprepare(tspi->clk);
- exit_free_master:
- 	spi_master_put(master);
- 	return ret;
-@@ -1159,6 +1161,7 @@ static int tegra_slink_remove(struct platform_device *pdev)
- 	free_irq(tspi->irq, tspi);
++	if (op->dev.of_node)
++		of_dma_controller_free(op->dev.of_node);
  
- 	clk_disable(tspi->clk);
-+	clk_unprepare(tspi->clk);
- 
- 	if (tspi->tx_dma_chan)
- 		tegra_slink_deinit_dma_param(tspi, false);
+ 	for (i = 0; i < pdev->dma_channels; i++) {
+ 		if (platform_get_irq(op, i) > 0)
 -- 
 2.24.0
 
