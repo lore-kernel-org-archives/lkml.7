@@ -2,83 +2,96 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86561C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6A2C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 643A320733
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 320BC20733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:55:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n1NFbqba"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbfKONye (ORCPT
+        id S1727560AbfKONzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 08:54:34 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:34947 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727406AbfKONyd (ORCPT
+        Fri, 15 Nov 2019 08:55:45 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45033 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727496AbfKONzo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 08:54:33 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 6166C3C009C;
-        Fri, 15 Nov 2019 14:54:31 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id jjwboKzUmcTj; Fri, 15 Nov 2019 14:54:26 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 75B393C04C1;
-        Fri, 15 Nov 2019 14:54:25 +0100 (CET)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Fri, 15 Nov
- 2019 14:54:25 +0100
-Date:   Fri, 15 Nov 2019 14:54:22 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>
-Subject: Re: [PATCH] mmc: renesas_sdhi_internal_dmac: Add MMC_CAP_ERASE to
- Gen3 SoCs
-Message-ID: <20191115135422.GA12691@vmlxhi-102.adit-jv.com>
-References: <20191112134808.23546-1-erosca@de.adit-jv.com>
- <20191112204952.GA2976@kunai>
- <CAPDyKFq8oVk26ruNA_R8HDXhMGKhDeHnL0q82xi40g1aeo109A@mail.gmail.com>
- <20191114113743.GA19656@vmlxhi-102.adit-jv.com>
- <CAPDyKFp5iqrFDM1EWnYBwFmQAiAA5FADDLAyuVVBgMu4Sx=x5w@mail.gmail.com>
- <20191114220744.GA17678@vmlxhi-102.adit-jv.com>
- <CAPDyKFoXEFbK_7-Nmkhz2_Sifc=hiPEGmUHKsp4=Baye86TCOg@mail.gmail.com>
- <20191115125109.GA32576@lxhi-065.adit-jv.com>
+        Fri, 15 Nov 2019 08:55:44 -0500
+Received: by mail-pl1-f196.google.com with SMTP id az9so4710173plb.11;
+        Fri, 15 Nov 2019 05:55:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=n1fqLNzThkpou5xsZlJyghefoBsjgqzEyV05NKr6H6U=;
+        b=n1NFbqbanS718NMzvx0SmdaCzu9jDkzbceNCxrGmAqLD75WM3CjeMgVDCAZV4BgugG
+         MyUayMb8kms9JdXSKJH5t9azgwmQ8CYdUhw/uOi1QOJHCkPym0/ovZ0RmntCu5+KQett
+         lqecjAk1ftQbBhb4QsV+xAB07c5iFgomcfwj0ocSzVAgHgt8sBZQCrjLfwgkSFCTruTY
+         AkFVMg4VUJT0C8UX5DTLefdCt/s+5luJCAgmELO5Xt724B5uN0MnAqx44iNuLNDfMsLs
+         ExJPaSDT1I2YjPt9cQoIQjDlkTBtUHx/QowsfGwxOL+w+tB9zNrupw6BxmKWh8jJpQc4
+         xrfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=n1fqLNzThkpou5xsZlJyghefoBsjgqzEyV05NKr6H6U=;
+        b=VCiuodrS5yhWKUuTJN5AzHujVIQl3Dy2e6wvxUzYIDaWxnAWYHEjjjKyslNP2qRHxm
+         +c3QmiSn765lU0W2bV3ZIVNXcb2C1GDzzWklaa5ATxV3MO46xq371Ucy1DGlNjBgGlKO
+         Ufq3uQ3lgaQiIca0GmOpJhGZxz9pbdmDyXfmJ9v/YxrDO9x3y1UqFcj+azx+Dfi6xC9/
+         C4CvES9QOr6wm1u5Eh4byZBoi9p3HqdUIYx/73GcMQLLeXbnZ6SH7Y4KINSqdzOOdNUU
+         tOLxGfhS+8aoOm4Xpkhtdkx1iLiAVapmvM2v05zymi20Rf1XBvompmsrkysJ0EpF9WD6
+         jQ+Q==
+X-Gm-Message-State: APjAAAV+YxC+ZqPbvpXBokT33w46Iar7u7sZ9sBlaKeUKbn7BjvJ4/jF
+        m0fHkb9NasVcJ/hASDDcVf4H13kB
+X-Google-Smtp-Source: APXvYqy9MIWaJU8Qz6+oah/tghadCTAPPSRJsVVqe4ncNzgHRlSzT+vWAeV9Ev29DBs6W5IaV/P5PQ==
+X-Received: by 2002:a17:902:d917:: with SMTP id c23mr15177030plz.199.1573826143893;
+        Fri, 15 Nov 2019 05:55:43 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a34sm10792143pgl.56.2019.11.15.05.55.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 Nov 2019 05:55:42 -0800 (PST)
+Subject: Re: [PATCH 4.4 00/20] 4.4.202-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20191115062006.854443935@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <61528559-4d1a-a3be-4e69-b7bf1bf8bea9@roeck-us.net>
+Date:   Fri, 15 Nov 2019 05:55:40 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191115125109.GA32576@lxhi-065.adit-jv.com>
-User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
-X-Originating-IP: [10.72.93.184]
+In-Reply-To: <20191115062006.854443935@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[to facilitate version tracking]
+On 11/14/19 10:20 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.202 release.
+> There are 20 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun, 17 Nov 2019 06:18:31 +0000.
+> Anything received after that time might be too late.
+> 
 
-Superseded by:
-https://lore.kernel.org/linux-renesas-soc/20191115134430.12621-1-erosca@de.adit-jv.com/
-("[PATCH v2] mmc: tmio: Add MMC_CAP_ERASE to allow erase/discard/trim requests")
+Build results:
+	total: 170 pass: 170 fail: 0
+Qemu test results:
+	total: 324 pass: 324 fail: 0
 
--- 
-Best Regards,
-Eugeniu
+Guenter
