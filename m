@@ -2,218 +2,67 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41186C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF51C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05CF320718
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2429B20718
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:05:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfKOGEJ (ORCPT
+        id S1727100AbfKOGFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:04:09 -0500
-Received: from mail-oln040092072048.outbound.protection.outlook.com ([40.92.72.48]:52088
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725774AbfKOGEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:04:08 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F+C3ayZVJBhCC4ptHXjrcl54pGKeLDqY3oTyOfwVg4mNSWEOLjo4pXCLfFVVkxwdGLLUzjPLWgo7O1bxbgzNqzuSllWZhQuRzY6kJhXP7nZpMAGvWB0ev5Guiqz3BTp0Am4tZFfJYFz94BNCfgZbTQwpve4nWWmfndZ7q/alOLgV3i7djJ29V1yYFwvntF7gPLH5QSVHLv/Kq/EMI2blGe76ReBj6tzDSP+pWRC4RiD1+twprGNfJvJwRsGpIPjO84qgUnUXpzk+mwpAQOCE8wOoDnKLlXJ1LBeYcVsG37a9Z7Gyu1fOG7eQjQSyk23ly7QKIwWAjCpydE5a3bsw9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/ljRdeOfRBRF75lrlc6efuQuv4Mw4k/6PgiVV5w+Yzc=;
- b=YqyXC0lVc2Pt5XTiRQamp3d5/re2+s068L/2Dw+wghnfoqbNyP6WAypGWeJfU1X/zmf0cusi1qEUK1DFZyJbWEBrxOSsbRfpzxEhSbeAYj/nFg5NJ5Ui2afEaLkon3++b/VGU6VVp+2gW49o1NJMDnFL/+sJF9vDvNZj0pAMx5oYO3yuQn8qcJsInc/GeqZRQr5eFgTjY72NE8kDUSUAVVxmFuhuHwky/p1hLoqUeUcfTp9/VDb/g8at0lFRW/XUcOlOEZuHa+8MmO+8w8e+Q7UOas5kmHYqrgrS9pdvA2kafB2T5Wqr7fgUBWD81eURWgCg5xF6Vh1jFMAlXAS5Mg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from VE1EUR03FT020.eop-EUR03.prod.protection.outlook.com
- (10.152.18.60) by VE1EUR03HT211.eop-EUR03.prod.protection.outlook.com
- (10.152.18.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.23; Fri, 15 Nov
- 2019 06:03:59 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.18.58) by
- VE1EUR03FT020.mail.protection.outlook.com (10.152.18.242) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23 via Frontend Transport; Fri, 15 Nov 2019 06:03:59 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::a1a9:f639:5cc7:341a]) by HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::a1a9:f639:5cc7:341a%7]) with mapi id 15.20.2451.027; Fri, 15 Nov 2019
- 06:03:59 +0000
-From:   Jonas Karlman <jonas@kwiboo.se>
-To:     Alexandre Courbot <acourbot@chromium.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-CC:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] media: hantro: make update_dpb() not leave holes in DPB
-Thread-Topic: [PATCH] media: hantro: make update_dpb() not leave holes in DPB
-Thread-Index: AQHVm2fc8a5gx4h70U68OREfDJIq8qeLpbAAgAAPVACAAAkbgA==
-Date:   Fri, 15 Nov 2019 06:03:59 +0000
-Message-ID: <HE1PR06MB40113F215699A3AA5C82E47EAC700@HE1PR06MB4011.eurprd06.prod.outlook.com>
-References: <20191115035013.145152-1-acourbot@chromium.org>
- <20191115053630.129b473b@collabora.com>
- <CAPBb6MXa_9Ji5TwEF-HqPRO5JFG9HU1VDDGJdk-+Smczg0RHZA@mail.gmail.com>
-In-Reply-To: <CAPBb6MXa_9Ji5TwEF-HqPRO5JFG9HU1VDDGJdk-+Smczg0RHZA@mail.gmail.com>
-Accept-Language: sv-SE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR02CA0057.eurprd02.prod.outlook.com
- (2603:10a6:208:d2::34) To HE1PR06MB4011.eurprd06.prod.outlook.com
- (2603:10a6:7:9c::32)
-x-incomingtopheadermarker: OriginalChecksum:55DD47D68507C194F891A1D92843772A031788D8E2DC90B93CE6A448D32DAAF5;UpperCasedChecksum:DF15CCB7A9D84F150A2A20D6FFBF5D025697285A343D01BF896D51E994AFA971;SizeAsReceived:7555;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [123OYT9JMy1K9j37Q4ny3jsOASi/xLwV]
-x-microsoft-original-message-id: <e8b727a0-e204-c643-0f51-64a7386efb4c@kwiboo.se>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: c4b2d156-43c2-4cc9-ccee-08d769919ad7
-x-ms-traffictypediagnostic: VE1EUR03HT211:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1NDiZJs8cnJoA8SmwL7LRtWjOScEqn/9K5AZZrBx0EERzd0l/NIEPKA1VoQaoxX2HOa2vYhoQfwuG5DhLQl5AoA9ExFawopMewTusH2we7l8XNWdl5PHoaKotyMRJJNkJ6zksL1RoHDolD8o1luWepNGeY0a1to8/q0J2kO6gUx8gWRy1kJNw9X36kDSx5Dy
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C964CD9035F8804898F2D806B9AC0CCF@eurprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 15 Nov 2019 01:05:49 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:57800 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726182AbfKOGFs (ORCPT <rfc822;linux-kernel@vger.kernel.orG>);
+        Fri, 15 Nov 2019 01:05:48 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1iVUjr-0004fW-D5; Fri, 15 Nov 2019 14:05:47 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1iVUjj-000650-GH; Fri, 15 Nov 2019 14:05:39 +0800
+Date:   Fri, 15 Nov 2019 14:05:39 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mpm@selenic.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        ludovic.desroches@microchip.com, arnd@arndb.de,
+        Tudor.Ambarus@microchip.com, Claudiu.Beznea@microchip.com,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: rng: atmel-trng: add new compatible
+Message-ID: <20191115060539.u6wamay56otcqcnm@gondor.apana.org.au>
+References: <20191104115457.2681-1-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4b2d156-43c2-4cc9-ccee-08d769919ad7
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Nov 2019 06:03:59.1729
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR03HT211
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191104115457.2681-1-codrin.ciubotariu@microchip.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0xMS0xNSAwNjozMSwgQWxleGFuZHJlIENvdXJib3Qgd3JvdGU6DQo+IE9uIEZyaSwg
-Tm92IDE1LCAyMDE5IGF0IDE6MzYgUE0gQm9yaXMgQnJlemlsbG9uDQo+IDxib3Jpcy5icmV6aWxs
-b25AY29sbGFib3JhLmNvbT4gd3JvdGU6DQo+PiBIaSBBbGV4YW5kcmUsDQo+Pg0KPj4gT24gRnJp
-LCAxNSBOb3YgMjAxOSAxMjo1MDoxMyArMDkwMA0KPj4gQWxleGFuZHJlIENvdXJib3QgPGFjb3Vy
-Ym90QGNocm9taXVtLm9yZz4gd3JvdGU6DQo+Pg0KPj4+IHVwZGF0ZV9kcGIoKSByZW9yZGVycyB0
-aGUgRFBCIGVudHJpZXMgc3VjaCBhcyB0aGUgc2FtZSBmcmFtZSBpbiB0d28NCj4+PiBjb25zZWN1
-dGl2ZSBkZWNvZGluZyByZXF1ZXN0cyBhbHdheXMgZW5kcyB1cCBpbiB0aGUgc2FtZSBEUEIgc2xv
-dC4NCj4+Pg0KPj4+IEl0IGZpcnN0IGNsZWFycyBhbGwgdGhlIGFjdGl2ZSBmbGFncyBpbiB0aGUg
-RFBCLCBhbmQgdGhlbiBjaGVja3Mgd2hldGhlcg0KPj4+IHRoZSBhY3RpdmUgZmxhZyBpcyBub3Qg
-c2V0IHRvIGRlY2lkZSB3aGV0aGVyIGFuIGVudHJ5IGlzIGEgY2FuZGlkYXRlIGZvcg0KPj4+IG1h
-dGNoaW5nIG9yIG5vdC4NCj4+Pg0KPj4+IEhvd2V2ZXIsIHRoaXMgbWVhbnMgdGhhdCB1bnVzZWQg
-RFBCIGVudHJpZXMgYXJlIGFsc28gY2FuZGlkYXRlcyBmb3INCj4+PiBtYXRjaGluZywgYW5kIGFu
-IHVudXNlZCBlbnRyeSB3aWxsIG1hdGNoIGlmIHdlIGFyZSB0ZXN0aW5nIGl0IGFnYWluc3QgYQ0K
-Pj4+IGZyYW1lIHdoaWNoIChUb3BGaWVsZE9yZGVyQ291bnQsIEJvdHRvbUZpZWxkT3JkZXJDb3Vu
-dCkgaXMgKDAsIDApLg0KPj4gSG0sIEkgbWlnaHQgYmUgd3JvbmcgYnV0IEkgdGhvdWdodCB3ZSB3
-ZXJlIHN1cHBvc2VkIHRvIHJlLXVzZSBtYXRjaGluZw0KPj4gZW50cmllcyBldmVuIGlmIHRoZSBy
-ZWYgd2FzIG5vdCBhY3RpdmUgb24gdGhlIGxhc3QgZGVjb2RlZCBmcmFtZS4gSUlSQywNCj4+IGEg
-cmVmIGNhbiBiZSBhY3RpdmUgb24gc3BlY2lmaWMgZGVjb2RpbmcgcmVxdWVzdCAoWCksIHRoZW4g
-aW5hY3RpdmUgb24NCj4+IHRoZSBuZXh0IG9uZSAoWCsxKSBhbmQgYWN0aXZlIGFnYWluIG9uIHRo
-ZSBmb2xsb3dpbmcgb25lIChYKzIpLg0KPj4gU2hvdWxkbid0IHdlIHJlLXVzZSB0aGUgc2xvdCB3
-ZSB1c2VkIHdoZW4gZGVjb2RpbmcgWCBmb3IgdGhpcyByZWYgd2hlbg0KPj4gZGVjb2RpbmcgWCsy
-Pw0KPiBJIGFtIG5vdCBzdXJlIGhvdyBvZnRlbiB0aGlzIGhhcHBlbnMgaW4gcHJhY3RpY2UgKGlm
-IGF0IGFsbCksIGJ1dA0KPiBtYXliZSB0aGlzIGxvZ2ljIHdvdWxkIHdvcmsgYXMgd2VsbC4gSW4g
-dGhpcyBjYXNlIHdlIHdvdWxkIG5lZWQgdG8NCj4gbWFyayBEUEIgZW50cmllcyB0aGF0IGFyZSBu
-b3QgdXNlZCB5ZXQgZGlmZmVyZW50bHkgdG8gYXZvaWQgdGhlIGlzc3VlDQo+IHRoYXQgdGhpcyBw
-YXRjaCBhdHRlbXB0cyB0byBmaXguDQo+DQo+IFRvIGdpdmUgYSBwcmVjaXNlIGV4YW1wbGUgb2Yg
-dGhlIGlzc3VlLCBmb3IgYSBzdHJlYW0gdGhhdCBvbmx5IHVzZXMgMw0KPiBEUEIgZW50cmllcyBh
-dCBtYXgsIGFmdGVyIGFuIElEUiBmcmFtZSB0aGUgNHRoIERQQiBlbnRyeSB3aWxsDQo+IGluY29y
-cmVjdGx5IGJlIG1hdGNoZWQgd2l0aCB0aGUgSURSIGZyYW1lIG9mIEZpZWxkT3JkZXJDb3VudCAo
-MCwgMCkNCj4gYW5kIGJlIHRoZSBvbmx5IGFjdGl2ZSBlbnRyeSBmb3IgdGhpcyBmcmFtZS4gSGFu
-dHJvIGlzIG9rIHdpdGggaXQsIGJ1dA0KPiB0aGlzIGlzIG5vdCBhbiBvcHRpbWFsIHVzZSBvZiB0
-aGUgRFBCIGFuZCBNVDgxODMgZG9lcyBub3QgbGlrZSB0aGF0Lg0KDQpJbiBteSBSRkMgc2VyaWVz
-IHRvIGZpeCBkZWNvZGluZyBvZiBmaWVsZCBlbmNvZGVkIHZpZGVvIG9uIGhhbnRybyBbMV0sDQpJ
-IGFsc28gaW5jbHVkZSBhIGNoYW5nZSB0byB1cGRhdGVfZHBiIHRoYXQgcG9zc2libGUgYWxzbyBm
-aXhlcyB0aGlzIGlzc3VlLg0KSSBkbyBub3QgZnVsbHkgcmVtZW1iZXIgd2h5IEkgbWFkZSB0aGUg
-Y2hhbmdlcywgZGVjb2Rpbmcgd2FzIGZpeGVkDQphbmQgSSBoYXZlIG5vdCBoYWQgdGltZSB0byBm
-dWxseSBhbmFseXplIHRoZSBjaGFuZ2UgdG8gdXBkYXRlX2RwYiB5ZXQuDQoNCkFsc28gbm90ZSB0
-aGF0IGluIG9yZGVyIHRvIHN1cHBvcnQgZmllbGQgZW5jb2RlZCB2aWRlbyB0aGVyZSBhcmUgYWxz
-byBzb21lDQp1QVBJIGNoYW5nZXMgcHJvcG9zZWQgaW4gb3JkZXIgdG8gc2lnbmFsIGhvdyB0aGUg
-ZHBiIGVudHJ5IGlzIHJlZmVyZW5jZWQuDQpNYXRjaGluZyBvbiBGaWVsZE9yZGVyQ291bnQgZG9l
-cyBub3Qgd29yayBvbiBmaWVsZCBlbmNvZGVkIHZpZGVvIGJlY2F1c2UNCmZpcnN0IGZpbGVkIG1h
-eSBoYXZlIEZpZWxkT3JkZXJDb3VudCAoWCwwKSBhbmQgc2Vjb25kIEZpZWxkT3JkZXJDb3VudCAo
-WCxZKS4NCg0KWzFdIGh0dHBzOi8vcGF0Y2h3b3JrLmxpbnV4dHYub3JnL3BhdGNoLzU5Njg4Lw0K
-WzJdIGh0dHBzOi8vcGF0Y2h3b3JrLmxpbnV4dHYub3JnL3BhdGNoLzU5Njg5Lw0KDQpSZWdhcmRz
-LA0KSm9uYXMNCg0KPg0KPj4+IEFzIGl0IHR1cm5zIG91dCwgdGhpcyBoYXBwZW5zIGZvciB0aGUg
-dmVyeSBmaXJzdCBmcmFtZSBvZiBhIHN0cmVhbSwgYnV0DQo+Pj4gaXQgaXMgbm90IGEgcHJvYmxl
-bSBhcyBpdCB3b3VsZCBiZSBjb3BpZWQgdG8gdGhlIGZpcnN0IGVudHJ5IGFueXdheS4NCj4+PiBN
-b3JlIGNvbmNlcm5pbmcgaXMgdGhhdCBhZnRlciBhbiBJRFIgZnJhbWUgdGhlIFRvcC9Cb3R0b21G
-aWVsZE9yZGVyQ291bnQNCj4+PiBjYW4gYmUgcmVzZXQgdG8gMCwgYW5kIHRoaXMgdGltZSB1cGRh
-dGVfZHBiKCkgd2lsbCBtYXRjaCB0aGUgSURSIGZyYW1lDQo+Pj4gdG8gdGhlIGZpcnN0IHVudXNl
-ZCBlbnRyeSBvZiB0aGUgRFBCIChhbmQgbm90IHRoZSBlbnRyeSBhdCBpbmRleCAwIGFzDQo+Pj4g
-d291bGQgYmUgZXhwZWN0ZWQpIGJlY2F1c2UgdGhlIGZpcnN0IHNsb3RzIHdpbGwgaGF2ZSBkaWZm
-ZXJlbnQgdmFsdWVzLg0KPj4gV2UgY291bGQgYWxzbyBjb25zaWRlciByZXNldHRpbmcgdGhlIERQ
-QiBjYWNoZSBvbiBJRFIgZnJhbWVzIGlmIHRoYXQNCj4+IHdvcmtzIG9uIEhhbnRyby4NCj4gTWF5
-YmUgdGhhdCBjb3VsZCBiZSBlbm91Z2ggaW5kZWVkLiBMZXQgbWUgZXhwZXJpbWVudCB3aXRoIHRo
-YXQgYSBiaXQuDQo+IEkgYmVsaWV2ZSB0aGlzIHdvdWxkIHdvcmsgc2luY2UgaW4gcHJhY3RpY2Ug
-dGhlIHJlc3VsdCB3b3VsZCBiZSB0aGUNCj4gc2FtZSBhcyB0aGlzIHBhdGNoLCBidXQgZm9yIHNh
-ZmV0eSBJJ2QgcmF0aGVyIGhhdmUgdW51c2VkIERQQiBlbnRyaWVzDQo+IGJlIHVuYW1iaWd1b3Vz
-bHkgaWRlbnRpZmllZCByYXRoZXIgdGhhbiBsZXR0aW5nIHRoZSAoMCwgMCkgbWF0Y2ggZG8NCj4g
-dGhlIHJpZ2h0IHRoaW5nIGJ5IGFjY2lkZW50Lg0KPg0KPj4+IFRoZSBIYW50cm8gZHJpdmVyIGlz
-IG9rIHdpdGggdGhpcywgYnV0IHdoZW4gdHJ5aW5nIHRvIHVzZSB0aGUgc2FtZQ0KPj4+IGZ1bmN0
-aW9uIGZvciBhbm90aGVyIGRyaXZlciAoTVQ4MTgzKSBJIG5vdGljZWQgZGVjb2RpbmcgYXJ0ZWZh
-Y3RzIGNhdXNlZA0KPj4+IGJ5IHRoaXMgaG9sZSBpbiB0aGUgRFBCLg0KPj4gSSBndWVzcyB0aGlz
-IG5ldyB2ZXJzaW9uIHBhc3NlcyB0aGUgY2hyb21pdW0gdGVzdHN1aXRlIG9uIHJrLWJhc2VkDQo+
-PiBib2FyZHMuIElmIHRoYXQncyB0aGUgY2FzZSBJIGRvbid0IGhhdmUgYW55IG9iamVjdGlvbiB0
-byB0aGlzIHBhdGNoLg0KPj4NCj4+IE5vdGUgdGhhdCBJIHdhcyBub3QgcGxhbm5pbmcgdG8gc2hh
-cmUgdGhlIERQQiBjYWNoaW5nIGxvZ2ljIGFzIEkNCj4+IHRob3VnaHQgb25seSBIYW50cm8gRzEg
-bmVlZGVkIHRoYXQgdHJpY2suIEhhdmUgeW91IHRyaWVkIHBhc3NpbmcgdGhlDQo+PiBEUEIgZGly
-ZWN0bHk/IE1heWJlIGl0IGp1c3Qgd29ya3Mgb24gbXRrLg0KPiBQYXNzaW5nIHRoZSBEUEIgZGly
-ZWN0bHkgSSBnZXQgY29ycnVwdGVkIGZyYW1lcyBvbiBhIHJlZ3VsYXIgYmFzaXMNCj4gd2l0aCBN
-VEsuIEkgYWxzbyBjb25maXJtZWQgdGhhdCB0aGUgZmlybXdhcmUncyBleHBlY3RhdGlvbnMgYXJl
-IHdoYXQNCj4gdGhpcyBmdW5jdGlvbiBkb2VzLiBVc2luZyB0aGUgc2FtZSBmdW5jdGlvbiBpbiB0
-aGUgTVRLIGRyaXZlciwgdGhlDQo+IGRlY29kZWQgc3RyZWFtIGlzIGZsYXdsZXNzLg0KPg0KPj4+
-IEZpeCB0aGlzIGJ5IG1haW50YWluaW5nIGEgbGlzdCBvZiBEUEIgc2xvdHMgdGhhdCBhcmUgYWN0
-dWFsbHkgaW4gdXNlLA0KPj4+IGluc3RlYWQgb2YgcmVseWluZyBvbiB0aGUgYWJzZW5jZSBvZiB0
-aGUgYWN0aXZlIGZsYWcgdG8gZG8gc28uIFRoaXMgYWxzbw0KPj4+IGFsbG93cyB1cyB0byBvcHRp
-bWl6ZSBtYXRjaGluZyBhIGJpdC4NCj4+Pg0KPj4+IFNpZ25lZC1vZmYtYnk6IEFsZXhhbmRyZSBD
-b3VyYm90IDxhY291cmJvdEBjaHJvbWl1bS5vcmc+DQo+Pj4gLS0tDQo+Pj4gIGRyaXZlcnMvc3Rh
-Z2luZy9tZWRpYS9oYW50cm8vaGFudHJvX2gyNjQuYyB8IDE4ICsrKysrKysrKysrKy0tLS0tLQ0K
-Pj4+ICAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkNCj4+
-Pg0KPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvbWVkaWEvaGFudHJvL2hhbnRyb19o
-MjY0LmMgYi9kcml2ZXJzL3N0YWdpbmcvbWVkaWEvaGFudHJvL2hhbnRyb19oMjY0LmMNCj4+PiBp
-bmRleCA1Njg2NDBlYWIzYTYuLjIzNTcwNjhiMGY4MiAxMDA2NDQNCj4+PiAtLS0gYS9kcml2ZXJz
-L3N0YWdpbmcvbWVkaWEvaGFudHJvL2hhbnRyb19oMjY0LmMNCj4+PiArKysgYi9kcml2ZXJzL3N0
-YWdpbmcvbWVkaWEvaGFudHJvL2hhbnRyb19oMjY0LmMNCj4+PiBAQCAtNDc0LDE0ICs0NzQsMTkg
-QEAgc3RhdGljIHZvaWQgdXBkYXRlX2RwYihzdHJ1Y3QgaGFudHJvX2N0eCAqY3R4KQ0KPj4+ICB7
-DQo+Pj4gICAgICAgY29uc3Qgc3RydWN0IHY0bDJfY3RybF9oMjY0X2RlY29kZV9wYXJhbXMgKmRl
-Y19wYXJhbTsNCj4+PiAgICAgICBERUNMQVJFX0JJVE1BUChuZXcsIEFSUkFZX1NJWkUoZGVjX3Bh
-cmFtLT5kcGIpKSA9IHsgMCwgfTsNCj4+PiArICAgICBERUNMQVJFX0JJVE1BUChpbl91c2UsIEFS
-UkFZX1NJWkUoZGVjX3BhcmFtLT5kcGIpKSA9IHsgMCwgfTsNCj4+PiAgICAgICBERUNMQVJFX0JJ
-VE1BUCh1c2VkLCBBUlJBWV9TSVpFKGRlY19wYXJhbS0+ZHBiKSkgPSB7IDAsIH07DQo+Pj4gICAg
-ICAgdW5zaWduZWQgaW50IGksIGo7DQo+Pj4NCj4+PiAgICAgICBkZWNfcGFyYW0gPSBjdHgtPmgy
-NjRfZGVjLmN0cmxzLmRlY29kZTsNCj4+Pg0KPj4+IC0gICAgIC8qIERpc2FibGUgYWxsIGVudHJp
-ZXMgYnkgZGVmYXVsdC4gKi8NCj4+PiAtICAgICBmb3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShj
-dHgtPmgyNjRfZGVjLmRwYik7IGkrKykNCj4+PiArICAgICAvKiBNYXJrIGVudHJpZXMgaW4gdXNl
-IGJlZm9yZSBkaXNhYmxpbmcgdGhlbS4gKi8NCj4+PiArICAgICBmb3IgKGkgPSAwOyBpIDwgQVJS
-QVlfU0laRShjdHgtPmgyNjRfZGVjLmRwYik7IGkrKykgew0KPj4+ICsgICAgICAgICAgICAgaWYg
-KGN0eC0+aDI2NF9kZWMuZHBiW2ldLmZsYWdzICYNCj4+PiArICAgICAgICAgICAgICAgICBWNEwy
-X0gyNjRfRFBCX0VOVFJZX0ZMQUdfQUNUSVZFKQ0KPj4+ICsgICAgICAgICAgICAgICAgICAgICBz
-ZXRfYml0KGksIGluX3VzZSk7DQo+Pj4gICAgICAgICAgICAgICBjdHgtPmgyNjRfZGVjLmRwYltp
-XS5mbGFncyAmPSB+VjRMMl9IMjY0X0RQQl9FTlRSWV9GTEFHX0FDVElWRTsNCj4+PiArICAgICB9
-DQo+Pj4NCj4+PiAgICAgICAvKiBUcnkgdG8gbWF0Y2ggbmV3IERQQiBlbnRyaWVzIHdpdGggZXhp
-c3Rpbmcgb25lcyBieSB0aGVpciBQT0NzLiAqLw0KPj4+ICAgICAgIGZvciAoaSA9IDA7IGkgPCBB
-UlJBWV9TSVpFKGRlY19wYXJhbS0+ZHBiKTsgaSsrKSB7DQo+Pj4gQEAgLTQ5MiwxOCArNDk3LDE5
-IEBAIHN0YXRpYyB2b2lkIHVwZGF0ZV9kcGIoc3RydWN0IGhhbnRyb19jdHggKmN0eCkNCj4+Pg0K
-Pj4+ICAgICAgICAgICAgICAgLyoNCj4+PiAgICAgICAgICAgICAgICAqIFRvIGN1dCBvZmYgc29t
-ZSBjb21wYXJpc29ucywgaXRlcmF0ZSBvbmx5IG9uIHRhcmdldCBEUEINCj4+PiAtICAgICAgICAg
-ICAgICAqIGVudHJpZXMgd2hpY2ggYXJlIG5vdCB1c2VkIHlldC4NCj4+PiArICAgICAgICAgICAg
-ICAqIGVudHJpZXMgd2hpY2ggYXJlIGFscmVhZHkgdXNlZC4NCj4+PiAgICAgICAgICAgICAgICAq
-Lw0KPj4+IC0gICAgICAgICAgICAgZm9yX2VhY2hfY2xlYXJfYml0KGosIHVzZWQsIEFSUkFZX1NJ
-WkUoY3R4LT5oMjY0X2RlYy5kcGIpKSB7DQo+Pj4gKyAgICAgICAgICAgICBmb3JfZWFjaF9zZXRf
-Yml0KGosIGluX3VzZSwgQVJSQVlfU0laRShjdHgtPmgyNjRfZGVjLmRwYikpIHsNCj4+PiAgICAg
-ICAgICAgICAgICAgICAgICAgc3RydWN0IHY0bDJfaDI2NF9kcGJfZW50cnkgKmNkcGI7DQo+Pj4N
-Cj4+PiAgICAgICAgICAgICAgICAgICAgICAgY2RwYiA9ICZjdHgtPmgyNjRfZGVjLmRwYltqXTsN
-Cj4+PiAtICAgICAgICAgICAgICAgICAgICAgaWYgKGNkcGItPmZsYWdzICYgVjRMMl9IMjY0X0RQ
-Ql9FTlRSWV9GTEFHX0FDVElWRSB8fA0KPj4+IC0gICAgICAgICAgICAgICAgICAgICAgICAgIWRw
-Yl9lbnRyeV9tYXRjaChjZHBiLCBuZHBiKSkNCj4+PiArICAgICAgICAgICAgICAgICAgICAgaWYg
-KCFkcGJfZW50cnlfbWF0Y2goY2RwYiwgbmRwYikpDQo+Pj4gICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgY29udGludWU7DQo+Pj4NCj4+PiAgICAgICAgICAgICAgICAgICAgICAgKmNkcGIg
-PSAqbmRwYjsNCj4+PiAgICAgICAgICAgICAgICAgICAgICAgc2V0X2JpdChqLCB1c2VkKTsNCj4+
-PiArICAgICAgICAgICAgICAgICAgICAgLyogRG9uJ3QgcmVpdGVyYXRlIG9uIHRoaXMgb25lLiAq
-Lw0KPj4+ICsgICAgICAgICAgICAgICAgICAgICBjbGVhcl9iaXQoaiwgaW5fdXNlKTsNCj4+PiAg
-ICAgICAgICAgICAgICAgICAgICAgYnJlYWs7DQo+Pj4gICAgICAgICAgICAgICB9DQo+Pj4NCg0K
+On Mon, Nov 04, 2019 at 01:54:56PM +0200, Codrin Ciubotariu wrote:
+> Add compatible for new IP found on sam9x60 SoC.
+> 
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+> 
+> Changes in v2:
+>  - added 'Acked-by' from Rob;
+> 
+>  Documentation/devicetree/bindings/rng/atmel-trng.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+
+All applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
