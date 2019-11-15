@@ -2,111 +2,97 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE7DC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C39C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7E7F2072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:45:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573839915;
-	bh=H7+Cvy6riOyJSBuDWiGVZHG8QS021N3D0nsJUzTOrMU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WZ3kN5zrXdLCcFVTig0aqK9Z8j2/bwtpEgkuo2SQuXszgdtrzamil6GCChiy0JdZZ
-	 bwhXDP/23whVX1wds5stYPeJMmjcRUeQDgaAl+fulTAvBb3laxH7tWW6hVlEc0YHkU
-	 SUxTERt+X5wm0ZJ4LCcRyyLGzN1oxb5SyHePmYp8=
+	by mail.kernel.org (Postfix) with ESMTP id EBC542072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:45:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=permerror (0-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="rjHnXjwB";
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="qhegkJsU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfKORpP (ORCPT
+        id S1726952AbfKORpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 12:45:15 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34487 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfKORpO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 12:45:14 -0500
-Received: by mail-qt1-f196.google.com with SMTP id i17so11663851qtq.1;
-        Fri, 15 Nov 2019 09:45:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YuU96D/TDOxMsRo5MUSuzz7CtcCcjXftMIfC3UuPqHU=;
-        b=pPGEq/7QhVZhrqpLch0bLyj/72nqtgSOl/IMPgAAmVYSsb/fRFxcnszz/kWfmiVeiX
-         qK1uvlLMbsbFmDfDJppVIkeWYm2SIamy03myVeeNOFkkjpYlcLM4KGVtP8f1AlPJmFa0
-         nvyUPYX0eBdDhMhIs8O1RuIwGjSBbGQCZOewWNUZkIcuLzwRbmKlcRkfaj3BKSHfQ5iB
-         dRmWsSYTEKp8UBfBfgLcndjAG7O+1WTjfubUSepVafd69mLHoSnQTbFeCe77pu+0/fEH
-         MoHr4DovkUADP32hUfqrkedITCc0DSJ5QqqfCraZRb/B/SKet6twIAOUHUzTTxddh5Kf
-         P3wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YuU96D/TDOxMsRo5MUSuzz7CtcCcjXftMIfC3UuPqHU=;
-        b=M7485x2oL8EGheCtdG768IFJtbvY/zy4bP/lup+FM2bggu06Mu0nHZyNNCc9a7AI3j
-         7bJMc+0L61n6Nq+ce2KLkqPe9yttVN2e1zUAXj4D+GUCS5eJr6iTRNs7KWETPMOAEWPi
-         bvHmfRAXXDZY5tvRh4Le6mW6Rg3ZPrdPebW7KYiWliadUZGgQfLxzjnQJxL204nksF/S
-         bmV4Y69FjPA0+eTx0AysIn89D/czpKDMylP9BDqmvC2eOGiQiE2YabFUsxHFrylj4Sqh
-         16CC5Mz/QqCtdxc+RGYXTyVM9EIJ+vxhPrhMnruhe9ngGqxWLqWIdy0Uwe6ySL5DwtYV
-         iEpg==
-X-Gm-Message-State: APjAAAVWxxQkNgnK5PS7Zaqhj2d9A+mlBQ6J9X9nszPudYOLaovAHHTB
-        gFhxsRpGwkIE81/i9hs0f0U=
-X-Google-Smtp-Source: APXvYqxgWGBD0NsPXWgJtmgUpYkbJPfQov6z2QUrwYyNakgEJcyuhrIgXufSFdsr+gbVuvan+NoQAg==
-X-Received: by 2002:ac8:151:: with SMTP id f17mr14536642qtg.92.1573839913365;
-        Fri, 15 Nov 2019 09:45:13 -0800 (PST)
-Received: from localhost ([2620:10d:c091:480::4ef1])
-        by smtp.gmail.com with ESMTPSA id w5sm4347404qkf.43.2019.11.15.09.45.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Nov 2019 09:45:12 -0800 (PST)
-Date:   Fri, 15 Nov 2019 09:45:10 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Roman Gushchin <guro@fb.com>,
-        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 1/2] mm: memcg: switch to css_tryget() in
- get_mem_cgroup_from_mm()
-Message-ID: <20191115174510.GQ4163745@devbig004.ftw2.facebook.com>
-References: <20191106225131.3543616-1-guro@fb.com>
- <20191113162934.GF19372@blackbody.suse.cz>
- <20191113170823.GA12464@castle.DHCP.thefacebook.com>
- <20191114191657.GN20866@dhcp22.suse.cz>
- <20191114192018.GJ4163745@devbig004.ftw2.facebook.com>
- <20191114193340.GA24848@dhcp22.suse.cz>
- <20191114193736.GL4163745@devbig004.ftw2.facebook.com>
- <20191115174031.GA15216@dhcp22.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115174031.GA15216@dhcp22.suse.cz>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Fri, 15 Nov 2019 12:45:40 -0500
+Received: from smtp.uniroma2.it ([160.80.6.23]:52404 "EHLO smtp.uniroma2.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbfKORpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 12:45:40 -0500
+Received: from smtpauth-2019-1.uniroma2.it (smtpauth.uniroma2.it [160.80.5.46])
+        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id xAFHiuoF021741;
+        Fri, 15 Nov 2019 18:45:01 +0100
+Received: from lubuntu-18.04 (unknown [160.80.103.17])
+        by smtpauth-2019-1.uniroma2.it (Postfix) with ESMTPSA id 6E582120288;
+        Fri, 15 Nov 2019 18:44:52 +0100 (CET)
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=uniroma2.it;
+        s=ed201904; t=1573839892; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=G+gMUpNvXVmANKnt9biF9wy+hihvyOaCvIM2XBgwx5k=;
+        b=rjHnXjwBoLKZ7zt0plnJZANkLWcH014rXejP75TbOEZ4lQQRRvgHpzUx8oy5Sv+gWBCvyL
+        +zo6ApJbV6PQ+hAw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniroma2.it; s=rsa201904;
+        t=1573839892; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=G+gMUpNvXVmANKnt9biF9wy+hihvyOaCvIM2XBgwx5k=;
+        b=qhegkJsU5LSEbbqG9RCyf7ATS3q1ZekBwgitPl2tilRWDIdg10dMctXpQ0AADtMOR3NLI7
+        EhuPGSRkGEBtzB+nG/cnNXYNhmEdRpPORRZzqemjKyVLunWNqcE7PK4gwpMmaP2USux/q9
+        n/IrlJh0R+nsBDrJm2izgiNAsuVZP3v8IGGrbsfnqlHAiu5BKMx2BtbujZWC/aGIrnDvOj
+        ZMJawXxrZ7rAAHcSLpPJ2xczegYfSCLTu2Pnv8gHdN3JWPtaeI4jKRih1tV6aBKq1M9iqK
+        1QMTwaFSDPIyulnSDwYg/ZMl2oKsw2eTmtfooYGSpz/IzfuzlD9YtRMpS/3rpg==
+Date:   Fri, 15 Nov 2019 18:44:52 +0100
+From:   Andrea Mayer <andrea.mayer@uniroma2.it>
+To:     David Miller <davem@davemloft.net>
+Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        dav.lebrun@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andrea.mayer@uniroma2.it
+Subject: Re: [net-next, 1/3] seg6: verify srh pointer in get_srh()
+Message-Id: <20191115184452.828eb26ff29c90ff432bc2f5@uniroma2.it>
+In-Reply-To: <20191114.174512.2282984013110706126.davem@davemloft.net>
+References: <20191113192912.17546-1-andrea.mayer@uniroma2.it>
+        <20191113192912.17546-2-andrea.mayer@uniroma2.it>
+        <20191114.174512.2282984013110706126.davem@davemloft.net>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 06:40:31PM +0100, Michal Hocko wrote:
-> I am sorry but I do not follow. How can css_tryget_online provide the
-> same semantic when the css can go offline right after the tryget call
-> returns so it is effectivelly undistinguishable from the case when the
-> css was already online before the call was made. Or is my understanding
-> of what Roman's said earlier in the thread?
+On Thu, 14 Nov 2019 17:45:12 -0800 (PST)
+David Miller <davem@davemloft.net> wrote:
 
-It's *exactly* the same semantics as opening a file and deleting it
-and keeping using it vs. deleting a file and then trying to open it.
-You can't give out a new reference when the entity's visibility is
-expected to be gone already and that's the exactly the condition that
-tryget_online avoids.  I don't know how to better explain it if the
-file analogy doesn't work.
+> From: Andrea Mayer <andrea.mayer@uniroma2.it>
+> Date: Wed, 13 Nov 2019 20:29:10 +0100
+> 
+> > pskb_may_pull may change pointers in header. For this reason, it is
+> > mandatory to reload any pointer that points into skb header.
+> > 
+> > Signed-off-by: Andrea Mayer <andrea.mayer@uniroma2.it>
+> 
+> This is a bug fix and must be separated out and submitted to 'net'.
+> 
+> Then you must wait until 'net' is merged into 'net-next' so that you
+> can cleanly resubmit the other changes in this series which add the
+> new features.
+> 
+> Actually, patch #2 looks like a bug fix as well.
 
-Thanks.
+Hi,
+thanks for your review. I will submit the first two patches to 'net'.
 
--- 
-tejun
+Regards,
+Andrea Mayer
