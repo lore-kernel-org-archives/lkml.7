@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C907C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC090C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2330420748
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4D0620803
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573798958;
-	bh=dP40GUeDd2fr9i4/K8ECYQMVSiLkcnTWieOXC8HVUjQ=;
+	s=default; t=1573798960;
+	bh=acL8ZUaE2aeTjwaN9MdvXUywSSnyKB1q0nlaYzlUDWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j97Dtc5Fd5tPcqxHBX8kOMxMc3Cdlf+I6qRK+lFHYGxwqabJDH3JLkI2mhC2yhd2W
-	 F9/bl7/deeMfl45ug8ds4IwL9AZEJwTgXc+4uYSlNgzbiFanH56H6+aRwm1nC8vOev
-	 g1BXZArLmtYwfWNaB5yakY/jIFFwmakq27cB5PcU=
+	b=o/j7qAAAS1EBaK/BDEWktSfyW86mdtMw289BHgesNROE9asjgikMJGWDhNX1UubJ2
+	 gXBl8HOjj5PKcobxUf2KvAxDdoFRYs6cgqSyQZVTVC23s49VgTw6Pq7khWXvlMh8SM
+	 vxTqStvDooxZamUdClKSF+1MOQELFSyaDclKE0EU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbfKOGWg (ORCPT
+        id S1727782AbfKOGWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:22:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51934 "EHLO mail.kernel.org"
+        Fri, 15 Nov 2019 01:22:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727388AbfKOGWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:22:32 -0500
+        id S1727734AbfKOGWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:22:30 -0500
 Received: from localhost (unknown [104.132.150.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D2922077B;
-        Fri, 15 Nov 2019 06:22:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BDDD2053B;
+        Fri, 15 Nov 2019 06:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573798951;
-        bh=dP40GUeDd2fr9i4/K8ECYQMVSiLkcnTWieOXC8HVUjQ=;
+        s=default; t=1573798949;
+        bh=acL8ZUaE2aeTjwaN9MdvXUywSSnyKB1q0nlaYzlUDWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I0cPj1HAC3pxx/TzUHdn/Jrw9Lig1EQFgx9bDgBvd+ctyB1AF+qrfeH36hR76sVVf
-         DHVggck8TY4xeGXmf0Njatx3AUhnJnpYTNZIOXi0G97f2JJ3z68nWz6f13TLUQirtW
-         azhDupF6n6tzojtoDErWsa6vjFGcmUIQh3/uRqYs=
+        b=JTqUGDSb8TmFxUC3ynzMqYg66GfiAmfwav26mE74Zc0BDoT6c09sCB7CjDiUdg51q
+         2rsu7PHnKLeDlLFcD8BknhCj3hwuNwAc8vgEUg1M4smhLxrQpSguyaKgZbLT8NTc+F
+         ED37ryh2kRcjxTpBEOaBiligxEawLhISfzwztNSE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.9 05/31] KVM: x86: use Intel speculation bugs and features as derived in generic x86 code
-Date:   Fri, 15 Nov 2019 14:20:34 +0800
-Message-Id: <20191115062011.276619370@linuxfoundation.org>
+        stable@vger.kernel.org, Jack Pham <jackp@codeaurora.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [PATCH 4.9 04/31] usb: gadget: core: unmap request from DMA only if previously mapped
+Date:   Fri, 15 Nov 2019 14:20:33 +0800
+Message-Id: <20191115062011.038703072@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191115062009.813108457@linuxfoundation.org>
 References: <20191115062009.813108457@linuxfoundation.org>
@@ -61,62 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Jack Pham <jackp@codeaurora.org>
 
-commit 0c54914d0c52a15db9954a76ce80fee32cf318f4 upstream.
+commit 31fe084ffaaf8abece14f8ca28e5e3b4e2bf97b6 upstream.
 
-Similar to AMD bits, set the Intel bits from the vendor-independent
-feature and bug flags, because KVM_GET_SUPPORTED_CPUID does not care
-about the vendor and they should be set on AMD processors as well.
+In the SG case this is already handled since a non-zero
+request->num_mapped_sgs is a clear indicator that dma_map_sg()
+had been called. While it would be nice to do the same for the
+singly mapped case by simply checking for non-zero request->dma,
+it's conceivable that 0 is a valid dma_addr_t handle. Hence add
+a flag 'dma_mapped' to struct usb_request and use this to
+determine the need to call dma_unmap_single(). Otherwise, if a
+request is not DMA mapped then the result of calling
+usb_request_unmap_request() would safely be a no-op.
 
-Suggested-by: Jim Mattson <jmattson@google.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Jack Pham <jackp@codeaurora.org>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/kvm/cpuid.c |    8 ++++++++
- arch/x86/kvm/x86.c   |    8 ++++++++
- 2 files changed, 16 insertions(+)
 
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -466,8 +466,16 @@ static inline int __do_cpuid_ent(struct
- 			/* PKU is not yet implemented for shadow paging. */
- 			if (!tdp_enabled || !boot_cpu_has(X86_FEATURE_OSPKE))
- 				entry->ecx &= ~F(PKU);
+---
+ drivers/usb/gadget/udc/core.c |    5 ++++-
+ include/linux/usb/gadget.h    |    2 ++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+--- a/drivers/usb/gadget/udc/core.c
++++ b/drivers/usb/gadget/udc/core.c
+@@ -817,6 +817,8 @@ int usb_gadget_map_request_by_dev(struct
+ 			dev_err(dev, "failed to map buffer\n");
+ 			return -EFAULT;
+ 		}
 +
- 			entry->edx &= kvm_cpuid_7_0_edx_x86_features;
- 			cpuid_mask(&entry->edx, CPUID_7_EDX);
-+			if (boot_cpu_has(X86_FEATURE_IBPB) &&
-+			    boot_cpu_has(X86_FEATURE_IBRS))
-+				entry->edx |= F(SPEC_CTRL);
-+			if (boot_cpu_has(X86_FEATURE_STIBP))
-+				entry->edx |= F(INTEL_STIBP);
-+			if (boot_cpu_has(X86_FEATURE_SSBD))
-+				entry->edx |= F(SPEC_CTRL_SSBD);
- 			/*
- 			 * We emulate ARCH_CAPABILITIES in software even
- 			 * if the host doesn't support it.
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1043,8 +1043,16 @@ u64 kvm_get_arch_capabilities(void)
- 	if (l1tf_vmx_mitigation != VMENTER_L1D_FLUSH_NEVER)
- 		data |= ARCH_CAP_SKIP_VMENTRY_L1DFLUSH;
++		req->dma_mapped = 1;
+ 	}
  
-+	if (!boot_cpu_has_bug(X86_BUG_CPU_MELTDOWN))
-+		data |= ARCH_CAP_RDCL_NO;
-+	if (!boot_cpu_has_bug(X86_BUG_SPEC_STORE_BYPASS))
-+		data |= ARCH_CAP_SSB_NO;
-+	if (!boot_cpu_has_bug(X86_BUG_MDS))
-+		data |= ARCH_CAP_MDS_NO;
-+
- 	return data;
+ 	return 0;
+@@ -841,9 +843,10 @@ void usb_gadget_unmap_request_by_dev(str
+ 				is_in ? DMA_TO_DEVICE : DMA_FROM_DEVICE);
+ 
+ 		req->num_mapped_sgs = 0;
+-	} else {
++	} else if (req->dma_mapped) {
+ 		dma_unmap_single(dev, req->dma, req->length,
+ 				is_in ? DMA_TO_DEVICE : DMA_FROM_DEVICE);
++		req->dma_mapped = 0;
+ 	}
  }
-+
- EXPORT_SYMBOL_GPL(kvm_get_arch_capabilities);
+ EXPORT_SYMBOL_GPL(usb_gadget_unmap_request_by_dev);
+--- a/include/linux/usb/gadget.h
++++ b/include/linux/usb/gadget.h
+@@ -48,6 +48,7 @@ struct usb_ep;
+  *     by adding a zero length packet as needed;
+  * @short_not_ok: When reading data, makes short packets be
+  *     treated as errors (queue stops advancing till cleanup).
++ * @dma_mapped: Indicates if request has been mapped to DMA (internal)
+  * @complete: Function called when request completes, so this request and
+  *	its buffer may be re-used.  The function will always be called with
+  *	interrupts disabled, and it must not sleep.
+@@ -103,6 +104,7 @@ struct usb_request {
+ 	unsigned		no_interrupt:1;
+ 	unsigned		zero:1;
+ 	unsigned		short_not_ok:1;
++	unsigned		dma_mapped:1;
  
- static int kvm_get_msr_feature(struct kvm_msr_entry *msr)
+ 	void			(*complete)(struct usb_ep *ep,
+ 					struct usb_request *req);
 
 
