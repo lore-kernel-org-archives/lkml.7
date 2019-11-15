@@ -4,234 +4,495 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 896E5C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 23:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE7CC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 23:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2EF20723
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 23:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E9DC2072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 23:27:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="GXQOfi/C"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ahA/T4iy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727355AbfKOXZR (ORCPT
+        id S1727296AbfKOX12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 18:25:17 -0500
-Received: from mail-eopbgr760120.outbound.protection.outlook.com ([40.107.76.120]:2726
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727056AbfKOXZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 18:25:16 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N8s09YNn5fnD2P51ET9s2PFDT0KJZhuovdpEPtlTEjxjgwreckr+na/UBLnDp72VY9TTEExtyOuNncyoN7D0tUK3/sP5zr7XjGgGbhyaARud1dtKPnWmp5ANqLiVzY4sE1TADCAfV1lPu1NBjdkyuM7xWTKbECCofp1gdh9FVwonNJvS94XfeLwDBK883uacx/WvignBxpkbnghMc4/l8eOcGHXxwkWasnql7RnJYxSNYt8EROtBgS84DXn0vuoXwDfDVCzaC1+/+kJW/go8U6/Vj18ovww3etokPaXuNiGUbHxqgZu1e802QWp/gqBF2jupgPNXKA+a2xFBUsjzBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mAKNRfQgssSYLB6eJy9iGvG11+Cf2pTVROIa2Ya8F20=;
- b=cMd/bLvnXg2ndcxWFwHMc6j+cy0bnaO+KIFNGWfIJtfiPRkjnGkJ3x26YvzM2AyJlQrXn5Yi3Sc0bEY6JJRfxVoef7VvtFx9BWrP60uDW1g9B/XJah4zx2y5hKAYQpQuMsUsZj4Fm+rRYZ0fZml4Yh3rMPGEhZCHz8gixnUcZnn3nktlTuDjbHgd6exRBDxR2ZfMtTqAeJnNmX6rlrIlU9B6y2ZzZ75nBPYxDa7xwFkZ9BH/F8bKFIzV90HsxJBTy9T0BWkTUlA2SipogYUAfa4L8QHN8ZQxD7pTBzdjkaz+i5Mkj+D5ElwxyNHzLDZ3qzS0J+hEJT74d77bZaK7eg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mAKNRfQgssSYLB6eJy9iGvG11+Cf2pTVROIa2Ya8F20=;
- b=GXQOfi/CVMq0s9s2Qzi1eX2NRKC/oCzW3PdVWNwNip7/4JKyhuEeAXapPtrrPa8DMNOkH9sq7IW3gON9AIt/BjJc4E37VKb+yE9FSkef9gUe9DMJFbswQe8wBa3wConjZDDBsS/MCpFuErOJKHEnWltQ88XwVtZslnppbXfUKFw=
-Received: from BL0PR2101MB1123.namprd21.prod.outlook.com (52.132.20.151) by
- BL0PR2101MB1105.namprd21.prod.outlook.com (52.132.24.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.5; Fri, 15 Nov 2019 23:25:13 +0000
-Received: from BL0PR2101MB1123.namprd21.prod.outlook.com
- ([fe80::18a7:20ab:be1b:bbd4]) by BL0PR2101MB1123.namprd21.prod.outlook.com
- ([fe80::18a7:20ab:be1b:bbd4%9]) with mapi id 15.20.2474.009; Fri, 15 Nov 2019
- 23:25:13 +0000
-From:   Long Li <longli@microsoft.com>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <keith.busch@intel.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] blk-mq: avoid repeatedly scheduling the same work to run
- hardware queue
-Thread-Topic: [PATCH] blk-mq: avoid repeatedly scheduling the same work to run
- hardware queue
-Thread-Index: AQHVmz4TqQ91Pi79cEuXS8Pqo/p+fKeM3FCA
-Date:   Fri, 15 Nov 2019 23:25:13 +0000
-Message-ID: <BL0PR2101MB1123D0597E3759918F3A0B11CE700@BL0PR2101MB1123.namprd21.prod.outlook.com>
-References: <1573771884-38879-1-git-send-email-longli@linuxonhyperv.com>
- <BYAPR04MB5816F14C06B4D2AC71A2FED9E7700@BYAPR04MB5816.namprd04.prod.outlook.com>
-In-Reply-To: <BYAPR04MB5816F14C06B4D2AC71A2FED9E7700@BYAPR04MB5816.namprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=longli@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:edec:db5c:c6fe:798]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 61445097-43c7-4c24-cca2-08d76a2310bb
-x-ms-traffictypediagnostic: BL0PR2101MB1105:
-x-microsoft-antispam-prvs: <BL0PR2101MB110572C4F7A27AB1581C3953CE700@BL0PR2101MB1105.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 02229A4115
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(376002)(39860400002)(136003)(346002)(199004)(189003)(9686003)(186003)(11346002)(76176011)(7696005)(55016002)(52536014)(2501003)(81156014)(229853002)(74316002)(305945005)(8990500004)(8676002)(33656002)(2201001)(86362001)(7736002)(5660300002)(14444005)(256004)(476003)(478600001)(10090500001)(10290500003)(486006)(2906002)(81166006)(14454004)(8936002)(46003)(446003)(6246003)(66946007)(6436002)(102836004)(6116002)(110136005)(316002)(66446008)(64756008)(66556008)(66476007)(76116006)(25786009)(71190400001)(6506007)(22452003)(71200400001)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR2101MB1105;H:BL0PR2101MB1123.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1M8LGtu4JSZr1CVsG2ZmhRZSESTGJsfWWiLTcIlRzbDn75rnwJ2zfgv/F8pU8uAanlc3bmrUir8IEl0s+TcLaldYv8sqqSxKwpZVK7EHiV5FdnitEMgU7JnqwhHmlFMScLAs9XPakl8kywedHQJYIv8x3KhxSxXVH5FTF4iW6JX2QIIUAJa0iF7moNMjKixDU9CPlORK7yCn3HYRFLeEHi6Y6iDhclDVEBtK324/VgmNAivBDR32050aF5fB0cp7bb/2hQ92YDHLjtY2FNJPWq5WDSpm1JccU9/pedeVeOZWtGZ8YF5wskw30SroT4e8YcCZc9WZ4AFg0aO2UuJV6JvRewCAowNxgqhrEJrUeK5fuLdPSNWu6liQzzW8wNIvE08X1glVicBsZOQ0NLzF5C7hlHAN6xGcQXFY0f2dbGviGEDCYJuQZjMaefP3kCnp
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 15 Nov 2019 18:27:28 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35423 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727119AbfKOX11 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 18:27:27 -0500
+Received: by mail-pl1-f193.google.com with SMTP id s10so5716967plp.2
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 15:27:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:subject:from:user-agent:date;
+        bh=R5Jq7LswKTFskMfbB4jD5M/3Va85xCk/mpxWDcwqRJc=;
+        b=ahA/T4iyUOUxg1QYcRNZkpvcm7U6DZpYQMQsy+EHwts3tsERGfFTLOT6AMsPatJW1T
+         uA7cD/+xYWVBEeRKntR5ADvVJQDF0ijsuYLp4emF2N0sY9Txheivmpyjj4tXKUDPhBZf
+         qtt391cI+xWkkcouAKq7sz3PLzU2AmVY4KNps=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:subject:from
+         :user-agent:date;
+        bh=R5Jq7LswKTFskMfbB4jD5M/3Va85xCk/mpxWDcwqRJc=;
+        b=pnSdGeRmt4oxX/glLzRS33wvkBGIAm0YhWbTv0E75f2PNCs1hIF18tirnrnl5MxFlm
+         0bVQWPZsJcsqbVJn6EnldEO+8SJ6vWBR54/k6gLV4yo2tNgIw6sawF4UO2+rsA75OY+d
+         JLsVE8bdG4VdBS0CmpjcTjDpBc1EByjlsC0b+wgsh5sVar+cmGmw9SEPKiUEmDs8ugTI
+         J5H8iixJf1jsSCKe/OsT+SE1ZlrwFSXqxeDHvhOpP4efFSll0+R0AXTRLl3GsFEWnuDk
+         fjCMP8CHWrcxIxFOruH1I/nAgPj8zX/frd/Fsz+iCF8Pd35E9aqI6oOVso0VNn4o5CLm
+         0Wcw==
+X-Gm-Message-State: APjAAAUCZ4SntUoSEKxm+gxq+lP9cn2rVnDvssMglqG0CYRoIorMh+iS
+        PCYToimWj+x28S1EwFa4+nEm0A==
+X-Google-Smtp-Source: APXvYqy/lEPjCERxDDum1wq26E0BRyguUbPch7OWhWnFuJPr34YU+/6jZuAQjbx2D+GxmIM7jkYa7A==
+X-Received: by 2002:a17:90a:b116:: with SMTP id z22mr22712318pjq.38.1573860444456;
+        Fri, 15 Nov 2019 15:27:24 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id u24sm10367194pgf.6.2019.11.15.15.27.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2019 15:27:23 -0800 (PST)
+Message-ID: <5dcf345b.1c69fb81.df1ea.f7f6@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 61445097-43c7-4c24-cca2-08d76a2310bb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Nov 2019 23:25:13.2324
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vFX09KLvAGU5EIZVaU3Et7xgQbPw4CPcPCU7toBg/ZwrfceqWo/FVweaEKKrNMdZbB5paemGeOHOy/f4BELSxA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB1105
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1573593774-12539-2-git-send-email-eberman@codeaurora.org>
+References: <1573593774-12539-1-git-send-email-eberman@codeaurora.org> <1573593774-12539-2-git-send-email-eberman@codeaurora.org>
+Cc:     Elliot Berman <eberman@codeaurora.org>, tsoni@codeaurora.org,
+        sidgup@codeaurora.org, psodagud@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Elliot Berman <eberman@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, saiprakash.ranjan@codeaurora.org
+Subject: Re: [PATCH v2 01/18] firmware: qcom_scm: Rename macros and structures
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Fri, 15 Nov 2019 15:27:22 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->Subject: Re: [PATCH] blk-mq: avoid repeatedly scheduling the same work to
->run hardware queue
->
->On 2019/11/15 7:51, longli@linuxonhyperv.com wrote:
->> From: Long Li <longli@microsoft.com>
->>
->> SCSI layer calls blk_mq_run_hw_queues() in scsi_end_request(), for
->> every completed I/O. blk_mq_run_hw_queues() in turn schedules some
->> works to run the hardware queues.
->>
->> The actual work is queued by mod_delayed_work_on(), it turns out the
->> cost of this function is high on locking and CPU usage, when the I/O
->> workload has high queue depth. Most of these calls are not necessary
->> since the queue is already scheduled to run, and has not run yet.
->>
->> This patch tries to solve this problem by avoiding scheduling work
->> when it's already scheduled.
->>
->> Benchmark results:
->> The following tests are run on a RAM backed virtual disk on Hyper-V,
->> with 8 FIO jobs with 4k random read I/O. The test numbers are for IOPS.
->>
->> queue_depth	pre-patch	after-patch	improvement
->> 16		190k		190k		0%
->> 64		235k		240k		2%
->> 256		180k		256k		42%
->> 1024		156k		250k		60%
->>
->> Signed-off-by: Long Li <longli@microsoft.com>
->> ---
->>  block/blk-mq.c         | 12 ++++++++++++
->>  include/linux/blk-mq.h |  1 +
->>  2 files changed, 13 insertions(+)
->>
->> diff --git a/block/blk-mq.c b/block/blk-mq.c index
->> ec791156e9cc..a882bd65167a 100644
->> --- a/block/blk-mq.c
->> +++ b/block/blk-mq.c
->> @@ -1476,6 +1476,16 @@ static void
->__blk_mq_delay_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async,
->>  		put_cpu();
->>  	}
->>
->> +	/*
->> +	 * Queue a work to run queue. If this is a non-delay run and the
->> +	 * work is already scheduled, avoid scheduling the same work again.
->> +	 */
->> +	if (!msecs) {
->> +		if (test_bit(BLK_MQ_S_WORK_QUEUED, &hctx->state))
->> +			return;
->
->With this change, if the kblockd work is already scheduled with a delay, t=
-hen
->the current no-delay run request will incur a delay because
->kblockd_mod_delayed_work_on() is not called, implying that
->__queue_delayed_work() does not execute __queue_work() as mandated
->by the 0 delay. The work is *not* started immediately.
+Quoting Elliot Berman (2019-11-12 13:22:37)
+> Rename legacy-specific structures and macros with legacy prefix; rename
+> smccc-specific structures and macros with smccc prefix.
 
-BLK_MQ_S_WORK_QUEUED is not touched if this is for a delayed kblockd work, =
-so the following non-delayed runs will get immediately scheduled.
+Yes that's what's happening in the patch, but there isn't the most
+important part in the commit text here, which is _why_ this change is
+meaningful. Presumably the reason is to clearly separate the original
+SCM calling convention from the newer SCM calling conventions.
 
-But I think you have raised a valid point for delayed runs, consider the fo=
-llowing sequence with three calls with quick succession.
+>=20
+> Signed-off-by: Elliot Berman <eberman@codeaurora.org>
+> ---
+>  drivers/firmware/qcom_scm-32.c | 70 ++++++++++++++++++++++--------------=
+------
+>  drivers/firmware/qcom_scm-64.c | 53 ++++++++++++++++----------------
+>  2 files changed, 64 insertions(+), 59 deletions(-)
+>=20
+> diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-3=
+2.c
+> index bee8729..5d52641 100644
+> --- a/drivers/firmware/qcom_scm-32.c
+> +++ b/drivers/firmware/qcom_scm-32.c
+> @@ -39,22 +39,22 @@ static struct qcom_scm_entry qcom_scm_wb[] =3D {
+>  static DEFINE_MUTEX(qcom_scm_lock);
+> =20
+>  /**
+> - * struct qcom_scm_command - one SCM command buffer
+> + * struct qcom_scm_legacy_command - one SCM command buffer
+>   * @len: total available memory for command and response
+>   * @buf_offset: start of command buffer
+>   * @resp_hdr_offset: start of response buffer
+>   * @id: command to be executed
+> - * @buf: buffer returned from qcom_scm_get_command_buffer()
+> + * @buf: buffer returned from legacy_get_command_buffer()
 
-1. __blk_mq_delay_run_hw_queue with no delay (this will set BLK_MQ_S_WORK_Q=
-UEUED)
-2. __blk_mq_delay_run_hw_queue with a delay (this will modify the kblockd w=
-ork if the work is not fired)
-3. __blk_mq_delay_run_hw_queue with no delay (this will not do anything sin=
-ce BLK_MQ_S_WORK_QUEUED is already set)
+I'd prefer to keep qcom_ or at least scm_ somewhere in the name. Just
+plain legacy_ is too generic.
 
-This sequence can potentially wait until 2 fires. Ideally it should fire im=
-mediately at step 3.
+>   *
+>   * An SCM command is laid out in memory as follows:
+>   *
+> - *     ------------------- <--- struct qcom_scm_command
+> + *     ------------------- <--- struct qcom_scm_legacy_command
+>   *     | command header  |
+> - *     ------------------- <--- qcom_scm_get_command_buffer()
+> + *     ------------------- <--- legacy_get_command_buffer()
+>   *     | command buffer  |
+> - *     ------------------- <--- struct qcom_scm_response and
+> - *     | response header |      qcom_scm_command_to_response()
+> - *     ------------------- <--- qcom_scm_get_response_buffer()
+> + *     ------------------- <--- struct qcom_scm_legacy_response and
+> + *     | response header |      legacy_command_to_response()
+> + *     ------------------- <--- legacy_get_response_buffer()
+>   *     | response buffer |
+>   *     -------------------
+>   *
+> @@ -62,7 +62,7 @@ static DEFINE_MUTEX(qcom_scm_lock);
+>   * you should always use the appropriate qcom_scm_get_*_buffer() routines
 
-I will send v2 to address this.
+Shouldn't this comment be updated too to say "legacy"?
 
->
->While your results show improvements of IOPS at high queue depth, doesn't
->this change degrade IOPS and especially latency at low queue depth ?
+>   * to access the buffers in a safe manner.
+>   */
+> -struct qcom_scm_command {
+> +struct qcom_scm_legacy_command {
 
-Here are additional tests done in Azure and Hyper-v, with the patch:
-NVMe showed little difference at all queue depths. (Samsung P983 and P963)
-SCSI showed little difference when queue depth <64. (RAM disk and local VHD=
-)
+Like here, it's called qcom_scm_legacy_<foo> so maybe that should be how
+it works.
 
 
-Long
+>         __le32 len;
+>         __le32 buf_offset;
+>         __le32 resp_hdr_offset;
+> @@ -71,52 +71,55 @@ struct qcom_scm_command {
+>  };
+> =20
+>  /**
+> - * struct qcom_scm_response - one SCM response buffer
+> + * struct qcom_scm_legacy_response - one SCM response buffer
+>   * @len: total available memory for response
+> - * @buf_offset: start of response data relative to start of qcom_scm_res=
+ponse
+> + * @buf_offset: start of response data relative to start of
+> + *              qcom_scm_legacy_response
+>   * @is_complete: indicates if the command has finished processing
+>   */
+> -struct qcom_scm_response {
+> +struct qcom_scm_legacy_response {
+>         __le32 len;
+>         __le32 buf_offset;
+>         __le32 is_complete;
+>  };
+> =20
+>  /**
+> - * qcom_scm_command_to_response() - Get a pointer to a qcom_scm_response
+> + * legacy_command_to_response() - Get a pointer to a qcom_scm_legacy_res=
+ponse
+>   * @cmd: command
+>   *
+>   * Returns a pointer to a response for a command.
+>   */
+> -static inline struct qcom_scm_response *qcom_scm_command_to_response(
+> -               const struct qcom_scm_command *cmd)
+> +static inline struct qcom_scm_legacy_response *legacy_command_to_respons=
+e(
+> +               const struct qcom_scm_legacy_command *cmd)
+>  {
+>         return (void *)cmd + le32_to_cpu(cmd->resp_hdr_offset);
+>  }
+> =20
+>  /**
+> - * qcom_scm_get_command_buffer() - Get a pointer to a command buffer
+> + * legacy_get_command_buffer() - Get a pointer to a command buffer
+>   * @cmd: command
+>   *
+>   * Returns a pointer to the command buffer of a command.
+>   */
+> -static inline void *qcom_scm_get_command_buffer(const struct qcom_scm_co=
+mmand *cmd)
+> +static inline void *legacy_get_command_buffer(
+> +               const struct qcom_scm_legacy_command *cmd)
+>  {
+>         return (void *)cmd->buf;
+>  }
+> =20
+>  /**
+> - * qcom_scm_get_response_buffer() - Get a pointer to a response buffer
+> + * legacy_get_response_buffer() - Get a pointer to a response buffer
+>   * @rsp: response
+>   *
+>   * Returns a pointer to a response buffer of a response.
+>   */
+> -static inline void *qcom_scm_get_response_buffer(const struct qcom_scm_r=
+esponse *rsp)
+> +static inline void *legacy_get_response_buffer(
+> +               const struct qcom_scm_legacy_response *rsp)
+>  {
+>         return (void *)rsp + le32_to_cpu(rsp->buf_offset);
+>  }
+> =20
+> -static u32 smc(u32 cmd_addr)
+> +static u32 __qcom_scm_call_do(u32 cmd_addr)
+>  {
+>         int context_id;
+>         register u32 r0 asm("r0") =3D 1;
+> @@ -164,8 +167,8 @@ static int qcom_scm_call(struct device *dev, u32 svc_=
+id, u32 cmd_id,
+>                          size_t resp_len)
+>  {
+>         int ret;
+> -       struct qcom_scm_command *cmd;
+> -       struct qcom_scm_response *rsp;
+> +       struct qcom_scm_legacy_command *cmd;
+> +       struct qcom_scm_legacy_response *rsp;
+>         size_t alloc_len =3D sizeof(*cmd) + cmd_len + sizeof(*rsp) + resp=
+_len;
+>         dma_addr_t cmd_phys;
+> =20
+> @@ -179,9 +182,9 @@ static int qcom_scm_call(struct device *dev, u32 svc_=
+id, u32 cmd_id,
+> =20
+>         cmd->id =3D cpu_to_le32((svc_id << 10) | cmd_id);
+>         if (cmd_buf)
+> -               memcpy(qcom_scm_get_command_buffer(cmd), cmd_buf, cmd_len=
+);
+> +               memcpy(legacy_get_command_buffer(cmd), cmd_buf, cmd_len);
+> =20
+> -       rsp =3D qcom_scm_command_to_response(cmd);
+> +       rsp =3D legacy_command_to_response(cmd);
+> =20
+>         cmd_phys =3D dma_map_single(dev, cmd, alloc_len, DMA_TO_DEVICE);
+>         if (dma_mapping_error(dev, cmd_phys)) {
+> @@ -190,7 +193,7 @@ static int qcom_scm_call(struct device *dev, u32 svc_=
+id, u32 cmd_id,
+>         }
+> =20
+>         mutex_lock(&qcom_scm_lock);
+> -       ret =3D smc(cmd_phys);
+> +       ret =3D __qcom_scm_call_do(cmd_phys);
 
->
->> +		set_bit(BLK_MQ_S_WORK_QUEUED, &hctx->state);
->> +	}
->> +
->>  	kblockd_mod_delayed_work_on(blk_mq_hctx_next_cpu(hctx),
->&hctx->run_work,
->>  				    msecs_to_jiffies(msecs));
->>  }
->> @@ -1561,6 +1571,7 @@ void blk_mq_stop_hw_queue(struct
->blk_mq_hw_ctx *hctx)
->>  	cancel_delayed_work(&hctx->run_work);
->>
->>  	set_bit(BLK_MQ_S_STOPPED, &hctx->state);
->> +	clear_bit(BLK_MQ_S_WORK_QUEUED, &hctx->state);
->>  }
->>  EXPORT_SYMBOL(blk_mq_stop_hw_queue);
->>
->> @@ -1626,6 +1637,7 @@ static void blk_mq_run_work_fn(struct
->work_struct *work)
->>  	struct blk_mq_hw_ctx *hctx;
->>
->>  	hctx =3D container_of(work, struct blk_mq_hw_ctx, run_work.work);
->> +	clear_bit(BLK_MQ_S_WORK_QUEUED, &hctx->state);
->>
->>  	/*
->>  	 * If we are stopped, don't run the queue.
->> diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h index
->> 0bf056de5cc3..98269d3fd141 100644
->> --- a/include/linux/blk-mq.h
->> +++ b/include/linux/blk-mq.h
->> @@ -234,6 +234,7 @@ enum {
->>  	BLK_MQ_S_STOPPED	=3D 0,
->>  	BLK_MQ_S_TAG_ACTIVE	=3D 1,
->>  	BLK_MQ_S_SCHED_RESTART	=3D 2,
->> +	BLK_MQ_S_WORK_QUEUED	=3D 3,
->>
->>  	BLK_MQ_MAX_DEPTH	=3D 10240,
->>
->>
->
->
->--
->Damien Le Moal
->Western Digital Research
+What is this change about? Is it confusing to have a function called
+'smc'? Please mention why this should change in the commit text.
+
+>         if (ret < 0)
+>                 ret =3D qcom_scm_remap_error(ret);
+>         mutex_unlock(&qcom_scm_lock);
+> @@ -206,7 +209,7 @@ static int qcom_scm_call(struct device *dev, u32 svc_=
+id, u32 cmd_id,
+>                 dma_sync_single_for_cpu(dev, cmd_phys + sizeof(*cmd) + cm=
+d_len +
+>                                         le32_to_cpu(rsp->buf_offset),
+>                                         resp_len, DMA_FROM_DEVICE);
+> -               memcpy(resp_buf, qcom_scm_get_response_buffer(rsp),
+> +               memcpy(resp_buf, legacy_get_response_buffer(rsp),
+>                        resp_len);
+>         }
+>  out:
+> @@ -215,11 +218,12 @@ static int qcom_scm_call(struct device *dev, u32 sv=
+c_id, u32 cmd_id,
+>         return ret;
+>  }
+> =20
+> -#define SCM_CLASS_REGISTER     (0x2 << 8)
+> -#define SCM_MASK_IRQS          BIT(5)
+> -#define SCM_ATOMIC(svc, cmd, n) (((((svc) << 10)|((cmd) & 0x3ff)) << 12)=
+ | \
+> -                               SCM_CLASS_REGISTER | \
+> -                               SCM_MASK_IRQS | \
+> +#define LEGACY_CLASS_REGISTER          (0x2 << 8)
+> +#define LEGACY_MASK_IRQS               BIT(5)
+> +#define LEGACY_ATOMIC_ID(svc, cmd, n) \
+> +                               (((((svc) << 10)|((cmd) & 0x3ff)) << 12) =
+| \
+> +                               LEGACY_CLASS_REGISTER | \
+> +                               LEGACY_MASK_IRQS | \
+>                                 (n & 0xf))
+> =20
+>  /**
+> @@ -235,7 +239,7 @@ static s32 qcom_scm_call_atomic1(u32 svc, u32 cmd, u3=
+2 arg1)
+>  {
+>         int context_id;
+> =20
+> -       register u32 r0 asm("r0") =3D SCM_ATOMIC(svc, cmd, 1);
+> +       register u32 r0 asm("r0") =3D LEGACY_ATOMIC_ID(svc, cmd, 1);
+>         register u32 r1 asm("r1") =3D (u32)&context_id;
+>         register u32 r2 asm("r2") =3D arg1;
+> =20
+> @@ -268,7 +272,7 @@ static s32 qcom_scm_call_atomic2(u32 svc, u32 cmd, u3=
+2 arg1, u32 arg2)
+>  {
+>         int context_id;
+> =20
+> -       register u32 r0 asm("r0") =3D SCM_ATOMIC(svc, cmd, 2);
+> +       register u32 r0 asm("r0") =3D LEGACY_ATOMIC_ID(svc, cmd, 2);
+>         register u32 r1 asm("r1") =3D (u32)&context_id;
+>         register u32 r2 asm("r2") =3D arg1;
+>         register u32 r3 asm("r3") =3D arg2;
+
+Is this hunk really necessary? The defines are local to the file.
+
+> diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-6=
+4.c
+> index 7686786..8226b94 100644
+> --- a/drivers/firmware/qcom_scm-64.c
+> +++ b/drivers/firmware/qcom_scm-64.c
+> @@ -14,7 +14,7 @@
+> =20
+>  #include "qcom_scm.h"
+> =20
+> -#define QCOM_SCM_FNID(s, c) ((((s) & 0xFF) << 8) | ((c) & 0xFF))
+> +#define SMCCC_FUNCNUM(s, c) ((((s) & 0xFF) << 8) | ((c) & 0xFF))
+
+Is this generic? Maybe it should go into the SMCCC file then if it isn't
+qcom specific? Otherwise, please leave QCOM in the name.
+
+> =20
+>  #define MAX_QCOM_SCM_ARGS 10
+>  #define MAX_QCOM_SCM_RETS 3
+> @@ -58,11 +58,11 @@ static DEFINE_MUTEX(qcom_scm_lock);
+>  #define QCOM_SCM_EBUSY_WAIT_MS 30
+>  #define QCOM_SCM_EBUSY_MAX_RETRY 20
+> =20
+> -#define N_EXT_QCOM_SCM_ARGS 7
+> -#define FIRST_EXT_ARG_IDX 3
+> -#define N_REGISTER_ARGS (MAX_QCOM_SCM_ARGS - N_EXT_QCOM_SCM_ARGS + 1)
+> +#define SMCCC_N_EXT_ARGS 7
+> +#define SMCCC_FIRST_EXT_IDX 3
+> +#define SMCCC_N_REG_ARGS (MAX_QCOM_SCM_ARGS - SMCCC_N_EXT_ARGS + 1)
+> =20
+> -static void __qcom_scm_call_do(const struct qcom_scm_desc *desc,
+> +static void __qcom_scm_call_do_quirk(const struct qcom_scm_desc *desc,
+>                                struct arm_smccc_res *res, u32 fn_id,
+>                                u64 x5, u32 type)
+>  {
+
+From here....
+
+> @@ -85,22 +85,23 @@ static void __qcom_scm_call_do(const struct qcom_scm_=
+desc *desc,
+>         } while (res->a0 =3D=3D QCOM_SCM_INTERRUPTED);
+>  }
+> =20
+> -static void qcom_scm_call_do(const struct qcom_scm_desc *desc,
+> +static void qcom_scm_call_do_smccc(const struct qcom_scm_desc *desc,
+>                              struct arm_smccc_res *res, u32 fn_id,
+>                              u64 x5, bool atomic)
+>  {
+>         int retry_count =3D 0;
+> =20
+>         if (atomic) {
+> -               __qcom_scm_call_do(desc, res, fn_id, x5, ARM_SMCCC_FAST_C=
+ALL);
+> +               __qcom_scm_call_do_quirk(desc, res, fn_id, x5,
+> +                                        ARM_SMCCC_FAST_CALL);
+>                 return;
+>         }
+> =20
+>         do {
+>                 mutex_lock(&qcom_scm_lock);
+> =20
+> -               __qcom_scm_call_do(desc, res, fn_id, x5,
+> -                                  ARM_SMCCC_STD_CALL);
+> +               __qcom_scm_call_do_quirk(desc, res, fn_id, x5,
+> +                                        ARM_SMCCC_STD_CALL);
+> =20
+>                 mutex_unlock(&qcom_scm_lock);
+> =20
+> @@ -112,21 +113,21 @@ static void qcom_scm_call_do(const struct qcom_scm_=
+desc *desc,
+>         }  while (res->a0 =3D=3D QCOM_SCM_V2_EBUSY);
+>  }
+> =20
+> -static int ___qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
+> -                           const struct qcom_scm_desc *desc,
+> -                           struct arm_smccc_res *res, bool atomic)
+> +static int ___qcom_scm_call_smccc(struct device *dev, u32 svc_id, u32 cm=
+d_id,
+> +                                 const struct qcom_scm_desc *desc,
+> +                                 struct arm_smccc_res *res, bool atomic)
+>  {
+>         int arglen =3D desc->arginfo & 0xf;
+>         int i;
+> -       u32 fn_id =3D QCOM_SCM_FNID(svc_id, cmd_id);
+> -       u64 x5 =3D desc->args[FIRST_EXT_ARG_IDX];
+> +       u32 fn_id =3D SMCCC_FUNCNUM(svc_id, cmd_id);
+> +       u64 x5 =3D desc->args[SMCCC_FIRST_EXT_IDX];
+>         dma_addr_t args_phys =3D 0;
+>         void *args_virt =3D NULL;
+>         size_t alloc_len;
+>         gfp_t flag =3D atomic ? GFP_ATOMIC : GFP_KERNEL;
+> =20
+> -       if (unlikely(arglen > N_REGISTER_ARGS)) {
+> -               alloc_len =3D N_EXT_QCOM_SCM_ARGS * sizeof(u64);
+> +       if (unlikely(arglen > SMCCC_N_REG_ARGS)) {
+> +               alloc_len =3D SMCCC_N_EXT_ARGS * sizeof(u64);
+>                 args_virt =3D kzalloc(PAGE_ALIGN(alloc_len), flag);
+> =20
+>                 if (!args_virt)
+> @@ -135,15 +136,15 @@ static int ___qcom_scm_call(struct device *dev, u32=
+ svc_id, u32 cmd_id,
+>                 if (qcom_smccc_convention =3D=3D ARM_SMCCC_SMC_32) {
+>                         __le32 *args =3D args_virt;
+> =20
+> -                       for (i =3D 0; i < N_EXT_QCOM_SCM_ARGS; i++)
+> +                       for (i =3D 0; i < SMCCC_N_EXT_ARGS; i++)
+>                                 args[i] =3D cpu_to_le32(desc->args[i +
+> -                                                     FIRST_EXT_ARG_IDX]);
+> +                                                     SMCCC_FIRST_EXT_IDX=
+]);
+>                 } else {
+>                         __le64 *args =3D args_virt;
+> =20
+> -                       for (i =3D 0; i < N_EXT_QCOM_SCM_ARGS; i++)
+> +                       for (i =3D 0; i < SMCCC_N_EXT_ARGS; i++)
+>                                 args[i] =3D cpu_to_le64(desc->args[i +
+> -                                                     FIRST_EXT_ARG_IDX]);
+> +                                                     SMCCC_FIRST_EXT_IDX=
+]);
+>                 }
+> =20
+>                 args_phys =3D dma_map_single(dev, args_virt, alloc_len,
+> @@ -157,7 +158,7 @@ static int ___qcom_scm_call(struct device *dev, u32 s=
+vc_id, u32 cmd_id,
+>                 x5 =3D args_phys;
+>         }
+> =20
+> -       qcom_scm_call_do(desc, res, fn_id, x5, atomic);
+> +       qcom_scm_call_do_smccc(desc, res, fn_id, x5, atomic);
+> =20
+>         if (args_virt) {
+>                 dma_unmap_single(dev, args_phys, alloc_len, DMA_TO_DEVICE=
+);
+> @@ -185,7 +186,7 @@ static int qcom_scm_call(struct device *dev, u32 svc_=
+id, u32 cmd_id,
+>                          struct arm_smccc_res *res)
+>  {
+>         might_sleep();
+> -       return ___qcom_scm_call(dev, svc_id, cmd_id, desc, res, false);
+> +       return ___qcom_scm_call_smccc(dev, svc_id, cmd_id, desc, res, fal=
+se);
+>  }
+> =20
+>  /**
+> @@ -203,7 +204,7 @@ static int qcom_scm_call_atomic(struct device *dev, u=
+32 svc_id, u32 cmd_id,
+>                                 const struct qcom_scm_desc *desc,
+>                                 struct arm_smccc_res *res)
+>  {
+> -       return ___qcom_scm_call(dev, svc_id, cmd_id, desc, res, true);
+> +       return ___qcom_scm_call_smccc(dev, svc_id, cmd_id, desc, res, tru=
+e);
+>  }
+> =20
+>  /**
+> @@ -253,7 +254,7 @@ int __qcom_scm_is_call_available(struct device *dev, =
+u32 svc_id, u32 cmd_id)
+>         struct arm_smccc_res res;
+> =20
+>         desc.arginfo =3D QCOM_SCM_ARGS(1);
+> -       desc.args[0] =3D QCOM_SCM_FNID(svc_id, cmd_id) |
+> +       desc.args[0] =3D SMCCC_FUNCNUM(svc_id, cmd_id) |
+>                         (ARM_SMCCC_OWNER_SIP << ARM_SMCCC_OWNER_SHIFT);
+> =20
+>         ret =3D qcom_scm_call(dev, QCOM_SCM_SVC_INFO, QCOM_IS_CALL_AVAIL_=
+CMD,
+> @@ -295,7 +296,7 @@ void __qcom_scm_init(void)
+>  {
+>         u64 cmd;
+>         struct arm_smccc_res res;
+> -       u32 function =3D QCOM_SCM_FNID(QCOM_SCM_SVC_INFO, QCOM_IS_CALL_AV=
+AIL_CMD);
+> +       u32 function =3D SMCCC_FUNCNUM(QCOM_SCM_SVC_INFO, QCOM_IS_CALL_AV=
+AIL_CMD);
+> =20
+>         /* First try a SMC64 call */
+>         cmd =3D ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL, ARM_SMCCC_SMC_64,
+
+... to here I don't understand why any of it needs to change. It looks
+like a bunch of churn and it conflates qcom SCM calls with SMCCC which
+is not desirable. Those two concepts are different.
+
