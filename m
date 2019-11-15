@@ -2,121 +2,86 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE4AC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 05:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A57C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 05:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D97092072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 05:04:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573794297;
-	bh=o4xVn6JWS/1SPWu+jKWiezJpPgRQKPQE3KnZ5ttMTZ0=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=HOiSGFD4Rvm6ILshEL3+1wo9Z8gW9J9WZHblOwnaHz2dIlapmEGM0yoTnJQ2ZOOh+
-	 eY60lkPiBfHQ5p/kNMX5NNDPBZ1SB3S793h9V2v6xo4qdoA+2oKZxJVgLUZ8gT2+DL
-	 wszJ4gizGPGKdJbSYXzORLMcKVoskYnKn6J2wiao=
+	by mail.kernel.org (Postfix) with ESMTP id 8C75820715
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 05:06:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfKOFE4 (ORCPT
+        id S1727116AbfKOFGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 00:04:56 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41972 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbfKOFE4 (ORCPT
+        Fri, 15 Nov 2019 00:06:37 -0500
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:19605 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725773AbfKOFGh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 00:04:56 -0500
-Received: by mail-pf1-f196.google.com with SMTP id p26so5823320pfq.8;
-        Thu, 14 Nov 2019 21:04:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=GE6hQGhTHyMhnZauws25uJSkPSE0gyI3eS4kkDg4LbY=;
-        b=jwjQitG4mPk4I/rwoKlZTLvSKE8EYNuOR9HeBS3e6Yzlw2fSTLnVbhzI0JRTDK632W
-         UAKFTNWm2xYX393OCvjSX7IjRtGPrX4nn2LmYwlD/U3qG8LDGjAXmckITVOTwsTIs4j5
-         pd5lMpxNKuRQdLJtzMcTx8gon+3MINLJBUtLjTvGVI1PPphLEW2LAFb/FdnCh0tQIPnC
-         QjXPdj6PMV7LT7biwuJ5arXzrBXK2yuNFgTahwXuWP4i5NEUYq0lOVC1roQT/3LGuCsP
-         FNiftJ8raQqXlU9FBwpS64QYtEupSah+cT8/5OIr7arvrlEOkHXOhnC30FT/cMzEhTNu
-         loqQ==
-X-Gm-Message-State: APjAAAVdbzATFaEBIaxDlHRqihd4wW/Doy6Tg4pZVWV9BJmQhqzWBpZL
-        4wWcMIGI4hDb5lWHrYF30tp5L/suNmA=
-X-Google-Smtp-Source: APXvYqzvSdSzlDAanRSyD1+gCAKlRxwBmY9wZ3K7A1gRCQvAUTP7lL0PumlgCYaic91mNvz1oPwOog==
-X-Received: by 2002:a63:e145:: with SMTP id h5mr14385538pgk.447.1573794295347;
-        Thu, 14 Nov 2019 21:04:55 -0800 (PST)
-Received: from localhost ([2601:646:8a00:9810:9d6:9cca:ff8c:efe0])
-        by smtp.gmail.com with ESMTPSA id y16sm9078871pfo.62.2019.11.14.21.04.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 21:04:54 -0800 (PST)
-Date:   Thu, 14 Nov 2019 21:04:53 -0800
-From:   Paul Burton <paulburton@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] MIPS fixes
-Message-ID: <20191115050453.zcgijwj7qt7uvx2c@pburton-laptop>
+        Fri, 15 Nov 2019 00:06:37 -0500
+X-IronPort-AV: E=Sophos;i="5.68,307,1569254400"; 
+   d="scan'208";a="78485426"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 15 Nov 2019 13:06:31 +0800
+Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
+        by cn.fujitsu.com (Postfix) with ESMTP id CA0234CE1A0C;
+        Fri, 15 Nov 2019 12:58:18 +0800 (CST)
+Received: from localhost.localdomain (10.167.225.140) by
+ G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Fri, 15 Nov 2019 13:06:38 +0800
+From:   Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
+To:     <x86@kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, Cao jin <caoj.fnst@cn.fujitsu.com>
+Subject: [RFC PATCH] x86/acpi: Drop duplicate BOOT table initialization
+Date:   Fri, 15 Nov 2019 13:06:13 +0800
+Message-ID: <20191115050613.1556-1-ruansy.fnst@cn.fujitsu.com>
+X-Mailer: git-send-email 2.17.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pl2idvt5zzjql3wu"
-Content-Disposition: inline
+Content-Type: text/plain
+X-Originating-IP: [10.167.225.140]
+X-yoursite-MailScanner-ID: CA0234CE1A0C.A94EC
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Cao jin <caoj.fnst@cn.fujitsu.com>
 
---pl2idvt5zzjql3wu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ACPI BOOT table is initialized in both acpi_boot_table_init &
+acpi_boot_init of setup_arch, but its usage is quite late at the end of
+start_kernel. It should be safe to drop one of them. Since it is less
+related with table init, drop it from there.
 
-Hi Linus,
+Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
+---
+ arch/x86/kernel/acpi/boot.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Here's a single fix for SGI IP27 machines & a MAINTAINERS update; please
-pull.
+It existed since git repo is built, so it might has its reason? The
+patch is not tested since I don't have BOOT table in my firmware.
 
-Thanks,
-    Paul
+diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
+index 04205ce127a1..ca1c15bb0b48 100644
+--- a/arch/x86/kernel/acpi/boot.c
++++ b/arch/x86/kernel/acpi/boot.c
+@@ -1558,8 +1558,6 @@ void __init acpi_boot_table_init(void)
+ 		return;
+ 	}
+ 
+-	acpi_table_parse(ACPI_SIG_BOOT, acpi_parse_sbf);
+-
+ 	/*
+ 	 * blacklist may disable ACPI entirely
+ 	 */
+-- 
+2.21.0
 
 
-The following changes since commit d6d5df1db6e9d7f8f76d2911707f7d5877251b02:
 
-  Linux 5.4-rc5 (2019-10-27 13:19:19 -0400)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git tags/mips_fixes_5.4_4
-
-for you to fetch changes up to f6929c92e283a35b183c293574adcbca409bf144:
-
-  MAINTAINERS: Remove Kevin as maintainer of BMIPS generic platforms (2019-11-04 10:46:05 -0800)
-
-----------------------------------------------------------------
-A fix & simplification for SGI IP27 exception handlers, and a small
-MAINTAINERS update for Broadcom MIPS systems.
-
-----------------------------------------------------------------
-Florian Fainelli (1):
-      MAINTAINERS: Remove Kevin as maintainer of BMIPS generic platforms
-
-Thomas Bogendoerfer (1):
-      MIPS: SGI-IP27: fix exception handler replication
-
- MAINTAINERS                      |  1 -
- arch/mips/sgi-ip27/Kconfig       |  7 -------
- arch/mips/sgi-ip27/ip27-init.c   | 21 ++++++---------------
- arch/mips/sgi-ip27/ip27-memory.c |  4 ----
- 4 files changed, 6 insertions(+), 27 deletions(-)
-
---pl2idvt5zzjql3wu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYIAB0WIQRgLjeFAZEXQzy86/s+p5+stXUA3QUCXc4x9QAKCRA+p5+stXUA
-3ScnAQCKK/Wzy90fKGnlhiXB2z+7Pdh0MLceC7rOkwdQJgs28wEA6DipbI11TQXU
-xe1El0zhm2K0aKV1hvHm7Q2ImjcYmAU=
-=0h92
------END PGP SIGNATURE-----
-
---pl2idvt5zzjql3wu--
