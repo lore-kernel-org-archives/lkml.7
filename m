@@ -2,226 +2,168 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD75C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAB8C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A9E120733
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:30:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dms2AT6y"
+	by mail.kernel.org (Postfix) with ESMTP id E182520733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:32:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfKOJaZ (ORCPT
+        id S1727520AbfKOJcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:30:25 -0500
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:42506 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727325AbfKOJaY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:30:24 -0500
-Received: by mail-ua1-f66.google.com with SMTP id 31so2792448uas.9
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 01:30:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=U0K8GRiXqSgIpN48tBNHcV+jI/oiDgvDhl7ShZIVOhE=;
-        b=dms2AT6yjYIujdBp5vLXzT3QSWBUJdp+Ja/bHoPGCKS84bKo37q9DYAWmQ+OhvnX47
-         wQESQqhFjyBsKxLBW14sJM6Kkxy/Yvicy1Vttr/bmnfFi1qkmbGWwvZC6/I2T2hc0dc4
-         E6e4jsZ8R7HPGQj7VhbAeZXMKd4W+mV9z0NBs1wYV93Cw7drye59WzshJHguKEkNXCPt
-         fHF0ouNrAUlgmAVwGBwpW7V1N92+w5PRrvnambZTbfMnbWUBMJIPHZCBuMz5iDZ3km48
-         QxwxVl+99j/KVNaPgNldx2y1f+snHTdbPP0IYzr0FUgyc31xgzkXkCrLt9Puderh1g1W
-         O9fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U0K8GRiXqSgIpN48tBNHcV+jI/oiDgvDhl7ShZIVOhE=;
-        b=s0bCT6EPoYYY9Onnq2gYGB5s46MZfgPRYdGHPQMtZzkWOhmOjjGVDxY9ccaZyQYXkM
-         SLMHab88kjOid93xt9jZ3axFwq4u1PP61F09fNZY6o6g50po2E2IfXXxIVq/oJLOyWa1
-         9NldcZzWqOYX5btSxwcftsXD2zIuLPrswgShHw3YJglBEJ4hh2biyIcpIiN+9J6tzRPN
-         vAOJvCDO1goGy29BfHkW6AYmtIsE7vg1lfKuHcjOjiVpQhH9sp3gcJMwuIjnlkm5wRs2
-         9RE1Gm5YVAfqQGnzlvniwSboU2DBm5RdFcO0vEH4XTx/iN0XZGvFQliXW4pP/gTSsa+m
-         LP/g==
-X-Gm-Message-State: APjAAAWhFid+CatNMa8JA6WuCX4WZ2urWqa9VaXp1i6gL4b7gSmjrTD9
-        cz8xbRA16oXWl8iVfWNBNgxMzPgHU47TtIKDGI4tKQ==
-X-Google-Smtp-Source: APXvYqzU6WJnGjb2iLphku/+v8QsaQ8unugsql39hfm0KRqoySp6l08BYKltD9R0v8e99ePYA9xvGwkzshWggfN0FEM=
-X-Received: by 2002:ab0:74cd:: with SMTP id f13mr8348393uaq.104.1573810223324;
- Fri, 15 Nov 2019 01:30:23 -0800 (PST)
+        Fri, 15 Nov 2019 04:32:18 -0500
+Received: from mx2.suse.de ([195.135.220.15]:52630 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727022AbfKOJcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 04:32:17 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B6C5CB1F7;
+        Fri, 15 Nov 2019 09:32:14 +0000 (UTC)
+Date:   Fri, 15 Nov 2019 10:32:13 +0100 (CET)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Steven Rostedt <rostedt@goodmis.org>
+cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        X86 ML <x86@kernel.org>, Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH 09/10] ftrace/x86: Add register_ftrace_direct() for custom
+ trampolines
+In-Reply-To: <20191114111952.3eb1a011@gandalf.local.home>
+Message-ID: <alpine.LSU.2.21.1911151024390.28642@pobox.suse.cz>
+References: <20191108212834.594904349@goodmis.org> <20191108213450.891579507@goodmis.org> <alpine.LSU.2.21.1911141627300.20723@pobox.suse.cz> <20191114111952.3eb1a011@gandalf.local.home>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-References: <cover.1573122644.git.hns@goldelico.com> <CAPDyKFrntf2Kd9Zf7uxRCUk_OrKD8B3xOKmvPaf04X21L5HwWA@mail.gmail.com>
- <5F5A5FC0-8F91-4D5B-9EF6-AF36FE38B588@goldelico.com>
-In-Reply-To: <5F5A5FC0-8F91-4D5B-9EF6-AF36FE38B588@goldelico.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 15 Nov 2019 10:29:46 +0100
-Message-ID: <CAPDyKFr=Uk1i0c=3WvuOYCQ__Skpr-9mjVM2Yqst-hd8zY6OeQ@mail.gmail.com>
-Subject: Re: [PATCH v3 00/12] OpenPandora: make wl1251 connected to mmc3 sdio
- port of OpenPandora work again
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Petr Mladek <pmladek@suse.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        kernel@pyra-handheld.com,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        David Sterba <dsterba@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Nov 2019 at 16:16, H. Nikolaus Schaller <hns@goldelico.com> wrote:
->
-> Hi Ulf,
->
-> > Am 14.11.2019 um 15:18 schrieb Ulf Hansson <ulf.hansson@linaro.org>:
-> >
-> > On Thu, 7 Nov 2019 at 11:31, H. Nikolaus Schaller <hns@goldelico.com> wrote:
-> >>
-> >>
-> >> * add a revisit note for special wl1251 handling code because it should
-> >>  be solved more generic in mmc core - suggested by Ulf Hansson <ulf.hansson@linaro.org>
-> >> * remove init_card callback from platform_data/hsmmc-omap.h - suggested by Ulf Hansson <ulf.hansson@linaro.org>
-> >> * remove obstructive always-on for vwlan regulator - suggested by Ulf Hansson <ulf.hansson@linaro.org>
-> >> * rename DT node - suggested by Rob Herring <robh@kernel.org>
-> >> * fix ARM: dts: subject prefix - suggested by Tony Lindgren <tony@atomide.com>
-> >> * also remove omap2_hsmmc_info and obc-y line in Makefile - suggested by Tony Lindgren <tony@atomide.com>
-> >
-> > No further comments from my side. Let's just agree on how to deal with
-> > the ti,power-gpio, then I can apply this.
->
-> I'd say it can be a separate patch since it does not fix the Pandora
-> issues, but is a new and independent optimization.
->
-> And in case someone complains and uses it for some out-of tree purpose
-> it can be discussed or even be reverted easier if it is a separate patch.
->
-> I can do it in the next days.
+On Thu, 14 Nov 2019, Steven Rostedt wrote:
 
-Okay, that sounds reasonable.
+> On Thu, 14 Nov 2019 16:34:58 +0100 (CET)
+> Miroslav Benes <mbenes@suse.cz> wrote:
+> 
+> > On Fri, 8 Nov 2019, Steven Rostedt wrote:
+> > 
+> > > From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> > > 
+> > > Enable x86 to allow for register_ftrace_direct(), where a custom trampoline
+> > > may be called directly from an ftrace mcount/fentry location.
+> > > 
+> > > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>  
+> > 
+> > [...]
+> > 
+> > > +++ b/arch/x86/kernel/ftrace_64.S
+> > > @@ -88,6 +88,7 @@ EXPORT_SYMBOL(__fentry__)
+> > >  	movq %rdi, RDI(%rsp)
+> > >  	movq %r8, R8(%rsp)
+> > >  	movq %r9, R9(%rsp)
+> > > +	movq $0, ORIG_RAX(%rsp)
+> > >  	/*
+> > >  	 * Save the original RBP. Even though the mcount ABI does not
+> > >  	 * require this, it helps out callers.
+> > > @@ -114,7 +115,8 @@ EXPORT_SYMBOL(__fentry__)
+> > >  	subq $MCOUNT_INSN_SIZE, %rdi
+> > >  	.endm
+> > >  
+> > > -.macro restore_mcount_regs
+> > > +.macro restore_mcount_regs save=0
+> > > +
+> > >  	movq R9(%rsp), %r9
+> > >  	movq R8(%rsp), %r8
+> > >  	movq RDI(%rsp), %rdi
+> > > @@ -123,10 +125,7 @@ EXPORT_SYMBOL(__fentry__)
+> > >  	movq RCX(%rsp), %rcx
+> > >  	movq RAX(%rsp), %rax
+> > >  
+> > > -	/* ftrace_regs_caller can modify %rbp */
+> > > -	movq RBP(%rsp), %rbp
+> > > -
+> > > -	addq $MCOUNT_REG_SIZE, %rsp
+> > > +	addq $MCOUNT_REG_SIZE-\save, %rsp
+> > >  
+> > >  	.endm
+> > >  
+> > > @@ -228,10 +227,30 @@ GLOBAL(ftrace_regs_call)
+> > >  	movq R10(%rsp), %r10
+> > >  	movq RBX(%rsp), %rbx
+> > >  
+> > > -	restore_mcount_regs
+> > > +	movq RBP(%rsp), %rbp
+> > > +
+> > > +	movq ORIG_RAX(%rsp), %rax
+> > > +	movq %rax, MCOUNT_REG_SIZE-8(%rsp)
+> > > +
+> > > +	/* If ORIG_RAX is anything but zero, make this a call to that */
+> > > +	movq ORIG_RAX(%rsp), %rax
+> > > +	cmpq	$0, %rax
+> > > +	je	1f
+> > > +
+> > > +	/* Swap the flags with orig_rax */
+> > > +	movq MCOUNT_REG_SIZE(%rsp), %rdi
+> > > +	movq %rdi, MCOUNT_REG_SIZE-8(%rsp)
+> > > +	movq %rax, MCOUNT_REG_SIZE(%rsp)
+> > > +
+> > > +	restore_mcount_regs 8
+> > > +
+> > > +	jmp	2f
+> > > +
+> > > +1:	restore_mcount_regs
+> > > +
+> > >  
+> > >  	/* Restore flags */
+> > > -	popfq
+> > > +2:	popfq  
+> > 
+> > If I am reading the code correctly (and I was confused couple of times, so 
+> > maybe I am not), this is what makes the direct fops incompatible with 
+> > ipmodify and livepatching for now. Is that correct?
+> 
+> Actually, it's the fact that the return goes to some unknown trampoline
+> that may do something else as well.
 
-In the meantime, I have queued up the series on my next branch (for v5.5).
+Right.
+ 
+> > 
+> > What are your plans regarding this?
+> 
+> I wanted to see what the eBPF folks were doing, and then perhaps allow
+> the ip modify occur too. I could let it happen as well now, and then we
+> can see what the fallout is later ;-)
 
-I fixed up a couple of complaints from checkpatch, and also added
-stable tags for the first two patches in the series, as that what
-missing.
+Waiting for eBPF using this first seems to be a good plan. Your call.
+ 
+> > Moreover, we could replace ftrace_regs_caller with direct fops for live 
+> > patching when this is merged with all arch support we need. After all, all 
+> 
+> Note, direct call is currently only available for x86_64.
 
-Kind regards
-Uffe
+Yes, I was speculating over a possibility in the future.
 
+> > we need is to change the rip, which we could do easily in the direct 
+> > trampoline. On the other hand, it would exclude coexistence of a live 
+> > patch and a BPF filter (both direct now) on one function.
+> 
+> It may also end up being more complex, and not much of a performance
+> benefit. I believe the BPF is injecting programs into the start of
+> functions, but your trampoline for live patching may be not much
+> different than what ftrace gives you today.
 
->
-> > Thanks a lot for fixing all this mess!
->
-> I hope the users also appreciate our work.
->
-> Best regards,
-> Nikolaus
->
-> >
-> > Kind regards
-> > Uffe
-> >
-> >>
-> >> PATCH V2 2019-10-19 20:41:47:
-> >> * added acked-by for wl1251 patches - Kalle Valo <kvalo@codeaurora.org>
-> >> * really removed old pdata-quirks code (not through #if 0)
-> >> * splited out a partial revert of
-> >>        efdfeb079cc3b ("regulator: fixed: Convert to use GPIO descriptor only")
-> >>  because that was introduced after v4.19 and stops the removal of
-> >>  the pdata-quirks patch from cleanly applying to v4.9, v4.14, v4.19
-> >>  - reported by Sasha Levin <sashal@kernel.org>
-> >> * added a new patch to remove old omap hsmmc since pdata quirks
-> >>  were last user - suggested by Tony Lindgren <tony@atomide.com>
-> >>
-> >> PATCH V1 2019-10-18 22:25:39:
-> >> Here we have a set of scattered patches to make the OpenPandora WiFi work again.
-> >>
-> >> v4.7 did break the pdata-quirks which made the mmc3 interface
-> >> fail completely, because some code now assumes device tree
-> >> based instantiation.
-> >>
-> >> Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
-> >>
-> >> v4.11 did break the sdio qirks for wl1251 which made the driver no longer
-> >> load, although the device was found as an sdio client.
-> >>
-> >> Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
-> >>
-> >> To solve these issues:
-> >> * we convert mmc3 and wl1251 initialization from pdata-quirks
-> >>  to device tree
-> >> * we make the wl1251 driver read properties from device tree
-> >> * we fix the mmc core vendor ids and quirks
-> >> * we fix the wl1251 (and wl1271) driver to use only vendor ids
-> >>  from header file instead of (potentially conflicting) local
-> >>  definitions
-> >>
-> >>
-> >> H. Nikolaus Schaller (12):
-> >>  Documentation: dt: wireless: update wl1251 for sdio
-> >>  net: wireless: ti: wl1251 add device tree support
-> >>  ARM: dts: pandora-common: define wl1251 as child node of mmc3
-> >>  mmc: host: omap_hsmmc: add code for special init of wl1251 to get rid
-> >>    of pandora_wl1251_init_card
-> >>  omap: pdata-quirks: revert pandora specific gpiod additions
-> >>  omap: pdata-quirks: remove openpandora quirks for mmc3 and wl1251
-> >>  omap: remove omap2_hsmmc_info in old hsmmc.[ch] and update Makefile
-> >>  mmc: host: omap-hsmmc: remove init_card pdata callback from pdata
-> >>  mmc: sdio: fix wl1251 vendor id
-> >>  mmc: core: fix wl1251 sdio quirks
-> >>  net: wireless: ti: wl1251 use new SDIO_VENDOR_ID_TI_WL1251 definition
-> >>  net: wireless: ti: remove local VENDOR_ID and DEVICE_ID definitions
-> >>
-> >> .../bindings/net/wireless/ti,wl1251.txt       |  26 +++
-> >> arch/arm/boot/dts/omap3-pandora-common.dtsi   |  36 +++-
-> >> arch/arm/mach-omap2/Makefile                  |   3 -
-> >> arch/arm/mach-omap2/common.h                  |   1 -
-> >> arch/arm/mach-omap2/hsmmc.c                   | 171 ------------------
-> >> arch/arm/mach-omap2/hsmmc.h                   |  32 ----
-> >> arch/arm/mach-omap2/pdata-quirks.c            | 105 -----------
-> >> drivers/mmc/core/quirks.h                     |   7 +
-> >> drivers/mmc/host/omap_hsmmc.c                 |  30 ++-
-> >> drivers/net/wireless/ti/wl1251/sdio.c         |  23 ++-
-> >> drivers/net/wireless/ti/wlcore/sdio.c         |   8 -
-> >> include/linux/mmc/sdio_ids.h                  |   2 +
-> >> include/linux/platform_data/hsmmc-omap.h      |   3 -
-> >> 13 files changed, 111 insertions(+), 336 deletions(-)
-> >> delete mode 100644 arch/arm/mach-omap2/hsmmc.c
-> >> delete mode 100644 arch/arm/mach-omap2/hsmmc.h
-> >>
-> >> --
-> >> 2.23.0
-> >>
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Ok, I made a note in my TODO list and let's see how it will evolve. It is 
+definitely not something urgent.
+
+Thanks
+Miroslav
