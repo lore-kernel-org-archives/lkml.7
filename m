@@ -2,106 +2,82 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BAAC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA588C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5563D2072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BEB02072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:39:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="a4WYlR9L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfKOPim (ORCPT
+        id S1727635AbfKOPjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 10:38:42 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:54192 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727540AbfKOPil (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 10:38:41 -0500
-Received: (qmail 1740 invoked by uid 2102); 15 Nov 2019 10:38:40 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 15 Nov 2019 10:38:40 -0500
-Date:   Fri, 15 Nov 2019 10:38:40 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Andrey Konovalov <andreyknvl@google.com>
-cc:     linux-usb@vger.kernel.org, <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Felipe Balbi <balbi@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
-Subject: Re: [PATCH v2 1/1] usb: gadget: add raw-gadget interface
-In-Reply-To: <92f5a2a1ba986f149aecec02d6ffe110d11dcdfd.1573824989.git.andreyknvl@google.com>
-Message-ID: <Pine.LNX.4.44L0.1911151036310.1527-100000@iolanthe.rowland.org>
+        Fri, 15 Nov 2019 10:39:22 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:34036 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727443AbfKOPjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 10:39:22 -0500
+Received: from zn.tnic (p200300EC2F0CC30001F0870692D99427.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:c300:1f0:8706:92d9:9427])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CD9D01EC0D06;
+        Fri, 15 Nov 2019 16:39:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1573832361;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=K0EJnNjdm/SoccIE6QZhZj/UPZX4QJ55VyQTfT34pgY=;
+        b=a4WYlR9LLQyOiDiXqYaq+EY+ULhIUXXBrobawZWM5pxrzIrfw88Bnwd6K3x002a7BneV2X
+        +FM5xoA7XBR/Ziv0736RARpD7vtOSfaTLROb0I4Ia0JzHQxvQzOT9SFn5GaSPuLowqiZKT
+        BGgZr1EJ6DsFBI9NzRzlXDzUyI7oFVM=
+Date:   Fri, 15 Nov 2019 16:39:13 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v2 06/16] x86/cpu: Clear VMX feature flag if VMX is not
+ fully enabled
+Message-ID: <20191115153913.GL18929@zn.tnic>
+References: <20191021234632.32363-1-sean.j.christopherson@intel.com>
+ <20191022000836.1907-1-sean.j.christopherson@intel.com>
+ <20191025163858.GF6483@zn.tnic>
+ <20191114183238.GH24045@linux.intel.com>
+ <5aacaba0-76e2-9824-ebd4-fa510bce712d@redhat.com>
+ <20191115103434.GH18929@zn.tnic>
+ <20191115153416.GA6055@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191115153416.GA6055@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019, Andrey Konovalov wrote:
-
-> USB Raw Gadget is a kernel module that provides a userspace interface for
-> the USB Gadget subsystem. Essentially it allows to emulate USB devices
-> from userspace. Enabled with CONFIG_USB_RAW_GADGET. Raw Gadget is
-> currently a strictly debugging feature and shouldn't be used in
-> production.
+On Fri, Nov 15, 2019 at 07:34:16AM -0800, Sean Christopherson wrote:
+> On Fri, Nov 15, 2019 at 11:34:34AM +0100, Borislav Petkov wrote:
+> > Btw, Sean, are you sending a new version of this ontop of latest
+> > tip/master or linux-next or so? I'd like to look at the rest of the bits
+> > in detail.
 > 
-> Raw Gadget is similar to GadgetFS, but provides a more low-level and
-> direct access to the USB Gadget layer for the userspace. The key
-> differences are:
-> 
-> 1. Every USB request is passed to the userspace to get a response, while
->    GadgetFS responds to some USB requests internally based on the provided
->    descriptors. However note, that the UDC driver might respond to some
->    requests on its own and never forward them to the Gadget layer.
-> 
-> 2. GadgetFS performs some sanity checks on the provided USB descriptors,
->    while Raw Gadget allows you to provide arbitrary data as responses to
->    USB requests.
-> 
-> 3. Raw Gadget provides a way to select a UDC device/driver to bind to,
->    while GadgetFS currently binds to the first available UDC.
-> 
-> 4. Raw Gadget uses predictable endpoint names (handles) across different
->    UDCs (as long as UDCs have enough endpoints of each required transfer
->    type).
-> 
-> 5. Raw Gadget has ioctl-based interface instead of a filesystem-based one.
+> Sure, I'll rebase and get a new version sent out today.
 
-...
+Thanks!
 
-> --- /dev/null
-> +++ b/Documentation/usb/raw-gadget.rst
+-- 
+Regards/Gruss,
+    Boris.
 
-> +Userspace interface
-> +~~~~~~~~~~~~~~~~~~~
-> +
-> +To create a Raw Gadget instance open /sys/kernel/debug/usb/raw-gadget
-> +(debugfs should be enabled and mounted). Multiple raw-gadget instances
-
-Looks like the documentation hasn't kept up with the more recent 
-changes to the driver.
-
-> --- /dev/null
-> +++ b/drivers/usb/gadget/legacy/raw.c
-> @@ -0,0 +1,1057 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * USB Raw Gadget driver.
-> + * See Documentation/usb/raw-gadget.rst for more details.
-> + *
-> + * Andrey Konovalov <andreyknvl@gmail.com>
-> + */
-> +
-> +#define pr_fmt(fmt) "raw: %s: " fmt, __func__
-
-This macro isn't used anywhere now.
-
-Alan Stern
-
+https://people.kernel.org/tglx/notes-about-netiquette
