@@ -2,168 +2,89 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E48C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202ECC33C99
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 887F320748
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E53EE2072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:59:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=c0d3.blue header.i=@c0d3.blue header.b="O8JtRdnt"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EICh4fBD";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EICh4fBD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfKOK4f (ORCPT
+        id S1727254AbfKOK7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:56:35 -0500
-Received: from mail.aperture-lab.de ([138.201.29.205]:33618 "EHLO
-        mail.aperture-lab.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727112AbfKOK4f (ORCPT
+        Fri, 15 Nov 2019 05:59:31 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:34020 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbfKOK7a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:56:35 -0500
-From:   =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c0d3.blue; s=2018;
-        t=1573815392;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=uBJc7hcajP8FEHgdeBWBaFOQbOLebSdyenmlOi0uYxA=;
-        b=O8JtRdntbEJURgpdD6MrUYkKYQYwyHbUNpMTSGs9rE8JbGfernDCI6mD8fKb2qukSC1FV+
-        ZBXt7Q/srnvMlQgQjZJgpve874drG5Y+k+G4+PVDhmURl/Jo+jaSTMbMrD0KjtuUDHEYHh
-        ZKetoahkmkKWGOetJK43EZreuRZdLVY11wn4wRwkDOllSrY9PB1JiuwiqcSNLiiOUskzQX
-        rMLmWk488ReuJm3Pd94UBJO6jGQxQU+IPi/pZvXUcujJHMd975fmw/U8JCBCyFsOZTta1S
-        s4AqP3D9GqvllPahTJ5SjYTu8+2trJeD+SfM4rbfGhKFPwgy6uqwDqLIhUZAiw==
-To:     ath10k@lists.infradead.org
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ben Greear <greearb@candelatech.com>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Linus=20L=C3=BCssing?= <ll@simonwunderlich.de>
-Subject: [PATCH net-next v2] ath10k: fix RX of frames with broken FCS in monitor mode
-Date:   Fri, 15 Nov 2019 11:56:12 +0100
-Message-Id: <20191115105612.8531-1-linus.luessing@c0d3.blue>
+        Fri, 15 Nov 2019 05:59:30 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id CBFD460721; Fri, 15 Nov 2019 10:59:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573815569;
+        bh=0Nah58GSAL88/uY+EvDDspGeElq/PM1FdgvLNEhSmgM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=EICh4fBD/b47qTIbJtdh6NYjYw8tR5Z47oZUBPlzmzHjRu9yA7bAICp62mGMKCViR
+         b/3q4ZKiKPSWucVY2LpmrVpHA6TDNs0nEhbaOg0UNW6XWIPkzWVYy2NlEuAWzIPtFp
+         radf5HVJ/eG9M7UyWa0D7Rxs+8H1A/EwTGsoq+Mc=
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 78443602EF;
+        Fri, 15 Nov 2019 10:59:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573815569;
+        bh=0Nah58GSAL88/uY+EvDDspGeElq/PM1FdgvLNEhSmgM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=EICh4fBD/b47qTIbJtdh6NYjYw8tR5Z47oZUBPlzmzHjRu9yA7bAICp62mGMKCViR
+         b/3q4ZKiKPSWucVY2LpmrVpHA6TDNs0nEhbaOg0UNW6XWIPkzWVYy2NlEuAWzIPtFp
+         radf5HVJ/eG9M7UyWa0D7Rxs+8H1A/EwTGsoq+Mc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 78443602EF
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH 0/2] Rename LLCC cache-controller to system-cache-controller
+Date:   Fri, 15 Nov 2019 16:29:10 +0530
+Message-Id: <cover.1573814758.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=c0d3.blue;
-        s=2018; t=1573815392;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=uBJc7hcajP8FEHgdeBWBaFOQbOLebSdyenmlOi0uYxA=;
-        b=MMfU0F89mh6EF+HRdjK7Qm9SsszXQXVQH8OEu8xiT+nDw+d9FYqeftHJDPdGVEAMmGhtXn
-        DYZYpjaQBlvZQOq2ue58DttUqGzKqsRIzNVf/lhFFxwBO3OCfbJQ2MgyCPeS+OqRLEvINB
-        q6b9N+hiNtFCKSZBAeMZDqgwkskCfB818bY/9SpdlaWg7m3CEmOXde+8CPyGqgGv5Alfwh
-        2kxFDq4STya73izPJ4XvnJTDwvpE8X/dTpQgYT9EmlGbwWknIJHDg3NATzVGwI6KdVnt1C
-        ImvCic5cn0NWp9LGRtcwkGcOt9QwEmR7dCPqu/ciBtlxnU3q8enPdY7NliXA6Q==
-ARC-Seal: i=1; s=2018; d=c0d3.blue; t=1573815392; a=rsa-sha256; cv=none;
-        b=KUUWM6vRn3AtzkRE3UM7xMjLNEdf9BrkiLXVJ5fDdPnyYR20R+KkU3mtbapdbMrLqKNQ+A
-        rrKNIglcXVdWorWhmSnuQExegzNsHXPerTiTBPPkBxgvieE5NtfSCVRwMua7qRYMf2iapg
-        M2xPM2k46UdQvoNDdSpT6DOLj+d7RD7wRlwrRGKjbaglBmUiGKwGfHrtLPsnK07nPvY/BI
-        ChcGcHcCDTRAawEBP1Y1hl5I2CI0K3dj0m3xwFsmAKyocvesfLDAwROkvcozB0I0KYVLsS
-        qxp6SrGcWbPYl1J1jpTveKCJ6wkVR9D4tmtvghVtEw69M8HxfE4rLzpenq5GHQ==
-ARC-Authentication-Results: i=1;
-        ORIGINATING;
-        auth=pass smtp.auth=linus.luessing@c0d3.blue smtp.mailfrom=linus.luessing@c0d3.blue
-Authentication-Results: ORIGINATING;
-        auth=pass smtp.auth=linus.luessing@c0d3.blue smtp.mailfrom=linus.luessing@c0d3.blue
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Lüssing <ll@simonwunderlich.de>
+DT schema checks for the node name 'cache-controller' and enforces
+that there has to be a cache-level associated with it. But LLCC is
+a system cache and does not have a cache-level property and hence
+the dt binding check fails. So let us rename the LLCC cache-controller
+to system-cache-controller which is the proper description and also
+makes the schema happy.
 
-So far, frames were forwarded regardless of the FCS correctness leading
-to userspace applications listening on the monitor mode interface to
-receive potentially broken frames, even with the "fcsfail" flag unset.
+Sai Prakash Ranjan (2):
+  dt-bindings: msm: Rename cache-controller to system-cache-controller
+  arm64: dts: sdm845: Update the device tree node for LLCC
 
-By default, with the "fcsfail" flag of a monitor mode interface
-unset, frames with FCS errors should be dropped. With this patch, the
-fcsfail flag is taken into account correctly.
+ Documentation/devicetree/bindings/arm/msm/qcom,llcc.yaml | 2 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi                     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Cc: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Linus Lüssing <ll@simonwunderlich.de>
----
-This was tested on an Open Mesh A41 device, featuring a QCA4019. And
-with this firmware:
-
-https://www.candelatech.com/downloads/ath10k-4019-10-4b/firmware-5-ct-full-community-12.bin-lede.011
-
-But from looking at the code it seems that the vanilla ath10k has the
-same issue, therefore submitting it here.
-
-Changelog v2:
-
-* removed the spinlock as only a 32 bit statistics counter is
-  incremented
-
-Changelog RFC->v1:
-
-* removed "ar->monitor" check
-* added a debug counter
-
----
-
- drivers/net/wireless/ath/ath10k/core.h   | 1 +
- drivers/net/wireless/ath/ath10k/debug.c  | 2 ++
- drivers/net/wireless/ath/ath10k/htt_rx.c | 7 +++++++
- 3 files changed, 10 insertions(+)
-
-diff --git a/drivers/net/wireless/ath/ath10k/core.h b/drivers/net/wireless/ath/ath10k/core.h
-index af68eb5d0776..d445482fa945 100644
---- a/drivers/net/wireless/ath/ath10k/core.h
-+++ b/drivers/net/wireless/ath/ath10k/core.h
-@@ -1180,6 +1180,7 @@ struct ath10k {
- 
- 	struct {
- 		/* protected by data_lock */
-+		u32 rx_crc_err_drop;
- 		u32 fw_crash_counter;
- 		u32 fw_warm_reset_counter;
- 		u32 fw_cold_reset_counter;
-diff --git a/drivers/net/wireless/ath/ath10k/debug.c b/drivers/net/wireless/ath/ath10k/debug.c
-index bd2b5628f850..5e4cd2966e6f 100644
---- a/drivers/net/wireless/ath/ath10k/debug.c
-+++ b/drivers/net/wireless/ath/ath10k/debug.c
-@@ -1094,6 +1094,7 @@ static const char ath10k_gstrings_stats[][ETH_GSTRING_LEN] = {
- 	"d_rts_good",
- 	"d_tx_power", /* in .5 dbM I think */
- 	"d_rx_crc_err", /* fcs_bad */
-+	"d_rx_crc_err_drop", /* frame with FCS error, dropped late in kernel */
- 	"d_no_beacon",
- 	"d_tx_mpdus_queued",
- 	"d_tx_msdu_queued",
-@@ -1193,6 +1194,7 @@ void ath10k_debug_get_et_stats(struct ieee80211_hw *hw,
- 	data[i++] = pdev_stats->rts_good;
- 	data[i++] = pdev_stats->chan_tx_power;
- 	data[i++] = pdev_stats->fcs_bad;
-+	data[i++] = ar->stats.rx_crc_err_drop;
- 	data[i++] = pdev_stats->no_beacons;
- 	data[i++] = pdev_stats->mpdu_enqued;
- 	data[i++] = pdev_stats->msdu_enqued;
-diff --git a/drivers/net/wireless/ath/ath10k/htt_rx.c b/drivers/net/wireless/ath/ath10k/htt_rx.c
-index 9f0e7b4943ec..8139c9cea1d8 100644
---- a/drivers/net/wireless/ath/ath10k/htt_rx.c
-+++ b/drivers/net/wireless/ath/ath10k/htt_rx.c
-@@ -1285,6 +1285,13 @@ static void ath10k_process_rx(struct ath10k *ar, struct sk_buff *skb)
- 
- 	status = IEEE80211_SKB_RXCB(skb);
- 
-+	if (!(ar->filter_flags & FIF_FCSFAIL) &&
-+	    status->flag & RX_FLAG_FAILED_FCS_CRC) {
-+		ar->stats.rx_crc_err_drop++;
-+		dev_kfree_skb_any(skb);
-+		return;
-+	}
-+
- 	ath10k_dbg(ar, ATH10K_DBG_DATA,
- 		   "rx skb %pK len %u peer %pM %s %s sn %u %s%s%s%s%s%s %srate_idx %u vht_nss %u freq %u band %u flag 0x%x fcs-err %i mic-err %i amsdu-more %i\n",
- 		   skb,
 -- 
-2.24.0.rc2
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
