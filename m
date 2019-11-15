@@ -2,198 +2,216 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDCDC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB220C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B81E20740
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:50:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQ3k97Ty"
+	by mail.kernel.org (Postfix) with ESMTP id 848D820730
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:52:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727721AbfKOOuW (ORCPT
+        id S1727590AbfKOOwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 09:50:22 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:34128 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727696AbfKOOuU (ORCPT
+        Fri, 15 Nov 2019 09:52:36 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:51981 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727380AbfKOOwg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 09:50:20 -0500
-Received: by mail-qt1-f194.google.com with SMTP id i17so11075798qtq.1
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 06:50:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=YQCIqL5y28pGcNIFaNUGqzaYgtdMvLUzkvVu9y+m5BE=;
-        b=DQ3k97TyXzeDy11z4/P/HF3S0AFe8inV8wtl2V5PDTv105+4INXCmpMK68riz+KwOF
-         47fQGSq+essXFPCkg0p0SBpf+I8u9N6aOgX76JzDmi0Qft+nTDwxth9c4sSXuqmBo6/8
-         LaM2Gmz+9CbsQzzDXCBPvSwfuNe1NoCOpitBQ+ztK2P/VOoVkiwlIDR2DnAwNpTepPk5
-         mQxuerdyCimRZGhjch0eD9+Q64MjRhJ88qMqJ8jxNqseaKIcnoByHw15XhHCu+F6fye6
-         DwFy2z5n4YrfaorRn4W7PQhN0yxSeiPzscmUItpoo1WidyyapC1eDl9FHCnFqhVbxC4F
-         bb7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=YQCIqL5y28pGcNIFaNUGqzaYgtdMvLUzkvVu9y+m5BE=;
-        b=XF/L0tETimFinqbonMSSM6/96bWML4C+Fwmu7sugDOFDmu7ol0a++v/WWc6VYMFoig
-         AzRKHpaAm8DdJiVn+VbV/jPJ1EnpiVszDkvsv7OC1rV6Clin4HkPiFnKDO1+e2h6RhgK
-         yslXpCl8gB6CA59bm1/LyXGZ9SvEoT/tRnF4NB6coJaKBeOJL5+JTEe7QLiWdCgHrVR3
-         CdUjJxIbPmpLhhANlNiW9q5sW97X9j5hY8wvlzemTqYrTIl9RzWkSy76fk3Q4ohhW0lf
-         TVQmZlpHGNMcLQnL4ShnLiK6CVyYovatiU3NYgTJ3+V2y4zg1McxRvU7cmWz/xFSmxsy
-         Z0Og==
-X-Gm-Message-State: APjAAAVS0FaYAP0bKw7NHagITc94XF3nu7l3xZEsDLxclDOAEVEb5Y+P
-        A5zklGWNHgQxzLnwPu9GVA==
-X-Google-Smtp-Source: APXvYqxVjhQYrmKp7KrC8+DiBT0Vbq5P6YPJjnx5ZlfTRIYCn/K/vEnfbqXS4tKkFcixz6X8V8HOsg==
-X-Received: by 2002:ac8:76d6:: with SMTP id q22mr4400229qtr.8.1573829418742;
-        Fri, 15 Nov 2019 06:50:18 -0800 (PST)
-Received: from gabell.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id l124sm4329317qkf.122.2019.11.15.06.50.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 06:50:18 -0800 (PST)
-From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Baoquan He <bhe@redhat.com>
-Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 4/4] x86/mm/KASLR: Adjust the padding size for the direct mapping.
-Date:   Fri, 15 Nov 2019 09:49:17 -0500
-Message-Id: <20191115144917.28469-5-msys.mizuma@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191115144917.28469-1-msys.mizuma@gmail.com>
-References: <20191115144917.28469-1-msys.mizuma@gmail.com>
+        Fri, 15 Nov 2019 09:52:36 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xAFEqHBg010614, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCAS12.realtek.com.tw[172.21.6.16])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xAFEqHBg010614
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 Nov 2019 22:52:17 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTITCAS12.realtek.com.tw (172.21.6.16) with Microsoft SMTP Server (TLS) id
+ 14.3.468.0; Fri, 15 Nov 2019 22:52:17 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 15 Nov 2019 22:52:16 +0800
+Received: from RTEXMB03.realtek.com.tw ([::1]) by RTEXMB03.realtek.com.tw
+ ([fe80::3d7d:f7db:e1fb:307b%12]) with mapi id 15.01.1779.005; Fri, 15 Nov
+ 2019 22:52:16 +0800
+From:   James Tai <james.tai@realtek.com>
+To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "'DTML'" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>
+Subject: RE: [PATCH v3 2/2] arm64: dts: realtek: Add RTD1619 SoC and Realtek Mjolnir EVB
+Thread-Topic: [PATCH v3 2/2] arm64: dts: realtek: Add RTD1619 SoC and Realtek
+ Mjolnir EVB
+Thread-Index: AdWZPm2tRLsPwxTXS12xPqXOk/yn2wA93OMAAGNK7sA=
+Date:   Fri, 15 Nov 2019 14:52:16 +0000
+Message-ID: <fbc4dee61c2547458fa0791f38abaed2@realtek.com>
+References: <73fb8106ec1a4665b59a2d187a576b71@realtek.com>
+ <9cadb78c-99af-8948-e76f-c26f263693b3@suse.de>
+In-Reply-To: <9cadb78c-99af-8948-e76f-c26f263693b3@suse.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [114.37.161.94]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
-
-The system sometimes crashes while memory hot-adding on KASLR
-enabled system. The crash happens because the regions pointed by
-kaslr_regions[].base are overwritten by the hot-added memory.
-
-It happens because of the padding size for kaslr_regions[].base isn't
-enough for the system whose physical memory layout has huge space for
-memory hotplug. kaslr_regions[].base points "actual installed
-memory size + padding" or higher address. So, if the "actual + padding"
-is lower address than the maximum memory address, which means the memory
-address reachable by memory hot-add, kaslr_regions[].base is destroyed by
-the overwritten.
-
-  address
-    ^
-    |------- maximum memory address (Hotplug)
-    |                                    ^
-    |------- kaslr_regions[0].base       | Hotadd-able region
-    |     ^                              |
-    |     | padding                      |
-    |     V                              V
-    |------- actual memory address (Installed on boot)
-    |
-
-Fix it by getting the maximum memory address from SRAT and store
-the value in boot_param, then set the padding size while KASLR
-initializing if the default padding size isn't enough.
-
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
----
- arch/x86/mm/kaslr.c | 57 +++++++++++++++++++++++++++++++++------------
- 1 file changed, 42 insertions(+), 15 deletions(-)
-
-diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
-index dc6182eecefa..1f0aa9e68226 100644
---- a/arch/x86/mm/kaslr.c
-+++ b/arch/x86/mm/kaslr.c
-@@ -70,15 +70,52 @@ static inline bool kaslr_memory_enabled(void)
- 	return kaslr_enabled() && !IS_ENABLED(CONFIG_KASAN);
- }
- 
-+/*
-+ * Even though a huge virtual address space is reserved for the direct
-+ * mapping of physical memory, e.g in 4-level paging mode, it's 64TB,
-+ * rare system can own enough physical memory to use it up, most are
-+ * even less than 1TB. So with KASLR enabled, we adapt the size of
-+ * direct mapping area to the size of actual physical memory plus the
-+ * configured padding CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING.
-+ * The left part will be taken out to join memory randomization.
-+ */
-+static inline unsigned long calc_direct_mapping_size(void)
-+{
-+	unsigned long size_tb, memory_tb;
-+
-+	memory_tb = DIV_ROUND_UP(max_pfn << PAGE_SHIFT, 1UL << TB_SHIFT) +
-+		CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING;
-+
-+#ifdef CONFIG_MEMORY_HOTPLUG
-+	if (boot_params.max_addr) {
-+		unsigned long maximum_tb;
-+
-+		maximum_tb = DIV_ROUND_UP(boot_params.max_addr,
-+				1UL << TB_SHIFT);
-+
-+		if (maximum_tb > memory_tb)
-+			memory_tb = maximum_tb;
-+	}
-+#endif
-+	size_tb = 1 << (MAX_PHYSMEM_BITS - TB_SHIFT);
-+
-+	/*
-+	 * Adapt physical memory region size based on available memory
-+	 */
-+	if (memory_tb < size_tb)
-+		size_tb = memory_tb;
-+
-+	return size_tb;
-+}
-+
- /* Initialize base and padding for each memory region randomized with KASLR */
- void __init kernel_randomize_memory(void)
- {
--	size_t i;
--	unsigned long vaddr_start, vaddr;
--	unsigned long rand, memory_tb;
--	struct rnd_state rand_state;
-+	unsigned long vaddr_start, vaddr, rand;
- 	unsigned long remain_entropy;
- 	unsigned long vmemmap_size;
-+	struct rnd_state rand_state;
-+	size_t i;
- 
- 	vaddr_start = pgtable_l5_enabled() ? __PAGE_OFFSET_BASE_L5 : __PAGE_OFFSET_BASE_L4;
- 	vaddr = vaddr_start;
-@@ -95,20 +132,10 @@ void __init kernel_randomize_memory(void)
- 	if (!kaslr_memory_enabled())
- 		return;
- 
--	kaslr_regions[0].size_tb = 1 << (MAX_PHYSMEM_BITS - TB_SHIFT);
-+	kaslr_regions[0].size_tb = calc_direct_mapping_size();
- 	kaslr_regions[1].size_tb = VMALLOC_SIZE_TB;
- 
--	/*
--	 * Update Physical memory mapping to available and
--	 * add padding if needed (especially for memory hotplug support).
--	 */
- 	BUG_ON(kaslr_regions[0].base != &page_offset_base);
--	memory_tb = DIV_ROUND_UP(max_pfn << PAGE_SHIFT, 1UL << TB_SHIFT) +
--		CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING;
--
--	/* Adapt phyiscal memory region size based on available memory */
--	if (memory_tb < kaslr_regions[0].size_tb)
--		kaslr_regions[0].size_tb = memory_tb;
- 
- 	/*
- 	 * Calculate the vmemmap region size in TBs, aligned to a TB
--- 
-2.20.1
-
+PiA+IEFkZCBEZXZpY2UgVHJlZXMgZm9yIFJlYWx0ZWsgUlREMTYxOSBTb0MgZmFtaWx5LCBSVEQx
+NjE5IFNvQyBhbmQNCj4gPiBSZWFsdGVrIE1qb2xuaXIgRVZCLg0KPiA+DQo+ID4gU2lnbmVkLW9m
+Zi1ieTogSmFtZXMgVGFpIDxqYW1lcy50YWlAcmVhbHRlay5jb20+DQo+ID4gLS0tDQo+IA0KPiBM
+YWNraW5nIHRoZSByZXF1ZXN0ZWQgY2hhbmdlbG9nLg0KPiANCj4gPiAgYXJjaC9hcm02NC9ib290
+L2R0cy9yZWFsdGVrL01ha2VmaWxlICAgICAgICAgIHwgICAyICsNCj4gPiAgLi4uL2Jvb3QvZHRz
+L3JlYWx0ZWsvcnRkMTYxOS1tam9sbmlyLmR0cyAgICAgIHwgIDQwICsrKysrDQo+ID4gIGFyY2gv
+YXJtNjQvYm9vdC9kdHMvcmVhbHRlay9ydGQxNjE5LmR0c2kgICAgICB8ICAxMiArKw0KPiA+ICBh
+cmNoL2FybTY0L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTZ4eC5kdHNpICAgICAgfCAxNjMNCj4gKysr
+KysrKysrKysrKysrKysrDQo+ID4gIDQgZmlsZXMgY2hhbmdlZCwgMjE3IGluc2VydGlvbnMoKykN
+Cj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMvcmVhbHRlay9ydGQx
+NjE5LW1qb2xuaXIuZHRzDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3Qv
+ZHRzL3JlYWx0ZWsvcnRkMTYxOS5kdHNpDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2Fy
+bTY0L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTZ4eC5kdHNpDQo+IA0KPiBTb21laG93IHRoZSBsYXN0
+IGh1bmsgKHJ0ZDE2eHguZHRzaSkgZGlkbid0IGFwcGx5IHdpdGggZ2l0LWFtIG9yIHBhdGNoIC1w
+MSwgbm90DQo+IHN1cmUgd2h5LiBJIGhhdmUgbWFudWFsbHkgY29waWVkIHRoZSBmaWxlIGludG8g
+cGxhY2UgYW5kIGZpeGVkIHVwIHNvbWUgbW9yZQ0KPiBuaXRzIGJlbG93Og0KPiANCj4gPg0KPiA+
+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlYWx0ZWsvTWFrZWZpbGUNCj4gPiBi
+L2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVhbHRlay9NYWtlZmlsZQ0KPiA+IGluZGV4IDU1NTYzOGFk
+YTcyMS4uZmI1ZjA1OTc4ZWNjIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
+cmVhbHRlay9NYWtlZmlsZQ0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVhbHRlay9N
+YWtlZmlsZQ0KPiA+IEBAIC03LDMgKzcsNSBAQCBkdGItJChDT05GSUdfQVJDSF9SRUFMVEVLKSAr
+PQ0KPiBydGQxMjk1LXByb2JveDItYXZhLmR0Yg0KPiA+ICBkdGItJChDT05GSUdfQVJDSF9SRUFM
+VEVLKSArPSBydGQxMjk1LXppZG9vLXg5cy5kdGINCj4gPg0KPiA+ICBkdGItJChDT05GSUdfQVJD
+SF9SRUFMVEVLKSArPSBydGQxMjk2LWRzNDE4LmR0Yg0KPiA+ICsNCj4gPiArZHRiLSQoQ09ORklH
+X0FSQ0hfUkVBTFRFSykgKz0gcnRkMTYxOS1tam9sbmlyLmR0Yg0KPiA+IGRpZmYgLS1naXQgYS9h
+cmNoL2FybTY0L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTYxOS1tam9sbmlyLmR0cw0KPiA+IGIvYXJj
+aC9hcm02NC9ib290L2R0cy9yZWFsdGVrL3J0ZDE2MTktbWpvbG5pci5kdHMNCj4gPiBuZXcgZmls
+ZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uNmFiNzkxYWYzODk2DQo+ID4g
+LS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVhbHRlay9ydGQx
+NjE5LW1qb2xuaXIuZHRzDQo+ID4gQEAgLTAsMCArMSw0MCBAQA0KPiA+ICsvLyBTUERYLUxpY2Vu
+c2UtSWRlbnRpZmllcjogKEdQTC0yLjAtb3ItbGF0ZXIgT1IgQlNELTItQ2xhdXNlKQ0KPiA+ICsv
+Kg0KPiA+ICsgKiBDb3B5cmlnaHQgKGMpIDIwMTkgUmVhbHRlayBTZW1pY29uZHVjdG9yIENvcnAu
+DQo+ID4gKyAqLw0KPiA+ICsNCj4gPiArL2R0cy12MS87DQo+ID4gKw0KPiA+ICsjaW5jbHVkZSAi
+cnRkMTYxOS5kdHNpIg0KPiA+ICsNCj4gPiArLyB7DQo+ID4gKwljb21wYXRpYmxlID0gInJlYWx0
+ZWsscnRkMTYxOSIsICJyZWFsdGVrLG1qb2xuaXIiOw0KPiANCj4gT3JkZXIgbm90IGZpeGVkIGZy
+b20gdjIuIFRoaXMgaXMgYSBzY2hlbWEgdmlvbGF0aW9uIGFuZCBsb2dpY2FsbHkgd3JvbmcuDQo+
+IA0KPiA+ICsJbW9kZWw9ICJSZWFsdGVrIE1qb2xuaXIgRVZCIjsNCj4gDQo+IFNwYWNlIG1pc3Np
+bmcgYmVmb3JlID0uIE1pc3NlZCB0aGF0IGluIHYyLg0KPiANCj4gPiArDQo+ID4gKwltZW1vcnlA
+MCB7DQo+ID4gKwkJZGV2aWNlX3R5cGUgPSAibWVtb3J5IjsNCj4gPiArCQlyZWcgPSA8MHgwIDB4
+ODAwMDAwMDA+Ow0KPiA+ICsJfTsNCj4gPiArDQo+ID4gKwljaG9zZW4gew0KPiA+ICsJCXN0ZG91
+dC1wYXRoID0gInNlcmlhbDA6MTE1MjAwbjgiOw0KPiA+ICsJfTsNCj4gPiArDQo+ID4gKwlhbGlh
+c2VzIHsNCj4gPiArCQlzZXJpYWwwID0gJnVhcnQwOyAvKiBUaGUgVUFSVDAgaXMgZGVidWcgY29u
+c29sZSAqLw0KPiA+ICsJCXNlcmlhbDEgPSAmdWFydDE7IC8qIFRoZSBVQVJUMSBpcyBvbiBNLjIg
+c2xvdCAqLw0KPiA+ICsJCXNlcmlhbDIgPSAmdWFydDI7IC8qIFRoZSBVQVJUMiBpcyBvbiBHUElP
+IGNvbm5lY3RvciAqLw0KPiA+ICsJfTsNCj4gPiArfTsNCj4gPiArDQo+ID4gKyZ1YXJ0MCB7DQo+
+ID4gKwlzdGF0dXMgPSAib2theSI7DQo+ID4gK307DQo+ID4gKw0KPiA+ICsmdWFydDEgew0KPiA+
+ICsJc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPiArfTsNCj4gPiArDQo+ID4gKyZ1YXJ0MiB7DQo+
+ID4gKwlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICt9Ow0KPiANCj4gVGhlIGNvbW1lbnRzIHdl
+cmUgaW50ZW5kZWQgdG8gZ28gYWJvdmUgZWFjaCBub2RlLCBub3QgYWZ0ZXIgdGhlIGFsaWFzZXMu
+DQo+IEkndmUgdGFrZW4gdGhlIGxpYmVydHkgdG8gYW5ub3RhdGUgdGhlbSBmdXJ0aGVyIHdpdGgg
+dGhlaXIgUENCIGxhYmVsLg0KPiANCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0
+cy9yZWFsdGVrL3J0ZDE2MTkuZHRzaQ0KPiA+IGIvYXJjaC9hcm02NC9ib290L2R0cy9yZWFsdGVr
+L3J0ZDE2MTkuZHRzaQ0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAw
+MDAwMDAwLi5lNTJiZjcwOGIwNGUNCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvYXJjaC9h
+cm02NC9ib290L2R0cy9yZWFsdGVrL3J0ZDE2MTkuZHRzaQ0KPiA+IEBAIC0wLDAgKzEsMTIgQEAN
+Cj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wLW9yLWxhdGVyIE9SIEJT
+RC0yLUNsYXVzZSkNCj4gPiArLyoNCj4gPiArICogUmVhbHRlayBSVEQxNjE5IFNvQw0KPiA+ICsg
+Kg0KPiA+ICsgKiBDb3B5cmlnaHQgKGMpIDIwMTkgUmVhbHRlayBTZW1pY29uZHVjdG9yIENvcnAu
+DQo+ID4gKyAqLw0KPiA+ICsNCj4gPiArI2luY2x1ZGUgInJ0ZDE2eHguZHRzaSINCj4gPiArDQo+
+ID4gKy8gew0KPiA+ICsJY29tcGF0aWJsZSA9ICJyZWFsdGVrLHJ0ZDE2MTkiOw0KPiA+ICt9Ow0K
+PiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTZ4eC5kdHNp
+DQo+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTZ4eC5kdHNpDQo+ID4gbmV3
+IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLmQ5YjU3MmE4NzBmNQ0K
+PiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlYWx0ZWsv
+cnRkMTZ4eC5kdHNpDQo+ID4gQEAgLTAsMCArMSwxNjMgQEANCj4gPiArLy8gU1BEWC1MaWNlbnNl
+LUlkZW50aWZpZXI6IChHUEwtMi4wLW9yLWxhdGVyIE9SIEJTRC0yLUNsYXVzZSkNCj4gPiArLyoN
+Cj4gPiArICogUmVhbHRlayBSVEQxNnh4IFNvQyBmYW1pbHkNCj4gPiArICoNCj4gPiArICogQ29w
+eXJpZ2h0IChjKSAyMDE5IFJlYWx0ZWsgU2VtaWNvbmR1Y3RvciBDb3JwLg0KPiA+ICsgKi8NCj4g
+PiArDQo+ID4gKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9hcm0t
+Z2ljLmg+DQo+ID4gKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9p
+cnEuaD4NCj4gPiArDQo+ID4gKy97DQo+IA0KPiBTcGFjZSBtaXNzaW5nLiBNaXNzZWQgdGhhdCBp
+biB2Mi4NCj4gDQo+ID4gKwlpbnRlcnJ1cHQtcGFyZW50ID0gPCZnaWM+Ow0KPiA+ICsJI2FkZHJl
+c3MtY2VsbHMgPSA8MT47DQo+ID4gKwkjc2l6ZS1jZWxscyA9IDwxPjsNCj4gPiArDQo+ID4gKwlj
+cHVzIHsNCj4gPiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiArCQkjc2l6ZS1jZWxscyA9
+IDwwPjsNCj4gPiArDQo+ID4gKwkJY3B1MDogY3B1QDAgew0KPiA+ICsJCQlkZXZpY2VfdHlwZSA9
+ICJjcHUiOw0KPiA+ICsJCQljb21wYXRpYmxlID0gImFybSxjb3J0ZXgtYTU1IjsNCj4gPiArCQkJ
+cmVnID0gPDB4MD47DQo+ID4gKwkJCWVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQo+ID4gKwkJCW5l
+eHQtbGV2ZWwtY2FjaGUgPSA8JmwyPjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQljcHUxOiBj
+cHVAMTAwIHsNCj4gPiArCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCj4gPiArCQkJY29tcGF0aWJs
+ZSA9ICJhcm0sY29ydGV4LWE1NSI7DQo+ID4gKwkJCXJlZyA9IDwweDEwMD47DQo+ID4gKwkJCWVu
+YWJsZS1tZXRob2QgPSAicHNjaSI7DQo+ID4gKwkJCW5leHQtbGV2ZWwtY2FjaGUgPSA8JmwzPjsN
+Cj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQljcHUyOiBjcHVAMjAwIHsNCj4gPiArCQkJZGV2aWNl
+X3R5cGUgPSAiY3B1IjsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE1NSI7DQo+
+ID4gKwkJCXJlZyA9IDwweDIwMD47DQo+ID4gKwkJCWVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQo+
+ID4gKwkJCW5leHQtbGV2ZWwtY2FjaGUgPSA8JmwzPjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiAr
+CQljcHUzOiBjcHVAMzAwIHsNCj4gPiArCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCj4gPiArCQkJ
+Y29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE1NSI7DQo+ID4gKwkJCXJlZyA9IDwweDMwMD47DQo+
+ID4gKwkJCWVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQo+ID4gKwkJCW5leHQtbGV2ZWwtY2FjaGUg
+PSA8JmwzPjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQljcHU0OiBjcHVANDAwIHsNCj4gPiAr
+CQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4
+LWE1NSI7DQo+ID4gKwkJCXJlZyA9IDwweDQwMD47DQo+ID4gKwkJCWVuYWJsZS1tZXRob2QgPSAi
+cHNjaSI7DQo+ID4gKwkJCW5leHQtbGV2ZWwtY2FjaGUgPSA8JmwzPjsNCj4gPiArCQl9Ow0KPiA+
+ICsNCj4gPiArCQljcHU1OiBjcHVANTAwIHsNCj4gPiArCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsN
+Cj4gPiArCQkJY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE1NSI7DQo+ID4gKwkJCXJlZyA9IDww
+eDUwMD47DQo+ID4gKwkJCWVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQo+ID4gKwkJCW5leHQtbGV2
+ZWwtY2FjaGUgPSA8JmwzPjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQlsMjogbDItY2FjaGUg
+ew0KPiA+ICsJCQljb21wYXRpYmxlID0gImNhY2hlIjsNCj4gPiArCQkJbmV4dC1sZXZlbC1jYWNo
+ZSA9IDwmbDM+Ow0KPiA+ICsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQlsMzogbDMtY2FjaGUg
+ew0KPiA+ICsJCQljb21wYXRpYmxlID0gImNhY2hlIjsNCj4gPiArCQl9Ow0KPiA+ICsJfTsNCj4g
+PiArDQo+ID4gKwl0aW1lciB7DQo+ID4gKwkJY29tcGF0aWJsZSA9ICJhcm0sYXJtdjgtdGltZXIi
+Ow0KPiA+ICsJCWludGVycnVwdHMgPSA8R0lDX1BQSSAxMyBJUlFfVFlQRV9MRVZFTF9MT1c+LA0K
+PiA+ICsJCQkgICAgIDxHSUNfUFBJIDE0IElSUV9UWVBFX0xFVkVMX0xPVz4sDQo+ID4gKwkJCSAg
+ICAgPEdJQ19QUEkgMTEgSVJRX1RZUEVfTEVWRUxfTE9XPiwNCj4gPiArCQkJICAgICA8R0lDX1BQ
+SSAxMCBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KPiA+ICsJfTsNCj4gPiArDQo+ID4gKwlhcm1fcG11
+OiBwbXUgew0KPiA+ICsJCWNvbXBhdGlibGUgPSAiYXJtLGFybXY4LXBtdXYzIjsNCj4gPiArCQlp
+bnRlcnJ1cHRzID0gPEdJQ19QUEkgNyBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KPiA+ICsJfTsNCj4g
+PiArDQo+ID4gKwlwc2NpIHsNCj4gPiArCQljb21wYXRpYmxlID0gImFybSxwc2NpLTEuMCI7DQo+
+ID4gKwkJbWV0aG9kID0gInNtYyI7DQo+ID4gKwl9Ow0KPiA+ICsNCj4gPiArCW9zYzI3TTogb3Nj
+IHsNCj4gPiArCQljb21wYXRpYmxlID0gImZpeGVkLWNsb2NrIjsNCj4gPiArCQljbG9jay1mcmVx
+dWVuY3kgPSA8MjcwMDAwMDA+Ow0KPiA+ICsJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJvc2MyN00i
+Ow0KPiA+ICsJCSNjbG9jay1jZWxscyA9IDwwPjsNCj4gPiArCX07DQo+ID4gKw0KPiA+ICsJc29j
+QDk4MDAwMDAwIHsNCj4gDQo+IElmIHRoZSBub2RlIGhhcyBhIHVuaXQgYWRkcmVzcywgaXQgYWxz
+byBuZWVkcyBhIHJlZyBwcm9wZXJ0eSB3aXRoIHRoYXQgdmFsdWUuIFNvDQo+IGxldCdzIGRyb3Ag
+dGhlIHVuaXQgYWRkcmVzcy4NCj4gDQo+ID4gKwkJY29tcGF0aWJsZSA9ICJzaW1wbGUtYnVzIjsN
+Cj4gPiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiArCQkjc2l6ZS1jZWxscyA9IDwxPjsN
+Cj4gPiArCQlyYW5nZXMgPSA8MHg5ODAwMDAwMCAweDk4MDAwMDAwIDB4NjgwMDAwMDA+Ow0KPiA+
+ICsNCj4gPiArCQlyYnVzOiByLWJ1c0A5ODAwMDAwMCB7DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAi
+c2ltcGxlLWJ1cyI7DQo+ID4gKwkJCXJlZyA9IDwweDk4MDAwMDAwIDB4MjAwMDAwPjsNCj4gPiAr
+CQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gKwkJCSNzaXplLWNlbGxzID0gPDE+Ow0KPiA+
+ICsJCQlyYW5nZXMgPSA8MHgwIDB4OTgwMDAwMDAgMHgyMDAwMDA+Ow0KPiA+ICsNCj4gPiArCQkJ
+dWFydDA6IHNlcmlhbDBANzgwMCB7DQo+ID4gKwkJCQljb21wYXRpYmxlID0gInNucHMsZHctYXBi
+LXVhcnQiOw0KPiA+ICsJCQkJcmVnID0gPDB4NzgwMCAweDQwMD47DQo+ID4gKwkJCQlyZWctc2hp
+ZnQgPSA8Mj47DQo+ID4gKwkJCQlyZWctaW8td2lkdGggPSA8ND47DQo+ID4gKwkJCQlpbnRlcnJ1
+cHRzID0gPEdJQ19TUEkgNjggSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gKwkJCQljbG9jay1m
+cmVxdWVuY3kgPSA8MjcwMDAwMDA+Ow0KPiA+ICsJCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCj4g
+PiArCQkJfTsNCj4gPiArDQo+ID4gKwkJCXVhcnQxOiBzZXJpYWwxQDFiMjAwIHsNCj4gPiArCQkJ
+CWNvbXBhdGlibGUgPSAic25wcyxkdy1hcGItdWFydCI7DQo+ID4gKwkJCQlyZWcgPSA8MHgxYjIw
+MCAweDQwMD47DQo+ID4gKwkJCQlyZWctc2hpZnQgPSA8Mj47DQo+ID4gKwkJCQlyZWctaW8td2lk
+dGggPSA8ND47DQo+ID4gKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODkgSVJRX1RZUEVfTEVW
+RUxfSElHSD47DQo+ID4gKwkJCQljbG9jay1mcmVxdWVuY3kgPSA8NDMyMDAwMDAwPjsNCj4gPiAr
+CQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gKwkJCX07DQo+ID4gKw0KPiA+ICsJCQl1YXJ0
+Mjogc2VyaWFsMkAxYjQwMCB7DQo+ID4gKwkJCQljb21wYXRpYmxlID0gInNucHMsZHctYXBiLXVh
+cnQiOw0KPiA+ICsJCQkJcmVnID0gPDB4MWI0MDAgMHg0MDA+Ow0KPiA+ICsJCQkJcmVnLXNoaWZ0
+ID0gPDI+Ow0KPiA+ICsJCQkJcmVnLWlvLXdpZHRoID0gPDQ+Ow0KPiA+ICsJCQkJaW50ZXJydXB0
+cyA9IDxHSUNfU1BJIDkwIElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ICsJCQkJY2xvY2stZnJl
+cXVlbmN5ID0gPDQzMjAwMDAwMD47DQo+ID4gKwkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+
+ICsJCQl9Ow0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCWdpYzogaW50ZXJydXB0LWNvbnRyb2xs
+ZXJAZmYxMDAwMDAgew0KPiA+ICsJCQljb21wYXRpYmxlID0gImFybSxnaWMtdjMiOw0KPiA+ICsJ
+CQlyZWcgPSA8MHhmZjEwMDAwMCAweDEwMDAwPiwNCj4gPiArCQkJICAgICAgPDB4ZmYxNDAwMDAg
+MHhjMDAwMD47DQo+ID4gKwkJCWludGVycnVwdC1jb250cm9sbGVyOw0KPiA+ICsJCQkjaW50ZXJy
+dXB0LWNlbGxzID0gPDM+Ow0KPiA+ICsJCQlpbnRlcnJ1cHRzID0gPEdJQ19QUEkgOSBJUlFfVFlQ
+RV9MRVZFTF9ISUdIPjsNCj4gPiArCQl9Ow0KPiA+ICsJfTsNCj4gPiArfTsNCj4gPiArDQo+ID4g
+KyZhcm1fcG11IHsNCj4gPiArCWludGVycnVwdC1hZmZpbml0eSA9IDwmY3B1MD4sIDwmY3B1MT4s
+IDwmY3B1Mj4sDQo+ID4gKwkJPCZjcHUzPiwgPCZjcHU0PiwgPCZjcHU1PjsNCj4gPiArfTsNCj4g
+DQo+IE5vdyB0aGF0IHRoZXkncmUgaW4gdGhlIHNhbWUgZmlsZSwgdGhpcyBjYW4ganVzdCBnbyBp
+bnRvIHRoZSBub2RlLg0KPiANCg0KSSdsbCBjb3JyZWN0IHRoZXNlIG1pc3Rha2VzIGluIG5leHQg
+dmVyc2lvbi4NCg0K
