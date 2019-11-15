@@ -2,108 +2,113 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98421C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09107C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF7B2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8A6F2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:57:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FdX9WGMj";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="W6PoPLTz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u03liyFW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbfKOL46 (ORCPT
+        id S1727509AbfKOL5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 06:56:58 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:59496 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbfKOL46 (ORCPT
+        Fri, 15 Nov 2019 06:57:23 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:59600 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbfKOL5W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 06:56:58 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 000D9601A3; Fri, 15 Nov 2019 11:56:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573819017;
-        bh=NJKjstIkPCIdcN/uk64cj3+wALwzkGLn4GdQPc9agfc=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=FdX9WGMj0/X8EwLGlM7hr5PVhb17CFXuFyMAS3+j7CYjXH88WlZ9kJnrkuUn6KMPD
-         tWJXKGZNJcOjbE0JnWqmoFhRi9Uc8noDIzXxXOY+E818CD9IXpENWxlUeBlvOSqxMz
-         WoVW4azVgaEsIlPHU+5c/1/ppcD9eZfhWqe/KpFs=
-Received: from x230.qca.qualcomm.com (unknown [83.145.195.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D6C93601A3;
-        Fri, 15 Nov 2019 11:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573819016;
-        bh=NJKjstIkPCIdcN/uk64cj3+wALwzkGLn4GdQPc9agfc=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=W6PoPLTzo2kC0KM/iJoqcgeu4MqfpfoSLJhOB+4qFcmp2T3nOnl5VOdG86LpvSyyW
-         sf0KUvhDr9zJYWfjQJwpumcr4ZkvXYdr+o8/V6N14mk1hcpAMGcJ34jtfAmLJ+bV1l
-         7fIluLiJH2a9Eu6xuRoXk+5mtI5PB0hzd5K+nH7w=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D6C93601A3
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Linus =?utf-8?Q?L=C3=BCssing?= <linus.luessing@c0d3.blue>
-Cc:     ath10k@lists.infradead.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Ben Greear <greearb@candelatech.com>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus =?utf-8?Q?L=C3=BCssing?= <ll@simonwunderlich.de>
-Subject: Re: [PATCH net-next v2] ath10k: fix RX of frames with broken FCS in monitor mode
-References: <20191115105612.8531-1-linus.luessing@c0d3.blue>
-Date:   Fri, 15 Nov 2019 13:56:45 +0200
-In-Reply-To: <20191115105612.8531-1-linus.luessing@c0d3.blue> ("Linus
-        \=\?utf-8\?Q\?L\=C3\=BCssing\=22's\?\= message of "Fri, 15 Nov 2019 11:56:12 +0100")
-Message-ID: <87a78xwdxe.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Fri, 15 Nov 2019 06:57:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=95crfP7e+By3Ml2TQeef+TjTRr2ZLBCtzI/MPPSwg9Y=; b=u03liyFWYLOHqu2h+X9ODlgmK
+        izGCoqdatwlPRTx76zlFyZxDsA3SmAJU5GGY0JUSnIxAUeoAQVKANXzKwHkqRoAUcYnyjMwGNVu1O
+        HEcq2zXZnme0xeJoyxFCOsqbpp+CYNUSZ+sd5C8PF2xrLhwkLHM8ZnhXsg+nxPHJeR2g00YyLTK6Y
+        ctFA0cxj2PW0aIU0vIbdxrYuGLKflM1QtKAQRbBGwq4H5PCuO8OgfX2Yh406IoihBce4uvSvcHh46
+        7mGdReKqWR/anErfTodpe4xuztt+C1TvxpAk2T5c3gIVBwJecVXVgdy9J08mBPIQFTV3x0JDpO9eA
+        4PoXKSeWw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iVaDQ-0007Dx-Vv; Fri, 15 Nov 2019 11:56:41 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 87829304637;
+        Fri, 15 Nov 2019 12:55:29 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 82BF92B128BE6; Fri, 15 Nov 2019 12:56:37 +0100 (CET)
+Date:   Fri, 15 Nov 2019 12:56:37 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Doug Smythies <dsmythies@telus.net>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
+        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
+Message-ID: <20191115115637.GH4131@hirez.programming.kicks-ass.net>
+References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org>
+ <20191115095447.GU4114@hirez.programming.kicks-ass.net>
+ <CAKfTPtCTcrq1E1H8A3TL1xvALUrQ7ybPoERJ+C2O2+QXpVEZGQ@mail.gmail.com>
+ <20191115103735.GE4131@hirez.programming.kicks-ass.net>
+ <CAKfTPtDi_-h6g+rhV04XXjqpWprC2vT6hgLZSrTW5rdD54PrQA@mail.gmail.com>
+ <20191115105110.GG4131@hirez.programming.kicks-ass.net>
+ <CAKfTPtC3g4iCxvAJo9Km9fZ0fPSw5Jt9TY2+xF7kxGmOZ66gxw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtC3g4iCxvAJo9Km9fZ0fPSw5Jt9TY2+xF7kxGmOZ66gxw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus L=C3=BCssing <linus.luessing@c0d3.blue> writes:
+On Fri, Nov 15, 2019 at 12:03:31PM +0100, Vincent Guittot wrote:
+> On Fri, 15 Nov 2019 at 11:51, Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Fri, Nov 15, 2019 at 11:46:01AM +0100, Vincent Guittot wrote:
+> > > On Fri, 15 Nov 2019 at 11:37, Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > > > Sure, but then it can still remember the value passed in last and use
+> > > > that state later.
+> > > >
+> > > > It doesn't _have_ to completely discard values.
+> > >
+> > > yes but it means that we run at the "wrong" frequency during this
+> > > period and also that the cpufreq must in this case set a kind of timer
+> > > to resubmit a new frequency change out of scheduler event
+> >
+> > But if, as you say, we're completely shutting down the event stream
+> > when everything has decayed, that's still true, right?
+> 
+> But It doesn't because there is nothing else to do.
+> 
+> This patch does 2 things:
+> - fix the spurious call to cpufreq just before attaching a task
+> - make sure cpufreq is still called when cfs is 0 but not irq/rt or dl
+> 
+> There are somehow related but not fully
 
-> From: Linus L=C3=BCssing <ll@simonwunderlich.de>
->
-> So far, frames were forwarded regardless of the FCS correctness leading
-> to userspace applications listening on the monitor mode interface to
-> receive potentially broken frames, even with the "fcsfail" flag unset.
->
-> By default, with the "fcsfail" flag of a monitor mode interface
-> unset, frames with FCS errors should be dropped. With this patch, the
-> fcsfail flag is taken into account correctly.
->
-> Cc: Simon Wunderlich <sw@simonwunderlich.de>
-> Signed-off-by: Linus L=C3=BCssing <ll@simonwunderlich.de>
+Right, but when everything is 0, we stop generating events because we
+stop calling update_blocked_average(), so there will be a last event
+when we hit all 0s and then nothing.
 
-ath10k patches go ath-next branch, not net-next. So to avoid confusion
-please don't mark ath10k patches as "net-next", please.
+So no superfluous events.
 
-> ---
-> This was tested on an Open Mesh A41 device, featuring a QCA4019. And
-> with this firmware:
->
-> https://www.candelatech.com/downloads/ath10k-4019-10-4b/firmware-5-ct-ful=
-l-community-12.bin-lede.011
-
-I'll add this testing information to the commit log. (No need to resend
-just because of commit log changes)
-
-> But from looking at the code it seems that the vanilla ath10k has the
-> same issue, therefore submitting it here.
-
-So this should work with the Qualcomm firmware as well, right?
-
---=20
-Kalle Valo
+And if that last event if thrown out because of rate-limiting ....
