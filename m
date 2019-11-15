@@ -2,75 +2,161 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF57C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 637F1C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B018120748
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 449ED20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:47:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbfKOKq4 (ORCPT
+        id S1727419AbfKOKq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 15 Nov 2019 05:46:59 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2102 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726996AbfKOKq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 15 Nov 2019 05:46:56 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:41785 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbfKOKqz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:46:55 -0500
-Received: from 79.184.253.153.ipv4.supernova.orange.pl (79.184.253.153) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 9e92dac80e5ea588; Fri, 15 Nov 2019 11:46:53 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: linux-next: manual merge of the pm tree with the printk tree
-Date:   Fri, 15 Nov 2019 11:46:53 +0100
-Message-ID: <2126744.rv85diC2z5@kreacher>
-In-Reply-To: <20191115110500.2bad45b2@canb.auug.org.au>
-References: <20191115110500.2bad45b2@canb.auug.org.au>
+Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 62D3A1695C76DAA7E817;
+        Fri, 15 Nov 2019 10:46:55 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 15 Nov 2019 10:46:55 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 15 Nov
+ 2019 10:46:54 +0000
+Subject: Re: [PATCH RFC 3/5] blk-mq: Facilitate a shared tags per tagset
+To:     Hannes Reinecke <hare@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
+CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "ming.lei@redhat.com" <ming.lei@redhat.com>,
+        "hare@suse.com" <hare@suse.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "chenxiang (M)" <chenxiang66@hisilicon.com>
+References: <1573652209-163505-1-git-send-email-john.garry@huawei.com>
+ <1573652209-163505-4-git-send-email-john.garry@huawei.com>
+ <32880159-86e8-5c48-1532-181fdea0df96@suse.de>
+ <2cbf591c-8284-8499-7804-e7078cf274d2@huawei.com>
+ <02056612-a958-7b05-3c54-bb2fa69bc493@suse.de>
+ <ace95bc5-7b89-9ed3-be89-8139f977984b@huawei.com>
+ <42b0bcd9-f147-76eb-dfce-270f77bca818@suse.de>
+ <89cd1985-39c7-2965-d25b-2ee2c183d057@huawei.com>
+ <e676df15-7331-abe3-d3da-3ff46cb6684f@suse.de>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <ff77beff-5fd9-9f05-12b6-826922bace1f@huawei.com>
+Date:   Fri, 15 Nov 2019 10:46:53 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <e676df15-7331-abe3-d3da-3ff46cb6684f@suse.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, November 15, 2019 1:05:00 AM CET Stephen Rothwell wrote:
-> 
-> --Sig_/8dHD0qGh0F9UnYxbYqUlngQ
-> Content-Type: text/plain; charset=US-ASCII
-> Content-Transfer-Encoding: quoted-printable
-> 
-> Hi all,
-> 
-> Today's linux-next merge of the pm tree got a conflict in:
-> 
->   scripts/checkpatch.pl
-> 
-> between commit:
-> 
->   1d28122131b2 ("checkpatch: don't warn about new vsprintf pointer extensio=
-> n '%pe'")
-> 
-> from the printk tree and commit:
-> 
->   3bd32d6a2ee6 ("lib/vsprintf: Add %pfw conversion specifier for printing f=
-> wnode names")
-> 
-> from the pm tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary.
+On 15/11/2019 07:26, Hannes Reinecke wrote:
+> On 11/14/19 10:41 AM, John Garry wrote:
+>> On 13/11/2019 18:38, Hannes Reinecke wrote:
+>>>> Hi Hannes,
+>>>>
+>>>>> Oh, my. Indeed, that's correct.
+>>>>
+>>>> The tags could be kept in sync like this:
+>>>>
+>>>> shared_tag = blk_mq_get_tag(shared_tagset);
+>>>> if (shared_tag != -1)
+>>>>       sbitmap_set(hctx->tags, shared_tag);
+>>>>
+>>>> But that's obviously not ideal.
+>>>>
+>>> Actually, I _do_ prefer keeping both in sync.
+>>> We might want to check if the 'normal' tag is set (typically it would
+>>> not, but then, who knows ...)
+>>> The beauty here is that both 'shared' and 'normal' tag are in sync, so
+>>> if a driver would be wanting to use the tag as index into a command
+>>> array it can do so without any surprises.
+>>>
+>>> Why do you think it's not ideal?
+>>
+>> A few points:
+>> - Getting a bit from one tagset and then setting it in another tagset is
+>> a bit clunky.
+> Yes, that's true.
+> But painstakingly trying to find a free bit in a bitmask when we already
+> know which to pick is also a bit daft.
 
-Thanks, and it looks good to me.
+Yeah, but it's not all good - there would still be a certain overhead in 
+the atomic set and unset bit on the hctx sbitmap. However it still 
+should be faster as it excludes the search.
 
+> 
+>> - There may be an atomicity of the getting the shared tag bit and
+>> setting the hctx tag bit - I don't think that there is.
+> 
+> That was precisely what I've alluded to in 'We might want to check if
+> the normal tag is set'.
+> Typically the 'normal' tag would be free (as the shared tag set out of
+> necessity needs to be the combination of all hctx tag sets).
 
+Right
 
+> Any difference here _is_ a programming error, and should be flagged as
+> such (sbitmap_test_and_set() anyone?)
+
+Eh, I hope that we wouldn't need this.
+
+> We might have ordering issues on release, as we really should drop the
+> hctx tag before the shared tag; but when we observe that we should be fine.
+> 
+>> - Consider that sometimes we may want to check if there is space on a hw
+>> queue - checking the hctx tags is not really proper any longer, as
+>> typically there would always be space on hctx, but not always the shared
+>> tags. We did delete blk_mq_can_queue() yesterday, which would be an
+>> example of that. Need to check if there are others.
+>>
+> Clearly, this needs an audit of all functions accessing the hctx tag
+> space; maybe it's worth having a pre-requisite patchset differentiating
+> between hctx tags and global, shared tags. Hmm.
+> 
+>> Having said all that, the obvious advantage is performance gain, can
+>> still use request.tag and so maybe less intrusive changes.
+>>
+>> I'll have a look at the implementation. The devil is mostly in the
+>> detail...
+>>
+> True.
+> And, incidentally, if we run with shared tage we can skip the scheduling
+> section in blk_mq_get_tag(); if we're out of tags, we're out of tags,
+
+Right, but don't we need to then "kick all hw queues", instead of just 
+that for the current hctx in blk_mq_get_tag() when free tags are exhausted?
+
+> and no rescheduling will help as we don't _have_ other tagsets to look at.
+> 
+> But overall I like this approach.
+> 
+
+Yeah, to me it seems sensible. Again, a neat implementation is the 
+challenge.
+
+I'll post an RFC v2 for this one.
+
+I am also requesting some performance figures also internally.
+
+Thanks,
+John
