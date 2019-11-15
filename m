@@ -2,103 +2,92 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE2BC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA932C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2906920748
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:51:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92F962072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:51:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Bn4NvDCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfKOKvY convert rfc822-to-8bit (ORCPT
+        id S1727438AbfKOKvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:51:24 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:40125 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbfKOKvX (ORCPT
+        Fri, 15 Nov 2019 05:51:39 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:59292 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727402AbfKOKvj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:51:23 -0500
-Received: by mail-oi1-f196.google.com with SMTP id d22so1297673oic.7
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 02:51:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3Z9bFXw6VxEQy+kWbCkswI7JaUmU2L6uYiQOrW8jGIQ=;
-        b=TxOsWm6NvwIn3itpiTeZH5Dzn3+tSFcZI5hCQJ3tZolEJGyjaKuXhQbHCqEBvs7MTC
-         K7SH23so2orUWEHej44iF2V/pm3hy9PcLw0wKRhOBope0Pt7VC7CiGsr+oQyAz+92s4r
-         MvPQoW05+NoOO4KgC6jDNh2z7oI9b7J7Fx3VrYatJhI+ZCr2ET37ZAg7faa0fVAXN5CJ
-         LwuV0ow16Kmm09sA7OsZbktHkrWXEPLjQBYiRmOXOFKXkhIeFwjnrdKbhhy/oorrdAcs
-         4oxa7JaEsfskK5mAaxowiNNZ9lecz7U66DBI6nONqrOZjerwcATdreE63+SkW0o5pVBJ
-         gDOw==
-X-Gm-Message-State: APjAAAVqsMfwFLJ3AZieJ1Hye6GzQQT97TFPQmqvwRardsWbf8h5hGnM
-        fE3l0GiqlYTdbYJVWFJIv7nJ9s+OWjwC3OWZfB5aBMbL
-X-Google-Smtp-Source: APXvYqwKXvmOjaKrXLIWWv7CKJ5uTjSTzzDToAMeVd6ma3Gy5tOiaTthFT5lnqnlsolzjep16bfWvWl6/itJngTCpp0=
-X-Received: by 2002:a05:6808:5d9:: with SMTP id d25mr2413343oij.54.1573815081909;
- Fri, 15 Nov 2019 02:51:21 -0800 (PST)
+        Fri, 15 Nov 2019 05:51:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=67KHNipD746iAjVQ7TmLwwZx6HgQFkNGjMQ1plrBBkY=; b=Bn4NvDCUPWQSAiRVNIQzQBkqx
+        FAt/9zgFo/KyKErVMb2klGxxEn6Yv1WnVpXF6prhEmnx3A+vFI31oQfmEMu+QqJPXyJHdcuQVHYBx
+        zuHVj5RMn/so+/gRV/6myNNZjimNj4n6NEzMbjA+/PqieSOtQd3cLNj8HFUGBUhPOXHCdH8w8JGXP
+        yVypFQKyxrjWMTeThX/FHrZPJF7BHXgQMCEEUjNXUiM8PcODVH9y4TAHTiR1s9jqo774290CI+tdv
+        ep+xC5qiYV9yOWXjhXXhsaU8lkaDT21rSXIxfdu0Q7h+fGyb5HzfCkM3qS1KGXDwanCZaK+FMgewh
+        WdFe5gnDg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iVZC5-0006Xg-5u; Fri, 15 Nov 2019 10:51:13 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6C6E33006FB;
+        Fri, 15 Nov 2019 11:50:02 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7984C2B128BE6; Fri, 15 Nov 2019 11:51:10 +0100 (CET)
+Date:   Fri, 15 Nov 2019 11:51:10 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Doug Smythies <dsmythies@telus.net>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
+        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
+Message-ID: <20191115105110.GG4131@hirez.programming.kicks-ass.net>
+References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org>
+ <20191115095447.GU4114@hirez.programming.kicks-ass.net>
+ <CAKfTPtCTcrq1E1H8A3TL1xvALUrQ7ybPoERJ+C2O2+QXpVEZGQ@mail.gmail.com>
+ <20191115103735.GE4131@hirez.programming.kicks-ass.net>
+ <CAKfTPtDi_-h6g+rhV04XXjqpWprC2vT6hgLZSrTW5rdD54PrQA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191104182107.23568-1-ben.dooks@codethink.co.uk>
-In-Reply-To: <20191104182107.23568-1-ben.dooks@codethink.co.uk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 15 Nov 2019 11:51:09 +0100
-Message-ID: <CAMuHMdURebgBTuaPxLZSfnVvMkOeX0vE8LXXj02AQjJQkfy8mw@mail.gmail.com>
-Subject: Re: [PATCH] byteorder: fix warning due to type mismatch in be32 array code
-To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-Cc:     linux-kernel@lists.codethink.co.uk,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtDi_-h6g+rhV04XXjqpWprC2vT6hgLZSrTW5rdD54PrQA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ben,
+On Fri, Nov 15, 2019 at 11:46:01AM +0100, Vincent Guittot wrote:
+> On Fri, 15 Nov 2019 at 11:37, Peter Zijlstra <peterz@infradead.org> wrote:
 
-CC Arnd.
+> > Sure, but then it can still remember the value passed in last and use
+> > that state later.
+> >
+> > It doesn't _have_ to completely discard values.
+> 
+> yes but it means that we run at the "wrong" frequency during this
+> period and also that the cpufreq must in this case set a kind of timer
+> to resubmit a new frequency change out of scheduler event
 
-On Mon, Nov 4, 2019 at 7:25 PM Ben Dooks (Codethink)
-<ben.dooks@codethink.co.uk> wrote:
-> The loop should use a "size_t" as the len parameter is a size_t which
-> should silence the following warning:
->
-> ./include/linux/byteorder/generic.h:195:16: warning: comparison of integer expressions of different signedness: ‘int’ and ‘size_t’ {aka ‘unsigned int’} [-Wsign-compare]
-> ./include/linux/byteorder/generic.h:203:16: warning: comparison of integer expressions of different signedness: ‘int’ and ‘size_t’ {aka ‘unsigned int’} [-Wsign-compare]
->
-> Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
-
-Thanks for your patch!
-
-> --- a/include/linux/byteorder/generic.h
-> +++ b/include/linux/byteorder/generic.h
-> @@ -190,7 +190,7 @@ static inline void be64_add_cpu(__be64 *var, u64 val)
->
->  static inline void cpu_to_be32_array(__be32 *dst, const u32 *src, size_t len)
->  {
-> -       int i;
-> +       size_t i;
->
->         for (i = 0; i < len; i++)
->                 dst[i] = cpu_to_be32(src[i]);
-
-Alternatively, you can follow the approach a few lines above:
-
-        while (len--)
-                *dst++ = cpu_to_be32(*src++);
-
-Regardless:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+But if, as you say, we're completely shutting down the event stream
+when everything has decayed, that's still true, right?
