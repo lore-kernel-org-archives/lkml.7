@@ -2,76 +2,97 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C626C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B26C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5742220733
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:31:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573828307;
-	bh=z4t0QNOpMSUfT6xxNqEGeyK4kvswHzvxvuh4u4MxWE4=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=1na+qrnm9WqySjStmOqndegddDnxhGUtJ1pxk8LQ/AtWg4z2jgyuaPFzfc+9lxqMK
-	 MA5MAaUylaqPe9igPHaRKDso6D2J5tKyl+zs0tvmbQQY0XoCYtyOQ4Cab/xOCAIPEB
-	 A3aVNTTOoi3ASruRRbY0rl6aUB49XPKFBLLgc26k=
+	by mail.kernel.org (Postfix) with ESMTP id 3C4EE2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:31:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fLdav0zx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727614AbfKOObq (ORCPT
+        id S1727641AbfKOObz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 09:31:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727380AbfKOObq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 09:31:46 -0500
-Received: from [192.168.1.20] (cpe-24-28-70-126.austin.res.rr.com [24.28.70.126])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABC7D2072D;
-        Fri, 15 Nov 2019 14:31:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573828305;
-        bh=z4t0QNOpMSUfT6xxNqEGeyK4kvswHzvxvuh4u4MxWE4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=tMCfohkEdQO5MZtypr3lSf1IVaJNmcuvM+seUixNNfXHYT1wU3BcK1Cfe+diLM0eV
-         fyzg3L/GNsHDQ+PhCDP+S6JRz0JMtKXb/fISpdS5IYkDXiRF5RBdamtlBk10zLLTLj
-         TmouuZ3KKjaXi3Y2CWdFcKM2A7/uTmgAkKcO5vH8=
-Subject: Re: [PATCH v4 46/47] net: ethernet: freescale: make UCC_GETH
- explicitly depend on PPC32
-To:     Li Yang <leoyang.li@nxp.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Qiang Zhao <qiang.zhao@nxp.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Scott Wood <oss@buserror.net>, netdev <netdev@vger.kernel.org>
-References: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
- <20191108130123.6839-47-linux@rasmusvillemoes.dk>
- <CAOZdJXUX2cZfaQTkBdNrwD=jT2399rZzRFtDj6vNa==9Bmkh5A@mail.gmail.com>
- <CADRPPNS00uU+f6ap9D-pYQUFo_T-o2bgtnYaE9qAXOwck86-OQ@mail.gmail.com>
-From:   Timur Tabi <timur@kernel.org>
-Message-ID: <52639dfc-d558-8a92-5e2e-8ec18f39b383@kernel.org>
-Date:   Fri, 15 Nov 2019 08:31:42 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.1
+        Fri, 15 Nov 2019 09:31:55 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:32832 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727619AbfKOOby (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 09:31:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lFf6dMuZ+Z677Mu+atmNfBMTjTNBdV46hR58S1n03Bw=; b=fLdav0zx2sYSW0v3s7tI6JqhI
+        i7d9/vr4rYSEvqt/p7lCLO5nk4FjdEP/waWiqJFTEs4e7A3brAzpOhscHMxVCEEHx8WDQaY2fd8Gr
+        GK3TZyjntH4NZYVDHPPKRUN+AsgdOJw2Cm2ZA2fsSg2yhR1F8LWGZb3c8HNAHerseKwJPUt366auU
+        yXVDObbWRAX2R2xTnSjp74xVKH4/hcGL9VqcxEzgIIACyD2Q8xu6GqD9a9uiaEDpt8LXrHH8EkZVT
+        0q5wDIWmPdE6CFeLG/2Xak2uIEe2UlAm65b4AUoKrm1vQ3tMwtkUeiJT21GYinhobMjPfO3WOy2ow
+        IjCWf0kTQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iVcd2-0000Es-S4; Fri, 15 Nov 2019 14:31:17 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2EA5D304637;
+        Fri, 15 Nov 2019 15:30:06 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 52A882B12E7AC; Fri, 15 Nov 2019 15:31:14 +0100 (CET)
+Date:   Fri, 15 Nov 2019 15:31:14 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: AMD TLB errata, (Was: [PATCH RFC] mm: add MAP_EXCLUSIVE to
+ create exclusive user mappings)
+Message-ID: <20191115143114.GN4131@hirez.programming.kicks-ass.net>
+References: <1572171452-7958-2-git-send-email-rppt@kernel.org>
+ <20191028123124.ogkk5ogjlamvwc2s@box>
+ <20191028130018.GA7192@rapoport-lnx>
+ <20191028131623.zwuwguhm4v4s5imh@box>
+ <CAA9_cmd7f2y2AAT6646S=tco3yfyLgCAC4Qp=1iTQaJqrQcOwQ@mail.gmail.com>
+ <20191029064318.s4n4gidlfjun3d47@box>
+ <20191029085602.GI4114@hirez.programming.kicks-ass.net>
+ <20191029110024.yjytp22lhd2vekrv@box>
+ <20191029123949.GL4114@hirez.programming.kicks-ass.net>
+ <1da1b025-cabc-6f04-bde5-e50830d1ecf0@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <CADRPPNS00uU+f6ap9D-pYQUFo_T-o2bgtnYaE9qAXOwck86-OQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1da1b025-cabc-6f04-bde5-e50830d1ecf0@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/14/19 11:44 PM, Li Yang wrote:
->> Can you add an explanation why we don't want ucc_geth on non-PowerPC platforms?
-> I think it is because the QE Ethernet was never integrated in any
-> non-PowerPC SoC and most likely will not be in the future.  We
-> probably can make it compile for other architectures for general code
-> quality but it is not a priority.
+On Fri, Nov 15, 2019 at 08:12:52AM -0600, Tom Lendacky wrote:
+> I talked with some of the hardware folks and if you maintain the same bits
+> in the large and small pages (aside from the large page bit) until the
+> flush, then the errata should not occur.
 
-This explanation belongs in the commit message.
+Excellent!
+
+Thanks for digging that out Tom.
