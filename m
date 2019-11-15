@@ -2,148 +2,75 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3A6C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF57C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1928A2075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:46:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lSLPjY+c"
+	by mail.kernel.org (Postfix) with ESMTP id B018120748
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfKOKqQ (ORCPT
+        id S1727365AbfKOKq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:46:16 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39738 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbfKOKqQ (ORCPT
+        Fri, 15 Nov 2019 05:46:56 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:41785 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726996AbfKOKqz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:46:16 -0500
-Received: by mail-lj1-f196.google.com with SMTP id p18so10199233ljc.6
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 02:46:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XzeCp6VRB5u6E5bejznBe7WgeQhKhCBDQs+PEE9AFyo=;
-        b=lSLPjY+cHxzqvPfuZR/I3YQzsJjDkX3DkVtGZ2YD4UZxNL5x8MrhKwPIe7CyIQ7Uq9
-         vXnZMOGbPrJ6/8LOqyb149Ol14iBcc0XW38PihnilC6NmSHvY7PX+EFMa7BkDqcO4/P8
-         9BnD8Jqt5L2PZf+DUwxTd4OZTSsr69n/6bcEAqDMFD995W4fQV3tqhYI9knv97Sh8FTB
-         PJ1KOIqvdmJG6KDQWj1ohYXdihKE3DGENCUgJLJlHKXI3Z06nA5tRIBRmv8TyOHKr6HW
-         PkjTQ0VBl5uEF9SAdRmsTqDeLfZt8QlCL5cH7T0pmwXUMDYPMFf6lYzt9nQq/ltV3cLL
-         cfFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XzeCp6VRB5u6E5bejznBe7WgeQhKhCBDQs+PEE9AFyo=;
-        b=TuoGFftPwkSfiuoV8uyPMvrwqX/cPwJwFb1Ua6aLskMe8ihtpwX+nFyQ0RreD1Yr/P
-         u4E0YyfrmUZG7Ad9rbklaDfnbUNQfgWCzae2H0cAZpr8AWj0ciaafg6xy4SxY/x7YOep
-         R9Gx7AgTPXSHwGdBvGKM9H6zyCpI6U3qM+b2fG6LSOUErxHm8wuDPqViv7i0vDq2rAGZ
-         zMj+kNoz3jz+EPXb+oviPhZeJ37BQUbHfnB4oB8bqzln9/6bKP6a9icU8MnNbnRmV83M
-         pUZ/dE5GOQLOnRz7II3CWk/yHko3oszObrPHzruSmn20xdqD/Mhumq0W7dsMbzDMSqet
-         /7Eg==
-X-Gm-Message-State: APjAAAWyd+D1Xctg7B9fn3S4Q6VVq9PWSLOPo82hKZpziKrqgJk6mkgo
-        S1I1RtrtTNQ019JXqDFM1AR0OeW2pUtSry8f1ec7iQ==
-X-Google-Smtp-Source: APXvYqxP70WABGHvCmIS6igkDhawaWM4g9i3gHqSIXFSPpJqOrxblXOVHwMXSTQNNjsz3TWLuonU4x4mfQNgLroS1m8=
-X-Received: by 2002:a2e:b0e3:: with SMTP id h3mr10224545ljl.193.1573814773542;
- Fri, 15 Nov 2019 02:46:13 -0800 (PST)
+        Fri, 15 Nov 2019 05:46:55 -0500
+Received: from 79.184.253.153.ipv4.supernova.orange.pl (79.184.253.153) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 9e92dac80e5ea588; Fri, 15 Nov 2019 11:46:53 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: linux-next: manual merge of the pm tree with the printk tree
+Date:   Fri, 15 Nov 2019 11:46:53 +0100
+Message-ID: <2126744.rv85diC2z5@kreacher>
+In-Reply-To: <20191115110500.2bad45b2@canb.auug.org.au>
+References: <20191115110500.2bad45b2@canb.auug.org.au>
 MIME-Version: 1.0
-References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org>
- <20191115095447.GU4114@hirez.programming.kicks-ass.net> <CAKfTPtCTcrq1E1H8A3TL1xvALUrQ7ybPoERJ+C2O2+QXpVEZGQ@mail.gmail.com>
- <20191115103735.GE4131@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191115103735.GE4131@hirez.programming.kicks-ass.net>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 15 Nov 2019 11:46:01 +0100
-Message-ID: <CAKfTPtDi_-h6g+rhV04XXjqpWprC2vT6hgLZSrTW5rdD54PrQA@mail.gmail.com>
-Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Doug Smythies <dsmythies@telus.net>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 at 11:37, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, Nov 15, 2019 at 11:18:00AM +0100, Vincent Guittot wrote:
-> > On Fri, 15 Nov 2019 at 10:55, Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > On Thu, Nov 14, 2019 at 06:07:31PM +0100, Vincent Guittot wrote:
-> > > > update_cfs_rq_load_avg() calls cfs_rq_util_change() everytime pelt decays,
-> > > > which might be inefficient when cpufreq driver has rate limitation.
-> > > >
-> > > > When a task is attached on a CPU, we have call path:
-> > > >
-> > > > update_load_avg()
-> > > >   update_cfs_rq_load_avg()
-> > > >     cfs_rq_util_change -- > trig frequency update
-> > > >   attach_entity_load_avg()
-> > > >     cfs_rq_util_change -- > trig frequency update
-> > > >
-> > > > The 1st frequency update will not take into account the utilization of the
-> > > > newly attached task and the 2nd one might be discard because of rate
-> > > > limitation of the cpufreq driver.
-> > >
-> > > Doesn't this just show that a dumb rate limit in the driver is broken?
-> >
-> > But the rate limit may come from HW constraints that forces to wait
-> > let say 4ms or even 10ms between each frequency update.
->
-> Sure, but then it can still remember the value passed in last and use
-> that state later.
->
-> It doesn't _have_ to completely discard values.
+On Friday, November 15, 2019 1:05:00 AM CET Stephen Rothwell wrote:
+> 
+> --Sig_/8dHD0qGh0F9UnYxbYqUlngQ
+> Content-Type: text/plain; charset=US-ASCII
+> Content-Transfer-Encoding: quoted-printable
+> 
+> Hi all,
+> 
+> Today's linux-next merge of the pm tree got a conflict in:
+> 
+>   scripts/checkpatch.pl
+> 
+> between commit:
+> 
+>   1d28122131b2 ("checkpatch: don't warn about new vsprintf pointer extensio=
+> n '%pe'")
+> 
+> from the printk tree and commit:
+> 
+>   3bd32d6a2ee6 ("lib/vsprintf: Add %pfw conversion specifier for printing f=
+> wnode names")
+> 
+> from the pm tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary.
 
-yes but it means that we run at the "wrong" frequency during this
-period and also that the cpufreq must in this case set a kind of timer
-to resubmit a new frequency change out of scheduler event
+Thanks, and it looks good to me.
 
->
-> > > > update_cfs_rq_load_avg() is only called by update_blocked_averages()
-> > > > and update_load_avg() so we can move the call to
-> > > > cfs_rq_util_change/cpufreq_update_util() into these 2 functions. It's also
-> > > > interesting to notice that update_load_avg() already calls directly
-> > > > cfs_rq_util_change() for !SMP case.
-> > > >
-> > > > This changes will also ensure that cpufreq_update_util() is called even
-> > > > when there is no more CFS rq in the leaf_cfs_rq_list to update but only
-> > > > irq, rt or dl pelt signals.
-> > >
-> > > I don't think it does that; that is, iirc the return value of
-> > > ___update_load_sum() is 1 every time a period lapses. So even if the avg
-> > > is 0 and doesn't change, it'll still return 1 on every period.
-> > >
-> > > Which is what that dumb rate-limit thing wants of course. But I'm still
-> > > thinking that it's stupid to do. If nothing changes, don't generate
-> > > events.
-> >
-> > When everything (irq, dl, rt, cfs) is 0, we don't generate events
-> > because update_blocked_averages is no more called because
-> > rq->has_blocked_load is clear
->
-> Aah.. Ok, let me look at this thing again.
->
-> > > If anything, update_blocked_avgerages() should look at
-> > > @done/others_have_blocked() to emit events for rt,dl,irq.
-> >
-> > other_have_blocked can be set but no decay happened during the update
-> > and we don't need to call cpufreq_update_util
->
-> True.
+
+
