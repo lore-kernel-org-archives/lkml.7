@@ -2,111 +2,91 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 440C1C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D7BC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E1D5206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:33:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD0AD206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:34:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GmWz2UJQ"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="rj46EbQQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbfKOKdv (ORCPT
+        id S1727348AbfKOKel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:33:51 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:60518 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbfKOKdu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:33:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=BQq4rfhZ/qkZrjGi9VrRkJjPTU3IQASdxtk+py8db0M=; b=GmWz2UJQfoWTfLRQgXnDZvK+D
-        /bs80r9tjbY+/kCYcNsBmynTY3nzHl4LwSn/tKhnlJowKEWUJBn4kDT/B5x+cBVf44PHMQaqXPbUY
-        NEL5MZLwm6m8ByKuq9/K7MRpEbQU8tnkQpEaqZwPF0bNajkdwNcl69p8t2ISEkpHCDkFraGqZ5b9c
-        T87fCO8b9dZuXNBr/Y6P0UdHxpGs85fbRzrU/GjGkIFzzyMXqB2uwClJCxwc+5MgfxyHVshPH9LCW
-        FVC5aZuaSOomFoV56E4ak3eK7j/MOLQRbgefbN3y7zas1GJvJrf1Ukf8ty8negsSo4SYym/cE85oE
-        a2dlz4r5w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iVYv5-0005ss-3g; Fri, 15 Nov 2019 10:33:39 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Fri, 15 Nov 2019 05:34:41 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:46080 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726983AbfKOKel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 05:34:41 -0500
+Received: from zn.tnic (p200300EC2F0CC3006D2B69FDD4279DE4.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:c300:6d2b:69fd:d427:9de4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1412F303D9F;
-        Fri, 15 Nov 2019 11:32:28 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2622D2B128BE8; Fri, 15 Nov 2019 11:33:36 +0100 (CET)
-Date:   Fri, 15 Nov 2019 11:33:36 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Shile Zhang <shile.zhang@linux.alibaba.com>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [RFC PATCH v3 6/7] scripts/sorttable: Add ORC unwind tables sort
- concurrently
-Message-ID: <20191115103336.GD4131@hirez.programming.kicks-ass.net>
-References: <20191115064750.47888-1-shile.zhang@linux.alibaba.com>
- <20191115064750.47888-7-shile.zhang@linux.alibaba.com>
- <20191115090723.GS4114@hirez.programming.kicks-ass.net>
- <9594afbc-52bc-5ae7-4a19-8fc4b36a1abd@linux.alibaba.com>
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C8A391EC0D09;
+        Fri, 15 Nov 2019 11:34:39 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1573814079;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=a9B35wF3gsxxqMQXD1ETi5MQJXf/8mWK2qZGuxNCwCQ=;
+        b=rj46EbQQL5L7jy8/0T1PXvpRTOIcbgJJjoemvP6lq36tNcSb4ueOLTXXASlUy/ZGsa2LA6
+        OWAY+7B/RePNpayREk9EhI/fiDYW+XiDU+bmLQi51eNsdIDWjrW3gkpQ+tzU/lZQiQlOcB
+        lk1ejT8Di5AhD5H88/azPB/66koFlNQ=
+Date:   Fri, 15 Nov 2019 11:34:34 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v2 06/16] x86/cpu: Clear VMX feature flag if VMX is not
+ fully enabled
+Message-ID: <20191115103434.GH18929@zn.tnic>
+References: <20191021234632.32363-1-sean.j.christopherson@intel.com>
+ <20191022000836.1907-1-sean.j.christopherson@intel.com>
+ <20191025163858.GF6483@zn.tnic>
+ <20191114183238.GH24045@linux.intel.com>
+ <5aacaba0-76e2-9824-ebd4-fa510bce712d@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <9594afbc-52bc-5ae7-4a19-8fc4b36a1abd@linux.alibaba.com>
+In-Reply-To: <5aacaba0-76e2-9824-ebd4-fa510bce712d@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 05:43:49PM +0800, Shile Zhang wrote:
-> On 2019/11/15 17:07, Peter Zijlstra wrote:
-> > On Fri, Nov 15, 2019 at 02:47:49PM +0800, Shile Zhang wrote:
-
-> > > +/**
-> > > + * sort - sort an array of elements
-> > > + * @base: pointer to data to sort
-> > > + * @num: number of elements
-> > > + * @size: size of each element
-> > > + * @cmp_func: pointer to comparison function
-> > > + * @swap_func: pointer to swap function
-> > > + *
-> > > + * This function does a heapsort on the given array. You may provide a
-> > > + * swap_func function optimized to your element type.
-> > > + *
-> > > + * Sorting time is O(n log n) both on average and worst-case. While
-> > > + * qsort is about 20% faster on average, it suffers from exploitable
-> > > + * O(n*n) worst-case behavior and extra memory requirements that make
-> > > + * it less suitable for kernel use.
-> > > + *
-> > > + * This code token out of /lib/sort.c.
-> > > + */
-> > > +static void sort(void *base, size_t num, size_t size,
-> > > +	  int (*cmp_func)(const void *, const void *),
-> > > +	  void (*swap_func)(void *, void *, int size))
-> > > +{
-
-> > > +}
-
-> > Do we really need to copy the heapsort implementation? That is, why not
-> > use libc's qsort() ? This is userspace after all.
+On Fri, Nov 15, 2019 at 11:05:24AM +0100, Paolo Bonzini wrote:
+> On 14/11/19 19:32, Sean Christopherson wrote:
+> >>> +			pr_err_once("x86/cpu: VMX disabled, IA32_FEATURE_CONTROL MSR unsupported\n");
+> > 
+> > My thought for having the print was to alert the user that something is
+> > royally borked with their system.  There's nothing the user can do to fix
+> > it per se, but it does indicate that either their hardware or the VMM
+> > hosting their virtual machine is broken.  So maybe be more explicit about
+> > it being a likely hardware/VMM issue?
 > 
-> Yes, I think qsort is better choice than copy-paste here. But qsort does not
-> support customized swap func, which is needed for ORC unwind swap two tables
-> together.
-> I think it's hard to do with qsort, so I used sort same with original orc
-> unwind table sort.
+> Yes, good idea.
 
-Urgh, you're right. That's unforunate.
+Yah, let's make sure it has some merit for users and doesn't make them
+only shrug and ignore it.
+
+Btw, Sean, are you sending a new version of this ontop of latest
+tip/master or linux-next or so? I'd like to look at the rest of the bits
+in detail.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
