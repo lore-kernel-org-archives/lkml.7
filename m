@@ -5,63 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A839C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B70C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D59A22075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF2AC2075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573820731;
-	bh=rAKrz869v8Nh34fJb36MRCZwyAW5VyL/JA3CarHP9cA=;
+	s=default; t=1573820734;
+	bh=FufWsne3f1whMQm+cC9OAxX0N+Zrta+LxKe3p9WNQOU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=GC2Nk8gLNjGC0SHkVziB+qT4G+EkgR4AYZbVKDkiuA95wCDJw5qVyupZzuYFrc6JD
-	 1Unye8s3G2//HOoV1aTQggyefYcu1ZWJAasQuq0ZJ9/HSM2QALp51ATAGuY/KLHO41
-	 YxD7qsChLGuSRVb8yMsfBdN7uJz53wlGjsgAl0wU=
+	b=j5MGY5BV4SZF96KO3b+I+GH/mg1XuKKE5VX9CkvghS7sGtkysRjD4WhgNugTlPDiw
+	 bEyz9GVmNW68MjSmgYKKbHosPmOT00Zz9IX4b6CmT8qMDYdMIReg7tXGraeiN6ESp1
+	 jJswkf6NfbpA9/ql7mGxNX+322E6v7sMXBVV+JmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbfKOMZa (ORCPT
+        id S1727837AbfKOMZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:25:30 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33442 "EHLO
+        Fri, 15 Nov 2019 07:25:34 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33562 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727715AbfKOMZ1 (ORCPT
+        with ESMTP id S1727792AbfKOMZb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 07:25:27 -0500
+        Fri, 15 Nov 2019 07:25:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=Hd/glJLeth5kRh7Z73Snc77sc3q68By7pIQCL5Nb6q4=; b=wcG4SKpuHi6x
-        CBaVIyNonM82NoK+BbhTUNwKUPHCFOY3oelWTEOS2ifduXKAcABdnVebzmd1K5PaoEm9OWl0TQvGi
-        TMvJi5qLgP81/MmnOwYUHNlm73gTEZ/lKxxxn09Kq5iJodws5vkuz4lXRvSAJTqcVs/lF0Ix3G8ZH
-        TCpfI=;
+        List-Archive; bh=GpfP1U7W192FYFrLj/ElAhmi+JHAHHGx6gwL3GmkbA0=; b=fSsLK0/SsRku
+        y6aDi7VwKtDjHY99W/szeZfmlc/ZR8EbrkSfDVQRJemwaVyDXuPSgRumw6HKRQcTQHF9L8gn1DMqs
+        0pR2Z3tRFhBpjW17mvT1vdSuxn27Res0TnglFEoGxT0bAtvCFcioLs4b7O0Z2yTC7B8eWdiXcbyqb
+        jjemY=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iVaf4-0000Ll-PQ; Fri, 15 Nov 2019 12:25:14 +0000
+        id 1iVaf7-0000Ma-6l; Fri, 15 Nov 2019 12:25:17 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 40CB92741609; Fri, 15 Nov 2019 12:25:14 +0000 (GMT)
+        id A60F627415A7; Fri, 15 Nov 2019 12:25:16 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
 Cc:     agross@kernel.org, alexandre.belloni@bootlin.com, andi@etezian.org,
         bjorn.andersson@linaro.org, broonie@kernel.org,
-        jonathanh@nvidia.com, Jon Hunter <jonathanh@nvidia.com>,
-        kgene@kernel.org, krzk@kernel.org, ldewangan@nvidia.com,
-        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        jonathanh@nvidia.com, kgene@kernel.org, krzk@kernel.org,
+        ldewangan@nvidia.com, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, radu_nicolae.pirea@upb.ro,
-        s.hauer@pengutronix.de, shawnguo@kernel.org,
-        thierry.reding@gmail.com, vkoul@kernel.org
-Subject: Applied "spi: tegra20-slink: Use dma_request_chan() directly for channel request" to the spi tree
-In-Reply-To: <20191113094256.1108-10-peter.ujfalusi@ti.com>
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        radu_nicolae.pirea@upb.ro, s.hauer@pengutronix.de,
+        shawnguo@kernel.org, thierry.reding@gmail.com, vkoul@kernel.org
+Subject: Applied "spi: atmel: Use dma_request_chan() directly for channel request" to the spi tree
+In-Reply-To: <20191113094256.1108-3-peter.ujfalusi@ti.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191115122514.40CB92741609@ypsilon.sirena.org.uk>
-Date:   Fri, 15 Nov 2019 12:25:14 +0000 (GMT)
+Message-Id: <20191115122516.A60F627415A7@ypsilon.sirena.org.uk>
+Date:   Fri, 15 Nov 2019 12:25:16 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -69,7 +70,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: tegra20-slink: Use dma_request_chan() directly for channel request
+   spi: atmel: Use dma_request_chan() directly for channel request
 
 has been applied to the spi tree at
 
@@ -94,38 +95,37 @@ to this mail.
 Thanks,
 Mark
 
-From 912a7df474d2cb22fc99a1fcf77997f2cea7d85e Mon Sep 17 00:00:00 2001
+From bef1e0c8f74c87e7427cb98b2e76caf046c7b65a Mon Sep 17 00:00:00 2001
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Date: Wed, 13 Nov 2019 11:42:56 +0200
-Subject: [PATCH] spi: tegra20-slink: Use dma_request_chan() directly for
- channel request
+Date: Wed, 13 Nov 2019 11:42:49 +0200
+Subject: [PATCH] spi: atmel: Use dma_request_chan() directly for channel
+ request
 
 dma_request_slave_channel_reason() is:
 #define dma_request_slave_channel_reason(dev, name) \
 	dma_request_chan(dev, name)
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Link: https://lore.kernel.org/r/20191113094256.1108-10-peter.ujfalusi@ti.com
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Link: https://lore.kernel.org/r/20191113094256.1108-3-peter.ujfalusi@ti.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-tegra20-slink.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/spi/spi-atmel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-tegra20-slink.c b/drivers/spi/spi-tegra20-slink.c
-index 111fffc91435..51573f41ed12 100644
---- a/drivers/spi/spi-tegra20-slink.c
-+++ b/drivers/spi/spi-tegra20-slink.c
-@@ -599,8 +599,7 @@ static int tegra_slink_init_dma_param(struct tegra_slink_data *tspi,
- 	int ret;
- 	struct dma_slave_config dma_sconfig;
+diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
+index d88e2aa64839..d692cc388126 100644
+--- a/drivers/spi/spi-atmel.c
++++ b/drivers/spi/spi-atmel.c
+@@ -512,7 +512,7 @@ static int atmel_spi_configure_dma(struct spi_master *master,
+ 	dma_cap_zero(mask);
+ 	dma_cap_set(DMA_SLAVE, mask);
  
--	dma_chan = dma_request_slave_channel_reason(tspi->dev,
--						dma_to_memory ? "rx" : "tx");
-+	dma_chan = dma_request_chan(tspi->dev, dma_to_memory ? "rx" : "tx");
- 	if (IS_ERR(dma_chan)) {
- 		ret = PTR_ERR(dma_chan);
- 		if (ret != -EPROBE_DEFER)
+-	master->dma_tx = dma_request_slave_channel_reason(dev, "tx");
++	master->dma_tx = dma_request_chan(dev, "tx");
+ 	if (IS_ERR(master->dma_tx)) {
+ 		err = PTR_ERR(master->dma_tx);
+ 		if (err == -EPROBE_DEFER) {
 -- 
 2.20.1
 
