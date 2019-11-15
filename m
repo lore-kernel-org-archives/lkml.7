@@ -2,123 +2,93 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3E3C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D79A8C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73623206D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:31:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kVXlSMbm"
+	by mail.kernel.org (Postfix) with ESMTP id A727A206D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:31:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573824706;
+	bh=0mEy+vTE2NKp+0FpbmD77dCc1obSZTMQf07nHTB35X4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=K1/SWNPLVJaZ86P57qjxeShRw4fjUluQ5HEb3r/zjj+syado5q+zZSTve5nObNbIP
+	 xYiQLZV3MJ25ldlhX4IIU0pLcSDVZN6f0nAdzWwteGfxUDKlfQugEf+51BAoyAgIhc
+	 ifZmxqV+mzpukWqlk9QA8v9CkVqe3L6cnCAtN6wc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbfKONbN (ORCPT
+        id S1727531AbfKONbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 08:31:13 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37791 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727249AbfKONbM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 08:31:12 -0500
-Received: by mail-lj1-f196.google.com with SMTP id d5so10710575ljl.4
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 05:31:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=owEif5DDsGmkWrR2bOQw0Tu37BwJ/6VDJnctQZE/unk=;
-        b=kVXlSMbmuvfa6FG0LateKEQ8kOMXjev2umGtggRjItX/o8etXqQMax/aVi5gUlo+SJ
-         LWvE7FPtiv+s24wL/wTvYFq4Jjf1yf9P22MRdFv/PlPYtgsy2Jz76FaVtQmML/ROLYXR
-         p40inBGxQBWyA+RIs5EEHEn6N8Ti2GI693f3tsZWC+o5UkQKJbMqqKYRkCP5U0r/RrW4
-         Cm12rI/2NR/iZvXtDdvj/fGarTHEeYUl1emjCsCNh+yRG7y9TEebqqBtcnqJPSDa1s+F
-         Rus3CalX7cR+p34jr7CNWa1X+v6iM7kU4LLM/K+oQR4wM3bghgJAwED4+avyRZE33c5j
-         g5yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=owEif5DDsGmkWrR2bOQw0Tu37BwJ/6VDJnctQZE/unk=;
-        b=eQqy183xjvHbOKk5n8hdj1QV440U4vQzDfTduEPtpdEhYAns7hfFm7Xf4o89cbHp2d
-         0hz600mG9hRJIfWckrMmdRsT8ebM/1PVWdyV0h2xLUYDYmBqn2zCqfLyNKPbWWlp0D0p
-         EohlXP7tS54He4+/OqQkQplkPzgwCOgewTqtYwiM5YUqBBKLLs1s0DflpH8kRck2In8p
-         a8HnMUo4APgYPWSaqCQr3z2IiyV7or1KMzzo1DtRI3PKfTaZp84ddM8OHrko77LtMovl
-         8PDq7X2Q4SNgGuJd/LC0l7bvtigqV12EkTX3HDZHo+vuEHjjE9HQVgmEBDWmaLFwGbQn
-         JB0g==
-X-Gm-Message-State: APjAAAVgoy59gGaim/HeLfk8NBZS1JOwAORy8cSvCDMi3X9QGRJxinnX
-        Q5Uvaxnv3U7pyNbzZdrkHCaFB4YWSZ0VQEw/zP0m2SoD
-X-Google-Smtp-Source: APXvYqwtqVZeOXU64f92wrWYkjlLPEKeNLzTiyg+ktWVv5LriIzng8KsjJMvxs4khm75rv2g02zmafkT3/7U0RidtbI=
-X-Received: by 2002:a2e:9748:: with SMTP id f8mr9922879ljj.87.1573824670486;
- Fri, 15 Nov 2019 05:31:10 -0800 (PST)
+        Fri, 15 Nov 2019 08:31:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58418 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727314AbfKONbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 08:31:45 -0500
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4037206D3;
+        Fri, 15 Nov 2019 13:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573824704;
+        bh=0mEy+vTE2NKp+0FpbmD77dCc1obSZTMQf07nHTB35X4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=b+jqg4WGDuApN3mmoZ66wqccYiNLMXXggBPiKnocz71XvO3l9QtLDklSDtm+Uqykr
+         +CTBdJno2bm/yzLh1fYOMVGinltDUSBOhoEB9DTSCO6rZabG3T+bCQBN5/OgQZaFjf
+         oQ/wG9GnN4if+Ca+CpnUPmP8P1/sV8dP9X/jJ2jA=
+Received: by mail-qk1-f174.google.com with SMTP id m4so8043303qke.9;
+        Fri, 15 Nov 2019 05:31:44 -0800 (PST)
+X-Gm-Message-State: APjAAAVTiXNyRqQ6P+lHDzD/BtaPjJiyfxBgJmXHg4yKEwxkFnIyunET
+        c3qOyRCo4gi1lb7QOKXEBowA6gH2uOjgU5q92A==
+X-Google-Smtp-Source: APXvYqzMPS3VKClIHmA0E8VehZ9+If+oxr1JeZ4huF9uwrJVhe9UxpXgWgnTse8IOpV5dfbE7pg3Dh5zmVck4EhBbJU=
+X-Received: by 2002:a05:620a:205d:: with SMTP id d29mr12519950qka.152.1573824703941;
+ Fri, 15 Nov 2019 05:31:43 -0800 (PST)
 MIME-Version: 1.0
-References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org>
- <20191115095447.GU4114@hirez.programming.kicks-ass.net> <CAKfTPtCTcrq1E1H8A3TL1xvALUrQ7ybPoERJ+C2O2+QXpVEZGQ@mail.gmail.com>
- <20191115103735.GE4131@hirez.programming.kicks-ass.net> <CAKfTPtDi_-h6g+rhV04XXjqpWprC2vT6hgLZSrTW5rdD54PrQA@mail.gmail.com>
- <20191115105110.GG4131@hirez.programming.kicks-ass.net> <CAKfTPtC3g4iCxvAJo9Km9fZ0fPSw5Jt9TY2+xF7kxGmOZ66gxw@mail.gmail.com>
- <20191115130144.GA4097@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191115130144.GA4097@hirez.programming.kicks-ass.net>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 15 Nov 2019 14:30:58 +0100
-Message-ID: <CAKfTPtBrxqkoFeWkxX1J1QmhBpRfDh6nYs1wRA-WR8y15AmaYQ@mail.gmail.com>
-Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Doug Smythies <dsmythies@telus.net>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+References: <20191111090230.3402-1-chunyan.zhang@unisoc.com>
+ <20191111090230.3402-3-chunyan.zhang@unisoc.com> <CAAfSe-sCM7T2TZ25hgXSdqOCWzXN2J4qeoSRi8bveqnwGy3vBw@mail.gmail.com>
+In-Reply-To: <CAAfSe-sCM7T2TZ25hgXSdqOCWzXN2J4qeoSRi8bveqnwGy3vBw@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 15 Nov 2019 07:31:31 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJOC_b+urTESd4tLaacJ8gV3upyxHeGGngY2_3m0oJaLA@mail.gmail.com>
+Message-ID: <CAL_JsqJOC_b+urTESd4tLaacJ8gV3upyxHeGGngY2_3m0oJaLA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] dt-bindings: serial: Convert sprd-uart to json-schema
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 at 14:02, Peter Zijlstra <peterz@infradead.org> wrote:
+On Fri, Nov 15, 2019 at 5:15 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
 >
-> On Fri, Nov 15, 2019 at 12:03:31PM +0100, Vincent Guittot wrote:
+> Hi Rob,
 >
-> > This patch does 2 things:
-> > - fix the spurious call to cpufreq just before attaching a task
+> On Mon, 11 Nov 2019 at 17:03, Chunyan Zhang <chunyan.zhang@unisoc.com> wrote:
 >
-> Right, so that one doesn't concern me too much.
+> [cut]
 >
-> > - make sure cpufreq is still called when cfs is 0 but not irq/rt or dl
+> > +
+> > +examples:
+> > +  - |
+> > +    serial@0 {
+> > +      compatible = "sprd,sc9860-uart", "sprd,sc9836-uart";
+> > +      reg = <0x0 0x100>;
+> > +      interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
 >
-> But per the rq->has_blocked_load logic we would mostly stop sending
-> events once we reach all 0s.
+> Seems this setence cannot pass dt_binding_check, it need to be changed to:
+> interrupts = <0 2 4>;
 >
-> Now, most of those updates will be through _nohz_idle_balance() ->
-> update_nohz_stats(), which are remote, which means intel_pstate is
-> ignoring them anyway.
->
-> Now the _nohz_idle_balance() -> update_blocked_averages() thing runs
-> local, and that will update the one random idle CPU we picked to run
-> nohz balance, but all others will be left where they were.
->
-> So why does intel_pstate care... Esp. on SKL+ with per-core P state this
-> is of dubious value.
+> Do you need me to send another patch, or you can help to fix that on
+> your tree :)
 
-Doug mentioned some periodic timers that were running on the CPUs
+I've fixed it up. You need the include file.
 
->
-> Also, and maybe I should go read back, why do we care what the P state
-> is when we're mostly in C states anyway? These are all idle CPUs,
-> otherwise we wouldkn't be running update_blocked_averages() on them
-> anyway.
-
-AFAIU, there is not 100% idle but they have periodic timers that will
-fire and run at higher P state
-
-
->
->
-> Much confusion..
+Rob
