@@ -2,175 +2,184 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A76C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62894C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67E3E2073C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 393CE20733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:24:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gsOlK5F4"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="Jj/Kv1KQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbfKORXL (ORCPT
+        id S1727641AbfKORYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 12:23:11 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24288 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727552AbfKORXL (ORCPT
+        Fri, 15 Nov 2019 12:24:44 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35103 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727552AbfKORYo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 12:23:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573838589;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=06kWqtx/26ngJrjOCfJyg6Cce2N2bE9JwILxSi+bOAI=;
-        b=gsOlK5F4ZYM3jqsry1S84abcxsIMy4ejIk2RAwysVOvQMHEOd5uHV0QQvTcnMuO1y7FNDT
-        jBoskBg7CGvklCzRDTYqEpd1clSUfQqkeJyzm0tTTRxudkN04XZErkIKWecGxbopkK3vb1
-        DTkjN+g5bG7UyZQHKQKWa3mTQU9g2CA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-273-R4y48ZzWOkGEjZwVb4saJQ-1; Fri, 15 Nov 2019 12:23:05 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E1D171083E80;
-        Fri, 15 Nov 2019 17:23:03 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0DC0828DDE;
-        Fri, 15 Nov 2019 17:23:02 +0000 (UTC)
-Date:   Fri, 15 Nov 2019 12:23:01 -0500
-From:   Brian Foster <bfoster@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/28] shrinker: defer work only to kswapd
-Message-ID: <20191115172301.GB55854@bfoster>
-References: <20191031234618.15403-1-david@fromorbit.com>
- <20191031234618.15403-13-david@fromorbit.com>
- <20191104152954.GC10665@bfoster>
- <20191114211150.GE4614@dread.disaster.area>
-MIME-Version: 1.0
-In-Reply-To: <20191114211150.GE4614@dread.disaster.area>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: R4y48ZzWOkGEjZwVb4saJQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
+        Fri, 15 Nov 2019 12:24:44 -0500
+Received: by mail-pg1-f196.google.com with SMTP id k32so598520pgl.2
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 09:24:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=7Eg62rE5QP5mVWkEobl5+3oFw1Pb3OmewXJM+IIwSag=;
+        b=Jj/Kv1KQeHJCervURI/92GZH526n2xPLAI70jj9x3n+TVTuxnjX3P7h27TT3zadcQx
+         FEeMxCPpHh/94yqDv5Hh4SDgCipB0pwoA9ZBHqtS9JMWUVm2z8bwIxJ4oafqhZaEIYxs
+         5hxL8lgbTzzPLTFoGOwfXBOX+DdhaC8FmiL3+qBTSNAGRGGoxDvGIRYDsCsR4uGxoP8q
+         sQyv1170WH1b/5c3eeznhPvJlcno+qwUie6wrfVjLB1aWEOU0p7uC4ujSPS/a+vNl8du
+         qv09D47N2Qre9HSX8JOZNAzaWjlXezg5kyGPhA+pKmHeR5cGpYT2cyXztrsqLW3H0LRy
+         oZiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=7Eg62rE5QP5mVWkEobl5+3oFw1Pb3OmewXJM+IIwSag=;
+        b=oko9i4sEZQouuMUxTgdTkze+ibcqDWCDH5qgXBxN5r3ayRcw85Ugq8mMXiCMxW4VaA
+         qupeeUHJ/qm4QsTGceXnP4EYVS5TjWCUw52OH+tZxnCcdoxZa3IRufWaDs1y5zb33U/P
+         uY5xCPmbpEKEUbpEIV8xzmoObjkmO843EWgtV9L4aACPQjKJP9nP9+pv3R1sW0fazAYC
+         rK30El/pcEKJPrqr9OgjgeF57/JaBqdIMCK2TXCjPy57KZxA+6qBpLeP4cVC758qf25G
+         9h5etR5x12PQddQ/JsnAiNX/sVgw5OC5DcPCr/QtW5fnkp2/Cp8PmpJ7F+QR7NhHG8lq
+         iUkA==
+X-Gm-Message-State: APjAAAUtvyOYKUiZ4fK46E5lS60o1N4ghHfp2cNSJ/2ksyc8kA83JMoT
+        L9uvvcmLElUcAR0EU4/p+J545g==
+X-Google-Smtp-Source: APXvYqy0g+SLctG6bBTKCqBMkm+DFPpOjxR0CjcbffcOwdXHVcj3/9JYAL2Kd7bdM+i0rrGaWIQdsw==
+X-Received: by 2002:a63:5163:: with SMTP id r35mr5652026pgl.201.1573838683002;
+        Fri, 15 Nov 2019 09:24:43 -0800 (PST)
+Received: from [192.168.0.177] (c-67-180-165-146.hsd1.ca.comcast.net. [67.180.165.146])
+        by smtp.gmail.com with ESMTPSA id 23sm10345379pgw.8.2019.11.15.09.24.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Nov 2019 09:24:41 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC PATCH v3 6/7] scripts/sorttable: Add ORC unwind tables sort concurrently
+Date:   Fri, 15 Nov 2019 09:24:07 -0800
+Message-Id: <A4F85A0C-C8A8-4226-A334-276F9D0C2679@amacapital.net>
+References: <9594afbc-52bc-5ae7-4a19-8fc4b36a1abd@linux.alibaba.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+In-Reply-To: <9594afbc-52bc-5ae7-4a19-8fc4b36a1abd@linux.alibaba.com>
+To:     Shile Zhang <shile.zhang@linux.alibaba.com>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 08:11:50AM +1100, Dave Chinner wrote:
-> On Mon, Nov 04, 2019 at 10:29:54AM -0500, Brian Foster wrote:
-> > On Fri, Nov 01, 2019 at 10:46:02AM +1100, Dave Chinner wrote:
-> > > @@ -601,10 +605,10 @@ static unsigned long do_shrink_slab(struct shri=
-nk_control *shrinkctl,
-> > >  =09 * scanning at high prio and therefore should try to reclaim as m=
-uch as
-> > >  =09 * possible.
-> > >  =09 */
-> > > -=09while (total_scan >=3D batch_size ||
-> > > -=09       total_scan >=3D freeable_objects) {
-> > > +=09while (scan_count >=3D batch_size ||
-> > > +=09       scan_count >=3D freeable_objects) {
-> > >  =09=09unsigned long ret;
-> > > -=09=09unsigned long nr_to_scan =3D min(batch_size, total_scan);
-> > > +=09=09unsigned long nr_to_scan =3D min_t(long, batch_size, scan_coun=
-t);
-> > > =20
-> > >  =09=09shrinkctl->nr_to_scan =3D nr_to_scan;
-> > >  =09=09shrinkctl->nr_scanned =3D nr_to_scan;
-> > > @@ -614,29 +618,29 @@ static unsigned long do_shrink_slab(struct shri=
-nk_control *shrinkctl,
-> > >  =09=09freed +=3D ret;
-> > > =20
-> > >  =09=09count_vm_events(SLABS_SCANNED, shrinkctl->nr_scanned);
-> > > -=09=09total_scan -=3D shrinkctl->nr_scanned;
-> > > -=09=09scanned +=3D shrinkctl->nr_scanned;
-> > > +=09=09scan_count -=3D shrinkctl->nr_scanned;
-> > > +=09=09scanned_objects +=3D shrinkctl->nr_scanned;
-> > > =20
-> > >  =09=09cond_resched();
-> > >  =09}
-> > > -
-> > >  done:
-> > > -=09if (next_deferred >=3D scanned)
-> > > -=09=09next_deferred -=3D scanned;
-> > > +=09if (deferred_count)
-> > > +=09=09next_deferred =3D deferred_count - scanned_objects;
-> > >  =09else
-> > > -=09=09next_deferred =3D 0;
-> > > +=09=09next_deferred =3D scan_count;
-> >=20
-> > Hmm.. so if there was no deferred count on this cycle, we set
-> > next_deferred to whatever is left from scan_count and add that back int=
-o
-> > the shrinker struct below. If there was a pending deferred count on thi=
-s
-> > cycle, we subtract what we scanned from that and add that value back.
-> > But what happens to the remaining scan_count in the latter case? Is it
-> > lost, or am I missing something?
+
+> On Nov 15, 2019, at 1:43 AM, Shile Zhang <shile.zhang@linux.alibaba.com> w=
+rote:
 >=20
-> if deferred_count is not zero, then it is kswapd that is running. It
-> does the deferred work, and if it doesn't make progress then adding
-> it's scan count to the deferred work doesn't matter. That's because
-> it will come back with an increased priority in a short while and
-> try to scan more of the deferred count plus it's larger scan count.
+> =EF=BB=BF
 >=20
-
-Ok, so perhaps there is no functional reason to defer remaining scan
-count from a context (i.e. kswapd) that attempts to process deferred
-work...
-
-> IOWs, if we defer kswapd unused scan count, we effectively increase
-> the pressure as the priority goes up, potentially making the
-> deferred count increase out of control. i.e. kswapd can make
-> progress and free items, but the result is that it increased the
-> deferred scan count rather than reducing it. This leads to excessive
-> reclaim of the slab caches and kswapd can trash the caches long
-> after the memory pressure has gone away...
+>> On 2019/11/15 17:07, Peter Zijlstra wrote:
+>>> On Fri, Nov 15, 2019 at 02:47:49PM +0800, Shile Zhang wrote:
+>>>=20
+>>> +#if defined(SORTTABLE_64) && defined(UNWINDER_ORC_ENABLED)
+>>> +/* ORC unwinder only support X86_64 */
+>>> +#include <errno.h>
+>>> +#include <pthread.h>
+>>> +#include <linux/types.h>
+>>> +
+>>> +#define ORC_REG_UNDEFINED    0
+>>> +#define ERRSTRING_MAXSZ        256
+>>> +
+>>> +struct orc_entry {
+>>> +    s16        sp_offset;
+>>> +    s16        bp_offset;
+>>> +    unsigned    sp_reg:4;
+>>> +    unsigned    bp_reg:4;
+>>> +    unsigned    type:2;
+>>> +    unsigned    end:1;
+>>> +} __attribute__((packed));
+>>> +
+>>> +struct orctable_info {
+>>> +    size_t    orc_size;
+>>> +    size_t    orc_ip_size;
+>>> +} orctable;
+>> There's ./arch/x86/include/asm/orc_types.h for this. Please don't
+>> duplicate. objtool uses that same header.
+> Good catch! Thanks for your kindly reminder! I'll remove it.
+>>> +/**
+>>> + * sort - sort an array of elements
+>>> + * @base: pointer to data to sort
+>>> + * @num: number of elements
+>>> + * @size: size of each element
+>>> + * @cmp_func: pointer to comparison function
+>>> + * @swap_func: pointer to swap function
+>>> + *
+>>> + * This function does a heapsort on the given array. You may provide a
+>>> + * swap_func function optimized to your element type.
+>>> + *
+>>> + * Sorting time is O(n log n) both on average and worst-case. While
+>>> + * qsort is about 20% faster on average, it suffers from exploitable
+>>> + * O(n*n) worst-case behavior and extra memory requirements that make
+>>> + * it less suitable for kernel use.
+>>> + *
+>>> + * This code token out of /lib/sort.c.
+>>> + */
+>>> +static void sort(void *base, size_t num, size_t size,
+>>> +      int (*cmp_func)(const void *, const void *),
+>>> +      void (*swap_func)(void *, void *, int size))
+>>> +{
+>>> +    /* pre-scale counters for performance */
+>>> +    int i =3D (num/2 - 1) * size, n =3D num * size, c, r;
+>>> +
+>>> +    /* heapify */
+>>> +    for ( ; i >=3D 0; i -=3D size) {
+>>> +        for (r =3D i; r * 2 + size < n; r  =3D c) {
+>>> +            c =3D r * 2 + size;
+>>> +            if (c < n - size &&
+>>> +                    cmp_func(base + c, base + c + size) < 0)
+>>> +                c +=3D size;
+>>> +            if (cmp_func(base + r, base + c) >=3D 0)
+>>> +                break;
+>>> +            swap_func(base + r, base + c, size);
+>>> +        }
+>>> +    }
+>>> +
+>>> +    /* sort */
+>>> +    for (i =3D n - size; i > 0; i -=3D size) {
+>>> +        swap_func(base, base + i, size);
+>>> +        for (r =3D 0; r * 2 + size < i; r =3D c) {
+>>> +            c =3D r * 2 + size;
+>>> +            if (c < i - size &&
+>>> +                    cmp_func(base + c, base + c + size) < 0)
+>>> +                c +=3D size;
+>>> +            if (cmp_func(base + r, base + c) >=3D 0)
+>>> +                break;
+>>> +            swap_func(base + r, base + c, size);
+>>> +        }
+>>> +    }
+>>> +}
+>> Do we really need to copy the heapsort implementation? That is, why not
+>> use libc's qsort() ? This is userspace after all.
 >=20
+> Yes, I think qsort is better choice than copy-paste here. But qsort does n=
+ot support customized swap func, which is needed for ORC unwind swap two tab=
+les together.
+> I think it's hard to do with qsort, so I used sort same with original orc u=
+nwind table sort.
 
-... yet if kswapd runs without pre-existing deferred work, that's
-precisely what it does. next_deferred is set to remaining scan_count and
-that is added back to the shrinker struct. So should kswapd generally
-defer work or not? If the answer is sometimes, then please add a comment
-to the next_deferred assignment to explain when/why.
+One solution is to make an array of indices 0, 1, 2, etc, and sort that usin=
+g a comparison function that compares i,j by actually comparing source[i], s=
+ource[j]. (Or use pointers, but indices are probably faster on a 64-bit mach=
+ine if you can use 32-bit indices.) Then, after sorting, permute the origina=
+l array using the now-sorted indices. In the case where swapping is expensiv=
+e, this is actually faster, since it does exactly n moves instead of O(n log=
+ n).
 
-> > For example, suppose we start this cycle with a large scan_count and
-> > ->scan_objects() returned SHRINK_STOP before doing much work. In that
-> > scenario, it looks like whether ->nr_deferred is 0 or not is the only
-> > thing that determines whether we defer the entire remaining scan_count
-> > or just what is left from the previous ->nr_deferred. The existing code
-> > appears to consistently factor in what is left from the current scan
-> > with the previous deferred count. Hm?
 >=20
-> If kswapd doesn't have any deferred work, then it's largely no
-> different in behaviour to direct reclaim. If it has no deferred
-> work, then the shrinker is not getting stopped early in direct
-> reclaim, so it's unlikely that kswapd is going to get stopped early,
-> either....
->=20
-
-Then perhaps the logic could be simplified to explicitly not defer from
-kswapd..?
-
-Brian
-
-> Cheers,
->=20
-> Dave.
-> --=20
-> Dave Chinner
-> david@fromorbit.com
->=20
-
