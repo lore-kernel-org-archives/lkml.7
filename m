@@ -2,231 +2,129 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D54DC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66988C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB6A20803
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E2FB2075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573798968;
-	bh=CgAhgakrXfD1X5gqGHUYuXq/VOonmV1rMSWMQeGDTSw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=fqYr5V11w3bE0YqBzFkQStYf70bGYv0986C+IkFdzS6uoKwNJ9FS97MM3KzW587HC
-	 1xmgk46eEvnxhwYnolcZnY1+UXUOtfXH0w+rqkTDn5YRWlxIP4wkp4453cQyBDMdPw
-	 3oh+TdAqPtizyDpZN7AvDNjc3qc+67rJ7uxIJyxc=
+	s=default; t=1573798971;
+	bh=mkLJIs9ecrxNE7DnRoualZWks1FmwOQshK2BMx4ylBA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=n1izzol4ke1n+qT+xU7L3ALDTwaRlo/7fvMswnprNkO91ukUENCjtfPXLy+ZZAXhV
+	 CfoyqaFFCQ6fjK8ltt6SwVYTqc7RdMe2PMdCp5LjhaKt2ZET+U5o1VNXALwYakXcxr
+	 lW3GKSaPDk/LDqwhd+n74QMShJ1ZVy9oz2naWM54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbfKOGWq (ORCPT
+        id S1727532AbfKOGWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:22:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52196 "EHLO mail.kernel.org"
+        Fri, 15 Nov 2019 01:22:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727804AbfKOGWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:22:43 -0500
+        id S1727842AbfKOGWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:22:47 -0500
 Received: from localhost (unknown [104.132.150.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB9A920801;
-        Fri, 15 Nov 2019 06:22:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D90320740;
+        Fri, 15 Nov 2019 06:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573798962;
-        bh=CgAhgakrXfD1X5gqGHUYuXq/VOonmV1rMSWMQeGDTSw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Z+L0s4dQqNCCKm/CUUG2G+nIghcge0DFORPusAQ553ta5k0QRTSKI5FbNVdOFwWEP
-         jEGmIYD9xAZfK4fkBzsPNYAIbO3/hjQovUOi4r8FJJMY88yvmF1xN2R+dkcTvDTmuM
-         Y9q/8vTlaYdkiweXM6k78RgppQPEPzjJruE2gHYs=
+        s=default; t=1573798966;
+        bh=mkLJIs9ecrxNE7DnRoualZWks1FmwOQshK2BMx4ylBA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GA/qNxovIkfj0z+lW5Gn/kYLYWrORilK167UQpqVnTqVo3fQ0k+W/btJMM+jgc0D4
+         +JtzR/Lk7cV+Qad1T4V/99lmLaFN0CgsV37/OlgptIGymUQjlEvS5886GOtPsjH5gS
+         S5zTNjpEeYBWuBKL9Zs9n/a2Pt8PoUYNycFG4Vvk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.9 00/31] 4.9.202-stable review
-Date:   Fri, 15 Nov 2019 14:20:29 +0800
-Message-Id: <20191115062009.813108457@linuxfoundation.org>
+        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.9 25/31] KVM: vmx, svm: always run with EFER.NXE=1 when shadow paging is active
+Date:   Fri, 15 Nov 2019 14:20:54 +0800
+Message-Id: <20191115062018.977683813@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
+In-Reply-To: <20191115062009.813108457@linuxfoundation.org>
+References: <20191115062009.813108457@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.202-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.202-rc1
-X-KernelTest-Deadline: 2019-11-17T06:20+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.9.202 release.
-There are 31 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-Responses should be made by Sun, 17 Nov 2019 06:18:35 +0000.
-Anything received after that time might be too late.
+commit 9167ab79936206118cc60e47dcb926c3489f3bd5 upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.202-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-and the diffstat can be found below.
+VMX already does so if the host has SMEP, in order to support the combination of
+CR0.WP=1 and CR4.SMEP=1.  However, it is perfectly safe to always do so, and in
+fact VMX already ends up running with EFER.NXE=1 on old processors that lack the
+"load EFER" controls, because it may help avoiding a slow MSR write.  Removing
+all the conditionals simplifies the code.
 
-thanks,
+SVM does not have similar code, but it should since recent AMD processors do
+support SMEP.  So this patch also makes the code for the two vendors more similar
+while fixing NPT=0, CR0.WP=1 and CR4.SMEP=1 on AMD processors.
 
-greg k-h
+Cc: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+[bwh: Backported to 4.9: adjust filename]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ arch/x86/kvm/svm.c |   10 ++++++++--
+ arch/x86/kvm/vmx.c |   14 +++-----------
+ 2 files changed, 11 insertions(+), 13 deletions(-)
 
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.9.202-rc1
-
-Gomez Iglesias, Antonio <antonio.gomez.iglesias@intel.com>
-    Documentation: Add ITLB_MULTIHIT documentation
-
-Junaid Shahid <junaids@google.com>
-    kvm: x86: mmu: Recovery of shattered NX large pages
-
-Junaid Shahid <junaids@google.com>
-    kvm: Add helper function for creating VM worker threads
-
-Paolo Bonzini <pbonzini@redhat.com>
-    kvm: mmu: ITLB_MULTIHIT mitigation
-
-Tyler Hicks <tyhicks@canonical.com>
-    cpu/speculation: Uninline and export CPU mitigations helpers
-
-Vineela Tummalapalli <vineela.tummalapalli@intel.com>
-    x86/bugs: Add ITLB_MULTIHIT bug infrastructure
-
-Paolo Bonzini <pbonzini@redhat.com>
-    KVM: vmx, svm: always run with EFER.NXE=1 when shadow paging is active
-
-Paolo Bonzini <pbonzini@redhat.com>
-    KVM: x86: add tracepoints around __direct_map and FNAME(fetch)
-
-Ben Hutchings <ben@decadent.org.uk>
-    KVM: x86: Add is_executable_pte()
-
-Paolo Bonzini <pbonzini@redhat.com>
-    KVM: x86: change kvm_mmu_page_get_gfn BUG_ON to WARN_ON
-
-Paolo Bonzini <pbonzini@redhat.com>
-    KVM: x86: remove now unneeded hugepage gfn adjustment
-
-Paolo Bonzini <pbonzini@redhat.com>
-    KVM: x86: make FNAME(fetch) and __direct_map more similar
-
-Junaid Shahid <junaids@google.com>
-    kvm: x86: Do not release the page inside mmu_set_spte()
-
-Junaid Shahid <junaids@google.com>
-    kvm: Convert kvm_lock to a mutex
-
-Paolo Bonzini <pbonzini@redhat.com>
-    KVM: x86: extend usage of RET_MMIO_PF_* constants
-
-Paolo Bonzini <pbonzini@redhat.com>
-    KVM: x86: simplify ept_misconfig
-
-Josh Poimboeuf <jpoimboe@redhat.com>
-    x86/speculation/taa: Fix printing of TAA_MSG_SMT on IBRS_ALL CPUs
-
-Michal Hocko <mhocko@suse.com>
-    x86/tsx: Add config options to set tsx=on|off|auto
-
-Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-    x86/speculation/taa: Add documentation for TSX Async Abort
-
-Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-    x86/tsx: Add "auto" option to the tsx= cmdline parameter
-
-Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-    kvm/x86: Export MDS_NO=0 to guests when TSX is enabled
-
-Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-    x86/speculation/taa: Add sysfs reporting for TSX Async Abort
-
-Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-    x86/speculation/taa: Add mitigation for TSX Async Abort
-
-Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-    x86/cpu: Add a "tsx=" cmdline option with TSX disabled by default
-
-Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-    x86/cpu: Add a helper function x86_read_arch_cap_msr()
-
-Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-    x86/msr: Add the IA32_TSX_CTRL MSR
-
-Paolo Bonzini <pbonzini@redhat.com>
-    KVM: x86: use Intel speculation bugs and features as derived in generic x86 code
-
-Jack Pham <jackp@codeaurora.org>
-    usb: gadget: core: unmap request from DMA only if previously mapped
-
-Jonas Gorski <jonas.gorski@gmail.com>
-    MIPS: BCM63XX: fix switch core reset on BCM6368
-
-Kefeng Wang <wangkefeng.wang@huawei.com>
-    Bluetooth: hci_ldisc: Postpone HCI_UART_PROTO_READY bit set in hci_uart_set_proto()
-
-Junaid Shahid <junaids@google.com>
-    kvm: mmu: Don't read PDPTEs when paging is not enabled
-
-
--------------
-
-Diffstat:
-
- Documentation/ABI/testing/sysfs-devices-system-cpu |   2 +
- Documentation/hw-vuln/index.rst                    |   2 +
- Documentation/hw-vuln/multihit.rst                 | 163 ++++++++
- Documentation/hw-vuln/tsx_async_abort.rst          | 276 +++++++++++++
- Documentation/kernel-parameters.txt                |  92 +++++
- Documentation/virtual/kvm/locking.txt              |   6 +-
- Documentation/x86/index.rst                        |   1 +
- Documentation/x86/tsx_async_abort.rst              | 117 ++++++
- Makefile                                           |   4 +-
- arch/mips/bcm63xx/reset.c                          |   2 +-
- arch/s390/kvm/kvm-s390.c                           |   4 +-
- arch/x86/Kconfig                                   |  45 ++
- arch/x86/include/asm/cpufeatures.h                 |   2 +
- arch/x86/include/asm/kvm_host.h                    |   6 +
- arch/x86/include/asm/msr-index.h                   |  16 +
- arch/x86/include/asm/nospec-branch.h               |   4 +-
- arch/x86/include/asm/processor.h                   |   7 +
- arch/x86/kernel/cpu/Makefile                       |   2 +-
- arch/x86/kernel/cpu/bugs.c                         | 161 +++++++-
- arch/x86/kernel/cpu/common.c                       |  93 +++--
- arch/x86/kernel/cpu/cpu.h                          |  18 +
- arch/x86/kernel/cpu/intel.c                        |   5 +
- arch/x86/kernel/cpu/tsx.c                          | 140 +++++++
- arch/x86/kvm/cpuid.c                               |   8 +
- arch/x86/kvm/mmu.c                                 | 452 +++++++++++++++++----
- arch/x86/kvm/mmu.h                                 |  21 +-
- arch/x86/kvm/mmutrace.h                            |  59 +++
- arch/x86/kvm/paging_tmpl.h                         |  79 ++--
- arch/x86/kvm/svm.c                                 |  10 +-
- arch/x86/kvm/vmx.c                                 |  27 +-
- arch/x86/kvm/x86.c                                 |  61 ++-
- drivers/base/cpu.c                                 |  17 +
- drivers/bluetooth/hci_ldisc.c                      |   3 +-
- drivers/usb/gadget/udc/core.c                      |   5 +-
- include/linux/cpu.h                                |  30 +-
- include/linux/kvm_host.h                           |   8 +-
- include/linux/usb/gadget.h                         |   2 +
- kernel/cpu.c                                       |  27 +-
- virt/kvm/kvm_main.c                                | 132 +++++-
- 39 files changed, 1855 insertions(+), 254 deletions(-)
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -590,8 +590,14 @@ static int get_npt_level(void)
+ static void svm_set_efer(struct kvm_vcpu *vcpu, u64 efer)
+ {
+ 	vcpu->arch.efer = efer;
+-	if (!npt_enabled && !(efer & EFER_LMA))
+-		efer &= ~EFER_LME;
++
++	if (!npt_enabled) {
++		/* Shadow paging assumes NX to be available.  */
++		efer |= EFER_NX;
++
++		if (!(efer & EFER_LMA))
++			efer &= ~EFER_LME;
++	}
+ 
+ 	to_svm(vcpu)->vmcb->save.efer = efer | EFER_SVME;
+ 	mark_dirty(to_svm(vcpu)->vmcb, VMCB_CR);
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -2219,17 +2219,9 @@ static bool update_transition_efer(struc
+ 	u64 guest_efer = vmx->vcpu.arch.efer;
+ 	u64 ignore_bits = 0;
+ 
+-	if (!enable_ept) {
+-		/*
+-		 * NX is needed to handle CR0.WP=1, CR4.SMEP=1.  Testing
+-		 * host CPUID is more efficient than testing guest CPUID
+-		 * or CR4.  Host SMEP is anyway a requirement for guest SMEP.
+-		 */
+-		if (boot_cpu_has(X86_FEATURE_SMEP))
+-			guest_efer |= EFER_NX;
+-		else if (!(guest_efer & EFER_NX))
+-			ignore_bits |= EFER_NX;
+-	}
++	/* Shadow paging assumes NX to be available.  */
++	if (!enable_ept)
++		guest_efer |= EFER_NX;
+ 
+ 	/*
+ 	 * LMA and LME handled by hardware; SCE meaningless outside long mode.
 
 
