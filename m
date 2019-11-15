@@ -2,218 +2,133 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE663C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB61C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F3B52075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:25:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yWCtHgRl"
+	by mail.kernel.org (Postfix) with ESMTP id 1133820748
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:25:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbfKOMZW (ORCPT
+        id S1727768AbfKOMZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:25:22 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36408 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbfKOMZS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 07:25:18 -0500
-Received: by mail-lj1-f196.google.com with SMTP id k15so10502941lja.3
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 04:25:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=a5dA1if5/dQUQeOTvdz3dJTa9SYokhdVUuKyxt1MvCE=;
-        b=yWCtHgRlb4JZrA50T4PvT54dR5u+qgTHvhqG+YCar+56kZzaBL1GHP4g9OKYRAiq3q
-         8yjgciJsyX4xve0vLX7QAOCUtaTNM6p58BmQDeip9IcENPnSCmpEmhqekYKAlZFxWAJo
-         d8/gD7pxEipb4Zqr0AJlDuCiaSVVkQl2ldBcVIfwCZ7CcczIILwMLvOZIQjiVMmTxkmO
-         Rbu4huZoF982p2IGm30Dyn22gJam6KHByalfJ+1lFQ33UCjNajxN9dALj3LTYcSB7hQP
-         t1RW37inWkg8hUugq+lFfKrQNQRMWsYKH6T8shNgx3L3Fez1L8InBtQgk+qF/XA/yKM9
-         ZuCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=a5dA1if5/dQUQeOTvdz3dJTa9SYokhdVUuKyxt1MvCE=;
-        b=i2hx7+bYeiSazDGlq8RU+/D6S0KqBDue6We5pF3cXbni5/9DAuZYo7vCloK9gRyV2a
-         jQ7m3NiQ3aV6g+3Pqz79esOePBEan5dEtLSmEsrPvpYQudbFM98W1pFYeiVXvZH/4VCu
-         rkzPx4EuO2SojPzWRhXQIaov/zU1jxEPR0hhRKpRW4eeQxZ3dOltp/3RlDNJuiYXCjL2
-         ZiyHP0wxvjtiTukYvic/KXtc3w/keLYowJ0AXNMMDol7tduoYN3t1i8O+cG1JhQIr84G
-         MOsMl1zEnVikv7nL0wIkva4QGRQZtgkfGhOTf/i+6ZmZEPyB3Ww+69dXfwobeDU3vT6t
-         7RAw==
-X-Gm-Message-State: APjAAAW07KdhFV+B/02sePq0os5GLqCs33QjHsNDSJVn5Mc3jQoTv4b4
-        4LosrPpwHJAiJDNkfGy8SL+dkn+rGcbXd4MaLOBw5w==
-X-Google-Smtp-Source: APXvYqx8XtWvU/urGTyHEcUEsNketHxIixjd/Ef3NbTOYU3Cg7krIvcGwOH3/8NFn7fsISi0vWBtOnn97sLIk8bgVhk=
-X-Received: by 2002:a2e:9695:: with SMTP id q21mr10562244lji.206.1573820716098;
- Fri, 15 Nov 2019 04:25:16 -0800 (PST)
+        Fri, 15 Nov 2019 07:25:25 -0500
+Received: from foss.arm.com ([217.140.110.172]:58224 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727715AbfKOMZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 07:25:17 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00A2031B;
+        Fri, 15 Nov 2019 04:25:17 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 15C963F534;
+        Fri, 15 Nov 2019 04:25:15 -0800 (PST)
+Date:   Fri, 15 Nov 2019 12:25:14 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the ftrace tree with the arm64 tree
+Message-ID: <20191115122513.GB41572@lakrids.cambridge.arm.com>
+References: <20191115135357.10386fac@canb.auug.org.au>
 MIME-Version: 1.0
-References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org>
- <20191115095447.GU4114@hirez.programming.kicks-ass.net> <CAKfTPtCTcrq1E1H8A3TL1xvALUrQ7ybPoERJ+C2O2+QXpVEZGQ@mail.gmail.com>
- <CAKfTPtA-up_9WHfTka33WRxXCatUZioYS0v5gY9jjzOGT98oLQ@mail.gmail.com> <20191115115935.GA27454@linaro.org>
-In-Reply-To: <20191115115935.GA27454@linaro.org>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 15 Nov 2019 13:25:04 +0100
-Message-ID: <CAKfTPtDzeFi7E3q-o7-KghKWm6eVgN4BLKKphQJYJyqCoVP5Yg@mail.gmail.com>
-Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Doug Smythies <dsmythies@telus.net>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115135357.10386fac@canb.auug.org.au>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 at 12:59, Vincent Guittot
-<vincent.guittot@linaro.org> wrote:
->
-> Le Friday 15 Nov 2019 =C3=A0 11:29:03 (+0100), Vincent Guittot a =C3=A9cr=
-it :
-> > On Fri, 15 Nov 2019 at 11:18, Vincent Guittot
-> > <vincent.guittot@linaro.org> wrote:
-> > >
-> > > On Fri, 15 Nov 2019 at 10:55, Peter Zijlstra <peterz@infradead.org> w=
-rote:
-> > > >
-> > > > On Thu, Nov 14, 2019 at 06:07:31PM +0100, Vincent Guittot wrote:
-> > > > > update_cfs_rq_load_avg() calls cfs_rq_util_change() everytime pel=
-t decays,
-> > > > > which might be inefficient when cpufreq driver has rate limitatio=
-n.
-> > > > >
-> > > > > When a task is attached on a CPU, we have call path:
-> > > > >
-> > > > > update_load_avg()
-> > > > >   update_cfs_rq_load_avg()
-> > > > >     cfs_rq_util_change -- > trig frequency update
-> > > > >   attach_entity_load_avg()
-> > > > >     cfs_rq_util_change -- > trig frequency update
-> > > > >
-> > > > > The 1st frequency update will not take into account the utilizati=
-on of the
-> > > > > newly attached task and the 2nd one might be discard because of r=
-ate
-> > > > > limitation of the cpufreq driver.
-> > > >
-> > > > Doesn't this just show that a dumb rate limit in the driver is brok=
-en?
-> > >
-> > > But the rate limit may come from HW constraints that forces to wait
-> > > let say 4ms or even 10ms between each frequency update.
-> > >
-> > > >
-> > > > > update_cfs_rq_load_avg() is only called by update_blocked_average=
-s()
-> > > > > and update_load_avg() so we can move the call to
-> > > > > cfs_rq_util_change/cpufreq_update_util() into these 2 functions. =
-It's also
-> > > > > interesting to notice that update_load_avg() already calls direct=
-ly
-> > > > > cfs_rq_util_change() for !SMP case.
-> > > > >
-> > > > > This changes will also ensure that cpufreq_update_util() is calle=
-d even
-> > > > > when there is no more CFS rq in the leaf_cfs_rq_list to update bu=
-t only
-> > > > > irq, rt or dl pelt signals.
-> > > >
-> > > > I don't think it does that; that is, iirc the return value of
-> > > > ___update_load_sum() is 1 every time a period lapses. So even if th=
-e avg
-> > > > is 0 and doesn't change, it'll still return 1 on every period.
-> > > >
-> > > > Which is what that dumb rate-limit thing wants of course. But I'm s=
-till
-> > > > thinking that it's stupid to do. If nothing changes, don't generate
-> > > > events.
-> > >
-> > > When everything (irq, dl, rt, cfs) is 0, we don't generate events
-> > > because update_blocked_averages is no more called because
-> > > rq->has_blocked_load is clear
-> > >
-> > > With current implementation, if cfs is 0 but not irq, dl or rt, we
-> > > don't call cpufreq_update_util because it is only called through cfs
-> > >
-> > > >
-> > > > If anything, update_blocked_avgerages() should look at
-> > > > @done/others_have_blocked() to emit events for rt,dl,irq.
-> > >
-> > > other_have_blocked can be set but no decay happened during the update
-> > > and we don't need to call cpufreq_update_util
-> > >
-> > > >
-> > > > So why are we making the scheduler code more ugly instead of fixing=
- that
-> > > > driver?
-> >
-> > Also, I think that calling cfs_rq_util_change in
-> > attach_entity_load_avg is not optimal because the attach can happen at
-> > a child level before it has been propagated down to root
-> > So I'm working on trying to remove it from attach_entity_load_avg and
-> > keep it in update_load_avg. this would help cleaning the ugly
-> >
-> > -       } else if (decayed && (flags & UPDATE_TG))
-> > -               update_tg_load_avg(cfs_rq, 0);
-> > +       } else if (decayed) {
-> > +               cfs_rq_util_change(cfs_rq, 0);
-> > +
-> > +               if (flags & UPDATE_TG)
-> > +                       update_tg_load_avg(cfs_rq, 0);
-> > +       }
-> >  }
-> >
->
-> we can also do this instead :
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index d377a3f..550b6bc 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -3614,15 +3614,15 @@ static inline void update_load_avg(struct cfs_rq =
-*cfs_rq, struct sched_entity *s
->                  *
->                  * IOW we're enqueueing a task on a new CPU.
->                  */
-> -               attach_entity_load_avg(cfs_rq, se, SCHED_CPUFREQ_MIGRATIO=
-N);
-> +               attach_entity_load_avg(cfs_rq, se, 0);
->                 update_tg_load_avg(cfs_rq, 0);
-> +               decayed =3D 1;
->
-> -       } else if (decayed) {
-> -               cfs_rq_util_change(cfs_rq, 0);
-> +       } else if (decayed && (flags & UPDATE_TG))
-> +               update_tg_load_avg(cfs_rq, 0);
->
-> -               if (flags & UPDATE_TG)
-> -                       update_tg_load_avg(cfs_rq, 0);
-> -       }
-> +       if (decayed)
-> +               cfs_rq_util_change(cfs_rq, 0);
->  }
+On Fri, Nov 15, 2019 at 01:53:57PM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the ftrace tree got a conflict in:
+> 
+>   include/asm-generic/vmlinux.lds.h
+> 
+> between commit:
+> 
+>   a1326b17ac03 ("module/ftrace: handle patchable-function-entry")
+> 
+> from the arm64 tree and commit:
+> 
+>   b83b43ffc6e4 ("fgraph: Fix function type mismatches of ftrace_graph_return using ftrace_stub")
+> 
+> from the ftrace tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
 
-Forget this ... It's not enough and will continue to generate spurious
-call when task is at root domain
+Thanks Stephen!
 
->
->
->
-> >
+Steven (Rostedt), what's your preference for handling this?
+
+We can drop revert the arm64 change to vmlinux.lds.h for now (and I can
+send it as a subsequent cleanup), or you could merge my
+arm64/ftrace-with-regs branch and fix this up in the ftrace tree.
+
+Thanks,
+Mark.
+
+> 
+> diff --cc include/asm-generic/vmlinux.lds.h
+> index 63cedc3c0c77,0f358be551cd..000000000000
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@@ -136,19 -110,30 +136,29 @@@
+>   #endif
+>   
+>   #ifdef CONFIG_FTRACE_MCOUNT_RECORD
+>  -#ifdef CC_USING_PATCHABLE_FUNCTION_ENTRY
+>  +/*
+>  + * The ftrace call sites are logged to a section whose name depends on the
+>  + * compiler option used. A given kernel image will only use one, AKA
+>  + * FTRACE_CALLSITE_SECTION. We capture all of them here to avoid header
+>  + * dependencies for FTRACE_CALLSITE_SECTION's definition.
+>  + */
+> + /*
+> +  * Need to also make ftrace_graph_stub point to ftrace_stub
+> +  * so that the same stub location may have different protocols
+> +  * and not mess up with C verifiers.
+> +  */
+>  -#define MCOUNT_REC()	. = ALIGN(8);				\
+>  -			__start_mcount_loc = .;			\
+>  -			KEEP(*(__patchable_function_entries))	\
+>  -			__stop_mcount_loc = .;			\
+>  -			ftrace_graph_stub = ftrace_stub;
+>  -#else
+>   #define MCOUNT_REC()	. = ALIGN(8);				\
+>   			__start_mcount_loc = .;			\
+>   			KEEP(*(__mcount_loc))			\
+>  +			KEEP(*(__patchable_function_entries))	\
+> - 			__stop_mcount_loc = .;
+> + 			__stop_mcount_loc = .;			\
+> + 			ftrace_graph_stub = ftrace_stub;
+>  -#endif
+>   #else
+> - #define MCOUNT_REC()
+> + # ifdef CONFIG_FUNCTION_TRACER
+> + #  define MCOUNT_REC()	ftrace_graph_stub = ftrace_stub;
+> + # else
+> + #  define MCOUNT_REC()
+> + # endif
+>   #endif
+>   
+>   #ifdef CONFIG_TRACE_BRANCH_PROFILING
+
+
