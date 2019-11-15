@@ -2,89 +2,101 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C091C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B68C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D2582073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:18:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Zc/Sb8xa"
+	by mail.kernel.org (Postfix) with ESMTP id 927892073C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:21:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573798870;
+	bh=Zy1uBYvPG6qBGTDoOPyw2yrFYen+93X9hti5Uk74Mfw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wT96B3AuENOBcOkTA8ZOJQ0OLUnpkgDH11JbiGx6sKqybA+VB116HUQfAe5uqQxI/
+	 tb+U+IJppXKvA5PkA8flM1ke/x56sddZ5RinjIizAhX1fyuTVzyNFfkwe8OVmNzJ3c
+	 D597+cYxIgNQGOVGsxvE2JceDn2eZ8h2wufF8be4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfKOGSW (ORCPT
+        id S1726996AbfKOGVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:18:22 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:7032 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbfKOGSW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:18:22 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dce43300000>; Thu, 14 Nov 2019 22:18:24 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 14 Nov 2019 22:18:21 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 14 Nov 2019 22:18:21 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 15 Nov
- 2019 06:18:21 +0000
-Subject: Re: [PATCH] mm/hmm: remove hmm_range_dma_map and hmm_range_dma_unmap
-To:     Christoph Hellwig <hch@lst.de>, <jgg@ziepe.ca>,
-        <jglisse@redhat.com>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-References: <20191113134528.21187-1-hch@lst.de>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <688e4271-bedd-c296-6a35-4547191c8f93@nvidia.com>
-Date:   Thu, 14 Nov 2019 22:18:20 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 15 Nov 2019 01:21:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725774AbfKOGVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:21:09 -0500
+Received: from localhost (unknown [104.132.150.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53D1A2073A;
+        Fri, 15 Nov 2019 06:21:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573798868;
+        bh=Zy1uBYvPG6qBGTDoOPyw2yrFYen+93X9hti5Uk74Mfw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cEbHH4CvuPiWde+xDfiJ+NU42Z6NEyd+Fhzt69JLrGVoTpdtXr7qNAGWX0uM3fVlk
+         7WQ+FqlVM/rSdtsIFES8jPt9wsP4coqy05pCGK31qxCum1qKORJK4CroIKJylVL4LC
+         7aZ698SMiayWpIPRYi0IZOwv4LV3iah7W6+uuFsY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Junaid Shahid <junaids@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 01/20] kvm: mmu: Dont read PDPTEs when paging is not enabled
+Date:   Fri, 15 Nov 2019 14:20:30 +0800
+Message-Id: <20191115062008.017263210@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191115062006.854443935@linuxfoundation.org>
+References: <20191115062006.854443935@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-In-Reply-To: <20191113134528.21187-1-hch@lst.de>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1573798704; bh=sNcshHEF2avVA9rnTZtLVohwfbWOQokarhKdv+S/gRc=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Zc/Sb8xaujNVQ4vAJcVfvPPo9owAxzqF7WFgRq5g3HWn0xwmUv6krqoZt4lBVWB/D
-         nO4E439bNvYQDRD2M0We8h4vUYMDGeQ3N7E8mea/iBSF3HL2cnRQ9vk3luE6ZY2z28
-         qIsAT3jP2R5tE6rTrzgq8wsLWk5BxmvCE4qH0Q98usL50EijewJZGrg27jLQdNqGnY
-         dk5sVbJZl1fMiNse0AQcmLv+sHwp0bLpI+fh/OsQ/Bz3qUQP9+ztszxsgFVn87/8uo
-         aINr2qgVbIF3C8tdx6wNa0P8Z3kPE8gB3fRhRTc7bQaA8fcsUpfwlx+YOKTW0oFuNh
-         NhR+M72R2ud7w==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13/19 5:45 AM, Christoph Hellwig wrote:
-> These two functions have never been used since they were added.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  include/linux/hmm.h |  23 -------
->  mm/hmm.c            | 147 --------------------------------------------
->  2 files changed, 170 deletions(-)
+From: Junaid Shahid <junaids@google.com>
 
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+[ Upstream commit d35b34a9a70edae7ef923f100e51b8b5ae9fe899 ]
 
-Also +CC Ralph just for another look. But I know we're not using these 
-routines.
+kvm should not attempt to read guest PDPTEs when CR0.PG = 0 and
+CR4.PAE = 1.
+
+Signed-off-by: Junaid Shahid <junaids@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/kvm/x86.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -575,7 +575,7 @@ static bool pdptrs_changed(struct kvm_vc
+ 	gfn_t gfn;
+ 	int r;
+ 
+-	if (is_long_mode(vcpu) || !is_pae(vcpu))
++	if (is_long_mode(vcpu) || !is_pae(vcpu) || !is_paging(vcpu))
+ 		return false;
+ 
+ 	if (!test_bit(VCPU_EXREG_PDPTR,
+@@ -7168,7 +7168,7 @@ int kvm_arch_vcpu_ioctl_set_sregs(struct
+ 		kvm_update_cpuid(vcpu);
+ 
+ 	idx = srcu_read_lock(&vcpu->kvm->srcu);
+-	if (!is_long_mode(vcpu) && is_pae(vcpu)) {
++	if (!is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu)) {
+ 		load_pdptrs(vcpu, vcpu->arch.walk_mmu, kvm_read_cr3(vcpu));
+ 		mmu_reset_needed = 1;
+ 	}
 
 
-thanks,
--- 
-John Hubbard
-NVIDIA
