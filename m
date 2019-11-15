@@ -5,65 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69149C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55AAC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 380632075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADC902075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573820776;
-	bh=2kT458QwiUoJ1anrPh85zSPZ+t9Tlaax6hx/8GssUrU=;
+	s=default; t=1573820779;
+	bh=WYqKBqJRBZ/mpknJJ0tGnyIvi7uEH4FXWehBhkL4Ya8=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Kil+3po8PQzc/FmNmmo/SvlqzsIrios5Yfax2s+tL8sSFK9780N5dgk3arvTek5MI
-	 a9H8gNML+cxno2uludirY4WGyCD45MkRwjY4ga5P3H784Gg9G6WKG77O70udL7g6VW
-	 +TTn0odM23x3fAJaUcEiVpc5AMWj5vomjSOx3LF0=
+	b=gKIE8Hi5cdaEfY9JwPRj/qMR05bfkP41qTanxYgPnN6tyBsZuRbJ81QPEWMYh59NM
+	 s1AO13nAzsR2tL/zl3EQ3w3smSkEqOJfPpo4tBGYD2brlygrXZChAuP6YA2s9cHkou
+	 vNRWyVkAfWrFtN8pdJecWYwaezhU2nD6Hu6QyGmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbfKOM0P (ORCPT
+        id S1727690AbfKOMZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:26:15 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:32956 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727668AbfKOMZQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 15 Nov 2019 07:25:16 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:32780 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727343AbfKOMZM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 07:25:12 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=NoJQ/BiAhwJPJINl8oVLkVKiRSpmH92kSU++XZetC4w=; b=AX7xCxNoUWqj
-        vtQ7yCrfzLG7qoCLrx8SeqModvFHZhqGcXsHGU8f0pPjbTnSPNs7C88qKQ0OIVB6RRQ5noDvHyVNl
-        GyEVps9wjMmmyFD5WIQVNuKrmAr+kwtGtINtOUJYg+FFDbJVWyb9gFAYhb/W4Bttk+Y9/ceHShYaO
-        lsDOM=;
+        List-Archive; bh=9Xr+rAsIpC8CQjO9znN4MATq/9q62joQAxWNOZyqq4o=; b=OfifgALu+Jk8
+        +01yTvo/23z/ruBH+bITj+mKv3MQITklmQoUVZzusEdc7ek85enxfAS6rsMtCFPGwwSOwyJodvyqO
+        Mi2omigkbGXSpajrbgjB3WdcyZsT1cqpY1jqMu8lIYCsF8pQx+NoEGqJY6Hm3PUrW6iNSq9rAsgnY
+        Z1ykY=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iVaex-0000Km-W9; Fri, 15 Nov 2019 12:25:08 +0000
+        id 1iVaes-0000KB-7q; Fri, 15 Nov 2019 12:25:02 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 7C3AF2741609; Fri, 15 Nov 2019 12:25:07 +0000 (GMT)
+        id A43D1274162A; Fri, 15 Nov 2019 12:25:01 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Christoph Fritz <chf.fritz@googlemail.com>
-Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Christian Hemp <c.hemp@phytec.de>, devicetree@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
+To:     Michael Walle <michael@walle.cc>
+Cc:     alsa-devel@alsa-project.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Jaroslav Kysela <perex@perex.cz>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Riedmueller <s.riedmueller@phytec.de>,
-        Support Opensource <support.opensource@diasemi.com>
-Subject: Applied "regulator: da9062: add of_map_mode support for bucks" to the regulator tree
-In-Reply-To: <1573652416-9848-3-git-send-email-chf.fritz@googlemail.com>
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        patches@opensource.cirrus.com, Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: wm8904: fix regcache handling" to the asoc tree
+In-Reply-To: <20191112223629.21867-1-michael@walle.cc>
 X-Patchwork-Hint: ignore
-Message-Id: <20191115122507.7C3AF2741609@ypsilon.sirena.org.uk>
-Date:   Fri, 15 Nov 2019 12:25:07 +0000 (GMT)
+Message-Id: <20191115122501.A43D1274162A@ypsilon.sirena.org.uk>
+Date:   Fri, 15 Nov 2019 12:25:01 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -71,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: da9062: add of_map_mode support for bucks
+   ASoC: wm8904: fix regcache handling
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -96,104 +90,39 @@ to this mail.
 Thanks,
 Mark
 
-From 844e7492ee3da1a8714bf3cc1dd54d777a5257c2 Mon Sep 17 00:00:00 2001
-From: Christoph Fritz <chf.fritz@googlemail.com>
-Date: Wed, 13 Nov 2019 14:40:14 +0100
-Subject: [PATCH] regulator: da9062: add of_map_mode support for bucks
+From e9149b8c00d25dbaef1aa174fc604bed207e576d Mon Sep 17 00:00:00 2001
+From: Michael Walle <michael@walle.cc>
+Date: Tue, 12 Nov 2019 23:36:29 +0100
+Subject: [PATCH] ASoC: wm8904: fix regcache handling
 
-This patch adds of_map_mode support for bucks to set regulator modes
-from within regulator framework.
+The current code assumes that the power is turned off in
+SND_SOC_BIAS_OFF. If there are no actual regulator the codec isn't
+turned off and the registers are not reset to their default values but
+the regcache is still marked as dirty. Thus a value might not be written
+to the hardware if it is set to the default value. Do a software reset
+before turning off the power to make sure the registers are always reset
+to their default states.
 
-Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
-Signed-off-by: Christian Hemp <c.hemp@phytec.de>
-Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
-Link: https://lore.kernel.org/r/1573652416-9848-3-git-send-email-chf.fritz@googlemail.com
+Signed-off-by: Michael Walle <michael@walle.cc>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20191112223629.21867-1-michael@walle.cc
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/da9062-regulator.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ sound/soc/codecs/wm8904.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-regulator.c
-index 601002e3e012..29f4a60398a3 100644
---- a/drivers/regulator/da9062-regulator.c
-+++ b/drivers/regulator/da9062-regulator.c
-@@ -98,6 +98,20 @@ static const unsigned int da9062_buck_b_limits[] = {
- 	2300000, 2400000, 2500000, 2600000, 2700000, 2800000, 2900000, 3000000
- };
+diff --git a/sound/soc/codecs/wm8904.c b/sound/soc/codecs/wm8904.c
+index bcb3c9d5abf0..9e8c564f6e9c 100644
+--- a/sound/soc/codecs/wm8904.c
++++ b/sound/soc/codecs/wm8904.c
+@@ -1917,6 +1917,7 @@ static int wm8904_set_bias_level(struct snd_soc_component *component,
+ 		snd_soc_component_update_bits(component, WM8904_BIAS_CONTROL_0,
+ 				    WM8904_BIAS_ENA, 0);
  
-+static unsigned int da9062_map_buck_mode(unsigned int mode)
-+{
-+	switch (mode) {
-+	case DA9063_BUCK_MODE_SLEEP:
-+		return REGULATOR_MODE_STANDBY;
-+	case DA9063_BUCK_MODE_SYNC:
-+		return REGULATOR_MODE_FAST;
-+	case DA9063_BUCK_MODE_AUTO:
-+		return REGULATOR_MODE_NORMAL;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
- static int da9062_buck_set_mode(struct regulator_dev *rdev, unsigned mode)
- {
- 	struct da9062_regulator *regl = rdev_get_drvdata(rdev);
-@@ -360,6 +374,7 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 		.desc.vsel_reg = DA9062AA_VBUCK1_A,
- 		.desc.vsel_mask = DA9062AA_VBUCK1_A_MASK,
- 		.desc.linear_min_sel = 0,
-+		.desc.of_map_mode = da9062_map_buck_mode,
- 		.sleep = REG_FIELD(DA9062AA_VBUCK1_A,
- 			__builtin_ffs((int)DA9062AA_BUCK1_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -396,6 +411,7 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 		.desc.vsel_reg = DA9062AA_VBUCK3_A,
- 		.desc.vsel_mask = DA9062AA_VBUCK3_A_MASK,
- 		.desc.linear_min_sel = 0,
-+		.desc.of_map_mode = da9062_map_buck_mode,
- 		.sleep = REG_FIELD(DA9062AA_VBUCK3_A,
- 			__builtin_ffs((int)DA9062AA_BUCK3_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -432,6 +448,7 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 		.desc.vsel_reg = DA9062AA_VBUCK4_A,
- 		.desc.vsel_mask = DA9062AA_VBUCK4_A_MASK,
- 		.desc.linear_min_sel = 0,
-+		.desc.of_map_mode = da9062_map_buck_mode,
- 		.sleep = REG_FIELD(DA9062AA_VBUCK4_A,
- 			__builtin_ffs((int)DA9062AA_BUCK4_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -604,6 +621,7 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 		.desc.vsel_reg = DA9062AA_VBUCK1_A,
- 		.desc.vsel_mask = DA9062AA_VBUCK1_A_MASK,
- 		.desc.linear_min_sel = 0,
-+		.desc.of_map_mode = da9062_map_buck_mode,
- 		.sleep = REG_FIELD(DA9062AA_VBUCK1_A,
- 			__builtin_ffs((int)DA9062AA_BUCK1_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -640,6 +658,7 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 		.desc.vsel_reg = DA9062AA_VBUCK2_A,
- 		.desc.vsel_mask = DA9062AA_VBUCK2_A_MASK,
- 		.desc.linear_min_sel = 0,
-+		.desc.of_map_mode = da9062_map_buck_mode,
- 		.sleep = REG_FIELD(DA9062AA_VBUCK2_A,
- 			__builtin_ffs((int)DA9062AA_BUCK2_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -676,6 +695,7 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 		.desc.vsel_reg = DA9062AA_VBUCK3_A,
- 		.desc.vsel_mask = DA9062AA_VBUCK3_A_MASK,
- 		.desc.linear_min_sel = 0,
-+		.desc.of_map_mode = da9062_map_buck_mode,
- 		.sleep = REG_FIELD(DA9062AA_VBUCK3_A,
- 			__builtin_ffs((int)DA9062AA_BUCK3_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -712,6 +732,7 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 		.desc.vsel_reg = DA9062AA_VBUCK4_A,
- 		.desc.vsel_mask = DA9062AA_VBUCK4_A_MASK,
- 		.desc.linear_min_sel = 0,
-+		.desc.of_map_mode = da9062_map_buck_mode,
- 		.sleep = REG_FIELD(DA9062AA_VBUCK4_A,
- 			__builtin_ffs((int)DA9062AA_BUCK4_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
++		snd_soc_component_write(component, WM8904_SW_RESET_AND_ID, 0);
+ 		regcache_cache_only(wm8904->regmap, true);
+ 		regcache_mark_dirty(wm8904->regmap);
+ 
 -- 
 2.20.1
 
