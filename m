@@ -2,58 +2,60 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC1EC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22151C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F58E20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEC3620732
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:50:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PBz9HlXP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i4m/rf3d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbfKOOuJ (ORCPT
+        id S1727606AbfKOOuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 09:50:09 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39389 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727380AbfKOOuI (ORCPT
+        Fri, 15 Nov 2019 09:50:14 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45387 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727561AbfKOOuN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 09:50:08 -0500
-Received: by mail-qt1-f193.google.com with SMTP id t8so11064001qtc.6
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 06:50:08 -0800 (PST)
+        Fri, 15 Nov 2019 09:50:13 -0500
+Received: by mail-qk1-f195.google.com with SMTP id q70so8255798qke.12
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 06:50:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=K3gZuaX72+1R2YBKWM0XR/k39YkPNf3E8LIgGu5FJuc=;
-        b=PBz9HlXPcfyc723unGRGy53EYrXDu5sl8wtwgcM1SDoj8HBR7wWC08IYQV6YTIrzv1
-         meuPonDIPUxqZL95KskO4RuW9vRFtij5xoFuegZ365R5bfvdTMHw6QQSRXUREo8DRJMn
-         PPCqyoLj3iY46msN24Yz/3VN0SiTtJjpID4zrRL9CiBWvXZRm6M0fVBwZnf8yGtP230z
-         4BRYfvyfqd3v7qJSp2GQ7LOL2+bjWgeA936EPTPWTxys7R0hUccemNwort2Ev5suxpdn
-         vguMJNZNSRo+om+U53NEkS4KepzNzSR5DpqL1iSxfoiyaoGOmbolt+ULaKkiXsz0E8kG
-         R53w==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=/kvBFKQi677ga7uy55gslQEdaVWu0/AqECgiCr1RRo4=;
+        b=i4m/rf3dtdO7pICpGohK+53jC1YnrR55j3yTG94ilzzFEn1CZNOi4xP3QLIzE4PU2V
+         E31vLJ1dr52Pt6jJqef+kSoNsPScUouogqmP+hC4sRUtbonwaZGTGBYcjU9oanAgW9qG
+         aw4nIid/3ZmQKnaeLr7wBynEWzFf3nbnL8QSxLAY7/SXpZ7bXv/H/Hwlsb0Pt6VvO948
+         w9eicjB1GRQO1uiSE740MTNpwKTg8APZa+3qSt5Px2dYb2MkUXxRXLL5aswEKzjTUBoc
+         ink/0aegyGu1D3EMHtv2iiSFnoTB/Q08T+B0cGq5PJzjz39YdeRz5ulaTUctCRFkIuHk
+         bjyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=K3gZuaX72+1R2YBKWM0XR/k39YkPNf3E8LIgGu5FJuc=;
-        b=hIcwZFqL0UEc4Hv9f5wBpJN/uowC/7lEFihVjGxNQoKv/vUb7HyZx9hiXf5fT+2fta
-         PTpI0+8wZrVXr4RDRfQEwLdXH9J105dOgh3xjJnlykmatNw/FmLdHN9UsXVZQ7EjQc+8
-         ZqyGw45E3CkQ0hHHsgje5kLbBu2yFUBG6TD+mREkD8tYOZIrkJ7459pvxLXrzLVURnLS
-         ihJThNuCroOYv4oXoNYHfEbJkxhBvD0M+DnBI83jjE8lX/QW6iUjTfrxyJ/9pPbSvkEg
-         iOc7znQEB9BcIJgsiALNgZTDe9yDSyTfLl8JC9zOK8SVJYWGNS4SCSeo7Frg/oA8/wLL
-         vA6g==
-X-Gm-Message-State: APjAAAVGIPAC6BgoFDGupujZjY7aDCAiCkOjd0XlT5aHMmZpVP9QtUav
-        vV0kbv5kiGjsw+j1E9UA6w==
-X-Google-Smtp-Source: APXvYqxw6WGxQpzvH3aaeN404vMOx2HdG4B0xhEdByQilDd+nvt0+apD/ZO1rRsGGyRcr0jXO6NwyA==
-X-Received: by 2002:ac8:ecc:: with SMTP id w12mr14134847qti.134.1573829407686;
-        Fri, 15 Nov 2019 06:50:07 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=/kvBFKQi677ga7uy55gslQEdaVWu0/AqECgiCr1RRo4=;
+        b=SvcgpJc5znxBW+BfKkYhwlKdZdDuY3LKbm4UuKp8lE96t3F0pLbbSsL+iFe75U7AZQ
+         JJXAdUR6zDHA1IU3IcrSraRxZuXTmn1+0N/pYviWZGtIHb2wX899W4rKHjxCSuvniBkj
+         Bxkt6Bvr/XoNOp+3BR15n6uni9gmcMmTDxZyAjhPau/E6S1NjEKxO74oXXWlkxHIju9H
+         llf1mNSjp2PmL/9hHSJGmMJiuJwPspqaTl33pPZURtJ+37eE2qS33LTXnl2D9PfvQwNa
+         u4VQmHuGzF1C0LChp0DXs2l8Wr2fVlIMRIO1dWgCxyWE1aeUhOCZuuysf/AHt/KaL2sG
+         KjoA==
+X-Gm-Message-State: APjAAAUwnPLk2RxCi6sWkxKkstGbAZ/uqvuykJ8suZha2eS0vcAmhPr2
+        yxjGIQtuTV9ReSRYU5fSrg==
+X-Google-Smtp-Source: APXvYqzf9IE+1GblOVI93LwlQ/+ywhezhVtH/XFIiHorjM6I+l34HIBgBTS69dj+7YdjMuMhyN9GCA==
+X-Received: by 2002:a37:98c6:: with SMTP id a189mr12915499qke.230.1573829411024;
+        Fri, 15 Nov 2019 06:50:11 -0800 (PST)
 Received: from gabell.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id l124sm4329317qkf.122.2019.11.15.06.50.06
+        by smtp.gmail.com with ESMTPSA id l124sm4329317qkf.122.2019.11.15.06.50.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 06:50:07 -0800 (PST)
+        Fri, 15 Nov 2019 06:50:10 -0800 (PST)
 From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
 To:     Borislav Petkov <bp@alien8.de>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -63,10 +65,12 @@ To:     Borislav Petkov <bp@alien8.de>,
 Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
         Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 0/4] Adjust the padding size for KASLR
-Date:   Fri, 15 Nov 2019 09:49:13 -0500
-Message-Id: <20191115144917.28469-1-msys.mizuma@gmail.com>
+Subject: [PATCH v5 1/4] x86/boot: Wrap up the SRAT traversing code into subtable_parse()
+Date:   Fri, 15 Nov 2019 09:49:14 -0500
+Message-Id: <20191115144917.28469-2-msys.mizuma@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191115144917.28469-1-msys.mizuma@gmail.com>
+References: <20191115144917.28469-1-msys.mizuma@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -74,45 +78,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 
-The system sometimes crashes while memory hot-adding on KASLR
-enabled system. The crash happens because the regions pointed by
-kaslr_regions[].base are overwritten by the hot-added memory.
+Wrap up the SRAT traversing code into subtable_parse().
 
-It happens because of the padding size for kaslr_regions[].base isn't
-enough for the system whose physical memory layout has huge space for
-memory hotplug. kaslr_regions[].base points "actual installed
-memory size + padding" or higher address. So, if the "actual + padding"
-is lower address than the maximum memory address, which means the memory
-address reachable by memory hot-add, kaslr_regions[].base is destroyed by
-the overwritten.
+Reviewed-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+---
+ arch/x86/boot/compressed/acpi.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-  address
-    ^
-    |------- maximum memory address (Hotplug)
-    |                                    ^
-    |------- kaslr_regions[0].base       | Hotadd-able region
-    |     ^                              |
-    |     | padding                      |
-    |     V                              V
-    |------- actual memory address (Installed on boot)
-    |
-
-Fix it by getting the maximum memory address from SRAT and store
-the value in boot_param, then set the padding size while KASLR
-initializing if the default padding size isn't enough.
-
-Masayoshi Mizuma (4):
-  x86/boot: Wrap up the SRAT traversing code into subtable_parse()
-  x86/boot: Add max_addr field in struct boot_params
-  x86/boot: Get the max address from SRAT
-  x86/mm/KASLR: Adjust the padding size for the direct mapping.
-
- Documentation/x86/zero-page.rst       |  4 ++
- arch/x86/boot/compressed/acpi.c       | 42 ++++++++++++++++----
- arch/x86/include/uapi/asm/bootparam.h |  2 +-
- arch/x86/mm/kaslr.c                   | 57 ++++++++++++++++++++-------
- 4 files changed, 82 insertions(+), 23 deletions(-)
-
+diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+index 25019d42ae93..a0f81438a0fd 100644
+--- a/arch/x86/boot/compressed/acpi.c
++++ b/arch/x86/boot/compressed/acpi.c
+@@ -362,6 +362,19 @@ static unsigned long get_acpi_srat_table(void)
+ 	return 0;
+ }
+ 
++static void subtable_parse(struct acpi_subtable_header *sub_table, int *num)
++{
++	struct acpi_srat_mem_affinity *ma;
++
++	ma = (struct acpi_srat_mem_affinity *)sub_table;
++
++	if (!(ma->flags & ACPI_SRAT_MEM_HOT_PLUGGABLE) && ma->length) {
++		immovable_mem[*num].start = ma->base_address;
++		immovable_mem[*num].size = ma->length;
++		(*num)++;
++	}
++}
++
+ /**
+  * count_immovable_mem_regions - Parse SRAT and cache the immovable
+  * memory regions into the immovable_mem array.
+@@ -395,14 +408,8 @@ int count_immovable_mem_regions(void)
+ 	while (table + sizeof(struct acpi_subtable_header) < table_end) {
+ 		sub_table = (struct acpi_subtable_header *)table;
+ 		if (sub_table->type == ACPI_SRAT_TYPE_MEMORY_AFFINITY) {
+-			struct acpi_srat_mem_affinity *ma;
+ 
+-			ma = (struct acpi_srat_mem_affinity *)sub_table;
+-			if (!(ma->flags & ACPI_SRAT_MEM_HOT_PLUGGABLE) && ma->length) {
+-				immovable_mem[num].start = ma->base_address;
+-				immovable_mem[num].size = ma->length;
+-				num++;
+-			}
++			subtable_parse(sub_table, &num);
+ 
+ 			if (num >= MAX_NUMNODES*2) {
+ 				debug_putstr("Too many immovable memory regions, aborting.\n");
 -- 
 2.20.1
 
