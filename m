@@ -2,130 +2,87 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 614C6C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8DEC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B3420725
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:05:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QQ9f3DZx"
+	by mail.kernel.org (Postfix) with ESMTP id B8FFF206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:05:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfKOAFF (ORCPT
+        id S1727291AbfKOAFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 19:05:05 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36653 "EHLO ozlabs.org"
+        Thu, 14 Nov 2019 19:05:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:50920 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbfKOAFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 19:05:04 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Ddrs3T92z9s4Y;
-        Fri, 15 Nov 2019 11:05:01 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573776302;
-        bh=Z8Krf4nl7BbTsHQgKDM3eQflPpkr4JmWXdsfcFOegaY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=QQ9f3DZxjf8hS5vTXW1B5lISqfqsM2Au0I2HCoN5g611wYFOJXfbkVy915drYYv18
-         gzVO5flDOkJtYV3L2YDTG39ZHpsECZjiJdDwjmbq/1hgcVtsDQFrc1InFmjEH0ww8u
-         HPaEL0f3gHy6uCTlh88c6WDJkxXmb1z7hMJT6VY+EnyA6i4sQpVzLCjDH4mNdCVl/7
-         lC0OH7FD3ssgRai4fGRx1sRXCqtVQVvB7dEAqB5/87nOOgTRVwj3mdRlOxppnFFSX9
-         HSeXbfyJo51uNHM+3yk19zfoU/aA8kGZ17dNn+EsFmsNrVp2BpSzEJ3J8dqlfCeZ8U
-         ovbtkHZRH5zWA==
-Date:   Fri, 15 Nov 2019 11:05:00 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Petr Mladek <pmladek@suse.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Uwe =?UTF-8?B?S2xlaW5lLUs=?= =?UTF-8?B?w7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: linux-next: manual merge of the pm tree with the printk tree
-Message-ID: <20191115110500.2bad45b2@canb.auug.org.au>
+        id S1726852AbfKOAFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 19:05:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4433831B;
+        Thu, 14 Nov 2019 16:05:53 -0800 (PST)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB51B3F534;
+        Thu, 14 Nov 2019 16:05:51 -0800 (PST)
+Subject: Re: [PATCH] sched/uclamp: Fix overzealous type replacement
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        Dietmar.Eggemann@arm.com, tj@kernel.org,
+        patrick.bellasi@matbug.net, surenb@google.com, qperret@google.com
+References: <20191113165334.14291-1-valentin.schneider@arm.com>
+ <20191114202855.64e4jnb4dcbru4w3@e107158-lin.cambridge.arm.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <4b702b68-997b-da33-660c-db4313ac6dc5@arm.com>
+Date:   Fri, 15 Nov 2019 00:05:40 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/8dHD0qGh0F9UnYxbYqUlngQ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20191114202855.64e4jnb4dcbru4w3@e107158-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/8dHD0qGh0F9UnYxbYqUlngQ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 14/11/2019 20:28, Qais Yousef wrote:
+> On 11/13/19 16:53, Valentin Schneider wrote:
+>> Some uclamp helpers had their return type changed from 'unsigned int' to
+>> 'enum uclamp_id' by commit
+>>
+>>   0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
+>>
+>> but it happens that some *actually* do return an unsigned int value. Those
+>> are the helpers that return a utilization value: uclamp_rq_max_value() and
+>> uclamp_eff_value(). Fix those up.
+>>
+>> Note that this doesn't lead to any obj diff using a relatively recent
+>> aarch64 compiler (8.3-2019.03). The current code of e.g. uclamp_eff_value()
+>> already figures out that the return value is 11 bits (bits_per(1024)) and
+>> doesn't seem to do anything funny. I'm still marking this as fixing the
+>> above commit to be on the safe side.
+>>
+>> Fixes: 0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
+>> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+>> ---
+> 
+> The changelog could be a bit simpler and more explicitly say 0413d7f33e60
+> wrongly changed the return type of some functions. For a second I thought
+> something weird is going inside these functions.
+> 
 
-Hi all,
+The first paragraph is exactly that, no? The rest (that starts with "Note
+that") is just optional stuff I look into because I was curious.
 
-Today's linux-next merge of the pm tree got a conflict in:
-
-  scripts/checkpatch.pl
-
-between commit:
-
-  1d28122131b2 ("checkpatch: don't warn about new vsprintf pointer extensio=
-n '%pe'")
-
-from the printk tree and commit:
-
-  3bd32d6a2ee6 ("lib/vsprintf: Add %pfw conversion specifier for printing f=
-wnode names")
-
-from the pm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc scripts/checkpatch.pl
-index 4b40445938dc,3d1f08fa091c..000000000000
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@@ -6019,10 -6020,13 +6020,13 @@@ sub process=20
-  				my $fmt =3D get_quoted_string($lines[$count - 1], raw_line($count, 0)=
-);
-  				$fmt =3D~ s/%%//g;
- =20
-- 				while ($fmt =3D~ /(\%[\*\d\.]*p(\w))/g) {
-+ 				while ($fmt =3D~ /(\%[\*\d\.]*p(\w)(\w*))/g) {
-  					$specifier =3D $1;
-  					$extension =3D $2;
-- 					if ($extension !~ /[SsBKRraEehMmIiUDdgVCbGNOxt]/) {
-+ 					$qualifier =3D $3;
- -					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxtf]/ ||
-++					if ($extension !~ /[SsBKRraEehMmIiUDdgVCbGNOxtf]/ ||
-+ 					    ($extension eq "f" &&
-+ 					     defined $qualifier && $qualifier !~ /^w/)) {
-  						$bad_specifier =3D $specifier;
-  						last;
-  					}
-
---Sig_/8dHD0qGh0F9UnYxbYqUlngQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3N66wACgkQAVBC80lX
-0GyNNwf+MljcLS7Y6Hc82Z8yOBygn97YfuFT6keFtfO3L8o/7YuwoS8AcG1C1y1F
-spRnriouGH3pwp70UyJequEDNihIYitSwj4ttSHOLJcf13+4Du7tTqKzrug5I3Bi
-u3qUpC8F/74vjHLj8edRppXbHAdCBiIp4MKDp1cg6xJXbOxvewKQAzObDkHroBwY
-Pj9lm/laWe9biZvXQVVAj6oOpJHkLamwQyjqLipi+fG1fRW9kZga1PFCQZOxDYiz
-ggfop/qjoaaaeXzLfVGBORW8FRi1RLAjz6lkr1HZERsw8vHj0j1hVZn3Qp7XGiKF
-+LGxhwr5aBqRZNiRa3Gul7OS+BC0OA==
-=tIuk
------END PGP SIGNATURE-----
-
---Sig_/8dHD0qGh0F9UnYxbYqUlngQ--
+> But that could be just me :-)
+> 
+> Reviewed-by: Qais Yousef <qais.yousef@arm.com>
+> 
+> Thanks!
+> 
+> --
+> Qais Yousef
+> 
