@@ -2,140 +2,186 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE042C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 23:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797FCC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 23:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A34992072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 23:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 520BD206D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 23:38:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LAVtUmq5"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fERGMGun"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbfKOXhj (ORCPT
+        id S1727329AbfKOXif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 18:37:39 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:53532 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727056AbfKOXhi (ORCPT
+        Fri, 15 Nov 2019 18:38:35 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:16256 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727056AbfKOXie (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 18:37:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=OqKVo0yXVA9lDAxvu1xGTBxEeOj1XJuu88/C73k1zqg=; b=LAVtUmq5UEa4xrfqj4srF9dyX
-        SOhHYMx2cjmqFnv6WbWW0CREvpVke6+qYhlCiVggV1Cy9f2BeacQxZmDI61MsnxObGa+DB7Ng2Rdj
-        6ivfWYckwDaZZrNGG2uO2jZBTlBpTO7Uw0TDToTFZ+d5397VCQvgor2AUwzRT8Q64RA4nkDyOk3Ot
-        MwH3A+WyusaEc2hRVHRxRPz680b5CCCVjiAMDJd+JxC14P53N41x4BmdXff+EfD9/ZqaBpMwAo63u
-        HeUyt0CUZH+2I/8T2p1g88DVCoNj2JVH7u01iG8Z3cLzpCI6XUpfG959X57SmGOEoYdDsgQEBpLpL
-        hFWu8eRuA==;
-Received: from [2601:1c0:6280:3f0::5a22]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iVl9g-0002xG-Iu; Fri, 15 Nov 2019 23:37:32 +0000
-Subject: Re: linux-next: build failure after merge of the akpm-current tree
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>, Qian Cai <cai@lca.pw>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20191115181957.4e72c0a2@canb.auug.org.au>
- <20191115152352.ddc9539e80b0840d82c7e2db@linux-foundation.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <4b797cde-1320-fa7e-3a71-156c2b0ca6a7@infradead.org>
-Date:   Fri, 15 Nov 2019 15:37:30 -0800
+        Fri, 15 Nov 2019 18:38:34 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dcf36f70001>; Fri, 15 Nov 2019 15:38:31 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 15 Nov 2019 15:38:31 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 15 Nov 2019 15:38:31 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 15 Nov
+ 2019 23:38:31 +0000
+Subject: Re: [PATCH] mm: get rid of odd jump label in find_mergeable_anon_vma
+To:     David Hildenbrand <david@redhat.com>,
+        linmiaohe <linmiaohe@huawei.com>, <akpm@linux-foundation.org>,
+        <richardw.yang@linux.intel.com>, <sfr@canb.auug.org.au>,
+        <rppt@linux.ibm.com>, <jannh@google.com>, <steve.capper@arm.com>,
+        <catalin.marinas@arm.com>, <aarcange@redhat.com>,
+        <chenjianhong2@huawei.com>, <walken@google.com>,
+        <dave.hansen@linux.intel.com>, <tiny.windzz@gmail.com>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+References: <1573799768-15650-1-git-send-email-linmiaohe@huawei.com>
+ <5277de34-ecb3-831e-c697-1fd3f66b45ba@redhat.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <b4d8cbf4-c553-2594-9d92-6d7e58eb246c@nvidia.com>
+Date:   Fri, 15 Nov 2019 15:38:30 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191115152352.ddc9539e80b0840d82c7e2db@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <5277de34-ecb3-831e-c697-1fd3f66b45ba@redhat.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573861111; bh=CqwX0NFi2jxdBUV037zt97imywMfzSOeWljkgkwL64o=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=fERGMGunwyYjKx1E1tXvp/kKBDDFe/hyMriNP6uV1DVcQnmzaFa+D72ufrHuGWcdZ
+         ok6z+6HrsyBjadNBhOeHM48uXushcx3D4b57nGAVOh7WDBKsWLBVeLxg3Fp0ZUJWts
+         s37w2RvdKjem8ulbp138pT53OmDmVapLFiUcqCLZg/bDatEkOdO3suz1tdVUiyBL6a
+         081ltCmdgFNtqQcSmnr5OZoiRUuw4vedfRXYO7qtU1XjXallkVnAkln6oQMT3/bPRK
+         Ipr94B5RZf7bG2+ufZkC6X6t74GxiYT2rW1MDEzp/HihZaJYYlo1Rj+W2xl//ioEHI
+         Ajq8ixkKUWfcQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/15/19 3:23 PM, Andrew Morton wrote:
-> On Fri, 15 Nov 2019 18:19:57 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On 11/15/19 4:58 AM, David Hildenbrand wrote:
+> On 15.11.19 07:36, linmiaohe wrote:
+>> From: Miaohe Lin <linmiaohe@huawei.com>
 > 
->> Hi all,
->>
->> [Also reported by Randy Dunlap]
->>
->> After merging the akpm-current tree, today's linux-next build (arm
->> multi_v7_defconfig) failed like this:
->>
->> mm/vmalloc.c: In function '__purge_vmap_area_lazy':
->> mm/vmalloc.c:1286:8: error: 'SHARED_KERNEL_PMD' undeclared (first use in this function)
->>  1286 |   if (!SHARED_KERNEL_PMD && boot_cpu_has(X86_FEATURE_PTI))
->>       |        ^~~~~~~~~~~~~~~~~
->> mm/vmalloc.c:1286:8: note: each undeclared identifier is reported only once for each function it appears in
->> mm/vmalloc.c:1286:29: error: implicit declaration of function 'boot_cpu_has' [-Werror=implicit-function-declaration]
->>  1286 |   if (!SHARED_KERNEL_PMD && boot_cpu_has(X86_FEATURE_PTI))
->>       |                             ^~~~~~~~~~~~
->> mm/vmalloc.c:1286:42: error: 'X86_FEATURE_PTI' undeclared (first use in this function)
->>  1286 |   if (!SHARED_KERNEL_PMD && boot_cpu_has(X86_FEATURE_PTI))
->>       |                                          ^~~~~~~~~~~~~~~
->>
->> Caused by commit
->>
->>   07ef40e149bf ("mm-vmalloc-fix-regression-caused-by-needless-vmalloc_sync_all-fix")
->>
->> SHARED_KERNEL_PMD, boot_cpu_has() and X86_FEATURE_PTI are only defined
->> for X86.
->>
->> I have reverted that commit for today.
+> I'm pro removing unnecessary jump labels.
+
+Thank you, simpler code is good--all other things being equal. 
+The  tradeoff is, as Qian points out: code churn and risk in critical 
+code paths.
+
+In this case, I'd claim it's OK to improve this one, because we
+can likely get it right by visual inspection, and the pre-existing
+code is quite poor. And being in the kernel does not necessarily give
+weak code a free pass to remain there and incur maintenance and annoyance
+costs until the end of time. :)
+
+However, please spend equal time when you write your commit descriptions,
+because that's also very important. Commit logs should also be clear!
+
 > 
-> Thanks.  So it has to be an ifdef.
+> Subject: "mm: get rid of jump labels in find_mergeable_anon_vma()"
+> 
+>>
+>> The odd jump label try_prev and none is not really need
 
-Yes, that works.  Thanks.
+s/need/needed/
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-
-
-> --- a/mm/vmalloc.c~mm-vmalloc-fix-regression-caused-by-needless-vmalloc_sync_all-fix-fix
-> +++ a/mm/vmalloc.c
-> @@ -1255,17 +1255,17 @@ static bool __purge_vmap_area_lazy(unsig
->  	if (unlikely(valist == NULL))
->  		return false;
->  
-> -	if (IS_ENABLED(CONFIG_X86_PAE)) {
-> -		/*
-> -		 * First make sure the mappings are removed from all page-tables
-> -		 * before they are freed.
-> -		 *
-> -		 * This is only needed on x86-32 with !SHARED_KERNEL_PMD, which
-> -		 * is the case on a PAE kernel with PTI enabled.
-> -		 */
-> -		if (!SHARED_KERNEL_PMD && boot_cpu_has(X86_FEATURE_PTI))
-> -			vmalloc_sync_all();
-> -	}
-> +#ifdef CONFIG_X86_PAE
-> +	/*
-> +	 * First make sure the mappings are removed from all pagetables before
-> +	 * they are freed.
-> +	 *
-> +	 * This is only needed on x86-32 with !SHARED_KERNEL_PMD, which is the
-> +	 * case on a PAE kernel with PTI enabled.
-> +	 */
-> +	if (!SHARED_KERNEL_PMD && boot_cpu_has(X86_FEATURE_PTI))
-> +		vmalloc_sync_all();
-> +#endif
->  
->  	/*
->  	 * TODO: to calculate a flush range without looping.
-> _
+> 
+> s/odd jump label/jump labels/
+> 
+> s/is/are/
+> 
+>> in func find_mergeable_anon_vma, eliminate them to
+>> improve readability.
+>>
+>> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+>> ---
+>>  mm/mmap.c | 18 +++++++-----------
+>>  1 file changed, 7 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/mm/mmap.c b/mm/mmap.c
+>> index 4d4db76a07da..ab980d468a10 100644
+>> --- a/mm/mmap.c
+>> +++ b/mm/mmap.c
+>> @@ -1276,25 +1276,21 @@ static struct anon_vma *reusable_anon_vma(struct vm_area_struct *old, struct vm_
+>>   */
+>>  struct anon_vma *find_mergeable_anon_vma(struct vm_area_struct *vma)
+>>  {
+>> -	struct anon_vma *anon_vma;
+>> +	struct anon_vma *anon_vma = NULL;
+>>  	struct vm_area_struct *near;
+>>  
+>>  	near = vma->vm_next;
+>> -	if (!near)
+>> -		goto try_prev;
+>> -
+>> -	anon_vma = reusable_anon_vma(near, vma, near);
+>> +	if (near)
+>> +		anon_vma = reusable_anon_vma(near, vma, near);>  	if (anon_vma)
+>>  		return anon_vma;
+> 
+> Let me suggest the following instead:
+> 
+> /* Try next first */
+> near = vma->vm_next;
+> if (near) {
+> 	anon_vma = reusable_anon_vma(near, vma, near);
+> 	if (anon_vma)
+> 		return anon_vma;
+> }
+> /* Try prev next */
+> near = vma->vm_prev;
+> if (near) {
+> 	anon_vma = reusable_anon_vma(near, vma, near);
+> 	if (anon_vma)
+> 		return anon_vma;
+> }
 > 
 
+Actually, it can be further simplified, because you don't need
+that last "if" statement, because you're returning NULL after this.
 
+So just return anon_vma there. (And adjust the comment block at the 
+end, so that it's clear that anon_vma might be null.)
+
+
+thanks,
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+John Hubbard
+NVIDIA
+
+>> -try_prev:
+>> -	near = vma->vm_prev;
+>> -	if (!near)
+>> -		goto none;
+>>  
+>> -	anon_vma = reusable_anon_vma(near, near, vma);
+>> +	near = vma->vm_prev;
+>> +	if (near)
+>> +		anon_vma = reusable_anon_vma(near, near, vma);
+>>  	if (anon_vma)
+>>  		return anon_vma;
+>> -none:
+>> +
+>>  	/*
+>>  	 * There's no absolute need to look only at touching neighbours:
+>>  	 * we could search further afield for "compatible" anon_vmas.
+>>
+> 
+> 
