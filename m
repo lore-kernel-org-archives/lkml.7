@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 836B5C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 457B6C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C180207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1852F20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573798930;
-	bh=k/QTvKQ7CL52EtvqmQq+zWJX9EG7E24ynNVmGRIe72w=;
+	s=default; t=1573798933;
+	bh=Orqr9LTQN31Ulk/Xwr8DMzLW3c8uf3Dv7yqSNnA+dV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UUuPHmN7dW4YyIdjuqhTOJ+JtjU76OopWnChF0YIHy7rbrtdBZaluik75onXi7QqN
-	 C5mcbj+WS2Y7lh2wEIBo9euhHRJTNiHJ/ASgcHK8EvrQURZkFPiVfZl2ZDiKDYG0bU
-	 v8q0S/xSuIU1fdkn2H7JOIeFt2PwvPseKHxjdGJo=
+	b=WqCuQq7acxcbAq3m3YO6Lr1rrg5qBkMdBMJSnXT5qADVXI05QBtECgbXcLvoNuTYm
+	 p8AiEBsefS+UrWl70r2Bh8zD6Vc1JeXdghCFHtSK+Frr0gTAgautGPkMKPXPWjShzE
+	 dXPz2UpZ98orGE+/Yhcj3w/VqUh6hrN9FS1gR/so=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727603AbfKOGWJ (ORCPT
+        id S1727620AbfKOGWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:22:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51156 "EHLO mail.kernel.org"
+        Fri, 15 Nov 2019 01:22:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727550AbfKOGWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:22:01 -0500
+        id S1727589AbfKOGWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:22:08 -0500
 Received: from localhost (unknown [104.132.150.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B61B42073C;
-        Fri, 15 Nov 2019 06:22:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D5A12053B;
+        Fri, 15 Nov 2019 06:22:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573798921;
-        bh=k/QTvKQ7CL52EtvqmQq+zWJX9EG7E24ynNVmGRIe72w=;
+        s=default; t=1573798927;
+        bh=Orqr9LTQN31Ulk/Xwr8DMzLW3c8uf3Dv7yqSNnA+dV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=18afwdj6kFztacoBFVH1y2nmRLO0hNRKuV3QCoDHV2X73wfs2GZqILybfR74Pso/S
-         ec94AV5WCHpWYEjxZPu2F2YWqaMR8Z1kmkrUGXfpr6P2cJqawE9ZgYjSopt59we1F+
-         itISkSwKR4tQFtOa5HqpBIcmUqWJKc4YCqcSNtoU=
+        b=rWku8QT2ckumJeuA3amNZrFMfw8bctzX+UPsipRW7Gea1101Ki+gScWf1YlPVxw7k
+         jSZxxpL92c3G7genxPdLvIKPe078dE9I1+cGYuVbk1vviX4DJ3pwv1So+dKFGXflP1
+         USy6DZgk89IEPuycPGyWomXOkcym2/RoomzOEQYk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>,
+        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Borislav Petkov <bp@suse.de>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.9 12/31] x86/tsx: Add "auto" option to the tsx= cmdline parameter
-Date:   Fri, 15 Nov 2019 14:20:41 +0800
-Message-Id: <20191115062014.685532405@linuxfoundation.org>
+Subject: [PATCH 4.9 15/31] x86/speculation/taa: Fix printing of TAA_MSG_SMT on IBRS_ALL CPUs
+Date:   Fri, 15 Nov 2019 14:20:44 +0800
+Message-Id: <20191115062016.618489685@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191115062009.813108457@linuxfoundation.org>
 References: <20191115062009.813108457@linuxfoundation.org>
@@ -64,66 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit 7531a3596e3272d1f6841e0d601a614555dc6b65 upstream.
+commit 012206a822a8b6ac09125bfaa210a95b9eb8f1c1 upstream.
 
-Platforms which are not affected by X86_BUG_TAA may want the TSX feature
-enabled. Add "auto" option to the TSX cmdline parameter. When tsx=auto
-disable TSX when X86_BUG_TAA is present, otherwise enable TSX.
+For new IBRS_ALL CPUs, the Enhanced IBRS check at the beginning of
+cpu_bugs_smt_update() causes the function to return early, unintentionally
+skipping the MDS and TAA logic.
 
-More details on X86_BUG_TAA can be found here:
-https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/tsx_async_abort.html
+This is not a problem for MDS, because there appears to be no overlap
+between IBRS_ALL and MDS-affected CPUs.  So the MDS mitigation would be
+disabled and nothing would need to be done in this function anyway.
 
- [ bp: Extend the arg buffer to accommodate "auto\0". ]
+But for TAA, the TAA_MSG_SMT string will never get printed on Cascade
+Lake and newer.
 
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
+The check is superfluous anyway: when 'spectre_v2_enabled' is
+SPECTRE_V2_IBRS_ENHANCED, 'spectre_v2_user' is always
+SPECTRE_V2_USER_NONE, and so the 'spectre_v2_user' switch statement
+handles it appropriately by doing nothing.  So just remove the check.
+
+Fixes: 1b42f017415b ("x86/speculation/taa: Add mitigation for TSX Async Abort")
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-[bwh: Backported to 4.9: adjust filename]
+Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
+Reviewed-by: Borislav Petkov <bp@suse.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- Documentation/kernel-parameters.txt |    3 +++
- arch/x86/kernel/cpu/tsx.c           |    7 ++++++-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+ arch/x86/kernel/cpu/bugs.c |    4 ----
+ 1 file changed, 4 deletions(-)
 
---- a/Documentation/kernel-parameters.txt
-+++ b/Documentation/kernel-parameters.txt
-@@ -4537,6 +4537,9 @@ bytes respectively. Such letter suffixes
- 				update. This new MSR allows for the reliable
- 				deactivation of the TSX functionality.)
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -882,10 +882,6 @@ static void update_mds_branch_idle(void)
  
-+			auto	- Disable TSX if X86_BUG_TAA is present,
-+				  otherwise enable TSX on the system.
-+
- 			Not specifying this option is equivalent to tsx=off.
- 
- 			See Documentation/hw-vuln/tsx_async_abort.rst
---- a/arch/x86/kernel/cpu/tsx.c
-+++ b/arch/x86/kernel/cpu/tsx.c
-@@ -75,7 +75,7 @@ static bool __init tsx_ctrl_is_supported
- 
- void __init tsx_init(void)
+ void arch_smt_update(void)
  {
--	char arg[4] = {};
-+	char arg[5] = {};
- 	int ret;
+-	/* Enhanced IBRS implies STIBP. No update required. */
+-	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
+-		return;
+-
+ 	mutex_lock(&spec_ctrl_mutex);
  
- 	if (!tsx_ctrl_is_supported())
-@@ -87,6 +87,11 @@ void __init tsx_init(void)
- 			tsx_ctrl_state = TSX_CTRL_ENABLE;
- 		} else if (!strcmp(arg, "off")) {
- 			tsx_ctrl_state = TSX_CTRL_DISABLE;
-+		} else if (!strcmp(arg, "auto")) {
-+			if (boot_cpu_has_bug(X86_BUG_TAA))
-+				tsx_ctrl_state = TSX_CTRL_DISABLE;
-+			else
-+				tsx_ctrl_state = TSX_CTRL_ENABLE;
- 		} else {
- 			tsx_ctrl_state = TSX_CTRL_DISABLE;
- 			pr_err("tsx: invalid option, defaulting to off\n");
+ 	switch (spectre_v2_user) {
 
 
