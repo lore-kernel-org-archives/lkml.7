@@ -2,137 +2,110 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4E5C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E45C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E6F02068D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:10:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="fYgwOJG4"
+	by mail.kernel.org (Postfix) with ESMTP id D5DB220706
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:19:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573787996;
+	bh=X4dYlN8jycxk7zQtoFd/+f0G72lvDqeGK30npKrQ4EY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WDRmSbuFyn/G77LSJ3MeSyE7qvS0IR4cD5WaLmNeetEYuG0CkjGKMuv+ClcHuobT2
+	 CS9YpEuzvWn9ImGWgOiruL3kThWX4vuyQg4ecqjDo80UapRo4xBouLmby31j1lPrpB
+	 gcIvlX8MoQSUx9lV43y6g+U4PWth6IKSVY1kOmIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfKODKd (ORCPT
+        id S1727063AbfKODTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 22:10:33 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43248 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbfKODKc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 22:10:32 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 3so5648971pfb.10
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 19:10:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=TRkIoUi0GBj9I4dT2JvmosKGsiQbJSEbDRvIbo63/Gs=;
-        b=fYgwOJG4p9E2bxbHOo4pCi89Hr08mSB/gRVLkMDo8YVyIIskkfZmcetI7SGL1kvyqy
-         3eO1N/T57ru6/euwUaEJejoKH6VZACKTd5iN4k1772MFSuuka+MmixMTp3yVdTIpQGK2
-         6XY3GqQeP5Yla8O5YPKiW+8loVXwnFV6MAaE8ptt3nqnwPYGr4CMtkGhjPr9UilcBvvh
-         sBZ0Yqczu5m/VGWJ+dJ1fphpOECSRurVOpLgb5VHTqsXsuFmgZaI3IlO7FE9T93iRSFt
-         UakLoWh57bVXCLTBaVk1wXwvKzlONOWYRoxwdIOs4uuBK5IwWRy4XqgQVfKVfu3Zjd7J
-         mHLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=TRkIoUi0GBj9I4dT2JvmosKGsiQbJSEbDRvIbo63/Gs=;
-        b=OKgy2tkneCke6Jcq4av11p5lyw8Ex2T8PxqDyekuLn1W0K82gWFq8nnJVEDaKjbUgR
-         R2jyj1c98/8zCGYtraLDHCYejPtOpEZPpjuuCmf9u5uHO+SWaoSuUvAkdm6TmghbGAEK
-         SIHzV4jgJgLOjLTwEdWiZfqw4ot+ANMu38c4bwfXypMSs1ZbNHBO9uu5zEMADT68Gxf8
-         3HzHov1dwvEFZed/uJqETKW+jME0kY6s8i7cmBSMUBYEZDu1keglF/H7ClCeyesP2For
-         g5FC9mInoIx3r13wimRryB8Uw9GCZtIJyvt6g0dfElfh8Czo4S6W8LDvAqduArUJ2W/g
-         h6oA==
-X-Gm-Message-State: APjAAAWAAgUgJL/B4Ofrscvr7E8aI0XYUAvgPa9fp/IUFMX1aC6USho0
-        UDR11BNrCsYDFwlRWj9iCIalfQ==
-X-Google-Smtp-Source: APXvYqxUrktXvFs7jzxCHAmUbP3k8BfyrSbz4O+ZCgj98MyJK5NAdeX2EiyFlAwcnLMJqUyG3/Rkag==
-X-Received: by 2002:a63:f743:: with SMTP id f3mr10817140pgk.410.1573787431911;
-        Thu, 14 Nov 2019 19:10:31 -0800 (PST)
-Received: from localhost.localdomain (111-241-173-86.dynamic-ip.hinet.net. [111.241.173.86])
-        by smtp.gmail.com with ESMTPSA id z23sm7260287pgj.43.2019.11.14.19.10.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 19:10:31 -0800 (PST)
-From:   Green Wan <green.wan@sifive.com>
-Cc:     Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: sf-pdma: fix kernel-doc W=1 warning
-Date:   Fri, 15 Nov 2019 11:10:09 +0800
-Message-Id: <20191115031013.30448-1-green.wan@sifive.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Thu, 14 Nov 2019 22:19:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbfKODTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 22:19:55 -0500
+Received: from localhost (unknown [104.132.150.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1258C206F4;
+        Fri, 15 Nov 2019 03:19:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573787994;
+        bh=X4dYlN8jycxk7zQtoFd/+f0G72lvDqeGK30npKrQ4EY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=k2VD6Bgw3J5MR11pZihhZ/NmF4+UVPdGxF2xOanlIJD6yhXpfGArzODu1jEaJcZxD
+         a8nxXL3a23P6xmA9c/wTwHQm8PVg6OBoGSIslb6e+evXQ4T+c+AS2aF25435pF0RJe
+         oM8isZ0lqZmzVxtDimIoMXRLH/OJnvyWS4DcSLno=
+Date:   Fri, 15 Nov 2019 11:19:51 +0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Felipe Balbi <balbi@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>
+Subject: Re: [PATCH 1/1] usb: gadget: add raw-gadget interface
+Message-ID: <20191115031951.GA793701@kroah.com>
+References: <cover.1573236684.git.andreyknvl@google.com>
+ <282c5da077ad53ce4e5ff9b4350bbf62b33bb6a9.1573236684.git.andreyknvl@google.com>
+ <20191108211745.GA1282512@kroah.com>
+ <CAAeHK+w-nB4MngSNhazkZAa-Ovdu1C45HaD6XCPoJ79qRo8keQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAeHK+w-nB4MngSNhazkZAa-Ovdu1C45HaD6XCPoJ79qRo8keQ@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix kernel-doc W=1 warning. There are several comments starting from "/**"
-but not for function comment purpose. Remove them to fix the warning.
-Another definition in front of function causes warning. Move definition
-to header file.
+On Thu, Nov 14, 2019 at 04:08:29PM +0100, Andrey Konovalov wrote:
+> On Fri, Nov 8, 2019 at 10:17 PM Greg Kroah-Hartman
+> > > +static void gadget_unbind(struct usb_gadget *gadget)
+> > > +{
+> > > +     struct raw_dev *dev = get_gadget_data(gadget);
+> > > +     unsigned long flags;
+> > > +
+> > > +     if (WARN_ON(!dev))
+> > > +             return;
+> >
+> > Why warn?  How can this happen?
+> 
+> This shouldn't happen and I initially had BUG_ON there, but checkpatch
+> complained. I can use BUG_ON of leave it as WARN_ON, which would you
+> prefer?
 
-kernel-doc warning:
+If it should never happen, then why test it?
+If it can happen, then just test and print an error, why panic the
+machine if panic-on-warn is enabled for something that we can test and
+recover from?
 
-drivers/dma/sf-pdma/sf-pdma.c:28: warning: Function parameter or member
-	'addr' not described in 'readq'
-drivers/dma/sf-pdma/sf-pdma.c:438: warning: Function parameter or member
-	'ch' not described in 'SF_PDMA_REG_BASE'
-drivers/dma/sf-pdma/sf-pdma.c:438: warning: Excess function parameter
-	'pdma' description in 'SF_PDMA_REG_BASE'
+And no, never add BUG_ON please.
 
-Changes:
- - Replace string '/**' with '/*' not for comment purpose
- - Move definition, "SF_PDMA_REG_BASE", fomr sf-pdma.c to sf-pdma.h
+> > > +static int raw_open(struct inode *inode, struct file *fd)
+> > > +{
+> > > +     struct raw_dev *dev;
+> > > +
+> > > +     dev = dev_new();
+> > > +     if (!dev) {
+> > > +             pr_err("failed to created device");
+> >
+> > So many error messages printed on failures, you only needed the original
+> > one if memory was gone that the core sent out.
+> 
+> What do you mean by the original one? I see only one error printed in
+> case dev_new() fails. However I'm not sure if there's much value in
+> printing an error in case the kernel ran out of memory, as it doesn't
+> handle this very well anyway AFAIK. Should I remove this pr_err?
 
-Signed-off-by: Green Wan <green.wan@sifive.com>
----
- drivers/dma/sf-pdma/sf-pdma.c | 3 +--
- drivers/dma/sf-pdma/sf-pdma.h | 4 +++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+Yes, please do.
 
-diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
-index 16fe00553496..465256fe8b1f 100644
---- a/drivers/dma/sf-pdma/sf-pdma.c
-+++ b/drivers/dma/sf-pdma/sf-pdma.c
-@@ -1,5 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
--/**
-+/*
-  * SiFive FU540 Platform DMA driver
-  * Copyright (C) 2019 SiFive
-  *
-@@ -435,7 +435,6 @@ static int sf_pdma_irq_init(struct platform_device *pdev, struct sf_pdma *pdma)
-  *
-  * Return: none
-  */
--#define SF_PDMA_REG_BASE(ch)	(pdma->membase + (PDMA_CHAN_OFFSET * (ch)))
- static void sf_pdma_setup_chans(struct sf_pdma *pdma)
- {
- 	int i;
-diff --git a/drivers/dma/sf-pdma/sf-pdma.h b/drivers/dma/sf-pdma/sf-pdma.h
-index 55816c9e0249..0c20167b097d 100644
---- a/drivers/dma/sf-pdma/sf-pdma.h
-+++ b/drivers/dma/sf-pdma/sf-pdma.h
-@@ -1,5 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0-or-later */
--/**
-+/*
-  * SiFive FU540 Platform DMA driver
-  * Copyright (C) 2019 SiFive
-  *
-@@ -57,6 +57,8 @@
- /* Error Recovery */
- #define MAX_RETRY					1
- 
-+#define SF_PDMA_REG_BASE(ch)	(pdma->membase + (PDMA_CHAN_OFFSET * (ch)))
-+
- struct pdma_regs {
- 	/* read-write regs */
- 	void __iomem *ctrl;		/* 4 bytes */
+thanks,
 
-base-commit: a7e335deed174a37fc6f84f69caaeff8a08f8ff8
--- 
-2.17.1
-
+greg k-h
