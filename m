@@ -2,156 +2,131 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB22C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 980A5C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4949F2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7570C2073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfKOHJz (ORCPT
+        id S1727202AbfKOHKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 02:09:55 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:52615 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbfKOHJz (ORCPT
+        Fri, 15 Nov 2019 02:10:04 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59202 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbfKOHKE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 02:09:55 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iVViy-0003Na-GI; Fri, 15 Nov 2019 08:08:56 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iVVik-0008Gw-CK; Fri, 15 Nov 2019 08:08:42 +0100
-Date:   Fri, 15 Nov 2019 08:08:42 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com,
-        alexandre.belloni@bootlin.com, mhocko@suse.com,
-        julien.thierry@arm.com, catalin.marinas@arm.com,
-        linux-kernel@vger.kernel.org, dhowells@redhat.com,
-        yamada.masahiro@socionext.com, ryabinin.a.a@gmail.com,
-        glider@google.com, kvmarm@lists.cs.columbia.edu, corbet@lwn.net,
-        liuwenliang@huawei.com, daniel.lezcano@linaro.org,
-        linux@armlinux.org.uk, kasan-dev@googlegroups.com,
-        bcm-kernel-feedback-list@broadcom.com, geert@linux-m68k.org,
-        drjones@redhat.com, vladimir.murzin@arm.com, keescook@chromium.org,
-        arnd@arndb.de, marc.zyngier@arm.com, andre.przywara@arm.com,
-        philip@cog.systems, jinb.park7@gmail.com, tglx@linutronix.de,
-        dvyukov@google.com, nico@fluxnic.net, gregkh@linuxfoundation.org,
-        ard.biesheuvel@linaro.org, linux-doc@vger.kernel.org,
-        christoffer.dall@arm.com, rob@landley.net, pombredanne@nexb.com,
-        akpm@linux-foundation.org, thgarnie@google.com,
-        kirill.shutemov@linux.intel.com, kernel@pengutronix.de
-Subject: Re: [PATCH v6 0/6] KASan for arm
-Message-ID: <20191115070842.2x7psp243nfo76co@pengutronix.de>
-References: <20190617221134.9930-1-f.fainelli@gmail.com>
- <20191114181243.q37rxoo3seds6oxy@pengutronix.de>
- <7322163f-e08e-a6b7-b143-e9d59917ee5b@gmail.com>
+        Fri, 15 Nov 2019 02:10:04 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 78C36291647;
+        Fri, 15 Nov 2019 07:10:01 +0000 (GMT)
+Date:   Fri, 15 Nov 2019 08:09:58 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Alexandre Courbot <acourbot@chromium.org>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] media: hantro: make update_dpb() not leave holes in DPB
+Message-ID: <20191115080958.12893ab5@collabora.com>
+In-Reply-To: <CAPBb6MXa_9Ji5TwEF-HqPRO5JFG9HU1VDDGJdk-+Smczg0RHZA@mail.gmail.com>
+References: <20191115035013.145152-1-acourbot@chromium.org>
+        <20191115053630.129b473b@collabora.com>
+        <CAPBb6MXa_9Ji5TwEF-HqPRO5JFG9HU1VDDGJdk-+Smczg0RHZA@mail.gmail.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7322163f-e08e-a6b7-b143-e9d59917ee5b@gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:52:54 up 181 days, 13:11, 128 users,  load average: 0.02, 0.03,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Florian,
+On Fri, 15 Nov 2019 14:31:22 +0900
+Alexandre Courbot <acourbot@chromium.org> wrote:
 
-On 19-11-14 15:01, Florian Fainelli wrote:
-> Hello Marco,
+> On Fri, Nov 15, 2019 at 1:36 PM Boris Brezillon
+> <boris.brezillon@collabora.com> wrote:
+> >
+> > Hi Alexandre,
+> >
+> > On Fri, 15 Nov 2019 12:50:13 +0900
+> > Alexandre Courbot <acourbot@chromium.org> wrote:
+> >  
+> > > update_dpb() reorders the DPB entries such as the same frame in two
+> > > consecutive decoding requests always ends up in the same DPB slot.
+> > >
+> > > It first clears all the active flags in the DPB, and then checks whether
+> > > the active flag is not set to decide whether an entry is a candidate for
+> > > matching or not.
+> > >
+> > > However, this means that unused DPB entries are also candidates for
+> > > matching, and an unused entry will match if we are testing it against a
+> > > frame which (TopFieldOrderCount, BottomFieldOrderCount) is (0, 0).  
+> >
+> > Hm, I might be wrong but I thought we were supposed to re-use matching
+> > entries even if the ref was not active on the last decoded frame. IIRC,
+> > a ref can be active on specific decoding request (X), then inactive on
+> > the next one (X+1) and active again on the following one (X+2).
+> > Shouldn't we re-use the slot we used when decoding X for this ref when
+> > decoding X+2?  
 > 
-> On 11/14/19 10:12 AM, Marco Felsch wrote:
-> > Hi Florian,
-> > 
-> > first of all, many thanks for your work on this series =) I picked your
-> > and Arnd patches to make it compilable. Now it's compiling but my imx6q
-> > board didn't boot anymore. I debugged the code and found that the branch
-> > to 'start_kernel' won't be reached
-> > 
-> > 8<------- arch/arm/kernel/head-common.S -------
-> > ....
-> > 
-> > #ifdef CONFIG_KASAN
-> >         bl      kasan_early_init
-> > #endif
-> > 	mov     lr, #0
-> > 	b       start_kernel
-> > ENDPROC(__mmap_switched)
-> > 
-> > ....
-> > 8<----------------------------------------------
-> > 
-> > Now, I found also that 'KASAN_SHADOW_OFFSET' isn't set due to missing
-> > 'CONFIG_KASAN_SHADOW_OFFSET' and so no '-fasan-shadow-offset=xxxxx' is
-> > added. Can that be the reason why my board isn't booted anymore?
+> I am not sure how often this happens in practice (if at all), but
+> maybe this logic would work as well. In this case we would need to
+> mark DPB entries that are not used yet differently to avoid the issue
+> that this patch attempts to fix.
 > 
-> The latest that I have is here, though not yet submitted since I needed
-> to solve one issue on a specific platform with a lot of memory:
+> To give a precise example of the issue, for a stream that only uses 3
+> DPB entries at max, after an IDR frame the 4th DPB entry will
+> incorrectly be matched with the IDR frame of FieldOrderCount (0, 0)
+> and be the only active entry for this frame. Hantro is ok with it, but
+> this is not an optimal use of the DPB and MT8183 does not like that.
+
+Well, having a ctx->h264_dec.unused_dpb bitmap only helps solving your
+problem if you reset it to 0xffff on IDR frames, otherwise the algo will
+keep picking the 4th entry.
+
 > 
-> https://github.com/ffainelli/linux/pull/new/kasan-v7
-
-Thanks for that hint, I will try this series too :) I read that you
-wanna prepare a v7 but didn't found it ^^
-
-> Can you share your branch as well? I did not pick all of Arnd's patches
-> since some appeared to be seemingly independent from KASan on ARM. This
-> is the KASAN related options that are set in my configuration:
-
-Of course I will push it to github and inform you shortly.
-
-> grep KASAN build/linux-custom/.config
-> CONFIG_HAVE_ARCH_KASAN=y
-> CONFIG_CC_HAS_KASAN_GENERIC=y
-> CONFIG_KASAN=y
-> CONFIG_KASAN_GENERIC=y
-> CONFIG_KASAN_OUTLINE=y
-> # CONFIG_KASAN_INLINE is not set
-> CONFIG_KASAN_STACK=1
-> CONFIG_TEST_KASAN=m
-
-My config is:
-
-CONFIG_HAVE_ARCH_KASAN=y
-CONFIG_CC_HAS_KASAN_GENERIC=y
-CONFIG_KASAN=y
-CONFIG_KASAN_GENERIC=y
-CONFIG_KASAN_OUTLINE=y
-# CONFIG_KASAN_INLINE is not set
-CONFIG_KASAN_STACK=1
-# CONFIG_TEST_KASAN is not set
-
-> are you using something different by any chance?
-
-Unfortunately not.
-
-Regards,
-  Marco
-
-> -- 
-> Florian
+> >  
+> > >
+> > > As it turns out, this happens for the very first frame of a stream, but
+> > > it is not a problem as it would be copied to the first entry anyway.
+> > > More concerning is that after an IDR frame the Top/BottomFieldOrderCount
+> > > can be reset to 0, and this time update_dpb() will match the IDR frame
+> > > to the first unused entry of the DPB (and not the entry at index 0 as
+> > > would be expected) because the first slots will have different values.  
+> >
+> > We could also consider resetting the DPB cache on IDR frames if that
+> > works on Hantro.  
 > 
+> Maybe that could be enough indeed. Let me experiment with that a bit.
+> I believe this would work since in practice the result would be the
+> same as this patch, but for safety I'd rather have unused DPB entries
+> be unambiguously identified rather than letting the (0, 0) match do
+> the right thing by accident.
+> 
+> >  
+> > >
+> > > The Hantro driver is ok with this, but when trying to use the same
+> > > function for another driver (MT8183) I noticed decoding artefacts caused
+> > > by this hole in the DPB.  
+> >
+> > I guess this new version passes the chromium testsuite on rk-based
+> > boards. If that's the case I don't have any objection to this patch.
+> >
+> > Note that I was not planning to share the DPB caching logic as I
+> > thought only Hantro G1 needed that trick. Have you tried passing the
+> > DPB directly? Maybe it just works on mtk.  
+> 
+> Passing the DPB directly I get corrupted frames on a regular basis
+> with MTK. I also confirmed that the firmware's expectations are what
+> this function does. Using the same function in the MTK driver, the
+> decoded stream is flawless.
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Okay.
