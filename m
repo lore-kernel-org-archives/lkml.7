@@ -2,138 +2,135 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 966F7C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 23:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709A9C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 23:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67F3F206D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 23:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49634206D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 23:45:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="imv3Y7hN"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N+hg0LEi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbfKOXox (ORCPT
+        id S1727485AbfKOXpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 18:44:53 -0500
-Received: from mail-eopbgr680110.outbound.protection.outlook.com ([40.107.68.110]:21861
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727171AbfKOXow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 18:44:52 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bdEc0Wxi3h7w6zpFwOJPygEIA3fwnOvdw3qWoYFGIvJWpr7Qnw2SvJMrHnEXfvoo+uQ7omuPPFszGJhP3ENU0a0XjM6S8P6ASD3aHVkLe9837iBxiNoJ061zqqZ/6fqtG/ut1vhkOHfUBAo+6UeeLGyIwCAjnkYXOZmfA+E2eXbFt5p4D6Rmx1Y0twf7RDhXXpSpoB4iW4OATzbGRUMAC9l+i4w63qgLw7Rw4PDfCw3J1bLcGGZLB+PZyger3B4TWNaBYsJMWOgozdl6FhvqGnHs7rHxLWuzksVb9dcBJuLt3BQZaQXYvnrTerG310dXTw+Z6SapHT0szOBgLnwS7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Et7uAzkU3ngaRZ3jbxcAG0Vw/O7L9IUsLzS24re5JQ0=;
- b=PGO31PyOauq08OZM3cwppEZtoPiRR5njf2gEpssF4QKFDTgvLFOPAYCONQoWrbtc4rx5exhUyZNtNh2znV+7ePlc6hdymNo8ag4TZrkgkeABkiJrFdlMq1zNcW9pXn2VC3LHir2XnTfGgFF+3PX4a+3pwODQUIG9tyNWZ/BaqpOikwLXr5iU0oHJ1wjgyIvWgstL0nBL6MwSdn3PoeDfF8JJovr4AefswQqm9G3ew5gvRBBEe9rHPhsGmtdle6LoXrJVmHSsekIpHnrpX4FXWA8a97I5W0Vv0eC3U6xrCUWy+AlwUTJAZojnk8B26NMPxkLiNUa0pQ9TC/7M5TweFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=wavecomp.com;
- dkim=pass header.d=wavecomp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Et7uAzkU3ngaRZ3jbxcAG0Vw/O7L9IUsLzS24re5JQ0=;
- b=imv3Y7hN2/L61vuPXzUNiTy2XP32jD3aBRDYOrp4XQuRmVhkfuWHu/ylII9frVVedrd91FWimMEDtmCr/E0WQyyfyC0CYx+/RjQ9apB9c21T8ZJxkytFXsm4nsB+DQ7mrBQNRHlnrtb7WpOtZauSTfkbGjXl8nof/nyn4kAAFfc=
-Received: from CY4PR2201MB1349.namprd22.prod.outlook.com (10.171.209.23) by
- CY4PR2201MB1285.namprd22.prod.outlook.com (10.171.211.144) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.22; Fri, 15 Nov 2019 23:44:49 +0000
-Received: from CY4PR2201MB1349.namprd22.prod.outlook.com
- ([fe80::a909:cf85:c0fd:f6f1]) by CY4PR2201MB1349.namprd22.prod.outlook.com
- ([fe80::a909:cf85:c0fd:f6f1%10]) with mapi id 15.20.2451.027; Fri, 15 Nov
- 2019 23:44:49 +0000
-From:   Hassan Naveed <hnaveed@wavecomp.com>
-CC:     "paulburton@kernel.org" <paulburton@kernel.org>,
-        Hassan Naveed <hnaveed@wavecomp.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <pburton@wavecomp.com>,
-        James Hogan <jhogan@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        Yury Norov <ynorov@caviumnetworks.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: [PATCH v2 2/2] tracing: enable syscall optimization for MIPS
-Thread-Topic: [PATCH v2 2/2] tracing: enable syscall optimization for MIPS
-Thread-Index: AQHVnA6rS9HJl3kZHkGjOV6iCG/7Yw==
-Date:   Fri, 15 Nov 2019 23:44:49 +0000
-Message-ID: <20191115234314.21599-2-hnaveed@wavecomp.com>
-References: <20191022174551.2fcc85fd@gandalf.local.home>
-In-Reply-To: <20191022174551.2fcc85fd@gandalf.local.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR07CA0101.namprd07.prod.outlook.com
- (2603:10b6:a03:12b::42) To CY4PR2201MB1349.namprd22.prod.outlook.com
- (2603:10b6:910:64::23)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=hnaveed@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [4.15.122.74]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 001ea042-787e-4217-54fe-08d76a25cd75
-x-ms-traffictypediagnostic: CY4PR2201MB1285:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR2201MB1285E35FC2BBED828564574ED4700@CY4PR2201MB1285.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1051;
-x-forefront-prvs: 02229A4115
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39840400004)(376002)(346002)(366004)(136003)(199004)(189003)(316002)(11346002)(14454004)(14444005)(76176011)(4744005)(256004)(1076003)(81156014)(6486002)(8936002)(8676002)(81166006)(386003)(26005)(99286004)(6506007)(6512007)(2906002)(6436002)(5660300002)(1671002)(102836004)(478600001)(86362001)(71200400001)(71190400001)(486006)(66946007)(66476007)(66556008)(64756008)(25786009)(3846002)(186003)(66066001)(66446008)(36756003)(6116002)(476003)(109986005)(7736002)(4326008)(50226002)(54906003)(7416002)(52116002)(446003)(305945005)(2616005);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR2201MB1285;H:CY4PR2201MB1349.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9l0Po2v7C4QWPyW56/sMYmacj6JLrqy/EH5roGtfyZt583IIwRvRMTZoCuZmTx/l0w/9CvVD2CDQaoiR3say4e6R4TdoC38mIbJExrhD/bIqEXNf9/8L0zUig3TosghndipZ0XKVjvgBVM2tvMR1fBHNEFShfMnmFJPHgRD3ovsufUh4ecjQombM4SzsmUOhA7rudn9/ybNRn0FFhRqAIkVXyTzQIWVe4BmJGJIhkUD2rsgYTdAFyH0dxDx2BJ8cGQnS7pt+6PqOfoS+BsnYKPXWOojPQ7LnqrIa7LH4XCTY1WOi4HmyydW2Kx0opk3Dj5VDJPG+z7tsukuqtf+KtKxQaCh1gLgXDHPpSss2BeNriF5KHF0c9eo9mGetThhJMVabHjYdmoB5AHZynrTOeSRRDVzZyAn76y98z+B1hRR7/mjMPaOx3yklcuDW6Zdt
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 15 Nov 2019 18:45:20 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36465 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbfKOXpU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 18:45:20 -0500
+Received: by mail-pl1-f196.google.com with SMTP id d7so5736429pls.3
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 15:45:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:subject:from:user-agent:date;
+        bh=kXOWF2hOb3/7rqhlcEbyPgOoLIssHKsRWuWD+s7f4Mk=;
+        b=N+hg0LEiDLpZR1JHyYBMl/j9yOFe0ZBxjdM7MpHVQCian8kpePmieHzQUO68cyecqA
+         d3fOig8OLDVDi0BCeS+4wwwTkmOjcJZNUWP8HlPsJolO/UpOx3yCu9f1C989e72DGVGd
+         6iBOK98DyHOO2TzJtkIdM1CAX5nLZ1UgIN6Po=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:subject:from
+         :user-agent:date;
+        bh=kXOWF2hOb3/7rqhlcEbyPgOoLIssHKsRWuWD+s7f4Mk=;
+        b=Z3dntwusSBgEl/b3IL0ZtkbydkDkQtMxrwRqsV1sR6A12I82GhwM5Wqzxm2Jigd38D
+         wcMHMK0VR676ZVoZu7pTnCxdKzHoHK5lLSVoQeZ6L/6Y6GyhQ1cpNGK4fHsq7IMrW61i
+         242CSOSY3Ed9iEnH/HadpEF1glSavoP2hGKDtxZzgLNjNoDtxvFy8G4yW5kJgvI1Dmze
+         OX0AZEBix3RYqt4Rn8gW4QQCB2kaQ4ArcYVJV5+UAJaztrFnbKCA8tqX/OUsvail1OZJ
+         Wotr9sT3QpeEP+Y3A1wPOJXtehAmRLV8noJicMHWqbU9XUC2bR1XbJW22QxS1Bn/pKg3
+         HNKA==
+X-Gm-Message-State: APjAAAXMkY2t84479zuGxsT2vreNWaqjesT9H5W1FnSbyglcRbMCqSgy
+        EKqA7DsBLOhFWaVOUJTxeOUwgw==
+X-Google-Smtp-Source: APXvYqzfhpa9dnTnUtApKLCAjn+CcBjVuT0vCoU21X1BiS3E6fw627ZLvxd+h+HkrmPYOHxgGkUBYA==
+X-Received: by 2002:a17:90a:b116:: with SMTP id z22mr22786871pjq.38.1573861517698;
+        Fri, 15 Nov 2019 15:45:17 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id h13sm12971272pfr.98.2019.11.15.15.45.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2019 15:45:17 -0800 (PST)
+Message-ID: <5dcf388d.1c69fb81.bfc02.59ab@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-OriginatorOrg: wavecomp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 001ea042-787e-4217-54fe-08d76a25cd75
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Nov 2019 23:44:49.1956
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: j31tICMTxdTZ6csRBwonrlLP+pa/TzoUWDaa1JqsE4qxRNfHoircHPO3i/Ldf/r5p0ZoF8xiO9zWLyDETBmqZw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR2201MB1285
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1573593774-12539-9-git-send-email-eberman@codeaurora.org>
+References: <1573593774-12539-1-git-send-email-eberman@codeaurora.org> <1573593774-12539-9-git-send-email-eberman@codeaurora.org>
+Cc:     Elliot Berman <eberman@codeaurora.org>, tsoni@codeaurora.org,
+        sidgup@codeaurora.org, psodagud@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Elliot Berman <eberman@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, saiprakash.ranjan@codeaurora.org
+Subject: Re: [PATCH v2 08/18] firmware: qcom_scm-64: Remove qcom_scm_call_do_smccc
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Fri, 15 Nov 2019 15:45:16 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since MIPS architecture has a sparse syscall array, select the
-HAVE_SPARSE_SYSCALL_NR to save space.
+Quoting Elliot Berman (2019-11-12 13:22:44)
+> Remove thin wrapper to qcom_scm_call_do_smccc because it doesn't do
+> enough of anything interesting to dedicate its own function.
+>=20
+> Signed-off-by: Elliot Berman <eberman@codeaurora.org>
+> ---
 
-Signed-off-by: Hassan Naveed <hnaveed@wavecomp.com>
-Reviewed-by: Paul Burton <paulburton@kernel.org>
----
- arch/mips/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+I don't see the need for this patch. The function was split out in a
+patch earlier this year because it was too nested in the calling
+function.
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 4a5f5b0ee9a9..32421ecff933 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -71,6 +71,7 @@ config MIPS
- 	select HAVE_PERF_EVENTS
- 	select HAVE_REGS_AND_STACK_ACCESS_API
- 	select HAVE_RSEQ
-+	select HAVE_SPARSE_SYSCALL_NR
- 	select HAVE_STACKPROTECTOR
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select HAVE_VIRT_CPU_ACCOUNTING_GEN if 64BIT || !SMP
---=20
-2.17.1
+>  drivers/firmware/qcom_scm-64.c | 46 ++++++++++++++++++------------------=
+------
+>  1 file changed, 20 insertions(+), 26 deletions(-)
+>=20
+> diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-6=
+4.c
+> index f0a5f24..4131093 100644
+> --- a/drivers/firmware/qcom_scm-64.c
+> +++ b/drivers/firmware/qcom_scm-64.c
+> @@ -90,31 +90,6 @@ static void __qcom_scm_call_do_quirk(const struct qcom=
+_scm_desc *desc,
+>         } while (res->a0 =3D=3D QCOM_SCM_INTERRUPTED);
+>  }
+> =20
+> -static void qcom_scm_call_do_smccc(const struct qcom_scm_desc *desc,
+> -                            struct arm_smccc_res *res, u64 x5, bool atom=
+ic)
+> -{
+> -       int retry_count =3D 0;
 
+Maybe this can be unsigned given that it's a counter that only
+increments.
+
+> -
+> -       if (atomic) {
+> -               __qcom_scm_call_do_quirk(desc, res, x5, ARM_SMCCC_FAST_CA=
+LL);
+> -               return;
+> -       }
+> -
+> -       do {
+> -               mutex_lock(&qcom_scm_lock);
+> -
+> -               __qcom_scm_call_do_quirk(desc, res, x5, ARM_SMCCC_STD_CAL=
+L);
+> -
+> -               mutex_unlock(&qcom_scm_lock);
+> -
+> -               if (res->a0 =3D=3D QCOM_SCM_V2_EBUSY) {
+> -                       if (retry_count++ > QCOM_SCM_EBUSY_MAX_RETRY)
+> -                               break;
+> -                       msleep(QCOM_SCM_EBUSY_WAIT_MS);
+> -               }
+> -       }  while (res->a0 =3D=3D QCOM_SCM_V2_EBUSY);
+> -}
+> -
+>  static int ___qcom_scm_call_smccc(struct device *dev,
+>                                   struct qcom_scm_desc *desc, bool atomic)
+>  {
