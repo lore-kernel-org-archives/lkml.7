@@ -2,105 +2,113 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D045C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F3CC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0224C20740
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:25:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573802718;
-	bh=wyiLiv7N8dLZwdkyrZymRhqaD9xV5RdkwT9el70/A84=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jSrhy5IQ0DbdKguaY/J/R5v3ogMlhbpmnm1snsDSaMDxA4nnq1U1LVeuFMaVvgZqV
-	 ytHjt8nUgnWNJzf7vMPohEjT7C7THCTvnctU/kxunjjdJyNRUOREjUwlCwacS7wCtY
-	 NGygucqBhPQ/tS+G8CGgE++8HgI2EWwYVgFEJ048=
+	by mail.kernel.org (Postfix) with ESMTP id A95D62073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:25:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfKOHZQ (ORCPT
+        id S1727031AbfKOHZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 02:25:16 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38303 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbfKOHZQ (ORCPT
+        Fri, 15 Nov 2019 02:25:38 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40333 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726505AbfKOHZi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 02:25:16 -0500
-Received: by mail-wr1-f65.google.com with SMTP id i12so9779643wro.5;
-        Thu, 14 Nov 2019 23:25:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=d+AJ4BxgAD1ZR5YtMJu5l/SPY546SyOeW/ALaWRlSX8=;
-        b=ErPukpXX60FNsAiXULBdlCclyamDqA8kk+bEWCSwx6oDwHj+D7Zptwi9x/47xi6dNq
-         QvmzRrpgQBUYCDpNTTqh68RciKxt8UnBdQR3ZbtrwcWKKU88uRLoN+oqNC5OWXub+lkz
-         E1BK/EWmigmZiKoiqcOklWIReiSf9VR2LT/FAbJLPsT/iKlX3Uf6mwl/YeCRGvUG6Dgf
-         aLJVcBvJi42DovaVPv3xEPLHam+WLLUkW1f9K6uSJwjDj4reuKR+F64XsDhLao5+m4b7
-         6cjgcrsvJrhW3djfSwMrvqyw9Rn7E8w/YvjUTyxXx9SV9u2I4H6yVr8smCL8zxdQX54Q
-         qzaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=d+AJ4BxgAD1ZR5YtMJu5l/SPY546SyOeW/ALaWRlSX8=;
-        b=Cx0ZNQyaMBl/rmW+9MpTohH97Uy0yOq9srpZV2a/PNQ/yJnxcLxpVkJwaEJQ4WEyJG
-         0mFIiEYCjCnisPbPyZCWfu2B1JFGKxgSeOBbQNZ8ENhVAPtND7I7AH16sJoL/hNqFn7K
-         B9pmQMixLvCZ8uuENVH+pf7C+JfgMXesFVG6TFcI2oOdH8eNmSRkYvDtcAt6liHcgV2q
-         FAO1Qg/mdPpjL2gH3+PbPA2MO1XXM/uiheOlql/HwstLAWwxofN3esw8/wigr2jBVyN+
-         a+faHthgbJmu57K5517TUXY6M1EVWJo9m5KR0J88NCr0+TeO9eAixisneauF2ph8+Y0E
-         MUng==
-X-Gm-Message-State: APjAAAUoT+sNmS0bBcw8/v+ZoW8YKPWJnoFdWLdXyA7bKpKMNLJQArdh
-        qIRPTH6uu06+pU1BSPZJxFc=
-X-Google-Smtp-Source: APXvYqxRPXREwyzIlYws3r9EGVsO8dcI8C7pBddq1gENBucLC7TM8CuNOBdJs+nKHBxxwsJMeKJXyw==
-X-Received: by 2002:adf:ef86:: with SMTP id d6mr13328931wro.118.1573802714336;
-        Thu, 14 Nov 2019 23:25:14 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id m15sm10817354wrq.97.2019.11.14.23.25.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 23:25:13 -0800 (PST)
-Date:   Fri, 15 Nov 2019 08:25:11 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Shile Zhang <shile.zhang@linux.alibaba.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [RFC PATCH v3 0/7] Speed booting by sorting ORC unwind tables at
- build time
-Message-ID: <20191115072511.GA114447@gmail.com>
-References: <20191115064750.47888-1-shile.zhang@linux.alibaba.com>
+        Fri, 15 Nov 2019 02:25:38 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iVVyz-000553-Pd; Fri, 15 Nov 2019 08:25:29 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iVVyy-0000MK-4d; Fri, 15 Nov 2019 08:25:28 +0100
+Date:   Fri, 15 Nov 2019 08:25:28 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: [PATCH v4 3/7] pwm: sun4i: Add an optional probe for bus clock
+Message-ID: <20191115072528.7p5ks7xhifjiso2p@pengutronix.de>
+References: <20191108084517.21617-1-peron.clem@gmail.com>
+ <20191108084517.21617-4-peron.clem@gmail.com>
+ <20191113083524.aqtf2ed4ltuiazjg@pengutronix.de>
+ <CAJiuCccqyPbxRLjv1NRy6eukMnma8OUJGKvVHHDSKwybNJgKrg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191115064750.47888-1-shile.zhang@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJiuCccqyPbxRLjv1NRy6eukMnma8OUJGKvVHHDSKwybNJgKrg@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Clément,
 
-* Shile Zhang <shile.zhang@linux.alibaba.com> wrote:
-
-> Hi,
+On Thu, Nov 14, 2019 at 11:36:16PM +0100, Clément Péron wrote:
+> On Wed, 13 Nov 2019 at 09:35, Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Fri, Nov 08, 2019 at 09:45:13AM +0100, Clément Péron wrote:
+> > > +     /*
+> > > +      * Fallback for old dtbs with a single clock and no name.
+> > > +      * If a parent has a clock-name called "mod" whereas the
+> > > +      * current node is unnamed the clock reference will be
+> > > +      * incorrectly obtained and will not go into this fallback.
+> >
+> > For me "old dtbs" suggests that today a device tree should have a "mod"
+> > clock. Is this true also for machines other than H6? And I'd put the
+> > comment before the acquisition of the "mod" clock. Something like:
 > 
-> I refactored the sortextable code and add ORC unwind tables sort
-> support, for kernel boot speedup by sorting kernel tables at build time
-> as much as possible.
+> Agree to remove the "old dtbs" but specifying the SoC instead
+> of the reason is less clear for me.
 > 
-> Followed Peter's suggestion, I put ORC tables sort into a separated
-> thread makes these tables sort concurrently. That helps to avoid
-> kernel's link time as possible.
+> I would prefer to have something like this:
+> 
+> A clock is explicitly called "mod" when several clocks are referenced.
+> However, when only one clock is declared this one is unamed.
+> So we request "mod" first (and ignore the corner case that a parent
+> provides a "mod" clock)
+> and if this is not found we fall back to the first clock of the PWM.
 
-Could you please also measure how much boot time this saves, 
-approximately, and how long it takes to do it at build time?
+It gets better. What about also describing shortly the purpose of this
+clock (assuming this is the source clock of the PWM that is then
+divided):
 
-Thanks,
+	All hardware variants need a source clock that is divided and
+	then feeds the counter that defines the output wave form. In the
+	device tree this clock is either unnamed or called "mod".
+	Some variants (e.g. H6) need another clock to access the
+	hardware registers; this is called "bus".
 
-	Ingo
+	So we request "mod" first (and ignore the corner case that a
+	parent provides a "mod" clock while the right one would be the
+	unnamed one of the PWM device) and if this is not found we fall
+	back to the first clock of the PWM.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
