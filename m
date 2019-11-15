@@ -3,157 +3,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C91C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82022C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CB61206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 593AE206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:32:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q0G6wd3w"
+	dkim=pass (2048-bit key) header.d=unikie-com.20150623.gappssmtp.com header.i=@unikie-com.20150623.gappssmtp.com header.b="kKgwjlUa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbfKOK3S (ORCPT
+        id S1727183AbfKOKcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:29:18 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39677 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727112AbfKOK3R (ORCPT
+        Fri, 15 Nov 2019 05:32:35 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33991 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727022AbfKOKcf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:29:17 -0500
-Received: by mail-lj1-f196.google.com with SMTP id p18so10147299ljc.6
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 02:29:16 -0800 (PST)
+        Fri, 15 Nov 2019 05:32:35 -0500
+Received: by mail-lf1-f67.google.com with SMTP id y186so7661097lfa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 02:32:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PNO7uhgp1dcpLp+jSsP4cB4QzEUZpe1GKQTX+AAJeuY=;
-        b=q0G6wd3wtT1g3Ze5W4bLdIwUj2olQvXCc26kmtZu4cGRHUgr0c2yofqR/zp1BazHVd
-         4GurAZcPwsvrmGAMNxAnQLpstMvjDpGtH0cbKMLR8ZauXVjV76MPSante0JjgH8u0JhN
-         1tY882Wfa50TCIHKGdfprKC990u64sTz9OwKHeoeV3nj5Qfeox4tA0qEMn1OZuDvvQMM
-         n+i0DaoCXK3ULsgRg1BV+JFn+ySXVebWnu6u842J5Ps6TMSfFAkuYFmxUMNnpCVZoD06
-         pf7ZUXgpfAmis/wJagvkYIqnCznjwZBfMMLaSQOO4TR0ZlmjGK/owvZA3snF4CV/F34n
-         taQQ==
+        d=unikie-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=LEboKIm4XtYUXiW1Vq6xcXCe3zY0ylQ/Sqx7enK/HH0=;
+        b=kKgwjlUa0n1nWif0RELshhBBhRTkumivvKv5zGSPuMJXP0PGwQRe+V0QxOeL2/rbqP
+         /rUoBJlJLRf0/ER76UH6Ehiw1Gaek8IVIbWXvLqDdX+lcmylJVdZygdlx8yCdCc6K0Zd
+         WBS3NeSIrhK9DlrnmvfQ3Dw9ScQOwqvQ83frLLb16yhIfadkeqiGI6+WqrrbGmTmS8IR
+         wWBvYFCq9C0FN/gD8hPEaU6S6rzKLITZ4jI55LLNe4kG65y7FNZvlbZ7U18SGTE08Qb8
+         lae3dgXXh+z/VhLvDs6Mdhdp4q1wVyMdp8NPw42wuOWmP/AF+481TzuY4oeWIqnf9Qz/
+         oFUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PNO7uhgp1dcpLp+jSsP4cB4QzEUZpe1GKQTX+AAJeuY=;
-        b=N/T36pCEmKazGmKwxniKrwVpU1yVnrd1FqdFCZn6z+BpaiH177wB2Rm5L+pGcgxb1x
-         dbjbKecnHwVkKxSvVtvnxHUvGWmIZ9Y35jiC+iXVFe+ZnUsi1eRFs+9c1eD7wliFCReu
-         yjJXl7XzhxYWrisGaYRwIL/R95YqZYVj/s3vR0Tw4psOESBZXItilGTOeMcWOWwK8AEZ
-         7rj7yNUbZ7pxDMCaOvcMSaI2cwJTXTvtCArCj4tpJTEwubXumvJW0DxBp5IEBQRt0Dq+
-         eX5VFu72VyCOrlvyUqc1fkHWnbU+AV5RCgFSHcdlkJnvVJpqaNwbswVumW3dTMQ4tod0
-         n+oQ==
-X-Gm-Message-State: APjAAAUuMbygI2jg3SluPpyxqwiKDz4YrKnO2Ul6+UHDPgkd8DC8VLhb
-        hAcPnhpDICHCZGcULu+JofNNBmLi3HRzhTia3ZUJyw==
-X-Google-Smtp-Source: APXvYqxS72HHnU9jyNroqC25BDaEGu7VNx5qQYXeMTZC7ZEf2Rk0L9H2sBLv3DCxNHHvulZNf2UsHJOXSc7+dOL5STM=
-X-Received: by 2002:a2e:b0e3:: with SMTP id h3mr10169336ljl.193.1573813755258;
- Fri, 15 Nov 2019 02:29:15 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version:content-transfer-encoding;
+        bh=LEboKIm4XtYUXiW1Vq6xcXCe3zY0ylQ/Sqx7enK/HH0=;
+        b=Yr05rts9H7IfddUs+EJuXjSJamCtpvl2A/1Hoziki6v99L4foKNxKFT79k9dGi4Tdf
+         lVgWsGTYlYbxGigj3WbfZMd/5g6PLu2iWQjUduaPxDpvHnF9GBXnlCRSniM6KG9Y8QKO
+         q+wuMSexTxLPzg+ayycplYtSQdQnwqCRblA5/XJH35GLk1SaumNb36l975A1V1hkPDeF
+         wBGJkswhrE1r620svB1KwCbdOTRMvngf7EooBsUQ1JWbXUC5tFblAayXlJZBsvLrWlVh
+         q6+kVydC1mTjlxZnS87HH3z9T/unTJy5wTlbAAvdrqm8PUWESaszKSHNvj0HiSkEkoAG
+         DArg==
+X-Gm-Message-State: APjAAAXClJDJblwHBFeju+/7/wIQ5YtFy4O/ZEjdNS/kfJTsTWtts12i
+        Cquu0PyOsrpYKGJwyq15d8abNQ==
+X-Google-Smtp-Source: APXvYqx4AjGfhwhLgmZVL/5isI0vcHIA+bgEWl38mBG43hAXzCmNi0w9qQFhMAYDmeYTWjP1IEdK3g==
+X-Received: by 2002:a19:790c:: with SMTP id u12mr11108700lfc.183.1573813953142;
+        Fri, 15 Nov 2019 02:32:33 -0800 (PST)
+Received: from GL-434 ([109.204.235.119])
+        by smtp.gmail.com with ESMTPSA id t12sm4030431lfc.73.2019.11.15.02.32.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 15 Nov 2019 02:32:32 -0800 (PST)
+From:   jouni.hogander@unikie.com (Jouni =?utf-8?Q?H=C3=B6gander?=)
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: Re: [PATCH] drivers/base: Fix memory leak in error paths
+References: <20191114121840.5585-1-jouni.hogander@unikie.com>
+        <20191115032603.GG793701@kroah.com> <878soha7tc.fsf@unikie.com>
+        <20191115082022.GB55909@kroah.com> <8736epa202.fsf@unikie.com>
+        <20191115101902.GB337025@kroah.com>
+Date:   Fri, 15 Nov 2019 12:32:31 +0200
+In-Reply-To: <20191115101902.GB337025@kroah.com> (Greg Kroah-Hartman's message
+        of "Fri, 15 Nov 2019 18:19:02 +0800")
+Message-ID: <87y2wh8m68.fsf@unikie.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.2 (gnu/linux)
 MIME-Version: 1.0
-References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org>
- <20191115095447.GU4114@hirez.programming.kicks-ass.net> <CAKfTPtCTcrq1E1H8A3TL1xvALUrQ7ybPoERJ+C2O2+QXpVEZGQ@mail.gmail.com>
-In-Reply-To: <CAKfTPtCTcrq1E1H8A3TL1xvALUrQ7ybPoERJ+C2O2+QXpVEZGQ@mail.gmail.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 15 Nov 2019 11:29:03 +0100
-Message-ID: <CAKfTPtA-up_9WHfTka33WRxXCatUZioYS0v5gY9jjzOGT98oLQ@mail.gmail.com>
-Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Doug Smythies <dsmythies@telus.net>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 at 11:18, Vincent Guittot
-<vincent.guittot@linaro.org> wrote:
->
-> On Fri, 15 Nov 2019 at 10:55, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Thu, Nov 14, 2019 at 06:07:31PM +0100, Vincent Guittot wrote:
-> > > update_cfs_rq_load_avg() calls cfs_rq_util_change() everytime pelt decays,
-> > > which might be inefficient when cpufreq driver has rate limitation.
-> > >
-> > > When a task is attached on a CPU, we have call path:
-> > >
-> > > update_load_avg()
-> > >   update_cfs_rq_load_avg()
-> > >     cfs_rq_util_change -- > trig frequency update
-> > >   attach_entity_load_avg()
-> > >     cfs_rq_util_change -- > trig frequency update
-> > >
-> > > The 1st frequency update will not take into account the utilization of the
-> > > newly attached task and the 2nd one might be discard because of rate
-> > > limitation of the cpufreq driver.
-> >
-> > Doesn't this just show that a dumb rate limit in the driver is broken?
->
-> But the rate limit may come from HW constraints that forces to wait
-> let say 4ms or even 10ms between each frequency update.
->
-> >
-> > > update_cfs_rq_load_avg() is only called by update_blocked_averages()
-> > > and update_load_avg() so we can move the call to
-> > > cfs_rq_util_change/cpufreq_update_util() into these 2 functions. It's also
-> > > interesting to notice that update_load_avg() already calls directly
-> > > cfs_rq_util_change() for !SMP case.
-> > >
-> > > This changes will also ensure that cpufreq_update_util() is called even
-> > > when there is no more CFS rq in the leaf_cfs_rq_list to update but only
-> > > irq, rt or dl pelt signals.
-> >
-> > I don't think it does that; that is, iirc the return value of
-> > ___update_load_sum() is 1 every time a period lapses. So even if the avg
-> > is 0 and doesn't change, it'll still return 1 on every period.
-> >
-> > Which is what that dumb rate-limit thing wants of course. But I'm still
-> > thinking that it's stupid to do. If nothing changes, don't generate
-> > events.
->
-> When everything (irq, dl, rt, cfs) is 0, we don't generate events
-> because update_blocked_averages is no more called because
-> rq->has_blocked_load is clear
->
-> With current implementation, if cfs is 0 but not irq, dl or rt, we
-> don't call cpufreq_update_util because it is only called through cfs
->
-> >
-> > If anything, update_blocked_avgerages() should look at
-> > @done/others_have_blocked() to emit events for rt,dl,irq.
->
-> other_have_blocked can be set but no decay happened during the update
-> and we don't need to call cpufreq_update_util
->
-> >
-> > So why are we making the scheduler code more ugly instead of fixing that
-> > driver?
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 
-Also, I think that calling cfs_rq_util_change in
-attach_entity_load_avg is not optimal because the attach can happen at
-a child level before it has been propagated down to root
-So I'm working on trying to remove it from attach_entity_load_avg and
-keep it in update_load_avg. this would help cleaning the ugly
+>>=20
+>> Ok, did some more debugging on
+>> this. net/core/net-sysfs.c:netdev_register_kobject is doing
+>> device_initialize(dev). This is in
+>> drivers/base/core.c:device_initialize:
+>>=20
+>>  * NOTE: Use put_device() to give up your reference instead of freeing
+>>  * @dev directly once you have called this function.
+>>=20
+>> My understanding is that remaining reference on error path is taken by
+>> device_initialize and as instructed in the note above it should be given
+>> up using put_device?
+>
+> Yes, that is correct.
+>
+>> Tested this and it's fixing the memory leak I found in my Syzkaller
+>> exercise. Addition to that it seems to be fixing also this one:
+>>=20
+>> https://syzkaller.appspot.com/bug?id=3Df5f4af9fb9ffb3112ad6e30f717f769de=
+cdccdfc
+>
+> Great!  Care to submit a patch for this?
 
--       } else if (decayed && (flags & UPDATE_TG))
--               update_tg_load_avg(cfs_rq, 0);
-+       } else if (decayed) {
-+               cfs_rq_util_change(cfs_rq, 0);
-+
-+               if (flags & UPDATE_TG)
-+                       update_tg_load_avg(cfs_rq, 0);
-+       }
- }
+I will submit another patch and Cc you there. This patch should be ignored.
+
+BR,
+
+Jouni H=C3=B6gander
