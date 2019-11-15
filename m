@@ -2,119 +2,220 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54407C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93D4C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E37F2072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:52:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573815127;
-	bh=Og2TQNGeHlIyI6nB9MvgEC0p6uuWI527JOiH54HUHug=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=n1I1ojOVn0o6icmCWtvWE086/ix9i0bMbi2Mn9UUAFykKKLY2T/D7bhDHL0SzKLnL
-	 77exiQj50K4C/kEHg+2n2RPH7pleqP5mfNYP91/fr9VooMKPUQw1G6DTA/79j0k1ve
-	 LQcByxCxpBa6yDIyXCM3Y/vV+Qs7bCNme+E7/vwM=
+	by mail.kernel.org (Postfix) with ESMTP id B8DFE2072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:52:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfKOKwG (ORCPT
+        id S1727463AbfKOKw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:52:06 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41949 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbfKOKwG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:52:06 -0500
-Received: by mail-oi1-f193.google.com with SMTP id e9so8240110oif.8;
-        Fri, 15 Nov 2019 02:52:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nOv8JeNlC2mI252aSJXP+QMtS/qGUyMu0OgZ22k7dKk=;
-        b=fejNYyEJoXzyV8WdENnyLgsHWa+IjpyC15OwA5K0EKJnN3a5hos7bNM9kEvKVMZlvi
-         YvlUiTyt6yjEYhqohTdQmVGogjvfwzYRvbVdy8pLtVVPHdg6OPA8KjpbM17a+9qDkMIj
-         Gp38t23/OiBcozVg9b9HW3Nx4u/IPhK5RjhGWbPaX+Q9SjKLnZmcrR/ofiNGvRB4vQn8
-         ditbegsOR3MXIjRz86ypWdsCseXAH30BZE/vcqUKkgjIkRf9dSXvPINl/A8VCcCN9V+Z
-         +nnA4O0/6aQatJZlrqnVy16OcTwKfCNv4Tq5oNrNNc0zQqtoBlmmMmAeUd2q1SN59YtY
-         W/uw==
-X-Gm-Message-State: APjAAAUhIqZORG5zMwvV0cbCfScgLbL+7AGu+pVVyi/+qR8mYU/Nr+IB
-        qu9wUiOG4fECk+gEMawsIbu4zCf61Tdw09YDVEY=
-X-Google-Smtp-Source: APXvYqyTP0AhxC4iysEpy1bSC77jZ1CGXL9oZp/Aqz0IrV6eOeDilANFiQYp+VTO0GgLvrD61ZDyJFMxcwkbnmTxqNc=
-X-Received: by 2002:aca:d4c6:: with SMTP id l189mr7152376oig.68.1573815124814;
- Fri, 15 Nov 2019 02:52:04 -0800 (PST)
-MIME-Version: 1.0
-References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org>
- <20191115095447.GU4114@hirez.programming.kicks-ass.net> <CAKfTPtCTcrq1E1H8A3TL1xvALUrQ7ybPoERJ+C2O2+QXpVEZGQ@mail.gmail.com>
- <20191115103735.GE4131@hirez.programming.kicks-ass.net> <CAKfTPtDi_-h6g+rhV04XXjqpWprC2vT6hgLZSrTW5rdD54PrQA@mail.gmail.com>
-In-Reply-To: <CAKfTPtDi_-h6g+rhV04XXjqpWprC2vT6hgLZSrTW5rdD54PrQA@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 15 Nov 2019 11:51:53 +0100
-Message-ID: <CAJZ5v0hs96oq_AmYa0mVxWZa=fAsFqC8Ce4JPjLkgfWQ9P18Fg@mail.gmail.com>
-Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Doug Smythies <dsmythies@telus.net>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 15 Nov 2019 05:52:29 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58198 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726986AbfKOKw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 05:52:29 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9E634AFD4;
+        Fri, 15 Nov 2019 10:52:27 +0000 (UTC)
+Date:   Fri, 15 Nov 2019 11:52:27 +0100
+Message-ID: <s5hmucxjtsk.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] sound fixes for 5.4-rc8
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 11:46 AM Vincent Guittot
-<vincent.guittot@linaro.org> wrote:
->
-> On Fri, 15 Nov 2019 at 11:37, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Fri, Nov 15, 2019 at 11:18:00AM +0100, Vincent Guittot wrote:
-> > > On Fri, 15 Nov 2019 at 10:55, Peter Zijlstra <peterz@infradead.org> wrote:
-> > > >
-> > > > On Thu, Nov 14, 2019 at 06:07:31PM +0100, Vincent Guittot wrote:
-> > > > > update_cfs_rq_load_avg() calls cfs_rq_util_change() everytime pelt decays,
-> > > > > which might be inefficient when cpufreq driver has rate limitation.
-> > > > >
-> > > > > When a task is attached on a CPU, we have call path:
-> > > > >
-> > > > > update_load_avg()
-> > > > >   update_cfs_rq_load_avg()
-> > > > >     cfs_rq_util_change -- > trig frequency update
-> > > > >   attach_entity_load_avg()
-> > > > >     cfs_rq_util_change -- > trig frequency update
-> > > > >
-> > > > > The 1st frequency update will not take into account the utilization of the
-> > > > > newly attached task and the 2nd one might be discard because of rate
-> > > > > limitation of the cpufreq driver.
-> > > >
-> > > > Doesn't this just show that a dumb rate limit in the driver is broken?
-> > >
-> > > But the rate limit may come from HW constraints that forces to wait
-> > > let say 4ms or even 10ms between each frequency update.
-> >
-> > Sure, but then it can still remember the value passed in last and use
-> > that state later.
-> >
-> > It doesn't _have_ to completely discard values.
->
-> yes but it means that we run at the "wrong" frequency during this
-> period and also that the cpufreq must in this case set a kind of timer
-> to resubmit a new frequency change out of scheduler event
+Linus,
 
-The driver would need to do that, because from the cpufreq core
-perspective it is in-band.
+please pull sound fixes for v5.4-rc8 from:
 
-Which would kind of defeat the purpose of driving it from the
-scheduler, wouldn't it?
+  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.4-rc8
+
+The topmost commit is 976a68f06b2ea49e2ab67a5f84919a8b105db8be
+
+----------------------------------------------------------------
+
+sound fixes for 5.4-rc8 or final
+
+A few small last-minute fixes for USB-audio and HD-audio as well
+as for PCM core:
+
+- A race fix for PCM core between stopping and closing a stream
+- USB-audio regressions in the recent descriptor validation code
+  and relevant changes
+- A read of uninitialized value in USB-audio spotted by fuzzer
+- A fix for USB-audio race at stopping a stream
+- Intel HD-audio platform fixes
+
+----------------------------------------------------------------
+
+Chiou, Cooper (1):
+      ALSA: hda: Add Cometlake-S PCI ID
+
+Henry Lin (1):
+      ALSA: usb-audio: not submit urb for stopped endpoint
+
+Kai Vehmanen (1):
+      ALSA: hda: hdmi - fix pin setup on Tigerlake
+
+Takashi Iwai (3):
+      ALSA: usb-audio: Fix missing error check at mixer resolution test
+      ALSA: usb-audio: Fix incorrect NULL check in create_yamaha_midi_quirk()
+      ALSA: usb-audio: Fix incorrect size check for processing/extension units
+
+paulhsia (1):
+      ALSA: pcm: Fix stream lock usage in snd_pcm_period_elapsed()
+
+---
+ sound/core/pcm_lib.c       | 8 ++++++--
+ sound/pci/hda/hda_intel.c  | 3 +++
+ sound/pci/hda/patch_hdmi.c | 4 +++-
+ sound/usb/endpoint.c       | 3 +++
+ sound/usb/mixer.c          | 4 +++-
+ sound/usb/quirks.c         | 4 ++--
+ sound/usb/validate.c       | 6 +++---
+ 7 files changed, 23 insertions(+), 9 deletions(-)
+
+diff --git a/sound/core/pcm_lib.c b/sound/core/pcm_lib.c
+index d80041ea4e01..2236b5e0c1f2 100644
+--- a/sound/core/pcm_lib.c
++++ b/sound/core/pcm_lib.c
+@@ -1782,11 +1782,14 @@ void snd_pcm_period_elapsed(struct snd_pcm_substream *substream)
+ 	struct snd_pcm_runtime *runtime;
+ 	unsigned long flags;
+ 
+-	if (PCM_RUNTIME_CHECK(substream))
++	if (snd_BUG_ON(!substream))
+ 		return;
+-	runtime = substream->runtime;
+ 
+ 	snd_pcm_stream_lock_irqsave(substream, flags);
++	if (PCM_RUNTIME_CHECK(substream))
++		goto _unlock;
++	runtime = substream->runtime;
++
+ 	if (!snd_pcm_running(substream) ||
+ 	    snd_pcm_update_hw_ptr0(substream, 1) < 0)
+ 		goto _end;
+@@ -1797,6 +1800,7 @@ void snd_pcm_period_elapsed(struct snd_pcm_substream *substream)
+ #endif
+  _end:
+ 	kill_fasync(&runtime->fasync, SIGIO, POLL_IN);
++ _unlock:
+ 	snd_pcm_stream_unlock_irqrestore(substream, flags);
+ }
+ EXPORT_SYMBOL(snd_pcm_period_elapsed);
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index cf53fbd872ee..c52419376c74 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2396,6 +2396,9 @@ static const struct pci_device_id azx_ids[] = {
+ 	/* CometLake-H */
+ 	{ PCI_DEVICE(0x8086, 0x06C8),
+ 	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
++	/* CometLake-S */
++	{ PCI_DEVICE(0x8086, 0xa3f0),
++	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
+ 	/* Icelake */
+ 	{ PCI_DEVICE(0x8086, 0x34c8),
+ 	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index 3c720703ebb8..78bd2e3722c7 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -46,10 +46,12 @@ MODULE_PARM_DESC(static_hdmi_pcm, "Don't restrict PCM parameters per ELD info");
+ 				((codec)->core.vendor_id == 0x80862800))
+ #define is_cannonlake(codec) ((codec)->core.vendor_id == 0x8086280c)
+ #define is_icelake(codec) ((codec)->core.vendor_id == 0x8086280f)
++#define is_tigerlake(codec) ((codec)->core.vendor_id == 0x80862812)
+ #define is_haswell_plus(codec) (is_haswell(codec) || is_broadwell(codec) \
+ 				|| is_skylake(codec) || is_broxton(codec) \
+ 				|| is_kabylake(codec) || is_geminilake(codec) \
+-				|| is_cannonlake(codec) || is_icelake(codec))
++				|| is_cannonlake(codec) || is_icelake(codec) \
++				|| is_tigerlake(codec))
+ #define is_valleyview(codec) ((codec)->core.vendor_id == 0x80862882)
+ #define is_cherryview(codec) ((codec)->core.vendor_id == 0x80862883)
+ #define is_valleyview_plus(codec) (is_valleyview(codec) || is_cherryview(codec))
+diff --git a/sound/usb/endpoint.c b/sound/usb/endpoint.c
+index a2ab8e8d3a93..4a9a2f6ef5a4 100644
+--- a/sound/usb/endpoint.c
++++ b/sound/usb/endpoint.c
+@@ -388,6 +388,9 @@ static void snd_complete_urb(struct urb *urb)
+ 		}
+ 
+ 		prepare_outbound_urb(ep, ctx);
++		/* can be stopped during prepare callback */
++		if (unlikely(!test_bit(EP_FLAG_RUNNING, &ep->flags)))
++			goto exit_clear;
+ 	} else {
+ 		retire_inbound_urb(ep, ctx);
+ 		/* can be stopped during retire callback */
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index 3fd1d1749edf..45eee5cc312e 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -1229,7 +1229,8 @@ static int get_min_max_with_quirks(struct usb_mixer_elem_info *cval,
+ 		if (cval->min + cval->res < cval->max) {
+ 			int last_valid_res = cval->res;
+ 			int saved, test, check;
+-			get_cur_mix_raw(cval, minchn, &saved);
++			if (get_cur_mix_raw(cval, minchn, &saved) < 0)
++				goto no_res_check;
+ 			for (;;) {
+ 				test = saved;
+ 				if (test < cval->max)
+@@ -1249,6 +1250,7 @@ static int get_min_max_with_quirks(struct usb_mixer_elem_info *cval,
+ 			snd_usb_set_cur_mix_value(cval, minchn, 0, saved);
+ 		}
+ 
++no_res_check:
+ 		cval->initialized = 1;
+ 	}
+ 
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index 0bbe1201a6ac..349e1e52996d 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -248,8 +248,8 @@ static int create_yamaha_midi_quirk(struct snd_usb_audio *chip,
+ 					NULL, USB_MS_MIDI_OUT_JACK);
+ 	if (!injd && !outjd)
+ 		return -ENODEV;
+-	if (!(injd && snd_usb_validate_midi_desc(injd)) ||
+-	    !(outjd && snd_usb_validate_midi_desc(outjd)))
++	if ((injd && !snd_usb_validate_midi_desc(injd)) ||
++	    (outjd && !snd_usb_validate_midi_desc(outjd)))
+ 		return -ENODEV;
+ 	if (injd && (injd->bLength < 5 ||
+ 		     (injd->bJackType != USB_MS_EMBEDDED &&
+diff --git a/sound/usb/validate.c b/sound/usb/validate.c
+index a5e584b60dcd..389e8657434a 100644
+--- a/sound/usb/validate.c
++++ b/sound/usb/validate.c
+@@ -81,9 +81,9 @@ static bool validate_processing_unit(const void *p,
+ 	switch (v->protocol) {
+ 	case UAC_VERSION_1:
+ 	default:
+-		/* bNrChannels, wChannelConfig, iChannelNames, bControlSize */
+-		len += 1 + 2 + 1 + 1;
+-		if (d->bLength < len) /* bControlSize */
++		/* bNrChannels, wChannelConfig, iChannelNames */
++		len += 1 + 2 + 1;
++		if (d->bLength < len + 1) /* bControlSize */
+ 			return false;
+ 		m = hdr[len];
+ 		len += 1 + m + 1; /* bControlSize, bmControls, iProcessing */
