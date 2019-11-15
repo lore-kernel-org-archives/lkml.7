@@ -2,100 +2,88 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5FAC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 04:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D714C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 04:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD9EA2072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 04:50:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NTo8ybxo"
+	by mail.kernel.org (Postfix) with ESMTP id 579B120715
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 04:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573793462;
+	bh=Zf6sTIMli76oYQWsxTvqKPeMc72IZB/Z2B0hBOL0C+w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ygeCmdG/JWIoHo3iPDkrUR0UbrRDSC9Hqc9n5gI4cyNVf+W+QEyZG5Q4VdAcP22vD
+	 UD/FkRX97BcJnC62sgVOiSwrfxTERQh53vn5usq2k7+8vAibaOe5ZBKumbtdefind7
+	 o8+45/YQ05VZKe8+79aQzVw8GowXlnCiOv405kMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfKOEu6 (ORCPT
+        id S1727200AbfKOEvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 23:50:58 -0500
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:34659 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbfKOEu6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 23:50:58 -0500
-Received: by mail-pl1-f202.google.com with SMTP id u9so5527752plq.1
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 20:50:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=w71CA9nI41QLngUUjO4kaDNCWv8Is/cxYLfXviB89PM=;
-        b=NTo8ybxoixlCH0ZM1hpm8k1kL45i3+Eh5sJUx6aF70GQFnFicUSLH/iVN4V7v5nxez
-         aSeLn+YhSHtNCWALSPcXKt1kt9rXZTysNWTysx9jJCcdsfzPAZHfZ3lVgIJDVQOh/kk8
-         U6L8AqrRcEQR/8bltVArD3ZU0+dZmE4FYWigJYdNlpP3DSOGwSn1zsz2krBosITPAmTs
-         DJitrC4FkVwD/IOkaerJR5ymcO2HxxN9VZZ0CH7/ALoVmiIlZr+IV0BPY5WaPBS6c/Da
-         Pojk/sakGMiZms6D9fYDH8aveluLe5NxC43OLQeYNe0ds5yXHzA3H1OTuiFV2I05mNtL
-         Q3tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=w71CA9nI41QLngUUjO4kaDNCWv8Is/cxYLfXviB89PM=;
-        b=KiOqaZB6wqsFnF7RvwK9iAZkKoEz4yYwkjXG2/WqgDQu8WGRTQZ3oKzD6O3Nj5EzlK
-         e+32oZw871L/Xb7KNo6iH363DVQ/TPHwcPpj2zzCXE77mYF5vKwEYq1E/NIijidN3B+8
-         KUVm/JQCYQ9m3dLGrg07sQ3CdqPq3WVkdtPfJ5x80MOZBf1IgqH1d6F6O3JaLAbA/Xmk
-         u6TkiBjgBMxJNgBaxis8ZCZOSzkhRtpn6ZIrvmGsZnrxhmnbpwY/oMiFY+3wq/hXcXSn
-         fu4mmaZJvhb+c2LaauY81fov+gRNrjPeis+pyvvSWisUCPDPlefCupJV39Hs648O7W/F
-         rWug==
-X-Gm-Message-State: APjAAAXHz+v9iqFJ9M1mNgrUICcXtB7Mtfqmgqc0I5N8Yi/fL43DM755
-        jYFaI1TYzXuf9SA4dTFmOVfoUunFroJLQfI=
-X-Google-Smtp-Source: APXvYqwoR0UhMLan4e4IUMAvPvgf+9vxmaOtBTzeVFpTKGkCGgYwDAz522FkrjiFpB745lMdX6ZtroWuXToyQIM=
-X-Received: by 2002:a63:ee44:: with SMTP id n4mr1499531pgk.137.1573793455780;
- Thu, 14 Nov 2019 20:50:55 -0800 (PST)
-Date:   Thu, 14 Nov 2019 20:50:48 -0800
-Message-Id: <20191115045049.261104-1-saravanak@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-Subject: [PATCH v1] i2c: of: Populate fwnode in of_i2c_get_board_info()
-From:   Saravana Kannan <saravanak@google.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel-team@android.com, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        Thu, 14 Nov 2019 23:51:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53208 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726755AbfKOEvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 23:51:00 -0500
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18905206E6
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 04:50:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573793459;
+        bh=Zf6sTIMli76oYQWsxTvqKPeMc72IZB/Z2B0hBOL0C+w=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=U6HSO2YxLNSLY6xFeYZ9L9kZOnK1zLpDkmnckCZ40n7Wa2tNA8RrHy8A/3JbXDRMO
+         0c59Tcos/mF4g2JiaTaJAqm7VWCRDVjlegnSnsoXJdJUDHp9MEEUWO4o2/BDcp1Zog
+         VLk+oFYf+bN8ZPmHI3WhZycAGPyJWHg/ObSj/sa8=
+Received: by mail-qk1-f180.google.com with SMTP id m4so7114815qke.9
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 20:50:59 -0800 (PST)
+X-Gm-Message-State: APjAAAWJQqc4V7noWubu2i1oYtoG1bqRkvIZw1YwNNPEwCMyOvxukvu4
+        BoxTYMgYRyRSmwDKHNAkgxf9v1vIiRqwvNLes5k=
+X-Google-Smtp-Source: APXvYqzfQ+D+sIW1zancKDC1U3nM1foEwdOLpsyTt+w7ZHUDx3VbOqfLeYpK5/1wDeVyzBxq3G2x5b7W0mA8w1wSKUE=
+X-Received: by 2002:a37:9d44:: with SMTP id g65mr10669230qke.302.1573793458206;
+ Thu, 14 Nov 2019 20:50:58 -0800 (PST)
+MIME-Version: 1.0
+References: <20191108130123.6839-1-linux@rasmusvillemoes.dk> <20191108130123.6839-8-linux@rasmusvillemoes.dk>
+In-Reply-To: <20191108130123.6839-8-linux@rasmusvillemoes.dk>
+From:   Timur Tabi <timur@kernel.org>
+Date:   Thu, 14 Nov 2019 22:50:21 -0600
+X-Gmail-Original-Message-ID: <CAOZdJXXHK9U_Y7_VgVmuOFKDAh4OqBJ7hZx58hisZZ6Cz6xE2w@mail.gmail.com>
+Message-ID: <CAOZdJXXHK9U_Y7_VgVmuOFKDAh4OqBJ7hZx58hisZZ6Cz6xE2w@mail.gmail.com>
+Subject: Re: [PATCH v4 07/47] soc: fsl: qe: qe.c: guard use of
+ pvr_version_is() with CONFIG_PPC32
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Scott Wood <oss@buserror.net>, linuxppc-dev@lists.ozlabs.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows the of_devlink feature to work across i2c devices too. This
-avoid unnecessary probe deferrals of i2c devices, defers consumers of
-i2c devices till the i2c devices probe, and allows i2c drivers to
-implement sync_state() callbacks.
+On Fri, Nov 8, 2019 at 7:04 AM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
+>
+> +static bool qe_general4_errata(void)
+> +{
+> +#ifdef CONFIG_PPC32
+> +       return pvr_version_is(PVR_VER_836x) || pvr_version_is(PVR_VER_832x);
+> +#endif
+> +       return false;
+> +}
+> +
+>  /* Program the BRG to the given sampling rate and multiplier
+>   *
+>   * @brg: the BRG, QE_BRG1 - QE_BRG16
+> @@ -223,7 +231,7 @@ int qe_setbrg(enum qe_clock brg, unsigned int rate, unsigned int multiplier)
+>         /* Errata QE_General4, which affects some MPC832x and MPC836x SOCs, says
+>            that the BRG divisor must be even if you're not using divide-by-16
+>            mode. */
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
-The of_devlink feature is present in driver-core-next branch. It started
-off with [1] but it has been improving since then.
-
-[1] -- https://lore.kernel.org/linux-acpi/20190904211126.47518-1-saravanak@google.com/
-
- drivers/i2c/i2c-core-of.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
-index 6f632d543fcc..4e913c890a7b 100644
---- a/drivers/i2c/i2c-core-of.c
-+++ b/drivers/i2c/i2c-core-of.c
-@@ -50,6 +50,7 @@ int of_i2c_get_board_info(struct device *dev, struct device_node *node,
- 
- 	info->addr = addr;
- 	info->of_node = node;
-+	info->fwnode = of_fwnode_handle(node);
- 
- 	if (of_property_read_bool(node, "host-notify"))
- 		info->flags |= I2C_CLIENT_HOST_NOTIFY;
--- 
-2.24.0.432.g9d3f5f5b63-goog
-
+Can you also move this comment (and fix the comment formatting so that
+it's a proper function comment) to qe_general4_errata()?
