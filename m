@@ -2,103 +2,110 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C84BBC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3D6C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB8320733
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3264A20733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:34:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gcZws/se"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbfKOJdu (ORCPT
+        id S1727291AbfKOJea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:33:50 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:44295 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbfKOJdt (ORCPT
+        Fri, 15 Nov 2019 04:34:30 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:49659 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726901AbfKOJea (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:33:49 -0500
-Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1My2pz-1hfdsh0DyZ-00zV17; Fri, 15 Nov 2019 10:33:48 +0100
-Received: by mail-qk1-f170.google.com with SMTP id d13so7589673qko.3;
-        Fri, 15 Nov 2019 01:33:47 -0800 (PST)
-X-Gm-Message-State: APjAAAXS/EV5BsFcJFwN5VESTmD3xzK1lo4Tpyx3tZDu3ZV4vc/th8Iq
-        tbAJcCQrU1iJ+99PiZZyUU0NGuiczPNXYO+vloI=
-X-Google-Smtp-Source: APXvYqyHs9ad/+3HaWdqKuzJptVRHCVwDklMrgq5Mkioy7i8IrZPX+/M8dSz9o3BBSnMlS0BE9d05Ry9BXPIzZIB7/k=
-X-Received: by 2002:a37:58d:: with SMTP id 135mr11660269qkf.394.1573810426879;
- Fri, 15 Nov 2019 01:33:46 -0800 (PST)
+        Fri, 15 Nov 2019 04:34:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573810469;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2lzawNQBmGA+jjj1+nr7/MFGmhoKRDvbgjKa9NHAufc=;
+        b=gcZws/seIZAErAEEmS+m0XFSbvJOuf4lMqYZ3K7dMsgWeqgwdwZn38IN29rocgMXv69siL
+        cKOclndh6l0K2LL1bQfKkjvrwNG/Ah9wJ73kb26F/daKrKmBRGMrz9N0+HsZWlspmzqL1J
+        ZzTioAfPbNGS7LtUijLjUg90WqQBp2E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-199-VKzwddh-P4W-IxqFdRfIlg-1; Fri, 15 Nov 2019 04:34:26 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2F5E6DB25;
+        Fri, 15 Nov 2019 09:34:24 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 662FE5ED32;
+        Fri, 15 Nov 2019 09:34:21 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 15 Nov 2019 10:34:22 +0100 (CET)
+Date:   Fri, 15 Nov 2019 10:34:20 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Andrei Vagin <avagin@gmail.com>
+Cc:     Adrian Reber <areber@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>
+Subject: Re: [PATCH v10 1/2] fork: extend clone3() to support setting a PID
+Message-ID: <20191115093419.GA25528@redhat.com>
+References: <20191114142707.1608679-1-areber@redhat.com>
+ <20191114191538.GC171963@gmail.com>
 MIME-Version: 1.0
-References: <20191114114525.12675-1-orson.zhai@unisoc.com> <20191114114525.12675-2-orson.zhai@unisoc.com>
-In-Reply-To: <20191114114525.12675-2-orson.zhai@unisoc.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 15 Nov 2019 10:33:30 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a23jcNgFErik1PFr=tG6n8kc8Pj9fARw47n=ou8t8iV+Q@mail.gmail.com>
-Message-ID: <CAK8P3a23jcNgFErik1PFr=tG6n8kc8Pj9fARw47n=ou8t8iV+Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: Add syscon-names support
-To:     Orson Zhai <orson.zhai@unisoc.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        steven.tang@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:eAMMgYvcgQoIgeVOJdJnUY/zP11VckfLtwFUG99sJIU8dAsgB97
- u+/vqG/j8y5hJiZP05FZJmsBaHHVRdgp9Q2pj1HvCU31AbH3QMzT8Obj4hvoDVfdDciCdb7
- q1RpMPtr/0FgtjxpBbA/2vqCJnA9sos/rT3tomqcs9pcjTXG0WfEja+K5ZeeLJkDfxvL40O
- 4KgiVz2t3zMISXv1BBgjA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3zhn3xOu5SQ=:XN5QE8YqU9AxAkLLOGzELj
- 4WN0CHJacEG2b4cF2W6VXmxgTitnHkllDhz/1eu+tPDjFN1BiN8Nuihcf8qpksrRt+S1CNNqx
- 5+PK+riuhCsyA68T9d0c8d+0pA3cPwMLn/TWTBNa6VdTRjbsUMBf1dtKMB7XgMh4iiOna2DG8
- yxqPyk3FUt8YgMjezbKmtrRR/cds8G1YukNhPCrqUyBr3dq1GXpJCMh+g41OC9rv4dL4Oak82
- oTHaNfmY2QBks8HF1Om7CIYdX7flDfflMqxrHV+MHjGQIkyvL9TKkXqSzVFFZNmVQVpLJDhEK
- hvYm0Twf3eVvtBnZRPasrmTXIJtrDrqQb5kZq1I2kvT0vAWHK+kwwoF6tNrAsvEMbgcEVDklA
- TfiDaBh/evD6CTycBB5CPhPXFAWa0sT/E06l9HGTjvFe6yEdbf/k4yG7YfqNZJX8oTpjY0T4A
- /2B+fokO01pGeOuN+VmpqTWsQ101KCMRBRAiHrihbFHNqukh2+sBb+SfePfYycjC3rZyDJhiB
- oLzUEABLr64u9YOx5qvU1BYqGru4ywTTgaVXBlf1tcc0YugZSrMG98zz6YuEBTEYYvtE7pNpe
- 0EFU9P5YUe9mG2wwOpV2tccUHirhRnPYIVgKoemx0UEuX2E0/znFTM1jFiPU/YGbEFKu9IsSL
- 8OEDh7cX0xAXLNStwMlsgrnnxRML7VSfEjDoLL4ytIgoTCR+cYbHwkf1m1BlJo4sX5iixltLk
- As5QXXSM5aiqufpyOCg8IPNMt80iHkHckfk9uijT1jHMB42DgANNavX9Z/Y9g6Mg9i27mWYs7
- +jINjnKPIBskDGPI20MYah/jEqecwbmrzPVefrpl0QO+V95Z74TPPaKppM43UDs3j8PZPL0zs
- vVCdoq8csaWrQQhrVJeA==
+In-Reply-To: <20191114191538.GC171963@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: VKzwddh-P4W-IxqFdRfIlg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 12:48 PM Orson Zhai <orson.zhai@unisoc.com> wrote:
+On 11/14, Andrei Vagin wrote:
 >
+> On Thu, Nov 14, 2019 at 03:27:06PM +0100, Adrian Reber wrote:
+> ...
+> > diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
+> > index 1d500ed03c63..2e649cfa07f4 100644
+> > --- a/include/uapi/linux/sched.h
+> > +++ b/include/uapi/linux/sched.h
+> ...
+> > @@ -174,24 +186,51 @@ struct pid *alloc_pid(struct pid_namespace *ns)
+> >  =09pid->level =3D ns->level;
+> >
+> >  =09for (i =3D ns->level; i >=3D 0; i--) {
+> > -=09=09int pid_min =3D 1;
+> > +=09=09int tid =3D 0;
+> > +
+> > +=09=09if (set_tid_size) {
+> > +=09=09=09tid =3D set_tid[ns->level - i];
+> > +=09=09=09if (tid < 1 || tid >=3D pid_max)
+> > +=09=09=09=09return ERR_PTR(-EINVAL);
 >
-> Make life easier when syscon consumer want to access multiple syscon
-> nodes.
-> Add syscon-names and relative properties to help manage complicated
-> cases when accessing more one syscon node.
->
-> Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
+> do we need to release pids what have been allocated on previous levels?
 
-Hi Orson,
+Heh ;) it is really amazing that nobody noticed this! Thanks Andrei.
 
-Can you explain why the number of cells in this binding is specific
-to the syscon node rather than the node referencing it?
+> nr =3D -EINVAL;
 
-In most other bindings that follow the same scheme, the additional
-arguments are interpreted by the subsystem that is being referenced,
-but the syscon driver is just a simple driver with no subsystem and no
-code to interpret those arguments.
+retval =3D -EINVAL;
 
-The way would otherwise handle the example from your binding
-would be with two separate properties in the display node, like
+> goto out_free;
 
-syscon-enable = <&ap_apb_regs 0x4 0xf00>;
-syscon-power = <&aon_regs 0x8>;
+Oleg.
 
-in which case, the syscon driver does not need to know anything
-about how it's being used, and the display driver is the one making
-sense of the arguments according to its own binding.
-
-I assume you have some good reason for introducing the other
-approach, but I don't understand it from your submission.
-
-       Arnd
