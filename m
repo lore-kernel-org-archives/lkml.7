@@ -2,170 +2,95 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D512C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 21:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C327C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 21:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D4922073C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 21:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B43520729
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 21:13:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfKOVNu (ORCPT
+        id S1727515AbfKOVNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 16:13:50 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44587 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbfKOVMh (ORCPT
+        Fri, 15 Nov 2019 16:13:55 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:37904 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbfKOVNx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 16:12:37 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iVitJ-0007O6-T1; Fri, 15 Nov 2019 22:12:30 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 71C371C18CE;
-        Fri, 15 Nov 2019 22:12:29 +0100 (CET)
-Date:   Fri, 15 Nov 2019 21:12:29 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/iopl] x86/ioperm: Remove bitmap if all permissions dropped
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191113210104.988865829@linutronix.de>
-References: <20191113210104.988865829@linutronix.de>
+        Fri, 15 Nov 2019 16:13:53 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id A58F61C14E3; Fri, 15 Nov 2019 22:13:51 +0100 (CET)
+Date:   Fri, 15 Nov 2019 22:13:51 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Cc:     Pavel Machek <pavel@denx.de>, colin.king@canonical.com,
+        mmoese@suse.de, sashal@kernel.org
+Subject: Re: 8250-men-mcb: fix signed/unsigned confusion
+Message-ID: <20191115211351.GB30273@duo.ucw.cz>
+References: <20191115125234.GC29996@duo.ucw.cz>
+ <20191115150942.GA375649@kroah.com>
 MIME-Version: 1.0
-Message-ID: <157385234943.12247.1722831605467761848.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="nVMJ2NtxeReIH9PS"
+Content-Disposition: inline
+In-Reply-To: <20191115150942.GA375649@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/iopl branch of tip:
 
-Commit-ID:     f16c41c9db8460874662b46f0db5c8af2a568157
-Gitweb:        https://git.kernel.org/tip/f16c41c9db8460874662b46f0db5c8af2a568157
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 13 Nov 2019 21:42:53 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 14 Nov 2019 20:15:05 +01:00
+--nVMJ2NtxeReIH9PS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-x86/ioperm: Remove bitmap if all permissions dropped
+On Fri 2019-11-15 23:09:42, Greg KH wrote:
+> On Fri, Nov 15, 2019 at 01:52:34PM +0100, Pavel Machek wrote:
+> > Hi!
+> >=20
+> > Commit 5210a3a722543fc25b8830d2236dcbe2c8178468 fixes part of
+> > signed/unsigned confusion, but not all of it.
+> >=20
+> > 8250-men-mcb: fix error checking when get_num_ports returns -ENODEV
+> > Upstream commit f50b6805dbb993152025ec04dea094c40cc93a0c
+> >=20
+> > Fix function returning -ENODEV to signed prototype, and make error
+> > check consistent between two functions.
+> >=20
+> > Signed-off-by: Pavel Machek <pavel@denx.de>
+> >=20
+>=20
+> Hi,
+>=20
+> This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+> a patch that has triggered this response.  He used to manually
+> respond
 
-If ioperm() results in a bitmap with all bits set (no permissions to any
-I/O port), then handling that bitmap on context switch and exit to user
-mode is pointless. Drop it.
+Not sure what is supposed to be friendly about this bot.
 
-Move the bitmap exit handling to the ioport code and reuse it for both the
-thread exit path and dropping it. This allows to reuse this code for the
-upcoming iopl() emulation.
+Anyway, it would be nice if authors of
+5210a3a722543fc25b8830d2236dcbe2c8178468 picked this up. I have no way
+to test it.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Andy Lutomirski <luto@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20191113210104.988865829@linutronix.de
+					 	     	   Pavel
 
----
- arch/x86/include/asm/io_bitmap.h |  2 ++
- arch/x86/kernel/ioport.c         | 19 ++++++++++++++++++-
- arch/x86/kernel/process.c        | 17 +++--------------
- 3 files changed, 23 insertions(+), 15 deletions(-)
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 
-diff --git a/arch/x86/include/asm/io_bitmap.h b/arch/x86/include/asm/io_bitmap.h
-index 6d82a37..784a88e 100644
---- a/arch/x86/include/asm/io_bitmap.h
-+++ b/arch/x86/include/asm/io_bitmap.h
-@@ -11,6 +11,8 @@ struct io_bitmap {
- 	unsigned long	bitmap[IO_BITMAP_LONGS];
- };
- 
-+void io_bitmap_exit(void);
-+
- void tss_update_io_bitmap(void);
- 
- #endif
-diff --git a/arch/x86/kernel/ioport.c b/arch/x86/kernel/ioport.c
-index 198bead..f9fc69a 100644
---- a/arch/x86/kernel/ioport.c
-+++ b/arch/x86/kernel/ioport.c
-@@ -16,6 +16,18 @@
- 
- static atomic64_t io_bitmap_sequence;
- 
-+void io_bitmap_exit(void)
-+{
-+	struct io_bitmap *iobm = current->thread.io_bitmap;
-+
-+	current->thread.io_bitmap = NULL;
-+	clear_thread_flag(TIF_IO_BITMAP);
-+	preempt_disable();
-+	tss_update_io_bitmap();
-+	preempt_enable();
-+	kfree(iobm);
-+}
-+
- /*
-  * this changes the io permissions bitmap in the current task.
-  */
-@@ -61,11 +73,16 @@ long ksys_ioperm(unsigned long from, unsigned long num, int turn_on)
- 	 * Search for a (possibly new) maximum. This is simple and stupid,
- 	 * to keep it obviously correct:
- 	 */
--	max_long = 0;
-+	max_long = UINT_MAX;
- 	for (i = 0; i < IO_BITMAP_LONGS; i++) {
- 		if (iobm->bitmap[i] != ~0UL)
- 			max_long = i;
- 	}
-+	/* All permissions dropped? */
-+	if (max_long == UINT_MAX) {
-+		io_bitmap_exit();
-+		return 0;
-+	}
- 
- 	iobm->max = (max_long + 1) * sizeof(unsigned long);
- 
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 1990011..75f8b13 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -102,21 +102,10 @@ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
- void exit_thread(struct task_struct *tsk)
- {
- 	struct thread_struct *t = &tsk->thread;
--	struct io_bitmap *iobm = t->io_bitmap;
- 	struct fpu *fpu = &t->fpu;
--	struct tss_struct *tss;
--
--	if (iobm) {
--		preempt_disable();
--		tss = this_cpu_ptr(&cpu_tss_rw);
--
--		t->io_bitmap = NULL;
--		clear_thread_flag(TIF_IO_BITMAP);
--		/* Invalidate the io bitmap base in the TSS */
--		tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_INVALID;
--		preempt_enable();
--		kfree(iobm);
--	}
-+
-+	if (test_thread_flag(TIF_IO_BITMAP))
-+		io_bitmap_exit();
- 
- 	free_vm86(t);
- 
+--nVMJ2NtxeReIH9PS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXc8VDwAKCRAw5/Bqldv6
+8go1AJ9eKBHmvdcBtyxG/oX6giluytirGgCgpANTvbCufWxtWZOgXsWt4yBjw1s=
+=BSiL
+-----END PGP SIGNATURE-----
+
+--nVMJ2NtxeReIH9PS--
