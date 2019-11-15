@@ -2,95 +2,77 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92D3C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3C8C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8020A2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:09:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="qKMhIXsj"
+	by mail.kernel.org (Postfix) with ESMTP id CE0552072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:10:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbfKORJ3 (ORCPT
+        id S1727732AbfKORKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 12:09:29 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:48730 "EHLO mail.skyhub.de"
+        Fri, 15 Nov 2019 12:10:08 -0500
+Received: from foss.arm.com ([217.140.110.172]:33936 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727528AbfKORJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 12:09:28 -0500
-Received: from [10.133.216.62] (unknown [46.114.32.62])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 77A0A1EC0D0C;
-        Fri, 15 Nov 2019 18:09:27 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1573837767;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AFnylH8db3KJwKcEae910K7PqT8B8oFlYNhXjdsP9M4=;
-        b=qKMhIXsjTarTuL3LJU5s3WTBnoabpUNswF0C6pQIcGtkjnOuAPE/NQettIdEX0zPDv/+KF
-        QcS4mB59jpsxK9/Xi9b3/P1nPrwCjUGhWKJ+5hIKx2aO4BKalbXOZKNITcAJiHs2WFXiWL
-        GhA7Ot0qZz/hBTUpOSlvCieh6Qf5gvc=
-Date:   Fri, 15 Nov 2019 18:09:25 +0100
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20191115161445.30809-2-longman@redhat.com>
-References: <20191115161445.30809-1-longman@redhat.com> <20191115161445.30809-2-longman@redhat.com>
+        id S1727528AbfKORKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 12:10:08 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35F6D31B;
+        Fri, 15 Nov 2019 09:10:08 -0800 (PST)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7CE003F6C4;
+        Fri, 15 Nov 2019 09:10:06 -0800 (PST)
+Subject: Re: [PATCH v2] sched/uclamp: Fix overzealous type replacement
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <Dietmar.Eggemann@arm.com>,
+        Tejun Heo <tj@kernel.org>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Qais Yousef <qais.yousef@arm.com>
+References: <20191115103908.27610-1-valentin.schneider@arm.com>
+ <CAKfTPtBoi_5sUiGrTpYuV_u2vPkBK+caUzgaKxY3Ck3PKJXZiw@mail.gmail.com>
+ <f4fcc45e-7609-3836-162a-0a1839134bcf@arm.com>
+Message-ID: <2dce8a83-b358-d975-bf43-8088b3bc5557@arm.com>
+Date:   Fri, 15 Nov 2019 17:10:05 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 1/2] x86/speculation: Fix incorrect MDS/TAA mitigation status
-To:     Waiman Long <longman@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-CC:     linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>
-From:   Boris Petkov <bp@alien8.de>
-Message-ID: <7EAED44C-A93E-405E-B57B-89AC3F779A70@alien8.de>
+In-Reply-To: <f4fcc45e-7609-3836-162a-0a1839134bcf@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On November 15, 2019 5:14:44 PM GMT+01:00, Waiman Long <longman@redhat=2Eco=
-m> wrote:
->For MDS vulnerable processors with TSX support, enabling either MDS or
->TAA mitigations will enable the use of VERW to flush internal processor
->buffers at the right code path=2E IOW, they are either both mitigated
->or both not=2E However, if the command line options are inconsistent,
->the vulnerabilites sysfs files may not report the mitigation status
->correctly=2E
->
->For example, with only the "mds=3Doff" option:
->
->  vulnerabilities/mds:Vulnerable; SMT vulnerable
->vulnerabilities/tsx_async_abort:Mitigation: Clear CPU buffers; SMT
->vulnerable
->
->The mds vulnerabilities file has wrong status in this case=2E Similarly,
->the taa vulnerability file will be wrong with mds mitigation on, but
->taa off=2E
->
->Change taa_select_mitigation() to sync up the two mitigation status
->and have them turned off if both "mds=3Doff" and "tsx_async_abort=3Doff"
->are present=2E
->
->Both hw-vuln/mds=2Erst and hw-vuln/tsx_async_abort=2Erst are updated
->to emphasize the fact that both "mds=3Doff" and "tsx_async_abort=3Doff"
->have to be specified together for processors that are affected by both
->TAA and MDS to be effective=2E As kernel-parameter=2Etxt references both
->documents above, it is not necessary to update it=2E
+On 15/11/2019 14:29, Valentin Schneider wrote:
+> On 15/11/2019 14:07, Vincent Guittot wrote:
+>>> -static inline enum uclamp_id uclamp_none(enum uclamp_id clamp_id)
+>>> +static inline unsigned int uclamp_none(enum uclamp_id clamp_id)
+>>
+>> Out of curiosity why uclamp decided to use unsigned int to manipulate
+>> utilization instead of unsigned long which is the type of util_avg ?
+>>
+> 
+> I didn't stare at the discussion much, but I think it stems from the
+> design choices behind struct uclamp_se: everything is crammed in an unsigned
+> int bitfield. Let me see if I can find some relevant mails.
+> 
 
-What about kernel-parameters=2Etxt?
+So I think a relevant mail is:
 
---=20
-Sent from a small device: formatting sux and brevity is inevitable=2E 
+https://lore.kernel.org/lkml/20180912174236.GB24106@hirez.programming.kicks-ass.net/
+
+Other than that, the uclamp_se.value field was 'int' in v1 and has been
+'unsigned int' for all following versions. uclamp_bucket.value is a bitfield
+of an 'unsigned long' just because we want more headroom for the tasks count,
+AFAICT.
