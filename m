@@ -2,105 +2,123 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A379CC33C99
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE14C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74C3A207FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:03:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573840987;
-	bh=MirA1jrq8mHJcQyT0xNmZnDZ6nURiIgkEN8mpheugP0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FKXrgj2UXCnjA2vGTEA59Vt8zTltqnqJ/ExlR+kXlksJ5jZRnMnidPhhQ3EvIlsqk
-	 jJBwYfLWfuuYw8kLwTZ8OvNeXA4AtInUt+jjWStQKSSbUWmfUh4+R4eq6mf2BKFpbK
-	 csLfIHuS6syJNqd1VVzFietqer3aV22abhKuFl9U=
+	by mail.kernel.org (Postfix) with ESMTP id ABDAF20803
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:04:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfKOSDG (ORCPT
+        id S1726818AbfKOSEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 13:03:06 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44928 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725907AbfKOSDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 13:03:06 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 46E8EB9DB;
-        Fri, 15 Nov 2019 18:03:04 +0000 (UTC)
-Date:   Fri, 15 Nov 2019 19:03:03 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Roman Gushchin <guro@fb.com>,
-        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 1/2] mm: memcg: switch to css_tryget() in
- get_mem_cgroup_from_mm()
-Message-ID: <20191115180303.GC15216@dhcp22.suse.cz>
-References: <20191106225131.3543616-1-guro@fb.com>
- <20191113162934.GF19372@blackbody.suse.cz>
- <20191113170823.GA12464@castle.DHCP.thefacebook.com>
- <20191114191657.GN20866@dhcp22.suse.cz>
- <20191114192018.GJ4163745@devbig004.ftw2.facebook.com>
- <20191114193340.GA24848@dhcp22.suse.cz>
- <20191114193736.GL4163745@devbig004.ftw2.facebook.com>
- <20191115174031.GA15216@dhcp22.suse.cz>
- <20191115174721.GB15216@dhcp22.suse.cz>
- <20191115174844.GR4163745@devbig004.ftw2.facebook.com>
+        Fri, 15 Nov 2019 13:04:53 -0500
+Received: from mga11.intel.com ([192.55.52.93]:31139 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726182AbfKOSEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 13:04:53 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 10:04:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,309,1569308400"; 
+   d="scan'208";a="203644131"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 15 Nov 2019 10:04:52 -0800
+Received: from [10.251.5.106] (kliang2-mobl.ccr.corp.intel.com [10.251.5.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id AE057580472;
+        Fri, 15 Nov 2019 10:04:51 -0800 (PST)
+Subject: Re: [PATCH] perf/x86/intel: Avoid PEBS_ENABLE MSR access in PMI
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, eranian@google.com
+References: <20191115133917.24424-1-kan.liang@linux.intel.com>
+ <20191115140739.GM4131@hirez.programming.kicks-ass.net>
+ <c0f562aa-39f3-1291-edd7-17c46178d1e3@linux.intel.com>
+Message-ID: <3e117702-c07f-bd58-9931-766c2698b5d7@linux.intel.com>
+Date:   Fri, 15 Nov 2019 13:04:50 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115174844.GR4163745@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <c0f562aa-39f3-1291-edd7-17c46178d1e3@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 15-11-19 09:48:44, Tejun Heo wrote:
-> On Fri, Nov 15, 2019 at 06:47:21PM +0100, Michal Hocko wrote:
-> > s@online@offline@
-> > 
-> > And reading after myself it turned out to sound differently than I
-> > meant. What I wanted to say really is, what is the difference that
-> > css_tryget_online really guarantee when the css might go offline right
-> > after the call suceeds so more specifically what is the difference
-> > between
-> > 	if (css_tryget()) {
-> > 		if (online)
-> > 			DO_SOMETHING
-> > 	}
-> > and
-> > 	if (css_tryget_online()) {
-> > 		DO_SOMETHING
-> > 	}
-> > 
-> > both of them are racy and do not provide any guarantee wrt. online
-> > state.
+
+
+On 11/15/2019 9:46 AM, Liang, Kan wrote:
 > 
-> It's about not giving new reference when the object is known to be
-> delted to the user.
+> 
+> On 11/15/2019 9:07 AM, Peter Zijlstra wrote:
+>> On Fri, Nov 15, 2019 at 05:39:17AM -0800, kan.liang@linux.intel.com 
+>> wrote:
+>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>
+>>> The perf PMI handler, intel_pmu_handle_irq(), currently does
+>>> unnecessary MSR accesses when PEBS is enabled.
+>>>
+>>> When entering the handler, global ctrl is explicitly disabled. All
+>>> counters do not count anymore. It doesn't matter if the PEBS is
+>>> enabled or disabled. Furthermore, cpuc->pebs_enabled is not changed
+>>> in PMI. The PEBS status doesn't change. The PEBS_ENABLE MSR doesn't need
+>>> to be changed either.
+>>
+>> PMI can throttle, and iirc x86_pmu_stop() ends up in
+>> intel_pmu_pebs_disable()
+>>
+> 
+> Right, the declaration is inaccurate. I will fix it in v2.
+> But the patch still works for the case of PMI throttle.
+> The intel_pmu_pebs_disable() will update cpuc->pebs_enabled and 
+> unconditionally modify MSR_IA32_PEBS_ENABLE.
 
-This part is clear to me. The failure just says it is already too late
-to do anything. I just still struggle why the success is telling me much
-more when the state might change before I can do anything on the object.
-I could see a usefulness if I've had a guarantee that the object stays
-online while I hold a $FOO lock but if there is nothing like that then 
-we are just having already too late or potentially too late.
+It seems not true for a corner case.
+PMI may land after cpuc->enabled=0 in x86_pmu_disable() and PMI throttle 
+may be triggered for the PMI. For this rare case, 
+intel_pmu_pebs_disable() will not touch MSR_IA32_PEBS_ENABLE.
 
-Anyway it's been a hard week and the brain is just going for the weekend
-so I just might be dense now.
+I don't have a test case for this rare corner case. But I think we may 
+have to handle it in PMI handler as well. I will add the codes as below 
+to V2.
 
-> Can you please think more about how file deletions work?
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index bc6468329c52..7198a372a5ab 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2620,6 +2624,15 @@ static int handle_pmi_common(struct pt_regs 
+*regs, u64 status)
+                 handled++;
+                 x86_pmu.drain_pebs(regs);
+                 status &= x86_pmu.intel_ctrl | GLOBAL_STATUS_TRACE_TOPAPMI;
++
++               /*
++                * PMI may land after cpuc->enabled=0 in 
+x86_pmu_disable() and
++                * PMI throttle may be triggered for the PMI.
++                * For this rare case, intel_pmu_pebs_disable() will not 
+touch
++                * MSR_IA32_PEBS_ENABLE. Explicitly disable the PEBS here.
++                */
++               if (unlikely(!cpuc->enabled && !cpuc->pebs_enabled))
++                       wrmsrl(MSR_IA32_PEBS_ENABLE, 0);
+         }
 
-I will try that with a fresh brain next week.
--- 
-Michal Hocko
-SUSE Labs
+
+Thanks,
+Kan
+
+> When exiting the handler, current perf re-write the PEBS MSR according 
+> to the updated cpuc->pebs_enabled, which is still unnecessary.
+> 
+
