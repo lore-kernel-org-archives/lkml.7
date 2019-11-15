@@ -6,82 +6,172 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FFEC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABCCC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C37F72072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FE122072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:42:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfKOSmo (ORCPT
+        id S1726865AbfKOSms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 13:42:44 -0500
-Received: from mga02.intel.com ([134.134.136.20]:40238 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726075AbfKOSmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 13:42:44 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 10:42:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,309,1569308400"; 
-   d="scan'208";a="208210512"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 15 Nov 2019 10:42:43 -0800
-Received: from [10.251.5.106] (kliang2-mobl.ccr.corp.intel.com [10.251.5.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id A97EF580472;
-        Fri, 15 Nov 2019 10:42:42 -0800 (PST)
-Subject: Re: [PATCH] perf/x86/intel: Avoid PEBS_ENABLE MSR access in PMI
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, acme@redhat.com,
-        mingo@kernel.org, linux-kernel@vger.kernel.org, eranian@google.com
-References: <20191115133917.24424-1-kan.liang@linux.intel.com>
- <20191115140739.GM4131@hirez.programming.kicks-ass.net>
- <c0f562aa-39f3-1291-edd7-17c46178d1e3@linux.intel.com>
- <3e117702-c07f-bd58-9931-766c2698b5d7@linux.intel.com>
- <20191115183341.GB22747@tassilo.jf.intel.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <d5da733d-f45a-702d-a8eb-57dd0c596659@linux.intel.com>
-Date:   Fri, 15 Nov 2019 13:42:41 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Fri, 15 Nov 2019 13:42:48 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:37926 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbfKOSms (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 13:42:48 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iVgXp-0001lF-OQ; Fri, 15 Nov 2019 18:42:09 +0000
+Date:   Fri, 15 Nov 2019 18:42:09 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, yu kuai <yukuai3@huawei.com>,
+        rafael@kernel.org, oleg@redhat.com, mchehab+samsung@kernel.org,
+        corbet@lwn.net, tytso@mit.edu, jmorris@namei.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        zhengbin13@huawei.com, yi.zhang@huawei.com,
+        chenxiang66@hisilicon.com, xiexiuqi@huawei.com
+Subject: [RFC] simple_recursive_removal()
+Message-ID: <20191115184209.GT26530@ZenIV.linux.org.uk>
+References: <1573788472-87426-2-git-send-email-yukuai3@huawei.com>
+ <20191115032759.GA795729@kroah.com>
+ <20191115041243.GN26530@ZenIV.linux.org.uk>
+ <20191115072011.GA1203354@kroah.com>
+ <20191115131625.GO26530@ZenIV.linux.org.uk>
+ <20191115083813.65f5523c@gandalf.local.home>
+ <20191115134823.GQ26530@ZenIV.linux.org.uk>
+ <20191115085805.008870cb@gandalf.local.home>
+ <20191115141754.GR26530@ZenIV.linux.org.uk>
+ <20191115175423.GS26530@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20191115183341.GB22747@tassilo.jf.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115175423.GS26530@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 11/15/2019 1:33 PM, Andi Kleen wrote:
->> @@ -2620,6 +2624,15 @@ static int handle_pmi_common(struct pt_regs *regs,
->> u64 status)
->>                  handled++;
->>                  x86_pmu.drain_pebs(regs);
->>                  status &= x86_pmu.intel_ctrl | GLOBAL_STATUS_TRACE_TOPAPMI;
->> +
->> +               /*
->> +                * PMI may land after cpuc->enabled=0 in x86_pmu_disable()
->> and
->> +                * PMI throttle may be triggered for the PMI.
->> +                * For this rare case, intel_pmu_pebs_disable() will not
->> touch
->> +                * MSR_IA32_PEBS_ENABLE. Explicitly disable the PEBS here.
->> +                */
->> +               if (unlikely(!cpuc->enabled && !cpuc->pebs_enabled))
->> +                       wrmsrl(MSR_IA32_PEBS_ENABLE, 0);
+On Fri, Nov 15, 2019 at 05:54:23PM +0000, Al Viro wrote:
+> Anyway, AFAICS removal could be done this way:
 > 
-> How does the enable_all() code know to reenable it in this case?
+> // parent is held exclusive, after is NULL or a child of parent
+> find_next_child(parent, prev)
+> 	child = NULL
+> 	node = prev ? &prev->d_child : &parent->d_subdirs;
+> 	grab parent->d_lock
+> 	for each entry in the list starting at node->next
+> 		d = container_of(entry, struct dentry, d_child)
+> 		grab d->d_lock
+> 		if simple_positive(d)
+> 			bump d->d_count
+> 			child = d
+> 		drop d->d_lock
+> 		if child
+> 			break
+> 	drop parent->d_lock
+> 	dput(prev);
+> 	return child
+> 
+> kill_it(victim, parent)
+> 	if simple_positive(victim)
+> 		d_invalidate(victim);	// needed to avoid lost mounts
+> 		if victim is a directory
+> 			fsnotify_rmdir
+> 		else
+> 			fsnotify_unlink
+> 		if victim is regular
+> 			__debugfs_file_removed(victim)
+> 		dput(victim)		// unpin it
+> 
+> recursive_removal(dentry)
+> 	this = dentry;
+> 	while (true) {
+> 		victim = NULL;
+> 		inode = this->d_inode;
+> 		inode_lock(inode);
+> 		if (d_is_dir(this))
+> 			mark this doomed
+> 		while ((child = find_next_child(this, victim)) == NULL) {
+> 			// no children (left); kill and ascend
+> 			// update metadata while it's still locked
+> 			inode->i_ctime = current_time(inode);
+> 			clear_nlink(inode);
+> 			inode_unlock(inode);
+> 			victim = this;
+> 			this = this->d_parent;
+> 			inode = this->d_inode;
+> 			inode_lock(inode);
+> 			kill_it(victim, this);
+> 			if (victim == dentry) {
+> 				inode->i_ctime = inode->i_mtime = current_time(inode);
+> 				if (d_is_dir(dentry))
+> 					drop_nlink(inode);
+> 				inode_unlock(inode);
+> 				dput(dentry);
+> 				return;
+> 			}
+> 		}
+> 		inode_unlock(inode);
+> 		this = child;
+> 	}
 
-For this case, we know that perf is disabling the PMU. The PMI handler 
-will not restore PMU state when it's inactive. The enable_all() will not 
-be called.
+Come to think of that, if we use IS_DEADDIR as "no more additions" marking,
+that looks like a good candidate for all in-kernel rm -rf on ramfs-style
+filesystems without cross-directory renames.  This bit in kill_it() above
+ 		if victim is regular
+ 			__debugfs_file_removed(victim)
+would be an fs-specific callback passed by the caller, turning the whole
+thing into this:
 
-Thanks,
-Kan
+void simple_recursive_removal(struct dentry *dentry,
+			      void (*callback)(struct dentry *))
+{
+	struct dentry *this = dentry;
+	while (true) {
+		struct dentry *victim = NULL, *child;
+		struct inode *inode = this->d_inode;
+
+		inode_lock(inode);
+		if (d_is_dir(this))
+			inode->i_flags |= S_DEAD;
+		while ((child = find_next_child(this, victim)) == NULL) {
+			// kill and ascend
+			// update metadata while it's still locked
+			inode->i_ctime = current_time(inode);
+			clear_nlink(inode);
+			inode_unlock(inode);
+			victim = this;
+			this = this->d_parent;
+			inode = this->d_inode;
+			inode_lock(inode);
+			if (simple_positive(victim)) {
+		 		d_invalidate(victim);	// avoid lost mounts
+				if (is_dir(victim))
+					fsnotify_rmdir(inode, victim);
+				else
+					fsnotify_unlink(inode, victim);
+				if (callback)
+					callback(victim);
+				dput(victim)		// unpin it
+			}
+			if (victim == dentry) {
+				inode->i_ctime = inode->i_mtime =
+					current_time(inode);
+				if (d_is_dir(dentry))
+					drop_nlink(inode);
+				inode_unlock(inode);
+				dput(dentry);
+				return;
+			}
+		}
+		inode_unlock(inode);
+		this = child;
+	}
+}
+
+with find_next_child() easily implemented via scan_positives() already
+in libfs.c...  Objections?  The above is obviously completely untested,
+and I've got nowhere near enough sleep, so there may be any number of
+brown paperbag bugs in it.  Review would be very welcome...
