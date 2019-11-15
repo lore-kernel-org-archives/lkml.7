@@ -6,93 +6,73 @@ X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF983C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 355EBC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C66D220733
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:06:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF4E520729
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:07:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nNcoGdvP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TNzmAWCC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbfKOOGl (ORCPT
+        id S1727606AbfKOOHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 09:06:41 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:60810 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727380AbfKOOGl (ORCPT
+        Fri, 15 Nov 2019 09:07:46 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:34562 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727380AbfKOOHp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 09:06:41 -0500
+        Fri, 15 Nov 2019 09:07:45 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=EESgAJ1TE14/ilPJDdeHT/O0bpBL1CggBzBhGTo6EWE=; b=nNcoGdvPpOOcrwHD4iBeEos0Z
-        5SdalHvw7KysG2cLC6tdPL5DFTCV0pHbDR+8q1XfA8vh+/NGLfXEmN62JKgw08OCt32TQLFUxxGbi
-        DimiCNSsn86tm0YraVMI5gInN9S2R8B+izsblgDyZsroEwlQ39D8FLIOoPKskG+O04/6JL4Tq4YXe
-        ftWhl0ley4MkYw8lLfEJHY8fNKrnHZWLvzTjxguL+xd1yCcelOXqEtlY7J5y9zCq2F8fuT6wTOHPt
-        +KVUxcvM77HydlF7OLSi7JE6NxvFR0eCQEf2OCEPSj0rbvSq2rXn2bq7qL+wKmGYxrVjIssf2FI0B
-        OqEBbxw1g==;
+         bh=lAZYg3lS135TwSE30pNm6foCygkKVQSy8A1PI6nH2bM=; b=TNzmAWCCScOR2GxCFXUW0B9z6
+        Tu9V8WfQkcTEmTnlofuupVMf4k+D8zlIKu5xM7xLUlAPNYFh4evZ+fzTa7jHk7G41vcch05E32xvQ
+        ZTzXogv37+1W6ffGTnP9Zj/XpuDm0y1vdPchaII8iZPkUW5XThG5k+10Y44PZE8h63Y2zzCP3nTEy
+        q2V3LrcA/6OnoHuQ4xI/PW4SQWLy6fCeLZjyCmtJKWtKv8c7Y/u620R/tSkAXsSVKJiqgqA18pFdQ
+        MwsIRwzQDxxQAuWuD0G684VqYqIv6M8FAQz9ZmdmxJK0lvZPFtU2XU/1peO9A8GPEJJp6Ue9gpPKm
+        BxCuXhzOA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iVcEZ-0008V3-42; Fri, 15 Nov 2019 14:05:59 +0000
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iVcGC-0000rB-Qe; Fri, 15 Nov 2019 14:07:40 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4433F304637;
-        Fri, 15 Nov 2019 15:04:47 +0100 (CET)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 13AE9303D9F;
+        Fri, 15 Nov 2019 15:06:31 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6691E2B12E78E; Fri, 15 Nov 2019 15:05:55 +0100 (CET)
-Date:   Fri, 15 Nov 2019 15:05:55 +0100
+        id 338A02B12E7AC; Fri, 15 Nov 2019 15:07:39 +0100 (CET)
+Date:   Fri, 15 Nov 2019 15:07:39 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Doug Smythies <dsmythies@telus.net>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
-Message-ID: <20191115140555.GL4131@hirez.programming.kicks-ass.net>
-References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org>
- <20191115132520.GJ4131@hirez.programming.kicks-ass.net>
- <CAKfTPtB4UGmZ53iVRsOV+k4MiS=Dzqw2-6_sBhko0bHRMAed2g@mail.gmail.com>
+To:     kan.liang@linux.intel.com
+Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, eranian@google.com
+Subject: Re: [PATCH] perf/x86/intel: Avoid PEBS_ENABLE MSR access in PMI
+Message-ID: <20191115140739.GM4131@hirez.programming.kicks-ass.net>
+References: <20191115133917.24424-1-kan.liang@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKfTPtB4UGmZ53iVRsOV+k4MiS=Dzqw2-6_sBhko0bHRMAed2g@mail.gmail.com>
+In-Reply-To: <20191115133917.24424-1-kan.liang@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 02:37:27PM +0100, Vincent Guittot wrote:
-> On Fri, 15 Nov 2019 at 14:25, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Thu, Nov 14, 2019 at 06:07:31PM +0100, Vincent Guittot wrote:
-
-> > > +     decayed = update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
-> > > +     decayed |= update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
-> > > +     decayed |= update_irq_load_avg(rq, 0);
-> >
-> > Should not all 3 have their windows aligned and thus alway return the
-> > exact same value?
+On Fri, Nov 15, 2019 at 05:39:17AM -0800, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
 > 
-> rt and dl yes but not irq
+> The perf PMI handler, intel_pmu_handle_irq(), currently does
+> unnecessary MSR accesses when PEBS is enabled.
+> 
+> When entering the handler, global ctrl is explicitly disabled. All
+> counters do not count anymore. It doesn't matter if the PEBS is
+> enabled or disabled. Furthermore, cpuc->pebs_enabled is not changed
+> in PMI. The PEBS status doesn't change. The PEBS_ENABLE MSR doesn't need
+> to be changed either.
 
-Any reason for IRQ not to be aligned?
-
-> But having aligned window doesn't mean that they will all decay.
-> One can have been updated just before (during a dequeue as an example)
-> or at least less than 1ms before
-
-Bah... true.
+PMI can throttle, and iirc x86_pmu_stop() ends up in
+intel_pmu_pebs_disable()
