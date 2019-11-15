@@ -2,82 +2,145 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F9BEC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A79FC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 561C5206D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F52920723
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:47:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="UB0SWHg9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F7E4azdR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfKOGg0 (ORCPT
+        id S1726986AbfKOGrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:36:26 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:56494 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725774AbfKOGfn (ORCPT
+        Fri, 15 Nov 2019 01:47:48 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37413 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfKOGrr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:35:43 -0500
-X-UUID: 4fd331558b9d414794818d6513d7117a-20191115
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=rk57yqGMmLCWAiKj3bUDvcywvFJ3T7OqD7JZ6VwhDU4=;
-        b=UB0SWHg95dooa4dydC6ecVveeXLMd9W9mOHNDhRUkv8P01rDr/YjQmJbZHIjAyts+4GsTaRZmHhL23GLl/M6J6/xIelgranoUFGDbxLiAQFxfRh+08Dc/d/59XRq+ZXEEO4xHXL5sCGx24TlBPGdzCVoVIXk6+2kLkGIzSJCiuU=;
-X-UUID: 4fd331558b9d414794818d6513d7117a-20191115
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 254854927; Fri, 15 Nov 2019 14:35:36 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 15 Nov 2019 14:35:27 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 15 Nov 2019 14:35:27 +0800
-Message-ID: <1573799728.4956.5.camel@mtkswgap22>
-Subject: Re: [PATCH v5 3/7] scsi: ufs: Fix up auto hibern8 enablement
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Can Guo <cang@codeaurora.org>
-CC:     <asutoshd@codeaurora.org>, <nguyenb@codeaurora.org>,
-        <rnayak@codeaurora.org>, <linux-scsi@vger.kernel.org>,
-        <kernel-team@android.com>, <saravanak@google.com>,
-        <salyzyn@google.com>, Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Fri, 15 Nov 2019 14:35:28 +0800
-In-Reply-To: <1573798172-20534-4-git-send-email-cang@codeaurora.org>
-References: <1573798172-20534-1-git-send-email-cang@codeaurora.org>
-         <1573798172-20534-4-git-send-email-cang@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Fri, 15 Nov 2019 01:47:47 -0500
+Received: by mail-wm1-f65.google.com with SMTP id b17so9086053wmj.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 22:47:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=h6eijrK8cUxC8CXdJIBcySFLn2s6ouwc2eAMAO7Yyes=;
+        b=F7E4azdR9jYdXe9IJM6V6g32ncVAFgLfs5WJQff5l0YFLEhwd00g0L91wRPaLhN8NA
+         2RG4IL/h2dLth8xKeqwfuRWasWCOhr2Wq5N4rTq+RqWGo7Z2xTSx5/iRfK9jINGsgp5N
+         V3irs7/8A/mQb1GvLKWE7NZT5ZPtL2T3dgfh6N+fm5wdw116AgoslDwixkp5Vtd+9DJv
+         0QMpS77XlFxg6yxa/bfrp6iK518+NROIXwI62+w0s+hVu8rcW4cVQKTpx2svKLpXiXuE
+         rdJ2PmHAao9o4wuuu9c+JzVvUnvwL8TiKxLGelI7TDtChfH7U1poW11maB2nzD1biEGQ
+         8vLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=h6eijrK8cUxC8CXdJIBcySFLn2s6ouwc2eAMAO7Yyes=;
+        b=e+8A7ZauV8WGdVCG9msuXQsxSTOxJfJjYDAYdsuHKC9rX0Je9jc4M5/A0B3TqpoY5U
+         GL89yv7fE8IT56/5apBsUr/NZr9rph1lnjtOfPsshtVErfzve7UsUF67KNR2X2ws/NWu
+         OH09H7XFFidOdcBaYJ8hZcKP3cWrckagffyQYakDqRj24f8hqUkmkBzYvP2jOFeGbCOX
+         lxK8914C5wVUzRmHSob0WtNH0G7VoJUVkREXw9y+RDmF9MHRf1b84XIKdoTSsH/vlTnA
+         p1xX4bQZ06U1whBfKgg9rGlbZLfCv207LQO2LoY+lBSsYoMShPT/YEA7JrramBZ+dOE7
+         4F5A==
+X-Gm-Message-State: APjAAAWi9cbZiUh/nSX/lRUmG7ys0HOWdqWlNaM+5T6XNZIn4Ldg/od3
+        X62C3Z7mBTEWFRqglcOFz3zH1w==
+X-Google-Smtp-Source: APXvYqwGXJtQkCBTsweQQRswiTBThypUGLrtgVwXGSWzzCLlpWA9L/kHnXqlVPEQ8MPJE01QlngFZg==
+X-Received: by 2002:a05:600c:296:: with SMTP id 22mr12909062wmk.155.1573800465347;
+        Thu, 14 Nov 2019 22:47:45 -0800 (PST)
+Received: from [192.168.0.100] (84-33-69-45.dyn.eolo.it. [84.33.69.45])
+        by smtp.gmail.com with ESMTPSA id f14sm9916446wrv.17.2019.11.14.22.47.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Nov 2019 22:47:44 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH] block,bfq: Skip tracing hooks if possible
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <20191101131110.18356-1-dmonakhov@gmail.com>
+Date:   Fri, 15 Nov 2019 07:47:43 +0100
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>, axboe@kernel.dk
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A32330F0-ADD6-43F8-B0EE-89A0D0568867@linaro.org>
+References: <20191101131110.18356-1-dmonakhov@gmail.com>
+To:     Dmitry Monakhov <dmonakhov@gmail.com>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2FuLA0KDQpPbiBUaHUsIDIwMTktMTEtMTQgYXQgMjI6MDkgLTA4MDAsIENhbiBHdW8gd3Jv
-dGU6DQo+ICsJaWYgKGhiYS0+YWhpdCAhPSBhaGl0KQ0KPiArCQloYmEtPmFoaXQgPSBhaGl0Ow0K
-PiAgCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoaGJhLT5ob3N0LT5ob3N0X2xvY2ssIGZsYWdzKTsN
-Cj4gKwlpZiAoIXBtX3J1bnRpbWVfc3VzcGVuZGVkKGhiYS0+ZGV2KSkgew0KDQpBbHdheXMgZG8g
-cG1fcnVudGltZV9nZXRfc3luYygpIGhlcmUgY291bGQgYXZvaWQgcG9zc2libGUgcmFjaW5nPw0K
-DQpBbmQgdGh1cyBBSDggY291bGQgYmUgZW5hYmxlZCByZWdhcmRsZXNzIG9mIHJ1bnRpbWUgc3Rh
-dHVzLg0KDQo+ICsJCXBtX3J1bnRpbWVfZ2V0X3N5bmMoaGJhLT5kZXYpOw0KPiArCQl1ZnNoY2Rf
-aG9sZChoYmEsIGZhbHNlKTsNCj4gKwkJdWZzaGNkX2F1dG9faGliZXJuOF9lbmFibGUoaGJhKTsN
-Cj4gKwkJdWZzaGNkX3JlbGVhc2UoaGJhKTsNCj4gKwkJcG1fcnVudGltZV9wdXQoaGJhLT5kZXYp
-Ow0KPiArCX0NCj4gIH0NCg0KVGhhbmtzLA0KU3RhbmxleQ0KDQo=
+
+
+> Il giorno 1 nov 2019, alle ore 14:11, Dmitry Monakhov =
+<dmonakhov@gmail.com> ha scritto:
+>=20
+> In most cases blk_tracing is not active, but  bfq_log_bfqq macro
+> generate pid_str unconditionally, which result in significant =
+overhead.
+>=20
+> ## Test
+> modprobe null_blk
+> echo bfq > /sys/block/nullb0/queue/scheduler
+> fio --name=3Dt --ioengine=3Dlibaio --direct=3D1 --filename=3D/dev/nullb0=
+ \
+>   --runtime=3D30 --time_based=3D1 --rw=3Dwrite --iodepth=3D128 --bs=3D4k=
+
+>=20
+> # Results
+> |        | baseline | w/ patch | gain |
+> | iops   | 113.19K  | 126.42K  | +11% |
+>=20
+
+Thank you very much for this simple yet effective improvement.
+
+Acked-by: Paolo Valente <paolo.valente@linaro.org>
+
+> Signed-off-by: Dmitry Monakhov <dmonakhov@gmail.com>
+> ---
+> block/bfq-iosched.h | 4 ++++
+> 1 file changed, 4 insertions(+)
+>=20
+> diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+> index 5d1a519..b320fe9 100644
+> --- a/block/bfq-iosched.h
+> +++ b/block/bfq-iosched.h
+> @@ -1062,6 +1062,8 @@ struct bfq_group *bfqq_group(struct bfq_queue =
+*bfqq);
+>=20
+> #define bfq_log_bfqq(bfqd, bfqq, fmt, args...)	do {			=
+\
+> 	char pid_str[MAX_PID_STR_LENGTH];	\
+> +	if (likely(!blk_trace_note_message_enabled((bfqd)->queue)))	=
+\
+> +		break;							=
+\
+> 	bfq_pid_to_str((bfqq)->pid, pid_str, MAX_PID_STR_LENGTH);	=
+\
+> 	blk_add_cgroup_trace_msg((bfqd)->queue,				=
+\
+> 			bfqg_to_blkg(bfqq_group(bfqq))->blkcg,		=
+\
+> @@ -1078,6 +1080,8 @@ struct bfq_group *bfqq_group(struct bfq_queue =
+*bfqq);
+>=20
+> #define bfq_log_bfqq(bfqd, bfqq, fmt, args...) do {	\
+> 	char pid_str[MAX_PID_STR_LENGTH];	\
+> +	if (likely(!blk_trace_note_message_enabled((bfqd)->queue)))	=
+\
+> +		break;							=
+\
+> 	bfq_pid_to_str((bfqq)->pid, pid_str, MAX_PID_STR_LENGTH);	=
+\
+> 	blk_add_trace_msg((bfqd)->queue, "bfq%s%c " fmt, pid_str,	=
+\
+> 			bfq_bfqq_sync((bfqq)) ? 'S' : 'A',		=
+\
+> --=20
+> 2.7.4
+>=20
 
