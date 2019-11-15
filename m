@@ -2,154 +2,138 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1CAC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA73C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D73FA207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 540AB20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:18:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iDXjXEt1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rcgSsPfU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbfKOKSG (ORCPT
+        id S1727632AbfKOKSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:18:06 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:47718 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727134AbfKOKSE (ORCPT
+        Fri, 15 Nov 2019 05:18:15 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36822 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727134AbfKOKSO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:18:04 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAFAEITt047434;
-        Fri, 15 Nov 2019 10:16:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=P+HiVSl1jyeAKRlbuhH0mupiRsIP0/UxZq92oAfDDa0=;
- b=iDXjXEt1yuowJ4YIPk8xoU6oq4qYiEeje0rFnIEyBHg+KTaZb66llIpBGdJy7pc2MgHK
- r5OZp2TUZ2yi0cKrAtEYbBaSA8jcEtR/Opcfgla9om84hvTZG0jagJoEJEqWE3o+Zbjj
- tS7VoTgh5xdaAuDH/ubM78mlyt90N+1tcHMKim9WmsMbIKNKENXUKfIb48++SWIo2uJ/
- w4zLXpJgqcFa3B8Ui5rOR8UEwg+SiitObUXpwJb8Ws1fDzpzAbRui7pm5d0BQmFDXrcT
- 1ggG8Cc9OK53K3/dwEDjYd1GuZ+X7HXCtyDiyXctKtiGWevZhicEJfxvfb1MTPhMOboZ Jg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2w9gxpje6a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Nov 2019 10:16:42 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAFADDL3007920;
-        Fri, 15 Nov 2019 10:16:42 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2w9h148ff4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Nov 2019 10:16:42 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAFAGe8p016353;
-        Fri, 15 Nov 2019 10:16:40 GMT
-Received: from dhcp-10-175-208-51.vpn.oracle.com (/10.175.208.51)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 15 Nov 2019 02:16:40 -0800
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     brendanhiggins@google.com, skhan@linuxfoundation.org,
-        linux-kselftest@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
-        keescook@chromium.org, yzaikin@google.com,
-        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
-        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
-        corbet@lwn.net, tytso@mit.edu, adilger.kernel@dilger.ca,
-        mcgrof@kernel.org, changbin.du@intel.com,
-        linux-ext4@vger.kernel.org, linux-doc@vger.kernel.org,
-        sboyd@kernel.org, Alan Maguire <alan.maguire@oracle.com>,
-        Knut Omang <knut.omang@oracle.com>
-Subject: [PATCH v4 linux-kselftest-test 4/6] kunit: remove timeout dependence on sysctl_hung_task_timeout_seconds
-Date:   Fri, 15 Nov 2019 10:16:10 +0000
-Message-Id: <1573812972-10529-5-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1573812972-10529-1-git-send-email-alan.maguire@oracle.com>
-References: <1573812972-10529-1-git-send-email-alan.maguire@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911150096
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911150096
+        Fri, 15 Nov 2019 05:18:14 -0500
+Received: by mail-lj1-f195.google.com with SMTP id k15so10108468lja.3
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 02:18:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pCyqOdp+ZndERcZb5iv1sm6YH8+z1aM4ycI4+c8RSn4=;
+        b=rcgSsPfU+Q97tOFNKOrVXTIZo5atGipqubSqP/Zb1Qy3QZH31sW7nEYJ/3pb294IST
+         tDNnwxKaF24pgsnVbJi7SCE/y42+d+VvKJdJbiuGRQciM7uSi/mtLQlkhqy8exd9vIhx
+         a56YtyxTQQn3tHCwIK5QMEa44XQ8nV5ZW3WYlEWLd4jMtaalMOF+NVU8VSU/oE+XQ/d3
+         nw1ySTNoE585b+1VAaDyZsbOkao9SFZIgIbYbS2gERD/c3P1Z8CiVdAZGuA3NRCSZ/6k
+         mCavaQR2o0D0s1ZJKWQN9pP6WcaK/fCllOY4pg4O/jiCvfBhgoNGlZ4JYUtefzD9zSYp
+         60eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pCyqOdp+ZndERcZb5iv1sm6YH8+z1aM4ycI4+c8RSn4=;
+        b=CdFOiLSdTEVfF2g/7Uu78KtT5wohW9RQ0r0uT6YDKPYNycbrQsVuat55YZZWrsz8Yj
+         smVWEObe05LSXs733ut0SOZ1eaZhAimxUR8Sdet006XDo/UalkQkJTdvocW+YdAIo142
+         y8a/3E7Skeu80QNYFbSdcftlJrs2PyeeWxynSOLnJQjvtlmpoPQWy/arFNXlTR/GdO3F
+         VF7muEYe0r4+R9lAOfltqHfN9+NaACg1wEoxAWooBh9439aiWHOtIw2dj2vswYlsYPle
+         tjj7+bE7bNYDBD9vZMvhvTunLBVkSfUo2dBiKMLjKSq/Fj9N4h3C5+ZWN7Bkbk+YKitO
+         B/XQ==
+X-Gm-Message-State: APjAAAXKkyyR8kvTToyLtuKXA6k5v4fNBeQ8XkH39ybndAYT7etjhlJ2
+        yvojHHSp9m3QSp3DVfnuDavkCDx7kuanR/sg8xLF6g==
+X-Google-Smtp-Source: APXvYqw4nG6xeDVRRT2y9ygXD8V2W7ROQTkc/+zE6SYLloLLqV10hMqTILv/0ihg/0vC+GzCo0u/uuerAQVwKblA97I=
+X-Received: by 2002:a2e:b0e3:: with SMTP id h3mr10133730ljl.193.1573813091777;
+ Fri, 15 Nov 2019 02:18:11 -0800 (PST)
+MIME-Version: 1.0
+References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org> <20191115095447.GU4114@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191115095447.GU4114@hirez.programming.kicks-ass.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 15 Nov 2019 11:18:00 +0100
+Message-ID: <CAKfTPtCTcrq1E1H8A3TL1xvALUrQ7ybPoERJ+C2O2+QXpVEZGQ@mail.gmail.com>
+Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Doug Smythies <dsmythies@telus.net>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
+        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In discussion of how to handle timeouts, it was noted that if
-sysctl_hung_task_timeout_seconds is exceeded for a kunit test,
-the test task will be killed and an oops generated.  This should
-suffice as a means of debugging such timeout issues for now.
+On Fri, 15 Nov 2019 at 10:55, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Thu, Nov 14, 2019 at 06:07:31PM +0100, Vincent Guittot wrote:
+> > update_cfs_rq_load_avg() calls cfs_rq_util_change() everytime pelt decays,
+> > which might be inefficient when cpufreq driver has rate limitation.
+> >
+> > When a task is attached on a CPU, we have call path:
+> >
+> > update_load_avg()
+> >   update_cfs_rq_load_avg()
+> >     cfs_rq_util_change -- > trig frequency update
+> >   attach_entity_load_avg()
+> >     cfs_rq_util_change -- > trig frequency update
+> >
+> > The 1st frequency update will not take into account the utilization of the
+> > newly attached task and the 2nd one might be discard because of rate
+> > limitation of the cpufreq driver.
+>
+> Doesn't this just show that a dumb rate limit in the driver is broken?
 
-Hence remove use of sysctl_hung_task_timeout_secs, which has the
-added benefit of avoiding the need to export that symbol from
-the core kernel.
+But the rate limit may come from HW constraints that forces to wait
+let say 4ms or even 10ms between each frequency update.
 
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Signed-off-by: Knut Omang <knut.omang@oracle.com>
----
- lib/kunit/try-catch.c | 22 ++++------------------
- 1 file changed, 4 insertions(+), 18 deletions(-)
+>
+> > update_cfs_rq_load_avg() is only called by update_blocked_averages()
+> > and update_load_avg() so we can move the call to
+> > cfs_rq_util_change/cpufreq_update_util() into these 2 functions. It's also
+> > interesting to notice that update_load_avg() already calls directly
+> > cfs_rq_util_change() for !SMP case.
+> >
+> > This changes will also ensure that cpufreq_update_util() is called even
+> > when there is no more CFS rq in the leaf_cfs_rq_list to update but only
+> > irq, rt or dl pelt signals.
+>
+> I don't think it does that; that is, iirc the return value of
+> ___update_load_sum() is 1 every time a period lapses. So even if the avg
+> is 0 and doesn't change, it'll still return 1 on every period.
+>
+> Which is what that dumb rate-limit thing wants of course. But I'm still
+> thinking that it's stupid to do. If nothing changes, don't generate
+> events.
 
-diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-index 0247a28..0dd434e 100644
---- a/lib/kunit/try-catch.c
-+++ b/lib/kunit/try-catch.c
-@@ -11,7 +11,6 @@
- #include <linux/completion.h>
- #include <linux/kernel.h>
- #include <linux/kthread.h>
--#include <linux/sched/sysctl.h>
- 
- #include "try-catch-impl.h"
- 
-@@ -33,8 +32,6 @@ static int kunit_generic_run_threadfn_adapter(void *data)
- 
- static unsigned long kunit_test_timeout(void)
- {
--	unsigned long timeout_msecs;
--
- 	/*
- 	 * TODO(brendanhiggins@google.com): We should probably have some type of
- 	 * variable timeout here. The only question is what that timeout value
-@@ -51,22 +48,11 @@ static unsigned long kunit_test_timeout(void)
- 	 *
- 	 * For more background on this topic, see:
- 	 * https://mike-bland.com/2011/11/01/small-medium-large.html
-+	 *
-+	 * If tests timeout due to exceeding sysctl_hung_task_timeout_secs,
-+	 * the task will be killed and an oops generated.
- 	 */
--	if (sysctl_hung_task_timeout_secs) {
--		/*
--		 * If sysctl_hung_task is active, just set the timeout to some
--		 * value less than that.
--		 *
--		 * In regards to the above TODO, if we decide on variable
--		 * timeouts, this logic will likely need to change.
--		 */
--		timeout_msecs = (sysctl_hung_task_timeout_secs - 1) *
--				MSEC_PER_SEC;
--	} else {
--		timeout_msecs = 300 * MSEC_PER_SEC; /* 5 min */
--	}
--
--	return timeout_msecs;
-+	return 300 * MSEC_PER_SEC; /* 5 min */
- }
- 
- void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
--- 
-1.8.3.1
+When everything (irq, dl, rt, cfs) is 0, we don't generate events
+because update_blocked_averages is no more called because
+rq->has_blocked_load is clear
 
+With current implementation, if cfs is 0 but not irq, dl or rt, we
+don't call cpufreq_update_util because it is only called through cfs
+
+>
+> If anything, update_blocked_avgerages() should look at
+> @done/others_have_blocked() to emit events for rt,dl,irq.
+
+other_have_blocked can be set but no decay happened during the update
+and we don't need to call cpufreq_update_util
+
+>
+> So why are we making the scheduler code more ugly instead of fixing that
+> driver?
