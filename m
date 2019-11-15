@@ -2,134 +2,96 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 651CFC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F56C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A8AA206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 045A920740
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573813618;
-	bh=AHR2am5oKQ0kOiNaOVKezCDCVN1wQZZo7DOXoNLfQjs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Ib7G5E02sFuk4r2w/Uq8M91rOhuPBBe7kow/ednj9lfBCauz46IcaYi8ggPS5WuOP
-	 AGVIO+Zv1tyc/jZ5oz1V/AyUk1TtCbHXPmvxWFAkYBS4eOT6wCQOWNiA9hpipDDncG
-	 tgzpVve8Vzmmt4VBupDOtCbIrHDMrm3zqInDzKSw=
+	s=default; t=1573813651;
+	bh=3MTIp3EVNTi3pvV+fHXDuaEdbhizPCO8hiADThBPsC4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=T+w/YigOfGDUvzs+BpvMK4jZf32sQlDpmqsVO4LZXzDy4UOmkahbvZ4E5U3Eo1e+/
+	 viV0vJ4r3Bown629An2oWMOBvbIa1D4UAWV2241CfXfOrFP1I8CYi4t1nYLcXw+yHy
+	 1Xexci964uNpcB8g4kaZOB3sK8Svs9ihP6I6FY7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbfKOK05 (ORCPT
+        id S1727466AbfKOK1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:26:57 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37548 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727386AbfKOK04 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:26:56 -0500
-Received: by mail-ot1-f68.google.com with SMTP id d5so7605892otp.4;
-        Fri, 15 Nov 2019 02:26:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pem47e68QsfR2xvNK79o7bq8NBfMBA9ulZTmR6QPBXQ=;
-        b=K1vHfbFJfFav1lGD0zptMCjxNGjlxHQMOTx24Z7vDAV4oGg6LhS7onR1GIpDJm9eew
-         OSAYPM64Lekp3X3ycoMo3UD4FYI7hh+16fK/1bYK08Vh4EIbxOSWNSiOMLjYTQIFfU4G
-         WqhhwBhtGiU/itI9TEAUspMcy21LbP33lncsFmv+0+jq1J0vfKK6OHM813aVJTS+eWG3
-         Am0nSyIyvHS/9gKX8VdtDQpl+fAiPQwo8e08BxwW9cWPgRnK6J4oMV2jbj+q85QcMqF7
-         Tsmdy0BtIAS3JYJTVpABZoFGqxiAX07DTTtTUfEiuEn9WPwecLSlyybRQk9MVKWMwDK5
-         jtUg==
-X-Gm-Message-State: APjAAAV04iwVukIyc2QvqA0K1HoYlIaPFw19vuTYAaWH6dqZwosyj8CO
-        B6mDNl1PWWmXDi1Ir0r6KoP0x3gF4O6I0Ym3+ew=
-X-Google-Smtp-Source: APXvYqztMO0pme2trK3Xq1OxPCXqw9OHvMhjZFp3BASCzEKVIw6hhkm5ZGbKg8xG2i1KfPlviXBRToiXidUY4AKPnF0=
-X-Received: by 2002:a9d:6b91:: with SMTP id b17mr10218038otq.189.1573813613955;
- Fri, 15 Nov 2019 02:26:53 -0800 (PST)
+        Fri, 15 Nov 2019 05:27:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49416 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727180AbfKOK1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 05:27:30 -0500
+Received: from vkoul-mobl.Dlink (unknown [106.51.108.125])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89AB5206C0;
+        Fri, 15 Nov 2019 10:27:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573813649;
+        bh=3MTIp3EVNTi3pvV+fHXDuaEdbhizPCO8hiADThBPsC4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=0pNE3cJFCKKJSbBsfE6KujE7e3TK1Rx5HbjMLI09Yc4TJ6W0YwH2R32B08BOYiyVu
+         /QptkQZPCeK1MCCpBfuXbz2pjXbUHpythsdbzI80zSnRo4F7EgrSecjyjE4bQxHmJZ
+         zbhEseG4zftbLT+1WnQpkRbxbaQK6L8cZxaowZoE=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Takashi Iwai <tiwai@suse.com>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/3] ALSA: compress: Add support for FLAC
+Date:   Fri, 15 Nov 2019 15:57:02 +0530
+Message-Id: <20191115102705.649976-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <1573041302-4904-1-git-send-email-zhenzhong.duan@oracle.com> <1573041302-4904-2-git-send-email-zhenzhong.duan@oracle.com>
-In-Reply-To: <1573041302-4904-2-git-send-email-zhenzhong.duan@oracle.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 15 Nov 2019 11:26:43 +0100
-Message-ID: <CAJZ5v0gyszPOvUxd8WX8gxc1OvX_nLUGh3vKn=aXWRj52L76yw@mail.gmail.com>
-Subject: Re: [PATCH RESEND v2 1/4] cpuidle-haltpoll: ensure grow start value
- is nonzero
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        kvm-devel <kvm@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 12:56 PM Zhenzhong Duan
-<zhenzhong.duan@oracle.com> wrote:
->
-> dev->poll_limit_ns could be zeroed in certain cases (e.g. by
-> guest_halt_poll_ns = 0). If guest_halt_poll_grow_start is zero,
-> dev->poll_limit_ns will never be bigger than zero.
+The current design of sending codec parameters assumes that decoders
+will have parsers so they can parse the encoded stream for parameters
+and configure the decoder.
 
-I would rephrase this in the following way:
+But this assumption may not be universally true and we know some DSPs
+which do not contain the parsers so additional parameters are required
+to be passed.
 
-"If guest_halt_poll_grow_start is zero and dev->poll_limit_ns becomes
-zero for any reason, it will never be greater than zero again, so use
-..."
+So add these parameters starting with FLAC decoder. The size of
+snd_codec_options is still 120 bytes after this change (due to this
+being a union)
 
-The patch itself looks OK to me.
+I think we should also bump the (minor) version if this proposal is
+acceptable so the userspace can check and populate flac specific structure.
 
-> Use param callback to avoid writing zero to guest_halt_poll_grow_start.
->
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-> ---
->  drivers/cpuidle/governors/haltpoll.c | 22 +++++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/cpuidle/governors/haltpoll.c b/drivers/cpuidle/governors/haltpoll.c
-> index 7a703d2..660859d 100644
-> --- a/drivers/cpuidle/governors/haltpoll.c
-> +++ b/drivers/cpuidle/governors/haltpoll.c
-> @@ -20,6 +20,26 @@
->  #include <linux/module.h>
->  #include <linux/kvm_para.h>
->
-> +static int grow_start_set(const char *val, const struct kernel_param *kp)
-> +{
-> +       int ret;
-> +       unsigned int n;
-> +
-> +       if (!val)
-> +               return -EINVAL;
-> +
-> +       ret = kstrtouint(val, 0, &n);
-> +       if (ret || !n)
-> +               return -EINVAL;
-> +
-> +       return param_set_uint(val, kp);
-> +}
-> +
-> +static const struct kernel_param_ops grow_start_ops = {
-> +       .set = grow_start_set,
-> +       .get = param_get_uint,
-> +};
-> +
->  static unsigned int guest_halt_poll_ns __read_mostly = 200000;
->  module_param(guest_halt_poll_ns, uint, 0644);
->
-> @@ -33,7 +53,7 @@
->
->  /* value in us to start growing per-cpu halt_poll_ns */
->  static unsigned int guest_halt_poll_grow_start __read_mostly = 50000;
-> -module_param(guest_halt_poll_grow_start, uint, 0644);
-> +module_param_cb(guest_halt_poll_grow_start, &grow_start_ops, &guest_halt_poll_grow_start, 0644);
->
->  /* allow shrinking guest halt poll */
->  static bool guest_halt_poll_allow_shrink __read_mostly = true;
-> --
-> 1.8.3.1
->
+Along, with the core header change, patches are added to support FLAC
+in Qualcomm drivers. This was tested on 96boards db845c
+
+Srinivas Kandagatla (1):
+  ASoC: qcom: q6asm: add support to flac config
+
+Vinod Koul (2):
+  ALSA: compress: add flac decoder params
+  ASoC: qcom: q6asm-dai: add support to flac decoder
+
+ include/uapi/sound/compress_params.h | 10 +++++
+ sound/soc/qcom/qdsp6/q6asm-dai.c     | 35 +++++++++++++++++-
+ sound/soc/qcom/qdsp6/q6asm.c         | 55 ++++++++++++++++++++++++++++
+ sound/soc/qcom/qdsp6/q6asm.h         | 15 ++++++++
+ 4 files changed, 114 insertions(+), 1 deletion(-)
+
+-- 
+2.23.0
+
