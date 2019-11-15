@@ -1,148 +1,90 @@
 Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	PDS_TONAME_EQ_TOLOCAL_SHORT,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E53C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8EB7C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7CD32072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F9F720748
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:49:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="V5ZHn4M2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbfKOLt2 (ORCPT
+        id S1727463AbfKOLtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 06:49:28 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57548 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726983AbfKOLt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 06:49:28 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AEDCEADCB;
-        Fri, 15 Nov 2019 11:49:25 +0000 (UTC)
-Subject: Re: Sense of soc bus? (was: [PATCH] base: soc: Export
- soc_device_to_device() helper)
-To:     Rob Herring <robh@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-realtek-soc@lists.infradead.org,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        linux-amlogic@lists.infradead.org,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        LAKML <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Architecture Mailman List <boot-architecture@lists.linaro.org>,
-        DTML <devicetree@vger.kernel.org>
-References: <20191103013645.9856-3-afaerber@suse.de>
- <20191111045609.7026-1-afaerber@suse.de> <20191111052741.GB3176397@kroah.com>
- <586fa37c-6292-aca4-fa7c-73064858afaf@suse.de>
- <20191111064040.GA3502217@kroah.com>
- <a88442df-dc6b-07e5-8dee-9e308bdda450@suse.de>
- <20191112052347.GA1197504@kroah.com>
- <20191112072926.isjxfa4ci6akhx56@pengutronix.de>
- <aff81b8e-f041-73a5-6a95-d308fa07842c@suse.de>
- <CAL_JsqLr=fw6zxa=69rtgZ4oxzdw=cVDr3km5ya0pRGsNT1xLw@mail.gmail.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <8411cceb-56f1-bcb3-96b6-5a2aaedd18cf@suse.de>
-Date:   Fri, 15 Nov 2019 12:49:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLr=fw6zxa=69rtgZ4oxzdw=cVDr3km5ya0pRGsNT1xLw@mail.gmail.com>
+        Fri, 15 Nov 2019 06:49:36 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:43365 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbfKOLtg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 06:49:36 -0500
+Received: by mail-qv1-f65.google.com with SMTP id cg2so3648364qvb.10
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 03:49:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=7dKMxnLIw0I5IEWPEmne+t8dS2cYDCj65egnvnRmvl0=;
+        b=V5ZHn4M2I9DoDc5fquceOLxcOcsj8avK56d4Gp2M07sPKeDjIb/V/Lpy889CQQ3gVG
+         XGEKNr2zF74uYcOD1oWxrMFwvdHFqskLThmRAuwnAbKcN8U/4B2xM4fdQxrUmdUbFwmj
+         DtaAaBLzOa3gahF70sElv8/Qb5UWNmP/2Z1LzuSQ2kUJ4kkmyM9j8hfBm2Hkt2EE4edI
+         DxUaakmSSztoxyA0mX2GVcuclU5EkUzSv3mC+B9tqp8CzHCThC1f6tGqpv0d0OjCTtTy
+         j/OEtfvEXPWxITCWOAaaI0BTwLyjk1kl0E/UJmJkw5uLE7lrL4WHxbxPIzW0JHiCKROt
+         ETrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=7dKMxnLIw0I5IEWPEmne+t8dS2cYDCj65egnvnRmvl0=;
+        b=BsAojT4V3IXaigVE8AoZucUWjQUBCskAFSoZN2YrW3hITQIKFpTb9r34zOViP4d5MZ
+         uXPwS++VcIlzIlJMK8luKsD2o3zomvMicVEfCkIFUC5YlfKTMxaLoM4cfs7iTIbApjDN
+         LMtnv+TFW5c5BalRIM80L64CcmVCp+mPsFmwvbV11h+DgystBHkcRA5TOBMcveDMcRmZ
+         x4PMe5cG58WWSa3EdGqEkpQBk15ijVuo90hv2/maC6AETq3zdUWiLEnooMi5njGbeyxO
+         fWAzT8rXxyp+Mc2ZcKyH+AGaLtW74gqYnxDFIV6yfJhMmSTcJoA7McwK5pF3HknUbMN6
+         jbpg==
+X-Gm-Message-State: APjAAAVVcOZgcrMPkjBZs67K/HiFVrbybjKdnGGZRcBSjwUUf5TW8iMj
+        mVqGS159ePtXatsxPZCe5+YnOQ==
+X-Google-Smtp-Source: APXvYqw4nEiUmME4o46iZd1sb3Igi+ECzv4G/OReLnRz7VXhpiuSXHueX0saATf7jq4PwguL+tIMGQ==
+X-Received: by 2002:a05:6214:8c6:: with SMTP id da6mr7169079qvb.1.1573818574998;
+        Fri, 15 Nov 2019 03:49:34 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id x12sm4050375qkf.84.2019.11.15.03.49.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Nov 2019 03:49:34 -0800 (PST)
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] mm: get rid of odd jump label in find_mergeable_anon_vma
+Date:   Fri, 15 Nov 2019 06:49:33 -0500
+Message-Id: <A698637C-E871-4AE9-A6A4-9AFF06C48B81@lca.pw>
+References: <1573799768-15650-1-git-send-email-linmiaohe@huawei.com>
+Cc:     akpm@linux-foundation.org, richardw.yang@linux.intel.com,
+        sfr@canb.auug.org.au, rppt@linux.ibm.com, jannh@google.com,
+        steve.capper@arm.com, catalin.marinas@arm.com, aarcange@redhat.com,
+        chenjianhong2@huawei.com, walken@google.com,
+        dave.hansen@linux.intel.com, tiny.windzz@gmail.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1573799768-15650-1-git-send-email-linmiaohe@huawei.com>
+To:     linmiaohe <linmiaohe@huawei.com>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 14.11.19 um 23:09 schrieb Rob Herring:
-> On Tue, Nov 12, 2019 at 4:47 AM Andreas Färber <afaerber@suse.de> wrote:
->> Finally, arch/arm seems unique in that it has the machine_desc mechanism
->> that allows individual SoCs to force creating their soc_device early and
->> using it as parent for further DT-created platform_devices. With arm64
->> we've lost that ability, and nios2 is not using it either.
->> A bad side effect (with SUSE hat on) is that this parent design pattern
->> does not allow to build such drivers as modules, which means that distro
->> configs using arm's multi-platform, e.g., CONFIG_ARCH_MULTI_V7 will get
->> unnecessary code creep as new platforms get added over time (beyond the
->> basic clk, pinctrl, tty and maybe timer).
->> Even if it were possible to call into a driver module that early, using
->> it as parent would seem to imply that all the references by its children
->> would not allow to unload the module, which I'd consider a flawed design
->> for such an "optional" read-once driver. If we want the device hierarchy
->> to have a soc root then most DT based platforms will have a /soc DT node
->> anyway (although no device_type = "soc") that we probably could have a
->> device registered for in common code rather than each SoC platform
->> handling that differently? That might then make soc_register_device()
->> not the creator of the device (if pre-existent) but the supplier of data
->> to that core device, which should then allow to unload the data provider
->> with just the sysfs data disappearing until re-inserted (speeding up the
->> develop-and-test cycle on say not-so-resource-constrained platforms).
-> 
-> I for one would like to for this to be consistent. Either we always
-> have an SoC device parent or never. I wouldn't decide based on having
-> a DT node or not either.
 
-Sure, if we can always be consistent, that might be best.
 
-Where I was coming from here is that, if we're not supposed to use
-soc_device_to_device(), then we have no way to associate an of_node with
-the soc_device from the outside (and nobody was doing it today, as per
-my analysis). We'd either need a new helper of_soc_device_register()
-with additional argument for the node, or it would need to be done
-entirely in the infrastructure as I suggested, be it by looking for one
-hardcoded /soc node or for nodes with device_type = "soc".
+> On Nov 15, 2019, at 1:36 AM, linmiaohe <linmiaohe@huawei.com> wrote:
+>=20
+> The odd jump label try_prev and none is not really need
+> in func find_mergeable_anon_vma, eliminate them to
+> improve readability.
 
-Rob, in light of this discussion, should we start adding the latter
-property for new DTs such as my new Realtek SoCs, or was there a reason
-this has not been used consistently outside of powerpc and nios2?
-Intel/Altera appear to be the only two in arm64, with only three more in
-arm, none in mips.
-
-(BTW my assumption was that we don't follow the booting-without-of.txt
-documented schema of soc<SOCname> so that we can share .dtsi across
-differently named SoCs, is that correct?)
-
-> Generally, we should always have MMIO devices
-> under a bus node and perhaps more than one, but that doesn't always
-> happen. I think building the drivers as modules is a good reason to do
-> away with the parent device.
-> 
-> It would also allow getting rid of remaining
-> of_platform_default_populate calls in arm platforms except for auxdata
-> cases. Pretty much that's the ones you list below in arch/arm/.
-
-The majority was indeed passing in NULL, so yeah, we might clean that
-up, if someone could come up with a plan of where/how to implement it.
-
-Cheers,
-Andreas
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+Warning: subtle code don=E2=80=99t touch especially with little gains like t=
+his.=
