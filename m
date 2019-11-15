@@ -2,196 +2,118 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 167BFC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 641A5C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E16C320729
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3783A2073C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:20:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573806026;
+	bh=H8/ptq9B4Ies/NmvPzkI+OvZqdjM6J5mCWh0lRahEfM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q+X/DBGDY7ODDd46a9GBbztztkbZzfbSfmF45zVLQuyKq6+a9RIu4wZFIgqLFNrmP
+	 ZGA+Fkxv11/S0Z2IEl9ECYVAXpvvpMbwCQKL6ZzCd3Wjsk5knTG5yyPctD6NV9yOuF
+	 ddmr+ukLYPiV/rRVhCUSY/RepauU1JZ/BDVR6Rd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbfKOIQ2 convert rfc822-to-8bit (ORCPT
+        id S1727199AbfKOIUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 03:16:28 -0500
-Received: from mail-oln040092070040.outbound.protection.outlook.com ([40.92.70.40]:36747
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725829AbfKOIQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 03:16:27 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eRTELI7r/m3eohKJt0iCMPfOG2Mvo1lucsUdJz+GToZRR881iWNNLjLB+FnJVg63hyYzt+23H9VAewUCwCJQFigHG1gPDuAXi0g2dWPoNAzC4mVJ3LyCVKN36JCW21M9xgbtNxZZbf7SdBF4jRl5ZSlca2IzTJTr4eMSCbGsGfTPv76IsNQ7ea58VLVIoe1FUK52LDb/eD3TDWsOcrcyaSE+BjxH3O0yG+iQfn1DE+QW8+Pd+g5lBPT86ZN67QA8eOWp6pfJYfX4Yn3URBVfNnH1DYVMLKVrCKWuK7+xUxT4eTHxsim8N3cRI1JlldlwtDxy7XgdLCTRmqjpsUnnkQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+E82gm9DS2wgN35DgM2Zpv6KtUd5ueVqPIeSl/1RJO8=;
- b=WqYK3SM7kYHUV/GlJrtmCuKM1jWPkNvfn/MvHd9s7SXQBck3CU+1QsUpwe0ItZmnWaUGzQvXH60mq3DnbSXTHefd7DS7ItmfntezIy38dz/OVoGd5G7lzMVEXF6wD4Qt979J3UUX8pRCwAl+ek5UvXD9vAyctG5k+JKB/v1mEj85Dlt5Qh4lBcNGkBt6ibf5OPMUcxAHqnvFMHlF59OOwt5HAiamY19l0ugOoR+vdhNGfAfZQGJ7YC0hbluiwmm1A0kje8b3GOB3P1LRDO5wPadf+Dv1GaghQMmvpszwR72tV4Og7uXQN/ItCWb9JvGkvybPGGG/ezLZFt5YKbzwUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from DB5EUR03FT054.eop-EUR03.prod.protection.outlook.com
- (10.152.20.58) by DB5EUR03HT038.eop-EUR03.prod.protection.outlook.com
- (10.152.21.220) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2451.23; Fri, 15 Nov
- 2019 08:15:44 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.20.57) by
- DB5EUR03FT054.mail.protection.outlook.com (10.152.20.248) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2451.23 via Frontend Transport; Fri, 15 Nov 2019 08:15:44 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::a1a9:f639:5cc7:341a]) by HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::a1a9:f639:5cc7:341a%7]) with mapi id 15.20.2451.027; Fri, 15 Nov 2019
- 08:15:44 +0000
-From:   Jonas Karlman <jonas@kwiboo.se>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-CC:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC v2 09/10] media: uapi: h264: Add DPB entry field reference
- flags
-Thread-Topic: [RFC v2 09/10] media: uapi: h264: Add DPB entry field reference
- flags
-Thread-Index: AQHVjffSYHfHedHWTUmVsr71xfoXj6d0jdMAgBdRlICAABYNAIAACFoA
-Date:   Fri, 15 Nov 2019 08:15:43 +0000
-Message-ID: <HE1PR06MB401140B28C855465E0784BA0AC700@HE1PR06MB4011.eurprd06.prod.outlook.com>
-References: <HE1PR06MB401108289F09802C261374F8AC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
- <20191029012550.24628-1-jonas@kwiboo.se>
- <HE1PR06MB401142C1E45B302094AD1149AC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
- <20191031112056.3442d6ac@collabora.com>
- <HE1PR06MB401159909AF49930BDD02658AC700@HE1PR06MB4011.eurprd06.prod.outlook.com>
- <20191115084548.45ea5b8d@collabora.com>
-In-Reply-To: <20191115084548.45ea5b8d@collabora.com>
-Accept-Language: sv-SE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: FRYP281CA0007.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::17)
- To HE1PR06MB4011.eurprd06.prod.outlook.com (2603:10a6:7:9c::32)
-x-incomingtopheadermarker: OriginalChecksum:A69FEDB935310FFAA187E8184C4772A5A0443E30874FE953F7CC5BA032AFD443;UpperCasedChecksum:94CD761C5F8FD6FE14A119E31F3A2692157970905359D09DEECE92479A2CB817;SizeAsReceived:7908;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [tu8BTUuXxzw2k5Y+lheMxTxCrfqGrZHI]
-x-microsoft-original-message-id: <4bd2e986-1488-5626-6e7e-5f98a1b331c0@kwiboo.se>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: cda60a12-e31f-4618-3a3c-08d769a4029d
-x-ms-traffictypediagnostic: DB5EUR03HT038:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6DVXUr7YOK6AB06PD6ljtQo5ll96iklCEs2js+AYf1S+F0Zi1HtP7F7gLp7oQxwOdztu5UK8MvN3L1FayG1KPMxMv7fminOEhLLYc8/rgpTveZdG2BXlcJzWrwkTiTunyJm5p2Rkp5yRgfACAS5z7QxznIUwQ2TM4tDq0BC+B9HisV9dbiIgVBSx1T3PhoFt
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <313C5CA616C5E74D89B1BEB6343A934C@eurprd06.prod.outlook.com>
-Content-Transfer-Encoding: 8BIT
+        Fri, 15 Nov 2019 03:20:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726196AbfKOIUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 03:20:25 -0500
+Received: from localhost (unknown [104.132.150.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6C232073C;
+        Fri, 15 Nov 2019 08:20:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573806024;
+        bh=H8/ptq9B4Ies/NmvPzkI+OvZqdjM6J5mCWh0lRahEfM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oyHuM2iKsp/09b2d5wyaUZQLc8d6WwBPoQmY9afiswqW3NjXuCxwLLguhU+HxM7Lz
+         7R+OrG3d7kbl+0Nr8rwAMBmzugg3e9PswmUaLgKk2jnp53rdWVx7aMJN2KV+alWEV6
+         n/+T45YsuRSfrODJJIZeg2plzetRr6QbuI/3l+Rs=
+Date:   Fri, 15 Nov 2019 16:20:22 +0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jouni =?iso-8859-1?Q?H=F6gander?= <jouni.hogander@unikie.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: Re: [PATCH] drivers/base: Fix memory leak in error paths
+Message-ID: <20191115082022.GB55909@kroah.com>
+References: <20191114121840.5585-1-jouni.hogander@unikie.com>
+ <20191115032603.GG793701@kroah.com>
+ <878soha7tc.fsf@unikie.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: cda60a12-e31f-4618-3a3c-08d769a4029d
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Nov 2019 08:15:44.0063
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB5EUR03HT038
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <878soha7tc.fsf@unikie.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-15 08:45, Boris Brezillon wrote:
-> On Fri, 15 Nov 2019 06:26:54 +0000
-> Jonas Karlman <jonas@kwiboo.se> wrote:
->
->> On 2019-10-31 11:20, Boris Brezillon wrote:
->>> On Tue, 29 Oct 2019 01:26:01 +0000
->>> Jonas Karlman <jonas@kwiboo.se> wrote:
->>>  
->>>> Add DPB entry flags to help indicate when a reference frame is a field picture
->>>> and how the DPB entry is referenced, top or bottom field or full frame.
->>>>
->>>> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
->>>> ---
->>>>  Documentation/media/uapi/v4l/ext-ctrls-codec.rst | 12 ++++++++++++
->>>>  include/media/h264-ctrls.h                       |  4 ++++
->>>>  2 files changed, 16 insertions(+)
->>>>
->>>> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
->>>> index 28313c0f4e7c..d472a54d1c4d 100644
->>>> --- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
->>>> +++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
->>>> @@ -2028,6 +2028,18 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
->>>>      * - ``V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM``
->>>>        - 0x00000004
->>>>        - The DPB entry is a long term reference frame
->>>> +    * - ``V4L2_H264_DPB_ENTRY_FLAG_FIELD_PICTURE``
->>>> +      - 0x00000008
->>>> +      - The DPB entry is a field picture
->>>> +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_TOP``
->>>> +      - 0x00000010
->>>> +      - The DPB entry is a top field reference
->>>> +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_BOTTOM``
->>>> +      - 0x00000020
->>>> +      - The DPB entry is a bottom field reference
->>>> +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_FRAME``
->>>> +      - 0x00000030
->>>> +      - The DPB entry is a reference frame
->>>>  
->>>>  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE (enum)``
->>>>      Specifies the decoding mode to use. Currently exposes slice-based and
->>>> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
->>>> index e877bf1d537c..76020ebd1e6c 100644
->>>> --- a/include/media/h264-ctrls.h
->>>> +++ b/include/media/h264-ctrls.h
->>>> @@ -185,6 +185,10 @@ struct v4l2_ctrl_h264_slice_params {
->>>>  #define V4L2_H264_DPB_ENTRY_FLAG_VALID		0x01
->>>>  #define V4L2_H264_DPB_ENTRY_FLAG_ACTIVE		0x02
->>>>  #define V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM	0x04
->>>> +#define V4L2_H264_DPB_ENTRY_FLAG_FIELD_PICTURE	0x08
->>>> +#define V4L2_H264_DPB_ENTRY_FLAG_REF_TOP	0x10
->>>> +#define V4L2_H264_DPB_ENTRY_FLAG_REF_BOTTOM	0x20
->>>> +#define V4L2_H264_DPB_ENTRY_FLAG_REF_FRAME	0x30  
->>> I don't remember all the details, but do we really need 3 flags?
->>> Maybe I'm wrong, but it looks like the following combination doesn't
->>> make sense:
->>>
->>> - FIELD_PICTURE + REF_FRAME: if it's a full frame ref it should
->>>   contain both top and bottom fields right, so it's no longer a
->>>   FIELD_PICTURE, is it?
->>>
->>> Can't we just have 2 flags?
->>>
->>> FIELD_PICTURE		0x08
->>> FIELD_REF_TOP		0x10 (meaning that FIELD_REF_BOTTOM is
->>> 			      0x00)
->>>
->>> and then have the following combinations:
->>>
->>> top field ref => FIELD_PICTURE | FIELD_REF_TOP
->>> bottom field ref => FIELD_PICTURE
->>> full frame ref => 0x0  
->> I am not sure and will need to look closer at spec and what ffmpeg is doing.
->> These flags was mostly inspired by the information ffmpeg stores in
->> H264Picture->reference and H264Picture->field_picture.
->>
->> I also believe that the new FLAG_REF_TOP/BOTTOM may make FLAG_ACTIVE obsolete.
->>
->> active => flags & FLAG_REF_FRAME
-> Can't we keep the ACTIVE flag and drop the REF_FRAME one then? AFAIU,
-> all we need to know in addition to what we already have is:
->
-> * is the reference a full-frame or a field?
-> * if it is a field, which one (top or bottom)?
->
-> Hence my suggestion to keep only 2 flags.
+On Fri, Nov 15, 2019 at 09:59:43AM +0200, Jouni Högander wrote:
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+> 
+> > On Thu, Nov 14, 2019 at 02:18:40PM +0200, jouni.hogander@unikie.com wrote:
+> >> From: Jouni Hogander <jouni.hogander@unikie.com>
+> >> 
+> >> Currently error paths are using device_del to clean-up preparations
+> >> done by device_add. This is causing memory leak as free of dev->p
+> >> allocated in device_add is freed in device_release. This is fixed by
+> >> moving freeing dev->p to counterpart of device_add i.e. device_del.
+> >
+> > Are you sure that is safe?  The device can still be "alive" after
+> > device_del() is called.  The only place you know that it should be freed
+> > is in the release callback.
+> 
+> Now as you pointed this out I'm not.
+> 
+> >
+> >> This memory leak was reported by Syzkaller:
+> >> 
+> >> BUG: memory leak unreferenced object 0xffff8880675ca008 (size 256):
+> >>   comm "netdev_register", pid 281, jiffies 4294696663 (age 6.808s)
+> >>   hex dump (first 32 bytes):
+> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+> >>   backtrace:
+> >>     [<0000000058ca4711>] kmem_cache_alloc_trace+0x167/0x280
+> >>     [<000000002340019b>] device_add+0x882/0x1750
+> >>     [<000000001d588c3a>] netdev_register_kobject+0x128/0x380
+> >>     [<0000000011ef5535>] register_netdevice+0xa1b/0xf00
+> >>     [<000000007fcf1c99>] __tun_chr_ioctl+0x20d5/0x3dd0
+> >>     [<000000006a5b7b2b>] tun_chr_ioctl+0x2f/0x40
+> >>     [<00000000f30f834a>] do_vfs_ioctl+0x1c7/0x1510
+> >>     [<00000000fba062ea>] ksys_ioctl+0x99/0xb0
+> >>     [<00000000b1c1b8d2>] __x64_sys_ioctl+0x78/0xb0
+> >>     [<00000000984cabb9>] do_syscall_64+0x16f/0x580
+> >>     [<000000000bde033d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >>     [<00000000e6ca2d9f>] 0xffffffffffffffff
+> >
+> > How is this a leak?  This is in device_add(), not removing the device.
+> > When the structure really is freed then it can be removed.
+> 
+> In net/core/net-sysfs.c:netdev_register_kobject device_add allocates
+> dev->p. Now if register_queue_kobjects fails the error path is calling
+> device_del and dev->p is never freed. Proper fix here could be to call
+> put_device after device_del?
 
-I think we also need to know if the reference frame was a field or a full-frame picture
-not just how it is referenced, I think there was an issue when I originally tried a similar
-approach as you suggested, but it was too long time ago as I seem to have forgotten the details.
+Hm, this sounds like you have a reference count leak here, as
+put_device() should be properly called already in this case.  You might
+want to look further to see where exactly the register_queue_kobjects()
+call fails in order to see if we grabbed a reference we forgot to put
+back on an error path.
 
-Will do more testing and see if I can refresh my memory.
+thanks,
 
-Best regards,
-Jonas
+greg k-h
