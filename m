@@ -2,85 +2,108 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D140C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7425C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF5B20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A86B820748
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:50:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uj//MN/e"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WyYSJhHQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbfKOJue (ORCPT
+        id S1727515AbfKOJuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:50:34 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37340 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727374AbfKOJu2 (ORCPT
+        Fri, 15 Nov 2019 04:50:37 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41139 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727452AbfKOJuc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:50:28 -0500
-Received: by mail-lj1-f193.google.com with SMTP id d5so10008786ljl.4
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 01:50:26 -0800 (PST)
+        Fri, 15 Nov 2019 04:50:32 -0500
+Received: by mail-pf1-f195.google.com with SMTP id p26so6360561pfq.8
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 01:50:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x/UA8N9071Hs67JB/CtCLOKYsRujWaxB61T4BkLclrk=;
-        b=Uj//MN/eYpagIL5SFVK5o9mqojQITuF2XVCgryREyFOYqXwn9xWNIEKr/hnSu/yd37
-         OgcpwNqi83ryL9yGP1i3iNYM1NbRKkpytuLcvx7ux/H500d7XGmBTA1gGyjzvIoV1iEw
-         ld7CduY+HoP5HPEWtCzcfMm9I2Dm+Qz4o73G7hmWuJKiE/659BHe9isr8jEu6zfrXY5w
-         p6E8t5bh/a39/Z0Xs8X8yXae3wjaBpHdwtcjDJIrI75l11sES3dl5SnTE4LguB/l+0rp
-         l/TlA8QLOU8hAcIlE+mlbdA00awq8mAiygKQOZVYY63BinchNpYcFAYnxZkBzVC+ig3U
-         4gDA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=7wWrBkewFqbPrqVa8Ew3nGEKEiQ7g+kHy7TXa1Tllc0=;
+        b=WyYSJhHQKw+P1T8ZikUxZQVW1xA7prMWiZSXruvM1Wxy/B/7Hff2OF97gfUf/L97fS
+         H57Ci7zkKesdL2sfqa421168II5E/AC/6f1oPOyZaga5yCC2Kr9aI2TslZFyByEt+85o
+         bMVP0aDUEUV8COczTYKLO/xLqb3cdk6b99g5Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x/UA8N9071Hs67JB/CtCLOKYsRujWaxB61T4BkLclrk=;
-        b=HmVh4mEd/FqEVbC0YDQWtnKWbfBw3/lpfbZPz3/QYuiJCoSuAI4/Vk2YnygkCQA5M6
-         47gBga2UYwbr1xDygs2/Qz6Tmg0otFe0awd+ocxGMk7PpepM2ZfwHB0ej2wsSjPt7UDP
-         W4UjmhGHEa9DA4bghI7BAjo495DErxqP6CV7OuvwuyTghJuN+JaoaLM8MWjmkw7mQQej
-         NOMLLkTnxz2hlN8mas2Bdj1tqF6lvHFHGy+b0Kq3ZjBkaYnnhi41Lf+sja9+HnQ7AqIW
-         Xo2QsZOZjCr74rY31xJbdwRr6Gos+g3bu6EiXZN1P5dh1XcNcH+tfQhibtdfSH9OnhrA
-         B7qA==
-X-Gm-Message-State: APjAAAX48lPGYnjo0f5XcQ3rIlcDDZL/BZEonKoil4u8uy3We8uGxpIn
-        c8ltxbagLt07zqX3BH5uNW86+/fNVyB1GoDKUhelvg==
-X-Google-Smtp-Source: APXvYqzoH0lE2meSnOsWYn4w2Vnm6zFN87zG7pAIdO4qZpC8+1a/pUkOgr9YtQTghftKTYLC9GIcmmSSdCngI9weV+A=
-X-Received: by 2002:a2e:161b:: with SMTP id w27mr10500539ljd.183.1573811425820;
- Fri, 15 Nov 2019 01:50:25 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=7wWrBkewFqbPrqVa8Ew3nGEKEiQ7g+kHy7TXa1Tllc0=;
+        b=umJeHaR2X6rr+/MZb4zi0pLEjcf60vX8C1tXuXuND0RakB8ifC2oZjm5Y4M1C+jPV2
+         clsI/TGDhPU4lySRaYFGToxdSiXUjNglbBvcJh+cm3RFrg7FXI/QRrQB23Rzl0soN5iK
+         jN9FZ0nKE8tSQm9yCzeODVCuzABWXuvHJ92Te01+/UKJ4IZdvgM5coy/SjGXSHpJgAKy
+         iM+QRfssBb6oD06RhGGYDaKLtapKvMnnG2uKABSG5kXUVEpFk9hHjQWtn5qNR/WU5vFt
+         rEmKL0gGieWmViEcDKJ+d3gTv8HbRCY6FmpVB5VYkyJoZZtsd8MxHFqAdi72uRYHbMZC
+         0JOA==
+X-Gm-Message-State: APjAAAWVc5sLIzQ0FclkERNqhgh9pUvtGyv8S4sMhcJYhT/T4g0X9to4
+        8G+ooqeMDSWuSJe4XHKYy1B3ow==
+X-Google-Smtp-Source: APXvYqwkOOXHb0x4JXSb9ku3gzQ2VvyHrclPXfVeyC5yCdeTLFgQsK0Fke15kh1Uh/ul6cVvAapEbQ==
+X-Received: by 2002:a65:5303:: with SMTP id m3mr14439397pgq.400.1573811431747;
+        Fri, 15 Nov 2019 01:50:31 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
+        by smtp.gmail.com with ESMTPSA id j20sm9310017pff.182.2019.11.15.01.50.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Nov 2019 01:50:31 -0800 (PST)
+From:   Gwendal Grignou <gwendal@chromium.org>
+To:     dmitry.torokhov@gmail.com, groeck@chromium.org,
+        briannorris@chromium.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, lee.jones@linaro.org,
+        bleung@chromium.org, enric.balletbo@collabora.com,
+        dianders@chromium.org, fabien.lahoudere@collabora.com
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, Gwendal Grignou <gwendal@chromium.org>
+Subject: [PATCH v5 08/18] Revert "Input: cros_ec_keyb: mask out extra flags in event_type"
+Date:   Fri, 15 Nov 2019 01:34:02 -0800
+Message-Id: <20191115093412.144922-9-gwendal@chromium.org>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+In-Reply-To: <20191115093412.144922-1-gwendal@chromium.org>
+References: <20191115093412.144922-1-gwendal@chromium.org>
 MIME-Version: 1.0
-References: <20191115062454.7025-1-hslester96@gmail.com>
-In-Reply-To: <20191115062454.7025-1-hslester96@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 15 Nov 2019 10:50:14 +0100
-Message-ID: <CACRpkdaXcas08jy+oZOi4fKuXZYkbFAOipqf49smSdGd6TmFag@mail.gmail.com>
-Subject: Re: [PATCH] net: gemini: add missed free_netdev
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Hans Ulli Kroll <ulli.kroll@googlemail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        netdev <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 7:25 AM Chuhong Yuan <hslester96@gmail.com> wrote:
+This reverts commit d096aa3eb6045a6a475a0239f3471c59eedf3d61.
 
-> This driver forgets to free allocated netdev in remove like
-> what is done in probe failure.
-> Add the free to fix it.
->
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+This patch is not needed anymore since we clear EC_MKBP_HAS_MORE_EVENTS
+flag before calling the notifiers in patch
+"9d9518f5b52a (platform: chrome: cros_ec: handle MKBP more events flag)"
 
-Looks correct!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+Changes in v5:
+  Added ack.
+No changes in v4, v3.
+New to v2.
 
-Yours,
-Linus Walleij
+ drivers/input/keyboard/cros_ec_keyb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/input/keyboard/cros_ec_keyb.c b/drivers/input/keyboard/cros_ec_keyb.c
+index a29e81fdf186..2b71c5a51f90 100644
+--- a/drivers/input/keyboard/cros_ec_keyb.c
++++ b/drivers/input/keyboard/cros_ec_keyb.c
+@@ -237,7 +237,7 @@ static int cros_ec_keyb_work(struct notifier_block *nb,
+ 	if (queued_during_suspend && !device_may_wakeup(ckdev->dev))
+ 		return NOTIFY_OK;
+ 
+-	switch (ckdev->ec->event_data.event_type & EC_MKBP_EVENT_TYPE_MASK) {
++	switch (ckdev->ec->event_data.event_type) {
+ 	case EC_MKBP_EVENT_KEY_MATRIX:
+ 		pm_wakeup_event(ckdev->dev, 0);
+ 
+-- 
+2.24.0.432.g9d3f5f5b63-goog
+
