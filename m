@@ -2,1238 +2,448 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67484C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF74AC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B2A92073C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9105620718
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:24:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfKOKWa (ORCPT
+        id S1727257AbfKOKYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:22:30 -0500
-Received: from mga04.intel.com ([192.55.52.120]:50563 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727112AbfKOKW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:22:29 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 02:22:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,308,1569308400"; 
-   d="scan'208";a="379889946"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005.jf.intel.com with ESMTP; 15 Nov 2019 02:22:24 -0800
-Received: from andy by smile with local (Exim 4.93-RC1)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1iVYkB-0003BI-5w; Fri, 15 Nov 2019 12:22:23 +0200
-Date:   Fri, 15 Nov 2019 12:22:23 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
-Subject: Re: [PATCH v8 1/2] pinctrl: Add pinmux & GPIO controller driver for
- a new SoC
-Message-ID: <20191115102223.GQ32742@smile.fi.intel.com>
-References: <cover.1573797249.git.rahul.tanwar@linux.intel.com>
- <33e649758b70490f01724a887c490d5008c7656d.1573797249.git.rahul.tanwar@linux.intel.com>
+        Fri, 15 Nov 2019 05:24:33 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2101 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727036AbfKOKYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 05:24:33 -0500
+Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id C9F70EC120A4434060D0;
+        Fri, 15 Nov 2019 10:24:30 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 15 Nov 2019 10:24:27 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 15 Nov
+ 2019 10:24:27 +0000
+Subject: Re: [PATCH RFC 3/5] blk-mq: Facilitate a shared tags per tagset
+To:     Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
+CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "ming.lei@redhat.com" <ming.lei@redhat.com>,
+        "hare@suse.com" <hare@suse.com>,
+        "chenxiang (M)" <chenxiang66@hisilicon.com>
+References: <1573652209-163505-1-git-send-email-john.garry@huawei.com>
+ <1573652209-163505-4-git-send-email-john.garry@huawei.com>
+ <32880159-86e8-5c48-1532-181fdea0df96@suse.de>
+ <2cbf591c-8284-8499-7804-e7078cf274d2@huawei.com>
+ <02056612-a958-7b05-3c54-bb2fa69bc493@suse.de>
+ <ace95bc5-7b89-9ed3-be89-8139f977984b@huawei.com>
+ <42b0bcd9-f147-76eb-dfce-270f77bca818@suse.de>
+ <89cd1985-39c7-2965-d25b-2ee2c183d057@huawei.com>
+ <c34c0ce2-40a8-e4fc-3366-1f7b906da5a3@acm.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <8e7bd2cb-1035-13ba-05db-d8e12c61df1f@huawei.com>
+Date:   Fri, 15 Nov 2019 10:24:26 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <33e649758b70490f01724a887c490d5008c7656d.1573797249.git.rahul.tanwar@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <c34c0ce2-40a8-e4fc-3366-1f7b906da5a3@acm.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml713-chm.china.huawei.com (10.201.108.64) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 05:25:07PM +0800, Rahul Tanwar wrote:
-> Intel Lightning Mountain SoC has a pinmux controller & GPIO controller IP which
-> controls pin multiplexing & configuration including GPIO functions selection &
-> GPIO attributes configuration.
+>>> Actually, I _do_ prefer keeping both in sync.
+>>> We might want to check if the 'normal' tag is set (typically it would not, but then, who knows ...)
+>>> The beauty here is that both 'shared' and 'normal' tag are in sync, so if a driver would be wanting to use the tag as index into a command array it can do so without any surprises.
+>>>
+>>> Why do you think it's not ideal?
+>>
+>> A few points:
+>> - Getting a bit from one tagset and then setting it in another tagset is a bit clunky.
+>> - There may be an atomicity of the getting the shared tag bit and setting the hctx tag bit - I don't think that there is.
+>> - Consider that sometimes we may want to check if there is space on a hw queue - checking the hctx tags is not really proper any longer, as typically there would always be space on hctx, but not always the shared tags. We did delete blk_mq_can_queue() yesterday, which
+>> would be an example of that. Need to check if there are others.
+>>
+>> Having said all that, the obvious advantage is performance gain, can still use request.tag and so maybe less intrusive changes.
+>>
+>> I'll have a look at the implementation. The devil is mostly in the detail...
 > 
-> This IP is not based on & does not have anything in common with Chassis
-> specification. The pinctrl drivers under pinctrl/intel/* are all based upon
-> Chassis spec compliant pinctrl IPs. So this driver doesn't fit & can not use
-> pinctrl framework under pinctrl/intel/* and it requires a separate new driver.
+
+Hi Bart,
+
+> Wouldn't that approach trigger a deadlock if it is attempted to allocate the last
+> tag from two different hardware queues?
+
+I see Hannes answered this one.
+
+How about sharing tag sets across hardware
+ > queues, e.g. like in the (totally untested) patch below?
+
+So this is similar in principle what Ming Lei came up with here:
+https://lore.kernel.org/linux-block/20190531022801.10003-1-ming.lei@redhat.com/
+
+However your implementation looks neater, which is good.
+
+My concern with this approach is that we can't differentiate which tags 
+are allocated for which hctx, and sometimes we need to know that.
+
+An example here was blk_mq_queue_tag_busy_iter(), which iterates the 
+bits for each hctx. This would just be broken by that change, unless we 
+record which bits are associated with each hctx.
+
+Another example was __blk_mq_tag_idle(), which looks problematic.
+
 > 
-> Add a new GPIO & pin control framework based driver for this IP.
-
-Same as per v7:
-
-Linus, I have no means to test this nor time to read any (internally?)
-available datasheet. At least my concerns against code were satisfied, except
-I'm not sure about locking model. If you consider it is okay, I'm fine with
-this version, although I believe there may be improvements made in the future.
-
-FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-
+> Thanks,
 > 
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> ---
->  drivers/pinctrl/Kconfig               |  18 +
->  drivers/pinctrl/Makefile              |   1 +
->  drivers/pinctrl/pinctrl-equilibrium.c | 944 ++++++++++++++++++++++++++++++++++
->  drivers/pinctrl/pinctrl-equilibrium.h | 144 ++++++
->  4 files changed, 1107 insertions(+)
->  create mode 100644 drivers/pinctrl/pinctrl-equilibrium.c
->  create mode 100644 drivers/pinctrl/pinctrl-equilibrium.h
+> Bart. >
+> diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
+
+For debugfs, when we examine 
+/sys/kernel/debug/block/.../hctxX/tags_bitmap, wouldn't that be the tags 
+for all hctx (hctx0)?
+
+For debugging reasons, I would say we want to know which tags are 
+allocated for a specific hctx, as this is tightly related to the 
+requests for that hctx.
+
+> index b3f2ba483992..3678e95ec947 100644
+> --- a/block/blk-mq-debugfs.c
+> +++ b/block/blk-mq-debugfs.c
+> @@ -211,8 +211,6 @@ static const struct blk_mq_debugfs_attr blk_mq_debugfs_queue_attrs[] = {
+>   #define HCTX_STATE_NAME(name) [BLK_MQ_S_##name] = #name
+>   static const char *const hctx_state_name[] = {
+>   	HCTX_STATE_NAME(STOPPED),
+> -	HCTX_STATE_NAME(TAG_ACTIVE),
+> -	HCTX_STATE_NAME(SCHED_RESTART),
+>   };
+>   #undef HCTX_STATE_NAME
 > 
-> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> index b372419d61f2..7809e33c7762 100644
-> --- a/drivers/pinctrl/Kconfig
-> +++ b/drivers/pinctrl/Kconfig
-> @@ -420,4 +420,22 @@ config PINCTRL_TB10X
->  	depends on OF && ARC_PLAT_TB10X
->  	select GPIOLIB
->  
-> +config PINCTRL_EQUILIBRIUM
-> +	tristate "Generic pinctrl and GPIO driver for Intel Lightning Mountain SoC"
-> +	select PINMUX
-> +	select PINCONF
-> +	select GPIOLIB
-> +	select GPIO_GENERIC
-> +	select GPIOLIB_IRQCHIP
-> +	select GENERIC_PINCONF
-> +	select GENERIC_PINCTRL_GROUPS
-> +	select GENERIC_PINMUX_FUNCTIONS
+> diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+> index ca22afd47b3d..6262584dca09 100644
+> --- a/block/blk-mq-sched.c
+> +++ b/block/blk-mq-sched.c
+> @@ -64,18 +64,18 @@ void blk_mq_sched_assign_ioc(struct request *rq)
+>    */
+>   void blk_mq_sched_mark_restart_hctx(struct blk_mq_hw_ctx *hctx)
+>   {
+> -	if (test_bit(BLK_MQ_S_SCHED_RESTART, &hctx->state))
+> +	if (test_bit(BLK_MQ_T_SCHED_RESTART, &hctx->tags->state))
+>   		return;
+> 
+> -	set_bit(BLK_MQ_S_SCHED_RESTART, &hctx->state);
+> +	set_bit(BLK_MQ_T_SCHED_RESTART, &hctx->tags->state);
+>   }
+>   EXPORT_SYMBOL_GPL(blk_mq_sched_mark_restart_hctx);
+> 
+>   void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx)
+>   {
+> -	if (!test_bit(BLK_MQ_S_SCHED_RESTART, &hctx->state))
+> +	if (!test_bit(BLK_MQ_T_SCHED_RESTART, &hctx->tags->state))
+>   		return;
+> -	clear_bit(BLK_MQ_S_SCHED_RESTART, &hctx->state);
+> +	clear_bit(BLK_MQ_T_SCHED_RESTART, &hctx->tags->state);
+> 
+>   	blk_mq_run_hw_queue(hctx, true);
+>   }
+> @@ -479,12 +479,15 @@ static int blk_mq_sched_alloc_tags(struct request_queue *q,
+>   /* called in queue's release handler, tagset has gone away */
+>   static void blk_mq_sched_tags_teardown(struct request_queue *q)
+>   {
+> +	struct blk_mq_tags *sched_tags = NULL;
+>   	struct blk_mq_hw_ctx *hctx;
+>   	int i;
+> 
+>   	queue_for_each_hw_ctx(q, hctx, i) {
+> -		if (hctx->sched_tags) {
+> +		if (hctx->sched_tags != sched_tags) {
+>   			blk_mq_free_rq_map(hctx->sched_tags);
+> +			if (!sched_tags)
+> +				sched_tags = hctx->sched_tags;
+>   			hctx->sched_tags = NULL;
+>   		}
+>   	}
+> @@ -512,6 +515,10 @@ int blk_mq_init_sched(struct request_queue *q, struct elevator_type *e)
+>   				   BLKDEV_MAX_RQ);
+> 
+>   	queue_for_each_hw_ctx(q, hctx, i) {
+> +		if (i > 0 && q->tag_set->share_tags) {
+> +			hctx->sched_tags = q->queue_hw_ctx[0]->sched_tags;
+> +			continue;
+> +		}
+>   		ret = blk_mq_sched_alloc_tags(q, hctx, i);
+>   		if (ret)
+>   			goto err;
+> @@ -556,8 +563,11 @@ void blk_mq_sched_free_requests(struct request_queue *q)
+>   	int i;
+> 
+>   	queue_for_each_hw_ctx(q, hctx, i) {
+> -		if (hctx->sched_tags)
+> +		if (hctx->sched_tags) {
+>   			blk_mq_free_rqs(q->tag_set, hctx->sched_tags, i);
+> +			if (q->tag_set->share_tags)
+> +				break;
+> +		}
+>   	}
+>   }
+> 
+> diff --git a/block/blk-mq-sched.h b/block/blk-mq-sched.h
+> index 126021fc3a11..15174a646468 100644
+> --- a/block/blk-mq-sched.h
+> +++ b/block/blk-mq-sched.h
+> @@ -82,7 +82,7 @@ static inline bool blk_mq_sched_has_work(struct blk_mq_hw_ctx *hctx)
+> 
+>   static inline bool blk_mq_sched_needs_restart(struct blk_mq_hw_ctx *hctx)
+>   {
+> -	return test_bit(BLK_MQ_S_SCHED_RESTART, &hctx->state);
+> +	return test_bit(BLK_MQ_T_SCHED_RESTART, &hctx->tags->state);
+>   }
+> 
+>   #endif
+> diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
+> index 586c9d6e904a..770fe2324230 100644
+> --- a/block/blk-mq-tag.c
+> +++ b/block/blk-mq-tag.c
+> @@ -23,8 +23,8 @@
+>    */
+>   bool __blk_mq_tag_busy(struct blk_mq_hw_ctx *hctx)
+>   {
+> -	if (!test_bit(BLK_MQ_S_TAG_ACTIVE, &hctx->state) &&
+> -	    !test_and_set_bit(BLK_MQ_S_TAG_ACTIVE, &hctx->state))
+> +	if (!test_bit(BLK_MQ_T_ACTIVE, &hctx->tags->state) &&
+> +	    !test_and_set_bit(BLK_MQ_T_ACTIVE, &hctx->tags->state))
+>   		atomic_inc(&hctx->tags->active_queues);
+> 
+>   	return true;
+> @@ -48,7 +48,7 @@ void __blk_mq_tag_idle(struct blk_mq_hw_ctx *hctx)
+>   {
+>   	struct blk_mq_tags *tags = hctx->tags;
+> 
+> -	if (!test_and_clear_bit(BLK_MQ_S_TAG_ACTIVE, &hctx->state))
+> +	if (!test_and_clear_bit(BLK_MQ_T_ACTIVE, &hctx->tags->state))
+>   		return;
+> 
+>   	atomic_dec(&tags->active_queues);
+> @@ -67,7 +67,7 @@ static inline bool hctx_may_queue(struct blk_mq_hw_ctx *hctx,
+> 
+>   	if (!hctx || !(hctx->flags & BLK_MQ_F_TAG_SHARED))
+>   		return true;
+> -	if (!test_bit(BLK_MQ_S_TAG_ACTIVE, &hctx->state))
+> +	if (!test_bit(BLK_MQ_T_ACTIVE, &hctx->tags->state))
+>   		return true;
+> 
+>   	/*
+> @@ -220,7 +220,7 @@ static bool bt_iter(struct sbitmap *bitmap, unsigned int bitnr, void *data)
+>   	 * We can hit rq == NULL here, because the tagging functions
+>   	 * test and set the bit before assigning ->rqs[].
+>   	 */
+> -	if (rq && rq->q == hctx->queue)
+> +	if (rq && rq->q == hctx->queue && rq->mq_hctx == hctx)
+>   		return iter_data->fn(hctx, rq, iter_data->data, reserved);
+>   	return true;
+>   }
+> @@ -341,8 +341,11 @@ void blk_mq_tagset_busy_iter(struct blk_mq_tag_set *tagset,
+>   	int i;
+> 
+>   	for (i = 0; i < tagset->nr_hw_queues; i++) {
+> -		if (tagset->tags && tagset->tags[i])
+> +		if (tagset->tags && tagset->tags[i]) {
+>   			blk_mq_all_tag_busy_iter(tagset->tags[i], fn, priv);
+
+As I mentioned earlier, wouldn't this iterate over all tags for all 
+hctx's, when we just want the tags for hctx[i]?
+
+Thanks,
+John
+
+[Not trimming reply for future reference]
+
+> +			if (tagset->share_tags)
+> +				break;
+> +		}
+>   	}
+>   }
+>   EXPORT_SYMBOL(blk_mq_tagset_busy_iter);
+> diff --git a/block/blk-mq-tag.h b/block/blk-mq-tag.h
+> index d0c10d043891..f75fa936b090 100644
+> --- a/block/blk-mq-tag.h
+> +++ b/block/blk-mq-tag.h
+> @@ -4,6 +4,11 @@
+> 
+>   #include "blk-mq.h"
+> 
+> +enum {
+> +	BLK_MQ_T_ACTIVE		= 1,
+> +	BLK_MQ_T_SCHED_RESTART	= 2,
+> +};
 > +
-> +	help
-> +	  Equilibrium pinctrl driver is a pinctrl & GPIO driver for Intel Lightning
-> +	  Mountain network processor SoC that supports both the linux GPIO and pin
-> +	  control frameworks. It provides interfaces to setup pinmux, assign desired
-> +	  pin functions, configure GPIO attributes for LGM SoC pins. Pinmux and
-> +	  pinconf settings are retrieved from device tree.
-> +
->  endif
-> diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-> index ac537fdbc998..879f312bfb75 100644
-> --- a/drivers/pinctrl/Makefile
-> +++ b/drivers/pinctrl/Makefile
-> @@ -46,6 +46,7 @@ obj-$(CONFIG_PINCTRL_ZYNQ)	+= pinctrl-zynq.o
->  obj-$(CONFIG_PINCTRL_INGENIC)	+= pinctrl-ingenic.o
->  obj-$(CONFIG_PINCTRL_RK805)	+= pinctrl-rk805.o
->  obj-$(CONFIG_PINCTRL_OCELOT)	+= pinctrl-ocelot.o
-> +obj-$(CONFIG_PINCTRL_EQUILIBRIUM)   += pinctrl-equilibrium.o
->  
->  obj-y				+= actions/
->  obj-$(CONFIG_ARCH_ASPEED)	+= aspeed/
-> diff --git a/drivers/pinctrl/pinctrl-equilibrium.c b/drivers/pinctrl/pinctrl-equilibrium.c
-> new file mode 100644
-> index 000000000000..36c9072c5ece
-> --- /dev/null
-> +++ b/drivers/pinctrl/pinctrl-equilibrium.c
-> @@ -0,0 +1,944 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (C) 2019 Intel Corporation */
-> +
-> +#include <linux/gpio/driver.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +#include <linux/pinctrl/pinconf.h>
-> +#include <linux/pinctrl/pinconf-generic.h>
-> +#include <linux/pinctrl/pinmux.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "core.h"
-> +#include "pinconf.h"
-> +#include "pinmux.h"
-> +#include "pinctrl-equilibrium.h"
-> +
-> +#define PIN_NAME_FMT	"io-%d"
-> +#define PIN_NAME_LEN	10
-> +#define PAD_REG_OFF	0x100
-> +
-> +static void eqbr_gpio_disable_irq(struct irq_data *d)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +	struct eqbr_gpio_ctrl *gctrl = gpiochip_get_data(gc);
-> +	unsigned int offset = irqd_to_hwirq(d);
-> +	unsigned long flags;
-> +
-> +	raw_spin_lock_irqsave(&gctrl->lock, flags);
-> +	writel(BIT(offset), gctrl->membase + GPIO_IRNENCLR);
-> +	raw_spin_unlock_irqrestore(&gctrl->lock, flags);
-> +}
-> +
-> +static void eqbr_gpio_enable_irq(struct irq_data *d)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +	struct eqbr_gpio_ctrl *gctrl = gpiochip_get_data(gc);
-> +	unsigned int offset = irqd_to_hwirq(d);
-> +	unsigned long flags;
-> +
-> +	gc->direction_input(gc, offset);
-> +	raw_spin_lock_irqsave(&gctrl->lock, flags);
-> +	writel(BIT(offset), gctrl->membase + GPIO_IRNRNSET);
-> +	raw_spin_unlock_irqrestore(&gctrl->lock, flags);
-> +}
-> +
-> +static void eqbr_gpio_ack_irq(struct irq_data *d)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +	struct eqbr_gpio_ctrl *gctrl = gpiochip_get_data(gc);
-> +	unsigned int offset = irqd_to_hwirq(d);
-> +	unsigned long flags;
-> +
-> +	raw_spin_lock_irqsave(&gctrl->lock, flags);
-> +	writel(BIT(offset), gctrl->membase + GPIO_IRNCR);
-> +	raw_spin_unlock_irqrestore(&gctrl->lock, flags);
-> +}
-> +
-> +static void eqbr_gpio_mask_ack_irq(struct irq_data *d)
-> +{
-> +	eqbr_gpio_disable_irq(d);
-> +	eqbr_gpio_ack_irq(d);
-> +}
-> +
-> +static inline void eqbr_cfg_bit(void __iomem *addr,
-> +				unsigned int offset, unsigned int set)
-> +{
-> +	if (set)
-> +		writel(readl(addr) | BIT(offset), addr);
-> +	else
-> +		writel(readl(addr) & ~BIT(offset), addr);
-> +}
-> +
-> +static int eqbr_irq_type_cfg(struct gpio_irq_type *type,
-> +			     struct eqbr_gpio_ctrl *gctrl,
-> +			     unsigned int offset)
-> +{
-> +	unsigned long flags;
-> +
-> +	raw_spin_lock_irqsave(&gctrl->lock, flags);
-> +	eqbr_cfg_bit(gctrl->membase + GPIO_IRNCFG, offset, type->trig_type);
-> +	eqbr_cfg_bit(gctrl->membase + GPIO_EXINTCR1, offset, type->trig_type);
-> +	eqbr_cfg_bit(gctrl->membase + GPIO_EXINTCR0, offset, type->logic_type);
-> +	raw_spin_unlock_irqrestore(&gctrl->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int eqbr_gpio_set_irq_type(struct irq_data *d, unsigned int type)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +	struct eqbr_gpio_ctrl *gctrl = gpiochip_get_data(gc);
-> +	unsigned int offset = irqd_to_hwirq(d);
-> +	struct gpio_irq_type it;
-> +
-> +	memset(&it, 0, sizeof(it));
-> +
-> +	if ((type & IRQ_TYPE_SENSE_MASK) == IRQ_TYPE_NONE)
-> +		return 0;
-> +
-> +	switch (type) {
-> +	case IRQ_TYPE_EDGE_RISING:
-> +		it.trig_type = GPIO_EDGE_TRIG;
-> +		it.edge_type = GPIO_SINGLE_EDGE;
-> +		it.logic_type = GPIO_POSITIVE_TRIG;
-> +		break;
-> +
-> +	case IRQ_TYPE_EDGE_FALLING:
-> +		it.trig_type = GPIO_EDGE_TRIG;
-> +		it.edge_type = GPIO_SINGLE_EDGE;
-> +		it.logic_type = GPIO_NEGATIVE_TRIG;
-> +		break;
-> +
-> +	case IRQ_TYPE_EDGE_BOTH:
-> +		it.trig_type = GPIO_EDGE_TRIG;
-> +		it.edge_type = GPIO_BOTH_EDGE;
-> +		it.logic_type = GPIO_POSITIVE_TRIG;
-> +		break;
-> +
-> +	case IRQ_TYPE_LEVEL_HIGH:
-> +		it.trig_type = GPIO_LEVEL_TRIG;
-> +		it.edge_type = GPIO_SINGLE_EDGE;
-> +		it.logic_type = GPIO_POSITIVE_TRIG;
-> +		break;
-> +
-> +	case IRQ_TYPE_LEVEL_LOW:
-> +		it.trig_type = GPIO_LEVEL_TRIG;
-> +		it.edge_type = GPIO_SINGLE_EDGE;
-> +		it.logic_type = GPIO_NEGATIVE_TRIG;
-> +		break;
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	eqbr_irq_type_cfg(&it, gctrl, offset);
-> +	if (it.trig_type == GPIO_EDGE_TRIG)
-> +		irq_set_handler_locked(d, handle_edge_irq);
-> +	else
-> +		irq_set_handler_locked(d, handle_level_irq);
-> +
-> +	return 0;
-> +}
-> +
-> +static void eqbr_irq_handler(struct irq_desc *desc)
-> +{
-> +	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-> +	struct eqbr_gpio_ctrl *gctrl = gpiochip_get_data(gc);
-> +	struct irq_chip *ic = irq_desc_get_chip(desc);
-> +	unsigned long pins, offset;
-> +
-> +	chained_irq_enter(ic, desc);
-> +	pins = readl(gctrl->membase + GPIO_IRNCR);
-> +
-> +	for_each_set_bit(offset, &pins, gc->ngpio)
-> +		generic_handle_irq(irq_find_mapping(gc->irq.domain, offset));
-> +
-> +	chained_irq_exit(ic, desc);
-> +}
-> +
-> +static int gpiochip_setup(struct device *dev, struct eqbr_gpio_ctrl *gctrl)
-> +{
-> +	struct gpio_irq_chip *girq;
-> +	struct gpio_chip *gc;
-> +
-> +	gc = &gctrl->chip;
-> +	gc->label = gctrl->name;
-> +#if defined(CONFIG_OF_GPIO)
-> +	gc->of_node = gctrl->node;
-> +#endif
-> +
-> +	if (!of_property_read_bool(gctrl->node, "interrupt-controller")) {
-> +		dev_dbg(dev, "gc %s: doesn't act as interrupt controller!\n",
-> +			gctrl->name);
+>   /*
+>    * Tag address space map.
+>    */
+> @@ -11,6 +16,11 @@ struct blk_mq_tags {
+>   	unsigned int nr_tags;
+>   	unsigned int nr_reserved_tags;
+> 
+> +	/**
+> +	 * @state: BLK_MQ_T_* flags. Defines the state of the hw
+> +	 * queue (active, scheduled to restart).
+> +	 */
+> +	unsigned long	state;
+>   	atomic_t active_queues;
+> 
+>   	struct sbitmap_queue bitmap_tags;
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index fec4b82ff91c..81d4d6a96098 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -2404,6 +2404,12 @@ static bool __blk_mq_alloc_rq_map(struct blk_mq_tag_set *set, int hctx_idx)
+>   {
+>   	int ret = 0;
+> 
+> +	if (hctx_idx > 0 && set->share_tags) {
+> +		WARN_ON_ONCE(!set->tags[0]);
+> +		set->tags[hctx_idx] = set->tags[0];
 > +		return 0;
 > +	}
 > +
-> +	gctrl->ic.name = "gpio_irq";
-> +	gctrl->ic.irq_mask = eqbr_gpio_disable_irq;
-> +	gctrl->ic.irq_unmask = eqbr_gpio_enable_irq;
-> +	gctrl->ic.irq_ack = eqbr_gpio_ack_irq;
-> +	gctrl->ic.irq_mask_ack = eqbr_gpio_mask_ack_irq;
-> +	gctrl->ic.irq_set_type = eqbr_gpio_set_irq_type;
-> +
-> +	girq = &gctrl->chip.irq;
-> +	girq->chip = &gctrl->ic;
-> +	girq->parent_handler = eqbr_irq_handler;
-> +	girq->num_parents = 1;
-> +	girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents), GFP_KERNEL);
-> +	if (!girq->parents)
-> +		return -ENOMEM;
-> +
-> +	girq->default_type = IRQ_TYPE_NONE;
-> +	girq->handler = handle_bad_irq;
-> +	girq->parents[0] = gctrl->virq;
-> +
-> +	return 0;
-> +}
-> +
-> +static int gpiolib_reg(struct eqbr_pinctrl_drv_data *drvdata)
-> +{
-> +	struct device *dev = drvdata->dev;
-> +	struct eqbr_gpio_ctrl *gctrl;
-> +	struct device_node *np;
-> +	struct resource res;
-> +	int i, ret;
-> +
-> +	for (i = 0; i < drvdata->nr_gpio_ctrls; i++) {
-> +		gctrl = drvdata->gpio_ctrls + i;
-> +		np = gctrl->node;
-> +
-> +		gctrl->name = devm_kasprintf(dev, GFP_KERNEL, "gpiochip%d", i);
-> +		if (!gctrl->name)
-> +			return -ENOMEM;
-> +
-> +		if (of_address_to_resource(np, 0, &res)) {
-> +			dev_err(dev, "Failed to get GPIO register address\n");
-> +			return -ENXIO;
+>   	set->tags[hctx_idx] = blk_mq_alloc_rq_map(set, hctx_idx,
+>   					set->queue_depth, set->reserved_tags);
+>   	if (!set->tags[hctx_idx])
+> @@ -2423,8 +2429,10 @@ static void blk_mq_free_map_and_requests(struct blk_mq_tag_set *set,
+>   					 unsigned int hctx_idx)
+>   {
+>   	if (set->tags && set->tags[hctx_idx]) {
+> -		blk_mq_free_rqs(set, set->tags[hctx_idx], hctx_idx);
+> -		blk_mq_free_rq_map(set->tags[hctx_idx]);
+> +		if (hctx_idx == 0 || !set->share_tags) {
+> +			blk_mq_free_rqs(set, set->tags[hctx_idx], hctx_idx);
+> +			blk_mq_free_rq_map(set->tags[hctx_idx]);
 > +		}
-> +
-> +		gctrl->membase = devm_ioremap_resource(dev, &res);
-> +		if (IS_ERR(gctrl->membase))
-> +			return PTR_ERR(gctrl->membase);
-> +
-> +		gctrl->virq = irq_of_parse_and_map(np, 0);
-> +		if (!gctrl->virq) {
-> +			dev_err(dev, "%s: failed to parse and map irq\n",
-> +				gctrl->name);
-> +			return -ENXIO;
-> +		}
-> +		raw_spin_lock_init(&gctrl->lock);
-> +
-> +		ret = bgpio_init(&gctrl->chip, dev, gctrl->bank->nr_pins / 8,
-> +				 gctrl->membase + GPIO_IN,
-> +				 gctrl->membase + GPIO_OUTSET,
-> +				 gctrl->membase + GPIO_OUTCLR,
-> +				 gctrl->membase + GPIO_DIR,
-> +				 NULL, 0);
-> +		if (ret) {
-> +			dev_err(dev, "unable to init generic GPIO\n");
-> +			return ret;
-> +		}
-> +
-> +		ret = gpiochip_setup(dev, gctrl);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = devm_gpiochip_add_data(dev, &gctrl->chip, gctrl);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static inline struct eqbr_pin_bank
-> +*find_pinbank_via_pin(struct eqbr_pinctrl_drv_data *pctl, unsigned int pin)
-> +{
-> +	struct eqbr_pin_bank *bank;
-> +	int i;
-> +
-> +	for (i = 0; i < pctl->nr_banks; i++) {
-> +		bank = &pctl->pin_banks[i];
-> +		if (pin >= bank->pin_base &&
-> +		    (pin - bank->pin_base) < bank->nr_pins)
-> +			return bank;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +static const struct pinctrl_ops eqbr_pctl_ops = {
-> +	.get_groups_count	= pinctrl_generic_get_group_count,
-> +	.get_group_name		= pinctrl_generic_get_group_name,
-> +	.get_group_pins		= pinctrl_generic_get_group_pins,
-> +	.dt_node_to_map		= pinconf_generic_dt_node_to_map_all,
-> +	.dt_free_map		= pinconf_generic_dt_free_map,
-> +};
-> +
-> +static int eqbr_set_pin_mux(struct eqbr_pinctrl_drv_data *pctl,
-> +			    unsigned int pmx, unsigned int pin)
-> +{
-> +	struct eqbr_pin_bank *bank;
-> +	unsigned long flags;
-> +	unsigned int offset;
-> +	void __iomem *mem;
-> +
-> +	bank = find_pinbank_via_pin(pctl, pin);
-> +	if (!bank) {
-> +		dev_err(pctl->dev, "Couldn't find pin bank for pin %u\n", pin);
-> +		return -ENODEV;
-> +	}
-> +	mem = bank->membase;
-> +	offset = pin - bank->pin_base;
-> +
-> +	if (!(bank->aval_pinmap & BIT(offset))) {
-> +		dev_err(pctl->dev,
-> +			"PIN: %u is not valid, pinbase: %u, bitmap: %u\n",
-> +			pin, bank->pin_base, bank->aval_pinmap);
-> +		return -ENODEV;
-> +	}
-> +
-> +	raw_spin_lock_irqsave(&pctl->lock, flags);
-> +	writel(pmx, mem + (offset * 4));
-> +	raw_spin_unlock_irqrestore(&pctl->lock, flags);
-> +	return 0;
-> +}
-> +
-> +static int eqbr_pinmux_set_mux(struct pinctrl_dev *pctldev,
-> +			       unsigned int selector, unsigned int group)
-> +{
-> +	struct eqbr_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
-> +	struct function_desc *func;
-> +	struct group_desc *grp;
-> +	unsigned int *pinmux;
-> +	int i;
-> +
-> +	func = pinmux_generic_get_function(pctldev, selector);
-> +	if (!func)
-> +		return -EINVAL;
-> +
-> +	grp = pinctrl_generic_get_group(pctldev, group);
-> +	if (!grp)
-> +		return -EINVAL;
-> +
-> +	pinmux = grp->data;
-> +	for (i = 0; i < grp->num_pins; i++)
-> +		eqbr_set_pin_mux(pctl, pinmux[i], grp->pins[i]);
-> +
-> +	return 0;
-> +}
-> +
-> +static int eqbr_pinmux_gpio_request(struct pinctrl_dev *pctldev,
-> +				    struct pinctrl_gpio_range *range,
-> +				    unsigned int pin)
-> +{
-> +	struct eqbr_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
-> +
-> +	return eqbr_set_pin_mux(pctl, EQBR_GPIO_MODE, pin);
-> +}
-> +
-> +static const struct pinmux_ops eqbr_pinmux_ops = {
-> +	.get_functions_count	= pinmux_generic_get_function_count,
-> +	.get_function_name	= pinmux_generic_get_function_name,
-> +	.get_function_groups	= pinmux_generic_get_function_groups,
-> +	.set_mux		= eqbr_pinmux_set_mux,
-> +	.gpio_request_enable	= eqbr_pinmux_gpio_request,
-> +	.strict			= true,
-> +};
-> +
-> +static int get_drv_cur(void __iomem *mem, unsigned int offset)
-> +{
-> +	unsigned int idx = offset / DRV_CUR_PINS; /* 0-15, 16-31 per register*/
-> +	unsigned int pin_offset = offset % DRV_CUR_PINS;
-> +
-> +	return PARSE_DRV_CURRENT(readl(mem + REG_DRCC(idx)), pin_offset);
-> +}
-> +
-> +static struct eqbr_gpio_ctrl
-> +*get_gpio_ctrls_via_bank(struct eqbr_pinctrl_drv_data *pctl,
-> +			struct eqbr_pin_bank *bank)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < pctl->nr_gpio_ctrls; i++) {
-> +		if (pctl->gpio_ctrls[i].bank == bank)
-> +			return &pctl->gpio_ctrls[i];
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +static int eqbr_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin,
-> +			    unsigned long *config)
-> +{
-> +	struct eqbr_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
-> +	enum pin_config_param param = pinconf_to_config_param(*config);
-> +	struct eqbr_gpio_ctrl *gctrl;
-> +	struct eqbr_pin_bank *bank;
-> +	unsigned long flags;
-> +	unsigned int offset;
-> +	void __iomem *mem;
-> +	u32 val;
-> +
-> +	bank = find_pinbank_via_pin(pctl, pin);
-> +	if (!bank) {
-> +		dev_err(pctl->dev, "Couldn't find pin bank for pin %u\n", pin);
-> +		return -ENODEV;
-> +	}
-> +	mem = bank->membase;
-> +	offset = pin - bank->pin_base;
-> +
-> +	if (!(bank->aval_pinmap & BIT(offset))) {
-> +		dev_err(pctl->dev,
-> +			"PIN: %u is not valid, pinbase: %u, bitmap: %u\n",
-> +			pin, bank->pin_base, bank->aval_pinmap);
-> +		return -ENODEV;
-> +	}
-> +
-> +	raw_spin_lock_irqsave(&pctl->lock, flags);
-> +	switch (param) {
-> +	case PIN_CONFIG_BIAS_PULL_UP:
-> +		val = !!(readl(mem + REG_PUEN) & BIT(offset));
-> +		break;
-> +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> +		val = !!(readl(mem + REG_PDEN) & BIT(offset));
-> +		break;
-> +	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> +		val = !!(readl(mem + REG_OD) & BIT(offset));
-> +		break;
-> +	case PIN_CONFIG_DRIVE_STRENGTH:
-> +		val = get_drv_cur(mem, offset);
-> +		break;
-> +	case PIN_CONFIG_SLEW_RATE:
-> +		val = !!(readl(mem + REG_SRC) & BIT(offset));
-> +		break;
-> +	case PIN_CONFIG_OUTPUT_ENABLE:
-> +		gctrl = get_gpio_ctrls_via_bank(pctl, bank);
-> +		if (!gctrl) {
-> +			dev_err(pctl->dev, "Failed to find gpio via bank pinbase: %u, pin: %u\n",
-> +				bank->pin_base, pin);
-> +			raw_spin_unlock_irqrestore(&pctl->lock, flags);
-> +			return -ENODEV;
-> +		}
-> +		val = !!(readl(gctrl->membase + GPIO_DIR) & BIT(offset));
-> +		break;
-> +	default:
-> +		raw_spin_unlock_irqrestore(&pctl->lock, flags);
-> +		return -ENOTSUPP;
-> +	}
-> +	raw_spin_unlock_irqrestore(&pctl->lock, flags);
-> +	*config = pinconf_to_config_packed(param, val);
-> +;
-> +	return 0;
-> +}
-> +
-> +static int eqbr_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
-> +			    unsigned long *configs, unsigned int num_configs)
-> +{
-> +	struct eqbr_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
-> +	struct eqbr_gpio_ctrl *gctrl;
-> +	enum pin_config_param param;
-> +	struct eqbr_pin_bank *bank;
-> +	unsigned int val, offset;
-> +	struct gpio_chip *gc;
-> +	unsigned long flags;
-> +	void __iomem *mem;
-> +	u32 regval, mask;
-> +	int i;
-> +
-> +	for (i = 0; i < num_configs; i++) {
-> +		param = pinconf_to_config_param(configs[i]);
-> +		val = pinconf_to_config_argument(configs[i]);
-> +
-> +		bank = find_pinbank_via_pin(pctl, pin);
-> +		if (!bank) {
-> +			dev_err(pctl->dev,
-> +				"Couldn't find pin bank for pin %u\n", pin);
-> +			return -ENODEV;
-> +		}
-> +		mem = bank->membase;
-> +		offset = pin - bank->pin_base;
-> +
-> +		switch (param) {
-> +		case PIN_CONFIG_BIAS_PULL_UP:
-> +			mem += REG_PUEN;
-> +			mask = BIT(offset);
-> +			break;
-> +		case PIN_CONFIG_BIAS_PULL_DOWN:
-> +			mem += REG_PDEN;
-> +			mask = BIT(offset);
-> +			break;
-> +		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> +			mem += REG_OD;
-> +			mask = BIT(offset);
-> +			break;
-> +		case PIN_CONFIG_DRIVE_STRENGTH:
-> +			mem += REG_DRCC(offset / DRV_CUR_PINS);
-> +			offset = (offset % DRV_CUR_PINS) * 2;
-> +			mask = GENMASK(1, 0) << offset;
-> +			break;
-> +		case PIN_CONFIG_SLEW_RATE:
-> +			mem += REG_SRC;
-> +			mask = BIT(offset);
-> +			break;
-> +		case PIN_CONFIG_OUTPUT_ENABLE:
-> +			gctrl = get_gpio_ctrls_via_bank(pctl, bank);
-> +			if (!gctrl) {
-> +				dev_err(pctl->dev, "Failed to find gpio via bank pinbase: %u, pin: %u\n",
-> +					bank->pin_base, pin);
-> +				return -ENODEV;
-> +			}
-> +			gc = &gctrl->chip;
-> +			gc->direction_output(gc, offset, 0);
-> +			continue;
-> +		default:
-> +			return -ENOTSUPP;
-> +		}
-> +
-> +		raw_spin_lock_irqsave(&pctl->lock, flags);
-> +		regval = readl(mem);
-> +		regval = (regval & ~mask) | ((val << offset) & mask);
-> +		writel(regval, mem);
-> +		raw_spin_unlock_irqrestore(&pctl->lock, flags);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int eqbr_pinconf_group_get(struct pinctrl_dev *pctldev,
-> +				  unsigned int group, unsigned long *config)
-> +{
-> +	unsigned int i, npins, old = 0;
-> +	const unsigned int *pins;
-> +	int ret;
-> +
-> +	ret = pinctrl_generic_get_group_pins(pctldev, group, &pins, &npins);
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (i = 0; i < npins; i++) {
-> +		if (eqbr_pinconf_get(pctldev, pins[i], config))
-> +			return -ENOTSUPP;
-> +
-> +		if (i && old != *config)
-> +			return -ENOTSUPP;
-> +
-> +		old = *config;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int eqbr_pinconf_group_set(struct pinctrl_dev *pctldev,
-> +				  unsigned int group, unsigned long *configs,
-> +				  unsigned int num_configs)
-> +{
-> +	const unsigned int *pins;
-> +	unsigned int i, npins;
-> +	int ret;
-> +
-> +	ret = pinctrl_generic_get_group_pins(pctldev, group, &pins, &npins);
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (i = 0; i < npins; i++) {
-> +		ret = eqbr_pinconf_set(pctldev, pins[i], configs, num_configs);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static const struct pinconf_ops eqbr_pinconf_ops = {
-> +	.is_generic			= true,
-> +	.pin_config_get			= eqbr_pinconf_get,
-> +	.pin_config_set			= eqbr_pinconf_set,
-> +	.pin_config_group_get		= eqbr_pinconf_group_get,
-> +	.pin_config_group_set		= eqbr_pinconf_group_set,
-> +	.pin_config_config_dbg_show	= pinconf_generic_dump_config,
-> +};
-> +
-> +static bool is_func_exist(struct eqbr_pmx_func *funcs, const char *name,
-> +			 unsigned int nr_funcs, unsigned int *idx)
-> +{
-> +	int i;
-> +
-> +	if (!funcs)
-> +		return false;
-> +
-> +	for (i = 0; i < nr_funcs; i++) {
-> +		if (funcs[i].name && !strcmp(funcs[i].name, name)) {
-> +			*idx = i;
-> +			return true;
-> +		}
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +static int funcs_utils(struct device *dev, struct eqbr_pmx_func *funcs,
-> +		       unsigned int *nr_funcs, funcs_util_ops op)
-> +{
-> +	struct device_node *node = dev->of_node;
-> +	struct device_node *np;
-> +	struct property *prop;
-> +	const char *fn_name;
-> +	unsigned int fid;
-> +	int i, j;
-> +
-> +	i = 0;
-> +	for_each_child_of_node(node, np) {
-> +		prop = of_find_property(np, "groups", NULL);
-> +		if (!prop)
-> +			continue;
-> +
-> +		if (of_property_read_string(np, "function", &fn_name)) {
-> +			/* some groups may not have function, it's OK */
-> +			dev_dbg(dev, "Group %s: not function binded!\n",
-> +				(char *)prop->value);
-> +			continue;
-> +		}
-> +
-> +		switch (op) {
-> +		case OP_COUNT_NR_FUNCS:
-> +			if (!is_func_exist(funcs, fn_name, *nr_funcs, &fid))
-> +				*nr_funcs = *nr_funcs + 1;
-> +			break;
-> +
-> +		case OP_ADD_FUNCS:
-> +			if (!is_func_exist(funcs, fn_name, *nr_funcs, &fid))
-> +				funcs[i].name = fn_name;
-> +			break;
-> +
-> +		case OP_COUNT_NR_FUNC_GRPS:
-> +			if (is_func_exist(funcs, fn_name, *nr_funcs, &fid))
-> +				funcs[fid].nr_groups++;
-> +			break;
-> +
-> +		case OP_ADD_FUNC_GRPS:
-> +			if (is_func_exist(funcs, fn_name, *nr_funcs, &fid)) {
-> +				for (j = 0; j < funcs[fid].nr_groups; j++)
-> +					if (!funcs[fid].groups[j])
-> +						break;
-> +				funcs[fid].groups[j] = prop->value;
-> +			}
-> +			break;
-> +
-> +		default:
-> +				return -EINVAL;
-> +		}
-> +		i++;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int eqbr_build_functions(struct eqbr_pinctrl_drv_data *drvdata)
-> +{
-> +	struct device *dev = drvdata->dev;
-> +	struct eqbr_pmx_func *funcs = NULL;
-> +	unsigned int nr_funcs = 0;
-> +	int i, ret;
-> +
-> +	ret = funcs_utils(dev, funcs, &nr_funcs, OP_COUNT_NR_FUNCS);
-> +	if (ret)
-> +		return ret;
-> +
-> +	funcs = devm_kcalloc(dev, nr_funcs, sizeof(*funcs), GFP_KERNEL);
-> +	if (!funcs)
-> +		return -ENOMEM;
-> +
-> +	ret = funcs_utils(dev, funcs, &nr_funcs, OP_ADD_FUNCS);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = funcs_utils(dev, funcs, &nr_funcs, OP_COUNT_NR_FUNC_GRPS);
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (i = 0; i < nr_funcs; i++) {
-> +		if (!funcs[i].nr_groups)
-> +			continue;
-> +		funcs[i].groups = devm_kcalloc(dev, funcs[i].nr_groups,
-> +					       sizeof(*(funcs[i].groups)),
-> +					       GFP_KERNEL);
-> +		if (!funcs[i].groups)
-> +			return -ENOMEM;
-> +	}
-> +
-> +	ret = funcs_utils(dev, funcs, &nr_funcs, OP_ADD_FUNC_GRPS);
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (i = 0; i < nr_funcs; i++) {
-> +		ret = pinmux_generic_add_function(drvdata->pctl_dev,
-> +						  funcs[i].name,
-> +						  funcs[i].groups,
-> +						  funcs[i].nr_groups,
-> +						  drvdata);
-> +		if (ret < 0) {
-> +			dev_err(dev, "Failed to register function %s\n",
-> +				funcs[i].name);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int eqbr_build_groups(struct eqbr_pinctrl_drv_data *drvdata)
-> +{
-> +	struct device *dev = drvdata->dev;
-> +	struct device_node *node = dev->of_node;
-> +	unsigned int *pinmux, pin_id, pinmux_id;
-> +	struct group_desc group;
-> +	struct device_node *np;
-> +	struct property *prop;
-> +	int j, err;
-> +
-> +	for_each_child_of_node(node, np) {
-> +		prop = of_find_property(np, "groups", NULL);
-> +		if (!prop)
-> +			continue;
-> +
-> +		group.num_pins = of_property_count_u32_elems(np, "pins");
-> +		if (group.num_pins < 0) {
-> +			dev_err(dev, "No pins in the group: %s\n", prop->name);
-> +			return -EINVAL;
-> +		}
-> +		group.name = prop->value;
-> +		group.pins = devm_kcalloc(dev, group.num_pins,
-> +					  sizeof(*(group.pins)), GFP_KERNEL);
-> +		if (!group.pins)
-> +			return -ENOMEM;
-> +
-> +		pinmux = devm_kcalloc(dev, group.num_pins, sizeof(*pinmux),
-> +				      GFP_KERNEL);
-> +		if (!pinmux)
-> +			return -ENOMEM;
-> +
-> +		for (j = 0; j < group.num_pins; j++) {
-> +			if (of_property_read_u32_index(np, "pins", j, &pin_id)) {
-> +				dev_err(dev, "Group %s: Read intel pins id failed\n",
-> +					group.name);
-> +				return -EINVAL;
-> +			}
-> +			if (pin_id >= drvdata->pctl_desc.npins) {
-> +				dev_err(dev, "Group %s: Invalid pin ID, idx: %d, pin %u\n",
-> +					group.name, j, pin_id);
-> +				return -EINVAL;
-> +			}
-> +			group.pins[j] = pin_id;
-> +			if (of_property_read_u32_index(np, "pinmux", j, &pinmux_id)) {
-> +				dev_err(dev, "Group %s: Read intel pinmux id failed\n",
-> +					group.name);
-> +				return -EINVAL;
-> +			}
-> +			pinmux[j] = pinmux_id;
-> +		}
-> +
-> +		err = pinctrl_generic_add_group(drvdata->pctl_dev, group.name,
-> +						group.pins, group.num_pins,
-> +						pinmux);
-> +		if (err < 0) {
-> +			dev_err(dev, "Failed to register group %s\n", group.name);
-> +			return err;
-> +		}
-> +		memset(&group, 0, sizeof(group));
-> +		pinmux = NULL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int pinctrl_reg(struct eqbr_pinctrl_drv_data *drvdata)
-> +{
-> +	struct pinctrl_desc *pctl_desc;
-> +	struct pinctrl_pin_desc *pdesc;
-> +	struct device *dev;
-> +	unsigned int nr_pins;
-> +	char *pin_names;
-> +	int i, ret;
-> +
-> +	dev = drvdata->dev;
-> +	pctl_desc = &drvdata->pctl_desc;
-> +	pctl_desc->name = "eqbr-pinctrl";
-> +	pctl_desc->owner = THIS_MODULE;
-> +	pctl_desc->pctlops = &eqbr_pctl_ops;
-> +	pctl_desc->pmxops = &eqbr_pinmux_ops;
-> +	pctl_desc->confops = &eqbr_pinconf_ops;
-> +	raw_spin_lock_init(&drvdata->lock);
-> +
-> +	for (i = 0, nr_pins = 0; i < drvdata->nr_banks; i++)
-> +		nr_pins += drvdata->pin_banks[i].nr_pins;
-> +
-> +	pdesc = devm_kcalloc(dev, nr_pins, sizeof(*pdesc), GFP_KERNEL);
-> +	if (!pdesc)
-> +		return -ENOMEM;
-> +	pin_names = devm_kcalloc(dev, nr_pins, PIN_NAME_LEN, GFP_KERNEL);
-> +	if (!pin_names)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < nr_pins; i++) {
-> +		sprintf(pin_names, PIN_NAME_FMT, i);
-> +		pdesc[i].number = i;
-> +		pdesc[i].name = pin_names;
-> +		pin_names += PIN_NAME_LEN;
-> +	}
-> +	pctl_desc->pins = pdesc;
-> +	pctl_desc->npins = nr_pins;
-> +	dev_dbg(dev, "pinctrl total pin number: %u\n", nr_pins);
-> +
-> +	ret = devm_pinctrl_register_and_init(dev, pctl_desc, drvdata,
-> +					     &drvdata->pctl_dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = eqbr_build_groups(drvdata);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to build groups\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = eqbr_build_functions(drvdata);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to build groups\n");
-> +		return ret;
-> +	}
-> +
-> +	return pinctrl_enable(drvdata->pctl_dev);
-> +}
-> +
-> +static int pinbank_init(struct device_node *np,
-> +			struct eqbr_pinctrl_drv_data *drvdata,
-> +			struct eqbr_pin_bank *bank, unsigned int id)
-> +{
-> +	struct device *dev = drvdata->dev;
-> +	struct of_phandle_args spec;
-> +	int ret;
-> +
-> +	bank->membase = drvdata->membase + id * PAD_REG_OFF;
-> +
-> +	ret = of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, 0, &spec);
-> +	if (ret) {
-> +		dev_err(dev, "gpio-range not available!\n");
-> +		return ret;
-> +	}
-> +
-> +	bank->pin_base = spec.args[1];
-> +	bank->nr_pins = spec.args[2];
-> +
-> +	bank->aval_pinmap = readl(bank->membase + REG_AVAIL);
-> +	bank->id = id;
-> +
-> +	dev_dbg(dev, "pinbank id: %d, reg: %px, pinbase: %u, pin number: %u, pinmap: 0x%x\n",
-> +		id, bank->membase, bank->pin_base,
-> +		bank->nr_pins, bank->aval_pinmap);
-> +
-> +	return ret;
-> +}
-> +
-> +static int pinbank_probe(struct eqbr_pinctrl_drv_data *drvdata)
-> +{
-> +	struct device *dev = drvdata->dev;
-> +	struct device_node *np_gpio;
-> +	struct eqbr_gpio_ctrl *gctrls;
-> +	struct eqbr_pin_bank *banks;
-> +	int i, nr_gpio;
-> +
-> +	/* Count gpio bank number */
-> +	nr_gpio = 0;
-> +	for_each_node_by_name(np_gpio, "gpio") {
-> +		if (of_device_is_available(np_gpio))
-> +			nr_gpio++;
-> +	}
-> +
-> +	if (!nr_gpio) {
-> +		dev_err(dev, "NO pin bank available!\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* Count pin bank number and gpio controller number */
-> +	banks = devm_kcalloc(dev, nr_gpio, sizeof(*banks), GFP_KERNEL);
-> +	if (!banks)
-> +		return -ENOMEM;
-> +
-> +	gctrls = devm_kcalloc(dev, nr_gpio, sizeof(*gctrls), GFP_KERNEL);
-> +	if (!gctrls)
-> +		return -ENOMEM;
-> +
-> +	dev_dbg(dev, "found %d gpio controller!\n", nr_gpio);
-> +
-> +	/* Initialize Pin bank */
-> +	i = 0;
-> +	for_each_node_by_name(np_gpio, "gpio") {
-> +		if (!of_device_is_available(np_gpio))
-> +			continue;
-> +
-> +		pinbank_init(np_gpio, drvdata, banks + i, i);
-> +
-> +		gctrls[i].node = np_gpio;
-> +		gctrls[i].bank = banks + i;
-> +		i++;
-> +	}
-> +
-> +	drvdata->pin_banks = banks;
-> +	drvdata->nr_banks = nr_gpio;
-> +	drvdata->gpio_ctrls = gctrls;
-> +	drvdata->nr_gpio_ctrls = nr_gpio;
-> +
-> +	return 0;
-> +}
-> +
-> +static int eqbr_pinctrl_probe(struct platform_device *pdev)
-> +{
-> +	struct eqbr_pinctrl_drv_data *drvdata;
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
-> +	if (!drvdata)
-> +		return -ENOMEM;
-> +
-> +	drvdata->dev = dev;
-> +
-> +	drvdata->membase = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(drvdata->membase))
-> +		return PTR_ERR(drvdata->membase);
-> +
-> +	ret = pinbank_probe(drvdata);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = pinctrl_reg(drvdata);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = gpiolib_reg(drvdata);
-> +	if (ret)
-> +		return ret;
-> +
-> +	platform_set_drvdata(pdev, drvdata);
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id eqbr_pinctrl_dt_match[] = {
-> +	{ .compatible = "intel,lgm-io" },
-> +	{}
-> +};
-> +
-> +static struct platform_driver eqbr_pinctrl_driver = {
-> +	.probe	= eqbr_pinctrl_probe,
-> +	.driver = {
-> +		.name = "eqbr-pinctrl",
-> +		.of_match_table = eqbr_pinctrl_dt_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(eqbr_pinctrl_driver);
-> +
-> +MODULE_AUTHOR("Zhu Yixin <yixin.zhu@intel.com>, Rahul Tanwar <rahul.tanwar@intel.com>");
-> +MODULE_DESCRIPTION("Pinctrl Driver for LGM SoC (Equilibrium)");
-> diff --git a/drivers/pinctrl/pinctrl-equilibrium.h b/drivers/pinctrl/pinctrl-equilibrium.h
-> new file mode 100644
-> index 000000000000..83cb7dafc657
-> --- /dev/null
-> +++ b/drivers/pinctrl/pinctrl-equilibrium.h
-> @@ -0,0 +1,144 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + *  Copyright(c) 2019 Intel Corporation.
-> + */
-> +
-> +#ifndef __PINCTRL_EQUILIBRIUM_H
-> +#define __PINCTRL_EQUILIBRIUM_H
-> +
-> +/* PINPAD register offset */
-> +#define REG_PMX_BASE	0x0	/* Port Multiplexer Control Register */
-> +#define REG_PUEN	0x80	/* PULL UP Enable Register */
-> +#define REG_PDEN	0x84	/* PULL DOWN Enable Register */
-> +#define REG_SRC		0x88	/* Slew Rate Control Register */
-> +#define REG_DCC0	0x8C	/* Drive Current Control Register 0 */
-> +#define REG_DCC1	0x90	/* Drive Current Control Register 1 */
-> +#define REG_OD		0x94	/* Open Drain Enable Register */
-> +#define REG_AVAIL	0x98	/* Pad Control Availability Register */
-> +#define DRV_CUR_PINS	16	/* Drive Current pin number per register */
-> +#define REG_DRCC(x)	(REG_DCC0 + (x) * 4) /* Driver current macro */
-> +
-> +/* GPIO register offset */
-> +#define GPIO_OUT	0x0	/* Data Output Register */
-> +#define GPIO_IN		0x4	/* Data Input Register */
-> +#define GPIO_DIR	0x8	/* Direction Register */
-> +#define GPIO_EXINTCR0	0x18	/* External Interrupt Control Register 0 */
-> +#define GPIO_EXINTCR1	0x1C	/* External Interrupt Control Register 1 */
-> +#define GPIO_IRNCR	0x20	/* IRN Capture Register */
-> +#define GPIO_IRNICR	0x24	/* IRN Interrupt Control Register */
-> +#define GPIO_IRNEN	0x28	/* IRN Interrupt Enable Register */
-> +#define GPIO_IRNCFG	0x2C	/* IRN Interrupt Configuration Register */
-> +#define GPIO_IRNRNSET	0x30	/* IRN Interrupt Enable Set Register */
-> +#define GPIO_IRNENCLR	0x34	/* IRN Interrupt Enable Clear Register */
-> +#define GPIO_OUTSET	0x40	/* Output Set Register */
-> +#define GPIO_OUTCLR	0x44	/* Output Clear Register */
-> +#define GPIO_DIRSET	0x48	/* Direction Set Register */
-> +#define GPIO_DIRCLR	0x4C	/* Direction Clear Register */
-> +
-> +/* parse given pin's driver current value */
-> +#define PARSE_DRV_CURRENT(val, pin) (((val) >> ((pin) * 2)) & 0x3)
-> +
-> +#define GPIO_EDGE_TRIG		0
-> +#define GPIO_LEVEL_TRIG		1
-> +#define GPIO_SINGLE_EDGE	0
-> +#define GPIO_BOTH_EDGE		1
-> +#define GPIO_POSITIVE_TRIG	0
-> +#define GPIO_NEGATIVE_TRIG	1
-> +
-> +#define EQBR_GPIO_MODE		0
-> +
-> +typedef enum {
-> +	OP_COUNT_NR_FUNCS,
-> +	OP_ADD_FUNCS,
-> +	OP_COUNT_NR_FUNC_GRPS,
-> +	OP_ADD_FUNC_GRPS,
-> +	OP_NONE,
-> +} funcs_util_ops;
-> +
-> +/**
-> + * struct gpio_irq_type: gpio irq configuration
-> + * @trig_type: level trigger or edge trigger
-> + * @edge_type: sigle edge or both edge
-> + * @logic_type: positive trigger or negative trigger
-> + */
-> +struct gpio_irq_type {
-> +	unsigned int trig_type;
-> +	unsigned int edge_type;
-> +	unsigned int logic_type;
-> +};
-> +
-> +/**
-> + * struct eqbr_pmx_func: represent a pin function.
-> + * @name: name of the pin function, used to lookup the function.
-> + * @groups: one or more names of pin groups that provide this function.
-> + * @nr_groups: number of groups included in @groups.
-> + */
-> +struct eqbr_pmx_func {
-> +	const char		*name;
-> +	const char		**groups;
-> +	unsigned int		nr_groups;
-> +};
-> +
-> +/**
-> + * struct eqbr_pin_bank: represent a pin bank.
-> + * @membase: base address of the pin bank register.
-> + * @id: bank id, to idenify the unique bank.
-> + * @pin_base: starting pin number of the pin bank.
-> + * @nr_pins: number of the pins of the pin bank.
-> + * @aval_pinmap: available pin bitmap of the pin bank.
-> + */
-> +struct eqbr_pin_bank {
-> +	void __iomem		*membase;
-> +	unsigned int		id;
-> +	unsigned int		pin_base;
-> +	unsigned int		nr_pins;
-> +	u32			aval_pinmap;
-> +};
-> +
-> +/**
-> + * struct eqbr_gpio_ctrl: represent a gpio controller.
-> + * @node: device node of gpio controller.
-> + * @bank: pointer to corresponding pin bank.
-> + * @membase: base address of the gpio controller.
-> + * @chip: gpio chip.
-> + * @ic:   irq chip.
-> + * @name: gpio chip name.
-> + * @virq: irq number of the gpio chip to parent's irq domain.
-> + * @lock: spin lock to protect gpio register write.
-> + */
-> +struct eqbr_gpio_ctrl {
-> +	struct device_node	*node;
-> +	struct eqbr_pin_bank	*bank;
-> +	void __iomem		*membase;
-> +	struct gpio_chip	chip;
-> +	struct irq_chip		ic;
-> +	const char		*name;
-> +	unsigned int		virq;
-> +	raw_spinlock_t		lock; /* protect gpio register */
-> +};
-> +
-> +/**
-> + * struct eqbr_pinctrl_drv_data:
-> + * @dev: device instance representing the controller.
-> + * @pctl_desc: pin controller descriptor.
-> + * @pctl_dev: pin control class device
-> + * @membase: base address of pin controller
-> + * @pin_banks: list of pin banks of the driver.
-> + * @nr_banks: number of pin banks.
-> + * @gpio_ctrls: list of gpio controllers.
-> + * @nr_gpio_ctrls: number of gpio controllers.
-> + * @lock: protect pinctrl register write
-> + */
-> +struct eqbr_pinctrl_drv_data {
-> +	struct device			*dev;
-> +	struct pinctrl_desc		pctl_desc;
-> +	struct pinctrl_dev		*pctl_dev;
-> +	void __iomem			*membase;
-> +	struct eqbr_pin_bank		*pin_banks;
-> +	unsigned int			nr_banks;
-> +	struct eqbr_gpio_ctrl		*gpio_ctrls;
-> +	unsigned int			nr_gpio_ctrls;
-> +	raw_spinlock_t			lock; /* protect pinpad register */
-> +};
-> +
-> +#endif /* __PINCTRL_EQUILIBRIUM_H */
-> -- 
-> 2.11.0
+>   		set->tags[hctx_idx] = NULL;
+>   	}
+>   }
+> @@ -2568,7 +2576,7 @@ static void blk_mq_del_queue_tag_set(struct request_queue *q)
 > 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+>   	mutex_lock(&set->tag_list_lock);
+>   	list_del_rcu(&q->tag_set_list);
+> -	if (list_is_singular(&set->tag_list)) {
+> +	if (list_is_singular(&set->tag_list) && !set->share_tags) {
+>   		/* just transitioned to unshared */
+>   		set->flags &= ~BLK_MQ_F_TAG_SHARED;
+>   		/* update existing queue */
+> @@ -2586,7 +2594,7 @@ static void blk_mq_add_queue_tag_set(struct blk_mq_tag_set *set,
+>   	/*
+>   	 * Check to see if we're transitioning to shared (from 1 to 2 queues).
+>   	 */
+> -	if (!list_empty(&set->tag_list) &&
+> +	if ((!list_empty(&set->tag_list) || set->share_tags) &&
+>   	    !(set->flags & BLK_MQ_F_TAG_SHARED)) {
+>   		set->flags |= BLK_MQ_F_TAG_SHARED;
+>   		/* update existing queue */
+> @@ -2911,15 +2919,21 @@ static int __blk_mq_alloc_rq_maps(struct blk_mq_tag_set *set)
+>   {
+>   	int i;
+> 
+> -	for (i = 0; i < set->nr_hw_queues; i++)
+> -		if (!__blk_mq_alloc_rq_map(set, i))
+> +	for (i = 0; i < set->nr_hw_queues; i++) {
+> +		if (i > 0 && set->share_tags) {
+> +			set->tags[i] = set->tags[0];
+> +		} else if (!__blk_mq_alloc_rq_map(set, i))
+>   			goto out_unwind;
+> +	}
+> 
+>   	return 0;
+> 
+>   out_unwind:
+> -	while (--i >= 0)
+> +	while (--i >= 0) {
+> +		if (i > 0 && set->share_tags)
+> +			continue;
+>   		blk_mq_free_rq_map(set->tags[i]);
+> +	}
+> 
+>   	return -ENOMEM;
+>   }
+> @@ -3016,6 +3030,10 @@ static int blk_mq_realloc_tag_set_tags(struct blk_mq_tag_set *set,
+>    * May fail with EINVAL for various error conditions. May adjust the
+>    * requested depth down, if it's too large. In that case, the set
+>    * value will be stored in set->queue_depth.
+> + *
+> + * @set: tag set for which to allocate tags.
+> + * @share_tags: If true, allocate a single set of tags and share it across
+> + *	hardware queues.
+>    */
+>   int blk_mq_alloc_tag_set(struct blk_mq_tag_set *set)
+>   {
+> @@ -3137,6 +3155,12 @@ int blk_mq_update_nr_requests(struct request_queue *q, unsigned int nr)
+>   	queue_for_each_hw_ctx(q, hctx, i) {
+>   		if (!hctx->tags)
+>   			continue;
+> +		if (i > 0 && set->share_tags) {
+> +			hctx->tags[i] = hctx->tags[0];
+> +			if (hctx->sched_tags)
+> +				hctx->sched_tags[i] = hctx->sched_tags[0];
+> +			continue;
+> +		}
+>   		/*
+>   		 * If we're using an MQ scheduler, just update the scheduler
+>   		 * queue depth. This is similar to what the old code would do.
+> diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+> index 11cfd6470b1a..dd5517476314 100644
+> --- a/include/linux/blk-mq.h
+> +++ b/include/linux/blk-mq.h
+> @@ -224,10 +224,13 @@ enum hctx_type {
+>    * @numa_node:	   NUMA node the storage adapter has been connected to.
+>    * @timeout:	   Request processing timeout in jiffies.
+>    * @flags:	   Zero or more BLK_MQ_F_* flags.
+> + * @share_tags:	   Whether or not to share one tag set across hardware queues.
+>    * @driver_data:   Pointer to data owned by the block driver that created this
+>    *		   tag set.
+> - * @tags:	   Tag sets. One tag set per hardware queue. Has @nr_hw_queues
+> - *		   elements.
+> + * @tags:	   Array of tag set pointers. Has @nr_hw_queues elements. If
+> + *		   share_tags has not been set, all tag set pointers are
+> + *		   different. If share_tags has been set, all tag_set pointers
+> + *		   are identical.
+>    * @tag_list_lock: Serializes tag_list accesses.
+>    * @tag_list:	   List of the request queues that use this tag set. See also
+>    *		   request_queue.tag_set_list.
+> @@ -243,6 +246,7 @@ struct blk_mq_tag_set {
+>   	int			numa_node;
+>   	unsigned int		timeout;
+>   	unsigned int		flags;
+> +	bool			share_tags;
+>   	void			*driver_data;
+> 
+>   	struct blk_mq_tags	**tags;
+> @@ -394,8 +398,6 @@ enum {
+>   	BLK_MQ_F_ALLOC_POLICY_BITS = 1,
+> 
+>   	BLK_MQ_S_STOPPED	= 0,
+> -	BLK_MQ_S_TAG_ACTIVE	= 1,
+> -	BLK_MQ_S_SCHED_RESTART	= 2,
+> 
+>   	BLK_MQ_MAX_DEPTH	= 10240,
+> 
+> 
+> .
+> 
 
