@@ -5,46 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 007E5C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F297C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD7252077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AE5B20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573820748;
-	bh=cUCVCnt1p06SfLX2lWOHaz71MWpIHKyIcOD8HHVCXf0=;
+	s=default; t=1573820752;
+	bh=lXy1792Fmreu7+x8r9t2O8Gf/AZc78Ky1kpO31qpIVI=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=fg7iZshAaqK+DbGYe61QJ7Abm0mjoWwN7LUE8jSs2ildVIsty9teckIgn/aIt8Xz/
-	 15jfa+zz0SxuUHhl5TPoEZ99pswYLnH1fplwOUb57Bo15NQXpw9E2gGQd4N8A4C2tu
-	 FdV+JCsYCFq0PJ6yAlPdj9P2NJdF4FUEJWbeXv+k=
+	b=pzQXPFfr4xu880lJWaCqGnp25B/1tVrf9ASJQ8opwB6OXxN5VoXCE5kBcYpVPBbj5
+	 bL7unxDHp6Bh8vqAevhQIfcAPrjYFVkbqyX9+FLgAGX62GH1AxyCmyB3oThDsFxeCp
+	 ayrUFp+0yMC8KsW136PbkG6TUY0p/mjyFw2NIZtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbfKOMZr (ORCPT
+        id S1727895AbfKOMZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:25:47 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33624 "EHLO
+        Fri, 15 Nov 2019 07:25:51 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33592 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727814AbfKOMZd (ORCPT
+        with ESMTP id S1727797AbfKOMZc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 07:25:33 -0500
+        Fri, 15 Nov 2019 07:25:32 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=h4iKmlZQEvf/Y5vua4D6c1vrSreviezqclNuVw4zeSI=; b=kNcFn1yiULFt
-        yzot5ErCt1/PLuAjts3Y0vS25ToJUXu21W+rMrb+wfqkUmUyIcQURcehrUlLD6oPpDo5PuyOyRmKs
-        CPsWOjTgthONIz8qfS43Fb9ySr615rzUDF14U7fdUSGW3l+mw0k+MpwxUuu12APDDIwCeazuHCTQe
-        vtcM8=;
+        List-Archive; bh=TPkerWaT+UrOy1QXFkAKpPnpFkG5kDXeCSVBQSeK+zk=; b=imxSAQtOu9jm
+        NZdh1JfO4HChL3Ft8rzvl5d5T3smfXMYRRSnROciGpSdC4jXd9+0u4of5jTzd6Ps2gdbs6wavEPxH
+        RVKpRjmray3VjAtFJTisjs1zwv9+1hPOgdBOEsCfxUu4OqnMmzK/DqdIn1tNOqonE/If9VSQY9uMa
+        pGXak=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iVaf7-0000Me-Kh; Fri, 15 Nov 2019 12:25:17 +0000
+        id 1iVaf6-0000MN-ON; Fri, 15 Nov 2019 12:25:16 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 11B732741609; Fri, 15 Nov 2019 12:25:16 +0000 (GMT)
+        id 462CA2741609; Fri, 15 Nov 2019 12:25:16 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
 Cc:     agross@kernel.org, alexandre.belloni@bootlin.com, andi@etezian.org,
@@ -54,14 +54,13 @@ Cc:     agross@kernel.org, alexandre.belloni@bootlin.com, andi@etezian.org,
         linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        radu_nicolae.pirea@upb.ro, s.hauer@pengutronix.de,
-        shawnguo@kernel.org, thierry.reding@gmail.com, vkoul@kernel.org
-Subject: Applied "spi: at91-usart: Use dma_request_chan() directly for channel request" to the spi tree
-In-Reply-To: <20191113094256.1108-2-peter.ujfalusi@ti.com>
+        Mark Brown <broonie@kernel.org>, radu_nicolae.pirea@upb.ro,
+        s.hauer@pengutronix.de, shawnguo@kernel.org,
+        thierry.reding@gmail.com, vkoul@kernel.org
+Subject: Applied "spi: fsl-lpspi: Use dma_request_chan() directly for channel request" to the spi tree
+In-Reply-To: <20191113094256.1108-4-peter.ujfalusi@ti.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191115122517.11B732741609@ypsilon.sirena.org.uk>
+Message-Id: <20191115122516.462CA2741609@ypsilon.sirena.org.uk>
 Date:   Fri, 15 Nov 2019 12:25:16 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -70,7 +69,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: at91-usart: Use dma_request_chan() directly for channel request
+   spi: fsl-lpspi: Use dma_request_chan() directly for channel request
 
 has been applied to the spi tree at
 
@@ -95,10 +94,10 @@ to this mail.
 Thanks,
 Mark
 
-From cef76e5ace759848e78323a14df0dcd66b8de13d Mon Sep 17 00:00:00 2001
+From 2e33f310dcfbceb7492d7e88baa9ca4f056f7c40 Mon Sep 17 00:00:00 2001
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Date: Wed, 13 Nov 2019 11:42:48 +0200
-Subject: [PATCH] spi: at91-usart: Use dma_request_chan() directly for channel
+Date: Wed, 13 Nov 2019 11:42:50 +0200
+Subject: [PATCH] spi: fsl-lpspi: Use dma_request_chan() directly for channel
  request
 
 dma_request_slave_channel_reason() is:
@@ -106,35 +105,34 @@ dma_request_slave_channel_reason() is:
 	dma_request_chan(dev, name)
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Link: https://lore.kernel.org/r/20191113094256.1108-2-peter.ujfalusi@ti.com
+Link: https://lore.kernel.org/r/20191113094256.1108-4-peter.ujfalusi@ti.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-at91-usart.c | 4 ++--
+ drivers/spi/spi-fsl-lpspi.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-at91-usart.c b/drivers/spi/spi-at91-usart.c
-index a40bb2ef89dc..88033422a42a 100644
---- a/drivers/spi/spi-at91-usart.c
-+++ b/drivers/spi/spi-at91-usart.c
-@@ -132,7 +132,7 @@ static int at91_usart_spi_configure_dma(struct spi_controller *ctlr,
- 	dma_cap_zero(mask);
- 	dma_cap_set(DMA_SLAVE, mask);
+diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
+index 6f4769a53f8a..2cc0ddb4a988 100644
+--- a/drivers/spi/spi-fsl-lpspi.c
++++ b/drivers/spi/spi-fsl-lpspi.c
+@@ -675,7 +675,7 @@ static int fsl_lpspi_dma_init(struct device *dev,
+ 	int ret;
  
--	ctlr->dma_tx = dma_request_slave_channel_reason(dev, "tx");
-+	ctlr->dma_tx = dma_request_chan(dev, "tx");
- 	if (IS_ERR_OR_NULL(ctlr->dma_tx)) {
- 		if (IS_ERR(ctlr->dma_tx)) {
- 			err = PTR_ERR(ctlr->dma_tx);
-@@ -145,7 +145,7 @@ static int at91_usart_spi_configure_dma(struct spi_controller *ctlr,
- 		goto at91_usart_spi_error_clear;
+ 	/* Prepare for TX DMA: */
+-	controller->dma_tx = dma_request_slave_channel_reason(dev, "tx");
++	controller->dma_tx = dma_request_chan(dev, "tx");
+ 	if (IS_ERR(controller->dma_tx)) {
+ 		ret = PTR_ERR(controller->dma_tx);
+ 		dev_dbg(dev, "can't get the TX DMA channel, error %d!\n", ret);
+@@ -684,7 +684,7 @@ static int fsl_lpspi_dma_init(struct device *dev,
  	}
  
--	ctlr->dma_rx = dma_request_slave_channel_reason(dev, "rx");
-+	ctlr->dma_rx = dma_request_chan(dev, "rx");
- 	if (IS_ERR_OR_NULL(ctlr->dma_rx)) {
- 		if (IS_ERR(ctlr->dma_rx)) {
- 			err = PTR_ERR(ctlr->dma_rx);
+ 	/* Prepare for RX DMA: */
+-	controller->dma_rx = dma_request_slave_channel_reason(dev, "rx");
++	controller->dma_rx = dma_request_chan(dev, "rx");
+ 	if (IS_ERR(controller->dma_rx)) {
+ 		ret = PTR_ERR(controller->dma_rx);
+ 		dev_dbg(dev, "can't get the RX DMA channel, error %d\n", ret);
 -- 
 2.20.1
 
