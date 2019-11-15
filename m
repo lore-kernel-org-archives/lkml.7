@@ -2,214 +2,122 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC842C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BECAC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B43A22072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3374B2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:40:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UfacSTFC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pUFG1Adq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbfKOLjQ (ORCPT
+        id S1727486AbfKOLkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 06:39:16 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33888 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727196AbfKOLjQ (ORCPT
+        Fri, 15 Nov 2019 06:40:00 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43695 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727412AbfKOLj7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 06:39:16 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAFBdDEp104147;
-        Fri, 15 Nov 2019 05:39:13 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573817953;
-        bh=DEBO99vGzZiqzGLPACsrYr2rPMREEYd/ww5CNsIVt2w=;
-        h=From:To:CC:Subject:Date;
-        b=UfacSTFCA7emtxHwitX4x9vrePd9t5eippio0IbDMIBHy9DWiSSWnFe7hUZFRBVw0
-         MpMUF1Cg7EBywCQBVTOD643V5TeLgXv9uE39ALq1a7XNuw+Aeav3F+bptB4sAbwMFq
-         oZygmFDgu0L2aRw3BiUjFsLqZOHrZySyas7FJHDU=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAFBdDUu092010;
-        Fri, 15 Nov 2019 05:39:13 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 15
- Nov 2019 05:39:12 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 15 Nov 2019 05:39:12 -0600
-Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAFBdAZt015936;
-        Fri, 15 Nov 2019 05:39:11 -0600
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-CC:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
-        <faiz_abbas@ti.com>
-Subject: [PATCH] mmc: sdhci_am654: Add Support for Command Queuing Engine to J721E
-Date:   Fri, 15 Nov 2019 17:10:09 +0530
-Message-ID: <20191115114009.20090-1-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.19.2
+        Fri, 15 Nov 2019 06:39:59 -0500
+Received: by mail-lj1-f193.google.com with SMTP id y23so10324368ljh.10;
+        Fri, 15 Nov 2019 03:39:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UmAi2H6KzYBMsHnO/QLE+PxP3dI7L9bn6T/LMsCVk58=;
+        b=pUFG1AdqOH3wjtFFxLf+iHxJHmMCAwgWgYt+Kf3UyMAZ8bJihvtybvsikZGmmp112C
+         Lpw3J8laa3CZUtx8wTHJAINyLMHI3B1wa6KPuYAJ9i1wsDm34ZXeacBUzobWMT2TFXVx
+         appDjFnTPzXY3pC/qtpoxSZYWha+Xe0qEFthv24Zm1aGzVhCX9jCPHsdh+yI5Et/hSM4
+         Ha/wxLHHxJ9z5P1/DkG4lij87MvGa1CpJ2mXBBXzE3PGJlkuayMX1e8pEp+B1IwfNv7p
+         q4m9I5adKBIsEa8r//xd0qs9+FrMAR+0xOQdEb2gHugAYWx8j1sfvzNmmbbqU/nv6vO4
+         FTjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UmAi2H6KzYBMsHnO/QLE+PxP3dI7L9bn6T/LMsCVk58=;
+        b=g72FVGyqP/8TQw8fmv0Fwf9rUedryhgzd0WHgCpIcYSyh0TuJxErbo9KXXAFMA4QQb
+         6uJdHMokR25VRio1N0YrZSdvPnrH8qTwRIAxr5Dwm3N+/NhmpKNBbCK46p8YAsUInn4P
+         +K4MNhg/EJEiOSRv4iGDoikuCXRCZ5q6kmqRz7WvK0saMFZA9QuG1fWbDx4VM+uYGD1F
+         VjILLD/IKzIptnktVJixfjs0hh5u8e+gGow6XhrmepIDapFPAXS+9+A2tsfhmmvyYoRx
+         62Kio/DGNaoVKB1z3DEEKGTo3JMcTMwd6yQwxwDRV88bKwSLKZ1pH0fPQG0ABeOiKPNr
+         u/bw==
+X-Gm-Message-State: APjAAAWPHs3GWxV1/j6Lm971OBuKafLVChN1h3T3baR6E5bfvhuJUlkb
+        e6LGAaNIX4DMM/G8OkrF5KS7uEpI
+X-Google-Smtp-Source: APXvYqxw/RuX+HC0aay7/RhWP6COvieyS/R8ADY2Pgeb/UJPnoCtNftVN+PW0z9r8FrtZdTBXp08Rg==
+X-Received: by 2002:a2e:9712:: with SMTP id r18mr11130390lji.12.1573817996154;
+        Fri, 15 Nov 2019 03:39:56 -0800 (PST)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id r22sm4067987lji.71.2019.11.15.03.39.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Nov 2019 03:39:55 -0800 (PST)
+Subject: Re: [PATCH v2] drm/tegra: Turn off and reset hardware across
+ suspend-resume
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190811183932.15850-1-digetx@gmail.com>
+ <20191114203117.GA761559@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <3b8e79ad-598c-f0f7-4589-00bb0acc1867@gmail.com>
+Date:   Fri, 15 Nov 2019 14:39:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <20191114203117.GA761559@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Support for CQHCI (Command Queuing Host Controller Interface)
-for each of the host controllers present in TI's J721E devices.
-Add cqhci_ops and a .irq() callback to handle cqhci specific interrupts.
+14.11.2019 23:31, Thierry Reding пишет:
+> On Sun, Aug 11, 2019 at 09:39:32PM +0300, Dmitry Osipenko wrote:
+>> The drivers core bumps runtime PM refcount during of entering into
+>> suspend to workaround some problem where parent device may become turned
+>> off before its children. In order to disable and reset CRTCs/HDMI/etc
+>> hardware, the runtime PM needs to be "forced" into suspend mode.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>
+>> Changelog:
+>>
+>> v2: The SYSTEM_SLEEP_PM_OPS are now set for all of the relevant drivers and
+>>     not only for the DC because turned out that they all should enforce the
+>>     suspending.
+>>
+>>  drivers/gpu/drm/tegra/dc.c    | 2 ++
+>>  drivers/gpu/drm/tegra/dpaux.c | 2 ++
+>>  drivers/gpu/drm/tegra/dsi.c   | 2 ++
+>>  drivers/gpu/drm/tegra/hdmi.c  | 2 ++
+>>  drivers/gpu/drm/tegra/hub.c   | 2 ++
+>>  drivers/gpu/drm/tegra/sor.c   | 2 ++
+>>  drivers/gpu/drm/tegra/vic.c   | 2 ++
+>>  7 files changed, 14 insertions(+)
+> 
+> I'm not exactly sure I understand why this is necessary. Runtime PM is
+> controlled by the drivers themselves so that when an output (say SOR) is
+> disabled, it drops the runtime PM reference. The idea is that since the
+> disabled output is no longer needed it can just go into a low power mode
+> which on Tegra usually means clocks off and reset asserted (and in some
+> cases also power domain off).
+> 
+> DRM/KMS has system-level suspend support, which we use to disable all
+> outputs when entering suspend. I see that, unfortunately, this doesn't
+> seem to actually cause the devices to runtime suspend. I'm pretty sure
+> that this used to work at some point, so I don't know what changed. I'd
+> have to look into this a little more. The core doing something like this
+> behind the driver's back seems wrong and having to force the device into
+> suspend mode seems like it's just piling up on the workarounds.
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
- drivers/mmc/host/Kconfig       |  1 +
- drivers/mmc/host/sdhci_am654.c | 71 +++++++++++++++++++++++++++++++++-
- 2 files changed, 71 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index 49ea02c467bf..25f12ef813ff 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -1011,6 +1011,7 @@ config MMC_SDHCI_AM654
- 	tristate "Support for the SDHCI Controller in TI's AM654 SOCs"
- 	depends on MMC_SDHCI_PLTFM && OF && REGMAP_MMIO
- 	select MMC_SDHCI_IO_ACCESSORS
-+	select CONFIG_MMC_CQHCI
- 	help
- 	  This selects the Secure Digital Host Controller Interface (SDHCI)
- 	  support present in TI's AM654 SOCs. The controller supports
-diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-index bb90757ecace..b8e897e31e2e 100644
---- a/drivers/mmc/host/sdhci_am654.c
-+++ b/drivers/mmc/host/sdhci_am654.c
-@@ -12,6 +12,7 @@
- #include <linux/property.h>
- #include <linux/regmap.h>
- 
-+#include "cqhci.h"
- #include "sdhci-pltfm.h"
- 
- /* CTL_CFG Registers */
-@@ -68,6 +69,9 @@
- 
- #define CLOCK_TOO_SLOW_HZ	400000
- 
-+/* Command Queue Host Controller Interface Base address */
-+#define SDHCI_AM654_CQE_BASE_ADDR 0x200
-+
- static struct regmap_config sdhci_am654_regmap_config = {
- 	.reg_bits = 32,
- 	.val_bits = 32,
-@@ -259,6 +263,19 @@ static const struct sdhci_am654_driver_data sdhci_am654_drvdata = {
- 	.flags = IOMUX_PRESENT | FREQSEL_2_BIT | STRBSEL_4_BIT | DLL_PRESENT,
- };
- 
-+static u32 sdhci_am654_cqhci_irq(struct sdhci_host *host, u32 intmask)
-+{
-+	int cmd_error = 0;
-+	int data_error = 0;
-+
-+	if (!sdhci_cqe_irq(host, intmask, &cmd_error, &data_error))
-+		return intmask;
-+
-+	cqhci_irq(host->mmc, intmask, cmd_error, data_error);
-+
-+	return 0;
-+}
-+
- static struct sdhci_ops sdhci_j721e_8bit_ops = {
- 	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
- 	.get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
-@@ -267,6 +284,7 @@ static struct sdhci_ops sdhci_j721e_8bit_ops = {
- 	.set_power = sdhci_am654_set_power,
- 	.set_clock = sdhci_am654_set_clock,
- 	.write_b = sdhci_am654_write_b,
-+	.irq = sdhci_am654_cqhci_irq,
- 	.reset = sdhci_reset,
- };
- 
-@@ -290,6 +308,7 @@ static struct sdhci_ops sdhci_j721e_4bit_ops = {
- 	.set_power = sdhci_am654_set_power,
- 	.set_clock = sdhci_j721e_4bit_set_clock,
- 	.write_b = sdhci_am654_write_b,
-+	.irq = sdhci_am654_cqhci_irq,
- 	.reset = sdhci_reset,
- };
- 
-@@ -304,6 +323,40 @@ static const struct sdhci_am654_driver_data sdhci_j721e_4bit_drvdata = {
- 	.pdata = &sdhci_j721e_4bit_pdata,
- 	.flags = IOMUX_PRESENT,
- };
-+
-+static void sdhci_am654_dumpregs(struct mmc_host *mmc)
-+{
-+	sdhci_dumpregs(mmc_priv(mmc));
-+}
-+
-+static const struct cqhci_host_ops sdhci_am654_cqhci_ops = {
-+	.enable		= sdhci_cqe_enable,
-+	.disable	= sdhci_cqe_disable,
-+	.dumpregs	= sdhci_am654_dumpregs,
-+};
-+
-+static int sdhci_am654_cqe_add_host(struct sdhci_host *host)
-+{
-+	struct cqhci_host *cq_host;
-+	int ret;
-+
-+	cq_host = devm_kzalloc(host->mmc->parent, sizeof(struct cqhci_host),
-+			       GFP_KERNEL);
-+	if (!cq_host)
-+		return -ENOMEM;
-+
-+	cq_host->mmio = host->ioaddr + SDHCI_AM654_CQE_BASE_ADDR;
-+	cq_host->quirks |= CQHCI_QUIRK_SHORT_TXFR_DESC_SZ;
-+	cq_host->caps |= CQHCI_TASK_DESC_SZ_128;
-+	cq_host->ops = &sdhci_am654_cqhci_ops;
-+
-+	host->mmc->caps2 |= MMC_CAP2_CQE;
-+
-+	ret = cqhci_init(cq_host, host->mmc, 1);
-+
-+	return ret;
-+}
-+
- static int sdhci_am654_init(struct sdhci_host *host)
- {
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-@@ -344,7 +397,23 @@ static int sdhci_am654_init(struct sdhci_host *host)
- 	regmap_update_bits(sdhci_am654->base, CTL_CFG_2, SLOTTYPE_MASK,
- 			   ctl_cfg_2);
- 
--	return sdhci_add_host(host);
-+	ret = sdhci_setup_host(host);
-+	if (ret)
-+		return ret;
-+
-+	ret = sdhci_am654_cqe_add_host(host);
-+	if (ret)
-+		goto err_cleanup_host;
-+
-+	ret = __sdhci_add_host(host);
-+	if (ret)
-+		goto err_cleanup_host;
-+
-+	return 0;
-+
-+err_cleanup_host:
-+	sdhci_cleanup_host(host);
-+	return ret;
- }
- 
- static int sdhci_am654_get_of_property(struct platform_device *pdev,
--- 
-2.19.2
+Please let me know if you'll find a better solution.
 
