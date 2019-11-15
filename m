@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DF0C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F45C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92FE820801
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A82D20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:51:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oUWF3k2Y"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m2EFgUMs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbfKOJvR (ORCPT
+        id S1727661AbfKOJv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:51:17 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40864 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727497AbfKOJuf (ORCPT
+        Fri, 15 Nov 2019 04:51:27 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33742 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727434AbfKOJub (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:50:35 -0500
-Received: by mail-pf1-f196.google.com with SMTP id r4so6363373pfl.7
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 01:50:35 -0800 (PST)
+        Fri, 15 Nov 2019 04:50:31 -0500
+Received: by mail-pl1-f194.google.com with SMTP id ay6so4315248plb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 01:50:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=q/zS7LIA/gAJ7ALKgbKIx/DtzP4PBNkkZFmoo4J/Xcw=;
-        b=oUWF3k2Yg6H98pIn3oKzqU+yM8RpGFNqOvbgdj3N8JnGrK2kekMgeCbQQmqyazQ2AD
-         empifS2PgK8+WrrujNzVaoYbHCC4Q0K1cU+6EEpZND4yrCc4PJOEvFmD9xHlEuGLCxXh
-         OIMq6jPtaBwimTDUTAFrj/guN4QZgPBKuSV3M=
+        bh=cfEOVKIJ8U0GfHedTM8uop95E6UnQcFBXP6PO2Xab/M=;
+        b=m2EFgUMsdkyQYfBqNYpaO5s0oKfL1ugX3rEJQyR6V1NScny95WiRNhsA/pIgkhM6tE
+         CRyBvyLsuKWFk6m9vb7ECHapzMYJBzFbYtCyNGu/f0ybVwgMi62LF48QEBPoqSbzN2Bi
+         U/LX62BKdu5ckGKJLVx+AT82sogu83S90lNrI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=q/zS7LIA/gAJ7ALKgbKIx/DtzP4PBNkkZFmoo4J/Xcw=;
-        b=ALeaWBqV9Ivelii8nrvhl2pDD8y17KJAiWnFpiQxpoGqjx0XbN8KyL+dPZqwfSMzeO
-         NLOj7Z78O/yenG9NNpUGNxbStM+8Oz2WLcUr/FEj0ifBgMLtiNm63CLPYl3FSJr+UH7N
-         zvffbPFOgbYe/n7IepybvUE7092hjKj4KooBeBIz06RY4viqMSctpMnuOtf16fw+29rv
-         IgTPQK1gtzukg1lUSpirMajM/OwdKelJSFYYCXzmdJHAcd1c9q3CVd8G9WQUNkhcOC5n
-         C4BiqnQhoBqIsetINLwdcjmlMrbfJt7VW+dOLN3TYoorQTU5mgbI+m1Rt6jUyl6cfZ/2
-         avJQ==
-X-Gm-Message-State: APjAAAXw4WwuQZa2NvQHYjSn+wtCbPjSf+XVbiRLOSo4OSjH8Hq/NKCe
-        ZDIOacHO4qgC3ef2fUoe/PRsFw==
-X-Google-Smtp-Source: APXvYqxpem5LuPx2W7ijK0Zxh/n/d1MWfJFA0LttZuKt+NfyE9sr+/HGCOIjjVU3MbM/9FaUlBmOaQ==
-X-Received: by 2002:a62:170b:: with SMTP id 11mr16359373pfx.85.1573811434914;
-        Fri, 15 Nov 2019 01:50:34 -0800 (PST)
+        bh=cfEOVKIJ8U0GfHedTM8uop95E6UnQcFBXP6PO2Xab/M=;
+        b=OYY+ikPccjW5nEssB60Omi4vvbst22tNHkQN+lnf5Evg6tHbFOJs96wzR5jAjn+pxT
+         t41DPnIPklvxqI5gglBNbjDN27EitM+e+BfwN3GroJzD++9axD/VniAzuPMcTF1fNrbG
+         mOwUNtEoIiqJrVr7chdA42B5bs7G4F0Ufdx7lvPW7eoiNY5ji1YOvV6O1JXH3pN8srA6
+         neVfdvRkqtOfyN666dZFXNZ/jCrw5fiN0064zS9vC/DXw9nCM9fzrCVsT9v6cZRWndEf
+         pZb9zbLtrIO2RxfINu+gSB+jnx/9ck+pho2/PU8EVHCHsZw9kRLBVvxYHxrcx199VkL+
+         X2rQ==
+X-Gm-Message-State: APjAAAXrB53nZv5gcIDmrj6MiVdJ1hTsGR1r5J1Nkv56pVSMYBkacUVe
+        WPPrYMfD8YInl1lk3MGmgbVysQ==
+X-Google-Smtp-Source: APXvYqwMQarLqCwMW2+EGNqFNExtVLNkA66aqH0FntvLNMlxemfuDPhChGsPbPaT/XThVqCt8gfSJQ==
+X-Received: by 2002:a17:902:aa42:: with SMTP id c2mr13953629plr.311.1573811430375;
+        Fri, 15 Nov 2019 01:50:30 -0800 (PST)
 Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id 83sm9517342pgh.86.2019.11.15.01.50.33
+        by smtp.gmail.com with ESMTPSA id i32sm8317366pgl.73.2019.11.15.01.50.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Nov 2019 01:50:34 -0800 (PST)
+        Fri, 15 Nov 2019 01:50:29 -0800 (PST)
 From:   Gwendal Grignou <gwendal@chromium.org>
 To:     dmitry.torokhov@gmail.com, groeck@chromium.org,
         briannorris@chromium.org, jic23@kernel.org, knaack.h@gmx.de,
@@ -60,12 +60,10 @@ To:     dmitry.torokhov@gmail.com, groeck@chromium.org,
         bleung@chromium.org, enric.balletbo@collabora.com,
         dianders@chromium.org, fabien.lahoudere@collabora.com
 Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v5 10/18] platform: chrome: sensorhub: Add code to spread timestmap
-Date:   Fri, 15 Nov 2019 01:34:04 -0800
-Message-Id: <20191115093412.144922-11-gwendal@chromium.org>
+        linux-input@vger.kernel.org, Gwendal Grignou <gwendal@chromium.org>
+Subject: [PATCH v5 07/18] Revert "Input: cros_ec_keyb - add back missing mask for event_type"
+Date:   Fri, 15 Nov 2019 01:34:01 -0800
+Message-Id: <20191115093412.144922-8-gwendal@chromium.org>
 X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
 In-Reply-To: <20191115093412.144922-1-gwendal@chromium.org>
 References: <20191115093412.144922-1-gwendal@chromium.org>
@@ -76,158 +74,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-EC FIFO can send sensor events in batch. Spread them based on
-previous (TSa) and currnet timestamp (TSb)
+This reverts commit 62c3801619e16b68a37ea899b76572145dfe41c9.
 
-  EC FIFO                             iio events
-+-----------+
-| TSa       |
-+-----------+             +---------------------------------------+
-| event 1   |             | event 1 | TSb - (TSb - TSa)/n * (n-1) |
-+-----------+             +---------------------------------------+
-| event 2   |             | event 2 | TSb - (TSb - TSa)/n * (n-2) |
-+-----------+             +---------------------------------------+
-|  ...      |  ------>    |  ....   |                             |
-+-----------+             +---------------------------------------+
-| event n-1 |             | event 2 | TSb - (TSb - TSa)/n         |
-+-----------+             +---------------------------------------+
-| event n   |             | event 2 | TSb                         |
-+-----------+             +---------------------------------------+
-| TSb       |
-+-----------+
+This patch is not needed anymore since we clear EC_MKBP_HAS_MORE_EVENTS
+flag before calling the notifiers in patch
+"9d9518f5b52a (platform: chrome: cros_ec: handle MKBP more events flag)"
 
 Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
-Changes in v5:
-  Added ack.
-Changes in v4:
-- Check patch with --strict option
-    Alignement
-No changes in v3.
-Changes in v2:
-- Use CROS_EC_SENSOR_LAST_TS instead of LAST_TS to avoid name colisions.
+No changes in v5, v4, v3.
+New to v2.
 
- .../platform/chrome/cros_ec_sensorhub_ring.c  | 98 ++++++++++++++++++-
- 1 file changed, 95 insertions(+), 3 deletions(-)
+ drivers/input/keyboard/cros_ec_keyb.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_sensorhub_ring.c b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
-index 32333f67e26a..a0a778999f30 100644
---- a/drivers/platform/chrome/cros_ec_sensorhub_ring.c
-+++ b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
-@@ -189,6 +189,96 @@ static bool cros_ec_ring_process_event(struct cros_ec_sensorhub *sensorhub,
- 	return true;
- }
+diff --git a/drivers/input/keyboard/cros_ec_keyb.c b/drivers/input/keyboard/cros_ec_keyb.c
+index 8d4d9786cc74..a29e81fdf186 100644
+--- a/drivers/input/keyboard/cros_ec_keyb.c
++++ b/drivers/input/keyboard/cros_ec_keyb.c
+@@ -226,8 +226,6 @@ static int cros_ec_keyb_work(struct notifier_block *nb,
+ {
+ 	struct cros_ec_keyb *ckdev = container_of(nb, struct cros_ec_keyb,
+ 						  notifier);
+-	uint8_t mkbp_event_type = ckdev->ec->event_data.event_type &
+-				  EC_MKBP_EVENT_TYPE_MASK;
+ 	u32 val;
+ 	unsigned int ev_type;
  
-+/*
-+ * cros_ec_ring_spread_add: Calculate proper timestamps then
-+ * add to ringbuffer (legacy).
-+ *
-+ * If there is a sample with a proper timestamp
-+ *                        timestamp | count
-+ * older_unprocess_out --> TS1      | 1
-+ *                         TS1      | 2
-+ * out -->                 TS1      | 3
-+ * next_out -->            TS2      |
-+ * We spread time for the samples [older_unprocess_out .. out]
-+ * between TS1 and TS2: [TS1+1/4, TS1+2/4, TS1+3/4, TS2].
-+ *
-+ * If we reach the end of the samples, we compare with the
-+ * current timestamp:
-+ *
-+ * older_unprocess_out --> TS1      | 1
-+ *                         TS1      | 2
-+ * out -->                 TS1      | 3
-+ * We know have [TS1+1/3, TS1+2/3, current timestamp]
-+ */
-+static void cros_ec_ring_spread_add(struct cros_ec_sensorhub *sensorhub,
-+				unsigned long sensor_mask,
-+				s64 current_timestamp,
-+				struct cros_ec_sensors_ring_sample *last_out)
-+{
-+	struct cros_ec_sensors_ring_sample *out;
-+	int i;
-+
-+	for_each_set_bit(i, &sensor_mask, BITS_PER_LONG) {
-+		s64 older_timestamp;
-+		s64 timestamp;
-+		struct cros_ec_sensors_ring_sample *older_unprocess_out =
-+			sensorhub->ring;
-+		struct cros_ec_sensors_ring_sample *next_out;
-+		int count = 1;
-+
-+		for (out = sensorhub->ring; out < last_out; out = next_out) {
-+			s64 time_period;
-+
-+			next_out = out + 1;
-+			if (out->sensor_id != i)
-+				continue;
-+
-+			/* Timestamp to start with */
-+			older_timestamp = out->timestamp;
-+
-+			/* find next sample */
-+			while (next_out < last_out && next_out->sensor_id != i)
-+				next_out++;
-+
-+			if (next_out >= last_out) {
-+				timestamp = current_timestamp;
-+			} else {
-+				timestamp = next_out->timestamp;
-+				if (timestamp == older_timestamp) {
-+					count++;
-+					continue;
-+				}
-+			}
-+
-+			/*
-+			 * The next sample has a new timestamp,
-+			 * spread the unprocessed samples.
-+			 */
-+			if (next_out < last_out)
-+				count++;
-+			time_period = div_s64(timestamp - older_timestamp,
-+					      count);
-+
-+			for (; older_unprocess_out <= out;
-+					older_unprocess_out++) {
-+				if (older_unprocess_out->sensor_id != i)
-+					continue;
-+				older_timestamp += time_period;
-+				older_unprocess_out->timestamp =
-+					older_timestamp;
-+			}
-+			count = 1;
-+			/* The next_out sample has a valid timestamp, skip. */
-+			next_out++;
-+			older_unprocess_out = next_out;
-+		}
-+	}
-+
-+	/* push the event into the kfifo */
-+	for (out = sensorhub->ring; out < last_out; out++)
-+		cros_sensorhub_send_sample(sensorhub, out);
-+}
-+
- /**
-  * cros_ec_sensorhub_ring_handler() - the trigger handler function
-  *
-@@ -322,9 +412,11 @@ static void cros_ec_sensorhub_ring_handler(struct cros_ec_sensorhub *sensorhub)
- 		}
- 	}
+@@ -239,7 +237,7 @@ static int cros_ec_keyb_work(struct notifier_block *nb,
+ 	if (queued_during_suspend && !device_may_wakeup(ckdev->dev))
+ 		return NOTIFY_OK;
  
--	/* push the event into the kfifo */
--	for (out = sensorhub->ring; out < last_out; out++)
--		cros_sensorhub_send_sample(sensorhub, out);
-+	/*
-+	 * Spread samples in case of batching, then add them to the ringbuffer.
-+	 */
-+	cros_ec_ring_spread_add(sensorhub, sensor_mask,
-+			current_timestamp, last_out);
+-	switch (mkbp_event_type) {
++	switch (ckdev->ec->event_data.event_type & EC_MKBP_EVENT_TYPE_MASK) {
+ 	case EC_MKBP_EVENT_KEY_MATRIX:
+ 		pm_wakeup_event(ckdev->dev, 0);
  
- ring_handler_end:
- 	sensorhub->fifo_timestamp[CROS_EC_SENSOR_LAST_TS] = current_timestamp;
+@@ -266,7 +264,7 @@ static int cros_ec_keyb_work(struct notifier_block *nb,
+ 	case EC_MKBP_EVENT_SWITCH:
+ 		pm_wakeup_event(ckdev->dev, 0);
+ 
+-		if (mkbp_event_type == EC_MKBP_EVENT_BUTTON) {
++		if (ckdev->ec->event_data.event_type == EC_MKBP_EVENT_BUTTON) {
+ 			val = get_unaligned_le32(
+ 					&ckdev->ec->event_data.data.buttons);
+ 			ev_type = EV_KEY;
 -- 
 2.24.0.432.g9d3f5f5b63-goog
 
