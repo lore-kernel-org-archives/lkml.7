@@ -7,53 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF68C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B07C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5569D20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B652053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573799023;
-	bh=yQgj9nUSMXhIRzKf4KtPw/6VPqUrJf/LMAp1p/aV+Og=;
+	s=default; t=1573799034;
+	bh=IkdXxJete19VJkW6jFFP7lbIFcc9ZEGPf3R2bm+BPb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=peA2Q9/3ezr6UEglRNKTdN8XndmGkVeF6O6Lea8PT5r7XPkl1P7J+8d0OX5L3Vj2v
-	 /SwHr2gZAd/auyxinPjM+/lY6VQF3MQrsNKv4vnHYuyrWQARG4idbdSEImqB1SoRDH
-	 UeiTnrAiJsJTTp7hZpv7Tk3/i1smIWvUzusgHcvk=
+	b=E3D7JvAJIdgrPS9LypZ6OfCX9He74dGgxvl59HVoNBkIPY+zMoqQvdIvS0kLuuvMz
+	 MTKIsLLqa8AvV+nwiHbLasxLHFSZTCP3AS9EOuKv3k3yfpIVElH6SztuCAsukwALOX
+	 rJ6UOLxt2r0W0N2kq9KdeDVeWo0XiiYMpK5owSwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbfKOGXl (ORCPT
+        id S1727290AbfKOGXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:23:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51992 "EHLO mail.kernel.org"
+        Fri, 15 Nov 2019 01:23:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727744AbfKOGWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:22:35 -0500
+        id S1727306AbfKOGWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:22:10 -0500
 Received: from localhost (unknown [104.132.150.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7682620801;
-        Fri, 15 Nov 2019 06:22:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 782B72075E;
+        Fri, 15 Nov 2019 06:22:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573798953;
-        bh=yQgj9nUSMXhIRzKf4KtPw/6VPqUrJf/LMAp1p/aV+Og=;
+        s=default; t=1573798929;
+        bh=IkdXxJete19VJkW6jFFP7lbIFcc9ZEGPf3R2bm+BPb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0w4ij/mUOmSd9kmGU+FQjxrCgaBpDGHyoED0/QnHYaWs7WrfUHe48UWzspBbdSAkf
-         eLyaecO2DSs1erS2bADMl+Fk5w9yPgdeu5cQpohecSLyySWj0Zai0z9zhsHF5tK/l8
-         x7TR4dwzfkQX/ihSZOyq+V1M4fh7of0RxMzmow/s=
+        b=r6jsxbnlCur9+7BEx0zFmsVNHyQ/D7X84Bwv3iG0tiivJyoUbkMAYNzGV/Nj9YJLb
+         XnTWwEEK+hEZaU/CKWCXQBGEWzW4PDepoO3/bJmIjrrwkcs+vCZmayeNuXGz8aT7SK
+         Wfb7YMscSE/YmqZm7Wp5eB5EnbC2B7FEz/7acJuI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Neelima Krishnan <neelima.krishnan@intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.9 06/31] x86/msr: Add the IA32_TSX_CTRL MSR
-Date:   Fri, 15 Nov 2019 14:20:35 +0800
-Message-Id: <20191115062011.497215220@linuxfoundation.org>
+Subject: [PATCH 4.9 16/31] KVM: x86: simplify ept_misconfig
+Date:   Fri, 15 Nov 2019 14:20:45 +0800
+Message-Id: <20191115062016.837160389@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191115062009.813108457@linuxfoundation.org>
 References: <20191115062009.813108457@linuxfoundation.org>
@@ -66,84 +61,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit c2955f270a84762343000f103e0640d29c7a96f3 upstream.
+commit e08d26f0712532c79b5ba6200862eaf2036f8df6 upstream.
 
-Transactional Synchronization Extensions (TSX) may be used on certain
-processors as part of a speculative side channel attack.  A microcode
-update for existing processors that are vulnerable to this attack will
-add a new MSR - IA32_TSX_CTRL to allow the system administrator the
-option to disable TSX as one of the possible mitigations.
+Calling handle_mmio_page_fault() has been unnecessary since commit
+e9ee956e311d ("KVM: x86: MMU: Move handle_mmio_page_fault() call to
+kvm_mmu_page_fault()", 2016-02-22).
 
-The CPUs which get this new MSR after a microcode upgrade are the ones
-which do not set MSR_IA32_ARCH_CAPABILITIES.MDS_NO (bit 5) because those
-CPUs have CPUID.MD_CLEAR, i.e., the VERW implementation which clears all
-CPU buffers takes care of the TAA case as well.
+handle_mmio_page_fault() can now be made static.
 
-  [ Note that future processors that are not vulnerable will also
-    support the IA32_TSX_CTRL MSR. ]
-
-Add defines for the new IA32_TSX_CTRL MSR and its bits.
-
-TSX has two sub-features:
-
-1. Restricted Transactional Memory (RTM) is an explicitly-used feature
-   where new instructions begin and end TSX transactions.
-2. Hardware Lock Elision (HLE) is implicitly used when certain kinds of
-   "old" style locks are used by software.
-
-Bit 7 of the IA32_ARCH_CAPABILITIES indicates the presence of the
-IA32_TSX_CTRL MSR.
-
-There are two control bits in IA32_TSX_CTRL MSR:
-
-  Bit 0: When set, it disables the Restricted Transactional Memory (RTM)
-         sub-feature of TSX (will force all transactions to abort on the
-	 XBEGIN instruction).
-
-  Bit 1: When set, it disables the enumeration of the RTM and HLE feature
-         (i.e. it will make CPUID(EAX=7).EBX{bit4} and
-	  CPUID(EAX=7).EBX{bit11} read as 0).
-
-The other TSX sub-feature, Hardware Lock Elision (HLE), is
-unconditionally disabled by the new microcode but still enumerated
-as present by CPUID(EAX=7).EBX{bit4}, unless disabled by
-IA32_TSX_CTRL_MSR[1] - TSX_CTRL_CPUID_CLEAR.
-
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
-Reviewed-by: Mark Gross <mgross@linux.intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
+[bwh: Backported to 4.9: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/include/asm/msr-index.h |    5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/kvm/mmu.c |   19 ++++++++++++++++++-
+ arch/x86/kvm/mmu.h |   17 -----------------
+ arch/x86/kvm/vmx.c |   13 +++----------
+ 3 files changed, 21 insertions(+), 28 deletions(-)
 
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -77,6 +77,7 @@
- 						  * Microarchitectural Data
- 						  * Sampling (MDS) vulnerabilities.
- 						  */
-+#define ARCH_CAP_TSX_CTRL_MSR		BIT(7)	/* MSR for TSX control is available. */
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -3383,7 +3383,23 @@ exit:
+ 	return reserved;
+ }
  
- #define MSR_IA32_FLUSH_CMD		0x0000010b
- #define L1D_FLUSH			BIT(0)	/*
-@@ -87,6 +88,10 @@
- #define MSR_IA32_BBL_CR_CTL		0x00000119
- #define MSR_IA32_BBL_CR_CTL3		0x0000011e
- 
-+#define MSR_IA32_TSX_CTRL		0x00000122
-+#define TSX_CTRL_RTM_DISABLE		BIT(0)	/* Disable RTM feature */
-+#define TSX_CTRL_CPUID_CLEAR		BIT(1)	/* Disable TSX enumeration */
+-int handle_mmio_page_fault(struct kvm_vcpu *vcpu, u64 addr, bool direct)
++/*
++ * Return values of handle_mmio_page_fault:
++ * RET_MMIO_PF_EMULATE: it is a real mmio page fault, emulate the instruction
++ *			directly.
++ * RET_MMIO_PF_INVALID: invalid spte is detected then let the real page
++ *			fault path update the mmio spte.
++ * RET_MMIO_PF_RETRY: let CPU fault again on the address.
++ * RET_MMIO_PF_BUG: a bug was detected (and a WARN was printed).
++ */
++enum {
++	RET_MMIO_PF_EMULATE = 1,
++	RET_MMIO_PF_INVALID = 2,
++	RET_MMIO_PF_RETRY = 0,
++	RET_MMIO_PF_BUG = -1
++};
 +
- #define MSR_IA32_SYSENTER_CS		0x00000174
- #define MSR_IA32_SYSENTER_ESP		0x00000175
- #define MSR_IA32_SYSENTER_EIP		0x00000176
++static int handle_mmio_page_fault(struct kvm_vcpu *vcpu, u64 addr, bool direct)
+ {
+ 	u64 spte;
+ 	bool reserved;
+@@ -4520,6 +4536,7 @@ int kvm_mmu_page_fault(struct kvm_vcpu *
+ 			return 1;
+ 		if (r < 0)
+ 			return r;
++		/* Must be RET_MMIO_PF_INVALID.  */
+ 	}
+ 
+ 	r = vcpu->arch.mmu.page_fault(vcpu, cr2, error_code, false);
+--- a/arch/x86/kvm/mmu.h
++++ b/arch/x86/kvm/mmu.h
+@@ -56,23 +56,6 @@ void kvm_mmu_set_mmio_spte_mask(u64 mmio
+ void
+ reset_shadow_zero_bits_mask(struct kvm_vcpu *vcpu, struct kvm_mmu *context);
+ 
+-/*
+- * Return values of handle_mmio_page_fault:
+- * RET_MMIO_PF_EMULATE: it is a real mmio page fault, emulate the instruction
+- *			directly.
+- * RET_MMIO_PF_INVALID: invalid spte is detected then let the real page
+- *			fault path update the mmio spte.
+- * RET_MMIO_PF_RETRY: let CPU fault again on the address.
+- * RET_MMIO_PF_BUG: a bug was detected (and a WARN was printed).
+- */
+-enum {
+-	RET_MMIO_PF_EMULATE = 1,
+-	RET_MMIO_PF_INVALID = 2,
+-	RET_MMIO_PF_RETRY = 0,
+-	RET_MMIO_PF_BUG = -1
+-};
+-
+-int handle_mmio_page_fault(struct kvm_vcpu *vcpu, u64 addr, bool direct);
+ void kvm_init_shadow_mmu(struct kvm_vcpu *vcpu);
+ void kvm_init_shadow_ept_mmu(struct kvm_vcpu *vcpu, bool execonly);
+ bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu);
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -6556,16 +6556,9 @@ static int handle_ept_misconfig(struct k
+ 						       NULL, 0) == EMULATE_DONE;
+ 	}
+ 
+-	ret = handle_mmio_page_fault(vcpu, gpa, true);
+-	if (likely(ret == RET_MMIO_PF_EMULATE))
+-		return x86_emulate_instruction(vcpu, gpa, 0, NULL, 0) ==
+-					      EMULATE_DONE;
+-
+-	if (unlikely(ret == RET_MMIO_PF_INVALID))
+-		return kvm_mmu_page_fault(vcpu, gpa, 0, NULL, 0);
+-
+-	if (unlikely(ret == RET_MMIO_PF_RETRY))
+-		return 1;
++	ret = kvm_mmu_page_fault(vcpu, gpa, PFERR_RSVD_MASK, NULL, 0);
++	if (ret >= 0)
++		return ret;
+ 
+ 	/* It is the real ept misconfig */
+ 	WARN_ON(1);
 
 
