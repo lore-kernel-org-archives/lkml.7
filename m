@@ -2,141 +2,120 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E7FC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A50CEC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8CB2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:03:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="zEKBpL15"
+	by mail.kernel.org (Postfix) with ESMTP id 7ED6620740
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:03:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573812214;
+	bh=hGwcyc7dse7aO4c4QTH0uwqziYR/8Omebj93aT3/dfY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=u15v5GdTWPYljdUO3LIBzTYYMkmAg631+Fqb6A2L3jkhBZ9Hg87dAeCB+6wF/WgXY
+	 OMDGzg7d8rwdFunNO2jinCHPakjJ1kt52m/Gps06RGoiNr0JblmCfsaVJ7PnEZHY4X
+	 8v4lQCEOyDANYIEOu5Dvx1b+4I5w9RqF1ykamaPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbfKOKD1 (ORCPT
+        id S1727359AbfKOKDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:03:27 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:43758 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726920AbfKOKD1 (ORCPT
+        Fri, 15 Nov 2019 05:03:33 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43914 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbfKOKDd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:03:27 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAFA2jj5028719;
-        Fri, 15 Nov 2019 11:03:16 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=7gCFVo1c3feoHsazY70FKsMn5zRITBygco7FGXQsWm0=;
- b=zEKBpL150QmvwnsFu7TMaV8SIS07qJ3LT1foyO0sA4n/tyHJlD16P8/cFAgzPq3hu9fk
- 7jdJ5kkF7X99XG4QQrLDCS5YN6lKJx2jpsIcLdQD1aRByDZotv1DangvGCbHL1M3NpCj
- 1B2ICn1Xa8JGZxXjHmNRj83XmRIkTQM3DpFfFURcdOPsY0intlCxt8hDB1YmMWeYvCY9
- cpgsmdj+TrIQJLNe1KLKkQzEwCzdoKGxaU9GLArCQq+ytbLX6wm/85BXy8bvEVyn6XaK
- raLpNasCa2H6Dsjrsz0cDOSmp6l3krFiQRBdEe1Oqo3P+9s55te9K5P26A4XDbD8Bf6I ug== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2w7psubc95-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 15 Nov 2019 11:03:16 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7E740100038;
-        Fri, 15 Nov 2019 11:03:14 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6D5EA2B1887;
-        Fri, 15 Nov 2019 11:03:14 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 15 Nov 2019 11:03:13
- +0100
-From:   Fabien Dessenne <fabien.dessenne@st.com>
-To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>
-CC:     Fabien Dessenne <fabien.dessenne@st.com>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: [PATCH v4] remoteproc: stm32: fix probe error case
-Date:   Fri, 15 Nov 2019 11:03:08 +0100
-Message-ID: <1573812188-19842-1-git-send-email-fabien.dessenne@st.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 15 Nov 2019 05:03:33 -0500
+Received: by mail-oi1-f196.google.com with SMTP id l20so8111869oie.10;
+        Fri, 15 Nov 2019 02:03:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SXs3HY8YTAHDWbWH1wQlCggSxa17Nb5994AEWlereo4=;
+        b=F2IpUuHkBLOC/jLR/goXePgHZXrKwQojVPhKwXrb+btbPM0x3Gw6wHyuQHWd9vFEUb
+         LGpLLxMbfc9+MrnDUbMoFhEWQzuI4QcRuk44rZ3LDLLclcfZ3uS9nTLFkDBRrccGgobS
+         FR3Ywp5FHKmNnUBdgR2uhfVX5gPm4b4EBdjwTOSz/123vuVXjGRC2do5PfNFtAzmEOcK
+         uTEJ96pviVHs4qQwkWERjHzSfNuoCsGMDYmmHaRsitY+CahrLAMA0QRkVj2N8MDicRRv
+         2ckcPsHtkacb771hxwdCxa1KghjPioByijgqZ+IcY1e1cid9+qnim42f2KjjLpHXC4e0
+         hr+Q==
+X-Gm-Message-State: APjAAAVx5Yl5Wg8SrHOXAGz1cv0DOLs7i0xnUBwgcJGO49qMbbjYb7/P
+        o7wXKhDWt2WDZEVzJcAdW5uAGyHnovDhJUIjonc=
+X-Google-Smtp-Source: APXvYqwiAa8H0BnnhAV06ueQYnpFwJa+VHpNTuCaIVQesI+RmNL/91h2SB+RspBXW3ItPkDPPzqd4eu8aBOy2UvXCAI=
+X-Received: by 2002:aca:530c:: with SMTP id h12mr7658865oib.110.1573812211998;
+ Fri, 15 Nov 2019 02:03:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-15_02:2019-11-15,2019-11-15 signatures=0
+References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org> <20191115095447.GU4114@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191115095447.GU4114@hirez.programming.kicks-ass.net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 15 Nov 2019 11:03:20 +0100
+Message-ID: <CAJZ5v0hjsWM=bRg4k2qNCfcqjQ08N+6kG=1vCXpjbi5qEx7utw@mail.gmail.com>
+Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Doug Smythies <dsmythies@telus.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
+        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the rproc driver is probed before the mailbox driver and if the rproc
-Device Tree node has some mailbox properties, the rproc driver probe
-shall be deferred instead of being probed without mailbox support.
+On Fri, Nov 15, 2019 at 10:55 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Thu, Nov 14, 2019 at 06:07:31PM +0100, Vincent Guittot wrote:
+> > update_cfs_rq_load_avg() calls cfs_rq_util_change() everytime pelt decays,
+> > which might be inefficient when cpufreq driver has rate limitation.
+> >
+> > When a task is attached on a CPU, we have call path:
+> >
+> > update_load_avg()
+> >   update_cfs_rq_load_avg()
+> >     cfs_rq_util_change -- > trig frequency update
+> >   attach_entity_load_avg()
+> >     cfs_rq_util_change -- > trig frequency update
+> >
+> > The 1st frequency update will not take into account the utilization of the
+> > newly attached task and the 2nd one might be discard because of rate
+> > limitation of the cpufreq driver.
+>
+> Doesn't this just show that a dumb rate limit in the driver is broken?
+>
+> > update_cfs_rq_load_avg() is only called by update_blocked_averages()
+> > and update_load_avg() so we can move the call to
+> > cfs_rq_util_change/cpufreq_update_util() into these 2 functions. It's also
+> > interesting to notice that update_load_avg() already calls directly
+> > cfs_rq_util_change() for !SMP case.
+> >
+> > This changes will also ensure that cpufreq_update_util() is called even
+> > when there is no more CFS rq in the leaf_cfs_rq_list to update but only
+> > irq, rt or dl pelt signals.
+>
+> I don't think it does that; that is, iirc the return value of
+> ___update_load_sum() is 1 every time a period lapses. So even if the avg
+> is 0 and doesn't change, it'll still return 1 on every period.
+>
+> Which is what that dumb rate-limit thing wants of course. But I'm still
+> thinking that it's stupid to do. If nothing changes, don't generate
+> events.
+>
+> If anything, update_blocked_avgerages() should look at
+> @done/others_have_blocked() to emit events for rt,dl,irq.
+>
+> So why are we making the scheduler code more ugly instead of fixing that
+> driver?
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
----
-Changes since v3: on error, free mailboxes from stm32_rproc_request_mbox()
-Changes since v2: free other requested mailboxes after one request fails
-Changes since v1: test IS_ERR() before checking PTR_ERR()
----
- drivers/remoteproc/stm32_rproc.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-index 2cf4b29..bcebb78 100644
---- a/drivers/remoteproc/stm32_rproc.c
-+++ b/drivers/remoteproc/stm32_rproc.c
-@@ -310,11 +310,12 @@ static const struct stm32_mbox stm32_rproc_mbox[MBOX_NB_MBX] = {
- 	}
- };
- 
--static void stm32_rproc_request_mbox(struct rproc *rproc)
-+static int stm32_rproc_request_mbox(struct rproc *rproc)
- {
- 	struct stm32_rproc *ddata = rproc->priv;
- 	struct device *dev = &rproc->dev;
- 	unsigned int i;
-+	int j;
- 	const unsigned char *name;
- 	struct mbox_client *cl;
- 
-@@ -329,10 +330,20 @@ static void stm32_rproc_request_mbox(struct rproc *rproc)
- 
- 		ddata->mb[i].chan = mbox_request_channel_byname(cl, name);
- 		if (IS_ERR(ddata->mb[i].chan)) {
-+			if (PTR_ERR(ddata->mb[i].chan) == -EPROBE_DEFER)
-+				goto err_probe;
- 			dev_warn(dev, "cannot get %s mbox\n", name);
- 			ddata->mb[i].chan = NULL;
- 		}
- 	}
-+
-+	return 0;
-+
-+err_probe:
-+	for (j = i - 1; j >= 0; j--)
-+		if (ddata->mb[j].chan)
-+			mbox_free_channel(ddata->mb[j].chan);
-+	return -EPROBE_DEFER;
- }
- 
- static int stm32_rproc_set_hold_boot(struct rproc *rproc, bool hold)
-@@ -596,7 +607,9 @@ static int stm32_rproc_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto free_rproc;
- 
--	stm32_rproc_request_mbox(rproc);
-+	ret = stm32_rproc_request_mbox(rproc);
-+	if (ret)
-+		goto free_rproc;
- 
- 	ret = rproc_add(rproc);
- 	if (ret)
--- 
-2.7.4
-
+I guess we could "fix" the driver by making it rate limit MSR writes
+only, but I'm not sure if that would help.
