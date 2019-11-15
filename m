@@ -2,110 +2,85 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C288C33C99
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D140C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 376AF20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AF5B20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:50:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g+iOhcZr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uj//MN/e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbfKOJub (ORCPT
+        id S1727492AbfKOJue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:50:31 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40830 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727385AbfKOJu2 (ORCPT
+        Fri, 15 Nov 2019 04:50:34 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37340 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727374AbfKOJu2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 15 Nov 2019 04:50:28 -0500
-Received: by mail-pf1-f195.google.com with SMTP id r4so6362893pfl.7
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 01:50:27 -0800 (PST)
+Received: by mail-lj1-f193.google.com with SMTP id d5so10008786ljl.4
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 01:50:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=00TE3UjkilRir+eBZdBUQADWxjiLoIj6o72iA3B1Sak=;
-        b=g+iOhcZrs7UHvseKUzS7H3Gpvuf+nZBEoWW8rYkkCFWMInk9W59sz0xitzhao5Txsi
-         WrUHfnBCjiQRmDJ3EAACFoIQ78JL3NwHz6QWOXGmrjik1Fex0wwvpOo4JlBeAboBLH5Z
-         O89w7p63Hp9pEwQ3GHEpduv0T3LhEn0JEmdsY=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x/UA8N9071Hs67JB/CtCLOKYsRujWaxB61T4BkLclrk=;
+        b=Uj//MN/eYpagIL5SFVK5o9mqojQITuF2XVCgryREyFOYqXwn9xWNIEKr/hnSu/yd37
+         OgcpwNqi83ryL9yGP1i3iNYM1NbRKkpytuLcvx7ux/H500d7XGmBTA1gGyjzvIoV1iEw
+         ld7CduY+HoP5HPEWtCzcfMm9I2Dm+Qz4o73G7hmWuJKiE/659BHe9isr8jEu6zfrXY5w
+         p6E8t5bh/a39/Z0Xs8X8yXae3wjaBpHdwtcjDJIrI75l11sES3dl5SnTE4LguB/l+0rp
+         l/TlA8QLOU8hAcIlE+mlbdA00awq8mAiygKQOZVYY63BinchNpYcFAYnxZkBzVC+ig3U
+         4gDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=00TE3UjkilRir+eBZdBUQADWxjiLoIj6o72iA3B1Sak=;
-        b=Kf/QVw/PGpPlkPEaZtJ/Q4cv/6yu9pz8B+ZEiu8IJU7BKK8Y06+MKAEppuqoecCGo1
-         Tr9tLUd3bgYjIQ0mEpQQdJJeQaaB43BfU5Y2ek3+wwg9XXmbqGOmX4kYtoGaZqR1J3Ll
-         AhXzJYAGaoqwaO44APbavINrmOtJiTVrxd0xV9+dxhHrxDEOfJKaK6af83nqDZIZAwqO
-         2ogpMhrL8JHvpzrQgcuzMpC6FfUA0TtrKo1l5LZTSqouaDgbhxIsGiRgiG8ecebAQ1jh
-         G22uONrmF6eOEJfT9D5XLnkguGpDlBIi1J95MTYiZYC4dDuKj9fCxu5Xf2ism8grq2oC
-         cfPg==
-X-Gm-Message-State: APjAAAV+e93uEFtvzytRvIncU8RsaDMTxwJVLDXC4FJ/u56d5PHgIcg7
-        XwFZ8d+gpen/zOSGBmY8TAko8g==
-X-Google-Smtp-Source: APXvYqwSf7X2rW+Bxb5/bsjJWmQV2TgPWw6OX5rnxCqpAbf3+Ggth6PILQOMBFyXwlyMU5+ZUMuJjA==
-X-Received: by 2002:a63:1f08:: with SMTP id f8mr14240497pgf.145.1573811426996;
-        Fri, 15 Nov 2019 01:50:26 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id y14sm9792409pff.69.2019.11.15.01.50.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Nov 2019 01:50:26 -0800 (PST)
-From:   Gwendal Grignou <gwendal@chromium.org>
-To:     dmitry.torokhov@gmail.com, groeck@chromium.org,
-        briannorris@chromium.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, lee.jones@linaro.org,
-        bleung@chromium.org, enric.balletbo@collabora.com,
-        dianders@chromium.org, fabien.lahoudere@collabora.com
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v5 05/18] platform: chrome: cros_ec: Do not attempt to register a non-positive IRQ number
-Date:   Fri, 15 Nov 2019 01:33:59 -0800
-Message-Id: <20191115093412.144922-6-gwendal@chromium.org>
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-In-Reply-To: <20191115093412.144922-1-gwendal@chromium.org>
-References: <20191115093412.144922-1-gwendal@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x/UA8N9071Hs67JB/CtCLOKYsRujWaxB61T4BkLclrk=;
+        b=HmVh4mEd/FqEVbC0YDQWtnKWbfBw3/lpfbZPz3/QYuiJCoSuAI4/Vk2YnygkCQA5M6
+         47gBga2UYwbr1xDygs2/Qz6Tmg0otFe0awd+ocxGMk7PpepM2ZfwHB0ej2wsSjPt7UDP
+         W4UjmhGHEa9DA4bghI7BAjo495DErxqP6CV7OuvwuyTghJuN+JaoaLM8MWjmkw7mQQej
+         NOMLLkTnxz2hlN8mas2Bdj1tqF6lvHFHGy+b0Kq3ZjBkaYnnhi41Lf+sja9+HnQ7AqIW
+         Xo2QsZOZjCr74rY31xJbdwRr6Gos+g3bu6EiXZN1P5dh1XcNcH+tfQhibtdfSH9OnhrA
+         B7qA==
+X-Gm-Message-State: APjAAAX48lPGYnjo0f5XcQ3rIlcDDZL/BZEonKoil4u8uy3We8uGxpIn
+        c8ltxbagLt07zqX3BH5uNW86+/fNVyB1GoDKUhelvg==
+X-Google-Smtp-Source: APXvYqzoH0lE2meSnOsWYn4w2Vnm6zFN87zG7pAIdO4qZpC8+1a/pUkOgr9YtQTghftKTYLC9GIcmmSSdCngI9weV+A=
+X-Received: by 2002:a2e:161b:: with SMTP id w27mr10500539ljd.183.1573811425820;
+ Fri, 15 Nov 2019 01:50:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191115062454.7025-1-hslester96@gmail.com>
+In-Reply-To: <20191115062454.7025-1-hslester96@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 15 Nov 2019 10:50:14 +0100
+Message-ID: <CACRpkdaXcas08jy+oZOi4fKuXZYkbFAOipqf49smSdGd6TmFag@mail.gmail.com>
+Subject: Re: [PATCH] net: gemini: add missed free_netdev
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Hans Ulli Kroll <ulli.kroll@googlemail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a layer of sanity checking to cros_ec_register against attempting to
-register IRQ values that are not strictly greater than 0.
+On Fri, Nov 15, 2019 at 7:25 AM Chuhong Yuan <hslester96@gmail.com> wrote:
 
-Signed-off-by: Enrico Granata <egranata@chromium.org>
-Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
----
-No changes in v5, v4, v3.
-Changes in v2:
-  Remove dual Enrico's signature.
+> This driver forgets to free allocated netdev in remove like
+> what is done in probe failure.
+> Add the free to fix it.
+>
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 
- drivers/platform/chrome/cros_ec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Looks correct!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
-index 925f84dbf621..d3dfa27171e6 100644
---- a/drivers/platform/chrome/cros_ec.c
-+++ b/drivers/platform/chrome/cros_ec.c
-@@ -149,7 +149,7 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
- 		return err;
- 	}
- 
--	if (ec_dev->irq) {
-+	if (ec_dev->irq > 0) {
- 		err = devm_request_threaded_irq(dev, ec_dev->irq,
- 						ec_irq_handler,
- 						ec_irq_thread,
--- 
-2.24.0.432.g9d3f5f5b63-goog
-
+Yours,
+Linus Walleij
