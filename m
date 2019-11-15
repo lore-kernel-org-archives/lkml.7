@@ -2,205 +2,117 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5838C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D9EC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F46A206CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:29:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="flnZk33o"
+	by mail.kernel.org (Postfix) with ESMTP id 4821E206D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:30:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbfKON3F (ORCPT
+        id S1727552AbfKONaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 08:29:05 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53735 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727223AbfKON3D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 08:29:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573824542;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Mks2DjWdpnukmwwEXVk82toAm3agWoayoydTXhkFsfg=;
-        b=flnZk33ocQ28HZ4XDL3qAGJ72dDwRt496HveaZUWJ6MUYUP9sUPhz179yxFxQbmbQNeVYp
-        xXi7UNXLrDxpeRYujxgpvPsrmM5ZWGXkajdGa4kqUD8Adg1tZnG9ADspoSMW6Zx5Hsxl0P
-        MQHD5J9aVF5k7wWhBqGeDTNswLMR79Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-278-HPOfJgVkOrK1lyjxuhbP-w-1; Fri, 15 Nov 2019 08:28:58 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 15 Nov 2019 08:30:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57702 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727421AbfKONaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 08:30:04 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5E6BA18B5F8A;
-        Fri, 15 Nov 2019 13:28:56 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-161.rdu2.redhat.com [10.10.120.161])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E61D95F900;
-        Fri, 15 Nov 2019 13:28:52 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20191110031348.GE29418@shao2-debian>
-References: <20191110031348.GE29418@shao2-debian>
-To:     kernel test robot <lkp@intel.com>
-Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lkp@lists.01.org
-Subject: Re: [pipe] d60337eff1: BUG:kernel_NULL_pointer_dereference,address
+        by mail.kernel.org (Postfix) with ESMTPSA id 2422C206CC;
+        Fri, 15 Nov 2019 13:30:02 +0000 (UTC)
+Date:   Fri, 15 Nov 2019 08:30:00 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, saiprakash.ranjan@codeaurora.org
+Subject: Re: [RFC 1/2] docs: ftrace: Clarify the RAM impact of
+ buffer_size_kb
+Message-ID: <20191115083000.76f89785@gandalf.local.home>
+In-Reply-To: <20191115042428.6xxiqbzhgoko6vyk@ubuntu1804-desktop>
+References: <cover.1573661658.git.frank@generalsoftwareinc.com>
+        <0e4a803c3e24140172855748b4a275c31920e208.1573661658.git.frank@generalsoftwareinc.com>
+        <20191113113730.213ddd72@gandalf.local.home>
+        <20191114202059.GC186056@google.com>
+        <20191114163639.4727e3ed@gandalf.local.home>
+        <20191115042428.6xxiqbzhgoko6vyk@ubuntu1804-desktop>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-ID: <9278.1573824532.1@warthog.procyon.org.uk>
-Date:   Fri, 15 Nov 2019 13:28:52 +0000
-Message-ID: <9279.1573824532@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: HPOfJgVkOrK1lyjxuhbP-w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kernel test robot <lkp@intel.com> wrote:
+On Thu, 14 Nov 2019 23:24:28 -0500
+"Frank A. Cancio Bello" <frank@generalsoftwareinc.com> wrote:
 
-> [    9.423019] BUG: kernel NULL pointer dereference, address: 00000000000=
-00008
-> [    9.425646] #PF: supervisor read access in kernel mode
-> [    9.427714] #PF: error_code(0x0000) - not-present page
-> [    9.429851] PGD 80000001fb937067 P4D 80000001fb937067 PUD 1739e1067 PM=
-D 0=20
-> [    9.432468] Oops: 0000 [#1] SMP PTI
-> [    9.434064] CPU: 0 PID: 178 Comm: cat Not tainted 5.4.0-rc5-00353-gd60=
-337eff18a3 #1
-> [    9.437139] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIO=
-S 1.10.2-1 04/01/2014
-> [    9.440439] RIP: 0010:iov_iter_get_pages_alloc+0x2a8/0x400
+> On Thu, Nov 14, 2019 at 04:36:39PM -0500, Steven Rostedt wrote:
+> > On Thu, 14 Nov 2019 15:20:59 -0500
+> > Joel Fernandes <joel@joelfernandes.org> wrote:
+> >   
+> > > On Wed, Nov 13, 2019 at 11:37:30AM -0500, Steven Rostedt wrote:  
+> > > > On Wed, 13 Nov 2019 11:32:36 -0500
+> > > > "Frank A. Cancio Bello" <frank@generalsoftwareinc.com> wrote:    
+> > > [snip]  
+> > > > > +
+> > > > > +        The number of pages allocated for each CPU buffer may not
+> > > > > +        be the same than the round up of the division:
+> > > > > +        buffer_size_kb / PAGE_SIZE. This is because part of each page is
+> > > > > +        used to store a page header with metadata. E.g. with
+> > > > > +        buffer_size_kb=4096 (kilobytes), a PAGE_SIZE=4096 bytes and a
+> > > > > +        BUF_PAGE_HDR_SIZE=16 bytes (BUF_PAGE_HDR_SIZE is the size of the
+> > > > > +        page header with metadata) the number of pages allocated for each
+> > > > > +        CPU buffer is 1029, not 1024. The formula for calculating the
+> > > > > +        number of pages allocated for each CPU buffer is the round up of:
+> > > > > +        buffer_size_kb / (PAGE_SIZE - BUF_PAGE_HDR_SIZE).    
+> > > > 
+> > > > I have no problem with this patch, but the concern of documenting the
+> > > > implementation here, which will most likely not be updated if the
+> > > > implementation is ever changed, which is why I was vague to begin with.
+> > > > 
+> > > > But it may never be changed as that code has been like that for a
+> > > > decade now.    
+> > > 
+> > > Agreed. To give some context, Frank is an outreachy intern I am working with and
+> > > one of his starter tasks was to understand the ring buffer's basics.  I asked
+> > > him to send a patch since I thought he mentioned there was an error in the
+> > > documnentation. It looks like all that was missing is some explanation which
+> > > the deleted text in brackets above should already cover.
+> > >   
+> 
+> Not exactly in my opinion ;) The deleted text was not the problem. I
+> just deleted it because with the added text it turns to be redundant.
+> 
+> The issue that I found with the documentation (maybe just to my
+> newbie's eyes) is in this part:
+> 
+> "The trace buffers are allocated in pages (blocks of memory that the
+> kernel uses for allocation, usually 4 KB in size). If the last page
+> allocated has room for more bytes than requested, the rest of the
+> page will be used, making the actual allocation bigger than requested
+> or shown."
+> 
+> For me that "suggests" the interpretation that the number of pages
+> allocated in the current implementation correspond with the round
+> integer division of buffer_size_kb / PAGE_SIZE, which is inaccurate
+> (for 5 pages in the example that I mentioned).
 
-Can you tell me if the following change fixes it for you?
+If you would like, you could reword that to something more accurate,
+but still not detailing the implementation.
 
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -404,7 +404,7 @@ static size_t copy_page_to_iter_pipe(struct page *page,=
- size_t offset, size_t by
- =09buf->offset =3D offset;
- =09buf->len =3D bytes;
-=20
--=09pipe->head =3D i_head;
-+=09pipe->head =3D i_head + 1;
- =09i->iov_offset =3D offset + bytes;
- =09i->head =3D i_head;
- out:
+> Understood and agreed. It is funny that what I spotted as "a problem"
+> was precisely an incomplete description of the implementation (the
+> sentences that I quoted above). What do you think about removing
+> those two sentences?
 
-Attached is a test program that can induce some a bug in
-copy_page_to_iter_pipe() where I forgot to increment the new head when
-assigning it to pipe->head.
+I wouldn't remove them, just reword them to something you find more
+accurate.
 
-David
----
-#define _GNU_SOURCE
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <err.h>
-#include <sys/wait.h>
-
-static char buf[256 * 1024] __attribute__((aligned(512)));
-static char *filename;
-static int pipe_wfd =3D -1;
-
-static void cleanup(void)
-{
-=09close(pipe_wfd);
-}
-
-static void cleanup_child(void)
-{
-=09int w;
-=09wait(&w);
-}
-
-int child(int fd)
-{
-=09ssize_t r;
-
-=09do {
-=09=09r =3D read(fd, buf, 256 * 1024);
-=09=09if (r =3D=3D -1)
-=09=09=09err(1, "read");
-=09} while (r !=3D 0);
-
-=09if (close(fd) =3D=3D -1)
-=09=09err(1, "close");
-
-=09return 0;
-}
-
-int main(int argc, char **argv)
-{
-=09ssize_t n;
-=09loff_t offset;
-=09size_t len;
-=09pid_t pid;
-=09int fd, pfd[2];
-
-=09if (argc !=3D 2) {
-=09=09fprintf(stderr, "Format: %s <file>\n", argv[1]);
-=09=09exit(2);
-=09}
-
-=09filename =3D argv[1];
-
-=09if (pipe(pfd) =3D=3D -1)
-=09=09err(1, "pipe");
-=09pipe_wfd =3D pfd[1];
-
-=09pid =3D fork();
-=09switch (pid) {
-=09case -1:
-=09=09err(1, "fork");
-=09case 0:
-=09=09close(pfd[1]);
-=09=09return child(pfd[0]);
-=09default:
-=09=09close(pfd[0]);
-=09=09atexit(cleanup_child);
-=09=09break;
-=09}
-
-=09fd =3D open(filename, O_RDONLY);
-=09if (fd =3D=3D -1)
-=09=09err(1, "%s", filename);
-
-=09atexit(cleanup);
-
-=09len =3D 256 * 1024;
-=09offset =3D 0;
-=09do {
-=09=09n =3D splice(fd, &offset, pfd[1], NULL, 256 * 1024, 0);
-=09=09if (n =3D=3D -1)
-=09=09=09err(1, "splice");
-=09} while (len -=3D n, len > 0);
-
-=09if (close(pfd[1]) =3D=3D -1)
-=09=09err(1, "close/p");
-=09if (close(fd) =3D=3D -1)
-=09=09err(1, "close/f");
-=09return 0;
-}
-
+-- Steve
