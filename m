@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B70C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE9CC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF2AC2075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CAD720748
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573820734;
-	bh=FufWsne3f1whMQm+cC9OAxX0N+Zrta+LxKe3p9WNQOU=;
+	s=default; t=1573820738;
+	bh=T2Zj3oM07HpbUQx+McCg9y2nEbayLAGzjhaRxHGiT0M=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=j5MGY5BV4SZF96KO3b+I+GH/mg1XuKKE5VX9CkvghS7sGtkysRjD4WhgNugTlPDiw
-	 bEyz9GVmNW68MjSmgYKKbHosPmOT00Zz9IX4b6CmT8qMDYdMIReg7tXGraeiN6ESp1
-	 jJswkf6NfbpA9/ql7mGxNX+322E6v7sMXBVV+JmY=
+	b=Yt4XXxtApMbbSYyoHObvQMI86uyWMeUzSFbHhNhgdhtfdRKVByv9OBUNjtUNSOhFS
+	 yK0D0zkQn1P+2SzUAuV7kNy1BPAoTme21IwndNlLU6+rRhaFCBhaiEzOPIUUxOa17J
+	 Ln0IEGsg+prgmQkSsVrkJcbDAR6RJcnemwFIFETs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbfKOMZe (ORCPT
+        id S1727860AbfKOMZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:25:34 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33562 "EHLO
+        Fri, 15 Nov 2019 07:25:37 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33528 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbfKOMZb (ORCPT
+        with ESMTP id S1727817AbfKOMZd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 07:25:31 -0500
+        Fri, 15 Nov 2019 07:25:33 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=GpfP1U7W192FYFrLj/ElAhmi+JHAHHGx6gwL3GmkbA0=; b=fSsLK0/SsRku
-        y6aDi7VwKtDjHY99W/szeZfmlc/ZR8EbrkSfDVQRJemwaVyDXuPSgRumw6HKRQcTQHF9L8gn1DMqs
-        0pR2Z3tRFhBpjW17mvT1vdSuxn27Res0TnglFEoGxT0bAtvCFcioLs4b7O0Z2yTC7B8eWdiXcbyqb
-        jjemY=;
+        List-Archive; bh=EO3rudpnfcccYyMUNmyp4oGPCnW+dbhX3sMWKHNEwxo=; b=a1rlZPt3qEzb
+        Lo8Yf1dY4Yz8qk3abOygFP2yrG79Z/KY2T69+QaJ1uwtIHuD4dQIGK8W1Ix0ZsHDOKvceMQZD+ZIq
+        7sV4veiF7GhHf9Y4CmDC546zXoM4ZcEnCA8vuqUuMLC7br1B84o5xj4vNz7PTdw0gWm/9sglVsLVA
+        lHsR8=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iVaf7-0000Ma-6l; Fri, 15 Nov 2019 12:25:17 +0000
+        id 1iVaf6-0000M8-1A; Fri, 15 Nov 2019 12:25:16 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id A60F627415A7; Fri, 15 Nov 2019 12:25:16 +0000 (GMT)
+        id 78769274162A; Fri, 15 Nov 2019 12:25:15 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
 Cc:     agross@kernel.org, alexandre.belloni@bootlin.com, andi@etezian.org,
         bjorn.andersson@linaro.org, broonie@kernel.org,
         jonathanh@nvidia.com, kgene@kernel.org, krzk@kernel.org,
         ldewangan@nvidia.com, linus.walleij@linaro.org,
+        Linus Walleij <linus.walleij@linaro.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        radu_nicolae.pirea@upb.ro, s.hauer@pengutronix.de,
-        shawnguo@kernel.org, thierry.reding@gmail.com, vkoul@kernel.org
-Subject: Applied "spi: atmel: Use dma_request_chan() directly for channel request" to the spi tree
-In-Reply-To: <20191113094256.1108-3-peter.ujfalusi@ti.com>
+        Mark Brown <broonie@kernel.org>, radu_nicolae.pirea@upb.ro,
+        s.hauer@pengutronix.de, shawnguo@kernel.org,
+        thierry.reding@gmail.com, vkoul@kernel.org
+Subject: Applied "spi: pl022: Use dma_request_chan() directly for channel request" to the spi tree
+In-Reply-To: <20191113094256.1108-6-peter.ujfalusi@ti.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191115122516.A60F627415A7@ypsilon.sirena.org.uk>
-Date:   Fri, 15 Nov 2019 12:25:16 +0000 (GMT)
+Message-Id: <20191115122515.78769274162A@ypsilon.sirena.org.uk>
+Date:   Fri, 15 Nov 2019 12:25:15 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -70,7 +70,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: atmel: Use dma_request_chan() directly for channel request
+   spi: pl022: Use dma_request_chan() directly for channel request
 
 has been applied to the spi tree at
 
@@ -95,10 +95,10 @@ to this mail.
 Thanks,
 Mark
 
-From bef1e0c8f74c87e7427cb98b2e76caf046c7b65a Mon Sep 17 00:00:00 2001
+From c1008957ff1aee0ac92c28c55947173fb68cd451 Mon Sep 17 00:00:00 2001
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Date: Wed, 13 Nov 2019 11:42:49 +0200
-Subject: [PATCH] spi: atmel: Use dma_request_chan() directly for channel
+Date: Wed, 13 Nov 2019 11:42:52 +0200
+Subject: [PATCH] spi: pl022: Use dma_request_chan() directly for channel
  request
 
 dma_request_slave_channel_reason() is:
@@ -106,26 +106,35 @@ dma_request_slave_channel_reason() is:
 	dma_request_chan(dev, name)
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Link: https://lore.kernel.org/r/20191113094256.1108-3-peter.ujfalusi@ti.com
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20191113094256.1108-6-peter.ujfalusi@ti.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-atmel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-pl022.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
-index d88e2aa64839..d692cc388126 100644
---- a/drivers/spi/spi-atmel.c
-+++ b/drivers/spi/spi-atmel.c
-@@ -512,7 +512,7 @@ static int atmel_spi_configure_dma(struct spi_master *master,
- 	dma_cap_zero(mask);
- 	dma_cap_set(DMA_SLAVE, mask);
+diff --git a/drivers/spi/spi-pl022.c b/drivers/spi/spi-pl022.c
+index 3024c30e7f2e..66028ebbc336 100644
+--- a/drivers/spi/spi-pl022.c
++++ b/drivers/spi/spi-pl022.c
+@@ -1158,7 +1158,7 @@ static int pl022_dma_autoprobe(struct pl022 *pl022)
+ 	int err;
  
--	master->dma_tx = dma_request_slave_channel_reason(dev, "tx");
-+	master->dma_tx = dma_request_chan(dev, "tx");
- 	if (IS_ERR(master->dma_tx)) {
- 		err = PTR_ERR(master->dma_tx);
- 		if (err == -EPROBE_DEFER) {
+ 	/* automatically configure DMA channels from platform, normally using DT */
+-	chan = dma_request_slave_channel_reason(dev, "rx");
++	chan = dma_request_chan(dev, "rx");
+ 	if (IS_ERR(chan)) {
+ 		err = PTR_ERR(chan);
+ 		goto err_no_rxchan;
+@@ -1166,7 +1166,7 @@ static int pl022_dma_autoprobe(struct pl022 *pl022)
+ 
+ 	pl022->dma_rx_channel = chan;
+ 
+-	chan = dma_request_slave_channel_reason(dev, "tx");
++	chan = dma_request_chan(dev, "tx");
+ 	if (IS_ERR(chan)) {
+ 		err = PTR_ERR(chan);
+ 		goto err_no_txchan;
 -- 
 2.20.1
 
