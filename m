@@ -2,103 +2,216 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2698C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7DEC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA64F2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:58:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UTHgI7il"
+	by mail.kernel.org (Postfix) with ESMTP id 77DB22073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:59:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbfKOI65 (ORCPT
+        id S1727344AbfKOI66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 03:58:57 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41897 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727276AbfKOI65 (ORCPT
+        Fri, 15 Nov 2019 03:58:58 -0500
+Received: from twhmllg3.macronix.com ([122.147.135.201]:45926 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727279AbfKOI65 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 15 Nov 2019 03:58:57 -0500
-Received: by mail-lj1-f194.google.com with SMTP id m4so4906935ljj.8
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 00:58:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Z+pg9wj7yRXgLDbaXk97MrdYcFuUJiaocpSFiWUQa1o=;
-        b=UTHgI7il6nkwPJ5t8b7FMh0XJmESz0IGK7rLutWB2vw6I0WyJlHZc5HzSJe9OJO/Ja
-         cy90XKj0jyihqQIuf3/Ck0cF/JNi8a+GasJC5mVdphNQ7QLH8qwoPiyf5YOLM25O8vUE
-         e8HS4mV64/idioykbqun7VK9SHxe/G39ajtZOMaPkNT4mZiM3aHLURCdjKP3qGnV9YAF
-         qZfzHyhsp1iwHI3ganjVtmXZ/Z8kRYHYojIyVFx6IdWBhExFxC+EmY3F7bcGcsbuVv1A
-         3GVwJ9NAqejEzjvYAnJylfaw7p8QaRTdtXztlHIoB5j4SiHJJMjpmlprWqNwfzWFc3or
-         IsUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z+pg9wj7yRXgLDbaXk97MrdYcFuUJiaocpSFiWUQa1o=;
-        b=L4lqkBFXHtQvqPAr6jxPB/8XCk31/fy4NR/gWQMCq/COpUNb5i93pqG+e7OwRNZm0q
-         7AwJCmau4zJx1EUNYUZn5M8Iff+NGgQKeyOpWM+uPQUXdGisVOhyWbM8tlww15moHXH6
-         cCxSKKhWm5x5O7PHX+H8AGTOaUUbCPH55YE5hDgMvDvnF8DWyS4A+DaN6hdziKaffBNY
-         nKvJ7DoTH/RNp1QojLh3Fpn8jJnfoEYYu+Fe9JqdnbAhhLJgJjHK/RaGX2iaovpF7AEi
-         a0eMmJCS0aHBEZEV2ISvT8Wu98lXqvzsGhN27ZyF8u2vyuol1ni8F2MT3/cdfMAVPvIR
-         UAVA==
-X-Gm-Message-State: APjAAAU8ar7TnSUyJ8PDs8KjtxLOkJ5jcUwqIUYdxkQOwis5FtWBUxTY
-        +j1ZJdS3sFdj1qnneK3WZ4lPeP+Xx+8keG5b+7aBKA==
-X-Google-Smtp-Source: APXvYqwIDdyPqvILxslSpTDagXqgZxcyneXp6w20bE5evFxcLeT7zIkuP+8wNFzYA/MQKGJ1IfoewtfpTYYk4NobWk0=
-X-Received: by 2002:a2e:888a:: with SMTP id k10mr10290408lji.195.1573808334796;
- Fri, 15 Nov 2019 00:58:54 -0800 (PST)
-MIME-Version: 1.0
-References: <CA+G9fYviReoG+gq=Jm8yQOMd01j2opae5p+VTGGMK7aLn0xWgw@mail.gmail.com>
- <20191114224213.GN4163745@devbig004.ftw2.facebook.com>
-In-Reply-To: <20191114224213.GN4163745@devbig004.ftw2.facebook.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 15 Nov 2019 14:28:43 +0530
-Message-ID: <CA+G9fYu-w+3qgkGet4B4NeBxQNaXoWij49j0WRwPAYELgakb6w@mail.gmail.com>
-Subject: Re: linux-next: arm32: beagleboard x15: WARNING: CPU: 0 PID: 0 at
- /usr/src/kernel/kernel/cgroup/cgroup.c:1969 cgroup_setup_root+0x36c/0x4e8
-To:     Tejun Heo <tj@kernel.org>
-Cc:     cgroups@vger.kernel.org,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        namhyung@kernel.org, open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, lizefan@huawei.com,
-        hannes@cmpxchg.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, kafai@fb.com,
-        Song Liu <songliubraving@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Received: from localhost.localdomain ([172.17.195.96])
+        by TWHMLLG3.macronix.com with ESMTP id xAF8wWGx046218;
+        Fri, 15 Nov 2019 16:58:36 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+From:   Mason Yang <masonccyang@mxic.com.tw>
+To:     broonie@kernel.org, miquel.raynal@bootlin.com, richard@nod.at,
+        marek.vasut@gmail.com, dwmw2@infradead.org,
+        computersforpeace@gmail.com, vigneshr@ti.com,
+        bbrezillon@kernel.org, tudor.ambarus@microchip.com
+Cc:     juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: [PATCH 4/4] spi: mxic: Add support for Octal 8D-8D-8D mode
+Date:   Fri, 15 Nov 2019 16:58:08 +0800
+Message-Id: <1573808288-19365-5-git-send-email-masonccyang@mxic.com.tw>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1573808288-19365-1-git-send-email-masonccyang@mxic.com.tw>
+References: <1573808288-19365-1-git-send-email-masonccyang@mxic.com.tw>
+X-MAIL: TWHMLLG3.macronix.com xAF8wWGx046218
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tejun,
+patch driver for 8-8-8 and 8D-8D-8D mode support.
 
-On Fri, 15 Nov 2019 at 04:12, Tejun Heo <tj@kernel.org> wrote:
-> > [    0.015402] WARNING: CPU: 0 PID: 0 at /usr/src/kernel/kernel/cgroup/cgroup.c:1969
-> > cgroup_setup_root+0x36c/0x4e8
-> ...
-> > [    0.015726] [<c053ac48>] (cgroup_setup_root) from [<c1c2a260>]
-> > (cgroup_init+0x108/0x560)
->
-> So, that's saying that the initial kernfs_node ino allocation returned
-> something other than 1.  Hmmm... x86_32 works fine.  What does the
-> following say?
->
-> # mkdir -p /tmp/cgroup2
-> # mount -t cgroup2 none /tmp/cgroup2
-> # ls -lid /tmp/cgroup2
+Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+---
+ drivers/spi/spi-mxic.c | 98 ++++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 67 insertions(+), 31 deletions(-)
 
+diff --git a/drivers/spi/spi-mxic.c b/drivers/spi/spi-mxic.c
+index f48563c..50e2055 100644
+--- a/drivers/spi/spi-mxic.c
++++ b/drivers/spi/spi-mxic.c
+@@ -280,10 +280,58 @@ static void mxic_spi_hw_init(struct mxic_spi *mxic)
+ 	       mxic->regs + HC_CFG);
+ }
+ 
++static u32 mxic_spi_mem_prep_op_cfg(const struct spi_mem_op *op)
++{
++	u32 cfg =  OP_CMD_BYTES(op->cmd.nbytes) |
++		   OP_CMD_BUSW(fls(op->cmd.buswidth) - 1) |
++		   (op->cmd.dtr ? OP_CMD_DDR : 0);
++
++	if (op->addr.nbytes)
++		cfg |= OP_ADDR_BYTES(op->addr.nbytes) |
++		       OP_ADDR_BUSW(fls(op->addr.buswidth) - 1) |
++		       (op->addr.dtr ? OP_ADDR_DDR : 0);
++
++	if (op->dummy.nbytes)
++		cfg |= OP_DUMMY_CYC(op->dummy.nbytes);
++
++	if (op->data.nbytes) {
++		cfg |= OP_DATA_BUSW(fls(op->data.buswidth) - 1) |
++		      (op->data.dtr ? OP_DATA_DDR : 0);
++		if (op->data.dir == SPI_MEM_DATA_IN) {
++			cfg |= OP_READ;
++			if (op->data.dtr == OP_DATA_DDR)
++				cfg |= OP_DQS_EN;
++		}
++	}
++
++	return cfg;
++}
++
++static void mxic_spi_set_hc_cfg(struct spi_device *spi, u32 flags)
++{
++	struct mxic_spi *mxic = spi_master_get_devdata(spi->master);
++	int nio = 1;
++
++	if (spi->mode & (SPI_RX_OCTAL | SPI_TX_OCTAL))
++		nio = 8;
++	else if (spi->mode & (SPI_TX_QUAD | SPI_RX_QUAD))
++		nio = 4;
++	else if (spi->mode & (SPI_TX_DUAL | SPI_RX_DUAL))
++		nio = 2;
++
++	writel(flags | HC_CFG_NIO(nio) |
++	       HC_CFG_TYPE(spi->chip_select, HC_CFG_TYPE_SPI_NOR) |
++	       HC_CFG_SLV_ACT(spi->chip_select) | HC_CFG_IDLE_SIO_LVL(1),
++	       mxic->regs + HC_CFG);
++}
++
+ static int mxic_spi_data_xfer(struct mxic_spi *mxic, const void *txbuf,
+ 			      void *rxbuf, unsigned int len)
+ {
+ 	unsigned int pos = 0;
++	bool dtr_enabled;
++
++	dtr_enabled = (readl(mxic->regs + SS_CTRL(0)) & OP_DATA_DDR);
+ 
+ 	while (pos < len) {
+ 		unsigned int nbytes = len - pos;
+@@ -302,6 +350,9 @@ static int mxic_spi_data_xfer(struct mxic_spi *mxic, const void *txbuf,
+ 		if (ret)
+ 			return ret;
+ 
++		if (dtr_enabled && len & 0x1)
++			nbytes++;
++
+ 		writel(data, mxic->regs + TXD(nbytes % 4));
+ 
+ 		if (rxbuf) {
+@@ -319,6 +370,8 @@ static int mxic_spi_data_xfer(struct mxic_spi *mxic, const void *txbuf,
+ 
+ 			data = readl(mxic->regs + RXD);
+ 			data >>= (8 * (4 - nbytes));
++			if (dtr_enabled && len & 0x1)
++				nbytes++;
+ 			memcpy(rxbuf + pos, &data, nbytes);
+ 			WARN_ON(readl(mxic->regs + INT_STS) & INT_RX_NOT_EMPTY);
+ 		} else {
+@@ -335,8 +388,8 @@ static int mxic_spi_data_xfer(struct mxic_spi *mxic, const void *txbuf,
+ static bool mxic_spi_mem_supports_op(struct spi_mem *mem,
+ 				     const struct spi_mem_op *op)
+ {
+-	if (op->data.buswidth > 4 || op->addr.buswidth > 4 ||
+-	    op->dummy.buswidth > 4 || op->cmd.buswidth > 4)
++	if (op->data.buswidth > 8 || op->addr.buswidth > 8 ||
++	    op->dummy.buswidth > 8 || op->cmd.buswidth > 8)
+ 		return false;
+ 
+ 	if (op->data.nbytes && op->dummy.nbytes &&
+@@ -353,47 +406,29 @@ static int mxic_spi_mem_exec_op(struct spi_mem *mem,
+ 				const struct spi_mem_op *op)
+ {
+ 	struct mxic_spi *mxic = spi_master_get_devdata(mem->spi->master);
+-	int nio = 1, i, ret;
+-	u32 ss_ctrl;
++	int i, ret;
+ 	u8 addr[8];
++	u8 cmd[2];
+ 
+ 	ret = mxic_spi_set_freq(mxic, mem->spi->max_speed_hz);
+ 	if (ret)
+ 		return ret;
+ 
+-	if (mem->spi->mode & (SPI_TX_QUAD | SPI_RX_QUAD))
+-		nio = 4;
+-	else if (mem->spi->mode & (SPI_TX_DUAL | SPI_RX_DUAL))
+-		nio = 2;
++	mxic_spi_set_hc_cfg(mem->spi, HC_CFG_MAN_CS_EN);
+ 
+-	writel(HC_CFG_NIO(nio) |
+-	       HC_CFG_TYPE(mem->spi->chip_select, HC_CFG_TYPE_SPI_NOR) |
+-	       HC_CFG_SLV_ACT(mem->spi->chip_select) | HC_CFG_IDLE_SIO_LVL(1) |
+-	       HC_CFG_MAN_CS_EN,
+-	       mxic->regs + HC_CFG);
+ 	writel(HC_EN_BIT, mxic->regs + HC_EN);
+ 
+-	ss_ctrl = OP_CMD_BYTES(1) | OP_CMD_BUSW(fls(op->cmd.buswidth) - 1);
+-
+-	if (op->addr.nbytes)
+-		ss_ctrl |= OP_ADDR_BYTES(op->addr.nbytes) |
+-			   OP_ADDR_BUSW(fls(op->addr.buswidth) - 1);
+-
+-	if (op->dummy.nbytes)
+-		ss_ctrl |= OP_DUMMY_CYC(op->dummy.nbytes);
+-
+-	if (op->data.nbytes) {
+-		ss_ctrl |= OP_DATA_BUSW(fls(op->data.buswidth) - 1);
+-		if (op->data.dir == SPI_MEM_DATA_IN)
+-			ss_ctrl |= OP_READ;
+-	}
+-
+-	writel(ss_ctrl, mxic->regs + SS_CTRL(mem->spi->chip_select));
++	writel(mxic_spi_mem_prep_op_cfg(op),
++	       mxic->regs + SS_CTRL(mem->spi->chip_select));
+ 
+ 	writel(readl(mxic->regs + HC_CFG) | HC_CFG_MAN_CS_ASSERT,
+ 	       mxic->regs + HC_CFG);
+ 
+-	ret = mxic_spi_data_xfer(mxic, &op->cmd.opcode, NULL, 1);
++	cmd[0] = op->cmd.opcode;
++	if (op->cmd.nbytes == 2)
++		cmd[1] = op->cmd.ext_opcode;
++
++	ret = mxic_spi_data_xfer(mxic, cmd, NULL, op->cmd.nbytes);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -566,7 +601,8 @@ static int mxic_spi_probe(struct platform_device *pdev)
+ 	master->bits_per_word_mask = SPI_BPW_MASK(8);
+ 	master->mode_bits = SPI_CPOL | SPI_CPHA |
+ 			SPI_RX_DUAL | SPI_TX_DUAL |
+-			SPI_RX_QUAD | SPI_TX_QUAD;
++			SPI_RX_QUAD | SPI_TX_QUAD |
++			SPI_RX_OCTAL | SPI_TX_OCTAL;
+ 
+ 	mxic_spi_hw_init(mxic);
+ 
+-- 
+1.9.1
 
- mkdir -p /tmp/cgroup2
- mount -t cgroup2 none /tmp/cgroup2
- ls -lid /tmp/cgroup2
- 1 dr-xr-xr-x 5 root root 0 Nov 15 08:00 /tmp/cgroup2
-
-
-Full test log link,
-https://lkft.validation.linaro.org/scheduler/job/1011451#L1170
-
-- Naresh
