@@ -2,159 +2,85 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 924B7C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 897AEC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D4520740
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62DBE20740
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfKOJp5 (ORCPT
+        id S1727306AbfKOJr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:45:57 -0500
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:39137 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727097AbfKOJp5 (ORCPT
+        Fri, 15 Nov 2019 04:47:59 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:41250 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbfKOJr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:45:57 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0Ti8k6bT_1573811150;
-Received: from ali-6c96cfdd1403.local(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0Ti8k6bT_1573811150)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 15 Nov 2019 17:45:51 +0800
-Subject: Re: [RFC PATCH v3 6/7] scripts/sorttable: Add ORC unwind tables sort
- concurrently
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-References: <20191115064750.47888-1-shile.zhang@linux.alibaba.com>
- <20191115064750.47888-7-shile.zhang@linux.alibaba.com>
- <20191115091945.GT4114@hirez.programming.kicks-ass.net>
-From:   Shile Zhang <shile.zhang@linux.alibaba.com>
-Message-ID: <2a6aa1ca-f26b-3dfd-ecbf-61e37a2a8242@linux.alibaba.com>
-Date:   Fri, 15 Nov 2019 17:45:50 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Fri, 15 Nov 2019 04:47:59 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iVYCo-0002Zt-Iq; Fri, 15 Nov 2019 09:47:54 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Rex Zhu <rex.zhu@amd.com>, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/amdgpu/powerplay: fix dereference before null check of pointer hwmgr
+Date:   Fri, 15 Nov 2019 09:47:54 +0000
+Message-Id: <20191115094754.40920-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191115091945.GT4114@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Colin Ian King <colin.king@canonical.com>
 
+The assignment of adev dereferences pointer hwmgr before hwmgr is null
+checked, hence there is a potential null pointer deference issue. Fix
+this by assigning adev after the null check.
 
-On 2019/11/15 17:19, Peter Zijlstra wrote:
-> On Fri, Nov 15, 2019 at 02:47:49PM +0800, Shile Zhang wrote:
->
->> @@ -141,21 +306,44 @@ static int do_sort(Elf_Ehdr *ehdr,
->>   		if (r(&s->sh_type) == SHT_SYMTAB_SHNDX)
->>   			symtab_shndx = (Elf32_Word *)((const char *)ehdr +
->>   						      _r(&s->sh_offset));
->> -	}
->>   
->> +#if defined(SORTTABLE_64) && defined(UNWINDER_ORC_ENABLED)
->> +		/* locate the ORC unwind tables */
->> +		if (!strcmp(secstrings + idx, ".orc_unwind_ip")) {
->> +			orctable.orc_ip_size = s->sh_size;
->> +			g_orc_ip_table = (int *)((void *)ehdr +
->> +						   s->sh_offset);
->> +		}
->> +		if (!strcmp(secstrings + idx, ".orc_unwind")) {
->> +			orctable.orc_size = s->sh_size;
->> +			g_orc_table = (struct orc_entry *)((void *)ehdr +
->> +							     s->sh_offset);
->> +		}
->> +#endif
->> +	} /* for loop */
->> +
->> +#if defined(SORTTABLE_64) && defined(UNWINDER_ORC_ENABLED)
-> Maybe something like:
->
-> 	if (g_orc_table && g_orc_ip_table) {
-> 		 if (pthread_create(...))
-> 		...
-> 	} else if (g_orc_table || g_orc_up_table) {
-> 		fprintf(stderr, "incomplete ORC tables...\n");
-> 	}
->
->> +	/* create thread to sort ORC unwind tables concurrently */
->> +	if (pthread_create(&orc_sort_thread, NULL, sort_orctable, &orctable)) {
->> +		fprintf(stderr,
->> +			"pthread_create orc_sort_thread failed '%s': %s\n",
->> +			strerror(errno), fname);
->> +		goto out;
->> +	}
->> +#endif
->>   	if (!extab_sec) {
->>   		fprintf(stderr,	"no __ex_table in file: %s\n", fname);
->> -		return -1;
->> +		goto out;
->>   	}
->>   
->>   	if (!symtab_sec) {
->>   		fprintf(stderr,	"no .symtab in file: %s\n", fname);
->> -		return -1;
->> +		goto out;
->>   	}
->>   
->>   	if (!strtab_sec) {
->>   		fprintf(stderr,	"no .strtab in file: %s\n", fname);
->> -		return -1;
->> +		goto out;
->>   	}
->>   
->>   	extab_image = (void *)ehdr + _r(&extab_sec->sh_offset);
->> @@ -192,7 +380,7 @@ static int do_sort(Elf_Ehdr *ehdr,
->>   		fprintf(stderr,
->>   			"no main_extable_sort_needed symbol in file: %s\n",
->>   			fname);
->> -		return -1;
->> +		goto out;
->>   	}
->>   
->>   	sort_needed_sec = &shdr[get_secindex(r2(&sym->st_shndx),
->> @@ -205,6 +393,20 @@ static int do_sort(Elf_Ehdr *ehdr,
->>   
->>   	/* extable has been sorted, clear the flag */
->>   	w(0, sort_needed_loc);
->> +	rc = 0;
->>   
->> -	return 0;
->> +out:
->> +#if defined(SORTTABLE_64) && defined(UNWINDER_ORC_ENABLED)
->> +	{ /* to avoid gcc warning about declaration */
->> +	void *retval = NULL;
-> and then here:
->
-> 	if (orc_sort_thread) {
-> 		void *retval = NULL;
-> 		pthread_join(...);
-> 		...
-> 	}
+Addresses-Coverity: ("Dereference before null check")
+Fixes: 0896d2f7ba4d ("drm/amdgpu/powerplay: properly set PP_GFXOFF_MASK")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/amd/powerplay/hwmgr/hwmgr.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-
-Thank you for your kindly advice! I'll change it in next version.
-
->> +
->> +	/* wait for ORC tables sort done */
->> +	pthread_join(orc_sort_thread, &retval);
->> +	if (retval) {
->> +		fprintf(stderr, "%s in file: %s\n", (char *)retval, fname);
->> +		rc = -1;
->> +	}
->> +	}
->> +#endif
->> +	return rc;
->>   }
+diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/hwmgr.c
+index 443625c83ec9..d2909c91d65b 100644
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/hwmgr.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/hwmgr.c
+@@ -81,7 +81,7 @@ static void hwmgr_init_workload_prority(struct pp_hwmgr *hwmgr)
+ 
+ int hwmgr_early_init(struct pp_hwmgr *hwmgr)
+ {
+-	struct amdgpu_device *adev = hwmgr->adev;
++	struct amdgpu_device *adev;
+ 
+ 	if (!hwmgr)
+ 		return -EINVAL;
+@@ -96,6 +96,8 @@ int hwmgr_early_init(struct pp_hwmgr *hwmgr)
+ 	hwmgr_init_workload_prority(hwmgr);
+ 	hwmgr->gfxoff_state_changed_by_workload = false;
+ 
++	adev = hwmgr->adev;
++
+ 	switch (hwmgr->chip_family) {
+ 	case AMDGPU_FAMILY_CI:
+ 		adev->pm.pp_feature &= ~PP_GFXOFF_MASK;
+-- 
+2.20.1
 
