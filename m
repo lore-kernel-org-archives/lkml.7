@@ -2,261 +2,291 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C610FC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D289C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 922DE206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AEF220715
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:12:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EwlSNHmU"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nTSrOb27"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfKOLKq (ORCPT
+        id S1727443AbfKOLME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 06:10:46 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27148 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726521AbfKOLKq (ORCPT
+        Fri, 15 Nov 2019 06:12:04 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59346 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbfKOLMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 06:10:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573816244;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=kvdfBB/OL1RKqn5wB2rhib2iB+Se/LfSqEAPqgf8JXY=;
-        b=EwlSNHmUs0Mh1fCPi6NujVil8NYwa8tvDs6oBI8UmmmmT3fpPyrq7R+SjPNj7Zt3EY9bR0
-        dyJjwocw6aOCaoXk+h5WNRcT0nRyDEBTtNr5AyoWDQ7VIdyCCLuDE5G/HFimy/Z/THxFBx
-        C47rCGhbxt+mLlFltwhOlmBTKQxewpE=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-97-zx2lrdjJNemjv8Sbq9Z_rQ-1; Fri, 15 Nov 2019 06:10:42 -0500
-Received: by mail-wm1-f70.google.com with SMTP id v8so5825346wml.4
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 03:10:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kjOGDwlR3plOhDtlved0KVpfk475OBTI+qZNZ+6nVyc=;
-        b=PcZxqz38eXGTnluxXiFoW9EkeKRIOyJkWYEQBt83ZlsxJH/WEJqdYSpIttDPlbgTAH
-         Ym5EUhIBjQ4lhMC3GBaEY1OrwYdLfAlCkHHwG9/41L/OccnJH+T+EITygAU/txKTiFn2
-         L8Tlq0m2DNMXNSanfxVWy+hXQzrH+O1nKjkFYz2u5zKlhHOkpHKr9l+lIELI+l/Jq0rY
-         MdMxH6zcuZP8h+Fp/L3naVFuRoHvLf/8TrHBXkkRExrBR7lmaHBDEQWu1EgGm+wL+Xmj
-         DKDGEf6zKyY4Y2zPtxPsFIWpdPVx5+PiO8dQ9BnuTE+QDuo6u5HjjvnnblLgff2AQqg3
-         Q8vg==
-X-Gm-Message-State: APjAAAXLZztUt5iIRGal/QJticr0pKMfAhUzkIEKR+evemt+yVhygaGM
-        hH28gsXoD7d2DglmdFuyFZ/LfXrpBVwDOG/KJVUsCFGyerDJCa+oMCz4E1/ZQD13EHJ931O/a+y
-        c3PWIEJAAVzLXXtfuj9iSZrDF
-X-Received: by 2002:a5d:526f:: with SMTP id l15mr14215169wrc.169.1573816241374;
-        Fri, 15 Nov 2019 03:10:41 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyOPQptYPfONVLIR3kAUatC7HlUW850xwQBpIGGl+7G/miLNYFThsiuimFFWREf2We/4QDuJg==
-X-Received: by 2002:a5d:526f:: with SMTP id l15mr14215138wrc.169.1573816241039;
-        Fri, 15 Nov 2019 03:10:41 -0800 (PST)
-Received: from mcroce-redhat.mxp.redhat.com (nat-pool-mxp-t.redhat.com. [149.6.153.186])
-        by smtp.gmail.com with ESMTPSA id v6sm11166971wrt.13.2019.11.15.03.10.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 03:10:40 -0800 (PST)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] bonding: symmetric ICMP transmit
-Date:   Fri, 15 Nov 2019 12:10:37 +0100
-Message-Id: <20191115111037.7843-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.23.0
+        Fri, 15 Nov 2019 06:12:03 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAFBBowk096356;
+        Fri, 15 Nov 2019 05:11:50 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573816310;
+        bh=RSfM/pVTGltEfQag5xIAjMs1tc4knLscTHrZC+lMegE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nTSrOb27rwarGbtfgh8UmhGaJZIW9Bi0phwT8NesKHN2ZwRyF4VDhAlswoPMyB5bp
+         /CF5tW1YQWZorlizCaUHAT9OroX4DFwQXPx/gDzP3Ll9runSDaNZJ2kd5SpR59zYdN
+         6fHbKXAemF9P5Wepy6ATS2rrGhNNRqrQTg1XQvnc=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAFBBorY008241
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 15 Nov 2019 05:11:50 -0600
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 15
+ Nov 2019 05:11:45 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 15 Nov 2019 05:11:45 -0600
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAFBBgsa117913;
+        Fri, 15 Nov 2019 05:11:42 -0600
+Subject: Re: [RFC PATCH] usb: gadget: f_tcm: Added DMA32 flag while allocation
+ of command buffer
+To:     Jayshri Dajiram Pawar <jpawar@cadence.com>,
+        Peter Chen <peter.chen@nxp.com>, <konrad.wilk@oracle.com>
+CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
+        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jbergsagel@ti.com" <jbergsagel@ti.com>,
+        "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>,
+        Rahul Kumar <kurahul@cadence.com>,
+        Pawel Laszczak <pawell@cadence.com>,
+        Sanket Parmar <sparmar@cadence.com>,
+        <iommu@lists.linux-foundation.org>
+References: <1573640672-10344-1-git-send-email-jpawar@cadence.com>
+ <20191114025301.GD30608@b29397-desktop>
+ <5b567d57-6206-24cf-5886-20e8b5a92a45@ti.com>
+ <MN2PR07MB6288D92B4AB6CF1B622A797CC1700@MN2PR07MB6288.namprd07.prod.outlook.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <cefc03a1-b70a-bb40-289e-fbf4f9c79faf@ti.com>
+Date:   Fri, 15 Nov 2019 13:11:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-MC-Unique: zx2lrdjJNemjv8Sbq9Z_rQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <MN2PR07MB6288D92B4AB6CF1B622A797CC1700@MN2PR07MB6288.namprd07.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: base64
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A bonding with layer2+3 or layer3+4 hashing uses the IP addresses and the p=
-orts
-to balance packets between slaves. With some network errors, we receive an =
-ICMP
-error packet by the remote host or a router. If sent by a router, the sourc=
-e IP
-can differ from the remote host one. Additionally the ICMP protocol has no =
-port
-numbers, so a layer3+4 bonding will get a different hash than the previous =
-one.
-These two conditions could let the packet go through a different interface =
-than
-the other packets of the same flow:
-
-    # tcpdump -qltnni veth0 |sed 's/^/0: /' &
-    # tcpdump -qltnni veth1 |sed 's/^/1: /' &
-    # hping3 -2 192.168.0.2 -p 9
-    0: IP 192.168.0.1.2251 > 192.168.0.2.9: UDP, length 0
-    1: IP 192.168.0.2 > 192.168.0.1: ICMP 192.168.0.2 udp port 9 unreachabl=
-e, length 36
-    1: IP 192.168.0.1.2252 > 192.168.0.2.9: UDP, length 0
-    1: IP 192.168.0.2 > 192.168.0.1: ICMP 192.168.0.2 udp port 9 unreachabl=
-e, length 36
-    1: IP 192.168.0.1.2253 > 192.168.0.2.9: UDP, length 0
-    1: IP 192.168.0.2 > 192.168.0.1: ICMP 192.168.0.2 udp port 9 unreachabl=
-e, length 36
-    0: IP 192.168.0.1.2254 > 192.168.0.2.9: UDP, length 0
-    1: IP 192.168.0.2 > 192.168.0.1: ICMP 192.168.0.2 udp port 9 unreachabl=
-e, length 36
-
-An ICMP error packet contains the header of the packet which caused the net=
-work
-error, so inspect it and match the flow against it, so we can send the ICMP=
- via
-the same interface of the previous packet in the flow.
-Move the IP and port dissect code into a generic function bond_flow_ip() an=
-d if
-we are dissecting an ICMP error packet, call it again with the adjusted off=
-set.
-
-    # hping3 -2 192.168.0.2 -p 9
-    1: IP 192.168.0.1.1224 > 192.168.0.2.9: UDP, length 0
-    1: IP 192.168.0.2 > 192.168.0.1: ICMP 192.168.0.2 udp port 9 unreachabl=
-e, length 36
-    1: IP 192.168.0.1.1225 > 192.168.0.2.9: UDP, length 0
-    1: IP 192.168.0.2 > 192.168.0.1: ICMP 192.168.0.2 udp port 9 unreachabl=
-e, length 36
-    0: IP 192.168.0.1.1226 > 192.168.0.2.9: UDP, length 0
-    0: IP 192.168.0.2 > 192.168.0.1: ICMP 192.168.0.2 udp port 9 unreachabl=
-e, length 36
-    0: IP 192.168.0.1.1227 > 192.168.0.2.9: UDP, length 0
-    0: IP 192.168.0.2 > 192.168.0.1: ICMP 192.168.0.2 udp port 9 unreachabl=
-e, length 36
-
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
----
- drivers/net/bonding/bond_main.c | 83 ++++++++++++++++++++++-----------
- 1 file changed, 57 insertions(+), 26 deletions(-)
-
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_mai=
-n.c
-index 08b2b0d855af..fcb7c2f7f001 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -41,6 +41,8 @@
- #include <linux/in.h>
- #include <net/ip.h>
- #include <linux/ip.h>
-+#include <linux/icmp.h>
-+#include <linux/icmpv6.h>
- #include <linux/tcp.h>
- #include <linux/udp.h>
- #include <linux/slab.h>
-@@ -3297,12 +3299,42 @@ static inline u32 bond_eth_hash(struct sk_buff *skb=
-)
- =09return 0;
- }
-=20
-+static bool bond_flow_ip(struct sk_buff *skb, struct flow_keys *fk,
-+=09=09=09 int *noff, int *proto, bool l34)
-+{
-+=09const struct ipv6hdr *iph6;
-+=09const struct iphdr *iph;
-+
-+=09if (skb->protocol =3D=3D htons(ETH_P_IP)) {
-+=09=09if (unlikely(!pskb_may_pull(skb, *noff + sizeof(*iph))))
-+=09=09=09return false;
-+=09=09iph =3D (const struct iphdr *)(skb->data + *noff);
-+=09=09iph_to_flow_copy_v4addrs(fk, iph);
-+=09=09*noff +=3D iph->ihl << 2;
-+=09=09if (!ip_is_fragment(iph))
-+=09=09=09*proto =3D iph->protocol;
-+=09} else if (skb->protocol =3D=3D htons(ETH_P_IPV6)) {
-+=09=09if (unlikely(!pskb_may_pull(skb, *noff + sizeof(*iph6))))
-+=09=09=09return false;
-+=09=09iph6 =3D (const struct ipv6hdr *)(skb->data + *noff);
-+=09=09iph_to_flow_copy_v6addrs(fk, iph6);
-+=09=09*noff +=3D sizeof(*iph6);
-+=09=09*proto =3D iph6->nexthdr;
-+=09} else {
-+=09=09return false;
-+=09}
-+
-+=09if (l34 && *proto >=3D 0)
-+=09=09fk->ports.ports =3D skb_flow_get_ports(skb, *noff, *proto);
-+
-+=09return true;
-+}
-+
- /* Extract the appropriate headers based on bond's xmit policy */
- static bool bond_flow_dissect(struct bonding *bond, struct sk_buff *skb,
- =09=09=09      struct flow_keys *fk)
- {
--=09const struct ipv6hdr *iph6;
--=09const struct iphdr *iph;
-+=09bool l34 =3D bond->params.xmit_policy =3D=3D BOND_XMIT_POLICY_LAYER34;
- =09int noff, proto =3D -1;
-=20
- =09if (bond->params.xmit_policy > BOND_XMIT_POLICY_LAYER23) {
-@@ -3314,31 +3346,30 @@ static bool bond_flow_dissect(struct bonding *bond,=
- struct sk_buff *skb,
- =09fk->ports.ports =3D 0;
- =09memset(&fk->icmp, 0, sizeof(fk->icmp));
- =09noff =3D skb_network_offset(skb);
--=09if (skb->protocol =3D=3D htons(ETH_P_IP)) {
--=09=09if (unlikely(!pskb_may_pull(skb, noff + sizeof(*iph))))
--=09=09=09return false;
--=09=09iph =3D ip_hdr(skb);
--=09=09iph_to_flow_copy_v4addrs(fk, iph);
--=09=09noff +=3D iph->ihl << 2;
--=09=09if (!ip_is_fragment(iph))
--=09=09=09proto =3D iph->protocol;
--=09} else if (skb->protocol =3D=3D htons(ETH_P_IPV6)) {
--=09=09if (unlikely(!pskb_may_pull(skb, noff + sizeof(*iph6))))
--=09=09=09return false;
--=09=09iph6 =3D ipv6_hdr(skb);
--=09=09iph_to_flow_copy_v6addrs(fk, iph6);
--=09=09noff +=3D sizeof(*iph6);
--=09=09proto =3D iph6->nexthdr;
--=09} else {
-+=09if (!bond_flow_ip(skb, fk, &noff, &proto, l34))
- =09=09return false;
--=09}
--=09if (bond->params.xmit_policy =3D=3D BOND_XMIT_POLICY_LAYER34 && proto >=
-=3D 0) {
--=09=09if (proto =3D=3D IPPROTO_ICMP || proto =3D=3D IPPROTO_ICMPV6)
--=09=09=09skb_flow_get_icmp_tci(skb, &fk->icmp, skb->data,
--=09=09=09=09=09      skb_transport_offset(skb),
--=09=09=09=09=09      skb_headlen(skb));
--=09=09else
--=09=09=09fk->ports.ports =3D skb_flow_get_ports(skb, noff, proto);
-+
-+=09/* ICMP error packets contains at least 8 bytes of the header
-+=09 * of the packet which generated the error. Use this information
-+=09 * to correlate ICMP error packets within the same flow which
-+=09 * generated the error.
-+=09 */
-+=09if (proto =3D=3D IPPROTO_ICMP || proto =3D=3D IPPROTO_ICMPV6) {
-+=09=09skb_flow_get_icmp_tci(skb, &fk->icmp, skb->data,
-+=09=09=09=09      skb_transport_offset(skb),
-+=09=09=09=09      skb_headlen(skb));
-+=09=09if (proto =3D=3D IPPROTO_ICMP) {
-+=09=09=09if (!icmp_is_err(fk->icmp.type))
-+=09=09=09=09return true;
-+
-+=09=09=09noff +=3D sizeof(struct icmphdr);
-+=09=09} else if (proto =3D=3D IPPROTO_ICMPV6) {
-+=09=09=09if (!icmpv6_is_err(fk->icmp.type))
-+=09=09=09=09return true;
-+
-+=09=09=09noff +=3D sizeof(struct icmp6hdr);
-+=09=09}
-+=09=09return bond_flow_ip(skb, fk, &noff, &proto, l34);
- =09}
-=20
- =09return true;
---=20
-2.23.0
-
+K0tvbnJhZA0KDQpKYXlzaHJpLA0KDQpPbiAxNS8xMS8yMDE5IDEyOjE0LCBKYXlzaHJpIERh
+amlyYW0gUGF3YXIgd3JvdGU6DQo+ICAgDQo+Pj4+IFRoZXJlIGlzIGEgcHJvYmxlbSB3aGVu
+IGZ1bmN0aW9uIGRyaXZlciBhbGxvY2F0ZSBtZW1vcnkgZm9yIGJ1ZmZlcg0KPj4+PiB1c2Vk
+IGJ5IERNQSBmcm9tIG91dHNpZGUgZG1hX21hc2sgc3BhY2UuDQo+Pj4+IEl0IGFwcGVhcnMg
+ZHVyaW5nIHRlc3RpbmcgZl90Y20gZHJpdmVyIHdpdGggY2RuczMgY29udHJvbGxlci4NCj4+
+Pj4gSW4gdGhlIHJlc3VsdCBjZG5zMyBkcml2ZXIgd2FzIG5vdCBhYmxlIHRvIG1hcCB2aXJ0
+dWFsIGJ1ZmZlciB0byBETUEuDQo+Pj4+IFRoaXMgZml4IHNob3VsZCBiZSBpbXByb3ZlZCBk
+ZXBlbmRpbmcgb24gZG1hX21hc2sgYXNzb2NpYXRlZCB3aXRoDQo+PiBkZXZpY2UuDQo+Pj4+
+IEFkZGluZyBHRlBfRE1BMzIgZmxhZyB3aGlsZSBhbGxvY2F0aW9uZyBjb21tYW5kIGRhdGEg
+YnVmZmVyIG9ubHkgZm9yDQo+Pj4+IDMyIGJpdCBjb250cm9sbGVycy4NCj4+Pg0KPj4+IEhp
+IEpheXNocmksDQo+Pj4NCj4+PiBUaGlzIGlzc3VlIHNob3VsZCBiZSBmaXhlZCBieSBzZXR0
+aW5nIERNQV9NQVNLIGNvcnJlY3RseSBmb3INCj4+PiBjb250cm9sbGVyLCB5b3UgY2FuJ3Qg
+bGltaXQgdXNlcidzIG1lbW9yeSByZWdpb24uIEF0IHVzYl9lcF9xdWV1ZSwgdGhlDQo+Pj4g
+VURDIGRyaXZlciB3aWxsIGNhbGwgRE1BIE1BUCBBUEksIGZvciBDYWRlbmNlLCBpdCBpcw0K
+Pj4gdXNiX2dhZGdldF9tYXBfcmVxdWVzdF9ieV9kZXYuDQo+Pj4gRm9yIHRoZSBzeXN0ZW0g
+d2l0aG91dCBTTU1VIChJTy1NTVUpLCBpdCB3aWxsIHVzZSBzd2lvdGxiIHRvIG1ha2Ugc3Vy
+ZQ0KPj4+IHRoZSBkYXRhIGJ1ZmZlciB1c2VkIGZvciBETUEgdHJhbnNmZXIgaXMgd2l0aGlu
+IERNQSBtYXNrIGZvcg0KPj4+IGNvbnRyb2xsZXIsIFRoZXJlIGlzIGEgcmVzZXJ2ZWQgbG93
+IG1lbW9yeSByZWdpb24gZm9yIGRlYm91bmNlIGJ1ZmZlcg0KPj4+IGluIHN3aW90bGIgdXNl
+IGNhc2UuDQo+Pj4NCj4+DQo+PiAvKioNCj4+ICAgICogc3RydWN0IHVzYl9yZXF1ZXN0IC0g
+ZGVzY3JpYmVzIG9uZSBpL28gcmVxdWVzdA0KPj4gICAgKiBAYnVmOiBCdWZmZXIgdXNlZCBm
+b3IgZGF0YS4gIEFsd2F5cyBwcm92aWRlIHRoaXM7IHNvbWUgY29udHJvbGxlcnMNCj4+ICAg
+ICoJb25seSB1c2UgUElPLCBvciBkb24ndCB1c2UgRE1BIGZvciBzb21lIGVuZHBvaW50cy4N
+Cj4+ICAgICogQGRtYTogRE1BIGFkZHJlc3MgY29ycmVzcG9uZGluZyB0byAnYnVmJy4gIElm
+IHlvdSBkb24ndCBzZXQgdGhpcw0KPj4gICAgKglmaWVsZCwgYW5kIHRoZSB1c2IgY29udHJv
+bGxlciBuZWVkcyBvbmUsIGl0IGlzIHJlc3BvbnNpYmxlDQo+PiAgICAqCWZvciBtYXBwaW5n
+IGFuZCB1bm1hcHBpbmcgdGhlIGJ1ZmZlci4NCj4+IDxzbmlwPg0KPj4gICAgKi8NCj4+DQo+
+PiBTbyBpZiBkbWEgaXMgbm90IHNldCBpbiB0aGUgdXNiX3JlcXVlc3QgdGhlbiBjb250cm9s
+bGVyIGRyaXZlciBpcyByZXNwb25zaWJsZSB0bw0KPj4gZG8gYSBkbWFfbWFwIG9mIHRoZSBi
+dWZmZXIgcG9pbnRlZCBieSAnYnVmJyBiZWZvcmUgaXQgYXR0ZW1wcyB0byBkbyBETUEuDQo+
+PiBUaGlzIHNob3VsZCB0YWtlIGNhcmUgb2YgRE1BIG1hc2sgYW5kIHN3aW90bGIuDQo+Pg0K
+Pj4gVGhpcyBwYXRjaCBpcyBub3QgY29ycmVjdC4NCj4+DQo+IEhpIFJvZ2VyLA0KPiANCj4g
+V2UgaGF2ZSBzY2F0dGVyLWdhdGhlciBkaXNhYmxlZC4NCj4gV2UgYXJlIGdldHRpbmcgYmVs
+b3cgZXJyb3Igd2hpbGUgYWxsb2NhdGlvbiBvZiBjbWQgZGF0YSBidWZmZXIgd2l0aCBsZW5n
+dGggNTI0Mjg4IG9yIGdyZWF0ZXIsIHdoaWxlIHdyaXRpbmcgbGFyZ2Ugc2l6ZSBmaWxlcyB0
+byBkZXZpY2UuDQo+IFRoaXMgZXJyb3Igb2NjdXJyZWQgb24geDg2IHBsYXRmb3JtLg0KPiBC
+ZWNhdXNlIG9mIHRoaXMgcmVhc29uIHdlIGhhdmUgYWRkZWQgRE1BIGZsYWcgd2hpbGUgYWxs
+b2NhdGlvbiBvZiBidWZmZXIuDQo+IA0KPiBbIDE2MDIuOTc3NTMyXSBzd2lvdGxiX3RibF9t
+YXBfc2luZ2xlOiAyNiBjYWxsYmFja3Mgc3VwcHJlc3NlZA0KPiBbIDE2MDIuOTc3NTM2XSBj
+ZG5zLXVzYjMgY2Rucy11c2IzLjE6IHN3aW90bGIgYnVmZmVyIGlzIGZ1bGwgKHN6OiA1MjQy
+ODggYnl0ZXMpLCB0b3RhbCAzMjc2OCAoc2xvdHMpLCB1c2VkIDAgKHNsb3RzKQ0KDQpXaHkg
+aXMgc3dpb3RsYiBidWZmZXIgZ2V0dGluZyBmdWxsPyBIb3cgbXVjaCBpcyBpdCBvbiB5b3Vy
+IHN5c3RlbT8NCkFyZSB5b3Ugc3VyZSB0aGF0IGRtYV91bm1hcCBpcyBoYXBwZW5pbmcgb24g
+cmVxdWVzdHMgdGhhdCBjb21wbGV0ZT8gZWxzZSB3ZSdsbCBqdXN0IGtlZXAgaG9nZ2luZyB0
+aGUgc3dpb3RsYiBidWZmZXIuDQoNCmNoZWVycywNCi1yb2dlcg0KDQo+IFsgMTYwMi45Nzc1
+NDJdIGNkbnMtdXNiMyBjZG5zLXVzYjMuMTogb3ZlcmZsb3cgMHgwMDAwMDAwN2VlZTAwMDAw
+KzUyNDI4OCBvZiBETUEgbWFzayBmZmZmZmZmZiBidXMgbWFzayAwDQo+IFsgMTYwMi45Nzc1
+NTVdIFdBUk5JTkc6IENQVTogNiBQSUQ6IDI4NSBhdCBrZXJuZWwvZG1hL2RpcmVjdC5jOjQz
+IHJlcG9ydF9hZGRyKzB4MzcvMHg2MA0KPiBbIDE2MDIuOTc3NTU2XSBNb2R1bGVzIGxpbmtl
+ZCBpbjogdGFyZ2V0X2NvcmVfdXNlciB1aW8gdGFyZ2V0X2NvcmVfcHNjc2kgdGFyZ2V0X2Nv
+cmVfZmlsZSB0YXJnZXRfY29yZV9pYmxvY2sgdXNiX2ZfdGNtKE9FKSB0YXJnZXRfY29yZV9t
+b2QgY2RuczMoT0UpIGNkbnMzX3BjaV93cmFwKE9FKSByb2xlcyhFKSBsaWJjb21wb3NpdGUo
+T0UpIHVkY19jb3JlKE9FKSB4dF9tdWx0aXBvcnQgaXB0YWJsZV9maWx0ZXIgYnBmaWx0ZXIg
+c25kX2hkYV9jb2RlY19oZG1pIG5sc19pc284ODU5XzEgaTkxNSBpbnRlbF9yYXBsIHg4Nl9w
+a2dfdGVtcF90aGVybWFsIGludGVsX3Bvd2VyY2xhbXAgY29yZXRlbXAga3ZtX2ludGVsIGt2
+bSBzbmRfaGRhX2NvZGVjX3JlYWx0ZWsgc25kX2hkYV9jb2RlY19nZW5lcmljIGxlZHRyaWdf
+YXVkaW8gc25kX2hkYV9pbnRlbCBpcnFieXBhc3Mgc25kX2hkYV9jb2RlYyBzbmRfaGRhX2Nv
+cmUgc25kX2h3ZGVwIHNuZF9wY20gZHJtX2ttc19oZWxwZXIgc25kX3NlcV9taWRpIHNuZF9z
+ZXFfbWlkaV9ldmVudCBjcmN0MTBkaWZfcGNsbXVsIHNuZF9yYXdtaWRpIGNyYzMyX3BjbG11
+bCBkcm0gc25kX3NlcSBnaGFzaF9jbG11bG5pX2ludGVsIHNuZF9zZXFfZGV2aWNlIGFlc25p
+X2ludGVsIHNuZF90aW1lciBtZWlfbWUgaTJjX2FsZ29fYml0IGFlc194ODZfNjQgY3J5cHRv
+X3NpbWQgY3J5cHRkIGZiX3N5c19mb3BzIGdsdWVfaGVscGVyIHNuZCBtZWkgaW5wdXRfbGVk
+cyBzeXNjb3B5YXJlYSBpbnRlbF9jc3RhdGUgc3lzZmlsbHJlY3QgaW50ZWxfcmFwbF9wZXJm
+IHN5c2ltZ2JsdCBocF93bWkgc291bmRjb3JlIHNwYXJzZV9rZXltYXAgc2VyaW9fcmF3IHdt
+aV9ibW9mIHRwbV9pbmZpbmVvbiBtYWNfaGlkIHNjaF9mcV9jb2RlbCBwYXJwb3J0X3BjIHBw
+ZGV2IGxwIHBhcnBvcnQgaXBfdGFibGVzIHhfdGFibGVzIGF1dG9mczQgaGlkX2dlbmVyaWMg
+dXNiaGlkIGhpZCBlMTAwMGUgcHNtb3VzZSBhaGNpIGxwY19pY2ggbGliYWhjaSBpMmNfaTgw
+MSB3bWkNCj4gWyAxNjAyLjk3NzYwNV0gIHZpZGVvDQo+IFsgMTYwMi45Nzc2MTNdIENQVTog
+NiBQSUQ6IDI4NSBDb21tOiBrd29ya2VyLzY6MiBUYWludGVkOiBHICAgICAgICAgICBPRSAg
+ICAgNS4yLjAtcmMzY2RuczMtamF5c2hyaS1zdHJlYW0tY29tbW9uKyAjNw0KPiBbIDE2MDIu
+OTc3NjE1XSBIYXJkd2FyZSBuYW1lOiBIZXdsZXR0LVBhY2thcmQgSFAgRWxpdGVEZXNrIDgw
+MCBHMSBUV1IvMThFNCwgQklPUyBMMDEgdjAyLjIxIDEyLzE3LzIwMTMNCj4gWyAxNjAyLjk3
+NzYyM10gV29ya3F1ZXVlOiB0Y21fdXNiX2dhZGdldCB1c2JnX2NtZF93b3JrIFt1c2JfZl90
+Y21dDQo+IFsgMTYwMi45Nzc2MjhdIFJJUDogMDAxMDpyZXBvcnRfYWRkcisweDM3LzB4NjAN
+Cj4gWyAxNjAyLjk3NzYzMV0gQ29kZTogNDggOGIgODcgMjggMDIgMDAgMDAgNDggODkgNzUg
+ZjggNDggODUgYzAgNzQgMmEgNGMgOGIgMDAgYjggZmUgZmYgZmYgZmYgNDkgMzkgYzAgNzYg
+MTEgODAgM2QgYWYgNjEgNzIgMDEgMDAgMGYgODQgZGYgMDYgMDAgMDAgPDBmPiAwYiBjOSBj
+MyA0OCA4MyBiZiAzOCAwMiAwMCAwMCAwMCA3NCBmMiBlYiBlMyA4MCAzZCA5MyA2MSA3MiAw
+MQ0KPiBbIDE2MDIuOTc3NjM0XSBSU1A6IDAwMTg6ZmZmZmEwYTY4MzRkZmMwMCBFRkxBR1M6
+IDAwMDEwMDQ2DQo+IFsgMTYwMi45Nzc2MzZdIFJBWDogMDAwMDAwMDAwMDAwMDAwMCBSQlg6
+IGZmZmY4ZWM1NzRhZWIwMTAgUkNYOiAwMDAwMDAwMDAwMDAwMDAwDQo+IFsgMTYwMi45Nzc2
+MzhdIFJEWDogMDAwMDAwMDAwMDAwMDAwNyBSU0k6IDAwMDAwMDAwMDAwMDAwODYgUkRJOiAw
+MDAwMDAwMDAwMDAwMDAwDQo+IFsgMTYwMi45Nzc2NDBdIFJCUDogZmZmZmEwYTY4MzRkZmMw
+OCBSMDg6IDAwMDAwMDAwMDAwMDA1NjkgUjA5OiBmZmZmZmZmZmEyMTg5ZmI4DQo+IFsgMTYw
+Mi45Nzc2NDJdIFIxMDogMDAwMDAwMDAwMDAwMDA2OSBSMTE6IGZmZmZhMGE2ODM0ZGY5NDAg
+UjEyOiAwMDAwMDAwMDAwMDgwMDAwDQo+IFsgMTYwMi45Nzc2NDRdIFIxMzogZmZmZjhlYzVh
+ZDUzNjIxOCBSMTQ6IGZmZmY4ZWM1YWQ2OTM4MDAgUjE1OiBmZmZmOGVjNWFkNjkzODAwDQo+
+IFsgMTYwMi45Nzc2NDddIEZTOiAgMDAwMDAwMDAwMDAwMDAwMCgwMDAwKSBHUzpmZmZmOGVj
+NWJlOTgwMDAwKDAwMDApIGtubEdTOjAwMDAwMDAwMDAwMDAwMDANCj4gWyAxNjAyLjk3NzY0
+OV0gQ1M6ICAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMw0K
+PiBbIDE2MDIuOTc3NjUxXSBDUjI6IDAwMDA3ZjA1YTU2YjcwMDAgQ1IzOiAwMDAwMDAwMzZm
+YzBhMDA2IENSNDogMDAwMDAwMDAwMDE2MDZlMA0KPiBbIDE2MDIuOTc3NjUzXSBDYWxsIFRy
+YWNlOg0KPiBbIDE2MDIuOTc3NjYwXSAgZG1hX2RpcmVjdF9tYXBfcGFnZSsweGRmLzB4ZjAN
+Cj4gWyAxNjAyLjk3NzY2OV0gIHVzYl9nYWRnZXRfbWFwX3JlcXVlc3RfYnlfZGV2KzB4MTdh
+LzB4MTkwIFt1ZGNfY29yZV0NCj4gWyAxNjAyLjk3NzY3OV0gIF9fY2RuczNfZ2FkZ2V0X2Vw
+X3F1ZXVlLmlzcmEuMzArMHgxNDkvMHgyZTAgW2NkbnMzXQ0KPiBbIDE2MDIuOTc3Njg2XSAg
+PyBrbWFsbG9jX29yZGVyKzB4MTgvMHg0MA0KPiBbIDE2MDIuOTc3NjkzXSAgY2RuczNfZ2Fk
+Z2V0X2VwX3F1ZXVlKzB4NTMvMHgxMDAgW2NkbnMzXQ0KPiBbIDE2MDIuOTc3Njk4XSAgdXNi
+X2VwX3F1ZXVlKzB4MzYvMHhhMCBbdWRjX2NvcmVdDQo+IFsgMTYwMi45Nzc3MDRdICB1c2Jn
+X3NlbmRfd3JpdGVfcmVxdWVzdCsweDFhZS8weDI1MCBbdXNiX2ZfdGNtXQ0KPiBbIDE2MDIu
+OTc3NzMxXSAgdHJhbnNwb3J0X2dlbmVyaWNfbmV3X2NtZCsweDFiYy8weDMyMCBbdGFyZ2V0
+X2NvcmVfbW9kXQ0KPiBbIDE2MDIuOTc3NzQ5XSAgdHJhbnNwb3J0X2hhbmRsZV9jZGJfZGly
+ZWN0KzB4NDIvMHg2MCBbdGFyZ2V0X2NvcmVfbW9kXQ0KPiBbIDE2MDIuOTc3NzY2XSAgdGFy
+Z2V0X3N1Ym1pdF9jbWRfbWFwX3NnbHMrMHgxNzYvMHgyMzAgW3RhcmdldF9jb3JlX21vZF0N
+Cj4gWyAxNjAyLjk3Nzc3MV0gID8gX19zd2l0Y2hfdG9fYXNtKzB4NDAvMHg3MA0KPiBbIDE2
+MDIuOTc3Nzg4XSAgdGFyZ2V0X3N1Ym1pdF9jbWQrMHgyNi8weDMwIFt0YXJnZXRfY29yZV9t
+b2RdDQo+IFsgMTYwMi45Nzc3OTRdICB1c2JnX2NtZF93b3JrKzB4NjAvMHhkMCBbdXNiX2Zf
+dGNtXQ0KPiBbIDE2MDIuOTc3Nzk5XSAgcHJvY2Vzc19vbmVfd29yaysweDIwZi8weDQxMA0K
+PiBbIDE2MDIuOTc3ODAyXSAgd29ya2VyX3RocmVhZCsweDM0LzB4NDAwDQo+IFsgMTYwMi45
+Nzc4MDddICBrdGhyZWFkKzB4MTIwLzB4MTQwDQo+IFsgMTYwMi45Nzc4MTFdICA/IHByb2Nl
+c3Nfb25lX3dvcmsrMHg0MTAvMHg0MTANCj4gWyAxNjAyLjk3NzgxNV0gID8gX19rdGhyZWFk
+X3BhcmttZSsweDcwLzB4NzANCj4gWyAxNjAyLjk3NzgxOF0gIHJldF9mcm9tX2ZvcmsrMHgz
+NS8weDQwDQo+IFsgMTYwMi45Nzc4MjJdIC0tLVsgZW5kIHRyYWNlIDcwZjI3Zjg0NjA0OWFl
+MzIgXS0tLQ0KPiBbIDE2MDIuOTc3ODI2XSBjZG5zLXVzYjMgY2Rucy11c2IzLjE6IGZhaWxl
+ZCB0byBtYXAgYnVmZmVyDQo+IFsgMTYwMi45Nzc4NTNdIHVhc3Bfc2VuZF93cml0ZV9yZXF1
+ZXN0KDY5NSkNCj4gDQo+IFJlZ2FyZHMsDQo+IEpheXNocmkNCj4gDQo+PiBjaGVlcnMsDQo+
+PiAtcm9nZXINCj4+DQo+Pj4gUGV0ZXINCj4+Pg0KPj4+Pg0KPj4+PiBTaWduZWQtb2ZmLWJ5
+OiBQYXdlbCBMYXN6Y3phayA8cGF3ZWxsQGNhZGVuY2UuY29tPg0KPj4+PiBTaWduZWQtb2Zm
+LWJ5OiBKYXlzaHJpIFBhd2FyIDxqcGF3YXJAY2FkZW5jZS5jb20+DQo+Pj4+IC0tLQ0KPj4+
+PiAgICBkcml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vZl90Y20uYyB8IDIwICsrKysrKysr
+KysrKysrLS0tLS0tDQo+Pj4+ICAgIGluY2x1ZGUvbGludXgvdXNiL2dhZGdldC5oICAgICAg
+ICAgIHwgIDIgKysNCj4+Pj4gICAgMiBmaWxlcyBjaGFuZ2VkLCAxNiBpbnNlcnRpb25zKCsp
+LCA2IGRlbGV0aW9ucygtKQ0KPj4+Pg0KPj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2Iv
+Z2FkZ2V0L2Z1bmN0aW9uL2ZfdGNtLmMNCj4+Pj4gYi9kcml2ZXJzL3VzYi9nYWRnZXQvZnVu
+Y3Rpb24vZl90Y20uYw0KPj4+PiBpbmRleCAzNjUwNDkzMWIyZDEuLmE3OGQ1ZmFkM2Q4NCAx
+MDA2NDQNCj4+Pj4gLS0tIGEvZHJpdmVycy91c2IvZ2FkZ2V0L2Z1bmN0aW9uL2ZfdGNtLmMN
+Cj4+Pj4gKysrIGIvZHJpdmVycy91c2IvZ2FkZ2V0L2Z1bmN0aW9uL2ZfdGNtLmMNCj4+Pj4g
+QEAgLTIxMyw3ICsyMTMsOCBAQCBzdGF0aWMgaW50IGJvdF9zZW5kX3JlYWRfcmVzcG9uc2Uo
+c3RydWN0DQo+PiB1c2JnX2NtZCAqY21kKQ0KPj4+PiAgICAJfQ0KPj4+Pg0KPj4+PiAgICAJ
+aWYgKCFnYWRnZXQtPnNnX3N1cHBvcnRlZCkgew0KPj4+PiAtCQljbWQtPmRhdGFfYnVmID0g
+a21hbGxvYyhzZV9jbWQtPmRhdGFfbGVuZ3RoLA0KPj4gR0ZQX0FUT01JQyk7DQo+Pj4+ICsJ
+CWNtZC0+ZGF0YV9idWYgPSBrbWFsbG9jKHNlX2NtZC0+ZGF0YV9sZW5ndGgsDQo+PiBHRlBf
+QVRPTUlDIHwNCj4+Pj4gKwkJCQkJZ2FkZ2V0LT5kbWFfZmxhZyk7DQo+Pj4+ICAgIAkJaWYg
+KCFjbWQtPmRhdGFfYnVmKQ0KPj4+PiAgICAJCQlyZXR1cm4gLUVOT01FTTsNCj4+Pj4NCj4+
+Pj4gQEAgLTI1Nyw3ICsyNTgsOCBAQCBzdGF0aWMgaW50IGJvdF9zZW5kX3dyaXRlX3JlcXVl
+c3Qoc3RydWN0DQo+PiB1c2JnX2NtZCAqY21kKQ0KPj4+PiAgICAJfQ0KPj4+Pg0KPj4+PiAg
+ICAJaWYgKCFnYWRnZXQtPnNnX3N1cHBvcnRlZCkgew0KPj4+PiAtCQljbWQtPmRhdGFfYnVm
+ID0ga21hbGxvYyhzZV9jbWQtPmRhdGFfbGVuZ3RoLA0KPj4gR0ZQX0tFUk5FTCk7DQo+Pj4+
+ICsJCWNtZC0+ZGF0YV9idWYgPSBrbWFsbG9jKHNlX2NtZC0+ZGF0YV9sZW5ndGgsIEdGUF9L
+RVJORUwNCj4+IHwNCj4+Pj4gKwkJCQkJZ2FkZ2V0LT5kbWFfZmxhZyk7DQo+Pj4+ICAgIAkJ
+aWYgKCFjbWQtPmRhdGFfYnVmKQ0KPj4+PiAgICAJCQlyZXR1cm4gLUVOT01FTTsNCj4+Pj4N
+Cj4+Pj4gQEAgLTMwNSw2ICszMDcsNyBAQCBzdGF0aWMgdm9pZCBib3RfY21kX2NvbXBsZXRl
+KHN0cnVjdCB1c2JfZXAgKmVwLA0KPj4gc3RydWN0IHVzYl9yZXF1ZXN0ICpyZXEpDQo+Pj4+
+ICAgIHN0YXRpYyBpbnQgYm90X3ByZXBhcmVfcmVxcyhzdHJ1Y3QgZl91YXMgKmZ1KQ0KPj4+
+PiAgICB7DQo+Pj4+ICAgIAlpbnQgcmV0Ow0KPj4+PiArCXN0cnVjdCB1c2JfZ2FkZ2V0ICpn
+YWRnZXQgPSBmdWFzX3RvX2dhZGdldChmdSk7DQo+Pj4+DQo+Pj4+ICAgIAlmdS0+Ym90X3Jl
+cV9pbiA9IHVzYl9lcF9hbGxvY19yZXF1ZXN0KGZ1LT5lcF9pbiwgR0ZQX0tFUk5FTCk7DQo+
+Pj4+ICAgIAlpZiAoIWZ1LT5ib3RfcmVxX2luKQ0KPj4+PiBAQCAtMzI3LDcgKzMzMCw4IEBA
+IHN0YXRpYyBpbnQgYm90X3ByZXBhcmVfcmVxcyhzdHJ1Y3QgZl91YXMgKmZ1KQ0KPj4+PiAg
+ICAJZnUtPmJvdF9zdGF0dXMucmVxLT5jb21wbGV0ZSA9IGJvdF9zdGF0dXNfY29tcGxldGU7
+DQo+Pj4+ICAgIAlmdS0+Ym90X3N0YXR1cy5jc3cuU2lnbmF0dXJlID0gY3B1X3RvX2xlMzIo
+VVNfQlVMS19DU19TSUdOKTsNCj4+Pj4NCj4+Pj4gLQlmdS0+Y21kLmJ1ZiA9IGttYWxsb2Mo
+ZnUtPmVwX291dC0+bWF4cGFja2V0LCBHRlBfS0VSTkVMKTsNCj4+Pj4gKwlmdS0+Y21kLmJ1
+ZiA9IGttYWxsb2MoZnUtPmVwX291dC0+bWF4cGFja2V0LCBHRlBfS0VSTkVMIHwNCj4+Pj4g
+KwkJCQlnYWRnZXQtPmRtYV9mbGFnKTsNCj4+Pj4gICAgCWlmICghZnUtPmNtZC5idWYpDQo+
+Pj4+ICAgIAkJZ290byBlcnJfYnVmOw0KPj4+Pg0KPj4+PiBAQCAtNTE1LDcgKzUxOSw4IEBA
+IHN0YXRpYyBpbnQgdWFzcF9wcmVwYXJlX3JfcmVxdWVzdChzdHJ1Y3QNCj4+IHVzYmdfY21k
+ICpjbWQpDQo+Pj4+ICAgIAlzdHJ1Y3QgdWFzX3N0cmVhbSAqc3RyZWFtID0gY21kLT5zdHJl
+YW07DQo+Pj4+DQo+Pj4+ICAgIAlpZiAoIWdhZGdldC0+c2dfc3VwcG9ydGVkKSB7DQo+Pj4+
+IC0JCWNtZC0+ZGF0YV9idWYgPSBrbWFsbG9jKHNlX2NtZC0+ZGF0YV9sZW5ndGgsDQo+PiBH
+RlBfQVRPTUlDKTsNCj4+Pj4gKwkJY21kLT5kYXRhX2J1ZiA9IGttYWxsb2Moc2VfY21kLT5k
+YXRhX2xlbmd0aCwNCj4+IEdGUF9BVE9NSUMgfA0KPj4+PiArCQkJCQlnYWRnZXQtPmRtYV9m
+bGFnKTsNCj4+Pj4gICAgCQlpZiAoIWNtZC0+ZGF0YV9idWYpDQo+Pj4+ICAgIAkJCXJldHVy
+biAtRU5PTUVNOw0KPj4+Pg0KPj4+PiBAQCAtNzYzLDExICs3NjgsMTMgQEAgc3RhdGljIGlu
+dCB1YXNwX2FsbG9jX3N0cmVhbV9yZXMoc3RydWN0IGZfdWFzDQo+Pj4+ICpmdSwgc3RydWN0
+IHVhc19zdHJlYW0gKnN0cmVhbSkNCj4+Pj4NCj4+Pj4gICAgc3RhdGljIGludCB1YXNwX2Fs
+bG9jX2NtZChzdHJ1Y3QgZl91YXMgKmZ1KQ0KPj4+PiAgICB7DQo+Pj4+ICsJc3RydWN0IHVz
+Yl9nYWRnZXQgKmdhZGdldCA9IGZ1YXNfdG9fZ2FkZ2V0KGZ1KTsNCj4+Pj4gICAgCWZ1LT5j
+bWQucmVxID0gdXNiX2VwX2FsbG9jX3JlcXVlc3QoZnUtPmVwX2NtZCwgR0ZQX0tFUk5FTCk7
+DQo+Pj4+ICAgIAlpZiAoIWZ1LT5jbWQucmVxKQ0KPj4+PiAgICAJCWdvdG8gZXJyOw0KPj4+
+Pg0KPj4+PiAtCWZ1LT5jbWQuYnVmID0ga21hbGxvYyhmdS0+ZXBfY21kLT5tYXhwYWNrZXQs
+IEdGUF9LRVJORUwpOw0KPj4+PiArCWZ1LT5jbWQuYnVmID0ga21hbGxvYyhmdS0+ZXBfY21k
+LT5tYXhwYWNrZXQsIEdGUF9LRVJORUwgfA0KPj4+PiArCQkJCWdhZGdldC0+ZG1hX2ZsYWcp
+Ow0KPj4+PiAgICAJaWYgKCFmdS0+Y21kLmJ1ZikNCj4+Pj4gICAgCQlnb3RvIGVycl9idWY7
+DQo+Pj4+DQo+Pj4+IEBAIC05ODAsNyArOTg3LDggQEAgc3RhdGljIGludCB1c2JnX3ByZXBh
+cmVfd19yZXF1ZXN0KHN0cnVjdA0KPj4gdXNiZ19jbWQgKmNtZCwgc3RydWN0IHVzYl9yZXF1
+ZXN0ICpyZXEpDQo+Pj4+ICAgIAlzdHJ1Y3QgdXNiX2dhZGdldCAqZ2FkZ2V0ID0gZnVhc190
+b19nYWRnZXQoZnUpOw0KPj4+Pg0KPj4+PiAgICAJaWYgKCFnYWRnZXQtPnNnX3N1cHBvcnRl
+ZCkgew0KPj4+PiAtCQljbWQtPmRhdGFfYnVmID0ga21hbGxvYyhzZV9jbWQtPmRhdGFfbGVu
+Z3RoLA0KPj4gR0ZQX0FUT01JQyk7DQo+Pj4+ICsJCWNtZC0+ZGF0YV9idWYgPSBrbWFsbG9j
+KHNlX2NtZC0+ZGF0YV9sZW5ndGgsDQo+PiBHRlBfQVRPTUlDIHwNCj4+Pj4gKwkJCQkJZ2Fk
+Z2V0LT5kbWFfZmxhZyk7DQo+Pj4+ICAgIAkJaWYgKCFjbWQtPmRhdGFfYnVmKQ0KPj4+PiAg
+ICAJCQlyZXR1cm4gLUVOT01FTTsNCj4+Pj4NCj4+Pj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUv
+bGludXgvdXNiL2dhZGdldC5oIGIvaW5jbHVkZS9saW51eC91c2IvZ2FkZ2V0LmgNCj4+Pj4g
+aW5kZXggMTI0NDYyZDY1ZWFjLi5kNmM5Y2QyMjI2MDAgMTAwNjQ0DQo+Pj4+IC0tLSBhL2lu
+Y2x1ZGUvbGludXgvdXNiL2dhZGdldC5oDQo+Pj4+ICsrKyBiL2luY2x1ZGUvbGludXgvdXNi
+L2dhZGdldC5oDQo+Pj4+IEBAIC0zNzMsNiArMzczLDcgQEAgc3RydWN0IHVzYl9nYWRnZXRf
+b3BzIHsNCj4+Pj4gICAgICogQGNvbm5lY3RlZDogVHJ1ZSBpZiBnYWRnZXQgaXMgY29ubmVj
+dGVkLg0KPj4+PiAgICAgKiBAbHBtX2NhcGFibGU6IElmIHRoZSBnYWRnZXQgbWF4X3NwZWVk
+IGlzIEZVTEwgb3IgSElHSCwgdGhpcyBmbGFnDQo+Pj4+ICAgICAqCWluZGljYXRlcyB0aGF0
+IGl0IHN1cHBvcnRzIExQTSBhcyBwZXIgdGhlIExQTSBFQ04gJiBlcnJhdGEuDQo+Pj4+ICsg
+KiBAZG1hX2ZsYWc6IGRtYSB6b25lIHRvIGJlIHVzZWQgZm9yIGJ1ZmZlciBhbGxvY2F0aW9u
+Lg0KPj4+PiAgICAgKg0KPj4+PiAgICAgKiBHYWRnZXRzIGhhdmUgYSBtb3N0bHktcG9ydGFi
+bGUgImdhZGdldCBkcml2ZXIiIGltcGxlbWVudGluZyBkZXZpY2UNCj4+Pj4gICAgICogZnVu
+Y3Rpb25zLCBoYW5kbGluZyBhbGwgdXNiIGNvbmZpZ3VyYXRpb25zIGFuZCBpbnRlcmZhY2Vz
+Lg0KPj4+PiBHYWRnZXQgQEAgLTQyNyw2ICs0MjgsNyBAQCBzdHJ1Y3QgdXNiX2dhZGdldCB7
+DQo+Pj4+ICAgIAl1bnNpZ25lZAkJCWRlYWN0aXZhdGVkOjE7DQo+Pj4+ICAgIAl1bnNpZ25l
+ZAkJCWNvbm5lY3RlZDoxOw0KPj4+PiAgICAJdW5zaWduZWQJCQlscG1fY2FwYWJsZToxOw0K
+Pj4+PiArCXVuc2lnbmVkIGludAkJCWRtYV9mbGFnOw0KPj4+PiAgICB9Ow0KPj4+PiAgICAj
+ZGVmaW5lIHdvcmtfdG9fZ2FkZ2V0KHcpCShjb250YWluZXJfb2YoKHcpLCBzdHJ1Y3QgdXNi
+X2dhZGdldCwNCj4+IHdvcmspKQ0KPj4+Pg0KPj4+PiAtLQ0KPj4+PiAyLjIwLjENCj4+Pj4N
+Cj4+Pg0KPj4NCj4+IC0tDQo+PiBUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jr
+a2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4NCj4+IFktdHVubnVzL0J1c2luZXNzIElE
+OiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpDQoNCi0tIA0KVGV4
+YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVs
+c2lua2kuDQpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0Rv
+bWljaWxlOiBIZWxzaW5raQ0K
