@@ -2,97 +2,90 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C737C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CC3C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44B42206E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:02:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ATCFqh3l"
+	by mail.kernel.org (Postfix) with ESMTP id 75D64206E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfKODCR (ORCPT
+        id S1727134AbfKODDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 22:02:17 -0500
-Received: from ozlabs.org ([203.11.71.1]:56489 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726674AbfKODCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 22:02:16 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47DjnK72MNz9s7T;
-        Fri, 15 Nov 2019 14:02:13 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573786934;
-        bh=+Do3LMt64aaFPe5u9CjhUx9/Fe0XAXiSgZFtW2yysPE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ATCFqh3lU9ge8ZX3r20ORLy8jcKP4NmvwMRyCRYzAm7rMFspFC6FgtUXxwkOp7ybt
-         7cKbfxyccnTe4j8BO3MILDtc65GYWsE4WwrHiU+sqLNg9fntpH4xOpMQ4r08raXBZL
-         QW0W38sMnBh2uB/ch1F6R3XWwxkbvOO78rlsPIDwhcgDtBFIBkLUydofrKM77SeeFH
-         9fwzju9V6wfTsyZaticmXc4WKoLQmiMpo8/O8yEDfA8S+RW/+1BHH+k4wbl9UlAk1X
-         xruLpQrH8/wOj0K3PaElcGsEtkMVBY1SyziGx8V2dVxg9Vr3/FPIwi8m/ymsbHP+lE
-         3U4vmfQ2BEyaA==
-Date:   Fri, 15 Nov 2019 14:02:13 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Viktor Rosendahl (BMW)" <viktor.rosendahl@gmail.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: linux-next: build warning after merge of the ftrace tree
-Message-ID: <20191115140213.74c5efe7@canb.auug.org.au>
+        Thu, 14 Nov 2019 22:03:23 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49994 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726674AbfKODDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 22:03:23 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5F901AFCD;
+        Fri, 15 Nov 2019 03:03:21 +0000 (UTC)
+Subject: Re: [PATCH v3 0/2] arm64: dts: Initial RTD1619 SoC and Realtek
+ Mjolnir EVB support
+To:     James Tai <james.tai@realtek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        'DTML' <devicetree@vger.kernel.org>,
+        "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <540b62715e77486485365081e992af76@realtek.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <44a543b9-988f-b56c-ca70-7d1faa40bffb@suse.de>
+Date:   Fri, 15 Nov 2019 04:03:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/KPUy8ukgb6DKaKhfJTQCk7f";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <540b62715e77486485365081e992af76@realtek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/KPUy8ukgb6DKaKhfJTQCk7f
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi James,
 
-Hi all,
+Am 12.11.19 um 16:45 schrieb James Tai:
+> This series adds initial Device Trees for Realtek RTD1619 SoC and
+> Realtek Mjolnir EVB.
+> 
+> v2 -> v3:
+> * Adjust the address-cells and address-size property of root node
+> * Adjust ranges property of r-bus node
+> * Adjust uart node addressing
+> * Add comments for uart node
+> * Revert soc node
+> 
+> v1 -> v2:
+> * Define compatible strings for Realtek RTD1619 SoC and Realtek Mjolnir
+> * Add uart1 and uart2 device node into rtd16xx.dtsi
+> * move cpus node and the interrupt-affinity into rtd16xx.dtsi
+> * Specify the r-bus ranges
 
-After merging the ftrace tree, today's linux-next build (arm
-multi_v7_defconfig) produced this warning:
+Some observations of what is not in this patchset:
 
-In file included from kernel/trace/trace.c:52:
-kernel/trace/trace.h:804:13: warning: 'latency_fsnotify' defined but not us=
-ed [-Wunused-function]
-  804 | static void latency_fsnotify(struct trace_array *tr) { }
-      |             ^~~~~~~~~~~~~~~~
+* There is neither /memreserve/ nor /reserved-memory here. What about
+Boot ROM, TEE and RPC?
+* The reset controllers for the UARTs are missing. Can we take the same
+shortcut as in my RTD1395 patch to add them now, i.e. are they
+compatible with RTD1295?
+* Is the watchdog incompatible, or is it just not enabled by the
+bootloader and depends on future, e.g., clk patches?
+* Is the RTC not enabled on boot, similar to the other SoCs?
 
-Introduced by commit
+Regards,
+Andreas
 
-  91edde2e6ae1 ("ftrace: Implement fs notification for tracing_max_latency")
-
-"inline" missing :-(
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/KPUy8ukgb6DKaKhfJTQCk7f
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3OFTUACgkQAVBC80lX
-0GwO9gf7B2J2SvrvjVgDAcquhmXTqeUktEgzex77/SRNCjvyH50lBga88zAoaplY
-gGZ2xzI86O1gjVgltZ2S9jWbjYxP4Yw+0XfIgEdKjXibF9WWIYFECuqN1KZjYsmA
-fVEOXbs9OCr1SbOosEpcnAB6f4yisx1++7WFReoOmqZOumCY7l0OISkqq+L1XxcP
-F8EKipBEh3yfLoTQTcgDmfUqy6z2OqE/qTeKzo+viHUg3mMLNu3byTfJn3uj6ba5
-hGnXXc+6geApteq7pENa6odd+AeOceuh+/PK0hSDwC3LwLkNIuTlnRoSW6jkyIAE
-cJ3VyMRbJRDWgxnrVnlHRZWs+jEdMg==
-=zxO2
------END PGP SIGNATURE-----
-
---Sig_/KPUy8ukgb6DKaKhfJTQCk7f--
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
