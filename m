@@ -2,162 +2,99 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D32C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FCEC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61BEB20740
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D70420730
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:16:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ffNF7aHK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a9gXLVhn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfKOOM6 (ORCPT
+        id S1727621AbfKOOQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 09:12:58 -0500
-Received: from mail-eopbgr720087.outbound.protection.outlook.com ([40.107.72.87]:33952
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727443AbfKOOM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 09:12:58 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IMbdtrKMCyAalIceeeW/dkXCaIr/Wutc0/FG9XvxNOUYf/ZQ80fzR3UTOeFRrRuMkbrgbW63ft3uzfmnHvzJI3Jw5hPoOITpoKfhk1RNN6bmCf7n5ZkUiba0W8lEl+d/uB/Zt3Tlz2uOO2Dm+2A9c9Wz6hLRdzNAdSS5G/f3UhR8jODvMdzaOyv41VTY1+bEVbMXaeSLCnR+qEpSOsMbdLH+L/P8thU5FTUyhfQUXQdqBK+H3BtzD45nvZBo20X/YXXhKoZw/nOWzNsumZMf7P4hVd7URtLKPG6uTtK73oa5ZSYi71Za2GhlLRZXvsFzNq4qZdkRX5qfP7oOjQ6Yqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HRCzcWTDN1b92Debzhlgk1CHemLK5eyz87Bbx4Y/uLM=;
- b=K3qEXfz34d2/NCoQN2i9S8wg7puErJ2opZ7dvQy1uLqqJ7BcDh7iP5n18KYuzwA5RHQp7j06/QaFfHI9RT0416i5rIOxs69LXTHaPPgCKK3wdlFgUqkuEeq9zNM3iO5lIGOQz2NPNR/Yd2J/oIR0wYiemI/RH++zk6/n8AORURlkN+ef9qjmra2W3OuwcfOxjZCokcwUu/uXUDPHC8Lz/GQLIlY30nAzU+o0zxGQRpJopBl/NsbnLFH+vOTwr2pr/1S99al8imqiwM2+LNYcAPqzCSJp/poMoc5ZkbKkURu4zhrYsaQqY9dpmXLk21afsiQbH6WwreRoXo5m/UOIQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HRCzcWTDN1b92Debzhlgk1CHemLK5eyz87Bbx4Y/uLM=;
- b=ffNF7aHKPKXTyv6spE2Ed21uOrC/wqlIpiR0yHCR7u1W4SQi5DgKlwI2p4QBiadSBAqxiduvZGn0NeOfLkgmoeBq+rx0NSkDLXeoy7SCYaOWHUsqxgeYhnlLfEMNUb8HG5Gi8dCarbcelJ/aOYQWLL+j8H9nthB3V028Vapdb+Q=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.71.154) by
- DM6PR12MB4249.namprd12.prod.outlook.com (10.141.8.206) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Fri, 15 Nov 2019 14:12:55 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::dd0c:8e53:4913:8ef4]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::dd0c:8e53:4913:8ef4%5]) with mapi id 15.20.2451.024; Fri, 15 Nov 2019
- 14:12:55 +0000
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: AMD TLB errata, (Was: [PATCH RFC] mm: add MAP_EXCLUSIVE to create
- exclusive user mappings)
-To:     Peter Zijlstra <peterz@infradead.org>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <1572171452-7958-2-git-send-email-rppt@kernel.org>
- <20191028123124.ogkk5ogjlamvwc2s@box> <20191028130018.GA7192@rapoport-lnx>
- <20191028131623.zwuwguhm4v4s5imh@box>
- <CAA9_cmd7f2y2AAT6646S=tco3yfyLgCAC4Qp=1iTQaJqrQcOwQ@mail.gmail.com>
- <20191029064318.s4n4gidlfjun3d47@box>
- <20191029085602.GI4114@hirez.programming.kicks-ass.net>
- <20191029110024.yjytp22lhd2vekrv@box>
- <20191029123949.GL4114@hirez.programming.kicks-ass.net>
-Openpgp: preference=signencrypt
-Message-ID: <1da1b025-cabc-6f04-bde5-e50830d1ecf0@amd.com>
-Date:   Fri, 15 Nov 2019 08:12:52 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-In-Reply-To: <20191029123949.GL4114@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0201CA0051.namprd02.prod.outlook.com
- (2603:10b6:803:20::13) To DM6PR12MB3163.namprd12.prod.outlook.com
- (2603:10b6:5:15e::26)
+        Fri, 15 Nov 2019 09:16:33 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47676 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727420AbfKOOQc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 09:16:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573827392;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=z2e5+UW0tK//TE2S4dwCVwmhkXMhlbynSTZrZr8XjC8=;
+        b=a9gXLVhnm/99H37z9pPRS5L0tAtOURTcvhOz7+5GHvYkT71OWeFoKpO1i1bEhJ9GeCorpT
+        Idr8jVnJ6uWGo9PJR7uVMm7bLhLAu/bPE3KUljcpFa9AnHb3+VT3uT97UnYZ5VON5k8jvc
+        sJETnONwOu5D06rW/biqUEim06TCUTg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-396-J0vUecp5NuK4wnoKV_yKsw-1; Fri, 15 Nov 2019 09:16:29 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 40F3E102C86E;
+        Fri, 15 Nov 2019 14:16:27 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B5C157BF99;
+        Fri, 15 Nov 2019 14:16:15 +0000 (UTC)
+Date:   Fri, 15 Nov 2019 22:16:10 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>
+Subject: Re: single aio thread is migrated crazily by scheduler
+Message-ID: <20191115141610.GA3283@ming.t460p>
+References: <20191114113153.GB4213@ming.t460p>
+ <20191114131434.GQ4114@hirez.programming.kicks-ass.net>
+ <20191115000925.GB4847@ming.t460p>
 MIME-Version: 1.0
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 29aa85a6-c9bc-4384-1ec6-08d769d5e8c4
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4249:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB4249378CBFC6244DA054B7C4EC700@DM6PR12MB4249.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 02229A4115
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(376002)(39860400002)(346002)(366004)(199004)(189003)(110136005)(54906003)(36756003)(86362001)(6666004)(66556008)(66946007)(8676002)(6512007)(66476007)(6246003)(8936002)(2906002)(31696002)(81156014)(81166006)(50466002)(5660300002)(58126008)(25786009)(6116002)(2486003)(76176011)(23676004)(52116002)(6486002)(47776003)(3846002)(305945005)(316002)(229853002)(14454004)(7736002)(230700001)(65806001)(2616005)(99286004)(4326008)(476003)(65956001)(66066001)(53546011)(6506007)(386003)(478600001)(186003)(26005)(486006)(31686004)(446003)(14444005)(11346002)(7416002)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB4249;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tb9q45e5EO+q6tc8iEfIYcZg/lxU4Nildc7BdS9/Pu5/4yxDQsDXe2wbE/T5T4gzHMngYSCIZNk+Z9h76EXcbXxeJO/PPDOzhxXVlgHCvtFPnwUB77FugvdTvkCBd+/Uts61jtmseF1YA2DH1HS9NMabd0Bxy7lBGdwG6Va9Ti/AhzXA7lHE82etjbbLhKKaLCwXmNTTTSC+WAInn7pEP5YoITuMMfickMnhnz4bINpjZPuiwYOTrqw5+ey5cWSu0T04COWqhBzLxTWcgXppn7h2iKXFoUT/9tKXLp35GyxckDPTCWLBR/ILuAuriSArWGe76XXIQQ5Gst6YjFL03FyD7k9F51JucTrv4a7TBMa+yrMijqAFSSrIVkvYbI8nEo5nn7ewUDJZoqEPdChb4weFN5VfYLO3BGcn1NpaO05/VtgZd57wtNFEuWxrONB5
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29aa85a6-c9bc-4384-1ec6-08d769d5e8c4
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2019 14:12:55.3570
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fTqq3rO6DX3jiRmRDnIGST64sWmiOnqps9AAp6cWLOIKw0KXxgkQ2GCRopED8H5lZB77vcerJr0vMGxY9BaBlQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4249
+In-Reply-To: <20191115000925.GB4847@ming.t460p>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: J0vUecp5NuK4wnoKV_yKsw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/29/19 7:39 AM, Peter Zijlstra wrote:
-> On Tue, Oct 29, 2019 at 02:00:24PM +0300, Kirill A. Shutemov wrote:
->> On Tue, Oct 29, 2019 at 09:56:02AM +0100, Peter Zijlstra wrote:
->>> On Tue, Oct 29, 2019 at 09:43:18AM +0300, Kirill A. Shutemov wrote:
->>>> But some CPUs don't like to have two TLB entries for the same memory with
->>>> different sizes at the same time. See for instance AMD erratum 383.
->>>>
->>>> Getting it right would require making the range not present, flush TLB and
->>>> only then install huge page. That's what we do for userspace.
->>>>
->>>> It will not fly for the direct mapping. There is no reasonable way to
->>>> exclude other CPU from accessing the range while it's not present (call
->>>> stop_machine()? :P). Moreover, the range may contain the code that doing
->>>> the collapse or data required for it...
->>>>
->>>> BTW, looks like current __split_large_page() in pageattr.c is susceptible
->>>> to the errata. Maybe we can get away with the easy way...
->>>
->>> As you write above, there is just no way we can have a (temporary) hole
->>> in the direct map.
->>>
->>> We are careful about that other errata, and make sure both translations
->>> are identical wrt everything else.
->>
->> It's not clear if it is enough to avoid the issue. "under a highly specific
->> and detailed set of conditions" is not very specific set of conditions :P
-> 
-> Yeah, I know ... :/ Tom is there any chance you could shed a little more
-> light on that errata?
+On Fri, Nov 15, 2019 at 08:09:25AM +0800, Ming Lei wrote:
+> On Thu, Nov 14, 2019 at 02:14:34PM +0100, Peter Zijlstra wrote:
+> > On Thu, Nov 14, 2019 at 07:31:53PM +0800, Ming Lei wrote:
+> > > Hi Guys,
+> > >=20
+> > > It is found that single AIO thread is migrated crazely by scheduler, =
+and
+> > > the migrate period can be < 10ms. Follows the test a):
+> >=20
+> > What does crazy mean? Does it cycle through the L3 mask?
+> >=20
+>=20
+> The single thread AIO thread is migrated in several milliseconds once.
 
-I talked with some of the hardware folks and if you maintain the same bits
-in the large and small pages (aside from the large page bit) until the
-flush, then the errata should not occur.
+Today I found the migrate rate of single fio IO thread can reach
+11~12K/sec when I run './xfs_complete 512' on another real machine
+(single numa node, 8 cores).
 
-The errata really applies to mappings that end up with different attribute
-bits being set. Even then, it doesn't fail every time. There are other
-conditions required to make it fail.
+And the number is very close to IOPS of the test, that said the fio
+IO thread can be migrated once just when completing one IO on the
+scsi_debug device.
+
 
 Thanks,
-Tom
+Ming
 
-> 
