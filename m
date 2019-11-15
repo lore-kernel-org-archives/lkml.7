@@ -6,181 +6,100 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA7AC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78361C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C609D20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 507F52075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 10:50:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ha4DEbaO"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="SLO8PHw1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbfKOKtU (ORCPT
+        id S1727399AbfKOKuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 05:49:20 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46575 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726983AbfKOKtT (ORCPT
+        Fri, 15 Nov 2019 05:50:15 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:35290 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727329AbfKOKuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:49:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573814958;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2WZELhR2mEJomYhrXFHphMnsP0bhd8Y9CxfJQCgTBVA=;
-        b=ha4DEbaO4HgsIX7pCvGLBJTsAkBZh3Lqv7hNp4CyEUPN6PIaxGfipszTCi3evOiFVJzOLh
-        VpwTO99086ffIW+xqbtRWA1ZeMKyjPD/FfCvDfG8cxCwwYkTq6+I7vwZLYSYp7LC0CEJxX
-        PBwjlvUntAwYVbVYBKlY6Ja7ziYfc4o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-304-pf5Z2PPWPXeyXz7k8RXRdQ-1; Fri, 15 Nov 2019 05:49:15 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1C66E1802CE0;
-        Fri, 15 Nov 2019 10:49:14 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id C83C369185;
-        Fri, 15 Nov 2019 10:49:11 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri, 15 Nov 2019 11:49:13 +0100 (CET)
-Date:   Fri, 15 Nov 2019 11:49:10 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Andrei Vagin <avagin@gmail.com>, Adrian Reber <areber@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v10 1/2] fork: extend clone3() to support setting a PID
-Message-ID: <20191115104909.GB25528@redhat.com>
-References: <20191114142707.1608679-1-areber@redhat.com>
- <20191114191538.GC171963@gmail.com>
- <20191115093419.GA25528@redhat.com>
- <20191115095854.4vr6bgfz6ny5zbpd@wittgenstein>
+        Fri, 15 Nov 2019 05:50:15 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAFAnPtd001023;
+        Fri, 15 Nov 2019 11:50:02 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=vbNZvQAxWj5aasRHQhk+/qrLFDSdRYRbFikBMduiqK8=;
+ b=SLO8PHw1uy4a+p8zkrQ3TXntGbMRI2YlKVg54MJi1bHZhtSDMVktT2weZh08kqmidMye
+ F2MVk+poLx/m4YvuyuSZIlW2PJNcmYMBKklbc4gmx+uRbZSoG1zn1k7hCc2jf2+ZY/LP
+ smypEYhvomkyxFCYp2W2A0s9PrrqLzv5k8P7E7XdrLjwn0T5m9N2fxGG4jo84eajGywR
+ HezBM2bafiKlt+acJORJ/S4P4rbRQ+yE5M3xo+rrExTdrTZHcaxNLv64QyNN6cM6WxSk
+ ncX0Y/17oPxCVbpBdcqWz4IrJS1q2M83qSGekBixm4OFVkK04WPD7Ag973ZTnsO2IQA0 iQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2w7psk3hcd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 Nov 2019 11:50:02 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4FE86100048;
+        Fri, 15 Nov 2019 11:50:02 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1EB652B494A;
+        Fri, 15 Nov 2019 11:50:02 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 15 Nov
+ 2019 11:50:01 +0100
+Subject: Re: [PATCH 0/4] Update sdmmc nodes for STM32MP1
+To:     Yann Gautier <yann.gautier@st.com>
+CC:     <mcoquelin.stm32@gmail.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191106100938.11368-1-yann.gautier@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <dc5b32b3-4bac-e53e-1fe4-74098231168f@st.com>
+Date:   Fri, 15 Nov 2019 11:50:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191115095854.4vr6bgfz6ny5zbpd@wittgenstein>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: pf5Z2PPWPXeyXz7k8RXRdQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <20191106100938.11368-1-yann.gautier@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-15_03:2019-11-15,2019-11-15 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/15, Christian Brauner wrote:
->
-> +static int set_tid_next(pid_t *set_tid, size_t *size, int idx)
-> +{
-> +=09int tid =3D 0;
-> +
-> +=09if (*size) {
-> +=09=09tid =3D set_tid[idx];
-> +=09=09if (tid < 1 || tid >=3D pid_max)
-> +=09=09=09return -EINVAL;
-> +
-> +=09=09/*
-> +=09=09 * Also fail if a PID !=3D 1 is requested and
-> +=09=09 * no PID 1 exists.
-> +=09=09 */
-> +=09=09if (tid !=3D 1 && !tmp->child_reaper)
-> +=09=09=09return -EINVAL;
-> +
-> +=09=09if (!ns_capable(tmp->user_ns, CAP_SYS_ADMIN))
-> +=09=09=09return -EPERM;
-> +
-> +=09=09(*size)--;
-> +=09}
+Hi Yann
 
-this needs more args, struct pid_namespace *tmp + pid_t pid_max
+On 11/6/19 11:09 AM, Yann Gautier wrote:
+> The STM32MP1 SoC embeds 3 instances of the SDMMC internal peripheral.
+> The sdmmc2 and sdmmc3 nodes are added in the SoC DT file, as well as
+> the required pins configuration.
+> The boards DT files are also updated:
+> - An eMMC is connected on SDMMC2 on STM32MP157C-ED1 and EV1 boards
+> - SDMMC3  can be used on the GPIO expansion pins on EV1 and DK1/DK2
+> boards.
+> 
+> Yann Gautier (4):
+>    ARM: dts: stm32: update slew-rate properties for sdmmc1 on stm32mp157
+>    ARM: dts: stm32: add sdmmc2 & 3 nodes for STM32MP157 SoC
+>    ARM: dts: stm32: enable sdmmc2 node for stm32mp157c-ed1 board
+>    ARM: dts: stm32: add sdmmc3 node for STM32MP1 boards
+> 
+>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 200 +++++++++++++++++++++-
+>   arch/arm/boot/dts/stm32mp157a-dk1.dts     |  12 ++
+>   arch/arm/boot/dts/stm32mp157c-ed1.dts     |  16 ++
+>   arch/arm/boot/dts/stm32mp157c-ev1.dts     |  12 ++
+>   arch/arm/boot/dts/stm32mp157c.dtsi        |  33 +++-
+>   5 files changed, 263 insertions(+), 10 deletions(-)
+> 
 
-> +
-> +=09return tid;
-> +}
-> +
->  struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
->  =09=09      size_t set_tid_size)
->  {
-> @@ -188,20 +213,10 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid=
-_t *set_tid,
->  =09for (i =3D ns->level; i >=3D 0; i--) {
->  =09=09int tid =3D 0;
-> =20
-> -=09=09if (set_tid_size) {
-> -=09=09=09tid =3D set_tid[ns->level - i];
-> -=09=09=09if (tid < 1 || tid >=3D pid_max)
-> -=09=09=09=09return ERR_PTR(-EINVAL);
-> -=09=09=09/*
-> -=09=09=09 * Also fail if a PID !=3D 1 is requested and
-> -=09=09=09 * no PID 1 exists.
-> -=09=09=09 */
-> -=09=09=09if (tid !=3D 1 && !tmp->child_reaper)
-> -=09=09=09=09return ERR_PTR(-EINVAL);
-> -=09=09=09if (!ns_capable(tmp->user_ns, CAP_SYS_ADMIN))
-> -=09=09=09=09return ERR_PTR(-EPERM);
-> -=09=09=09set_tid_size--;
-> -=09=09}
-> +=09=09retval =3D set_tid_next(set_tid, &set_tid_size, ns->level - i);
-> +=09=09if (retval < 0)
-> +=09=09=09goto out_free;
-> +=09=09tid =3D retval;
+Series applied on stm32-next.
 
-Well, if we add a helper then
-
-=09static inline int check_tid(tid, max, ns)
-=09{
-=09=09if (tid < 1 || tid >=3D max)
-=09=09=09return ERR_PTR(-EINVAL);
-=09=09/*
-=09=09 * Also fail if a PID !=3D 1 is requested and
-=09=09 * no PID 1 exists.
-=09=09 */
-=09=09if (tid !=3D 1 && !ns->child_reaper)
-=09=09=09return ERR_PTR(-EINVAL);
-=09=09if (!ns_capable(ns->user_ns, CAP_SYS_ADMIN))
-=09=09=09return ERR_PTR(-EPERM);
-=09=09return 0;
-=09}
-
-=09... alloc_pid() ...
-
-=09=09if (set_tid_size) {
-=09=09=09tid =3D set_tid[ns->level - i];
-=09=09=09retval =3D check_tid(tid, pid_max, tmp);
-=09=09=09if (retval)
-=09=09=09=09goto out_free;
-=09=09=09set_tid_size--;
-=09=09}
-
-looks more clean to me. But still ugly. IMO,
-
-=09=09if (set_tid_size) {
-=09=09=09tid =3D set_tid[ns->level - i];
-
-=09=09=09retval =3D -EINVAL;
-=09=09=09if (tid < 1 || tid >=3D pid_max)
-=09=09=09=09goto out_free;
-=09=09=09/*
-=09=09=09 * Also fail if a PID !=3D 1 is requested and
-=09=09=09 * no PID 1 exists.
-=09=09=09 */
-=09=09=09if (tid !=3D 1 && !tmp->child_reaper)
-=09=09=09=09goto out_free;
-=09=09=09retval =3D -EPERM;
-=09=09=09if (!ns_capable(tmp->user_ns, CAP_SYS_ADMIN))
-=09=09=09=09goto out_free;
-=09=09=09set_tid_size--;
-=09=09}
-
-makes more sense.
-
-Oleg.
-
+Regards
+Alex
