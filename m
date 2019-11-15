@@ -2,109 +2,124 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB06BC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2D3C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5B9A2073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34A462072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:56:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DLHHau4j"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fm9V3hiW";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="f6xSntbR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbfKOJzn (ORCPT
+        id S1727558AbfKOJ40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:55:43 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:58710 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfKOJzn (ORCPT
+        Fri, 15 Nov 2019 04:56:26 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:55700 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfKOJ40 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:55:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GtyCPw9XqiblXcSeWSKatoSztw4h8uQgEpbZa+XD5aU=; b=DLHHau4jKi+lKiykWEk5rBCJj
-        pAhYhQBbDOwb1w4sy/tXlvQ+Xy8HXvaSLxIWZvQy8f6vLKr5rpeBrv0fpRF6iMf4wDZ6iyvHjyMMX
-        i3Z4wXCJeRubxds/5mlieBaqon4tEkvamFVnDMpPuOu1uB7SoWtzcxYMkIeiXW/FELt8/jWeQD7NV
-        Gb4iOhUCbKRlmgVrlAGyRtkILykoYn9j0/AdsWCPTy5Ts+oXjyg9lIyAubzffFoW0CBjT6ZMbAUNa
-        ja+3zenTuQUwVxx36CadfaIk8LxtuYT1zmp0LLUzaJbI71qx/bnXEqtDN3mgp0QSQ5D0i69iv0zZe
-        NrVhB0yAQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iVYJY-0005qz-0D; Fri, 15 Nov 2019 09:54:52 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 371323006FB;
-        Fri, 15 Nov 2019 10:53:39 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2C10C29E4EBB3; Fri, 15 Nov 2019 10:54:47 +0100 (CET)
-Date:   Fri, 15 Nov 2019 10:54:47 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
-        rostedt@goodmis.org, mgorman@suse.de, dsmythies@telus.net,
-        linux-pm@vger.kernel.org, torvalds@linux-foundation.org,
-        tglx@linutronix.de, sargun@sargun.me, tj@kernel.org,
-        xiexiuqi@huawei.com, xiezhipeng1@huawei.com,
-        srinivas.pandruvada@linux.intel.com
-Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
-Message-ID: <20191115095447.GU4114@hirez.programming.kicks-ass.net>
-References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 15 Nov 2019 04:56:26 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 575EB601B4; Fri, 15 Nov 2019 09:56:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573811783;
+        bh=XGTVUfdwEfTtaLkWyp7SQUqekT4GERDU54cFO0CncMQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fm9V3hiWnTl4tegWE9qoxKIsI/+PhqLA/S5XTh2JUzAR9wv5sL4C9jFJWK+nJHI5s
+         Z38S2vMiLjXhLZnk9N3/BVgbD70wdxLQe5IbE+GagI2nZBK/YAgvFnixPKrF/3w24j
+         rIXWoP6R5OQylpfdpEeTiBESFSVvWKriqmhsYcfM=
+Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 04CD0611F6;
+        Fri, 15 Nov 2019 09:56:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573811782;
+        bh=XGTVUfdwEfTtaLkWyp7SQUqekT4GERDU54cFO0CncMQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=f6xSntbRVTu3wUrQsjUlssdXrq+KDegXkWzz9cDtrUP1uD3IUgx5ZSqWUnNshphA3
+         RqyIR8UeBS1PeywRwZVjXDruWN48XQS22r2mK+WukRC/GWKnFoubsYOxoQT8fz6fqx
+         2xik1e2J4UR80x1ixDwkOBd+TQL7ndPxFMyf60vw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 04CD0611F6
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v2 0/8] Add GPU & Video Clock controller driver for SC7180
+Date:   Fri, 15 Nov 2019 15:26:00 +0530
+Message-Id: <1573811768-21462-1-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 06:07:31PM +0100, Vincent Guittot wrote:
-> update_cfs_rq_load_avg() calls cfs_rq_util_change() everytime pelt decays,
-> which might be inefficient when cpufreq driver has rate limitation.
-> 
-> When a task is attached on a CPU, we have call path:
-> 
-> update_load_avg()
->   update_cfs_rq_load_avg()
->     cfs_rq_util_change -- > trig frequency update
->   attach_entity_load_avg()
->     cfs_rq_util_change -- > trig frequency update
-> 
-> The 1st frequency update will not take into account the utilization of the
-> newly attached task and the 2nd one might be discard because of rate
-> limitation of the cpufreq driver.
+[v2]
+ * Split Fabia code cleanup and calibration code.
+ * Few cleanups for GPU/Video CC are
+    * header file inclusion, const for pll vco table.
+    * removal of always enabled clock from gpucc.
+    * compatibles added in sorted order.
+    * move from core_initcall to subsys_initcall().
+    * cleanup clk_parent_data for clocks to be provided from DT.
 
-Doesn't this just show that a dumb rate limit in the driver is broken?
+[v1]
+ * Fabia PLLs could fail latching in the case where the PLL is not
+   calibrated, so add support to calibrate in prepare clock ops.
 
-> update_cfs_rq_load_avg() is only called by update_blocked_averages()
-> and update_load_avg() so we can move the call to
-> cfs_rq_util_change/cpufreq_update_util() into these 2 functions. It's also
-> interesting to notice that update_load_avg() already calls directly
-> cfs_rq_util_change() for !SMP case.
-> 
-> This changes will also ensure that cpufreq_update_util() is called even
-> when there is no more CFS rq in the leaf_cfs_rq_list to update but only
-> irq, rt or dl pelt signals.
+ * Add driver support for Graphics clock controller for SC7180 and also
+   update device tree bindings for the various clocks supported in the
+   clock controller.
 
-I don't think it does that; that is, iirc the return value of
-___update_load_sum() is 1 every time a period lapses. So even if the avg
-is 0 and doesn't change, it'll still return 1 on every period.
+ * Add driver support for Video clock controller for SC7180 and also
+   update device tree bindings for the various clocks supported in the
+   clock controller.
 
-Which is what that dumb rate-limit thing wants of course. But I'm still
-thinking that it's stupid to do. If nothing changes, don't generate
-events.
+Taniya Das (8):
+  clk: qcom: alpha-pll: Remove useless read from set rate
+  clk: qcom: clk-alpha-pll: Add support for Fabia PLL calibration
+  dt-bindings: clock: Add YAML schemas for the QCOM GPUCC clock bindings
+  dt-bindings: clock: Introduce QCOM Graphics clock bindings
+  clk: qcom: Add graphics clock controller driver for SC7180
+  dt-bindings: clock: Add YAML schemas for the QCOM VIDEOCC clock
+    bindings
+  dt-bindings: clock: Introduce QCOM Video clock bindings
+  clk: qcom: Add video clock controller driver for SC7180
 
-If anything, update_blocked_avgerages() should look at
-@done/others_have_blocked() to emit events for rt,dl,irq.
+ .../devicetree/bindings/clock/qcom,gpucc.txt       |  24 --
+ .../devicetree/bindings/clock/qcom,gpucc.yaml      |  70 ++++++
+ .../devicetree/bindings/clock/qcom,videocc.txt     |  18 --
+ .../devicetree/bindings/clock/qcom,videocc.yaml    |  62 +++++
+ drivers/clk/qcom/Kconfig                           |  16 ++
+ drivers/clk/qcom/Makefile                          |   2 +
+ drivers/clk/qcom/clk-alpha-pll.c                   |  83 ++++++-
+ drivers/clk/qcom/clk-alpha-pll.h                   |   4 +
+ drivers/clk/qcom/gpucc-sc7180.c                    | 266 +++++++++++++++++++++
+ drivers/clk/qcom/videocc-sc7180.c                  | 259 ++++++++++++++++++++
+ include/dt-bindings/clock/qcom,gpucc-sc7180.h      |  21 ++
+ include/dt-bindings/clock/qcom,videocc-sc7180.h    |  23 ++
+ 12 files changed, 800 insertions(+), 48 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,gpucc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,videocc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,videocc.yaml
+ create mode 100644 drivers/clk/qcom/gpucc-sc7180.c
+ create mode 100644 drivers/clk/qcom/videocc-sc7180.c
+ create mode 100644 include/dt-bindings/clock/qcom,gpucc-sc7180.h
+ create mode 100644 include/dt-bindings/clock/qcom,videocc-sc7180.h
 
-So why are we making the scheduler code more ugly instead of fixing that
-driver?
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
+
