@@ -2,102 +2,71 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B10A0C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69996C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C8B020732
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D1BF20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:56:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfKOIy2 (ORCPT
+        id S1727020AbfKOI44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 03:54:28 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35478 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfKOIy2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 03:54:28 -0500
-Received: by mail-ot1-f65.google.com with SMTP id c14so415308oth.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 00:54:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xXAIHX2Tl2rPR9tSIWbBGJFZ8rTfCs0FskSAJ4Ev+rs=;
-        b=B+xi3/LEkVd7NPwBiiUPa2Lwa8maXGUFBTb+VF9Z+HqD1x5OqiRT+iDFRdmrItw5dP
-         jHlR9BYteBPZyjbTloYASQtYuO/v6FsNSU8NEegaltC8uk5716ZuwbOpXfWSd6cvMYoD
-         jIpx7CM9YnirMM9R5SnMcglHY7wh74QxKmNBWscemW/ag54+cP9Ddcycd22RHhEZouOa
-         2FuWYgxWUIk7ne6y8gWP7QQ/W9QaJMnCmH2nbF4D7aN4AXPnhWLtxZRGJhbfAFn5GwXI
-         M/MTATgH3+I8/v/2xkemhlZu/V8olAXpo2kuSKtwASqduWeX0hd7rRB3zDoT1PJSg4qO
-         uaBA==
-X-Gm-Message-State: APjAAAW1JD+sSrS3WT5CIQPyF7YFOZjVvtFULav/LzHRrr9m0AOXqFhX
-        E2AKn+V/XhMmoqnvBFpHgYhN+KRloIVPX6Ztop7sUq3l
-X-Google-Smtp-Source: APXvYqyrQa5IxPsi3G7rS21hAK95+jhiYLA+S1aXs4vPX3QHlvXrVWf1Du1CX8vCc3Xf7tA+IQXdPThfCc6L3uJSoDg=
-X-Received: by 2002:a9d:5511:: with SMTP id l17mr2306903oth.145.1573808066972;
- Fri, 15 Nov 2019 00:54:26 -0800 (PST)
-MIME-Version: 1.0
-References: <20191024153756.31861-1-geert+renesas@glider.be>
- <20191115061554.532d29e9@collabora.com> <CAMuHMdWO=8sHn9wrEiuBGes0x_L2=Qkou=aPcHM7Mr9oDS74Qw@mail.gmail.com>
- <20191115094010.31acadf6@collabora.com>
-In-Reply-To: <20191115094010.31acadf6@collabora.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 15 Nov 2019 09:54:15 +0100
-Message-ID: <CAMuHMdVvycHZv6g-vem7Mu4fqVc9FBx2xrdER85Sjb+vVW0=sA@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Mark linux-i3c mailing list moderated
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        linux-i3c@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 15 Nov 2019 03:56:56 -0500
+Received: from mail.monom.org ([188.138.9.77]:49562 "EHLO mail.monom.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbfKOI4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 03:56:55 -0500
+X-Greylist: delayed 499 seconds by postgrey-1.27 at vger.kernel.org; Fri, 15 Nov 2019 03:56:55 EST
+Received: from mail.monom.org (localhost [127.0.0.1])
+        by filter.mynetwork.local (Postfix) with ESMTP id D37BC50064D;
+        Fri, 15 Nov 2019 09:48:34 +0100 (CET)
+Received: from localhost (b9168fab.cgn.dg-w.de [185.22.143.171])
+        by mail.monom.org (Postfix) with ESMTPSA id 535655004AF;
+        Fri, 15 Nov 2019 09:48:34 +0100 (CET)
+Date:   Fri, 15 Nov 2019 09:48:33 +0100
+From:   Daniel Wagner <wagi@monom.org>
+Subject: [ANNOUNCE] 4.4.201-rt189
+Data:   Fri, 15 Nov 2019 08:39:05 -0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Julia Cartwright <julia@ni.com>, Pavel Machek <pavel@denx.de>
+Message-Id: <20191115084834.D37BC50064D@mail.monom.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
+Hello RT Folks!
 
-On Fri, Nov 15, 2019 at 9:40 AM Boris Brezillon
-<boris.brezillon@collabora.com> wrote:
-> On Fri, 15 Nov 2019 09:10:02 +0100
-> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> > Hi Boris,
-> >
-> > On Fri, Nov 15, 2019 at 6:16 AM Boris Brezillon
-> > <boris.brezillon@collabora.com> wrote:
-> > > On Thu, 24 Oct 2019 17:37:56 +0200
-> > > Geert Uytterhoeven <geert+renesas@glider.be> wrote:
-> > > > The linux-i3c mailing list is moderated for non-subscribers.
-> > > >
-> > > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > >
-> > > Queued to i3c/next. It was actually queued 2 weeks ago but the
-> > > patchwork bot didn't send a notification for that one (one was sent for
-> > > your other patch) and I don't know why.
-> >
-> > It did:
->
-> Ok, perfect then. Looks like sometimes it doesn't work, but for this
-> patch I did receive a notification too (it was one notification for both
-> of your patches and I thought I was receiving one per patch).
+I'm pleased to announce the 4.4.201-rt189 stable release.
 
-It is one per patch, I did receive the other one, too:
+This release is just an update to the new stable 4.4.201 version and
+no RT specific changes have been made. -rt188 points to the tiny merge
+conflict in a Makefile, just in case you are wondering.
 
-Subject: Re: [PATCH trivial] i3c: Spelling s/dicovered/discovered/
-From: patchwork-bot+linux-i3c@kernel.org
-Message-Id: <157251967168.27046.5733392327207757366.git-patchwork-notify@kernel.org>
+You can get this release via the git tree at:
 
-Gr{oetje,eeting}s,
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
-                        Geert
+  branch: v4.4-rt
+  Head SHA1: fd812331da09b85713fdb0f3ce44640180dfad97
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Or to build 4.4.201-rt189 directly, the following patches should be applied:
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.4.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.4.201.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.4/patch-4.4.201-rt189.patch.xz
+
+Enjoy!
+   Daniel
