@@ -2,91 +2,96 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CC7C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B267C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56DF320706
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:20:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573788035;
-	bh=PiIS7yZbS9fEJm3OF/jynPajFSd2cFJT194PH0QlBWg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RLqRMvzyl7WV0l3m/4iHcqbFJe9IOahu39BYTOgAm5bEFwmUfxlHcrPrFYErAO/+3
-	 zo64Q2LEUD0WpTdENPtlqziY1ZwaEYoZa8X7oZxszY10wNLXNjsz8W/rdP/4m57y/V
-	 Mj1OY0my1KoUrs1DYW4tXq55Ac+dUq+VIgPIpuIE=
+	by mail.kernel.org (Postfix) with ESMTP id 44007206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 03:20:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbfKODUe (ORCPT
+        id S1727265AbfKODUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 22:20:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37608 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726549AbfKODUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 22:20:33 -0500
-Received: from localhost (unknown [104.132.150.99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEBA5206F4;
-        Fri, 15 Nov 2019 03:20:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573788033;
-        bh=PiIS7yZbS9fEJm3OF/jynPajFSd2cFJT194PH0QlBWg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fKC/RQgwC7siUSag2RQgnJu+dgSU2VictpP0hSTbuf4pd3iVsuNtjQ34ue5Hl0ah9
-         RFm8uTwWp4JsK2Elkbq3JlaMAxLFK71zwNEGDcjI4NHV4UPA3dBVgaZTaEYXEoznAA
-         6bHYx4ahAGFmuaJgiY1gI9JnSfjm7EgYwdJfBYF8=
-Date:   Fri, 15 Nov 2019 11:20:30 +0800
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     USB list <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Felipe Balbi <balbi@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
-Subject: Re: [PATCH 1/1] usb: gadget: add raw-gadget interface
-Message-ID: <20191115032030.GB793701@kroah.com>
-References: <cover.1573236684.git.andreyknvl@google.com>
- <282c5da077ad53ce4e5ff9b4350bbf62b33bb6a9.1573236684.git.andreyknvl@google.com>
- <20191108211745.GA1282512@kroah.com>
- <CAAeHK+w-nB4MngSNhazkZAa-Ovdu1C45HaD6XCPoJ79qRo8keQ@mail.gmail.com>
- <CAAeHK+y1O39gX5wDtF2j4jzpqKT8Z2c6cCHnZrh4hGWTS2Y65w@mail.gmail.com>
+        Thu, 14 Nov 2019 22:20:42 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6673 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727192AbfKODUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 22:20:40 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 34467167B78BBFEC3706;
+        Fri, 15 Nov 2019 11:20:38 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 15 Nov 2019
+ 11:20:30 +0800
+From:   yu kuai <yukuai3@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
+        <viro@zeniv.linux.org.uk>, <rostedt@goodmis.org>,
+        <oleg@redhat.com>, <mchehab+samsung@kernel.org>, <corbet@lwn.net>,
+        <tytso@mit.edu>, <jmorris@namei.org>
+CC:     <yukuai3@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <zhengbin13@huawei.com>,
+        <yi.zhang@huawei.com>, <chenxiang66@hisilicon.com>,
+        <xiexiuqi@huawei.com>
+Subject: [PATCH 3/3] debugfs: fix potential infinite loop in debugfs_remove_recursive
+Date:   Fri, 15 Nov 2019 11:27:52 +0800
+Message-ID: <1573788472-87426-4-git-send-email-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1573788472-87426-1-git-send-email-yukuai3@huawei.com>
+References: <1573788472-87426-1-git-send-email-yukuai3@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAeHK+y1O39gX5wDtF2j4jzpqKT8Z2c6cCHnZrh4hGWTS2Y65w@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 04:33:56PM +0100, Andrey Konovalov wrote:
-> On Thu, Nov 14, 2019 at 4:08 PM Andrey Konovalov <andreyknvl@google.com> wrote:
-> > On Fri, Nov 8, 2019 at 10:17 PM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > > > +static void gadget_reset(struct usb_gadget *gadget)
-> > > > +{
-> > > > +     pr_debug("ignoring\n");
-> > > > +}
-> > >
-> > > I think you don't even need functions for these, right?  If not, just
-> > > remove.  If you do, we should fix the gadget core to not require them :)
-> >
-> > Will do in v2.
-> 
-> Actually, I just hit that Dummy HCD/UDC requires a disconnect callback
-> to be present. And I assume other UDCs might do the same, so I'd
-> rather include the callbacks just in case. WDYT?
+debugfs_remove_recursive uses list_empty to judge weather a dentry has
+any subdentry or not. This can lead to infinite loop when any subdir is
+in use.
 
-If they require it to be present then yes, leave all of these.
+The problem was discoverd by the following steps in the console.
+1. use debugfs_create_dir to create a dir and multiple subdirs(insmod);
+2. cd to the subdir with depth not less than 2;
+3. call debugfs_remove_recursive(rmmod).
 
-thanks,
+After removing the subdir, the infinite loop is triggered because
+debugfs_remove_recursive uses list_empty to judge if the current dir
+doesn't have any subdentry. However list_empty can't skip the subdentry
+that is not simple_positive(simple_positive() will return false).
 
-greg k-h
+Fix the problem by using simple_empty instead of list_empty.
+
+Fixes: 776164c1faac ('debugfs: debugfs_remove_recursive() must not rely
+on list_empty(d_subdirs)')
+Reported-by: chenxiang66@hisilicon.com
+
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+---
+ fs/debugfs/inode.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
+index 7b975db..d64608276 100644
+--- a/fs/debugfs/inode.c
++++ b/fs/debugfs/inode.c
+@@ -773,8 +773,11 @@ void debugfs_remove_recursive(struct dentry *dentry)
+ 		if (!simple_positive(child))
+ 			continue;
+ 
+-		/* perhaps simple_empty(child) makes more sense */
+-		if (!list_empty(&child->d_subdirs)) {
++		/*
++		 * use simple_empty to prevent infinite loop when any
++		 * subdentry of child is in use
++		 */
++		if (!simple_empty(child)) {
+ 			spin_unlock(&parent->d_lock);
+ 			inode_unlock(d_inode(parent));
+ 			parent = child;
+-- 
+2.7.4
+
