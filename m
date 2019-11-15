@@ -2,112 +2,134 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C89C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2CFC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8944120727
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:22:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 672D520725
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:24:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qjvFTPBg"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="pULEYqD8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfKOBWp (ORCPT
+        id S1727402AbfKOBYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 20:22:45 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46027 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbfKOBWo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 20:22:44 -0500
-Received: by mail-lf1-f67.google.com with SMTP id v8so6629099lfa.12
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 17:22:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rbE1Wcsirza2JaW+3utZn4hbrXpX5xNM8bL08eDqpyw=;
-        b=qjvFTPBgFXYbB5WdseQRUdly8Y8CbuMcAAcDxORIfmdVQS99H/oqvGy8WoF96Tg7A+
-         n2YmgRm6wt8AA9LrPXu2b/aspr0DYORzzcudOogpl9P9ditcW6nnwA/1v9B+MLV077dM
-         MSod2kWwlGFXQQrBokWh0PhHbF6L7khF7M67SFJ6gb/MFXEocLfBhboQbz4/yF1sC9rK
-         8f1/RXUBhcSFNSFfdPpc8baOHrvdGEdH5Lo8aoKcGlDBeeHB7Sr6aJF+uFvp9iPYTbuv
-         5+a8xXS01xAajSZj5AiRN53uswZtj1Hltsb6Wln1LzhHdYiiXudnLqLVeBFJENJWr3g9
-         ZnUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rbE1Wcsirza2JaW+3utZn4hbrXpX5xNM8bL08eDqpyw=;
-        b=EV0+EdTVBdY2u9LUyEvbUf1DKMEntDGOlGLVG35htuVgWXWWEABPsNPRl/59J/1eH6
-         YASKj4sWp/jMUK+MWw+0oO1bX6r5h91xGhpZ1Yn2wbxKTuXP+UxCljO9JFnw+oMIhrbd
-         gdlAN2vQPsliJ9GegNgFGSpVJ1mNCLpa0huAFFsz7FTnBBDGhxb44Qj3nvG4xE0x9gt4
-         ExrRA0fITqfgXvmY38xloZNgefCsqY/vX0e/wLeA9c2KKZz8uEUfedC+DCG8faT9WzTP
-         bzqY2g5xU0tUvQSli/QeGkGs/FDRmOY2rKPDvVuImdPffD44S2iZd8mR18s9AoM/dV2f
-         akWA==
-X-Gm-Message-State: APjAAAUHBlNsO/Vx/vOFhlCVnBNIYiyaicwkvFvUNVbcAouvn9QDGcqy
-        fnmVsvQc17VVlTO5jz/nQzFDMIHAc9bWDMMXG4d8Tg==
-X-Google-Smtp-Source: APXvYqwQwGEi9KMXiJwWP1bFww1hrCBel+m7oLxDqeOryH+SK2KL+bPmaHUTPWh+0JAj/TgIbmhHhZMIwkji3C1u9sU=
-X-Received: by 2002:a19:22d3:: with SMTP id i202mr8959655lfi.69.1573780962459;
- Thu, 14 Nov 2019 17:22:42 -0800 (PST)
+        Thu, 14 Nov 2019 20:24:08 -0500
+Received: from cmta19.telus.net ([209.171.16.92]:48862 "EHLO cmta19.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727020AbfKOBYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 20:24:08 -0500
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id VQLDisIdVhFQMVQLEiZoU0; Thu, 14 Nov 2019 18:24:05 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1573781045; bh=SaaZOxWPpA1oUIgRGITBL2YkfVbqvLtRxZDaYbwOsck=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=pULEYqD8gGrEOfTQzYJtff0HcPdC3fS90+rgtHOeUv468FBmIKnrldXsw5H9qiR2u
+         Jd2lRSr3LqPTLJTHOMUEsQd7OdANyjMRguNTsrPO8bZkuk1dJC2fQeoFxrInVFLr63
+         /SPZiRdSVd9EBEgv5v3tmuwIKyeMZXO8Hysk0ze8rQB+UxiseCxUMDBbphtD3MtFDZ
+         uzA6U/TOcThAiqpreXWZnU3G7+n4mpU7Ux0Obrw9yQkOn6Wpu4Y0k3tQkGn11FGq8F
+         dQOcpNo5+PPxZQstGlQups50iQmB3AQJvaje7amiE87OOhpreStH31NZ1sYLAMkK1S
+         J5zCixlyXwXRg==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=ZPWpZkzb c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=IkcTkHD0fZMA:10 a=p-nOP-kxAAAA:8 a=QyXUC8HyAAAA:8 a=FGbulvE0AAAA:8
+ a=FDqIjB1zuNXgCgwSOjIA:9 a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19 a=QEXdDO2ut3YA:10
+ a=XN2wCei03jY4uMu7D0Wg:22 a=svzTaB3SJmTkU8mK-ULk:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Rafael J. Wysocki'" <rafael@kernel.org>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
+Cc:     "'Linux PM'" <linux-pm@vger.kernel.org>,
+        "'LKML'" <linux-kernel@vger.kernel.org>
+References: <13588000.TfE7eV4KYW@kreacher> <3144686.I8R4d9A2JO@kreacher> <CAJZ5v0jiBrx2xxf2EdvGrqke0ByK5YWXEw0R2rpHZYAJjgwJmg@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jiBrx2xxf2EdvGrqke0ByK5YWXEw0R2rpHZYAJjgwJmg@mail.gmail.com>
+Subject: RE: [PATCH 2/3] cpuidle: teo: Avoid expecting unrealistic idle times
+Date:   Thu, 14 Nov 2019 17:24:02 -0800
+Message-ID: <001a01d59b53$5eb8ae10$1c2a0a30$@net>
 MIME-Version: 1.0
-References: <20190710201244.25195-1-brijesh.singh@amd.com> <20190710201244.25195-12-brijesh.singh@amd.com>
-In-Reply-To: <20190710201244.25195-12-brijesh.singh@amd.com>
-From:   Steve Rutherford <srutherford@google.com>
-Date:   Thu, 14 Nov 2019 17:22:06 -0800
-Message-ID: <CABayD+ctvNszs6gVdjP+geJTk1RN3Ko-RWaRTdeU6-7G1=F=Mw@mail.gmail.com>
-Subject: Re: [PATCH v3 11/11] KVM: x86: Introduce KVM_SET_PAGE_ENC_BITMAP ioctl
-To:     "Singh, Brijesh" <brijesh.singh@amd.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdWbRmV8IOJacMpNQga2PAxrKUg3RwACM+RQ
+X-CMAE-Envelope: MS4wfAbD9LyVp0ZamvLOqcHUZr+po31sWiKJxtFCEo+UxAjx3hpDS/vAjwGSFxWayjkTUo9ee8o3snR4/lTa3U4/esOjqRUTbsQ15u1tdsQ2Vs2Mx4eiw5D8
+ Rv+3ghq8VoThZ0Nb6OeaH3T+ZuZqPop5EhLITmx+4e+WxzZB3+pvL3G5tWQG1paMCOW/xpRZBnEFGyAPtdBhnwG2dmsw2ZrRGiqz+qgRT8YvlcdU4zY0heBL
+ HbwM4LrrEPZovQj9pBxNLzyrlqwB5k4Vje4u4fh46k4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 1:13 PM Singh, Brijesh <brijesh.singh@amd.com> wrote:
+On 2019.11.14 15:51 Rafael J. Wysocki wrote:
+> On Wed, Nov 13, 2019 at 1:11 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>>
+>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>
+>> If an idle state shallower than the one "matching" the time till the
+>> next timer event is considered for selection, expect the idle duration
+>> to fall in the middle of the "bin" corresponding to that state rather
+>> than at the beginning of it which is unrealistic.
+>>
+>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>> ---
+>>  drivers/cpuidle/governors/teo.c |    9 ++++++++-
+>>  1 file changed, 8 insertions(+), 1 deletion(-)
+>>
+>> Index: linux-pm/drivers/cpuidle/governors/teo.c
+>> ===================================================================
+>> --- linux-pm.orig/drivers/cpuidle/governors/teo.c
+>> +++ linux-pm/drivers/cpuidle/governors/teo.c
+>> @@ -360,7 +360,14 @@ static int teo_select(struct cpuidle_dri
+>>
+>>                 if (max_early_idx >= 0) {
+>>                         idx = max_early_idx;
+>> -                       duration_ns = drv->states[idx].target_residency_ns;
+>> +                       /*
+>> +                        * Expect the idle duration to fall in the middle of the
+>> +                        * "bin" corresponding to idx (note that the maximum
+>> +                        * state index is guaranteed to be greater than idx at
+>> +                        * this point).
+>> +                        */
+>> +                       duration_ns = (drv->states[idx].target_residency_ns +
+>> +                               drv->states[idx+1].target_residency_ns) / 2;
+>>                 }
+>>         }
 >
->  struct kvm_arch_async_pf {
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index e675fd89bb9a..31653e8d5927 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -7466,6 +7466,47 @@ static int svm_get_page_enc_bitmap(struct kvm *kvm,
->         return ret;
->  }
->
-> +static int svm_set_page_enc_bitmap(struct kvm *kvm,
-> +                                  struct kvm_page_enc_bitmap *bmap)
-> +{
-> +       struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> +       unsigned long gfn_start, gfn_end;
-> +       unsigned long *bitmap;
-> +       unsigned long sz, i;
-> +       int ret;
-> +
-> +       if (!sev_guest(kvm))
-> +               return -ENOTTY;
-> +
-> +       gfn_start = bmap->start_gfn;
-> +       gfn_end = gfn_start + bmap->num_pages;
-> +
-> +       sz = ALIGN(bmap->num_pages, BITS_PER_LONG) / 8;
-> +       bitmap = kmalloc(sz, GFP_KERNEL);
+> This change turns out to cause the governor to choose idle states that
+> are too deep or too shallow too often, so I'm withdrawing it.
 
-This kmalloc should probably be either a vmalloc or kvmalloc. The max
-size, if I'm reading kmalloc correctly, is 2^10 pages. That's 4MB,
-which should correspond to a bitmap for a 128GB VM, which is a
-plausible VM size.
+O.K. thanks for letting us know.
+I did see some differences in the testing I did so far, but hadn't drilled down
+into it yet.
+I am somewhat wondering about the above and below stats in general.
 
---Steve
+By the way, I had a daft mistake in my post processing program, such that the
+"below" graph for idle state 0 was always plotting 0.
+
+Reference for that sweep test that I do (which is as far I got so far):
+http://www.smythies.com/~doug/linux/idle/teo-2019-11/sweep/index.html
+
+Legend:
+
+teo-v2: re-run of previous teo-v2 so that I could get non-zero idle state "below" data
+linux-next 2019.11.07 + cpuidle: Consolidate disabled state checks +
+[PATCH v2] cpuidle: Use nanoseconds as the unit of time
+
+teo-v3: teo-v2 + cpuidle: teo: Exclude cpuidle overhead from computations
+
+teo-v4: linux-pm + linux-next 2019.11.12 +
+cpuidle: teo: Avoid code duplication in conditionals
+cpuidle: teo: Avoid expecting unrealistic idle times
+cpuidle: teo: Avoid using "early hits" incorrectly
+
+teo-v5: teo-v4 + cpuidle: teo: Exclude cpuidle overhead from computations
+
+... Doug
+
+
