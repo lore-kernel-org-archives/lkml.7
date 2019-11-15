@@ -2,88 +2,99 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D73C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 279F8C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 611782053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F17472053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:25:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="eecwD5o8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="surtFdZ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727540AbfKOGZX (ORCPT
+        id S1727610AbfKOGZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:25:23 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:52210 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727362AbfKOGZX (ORCPT
+        Fri, 15 Nov 2019 01:25:27 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37857 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727362AbfKOGZ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:25:23 -0500
-X-UUID: 27f6db6e91664045828506e2071bf9d3-20191115
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=SLNrxh6JD/1mHEyfTiNySmTmbTYyNOt5EvaG5WpUSaE=;
-        b=eecwD5o88RLww6oY4RunnEsNuVNVx3v/rbgMnGk7L1+NVwSZ3BoqTuiWUaAchk5LZ3ZfPFGHyJRGumjK5aC3MUXouLU1PsvGplPg3zGGda5aJiPbsuXeslL2MnFD+h0l0J0eMaFRB73TxmzWzmdfoVGsfCDXArodn8IsJfgiqjY=;
-X-UUID: 27f6db6e91664045828506e2071bf9d3-20191115
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1876485587; Fri, 15 Nov 2019 14:25:16 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 15 Nov 2019 14:25:14 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 15 Nov 2019 14:25:12 +0800
-Message-ID: <1573799114.4956.0.camel@mtkswgap22>
-Subject: Re: [PATCH v5 1/7] scsi: ufs: Add device reset in link recovery path
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Can Guo <cang@codeaurora.org>
-CC:     <asutoshd@codeaurora.org>, <nguyenb@codeaurora.org>,
-        <rnayak@codeaurora.org>, <linux-scsi@vger.kernel.org>,
-        <kernel-team@android.com>, <saravanak@google.com>,
-        <salyzyn@google.com>, Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Fri, 15 Nov 2019 14:25:14 +0800
-In-Reply-To: <1573798172-20534-2-git-send-email-cang@codeaurora.org>
-References: <1573798172-20534-1-git-send-email-cang@codeaurora.org>
-         <1573798172-20534-2-git-send-email-cang@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Fri, 15 Nov 2019 01:25:26 -0500
+Received: by mail-pl1-f195.google.com with SMTP id bb5so3933310plb.4;
+        Thu, 14 Nov 2019 22:25:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hWSFthaD6WQUpptuakDsFyGfoN+3DaezgL6+fYz/Ahc=;
+        b=surtFdZ6zev7u3GpypYS2mChQSvez3bS0pyRfpr0JfAThjv1WU5p0mZ9tfK5pvXCLD
+         xCX/zk8n+XK3BQOsjfd+hE1wpQpfFJ+lOZzDnINijaahKraSSjOD+jrPujRtt7T3tIHr
+         Q5pcmZsObJYz1F5yRoAkJ6MG9NM7KZ9hYzfxzOhUOrufjedpvuQimZE63+HEdWPPQWfx
+         zwZxjATZZForCjopS6WxX7HLFEeJtZQs8NQROfwp8fqa9ZXdVAtqZ/HaEpoKi3pc995g
+         +LrVj9lOLH7RnIsXLttMBNA5d7p7G/BU/cAtXayQNKPRmQXt/mUyMAKRgCJg/8cehpBO
+         BgEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hWSFthaD6WQUpptuakDsFyGfoN+3DaezgL6+fYz/Ahc=;
+        b=oL5ZsSUWD4ZEqe6cvcJEUIlQPqrZ7Li1JghBYqGAe/OzpPRj3Q2P7EaGykiX36B9di
+         dGWD+/C/mD5n+xYEZePOkivZQTYTPcRUEM8IMGiXY7ey8BEwbxk48JrD9lgPA/M7jjyr
+         Rd1G9QF1Ue4xSwEnWKO2IaGlXcDxpvNrwF5nYzyhzC/SKlrFvhHncKVBJ60vGm2S8gAo
+         QqIl4bXTNlU9kqVl0ffS35b3NEVfAJjD/8y8xtfgmrT2Kyv6VI44i1RgpCyZG0FFDqdG
+         aCVGBQv5cXhjSognbjVm7T9tP9e3UUTybXalPxXryx+CgBkd4jW/G+fhetoKtME5U0iW
+         8kyg==
+X-Gm-Message-State: APjAAAXKUqYsQQQPSItuZlcQ8QxbCznR6clQoatsWUyJbp8rZe7/EDGU
+        CoFNYi2qgtHNA6SeYUlosVg=
+X-Google-Smtp-Source: APXvYqyUtDRGP8aPtEUpVOiMEJ3XpXw98JSoFyR7XZp1dXU0TZoIdIwfRWpWprrKDJqFByr7GZINAQ==
+X-Received: by 2002:a17:90a:d155:: with SMTP id t21mr16943033pjw.84.1573799124691;
+        Thu, 14 Nov 2019 22:25:24 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id x12sm8682608pfm.130.2019.11.14.22.25.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 22:25:24 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] power: supply: pda_power: add missed usb_unregister_notifier
+Date:   Fri, 15 Nov 2019 14:25:15 +0800
+Message-Id: <20191115062515.7087-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 6D3359264B6CB738D29D543A3333E14F23629DF003DDE3A284AE955E724C7D612000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2FuLA0KDQpPbiBUaHUsIDIwMTktMTEtMTQgYXQgMjI6MDkgLTA4MDAsIENhbiBHdW8gd3Jv
-dGU6DQo+IEluIG9yZGVyIHRvIHJlY292ZXIgZnJvbSBoaWJlcm44IGV4aXQgZmFpbHVyZSwgcGVy
-Zm9ybSBhIHJlc2V0IGluDQo+IGxpbmsgcmVjb3ZlcnkgcGF0aCBiZWZvcmUgaXNzdWluZyBsaW5r
-IHN0YXJ0LXVwLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQ2FuIEd1byA8Y2FuZ0Bjb2RlYXVyb3Jh
-Lm9yZz4NCj4gUmV2aWV3ZWQtYnk6IEJlYW4gSHVvIDxiZWFuaHVvQG1pY3Jvbi5jb20+DQo+IC0t
-LQ0KPiAgZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYyB8IDMgKysrDQo+ICAxIGZpbGUgY2hhbmdl
-ZCwgMyBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zY3NpL3Vmcy91
-ZnNoY2QuYyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMNCj4gaW5kZXggYzI4YzE0NC4uNTI1
-ZjhlNiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYw0KPiArKysgYi9k
-cml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQo+IEBAIC0zODU5LDYgKzM4NTksOSBAQCBzdGF0aWMg
-aW50IHVmc2hjZF9saW5rX3JlY292ZXJ5KHN0cnVjdCB1ZnNfaGJhICpoYmEpDQo+ICAJdWZzaGNk
-X3NldF9laF9pbl9wcm9ncmVzcyhoYmEpOw0KPiAgCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoaGJh
-LT5ob3N0LT5ob3N0X2xvY2ssIGZsYWdzKTsNCj4gIA0KPiArCS8qIFJlc2V0IHRoZSBhdHRhY2hl
-ZCBkZXZpY2UgKi8NCj4gKwl1ZnNoY2Rfdm9wc19kZXZpY2VfcmVzZXQoaGJhKTsNCj4gKw0KPiAg
-CXJldCA9IHVmc2hjZF9ob3N0X3Jlc2V0X2FuZF9yZXN0b3JlKGhiYSk7DQo+ICANCj4gIAlzcGlu
-X2xvY2tfaXJxc2F2ZShoYmEtPmhvc3QtPmhvc3RfbG9jaywgZmxhZ3MpOw0KDQpSZXZpZXdlZC1i
-eTogU3RhbmxleSBDaHUgPHN0YW5sZXkuY2h1QG1lZGlhdGVrLmNvbT4NCg0K
+The driver forgets to unregister the notifier in remove.
+Add the call to fix it.
+
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/power/supply/pda_power.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/power/supply/pda_power.c b/drivers/power/supply/pda_power.c
+index 3ae5707d39fa..03a37fd6be27 100644
+--- a/drivers/power/supply/pda_power.c
++++ b/drivers/power/supply/pda_power.c
+@@ -429,6 +429,10 @@ static int pda_power_probe(struct platform_device *pdev)
+ 
+ static int pda_power_remove(struct platform_device *pdev)
+ {
++#if IS_ENABLED(CONFIG_USB_PHY)
++	if (!IS_ERR_OR_NULL(transceiver) && pdata->use_otg_notifier)
++		usb_unregister_notifier(transceiver, &otg_nb);
++#endif
+ 	if (pdata->is_usb_online && usb_irq)
+ 		free_irq(usb_irq->start, pda_psy_usb);
+ 	if (pdata->is_ac_online && ac_irq)
+-- 
+2.24.0
 
