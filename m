@@ -2,161 +2,100 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4534DC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 19:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36132C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 19:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B47320733
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 19:52:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="J2q0LIOq"
+	by mail.kernel.org (Postfix) with ESMTP id 0DE8320733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 19:54:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573847641;
+	bh=QWNc7T+0hFj2yzET9ywgGzvprAWZvDKFK16dNoM/dXY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=knbYP9mIUGZ9iNIyJRQgO6ainyFHDHDmIv9TI5+c0RLmbFd2Gi6QK4Pualn2GfuXf
+	 6wdBmRHi34aKOcfgD3KQzcZOjeo4rLNN4jzXu0RL+oAaecwusWX8NGkxykAnIENTbR
+	 uVRQ4eFbhXFhewZoAJhw1qw8ROHRAsbI7EjS3aj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbfKOTwI (ORCPT
+        id S1727041AbfKOTx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 14:52:08 -0500
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:45495 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbfKOTwH (ORCPT
+        Fri, 15 Nov 2019 14:53:59 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:38592 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbfKOTx6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 14:52:07 -0500
-Received: by mail-ua1-f65.google.com with SMTP id w10so906321uar.12;
-        Fri, 15 Nov 2019 11:52:07 -0800 (PST)
+        Fri, 15 Nov 2019 14:53:58 -0500
+Received: by mail-qt1-f193.google.com with SMTP id p20so12049149qtq.5
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 11:53:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HHbI26fz+zQpABS0zqXiY8c4KjnBwCq3pE9F7Wnb8fY=;
-        b=J2q0LIOq9UNr8vaWrhFjK3y7keJnCFExHpkVvk1zXXQkwtbojNxqPueOGrFo+4lQfP
-         Ob2upH2NnhOl8e3FxPoLV0SjuA3Txr9caDvzDsJ5ljV6kQIFoNJYKRbjoo5fFy+Y0oax
-         9hYgpJU54IFLr2pKqbjFyycL265BkrtHoxfuMjrgVMtvi//MC7IctsbWYF+V8xwwhD2i
-         CtDxHGWDoiNpPGUPwDJm6e0wajE/DblDMTbw89gVaeBcSzbRWqsWt/XZbHWJ0d3UF9yg
-         E6ucy09GLMjWYkp1bFQQMWNQTMw1qq/ftSt/CuLwiHb0VB8LY6GZHTPqaJ/WO1/7nsgP
-         srXA==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IsyLWQ2rudgA1dfvEg2LT4nZEaPujsclpElv3aF+5fs=;
+        b=fb63xrBBljzgxb94F+3bo8xOvpSevc8YzKtUZuSx0V62wpC78+Ro9w8xl4n0dkcHZa
+         wEcDXHOjzfa99hJ/4bvvWD12N47uqbwxGOkA5lhCq6nvlVaKYGjFsHQQUXzmNP/DoHsc
+         y3wU4MbKJ31RYqGS/g4cH4tFgPaiwhyAY+DzzTlEekzmlYB9GHNyV1oxufXI2DOZX7xq
+         HF+t1dG+EJHiDCtnKFLoPRVf5GIgErs2rTijse01spZwzj3PBoLSqMJDBh2lcGti9XoK
+         PCemGWIq1dc2rW1K0DyVRwEHUTN/B+0rHjxIBxe7wP1xSi/0qpkpYsaPEMMUnxqiZXGO
+         b6Rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HHbI26fz+zQpABS0zqXiY8c4KjnBwCq3pE9F7Wnb8fY=;
-        b=FLIKwIAZq3QlD0Em0UBkGe4Qz6JfPQrzWAAD97w0ManS7hu8aLeVSDyKetCIv5lfis
-         8WlVmyj+SjmoTZXfcIZz1xjMemxI6jVE+qjNvoyjDF0hnZSpi0CUfhufabdldlAKQTkx
-         0Dbxj0axmUFqTwsMYupLvbikhKzdNVul+7aJNIEHwDHDBX1geYq/oUgOsJSMTcaCKIz/
-         w+U4eLKtTDOty9OQOA7kLORTaMEPgklcYnq2bWhRuhYXlvB0q/kTqe8ZaS66Q50u6hS0
-         4iqyhqHSxyrUpj+SpoLBYXyteOqyiTr88D0M4Se4g2JVnlichQe2oryrbS6/myZcnbVK
-         V50g==
-X-Gm-Message-State: APjAAAWpvlL3wvT91V2JvcvCRWC9258uKe26IRdEDjqUfL/oxUe3ia+Y
-        zl+8UDgbvdZCtzDO+zHfX2VJ8nan/JGwkFL2Fy7Jtg==
-X-Google-Smtp-Source: APXvYqx+/nT4BADAMxeuRrzcjMfxVjvDdGp8/th+yZsYwloAo8QW5U97u4z3d7xWU/7ck/2px+YjHaoLWmjXtJR8Sk8=
-X-Received: by 2002:ab0:1c06:: with SMTP id a6mr9926650uaj.93.1573847526571;
- Fri, 15 Nov 2019 11:52:06 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IsyLWQ2rudgA1dfvEg2LT4nZEaPujsclpElv3aF+5fs=;
+        b=mI5qCIYRacRucnBWN65vBQWXxBKvGgWsC4XwKRb1XbnZTDV4InRjg+Ww9NR2rmzL0Q
+         1g9Xa8CXKxk0yFNRwhIo2KBeOhHu7OHki8KqbIhEry7xfDoiRUEk+KCXtDku82lxCuhb
+         iPTZSjdX9vX1bJq/fnemch97mcb9nlB6VZ7Pm5dQa/py0M12t6GlUj8jNpOvrUG9VZGp
+         z9emr40mYDQ1JYSsFlIqsBzLFr4tShKTZ4V/AQFJdYZ14LpLwwmj+Sq307FYIl2e3Iss
+         kU6lHWVoLIOe9fZyi9fgJ6DkxMrMl9Tc+bCWzstC+ncwViPr66SnLID/YDuF4+NhohYR
+         EWoQ==
+X-Gm-Message-State: APjAAAXGXXejvHIYWzU5IdZkljJHnNwdSHiXEhZyxkizbQnWDnHd2oG1
+        Y6+pVndmctphnikmxsuJjNPzvxse
+X-Google-Smtp-Source: APXvYqwQMt2m4alobQ3Rl766P/h9zfpmyUnkSMt299RU1W8EsbbfpyumMS/0c/RNP8WAr3U0JhsDNA==
+X-Received: by 2002:ac8:6f44:: with SMTP id n4mr15388197qtv.379.1573847637447;
+        Fri, 15 Nov 2019 11:53:57 -0800 (PST)
+Received: from localhost ([2620:10d:c091:480::9935])
+        by smtp.gmail.com with ESMTPSA id p3sm4576733qkf.107.2019.11.15.11.53.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 15 Nov 2019 11:53:56 -0800 (PST)
+Date:   Fri, 15 Nov 2019 11:53:53 -0800
+From:   Tejun Heo <tj@kernel.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] workqueue: Add RCU annotation for pwq list walk
+Message-ID: <20191115195353.GS4163745@devbig004.ftw2.facebook.com>
+References: <20191115180125.j4gvmltzi6z2szhw@linutronix.de>
 MIME-Version: 1.0
-References: <3d8e949c-e266-c4f7-5179-c06ab3629418@canonical.com>
-In-Reply-To: <3d8e949c-e266-c4f7-5179-c06ab3629418@canonical.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Fri, 15 Nov 2019 14:51:55 -0500
-Message-ID: <CAN-5tyEgufUvN_FeLNnwdpGM0Yw1Jag8HQMAzti8Tg_xaOoOjg@mail.gmail.com>
-Subject: Re: NFS: inter ssc open (memory leak detected)
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Olga Kornievskaia <kolga@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115180125.j4gvmltzi6z2szhw@linutronix.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 4:24 AM Colin Ian King <colin.king@canonical.com> wrote:
->
-> Hi,
->
-> Static analysis with Coverity has detected a memory leak in the
-> following commit:
->
-> commit ec4b0925089826af45e99cdf78a8ac84c1d005f1
-> Author: Olga Kornievskaia <kolga@netapp.com>
-> Date:   Tue Oct 8 16:33:53 2019 -0400
->
->     NFS: inter ssc open
->
->
-> In function nfs42_ssc_open(), fs/nfs/nfs4file.c, analysis is as follows:
->
->    3. alloc_fn: Storage is returned from allocation function kzalloc.
->    4. var_assign: Assigning: read_name = storage returned from
-> kzalloc(len, 3136U).
-> 336        read_name = kzalloc(len, GFP_NOFS);
->
->    5. Condition read_name == NULL, taking false branch.
-> 337        if (read_name == NULL)
-> 338                goto out;
->
->    6. noescape: Resource read_name is not freed or pointed-to in snprintf.
-> 339        snprintf(read_name, len, SSC_READ_NAME_BODY, read_name_gen++);
-> 340
-> 341        r_ino = nfs_fhget(ss_mnt->mnt_root->d_inode->i_sb, src_fh,
-> &fattr,
-> 342                        NULL);
->
->    7. Condition IS_ERR(r_ino), taking true branch.
-> 343        if (IS_ERR(r_ino)) {
-> 344                res = ERR_CAST(r_ino);
->
->    8. Jumping to label out.
-> 345                goto out;
-> 346        }
-> 347
-> 348        filep = alloc_file_pseudo(r_ino, ss_mnt, read_name, FMODE_READ,
-> 349                                     r_ino->i_fop);
-> 350        if (IS_ERR(filep)) {
-> 351                res = ERR_CAST(filep);
-> 352                goto out;
-> 353        }
-> 354        filep->f_mode |= FMODE_READ;
-> 355
-> 356        ctx = alloc_nfs_open_context(filep->f_path.dentry, filep->f_mode,
-> 357                                        filep);
-> 358        if (IS_ERR(ctx)) {
-> 359                res = ERR_CAST(ctx);
-> 360                goto out_filep;
-> 361        }
-> 362
-> 363        res = ERR_PTR(-EINVAL);
-> 364        sp = nfs4_get_state_owner(server, ctx->cred, GFP_KERNEL);
-> 365        if (sp == NULL)
-> 366                goto out_ctx;
-> 367
-> 368        ctx->state = nfs4_get_open_state(r_ino, sp);
-> 369        if (ctx->state == NULL)
-> 370                goto out_stateowner;
-> 371
-> 372        set_bit(NFS_SRV_SSC_COPY_STATE, &ctx->state->flags);
-> 373        set_bit(NFS_OPEN_STATE, &ctx->state->flags);
-> 374        memcpy(&ctx->state->open_stateid.other, &stateid->other,
-> 375               NFS4_STATEID_OTHER_SIZE);
-> 376        update_open_stateid(ctx->state, stateid, NULL, filep->f_mode);
-> 377
-> 378        nfs_file_set_open_context(filep, ctx);
-> 379        put_nfs_open_context(ctx);
-> 380
-> 381        file_ra_state_init(&filep->f_ra,
-> filep->f_mapping->host->i_mapping);
-> 382        res = filep;
-> 383out:
->
->    CID 91575 (#1-2 of 2): Resource leak (RESOURCE_LEAK)
->
-> 9. leaked_storage: Variable read_name going out of scope leaks the
-> storage it points to.
->
-> 384        return res;
->
->
-> Looks like there are several return paths to out: that leak the
-> allocation of read_name.
+On Fri, Nov 15, 2019 at 07:01:25PM +0100, Sebastian Andrzej Siewior wrote:
+> An additional check has been recently added to ensure that a RCU related lock
+> is held while the RCU list is iterated.
+> The `pwqs' are sometimes iterated without a RCU lock but with the &wq->mutex
+> acquired leading to a warning.
+> 
+> Teach list_for_each_entry_rcu() that the RCU usage is okay if &wq->mutex
+> is acquired during the list traversal.
+> 
+> Fixes: 28875945ba98d ("rcu: Add support for consolidated-RCU reader checking")
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Thanks will fix.
+Applied to wq/for-5.5.
+
+Thanks.
+
+-- 
+tejun
