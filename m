@@ -2,97 +2,86 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFBDC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FFEC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B58BD20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:39:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m+L1dD7D"
+	by mail.kernel.org (Postfix) with ESMTP id C37F72072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:42:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfKOSjp (ORCPT
+        id S1726605AbfKOSmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 13:39:45 -0500
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:41010 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbfKOSjp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 13:39:45 -0500
-Received: by mail-ua1-f66.google.com with SMTP id o9so3302987uat.8
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 10:39:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bV2myfTUpz0CRJJzgk898nsegVBK706DjRFlK59PguM=;
-        b=m+L1dD7DHAoqoFPkWS4f+BNnvPYPE9XHcSqCYVyMx0c+a1MWv5B2TY/7T8BOZaL1s5
-         +vIAKqP3eSwDZBkR4whM1COVoYPLhTboSVtYVavsvQHhcE3BCGy6WMEFEC2fDWVd70HE
-         OFhXVx+1nd2oVHFa8C8xsrP9VnVxvO7aylKw54njPk1dKNiijEDK7NV7wqfjKMFg7PSP
-         wnHOBwfkZawEWSViQKsQGbRBc0CbbEtPJXGQfd1l6MWgTGTqXZs914IDyyTM0R82ejR9
-         KLdZ0Id83YIX04xikE1J6N90jB2iz9ac5sHcI4A8QECIGGeB+xAcz7dLqsMLxn4rNsEZ
-         K6gQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bV2myfTUpz0CRJJzgk898nsegVBK706DjRFlK59PguM=;
-        b=KaDZ9OeaFbwNhVAnX8rfEJvCC+Haz1ESRYjl5XZEMNI9QV40E1kbZO6V2Vfec2lo+n
-         EHkL5ZevSeCD+eHRD2DnjQHWfA2loTZq+GB9W2wI1WJQQy+T2JYXiSLaqJVfd6m8JUfR
-         4hpmhWgt9hIGvsR2rKTgZV/ESx+f+bG0wRnP5QMDLlysHbBKi3FJnh1KBkcjjqcS6bF1
-         NXzp70mdv7WWO16Ncb7zulLqOpP+8yGqthu6j6nrScqh4c628IKutbtHEWGh2SGJgZmm
-         UaSrXpvdyFCCENeC4ZofaZWje1xpD1rPqIDsgKu9Hr8yt5lK6LVi+ad7fGHZkjcP6Yts
-         8qCw==
-X-Gm-Message-State: APjAAAWk4Avrt5PIoFwe4FyvVTaQotqFF9aTdl1KgZGdpuj+TQsL8mhm
-        pUW8jflXFJADEelINkKa5FDWB9bf3ly3+QsnU5A=
-X-Google-Smtp-Source: APXvYqz/+B5/7vOeF44jPGMtbH299xhEPCR27z4T3xxKJV5F6OEavJ0VioPYov6QfZkmxnjSucv5N4F/ROowt8aFNmI=
-X-Received: by 2002:a9f:3c2c:: with SMTP id u44mr10152334uah.2.1573843183656;
- Fri, 15 Nov 2019 10:39:43 -0800 (PST)
+        Fri, 15 Nov 2019 13:42:44 -0500
+Received: from mga02.intel.com ([134.134.136.20]:40238 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726075AbfKOSmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 13:42:44 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 10:42:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,309,1569308400"; 
+   d="scan'208";a="208210512"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 15 Nov 2019 10:42:43 -0800
+Received: from [10.251.5.106] (kliang2-mobl.ccr.corp.intel.com [10.251.5.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id A97EF580472;
+        Fri, 15 Nov 2019 10:42:42 -0800 (PST)
+Subject: Re: [PATCH] perf/x86/intel: Avoid PEBS_ENABLE MSR access in PMI
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, acme@redhat.com,
+        mingo@kernel.org, linux-kernel@vger.kernel.org, eranian@google.com
+References: <20191115133917.24424-1-kan.liang@linux.intel.com>
+ <20191115140739.GM4131@hirez.programming.kicks-ass.net>
+ <c0f562aa-39f3-1291-edd7-17c46178d1e3@linux.intel.com>
+ <3e117702-c07f-bd58-9931-766c2698b5d7@linux.intel.com>
+ <20191115183341.GB22747@tassilo.jf.intel.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <d5da733d-f45a-702d-a8eb-57dd0c596659@linux.intel.com>
+Date:   Fri, 15 Nov 2019 13:42:41 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <20191114142707.1608679-1-areber@redhat.com> <20191114142707.1608679-2-areber@redhat.com>
- <20191114183421.GA171963@gmail.com> <20191115151420.GC20767@dcbz.redhat.com>
-In-Reply-To: <20191115151420.GC20767@dcbz.redhat.com>
-From:   Andrei Vagin <avagin@gmail.com>
-Date:   Fri, 15 Nov 2019 10:39:32 -0800
-Message-ID: <CANaxB-wWfXmFaFD7GuXe6GaOnEQhTCS-7cPa24L00dxux5YtOQ@mail.gmail.com>
-Subject: Re: [PATCH v10 2/2] selftests: add tests for clone3() with *set_tid
-To:     Adrian Reber <areber@redhat.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191115183341.GB22747@tassilo.jf.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 7:14 AM Adrian Reber <areber@redhat.com> wrote:
->
-> On Thu, Nov 14, 2019 at 10:34:21AM -0800, Andrei Vagin wrote:
->
-> > > +   snprintf(proc_path, sizeof(proc_path), "/proc/%d/status", pid);
-> > > +   f = fopen(proc_path, "r");
-> > > +   if (f == NULL)
-> > > +           ksft_exit_fail_msg(
-> > > +                   "%s - Could not open %s\n",
-> > > +                   strerror(errno), proc_path);
->
-> If the child does not exist anymore, the test will fail here and exit.
->
-> Besides this while() I tried to address all your comments in v11. Any
-> further comments on the test?
 
-No, I don't have any other comments.
+
+On 11/15/2019 1:33 PM, Andi Kleen wrote:
+>> @@ -2620,6 +2624,15 @@ static int handle_pmi_common(struct pt_regs *regs,
+>> u64 status)
+>>                  handled++;
+>>                  x86_pmu.drain_pebs(regs);
+>>                  status &= x86_pmu.intel_ctrl | GLOBAL_STATUS_TRACE_TOPAPMI;
+>> +
+>> +               /*
+>> +                * PMI may land after cpuc->enabled=0 in x86_pmu_disable()
+>> and
+>> +                * PMI throttle may be triggered for the PMI.
+>> +                * For this rare case, intel_pmu_pebs_disable() will not
+>> touch
+>> +                * MSR_IA32_PEBS_ENABLE. Explicitly disable the PEBS here.
+>> +                */
+>> +               if (unlikely(!cpuc->enabled && !cpuc->pebs_enabled))
+>> +                       wrmsrl(MSR_IA32_PEBS_ENABLE, 0);
+> 
+> How does the enable_all() code know to reenable it in this case?
+
+For this case, we know that perf is disabling the PMU. The PMI handler 
+will not restore PMU state when it's inactive. The enable_all() will not 
+be called.
 
 Thanks,
-Andrei
+Kan
