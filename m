@@ -3,68 +3,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB04BC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5558C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E4F020728
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E50920715
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:48:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbfKONs3 (ORCPT
+        id S1727556AbfKONs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 08:48:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36126 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727417AbfKONs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 08:48:29 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81E8E20715;
-        Fri, 15 Nov 2019 13:48:28 +0000 (UTC)
-Date:   Fri, 15 Nov 2019 08:48:27 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the ftrace tree with the arm64 tree
-Message-ID: <20191115084827.6e04ec9f@gandalf.local.home>
-In-Reply-To: <20191115122513.GB41572@lakrids.cambridge.arm.com>
-References: <20191115135357.10386fac@canb.auug.org.au>
-        <20191115122513.GB41572@lakrids.cambridge.arm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 15 Nov 2019 08:48:56 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:60950 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727417AbfKONs4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 08:48:56 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iVbxX-0001U0-6B; Fri, 15 Nov 2019 13:48:23 +0000
+Date:   Fri, 15 Nov 2019 13:48:23 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, yu kuai <yukuai3@huawei.com>,
+        rafael@kernel.org, oleg@redhat.com, mchehab+samsung@kernel.org,
+        corbet@lwn.net, tytso@mit.edu, jmorris@namei.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        zhengbin13@huawei.com, yi.zhang@huawei.com,
+        chenxiang66@hisilicon.com, xiexiuqi@huawei.com
+Subject: Re: [PATCH 1/3] dcache: add a new enum type for 'dentry_d_lock_class'
+Message-ID: <20191115134823.GQ26530@ZenIV.linux.org.uk>
+References: <1573788472-87426-1-git-send-email-yukuai3@huawei.com>
+ <1573788472-87426-2-git-send-email-yukuai3@huawei.com>
+ <20191115032759.GA795729@kroah.com>
+ <20191115041243.GN26530@ZenIV.linux.org.uk>
+ <20191115072011.GA1203354@kroah.com>
+ <20191115131625.GO26530@ZenIV.linux.org.uk>
+ <20191115083813.65f5523c@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115083813.65f5523c@gandalf.local.home>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 12:25:14 +0000
-Mark Rutland <mark.rutland@arm.com> wrote:
-
-> Thanks Stephen!
+On Fri, Nov 15, 2019 at 08:38:13AM -0500, Steven Rostedt wrote:
+> On Fri, 15 Nov 2019 13:16:25 +0000
+> Al Viro <viro@zeniv.linux.org.uk> wrote:
 > 
-> Steven (Rostedt), what's your preference for handling this?
+> > I want to understand the overall situation.  No argument, list_empty()
+> > in there is BS, for many reasons.  But I wonder if trying to keep the
+> > current structure of the iterator _and_ the use of simple_rmdir()/simple_unlink()
+> > is the right approach.
 > 
-> We can drop revert the arm64 change to vmlinux.lds.h for now (and I can
-> send it as a subsequent cleanup), or you could merge my
-> arm64/ftrace-with-regs branch and fix this up in the ftrace tree.
+> My guess is that debugfs was written to be as simple as possible.
+> Nothing too complex. And in doing so, may have issues as you are
+> pointing out. Just a way to allow communications between user space and
+> kernel space (as tracefs started out).
+> 
+> BTW, what do you mean by "can debugfs_remove_recursive() rely upon the
+> lack of attempts to create new entries inside the subtree it's trying
+> to kill?"
 
-Or we can just make a note of this, and mention it in our pull requests
-to Linus.
+Is it possible for something to call e.g. debugfs_create_dir() (or any
+similar primitive) with parent inside the subtree that has been
+passed to debugfs_remove_recursive() call that is still in progress?
 
-We could make a single branch where we merged the two branches, fix it
-up (as I believe Stephen did it correctly) and tell Linus "here's the
-fix up".
-
-This is a common occurrence and Linus has no problems with this. As
-long as he's given a heads up.
-
--- Steve
+If debugfs needs to cope with that, debugfs_remove_recursive() needs
+considerably heavier locking, to start with.
