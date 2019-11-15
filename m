@@ -2,172 +2,105 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54005C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2742BC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B01B20727
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E823920723
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:38:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FAkJB/fk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="alMS8Avt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbfKOAbN (ORCPT
+        id S1727185AbfKOAi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 19:31:13 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:51488 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbfKOAbN (ORCPT
+        Thu, 14 Nov 2019 19:38:28 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33383 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726852AbfKOAi1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 19:31:13 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAF0NwPc162409;
-        Fri, 15 Nov 2019 00:29:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=9jrL+BhqTPJfGslBLcrIu2gfpEanXTGlkl6dwq3AI5s=;
- b=FAkJB/fkPdwLwF8fI+cc3AEY0b6WrXBX6fm3i4eCPJjFDKMhs8jADyZLQO/WOqP9MRAM
- 1U9JW9DSlV6YDhTbTuLGaSSqZfA0y+bkPqmC7PFfqYbGJ9OSGQVczF6uEc9jtvMrwUck
- J5sDuHbVx/0tesYGT2ZE+DknD4PAHILfdfr0r3mM08kBc6ryg36z79AaBdI/TrScBb0i
- YqP7Ye82SYVq1wYoDRg67HMMdxEb67tK0P6s56mCx5+bozBshVbAFe5u3vCT0RLvA0Rp
- R7hVjTVl3KwgOtZ6JLV5xS7gaT2JxKY1RW/xCypn/ocC+NETtGud7EMNQ7rUHbmjDp7m mA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2w9gxpg3ha-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Nov 2019 00:29:27 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAF0TBTh006674;
-        Fri, 15 Nov 2019 00:29:27 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2w9h171780-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Nov 2019 00:29:26 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAF0SAK0027264;
-        Fri, 15 Nov 2019 00:28:10 GMT
-Received: from localhost (/10.145.178.64)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 14 Nov 2019 16:28:09 -0800
-Date:   Thu, 14 Nov 2019 16:28:07 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     ira.weiny@intel.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH] Documentation/fs: Move swap_[de]activate() to
- file_operations
-Message-ID: <20191115002807.GN6219@magnolia>
-References: <20191114231943.11220-1-ira.weiny@intel.com>
+        Thu, 14 Nov 2019 19:38:27 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a17so8833043wmb.0;
+        Thu, 14 Nov 2019 16:38:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=V+xyAyokSVdG2YJZBQsiL4UYdt3E6o24h3s6g0fTDHQ=;
+        b=alMS8AvtcH2tnUO26K5nS7zSK+98v4P5mFBkv5HzrpQRFZdrUnC08/d/o+dCvZF771
+         PIxw8+RRGzhcv5JtqMhmNFK00a7GHIvyNyHTmJs084SQkIENknsGDyc4PuV1ARIIeqSB
+         ztUx3sBVVVX/MJScjB/cJQknV4L1rNX8tWcFY7qb3MpX0EUOpFtT7YCkp5i9Rr9iZFbc
+         8npg3kUuCrQ7lVnCaivW3205Pj2eKwC/fXKO6Rd427N2IIPs1BJBVh327D4JM1GG/RqY
+         ueb40XzyXltLWlprmaL0Eun06GDo1jZ3JWyORxThL/yCXFXzPoAUqbgzPF8FlCHAeLYF
+         v9eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=V+xyAyokSVdG2YJZBQsiL4UYdt3E6o24h3s6g0fTDHQ=;
+        b=jTJWD5dyOzO2DErh8K4cAYUyf53XZjqieqE0KjJ6U0ST9asHLjhC6SYLLIJA7fhdDC
+         DF3759Fo9EWYE0WnnNVQZ0iq/jzEeROyPwKLBWa7Achg6s5jjCcZWAFgN4VHlDcUyY+J
+         ffIQjIWIs+o0MXLQ5XNzTeQzppWeIKFrMm1jQxXHnKs9EJR7yxnrLC8FEueDUA6Fn9TZ
+         7sqoEhcVQA9kMqxr2k9Z97lOVCdDg8dLu571ddzbtf0OrTr4f/G3XWemv4C/oEE2DF+5
+         BXdQK8g4ycTpOc79tVq8SMkR99b/ykrf7PRrAj5aCqyZACFiomXJ4oZmZ69H5cp+02De
+         LITw==
+X-Gm-Message-State: APjAAAW57VIqgpBdYFts1w4Zu7c/X26h0DTo+1XFswrA9NbPjCCNA+Nj
+        4dsyV3hJuyShS+5wtk5vvJU=
+X-Google-Smtp-Source: APXvYqw+jrTZ3N3Sm7eZpuhockFOKaDrAq0PEkEBLyklk7eKmoF21L840DTBnyz29dOFz0ycSxS9pA==
+X-Received: by 2002:a1c:64d6:: with SMTP id y205mr10714765wmb.136.1573778303928;
+        Thu, 14 Nov 2019 16:38:23 -0800 (PST)
+Received: from ltop.local ([2a02:a03f:40e1:9900:b41c:b7ad:6b56:89fb])
+        by smtp.gmail.com with ESMTPSA id g133sm7856389wme.42.2019.11.14.16.38.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 16:38:23 -0800 (PST)
+Date:   Fri, 15 Nov 2019 01:38:21 +0100
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     kbuild test robot <lkp@intel.com>, linux-sparse@vger.kernel.org,
+        kbuild-all@lists.01.org, linux@armlinux.org.uk,
+        Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
+        will.deacon@arm.com, arnd@arndb.de, longman@redhat.com,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
+        jglauber@marvell.com, steven.sistare@oracle.com,
+        daniel.m.jordan@oracle.com, dave.dice@oracle.com,
+        rahul.x.yadav@oracle.com
+Subject: Re: [PATCH v6 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+Message-ID: <20191115003821.raskzlj7hscz7vax@ltop.local>
+References: <20191107174622.61718-4-alex.kogan@oracle.com>
+ <201911110540.8p3UoQAR%lkp@intel.com>
+ <58623E4A-973B-46CC-8FA8-29E68DB5EFF4@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191114231943.11220-1-ira.weiny@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911150001
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911150001
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <58623E4A-973B-46CC-8FA8-29E68DB5EFF4@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 03:19:43PM -0800, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
+On Thu, Nov 14, 2019 at 03:57:34PM -0500, Alex Kogan wrote:
+> + linux-sparse mailing list
 > 
-> Update the documentation for the move of the swap_* functions out of
-> address_space_operations and into file_operations.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> It seems like a bug in the way sparse handles “pure” functions that return
+> a pointer.
 
-Looks ok,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Yes, it's a bug in sparse.
+ 
+> The warnings can be eliminated by adding an explicit cast, e.g.:
+> 
+> 	node = (struct mcs_spinlock *)grab_mcs_node(node, idx);
+> 
+> but this seems wrong (unnecessary) to me.
 
---D
+Indeed, it would be wrong.
 
-> ---
-> Follow on to the V2 series sent earlier.  If I need to spin a V3 I will squash
-> this into patch 2/2 "fs: Move swap_[de]activate to file_operations"
-> 
->  Documentation/filesystems/vfs.rst | 24 ++++++++++++------------
->  1 file changed, 12 insertions(+), 12 deletions(-)
-> 
-> diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
-> index 7d4d09dd5e6d..03a740d7faa4 100644
-> --- a/Documentation/filesystems/vfs.rst
-> +++ b/Documentation/filesystems/vfs.rst
-> @@ -731,8 +731,6 @@ cache in your filesystem.  The following members are defined:
->  					      unsigned long);
->  		void (*is_dirty_writeback) (struct page *, bool *, bool *);
->  		int (*error_remove_page) (struct mapping *mapping, struct page *page);
-> -		int (*swap_activate)(struct file *);
-> -		int (*swap_deactivate)(struct file *);
->  	};
->  
->  ``writepage``
-> @@ -924,16 +922,6 @@ cache in your filesystem.  The following members are defined:
->  	Setting this implies you deal with pages going away under you,
->  	unless you have them locked or reference counts increased.
->  
-> -``swap_activate``
-> -	Called when swapon is used on a file to allocate space if
-> -	necessary and pin the block lookup information in memory.  A
-> -	return value of zero indicates success, in which case this file
-> -	can be used to back swapspace.
-> -
-> -``swap_deactivate``
-> -	Called during swapoff on files where swap_activate was
-> -	successful.
-> -
->  
->  The File Object
->  ===============
-> @@ -988,6 +976,8 @@ This describes how the VFS can manipulate an open file.  As of kernel
->  					   struct file *file_out, loff_t pos_out,
->  					   loff_t len, unsigned int remap_flags);
->  		int (*fadvise)(struct file *, loff_t, loff_t, int);
-> +		int (*swap_activate)(struct file *);
-> +		int (*swap_deactivate)(struct file *);
->  	};
->  
->  Again, all methods are called without any locks being held, unless
-> @@ -1108,6 +1098,16 @@ otherwise noted.
->  ``fadvise``
->  	possibly called by the fadvise64() system call.
->  
-> +``swap_activate``
-> +	Called when swapon is used on a file to allocate space if
-> +	necessary and pin the block lookup information in memory.  A
-> +	return value of zero indicates success, in which case this file
-> +	can be used to back swapspace.
-> +
-> +``swap_deactivate``
-> +	Called during swapoff on files where swap_activate was
-> +	successful.
-> +
->  Note that the file operations are implemented by the specific
->  filesystem in which the inode resides.  When opening a device node
->  (character or block special) most filesystems will call special
-> -- 
-> 2.21.0
-> 
+Thanks for analyzing and reporting this,
+-- Luc 
