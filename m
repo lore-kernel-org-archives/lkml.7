@@ -2,107 +2,88 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AC8C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45021C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BD812073C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:44:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="cimPOY7g"
+	by mail.kernel.org (Postfix) with ESMTP id 1D7972073C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbfKOHoS (ORCPT
+        id S1727344AbfKOHoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 02:44:18 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46719 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbfKOHoQ (ORCPT
+        Fri, 15 Nov 2019 02:44:39 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:50171 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbfKOHoi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 02:44:16 -0500
-Received: by mail-lj1-f195.google.com with SMTP id e9so9586225ljp.13
-        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 23:44:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MerzeYQd7mMrWj7xug82ip0Zzuk57QC86rO5mCSsEzs=;
-        b=cimPOY7g4EAlwVyfr4cwpdgRJdBwRgLjtx/sUwL01IBFA4qPtm6hLBgyIKILrFzJM9
-         xiOtbLJf0y4FyFS5wuHNxaB4q8sFK2F7P67/5/RQWCsQ9oGFBnDTdc4D+B26iZzap9Qa
-         gTUwq1Rz9t3IIvqDWNeazaS9zPcEWsGD6g1ZM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MerzeYQd7mMrWj7xug82ip0Zzuk57QC86rO5mCSsEzs=;
-        b=fKO9FwzXy4vbytD3UM6jF2djNTuZTOXPbEoIK0L3H3+O9kvoLROyvSB3DABGddwFiZ
-         3TNSK1GrcixiHOubVq/sBeWe5r/9otVl+4iU7Zj6etxx3qs6L48VU21Gk0aEp4BC5g8T
-         mkNxqKC5OzqgC2Jqu9+UaFmBzwXS0pB90anDLnprG8QJf7VnoH1DgtpNkDpjI1jobW0z
-         k62DtKPH99Y7SBvAhVMuBzQrkhlJeyvBKCzOFr51Tyw50AbHMEqnKYkKTM8Oeqs/Aq/k
-         Plt2w0p//qI3j3m4Q0sUpGjqTRI1yS6320+jD4kfr7egXBOd8/rgM5vdfjh9bUp/OOGq
-         ErbA==
-X-Gm-Message-State: APjAAAVmrNbvjqPxlRLyZXZQwQV+GFRdjE3a04hn6Hixdw4Rd4dkP5c0
-        Rkn4ELMrxjC5WK22jQuaZwjZ4w==
-X-Google-Smtp-Source: APXvYqw8OAiLBu508szXHtSnz3QQioa3U2uijYFbTHFzEtm/A+7bHMI6CgvxmnwrGknlwyb2z4HUYw==
-X-Received: by 2002:a2e:9784:: with SMTP id y4mr10091304lji.77.1573803854082;
-        Thu, 14 Nov 2019 23:44:14 -0800 (PST)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id p19sm3689755lji.65.2019.11.14.23.44.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Nov 2019 23:44:13 -0800 (PST)
-Subject: Re: [PATCH v4 45/47] net/wan/fsl_ucc_hdlc: reject muram offsets above
- 64K
-To:     Timur Tabi <timur@kernel.org>
-Cc:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Scott Wood <oss@buserror.net>, netdev <netdev@vger.kernel.org>
-References: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
- <20191108130123.6839-46-linux@rasmusvillemoes.dk>
- <CAOZdJXUibQ6RM8O4CfkYBdGsg+LMcE2ZoZEQ4txn2yvquUWwCA@mail.gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <79101f00-e3ff-9dd0-7a05-760f8be1ff69@rasmusvillemoes.dk>
-Date:   Fri, 15 Nov 2019 08:44:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 15 Nov 2019 02:44:38 -0500
+Received: from localhost ([46.78.193.225]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MMGZM-1iCCAc11Da-00JFS9; Fri, 15 Nov 2019 08:44:04 +0100
+Date:   Fri, 15 Nov 2019 08:43:56 +0100
+From:   Andreas Klinger <ak@it-klinger.de>
+To:     robh+dt@kernel.org, jic23@kernel.org, mark.rutland@arm.com
+Cc:     mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
+        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        gregkh@linuxfoundation.org, christophe.jaillet@wanadoo.fr,
+        tglx@linutronix.de, mchehab+samsung@kernel.org,
+        davem@davemloft.net, paulmck@linux.ibm.com,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/4] dt-bindings: add vendor prefix parallax
+Message-ID: <20191115074354.uanova4tomgwofgg@arbad>
 MIME-Version: 1.0
-In-Reply-To: <CAOZdJXUibQ6RM8O4CfkYBdGsg+LMcE2ZoZEQ4txn2yvquUWwCA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Provags-ID: V03:K1:BANQnTLmM11JdWuHk+f2usdySofhmleBOZBH9+B0lRvU48xl4v+
+ tDXrArYElBLOxl7kePqOuNA/F3W6TDXwUv5Gs4MnkgZrTkxvLbOeAyaWP5hglvM2U7gA7IM
+ dqCCWw5DellDtPg4MBLLf3UyJ9ug868NQoEHnt1g7mWb/1iuea2XmjbuCJUV8kZBr4f1+xs
+ RktH1OV0q0y/EVZ/rJGAA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bwnKK+5gh/0=:oHmi3tRaf4n+GDTBk1ivpp
+ ZU0X9mRPWtYoOtFzvOTJFUmOAEPsboWv9qB0uqrJXanYzgg0nHswNJe1jlUSQ4EJ8ZNnz4JUI
+ 5TNvTYJ9wIpglvXGaBOkF//djz4vQHXQ76hkdC07TkL7QCWVRj9f0cmJ+bN2IikSvp1GR5NhC
+ pG7+Wf0BeehhtW5tX4vtUdq0QLNaixkxhtDq/qab5Fauig6dQYyXOEQZdJJvMypBElYtvd48H
+ ipGnjNfmvCc05Jd+PCU0bFxxqMB+Ozd7LOJPl/zZgvTGbDCYIiy4VrLHTR8hnYYfJjUV6cq/S
+ 2f62N595Wvj8yR6opLS9gZZ+RiZUb1c9DL6ZQqRuHoDIWU3yg8yV7fXN1uQIJC79OPXsN19J7
+ G4rGYh9BYeBvy4qZi33edxdfd+iUhjVWj30nmHh7A/CcHBDBsw5OE9ylAZCtU4YgLFHVE3APT
+ 5xiJxnP8oLakLc1uq0A3llRKN3pRLDP94oX8BeZZtbI8zuVHzwzxMDZjb/7c9F4b546OogVs2
+ mv9TmEZEgeDN3zOH/r3WFiQBApmuYLpG7ReTXhWLsyiF3VGhcLz2wCKS+ss2LAr1tGMkbnLBk
+ 8E6pXNvyUru11GH57hIDSKe+kybIjn5B9IGm7hRmPmIHpfrG8sYazpucEmZKJYlhRZAWDmpG2
+ tjKGJ54CNCja6x4rDQuj4u9msWuubcxKBcaJZrFUpuS4G71/5cQ3ujeWHcGCzK926Pz7qD1M0
+ Ako1NCcB9L5GPwExG6XcibNJw8LmwtO58I2Y3f3UVyWnvpW4L7iB1zGOb6UOWLNjEFCMj6lEb
+ +8CAN2whjEI/55XrvRld6fyRk0YPB0GyQNgD6+aKIbOhU8Q/7LBHrX/LbxBEbS/YtnKoT1Mpe
+ MpYGQ6AWPTraRBl2r8Tw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/11/2019 05.41, Timur Tabi wrote:
-> On Fri, Nov 8, 2019 at 7:04 AM Rasmus Villemoes
-> <linux@rasmusvillemoes.dk> wrote:
-> 
->> diff --git a/drivers/net/wan/fsl_ucc_hdlc.c b/drivers/net/wan/fsl_ucc_hdlc.c
->> index 8d13586bb774..f029eaa7cfc0 100644
->> --- a/drivers/net/wan/fsl_ucc_hdlc.c
->> +++ b/drivers/net/wan/fsl_ucc_hdlc.c
->> @@ -245,6 +245,11 @@ static int uhdlc_init(struct ucc_hdlc_private *priv)
->>                 ret = -ENOMEM;
->>                 goto free_riptr;
->>         }
->> +       if (riptr != (u16)riptr || tiptr != (u16)tiptr) {
-> 
-> "riptr/tiptr > U16_MAX" is clearer.
-> 
+Add new vendor prefix parallax for newly created ping iio sensors.
 
-I can change it, sure, but it's a matter of taste. To me the above asks
-"does the value change when it is truncated to a u16" which makes
-perfect sense when the value is next used with iowrite16be(). Using a
-comparison to U16_MAX takes more brain cycles for me, because I have to
-think whether it should be > or >=, and are there some
-signedness/integer promotion business interfering with that test.
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Rasmus
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 967e78c5ec0a..d3f9690e1e4b 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -713,6 +713,8 @@ patternProperties:
+     description: Panasonic Corporation
+   "^parade,.*":
+     description: Parade Technologies Inc.
++  "^parallax,.*":
++    description: Parallax Inc.
+   "^pda,.*":
+     description: Precision Design Associates, Inc.
+   "^pericom,.*":
+-- 
+2.11.0
