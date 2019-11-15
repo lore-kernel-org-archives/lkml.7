@@ -2,94 +2,104 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706B3C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6809C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53EE720728
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C7C20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:37:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573825024;
+	bh=xw6+YS+K/aX6p3C3mvtL28AvnVECOYE38j0p3cjI+i4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AsJHNGoc4M20FUfzwzF/AGPM4Bg3Q3rLcwbBAf1CZWRJr9RFf18lNeYXJxvGxW0ba
+	 wr8rXaohDl8cY8Rpaf0+dXL0vSEzdZffYA4TRZexTND0zxnXMHrwf2xphg4IY7UmNo
+	 7zRAD63IIfJM1uT6typx+KCJ9iVBYYrE0LaKjVpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727567AbfKONgb (ORCPT
+        id S1727577AbfKONhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 08:36:31 -0500
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:51689 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727329AbfKONg3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 08:36:29 -0500
-X-Originating-IP: 90.66.177.178
-Received: from localhost (lfbn-1-2888-178.w90-66.abo.wanadoo.fr [90.66.177.178])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 07B40FF80D;
-        Fri, 15 Nov 2019 13:36:27 +0000 (UTC)
-Date:   Fri, 15 Nov 2019 14:36:27 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Steve Muckle <smuckle@google.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH] rtc: class: support hctosys from modular RTC drivers
-Message-ID: <20191115133627.GT3572@piout.net>
-References: <20191106194625.116692-1-smuckle@google.com>
- <20191106231923.GK8309@piout.net>
- <b96f085b-8a0c-7c71-4fde-8af83d49823a@google.com>
+        Fri, 15 Nov 2019 08:37:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60462 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727329AbfKONhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 08:37:03 -0500
+Received: from localhost (unknown [122.181.197.112])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E30EC20728;
+        Fri, 15 Nov 2019 13:37:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573825022;
+        bh=xw6+YS+K/aX6p3C3mvtL28AvnVECOYE38j0p3cjI+i4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=exIVUUp5a2Q2YN9kc/gsxvHncmC3Ty8P1XudP4oreOB/6MqS4o8V6SYYyUf+zXvaz
+         a4QhGJ8J9jUJ4GjjizqVUdg3vNUmN7BJ58B61qzY0oEX3f5CxKYQX1b25HsZ8dIqpL
+         G8I0vRA1AUrD7KMckbe7o/4eM/xzNtNvx+m/nETo=
+Date:   Fri, 15 Nov 2019 19:06:57 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Takashi Iwai <tiwai@suse.com>, linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/3] ALSA: compress: Add support for FLAC
+Message-ID: <20191115133657.GA6762@vkoul-mobl>
+References: <20191115102705.649976-1-vkoul@kernel.org>
+ <s5h7e41jmvl.wl-tiwai@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b96f085b-8a0c-7c71-4fde-8af83d49823a@google.com>
+In-Reply-To: <s5h7e41jmvl.wl-tiwai@suse.de>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/11/2019 15:37:49-0800, Steve Muckle wrote:
-> On 11/6/19 3:19 PM, Alexandre Belloni wrote:
-> > On 06/11/2019 11:46:25-0800, Steve Muckle wrote:
-> > > Due to distribution constraints it may not be possible to statically
-> > > compile the required RTC driver into the kernel.
-> > > 
-> > > Expand RTC_HCTOSYS support to cover all RTC devices (statically compiled
-> > > or not) by checking at the end of RTC device registration whether the
-> > > time should be synced.
-> > > 
+On 15-11-19, 14:21, Takashi Iwai wrote:
+> On Fri, 15 Nov 2019 11:27:02 +0100,
+> Vinod Koul wrote:
 > > 
-> > This does not really help distributions because most of them will still
-> > have "rtc0" hardcoded and rtc0 is often the rtc that shouldn't be used.
+> > The current design of sending codec parameters assumes that decoders
+> > will have parsers so they can parse the encoded stream for parameters
+> > and configure the decoder.
+> > 
+> > But this assumption may not be universally true and we know some DSPs
+> > which do not contain the parsers so additional parameters are required
+> > to be passed.
+> > 
+> > So add these parameters starting with FLAC decoder. The size of
+> > snd_codec_options is still 120 bytes after this change (due to this
+> > being a union)
+> > 
+> > I think we should also bump the (minor) version if this proposal is
+> > acceptable so the userspace can check and populate flac specific structure.
+> > 
+> > Along, with the core header change, patches are added to support FLAC
+> > in Qualcomm drivers. This was tested on 96boards db845c
+> > 
+> > Srinivas Kandagatla (1):
+> >   ASoC: qcom: q6asm: add support to flac config
+> > 
+> > Vinod Koul (2):
+> >   ALSA: compress: add flac decoder params
+> >   ASoC: qcom: q6asm-dai: add support to flac decoder
 > 
-> Just for my own edification, why is that? Is rtc0 normally useless on PC for
-> some reason?
-> 
+> Feel free to take my ACK for ALSA core part:
+>   Acked-by: Takashi Iwai <tiwai@suse.de>
 
-On PC, rtc0 is probably fine which is not the case for other
-architectures where rtc0 is the SoC RTC and is often not battery backed.
+Thanks Takashi, should we bump the version for the header to check for.
+Btw I plan to add other decoders required as well. I have mp3 working
+without any additional params but rest need additional info
 
-> On the platforms I'm working with I believe it can be assured that rtc0 will
-> be the correct rtc. That doesn't help typical distributions though.
-> 
-> What about a kernel parameter to optionally override the rtc hctosys device
-> at runtime?
-> 
-
-What about keeping that in userspace instead which is way easier than
-messing with kernel parameters?
-
-> > Can't you move away from HCTOSYS and do the correct thing in userspace
-> > instead of the crap hctosys is doing?
-> 
-> Yes, I just figured it's a small change, and if hctosys can be made to work
-> might as well use that.
-
-The fact is that hctosys is more related to time keeping than it is to
-the RTC subsytem. It also does a very poor job setting the system time
-because adding 0.5s is not the smartest thing to do. The rtc granularity
-is indeed 1 second but is can be very precisely set.
-
-
+Thanks
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+~Vinod
