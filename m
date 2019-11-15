@@ -4,56 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6407C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D299C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE6FF2075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66373207FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573820782;
-	bh=6DHLSqXIf4J3iwTdc7lXQp2Fc5+t7djvLaP5nivb9EU=;
+	s=default; t=1573820785;
+	bh=MNooDav1f3qm4aeDmYawwRh6m3R+ULY/Okcq3oPCnH4=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=mRftilgOoL47ndD8IA/FT2gy+tBN7T3AluEj2f4pgzzjJmcQ/a8+EV4bOaf8JwpCU
-	 Odb2vpr/X9wmNdlkeLYUz/oM4Nofypq5g/1gqMmMao0O5yACW++VS1nkJwklIr27pt
-	 CHXv2S/pv7pRmaO95VZ3iVY8Bnm8LdoRqYIkMQk4=
+	b=NEkYneBXGPqlhf8PB9O0fXdnP6mjHEro3AuANFKmBOGPHVTZPXR1MfHMe57qKh+B/
+	 c1cFrD+M1oQwpoWfnIrOtaw7S8717Or3ihqamXdWjusOihkthZ2wge+PP/Th96um5P
+	 q+PsVtxpHOJS/RBd7Mtou9JRczbox+lAxKTRPFTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbfKOMZP (ORCPT
+        id S1727937AbfKOM0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:25:15 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:32832 "EHLO
+        Fri, 15 Nov 2019 07:26:24 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:32878 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727640AbfKOMZM (ORCPT
+        with ESMTP id S1727348AbfKOMZO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 07:25:12 -0500
+        Fri, 15 Nov 2019 07:25:14 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=WhivmarhjnWVrpuxW2+0Mno7dKVQIUl8/k+Us9L6ZW0=; b=Y1lX6qjjYG+D
-        39zSRf/fkQPMr5uJhN+oiJiEqE0j8yzY8AolT5jHTIrrpJRE9avhmVSGqAuILtg2TfnaHaO29WsPi
-        me24IQ5zdJMSD2CH3J3Z16WvTiO7Q9VxmXXmjNTLClAzKyA85cr1Fp4P+1AmzgWHC45SOeESaCCsk
-        HwN7Y=;
+        List-Archive; bh=immwQu1s4GLBl9d9SM1DbC/YW1vUXocvDwY8FGJGiCY=; b=oR82FhYFqr8f
+        xA0DUVdcDhwNVB50yvpHL96TcDazahN8+TjfNU/B6JlWJL8VDX3jY4nIJN0tBhdxqxvpm2UUglRbA
+        ZoSBmDkdZ4I3hNBa9y8CQA2vrHtNFJlAHcox8I+Jt6wpQ+aUIFsW9FD2yWgLmJ5bz4jC5HJDPFayN
+        nB09c=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iVaey-0000Kz-Vt; Fri, 15 Nov 2019 12:25:09 +0000
+        id 1iVaes-0000Jz-1K; Fri, 15 Nov 2019 12:25:02 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 79111274162A; Fri, 15 Nov 2019 12:25:08 +0000 (GMT)
+        id 64F8E2741609; Fri, 15 Nov 2019 12:25:01 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     kernel-team@android.com, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: core: Don't try to remove device links if add failed" to the regulator tree
-In-Reply-To: <20191115000438.45970-1-saravanak@google.com>
+To:     Jacob Rasmussen <jacobraz@chromium.org>
+Cc:     alsa-devel@alsa-project.org, Bard Liao <bardliao@realtek.com>,
+        Jacob Rasmussen <jacobraz@google.com>, <jacobraz@google.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Ross Zwisler <zwisler@google.com>, stable@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: rt5645: Fixed typo for buddy jack support." to the asoc tree
+In-Reply-To: <20191114232011.165762-1-jacobraz@google.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191115122508.79111274162A@ypsilon.sirena.org.uk>
-Date:   Fri, 15 Nov 2019 12:25:08 +0000 (GMT)
+Message-Id: <20191115122501.64F8E2741609@ypsilon.sirena.org.uk>
+Date:   Fri, 15 Nov 2019 12:25:01 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -61,11 +67,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: core: Don't try to remove device links if add failed
+   ASoC: rt5645: Fixed typo for buddy jack support.
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -86,70 +92,38 @@ to this mail.
 Thanks,
 Mark
 
-From b59b654478093fa429ad4c7897ae29f201146a00 Mon Sep 17 00:00:00 2001
-From: Saravana Kannan <saravanak@google.com>
-Date: Thu, 14 Nov 2019 16:04:38 -0800
-Subject: [PATCH] regulator: core: Don't try to remove device links if add
- failed
+From fe23be2d85b05f561431d75acddec726ea807d2a Mon Sep 17 00:00:00 2001
+From: Jacob Rasmussen <jacobraz@chromium.org>
+Date: Thu, 14 Nov 2019 16:20:11 -0700
+Subject: [PATCH] ASoC: rt5645: Fixed typo for buddy jack support.
 
-device_link_add() might not always succeed depending on the type of
-device link and the rest of the dependencies in the system. If
-device_link_add() didn't succeed, then we shouldn't try to remove the
-link later on as it might remove a link someone else created.
+Had a typo in e7cfd867fd98 that resulted in buddy jack support not being
+fixed.
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
-Link: https://lore.kernel.org/r/20191115000438.45970-1-saravanak@google.com
+Fixes: e7cfd867fd98 ("ASoC: rt5645: Fixed buddy jack support.")
+Signed-off-by: Jacob Rasmussen <jacobraz@google.com>
+Reviewed-by: Ross Zwisler <zwisler@google.com>
+Cc: <jacobraz@google.com>
+CC: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20191114232011.165762-1-jacobraz@google.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/core.c     | 8 ++++++--
- drivers/regulator/internal.h | 1 +
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ sound/soc/codecs/rt5645.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 51ce280c1ce1..df49f35ae20f 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -1844,6 +1844,7 @@ struct regulator *_regulator_get(struct device *dev, const char *id,
- 	struct regulator_dev *rdev;
- 	struct regulator *regulator;
- 	const char *devname = dev ? dev_name(dev) : "deviceless";
-+	struct device_link *link;
- 	int ret;
- 
- 	if (get_type >= MAX_GET_TYPE) {
-@@ -1951,7 +1952,9 @@ struct regulator *_regulator_get(struct device *dev, const char *id,
- 			rdev->use_count = 0;
- 	}
- 
--	device_link_add(dev, &rdev->dev, DL_FLAG_STATELESS);
-+	link = device_link_add(dev, &rdev->dev, DL_FLAG_STATELESS);
-+	if (!IS_ERR_OR_NULL(link))
-+		regulator->device_link = true;
- 
- 	return regulator;
- }
-@@ -2046,7 +2049,8 @@ static void _regulator_put(struct regulator *regulator)
- 	debugfs_remove_recursive(regulator->debugfs);
- 
- 	if (regulator->dev) {
--		device_link_remove(regulator->dev, &rdev->dev);
-+		if (regulator->device_link)
-+			device_link_remove(regulator->dev, &rdev->dev);
- 
- 		/* remove any sysfs entries */
- 		sysfs_remove_link(&rdev->dev.kobj, regulator->supply_name);
-diff --git a/drivers/regulator/internal.h b/drivers/regulator/internal.h
-index 83ae442f515b..2391b565ef11 100644
---- a/drivers/regulator/internal.h
-+++ b/drivers/regulator/internal.h
-@@ -36,6 +36,7 @@ struct regulator {
- 	struct list_head list;
- 	unsigned int always_on:1;
- 	unsigned int bypass:1;
-+	unsigned int device_link:1;
- 	int uA_load;
- 	unsigned int enable_count;
- 	unsigned int deferred_disables;
+diff --git a/sound/soc/codecs/rt5645.c b/sound/soc/codecs/rt5645.c
+index 902ac98a3fbe..19662ee330d6 100644
+--- a/sound/soc/codecs/rt5645.c
++++ b/sound/soc/codecs/rt5645.c
+@@ -3271,7 +3271,7 @@ static void rt5645_jack_detect_work(struct work_struct *work)
+ 				    report, SND_JACK_MICROPHONE);
+ 		return;
+ 	case 4:
+-		val = snd_soc_component_read32(rt5645->component, RT5645_A_JD_CTRL1) & 0x002;
++		val = snd_soc_component_read32(rt5645->component, RT5645_A_JD_CTRL1) & 0x0020;
+ 		break;
+ 	default: /* read rt5645 jd1_1 status */
+ 		val = snd_soc_component_read32(rt5645->component, RT5645_INT_IRQ_ST) & 0x1000;
 -- 
 2.20.1
 
