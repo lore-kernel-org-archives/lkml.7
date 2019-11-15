@@ -2,78 +2,118 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF21C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC97BC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37CA320723
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 00:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6A0F20725
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 01:00:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbfKOAuP (ORCPT
+        id S1727276AbfKOBAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 19:50:15 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:49784 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726852AbfKOAuO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 19:50:14 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iVPoS-0007lg-Tx; Fri, 15 Nov 2019 00:50:13 +0000
-Date:   Fri, 15 Nov 2019 00:50:12 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [git pull] vfs.git fixes
-Message-ID: <20191115005012.GM26530@ZenIV.linux.org.uk>
+        Thu, 14 Nov 2019 20:00:35 -0500
+Received: from mga07.intel.com ([134.134.136.100]:64110 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726986AbfKOBAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 20:00:35 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 17:00:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,306,1569308400"; 
+   d="scan'208";a="230294252"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Nov 2019 17:00:30 -0800
+Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        pengfei.xu@intel.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: Re: [PATCH v5 02/10] iommu/vt-d: Use per-device dma_ops
+To:     Christoph Hellwig <hch@lst.de>
+References: <20190725031717.32317-3-baolu.lu@linux.intel.com>
+ <20190725054413.GC24527@lst.de>
+ <bc831f88-5b19-7531-00aa-a7577dd5c1ac@linux.intel.com>
+ <20190725114348.GA30957@lst.de>
+ <a098359a-0f89-6028-68df-9f83718df256@linux.intel.com>
+ <20191112071640.GA3343@lst.de>
+ <0885617e-8390-6d18-987f-40d49f9f563e@linux.intel.com>
+ <20191113070312.GA2735@lst.de> <20191113095353.GA5937@lst.de>
+ <0ddc8aff-783a-97b9-f5cc-9e27990de278@linux.intel.com>
+ <20191114081423.GA27407@lst.de>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <6069128f-354c-e708-fa1d-d866dc186d57@linux.intel.com>
+Date:   Fri, 15 Nov 2019 08:57:32 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191114081423.GA27407@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Assorted fixes all over the place; some of that is -stable
-fodder, some - regressions from the last window.
+Hi,
 
-The following changes since commit 4f5cafb5cb8471e54afdc9054d973535614f7675:
+On 11/14/19 4:14 PM, Christoph Hellwig wrote:
+> On Thu, Nov 14, 2019 at 01:14:11PM +0800, Lu Baolu wrote:
+>> Could you please educate me what dma_supported() is exactly for? Will
+>> it always get called during boot? When will it be called?
+> 
+> ->dma_supported is set when setting either the dma_mask or
+> dma_coherent_mask. These days it serves too primary purposes: reject
+> too small masks that can't be addressed, and provide any hooks needed
+> in the driver based on the mask.
 
-  Linux 5.4-rc3 (2019-10-13 16:37:36 -0700)
+Thanks! So ->dma_supported might not be called before driver maps buffer
+and start DMA. Right?
 
-are available in the git repository at:
+> 
+>> In above implementation, why do we need to check dma_direct_supported()
+>> at the beginning? And why
+> 
+> Because the existing driver called dma_direct_supported, which I added
+> based on x86 arch overrides doings the same a while ago.  I suspect
+> it is related to addressing for tiny dma masks, but I'm not entirely
+> sure.  The longer term intel-iommu maintainers or x86 maintainers might
+> be able to shed more light how this was supposed to work and/or how
+> systems with the Intel IOMMU deal with e.g. ISA devices with 24-bit
+> addressing.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
+Yes. Make sense.
 
-for you to fetch changes up to 762c69685ff7ad5ad7fee0656671e20a0c9c864d:
+> 
+>>
+>> 	if (!info || info == DUMMY_DEVICE_DOMAIN_INFO ||
+>> 			info == DEFER_DEVICE_DOMAIN_INFO) {
+>> 		dev->dma_ops_bypass = true;
+> 
+> This was supposed to transform the checks from iommu_dummy and
+> identity_mapping.  But I think it actually isn't entirely correct and
+> already went bad in the patch to remove identity_mapping.  Pleae check
+> the branch I just re-pushed, which should be correct now.
+> 
 
-  ecryptfs_lookup_interpose(): lower_dentry->d_parent is not stable either (2019-11-10 11:57:45 -0500)
+Okay. Thanks!
 
-----------------------------------------------------------------
-Al Viro (7):
-      autofs: fix a leak in autofs_expire_indirect()
-      cgroup: don't put ERR_PTR() into fc->root
-      exportfs_decode_fh(): negative pinned may become positive without the parent locked
-      audit_get_nd(): don't unlock parent too early
-      ecryptfs: fix unlink and rmdir in face of underlying fs modifications
-      ecryptfs_lookup_interpose(): lower_dentry->d_inode is not stable
-      ecryptfs_lookup_interpose(): lower_dentry->d_parent is not stable either
-
-Eric Biggers (1):
-      fs/namespace.c: fix use-after-free of mount in mnt_warn_timestamp_expiry()
-
-Guillem Jover (1):
-      aio: Fix io_pgetevents() struct __compat_aio_sigset layout
-
- fs/aio.c               | 10 +++---
- fs/autofs/expire.c     |  5 +--
- fs/ecryptfs/inode.c    | 84 +++++++++++++++++++++++++++++++-------------------
- fs/exportfs/expfs.c    | 31 +++++++++++--------
- fs/namespace.c         | 15 +++++----
- kernel/audit_watch.c   |  2 +-
- kernel/cgroup/cgroup.c |  5 +--
- 7 files changed, 91 insertions(+), 61 deletions(-)
+Best regard,
+baolu
