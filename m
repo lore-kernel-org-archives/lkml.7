@@ -2,187 +2,151 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27571C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C44DBC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00264205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9282E206D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:32:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IDUmX0KG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbfKOG1A convert rfc822-to-8bit (ORCPT
+        id S1727032AbfKOGce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:27:00 -0500
-Received: from mail-oln040092064096.outbound.protection.outlook.com ([40.92.64.96]:13285
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727032AbfKOG07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:26:59 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ff859bazUDYQWSQDIFNDx/hiDVKBxl3HHm8GzK6nEm8Qroac10vTvzKZcbEbocjQiMNbUVK45cOdcPOqtoE78VQ/E2xghwO6Qh1btRsW3ICcuNQ7aGUv/6VBoy7Nw31lZJbe7rGyPP6F7rd1A4gX/eBsqFA7YnciN2Hu+bE6SxX1lXo/zWODw2xnX+qUZH8y/f111KP59S+kV+p1CzGXLzHOxTTIsk6U//+iVr3GxAFVR0cMf/buP0KUWpNz5pWOB+w45I8iemrzL3VcxZCyN9I6oON2PxraLqlGnTHEWQsd6tBfjCLd01m5ft96EZKxwy6bvylPHplsPKy1R3dI/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=frcb7C0RDKMbAf7g8aEqsSgzK/UKgtgv+EFb7xHl9II=;
- b=XFYPwFMQOqm8A7AHkc8GGZZqrDOld9lNy/FZBX9N5Lyo16VKvSyMqKanoBudsacML7kHk+wXtjxwVL/TvlLIl15vSNc9oSQ7rQTsJjFnIKuOFOWwYTYuC1Ia4Emjqr80UflkOTl1LZnpAl6cuHIMjKmfMHPpuCU/rOO/Y+ToPEeq2K3IpVRjjPDl4FEAB9X2peFRNLQVDp9CxoEWChkTeVeikHsQOeNYHThV352XORjUqeZYJuR9aT8WawonjKVlrkibtzwO8n0+nFRCPlzeyhyizwSbnU7hs+RrQ4Ez4Zi6iadNYE6zbfDojDRqLgYws+CsHpUk1t51UgfA8MLp4g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from VE1EUR01FT021.eop-EUR01.prod.protection.outlook.com
- (10.152.2.55) by VE1EUR01HT005.eop-EUR01.prod.protection.outlook.com
- (10.152.2.92) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.23; Fri, 15 Nov
- 2019 06:26:54 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.2.57) by
- VE1EUR01FT021.mail.protection.outlook.com (10.152.2.223) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23 via Frontend Transport; Fri, 15 Nov 2019 06:26:54 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::a1a9:f639:5cc7:341a]) by HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::a1a9:f639:5cc7:341a%7]) with mapi id 15.20.2451.027; Fri, 15 Nov 2019
- 06:26:54 +0000
-From:   Jonas Karlman <jonas@kwiboo.se>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-CC:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC v2 09/10] media: uapi: h264: Add DPB entry field reference
- flags
-Thread-Topic: [RFC v2 09/10] media: uapi: h264: Add DPB entry field reference
- flags
-Thread-Index: AQHVjffSYHfHedHWTUmVsr71xfoXj6d0jdMAgBdRlIA=
-Date:   Fri, 15 Nov 2019 06:26:54 +0000
-Message-ID: <HE1PR06MB401159909AF49930BDD02658AC700@HE1PR06MB4011.eurprd06.prod.outlook.com>
-References: <HE1PR06MB401108289F09802C261374F8AC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
- <20191029012550.24628-1-jonas@kwiboo.se>
- <HE1PR06MB401142C1E45B302094AD1149AC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
- <20191031112056.3442d6ac@collabora.com>
-In-Reply-To: <20191031112056.3442d6ac@collabora.com>
-Accept-Language: sv-SE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR01CA0030.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:69::43) To HE1PR06MB4011.eurprd06.prod.outlook.com
- (2603:10a6:7:9c::32)
-x-incomingtopheadermarker: OriginalChecksum:B4DEB051BD9E022A1C2CF71FCE8D33CE3D7A5051E14E74E7BC4B2EB8B554653F;UpperCasedChecksum:9D6CD12D0B5A28FFD96AF77A22641DDD4FA7825D6670E4E651196CE2EE5EFC18;SizeAsReceived:7791;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [bgyRkYW7HjqrXO/dff1CaLgYWmP9Bshw]
-x-microsoft-original-message-id: <736cb94d-3d57-ec99-ff47-004bfb0dae1b@kwiboo.se>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: c916cf51-8e17-4c04-9be8-08d76994ced4
-x-ms-traffictypediagnostic: VE1EUR01HT005:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OEDM4qPz/bMdSjvPjl5wVAZvorBm4AosjBi3nhFgKLTWWKz7kTU4UNovEMoThVhyAQMlPjEsjIdJFlEsoaxF+aAZJ1jz1ASCTl87YCG7VSljeHoh6YbogaIp+S9gb8V6k2v4RPjElpfDiuhE7GQu37dt5baCZ0qC06oYZ2p4OCSSD8kgAOZvlR+5tBDe/SlO
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <A6AADD59F80B4E438D18D2659C3057C7@eurprd06.prod.outlook.com>
-Content-Transfer-Encoding: 8BIT
+        Fri, 15 Nov 2019 01:32:34 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37897 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbfKOGce (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:32:34 -0500
+Received: by mail-pf1-f195.google.com with SMTP id c13so5960053pfp.5
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 22:32:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=q3ePoHPIIdr3W7D+aaS4Z60EnVlbf0EDqLIH1S2hQUU=;
+        b=IDUmX0KGEbj6muhIKJyL7HEhTXwt+PkuOrsqDIMdJNfODpcksOOJ4zuhsAIsOr/Oce
+         U27ZwTq8v6TVX2+Mm7OMb2JyPNhU+gFqNK6itxctNYK+T7Beoe3iwMML41GMjVpy7iRW
+         p9QrS6/uZ7hhBUVoYO1vBF2n7h4u0ac3aKJM3Sv2mS82gGvsO9ZSsHCIng271RLEqKgc
+         ussy0+OzHFTn9oj0QukKglzMDdkO5Xk8PZSKKceMb0VCOSrLdyAgGnyrSGxVbGhJW3kf
+         iJ53JmuF4I2o6rTRRvcX3VwVUcWOuNhknIkWTpzAgKryWtidmIWwgK8nYkLweoAu4GC+
+         4LOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=q3ePoHPIIdr3W7D+aaS4Z60EnVlbf0EDqLIH1S2hQUU=;
+        b=cT6HlKgppVYeW7uzjVzjQ/04pws7vUGuRVGSTFI3iv2UJx8uwwu/3dQjMYm6JgpevN
+         2XA44/4nThF0tpM43FkVMZQQ3mfq52U69WbmIt2LOhJKsWT27w3d8eLnFg/LcaEXWsNz
+         ZNXGhZ2jJM6gmzBSoJODwLgokrpG1s1xuAKVkhWJ3Cpy6czfeJaCDkHFCEoG+KtBs+rr
+         N73rA/p27UoQjTnlDcb+6dX55Pi5/49uTcY0Z6e58MWw5frB5KYHVecAN0x8YQEBquHn
+         kdYDL9F1ctOBA14sUAqBgpgl8t2D5+qFgTTU/fbRfQ7yh4KiF0BKNDlMavMRbqRbw1vi
+         sJjg==
+X-Gm-Message-State: APjAAAU+o6rgf01MlV7N5ACJ/kxBFQ5dwxEe2yCTfzlK0ef8xUHPkeSg
+        l+AyK6JYoLa+AC6fOko7366TyQ==
+X-Google-Smtp-Source: APXvYqwXmWhg5Qpo4vphioNQf1z/8vt/0yg96EIeaEoylI37/2yBLu1fWTS4R30QXtIhmfgqLJ6KzA==
+X-Received: by 2002:a17:90a:bf16:: with SMTP id c22mr17129860pjs.83.1573799551704;
+        Thu, 14 Nov 2019 22:32:31 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id p16sm9058430pfn.171.2019.11.14.22.32.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 22:32:30 -0800 (PST)
+Date:   Thu, 14 Nov 2019 22:32:28 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Fabien Dessenne <fabien.dessenne@st.com>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH v3] remoteproc: stm32: fix probe error case
+Message-ID: <20191115063228.GS3108315@builder>
+References: <1573635167-24590-1-git-send-email-fabien.dessenne@st.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: c916cf51-8e17-4c04-9be8-08d76994ced4
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Nov 2019 06:26:54.5679
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR01HT005
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573635167-24590-1-git-send-email-fabien.dessenne@st.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-31 11:20, Boris Brezillon wrote:
-> On Tue, 29 Oct 2019 01:26:01 +0000
-> Jonas Karlman <jonas@kwiboo.se> wrote:
->
->> Add DPB entry flags to help indicate when a reference frame is a field picture
->> and how the DPB entry is referenced, top or bottom field or full frame.
->>
->> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
->> ---
->>  Documentation/media/uapi/v4l/ext-ctrls-codec.rst | 12 ++++++++++++
->>  include/media/h264-ctrls.h                       |  4 ++++
->>  2 files changed, 16 insertions(+)
->>
->> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
->> index 28313c0f4e7c..d472a54d1c4d 100644
->> --- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
->> +++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
->> @@ -2028,6 +2028,18 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
->>      * - ``V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM``
->>        - 0x00000004
->>        - The DPB entry is a long term reference frame
->> +    * - ``V4L2_H264_DPB_ENTRY_FLAG_FIELD_PICTURE``
->> +      - 0x00000008
->> +      - The DPB entry is a field picture
->> +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_TOP``
->> +      - 0x00000010
->> +      - The DPB entry is a top field reference
->> +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_BOTTOM``
->> +      - 0x00000020
->> +      - The DPB entry is a bottom field reference
->> +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_FRAME``
->> +      - 0x00000030
->> +      - The DPB entry is a reference frame
->>  
->>  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE (enum)``
->>      Specifies the decoding mode to use. Currently exposes slice-based and
->> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
->> index e877bf1d537c..76020ebd1e6c 100644
->> --- a/include/media/h264-ctrls.h
->> +++ b/include/media/h264-ctrls.h
->> @@ -185,6 +185,10 @@ struct v4l2_ctrl_h264_slice_params {
->>  #define V4L2_H264_DPB_ENTRY_FLAG_VALID		0x01
->>  #define V4L2_H264_DPB_ENTRY_FLAG_ACTIVE		0x02
->>  #define V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM	0x04
->> +#define V4L2_H264_DPB_ENTRY_FLAG_FIELD_PICTURE	0x08
->> +#define V4L2_H264_DPB_ENTRY_FLAG_REF_TOP	0x10
->> +#define V4L2_H264_DPB_ENTRY_FLAG_REF_BOTTOM	0x20
->> +#define V4L2_H264_DPB_ENTRY_FLAG_REF_FRAME	0x30
-> I don't remember all the details, but do we really need 3 flags?
-> Maybe I'm wrong, but it looks like the following combination doesn't
-> make sense:
->
-> - FIELD_PICTURE + REF_FRAME: if it's a full frame ref it should
->   contain both top and bottom fields right, so it's no longer a
->   FIELD_PICTURE, is it?
->
-> Can't we just have 2 flags?
->
-> FIELD_PICTURE		0x08
-> FIELD_REF_TOP		0x10 (meaning that FIELD_REF_BOTTOM is
-> 			      0x00)
->
-> and then have the following combinations:
->
-> top field ref => FIELD_PICTURE | FIELD_REF_TOP
-> bottom field ref => FIELD_PICTURE
-> full frame ref => 0x0
+On Wed 13 Nov 00:52 PST 2019, Fabien Dessenne wrote:
 
-I am not sure and will need to look closer at spec and what ffmpeg is doing.
-These flags was mostly inspired by the information ffmpeg stores in
-H264Picture->reference and H264Picture->field_picture.
+> If the rproc driver is probed before the mailbox driver and if the rproc
+> Device Tree node has some mailbox properties, the rproc driver probe
+> shall be deferred instead of being probed without mailbox support.
+> 
+> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+> ---
+> Changes since v2: free other requested mailboxes after one request fails
+> Changes since v1: test IS_ERR() before checking PTR_ERR()
+> ---
+>  drivers/remoteproc/stm32_rproc.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
+> index 2cf4b29..4b67480 100644
+> --- a/drivers/remoteproc/stm32_rproc.c
+> +++ b/drivers/remoteproc/stm32_rproc.c
+> @@ -310,7 +310,7 @@ static const struct stm32_mbox stm32_rproc_mbox[MBOX_NB_MBX] = {
+>  	}
+>  };
+>  
+> -static void stm32_rproc_request_mbox(struct rproc *rproc)
+> +static int stm32_rproc_request_mbox(struct rproc *rproc)
+>  {
+>  	struct stm32_rproc *ddata = rproc->priv;
+>  	struct device *dev = &rproc->dev;
+> @@ -329,10 +329,16 @@ static void stm32_rproc_request_mbox(struct rproc *rproc)
+>  
+>  		ddata->mb[i].chan = mbox_request_channel_byname(cl, name);
+>  		if (IS_ERR(ddata->mb[i].chan)) {
+> +			if (PTR_ERR(ddata->mb[i].chan) == -EPROBE_DEFER) {
+> +				ddata->mb[i].chan = NULL;
 
-I also believe that the new FLAG_REF_TOP/BOTTOM may make FLAG_ACTIVE obsolete.
+So this relies on the caller jumping to stm32_rproc_free_mbox() to
+release a subset of ddata->mb[x].chan. While this works I find it error
+prone and would prefer the idiomatic solution of cleaning things up, in
+this function, before returning.
 
-active => flags & FLAG_REF_FRAME
+So, could you please goto a snippet that loops backwards from i-- to 0
+calling mbox_free_channel() and then return -EPROBE_DEFER instead?
 
-Hopefully I will have some time to rework and respin this at the end of next week.
+Thanks,
+Bjorn
 
-Regards,
-Jonas
-
->
->>  
->>  struct v4l2_h264_dpb_entry {
->>  	__u64 reference_ts;
-
+> +				return -EPROBE_DEFER;
+> +			}
+>  			dev_warn(dev, "cannot get %s mbox\n", name);
+>  			ddata->mb[i].chan = NULL;
+>  		}
+>  	}
+> +
+> +	return 0;
+>  }
+>  
+>  static int stm32_rproc_set_hold_boot(struct rproc *rproc, bool hold)
+> @@ -596,7 +602,9 @@ static int stm32_rproc_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto free_rproc;
+>  
+> -	stm32_rproc_request_mbox(rproc);
+> +	ret = stm32_rproc_request_mbox(rproc);
+> +	if (ret)
+> +		goto free_mb;
+>  
+>  	ret = rproc_add(rproc);
+>  	if (ret)
+> -- 
+> 2.7.4
+> 
