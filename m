@@ -2,219 +2,103 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DDFC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2698C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9722C2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA64F2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 08:58:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UTHgI7il"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbfKOI6w (ORCPT
+        id S1727316AbfKOI65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 03:58:52 -0500
-Received: from twhmllg3.macronix.com ([122.147.135.201]:45914 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfKOI6w (ORCPT
+        Fri, 15 Nov 2019 03:58:57 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41897 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727276AbfKOI65 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 03:58:52 -0500
-Received: from localhost.localdomain ([172.17.195.96])
-        by TWHMLLG3.macronix.com with ESMTP id xAF8wWGw046218;
-        Fri, 15 Nov 2019 16:58:35 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-From:   Mason Yang <masonccyang@mxic.com.tw>
-To:     broonie@kernel.org, miquel.raynal@bootlin.com, richard@nod.at,
-        marek.vasut@gmail.com, dwmw2@infradead.org,
-        computersforpeace@gmail.com, vigneshr@ti.com,
-        bbrezillon@kernel.org, tudor.ambarus@microchip.com
-Cc:     juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: [PATCH 3/4] mtd: spi-nor: Add Octal 8D-8D-8D mode support for Macronix mx25uw51245g
-Date:   Fri, 15 Nov 2019 16:58:07 +0800
-Message-Id: <1573808288-19365-4-git-send-email-masonccyang@mxic.com.tw>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1573808288-19365-1-git-send-email-masonccyang@mxic.com.tw>
-References: <1573808288-19365-1-git-send-email-masonccyang@mxic.com.tw>
-X-MAIL: TWHMLLG3.macronix.com xAF8wWGw046218
+        Fri, 15 Nov 2019 03:58:57 -0500
+Received: by mail-lj1-f194.google.com with SMTP id m4so4906935ljj.8
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 00:58:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z+pg9wj7yRXgLDbaXk97MrdYcFuUJiaocpSFiWUQa1o=;
+        b=UTHgI7il6nkwPJ5t8b7FMh0XJmESz0IGK7rLutWB2vw6I0WyJlHZc5HzSJe9OJO/Ja
+         cy90XKj0jyihqQIuf3/Ck0cF/JNi8a+GasJC5mVdphNQ7QLH8qwoPiyf5YOLM25O8vUE
+         e8HS4mV64/idioykbqun7VK9SHxe/G39ajtZOMaPkNT4mZiM3aHLURCdjKP3qGnV9YAF
+         qZfzHyhsp1iwHI3ganjVtmXZ/Z8kRYHYojIyVFx6IdWBhExFxC+EmY3F7bcGcsbuVv1A
+         3GVwJ9NAqejEzjvYAnJylfaw7p8QaRTdtXztlHIoB5j4SiHJJMjpmlprWqNwfzWFc3or
+         IsUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z+pg9wj7yRXgLDbaXk97MrdYcFuUJiaocpSFiWUQa1o=;
+        b=L4lqkBFXHtQvqPAr6jxPB/8XCk31/fy4NR/gWQMCq/COpUNb5i93pqG+e7OwRNZm0q
+         7AwJCmau4zJx1EUNYUZn5M8Iff+NGgQKeyOpWM+uPQUXdGisVOhyWbM8tlww15moHXH6
+         cCxSKKhWm5x5O7PHX+H8AGTOaUUbCPH55YE5hDgMvDvnF8DWyS4A+DaN6hdziKaffBNY
+         nKvJ7DoTH/RNp1QojLh3Fpn8jJnfoEYYu+Fe9JqdnbAhhLJgJjHK/RaGX2iaovpF7AEi
+         a0eMmJCS0aHBEZEV2ISvT8Wu98lXqvzsGhN27ZyF8u2vyuol1ni8F2MT3/cdfMAVPvIR
+         UAVA==
+X-Gm-Message-State: APjAAAU8ar7TnSUyJ8PDs8KjtxLOkJ5jcUwqIUYdxkQOwis5FtWBUxTY
+        +j1ZJdS3sFdj1qnneK3WZ4lPeP+Xx+8keG5b+7aBKA==
+X-Google-Smtp-Source: APXvYqwIDdyPqvILxslSpTDagXqgZxcyneXp6w20bE5evFxcLeT7zIkuP+8wNFzYA/MQKGJ1IfoewtfpTYYk4NobWk0=
+X-Received: by 2002:a2e:888a:: with SMTP id k10mr10290408lji.195.1573808334796;
+ Fri, 15 Nov 2019 00:58:54 -0800 (PST)
+MIME-Version: 1.0
+References: <CA+G9fYviReoG+gq=Jm8yQOMd01j2opae5p+VTGGMK7aLn0xWgw@mail.gmail.com>
+ <20191114224213.GN4163745@devbig004.ftw2.facebook.com>
+In-Reply-To: <20191114224213.GN4163745@devbig004.ftw2.facebook.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 15 Nov 2019 14:28:43 +0530
+Message-ID: <CA+G9fYu-w+3qgkGet4B4NeBxQNaXoWij49j0WRwPAYELgakb6w@mail.gmail.com>
+Subject: Re: linux-next: arm32: beagleboard x15: WARNING: CPU: 0 PID: 0 at
+ /usr/src/kernel/kernel/cgroup/cgroup.c:1969 cgroup_setup_root+0x36c/0x4e8
+To:     Tejun Heo <tj@kernel.org>
+Cc:     cgroups@vger.kernel.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        namhyung@kernel.org, open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, lizefan@huawei.com,
+        hannes@cmpxchg.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, kafai@fb.com,
+        Song Liu <songliubraving@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mx25uw51245g is a SPI NOR that supports 1-1-1/8-8-8 mode and the SFDPRD
-command but returns an empty SFDP page. This forces us to add a new entry
-in the flash_info table and patch spi_nor_fixups hooks to tweak flash
-parameters for spi_nor_read/pp_setting() and then to enter
-Octal 8D-8D-8D modes.
+Hi Tejun,
 
-Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
----
- drivers/mtd/spi-nor/spi-nor.c | 114 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/mtd/spi-nor.h   |   3 ++
- 2 files changed, 117 insertions(+)
+On Fri, 15 Nov 2019 at 04:12, Tejun Heo <tj@kernel.org> wrote:
+> > [    0.015402] WARNING: CPU: 0 PID: 0 at /usr/src/kernel/kernel/cgroup/cgroup.c:1969
+> > cgroup_setup_root+0x36c/0x4e8
+> ...
+> > [    0.015726] [<c053ac48>] (cgroup_setup_root) from [<c1c2a260>]
+> > (cgroup_init+0x108/0x560)
+>
+> So, that's saying that the initial kernfs_node ino allocation returned
+> something other than 1.  Hmmm... x86_32 works fine.  What does the
+> following say?
+>
+> # mkdir -p /tmp/cgroup2
+> # mount -t cgroup2 none /tmp/cgroup2
+> # ls -lid /tmp/cgroup2
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 4cdf52d..9013590 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -615,6 +615,56 @@ static int write_disable(struct spi_nor *nor)
- }
- 
- /*
-+ * Read configuration register 2, returning its value in the
-+ * location. Return the configuration register 2 value.
-+ * Returns negative if error occurred.
-+ */
-+static int read_cr2(struct spi_nor *nor, u32 addr)
-+{
-+	int ret;
-+
-+	if (nor->spimem) {
-+		struct spi_mem_op op =
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_RDCR2, 1),
-+				   SPI_MEM_OP_ADDR(4, addr, 1),
-+				   SPI_MEM_OP_DUMMY(4, 1),
-+				   SPI_MEM_OP_DATA_IN(1, nor->bouncebuf, 1));
-+
-+		if (spi_nor_protocol_is_8_8_8(nor->read_proto)) {
-+			op.cmd.buswidth = 8;
-+			op.addr.buswidth = 8;
-+			op.dummy.buswidth = 8;
-+			op.data.buswidth = 8;
-+			op.cmd.nbytes = 2;
-+
-+			if (spi_nor_protocol_is_8D_8D_8D(nor->read_proto)) {
-+				op.dummy.nbytes *= 2;
-+				op.cmd.dtr = true;
-+				op.addr.dtr = true;
-+				op.dummy.dtr = true;
-+				op.data.dtr = true;
-+			}
-+
-+			if (nor->ext_cmd_mode == EXT_CMD_IS_INVERSE)
-+				op.cmd.ext_opcode = ~SPINOR_OP_RDCR2;
-+			else
-+				op.cmd.ext_opcode = SPINOR_OP_RDCR2;
-+		}
-+
-+		ret = spi_mem_exec_op(nor->spimem, &op);
-+	} else {
-+		ret = -ENOTSUPP;
-+	}
-+
-+	if (ret < 0) {
-+		dev_err(nor->dev, "error %d reading CR\n", ret);
-+		return ret;
-+	}
-+
-+	return nor->bouncebuf[0];
-+}
-+
-+/*
-  * Write configuration register 2 one byte
-  * Returns negative if error occurred.
-  */
-@@ -2275,10 +2325,72 @@ static int spi_nor_spansion_clear_sr_bp(struct spi_nor *nor)
- 	return 0;
- }
- 
-+static void
-+spi_nor_set_read_settings(struct spi_nor_read_command *read,
-+			  u8 num_mode_clocks,
-+			  u8 num_wait_states,
-+			  u8 opcode,
-+			  enum spi_nor_protocol proto);
-+
-+static void
-+spi_nor_set_pp_settings(struct spi_nor_pp_command *pp,
-+			u8 opcode,
-+			enum spi_nor_protocol proto);
-+
-+static void
-+mx25uw51245g_default_init(struct spi_nor *nor)
-+{
-+	struct spi_nor_flash_parameter *params = &nor->params;
-+
-+	if (!(nor->spimem->spi->mode & (SPI_RX_OCTAL | SPI_TX_OCTAL)))
-+		return;
-+
-+	/* Octal 8S-8S-8S mode */
-+	params->hwcaps.mask |= SNOR_HWCAPS_OPI_FULL_STR;
-+	spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_8_8_8],
-+				  0, 20, SPINOR_OP_READ_8_8_8,
-+				  SNOR_PROTO_8_8_8);
-+
-+	spi_nor_set_pp_settings(&params->page_programs[SNOR_CMD_PP_8_8_8],
-+				SPINOR_OP_PP_8_8_8, SNOR_PROTO_8_8_8);
-+
-+	/* Octal 8D-8D-8D mode */
-+	params->hwcaps.mask |= SNOR_HWCAPS_OPI_FULL_DTR;
-+	spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_8D_8D_8D],
-+				  0, 20, SPINOR_OP_READ_8D_8D_8D,
-+				  SNOR_PROTO_8_8_8_DTR);
-+
-+	spi_nor_set_pp_settings(&params->page_programs[SNOR_CMD_PP_8D_8D_8D],
-+				SPINOR_OP_PP_8D_8D_8D, SNOR_PROTO_8_8_8_DTR);
-+
-+	nor->ext_cmd_mode = EXT_CMD_IS_INVERSE;
-+}
-+
-+static void
-+mx25uw51245g_post_sfdp_fixups(struct spi_nor *nor)
-+{
-+	struct spi_nor_flash_parameter *params = &nor->params;
-+	u8 cr2;
-+
-+	cr2 = read_cr2(nor, CR2_REG0) & CR2_REG0_MODE_MASK;
-+
-+	if (params->hwcaps.mask & SNOR_HWCAPS_OPI_FULL_DTR)
-+		cr2 |= CR2_REG0_MODE_OPI_DTR;
-+	else if (params->hwcaps.mask & SNOR_HWCAPS_OPI_FULL_STR)
-+		cr2 |= CR2_REG0_MODE_OPI_STR;
-+
-+	write_cr2(nor, CR2_REG0, cr2);
-+}
-+
- static struct spi_nor_fixups mx25l25635_fixups = {
- 	.post_bfpt = mx25l25635_post_bfpt_fixups,
- };
- 
-+static struct spi_nor_fixups mx25uw51245g_fixups = {
-+	.default_init = mx25uw51245g_default_init,
-+	.post_sfdp = mx25uw51245g_post_sfdp_fixups,
-+};
-+
- static void gd25q256_default_init(struct spi_nor *nor)
- {
- 	/*
-@@ -2442,6 +2554,8 @@ static void gd25q256_default_init(struct spi_nor *nor)
- 			 SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ)
- 			 .fixups = &mx25l25635_fixups },
- 	{ "mx25u25635f", INFO(0xc22539, 0, 64 * 1024, 512, SECT_4K | SPI_NOR_4B_OPCODES) },
-+	{ "mx25uw51245g", INFO(0xc2813a, 0, 64 * 1024, 1024, SECT_4K | SPI_NOR_4B_OPCODES)
-+				.fixups = &mx25uw51245g_fixups},
- 	{ "mx25v8035f",  INFO(0xc22314, 0, 64 * 1024,  16,
- 			 SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
- 	{ "mx25l25655e", INFO(0xc22619, 0, 64 * 1024, 512, 0) },
-diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-index 2e720ca..3aa54dd 100644
---- a/include/linux/mtd/spi-nor.h
-+++ b/include/linux/mtd/spi-nor.h
-@@ -114,6 +114,9 @@
- /* Write CFG Reg 2 - defined in JEDEC JESD216C. */
- #define SPINOR_OP_WRCR2		0x72	/* Write configuration register 2 */
- 
-+/* Used for Macronix flashes only */
-+#define SPINOR_OP_RDCR2		0x71	/* Read configuration register 2 */
-+
- /* Used for Macronix and Winbond flashes. */
- #define SPINOR_OP_EN4B		0xb7	/* Enter 4-byte mode */
- #define SPINOR_OP_EX4B		0xe9	/* Exit 4-byte mode */
--- 
-1.9.1
 
+ mkdir -p /tmp/cgroup2
+ mount -t cgroup2 none /tmp/cgroup2
+ ls -lid /tmp/cgroup2
+ 1 dr-xr-xr-x 5 root root 0 Nov 15 08:00 /tmp/cgroup2
+
+
+Full test log link,
+https://lkft.validation.linaro.org/scheduler/job/1011451#L1170
+
+- Naresh
