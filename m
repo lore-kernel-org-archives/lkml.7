@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A07C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA81C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9021C20740
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3D4420728
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:24:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573799055;
-	bh=Lzo/2fcFnObehszJJ05vKGc6TU4nb2GN4c4SDiqw27w=;
+	s=default; t=1573799059;
+	bh=CkL0tDFA+Apaq1emDTVz2gK/dfHItz5GIQYcLZnx45g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e873XMdBh53nK75V2hk9exm6ovmD0JxLvFmEp1pHkuFoFDX7+pTq2akJK18RQ2ASR
-	 aI/6OoGp+QpX1x7aGBtOvRh03/0DZMuEFnCxKL+d0V6D6vulp8tz9pCl+jITAK7nTH
-	 AteFa25Gx49tveSaND6oSdtlBR+K+YBuN8pIMhD0=
+	b=HrSy/RjmDcFcnKQu1MpJHWuYVzRbU+tLbjJcL/kySeTvGP05cYDP+TajjEr/Nupno
+	 IrZyp8xZsjFV4jTSUi+kiJm0wRRIikIIkuv4ltowX+wmUAhhDz5SQ+GF+aXF5rHg12
+	 gYJAUPOIC4liIHCRZSv+IJK3uRoNCw8lH6hwxpBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbfKOGVn (ORCPT
+        id S1727855AbfKOGYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:21:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50574 "EHLO mail.kernel.org"
+        Fri, 15 Nov 2019 01:24:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727387AbfKOGVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:21:40 -0500
+        id S1727192AbfKOGVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:21:37 -0500
 Received: from localhost (unknown [104.132.150.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3F2D2053B;
-        Fri, 15 Nov 2019 06:21:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B52A420815;
+        Fri, 15 Nov 2019 06:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573798899;
-        bh=Lzo/2fcFnObehszJJ05vKGc6TU4nb2GN4c4SDiqw27w=;
+        s=default; t=1573798897;
+        bh=CkL0tDFA+Apaq1emDTVz2gK/dfHItz5GIQYcLZnx45g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FLQXkKXU2H80mbTHC7gtY2RD6w1pXbSbVuMMvpzPchA7k5HvckPVFnRdp23DqSNKV
-         4cKqdV+G3dqRiuY3lJ9cB/AvasWQ/wIlacNIepmbN8JqKp/HxCAXrwC0hAKBw5bZow
-         h1q4HJhJwycXF7k7SE+7ZTadZv25281pVlmB3Zio=
+        b=clQw6Ick6MsAp4t8G62IZcobDuqogIuSqfYwh1Ttt2nDzFt8kydGMKWX4vlhS+abL
+         Eh3Pf23z9kYSKGmxijq1pIA7F/eLmAWsx/fSm3yEr73e52YKc6sKaDC6mYT5fBHlAv
+         hjTo2RnIKsiDX8MsK8ggKshW3j37vaLLBBQTpcnY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
         Andrew Donnellan <ajd@linux.ibm.com>
-Subject: [PATCH 4.4 04/20] powerpc: Fix compiling a BE kernel with a powerpc64le toolchain
-Date:   Fri, 15 Nov 2019 14:20:33 +0800
-Message-Id: <20191115062009.322973021@linuxfoundation.org>
+Subject: [PATCH 4.4 03/20] powerpc/Makefile: Use cflags-y/aflags-y for setting endian options
+Date:   Fri, 15 Nov 2019 14:20:32 +0800
+Message-Id: <20191115062008.666712711@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191115062006.854443935@linuxfoundation.org>
 References: <20191115062006.854443935@linuxfoundation.org>
@@ -61,61 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit 4dc831aa88132f835cefe876aa0206977c4d7710 upstream.
+commit 164af597ce945751e2dcd53d0a86e84203a6d117 upstream.
 
-GCC can compile with either endian, but the default ABI version is set
-based on the default endianness of the toolchain. Alan Modra says:
+When we introduced the little endian support, we added the endian flags
+to CC directly using override. I don't know the history of why we did
+that, I suspect no one does.
 
-  you need both -mbig and -mabi=elfv1 to make a powerpc64le gcc
-  generate powerpc64 code
+Although this mostly works, it has one bug, which is that CROSS32CC
+doesn't get -mbig-endian. That means when the compiler is little endian
+by default and the user is building big endian, vdso32 is incorrectly
+compiled as little endian and the kernel fails to build.
 
-The opposite is true for powerpc64 when generating -mlittle it
-requires -mabi=elfv2 to generate v2 ABI, which we were already doing.
+Instead we can add the endian flags to cflags-y/aflags-y, and then
+append those to KBUILD_CFLAGS/KBUILD_AFLAGS.
 
-This change adds ABI annotations together with endianness for all cases,
-LE and BE. This fixes the case of building a BE kernel with a toolchain
-that is LE by default.
+This has the advantage of being 1) less ugly, 2) the documented way of
+adding flags in the arch Makefile and 3) it fixes building vdso32 with a
+LE toolchain.
 
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Tested-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Andrew Donnellan <ajd@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/Makefile |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ arch/powerpc/Makefile |   22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
 --- a/arch/powerpc/Makefile
 +++ b/arch/powerpc/Makefile
-@@ -79,8 +79,15 @@ GNUTARGET	:= powerpc
+@@ -66,29 +66,28 @@ endif
+ UTS_MACHINE := $(OLDARCH)
+ 
+ ifeq ($(CONFIG_CPU_LITTLE_ENDIAN),y)
+-override CC	+= -mlittle-endian
+-ifneq ($(cc-name),clang)
+-override CC	+= -mno-strict-align
+-endif
+-override AS	+= -mlittle-endian
+ override LD	+= -EL
+-override CROSS32CC += -mlittle-endian
+ override CROSS32AS += -mlittle-endian
+ LDEMULATION	:= lppc
+ GNUTARGET	:= powerpcle
+ MULTIPLEWORD	:= -mno-multiple
+ KBUILD_CFLAGS_MODULE += $(call cc-option,-mno-save-toc-indirect)
+ else
+-ifeq ($(call cc-option-yn,-mbig-endian),y)
+-override CC	+= -mbig-endian
+-override AS	+= -mbig-endian
+-endif
+ override LD	+= -EB
+ LDEMULATION	:= ppc
+ GNUTARGET	:= powerpc
  MULTIPLEWORD	:= -mmultiple
  endif
  
--cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mbig-endian)
-+ifdef CONFIG_PPC64
-+cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mabi=elfv1)
-+cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mcall-aixdesc)
-+aflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mabi=elfv1)
-+aflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mabi=elfv2
++cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mbig-endian)
++cflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mlittle-endian
++ifneq ($(cc-name),clang)
++  cflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mno-strict-align
 +endif
 +
- cflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mlittle-endian
-+cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mbig-endian)
- ifneq ($(cc-name),clang)
-   cflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mno-strict-align
- endif
-@@ -120,7 +127,9 @@ ifeq ($(CONFIG_CPU_LITTLE_ENDIAN),y)
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2,$(call cc-option,-mcall-aixdesc))
- AFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2)
- else
-+CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcall-aixdesc)
-+AFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
- endif
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcmodel=medium,$(call cc-option,-mminimal-toc))
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mno-pointers-to-nested-functions)
++aflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mbig-endian)
++aflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mlittle-endian
++
+ ifeq ($(HAS_BIARCH),y)
+ override AS	+= -a$(CONFIG_WORD_SIZE)
+ override LD	+= -m elf$(CONFIG_WORD_SIZE)$(LDEMULATION)
+@@ -212,6 +211,9 @@ cpu-as-$(CONFIG_E200)		+= -Wa,-me200
+ KBUILD_AFLAGS += $(cpu-as-y)
+ KBUILD_CFLAGS += $(cpu-as-y)
+ 
++KBUILD_AFLAGS += $(aflags-y)
++KBUILD_CFLAGS += $(cflags-y)
++
+ head-y				:= arch/powerpc/kernel/head_$(CONFIG_WORD_SIZE).o
+ head-$(CONFIG_8xx)		:= arch/powerpc/kernel/head_8xx.o
+ head-$(CONFIG_40x)		:= arch/powerpc/kernel/head_40x.o
 
 
