@@ -2,252 +2,150 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B671FC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 02:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF30FC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 02:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E43A206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 02:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7BC820731
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 02:54:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LWi7+rpi"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jgqVFC5i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbfKOCli (ORCPT
+        id S1727002AbfKOCyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 21:41:38 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:64221 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbfKOCli (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 21:41:38 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191115024134epoutp024ca40ec8b14c217338fc9556b7efc043~XNcBFWfgW0121101211epoutp023
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 02:41:34 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191115024134epoutp024ca40ec8b14c217338fc9556b7efc043~XNcBFWfgW0121101211epoutp023
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1573785694;
-        bh=rrEXPmBLtCwvfgy/REU0C8PXjZ+TZxP2NNvKo4CyY4Q=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=LWi7+rpiTNpEFV1CvHlCkVZs01PGU8ay5aGf2cXyuLHyNTzZ9gSTkCxxkHxPdJjUR
-         FCFnmb4F/2JPzUpSoCyII/34QyZsGhlVzmf623XVaDc3zf2lPfaEUtOrckbQvK+V87
-         sbxxWDP9Y7lncHWpNlv23uS77WhJncAeJ72a7nEs=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191115024134epcas1p160bb2567f2737b7dde919fc38bc5f4c2~XNcAfADpj0936209362epcas1p1v;
-        Fri, 15 Nov 2019 02:41:34 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.152]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 47DjKR3MLGzMqYkX; Fri, 15 Nov
-        2019 02:41:31 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        22.03.04135.9501ECD5; Fri, 15 Nov 2019 11:41:29 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191115024129epcas1p107f2772f8919b82395dcc632f953ca2c~XNb76Rl5q0936209362epcas1p1m;
-        Fri, 15 Nov 2019 02:41:29 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191115024129epsmtrp294635bc19f145cdaf9fdb85fad3e40a7~XNb75T3q91733017330epsmtrp2O;
-        Fri, 15 Nov 2019 02:41:29 +0000 (GMT)
-X-AuditID: b6c32a36-7fbff70000001027-ef-5dce1059dd51
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        9A.4D.25663.8501ECD5; Fri, 15 Nov 2019 11:41:29 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191115024128epsmtip19227c10fec3e40912680bc68872e3f0b~XNb7PNV1O1569915699epsmtip1t;
-        Fri, 15 Nov 2019 02:41:28 +0000 (GMT)
-Subject: Re: [PATCH 3/7] devfreq: add clearing transitions stats in sysfs
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Kamil Konieczny <k.konieczny@samsung.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <22eda7a2-3c3d-fd3e-fe5f-169c17a50a0b@samsung.com>
-Date:   Fri, 15 Nov 2019 11:47:12 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Thu, 14 Nov 2019 21:54:09 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:45051 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbfKOCyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 21:54:08 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Djbx2VWfz9s7T;
+        Fri, 15 Nov 2019 13:54:04 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573786445;
+        bh=SybDljMw+M7nx2Wto9NsHQOdfYnh2eeHcpMdwIVCDAA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=jgqVFC5iHnWnn2/4nG1ptrdqn1fiEZsaWabD/7/W/c5LzP1LIxZ34jw24V1k2HSOw
+         wU4/QqtCq9jcs0ATEHTvzxWBzrDXL3b0DpQSbhr0n62jxQUK+5DJk5MXXYQWVWy03j
+         vlhJQiTQzFZVHDMEm6+sKVb8hND43kY+KzTdD9GEK/RvJOoIeaA3qjaJHWDvXSYYkb
+         RzxOXrm5Gf3tpQf6z1avftPzm16ljpJsJJmFxjcgmH1VyMNJmfayaJM3Btw1whRYYm
+         IGCycHZnkzMcjs3OifihlU2xBSpRlwWteLkL2LJR0UgAKDmzLNUA5hvyxOvdFx0fHR
+         TeHkNG+uQY2+Q==
+Date:   Fri, 15 Nov 2019 13:53:57 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: linux-next: manual merge of the ftrace tree with the arm64 tree
+Message-ID: <20191115135357.10386fac@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <95813188-be4f-d3b3-459a-597be775f035@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTURT1ddrpYKw+63atiZYxGiVBOi3FQYuKGoPaD4yJwQVxAkNButlp
-        CeiHgsaKQcUdC0SDO6IgIQIarCLGoIgaghoRN/gg4ELAEqMR7TAY+Tv3vHPePfe9SxHqElJD
-        pdvdvMvOWWlyrPzWg/m68I24JVHX36plbxZWKNhz/YUK9tmzSiX7NPezkm29XUyyA4caEXu9
-        sUPJtudcIZdRcVVleWTc4eoyFDdQNTOe2JRhSuO5FN6l5e3JjpR0uyWGXrs+aUWSMUrHhDPR
-        7EJaa+dsfAy90hwfvirdGkxAazM5qydIxXOCQEcsMbkcHjevTXMI7hiad6ZYndHOBQJnEzx2
-        y4Jkh20Ro9PpjUHhtoy0QO5i5wVt1rWP5bI96LTmIAqhAEfC+2O1soNoLKXGtQiK35YopaIf
-        QffQj5FiEEFB80Pin+XdrVdy6aAeQV/l75HiG4KK7/lyUTUJr4bcouagg6ImYx66/VZRQ+Bu
-        BFWn2hSihsRh4O9+TYp4Ag6Fth+dSNSr8BL43jJXpOV4DuT/qhy+ZgpOgCcBTqRVeCI0neka
-        7hSCl4L3w5/hWwg8Dd50nZVJeBbUfCkeydxLQsu9dRJeCfcHexUSngQ9j6qVEtbAwNd6UsK7
-        4GpTIylGBnwAQbX/+YjBAP6Lx2ViHgLPh4rbERIdCnW/SpDUdzx8DeQrRAlgFRzYr5Yks6H1
-        Q4dMwtPhvDePLEC0b9Q0vlET+EZN4Pvf7BySl6GpvFOwWXiBcepHf3UVGl7NsKhaVNpibkCY
-        QvQ4Fbx5mqhWcJlCtq0BAUXQk1UnvjQnqlUpXPZO3uVIcnmsvNCAjMG3PkpopiQ7gotudycx
-        Rr3BYGAjmSgjw9DTVLGXLyaqsYVz8xk87+Rd/3wyKkSzB62pC5jHl7MvcrIu3Yl9TG/uLfJs
-        XbMh8pCQ0P5z4gxyjLcjQpObuirH3FY3Zv8WmLO9dGiWvqdTWatNbS/kMtyRRfUvhz7VWLy+
-        zoS3BYa+0thl86qjY5Yfztp3I6p8r081eHJ9h8m8+3Lo9pq8u6+mVuhNfu/98B2vaY8r+0gA
-        0XIhjWPCCJfA/QWwS5ujsAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnkeLIzCtJLcpLzFFi42LZdlhJTjdS4Fyswc+dzBYbZ6xntVjwaQar
-        xfnzG9gtzja9Ybe4vGsOm8Xn3iOMFmuP3GW3uN24gs2Bw2PTqk42j74tqxg9Pm+SC2CO4rJJ
-        Sc3JLEst0rdL4Mr42mRdsEShYvXDNUwNjNOluhg5OSQETCTubbvO0sXIxSEksJtRYsezHawQ
-        CUmJaRePMncxcgDZwhKHDxeDhIUE3jJK9M3TAbGFBTwlmmafASsREUiVWP0wBCTMLPCCUaK5
-        PRhi5GomiS9H/jGBJNgEtCT2v7jBBmLzCyhKXP3xmBGkl1fATuLLOTWQMIuAqkTP7w3MILao
-        QITE8+03GEFsXgFBiZMzn7CA2JwC9hLtD/6zQexSl/gz7xIzhC0ucevJfCYIW15i+9s5zBMY
-        hWchaZ+FpGUWkpZZSFoWMLKsYpRMLSjOTc8tNiwwykst1ytOzC0uzUvXS87P3cQIjh4trR2M
-        J07EH2IU4GBU4uGVuHU2Vog1say4MvcQowQHs5II75S3Z2KFeFMSK6tSi/Lji0pzUosPMUpz
-        sCiJ88rnH4sUEkhPLEnNTk0tSC2CyTJxcEo1MKqePX/2StZTufpEl0kfljFxRB/Wsd8n8Pfm
-        La0z7UGGa+aYN7tN1diilnEnJlhpbUF02kvvPeJa6nejF3yLvLPw+e9NrnrmQTGFTUs+KfvK
-        XPUTWa84rWxK9Vx/Efey/c65D3yZJnJNX9vQfyThuKN+T/HCOq/qvasPZf59rKf88PRX9222
-        skosxRmJhlrMRcWJAE+UzuaaAgAA
-X-CMS-MailID: 20191115024129epcas1p107f2772f8919b82395dcc632f953ca2c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191113091352eucas1p2c30c8a73a8362aff872e3cd9312eb24b
-References: <20191113091336.5218-1-k.konieczny@samsung.com>
-        <CGME20191113091352eucas1p2c30c8a73a8362aff872e3cd9312eb24b@eucas1p2.samsung.com>
-        <20191113091336.5218-4-k.konieczny@samsung.com>
-        <3a5096c3-03d2-fd5d-852a-6a19c5b262a5@samsung.com>
-        <95813188-be4f-d3b3-459a-597be775f035@samsung.com>
+Content-Type: multipart/signed; boundary="Sig_/wu9x9N7Ps.0tRtcEvyvCnHK";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bartlomiej,
+--Sig_/wu9x9N7Ps.0tRtcEvyvCnHK
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 11/15/19 3:23 AM, Bartlomiej Zolnierkiewicz wrote:
-> 
-> Hi Chanwoo,
-> 
-> On 11/13/19 10:41 AM, Chanwoo Choi wrote:
->> Hi,
->>
->> If user only want to use the transitions stats information
->> from now, the user just read the sysfs twice and then
->> can calculate them between the read data. It is enough
-> 
-> IOW you are suggesting that user should invest his valuable time
-> into actually doing such calculations (or implementing some extra
-> script to do the data parsing and calculations automatically)
-> instead of doing simple write to special sysfs file?
+Hi all,
 
-Actually, I wouldn't like to add the new node for the debugging.
-If there are some requirement for the debugging, we better to
-add the debugfs for devfreq (devfreq has not yet developed
-the debugfs. I'll do that). If some node is necessary for the devfreq
-core/device operation, Surely, I'll agree.
+Today's linux-next merge of the ftrace tree got a conflict in:
 
-On the initial version of devfreq, it contained the 'trans_stat'.
-In order to keep the compatibility, just could not move 'trans_stat'
-to under debugfs path.
+  include/asm-generic/vmlinux.lds.h
 
-If there are any requirement for resetting for transition stats,
-I prefer to use the following style without any extra debugging node.
+between commit:
 
-	For resetting for transition stats as following,
-	echo 0 > /sys/class/devfreq/devfreq0/trans_stat
+  a1326b17ac03 ("module/ftrace: handle patchable-function-entry")
 
-> 
-> Also similar patch for cpufreq has been applied not so long ago:
-> 
-> commit ee7930ee27fe5240398cc302fa8eb4454725f188
-> Author: Markus Mayer <mmayer@broadcom.com>
-> Date:   Mon Nov 7 10:02:23 2016 -0800
-> 
->     cpufreq: stats: New sysfs attribute for clearing statistics
->     
->     Allow CPUfreq statistics to be cleared by writing anything to
->     /sys/.../cpufreq/stats/reset.
->     
->     Signed-off-by: Markus Mayer <mmayer@broadcom.com>
->     Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
->     Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ...
-> 
-> Best regards,
-> --
-> Bartlomiej Zolnierkiewicz
-> Samsung R&D Institute Poland
-> Samsung Electronics
-> 
->> to get the existing sysfs information. 
->>
->> And I don't know the any other reason. So, I can't agree this patch.
->> So, Not ack.
->>
->> Regards,
->> Chanwoo Choi
->>
->>
->> On 11/13/19 6:13 PM, Kamil Konieczny wrote:
->>> Add new function trans_reset in sysfs for clearing transition
->>> table and time in states devfreq statistics.> 
->>> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
->>> ---
->>>  drivers/devfreq/devfreq.c | 26 ++++++++++++++++++++++++++
->>>  1 file changed, 26 insertions(+)
->>>
->>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
->>> index ac04b5baef70..0a88055d1362 100644
->>> --- a/drivers/devfreq/devfreq.c
->>> +++ b/drivers/devfreq/devfreq.c
->>> @@ -1445,6 +1445,31 @@ static ssize_t trans_stat_show(struct device *dev,
->>>  }
->>>  static DEVICE_ATTR_RO(trans_stat);
->>>  
->>> +static void defvreq_stats_clear_table(struct devfreq *devfreq)
->>> +{
->>> +	unsigned int count = devfreq->profile->max_state;
->>> +
->>> +	spin_lock(&devfreq->stats_lock);
->>> +	memset(devfreq->time_in_state, 0, count * sizeof(u64));
->>> +	memset(devfreq->trans_table, 0, count * count * sizeof(int));
->>> +	devfreq->last_stat_updated = get_jiffies_64();
->>> +	devfreq->total_trans = 0;
->>> +	spin_unlock(&devfreq->stats_lock);
->>> +}
->>> +
->>> +static ssize_t trans_reset_store(struct device *dev,
->>> +				 struct device_attribute *attr,
->>> +				 const char *buf,
->>> +				 size_t count)
->>> +{
->>> +	struct devfreq *devfreq = to_devfreq(dev);
->>> +
->>> +	defvreq_stats_clear_table(devfreq);
->>> +
->>> +	return count;
->>> +}
->>> +static DEVICE_ATTR_WO(trans_reset);
->>> +
->>>  static struct attribute *devfreq_attrs[] = {
->>>  	&dev_attr_governor.attr,
->>>  	&dev_attr_available_governors.attr,
->>> @@ -1455,6 +1480,7 @@ static struct attribute *devfreq_attrs[] = {
->>>  	&dev_attr_min_freq.attr,
->>>  	&dev_attr_max_freq.attr,
->>>  	&dev_attr_trans_stat.attr,
->>> +	&dev_attr_trans_reset.attr,
->>>  	NULL,
->>>  };
->>>  ATTRIBUTE_GROUPS(devfreq);
-> 
-> 
-> 
+from the arm64 tree and commit:
 
+  b83b43ffc6e4 ("fgraph: Fix function type mismatches of ftrace_graph_retur=
+n using ftrace_stub")
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+from the ftrace tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc include/asm-generic/vmlinux.lds.h
+index 63cedc3c0c77,0f358be551cd..000000000000
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@@ -136,19 -110,30 +136,29 @@@
+  #endif
+ =20
+  #ifdef CONFIG_FTRACE_MCOUNT_RECORD
+ -#ifdef CC_USING_PATCHABLE_FUNCTION_ENTRY
+ +/*
+ + * The ftrace call sites are logged to a section whose name depends on the
+ + * compiler option used. A given kernel image will only use one, AKA
+ + * FTRACE_CALLSITE_SECTION. We capture all of them here to avoid header
+ + * dependencies for FTRACE_CALLSITE_SECTION's definition.
+ + */
++ /*
++  * Need to also make ftrace_graph_stub point to ftrace_stub
++  * so that the same stub location may have different protocols
++  * and not mess up with C verifiers.
++  */
+ -#define MCOUNT_REC()	. =3D ALIGN(8);				\
+ -			__start_mcount_loc =3D .;			\
+ -			KEEP(*(__patchable_function_entries))	\
+ -			__stop_mcount_loc =3D .;			\
+ -			ftrace_graph_stub =3D ftrace_stub;
+ -#else
+  #define MCOUNT_REC()	. =3D ALIGN(8);				\
+  			__start_mcount_loc =3D .;			\
+  			KEEP(*(__mcount_loc))			\
+ +			KEEP(*(__patchable_function_entries))	\
+- 			__stop_mcount_loc =3D .;
++ 			__stop_mcount_loc =3D .;			\
++ 			ftrace_graph_stub =3D ftrace_stub;
+ -#endif
+  #else
+- #define MCOUNT_REC()
++ # ifdef CONFIG_FUNCTION_TRACER
++ #  define MCOUNT_REC()	ftrace_graph_stub =3D ftrace_stub;
++ # else
++ #  define MCOUNT_REC()
++ # endif
+  #endif
+ =20
+  #ifdef CONFIG_TRACE_BRANCH_PROFILING
+
+--Sig_/wu9x9N7Ps.0tRtcEvyvCnHK
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3OE0UACgkQAVBC80lX
+0Gy90wf8DG2g3bXYzLlXAN+vkX/Q8pIVdoD/eRfWodPH9RHC/Z0p+J9OLJFIl3Q4
+4VNwsAgQcYgvj+W8m4zMz0ZX88uzKCjsM5DfOeZ7I7pKHxwGhihJDTC8YzlhZFln
+i7G1qoSdovqc9IVSJw58n93GjO5m85rIhiQpsUK3YLTvYRy5CPDPwNlQXv+y592/
+P/cAgZBFSSPjrdjVMWVJ2DZ3IawJ0ViT4xOb2oOYdZVoVotiSFWCLQcP84M+nncx
+Y+1a9SdYtcHQnBg+v8LCFIps+bbU7u732IPJg5pTHitV3yT4fmNhW4NvRPESnUGZ
+rvEglKw1e/k0j2pMq4IrIX4epGw0Xg==
+=rW2a
+-----END PGP SIGNATURE-----
+
+--Sig_/wu9x9N7Ps.0tRtcEvyvCnHK--
