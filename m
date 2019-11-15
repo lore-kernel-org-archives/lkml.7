@@ -2,122 +2,114 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF25C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D979AC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38BC82073C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:00:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="MUMcguYJ"
+	by mail.kernel.org (Postfix) with ESMTP id BA1F02073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:01:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727496AbfKOMAG (ORCPT
+        id S1727417AbfKOMBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:00:06 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46237 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbfKOMAG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 07:00:06 -0500
-Received: by mail-wr1-f65.google.com with SMTP id b3so10674227wrs.13
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 04:00:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=xswx1TYcTCN/R8BEco33f7ioZ6ZLAVd47u0UZeI2jCk=;
-        b=MUMcguYJF8ajnQ3y7i1PjDdTyM+BQ2KMNnYfE1qxTk2qXijwX+4CN6nCI8Cgsutns8
-         Uzi+Zbxlm2231OvJMmIkO6dj8PkMI+acnr8gaPIh85xqikCPKOZ+NH1zvwPWxEAYrlkg
-         dDi+5IwLYwFU6X7ODSHQ0MaTD/dw2Gzj/5CnutAqBXUkgLR4oxNao3Evtrj4fkXdgZZB
-         vxpZzjUPqWn0D0TeY3FLRUM0T46rggV73MXPD0BbBUAwTwKe+UcVCVjtV5gRZB90B9lM
-         wUhW54SVL/o1ZXfrL5y9sXoX4K/WqYlrCBZKkEHg74bvMEINce/LnOq1cFdKMNi+WHDa
-         PY9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=xswx1TYcTCN/R8BEco33f7ioZ6ZLAVd47u0UZeI2jCk=;
-        b=Vb6pb32vyZXPIjxU1IbJNCtoQJrmf43dKy4EqBJ3zASDxfymZNCX9IX4u38+2PlTYs
-         4tWDaeuk0chx0FW1stSG4gW89NPVN0kfH67sagT2yYN2XwMql9LIRoaCHhPexPm4D8IH
-         RxZwON2Fm57qHZ/1HEx1Nzv5t4EhOsAZYT/t9znhB12aFcdn0x/hChK0XLsnW6iTl8Zu
-         WC6xkdGCPrbBpY4A4RIazbQ122qcL7gTif0pRDf/ol6beTFkjfu85zo36ngmdBmkMLla
-         yqRG61bFHEE3wmKHu+tNqqYGFQZu9btGR/Di5wBT6OX2bhdD0V+seFdjyniF4D6e0EHS
-         9VqA==
-X-Gm-Message-State: APjAAAW4hbcZkE4hCiJZY7PNzIzvjpLicSZT7G2evKg7f+HdJGp0wBtl
-        bhdu2FXr54T2Hk3PuZGxeflh5A==
-X-Google-Smtp-Source: APXvYqzzIgy/syrF3JnQEqeoEyHU6giJHzqN+5y+DMC43YNF5J1SmtmtN2HDN0/nAsrvn036HOXSWA==
-X-Received: by 2002:adf:9d88:: with SMTP id p8mr15426058wre.286.1573819203903;
-        Fri, 15 Nov 2019 04:00:03 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id g4sm10390750wru.75.2019.11.15.04.00.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 04:00:03 -0800 (PST)
-Message-ID: <5dce9343.1c69fb81.322d4.273d@mx.google.com>
-Date:   Fri, 15 Nov 2019 04:00:03 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        Fri, 15 Nov 2019 07:01:04 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34764 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726983AbfKOMBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 07:01:04 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 17814ACB4;
+        Fri, 15 Nov 2019 12:01:02 +0000 (UTC)
+Subject: Re: Sense of soc bus? (was: [PATCH] base: soc: Export
+ soc_device_to_device() helper)
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-realtek-soc@lists.infradead.org,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        boot-architecture@lists.linaro.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        linux-amlogic@lists.infradead.org, linux-omap@vger.kernel.org,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+References: <20191103013645.9856-3-afaerber@suse.de>
+ <20191111045609.7026-1-afaerber@suse.de> <20191111052741.GB3176397@kroah.com>
+ <586fa37c-6292-aca4-fa7c-73064858afaf@suse.de>
+ <20191111064040.GA3502217@kroah.com>
+ <a88442df-dc6b-07e5-8dee-9e308bdda450@suse.de>
+ <20191112052347.GA1197504@kroah.com>
+ <20191112072926.isjxfa4ci6akhx56@pengutronix.de>
+ <aff81b8e-f041-73a5-6a95-d308fa07842c@suse.de>
+ <c8572f70-5550-8cee-4381-fd7de7ae5af0@baylibre.com>
+ <CAMuHMdWOWWQoJh5=07VMRhtrFR_Gc_qNhjTV4tCsvwvMn0kYfA@mail.gmail.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <a0a6d71f-4fb7-51ce-fe33-74f9e588b791@suse.de>
+Date:   Fri, 15 Nov 2019 13:00:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: linux-4.9.y
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v4.9.201-32-gd7f83e4f45e8
-In-Reply-To: <20191115062009.813108457@linuxfoundation.org>
-References: <20191115062009.813108457@linuxfoundation.org>
-Subject: Re: [PATCH 4.9 00/31] 4.9.202-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+In-Reply-To: <CAMuHMdWOWWQoJh5=07VMRhtrFR_Gc_qNhjTV4tCsvwvMn0kYfA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.9.y boot: 93 boots: 0 failed, 89 passed with 3 offline, 1=
- conflict (v4.9.201-32-gd7f83e4f45e8)
+Hi Geert,
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.9.y/kernel/v4.9.201-32-gd7f83e4f45e8/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.9.y=
-/kernel/v4.9.201-32-gd7f83e4f45e8/
+Am 15.11.19 um 09:58 schrieb Geert Uytterhoeven:
+> On Fri, Nov 15, 2019 at 9:52 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>> On 12/11/2019 11:47, Andreas Färber wrote:
+>>> For example, RTD1295 will support LSADC only from revision B00
+>>> on (and it's not the first time I'm seeing such things in the industry).
+>>> So if a user complains, it will be helpful to see that information.
+>>>
+>>> Referencing your Amlogic review, with all due respect for its authors,
+>>> the common framework here just lets that information evaporate into the
+>>> deeps of sysfs.
+>>
+>> Hopefully we never had the case where needed to use the soc info in drivers,
+>> but now we have one and having such infrastructure already in-place will help.
+>>
+>> Renesas platforms makes a extensive usage of the soc info infrastructure to
+>> figure out plenty of HW parameters at runtime and lower their DT changes.
+> 
+> We do our best to use it solely for detecting quirks in early SoC revisions.
 
-Tree: stable-rc
-Branch: linux-4.9.y
-Git Describe: v4.9.201-32-gd7f83e4f45e8
-Git Commit: d7f83e4f45e886d919bc985bd225b8355ddd9284
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 49 unique boards, 19 SoC families, 14 builds out of 197
+Got a pointer? I fail to immediately understand how sysfs would help
+drivers (as opposed to userspace) detect quirks: Parsing strings back
+doesn't sound efficient, and I don't see you exporting any custom APIs
+in drivers/soc/renesas/renesas-soc.c?
 
-Offline Platforms:
+Regards,
+Andreas
 
-arm:
-
-    sunxi_defconfig:
-        gcc-8
-            sun7i-a20-bananapi: 1 offline lab
-
-    multi_v7_defconfig:
-        gcc-8
-            bcm4708-smartrg-sr400ac: 1 offline lab
-            sun7i-a20-bananapi: 1 offline lab
-
-Conflicting Boot Failure Detected: (These likely are not failures as other =
-labs are reporting PASS. Needs review.)
-
-x86_64:
-    x86_64_defconfig:
-        qemu_x86_64:
-            lab-collabora: FAIL (gcc-8)
-            lab-baylibre: PASS (gcc-8)
-
----
-For more info write to <info@kernelci.org>
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
