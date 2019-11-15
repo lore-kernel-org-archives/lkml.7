@@ -2,122 +2,104 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA983C33C99
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B87E9C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A55C22073C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:48:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573840129;
-	bh=Cec4G7J1NLFbLK/mgcOgF4kBUaE1PEQX0oi24K30Wo8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IsZARgxZM04FtPU/PTkqjU1Mf7v9HzbumJLlsNDML8WzrEDPyvIh4yC5aVzjRAmxK
-	 jUbIvYkkAh6Xl1VeWsvCS38VRqUYmDjrxke5dDxZcegd3UUPNE+cEhVnrzQwzrfdYq
-	 7da1+/fW687WdJIv47IXrFVEaTmpJZYJNb03JG2E=
+	by mail.kernel.org (Postfix) with ESMTP id 92D982073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:51:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EorYr20i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfKORss (ORCPT
+        id S1726750AbfKORvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 12:48:48 -0500
-Received: from mail-qv1-f53.google.com ([209.85.219.53]:44857 "EHLO
-        mail-qv1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfKORss (ORCPT
+        Fri, 15 Nov 2019 12:51:24 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37925 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfKORvY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 12:48:48 -0500
-Received: by mail-qv1-f53.google.com with SMTP id d3so4078334qvs.11;
-        Fri, 15 Nov 2019 09:48:47 -0800 (PST)
+        Fri, 15 Nov 2019 12:51:24 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 15so6343458pgh.5
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 09:51:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Tggz0Sup0tJF7r/miqRqPkt8QctjM6InW2y0Q0myCrA=;
-        b=YRwOG6FnZpiAU/ObEKfFoLeH/BCO4X7fGLIUL0/xug+uGlbhVwQmRJuMAs4JwqSmdZ
-         BBBEcHVid4mj6iyuE2y9bFo3+ursRhOY8/ugAfoZFQOoTb8BU2o41wtkDGZRfiXZTPS/
-         5rFKFXg/Hq4c9Vbva7CFLkNwlT4AP/YwWMy+6RKbbruhfMkZTxjjQU7lMB2MIzdEEqZC
-         kFoApnlFJS+sKduvaKlGXvm/TzT3TC4W6Pyryv8bXo+kOCLHqkOz7mDgBfRofD4ICoaD
-         /bx/hfTcEsEURtRGNZVn3tUY9m193AYhL5Jea7wkggKhwjlM3APZflaFfE9HJXCM6D0B
-         m94A==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:to:subject:from:user-agent:date;
+        bh=dLhYkfUvuM3MR/JcrrR7Nokdc6ORsY2H2jUYzk/2iMw=;
+        b=EorYr20iszXneZR3cFgWw+iMhIgDDQXoL2/uXYakczV+sXoukhMfHWMbzspvnCFdxg
+         kAwA6q3qrOE3B5BWKlVn0ruxtti1+d5w6tOTNC+cIbDCekuAZbgvcjjKh4duLjDGWiip
+         JtuFNGj/xEp7OOMwY3CiHkt/F0ypAKegBWMU0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Tggz0Sup0tJF7r/miqRqPkt8QctjM6InW2y0Q0myCrA=;
-        b=WEgISatshGoj4JR6Xu4Y57uolSISy6nVdxuUapaC5pLUbbSh0UDMOqnrkAddHCzb3E
-         DuZ8zJIem3v+hVn3K9OikqdHzuNHj5LBExaXMDZTsgCjslNDeCUvJORD8c+3J2naD195
-         EFzze6fnkoFrTf5FHEY/E1doeiyEdXIxa8FWmVq1SV/6zKCtrJUW+PxRdwLeFfYWFtqQ
-         Zea2dnrOZlre/CwKuK98/DijUn6MiOhyF0bVOSlrtZ2iBhmZayInqxDBHZkl8YpubguX
-         1IEl5Q1yDV+B1fo9XViaoyzWy/6t+JVaP+qlg/AY1PswCtC24cSgpjTKIV0RI2bDbMxE
-         Q6pA==
-X-Gm-Message-State: APjAAAXUCblhF6NU4X7SlSwLDpLTGkuoFllE50Sj3uebkgsR/VGZFyTY
-        zCHTGhTtCm26oiWQXzUG2T8=
-X-Google-Smtp-Source: APXvYqydPSTYxYN82kZIJOLGlcFhkq+6JEEBk7LqqlPn79KmDLe7cS/rHfO/ZD0Ur8OF3MNkOiR1lA==
-X-Received: by 2002:ad4:458b:: with SMTP id x11mr7704350qvu.7.1573840127172;
-        Fri, 15 Nov 2019 09:48:47 -0800 (PST)
-Received: from localhost ([2620:10d:c091:480::4ef1])
-        by smtp.gmail.com with ESMTPSA id 76sm4642961qke.111.2019.11.15.09.48.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Nov 2019 09:48:46 -0800 (PST)
-Date:   Fri, 15 Nov 2019 09:48:44 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Roman Gushchin <guro@fb.com>,
-        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 1/2] mm: memcg: switch to css_tryget() in
- get_mem_cgroup_from_mm()
-Message-ID: <20191115174844.GR4163745@devbig004.ftw2.facebook.com>
-References: <20191106225131.3543616-1-guro@fb.com>
- <20191113162934.GF19372@blackbody.suse.cz>
- <20191113170823.GA12464@castle.DHCP.thefacebook.com>
- <20191114191657.GN20866@dhcp22.suse.cz>
- <20191114192018.GJ4163745@devbig004.ftw2.facebook.com>
- <20191114193340.GA24848@dhcp22.suse.cz>
- <20191114193736.GL4163745@devbig004.ftw2.facebook.com>
- <20191115174031.GA15216@dhcp22.suse.cz>
- <20191115174721.GB15216@dhcp22.suse.cz>
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:to:subject:from
+         :user-agent:date;
+        bh=dLhYkfUvuM3MR/JcrrR7Nokdc6ORsY2H2jUYzk/2iMw=;
+        b=Pz4I57w0wJC4/QaPH3XE/vD5OsTNAvbgqmSJ0NF5Ob/mUw4hJxBlmC718gVr0uJMHF
+         5v4Xuo+a618D37XWKMsogtTFTGIfHpLT8BH4SIPoMDvMBHS6RzwijVGB8kc6ZU/Fh3nm
+         M/QJM59Qd0yzV0RzghdLi4WM3UDWS0KyPTPJiPYnAI7lLh7JsBv8HW6NDrDKeAJqGu24
+         57vyKwY2CippLm07MgpaySXqAA+WGsPKbPeN60+zHA26KbjyCYnDKXON3xlzK5BnHlqg
+         vrje4r6CA0Vfk/pKDlmx1lGqwa4//4sL3fdsqEVH7dIknMdUQgzJ2EzGFCHfdo4ps0+6
+         3qXA==
+X-Gm-Message-State: APjAAAXyfupjjCfv+uiPJoUNdKn/JPlr3Rvpp+IHJMf/JKIH0qrgzvP/
+        88HAACgp2KbZ4hdQCxEVGBeGlg==
+X-Google-Smtp-Source: APXvYqwcLOBA5BoQIkVOeY36QAMv4CCxUyLegLofHm0JXeFtgI1ujTzkBTIiWgzH4iVDJ99l3Wkk2g==
+X-Received: by 2002:a63:1d0a:: with SMTP id d10mr2492394pgd.242.1573840282995;
+        Fri, 15 Nov 2019 09:51:22 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id v10sm10079543pgr.37.2019.11.15.09.51.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2019 09:51:22 -0800 (PST)
+Message-ID: <5dcee59a.1c69fb81.188d.e4b9@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115174721.GB15216@dhcp22.suse.cz>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <000000000000cdaa560596acbc4e@google.com>
+References: <000000000000cdaa560596acbc4e@google.com>
+To:     alexandre.belloni@bootlin.com, andreyknvl@google.com,
+        arnd@arndb.de, b.zolnierkie@samsung.com,
+        gregkh@linuxfoundation.org, herbert@gondor.apana.org.au,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, lvivier@redhat.com,
+        mchehab+samsung@kernel.org, mpm@selenic.com,
+        syzbot <syzbot+f41c4f7c6d8b0b778780@syzkaller.appspotmail.com>,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: INFO: task hung in chaoskey_disconnect
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Fri, 15 Nov 2019 09:51:21 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 06:47:21PM +0100, Michal Hocko wrote:
-> s@online@offline@
-> 
-> And reading after myself it turned out to sound differently than I
-> meant. What I wanted to say really is, what is the difference that
-> css_tryget_online really guarantee when the css might go offline right
-> after the call suceeds so more specifically what is the difference
-> between
-> 	if (css_tryget()) {
-> 		if (online)
-> 			DO_SOMETHING
-> 	}
-> and
-> 	if (css_tryget_online()) {
-> 		DO_SOMETHING
-> 	}
-> 
-> both of them are racy and do not provide any guarantee wrt. online
-> state.
+Quoting syzbot (2019-11-06 04:32:09)
+> Hello,
+>=20
+> syzbot found the following crash on:
+>=20
+> HEAD commit:    b1aa9d83 usb: raw: add raw-gadget interface
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D16ae2adce00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D79de80330003b=
+5f7
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3Df41c4f7c6d8b0b7=
+78780
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D10248158e00=
+000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D16afbf7ce00000
+>=20
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+f41c4f7c6d8b0b778780@syzkaller.appspotmail.com
 
-It's about not giving new reference when the object is known to be
-delted to the user.  Can you please think more about how file
-deletions work?
+I suspect this is because of the kthread getting stuck problem reported
+by Maciej. Maybe try the commit that Herbert picked up.
 
-Thanks.
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6=
+.git linus
 
--- 
-tejun
