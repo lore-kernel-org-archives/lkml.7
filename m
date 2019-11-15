@@ -2,105 +2,100 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 903ACC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 04:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5FAC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 04:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 681B9206E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 04:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD9EA2072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 04:50:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UqVjFT6j"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NTo8ybxo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfKOEpA (ORCPT
+        id S1727142AbfKOEu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 23:45:00 -0500
-Received: from ozlabs.org ([203.11.71.1]:48885 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726549AbfKOEo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 23:44:59 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Dm3s3Z3bz9sP6;
-        Fri, 15 Nov 2019 15:44:57 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573793097;
-        bh=2IT7kQyS7HUi89J83sS/Y6EzE36k0O7rOWKgl9xBC/Y=;
-        h=Date:From:To:Cc:Subject:From;
-        b=UqVjFT6jZefTcgkWnqpQdeeiuapcBnA19gk9Isnfq9+9Na4PP/iutpqH7Jx3nWqEK
-         Ty9FMmonrbDj8jfULZ20e/xqocg6QZzo3CeVZ/Kf8QyuSLD9Qug0+s+4D1srMSBicK
-         sANM55jy9b8cqYkP5uAhRG5l4AHaC67PhoeP0uDfri5LxvXFQr3m7LkzI8GaxSt0Q5
-         ZxsUuR+Oki3hfI3IhKbCfKS9/DfHJL1vhq2Ab1b3gCBQtoPRwVvrw5vIs0EqtibiXo
-         zmtoi5q1crRQ5RPGBHbCq4PgWcf0JEzmozL/BImbfqh/M3TLjT9GPAPz4guLXGjsRW
-         9wtPdCHq7Ko3w==
-Date:   Fri, 15 Nov 2019 15:44:56 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robherring2@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: linux-next: manual merge of the pwm tree with the devicetree tree
-Message-ID: <20191115154456.244c27e4@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/RyIrEUa4PrOL3P+S8eK5+Yh";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Thu, 14 Nov 2019 23:50:58 -0500
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:34659 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726755AbfKOEu6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 23:50:58 -0500
+Received: by mail-pl1-f202.google.com with SMTP id u9so5527752plq.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 20:50:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=w71CA9nI41QLngUUjO4kaDNCWv8Is/cxYLfXviB89PM=;
+        b=NTo8ybxoixlCH0ZM1hpm8k1kL45i3+Eh5sJUx6aF70GQFnFicUSLH/iVN4V7v5nxez
+         aSeLn+YhSHtNCWALSPcXKt1kt9rXZTysNWTysx9jJCcdsfzPAZHfZ3lVgIJDVQOh/kk8
+         U6L8AqrRcEQR/8bltVArD3ZU0+dZmE4FYWigJYdNlpP3DSOGwSn1zsz2krBosITPAmTs
+         DJitrC4FkVwD/IOkaerJR5ymcO2HxxN9VZZ0CH7/ALoVmiIlZr+IV0BPY5WaPBS6c/Da
+         Pojk/sakGMiZms6D9fYDH8aveluLe5NxC43OLQeYNe0ds5yXHzA3H1OTuiFV2I05mNtL
+         Q3tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=w71CA9nI41QLngUUjO4kaDNCWv8Is/cxYLfXviB89PM=;
+        b=KiOqaZB6wqsFnF7RvwK9iAZkKoEz4yYwkjXG2/WqgDQu8WGRTQZ3oKzD6O3Nj5EzlK
+         e+32oZw871L/Xb7KNo6iH363DVQ/TPHwcPpj2zzCXE77mYF5vKwEYq1E/NIijidN3B+8
+         KUVm/JQCYQ9m3dLGrg07sQ3CdqPq3WVkdtPfJ5x80MOZBf1IgqH1d6F6O3JaLAbA/Xmk
+         u6TkiBjgBMxJNgBaxis8ZCZOSzkhRtpn6ZIrvmGsZnrxhmnbpwY/oMiFY+3wq/hXcXSn
+         fu4mmaZJvhb+c2LaauY81fov+gRNrjPeis+pyvvSWisUCPDPlefCupJV39Hs648O7W/F
+         rWug==
+X-Gm-Message-State: APjAAAXHz+v9iqFJ9M1mNgrUICcXtB7Mtfqmgqc0I5N8Yi/fL43DM755
+        jYFaI1TYzXuf9SA4dTFmOVfoUunFroJLQfI=
+X-Google-Smtp-Source: APXvYqwoR0UhMLan4e4IUMAvPvgf+9vxmaOtBTzeVFpTKGkCGgYwDAz522FkrjiFpB745lMdX6ZtroWuXToyQIM=
+X-Received: by 2002:a63:ee44:: with SMTP id n4mr1499531pgk.137.1573793455780;
+ Thu, 14 Nov 2019 20:50:55 -0800 (PST)
+Date:   Thu, 14 Nov 2019 20:50:48 -0800
+Message-Id: <20191115045049.261104-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+Subject: [PATCH v1] i2c: of: Populate fwnode in of_i2c_get_board_info()
+From:   Saravana Kannan <saravanak@google.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel-team@android.com, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/RyIrEUa4PrOL3P+S8eK5+Yh
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This allows the of_devlink feature to work across i2c devices too. This
+avoid unnecessary probe deferrals of i2c devices, defers consumers of
+i2c devices till the i2c devices probe, and allows i2c drivers to
+implement sync_state() callbacks.
 
-Hi all,
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+The of_devlink feature is present in driver-core-next branch. It started
+off with [1] but it has been improving since then.
 
-Today's linux-next merge of the pwm tree got a conflict in:
+[1] -- https://lore.kernel.org/linux-acpi/20190904211126.47518-1-saravanak@google.com/
 
-  Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+ drivers/i2c/i2c-core-of.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-between commit:
+diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
+index 6f632d543fcc..4e913c890a7b 100644
+--- a/drivers/i2c/i2c-core-of.c
++++ b/drivers/i2c/i2c-core-of.c
+@@ -50,6 +50,7 @@ int of_i2c_get_board_info(struct device *dev, struct device_node *node,
+ 
+ 	info->addr = addr;
+ 	info->of_node = node;
++	info->fwnode = of_fwnode_handle(node);
+ 
+ 	if (of_property_read_bool(node, "host-notify"))
+ 		info->flags |= I2C_CLIENT_HOST_NOTIFY;
+-- 
+2.24.0.432.g9d3f5f5b63-goog
 
-  56fb34d86e87 ("dt-bindings: mfd: Convert stm32 timers bindings to json-sc=
-hema")
-
-from the devicetree tree and commit:
-
-  4205e356285e ("dt-bindings: pwm-stm32: Document pinctrl sleep state")
-
-from the pwm tree.
-
-I fixed it up (I just deleted the file - more fixup is probably required)
-and can carry the fix as necessary. This is now fixed as far as linux-next
-is concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/RyIrEUa4PrOL3P+S8eK5+Yh
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3OLUgACgkQAVBC80lX
-0GzU2gf+PT9N1c5iWBlI7Fz+cTmIEOoRDiTnRPH+F6HNsJrHCA397ENwXZldksVq
-+ocghgddSJILnIRUBhMygIDEbwAenf3avYHdWuXjhTm/8uJOwWULbZWx/uEQiUkA
-gEkgX437WGv7OsmZMuk55S6bCCVW822ZT4EkNGawgwDRhwV5PD8mYkIkX2tk2O/E
-a2qY54g0PztvfiFYV1rv1unvAHv44YVW5Pm1I6JCOCBs8+57vHSXEwjPBGIadOLk
-TLuR5imLGueOtddv3eM1eldaSqQTF5M37GA1qc6TEjO9MWhrXGeu6nSCmbF/Vcm1
-BP7QAQkFcP4iYSSD7+KcayA1oJcBKQ==
-=n2vS
------END PGP SIGNATURE-----
-
---Sig_/RyIrEUa4PrOL3P+S8eK5+Yh--
