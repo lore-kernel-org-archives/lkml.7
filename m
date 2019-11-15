@@ -2,216 +2,186 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB220C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85004C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 848D820730
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D90020730
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:52:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573829564;
+	bh=cAugVQqnfOJDIZQAyQVPIYP8CjsNR+kKtTc6VBr8RPE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xh5If5D3FlaSzmHdyPskTiiBC3Le2dGuyDRQ1iwAfq/bHrkaQV2CSkA/6A97Yw9LZ
+	 VvGDGsYAIEr4mJd0OMdfFGjowFLxkdo6Q1RP9V8Ir4FIvqzwedmStdlqcToS2cpmAX
+	 Ci7+Z2eymzjPTU1/HdiJknGYuNCeJJfC5i444bfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfKOOwg (ORCPT
+        id S1727705AbfKOOwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 09:52:36 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:51981 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727380AbfKOOwg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 09:52:36 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xAFEqHBg010614, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCAS12.realtek.com.tw[172.21.6.16])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xAFEqHBg010614
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 15 Nov 2019 22:52:17 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTITCAS12.realtek.com.tw (172.21.6.16) with Microsoft SMTP Server (TLS) id
- 14.3.468.0; Fri, 15 Nov 2019 22:52:17 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 15 Nov 2019 22:52:16 +0800
-Received: from RTEXMB03.realtek.com.tw ([::1]) by RTEXMB03.realtek.com.tw
- ([fe80::3d7d:f7db:e1fb:307b%12]) with mapi id 15.01.1779.005; Fri, 15 Nov
- 2019 22:52:16 +0800
-From:   James Tai <james.tai@realtek.com>
-To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "'DTML'" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>
-Subject: RE: [PATCH v3 2/2] arm64: dts: realtek: Add RTD1619 SoC and Realtek Mjolnir EVB
-Thread-Topic: [PATCH v3 2/2] arm64: dts: realtek: Add RTD1619 SoC and Realtek
- Mjolnir EVB
-Thread-Index: AdWZPm2tRLsPwxTXS12xPqXOk/yn2wA93OMAAGNK7sA=
-Date:   Fri, 15 Nov 2019 14:52:16 +0000
-Message-ID: <fbc4dee61c2547458fa0791f38abaed2@realtek.com>
-References: <73fb8106ec1a4665b59a2d187a576b71@realtek.com>
- <9cadb78c-99af-8948-e76f-c26f263693b3@suse.de>
-In-Reply-To: <9cadb78c-99af-8948-e76f-c26f263693b3@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [114.37.161.94]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 15 Nov 2019 09:52:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727588AbfKOOwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 09:52:42 -0500
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DFC02075E;
+        Fri, 15 Nov 2019 14:52:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573829561;
+        bh=cAugVQqnfOJDIZQAyQVPIYP8CjsNR+kKtTc6VBr8RPE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NfKnZ0wShweb+o//n4ef+q6txsUq189RZ43VQyzN1eTtfXSMUbQsqdvf0mFLu/1eh
+         gB22P6aGgHdHrbSSuCNkwHlfVDdUszFB1CZ/IZ9LJcealpcA3j4NFIC7VC8PH2GDAH
+         OA/MRNQ4rvSh2tsgssWUogkCRu9fOHCAPNUYGhbQ=
+Received: by mail-qk1-f174.google.com with SMTP id m16so8261134qki.11;
+        Fri, 15 Nov 2019 06:52:41 -0800 (PST)
+X-Gm-Message-State: APjAAAV2HISZ92dB4jC3eTgq9sI8EvecsW6lyJ3IBYU7dnNnKfHP/MB9
+        dCmMIxokb/njThtwmBzsM9QpBN9r37DsM+bNcg==
+X-Google-Smtp-Source: APXvYqyXpGPFd9dzp+nyir0q1Fm0wlWrqJRPWRpg47RGzyTiBMtJ1tJy2r+lUTTrK8LCwu5o2Zx4RL0nnwj49ZakawM=
+X-Received: by 2002:a05:620a:205d:: with SMTP id d29mr12885993qka.152.1573829560581;
+ Fri, 15 Nov 2019 06:52:40 -0800 (PST)
 MIME-Version: 1.0
+References: <20191113210544.1894-1-robh@kernel.org> <30b73f89-1ba1-6052-53bd-414ebdfa142c@codeaurora.org>
+ <CAL_Jsq+WFvwBy4rpZkT=_KMYzzvrsLcaTMFSydY_euuFLAsZEQ@mail.gmail.com> <CAK7LNASNugzCjzgObh8+fMvDhUNspapZy9rCA57eX3cLs6NW_g@mail.gmail.com>
+In-Reply-To: <CAK7LNASNugzCjzgObh8+fMvDhUNspapZy9rCA57eX3cLs6NW_g@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 15 Nov 2019 08:52:29 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+iTrSPsnAJyN9TVhqWzX4vv9KizTvHV08D7gCUTmEv+A@mail.gmail.com>
+Message-ID: <CAL_Jsq+iTrSPsnAJyN9TVhqWzX4vv9KizTvHV08D7gCUTmEv+A@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Improve validation build error handling
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiA+IEFkZCBEZXZpY2UgVHJlZXMgZm9yIFJlYWx0ZWsgUlREMTYxOSBTb0MgZmFtaWx5LCBSVEQx
-NjE5IFNvQyBhbmQNCj4gPiBSZWFsdGVrIE1qb2xuaXIgRVZCLg0KPiA+DQo+ID4gU2lnbmVkLW9m
-Zi1ieTogSmFtZXMgVGFpIDxqYW1lcy50YWlAcmVhbHRlay5jb20+DQo+ID4gLS0tDQo+IA0KPiBM
-YWNraW5nIHRoZSByZXF1ZXN0ZWQgY2hhbmdlbG9nLg0KPiANCj4gPiAgYXJjaC9hcm02NC9ib290
-L2R0cy9yZWFsdGVrL01ha2VmaWxlICAgICAgICAgIHwgICAyICsNCj4gPiAgLi4uL2Jvb3QvZHRz
-L3JlYWx0ZWsvcnRkMTYxOS1tam9sbmlyLmR0cyAgICAgIHwgIDQwICsrKysrDQo+ID4gIGFyY2gv
-YXJtNjQvYm9vdC9kdHMvcmVhbHRlay9ydGQxNjE5LmR0c2kgICAgICB8ICAxMiArKw0KPiA+ICBh
-cmNoL2FybTY0L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTZ4eC5kdHNpICAgICAgfCAxNjMNCj4gKysr
-KysrKysrKysrKysrKysrDQo+ID4gIDQgZmlsZXMgY2hhbmdlZCwgMjE3IGluc2VydGlvbnMoKykN
-Cj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMvcmVhbHRlay9ydGQx
-NjE5LW1qb2xuaXIuZHRzDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3Qv
-ZHRzL3JlYWx0ZWsvcnRkMTYxOS5kdHNpDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2Fy
-bTY0L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTZ4eC5kdHNpDQo+IA0KPiBTb21laG93IHRoZSBsYXN0
-IGh1bmsgKHJ0ZDE2eHguZHRzaSkgZGlkbid0IGFwcGx5IHdpdGggZ2l0LWFtIG9yIHBhdGNoIC1w
-MSwgbm90DQo+IHN1cmUgd2h5LiBJIGhhdmUgbWFudWFsbHkgY29waWVkIHRoZSBmaWxlIGludG8g
-cGxhY2UgYW5kIGZpeGVkIHVwIHNvbWUgbW9yZQ0KPiBuaXRzIGJlbG93Og0KPiANCj4gPg0KPiA+
-IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlYWx0ZWsvTWFrZWZpbGUNCj4gPiBi
-L2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVhbHRlay9NYWtlZmlsZQ0KPiA+IGluZGV4IDU1NTYzOGFk
-YTcyMS4uZmI1ZjA1OTc4ZWNjIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
-cmVhbHRlay9NYWtlZmlsZQ0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVhbHRlay9N
-YWtlZmlsZQ0KPiA+IEBAIC03LDMgKzcsNSBAQCBkdGItJChDT05GSUdfQVJDSF9SRUFMVEVLKSAr
-PQ0KPiBydGQxMjk1LXByb2JveDItYXZhLmR0Yg0KPiA+ICBkdGItJChDT05GSUdfQVJDSF9SRUFM
-VEVLKSArPSBydGQxMjk1LXppZG9vLXg5cy5kdGINCj4gPg0KPiA+ICBkdGItJChDT05GSUdfQVJD
-SF9SRUFMVEVLKSArPSBydGQxMjk2LWRzNDE4LmR0Yg0KPiA+ICsNCj4gPiArZHRiLSQoQ09ORklH
-X0FSQ0hfUkVBTFRFSykgKz0gcnRkMTYxOS1tam9sbmlyLmR0Yg0KPiA+IGRpZmYgLS1naXQgYS9h
-cmNoL2FybTY0L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTYxOS1tam9sbmlyLmR0cw0KPiA+IGIvYXJj
-aC9hcm02NC9ib290L2R0cy9yZWFsdGVrL3J0ZDE2MTktbWpvbG5pci5kdHMNCj4gPiBuZXcgZmls
-ZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uNmFiNzkxYWYzODk2DQo+ID4g
-LS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVhbHRlay9ydGQx
-NjE5LW1qb2xuaXIuZHRzDQo+ID4gQEAgLTAsMCArMSw0MCBAQA0KPiA+ICsvLyBTUERYLUxpY2Vu
-c2UtSWRlbnRpZmllcjogKEdQTC0yLjAtb3ItbGF0ZXIgT1IgQlNELTItQ2xhdXNlKQ0KPiA+ICsv
-Kg0KPiA+ICsgKiBDb3B5cmlnaHQgKGMpIDIwMTkgUmVhbHRlayBTZW1pY29uZHVjdG9yIENvcnAu
-DQo+ID4gKyAqLw0KPiA+ICsNCj4gPiArL2R0cy12MS87DQo+ID4gKw0KPiA+ICsjaW5jbHVkZSAi
-cnRkMTYxOS5kdHNpIg0KPiA+ICsNCj4gPiArLyB7DQo+ID4gKwljb21wYXRpYmxlID0gInJlYWx0
-ZWsscnRkMTYxOSIsICJyZWFsdGVrLG1qb2xuaXIiOw0KPiANCj4gT3JkZXIgbm90IGZpeGVkIGZy
-b20gdjIuIFRoaXMgaXMgYSBzY2hlbWEgdmlvbGF0aW9uIGFuZCBsb2dpY2FsbHkgd3JvbmcuDQo+
-IA0KPiA+ICsJbW9kZWw9ICJSZWFsdGVrIE1qb2xuaXIgRVZCIjsNCj4gDQo+IFNwYWNlIG1pc3Np
-bmcgYmVmb3JlID0uIE1pc3NlZCB0aGF0IGluIHYyLg0KPiANCj4gPiArDQo+ID4gKwltZW1vcnlA
-MCB7DQo+ID4gKwkJZGV2aWNlX3R5cGUgPSAibWVtb3J5IjsNCj4gPiArCQlyZWcgPSA8MHgwIDB4
-ODAwMDAwMDA+Ow0KPiA+ICsJfTsNCj4gPiArDQo+ID4gKwljaG9zZW4gew0KPiA+ICsJCXN0ZG91
-dC1wYXRoID0gInNlcmlhbDA6MTE1MjAwbjgiOw0KPiA+ICsJfTsNCj4gPiArDQo+ID4gKwlhbGlh
-c2VzIHsNCj4gPiArCQlzZXJpYWwwID0gJnVhcnQwOyAvKiBUaGUgVUFSVDAgaXMgZGVidWcgY29u
-c29sZSAqLw0KPiA+ICsJCXNlcmlhbDEgPSAmdWFydDE7IC8qIFRoZSBVQVJUMSBpcyBvbiBNLjIg
-c2xvdCAqLw0KPiA+ICsJCXNlcmlhbDIgPSAmdWFydDI7IC8qIFRoZSBVQVJUMiBpcyBvbiBHUElP
-IGNvbm5lY3RvciAqLw0KPiA+ICsJfTsNCj4gPiArfTsNCj4gPiArDQo+ID4gKyZ1YXJ0MCB7DQo+
-ID4gKwlzdGF0dXMgPSAib2theSI7DQo+ID4gK307DQo+ID4gKw0KPiA+ICsmdWFydDEgew0KPiA+
-ICsJc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPiArfTsNCj4gPiArDQo+ID4gKyZ1YXJ0MiB7DQo+
-ID4gKwlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICt9Ow0KPiANCj4gVGhlIGNvbW1lbnRzIHdl
-cmUgaW50ZW5kZWQgdG8gZ28gYWJvdmUgZWFjaCBub2RlLCBub3QgYWZ0ZXIgdGhlIGFsaWFzZXMu
-DQo+IEkndmUgdGFrZW4gdGhlIGxpYmVydHkgdG8gYW5ub3RhdGUgdGhlbSBmdXJ0aGVyIHdpdGgg
-dGhlaXIgUENCIGxhYmVsLg0KPiANCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0
-cy9yZWFsdGVrL3J0ZDE2MTkuZHRzaQ0KPiA+IGIvYXJjaC9hcm02NC9ib290L2R0cy9yZWFsdGVr
-L3J0ZDE2MTkuZHRzaQ0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAw
-MDAwMDAwLi5lNTJiZjcwOGIwNGUNCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvYXJjaC9h
-cm02NC9ib290L2R0cy9yZWFsdGVrL3J0ZDE2MTkuZHRzaQ0KPiA+IEBAIC0wLDAgKzEsMTIgQEAN
-Cj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wLW9yLWxhdGVyIE9SIEJT
-RC0yLUNsYXVzZSkNCj4gPiArLyoNCj4gPiArICogUmVhbHRlayBSVEQxNjE5IFNvQw0KPiA+ICsg
-Kg0KPiA+ICsgKiBDb3B5cmlnaHQgKGMpIDIwMTkgUmVhbHRlayBTZW1pY29uZHVjdG9yIENvcnAu
-DQo+ID4gKyAqLw0KPiA+ICsNCj4gPiArI2luY2x1ZGUgInJ0ZDE2eHguZHRzaSINCj4gPiArDQo+
-ID4gKy8gew0KPiA+ICsJY29tcGF0aWJsZSA9ICJyZWFsdGVrLHJ0ZDE2MTkiOw0KPiA+ICt9Ow0K
-PiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTZ4eC5kdHNp
-DQo+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTZ4eC5kdHNpDQo+ID4gbmV3
-IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLmQ5YjU3MmE4NzBmNQ0K
-PiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlYWx0ZWsv
-cnRkMTZ4eC5kdHNpDQo+ID4gQEAgLTAsMCArMSwxNjMgQEANCj4gPiArLy8gU1BEWC1MaWNlbnNl
-LUlkZW50aWZpZXI6IChHUEwtMi4wLW9yLWxhdGVyIE9SIEJTRC0yLUNsYXVzZSkNCj4gPiArLyoN
-Cj4gPiArICogUmVhbHRlayBSVEQxNnh4IFNvQyBmYW1pbHkNCj4gPiArICoNCj4gPiArICogQ29w
-eXJpZ2h0IChjKSAyMDE5IFJlYWx0ZWsgU2VtaWNvbmR1Y3RvciBDb3JwLg0KPiA+ICsgKi8NCj4g
-PiArDQo+ID4gKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9hcm0t
-Z2ljLmg+DQo+ID4gKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9p
-cnEuaD4NCj4gPiArDQo+ID4gKy97DQo+IA0KPiBTcGFjZSBtaXNzaW5nLiBNaXNzZWQgdGhhdCBp
-biB2Mi4NCj4gDQo+ID4gKwlpbnRlcnJ1cHQtcGFyZW50ID0gPCZnaWM+Ow0KPiA+ICsJI2FkZHJl
-c3MtY2VsbHMgPSA8MT47DQo+ID4gKwkjc2l6ZS1jZWxscyA9IDwxPjsNCj4gPiArDQo+ID4gKwlj
-cHVzIHsNCj4gPiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiArCQkjc2l6ZS1jZWxscyA9
-IDwwPjsNCj4gPiArDQo+ID4gKwkJY3B1MDogY3B1QDAgew0KPiA+ICsJCQlkZXZpY2VfdHlwZSA9
-ICJjcHUiOw0KPiA+ICsJCQljb21wYXRpYmxlID0gImFybSxjb3J0ZXgtYTU1IjsNCj4gPiArCQkJ
-cmVnID0gPDB4MD47DQo+ID4gKwkJCWVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQo+ID4gKwkJCW5l
-eHQtbGV2ZWwtY2FjaGUgPSA8JmwyPjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQljcHUxOiBj
-cHVAMTAwIHsNCj4gPiArCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCj4gPiArCQkJY29tcGF0aWJs
-ZSA9ICJhcm0sY29ydGV4LWE1NSI7DQo+ID4gKwkJCXJlZyA9IDwweDEwMD47DQo+ID4gKwkJCWVu
-YWJsZS1tZXRob2QgPSAicHNjaSI7DQo+ID4gKwkJCW5leHQtbGV2ZWwtY2FjaGUgPSA8JmwzPjsN
-Cj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQljcHUyOiBjcHVAMjAwIHsNCj4gPiArCQkJZGV2aWNl
-X3R5cGUgPSAiY3B1IjsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE1NSI7DQo+
-ID4gKwkJCXJlZyA9IDwweDIwMD47DQo+ID4gKwkJCWVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQo+
-ID4gKwkJCW5leHQtbGV2ZWwtY2FjaGUgPSA8JmwzPjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiAr
-CQljcHUzOiBjcHVAMzAwIHsNCj4gPiArCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCj4gPiArCQkJ
-Y29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE1NSI7DQo+ID4gKwkJCXJlZyA9IDwweDMwMD47DQo+
-ID4gKwkJCWVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQo+ID4gKwkJCW5leHQtbGV2ZWwtY2FjaGUg
-PSA8JmwzPjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQljcHU0OiBjcHVANDAwIHsNCj4gPiAr
-CQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4
-LWE1NSI7DQo+ID4gKwkJCXJlZyA9IDwweDQwMD47DQo+ID4gKwkJCWVuYWJsZS1tZXRob2QgPSAi
-cHNjaSI7DQo+ID4gKwkJCW5leHQtbGV2ZWwtY2FjaGUgPSA8JmwzPjsNCj4gPiArCQl9Ow0KPiA+
-ICsNCj4gPiArCQljcHU1OiBjcHVANTAwIHsNCj4gPiArCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsN
-Cj4gPiArCQkJY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE1NSI7DQo+ID4gKwkJCXJlZyA9IDww
-eDUwMD47DQo+ID4gKwkJCWVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQo+ID4gKwkJCW5leHQtbGV2
-ZWwtY2FjaGUgPSA8JmwzPjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQlsMjogbDItY2FjaGUg
-ew0KPiA+ICsJCQljb21wYXRpYmxlID0gImNhY2hlIjsNCj4gPiArCQkJbmV4dC1sZXZlbC1jYWNo
-ZSA9IDwmbDM+Ow0KPiA+ICsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQlsMzogbDMtY2FjaGUg
-ew0KPiA+ICsJCQljb21wYXRpYmxlID0gImNhY2hlIjsNCj4gPiArCQl9Ow0KPiA+ICsJfTsNCj4g
-PiArDQo+ID4gKwl0aW1lciB7DQo+ID4gKwkJY29tcGF0aWJsZSA9ICJhcm0sYXJtdjgtdGltZXIi
-Ow0KPiA+ICsJCWludGVycnVwdHMgPSA8R0lDX1BQSSAxMyBJUlFfVFlQRV9MRVZFTF9MT1c+LA0K
-PiA+ICsJCQkgICAgIDxHSUNfUFBJIDE0IElSUV9UWVBFX0xFVkVMX0xPVz4sDQo+ID4gKwkJCSAg
-ICAgPEdJQ19QUEkgMTEgSVJRX1RZUEVfTEVWRUxfTE9XPiwNCj4gPiArCQkJICAgICA8R0lDX1BQ
-SSAxMCBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KPiA+ICsJfTsNCj4gPiArDQo+ID4gKwlhcm1fcG11
-OiBwbXUgew0KPiA+ICsJCWNvbXBhdGlibGUgPSAiYXJtLGFybXY4LXBtdXYzIjsNCj4gPiArCQlp
-bnRlcnJ1cHRzID0gPEdJQ19QUEkgNyBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KPiA+ICsJfTsNCj4g
-PiArDQo+ID4gKwlwc2NpIHsNCj4gPiArCQljb21wYXRpYmxlID0gImFybSxwc2NpLTEuMCI7DQo+
-ID4gKwkJbWV0aG9kID0gInNtYyI7DQo+ID4gKwl9Ow0KPiA+ICsNCj4gPiArCW9zYzI3TTogb3Nj
-IHsNCj4gPiArCQljb21wYXRpYmxlID0gImZpeGVkLWNsb2NrIjsNCj4gPiArCQljbG9jay1mcmVx
-dWVuY3kgPSA8MjcwMDAwMDA+Ow0KPiA+ICsJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJvc2MyN00i
-Ow0KPiA+ICsJCSNjbG9jay1jZWxscyA9IDwwPjsNCj4gPiArCX07DQo+ID4gKw0KPiA+ICsJc29j
-QDk4MDAwMDAwIHsNCj4gDQo+IElmIHRoZSBub2RlIGhhcyBhIHVuaXQgYWRkcmVzcywgaXQgYWxz
-byBuZWVkcyBhIHJlZyBwcm9wZXJ0eSB3aXRoIHRoYXQgdmFsdWUuIFNvDQo+IGxldCdzIGRyb3Ag
-dGhlIHVuaXQgYWRkcmVzcy4NCj4gDQo+ID4gKwkJY29tcGF0aWJsZSA9ICJzaW1wbGUtYnVzIjsN
-Cj4gPiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiArCQkjc2l6ZS1jZWxscyA9IDwxPjsN
-Cj4gPiArCQlyYW5nZXMgPSA8MHg5ODAwMDAwMCAweDk4MDAwMDAwIDB4NjgwMDAwMDA+Ow0KPiA+
-ICsNCj4gPiArCQlyYnVzOiByLWJ1c0A5ODAwMDAwMCB7DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAi
-c2ltcGxlLWJ1cyI7DQo+ID4gKwkJCXJlZyA9IDwweDk4MDAwMDAwIDB4MjAwMDAwPjsNCj4gPiAr
-CQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gKwkJCSNzaXplLWNlbGxzID0gPDE+Ow0KPiA+
-ICsJCQlyYW5nZXMgPSA8MHgwIDB4OTgwMDAwMDAgMHgyMDAwMDA+Ow0KPiA+ICsNCj4gPiArCQkJ
-dWFydDA6IHNlcmlhbDBANzgwMCB7DQo+ID4gKwkJCQljb21wYXRpYmxlID0gInNucHMsZHctYXBi
-LXVhcnQiOw0KPiA+ICsJCQkJcmVnID0gPDB4NzgwMCAweDQwMD47DQo+ID4gKwkJCQlyZWctc2hp
-ZnQgPSA8Mj47DQo+ID4gKwkJCQlyZWctaW8td2lkdGggPSA8ND47DQo+ID4gKwkJCQlpbnRlcnJ1
-cHRzID0gPEdJQ19TUEkgNjggSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gKwkJCQljbG9jay1m
-cmVxdWVuY3kgPSA8MjcwMDAwMDA+Ow0KPiA+ICsJCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCj4g
-PiArCQkJfTsNCj4gPiArDQo+ID4gKwkJCXVhcnQxOiBzZXJpYWwxQDFiMjAwIHsNCj4gPiArCQkJ
-CWNvbXBhdGlibGUgPSAic25wcyxkdy1hcGItdWFydCI7DQo+ID4gKwkJCQlyZWcgPSA8MHgxYjIw
-MCAweDQwMD47DQo+ID4gKwkJCQlyZWctc2hpZnQgPSA8Mj47DQo+ID4gKwkJCQlyZWctaW8td2lk
-dGggPSA8ND47DQo+ID4gKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODkgSVJRX1RZUEVfTEVW
-RUxfSElHSD47DQo+ID4gKwkJCQljbG9jay1mcmVxdWVuY3kgPSA8NDMyMDAwMDAwPjsNCj4gPiAr
-CQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gKwkJCX07DQo+ID4gKw0KPiA+ICsJCQl1YXJ0
-Mjogc2VyaWFsMkAxYjQwMCB7DQo+ID4gKwkJCQljb21wYXRpYmxlID0gInNucHMsZHctYXBiLXVh
-cnQiOw0KPiA+ICsJCQkJcmVnID0gPDB4MWI0MDAgMHg0MDA+Ow0KPiA+ICsJCQkJcmVnLXNoaWZ0
-ID0gPDI+Ow0KPiA+ICsJCQkJcmVnLWlvLXdpZHRoID0gPDQ+Ow0KPiA+ICsJCQkJaW50ZXJydXB0
-cyA9IDxHSUNfU1BJIDkwIElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ICsJCQkJY2xvY2stZnJl
-cXVlbmN5ID0gPDQzMjAwMDAwMD47DQo+ID4gKwkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+
-ICsJCQl9Ow0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCWdpYzogaW50ZXJydXB0LWNvbnRyb2xs
-ZXJAZmYxMDAwMDAgew0KPiA+ICsJCQljb21wYXRpYmxlID0gImFybSxnaWMtdjMiOw0KPiA+ICsJ
-CQlyZWcgPSA8MHhmZjEwMDAwMCAweDEwMDAwPiwNCj4gPiArCQkJICAgICAgPDB4ZmYxNDAwMDAg
-MHhjMDAwMD47DQo+ID4gKwkJCWludGVycnVwdC1jb250cm9sbGVyOw0KPiA+ICsJCQkjaW50ZXJy
-dXB0LWNlbGxzID0gPDM+Ow0KPiA+ICsJCQlpbnRlcnJ1cHRzID0gPEdJQ19QUEkgOSBJUlFfVFlQ
-RV9MRVZFTF9ISUdIPjsNCj4gPiArCQl9Ow0KPiA+ICsJfTsNCj4gPiArfTsNCj4gPiArDQo+ID4g
-KyZhcm1fcG11IHsNCj4gPiArCWludGVycnVwdC1hZmZpbml0eSA9IDwmY3B1MD4sIDwmY3B1MT4s
-IDwmY3B1Mj4sDQo+ID4gKwkJPCZjcHUzPiwgPCZjcHU0PiwgPCZjcHU1PjsNCj4gPiArfTsNCj4g
-DQo+IE5vdyB0aGF0IHRoZXkncmUgaW4gdGhlIHNhbWUgZmlsZSwgdGhpcyBjYW4ganVzdCBnbyBp
-bnRvIHRoZSBub2RlLg0KPiANCg0KSSdsbCBjb3JyZWN0IHRoZXNlIG1pc3Rha2VzIGluIG5leHQg
-dmVyc2lvbi4NCg0K
+On Thu, Nov 14, 2019 at 11:59 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> On Fri, Nov 15, 2019 at 1:34 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Thu, Nov 14, 2019 at 9:21 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+> > >
+> > > On 11/13/2019 2:05 PM, Rob Herring wrote:
+> > > > Schema errors can cause make to exit before useful information is
+> > > > printed. This leaves developers wondering what's wrong. It can be
+> > > > overcome passing '-k' to make, but that's not an obvious solution.
+> > > > There's 2 scenarios where this happens.
+> > > >
+> > > > When using DT_SCHEMA_FILES to validate with a single schema, any error
+> > > > in the schema results in processed-schema.yaml being empty causing a
+> > > > make error. The result is the specific errors in the schema are never
+> > > > shown because processed-schema.yaml is the first target built. Simply
+> > > > making processed-schema.yaml last in extra-y ensures the full schema
+> > > > validation with detailed error messages happen first.
+> > > >
+> > > > The 2nd problem is while schema errors are ignored for
+> > > > processed-schema.yaml, full validation of the schema still runs in
+> > > > parallel and any schema validation errors will still stop the build when
+> > > > running validation of dts files. The fix is to not add the schema
+> > > > examples to extra-y in this case. This means 'dtbs_check' is no longer a
+> > > > superset of 'dt_binding_check'. Update the documentation to make this
+> > > > clear.
+> > > >
+> > > > Cc: Jeffrey Hugo <jhugo@codeaurora.org>
+> > > > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > >
+> > > I injected a syntax error into a random binding file, and compared the
+> > > output with and without this patch.  This patch makes a massive
+> > > improvement in giving the user the necessary information to identify and
+> > > fix issues.  Thanks!
+>
+>
+> Could you show me an example of the injected syntax error,
+> and how this commit will improve the diagnostic?
+>
+>
+> For example, I changed as follows:
+>
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+> b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+> index 47bc1ac36426..358cb1fa4bb6 100644
+> --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+> @@ -89,7 +89,7 @@ required:
+>    - clocks
+>
+>  allOf:
+> -  - if:
+> +  - if2:
+>        properties:
+>          compatible:
+>            contains:
+>
+>
+>
+> The tool clearly explains the cause of the error.
+> I am struggling to understand what the current problem is.
+>
+>
+>
+> masahiro@pug:~/ref/linux$ make -j8  ARCH=arm  dt_binding_check
+
+Before this patch, you should see processed-schema.yaml built first.
+Clean your tree and do:
+
+make -j8  ARCH=arm
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+dt_binding_check
+
+Building processed-schema.yaml will fail because it will be empty as
+the 1 file included had an error.
+
+>   CHKDT   Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+>   DTC     Documentation/devicetree/bindings/arm/altera.example.dt.yaml
+>   DTC     Documentation/devicetree/bindings/arm/nxp/lpc32xx.example.dt.yaml
+>   DTC     Documentation/devicetree/bindings/arm/pmu.example.dt.yaml
+>   DTC     Documentation/devicetree/bindings/arm/rockchip.example.dt.yaml
+>   DTC     Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.example.dt.yaml
+>   DTC     Documentation/devicetree/bindings/arm/primecell.example.dt.yaml
+>   DTC     Documentation/devicetree/bindings/arm/renesas.example.dt.yaml
+>   CHECK   Documentation/devicetree/bindings/arm/nxp/lpc32xx.example.dt.yaml
+>   CHECK   Documentation/devicetree/bindings/arm/pmu.example.dt.yaml
+>   CHECK   Documentation/devicetree/bindings/arm/altera.example.dt.yaml
+>   CHECK   Documentation/devicetree/bindings/arm/rockchip.example.dt.yaml
+>   CHECK   Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.example.dt.yaml
+>   CHECK   Documentation/devicetree/bindings/arm/primecell.example.dt.yaml
+>   CHECK   Documentation/devicetree/bindings/arm/renesas.example.dt.yaml
+> /home/masahiro/ref/linux/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml:
+> allOf:0: 'if2' is not one of ['$ref', 'if', 'then', 'else']
+> make[1]: *** [Documentation/devicetree/bindings/Makefile;12:
+> Documentation/devicetree/bindings/gpu/arm,mali-midgard.example.dts]
+> Error 1
+> make[1]: *** Waiting for unfinished jobs....
+> make: *** [Makefile;1266: dt_binding_check] Error 2
+>
+>
+>
+>
+>
+>
+> > BTW, update dtschema and you'll get better (or more at least) messages
+> > when 'is not valid under any of the given schemas' errors occur.
+> >
+> > > Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> >
+> > Thanks.
+> >
+> > Rob
+>
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
