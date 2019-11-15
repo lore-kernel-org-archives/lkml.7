@@ -2,112 +2,100 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E51FC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F02C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D4432073C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:55:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EREwrdwl"
+	by mail.kernel.org (Postfix) with ESMTP id 01E7A2053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 14:56:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbfKOOzu (ORCPT
+        id S1727825AbfKOO4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 09:55:50 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24621 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727786AbfKOOzr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 09:55:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573829746;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vyWkFPpuPA83lu+9TJYuXo3BcNIHjBOZjcUx9JW1TRk=;
-        b=EREwrdwlgLxLVW7GxRgYfUs48h6hSO0Gl3saYtbxa2UMuz4CNP1jw4DpAbzoBNHcK1jgex
-        Fa7fD83fDOEHzK+kAHTNbFBav/x4KeLpPSm0DfDxe5PBoqh/izcaDAVdgdKe+qTEP2CXt1
-        J3jbZo4QQz98KGcR3C+wG/AWnHXGR3s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-93-1Pdznkz1MuWdgeIogsr6bQ-1; Fri, 15 Nov 2019 09:55:45 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E36EE64A92;
-        Fri, 15 Nov 2019 14:55:43 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with SMTP id C4B516918E;
-        Fri, 15 Nov 2019 14:55:42 +0000 (UTC)
-Date:   Fri, 15 Nov 2019 15:55:42 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Andi Kleen <andi@firstfloor.org>
-Cc:     jolsa@kernel.org, acme@kernel.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v6 10/12] perf stat: Use affinity for reading
-Message-ID: <20191115145542.GD4255@krava>
-References: <20191112005941.649137-1-andi@firstfloor.org>
- <20191112005941.649137-11-andi@firstfloor.org>
+        Fri, 15 Nov 2019 09:56:42 -0500
+Received: from mx2.suse.de ([195.135.220.15]:40462 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727526AbfKOO4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 09:56:41 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3CBA7B15E;
+        Fri, 15 Nov 2019 14:56:39 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 3ABBE1E4407; Fri, 15 Nov 2019 15:56:38 +0100 (CET)
+Date:   Fri, 15 Nov 2019 15:56:38 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Sebastian Siewior <bigeasy@linutronix.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Julia Cartwright <julia@ni.com>, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Joel Becker <jlbec@evilplan.org>
+Subject: Re: [PATCH] fs/buffer: Make BH_Uptodate_Lock bit_spin_lock a regular
+ spinlock_t
+Message-ID: <20191115145638.GA5461@quack2.suse.cz>
+References: <20190820170818.oldsdoumzashhcgh@linutronix.de>
+ <20190820171721.GA4949@bombadil.infradead.org>
+ <alpine.DEB.2.21.1908201959240.2223@nanos.tec.linutronix.de>
+ <20191011112525.7dksg6ixb5c3hxn5@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191112005941.649137-11-andi@firstfloor.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: 1Pdznkz1MuWdgeIogsr6bQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191011112525.7dksg6ixb5c3hxn5@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 04:59:39PM -0800, Andi Kleen wrote:
+On Fri 11-10-19 13:25:25, Sebastian Siewior wrote:
+> On 2019-08-20 20:01:14 [+0200], Thomas Gleixner wrote:
+> > On Tue, 20 Aug 2019, Matthew Wilcox wrote:
+> > > On Tue, Aug 20, 2019 at 07:08:18PM +0200, Sebastian Siewior wrote:
+> > > > Bit spinlocks are problematic if PREEMPT_RT is enabled, because they
+> > > > disable preemption, which is undesired for latency reasons and breaks when
+> > > > regular spinlocks are taken within the bit_spinlock locked region because
+> > > > regular spinlocks are converted to 'sleeping spinlocks' on RT. So RT
+> > > > replaces the bit spinlocks with regular spinlocks to avoid this problem.
+> > > > Bit spinlocks are also not covered by lock debugging, e.g. lockdep.
+> > > > 
+> > > > Substitute the BH_Uptodate_Lock bit spinlock with a regular spinlock.
+> > > > 
+> > > > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> > > > [bigeasy: remove the wrapper and use always spinlock_t]
+> > > 
+> > > Uhh ... always grow the buffer_head, even for non-PREEMPT_RT?  Why?
+> > 
+> > Christoph requested that:
+> > 
+> >   https://lkml.kernel.org/r/20190802075612.GA20962@infradead.org
+> 
+> What do we do about this one?
 
-SNIP
+I was thinking about this for quite some time. In the end I think the patch
+is almost fine but I'd name the lock b_update_lock and put it just after
+b_size element in struct buffer_head to use the hole there. That way we
+don't grow struct buffer_head.
 
-> =20
->  =09return 0;
-> @@ -325,15 +318,35 @@ static int read_counter(struct evsel *counter, stru=
-ct timespec *rs)
->  static void read_counters(struct timespec *rs)
->  {
->  =09struct evsel *counter;
-> -=09int ret;
-> +=09struct affinity affinity;
-> +=09int i, ncpus, cpu;
-> +
-> +=09if (affinity__setup(&affinity) < 0)
-> +=09=09return;
-> +
-> +=09ncpus =3D evsel_list->core.all_cpus->nr;
-> +=09if (!(target__has_cpu(&target) && !target__has_per_thread(&target)))
-> +=09=09ncpus =3D 1;
+With some effort, we could even shrink struct buffer_head from 104 bytes
+(on x86_64) to 96 bytes but I don't think that effort is worth it (I'd find
+it better use of time to actually work on getting rid of buffer heads
+completely).
 
-hum, could we propagate the negation inside amke this more readable?
+								Honza
 
-  if (!target__has_cpu(&target) || target__has_per_thread(&target))
-
-jirka
-
-> +=09evlist__for_each_cpu (evsel_list, i, cpu) {
-> +=09=09if (i >=3D ncpus)
-> +=09=09=09break;
-> +=09=09affinity__set(&affinity, cpu);
-> +
-> +=09=09evlist__for_each_entry(evsel_list, counter) {
-> +=09=09=09if (evsel__cpu_iter_skip(counter, cpu))
-> +=09=09=09=09continue;
-> +=09=09=09if (!counter->err)
-> +=09=09=09=09counter->err =3D read_counter(counter, rs, counter->cpu_iter=
- - 1);
-> +=09=09}
-> +=09}
-> +=09affinity__cleanup(&affinity);
-
-SNIP
-
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
