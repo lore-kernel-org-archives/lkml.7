@@ -2,86 +2,130 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E21C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 19:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 013AAC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 19:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C259206D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 19:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC1D8206D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 19:34:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fP2Gc25k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ix9xhWel"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfKOTei (ORCPT
+        id S1727136AbfKOTel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 14:34:38 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40491 "EHLO
+        Fri, 15 Nov 2019 14:34:41 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41798 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbfKOTeh (ORCPT
+        with ESMTP id S1726632AbfKOTek (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 14:34:37 -0500
-Received: by mail-pf1-f193.google.com with SMTP id r4so7148165pfl.7
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 11:34:37 -0800 (PST)
+        Fri, 15 Nov 2019 14:34:40 -0500
+Received: by mail-pf1-f193.google.com with SMTP id p26so7147212pfq.8;
+        Fri, 15 Nov 2019 11:34:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:to:subject:from:user-agent:date;
-        bh=H84pwGxmH+W2D5GMkQ1r4ZDA2UfLVwXz8afXZRba2DI=;
-        b=fP2Gc25k8esFyAA6tnM15lD1mfWq5CQC8OoswU1CcnqOuDbD7HHx68kIexzMVP+t7V
-         OSuHA/E6JEKy0vO1zg/cFiZLDrwe6u6CdFAbrQtsUMCK9b3I7yE6ybQY8PKW+P22X9Qq
-         jbg20eVhdHuxoTKmBzw04nv/YGfcHyh3Sjnqs=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KxszWDeOWGIWijBL9B0pmi+TzXGhcCKiCV88GoXmYts=;
+        b=ix9xhWelBDVLrmeaMb833ads5aVSS8YENH9KOhh4LTYGmwVVhT3RyGN0CXYfbMgFib
+         FNru40g4F2quB7EAzfQoMZqboPGsJXOQiTeg3IUR9MvC1OPcIE55VwvU3TKyx35ZJY4H
+         xAAh6H1XqCZ+b/aJiP8MAtJCe/Zk4+jNu2xoqmGxoxsJVaWYjVrwb4ALKToqxKcVx+6u
+         D0RbPtxcufW8zyAjbHQhcf1zu7Mv4o37Y1u55m1mdTrNdGo3cFK2yMjKd9VjQxKTLNde
+         euS1YxNbjiP6M4QxNEcrRaEH2aq8OEOt0oVno5MXuzwHkH8Yv81bh91k4L+0C1Dz6pJj
+         e+Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:to:subject:from
-         :user-agent:date;
-        bh=H84pwGxmH+W2D5GMkQ1r4ZDA2UfLVwXz8afXZRba2DI=;
-        b=hHSpA1MUyRIN0jN6wm7G4Yhfa0uYerKWxdXkOW8JnRucsdZwWBMp8NIsWVaVSdl2/e
-         awLSK/Bex+ixSg2L1XLM+ZE3z0Y1OPMKcokoaOSSmdOm3p+5s1l3Bs6DGRNB6trbofU1
-         6oBkvuOu5WvSCa6E+XHR08cCDC4jzurMHfC3M4RLKp+m9IaHfiq1VFQ2fjpXNUmJOpb2
-         IJlKjEFxA+izXfWOYnM5WYdeoyV562DTWWswnp7QGGiwfkQYs+unw5jkEdhGWPWBh/zC
-         nGc7u06J1GcZYraY6KCMGlT8BXCZ3/QwQShvJfJYYErRt2JLOtZbYUPpQ6Ne5KD/lez+
-         EZ1g==
-X-Gm-Message-State: APjAAAVSHxcUPKlwAML/8g9EuR9o07rTEZgzRG04WIw+sj4qgiN2Qeyx
-        yRx2tUh3IuHT8BqjFSR69VYQlg==
-X-Google-Smtp-Source: APXvYqz6cATt1IqIlRmta4gmunzU7FDj1GjrNhJUNMsTkqBckqt8QaoVAlCXKdDwVyeS+yvGTMohHQ==
-X-Received: by 2002:aa7:97a8:: with SMTP id d8mr16682718pfq.234.1573846476915;
-        Fri, 15 Nov 2019 11:34:36 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id a3sm11006517pfo.71.2019.11.15.11.34.36
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KxszWDeOWGIWijBL9B0pmi+TzXGhcCKiCV88GoXmYts=;
+        b=TBkfWN+fgarbjFemuc+Ih+VninOxWvlQq51QT74FW88hmM76nCoQwmoqa8X5hblRvP
+         yUGPIN/F3Yb3WsQ4QcCCpDQgzqX2xa//tjb5hNrdbi6DWqlwBcQQaKsL5SNrWPaXmqqq
+         eyeGKLsQNeH9zXFRPA54s4OhDyrbEDu61rMGsCB16TLylEJi+cwGO40oBmHRXXSizqKk
+         XnaxkB6GJ3C+PZ6bPIYUy1ZftCXru2/jfB1xYq7XgfWMZYTNkbAcul9mlDt9E988qxBL
+         Q6wEWdTUTRYYNEm+o9mTZyp4U4r8NHTo4Awt2gotRIYldpp6YOrnSUoGBgrEaGDRAkpO
+         iG5A==
+X-Gm-Message-State: APjAAAUX9o+PRDW2aFbTS7zVYFKo9mm5Np44WP3erBDA1h8mk6pA44Nl
+        /LtvySS+v13TT+BMGL+8HtQ=
+X-Google-Smtp-Source: APXvYqwRG6vw52uUe5HQdn6dIY5Z9EccMoKVImiOfsEmWVxZNIwL/19Lgb1GiwMkKmO/xOPS3BRpXw==
+X-Received: by 2002:a63:e407:: with SMTP id a7mr17566589pgi.92.1573846478340;
+        Fri, 15 Nov 2019 11:34:38 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id 12sm11435882pjm.11.2019.11.15.11.34.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 11:34:36 -0800 (PST)
-Message-ID: <5dcefdcc.1c69fb81.188a8.0a27@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1573756521-27373-13-git-send-email-ilina@codeaurora.org>
-References: <1573756521-27373-1-git-send-email-ilina@codeaurora.org> <1573756521-27373-13-git-send-email-ilina@codeaurora.org>
-Cc:     evgreen@chromium.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org,
-        dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
-To:     Lina Iyer <ilina@codeaurora.org>, bjorn.andersson@linaro.org,
-        linus.walleij@linaro.org, maz@kernel.org
-Subject: Re: [PATCH 12/12] arm64: defconfig: enable PDC interrupt controller for Qualcomm SDM845
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
+        Fri, 15 Nov 2019 11:34:37 -0800 (PST)
 Date:   Fri, 15 Nov 2019 11:34:35 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, robh@kernel.org, linux-input@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH] Input: keyboard - imx_sc: Correct SCU message structure
+ to avoid stack corruption
+Message-ID: <20191115193435.GV13374@dtor-ws>
+References: <1573730499-2224-1-git-send-email-Anson.Huang@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573730499-2224-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Lina Iyer (2019-11-14 10:35:21)
-> Enable PDC interrupt controller for SDM845 devices. The interrupt
-> controller can detect wakeup capable interrupts when the SoC is in a low
-> power state.
->=20
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+On Thu, Nov 14, 2019 at 07:21:39PM +0800, Anson Huang wrote:
+> The SCU message's data field used for receiving response data
+> from SCU should be 32-bit width, as SCU will send back 32-bit
+> width data, correct it to avoid kernel panic of stack protection
+> when CONFIG_CC_HAVE_STACKPROTECTOR_SYSREG is enabled.
+> 
+> [    1.950768] Kernel panic - not syncing: stack-protector: Kernel stack is corrupted
+> [    1.980607] Workqueue: events imx_sc_check_for_events
+> [    1.985657] Call trace:
+> [    1.988104]  dump_backtrace+0x0/0x140
+> [    1.991768]  show_stack+0x14/0x20
+> [    1.995090]  dump_stack+0xb4/0xf8
+> [    1.998407]  panic+0x158/0x324
+> [    2.001463]  print_tainted+0x0/0xa8
+> [    2.004950]  imx_sc_check_for_events+0x18c/0x190
+> [    2.009569]  process_one_work+0x198/0x320
+> [    2.013579]  worker_thread+0x48/0x420
+> [    2.017252]  kthread+0xf0/0x120
+> [    2.020394]  ret_from_fork+0x10/0x18
+> [    2.023977] SMP: stopping secondary CPUs
+> [    2.027901] Kernel Offset: disabled
+> [    2.031391] CPU features: 0x0002,2100600c
+> [    2.035401] Memory Limit: none
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+
+Applied, thank you.
+
 > ---
+>  drivers/input/keyboard/imx_sc_key.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/keyboard/imx_sc_key.c b/drivers/input/keyboard/imx_sc_key.c
+> index dd57daa..5379952 100644
+> --- a/drivers/input/keyboard/imx_sc_key.c
+> +++ b/drivers/input/keyboard/imx_sc_key.c
+> @@ -35,7 +35,7 @@ struct imx_key_drv_data {
+>  
+>  struct imx_sc_msg_key {
+>  	struct imx_sc_rpc_msg hdr;
+> -	u8 state;
+> +	u32 state;
+>  };
+>  
+>  static int imx_sc_key_notify(struct notifier_block *nb,
+> -- 
+> 2.7.4
+> 
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-
+-- 
+Dmitry
