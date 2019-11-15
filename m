@@ -2,56 +2,74 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79603C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D37C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE7B20692
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EB3F20692
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 16:17:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HI7rLNA4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbfKOQRl (ORCPT
+        id S1727847AbfKOQRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 11:17:41 -0500
-Received: from mga07.intel.com ([134.134.136.100]:12461 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727799AbfKOQRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 11:17:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 08:17:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,308,1569308400"; 
-   d="scan'208";a="199242713"
-Received: from um.fi.intel.com (HELO um) ([10.237.72.57])
-  by orsmga008.jf.intel.com with ESMTP; 15 Nov 2019 08:17:34 -0800
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        tmricht@linux.ibm.com, alexander.shishkin@linux.intel.com
-Subject: Re: [PATCH] perf: Fix the mlock accounting, again
-In-Reply-To: <20191115160818.6480-1-alexander.shishkin@linux.intel.com>
-References: <20191115160818.6480-1-alexander.shishkin@linux.intel.com>
-Date:   Fri, 15 Nov 2019 18:17:34 +0200
-Message-ID: <878sohdsgx.fsf@ashishki-desk.ger.corp.intel.com>
+        Fri, 15 Nov 2019 11:17:51 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43226 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727557AbfKOQRt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 11:17:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3mV00l6B2GS4HhX43HLje0KVpGQvHZUvaXI9YSCtNRo=; b=HI7rLNA4WPBSlnzlUg3+K6V4G
+        FG+6Ov35hFW3DaIlzakIp+Tgb02+BiQnf4Wpry7Mp0+AhdnsviWuR0MZ6IwixjjPJGsRZ6d0NsVBO
+        G455eTlT8JpCbBSxHKQ3iRBQAbyzx2iQIfTMWbwdphCVPhbJOLXVbwGvJ5wWvb592hOnHt2/WGs4L
+        Y4jrqy9EIQovlVmSyVjCA0Q01fXgB4A8wi7vkR3DTG2fVN7Doe40jJog2jvecVSs7TyPmcIpKr8Uv
+        gi+jTc6hp2uobScCGEiVOUSXZk+pf+zOO9j7kaKEMsRJoWl4uWyggpBxQ2kq1FEch+V5erhdgDDid
+        coo9FPF+A==;
+Received: from [2601:1c0:6280:3f0::5a22]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iVeI9-0002c4-2I; Fri, 15 Nov 2019 16:17:49 +0000
+Subject: Re: linux-next: Tree for Nov 15 (drivers/md/dm-integrity)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joe Thornber <dm-devel@redhat.com>
+References: <20191115190525.77efdf6c@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <f368f431-b741-d04f-440b-3d8c3c035537@infradead.org>
+Date:   Fri, 15 Nov 2019 08:17:48 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20191115190525.77efdf6c@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexander Shishkin <alexander.shishkin@linux.intel.com> writes:
+On 11/15/19 12:05 AM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Changes since 20191114:
+> 
 
-> Commit
->
->   5e6c3c7b1ec2 ("perf/aux: Fix tracking of auxiliary trace buffer allocation")
->
-> tried to guess the correct combination of arithmetic operations that would
-> undo the AUX buffer's mlock accounting, and failed, leaking the bottom part
-> when an allocation needs to be changed partially to both user->locked_vm
+on i386:
 
-s/changed/charged/
+ld: drivers/md/dm-integrity.o: in function `calculate_device_limits':
+dm-integrity.c:(.text.unlikely+0x1e9): undefined reference to `__udivdi3'
+
+
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
