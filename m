@@ -2,94 +2,97 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AC3C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AE6C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E0820674
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8DCF2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 15:07:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573830472;
+	bh=dhRhLDp9apleuZIXJcFzFMzceLE0xCrAf72x4cu0ydw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BBXbqqTskXEh3Xp1zk3fzJjoXLpCv3zYRaNTgt23eQLcVirmf4q7fJOxr6cazqgY9
+	 +ns/D1HUN45PXOuyUo6L4lssiVAKw9EnwCECD0134FKy8mokswVg6umvw0kcJ2QkU6
+	 tpwOyiqdeqMQHdLbdnD/AYsMNrLFaykf4dKu4YAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbfKOPDU (ORCPT
+        id S1727640AbfKOPHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 10:03:20 -0500
-Received: from mga12.intel.com ([192.55.52.136]:26618 "EHLO mga12.intel.com"
+        Fri, 15 Nov 2019 10:07:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727429AbfKOPDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 10:03:20 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 07:03:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,308,1569308400"; 
-   d="scan'208";a="406694707"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
-  by fmsmga006.fm.intel.com with ESMTP; 15 Nov 2019 07:03:15 -0800
-Subject: Re: [PATCH v2] usb: xhci: only set D3hot for pci device
-To:     Henry Lin <henryl@nvidia.com>
-Cc:     hch@infradead.org, Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191112071831.1043-1-henryl@nvidia.com>
- <20191113014927.11915-1-henryl@nvidia.com>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Message-ID: <7aa0d839-57f8-54af-4b55-b3e605ae20cc@linux.intel.com>
-Date:   Fri, 15 Nov 2019 17:05:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1727406AbfKOPHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 10:07:51 -0500
+Received: from localhost (unknown [122.147.212.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EA5B20733;
+        Fri, 15 Nov 2019 15:07:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573830470;
+        bh=dhRhLDp9apleuZIXJcFzFMzceLE0xCrAf72x4cu0ydw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iWDnWDOz3fjMlWruHlQfjdC3mulEkmevVQmShncwUNsYiYKW9eBeSzuYNPHeizZ25
+         bnRAtkIhfBhmHqiyiozIDSEe7ANd/tCmnTAsDKNzu7dem2o+UYZ+cgQQHOV2t+0aoK
+         D+2i3biFeZCG7RcCOAZ0SbeVq5yNhzY5yBRk2NPc=
+Date:   Fri, 15 Nov 2019 23:07:47 +0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 4.9 00/31] 4.9.202-stable review
+Message-ID: <20191115150747.GA375474@kroah.com>
+References: <20191115062009.813108457@linuxfoundation.org>
+ <be8b3704-c780-ceaf-7775-3d1f21db6224@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20191113014927.11915-1-henryl@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <be8b3704-c780-ceaf-7775-3d1f21db6224@nvidia.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.11.2019 3.49, Henry Lin wrote:
-> Xhci driver cannot call pci_set_power_state() on non-pci xhci host
-> controllers. For example, NVIDIA Tegra XHCI host controller which acts
-> as platform device with XHCI_SPURIOUS_WAKEUP quirk set in some platform
-> hits this issue during shutdown.
+On Fri, Nov 15, 2019 at 01:50:56PM +0000, Jon Hunter wrote:
 > 
-
-The XHCI_SPURIOUS_WAKEUP quirk both resets the controller at shutdown
-and sets it to PCI D3 at remove/shutdown.
-
-Is it so that the NVIDIA Tegra xHC just needs to be reset at shutdown?
-The quirk is not set for Tegra xHC in current mainline kernel.
-
-> Signed-off-by: Henry Lin <henryl@nvidia.com>
-> ---
->   drivers/usb/host/xhci.c | 7 +++++--
->   1 file changed, 5 insertions(+), 2 deletions(-)
+> On 15/11/2019 06:20, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 4.9.202 release.
+> > There are 31 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sun, 17 Nov 2019 06:18:35 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.202-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
 > 
-> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-> index 6c17e3fe181a..61718b126d2b 100644
-> --- a/drivers/usb/host/xhci.c
-> +++ b/drivers/usb/host/xhci.c
-> @@ -791,8 +791,11 @@ static void xhci_shutdown(struct usb_hcd *hcd)
->   			readl(&xhci->op_regs->status));
->   
->   	/* Yet another workaround for spurious wakeups at shutdown with HSW */
-> -	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
-> -		pci_set_power_state(to_pci_dev(hcd->self.sysdev), PCI_D3hot);
-> +	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP) {
-> +		if (dev_is_pci(hcd->self.sysdev))
-> +			pci_set_power_state(to_pci_dev(hcd->self.sysdev),
-> +					PCI_D3hot);
-> +	}
+> All tests are passing for Tegra ...
+> 
+> Test results for stable-v4.9:
+>     8 builds:	8 pass, 0 fail
+>     16 boots:	16 pass, 0 fail
+>     24 tests:	24 pass, 0 fail
+> 
+> Linux version:	4.9.202-rc1-gd7f83e4f45e8
+> Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra30-cardhu-a04
 
-Agree that we shouldn't call PCI specific functions in the generic shutdown code.
-Would be better if we could move the PCI parts to xhci-pci.c or hcd-pci.c
+Thanks for testing both of these and letting me know.
 
-Maybe we need to add a xhci_pci_shutdown() function for the xhci pci driver
-that could take care of the pci related shutdown quirks before calling
-usb_hcd_pci_shutdown(), and call that instead of directly calling
-usb_hcd_pci_shutdown().
-
--Mathias
+greg k-h
