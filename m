@@ -2,170 +2,110 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D71D3C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6C8C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D3E02072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37C6C2072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:43:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qTyktsT4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i735wbRL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfKOWmg (ORCPT
+        id S1727140AbfKOWnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 17:42:36 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:35166 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbfKOWmg (ORCPT
+        Fri, 15 Nov 2019 17:43:35 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34778 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726995AbfKOWnf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 17:42:36 -0500
-Received: by mail-qt1-f196.google.com with SMTP id n4so12543133qte.2;
-        Fri, 15 Nov 2019 14:42:35 -0800 (PST)
+        Fri, 15 Nov 2019 17:43:35 -0500
+Received: by mail-pl1-f196.google.com with SMTP id h13so5656761plr.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 14:43:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1Ljh/C9bOl+iw6pSFvN3eoLNKQmG6h31Yeu6UPqkFhQ=;
-        b=qTyktsT4cDpAQOuWRvAREFnO06PUl5P+DdqgZm+lxHqH05GZI2qSuxSrvvBPdanQoL
-         URI+YXs/LLv+nK0GkRAFNzSNYbBipDq1Hbt08kTHPTpcA92Cc+UaxSaCLIhPHQ7OMKc8
-         Cw9eqqoYH3rVjwSYxFU8rW3d0rClYqPQLkNu7UdD1JjEgK56fhBbOE9PXYG/ndHyBjlG
-         SlseIWTzGRdJ94MYa95c+aTBf0b3yDAZK2UO8zs72iuNvX+5QraLP7zU/s2aHpPoq8Xo
-         omyqG8D30tKykT7YpnQxkY4kIdYAzSkJpRaDsAdaR20562wr39KFzy83C/L9crO+tD95
-         4P8g==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:subject:from:user-agent:date;
+        bh=7o6XJFRPmxhjke+xOAXjdubz9lTZY4Bf8A5Q4MvHVgM=;
+        b=i735wbRLkTV+X2RQq2yJqvlQ14P41p1rPATZ+3f8Xt2WkG43O5RCm72dDYNNvxmzDa
+         z0ifBWftulbWVW3g1WFhh8yv8gXti3Wp5qPgPy1fHoeM9khlaNFsqtV9tbc4kUOebj0f
+         U53LPLKOY6sQFAvCA/9p3CgMXInyTqX8oSr8o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1Ljh/C9bOl+iw6pSFvN3eoLNKQmG6h31Yeu6UPqkFhQ=;
-        b=KCXSHrrhbBy0vlgA1/EWPksFHv9GWnMMnlcb7QcKDYSpTmqU9TanBN4/bJoFfJz3dN
-         hz3Z9xF3Q96rubq1ug3ZOENRDF+45Nb35JfeqNRDZ7lGHO3MY0zLbBL1RjonlWOAB255
-         YWRtzsGRdsPckjtgdqYEekAw1rEVTiljbF1yhSijBIroqRBUV+omvVop64btVIwRhB5N
-         LGjXcyOE76U3uWTLzF7VxJNlSKJsjqnjX2IQAPU3mlCYyV2GTuN2fXRV9PULe9czrrJv
-         IVG/UDgrGLbtr+c+ZlCZqEccp4Dp8Q0VG8F7uNxMLosPYoQI2WhYfSVhsoxG0tCEXzWi
-         R02Q==
-X-Gm-Message-State: APjAAAWyyhsUAIIOBIW/0hkVaumR0Grcf3FNgUpulytqv3XvTLUUU/Ec
-        Cz/Q6Z1+KeutjfHtDBeyNwDbrKKsHkwjQgqQzz0=
-X-Google-Smtp-Source: APXvYqxS8GFDbUqv8q+wlxQKq2ZdR4dc8Hypo7Wdr47XR6xakaez1owd4zmlDuenxRAj580QV3D41WsgWMccHfyOOeQ=
-X-Received: by 2002:ac8:199d:: with SMTP id u29mr15886076qtj.93.1573857754983;
- Fri, 15 Nov 2019 14:42:34 -0800 (PST)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:subject:from
+         :user-agent:date;
+        bh=7o6XJFRPmxhjke+xOAXjdubz9lTZY4Bf8A5Q4MvHVgM=;
+        b=RIQucuU2c6Pca6kACMODmgT9smXrr6AEk9APwG1pcn6VmbN2xKDtN5mWUmtTbzJgUU
+         LshQjqOIOOWnFVFI4wXHf7kr0QOdca8NUkCRiDlAz4a67lCJc7xVhE8XR7WreTwFRzMb
+         MnEGyfkusJYy1jZdACwIWeJ/d1cV9m4Mfp5gRKHc7msbElw8FSaYM2ePhiDREU6qIxOg
+         0B6KDyc8hYT1q0PDbdr7xykPEuzGxI6QZU1qjKp+yxbx/fAAAnZmeTpfP/sd2GbRVe9n
+         dE4TxLaGTGuYFlwEb/h3fEHCl/WUREwBPZzL3eUENVpcLVhrzOJFm1tzm6cGf748Qdtd
+         T6Vw==
+X-Gm-Message-State: APjAAAVzl4mFNj+JWr1PxhGNwnwvHhIxoR9Fzb1978Hzy81BAgDhkKX1
+        XAzGjOcuut0F+Btx697kw8oAvg==
+X-Google-Smtp-Source: APXvYqzL/YIzEQ/4F8p95uH8VP6Lh3WXV2QpSRaoK+dUjlI6mT24JhIwSokKWCvuLLzsjCTstOj35g==
+X-Received: by 2002:a17:90a:2947:: with SMTP id x7mr22564702pjf.136.1573857814143;
+        Fri, 15 Nov 2019 14:43:34 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id g11sm9533898pjv.8.2019.11.15.14.43.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2019 14:43:33 -0800 (PST)
+Message-ID: <5dcf2a15.1c69fb81.b2b08.cc1a@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191107212023.171208-1-brianvv@google.com> <20191107212023.171208-3-brianvv@google.com>
-In-Reply-To: <20191107212023.171208-3-brianvv@google.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 15 Nov 2019 14:42:24 -0800
-Message-ID: <CAEf4Bzbn6J79+_wK2+JtQaGRiiM9hCGyOsuE9DeSqa9ngemTWw@mail.gmail.com>
-Subject: Re: [RFC bpf-next 2/3] tools/bpf: test bpf_map_lookup_and_delete_batch()
-To:     Brian Vazquez <brianvv@google.com>
-Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Yonghong Song <yhs@fb.com>, Petar Penkov <ppenkov@google.com>,
-        Willem de Bruijn <willemb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1573593774-12539-4-git-send-email-eberman@codeaurora.org>
+References: <1573593774-12539-1-git-send-email-eberman@codeaurora.org> <1573593774-12539-4-git-send-email-eberman@codeaurora.org>
+Cc:     Elliot Berman <eberman@codeaurora.org>, tsoni@codeaurora.org,
+        sidgup@codeaurora.org, psodagud@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Elliot Berman <eberman@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, saiprakash.ranjan@codeaurora.org
+Subject: Re: [PATCH v2 03/18] firmware: qcom_scm-64: Make SMCCC macros less magical
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Fri, 15 Nov 2019 14:43:32 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 1:23 PM Brian Vazquez <brianvv@google.com> wrote:
->
-> From: Yonghong Song <yhs@fb.com>
->
-> Added four libbpf API functions to support map batch operations:
->   . int bpf_map_delete_batch( ... )
->   . int bpf_map_lookup_batch( ... )
->   . int bpf_map_lookup_and_delete_batch( ... )
->   . int bpf_map_update_batch( ... )
->
-> Tested bpf_map_lookup_and_delete_batch() and bpf_map_update_batch()
-> functionality.
->   $ ./test_maps
->   ...
->   test_map_lookup_and_delete_batch:PASS
->   ...
->
-> Note that I clumped uapi header sync patch, libbpf patch
-> and tests patch together considering this is a RFC patch.
-> Will do proper formating once it is out of RFC stage.
->
-> Signed-off-by: Yonghong Song <yhs@fb.com>
+Quoting Elliot Berman (2019-11-12 13:22:39)
+> Improve understandability of SMCCC macros as they are all functions of
+> how many arguments can be shoved in registers and how many SCM arguments
+> are supported.
+
+By reversing the logic to build up these defines based on the number of
+register arguments instead of subtract them out of number of total
+arguments? Might be worth mentioning that.
+
+>=20
+> Signed-off-by: Elliot Berman <eberman@codeaurora.org>
 > ---
 
-[...]
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
->
-> +       struct { /* struct used by BPF_MAP_*_BATCH commands */
-> +               __u64           batch;  /* input/output:
-> +                                        * input: start batch,
-> +                                        *        0 to start from beginning.
-> +                                        * output: next start batch,
-> +                                        *         0 to end batching.
-> +                                        */
-> +               __aligned_u64   keys;
-> +               __aligned_u64   values;
-> +               __u32           count;  /* input/output:
-> +                                        * input: # of elements keys/values.
-> +                                        * output: # of filled elements.
-> +                                        */
-> +               __u32           map_fd;
-> +               __u64           elem_flags;
-> +               __u64           flags;
-> +       } batch;
-> +
-
-Describe what elem_flags and flags are here?
-
-[...]
-
-> +LIBBPF_API int bpf_map_delete_batch(int fd, __u64 *batch, __u32 *count,
-> +                                   __u64 elem_flags, __u64 flags);
-> +LIBBPF_API int bpf_map_lookup_batch(int fd, __u64 *batch, void *keys,
-> +                                   void *values, __u32 *count,
-> +                                   __u64 elem_flags, __u64 flags);
-> +LIBBPF_API int bpf_map_lookup_and_delete_batch(int fd, __u64 *batch,
-> +                                              void *keys, void *values,
-> +                                              __u32 *count, __u64 elem_flags,
-> +                                              __u64 flags);
-> +LIBBPF_API int bpf_map_update_batch(int fd, void *keys, void *values,
-> +                                   __u32 *count, __u64 elem_flags,
-> +                                   __u64 flags);
-
-Should we start using the same approach as with bpf_object__open_file
-(see LIBBPF_OPTS), so that we can keep adding extra fields without
-breaking ABI? The gist is: use function arguments for mandatory fields
-(as of right now, at least), and put all the optional fields into a
-xxx_opts struct, which can be NULL. Please see
-bpf_object__open_{file,mem} for details.
-
-> +
->  LIBBPF_API int bpf_obj_pin(int fd, const char *pathname);
->  LIBBPF_API int bpf_obj_get(const char *pathname);
->  LIBBPF_API int bpf_prog_attach(int prog_fd, int attachable_fd,
-> diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
-> index 86173cbb159d3..0529a770a04eb 100644
-> --- a/tools/lib/bpf/libbpf.map
-> +++ b/tools/lib/bpf/libbpf.map
-> @@ -189,6 +189,10 @@ LIBBPF_0.0.4 {
->  LIBBPF_0.0.5 {
->         global:
->                 bpf_btf_get_next_id;
-> +               bpf_map_delete_batch;
-> +               bpf_map_lookup_and_delete_batch;
-> +               bpf_map_lookup_batch;
-> +               bpf_map_update_batch;
->  } LIBBPF_0.0.4;
-
-This should be in 0.0.6 section now.
-
->
-
-[...]
+>  drivers/firmware/qcom_scm-64.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-6=
+4.c
+> index de337b3..badc245 100644
+> --- a/drivers/firmware/qcom_scm-64.c
+> +++ b/drivers/firmware/qcom_scm-64.c
+> @@ -57,9 +57,9 @@ static DEFINE_MUTEX(qcom_scm_lock);
+>  #define QCOM_SCM_EBUSY_MAX_RETRY 20
+> =20
+>  #define SMCCC_FUNCNUM(s, c)    ((((s) & 0xFF) << 8) | ((c) & 0xFF))
+> -#define SMCCC_N_EXT_ARGS 7
+> -#define SMCCC_FIRST_EXT_IDX 3
+> -#define SMCCC_N_REG_ARGS (MAX_QCOM_SCM_ARGS - SMCCC_N_EXT_ARGS + 1)
+> +#define SMCCC_N_REG_ARGS       4
+> +#define SMCCC_FIRST_EXT_IDX    (SMCCC_N_REG_ARGS - 1)
+> +#define SMCCC_N_EXT_ARGS       (MAX_QCOM_SCM_ARGS - SMCCC_N_REG_ARGS + 1)
+> =20
+>  static void __qcom_scm_call_do_quirk(const struct qcom_scm_desc *desc,
