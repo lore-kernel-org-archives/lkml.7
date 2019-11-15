@@ -2,88 +2,111 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CB7C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1193EC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE4720740
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB86A2073C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:54:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="jJh5himR"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Tj7gXOnq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727135AbfKOHxL (ORCPT
+        id S1727274AbfKOHy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 02:53:11 -0500
-Received: from mail.dlink.ru ([178.170.168.18]:48360 "EHLO fd.dlink.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfKOHxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 02:53:10 -0500
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id E7B311B2040B; Fri, 15 Nov 2019 10:53:07 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru E7B311B2040B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1573804387; bh=8Ehrj23PMw/h0WcE7C1DeuA9hvHqsayqXUUFF8u9gEM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=jJh5himROQYvaXrqmY9SbrNIc2jqMifGFam4qqbx2Tcq9Zf46JguwD2uABxXilSWz
-         6jj77L9eW5WDfMr8rvjRhh+OADuBEEPlDOrhxCh2gXu6in+jEL/6pMB6VDOhmrLn9l
-         V5Sial4/eZWn7TTjiV1av0m7W3ZwyvPdMvgBUFyM=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id 80FF51B2040B;
-        Fri, 15 Nov 2019 10:52:59 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 80FF51B2040B
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id 3ECB51B21209;
-        Fri, 15 Nov 2019 10:52:59 +0300 (MSK)
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Fri, 15 Nov 2019 10:52:59 +0300 (MSK)
+        Fri, 15 Nov 2019 02:54:28 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41282 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfKOHy2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 02:54:28 -0500
+Received: by mail-lj1-f193.google.com with SMTP id m4so4709126ljj.8
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 23:54:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+C6UFetkkOkabjlrx29bRj2f/pHq6ZunDxUzZ7B8oJI=;
+        b=Tj7gXOnqtuG0wJhNZbvfhuhFF7Ajj+d/fkSs7BOhJuk6zYcUK3pqsPz4KlpJ5C6cZu
+         CQ9MRWf2wM06ny9O2bnOKcTBNvY1ewmlHc0/L/nIx34DK3gZJOIMBOt6MJMcRJUnM6lj
+         Sty8aREsnWc3bR9ednCLj5/uDLng1EyPh4j+w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+C6UFetkkOkabjlrx29bRj2f/pHq6ZunDxUzZ7B8oJI=;
+        b=cmZJCqNYcTzym+COH4b79ihO3F15GfDOypfUk/ul4N/IrGTeVDcIFicJum2bS/TzE4
+         nUcgahRGLGcfapi86aBW+tUTrAWJqalfW5rIL4/lSOoU99wX9wZwGTvHY0s4ind9TfYn
+         7G0upAQJJI4Ft8WYlWXDNt95E7KWynZRSFaBjngoAlHGr25aOFp5hrytb7i/a784vq7J
+         JBpMEhiN7/KfEa5OZU4UhI9DYlfIPTUhN3AQhlBrQqwHAaMZgcH9Xgq6AIYfR5aHvcxr
+         xExOMe7IWNMXJAWFiyvHBiw242uuTxGQOj/vIsaYWIXsL94hr8RXi8ExRb05v6d+e2+z
+         uO7w==
+X-Gm-Message-State: APjAAAUqx/1YtbFIWvqtAxuoaly1RY1WTnoHEHBDxLqpVlt9tvq0w5Jc
+        gDqgWsQX8XcXQmKrwrfCj/68Ig==
+X-Google-Smtp-Source: APXvYqwtca4V1MXOZa/BxeDe/jqUfjT4UHa/rribPRAykBqSAV8Y1dWumBHX7aG8dBwq5CyNgx3uLQ==
+X-Received: by 2002:a2e:8809:: with SMTP id x9mr9979158ljh.82.1573804466324;
+        Thu, 14 Nov 2019 23:54:26 -0800 (PST)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id w11sm4254332lji.45.2019.11.14.23.54.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Nov 2019 23:54:25 -0800 (PST)
+Subject: Re: [PATCH v4 46/47] net: ethernet: freescale: make UCC_GETH
+ explicitly depend on PPC32
+To:     Li Yang <leoyang.li@nxp.com>, Timur Tabi <timur@kernel.org>
+Cc:     Qiang Zhao <qiang.zhao@nxp.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Scott Wood <oss@buserror.net>, netdev <netdev@vger.kernel.org>
+References: <20191108130123.6839-1-linux@rasmusvillemoes.dk>
+ <20191108130123.6839-47-linux@rasmusvillemoes.dk>
+ <CAOZdJXUX2cZfaQTkBdNrwD=jT2399rZzRFtDj6vNa==9Bmkh5A@mail.gmail.com>
+ <CADRPPNS00uU+f6ap9D-pYQUFo_T-o2bgtnYaE9qAXOwck86-OQ@mail.gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <29b45e76-f384-fe16-0891-cc51cfecefd4@rasmusvillemoes.dk>
+Date:   Fri, 15 Nov 2019 08:54:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 15 Nov 2019 10:52:59 +0300
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     David Miller <davem@davemloft.net>
-Cc:     ecree@solarflare.com, jiri@mellanox.com, edumazet@google.com,
-        idosch@mellanox.com, pabeni@redhat.com, petrm@mellanox.com,
-        sd@queasysnail.net, f.fainelli@gmail.com,
-        jaswinder.singh@linaro.org, manishc@marvell.com,
-        GR-Linux-NIC-Dev@marvell.com, johannes.berg@intel.com,
-        emmanuel.grumbach@intel.com, luciano.coelho@intel.com,
-        linuxwifi@intel.com, kvalo@codeaurora.org, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: core: allow fast GRO for skbs with Ethernet
- header in head
-In-Reply-To: <20191114.234958.1198680245198023054.davem@davemloft.net>
-References: <20191112122843.30636-1-alobakin@dlink.ru>
- <20191114.172508.1027995193093100862.davem@davemloft.net>
- <097eb720466a7c429c8fd91c792e7cd5@dlink.ru>
- <20191114.234958.1198680245198023054.davem@davemloft.net>
-User-Agent: Roundcube Webmail/1.4.0
-Message-ID: <4cff3016dcc4fc63e23d5c0de6f81bd8@dlink.ru>
-X-Sender: alobakin@dlink.ru
+In-Reply-To: <CADRPPNS00uU+f6ap9D-pYQUFo_T-o2bgtnYaE9qAXOwck86-OQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Miller wrote 15.11.2019 10:49:
+On 15/11/2019 06.44, Li Yang wrote:
+> On Thu, Nov 14, 2019 at 10:37 PM Timur Tabi <timur@kernel.org> wrote:
+>>
+>> On Fri, Nov 8, 2019 at 7:04 AM Rasmus Villemoes
+>> <linux@rasmusvillemoes.dk> wrote:
+>>>
+>>> Currently, QUICC_ENGINE depends on PPC32, so this in itself does not
+>>> change anything. In order to allow removing the PPC32 dependency from
+>>> QUICC_ENGINE and avoid allmodconfig build failures, add this explicit
+>>> dependency.
+>>
+>> Can you add an explanation why we don't want ucc_geth on non-PowerPC platforms?
 
-> From: Alexander Lobakin <alobakin@dlink.ru>
-> Date: Fri, 15 Nov 2019 10:36:08 +0300
-> 
->> Please let me know if I must send v2 of this patch with corrected
->> description before getting any further reviews.
-> 
-> I would say that you do, thanks for asking.
-> 
-> The more details and information in the commit message, the better.
+It's not that "we" don't want to allow building this on non-PPC per se,
+but making it build requires some surgery that I think should be done by
+whoever might eventually want it. So _my_ reason for lowering this
+dependency from QUICC_ENGINE to UCC_GETH is exactly what it says above.
 
-Thank you, I'll publish v2 soon to clarify all the possible
-misunderstandings.
+> I think it is because the QE Ethernet was never integrated in any
+> non-PowerPC SoC and most likely will not be in the future. 
 
-Regards,
-ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
+Well, that kind of thing is impossible to know for outsiders like me.
+Maybe one can amend the commit log with that info:
+
+"Also, the QE Ethernet has never been integrated on any non-PowerPC SoC
+and most likely will not be in the future."
+
+Rasmus
