@@ -2,150 +2,188 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF30FC43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 02:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C350C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 02:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7BC820731
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 02:54:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jgqVFC5i"
+	by mail.kernel.org (Postfix) with ESMTP id 5736B206E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 02:59:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfKOCyJ (ORCPT
+        id S1727022AbfKOC7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 21:54:09 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45051 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbfKOCyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 21:54:08 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Djbx2VWfz9s7T;
-        Fri, 15 Nov 2019 13:54:04 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573786445;
-        bh=SybDljMw+M7nx2Wto9NsHQOdfYnh2eeHcpMdwIVCDAA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=jgqVFC5iHnWnn2/4nG1ptrdqn1fiEZsaWabD/7/W/c5LzP1LIxZ34jw24V1k2HSOw
-         wU4/QqtCq9jcs0ATEHTvzxWBzrDXL3b0DpQSbhr0n62jxQUK+5DJk5MXXYQWVWy03j
-         vlhJQiTQzFZVHDMEm6+sKVb8hND43kY+KzTdD9GEK/RvJOoIeaA3qjaJHWDvXSYYkb
-         RzxOXrm5Gf3tpQf6z1avftPzm16ljpJsJJmFxjcgmH1VyMNJmfayaJM3Btw1whRYYm
-         IGCycHZnkzMcjs3OifihlU2xBSpRlwWteLkL2LJR0UgAKDmzLNUA5hvyxOvdFx0fHR
-         TeHkNG+uQY2+Q==
-Date:   Fri, 15 Nov 2019 13:53:57 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: linux-next: manual merge of the ftrace tree with the arm64 tree
-Message-ID: <20191115135357.10386fac@canb.auug.org.au>
+        Thu, 14 Nov 2019 21:59:33 -0500
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:60779 "EHLO
+        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbfKOC7d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 21:59:33 -0500
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id xAF2wscV002069
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 15 Nov 2019 11:58:54 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id xAF2wsJ7017676;
+        Fri, 15 Nov 2019 11:58:54 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id xAF2vp8X014887;
+        Fri, 15 Nov 2019 11:58:54 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.148] [10.38.151.148]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-10387758; Fri, 15 Nov 2019 11:57:46 +0900
+Received: from BPXM20GP.gisp.nec.co.jp ([10.38.151.212]) by
+ BPXC20GP.gisp.nec.co.jp ([10.38.151.148]) with mapi id 14.03.0439.000; Fri,
+ 15 Nov 2019 11:57:45 +0900
+From:   Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+To:     David Hildenbrand <david@redhat.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "longman@redhat.com" <longman@redhat.com>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "mst@redhat.com" <mst@redhat.com>, "cai@lca.pw" <cai@lca.pw>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH 2/3] mm: Introduce subsection_dev_map
+Thread-Topic: [PATCH 2/3] mm: Introduce subsection_dev_map
+Thread-Index: AQHVlciaV4LdiB2s4UGTCvjTchQqtqeBDuKAgAfVYoCAAAQ6gIAADP8AgAAE4gCAAAOxgIAABLSAgAAItACAAAMVAIAAARcAgAG27YCAABMpgIAAJQOA
+Date:   Fri, 15 Nov 2019 02:57:44 +0000
+Message-ID: <97b0e568-828b-c298-e7e4-1af7ff9c3963@vx.jp.nec.com>
+References: <49786b4d-ba95-21b5-c079-46d93c2fe53f@vx.jp.nec.com>
+ <759F6C7C-C34F-433E-8909-DB76A626CF3F@redhat.com>
+In-Reply-To: <759F6C7C-C34F-433E-8909-DB76A626CF3F@redhat.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.135]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B32E1C368B20E1498D789BEED70BC78C@gisp.nec.co.jp>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/wu9x9N7Ps.0tRtcEvyvCnHK";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/wu9x9N7Ps.0tRtcEvyvCnHK
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+T24gMjAxOS8xMS8xNSA5OjQ2LCBEYXZpZCBIaWxkZW5icmFuZCB3cm90ZToNCj4gDQo+IA0KPj4g
+QW0gMTUuMTEuMjAxOSB1bSAwMDo0MiBzY2hyaWViIFRvc2hpa2kgRnVrYXNhd2EgPHQtZnVrYXNh
+d2FAdnguanAubmVjLmNvbT46DQo+Pg0KPj4g77u/T24gMjAxOS8xMS8xNCA2OjI2LCBEYW4gV2ls
+bGlhbXMgd3JvdGU6DQo+Pj4+IE9uIFdlZCwgTm92IDEzLCAyMDE5IGF0IDE6MjIgUE0gRGF2aWQg
+SGlsZGVuYnJhbmQgPGRhdmlkQHJlZGhhdC5jb20+IHdyb3RlOg0KPj4+Pg0KPj4+Pg0KPj4+Pg0K
+Pj4+Pj4gQW0gMTMuMTEuMjAxOSB1bSAyMjoxMiBzY2hyaWViIERhbiBXaWxsaWFtcyA8ZGFuLmou
+d2lsbGlhbXNAaW50ZWwuY29tPjoNCj4+Pj4+DQo+Pj4+PiDvu79PbiBXZWQsIE5vdiAxMywgMjAx
+OSBhdCAxMjo0MCBQTSBEYXZpZCBIaWxkZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT4gd3JvdGU6
+DQo+Pj4+PiBbLi5dDQo+Pj4+Pj4+Pj4+IEknbSBzdGlsbCBzdHJ1Z2dsaW5nIHRvIHVuZGVyc3Rh
+bmQgdGhlIG1vdGl2YXRpb24gb2YgZGlzdGluZ3Vpc2hpbmcNCj4+Pj4+Pj4+Pj4gImFjdGl2ZSIg
+YXMgc29tZXRoaW5nIGRpc3RpbmN0IGZyb20gIm9ubGluZSIuIEFzIGxvbmcgYXMgdGhlICJvbmxp
+bmUiDQo+Pj4+Pj4+Pj4+IGdyYW51bGFyaXR5IGlzIGltcHJvdmVkIGZyb20gc2VjdGlvbnMgZG93
+biB0byBzdWJzZWN0aW9ucyB0aGVuIG1vc3QNCj4+Pj4+Pj4+Pj4gY29kZSBwYXRocyBhcmUgZ29v
+ZCB0byBnby4gVGhlIG90aGVycyBjYW4gdXNlIGdldF9kZXZwYWdlbWFwKCkgdG8NCj4+Pj4+Pj4+
+Pj4gY2hlY2sgZm9yIFpPTkVfREVWSUNFIGluIGEgcmFjZSBmcmVlIG1hbm5lciBhcyB0aGV5IGN1
+cnJlbnRseSBkby4NCj4+Pj4+Pj4+Pg0KPj4+Pj4+Pj4+IEkgdGhvdWdodCB3ZSB3YW50ZWQgdG8g
+dW5pZnkgYWNjZXNzIGlmIHdlIGRvbuKAmXQgcmVhbGx5IGNhcmUgYWJvdXQgdGhlIHpvbmUgYXMg
+aW4gbW9zdCBwZm4gd2Fsa2VycyAtIEUuZy4sIGZvciB6b25lIHNocmlua2luZy4NCj4+Pj4+Pj4+
+DQo+Pj4+Pj4+PiBBZ3JlZSwgd2hlbiB0aGUgem9uZSBkb2VzIG5vdCBtYXR0ZXIsIHdoaWNoIGlz
+IG1vc3QgY2FzZXMsIHRoZW4NCj4+Pj4+Pj4+IHBmbl9vbmxpbmUoKSBhbmQgcGZuX3ZhbGlkKCkg
+YXJlIHN1ZmZpY2llbnQuDQo+Pj4+Pj4NCj4+Pj4+PiBPaCwgYW5kIGp1c3QgdG8gY2xhcmlmeSB3
+aHkgSSBwcm9wb3NlZCBwZm5fYWN0aXZlKCk6IFRoZSBpc3N1ZSByaWdodCBub3cgaXMgdGhhdCBh
+IFBGTiB0aGF0IGlzIHZhbGlkIGJ1dCBub3Qgb25saW5lIGNvdWxkIGJlIG9mZmxpbmUgbWVtb3J5
+IChtZW1tYXAgbm90IGluaXRpYWxpemVkKSBvciBaT05FX0RFVklDRS4gVGhhdOKAmHMgd2h5IEkg
+d2FudGVkIHRvIGhhdmUgYSB3YXkgdG8gZGV0ZWN0IGlmIGEgbWVtbWFwIHdhcyBpbml0aWFsaXpl
+ZCwgaW5kZXBlbmRlbnQgb2YgdGhlIHpvbmUuIFRoYXTigJhzIGltcG9ydGFudCBmb3IgZ2VuZXJp
+YyBQRk4gd2Fsa2Vycy4NCj4+Pj4+DQo+Pj4+PiBUaGF0J3Mgd2hhdCBJIHdhcyBkZWJhdGluZyB3
+aXRoIFRvc2hpa2kgWzFdLCB3aGV0aGVyIHRoZXJlIGlzIGEgcmVhbA0KPj4+Pj4gZXhhbXBsZSBv
+ZiBuZWVkaW5nIHRvIGRpc3Rpbmd1aXNoIFpPTkVfREVWSUNFIGZyb20gb2ZmbGluZSBtZW1vcnkg
+aW4gYQ0KPj4+Pj4gcGZuIHdhbGtlci4gVGhlIHByb3Bvc2VkIHVzZSBjYXNlIGluIHRoaXMgcGF0
+Y2ggc2V0IG9mIGJlaW5nIGFibGUgdG8NCj4+Pj4+IHNldCBod3BvaXNvbiBvbiBaT05FX0RFVklD
+RSBwYWdlcyBkb2VzIG5vdCBzZWVtIGxpa2UgYSBnb29kIGlkZWEgdG8NCj4+Pj4+IG1lLiBNeSBz
+dXNwaWNpb24gaXMgdGhhdCB0aGlzIGlzIGEgY29tbW9uIHRoZW1lIGFuZCBvdGhlcnMgYXJlIGxv
+b2tpbmcNCj4+Pj4+IHRvIGRvIHRoZXNlIHR5cGVzIHBhZ2UgbWFuaXB1bGF0aW9ucyB0aGF0IG9u
+bHkgbWFrZSBzZW5zZSBmb3Igb25saW5lDQo+Pj4+PiBtZW1vcnkuIElmIHRoYXQgaXMgdGhlIGNh
+c2UgdGhlbiB0cmVhdGluZyBaT05FX0RFVklDRSBhcyBvZmZsaW5lIHNlZW1zDQo+Pj4+PiB0aGUg
+cmlnaHQgZGlyZWN0aW9uLg0KPj4+Pg0KPj4+PiBSaWdodC4gQXQgbGVhc3QgaXQgd291bGQgYmUg
+bmljZSB0byBoYXZlIGZvciB6b25lIHNocmlua2luZyAtIG5vdCBzdXJlIGFib3V0IHRoZSBvdGhl
+ciB3YWxrZXJzLiBXZSB3b3VsZCBoYXZlIHRvIHNwZWNpYWwtY2FzZSBaT05FX0RFVklDRSBoYW5k
+bGluZyB0aGVyZS4NCj4+Pj4NCj4+Pg0KPj4+IEkgdGhpbmsgdGhhdCdzIG9rLi4uIEl0J3MgYWxy
+ZWFkeSB6b25lIGF3YXJlIGNvZGUgd2hlcmVhcyBwZm4gd2Fsa2Vycw0KPj4+IGFyZSB6b25lIHVu
+YXdhcmUgYW5kIHNob3VsZCBzdGF5IHRoYXQgd2F5IGlmIGF0IGFsbCBwb3NzaWJsZS4NCj4+Pg0K
+Pj4+PiBCdXQgYXMgSSBzYWlkLCBhIHN1YnNlY3Rpb24gbWFwIGZvciBvbmxpbmUgbWVtb3J5IGlz
+IGEgZ29vZCBzdGFydCwgZXNwZWNpYWxseSB0byBmaXggcGZuX3RvX29ubGluZV9wYWdlKCkuIEFs
+c28sIEkgdGhpbmsgdGhpcyBtaWdodCBiZSBhIHZlcnkgZ29vZCB0aGluZyB0byBoYXZlIGZvciBP
+c2NhcnMgbWVtbWFwLW9uLW1lbW9yeSB3b3JrIChJIGhhdmUgYSBwbGFuIGluIG15IGhlYWQgSSBj
+YW4gZGlzY3VzcyB3aXRoIE9zY2FyIG9uY2UgaGUgaGFzIHRpbWUgdG8gd29yayBvbiB0aGF0IGFn
+YWluKS4NCj4+Pg0KPj4+IE9rLCBJJ2xsIGtlZXAgYW4gZXllIG91dC4NCj4+DQo+PiBJIHVuZGVy
+c3RhbmQgeW91ciBwb2ludC4gVGhhbmtzIQ0KPj4NCj4+IEJ5IHRoZSB3YXksIEkgZm91bmQgYW5v
+dGhlciBwcm9ibGVtIGFib3V0IFpPTkVfREVWSUNFLCB3aGljaA0KPj4gaXMgcmFjZSBiZXR3ZWVu
+IG1lbW1hcCBpbml0aWFsaXphdGlvbiBhbmQgem9uZSBzaHJpbmtpbmcuDQo+Pg0KPj4gSXRlcmF0
+aW9uIG9mIGNyZWF0ZSBhbmQgZGVzdHJveSBuYW1lc3BhY2UgY2F1c2VzIHRoZSBwYW5pYyBhcyBi
+ZWxvdzoNCj4+DQo+PiBbICAgNDEuMjA3Njk0XSBrZXJuZWwgQlVHIGF0IG1tL3BhZ2VfYWxsb2Mu
+Yzo1MzUhDQo+PiBbICAgNDEuMjA4MTA5XSBpbnZhbGlkIG9wY29kZTogMDAwMCBbIzFdIFNNUCBQ
+VEkNCj4+IFsgICA0MS4yMDg1MDhdIENQVTogNyBQSUQ6IDI3NjYgQ29tbTogbmRjdGwgTm90IHRh
+aW50ZWQgNS40LjAtcmM0ICM2DQo+PiBbICAgNDEuMjA5MDY0XSBIYXJkd2FyZSBuYW1lOiBRRU1V
+IFN0YW5kYXJkIFBDIChpNDQwRlggKyBQSUlYLCAxOTk2KSwgQklPUyByZWwtMS4xMS4wLTAtZzYz
+NDUxZmNhMTMtcHJlYnVpbHQucWVtdS1wcm9qZWN0Lm9yZyAwNC8wMS8yMDE0DQo+PiBbICAgNDEu
+MjEwMTc1XSBSSVA6IDAwMTA6c2V0X3BmbmJsb2NrX2ZsYWdzX21hc2srMHg5NS8weGYwDQo+PiBb
+ICAgNDEuMjEwNjQzXSBDb2RlOiAwNCA0MSA4MyBlMiAzYyA0OCA4ZCAwNCBhOCA0OCBjMSBlMCAw
+NyA0OCAwMyAwNCBkZCBlMCA1OSA1NSBiYiA0OCA4YiA1OCA2OCA0OCAzOSBkYSA3MyAwZSA0OCBj
+NyBjNiA3MCBhYyAxMSBiYiBlOCAxYiBiMiBmZCBmZiA8MGY+IDBiIDQ4IDAzIDU4IDc4IDQ4IDM5
+IGRhIDczIGU5IDQ5IDAxIGNhIGI5IDNmIDAwIDAwIDAwIDRmIDhkIDBjDQo+PiBbICAgNDEuMjEy
+MzU0XSBSU1A6IDAwMTg6ZmZmZmFjMGQ0MTU1N2M4MCBFRkxBR1M6IDAwMDEwMjQ2DQo+PiBbICAg
+NDEuMjEyODIxXSBSQVg6IDAwMDAwMDAwMDAwMDAwNGEgUkJYOiAwMDAwMDAwMDAwMjQ0YTAwIFJD
+WDogMDAwMDAwMDAwMDAwMDAwMA0KPj4gWyAgIDQxLjIxMzQ1OV0gUkRYOiAwMDAwMDAwMDAwMDAw
+MDAwIFJTSTogMDAwMDAwMDAwMDAwMDAwMCBSREk6IGZmZmZmZmZmYmIxMTk3ZGMNCj4+IFsgICA0
+MS4yMTQxMDBdIFJCUDogMDAwMDAwMDAwMDAwMDAwYyBSMDg6IDAwMDAwMDAwMDAwMDA0MzkgUjA5
+OiAwMDAwMDAwMDAwMDAwMDU5DQo+PiBbICAgNDEuMjE0NzM2XSBSMTA6IDAwMDAwMDAwMDAwMDAw
+MDAgUjExOiBmZmZmYWMwZDQxNTU3YjA4IFIxMjogZmZmZjhiZTQ3NWVhNzJiMA0KPj4gWyAgIDQx
+LjIxNTM3Nl0gUjEzOiAwMDAwMDAwMDAwMDBmYTAwIFIxNDogMDAwMDAwMDAwMDI1MDAwMCBSMTU6
+IDAwMDAwMDAwZmZmYzBiYjUNCj4+IFsgICA0MS4yMTYwMDhdIEZTOiAgMDAwMDdmMzA4NjJhYjYw
+MCgwMDAwKSBHUzpmZmZmOGJlNTdiYzQwMDAwKDAwMDApIGtubEdTOjAwMDAwMDAwMDAwMDAwMDAN
+Cj4+IFsgICA0MS4yMTY3NzFdIENTOiAgMDAxMCBEUzogMDAwMCBFUzogMDAwMCBDUjA6IDAwMDAw
+MDAwODAwNTAwMzMNCj4+IFsgICA0MS4yMTcyOTldIENSMjogMDAwMDU1ZTgyNGQwZDUwOCBDUjM6
+IDAwMDAwMDAyMzFkYWMwMDAgQ1I0OiAwMDAwMDAwMDAwMDAwNmUwDQo+PiBbICAgNDEuMjE3OTM0
+XSBDYWxsIFRyYWNlOg0KPj4gWyAgIDQxLjIxODIyNV0gIG1lbW1hcF9pbml0X3pvbmVfZGV2aWNl
+KzB4MTY1LzB4MTdjDQo+PiBbICAgNDEuMjE4NjQyXSAgbWVtcmVtYXBfcGFnZXMrMHg0YzEvMHg1
+NDANCj4+IFsgICA0MS4yMTg5ODldICBkZXZtX21lbXJlbWFwX3BhZ2VzKzB4MWQvMHg2MA0KPj4g
+WyAgIDQxLjIxOTM2N10gIHBtZW1fYXR0YWNoX2Rpc2srMHgxNmIvMHg2MDAgW25kX3BtZW1dDQo+
+PiBbICAgNDEuMjE5ODA0XSAgPyBkZXZtX25zaW9fZW5hYmxlKzB4YjgvMHhlMA0KPj4gWyAgIDQx
+LjIyMDE3Ml0gIG52ZGltbV9idXNfcHJvYmUrMHg2OS8weDFjMA0KPj4gWyAgIDQxLjIyMDUyNl0g
+IHJlYWxseV9wcm9iZSsweDFjMi8weDNlMA0KPj4gWyAgIDQxLjIyMDg1Nl0gIGRyaXZlcl9wcm9i
+ZV9kZXZpY2UrMHhiNC8weDEwMA0KPj4gWyAgIDQxLjIyMTIzOF0gIGRldmljZV9kcml2ZXJfYXR0
+YWNoKzB4NGYvMHg2MA0KPj4gWyAgIDQxLjIyMTYxMV0gIGJpbmRfc3RvcmUrMHhjOS8weDExMA0K
+Pj4gWyAgIDQxLjIyMTkxOV0gIGtlcm5mc19mb3Bfd3JpdGUrMHgxMTYvMHgxOTANCj4+IFsgICA0
+MS4yMjIzMjZdICB2ZnNfd3JpdGUrMHhhNS8weDFhMA0KPj4gWyAgIDQxLjIyMjYyNl0gIGtzeXNf
+d3JpdGUrMHg1OS8weGQwDQo+PiBbICAgNDEuMjIyOTI3XSAgZG9fc3lzY2FsbF82NCsweDViLzB4
+MTgwDQo+PiBbICAgNDEuMjIzMjY0XSAgZW50cnlfU1lTQ0FMTF82NF9hZnRlcl9od2ZyYW1lKzB4
+NDQvMHhhOQ0KPj4gWyAgIDQxLjIyMzcxNF0gUklQOiAwMDMzOjB4N2YzMDg2NWQwZWQ4DQo+PiBb
+ICAgNDEuMjI0MDM3XSBDb2RlOiA4OSAwMiA0OCBjNyBjMCBmZiBmZiBmZiBmZiBlYiBiMyAwZiAx
+ZiA4MCAwMCAwMCAwMCAwMCBmMyAwZiAxZSBmYSA0OCA4ZCAwNSA0NSA3OCAwZCAwMCA4YiAwMCA4
+NSBjMCA3NSAxNyBiOCAwMSAwMCAwMCAwMCAwZiAwNSA8NDg+IDNkIDAwIGYwIGZmIGZmIDc3IDU4
+IGMzIDBmIDFmIDgwIDAwIDAwIDAwIDAwIDQxIDU0IDQ5IDg5IGQ0IDU1DQo+PiBbICAgNDEuMjI1
+OTIwXSBSU1A6IDAwMmI6MDAwMDdmZmZlNWQzMGE3OCBFRkxBR1M6IDAwMDAwMjQ2IE9SSUdfUkFY
+OiAwMDAwMDAwMDAwMDAwMDAxDQo+PiBbICAgNDEuMjI2NjA4XSBSQVg6IGZmZmZmZmZmZmZmZmZm
+ZGEgUkJYOiAwMDAwNTVlODI0ZDA3ZjQwIFJDWDogMDAwMDdmMzA4NjVkMGVkOA0KPj4gWyAgIDQx
+LjIyNzI0Ml0gUkRYOiAwMDAwMDAwMDAwMDAwMDA3IFJTSTogMDAwMDU1ZTgyNGQwN2Y0MCBSREk6
+IDAwMDAwMDAwMDAwMDAwMDQNCj4+IFsgICA0MS4yMjc4NzBdIFJCUDogMDAwMDAwMDAwMDAwMDAw
+NyBSMDg6IDAwMDAwMDAwMDAwMDAwMDcgUjA5OiAwMDAwMDAwMDAwMDAwMDA2DQo+PiBbICAgNDEu
+MjI4NzUzXSBSMTA6IDAwMDAwMDAwMDAwMDAwMDAgUjExOiAwMDAwMDAwMDAwMDAwMjQ2IFIxMjog
+MDAwMDAwMDAwMDAwMDAwNA0KPj4gWyAgIDQxLjIyOTQxOV0gUjEzOiAwMDAwN2YzMDg2MmFiNTI4
+IFIxNDogMDAwMDAwMDAwMDAwMDAwMSBSMTU6IDAwMDA1NWU4MjRkMDdmNDANCj4+DQo+PiBXaGls
+ZSBjcmVhdGluZyBhIG5hbWVzcGFjZSBhbmQgaW5pdGlhbGl6aW5nIG1lbW1hcCwgaWYgeW91IGRl
+c3Ryb3kgdGhlIG5hbWVzcGFjZQ0KPj4gYW5kIHNocmluayB0aGUgem9uZSwgaXQgd2lsbCBpbml0
+aWFsaXplIHRoZSBtZW1tYXAgb3V0c2lkZSB0aGUgem9uZSBhbmQNCj4+IHRyaWdnZXIgVk1fQlVH
+X09OX1BBR0UoIXpvbmVfc3BhbnNfcGZuKHBhZ2Vfem9uZShwYWdlKSwgcGZuKSwgcGFnZSkgaW4N
+Cj4+IHNldF9wZm5ibG9ja19mbGFnc19tYXNrKCkuDQo+IA0KPiBEb2VzIHRoYXQgaGFwcGVuIHdp
+dGggLW5leHQgYXMgd2VsbD8gVGhlcmUsIHdlIGN1cnJlbnRseSBkb27igJh0IHNocmluayB0aGUg
+Wk9ORV9ERVZJQ0Ugem9uZSBhbnltb3JlLg0KDQpJIGNvbmZpcm1lZCB0aGUgcGF0Y2guIFRoZSBw
+YW5pYyBkb2Vzbid0IG9jY3VyIHdpdGggbGludXgtbmV4dCBrZXJuZWwuDQpodHRwczovL2xvcmUu
+a2VybmVsLm9yZy9saW51eC1tbS8yMDE5MTAwNjA4NTY0Ni41NzY4LTYtZGF2aWRAcmVkaGF0LmNv
+bS8NCg0KVGhhbmsgeW91IGZvciB5b3VyIGluZm9ybWF0aW9uLg0KDQpUaGFua3MsDQpUb3NoaWtp
+IEZ1a2FzYXdh
 
-Hi all,
-
-Today's linux-next merge of the ftrace tree got a conflict in:
-
-  include/asm-generic/vmlinux.lds.h
-
-between commit:
-
-  a1326b17ac03 ("module/ftrace: handle patchable-function-entry")
-
-from the arm64 tree and commit:
-
-  b83b43ffc6e4 ("fgraph: Fix function type mismatches of ftrace_graph_retur=
-n using ftrace_stub")
-
-from the ftrace tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/asm-generic/vmlinux.lds.h
-index 63cedc3c0c77,0f358be551cd..000000000000
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@@ -136,19 -110,30 +136,29 @@@
-  #endif
- =20
-  #ifdef CONFIG_FTRACE_MCOUNT_RECORD
- -#ifdef CC_USING_PATCHABLE_FUNCTION_ENTRY
- +/*
- + * The ftrace call sites are logged to a section whose name depends on the
- + * compiler option used. A given kernel image will only use one, AKA
- + * FTRACE_CALLSITE_SECTION. We capture all of them here to avoid header
- + * dependencies for FTRACE_CALLSITE_SECTION's definition.
- + */
-+ /*
-+  * Need to also make ftrace_graph_stub point to ftrace_stub
-+  * so that the same stub location may have different protocols
-+  * and not mess up with C verifiers.
-+  */
- -#define MCOUNT_REC()	. =3D ALIGN(8);				\
- -			__start_mcount_loc =3D .;			\
- -			KEEP(*(__patchable_function_entries))	\
- -			__stop_mcount_loc =3D .;			\
- -			ftrace_graph_stub =3D ftrace_stub;
- -#else
-  #define MCOUNT_REC()	. =3D ALIGN(8);				\
-  			__start_mcount_loc =3D .;			\
-  			KEEP(*(__mcount_loc))			\
- +			KEEP(*(__patchable_function_entries))	\
-- 			__stop_mcount_loc =3D .;
-+ 			__stop_mcount_loc =3D .;			\
-+ 			ftrace_graph_stub =3D ftrace_stub;
- -#endif
-  #else
-- #define MCOUNT_REC()
-+ # ifdef CONFIG_FUNCTION_TRACER
-+ #  define MCOUNT_REC()	ftrace_graph_stub =3D ftrace_stub;
-+ # else
-+ #  define MCOUNT_REC()
-+ # endif
-  #endif
- =20
-  #ifdef CONFIG_TRACE_BRANCH_PROFILING
-
---Sig_/wu9x9N7Ps.0tRtcEvyvCnHK
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3OE0UACgkQAVBC80lX
-0Gy90wf8DG2g3bXYzLlXAN+vkX/Q8pIVdoD/eRfWodPH9RHC/Z0p+J9OLJFIl3Q4
-4VNwsAgQcYgvj+W8m4zMz0ZX88uzKCjsM5DfOeZ7I7pKHxwGhihJDTC8YzlhZFln
-i7G1qoSdovqc9IVSJw58n93GjO5m85rIhiQpsUK3YLTvYRy5CPDPwNlQXv+y592/
-P/cAgZBFSSPjrdjVMWVJ2DZ3IawJ0ViT4xOb2oOYdZVoVotiSFWCLQcP84M+nncx
-Y+1a9SdYtcHQnBg+v8LCFIps+bbU7u732IPJg5pTHitV3yT4fmNhW4NvRPESnUGZ
-rvEglKw1e/k0j2pMq4IrIX4epGw0Xg==
-=rW2a
------END PGP SIGNATURE-----
-
---Sig_/wu9x9N7Ps.0tRtcEvyvCnHK--
