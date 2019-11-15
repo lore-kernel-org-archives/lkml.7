@@ -2,110 +2,116 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F59C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA4AC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E861C2073C
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E2E2073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:04:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QDM5+LEz"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YQVJAjOD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbfKONCY (ORCPT
+        id S1727442AbfKONEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 08:02:24 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:60266 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727329AbfKONCX (ORCPT
+        Fri, 15 Nov 2019 08:04:49 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:36866 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727329AbfKONEt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 08:02:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KoLdEclcoHvvYVt7J9ZCX8ttqkOU2glCR7dqzQXBQMU=; b=QDM5+LEzEyrONS/b0QlQdc4Wj
-        qV3yHi4kQcG48HIUUPcHLSFEtpCXcEqTGR38s6AuW70VY4uQYdBsRP1CGYCWsxS8X8jC4xe0tt84F
-        TIkUumXToJooURP0sBtSY69t6xta7VRGaQZQBBqZWHq1EQ4vTIcJ0ElMAFRrTTqh92cgyhjJA3K5V
-        lEOL06wbXOso5O5omYPNuzSpUKhAWkYl5D/bK46OA9OjAGPs9dskVmUD6+O2pGNwZ7VqAFtDhEIMx
-        hEL2yAr1IDnWozFjemszTohqqSMmuyumNmuXkjYlVncvlE5/M/9h/MAGhAgjt5bsQd1EB3GSeh6J1
-        DIx9+qEWQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iVbES-0007vI-Pw; Fri, 15 Nov 2019 13:01:48 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3C6A530018B;
-        Fri, 15 Nov 2019 14:00:36 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 363132B12DAC0; Fri, 15 Nov 2019 14:01:44 +0100 (CET)
-Date:   Fri, 15 Nov 2019 14:01:44 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Doug Smythies <dsmythies@telus.net>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
-Message-ID: <20191115130144.GA4097@hirez.programming.kicks-ass.net>
-References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org>
- <20191115095447.GU4114@hirez.programming.kicks-ass.net>
- <CAKfTPtCTcrq1E1H8A3TL1xvALUrQ7ybPoERJ+C2O2+QXpVEZGQ@mail.gmail.com>
- <20191115103735.GE4131@hirez.programming.kicks-ass.net>
- <CAKfTPtDi_-h6g+rhV04XXjqpWprC2vT6hgLZSrTW5rdD54PrQA@mail.gmail.com>
- <20191115105110.GG4131@hirez.programming.kicks-ass.net>
- <CAKfTPtC3g4iCxvAJo9Km9fZ0fPSw5Jt9TY2+xF7kxGmOZ66gxw@mail.gmail.com>
+        Fri, 15 Nov 2019 08:04:49 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAFCx9Ue167692;
+        Fri, 15 Nov 2019 13:04:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=NFSSVbjhEqElsrA73XhmCVdsI7Nss0hsHyVS7FwP2+Q=;
+ b=YQVJAjOD8u/DCdzbTWgjB6kB+86XbwfNvVG7HB4og2jcOuYIoorw9Q0nkqXYcYRYisSN
+ aepKCWa+8+eYyaAJ3vCuvuCAxqGNJYt/T/V07mfYHzTeQo0Gy/ggjPSc0Vc98o2b30ul
+ wtXquJGr3i3w8r/zQiIYaXbhGct+RBGyxizIoCLdpAGfNU8GwaV4T7UQQmWSLq6/hBwU
+ oP2OyO7QXXejzW08cEid5+zGbKT/76G/p51uxVcWg5xjdIWdMshHO9vtZzBKNhgff9a4
+ Vam6PKjXqF83Nz2Y/U7zL6RKBmqe40HuI9EQLO5rpaip/GGr3Qnm3sGc1oSR8u82aGyS mw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2w9gxpk4b3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 Nov 2019 13:04:16 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAFCx7p0167338;
+        Fri, 15 Nov 2019 13:04:15 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2w9h14fam4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 Nov 2019 13:04:15 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAFD48Hx001873;
+        Fri, 15 Nov 2019 13:04:08 GMT
+Received: from kadam.lan (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 15 Nov 2019 05:04:08 -0800
+Date:   Fri, 15 Nov 2019 16:03:59 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     jic23@kernel.org, devel@driverdev.osuosl.org, mark.rutland@arm.com,
+        lars@metafoo.de, biabeniamin@outlook.com,
+        Michael.Hennerich@analog.com, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        pmeerw@pmeerw.net, knaack.h@gmx.de,
+        Paul Cercueil <paul.cercueil@analog.com>
+Subject: Re: [PATCH v4 2/4] iio: adc: ad7091r5: Add scale and external VREF
+ support
+Message-ID: <20191115130359.GE19101@kadam.lan>
+References: <20191115122316.20893-1-beniamin.bia@analog.com>
+ <20191115122316.20893-2-beniamin.bia@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKfTPtC3g4iCxvAJo9Km9fZ0fPSw5Jt9TY2+xF7kxGmOZ66gxw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191115122316.20893-2-beniamin.bia@analog.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911150120
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9441 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911150120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 12:03:31PM +0100, Vincent Guittot wrote:
+On Fri, Nov 15, 2019 at 02:23:14PM +0200, Beniamin Bia wrote:
+> @@ -216,6 +240,21 @@ int ad7091r_probe(struct device *dev, const char *name,
+>  			return ret;
+>  	}
+>  
+> +	st->vref = devm_regulator_get_optional(dev, "vref");
+> +	if (IS_ERR(st->vref)) {
+> +		if (PTR_ERR(st->vref) == EPROBE_DEFER)
+                                      ^^^^^^^^^^^^^^^
+Missing - on EPROBE_DEFER.
 
-> This patch does 2 things:
-> - fix the spurious call to cpufreq just before attaching a task
+> +			return -EPROBE_DEFER;
+> +
+> +		st->vref = NULL;
+> +	} else {
+> +		ret = regulator_enable(st->vref);
+> +		if (ret)
+> +			return ret;
+> +		ret = devm_add_action_or_reset(dev, ad7091r_remove, st);
+> +		if (ret)
+> +			return ret;
+> +		}
 
-Right, so that one doesn't concern me too much.
+Curly brace is indented an extra tab.
 
-> - make sure cpufreq is still called when cfs is 0 but not irq/rt or dl
-
-But per the rq->has_blocked_load logic we would mostly stop sending
-events once we reach all 0s.
-
-Now, most of those updates will be through _nohz_idle_balance() ->
-update_nohz_stats(), which are remote, which means intel_pstate is
-ignoring them anyway.
-
-Now the _nohz_idle_balance() -> update_blocked_averages() thing runs
-local, and that will update the one random idle CPU we picked to run
-nohz balance, but all others will be left where they were.
-
-So why does intel_pstate care... Esp. on SKL+ with per-core P state this
-is of dubious value.
-
-Also, and maybe I should go read back, why do we care what the P state
-is when we're mostly in C states anyway? These are all idle CPUs,
-otherwise we wouldkn't be running update_blocked_averages() on them
-anyway.
-
-
-Much confusion..
+regards,
+dan carpenter
