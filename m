@@ -2,166 +2,134 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A521C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A5CC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CDD42072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F02BA2073C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 07:59:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=unikie-com.20150623.gappssmtp.com header.i=@unikie-com.20150623.gappssmtp.com header.b="qlTFholu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfKOH7b convert rfc822-to-8bit (ORCPT
+        id S1727372AbfKOH7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 02:59:31 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:34002 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfKOH7a (ORCPT
+        Fri, 15 Nov 2019 02:59:48 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43701 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfKOH7r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 02:59:30 -0500
-Received: from marcel-macbook.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
-        by mail.holtmann.org (Postfix) with ESMTPSA id DF3C9CED16;
-        Fri, 15 Nov 2019 09:08:34 +0100 (CET)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [PATCH v5 1/4] Bluetooth: hci_bcm: Disallow set_baudrate for
- BCM4354
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20191114180959.v5.1.I8ed714e23fdf42fa35588cfee2877b53d781df12@changeid>
-Date:   Fri, 15 Nov 2019 08:59:28 +0100
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-bluetooth@vger.kernel.org, dianders@chromium.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <43FDCD41-50CE-4A4B-BC57-6466FE4090F8@holtmann.org>
-References: <20191115021008.32926-1-abhishekpandit@chromium.org>
- <20191114180959.v5.1.I8ed714e23fdf42fa35588cfee2877b53d781df12@changeid>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3601.0.10)
+        Fri, 15 Nov 2019 02:59:47 -0500
+Received: by mail-lj1-f193.google.com with SMTP id y23so9630269ljh.10
+        for <linux-kernel@vger.kernel.org>; Thu, 14 Nov 2019 23:59:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=unikie-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=TfZCE8XJRS2orWRrItYHlrJ8IwyjIIAY3mBdfPZoME0=;
+        b=qlTFholuGVwywOf3HAYf7AR256NsOgf9/UvQjBzYTvtqbKMbzjOyUdhASTe67P9Y4K
+         lT8wZlQOgqV2TzQ2xXxAr33ROhHvNI+zgJubrqNz90TK7THkpwFZIJ1QFapM4OvJDeZE
+         CtjQTJ63jZSwZ82zkrrS0jSsa71VM0+dr5iEPf6HAc1YYzSPW5BX4Pu8YX5aoy8n2qXJ
+         KLjQFGfoSsIO06dLf86/+y3c2Hchyw2xhYzjzz/xAMm2PgspakzFx2YkaNhf/yN0QjGN
+         lI+Xd6fcQFvEZyJujOAyEZBw2fGdho0JpB85NWXKmikblgIZBBbwa1Kmgd8h631I+TC0
+         hlTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version:content-transfer-encoding;
+        bh=TfZCE8XJRS2orWRrItYHlrJ8IwyjIIAY3mBdfPZoME0=;
+        b=k99WjbSuhDsJYoIwdXDGN38TCLbEeDSAy5wHvk7vv4RkVv4ct3inwKVSNgirDDYHNV
+         5kq3QeBARvPuYBdMnSqzf8n51+LnOv8IjSJm/hXB+ejG7GLgOlxgeGaRzVtrdigxZldb
+         uyPRy9HD9QmeEw7V1b7u3cTU04FuLtWeRxVEgZQ4x61wT72xFArkaozYLGS9vtIklSCE
+         rz+YX+srv1vG+Wt1A1jNFJqWGLNMk4RzF7FkL8PCCGGtLFARqAaM3nVwrDydk3fxnxu+
+         IQtbkHRvljPtCvC6iIA9XmlBtD9mtB2czJg5JsDCeU+kongCOC3WuJGkxizgZHvkgOI9
+         ehpw==
+X-Gm-Message-State: APjAAAV7ijNPBfbFCf9vM6PYGkRZqgAb2+JVTOT0jMEffHulP7IRv/Ug
+        wfuVeyzDbaNZEwX8y2bCnJIwNA==
+X-Google-Smtp-Source: APXvYqy6pyV0+R8s+Own+oKYGVaairdwlPnbopRhAjIwkuypSTfZNgycwE+hbvF0eBr8cD2siA9npg==
+X-Received: by 2002:a2e:2903:: with SMTP id u3mr10219487lje.131.1573804785634;
+        Thu, 14 Nov 2019 23:59:45 -0800 (PST)
+Received: from GL-434 ([109.204.235.119])
+        by smtp.gmail.com with ESMTPSA id 3sm3783547lfq.55.2019.11.14.23.59.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 Nov 2019 23:59:45 -0800 (PST)
+From:   jouni.hogander@unikie.com (Jouni =?utf-8?Q?H=C3=B6gander?=)
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: Re: [PATCH] drivers/base: Fix memory leak in error paths
+References: <20191114121840.5585-1-jouni.hogander@unikie.com>
+        <20191115032603.GG793701@kroah.com>
+Date:   Fri, 15 Nov 2019 09:59:43 +0200
+In-Reply-To: <20191115032603.GG793701@kroah.com> (Greg Kroah-Hartman's message
+        of "Fri, 15 Nov 2019 11:26:03 +0800")
+Message-ID: <878soha7tc.fsf@unikie.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.2 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 
-> Without updating the patchram, the BCM4354 does not support a higher
-> operating speed. The normal bcm_setup follows the correct order
-> (init_speed, patchram and then oper_speed) but the serdev driver will
-> set the operating speed before calling the hu->setup function. Thus,
-> for the BCM4354, don't set the operating speed before patchram.
-> 
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> ---
-> 
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
-> 
-> drivers/bluetooth/hci_bcm.c | 31 +++++++++++++++++++++++++++++--
-> 1 file changed, 29 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-> index 0f851c0dde7f..ee40003008d8 100644
-> --- a/drivers/bluetooth/hci_bcm.c
-> +++ b/drivers/bluetooth/hci_bcm.c
-> @@ -47,6 +47,14 @@
-> 
-> #define BCM_NUM_SUPPLIES 2
-> 
-> +/**
-> + * struct bcm_device_data - device specific data
-> + * @no_early_set_baudrate: Disallow set baudrate before driver setup()
-> + */
-> +struct bcm_device_data {
-> +	bool	no_early_set_baudrate;
-> +};
-> +
-> /**
->  * struct bcm_device - device driver resources
->  * @serdev_hu: HCI UART controller struct
-> @@ -79,6 +87,7 @@
->  * @hu: pointer to HCI UART controller struct,
->  *	used to disable flow control during runtime suspend and system sleep
->  * @is_suspended: whether flow control is currently disabled
-> + * @no_early_set_baudrate: don't set_baudrate before setup()
->  */
-> struct bcm_device {
-> 	/* Must be the first member, hci_serdev.c expects this. */
-> @@ -112,6 +121,7 @@ struct bcm_device {
-> 	struct hci_uart		*hu;
-> 	bool			is_suspended;
-> #endif
-> +	bool			no_early_set_baudrate;
-> };
-> 
-> /* generic bcm uart resources */
-> @@ -447,7 +457,13 @@ static int bcm_open(struct hci_uart *hu)
-> 	if (bcm->dev) {
-> 		hci_uart_set_flow_control(hu, true);
-> 		hu->init_speed = bcm->dev->init_speed;
-> -		hu->oper_speed = bcm->dev->oper_speed;
-> +
-> +		/* If oper_speed is set, ldisc/serdev will set the baudrate
-> +		 * before calling setup()
-> +		 */
-> +		if (!bcm->dev->no_early_set_baudrate)
-> +			hu->oper_speed = bcm->dev->oper_speed;
-> +
-> 		err = bcm_gpio_set_power(bcm->dev, true);
-> 		hci_uart_set_flow_control(hu, false);
-> 		if (err)
-> @@ -565,6 +581,8 @@ static int bcm_setup(struct hci_uart *hu)
-> 	/* Operational speed if any */
-> 	if (hu->oper_speed)
-> 		speed = hu->oper_speed;
-> +	else if (bcm->dev && bcm->dev->oper_speed)
-> +		speed = bcm->dev->oper_speed;
-> 	else if (hu->proto->oper_speed)
-> 		speed = hu->proto->oper_speed;
-> 	else
-> @@ -1374,6 +1392,7 @@ static struct platform_driver bcm_driver = {
-> static int bcm_serdev_probe(struct serdev_device *serdev)
-> {
-> 	struct bcm_device *bcmdev;
-> +	const struct bcm_device_data *data;
-> 	int err;
-> 
-> 	bcmdev = devm_kzalloc(&serdev->dev, sizeof(*bcmdev), GFP_KERNEL);
-> @@ -1408,6 +1427,10 @@ static int bcm_serdev_probe(struct serdev_device *serdev)
-> 	if (err)
-> 		dev_err(&serdev->dev, "Failed to power down\n");
-> 
-> +	data = device_get_match_data(bcmdev->dev);
-> +	if (data)
-> +		bcmdev->no_early_set_baudrate = data->no_early_set_baudrate;
-> +
-> 	return hci_uart_register_device(&bcmdev->serdev_hu, &bcm_proto);
-> }
-> 
-> @@ -1419,12 +1442,16 @@ static void bcm_serdev_remove(struct serdev_device *serdev)
-> }
-> 
-> #ifdef CONFIG_OF
-> +struct bcm_device_data bcm4354_device_data = {
-> +	.no_early_set_baudrate = true,
-> +};
-> +
-> static const struct of_device_id bcm_bluetooth_of_match[] = {
-> 	{ .compatible = "brcm,bcm20702a1" },
-> 	{ .compatible = "brcm,bcm4345c5" },
-> 	{ .compatible = "brcm,bcm4330-bt" },
-> 	{ .compatible = "brcm,bcm43438-bt" },
-> -	{ .compatible = "brcm,bcm43540-bt" },
-> +	{ .compatible = "brcm,bcm43540-bt", .data = &bcm4354_device_data },
+> On Thu, Nov 14, 2019 at 02:18:40PM +0200, jouni.hogander@unikie.com wrote:
+>> From: Jouni Hogander <jouni.hogander@unikie.com>
+>>=20
+>> Currently error paths are using device_del to clean-up preparations
+>> done by device_add. This is causing memory leak as free of dev->p
+>> allocated in device_add is freed in device_release. This is fixed by
+>> moving freeing dev->p to counterpart of device_add i.e. device_del.
+>
+> Are you sure that is safe?  The device can still be "alive" after
+> device_del() is called.  The only place you know that it should be freed
+> is in the release callback.
 
-this looks good to me. Can some users of the other devices test this patch so we ensure that it won’t break other devices.
+Now as you pointed this out I'm not.
 
-Regards
+>
+>> This memory leak was reported by Syzkaller:
+>>=20
+>> BUG: memory leak unreferenced object 0xffff8880675ca008 (size 256):
+>>   comm "netdev_register", pid 281, jiffies 4294696663 (age 6.808s)
+>>   hex dump (first 32 bytes):
+>>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+>>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+>>   backtrace:
+>>     [<0000000058ca4711>] kmem_cache_alloc_trace+0x167/0x280
+>>     [<000000002340019b>] device_add+0x882/0x1750
+>>     [<000000001d588c3a>] netdev_register_kobject+0x128/0x380
+>>     [<0000000011ef5535>] register_netdevice+0xa1b/0xf00
+>>     [<000000007fcf1c99>] __tun_chr_ioctl+0x20d5/0x3dd0
+>>     [<000000006a5b7b2b>] tun_chr_ioctl+0x2f/0x40
+>>     [<00000000f30f834a>] do_vfs_ioctl+0x1c7/0x1510
+>>     [<00000000fba062ea>] ksys_ioctl+0x99/0xb0
+>>     [<00000000b1c1b8d2>] __x64_sys_ioctl+0x78/0xb0
+>>     [<00000000984cabb9>] do_syscall_64+0x16f/0x580
+>>     [<000000000bde033d>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>     [<00000000e6ca2d9f>] 0xffffffffffffffff
+>
+> How is this a leak?  This is in device_add(), not removing the device.
+> When the structure really is freed then it can be removed.
 
-Marcel
+In net/core/net-sysfs.c:netdev_register_kobject device_add allocates
+dev->p. Now if register_queue_kobjects fails the error path is calling
+device_del and dev->p is never freed. Proper fix here could be to call
+put_device after device_del?
 
+>
+> Or are you triggering an error in device_add() somehow to trigger this
+> callback?
+
+This was found using Syzkaller with fault injection and memory leak
+detection enabled. Error is not triggered in device_add but after
+device_add.
+
+BR,
+
+Jouni H=C3=B6gander
