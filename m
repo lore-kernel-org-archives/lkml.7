@@ -3,117 +3,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E013AC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 683B8C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFB3B2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41FDD2073C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:16:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfKONOt (ORCPT
+        id S1727532AbfKONQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 08:14:49 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46924 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727223AbfKONOt (ORCPT
+        Fri, 15 Nov 2019 08:16:53 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:60406 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727249AbfKONQx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 08:14:49 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAFD2817054943
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 08:14:48 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w9nsmfns7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 08:14:47 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 15 Nov 2019 13:14:46 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 15 Nov 2019 13:14:42 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAFDEfI943713012
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Nov 2019 13:14:41 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 90D2811C052;
-        Fri, 15 Nov 2019 13:14:41 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6655311C04A;
-        Fri, 15 Nov 2019 13:14:40 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.206.176])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 15 Nov 2019 13:14:40 +0000 (GMT)
-Subject: Re: [PATCH v7 3/5] KEYS: Call the IMA hook to measure keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        dhowells@redhat.com, matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 15 Nov 2019 08:14:39 -0500
-In-Reply-To: <24262d82-c90b-b64d-f237-9ef038f38d0e@linux.microsoft.com>
-References: <20191114031202.18012-1-nramas@linux.microsoft.com>
-         <20191114031202.18012-4-nramas@linux.microsoft.com>
-         <1573743267.4793.43.camel@linux.ibm.com>
-         <24262d82-c90b-b64d-f237-9ef038f38d0e@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19111513-0028-0000-0000-000003B72858
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111513-0029-0000-0000-0000247A39C3
-Message-Id: <1573823679.4793.121.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-15_03:2019-11-15,2019-11-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- malwarescore=0 impostorscore=0 mlxscore=0 spamscore=0 phishscore=0
- mlxlogscore=999 suspectscore=0 priorityscore=1501 bulkscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911150120
+        Fri, 15 Nov 2019 08:16:53 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iVbSb-0000Kr-Ni; Fri, 15 Nov 2019 13:16:25 +0000
+Date:   Fri, 15 Nov 2019 13:16:25 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     yu kuai <yukuai3@huawei.com>, rafael@kernel.org,
+        rostedt@goodmis.org, oleg@redhat.com, mchehab+samsung@kernel.org,
+        corbet@lwn.net, tytso@mit.edu, jmorris@namei.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        zhengbin13@huawei.com, yi.zhang@huawei.com,
+        chenxiang66@hisilicon.com, xiexiuqi@huawei.com
+Subject: Re: [PATCH 1/3] dcache: add a new enum type for 'dentry_d_lock_class'
+Message-ID: <20191115131625.GO26530@ZenIV.linux.org.uk>
+References: <1573788472-87426-1-git-send-email-yukuai3@huawei.com>
+ <1573788472-87426-2-git-send-email-yukuai3@huawei.com>
+ <20191115032759.GA795729@kroah.com>
+ <20191115041243.GN26530@ZenIV.linux.org.uk>
+ <20191115072011.GA1203354@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115072011.GA1203354@kroah.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-11-14 at 10:24 -0800, Lakshmi Ramasubramanian wrote:
-> On 11/14/2019 6:54 AM, Mimi Zohar wrote:
-> > With this patch, keys are now being measured.  With the boot command
-> > line, we can verify the measurement entry against /proc/cmdline.  How
-> > can the key measurement entry be verified?  Please include that
-> > information, here, in this patch description.
+On Fri, Nov 15, 2019 at 03:20:11PM +0800, Greg KH wrote:
+
+> > FWIW, I'm not sure it's a good solution.  What are the rules for callers
+> > of that thing, anyway?  If it can be called when somebody is creating
+> > more files in that subtree, we almost certainly will have massive
+> > problems with the lifetimes of underlying objects...
+> > 
+> > Could somebody familiar with debugfs explain how is that thing actually
+> > used and what is required from/promised to its callers?  I can try and
+> > grep through the tree and guess what the rules are, but I've way too
+> > much on my platter right now and I don't want to get sidetracked into yet
+> > another tree-wide search and analysis session ;-/
 > 
-> Glad you could verify measurement of keys. Thanks a lot for trying it.
+> Yu wants to use simple_empty() in debugfs_remove_recursive() instead of
+> manually checking:
+> 	if (!list_empty(&child->d_subdirs)) {
 > 
-> Will add information on testing\validating the feature.
-
-Thank you.
-
+> See patch 3 of this series for that change and why they feel it is
+> needed:
+> 	https://lore.kernel.org/lkml/1573788472-87426-4-git-send-email-yukuai3@huawei.com/
 > 
-> > Also, can the key data, now included in the measurement list, be used
-> > to verify signatures in the ima-sig or ima-modsig templates?  Is there
-> > a way of correlating a signature with a key?  Perhaps include a
-> > kselftest as an example.
-> 
-> I am not familiar with kselftest. Will take a look and see if it'd be 
-> possible to correlate a signature with a key.
+> As to if patch 3 really is needed, I'll leave that up to Yu given that I
+> thought we had resolved these types of issues already a year or so ago.
 
-I'd like the measurement list to be self contained, allowing a
-regression test, for example, to walk the measurement list, verifying
-the file signatures stored in the measurement list based on the key
-measurement(s).
+What I'm asking is what concurrency warranties does the whole thing
+(debugfs_remove_recursive()) have to deal with.  IMO the overall
+structure of the walk-and-remove the tree algorithm in there
+is Not Nice(tm) and I'd like to understand if it needs to be kept
+that way.  And the locking is confused in there - it either locks
+too much, or not enough.
 
-It isn't so much about Kselftest, but implementing a regression test
-(eg. Kselftest, LTP, ima-evm-utils, ...) as a PoC, in order to know
-that the key measurement contains everything needed to identify the
-key (eg. keyid, certificate serial number, ...) and verify file
-signatures.
+So... can debugfs_remove_recursive() rely upon the lack of attempts to create
+new entries inside the subtree it's trying to kill?  If it can, the things
+can be made simpler; if it can't, it's not locking enough; e.g. results of
+simple_empty() on child won't be guaranteed to remain unchanged just as it
+returns to caller.
 
-Mimi
+What's more, the uses of simple_unlink()/simple_rmdir() there are not
+imitiating the normal locking environment for ->unlink() and ->rmdir() resp. -
+the victim's inode is not locked, so just for starters the call of simple_empty()
+from simple_rmdir() itself is not guaranteed to give valid result.
 
+I want to understand the overall situation.  No argument, list_empty()
+in there is BS, for many reasons.  But I wonder if trying to keep the
+current structure of the iterator _and_ the use of simple_rmdir()/simple_unlink()
+is the right approach.
