@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF40CC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1CEC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C61802073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A01022073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:35:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uq0Rvs0K"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T5gTpPfM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfKOWfC (ORCPT
+        id S1727606AbfKOWfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 17:35:02 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42529 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727226AbfKOWeF (ORCPT
+        Fri, 15 Nov 2019 17:35:07 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35869 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726865AbfKOWeC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 17:34:05 -0500
-Received: by mail-pg1-f193.google.com with SMTP id q17so6617130pgt.9
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 14:34:03 -0800 (PST)
+        Fri, 15 Nov 2019 17:34:02 -0500
+Received: by mail-pl1-f195.google.com with SMTP id d7so5632997pls.3
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 14:34:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=I8DYLlgbe7crhAhNbwNPqGy2McaZWO3AECdzJYJCCco=;
-        b=uq0Rvs0KPR5i9HtlAfbqJ09ftst7366sxovqlgQSCdSMlx7zsOEFlsXzxIZ/RFJepW
-         +xNmN50KWjZEmZ4ahwYGYncO2oNSlvlk9+bSZ0uJj5KwnzYGnYwwpJh3Z0U0CVVPUgeF
-         WBek2r2DnpcVe5urx/INF76BoO8wqFwuN86lGWJuCvpErfOgoUCoWWPI37s5pI2Uuw9X
-         OEj1WNleT7NOb7K1+oFm34vXUlCdixUaNsyhZrrKKyzZ34tRHBi5jpoqITPilNH4uc3A
-         cG9Aay+Ra1kWvl+WOeF5ifVv++jVQtvf2AnAcuQ92MtUnevyPsRG5Pf0brxRmVhP9TbT
-         u6bw==
+        bh=5tCHcBKEZssfZtGLO4lrvgsi0FdvjwhVDJVSSTh6psc=;
+        b=T5gTpPfMPcBQaM1Rda0Ndn9G4cEZJwjbmnNlxXqg9buGJ/wlKso18b4SNXgJD7wEjJ
+         rOro72GB7K62gRe3juF5g9nEfWBkcsocfcJAPAukedKksQ9p/Ct99Cz7rAfD0zWrGgCT
+         t55WWai/iFvSieafgwu7rtv7uNqXlW18lIIAG+PCfV+zOwAQgcrzYQZrFYj1SAtAyGdz
+         cUv8qB5jxyGPynQ7jFkXphM8oHv+T229CnEEWm+EoVNr3J8vMlXstQwEIl4FeI/NjSH3
+         nVfEjRJCBYn8gJpA95V+ZVLMi5mzXl1i+KBtLJVt8bVqYLlL4lqi5vxI1KNbXvHMRRTV
+         JVZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=I8DYLlgbe7crhAhNbwNPqGy2McaZWO3AECdzJYJCCco=;
-        b=V4vVRNPuxWWzblNOyTYR9WPR5e29OdO2kZniH1GJWhXRNpwi57vWbZ1ZoxElOmmPft
-         1FvH4MIPxlomyBACid3dpMH88JCdF1tZ8VFO4xX4jgcUtVzIdzmOON7gCa6ll6KRZ1f9
-         JHyxagTLWqwkTUrsLRvfDFhYkBfDBOwjujEkZFooFWMAxXkmAhvxSGynDOf0kvZoCt3c
-         s6Cgu7V/kFZjaYJEBgqyIIA03RBzJP2ieTgVNUt9osruSfkhnjAoxJT/nzRkYQaEg0eC
-         ph2ELxMNeb/+8o8UCE6P7oLDO9fRAijVfaPfKzEGa9LW/1CwvlO1OHWxQ1K4xvpuAU9L
-         eY/Q==
-X-Gm-Message-State: APjAAAXVu5TaSzNzapuSxdd6Rs83FV3eoFgpl/4XDlzYzdFGxLSwVZAH
-        d81iRaBfUss8YWEYozmL15dNCA==
-X-Google-Smtp-Source: APXvYqytHqdgYw+McewKp6L1IK0RR+uPnytQnNFy3RGnQfrkQ+RNzORO54L3aq41JZ6v3SKIJheJ4A==
-X-Received: by 2002:a63:2e01:: with SMTP id u1mr19770443pgu.25.1573857243342;
-        Fri, 15 Nov 2019 14:34:03 -0800 (PST)
+        bh=5tCHcBKEZssfZtGLO4lrvgsi0FdvjwhVDJVSSTh6psc=;
+        b=Sw1woIRnhqTxI/Ro8oOVBjg6YpL1xdHhd47++IdzlBFuprgZIIdYGKbsmm4U0ydkRe
+         nqFoHEUgsaVECWAKnyeDIwLzSOXlFJOQWyNz8DxX8SFIxRTRwKAmMn+im/VK8UgCyha4
+         tOaALUvqH3PgsOEGp8yHls07pLQnrmg3VtpGsPXh4AVJbShcTwjE+O85y8mii5sBi0Dg
+         hB1ZKkwHbIDAkaoNzvaQXEwRmULDDAhIOHfNN5Lg42q2kVx+6m6P5JVH9UgU6IJZpqPc
+         x0v9TIZqDevgAKX2nT2+JZwafTeLTkADArb/oDb654S0X8uwPrnzd9NKA8TH6I4q2qjG
+         3d9w==
+X-Gm-Message-State: APjAAAXl/KGJtW3Vo5i6/qxDPgSA1qgpPxm2OWWglG6jeJmJnfwDsTC8
+        qi1dRbfwK68jAWsQORJlJ9BH3WMeboA=
+X-Google-Smtp-Source: APXvYqwvOrQGWg4m3FQouJyEIubtEKECASGnP2QVJqCfiGFzcLOOO3tw+OVASMP7PJoPOnKieSXp8g==
+X-Received: by 2002:a17:902:8d81:: with SMTP id v1mr1565624plo.289.1573857239827;
+        Fri, 15 Nov 2019 14:33:59 -0800 (PST)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id m15sm11699724pfh.19.2019.11.15.14.34.02
+        by smtp.gmail.com with ESMTPSA id m15sm11699724pfh.19.2019.11.15.14.33.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 14:34:02 -0800 (PST)
+        Fri, 15 Nov 2019 14:33:59 -0800 (PST)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     stable@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [stable 4.19+][PATCH 07/20] hwrng: stm32 - fix unbalanced pm_runtime_enable
-Date:   Fri, 15 Nov 2019 15:33:43 -0700
-Message-Id: <20191115223356.27675-7-mathieu.poirier@linaro.org>
+Subject: [stable 4.19+][PATCH 03/20] mailbox: stm32_ipcc: add spinlock to fix channels concurrent access
+Date:   Fri, 15 Nov 2019 15:33:39 -0700
+Message-Id: <20191115223356.27675-3-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191115223356.27675-1-mathieu.poirier@linaro.org>
 References: <20191115223356.27675-1-mathieu.poirier@linaro.org>
@@ -69,48 +69,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lionel Debieve <lionel.debieve@st.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 
-commit af0d4442dd6813de6e77309063beb064fa8e89ae upstream
+commit dba9a3dfe912dc47c9dbc9ba1f5f65adbf9aea0f upstream
 
-No remove function implemented yet in the driver.
-Without remove function, the pm_runtime implementation
-complains when removing and probing again the driver.
+Add spinlock protection on IPCC register update to avoid race condition.
+Without this fix, stm32_ipcc_set_bits and stm32_ipcc_clr_bits can be
+called in parallel for different channels. This results in register
+corruptions.
 
-Signed-off-by: Lionel Debieve <lionel.debieve@st.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Reviewed-by: Fabien Dessenne <fabien.dessenne@st.com>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 Cc: stable <stable@vger.kernel.org> # 4.19+
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/char/hw_random/stm32-rng.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/mailbox/stm32-ipcc.c | 37 ++++++++++++++++++++++++++----------
+ 1 file changed, 27 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/char/hw_random/stm32-rng.c b/drivers/char/hw_random/stm32-rng.c
-index 042860d97b15..37b338a76ba4 100644
---- a/drivers/char/hw_random/stm32-rng.c
-+++ b/drivers/char/hw_random/stm32-rng.c
-@@ -169,6 +169,13 @@ static int stm32_rng_probe(struct platform_device *ofdev)
- 	return devm_hwrng_register(dev, &priv->rng);
- }
- 
-+static int stm32_rng_remove(struct platform_device *ofdev)
-+{
-+	pm_runtime_disable(&ofdev->dev);
-+
-+	return 0;
-+}
-+
- #ifdef CONFIG_PM
- static int stm32_rng_runtime_suspend(struct device *dev)
- {
-@@ -210,6 +217,7 @@ static struct platform_driver stm32_rng_driver = {
- 		.of_match_table = stm32_rng_match,
- 	},
- 	.probe = stm32_rng_probe,
-+	.remove = stm32_rng_remove,
+diff --git a/drivers/mailbox/stm32-ipcc.c b/drivers/mailbox/stm32-ipcc.c
+index ca1f993c0de3..e31322225e93 100644
+--- a/drivers/mailbox/stm32-ipcc.c
++++ b/drivers/mailbox/stm32-ipcc.c
+@@ -50,6 +50,7 @@ struct stm32_ipcc {
+ 	void __iomem *reg_base;
+ 	void __iomem *reg_proc;
+ 	struct clk *clk;
++	spinlock_t lock; /* protect access to IPCC registers */
+ 	int irqs[IPCC_IRQ_NUM];
+ 	int wkp;
+ 	u32 proc_id;
+@@ -58,14 +59,24 @@ struct stm32_ipcc {
+ 	u32 xmr;
  };
  
- module_platform_driver(stm32_rng_driver);
+-static inline void stm32_ipcc_set_bits(void __iomem *reg, u32 mask)
++static inline void stm32_ipcc_set_bits(spinlock_t *lock, void __iomem *reg,
++				       u32 mask)
+ {
++	unsigned long flags;
++
++	spin_lock_irqsave(lock, flags);
+ 	writel_relaxed(readl_relaxed(reg) | mask, reg);
++	spin_unlock_irqrestore(lock, flags);
+ }
+ 
+-static inline void stm32_ipcc_clr_bits(void __iomem *reg, u32 mask)
++static inline void stm32_ipcc_clr_bits(spinlock_t *lock, void __iomem *reg,
++				       u32 mask)
+ {
++	unsigned long flags;
++
++	spin_lock_irqsave(lock, flags);
+ 	writel_relaxed(readl_relaxed(reg) & ~mask, reg);
++	spin_unlock_irqrestore(lock, flags);
+ }
+ 
+ static irqreturn_t stm32_ipcc_rx_irq(int irq, void *data)
+@@ -92,7 +103,7 @@ static irqreturn_t stm32_ipcc_rx_irq(int irq, void *data)
+ 
+ 		mbox_chan_received_data(&ipcc->controller.chans[chan], NULL);
+ 
+-		stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XSCR,
++		stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XSCR,
+ 				    RX_BIT_CHAN(chan));
+ 
+ 		ret = IRQ_HANDLED;
+@@ -121,7 +132,7 @@ static irqreturn_t stm32_ipcc_tx_irq(int irq, void *data)
+ 		dev_dbg(dev, "%s: chan:%d tx\n", __func__, chan);
+ 
+ 		/* mask 'tx channel free' interrupt */
+-		stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XMR,
++		stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XMR,
+ 				    TX_BIT_CHAN(chan));
+ 
+ 		mbox_chan_txdone(&ipcc->controller.chans[chan], 0);
+@@ -141,10 +152,12 @@ static int stm32_ipcc_send_data(struct mbox_chan *link, void *data)
+ 	dev_dbg(ipcc->controller.dev, "%s: chan:%d\n", __func__, chan);
+ 
+ 	/* set channel n occupied */
+-	stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XSCR, TX_BIT_CHAN(chan));
++	stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XSCR,
++			    TX_BIT_CHAN(chan));
+ 
+ 	/* unmask 'tx channel free' interrupt */
+-	stm32_ipcc_clr_bits(ipcc->reg_proc + IPCC_XMR, TX_BIT_CHAN(chan));
++	stm32_ipcc_clr_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XMR,
++			    TX_BIT_CHAN(chan));
+ 
+ 	return 0;
+ }
+@@ -163,7 +176,8 @@ static int stm32_ipcc_startup(struct mbox_chan *link)
+ 	}
+ 
+ 	/* unmask 'rx channel occupied' interrupt */
+-	stm32_ipcc_clr_bits(ipcc->reg_proc + IPCC_XMR, RX_BIT_CHAN(chan));
++	stm32_ipcc_clr_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XMR,
++			    RX_BIT_CHAN(chan));
+ 
+ 	return 0;
+ }
+@@ -175,7 +189,7 @@ static void stm32_ipcc_shutdown(struct mbox_chan *link)
+ 					       controller);
+ 
+ 	/* mask rx/tx interrupt */
+-	stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XMR,
++	stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XMR,
+ 			    RX_BIT_CHAN(chan) | TX_BIT_CHAN(chan));
+ 
+ 	clk_disable_unprepare(ipcc->clk);
+@@ -208,6 +222,8 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
+ 	if (!ipcc)
+ 		return -ENOMEM;
+ 
++	spin_lock_init(&ipcc->lock);
++
+ 	/* proc_id */
+ 	if (of_property_read_u32(np, "st,proc-id", &ipcc->proc_id)) {
+ 		dev_err(dev, "Missing st,proc-id\n");
+@@ -259,9 +275,10 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* mask and enable rx/tx irq */
+-	stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XMR,
++	stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XMR,
+ 			    RX_BIT_MASK | TX_BIT_MASK);
+-	stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XCR, XCR_RXOIE | XCR_TXOIE);
++	stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XCR,
++			    XCR_RXOIE | XCR_TXOIE);
+ 
+ 	/* wakeup */
+ 	if (of_property_read_bool(np, "wakeup-source")) {
 -- 
 2.17.1
 
