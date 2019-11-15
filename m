@@ -2,114 +2,102 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD85C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 02:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A1DC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 02:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00B03206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 02:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA65420718
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 02:28:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ooPZ7LYN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfKOCSJ (ORCPT
+        id S1726996AbfKOC2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 Nov 2019 21:18:09 -0500
-Received: from mga09.intel.com ([134.134.136.24]:50611 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726533AbfKOCSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 Nov 2019 21:18:08 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Nov 2019 18:18:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,306,1569308400"; 
-   d="scan'208";a="199047942"
-Received: from guptapadev.jf.intel.com (HELO guptapadev.amr) ([10.7.198.56])
-  by orsmga008.jf.intel.com with ESMTP; 14 Nov 2019 18:18:07 -0800
-Date:   Thu, 14 Nov 2019 18:11:19 -0800
-From:   Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Nadav Amit <nadav.amit@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        "Gupta, Pawan Kumar" <pawan.kumar.gupta@intel.com>,
-        kirill.shutemov@linux.intel.com
-Subject: Re: [FYI PATCH 0/7] Mitigation for CVE-2018-12207
-Message-ID: <20191115021119.GB18745@guptapadev.amr>
-References: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
- <23353382-53ea-8b20-7e30-763ef6df374c@siemens.com>
- <ea5a084b-e047-6677-b8fe-d7bb6f8c0ef8@redhat.com>
- <dffb19ab-daa2-a513-531e-c43279d8a4bf@intel.com>
- <6C0513A5-6C73-4F17-B73B-6F19E7D9EAF0@gmail.com>
- <6a317558-44c0-5a21-0310-4ae49048134f@intel.com>
+        Thu, 14 Nov 2019 21:28:12 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:41064 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbfKOC2M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 Nov 2019 21:28:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ISaYPON1vGFntbrhcVpZEFaBbyVPL4wL9MWKN8HpUjY=; b=ooPZ7LYNuKQhHb99nuwHdi+l9
+        SAa+fsOMVzwKuwMScD+K56KNmarhjpk49l7bhWYm3a2SrR5jGVW4VP7o6iPmq0+br6/ArhoawBZOd
+        Abt15t1gMobT7dxeRwNqgOto6NocFwB98jQDuyQJl5dChxksNxW6LG07lnOblqFNYx+1vtXg07orY
+        +4RqopCsKZHw3eJhs80O18RKQ389aUbBMia0RGPeeUOkDtWqCmdt4srHdyyBL3Zr1e7kk/gHhJg9E
+        V2zaaLz49oBJPQ3ixntnMryLQsE2iZ9stFofb9dp8W5wo7Wvlo18r/YJptJpn34kgt9JnueGu9wYM
+        +BWnc2sWg==;
+Received: from [2601:1c0:6280:3f0::5a22]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iVRLE-0001NS-9u; Fri, 15 Nov 2019 02:28:08 +0000
+Subject: Re: mmotm 2019-11-14-17-24 uploaded (UML mm/vmalloc.c)
+To:     akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        richard -rw- weinberger <richard.weinberger@gmail.com>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>
+References: <20191115012505.5C2YGloIj%akpm@linux-foundation.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <25f8266e-bba5-d3a3-00e9-d1855e5483c6@infradead.org>
+Date:   Thu, 14 Nov 2019 18:28:06 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6a317558-44c0-5a21-0310-4ae49048134f@intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20191115012505.5C2YGloIj%akpm@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 09:26:24PM -0800, Dave Hansen wrote:
-> On 11/13/19 5:17 PM, Nadav Amit wrote:
-> > But is it always the case? Looking at __split_large_page(), it seems that the
-> > TLB invalidation is only done after the PMD is changed. Can't this leave a
-> > small time window in which a malicious actor triggers a machine-check on 
-> > another core than the one that runs __split_large_page()?
+On 11/14/19 5:25 PM, akpm@linux-foundation.org wrote:
+> The mm-of-the-moment snapshot 2019-11-14-17-24 has been uploaded to
 > 
-> It's not just a split.  It has to be a change that results in
-> inconsistencies between two entries in the TLB.  A normal split doesn't
-> change the resulting final translations and is never inconsistent
-> between the two translations.
+>    http://www.ozlabs.org/~akpm/mmotm/
 > 
-> To have an inconsistency, you need to change the backing physical
-> address (or cache attributes?).  I'd need to go double-check the erratum
-> to be sure about the cache attributes.
+> mmotm-readme.txt says
 > 
-> In any case, that's why we decided that normal kernel mapping
-> split/merges don't need to be mitigated.  But, we should probably
-> document this somewhere if it's not clear.
+> README for mm-of-the-moment:
 > 
-> Pawan, did we document the results of the audit you did anywhere?
+> http://www.ozlabs.org/~akpm/mmotm/
+> 
+> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> more than once a week.
+> 
+> You will need quilt to apply these patches to the latest Linus release (5.x
+> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> http://ozlabs.org/~akpm/mmotm/series
+> 
+> The file broken-out.tar.gz contains two datestamp files: .DATE and
+> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+> followed by the base kernel version against which this patch series is to
+> be applied.
 
-Kirill Shutemov did the heavy lifting, thank you Kirill. Below were the
-major areas probed: 
+UML on i386 has build errors (defconfig):
 
-1. Can a non-privileged user application induce this erratum?
+  CC      mm/vmalloc.o
+../mm/vmalloc.c: In function ‘__purge_vmap_area_lazy’:
+../mm/vmalloc.c:1286:8: error: ‘SHARED_KERNEL_PMD’ undeclared (first use in this function); did you mean ‘PAGE_KERNEL_RO’?
+   if (!SHARED_KERNEL_PMD && boot_cpu_has(X86_FEATURE_PTI))
+        ^~~~~~~~~~~~~~~~~
+        PAGE_KERNEL_RO
+../mm/vmalloc.c:1286:8: note: each undeclared identifier is reported only once for each function it appears in
+../mm/vmalloc.c:1286:29: error: implicit declaration of function ‘boot_cpu_has’; did you mean ‘get_cpu_mask’? [-Werror=implicit-function-declaration]
+   if (!SHARED_KERNEL_PMD && boot_cpu_has(X86_FEATURE_PTI))
+                             ^~~~~~~~~~~~
+                             get_cpu_mask
 
-	Userspace can trigger switching between 4k and 2M (in both
-	directions), but kernel already follows the protocol to avoid
-	this issue due to similar errata in AMD CPUs. [1][2]
 
-2. If kernel can accidentally induce this?
+-- 
+~Randy
 
-	__split_large_page() in arch/x86/mm/pageattr.c was the suspect [3]. 
-
-	The locking scheme described in the comment only guarantees that
-	TLB entries for 4k and 2M/1G will have the same page attributes
-	until TLB flush. There is nothing that would protect from having
-	multiple TLB entries of different sizes with the same attributes.
-
-	But the erratum can be triggered only when:
-
-		Software modifies the paging structures so that the same
-		linear address is translated using a large page (2 MB, 4
-		MB, or 1 GB) with a different physical address or memory
-		type.
-
-	And in this case the physical address and memory type is
-	preserved until TLB is flushed, so it should be safe.
-
-Thanks,
-Pawan
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/huge_memory.c#n2190
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/khugepaged.c#n1038
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/mm/pageattr.c#n1020
