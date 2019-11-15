@@ -2,96 +2,62 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 765C0C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94070C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF98206D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:12:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kJhUtVpg"
+	by mail.kernel.org (Postfix) with ESMTP id 76FCF2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 20:12:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfKOUMn (ORCPT
+        id S1727112AbfKOUMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 15:12:43 -0500
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:52731 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbfKOUMm (ORCPT
+        Fri, 15 Nov 2019 15:12:48 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:40466 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbfKOUMn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 15:12:42 -0500
-Received: by mail-pl1-f201.google.com with SMTP id 62so4199237ple.19
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 12:12:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=Sbu+XQWMurh2GLbIyBKUUnQnRbxa6ToLvKnRjUx2+mk=;
-        b=kJhUtVpgdk+g5aBIsUyY+QtH27c5HF16vPkrUjCEM5Pwwaqzb2GGmppUJuBtJ2uEmE
-         xtPzgwpzAQPIoJY/rL7pbuAyIUVWPFXDzaUWNuRf4Fv80wsomquUVelupyvev2v/ICw5
-         Kz/MqcK/ccdPC7sM4LJct9KbW2bWOCOHnxazL8HarJM+tCmTbblt+4xDjvhL0oN4ziia
-         trPLPk3ZyBd+a9u45n2nx7U6HwWO3E+tE8ZA6NLvEPYTufe0it+tmbdew7Ubj1GQvJrP
-         Mtgyqiheax6VYwAmbmr5OnynG21/mkmKBvsUHm0snlOBwpcajeCZILEAJwozH5jLK0Gu
-         /LSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=Sbu+XQWMurh2GLbIyBKUUnQnRbxa6ToLvKnRjUx2+mk=;
-        b=kt3q1zH1davzMqFjxRPljiRp/Q9fpKrbjrKRGQSPszDJ3cRX51YWblQJ+rdR6HRQJt
-         sra14/0HdAKv4ysVvjLNDZmXFysLPOb+186A0LYmfHdO0E/ZVVGobu1e6Er6PLwAcJk3
-         uhIsgz5QYJHVbq08InbFAGxSXjxFwu/ZWriEfMJycyqs59K62E2RYbDlX/pNkRIpEzuw
-         mHRI7H/6WBxh0zyzJWNYJRNNxyfcyCSweTqWqBHSy+9hLIoKUFR28uSWMVOH59BkKLvx
-         +qAAU9iqRO/16O2K7CWPnSNve6dOLcApoZaay4E9NiN75AvYPFzoxhwG0OogY8DKxN50
-         OsTA==
-X-Gm-Message-State: APjAAAX8i3bZzekq8fgtkwj/vyAYvX1oTVrSHplbMBuTomt2svR3JDV1
-        jom5hUZTvWH5tjEpju6yKvtCbHJuxn0=
-X-Google-Smtp-Source: APXvYqyDBw0YFLaXPMxws6oIH6CoH8g04h4hUhbLnfPSZ1F6jkuwh61Lp96GwRDqu+epjyPBXas46UvTQs0=
-X-Received: by 2002:a65:6685:: with SMTP id b5mr9039818pgw.94.1573848761875;
- Fri, 15 Nov 2019 12:12:41 -0800 (PST)
-Date:   Fri, 15 Nov 2019 12:12:25 -0800
-Message-Id: <20191115201225.92888-1-lrizzo@google.com>
+        Fri, 15 Nov 2019 15:12:43 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0E55414DE8719;
+        Fri, 15 Nov 2019 12:12:42 -0800 (PST)
+Date:   Fri, 15 Nov 2019 12:12:41 -0800 (PST)
+Message-Id: <20191115.121241.1718858679030793641.davem@davemloft.net>
+To:     yuehaibing@huawei.com
+Cc:     borisp@mellanox.com, aviadye@mellanox.com,
+        john.fastabend@gmail.com, daniel@iogearbox.net,
+        jakub.kicinski@netronome.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net/tls: Fix unused function warning
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191114073946.46340-1-yuehaibing@huawei.com>
+References: <20191114073946.46340-1-yuehaibing@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-Subject: [PATCH] net/mlx4_en: fix mlx4 ethtool -N insertion
-From:   Luigi Rizzo <lrizzo@google.com>
-To:     netdev@vger.kernel.org
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luigi Rizzo <lrizzo@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 15 Nov 2019 12:12:42 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ethtool expects ETHTOOL_GRXCLSRLALL to set ethtool_rxnfc->data with the
-total number of entries in the rx classifier table.  Surprisingly, mlx4
-is missing this part (in principle ethtool could still move forward and
-try the insert).
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Thu, 14 Nov 2019 15:39:46 +0800
 
-Tested: compiled and run command:
-	phh13:~# ethtool -N eth1 flow-type udp4  queue 4
-	Added rule with ID 255
+> If PROC_FS is not set, gcc warning this:
+> 
+> net/tls/tls_proc.c:23:12: warning:
+>  'tls_statistics_seq_show' defined but not used [-Wunused-function]
+> 
+> Use #ifdef to guard this.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Signed-off-by: Luigi Rizzo <lrizzo@google.com>
-Change-Id: I18a72f08dfcfb6b9f6aa80fbc12d58553e1fda76
----
- drivers/net/ethernet/mellanox/mlx4/en_ethtool.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
-index d8313e2ee6002..c12da02c2d1bd 100644
---- a/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
-@@ -1745,6 +1745,7 @@ static int mlx4_en_get_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd,
- 		err = mlx4_en_get_flow(dev, cmd, cmd->fs.location);
- 		break;
- 	case ETHTOOL_GRXCLSRLALL:
-+		cmd->data = MAX_NUM_OF_FS_RULES;
- 		while ((!err || err == -ENOENT) && priority < cmd->rule_cnt) {
- 			err = mlx4_en_get_flow(dev, cmd, i);
- 			if (!err)
--- 
-2.24.0.432.g9d3f5f5b63-goog
-
+Applied.
