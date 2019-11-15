@@ -2,368 +2,231 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F2FC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D54DC43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9DFC20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FB6A20803
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573798965;
-	bh=0bG3vvcD286qkpT5MDQxSPaUEb6ya5vK18dcSDDxzHE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ufdhqyrJONGgbnn3PlP+ki+Rnd220pvCgyFeORdaR2CQLvjgXn3irH+qiHwYmvo1G
-	 h3atYmCOOx/jbzQ5xb2RU2VcGk3i5L8Qb6fpJ8R1vE56uHl7N+MFD9F3IpPbivcI46
-	 kBc8oEYI1JkPFqEpm217g6ftlvGh+BtRSNwkXHow=
+	s=default; t=1573798968;
+	bh=CgAhgakrXfD1X5gqGHUYuXq/VOonmV1rMSWMQeGDTSw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=fqYr5V11w3bE0YqBzFkQStYf70bGYv0986C+IkFdzS6uoKwNJ9FS97MM3KzW587HC
+	 1xmgk46eEvnxhwYnolcZnY1+UXUOtfXH0w+rqkTDn5YRWlxIP4wkp4453cQyBDMdPw
+	 3oh+TdAqPtizyDpZN7AvDNjc3qc+67rJ7uxIJyxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbfKOGWo (ORCPT
+        id S1727837AbfKOGWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:22:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52138 "EHLO mail.kernel.org"
+        Fri, 15 Nov 2019 01:22:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727790AbfKOGWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:22:41 -0500
+        id S1727804AbfKOGWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:22:43 -0500
 Received: from localhost (unknown [104.132.150.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDCF72077B;
-        Fri, 15 Nov 2019 06:22:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB9A920801;
+        Fri, 15 Nov 2019 06:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573798960;
-        bh=0bG3vvcD286qkpT5MDQxSPaUEb6ya5vK18dcSDDxzHE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FMj2+4jKRBCepYs1hJA5zG0qlktpugMXtmmAaLhORaQVLwoDUE5MSr6CzanLJQAur
-         x6ZGFrSB9mcI+a02MO5x9xAY0qcWzkyPiTUA4MInXVdeybMCj2/DDfdD1BxEUU2KZD
-         V/TWuWFQUhl00uVfwTakpt4OhHlk554tAwOn49hI=
+        s=default; t=1573798962;
+        bh=CgAhgakrXfD1X5gqGHUYuXq/VOonmV1rMSWMQeGDTSw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Z+L0s4dQqNCCKm/CUUG2G+nIghcge0DFORPusAQ553ta5k0QRTSKI5FbNVdOFwWEP
+         jEGmIYD9xAZfK4fkBzsPNYAIbO3/hjQovUOi4r8FJJMY88yvmF1xN2R+dkcTvDTmuM
+         Y9q/8vTlaYdkiweXM6k78RgppQPEPzjJruE2gHYs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.9 09/31] x86/speculation/taa: Add mitigation for TSX Async Abort
-Date:   Fri, 15 Nov 2019 14:20:38 +0800
-Message-Id: <20191115062013.019367544@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.9 00/31] 4.9.202-stable review
+Date:   Fri, 15 Nov 2019 14:20:29 +0800
+Message-Id: <20191115062009.813108457@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191115062009.813108457@linuxfoundation.org>
-References: <20191115062009.813108457@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.202-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.9.202-rc1
+X-KernelTest-Deadline: 2019-11-17T06:20+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+This is the start of the stable review cycle for the 4.9.202 release.
+There are 31 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-commit 1b42f017415b46c317e71d41c34ec088417a1883 upstream.
+Responses should be made by Sun, 17 Nov 2019 06:18:35 +0000.
+Anything received after that time might be too late.
 
-TSX Async Abort (TAA) is a side channel vulnerability to the internal
-buffers in some Intel processors similar to Microachitectural Data
-Sampling (MDS). In this case, certain loads may speculatively pass
-invalid data to dependent operations when an asynchronous abort
-condition is pending in a TSX transaction.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.202-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+and the diffstat can be found below.
 
-This includes loads with no fault or assist condition. Such loads may
-speculatively expose stale data from the uarch data structures as in
-MDS. Scope of exposure is within the same-thread and cross-thread. This
-issue affects all current processors that support TSX, but do not have
-ARCH_CAP_TAA_NO (bit 8) set in MSR_IA32_ARCH_CAPABILITIES.
+thanks,
 
-On CPUs which have their IA32_ARCH_CAPABILITIES MSR bit MDS_NO=0,
-CPUID.MD_CLEAR=1 and the MDS mitigation is clearing the CPU buffers
-using VERW or L1D_FLUSH, there is no additional mitigation needed for
-TAA. On affected CPUs with MDS_NO=1 this issue can be mitigated by
-disabling the Transactional Synchronization Extensions (TSX) feature.
+greg k-h
 
-A new MSR IA32_TSX_CTRL in future and current processors after a
-microcode update can be used to control the TSX feature. There are two
-bits in that MSR:
+-------------
+Pseudo-Shortlog of commits:
 
-* TSX_CTRL_RTM_DISABLE disables the TSX sub-feature Restricted
-Transactional Memory (RTM).
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.9.202-rc1
 
-* TSX_CTRL_CPUID_CLEAR clears the RTM enumeration in CPUID. The other
-TSX sub-feature, Hardware Lock Elision (HLE), is unconditionally
-disabled with updated microcode but still enumerated as present by
-CPUID(EAX=7).EBX{bit4}.
+Gomez Iglesias, Antonio <antonio.gomez.iglesias@intel.com>
+    Documentation: Add ITLB_MULTIHIT documentation
 
-The second mitigation approach is similar to MDS which is clearing the
-affected CPU buffers on return to user space and when entering a guest.
-Relevant microcode update is required for the mitigation to work.  More
-details on this approach can be found here:
+Junaid Shahid <junaids@google.com>
+    kvm: x86: mmu: Recovery of shattered NX large pages
 
-  https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/mds.html
+Junaid Shahid <junaids@google.com>
+    kvm: Add helper function for creating VM worker threads
 
-The TSX feature can be controlled by the "tsx" command line parameter.
-If it is force-enabled then "Clear CPU buffers" (MDS mitigation) is
-deployed. The effective mitigation state can be read from sysfs.
+Paolo Bonzini <pbonzini@redhat.com>
+    kvm: mmu: ITLB_MULTIHIT mitigation
 
- [ bp:
-   - massage + comments cleanup
-   - s/TAA_MITIGATION_TSX_DISABLE/TAA_MITIGATION_TSX_DISABLED/g - Josh.
-   - remove partial TAA mitigation in update_mds_branch_idle() - Josh.
-   - s/tsx_async_abort_cmdline/tsx_async_abort_parse_cmdline/g
- ]
+Tyler Hicks <tyhicks@canonical.com>
+    cpu/speculation: Uninline and export CPU mitigations helpers
 
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-[bwh: Backported to 4.9:
- - Add #include "cpu.h" in bugs.c
- - Adjust context, indentation]
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/include/asm/cpufeatures.h   |    1 
- arch/x86/include/asm/msr-index.h     |    4 +
- arch/x86/include/asm/nospec-branch.h |    4 -
- arch/x86/include/asm/processor.h     |    7 ++
- arch/x86/kernel/cpu/bugs.c           |  110 +++++++++++++++++++++++++++++++++++
- arch/x86/kernel/cpu/common.c         |   15 ++++
- 6 files changed, 139 insertions(+), 2 deletions(-)
+Vineela Tummalapalli <vineela.tummalapalli@intel.com>
+    x86/bugs: Add ITLB_MULTIHIT bug infrastructure
 
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -357,5 +357,6 @@
- #define X86_BUG_MDS		X86_BUG(19) /* CPU is affected by Microarchitectural data sampling */
- #define X86_BUG_MSBDS_ONLY	X86_BUG(20) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
- #define X86_BUG_SWAPGS		X86_BUG(21) /* CPU is affected by speculation through SWAPGS */
-+#define X86_BUG_TAA		X86_BUG(22) /* CPU is affected by TSX Async Abort(TAA) */
- 
- #endif /* _ASM_X86_CPUFEATURES_H */
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -78,6 +78,10 @@
- 						  * Sampling (MDS) vulnerabilities.
- 						  */
- #define ARCH_CAP_TSX_CTRL_MSR		BIT(7)	/* MSR for TSX control is available. */
-+#define ARCH_CAP_TAA_NO			BIT(8)	/*
-+						 * Not susceptible to
-+						 * TSX Async Abort (TAA) vulnerabilities.
-+						 */
- 
- #define MSR_IA32_FLUSH_CMD		0x0000010b
- #define L1D_FLUSH			BIT(0)	/*
---- a/arch/x86/include/asm/nospec-branch.h
-+++ b/arch/x86/include/asm/nospec-branch.h
-@@ -314,7 +314,7 @@ DECLARE_STATIC_KEY_FALSE(mds_idle_clear)
- #include <asm/segment.h>
- 
- /**
-- * mds_clear_cpu_buffers - Mitigation for MDS vulnerability
-+ * mds_clear_cpu_buffers - Mitigation for MDS and TAA vulnerability
-  *
-  * This uses the otherwise unused and obsolete VERW instruction in
-  * combination with microcode which triggers a CPU buffer flush when the
-@@ -337,7 +337,7 @@ static inline void mds_clear_cpu_buffers
- }
- 
- /**
-- * mds_user_clear_cpu_buffers - Mitigation for MDS vulnerability
-+ * mds_user_clear_cpu_buffers - Mitigation for MDS and TAA vulnerability
-  *
-  * Clear CPU buffers if the corresponding static key is enabled
-  */
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -880,4 +880,11 @@ enum mds_mitigations {
- 	MDS_MITIGATION_VMWERV,
- };
- 
-+enum taa_mitigations {
-+	TAA_MITIGATION_OFF,
-+	TAA_MITIGATION_UCODE_NEEDED,
-+	TAA_MITIGATION_VERW,
-+	TAA_MITIGATION_TSX_DISABLED,
-+};
-+
- #endif /* _ASM_X86_PROCESSOR_H */
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -31,11 +31,14 @@
- #include <asm/intel-family.h>
- #include <asm/e820.h>
- 
-+#include "cpu.h"
-+
- static void __init spectre_v1_select_mitigation(void);
- static void __init spectre_v2_select_mitigation(void);
- static void __init ssb_select_mitigation(void);
- static void __init l1tf_select_mitigation(void);
- static void __init mds_select_mitigation(void);
-+static void __init taa_select_mitigation(void);
- 
- /* The base value of the SPEC_CTRL MSR that always has to be preserved. */
- u64 x86_spec_ctrl_base;
-@@ -102,6 +105,7 @@ void __init check_bugs(void)
- 	ssb_select_mitigation();
- 	l1tf_select_mitigation();
- 	mds_select_mitigation();
-+	taa_select_mitigation();
- 
- 	arch_smt_update();
- 
-@@ -266,6 +270,100 @@ static int __init mds_cmdline(char *str)
- early_param("mds", mds_cmdline);
- 
- #undef pr_fmt
-+#define pr_fmt(fmt)	"TAA: " fmt
-+
-+/* Default mitigation for TAA-affected CPUs */
-+static enum taa_mitigations taa_mitigation __ro_after_init = TAA_MITIGATION_VERW;
-+static bool taa_nosmt __ro_after_init;
-+
-+static const char * const taa_strings[] = {
-+	[TAA_MITIGATION_OFF]		= "Vulnerable",
-+	[TAA_MITIGATION_UCODE_NEEDED]	= "Vulnerable: Clear CPU buffers attempted, no microcode",
-+	[TAA_MITIGATION_VERW]		= "Mitigation: Clear CPU buffers",
-+	[TAA_MITIGATION_TSX_DISABLED]	= "Mitigation: TSX disabled",
-+};
-+
-+static void __init taa_select_mitigation(void)
-+{
-+	u64 ia32_cap;
-+
-+	if (!boot_cpu_has_bug(X86_BUG_TAA)) {
-+		taa_mitigation = TAA_MITIGATION_OFF;
-+		return;
-+	}
-+
-+	/* TSX previously disabled by tsx=off */
-+	if (!boot_cpu_has(X86_FEATURE_RTM)) {
-+		taa_mitigation = TAA_MITIGATION_TSX_DISABLED;
-+		goto out;
-+	}
-+
-+	if (cpu_mitigations_off()) {
-+		taa_mitigation = TAA_MITIGATION_OFF;
-+		return;
-+	}
-+
-+	/* TAA mitigation is turned off on the cmdline (tsx_async_abort=off) */
-+	if (taa_mitigation == TAA_MITIGATION_OFF)
-+		goto out;
-+
-+	if (boot_cpu_has(X86_FEATURE_MD_CLEAR))
-+		taa_mitigation = TAA_MITIGATION_VERW;
-+	else
-+		taa_mitigation = TAA_MITIGATION_UCODE_NEEDED;
-+
-+	/*
-+	 * VERW doesn't clear the CPU buffers when MD_CLEAR=1 and MDS_NO=1.
-+	 * A microcode update fixes this behavior to clear CPU buffers. It also
-+	 * adds support for MSR_IA32_TSX_CTRL which is enumerated by the
-+	 * ARCH_CAP_TSX_CTRL_MSR bit.
-+	 *
-+	 * On MDS_NO=1 CPUs if ARCH_CAP_TSX_CTRL_MSR is not set, microcode
-+	 * update is required.
-+	 */
-+	ia32_cap = x86_read_arch_cap_msr();
-+	if ( (ia32_cap & ARCH_CAP_MDS_NO) &&
-+	    !(ia32_cap & ARCH_CAP_TSX_CTRL_MSR))
-+		taa_mitigation = TAA_MITIGATION_UCODE_NEEDED;
-+
-+	/*
-+	 * TSX is enabled, select alternate mitigation for TAA which is
-+	 * the same as MDS. Enable MDS static branch to clear CPU buffers.
-+	 *
-+	 * For guests that can't determine whether the correct microcode is
-+	 * present on host, enable the mitigation for UCODE_NEEDED as well.
-+	 */
-+	static_branch_enable(&mds_user_clear);
-+
-+	if (taa_nosmt || cpu_mitigations_auto_nosmt())
-+		cpu_smt_disable(false);
-+
-+out:
-+	pr_info("%s\n", taa_strings[taa_mitigation]);
-+}
-+
-+static int __init tsx_async_abort_parse_cmdline(char *str)
-+{
-+	if (!boot_cpu_has_bug(X86_BUG_TAA))
-+		return 0;
-+
-+	if (!str)
-+		return -EINVAL;
-+
-+	if (!strcmp(str, "off")) {
-+		taa_mitigation = TAA_MITIGATION_OFF;
-+	} else if (!strcmp(str, "full")) {
-+		taa_mitigation = TAA_MITIGATION_VERW;
-+	} else if (!strcmp(str, "full,nosmt")) {
-+		taa_mitigation = TAA_MITIGATION_VERW;
-+		taa_nosmt = true;
-+	}
-+
-+	return 0;
-+}
-+early_param("tsx_async_abort", tsx_async_abort_parse_cmdline);
-+
-+#undef pr_fmt
- #define pr_fmt(fmt)     "Spectre V1 : " fmt
- 
- enum spectre_v1_mitigation {
-@@ -780,6 +878,7 @@ static void update_mds_branch_idle(void)
- }
- 
- #define MDS_MSG_SMT "MDS CPU bug present and SMT on, data leak possible. See https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/mds.html for more details.\n"
-+#define TAA_MSG_SMT "TAA CPU bug present and SMT on, data leak possible. See https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/tsx_async_abort.html for more details.\n"
- 
- void arch_smt_update(void)
- {
-@@ -812,6 +911,17 @@ void arch_smt_update(void)
- 		break;
- 	}
- 
-+	switch (taa_mitigation) {
-+	case TAA_MITIGATION_VERW:
-+	case TAA_MITIGATION_UCODE_NEEDED:
-+		if (sched_smt_active())
-+			pr_warn_once(TAA_MSG_SMT);
-+		break;
-+	case TAA_MITIGATION_TSX_DISABLED:
-+	case TAA_MITIGATION_OFF:
-+		break;
-+	}
-+
- 	mutex_unlock(&spec_ctrl_mutex);
- }
- 
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -998,6 +998,21 @@ static void __init cpu_set_bug_bits(stru
- 	if (!cpu_matches(NO_SWAPGS))
- 		setup_force_cpu_bug(X86_BUG_SWAPGS);
- 
-+	/*
-+	 * When the CPU is not mitigated for TAA (TAA_NO=0) set TAA bug when:
-+	 *	- TSX is supported or
-+	 *	- TSX_CTRL is present
-+	 *
-+	 * TSX_CTRL check is needed for cases when TSX could be disabled before
-+	 * the kernel boot e.g. kexec.
-+	 * TSX_CTRL check alone is not sufficient for cases when the microcode
-+	 * update is not present or running as guest that don't get TSX_CTRL.
-+	 */
-+	if (!(ia32_cap & ARCH_CAP_TAA_NO) &&
-+	    (cpu_has(c, X86_FEATURE_RTM) ||
-+	     (ia32_cap & ARCH_CAP_TSX_CTRL_MSR)))
-+		setup_force_cpu_bug(X86_BUG_TAA);
-+
- 	if (cpu_matches(NO_MELTDOWN))
- 		return;
- 
+Paolo Bonzini <pbonzini@redhat.com>
+    KVM: vmx, svm: always run with EFER.NXE=1 when shadow paging is active
+
+Paolo Bonzini <pbonzini@redhat.com>
+    KVM: x86: add tracepoints around __direct_map and FNAME(fetch)
+
+Ben Hutchings <ben@decadent.org.uk>
+    KVM: x86: Add is_executable_pte()
+
+Paolo Bonzini <pbonzini@redhat.com>
+    KVM: x86: change kvm_mmu_page_get_gfn BUG_ON to WARN_ON
+
+Paolo Bonzini <pbonzini@redhat.com>
+    KVM: x86: remove now unneeded hugepage gfn adjustment
+
+Paolo Bonzini <pbonzini@redhat.com>
+    KVM: x86: make FNAME(fetch) and __direct_map more similar
+
+Junaid Shahid <junaids@google.com>
+    kvm: x86: Do not release the page inside mmu_set_spte()
+
+Junaid Shahid <junaids@google.com>
+    kvm: Convert kvm_lock to a mutex
+
+Paolo Bonzini <pbonzini@redhat.com>
+    KVM: x86: extend usage of RET_MMIO_PF_* constants
+
+Paolo Bonzini <pbonzini@redhat.com>
+    KVM: x86: simplify ept_misconfig
+
+Josh Poimboeuf <jpoimboe@redhat.com>
+    x86/speculation/taa: Fix printing of TAA_MSG_SMT on IBRS_ALL CPUs
+
+Michal Hocko <mhocko@suse.com>
+    x86/tsx: Add config options to set tsx=on|off|auto
+
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+    x86/speculation/taa: Add documentation for TSX Async Abort
+
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+    x86/tsx: Add "auto" option to the tsx= cmdline parameter
+
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+    kvm/x86: Export MDS_NO=0 to guests when TSX is enabled
+
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+    x86/speculation/taa: Add sysfs reporting for TSX Async Abort
+
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+    x86/speculation/taa: Add mitigation for TSX Async Abort
+
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+    x86/cpu: Add a "tsx=" cmdline option with TSX disabled by default
+
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+    x86/cpu: Add a helper function x86_read_arch_cap_msr()
+
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+    x86/msr: Add the IA32_TSX_CTRL MSR
+
+Paolo Bonzini <pbonzini@redhat.com>
+    KVM: x86: use Intel speculation bugs and features as derived in generic x86 code
+
+Jack Pham <jackp@codeaurora.org>
+    usb: gadget: core: unmap request from DMA only if previously mapped
+
+Jonas Gorski <jonas.gorski@gmail.com>
+    MIPS: BCM63XX: fix switch core reset on BCM6368
+
+Kefeng Wang <wangkefeng.wang@huawei.com>
+    Bluetooth: hci_ldisc: Postpone HCI_UART_PROTO_READY bit set in hci_uart_set_proto()
+
+Junaid Shahid <junaids@google.com>
+    kvm: mmu: Don't read PDPTEs when paging is not enabled
+
+
+-------------
+
+Diffstat:
+
+ Documentation/ABI/testing/sysfs-devices-system-cpu |   2 +
+ Documentation/hw-vuln/index.rst                    |   2 +
+ Documentation/hw-vuln/multihit.rst                 | 163 ++++++++
+ Documentation/hw-vuln/tsx_async_abort.rst          | 276 +++++++++++++
+ Documentation/kernel-parameters.txt                |  92 +++++
+ Documentation/virtual/kvm/locking.txt              |   6 +-
+ Documentation/x86/index.rst                        |   1 +
+ Documentation/x86/tsx_async_abort.rst              | 117 ++++++
+ Makefile                                           |   4 +-
+ arch/mips/bcm63xx/reset.c                          |   2 +-
+ arch/s390/kvm/kvm-s390.c                           |   4 +-
+ arch/x86/Kconfig                                   |  45 ++
+ arch/x86/include/asm/cpufeatures.h                 |   2 +
+ arch/x86/include/asm/kvm_host.h                    |   6 +
+ arch/x86/include/asm/msr-index.h                   |  16 +
+ arch/x86/include/asm/nospec-branch.h               |   4 +-
+ arch/x86/include/asm/processor.h                   |   7 +
+ arch/x86/kernel/cpu/Makefile                       |   2 +-
+ arch/x86/kernel/cpu/bugs.c                         | 161 +++++++-
+ arch/x86/kernel/cpu/common.c                       |  93 +++--
+ arch/x86/kernel/cpu/cpu.h                          |  18 +
+ arch/x86/kernel/cpu/intel.c                        |   5 +
+ arch/x86/kernel/cpu/tsx.c                          | 140 +++++++
+ arch/x86/kvm/cpuid.c                               |   8 +
+ arch/x86/kvm/mmu.c                                 | 452 +++++++++++++++++----
+ arch/x86/kvm/mmu.h                                 |  21 +-
+ arch/x86/kvm/mmutrace.h                            |  59 +++
+ arch/x86/kvm/paging_tmpl.h                         |  79 ++--
+ arch/x86/kvm/svm.c                                 |  10 +-
+ arch/x86/kvm/vmx.c                                 |  27 +-
+ arch/x86/kvm/x86.c                                 |  61 ++-
+ drivers/base/cpu.c                                 |  17 +
+ drivers/bluetooth/hci_ldisc.c                      |   3 +-
+ drivers/usb/gadget/udc/core.c                      |   5 +-
+ include/linux/cpu.h                                |  30 +-
+ include/linux/kvm_host.h                           |   8 +-
+ include/linux/usb/gadget.h                         |   2 +
+ kernel/cpu.c                                       |  27 +-
+ virt/kvm/kvm_main.c                                | 132 +++++-
+ 39 files changed, 1855 insertions(+), 254 deletions(-)
 
 
