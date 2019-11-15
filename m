@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60787C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 21:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADA0C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 21:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3999E20729
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 21:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC2B120729
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 21:13:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbfKOVNG (ORCPT
+        id S1727163AbfKOVMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 16:13:06 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44641 "EHLO
+        Fri, 15 Nov 2019 16:12:43 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44598 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727143AbfKOVMo (ORCPT
+        with ESMTP id S1726767AbfKOVMi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 16:12:44 -0500
+        Fri, 15 Nov 2019 16:12:38 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iVitT-0007RX-KY; Fri, 15 Nov 2019 22:12:39 +0100
+        id 1iVitM-0007Py-OZ; Fri, 15 Nov 2019 22:12:32 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3DC2E1C18CE;
-        Fri, 15 Nov 2019 22:12:30 +0100 (CET)
-Date:   Fri, 15 Nov 2019 21:12:30 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E61B61C18D0;
+        Fri, 15 Nov 2019 22:12:29 +0100 (CET)
+Date:   Fri, 15 Nov 2019 21:12:29 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/iopl] x86/ioperm: Simplify first ioperm() invocation logic
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
+Subject: [tip: x86/iopl] x86/tss: Move I/O bitmap data into a seperate struct
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191113210104.295618595@linutronix.de>
-References: <20191113210104.295618595@linutronix.de>
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191113210104.591976506@linutronix.de>
+References: <20191113210104.591976506@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <157385235022.12247.13427059796080402232.tip-bot2@tip-bot2>
+Message-ID: <157385234991.12247.14441822087629749132.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,130 +57,145 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/iopl branch of tip:
 
-Commit-ID:     3817927e6f5686a5c7571ae33f7b1a8483821c5b
-Gitweb:        https://git.kernel.org/tip/3817927e6f5686a5c7571ae33f7b1a8483821c5b
+Commit-ID:     98336a94ec192ef45ba66e2c86dd3d7a3ef520a1
+Gitweb:        https://git.kernel.org/tip/98336a94ec192ef45ba66e2c86dd3d7a3ef520a1
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 13 Nov 2019 21:42:46 +01:00
+AuthorDate:    Wed, 13 Nov 2019 21:42:49 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 14 Nov 2019 20:15:01 +01:00
+CommitterDate: Thu, 14 Nov 2019 20:15:03 +01:00
 
-x86/ioperm: Simplify first ioperm() invocation logic
+x86/tss: Move I/O bitmap data into a seperate struct
 
-On the first allocation of a task the I/O bitmap needs to be
-allocated. After the allocation it is installed as an empty bitmap and
-immediately afterwards updated.
+Move the non hardware portion of I/O bitmap data into a seperate struct for
+readability sake.
 
-Avoid that and just do the initial updates (store bitmap pointer, set TIF
-flag and make TSS limit valid) in the update path unconditionally. If the
-bitmap was already active this is redundant but harmless.
-
-Preparatory change for later optimizations in the context switch code.
-
+Originally-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20191113210104.295618595@linutronix.de
+Link: https://lkml.kernel.org/r/20191113210104.591976506@linutronix.de
 
 ---
- arch/x86/kernel/ioport.c | 55 ++++++++++++++++++---------------------
- 1 file changed, 26 insertions(+), 29 deletions(-)
+ arch/x86/include/asm/processor.h | 35 ++++++++++++++++++-------------
+ arch/x86/kernel/cpu/common.c     |  4 ++--
+ arch/x86/kernel/ioport.c         |  4 ++--
+ arch/x86/kernel/process.c        |  6 ++---
+ 4 files changed, 28 insertions(+), 21 deletions(-)
 
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 6d0059c..cd7cd7d 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -328,11 +328,11 @@ struct x86_hw_tss {
+  * IO-bitmap sizes:
+  */
+ #define IO_BITMAP_BITS			65536
+-#define IO_BITMAP_BYTES			(IO_BITMAP_BITS/8)
+-#define IO_BITMAP_LONGS			(IO_BITMAP_BYTES/sizeof(long))
++#define IO_BITMAP_BYTES			(IO_BITMAP_BITS / BITS_PER_BYTE)
++#define IO_BITMAP_LONGS			(IO_BITMAP_BYTES / sizeof(long))
+ 
+-#define IO_BITMAP_OFFSET_VALID				\
+-	(offsetof(struct tss_struct, io_bitmap) -	\
++#define IO_BITMAP_OFFSET_VALID					\
++	(offsetof(struct tss_struct, io_bitmap.bitmap) -	\
+ 	 offsetof(struct tss_struct, x86_tss))
+ 
+ /*
+@@ -356,14 +356,10 @@ struct entry_stack_page {
+ 	struct entry_stack stack;
+ } __aligned(PAGE_SIZE);
+ 
+-struct tss_struct {
+-	/*
+-	 * The fixed hardware portion.  This must not cross a page boundary
+-	 * at risk of violating the SDM's advice and potentially triggering
+-	 * errata.
+-	 */
+-	struct x86_hw_tss	x86_tss;
+-
++/*
++ * All IO bitmap related data stored in the TSS:
++ */
++struct x86_io_bitmap {
+ 	/*
+ 	 * Store the dirty size of the last io bitmap offender. The next
+ 	 * one will have to do the cleanup as the switch out to a non io
+@@ -371,7 +367,7 @@ struct tss_struct {
+ 	 * outside of the TSS limit. So for sane tasks there is no need to
+ 	 * actually touch the io_bitmap at all.
+ 	 */
+-	unsigned int		io_bitmap_prev_max;
++	unsigned int		prev_max;
+ 
+ 	/*
+ 	 * The extra 1 is there because the CPU will access an
+@@ -379,7 +375,18 @@ struct tss_struct {
+ 	 * bitmap. The extra byte must be all 1 bits, and must
+ 	 * be within the limit.
+ 	 */
+-	unsigned long		io_bitmap[IO_BITMAP_LONGS + 1];
++	unsigned long		bitmap[IO_BITMAP_LONGS + 1];
++};
++
++struct tss_struct {
++	/*
++	 * The fixed hardware portion.  This must not cross a page boundary
++	 * at risk of violating the SDM's advice and potentially triggering
++	 * errata.
++	 */
++	struct x86_hw_tss	x86_tss;
++
++	struct x86_io_bitmap	io_bitmap;
+ } __aligned(PAGE_SIZE);
+ 
+ DECLARE_PER_CPU_PAGE_ALIGNED(struct tss_struct, cpu_tss_rw);
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 8c1000a..3aee167 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1861,8 +1861,8 @@ void cpu_init(void)
+ 	/* Initialize the TSS. */
+ 	tss_setup_ist(tss);
+ 	tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_INVALID;
+-	tss->io_bitmap_prev_max = 0;
+-	memset(tss->io_bitmap, 0xff, sizeof(tss->io_bitmap));
++	tss->io_bitmap.prev_max = 0;
++	memset(tss->io_bitmap.bitmap, 0xff, sizeof(tss->io_bitmap.bitmap));
+ 	set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
+ 
+ 	load_TR_desc();
 diff --git a/arch/x86/kernel/ioport.c b/arch/x86/kernel/ioport.c
-index 76fc2ef..ca6aa1e 100644
+index eed218a..80d99bb 100644
 --- a/arch/x86/kernel/ioport.c
 +++ b/arch/x86/kernel/ioport.c
-@@ -18,9 +18,10 @@
-  */
- long ksys_ioperm(unsigned long from, unsigned long num, int turn_on)
- {
-+	unsigned int i, max_long, bytes, bytes_updated;
- 	struct thread_struct *t = &current->thread;
- 	struct tss_struct *tss;
--	unsigned int i, max_long, bytes, bytes_updated;
-+	unsigned long *bitmap;
+@@ -81,9 +81,9 @@ long ksys_ioperm(unsigned long from, unsigned long num, int turn_on)
  
- 	if ((from + num <= from) || (from + num > IO_BITMAP_BITS))
- 		return -EINVAL;
-@@ -33,59 +34,55 @@ long ksys_ioperm(unsigned long from, unsigned long num, int turn_on)
- 	 * IO bitmap up. ioperm() is much less timing critical than clone(),
- 	 * this is why we delay this operation until now:
- 	 */
--	if (!t->io_bitmap_ptr) {
--		unsigned long *bitmap = kmalloc(IO_BITMAP_BYTES, GFP_KERNEL);
--
-+	bitmap = t->io_bitmap_ptr;
-+	if (!bitmap) {
-+		bitmap = kmalloc(IO_BITMAP_BYTES, GFP_KERNEL);
- 		if (!bitmap)
- 			return -ENOMEM;
+ 	/* Update the TSS */
+ 	tss = this_cpu_ptr(&cpu_tss_rw);
+-	memcpy(tss->io_bitmap, t->io_bitmap_ptr, bytes_updated);
++	memcpy(tss->io_bitmap.bitmap, t->io_bitmap_ptr, bytes_updated);
+ 	/* Store the new end of the zero bits */
+-	tss->io_bitmap_prev_max = bytes;
++	tss->io_bitmap.prev_max = bytes;
+ 	/* Make the bitmap base in the TSS valid */
+ 	tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_VALID;
+ 	/* Make sure the TSS limit covers the I/O bitmap. */
+diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+index 023e7f8..3e2f1aa 100644
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -368,11 +368,11 @@ static inline void switch_to_bitmap(struct thread_struct *next,
+ 		 * bits permitted, then the copy needs to cover those as
+ 		 * well so they get turned off.
+ 		 */
+-		memcpy(tss->io_bitmap, next->io_bitmap_ptr,
+-		       max(tss->io_bitmap_prev_max, next->io_bitmap_max));
++		memcpy(tss->io_bitmap.bitmap, next->io_bitmap_ptr,
++		       max(tss->io_bitmap.prev_max, next->io_bitmap_max));
  
- 		memset(bitmap, 0xff, IO_BITMAP_BYTES);
--		t->io_bitmap_ptr = bitmap;
--		set_thread_flag(TIF_IO_BITMAP);
--
--		/*
--		 * Now that we have an IO bitmap, we need our TSS limit to be
--		 * correct.  It's fine if we are preempted after doing this:
--		 * with TIF_IO_BITMAP set, context switches will keep our TSS
--		 * limit correct.
--		 */
--		preempt_disable();
--		refresh_tss_limit();
--		preempt_enable();
- 	}
+ 		/* Store the new max and set io_bitmap_base valid */
+-		tss->io_bitmap_prev_max = next->io_bitmap_max;
++		tss->io_bitmap.prev_max = next->io_bitmap_max;
+ 		tss->x86_tss.io_bitmap_base = IO_BITMAP_OFFSET_VALID;
  
- 	/*
--	 * do it in the per-thread copy and in the TSS ...
--	 *
--	 * Disable preemption via get_cpu() - we must not switch away
--	 * because the ->io_bitmap_max value must match the bitmap
--	 * contents:
-+	 * Update the bitmap and the TSS copy with preemption disabled to
-+	 * prevent a race against context switch.
- 	 */
--	tss = &per_cpu(cpu_tss_rw, get_cpu());
--
-+	preempt_disable();
- 	if (turn_on)
--		bitmap_clear(t->io_bitmap_ptr, from, num);
-+		bitmap_clear(bitmap, from, num);
- 	else
--		bitmap_set(t->io_bitmap_ptr, from, num);
-+		bitmap_set(bitmap, from, num);
- 
- 	/*
- 	 * Search for a (possibly new) maximum. This is simple and stupid,
- 	 * to keep it obviously correct:
- 	 */
- 	max_long = 0;
--	for (i = 0; i < IO_BITMAP_LONGS; i++)
--		if (t->io_bitmap_ptr[i] != ~0UL)
-+	for (i = 0; i < IO_BITMAP_LONGS; i++) {
-+		if (bitmap[i] != ~0UL)
- 			max_long = i;
-+	}
- 
- 	bytes = (max_long + 1) * sizeof(unsigned long);
- 	bytes_updated = max(bytes, t->io_bitmap_max);
- 
-+	/* Update the thread data */
- 	t->io_bitmap_max = bytes;
-+	/*
-+	 * Store the bitmap pointer (might be the same if the task already
-+	 * head one). Set the TIF flag, just in case this is the first
-+	 * invocation.
-+	 */
-+	t->io_bitmap_ptr = bitmap;
-+	set_thread_flag(TIF_IO_BITMAP);
- 
--	/* Update the TSS: */
-+	/* Update the TSS */
-+	tss = this_cpu_ptr(&cpu_tss_rw);
- 	memcpy(tss->io_bitmap, t->io_bitmap_ptr, bytes_updated);
-+	/* Make sure the TSS limit covers the I/O bitmap. */
-+	refresh_tss_limit();
- 
--	put_cpu();
-+	preempt_enable();
- 
- 	return 0;
- }
+ 		/*
