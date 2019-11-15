@@ -2,231 +2,424 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D81C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0927C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E692053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 813962053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 06:23:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573798995;
+	bh=+53pkdTiCtyd61JemDLRgWS5rw+0DoDosOZxlDJ0d00=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WSZe/GV6AwTBnLqCJ36ZSVmzQ0CyYK3jZi6omtdFBBynYDTADApXTmXMQj7yDH5wG
+	 WNlFPChnLUEDA/QVZ+d/Kr0D2QdMLle6tOYWFAeasueNi6pESjvV9htnBvp/pXCnVK
+	 6kpjRTRrH4EX+wB9V+KKyx2KDqhvl6hIsijwQD7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbfKOGXL (ORCPT
+        id S1727957AbfKOGXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 01:23:11 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6233 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727953AbfKOGXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 01:23:07 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 95A67377791EE37F876E;
-        Fri, 15 Nov 2019 14:23:03 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.12) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Fri, 15 Nov 2019
- 14:22:57 +0800
-From:   "wangxiaogang (F)" <wangxiaogang3@huawei.com>
-To:     <dsahern@kernel.org>, <shrijeet@gmail.com>, <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <hujunwei4@huawei.com>, <xuhanbing@huawei.com>
-Subject: [PATCH] vrf: Fix possible NULL pointer oops when delete nic
-Message-ID: <60e827cb-2bba-2b7e-55dc-651103e9905f@huawei.com>
-Date:   Fri, 15 Nov 2019 14:22:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 15 Nov 2019 01:23:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52570 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727918AbfKOGW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 01:22:59 -0500
+Received: from localhost (unknown [104.132.150.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43BE92075E;
+        Fri, 15 Nov 2019 06:22:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573798977;
+        bh=+53pkdTiCtyd61JemDLRgWS5rw+0DoDosOZxlDJ0d00=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WoXyLLl+yrnv8snA7mVKgH0/2OtReuuh93/zfyWzjdKr6rJ62IJma0/wVxruDfN21
+         Ea8tWDOr6WlsLBK/Ml04jsY1NM8uVqte9HhQS3O4v9+zf11DRXChsz4HpLfjpCsww4
+         Tt+3ZH+Fcivd2dF+1D9tl32MYg/wCZV321C47a7Q=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Junaid Shahid <junaids@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.9 30/31] kvm: x86: mmu: Recovery of shattered NX large pages
+Date:   Fri, 15 Nov 2019 14:20:59 +0800
+Message-Id: <20191115062020.185221469@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191115062009.813108457@linuxfoundation.org>
+References: <20191115062009.813108457@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.222.12]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: XiaoGang Wang <wangxiaogang3@huawei.com>
+From: Junaid Shahid <junaids@google.com>
 
-Recently we get a crash when access illegal address (0xc0),
-which will occasionally appear when deleting a physical NIC with vrf.
+commit 1aa9b9572b10529c2e64e2b8f44025d86e124308 upstream.
 
-[166603.826737]hinic 0000:43:00.4 eth-s3: Failed to cycle device eth-s3;
-route tables might be wrong!
-.....
-[166603.828018]WARNING: CPU: 135 PID: 15382at net/core/dev.c:6875
-__netdev_adjacent_dev_remove.constprop.40+0x1e0/0x1e8
-......
-[166603.828169]pc : __netdev_adjacent_dev_remove.constprop.40+0x1e0/0x1e8
-[166603.828171]lr : __netdev_adjacent_dev_remove.constprop.40+0x1e0/0x1e8
-[166603.828172]sp : ffff000031efb810
-[166603.828173]x29: ffff000031efb810 x28: 0000000000002710
-[166603.828175]x27: 0000000000000001 x26: ffffa021f4095d88
-[166603.828177]x25: ffff000008d30de8 x24: ffff0000092d75d6
-[166603.828179]x23: 0000000000000006 x22: ffffa021e1edc480
-[166603.828181]x21: 0000000000000000 x20: ffffa021e1edc530
-[166603.828183]x19: ffffa021e1edc518 x18: ffffffffffffffff
-[166603.828185]x17: 0000000000000000 x16: 0000000000000000
-[166603.828186]x15: ffff0000091d9708 x14: 776620746567206f
-[166603.828188]x13: 742064656c696146 x12: ffff800040801004
-[166603.828190]x11: ffff80004080100c x10: ffff0000091dbae0
-[166603.828192]x9 : 0000000000000001 x8 : 0000000006a60f9c
-[166603.828194]x7 : ffff0000093b6fc0 x6 : 0000000000000001
-[166603.828196]x5 : 0000000000000001 x4 : ffffa020560383c0
-[166603.828198]x3 : ffffa020560383c0 x2 : 371cb5224b539100
-[166603.828200]x1 : 0000000000000000 x0 : 0000000000000036
-[166603.828202]Call trace:
-[166603.828204] __netdev_adjacent_dev_remove.constprop.40+0x1e0/0x1e8
-[166603.828205] __netdev_adjacent_dev_unlink_neighbour+0x2c/0x48
-[166603.828207] netdev_upper_dev_unlink+0x7c/0xe8
-[166603.828215] vrf_device_event+0x58/0x80 [vrf]
-[166603.828221] notifier_call_chain+0x5c/0xa0
-[166603.828222] raw_notifier_call_chain+0x3c/0x50
-[166603.828224] call_netdevice_notifiers_info+0x3c/0x80
-[166603.828229] rollback_registered_many+0x35c/0x568
-[166603.828233] rollback_registered+0x68/0xb0
-[166603.828234] unregister_netdevice_queue+0xc0/0x110
-[166603.828239] unregister_netdev+0x28/0x38
-[166603.828425] nic_remove+0x58/0xc0 [hinic]
-[166603.828442] detach_uld+0xd8/0x1a8 [hinic]
-[166603.828458] hinic_ulds_deinit+0x54/0x68 [hinic]
-[166603.828473] hinic_remove+0x218/0x240 [hinic]
-[166603.828481] pci_device_remove+0x48/0xd8
-[166603.828490] device_release_driver_internal+0x1b4/0x250
-[166603.828492] device_release_driver+0x28/0x38
-[166603.828499] pci_stop_bus_device+0x84/0xb8
-[166603.828500] pci_stop_bus_device+0x40/0xb8
-[166603.828502] pci_stop_bus_device+0x40/0xb8
-[166603.828503] pci_stop_and_remove_bus_device+0x20/0x38
-[166603.828557] PCIEMGT_KNL_DelPciDev+0xc0/0x198 [pciemgtagent]
-[166603.828564] PCIEMGT_KNL_DelDev+0xac/0x1d8 [pciemgtagent]
-[166603.828573] PCIEMGT_DelKnlDev+0x50/0x180 [pciemgtagent]
-[166603.828579] PCIEMGT_KAGENT_DevEventHandle+0x94/0x168 [pciemgtagent]
-[166603.828585] PCIEMGT_KAGENT_EventHandleThread+0xb8/0x1a0 [pciemgtagent]
-[166603.828594] kthread+0x134/0x138
-[166603.828599] ret_from_fork+0x10/0x18
-[166603.828601]---[ end trace 5052903cb62d99f0 ]---
-[166603.828612]Unable to handle kernel NULL pointer dereference at virtual address 00000000000000c0
-[166603.828613]Mem abort info:
-[166603.828614]  ESR = 0x96000006
-[166603.828616]  Exception class = DABT (current EL), IL = 32 bits
-[166603.828617]  SET = 0, FnV = 0
-[166603.828618]  EA = 0, S1PTW = 0
-[166603.828618]Data abort info:
-[166603.828619]  ISV = 0, ISS = 0x00000006
-[166603.828620]  CM = 0, WnR = 0
-[166603.828622]user pgtable: 4k pages, 48-bit VAs, pgdp = 000000003c6ab870
-[166603.828623][00000000000000c0] pgd=00002022651d1003, pud=000020226bd6a003, pmd=0000000000000000
-[166603.828628]Internal error: Oops: 96000006 [#1] SMP
-[166603.828630]Process PCIE40:c.0 (pid: 15382, stack limit = 0x00000000d24f8167)
-[166603.828632]CPU: 135 PID: 15382 Comm: PCIE40:c.0 Kdump: loaded Tainted: PF       WC OE     4.19.36-vhulk1907.1.0.h453.eulerosv2r8.aarch64 #1
-[166603.828633]Hardware name: Huawei Technologies Co., Ltd. PANGEA/STL6SPCB, BIOS TA BIOS Pangea3P CS - 11.01.60T31 05/26/2019
-[166603.828634]pstate: 40c00009 (nZcv daif +PAN +UAO)
-[166603.828636]pc : __netdev_adjacent_dev_remove.constprop.40+0x28/0x1e8
-[166603.828638]lr : __netdev_adjacent_dev_unlink_neighbour+0x3c/0x48
-[166603.828639]sp : ffff000031efb810
-[166603.828639]x29: ffff000031efb810 x28: 0000000000002710
-[166603.828641]x27: 0000000000000001 x26: ffffa021f4095d88
-[166603.828643]x25: ffff000008d30de8 x24: ffff0000092d75d6
-[166603.828645]x23: 0000000000000006 x22: 0000000000000000
-[166603.828647]x21: ffffa021e1edc480 x20: 00000000000000c0
-[166603.828649]x19: 0000000000000000 x18: ffffffffffffffff
-[166603.828651]x17: 0000000000000000 x16: 0000000000000000
-[166603.828653]x15: ffff0000091d9708 x14: 776620746567206f
-[166603.828654]x13: 742064656c696146 x12: ffff800040801004
-[166603.828656]x11: ffff80004080100c x10: ffff0000091dbae0
-[166603.828658]x9 : 0000000000000001 x8 : 0000000006a60f9c
-[166603.828660]x7 : ffff0000093b6fc0 x6 : 0000000000000001
-[166603.828662]x5 : 0000000000000001 x4 : ffffa020560383c0
-[166603.828664]x3 : ffffa020560383c0 x2 : 00000000000000c0
-[166603.828666]x1 : ffffa021e1edc480 x0 : ffff000008879f7c
-[166603.828668]Call trace:
-[166603.828669] __netdev_adjacent_dev_remove.constprop.40+0x28/0x1e8
-[166603.828670] __netdev_adjacent_dev_unlink_neighbour+0x3c/0x48
-[166603.828672] netdev_upper_dev_unlink+0x7c/0xe8
-[166603.828674] vrf_device_event+0x58/0x80 [vrf]
-[166603.828675] notifier_call_chain+0x5c/0xa0
-[166603.828676] raw_notifier_call_chain+0x3c/0x50
-[166603.828678] call_netdevice_notifiers_info+0x3c/0x80
-[166603.828679] rollback_registered_many+0x35c/0x568
-[166603.828681] rollback_registered+0x68/0xb0
-[166603.828682] unregister_netdevice_queue+0xc0/0x110
-[166603.828684] unregister_netdev+0x28/0x38
-[166603.828699] nic_remove+0x58/0xc0 [hinic]
-[166603.828714] detach_uld+0xd8/0x1a8 [hinic]
-[166603.828729] hinic_ulds_deinit+0x54/0x68 [hinic]
-[166603.828743] hinic_remove+0x218/0x240 [hinic]
-[166603.828745] pci_device_remove+0x48/0xd8
-[166603.828747] device_release_driver_internal+0x1b4/0x250
-[166603.828748] device_release_driver+0x28/0x38
-[166603.828750] pci_stop_bus_device+0x84/0xb8
-[166603.828751] pci_stop_bus_device+0x40/0xb8
-[166603.828752] pci_stop_bus_device+0x40/0xb8
-[166603.828753] pci_stop_and_remove_bus_device+0x20/0x38
-[166603.828760] PCIEMGT_KNL_DelPciDev+0xc0/0x198 [pciemgtagent]
-[166603.828765] PCIEMGT_KNL_DelDev+0xac/0x1d8 [pciemgtagent]
-[166603.828771] PCIEMGT_DelKnlDev+0x50/0x180 [pciemgtagent]
-[166603.828776] PCIEMGT_KAGENT_DevEventHandle+0x94/0x168 [pciemgtagent]
-[166603.828782] PCIEMGT_KAGENT_EventHandleThread+0xb8/0x1a0 [pciemgtagent]
-[166603.828784] kthread+0x134/0x138
-[166603.828785] ret_from_fork+0x10/0x18
-[166603.828788]Code: aa0203f4 aa1e03e0 d503201f d503201f (f9400280)
-[166603.828789]kernel fault(0x1) notification starting on CPU 135
+The page table pages corresponding to broken down large pages are zapped in
+FIFO order, so that the large page can potentially be recovered, if it is
+not longer being used for execution.  This removes the performance penalty
+for walking deeper EPT page tables.
 
-set vrf nomaster function vrf_del_slave() and del nic function
-vrf_device_event() concurrent execution will occasionally oops.
+By default, one large page will last about one hour once the guest
+reaches a steady state.
 
-thread1                     thread2
-
-do_vrf_del_slave
-netdev_upper_dev_unlink()   vrf_device_event
- 	
-                            vrf_device_event
-                            netif_is_l3_slave(dev)
-                            //IFF_L3MDEV_SLAVE is not cleaned
-                            //so function return 1
-                            netdev_master_upper_dev_get()
-                            //return vrf_dev is NULL
-                            ....	
-                            __netdev_adjacent_dev_remove()
-                            //adj pointer is NULL cause WARN_ON
-                            __netdev_adjacent_dev_remove()
-                            //down_list is NULL cause OOPS
-
-port_dev->priv_flags &= ~IFF_L3MDEV_SLAVE;
-
-why oops did not happen in __netdev_adjacent_dev_unlink_lists()'s
-parameter “&upper_dev->adj_list.lower”.
-we Disassemble __netdev_adjacent_dev_unlink_neighbour:
-.....
- <__netdev_adjacent_dev_unlink_neighbour+44>: add     x2, x19, #0xc0
- <__netdev_adjacent_dev_unlink_neighbour+48>: mov     x1, x20
- <__netdev_adjacent_dev_unlink_neighbour+52>: mov     x0, x19
-....
-upper_dev->adj_list.lower is compiled to be optimized to
-upper_dev pointer offset 0xc0.
-
-this patch adds vrf_dev NULL pointer judgment to resolve the above problem.
-
-Signed-off-by: XiaoGang Wang <wangxiaogang3@huawei.com>
-Reviewed-by: JunWei Hu <hujunwei4@huawei.com>
+Signed-off-by: Junaid Shahid <junaids@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+[bwh: Backported to 4.9:
+ - Update another error path in kvm_create_vm() to use out_err_no_mmu_notifier
+ - Adjust filename, context]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/vrf.c | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/kernel-parameters.txt |    6 +
+ arch/x86/include/asm/kvm_host.h     |    4 +
+ arch/x86/kvm/mmu.c                  |  129 ++++++++++++++++++++++++++++++++++++
+ arch/x86/kvm/mmu.h                  |    4 +
+ arch/x86/kvm/x86.c                  |   11 +++
+ virt/kvm/kvm_main.c                 |   30 ++++++++
+ 6 files changed, 183 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
-index b8228f5..86c4b8c 100644
---- a/drivers/net/vrf.c
-+++ b/drivers/net/vrf.c
-@@ -1427,6 +1427,9 @@ static int vrf_device_event(struct notifier_block *unused,
- 			goto out;
-
- 		vrf_dev = netdev_master_upper_dev_get(dev);
-+		if (!vrf_dev)
-+			goto out;
+--- a/Documentation/kernel-parameters.txt
++++ b/Documentation/kernel-parameters.txt
+@@ -1988,6 +1988,12 @@ bytes respectively. Such letter suffixes
+ 			If the software workaround is enabled for the host,
+ 			guests do need not to enable it for nested guests.
+ 
++	kvm.nx_huge_pages_recovery_ratio=
++			[KVM] Controls how many 4KiB pages are periodically zapped
++			back to huge pages.  0 disables the recovery, otherwise if
++			the value is N KVM will zap 1/Nth of the 4KiB pages every
++			minute.  The default is 60.
 +
- 		vrf_del_slave(vrf_dev, dev);
+ 	kvm-amd.nested=	[KVM,AMD] Allow nested virtualization in KVM/SVM.
+ 			Default is 1 (enabled)
+ 
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -261,6 +261,7 @@ struct kvm_rmap_head {
+ struct kvm_mmu_page {
+ 	struct list_head link;
+ 	struct hlist_node hash_link;
++	struct list_head lpage_disallowed_link;
+ 
+ 	/*
+ 	 * The following two entries are used to key the shadow page in the
+@@ -725,6 +726,7 @@ struct kvm_arch {
+ 	 */
+ 	struct list_head active_mmu_pages;
+ 	struct list_head zapped_obsolete_pages;
++	struct list_head lpage_disallowed_mmu_pages;
+ 	struct kvm_page_track_notifier_node mmu_sp_tracker;
+ 	struct kvm_page_track_notifier_head track_notifier_head;
+ 
+@@ -799,6 +801,8 @@ struct kvm_arch {
+ 
+ 	bool x2apic_format;
+ 	bool x2apic_broadcast_quirk_disabled;
++
++	struct task_struct *nx_lpage_recovery_thread;
+ };
+ 
+ struct kvm_vm_stat {
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -37,6 +37,7 @@
+ #include <linux/srcu.h>
+ #include <linux/slab.h>
+ #include <linux/uaccess.h>
++#include <linux/kthread.h>
+ 
+ #include <asm/page.h>
+ #include <asm/cmpxchg.h>
+@@ -47,16 +48,26 @@
+ extern bool itlb_multihit_kvm_mitigation;
+ 
+ static int __read_mostly nx_huge_pages = -1;
++static uint __read_mostly nx_huge_pages_recovery_ratio = 60;
+ 
+ static int set_nx_huge_pages(const char *val, const struct kernel_param *kp);
++static int set_nx_huge_pages_recovery_ratio(const char *val, const struct kernel_param *kp);
+ 
+ static struct kernel_param_ops nx_huge_pages_ops = {
+ 	.set = set_nx_huge_pages,
+ 	.get = param_get_bool,
+ };
+ 
++static struct kernel_param_ops nx_huge_pages_recovery_ratio_ops = {
++	.set = set_nx_huge_pages_recovery_ratio,
++	.get = param_get_uint,
++};
++
+ module_param_cb(nx_huge_pages, &nx_huge_pages_ops, &nx_huge_pages, 0644);
+ __MODULE_PARM_TYPE(nx_huge_pages, "bool");
++module_param_cb(nx_huge_pages_recovery_ratio, &nx_huge_pages_recovery_ratio_ops,
++		&nx_huge_pages_recovery_ratio, 0644);
++__MODULE_PARM_TYPE(nx_huge_pages_recovery_ratio, "uint");
+ 
+ /*
+  * When setting this variable to true it enables Two-Dimensional-Paging
+@@ -880,6 +891,8 @@ static void account_huge_nx_page(struct
+ 		return;
+ 
+ 	++kvm->stat.nx_lpage_splits;
++	list_add_tail(&sp->lpage_disallowed_link,
++		      &kvm->arch.lpage_disallowed_mmu_pages);
+ 	sp->lpage_disallowed = true;
+ }
+ 
+@@ -904,6 +917,7 @@ static void unaccount_huge_nx_page(struc
+ {
+ 	--kvm->stat.nx_lpage_splits;
+ 	sp->lpage_disallowed = false;
++	list_del(&sp->lpage_disallowed_link);
+ }
+ 
+ static bool __mmu_gfn_lpage_is_disallowed(gfn_t gfn, int level,
+@@ -5172,6 +5186,8 @@ static int set_nx_huge_pages(const char
+ 			idx = srcu_read_lock(&kvm->srcu);
+ 			kvm_mmu_invalidate_zap_all_pages(kvm);
+ 			srcu_read_unlock(&kvm->srcu, idx);
++
++			wake_up_process(kvm->arch.nx_lpage_recovery_thread);
+ 		}
+ 		mutex_unlock(&kvm_lock);
  	}
- out:
--- 
-1.7.12.4
+@@ -5247,3 +5263,116 @@ void kvm_mmu_module_exit(void)
+ 	unregister_shrinker(&mmu_shrinker);
+ 	mmu_audit_disable();
+ }
++
++static int set_nx_huge_pages_recovery_ratio(const char *val, const struct kernel_param *kp)
++{
++	unsigned int old_val;
++	int err;
++
++	old_val = nx_huge_pages_recovery_ratio;
++	err = param_set_uint(val, kp);
++	if (err)
++		return err;
++
++	if (READ_ONCE(nx_huge_pages) &&
++	    !old_val && nx_huge_pages_recovery_ratio) {
++		struct kvm *kvm;
++
++		mutex_lock(&kvm_lock);
++
++		list_for_each_entry(kvm, &vm_list, vm_list)
++			wake_up_process(kvm->arch.nx_lpage_recovery_thread);
++
++		mutex_unlock(&kvm_lock);
++	}
++
++	return err;
++}
++
++static void kvm_recover_nx_lpages(struct kvm *kvm)
++{
++	int rcu_idx;
++	struct kvm_mmu_page *sp;
++	unsigned int ratio;
++	LIST_HEAD(invalid_list);
++	ulong to_zap;
++
++	rcu_idx = srcu_read_lock(&kvm->srcu);
++	spin_lock(&kvm->mmu_lock);
++
++	ratio = READ_ONCE(nx_huge_pages_recovery_ratio);
++	to_zap = ratio ? DIV_ROUND_UP(kvm->stat.nx_lpage_splits, ratio) : 0;
++	while (to_zap && !list_empty(&kvm->arch.lpage_disallowed_mmu_pages)) {
++		/*
++		 * We use a separate list instead of just using active_mmu_pages
++		 * because the number of lpage_disallowed pages is expected to
++		 * be relatively small compared to the total.
++		 */
++		sp = list_first_entry(&kvm->arch.lpage_disallowed_mmu_pages,
++				      struct kvm_mmu_page,
++				      lpage_disallowed_link);
++		WARN_ON_ONCE(!sp->lpage_disallowed);
++		kvm_mmu_prepare_zap_page(kvm, sp, &invalid_list);
++		WARN_ON_ONCE(sp->lpage_disallowed);
++
++		if (!--to_zap || need_resched() || spin_needbreak(&kvm->mmu_lock)) {
++			kvm_mmu_commit_zap_page(kvm, &invalid_list);
++			if (to_zap)
++				cond_resched_lock(&kvm->mmu_lock);
++		}
++	}
++
++	spin_unlock(&kvm->mmu_lock);
++	srcu_read_unlock(&kvm->srcu, rcu_idx);
++}
++
++static long get_nx_lpage_recovery_timeout(u64 start_time)
++{
++	return READ_ONCE(nx_huge_pages) && READ_ONCE(nx_huge_pages_recovery_ratio)
++		? start_time + 60 * HZ - get_jiffies_64()
++		: MAX_SCHEDULE_TIMEOUT;
++}
++
++static int kvm_nx_lpage_recovery_worker(struct kvm *kvm, uintptr_t data)
++{
++	u64 start_time;
++	long remaining_time;
++
++	while (true) {
++		start_time = get_jiffies_64();
++		remaining_time = get_nx_lpage_recovery_timeout(start_time);
++
++		set_current_state(TASK_INTERRUPTIBLE);
++		while (!kthread_should_stop() && remaining_time > 0) {
++			schedule_timeout(remaining_time);
++			remaining_time = get_nx_lpage_recovery_timeout(start_time);
++			set_current_state(TASK_INTERRUPTIBLE);
++		}
++
++		set_current_state(TASK_RUNNING);
++
++		if (kthread_should_stop())
++			return 0;
++
++		kvm_recover_nx_lpages(kvm);
++	}
++}
++
++int kvm_mmu_post_init_vm(struct kvm *kvm)
++{
++	int err;
++
++	err = kvm_vm_create_worker_thread(kvm, kvm_nx_lpage_recovery_worker, 0,
++					  "kvm-nx-lpage-recovery",
++					  &kvm->arch.nx_lpage_recovery_thread);
++	if (!err)
++		kthread_unpark(kvm->arch.nx_lpage_recovery_thread);
++
++	return err;
++}
++
++void kvm_mmu_pre_destroy_vm(struct kvm *kvm)
++{
++	if (kvm->arch.nx_lpage_recovery_thread)
++		kthread_stop(kvm->arch.nx_lpage_recovery_thread);
++}
+--- a/arch/x86/kvm/mmu.h
++++ b/arch/x86/kvm/mmu.h
+@@ -185,4 +185,8 @@ void kvm_mmu_gfn_disallow_lpage(struct k
+ void kvm_mmu_gfn_allow_lpage(struct kvm_memory_slot *slot, gfn_t gfn);
+ bool kvm_mmu_slot_gfn_write_protect(struct kvm *kvm,
+ 				    struct kvm_memory_slot *slot, u64 gfn);
++
++int kvm_mmu_post_init_vm(struct kvm *kvm);
++void kvm_mmu_pre_destroy_vm(struct kvm *kvm);
++
+ #endif
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8108,6 +8108,7 @@ int kvm_arch_init_vm(struct kvm *kvm, un
+ 	INIT_HLIST_HEAD(&kvm->arch.mask_notifier_list);
+ 	INIT_LIST_HEAD(&kvm->arch.active_mmu_pages);
+ 	INIT_LIST_HEAD(&kvm->arch.zapped_obsolete_pages);
++	INIT_LIST_HEAD(&kvm->arch.lpage_disallowed_mmu_pages);
+ 	INIT_LIST_HEAD(&kvm->arch.assigned_dev_head);
+ 	atomic_set(&kvm->arch.noncoherent_dma_count, 0);
+ 
+@@ -8136,6 +8137,11 @@ int kvm_arch_init_vm(struct kvm *kvm, un
+ 	return 0;
+ }
+ 
++int kvm_arch_post_init_vm(struct kvm *kvm)
++{
++	return kvm_mmu_post_init_vm(kvm);
++}
++
+ static void kvm_unload_vcpu_mmu(struct kvm_vcpu *vcpu)
+ {
+ 	int r;
+@@ -8242,6 +8248,11 @@ int x86_set_memory_region(struct kvm *kv
+ }
+ EXPORT_SYMBOL_GPL(x86_set_memory_region);
+ 
++void kvm_arch_pre_destroy_vm(struct kvm *kvm)
++{
++	kvm_mmu_pre_destroy_vm(kvm);
++}
++
+ void kvm_arch_destroy_vm(struct kvm *kvm)
+ {
+ 	if (current->mm == kvm->mm) {
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -613,6 +613,23 @@ static int kvm_create_vm_debugfs(struct
+ 	return 0;
+ }
+ 
++/*
++ * Called after the VM is otherwise initialized, but just before adding it to
++ * the vm_list.
++ */
++int __weak kvm_arch_post_init_vm(struct kvm *kvm)
++{
++	return 0;
++}
++
++/*
++ * Called just after removing the VM from the vm_list, but before doing any
++ * other destruction.
++ */
++void __weak kvm_arch_pre_destroy_vm(struct kvm *kvm)
++{
++}
++
+ static struct kvm *kvm_create_vm(unsigned long type)
+ {
+ 	int r, i;
+@@ -660,11 +677,15 @@ static struct kvm *kvm_create_vm(unsigne
+ 		kvm->buses[i] = kzalloc(sizeof(struct kvm_io_bus),
+ 					GFP_KERNEL);
+ 		if (!kvm->buses[i])
+-			goto out_err;
++			goto out_err_no_mmu_notifier;
+ 	}
+ 
+ 	r = kvm_init_mmu_notifier(kvm);
+ 	if (r)
++		goto out_err_no_mmu_notifier;
++
++	r = kvm_arch_post_init_vm(kvm);
++	if (r)
+ 		goto out_err;
+ 
+ 	mutex_lock(&kvm_lock);
+@@ -676,6 +697,11 @@ static struct kvm *kvm_create_vm(unsigne
+ 	return kvm;
+ 
+ out_err:
++#if defined(CONFIG_MMU_NOTIFIER) && defined(KVM_ARCH_WANT_MMU_NOTIFIER)
++	if (kvm->mmu_notifier.ops)
++		mmu_notifier_unregister(&kvm->mmu_notifier, current->mm);
++#endif
++out_err_no_mmu_notifier:
+ 	cleanup_srcu_struct(&kvm->irq_srcu);
+ out_err_no_irq_srcu:
+ 	cleanup_srcu_struct(&kvm->srcu);
+@@ -728,6 +754,8 @@ static void kvm_destroy_vm(struct kvm *k
+ 	mutex_lock(&kvm_lock);
+ 	list_del(&kvm->vm_list);
+ 	mutex_unlock(&kvm_lock);
++	kvm_arch_pre_destroy_vm(kvm);
++
+ 	kvm_free_irq_routing(kvm);
+ 	for (i = 0; i < KVM_NR_BUSES; i++) {
+ 		if (kvm->buses[i])
+
 
