@@ -2,114 +2,168 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D979AC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E153C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1F02073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CAD12073C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 12:02:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nVJwYDJC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbfKOMBE (ORCPT
+        id S1727485AbfKOMCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 07:01:04 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34764 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726983AbfKOMBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 07:01:04 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 17814ACB4;
-        Fri, 15 Nov 2019 12:01:02 +0000 (UTC)
-Subject: Re: Sense of soc bus? (was: [PATCH] base: soc: Export
- soc_device_to_device() helper)
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-realtek-soc@lists.infradead.org,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        boot-architecture@lists.linaro.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        linux-amlogic@lists.infradead.org, linux-omap@vger.kernel.org,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-References: <20191103013645.9856-3-afaerber@suse.de>
- <20191111045609.7026-1-afaerber@suse.de> <20191111052741.GB3176397@kroah.com>
- <586fa37c-6292-aca4-fa7c-73064858afaf@suse.de>
- <20191111064040.GA3502217@kroah.com>
- <a88442df-dc6b-07e5-8dee-9e308bdda450@suse.de>
- <20191112052347.GA1197504@kroah.com>
- <20191112072926.isjxfa4ci6akhx56@pengutronix.de>
- <aff81b8e-f041-73a5-6a95-d308fa07842c@suse.de>
- <c8572f70-5550-8cee-4381-fd7de7ae5af0@baylibre.com>
- <CAMuHMdWOWWQoJh5=07VMRhtrFR_Gc_qNhjTV4tCsvwvMn0kYfA@mail.gmail.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <a0a6d71f-4fb7-51ce-fe33-74f9e588b791@suse.de>
-Date:   Fri, 15 Nov 2019 13:00:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Fri, 15 Nov 2019 07:02:22 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34825 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727283AbfKOMCW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 07:02:22 -0500
+Received: by mail-oi1-f193.google.com with SMTP id n16so8418147oig.2
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 04:02:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RRytg93FU7f6sfBrcqBa/NI8/4Q9Vec4eDf1e8YsiLA=;
+        b=nVJwYDJCtXWgpUbdQGvyEnuFLUcgdoMeKxiPthFRXCdtZdTeFIDBqKZ6+bNhKMXARK
+         FiuRwf09ZIePoP7o/Ki7Hfnl+pJjquU+FvzRQG4URKaKiWDYzrj+CImuhHJEJ2NcFIIn
+         mpboR/iTkoBaC8CDx8OxDvhdd72HtlFQl9ugHgGSp3pFy8Jdcdj3EjJAV3NcXjs4jBGG
+         HcWRqotcj1x+8mz1un8uwKWvI1p5uNiUwHjldbs8fjcRCwN5wBTM7BvtzXYUp0JF//Dd
+         7I+pJyMn6PlWTucSGO3aGtxcpZVvuzFq6Q9pu+lqZ+6Jy9GBjB21YirKDhsibmAdtSdW
+         QtPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RRytg93FU7f6sfBrcqBa/NI8/4Q9Vec4eDf1e8YsiLA=;
+        b=BspDCTGkf03QejxthTt6pBJ+ClINgQMfkmEKfbBewgYY25d0pHK+vymO3WhG/VKOhD
+         hoxwd1ZXGgZ6oNwQVbUAI0odA+euGQ+ubPIv0xO44HxmFmku00ffWMTAOe4wjdTg77Fu
+         LDSLLpSu7NgjRn9IWXeFspMmL77lj0jUwzyvixlk5Ovcqp5i05MAdkuyk1yAjZp5RnWU
+         KUztGZUcRLhFDqK4F6BjzRL3Zfc+Zu3J7JX6MHYlOmyvcL9PjRcsARmukXz97xXm2Zfl
+         jfZLLdOqZpOjHOHX4aMdZqRFIu5Xxnnf0JqmIaxue1mvfBFOYziFw/DsJF6QeoeV84y6
+         gIYQ==
+X-Gm-Message-State: APjAAAXBK/HssVblu2T7afU62RCMOG45l/LsCKoR5qYNgMhXgTPkD8Ye
+        IsvVnkenTU9h4VdcmQDIrSC6+YoaI+7RoZuIoumdwQ==
+X-Google-Smtp-Source: APXvYqx6zqcXYMp7eFJA/krQ5decJuNJdJO30uNxuNlyEY/pcLWFYr8pgT33say7KL4tYPQxYL+H1c4MsqJbhx+1xvc=
+X-Received: by 2002:aca:5413:: with SMTP id i19mr7842386oib.121.1573819340279;
+ Fri, 15 Nov 2019 04:02:20 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdWOWWQoJh5=07VMRhtrFR_Gc_qNhjTV4tCsvwvMn0kYfA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191114180303.66955-1-elver@google.com> <20191114195046.GP2865@paulmck-ThinkPad-P72>
+ <20191114213303.GA237245@google.com> <20191114221559.GS2865@paulmck-ThinkPad-P72>
+In-Reply-To: <20191114221559.GS2865@paulmck-ThinkPad-P72>
+From:   Marco Elver <elver@google.com>
+Date:   Fri, 15 Nov 2019 13:02:08 +0100
+Message-ID: <CANpmjNPxAOUAxXHd9tka5gCjR_rNKmBk+k5UzRsXT0a0CtNorw@mail.gmail.com>
+Subject: Re: [PATCH v4 00/10] Add Kernel Concurrency Sanitizer (KCSAN)
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Alexander Potapenko <glider@google.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Howells <dhowells@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-efi@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+On Thu, 14 Nov 2019 at 23:16, Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Thu, Nov 14, 2019 at 10:33:03PM +0100, Marco Elver wrote:
+> > On Thu, 14 Nov 2019, Paul E. McKenney wrote:
+> >
+> > > On Thu, Nov 14, 2019 at 07:02:53PM +0100, Marco Elver wrote:
+> > > > This is the patch-series for the Kernel Concurrency Sanitizer (KCSAN).
+> > > > KCSAN is a sampling watchpoint-based *data race detector*. More details
+> > > > are included in **Documentation/dev-tools/kcsan.rst**. This patch-series
+> > > > only enables KCSAN for x86, but we expect adding support for other
+> > > > architectures is relatively straightforward (we are aware of
+> > > > experimental ARM64 and POWER support).
+> > > >
+> > > > To gather early feedback, we announced KCSAN back in September, and have
+> > > > integrated the feedback where possible:
+> > > > http://lkml.kernel.org/r/CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com
+> > > >
+> > > > The current list of known upstream fixes for data races found by KCSAN
+> > > > can be found here:
+> > > > https://github.com/google/ktsan/wiki/KCSAN#upstream-fixes-of-data-races-found-by-kcsan
+> > > >
+> > > > We want to point out and acknowledge the work surrounding the LKMM,
+> > > > including several articles that motivate why data races are dangerous
+> > > > [1, 2], justifying a data race detector such as KCSAN.
+> > > >
+> > > > [1] https://lwn.net/Articles/793253/
+> > > > [2] https://lwn.net/Articles/799218/
+> > >
+> > > I queued this and ran a quick rcutorture on it, which completed
+> > > successfully with quite a few reports.
+> >
+> > Great. Many thanks for queuing this in -rcu. And regarding merge window
+> > you mentioned, we're fine with your assumption to targeting the next
+> > (v5.6) merge window.
+> >
+> > I've just had a look at linux-next to check what a future rebase
+> > requires:
+> >
+> > - There is a change in lib/Kconfig.debug and moving KCSAN to the
+> >   "Generic Kernel Debugging Instruments" section seems appropriate.
+> > - bitops-instrumented.h was removed and split into 3 files, and needs
+> >   re-inserting the instrumentation into the right places.
+> >
+> > Otherwise there are no issues. Let me know what you recommend.
+>
+> Sounds good!
+>
+> I will be rebasing onto v5.5-rc1 shortly after it comes out.  My usual
+> approach is to fix any conflicts during that rebasing operation.
+> Does that make sense, or would you prefer to send me a rebased stack at
+> that point?  Either way is fine for me.
 
-Am 15.11.19 um 09:58 schrieb Geert Uytterhoeven:
-> On Fri, Nov 15, 2019 at 9:52 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->> On 12/11/2019 11:47, Andreas Färber wrote:
->>> For example, RTD1295 will support LSADC only from revision B00
->>> on (and it's not the first time I'm seeing such things in the industry).
->>> So if a user complains, it will be helpful to see that information.
->>>
->>> Referencing your Amlogic review, with all due respect for its authors,
->>> the common framework here just lets that information evaporate into the
->>> deeps of sysfs.
->>
->> Hopefully we never had the case where needed to use the soc info in drivers,
->> but now we have one and having such infrastructure already in-place will help.
->>
->> Renesas platforms makes a extensive usage of the soc info infrastructure to
->> figure out plenty of HW parameters at runtime and lower their DT changes.
-> 
-> We do our best to use it solely for detecting quirks in early SoC revisions.
+That's fine with me, thanks!  To avoid too much additional churn on
+your end, I just replied to the bitops patch with a version that will
+apply with the change to bitops-instrumented infrastructure.
 
-Got a pointer? I fail to immediately understand how sysfs would help
-drivers (as opposed to userspace) detect quirks: Parsing strings back
-doesn't sound efficient, and I don't see you exporting any custom APIs
-in drivers/soc/renesas/renesas-soc.c?
+Also considering the merge window, we had a discussion and there are
+some arguments for targeting the v5.5 merge window:
+- we'd unblock ARM and POWER ports;
+- we'd unblock people wanting to use the data_race macro;
+- we'd unblock syzbot just tracking upstream;
+Unless there are strong reasons to not target v5.5, I leave it to you
+if you think it's appropriate.
 
-Regards,
-Andreas
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+Thanks,
+-- Marco
