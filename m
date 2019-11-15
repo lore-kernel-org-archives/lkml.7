@@ -2,32 +2,32 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A57B1C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5642EC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8876B2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B77D20733
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 09:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfKOJZO (ORCPT
+        id S1727264AbfKOJZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 04:25:14 -0500
-Received: from mga03.intel.com ([134.134.136.65]:1110 "EHLO mga03.intel.com"
+        Fri, 15 Nov 2019 04:25:23 -0500
+Received: from mga14.intel.com ([192.55.52.115]:47552 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727002AbfKOJZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 04:25:14 -0500
+        id S1726567AbfKOJZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 04:25:22 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 01:25:13 -0800
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 01:25:21 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,307,1569308400"; 
-   d="scan'208";a="214743830"
+   d="scan'208";a="356065503"
 Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Nov 2019 01:25:11 -0800
+  by orsmga004.jf.intel.com with ESMTP; 15 Nov 2019 01:25:18 -0800
 From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
 To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -35,94 +35,150 @@ Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
         yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
         Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v8 0/2] pinctrl: Add new pinctrl/GPIO driver
-Date:   Fri, 15 Nov 2019 17:25:06 +0800
-Message-Id: <cover.1573797249.git.rahul.tanwar@linux.intel.com>
+Subject: [PATCH v8 2/2] dt-bindings: pinctrl: intel: Add for new SoC
+Date:   Fri, 15 Nov 2019 17:25:08 +0800
+Message-Id: <b59afc497e41404fea06aa48d633cba183ee944d.1573797249.git.rahul.tanwar@linux.intel.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <cover.1573797249.git.rahul.tanwar@linux.intel.com>
+References: <cover.1573797249.git.rahul.tanwar@linux.intel.com>
+In-Reply-To: <cover.1573797249.git.rahul.tanwar@linux.intel.com>
+References: <cover.1573797249.git.rahul.tanwar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Add dt bindings document for pinmux & GPIO controller driver of
+Intel Lightning Mountain SoC.
 
-This series is to add pinctrl & GPIO controller driver for a new SoC.
-Patch 1 adds pinmux & GPIO controller driver.
-Patch 2 adds the corresponding dt bindings YAML document.
-
-Patches are against Linux 5.4-rc1 at below Git tree:
-git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-
-v8:
-- Rename compatible name from intel,lightning-mountain-io to intel,lgm-io
-  in both driver source & dt bindings to be consistent with other bindings
-  for LGM SoC.
-
-v7:
-- Fix code quality/style related review concerns.
-- Correct license id & data types used for some properties in dt bindings.
-- Add possible values for drive-strength & slew rate in dt bindings.
-- Rename compatible name to more self explanatory name in dt bindings.
-- Fix make dt_binding_check reported errors. Ensure make dt_binding_check
-  passes.
-
-v6:
-- Fix code quality/style/readability related review concerns.
-- Remove enum usage from pinmux property in dt bindings.
-
-v5:
-- Fix code style/readability related review concerns.
-- Change data type of groups property to uint32-array in dt bindings.
-
-v4:
-- Correct data types for some pin config properties in dt bindings.
-- Improve pattern regex as per review feedback in dt bindings.
-- Remove eqbr_set_val() & set_drv_cur() reg update routines & instead
-  do reg updates in eqbr_pinconf_set() routine itself.
-- Add locking in few ops where it was missing.
-- Rename eqbr_gpio_desc struct to eqbr_gpio_ctrl and avoid using desc
-  in variable namings so as not to confuse with GPIO descriptors.
-- Address code quality/convention/style related review concerns.
-
-v3:
-- Add locking for GPIO IRQ ops.
-- Fix property naming mistake in dt bindings document.
-- Address other code quality related review concerns.
-- Fix a build error reported by kbuild test robot.
-- Remove deleted structure fields from comments.
-
-v2:
-- Enable GENERIC_PINMUX_FUNCTIONS & GENERIC_PINCTRL_GROUPS and use core
-  provided code for pinmux_ops & pinctrl_ops. Remove related code from
-  the driver.
-- Enable GENERIC_PINCONF & use core provided pinconf code. Remove related
-  code from the driver.
-- Use GPIOLIB_IRQCHIP framework core code instead of implementing separtely
-  in the driver.
-- Enable GPIO_GENERIC and switch to core provided memory mapped GPIO banks
-  design. 
-- Use standard pinctrl DT properties instead of custom made properties.
-- Address review concerns for dt bindings document.
-- Address code quality related review concerns.
-
-v1:
-- Initial version.
-
-
-Rahul Tanwar (2):
-  pinctrl: Add pinmux & GPIO controller driver for a new SoC
-  dt-bindings: pinctrl: intel: Add for new SoC
-
- .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 116 +++
- drivers/pinctrl/Kconfig                            |  18 +
- drivers/pinctrl/Makefile                           |   1 +
- drivers/pinctrl/pinctrl-equilibrium.c              | 944 +++++++++++++++++++++
- drivers/pinctrl/pinctrl-equilibrium.h              | 144 ++++
- 5 files changed, 1223 insertions(+)
+Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+---
+ .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 116 +++++++++++++++++++++
+ 1 file changed, 116 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
- create mode 100644 drivers/pinctrl/pinctrl-equilibrium.c
- create mode 100644 drivers/pinctrl/pinctrl-equilibrium.h
 
+diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+new file mode 100644
+index 000000000000..240d429f773b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+@@ -0,0 +1,116 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
++
++maintainers:
++  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
++
++description: |
++  Pinmux & GPIO controller controls pin multiplexing & configuration including
++  GPIO function selection & GPIO attributes configuration.
++
++  Please refer to [1] for details of the common pinctrl bindings used by the
++  client devices.
++
++  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++
++properties:
++  compatible:
++    const: intel,lgm-io
++
++  reg:
++    maxItems: 1
++
++# Client device subnode's properties
++patternProperties:
++  '-pins$':
++    type: object
++    description:
++      Pinctrl node's client devices use subnodes for desired pin configuration.
++      Client device subnodes use below standard properties.
++
++    properties:
++      function:
++        $ref: /schemas/types.yaml#/definitions/string
++        description:
++          A string containing the name of the function to mux to the group.
++
++      groups:
++        $ref: /schemas/types.yaml#/definitions/string-array
++        description:
++          An array of strings identifying the list of groups.
++
++      pins:
++        $ref: /schemas/types.yaml#/definitions/uint32-array
++        description:
++          List of pins to select with this function.
++
++      pinmux:
++        description: The applicable mux group.
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/uint32-array"
++
++      bias-pull-up:
++        type: boolean
++
++      bias-pull-down:
++        type: boolean
++
++      drive-strength:
++        description: |
++          Selects the drive strength for the specified pins in mA.
++          0: 2 mA
++          1: 4 mA
++          2: 8 mA
++          3: 12 mA
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32
++          - enum: [0, 1, 2, 3]
++
++      slew-rate:
++        type: boolean
++        description: |
++          Sets slew rate for specified pins.
++          0: slow slew
++          1: fast slew
++
++      drive-open-drain:
++        type: boolean
++
++      output-enable:
++        type: boolean
++
++    required:
++      - function
++      - groups
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  # Pinmux controller node
++  - |
++    pinctrl: pinctrl@e2880000 {
++        compatible = "intel,lgm-pinctrl";
++        reg = <0xe2880000 0x100000>;
++
++        uart0-pins {
++             pins = <64>, /* UART_RX0 */
++                    <65>; /* UART_TX0 */
++             function = "CONSOLE_UART0";
++             pinmux = <1>,
++                      <1>;
++             groups = "CONSOLE_UART0";
++          };
++    };
++
++...
 -- 
 2.11.0
 
