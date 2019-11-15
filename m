@@ -2,198 +2,211 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46433C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4E9C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C5432072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D3F20730
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:19:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727343AbfKOLQA (ORCPT
+        id S1727323AbfKOLTc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 06:16:00 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42062 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727022AbfKOLP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 06:15:59 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 61B3EACEC;
-        Fri, 15 Nov 2019 11:15:56 +0000 (UTC)
-Subject: Re: Sense of soc bus? (was: [PATCH] base: soc: Export
- soc_device_to_device() helper)
-To:     Rob Herring <robh@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-realtek-soc@lists.infradead.org,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        LAKML <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Architecture Mailman List <boot-architecture@lists.linaro.org>,
-        U-Boot <u-boot@lists.denx.de>
-References: <20191103013645.9856-3-afaerber@suse.de>
- <20191111045609.7026-1-afaerber@suse.de> <20191111052741.GB3176397@kroah.com>
- <586fa37c-6292-aca4-fa7c-73064858afaf@suse.de>
- <20191111064040.GA3502217@kroah.com>
- <a88442df-dc6b-07e5-8dee-9e308bdda450@suse.de>
- <20191112052347.GA1197504@kroah.com>
- <20191112072926.isjxfa4ci6akhx56@pengutronix.de>
- <aff81b8e-f041-73a5-6a95-d308fa07842c@suse.de>
- <CAL_JsqLr=fw6zxa=69rtgZ4oxzdw=cVDr3km5ya0pRGsNT1xLw@mail.gmail.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <faa9924a-1c61-349c-9c35-da83fd0b3547@suse.de>
-Date:   Fri, 15 Nov 2019 12:15:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Fri, 15 Nov 2019 06:19:32 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:51278 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726521AbfKOLTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 06:19:31 -0500
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iVZdC-0008IT-Uf; Fri, 15 Nov 2019 12:19:14 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Markus Reichl <m.reichl@fivetechno.de>
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        Brian Norris <briannorris@chromium.org>,
+        Tony Xie <tony.xie@rock-chips.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        shawn.lin@rock-chips.com, Jeffy Chen <jeffy.chen@rock-chips.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Vicente Bergas <vicencb@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-rockchip@lists.infradead.org, robh+dt@kernel.org,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Randy Li <ayaka@soulik.info>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>
+Subject: Re: arm64: dts: rockchip: Disable HS400 for mmc on rk3399-roc-pc
+Date:   Fri, 15 Nov 2019 12:19:13 +0100
+Message-ID: <3460135.SDF8zhHPq4@diego>
+In-Reply-To: <69472c06-8b21-c3d8-acad-1a0a292c0fa2@fivetechno.de>
+References: <20190301153348.29870-1-christoph.muellner@theobroma-systems.com> <2766673.iMURPl8gB5@phil> <69472c06-8b21-c3d8-acad-1a0a292c0fa2@fivetechno.de>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLr=fw6zxa=69rtgZ4oxzdw=cVDr3km5ya0pRGsNT1xLw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 14.11.19 um 23:09 schrieb Rob Herring:
-> On Tue, Nov 12, 2019 at 4:47 AM Andreas Färber <afaerber@suse.de> wrote:
->> On the other hand, one might argue that such information should just be
->> parsed by EBBR-conformant bootloaders and be passed to the kernel via
->> standard UEFI interfaces and DMI tables. But I'm not aware of Barebox
->> having implemented any of that yet, and even for U-Boot (e.g., Realtek
->> based consumer devices...) not everyone has the GPL sources or tools to
->> update their bootloader. So, having the kernel we control gather
->> information relevant to kernel developers does make some sense to me.
+Hi Markus,
+
+Am Freitag, 15. November 2019, 11:37:58 CET schrieb Markus Reichl:
+> Am 14.11.19 um 14:10 schrieb Heiko Stuebner:
+> > $subject is missing the [PATCH] prefix
+> will fix.
+
+no need to resend just for this ... just to keep in mind for future patches ;-)
+
+
+> > Am Montag, 11. November 2019, 10:51:04 CET schrieb Markus Reichl:
+> >> Working with rootfs on two 128GB mmcs on rk3399-roc-pc.
+> >> 
+> >> One (mmc name 128G72, one screw hole) works fine in HS400 mode.
+> >> Other (mmc name DJNB4R, firefly on pcb, two screw holes) gets lots of
+> >> mmc1: "running CQE recovery", even hangs with damaged fs,
+> >> when running under heavy load, e.g. compiling kernel.
+> >> Both run fine with HS200.
+> >> 
+> >> Disabling CQ with patch mmc: core: Add MMC Command Queue Support kernel parameter [0] did not help.
+> >> [0] https://gitlab.com/ayufan-repos/rock64/linux-mainline-kernel/commit/54e264154b87dfe32a8359b2726e2d5611adbaf3
+> > 
+> > I'm hoping for some input from other people in Cc but your mail headers
+> > also referenced the drive-impendance series from Christoph [0], which
+> > it seems we need to poke the phy maintainer again.
+> > 
+> > Did you check if changing the impedance helped (like the signal dampening
+> > Philipp described in one of the replies there).
 > 
-> UEFI and DMI are orthogonal, right. You can't expect DMI on a UEFI+DT system.
+> checked with
+> 
+> &emmc_phy {
+> +       drive-impedance-ohm = <33>;
+> 
+> gives no improvement:
 
-Not sure, that's why I CC'ed the EBBR folks for input. If it's not
-mandatory today, the next revision of EBBR could just require it - if
-that's the unified way between SBBR and EBBR. Little point in doing it
-only for EBBR.
-
-On my UEFI+DT based Raspberry Pi 3 Model B I do see it, note the
-non-filled Processor Information delivered by U-Boot:
-
-raspi3:~ # dmidecode
-# dmidecode 3.2
-Getting SMBIOS data from sysfs.
-SMBIOS 3.0 present.
-7 structures occupying 253 bytes.
-Table at 0x3CB3E020.
-
-Handle 0x0000, DMI type 0, 24 bytes
-BIOS Information
-	Vendor: U-Boot
-	Version: 2019.10
-	Release Date: 10/26/2019
-	ROM Size: 64 kB
-	Characteristics:
-		PCI is supported
-		BIOS is upgradeable
-		Selectable boot is supported
-		I2O boot is supported
-		Targeted content distribution is supported
-
-Handle 0x0001, DMI type 1, 27 bytes
-System Information
-	Manufacturer: raspberrypi
-	Product Name: rpi
-	Version: Not Specified
-	Serial Number: 00000000********
-	UUID: 30303030-3030-3030-6437-623461336666
-	Wake-up Type: Reserved
-	SKU Number: Not Specified
-	Family: Not Specified
-
-Handle 0x0002, DMI type 2, 14 bytes
-Base Board Information
-	Manufacturer: raspberrypi
-	Product Name: rpi
-	Version: Not Specified
-	Serial Number: Not Specified
-	Asset Tag: Not Specified
-	Features:
-		Board is a hosting board
-	Location In Chassis: Not Specified
-	Chassis Handle: 0x0000
-	Type: Motherboard
-
-Handle 0x0003, DMI type 3, 21 bytes
-Chassis Information
-	Manufacturer: raspberrypi
-	Type: Desktop
-	Lock: Not Present
-	Version: Not Specified
-	Serial Number: Not Specified
-	Asset Tag: Not Specified
-	Boot-up State: Safe
-	Power Supply State: Safe
-	Thermal State: Safe
-	Security Status: None
-	OEM Information: 0x00000000
-	Height: Unspecified
-	Number Of Power Cords: Unspecified
-	Contained Elements: 0
-
-Handle 0x0004, DMI type 4, 48 bytes
-Processor Information
-	Socket Designation: Not Specified
-	Type: Central Processor
-	Family: Unknown
-	Manufacturer: Unknown
-	ID: 00 00 00 00 00 00 00 00
-	Version: Unknown
-	Voltage: Unknown
-	External Clock: Unknown
-	Max Speed: Unknown
-	Current Speed: Unknown
-	Status: Unpopulated
-	Upgrade: None
-	L1 Cache Handle: Not Provided
-	L2 Cache Handle: Not Provided
-	L3 Cache Handle: Not Provided
-	Serial Number: Not Specified
-	Asset Tag: Not Specified
-	Part Number: Not Specified
-	Characteristics: None
-
-Handle 0x0005, DMI type 32, 11 bytes
-System Boot Information
-	Status: No errors detected
-
-Handle 0x0006, DMI type 127, 4 bytes
-End Of Table
+That is sad ... I guess we really should disable hs400 then ...
+that may give others more incentive to dive deeper ;-)
 
 
-Regards,
-Andreas
+Heiko
 
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+
+> [    1.688590] mmc1: CQHCI version 5.10
+> [    1.714157] mmc1: SDHCI controller on fe330000.sdhci [fe330000.sdhci] using ADMA
+> [    1.797822] mmc1: Command Queue Engine enabled
+> [    1.798259] mmc1: new HS400 Enhanced strobe MMC card at address 0001
+> [    1.800034] mmcblk1: mmc1:0001 DJNB4R 116 GiB 
+> [    1.800643] mmcblk1boot0: mmc1:0001 DJNB4R partition 1 4.00 MiB
+> [    1.801408] mmcblk1boot1: mmc1:0001 DJNB4R partition 2 4.00 MiB
+> [    1.802886] mmcblk1rpmb: mmc1:0001 DJNB4R partition 3 4.00 MiB, chardev (246:0)
+> ...
+> [  100.118020] mmc1: running CQE recovery
+> [  100.120890] ------------[ cut here ]------------
+> [  100.121310] mmc1: cqhci: spurious TCN for tag 2
+> [  100.121802] WARNING: CPU: 0 PID: 232 at drivers/mmc/host/cqhci.c:729 cqhci_irq+0x30c/0x480
+> [  100.122530] Modules linked in: rfkill snd_soc_hdmi_codec dw_hdmi_i2s_audio dw_hdmi_cec rockchipdrm crct10dif_ce analogix_dp dw_mipi_dsi snd_soc_simple_card dw_hdmi cec snd_soc_rockchip_i2s snd_soc_simple_card_utils panfrost snd_soc_rockchip_pcm drm_kms_helper snd_soc_core gpu_sched snd_pcm_dmaengine syscopyarea sysfillrect sysimgblt snd_pcm fb_sys_fops snd_timer snd drm soundcore fusb302 tcpm typec rockchip_saradc drm_panel_orientation_quirks ipv6
+> [  100.126097] CPU: 0 PID: 232 Comm: kworker/0:2H Not tainted 5.4.0-rc7-next-20191112-00007-g2ad177c77749 #44
+> [  100.126946] Hardware name: Firefly ROC-RK3399-PC Board (DT)
+> [  100.127454] Workqueue: kblockd blk_mq_run_work_fn
+> [  100.127885] pstate: 20000085 (nzCv daIf -PAN -UAO)
+> [  100.128318] pc : cqhci_irq+0x30c/0x480
+> [  100.128660] lr : cqhci_irq+0x30c/0x480
+> [  100.128997] sp : ffff800010003d10
+> [  100.129298] x29: ffff800010003d10 x28: 0000000000000000 
+> [  100.129777] x27: 0000000000000001 x26: ffff8000108e0fe8 
+> [  100.130257] x25: ffff0000f5ae5c98 x24: ffff800010b7e1a8 
+> [  100.130737] x23: ffff800010b198c8 x22: ffff0000f5a80000 
+> [  100.131216] x21: 0000000000000002 x20: 0000000000000002 
+> [  100.131694] x19: ffff0000f5ae5c80 x18: 0000000000000010 
+> [  100.132173] x17: 0000000000000000 x16: 0000000000000000 
+> [  100.132653] x15: ffffffffffffffff x14: ffff800010b198c8 
+> [  100.133132] x13: ffff800090003a77 x12: ffff800010003a7f 
+> [  100.133612] x11: ffff800010b30000 x10: ffff800010003a00 
+> [  100.134092] x9 : 00000000ffffffd0 x8 : ffff80001045a060 
+> [  100.134571] x7 : 000000000000025f x6 : ffff800010b979e2 
+> [  100.135050] x5 : 0000000000000001 x4 : 0000000000000000 
+> [  100.135529] x3 : 0000000000000000 x2 : 0000000000000000 
+> [  100.136007] x1 : e005989da46f2500 x0 : 0000000000000000 
+> [  100.136486] Call trace:
+> [  100.136719]  cqhci_irq+0x30c/0x480
+> [  100.137033]  sdhci_arasan_cqhci_irq+0x58/0x80
+> [  100.137430]  sdhci_irq+0xb8/0xbb8
+> [  100.137742]  __handle_irq_event_percpu+0x6c/0x170
+> [  100.138169]  handle_irq_event_percpu+0x34/0x88
+> [  100.138575]  handle_irq_event+0x44/0xc8
+> [  100.138927]  handle_fasteoi_irq+0xb4/0x160
+> [  100.139302]  generic_handle_irq+0x24/0x38
+> [  100.139670]  __handle_domain_irq+0x60/0xb8
+> [  100.140045]  gic_handle_irq+0xc0/0x158
+> [  100.140389]  el1_irq+0xb8/0x180
+> [  100.140684]  _raw_spin_unlock_irqrestore+0x20/0x48
+> [  100.141119]  sdhci_cqe_enable+0xec/0x108
+> [  100.141478]  sdhci_arasan_cqe_enable+0x4c/0x58
+> [  100.141880]  cqhci_request+0x2d0/0x500
+> [  100.142226]  mmc_cqe_start_req+0x50/0x60
+> [  100.142585]  mmc_blk_mq_issue_rq+0x430/0x794
+> [  100.142974]  mmc_mq_queue_rq+0x104/0x270
+> [  100.143332]  blk_mq_dispatch_rq_list+0xa8/0x580
+> [  100.143746]  blk_mq_sched_dispatch_requests+0xf4/0x1d8
+> [  100.144210]  __blk_mq_run_hw_queue+0xac/0x120
+> [  100.144605]  blk_mq_run_work_fn+0x1c/0x28
+> [  100.144974]  process_one_work+0x1e0/0x358
+> [  100.145340]  worker_thread+0x40/0x488
+> [  100.145679]  kthread+0x118/0x120
+> [  100.145977]  ret_from_fork+0x10/0x18
+> [  100.146302] ---[ end trace 6277099ad751ed64 ]---
+> [  100.213815] mmc1: running CQE recovery
+> [  100.413933] mmc1: running CQE recovery
+> 
+> > 
+> > [0] https://patchwork.kernel.org/patch/10835567/
+> > most current v2 it seems is https://patchwork.kernel.org/patch/10842421/
+> > 
+> >> Therefore I propose to disable HS400 mode on roc-pc for now.
+> > 
+> > Hoping for more input :-)
+> 
+> Hoping, too.
+> 
+> 
+> Gru�,
+> > 
+> > 
+> > Heiko
+> > 
+> > 
+> >> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+> >> ---
+> >>  arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi | 2 --
+> >>  1 file changed, 2 deletions(-)
+> >> 
+> >> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> >> index 29a50a083c42..33df95e384b4 100644
+> >> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> >> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> >> @@ -660,8 +660,6 @@
+> >>  
+> >>  &sdhci {
+> >>  	bus-width = <8>;
+> >> -	mmc-hs400-1_8v;
+> >> -	mmc-hs400-enhanced-strobe;
+> >>  	non-removable;
+> >>  	status = "okay";
+> >>  };
+> >> 
+> > 
+> 
+> 
+
+
+
+
