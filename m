@@ -7,41 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0260C43141
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 470A6C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB510207DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15AB52073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfKOSTi (ORCPT
+        id S1727224AbfKOSTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 13:19:38 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44347 "EHLO
+        Fri, 15 Nov 2019 13:19:43 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44335 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727146AbfKOSTe (ORCPT
+        with ESMTP id S1727109AbfKOSTd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 13:19:34 -0500
+        Fri, 15 Nov 2019 13:19:33 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iVgBq-0005BE-3F; Fri, 15 Nov 2019 19:19:26 +0100
+        id 1iVgBn-0005C5-Gu; Fri, 15 Nov 2019 19:19:23 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A22F21C18CF;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E38571C18D0;
         Fri, 15 Nov 2019 19:19:20 +0100 (CET)
 Date:   Fri, 15 Nov 2019 18:19:20 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+From:   "tip-bot2 for Yang Tao" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] futex: Replace PF_EXITPIDONE with a state
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
+Subject: [tip: locking/core] futex: Prevent robust futex exit race
+Cc:     Yang Tao <yang.tao172@zte.com.cn>, Yi Wang <wang.yi59@zte.com.cn>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191106224556.149449274@linutronix.de>
-References: <20191106224556.149449274@linutronix.de>
+        stable@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <1573010582-35297-1-git-send-email-wang.yi59@zte.com.cn>
+References: <1573010582-35297-1-git-send-email-wang.yi59@zte.com.cn>
 MIME-Version: 1.0
-Message-ID: <157384196061.12247.13198842063216837911.tip-bot2@tip-bot2>
+Message-ID: <157384196089.12247.9598930605067890286.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,203 +59,265 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     98b9809461405be8fadf7e1fa184d19413768b6a
-Gitweb:        https://git.kernel.org/tip/98b9809461405be8fadf7e1fa184d19413768b6a
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 06 Nov 2019 22:55:37 +01:00
+Commit-ID:     ca16d5bee59807bf04deaab0a8eccecd5061528c
+Gitweb:        https://git.kernel.org/tip/ca16d5bee59807bf04deaab0a8eccecd5061528c
+Author:        Yang Tao <yang.tao172@zte.com.cn>
+AuthorDate:    Wed, 06 Nov 2019 22:55:35 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 15 Nov 2019 19:10:50 +01:00
+CommitterDate: Fri, 15 Nov 2019 19:10:49 +01:00
 
-futex: Replace PF_EXITPIDONE with a state
+futex: Prevent robust futex exit race
 
-The futex exit handling relies on PF_ flags. That's suboptimal as it
-requires a smp_mb() and an ugly lock/unlock of the exiting tasks pi_lock in
-the middle of do_exit() to enforce the observability of PF_EXITING in the
-futex code.
+Robust futexes utilize the robust_list mechanism to allow the kernel to
+release futexes which are held when a task exits. The exit can be voluntary
+or caused by a signal or fault. This prevents that waiters block forever.
 
-Add a futex_state member to task_struct and convert the PF_EXITPIDONE logic
-over to the new state. The PF_EXITING dependency will be cleaned up in a
-later step.
+The futex operations in user space store a pointer to the futex they are
+either locking or unlocking in the op_pending member of the per task robust
+list.
 
-This prepares for handling various futex exit issues later.
+After a lock operation has succeeded the futex is queued in the robust list
+linked list and the op_pending pointer is cleared.
 
+After an unlock operation has succeeded the futex is removed from the
+robust list linked list and the op_pending pointer is cleared.
+
+The robust list exit code checks for the pending operation and any futex
+which is queued in the linked list. It carefully checks whether the futex
+value is the TID of the exiting task. If so, it sets the OWNER_DIED bit and
+tries to wake up a potential waiter.
+
+This is race free for the lock operation but unlock has two race scenarios
+where waiters might not be woken up. These issues can be observed with
+regular robust pthread mutexes. PI aware pthread mutexes are not affected.
+
+(1) Unlocking task is killed after unlocking the futex value in user space
+    before being able to wake a waiter.
+
+        pthread_mutex_unlock()
+                |
+                V
+        atomic_exchange_rel (&mutex->__data.__lock, 0)
+                        <------------------------killed
+            lll_futex_wake ()                   |
+                                                |
+                                                |(__lock = 0)
+                                                |(enter kernel)
+                                                |
+                                                V
+                                            do_exit()
+                                            exit_mm()
+                                          mm_release()
+                                        exit_robust_list()
+                                        handle_futex_death()
+                                                |
+                                                |(__lock = 0)
+                                                |(uval = 0)
+                                                |
+                                                V
+        if ((uval & FUTEX_TID_MASK) != task_pid_vnr(curr))
+                return 0;
+
+    The sanity check which ensures that the user space futex is owned by
+    the exiting task prevents the wakeup of waiters which in consequence
+    block infinitely.
+
+(2) Waiting task is killed after a wakeup and before it can acquire the
+    futex in user space.
+
+        OWNER                         WAITER
+				futex_wait()      		
+   pthread_mutex_unlock()               |
+                |                       |
+                |(__lock = 0)           |
+                |                       |
+                V                       |
+         futex_wake() ------------>  wakeup()
+                                        |
+                                        |(return to userspace)
+                                        |(__lock = 0)
+                                        |
+                                        V
+                        oldval = mutex->__data.__lock
+                                          <-----------------killed
+    atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,  |
+                        id | assume_other_futex_waiters, 0)      |
+                                                                 |
+                                                                 |
+                                                   (enter kernel)|
+                                                                 |
+                                                                 V
+                                                         do_exit()
+                                                        |
+                                                        |
+                                                        V
+                                        handle_futex_death()
+                                        |
+                                        |(__lock = 0)
+                                        |(uval = 0)
+                                        |
+                                        V
+        if ((uval & FUTEX_TID_MASK) != task_pid_vnr(curr))
+                return 0;
+
+    The sanity check which ensures that the user space futex is owned
+    by the exiting task prevents the wakeup of waiters, which seems to
+    be correct as the exiting task does not own the futex value, but
+    the consequence is that other waiters wont be woken up and block
+    infinitely.
+
+In both scenarios the following conditions are true:
+
+   - task->robust_list->list_op_pending != NULL
+   - user space futex value == 0
+   - Regular futex (not PI)
+
+If these conditions are met then it is reasonably safe to wake up a
+potential waiter in order to prevent the above problems.
+
+As this might be a false positive it can cause spurious wakeups, but the
+waiter side has to handle other types of unrelated wakeups, e.g. signals
+gracefully anyway. So such a spurious wakeup will not affect the
+correctness of these operations.
+
+This workaround must not touch the user space futex value and cannot set
+the OWNER_DIED bit because the lock value is 0, i.e. uncontended. Setting
+OWNER_DIED in this case would result in inconsistent state and subsequently
+in malfunction of the owner died handling in user space.
+
+The rest of the user space state is still consistent as no other task can
+observe the list_op_pending entry in the exiting tasks robust list.
+
+The eventually woken up waiter will observe the uncontended lock value and
+take it over.
+
+[ tglx: Massaged changelog and comment. Made the return explicit and not
+  	depend on the subsequent check and added constants to hand into
+  	handle_futex_death() instead of plain numbers. Fixed a few coding
+	style issues. ]
+
+Fixes: 0771dfefc9e5 ("[PATCH] lightweight robust futexes: core")
+Signed-off-by: Yang Tao <yang.tao172@zte.com.cn>
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20191106224556.149449274@linutronix.de
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1573010582-35297-1-git-send-email-wang.yi59@zte.com.cn
+Link: https://lkml.kernel.org/r/20191106224555.943191378@linutronix.de
 
 ---
- include/linux/futex.h | 33 +++++++++++++++++++++++++++++++++
- include/linux/sched.h |  2 +-
- kernel/exit.c         | 18 ++----------------
- kernel/futex.c        | 25 +++++++++++++------------
- 4 files changed, 49 insertions(+), 29 deletions(-)
+ kernel/futex.c | 58 +++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 51 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/futex.h b/include/linux/futex.h
-index 2ffbb9c..5a74bda 100644
---- a/include/linux/futex.h
-+++ b/include/linux/futex.h
-@@ -48,6 +48,10 @@ union futex_key {
- #define FUTEX_KEY_INIT (union futex_key) { .both = { .ptr = NULL } }
- 
- #ifdef CONFIG_FUTEX
-+enum {
-+	FUTEX_STATE_OK,
-+	FUTEX_STATE_DEAD,
-+};
- 
- static inline void futex_init_task(struct task_struct *tsk)
- {
-@@ -57,6 +61,34 @@ static inline void futex_init_task(struct task_struct *tsk)
- #endif
- 	INIT_LIST_HEAD(&tsk->pi_state_list);
- 	tsk->pi_state_cache = NULL;
-+	tsk->futex_state = FUTEX_STATE_OK;
-+}
-+
-+/**
-+ * futex_exit_done - Sets the tasks futex state to FUTEX_STATE_DEAD
-+ * @tsk:	task to set the state on
-+ *
-+ * Set the futex exit state of the task lockless. The futex waiter code
-+ * observes that state when a task is exiting and loops until the task has
-+ * actually finished the futex cleanup. The worst case for this is that the
-+ * waiter runs through the wait loop until the state becomes visible.
-+ *
-+ * This has two callers:
-+ *
-+ * - futex_mm_release() after the futex exit cleanup has been done
-+ *
-+ * - do_exit() from the recursive fault handling path.
-+ *
-+ * In case of a recursive fault this is best effort. Either the futex exit
-+ * code has run already or not. If the OWNER_DIED bit has been set on the
-+ * futex then the waiter can take it over. If not, the problem is pushed
-+ * back to user space. If the futex exit code did not run yet, then an
-+ * already queued waiter might block forever, but there is nothing which
-+ * can be done about that.
-+ */
-+static inline void futex_exit_done(struct task_struct *tsk)
-+{
-+	tsk->futex_state = FUTEX_STATE_DEAD;
- }
- 
- void futex_mm_release(struct task_struct *tsk);
-@@ -66,6 +98,7 @@ long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
- #else
- static inline void futex_init_task(struct task_struct *tsk) { }
- static inline void futex_mm_release(struct task_struct *tsk) { }
-+static inline void futex_exit_done(struct task_struct *tsk) { }
- static inline long do_futex(u32 __user *uaddr, int op, u32 val,
- 			    ktime_t *timeout, u32 __user *uaddr2,
- 			    u32 val2, u32 val3)
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 2c2e56b..85dab2f 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1053,6 +1053,7 @@ struct task_struct {
- #endif
- 	struct list_head		pi_state_list;
- 	struct futex_pi_state		*pi_state_cache;
-+	unsigned int			futex_state;
- #endif
- #ifdef CONFIG_PERF_EVENTS
- 	struct perf_event_context	*perf_event_ctxp[perf_nr_task_contexts];
-@@ -1441,7 +1442,6 @@ extern struct pid *cad_pid;
-  */
- #define PF_IDLE			0x00000002	/* I am an IDLE thread */
- #define PF_EXITING		0x00000004	/* Getting shut down */
--#define PF_EXITPIDONE		0x00000008	/* PI exit done on shut down */
- #define PF_VCPU			0x00000010	/* I'm a virtual CPU */
- #define PF_WQ_WORKER		0x00000020	/* I'm a workqueue worker */
- #define PF_FORKNOEXEC		0x00000040	/* Forked but didn't exec */
-diff --git a/kernel/exit.c b/kernel/exit.c
-index a46a50d..d11bdca 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -746,16 +746,7 @@ void __noreturn do_exit(long code)
- 	 */
- 	if (unlikely(tsk->flags & PF_EXITING)) {
- 		pr_alert("Fixing recursive fault but reboot is needed!\n");
--		/*
--		 * We can do this unlocked here. The futex code uses
--		 * this flag just to verify whether the pi state
--		 * cleanup has been done or not. In the worst case it
--		 * loops once more. We pretend that the cleanup was
--		 * done as there is no way to return. Either the
--		 * OWNER_DIED bit is set by now or we push the blocked
--		 * task into the wait for ever nirwana as well.
--		 */
--		tsk->flags |= PF_EXITPIDONE;
-+		futex_exit_done(tsk);
- 		set_current_state(TASK_UNINTERRUPTIBLE);
- 		schedule();
- 	}
-@@ -846,12 +837,7 @@ void __noreturn do_exit(long code)
- 	 * Make sure we are holding no locks:
- 	 */
- 	debug_check_no_locks_held();
--	/*
--	 * We can do this unlocked here. The futex code uses this flag
--	 * just to verify whether the pi state cleanup has been done
--	 * or not. In the worst case it loops once more.
--	 */
--	tsk->flags |= PF_EXITPIDONE;
-+	futex_exit_done(tsk);
- 
- 	if (tsk->io_context)
- 		exit_io_context(tsk);
 diff --git a/kernel/futex.c b/kernel/futex.c
-index f8f00d4..41c7527 100644
+index 43229f8..49eaf5b 100644
 --- a/kernel/futex.c
 +++ b/kernel/futex.c
-@@ -1182,9 +1182,10 @@ static int handle_exit_race(u32 __user *uaddr, u32 uval,
- 	u32 uval2;
+@@ -3452,11 +3452,16 @@ err_unlock:
+ 	return ret;
+ }
  
- 	/*
--	 * If PF_EXITPIDONE is not yet set, then try again.
-+	 * If the futex exit state is not yet FUTEX_STATE_DEAD, wait
-+	 * for it to finish.
- 	 */
--	if (tsk && !(tsk->flags & PF_EXITPIDONE))
-+	if (tsk && tsk->futex_state != FUTEX_STATE_DEAD)
- 		return -EAGAIN;
++/* Constants for the pending_op argument of handle_futex_death */
++#define HANDLE_DEATH_PENDING	true
++#define HANDLE_DEATH_LIST	false
++
+ /*
+  * Process a futex-list entry, check whether it's owned by the
+  * dying task, and do notification if so:
+  */
+-static int handle_futex_death(u32 __user *uaddr, struct task_struct *curr, int pi)
++static int handle_futex_death(u32 __user *uaddr, struct task_struct *curr,
++			      bool pi, bool pending_op)
+ {
+ 	u32 uval, uninitialized_var(nval), mval;
+ 	int err;
+@@ -3469,6 +3474,42 @@ retry:
+ 	if (get_user(uval, uaddr))
+ 		return -1;
  
- 	/*
-@@ -1203,8 +1204,9 @@ static int handle_exit_race(u32 __user *uaddr, u32 uval,
- 	 *    *uaddr = 0xC0000000;	     tsk = get_task(PID);
- 	 *   }				     if (!tsk->flags & PF_EXITING) {
- 	 *  ...				       attach();
--	 *  tsk->flags |= PF_EXITPIDONE;     } else {
--	 *				       if (!(tsk->flags & PF_EXITPIDONE))
-+	 *  tsk->futex_state =               } else {
-+	 *	FUTEX_STATE_DEAD;              if (tsk->futex_state !=
-+	 *					  FUTEX_STATE_DEAD)
- 	 *				         return -EAGAIN;
- 	 *				       return -ESRCH; <--- FAIL
- 	 *				     }
-@@ -1260,17 +1262,16 @@ static int attach_to_pi_owner(u32 __user *uaddr, u32 uval, union futex_key *key,
++	/*
++	 * Special case for regular (non PI) futexes. The unlock path in
++	 * user space has two race scenarios:
++	 *
++	 * 1. The unlock path releases the user space futex value and
++	 *    before it can execute the futex() syscall to wake up
++	 *    waiters it is killed.
++	 *
++	 * 2. A woken up waiter is killed before it can acquire the
++	 *    futex in user space.
++	 *
++	 * In both cases the TID validation below prevents a wakeup of
++	 * potential waiters which can cause these waiters to block
++	 * forever.
++	 *
++	 * In both cases the following conditions are met:
++	 *
++	 *	1) task->robust_list->list_op_pending != NULL
++	 *	   @pending_op == true
++	 *	2) User space futex value == 0
++	 *	3) Regular futex: @pi == false
++	 *
++	 * If these conditions are met, it is safe to attempt waking up a
++	 * potential waiter without touching the user space futex value and
++	 * trying to set the OWNER_DIED bit. The user space futex value is
++	 * uncontended and the rest of the user space mutex state is
++	 * consistent, so a woken waiter will just take over the
++	 * uncontended futex. Setting the OWNER_DIED bit would create
++	 * inconsistent state and malfunction of the user space owner died
++	 * handling.
++	 */
++	if (pending_op && !pi && !uval) {
++		futex_wake(uaddr, 1, 1, FUTEX_BITSET_MATCH_ANY);
++		return 0;
++	}
++
+ 	if ((uval & FUTEX_TID_MASK) != task_pid_vnr(curr))
+ 		return 0;
+ 
+@@ -3588,10 +3629,11 @@ void exit_robust_list(struct task_struct *curr)
+ 		 * A pending lock might already be on the list, so
+ 		 * don't process it twice:
+ 		 */
+-		if (entry != pending)
++		if (entry != pending) {
+ 			if (handle_futex_death((void __user *)entry + futex_offset,
+-						curr, pi))
++						curr, pi, HANDLE_DEATH_LIST))
+ 				return;
++		}
+ 		if (rc)
+ 			return;
+ 		entry = next_entry;
+@@ -3605,9 +3647,10 @@ void exit_robust_list(struct task_struct *curr)
+ 		cond_resched();
  	}
  
- 	/*
--	 * We need to look at the task state flags to figure out,
--	 * whether the task is exiting. To protect against the do_exit
--	 * change of the task flags, we do this protected by
--	 * p->pi_lock:
-+	 * We need to look at the task state to figure out, whether the
-+	 * task is exiting. To protect against the change of the task state
-+	 * in futex_exit_release(), we do this protected by p->pi_lock:
- 	 */
- 	raw_spin_lock_irq(&p->pi_lock);
--	if (unlikely(p->flags & PF_EXITING)) {
-+	if (unlikely(p->futex_state != FUTEX_STATE_OK)) {
- 		/*
--		 * The task is on the way out. When PF_EXITPIDONE is
--		 * set, we know that the task has finished the
--		 * cleanup:
-+		 * The task is on the way out. When the futex state is
-+		 * FUTEX_STATE_DEAD, we know that the task has finished
-+		 * the cleanup:
- 		 */
- 		int ret = handle_exit_race(uaddr, uval, p);
+-	if (pending)
++	if (pending) {
+ 		handle_futex_death((void __user *)pending + futex_offset,
+-				   curr, pip);
++				   curr, pip, HANDLE_DEATH_PENDING);
++	}
+ }
+ 
+ long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
+@@ -3784,7 +3827,8 @@ void compat_exit_robust_list(struct task_struct *curr)
+ 		if (entry != pending) {
+ 			void __user *uaddr = futex_uaddr(entry, futex_offset);
+ 
+-			if (handle_futex_death(uaddr, curr, pi))
++			if (handle_futex_death(uaddr, curr, pi,
++					       HANDLE_DEATH_LIST))
+ 				return;
+ 		}
+ 		if (rc)
+@@ -3803,7 +3847,7 @@ void compat_exit_robust_list(struct task_struct *curr)
+ 	if (pending) {
+ 		void __user *uaddr = futex_uaddr(pending, futex_offset);
+ 
+-		handle_futex_death(uaddr, curr, pip);
++		handle_futex_death(uaddr, curr, pip, HANDLE_DEATH_PENDING);
+ 	}
+ }
  
