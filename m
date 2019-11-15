@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D526C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1745FC43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42B5120740
+	by mail.kernel.org (Postfix) with ESMTP id E3DA42073B
 	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:17:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="S59ij60H";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZIQe7049"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="k8awBem1";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Q1KBbE5v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfKOWR4 (ORCPT
+        id S1727241AbfKOWR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 17:17:56 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:47448 "EHLO
+        Fri, 15 Nov 2019 17:17:57 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:47662 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727075AbfKOWRv (ORCPT
+        with ESMTP id S1727176AbfKOWRy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 17:17:51 -0500
+        Fri, 15 Nov 2019 17:17:54 -0500
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 9E576611A6; Fri, 15 Nov 2019 22:17:49 +0000 (UTC)
+        id 2BA09611BD; Fri, 15 Nov 2019 22:17:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573856269;
-        bh=kvfbMSlyjRr428zvEa7lwNZjaJQ2PcG+aqcLq/uH3ms=;
+        s=default; t=1573856273;
+        bh=vXbYBwpzjqpUtaliXsEar6TubTw9Dp5DFVeUJyH1tNc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S59ij60HnxwJWXy/k5H6eJ2lQpOtK764LwQq25NdTCBf4Ec9zGZ4SPRQ9CSJn9YOk
-         MsQ/8In5ctmIWuC3FXe1qRG5gjJJljVDCCb35bkeeET5ieTS0XQALQu8VUTOFBpJaf
-         BwtRC+B6Slz0gkOWsEhG7cOOonJC4hos0/E+PpJY=
+        b=k8awBem1YT5xLIt2ka8RFY+Ol/7vdhqOiWhDWo5WK9LxrER8WXYoj2lVUWTMkChtM
+         VIx2huiWfmHbdHmGj/LaCL2OjDAw35CMf8V9vY3wgMrCQv9Qwoy9+p6BRCi10rlrs0
+         CE3cwNuFdf1PBo/9I7Eboca+Y7idfOtOXqOqRQNA=
 Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D7BA36118E;
-        Fri, 15 Nov 2019 22:17:47 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 41A8F611A2;
+        Fri, 15 Nov 2019 22:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573856268;
-        bh=kvfbMSlyjRr428zvEa7lwNZjaJQ2PcG+aqcLq/uH3ms=;
+        s=default; t=1573856272;
+        bh=vXbYBwpzjqpUtaliXsEar6TubTw9Dp5DFVeUJyH1tNc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZIQe7049s/2ZY6AkDiIvDCRleiWKd5bpPfmJmsPgilJxEJvN4zgIbLV7x0gQjypWY
-         JZld9HJtOfcnm07jwIcBsD/WkifQL5M8SbZoQHLqyyYzsFybCIoLUX42fjMasMg3E8
-         JsCQGyr4WwNr7kvlgZnOYenSdxcwgaKtMYYIww3M=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D7BA36118E
+        b=Q1KBbE5vCJrj3uJpEsVcM+pYaq8zfW3uA9h7CcrKhEulnqF31WJjHl0l+ycYrytsN
+         KVDg97Axl9y9A5zK0H9qwxvDGmEy0OKcB48D1Bax/oNViTFzMnpH5tYYaFirdVW/kW
+         Z5IFYL5k4JdYI/7yVsJX7Ncfuop4ldIVnmtaR08Y=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 41A8F611A2
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
 From:   Lina Iyer <ilina@codeaurora.org>
@@ -56,9 +56,9 @@ Cc:     evgreen@chromium.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, mkshah@codeaurora.org,
         linux-gpio@vger.kernel.org, agross@kernel.org,
         dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v2 06/12] genirq: Introduce irq_chip_get/set_parent_state calls
-Date:   Fri, 15 Nov 2019 15:11:49 -0700
-Message-Id: <1573855915-9841-7-git-send-email-ilina@codeaurora.org>
+Subject: [PATCH v2 09/12] drivers: pinctrl: sdm845: add PDC wakeup interrupt map for GPIOs
+Date:   Fri, 15 Nov 2019 15:11:52 -0700
+Message-Id: <1573855915-9841-10-git-send-email-ilina@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1573855915-9841-1-git-send-email-ilina@codeaurora.org>
 References: <1573855915-9841-1-git-send-email-ilina@codeaurora.org>
@@ -67,105 +67,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maulik Shah <mkshah@codeaurora.org>
+Add interrupt parents for wakeup capable GPIOs for Qualcomm SDM845 SoC.
 
-On certain QTI chipsets some GPIOs are direct-connect interrupts to the
-GIC to be used as regular interrupt lines. When the GPIOs are not used
-for interrupt generation the interrupt line is disabled. But disabling
-the interrupt at GIC does not prevent the interrupt to be reported as
-pending at GIC_ISPEND. Later, when drivers call enable_irq() on the
-interrupt, an unwanted interrupt occurs.
-
-Introduce get and set methods for irqchip's parent to clear it's pending
-irq state. This then can be invoked by the GPIO interrupt controller on
-the parents in it hierarchy to clear the interrupt before enabling the
-interrupt.
-
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-[updated commit text and minor code fixes]
 Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 ---
-Changes in RFC v2 -
-	- Rephrase commit text
-	- Address code review comments
+Changes in RFC v2:
+	- Rearranged GPIO wakeup parent map
 ---
- include/linux/irq.h |  6 ++++++
- kernel/irq/chip.c   | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 50 insertions(+)
+ drivers/pinctrl/qcom/pinctrl-sdm845.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index fb301cf..7853eb9 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -610,6 +610,12 @@ extern int irq_chip_pm_put(struct irq_data *data);
- #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
- extern void handle_fasteoi_ack_irq(struct irq_desc *desc);
- extern void handle_fasteoi_mask_irq(struct irq_desc *desc);
-+extern int irq_chip_set_parent_state(struct irq_data *data,
-+				     enum irqchip_irq_state which,
-+				     bool val);
-+extern int irq_chip_get_parent_state(struct irq_data *data,
-+				     enum irqchip_irq_state which,
-+				     bool *state);
- extern void irq_chip_enable_parent(struct irq_data *data);
- extern void irq_chip_disable_parent(struct irq_data *data);
- extern void irq_chip_ack_parent(struct irq_data *data);
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index b76703b..b3fa2d8 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -1298,6 +1298,50 @@ EXPORT_SYMBOL_GPL(handle_fasteoi_mask_irq);
- #endif /* CONFIG_IRQ_FASTEOI_HIERARCHY_HANDLERS */
+diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+index ce49597..2834d2c 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
++++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
+  */
  
- /**
-+ * irq_chip_set_parent_state - set the state of a parent interrupt.
-+ *
-+ * @data: Pointer to interrupt specific data
-+ * @which: State to be restored (one of IRQCHIP_STATE_*)
-+ * @val: Value corresponding to @which
-+ *
-+ * Conditional success, if the underlying irqchip does not implement it.
-+ */
-+int irq_chip_set_parent_state(struct irq_data *data,
-+			      enum irqchip_irq_state which,
-+			      bool val)
-+{
-+	data = data->parent_data;
+ #include <linux/acpi.h>
+@@ -1282,6 +1282,24 @@ static const int sdm845_acpi_reserved_gpios[] = {
+ 	0, 1, 2, 3, 81, 82, 83, 84, -1
+ };
+ 
++static const struct msm_gpio_wakeirq_map sdm845_pdc_map[] = {
++	{ 1, 30 }, { 3, 31 }, { 5, 32 }, { 10, 33 }, { 11, 34 },
++	{ 20, 35 }, { 22, 36 }, { 24, 37 }, { 26, 38 }, { 30, 39 },
++	{ 31, 117 }, { 32, 41 }, { 34, 42 }, { 36, 43 }, { 37, 44 },
++	{ 38, 45 }, { 39, 46 }, { 40, 47 }, { 41, 115 }, { 43, 49 },
++	{ 44, 50 }, { 46, 51 }, { 48, 52 }, { 49, 118 }, { 52, 54 },
++	{ 53, 55 }, { 54, 56 }, { 56, 57 }, { 57, 58 }, { 58, 59 },
++	{ 59, 60 }, { 60, 61 }, { 61, 62 }, { 62, 63 }, { 63, 64 },
++	{ 64, 65 }, { 66, 66 }, { 68, 67 }, { 71, 68 }, { 73, 69 },
++	{ 77, 70 }, { 78, 71 }, { 79, 72 }, { 80, 73 }, { 84, 74 },
++	{ 85, 75 }, { 86, 76 }, { 88, 77 }, { 89, 116 }, { 91, 79 },
++	{ 92, 80 }, { 95, 81 }, { 96, 82 }, { 97, 83 }, { 101, 84 },
++	{ 103, 85 }, { 104, 86 }, { 115, 90 }, { 116, 91 }, { 117, 92 },
++	{ 118, 93 }, { 119, 94 }, { 120, 95 }, { 121, 96 }, { 122, 97 },
++	{ 123, 98 }, { 124, 99 }, { 125, 100 }, { 127, 102 }, { 128, 103 },
++	{ 129, 104 }, { 130, 105 }, { 132, 106 }, { 133, 107 }, { 145, 108 },
++};
 +
-+	if (!data || !data->chip->irq_set_irqchip_state)
-+		return 0;
+ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
+ 	.pins = sdm845_pins,
+ 	.npins = ARRAY_SIZE(sdm845_pins),
+@@ -1290,6 +1308,9 @@ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
+ 	.groups = sdm845_groups,
+ 	.ngroups = ARRAY_SIZE(sdm845_groups),
+ 	.ngpios = 151,
++	.wakeirq_map = sdm845_pdc_map,
++	.nwakeirq_map = ARRAY_SIZE(sdm845_pdc_map),
 +
-+	return data->chip->irq_set_irqchip_state(data, which, val);
-+}
-+EXPORT_SYMBOL_GPL(irq_chip_set_parent_state);
-+
-+/**
-+ * irq_chip_get_parent_state - get the state of a parent interrupt.
-+ *
-+ * @data: Pointer to interrupt specific data
-+ * @which: one of IRQCHIP_STATE_* the caller wants to know
-+ * @state: a pointer to a boolean where the state is to be stored
-+ *
-+ * Conditional success, if the underlying irqchip does not implement it.
-+ */
-+int irq_chip_get_parent_state(struct irq_data *data,
-+			      enum irqchip_irq_state which,
-+			      bool *state)
-+{
-+	data = data->parent_data;
-+
-+	if (!data || !data->chip->irq_get_irqchip_state)
-+		return 0;
-+
-+	return data->chip->irq_get_irqchip_state(data, which, state);
-+}
-+EXPORT_SYMBOL_GPL(irq_chip_get_parent_state);
-+
-+/**
-  * irq_chip_enable_parent - Enable the parent interrupt (defaults to unmask if
-  * NULL)
-  * @data:	Pointer to interrupt specific data
+ };
+ 
+ static const struct msm_pinctrl_soc_data sdm845_acpi_pinctrl = {
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
