@@ -2,115 +2,261 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF078C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C610FC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B71B0206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:06:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 922DE206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:10:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nt1cvHlN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EwlSNHmU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbfKOLGH (ORCPT
+        id S1727226AbfKOLKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 06:06:07 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43607 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbfKOLGH (ORCPT
+        Fri, 15 Nov 2019 06:10:46 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27148 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726521AbfKOLKq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 06:06:07 -0500
-Received: by mail-lj1-f193.google.com with SMTP id y23so10221185ljh.10
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 03:06:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=shq3V/ue0af5VG0Uxhe+EhaqYoTx4YdTo+9ySK44k0o=;
-        b=Nt1cvHlNqQgeHmvi9R72Of3lIXCieP0osFMIeTaE/doM7/x3/kEP0XJPKtQ29bvRmF
-         79k/Yyu+Okilh9P44v0tvQ0dzqRyBN9BpR0kKgWFOiL6a/VqS1uXSiUNSH9uPILvgOrT
-         YapkLcQWFUBRNmuXweWg//5qSltKeulsANa9LMM+2cWrYrtcyrM9/7Jm5UU/a1qF/Qto
-         QKIsxLAoBnU5M77FaH9uO0bD3c8Yv/gEOhCrtitC0oc2KvU8DNvLdz8k+eBy0SSD8UGO
-         uM8/z5Yil8RSNCvVMZTlB9WKcja2Bf6ijGCjuHRpBSiBlGTJBmEjITBx91FOCeKwxcgZ
-         Whsw==
+        Fri, 15 Nov 2019 06:10:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573816244;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=kvdfBB/OL1RKqn5wB2rhib2iB+Se/LfSqEAPqgf8JXY=;
+        b=EwlSNHmUs0Mh1fCPi6NujVil8NYwa8tvDs6oBI8UmmmmT3fpPyrq7R+SjPNj7Zt3EY9bR0
+        dyJjwocw6aOCaoXk+h5WNRcT0nRyDEBTtNr5AyoWDQ7VIdyCCLuDE5G/HFimy/Z/THxFBx
+        C47rCGhbxt+mLlFltwhOlmBTKQxewpE=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-97-zx2lrdjJNemjv8Sbq9Z_rQ-1; Fri, 15 Nov 2019 06:10:42 -0500
+Received: by mail-wm1-f70.google.com with SMTP id v8so5825346wml.4
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 03:10:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=shq3V/ue0af5VG0Uxhe+EhaqYoTx4YdTo+9ySK44k0o=;
-        b=UrJp7mZU6Dep+9FagV03gQCImGMW0n5mSZQXGBX6iv++l2uA04w+ZAfVrH4UYMReBL
-         LwmCYzdEuQvAm1Nu20KlcN/YuLFcKnY8m9QYoWK3T3Gyt3IKXPRSeMFAtTh2pMwJSzX8
-         qMmz/FljrgEvwPEKZ6dP4rFSRbqIWJtxYJ2ZtScmOiDFAbEHNjqHcM+iMc5xJZUAoxPV
-         1egTgE23xspE+kYRV38z6m1lK5Bs19Ia3PC26/ZKzQFyAudeWB/joXt2X23zDbd03Htf
-         O4XxTwP8+nS5Gk+7Gh6STDT2+wmYAWdP7mWDcTZJT5shbJ2spUuaaRM10GKNiHyOVo31
-         cpjg==
-X-Gm-Message-State: APjAAAVT4mg5QrxWkEt7Paihcd9avB+kjtoLDIq1t+8nnDdbQT2VqvQD
-        jCXiM/w13HJdNnDCnjbZUwf1kJqvFvfDzKrIIh6myw==
-X-Google-Smtp-Source: APXvYqzS1EIkNYVvmw564gwWMYzpaZj7xXThYxA72Qt1a8gJgwDQEbyZRfy73qyedSN3eTDxq9/BRrbFbF6ApF6ydh8=
-X-Received: by 2002:a2e:982:: with SMTP id 124mr11018244ljj.48.1573815965102;
- Fri, 15 Nov 2019 03:06:05 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kjOGDwlR3plOhDtlved0KVpfk475OBTI+qZNZ+6nVyc=;
+        b=PcZxqz38eXGTnluxXiFoW9EkeKRIOyJkWYEQBt83ZlsxJH/WEJqdYSpIttDPlbgTAH
+         Ym5EUhIBjQ4lhMC3GBaEY1OrwYdLfAlCkHHwG9/41L/OccnJH+T+EITygAU/txKTiFn2
+         L8Tlq0m2DNMXNSanfxVWy+hXQzrH+O1nKjkFYz2u5zKlhHOkpHKr9l+lIELI+l/Jq0rY
+         MdMxH6zcuZP8h+Fp/L3naVFuRoHvLf/8TrHBXkkRExrBR7lmaHBDEQWu1EgGm+wL+Xmj
+         DKDGEf6zKyY4Y2zPtxPsFIWpdPVx5+PiO8dQ9BnuTE+QDuo6u5HjjvnnblLgff2AQqg3
+         Q8vg==
+X-Gm-Message-State: APjAAAXLZztUt5iIRGal/QJticr0pKMfAhUzkIEKR+evemt+yVhygaGM
+        hH28gsXoD7d2DglmdFuyFZ/LfXrpBVwDOG/KJVUsCFGyerDJCa+oMCz4E1/ZQD13EHJ931O/a+y
+        c3PWIEJAAVzLXXtfuj9iSZrDF
+X-Received: by 2002:a5d:526f:: with SMTP id l15mr14215169wrc.169.1573816241374;
+        Fri, 15 Nov 2019 03:10:41 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyOPQptYPfONVLIR3kAUatC7HlUW850xwQBpIGGl+7G/miLNYFThsiuimFFWREf2We/4QDuJg==
+X-Received: by 2002:a5d:526f:: with SMTP id l15mr14215138wrc.169.1573816241039;
+        Fri, 15 Nov 2019 03:10:41 -0800 (PST)
+Received: from mcroce-redhat.mxp.redhat.com (nat-pool-mxp-t.redhat.com. [149.6.153.186])
+        by smtp.gmail.com with ESMTPSA id v6sm11166971wrt.13.2019.11.15.03.10.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2019 03:10:40 -0800 (PST)
+From:   Matteo Croce <mcroce@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] bonding: symmetric ICMP transmit
+Date:   Fri, 15 Nov 2019 12:10:37 +0100
+Message-Id: <20191115111037.7843-1-mcroce@redhat.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org>
- <20191115095447.GU4114@hirez.programming.kicks-ass.net> <CAJZ5v0hjsWM=bRg4k2qNCfcqjQ08N+6kG=1vCXpjbi5qEx7utw@mail.gmail.com>
- <20191115104052.GF4131@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191115104052.GF4131@hirez.programming.kicks-ass.net>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 15 Nov 2019 12:05:52 +0100
-Message-ID: <CAKfTPtBWrpT+jEFo0Jy+WhX+CSQ4rOL_Hbkzhy4nwcEARh9CFw@mail.gmail.com>
-Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Doug Smythies <dsmythies@telus.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MC-Unique: zx2lrdjJNemjv8Sbq9Z_rQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 at 11:41, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, Nov 15, 2019 at 11:03:20AM +0100, Rafael J. Wysocki wrote:
-> > On Fri, Nov 15, 2019 at 10:55 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> > > So why are we making the scheduler code more ugly instead of fixing that
-> > > driver?
-> >
-> > I guess we could "fix" the driver by making it rate limit MSR writes
-> > only, but I'm not sure if that would help.
->
-> So it is not clear to me what exactly intel_pstate needs and why. Like I
-> wrote in my reply to Vincent just now, it can still store the last
-> value, even if it doesn't act on it right away.
->
-> And it can then act on that stored value at a later event, whatever is
-> appropriate.
->
-> I'm just saying that generating superfluous events is silly. But
-> possibly I read the patch wrong.
+A bonding with layer2+3 or layer3+4 hashing uses the IP addresses and the p=
+orts
+to balance packets between slaves. With some network errors, we receive an =
+ICMP
+error packet by the remote host or a router. If sent by a router, the sourc=
+e IP
+can differ from the remote host one. Additionally the ICMP protocol has no =
+port
+numbers, so a layer3+4 bonding will get a different hash than the previous =
+one.
+These two conditions could let the packet go through a different interface =
+than
+the other packets of the same flow:
 
-This is not the intent of the patch.
+    # tcpdump -qltnni veth0 |sed 's/^/0: /' &
+    # tcpdump -qltnni veth1 |sed 's/^/1: /' &
+    # hping3 -2 192.168.0.2 -p 9
+    0: IP 192.168.0.1.2251 > 192.168.0.2.9: UDP, length 0
+    1: IP 192.168.0.2 > 192.168.0.1: ICMP 192.168.0.2 udp port 9 unreachabl=
+e, length 36
+    1: IP 192.168.0.1.2252 > 192.168.0.2.9: UDP, length 0
+    1: IP 192.168.0.2 > 192.168.0.1: ICMP 192.168.0.2 udp port 9 unreachabl=
+e, length 36
+    1: IP 192.168.0.1.2253 > 192.168.0.2.9: UDP, length 0
+    1: IP 192.168.0.2 > 192.168.0.1: ICMP 192.168.0.2 udp port 9 unreachabl=
+e, length 36
+    0: IP 192.168.0.1.2254 > 192.168.0.2.9: UDP, length 0
+    1: IP 192.168.0.2 > 192.168.0.1: ICMP 192.168.0.2 udp port 9 unreachabl=
+e, length 36
 
-Before 039ae8bcf7a5 ("sched/fair: Fix O(nr_cgroups) in the load
-balancing path"), the call to cpufreq was done thanks to
-update_cfs_rq_load_avg() even if cfs was already null but not irq/rt
-or dl
-After the patch, cpufreq was not called anymore
+An ICMP error packet contains the header of the packet which caused the net=
+work
+error, so inspect it and match the flow against it, so we can send the ICMP=
+ via
+the same interface of the previous packet in the flow.
+Move the IP and port dissect code into a generic function bond_flow_ip() an=
+d if
+we are dissecting an ICMP error packet, call it again with the adjusted off=
+set.
 
-This patch fix this to make sure that cpufreq is called while  irq/rt
-or dl is not null
+    # hping3 -2 192.168.0.2 -p 9
+    1: IP 192.168.0.1.1224 > 192.168.0.2.9: UDP, length 0
+    1: IP 192.168.0.2 > 192.168.0.1: ICMP 192.168.0.2 udp port 9 unreachabl=
+e, length 36
+    1: IP 192.168.0.1.1225 > 192.168.0.2.9: UDP, length 0
+    1: IP 192.168.0.2 > 192.168.0.1: ICMP 192.168.0.2 udp port 9 unreachabl=
+e, length 36
+    0: IP 192.168.0.1.1226 > 192.168.0.2.9: UDP, length 0
+    0: IP 192.168.0.2 > 192.168.0.1: ICMP 192.168.0.2 udp port 9 unreachabl=
+e, length 36
+    0: IP 192.168.0.1.1227 > 192.168.0.2.9: UDP, length 0
+    0: IP 192.168.0.2 > 192.168.0.1: ICMP 192.168.0.2 udp port 9 unreachabl=
+e, length 36
 
-Then, it also remove a spurious call to cpufreq just before attaching the task
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+---
+ drivers/net/bonding/bond_main.c | 83 ++++++++++++++++++++++-----------
+ 1 file changed, 57 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_mai=
+n.c
+index 08b2b0d855af..fcb7c2f7f001 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -41,6 +41,8 @@
+ #include <linux/in.h>
+ #include <net/ip.h>
+ #include <linux/ip.h>
++#include <linux/icmp.h>
++#include <linux/icmpv6.h>
+ #include <linux/tcp.h>
+ #include <linux/udp.h>
+ #include <linux/slab.h>
+@@ -3297,12 +3299,42 @@ static inline u32 bond_eth_hash(struct sk_buff *skb=
+)
+ =09return 0;
+ }
+=20
++static bool bond_flow_ip(struct sk_buff *skb, struct flow_keys *fk,
++=09=09=09 int *noff, int *proto, bool l34)
++{
++=09const struct ipv6hdr *iph6;
++=09const struct iphdr *iph;
++
++=09if (skb->protocol =3D=3D htons(ETH_P_IP)) {
++=09=09if (unlikely(!pskb_may_pull(skb, *noff + sizeof(*iph))))
++=09=09=09return false;
++=09=09iph =3D (const struct iphdr *)(skb->data + *noff);
++=09=09iph_to_flow_copy_v4addrs(fk, iph);
++=09=09*noff +=3D iph->ihl << 2;
++=09=09if (!ip_is_fragment(iph))
++=09=09=09*proto =3D iph->protocol;
++=09} else if (skb->protocol =3D=3D htons(ETH_P_IPV6)) {
++=09=09if (unlikely(!pskb_may_pull(skb, *noff + sizeof(*iph6))))
++=09=09=09return false;
++=09=09iph6 =3D (const struct ipv6hdr *)(skb->data + *noff);
++=09=09iph_to_flow_copy_v6addrs(fk, iph6);
++=09=09*noff +=3D sizeof(*iph6);
++=09=09*proto =3D iph6->nexthdr;
++=09} else {
++=09=09return false;
++=09}
++
++=09if (l34 && *proto >=3D 0)
++=09=09fk->ports.ports =3D skb_flow_get_ports(skb, *noff, *proto);
++
++=09return true;
++}
++
+ /* Extract the appropriate headers based on bond's xmit policy */
+ static bool bond_flow_dissect(struct bonding *bond, struct sk_buff *skb,
+ =09=09=09      struct flow_keys *fk)
+ {
+-=09const struct ipv6hdr *iph6;
+-=09const struct iphdr *iph;
++=09bool l34 =3D bond->params.xmit_policy =3D=3D BOND_XMIT_POLICY_LAYER34;
+ =09int noff, proto =3D -1;
+=20
+ =09if (bond->params.xmit_policy > BOND_XMIT_POLICY_LAYER23) {
+@@ -3314,31 +3346,30 @@ static bool bond_flow_dissect(struct bonding *bond,=
+ struct sk_buff *skb,
+ =09fk->ports.ports =3D 0;
+ =09memset(&fk->icmp, 0, sizeof(fk->icmp));
+ =09noff =3D skb_network_offset(skb);
+-=09if (skb->protocol =3D=3D htons(ETH_P_IP)) {
+-=09=09if (unlikely(!pskb_may_pull(skb, noff + sizeof(*iph))))
+-=09=09=09return false;
+-=09=09iph =3D ip_hdr(skb);
+-=09=09iph_to_flow_copy_v4addrs(fk, iph);
+-=09=09noff +=3D iph->ihl << 2;
+-=09=09if (!ip_is_fragment(iph))
+-=09=09=09proto =3D iph->protocol;
+-=09} else if (skb->protocol =3D=3D htons(ETH_P_IPV6)) {
+-=09=09if (unlikely(!pskb_may_pull(skb, noff + sizeof(*iph6))))
+-=09=09=09return false;
+-=09=09iph6 =3D ipv6_hdr(skb);
+-=09=09iph_to_flow_copy_v6addrs(fk, iph6);
+-=09=09noff +=3D sizeof(*iph6);
+-=09=09proto =3D iph6->nexthdr;
+-=09} else {
++=09if (!bond_flow_ip(skb, fk, &noff, &proto, l34))
+ =09=09return false;
+-=09}
+-=09if (bond->params.xmit_policy =3D=3D BOND_XMIT_POLICY_LAYER34 && proto >=
+=3D 0) {
+-=09=09if (proto =3D=3D IPPROTO_ICMP || proto =3D=3D IPPROTO_ICMPV6)
+-=09=09=09skb_flow_get_icmp_tci(skb, &fk->icmp, skb->data,
+-=09=09=09=09=09      skb_transport_offset(skb),
+-=09=09=09=09=09      skb_headlen(skb));
+-=09=09else
+-=09=09=09fk->ports.ports =3D skb_flow_get_ports(skb, noff, proto);
++
++=09/* ICMP error packets contains at least 8 bytes of the header
++=09 * of the packet which generated the error. Use this information
++=09 * to correlate ICMP error packets within the same flow which
++=09 * generated the error.
++=09 */
++=09if (proto =3D=3D IPPROTO_ICMP || proto =3D=3D IPPROTO_ICMPV6) {
++=09=09skb_flow_get_icmp_tci(skb, &fk->icmp, skb->data,
++=09=09=09=09      skb_transport_offset(skb),
++=09=09=09=09      skb_headlen(skb));
++=09=09if (proto =3D=3D IPPROTO_ICMP) {
++=09=09=09if (!icmp_is_err(fk->icmp.type))
++=09=09=09=09return true;
++
++=09=09=09noff +=3D sizeof(struct icmphdr);
++=09=09} else if (proto =3D=3D IPPROTO_ICMPV6) {
++=09=09=09if (!icmpv6_is_err(fk->icmp.type))
++=09=09=09=09return true;
++
++=09=09=09noff +=3D sizeof(struct icmp6hdr);
++=09=09}
++=09=09return bond_flow_ip(skb, fk, &noff, &proto, l34);
+ =09}
+=20
+ =09return true;
+--=20
+2.23.0
+
