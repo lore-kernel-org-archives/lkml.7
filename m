@@ -2,134 +2,168 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9243EC33C99
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4655C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3592073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:52:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="U9usOCz4"
+	by mail.kernel.org (Postfix) with ESMTP id 99A8F20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 13:52:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573825957;
+	bh=byccjQGKDp78Hpig9iIFTYDmZ2hi5+wPX21QztoMffQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cIONvmXdp0GAfGMUGCBfjXsQ4HZTHW7IFQNiE1Hni/nAlq5s/N1SQxRoO50N3MSfo
+	 6Sh8IzKPaqrMX0vJnPv8ehobaEefenLxJ4j67MEWfzTWlJJlie8+lUf80SC1Tk7438
+	 dnbZtBWLo3RQnvjyQt9xiGY5x4vc52kLg4zNTdcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfKONwV (ORCPT
+        id S1727625AbfKONwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 08:52:21 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:41040 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727411AbfKONwU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 08:52:20 -0500
-Received: by mail-qv1-f68.google.com with SMTP id g18so3777900qvp.8
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 05:52:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=En/i0mthZpZvBiVTNrAQOYo+mL/zOQQWMDgCZMT6UJQ=;
-        b=U9usOCz4Y+Ccrh7wRKgnYMkH+xsOZmCuF7gaEx2tjqr7dKhq3Z+b1BymHlSEHrX5nt
-         ZteIpssn+vyYSN+svr6MeeQlHGhb9jGBT4PnxEyjllUQgatqf/VQvENyRfrvsp8JL6AC
-         KwzZaQQWO81+kuGADVx7XcGx683FL14k1I+4aICU3bIFsHUWr6C8OWcmlMVdrTuaQtBP
-         1WR1ug+O0ZFEyynl6Sz7C8CbxH4SmnamIByRA7R12spu75GnZh1BBSZgscGrYee1BaCW
-         hYVcfXIFx6zfD2u5AET57EfI06qxW93ooy2yDOiWjkBmSWRuBSzJx37tQ01Uw+wcxf2u
-         GFCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=En/i0mthZpZvBiVTNrAQOYo+mL/zOQQWMDgCZMT6UJQ=;
-        b=uRXPyCHpdpDUDqATNeDDx4NcBYuP1pfBuvhf6KldC56UG0tSnGeDZcj7AQVrFjTxKD
-         SVb3Zm3wZuc/WUsPlkLF9JEJh7jRosG0cn11n/rAbFPo4vLAuH9rAG1AcrhdoOT9xVJt
-         ujvwKiKCIPQAMRFFBesxbCPiX7fY4yiFkp+1H7guQmplA8KJ5GbARGlOpOw6Ovi824bE
-         Rzw7/dEEaflMUGbJpyuQ6qym/w9QMxYtFlKiNxkIh5e//FgiMwU6wTaTxci/b3McsD5l
-         cAUfKGjTXjXAv5orpTDj0OxVNN2ciwSIJvO2MD2AUF01rSo/t35pEYmLzo0Ql6ZnU645
-         oPrw==
-X-Gm-Message-State: APjAAAUm21PS2aHpwzIOFO9QlDywivMHgHk3dom7XFO6ScAL2mz1dl0W
-        7bLrvb20E0Xgiy6jWRkgucFymNfNOz8=
-X-Google-Smtp-Source: APXvYqytHn9HhD1jy+wId5udh+kHrIxZOaT+/DdqUVP3yjcLOnxpCq+mp+CUdHmlDhG79M9Lf2FejA==
-X-Received: by 2002:a0c:b88f:: with SMTP id y15mr13590929qvf.161.1573825939616;
-        Fri, 15 Nov 2019 05:52:19 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id x203sm4206111qkb.11.2019.11.15.05.52.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Nov 2019 05:52:19 -0800 (PST)
-Message-ID: <1573825937.5937.126.camel@lca.pw>
-Subject: Re: [PATCH] mm: Cast the type of unmap_start to u64
-From:   Qian Cai <cai@lca.pw>
-To:     Chen Jun <chenjun102@huawei.com>, Hugh Dickins <hughd@google.com>,
-        linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, wangkefeng.wang@huawei.com
-Date:   Fri, 15 Nov 2019 08:52:17 -0500
-In-Reply-To: <1573867464-5107-1-git-send-email-chenjun102@huawei.com>
-References: <1573867464-5107-1-git-send-email-chenjun102@huawei.com>
+        Fri, 15 Nov 2019 08:52:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727411AbfKONwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 08:52:36 -0500
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AADD22073B;
+        Fri, 15 Nov 2019 13:52:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573825954;
+        bh=byccjQGKDp78Hpig9iIFTYDmZ2hi5+wPX21QztoMffQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jksCRt0n9nFcU+ZExUEHHKzIWbgnbV8XdpoR7rkhnQF7ZMS5HoKM7k5PLGDMp44++
+         qoEFF4fDOqnYCRvWSl5sBsoW141oAQ743jD66MGXoOROWargZKeIEkpQ4BoOMKsz0k
+         QTBZmrmAK7yVvtks+VlhPdIEc6bjs6iXSZYioSso=
+Received: by mail-qv1-f48.google.com with SMTP id d3so3771388qvs.11;
+        Fri, 15 Nov 2019 05:52:34 -0800 (PST)
+X-Gm-Message-State: APjAAAVkguIokj3sxK8IwJ/87xHXNpmKtESsZpjn/KB5RxpvHH6e4tYf
+        w6xHU81FBHGGo49syK5aqFU6jiCfMy0zWLZhNA==
+X-Google-Smtp-Source: APXvYqwWnpvZlkGEaU+MoyCE0QcbXaYmkR1k9FsQYEefvYoJDNpv7HxUniQpMKCZFcqXCVK++8fwMkHnwAevVKIkZj8=
+X-Received: by 2002:a0c:edcc:: with SMTP id i12mr1964139qvr.20.1573825953731;
+ Fri, 15 Nov 2019 05:52:33 -0800 (PST)
+MIME-Version: 1.0
+References: <20191112055412.192675-1-dmitry.torokhov@gmail.com>
+ <20191112055412.192675-2-dmitry.torokhov@gmail.com> <20191112120307.GB5195@sirena.co.uk>
+ <20191112190328.GA199853@dtor-ws> <20191112191547.GK5195@sirena.co.uk>
+ <20191112193653.GB13374@dtor-ws> <20191114222652.GA7517@bogus> <CAKdAkRQBrKOUTW8puakA26ODYW9=0H4VhwFhGQAqMs-cMmj3CQ@mail.gmail.com>
+In-Reply-To: <CAKdAkRQBrKOUTW8puakA26ODYW9=0H4VhwFhGQAqMs-cMmj3CQ@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 15 Nov 2019 07:52:22 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKUXPTC-fmUowpaHQpuKTfgfQ6D2n7kOZgkYt+MS7OfaA@mail.gmail.com>
+Message-ID: <CAL_JsqKUXPTC-fmUowpaHQpuKTfgfQ6D2n7kOZgkYt+MS7OfaA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] spi: dt-bindings: spi-controller: add wakeup-source
+ and interrupts
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-11-15 at 20:24 -0500, Chen Jun wrote:
-> In 64bit system. sb->s_maxbytes of shmem filesystem is MAX_LFS_FILESIZE,
-> which equal LLONG_MAX.
-> If offset > LLONG_MAX - PAGE_SIZE, offset + len < LLONG_MAX in
-> shmem_fallocate, which will pass the checking in vfs_fallocate.
-> 	/* Check for wrap through zero too */
-> 	if (((offset + len) > inode->i_sb->s_maxbytes) || ((offset + len) < 0))
-> 		return -EFBIG;
-> 
-> loff_t unmap_start = round_up(offset, PAGE_SIZE) in shmem_fallocate
-> causes a overflow.
-> 
-> Syzkaller reports a overflow problem in mm/shmem:
-> UBSAN: Undefined behaviour in mm/shmem.c:2014:10
+On Thu, Nov 14, 2019 at 5:09 PM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> On Thu, Nov 14, 2019 at 2:26 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Tue, Nov 12, 2019 at 11:36:53AM -0800, Dmitry Torokhov wrote:
+> > > On Tue, Nov 12, 2019 at 07:15:47PM +0000, Mark Brown wrote:
+> > > > On Tue, Nov 12, 2019 at 11:03:28AM -0800, Dmitry Torokhov wrote:
+> > > > > On Tue, Nov 12, 2019 at 12:03:07PM +0000, Mark Brown wrote:
+> > > > > > On Mon, Nov 11, 2019 at 09:54:10PM -0800, Dmitry Torokhov wrote:
+> > > >
+> > > > > > > +      interrupts:
+> > > > > > > +        items:
+> > > > > > > +          - description: main interrupt (attention) line.
+> > > > > > > +          - description: dedicated wakeup interrupt.
+> > > > > > > +        minItems: 1 # The wakeup interrupt is optional.
+> > > >
+> > > > > > > +      interrupt-names:
+> > > > > > > +        items:
+> > > > > > > +          - const: irq
+> > > > > > > +          - const: wakeup
+> > > > > > > +        minItems: 1
+> > > >
+> > > > > > How will this interact with a SPI device that defines interrupts at the
+> > > > > > device level, possibly more than one of them?  Especially if the device
+> > > > > > has its own idea what the interrupts should be called.
+> > > >
+> > > > > My understanding that individual drivers should be able to override
+> > > > > whatever the default behavior core has configured, and the device can
+> > > > > establish their own mapping. We have this in I2C and I believe this
+> > > > > works well.
+> > > >
+> > > > > Is the concern about the device tree scheme or SPI core handling?
+> > > >
+> > > > Both really.
+> > >
+> > > So as I mentioned, the driver is not forced to use the interrupt
+> > > supplied by the SPI core, and the worst thing is that the core
+> > > configures the main IRQ as wakeirq and driver would need to call
+> > > dev_pm_clear_wake_irq() before switching to correct one. I expect there
+> > > will be just a few drivers needing that and many more would benefit from
+> > > the default behavior and not needing to repeat the same boilerplate
+> > > code.
+> > >
+> > > As far as scheme goes - I hope that Rob could confirm that we can
+> > > override number of interrupts and names in consumers of the binding, as
+> > > needed.
+> >
+> > This won't work. A device schema doesn't override what's defined here,
+> > but just further constrains this schema.
+> >
+> > You could define a "spi irq" schema which devices can include if they
+> > want to, but I don't think this pattern is that common to SPI devices.
+> > There's not any spec behind compared to say alert irq for SMBus.
+> >
+> > The 'wakeup' irq name is standardized (for DT), but that's not SPI
+> > specific. About all we could define there is 'wakeup-source' is boolean
+> > and if there is more than one interrupt, one should be named 'wakeup'.
+>
+> OK, so what I am hearing is "interrupt"/"interrupt-names" properties
+> should be defined in individual device's bindings, and wakeup-source
+> can stay in spi-controller.yaml, right?
 
-What is the syzkaller reproducer if any?
+It could, but it's not SPI specific. I think we should convert
+bindings/power/wakeup-source.txt instead. Something like this:
 
-> signed integer overflow:
-> '9223372036854775807 + 1' cannot be represented in type 'long long int'
-> CPU: 0 PID:17076 Comm: syz-executor0 Not tainted 4.1.46+ #1
-> Hardware name: linux, dummy-virt (DT)
-> Call trace:
-> [<ffff800000092150>] dump_backtrace+0x0/0x2c8 arch/arm64/kernel/traps.c:100
-> [<ffff800000092438>] show_stack+0x20/0x30 arch/arm64/kernel/traps.c:238
-> [<ffff800000f9b134>] __dump_stack lib/dump_stack.c:15 [inline]
-> [<ffff800000f9b134>] ubsan_epilogue+0x18/0x70 lib/ubsan.c:164
-> [<ffff800000f9b468>] handle_overflow+0x158/0x1b0 lib/ubsan.c:195
-> [<ffff800000341280>] shmem_fallocate+0x6d0/0x820 mm/shmem.c:2104
-> [<ffff8000003ee008>] vfs_fallocate+0x238/0x428 fs/open.c:312
-> [<ffff8000003ef72c>] SYSC_fallocate fs/open.c:335 [inline]
-> [<ffff8000003ef72c>] SyS_fallocate+0x54/0xc8 fs/open.c:239
-> 
-> The highest bit of unmap_start will be appended with sign bit 1 (overflow)
-> when calculate shmem_falloc.start:
-> shmem_falloc.start = unmap_start >> PAGE_SHIFT.
-> 
-> Fix it by casting the type of unmap_start to u64, when right shifted.
-> 
-> This bug is found in LTS Linux 4.1. It also seems to exist in mainline.
-> 
-> Signed-off-by: Chen Jun <chenjun102@huawei.com>
-> ---
->  mm/shmem.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index e9342c3..82cebbc 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -2717,7 +2717,7 @@ static long shmem_fallocate(struct file *file, int mode, loff_t offset,
->  		}
->  
->  		shmem_falloc.waitq = &shmem_falloc_waitq;
-> -		shmem_falloc.start = unmap_start >> PAGE_SHIFT;
-> +		shmem_falloc.start = (u64)unmap_start >> PAGE_SHIFT;
->  		shmem_falloc.next = (unmap_end + 1) >> PAGE_SHIFT;
->  		spin_lock(&inode->i_lock);
->  		inode->i_private = &shmem_falloc;
+select: true
+
+properties:
+  wakeup-source:
+    type: boolean
+    description: ...
+
+if:
+  properties:
+    interrupt-names:
+      contains:
+        const: wakeup
+  required:
+    - interrupt-names
+then:
+  required:
+    - wakeup-source
+
+dependencies:
+  wakeup-source: [ interrupts ]
+
+
+Rob
+
+> And as far as SPI core goes, we can still do what I proposed, because
+> we already handle "first" interrupt as the default one and the drivers
+> can override as needed anyway...
+>
+> Thanks.
+>
+> --
+> Dmitry
