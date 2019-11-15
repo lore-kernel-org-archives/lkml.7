@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC4BC43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1DDC432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 248D02073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94F0D2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:13:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfKOSNQ (ORCPT
+        id S1727036AbfKOSNY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 13:13:16 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44258 "EHLO
+        Fri, 15 Nov 2019 13:13:24 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44270 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbfKOSNQ (ORCPT
+        with ESMTP id S1726075AbfKOSNY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 13:13:16 -0500
+        Fri, 15 Nov 2019 13:13:24 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iVg5i-00051Z-Vj; Fri, 15 Nov 2019 19:13:07 +0100
+        id 1iVg5i-00051Y-UY; Fri, 15 Nov 2019 19:13:07 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9D3661C18CD;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6C7BE1C08AC;
         Fri, 15 Nov 2019 19:13:06 +0100 (CET)
 Date:   Fri, 15 Nov 2019 18:13:06 -0000
 From:   "tip-bot2 for Valentin Schneider" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/uclamp: Fix overzealous type replacement
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+Subject: [tip: sched/urgent] sched/topology, cpuset: Account for housekeeping
+ CPUs to avoid empty cpumasks
+Cc:     mkoutny@suse.com, Valentin Schneider <valentin.schneider@arm.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Qais Yousef <qais.yousef@arm.com>, Dietmar.Eggemann@arm.com,
+        Dietmar.Eggemann@arm.com,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        patrick.bellasi@matbug.net, qperret@google.com, surenb@google.com,
+        Thomas Gleixner <tglx@linutronix.de>, hannes@cmpxchg.org,
+        lizefan@huawei.com, morten.rasmussen@arm.com, qperret@google.com,
         tj@kernel.org, vincent.guittot@linaro.org,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191113165334.14291-1-valentin.schneider@arm.com>
-References: <20191113165334.14291-1-valentin.schneider@arm.com>
+In-Reply-To: <20191104003906.31476-1-valentin.schneider@arm.com>
+References: <20191104003906.31476-1-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Message-ID: <157384158660.12247.7949310118741537963.tip-bot2@tip-bot2>
+Message-ID: <157384158622.12247.6135151696743651397.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -62,82 +63,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/urgent branch of tip:
 
-Commit-ID:     16d6bbe7982e99f7f326ec6f088c0aaf85efa69d
-Gitweb:        https://git.kernel.org/tip/16d6bbe7982e99f7f326ec6f088c0aaf85efa69d
+Commit-ID:     48a723d23b0d957e5b5861b974864e53c6841de8
+Gitweb:        https://git.kernel.org/tip/48a723d23b0d957e5b5861b974864e53c6841de8
 Author:        Valentin Schneider <valentin.schneider@arm.com>
-AuthorDate:    Wed, 13 Nov 2019 16:53:34 
+AuthorDate:    Mon, 04 Nov 2019 00:39:06 
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 15 Nov 2019 11:02:19 +01:00
+CommitterDate: Fri, 15 Nov 2019 11:02:20 +01:00
 
-sched/uclamp: Fix overzealous type replacement
+sched/topology, cpuset: Account for housekeeping CPUs to avoid empty cpumasks
 
-Some uclamp helpers had their return type changed from 'unsigned int' to
-'enum uclamp_id' by commit:
+Michal noted that a cpuset's effective_cpus can be a non-empy mask, but
+because of the masking done with housekeeping_cpumask(HK_FLAG_DOMAIN)
+further down the line, we can still end up with an empty cpumask being
+passed down to partition_sched_domains_locked().
 
-  0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
+Do the proper thing and don't just check the mask is non-empty - check
+that its intersection with housekeeping_cpumask(HK_FLAG_DOMAIN) is
+non-empty.
 
-but it happens that some *actually* do return an unsigned int value. Those
-are the helpers that return a utilization value: uclamp_rq_max_value() and
-uclamp_eff_value(). Fix those up.
-
-Note that this doesn't lead to any obj diff using a relatively recent
-aarch64 compiler (8.3-2019.03). The current code of e.g. uclamp_eff_value()
-already figures out that the return value is 11 bits (bits_per(1024)) and
-doesn't seem to do anything funny. I'm still marking this as fixing the
-above commit to be on the safe side.
-
+Reported-by: Michal Koutný <mkoutny@suse.com>
 Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Qais Yousef <qais.yousef@arm.com>
 Cc: Dietmar.Eggemann@arm.com
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: patrick.bellasi@matbug.net
+Cc: hannes@cmpxchg.org
+Cc: lizefan@huawei.com
+Cc: morten.rasmussen@arm.com
 Cc: qperret@google.com
-Cc: surenb@google.com
 Cc: tj@kernel.org
 Cc: vincent.guittot@linaro.org
-Fixes: 0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
-Link: https://lkml.kernel.org/r/20191113165334.14291-1-valentin.schneider@arm.com
+Fixes: cd1cb3350561 ("sched/topology: Don't try to build empty sched domains")
+Link: https://lkml.kernel.org/r/20191104003906.31476-1-valentin.schneider@arm.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/core.c  | 4 ++--
- kernel/sched/sched.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ kernel/cgroup/cpuset.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 44123b4..a4f76d3 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -853,7 +853,7 @@ static inline void uclamp_idle_reset(struct rq *rq, enum uclamp_id clamp_id,
- }
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index c87ee64..e4c1078 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -798,8 +798,14 @@ static int generate_sched_domains(cpumask_var_t **domains,
+ 		    cpumask_subset(cp->cpus_allowed, top_cpuset.effective_cpus))
+ 			continue;
  
- static inline
--enum uclamp_id uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
-+unsigned int uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
- 				   unsigned int clamp_value)
- {
- 	struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
-@@ -918,7 +918,7 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
- 	return uc_req;
- }
++		/*
++		 * Skip cpusets that would lead to an empty sched domain.
++		 * That could be because effective_cpus is empty, or because
++		 * it's only spanning CPUs outside the housekeeping mask.
++		 */
+ 		if (is_sched_load_balance(cp) &&
+-		    !cpumask_empty(cp->effective_cpus))
++		    cpumask_intersects(cp->effective_cpus,
++				       housekeeping_cpumask(HK_FLAG_DOMAIN)))
+ 			csa[csn++] = cp;
  
--enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
-+unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
- {
- 	struct uclamp_se uc_eff;
- 
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index c8870c5..49ed949 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2309,7 +2309,7 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
- #endif /* CONFIG_CPU_FREQ */
- 
- #ifdef CONFIG_UCLAMP_TASK
--enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
-+unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
- 
- static __always_inline
- unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
+ 		/* skip @cp's subtree if not a partition root */
