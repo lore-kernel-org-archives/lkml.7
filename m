@@ -2,102 +2,175 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30453C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A76C43141
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 113002073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E3E2073C
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 17:23:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gsOlK5F4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbfKORVx (ORCPT
+        id S1727684AbfKORXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 12:21:53 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:36333 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727552AbfKORVv (ORCPT
+        Fri, 15 Nov 2019 12:23:11 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24288 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727552AbfKORXL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 12:21:51 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 70FF43C04C0;
-        Fri, 15 Nov 2019 18:21:49 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id iCW7gDl92XkX; Fri, 15 Nov 2019 18:21:44 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Fri, 15 Nov 2019 12:23:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573838589;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=06kWqtx/26ngJrjOCfJyg6Cce2N2bE9JwILxSi+bOAI=;
+        b=gsOlK5F4ZYM3jqsry1S84abcxsIMy4ejIk2RAwysVOvQMHEOd5uHV0QQvTcnMuO1y7FNDT
+        jBoskBg7CGvklCzRDTYqEpd1clSUfQqkeJyzm0tTTRxudkN04XZErkIKWecGxbopkK3vb1
+        DTkjN+g5bG7UyZQHKQKWa3mTQU9g2CA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-273-R4y48ZzWOkGEjZwVb4saJQ-1; Fri, 15 Nov 2019 12:23:05 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 18CCC3C009C;
-        Fri, 15 Nov 2019 18:21:44 +0100 (CET)
-Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Fri, 15 Nov
- 2019 18:21:43 +0100
-Date:   Fri, 15 Nov 2019 18:21:41 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        <linux-kernel@vger.kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] checkpatch: whitelist Originally-by: signature
-Message-ID: <20191115172141.GA3085@lxhi-065.adit-jv.com>
-References: <20191115150202.15208-1-erosca@de.adit-jv.com>
- <05ba4e29fb78885cf9abf7bfc87e0a7bcda099fe.camel@perches.com>
- <20191115154627.GA2187@lxhi-065.adit-jv.com>
- <20191115092943.7c79f81e@lwn.net>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E1D171083E80;
+        Fri, 15 Nov 2019 17:23:03 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0DC0828DDE;
+        Fri, 15 Nov 2019 17:23:02 +0000 (UTC)
+Date:   Fri, 15 Nov 2019 12:23:01 -0500
+From:   Brian Foster <bfoster@redhat.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 12/28] shrinker: defer work only to kswapd
+Message-ID: <20191115172301.GB55854@bfoster>
+References: <20191031234618.15403-1-david@fromorbit.com>
+ <20191031234618.15403-13-david@fromorbit.com>
+ <20191104152954.GC10665@bfoster>
+ <20191114211150.GE4614@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20191114211150.GE4614@dread.disaster.area>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: R4y48ZzWOkGEjZwVb4saJQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191115092943.7c79f81e@lwn.net>
-X-Originating-IP: [10.72.93.66]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+On Fri, Nov 15, 2019 at 08:11:50AM +1100, Dave Chinner wrote:
+> On Mon, Nov 04, 2019 at 10:29:54AM -0500, Brian Foster wrote:
+> > On Fri, Nov 01, 2019 at 10:46:02AM +1100, Dave Chinner wrote:
+> > > @@ -601,10 +605,10 @@ static unsigned long do_shrink_slab(struct shri=
+nk_control *shrinkctl,
+> > >  =09 * scanning at high prio and therefore should try to reclaim as m=
+uch as
+> > >  =09 * possible.
+> > >  =09 */
+> > > -=09while (total_scan >=3D batch_size ||
+> > > -=09       total_scan >=3D freeable_objects) {
+> > > +=09while (scan_count >=3D batch_size ||
+> > > +=09       scan_count >=3D freeable_objects) {
+> > >  =09=09unsigned long ret;
+> > > -=09=09unsigned long nr_to_scan =3D min(batch_size, total_scan);
+> > > +=09=09unsigned long nr_to_scan =3D min_t(long, batch_size, scan_coun=
+t);
+> > > =20
+> > >  =09=09shrinkctl->nr_to_scan =3D nr_to_scan;
+> > >  =09=09shrinkctl->nr_scanned =3D nr_to_scan;
+> > > @@ -614,29 +618,29 @@ static unsigned long do_shrink_slab(struct shri=
+nk_control *shrinkctl,
+> > >  =09=09freed +=3D ret;
+> > > =20
+> > >  =09=09count_vm_events(SLABS_SCANNED, shrinkctl->nr_scanned);
+> > > -=09=09total_scan -=3D shrinkctl->nr_scanned;
+> > > -=09=09scanned +=3D shrinkctl->nr_scanned;
+> > > +=09=09scan_count -=3D shrinkctl->nr_scanned;
+> > > +=09=09scanned_objects +=3D shrinkctl->nr_scanned;
+> > > =20
+> > >  =09=09cond_resched();
+> > >  =09}
+> > > -
+> > >  done:
+> > > -=09if (next_deferred >=3D scanned)
+> > > -=09=09next_deferred -=3D scanned;
+> > > +=09if (deferred_count)
+> > > +=09=09next_deferred =3D deferred_count - scanned_objects;
+> > >  =09else
+> > > -=09=09next_deferred =3D 0;
+> > > +=09=09next_deferred =3D scan_count;
+> >=20
+> > Hmm.. so if there was no deferred count on this cycle, we set
+> > next_deferred to whatever is left from scan_count and add that back int=
+o
+> > the shrinker struct below. If there was a pending deferred count on thi=
+s
+> > cycle, we subtract what we scanned from that and add that value back.
+> > But what happens to the remaining scan_count in the latter case? Is it
+> > lost, or am I missing something?
+>=20
+> if deferred_count is not zero, then it is kswapd that is running. It
+> does the deferred work, and if it doesn't make progress then adding
+> it's scan count to the deferred work doesn't matter. That's because
+> it will come back with an increased priority in a short while and
+> try to scan more of the deferred count plus it's larger scan count.
+>=20
 
-On Fri, Nov 15, 2019 at 09:29:43AM -0700, Jonathan Corbet wrote:
-> On Fri, 15 Nov 2019 16:46:27 +0100
-> Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> 
-> > On Fri, Nov 15, 2019 at 07:09:17AM -0800, Joe Perches wrote:
-> > > On Fri, 2019-11-15 at 16:02 +0100, Eugeniu Rosca wrote:  
-> > > > Oftentimes [1], the contributor would like to honor or give credits [2]
-> > > > to somebody's original ideas in the submission/reviewing process. While
-> > > > "Co-developed-by:" and "Suggested-by:" (currently whitelisted) could be
-> > > > employed for this purpose, they are not ideal.  
-> > > 
-> > > You need to get the use of this accepted into Documentation/process
-> > > before adding it to checkpatch  
-> > 
-> > If the change [*] makes sense to you, I can submit an update to
-> > Documentation/process/submitting-patches.rst
-> 
-> So there appear to be 89 patches with Originally-by in the entire Git
-> history, which isn't a a lot; there are 3x as many Co-developed-by tags,
-> which still isn't a huge number.  I do wonder if it's worth recognizing
-> yet another tag with a subtly different shade of meaning here?  My own
-> opinion doesn't matter a lot, but I'd like to have a sense that there is
-> wider acceptance of this tag before adding it to the docs.
+Ok, so perhaps there is no functional reason to defer remaining scan
+count from a context (i.e. kswapd) that attempts to process deferred
+work...
 
-I will give a real-life example. Say, I have some patches in my
-local tree and they've been developed by somebody who is no longer
-interested/paid to upstream those.
+> IOWs, if we defer kswapd unused scan count, we effectively increase
+> the pressure as the priority goes up, potentially making the
+> deferred count increase out of control. i.e. kswapd can make
+> progress and free items, but the result is that it increased the
+> deferred scan count rather than reducing it. This leads to excessive
+> reclaim of the slab caches and kswapd can trash the caches long
+> after the memory pressure has gone away...
+>=20
 
-I first submit those patches with the original authorship, plus my SoB.
-Then, the reviewers post their findings. I put my time into fixing those
-and re-testing the patch or the entire series. The final patch/series
-may look totally different compared to the original one.
+... yet if kswapd runs without pre-existing deferred work, that's
+precisely what it does. next_deferred is set to remaining scan_count and
+that is added back to the shrinker struct. So should kswapd generally
+defer work or not? If the answer is sometimes, then please add a comment
+to the next_deferred assignment to explain when/why.
 
-Which way would you suggest to give credits to the original author?
-I personally think that "Co-developed-by:" conveys the idea/feeling of
-"teaming up" with somebody, which doesn't happen in my example.
+> > For example, suppose we start this cycle with a large scan_count and
+> > ->scan_objects() returned SHRINK_STOP before doing much work. In that
+> > scenario, it looks like whether ->nr_deferred is 0 or not is the only
+> > thing that determines whether we defer the entire remaining scan_count
+> > or just what is left from the previous ->nr_deferred. The existing code
+> > appears to consistently factor in what is left from the current scan
+> > with the previous deferred count. Hm?
+>=20
+> If kswapd doesn't have any deferred work, then it's largely no
+> different in behaviour to direct reclaim. If it has no deferred
+> work, then the shrinker is not getting stopped early in direct
+> reclaim, so it's unlikely that kswapd is going to get stopped early,
+> either....
+>=20
 
--- 
-Best Regards,
-Eugeniu
+Then perhaps the logic could be simplified to explicitly not defer from
+kswapd..?
+
+Brian
+
+> Cheers,
+>=20
+> Dave.
+> --=20
+> Dave Chinner
+> david@fromorbit.com
+>=20
+
