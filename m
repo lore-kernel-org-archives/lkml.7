@@ -2,119 +2,92 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBDFC432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA15C43215
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 932A92072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A10B20730
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 18:48:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EQLOVGqY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="isV1GwSy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbfKOSrs (ORCPT
+        id S1726912AbfKOSsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 13:47:48 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:35847 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbfKOSrs (ORCPT
+        Fri, 15 Nov 2019 13:48:24 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33940 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbfKOSsY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 13:47:48 -0500
-Received: by mail-pj1-f67.google.com with SMTP id cq11so121454pjb.3
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 10:47:46 -0800 (PST)
+        Fri, 15 Nov 2019 13:48:24 -0500
+Received: by mail-pl1-f195.google.com with SMTP id h13so5273065plr.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 10:48:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:to:subject:from:user-agent:date;
-        bh=iS/Fqu32CYRsyYqI3nNewHGyeeTZ7Vyn3l2lS2Wx+I4=;
-        b=EQLOVGqYrkyo+x9eBqaR38FivLhZb82i4BXqpCkgEtQbc5eP5cdH3D9uM6kDxJ5NSS
-         0faGbqmYkX5A7cAuuymXwjY/NdAY3n+5XO9WW1BVZUMC9xvtcxX01fFTCwhzHLJrvmY6
-         Xgfx56P0+DbzPUA4veZCjkLneUfU7DTBumXTY=
+         :references:cc:to:subject:from:user-agent:date;
+        bh=X4twp3pctC7VCYEezfWUSk2DKafsbFD6g/B7PxJ7beE=;
+        b=isV1GwSykbdCIUh1Sq2o8vQA3iKaQVXo2ALyRNUWZ8d6X0VzM46cePA97/qONQhJ00
+         RFJ8tV421WaulCuo3jygFdZGKUKdOYYkry8Skc2I706xbc0HLFhIDEepgOxGqQdmgQS0
+         3vfOyfjJdFFH/sFlt9zScWDVH7vA6ecKloMps=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:to:subject:from
+         :content-transfer-encoding:in-reply-to:references:cc:to:subject:from
          :user-agent:date;
-        bh=iS/Fqu32CYRsyYqI3nNewHGyeeTZ7Vyn3l2lS2Wx+I4=;
-        b=JK+p8Ed15PFp1i3H03fRLkEgLWKdzZk6GnZw+6397ChNumObsN9OOASWTzYyDJ1VgK
-         cmhzBMm4NlEcMxwHE5t+VGeXypZzTPdm/2DDQAz1nEcLH9KI2mEmYuzlJuUBCQkpyHiE
-         Rw3sA1uAFm7aYel8fX/VZHf/ZdJYyDQYKYWYeQZXcILULIl7J+t4sEeqmDyud4nMtcEE
-         O4KH7ouaJDDmS0O7Z9btts1Wz9gTB10ZpA1s/XyQnCM8XKgkHL2NjW3FCiNXdFCkKYNw
-         UwpHL67ewA3hc1qhozQorM42unbwpf63QNaOaYALUu9/9QaSFiOPSfJLGJ2tULGpCpKm
-         FTrA==
-X-Gm-Message-State: APjAAAXAMNfu+1nN8OI+R3ZvZ52xuwFZW8mCXGU3b6GjC4QjKo3VoNjT
-        +4L2RKQdn5G/OcqCEymfZFLpQA==
-X-Google-Smtp-Source: APXvYqzo8ZTaeQMvkZzw76l4dUblfI2O5tBibpRcgatRhGZq8Uo9e3xMTJCYC85y6OhrsNVmUd0svw==
-X-Received: by 2002:a17:902:7e4c:: with SMTP id a12mr16275022pln.219.1573843665716;
-        Fri, 15 Nov 2019 10:47:45 -0800 (PST)
+        bh=X4twp3pctC7VCYEezfWUSk2DKafsbFD6g/B7PxJ7beE=;
+        b=eXn29llbfutiHE2ZSbutLzlBv+2a9PjztMG5VPwbCg+DcetvFTTeGpPBsk3dx9X8pE
+         9O50v1HMxvNUn8Zzj4QIjDHRtGZnWqlSRZf+KmB6kVq8anz9EUydOAXXtS39XB/ih2Ul
+         9CKIp/y8FOwBESX1gf9lIG528T+G6kU2NKYyG+ThAGmJpL5ird4kxrB/plN15QJvqQ4T
+         LxK+Ok27bRZULNyykMZO8qwezZVrrfpfb2BIhp9P4C9TkAOJjmxOK5LMsecId0jSAbK+
+         AjADQzndKGte+NtiO/gBtfdjihZvOGMYJohOzoBATKoliLojkDPUW/A9WjG7olOLlJXK
+         Cupg==
+X-Gm-Message-State: APjAAAUHqxl3wLFCTABxoYjJPewE37KCOE2fAIWQ5x97q6zOKeDfJyfC
+        zIsWuiRGiCSAHIF6BfGw1TFNQA==
+X-Google-Smtp-Source: APXvYqzCEHYKTJk35+KbDAqTeknJ92k5jjiweJcm0Q36J9YfJLytr/wLW+RFHHfKHabR4PfHBGRO9g==
+X-Received: by 2002:a17:902:8ec6:: with SMTP id x6mr16554556plo.151.1573843701878;
+        Fri, 15 Nov 2019 10:48:21 -0800 (PST)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id x12sm11001564pfm.130.2019.11.15.10.47.45
+        by smtp.gmail.com with ESMTPSA id a26sm11247215pff.155.2019.11.15.10.48.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 10:47:45 -0800 (PST)
-Message-ID: <5dcef2d1.1c69fb81.803c0.0872@mx.google.com>
+        Fri, 15 Nov 2019 10:48:21 -0800 (PST)
+Message-ID: <5dcef2f5.1c69fb81.ccbc2.1a7e@mx.google.com>
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <000000000000cdaa560596acbc4e@google.com>
-References: <000000000000cdaa560596acbc4e@google.com>
-To:     alexandre.belloni@bootlin.com, andreyknvl@google.com,
-        arnd@arndb.de, b.zolnierkie@samsung.com,
-        gregkh@linuxfoundation.org, herbert@gondor.apana.org.au,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, lvivier@redhat.com,
-        mchehab+samsung@kernel.org, mpm@selenic.com,
-        syzbot <syzbot+f41c4f7c6d8b0b778780@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: INFO: task hung in chaoskey_disconnect
+In-Reply-To: <1573756521-27373-2-git-send-email-ilina@codeaurora.org>
+References: <1573756521-27373-1-git-send-email-ilina@codeaurora.org> <1573756521-27373-2-git-send-email-ilina@codeaurora.org>
+Cc:     evgreen@chromium.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mkshah@codeaurora.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org,
+        dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
+To:     Lina Iyer <ilina@codeaurora.org>, bjorn.andersson@linaro.org,
+        linus.walleij@linaro.org, maz@kernel.org
+Subject: Re: [PATCH 01/12] irqdomain: add bus token DOMAIN_BUS_WAKEUP
 From:   Stephen Boyd <swboyd@chromium.org>
 User-Agent: alot/0.8.1
-Date:   Fri, 15 Nov 2019 10:47:44 -0800
+Date:   Fri, 15 Nov 2019 10:48:20 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting syzbot (2019-11-06 04:32:09)
-> Hello,
+Quoting Lina Iyer (2019-11-14 10:35:10)
+> A single controller can handle normal interrupts and wake-up interrupts
+> independently, with a different numbering space. It is thus crucial to
+> allow the driver for such a controller discriminate between the two.
 >=20
-> syzbot found the following crash on:
+> A simple way to do so is to tag the wake-up irqdomain with a "bus token"
+> that indicates the wake-up domain. This slightly abuses the notion of
+> bus, but also radically simplifies the design of such a driver. Between
+> two evils, we choose the least damaging.
 >=20
-> HEAD commit:    b1aa9d83 usb: raw: add raw-gadget interface
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D16ae2adce00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D79de80330003b=
-5f7
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3Df41c4f7c6d8b0b7=
-78780
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D10248158e00=
-000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D16afbf7ce00000
->=20
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+f41c4f7c6d8b0b778780@syzkaller.appspotmail.com
->=20
+> Suggested-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> ---
 
-There are two reports. Let's test this one too.
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-#syz test: https://github.com/google/kasan.git b1aa9d83
-
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 5b799aa973a3..c487709499fc 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -2440,8 +2440,8 @@ void add_hwgenerator_randomness(const char *buffer, s=
-ize_t count,
- 	 * We'll be woken up again once below random_write_wakeup_thresh,
- 	 * or when the calling thread is about to terminate.
- 	 */
--	wait_event_freezable(random_write_wait,
--			kthread_should_stop() ||
-+	wait_event_interruptible(random_write_wait,
-+			kthread_should_stop() || freezing(current) ||
- 			ENTROPY_BITS(&input_pool) <=3D random_write_wakeup_bits);
- 	mix_pool_bytes(poolp, buffer, count);
- 	credit_entropy_bits(poolp, entropy);
