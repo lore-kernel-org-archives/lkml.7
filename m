@@ -2,96 +2,147 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E657C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E53C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 364FF20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:46:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573818390;
-	bh=0ghNXRxv0XQeQoTUBbtxGBMNkhSqvp2R6oRI3ThRTFY=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=WyNyC2WoMxSdwudIL45s42OPYjbX62ueiC2qL5b7xHyeOS6Of8HCpRMXRspv4WKda
-	 rynPlbeBXCK8+ekvFUkP7S5OKpmJq/+EsB92EisCZ425mVoZtTAUxEO5Km8o5eEFyl
-	 qkSPw8lky7vsp2gYbondJ3KA9DPskrd+SNqJta2k=
+	by mail.kernel.org (Postfix) with ESMTP id A7CD32072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 11:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbfKOLq3 (ORCPT
+        id S1727380AbfKOLt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 06:46:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727421AbfKOLq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 06:46:28 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E9892072D;
-        Fri, 15 Nov 2019 11:46:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573818388;
-        bh=0ghNXRxv0XQeQoTUBbtxGBMNkhSqvp2R6oRI3ThRTFY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=T0MLys2PWf3E9IxL9JNS4kd1xgRhpnnkT5AK7kZyYHiMYj9LZ9U76dsuvoqMRp8VS
-         UaRpzT4yEF60waHyxcMGDqTL6eyEUyIqaIbyB/tjJ4o0b57ujUQiZMg/3q8fX/aayf
-         5iVGojPoXcT+GHRX63/0C3jg3fXYvgSU9f9aCDKc=
-Date:   Fri, 15 Nov 2019 11:46:24 +0000
-From:   Will Deacon <will@kernel.org>
-To:     torvalds@linux-foundation.org
-Cc:     catalin.marinas@arm.com,
-        Linux ARM Kernel Mailing List 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] arm64: Fix for -rc8 / final
-Message-ID: <20191115114622.GA12198@willie-the-truck>
+        Fri, 15 Nov 2019 06:49:28 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57548 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726983AbfKOLt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 06:49:28 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AEDCEADCB;
+        Fri, 15 Nov 2019 11:49:25 +0000 (UTC)
+Subject: Re: Sense of soc bus? (was: [PATCH] base: soc: Export
+ soc_device_to_device() helper)
+To:     Rob Herring <robh@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-realtek-soc@lists.infradead.org,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        linux-amlogic@lists.infradead.org,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        LAKML <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Architecture Mailman List <boot-architecture@lists.linaro.org>,
+        DTML <devicetree@vger.kernel.org>
+References: <20191103013645.9856-3-afaerber@suse.de>
+ <20191111045609.7026-1-afaerber@suse.de> <20191111052741.GB3176397@kroah.com>
+ <586fa37c-6292-aca4-fa7c-73064858afaf@suse.de>
+ <20191111064040.GA3502217@kroah.com>
+ <a88442df-dc6b-07e5-8dee-9e308bdda450@suse.de>
+ <20191112052347.GA1197504@kroah.com>
+ <20191112072926.isjxfa4ci6akhx56@pengutronix.de>
+ <aff81b8e-f041-73a5-6a95-d308fa07842c@suse.de>
+ <CAL_JsqLr=fw6zxa=69rtgZ4oxzdw=cVDr3km5ya0pRGsNT1xLw@mail.gmail.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <8411cceb-56f1-bcb3-96b6-5a2aaedd18cf@suse.de>
+Date:   Fri, 15 Nov 2019 12:49:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAL_JsqLr=fw6zxa=69rtgZ4oxzdw=cVDr3km5ya0pRGsNT1xLw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Am 14.11.19 um 23:09 schrieb Rob Herring:
+> On Tue, Nov 12, 2019 at 4:47 AM Andreas Färber <afaerber@suse.de> wrote:
+>> Finally, arch/arm seems unique in that it has the machine_desc mechanism
+>> that allows individual SoCs to force creating their soc_device early and
+>> using it as parent for further DT-created platform_devices. With arm64
+>> we've lost that ability, and nios2 is not using it either.
+>> A bad side effect (with SUSE hat on) is that this parent design pattern
+>> does not allow to build such drivers as modules, which means that distro
+>> configs using arm's multi-platform, e.g., CONFIG_ARCH_MULTI_V7 will get
+>> unnecessary code creep as new platforms get added over time (beyond the
+>> basic clk, pinctrl, tty and maybe timer).
+>> Even if it were possible to call into a driver module that early, using
+>> it as parent would seem to imply that all the references by its children
+>> would not allow to unload the module, which I'd consider a flawed design
+>> for such an "optional" read-once driver. If we want the device hierarchy
+>> to have a soc root then most DT based platforms will have a /soc DT node
+>> anyway (although no device_type = "soc") that we probably could have a
+>> device registered for in common code rather than each SoC platform
+>> handling that differently? That might then make soc_register_device()
+>> not the creator of the device (if pre-existent) but the supplier of data
+>> to that core device, which should then allow to unload the data provider
+>> with just the sysfs data disappearing until re-inserted (speeding up the
+>> develop-and-test cycle on say not-so-resource-constrained platforms).
+> 
+> I for one would like to for this to be consistent. Either we always
+> have an SoC device parent or never. I wouldn't decide based on having
+> a DT node or not either.
 
-Please pull this one trivial fix for -rc8/final that ensures that the
-script used to detect RELR relocation support in the toolchain works
-correctly when $CC contains quotes. Although it fails safely (by failing
-to detect the support when it exists), it would be nice to have this
-fixed in 5.4 given that it was only introduced in the last merge window.
+Sure, if we can always be consistent, that might be best.
 
-Thanks,
+Where I was coming from here is that, if we're not supposed to use
+soc_device_to_device(), then we have no way to associate an of_node with
+the soc_device from the outside (and nobody was doing it today, as per
+my analysis). We'd either need a new helper of_soc_device_register()
+with additional argument for the node, or it would need to be done
+entirely in the infrastructure as I suggested, be it by looking for one
+hardcoded /soc node or for nodes with device_type = "soc".
 
-Will
+Rob, in light of this discussion, should we start adding the latter
+property for new DTs such as my new Realtek SoCs, or was there a reason
+this has not been used consistently outside of powerpc and nios2?
+Intel/Altera appear to be the only two in arm64, with only three more in
+arm, none in mips.
 
---->8
+(BTW my assumption was that we don't follow the booting-without-of.txt
+documented schema of soc<SOCname> so that we can share .dtsi across
+differently named SoCs, is that correct?)
 
-The following changes since commit 6767df245f4736d0cf0c6fb7cf9cf94b27414245:
+> Generally, we should always have MMIO devices
+> under a bus node and perhaps more than one, but that doesn't always
+> happen. I think building the drivers as modules is a good reason to do
+> away with the parent device.
+> 
+> It would also allow getting rid of remaining
+> of_platform_default_populate calls in arm platforms except for auxdata
+> cases. Pretty much that's the ones you list below in arch/arm/.
 
-  arm64: Do not mask out PTE_RDONLY in pte_same() (2019-11-06 19:31:56 +0000)
+The majority was indeed passing in NULL, so yeah, we might clean that
+up, if someone could come up with a plan of where/how to implement it.
 
-are available in the Git repository at:
+Cheers,
+Andreas
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
-
-for you to fetch changes up to 65e1f38d9a2f07d4b81f369864c105880e47bd5a:
-
-  scripts/tools-support-relr.sh: un-quote variables (2019-11-13 10:52:05 +0000)
-
-----------------------------------------------------------------
-arm64 fix for -rc8 / final
-
-- Handle CC variables containing quotes in tools-support-relr.sh script
-
-----------------------------------------------------------------
-Ilie Halip (1):
-      scripts/tools-support-relr.sh: un-quote variables
-
- scripts/tools-support-relr.sh | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
