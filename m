@@ -2,119 +2,81 @@ Return-Path: <SRS0=19dG=ZH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73020C43215
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F418C432C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB03206E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:09:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FO+N6MSe"
+	by mail.kernel.org (Postfix) with ESMTP id 3B200206E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 15 Nov 2019 22:11:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfKOWJZ (ORCPT
+        id S1726992AbfKOWK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 17:09:25 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34219 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbfKOWJZ (ORCPT
+        Fri, 15 Nov 2019 17:10:59 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:41290 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbfKOWK6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 17:09:25 -0500
-Received: by mail-pg1-f193.google.com with SMTP id z188so6620246pgb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 14:09:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:to:subject:from:user-agent:date;
-        bh=HHPDkMqYLRE1UmTcCXc29WF8eT8rU9fO8tUKqDH1bWM=;
-        b=FO+N6MSe7PeyfgqsNtfAMKWzchnk8stYlVmX924RBKfFnEVahkLYWSHpVkM48Rd1Q7
-         hoGi9nO+Sakv/4CMxCLH1Rp8zwU2NRX60CfV7eU5YVJAtPkJPELbdEgH7mWJ39owgwBt
-         j3q7OHpfnYS6S6XItdMPNC1shlSdKSvoHMynI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:to:subject:from
-         :user-agent:date;
-        bh=HHPDkMqYLRE1UmTcCXc29WF8eT8rU9fO8tUKqDH1bWM=;
-        b=qkf0yXV8NHwHMYtS2DwRvA0+YtPTxN3khNoRSYhv/Z1yUoqGNSDQAPCnkGtINBQiJN
-         Bp/8ZJtpuqJJW/OCmD4kyE0a6mwzYKE+nyaN2rjIgw0z+OKmmwpGgPwqy432XJnFZ4R+
-         j1re+TnGRR3+gm7sWWMcDQ67e5AXt4WtSMSCEWzcwmLCQhI62qnu0MPolaalMVN/XiyJ
-         iuyqyetYCMbvgwRx/37mFd8oU/vPHzhaTSmMvpzA2ZJsuU1jZ/Aw3aBGcopNs/vp2w9s
-         ZMg0TwhRnS9dWgNFnFHxhhauk7R8YA6uXb7X0ZkvsB+Yk41DILH6P0Z6XGFzIoI0GUuN
-         xfqw==
-X-Gm-Message-State: APjAAAXHATZSwyMWcRYtxnYkrA/En2eDyoui9kagCJUKBiiNNW+6rEeF
-        wexPPnUf1DwNIpE4a7Wc0JpLsg==
-X-Google-Smtp-Source: APXvYqxjkXIKUrRKWqlKT3BM6RRfSPhAVuL99mmoOgGfxld7zoOjsmN41sw578rR+emLjfBA+dl1iA==
-X-Received: by 2002:a63:750f:: with SMTP id q15mr19105221pgc.422.1573855764169;
-        Fri, 15 Nov 2019 14:09:24 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id k14sm10717256pgt.54.2019.11.15.14.09.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 14:09:23 -0800 (PST)
-Message-ID: <5dcf2213.1c69fb81.1e0ec.f500@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 15 Nov 2019 17:10:58 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iVjnZ-0008GP-F9; Fri, 15 Nov 2019 22:10:37 +0000
+Date:   Fri, 15 Nov 2019 22:10:37 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, yu kuai <yukuai3@huawei.com>,
+        rafael@kernel.org, oleg@redhat.com, mchehab+samsung@kernel.org,
+        corbet@lwn.net, tytso@mit.edu, jmorris@namei.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        zhengbin13@huawei.com, yi.zhang@huawei.com,
+        chenxiang66@hisilicon.com, xiexiuqi@huawei.com
+Subject: Re: [RFC] simple_recursive_removal()
+Message-ID: <20191115221037.GW26530@ZenIV.linux.org.uk>
+References: <20191115131625.GO26530@ZenIV.linux.org.uk>
+ <20191115083813.65f5523c@gandalf.local.home>
+ <20191115134823.GQ26530@ZenIV.linux.org.uk>
+ <20191115085805.008870cb@gandalf.local.home>
+ <20191115141754.GR26530@ZenIV.linux.org.uk>
+ <20191115175423.GS26530@ZenIV.linux.org.uk>
+ <20191115184209.GT26530@ZenIV.linux.org.uk>
+ <20191115194138.GU26530@ZenIV.linux.org.uk>
+ <20191115211820.GV26530@ZenIV.linux.org.uk>
+ <20191115162609.2d26d498@gandalf.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191115215737.GG18786@codeaurora.org>
-References: <1573756521-27373-1-git-send-email-ilina@codeaurora.org> <1573756521-27373-9-git-send-email-ilina@codeaurora.org> <5dcefd86.1c69fb81.c72c8.07a1@mx.google.com> <20191115205555.GF18786@codeaurora.org> <20191115215737.GG18786@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, linus.walleij@linaro.org,
-        maz@kernel.org, evgreen@chromium.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org,
-        dianders@chromium.org
-To:     Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH 08/12] drivers: pinctrl: msm: setup GPIO chip in hierarchy
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Fri, 15 Nov 2019 14:09:22 -0800
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115162609.2d26d498@gandalf.local.home>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Lina Iyer (2019-11-15 13:57:37)
-> On Fri, Nov 15 2019 at 13:55 -0700, Lina Iyer wrote:
-> >>Quoting Lina Iyer (2019-11-14 10:35:17)
->=20
-> >>>+static int msm_gpio_wakeirq(struct gpio_chip *gc,
-> >>>+                           unsigned int child,
-> >>>+                           unsigned int child_type,
-> >>>+                           unsigned int *parent,
-> >>>+                           unsigned int *parent_type)
-> >>>+{
-> >>>+       struct msm_pinctrl *pctrl =3D gpiochip_get_data(gc);
-> >>>+       const struct msm_gpio_wakeirq_map *map;
-> >>>+       int i;
-> >>>+
-> >>>+       *parent =3D GPIO_NO_WAKE_IRQ;
-> >>>+       *parent_type =3D IRQ_TYPE_EDGE_RISING;
-> >>>+
-> >>>+       for (i =3D 0; i < pctrl->soc->nwakeirq_map; i++) {
-> >>>+               map =3D &pctrl->soc->wakeirq_map[i];
-> >>>+               if (map->gpio =3D=3D child) {
-> >>>+                       *parent =3D map->wakeirq;
-> >>>+                       break;
-> >>>+               }
-> >>>+       }
-> >>>+
-> >>>+       return 0;
-> >>
-> >>Shouldn't we return -EINVAL if we can't translate the gpio irq to the
-> >>parent domain? I would expect to see return -EINVAL here and the above
-> >>if condition to return 0 instead of break.
-> >>
-> >Good catch. Sure.
-> >>>+}
-> >>>+
-> Looking into this, we have been setting GPIO in hierarchy with PDC and
-> the return 0 is appropriate as it would set the GPIO_NO_WAKE_IRQ as the
-> parent and setup the IRQ correctly. We fail to setup GPIOs otherwise.
+On Fri, Nov 15, 2019 at 04:26:09PM -0500, Steven Rostedt wrote:
+> On Fri, 15 Nov 2019 21:18:20 +0000
+> Al Viro <viro@zeniv.linux.org.uk> wrote:
+> 
+> > OK... debugfs and tracefs definitely convert to that; so do, AFAICS,
+> > spufs and selinuxfs, and I wouldn't be surprised if it could be
+> > used in a few more places...  securityfs, almost certainly qibfs,
+> > gadgetfs looks like it could make use of that.  Maybe subrpc
+> > as well, but I'll need to look in details.  configfs won't,
+> > unfortunately...
+> 
+> Thanks Al for looking into this.
+> 
+> I'll try to test it in tracefs, and see if anything breaks. But
+> probably wont get to it till next week.
 
-Ah ok so by default we will set the parent irq to ~0 and that means
-bypass pdc and go directly to GIC?
+I'll probably throw that into #next.dcache - if nothing else,
+that cuts down on the size of patch converting d_subdirs/d_child
+from list to hlist...
 
-Where do we fail to setup a GPIO otherwise? It sounds like we can always
-translate to either something in the map or to ~0.
+Need to get some sleep first, though - only 5 hours today, so
+I want to take another look at that thing tomorrow morning -
+I don't trust my ability to spot obvious bugs right now... ;-/
 
+Oh, well - that at least might finally push the old "kernel-side
+rm -rf done right" pile of half-baked patches into more useful
+state, probably superseding most of them.
