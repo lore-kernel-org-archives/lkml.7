@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91454C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95639C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF502089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60AC32089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:14:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920840;
-	bh=gLtelvidJmu/jlsBQOJ2hGDX/2Qcy3X0HMoFKf8YEr4=;
+	s=default; t=1573920845;
+	bh=lk+Xh0MaiD1FoRGNeq29i40Di3Mj0VgeUVYmCBBoJno=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SiwgJnIsTxFz20QdFY+nVbv2ah1uPrV4n7mSLoXZlQIyBBSUPUvMJSmXu72qbB4Ii
-	 7PXRCLI6Ei6m6TLVaXVj5XBzU5F124ck2IQQxdejm6GY8NSVvzeVJ+YhNMmz/L56/J
-	 IRDDYTLzNpwLovsVqA8Q4bpBTx80Lon3pOBXw6gI=
+	b=wEzIZ94b1denJSKruZL05KyuFiZwiiitUPmg0I/hBQ0OevkTuhMYDp8x4wsm33YGO
+	 8z3fVEqZH+lLUYr/NhLZGa/SFbP6PZHpSatEViSJlG0hrvn5btsSyNEWff0npl7W8f
+	 /FrJBPoZldDH0Nc4Lkya4JSn8GNeWDLEkAJWZzT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729852AbfKPPrz (ORCPT
+        id S1731916AbfKPQOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:47:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54334 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:14:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729724AbfKPPrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:47:35 -0500
+        id S1728458AbfKPPry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:47:54 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B37F3208C0;
-        Sat, 16 Nov 2019 15:47:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C2652086A;
+        Sat, 16 Nov 2019 15:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919254;
-        bh=gLtelvidJmu/jlsBQOJ2hGDX/2Qcy3X0HMoFKf8YEr4=;
+        s=default; t=1573919274;
+        bh=lk+Xh0MaiD1FoRGNeq29i40Di3Mj0VgeUVYmCBBoJno=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oOcmbnFJMNO9mMj0FDVHA+rnqWeu5NiZcznLAamH6iyWBd4uMNsqsugXaY/dXg2wA
-         CFyzk1tAXO0OrHU7jydeJqbAdAcwLM1elS5NLxIeT0A65BhRyhEhROLvI2cpy86TOh
-         T2Uy9dqD6x1QFFXKMXDlaktazY1/SeEy9OgONYUU=
+        b=ygkS7N6wjRqLBg1qvRb0YJ9C0VtBqo/ewZavPGUdPnleUCANYrJRVQ2/aFrA/F4LJ
+         ibpRvoMnZNBPTKcVdKWap1i8d8u86uermwstMP3lYGWqTFc78tm9/eN/9GcZZJcjqG
+         Depv/gkmwN4TmOM3KJBDJTWDkYd+8zb6SYofi3YA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joel Stanley <joel@jms.id.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 007/150] powerpc/boot: Disable vector instructions
-Date:   Sat, 16 Nov 2019 10:45:05 -0500
-Message-Id: <20191116154729.9573-7-sashal@kernel.org>
+Cc:     Devesh Sharma <devesh.sharma@broadcom.com>,
+        Selvin Xavier <selvin.xavier@broadcom.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 022/150] RDMA/bnxt_re: Fix qp async event reporting
+Date:   Sat, 16 Nov 2019 10:45:20 -0500
+Message-Id: <20191116154729.9573-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -59,42 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joel Stanley <joel@jms.id.au>
+From: Devesh Sharma <devesh.sharma@broadcom.com>
 
-[ Upstream commit e8e132e6885962582784b6fa16a80d07ea739c0f ]
+[ Upstream commit 4c01f2e3a906a0d2d798be5751c331cf501bc129 ]
 
-This will avoid auto-vectorisation when building with higher
-optimisation levels.
+Reports affiliated async event on the qp-async event channel instead of
+global event channel.
 
-We don't know if the machine can support VSX and even if it's present
-it's probably not going to be enabled at this point in boot.
-
-These flag were both added prior to GCC 4.6 which is the minimum
-compiler version supported by upstream, thanks to Segher for the
-details.
-
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Devesh Sharma <devesh.sharma@broadcom.com>
+Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/boot/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/bnxt_re/main.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
-index e2a5a932c24a8..5807c9d8e56d5 100644
---- a/arch/powerpc/boot/Makefile
-+++ b/arch/powerpc/boot/Makefile
-@@ -24,8 +24,8 @@ compress-$(CONFIG_KERNEL_GZIP) := CONFIG_KERNEL_GZIP
- compress-$(CONFIG_KERNEL_XZ)   := CONFIG_KERNEL_XZ
+diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
+index bf811b23bc953..7d00b6a53ed8c 100644
+--- a/drivers/infiniband/hw/bnxt_re/main.c
++++ b/drivers/infiniband/hw/bnxt_re/main.c
+@@ -782,12 +782,17 @@ static void bnxt_re_dispatch_event(struct ib_device *ibdev, struct ib_qp *qp,
+ 	struct ib_event ib_event;
  
- BOOTCFLAGS    := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
--		 -fno-strict-aliasing -Os -msoft-float -pipe \
--		 -fomit-frame-pointer -fno-builtin -fPIC -nostdinc \
-+		 -fno-strict-aliasing -Os -msoft-float -mno-altivec -mno-vsx \
-+		 -pipe -fomit-frame-pointer -fno-builtin -fPIC -nostdinc \
- 		 -D$(compress-y)
+ 	ib_event.device = ibdev;
+-	if (qp)
++	if (qp) {
+ 		ib_event.element.qp = qp;
+-	else
++		ib_event.event = event;
++		if (qp->event_handler)
++			qp->event_handler(&ib_event, qp->qp_context);
++
++	} else {
+ 		ib_event.element.port_num = port_num;
+-	ib_event.event = event;
+-	ib_dispatch_event(&ib_event);
++		ib_event.event = event;
++		ib_dispatch_event(&ib_event);
++	}
+ }
  
- BOOTCC := $(CC)
+ #define HWRM_QUEUE_PRI2COS_QCFG_INPUT_FLAGS_IVLAN      0x02
 -- 
 2.20.1
 
