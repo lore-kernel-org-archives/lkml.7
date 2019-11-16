@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC53C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6660C43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0634A21479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85F1E20740
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:47:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919217;
-	bh=+Tu81s/jZSdhO5WGgtrMGG8ucgrcGU+ah1WI414OjVc=;
+	s=default; t=1573919229;
+	bh=9BUY48yvrLMhHqxYllnn6XxLMqRsZnTGF692jic1HTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n64n9/x5EjjvAHw/jP+pDtHm0TtbeY4Na+cFmoa75cEt3VvC6n6FlxOan4gIeLqfe
-	 LT/8Q0Yphboq08tBgRCnCuaooDGfjiXgpBxnUajBfYcf6QlJHGot7v9sVlPn2CDqUH
-	 YPUT6lvzQuPTZpwiHGgeQR+Hitbv8rR0gbdqa1aY=
+	b=cQHf86sXpVumC61xd90GaYlpj81s3ru7L418y5LOLQhH6J+EoItijPZfEQ6gH5K/R
+	 y5KIVTMevon56GVQR2Wi2eWFtajYIKLaHJH6uf6KRVQ/x8CxFTKBZgHHEyr1EX16fx
+	 S7rGtHmLLJvxhWMNcGDV6TXNhdpxGN+FTbMZBJ4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728704AbfKPPqz (ORCPT
+        id S1729632AbfKPPrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:46:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52646 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:47:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729337AbfKPPqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:46:18 -0500
+        id S1728775AbfKPPqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:34 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C8E12083B;
-        Sat, 16 Nov 2019 15:46:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE4F620869;
+        Sat, 16 Nov 2019 15:46:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919178;
-        bh=+Tu81s/jZSdhO5WGgtrMGG8ucgrcGU+ah1WI414OjVc=;
+        s=default; t=1573919194;
+        bh=9BUY48yvrLMhHqxYllnn6XxLMqRsZnTGF692jic1HTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2tTi3lM4+ifw8TrAvx+imKniBJf8q5JjPHEBH3Mn2JFslXmo7HpYbUdH2348N0hdK
-         oCW0rH1QNVE7J3OSiellNwXyiAVTIpoUncjB8hDFeNkDt2j4tge3U8C0XMzVXcKRn+
-         4zc0fXE8ZnLS/tNzLKmPQ7UIe8QDIXyYWZWxan/o=
+        b=qHUlFTwlZgLgRKWSRG79p2IUGIqXqsb2biBmcEnNNsg1Bdhu5fPi4cbWWtA8Og6gP
+         7223qYvu0qrW5K7dLYzS4DEZInILhVlqHdf66lAxwFAEZL1HDgL/BzNfEm2MHPJhg+
+         w7YgGzjMLNQIoUmmbJjR1Ux24G+vUOpcVy6E2qH4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 187/237] ARM: dts: imx6sx-sdb: Fix enet phy regulator
-Date:   Sat, 16 Nov 2019 10:40:22 -0500
-Message-Id: <20191116154113.7417-187-sashal@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 202/237] rtl8xxxu: Fix missing break in switch
+Date:   Sat, 16 Nov 2019 10:40:37 -0500
+Message-Id: <20191116154113.7417-202-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -59,74 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit 1ad9fb750a104f51851c092edd7b3553f0218428 ]
+[ Upstream commit 307b00c5e695857ca92fc6a4b8ab6c48f988a1b1 ]
 
-Bindings for "fixed-regulator" only explicitly support "gpio" property,
-not "gpios". Fix by correcting the property name.
+Add missing break statement in order to prevent the code from falling
+through to the default case.
 
-The enet PHYs on imx6sx-sdb needs to be explicitly reset after a power
-cycle, this can be handled by the phy-reset-gpios property. Sadly this
-is not handled on suspend: the fec driver turns phy-supply off but
-doesn't assert phy-reset-gpios again on resume.
-
-Since additional phy-level work is required to support powering off the
-phy in suspend fix the problem by just marking the regulator as
-"boot-on" "always-on" so that it's never turned off. This behavior is
-equivalent to older releases.
-
-Keep the phy-reset-gpios property on fec anyway because it is a correct
-description of board design.
-
-This issue was exposed by commit efdfeb079cc3 ("regulator: fixed:
-Convert to use GPIO descriptor only") which causes the "gpios" property
-to also be parsed. Before that commit the "gpios" property had no
-effect, PHY reset was only handled in the the bootloader.
-
-This fixes linux-next boot failures previously reported here:
- https://lore.kernel.org/patchwork/patch/982437/#1177900
- https://lore.kernel.org/patchwork/patch/994091/#1178304
-
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 26f1fad29ad9 ("New driver: rtl8xxxu (mac80211)")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6sx-sdb.dtsi | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/imx6sx-sdb.dtsi b/arch/arm/boot/dts/imx6sx-sdb.dtsi
-index f8f31872fa144..d6d517e4922ff 100644
---- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
-+++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
-@@ -115,7 +115,9 @@
- 		regulator-name = "enet_3v3";
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
--		gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
-+		gpio = <&gpio2 6 GPIO_ACTIVE_LOW>;
-+		regulator-boot-on;
-+		regulator-always-on;
- 	};
- 
- 	reg_pcie_gpio: regulator-pcie-gpio {
-@@ -178,6 +180,7 @@
- 	phy-supply = <&reg_enet_3v3>;
- 	phy-mode = "rgmii";
- 	phy-handle = <&ethphy1>;
-+	phy-reset-gpios = <&gpio2 7 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- 
- 	mdio {
-@@ -371,6 +374,8 @@
- 				MX6SX_PAD_RGMII1_RD3__ENET1_RX_DATA_3	0x3081
- 				MX6SX_PAD_RGMII1_RX_CTL__ENET1_RX_EN	0x3081
- 				MX6SX_PAD_ENET2_RX_CLK__ENET2_REF_CLK_25M	0x91
-+				/* phy reset */
-+				MX6SX_PAD_ENET2_CRS__GPIO2_IO_7		0x10b0
- 			>;
- 		};
- 
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+index 505ab1b055ff4..2b4fcdf4ec5bb 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -5691,6 +5691,7 @@ static int rtl8xxxu_set_key(struct ieee80211_hw *hw, enum set_key_cmd cmd,
+ 		break;
+ 	case WLAN_CIPHER_SUITE_TKIP:
+ 		key->flags |= IEEE80211_KEY_FLAG_GENERATE_MMIC;
++		break;
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
 -- 
 2.20.1
 
