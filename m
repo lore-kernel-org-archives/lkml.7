@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9418FC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CC0C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A46D208CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1268721844
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919592;
-	bh=MrLJ86T+smoGDf0HCCf+yJ1xZ8hW11ko/jhzYVfFags=;
+	s=default; t=1573919595;
+	bh=huLGE5ggeIgXKytVG3OtvdU6vFNW9/hzsvZZSdna6ZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TWn8xwhzHa0c/Eh1vDNky0Pv0mAV8Gwpft112ySooj4ckS1E9EP6peZ33R/HXpjSL
-	 ytUqlaZSbjczI5tT0pwMTAR7wYvFup4xPOv6kZ4jl9YqIipIKj8NWhnLT4mrpmlvEQ
-	 fueGFKfmSw1exDwYj8UXNiPWfRwK276l6Y77VP8Y=
+	b=Oo2PUM/bXoWgciO3QWR61ciCo+roe3W78Xm1T0KY8zPltdADVS2wBUPKSUXAAmWgW
+	 r7ZdmVcGSImJ3qx8D27nRTEtQL9NcLSoNbtLiI+iqC/G0XHRHZfBa6+uxp88hKFxw6
+	 a74Klno7tvBEBT6rMDysewo3J5AnO0RMCF+gK27E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbfKPPxK (ORCPT
+        id S1731168AbfKPPxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:53:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34062 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:53:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731102AbfKPPxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:53:05 -0500
+        id S1728295AbfKPPxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:53:11 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CE7520859;
-        Sat, 16 Nov 2019 15:53:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE44920728;
+        Sat, 16 Nov 2019 15:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919585;
-        bh=MrLJ86T+smoGDf0HCCf+yJ1xZ8hW11ko/jhzYVfFags=;
+        s=default; t=1573919591;
+        bh=huLGE5ggeIgXKytVG3OtvdU6vFNW9/hzsvZZSdna6ZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A9kOQjq8pgCYeqoVwu0ny/VQEkMb+UG7cosKYKUBCJ3bHPNGRFJRXanCKfVJzz0uH
-         dizyESoQIzphsXiZXJ5wlpo+uXQ85inR8AsROyNqvXPniuxEWyk4VFPVmLBMjYjrzR
-         TcKDwidlpeOKghfozkW/z8In2/4qz169Lh+vab70=
+        b=kUr0huZgIg9x2fhnXNIBApUVAIK51Yzn+c8vOxTTCEZt9msdgCClbTR0Uyzvcuy9Y
+         ltixpAF/zXpYRjpRthoCh+f3lzRv3LsZ4ZyMKDPhTthmBjHvaAGId+JUeFutgPd7iu
+         2lknMJ28TaP/1iCvGUEAIzlqBVIVHqlqMzsFlA3Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar.Eggemann@arm.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, patrick.bellasi@arm.com,
-        vincent.guittot@linaro.org, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 76/99] sched/fair: Don't increase sd->balance_interval on newidle balance
-Date:   Sat, 16 Nov 2019 10:50:39 -0500
-Message-Id: <20191116155103.10971-76-sashal@kernel.org>
+Cc:     Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 80/99] brcmsmac: never log "tid x is not agg'able" by default
+Date:   Sat, 16 Nov 2019 10:50:43 -0500
+Message-Id: <20191116155103.10971-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -63,75 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Schneider <valentin.schneider@arm.com>
+From: Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>
 
-[ Upstream commit 3f130a37c442d5c4d66531b240ebe9abfef426b5 ]
+[ Upstream commit 96fca788e5788b7ea3b0050eb35a343637e0a465 ]
 
-When load_balance() fails to move some load because of task affinity,
-we end up increasing sd->balance_interval to delay the next periodic
-balance in the hopes that next time we look, that annoying pinned
-task(s) will be gone.
+This message greatly spams the log under heavy Tx of frames with BK access
+class which is especially true when operating as AP. It is also not informative
+as the "agg'ablity" of TIDs are set once and never change.
+Fix this by logging only in debug mode.
 
-However, idle_balance() pays no attention to sd->balance_interval, yet
-it will still lead to an increase in balance_interval in case of
-pinned tasks.
-
-If we're going through several newidle balances (e.g. we have a
-periodic task), this can lead to a huge increase of the
-balance_interval in a very small amount of time.
-
-To prevent that, don't increase the balance interval when going
-through a newidle balance.
-
-This is a similar approach to what is done in commit 58b26c4c0257
-("sched: Increment cache_nice_tries only on periodic lb"), where we
-disregard newidle balance and rely on periodic balance for more stable
-results.
-
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Dietmar.Eggemann@arm.com
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: patrick.bellasi@arm.com
-Cc: vincent.guittot@linaro.org
-Link: http://lkml.kernel.org/r/1537974727-30788-2-git-send-email-valentin.schneider@arm.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ .../net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c    | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index d8afae1bd5c5e..b765a58cf20f1 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7950,13 +7950,22 @@ static int load_balance(int this_cpu, struct rq *this_rq,
- 	sd->nr_balance_failed = 0;
- 
- out_one_pinned:
-+	ld_moved = 0;
-+
-+	/*
-+	 * idle_balance() disregards balance intervals, so we could repeatedly
-+	 * reach this code, which would lead to balance_interval skyrocketting
-+	 * in a short amount of time. Skip the balance_interval increase logic
-+	 * to avoid that.
-+	 */
-+	if (env.idle == CPU_NEWLY_IDLE)
-+		goto out;
-+
- 	/* tune up the balancing interval */
- 	if (((env.flags & LBF_ALL_PINNED) &&
- 			sd->balance_interval < MAX_PINNED_INTERVAL) ||
- 			(sd->balance_interval < sd->max_interval))
- 		sd->balance_interval *= 2;
--
--	ld_moved = 0;
- out:
- 	return ld_moved;
- }
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
+index a620b2f6c7c4c..b820e80d4b4c2 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
+@@ -846,8 +846,8 @@ brcms_ops_ampdu_action(struct ieee80211_hw *hw,
+ 		status = brcms_c_aggregatable(wl->wlc, tid);
+ 		spin_unlock_bh(&wl->lock);
+ 		if (!status) {
+-			brcms_err(wl->wlc->hw->d11core,
+-				  "START: tid %d is not agg\'able\n", tid);
++			brcms_dbg_ht(wl->wlc->hw->d11core,
++				     "START: tid %d is not agg\'able\n", tid);
+ 			return -EINVAL;
+ 		}
+ 		ieee80211_start_tx_ba_cb_irqsafe(vif, sta->addr, tid);
 -- 
 2.20.1
 
