@@ -7,153 +7,232 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B00EC432C3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E51C43141
 	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 13:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63AA820700
+	by mail.kernel.org (Postfix) with ESMTP id 8B64620723
 	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 13:16:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cDvYjLtS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GirAD+vK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbfKPNQY (ORCPT
+        id S1727619AbfKPNQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 08:16:24 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45469 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727510AbfKPNQX (ORCPT
+        Sat, 16 Nov 2019 08:16:26 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46163 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727540AbfKPNQY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 08:16:23 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z10so13908000wrs.12
+        Sat, 16 Nov 2019 08:16:24 -0500
+Received: by mail-wr1-f67.google.com with SMTP id b3so13910043wrs.13
         for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 05:16:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fBRrOeFjzqnzfONE7OUt/W61tGgjVczN6HnwGIweIMY=;
-        b=cDvYjLtSsqqISLupyBqRuzfoSBOW3mxJFlXdyx1Unip7m5FZH48Kkg/f7grqZn13QW
-         qeHa72WXEHUifndhqySQZsiRK+iRvTG+DAZV2oqKFKS4Ca4GxV5dgGKWkKXVS3u102+O
-         ZXdGtFhk8xwb1kPwzG+pOLiUYI3Y34FAdlWZYx0c8NB8J4lGPoGUVD5gcY0aR6umhP7n
-         e/7GunXSLOK7fi58FbbDsN3P10gJFd93CWJUL4oKk/e4EvkBRD4cbuwcPwCZ1vNrJiCE
-         NrTqNDmOgtCCZNuH6EKGUdYwHaSsz4y6qZnb6ayjUDK/Yhcb8fxyxeHlYRDPxgHpcjkS
-         hYcg==
+        h=from:to:cc:subject:date:message-id;
+        bh=tg11cTivSk8CuEqGhmHmDNWvHOysA3jwYAGlqgKbG4c=;
+        b=GirAD+vKxjyd5OFXVVcD73825caTPpQT3zyFYDhPJmQP2+wOrhtIH3Doi0c7zREGmj
+         p1x6DfxjpOLX2Ec/MslH8bQpMTPbvFPrhqstclENzGsx0jJYmeY5UEyKA6dHgIiY//JO
+         qaPC2I+05TfMDm+138SK6j7be0b1aPpocydbxi9HCLMjnzIn4mMkLZM9ZnCFo5suca69
+         ACNkNHfQ9WqlB2ALMDyfuZxiVeCeo59RziqRDnhbm2dRmRDJz0+puD1RaeHpMVQqaa7I
+         8jXOn8UpiFOcHYJF2dF+w3bE/PCL00vm7vWt1xjNkRbUrosteggtbrGXWf3hxv8RpxPS
+         cI2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=fBRrOeFjzqnzfONE7OUt/W61tGgjVczN6HnwGIweIMY=;
-        b=Lq7ds6ONHXs+ecT93NH69VG7Y5UeAjNLXdtsHg7LPtTrFivFNZ3cDX+TMBP4tn+c0d
-         PrGXyL5aucn7FdgQqqbjks071zKK5mtgnVEDZfBFhWasSVuH96GPNZjWxNVwuJOg2fhr
-         TUbRo0cwau0LPDxG3Iv5WbnhHEzKBEaMYXaP4rlEvaHAw2LxcPVRac9MK0abBbYWBreK
-         6QDw60Vp44ZJNup+BZZJVa64znVLFjq4KEZslPJaRDaf1JuSfXADOk0iLCxRJjLme2VL
-         2D1HzxZRfNWZahi6U/1P+ynN36BdX90y1H9GsK6vRbs5MeF62rmVgf73bCWpvTcvxKky
-         oZEA==
-X-Gm-Message-State: APjAAAWdNE68N6qrlKbuSNlxzyeWyz6u6WsuIz0SFNCOMwHTxy8B3+sJ
-        d9SKYYK4pePQyVdGcGyJ/rzexw==
-X-Google-Smtp-Source: APXvYqxU+Ce984OIm+gEBSmPBiLEdlT1QPAD52gaDJ94Lrikl70nHZBdVaaGDkqzmNzdcHbIPoBUVQ==
-X-Received: by 2002:adf:db41:: with SMTP id f1mr19862644wrj.351.1573910180899;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tg11cTivSk8CuEqGhmHmDNWvHOysA3jwYAGlqgKbG4c=;
+        b=J37VPDK6F+CRei9Mmn05M2431DAM7LU5NLwMFmYB7oCAwBalPdqLPg4UKf/tsGKjdn
+         FGuBUCQBlkLfFQHYjIw1V1sdeRPfZRwEMi/wtAILE+JQ+RYq6ny16hs3NvURcBKx3XWR
+         AOH6tCht7F368p/NkQNCrdp02CKMGI1mULbON372Ia5aC2OXczN9kg20+bx7N0tO4+pr
+         YpcIbf0bpsK2byswWm1uivpBy0+KH2KkGkCsSQw2BKkX7G2gpxBh0wyjC1dgxPu4N6gp
+         CaBG3OaUMNVJgPInz5iU/SdOy85T6aGQ/TTWL1syen/SVqeJJY6NSDPSWmdCAWxotHXi
+         Oclw==
+X-Gm-Message-State: APjAAAVy/w14sSOKXU7Wh6AD2vfVgWlN3DP2BAreFVaN2XKZz/BAGlTZ
+        8YtXmMZPPqlqEFxr5zc4J5b0ag==
+X-Google-Smtp-Source: APXvYqyHW5ijIPfL2Ep4+ox47SbxoujUX+av53dHNyM6NeuTcEWIcEELLwtuNXkWHbejHNtn0zWz/Q==
+X-Received: by 2002:a05:6000:110a:: with SMTP id z10mr19691490wrw.291.1573910180022;
         Sat, 16 Nov 2019 05:16:20 -0800 (PST)
 Received: from localhost.localdomain ([2a01:e34:ed2f:f020:b462:d85e:9aab:bc1d])
-        by smtp.gmail.com with ESMTPSA id r2sm11128914wma.44.2019.11.16.05.16.20
+        by smtp.gmail.com with ESMTPSA id r2sm11128914wma.44.2019.11.16.05.16.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Nov 2019 05:16:20 -0800 (PST)
+        Sat, 16 Nov 2019 05:16:19 -0800 (PST)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     rafael@kernel.org
 Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
         ulf.hansson@linaro.org
-Subject: [PATCH V2 2/2] cpuidle: Use the latency to call find_deepest_idle_state
-Date:   Sat, 16 Nov 2019 14:16:13 +0100
-Message-Id: <20191116131613.15733-2-daniel.lezcano@linaro.org>
+Subject: [PATCH V2 1/2] cpuidle: Replace use_deepest_state flag by forced_idle_latency_limit_ns
+Date:   Sat, 16 Nov 2019 14:16:12 +0100
+Message-Id: <20191116131613.15733-1-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191116131613.15733-1-daniel.lezcano@linaro.org>
-References: <20191116131613.15733-1-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As the dev->forced_idle_latency_limit_ns is filled with the latency
-value when this function is called, use it as a parameter to the
-find_deepest_idle_state() function.
+We want to specify a latency constraint when choosing an idle state at
+play_idle time. Instead of duplicating the information in the
+structure or propagate the latency in the call stack, change the
+use_deepest_state by forced_latency_limit_ns to introduce this
+constraint. The idea being that when it is set, idle is forced
+(i.e. no governors), but there is a latency limit for the state to
+use.
+
+A zero latency constraint means "do not use the deepest idle state
+path" as the 'use_deepest_state' boolean was used in the
+cpuidle_idle_call.
+
+In addition add the play_idle_precise() function getting a nanosec
+base latency constraint as parameter. The play_idle() function becomes
+a wrapper passing an U64_MAX to play_idle_precise().
 
 Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/cpuidle/cpuidle.c | 7 +++++--
- include/linux/cpuidle.h   | 6 ++++--
- kernel/sched/idle.c       | 8 +++++++-
- 3 files changed, 16 insertions(+), 5 deletions(-)
+ drivers/cpuidle/cpuidle.c | 10 +++++-----
+ include/linux/cpu.h       |  6 +++++-
+ include/linux/cpuidle.h   |  6 +++---
+ kernel/sched/idle.c       | 14 +++++++-------
+ 4 files changed, 20 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-index 62226fadc02d..a02b701fc289 100644
+index 44ae39f2b47a..62226fadc02d 100644
 --- a/drivers/cpuidle/cpuidle.c
 +++ b/drivers/cpuidle/cpuidle.c
-@@ -122,9 +122,12 @@ void cpuidle_use_deepest_state(u64 latency_limit_ns)
-  * @dev: cpuidle device for the given CPU.
+@@ -100,19 +100,19 @@ static int find_deepest_state(struct cpuidle_driver *drv,
+ 
+ /**
+  * cpuidle_use_deepest_state - Set/clear governor override flag.
+- * @enable: New value of the flag.
++ * @latency_limit_ns: A latency limit constraint
+  *
+- * Set/unset the current CPU to use the deepest idle state (override governors
+- * going forward if set).
++ * Set/unset the current CPU to use the deepest idle state with the exit
++ * latency within @latency_limit_ns
   */
- int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
--			       struct cpuidle_device *dev)
-+			       struct cpuidle_device *dev,
-+			       u64 latency_limit_ns)
+-void cpuidle_use_deepest_state(bool enable)
++void cpuidle_use_deepest_state(u64 latency_limit_ns)
  {
--	return find_deepest_state(drv, dev, UINT_MAX, 0, false);
-+	return find_deepest_state(drv, dev,
-+				  div_u64(latency_limit_ns, NSEC_PER_USEC),
-+				  0, false);
+ 	struct cpuidle_device *dev;
+ 
+ 	preempt_disable();
+ 	dev = cpuidle_get_device();
+ 	if (dev)
+-		dev->use_deepest_state = enable;
++		dev->forced_idle_latency_limit_ns = latency_limit_ns;
+ 	preempt_enable();
  }
  
- #ifdef CONFIG_SUSPEND
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index d0633ebdaa9c..4c9694e209a5 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -179,7 +179,11 @@ void arch_cpu_idle_dead(void);
+ int cpu_report_state(int cpu);
+ int cpu_check_up_prepare(int cpu);
+ void cpu_set_state_online(int cpu);
+-void play_idle(unsigned long duration_us);
++void play_idle_precise(u64 duration_ns, u64 latency_ns);
++static inline void play_idle(unsigned long duration_us)
++{
++	play_idle_precise(duration_us * NSEC_PER_USEC, U64_MAX);
++}
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+ bool cpu_wait_death(unsigned int cpu, int seconds);
 diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-index 1f3f4dd01e48..b60f35b7d53e 100644
+index d23a3b1ddcf6..1f3f4dd01e48 100644
 --- a/include/linux/cpuidle.h
 +++ b/include/linux/cpuidle.h
-@@ -207,13 +207,15 @@ static inline struct cpuidle_device *cpuidle_get_device(void) {return NULL; }
- 
- #ifdef CONFIG_CPU_IDLE
- extern int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
--				      struct cpuidle_device *dev);
-+				      struct cpuidle_device *dev,
-+				      u64 latency_limit_ns);
+@@ -83,7 +83,6 @@ struct cpuidle_driver_kobj;
+ struct cpuidle_device {
+ 	unsigned int		registered:1;
+ 	unsigned int		enabled:1;
+-	unsigned int		use_deepest_state:1;
+ 	unsigned int		poll_time_limit:1;
+ 	unsigned int		cpu;
+ 	ktime_t			next_hrtimer;
+@@ -91,6 +90,7 @@ struct cpuidle_device {
+ 	int			last_state_idx;
+ 	int			last_residency;
+ 	u64			poll_limit_ns;
++	u64			forced_idle_latency_limit_ns;
+ 	struct cpuidle_state_usage	states_usage[CPUIDLE_STATE_MAX];
+ 	struct cpuidle_state_kobj *kobjs[CPUIDLE_STATE_MAX];
+ 	struct cpuidle_driver_kobj *kobj_driver;
+@@ -210,7 +210,7 @@ extern int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
+ 				      struct cpuidle_device *dev);
  extern int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
  				struct cpuidle_device *dev);
- extern void cpuidle_use_deepest_state(u64 latency_limit_ns);
+-extern void cpuidle_use_deepest_state(bool enable);
++extern void cpuidle_use_deepest_state(u64 latency_limit_ns);
  #else
  static inline int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
--					     struct cpuidle_device *dev)
-+					     struct cpuidle_device *dev,
-+					     u64 latency_limit_ns)
- {return -ENODEV; }
+ 					     struct cpuidle_device *dev)
+@@ -218,7 +218,7 @@ static inline int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
  static inline int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
  				       struct cpuidle_device *dev)
+ {return -ENODEV; }
+-static inline void cpuidle_use_deepest_state(bool enable)
++static inline void cpuidle_use_deepest_state(u64 latency_limit_ns)
+ {
+ }
+ #endif
 diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index 0a817e907192..fd4a8747e602 100644
+index 8dad5aa600ea..0a817e907192 100644
 --- a/kernel/sched/idle.c
 +++ b/kernel/sched/idle.c
-@@ -166,6 +166,9 @@ static void cpuidle_idle_call(void)
+@@ -165,7 +165,7 @@ static void cpuidle_idle_call(void)
+ 	 * until a proper wakeup interrupt happens.
  	 */
  
- 	if (idle_should_enter_s2idle() || dev->forced_idle_latency_limit_ns) {
-+
-+		u64 latency_limit_ns = dev->forced_idle_latency_limit_ns;
-+
+-	if (idle_should_enter_s2idle() || dev->use_deepest_state) {
++	if (idle_should_enter_s2idle() || dev->forced_idle_latency_limit_ns) {
  		if (idle_should_enter_s2idle()) {
  			rcu_idle_enter();
  
-@@ -176,12 +179,15 @@ static void cpuidle_idle_call(void)
- 			}
+@@ -311,7 +311,7 @@ static enum hrtimer_restart idle_inject_timer_fn(struct hrtimer *timer)
+ 	return HRTIMER_NORESTART;
+ }
  
- 			rcu_idle_exit();
-+
-+			latency_limit_ns = U64_MAX;
- 		}
+-void play_idle(unsigned long duration_us)
++void play_idle_precise(u64 duration_ns, u64 latency_ns)
+ {
+ 	struct idle_timer it;
  
- 		tick_nohz_idle_stop_tick();
- 		rcu_idle_enter();
+@@ -323,29 +323,29 @@ void play_idle(unsigned long duration_us)
+ 	WARN_ON_ONCE(current->nr_cpus_allowed != 1);
+ 	WARN_ON_ONCE(!(current->flags & PF_KTHREAD));
+ 	WARN_ON_ONCE(!(current->flags & PF_NO_SETAFFINITY));
+-	WARN_ON_ONCE(!duration_us);
++	WARN_ON_ONCE(!duration_ns);
  
--		next_state = cpuidle_find_deepest_state(drv, dev);
-+		next_state = cpuidle_find_deepest_state(drv, dev,
-+							latency_limit_ns);
- 		call_cpuidle(drv, dev, next_state);
- 	} else {
- 		bool stop_tick = true;
+ 	rcu_sleep_check();
+ 	preempt_disable();
+ 	current->flags |= PF_IDLE;
+-	cpuidle_use_deepest_state(true);
++	cpuidle_use_deepest_state(latency_ns);
+ 
+ 	it.done = 0;
+ 	hrtimer_init_on_stack(&it.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	it.timer.function = idle_inject_timer_fn;
+-	hrtimer_start(&it.timer, ns_to_ktime(duration_us * NSEC_PER_USEC),
++	hrtimer_start(&it.timer, ns_to_ktime(duration_ns),
+ 		      HRTIMER_MODE_REL_PINNED);
+ 
+ 	while (!READ_ONCE(it.done))
+ 		do_idle();
+ 
+-	cpuidle_use_deepest_state(false);
++	cpuidle_use_deepest_state(0);
+ 	current->flags &= ~PF_IDLE;
+ 
+ 	preempt_fold_need_resched();
+ 	preempt_enable();
+ }
+-EXPORT_SYMBOL_GPL(play_idle);
++EXPORT_SYMBOL_GPL(play_idle_precise);
+ 
+ void cpu_startup_entry(enum cpuhp_state state)
+ {
 -- 
 2.17.1
 
