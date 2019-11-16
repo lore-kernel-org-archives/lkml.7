@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76545C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 361E0C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F57B21823
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C44721823
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920500;
-	bh=J0/R4Z5BY+02R0pbRuvu0OdHWnNZFRHfN+3UcXMO7bk=;
+	s=default; t=1573920503;
+	bh=Z5a/og1bx1sz2Y6k8bJubC1q/duzlsbMbgSblkYn4a0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wJr6nw42UcQ8HsNlRCr8kApQqmkhQEDDtzo85rOw3vEJ0oZZoswHZzDGPI5jZJN1g
-	 qtVdUIJY/W+evRzlSmlM0/CDrhn81m9dLSn75rZ0ZVhb3EXEbIle4M2v5tKIOxewPH
-	 6wnAFKwitSO3M+pOy2KoizNUtxzy2IJlqh6mej48=
+	b=P2MiaEZGPqeo9DFPqXdfx7dCsEtWp4x9/qdpvuzMxB9v3UHC7pa++ewHhP3j9jymv
+	 4ZgccG8nBhVSNk/P/vTYcCvW7pQA7AV1URNk9iUW3Y2lcYYDMxE94FmVErD5J42AED
+	 cXtEJo29BU7ctsAGCWKj5Me91EqkoClM+6yBDgWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730445AbfKPPuN (ORCPT
+        id S1730932AbfKPQIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:50:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57958 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:08:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730415AbfKPPuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:50:07 -0500
+        id S1729508AbfKPPuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:50:13 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25DE1208A1;
-        Sat, 16 Nov 2019 15:50:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E83F20885;
+        Sat, 16 Nov 2019 15:50:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919406;
-        bh=J0/R4Z5BY+02R0pbRuvu0OdHWnNZFRHfN+3UcXMO7bk=;
+        s=default; t=1573919413;
+        bh=Z5a/og1bx1sz2Y6k8bJubC1q/duzlsbMbgSblkYn4a0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LJr7BlBgL0W2gVGZwGVazD5NIZY5Hk5p9iamJESK+q2umdDF02kJdlH72BTW5Paug
-         5FApyGPoJIOEnq3G1NfxNjCITOZx/mm4mzoZpk0T4HCGsK0NUNO4J0fIYNEdThYPEp
-         ELZQmGA3j+EYFi70KKC2MbAO6+ZII5xS2kEem4oQ=
+        b=lbPktFAmpuUe83nz4+NFfQFO/NGR1hJbplpycNwMIKiSYMUr/dmEZgMQ3kR2/uLsl
+         wf6MVdtb38kV/Rt6IVtktEawraajOhbf3e2EdWKY1GYV82vv6MLQ4/ZqMZF9JN6L4U
+         Q8uXvK/fSvLEdwLPDxU1MmeLFokYplRoQ5J/4pA0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 105/150] igb: shorten maximum PHC timecounter update interval
-Date:   Sat, 16 Nov 2019 10:46:43 -0500
-Message-Id: <20191116154729.9573-105-sashal@kernel.org>
+Cc:     Larry Chen <lchen@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <jiangqi903@gmail.com>,
+        Changwei Ge <ge.changwei@h3c.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 112/150] ocfs2: fix clusters leak in ocfs2_defrag_extent()
+Date:   Sat, 16 Nov 2019 10:46:50 -0500
+Message-Id: <20191116154729.9573-112-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -63,54 +65,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miroslav Lichvar <mlichvar@redhat.com>
+From: Larry Chen <lchen@suse.com>
 
-[ Upstream commit 094bf4d0e9657f6ea1ee3d7e07ce3970796949ce ]
+[ Upstream commit 6194ae4242dec0c9d604bc05df83aa9260a899e4 ]
 
-The timecounter needs to be updated at least once per ~550 seconds in
-order to avoid a 40-bit SYSTIM timestamp to be misinterpreted as an old
-timestamp.
+ocfs2_defrag_extent() might leak allocated clusters.  When the file
+system has insufficient space, the number of claimed clusters might be
+less than the caller wants.  If that happens, the original code might
+directly commit the transaction without returning clusters.
 
-Since commit 500462a9d ("timers: Switch to a non-cascading wheel"),
-scheduling of delayed work seems to be less accurate and a requested
-delay of 540 seconds may actually be longer than 550 seconds. Shorten
-the delay to 480 seconds to be sure the timecounter is updated in time.
+This patch is based on code in ocfs2_add_clusters_in_btree().
 
-This fixes an issue with HW timestamps on 82580/I350/I354 being off by
-~1100 seconds for few seconds every ~9 minutes.
-
-Cc: Jacob Keller <jacob.e.keller@intel.com>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+[akpm@linux-foundation.org: include localalloc.h, reduce scope of data_ac]
+Link: http://lkml.kernel.org/r/20180904041621.16874-3-lchen@suse.com
+Signed-off-by: Larry Chen <lchen@suse.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Joseph Qi <jiangqi903@gmail.com>
+Cc: Changwei Ge <ge.changwei@h3c.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/igb/igb_ptp.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/ocfs2/move_extents.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/igb/igb_ptp.c b/drivers/net/ethernet/intel/igb/igb_ptp.c
-index 0746b19ec6d37..295d27f331042 100644
---- a/drivers/net/ethernet/intel/igb/igb_ptp.c
-+++ b/drivers/net/ethernet/intel/igb/igb_ptp.c
-@@ -65,9 +65,15 @@
-  *
-  * The 40 bit 82580 SYSTIM overflows every
-  *   2^40 * 10^-9 /  60  = 18.3 minutes.
-+ *
-+ * SYSTIM is converted to real time using a timecounter. As
-+ * timecounter_cyc2time() allows old timestamps, the timecounter
-+ * needs to be updated at least once per half of the SYSTIM interval.
-+ * Scheduling of delayed work is not very accurate, so we aim for 8
-+ * minutes to be sure the actual interval is shorter than 9.16 minutes.
-  */
+diff --git a/fs/ocfs2/move_extents.c b/fs/ocfs2/move_extents.c
+index f55f82ca34250..1565dd8e8856e 100644
+--- a/fs/ocfs2/move_extents.c
++++ b/fs/ocfs2/move_extents.c
+@@ -25,6 +25,7 @@
+ #include "ocfs2_ioctl.h"
  
--#define IGB_SYSTIM_OVERFLOW_PERIOD	(HZ * 60 * 9)
-+#define IGB_SYSTIM_OVERFLOW_PERIOD	(HZ * 60 * 8)
- #define IGB_PTP_TX_TIMEOUT		(HZ * 15)
- #define INCPERIOD_82576			BIT(E1000_TIMINCA_16NS_SHIFT)
- #define INCVALUE_82576_MASK		GENMASK(E1000_TIMINCA_16NS_SHIFT - 1, 0)
+ #include "alloc.h"
++#include "localalloc.h"
+ #include "aops.h"
+ #include "dlmglue.h"
+ #include "extent_map.h"
+@@ -222,6 +223,7 @@ static int ocfs2_defrag_extent(struct ocfs2_move_extents_context *context,
+ 	struct ocfs2_refcount_tree *ref_tree = NULL;
+ 	u32 new_phys_cpos, new_len;
+ 	u64 phys_blkno = ocfs2_clusters_to_blocks(inode->i_sb, phys_cpos);
++	int need_free = 0;
+ 
+ 	if ((ext_flags & OCFS2_EXT_REFCOUNTED) && *len) {
+ 		BUG_ON(!ocfs2_is_refcount_inode(inode));
+@@ -312,6 +314,7 @@ static int ocfs2_defrag_extent(struct ocfs2_move_extents_context *context,
+ 		if (!partial) {
+ 			context->range->me_flags &= ~OCFS2_MOVE_EXT_FL_COMPLETE;
+ 			ret = -ENOSPC;
++			need_free = 1;
+ 			goto out_commit;
+ 		}
+ 	}
+@@ -336,6 +339,20 @@ static int ocfs2_defrag_extent(struct ocfs2_move_extents_context *context,
+ 		mlog_errno(ret);
+ 
+ out_commit:
++	if (need_free && context->data_ac) {
++		struct ocfs2_alloc_context *data_ac = context->data_ac;
++
++		if (context->data_ac->ac_which == OCFS2_AC_USE_LOCAL)
++			ocfs2_free_local_alloc_bits(osb, handle, data_ac,
++					new_phys_cpos, new_len);
++		else
++			ocfs2_free_clusters(handle,
++					data_ac->ac_inode,
++					data_ac->ac_bh,
++					ocfs2_clusters_to_blocks(osb->sb, new_phys_cpos),
++					new_len);
++	}
++
+ 	ocfs2_commit_trans(osb, handle);
+ 
+ out_unlock_mutex:
 -- 
 2.20.1
 
