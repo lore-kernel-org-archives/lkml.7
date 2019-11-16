@@ -7,46 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CE1C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED11C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 239D321887
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32CD72184B
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919631;
-	bh=l4vparjXE7s9TQNJo7G5ramjuZ7Osol/anGZJCpStGk=;
+	s=default; t=1573919638;
+	bh=kFJth200sPmtszgT2RYC2hQ65ZwtwIBT34N2U7ZQ2VA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0SQv5SK+FXqO4lXgeX3pLEeQcHclrcit/Q+HF6Hu2yuQjyvUdFMRhBDlbJXN06G4k
-	 qOBV0JSv0+f6gNoI8vD3zhlAyjZ7Vz1sKpN0UQvpYHS6pQWmmTKERujCB4d3OcEy00
-	 4KfZRslePtws1okvk55DCJRI5Ae4/s4rKFwu1wfE=
+	b=qWqF17ZLooJFv8opkhw+NMpq4UKEdquB/+9xjtEOXatU2Exg9fZ5BbmggC9wLAasB
+	 iQkXCdE6Y/Jwcrni2WpGp/equphNwUW6bzArGCzII/oz6WvplgRRTsKmjVIWdqvToq
+	 9doBDv9oB0LkfJKUcDJPrww36su+p4f/tYaKRsIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731322AbfKPPxu (ORCPT
+        id S1731352AbfKPPx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:53:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35088 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:53:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731289AbfKPPxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:53:48 -0500
+        id S1731326AbfKPPxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:53:52 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5DB821887;
-        Sat, 16 Nov 2019 15:53:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F951218DE;
+        Sat, 16 Nov 2019 15:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919628;
-        bh=l4vparjXE7s9TQNJo7G5ramjuZ7Osol/anGZJCpStGk=;
+        s=default; t=1573919631;
+        bh=kFJth200sPmtszgT2RYC2hQ65ZwtwIBT34N2U7ZQ2VA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LANEmuhi0A7h63ROWAeWd1S4H3Oc+KR2ODsaY3JcHVoMF2RJfwyUzK4XFxlw8m6Pp
-         Ya7KAFkLEql0bzYswL8lu9siMAUeuIw6Zp+IRmMUW14SGcSKy7cME59ITHDcf+mx5t
-         UcKYvSb0105rRWG4b93QzMhcDv1MJzbD9ejo7xf0=
+        b=Z7mz6469LWzeMbMjOEv63giBfW+8OJCu/DM36vilLQ6hF7aHVnYvUSoTiFYSyyFhq
+         VgoIrigDfTTp6GaNFgv/5Sy68S8e9pRfk7rtD5cWhxAwAPa2kHNlfXkQVlbfDtqSdZ
+         5O02sT3e2oDotYz6fFnCQ8lkneHCna8HA4PG4Moc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 08/77] spi: sh-msiof: fix deferred probing
-Date:   Sat, 16 Nov 2019 10:52:30 -0500
-Message-Id: <20191116155339.11909-8-sashal@kernel.org>
+Cc:     Duncan Laurie <dlaurie@chromium.org>,
+        Vadim Bendebury <vbendeb@chromium.org>,
+        Stefan Reinauer <reinauer@chromium.org>,
+        Furquan Shaikh <furquan@google.com>,
+        Furquan Shaikh <furquan@chromium.org>,
+        Aaron Durbin <adurbin@chromium.org>,
+        Justin TerAvest <teravest@chromium.org>,
+        Ross Zwisler <zwisler@google.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 11/77] gsmi: Fix bug in append_to_eventlog sysfs handler
+Date:   Sat, 16 Nov 2019 10:52:33 -0500
+Message-Id: <20191116155339.11909-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -59,38 +67,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+From: Duncan Laurie <dlaurie@chromium.org>
 
-[ Upstream commit f34c6e6257aa477cdfe7e9bbbecd3c5648ecda69 ]
+[ Upstream commit 655603de68469adaff16842ac17a5aec9c9ce89b ]
 
-Since commit 9ec36cafe43b ("of/irq: do irq resolution in platform_get_irq")
-platform_get_irq() can return -EPROBE_DEFER. However, the driver overrides
-an error returned by that function with -ENOENT which breaks the deferred
-probing. Propagate upstream an error code returned by platform_get_irq()
-and remove the bogus "platform" from the error message, while at it...
+The sysfs handler should return the number of bytes consumed, which in the
+case of a successful write is the entire buffer.  Also fix a bug where
+param.data_len was being set to (count - (2 * sizeof(u32))) instead of just
+(count - sizeof(u32)).  The latter is correct because we skip over the
+leading u32 which is our param.type, but we were also incorrectly
+subtracting sizeof(u32) on the line where we were actually setting
+param.data_len:
 
-Fixes: 9ec36cafe43b ("of/irq: do irq resolution in platform_get_irq")
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+	param.data_len = count - sizeof(u32);
+
+This meant that for our example event.kernel_software_watchdog with total
+length 10 bytes, param.data_len was just 2 prior to this change.
+
+To test, successfully append an event to the log with gsmi sysfs.
+This sample event is for a "Kernel Software Watchdog"
+
+> xxd -g 1 event.kernel_software_watchdog
+0000000: 01 00 00 00 ad de 06 00 00 00
+
+> cat event.kernel_software_watchdog > /sys/firmware/gsmi/append_to_eventlog
+
+> mosys eventlog list | tail -1
+14 | 2012-06-25 10:14:14 | Kernl Event | Software Watchdog
+
+Signed-off-by: Duncan Laurie <dlaurie@chromium.org>
+Reviewed-by: Vadim Bendebury <vbendeb@chromium.org>
+Reviewed-by: Stefan Reinauer <reinauer@chromium.org>
+Signed-off-by: Furquan Shaikh <furquan@google.com>
+Tested-by: Furquan Shaikh <furquan@chromium.org>
+Reviewed-by: Aaron Durbin <adurbin@chromium.org>
+Reviewed-by: Justin TerAvest <teravest@chromium.org>
+[zwisler: updated changelog for 2nd bug fix and upstream]
+Signed-off-by: Ross Zwisler <zwisler@google.com>
+Reviewed-by: Guenter Roeck <groeck@chromium.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-sh-msiof.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/firmware/google/gsmi.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-sh-msiof.c b/drivers/spi/spi-sh-msiof.c
-index 03b566848da63..b4f136d04a2b1 100644
---- a/drivers/spi/spi-sh-msiof.c
-+++ b/drivers/spi/spi-sh-msiof.c
-@@ -1198,8 +1198,8 @@ static int sh_msiof_spi_probe(struct platform_device *pdev)
+diff --git a/drivers/firmware/google/gsmi.c b/drivers/firmware/google/gsmi.c
+index f1ab05ea56bbc..3c117559f102f 100644
+--- a/drivers/firmware/google/gsmi.c
++++ b/drivers/firmware/google/gsmi.c
+@@ -480,11 +480,10 @@ static ssize_t eventlog_write(struct file *filp, struct kobject *kobj,
+ 	if (count < sizeof(u32))
+ 		return -EINVAL;
+ 	param.type = *(u32 *)buf;
+-	count -= sizeof(u32);
+ 	buf += sizeof(u32);
  
- 	i = platform_get_irq(pdev, 0);
- 	if (i < 0) {
--		dev_err(&pdev->dev, "cannot get platform IRQ\n");
--		ret = -ENOENT;
-+		dev_err(&pdev->dev, "cannot get IRQ\n");
-+		ret = i;
- 		goto err1;
- 	}
+ 	/* The remaining buffer is the data payload */
+-	if (count > gsmi_dev.data_buf->length)
++	if ((count - sizeof(u32)) > gsmi_dev.data_buf->length)
+ 		return -EINVAL;
+ 	param.data_len = count - sizeof(u32);
+ 
+@@ -504,7 +503,7 @@ static ssize_t eventlog_write(struct file *filp, struct kobject *kobj,
+ 
+ 	spin_unlock_irqrestore(&gsmi_dev.lock, flags);
+ 
+-	return rc;
++	return (rc == 0) ? count : rc;
+ 
+ }
  
 -- 
 2.20.1
