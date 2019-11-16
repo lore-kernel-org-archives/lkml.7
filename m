@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D55C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19094C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D062084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E225420803
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919062;
-	bh=66OswkvPZoALuafR5qsSA0Pwjf5yODcChCiMsXuUxx4=;
+	s=default; t=1573919067;
+	bh=xy9fV6VRf6ZTjqVGfwmNG4IyHl8ycEZP8gaaGlsnQeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0VZ2qT05BgAi5deE6kskykoI0Xj4K8H40LHngCb0vt2W57KOugu0PPJL75g/GL0Yk
-	 VW+SsBctIewfyIKqm1fI6a+W5ADIMCZWKKXoEgy7Q8euFTo+/rMp5K6EWbmdiZhI0h
-	 MjGrEOmBW5pvGBKrQTNyn4f4a6o8bZ0bXFsPAtEI=
+	b=14ORbeGBCpMv84l+qXR+5FhgVXX5AAy9qrZoYn0TSg3IJGqD6/yreYNLlR4mtNNWf
+	 3EM6M2Ne36oi9wugwV/6CnKHFZRPOLET99/NnuzuoygZdDW70werl20dAaijx0jCXh
+	 3Wkrl+dv1SBZEP+LJoCh39RvWzJw148hN3m329eE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbfKPPoV (ORCPT
+        id S1728963AbfKPPoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:44:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48806 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:44:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727857AbfKPPoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:44:17 -0500
+        id S1728933AbfKPPoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:44:21 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3CAF20740;
-        Sat, 16 Nov 2019 15:44:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC3B920815;
+        Sat, 16 Nov 2019 15:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919056;
-        bh=66OswkvPZoALuafR5qsSA0Pwjf5yODcChCiMsXuUxx4=;
+        s=default; t=1573919061;
+        bh=xy9fV6VRf6ZTjqVGfwmNG4IyHl8ycEZP8gaaGlsnQeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ESTpuIf+A7K38FLrI8eum9KxhhrNkUW0r5i4bkpD7BCVoEy0SIOp+MBwybvnXZu8a
-         lxe8fdJWeV/tenBMN6btbQmwUHsPrWvZXP3i/uDxPv9+RI4s6mlTN1JwdwsZ/GamCw
-         tJj58kYfWvJWe+OA+y+1ECqMYbNSn3f4Eq1HjOa0=
+        b=VW8qc6L9iUz3JwJGgF80E/aAi/CeDoqpINcydqppdMzXriVOAhyasSTQeAY6J4Cn6
+         /h80bURzmeZJqD7N2cdyqra0b8dXU/LN6oNrS9cDS8wWsW4tYHvqbfLw0ktJJm463r
+         DKNXiT6oDMOA6fflxPIbOOSSXr+rz3h8XrlmsOeM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Keith Busch <keith.busch@intel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 131/237]  tools/testing/selftests/vm/gup_benchmark.c: fix 'write' flag usage
-Date:   Sat, 16 Nov 2019 10:39:26 -0500
-Message-Id: <20191116154113.7417-131-sashal@kernel.org>
+Cc:     Sabrina Dubroca <sd@queasysnail.net>,
+        Radu Rendec <radu.rendec@gmail.com>,
+        Patrick Talbert <ptalbert@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 134/237] macsec: update operstate when lower device changes
+Date:   Sat, 16 Nov 2019 10:39:29 -0500
+Message-Id: <20191116154113.7417-134-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -64,38 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <keith.busch@intel.com>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-[ Upstream commit 319e0bec1aecb36c5ac6d23812af487ff2c8f47f ]
+[ Upstream commit e6ac075882b2afcdf2d5ab328ce4ab42a1eb9593 ]
 
-If the '-w' parameter was provided, the benchmark would exit due to a
-mssing 'break'.
+Like all other virtual devices (macvlan, vlan), the operstate of a
+macsec device should match the state of its lower device. This is done
+by calling netif_stacked_transfer_operstate from its netdevice notifier.
 
-Link: http://lkml.kernel.org/r/20181010195605.10689-3-keith.busch@intel.com
-Signed-off-by: Keith Busch <keith.busch@intel.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+We also need to call netif_stacked_transfer_operstate when a new macsec
+device is created, so that its operstate is set properly. This is only
+relevant when we try to bring the device up directly when we create it.
+
+Radu Rendec proposed a similar patch, inspired from the 802.1q driver,
+that included changing the administrative state of the macsec device,
+instead of just the operstate. This version is similar to what the
+macvlan driver does, and updates only the operstate.
+
+Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
+Reported-by: Radu Rendec <radu.rendec@gmail.com>
+Reported-by: Patrick Talbert <ptalbert@redhat.com>
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/vm/gup_benchmark.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/macsec.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/tools/testing/selftests/vm/gup_benchmark.c b/tools/testing/selftests/vm/gup_benchmark.c
-index 9601bc24454d9..17da711f26afb 100644
---- a/tools/testing/selftests/vm/gup_benchmark.c
-+++ b/tools/testing/selftests/vm/gup_benchmark.c
-@@ -51,6 +51,7 @@ int main(int argc, char **argv)
- 			break;
- 		case 'w':
- 			write = 1;
-+			break;
- 		default:
- 			return -1;
- 		}
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index 05115fb0c97a9..50acd8c9d7f53 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -3305,6 +3305,9 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
+ 	if (err < 0)
+ 		goto del_dev;
+ 
++	netif_stacked_transfer_operstate(real_dev, dev);
++	linkwatch_fire_event(dev);
++
+ 	macsec_generation++;
+ 
+ 	return 0;
+@@ -3489,6 +3492,20 @@ static int macsec_notify(struct notifier_block *this, unsigned long event,
+ 		return NOTIFY_DONE;
+ 
+ 	switch (event) {
++	case NETDEV_DOWN:
++	case NETDEV_UP:
++	case NETDEV_CHANGE: {
++		struct macsec_dev *m, *n;
++		struct macsec_rxh_data *rxd;
++
++		rxd = macsec_data_rtnl(real_dev);
++		list_for_each_entry_safe(m, n, &rxd->secys, secys) {
++			struct net_device *dev = m->secy.netdev;
++
++			netif_stacked_transfer_operstate(real_dev, dev);
++		}
++		break;
++	}
+ 	case NETDEV_UNREGISTER: {
+ 		struct macsec_dev *m, *n;
+ 		struct macsec_rxh_data *rxd;
 -- 
 2.20.1
 
