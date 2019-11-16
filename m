@@ -2,68 +2,99 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4ADC432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 20:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E9CC43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 20:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 949DE20730
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 20:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F40DC20729
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 20:50:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="juUv8+t1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbfKPUtk (ORCPT
+        id S1727761AbfKPUuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 15:49:40 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:53610 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727273AbfKPUtj (ORCPT
+        Sat, 16 Nov 2019 15:50:35 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33328 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727195AbfKPUuf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 15:49:39 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3E4171518AA52;
-        Sat, 16 Nov 2019 12:49:38 -0800 (PST)
-Date:   Sat, 16 Nov 2019 12:49:37 -0800 (PST)
-Message-Id: <20191116.124937.2149949659485060921.davem@davemloft.net>
-To:     po.liu@nxp.com
-Cc:     ivan.khoronzhuk@linaro.org, claudiu.manoil@nxp.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        vinicius.gomes@intel.com, vladimir.oltean@nxp.com,
-        alexandru.marginean@nxp.com, xiaoliang.yang_1@nxp.com,
-        roy.zang@nxp.com, mingkai.hu@nxp.com, jerry.huang@nxp.com,
-        leoyang.li@nxp.com
-Subject: Re: [v4,net-next, 2/2] enetc: update TSN Qbv PSPEED set according
- to adjust link speed
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191115031846.4871-2-Po.Liu@nxp.com>
-References: <20191114045833.18064-2-Po.Liu@nxp.com>
-        <20191115031846.4871-1-Po.Liu@nxp.com>
-        <20191115031846.4871-2-Po.Liu@nxp.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 16 Nov 2019 12:49:38 -0800 (PST)
+        Sat, 16 Nov 2019 15:50:35 -0500
+Received: by mail-qt1-f194.google.com with SMTP id y39so15238707qty.0;
+        Sat, 16 Nov 2019 12:50:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=IgR9yFlnkTLp2xXRay8i5nzS1cYkIa5/QSxH05dSlL0=;
+        b=juUv8+t1CWRILYNBB5Fz5/VRKcZaRnyzIrsi3B4aVrl4+jCRyeM/ZnJYXeUqJPOn+k
+         AAsqNvjC2UkNcL4gGkIbMxAHPbUvYyX5aeQyC4S0Ewz4xgn82IY9cXNpXKCzDGip/2eb
+         H3OJCQ7vfq3sLbewDurmUKfQ//e6grKxTr3oV108zAacEl5OT8e6mOaR8Kh323UBxTuw
+         kr1tfFaiSgb+A50n/8gbzrvaXXEBJU3ptcmfYsB/rqvVAnmCTI/flXow+GrLRr7fG0z1
+         J/bTSzHgVd38Hl5ymqgxkX1sD75tQOKNNZJUCZFRFBQTkZGAm45iUvDG6FSgx7zMOqbt
+         hpPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=IgR9yFlnkTLp2xXRay8i5nzS1cYkIa5/QSxH05dSlL0=;
+        b=X1Sy0NmFui31kX05l4ZEgTvXUdyS1Hev9bApp50yRF2df1mFUazRJYyL3pMpK9hG0n
+         nhf7+nGbr8RJ0sceOALYm4FAPY7dTDADqFxrGEDJYRX4m18VQQVygLUD1McKDewuBY6x
+         o51heOit1jypHn6um+ejFtBwa4UZ9Kwg+3LPNxj8zmpQ4+oiMZV8Cy1cCmBQoKZ2v7QX
+         d6/fgLgBwpXjnqKfO05Gds9FBHRMShlBA6dKAQiqJhp9uYkQYx9i/hpfdmg0cFYx1RsF
+         z4eKsBTZu77qJz4Xlp89KwgYUD30+rA83SXCMaW1e3uQsnfcwpTPQvJStK5+wSXk10W/
+         mQMg==
+X-Gm-Message-State: APjAAAVNqFkbgkKFhr9UsBhqP0AohV8ZD9nD3Y0DhDfGNMhOVnR6zKAu
+        rXKKoquovdtXOtiSuNAotVg=
+X-Google-Smtp-Source: APXvYqxQM0WInjnJ/eVmD8Bz8e0hfDGxTooPflY7Hfz3KHFu1WROasjqDKOBroco3HFuM9aSEtS7yQ==
+X-Received: by 2002:aed:3baf:: with SMTP id r44mr20358974qte.30.1573937433338;
+        Sat, 16 Nov 2019 12:50:33 -0800 (PST)
+Received: from smtp.gmail.com ([143.107.45.1])
+        by smtp.gmail.com with ESMTPSA id n55sm7416978qta.24.2019.11.16.12.50.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 Nov 2019 12:50:32 -0800 (PST)
+Date:   Sat, 16 Nov 2019 17:50:29 -0300
+From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To:     jic23@kernel.org, robh@kernel.org
+Cc:     dragos.bogdan@analog.com, alexandru.ardelean@analog.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: [PATCH 1/2] dt-bindings: iio: adc: ad7292: Update SPDX identifier
+Message-ID: <20191116205026.dvlevawj5obq7weh@smtp.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Po Liu <po.liu@nxp.com>
-Date: Fri, 15 Nov 2019 03:33:41 +0000
+Update SPDX identifier to the preferred dual GPL-2.0 OR BSD-2-Clause
+licensing.
 
-> ENETC has a register PSPEED to indicate the link speed of hardware.
-> It is need to update accordingly. PSPEED field needs to be updated
-> with the port speed for QBV scheduling purposes. Or else there is
-> chance for gate slot not free by frame taking the MAC if PSPEED and
-> phy speed not match. So update PSPEED when link adjust. This is
-> implement by the adjust_link.
-> 
-> Signed-off-by: Po Liu <Po.Liu@nxp.com>
-> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+---
+I split the changes into 2 different patches since they are about
+different issues.
 
-Applied.
+ Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+index b68be3aaf587..5770f63dd511 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+@@ -1,4 +1,4 @@
+-# SPDX-License-Identifier: GPL-2.0-only
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+ %YAML 1.2
+ ---
+ $id: http://devicetree.org/schemas/iio/adc/adi,ad7292.yaml#
+-- 
+2.23.0
+
