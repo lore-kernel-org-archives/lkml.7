@@ -2,104 +2,126 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA88EC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 11:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38004C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 11:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C532C20723
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 11:41:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="KoLgJr45"
+	by mail.kernel.org (Postfix) with ESMTP id 1152D206F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 11:42:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573904536;
+	bh=xwWEZmLdfRvFjBKrfuUpm0w5tnQ2hcrbT7NWa3O7GEs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Ummul9uAW/vHDENywVTJPiH7/aIQ0L7N96fyB81TOYpRJ7LQ+zdZzLah0WoKcyI0Z
+	 KgSFG+cBWDBv5plPrKN3pno1PdZDruSe2JFZc6YNidqljsJb9SXTJ+Bhbsm7CVajuK
+	 tfff36hZ2UMKzc4XPogWzoApBzOewKX2gMbzP8/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbfKPLle (ORCPT
+        id S1727597AbfKPLmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 06:41:34 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36279 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727518AbfKPLl1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 06:41:27 -0500
-Received: by mail-wr1-f67.google.com with SMTP id r10so13779337wrx.3
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 03:41:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pR9uF4o4qP6hFR154w2iCrTxAAAU4GSrRoZE0BDXvFQ=;
-        b=KoLgJr45iUvuUFP8TUcfty8RAL6k9p+pxVTeRu0CK3/B+FuWPZ7Ji+eJqx4fwU7tnX
-         EtJe16nR+SP/8v+X9BBIfv4DVMwXDchB+RJHaOLmQHzAdzYcrafzQE/1d+h5NPS8Yr+X
-         b5PQjGDVCzlSGnbNdUwMFydHds3NhChT63JrJ09Cmna4IAbSetUllyuEkkcap5Bqu3K1
-         BKo5bIywDxKm8ANqmf68954ShoMFYeE2fYTA/CDHFB2s1N+212xoL2+O9EOJmyQwfRsK
-         6EC3cCdtQK+ndFIsxQxoPeif2ecx63IVkXFabXKFm7QNFnLSsUpCtrZBCUAaqt7NqzPc
-         i4vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pR9uF4o4qP6hFR154w2iCrTxAAAU4GSrRoZE0BDXvFQ=;
-        b=BHNtntXLAmUeNLAHwYrhRRKT7kb89WA0HWoq5YS9QS9lVr5oKzcDNt5fWoDisp+pJe
-         jNnwbYwRExGo07w5UaU6FSntzEqQXMwedhHUAYr7uLM4AufwmpV0ffllCMT+ScRf+7Wt
-         Z+lO1+Mk2XxAbtwqEKExuxb6HTYLfwC0IWpwcmc7pfp1j+6UTwBasIfNGQHdGYvCL9Ve
-         FdbEo6GIqHzNE/74tU8mvSf7yUbzlpbfGZWklz9fsqn5OpxVosABSMSzWhT8MgQB6hWY
-         pVvwcl9hauGQuH0FeA+H9Igtbha2PUIskqm1kpLiVnjYZT/jJykUfbMAU0AXiymBw6DU
-         UH7Q==
-X-Gm-Message-State: APjAAAViJh5L/dRcwggs2Zsry97VFj8wBAdUd0yl1AlKD1mhMdm1+U5Z
-        fdBT5dNr8/8FB/Xo26VRMQex4g==
-X-Google-Smtp-Source: APXvYqxIRKSZXDaEs+mfuWkMVieq83A9iqb3TEeqg8cd1Gf9rkZniFg7DskPcHjGaipwsu2GaVFRsg==
-X-Received: by 2002:a5d:4688:: with SMTP id u8mr9687774wrq.40.1573904485051;
-        Sat, 16 Nov 2019 03:41:25 -0800 (PST)
-Received: from localhost.localdomain ([213.220.153.21])
-        by smtp.gmail.com with ESMTPSA id x5sm12539189wmj.7.2019.11.16.03.41.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Nov 2019 03:41:24 -0800 (PST)
-From:   Christian Brauner <christian@brauner.io>
-To:     mtk.manpages@gmail.com
-Cc:     adrian@lisas.de, akpm@linux-foundation.org, arnd@arndb.de,
-        avagin@gmail.com, christian.brauner@ubuntu.com,
-        dhowells@redhat.com, fweimer@redhat.com, jannh@google.com,
-        keescook@chromium.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-man@vger.kernel.org,
-        mingo@elte.hu, oleg@redhat.com, xemul@virtuozzo.com
-Subject: [PATCH 2/3] clone.2: Check for MAP_FAILED not NULL on mmap()
-Date:   Sat, 16 Nov 2019 12:41:13 +0100
-Message-Id: <20191116114114.7066-2-christian@brauner.io>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191116114114.7066-1-christian@brauner.io>
-References: <20191116114114.7066-1-christian@brauner.io>
+        Sat, 16 Nov 2019 06:42:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51880 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727518AbfKPLmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 06:42:14 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 872EA206D6;
+        Sat, 16 Nov 2019 11:42:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573904534;
+        bh=xwWEZmLdfRvFjBKrfuUpm0w5tnQ2hcrbT7NWa3O7GEs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YyN2HWxD1+mTBTF8wF3GsjpzIebVgsUbDcg/SlWKfRFqB/930697YHP/BsIkJGHEo
+         O7NsTHTF3E0pD+rOGWtcEZGTh4LZSUDnCCZOJT5OvtIodIuiw7me5tmA0HLomsqJtb
+         BpZUjL2a76vnXsv/UTUPMTcUssSRFwivyX18ZhH4=
+Date:   Sat, 16 Nov 2019 11:42:08 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     dmitry.torokhov@gmail.com, groeck@chromium.org,
+        briannorris@chromium.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
+        enric.balletbo@collabora.com, dianders@chromium.org,
+        fabien.lahoudere@collabora.com, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH v5 13/18] iio: expose iio_device_set_clock
+Message-ID: <20191116114208.1f92d4c4@archlinux>
+In-Reply-To: <20191115093412.144922-14-gwendal@chromium.org>
+References: <20191115093412.144922-1-gwendal@chromium.org>
+        <20191115093412.144922-14-gwendal@chromium.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian.brauner@ubuntu.com>
+On Fri, 15 Nov 2019 01:34:07 -0800
+Gwendal Grignou <gwendal@chromium.org> wrote:
 
-If mmap() fails it will return MAP_FAILED which according to the manpage
-is (void *)-1 not NULL.
+> Some IIO devices may want to override the default (realtime) to another
+> clock source by default.
+> It can beneficial when timestamps coming from the hardware or underlying
+> drivers are already in that format.
+> It can always be overridden by attribute current_timestamp_clock.
+> 
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+Definitely a step in the right direction.  We may want to also
+consider a 'lock' on the value to prevent userspace overriding it, or
+to perhaps limit the available choices.
 
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
- man2/clone.2 | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+For now though this lets you move forwards
 
-diff --git a/man2/clone.2 b/man2/clone.2
-index 57a9eaba7..faff2ada6 100644
---- a/man2/clone.2
-+++ b/man2/clone.2
-@@ -1628,7 +1628,7 @@ main(int argc, char *argv[])
- 
-     stack = mmap(NULL, STACK_SIZE, PROT_READ | PROT_WRITE,
-                  MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, \-1, 0);
--    if (stack == NULL)
-+    if (stack == MAP_FAILED)
-         errExit("mmap");
- 
-     stackTop = stack + STACK_SIZE;  /* Assume stack grows downward */
--- 
-2.24.0
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> ---
+>  drivers/iio/industrialio-core.c | 8 +++++++-
+>  include/linux/iio/iio.h         | 2 ++
+>  2 files changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index a46cdf2d8833..92815bdc14ee 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -188,7 +188,12 @@ ssize_t iio_read_const_attr(struct device *dev,
+>  }
+>  EXPORT_SYMBOL(iio_read_const_attr);
+>  
+> -static int iio_device_set_clock(struct iio_dev *indio_dev, clockid_t clock_id)
+> +/**
+> + * iio_device_set_clock() - Set current timestamping clock for the device
+> + * @indio_dev: IIO device structure containing the device
+> + * @clock_id: timestamping clock posix identifier to set.
+> + */
+> +int iio_device_set_clock(struct iio_dev *indio_dev, clockid_t clock_id)
+>  {
+>  	int ret;
+>  	const struct iio_event_interface *ev_int = indio_dev->event_interface;
+> @@ -206,6 +211,7 @@ static int iio_device_set_clock(struct iio_dev *indio_dev, clockid_t clock_id)
+>  
+>  	return 0;
+>  }
+> +EXPORT_SYMBOL(iio_device_set_clock);
+>  
+>  /**
+>   * iio_get_time_ns() - utility function to get a time stamp for events etc
+> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+> index 862ce0019eba..b18f34a8901f 100644
+> --- a/include/linux/iio/iio.h
+> +++ b/include/linux/iio/iio.h
+> @@ -627,6 +627,8 @@ static inline clockid_t iio_device_get_clock(const struct iio_dev *indio_dev)
+>  	return indio_dev->clock_id;
+>  }
+>  
+> +int iio_device_set_clock(struct iio_dev *indio_dev, clockid_t clock_id);
+> +
+>  /**
+>   * dev_to_iio_dev() - Get IIO device struct from a device struct
+>   * @dev: 		The device embedded in the IIO device
 
