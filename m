@@ -2,104 +2,141 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E712C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5562FC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1844221847
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BD65214DE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:26:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921613;
-	bh=u+xBCALwba5ux8lkBspkQlgCbUB0P91PtT6vi6b6KE4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dr9Dml+0MvChw3096wGUKvppbnytzH+D5AXmyjZCzzljInF4JD7LntqPkcBZM+UmE
-	 ffSudfHXvTHNV7mQFef2/vhpk2SH7hwfkNv7DKcmPph4ufRK6Nw6HajtAYQN+4dcQ/
-	 2rimbsxE5rt4McOGUI7T0MpJnKNqJBYT/HAqXZ68=
+	s=default; t=1573921619;
+	bh=Mjp9Ayi7gHDEl4RyIz4743czz+ZO/l4kYbTirM1WaXM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RPj//w7EAY3FmNVU+I7+n2k3z255X9R75NJTF8nx8RNLUHR/KvMeDGm5EyH9VZ/6X
+	 0l+G7pXbYWJxYxSzKmbViZR+sNK+fBSWzIkmGQUJblXXluQ8WUT8zGhp9M4WGTTn4U
+	 O1ZekPhe8SIuHni+6LGWYf7z69rzYNWv9xQnSYz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728530AbfKPQ0v (ORCPT
+        id S1732070AbfKPQ06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:26:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48318 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:26:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727912AbfKPQ0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 11:26:46 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727988AbfKPPlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:41:44 -0500
+Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB264214DE;
-        Sat, 16 Nov 2019 16:26:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EBC020740;
+        Sat, 16 Nov 2019 15:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573921606;
-        bh=u+xBCALwba5ux8lkBspkQlgCbUB0P91PtT6vi6b6KE4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PYMNe0NsWDQoRleJ+awapTwkV7w48mmVOZRnH7hzc1CE5BHI10gb/HJ2RzsNGcvho
-         a16xCTubXSMeU3/Xm+0Zhr6Uh0pebkBRqu/dDDKM6lOWwXtlUCJl3as2cVG+U4r0r0
-         Xsdu5ZdggMH7rO5LHhED5VMJAs6vR9CjFvxw5t44=
-Date:   Sat, 16 Nov 2019 16:26:41 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Mircea Caprioru <mircea.caprioru@analog.com>
-Cc:     <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
-        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH] iio: adc: ad7124: Enable internal reference
-Message-ID: <20191116162641.45c9a557@archlinux>
-In-Reply-To: <20191114092426.21631-1-mircea.caprioru@analog.com>
-References: <20191114092426.21631-1-mircea.caprioru@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1573918903;
+        bh=Mjp9Ayi7gHDEl4RyIz4743czz+ZO/l4kYbTirM1WaXM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QbJbyd3fZTAYvMsY04GNxVF52FMaT1Wjs2RTZHy3qvE+exyHM+JajwN3VruJCjJDi
+         ao0izyynkKviFg0BSogXy26Fz0yumR2JrbQCYYsT0Unrv/fpNNcfnHNZ7j9WLeKGbh
+         REBQbUXDgU+kMGG/TCfTmINeXG5ZHIX2pDXyKtLA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Duncan Laurie <dlaurie@chromium.org>,
+        Vadim Bendebury <vbendeb@chromium.org>,
+        Stefan Reinauer <reinauer@chromium.org>,
+        Furquan Shaikh <furquan@google.com>,
+        Furquan Shaikh <furquan@chromium.org>,
+        Aaron Durbin <adurbin@chromium.org>,
+        Justin TerAvest <teravest@chromium.org>,
+        Ross Zwisler <zwisler@google.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 030/237] gsmi: Fix bug in append_to_eventlog sysfs handler
+Date:   Sat, 16 Nov 2019 10:37:45 -0500
+Message-Id: <20191116154113.7417-30-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
+References: <20191116154113.7417-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Nov 2019 11:24:26 +0200
-Mircea Caprioru <mircea.caprioru@analog.com> wrote:
+From: Duncan Laurie <dlaurie@chromium.org>
 
-> When the internal reference was selected by a channel it was not enabled.
-> This patch fixes that and enables it.
-> 
-> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+[ Upstream commit 655603de68469adaff16842ac17a5aec9c9ce89b ]
 
-Probably want to clearly mark this as a fix in the patch title and
-give a fixes tag here.
+The sysfs handler should return the number of bytes consumed, which in the
+case of a successful write is the entire buffer.  Also fix a bug where
+param.data_len was being set to (count - (2 * sizeof(u32))) instead of just
+(count - sizeof(u32)).  The latter is correct because we skip over the
+leading u32 which is our param.type, but we were also incorrectly
+subtracting sizeof(u32) on the line where we were actually setting
+param.data_len:
 
-Seems like it would be awfully broken without this!
+	param.data_len = count - sizeof(u32);
 
-Jonathan
+This meant that for our example event.kernel_software_watchdog with total
+length 10 bytes, param.data_len was just 2 prior to this change.
 
-> ---
->  drivers/iio/adc/ad7124.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
-> index edc6f1cc90b2..3f03abf100b5 100644
-> --- a/drivers/iio/adc/ad7124.c
-> +++ b/drivers/iio/adc/ad7124.c
-> @@ -39,6 +39,8 @@
->  #define AD7124_STATUS_POR_FLAG_MSK	BIT(4)
->  
->  /* AD7124_ADC_CONTROL */
-> +#define AD7124_ADC_CTRL_REF_EN_MSK	BIT(8)
-> +#define AD7124_ADC_CTRL_REF_EN(x)	FIELD_PREP(AD7124_ADC_CTRL_REF_EN_MSK, x)
->  #define AD7124_ADC_CTRL_PWR_MSK	GENMASK(7, 6)
->  #define AD7124_ADC_CTRL_PWR(x)		FIELD_PREP(AD7124_ADC_CTRL_PWR_MSK, x)
->  #define AD7124_ADC_CTRL_MODE_MSK	GENMASK(5, 2)
-> @@ -424,7 +426,10 @@ static int ad7124_init_channel_vref(struct ad7124_state *st,
->  		break;
->  	case AD7124_INT_REF:
->  		st->channel_config[channel_number].vref_mv = 2500;
-> -		break;
-> +		st->adc_control &= ~AD7124_ADC_CTRL_REF_EN_MSK;
-> +		st->adc_control |= AD7124_ADC_CTRL_REF_EN(1);
-> +		return ad_sd_write_reg(&st->sd, AD7124_ADC_CONTROL,
-> +				      2, st->adc_control);
->  	default:
->  		dev_err(&st->sd.spi->dev, "Invalid reference %d\n", refsel);
->  		return -EINVAL;
+To test, successfully append an event to the log with gsmi sysfs.
+This sample event is for a "Kernel Software Watchdog"
+
+> xxd -g 1 event.kernel_software_watchdog
+0000000: 01 00 00 00 ad de 06 00 00 00
+
+> cat event.kernel_software_watchdog > /sys/firmware/gsmi/append_to_eventlog
+
+> mosys eventlog list | tail -1
+14 | 2012-06-25 10:14:14 | Kernl Event | Software Watchdog
+
+Signed-off-by: Duncan Laurie <dlaurie@chromium.org>
+Reviewed-by: Vadim Bendebury <vbendeb@chromium.org>
+Reviewed-by: Stefan Reinauer <reinauer@chromium.org>
+Signed-off-by: Furquan Shaikh <furquan@google.com>
+Tested-by: Furquan Shaikh <furquan@chromium.org>
+Reviewed-by: Aaron Durbin <adurbin@chromium.org>
+Reviewed-by: Justin TerAvest <teravest@chromium.org>
+[zwisler: updated changelog for 2nd bug fix and upstream]
+Signed-off-by: Ross Zwisler <zwisler@google.com>
+Reviewed-by: Guenter Roeck <groeck@chromium.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/firmware/google/gsmi.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/firmware/google/gsmi.c b/drivers/firmware/google/gsmi.c
+index c8f169bf2e27d..62337be07afcb 100644
+--- a/drivers/firmware/google/gsmi.c
++++ b/drivers/firmware/google/gsmi.c
+@@ -480,11 +480,10 @@ static ssize_t eventlog_write(struct file *filp, struct kobject *kobj,
+ 	if (count < sizeof(u32))
+ 		return -EINVAL;
+ 	param.type = *(u32 *)buf;
+-	count -= sizeof(u32);
+ 	buf += sizeof(u32);
+ 
+ 	/* The remaining buffer is the data payload */
+-	if (count > gsmi_dev.data_buf->length)
++	if ((count - sizeof(u32)) > gsmi_dev.data_buf->length)
+ 		return -EINVAL;
+ 	param.data_len = count - sizeof(u32);
+ 
+@@ -504,7 +503,7 @@ static ssize_t eventlog_write(struct file *filp, struct kobject *kobj,
+ 
+ 	spin_unlock_irqrestore(&gsmi_dev.lock, flags);
+ 
+-	return rc;
++	return (rc == 0) ? count : rc;
+ 
+ }
+ 
+-- 
+2.20.1
 
