@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B66A0C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D6FC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8595C2168B
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E7E02168B
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919777;
-	bh=3ezIcSOyWYw8I4efjEO+0CwCb+ZkrQdkz6h7FNO1ffM=;
+	s=default; t=1573919783;
+	bh=YAoNevRZdrrDehJ/hPdRuUZnd/D//7WimKmw/6nGgNc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pFnsq64Ngh0d63vZ4diaFedP440BsHK5rOXowDGIMDWUKnhzu83UGj2nwxYNmyxWh
-	 +N3tRAt3aGhT4TpXyqn7Kfj1z18sM6BsBVZhEh4afPYnwWV9OaBKjV674IDj8NfaJE
-	 a0Lnn2IcnsN+rdqM9nWzsKwuaQddaK0hbmHxdZ9U=
+	b=Vg9gUJQ5yi6tApXEtWl7Q/ReUoL9SBSG5f9XAgU0SAjTs5i9zcMsanSrssYsOyhUo
+	 aeNleNNQJc83HqGtqiS7lUd/SavaEFDt2KxEuURQ5Pb6N/nOgWTokrfET9wJs0qwzA
+	 mZooM/LU5Y5Ng2glhOzh05G9vj3vYQDRvHt8yfpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731129AbfKPP4Q (ORCPT
+        id S1731677AbfKPP4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:56:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37594 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:56:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731620AbfKPPz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:55:29 -0500
+        id S1731612AbfKPPz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:55:27 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6F86219F7;
-        Sat, 16 Nov 2019 15:55:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53C292195D;
+        Sat, 16 Nov 2019 15:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919729;
-        bh=3ezIcSOyWYw8I4efjEO+0CwCb+ZkrQdkz6h7FNO1ffM=;
+        s=default; t=1573919726;
+        bh=YAoNevRZdrrDehJ/hPdRuUZnd/D//7WimKmw/6nGgNc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J+I+8J3unJ7rkCLWBda6A7dxHT6HW2l/R/pArabgKyk7V8GCQkaAb5LFqwvXreDx9
-         YtNoY2hXtRSy3XYWajNHppbr+Gk+HQ2j0gmTspzPsM+I7TS7GN1aCxp3e+BGaBC8LL
-         1NhUffGhfjvFyyqQvljbVdV7NtGiMJFGiQv0T1Yo=
+        b=HLI4ek4KAxQ/wz8J4ys9BaI5XVvxf2S0zrhW1zunmNH8Ft3iAsqwVHdwNecqnPzZO
+         okBjzYQG6boFcO/h1OYUTUiBTXMXUWFvl1PhdDjgkg69ejHHde3DdDpZEykuR5+f+3
+         fE0XeaFA0bb9RGW/hLRZ8MSkPKu1vZTqoEAXAY8g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tycho Andersen <tycho@tycho.ws>,
-        David Teigland <teigland@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 4.4 70/77] dlm: fix invalid free
-Date:   Sat, 16 Nov 2019 10:53:32 -0500
-Message-Id: <20191116155339.11909-70-sashal@kernel.org>
+Cc:     Suganath Prabu <suganath-prabu.subramani@broadcom.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 67/77] scsi: mpt3sas: Fix driver modifying persistent data in Manufacturing page11
+Date:   Sat, 16 Nov 2019 10:53:29 -0500
+Message-Id: <20191116155339.11909-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -59,44 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tycho Andersen <tycho@tycho.ws>
+From: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
 
-[ Upstream commit d968b4e240cfe39d39d80483bac8bca8716fd93c ]
+[ Upstream commit 97f35194093362a63b33caba2485521ddabe2c95 ]
 
-dlm_config_nodes() does not allocate nodes on failure, so we should not
-free() nodes when it fails.
+Currently driver is modifying both current & NVRAM/persistent data in
+Manufacturing page11. Driver should change only current copy of
+Manufacturing page11. It should not modify the persistent data.
 
-Signed-off-by: Tycho Andersen <tycho@tycho.ws>
-Signed-off-by: David Teigland <teigland@redhat.com>
+So removed the section of code where driver is modifying the persistent
+data of Manufacturing page11.
+
+Signed-off-by: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
+Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/dlm/member.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/scsi/mpt3sas/mpt3sas_config.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/fs/dlm/member.c b/fs/dlm/member.c
-index 9c47f1c14a8ba..a47ae99f7bcbc 100644
---- a/fs/dlm/member.c
-+++ b/fs/dlm/member.c
-@@ -683,7 +683,7 @@ int dlm_ls_start(struct dlm_ls *ls)
- 
- 	error = dlm_config_nodes(ls->ls_name, &nodes, &count);
- 	if (error < 0)
--		goto fail;
-+		goto fail_rv;
- 
- 	spin_lock(&ls->ls_recover_lock);
- 
-@@ -715,8 +715,9 @@ int dlm_ls_start(struct dlm_ls *ls)
- 	return 0;
- 
-  fail:
--	kfree(rv);
- 	kfree(nodes);
-+ fail_rv:
-+	kfree(rv);
- 	return error;
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_config.c b/drivers/scsi/mpt3sas/mpt3sas_config.c
+index a6914ec99cc04..56dc0e3be2ba2 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_config.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_config.c
+@@ -677,10 +677,6 @@ mpt3sas_config_set_manufacturing_pg11(struct MPT3SAS_ADAPTER *ioc,
+ 	r = _config_request(ioc, &mpi_request, mpi_reply,
+ 	    MPT3_CONFIG_PAGE_DEFAULT_TIMEOUT, config_page,
+ 	    sizeof(*config_page));
+-	mpi_request.Action = MPI2_CONFIG_ACTION_PAGE_WRITE_NVRAM;
+-	r = _config_request(ioc, &mpi_request, mpi_reply,
+-	    MPT3_CONFIG_PAGE_DEFAULT_TIMEOUT, config_page,
+-	    sizeof(*config_page));
+  out:
+ 	return r;
  }
- 
 -- 
 2.20.1
 
