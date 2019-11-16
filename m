@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64688C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC6EC43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32ABB207FA
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89CEC2086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919302;
-	bh=wm40pxxZ59JGzonob8Ges0kmf+882DncGH3d04jzJGs=;
+	s=default; t=1573919306;
+	bh=+MSac9lGQ3g4tukeHIJJKFOOP18cM1X5Kz249xwJKOY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E376E+jr06bQlkDM4B7pqZVUQEeKB77Vs9OdWhrg1ih0VxmmSFZ9445UaPASB3/tN
-	 /ue8hdN7LnCY2VQevI1/u6WRWhG7uS6yQJaNaoPAx6tYnvn/KX6iLHVP8Y2uK8i0ub
-	 s/yM0ZNEYEQ5Pm2oWG3bMlrBoy2dNf+UYwBNOupg=
+	b=yPOKqtNoiIADcqvNq4yC6K8O2XRODuGI3qtiLRdiosdZsQmh5JGiiX91xK3Hy5JKR
+	 LhslWpwZwC1MFNgQ6RC7SQTB/CpEatxMs9DbcJk842RySz5tf24EYKrn8DBGXHR6pL
+	 ciwn5aENh+dFcM2PEtfrv/+bTdnsvxkTQjyF+xWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730019AbfKPPsV (ORCPT
+        id S1730036AbfKPPsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:48:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55256 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:48:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729900AbfKPPsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:48:16 -0500
+        id S1729971AbfKPPsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:48:13 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AF7C208CD;
-        Sat, 16 Nov 2019 15:48:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B4CF20891;
+        Sat, 16 Nov 2019 15:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919295;
-        bh=wm40pxxZ59JGzonob8Ges0kmf+882DncGH3d04jzJGs=;
+        s=default; t=1573919293;
+        bh=+MSac9lGQ3g4tukeHIJJKFOOP18cM1X5Kz249xwJKOY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=auLby6rtu6B0YPnoeDytv1SFiLHYdeKUFgK3GCoH+C3vxWmBG4lsu8Vf34iVKPKn6
-         mbhm2q31aMm/X9En/sUxjYZTICd9nBSo69ZLyuJtjrLdSw4elK+EAv2PySKsN0A7zM
-         bao+G2FMP/aoRE3E9ngBq3QXXdvR+3poIk6pvQxg=
+        b=kCKfKUvK/zTfxANLue9tFMR2mZTJsZdaIKIuIcVPucXup+/ef7ieIJDcJ7cPe8jKf
+         fayyKjwOjqhaML/9LXuBdWc5EmtvTPPrIzJnwaJkDbGqpqhGYWWN2eeVJXSea/yDKL
+         KQeEh3BaR8OUm8MC+fTacBYqXyQiy0Ek9MZFTvfw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kyeongdon Kim <kyeongdon.kim@lge.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 042/150] net: fix warning in af_unix
-Date:   Sat, 16 Nov 2019 10:45:40 -0500
-Message-Id: <20191116154729.9573-42-sashal@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, dc395x@twibble.org,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 040/150] scsi: dc395x: fix DMA API usage in sg_update_list
+Date:   Sat, 16 Nov 2019 10:45:38 -0500
+Message-Id: <20191116154729.9573-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -59,35 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kyeongdon Kim <kyeongdon.kim@lge.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 33c4368ee2589c165aebd8d388cbd91e9adb9688 ]
+[ Upstream commit 6c404a68bf83b4135a8a9aa1c388ebdf98e8ba7f ]
 
-This fixes the "'hash' may be used uninitialized in this function"
+We need to transfer device ownership to the CPU before we can manipulate
+the mapped data.
 
-net/unix/af_unix.c:1041:20: warning: 'hash' may be used uninitialized in this function [-Wmaybe-uninitialized]
-  addr->hash = hash ^ sk->sk_type;
-
-Signed-off-by: Kyeongdon Kim <kyeongdon.kim@lge.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/unix/af_unix.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/dc395x.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
-index 4de9dfd14d09d..99f581a61cfac 100644
---- a/net/unix/af_unix.c
-+++ b/net/unix/af_unix.c
-@@ -225,6 +225,8 @@ static inline void unix_release_addr(struct unix_address *addr)
- 
- static int unix_mkname(struct sockaddr_un *sunaddr, int len, unsigned int *hashp)
- {
-+	*hashp = 0;
-+
- 	if (len <= sizeof(short) || len > sizeof(*sunaddr))
- 		return -EINVAL;
- 	if (!sunaddr || sunaddr->sun_family != AF_UNIX)
+diff --git a/drivers/scsi/dc395x.c b/drivers/scsi/dc395x.c
+index 9da0ac360848f..830b2d2dcf206 100644
+--- a/drivers/scsi/dc395x.c
++++ b/drivers/scsi/dc395x.c
+@@ -1972,6 +1972,11 @@ static void sg_update_list(struct ScsiReqBlk *srb, u32 left)
+ 			xferred -= psge->length;
+ 		} else {
+ 			/* Partial SG entry done */
++			pci_dma_sync_single_for_cpu(srb->dcb->
++					    acb->dev,
++					    srb->sg_bus_addr,
++					    SEGMENTX_LEN,
++					    PCI_DMA_TODEVICE);
+ 			psge->length -= xferred;
+ 			psge->address += xferred;
+ 			srb->sg_index = idx;
 -- 
 2.20.1
 
