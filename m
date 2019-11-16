@@ -2,52 +2,54 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0980C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B41C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A26221479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE3B821479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921492;
-	bh=AEKuXHxzOlWw1jjhUhJvnxQdyfazbBauDavrgiai+r0=;
+	s=default; t=1573921504;
+	bh=OKqeG2P+tPeyHFAyZKVWcBe8xkMu2lCZ2qbbeu6ZUeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o5klDA++BEp/izqq3a90/PGO0uP5Ve5Bh22a0J2qvl7HDSNNLGiDmpbep6gGBOWVB
-	 ykR19ku7XBmL1fvpthdQ0zoJ6xWCslVe9v4QRhg8LJkIq+3T8ajuj5wJQw3QBrwlJm
-	 xUnrxRTu8tEKuR0odJobqDAEwaJ4+vNY87GUnjmk=
+	b=1Vdleb3elh7zGj0hxn6TspDoF3tInRsLvlQtNMS72nnigVb4S2iSMlal5+3W6OawH
+	 mGThPRPb3qXFfFy4E84cPW+w8HGQac4qS1+Tm5lYLp4NjaougGzFHdndH1h1mLSPCn
+	 B8DRr2uFCDGDTBah74ggIfqvOGTkFfYaKpEOx9rY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbfKPQYv (ORCPT
+        id S1728237AbfKPPmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:24:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45872 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:42:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728266AbfKPPmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:42:20 -0500
+        id S1728191AbfKPPmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:42:09 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D778A2072D;
-        Sat, 16 Nov 2019 15:42:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13F362075B;
+        Sat, 16 Nov 2019 15:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918940;
-        bh=AEKuXHxzOlWw1jjhUhJvnxQdyfazbBauDavrgiai+r0=;
+        s=default; t=1573918928;
+        bh=OKqeG2P+tPeyHFAyZKVWcBe8xkMu2lCZ2qbbeu6ZUeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pM3U4VlUblagR2RXpQHQaPHodkDMOo32UAwuSiKXyCv6Uld/cvr6Rd2kQy2M9F5tr
-         /FTcnt3sXv2lpWK7e4BCkbb7gQTJW/nmio9Iekl1PkwVptkc0bqDK6dkZelJKGls/e
-         wm5xyQ+Uy9K7LaUEHMvPcshOl+lNShiLV/vDL42A=
+        b=qt/cUn+ClZmPMPrzTlTuQcXjh847Zqv5VWk+meyQ82KW9GgAwzr7v/cQlLIE1V2Cn
+         kN8kOKEuz+qZ270ZGqeEY0T8Pl/35filyFx/BDjxSWtU0lLEYf8zxmq1I/SxvJ9CfV
+         JZfA58Z/TMCDUizFFH0xSfhDUFTNoji+GQy+6lIw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 062/237] ASoC: tegra_sgtl5000: fix device_node refcounting
-Date:   Sat, 16 Nov 2019 10:38:17 -0500
-Message-Id: <20191116154113.7417-62-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 055/237] crypto: ccree - avoid implicit enum conversion
+Date:   Sat, 16 Nov 2019 10:38:10 -0500
+Message-Id: <20191116154113.7417-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,72 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit a85227da2dcc291b762c8482a505bc7d0d2d4b07 ]
+[ Upstream commit 18e732b8035d175181aae2ded127994cb01694f7 ]
 
-Similar to the following:
+Clang warns when one enumerated type is implicitly converted to another
+and this happens in several locations in this driver, ultimately related
+to the set_cipher_{mode,config0} functions. set_cipher_mode expects a mode
+of type drv_cipher_mode and set_cipher_config0 expects a mode of type
+drv_crypto_direction.
 
-commit 4321723648b0 ("ASoC: tegra_alc5632: fix device_node refcounting")
+drivers/crypto/ccree/cc_ivgen.c:58:35: warning: implicit conversion from
+enumeration type 'enum cc_desc_direction' to different enumeration type
+'enum drv_crypto_direction' [-Wenum-conversion]
+        set_cipher_config0(&iv_seq[idx], DESC_DIRECTION_ENCRYPT_ENCRYPT);
 
-commit 7c5dfd549617 ("ASoC: tegra: fix device_node refcounting")
+drivers/crypto/ccree/cc_hash.c:99:28: warning: implicit conversion from
+enumeration type 'enum cc_hash_conf_pad' to different enumeration type
+'enum drv_crypto_direction' [-Wenum-conversion]
+                set_cipher_config0(desc, HASH_DIGEST_RESULT_LITTLE_ENDIAN);
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+drivers/crypto/ccree/cc_aead.c:1643:30: warning: implicit conversion
+from enumeration type 'enum drv_hash_hw_mode' to different enumeration
+type 'enum drv_cipher_mode' [-Wenum-conversion]
+        set_cipher_mode(&desc[idx], DRV_HASH_HW_GHASH);
+
+Since this fundamentally isn't a problem because these values just
+represent simple integers for a shift operation, make it clear to Clang
+that this is okay by making the mode parameter in both functions an int.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/46
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/tegra/tegra_sgtl5000.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ drivers/crypto/ccree/cc_hw_queue_defs.h | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/tegra/tegra_sgtl5000.c b/sound/soc/tegra/tegra_sgtl5000.c
-index 45a4aa9d2a479..901457da25ec3 100644
---- a/sound/soc/tegra/tegra_sgtl5000.c
-+++ b/sound/soc/tegra/tegra_sgtl5000.c
-@@ -149,14 +149,14 @@ static int tegra_sgtl5000_driver_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev,
- 			"Property 'nvidia,i2s-controller' missing/invalid\n");
- 		ret = -EINVAL;
--		goto err;
-+		goto err_put_codec_of_node;
- 	}
- 
- 	tegra_sgtl5000_dai.platform_of_node = tegra_sgtl5000_dai.cpu_of_node;
- 
- 	ret = tegra_asoc_utils_init(&machine->util_data, &pdev->dev);
- 	if (ret)
--		goto err;
-+		goto err_put_cpu_of_node;
- 
- 	ret = snd_soc_register_card(card);
- 	if (ret) {
-@@ -169,6 +169,13 @@ static int tegra_sgtl5000_driver_probe(struct platform_device *pdev)
- 
- err_fini_utils:
- 	tegra_asoc_utils_fini(&machine->util_data);
-+err_put_cpu_of_node:
-+	of_node_put(tegra_sgtl5000_dai.cpu_of_node);
-+	tegra_sgtl5000_dai.cpu_of_node = NULL;
-+	tegra_sgtl5000_dai.platform_of_node = NULL;
-+err_put_codec_of_node:
-+	of_node_put(tegra_sgtl5000_dai.codec_of_node);
-+	tegra_sgtl5000_dai.codec_of_node = NULL;
- err:
- 	return ret;
+diff --git a/drivers/crypto/ccree/cc_hw_queue_defs.h b/drivers/crypto/ccree/cc_hw_queue_defs.h
+index a091ae57f9024..45985b955d2c8 100644
+--- a/drivers/crypto/ccree/cc_hw_queue_defs.h
++++ b/drivers/crypto/ccree/cc_hw_queue_defs.h
+@@ -449,8 +449,7 @@ static inline void set_flow_mode(struct cc_hw_desc *pdesc,
+  * @pdesc: pointer HW descriptor struct
+  * @mode:  Any one of the modes defined in [CC7x-DESC]
+  */
+-static inline void set_cipher_mode(struct cc_hw_desc *pdesc,
+-				   enum drv_cipher_mode mode)
++static inline void set_cipher_mode(struct cc_hw_desc *pdesc, int mode)
+ {
+ 	pdesc->word[4] |= FIELD_PREP(WORD4_CIPHER_MODE, mode);
  }
-@@ -183,6 +190,12 @@ static int tegra_sgtl5000_driver_remove(struct platform_device *pdev)
- 
- 	tegra_asoc_utils_fini(&machine->util_data);
- 
-+	of_node_put(tegra_sgtl5000_dai.cpu_of_node);
-+	tegra_sgtl5000_dai.cpu_of_node = NULL;
-+	tegra_sgtl5000_dai.platform_of_node = NULL;
-+	of_node_put(tegra_sgtl5000_dai.codec_of_node);
-+	tegra_sgtl5000_dai.codec_of_node = NULL;
-+
- 	return ret;
+@@ -461,8 +460,7 @@ static inline void set_cipher_mode(struct cc_hw_desc *pdesc,
+  * @pdesc: pointer HW descriptor struct
+  * @mode: Any one of the modes defined in [CC7x-DESC]
+  */
+-static inline void set_cipher_config0(struct cc_hw_desc *pdesc,
+-				      enum drv_crypto_direction mode)
++static inline void set_cipher_config0(struct cc_hw_desc *pdesc, int mode)
+ {
+ 	pdesc->word[4] |= FIELD_PREP(WORD4_CIPHER_CONF0, mode);
  }
- 
 -- 
 2.20.1
 
