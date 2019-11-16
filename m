@@ -2,123 +2,262 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B76C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F04C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8CC20740
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:43:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573918985;
-	bh=RhEQdIRWLTuBSUEAgYQ268wy45fY4RTZSKHNk1bT7B8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uLXR8QQfvpV5xpBX56pTybpsxBgqJ1m2D5Xs4IFGqB8Gv6rZgD2Wak7Pvg0E+jxy8
-	 ChlbfZqdpXo+BI9s1VttOs/alG0BdtHiOGEx7C/L5ubLnib31pgja986QxfqQT66xv
-	 uskpUgCUDvE1O9D+b44NyCZUmVob2yHaq3MupOdo=
+	by mail.kernel.org (Postfix) with ESMTP id 57D9D2072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:43:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="h5EJi9fK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbfKPPnE (ORCPT
+        id S1728585AbfKPPnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:43:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728547AbfKPPnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:43:01 -0500
-Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
+        Sat, 16 Nov 2019 10:43:07 -0500
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:56582 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728543AbfKPPnC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:43:02 -0500
+Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id C09822E0DE5;
+        Sat, 16 Nov 2019 18:42:59 +0300 (MSK)
+Received: from vla5-2bf13a090f43.qloud-c.yandex.net (vla5-2bf13a090f43.qloud-c.yandex.net [2a02:6b8:c18:3411:0:640:2bf1:3a09])
+        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id netFG6C4VG-gusi6Wc9;
+        Sat, 16 Nov 2019 18:42:59 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1573918979; bh=6OWgJ/D1bA0jYWwhhbhnmnOKbAnNBP1YmMdV9P9HUxM=;
+        h=In-Reply-To:References:Date:Message-ID:From:To:Subject;
+        b=h5EJi9fKSV4BLLS9RXZAyGKW34uyJOFzDiECn7EPINx4wVWWILagKHDE/LaI6exYG
+         EjRWrU1L9WnavsHYawOXTqt7rXekWFNbe5krHuUQNIZBmUAx7SKeVepEXGx7dvr3Cw
+         ns2jR6nm7JdtZmb+m1EXHbs/wLVGo86xDXm+8muI=
+Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:1009:4fae:ad87:4eae])
+        by vla5-2bf13a090f43.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id Ek98rnroKw-guXC19OO;
+        Sat, 16 Nov 2019 18:42:56 +0300
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC3C92075B;
-        Sat, 16 Nov 2019 15:43:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918981;
-        bh=RhEQdIRWLTuBSUEAgYQ268wy45fY4RTZSKHNk1bT7B8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M0maQnGZUFuKgwgs3Tqt0qV1c8IPS6o9JPidNCtd1m5OZNhNnmPnou/2dWTjNFECh
-         C4fhnkJsI9nXTQUNobuXf2UbB2nbuPLxJh1v7DGs9LslqY6GixitVP+ohhrrLvdgy6
-         QaogoqDc5KvQUbqPb9PJy/H3gZrCf6duEITBEtP8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Xiang Chen <chenxiang66@hisilicon.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 090/237] scsi: hisi_sas: Fix NULL pointer dereference
-Date:   Sat, 16 Nov 2019 10:38:45 -0500
-Message-Id: <20191116154113.7417-90-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
-References: <20191116154113.7417-1-sashal@kernel.org>
+        (Client certificate not present)
+Subject: Re: possible deadlock in proc_pid_syscall
+To:     syzbot <syzbot+ffc5f92d13ebf6b3e760@syzkaller.appspotmail.com>,
+        adobriyan@gmail.com, akpm@linux-foundation.org,
+        casey@schaufler-ca.com, christian@brauner.io,
+        keescook@chromium.org, kent.overstreet@gmail.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mhocko@suse.com, shakeelb@google.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+References: <0000000000008026b8059777575c@google.com>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <ed10dd02-09cf-ebc6-f123-208f7ad88578@yandex-team.ru>
+Date:   Sat, 16 Nov 2019 18:42:56 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <0000000000008026b8059777575c@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+On 16/11/2019 17.15, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    eb70e26c Merge tag 'arm64-fixes' of git://git.kernel.org/p..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10a38772e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=7654f9089a2e8c85
+> dashboard link: https://syzkaller.appspot.com/bug?extid=ffc5f92d13ebf6b3e760
+> compiler:       clang version 9.0.0 (/home/glider/llvm/clang 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+ffc5f92d13ebf6b3e760@syzkaller.appspotmail.com
+> 
+> ======================================================
+> WARNING: possible circular locking dependency detected
+> 5.4.0-rc7+ #0 Not tainted
+> ------------------------------------------------------
+> syz-executor.4/16763 is trying to acquire lock:
+> ffff8880916fc710 (&sig->cred_guard_mutex){+.+.}, at: lock_trace fs/proc/base.c:406 [inline]
+> ffff8880916fc710 (&sig->cred_guard_mutex){+.+.}, at: proc_pid_syscall+0x66/0x3a0 fs/proc/base.c:635
+> 
+> but task is already holding lock:
+> ffff8880a02001c0 (&p->lock){+.+.}, at: seq_read+0x6e/0xd70 fs/seq_file.c:161
+> 
+> which lock already depends on the new lock.
+> 
 
-[ Upstream commit f4445bb93d82a984657b469e63118c2794a4c3d3 ]
+It seems reason is similar to this problem
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=eb94cd96e05d6c65a07937e66a04ea265c1b767d
+but this chain is more complicated.
 
-There is a NULL pointer dereference in case *slot* happens to be NULL at
-lines 1053 and 1878:
+Exec grabs task->signal->cred_guard_mutex in prepare_bprm_creds() and
+then open file -- vfs locks nests inside cred_guard_mutex.
 
-struct hisi_sas_cq *cq =
-	&hisi_hba->cq[slot->dlvry_queue];
+Procfs grabs cred_guard_mutex in lock_trace when reads files like "syscall".
+inside "p->lock" (mutex inside seq_file which serialize read and seek).
 
-Notice that *slot* is being NULL checked at lines 1057 and 1881:
-if (slot), which implies it may be NULL.
+Seq_file usually are not executable (exec /proc/self/syscall will fail before calling read).
+It seems there is no trivial deadlock, but really might be some chain with vfs locks.
 
-Fix this by placing the declaration and definition of variable cq, which
-contains the pointer dereference slot->dlvry_queue, after slot has been
-properly NULL checked.
-
-Addresses-Coverity-ID: 1474515 ("Dereference before null check")
-Addresses-Coverity-ID: 1474520 ("Dereference before null check")
-Fixes: 584f53fe5f52 ("scsi: hisi_sas: Fix the race between IO completion and timeout for SMP/internal IO")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Xiang Chen <chenxiang66@hisilicon.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/hisi_sas/hisi_sas_main.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index d4a2625a44232..f478d1f50dfc0 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -1025,11 +1025,11 @@ static int hisi_sas_exec_internal_tmf_task(struct domain_device *device,
- 		if ((task->task_state_flags & SAS_TASK_STATE_ABORTED)) {
- 			if (!(task->task_state_flags & SAS_TASK_STATE_DONE)) {
- 				struct hisi_sas_slot *slot = task->lldd_task;
--				struct hisi_sas_cq *cq =
--					&hisi_hba->cq[slot->dlvry_queue];
- 
- 				dev_err(dev, "abort tmf: TMF task timeout and not done\n");
- 				if (slot) {
-+					struct hisi_sas_cq *cq =
-+					       &hisi_hba->cq[slot->dlvry_queue];
- 					/*
- 					 * flush tasklet to avoid free'ing task
- 					 * before using task in IO completion
-@@ -1856,10 +1856,10 @@ hisi_sas_internal_task_abort(struct hisi_hba *hisi_hba,
- 	if ((task->task_state_flags & SAS_TASK_STATE_ABORTED)) {
- 		if (!(task->task_state_flags & SAS_TASK_STATE_DONE)) {
- 			struct hisi_sas_slot *slot = task->lldd_task;
--			struct hisi_sas_cq *cq =
--				&hisi_hba->cq[slot->dlvry_queue];
- 
- 			if (slot) {
-+				struct hisi_sas_cq *cq =
-+					&hisi_hba->cq[slot->dlvry_queue];
- 				/*
- 				 * flush tasklet to avoid free'ing task
- 				 * before using task in IO completion
--- 
-2.20.1
-
+> 
+> the existing dependency chain (in reverse order) is:
+> 
+> -> #3 (&p->lock){+.+.}:
+>         lock_acquire+0x158/0x250 kernel/locking/lockdep.c:4487
+>         __mutex_lock_common+0x14c/0x2e20 kernel/locking/mutex.c:956
+>         __mutex_lock kernel/locking/mutex.c:1103 [inline]
+>         mutex_lock_nested+0x1b/0x30 kernel/locking/mutex.c:1118
+>         seq_read+0x6e/0xd70 fs/seq_file.c:161
+>         proc_reg_read+0x1e2/0x2d0 fs/proc/inode.c:223
+>         do_loop_readv_writev fs/read_write.c:714 [inline]
+>         do_iter_read+0x4b1/0x5b0 fs/read_write.c:935
+>         vfs_readv+0xc2/0x120 fs/read_write.c:997
+>         kernel_readv fs/splice.c:359 [inline]
+>         default_file_splice_read+0x544/0x8d0 fs/splice.c:414
+>         do_splice_to fs/splice.c:877 [inline]
+>         splice_direct_to_actor+0x39c/0xac0 fs/splice.c:954
+>         do_splice_direct+0x200/0x330 fs/splice.c:1063
+>         do_sendfile+0x7e4/0xfd0 fs/read_write.c:1464
+>         __do_sys_sendfile64 fs/read_write.c:1525 [inline]
+>         __se_sys_sendfile64 fs/read_write.c:1511 [inline]
+>         __x64_sys_sendfile64+0x176/0x1b0 fs/read_write.c:1511
+>         do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
+>         entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> -> #2 (sb_writers#3){.+.+}:
+>         lock_acquire+0x158/0x250 kernel/locking/lockdep.c:4487
+>         percpu_down_read include/linux/percpu-rwsem.h:40 [inline]
+>         __sb_start_write+0xeb/0x430 fs/super.c:1672
+>         sb_start_write include/linux/fs.h:1650 [inline]
+>         mnt_want_write+0x4a/0xa0 fs/namespace.c:354
+>         ovl_want_write+0x77/0x80 fs/overlayfs/util.c:21
+>         ovl_create_object+0xaf/0x2d0 fs/overlayfs/dir.c:596
+>         ovl_create+0x29/0x30 fs/overlayfs/dir.c:627
+>         lookup_open fs/namei.c:3224 [inline]
+>         do_last fs/namei.c:3314 [inline]
+>         path_openat+0x2236/0x4420 fs/namei.c:3525
+>         do_filp_open+0x192/0x3d0 fs/namei.c:3555
+>         do_sys_open+0x29f/0x560 fs/open.c:1097
+>         ksys_open include/linux/syscalls.h:1385 [inline]
+>         __do_sys_creat fs/open.c:1155 [inline]
+>         __se_sys_creat fs/open.c:1153 [inline]
+>         __x64_sys_creat+0x65/0x70 fs/open.c:1153
+>         do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
+>         entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> -> #1 (&ovl_i_mutex_dir_key[depth]){++++}:
+>         lock_acquire+0x158/0x250 kernel/locking/lockdep.c:4487
+>         down_read+0x39/0x50 kernel/locking/rwsem.c:1495
+>         inode_lock_shared include/linux/fs.h:801 [inline]
+>         do_last fs/namei.c:3313 [inline]
+>         path_openat+0xa9a/0x4420 fs/namei.c:3525
+>         do_filp_open+0x192/0x3d0 fs/namei.c:3555
+>         do_open_execat+0xff/0x610 fs/exec.c:857
+>         __do_execve_file+0x766/0x1cc0 fs/exec.c:1762
+>         do_execveat_common fs/exec.c:1868 [inline]
+>         do_execve fs/exec.c:1885 [inline]
+>         __do_sys_execve fs/exec.c:1961 [inline]
+>         __se_sys_execve fs/exec.c:1956 [inline]
+>         __x64_sys_execve+0x94/0xb0 fs/exec.c:1956
+>         do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
+>         entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> -> #0 (&sig->cred_guard_mutex){+.+.}:
+>         check_prev_add kernel/locking/lockdep.c:2476 [inline]
+>         check_prevs_add kernel/locking/lockdep.c:2581 [inline]
+>         validate_chain+0x161e/0x7bc0 kernel/locking/lockdep.c:2971
+>         __lock_acquire+0xc75/0x1be0 kernel/locking/lockdep.c:3955
+>         lock_acquire+0x158/0x250 kernel/locking/lockdep.c:4487
+>         __mutex_lock_common+0x14c/0x2e20 kernel/locking/mutex.c:956
+>         __mutex_lock kernel/locking/mutex.c:1103 [inline]
+>         mutex_lock_killable_nested+0x1b/0x30 kernel/locking/mutex.c:1133
+>         lock_trace fs/proc/base.c:406 [inline]
+>         proc_pid_syscall+0x66/0x3a0 fs/proc/base.c:635
+>         proc_single_show+0xd8/0x120 fs/proc/base.c:756
+>         seq_read+0x4cd/0xd70 fs/seq_file.c:229
+>         do_loop_readv_writev fs/read_write.c:714 [inline]
+>         do_iter_read+0x4b1/0x5b0 fs/read_write.c:935
+>         vfs_readv fs/read_write.c:997 [inline]
+>         do_preadv+0x178/0x290 fs/read_write.c:1089
+>         __do_sys_preadv fs/read_write.c:1139 [inline]
+>         __se_sys_preadv fs/read_write.c:1134 [inline]
+>         __x64_sys_preadv+0x9e/0xb0 fs/read_write.c:1134
+>         do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
+>         entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> other info that might help us debug this:
+> 
+> Chain exists of:
+>    &sig->cred_guard_mutex --> sb_writers#3 --> &p->lock
+> 
+>   Possible unsafe locking scenario:
+> 
+>         CPU0                    CPU1
+>         ----                    ----
+>    lock(&p->lock);
+>                                 lock(sb_writers#3);
+>                                 lock(&p->lock);
+>    lock(&sig->cred_guard_mutex);
+> 
+>   *** DEADLOCK ***
+> 
+> 1 lock held by syz-executor.4/16763:
+>   #0: ffff8880a02001c0 (&p->lock){+.+.}, at: seq_read+0x6e/0xd70 fs/seq_file.c:161
+> 
+> stack backtrace:
+> CPU: 0 PID: 16763 Comm: syz-executor.4 Not tainted 5.4.0-rc7+ #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+>   print_circular_bug+0xc2d/0xe60 kernel/locking/lockdep.c:1685
+>   check_noncircular+0x206/0x3a0 kernel/locking/lockdep.c:1809
+>   check_prev_add kernel/locking/lockdep.c:2476 [inline]
+>   check_prevs_add kernel/locking/lockdep.c:2581 [inline]
+>   validate_chain+0x161e/0x7bc0 kernel/locking/lockdep.c:2971
+>   __lock_acquire+0xc75/0x1be0 kernel/locking/lockdep.c:3955
+>   lock_acquire+0x158/0x250 kernel/locking/lockdep.c:4487
+>   __mutex_lock_common+0x14c/0x2e20 kernel/locking/mutex.c:956
+>   __mutex_lock kernel/locking/mutex.c:1103 [inline]
+>   mutex_lock_killable_nested+0x1b/0x30 kernel/locking/mutex.c:1133
+>   lock_trace fs/proc/base.c:406 [inline]
+>   proc_pid_syscall+0x66/0x3a0 fs/proc/base.c:635
+>   proc_single_show+0xd8/0x120 fs/proc/base.c:756
+>   seq_read+0x4cd/0xd70 fs/seq_file.c:229
+>   do_loop_readv_writev fs/read_write.c:714 [inline]
+>   do_iter_read+0x4b1/0x5b0 fs/read_write.c:935
+>   vfs_readv fs/read_write.c:997 [inline]
+>   do_preadv+0x178/0x290 fs/read_write.c:1089
+>   __do_sys_preadv fs/read_write.c:1139 [inline]
+>   __se_sys_preadv fs/read_write.c:1134 [inline]
+>   __x64_sys_preadv+0x9e/0xb0 fs/read_write.c:1134
+>   do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x45a669
+> Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 
+> 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007ff34e552c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000127
+> RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 000000000045a669
+> RDX: 00000000000001e3 RSI: 00000000200013c0 RDI: 0000000000000004
+> RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00007ff34e5536d4
+> R13: 00000000004c7ef1 R14: 00000000004dde10 R15: 00000000ffffffff
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
