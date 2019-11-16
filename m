@@ -4,60 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52012C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756EFC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28965214DE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49082214DE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920864;
-	bh=Mjp9Ayi7gHDEl4RyIz4743czz+ZO/l4kYbTirM1WaXM=;
+	s=default; t=1573920869;
+	bh=L4QbWVzfIJSe4VDi2e6Gwm+s3G1sQIYBlYSwyB3DNpc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0vHF223Oo/l22jG4D+ZDoZKAw+wLLpeqBAeuKIaQbVHLoMXMltULCtaDzQkyBmSFJ
-	 NnYRnAMgpqJngwnKd31QCptLikt0Cd/u0PiVGOeTD1zthppww7+kVgmaKqrjKPXKSY
-	 IwCmZe742OXkKFWn+aYoDH9QDk3kf0uhmC5LgmWc=
+	b=CAzbDToNeKux4l827Ak3LzuMzJZavVfbtlDmPUoAqUGSeU4MzS8/cHVglcTRrCRaW
+	 TNesJbrBWdKDDTLW85HWxjWUO5D/Uq/GXHkqLyhmZO9YAe1wNYjxzWG4qskpdna1Om
+	 LbWSztXsVV34tIP4NDsVFLaEnaYXte8XFyEawUtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731919AbfKPQOW (ORCPT
+        id S1729809AbfKPPrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:14:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54624 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729806AbfKPPrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 16 Nov 2019 10:47:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729623AbfKPPrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:47:10 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A8EE2086A;
-        Sat, 16 Nov 2019 15:47:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E11F820885;
+        Sat, 16 Nov 2019 15:47:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919267;
-        bh=Mjp9Ayi7gHDEl4RyIz4743czz+ZO/l4kYbTirM1WaXM=;
+        s=default; t=1573919230;
+        bh=L4QbWVzfIJSe4VDi2e6Gwm+s3G1sQIYBlYSwyB3DNpc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lZLF5BSJ0XsXCfkeuOZgdwPWm/XpI1tu4GuVwlDY7NY2j1RE5v5Ac4gNeTzl36ry6
-         /KqjykInnPcLibwAr6Z9e1lTfDvaj3+DP8Wlq1FVNq6x94QE5SFpsZHv/jPR+lI2Z6
-         dEeT95zMR7GhWYNyWXWqkRuz7CsYPR0moN1zPyjY=
+        b=hOMK+7bJZrnZQyLoEeGWcHaOOwSAD8KzAd2W59iXwKfaIANCS/V9sP8hKA6fp6zH+
+         8WiRX3CiJkCPGgZfm14pv5LGgBpa6d6MJtH8TZmV8CsSbBxJpMtTaz13ZNsGblLB3Q
+         iGim2DUMrNTIg3qyiBd4Pk5LgeZFU0w/rwifdMEc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Duncan Laurie <dlaurie@chromium.org>,
-        Vadim Bendebury <vbendeb@chromium.org>,
-        Stefan Reinauer <reinauer@chromium.org>,
-        Furquan Shaikh <furquan@google.com>,
-        Furquan Shaikh <furquan@chromium.org>,
-        Aaron Durbin <adurbin@chromium.org>,
-        Justin TerAvest <teravest@chromium.org>,
-        Ross Zwisler <zwisler@google.com>,
-        Guenter Roeck <groeck@chromium.org>,
+Cc:     zhong jiang <zhongjiang@huawei.com>,
+        Yang yingliang <yangyingliang@huawei.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 018/150] gsmi: Fix bug in append_to_eventlog sysfs handler
-Date:   Sat, 16 Nov 2019 10:45:16 -0500
-Message-Id: <20191116154729.9573-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 235/237] mm/memory_hotplug: Do not unlock when fails to take the device_hotplug_lock
+Date:   Sat, 16 Nov 2019 10:41:10 -0500
+Message-Id: <20191116154113.7417-235-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
-References: <20191116154729.9573-1-sashal@kernel.org>
+In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
+References: <20191116154113.7417-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -67,76 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Duncan Laurie <dlaurie@chromium.org>
+From: zhong jiang <zhongjiang@huawei.com>
 
-[ Upstream commit 655603de68469adaff16842ac17a5aec9c9ce89b ]
+[ Upstream commit d2ab99403ee00d8014e651728a4702ea1ae5e52c ]
 
-The sysfs handler should return the number of bytes consumed, which in the
-case of a successful write is the entire buffer.  Also fix a bug where
-param.data_len was being set to (count - (2 * sizeof(u32))) instead of just
-(count - sizeof(u32)).  The latter is correct because we skip over the
-leading u32 which is our param.type, but we were also incorrectly
-subtracting sizeof(u32) on the line where we were actually setting
-param.data_len:
+When adding the memory by probing memory block in sysfs interface, there is an
+obvious issue that we will unlock the device_hotplug_lock when fails to takes it.
 
-	param.data_len = count - sizeof(u32);
+That issue was introduced in Commit 8df1d0e4a265
+("mm/memory_hotplug: make add_memory() take the device_hotplug_lock")
 
-This meant that for our example event.kernel_software_watchdog with total
-length 10 bytes, param.data_len was just 2 prior to this change.
+We should drop out in time when fails to take the device_hotplug_lock.
 
-To test, successfully append an event to the log with gsmi sysfs.
-This sample event is for a "Kernel Software Watchdog"
-
-> xxd -g 1 event.kernel_software_watchdog
-0000000: 01 00 00 00 ad de 06 00 00 00
-
-> cat event.kernel_software_watchdog > /sys/firmware/gsmi/append_to_eventlog
-
-> mosys eventlog list | tail -1
-14 | 2012-06-25 10:14:14 | Kernl Event | Software Watchdog
-
-Signed-off-by: Duncan Laurie <dlaurie@chromium.org>
-Reviewed-by: Vadim Bendebury <vbendeb@chromium.org>
-Reviewed-by: Stefan Reinauer <reinauer@chromium.org>
-Signed-off-by: Furquan Shaikh <furquan@google.com>
-Tested-by: Furquan Shaikh <furquan@chromium.org>
-Reviewed-by: Aaron Durbin <adurbin@chromium.org>
-Reviewed-by: Justin TerAvest <teravest@chromium.org>
-[zwisler: updated changelog for 2nd bug fix and upstream]
-Signed-off-by: Ross Zwisler <zwisler@google.com>
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
+Fixes: 8df1d0e4a265 ("mm/memory_hotplug: make add_memory() take the device_hotplug_lock")
+Reported-by: Yang yingliang <yangyingliang@huawei.com>
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/google/gsmi.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/base/memory.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/google/gsmi.c b/drivers/firmware/google/gsmi.c
-index c8f169bf2e27d..62337be07afcb 100644
---- a/drivers/firmware/google/gsmi.c
-+++ b/drivers/firmware/google/gsmi.c
-@@ -480,11 +480,10 @@ static ssize_t eventlog_write(struct file *filp, struct kobject *kobj,
- 	if (count < sizeof(u32))
- 		return -EINVAL;
- 	param.type = *(u32 *)buf;
--	count -= sizeof(u32);
- 	buf += sizeof(u32);
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index 0f8e77f78cc80..ac1574a696100 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -510,7 +510,7 @@ memory_probe_store(struct device *dev, struct device_attribute *attr,
  
- 	/* The remaining buffer is the data payload */
--	if (count > gsmi_dev.data_buf->length)
-+	if ((count - sizeof(u32)) > gsmi_dev.data_buf->length)
- 		return -EINVAL;
- 	param.data_len = count - sizeof(u32);
+ 	ret = lock_device_hotplug_sysfs();
+ 	if (ret)
+-		goto out;
++		return ret;
  
-@@ -504,7 +503,7 @@ static ssize_t eventlog_write(struct file *filp, struct kobject *kobj,
- 
- 	spin_unlock_irqrestore(&gsmi_dev.lock, flags);
- 
--	return rc;
-+	return (rc == 0) ? count : rc;
- 
- }
- 
+ 	nid = memory_add_physaddr_to_nid(phys_addr);
+ 	ret = __add_memory(nid, phys_addr,
 -- 
 2.20.1
 
