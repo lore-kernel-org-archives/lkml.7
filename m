@@ -2,143 +2,263 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBA2C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 00:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1415C43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 00:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A59D420692
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 00:51:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="OsTLUICO"
+	by mail.kernel.org (Postfix) with ESMTP id 91A6120733
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 00:52:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573865564;
+	bh=ONcyJ//SGD1mZoiN15ibjsK1Ny7X1eS1qAreB943Snw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=zg0v8Z5z6Ijwvm+1592MCwDRdfsy5D/ljXjbgZbFzYbEOLMVLDyRcwOqNDVWu+7Xm
+	 gqf4FSonbx4RtFawitMu0oe1s89HXZbeA+bW9fOhtzd2elBNKzAaUDYgEdWNMZERpf
+	 V3/F3YngewzSITKpku44c8K4UraYt5Ng3PEMVSWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbfKPAvB (ORCPT
+        id S1727324AbfKPAwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 19:51:01 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:50086 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727128AbfKPAvB (ORCPT
+        Fri, 15 Nov 2019 19:52:43 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45062 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727112AbfKPAwn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 19:51:01 -0500
-Received: by linux.microsoft.com (Postfix, from userid 1004)
-        id 174192007690; Fri, 15 Nov 2019 16:51:00 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 174192007690
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1573865460;
-        bh=DehnQsYkGnfpWqfC6bFuZD9CR2Eiz11eNsWa14hueAU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=OsTLUICOgO7D2YJEDt0vaht/J8xsQ6YNXHjtLlW/9RHuySud09LgkUvtpLDqe6Jaa
-         YlfNGmDqKq2Kf0hhyx3pLdxtXH/I8GxwLUtJPyysCaSbi6Yaz/inPUGyNpT79b+Pz3
-         DJEbTJjregk+fasUxYtz+zLyjlydqSncK1/TY1v0=
-From:   longli@linuxonhyperv.com
-To:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <keith.busch@intel.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Dongli Zhang <dongli.zhang@oracle.com>, damien.lemoal@wdc.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>
-Subject: [Patch v2] blk-mq: avoid repeatedly scheduling the same work to run hardware queue
-Date:   Fri, 15 Nov 2019 16:50:28 -0800
-Message-Id: <1573865428-24958-1-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 15 Nov 2019 19:52:43 -0500
+Received: by mail-oi1-f196.google.com with SMTP id 14so10233900oir.12;
+        Fri, 15 Nov 2019 16:52:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nWoMQ0paWOmaUsqalpGTNE9kf3zkQUzvDJAB/ODhtQI=;
+        b=pWcYfcHehFfatfjpzjUhwdXkxX1SkDub3jrhghsQXkvRkodcXyv5A1ysH2nC3Di/09
+         PhI36FAfOFWmIYnSXmiyPfo/8vZsVseFOZdMChvAQccvlTSzA+H1gM6SU8YMm1fZaJee
+         H9cbPEb9f7s0+BoANrB5syW3wPkLmziUs5ZWoheS3F8BCdQSfV09spGvnPDhuQyGkLlK
+         0b/orE0Ng51P/d13aeZxktQGrTBS8/FsZjdpoDJbVKxhkO5gr98FDmO4YkFzUUQdnWhq
+         wmeI8mSSqFW6OIc5+etMa0hqO91VQj0G5f3GoddPCj9dgSSRghH7ybTl2oqgVCKTysli
+         H9eQ==
+X-Gm-Message-State: APjAAAUyUivQiCEoRV1Lx/DlDZgjPs6TankHicUfTe5arPxcV7iSZiuD
+        p943rUFs6W9LAtY6mB05pq7JRFc=
+X-Google-Smtp-Source: APXvYqxDPJ1BWP4pTS1D7z522kFc2WMxm7LqVnyyAdUsHtniQgmyyWk+hP4cf0Wf7J1GjpqUXNM68g==
+X-Received: by 2002:a05:6808:b1c:: with SMTP id s28mr9147959oij.12.1573865561362;
+        Fri, 15 Nov 2019 16:52:41 -0800 (PST)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id g18sm3525680otg.50.2019.11.15.16.52.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2019 16:52:40 -0800 (PST)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>
+Subject: [PATCH 1/3] dt-bindings: PCI: Convert Arm Versatile binding to DT schema
+Date:   Fri, 15 Nov 2019 18:52:38 -0600
+Message-Id: <20191116005240.15722-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+Convert the Arm Versatile PCI host binding to a DT schema.
 
-SCSI layer calls blk_mq_run_hw_queues() in scsi_end_request(), for every
-completed I/O. blk_mq_run_hw_queues() in turn schedules some works to run
-the hardware queues.
-
-The actual work is queued by mod_delayed_work_on(), it turns out the cost of
-this function is high on locking and CPU usage, when the I/O workload has
-high queue depth. Most of these calls are not necessary since the queue is
-already scheduled to run, and has not started yet.
-
-This patch tries to solve this problem by avoiding scheduling work when it's
-already scheduled.
-
-Benchmark results:
-The following tests are run on a RAM backed virtual disk on Hyper-V, with 8
-FIO jobs with 4k random read I/O. The test numbers are for IOPS.
-
-queue_depth	pre-patch	after-patch	improvement
-16		190k		190k		0%
-64		235k		240k		2%
-256		180k		256k		42%
-1024		156k		250k		60%
-
-Signed-off-by: Long Li <longli@microsoft.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-Change in v2: Clear bit for delayed runs to allow successive non-delayed runs
+ .../devicetree/bindings/pci/versatile.txt     | 59 ------------
+ .../devicetree/bindings/pci/versatile.yaml    | 92 +++++++++++++++++++
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 93 insertions(+), 60 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/versatile.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/versatile.yaml
 
- block/blk-mq.c         | 20 ++++++++++++++++++++
- include/linux/blk-mq.h |  1 +
- 2 files changed, 21 insertions(+)
-
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index ec791156e9cc..f103d336f9c8 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1476,6 +1476,24 @@ static void __blk_mq_delay_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async,
- 		put_cpu();
- 	}
- 
-+	/*
-+	 * Queue a work to run queue.
-+	 *
-+	 * If this is a non-delayed run and a non-delayed work is already
-+	 * scheduled, avoid scheduling the same work again.
-+	 *
-+	 * If this is a delayed run, unconditinally clear the
-+	 * BLK_MQ_S_WORK_QUEUED bit so the next possible non-delayed run can
-+	 * be queued before this delayed run gets to start.
-+	 */
+diff --git a/Documentation/devicetree/bindings/pci/versatile.txt b/Documentation/devicetree/bindings/pci/versatile.txt
+deleted file mode 100644
+index 0a702b13d2ac..000000000000
+--- a/Documentation/devicetree/bindings/pci/versatile.txt
++++ /dev/null
+@@ -1,59 +0,0 @@
+-* ARM Versatile Platform Baseboard PCI interface
+-
+-PCI host controller found on the ARM Versatile PB board's FPGA.
+-
+-Required properties:
+-- compatible: should contain "arm,versatile-pci" to identify the Versatile PCI
+-  controller.
+-- reg: base addresses and lengths of the PCI controller. There must be 3
+-  entries:
+-	- Versatile-specific registers
+-	- Self Config space
+-	- Config space
+-- #address-cells: set to <3>
+-- #size-cells: set to <2>
+-- device_type: set to "pci"
+-- bus-range: set to <0 0xff>
+-- ranges: ranges for the PCI memory and I/O regions
+-- #interrupt-cells: set to <1>
+-- interrupt-map-mask and interrupt-map: standard PCI properties to define
+-	the mapping of the PCI interface to interrupt numbers.
+-
+-Example:
+-
+-pci-controller@10001000 {
+-	compatible = "arm,versatile-pci";
+-	device_type = "pci";
+-	reg = <0x10001000 0x1000
+-	       0x41000000 0x10000
+-	       0x42000000 0x100000>;
+-	bus-range = <0 0xff>;
+-	#address-cells = <3>;
+-	#size-cells = <2>;
+-	#interrupt-cells = <1>;
+-
+-	ranges = <0x01000000 0 0x00000000 0x43000000 0 0x00010000   /* downstream I/O */
+-		  0x02000000 0 0x50000000 0x50000000 0 0x10000000   /* non-prefetchable memory */
+-		  0x42000000 0 0x60000000 0x60000000 0 0x10000000>; /* prefetchable memory */
+-
+-	interrupt-map-mask = <0x1800 0 0 7>;
+-	interrupt-map = <0x1800 0 0 1 &sic 28
+-			 0x1800 0 0 2 &sic 29
+-			 0x1800 0 0 3 &sic 30
+-			 0x1800 0 0 4 &sic 27
+-
+-			 0x1000 0 0 1 &sic 27
+-			 0x1000 0 0 2 &sic 28
+-			 0x1000 0 0 3 &sic 29
+-			 0x1000 0 0 4 &sic 30
+-
+-			 0x0800 0 0 1 &sic 30
+-			 0x0800 0 0 2 &sic 27
+-			 0x0800 0 0 3 &sic 28
+-			 0x0800 0 0 4 &sic 29
+-
+-			 0x0000 0 0 1 &sic 29
+-			 0x0000 0 0 2 &sic 30
+-			 0x0000 0 0 3 &sic 27
+-			 0x0000 0 0 4 &sic 28>;
+-};
+diff --git a/Documentation/devicetree/bindings/pci/versatile.yaml b/Documentation/devicetree/bindings/pci/versatile.yaml
+new file mode 100644
+index 000000000000..07a48c27db1f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/versatile.yaml
+@@ -0,0 +1,92 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/versatile.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	if (!msecs) {
-+		if (test_bit(BLK_MQ_S_WORK_QUEUED, &hctx->state))
-+			return;
-+		set_bit(BLK_MQ_S_WORK_QUEUED, &hctx->state);
-+	} else
-+		clear_bit(BLK_MQ_S_WORK_QUEUED, &hctx->state);
++title: ARM Versatile Platform Baseboard PCI interface
 +
- 	kblockd_mod_delayed_work_on(blk_mq_hctx_next_cpu(hctx), &hctx->run_work,
- 				    msecs_to_jiffies(msecs));
- }
-@@ -1561,6 +1579,7 @@ void blk_mq_stop_hw_queue(struct blk_mq_hw_ctx *hctx)
- 	cancel_delayed_work(&hctx->run_work);
++maintainers:
++  - Rob Herring <robh@kernel.org>
++
++description: |+
++  PCI host controller found on the ARM Versatile PB board's FPGA.
++
++allOf:
++  - $ref: /schemas/pci/pci-bus.yaml#
++
++properties:
++  compatible:
++    const: arm,versatile-pci
++
++  reg:
++    items:
++      - description: Versatile-specific registers
++      - description: Self Config space
++      - description: Config space
++
++  ranges:
++    maxItems: 3
++
++  "#interrupt-cells": true
++
++  interrupt-map:
++    maxItems: 16
++
++  interrupt-map-mask:
++    items:
++      - const: 0x1800
++      - const: 0
++      - const: 0
++      - const: 7
++
++required:
++  - compatible
++  - reg
++  - ranges
++  - "#interrupt-cells"
++  - interrupt-map
++  - interrupt-map-mask
++
++examples:
++  - |
++    pci@10001000 {
++      compatible = "arm,versatile-pci";
++      device_type = "pci";
++      reg = <0x10001000 0x1000>,
++            <0x41000000 0x10000>,
++            <0x42000000 0x100000>;
++      bus-range = <0 0xff>;
++      #address-cells = <3>;
++      #size-cells = <2>;
++      #interrupt-cells = <1>;
++
++      ranges =
++          <0x01000000 0 0x00000000 0x43000000 0 0x00010000>,  /* downstream I/O */
++          <0x02000000 0 0x50000000 0x50000000 0 0x10000000>,  /* non-prefetchable memory */
++          <0x42000000 0 0x60000000 0x60000000 0 0x10000000>;  /* prefetchable memory */
++
++      interrupt-map-mask = <0x1800 0 0 7>;
++      interrupt-map = <0x1800 0 0 1 &sic 28>,
++          <0x1800 0 0 2 &sic 29>,
++          <0x1800 0 0 3 &sic 30>,
++          <0x1800 0 0 4 &sic 27>,
++
++          <0x1000 0 0 1 &sic 27>,
++          <0x1000 0 0 2 &sic 28>,
++          <0x1000 0 0 3 &sic 29>,
++          <0x1000 0 0 4 &sic 30>,
++
++          <0x0800 0 0 1 &sic 30>,
++          <0x0800 0 0 2 &sic 27>,
++          <0x0800 0 0 3 &sic 28>,
++          <0x0800 0 0 4 &sic 29>,
++
++          <0x0000 0 0 1 &sic 29>,
++          <0x0000 0 0 2 &sic 30>,
++          <0x0000 0 0 3 &sic 27>,
++          <0x0000 0 0 4 &sic 28>;
++    };
++
++
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c6c34d04ce95..48a90f0833b8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12401,7 +12401,7 @@ M:	Rob Herring <robh@kernel.org>
+ L:	linux-pci@vger.kernel.org
+ L:	linux-arm-kernel@lists.infradead.org
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/pci/versatile.txt
++F:	Documentation/devicetree/bindings/pci/versatile.yaml
+ F:	drivers/pci/controller/pci-versatile.c
  
- 	set_bit(BLK_MQ_S_STOPPED, &hctx->state);
-+	clear_bit(BLK_MQ_S_WORK_QUEUED, &hctx->state);
- }
- EXPORT_SYMBOL(blk_mq_stop_hw_queue);
- 
-@@ -1626,6 +1645,7 @@ static void blk_mq_run_work_fn(struct work_struct *work)
- 	struct blk_mq_hw_ctx *hctx;
- 
- 	hctx = container_of(work, struct blk_mq_hw_ctx, run_work.work);
-+	clear_bit(BLK_MQ_S_WORK_QUEUED, &hctx->state);
- 
- 	/*
- 	 * If we are stopped, don't run the queue.
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 0bf056de5cc3..98269d3fd141 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -234,6 +234,7 @@ enum {
- 	BLK_MQ_S_STOPPED	= 0,
- 	BLK_MQ_S_TAG_ACTIVE	= 1,
- 	BLK_MQ_S_SCHED_RESTART	= 2,
-+	BLK_MQ_S_WORK_QUEUED	= 3,
- 
- 	BLK_MQ_MAX_DEPTH	= 10240,
- 
+ PCI DRIVER FOR ARMADA 8K
 -- 
-2.17.1
+2.20.1
 
