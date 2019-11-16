@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D591DC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C23C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1CD221479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFFF0214DE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920697;
-	bh=G198HjGEWxt/kMMfYKLq7qrRGUBrAdqtBeP+Wdaj69s=;
+	s=default; t=1573920706;
+	bh=4JUphUXaKzuXi8JFfFbcAAFZaGvFQBHCrxl018O+3uk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wtUbzKeYfQWbJHkvey/g3cT6eOLW2kSG4xhs7SAYXxmj5XSFv2MjtPnoGJRGlgAI7
-	 FLWgTBUZq6c12G9oygiabZbT36pvq2t47RXapa7ufAjCKMi7iFWmJBXxJbr5G2MPKX
-	 czg8u318DZOl+wmwa9+g6bDiSvzAumcOFJhGpb9k=
+	b=LC2dHGEPiPPD1FhD8TIbJTtWzEWfKWZ+mdT8XGm3mVGaqmkbXtICbqIbMEeukTEi5
+	 QwP7OiUapaWLssb9RMcKcr7kG4XOlozUp7/YDJpwTCLv7xzfY4doiudDdwTFjvRuHJ
+	 zTpAuyQr/OS3XZndpX0wjVoWuzR1tTl2r7XWSYL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730540AbfKPQLg (ORCPT
+        id S1731863AbfKPQLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:11:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55766 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:11:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727817AbfKPPsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:48:37 -0500
+        id S1730100AbfKPPse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:48:34 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F203207FA;
-        Sat, 16 Nov 2019 15:48:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC3682086A;
+        Sat, 16 Nov 2019 15:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919316;
-        bh=G198HjGEWxt/kMMfYKLq7qrRGUBrAdqtBeP+Wdaj69s=;
+        s=default; t=1573919314;
+        bh=4JUphUXaKzuXi8JFfFbcAAFZaGvFQBHCrxl018O+3uk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZJRc5Rayqs2OSboV3JKZ1GkaWLKEraomrsmwqkhiH7MhKk6XAwXn51cRxSo7014OE
-         bLZ1kmTfsIFxEUJZEYh6IT8DC6j/GlQSvAG4aADqBmsYdlna0C71/bK2McF6b3GbHe
-         WxzFPQ6KL/Wh86yOXp6bQF1ctgdyp9kIjLKwbEzo=
+        b=xkKBv9234LNJhd/PncJ8YuS6bnnhrOEsh/JNoizlYuZC0uzzYN2MffIjeZ3uPCMcx
+         P5t10RrGHEIpsA1/oNG1IZ7dyvtOncp6MTTdQSftH3CTTK+G7Qs4GWctJZIt7KMqMt
+         YpYSpx4J76lw7IMq/aSh3gGREzEkcL8wXBWoBLGw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, sparclinux@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 058/150] sparc: Fix parport build warnings.
-Date:   Sat, 16 Nov 2019 10:45:56 -0500
-Message-Id: <20191116154729.9573-58-sashal@kernel.org>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 056/150] s390/perf: Return error when debug_register fails
+Date:   Sat, 16 Nov 2019 10:45:54 -0500
+Message-Id: <20191116154729.9573-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,45 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "David S. Miller" <davem@davemloft.net>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-[ Upstream commit 46b8306480fb424abd525acc1763da1c63a27d8a ]
+[ Upstream commit ec0c0bb489727de0d4dca6a00be6970ab8a3b30a ]
 
-If PARPORT_PC_FIFO is not enabled, do not provide the dma lock
-macros and lock definition.  Otherwise:
+Return an error when the function debug_register() fails allocating
+the debug handle.
+Also remove the registered debug handle when the initialization fails
+later on.
 
-./arch/sparc/include/asm/parport.h:24:24: warning: ‘dma_spin_lock’ defined but not used [-Wunused-variable]
- static DEFINE_SPINLOCK(dma_spin_lock);
-                        ^~~~~~~~~~~~~
-./include/linux/spinlock_types.h:81:39: note: in definition of macro ‘DEFINE_SPINLOCK’
- #define DEFINE_SPINLOCK(x) spinlock_t x = __SPIN_LOCK_UNLOCKED(x)
-
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sparc/include/asm/parport.h | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/s390/kernel/perf_cpum_sf.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/sparc/include/asm/parport.h b/arch/sparc/include/asm/parport.h
-index 05df5f0430535..3c5a1c620f0f7 100644
---- a/arch/sparc/include/asm/parport.h
-+++ b/arch/sparc/include/asm/parport.h
-@@ -21,6 +21,7 @@
-  */
- #define HAS_DMA
+diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
+index d99155793c26e..2e2fd9535f865 100644
+--- a/arch/s390/kernel/perf_cpum_sf.c
++++ b/arch/s390/kernel/perf_cpum_sf.c
+@@ -1610,14 +1610,17 @@ static int __init init_cpum_sampling_pmu(void)
+ 	}
  
-+#ifdef CONFIG_PARPORT_PC_FIFO
- static DEFINE_SPINLOCK(dma_spin_lock);
+ 	sfdbg = debug_register(KMSG_COMPONENT, 2, 1, 80);
+-	if (!sfdbg)
++	if (!sfdbg) {
+ 		pr_err("Registering for s390dbf failed\n");
++		return -ENOMEM;
++	}
+ 	debug_register_view(sfdbg, &debug_sprintf_view);
  
- #define claim_dma_lock() \
-@@ -31,6 +32,7 @@ static DEFINE_SPINLOCK(dma_spin_lock);
+ 	err = register_external_irq(EXT_IRQ_MEASURE_ALERT,
+ 				    cpumf_measurement_alert);
+ 	if (err) {
+ 		pr_cpumsf_err(RS_INIT_FAILURE_ALRT);
++		debug_unregister(sfdbg);
+ 		goto out;
+ 	}
  
- #define release_dma_lock(__flags) \
- 	spin_unlock_irqrestore(&dma_spin_lock, __flags);
-+#endif
+@@ -1626,6 +1629,7 @@ static int __init init_cpum_sampling_pmu(void)
+ 		pr_cpumsf_err(RS_INIT_FAILURE_PERF);
+ 		unregister_external_irq(EXT_IRQ_MEASURE_ALERT,
+ 					cpumf_measurement_alert);
++		debug_unregister(sfdbg);
+ 		goto out;
+ 	}
  
- static struct sparc_ebus_info {
- 	struct ebus_dma_info info;
 -- 
 2.20.1
 
