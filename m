@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75090C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5DFC43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44C4B2195D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49CE121843
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:55:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919730;
-	bh=eGI2FMmDfPDYoCg1ZCjAMD3yPyrwIpkZXMOAqPWr9GM=;
+	s=default; t=1573919734;
+	bh=KyCR4irzEfG7n+3FZsoOJ3KbIgEkN2xASgay6KATBSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GiotuEtpidoIJipxwclDVynQdmSlNvoAXkKij1CmLUbEADWH07Xx8/EMzZdmUrGVd
-	 chMOMCAIZIEKSGPaKFOn+NA1+lntZe0RD+VtI/nR4YQmqJdxgdFJN//Y3mnufrNNMy
-	 eq3dkMaiji6/JXOpbMlzfdFLVjt/fYJi4iukOqeo=
+	b=B7IaeW9WS1VIx0AMOC1mmjUOcE++4HcbnJHlyScfGo1+244j+E20c3k8cUIESyyGh
+	 S0zjLBm7YeY2IYr8ItFxfI1M1o2dwQC8tBxCzBKZrG3mx2/cwtbIdL7NZYo/ic1xGU
+	 s4OAwnFWzDy/mUOv8ZtR3xdQWRLXcur7a7Fssw/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731619AbfKPPz2 (ORCPT
+        id S1731626AbfKPPzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:55:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37348 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:55:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730365AbfKPPzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:55:19 -0500
+        id S1731600AbfKPPzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:55:25 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6E062186D;
-        Sat, 16 Nov 2019 15:55:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FFA721903;
+        Sat, 16 Nov 2019 15:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919719;
-        bh=eGI2FMmDfPDYoCg1ZCjAMD3yPyrwIpkZXMOAqPWr9GM=;
+        s=default; t=1573919725;
+        bh=KyCR4irzEfG7n+3FZsoOJ3KbIgEkN2xASgay6KATBSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZD+Qa/15nDrWbIBIcLfYqb6wUppvQvrUHDhERXYqxXn39+aglKTRjMqVZNVXIbIno
-         1qsYztmzJjR5n061cwt0kwxAVeoxiSwvKLx1f/hSbjpS/0PtwhKjXiaftIDjYZn5H4
-         g4tKW4b5Lq5a2nFfg4Tr7131yDUbVjghDmPga34E=
+        b=PaxhJJKopEcQaFsdZLXNNJT6vV305fDaS41iHOxH/ebDsKLEze3toHf4ATKpice02
+         NmuPnXk5etmchN/zmQcL1JcrLJZ7Pe/TaLz3Q5Z2BsSerN/0eCs6DWhkTjqfeJEunj
+         nEGXayahZ/LPHh/TvcGIQAu/fRsmqddq9nRawdhU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+Cc:     Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Ping-Ke Shih <pkshih@realtek.com>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 61/77] wlcore: Fix the return value in case of error in 'wlcore_vendor_cmd_smart_config_start()'
-Date:   Sat, 16 Nov 2019 10:53:23 -0500
-Message-Id: <20191116155339.11909-61-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 65/77] rtlwifi: rtl8192de: Fix misleading REG_MCUFWDL information
+Date:   Sat, 16 Nov 2019 10:53:27 -0500
+Message-Id: <20191116155339.11909-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -60,38 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Shaokun Zhang <zhangshaokun@hisilicon.com>
 
-[ Upstream commit 3419348a97bcc256238101129d69b600ceb5cc70 ]
+[ Upstream commit 7d129adff3afbd3a449bc3593f2064ac546d58d3 ]
 
-We return 0 unconditionally at the end of
-'wlcore_vendor_cmd_smart_config_start()'.
-However, 'ret' is set to some error codes in several error handling paths
-and we already return some error codes at the beginning of the function.
+RT_TRACE shows REG_MCUFWDL value as a decimal value with a '0x'
+prefix, which is somewhat misleading.
 
-Return 'ret' instead to propagate the error code.
+Fix it to print hexadecimal, as was intended.
 
-Fixes: 80ff8063e87c ("wlcore: handle smart config vendor commands")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Ping-Ke Shih <pkshih@realtek.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Acked-by: Ping-Ke Shih <pkshih@realtek.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ti/wlcore/vendor_cmd.c | 2 +-
+ drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ti/wlcore/vendor_cmd.c b/drivers/net/wireless/ti/wlcore/vendor_cmd.c
-index fd4e9ba176c9b..332a3a5c1c900 100644
---- a/drivers/net/wireless/ti/wlcore/vendor_cmd.c
-+++ b/drivers/net/wireless/ti/wlcore/vendor_cmd.c
-@@ -66,7 +66,7 @@ wlcore_vendor_cmd_smart_config_start(struct wiphy *wiphy,
- out:
- 	mutex_unlock(&wl->mutex);
- 
--	return 0;
-+	return ret;
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c
+index 62ef8209718f1..5bf3712a4d49d 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c
+@@ -234,7 +234,7 @@ static int _rtl92d_fw_init(struct ieee80211_hw *hw)
+ 			 rtl_read_byte(rtlpriv, FW_MAC1_READY));
+ 	}
+ 	RT_TRACE(rtlpriv, COMP_FW, DBG_DMESG,
+-		 "Polling FW ready fail!! REG_MCUFWDL:0x%08ul\n",
++		 "Polling FW ready fail!! REG_MCUFWDL:0x%08x\n",
+ 		 rtl_read_dword(rtlpriv, REG_MCUFWDL));
+ 	return -1;
  }
- 
- static int
 -- 
 2.20.1
 
