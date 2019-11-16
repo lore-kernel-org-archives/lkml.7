@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79951C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0AAC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4807C206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4600F2089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920356;
-	bh=ICBpKs12ZejgGbxnsIPoiqox3+96tRhrr5TqFqHAmGI=;
+	s=default; t=1573920360;
+	bh=jPgVZdWq1uxqLuuFB4zn5NW/loTd09gJehXLV22OFX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PbrdPfhrLePnVFBqutZNd5EkmJu/r5EJ49W8Si2xy1HU6+uDZBNzvgAae7rdya1Ik
-	 LjaqWgtbCJ9Al/dpmk4h0zVKxtKyxKlKT7ZXeKj6WfoI+jLFc80TuXHqjpOZ65lFgv
-	 t+QN1Hcc8nUY/2FxvB3znHmVUT1EjtEOdieK1/Z8=
+	b=l4/yZeswxgWmUxptheStb8U/WE/MtH7PNeyp8VjMQSjVCluKapDshxHDf1JhWW0kU
+	 KVn93GgKAGWy0kpqc+w4lJl0Iu3F2e1FpfkaDy/RH++qoDq2pF8ZNuLW3aK7hrOsxs
+	 pVvQNVuWVsQbNIVY2QCg9kp6unLvYXyCd5FQ8PKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730680AbfKPPvK (ORCPT
+        id S1730941AbfKPQF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:51:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59034 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:05:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728130AbfKPPus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:50:48 -0500
+        id S1730672AbfKPPvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:51:09 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D03F120729;
-        Sat, 16 Nov 2019 15:50:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 239D9208CE;
+        Sat, 16 Nov 2019 15:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919448;
-        bh=ICBpKs12ZejgGbxnsIPoiqox3+96tRhrr5TqFqHAmGI=;
+        s=default; t=1573919468;
+        bh=jPgVZdWq1uxqLuuFB4zn5NW/loTd09gJehXLV22OFX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bCzADZsTEQuz8k+DxNtsmtS4f9Pa/toEatMyzyP5egIE6/03s8w0yWE7YuuZkhYjM
-         +Jncefk9XBNg/JlnmlmcqoNASdPQ9beTdOmTINaqQ19oAI13UAs8DdvHDfQXlVDrIS
-         sU8hKWsBr3hhSsGQX4Hn1GDWZZIdpAni6qeqD3kE=
+        b=C+FwkJW7PJsxsSVuqnUaA8qk3ZmlKGUW8VvFZqgbCRf+7nAg2nfQELpPXNYl+MVGT
+         +VxLP1O1ROsGL25ahZzq60cxv4qON5Pr8gsnsQnjMOMu7D4EJzSezaI11d90/jvai2
+         2wc1zKbYjSqE2Px2Zny7ESQ57EMvUJ8pePNAxtoY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vignesh R <vigneshr@ti.com>, David Lechner <david@lechnology.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 146/150] spi: omap2-mcspi: Fix DMA and FIFO event trigger size mismatch
-Date:   Sat, 16 Nov 2019 10:47:24 -0500
-Message-Id: <20191116154729.9573-146-sashal@kernel.org>
+Cc:     Sam Bobroff <sbobroff@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 06/99] powerpc/eeh: Fix use of EEH_PE_KEEP on wrong field
+Date:   Sat, 16 Nov 2019 10:49:29 -0500
+Message-Id: <20191116155103.10971-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
-References: <20191116154729.9573-1-sashal@kernel.org>
+In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
+References: <20191116155103.10971-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,47 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vignesh R <vigneshr@ti.com>
+From: Sam Bobroff <sbobroff@linux.ibm.com>
 
-[ Upstream commit baf8b9f8d260c55a86405f70a384c29cda888476 ]
+[ Upstream commit 473af09b56dc4be68e4af33220ceca6be67aa60d ]
 
-Commit b682cffa3ac6 ("spi: omap2-mcspi: Set FIFO DMA trigger level to word length")
-broke SPI transfers where bits_per_word != 8. This is because of
-mimsatch between McSPI FIFO level event trigger size (SPI word length) and
-DMA request size(word length * maxburst). This leads to data
-corruption, lockup and errors like:
+eeh_add_to_parent_pe() sometimes removes the EEH_PE_KEEP flag, but it
+incorrectly removes it from pe->type, instead of pe->state.
 
-	spi1.0: EOW timed out
+However, rather than clearing it from the correct field, remove it.
+Inspection of the code shows that it can't ever have had any effect
+(even if it had been cleared from the correct field), because the
+field is never tested after it is cleared by the statement in
+question.
 
-Fix this by setting DMA maxburst size to 1 so that
-McSPI FIFO level event trigger size matches DMA request size.
+The clear statement was added by commit 807a827d4e74 ("powerpc/eeh:
+Keep PE during hotplug"), but it didn't explain why it was necessary.
 
-Fixes: b682cffa3ac6 ("spi: omap2-mcspi: Set FIFO DMA trigger level to word length")
-Cc: stable@vger.kernel.org
-Reported-by: David Lechner <david@lechnology.com>
-Tested-by: David Lechner <david@lechnology.com>
-Signed-off-by: Vignesh R <vigneshr@ti.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-omap2-mcspi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/eeh_pe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
-index 517d0ade586bd..1db4d3c1d2bfa 100644
---- a/drivers/spi/spi-omap2-mcspi.c
-+++ b/drivers/spi/spi-omap2-mcspi.c
-@@ -625,8 +625,8 @@ omap2_mcspi_txrx_dma(struct spi_device *spi, struct spi_transfer *xfer)
- 	cfg.dst_addr = cs->phys + OMAP2_MCSPI_TX0;
- 	cfg.src_addr_width = width;
- 	cfg.dst_addr_width = width;
--	cfg.src_maxburst = es;
--	cfg.dst_maxburst = es;
-+	cfg.src_maxburst = 1;
-+	cfg.dst_maxburst = 1;
+diff --git a/arch/powerpc/kernel/eeh_pe.c b/arch/powerpc/kernel/eeh_pe.c
+index 1abd8dd77ec13..eee2131a97e61 100644
+--- a/arch/powerpc/kernel/eeh_pe.c
++++ b/arch/powerpc/kernel/eeh_pe.c
+@@ -370,7 +370,7 @@ int eeh_add_to_parent_pe(struct eeh_dev *edev)
+ 		while (parent) {
+ 			if (!(parent->type & EEH_PE_INVALID))
+ 				break;
+-			parent->type &= ~(EEH_PE_INVALID | EEH_PE_KEEP);
++			parent->type &= ~EEH_PE_INVALID;
+ 			parent = parent->parent;
+ 		}
  
- 	rx = xfer->rx_buf;
- 	tx = xfer->tx_buf;
 -- 
 2.20.1
 
