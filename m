@@ -2,95 +2,148 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B613C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A79B2C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5556120728
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BDCC20728
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:15:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573917333;
+	bh=sfswPkLkh/RNYHt16XH+PrtY9jP4ASLZcJsAC/YIzwA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hodsJz+QzioQzG7FYSL4Wi5642CkRQVwoVU9xXGwYhvKhkdK3vWry33RdMnRosdsg
+	 S3EmLXk0E2C2pQLx67sBGefVtbbrapuTN3ieVlZ1DOouGlLyrnwm2k45UV0xbTphpZ
+	 FT04EmgVOyG92dCCxNkbKn7gZ+9NTTaWzdc0kk9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbfKPPN4 (ORCPT
+        id S1727840AbfKPPPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:13:56 -0500
-Received: from smtp.uniroma2.it ([160.80.6.23]:54166 "EHLO smtp.uniroma2.it"
+        Sat, 16 Nov 2019 10:15:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727798AbfKPPNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:13:55 -0500
-Received: from localhost.localdomain ([160.80.103.126])
-        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id xAGF6RdB011419
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Sat, 16 Nov 2019 16:06:29 +0100
-From:   Andrea Mayer <andrea.mayer@uniroma2.it>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Lebrun <dav.lebrun@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Andrea Mayer <andrea.mayer@uniroma2.it>
-Subject: [net, 2/2] seg6: fix skb transport_header after decap_and_validate()
-Date:   Sat, 16 Nov 2019 16:05:53 +0100
-Message-Id: <20191116150553.17497-3-andrea.mayer@uniroma2.it>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191116150553.17497-1-andrea.mayer@uniroma2.it>
-References: <20191116150553.17497-1-andrea.mayer@uniroma2.it>
+        id S1727691AbfKPPPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:15:32 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC92820723;
+        Sat, 16 Nov 2019 15:15:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573917331;
+        bh=sfswPkLkh/RNYHt16XH+PrtY9jP4ASLZcJsAC/YIzwA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ZKJyUylVCN+a9iXLtHG8+ZWDhyNIvfOY8eNyWefAn1vTJiJ7+0AEXw0LW7gEaOPNV
+         hFK++8da/MVnZQjEU+SjYrim4yrndm0TtaxZ7aqbjL9HyJCTt4JadQD/uNR4ElTVTF
+         grVEIrpVmkAFOLQLPJ0aIo6IqNTXTfLCf1rIVOAo=
+Date:   Sat, 16 Nov 2019 15:15:25 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Sa, Nuno" <Nuno.Sa@analog.com>
+Cc:     "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+        "colin.king@canonical.com" <colin.king@canonical.com>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: temperature: ltc2983: fix u32 read into a unsigned
+ long long
+Message-ID: <20191116151516.5c7a7555@archlinux>
+In-Reply-To: <20191110114823.2bbe87b0@archlinux>
+References: <20191105202818.90065-1-colin.king@canonical.com>
+        <dab9cfd93e6affa5d94f078154c3e181303bbf47.camel@analog.com>
+        <20191110114823.2bbe87b0@archlinux>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-in the receive path (more precisely in ip6_rcv_core()) the
-skb->transport_header is set to skb->network_header + sizeof(*hdr). As a
-consequence, after routing operations, destination input expects to find
-skb->transport_header correctly set to the next protocol (or extension
-header) that follows the network protocol. However, decap behaviors (DX*,
-DT*) remove the outer IPv6 and SRH extension and do not set again the
-skb->transport_header pointer correctly. For this reason, the patch sets
-the skb->transport_header to the skb->network_header + sizeof(hdr) in each
-DX* and DT* behavior.
+On Sun, 10 Nov 2019 11:48:23 +0000
+Jonathan Cameron <jic23@kernel.org> wrote:
 
-Signed-off-by: Andrea Mayer <andrea.mayer@uniroma2.it>
----
- net/ipv6/seg6_local.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+> On Wed, 6 Nov 2019 14:19:52 +0000
+> "Sa, Nuno" <Nuno.Sa@analog.com> wrote:
+>=20
+> > On Tue, 2019-11-05 at 20:28 +0000, Colin King wrote: =20
+> > >=20
+> > > From: Colin Ian King <colin.king@canonical.com>
+> > >=20
+> > > Currently the read of temp using of_property_read_u32_index is
+> > > reading
+> > > a u32 value into a unsigned long long.  This relies on machine
+> > > endianness
+> > > to work correctly, so fix this by reading a u32 value and setting
+> > > temp
+> > > to this value.
+> > >=20
+> > > Addresses-Coverity: ("Reliance on integer endianness")
+> > > Fixes: f110f3188e56 ("iio: temperature: Add support for LTC2983")
+> > > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> > > ---
+> > >  drivers/iio/temperature/ltc2983.c | 6 ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > >=20
+> > > diff --git a/drivers/iio/temperature/ltc2983.c
+> > > b/drivers/iio/temperature/ltc2983.c
+> > > index ddf47023364b..d39c0d6b77f1 100644
+> > > --- a/drivers/iio/temperature/ltc2983.c
+> > > +++ b/drivers/iio/temperature/ltc2983.c
+> > > @@ -444,8 +444,10 @@ static struct ltc2983_custom_sensor
+> > > *__ltc2983_custom_sensor_new(
+> > >  			else
+> > >  				temp =3D __convert_to_raw(temp,
+> > > resolution);
+> > >  		} else {
+> > > -			of_property_read_u32_index(np, propname, index,
+> > > -						   (u32 *)&temp);
+> > > +			u32 t32;
+> > > +
+> > > +			of_property_read_u32_index(np, propname, index,
+> > > &t32);
+> > > +			temp =3D t32;
+> > >  		}
+> > > =20
+> > >  		for (j =3D 0; j < n_size; j++)   =20
+> >=20
+> > Acked-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+> >  =20
+>=20
+> A slight complexity around this one. I'm not sure I'll have time for a pu=
+ll
+> before the merge window (as Greg will only take them to about 1 week befo=
+re
+> that opens so we get some exposure in Linux next).
+>=20
+> As a result I'll have to sit on this one until Linus comments on rc7, pro=
+bably
+> later today.  Otherwise it'll be material for stable post release.
+>=20
+> If I seem to have lost it give me a poke and we'll make sure it goes into=
+=20
+> an early rc instead of at the merge window.
+I forgot about it when I sent the final pull request out.  Sorry about that,
+will have to wait for post merge window.
 
-diff --git a/net/ipv6/seg6_local.c b/net/ipv6/seg6_local.c
-index 5e3d7004d431..e70567446f28 100644
---- a/net/ipv6/seg6_local.c
-+++ b/net/ipv6/seg6_local.c
-@@ -341,6 +341,8 @@ static int input_action_end_dx6(struct sk_buff *skb,
- 	if (!ipv6_addr_any(&slwt->nh6))
- 		nhaddr = &slwt->nh6;
- 
-+	skb_set_transport_header(skb, sizeof(struct ipv6hdr));
-+
- 	seg6_lookup_nexthop(skb, nhaddr, 0);
- 
- 	return dst_input(skb);
-@@ -370,6 +372,8 @@ static int input_action_end_dx4(struct sk_buff *skb,
- 
- 	skb_dst_drop(skb);
- 
-+	skb_set_transport_header(skb, sizeof(struct iphdr));
-+
- 	err = ip_route_input(skb, nhaddr, iph->saddr, 0, skb->dev);
- 	if (err)
- 		goto drop;
-@@ -390,6 +394,8 @@ static int input_action_end_dt6(struct sk_buff *skb,
- 	if (!pskb_may_pull(skb, sizeof(struct ipv6hdr)))
- 		goto drop;
- 
-+	skb_set_transport_header(skb, sizeof(struct ipv6hdr));
-+
- 	seg6_lookup_nexthop(skb, NULL, slwt->table);
- 
- 	return dst_input(skb);
--- 
-2.20.1
+Applied to the fixes-togreg branch of iio.git.
+
+Thanks,
+
+Jonathan
+
+>=20
+> Thanks,
+>=20
+> Jonathan
+>=20
+> > Thanks,
+> > Nuno S=C3=A1 =20
+>=20
 
