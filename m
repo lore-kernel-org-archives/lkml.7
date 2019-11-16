@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F62AC43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B4FC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E54D020833
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707992082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919190;
-	bh=kJetW/Z6Ckzen/8njzEpaOOotsP1WWeBNpmitgi3smI=;
+	s=default; t=1573919192;
+	bh=0ptIyz2rwTGU2srGHJGqVEpxkJkoXMIW8fkoSVCQ1YI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZQzAXUX5qiFtKKlfuSiJJ5k+SswEG9KlqK3GW5BMQmPJv0qhF26TFe/WwaT0MtJrY
-	 lbpKKtNM+GE8oOC73a+UR93tooSS6PIQo22nxbljTYZ92+lpMhhFKOBehfiW4+jH7I
-	 GvdNyqxVWy2mBW2nzbezcI7iaxM1JGXKnPcje2IM=
+	b=wk/QoToSMq2XjGyE4OVMXaZFjlb/6WvQ9nQ8W/1LqqE9hGiEnnwcZWUrhtsqOo5Q6
+	 tmTwGheiWKF9xqvTdw/1VoQHOTPM/qW6C30pQDcqCrmcGgaU7LXhlUdhmSmA2IdvIZ
+	 ytxwhjfglaK5G3Hin63Hvjwq8tn+5JTUVrjWF9Ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbfKPPq2 (ORCPT
+        id S1729418AbfKPPqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:46:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52232 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:46:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729280AbfKPPqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:46:07 -0500
+        id S1729277AbfKPPqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:04 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDB0D20869;
-        Sat, 16 Nov 2019 15:46:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3DCC20833;
+        Sat, 16 Nov 2019 15:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919167;
-        bh=kJetW/Z6Ckzen/8njzEpaOOotsP1WWeBNpmitgi3smI=;
+        s=default; t=1573919164;
+        bh=0ptIyz2rwTGU2srGHJGqVEpxkJkoXMIW8fkoSVCQ1YI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LjNB+hvQ5fDLzIaRzEyarAQI0ab6lS/UbEQn6CBChKGooS2KsJz503vSx2DiAvCxP
-         cdWVEz6vosLOxz41IjLM+uqzdyih5lySvPltU2UVFjAJEe6TfylQmGsY+w7I/VgBUU
-         sEtZFbSkbuwqEIc4T68ldvxn51nXEx6sP9P6DZvY=
+        b=0WkOjB+FkjbZcSnJuSCV3ZaylgPrPkD6cbvzVyPPzUZv1IcS+zxsGK+ejVu07MLxA
+         i286l6d4B4Jo5e1iGVPfpJ4mNfv0bhcZa1iYcbVCEsC19TUtAmU0wx+3uR/fKE9wu4
+         QiNNNBUsF2zKocpTog1pVPlOcNOTcFn7yTkWezdI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Victor Kamensky <kamensky@cisco.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 176/237] arm64: makefile fix build of .i file in external module case
-Date:   Sat, 16 Nov 2019 10:40:11 -0500
-Message-Id: <20191116154113.7417-176-sashal@kernel.org>
+Cc:     Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 171/237] net: hns3: bugfix for hclge_mdio_write and hclge_mdio_read
+Date:   Sat, 16 Nov 2019 10:40:06 -0500
+Message-Id: <20191116154113.7417-171-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,55 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Victor Kamensky <kamensky@cisco.com>
+From: Huazhong Tan <tanhuazhong@huawei.com>
 
-[ Upstream commit 98356eb0ae499c63e78073ccedd9a5fc5c563288 ]
+[ Upstream commit 1c12493809924deda6c0834cb2f2c5a6dc786390 ]
 
-After 'a66649dab350 arm64: fix vdso-offsets.h dependency' if
-one will try to build .i file in case of external kernel module,
-build fails complaining that prepare0 target is missing. This
-issue came up with SystemTap when it tries to build variety
-of .i files for its own generated kernel modules trying to
-figure given kernel features/capabilities.
+When there is a PHY, the driver needs to complete some operations through
+MDIO during reset reinitialization, so HCLGE_STATE_CMD_DISABLE is more
+suitable than HCLGE_STATE_RST_HANDLING to prevent the MDIO operation from
+being sent during the hardware reset.
 
-The issue is that prepare0 is defined in top level Makefile
-only if KBUILD_EXTMOD is not defined. .i file rule depends
-on prepare and in case KBUILD_EXTMOD defined top level Makefile
-contains empty rule for prepare. But after mentioned commit
-arch/arm64/Makefile would introduce dependency on prepare0
-through its own prepare target.
-
-Fix it to put proper ifdef KBUILD_EXTMOD around code introduced
-by mentioned commit. It matches what top level Makefile does.
-
-Acked-by: Kevin Brodsky <kevin.brodsky@arm.com>
-Signed-off-by: Victor Kamensky <kamensky@cisco.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Fixes: b50ae26c57cb ("net: hns3: never send command queue message to IMP when reset)
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index 5d8787f0ca5f9..9a5e281412116 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -148,6 +148,7 @@ archclean:
- 	$(Q)$(MAKE) $(clean)=$(boot)
- 	$(Q)$(MAKE) $(clean)=$(boot)/dts
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c
+index 398971a062f47..03491e8ebb730 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c
+@@ -54,7 +54,7 @@ static int hclge_mdio_write(struct mii_bus *bus, int phyid, int regnum,
+ 	struct hclge_desc desc;
+ 	int ret;
  
-+ifeq ($(KBUILD_EXTMOD),)
- # We need to generate vdso-offsets.h before compiling certain files in kernel/.
- # In order to do that, we should use the archprepare target, but we can't since
- # asm-offsets.h is included in some files used to generate vdso-offsets.h, and
-@@ -157,6 +158,7 @@ archclean:
- prepare: vdso_prepare
- vdso_prepare: prepare0
- 	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso include/generated/vdso-offsets.h
-+endif
+-	if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state))
++	if (test_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state))
+ 		return 0;
  
- define archhelp
-   echo  '* Image.gz      - Compressed kernel image (arch/$(ARCH)/boot/Image.gz)'
+ 	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_MDIO_CONFIG, false);
+@@ -92,7 +92,7 @@ static int hclge_mdio_read(struct mii_bus *bus, int phyid, int regnum)
+ 	struct hclge_desc desc;
+ 	int ret;
+ 
+-	if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state))
++	if (test_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state))
+ 		return 0;
+ 
+ 	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_MDIO_CONFIG, true);
 -- 
 2.20.1
 
