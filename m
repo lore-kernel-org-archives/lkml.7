@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B60A3C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77616C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BCE12077B
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4719E2084B
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919542;
-	bh=RIQTKhDDQiNcNFXqGKPVnrkTgxXZnNicodfxzrmhHKY=;
+	s=default; t=1573919545;
+	bh=pm4J433S+H+C6Sxgui/dBAeNPiQ5Rk3ZCpsfCJCntLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jreOsvQuH9iAA6KZYJruwl6i2Et9BhYJBgthrLolx4vHrnhjZMxR61boiY6p/dMTY
-	 f/HHpxV23C0oDYBLHb3mJYacnlrD2eKwwoMUqTehXAgHOaS73QklOX6HRyiwlSc8wH
-	 KMQ1+1RtPOhn+FnvMX+na4vgvPCAFQ1SXIniQeGA=
+	b=lS2Vnzdy8ADJNl46qc0c7je3Yi5RoNZcTSyFYAYuAfJ+cZiNoavayrYfICYNm+/nQ
+	 UF8Kmp6+JCK5GcM99989wfB/ho9jcgHBvOjho0YWaSZ47CYPjhI2gEBV81jvOX1J59
+	 daVW8ybIq+QhAFBMiJDFg4YjvQgnUl9G4pajQJcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731030AbfKPPwV (ORCPT
+        id S1731039AbfKPPwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:52:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33036 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:52:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731007AbfKPPwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:52:18 -0500
+        id S1730999AbfKPPwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:52:20 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 041E02077B;
-        Sat, 16 Nov 2019 15:52:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E53520842;
+        Sat, 16 Nov 2019 15:52:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919537;
-        bh=RIQTKhDDQiNcNFXqGKPVnrkTgxXZnNicodfxzrmhHKY=;
+        s=default; t=1573919539;
+        bh=pm4J433S+H+C6Sxgui/dBAeNPiQ5Rk3ZCpsfCJCntLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zF5rsW1MmnisMor6twYCrhwuEJDtut+ddlsY7cQCRtoQsHiHmExLbKQHJFpVupWmG
-         zk8kuxwKm31xNaDsnhZYuSMFSer3iJrsuBmwx0fZkHbHVvkUqIsdkxyJ6sVPgbS4Dw
-         ibyKLwd/pZig5VNkoCwL8n8yLb1xVnc97fGxKWXQ=
+        b=df6Wy+u+lH+AHD8WLcpze6Ao25lqDOVjcIqc9Ch2aj2yaghl5AHCS+xyEkTC0lhsi
+         yst4R9IYy698YTTCNyfKjUvTDIrTk5R+va+ydr2Pn02FNR1ERWfZUmW472bkwFVyxA
+         TldPTWI+a2zpic9NqOYUNFOOJoy1+vMcfZdkrU9Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Sabrina Dubroca <sd@queasysnail.net>,
         Radu Rendec <radu.rendec@gmail.com>,
-        Patrick Talbert <ptalbert@redhat.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 54/99] macsec: update operstate when lower device changes
-Date:   Sat, 16 Nov 2019 10:50:17 -0500
-Message-Id: <20191116155103.10971-54-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 55/99] macsec: let the administrator set UP state even if lowerdev is down
+Date:   Sat, 16 Nov 2019 10:50:18 -0500
+Message-Id: <20191116155103.10971-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -63,66 +62,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sabrina Dubroca <sd@queasysnail.net>
 
-[ Upstream commit e6ac075882b2afcdf2d5ab328ce4ab42a1eb9593 ]
+[ Upstream commit 07bddef9839378bd6f95b393cf24c420529b4ef1 ]
 
-Like all other virtual devices (macvlan, vlan), the operstate of a
-macsec device should match the state of its lower device. This is done
-by calling netif_stacked_transfer_operstate from its netdevice notifier.
+Currently, the kernel doesn't let the administrator set a macsec device
+up unless its lower device is currently up. This is inconsistent, as a
+macsec device that is up won't automatically go down when its lower
+device goes down.
 
-We also need to call netif_stacked_transfer_operstate when a new macsec
-device is created, so that its operstate is set properly. This is only
-relevant when we try to bring the device up directly when we create it.
-
-Radu Rendec proposed a similar patch, inspired from the 802.1q driver,
-that included changing the administrative state of the macsec device,
-instead of just the operstate. This version is similar to what the
-macvlan driver does, and updates only the operstate.
+Now that linkstate propagation works, there's really no reason for this
+limitation, so let's remove it.
 
 Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
 Reported-by: Radu Rendec <radu.rendec@gmail.com>
-Reported-by: Patrick Talbert <ptalbert@redhat.com>
 Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macsec.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/net/macsec.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-index da10104be16cf..d2a3825376be5 100644
+index d2a3825376be5..a48ed0873cc72 100644
 --- a/drivers/net/macsec.c
 +++ b/drivers/net/macsec.c
-@@ -3275,6 +3275,9 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
+@@ -2798,9 +2798,6 @@ static int macsec_dev_open(struct net_device *dev)
+ 	struct net_device *real_dev = macsec->real_dev;
+ 	int err;
+ 
+-	if (!(real_dev->flags & IFF_UP))
+-		return -ENETDOWN;
+-
+ 	err = dev_uc_add(real_dev, dev->dev_addr);
  	if (err < 0)
- 		goto del_dev;
- 
-+	netif_stacked_transfer_operstate(real_dev, dev);
-+	linkwatch_fire_event(dev);
-+
- 	macsec_generation++;
- 
- 	return 0;
-@@ -3446,6 +3449,20 @@ static int macsec_notify(struct notifier_block *this, unsigned long event,
- 		return NOTIFY_DONE;
- 
- 	switch (event) {
-+	case NETDEV_DOWN:
-+	case NETDEV_UP:
-+	case NETDEV_CHANGE: {
-+		struct macsec_dev *m, *n;
-+		struct macsec_rxh_data *rxd;
-+
-+		rxd = macsec_data_rtnl(real_dev);
-+		list_for_each_entry_safe(m, n, &rxd->secys, secys) {
-+			struct net_device *dev = m->secy.netdev;
-+
-+			netif_stacked_transfer_operstate(real_dev, dev);
-+		}
-+		break;
-+	}
- 	case NETDEV_UNREGISTER: {
- 		struct macsec_dev *m, *n;
- 		struct macsec_rxh_data *rxd;
+ 		return err;
 -- 
 2.20.1
 
