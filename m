@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31580C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1ED0C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 054E82075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9812020833
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:41:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573918903;
-	bh=AyTUmJ/PdREZeE/3RwDvKntTI3oiK+VLMX9m0h1ozyc=;
+	s=default; t=1573918905;
+	bh=E+336G3Zqyz4BvpRIJ6RtfyKVtr1OG5s4I4J4q3nsHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mz/uulQD1e+ufNjOxiMCgyNkxhPPYWrWZMhhLsfYIABndq0RJxsHv5DGKyCj5xmj9
-	 0gjDmBqdtqrMr0EPqNptLmpmNrlECGk5fqdkL3AjMhVCnCcm6lvnR18CupJV6uuvo0
-	 E6hs/l8rL313h7lRlknDrwd7hCWW+KOPOq49660w=
+	b=bG0nwedh0+R22YqSBtC6Lbpry7RgH4ZvKExWhBYHA8M+M42jYbCizQSN4biwt3DKn
+	 cvWEslq4bCZZSCyQx+O91+aZzUO5uLusLgWErdfRQQCanV70pUN2q5Qtbgyq7dvJU3
+	 UHWD1yMCW8T4aK8/D204KKFJGCNFx4fJsU6UbL7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbfKPPll (ORCPT
+        id S1727803AbfKPPlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:41:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44670 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:41:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727866AbfKPPle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:41:34 -0500
+        id S1727936AbfKPPlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:41:36 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E57220718;
-        Sat, 16 Nov 2019 15:41:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A70A4207DD;
+        Sat, 16 Nov 2019 15:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918894;
-        bh=AyTUmJ/PdREZeE/3RwDvKntTI3oiK+VLMX9m0h1ozyc=;
+        s=default; t=1573918895;
+        bh=E+336G3Zqyz4BvpRIJ6RtfyKVtr1OG5s4I4J4q3nsHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q740NAToJcLN0mEN6M6ivGVDmBB2DsnzbcgSSMLd3ijuUScA4ZDwr9vQef4vbPPWt
-         7ib/XlKhfoTEEWNxjzmMsO4mGYzo7VP+pW53QWR2ON7CH1t5XunklyMMCdxbgmc2rG
-         zXUG4PdCZBNVPefH/eNyf8JgGqFKzcdQKgcGyg6Q=
+        b=cD5n6WiIpdPxpzfOas/t0IroVOt3FjnM7I4GDkYdb0JBoT+xuBqMqzpK8Pq0xpSD+
+         hjTK/eop/S0ZRma6hZK1pZEUdyrdfhTNjpkduZEvPZwABaRQHQP3WnAN2Xx5jOo++q
+         +xGVoZteJIzVjuK4JwCSM4+Ywmf0mh99sdrhi2iw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 018/237] brcmsmac: AP mode: update beacon when TIM changes
-Date:   Sat, 16 Nov 2019 10:37:33 -0500
-Message-Id: <20191116154113.7417-18-sashal@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 021/237] skd: fixup usage of legacy IO API
+Date:   Sat, 16 Nov 2019 10:37:36 -0500
+Message-Id: <20191116154113.7417-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -62,97 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 2258ee58baa554609a3cc3996276e4276f537b6d ]
+[ Upstream commit 6d1f9dfde7343c4ebfb8f84dcb333af571bb3b22 ]
 
-Beacons are not updated to reflect TIM changes. This is not compliant with
-power-saving client stations as the beacons do not have valid TIM and can
-cause the network to stall at random occasions and to have highly variable
-latencies.
-Fix it by updating beacon templates on mac80211 set_tim callback.
+We need to be using the mq variant of request requeue here.
 
-Addresses an issue described in:
-https://marc.info/?i=20180911163534.21312d08%20()%20manjaro
-
-Signed-off-by: Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: ca33dd92968b ("skd: Convert to blk-mq")
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../broadcom/brcm80211/brcmsmac/mac80211_if.c | 26 +++++++++++++++++++
- .../broadcom/brcm80211/brcmsmac/main.h        |  1 +
- 2 files changed, 27 insertions(+)
+ drivers/block/skd_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
-index ecc89e718b9c1..23118207b661e 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
-@@ -502,6 +502,7 @@ brcms_ops_add_interface(struct ieee80211_hw *hw, struct ieee80211_vif *vif)
- 	}
+diff --git a/drivers/block/skd_main.c b/drivers/block/skd_main.c
+index 87b9e7fbf0621..27323fa23997d 100644
+--- a/drivers/block/skd_main.c
++++ b/drivers/block/skd_main.c
+@@ -1416,7 +1416,7 @@ static void skd_resolve_req_exception(struct skd_device *skdev,
  
- 	spin_lock_bh(&wl->lock);
-+	wl->wlc->vif = vif;
- 	wl->mute_tx = false;
- 	brcms_c_mute(wl->wlc, false);
- 	if (vif->type == NL80211_IFTYPE_STATION)
-@@ -519,6 +520,11 @@ brcms_ops_add_interface(struct ieee80211_hw *hw, struct ieee80211_vif *vif)
- static void
- brcms_ops_remove_interface(struct ieee80211_hw *hw, struct ieee80211_vif *vif)
- {
-+	struct brcms_info *wl = hw->priv;
-+
-+	spin_lock_bh(&wl->lock);
-+	wl->wlc->vif = NULL;
-+	spin_unlock_bh(&wl->lock);
- }
- 
- static int brcms_ops_config(struct ieee80211_hw *hw, u32 changed)
-@@ -937,6 +943,25 @@ static void brcms_ops_set_tsf(struct ieee80211_hw *hw,
- 	spin_unlock_bh(&wl->lock);
- }
- 
-+static int brcms_ops_beacon_set_tim(struct ieee80211_hw *hw,
-+				 struct ieee80211_sta *sta, bool set)
-+{
-+	struct brcms_info *wl = hw->priv;
-+	struct sk_buff *beacon = NULL;
-+	u16 tim_offset = 0;
-+
-+	spin_lock_bh(&wl->lock);
-+	if (wl->wlc->vif)
-+		beacon = ieee80211_beacon_get_tim(hw, wl->wlc->vif,
-+						  &tim_offset, NULL);
-+	if (beacon)
-+		brcms_c_set_new_beacon(wl->wlc, beacon, tim_offset,
-+				       wl->wlc->vif->bss_conf.dtim_period);
-+	spin_unlock_bh(&wl->lock);
-+
-+	return 0;
-+}
-+
- static const struct ieee80211_ops brcms_ops = {
- 	.tx = brcms_ops_tx,
- 	.start = brcms_ops_start,
-@@ -955,6 +980,7 @@ static const struct ieee80211_ops brcms_ops = {
- 	.flush = brcms_ops_flush,
- 	.get_tsf = brcms_ops_get_tsf,
- 	.set_tsf = brcms_ops_set_tsf,
-+	.set_tim = brcms_ops_beacon_set_tim,
- };
- 
- void brcms_dpc(unsigned long data)
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.h b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.h
-index c4d135cff04ad..9f76b880814e8 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.h
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.h
-@@ -563,6 +563,7 @@ struct brcms_c_info {
- 
- 	struct wiphy *wiphy;
- 	struct scb pri_scb;
-+	struct ieee80211_vif *vif;
- 
- 	struct sk_buff *beacon;
- 	u16 beacon_tim_offset;
+ 	case SKD_CHECK_STATUS_BUSY_IMMINENT:
+ 		skd_log_skreq(skdev, skreq, "retry(busy)");
+-		blk_requeue_request(skdev->queue, req);
++		blk_mq_requeue_request(req, true);
+ 		dev_info(&skdev->pdev->dev, "drive BUSY imminent\n");
+ 		skdev->state = SKD_DRVR_STATE_BUSY_IMMINENT;
+ 		skdev->timer_countdown = SKD_TIMER_MINUTES(20);
+@@ -1426,7 +1426,7 @@ static void skd_resolve_req_exception(struct skd_device *skdev,
+ 	case SKD_CHECK_STATUS_REQUEUE_REQUEST:
+ 		if ((unsigned long) ++req->special < SKD_MAX_RETRIES) {
+ 			skd_log_skreq(skdev, skreq, "retry");
+-			blk_requeue_request(skdev->queue, req);
++			blk_mq_requeue_request(req, true);
+ 			break;
+ 		}
+ 		/* fall through */
 -- 
 2.20.1
 
