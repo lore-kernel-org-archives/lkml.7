@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6341C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0D0C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCFDE21843
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFC4D21845
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919740;
-	bh=8zZBd4JllggUa0QqNjPyfYaunOJs2rrXmcTVYbNuM+s=;
+	s=default; t=1573919744;
+	bh=Ear3GYjHcm6aXs1U2mblM6eBMGjbS/W5opmAxtJII2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T06BWFaIhjCZzoyMD5vYoIsllIY8w8dxQB4Rb/cEtp4fRjQSF737J6IVixNbrL5t3
-	 Jf6sauWLi3U/hMvtlgBZrvr/xPuecHF+vTOwuSCIGzHWOyt99EoGqLrzOtdZh6uAA6
-	 ziw6AjhevT24DfBRywQj0TGkfM85Gk2R6GbSehKY=
+	b=PjZgjWbIzvK8gzAduAEp0FUElfxBU0HdqlugOHT7tIdIno6EjsjS1DNJ5dnylJTeg
+	 IVe+Mvrr8bklpPjOAzlGOfzg7vCTcq3GMo9RgLyyerO+emUywOuGtyQPR/bN2hzQTR
+	 J33Y4k9VdeRPplj5sMneNxc0XCODa5JGip19kaeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731652AbfKPPzj (ORCPT
+        id S1731646AbfKPPzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:55:39 -0500
+        Sat, 16 Nov 2019 10:55:38 -0500
 Received: from mail.kernel.org ([198.145.29.99]:37680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731629AbfKPPze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:55:34 -0500
+        id S1731623AbfKPPzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:55:33 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 415E621844;
-        Sat, 16 Nov 2019 15:55:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02BC921845;
+        Sat, 16 Nov 2019 15:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919733;
-        bh=8zZBd4JllggUa0QqNjPyfYaunOJs2rrXmcTVYbNuM+s=;
+        s=default; t=1573919732;
+        bh=Ear3GYjHcm6aXs1U2mblM6eBMGjbS/W5opmAxtJII2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a5Ip4bZNN3kcaRo3KLfpakroku6a5t5+fbx2Kla/3yEdk3jmyCKXy2i9hKrBpO+kh
-         yse9OKezJzvGDbmBYyLPwgsrC+0Ed1ZT0eKLvJxoG9p6UHdhM8YmUPWA/3m9aKtaR5
-         urL9IBm46U/LhX9QCqKUJpwLszRF13FBzMNnkYaw=
+        b=vNJPqhqOTwgxOvhhpXG3LcXAWcDng7tDb1AQO6EgBbSaaHyj2KYyUBwD4Kk0pvUJq
+         YYHmMTa6DY0gDktBQGab07i2nXUZ44IL7ylY5BDiDDxCOJ6zS3A3XWxNDkNhdMSKir
+         BX+BUXDf3Bs+en4domLbes2Q6mbBUciwPLPIIkUk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.4 75/77] pinctrl: zynq: Use define directive for PIN_CONFIG_IO_STANDARD
-Date:   Sat, 16 Nov 2019 10:53:37 -0500
-Message-Id: <20191116155339.11909-75-sashal@kernel.org>
+Cc:     David Barmann <david.barmann@stackpath.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 73/77] sock: Reset dst when changing sk_mark via setsockopt
+Date:   Sat, 16 Nov 2019 10:53:35 -0500
+Message-Id: <20191116155339.11909-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -61,65 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: David Barmann <david.barmann@stackpath.com>
 
-[ Upstream commit cd8a145a066a1a3beb0ae615c7cb2ee4217418d7 ]
+[ Upstream commit 50254256f382c56bde87d970f3d0d02fdb76ec70 ]
 
-Clang warns when one enumerated type is implicitly converted to another:
+When setting the SO_MARK socket option, if the mark changes, the dst
+needs to be reset so that a new route lookup is performed.
 
-drivers/pinctrl/pinctrl-zynq.c:985:18: warning: implicit conversion from
-enumeration type 'enum zynq_pin_config_param' to different enumeration
-type 'enum pin_config_param' [-Wenum-conversion]
-        {"io-standard", PIN_CONFIG_IOSTANDARD, zynq_iostd_lvcmos18},
-        ~               ^~~~~~~~~~~~~~~~~~~~~
-drivers/pinctrl/pinctrl-zynq.c:990:16: warning: implicit conversion from
-enumeration type 'enum zynq_pin_config_param' to different enumeration
-type 'enum pin_config_param' [-Wenum-conversion]
-        = { PCONFDUMP(PIN_CONFIG_IOSTANDARD, "IO-standard", NULL, true),
-            ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/pinctrl/pinconf-generic.h:163:11: note: expanded from
-macro 'PCONFDUMP'
-        .param = a, .display = b, .format = c, .has_arg = d     \
-                 ^
-2 warnings generated.
+This fixes the case where an application wants to change routing by
+setting a new sk_mark.  If this is done after some packets have already
+been sent, the dst is cached and has no effect.
 
-It is expected that pinctrl drivers can extend pin_config_param because
-of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
-isn't an issue. Most drivers that take advantage of this define the
-PIN_CONFIG variables as constants, rather than enumerated values. Do the
-same thing here so that Clang no longer warns.
-
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: David Barmann <david.barmann@stackpath.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-zynq.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ net/core/sock.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-zynq.c b/drivers/pinctrl/pinctrl-zynq.c
-index d57b5eca7b983..ad12205dd7962 100644
---- a/drivers/pinctrl/pinctrl-zynq.c
-+++ b/drivers/pinctrl/pinctrl-zynq.c
-@@ -967,15 +967,12 @@ enum zynq_io_standards {
- 	zynq_iostd_max
- };
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 8aa4a5f895723..92d5f6232ec76 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -951,10 +951,12 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
+ 			clear_bit(SOCK_PASSSEC, &sock->flags);
+ 		break;
+ 	case SO_MARK:
+-		if (!ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN))
++		if (!ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN)) {
+ 			ret = -EPERM;
+-		else
++		} else if (val != sk->sk_mark) {
+ 			sk->sk_mark = val;
++			sk_dst_reset(sk);
++		}
+ 		break;
  
--/**
-- * enum zynq_pin_config_param - possible pin configuration parameters
-- * @PIN_CONFIG_IOSTANDARD: if the pin can select an IO standard, the argument to
-+/*
-+ * PIN_CONFIG_IOSTANDARD: if the pin can select an IO standard, the argument to
-  *	this parameter (on a custom format) tells the driver which alternative
-  *	IO standard to use.
-  */
--enum zynq_pin_config_param {
--	PIN_CONFIG_IOSTANDARD = PIN_CONFIG_END + 1,
--};
-+#define PIN_CONFIG_IOSTANDARD		(PIN_CONFIG_END + 1)
- 
- static const struct pinconf_generic_params zynq_dt_params[] = {
- 	{"io-standard", PIN_CONFIG_IOSTANDARD, zynq_iostd_lvcmos18},
+ 	case SO_RXQ_OVFL:
 -- 
 2.20.1
 
