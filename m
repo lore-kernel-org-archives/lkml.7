@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC98C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBA9C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88C99208CC
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D65E620895
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919210;
-	bh=xmdbH0phXbwmcfIEkdotRoCH7S548831AuKSrZqd5Mg=;
+	s=default; t=1573919214;
+	bh=g5JG3N6L0NyVvDNzIuGXVjudP/DJfzVs1xq1Vs9a7Kg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YZPdcd9Oz2mb9AyA0WIoxThqqIMeVo2Y8247hp6NbzdoOwGdSc5CSumG5FZ4hiFP0
-	 lNP1ebM8MVCcpggsxdSOwGnirAE7Zad+1WCTFhYCU9LCOAExFACYgsJGvniGappZWZ
-	 ptjzHMAIaST0VIa241r4uoH/eldZn4LPeMfwI5bM=
+	b=eT2cxSk9m7fLuHHpdD+TIXVbCZY/z0vaHuwSh+egwQhwU1T9vuXHAuzybMLOs9nHm
+	 N0dbb5dRlRy7pDW0aKsEtwgQPEXUQorkqQKdbI5pxNsXq+k1F+TmF/ZsDv2ffAeaFa
+	 FBN64pDCYfpMyrNeR4gOlFXPAtKUw0h7RpQ2VRS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbfKPPqt (ORCPT
+        id S1729550AbfKPPqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:46:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52560 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:46:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729326AbfKPPqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:46:16 -0500
+        id S1728631AbfKPPqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:17 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A583207FA;
-        Sat, 16 Nov 2019 15:46:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B6A020830;
+        Sat, 16 Nov 2019 15:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919175;
-        bh=xmdbH0phXbwmcfIEkdotRoCH7S548831AuKSrZqd5Mg=;
+        s=default; t=1573919177;
+        bh=g5JG3N6L0NyVvDNzIuGXVjudP/DJfzVs1xq1Vs9a7Kg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MJBR1NwUsY7S3L8GuzlCGTHYRmssS46zD1OuSzEpBFkvCtLCUxJPBGoC05Lq7bB+f
-         VL46Qfk2BDKuvlYZP5mWgemwzjVOboPKDDKQj3b8vbfnTI0LVSQGaqg07wR3FmtweI
-         3l4WTQjBUgLJdToE+apb+mv93ecmKZWKZQBIarEM=
+        b=GLFGHRj7cueGZGQY/IG5zfJVyshenXHqQSDHOOtexa6LeoOw6l3J+OfNQsRZpWWVH
+         EGa3GZLBoBbOc7DbjDaqS1s2JhwweUcwN3BOQ2yoP2suHhRs9hTDj2pr+ac4BBBQRD
+         myVo0+DLu4bsdFAyAOZGqguKKrKjKKUFs70dKKew=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 183/237] net: do not abort bulk send on BQL status
-Date:   Sat, 16 Nov 2019 10:40:18 -0500
-Message-Id: <20191116154113.7417-183-sashal@kernel.org>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dietmar.Eggemann@arm.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, patrick.bellasi@arm.com,
+        vincent.guittot@linaro.org, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 185/237] sched/fair: Don't increase sd->balance_interval on newidle balance
+Date:   Sat, 16 Nov 2019 10:40:20 -0500
+Message-Id: <20191116154113.7417-185-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -59,49 +63,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Valentin Schneider <valentin.schneider@arm.com>
 
-[ Upstream commit fe60faa5063822f2d555f4f326c7dd72a60929bf ]
+[ Upstream commit 3f130a37c442d5c4d66531b240ebe9abfef426b5 ]
 
-Before calling dev_hard_start_xmit(), upper layers tried
-to cook optimal skb list based on BQL budget.
+When load_balance() fails to move some load because of task affinity,
+we end up increasing sd->balance_interval to delay the next periodic
+balance in the hopes that next time we look, that annoying pinned
+task(s) will be gone.
 
-Problem is that GSO packets can end up comsuming more than
-the BQL budget.
+However, idle_balance() pays no attention to sd->balance_interval, yet
+it will still lead to an increase in balance_interval in case of
+pinned tasks.
 
-Breaking the loop is not useful, since requeued packets
-are ahead of any packets still in the qdisc.
+If we're going through several newidle balances (e.g. we have a
+periodic task), this can lead to a huge increase of the
+balance_interval in a very small amount of time.
 
-It is also more expensive, since next TX completion will
-push these packets later, while skbs are not in cpu caches.
+To prevent that, don't increase the balance interval when going
+through a newidle balance.
 
-It is also a behavior difference with TSO packets, that can
-break the BQL limit by a large amount.
+This is a similar approach to what is done in commit 58b26c4c0257
+("sched: Increment cache_nice_tries only on periodic lb"), where we
+disregard newidle balance and rely on periodic balance for more stable
+results.
 
-Note that drivers should use __netdev_tx_sent_queue()
-in order to have optimal xmit_more support, and avoid
-useless atomic operations as shown in the following patch.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Dietmar.Eggemann@arm.com
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: patrick.bellasi@arm.com
+Cc: vincent.guittot@linaro.org
+Link: http://lkml.kernel.org/r/1537974727-30788-2-git-send-email-valentin.schneider@arm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/fair.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 4a2ee1ce6c024..0a900e353cfff 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -3277,7 +3277,7 @@ struct sk_buff *dev_hard_start_xmit(struct sk_buff *first, struct net_device *de
- 		}
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index e5e8f67218728..f77fcd37b226f 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -8819,13 +8819,22 @@ static int load_balance(int this_cpu, struct rq *this_rq,
+ 	sd->nr_balance_failed = 0;
  
- 		skb = next;
--		if (netif_xmit_stopped(txq) && skb) {
-+		if (netif_tx_queue_stopped(txq) && skb) {
- 			rc = NETDEV_TX_BUSY;
- 			break;
- 		}
+ out_one_pinned:
++	ld_moved = 0;
++
++	/*
++	 * idle_balance() disregards balance intervals, so we could repeatedly
++	 * reach this code, which would lead to balance_interval skyrocketting
++	 * in a short amount of time. Skip the balance_interval increase logic
++	 * to avoid that.
++	 */
++	if (env.idle == CPU_NEWLY_IDLE)
++		goto out;
++
+ 	/* tune up the balancing interval */
+ 	if (((env.flags & LBF_ALL_PINNED) &&
+ 			sd->balance_interval < MAX_PINNED_INTERVAL) ||
+ 			(sd->balance_interval < sd->max_interval))
+ 		sd->balance_interval *= 2;
+-
+-	ld_moved = 0;
+ out:
+ 	return ld_moved;
+ }
 -- 
 2.20.1
 
