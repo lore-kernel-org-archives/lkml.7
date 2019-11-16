@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE6BC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75090C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43CF121479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44C4B2195D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919727;
-	bh=s3CGvjS4iv6lqtw9qf0dsHz4Mb21EKg5poi6xwHyv1c=;
+	s=default; t=1573919730;
+	bh=eGI2FMmDfPDYoCg1ZCjAMD3yPyrwIpkZXMOAqPWr9GM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lf57zC5l9UnQOvNRj0S8GRnpi6IfuOZg+NW/Et3bR4HJJP3wuDCfvuPF0HuCEx2g2
-	 sYfIK0NDCVqCSbcYORiQ+41O+dBR2piu2pY7tRjwd9v6ysd6cVXXBvGdUSB5vFZU2k
-	 6XdReW+XydJkQqow5LFqSjKktAhmCy/XWcrs3DFQ=
+	b=GiotuEtpidoIJipxwclDVynQdmSlNvoAXkKij1CmLUbEADWH07Xx8/EMzZdmUrGVd
+	 chMOMCAIZIEKSGPaKFOn+NA1+lntZe0RD+VtI/nR4YQmqJdxgdFJN//Y3mnufrNNMy
+	 eq3dkMaiji6/JXOpbMlzfdFLVjt/fYJi4iukOqeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729691AbfKPPzZ (ORCPT
+        id S1731619AbfKPPz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:55:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37298 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:55:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731562AbfKPPzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:55:16 -0500
+        id S1730365AbfKPPzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:55:19 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C80021903;
-        Sat, 16 Nov 2019 15:55:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6E062186D;
+        Sat, 16 Nov 2019 15:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919716;
-        bh=s3CGvjS4iv6lqtw9qf0dsHz4Mb21EKg5poi6xwHyv1c=;
+        s=default; t=1573919719;
+        bh=eGI2FMmDfPDYoCg1ZCjAMD3yPyrwIpkZXMOAqPWr9GM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cxeUJ5V0Kos5FFqUwWsYyW02c7EzPcpcw2fVxYhSkT1w4WOr3cNjbSg++XntUfS3b
-         dH8d9IcDhskrFPqm7qLycEcE/aGr3jcupY9plccBbLxUTW+7tkhU4aXyWWUg4uFfoX
-         WKjQ35OvjMjfCCh7Js/aIWxEX6vbbPJDe32eRIcQ=
+        b=ZD+Qa/15nDrWbIBIcLfYqb6wUppvQvrUHDhERXYqxXn39+aglKTRjMqVZNVXIbIno
+         1qsYztmzJjR5n061cwt0kwxAVeoxiSwvKLx1f/hSbjpS/0PtwhKjXiaftIDjYZn5H4
+         g4tKW4b5Lq5a2nFfg4Tr7131yDUbVjghDmPga34E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar.Eggemann@arm.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, patrick.bellasi@arm.com,
-        vincent.guittot@linaro.org, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 59/77] sched/fair: Don't increase sd->balance_interval on newidle balance
-Date:   Sat, 16 Nov 2019 10:53:21 -0500
-Message-Id: <20191116155339.11909-59-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 61/77] wlcore: Fix the return value in case of error in 'wlcore_vendor_cmd_smart_config_start()'
+Date:   Sat, 16 Nov 2019 10:53:23 -0500
+Message-Id: <20191116155339.11909-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -63,75 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Schneider <valentin.schneider@arm.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 3f130a37c442d5c4d66531b240ebe9abfef426b5 ]
+[ Upstream commit 3419348a97bcc256238101129d69b600ceb5cc70 ]
 
-When load_balance() fails to move some load because of task affinity,
-we end up increasing sd->balance_interval to delay the next periodic
-balance in the hopes that next time we look, that annoying pinned
-task(s) will be gone.
+We return 0 unconditionally at the end of
+'wlcore_vendor_cmd_smart_config_start()'.
+However, 'ret' is set to some error codes in several error handling paths
+and we already return some error codes at the beginning of the function.
 
-However, idle_balance() pays no attention to sd->balance_interval, yet
-it will still lead to an increase in balance_interval in case of
-pinned tasks.
+Return 'ret' instead to propagate the error code.
 
-If we're going through several newidle balances (e.g. we have a
-periodic task), this can lead to a huge increase of the
-balance_interval in a very small amount of time.
-
-To prevent that, don't increase the balance interval when going
-through a newidle balance.
-
-This is a similar approach to what is done in commit 58b26c4c0257
-("sched: Increment cache_nice_tries only on periodic lb"), where we
-disregard newidle balance and rely on periodic balance for more stable
-results.
-
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Dietmar.Eggemann@arm.com
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: patrick.bellasi@arm.com
-Cc: vincent.guittot@linaro.org
-Link: http://lkml.kernel.org/r/1537974727-30788-2-git-send-email-valentin.schneider@arm.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 80ff8063e87c ("wlcore: handle smart config vendor commands")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ti/wlcore/vendor_cmd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index cd2fb8384fbe3..d012681fb1abd 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7334,13 +7334,22 @@ static int load_balance(int this_cpu, struct rq *this_rq,
- 	sd->nr_balance_failed = 0;
- 
- out_one_pinned:
-+	ld_moved = 0;
-+
-+	/*
-+	 * idle_balance() disregards balance intervals, so we could repeatedly
-+	 * reach this code, which would lead to balance_interval skyrocketting
-+	 * in a short amount of time. Skip the balance_interval increase logic
-+	 * to avoid that.
-+	 */
-+	if (env.idle == CPU_NEWLY_IDLE)
-+		goto out;
-+
- 	/* tune up the balancing interval */
- 	if (((env.flags & LBF_ALL_PINNED) &&
- 			sd->balance_interval < MAX_PINNED_INTERVAL) ||
- 			(sd->balance_interval < sd->max_interval))
- 		sd->balance_interval *= 2;
--
--	ld_moved = 0;
+diff --git a/drivers/net/wireless/ti/wlcore/vendor_cmd.c b/drivers/net/wireless/ti/wlcore/vendor_cmd.c
+index fd4e9ba176c9b..332a3a5c1c900 100644
+--- a/drivers/net/wireless/ti/wlcore/vendor_cmd.c
++++ b/drivers/net/wireless/ti/wlcore/vendor_cmd.c
+@@ -66,7 +66,7 @@ wlcore_vendor_cmd_smart_config_start(struct wiphy *wiphy,
  out:
- 	return ld_moved;
+ 	mutex_unlock(&wl->mutex);
+ 
+-	return 0;
++	return ret;
  }
+ 
+ static int
 -- 
 2.20.1
 
