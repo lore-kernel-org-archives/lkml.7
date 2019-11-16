@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC24C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 211EFC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC6F2089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E147421845
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920315;
-	bh=uf/SQX7gvex7V0ZjiMgcVzRM39CtftIlMt1fKTjPSYY=;
+	s=default; t=1573920319;
+	bh=Cm8oqydL25NKOv9Ru7j+5HUTOOWMEduozul5gSK8JoY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W9jRJGiDpJVXNKFAuWJOo2ZZzqpe9b83IHJ6i3d4w8TrPbbPqGl1YFpLvwe8Xh4fM
-	 B4zLTbYaLJ+ll7A7TzJIPtdYF1BkC0r04VnGyhn8OzO5F3OiayNVPhufRZ8wTDH3vU
-	 C2fczO74IUZp7noCSB7BZPQ4HomLqQba52Q9li3A=
+	b=H9SKcRmJF2Cl/L4Jy0JJiK+02Y5JFmY/qKkI+JM7iQ+aubh0kmcObtlwDrv65gen6
+	 gDUNvoNv7x3bCEmZCGoaCeKtwOvR+m4v1qx04t2FstQW8GF7yxskpjfG2Kh3uOJS6F
+	 o6tyH+YG/EFCr0Wv4ITW79Nld27fCVg+L9xbgmec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731585AbfKPQFO (ORCPT
+        id S1730735AbfKPPvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:05:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60010 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:51:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730737AbfKPPvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:51:24 -0500
+        id S1730707AbfKPPvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:51:17 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCC93208CE;
-        Sat, 16 Nov 2019 15:51:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AEF3208CE;
+        Sat, 16 Nov 2019 15:51:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919484;
-        bh=uf/SQX7gvex7V0ZjiMgcVzRM39CtftIlMt1fKTjPSYY=;
+        s=default; t=1573919476;
+        bh=Cm8oqydL25NKOv9Ru7j+5HUTOOWMEduozul5gSK8JoY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SOqwaifXf4C8rU+4Pf6X0w0HrU/9YhxlufD01eg+ZvT5ARMe2MTNulfEBy8+vJFeS
-         JmZ127ruzHQb4OcEN9s74wpGwzrH6zlxRybuSZRdHR74g+DvFF4O2O6ukIp/lt0Alk
-         Wf4ktZ2QZhdtBs7acymNqAE+wB2QgYWebqo/n+34=
+        b=tiNOboaqMNlnHFR0qGu9SyfjnLr4lQ/twD6dBHlaau895Gk5fxjOB/vL+teX7RdIK
+         20WiU6kRfGGJtNyrTZFHg17mq8Lj1C6SB3Lsvccs/rE1rvYkii65niTnf1PRieNs5Q
+         jxv3zqHu9Y+T8FAz+JlTeDGjf3ubhBLJVr5+vJAo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Angelo Dureghello <angelo@sysam.it>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-m68k@lists.linux-m68k.org
-Subject: [PATCH AUTOSEL 4.9 14/99] m68k: fix command-line parsing when passed from u-boot
-Date:   Sat, 16 Nov 2019 10:49:37 -0500
-Message-Id: <20191116155103.10971-14-sashal@kernel.org>
+Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 10/99] mmc: mediatek: fix cannot receive new request when msdc_cmd_is_ready fail
+Date:   Sat, 16 Nov 2019 10:49:33 -0500
+Message-Id: <20191116155103.10971-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -60,31 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Angelo Dureghello <angelo@sysam.it>
+From: Chaotian Jing <chaotian.jing@mediatek.com>
 
-[ Upstream commit 381fdd62c38344a771aed06adaf14aae65c47454 ]
+[ Upstream commit f38a9774ddde9d79b3487dd888edd8b8623552af ]
 
-This patch fixes command_line array zero-terminated
-one byte over the end of the array, causing boot to hang.
+when msdc_cmd_is_ready return fail, the req_timeout work has not been
+inited and cancel_delayed_work() will return false, then, the request
+return directly and never call mmc_request_done().
 
-Signed-off-by: Angelo Dureghello <angelo@sysam.it>
-Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+so need call mod_delayed_work() before msdc_cmd_is_ready()
+
+Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/kernel/uboot.c | 2 +-
+ drivers/mmc/host/mtk-sd.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/m68k/kernel/uboot.c b/arch/m68k/kernel/uboot.c
-index b3536a82a2620..e002084af1012 100644
---- a/arch/m68k/kernel/uboot.c
-+++ b/arch/m68k/kernel/uboot.c
-@@ -103,5 +103,5 @@ __init void process_uboot_commandline(char *commandp, int size)
- 	}
+diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+index 6f9535e5e584b..7fc6ce3811421 100644
+--- a/drivers/mmc/host/mtk-sd.c
++++ b/drivers/mmc/host/mtk-sd.c
+@@ -870,6 +870,7 @@ static void msdc_start_command(struct msdc_host *host,
+ 	WARN_ON(host->cmd);
+ 	host->cmd = cmd;
  
- 	parse_uboot_commandline(commandp, len);
--	commandp[size - 1] = 0;
-+	commandp[len - 1] = 0;
- }
++	mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
+ 	if (!msdc_cmd_is_ready(host, mrq, cmd))
+ 		return;
+ 
+@@ -881,7 +882,6 @@ static void msdc_start_command(struct msdc_host *host,
+ 
+ 	cmd->error = 0;
+ 	rawcmd = msdc_cmd_prepare_raw_cmd(host, mrq, cmd);
+-	mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
+ 
+ 	sdr_set_bits(host->base + MSDC_INTEN, cmd_ints_mask);
+ 	writel(cmd->arg, host->base + SDC_ARG);
 -- 
 2.20.1
 
