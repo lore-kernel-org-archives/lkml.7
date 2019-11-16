@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2461C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81749C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B836A214DE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D6C621479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920816;
-	bh=nmvde+ljFulYf6/7LnCn9UVguBbRoL7WmjxVtLajoyY=;
+	s=default; t=1573920822;
+	bh=I7BJNofsoP6hl8a//GDoTm7cBtYa5RqLyPJ2jwXpwQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jwT+++WmxMPv3aUQPtQQZw8hO9BXT8q0IxAt6sWQcHf3nrZbRkplnKOjKveUkpMkX
-	 e/kc5UvJRfWHyH1lj+4J/rd9pWlivTCx6t0OZzWJLUpXywGqp+xthZYaFFPUJXX1QP
-	 i3ST9Cf5ZPZH+UQZABIeSGzPuwvjRQ62nvedBEEA=
+	b=CvkmqlvbFB9mUlpA8wQ3N/bZ+whCKWQ3+8JBkRp2LkI1Vp2S8bMub2WDiPhqZprAC
+	 5npixgvBEGr206vagWAv7rxVFqPqcUkBcHRvdtATk+jkfChALfRU+xpk4IezB15HZ0
+	 ovXRiMbKntV4s1ok6Cqtb23QIVMIiy8L17TTBa5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731897AbfKPQNf (ORCPT
+        id S1731218AbfKPQNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:13:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54878 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:13:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729768AbfKPPr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:47:59 -0500
+        id S1729773AbfKPPr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:47:58 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8122620729;
-        Sat, 16 Nov 2019 15:47:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A116D20855;
+        Sat, 16 Nov 2019 15:47:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919278;
-        bh=nmvde+ljFulYf6/7LnCn9UVguBbRoL7WmjxVtLajoyY=;
+        s=default; t=1573919277;
+        bh=I7BJNofsoP6hl8a//GDoTm7cBtYa5RqLyPJ2jwXpwQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tBlf6j+foTzNpIEZR0kD7Rxjv42sWCPaH16ipE+ssfc/i8drjLGwCgqPQ/mTECJee
-         /wxYrXWPzYlxi1zWEByN5cM5vwJoDRz0jis95kXUk9wylpt4eqFkZvAvz+hnEJF0y9
-         xUY23wld7tl7tbCWMe+8O2hghTb52T96tkOZV6l8=
+        b=orrh+FzdCmKnyhMjkzc/JmRv0s8YQULQMESE+nEGgiSxxxPz+yOPNlf9yqr1DdrKg
+         st8U8Abmwe5tltWA7gtlB9/S83tpnTScSNJcvJlMpIniy6FHGz10BX7dBWSjc6KKdy
+         NMr64IPvBTUP/KE00DXuNWuhfUPri6Cmbp5c+jO4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 029/150] KVM: nVMX: move check_vmentry_postreqs() call to nested_vmx_enter_non_root_mode()
-Date:   Sat, 16 Nov 2019 10:45:27 -0500
-Message-Id: <20191116154729.9573-29-sashal@kernel.org>
+Cc:     Rahul Verma <Rahul.Verma@cavium.com>,
+        Rahul Verma <rahul.verma@cavium.com>,
+        Ariel Elior <ariel.elior@cavium.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 026/150] qed: Align local and global PTT to propagate through the APIs.
+Date:   Sat, 16 Nov 2019 10:45:24 -0500
+Message-Id: <20191116154729.9573-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,64 +61,199 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Rahul Verma <Rahul.Verma@cavium.com>
 
-[ Upstream commit 7671ce21b13b9596163a29f4712cb2451a9b97dc ]
+[ Upstream commit 706d08913d1f68610c32b4a001026aa989878dd9 ]
 
-In preparation of supporting checkpoint/restore for nested state,
-commit ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_run()")
-modified check_vmentry_postreqs() to only perform the guest EFER
-consistency checks when nested_run_pending is true.  But, in the
-normal nested VMEntry flow, nested_run_pending is only set after
-check_vmentry_postreqs(), i.e. the consistency check is being skipped.
+    Align the use of local PTT to propagate through the qed_mcp* API's.
+    Global ptt should not be used.
 
-Alternatively, nested_run_pending could be set prior to calling
-check_vmentry_postreqs() in nested_vmx_run(), but placing the
-consistency checks in nested_vmx_enter_non_root_mode() allows us
-to split prepare_vmcs02() and interleave the preparation with
-the consistency checks without having to change the call sites
-of nested_vmx_enter_non_root_mode().  In other words, the rest
-of the consistency check code in nested_vmx_run() will be joining
-the postreqs checks in future patches.
+    Register access should be done through layers. Register address is
+    mapped into a PTT, PF translation table. Several interface functions
+    require a PTT to direct read/write into register. There is a pool of
+    PTT maintained, and several PTT are used simultaneously to access
+    device registers in different flows. Same PTT should not be used in
+    flows that can run concurrently.
+    To avoid running out of PTT resources, too many PTT should not be
+    acquired without releasing them. Every PF has a global PTT, which is
+    used throughout the life of PF, in most important flows for register
+    access. Generic functions acquire the PTT locally and release after
+    the use. This patch aligns the use of Global PTT and Local PTT
+    accordingly.
 
-Fixes: ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_run()")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Jim Mattson <jmattson@google.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Rahul Verma <rahul.verma@cavium.com>
+Signed-off-by: Ariel Elior <ariel.elior@cavium.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/vmx.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed.h      |  2 +-
+ drivers/net/ethernet/qlogic/qed/qed_main.c | 22 ++++++++++++++----
+ drivers/net/ethernet/qlogic/qed/qed_mcp.c  | 27 ++++++++++------------
+ drivers/net/ethernet/qlogic/qed/qed_mcp.h  |  5 ++--
+ drivers/net/ethernet/qlogic/qed/qed_vf.c   |  2 +-
+ 5 files changed, 35 insertions(+), 23 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index bba42eb3cc124..ae34b482e9109 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -11427,6 +11427,9 @@ static int enter_vmx_non_root_mode(struct kvm_vcpu *vcpu, bool from_vmentry)
- 	u32 msr_entry_idx;
- 	u32 exit_qual;
+diff --git a/drivers/net/ethernet/qlogic/qed/qed.h b/drivers/net/ethernet/qlogic/qed/qed.h
+index 91003bc6f00bd..6c4714a8b54ce 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed.h
++++ b/drivers/net/ethernet/qlogic/qed/qed.h
+@@ -829,7 +829,7 @@ u16 qed_get_cm_pq_idx_vf(struct qed_hwfn *p_hwfn, u16 vf);
+ /* Prototypes */
+ int qed_fill_dev_info(struct qed_dev *cdev,
+ 		      struct qed_dev_info *dev_info);
+-void qed_link_update(struct qed_hwfn *hwfn);
++void qed_link_update(struct qed_hwfn *hwfn, struct qed_ptt *ptt);
+ u32 qed_unzip_data(struct qed_hwfn *p_hwfn,
+ 		   u32 input_len, u8 *input_buf,
+ 		   u32 max_size, u8 *unzip_buf);
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_main.c b/drivers/net/ethernet/qlogic/qed/qed_main.c
+index 557332f1f886c..52e747fd9c839 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_main.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_main.c
+@@ -1389,6 +1389,7 @@ static int qed_get_link_data(struct qed_hwfn *hwfn,
+ }
  
-+	if (from_vmentry && check_vmentry_postreqs(vcpu, vmcs12, exit_qual))
-+		return EXIT_REASON_INVALID_STATE;
-+
- 	enter_guest_mode(vcpu);
+ static void qed_fill_link(struct qed_hwfn *hwfn,
++			  struct qed_ptt *ptt,
+ 			  struct qed_link_output *if_link)
+ {
+ 	struct qed_mcp_link_params params;
+@@ -1469,7 +1470,7 @@ static void qed_fill_link(struct qed_hwfn *hwfn,
  
- 	if (!(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS))
-@@ -11525,13 +11528,6 @@ static int nested_vmx_run(struct kvm_vcpu *vcpu, bool launch)
- 	 */
- 	skip_emulated_instruction(vcpu);
+ 	/* TODO - fill duplex properly */
+ 	if_link->duplex = DUPLEX_FULL;
+-	qed_mcp_get_media_type(hwfn->cdev, &media_type);
++	qed_mcp_get_media_type(hwfn, ptt, &media_type);
+ 	if_link->port = qed_get_port_type(media_type);
  
--	ret = check_vmentry_postreqs(vcpu, vmcs12, &exit_qual);
--	if (ret) {
--		nested_vmx_entry_failure(vcpu, vmcs12,
--					 EXIT_REASON_INVALID_STATE, exit_qual);
--		return 1;
--	}
+ 	if_link->autoneg = params.speed.autoneg;
+@@ -1525,21 +1526,34 @@ static void qed_fill_link(struct qed_hwfn *hwfn,
+ static void qed_get_current_link(struct qed_dev *cdev,
+ 				 struct qed_link_output *if_link)
+ {
++	struct qed_hwfn *hwfn;
++	struct qed_ptt *ptt;
+ 	int i;
+ 
+-	qed_fill_link(&cdev->hwfns[0], if_link);
++	hwfn = &cdev->hwfns[0];
++	if (IS_PF(cdev)) {
++		ptt = qed_ptt_acquire(hwfn);
++		if (ptt) {
++			qed_fill_link(hwfn, ptt, if_link);
++			qed_ptt_release(hwfn, ptt);
++		} else {
++			DP_NOTICE(hwfn, "Failed to fill link; No PTT\n");
++		}
++	} else {
++		qed_fill_link(hwfn, NULL, if_link);
++	}
+ 
+ 	for_each_hwfn(cdev, i)
+ 		qed_inform_vf_link_state(&cdev->hwfns[i]);
+ }
+ 
+-void qed_link_update(struct qed_hwfn *hwfn)
++void qed_link_update(struct qed_hwfn *hwfn, struct qed_ptt *ptt)
+ {
+ 	void *cookie = hwfn->cdev->ops_cookie;
+ 	struct qed_common_cb_ops *op = hwfn->cdev->protocol_ops.common;
+ 	struct qed_link_output if_link;
+ 
+-	qed_fill_link(hwfn, &if_link);
++	qed_fill_link(hwfn, ptt, &if_link);
+ 	qed_inform_vf_link_state(hwfn);
+ 
+ 	if (IS_LEAD_HWFN(hwfn) && cookie)
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_mcp.c b/drivers/net/ethernet/qlogic/qed/qed_mcp.c
+index 7938abe9a3010..ef17ca09d3038 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_mcp.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_mcp.c
+@@ -1352,7 +1352,7 @@ static void qed_mcp_handle_link_change(struct qed_hwfn *p_hwfn,
+ 	if (p_hwfn->mcp_info->capabilities & FW_MB_PARAM_FEATURE_SUPPORT_EEE)
+ 		qed_mcp_read_eee_config(p_hwfn, p_ptt, p_link);
+ 
+-	qed_link_update(p_hwfn);
++	qed_link_update(p_hwfn, p_ptt);
+ out:
+ 	spin_unlock_bh(&p_hwfn->mcp_info->link_lock);
+ }
+@@ -1722,12 +1722,10 @@ int qed_mcp_get_mbi_ver(struct qed_hwfn *p_hwfn,
+ 	return 0;
+ }
+ 
+-int qed_mcp_get_media_type(struct qed_dev *cdev, u32 *p_media_type)
++int qed_mcp_get_media_type(struct qed_hwfn *p_hwfn,
++			   struct qed_ptt *p_ptt, u32 *p_media_type)
+ {
+-	struct qed_hwfn *p_hwfn = &cdev->hwfns[0];
+-	struct qed_ptt  *p_ptt;
 -
- 	/*
- 	 * We're finally done with prerequisite checking, and can start with
- 	 * the nested entry.
+-	if (IS_VF(cdev))
++	if (IS_VF(p_hwfn->cdev))
+ 		return -EINVAL;
+ 
+ 	if (!qed_mcp_is_init(p_hwfn)) {
+@@ -1735,16 +1733,15 @@ int qed_mcp_get_media_type(struct qed_dev *cdev, u32 *p_media_type)
+ 		return -EBUSY;
+ 	}
+ 
+-	*p_media_type = MEDIA_UNSPECIFIED;
+-
+-	p_ptt = qed_ptt_acquire(p_hwfn);
+-	if (!p_ptt)
+-		return -EBUSY;
+-
+-	*p_media_type = qed_rd(p_hwfn, p_ptt, p_hwfn->mcp_info->port_addr +
+-			       offsetof(struct public_port, media_type));
++	if (!p_ptt) {
++		*p_media_type = MEDIA_UNSPECIFIED;
++		return -EINVAL;
++	}
+ 
+-	qed_ptt_release(p_hwfn, p_ptt);
++	*p_media_type = qed_rd(p_hwfn, p_ptt,
++			       p_hwfn->mcp_info->port_addr +
++			       offsetof(struct public_port,
++					media_type));
+ 
+ 	return 0;
+ }
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_mcp.h b/drivers/net/ethernet/qlogic/qed/qed_mcp.h
+index f1fe5e3427ea5..8fcdb2c3e5dba 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_mcp.h
++++ b/drivers/net/ethernet/qlogic/qed/qed_mcp.h
+@@ -284,14 +284,15 @@ int qed_mcp_get_mbi_ver(struct qed_hwfn *p_hwfn,
+  * @brief Get media type value of the port.
+  *
+  * @param cdev      - qed dev pointer
++ * @param p_ptt
+  * @param mfw_ver    - media type value
+  *
+  * @return int -
+  *      0 - Operation was successul.
+  *      -EBUSY - Operation failed
+  */
+-int qed_mcp_get_media_type(struct qed_dev      *cdev,
+-			   u32                  *media_type);
++int qed_mcp_get_media_type(struct qed_hwfn *p_hwfn,
++			   struct qed_ptt *p_ptt, u32 *media_type);
+ 
+ /**
+  * @brief General function for sending commands to the MCP
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_vf.c b/drivers/net/ethernet/qlogic/qed/qed_vf.c
+index 3220086f99dea..a2a9921b467b1 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_vf.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_vf.c
+@@ -1669,7 +1669,7 @@ static void qed_handle_bulletin_change(struct qed_hwfn *hwfn)
+ 	ops->ports_update(cookie, vxlan_port, geneve_port);
+ 
+ 	/* Always update link configuration according to bulletin */
+-	qed_link_update(hwfn);
++	qed_link_update(hwfn, NULL);
+ }
+ 
+ void qed_iov_vf_task(struct work_struct *work)
 -- 
 2.20.1
 
