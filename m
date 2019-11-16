@@ -2,141 +2,100 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 699E1C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2FCC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC8921823
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EBAA21823
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:13:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573920812;
+	bh=wk9K6+R12aMkBHHoJ+8wPEfa30a10Re55114L6oEtzQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mhiRTPLFwnvOHytTHZSDV+oTwgYRLd/mkSjL3Iy2v4vW5YAo2SUkUBK4dWkEiiQGK
+	 Bgc2urug0hL7NPweWm40s8ZfcrSfD7cdIutu2LHpu98SOqaC5Uk0EoMkSyKfOnFaVi
+	 2LbzDHRuLaQIK7gU55YWxF95ByErXVKh+wZ54ydo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731894AbfKPQN1 (ORCPT
+        id S1729894AbfKPPsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:13:27 -0500
-Received: from mga18.intel.com ([134.134.136.126]:22745 "EHLO mga18.intel.com"
+        Sat, 16 Nov 2019 10:48:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729892AbfKPQNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 11:13:24 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Nov 2019 08:13:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,312,1569308400"; 
-   d="scan'208";a="214979599"
-Received: from xshen14-mobl.ccr.corp.intel.com (HELO [10.254.215.65]) ([10.254.215.65])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Nov 2019 08:13:21 -0800
-Subject: Re: [PATCH] x86/resctrl: Fix potential lockdep warning
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        tony.luck@intel.com, fenghua.yu@intel.com,
-        reinette.chatre@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, pei.p.jia@intel.com,
-        Xiaochen Shen <xiaochen.shen@intel.com>
-References: <1573079796-11713-1-git-send-email-xiaochen.shen@intel.com>
- <20191113114334.GA1647@zn.tnic>
-From:   Xiaochen Shen <xiaochen.shen@intel.com>
-Message-ID: <ec0f21ce-17a8-5038-4e69-565a28ca041d@intel.com>
-Date:   Sun, 17 Nov 2019 00:13:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.8.0
+        id S1729774AbfKPPro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:47:44 -0500
+Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFE3B208E3;
+        Sat, 16 Nov 2019 15:47:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573919264;
+        bh=wk9K6+R12aMkBHHoJ+8wPEfa30a10Re55114L6oEtzQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=x+mhpQOs08cu0O4AUYN1jyGqurCQKKZnFBN5G3+pdNknS5VNqHlQJ33YNYOW5+vVs
+         UnpAQm9VNUhy/1V7+HGs63PGOfgPvHZFNHZw/e6Uflllcm2KxXMf68IWGOPDC5PLl4
+         nCv3zR/DREhbFa/2pPZ7ppCS3GavwS4qpPPIMEUo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 015/150] mmc: mediatek: fix cannot receive new request when msdc_cmd_is_ready fail
+Date:   Sat, 16 Nov 2019 10:45:13 -0500
+Message-Id: <20191116154729.9573-15-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
+References: <20191116154729.9573-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191113114334.GA1647@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
+From: Chaotian Jing <chaotian.jing@mediatek.com>
 
-Thank you for your kind code review. Please find my comments inline.
+[ Upstream commit f38a9774ddde9d79b3487dd888edd8b8623552af ]
 
-On 11/13/2019 19:44, Borislav Petkov wrote:
-> On Thu, Nov 07, 2019 at 06:36:36AM +0800, Xiaochen Shen wrote:
->> rdtgroup_cpus_write() and mkdir_rdt_prepare() call
->> rdtgroup_kn_lock_live() -> kernfs_to_rdtgroup() to get 'rdtgrp', and
->> then call rdt_last_cmd_xxx() functions which will check if
-> 
-> Write those names like this:
-> 
-> rdt_last_cmd_{clear,puts,...} but not with an "xxx" which confuses
-> people unfamiliar with the code.
+when msdc_cmd_is_ready return fail, the req_timeout work has not been
+inited and cancel_delayed_work() will return false, then, the request
+return directly and never call mmc_request_done().
 
-OK. I got it. rdt_last_cmd_{clear,puts,printf}().
+so need call mod_delayed_work() before msdc_cmd_is_ready()
 
-> 
->> rdtgroup_mutex is held/requires its caller to hold rdtgroup_mutex.
->> But if 'rdtgrp' returned from kernfs_to_rdtgroup() is NULL,
->> rdtgroup_mutex is not held and calling rdt_last_cmd_xxx() will result
->> in a lockdep warning.
-> 
-> That's more of a self-incurred lockdep warning. You can't be calling
-> lockdep_assert_held() after a function which doesn't always grab the
-> mutex. Looks like the design needs changing here...
+Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/mmc/host/mtk-sd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Actually this fix covers all the cases of an audit of the calling paths
-of rdt_last_cmd_{clear,puts,printf}(), to make sure we only have the
-lockdep_assert_held() in places where we are sure that it must be held.
-Please find more background details as below.
-
-> 
->> Remove rdt_last_cmd_xxx() in these two paths. Just returning error
->> should be sufficient to report to the user that the entry doesn't exist
->> any more.
-> 
-> ... or that.
-> 
-> In any case, you should consider fixing such patterns in the code as it
-> looks sub-optimal from where I'm standing.
-
-I would like to provide more of the background details in the commit
-comment in v2 patch:
-
--------------------
-x86/resctrl: Fix potential lockdep warning
-
-rdt_last_cmd_{clear,puts,printf}() call lockdep_assert_held() to assert
-that rdtgroup_mutex is held.
-
-During internal review of some other changes we found that there are
-code paths that call rdt_last_cmd_{clear,puts}() when the rdtgroup_mutex
-is not held.
-
-An audit of calling sequences identified two different cases in
-rdtgroup_kn_lock_live() which both returning NULL:
-1.'rdtgrp' returned from kernfs_to_rdtgroup() is NULL, rdtgroup_mutex
-is not held.
-2.'rdtgrp' is being deleted, rdtgroup_mutex is held.
-
-Checking all call sites of rdt_last_cmd_{clear,puts,printf}() found two
-code paths where rdtgroup_mutex is not held: rdtgroup_cpus_write() and
-mkdir_rdt_prepare().
-
-Fix by removing rdt_last_cmd_{clear,puts}() in these two paths. Just
-returning error should be sufficient to report to the user that the
-entry doesn't exist any more.
-
-Fixes: 94457b36e8a5 ("x86/intel_rdt: Add diagnostics when writing the 
-cpus file")
-Fixes: cfd0f34e4cd5 ("x86/intel_rdt: Add diagnostics when making 
-directories")
-Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
--------------------
-Updated commit comment to provide additional context on how these were
-found.
-
-> 
-> Thx.
-> 
-
+diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+index 267f7ab08420e..a2ac9938d9459 100644
+--- a/drivers/mmc/host/mtk-sd.c
++++ b/drivers/mmc/host/mtk-sd.c
+@@ -885,6 +885,7 @@ static void msdc_start_command(struct msdc_host *host,
+ 	WARN_ON(host->cmd);
+ 	host->cmd = cmd;
+ 
++	mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
+ 	if (!msdc_cmd_is_ready(host, mrq, cmd))
+ 		return;
+ 
+@@ -896,7 +897,6 @@ static void msdc_start_command(struct msdc_host *host,
+ 
+ 	cmd->error = 0;
+ 	rawcmd = msdc_cmd_prepare_raw_cmd(host, mrq, cmd);
+-	mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
+ 
+ 	sdr_set_bits(host->base + MSDC_INTEN, cmd_ints_mask);
+ 	writel(cmd->arg, host->base + SDC_ARG);
 -- 
-Best regards,
-Xiaochen
+2.20.1
+
