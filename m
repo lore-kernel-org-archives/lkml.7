@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 846F6C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 900ADC33C8C
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4F121479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6498B21479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:19:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921143;
-	bh=QiUo4hDo6X9EO6O8FE6TbEIZnyPD3uwyPo97cTDFrBg=;
+	s=default; t=1573921148;
+	bh=fD3i4LF56F5nF67qI1WpmKo+F44vFHcpbntZ+Ul8q2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H+1CXYV6DwgMzklqc2VsyBIWgBiX4wrHkiXfXHBbddTo7Xcx3gCqmYml00fZC+D3h
-	 84xKcChLl8A4GtjjnXjW0xLhmRz1h9QfSZUmMN5hMEW+fVL5+CULz1bnXcIUEorWpH
-	 VIZ1ncD15MpoGXCIrNV61Opst7TJ1WM489dEf9xs=
+	b=pR5cgDWTFn2fkZANQCKjZkK9FlVzbn19BgugmyNTt6di+foGntYPzRwMn7CcBZDrr
+	 P7fazjJH5DYKrfuVO/7bLAaPerfi1XwN3/ZO6YAnJqC9Eq525TAqGdr8gUO8GBC0SY
+	 MjWGWcALtWZa5jD91lcbH5VQBVZyG2NdyNhTISP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730059AbfKPQTB (ORCPT
+        id S1729347AbfKPPqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:19:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52682 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:46:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728709AbfKPPqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:46:21 -0500
+        id S1728548AbfKPPqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:07 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B326B2077B;
-        Sat, 16 Nov 2019 15:46:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E72120866;
+        Sat, 16 Nov 2019 15:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919180;
-        bh=QiUo4hDo6X9EO6O8FE6TbEIZnyPD3uwyPo97cTDFrBg=;
+        s=default; t=1573919166;
+        bh=fD3i4LF56F5nF67qI1WpmKo+F44vFHcpbntZ+Ul8q2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vC6VTyyG2Qw+2GoDa17D6gdw12GtBRfinrLHL/mrxRS2RSRQjfyU3TZj+woOjnL1w
-         K28K67FFx22nq+/u6xusIMzLAFdyxAFev5iYc7tIm3FKU0URfRV+1k0kGVqvfX0kRJ
-         +xwa3CksimpfX0xlz0m+IlRqBFrtAiBwb1DMyagA=
+        b=uKbt2XdhBqj/7jGhRFEreBXGE5yimXIBF2JqH3pYAvAsNeQwrMVr2oVLdIKqo3nEH
+         lh6nDvPKnKWZtluygno4xWEuENnpuPorue1UpELD6C0Ntei/n4yjB2p5LqcewhQHo8
+         EOumWeiQm/BJStF6ucjZbLeU6n9oW9j8axSfgu0M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 189/237] soc: bcm: brcmstb: Fix re-entry point with a THUMB2_KERNEL
-Date:   Sat, 16 Nov 2019 10:40:24 -0500
-Message-Id: <20191116154113.7417-189-sashal@kernel.org>
+Cc:     Keith Busch <keith.busch@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 175/237] nvme-pci: fix conflicting p2p resource adds
+Date:   Sat, 16 Nov 2019 10:40:10 -0500
+Message-Id: <20191116154113.7417-175-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -58,36 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Keith Busch <keith.busch@intel.com>
 
-[ Upstream commit fb14ada11d62fb849fc357a25ef8016ba438ba10 ]
+[ Upstream commit 9fe5c59ff6a1e5e26a39b75489a1420e7eaaf0b1 ]
 
-When the kernel is built with CONFIG_THUMB2_KERNEL we would set the
-kernel's resume entry point to be a function that is already built as
-Thumb-2 code while the boot agent doing the resume is in ARM mode, so
-this does not work. There is a header label defined: cpu_resume_arm
-which we can use to do the switching for us.
+The nvme pci driver had been adding its CMB resource to the P2P DMA
+subsystem everytime on on a controller reset. This results in the
+following warning:
 
-Fixes: 0b741b8234c8 ("soc: bcm: brcmstb: Add support for S2/S3/S5 suspend states (ARM)")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+    ------------[ cut here ]------------
+    nvme 0000:00:03.0: Conflicting mapping in same section
+    WARNING: CPU: 7 PID: 81 at kernel/memremap.c:155 devm_memremap_pages+0xa6/0x380
+    ...
+    Call Trace:
+     pci_p2pdma_add_resource+0x153/0x370
+     nvme_reset_work+0x28c/0x17b1 [nvme]
+     ? add_timer+0x107/0x1e0
+     ? dequeue_entity+0x81/0x660
+     ? dequeue_entity+0x3b0/0x660
+     ? pick_next_task_fair+0xaf/0x610
+     ? __switch_to+0xbc/0x410
+     process_one_work+0x1cf/0x350
+     worker_thread+0x215/0x3d0
+     ? process_one_work+0x350/0x350
+     kthread+0x107/0x120
+     ? kthread_park+0x80/0x80
+     ret_from_fork+0x1f/0x30
+    ---[ end trace f7ea76ac6ee72727 ]---
+    nvme nvme0: failed to register the CMB
+
+This patch fixes this by registering the CMB with P2P only once.
+
+Signed-off-by: Keith Busch <keith.busch@intel.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/bcm/brcmstb/pm/pm-arm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvme/host/pci.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/bcm/brcmstb/pm/pm-arm.c b/drivers/soc/bcm/brcmstb/pm/pm-arm.c
-index a5577dd5eb087..8ee06347447c0 100644
---- a/drivers/soc/bcm/brcmstb/pm/pm-arm.c
-+++ b/drivers/soc/bcm/brcmstb/pm/pm-arm.c
-@@ -404,7 +404,7 @@ noinline int brcmstb_pm_s3_finish(void)
- {
- 	struct brcmstb_s3_params *params = ctrl.s3_params;
- 	dma_addr_t params_pa = ctrl.s3_params_pa;
--	phys_addr_t reentry = virt_to_phys(&cpu_resume);
-+	phys_addr_t reentry = virt_to_phys(&cpu_resume_arm);
- 	enum bsp_initiate_command cmd;
- 	u32 flags;
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 9479c0db08f62..124f41157173e 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -1652,6 +1652,9 @@ static void nvme_map_cmb(struct nvme_dev *dev)
+ 	struct pci_dev *pdev = to_pci_dev(dev->dev);
+ 	int bar;
  
++	if (dev->cmb_size)
++		return;
++
+ 	dev->cmbsz = readl(dev->bar + NVME_REG_CMBSZ);
+ 	if (!dev->cmbsz)
+ 		return;
+@@ -2136,7 +2139,6 @@ static void nvme_pci_disable(struct nvme_dev *dev)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev->dev);
+ 
+-	nvme_release_cmb(dev);
+ 	pci_free_irq_vectors(pdev);
+ 
+ 	if (pci_is_enabled(pdev)) {
+@@ -2595,6 +2597,7 @@ static void nvme_remove(struct pci_dev *pdev)
+ 	nvme_stop_ctrl(&dev->ctrl);
+ 	nvme_remove_namespaces(&dev->ctrl);
+ 	nvme_dev_disable(dev, true);
++	nvme_release_cmb(dev);
+ 	nvme_free_host_mem(dev);
+ 	nvme_dev_remove_admin(dev);
+ 	nvme_free_queues(dev, 0);
 -- 
 2.20.1
 
