@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C66CC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F52BC33C8C
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 143C12072D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F53B207FA
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:43:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919022;
-	bh=ArEb2f18QmJygKaaZnogCTVHbEhcpUrues3qVydbb7o=;
+	s=default; t=1573919026;
+	bh=S3hOXPcM+w0k/7va/5THvsyB8gokQ9VS9+1IN4YV+Lg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DB/0aLeNP7emOKOUEmexxODtfjRVMwv8GVCLQQkeYacj5iFuv9LgKFzCY3t3lai8E
-	 jIYcrotyO/rJTeeU4i9wVKfU7LXOUb59uHC3FRX0zwPOYLb9Euz5UrSBOndNhgmJTO
-	 7WjUQIuetRV8ua3QWu/D1nRlyrXi5n07juVGkVRc=
+	b=rJhvohAJiVIDAAR1aiISiPmNRA/M+FNJbOHAlNeuc4X7q42vNORan1ohNAZ3cXFIw
+	 LATmNilbT3tvXDZ2R2Jko/J7H1gzCW8keFgJoiRENhjkUeWfLv8QWH8x18xPFxpj6+
+	 Pl5Xn981G1FvWHZ1/7R398t6EsVPhA5QDoi5HQWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbfKPPnk (ORCPT
+        id S1728822AbfKPPnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:43:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47724 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:43:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728789AbfKPPni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:43:38 -0500
+        id S1727830AbfKPPnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:43:43 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7484720729;
-        Sat, 16 Nov 2019 15:43:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D86720729;
+        Sat, 16 Nov 2019 15:43:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919017;
-        bh=ArEb2f18QmJygKaaZnogCTVHbEhcpUrues3qVydbb7o=;
+        s=default; t=1573919022;
+        bh=S3hOXPcM+w0k/7va/5THvsyB8gokQ9VS9+1IN4YV+Lg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ycKyvITvVNx/zDBeRhONbJWhg5P9wKivGiWnUmiGN3iAdJUJNpl4IWdsaWFMMm1n5
-         9AUBnaQSqV2zkZi/jwUu/KJr2M+Vip7Dvz82qm8nVFfUcn/i2JlLomNiPlu8fEErsu
-         OSp9yv1y18pxvQZvSpRXOKhsWj895rCA+xAKPQVQ=
+        b=wnMe1cMnvrWVIZatEDP+2TRffjD6G7UtdNN93bFc4YzyJQoOOOmvmr0hTmgu5iuor
+         i0bGkn84BcyWp4NKABrKCI88vSJooecDyotQ0XFensS7b11/3Sk0o7dPCoEv7ZD0+I
+         x6Zbx1bMaODo8pkYHoia68byGS7qr3JOjoOBXGHo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>,
+Cc:     Peng Hao <peng.hao2@zte.com.cn>, Shuah Khan <shuah@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org,
         linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 118/237] selftests: watchdog: Fix error message.
-Date:   Sat, 16 Nov 2019 10:39:13 -0500
-Message-Id: <20191116154113.7417-118-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 120/237] selftests: fix warning: "_GNU_SOURCE" redefined
+Date:   Sat, 16 Nov 2019 10:39:15 -0500
+Message-Id: <20191116154113.7417-120-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -59,60 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerry Hoemann <jerry.hoemann@hpe.com>
+From: Peng Hao <peng.hao2@zte.com.cn>
 
-[ Upstream commit 04d5e4bd37516ad60854eb74592c7dbddd75d277 ]
+[ Upstream commit 0387662d1b6c5ad2950d8e94d5e380af3f15c05c ]
 
-Printf's say errno but print the string version of error.
-Make consistent.
+Makefile contains -D_GNU_SOURCE. remove define "_GNU_SOURCE"
+in c files.
 
-Signed-off-by: Jerry Hoemann <jerry.hoemann@hpe.com>
+Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
 Signed-off-by: Shuah Khan (Samsung OSG) <shuah@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/watchdog/watchdog-test.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/testing/selftests/proc/fd-001-lookup.c  | 2 +-
+ tools/testing/selftests/proc/fd-003-kthread.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/watchdog/watchdog-test.c b/tools/testing/selftests/watchdog/watchdog-test.c
-index e029e2017280f..f1c6e025cbe54 100644
---- a/tools/testing/selftests/watchdog/watchdog-test.c
-+++ b/tools/testing/selftests/watchdog/watchdog-test.c
-@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
- 				printf("Last boot is caused by: %s.\n", (flags != 0) ?
- 					"Watchdog" : "Power-On-Reset");
- 			else
--				printf("WDIOC_GETBOOTSTATUS errno '%s'\n", strerror(errno));
-+				printf("WDIOC_GETBOOTSTATUS error '%s'\n", strerror(errno));
- 			break;
- 		case 'd':
- 			flags = WDIOS_DISABLECARD;
-@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
- 			if (!ret)
- 				printf("Watchdog card disabled.\n");
- 			else
--				printf("WDIOS_DISABLECARD errno '%s'\n", strerror(errno));
-+				printf("WDIOS_DISABLECARD error '%s'\n", strerror(errno));
- 			break;
- 		case 'e':
- 			flags = WDIOS_ENABLECARD;
-@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
- 			if (!ret)
- 				printf("Watchdog card enabled.\n");
- 			else
--				printf("WDIOS_ENABLECARD errno '%s'\n", strerror(errno));
-+				printf("WDIOS_ENABLECARD error '%s'\n", strerror(errno));
- 			break;
- 		case 'p':
- 			ping_rate = strtoul(optarg, NULL, 0);
-@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
- 			if (!ret)
- 				printf("Watchdog timeout set to %u seconds.\n", flags);
- 			else
--				printf("WDIOC_SETTIMEOUT errno '%s'\n", strerror(errno));
-+				printf("WDIOC_SETTIMEOUT error '%s'\n", strerror(errno));
- 			break;
- 		default:
- 			usage(argv[0]);
+diff --git a/tools/testing/selftests/proc/fd-001-lookup.c b/tools/testing/selftests/proc/fd-001-lookup.c
+index a2010dfb21104..60d7948e7124f 100644
+--- a/tools/testing/selftests/proc/fd-001-lookup.c
++++ b/tools/testing/selftests/proc/fd-001-lookup.c
+@@ -14,7 +14,7 @@
+  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  */
+ // Test /proc/*/fd lookup.
+-#define _GNU_SOURCE
++
+ #undef NDEBUG
+ #include <assert.h>
+ #include <dirent.h>
+diff --git a/tools/testing/selftests/proc/fd-003-kthread.c b/tools/testing/selftests/proc/fd-003-kthread.c
+index 1d659d55368c2..dc591f97b63d4 100644
+--- a/tools/testing/selftests/proc/fd-003-kthread.c
++++ b/tools/testing/selftests/proc/fd-003-kthread.c
+@@ -14,7 +14,7 @@
+  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  */
+ // Test that /proc/$KERNEL_THREAD/fd/ is empty.
+-#define _GNU_SOURCE
++
+ #undef NDEBUG
+ #include <sys/syscall.h>
+ #include <assert.h>
 -- 
 2.20.1
 
