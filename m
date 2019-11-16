@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFECEC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6630C43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 860A221823
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B531E21479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921576;
-	bh=pHdX6CY6Rf7zrpKNhcJf+fkTXPMjxTYy8EVKOPNPvA4=;
+	s=default; t=1573921583;
+	bh=6eykspN3cd2v1dC2FZs8AixH9I5Z7C5N1now7YBSKs8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CdSjzkgkU6g6ElHUm7ng7psGR9FFfvzEyymWOGnLURxBYuAJ7ngK2elGotjZ79qpM
-	 2qHPHOGQ7m8L3Im1CyvmD6073oLVeQ2svI9pZtMNJ/u36LUteo+6Eb0zN+aqn6+21v
-	 q4yxwzRfSvFJHhzdu7HcBPQUEbO6gcImeuuC9oAE=
+	b=2uac9Ho9qcE+9rpyvzHqmpyLLln9oB7wkLa60ZLgEMDx5WcSeZ4RgNlAOuGncD2xV
+	 JWoqcYlv5UB1sWUo5T7l4xgimEsn8tFluFBO1qOLqpta9aTxCXlSsqU3fOv0M3z+Hf
+	 vOPUHqb5yn/1fHrL4PZ/ifSyWkpszaXycxcALlf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbfKPQ0O (ORCPT
+        id S1728066AbfKPPl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:26:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45374 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:41:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728075AbfKPPl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:41:59 -0500
+        id S1728024AbfKPPlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:41:51 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 175912072D;
-        Sat, 16 Nov 2019 15:41:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7BCB20833;
+        Sat, 16 Nov 2019 15:41:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918918;
-        bh=pHdX6CY6Rf7zrpKNhcJf+fkTXPMjxTYy8EVKOPNPvA4=;
+        s=default; t=1573918911;
+        bh=6eykspN3cd2v1dC2FZs8AixH9I5Z7C5N1now7YBSKs8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gwd16+2bHd1BWQ+74DSeLSEXKMyUtIsthSsHYcJ5kbe2TOvPx6GJgewcxIb9GahSX
-         8ZDNODitjNnHcn/gh+kspwrDGUW9/I1492yhRlQMVOSFiBLDyRN8fN/iMiWDpzM+O/
-         gkg3NFv4lEScseiE60tWnhpF6YIo9Y8iO4boaUUk=
+        b=KUeqWWM4PIyauU9lugAMBZBc8zKZUlUvpUEeZ2EaBuhZ9JVDEBEecmvxhsZOYj0Eh
+         wWugueQxrCb67UMzCT0bLC4wENwx0olqdC53UevRAPBjEttpY0bV/3eGARe2FunanK
+         iaV1FpCqkQGMnjPrEOPR8ny3yFNU8dgCZ5c8BaZI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 042/237] pwm: lpss: Only set update bit if we are actually changing the settings
-Date:   Sat, 16 Nov 2019 10:37:57 -0500
-Message-Id: <20191116154113.7417-42-sashal@kernel.org>
+Cc:     Luo Jiaxing <luojiaxing@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 034/237] scsi: hisi_sas: Feed back linkrate(max/min) when re-attached
+Date:   Sat, 16 Nov 2019 10:37:49 -0500
+Message-Id: <20191116154113.7417-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -59,94 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Luo Jiaxing <luojiaxing@huawei.com>
 
-[ Upstream commit 2153bbc12f77fb2203276befc0f0dddbfb023bb1 ]
+[ Upstream commit 5a54691f874ab29ec82f08bc6936866a3ccdaa91 ]
 
-According to the datasheet the update bit must be set if the on-time-div
-or the base-unit changes.
+At directly attached situation, if the user modifies the sysfs interface
+of maximum_linkrate and minimum_linkrate to renegotiate the linkrate
+between SAS controller and target, the value of both files mentioned
+above should have change to user setting after renegotiate is over, but
+it remains unchanged.
 
-Now that we properly order device resume on Cherry Trail so that the GFX0
-_PS0 method no longer exits with an error, we end up with a sequence of
-events where we are writing the same values twice in a row.
+To fix this bug, maximum_linkrate and minimum_linkrate will be directly
+fed back to relevant sas_phy structure.
 
-First the _PS0 method restores the duty cycle of 0% the GPU driver set
-on suspend and then the GPU driver first updates just the enabled bit in
-the pwm_state from 0 to 1, causing us to write the same values again,
-before restoring the pre-suspend duty-cycle in a separate pwm_apply call.
-
-When writing the update bit the second time, without changing any of
-the values the update bit clears immediately / instantly, instead of
-staying 1 for a while as usual. After this the next setting of the update
-bit seems to be ignored, causing the restoring of the pre-suspend
-duty-cycle to not get applied. This makes the backlight come up with
-a 0% dutycycle after suspend/resume.
-
-Any further brightness changes after this do work.
-
-This commit moves the setting of the update bit into pwm_lpss_prepare()
-and only sets the bit if we have actually changed any of the values.
-
-This avoids the setting of the update bit the second time we configure
-the PWM to 0% dutycycle, this fixes the backlight coming up with 0%
-duty-cycle after a suspend/resume.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-lpss.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
-index 4721a264bac25..1e69c1c9ec096 100644
---- a/drivers/pwm/pwm-lpss.c
-+++ b/drivers/pwm/pwm-lpss.c
-@@ -97,7 +97,7 @@ static void pwm_lpss_prepare(struct pwm_lpss_chip *lpwm, struct pwm_device *pwm,
- 	unsigned long long on_time_div;
- 	unsigned long c = lpwm->info->clk_rate, base_unit_range;
- 	unsigned long long base_unit, freq = NSEC_PER_SEC;
--	u32 ctrl;
-+	u32 orig_ctrl, ctrl;
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index fd9d82c9033de..e9747379384b2 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -906,6 +906,9 @@ static void hisi_sas_phy_set_linkrate(struct hisi_hba *hisi_hba, int phy_no,
+ 	_r.maximum_linkrate = max;
+ 	_r.minimum_linkrate = min;
  
- 	do_div(freq, period_ns);
- 
-@@ -114,13 +114,17 @@ static void pwm_lpss_prepare(struct pwm_lpss_chip *lpwm, struct pwm_device *pwm,
- 	do_div(on_time_div, period_ns);
- 	on_time_div = 255ULL - on_time_div;
- 
--	ctrl = pwm_lpss_read(pwm);
-+	orig_ctrl = ctrl = pwm_lpss_read(pwm);
- 	ctrl &= ~PWM_ON_TIME_DIV_MASK;
- 	ctrl &= ~(base_unit_range << PWM_BASE_UNIT_SHIFT);
- 	base_unit &= base_unit_range;
- 	ctrl |= (u32) base_unit << PWM_BASE_UNIT_SHIFT;
- 	ctrl |= on_time_div;
--	pwm_lpss_write(pwm, ctrl);
++	sas_phy->phy->maximum_linkrate = max;
++	sas_phy->phy->minimum_linkrate = min;
 +
-+	if (orig_ctrl != ctrl) {
-+		pwm_lpss_write(pwm, ctrl);
-+		pwm_lpss_write(pwm, ctrl | PWM_SW_UPDATE);
-+	}
- }
- 
- static inline void pwm_lpss_cond_enable(struct pwm_device *pwm, bool cond)
-@@ -144,7 +148,6 @@ static int pwm_lpss_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 				return ret;
- 			}
- 			pwm_lpss_prepare(lpwm, pwm, state->duty_cycle, state->period);
--			pwm_lpss_write(pwm, pwm_lpss_read(pwm) | PWM_SW_UPDATE);
- 			pwm_lpss_cond_enable(pwm, lpwm->info->bypass == false);
- 			ret = pwm_lpss_wait_for_update(pwm);
- 			if (ret) {
-@@ -157,7 +160,6 @@ static int pwm_lpss_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			if (ret)
- 				return ret;
- 			pwm_lpss_prepare(lpwm, pwm, state->duty_cycle, state->period);
--			pwm_lpss_write(pwm, pwm_lpss_read(pwm) | PWM_SW_UPDATE);
- 			return pwm_lpss_wait_for_update(pwm);
- 		}
- 	} else if (pwm_is_enabled(pwm)) {
+ 	hisi_hba->hw->phy_disable(hisi_hba, phy_no);
+ 	msleep(100);
+ 	hisi_hba->hw->phy_set_linkrate(hisi_hba, phy_no, &_r);
 -- 
 2.20.1
 
