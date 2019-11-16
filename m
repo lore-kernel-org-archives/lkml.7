@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F25C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53587C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEAC620895
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2941D207FA
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919367;
-	bh=yBjFzhPXopZMDn2CcBcQl8G9pKCxB5RUD8DZ79AQZmM=;
+	s=default; t=1573919373;
+	bh=qG+GTWJUCtUCh6z1mTFgs8RZeHFD3rjOGTuiY9vZXrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s4RqjTSArSKr2n95hCpUcxiOQycZ+x/KnJM9vEl09IkVoWB6gcdRun89vNXKEZaU5
-	 YfezTgzGOefP1IcB88dCM8ex/mZniurXMgaXLBbmG8WiIIRxK+8VHjxUQljXMtaH3w
-	 V0DR//85F2UfoUpcoCTCaGn6o3ZsFxK5Ba30Vf1I=
+	b=ZYxAGZyPh5VJ7A7X8OV3wPUTv4qbN5GyBMaCW24egxPm91278Oj189Ic0sRHJggO2
+	 I2e/MXYjqQxoMwe0qr7Q7nuUl/NYS6ZfQREVvfJshZqb75YygwCf4sqMcp1sNYSvdk
+	 X/xBJGSq191znWlckkwTH2UDLG7wlmy4WYd+8omk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730327AbfKPPt0 (ORCPT
+        id S1730338AbfKPPtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:49:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56918 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:49:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730279AbfKPPtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:49:22 -0500
+        id S1730279AbfKPPt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:49:27 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 977EA20857;
-        Sat, 16 Nov 2019 15:49:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F160920729;
+        Sat, 16 Nov 2019 15:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919362;
-        bh=yBjFzhPXopZMDn2CcBcQl8G9pKCxB5RUD8DZ79AQZmM=;
+        s=default; t=1573919366;
+        bh=qG+GTWJUCtUCh6z1mTFgs8RZeHFD3rjOGTuiY9vZXrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AhL3rrtcDktA195x+pyZ0dEFPrIKj5tdFLbqIig0V2ECVwvop+8OetK973Op5XF2W
-         7rkeoSR3glt0rc0uwsS4Uo4ug8zgFDayWfRUJRM8QwGMLgqLnyFlW16rZJDWDhxVhS
-         X2gV+ybgOwQ05E+KpmbOZcYyUJ1KfIF8GRpRjzz8=
+        b=aoH5ejTeYuOHgczhDuUQiLnq9vc8XdDSXFe7TIJN9tXBCkTR0XyOmZSctPJz/mU0H
+         nYh4L/m3iX59K1XWHCZHfW7ULcgHR4sKRx8oSL3O2EPhV7Qw+TaD+HjW6nXMHv+UU2
+         55aCglAK2vJXv2TteUSwQhK30MwFtpZrH6U7LnHw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jianchao Wang <jianchao.w.wang@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 083/150] block: fix the DISCARD request merge
-Date:   Sat, 16 Nov 2019 10:46:21 -0500
-Message-Id: <20191116154729.9573-83-sashal@kernel.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Chinner <david@fromorbit.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 088/150] vfs: avoid problematic remapping requests into partial EOF block
+Date:   Sat, 16 Nov 2019 10:46:26 -0500
+Message-Id: <20191116154729.9573-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,111 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jianchao Wang <jianchao.w.wang@oracle.com>
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-[ Upstream commit 69840466086d2248898020a08dda52732686c4e6 ]
+[ Upstream commit 07d19dc9fbe9128378b9e226abe886fd8fd473df ]
 
-There are two cases when handle DISCARD merge.
-If max_discard_segments == 1, the bios/requests need to be contiguous
-to merge. If max_discard_segments > 1, it takes every bio as a range
-and different range needn't to be contiguous.
+A deduplication data corruption is exposed in XFS and btrfs. It is
+caused by extending the block match range to include the partial EOF
+block, but then allowing unknown data beyond EOF to be considered a
+"match" to data in the destination file because the comparison is only
+made to the end of the source file. This corrupts the destination file
+when the source extent is shared with it.
 
-But now, attempt_merge screws this up. It always consider contiguity
-for DISCARD for the case max_discard_segments > 1 and cannot merge
-contiguous DISCARD for the case max_discard_segments == 1, because
-rq_attempt_discard_merge always returns false in this case.
-This patch fixes both of the two cases above.
+The VFS remapping prep functions  only support whole block dedupe, but
+we still need to appear to support whole file dedupe correctly.  Hence
+if the dedupe request includes the last block of the souce file, don't
+include it in the actual dedupe operation. If the rest of the range
+dedupes successfully, then reject the entire request.  A subsequent
+patch will enable us to shorten dedupe requests correctly.
 
+When reflinking sub-file ranges, a data corruption can occur when the
+source file range includes a partial EOF block. This shares the unknown
+data beyond EOF into the second file at a position inside EOF, exposing
+stale data in the second file.
+
+If the reflink request includes the last block of the souce file, only
+proceed with the reflink operation if it lands at or past the
+destination file's current EOF. If it lands within the destination file
+EOF, reject the entire request with -EINVAL and make the caller go the
+hard way.  A subsequent patch will enable us to shorten reflink requests
+correctly.
+
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jianchao Wang <jianchao.w.wang@oracle.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Dave Chinner <david@fromorbit.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-merge.c | 46 ++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 36 insertions(+), 10 deletions(-)
+ fs/read_write.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 8d60a5bbcef93..94650cdf2924b 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -659,6 +659,31 @@ static void blk_account_io_merge(struct request *req)
- 		part_stat_unlock();
- 	}
+diff --git a/fs/read_write.c b/fs/read_write.c
+index 38a8bcccf0dd0..e8136a72c13f3 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -1709,6 +1709,34 @@ static int clone_verify_area(struct file *file, loff_t pos, u64 len, bool write)
+ 
+ 	return security_file_permission(file, write ? MAY_WRITE : MAY_READ);
  }
 +/*
-+ * Two cases of handling DISCARD merge:
-+ * If max_discard_segments > 1, the driver takes every bio
-+ * as a range and send them to controller together. The ranges
-+ * needn't to be contiguous.
-+ * Otherwise, the bios/requests will be handled as same as
-+ * others which should be contiguous.
++ * Ensure that we don't remap a partial EOF block in the middle of something
++ * else.  Assume that the offsets have already been checked for block
++ * alignment.
++ *
++ * For deduplication we always scale down to the previous block because we
++ * can't meaningfully compare post-EOF contents.
++ *
++ * For clone we only link a partial EOF block above the destination file's EOF.
 + */
-+static inline bool blk_discard_mergable(struct request *req)
++static int generic_remap_check_len(struct inode *inode_in,
++				   struct inode *inode_out,
++				   loff_t pos_out,
++				   u64 *len,
++				   bool is_dedupe)
 +{
-+	if (req_op(req) == REQ_OP_DISCARD &&
-+	    queue_max_discard_segments(req->q) > 1)
-+		return true;
-+	return false;
-+}
++	u64 blkmask = i_blocksize(inode_in) - 1;
 +
-+enum elv_merge blk_try_req_merge(struct request *req, struct request *next)
-+{
-+	if (blk_discard_mergable(req))
-+		return ELEVATOR_DISCARD_MERGE;
-+	else if (blk_rq_pos(req) + blk_rq_sectors(req) == blk_rq_pos(next))
-+		return ELEVATOR_BACK_MERGE;
++	if ((*len & blkmask) == 0)
++		return 0;
 +
-+	return ELEVATOR_NO_MERGE;
++	if (is_dedupe)
++		*len &= ~blkmask;
++	else if (pos_out + *len < i_size_read(inode_out))
++		return -EINVAL;
++
++	return 0;
 +}
  
  /*
-  * For non-mq, this has to be called with the request spinlock acquired.
-@@ -676,12 +701,6 @@ static struct request *attempt_merge(struct request_queue *q,
- 	if (req_op(req) != req_op(next))
- 		return NULL;
+  * Check that the two inodes are eligible for cloning, the ranges make
+@@ -1815,6 +1843,11 @@ int vfs_clone_file_prep_inodes(struct inode *inode_in, loff_t pos_in,
+ 			return -EBADE;
+ 	}
  
--	/*
--	 * not contiguous
--	 */
--	if (blk_rq_pos(req) + blk_rq_sectors(req) != blk_rq_pos(next))
--		return NULL;
--
- 	if (rq_data_dir(req) != rq_data_dir(next)
- 	    || req->rq_disk != next->rq_disk
- 	    || req_no_special_merge(next))
-@@ -705,11 +724,19 @@ static struct request *attempt_merge(struct request_queue *q,
- 	 * counts here. Handle DISCARDs separately, as they
- 	 * have separate settings.
- 	 */
--	if (req_op(req) == REQ_OP_DISCARD) {
++	ret = generic_remap_check_len(inode_in, inode_out, pos_out, len,
++			is_dedupe);
++	if (ret)
++		return ret;
 +
-+	switch (blk_try_req_merge(req, next)) {
-+	case ELEVATOR_DISCARD_MERGE:
- 		if (!req_attempt_discard_merge(q, req, next))
- 			return NULL;
--	} else if (!ll_merge_requests_fn(q, req, next))
-+		break;
-+	case ELEVATOR_BACK_MERGE:
-+		if (!ll_merge_requests_fn(q, req, next))
-+			return NULL;
-+		break;
-+	default:
- 		return NULL;
-+	}
- 
- 	/*
- 	 * If failfast settings disagree or any of the two is already
-@@ -834,8 +861,7 @@ bool blk_rq_merge_ok(struct request *rq, struct bio *bio)
- 
- enum elv_merge blk_try_merge(struct request *rq, struct bio *bio)
- {
--	if (req_op(rq) == REQ_OP_DISCARD &&
--	    queue_max_discard_segments(rq->q) > 1)
-+	if (blk_discard_mergable(rq))
- 		return ELEVATOR_DISCARD_MERGE;
- 	else if (blk_rq_pos(rq) + blk_rq_sectors(rq) == bio->bi_iter.bi_sector)
- 		return ELEVATOR_BACK_MERGE;
+ 	return 1;
+ }
+ EXPORT_SYMBOL(vfs_clone_file_prep_inodes);
 -- 
 2.20.1
 
