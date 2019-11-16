@@ -2,52 +2,53 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC980C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15180C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93CB921479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7D0221479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919613;
-	bh=FnI+fa6RYHCzzLqSE6NIcC3D6jU/xkVbeou+UhqK7sc=;
+	s=default; t=1573919616;
+	bh=B0Njg5yOngXhHDvGrWZ4jBKX4MpUpoK1cGw/PDSWp/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BFzjLNUZ45aAfLG7WfX0n8vXDAnfCe9zgyq7hWWEASE1f/Rsq/njNZzIfOjvGf0zv
-	 G81yKd3beIN59iSGgJ5NTt4dSHNRwCGZgplxR8kZFEzhvR2hVXCEO/jxzQnL/f0m6o
-	 UvvgACUqBg0l+U1mdTipCIgp4UNu71PZiQRLr114=
+	b=pa8iw8GdYR4QpBDBlrbYVLP4RGd8YZF/fa8jfqnS0KT2Jq18YKc310cK0rceKOxS7
+	 0glvC2CNeOkWN0ifj9MRzNB9Z8AV+oD+JemniKzGXrO2H4+HJ3g9wfB+0Pn8Ra2A3Z
+	 bZmD1uHVBBNXRlqXYlx8l8QUTZuqVgYSBsqrjJII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731257AbfKPPxc (ORCPT
+        id S1731278AbfKPPxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:53:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34512 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:53:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730404AbfKPPx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:53:27 -0500
+        id S1731258AbfKPPxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:53:32 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CE2B218A3;
-        Sat, 16 Nov 2019 15:53:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25AAF2168B;
+        Sat, 16 Nov 2019 15:53:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919606;
-        bh=FnI+fa6RYHCzzLqSE6NIcC3D6jU/xkVbeou+UhqK7sc=;
+        s=default; t=1573919612;
+        bh=B0Njg5yOngXhHDvGrWZ4jBKX4MpUpoK1cGw/PDSWp/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wV1CWVE3BQF2YUqnoeOYq77Lauqq3WErBXxnASyOhPv+bj8RUP6y/uQahGPuqlSOE
-         iqHudthPocz8AFUHqVm+qoXCqK259KQgoLs5YpSW+gekPA/Pe5n5s2KeqNNX5VagD3
-         oKYxZwOrAlhOOlMaB6Lss+tVo8TuTjiiRcprqzqQ=
+        b=q0PZek3q7sxS9Afet8LJCiI3GuvXHBOD26+gSGP7aLQnwt9ZqKd3CuV2ByvO8kO0/
+         +I7inij3aj1upbU1WFaEMTrWTMqr1Mrs2eZ+spsEBHjVMdBmpntXxVo3snHJS4F5la
+         HoGPyGGwzj49K6HEozWX+V6nMUeGko6Db+q3TdcU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.9 94/99] pinctrl: lpc18xx: Use define directive for PIN_CONFIG_GPIO_PIN_INT
-Date:   Sat, 16 Nov 2019 10:50:57 -0500
-Message-Id: <20191116155103.10971-94-sashal@kernel.org>
+Cc:     David Ahern <dsahern@gmail.com>,
+        Donald Sharp <sharpd@cumulusnetworks.com>,
+        Mike Manning <mmanning@vyatta.att-mail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 99/99] ipv6: Fix handling of LLA with VRF and sockets bound to VRF
+Date:   Sat, 16 Nov 2019 10:51:02 -0500
+Message-Id: <20191116155103.10971-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -60,63 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit f24bfb39975c241374cadebbd037c17960cf1412 ]
+[ Upstream commit c2027d1e17582903e368abf5d4838b22a98f2b7b ]
 
-Clang warns when one enumerated type is implicitly converted to another:
+A recent commit allows sockets bound to a VRF to receive ipv6 link local
+packets. However, it only works for UDP and worse TCP connection attempts
+to the LLA with the only listener bound to the VRF just hang where as
+before the client gets a reset and connection refused. Fix by adjusting
+ir_iif for LL addresses and packets received through a device enslaved
+to a VRF.
 
-drivers/pinctrl/pinctrl-lpc18xx.c:643:29: warning: implicit conversion
-from enumeration type 'enum lpc18xx_pin_config_param' to different
-enumeration type 'enum pin_config_param' [-Wenum-conversion]
-        {"nxp,gpio-pin-interrupt", PIN_CONFIG_GPIO_PIN_INT, 0},
-        ~                          ^~~~~~~~~~~~~~~~~~~~~~~
-drivers/pinctrl/pinctrl-lpc18xx.c:648:12: warning: implicit conversion
-from enumeration type 'enum lpc18xx_pin_config_param' to different
-enumeration type 'enum pin_config_param' [-Wenum-conversion]
-        PCONFDUMP(PIN_CONFIG_GPIO_PIN_INT, "gpio pin int", NULL, true),
-        ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/pinctrl/pinconf-generic.h:163:11: note: expanded from
-macro 'PCONFDUMP'
-        .param = a, .display = b, .format = c, .has_arg = d     \
-                 ^
-2 warnings generated.
-
-It is expected that pinctrl drivers can extend pin_config_param because
-of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
-isn't an issue. Most drivers that take advantage of this define the
-PIN_CONFIG variables as constants, rather than enumerated values. Do the
-same thing here so that Clang no longer warns.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/140
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 6f12fa775530 ("vrf: mark skb for multicast or link-local as enslaved to VRF")
+Reported-by: Donald Sharp <sharpd@cumulusnetworks.com>
+Cc: Mike Manning <mmanning@vyatta.att-mail.com>
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-lpc18xx.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ net/ipv6/tcp_ipv6.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-lpc18xx.c b/drivers/pinctrl/pinctrl-lpc18xx.c
-index e053f1fa55120..ab2a451f31562 100644
---- a/drivers/pinctrl/pinctrl-lpc18xx.c
-+++ b/drivers/pinctrl/pinctrl-lpc18xx.c
-@@ -630,14 +630,8 @@ static const struct pinctrl_pin_desc lpc18xx_pins[] = {
- 	LPC18XX_PIN(i2c0_sda, PIN_I2C0_SDA),
- };
+diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+index 4953466cf98f0..54e2557335c1c 100644
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -693,6 +693,7 @@ static void tcp_v6_init_req(struct request_sock *req,
+ 			    const struct sock *sk_listener,
+ 			    struct sk_buff *skb)
+ {
++	bool l3_slave = ipv6_l3mdev_skb(TCP_SKB_CB(skb)->header.h6.flags);
+ 	struct inet_request_sock *ireq = inet_rsk(req);
+ 	const struct ipv6_pinfo *np = inet6_sk(sk_listener);
  
--/**
-- * enum lpc18xx_pin_config_param - possible pin configuration parameters
-- * @PIN_CONFIG_GPIO_PIN_INT: route gpio to the gpio pin interrupt
-- * 	controller.
-- */
--enum lpc18xx_pin_config_param {
--	PIN_CONFIG_GPIO_PIN_INT = PIN_CONFIG_END + 1,
--};
-+/* PIN_CONFIG_GPIO_PIN_INT: route gpio to the gpio pin interrupt controller */
-+#define PIN_CONFIG_GPIO_PIN_INT		(PIN_CONFIG_END + 1)
+@@ -700,7 +701,7 @@ static void tcp_v6_init_req(struct request_sock *req,
+ 	ireq->ir_v6_loc_addr = ipv6_hdr(skb)->daddr;
  
- static const struct pinconf_generic_params lpc18xx_params[] = {
- 	{"nxp,gpio-pin-interrupt", PIN_CONFIG_GPIO_PIN_INT, 0},
+ 	/* So that link locals have meaning */
+-	if (!sk_listener->sk_bound_dev_if &&
++	if ((!sk_listener->sk_bound_dev_if || l3_slave) &&
+ 	    ipv6_addr_type(&ireq->ir_v6_rmt_addr) & IPV6_ADDR_LINKLOCAL)
+ 		ireq->ir_iif = tcp_v6_iif(skb);
+ 
 -- 
 2.20.1
 
