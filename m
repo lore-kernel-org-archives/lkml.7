@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEE3C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1505C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF4321843
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EFD32089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:03:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920228;
-	bh=2pRONMT9Wb0FmlOGGCaXMgsOEB5HUk+wXh22ByjWyUo=;
+	s=default; t=1573920232;
+	bh=8kDImJjryhfnFKRIvUpsUC0GDNu64NHJvZs6pjL/zvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=10AlHwazn6DhYtz83Nye+qmHAOkGBiC+fbihiAR4EVSK2cnAr4PpvKFhFiz73gQ+U
-	 x1MLOvDzNIePDxBixR+34MEMTrZKr0idpyxBXPW0NokYYiphSzagJMg1XULGRwM3Wd
-	 tVVbxNjpTvw3CUpvQuxAF5YCtGy0Cy6iwgmgaJ8E=
+	b=uZ8LCV6Xz6r0JDMSnelMFNUHNwqMKY6qZ/Yhvw9eIzP4/rfxJtUXTMiYJfVnQKlqr
+	 3LHf+OHMYwnZnxZXcd8FXuzIsnwk8s0NLM+HBZ4a6Xh4gwZrBOYaVSSfrEYB9lBvFn
+	 /T9kd5S/9PWj76LT/xJNAABwrWlCt6irXxRJdUDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730884AbfKPPv7 (ORCPT
+        id S1729211AbfKPQDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:51:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60768 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:03:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730867AbfKPPvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:51:55 -0500
+        id S1730875AbfKPPv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:51:58 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8269D20857;
-        Sat, 16 Nov 2019 15:51:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEECC20859;
+        Sat, 16 Nov 2019 15:51:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919514;
-        bh=2pRONMT9Wb0FmlOGGCaXMgsOEB5HUk+wXh22ByjWyUo=;
+        s=default; t=1573919518;
+        bh=8kDImJjryhfnFKRIvUpsUC0GDNu64NHJvZs6pjL/zvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rfrrxFnkfqiFmxaPtXFKfkON7+WMg5A5YHk29ObSGJUaDPucRlqzKLHvWb3U8fX8L
-         N3Dfx19JhbldyV3v83cmMIAdBGsfUVZ6fizImur34bjEofYFfaekLgxx+bBfcpyueH
-         v33RJToIV1uFr1v+ffqUTpC8EME1vLAfivXCtokQ=
+        b=NH7uylT/xdEUJ6PY5cdkYkkuFvBjHwoZwmlYQQfslpmiOUJ02BoSvQ1ROuUHoFYe5
+         5KuAnEJgBaR9kVkDXMZ8JF3jDRaM3A+lrLqLWzEBnW1yZzkeeQpUewv2e8HzKvzFuD
+         pr8U2NGx/Yuc9BbHZBg7V61CnG8UdyTgXpAYwZE8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 36/99] s390/perf: Return error when debug_register fails
-Date:   Sat, 16 Nov 2019 10:49:59 -0500
-Message-Id: <20191116155103.10971-36-sashal@kernel.org>
+Cc:     "Yan, Zheng" <zyan@redhat.com>, Jeff Layton <jlayton@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 39/99] ceph: fix dentry leak in ceph_readdir_prepopulate
+Date:   Sat, 16 Nov 2019 10:50:02 -0500
+Message-Id: <20191116155103.10971-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -60,54 +59,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: "Yan, Zheng" <zyan@redhat.com>
 
-[ Upstream commit ec0c0bb489727de0d4dca6a00be6970ab8a3b30a ]
+[ Upstream commit c58f450bd61511d897efc2ea472c69630635b557 ]
 
-Return an error when the function debug_register() fails allocating
-the debug handle.
-Also remove the registered debug handle when the initialization fails
-later on.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/perf_cpum_sf.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/ceph/inode.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index 96e4fcad57bf7..f46e5c0cb6d95 100644
---- a/arch/s390/kernel/perf_cpum_sf.c
-+++ b/arch/s390/kernel/perf_cpum_sf.c
-@@ -1611,14 +1611,17 @@ static int __init init_cpum_sampling_pmu(void)
- 	}
- 
- 	sfdbg = debug_register(KMSG_COMPONENT, 2, 1, 80);
--	if (!sfdbg)
-+	if (!sfdbg) {
- 		pr_err("Registering for s390dbf failed\n");
-+		return -ENOMEM;
-+	}
- 	debug_register_view(sfdbg, &debug_sprintf_view);
- 
- 	err = register_external_irq(EXT_IRQ_MEASURE_ALERT,
- 				    cpumf_measurement_alert);
- 	if (err) {
- 		pr_cpumsf_err(RS_INIT_FAILURE_ALRT);
-+		debug_unregister(sfdbg);
- 		goto out;
- 	}
- 
-@@ -1627,6 +1630,7 @@ static int __init init_cpum_sampling_pmu(void)
- 		pr_cpumsf_err(RS_INIT_FAILURE_PERF);
- 		unregister_external_irq(EXT_IRQ_MEASURE_ALERT,
- 					cpumf_measurement_alert);
-+		debug_unregister(sfdbg);
- 		goto out;
- 	}
- 
+diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
+index 7fcddaaca8a5d..049cff197d2a1 100644
+--- a/fs/ceph/inode.c
++++ b/fs/ceph/inode.c
+@@ -1630,7 +1630,6 @@ int ceph_readdir_prepopulate(struct ceph_mds_request *req,
+ 			if (IS_ERR(realdn)) {
+ 				err = PTR_ERR(realdn);
+ 				d_drop(dn);
+-				dn = NULL;
+ 				goto next_item;
+ 			}
+ 			dn = realdn;
 -- 
 2.20.1
 
