@@ -4,54 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE96C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E64C33C8C
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE63206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62ECE206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920506;
-	bh=Vt4u48HOCbcz3ybOMB9dVcvqoXTpvruV+PEMafpIE0E=;
+	s=default; t=1573920512;
+	bh=oWcwd+FN3BZWj+mOzGD/owj3Ghki+hBzbszw+PQoejY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Khr4ykUNpewQhvhlUq7i2Wiu0mgRJw5TCSnHPVznKpitOyUidgp2ULnS+IEJbnS62
-	 jQ2OLwg7tbuW5bFRyp7OecuPGiANI0qeamhoYrCHPAjyvjg1U/z6Zlex0JgFgoql2z
-	 ZR1ykDUcgb9YJ+SIwU+W+1Z6mKCvvFFLoIQ3ev7E=
+	b=UmIdT6B7c0+XN2sHQcVD6pA0T02XQToAXCMToJtA6CNBpeI27bMrKaEXKa4HzA5FQ
+	 6X6ALswxSBBFiKaWcj07fWgmm8DCQM5iqzCLD7B8YgAgmVI4foUwSUTlWlA6zmX8+J
+	 nr0OYmiyVRufg6bBJ4B0R4lSe3uEy/wpBUPCs4Sg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731820AbfKPQIZ (ORCPT
+        id S1730435AbfKPPuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:08:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58130 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:50:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730437AbfKPPuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:50:13 -0500
+        id S1730413AbfKPPuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:50:07 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4722208D4;
-        Sat, 16 Nov 2019 15:50:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BC3120857;
+        Sat, 16 Nov 2019 15:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919412;
-        bh=Vt4u48HOCbcz3ybOMB9dVcvqoXTpvruV+PEMafpIE0E=;
+        s=default; t=1573919405;
+        bh=oWcwd+FN3BZWj+mOzGD/owj3Ghki+hBzbszw+PQoejY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZbD+fQsdOG4oBFMFYvjml0Xzq6TAHp0ylVXLUeSNzB++RiCA3CzEnUoovDcnI80Aa
-         lk0vUOJ5wEK7l+ns98Xx1Jz6cS5BOShKuc/dh2hDUOHQaHT9NOtCYU14Iwg7gq7ScY
-         /6Y1gN8ldcgc7mLBkrCHt5ODWxKsgg24cOuIjX8s=
+        b=EZVD5cBWItpa/Ksuby/8zw8N2lckaVN1DDwtUXuVzQuR7ZgUnfRf65O0lwz/acagZ
+         85EGHpYwwsSN1RevPncs9mByRKogmKADwHqTI2udozy2QwLOGOVeL3aKedZ79x+l2K
+         FMxtzODxOgTyxIi1FmhBlSY2w/5HdjxVUndIft2o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Changwei Ge <ge.changwei@h3c.com>,
-        Guozhonghua <guozhonghua@h3c.com>, Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Joseph Qi <jiangqi903@gmail.com>,
+Cc:     David Hildenbrand <david@redhat.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Rashmica Gupta <rashmica.g@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        John Allen <jallen@linux.vnet.ibm.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mathieu Malaterre <malat@debian.org>,
+        YASUAKI ISHIMATSU <yasu.isimatu@gmail.com>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 111/150] ocfs2: don't put and assigning null to bh allocated outside
-Date:   Sat, 16 Nov 2019 10:46:49 -0500
-Message-Id: <20191116154729.9573-111-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-acpi@vger.kernel.org, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.14 104/150] mm/memory_hotplug: make add_memory() take the device_hotplug_lock
+Date:   Sat, 16 Nov 2019 10:46:42 -0500
+Message-Id: <20191116154729.9573-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -64,214 +92,213 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changwei Ge <ge.changwei@h3c.com>
+From: David Hildenbrand <david@redhat.com>
 
-[ Upstream commit cf76c78595ca87548ca5e45c862ac9e0949c4687 ]
+[ Upstream commit 8df1d0e4a265f25dc1e7e7624ccdbcb4a6630c89 ]
 
-ocfs2_read_blocks() and ocfs2_read_blocks_sync() are both used to read
-several blocks from disk.  Currently, the input argument *bhs* can be
-NULL or NOT.  It depends on the caller's behavior.  If the function
-fails in reading blocks from disk, the corresponding bh will be assigned
-to NULL and put.
+add_memory() currently does not take the device_hotplug_lock, however
+is aleady called under the lock from
+	arch/powerpc/platforms/pseries/hotplug-memory.c
+	drivers/acpi/acpi_memhotplug.c
+to synchronize against CPU hot-remove and similar.
 
-Obviously, above process for non-NULL input bh is not appropriate.
-Because the caller doesn't even know its bhs are put and re-assigned.
+In general, we should hold the device_hotplug_lock when adding memory to
+synchronize against online/offline request (e.g.  from user space) - which
+already resulted in lock inversions due to device_lock() and
+mem_hotplug_lock - see 30467e0b3be ("mm, hotplug: fix concurrent memory
+hot-add deadlock").  add_memory()/add_memory_resource() will create memory
+block devices, so this really feels like the right thing to do.
 
-If buffer head is managed by caller, ocfs2_read_blocks and
-ocfs2_read_blocks_sync() should not evaluate it to NULL.  It will cause
-caller accessing illegal memory, thus crash.
+Holding the device_hotplug_lock makes sure that a memory block device
+can really only be accessed (e.g. via .online/.state) from user space,
+once the memory has been fully added to the system.
 
-Link: http://lkml.kernel.org/r/HK2PR06MB045285E0F4FBB561F9F2F9B3D5680@HK2PR06MB0452.apcprd06.prod.outlook.com
-Signed-off-by: Changwei Ge <ge.changwei@h3c.com>
-Reviewed-by: Guozhonghua <guozhonghua@h3c.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Joseph Qi <jiangqi903@gmail.com>
-Cc: Changwei Ge <ge.changwei@h3c.com>
+The lock is not held yet in
+	drivers/xen/balloon.c
+	arch/powerpc/platforms/powernv/memtrace.c
+	drivers/s390/char/sclp_cmd.c
+	drivers/hv/hv_balloon.c
+So, let's either use the locked variants or take the lock.
+
+Don't export add_memory_resource(), as it once was exported to be used by
+XEN, which is never built as a module.  If somebody requires it, we also
+have to export a locked variant (as device_hotplug_lock is never
+exported).
+
+Link: http://lkml.kernel.org/r/20180925091457.28651-3-david@redhat.com
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Pavel Tatashin <pavel.tatashin@microsoft.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Rashmica Gupta <rashmica.g@gmail.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Len Brown <lenb@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+Cc: John Allen <jallen@linux.vnet.ibm.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mathieu Malaterre <malat@debian.org>
+Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
+Cc: YASUAKI ISHIMATSU <yasu.isimatu@gmail.com>
+Cc: Balbir Singh <bsingharora@gmail.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Kate Stewart <kstewart@linuxfoundation.org>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Michael Neuling <mikey@neuling.org>
+Cc: Philippe Ombredanne <pombredanne@nexb.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/buffer_head_io.c | 77 ++++++++++++++++++++++++++++++---------
- 1 file changed, 59 insertions(+), 18 deletions(-)
+ .../platforms/pseries/hotplug-memory.c        |  2 +-
+ drivers/acpi/acpi_memhotplug.c                |  2 +-
+ drivers/base/memory.c                         |  9 ++++++--
+ drivers/xen/balloon.c                         |  3 +++
+ include/linux/memory_hotplug.h                |  1 +
+ mm/memory_hotplug.c                           | 22 ++++++++++++++++---
+ 6 files changed, 32 insertions(+), 7 deletions(-)
 
-diff --git a/fs/ocfs2/buffer_head_io.c b/fs/ocfs2/buffer_head_io.c
-index 9f8250df99f1f..f9b84f7a3e4bb 100644
---- a/fs/ocfs2/buffer_head_io.c
-+++ b/fs/ocfs2/buffer_head_io.c
-@@ -99,25 +99,34 @@ int ocfs2_write_block(struct ocfs2_super *osb, struct buffer_head *bh,
+diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
+index 93e09f108ca17..99a3cf51c5ba4 100644
+--- a/arch/powerpc/platforms/pseries/hotplug-memory.c
++++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+@@ -787,7 +787,7 @@ static int dlpar_add_lmb(struct of_drconf_cell *lmb)
+ 	nid = memory_add_physaddr_to_nid(lmb->base_addr);
+ 
+ 	/* Add the memory */
+-	rc = add_memory(nid, lmb->base_addr, block_sz);
++	rc = __add_memory(nid, lmb->base_addr, block_sz);
+ 	if (rc) {
+ 		dlpar_remove_device_tree_lmb(lmb);
+ 		return rc;
+diff --git a/drivers/acpi/acpi_memhotplug.c b/drivers/acpi/acpi_memhotplug.c
+index 6b0d3ef7309cb..2ccfbb61ca899 100644
+--- a/drivers/acpi/acpi_memhotplug.c
++++ b/drivers/acpi/acpi_memhotplug.c
+@@ -228,7 +228,7 @@ static int acpi_memory_enable_device(struct acpi_memory_device *mem_device)
+ 		if (node < 0)
+ 			node = memory_add_physaddr_to_nid(info->start_addr);
+ 
+-		result = add_memory(node, info->start_addr, info->length);
++		result = __add_memory(node, info->start_addr, info->length);
+ 
+ 		/*
+ 		 * If the memory block has been used by the kernel, add_memory()
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index c617e00f4361d..8e5818e735e2f 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -517,15 +517,20 @@ memory_probe_store(struct device *dev, struct device_attribute *attr,
+ 	if (phys_addr & ((pages_per_block << PAGE_SHIFT) - 1))
+ 		return -EINVAL;
+ 
++	ret = lock_device_hotplug_sysfs();
++	if (ret)
++		goto out;
++
+ 	nid = memory_add_physaddr_to_nid(phys_addr);
+-	ret = add_memory(nid, phys_addr,
+-			 MIN_MEMORY_BLOCK_SIZE * sections_per_block);
++	ret = __add_memory(nid, phys_addr,
++			   MIN_MEMORY_BLOCK_SIZE * sections_per_block);
+ 
+ 	if (ret)
+ 		goto out;
+ 
+ 	ret = count;
+ out:
++	unlock_device_hotplug();
  	return ret;
  }
  
-+/* Caller must provide a bhs[] with all NULL or non-NULL entries, so it
-+ * will be easier to handle read failure.
-+ */
- int ocfs2_read_blocks_sync(struct ocfs2_super *osb, u64 block,
- 			   unsigned int nr, struct buffer_head *bhs[])
- {
- 	int status = 0;
- 	unsigned int i;
- 	struct buffer_head *bh;
-+	int new_bh = 0;
+diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
+index 7d521babc020b..71a6deeb4e714 100644
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -356,7 +356,10 @@ static enum bp_state reserve_additional_memory(void)
+ 	 * callers drop the mutex before trying again.
+ 	 */
+ 	mutex_unlock(&balloon_mutex);
++	/* add_memory_resource() requires the device_hotplug lock */
++	lock_device_hotplug();
+ 	rc = add_memory_resource(nid, resource, memhp_auto_online);
++	unlock_device_hotplug();
+ 	mutex_lock(&balloon_mutex);
  
- 	trace_ocfs2_read_blocks_sync((unsigned long long)block, nr);
+ 	if (rc) {
+diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+index 58e110aee7ab4..d36a029353915 100644
+--- a/include/linux/memory_hotplug.h
++++ b/include/linux/memory_hotplug.h
+@@ -316,6 +316,7 @@ static inline void remove_memory(int nid, u64 start, u64 size) {}
  
- 	if (!nr)
- 		goto bail;
- 
-+	/* Don't put buffer head and re-assign it to NULL if it is allocated
-+	 * outside since the caller can't be aware of this alternation!
-+	 */
-+	new_bh = (bhs[0] == NULL);
-+
- 	for (i = 0 ; i < nr ; i++) {
- 		if (bhs[i] == NULL) {
- 			bhs[i] = sb_getblk(osb->sb, block++);
- 			if (bhs[i] == NULL) {
- 				status = -ENOMEM;
- 				mlog_errno(status);
--				goto bail;
-+				break;
- 			}
- 		}
- 		bh = bhs[i];
-@@ -157,9 +166,26 @@ int ocfs2_read_blocks_sync(struct ocfs2_super *osb, u64 block,
- 		submit_bh(REQ_OP_READ, 0, bh);
- 	}
- 
-+read_failure:
- 	for (i = nr; i > 0; i--) {
- 		bh = bhs[i - 1];
- 
-+		if (unlikely(status)) {
-+			if (new_bh && bh) {
-+				/* If middle bh fails, let previous bh
-+				 * finish its read and then put it to
-+				 * aovoid bh leak
-+				 */
-+				if (!buffer_jbd(bh))
-+					wait_on_buffer(bh);
-+				put_bh(bh);
-+				bhs[i - 1] = NULL;
-+			} else if (bh && buffer_uptodate(bh)) {
-+				clear_buffer_uptodate(bh);
-+			}
-+			continue;
-+		}
-+
- 		/* No need to wait on the buffer if it's managed by JBD. */
- 		if (!buffer_jbd(bh))
- 			wait_on_buffer(bh);
-@@ -169,8 +195,7 @@ int ocfs2_read_blocks_sync(struct ocfs2_super *osb, u64 block,
- 			 * so we can safely record this and loop back
- 			 * to cleanup the other buffers. */
- 			status = -EIO;
--			put_bh(bh);
--			bhs[i - 1] = NULL;
-+			goto read_failure;
- 		}
- 	}
- 
-@@ -178,6 +203,9 @@ int ocfs2_read_blocks_sync(struct ocfs2_super *osb, u64 block,
- 	return status;
+ extern int walk_memory_range(unsigned long start_pfn, unsigned long end_pfn,
+ 		void *arg, int (*func)(struct memory_block *, void *));
++extern int __add_memory(int nid, u64 start, u64 size);
+ extern int add_memory(int nid, u64 start, u64 size);
+ extern int add_memory_resource(int nid, struct resource *resource, bool online);
+ extern int arch_add_memory(int nid, u64 start, u64 size, bool want_memblock);
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index c9d3a49bd4e20..4dfcee4a779f3 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1110,7 +1110,12 @@ static int online_memory_block(struct memory_block *mem, void *arg)
+ 	return device_online(&mem->dev);
  }
  
-+/* Caller must provide a bhs[] with all NULL or non-NULL entries, so it
-+ * will be easier to handle read failure.
+-/* we are OK calling __meminit stuff here - we have CONFIG_MEMORY_HOTPLUG */
++/*
++ * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
++ * and online/offline operations (triggered e.g. by sysfs).
++ *
++ * we are OK calling __meminit stuff here - we have CONFIG_MEMORY_HOTPLUG
 + */
- int ocfs2_read_blocks(struct ocfs2_caching_info *ci, u64 block, int nr,
- 		      struct buffer_head *bhs[], int flags,
- 		      int (*validate)(struct super_block *sb,
-@@ -187,6 +215,7 @@ int ocfs2_read_blocks(struct ocfs2_caching_info *ci, u64 block, int nr,
- 	int i, ignore_cache = 0;
- 	struct buffer_head *bh;
- 	struct super_block *sb = ocfs2_metadata_cache_get_super(ci);
-+	int new_bh = 0;
+ int __ref add_memory_resource(int nid, struct resource *res, bool online)
+ {
+ 	u64 start, size;
+@@ -1203,9 +1208,9 @@ int __ref add_memory_resource(int nid, struct resource *res, bool online)
+ 	mem_hotplug_done();
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(add_memory_resource);
  
- 	trace_ocfs2_read_blocks_begin(ci, (unsigned long long)block, nr, flags);
- 
-@@ -212,6 +241,11 @@ int ocfs2_read_blocks(struct ocfs2_caching_info *ci, u64 block, int nr,
- 		goto bail;
- 	}
- 
-+	/* Don't put buffer head and re-assign it to NULL if it is allocated
-+	 * outside since the caller can't be aware of this alternation!
-+	 */
-+	new_bh = (bhs[0] == NULL);
+-int __ref add_memory(int nid, u64 start, u64 size)
++/* requires device_hotplug_lock, see add_memory_resource() */
++int __ref __add_memory(int nid, u64 start, u64 size)
+ {
+ 	struct resource *res;
+ 	int ret;
+@@ -1219,6 +1224,17 @@ int __ref add_memory(int nid, u64 start, u64 size)
+ 		release_memory_resource(res);
+ 	return ret;
+ }
 +
- 	ocfs2_metadata_cache_io_lock(ci);
- 	for (i = 0 ; i < nr ; i++) {
- 		if (bhs[i] == NULL) {
-@@ -220,7 +254,8 @@ int ocfs2_read_blocks(struct ocfs2_caching_info *ci, u64 block, int nr,
- 				ocfs2_metadata_cache_io_unlock(ci);
- 				status = -ENOMEM;
- 				mlog_errno(status);
--				goto bail;
-+				/* Don't forget to put previous bh! */
-+				break;
- 			}
- 		}
- 		bh = bhs[i];
-@@ -314,16 +349,27 @@ int ocfs2_read_blocks(struct ocfs2_caching_info *ci, u64 block, int nr,
- 		}
- 	}
++int add_memory(int nid, u64 start, u64 size)
++{
++	int rc;
++
++	lock_device_hotplug();
++	rc = __add_memory(nid, start, size);
++	unlock_device_hotplug();
++
++	return rc;
++}
+ EXPORT_SYMBOL_GPL(add_memory);
  
--	status = 0;
--
-+read_failure:
- 	for (i = (nr - 1); i >= 0; i--) {
- 		bh = bhs[i];
- 
- 		if (!(flags & OCFS2_BH_READAHEAD)) {
--			if (status) {
--				/* Clear the rest of the buffers on error */
--				put_bh(bh);
--				bhs[i] = NULL;
-+			if (unlikely(status)) {
-+				/* Clear the buffers on error including those
-+				 * ever succeeded in reading
-+				 */
-+				if (new_bh && bh) {
-+					/* If middle bh fails, let previous bh
-+					 * finish its read and then put it to
-+					 * aovoid bh leak
-+					 */
-+					if (!buffer_jbd(bh))
-+						wait_on_buffer(bh);
-+					put_bh(bh);
-+					bhs[i] = NULL;
-+				} else if (bh && buffer_uptodate(bh)) {
-+					clear_buffer_uptodate(bh);
-+				}
- 				continue;
- 			}
- 			/* We know this can't have changed as we hold the
-@@ -341,9 +387,7 @@ int ocfs2_read_blocks(struct ocfs2_caching_info *ci, u64 block, int nr,
- 				 * uptodate. */
- 				status = -EIO;
- 				clear_buffer_needs_validate(bh);
--				put_bh(bh);
--				bhs[i] = NULL;
--				continue;
-+				goto read_failure;
- 			}
- 
- 			if (buffer_needs_validate(bh)) {
-@@ -353,11 +397,8 @@ int ocfs2_read_blocks(struct ocfs2_caching_info *ci, u64 block, int nr,
- 				BUG_ON(buffer_jbd(bh));
- 				clear_buffer_needs_validate(bh);
- 				status = validate(sb, bh);
--				if (status) {
--					put_bh(bh);
--					bhs[i] = NULL;
--					continue;
--				}
-+				if (status)
-+					goto read_failure;
- 			}
- 		}
- 
+ #ifdef CONFIG_MEMORY_HOTREMOVE
 -- 
 2.20.1
 
