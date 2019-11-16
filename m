@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 749A2C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 457C5C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44C1321843
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10CB52186D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919683;
-	bh=dvvlDb/+0VMhtBKkl1moFhh/et82E8jtpyGoaFbPt7I=;
+	s=default; t=1573919687;
+	bh=itihUV75LrKfmppqFKpEer/o557PHmae8JTZEu0oCCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JymuTwANW/JcRRfyNI8lOZUU0nFQFw9MKEZU6RtJkGIXGdbpZoUs/CaWwj4zRsyek
-	 TBzkBZ8bDY/isQsRFB7w21oA29bsMNU1E/ZWjlxNtrH3hthBe+tnWDYPnOgYaDzGKe
-	 hU8Yfoj8SfyPKSl2+OfDFJ4aL8Y5lLedzUSTmo1o=
+	b=NvAFcuR/2yV++nKnydL93yOeewV9AVBX/9/A9Sls55nQG92tJMNOdD8mUNCXY7AbL
+	 8L2LBjkVhri0h4GyXd5cTv4/aii983zpQt6WVgOV3W/bmFg4aIQdYdtzN75puYtX9Q
+	 FUx/u9xlhZkST/b9PeKGQefI+LXoxpc8DaW1Qpok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729839AbfKPPym (ORCPT
+        id S1731489AbfKPPyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:54:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36380 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:54:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731473AbfKPPyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:54:36 -0500
+        id S1731487AbfKPPym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:54:42 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21B50208E3;
-        Sat, 16 Nov 2019 15:54:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF1BA208E3;
+        Sat, 16 Nov 2019 15:54:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919676;
-        bh=dvvlDb/+0VMhtBKkl1moFhh/et82E8jtpyGoaFbPt7I=;
+        s=default; t=1573919682;
+        bh=itihUV75LrKfmppqFKpEer/o557PHmae8JTZEu0oCCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=evjR2RHT3QIlj262p48vE9Y5XkChUEbqEk14VaGcf67c3P0nlefwyj0aAJT7fBQYo
-         x/e0zHrzoc6IyOGgoTW/I9cRoTdiEsPMa2gKhCp7U2x3rwsfIyzmUpNYXCGkFUnYeA
-         CCqh2vEf2LhBZoaWLbV1FuO1pEE3+W9MXLA26t78=
+        b=1nEwnbmv7UTuEsUwziWRVy+qvbElVzAH70Yp7GGfGkUm0fw8bTjMnp3Mrn1TfYea7
+         elXFwNS97BiD5Iefx295iOvyUnK38gsufXiUzDTrX0laKsMb3FB32wveNb16glf9o0
+         nXcbashq162boee3w1wUVWyRRZHDNrEfN6nqXuqw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 43/77] um: Make line/tty semantics use true write IRQ
-Date:   Sat, 16 Nov 2019 10:53:05 -0500
-Message-Id: <20191116155339.11909-43-sashal@kernel.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Yury Norov <ynorov@caviumnetworks.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 45/77] linux/bitmap.h: fix type of nbits in bitmap_shift_right()
+Date:   Sat, 16 Nov 2019 10:53:07 -0500
+Message-Id: <20191116155339.11909-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -59,39 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-[ Upstream commit 917e2fd2c53eb3c4162f5397555cbd394390d4bc ]
+[ Upstream commit d9873969fa8725dc6a5a21ab788c057fd8719751 ]
 
-This fixes a long standing bug where large amounts of output
-could freeze the tty (most commonly seen on stdio console).
-While the bug has always been there it became more pronounced
-after moving to the new interrupt controller.
+Most other bitmap API, including the OOL version __bitmap_shift_right,
+take unsigned nbits.  This was accidentally left out from 2fbad29917c98.
 
-The line semantics are now changed to have true IRQ write
-semantics which should further improve the tty/line subsystem
-stability and performance
-
-Signed-off-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Link: http://lkml.kernel.org/r/20180818131623.8755-5-linux@rasmusvillemoes.dk
+Fixes: 2fbad29917c98 ("lib: bitmap: change bitmap_shift_right to take unsigned parameters")
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Reported-by: Yury Norov <ynorov@caviumnetworks.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/drivers/line.c | 2 +-
+ include/linux/bitmap.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/um/drivers/line.c b/arch/um/drivers/line.c
-index 62087028a9ce1..d2ad45c101137 100644
---- a/arch/um/drivers/line.c
-+++ b/arch/um/drivers/line.c
-@@ -260,7 +260,7 @@ static irqreturn_t line_write_interrupt(int irq, void *data)
- 	if (err == 0) {
- 		spin_unlock(&line->lock);
- 		return IRQ_NONE;
--	} else if (err < 0) {
-+	} else if ((err < 0) && (err != -EAGAIN)) {
- 		line->head = line->buffer;
- 		line->tail = line->buffer;
- 	}
+diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
+index e9d5df4315d94..714ce4a5e31fd 100644
+--- a/include/linux/bitmap.h
++++ b/include/linux/bitmap.h
+@@ -308,7 +308,7 @@ static __always_inline int bitmap_weight(const unsigned long *src, unsigned int
+ }
+ 
+ static inline void bitmap_shift_right(unsigned long *dst, const unsigned long *src,
+-				unsigned int shift, int nbits)
++				unsigned int shift, unsigned int nbits)
+ {
+ 	if (small_const_nbits(nbits))
+ 		*dst = (*src & BITMAP_LAST_WORD_MASK(nbits)) >> shift;
 -- 
 2.20.1
 
