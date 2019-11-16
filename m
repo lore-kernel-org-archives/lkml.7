@@ -2,159 +2,118 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7CCC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FCFC43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A251206E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58487206E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:03:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H7PIYRUD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vY1igBXZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbfKPPB0 (ORCPT
+        id S1727761AbfKPPDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:01:26 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43351 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727123AbfKPPB0 (ORCPT
+        Sat, 16 Nov 2019 10:03:15 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44087 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727691AbfKPPDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:01:26 -0500
-Received: by mail-io1-f67.google.com with SMTP id r2so8599443iot.10;
-        Sat, 16 Nov 2019 07:01:24 -0800 (PST)
+        Sat, 16 Nov 2019 10:03:15 -0500
+Received: by mail-wr1-f68.google.com with SMTP id f2so14112553wrs.11;
+        Sat, 16 Nov 2019 07:03:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=70Jvx3vkhwPfIehKPa34OVbS25rHZjyV2djtKv+JlWE=;
-        b=H7PIYRUDbc6WJrQp87zP4xTZ/29c7hX5O8LQqbCOEYR2zJZEYNBl8zkRUyMIgVAGMP
-         KfkuHKN00XyfOle2o8EkV9sQSg9zAURlcr4Qm1QreMqvJCeHBPkVCy0WGr2nkjslxjDT
-         mPGRxxb0G4WdDYvkHB2kMAnrgMPVkd6npO8qKPnTg+ISRXmGbMttGEZVa7xzjGTJdoLg
-         ZfJo7rd+16kzXZBAjZvoz643nqNFKnDnKBlYqH5Jym4gNBJfP5rK6BghgIf8/p81QX40
-         fWorpFLbGrrFPj0DOHBqE0CoLZznc2JtrOBXH1acWiVjiEI3/oQAafU9OnLxLXBBCZxx
-         wSCg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ts/Cau9oznV84QKj9dFCVAYvzPmUjunHN+Y97FI+mBs=;
+        b=vY1igBXZRByDldpJLifqIVJ9g1gaOPLjqrsOdaOwznC8QWDmvF88gQgWaUJElqppxv
+         vxLG9W3LCH1VdZsjaW5cfTjKC1FIHFIovqLeV0JBK9jMlTu70auTpdczF88JGNLHiBA7
+         5g8sROuwUoj/tyyqjTgZCchq11oW7RqjDWkDGqlq4FVHCq1IIoF3ZMpC03Dt046V/IWG
+         2FlR9DdnRr+7zhkRpwd8cuCJH2czgUdoBkHNvyWqUvfUnf6pGzs6J1F531YXjbQo/CaZ
+         GfN0nIlpTcbXrmeLB6OW4SanlJyyKqzg9uWZ0CtgA2GpMUJZEvM67d+aarvhq0qlWePu
+         sgjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=70Jvx3vkhwPfIehKPa34OVbS25rHZjyV2djtKv+JlWE=;
-        b=CfblOujECdPSIuvtfPBErfD9vBltVfVoMu7+vxKe9aadaWcGihGXt2UP4r6r8Uap28
-         tbri+PcleWKOMCoeLFhEgLX+vyPHWG0oLFVQXjkV6Poh9Oz/e1Y/rUo9/clrBaurNJ1h
-         kGVYj7KMKnjnf55ajSYRHDjCt+JE16Z2uEQuF9Gox1Jovfei/YeH/13AkxfauNN4thTd
-         mL0jLStPgfoFUW9ePIb/oyG5i4St2oIWeimePtaw3rJUxn4CHfqFZm6U8l3NhV4cquBn
-         3W774mL6ZSY9tHRITFUAbe9lNwMa3XjSlkZuWujyXQpHbNMptXevZzLTKMnYKl6iksDw
-         BK6w==
-X-Gm-Message-State: APjAAAXe3El1g9K9q1jnJ4vIPj1e1u/3JwzTnYeS4skw43todYJ87GZB
-        9U/0d0qJJ5oxePA9NRdegYMhhpEB+gtD+MRW6Rw=
-X-Google-Smtp-Source: APXvYqyhmf37mEXcw5Pd6HR9pfETRRsjLHxtOkhyTkLJwAWAmRFnuKpChj4SNEWrZdHjPE7ik/BGcyZvdI0JFEDYKcg=
-X-Received: by 2002:a6b:8bcc:: with SMTP id n195mr5557079iod.135.1573916483656;
- Sat, 16 Nov 2019 07:01:23 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ts/Cau9oznV84QKj9dFCVAYvzPmUjunHN+Y97FI+mBs=;
+        b=T6ehTn+KdpNZ6/w5A+H5dyD6C/jsauK7Tce/of6+0RmyD4Po2bME0/wOu6h1Ad+Cwy
+         Nz+ySMK8ypg8ZpyiENqnyGcZiUjxGKBtEzyfp1UvZYdb28/BTAJzEMb4OafmfQsQP05N
+         CCqOm3lyhFQoCQdjFvOnDcpTjiOnTHINq/AcsgHUqgTILohKJ0OpVClpuYsb6ZpyZ5zr
+         OF5n6oXdCXxtF450p1oeiF4FnUxvgT5ZShPe0b2Z7SifX0z6ZEcPUuEcvc2rUT0WRDJJ
+         SG1tVBM0dNAR2WOU0HbrQ65RscQ12IU+iJnebiRde1gKYm7fZZv9gCzhNUw2MiWjA/cm
+         3fmA==
+X-Gm-Message-State: APjAAAWty9fP3oJ70TlLE0J3mc4oHmmiuwvvUx9KSN+o2YY/x+BfGsyi
+        EKzXKsECGbZuG4znQfQBLMA=
+X-Google-Smtp-Source: APXvYqwhXdR402iqMvF8f/j3Zulop2bF3MFttatFbIkCn1lzVFrLzQ4dLrgzNllrMYhcZnxmpE6E5g==
+X-Received: by 2002:a5d:660b:: with SMTP id n11mr22071427wru.146.1573916592737;
+        Sat, 16 Nov 2019 07:03:12 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id x205sm15663732wmb.5.2019.11.16.07.03.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 16 Nov 2019 07:03:11 -0800 (PST)
+Date:   Sat, 16 Nov 2019 16:03:10 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Giovanni Mascellani <gio@debian.org>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon: (dell-smm-hwmon) Disable BIOS fan control on
+ SET_FAN
+Message-ID: <20191116150310.dlhjrr3kyh7fsykf@pali>
+References: <20191114211408.22123-1-gio@debian.org>
 MIME-Version: 1.0
-References: <cover.1573788882.git.yu.c.chen@intel.com> <5dcd6580b51342c0803db6bc27866dd569914b0d.1573788882.git.yu.c.chen@intel.com>
- <20191115092420.GF18929@zn.tnic>
-In-Reply-To: <20191115092420.GF18929@zn.tnic>
-From:   Ryan Chen <yu.chen.surf@gmail.com>
-Date:   Sat, 16 Nov 2019 23:01:12 +0800
-Message-ID: <CADjb_WR_DNAR_4jVEJ1C4LO7Xfnc54J2u2AoqyCjZT39+AhrWA@mail.gmail.com>
-Subject: Re: [PATCH 2/2][v2] x86/resctrl: Add task resctrl information display
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Chen Yu <yu.c.chen@intel.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        Christian Brauner <christian@brauner.io>,
-        Shakeel Butt <shakeelb@google.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="7tkusd6mbxqavr5z"
+Content-Disposition: inline
+In-Reply-To: <20191114211408.22123-1-gio@debian.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
-On Fri, Nov 15, 2019 at 5:25 PM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Fri, Nov 15, 2019 at 01:25:06PM +0800, Chen Yu wrote:
-> > Monitoring tools that want to find out which resctrl CTRL
-> > and MONITOR groups a task belongs to must currently read
-> > the "tasks" file in every group until they locate the process
-> > ID.
-> >
-> > Add an additional file /proc/{pid}/resctrl to provide this
-> > information.
-> >
-> > For example:
-> >  cat /proc/1193/resctrl
-> > CTRL_MON:/ctrl_grp0
-> > MON:/ctrl_grp0/mon_groups/mon_grp0
-> >
-> > If the resctrl filesystem has not been mounted,
-> > reading /proc/{pid}/resctrl returns an error:
-> > cat: /proc/1193/resctrl: No such device
->
-> Eww, this doesn't sound very user-friendly. How is the user supposed to
-> know that the resctrl fs needs to be mounted for this to work?
->
-> Why does the resctrl fs need to be mounted at all to show this?
->
-> I'm guessing if it is not mounted, you have no groups so you don't have
-> to return an error - you simply return "". Right?
->
-Right, we can return 'blank' to user and let the user to parse the information.
-And there is a similar behavior in cgroup that, for kernel thread that
-does not belong
-to any cgroup, /proc/{pid}/cgroup just show 'blank' without returning an error.
 
-> > Tested-by: Jinshi Chen <jinshi.chen@intel.com>
-> > Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-> > Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
-> > Reviewed-by: Tony Luck <tony.luck@intel.com>
->
-> When you send a new version which has non-trivial changes, you should
-> drop those tags because they don't apply anymore. Unless those people
-> have managed to review and test the new version ...
->
-Got it, thanks for telling me this.
-> Looking at CONFIG_PROC_PID_ARCH_STATUS for an example of proc/ calling
-> arch-specific functions, I guess you need to do:
->
-> select CPU_RESCTRL if PROC_FS
->
-Yes, only when PROC_FS is set, /proc/{pid}/resctrl
-can be displayed. However, CPU_RESCTRL might not
-depend on proc fs, it is possible that the CPU_RESCTRL
-is enabled but without PROC_FS set. If I understand correctly,
- CPU_RESCTRL is the 'root' config for X86_CPU_RESCTRL,
-after reading this thread:
-https://lists.gt.net/linux/kernel/3211659
- If this is the case, shall we add the new file at kernel/resctrl/resctrl.c?
-And the generic proc_resctrl_show() could be put into this file. In the future
-the generic code for resctrl could be added/moved to kernel/resctrl/resctrl.c
+--7tkusd6mbxqavr5z
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Chenyu
+On Thursday 14 November 2019 22:14:08 Giovanni Mascellani wrote:
+> +#define I8K_SMM_DISABLE_BIOS	0x30a3
+> +#define I8K_SMM_ENABLE_BIOS	0x31a3
 
-> Thx.
->
-> --
-> Regards/Gruss,
->     Boris.
->
-> https://people.kernel.org/tglx/notes-about-netiquette
+In my old notes I have written these two comments:
+
+0x30a3  disable the Fn- key combinations (except the volume functions) key =
+and disable BIOS auto fan control (no args)
+0x31a3  enable the Fn- key combinations (except the volume functions) key a=
+nd enable BIOS auto fan control (no args)
+
+So seems that these two commands have some side effect on some
+machines.
+
+For 0x34a3/0x35a3 I have only these comments:
+
+0x34a3  disable BIOS auto fan control (no args)
+0x35a3  enable BIOS auto fan control (no args)
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--7tkusd6mbxqavr5z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXdAPrAAKCRCL8Mk9A+RD
+UjJRAJ95ij/W/aSdbiOocV6rkc/yhSY40gCbBACMEV+fSdVywC+gLlNb25KF7nQ=
+=MQjG
+-----END PGP SIGNATURE-----
+
+--7tkusd6mbxqavr5z--
