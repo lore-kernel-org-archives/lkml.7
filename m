@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 713A0C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF59FC43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 491E521479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A078C214DE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920981;
-	bh=/UtcM2CJ+MzcFJltihVFYIShK9Fi91fdbH/dA9RjkHs=;
+	s=default; t=1573920988;
+	bh=kZ8zWA2dW+43AmUKUBWUQPRKVQv73HqDZw+2W139/QY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yMWMWZHOAfHb61GoDauduE/0yxlutRdczrrq8eui1A0A7q159P0OuKIh3dxV47mtM
-	 qOlk0IwK/uww+Uj7ip1mJy6g3ie1GlrXpMRq5LfGvCDiNlydxGgtcow6/jV/ktZTqE
-	 SqfevhK1LBHEdshawdjKeNgnWD+bRn9wQjnTeIZA=
+	b=pmNI47B4lyuFI9VQDP7kemsTWJaUZjAsHyJCoUVRZvt5DXy2Pv6IZk9wAsot7hpD5
+	 JbGEEnJd9bKBYpoThflhq1HfQyuZ51+iZNTkfgW6hyX0IwyYiIWmIWbrAj2bHR/YuC
+	 rLtynzXKieWACrkHLmIN77Njh9zUUI/72LgWncps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731956AbfKPQQT (ORCPT
+        id S1731202AbfKPQQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:16:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53682 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:16:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728892AbfKPPrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729597AbfKPPrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 16 Nov 2019 10:47:03 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0833520855;
+        by mail.kernel.org (Postfix) with ESMTPSA id 62F8D2133F;
         Sat, 16 Nov 2019 15:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919223;
-        bh=/UtcM2CJ+MzcFJltihVFYIShK9Fi91fdbH/dA9RjkHs=;
+        s=default; t=1573919222;
+        bh=kZ8zWA2dW+43AmUKUBWUQPRKVQv73HqDZw+2W139/QY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XnBauPPrY73SBV8wpD2xyd2vISE6Cuob0YSM1O22s9myl0RGwSRVWbGvZ2BkXthOG
-         H5iilzB4n6/rASJ/r6vM1BsQWqDTUVZE/zyoFBs3loH7y+g/YkAoNf9hFo7SSJ+VqM
-         Y2XTW2rjkggV/Z2ywOAKjyKSwkHJzcE0GhHsDn8E=
+        b=b4ggr0lHaemtpOzYvpM3QVjjjyV1n/ND5yHRmN/6bcVbn4sen8rcAKOEebXCc+ju7
+         Yd47gmL43zIPUfUYaLjlsP1w32tWFXDYbIx3pENgVodIhVoDQDYjoNJNR1rcx6WJv1
+         xwPlw1r4b3pMnbLru0uRHfASeZGvmHDSZhx8wGCI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Masney <masneyb@onstation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 227/237] pinctrl: qcom: spmi-gpio: fix gpio-hog related boot issues
-Date:   Sat, 16 Nov 2019 10:41:02 -0500
-Message-Id: <20191116154113.7417-227-sashal@kernel.org>
+Cc:     Sriram R <srirrama@codeaurora.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 226/237] cfg80211: Prevent regulatory restore during STA disconnect in concurrent interfaces
+Date:   Sat, 16 Nov 2019 10:41:01 -0500
+Message-Id: <20191116154113.7417-226-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,60 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Masney <masneyb@onstation.org>
+From: Sriram R <srirrama@codeaurora.org>
 
-[ Upstream commit 149a96047237574b756d872007c006acd0cc6687 ]
+[ Upstream commit 113f3aaa81bd56aba02659786ed65cbd9cb9a6fc ]
 
-When attempting to setup up a gpio hog, device probing would repeatedly
-fail with -EPROBE_DEFERED errors. It was caused by a circular dependency
-between the gpio and pinctrl frameworks. If the gpio-ranges property is
-present in device tree, then the gpio framework will handle the gpio pin
-registration and eliminate the circular dependency.
+Currently when an AP and STA interfaces are active in the same or different
+radios, regulatory settings are restored whenever the STA disconnects. This
+restores all channel information including dfs states in all radios.
+For example, if an AP interface is active in one radio and STA in another,
+when radar is detected on the AP interface, the dfs state of the channel
+will be changed to UNAVAILABLE. But when the STA interface disconnects,
+this issues a regulatory disconnect hint which restores all regulatory
+settings in all the radios attached and thereby losing the stored dfs
+state on the other radio where the channel was marked as unavailable
+earlier. Hence prevent such regulatory restore whenever another active
+beaconing interface is present in the same or other radios.
 
-See Christian Lamparter's commit a86caa9ba5d7 ("pinctrl: msm: fix
-gpio-hog related boot issues") for a detailed commit message that
-explains the issue in much more detail. The code comment in this commit
-came from Christian's commit.
-
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sriram R <srirrama@codeaurora.org>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ net/wireless/sme.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index cf82db78e69e6..0c30f5eb4c714 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -1028,10 +1028,23 @@ static int pmic_gpio_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	ret = gpiochip_add_pin_range(&state->chip, dev_name(dev), 0, 0, npins);
--	if (ret) {
--		dev_err(dev, "failed to add pin range\n");
--		goto err_range;
-+	/*
-+	 * For DeviceTree-supported systems, the gpio core checks the
-+	 * pinctrl's device node for the "gpio-ranges" property.
-+	 * If it is present, it takes care of adding the pin ranges
-+	 * for the driver. In this case the driver can skip ahead.
-+	 *
-+	 * In order to remain compatible with older, existing DeviceTree
-+	 * files which don't set the "gpio-ranges" property or systems that
-+	 * utilize ACPI the driver has to call gpiochip_add_pin_range().
-+	 */
-+	if (!of_property_read_bool(dev->of_node, "gpio-ranges")) {
-+		ret = gpiochip_add_pin_range(&state->chip, dev_name(dev), 0, 0,
-+					     npins);
-+		if (ret) {
-+			dev_err(dev, "failed to add pin range\n");
-+			goto err_range;
-+		}
- 	}
- 
- 	return 0;
+diff --git a/net/wireless/sme.c b/net/wireless/sme.c
+index d536b07582f8c..c7047c7b4e80f 100644
+--- a/net/wireless/sme.c
++++ b/net/wireless/sme.c
+@@ -642,11 +642,15 @@ static bool cfg80211_is_all_idle(void)
+ 	 * All devices must be idle as otherwise if you are actively
+ 	 * scanning some new beacon hints could be learned and would
+ 	 * count as new regulatory hints.
++	 * Also if there is any other active beaconing interface we
++	 * need not issue a disconnect hint and reset any info such
++	 * as chan dfs state, etc.
+ 	 */
+ 	list_for_each_entry(rdev, &cfg80211_rdev_list, list) {
+ 		list_for_each_entry(wdev, &rdev->wiphy.wdev_list, list) {
+ 			wdev_lock(wdev);
+-			if (wdev->conn || wdev->current_bss)
++			if (wdev->conn || wdev->current_bss ||
++			    cfg80211_beaconing_iface_active(wdev))
+ 				is_all_idle = false;
+ 			wdev_unlock(wdev);
+ 		}
 -- 
 2.20.1
 
