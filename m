@@ -2,98 +2,151 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED66AC43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 13:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD03C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 14:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C75C8206D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 13:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07D54206D5
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 14:00:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="gor+OKjQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hM7nbd5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbfKPN41 (ORCPT
+        id S1727658AbfKPOAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 08:56:27 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:44912 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727551AbfKPN40 (ORCPT
+        Sat, 16 Nov 2019 09:00:35 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39121 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727551AbfKPOAf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 08:56:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1573912585; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=XtMiD4L8Mgswux/la2nsChygCf/Wix4n1q7sgFMyzbs=;
-        b=gor+OKjQzzT9o51Vg9CwAiSyZIAW9gc5B9ChfIeGHNp/vaNq8JdWn+sx0qr5k6Fi1mM8mN
-        Ok/AMoyPDe1bbez6taaooAfOtn6gyZzARXz4zC+oNwO5uhIE+WkUr9mk8l48LJHBqebnue
-        xyLGCMaZ+cz1ENwHYiwKKeOdKNwa0l4=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me,
-        Paul Cercueil <paul@crapouillou.net>, stable@vger.kernel.org
-Subject: [PATCH v3] power/supply: ingenic-battery: Don't change scale if there's only one
-Date:   Sat, 16 Nov 2019 14:56:19 +0100
-Message-Id: <20191116135619.9545-1-paul@crapouillou.net>
+        Sat, 16 Nov 2019 09:00:35 -0500
+Received: by mail-ed1-f67.google.com with SMTP id l25so9802117edt.6;
+        Sat, 16 Nov 2019 06:00:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vg6OMNguE37yRu0lZWDv0k0PCtncGHdIM9h+B2HKyM0=;
+        b=hM7nbd5gGgND0V7S1OiJOui/OwV0wmHX9tSl/bTxGNE7cP8pbplWyA0REo22B/wq4R
+         tGLDzmpndHJ2i2WBe2nt+ObWvTgRjMVUkfbghIQHlVHtMasiQFqOAu6HwyG1DSPMuDBB
+         ODU2sInhuDbf63eETl+wljibS4V3NR6f1aPtm0h+PPNBMxtV8d9tupKD1SODlsd9f7pS
+         BWVcqT/Ee2WwGYP82RF1qKA3riDKux5hbgZwqDxFu/pew2ep809Y5oQGx9Cx5TrFhGMH
+         UaEj8vZjva6d0sElsNieq8b82U1HG5g0wckLy6LsJM5q+EbPgz9y4+y0UuaDH8kp/8kR
+         dLtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vg6OMNguE37yRu0lZWDv0k0PCtncGHdIM9h+B2HKyM0=;
+        b=X/MrQBtV8WfCsVwOISw+V4YOr7SQhBQvP3Qy3DWeuqoaqO8cL4Ezxmg4E6Df7ZD/RW
+         WqhNrSHGlDrZ4Uwe3tBxs77m3NgOLb6NbnjCtAAIzniJkSE7PdOpzG+0EVsVnpSo2m2w
+         6tpR5r+eSjfrYEk+ZvkkTFQ+sBH3qUaAcSqTCiOow9IeUgywoM31ccob6FxKTrmZxthM
+         AxQeEaILViCHJLB7J6pRyq/HqwcSbLPCf0umtcs1nCWnU47vKiZ+RSDPnjpMFUlcJWs3
+         xt7mUqQgxF3if3jffvotBbjuFL43sbb1iTiD+reeSEFF+smi0r0b62yxKPEZEM3Eu8K5
+         24lA==
+X-Gm-Message-State: APjAAAUDYmHMc8vOg7GJDR+jWiE3HiMeEFtxcJmefVkgQVckVoLLD5+H
+        hjfRAOEk9yRaUfpkiqFz590tGgCdeQcWnZlW377GAEsL
+X-Google-Smtp-Source: APXvYqxj3xRFkMYxP+BopeZ8IgN78tBvhLNLSsp0WDlo7FxOG5yBwZDICwp9PI+Z2EhY9uaorCeokmEjFFgZIv24D4Q=
+X-Received: by 2002:a17:906:a388:: with SMTP id k8mr9654605ejz.223.1573912833541;
+ Sat, 16 Nov 2019 06:00:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191112112830.27561-1-hslester96@gmail.com> <20191115.121050.591805779332799354.davem@davemloft.net>
+ <VI1PR0402MB3600CE74E0EC86AC97F25026FF730@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR0402MB3600CE74E0EC86AC97F25026FF730@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Sat, 16 Nov 2019 22:00:21 +0800
+Message-ID: <CANhBUQ1VZMV4MKqs95mJnZPLeDnhAgjgLTSaqL_pY08GGzM-mQ@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH net v2] net: fec: add a check for CONFIG_PM to
+ avoid clock count mis-match
+To:     Andy Duan <fugang.duan@nxp.com>
+Cc:     David Miller <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ADC in the JZ4740 can work either in high-precision mode with a 2.5V
-range, or in low-precision mode with a 7.5V range. The code in place in
-this driver will select the proper scale according to the maximum
-voltage of the battery.
+On Sat, Nov 16, 2019 at 2:57 PM Andy Duan <fugang.duan@nxp.com> wrote:
+>
+> From: David Miller <davem@davemloft.net> Sent: Saturday, November 16, 2019 4:11 AM
+> > From: Chuhong Yuan <hslester96@gmail.com>
+> > Date: Tue, 12 Nov 2019 19:28:30 +0800
+> >
+> > > If CONFIG_PM is enabled, runtime pm will work and call runtime_suspend
+> > > automatically to disable clks.
+> > > Therefore, remove only needs to disable clks when CONFIG_PM is disabled.
+> > > Add this check to avoid clock count mis-match caused by double-disable.
+> > >
+> > > Fixes: c43eab3eddb4 ("net: fec: add missed clk_disable_unprepare in
+> > > remove")
+> > > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> >
+> > Your explanation in your reply to my feedback still doesn't explain the
+> > situation to me.
+> >
+> > For every clock enable done during probe, there must be a matching clock
+> > disable during remove.
+> >
+> > Period.
+> >
+> > There is no CONFIG_PM guarding the clock enables during probe in this driver,
+> > therefore there should be no reason to require CONFIG_PM guards to the
+> > clock disables during the remove method,
+> >
+> > You have to explain clearly, and in detail, why my logic and analysis of this
+> > situation is not correct.
+> >
+> > And when you do so, you will need to add those important details to the
+> > commit message of this change and submit a v3.
+> >
+> > Thank you.
+>
+> I agree with David. Below fixes is more reasonable.
+> Chuhong, if there has no voice about below fixes, you can submit v3 later.
+>
 
-The JZ4770 however only has one mode, with a 6.6V range. If only one
-scale is available, there's no need to change it (and nothing to change
-it to), and trying to do so will fail with -EINVAL.
+I get confused that how does this work to solve the CONFIG_PM problem.
+And why do we need to adjust the position of the latter four functions?
+I need to explain them in the commit message.
 
-Fixes: fb24ccfbe1e0 ("power: supply: add Ingenic JZ47xx battery driver.")
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Cc: stable@vger.kernel.org
----
-
-Notes:
-    v2: Rebased on v5.4-rc7
-    v3: Move code after check for max scale voltage
-
- drivers/power/supply/ingenic-battery.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/power/supply/ingenic-battery.c b/drivers/power/supply/ingenic-battery.c
-index 35816d4b3012..2748715c4c75 100644
---- a/drivers/power/supply/ingenic-battery.c
-+++ b/drivers/power/supply/ingenic-battery.c
-@@ -100,10 +100,17 @@ static int ingenic_battery_set_scale(struct ingenic_battery *bat)
- 		return -EINVAL;
- 	}
- 
--	return iio_write_channel_attribute(bat->channel,
--					   scale_raw[best_idx],
--					   scale_raw[best_idx + 1],
--					   IIO_CHAN_INFO_SCALE);
-+	/* Only set scale if there is more than one (fractional) entry */
-+	if (scale_len > 2) {
-+		ret = iio_write_channel_attribute(bat->channel,
-+						  scale_raw[best_idx],
-+						  scale_raw[best_idx + 1],
-+						  IIO_CHAN_INFO_SCALE);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
- }
- 
- static enum power_supply_property ingenic_battery_properties[] = {
--- 
-2.24.0
-
+> @@ -3636,6 +3636,11 @@ fec_drv_remove(struct platform_device *pdev)
+>         struct net_device *ndev = platform_get_drvdata(pdev);
+>         struct fec_enet_private *fep = netdev_priv(ndev);
+>         struct device_node *np = pdev->dev.of_node;
+> +       int ret;
+> +
+> +       ret = pm_runtime_get_sync(&pdev->dev);
+> +       if (ret < 0)
+> +               return ret;
+>
+>         cancel_work_sync(&fep->tx_timeout_work);
+>         fec_ptp_stop(pdev);
+> @@ -3643,15 +3648,17 @@ fec_drv_remove(struct platform_device *pdev)
+>         fec_enet_mii_remove(fep);
+>         if (fep->reg_phy)
+>                 regulator_disable(fep->reg_phy);
+> -       pm_runtime_put(&pdev->dev);
+> -       pm_runtime_disable(&pdev->dev);
+> -       clk_disable_unprepare(fep->clk_ahb);
+> -       clk_disable_unprepare(fep->clk_ipg);
+> +
+>         if (of_phy_is_fixed_link(np))
+>                 of_phy_deregister_fixed_link(np);
+>         of_node_put(fep->phy_node);
+>         free_netdev(ndev);
+>
+> +       clk_disable_unprepare(fep->clk_ahb);
+> +       clk_disable_unprepare(fep->clk_ipg);
+> +       pm_runtime_put_noidle(&pdev->dev);
+> +       pm_runtime_disable(&pdev->dev);
+> +
+>         return 0;
+>  }
+>
+> Regards,
+> Fugang Duan
