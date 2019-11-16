@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E3BC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C7DC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A57421479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D362168B
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919762;
-	bh=tHz6rQfVRrlihB6AmfT2FhFCw8KS4l93N13Y6nXzowU=;
+	s=default; t=1573919766;
+	bh=MJkrTnZhYe4LTAXlDBRFqF4QGe98ekRj43Q6Mgu8rWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q4dHnke5LPV370UxQyyiepLJ45VDE0X+2SZQbZixB8wyaeJoyj2Bv3zFgEnZFbzoP
-	 7AKFsopo60ZgDq+CBDj0/on8to30FJXLv2AMETstb9xhDUq/V9PFU8tqhjeSRh9u1B
-	 7mC0/v/YE43m7Ci0aDmlydkPRGiWFFCNNQny2xSk=
+	b=w0rtBJYMNuY+T/0rwD9UFMjkmv2rmdecO5pboUIVfL7TYpBigZwqKNkFmKoF6QeMA
+	 7mWq+qVWg0c7ioxS6E4B8Bw0mgblHjMjZzJZal2Gcc5jGfN2KGYyS1FgkeGOPe+AYs
+	 8q0tXO8SHg1Pc9DaaLSxXwIBelV5UG4NYNVS2A5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731638AbfKPP4B (ORCPT
+        id S1731661AbfKPP4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:56:01 -0500
+        Sat, 16 Nov 2019 10:56:05 -0500
 Received: from mail.kernel.org ([198.145.29.99]:37628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731627AbfKPPzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:55:33 -0500
+        id S1731624AbfKPPza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:55:30 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A25B92192D;
-        Sat, 16 Nov 2019 15:55:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D22F02192C;
+        Sat, 16 Nov 2019 15:55:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919732;
-        bh=tHz6rQfVRrlihB6AmfT2FhFCw8KS4l93N13Y6nXzowU=;
+        s=default; t=1573919730;
+        bh=MJkrTnZhYe4LTAXlDBRFqF4QGe98ekRj43Q6Mgu8rWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2IAX7hRBOK7uSI/oP6sQi5n53JJ4J0oPkmMsnH4Yi1pI35Kqqta3nDxeg0GuFUn/r
-         NlE5bTLz7v0LSbn8pKMjJ7wQqcI8DnII5IgF5SwY2BQwVYHrFjc4cS5C9KnErDBafa
-         bVOM2dowvxDrj78cdBcijEqYyJ+g1hA4wsJPkcHw=
+        b=Xe2uYWcb9cTg8r96hjyUN9Eize7Er0K9HmiaBhtxzK1oPgyN7wuAifj+MntwRwFPp
+         JAdJbr75nLBYCAPNKA41izBl96V4/MfWWgA6f8/Nncht5VBQuHCYIPotDWO3l9/O4Q
+         Gi0GdVAvvsM27mqWseE3dlZecxzKjZ9OAbQhVeAQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Masney <masneyb@onstation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 74/77] pinctrl: qcom: spmi-gpio: fix gpio-hog related boot issues
-Date:   Sat, 16 Nov 2019 10:53:36 -0500
-Message-Id: <20191116155339.11909-74-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 72/77] net: bcmgenet: return correct value 'ret' from bcmgenet_power_down
+Date:   Sat, 16 Nov 2019 10:53:34 -0500
+Message-Id: <20191116155339.11909-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -60,60 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Masney <masneyb@onstation.org>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 149a96047237574b756d872007c006acd0cc6687 ]
+[ Upstream commit 0db55093b56618088b9a1d445eb6e43b311bea33 ]
 
-When attempting to setup up a gpio hog, device probing would repeatedly
-fail with -EPROBE_DEFERED errors. It was caused by a circular dependency
-between the gpio and pinctrl frameworks. If the gpio-ranges property is
-present in device tree, then the gpio framework will handle the gpio pin
-registration and eliminate the circular dependency.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-See Christian Lamparter's commit a86caa9ba5d7 ("pinctrl: msm: fix
-gpio-hog related boot issues") for a detailed commit message that
-explains the issue in much more detail. The code comment in this commit
-came from Christian's commit.
+drivers/net/ethernet/broadcom/genet/bcmgenet.c: In function 'bcmgenet_power_down':
+drivers/net/ethernet/broadcom/genet/bcmgenet.c:1136:6: warning:
+ variable 'ret' set but not used [-Wunused-but-set-variable]
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+bcmgenet_power_down should return 'ret' instead of 0.
+
+Fixes: ca8cf341903f ("net: bcmgenet: propagate errors from bcmgenet_power_down")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index 4ea810cafaac6..913b2604d3454 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -793,10 +793,23 @@ static int pmic_gpio_probe(struct platform_device *pdev)
- 		goto err_chip;
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+index 04fe570275cd6..34fae5576b603 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -1074,7 +1074,7 @@ static int bcmgenet_power_down(struct bcmgenet_priv *priv,
+ 		break;
  	}
  
--	ret = gpiochip_add_pin_range(&state->chip, dev_name(dev), 0, 0, npins);
--	if (ret) {
--		dev_err(dev, "failed to add pin range\n");
--		goto err_range;
-+	/*
-+	 * For DeviceTree-supported systems, the gpio core checks the
-+	 * pinctrl's device node for the "gpio-ranges" property.
-+	 * If it is present, it takes care of adding the pin ranges
-+	 * for the driver. In this case the driver can skip ahead.
-+	 *
-+	 * In order to remain compatible with older, existing DeviceTree
-+	 * files which don't set the "gpio-ranges" property or systems that
-+	 * utilize ACPI the driver has to call gpiochip_add_pin_range().
-+	 */
-+	if (!of_property_read_bool(dev->of_node, "gpio-ranges")) {
-+		ret = gpiochip_add_pin_range(&state->chip, dev_name(dev), 0, 0,
-+					     npins);
-+		if (ret) {
-+			dev_err(dev, "failed to add pin range\n");
-+			goto err_range;
-+		}
- 	}
+-	return 0;
++	return ret;
+ }
  
- 	return 0;
+ static void bcmgenet_power_up(struct bcmgenet_priv *priv,
 -- 
 2.20.1
 
