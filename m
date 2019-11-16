@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362CBC43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0361AC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 030D62084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C23D620836
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919177;
-	bh=O+KNYKwrYXlnpwO1GIlUFnzRl1BQrKkUD6M9YTg3B08=;
+	s=default; t=1573919183;
+	bh=wX4O2JHToNm4AF5thow3+D7uWZoA5jbNZGRyT/NCEgo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t5wTokhnLIpc8ttWMAIHIb0ED+xsvsVfBIMdqzNuhan2WewWRX8QWUKVUFGSDMtce
-	 tNKPQSbG1L5XpZN2IVg+hyH8ZRriEkpzp+Ng8CjTx0CUeT/HxmRXoGrhtKTy0XbG0m
-	 zhvj8671pCGdI1RAc8gXjbb1+2hlMUFvhHld2iVs=
+	b=qoybARqdLvvdYh6rMdikDp4wDyYI5at60bgBg3HGoeNxbAzvNq56QY8+UkkwWEgtL
+	 nEv625JkkGTDhKHci5/Ogwf+szcxC078VQEbkj119/WpnpSuWUP4gGQcq/eJa+5iOx
+	 YDrS06qanvWCZXSSmMhWnqZP5cMfMz7du+KfjWI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbfKPPqP (ORCPT
+        id S1729362AbfKPPqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:46:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52232 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:46:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727972AbfKPPqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:46:06 -0500
+        id S1729279AbfKPPqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:05 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93A8020862;
+        by mail.kernel.org (Postfix) with ESMTPSA id 0782A2083B;
         Sat, 16 Nov 2019 15:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1573919165;
-        bh=O+KNYKwrYXlnpwO1GIlUFnzRl1BQrKkUD6M9YTg3B08=;
+        bh=wX4O2JHToNm4AF5thow3+D7uWZoA5jbNZGRyT/NCEgo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Er3rUtXv+Y1+XVmsvMFWTRe8OvQAb1eVO1C/ofNlm6zPc57NcnCahrIT2VnKjkW1t
-         MpANyNsjwesOQFZBMNWrTFn0CnNJHtZjax7qrsFcWXaImyattNF/IND4OuDiCSNw3t
-         yKG97VIioXgxWN2nVz970L3JbLmRh3kYIi3s6o/s=
+        b=HbpCe8VRKY17xsavJd4m44nlQy754bLocd9UzlTA3NMndehqt3Ql5FrgJfUCmfQZD
+         reJS2CxX4X+nhr9RoiUjARbfc+wXd0OtIWGFYZ0iKTslJXc9w5RFSSWwEMKrdSDBZ1
+         8BncWmHIX2njIb/CxLQZWc+8fP171aEeZVfGRukc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        KY Srinivasan <kys@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 174/237] irq/matrix: Fix memory overallocation
-Date:   Sat, 16 Nov 2019 10:40:09 -0500
-Message-Id: <20191116154113.7417-174-sashal@kernel.org>
+Cc:     Dave Jiang <dave.jiang@intel.com>, Lucas Van <lucas.van@intel.com>,
+        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
+        linux-ntb@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 173/237] ntb: intel: fix return value for ndev_vec_mask()
+Date:   Sat, 16 Nov 2019 10:40:08 -0500
+Message-Id: <20191116154113.7417-173-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,40 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Kelley <mikelley@microsoft.com>
+From: Dave Jiang <dave.jiang@intel.com>
 
-[ Upstream commit 57f01796f14fecf00d330fe39c8d2477ced9cd79 ]
+[ Upstream commit 7756e2b5d68c36e170a111dceea22f7365f83256 ]
 
-IRQ_MATRIX_SIZE is the number of longs needed for a bitmap, multiplied by
-the size of a long, yielding a byte count. But it is used to size an array
-of longs, which is way more memory than is needed.
+ndev_vec_mask() should be returning u64 mask value instead of int.
+Otherwise the mask value returned can be incorrect for larger
+vectors.
 
-Change IRQ_MATRIX_SIZE so it is just the number of longs needed and the
-arrays come out the correct size.
+Fixes: e26a5843f7f5 ("NTB: Split ntb_hw_intel and ntb_transport drivers")
 
-Fixes: 2f75d9e1c905 ("genirq: Implement bitmap matrix allocator")
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: KY Srinivasan <kys@microsoft.com>
-Link: https://lkml.kernel.org/r/1541032428-10392-1-git-send-email-mikelley@microsoft.com
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Tested-by: Lucas Van <lucas.van@intel.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/irq/matrix.c | 2 +-
+ drivers/ntb/hw/intel/ntb_hw_gen1.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/irq/matrix.c b/kernel/irq/matrix.c
-index 92337703ca9fd..30cc217b86318 100644
---- a/kernel/irq/matrix.c
-+++ b/kernel/irq/matrix.c
-@@ -8,7 +8,7 @@
- #include <linux/cpu.h>
- #include <linux/irq.h>
+diff --git a/drivers/ntb/hw/intel/ntb_hw_gen1.c b/drivers/ntb/hw/intel/ntb_hw_gen1.c
+index 6aa5732272791..2ad263f708da7 100644
+--- a/drivers/ntb/hw/intel/ntb_hw_gen1.c
++++ b/drivers/ntb/hw/intel/ntb_hw_gen1.c
+@@ -265,7 +265,7 @@ static inline int ndev_db_clear_mask(struct intel_ntb_dev *ndev, u64 db_bits,
+ 	return 0;
+ }
  
--#define IRQ_MATRIX_SIZE	(BITS_TO_LONGS(IRQ_MATRIX_BITS) * sizeof(unsigned long))
-+#define IRQ_MATRIX_SIZE	(BITS_TO_LONGS(IRQ_MATRIX_BITS))
+-static inline int ndev_vec_mask(struct intel_ntb_dev *ndev, int db_vector)
++static inline u64 ndev_vec_mask(struct intel_ntb_dev *ndev, int db_vector)
+ {
+ 	u64 shift, mask;
  
- struct cpumap {
- 	unsigned int		available;
 -- 
 2.20.1
 
