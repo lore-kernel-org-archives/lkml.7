@@ -2,148 +2,129 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53200C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 04:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DC6C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 05:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C5EF2073B
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 04:38:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KJtGujYN"
+	by mail.kernel.org (Postfix) with ESMTP id 825F2207FA
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 05:50:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573883417;
+	bh=cqibmtWhugPFIdWWdJC/LaDl+aZlb97vNdXIjuHltc8=;
+	h=In-Reply-To:References:Cc:To:Subject:From:Date:List-ID:From;
+	b=mGZtJoBOJBbX2Mo73aHbH6H8+wiCcYPtJW2/lPXoqHupoEodGPLYsFQje/FAbYYTw
+	 TkaAn+Pa4rWfsUAoUlWvcfStQA5yDL+JXWi+vcdDyiVNe4+JmgCiiJEBl8zA9BXgmx
+	 YhZMMBZAEd54g4wuroNppP2BEmBhbjUkx4Hfiirk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbfKPEiP (ORCPT
+        id S1726067AbfKPFuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 23:38:15 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:34932 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727323AbfKPEiP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 23:38:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NcGo6y3a7xQQOSK5TngZP8uR7CqYMj91tUhuMqf+9Ns=; b=KJtGujYNRdJwEveOIs3XLtio4
-        XHcsmagpcP1yaA2N+7UrIE8V88n7OW4Do7IfTCYeR+d4q8v+G3r8Zir+Cp+wqGKc7HcyXxooyXm1i
-        jUE+uYz62ZT+621BjFs/KBU3haXSa51WqN5sxZOr6xU5RH76Y/Sz5sUAwn8r5wYzwdM5mfHtQUUs2
-        ZrfmLVkLLS3h61l7VCJuzpkz68DUwA0bDfpS9kSDMtYs2EMRC5HTkOW19cMl/t9SIEyiGCRFhHR5D
-        Twd3LrtrHICHuFYKljsa+iVV+hFFYEI2DXYCf/BJPck0X727I4xYwpczptlMf5e6Dk3CiwXvaYxO3
-        s/HDUXKow==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iVpqY-00079E-6F; Sat, 16 Nov 2019 04:38:06 +0000
-Date:   Fri, 15 Nov 2019 20:38:06 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH v3 3/7] mm/lru: replace pgdat lru_lock with lruvec lock
-Message-ID: <20191116043806.GD20752@bombadil.infradead.org>
-References: <1573874106-23802-1-git-send-email-alex.shi@linux.alibaba.com>
- <1573874106-23802-4-git-send-email-alex.shi@linux.alibaba.com>
+        Sat, 16 Nov 2019 00:50:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725308AbfKPFuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 00:50:16 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FBCE20729;
+        Sat, 16 Nov 2019 05:50:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573883415;
+        bh=cqibmtWhugPFIdWWdJC/LaDl+aZlb97vNdXIjuHltc8=;
+        h=In-Reply-To:References:Cc:To:Subject:From:Date:From;
+        b=1Zk9wAz5nUsulI2tlJtlKZeDOw4Cfc3A9Qu9NO2eA7Aw+SQLwfkYz7d7Ez+geeUu+
+         KbmHJC4U1kP8QQGUagT+bewwcNW2xMWBXj6/Pf3KRbdzTv5RK3EOZh89QGWjshaQbf
+         pfnKuI2OKVJr1xUDq2ojknyZqnAOXO8RdIO1rt5Y=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573874106-23802-4-git-send-email-alex.shi@linux.alibaba.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <307ce88d-ab1b-ce2b-0e25-79b7fde637e5@codeaurora.org>
+References: <1572524473-19344-1-git-send-email-tdas@codeaurora.org> <1572524473-19344-5-git-send-email-tdas@codeaurora.org> <20191106003053.DA8462178F@mail.kernel.org> <307ce88d-ab1b-ce2b-0e25-79b7fde637e5@codeaurora.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v1 4/7] clk: qcom: Add graphics clock controller driver for SC7180
+From:   Stephen Boyd <sboyd@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Fri, 15 Nov 2019 21:50:14 -0800
+Message-Id: <20191116055015.8FBCE20729@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 16, 2019 at 11:15:02AM +0800, Alex Shi wrote:
-> This is the main patch to replace per node lru_lock with per memcg
-> lruvec lock. It also fold the irqsave flags into lruvec.
+Quoting Taniya Das (2019-11-15 00:11:28)
+> Hi Stephen,
+>=20
+> Thanks for the review.
+>=20
+> On 11/6/2019 6:00 AM, Stephen Boyd wrote:
+> > Quoting Taniya Das (2019-10-31 05:21:10)
+> >> diff --git a/drivers/clk/qcom/gpucc-sc7180.c b/drivers/clk/qcom/gpucc-=
+sc7180.c
+> >> new file mode 100644
+> >> index 0000000..0d893e6
+> >> --- /dev/null
+> >> +++ b/drivers/clk/qcom/gpucc-sc7180.c
+> >> @@ -0,0 +1,274 @@
+> >> +// SPDX-License-Identifier: GPL-2.0-only
+> >> +/*
+> >> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> >> + */
+> >> +
+> >> +#include <linux/clk-provider.h>
+> >> +#include <linux/err.h>
+> >> +#include <linux/kernel.h>
+> >> +#include <linux/module.h>
+> >> +#include <linux/of.h>
+> >> +#include <linux/of_device.h>
+> >=20
+> > Are these of includes used?
+> >
+>=20
+> yes, would clean up these headers.
+>=20
 
-I have to say, I don't love the part where we fold the irqsave flags
-into the lruvec.  I know it saves us an argument, but it opens up the
-possibility of mismatched expectations.  eg we currently have:
+Maybe they're used. I'm not sure.
 
-static void __split_huge_page(struct page *page, struct list_head *list,
-			struct lruvec *lruvec, pgoff_t end)
-{
-...
-	spin_unlock_irqrestore(&lruvec->lru_lock, lruvec->irqflags);
+> >> +       regmap =3D qcom_cc_map(pdev, &gpu_cc_sc7180_desc);
+> >> +       if (IS_ERR(regmap))
+> >> +               return PTR_ERR(regmap);
+> >> +
+> >> +       /* 360MHz Configuration */
+> >> +       gpu_cc_pll_config.l =3D 0x12;
+> >> +       gpu_cc_pll_config.alpha =3D 0xC000;
+> >> +       gpu_cc_pll_config.config_ctl_val =3D 0x20485699;
+> >> +       gpu_cc_pll_config.config_ctl_hi_val =3D 0x00002067;
+> >> +       gpu_cc_pll_config.user_ctl_val =3D 0x00000001;
+> >> +       gpu_cc_pll_config.user_ctl_hi_val =3D 0x00004805;
+> >> +       gpu_cc_pll_config.test_ctl_hi_val =3D 0x40000000;
+> >=20
+> > Is there a reason this is built on the stack? Save space or something?
+> >=20
+>=20
+> I have done as we had discussed during the dispcc review for SDM845
+> https://patchwork.kernel.org/patch/10446073/
+>  >>>
+>  >> +static const struct alpha_pll_config disp_cc_pll0_config =3D {
+>  >> +       .l =3D 0x2c,
+>  >> +       .alpha =3D 0xcaaa,
+>  >> +};
+>  >
+>  > Any reason this can't be put on the stack in the probe function?
+>  >
+> I would move it.
+>  >>>
+>=20
+> In case you think I should move it outside I can do that too.
 
-so if we introduce a new caller, we have to be certain that this caller
-is also using lock_page_lruvec_irqsave() and not lock_page_lruvec_irq().
-I can't think of a way to make the compiler enforce that, and if we don't,
-then we can get some odd crashes with interrupts being unexpectedly
-enabled or disabled, depending on how ->irqflags was used last.
-
-So it makes the code more subtle.  And that's not a good thing.
-
-> +static inline struct lruvec *lock_page_lruvec_irq(struct page *page,
-> +						struct pglist_data *pgdat)
-> +{
-> +	struct lruvec *lruvec = mem_cgroup_page_lruvec(page, pgdat);
-> +
-> +	spin_lock_irq(&lruvec->lru_lock);
-> +
-> +	return lruvec;
-> +}
-
-...
-
-> +static struct lruvec *lock_page_lru(struct page *page, int *isolated)
->  {
->  	pg_data_t *pgdat = page_pgdat(page);
-> +	struct lruvec *lruvec = lock_page_lruvec_irq(page, pgdat);
->  
-> -	spin_lock_irq(&pgdat->lru_lock);
->  	if (PageLRU(page)) {
-> -		struct lruvec *lruvec;
->  
-> -		lruvec = mem_cgroup_page_lruvec(page, pgdat);
->  		ClearPageLRU(page);
->  		del_page_from_lru_list(page, lruvec, page_lru(page));
->  		*isolated = 1;
->  	} else
->  		*isolated = 0;
-> +
-> +	return lruvec;
->  }
-
-But what if the page is !PageLRU?  What lruvec did we just lock?
-According to the comments on mem_cgroup_page_lruvec(),
-
- * This function is only safe when following the LRU page isolation
- * and putback protocol: the LRU lock must be held, and the page must
- * either be PageLRU() or the caller must have isolated/allocated it.
-
-and now it's being called in order to find out which LRU lock to take.
-So this comment needs to be updated, if it's wrong, or this patch has
-a race.
+No I was just wondering what prompted it.
 
