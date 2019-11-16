@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0526AC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A050C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFDCD206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A617206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920612;
-	bh=NjWy5znEkoWXqsJzxRB5cmvhQBP3xr8ifrgF/0d3lR8=;
+	s=default; t=1573920619;
+	bh=d9nxKcst+qQU3OV1rFInKjs+FqAyZY6FfLLPYATbVhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GlJogM49xsh52vxZ7RnMRstT5ODgT4I/x43Sc1w41eVg4iDOhRvBcCMV0ZFjRomWu
-	 vjI7rBwloskxaZb6+cOKS+CRwRU8x2379a/c/1xqvxWudTF4Sx+FPdKb+exqTCjMuh
-	 UPkT4DWL1XYCisrX9SD1Aj8qE/kQHDYgAktYmU+0=
+	b=YUhCl+CdXzrDRLcvbG4hJGgb0yvU+d3PyRYvGoDGyVCQ1DYXntfbim0zSnq6WHEKG
+	 atebCIlHghsuYUoHmWDAlw22REyMuMT05lG034ciG7mjSDZfWLwDpEy8Y9BJ4dgKCq
+	 Djo5+SPN5dWK50g+IkmsHieDo1kFdiAoe1kdFUYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731426AbfKPQKL (ORCPT
+        id S1730276AbfKPPtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:10:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56938 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:49:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730301AbfKPPtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:49:23 -0500
+        id S1728876AbfKPPtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:49:14 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D00720870;
-        Sat, 16 Nov 2019 15:49:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3367120729;
+        Sat, 16 Nov 2019 15:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919362;
-        bh=NjWy5znEkoWXqsJzxRB5cmvhQBP3xr8ifrgF/0d3lR8=;
+        s=default; t=1573919353;
+        bh=d9nxKcst+qQU3OV1rFInKjs+FqAyZY6FfLLPYATbVhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eiUBJuM9/pgZ2lLV9GJlFU7Iaz3Hh8UfqUG+q083v94o7sYYT2Fz0XzQWagva2prE
-         2DtIWVFCnde7nXOo1h83pTrXoesmmCNLqAIfgFZA/iwNZIh8nghjoGVdlj496JNCEG
-         uil/067Bf4oAmgX3zJLU+HBYg7G2RkwQWcTVjZv4=
+        b=Ob4PYnxUVAgOBua7y69qsoy0bpFZw8aNCDS4+oTxN/u7pgMDFa7Oqzk8vclyhtLc5
+         1WEUvq8LEeUXY3axIvgi/QmiOJ4HFialrwjRriLVGR5dWIm7uiVVkRmd3XmusxediF
+         G7i6KexGXmq17gsHN2NwRXslCmSHPGJJ2vGUNucc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 084/150] i2c: uniphier-f: make driver robust against concurrency
-Date:   Sat, 16 Nov 2019 10:46:22 -0500
-Message-Id: <20191116154729.9573-84-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <jiangqi903@gmail.com>,
+        Changwei Ge <ge.changwei@h3c.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 079/150] fs/ocfs2/dlm/dlmdebug.c: fix a sleep-in-atomic-context bug in dlm_print_one_mle()
+Date:   Sat, 16 Nov 2019 10:46:17 -0500
+Message-Id: <20191116154729.9573-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -59,97 +65,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit f1fdcbbdf45d9609f3d4063b67e9ea941ba3a58f ]
+[ Upstream commit 999865764f5f128896402572b439269acb471022 ]
 
-This is unlikely to happen, but it is possible for a CPU to enter
-the interrupt handler just after wait_for_completion_timeout() has
-expired. If this happens, the hardware is accessed from multiple
-contexts concurrently.
+The kernel module may sleep with holding a spinlock.
 
-Disable the IRQ after wait_for_completion_timeout(), and do nothing
-from the handler when the IRQ is disabled.
+The function call paths (from bottom to top) in Linux-4.16 are:
 
-Fixes: 6a62974b667f ("i2c: uniphier_f: add UniPhier FIFO-builtin I2C driver")
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+[FUNC] get_zeroed_page(GFP_NOFS)
+fs/ocfs2/dlm/dlmdebug.c, 332: get_zeroed_page in dlm_print_one_mle
+fs/ocfs2/dlm/dlmmaster.c, 240: dlm_print_one_mle in __dlm_put_mle
+fs/ocfs2/dlm/dlmmaster.c, 255: __dlm_put_mle in dlm_put_mle
+fs/ocfs2/dlm/dlmmaster.c, 254: spin_lock in dlm_put_ml
+
+[FUNC] get_zeroed_page(GFP_NOFS)
+fs/ocfs2/dlm/dlmdebug.c, 332: get_zeroed_page in dlm_print_one_mle
+fs/ocfs2/dlm/dlmmaster.c, 240: dlm_print_one_mle in __dlm_put_mle
+fs/ocfs2/dlm/dlmmaster.c, 222: __dlm_put_mle in dlm_put_mle_inuse
+fs/ocfs2/dlm/dlmmaster.c, 219: spin_lock in dlm_put_mle_inuse
+
+To fix this bug, GFP_NOFS is replaced with GFP_ATOMIC.
+
+This bug is found by my static analysis tool DSAC.
+
+Link: http://lkml.kernel.org/r/20180901112528.27025-1-baijiaju1990@gmail.com
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Joseph Qi <jiangqi903@gmail.com>
+Cc: Changwei Ge <ge.changwei@h3c.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-uniphier-f.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ fs/ocfs2/dlm/dlmdebug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-uniphier-f.c b/drivers/i2c/busses/i2c-uniphier-f.c
-index bc26ec822e268..b9a0690b4fd73 100644
---- a/drivers/i2c/busses/i2c-uniphier-f.c
-+++ b/drivers/i2c/busses/i2c-uniphier-f.c
-@@ -98,6 +98,7 @@ struct uniphier_fi2c_priv {
- 	unsigned int flags;
- 	unsigned int busy_cnt;
- 	unsigned int clk_cycle;
-+	spinlock_t lock;	/* IRQ synchronization */
- };
- 
- static void uniphier_fi2c_fill_txfifo(struct uniphier_fi2c_priv *priv,
-@@ -162,7 +163,10 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
- 	struct uniphier_fi2c_priv *priv = dev_id;
- 	u32 irq_status;
- 
-+	spin_lock(&priv->lock);
-+
- 	irq_status = readl(priv->membase + UNIPHIER_FI2C_INT);
-+	irq_status &= priv->enabled_irqs;
- 
- 	dev_dbg(&priv->adap.dev,
- 		"interrupt: enabled_irqs=%04x, irq_status=%04x\n",
-@@ -230,6 +234,8 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
- 		goto handled;
- 	}
- 
-+	spin_unlock(&priv->lock);
-+
- 	return IRQ_NONE;
- 
- data_done:
-@@ -246,6 +252,8 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
- handled:
- 	uniphier_fi2c_clear_irqs(priv);
- 
-+	spin_unlock(&priv->lock);
-+
- 	return IRQ_HANDLED;
- }
- 
-@@ -311,7 +319,7 @@ static int uniphier_fi2c_master_xfer_one(struct i2c_adapter *adap,
+diff --git a/fs/ocfs2/dlm/dlmdebug.c b/fs/ocfs2/dlm/dlmdebug.c
+index 9b984cae4c4e0..1d6dc8422899b 100644
+--- a/fs/ocfs2/dlm/dlmdebug.c
++++ b/fs/ocfs2/dlm/dlmdebug.c
+@@ -329,7 +329,7 @@ void dlm_print_one_mle(struct dlm_master_list_entry *mle)
  {
- 	struct uniphier_fi2c_priv *priv = i2c_get_adapdata(adap);
- 	bool is_read = msg->flags & I2C_M_RD;
--	unsigned long time_left;
-+	unsigned long time_left, flags;
+ 	char *buf;
  
- 	dev_dbg(&adap->dev, "%s: addr=0x%02x, len=%d, stop=%d\n",
- 		is_read ? "receive" : "transmit", msg->addr, msg->len, stop);
-@@ -342,6 +350,12 @@ static int uniphier_fi2c_master_xfer_one(struct i2c_adapter *adap,
- 	       priv->membase + UNIPHIER_FI2C_CR);
- 
- 	time_left = wait_for_completion_timeout(&priv->comp, adap->timeout);
-+
-+	spin_lock_irqsave(&priv->lock, flags);
-+	priv->enabled_irqs = 0;
-+	uniphier_fi2c_set_irqs(priv);
-+	spin_unlock_irqrestore(&priv->lock, flags);
-+
- 	if (!time_left) {
- 		dev_err(&adap->dev, "transaction timeout.\n");
- 		uniphier_fi2c_recover(priv);
-@@ -546,6 +560,7 @@ static int uniphier_fi2c_probe(struct platform_device *pdev)
- 
- 	priv->clk_cycle = clk_rate / bus_speed;
- 	init_completion(&priv->comp);
-+	spin_lock_init(&priv->lock);
- 	priv->adap.owner = THIS_MODULE;
- 	priv->adap.algo = &uniphier_fi2c_algo;
- 	priv->adap.dev.parent = dev;
+-	buf = (char *) get_zeroed_page(GFP_NOFS);
++	buf = (char *) get_zeroed_page(GFP_ATOMIC);
+ 	if (buf) {
+ 		dump_mle(mle, buf, PAGE_SIZE - 1);
+ 		free_page((unsigned long)buf);
 -- 
 2.20.1
 
