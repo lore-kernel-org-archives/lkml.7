@@ -2,52 +2,52 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D432C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0A6C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF61F21479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB0F02089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920961;
-	bh=PV75VkIsQLSgJfMJKGoDxgGY1yV4axR33hw/nS5ls3w=;
+	s=default; t=1573920966;
+	bh=joWvDbyWmwlaBdQTIKjS8/wZr1JeRCpZe/Ec4J4cdhA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pnGkP2uIcdHayoSDi2l+zS9kDe5/e1OGc+b4s7DVrxhbcgdk8dXqSsksYnE2AewiF
-	 8faEWo+k0hyH1JaaCsGAp5fpZ6aTZk46UUfyXeFXuh8QieqdBc+ek3SG7BELhBC185
-	 C4kcllS1C76slueypCkxaJtTjZGA1W21xe8kmLDM=
+	b=Piny+UU/0Q5Wac6Orb2+PbQHZ8YqkKYeT1y/sw/4gR/sPgeuSPwy4bu8jaBh4GtpE
+	 C0qrMqGwDxTSoy7Qv5V3TLNpx/GrFjQ5LDv/IRIWqHzRCLk0yLnETyNLehH8HMiONo
+	 WlX3XhqvEhJVB1nzhsYlncVANR3DKdfEFMSYqOBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730860AbfKPQQA (ORCPT
+        id S1731879AbfKPQQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:16:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53758 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:16:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729635AbfKPPrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:47:08 -0500
+        id S1729625AbfKPPrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:47:07 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD3072083E;
-        Sat, 16 Nov 2019 15:47:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB78C2084F;
+        Sat, 16 Nov 2019 15:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919228;
-        bh=PV75VkIsQLSgJfMJKGoDxgGY1yV4axR33hw/nS5ls3w=;
+        s=default; t=1573919226;
+        bh=joWvDbyWmwlaBdQTIKjS8/wZr1JeRCpZe/Ec4J4cdhA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r+99ikYBG5FC64ak8lYuHubAWuli8KXEGLoHwOHONxLvx6m6QjkF+PzGuVutGKO0M
-         2Gc3CPC6gt7drOKg3hHrhHg8Aeiare6n+EmxD51zAMObRAxh6L0vTeUsFalGMeWwUt
-         6TkbyiWAnr7bmLU8/FcmIkrmdEylJxNvfuFVm2MY=
+        b=jWq54rnu2mOcs1J5vVAETXXQOQkR/Aj/Ni6ugaiohXCAzwiRqat9oJRngrIUYCOIm
+         sy4HJSjnzQxiY9d5X5irBifUGo7P1O6zkfFdpp5avv0VeeTmooLZngq066N9YKiR5/
+         ZldgFt4qpEYWyQIlaDsQTQQ7g/5g6upPXkB9R1PM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Igor Konopko <igor.j.konopko@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 232/237] nvme-pci: fix surprise removal
-Date:   Sat, 16 Nov 2019 10:41:07 -0500
-Message-Id: <20191116154113.7417-232-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 229/237] pinctrl: lpc18xx: Use define directive for PIN_CONFIG_GPIO_PIN_INT
+Date:   Sat, 16 Nov 2019 10:41:04 -0500
+Message-Id: <20191116154113.7417-229-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,48 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Konopko <igor.j.konopko@intel.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 751a0cc0cd3a0d51e6aaf6fd3b8bd31f4ecfaf3e ]
+[ Upstream commit f24bfb39975c241374cadebbd037c17960cf1412 ]
 
-When a PCIe NVMe device is not present, nvme_dev_remove_admin() calls
-blk_cleanup_queue() on the admin queue, which frees the hctx for that
-queue.  Moments later, on the same path nvme_kill_queues() calls
-blk_mq_unquiesce_queue() on admin queue and tries to access hctx of it,
-which leads to following OOPS:
+Clang warns when one enumerated type is implicitly converted to another:
 
-Oops: 0000 [#1] SMP PTI
-RIP: 0010:sbitmap_any_bit_set+0xb/0x40
-Call Trace:
- blk_mq_run_hw_queue+0xd5/0x150
- blk_mq_run_hw_queues+0x3a/0x50
- nvme_kill_queues+0x26/0x50
- nvme_remove_namespaces+0xb2/0xc0
- nvme_remove+0x60/0x140
- pci_device_remove+0x3b/0xb0
+drivers/pinctrl/pinctrl-lpc18xx.c:643:29: warning: implicit conversion
+from enumeration type 'enum lpc18xx_pin_config_param' to different
+enumeration type 'enum pin_config_param' [-Wenum-conversion]
+        {"nxp,gpio-pin-interrupt", PIN_CONFIG_GPIO_PIN_INT, 0},
+        ~                          ^~~~~~~~~~~~~~~~~~~~~~~
+drivers/pinctrl/pinctrl-lpc18xx.c:648:12: warning: implicit conversion
+from enumeration type 'enum lpc18xx_pin_config_param' to different
+enumeration type 'enum pin_config_param' [-Wenum-conversion]
+        PCONFDUMP(PIN_CONFIG_GPIO_PIN_INT, "gpio pin int", NULL, true),
+        ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/pinctrl/pinconf-generic.h:163:11: note: expanded from
+macro 'PCONFDUMP'
+        .param = a, .display = b, .format = c, .has_arg = d     \
+                 ^
+2 warnings generated.
 
-Fixes: cb4bfda62afa2 ("nvme-pci: fix hot removal during error handling")
-Signed-off-by: Igor Konopko <igor.j.konopko@intel.com>
-Reviewed-by: Keith Busch <keith.busch@intel.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+It is expected that pinctrl drivers can extend pin_config_param because
+of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
+isn't an issue. Most drivers that take advantage of this define the
+PIN_CONFIG variables as constants, rather than enumerated values. Do the
+same thing here so that Clang no longer warns.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/140
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-lpc18xx.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 5d0f99bcc987f..44da9fe5b27b8 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3647,7 +3647,7 @@ void nvme_kill_queues(struct nvme_ctrl *ctrl)
- 	down_read(&ctrl->namespaces_rwsem);
+diff --git a/drivers/pinctrl/pinctrl-lpc18xx.c b/drivers/pinctrl/pinctrl-lpc18xx.c
+index 190f17e4bbdaf..1d3b88e6ab862 100644
+--- a/drivers/pinctrl/pinctrl-lpc18xx.c
++++ b/drivers/pinctrl/pinctrl-lpc18xx.c
+@@ -630,14 +630,8 @@ static const struct pinctrl_pin_desc lpc18xx_pins[] = {
+ 	LPC18XX_PIN(i2c0_sda, PIN_I2C0_SDA),
+ };
  
- 	/* Forcibly unquiesce queues to avoid blocking dispatch */
--	if (ctrl->admin_q)
-+	if (ctrl->admin_q && !blk_queue_dying(ctrl->admin_q))
- 		blk_mq_unquiesce_queue(ctrl->admin_q);
+-/**
+- * enum lpc18xx_pin_config_param - possible pin configuration parameters
+- * @PIN_CONFIG_GPIO_PIN_INT: route gpio to the gpio pin interrupt
+- * 	controller.
+- */
+-enum lpc18xx_pin_config_param {
+-	PIN_CONFIG_GPIO_PIN_INT = PIN_CONFIG_END + 1,
+-};
++/* PIN_CONFIG_GPIO_PIN_INT: route gpio to the gpio pin interrupt controller */
++#define PIN_CONFIG_GPIO_PIN_INT		(PIN_CONFIG_END + 1)
  
- 	list_for_each_entry(ns, &ctrl->namespaces, list)
+ static const struct pinconf_generic_params lpc18xx_params[] = {
+ 	{"nxp,gpio-pin-interrupt", PIN_CONFIG_GPIO_PIN_INT, 0},
 -- 
 2.20.1
 
