@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CD2C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B76C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C349A2077B
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D8CC20740
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573918980;
-	bh=gjuzvXyhWRsXKjSOSgKr4qFWVX5/LvmJynn27rqTZCU=;
+	s=default; t=1573918985;
+	bh=RhEQdIRWLTuBSUEAgYQ268wy45fY4RTZSKHNk1bT7B8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MxC1yVrM7tCbC3Ss/a7/dhNkA67Mvd/gUBysfBx0E4lgH+YnTAqa/ug+BcaIYKnk1
-	 sHkQ6fL2pJFmdgtUW+hHjoGGifOe2J48TomfUtUuMSiWkb9rFahzX7mEKuvMV9ydP5
-	 HfVIzPcdqb7B5HXb2Km0cw6DftgGkZIY3uZVbxqA=
+	b=uLXR8QQfvpV5xpBX56pTybpsxBgqJ1m2D5Xs4IFGqB8Gv6rZgD2Wak7Pvg0E+jxy8
+	 ChlbfZqdpXo+BI9s1VttOs/alG0BdtHiOGEx7C/L5ubLnib31pgja986QxfqQT66xv
+	 uskpUgCUDvE1O9D+b44NyCZUmVob2yHaq3MupOdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbfKPPnA (ORCPT
+        id S1728571AbfKPPnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:43:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46626 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:43:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728477AbfKPPmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:42:51 -0500
+        id S1728547AbfKPPnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:43:01 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2658620740;
-        Sat, 16 Nov 2019 15:42:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC3C92075B;
+        Sat, 16 Nov 2019 15:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918970;
-        bh=gjuzvXyhWRsXKjSOSgKr4qFWVX5/LvmJynn27rqTZCU=;
+        s=default; t=1573918981;
+        bh=RhEQdIRWLTuBSUEAgYQ268wy45fY4RTZSKHNk1bT7B8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KST8cLQvvEOeTaMOFk0K1Jy/FOLdYYZSfxSgNn+K3KO794RZa9ThxnmSlKoCeE+bR
-         LSWu6d5ul6GgOhFtH4dYTkKhL0mxEHSRkAP5xFBuiPiNrxdtH2F6ywemPSbUk/4B7e
-         uOrWAxcPirZOFuxr5jRBDCJfZpQC8L51Yolsv43A=
+        b=M0maQnGZUFuKgwgs3Tqt0qV1c8IPS6o9JPidNCtd1m5OZNhNnmPnou/2dWTjNFECh
+         C4fhnkJsI9nXTQUNobuXf2UbB2nbuPLxJh1v7DGs9LslqY6GixitVP+ohhrrLvdgy6
+         QaogoqDc5KvQUbqPb9PJy/H3gZrCf6duEITBEtP8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 085/237] s390/perf: Return error when debug_register fails
-Date:   Sat, 16 Nov 2019 10:38:40 -0500
-Message-Id: <20191116154113.7417-85-sashal@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Xiang Chen <chenxiang66@hisilicon.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 090/237] scsi: hisi_sas: Fix NULL pointer dereference
+Date:   Sat, 16 Nov 2019 10:38:45 -0500
+Message-Id: <20191116154113.7417-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,54 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit ec0c0bb489727de0d4dca6a00be6970ab8a3b30a ]
+[ Upstream commit f4445bb93d82a984657b469e63118c2794a4c3d3 ]
 
-Return an error when the function debug_register() fails allocating
-the debug handle.
-Also remove the registered debug handle when the initialization fails
-later on.
+There is a NULL pointer dereference in case *slot* happens to be NULL at
+lines 1053 and 1878:
 
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+struct hisi_sas_cq *cq =
+	&hisi_hba->cq[slot->dlvry_queue];
+
+Notice that *slot* is being NULL checked at lines 1057 and 1881:
+if (slot), which implies it may be NULL.
+
+Fix this by placing the declaration and definition of variable cq, which
+contains the pointer dereference slot->dlvry_queue, after slot has been
+properly NULL checked.
+
+Addresses-Coverity-ID: 1474515 ("Dereference before null check")
+Addresses-Coverity-ID: 1474520 ("Dereference before null check")
+Fixes: 584f53fe5f52 ("scsi: hisi_sas: Fix the race between IO completion and timeout for SMP/internal IO")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Xiang Chen <chenxiang66@hisilicon.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/perf_cpum_sf.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index 44404836e9d11..df92c2af99b69 100644
---- a/arch/s390/kernel/perf_cpum_sf.c
-+++ b/arch/s390/kernel/perf_cpum_sf.c
-@@ -2045,14 +2045,17 @@ static int __init init_cpum_sampling_pmu(void)
- 	}
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index d4a2625a44232..f478d1f50dfc0 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -1025,11 +1025,11 @@ static int hisi_sas_exec_internal_tmf_task(struct domain_device *device,
+ 		if ((task->task_state_flags & SAS_TASK_STATE_ABORTED)) {
+ 			if (!(task->task_state_flags & SAS_TASK_STATE_DONE)) {
+ 				struct hisi_sas_slot *slot = task->lldd_task;
+-				struct hisi_sas_cq *cq =
+-					&hisi_hba->cq[slot->dlvry_queue];
  
- 	sfdbg = debug_register(KMSG_COMPONENT, 2, 1, 80);
--	if (!sfdbg)
-+	if (!sfdbg) {
- 		pr_err("Registering for s390dbf failed\n");
-+		return -ENOMEM;
-+	}
- 	debug_register_view(sfdbg, &debug_sprintf_view);
+ 				dev_err(dev, "abort tmf: TMF task timeout and not done\n");
+ 				if (slot) {
++					struct hisi_sas_cq *cq =
++					       &hisi_hba->cq[slot->dlvry_queue];
+ 					/*
+ 					 * flush tasklet to avoid free'ing task
+ 					 * before using task in IO completion
+@@ -1856,10 +1856,10 @@ hisi_sas_internal_task_abort(struct hisi_hba *hisi_hba,
+ 	if ((task->task_state_flags & SAS_TASK_STATE_ABORTED)) {
+ 		if (!(task->task_state_flags & SAS_TASK_STATE_DONE)) {
+ 			struct hisi_sas_slot *slot = task->lldd_task;
+-			struct hisi_sas_cq *cq =
+-				&hisi_hba->cq[slot->dlvry_queue];
  
- 	err = register_external_irq(EXT_IRQ_MEASURE_ALERT,
- 				    cpumf_measurement_alert);
- 	if (err) {
- 		pr_cpumsf_err(RS_INIT_FAILURE_ALRT);
-+		debug_unregister(sfdbg);
- 		goto out;
- 	}
- 
-@@ -2061,6 +2064,7 @@ static int __init init_cpum_sampling_pmu(void)
- 		pr_cpumsf_err(RS_INIT_FAILURE_PERF);
- 		unregister_external_irq(EXT_IRQ_MEASURE_ALERT,
- 					cpumf_measurement_alert);
-+		debug_unregister(sfdbg);
- 		goto out;
- 	}
- 
+ 			if (slot) {
++				struct hisi_sas_cq *cq =
++					&hisi_hba->cq[slot->dlvry_queue];
+ 				/*
+ 				 * flush tasklet to avoid free'ing task
+ 				 * before using task in IO completion
 -- 
 2.20.1
 
