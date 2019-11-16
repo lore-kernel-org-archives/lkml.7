@@ -2,51 +2,53 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF865C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C56C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A88DA20729
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE0E208CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919292;
-	bh=8YhL0ze8eWMLOFfOXvqE7tZ92Hf36MAGwjzaFKJo2Rs=;
+	s=default; t=1573919295;
+	bh=M8yWhEhiTwNnh56fDzs9IjxrNHd3LnDK6hpxY8eNykY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x5ofMeNxGOqe5gczOgLI3qNHDsiobY1OnIwTpIBSsIDNJUYcq3XazOoHNVEWpO75+
-	 jXr+8IN2/1qiVcu+CbrBikqMUdh0uYigQ5nhh8lEEdnuLPMP1hkvJYZIWav1F2I5mt
-	 QBZxhbC5nOCzO4jZZeD279QHbVQTrclcsoANBrE4=
+	b=cTRqz9q58Kg2mINqP6RNX4FjM3Npc0Tap2zy1eEwM5pE8gHH5E4i3TYQX0oxBtxtw
+	 0TNxGC7L3kU+iEo6ubsVV0ikXX2xkPG49B/r+KrCAANf6ALwzauK1/G/yEF6Gz5PmB
+	 qhsjQYjBno61meeI3DlhkR8bpU4+YWR7C8gMfMW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729963AbfKPPsL (ORCPT
+        id S1729972AbfKPPsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:48:11 -0500
+        Sat, 16 Nov 2019 10:48:13 -0500
 Received: from mail.kernel.org ([198.145.29.99]:54902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729888AbfKPPsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:48:00 -0500
+        id S1729900AbfKPPsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:48:02 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D04A208E3;
-        Sat, 16 Nov 2019 15:47:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14D7D20815;
+        Sat, 16 Nov 2019 15:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919279;
-        bh=8YhL0ze8eWMLOFfOXvqE7tZ92Hf36MAGwjzaFKJo2Rs=;
+        s=default; t=1573919281;
+        bh=M8yWhEhiTwNnh56fDzs9IjxrNHd3LnDK6hpxY8eNykY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aMX5LBvsi+PVK++ytpnfqRB9AaW/0xts/2ZZNh3D8ISyQiDMEi9pq1UvwBCvhZ41X
-         5wgpY4ljKABsKA7UizDge+hzia0bKGk297ncc5JBZStTANCkdn6WNvwRvXWXFCKS82
-         wM7kBzuDLnuV7IVN0bGuqvBYja7XQHKWVX8APH04=
+        b=03/AV6rId3P1g1Omt+Vpv/Sq5XusEuPASaeByd2Zq4Qs9J80J63znMllXkx1W+bnv
+         NoPtBCog8378DRFq6ZLz07vxFM1EL+kAURjF8fBIwfFbfRzePLDW0BLNbsR3/zx8/m
+         tRb4fv8QrdOkl/dcCSC6K9uMrb6CqVM3q5awUr4w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Uros Bizjak <ubizjak@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 030/150] KVM/x86: Fix invvpid and invept register operand size in 64-bit mode
-Date:   Sat, 16 Nov 2019 10:45:28 -0500
-Message-Id: <20191116154729.9573-30-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, open-iscsi@googlegroups.com,
+        linux-scsi@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 033/150] scsi: iscsi_tcp: Explicitly cast param in iscsi_sw_tcp_host_get_param
+Date:   Sat, 16 Nov 2019 10:45:31 -0500
+Message-Id: <20191116154729.9573-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -59,43 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uros Bizjak <ubizjak@gmail.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 5ebb272b2ea7e02911a03a893f8d922d49f9bb4a ]
+[ Upstream commit 20054597f169090109fc3f0dfa1a48583f4178a4 ]
 
-Register operand size of invvpid and invept instruction in 64-bit mode
-has always 64 bits. Adjust inline function argument type to reflect
-correct size.
+Clang warns when one enumerated type is implicitly converted to another.
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+drivers/scsi/iscsi_tcp.c:803:15: warning: implicit conversion from
+enumeration type 'enum iscsi_host_param' to different enumeration type
+'enum iscsi_param' [-Wenum-conversion]
+                                                 &addr, param, buf);
+                                                        ^~~~~
+1 warning generated.
+
+iscsi_conn_get_addr_param handles ISCSI_HOST_PARAM_IPADDRESS just fine
+so add an explicit cast to iscsi_param to make it clear to Clang that
+this is expected behavior.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/153
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/vmx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/iscsi_tcp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index ae34b482e9109..0bd5f8f4d6ebd 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -1602,7 +1602,7 @@ static int __find_msr_index(struct vcpu_vmx *vmx, u32 msr)
- 	return -1;
- }
+diff --git a/drivers/scsi/iscsi_tcp.c b/drivers/scsi/iscsi_tcp.c
+index e11eff6b0e97d..045207b5560eb 100644
+--- a/drivers/scsi/iscsi_tcp.c
++++ b/drivers/scsi/iscsi_tcp.c
+@@ -798,7 +798,8 @@ static int iscsi_sw_tcp_host_get_param(struct Scsi_Host *shost,
+ 			return rc;
  
--static inline void __invvpid(int ext, u16 vpid, gva_t gva)
-+static inline void __invvpid(unsigned long ext, u16 vpid, gva_t gva)
- {
-     struct {
- 	u64 vpid : 16;
-@@ -1616,7 +1616,7 @@ static inline void __invvpid(int ext, u16 vpid, gva_t gva)
- 		  : : "a"(&operand), "c"(ext) : "cc", "memory");
- }
- 
--static inline void __invept(int ext, u64 eptp, gpa_t gpa)
-+static inline void __invept(unsigned long ext, u64 eptp, gpa_t gpa)
- {
- 	struct {
- 		u64 eptp, gpa;
+ 		return iscsi_conn_get_addr_param((struct sockaddr_storage *)
+-						 &addr, param, buf);
++						 &addr,
++						 (enum iscsi_param)param, buf);
+ 	default:
+ 		return iscsi_host_get_param(shost, param, buf);
+ 	}
 -- 
 2.20.1
 
