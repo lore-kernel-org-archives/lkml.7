@@ -4,57 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5562FC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC98C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD65214DE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AD49214DE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921619;
-	bh=Mjp9Ayi7gHDEl4RyIz4743czz+ZO/l4kYbTirM1WaXM=;
+	s=default; t=1573921626;
+	bh=rsnNf15HrUbaGOrIbi6wyozb9yMbdByNuffKHCgCcss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RPj//w7EAY3FmNVU+I7+n2k3z255X9R75NJTF8nx8RNLUHR/KvMeDGm5EyH9VZ/6X
-	 0l+G7pXbYWJxYxSzKmbViZR+sNK+fBSWzIkmGQUJblXXluQ8WUT8zGhp9M4WGTTn4U
-	 O1ZekPhe8SIuHni+6LGWYf7z69rzYNWv9xQnSYz4=
+	b=P/QhQgxOp47Mb1AdbzDymSn3zLl2tKT5E16rMKhWx01arVG0aJ/PIVnhn3CzGuKPX
+	 ircmoWXO7zf1vgx2edYEVVZI8z36pQLTQJnb0NZUujZBXYBs1cs7Dn64IgXNPCuz9k
+	 m0r4BhWmYJpgTQWpTmnR7XdBopLV5X3JZPSXK+58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732070AbfKPQ06 (ORCPT
+        id S1732073AbfKPQ1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:26:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44972 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:27:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727988AbfKPPlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:41:44 -0500
+        id S1727969AbfKPPll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:41:41 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EBC020740;
-        Sat, 16 Nov 2019 15:41:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 609AE2081E;
+        Sat, 16 Nov 2019 15:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918903;
-        bh=Mjp9Ayi7gHDEl4RyIz4743czz+ZO/l4kYbTirM1WaXM=;
+        s=default; t=1573918900;
+        bh=rsnNf15HrUbaGOrIbi6wyozb9yMbdByNuffKHCgCcss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QbJbyd3fZTAYvMsY04GNxVF52FMaT1Wjs2RTZHy3qvE+exyHM+JajwN3VruJCjJDi
-         ao0izyynkKviFg0BSogXy26Fz0yumR2JrbQCYYsT0Unrv/fpNNcfnHNZ7j9WLeKGbh
-         REBQbUXDgU+kMGG/TCfTmINeXG5ZHIX2pDXyKtLA=
+        b=m9ItCvsSC2uJjajHlASRqYoi5HM99qCHZ6y+K2+rYf4dq+DxdMO+2QRNyjeQkHiuZ
+         dOUT+5mQWyo0hbVLovnj63vTf9GV18Vq2FYNK4qSYPEsIVOHtFGwN+p86u4+nPxTBy
+         9GmQj1uoTxjaQssmABcI2JvGUFbuZBXQ1hGSB3A4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Duncan Laurie <dlaurie@chromium.org>,
-        Vadim Bendebury <vbendeb@chromium.org>,
-        Stefan Reinauer <reinauer@chromium.org>,
-        Furquan Shaikh <furquan@google.com>,
-        Furquan Shaikh <furquan@chromium.org>,
-        Aaron Durbin <adurbin@chromium.org>,
-        Justin TerAvest <teravest@chromium.org>,
-        Ross Zwisler <zwisler@google.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 030/237] gsmi: Fix bug in append_to_eventlog sysfs handler
-Date:   Sat, 16 Nov 2019 10:37:45 -0500
-Message-Id: <20191116154113.7417-30-sashal@kernel.org>
+Cc:     Nikolay Borisov <nborisov@suse.com>,
+        Lu Fengqi <lufq.fnst@cn.fujitsu.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 029/237] btrfs: handle error of get_old_root
+Date:   Sat, 16 Nov 2019 10:37:44 -0500
+Message-Id: <20191116154113.7417-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -67,75 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Duncan Laurie <dlaurie@chromium.org>
+From: Nikolay Borisov <nborisov@suse.com>
 
-[ Upstream commit 655603de68469adaff16842ac17a5aec9c9ce89b ]
+[ Upstream commit 315bed43fea532650933e7bba316a7601d439edf ]
 
-The sysfs handler should return the number of bytes consumed, which in the
-case of a successful write is the entire buffer.  Also fix a bug where
-param.data_len was being set to (count - (2 * sizeof(u32))) instead of just
-(count - sizeof(u32)).  The latter is correct because we skip over the
-leading u32 which is our param.type, but we were also incorrectly
-subtracting sizeof(u32) on the line where we were actually setting
-param.data_len:
+In btrfs_search_old_slot get_old_root is always used with the assumption
+it cannot fail. However, this is not true in rare circumstance it can
+fail and return null. This will lead to null point dereference when the
+header is read. Fix this by checking the return value and properly
+handling NULL by setting ret to -EIO and returning gracefully.
 
-	param.data_len = count - sizeof(u32);
-
-This meant that for our example event.kernel_software_watchdog with total
-length 10 bytes, param.data_len was just 2 prior to this change.
-
-To test, successfully append an event to the log with gsmi sysfs.
-This sample event is for a "Kernel Software Watchdog"
-
-> xxd -g 1 event.kernel_software_watchdog
-0000000: 01 00 00 00 ad de 06 00 00 00
-
-> cat event.kernel_software_watchdog > /sys/firmware/gsmi/append_to_eventlog
-
-> mosys eventlog list | tail -1
-14 | 2012-06-25 10:14:14 | Kernl Event | Software Watchdog
-
-Signed-off-by: Duncan Laurie <dlaurie@chromium.org>
-Reviewed-by: Vadim Bendebury <vbendeb@chromium.org>
-Reviewed-by: Stefan Reinauer <reinauer@chromium.org>
-Signed-off-by: Furquan Shaikh <furquan@google.com>
-Tested-by: Furquan Shaikh <furquan@chromium.org>
-Reviewed-by: Aaron Durbin <adurbin@chromium.org>
-Reviewed-by: Justin TerAvest <teravest@chromium.org>
-[zwisler: updated changelog for 2nd bug fix and upstream]
-Signed-off-by: Ross Zwisler <zwisler@google.com>
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Coverity-id: 1087503
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: Lu Fengqi <lufq.fnst@cn.fujitsu.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/google/gsmi.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ fs/btrfs/ctree.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/firmware/google/gsmi.c b/drivers/firmware/google/gsmi.c
-index c8f169bf2e27d..62337be07afcb 100644
---- a/drivers/firmware/google/gsmi.c
-+++ b/drivers/firmware/google/gsmi.c
-@@ -480,11 +480,10 @@ static ssize_t eventlog_write(struct file *filp, struct kobject *kobj,
- 	if (count < sizeof(u32))
- 		return -EINVAL;
- 	param.type = *(u32 *)buf;
--	count -= sizeof(u32);
- 	buf += sizeof(u32);
+diff --git a/fs/btrfs/ctree.c b/fs/btrfs/ctree.c
+index 9fd383285f0ea..fc764f350f05a 100644
+--- a/fs/btrfs/ctree.c
++++ b/fs/btrfs/ctree.c
+@@ -3031,6 +3031,10 @@ int btrfs_search_old_slot(struct btrfs_root *root, const struct btrfs_key *key,
  
- 	/* The remaining buffer is the data payload */
--	if (count > gsmi_dev.data_buf->length)
-+	if ((count - sizeof(u32)) > gsmi_dev.data_buf->length)
- 		return -EINVAL;
- 	param.data_len = count - sizeof(u32);
- 
-@@ -504,7 +503,7 @@ static ssize_t eventlog_write(struct file *filp, struct kobject *kobj,
- 
- 	spin_unlock_irqrestore(&gsmi_dev.lock, flags);
- 
--	return rc;
-+	return (rc == 0) ? count : rc;
- 
- }
+ again:
+ 	b = get_old_root(root, time_seq);
++	if (!b) {
++		ret = -EIO;
++		goto done;
++	}
+ 	level = btrfs_header_level(b);
+ 	p->locks[level] = BTRFS_READ_LOCK;
  
 -- 
 2.20.1
