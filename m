@@ -2,52 +2,52 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 152AEC43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E213C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2DDD2072D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72C762075B
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919011;
-	bh=vmPorgr1AqtidpatjFnUpqU7k2gwi5CeAXMZW/HP/W8=;
+	s=default; t=1573919014;
+	bh=rh03igqzqmJ/spz57UkA4AWPIpnxHGzKIwHeAdn90AY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cdvorzkkfpsZh2nr4phuMbRZoo2I3vSaTZSicBRBx0pkSlJn6hBXTxOkFNZUZJcOV
-	 50ZChDbjPcTLshGJTErL1on+2/dmIN+FO8aHLXtPgN8Xp41O9GVXVmDD0SnYZkz73u
-	 xl47o07qFky8UEHwLXKjbMAJHkbN2OsFMG604S+k=
+	b=BMEO0ArGu0fYa/HcHZii4qTpth7hQ2+1bsq6TjkhQdJncei025waRLhY7iYQdmkaY
+	 jG/mGH7IZu9h2im/NCbzeoUpov/F6BDz0a2wgdRPQyI8/WuMWBDafxURSviVXyTbTt
+	 g2qCp2/WUKbf6Fcj3WW9TS8kl9LJBu6ZWUICQuEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbfKPPnb (ORCPT
+        id S1728767AbfKPPnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:43:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47490 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:43:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728738AbfKPPn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:43:28 -0500
+        id S1728697AbfKPPn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:43:29 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D20E20815;
-        Sat, 16 Nov 2019 15:43:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5436D2072D;
+        Sat, 16 Nov 2019 15:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919007;
-        bh=vmPorgr1AqtidpatjFnUpqU7k2gwi5CeAXMZW/HP/W8=;
+        s=default; t=1573919008;
+        bh=rh03igqzqmJ/spz57UkA4AWPIpnxHGzKIwHeAdn90AY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oL+VRJzvCi3FJYjGL9WLaaGqg/Pget3WjSLzJmwVlsiiTzP3eac8yrrZW201yzwln
-         t+lG5AAI5WnsNDc3W3kr4l5aCqEZ3kQJK6uU8grH3qwY4B8AIy53TeIq+h78/xi4sH
-         /0U4tDboTKJBIwzLM7fimBVolBTH0XClbzzxH+ZY=
+        b=EHzk+czqRZQEJvNraXnIwfIyte+A04FBpHsU3XSVvBAyHWWZVxH7k1dLrsXpAo/zV
+         bg6VsygGvqMScPoDy/zJgLg7Oj158cvuW4VfT7EFyxc7t3lCuTuwpk2N9lty9y1caC
+         Ei1xUy60ZAOpJNyq2BVZheJ5A6/8wNEO02mMOlkU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabio Estevam <fabio.estevam@nxp.com>,
-        Chris Healy <cphealy@gmail.com>,
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 110/237] mfd: mc13xxx-core: Fix PMIC shutdown when reading ADC values
-Date:   Sat, 16 Nov 2019 10:39:05 -0500
-Message-Id: <20191116154113.7417-110-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 111/237] mfd: intel_soc_pmic_bxtwc: Chain power button IRQs as well
+Date:   Sat, 16 Nov 2019 10:39:06 -0500
+Message-Id: <20191116154113.7417-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,58 +60,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam@nxp.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 55143439b7b501882bea9d95a54adfe00ffc79a3 ]
+[ Upstream commit 9f8ddee1dab836ca758ca8fc555ab5a3aaa5d3fd ]
 
-When trying to read any MC13892 ADC channel on a imx51-babbage board:
+Power button IRQ actually has a second level of interrupts to
+distinguish between UI and POWER buttons. Moreover, current
+implementation looks awkward in approach to handle second level IRQs by
+first level related IRQ chip.
 
-The MC13892 PMIC shutdowns completely.
+To address above issues, split power button IRQ to be chained as well.
 
-After debugging this issue and comparing the MC13892 and MC13783
-initializations done in the vendor kernel, it was noticed that the
-CHRGRAWDIV bit of the ADC0 register was not being set.
-
-This bit is set by default after power on, but the driver was
-clearing it.
-
-After setting this bit it is possible to read the ADC values correctly.
-
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
-Tested-by: Chris Healy <cphealy@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/mc13xxx-core.c  | 3 ++-
- include/linux/mfd/mc13xxx.h | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/mfd/intel_soc_pmic_bxtwc.c | 41 ++++++++++++++++++++++--------
+ include/linux/mfd/intel_soc_pmic.h |  1 +
+ 2 files changed, 32 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/mfd/mc13xxx-core.c b/drivers/mfd/mc13xxx-core.c
-index 234febfe6398b..d0bf50e3568d7 100644
---- a/drivers/mfd/mc13xxx-core.c
-+++ b/drivers/mfd/mc13xxx-core.c
-@@ -278,7 +278,8 @@ int mc13xxx_adc_do_conversion(struct mc13xxx *mc13xxx, unsigned int mode,
- 	if (ret)
- 		goto out;
+diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_pmic_bxtwc.c
+index 15bc052704a6d..9ca1f8c015de9 100644
+--- a/drivers/mfd/intel_soc_pmic_bxtwc.c
++++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
+@@ -31,8 +31,8 @@
  
--	adc0 = MC13XXX_ADC0_ADINC1 | MC13XXX_ADC0_ADINC2;
-+	adc0 = MC13XXX_ADC0_ADINC1 | MC13XXX_ADC0_ADINC2 |
-+	       MC13XXX_ADC0_CHRGRAWDIV;
- 	adc1 = MC13XXX_ADC1_ADEN | MC13XXX_ADC1_ADTRIGIGN | MC13XXX_ADC1_ASC;
+ /* Interrupt Status Registers */
+ #define BXTWC_IRQLVL1		0x4E02
+-#define BXTWC_PWRBTNIRQ		0x4E03
  
- 	/*
-diff --git a/include/linux/mfd/mc13xxx.h b/include/linux/mfd/mc13xxx.h
-index 54a3cd808f9e6..2ad9bdc0a5ec8 100644
---- a/include/linux/mfd/mc13xxx.h
-+++ b/include/linux/mfd/mc13xxx.h
-@@ -249,6 +249,7 @@ struct mc13xxx_platform_data {
- #define MC13XXX_ADC0_TSMOD0		(1 << 12)
- #define MC13XXX_ADC0_TSMOD1		(1 << 13)
- #define MC13XXX_ADC0_TSMOD2		(1 << 14)
-+#define MC13XXX_ADC0_CHRGRAWDIV		(1 << 15)
- #define MC13XXX_ADC0_ADINC1		(1 << 16)
- #define MC13XXX_ADC0_ADINC2		(1 << 17)
++#define BXTWC_PWRBTNIRQ		0x4E03
+ #define BXTWC_THRM0IRQ		0x4E04
+ #define BXTWC_THRM1IRQ		0x4E05
+ #define BXTWC_THRM2IRQ		0x4E06
+@@ -47,10 +47,9 @@
  
+ /* Interrupt MASK Registers */
+ #define BXTWC_MIRQLVL1		0x4E0E
+-#define BXTWC_MPWRTNIRQ		0x4E0F
+-
+ #define BXTWC_MIRQLVL1_MCHGR	BIT(5)
+ 
++#define BXTWC_MPWRBTNIRQ	0x4E0F
+ #define BXTWC_MTHRM0IRQ		0x4E12
+ #define BXTWC_MTHRM1IRQ		0x4E13
+ #define BXTWC_MTHRM2IRQ		0x4E14
+@@ -66,9 +65,7 @@
+ /* Whiskey Cove PMIC share same ACPI ID between different platforms */
+ #define BROXTON_PMIC_WC_HRV	4
+ 
+-/* Manage in two IRQ chips since mask registers are not consecutive */
+ enum bxtwc_irqs {
+-	/* Level 1 */
+ 	BXTWC_PWRBTN_LVL1_IRQ = 0,
+ 	BXTWC_TMU_LVL1_IRQ,
+ 	BXTWC_THRM_LVL1_IRQ,
+@@ -77,9 +74,11 @@ enum bxtwc_irqs {
+ 	BXTWC_CHGR_LVL1_IRQ,
+ 	BXTWC_GPIO_LVL1_IRQ,
+ 	BXTWC_CRIT_LVL1_IRQ,
++};
+ 
+-	/* Level 2 */
+-	BXTWC_PWRBTN_IRQ,
++enum bxtwc_irqs_pwrbtn {
++	BXTWC_PWRBTN_IRQ = 0,
++	BXTWC_UIBTN_IRQ,
+ };
+ 
+ enum bxtwc_irqs_bcu {
+@@ -113,7 +112,10 @@ static const struct regmap_irq bxtwc_regmap_irqs[] = {
+ 	REGMAP_IRQ_REG(BXTWC_CHGR_LVL1_IRQ, 0, BIT(5)),
+ 	REGMAP_IRQ_REG(BXTWC_GPIO_LVL1_IRQ, 0, BIT(6)),
+ 	REGMAP_IRQ_REG(BXTWC_CRIT_LVL1_IRQ, 0, BIT(7)),
+-	REGMAP_IRQ_REG(BXTWC_PWRBTN_IRQ, 1, 0x03),
++};
++
++static const struct regmap_irq bxtwc_regmap_irqs_pwrbtn[] = {
++	REGMAP_IRQ_REG(BXTWC_PWRBTN_IRQ, 0, 0x01),
+ };
+ 
+ static const struct regmap_irq bxtwc_regmap_irqs_bcu[] = {
+@@ -125,7 +127,7 @@ static const struct regmap_irq bxtwc_regmap_irqs_adc[] = {
+ };
+ 
+ static const struct regmap_irq bxtwc_regmap_irqs_chgr[] = {
+-	REGMAP_IRQ_REG(BXTWC_USBC_IRQ, 0, BIT(5)),
++	REGMAP_IRQ_REG(BXTWC_USBC_IRQ, 0, 0x20),
+ 	REGMAP_IRQ_REG(BXTWC_CHGR0_IRQ, 0, 0x1f),
+ 	REGMAP_IRQ_REG(BXTWC_CHGR1_IRQ, 1, 0x1f),
+ };
+@@ -144,7 +146,16 @@ static struct regmap_irq_chip bxtwc_regmap_irq_chip = {
+ 	.mask_base = BXTWC_MIRQLVL1,
+ 	.irqs = bxtwc_regmap_irqs,
+ 	.num_irqs = ARRAY_SIZE(bxtwc_regmap_irqs),
+-	.num_regs = 2,
++	.num_regs = 1,
++};
++
++static struct regmap_irq_chip bxtwc_regmap_irq_chip_pwrbtn = {
++	.name = "bxtwc_irq_chip_pwrbtn",
++	.status_base = BXTWC_PWRBTNIRQ,
++	.mask_base = BXTWC_MPWRBTNIRQ,
++	.irqs = bxtwc_regmap_irqs_pwrbtn,
++	.num_irqs = ARRAY_SIZE(bxtwc_regmap_irqs_pwrbtn),
++	.num_regs = 1,
+ };
+ 
+ static struct regmap_irq_chip bxtwc_regmap_irq_chip_tmu = {
+@@ -472,6 +483,16 @@ static int bxtwc_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	ret = bxtwc_add_chained_irq_chip(pmic, pmic->irq_chip_data,
++					 BXTWC_PWRBTN_LVL1_IRQ,
++					 IRQF_ONESHOT,
++					 &bxtwc_regmap_irq_chip_pwrbtn,
++					 &pmic->irq_chip_data_pwrbtn);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to add PWRBTN IRQ chip\n");
++		return ret;
++	}
++
+ 	ret = bxtwc_add_chained_irq_chip(pmic, pmic->irq_chip_data,
+ 					 BXTWC_TMU_LVL1_IRQ,
+ 					 IRQF_ONESHOT,
+diff --git a/include/linux/mfd/intel_soc_pmic.h b/include/linux/mfd/intel_soc_pmic.h
+index 5aacdb017a9f6..806a4f095312b 100644
+--- a/include/linux/mfd/intel_soc_pmic.h
++++ b/include/linux/mfd/intel_soc_pmic.h
+@@ -25,6 +25,7 @@ struct intel_soc_pmic {
+ 	int irq;
+ 	struct regmap *regmap;
+ 	struct regmap_irq_chip_data *irq_chip_data;
++	struct regmap_irq_chip_data *irq_chip_data_pwrbtn;
+ 	struct regmap_irq_chip_data *irq_chip_data_tmu;
+ 	struct regmap_irq_chip_data *irq_chip_data_bcu;
+ 	struct regmap_irq_chip_data *irq_chip_data_adc;
 -- 
 2.20.1
 
