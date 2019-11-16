@@ -2,63 +2,64 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6C6C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 01:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1809C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 01:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A410720733
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 01:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8911D2073B
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 01:18:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m+oUr6LD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pHFI4YN+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbfKPBSv (ORCPT
+        id S1727352AbfKPBSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 20:18:51 -0500
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:50177 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbfKPBSv (ORCPT
+        Fri, 15 Nov 2019 20:18:54 -0500
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:35302 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbfKPBSy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 20:18:51 -0500
-Received: by mail-pg1-f202.google.com with SMTP id u197so8548471pgc.17
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 17:18:50 -0800 (PST)
+        Fri, 15 Nov 2019 20:18:54 -0500
+Received: by mail-pl1-f201.google.com with SMTP id x9so7461123plv.2
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 17:18:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=ZUzmEblzCu4i0QMDAqcjBIhHaYZF4xUnc6EPrpjs8GA=;
-        b=m+oUr6LD7SGcMf5IM6mu649+U7cxDVK+6g8YT9MGNVLJ9cx9LrADDukztI6B9Hdnti
-         5mnXHqBvDq5aocbnFBMpMLxXb8GF2lYtffx6D8JuV8Ct/VubYzztje4WJmsjwnuIUrY7
-         BVJOSZodhzi3VPTcF36gL2evRaZMJ0YE1pwU0OxxMGXdxX+3U/SLwdlRM30AZaBnQbXM
-         0FjnWff5BoxXiNIHoqrsIC/p6OflT/KeDLJez03xU8EofC27VvRsso7MzofXrrUJm5gU
-         UoiHBCaKxkbshJf4OBsXORLzNDrtmwHv5CFL3YdrV5jHYkpnUf/hPbEOlubMkF/KZ+aI
-         tgBw==
+        bh=oyyrSWNIsHzDyGXKN9qogJst/Abh/eZwINcXn9u67XQ=;
+        b=pHFI4YN+TM3wMPRs0Sai00/gZw/oMmLXKygl5BBW7FgWJLykIeGJ8xmcFdZnXfbZlL
+         3uW2I2buJVt2xtSF77DCulgSybJMOCp/y5UH/x+txuRGZJ0S12PXCSMq9SuOUaAwXSZ2
+         Sut1gl40I/By7IeVYftAxb+SmokYNJ1EeQKQVJM4+rbfzTPh69i9sfNBMZby3NWkC5zu
+         0BGttX2v5li9kc07FYSaTTQya/vvEYOZsXJpPnoBvEx0/Yd36Flcj9SiWKGVK/FyBvSp
+         gNWjqIjxyIq5YdXP7fRkm4e5rjclzv482f2Kr0eLHTMgwFCqNpwvWAUZ8KFTtx8QVS09
+         pcyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=ZUzmEblzCu4i0QMDAqcjBIhHaYZF4xUnc6EPrpjs8GA=;
-        b=gYvZaEGn5wVTXP5w2KHUhB55W2FtwCI0CeyzDArhcFLfWAxJUl95xUWV6x2XKviTOI
-         j02vfeQt9l2UFAjJuHlwZ4A3/bTxuuhBiP4tYiniXrd4PIbup37Y36wTPx+FD2Os7nEU
-         zd0Ahg0X3xZ1BlNpePlR6BTlw8zLLW6MmQYRkq/4vOJvypif2I2PnHz+epFPGyW3Y+fz
-         Yv6R+dp4fNAXii9zMoWyz1BSYz/6pXLcLfSlg2nSiwggxM0YHRLmo6XjHWQrVmRu6jzS
-         7ScymCOwN6jdLAYBfK47mLzeqI2X/V83U+TXs6CkHO86FfIhA5mnYpSNGdLALJrCZTta
-         Qhbw==
-X-Gm-Message-State: APjAAAUnddJMR/u15LXKqNQW1RnCtqaMHrnZqG+eiqgvIykvM5sthvaa
-        At7Ilea0oVpwpEXDBtESiTVcSM8CT7Ln
-X-Google-Smtp-Source: APXvYqxzKdtjV5hPEMecJBIE7pKadM9wdZYvUIHMoFXQsvB2JpF2ZovkxrEWglOY1jZUxeQvwR1g1Rgau1WZ
-X-Received: by 2002:a63:f40e:: with SMTP id g14mr16147727pgi.132.1573867129795;
- Fri, 15 Nov 2019 17:18:49 -0800 (PST)
-Date:   Fri, 15 Nov 2019 17:18:35 -0800
-In-Reply-To: <20191114003042.85252-1-irogers@google.com>
-Message-Id: <20191116011845.177150-1-irogers@google.com>
+        bh=oyyrSWNIsHzDyGXKN9qogJst/Abh/eZwINcXn9u67XQ=;
+        b=nskUthLjVb9ELsJPhagxqk5qQDwf2QObDgCaD3h2fsQPiKKFOydGewu8y3urTh33CX
+         CYGxT/H5Hfoib2FRgz4BchPRGXcnnWAU9UaEWneAa+u9zMJzvrWToIbyE7ekndigFq6T
+         dLtzMKaxVVOzgKzg14RkWSUY9X2hT0StWGa6NMw5sI9cth0w+XsExGWVcGEcDPhQA6GU
+         5IpbLcXzKOlmw9hLR0ANF0h5kefjANQQQA9YM+UIYFkiWy3q08XnfVOeviMIYlcaHo/3
+         QkXL9eammGMfagbHOdfwO6XtB3RkCOirmwQTGLdpS/Z96iNoFLYn6tyqbndUEIqVMFnJ
+         xmdQ==
+X-Gm-Message-State: APjAAAXgNBFEJFAgAvz6+bSTRmaORgn6J4DHunW9qzcz/NhqS6qVAjoS
+        1313wQ1aSx9eK5MtcLFUhEtx4S/CFVgm
+X-Google-Smtp-Source: APXvYqydLayo836dsLIdcAePESVOSrYVoF/8reHncNaaFQPyT6vIf5oRUpwqS9D0iE+iyokD89CSTvvrt/if
+X-Received: by 2002:a63:4a01:: with SMTP id x1mr5772043pga.312.1573867132739;
+ Fri, 15 Nov 2019 17:18:52 -0800 (PST)
+Date:   Fri, 15 Nov 2019 17:18:36 -0800
+In-Reply-To: <20191116011845.177150-1-irogers@google.com>
+Message-Id: <20191116011845.177150-2-irogers@google.com>
 Mime-Version: 1.0
-References: <20191114003042.85252-1-irogers@google.com>
+References: <20191114003042.85252-1-irogers@google.com> <20191116011845.177150-1-irogers@google.com>
 X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-Subject: [PATCH v4 00/10] Optimize cgroup context switch
+Subject: [PATCH v4 01/10] perf/cgroup: Reorder perf_cgroup_connect()
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -92,53 +93,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avoid iterating over all per-CPU events during cgroup changing context
-switches by organizing events by cgroup.
+From: Peter Zijlstra <peterz@infradead.org>
 
-To make an efficient set of iterators, introduce a min max heap
-utility with test.
+Move perf_cgroup_connect() after perf_event_alloc(), such that we can
+find/use the PMU's cpu context.
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ kernel/events/core.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-The v4 patch set addresses review comments on the v3 patch set by
-Peter Zijlstra.
-
-These patches include a caching algorithm to improve the search for
-the first event in a group by Kan Liang <kan.liang@linux.intel.com> as
-well as rebasing hit "optimize event_filter_match during sched_in"
-from https://lkml.org/lkml/2019/8/7/771.
-
-The v2 patch set was modified by Peter Zijlstra in his perf/cgroup
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git
-
-These patches follow Peter's reorganization and his fixes to the
-perf_cpu_context min_heap storage code.
-
-Ian Rogers (8):
-  lib: introduce generic min max heap
-  perf: Use min_max_heap in visit_groups_merge
-  perf: Add per perf_cpu_context min_heap storage
-  perf/cgroup: Grow per perf_cpu_context heap storage
-  perf/cgroup: Order events in RB tree by cgroup id
-  perf: simplify and rename visit_groups_merge
-  perf: cache perf_event_groups_first for cgroups
-  perf: optimize event_filter_match during sched_in
-
-Kan Liang (1):
-  perf/cgroup: Do not switch system-wide events in cgroup switch
-
-Peter Zijlstra (1):
-  perf/cgroup: Reorder perf_cgroup_connect()
-
- include/linux/min_max_heap.h | 133 +++++++++
- include/linux/perf_event.h   |  15 +
- kernel/events/core.c         | 543 +++++++++++++++++++++++++++--------
- lib/Kconfig.debug            |  10 +
- lib/Makefile                 |   1 +
- lib/test_min_max_heap.c      | 194 +++++++++++++
- 6 files changed, 782 insertions(+), 114 deletions(-)
- create mode 100644 include/linux/min_max_heap.h
- create mode 100644 lib/test_min_max_heap.c
-
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index cfd89b4a02d8..0dce28b0aae0 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10597,12 +10597,6 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 	if (!has_branch_stack(event))
+ 		event->attr.branch_sample_type = 0;
+ 
+-	if (cgroup_fd != -1) {
+-		err = perf_cgroup_connect(cgroup_fd, event, attr, group_leader);
+-		if (err)
+-			goto err_ns;
+-	}
+-
+ 	pmu = perf_init_event(event);
+ 	if (IS_ERR(pmu)) {
+ 		err = PTR_ERR(pmu);
+@@ -10615,6 +10609,12 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 		goto err_pmu;
+ 	}
+ 
++	if (cgroup_fd != -1) {
++		err = perf_cgroup_connect(cgroup_fd, event, attr, group_leader);
++		if (err)
++			goto err_pmu;
++	}
++
+ 	err = exclusive_event_init(event);
+ 	if (err)
+ 		goto err_pmu;
+@@ -10675,12 +10675,12 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 	exclusive_event_destroy(event);
+ 
+ err_pmu:
++	if (is_cgroup_event(event))
++		perf_detach_cgroup(event);
+ 	if (event->destroy)
+ 		event->destroy(event);
+ 	module_put(pmu->module);
+ err_ns:
+-	if (is_cgroup_event(event))
+-		perf_detach_cgroup(event);
+ 	if (event->ns)
+ 		put_pid_ns(event->ns);
+ 	if (event->hw.target)
 -- 
 2.24.0.432.g9d3f5f5b63-goog
 
