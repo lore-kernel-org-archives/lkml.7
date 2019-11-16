@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBA9C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC53C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D65E620895
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0634A21479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919214;
-	bh=g5JG3N6L0NyVvDNzIuGXVjudP/DJfzVs1xq1Vs9a7Kg=;
+	s=default; t=1573919217;
+	bh=+Tu81s/jZSdhO5WGgtrMGG8ucgrcGU+ah1WI414OjVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eT2cxSk9m7fLuHHpdD+TIXVbCZY/z0vaHuwSh+egwQhwU1T9vuXHAuzybMLOs9nHm
-	 N0dbb5dRlRy7pDW0aKsEtwgQPEXUQorkqQKdbI5pxNsXq+k1F+TmF/ZsDv2ffAeaFa
-	 FBN64pDCYfpMyrNeR4gOlFXPAtKUw0h7RpQ2VRS4=
+	b=n64n9/x5EjjvAHw/jP+pDtHm0TtbeY4Na+cFmoa75cEt3VvC6n6FlxOan4gIeLqfe
+	 LT/8Q0Yphboq08tBgRCnCuaooDGfjiXgpBxnUajBfYcf6QlJHGot7v9sVlPn2CDqUH
+	 YPUT6lvzQuPTZpwiHGgeQR+Hitbv8rR0gbdqa1aY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729550AbfKPPqx (ORCPT
+        id S1728704AbfKPPqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:46:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52600 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:46:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728631AbfKPPqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:46:17 -0500
+        id S1729337AbfKPPqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:18 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B6A020830;
-        Sat, 16 Nov 2019 15:46:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C8E12083B;
+        Sat, 16 Nov 2019 15:46:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919177;
-        bh=g5JG3N6L0NyVvDNzIuGXVjudP/DJfzVs1xq1Vs9a7Kg=;
+        s=default; t=1573919178;
+        bh=+Tu81s/jZSdhO5WGgtrMGG8ucgrcGU+ah1WI414OjVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GLFGHRj7cueGZGQY/IG5zfJVyshenXHqQSDHOOtexa6LeoOw6l3J+OfNQsRZpWWVH
-         EGa3GZLBoBbOc7DbjDaqS1s2JhwweUcwN3BOQ2yoP2suHhRs9hTDj2pr+ac4BBBQRD
-         myVo0+DLu4bsdFAyAOZGqguKKrKjKKUFs70dKKew=
+        b=2tTi3lM4+ifw8TrAvx+imKniBJf8q5JjPHEBH3Mn2JFslXmo7HpYbUdH2348N0hdK
+         oCW0rH1QNVE7J3OSiellNwXyiAVTIpoUncjB8hDFeNkDt2j4tge3U8C0XMzVXcKRn+
+         4zc0fXE8ZnLS/tNzLKmPQ7UIe8QDIXyYWZWxan/o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar.Eggemann@arm.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, patrick.bellasi@arm.com,
-        vincent.guittot@linaro.org, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 185/237] sched/fair: Don't increase sd->balance_interval on newidle balance
-Date:   Sat, 16 Nov 2019 10:40:20 -0500
-Message-Id: <20191116154113.7417-185-sashal@kernel.org>
+Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 187/237] ARM: dts: imx6sx-sdb: Fix enet phy regulator
+Date:   Sat, 16 Nov 2019 10:40:22 -0500
+Message-Id: <20191116154113.7417-187-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -63,75 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Schneider <valentin.schneider@arm.com>
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-[ Upstream commit 3f130a37c442d5c4d66531b240ebe9abfef426b5 ]
+[ Upstream commit 1ad9fb750a104f51851c092edd7b3553f0218428 ]
 
-When load_balance() fails to move some load because of task affinity,
-we end up increasing sd->balance_interval to delay the next periodic
-balance in the hopes that next time we look, that annoying pinned
-task(s) will be gone.
+Bindings for "fixed-regulator" only explicitly support "gpio" property,
+not "gpios". Fix by correcting the property name.
 
-However, idle_balance() pays no attention to sd->balance_interval, yet
-it will still lead to an increase in balance_interval in case of
-pinned tasks.
+The enet PHYs on imx6sx-sdb needs to be explicitly reset after a power
+cycle, this can be handled by the phy-reset-gpios property. Sadly this
+is not handled on suspend: the fec driver turns phy-supply off but
+doesn't assert phy-reset-gpios again on resume.
 
-If we're going through several newidle balances (e.g. we have a
-periodic task), this can lead to a huge increase of the
-balance_interval in a very small amount of time.
+Since additional phy-level work is required to support powering off the
+phy in suspend fix the problem by just marking the regulator as
+"boot-on" "always-on" so that it's never turned off. This behavior is
+equivalent to older releases.
 
-To prevent that, don't increase the balance interval when going
-through a newidle balance.
+Keep the phy-reset-gpios property on fec anyway because it is a correct
+description of board design.
 
-This is a similar approach to what is done in commit 58b26c4c0257
-("sched: Increment cache_nice_tries only on periodic lb"), where we
-disregard newidle balance and rely on periodic balance for more stable
-results.
+This issue was exposed by commit efdfeb079cc3 ("regulator: fixed:
+Convert to use GPIO descriptor only") which causes the "gpios" property
+to also be parsed. Before that commit the "gpios" property had no
+effect, PHY reset was only handled in the the bootloader.
 
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Dietmar.Eggemann@arm.com
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: patrick.bellasi@arm.com
-Cc: vincent.guittot@linaro.org
-Link: http://lkml.kernel.org/r/1537974727-30788-2-git-send-email-valentin.schneider@arm.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+This fixes linux-next boot failures previously reported here:
+ https://lore.kernel.org/patchwork/patch/982437/#1177900
+ https://lore.kernel.org/patchwork/patch/994091/#1178304
+
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6sx-sdb.dtsi | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index e5e8f67218728..f77fcd37b226f 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -8819,13 +8819,22 @@ static int load_balance(int this_cpu, struct rq *this_rq,
- 	sd->nr_balance_failed = 0;
+diff --git a/arch/arm/boot/dts/imx6sx-sdb.dtsi b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+index f8f31872fa144..d6d517e4922ff 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
++++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+@@ -115,7 +115,9 @@
+ 		regulator-name = "enet_3v3";
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+-		gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
++		gpio = <&gpio2 6 GPIO_ACTIVE_LOW>;
++		regulator-boot-on;
++		regulator-always-on;
+ 	};
  
- out_one_pinned:
-+	ld_moved = 0;
-+
-+	/*
-+	 * idle_balance() disregards balance intervals, so we could repeatedly
-+	 * reach this code, which would lead to balance_interval skyrocketting
-+	 * in a short amount of time. Skip the balance_interval increase logic
-+	 * to avoid that.
-+	 */
-+	if (env.idle == CPU_NEWLY_IDLE)
-+		goto out;
-+
- 	/* tune up the balancing interval */
- 	if (((env.flags & LBF_ALL_PINNED) &&
- 			sd->balance_interval < MAX_PINNED_INTERVAL) ||
- 			(sd->balance_interval < sd->max_interval))
- 		sd->balance_interval *= 2;
--
--	ld_moved = 0;
- out:
- 	return ld_moved;
- }
+ 	reg_pcie_gpio: regulator-pcie-gpio {
+@@ -178,6 +180,7 @@
+ 	phy-supply = <&reg_enet_3v3>;
+ 	phy-mode = "rgmii";
+ 	phy-handle = <&ethphy1>;
++	phy-reset-gpios = <&gpio2 7 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ 
+ 	mdio {
+@@ -371,6 +374,8 @@
+ 				MX6SX_PAD_RGMII1_RD3__ENET1_RX_DATA_3	0x3081
+ 				MX6SX_PAD_RGMII1_RX_CTL__ENET1_RX_EN	0x3081
+ 				MX6SX_PAD_ENET2_RX_CLK__ENET2_REF_CLK_25M	0x91
++				/* phy reset */
++				MX6SX_PAD_ENET2_CRS__GPIO2_IO_7		0x10b0
+ 			>;
+ 		};
+ 
 -- 
 2.20.1
 
