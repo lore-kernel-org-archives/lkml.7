@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 153EBC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B45C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D579520729
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA7520729
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919343;
-	bh=HsPWwmDEIMEtsZTabfg0H5Vjz9voDV9fpRM5MsHpzpw=;
+	s=default; t=1573919345;
+	bh=Dr/MgV0CT6e61/f8fbdA16ZEvfZhrv4OxigPBFLptW0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RTA9bq/3wviUoKKYYVUo22qwBuywmVdgt9PyxgRrVpffJbdZEIg0GyU2iWF4RMS0m
-	 +f6c+fOu2k0KVfenCSGkT71vVEePBok0Vxkg8EJyFVOkIDvU9T98y1EjbuhPW+l4ac
-	 dKd6eX0NkRZqyN95dOoDz9miRPSsp4+6RtQmb81U=
+	b=LpgVTa+O+cw6XW5j6ZRhVVF4RopXwFeZVXwuj/Fdoy/XpQbW2vVxUieaf2eHaZh8p
+	 PjAZsCrIUCPMbLT5HYSfs4fNhZ8oDoGlSgE1lc3gSASt0ejncS3LUmS9FTRLKtp2Mf
+	 VWLpAkyA+Fuc14ttkImAfpCmoxQCW43xO7WQHSAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729171AbfKPPtC (ORCPT
+        id S1730261AbfKPPtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:49:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56350 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:49:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730236AbfKPPs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:48:58 -0500
+        id S1730208AbfKPPsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:48:54 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E7022086A;
-        Sat, 16 Nov 2019 15:48:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8B822086A;
+        Sat, 16 Nov 2019 15:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919337;
-        bh=HsPWwmDEIMEtsZTabfg0H5Vjz9voDV9fpRM5MsHpzpw=;
+        s=default; t=1573919333;
+        bh=Dr/MgV0CT6e61/f8fbdA16ZEvfZhrv4OxigPBFLptW0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qPkZ0RWBlRmZUlrCMs1PzBx6T3OLoSPeotxvUx3fcuBCzhr5gSQ+xGqyziWvON3OV
-         E14ZCzt04i2IcCuP5LX6eeVFNasEZfM6TycsKHMAH6s5LQPrpX1sGQbsmlyxuOhFIj
-         6p7MIzPfvFr3V6C60tMTNsTG1/aGPc3YvzVlEyGw=
+        b=GjMish9SvTdNTUQDc+xXENSbndt8dydOwnXokEvvHifxvXt7OjgnaEK+uBsmCgxli
+         pGafN/YoDpd+3LtsHVkV1IVlON4ZDxS6OwXX+YyWpI8n3rt6OJWKFBWEJfuNCDuVCb
+         MQYa4gdU+AXQ4ige0PMXlT+qXN2bK6js9m0AQZMc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, sparclinux@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 077/150] sparc64: Rework xchg() definition to avoid warnings.
-Date:   Sat, 16 Nov 2019 10:46:15 -0500
-Message-Id: <20191116154729.9573-77-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 074/150] thermal: rcar_thermal: Prevent hardware access during system suspend
+Date:   Sat, 16 Nov 2019 10:46:12 -0500
+Message-Id: <20191116154729.9573-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,45 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "David S. Miller" <davem@davemloft.net>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 6c2fc9cddc1ffdef8ada1dc8404e5affae849953 ]
+[ Upstream commit 3a31386217628ffe2491695be2db933c25dde785 ]
 
-Such as:
+On r8a7791/koelsch, sometimes the following message is printed during
+system suspend:
 
-fs/ocfs2/file.c: In function ‘ocfs2_file_write_iter’:
-./arch/sparc/include/asm/cmpxchg_64.h:55:22: warning: value computed is not used [-Wunused-value]
- #define xchg(ptr,x) ((__typeof__(*(ptr)))__xchg((unsigned long)(x),(ptr),sizeof(*(ptr))))
+    rcar_thermal e61f0000.thermal: thermal sensor was broken
 
-and
+This happens if the workqueue runs while the device is already
+suspended.  Fix this by using the freezable system workqueue instead,
+cfr. commit 51e20d0e3a60cf46 ("thermal: Prevent polling from happening
+during system suspend").
 
-drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c: In function ‘ixgbevf_xdp_setup’:
-./arch/sparc/include/asm/cmpxchg_64.h:55:22: warning: value computed is not used [-Wunused-value]
- #define xchg(ptr,x) ((__typeof__(*(ptr)))__xchg((unsigned long)(x),(ptr),sizeof(*(ptr))))
-
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: e0a5172e9eec7f0d ("thermal: rcar: add interrupt support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sparc/include/asm/cmpxchg_64.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/thermal/rcar_thermal.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/sparc/include/asm/cmpxchg_64.h b/arch/sparc/include/asm/cmpxchg_64.h
-index f71ef3729888f..316faa0130bab 100644
---- a/arch/sparc/include/asm/cmpxchg_64.h
-+++ b/arch/sparc/include/asm/cmpxchg_64.h
-@@ -52,7 +52,12 @@ static inline unsigned long xchg64(__volatile__ unsigned long *m, unsigned long
- 	return val;
- }
- 
--#define xchg(ptr,x) ((__typeof__(*(ptr)))__xchg((unsigned long)(x),(ptr),sizeof(*(ptr))))
-+#define xchg(ptr,x)							\
-+({	__typeof__(*(ptr)) __ret;					\
-+	__ret = (__typeof__(*(ptr)))					\
-+		__xchg((unsigned long)(x), (ptr), sizeof(*(ptr)));	\
-+	__ret;								\
-+})
- 
- void __xchg_called_with_bad_pointer(void);
+diff --git a/drivers/thermal/rcar_thermal.c b/drivers/thermal/rcar_thermal.c
+index 73e5fee6cf1d5..83126e2dce36d 100644
+--- a/drivers/thermal/rcar_thermal.c
++++ b/drivers/thermal/rcar_thermal.c
+@@ -401,8 +401,8 @@ static irqreturn_t rcar_thermal_irq(int irq, void *data)
+ 	rcar_thermal_for_each_priv(priv, common) {
+ 		if (rcar_thermal_had_changed(priv, status)) {
+ 			rcar_thermal_irq_disable(priv);
+-			schedule_delayed_work(&priv->work,
+-					      msecs_to_jiffies(300));
++			queue_delayed_work(system_freezable_wq, &priv->work,
++					   msecs_to_jiffies(300));
+ 		}
+ 	}
  
 -- 
 2.20.1
