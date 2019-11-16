@@ -2,51 +2,51 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AB7C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CDBC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 572D220855
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84B7820B7C
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919421;
-	bh=l6iiVA3E9iGMZdpQYcBruEKsw7d0YFm93jzD7sppr0Q=;
+	s=default; t=1573919427;
+	bh=Mv4ZG/FKh2Sre3UqDdN6MVRYBL3K8PTWXp77f0CNeMQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NF5rNoycMi+xOFeLOXE5mhdXQgnmqGY1PgUwryIfSobVJ+vTc4FbfoBmjgHQYb1Mj
-	 3HFzYcaALFToDCOa9quVBKoD3TtrMxanz4Y3TArD+ZFJoQaQvWV31B6fNdeUjz+qF+
-	 ndjPSOsVzr0DxSSKwqSNqL1CPHZRQejrkcrl4Syw=
+	b=L93c3JBDI+Q7+0ko/cSQz9gRCNNfFSn2zBENfQCU2C5+xAqt/DkCjTk34kCd1vfRh
+	 WLOiW4MqEedQcGvao2McMAhtR2wqFDXdtFgJZI86RoukWEtb3SnzV8+y6U+xeToOWb
+	 U1FrRgC2IqwL8e9NMdgiwwQ5q8EFZt9t6hF08Cvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730489AbfKPPuU (ORCPT
+        id S1730527AbfKPPu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:50:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58208 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:50:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730452AbfKPPuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:50:15 -0500
+        id S1728860AbfKPPuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:50:19 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A359B20855;
-        Sat, 16 Nov 2019 15:50:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 487F1208CE;
+        Sat, 16 Nov 2019 15:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919415;
-        bh=l6iiVA3E9iGMZdpQYcBruEKsw7d0YFm93jzD7sppr0Q=;
+        s=default; t=1573919418;
+        bh=Mv4ZG/FKh2Sre3UqDdN6MVRYBL3K8PTWXp77f0CNeMQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HfscN+AYeXrziaHkKN7DLsU8Yeczom/K0KC6EgzpvVUAEmJwbO6Hj53zDMR2VFxzz
-         a/DFfzfCL/yEbH4OvYuTedFtDuQFDvcRanI0D0rEOsX3btXz1fATIhQvRXizct7t+2
-         0HSb2ZH0MCusbsmbbEjI0QLXxVJCjftFFoyN/4pc=
+        b=0MwXKgCHueyFAOqJRuz91kgR83pe6Vvdvi2EBqoQIsuyszfcHfSigT5VKn4oCbvld
+         FiwrNmW15DUVGiyiJ9S+MXUD4uoD6uqPwIWtDw+zqxyha6jb+szg1zDll7qH2mwtiM
+         8pmk0rPtQMBblpz38mFJaslMdjKzu8bLFvHd25+o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 113/150] net: do not abort bulk send on BQL status
-Date:   Sat, 16 Nov 2019 10:46:51 -0500
-Message-Id: <20191116154729.9573-113-sashal@kernel.org>
+Cc:     Richard Guy Briggs <rgb@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 118/150] audit: print empty EXECVE args
+Date:   Sat, 16 Nov 2019 10:46:56 -0500
+Message-Id: <20191116154729.9573-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -59,49 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Richard Guy Briggs <rgb@redhat.com>
 
-[ Upstream commit fe60faa5063822f2d555f4f326c7dd72a60929bf ]
+[ Upstream commit ea956d8be91edc702a98b7fe1f9463e7ca8c42ab ]
 
-Before calling dev_hard_start_xmit(), upper layers tried
-to cook optimal skb list based on BQL budget.
+Empty executable arguments were being skipped when printing out the list
+of arguments in an EXECVE record, making it appear they were somehow
+lost.  Include empty arguments as an itemized empty string.
 
-Problem is that GSO packets can end up comsuming more than
-the BQL budget.
+Reproducer:
+	autrace /bin/ls "" "/etc"
+	ausearch --start recent -m execve -i | grep EXECVE
+	type=EXECVE msg=audit(10/03/2018 13:04:03.208:1391) : argc=3 a0=/bin/ls a2=/etc
 
-Breaking the loop is not useful, since requeued packets
-are ahead of any packets still in the qdisc.
+With fix:
+	type=EXECVE msg=audit(10/03/2018 21:51:38.290:194) : argc=3 a0=/bin/ls a1= a2=/etc
+	type=EXECVE msg=audit(1538617898.290:194): argc=3 a0="/bin/ls" a1="" a2="/etc"
 
-It is also more expensive, since next TX completion will
-push these packets later, while skbs are not in cpu caches.
+Passes audit-testsuite.  GH issue tracker at
+https://github.com/linux-audit/audit-kernel/issues/99
 
-It is also a behavior difference with TSO packets, that can
-break the BQL limit by a large amount.
-
-Note that drivers should use __netdev_tx_sent_queue()
-in order to have optimal xmit_more support, and avoid
-useless atomic operations as shown in the following patch.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+[PM: cleaned up the commit metadata]
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/dev.c | 2 +-
+ kernel/auditsc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 9d6beb9de924b..3ce68484ed5aa 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -3029,7 +3029,7 @@ struct sk_buff *dev_hard_start_xmit(struct sk_buff *first, struct net_device *de
+diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+index 76d789d6cea06..ffa8d64f6fef4 100644
+--- a/kernel/auditsc.c
++++ b/kernel/auditsc.c
+@@ -1102,7 +1102,7 @@ static void audit_log_execve_info(struct audit_context *context,
  		}
  
- 		skb = next;
--		if (netif_xmit_stopped(txq) && skb) {
-+		if (netif_tx_queue_stopped(txq) && skb) {
- 			rc = NETDEV_TX_BUSY;
- 			break;
- 		}
+ 		/* write as much as we can to the audit log */
+-		if (len_buf > 0) {
++		if (len_buf >= 0) {
+ 			/* NOTE: some magic numbers here - basically if we
+ 			 *       can't fit a reasonable amount of data into the
+ 			 *       existing audit buffer, flush it and start with
 -- 
 2.20.1
 
