@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CA9C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F884C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4784321479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C87FA21844
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919891;
-	bh=G+bUnZIIGo0TF/ZYi61/DRntB0hbkjdnF5/2+ThSJ3w=;
+	s=default; t=1573919896;
+	bh=mZXpx8+xFCXZk4H+qNwB395xe4afMbtzQq2VjSn5N+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P5hjTwJiz2kNzVrOAil48YuLM/oTLSFwnVSY8IA0oW+Np4nxOZGlLLKI8HPiVozJL
-	 olhr82isjXfq6wUO1DXC/w5xC1UiN9sOQ5/zkr0yYd6uPmJJLMET96fb49HRCzQ4xl
-	 gdE2rSSjCmOaofOUYgqDq/n/Gq7koUymGKrJwd/A=
+	b=1Ht19GmcR14jYs9HezEO867NWV0LHPXK5JtBfORHu2d3a/P18tFCUQ6shCDJLhFlz
+	 GITkIetUPO4qfdOrJ4hpSTNgf8CDmKCfF36DRhGp64x2QrrW96HdJbTA03pOYjVSlq
+	 61ml/ooIjPS3se9rjYuqcNZkQHqFp+OaAPbRtUC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731155AbfKPP6F (ORCPT
+        id S1731096AbfKPP6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:58:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36092 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:58:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731450AbfKPPy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:54:26 -0500
+        id S1731443AbfKPPyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:54:23 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D424A20854;
-        Sat, 16 Nov 2019 15:54:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 730D22184B;
+        Sat, 16 Nov 2019 15:54:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919666;
-        bh=G+bUnZIIGo0TF/ZYi61/DRntB0hbkjdnF5/2+ThSJ3w=;
+        s=default; t=1573919662;
+        bh=mZXpx8+xFCXZk4H+qNwB395xe4afMbtzQq2VjSn5N+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1tIp7Tr9MajtYxyDhtd9A9FpYXebUJcEoiUR+0HtOLrDqXmunEgNB9lN2bi1pQ51X
-         C3CXgl5ltXz6724N2YicDlLTf4ODpgH6aW7VptVfyXJAsaP1Q4awAGhPmTz1KDZZdS
-         rBi9gGBvl3xAI64iRrphAyQqR3UY0hN4UYGM4g8E=
+        b=DeGY8v+tAzBm1RjD55WfKzR6eBBBxhnakX1qMTI2DQQyA3huGaxkAlyqjTs+9ASEI
+         5VCjqa9eRXCMaSf0ZeIYiK2A2Gi7H+//+cizHOQ2CPJ2cyMgqTjM04xoelmq+hefw1
+         yZCd/mrZdA6/00tl/nwdoFZsba9G6H5DJtEhQJwQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 38/77] selftests/ftrace: Fix to test kprobe $comm arg only if available
-Date:   Sat, 16 Nov 2019 10:53:00 -0500
-Message-Id: <20191116155339.11909-38-sashal@kernel.org>
+Cc:     Fabio Estevam <fabio.estevam@nxp.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 36/77] mfd: mc13xxx-core: Fix PMIC shutdown when reading ADC values
+Date:   Sat, 16 Nov 2019 10:52:58 -0500
+Message-Id: <20191116155339.11909-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -59,38 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Fabio Estevam <fabio.estevam@nxp.com>
 
-[ Upstream commit 2452c96e617a0ff6fb2692e55217a3fa57a7322c ]
+[ Upstream commit 55143439b7b501882bea9d95a54adfe00ffc79a3 ]
 
-Test $comm in kprobe-event argument syntax testcase
-only if it is supported on the kernel because
-$comm has been introduced 4.8 kernel.
-So on older stable kernel, it should be skipped.
+When trying to read any MC13892 ADC channel on a imx51-babbage board:
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Shuah Khan (Samsung OSG) <shuah@kernel.org>
+The MC13892 PMIC shutdowns completely.
+
+After debugging this issue and comparing the MC13892 and MC13783
+initializations done in the vendor kernel, it was noticed that the
+CHRGRAWDIV bit of the ADC0 register was not being set.
+
+This bit is set by default after power on, but the driver was
+clearing it.
+
+After setting this bit it is possible to read the ADC values correctly.
+
+Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+Tested-by: Chris Healy <cphealy@gmail.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc       | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/mfd/mc13xxx-core.c  | 3 ++-
+ include/linux/mfd/mc13xxx.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
-index 231bcd2c4eb59..1e7ac6f3362ff 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
-@@ -71,8 +71,11 @@ test_badarg "\$stackp" "\$stack0+10" "\$stack1-10"
- echo "r ${PROBEFUNC} \$retval" > kprobe_events
- ! echo "p ${PROBEFUNC} \$retval" > kprobe_events
+diff --git a/drivers/mfd/mc13xxx-core.c b/drivers/mfd/mc13xxx-core.c
+index 8d74806b83c12..1494e7cbd593b 100644
+--- a/drivers/mfd/mc13xxx-core.c
++++ b/drivers/mfd/mc13xxx-core.c
+@@ -278,7 +278,8 @@ int mc13xxx_adc_do_conversion(struct mc13xxx *mc13xxx, unsigned int mode,
+ 	if (ret)
+ 		goto out;
  
-+# $comm was introduced in 4.8, older kernels reject it.
-+if grep -A1 "fetcharg:" README | grep -q '\$comm' ; then
- : "Comm access"
- test_goodarg "\$comm"
-+fi
+-	adc0 = MC13XXX_ADC0_ADINC1 | MC13XXX_ADC0_ADINC2;
++	adc0 = MC13XXX_ADC0_ADINC1 | MC13XXX_ADC0_ADINC2 |
++	       MC13XXX_ADC0_CHRGRAWDIV;
+ 	adc1 = MC13XXX_ADC1_ADEN | MC13XXX_ADC1_ADTRIGIGN | MC13XXX_ADC1_ASC;
  
- : "Indirect memory access"
- test_goodarg "+0(${GOODREG})" "-0(${GOODREG})" "+10(\$stack)" \
+ 	if (channel > 7)
+diff --git a/include/linux/mfd/mc13xxx.h b/include/linux/mfd/mc13xxx.h
+index 638222e43e489..93011c61aafd2 100644
+--- a/include/linux/mfd/mc13xxx.h
++++ b/include/linux/mfd/mc13xxx.h
+@@ -247,6 +247,7 @@ struct mc13xxx_platform_data {
+ #define MC13XXX_ADC0_TSMOD0		(1 << 12)
+ #define MC13XXX_ADC0_TSMOD1		(1 << 13)
+ #define MC13XXX_ADC0_TSMOD2		(1 << 14)
++#define MC13XXX_ADC0_CHRGRAWDIV		(1 << 15)
+ #define MC13XXX_ADC0_ADINC1		(1 << 16)
+ #define MC13XXX_ADC0_ADINC2		(1 << 17)
+ 
 -- 
 2.20.1
 
