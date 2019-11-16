@@ -2,102 +2,122 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88325C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 13:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB0CC43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 13:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5502420728
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 13:40:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573911606;
-	bh=qEu1+/Og3OBtKVbdJFE+PQGreGDYeq5DFHD43HsDEn8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RLy+26UvNaXlqOLKKIiBcrlVhG4YmuCbdT5qgXS3MaYiSccKXXosImqB6poW9spiS
-	 246VK+nkoSo0V7UvlhJND55PU5ruw42qln8B9YVhR+Xu672YVZyUGU8eCEoF9JlUru
-	 +Vk6THiLoSdSqCVwbR25AOWMv67SNbVp2jJ9qvCs=
+	by mail.kernel.org (Postfix) with ESMTP id 65586206D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 13:54:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="JCs4egWj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbfKPNkF (ORCPT
+        id S1727605AbfKPNy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 08:40:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50170 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727568AbfKPNkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 08:40:04 -0500
-Received: from localhost (unknown [84.241.192.145])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 864CE206D4;
-        Sat, 16 Nov 2019 13:40:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573911604;
-        bh=qEu1+/Og3OBtKVbdJFE+PQGreGDYeq5DFHD43HsDEn8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HJ+dSToqiKaeu8Dz3e383PGP1WmAXi10JYYiR+GO2obTqyw4VFaGcu1R61I1E2VF6
-         lzFQfb3o+VPhUQzZwFuoAoBbz7Ey0A4QDQ4GoWqWZKWHZ8nSF+ggTWkZ0G4HZMwugK
-         yDNZFkp3Bg/W2lXVY9s8YYpZk0Ymm9RoM5NsV440=
-Date:   Sat, 16 Nov 2019 14:40:01 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     patrick.rudolph@9elements.com
-Cc:     linux-kernel@vger.kernel.org, coreboot@coreboot.org,
-        Arthur Heymans <arthur@aheymans.xyz>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexios Zavras <alexios.zavras@intel.com>
-Subject: Re: [PATCH 2/3] firmware: google: Unregister driver_info on failure
- and exit in gsmi
-Message-ID: <20191116134001.GE454551@kroah.com>
-References: <20191115134842.17013-1-patrick.rudolph@9elements.com>
- <20191115134842.17013-3-patrick.rudolph@9elements.com>
+        Sat, 16 Nov 2019 08:54:27 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:43426 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727551AbfKPNy0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 08:54:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1573912464; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FMg2UQ0AjVfNKkZxaPXgwun/tawVgx5MduyoijaPIVs=;
+        b=JCs4egWjPEhJHCVnunWe+Hv6R2v65qQYjiqSqtcMixHFDWutHoMZF8TjB9+5zoG4Q5pb39
+        BJNhzUS0fRap2UUDLH7OUw0F/7TuQWGjs6aGIR0qZKttvQ/FZgmQiPPYwIIvlTtE0ITBoC
+        4rcssO5nR4YVmfmTNLkTco2LDd1jS2g=
+Date:   Sat, 16 Nov 2019 14:54:18 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2] power/supply: ingenic-battery: Don't change scale if
+ there's only one
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Message-Id: <1573912458.3.0@crapouillou.net>
+In-Reply-To: <0f300a5f82b4cce76cdbdb5ba081d7ae@artur-rojek.eu>
+References: <20191114163500.57384-1-paul@crapouillou.net>
+        <0f300a5f82b4cce76cdbdb5ba081d7ae@artur-rojek.eu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115134842.17013-3-patrick.rudolph@9elements.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 02:48:38PM +0100, patrick.rudolph@9elements.com wrote:
-> From: Arthur Heymans <arthur@aheymans.xyz>
-> 
-> Fix a bug where the kernel module couldn't be loaded after unloading,
-> as the platform driver wasn't released on exit.
-> 
-> Signed-off-by: Arthur Heymans <arthur@aheymans.xyz>
-> ---
->  drivers/firmware/google/gsmi.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/firmware/google/gsmi.c b/drivers/firmware/google/gsmi.c
-> index edaa4e5d84ad..974c769b75cf 100644
-> --- a/drivers/firmware/google/gsmi.c
-> +++ b/drivers/firmware/google/gsmi.c
-> @@ -1016,6 +1016,9 @@ static __init int gsmi_init(void)
->  	dma_pool_destroy(gsmi_dev.dma_pool);
->  	platform_device_unregister(gsmi_dev.pdev);
->  	pr_info("gsmi: failed to load: %d\n", ret);
-> +#ifdef CONFIG_PM
-> +	platform_driver_unregister(&gsmi_driver_info);
-> +#endif
->  	return ret;
->  }
->  
-> @@ -1037,6 +1040,9 @@ static void __exit gsmi_exit(void)
->  	gsmi_buf_free(gsmi_dev.name_buf);
->  	dma_pool_destroy(gsmi_dev.dma_pool);
->  	platform_device_unregister(gsmi_dev.pdev);
-> +#ifdef CONFIG_PM
-> +	platform_driver_unregister(&gsmi_driver_info);
+Hi Artur,
 
-Why the #ifdef here?  Why does PM change things?
 
-#ifdefs in .c code is really frowned on.
+Le ven., nov. 15, 2019 at 18:39, Artur Rojek <contact@artur-rojek.eu> a=20
+=E9crit :
+> Hi Paul.
+> Comments inline.
+>=20
+> On 2019-11-14 17:35, Paul Cercueil wrote:
+>> The ADC in the JZ4740 can work either in high-precision mode with a=20
+>> =7F2.5V
+>> range, or in low-precision mode with a 7.5V range. The code in place=20
+>> in
+>> this driver will select the proper scale according to the maximum
+>> voltage of the battery.
+>>=20
+>> The JZ4770 however only has one mode, with a 6.6V range. If only one
+>> scale is available, there's no need to change it (and nothing to=20
+>> change
+>> it to), and trying to do so will fail with -EINVAL.
+>>=20
+>> Fixes: fb24ccfbe1e0 ("power: supply: add Ingenic JZ47xx battery=20
+>> =7Fdriver.")
+>>=20
+>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>> Cc: stable@vger.kernel.org
+>> ---
+>>=20
+>> Notes:
+>>     v2: Rebased on v5.4-rc7
+>>=20
+>>  drivers/power/supply/ingenic-battery.c | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>=20
+>> diff --git a/drivers/power/supply/ingenic-battery.c
+>> b/drivers/power/supply/ingenic-battery.c
+>> index 35816d4b3012..5a53057b4f64 100644
+>> --- a/drivers/power/supply/ingenic-battery.c
+>> +++ b/drivers/power/supply/ingenic-battery.c
+>> @@ -80,6 +80,10 @@ static int ingenic_battery_set_scale(struct
+>> ingenic_battery *bat)
+>>  	if (ret !=3D IIO_AVAIL_LIST || scale_type !=3D IIO_VAL_FRACTIONAL_LOG2=
+)
+>>  		return -EINVAL;
+>>=20
+>> +	/* Only one (fractional) entry - nothing to change */
+>> +	if (scale_len =3D=3D 2)
+>> +		return 0;
+>> +
+>=20
+> This function also serves to validate that the maximum voltage is in=20
+> range of available scales.
+> Please move your code down a bit so that the check for max_mV is=20
+> still being done.
 
-thanks,
+Good point - I'll send a V3.
 
-greg k-h
+-Paul
+
+>=20
+> Thanks,
+> Artur
+>=20
+>>  	max_mV =3D bat->info.voltage_max_design_uv / 1000;
+>>=20
+>>  	for (i =3D 0; i < scale_len; i +=3D 2) {
+
+=
+
