@@ -2,82 +2,94 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD9FC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 19:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9552FC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 19:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD09206E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 19:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6777A206E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 19:47:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/DQ/d+S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eG8Ac8nL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727577AbfKPTrq (ORCPT
+        id S1727666AbfKPTry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 14:47:46 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46967 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727473AbfKPTrp (ORCPT
+        Sat, 16 Nov 2019 14:47:54 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36006 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727473AbfKPTrx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 14:47:45 -0500
-Received: by mail-pl1-f193.google.com with SMTP id l4so7059725plt.13;
-        Sat, 16 Nov 2019 11:47:45 -0800 (PST)
+        Sat, 16 Nov 2019 14:47:53 -0500
+Received: by mail-wr1-f65.google.com with SMTP id r10so14956323wrx.3;
+        Sat, 16 Nov 2019 11:47:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OYC2ekx7Tzmq1QfMcXgIkodtKuvAto7LJnsdQYrM5P0=;
-        b=O/DQ/d+SOGMDbioUU5bvadLkKDnTXUk7FRJF1g2GFbdPQm9yWrAopHx7hJg+wAtSDB
-         aynBQ/HG50v06LEuARaPf+RM5PPAKgPRvKGVPKCnUOqFHMJGPDzXKf9+7CH1qdx+z6hE
-         b5zIz5Y6VRUvJmjS8QbwPMYRPMVQcR7MhkbAykyzXtEMu63YVUEzjqeWMX6sqBJTZIHt
-         JFL9dlDKuRpzk6S+rk0ztqrb8T9Vqy23SuYsik14+0KHWiS6mgbtjEvYvZJYz+Ipwmxg
-         4l8sV0cNGS9zko/Kg91UQV7y93HM+zE1Lrm1URK3jvL8FopPdnQzsUzMnzV5SeUzPntr
-         nlMg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kF8bADSuYOyZZ04T0VZZ38WxPOWk9q6i2kAOnZ54aEI=;
+        b=eG8Ac8nL9fJJ4dAxSlZ5w1mlOPQ/aZ44+2vKtS/iCw26fv8FTKt6AqpoUMiPu3pOBr
+         Wm46KJ9wUiA9nhrMoDOjF80R3DNyRC8bbZ/wono9/fKwCBzuAqiDb20MjxrXNtAsY6De
+         xhEIgdFubj2LpSMBCDZZAdpMbZAbYZhggITGNS/o+rMfp0jaNipFl4Hq+nFiJVhl+1Uh
+         0JpZbxWG3JUXhbZZ4U7Huzleg/97V3LYFyoVYvXQYTG120n8YyULMVrGXOmtuuBGJeoT
+         qlr2Fgp4DE3rpVMiXtX2fj8CKHK2833jMMxeacBhAk5/2WzPrTakAsOuIGzxz3DJPKcy
+         1KuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OYC2ekx7Tzmq1QfMcXgIkodtKuvAto7LJnsdQYrM5P0=;
-        b=GLbGsGWxMpJ1l9oLGcP9ABDmq9ZJv34ySeBqdG+zJi/J1qg+p15OgB0NqaLptm6XLd
-         8rg6qDKvxuiDobXVlSGzDLgsXXUSJDZ5vwDwgVwwtZYqrys5w2ycx9lG1H7xL95aC0c2
-         aHU2XpK5jwSiTKCpeoMjib99lFpM8AkmSY57JjbSuNH7q3j6ITo3247gwmbmej99siie
-         soUkYdXBRXNBlf7b4LwI5DGBqxnKUhp1mHwqB+UAQLKHFUqp+w5IBFlPqJaSFAjeqalb
-         Xn2qz1OuVNrcimyXVOghf87bKdtvz53W2zyLptWLkYT6gDWm6oVnGu7gyTsN6ZGelBKG
-         ijAg==
-X-Gm-Message-State: APjAAAWBH6942o5uWLL4/HC/lLnQnGxq/fE8Zh1zxsMSNc1qiqtThLks
-        2zhbHkClMhAU8VCOiFb3WPT2BAhEhcJf+EDXEOY=
-X-Google-Smtp-Source: APXvYqzzKrnIp2YvOOnX+vGIyguect9QGtIIXcMScDxpXTL77ouZZoPvyilpnVU+y7dsn+efWeNlPwsQXCG9e75v9XM=
-X-Received: by 2002:a17:902:d684:: with SMTP id v4mr20988116ply.316.1573933664833;
- Sat, 16 Nov 2019 11:47:44 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kF8bADSuYOyZZ04T0VZZ38WxPOWk9q6i2kAOnZ54aEI=;
+        b=BHMW4R5RfhWANla4+AW2CN3TKIbko+oBe+Vpfc7jk0Jbhlj0pIA178x8Aisuwc74XN
+         I3HpXaaKZ2wD0WgZg4vP5hTwqPeb0IGdG49zqaBGxJZlcdiMdlfRtlIn8A2DcsUo9zQm
+         KtsRMqWQ1AQm//bmdcpPvsJG/bL9sBHfVzMGopwViEYhLFABGtaQK11zawbTFk703gk5
+         DrNh/mYxiFG5s6kDJh/KUEgfryAG2odr2TKS+EmD1g/+i6mQocwgVHQWduY/7ggGMwOr
+         IMQQuW0HETh+/NtOPC0kaPp1XL/MVb3ELyH7vAmV5E+2kbSXLLv9VjEFpzkLcPabPOt5
+         laOg==
+X-Gm-Message-State: APjAAAWqnyutIzTALx0eKB45Lg6EP5KygeLTV5GaoAvf/DntzU/S0vd0
+        O3ZxzkOOWproGaA7Mg4B5oc=
+X-Google-Smtp-Source: APXvYqx1+kz8MC/TEjt8V8DXDIvq8MBgjf1a9D6+6mE2GxlbPdRhZqxKarPwAbTsKLoRZIFBdux2BA==
+X-Received: by 2002:adf:8543:: with SMTP id 61mr13202158wrh.171.1573933671822;
+        Sat, 16 Nov 2019 11:47:51 -0800 (PST)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id 76sm15319821wma.0.2019.11.16.11.47.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 Nov 2019 11:47:51 -0800 (PST)
+Date:   Sat, 16 Nov 2019 20:47:48 +0100
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v2 -next] crypto: sun8i-ce - Fix memdup.cocci warnings
+Message-ID: <20191116194748.GA23118@Red>
+References: <20191109024403.47106-1-yuehaibing@huawei.com>
+ <20191112072314.145064-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-References: <20191112130510.91570-1-tonylu@linux.alibaba.com>
- <20191112130510.91570-2-tonylu@linux.alibaba.com> <ea3bf073-68af-d899-2664-fef54953a68d@gmail.com>
-In-Reply-To: <ea3bf073-68af-d899-2664-fef54953a68d@gmail.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Sat, 16 Nov 2019 11:47:33 -0800
-Message-ID: <CAM_iQpW7S9fUX33jCNhRfsK17rGmFSCkO97ujREJGsq1NpwwzQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] net: add trace events for net_device refcnt
-To:     David Ahern <dsahern@gmail.com>
-Cc:     Tony Lu <tonylu@linux.alibaba.com>,
-        David Miller <davem@davemloft.net>,
-        Eric Dumazet <eric.dumazet@gmail.com>, shemminger@osdl.org,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112072314.145064-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 7:27 AM David Ahern <dsahern@gmail.com> wrote:
-> The location alone does nothing for resolving reference count leaks; you
-> really have to use stack traces to pair up the hold and put and to give
-> context for what are repetitive locations for the hold and put.
+On Tue, Nov 12, 2019 at 07:23:14AM +0000, YueHaibing wrote:
+> Use kmemdup rather than duplicating its implementation
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+> v2: fix patch title 'sun8i-ss' -> 'sun8i-ce'
+> ---
+>  drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
 
-+1
+Acked-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 
-And, as you are using tracepoint, you get trace filter and trigger for free,
-which already includes stacktrace.
+Thanks
