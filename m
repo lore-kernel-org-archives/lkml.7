@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA3CC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4ECC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F38CA21479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EF5021479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919884;
-	bh=GrS/sfvynxkd0Z9uBnjBDVMYI0Mc/xdQEjRQgmhPX4Q=;
+	s=default; t=1573919888;
+	bh=QE+CGNDNhKU+qrVEKrUF0e4RK3I+KMAovBbubBxCR/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R8J/Ba40kHGLxYekrTA86RrcMBmxY0q2nSV7wXkRUhNsaeOhROAlDsC2dFfqT1aWq
-	 SjAs7dOFVv9cMMz27mUSZK09NRIb/nV2LtzvXm1QTghRSkOd8dIa4Yayq+yJgVocI8
-	 fLQRCHPed3dIsbskbMnQnK5KS+XrEXnkoV4siPOM=
+	b=1JvZgxW3CJRqawpEOITVxqFaKwUvDlTo/pPflOohFmDG71XHp5PWMLxMOaxIad96/
+	 gXDF5thLjh2xY/kJfkIAgIqFSN9QbwM+yHwd8A7NkYHxvHgwg8jEWzWAGdk+UUjO0i
+	 ieb2tMbgSResmBSH5416cwddSQK+FHrB/hoKS/YQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730109AbfKPPyX (ORCPT
+        id S1731070AbfKPP6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:54:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35784 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:58:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731405AbfKPPyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:54:14 -0500
+        id S1731405AbfKPPyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:54:24 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8C162186D;
-        Sat, 16 Nov 2019 15:54:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6230A208E3;
+        Sat, 16 Nov 2019 15:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919653;
-        bh=GrS/sfvynxkd0Z9uBnjBDVMYI0Mc/xdQEjRQgmhPX4Q=;
+        s=default; t=1573919663;
+        bh=QE+CGNDNhKU+qrVEKrUF0e4RK3I+KMAovBbubBxCR/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o1kQhy2zZkJPGCkx3oDbliHrL0l/KdDM1Q5AK5RoV0UGsCLnyxefR8Eqk+72ITBhY
-         bRSK90zzCl2C2s1I71NHjsHQlodb0nJK5ZqehhnSj2TV4H0V6obsmuxRWJR7I6kSEl
-         AtvxQQP1TVaHcw+RqD2EuOwfjhs4MasydY1T/LbM=
+        b=b+gmaZcPLaDjKGUzD0VT7NoviaOdcfsGqR3EBobP+ty7yElNVWKDZbLNL8qAhCUjo
+         2r83HVhXGWYykMkszG4Rai+91mVUfdxgILM4RG8VWvBUxDWh5NEYDyDlPJ1ur0BXDb
+         7uwlISv9/ZblsMlE1odgHz1VOsPEtRiDee7K/nu4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 27/77] SUNRPC: Fix a compile warning for cmpxchg64()
-Date:   Sat, 16 Nov 2019 10:52:49 -0500
-Message-Id: <20191116155339.11909-27-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 37/77] mfd: max8997: Enale irq-wakeup unconditionally
+Date:   Sat, 16 Nov 2019 10:52:59 -0500
+Message-Id: <20191116155339.11909-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -59,28 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit e732f4485a150492b286f3efc06f9b34dd6b9995 ]
+[ Upstream commit efddff27c886e729a7f84a7205bd84d7d4af7336 ]
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+IRQ wake up support for MAX8997 driver was initially configured by
+respective property in pdata. However, after the driver conversion to
+device-tree, setting it was left as 'todo'. Nowadays most of other PMIC MFD
+drivers initialized from device-tree assume that they can be an irq wakeup
+source, so enable it also for MAX8997. This fixes support for wakeup from
+MAX8997 RTC alarm.
+
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/auth_gss/gss_krb5_seal.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mfd/max8997.c       | 8 +-------
+ include/linux/mfd/max8997.h | 1 -
+ 2 files changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/net/sunrpc/auth_gss/gss_krb5_seal.c b/net/sunrpc/auth_gss/gss_krb5_seal.c
-index 1d74d653e6c05..ad0dcb69395d7 100644
---- a/net/sunrpc/auth_gss/gss_krb5_seal.c
-+++ b/net/sunrpc/auth_gss/gss_krb5_seal.c
-@@ -63,6 +63,7 @@
- #include <linux/sunrpc/gss_krb5.h>
- #include <linux/random.h>
- #include <linux/crypto.h>
-+#include <linux/atomic.h>
+diff --git a/drivers/mfd/max8997.c b/drivers/mfd/max8997.c
+index 156ed6f92aa32..2d9ae7cf948f8 100644
+--- a/drivers/mfd/max8997.c
++++ b/drivers/mfd/max8997.c
+@@ -156,12 +156,6 @@ static struct max8997_platform_data *max8997_i2c_parse_dt_pdata(
  
- #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
- # define RPCDBG_FACILITY        RPCDBG_AUTH
+ 	pd->ono = irq_of_parse_and_map(dev->of_node, 1);
+ 
+-	/*
+-	 * ToDo: the 'wakeup' member in the platform data is more of a linux
+-	 * specfic information. Hence, there is no binding for that yet and
+-	 * not parsed here.
+-	 */
+-
+ 	return pd;
+ }
+ 
+@@ -249,7 +243,7 @@ static int max8997_i2c_probe(struct i2c_client *i2c,
+ 	 */
+ 
+ 	/* MAX8997 has a power button input. */
+-	device_init_wakeup(max8997->dev, pdata->wakeup);
++	device_init_wakeup(max8997->dev, true);
+ 
+ 	return ret;
+ 
+diff --git a/include/linux/mfd/max8997.h b/include/linux/mfd/max8997.h
+index cf815577bd686..3ae1fe743bc34 100644
+--- a/include/linux/mfd/max8997.h
++++ b/include/linux/mfd/max8997.h
+@@ -178,7 +178,6 @@ struct max8997_led_platform_data {
+ struct max8997_platform_data {
+ 	/* IRQ */
+ 	int ono;
+-	int wakeup;
+ 
+ 	/* ---- PMIC ---- */
+ 	struct max8997_regulator_data *regulators;
 -- 
 2.20.1
 
