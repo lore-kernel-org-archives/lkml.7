@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53587C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B82FC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2941D207FA
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1118E20895
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919373;
-	bh=qG+GTWJUCtUCh6z1mTFgs8RZeHFD3rjOGTuiY9vZXrw=;
+	s=default; t=1573919383;
+	bh=smj7WEOSQsCw5b/IQBjPivmAUO3VMbcy9rvsjk69F/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZYxAGZyPh5VJ7A7X8OV3wPUTv4qbN5GyBMaCW24egxPm91278Oj189Ic0sRHJggO2
-	 I2e/MXYjqQxoMwe0qr7Q7nuUl/NYS6ZfQREVvfJshZqb75YygwCf4sqMcp1sNYSvdk
-	 X/xBJGSq191znWlckkwTH2UDLG7wlmy4WYd+8omk=
+	b=jjHgvLcsDN4LzLW6TTzn+ZnGp2cdccuL0sjbhawHjjVM/RU/ai2fK4W7InhTg29U/
+	 s80w8v+kV+XuZM3o3WHi30C4S47gO08VxvBqahLjaaKKzzMSGSVQ1qbcOU6IQmI3u/
+	 a3q/rH5OYHaZCMyc8vLFMHsFjDQRCsMOQD8G0pTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730338AbfKPPtb (ORCPT
+        id S1729173AbfKPPtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:49:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57056 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:49:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730279AbfKPPt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:49:27 -0500
+        id S1730350AbfKPPtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:49:36 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F160920729;
-        Sat, 16 Nov 2019 15:49:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E081207FA;
+        Sat, 16 Nov 2019 15:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919366;
-        bh=qG+GTWJUCtUCh6z1mTFgs8RZeHFD3rjOGTuiY9vZXrw=;
+        s=default; t=1573919375;
+        bh=smj7WEOSQsCw5b/IQBjPivmAUO3VMbcy9rvsjk69F/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aoH5ejTeYuOHgczhDuUQiLnq9vc8XdDSXFe7TIJN9tXBCkTR0XyOmZSctPJz/mU0H
-         nYh4L/m3iX59K1XWHCZHfW7ULcgHR4sKRx8oSL3O2EPhV7Qw+TaD+HjW6nXMHv+UU2
-         55aCglAK2vJXv2TteUSwQhK30MwFtpZrH6U7LnHw=
+        b=VLuimyiA3koVGjsZ2NWcPC1TZuehYW0nbSfZYB6lXRHBztZtmFi8VEg9YbM9ziIh8
+         tOtWCp9UQ+Yx5xYgzLddnM0jt1Rvzv+dWz1jyvlHut7TVlw+dH5Ic/F7KQ2pq0HDcn
+         v2AahSntDWzU2ZAoItuDBA6ZA4MnPNSonKir8yao=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Chinner <david@fromorbit.com>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 088/150] vfs: avoid problematic remapping requests into partial EOF block
-Date:   Sat, 16 Nov 2019 10:46:26 -0500
-Message-Id: <20191116154729.9573-88-sashal@kernel.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Yury Norov <ynorov@caviumnetworks.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 093/150] linux/bitmap.h: handle constant zero-size bitmaps correctly
+Date:   Sat, 16 Nov 2019 10:46:31 -0500
+Message-Id: <20191116154729.9573-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,95 +63,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-[ Upstream commit 07d19dc9fbe9128378b9e226abe886fd8fd473df ]
+[ Upstream commit 7275b097851a5e2e0dd4da039c7e96b59ac5314e ]
 
-A deduplication data corruption is exposed in XFS and btrfs. It is
-caused by extending the block match range to include the partial EOF
-block, but then allowing unknown data beyond EOF to be considered a
-"match" to data in the destination file because the comparison is only
-made to the end of the source file. This corrupts the destination file
-when the source extent is shared with it.
+The static inlines in bitmap.h do not handle a compile-time constant
+nbits==0 correctly (they dereference the passed src or dst pointers,
+despite only 0 words being valid to access).  I had the 0-day buildbot
+chew on a patch [1] that would cause build failures for such cases without
+complaining, suggesting that we don't have any such users currently, at
+least for the 70 .config/arch combinations that was built.  Should any
+turn up, make sure they use the out-of-line versions, which do handle
+nbits==0 correctly.
 
-The VFS remapping prep functions  only support whole block dedupe, but
-we still need to appear to support whole file dedupe correctly.  Hence
-if the dedupe request includes the last block of the souce file, don't
-include it in the actual dedupe operation. If the rest of the range
-dedupes successfully, then reject the entire request.  A subsequent
-patch will enable us to shorten dedupe requests correctly.
+This is of course not the most efficient, but it's much less churn than
+teaching all the static inlines an "if (zero_const_nbits())", and since we
+don't have any current instances, this doesn't affect existing code at
+all.
 
-When reflinking sub-file ranges, a data corruption can occur when the
-source file range includes a partial EOF block. This shares the unknown
-data beyond EOF into the second file at a position inside EOF, exposing
-stale data in the second file.
+[1] lkml.kernel.org/r/20180815085539.27485-1-linux@rasmusvillemoes.dk
 
-If the reflink request includes the last block of the souce file, only
-proceed with the reflink operation if it lands at or past the
-destination file's current EOF. If it lands within the destination file
-EOF, reject the entire request with -EINVAL and make the caller go the
-hard way.  A subsequent patch will enable us to shorten reflink requests
-correctly.
-
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Dave Chinner <david@fromorbit.com>
+Link: http://lkml.kernel.org/r/20180818131623.8755-3-linux@rasmusvillemoes.dk
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Yury Norov <ynorov@caviumnetworks.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/read_write.c | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ include/linux/bitmap.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index 38a8bcccf0dd0..e8136a72c13f3 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -1709,6 +1709,34 @@ static int clone_verify_area(struct file *file, loff_t pos, u64 len, bool write)
+diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
+index 835c2271196a4..1990b88bd0ab2 100644
+--- a/include/linux/bitmap.h
++++ b/include/linux/bitmap.h
+@@ -185,8 +185,13 @@ extern int bitmap_print_to_pagebuf(bool list, char *buf,
+ #define BITMAP_FIRST_WORD_MASK(start) (~0UL << ((start) & (BITS_PER_LONG - 1)))
+ #define BITMAP_LAST_WORD_MASK(nbits) (~0UL >> (-(nbits) & (BITS_PER_LONG - 1)))
  
- 	return security_file_permission(file, write ? MAY_WRITE : MAY_READ);
- }
 +/*
-+ * Ensure that we don't remap a partial EOF block in the middle of something
-+ * else.  Assume that the offsets have already been checked for block
-+ * alignment.
-+ *
-+ * For deduplication we always scale down to the previous block because we
-+ * can't meaningfully compare post-EOF contents.
-+ *
-+ * For clone we only link a partial EOF block above the destination file's EOF.
++ * The static inlines below do not handle constant nbits==0 correctly,
++ * so make such users (should any ever turn up) call the out-of-line
++ * versions.
 + */
-+static int generic_remap_check_len(struct inode *inode_in,
-+				   struct inode *inode_out,
-+				   loff_t pos_out,
-+				   u64 *len,
-+				   bool is_dedupe)
-+{
-+	u64 blkmask = i_blocksize(inode_in) - 1;
-+
-+	if ((*len & blkmask) == 0)
-+		return 0;
-+
-+	if (is_dedupe)
-+		*len &= ~blkmask;
-+	else if (pos_out + *len < i_size_read(inode_out))
-+		return -EINVAL;
-+
-+	return 0;
-+}
+ #define small_const_nbits(nbits) \
+-	(__builtin_constant_p(nbits) && (nbits) <= BITS_PER_LONG)
++	(__builtin_constant_p(nbits) && (nbits) <= BITS_PER_LONG && (nbits) > 0)
  
- /*
-  * Check that the two inodes are eligible for cloning, the ranges make
-@@ -1815,6 +1843,11 @@ int vfs_clone_file_prep_inodes(struct inode *inode_in, loff_t pos_in,
- 			return -EBADE;
- 	}
- 
-+	ret = generic_remap_check_len(inode_in, inode_out, pos_out, len,
-+			is_dedupe);
-+	if (ret)
-+		return ret;
-+
- 	return 1;
- }
- EXPORT_SYMBOL(vfs_clone_file_prep_inodes);
+ static inline void bitmap_zero(unsigned long *dst, unsigned int nbits)
+ {
 -- 
 2.20.1
 
