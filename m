@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B18DC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6CDC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC105214DE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5958214DE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:27:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921638;
-	bh=UO3XCC42t0obPxpUMFWs3bkB7qRjPJ5pyIs/hvKqYnY=;
+	s=default; t=1573921642;
+	bh=STG2Hmg0LoPyc4kntgruZckgQ/wfT/uWDxEsXM8w6mI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PGJCNkCyl/YTWo3SPD0JDrvz/uiBQkmRmnrS8CxQs7/XBd6V7JOx42m7Lo2VB7sSk
-	 nUEbXo+jhaCO8+6wHY0noOxf9B3bUl409cT15RWmvJufZtKR6S0MzpesUfdb+6SvFA
-	 bp2YdCgKMiCLL6ZNCUxDGOGcGR2jhXcKappUtKEw=
+	b=XqKnQhJ46rl8XER/YZ8IEw1wHVANjwiKR2cvqIRD5edu5lJM22knofnaLw5lJ/5wk
+	 rJbgDHWzIJ80ebo6bP0k8Q5RQCD87H2nJa1cUwAcgkQTmxhBJMMu+hqDJ7C84QBEky
+	 p4CtaPrjNrBWNNzZ5baZqUEiDDLnbPywuWTpH7+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbfKPQ1Q (ORCPT
+        id S1730217AbfKPQ1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:27:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44872 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:27:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727958AbfKPPlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:41:39 -0500
+        id S1727950AbfKPPli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:41:38 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77BEC207DD;
-        Sat, 16 Nov 2019 15:41:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51D8620803;
+        Sat, 16 Nov 2019 15:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918898;
-        bh=UO3XCC42t0obPxpUMFWs3bkB7qRjPJ5pyIs/hvKqYnY=;
+        s=default; t=1573918897;
+        bh=STG2Hmg0LoPyc4kntgruZckgQ/wfT/uWDxEsXM8w6mI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eaUvNw3DnqYaGrVa1BUAq+bmllDgryEb8i3ElSHsFgXYS64R8ehJ9kVwLUdBljVmR
-         htc0M8d65fIa3buSHa4T5IrJUiozRw5dANK6Wsfsya7QTVdfvVWLHQ6l2dtFMvHSHs
-         i+aEO0wA+NnDkuDrJGITHGXikaIRzcG585me9k0I=
+        b=UWTAWPza5JCNnO6uW4diJ+r+oeeHwbtu3aSZ8EwE3XQO+isYEs+NlxDLMtduCC4xS
+         Kjg/MskDRjRGZE92F2vmgOar5eNNQLTL01yOEMXLO/tcZG1oROtUsIpg11TORjGlNJ
+         R6C+yguOqOFSBCsTxxniRwOa+aBbf6/rf+PPXcaQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Honghui Zhang <honghui.zhang@mediatek.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 026/237] PCI: mediatek: Fix class type for MT7622 to PCI_CLASS_BRIDGE_PCI
-Date:   Sat, 16 Nov 2019 10:37:41 -0500
-Message-Id: <20191116154113.7417-26-sashal@kernel.org>
+Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 024/237] mmc: mediatek: fill the actual clock for mmc debugfs
+Date:   Sat, 16 Nov 2019 10:37:39 -0500
+Message-Id: <20191116154113.7417-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -61,45 +59,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Honghui Zhang <honghui.zhang@mediatek.com>
+From: Chaotian Jing <chaotian.jing@mediatek.com>
 
-[ Upstream commit a7f172ab6a8e755e60311f27512034b0441ef421 ]
+[ Upstream commit 56f6cbbed0463f1c78d602b17c315916cc1cd238 ]
 
-commit 101c92dc80c8 ("PCI: mediatek: Set up vendor ID and class
-type for MT7622") erroneously set the class type for MT7622 to
-PCI_CLASS_BRIDGE_HOST.
+as the mmc core layer has the mmc->actual_clock, so fill it
+and drop msdc_host->sclk.
 
-The PCIe controller of MT7622 integrates a Root Port that has type 1
-configuration space header and related bridge windows.
-
-The HW default value of this bridge's class type is invalid.
-
-Fix its class type and set it to PCI_CLASS_BRIDGE_PCI to
-match the hardware implementation.
-
-Fixes: 101c92dc80c8 ("PCI: mediatek: Set up vendor ID and class type for MT7622")
-Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-[lorenzo.pieralisi@arm.com: reworked the commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-mediatek.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mmc/host/mtk-sd.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index c5ff6ca65eab2..abedf8ec11bba 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -432,7 +432,7 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
- 		val = PCI_VENDOR_ID_MEDIATEK;
- 		writew(val, port->base + PCIE_CONF_VEND_ID);
+diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+index f171cce5197de..621c914dc5c01 100644
+--- a/drivers/mmc/host/mtk-sd.c
++++ b/drivers/mmc/host/mtk-sd.c
+@@ -390,7 +390,6 @@ struct msdc_host {
+ 	struct clk *src_clk_cg; /* msdc source clock control gate */
+ 	u32 mclk;		/* mmc subsystem clock frequency */
+ 	u32 src_clk_freq;	/* source clock frequency */
+-	u32 sclk;		/* SD/MS bus clock frequency */
+ 	unsigned char timing;
+ 	bool vqmmc_enabled;
+ 	u32 latch_ck;
+@@ -635,10 +634,10 @@ static void msdc_set_timeout(struct msdc_host *host, u32 ns, u32 clks)
  
--		val = PCI_CLASS_BRIDGE_HOST;
-+		val = PCI_CLASS_BRIDGE_PCI;
- 		writew(val, port->base + PCIE_CONF_CLASS_ID);
+ 	host->timeout_ns = ns;
+ 	host->timeout_clks = clks;
+-	if (host->sclk == 0) {
++	if (host->mmc->actual_clock == 0) {
+ 		timeout = 0;
+ 	} else {
+-		clk_ns  = 1000000000UL / host->sclk;
++		clk_ns  = 1000000000UL / host->mmc->actual_clock;
+ 		timeout = (ns + clk_ns - 1) / clk_ns + clks;
+ 		/* in 1048576 sclk cycle unit */
+ 		timeout = (timeout + (0x1 << 20) - 1) >> 20;
+@@ -683,6 +682,7 @@ static void msdc_set_mclk(struct msdc_host *host, unsigned char timing, u32 hz)
+ 	if (!hz) {
+ 		dev_dbg(host->dev, "set mclk to 0\n");
+ 		host->mclk = 0;
++		host->mmc->actual_clock = 0;
+ 		sdr_clr_bits(host->base + MSDC_CFG, MSDC_CFG_CKPDN);
+ 		return;
  	}
+@@ -761,7 +761,7 @@ static void msdc_set_mclk(struct msdc_host *host, unsigned char timing, u32 hz)
+ 	while (!(readl(host->base + MSDC_CFG) & MSDC_CFG_CKSTB))
+ 		cpu_relax();
+ 	sdr_set_bits(host->base + MSDC_CFG, MSDC_CFG_CKPDN);
+-	host->sclk = sclk;
++	host->mmc->actual_clock = sclk;
+ 	host->mclk = hz;
+ 	host->timing = timing;
+ 	/* need because clk changed. */
+@@ -772,7 +772,7 @@ static void msdc_set_mclk(struct msdc_host *host, unsigned char timing, u32 hz)
+ 	 * mmc_select_hs400() will drop to 50Mhz and High speed mode,
+ 	 * tune result of hs200/200Mhz is not suitable for 50Mhz
+ 	 */
+-	if (host->sclk <= 52000000) {
++	if (host->mmc->actual_clock <= 52000000) {
+ 		writel(host->def_tune_para.iocon, host->base + MSDC_IOCON);
+ 		writel(host->def_tune_para.pad_tune, host->base + tune_reg);
+ 	} else {
+@@ -787,7 +787,8 @@ static void msdc_set_mclk(struct msdc_host *host, unsigned char timing, u32 hz)
+ 		sdr_set_field(host->base + tune_reg,
+ 			      MSDC_PAD_TUNE_CMDRRDLY,
+ 			      host->hs400_cmd_int_delay);
+-	dev_dbg(host->dev, "sclk: %d, timing: %d\n", host->sclk, timing);
++	dev_dbg(host->dev, "sclk: %d, timing: %d\n", host->mmc->actual_clock,
++		timing);
+ }
  
+ static inline u32 msdc_cmd_find_resp(struct msdc_host *host,
 -- 
 2.20.1
 
