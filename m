@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE04C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF54C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B7F420733
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A2B12072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:44:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919090;
-	bh=VPtjYK0w0uuloqDArLaAMixd8sNqxlmnTNrSoitDDRs=;
+	s=default; t=1573919092;
+	bh=w0/xY84kePr1FeSz8bEq9jbc2HkpuXp4oF3+DxCx8oU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=umsbmcUs0SiVO83SB7jOuk7nUdJ55sNgWomFgyUp0inJoFtKgHPez2PRPsJJ9Pnay
-	 Z28mFBQBhnXy/eZv1KlBMeWs2gaNOgONrbZTNdlOTHviCSNYQx6Zd+No02KDTVHjVp
-	 buj2O/t3jr4hxOXSHJqcLqQ3OcPBJkoAJcMspKpg=
+	b=ncxnF85D2cj3yRHmiVTQh90PRuwSURChYojruhqeUtq/Wq4hg7ckxBtHS6sLDVGvM
+	 yUEpfjy49PTnfeQ4kC78WHl2NLj7YkOMsTDxo/13RdxOIjZGiUqAxMu9VGw6LJKssH
+	 qhYnwkxEbHcSLC88QjFiO+LWn/CVAa2BHUab7+2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbfKPPot (ORCPT
+        id S1728157AbfKPPov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:44:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49848 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:44:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729059AbfKPPop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:44:45 -0500
+        id S1729064AbfKPPor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:44:47 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 912A12073B;
-        Sat, 16 Nov 2019 15:44:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8EF82072D;
+        Sat, 16 Nov 2019 15:44:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919085;
-        bh=VPtjYK0w0uuloqDArLaAMixd8sNqxlmnTNrSoitDDRs=;
+        s=default; t=1573919086;
+        bh=w0/xY84kePr1FeSz8bEq9jbc2HkpuXp4oF3+DxCx8oU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y3HiT4r4jfdNC9nCFT+soqsTcb8hytpY3lfXCn0aOIvRb8+67AkmEvzfJmoRiFmf/
-         ofEZ4QCpdGWKjiif5iQII9OO6dY6Juizj432KMr5Pqk8S6ZHw28IDPJZ8LU9+9cEhA
-         eotwILpYpNfSDeOPNh15QUgWOv1VFs1ZecGWBDxw=
+        b=rDTTG/aZIq2/5jXH/1DudVwjMVsMUooueRqkQzOkN+sL5hXqZQcx+bjQTmxgj+E7j
+         6xz22EChGC+83GY242U9NdHXRyPvWS/lvASRyko4ff4fTAH8wkoFj4A7GJJXxX5xkg
+         T53KgIDPsNdncgF7UOTvznHWLSR3BoTXMy4pPFC0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 147/237] selftests/powerpc/cache_shape: Fix out-of-tree build
-Date:   Sat, 16 Nov 2019 10:39:42 -0500
-Message-Id: <20191116154113.7417-147-sashal@kernel.org>
+Cc:     Ming Lei <ming.lei@redhat.com>, Josef Bacik <josef@toxicpanda.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 148/237] block: call rq_qos_exit() after queue is frozen
+Date:   Sat, 16 Nov 2019 10:39:43 -0500
+Message-Id: <20191116154113.7417-148-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -59,41 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 69f8117f17b332a68cd8f4bf8c2d0d3d5b84efc5 ]
+[ Upstream commit c57cdf7a9e51d97a43e29b8f4a04157875104000 ]
 
-Use TEST_GEN_PROGS and don't redefine all, this makes the out-of-tree
-build work. We need to move the extra dependencies below the include
-of lib.mk, because it adds the $(OUTPUT) prefix if it's defined.
+rq_qos_exit() removes the current q->rq_qos, this action has to be
+done after queue is frozen, otherwise the IO queue path may never
+be waken up, then IO hang is caused.
 
-We can also drop the clean rule, lib.mk does it for us.
+So fixes this issue by moving rq_qos_exit() after queue is frozen.
 
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/powerpc/cache_shape/Makefile | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ block/blk-core.c  | 3 +++
+ block/blk-sysfs.c | 2 --
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/powerpc/cache_shape/Makefile b/tools/testing/selftests/powerpc/cache_shape/Makefile
-index ede4d3dae7505..689f6c8ebcd8d 100644
---- a/tools/testing/selftests/powerpc/cache_shape/Makefile
-+++ b/tools/testing/selftests/powerpc/cache_shape/Makefile
-@@ -1,12 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
--TEST_PROGS := cache_shape
--
--all: $(TEST_PROGS)
--
--$(TEST_PROGS): ../harness.c ../utils.c
-+TEST_GEN_PROGS := cache_shape
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 074ae9376189b..ea33d6abdcfc9 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -784,6 +784,9 @@ void blk_cleanup_queue(struct request_queue *q)
+ 	 * prevent that q->request_fn() gets invoked after draining finished.
+ 	 */
+ 	blk_freeze_queue(q);
++
++	rq_qos_exit(q);
++
+ 	spin_lock_irq(lock);
+ 	queue_flag_set(QUEUE_FLAG_DEAD, q);
+ 	spin_unlock_irq(lock);
+diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+index bab47a17b96f4..8286640d4d663 100644
+--- a/block/blk-sysfs.c
++++ b/block/blk-sysfs.c
+@@ -997,8 +997,6 @@ void blk_unregister_queue(struct gendisk *disk)
+ 	kobject_del(&q->kobj);
+ 	blk_trace_remove_sysfs(disk_to_dev(disk));
  
- top_srcdir = ../../../../..
- include ../../lib.mk
- 
--clean:
--	rm -f $(TEST_PROGS) *.o
-+$(TEST_GEN_PROGS): ../harness.c ../utils.c
+-	rq_qos_exit(q);
+-
+ 	mutex_lock(&q->sysfs_lock);
+ 	if (q->request_fn || (q->mq_ops && q->elevator))
+ 		elv_unregister_queue(q);
 -- 
 2.20.1
 
