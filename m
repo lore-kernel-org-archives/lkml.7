@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D1DC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C85C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF5D21479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2BAF214DE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920854;
-	bh=5Pdak+JPJzVEhoD/8rcgc5m8LdWqf4v8nm3VoE3IvzQ=;
+	s=default; t=1573920855;
+	bh=AiDrupa0ElEL9BkwztZdJMc2ifNPMRDNGjY+TvtGWtg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ot5jAy9k0DfE6t2wmfsrsfq29tY6Nf7p/J6Oh1W7QOhF/WpjjV0K49V6vEEqhaAgC
-	 swpVdvDrar8xqkrMXFK01HBVGZOoyYSukm0gcHXdvFNPPCai02cYxfe8Hx3+B2Kipq
-	 968rsMocNb7+MjkSw4Jsv9AeDmsSEO6gGIMfqFa4=
+	b=EXcTrQolSPPfQm1fib846mxO5DgrN0fTeRhJdpomTz51uwzBjU0J97G9ScIEZnbIl
+	 eya6cIpK9zMwZSZ+Gw5zWtEUl2OFpccz0Ogy/+Sq3c7seVkeJIJmKYEWl1ngvDWTl3
+	 YyGg1NHrD0zuRnt+pjYM0cRV8arFZI53BrzCSw2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbfKPPrw (ORCPT
+        id S1729826AbfKPPru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:47:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53866 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:47:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729654AbfKPPrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:47:12 -0500
+        id S1728873AbfKPPrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:47:11 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D97C2088F;
-        Sat, 16 Nov 2019 15:47:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DB672084F;
+        Sat, 16 Nov 2019 15:47:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1573919231;
-        bh=5Pdak+JPJzVEhoD/8rcgc5m8LdWqf4v8nm3VoE3IvzQ=;
+        bh=AiDrupa0ElEL9BkwztZdJMc2ifNPMRDNGjY+TvtGWtg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XxTUeGBtQno2/GyHBn/Q5+d4Y6ybRImKJB3WlcSUQVR3LOdrzuctuuiEgRYe2KVpX
-         2r/gI0OplJpSdeyqWWj2sO4E6oD5ruQrER8rAatQOJVU+/USDMFzo3d1apkI99MPC5
-         350/jI+CT4W8xzBsREcPT0LGECVZq7hrFnnDBrnY=
+        b=L1vuHA5iGl2VusWw1xB2iY7A6eR7ZR5Jt7GQNm9jwmvwg8z+jRdHQW23oyTkECq9i
+         6B5KVnBrejixsfqFlmCTG9OlSOT5wEGVnRIvY5vBf3weIEd7oof1ri8Jskm3wqciZQ
+         NqkDxMVePrNWM7BkkEuVmI57DH0DbR7bYR8vMIDM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 237/237] cfg80211: call disconnect_wk when AP stops
-Date:   Sat, 16 Nov 2019 10:41:12 -0500
-Message-Id: <20191116154113.7417-237-sashal@kernel.org>
+Cc:     David Ahern <dsahern@gmail.com>,
+        Donald Sharp <sharpd@cumulusnetworks.com>,
+        Mike Manning <mmanning@vyatta.att-mail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 236/237] ipv6: Fix handling of LLA with VRF and sockets bound to VRF
+Date:   Sat, 16 Nov 2019 10:41:11 -0500
+Message-Id: <20191116154113.7417-236-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -59,66 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit e005bd7ddea06784c1eb91ac5bb6b171a94f3b05 ]
+[ Upstream commit c2027d1e17582903e368abf5d4838b22a98f2b7b ]
 
-Since we now prevent regulatory restore during STA disconnect
-if concurrent AP interfaces are active, we need to reschedule
-this check when the AP state changes. This fixes never doing
-a restore when an AP is the last interface to stop. Or to put
-it another way: we need to re-check after anything we check
-here changes.
+A recent commit allows sockets bound to a VRF to receive ipv6 link local
+packets. However, it only works for UDP and worse TCP connection attempts
+to the LLA with the only listener bound to the VRF just hang where as
+before the client gets a reset and connection refused. Fix by adjusting
+ir_iif for LL addresses and packets received through a device enslaved
+to a VRF.
 
-Cc: stable@vger.kernel.org
-Fixes: 113f3aaa81bd ("cfg80211: Prevent regulatory restore during STA disconnect in concurrent interfaces")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 6f12fa775530 ("vrf: mark skb for multicast or link-local as enslaved to VRF")
+Reported-by: Donald Sharp <sharpd@cumulusnetworks.com>
+Cc: Mike Manning <mmanning@vyatta.att-mail.com>
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/ap.c   | 2 ++
- net/wireless/core.h | 2 ++
- net/wireless/sme.c  | 2 +-
- 3 files changed, 5 insertions(+), 1 deletion(-)
+ net/ipv6/tcp_ipv6.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/wireless/ap.c b/net/wireless/ap.c
-index 882d97bdc6bfd..550ac9d827fe7 100644
---- a/net/wireless/ap.c
-+++ b/net/wireless/ap.c
-@@ -41,6 +41,8 @@ int __cfg80211_stop_ap(struct cfg80211_registered_device *rdev,
- 		cfg80211_sched_dfs_chan_update(rdev);
- 	}
+diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+index e7cdfa92c3820..9a117a79af659 100644
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -734,6 +734,7 @@ static void tcp_v6_init_req(struct request_sock *req,
+ 			    const struct sock *sk_listener,
+ 			    struct sk_buff *skb)
+ {
++	bool l3_slave = ipv6_l3mdev_skb(TCP_SKB_CB(skb)->header.h6.flags);
+ 	struct inet_request_sock *ireq = inet_rsk(req);
+ 	const struct ipv6_pinfo *np = inet6_sk(sk_listener);
  
-+	schedule_work(&cfg80211_disconnect_work);
-+
- 	return err;
- }
+@@ -741,7 +742,7 @@ static void tcp_v6_init_req(struct request_sock *req,
+ 	ireq->ir_v6_loc_addr = ipv6_hdr(skb)->daddr;
  
-diff --git a/net/wireless/core.h b/net/wireless/core.h
-index 7f52ef5693203..f5d58652108dd 100644
---- a/net/wireless/core.h
-+++ b/net/wireless/core.h
-@@ -430,6 +430,8 @@ void cfg80211_process_wdev_events(struct wireless_dev *wdev);
- bool cfg80211_does_bw_fit_range(const struct ieee80211_freq_range *freq_range,
- 				u32 center_freq_khz, u32 bw_khz);
+ 	/* So that link locals have meaning */
+-	if (!sk_listener->sk_bound_dev_if &&
++	if ((!sk_listener->sk_bound_dev_if || l3_slave) &&
+ 	    ipv6_addr_type(&ireq->ir_v6_rmt_addr) & IPV6_ADDR_LINKLOCAL)
+ 		ireq->ir_iif = tcp_v6_iif(skb);
  
-+extern struct work_struct cfg80211_disconnect_work;
-+
- /**
-  * cfg80211_chandef_dfs_usable - checks if chandef is DFS usable
-  * @wiphy: the wiphy to validate against
-diff --git a/net/wireless/sme.c b/net/wireless/sme.c
-index c7047c7b4e80f..07c2196e9d573 100644
---- a/net/wireless/sme.c
-+++ b/net/wireless/sme.c
-@@ -667,7 +667,7 @@ static void disconnect_work(struct work_struct *work)
- 	rtnl_unlock();
- }
- 
--static DECLARE_WORK(cfg80211_disconnect_work, disconnect_work);
-+DECLARE_WORK(cfg80211_disconnect_work, disconnect_work);
- 
- 
- /*
 -- 
 2.20.1
 
