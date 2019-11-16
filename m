@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B8EC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA826C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47F2F20B7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C03CB20854
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:51:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919514;
-	bh=qpOfe/n+XafqdA3bd277vvX9ZgxGKO9nKXTsAQ4Xcxc=;
+	s=default; t=1573919517;
+	bh=AV/zQ3grI4g6c2Q6sjeaJCpxGDoltA1NpCB4s6lo8/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aV6n/ylzd7XOZGslzme3AMSFZ/4qUvRtQDi22rpepFVQ14Ua1ZN31/a+ovGp4+ozD
-	 fFtiykI0ayRDc/oGwxZuEsUKYyCsT8LhJqRtTBTqckPIpy2aaCsEW+VeX9ICr89Eeo
-	 QX6RHQcT9mnt6rTYNCFJSugVWQCF6AWavaxbcIK4=
+	b=TCHYQJpcRIzYwR3484OwIwUSG1ep/rFkG3FXsL8uFsE2uwwy0hAWXhGMZSQVJc+En
+	 WYcDInh+nje/dCYAMx9tLMscqfMyWkpNITkpoZ2K8aCiwlWrVHRwLmiTiTkJxw1bUT
+	 G0q/ZB7mLkYMAmCdgvy/Vo/Z16SHdawqRApzKMBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729924AbfKPPvx (ORCPT
+        id S1730870AbfKPPv4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:51:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60616 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:51:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730843AbfKPPvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:51:48 -0500
+        id S1730848AbfKPPvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:51:53 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C1002084B;
-        Sat, 16 Nov 2019 15:51:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D89CE20859;
+        Sat, 16 Nov 2019 15:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919507;
-        bh=qpOfe/n+XafqdA3bd277vvX9ZgxGKO9nKXTsAQ4Xcxc=;
+        s=default; t=1573919512;
+        bh=AV/zQ3grI4g6c2Q6sjeaJCpxGDoltA1NpCB4s6lo8/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ONmA/lAxz8jkEnZ+iLubex0frOc7iY9P259auJUOQeQxJNaacTplkC1N016xqzlBh
-         Z+e1S2R+BTX/M+dci62lE/2gvPoQJcdpBASZwqXKy7tLuSDLxgAYigL9kmDspq/KHQ
-         gHh6uuPtI6xC+Cdc5tMZ0nQJVrhWu7yr3iuEK8xM=
+        b=b4yIvZnbYaQquROQWgvPxWIXsSZ4PLahV7uz4mK+b5RMvB7fUE9jrDtOI0sOhkb0R
+         lSvOZT3tDiqWMPn3KiyPU51S/bupN+jx2SkF8TnnBXtzpl2rIopudrXIg8eLd9reSe
+         kCi0uCLp5S3GjyU0lytnk5ffh87oWWdj8IftqQXk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mattias Jacobsson <2pi@mok.nu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 31/99] USB: misc: appledisplay: fix backlight update_status return code
-Date:   Sat, 16 Nov 2019 10:49:54 -0500
-Message-Id: <20191116155103.10971-31-sashal@kernel.org>
+Cc:     "J. Bruce Fields" <bfields@redhat.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 34/99] sunrpc: safely reallow resvport min/max inversion
+Date:   Sat, 16 Nov 2019 10:49:57 -0500
+Message-Id: <20191116155103.10971-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -59,48 +60,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mattias Jacobsson <2pi@mok.nu>
+From: "J. Bruce Fields" <bfields@redhat.com>
 
-[ Upstream commit 090158555ff8d194a98616034100b16697dd80d0 ]
+[ Upstream commit 826799e66e8683e5698e140bb9ef69afc8c0014e ]
 
-Upon success the update_status handler returns a positive number
-corresponding to the number of bytes transferred by usb_control_msg.
-However the return code of the update_status handler should indicate if
-an error occurred(negative) or how many bytes of the user's input to sysfs
-that was consumed. Return code zero indicates all bytes were consumed.
+Commits ffb6ca33b04b and e08ea3a96fc7 prevent setting xprt_min_resvport
+greater than xprt_max_resvport, but may also break simple code that sets
+one parameter then the other, if the new range does not overlap the old.
 
-The bug can for example result in the update_status handler being called
-twice, the second time with only the "unconsumed" part of the user's input
-to sysfs. Effectively setting an incorrect brightness.
+Also it looks racy to me, unless there's some serialization I'm not
+seeing.  Granted it would probably require malicious privileged processes
+(unless there's a chance these might eventually be settable in unprivileged
+containers), but still it seems better not to let userspace panic the
+kernel.
 
-Change the update_status handler to return zero for all successful
-transactions and forward usb_control_msg's error code upon failure.
+Simpler seems to be to allow setting the parameters to whatever you want
+but interpret xprt_min_resvport > xprt_max_resvport as the empty range.
 
-Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: ffb6ca33b04b "sunrpc: Prevent resvport min/max inversion..."
+Fixes: e08ea3a96fc7 "sunrpc: Prevent rexvport min/max inversion..."
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/misc/appledisplay.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ net/sunrpc/xprtsock.c | 34 ++++++++++++++++++----------------
+ 1 file changed, 18 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/usb/misc/appledisplay.c b/drivers/usb/misc/appledisplay.c
-index b8092bcf89a29..140af7754c1e6 100644
---- a/drivers/usb/misc/appledisplay.c
-+++ b/drivers/usb/misc/appledisplay.c
-@@ -160,8 +160,11 @@ static int appledisplay_bl_update_status(struct backlight_device *bd)
- 		pdata->msgdata, 2,
- 		ACD_USB_TIMEOUT);
- 	mutex_unlock(&pdata->sysfslock);
--	
--	return retval;
-+
-+	if (retval < 0)
-+		return retval;
-+	else
-+		return 0;
+diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+index 280fb31787084..f3f05148922a1 100644
+--- a/net/sunrpc/xprtsock.c
++++ b/net/sunrpc/xprtsock.c
+@@ -124,7 +124,7 @@ static struct ctl_table xs_tunables_table[] = {
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_dointvec_minmax,
+ 		.extra1		= &xprt_min_resvport_limit,
+-		.extra2		= &xprt_max_resvport
++		.extra2		= &xprt_max_resvport_limit
+ 	},
+ 	{
+ 		.procname	= "max_resvport",
+@@ -132,7 +132,7 @@ static struct ctl_table xs_tunables_table[] = {
+ 		.maxlen		= sizeof(unsigned int),
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= &xprt_min_resvport,
++		.extra1		= &xprt_min_resvport_limit,
+ 		.extra2		= &xprt_max_resvport_limit
+ 	},
+ 	{
+@@ -1737,11 +1737,17 @@ static void xs_udp_timer(struct rpc_xprt *xprt, struct rpc_task *task)
+ 	xprt_adjust_cwnd(xprt, task, -ETIMEDOUT);
  }
  
- static int appledisplay_bl_get_brightness(struct backlight_device *bd)
+-static unsigned short xs_get_random_port(void)
++static int xs_get_random_port(void)
+ {
+-	unsigned short range = xprt_max_resvport - xprt_min_resvport + 1;
+-	unsigned short rand = (unsigned short) prandom_u32() % range;
+-	return rand + xprt_min_resvport;
++	unsigned short min = xprt_min_resvport, max = xprt_max_resvport;
++	unsigned short range;
++	unsigned short rand;
++
++	if (max < min)
++		return -EADDRINUSE;
++	range = max - min + 1;
++	rand = (unsigned short) prandom_u32() % range;
++	return rand + min;
+ }
+ 
+ /**
+@@ -1798,9 +1804,9 @@ static void xs_set_srcport(struct sock_xprt *transport, struct socket *sock)
+ 		transport->srcport = xs_sock_getport(sock);
+ }
+ 
+-static unsigned short xs_get_srcport(struct sock_xprt *transport)
++static int xs_get_srcport(struct sock_xprt *transport)
+ {
+-	unsigned short port = transport->srcport;
++	int port = transport->srcport;
+ 
+ 	if (port == 0 && transport->xprt.resvport)
+ 		port = xs_get_random_port();
+@@ -1821,7 +1827,7 @@ static int xs_bind(struct sock_xprt *transport, struct socket *sock)
+ {
+ 	struct sockaddr_storage myaddr;
+ 	int err, nloop = 0;
+-	unsigned short port = xs_get_srcport(transport);
++	int port = xs_get_srcport(transport);
+ 	unsigned short last;
+ 
+ 	/*
+@@ -1839,8 +1845,8 @@ static int xs_bind(struct sock_xprt *transport, struct socket *sock)
+ 	 * transport->xprt.resvport == 1) xs_get_srcport above will
+ 	 * ensure that port is non-zero and we will bind as needed.
+ 	 */
+-	if (port == 0)
+-		return 0;
++	if (port <= 0)
++		return port;
+ 
+ 	memcpy(&myaddr, &transport->srcaddr, transport->xprt.addrlen);
+ 	do {
+@@ -3223,12 +3229,8 @@ static int param_set_uint_minmax(const char *val,
+ 
+ static int param_set_portnr(const char *val, const struct kernel_param *kp)
+ {
+-	if (kp->arg == &xprt_min_resvport)
+-		return param_set_uint_minmax(val, kp,
+-			RPC_MIN_RESVPORT,
+-			xprt_max_resvport);
+ 	return param_set_uint_minmax(val, kp,
+-			xprt_min_resvport,
++			RPC_MIN_RESVPORT,
+ 			RPC_MAX_RESVPORT);
+ }
+ 
 -- 
 2.20.1
 
