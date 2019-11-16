@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06502C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5802C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7AF321479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFBB721479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920737;
-	bh=m09NQk/hf9MktbOGeBLi3nTN2WP7IyVR6LenXFTYOpY=;
+	s=default; t=1573920742;
+	bh=zVi3l48Dj1pEq/lXVT7CWip3HEIXhUTRhaX6jVURMJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rraAlbOVWHAFhGRlHoDup0k6C4huknolQLr9eUAXC4YL86nlMZAkNtxuUoN/UwVyo
-	 edeTaBd2ecukvWGbE8uQkPgy2qVqkHpH0kC0GJ/2yxn2M/n9cPtSBHl/jlY3T/K9pn
-	 7E3IYwAAssLNNatMgpmuG3wwZzlxoVW6rMAP2qtE=
+	b=Qn6WOnkZih9Mwy776lUSPpp0PpG8PVfNNRo51fvRq5oKWJsaQNwjm++803qS+9kQ3
+	 PmIVycsPlCXOQ5BwR/IJWkDwc/UvpjPPOqr+JcIR9cpNvFfi6qm2uLE9zFGB+NFm5n
+	 xmv9ciGgWrlct2W4JQrop47cwx87gq/X18RF9fL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731878AbfKPQMQ (ORCPT
+        id S1730027AbfKPPsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:12:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55526 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:48:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730032AbfKPPsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:48:25 -0500
+        id S1729078AbfKPPsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:48:13 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51001207FA;
-        Sat, 16 Nov 2019 15:48:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 621592088F;
+        Sat, 16 Nov 2019 15:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919304;
-        bh=m09NQk/hf9MktbOGeBLi3nTN2WP7IyVR6LenXFTYOpY=;
+        s=default; t=1573919292;
+        bh=zVi3l48Dj1pEq/lXVT7CWip3HEIXhUTRhaX6jVURMJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E+EiG+4NQQNKl5myCF263slnxWJYUSXFx1WfJ7/F9fhlaLHlIagfoC4rcuDexD0S4
-         UpPbtOT5LTA1qE0dThehsBz1Dv36yct/V6K+WPrRy4DBdGwGNsVrWgcO8qEdz9xeZq
-         V0UUV6RaeR7U+uBRukJUSGT7aMEkEnJCk8TSx1X0=
+        b=mpdXb26m2kOK372hMUbWpehWywo2WzVe9khhOOkZ+ue5kZX6CO+euP/DjJkEgxVbk
+         9F74Rke83Fq65Ier/ICx+1Cgv0abU7ykr3dJKLP3fl165ca3UDK4rvW6trpEGKSEiE
+         edyjdk1dSkmFGqsbYYignzOx9iuuLqExUdNCmPV8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jon Derrick <jonathan.derrick@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 049/150] PCI: vmd: Detach resources after stopping root bus
-Date:   Sat, 16 Nov 2019 10:45:47 -0500
-Message-Id: <20191116154729.9573-49-sashal@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, dc395x@twibble.org,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 039/150] scsi: dc395x: fix dma API usage in srb_done
+Date:   Sat, 16 Nov 2019 10:45:37 -0500
+Message-Id: <20191116154729.9573-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,54 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Derrick <jonathan.derrick@intel.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit dc8af3a827df6d4bb925d3b81b7ec94a7cce9482 ]
+[ Upstream commit 3a5bd7021184dec2946f2a4d7a8943f8a5713e52 ]
 
-The VMD removal path calls pci_stop_root_busi(), which tears down the pcie
-tree, including detaching all of the attached drivers. During driver
-detachment, devices may use pci_release_region() to release resources.
-This path relies on the resource being accessible in resource tree.
+We can't just transfer ownership to the CPU and then unmap, as this will
+break with swiotlb.
 
-By detaching the child domain from the parent resource domain prior to
-stopping the bus, we are preventing the list traversal from finding the
-resource to be freed. If we instead detach the resource after stopping
-the bus, we will have properly freed the resource and detaching is
-simply accounting at that point.
+Instead unmap the command and sense buffer a little earlier in the I/O
+completion handler and get rid of the pci_dma_sync_sg_for_cpu call
+entirely.
 
-Without this order, the resource is never freed and is orphaned on VMD
-removal, leading to a warning:
-
-[  181.940162] Trying to free nonexistent resource <e5a10000-e5a13fff>
-
-Fixes: 2c2c5c5cd213 ("x86/PCI: VMD: Attach VMD resources to parent domain's resource tree")
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-[lorenzo.pieralisi@arm.com: updated commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Keith Busch <keith.busch@intel.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/host/vmd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/dc395x.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/host/vmd.c b/drivers/pci/host/vmd.c
-index 2537b022f42d4..af6d5da10ea5f 100644
---- a/drivers/pci/host/vmd.c
-+++ b/drivers/pci/host/vmd.c
-@@ -753,12 +753,12 @@ static void vmd_remove(struct pci_dev *dev)
- {
- 	struct vmd_dev *vmd = pci_get_drvdata(dev);
+diff --git a/drivers/scsi/dc395x.c b/drivers/scsi/dc395x.c
+index 5ee7f44cf869b..9da0ac360848f 100644
+--- a/drivers/scsi/dc395x.c
++++ b/drivers/scsi/dc395x.c
+@@ -3450,14 +3450,12 @@ static void srb_done(struct AdapterCtlBlk *acb, struct DeviceCtlBlk *dcb,
+ 		}
+ 	}
  
--	vmd_detach_resources(vmd);
- 	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
- 	pci_stop_root_bus(vmd->bus);
- 	pci_remove_root_bus(vmd->bus);
- 	vmd_cleanup_srcu(vmd);
- 	vmd_teardown_dma_ops(vmd);
-+	vmd_detach_resources(vmd);
- 	irq_domain_remove(vmd->irq_domain);
- }
+-	if (dir != PCI_DMA_NONE && scsi_sg_count(cmd))
+-		pci_dma_sync_sg_for_cpu(acb->dev, scsi_sglist(cmd),
+-					scsi_sg_count(cmd), dir);
+-
+ 	ckc_only = 0;
+ /* Check Error Conditions */
+       ckc_e:
  
++	pci_unmap_srb(acb, srb);
++
+ 	if (cmd->cmnd[0] == INQUIRY) {
+ 		unsigned char *base = NULL;
+ 		struct ScsiInqData *ptr;
+@@ -3511,7 +3509,6 @@ static void srb_done(struct AdapterCtlBlk *acb, struct DeviceCtlBlk *dcb,
+ 			cmd, cmd->result);
+ 		srb_free_insert(acb, srb);
+ 	}
+-	pci_unmap_srb(acb, srb);
+ 
+ 	cmd->scsi_done(cmd);
+ 	waiting_process_next(acb);
 -- 
 2.20.1
 
