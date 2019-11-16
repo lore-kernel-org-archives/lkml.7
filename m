@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DADB1C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3615C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B56E021739
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:50:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C322D217D6
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:50:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919430;
-	bh=e0kwQxqjl/q5q36XpJycaaUijSZMetJRcSRLw0P4rkw=;
+	s=default; t=1573919436;
+	bh=nkllnDBXf4AfaxLJlPMIAIRxCjsdEuPwlVE+x4bcaHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OGuy0GyEfv6pKDoXO1v6LkQTY8xAGYIsdPV97YkqhAohut2oV8SpX+iSgMuOtcOE9
-	 9TFJ9Yq9u2b8Y9usx0OyQmWppWnElE2HIgesUnO0mwszCMm6pWf5X2SsGTIYZKzPa0
-	 YZtEXD5m6Nw0hjoKgo0t9S6IRAvNCfGK+hHoXhEo=
+	b=PJQdoWJQ+ykMVkLuvKj98mLBUJIw/JemWdDMmMbeMhG3UTvA/ke4foD1e61rul5lG
+	 LUjkn5RPJ5sw2+2kfXZLwWo9RVyGh2eHTx425AY2xQsHH8tz7X1amkYByHHVm0TVOC
+	 wc/myV8eMLLHyEFKGXLAHA4N+LpFkJAkaYX9UEg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730531AbfKPPu3 (ORCPT
+        id S1730565AbfKPPuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:50:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58306 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:50:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730478AbfKPPuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:50:19 -0500
+        id S1730495AbfKPPuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:50:23 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C56F721479;
-        Sat, 16 Nov 2019 15:50:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33934208C0;
+        Sat, 16 Nov 2019 15:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919419;
-        bh=e0kwQxqjl/q5q36XpJycaaUijSZMetJRcSRLw0P4rkw=;
+        s=default; t=1573919422;
+        bh=nkllnDBXf4AfaxLJlPMIAIRxCjsdEuPwlVE+x4bcaHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uKZsLnD/VAwJx4hUiSHppjgNQbwApeS3I6NUzsJoPuKio490EvPchnD5YSkBST3Fj
-         eQ6N/LfLMo2WpI5Wp89b5MtX1j1bMEqGZKKGgxgJNj23OO357jsG50Su8H05li23el
-         z4NfPFlqDPZMiagkMZQ4pZhRx4kyE4MlDgpZz2VI=
+        b=J/rcnoFx1KBERbzQbl8sP6GDxA7ep441KfmxmQPc6MPxVDXB6APw7E6GSd1gkqayO
+         SEGW5fepeYHyjiUOJmVbq5H96aL0qIFCox6+kr77DO4gBEITCppCSGjP8WqEW9zBg3
+         D8j61ECHWnJCArm0uT3mB2fqSRvmZ5LQNe2+347I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Nikolay Borisov <nborisov@suse.com>,
-        Changbin Du <changbin.du@gmail.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 119/150] btrfs: avoid link error with CONFIG_NO_AUTO_INLINE
-Date:   Sat, 16 Nov 2019 10:46:57 -0500
-Message-Id: <20191116154729.9573-119-sashal@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 122/150] rtl8xxxu: Fix missing break in switch
+Date:   Sat, 16 Nov 2019 10:47:00 -0500
+Message-Id: <20191116154729.9573-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,70 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit 7e17916b35797396f681a3270245fd29c1e4c250 ]
+[ Upstream commit 307b00c5e695857ca92fc6a4b8ab6c48f988a1b1 ]
 
-Note: this patch fixes a problem in a feature outside of btrfs ("kernel
-hacking: add a config option to disable compiler auto-inlining") and is
-applied ahead of time due to cross-subsystem dependencies.
+Add missing break statement in order to prevent the code from falling
+through to the default case.
 
-On 32-bit ARM with gcc-8, I see a link error with the addition of the
-CONFIG_NO_AUTO_INLINE option:
-
-fs/btrfs/super.o: In function `btrfs_statfs':
-super.c:(.text+0x67b8): undefined reference to `__aeabi_uldivmod'
-super.c:(.text+0x67fc): undefined reference to `__aeabi_uldivmod'
-super.c:(.text+0x6858): undefined reference to `__aeabi_uldivmod'
-super.c:(.text+0x6920): undefined reference to `__aeabi_uldivmod'
-super.c:(.text+0x693c): undefined reference to `__aeabi_uldivmod'
-fs/btrfs/super.o:super.c:(.text+0x6958): more undefined references to `__aeabi_uldivmod' follow
-
-So far this is the only file that shows the behavior, so I'd propose
-to just work around it by marking the functions as 'static inline'
-that normally get inlined here.
-
-The reference to __aeabi_uldivmod comes from a div_u64() which has an
-optimization for a constant division that uses a straight '/' operator
-when the result should be known to the compiler. My interpretation is
-that as we turn off inlining, gcc still expects the result to be constant
-but fails to use that constant value.
-
-Link: https://lkml.kernel.org/r/20181103153941.1881966-1-arnd@arndb.de
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: Changbin Du <changbin.du@gmail.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-[ add the note ]
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 26f1fad29ad9 ("New driver: rtl8xxxu (mac80211)")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/super.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
-index 49a02bf091aea..204d585e012a8 100644
---- a/fs/btrfs/super.c
-+++ b/fs/btrfs/super.c
-@@ -1863,7 +1863,7 @@ static int btrfs_remount(struct super_block *sb, int *flags, char *data)
- }
- 
- /* Used to sort the devices by max_avail(descending sort) */
--static int btrfs_cmp_device_free_bytes(const void *dev_info1,
-+static inline int btrfs_cmp_device_free_bytes(const void *dev_info1,
- 				       const void *dev_info2)
- {
- 	if (((struct btrfs_device_info *)dev_info1)->max_avail >
-@@ -1892,8 +1892,8 @@ static inline void btrfs_descending_sort_devices(
-  * The helper to calc the free space on the devices that can be used to store
-  * file data.
-  */
--static int btrfs_calc_avail_data_space(struct btrfs_fs_info *fs_info,
--				       u64 *free_bytes)
-+static inline int btrfs_calc_avail_data_space(struct btrfs_fs_info *fs_info,
-+					      u64 *free_bytes)
- {
- 	struct btrfs_device_info *devices_info;
- 	struct btrfs_fs_devices *fs_devices = fs_info->fs_devices;
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+index 7806a4d2b1fcd..91b01ca32e752 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -5691,6 +5691,7 @@ static int rtl8xxxu_set_key(struct ieee80211_hw *hw, enum set_key_cmd cmd,
+ 		break;
+ 	case WLAN_CIPHER_SUITE_TKIP:
+ 		key->flags |= IEEE80211_KEY_FLAG_GENERATE_MMIC;
++		break;
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
 -- 
 2.20.1
 
