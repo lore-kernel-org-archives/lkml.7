@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA2EC33C9D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362CBC43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4524E20891
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 030D62084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919172;
-	bh=2Luct6aeUchWiuAqbQk8IOpLZN3/QWd0Ogx29N2hSO4=;
+	s=default; t=1573919177;
+	bh=O+KNYKwrYXlnpwO1GIlUFnzRl1BQrKkUD6M9YTg3B08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t+ngx+BXF9nAQsoBSqEFCAJ3KKvMb2rmTXwc63r4CEMDtGULG0U77LOlbJBkTZV61
-	 S/T1VY0GEto0XYgmjyodOuJj+8KjI7vdGAyKJeqFzd0l2WGK/WvID17E3dt/AJifNK
-	 6vajlFvLrUIBRxxw/Q9M5u2mglmGwjUqTtxDGofc=
+	b=t5wTokhnLIpc8ttWMAIHIb0ED+xsvsVfBIMdqzNuhan2WewWRX8QWUKVUFGSDMtce
+	 tNKPQSbG1L5XpZN2IVg+hyH8ZRriEkpzp+Ng8CjTx0CUeT/HxmRXoGrhtKTy0XbG0m
+	 zhvj8671pCGdI1RAc8gXjbb1+2hlMUFvhHld2iVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbfKPPqK (ORCPT
+        id S1728655AbfKPPqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:46:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52120 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:46:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729271AbfKPPqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:46:02 -0500
+        id S1727972AbfKPPqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:06 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B63EE207FA;
-        Sat, 16 Nov 2019 15:46:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93A8020862;
+        Sat, 16 Nov 2019 15:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919162;
-        bh=2Luct6aeUchWiuAqbQk8IOpLZN3/QWd0Ogx29N2hSO4=;
+        s=default; t=1573919165;
+        bh=O+KNYKwrYXlnpwO1GIlUFnzRl1BQrKkUD6M9YTg3B08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LlUBYgEeOXCtKO5CzykNtpRewz3OGoFKeNqp84A/2hRKeI2rbbe4oygBOzo1F8sqZ
-         bJfisXzb3GZ4apRM/UrRScQR8Z+JthNhWFuN70UtDU/jgBnEJUBWgkYkdMspVE3Bqy
-         sfNFf/HULlvXk3YQSVY+S2Q2KR3M2ckdojKfbZqM=
+        b=Er3rUtXv+Y1+XVmsvMFWTRe8OvQAb1eVO1C/ofNlm6zPc57NcnCahrIT2VnKjkW1t
+         MpANyNsjwesOQFZBMNWrTFn0CnNJHtZjax7qrsFcWXaImyattNF/IND4OuDiCSNw3t
+         yKG97VIioXgxWN2nVz970L3JbLmRh3kYIi3s6o/s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 170/237] net: hns3: bugfix for is_valid_csq_clean_head()
-Date:   Sat, 16 Nov 2019 10:40:05 -0500
-Message-Id: <20191116154113.7417-170-sashal@kernel.org>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        KY Srinivasan <kys@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 174/237] irq/matrix: Fix memory overallocation
+Date:   Sat, 16 Nov 2019 10:40:09 -0500
+Message-Id: <20191116154113.7417-174-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -59,50 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huazhong Tan <tanhuazhong@huawei.com>
+From: Michael Kelley <mikelley@microsoft.com>
 
-[ Upstream commit 6d71ec6cbf74ac9c2823ef751b1baa5b889bb3ac ]
+[ Upstream commit 57f01796f14fecf00d330fe39c8d2477ced9cd79 ]
 
-The HEAD pointer of the hardware command queue maybe equal to the command
-queue's next_to_use in the driver, so that does not belong to the invalid
-HEAD pointer, since the hardware may not process the command in time,
-causing the HEAD pointer to be too late to update. The variables' name
-in this function is unreadable, so give them a more readable one.
+IRQ_MATRIX_SIZE is the number of longs needed for a bitmap, multiplied by
+the size of a long, yielding a byte count. But it is used to size an array
+of longs, which is way more memory than is needed.
 
-Fixes: 3ff504908f95 ("net: hns3: fix a dead loop in hclge_cmd_csq_clean")
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Change IRQ_MATRIX_SIZE so it is just the number of longs needed and the
+arrays come out the correct size.
+
+Fixes: 2f75d9e1c905 ("genirq: Implement bitmap matrix allocator")
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: KY Srinivasan <kys@microsoft.com>
+Link: https://lkml.kernel.org/r/1541032428-10392-1-git-send-email-mikelley@microsoft.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c   | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ kernel/irq/matrix.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-index 68026a5ad7e77..690f62ed87dca 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-@@ -24,15 +24,15 @@ static int hclge_ring_space(struct hclge_cmq_ring *ring)
- 	return ring->desc_num - used - 1;
- }
+diff --git a/kernel/irq/matrix.c b/kernel/irq/matrix.c
+index 92337703ca9fd..30cc217b86318 100644
+--- a/kernel/irq/matrix.c
++++ b/kernel/irq/matrix.c
+@@ -8,7 +8,7 @@
+ #include <linux/cpu.h>
+ #include <linux/irq.h>
  
--static int is_valid_csq_clean_head(struct hclge_cmq_ring *ring, int h)
-+static int is_valid_csq_clean_head(struct hclge_cmq_ring *ring, int head)
- {
--	int u = ring->next_to_use;
--	int c = ring->next_to_clean;
-+	int ntu = ring->next_to_use;
-+	int ntc = ring->next_to_clean;
+-#define IRQ_MATRIX_SIZE	(BITS_TO_LONGS(IRQ_MATRIX_BITS) * sizeof(unsigned long))
++#define IRQ_MATRIX_SIZE	(BITS_TO_LONGS(IRQ_MATRIX_BITS))
  
--	if (unlikely(h >= ring->desc_num))
--		return 0;
-+	if (ntu > ntc)
-+		return head >= ntc && head <= ntu;
- 
--	return u > c ? (h > c && h <= u) : (h > c || h <= u);
-+	return head >= ntc || head <= ntu;
- }
- 
- static int hclge_alloc_cmd_desc(struct hclge_cmq_ring *ring)
+ struct cpumap {
+ 	unsigned int		available;
 -- 
 2.20.1
 
