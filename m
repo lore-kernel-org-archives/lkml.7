@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756EFC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C624BC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49082214DE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BDC5214DE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:14:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920869;
-	bh=L4QbWVzfIJSe4VDi2e6Gwm+s3G1sQIYBlYSwyB3DNpc=;
+	s=default; t=1573920875;
+	bh=gZtgvh8qFeJ0rwP1uNVOTHy9jivYcPY13ibJR/gnb4Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CAzbDToNeKux4l827Ak3LzuMzJZavVfbtlDmPUoAqUGSeU4MzS8/cHVglcTRrCRaW
-	 TNesJbrBWdKDDTLW85HWxjWUO5D/Uq/GXHkqLyhmZO9YAe1wNYjxzWG4qskpdna1Om
-	 LbWSztXsVV34tIP4NDsVFLaEnaYXte8XFyEawUtM=
+	b=SvRG0kmqL7oeJLz7nRMBir5GkZEqydrc7pdM7MrSA+bXIidCRJ+nze7I7CUVInqfI
+	 8SS1h2zZsaepfi9U1qSaIvy4wqZl6JcExiZYbAfcupjmPHWHhPZBhui7fdb/LDt0w+
+	 ZNVA0CTtJREBt/CujBqUQXtESdaw6q2BwME5L2yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729809AbfKPPrs (ORCPT
+        id S1729771AbfKPPrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:47:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53746 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:47:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729623AbfKPPrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:47:10 -0500
+        id S1729630AbfKPPrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:47:07 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E11F820885;
-        Sat, 16 Nov 2019 15:47:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D2D620885;
+        Sat, 16 Nov 2019 15:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919230;
-        bh=L4QbWVzfIJSe4VDi2e6Gwm+s3G1sQIYBlYSwyB3DNpc=;
+        s=default; t=1573919226;
+        bh=gZtgvh8qFeJ0rwP1uNVOTHy9jivYcPY13ibJR/gnb4Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hOMK+7bJZrnZQyLoEeGWcHaOOwSAD8KzAd2W59iXwKfaIANCS/V9sP8hKA6fp6zH+
-         8WiRX3CiJkCPGgZfm14pv5LGgBpa6d6MJtH8TZmV8CsSbBxJpMtTaz13ZNsGblLB3Q
-         iGim2DUMrNTIg3qyiBd4Pk5LgeZFU0w/rwifdMEc=
+        b=RzPnVjzvEeGIDGL1E28BnWX1OZSe24E4u3MDFcmtvqb8FmdV0G7pMzCgVZjWi1FDt
+         gKTg3gd6ycJ1vuCTXKWPuAUV2R98uFfkPOejc8hkU2HHHHYnxGWHn6ipFfAWEyin5Z
+         UANHkg2bzT3LRXHJqEG1I/zmFUymBcp/ubQnOm/I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhong jiang <zhongjiang@huawei.com>,
-        Yang yingliang <yangyingliang@huawei.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 235/237] mm/memory_hotplug: Do not unlock when fails to take the device_hotplug_lock
-Date:   Sat, 16 Nov 2019 10:41:10 -0500
-Message-Id: <20191116154113.7417-235-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 230/237] pinctrl: zynq: Use define directive for PIN_CONFIG_IO_STANDARD
+Date:   Sat, 16 Nov 2019 10:41:05 -0500
+Message-Id: <20191116154113.7417-230-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -63,44 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhong jiang <zhongjiang@huawei.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit d2ab99403ee00d8014e651728a4702ea1ae5e52c ]
+[ Upstream commit cd8a145a066a1a3beb0ae615c7cb2ee4217418d7 ]
 
-When adding the memory by probing memory block in sysfs interface, there is an
-obvious issue that we will unlock the device_hotplug_lock when fails to takes it.
+Clang warns when one enumerated type is implicitly converted to another:
 
-That issue was introduced in Commit 8df1d0e4a265
-("mm/memory_hotplug: make add_memory() take the device_hotplug_lock")
+drivers/pinctrl/pinctrl-zynq.c:985:18: warning: implicit conversion from
+enumeration type 'enum zynq_pin_config_param' to different enumeration
+type 'enum pin_config_param' [-Wenum-conversion]
+        {"io-standard", PIN_CONFIG_IOSTANDARD, zynq_iostd_lvcmos18},
+        ~               ^~~~~~~~~~~~~~~~~~~~~
+drivers/pinctrl/pinctrl-zynq.c:990:16: warning: implicit conversion from
+enumeration type 'enum zynq_pin_config_param' to different enumeration
+type 'enum pin_config_param' [-Wenum-conversion]
+        = { PCONFDUMP(PIN_CONFIG_IOSTANDARD, "IO-standard", NULL, true),
+            ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/pinctrl/pinconf-generic.h:163:11: note: expanded from
+macro 'PCONFDUMP'
+        .param = a, .display = b, .format = c, .has_arg = d     \
+                 ^
+2 warnings generated.
 
-We should drop out in time when fails to take the device_hotplug_lock.
+It is expected that pinctrl drivers can extend pin_config_param because
+of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
+isn't an issue. Most drivers that take advantage of this define the
+PIN_CONFIG variables as constants, rather than enumerated values. Do the
+same thing here so that Clang no longer warns.
 
-Fixes: 8df1d0e4a265 ("mm/memory_hotplug: make add_memory() take the device_hotplug_lock")
-Reported-by: Yang yingliang <yangyingliang@huawei.com>
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/memory.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-zynq.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 0f8e77f78cc80..ac1574a696100 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -510,7 +510,7 @@ memory_probe_store(struct device *dev, struct device_attribute *attr,
+diff --git a/drivers/pinctrl/pinctrl-zynq.c b/drivers/pinctrl/pinctrl-zynq.c
+index a0daf27042bd0..90fd37e8207bf 100644
+--- a/drivers/pinctrl/pinctrl-zynq.c
++++ b/drivers/pinctrl/pinctrl-zynq.c
+@@ -971,15 +971,12 @@ enum zynq_io_standards {
+ 	zynq_iostd_max
+ };
  
- 	ret = lock_device_hotplug_sysfs();
- 	if (ret)
--		goto out;
-+		return ret;
+-/**
+- * enum zynq_pin_config_param - possible pin configuration parameters
+- * @PIN_CONFIG_IOSTANDARD: if the pin can select an IO standard, the argument to
++/*
++ * PIN_CONFIG_IOSTANDARD: if the pin can select an IO standard, the argument to
+  *	this parameter (on a custom format) tells the driver which alternative
+  *	IO standard to use.
+  */
+-enum zynq_pin_config_param {
+-	PIN_CONFIG_IOSTANDARD = PIN_CONFIG_END + 1,
+-};
++#define PIN_CONFIG_IOSTANDARD		(PIN_CONFIG_END + 1)
  
- 	nid = memory_add_physaddr_to_nid(phys_addr);
- 	ret = __add_memory(nid, phys_addr,
+ static const struct pinconf_generic_params zynq_dt_params[] = {
+ 	{"io-standard", PIN_CONFIG_IOSTANDARD, zynq_iostd_lvcmos18},
 -- 
 2.20.1
 
