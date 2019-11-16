@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B421FC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0A8C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EBB121479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85B69214DE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:17:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921048;
-	bh=XMhY8a5ut28V1T9lJw6bN/LcWSGEAEJquJDZCFGqYyQ=;
+	s=default; t=1573921056;
+	bh=kqAp3QBxVhcqTGJGRtkpTNDA19iAjS9CSm45alVTbgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x8tS4HN9wPF+UV0FRUkjalSSD91r7T5b+Sc/+3CAcNaluG/8YpgapMLv6OjEv35K3
-	 /hGhVCYCISQbHbfzpxkdo2nQWuv5CLhl00BnXBsNZTu4wkZNLLEFe/B5nHkro50nzi
-	 9zqO+eNV8VoBiUoSbtvDzboD0+j6uFhlOSN7u3S8=
+	b=YcINRzAgMm3Axlt2l3CSi4aUvI6jac6ML9ZstZ1b++cERa5qFf/rBAQi/TNhRqXn3
+	 ASWnhk90/FGJX8wFK2oLYK6gEsS9IO4rxBjXca7jf4J1PnHppRjlsFM1j67oPVSZqd
+	 vI+NV5HJXl8GLrEQh3Sv2mtyib3FQFOGt0B+zjY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732006AbfKPQR1 (ORCPT
+        id S1732003AbfKPQRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:17:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53370 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:17:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729515AbfKPPqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:46:49 -0500
+        id S1729502AbfKPPqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:46 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E53C208A1;
-        Sat, 16 Nov 2019 15:46:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C89A2089D;
+        Sat, 16 Nov 2019 15:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919208;
-        bh=XMhY8a5ut28V1T9lJw6bN/LcWSGEAEJquJDZCFGqYyQ=;
+        s=default; t=1573919205;
+        bh=kqAp3QBxVhcqTGJGRtkpTNDA19iAjS9CSm45alVTbgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gqrd8k9rkWosiL+VVB3wQka3KFaNI5Gilas1aTakmmoaejmfNUkFAFhmD8ksAMqrI
-         abAXR6ZaEHBsNgC2hthN9HCjgQPpZSt4JQwBdmX3PVmLBtmBEArmJ+uA292ZMGav54
-         ov8d2qlNwWGr6Xyc6tetohlsuhYyGepvHoIN2X3k=
+        b=BYhJ4cn6d/tAayh5HgACaAg4iBn7sL7J21TK+0i2+iTluTWo23yoY/XugKG4yfTV3
+         GdHJIVh+ZP8JUnsGazyGkfwJo0oJgvhWqs0gy9vnxz1ZhpKeCxWrVVInvAExsMI/ob
+         SfZD2xPLvx6wKMZ+gFKIyF5cttUvNgMyrFR6jsuk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        Hannes Reinecke <hare@suse.com>,
+Cc:     Suganath Prabu <suganath-prabu.subramani@broadcom.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 213/237] scsi: lpfc: Fix odd recovery in duplicate FLOGIs in point-to-point
-Date:   Sat, 16 Nov 2019 10:40:48 -0500
-Message-Id: <20191116154113.7417-213-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 209/237] scsi: mpt3sas: Fix driver modifying persistent data in Manufacturing page11
+Date:   Sat, 16 Nov 2019 10:40:44 -0500
+Message-Id: <20191116154113.7417-209-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -61,206 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
 
-[ Upstream commit d496b9a7246cb9813da1fe49e14edbbbf8e232d5 ]
+[ Upstream commit 97f35194093362a63b33caba2485521ddabe2c95 ]
 
-Testing a point-to-point topology and a case of re-FLOGI without
-intervening link bouncing, showed an odd interaction with firmware and
-a resulting scenario where the driver no longer probed after accepting
-the new FLOGI.
+Currently driver is modifying both current & NVRAM/persistent data in
+Manufacturing page11. Driver should change only current copy of
+Manufacturing page11. It should not modify the persistent data.
 
-Work around the firmware issue by issuing a link bounce if a FLOGI is
-received after the link is already up and FLOGI's accepted.
+So removed the section of code where driver is modifying the persistent
+data of Manufacturing page11.
 
-While debugging the issue, realized that some debug traces should be
-clarified to help in the future.
-
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
+Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc.h         |  1 +
- drivers/scsi/lpfc/lpfc_els.c     | 66 ++++++++++++++++++++++++++------
- drivers/scsi/lpfc/lpfc_hbadisc.c |  9 +++++
- 3 files changed, 64 insertions(+), 12 deletions(-)
+ drivers/scsi/mpt3sas/mpt3sas_config.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc.h b/drivers/scsi/lpfc/lpfc.h
-index 43732e8d13473..ebcfcbb8b4ccc 100644
---- a/drivers/scsi/lpfc/lpfc.h
-+++ b/drivers/scsi/lpfc/lpfc.h
-@@ -490,6 +490,7 @@ struct lpfc_vport {
- 	struct nvme_fc_local_port *localport;
- 	uint8_t  nvmei_support; /* driver supports NVME Initiator */
- 	uint32_t last_fcp_wqidx;
-+	uint32_t rcv_flogi_cnt; /* How many unsol FLOGIs ACK'd. */
- };
- 
- struct hbq_s {
-diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
-index 8bf916b9a987d..e263a486b1c6c 100644
---- a/drivers/scsi/lpfc/lpfc_els.c
-+++ b/drivers/scsi/lpfc/lpfc_els.c
-@@ -1057,9 +1057,9 @@ lpfc_cmpl_els_flogi(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
- 			goto flogifail;
- 
- 		lpfc_printf_vlog(vport, KERN_WARNING, LOG_ELS,
--				 "0150 FLOGI failure Status:x%x/x%x TMO:x%x\n",
-+				 "0150 FLOGI failure Status:x%x/x%x xri x%x TMO:x%x\n",
- 				 irsp->ulpStatus, irsp->un.ulpWord[4],
--				 irsp->ulpTimeout);
-+				 cmdiocb->sli4_xritag, irsp->ulpTimeout);
- 
- 		/* FLOGI failed, so there is no fabric */
- 		spin_lock_irq(shost->host_lock);
-@@ -1113,7 +1113,8 @@ lpfc_cmpl_els_flogi(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
- 	/* FLOGI completes successfully */
- 	lpfc_printf_vlog(vport, KERN_INFO, LOG_ELS,
- 			 "0101 FLOGI completes successfully, I/O tag:x%x, "
--			 "Data: x%x x%x x%x x%x x%x x%x\n", cmdiocb->iotag,
-+			 "xri x%x Data: x%x x%x x%x x%x x%x %x\n",
-+			 cmdiocb->iotag, cmdiocb->sli4_xritag,
- 			 irsp->un.ulpWord[4], sp->cmn.e_d_tov,
- 			 sp->cmn.w2.r_a_tov, sp->cmn.edtovResolution,
- 			 vport->port_state, vport->fc_flag);
-@@ -4266,14 +4267,6 @@ lpfc_els_rsp_acc(struct lpfc_vport *vport, uint32_t flag,
- 	default:
- 		return 1;
- 	}
--	/* Xmit ELS ACC response tag <ulpIoTag> */
--	lpfc_printf_vlog(vport, KERN_INFO, LOG_ELS,
--			 "0128 Xmit ELS ACC response tag x%x, XRI: x%x, "
--			 "DID: x%x, nlp_flag: x%x nlp_state: x%x RPI: x%x "
--			 "fc_flag x%x\n",
--			 elsiocb->iotag, elsiocb->iocb.ulpContext,
--			 ndlp->nlp_DID, ndlp->nlp_flag, ndlp->nlp_state,
--			 ndlp->nlp_rpi, vport->fc_flag);
- 	if (ndlp->nlp_flag & NLP_LOGO_ACC) {
- 		spin_lock_irq(shost->host_lock);
- 		if (!(ndlp->nlp_flag & NLP_RPI_REGISTERED ||
-@@ -4442,6 +4435,15 @@ lpfc_els_rsp_adisc_acc(struct lpfc_vport *vport, struct lpfc_iocbq *oldiocb,
- 		lpfc_els_free_iocb(phba, elsiocb);
- 		return 1;
- 	}
-+
-+	/* Xmit ELS ACC response tag <ulpIoTag> */
-+	lpfc_printf_vlog(vport, KERN_INFO, LOG_ELS,
-+			 "0128 Xmit ELS ACC response Status: x%x, IoTag: x%x, "
-+			 "XRI: x%x, DID: x%x, nlp_flag: x%x nlp_state: x%x "
-+			 "RPI: x%x, fc_flag x%x\n",
-+			 rc, elsiocb->iotag, elsiocb->sli4_xritag,
-+			 ndlp->nlp_DID, ndlp->nlp_flag, ndlp->nlp_state,
-+			 ndlp->nlp_rpi, vport->fc_flag);
- 	return 0;
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_config.c b/drivers/scsi/mpt3sas/mpt3sas_config.c
+index d29a2dcc7d0ec..9b01c5a7aebd9 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_config.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_config.c
+@@ -692,10 +692,6 @@ mpt3sas_config_set_manufacturing_pg11(struct MPT3SAS_ADAPTER *ioc,
+ 	r = _config_request(ioc, &mpi_request, mpi_reply,
+ 	    MPT3_CONFIG_PAGE_DEFAULT_TIMEOUT, config_page,
+ 	    sizeof(*config_page));
+-	mpi_request.Action = MPI2_CONFIG_ACTION_PAGE_WRITE_NVRAM;
+-	r = _config_request(ioc, &mpi_request, mpi_reply,
+-	    MPT3_CONFIG_PAGE_DEFAULT_TIMEOUT, config_page,
+-	    sizeof(*config_page));
+  out:
+ 	return r;
  }
- 
-@@ -6452,6 +6454,11 @@ lpfc_els_rcv_flogi(struct lpfc_vport *vport, struct lpfc_iocbq *cmdiocb,
- 	port_state = vport->port_state;
- 	vport->fc_flag |= FC_PT2PT;
- 	vport->fc_flag &= ~(FC_FABRIC | FC_PUBLIC_LOOP);
-+
-+	/* Acking an unsol FLOGI.  Count 1 for link bounce
-+	 * work-around.
-+	 */
-+	vport->rcv_flogi_cnt++;
- 	spin_unlock_irq(shost->host_lock);
- 	lpfc_printf_vlog(vport, KERN_INFO, LOG_ELS,
- 			 "3311 Rcv Flogi PS x%x new PS x%x "
-@@ -7849,8 +7856,9 @@ lpfc_els_unsol_buffer(struct lpfc_hba *phba, struct lpfc_sli_ring *pring,
- 	struct ls_rjt stat;
- 	uint32_t *payload;
- 	uint32_t cmd, did, newnode;
--	uint8_t rjt_exp, rjt_err = 0;
-+	uint8_t rjt_exp, rjt_err = 0, init_link = 0;
- 	IOCB_t *icmd = &elsiocb->iocb;
-+	LPFC_MBOXQ_t *mbox;
- 
- 	if (!vport || !(elsiocb->context2))
- 		goto dropit;
-@@ -7999,6 +8007,19 @@ lpfc_els_unsol_buffer(struct lpfc_hba *phba, struct lpfc_sli_ring *pring,
- 			did, vport->port_state, ndlp->nlp_flag);
- 
- 		phba->fc_stat.elsRcvFLOGI++;
-+
-+		/* If the driver believes fabric discovery is done and is ready,
-+		 * bounce the link.  There is some descrepancy.
-+		 */
-+		if (vport->port_state >= LPFC_LOCAL_CFG_LINK &&
-+		    vport->fc_flag & FC_PT2PT &&
-+		    vport->rcv_flogi_cnt >= 1) {
-+			rjt_err = LSRJT_LOGICAL_BSY;
-+			rjt_exp = LSEXP_NOTHING_MORE;
-+			init_link++;
-+			goto lsrjt;
-+		}
-+
- 		lpfc_els_rcv_flogi(vport, elsiocb, ndlp);
- 		if (newnode)
- 			lpfc_nlp_put(ndlp);
-@@ -8227,6 +8248,27 @@ lpfc_els_unsol_buffer(struct lpfc_hba *phba, struct lpfc_sli_ring *pring,
- 
- 	lpfc_nlp_put(elsiocb->context1);
- 	elsiocb->context1 = NULL;
-+
-+	/* Special case.  Driver received an unsolicited command that
-+	 * unsupportable given the driver's current state.  Reset the
-+	 * link and start over.
-+	 */
-+	if (init_link) {
-+		mbox = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
-+		if (!mbox)
-+			return;
-+		lpfc_linkdown(phba);
-+		lpfc_init_link(phba, mbox,
-+			       phba->cfg_topology,
-+			       phba->cfg_link_speed);
-+		mbox->u.mb.un.varInitLnk.lipsr_AL_PA = 0;
-+		mbox->mbox_cmpl = lpfc_sli_def_mbox_cmpl;
-+		mbox->vport = vport;
-+		if (lpfc_sli_issue_mbox(phba, mbox, MBX_NOWAIT) ==
-+		    MBX_NOT_FINISHED)
-+			mempool_free(mbox, phba->mbox_mem_pool);
-+	}
-+
- 	return;
- 
- dropit:
-diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
-index 38a9245fddba1..5ec60c221d846 100644
---- a/drivers/scsi/lpfc/lpfc_hbadisc.c
-+++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
-@@ -952,6 +952,7 @@ lpfc_linkdown(struct lpfc_hba *phba)
- 		}
- 		spin_lock_irq(shost->host_lock);
- 		phba->pport->fc_flag &= ~(FC_PT2PT | FC_PT2PT_PLOGI);
-+		phba->pport->rcv_flogi_cnt = 0;
- 		spin_unlock_irq(shost->host_lock);
- 	}
- 	return 0;
-@@ -1023,6 +1024,7 @@ lpfc_linkup(struct lpfc_hba *phba)
- {
- 	struct lpfc_vport **vports;
- 	int i;
-+	struct Scsi_Host  *shost = lpfc_shost_from_vport(phba->pport);
- 
- 	phba->link_state = LPFC_LINK_UP;
- 
-@@ -1036,6 +1038,13 @@ lpfc_linkup(struct lpfc_hba *phba)
- 			lpfc_linkup_port(vports[i]);
- 	lpfc_destroy_vport_work_array(phba, vports);
- 
-+	/* Clear the pport flogi counter in case the link down was
-+	 * absorbed without an ACQE. No lock here - in worker thread
-+	 * and discovery is synchronized.
-+	 */
-+	spin_lock_irq(shost->host_lock);
-+	phba->pport->rcv_flogi_cnt = 0;
-+	spin_unlock_irq(shost->host_lock);
- 	return 0;
- }
- 
 -- 
 2.20.1
 
