@@ -2,50 +2,52 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDAEC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CD5C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B71362086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B109207FA
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919327;
-	bh=Adeqws/vbvbbgwO/qw2tFv0F8t6Gf2n3CMXRD7k9Ijg=;
+	s=default; t=1573919336;
+	bh=dP+PCoNwoOWfPuFe01TtS/TXqgxB3zZdYBB2ROF1FZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yZLiZhlsN6io/7BRZMBVZql/YYEozTJyVEe0k2kSjBzFL5S5GUaRbWNJK9/m6boTp
-	 A8m7dCSlg633bE9EiNjeCxcACsjalrob8XFBKy8AabaDjRUuKta4H8R/XJOqlvFM/O
-	 9yy9UeDBqCY+Rl+1jRVwYwB+f2WOE7sFFUb2d3Dg=
+	b=oAOJpPqgMKcGztneNdovALIILn8NFfThe5gUUxnn44qOzboB7U9AeZMTF4E9No9jq
+	 R/c8uwha8OI2nFfrxkCzSIxpizUecjXztIK2vDrQ5dbBuGDwg8SkoxJJDdF/GachWT
+	 ccW4GrVHVVDK/NngnQ285REbV3SZVwPNPU8SfjVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730176AbfKPPsq (ORCPT
+        id S1728267AbfKPPsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:48:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55756 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:48:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730101AbfKPPsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:48:35 -0500
+        id S1728774AbfKPPsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:48:42 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D5C020885;
-        Sat, 16 Nov 2019 15:48:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72C4C208E3;
+        Sat, 16 Nov 2019 15:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919314;
-        bh=Adeqws/vbvbbgwO/qw2tFv0F8t6Gf2n3CMXRD7k9Ijg=;
+        s=default; t=1573919322;
+        bh=dP+PCoNwoOWfPuFe01TtS/TXqgxB3zZdYBB2ROF1FZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T5vDQQPCE0Gi3DyyomYZnx9QfTKHacI8QOCOCA4pMKirux0dqdZqXL4j9TMjkrGy2
-         iEFJXC/A8Nx7w51JaXwjOoFOhn/F3ilxRGuA26JP7nJCOSpieQ+rm2TCh9KOKzshcj
-         XrX2I8SDiwff0j0JgwA0W8HAqN/zwFdKsXm9G0Gs=
+        b=WRQkIddXCKvEt4risY8XLJwDMeq93FTF55IRTYPXvvoGwFERmd7uWFciNAN9TDpI/
+         jzWeI/7DeDUkrtL8OICb2lFsCpL9oKdsFEsFaIZq3m0dJ95iQ+MOH8zmJNyfA6qn6B
+         M28pCK2UOsJclRSENAnXVICoOcuatbC9uIaVOjhc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vignesh R <vigneshr@ti.com>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 057/150] spi: omap2-mcspi: Set FIFO DMA trigger level to word length
-Date:   Sat, 16 Nov 2019 10:45:55 -0500
-Message-Id: <20191116154729.9573-57-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 064/150] mISDN: Fix type of switch control variable in ctrl_teimanager
+Date:   Sat, 16 Nov 2019 10:46:02 -0500
+Message-Id: <20191116154729.9573-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -58,110 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vignesh R <vigneshr@ti.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit b682cffa3ac6d9d9e16e9b413c45caee3b391fab ]
+[ Upstream commit aeb5e02aca91522733eb1db595ac607d30c87767 ]
 
-McSPI has 32 byte FIFO in Transmit-Receive mode. Current code tries to
-configuration FIFO watermark level for DMA trigger to be GCD of transfer
-length and max FIFO size which would mean trigger level may be set to 32
-for transmit-receive mode if length is aligned. This does not work in
-case of SPI slave mode where FIFO always needs to have data ready
-whenever master starts the clock. With DMA trigger size of 32 there will
-be a small window during slave TX where DMA is still putting data into
-FIFO but master would have started clock for next byte, resulting in
-shifting out of stale data. Similarly, on Slave RX side there may be RX
-FIFO overflow
-Fix this by setting FIFO watermark for DMA trigger to word
-length. This means DMA is triggered as soon as FIFO has space for word
-length bytes and DMA would make sure FIFO is almost always full
-therefore improving FIFO occupancy in both master and slave mode.
+Clang warns (trimmed for brevity):
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+drivers/isdn/mISDN/tei.c:1193:7: warning: overflow converting case value
+to switch condition type (2147764552 to 18446744071562348872) [-Wswitch]
+        case IMHOLD_L1:
+             ^
+drivers/isdn/mISDN/tei.c:1187:7: warning: overflow converting case value
+to switch condition type (2147764550 to 18446744071562348870) [-Wswitch]
+        case IMCLEAR_L2:
+             ^
+2 warnings generated.
+
+The root cause is that the _IOC macro can generate really large numbers,
+which don't find into type int. My research into how GCC and Clang are
+handling this at a low level didn't prove fruitful and surveying the
+kernel tree shows that aside from here and a few places in the scsi
+subsystem, everything that uses _IOC is at least of type 'unsigned int'.
+Make that change here because as nothing in this function cares about
+the signedness of the variable and it removes ambiguity, which is never
+good when dealing with compilers.
+
+While we're here, remove the unnecessary local variable ret (just return
+-EINVAL and 0 directly).
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/67
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-omap2-mcspi.c | 26 +++++++-------------------
- 1 file changed, 7 insertions(+), 19 deletions(-)
+ drivers/isdn/mISDN/tei.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
-index 9bf64e6eca9ba..517d0ade586bd 100644
---- a/drivers/spi/spi-omap2-mcspi.c
-+++ b/drivers/spi/spi-omap2-mcspi.c
-@@ -298,7 +298,7 @@ static void omap2_mcspi_set_fifo(const struct spi_device *spi,
- 	struct omap2_mcspi_cs *cs = spi->controller_state;
- 	struct omap2_mcspi *mcspi;
- 	unsigned int wcnt;
--	int max_fifo_depth, fifo_depth, bytes_per_word;
-+	int max_fifo_depth, bytes_per_word;
- 	u32 chconf, xferlevel;
+diff --git a/drivers/isdn/mISDN/tei.c b/drivers/isdn/mISDN/tei.c
+index 12d9e5f4beb1f..58635b5f296f0 100644
+--- a/drivers/isdn/mISDN/tei.c
++++ b/drivers/isdn/mISDN/tei.c
+@@ -1180,8 +1180,7 @@ static int
+ ctrl_teimanager(struct manager *mgr, void *arg)
+ {
+ 	/* currently we only have one option */
+-	int	*val = (int *)arg;
+-	int	ret = 0;
++	unsigned int *val = (unsigned int *)arg;
  
- 	mcspi = spi_master_get_devdata(master);
-@@ -314,10 +314,6 @@ static void omap2_mcspi_set_fifo(const struct spi_device *spi,
- 		else
- 			max_fifo_depth = OMAP2_MCSPI_MAX_FIFODEPTH;
- 
--		fifo_depth = gcd(t->len, max_fifo_depth);
--		if (fifo_depth < 2 || fifo_depth % bytes_per_word != 0)
--			goto disable_fifo;
--
- 		wcnt = t->len / bytes_per_word;
- 		if (wcnt > OMAP2_MCSPI_MAX_FIFOWCNT)
- 			goto disable_fifo;
-@@ -325,16 +321,17 @@ static void omap2_mcspi_set_fifo(const struct spi_device *spi,
- 		xferlevel = wcnt << 16;
- 		if (t->rx_buf != NULL) {
- 			chconf |= OMAP2_MCSPI_CHCONF_FFER;
--			xferlevel |= (fifo_depth - 1) << 8;
-+			xferlevel |= (bytes_per_word - 1) << 8;
- 		}
-+
- 		if (t->tx_buf != NULL) {
- 			chconf |= OMAP2_MCSPI_CHCONF_FFET;
--			xferlevel |= fifo_depth - 1;
-+			xferlevel |= bytes_per_word - 1;
- 		}
- 
- 		mcspi_write_reg(master, OMAP2_MCSPI_XFERLEVEL, xferlevel);
- 		mcspi_write_chconf0(spi, chconf);
--		mcspi->fifo_depth = fifo_depth;
-+		mcspi->fifo_depth = max_fifo_depth;
- 
- 		return;
+ 	switch (val[0]) {
+ 	case IMCLEAR_L2:
+@@ -1197,9 +1196,9 @@ ctrl_teimanager(struct manager *mgr, void *arg)
+ 			test_and_clear_bit(OPTION_L1_HOLD, &mgr->options);
+ 		break;
+ 	default:
+-		ret = -EINVAL;
++		return -EINVAL;
  	}
-@@ -601,7 +598,6 @@ omap2_mcspi_txrx_dma(struct spi_device *spi, struct spi_transfer *xfer)
- 	struct dma_slave_config	cfg;
- 	enum dma_slave_buswidth width;
- 	unsigned es;
--	u32			burst;
- 	void __iomem		*chstat_reg;
- 	void __iomem            *irqstat_reg;
- 	int			wait_res;
-@@ -623,22 +619,14 @@ omap2_mcspi_txrx_dma(struct spi_device *spi, struct spi_transfer *xfer)
- 	}
+-	return ret;
++	return 0;
+ }
  
- 	count = xfer->len;
--	burst = 1;
--
--	if (mcspi->fifo_depth > 0) {
--		if (count > mcspi->fifo_depth)
--			burst = mcspi->fifo_depth / es;
--		else
--			burst = count / es;
--	}
- 
- 	memset(&cfg, 0, sizeof(cfg));
- 	cfg.src_addr = cs->phys + OMAP2_MCSPI_RX0;
- 	cfg.dst_addr = cs->phys + OMAP2_MCSPI_TX0;
- 	cfg.src_addr_width = width;
- 	cfg.dst_addr_width = width;
--	cfg.src_maxburst = burst;
--	cfg.dst_maxburst = burst;
-+	cfg.src_maxburst = es;
-+	cfg.dst_maxburst = es;
- 
- 	rx = xfer->rx_buf;
- 	tx = xfer->tx_buf;
+ /* This function does create a L2 for fixed TEI in NT Mode */
 -- 
 2.20.1
 
