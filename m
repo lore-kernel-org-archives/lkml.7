@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E51C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3C6C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C57C20891
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 848F020885
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919456;
-	bh=EHA+Fe7eIbG8tt1ANtpom1GPKu0YwoUmtCxEmscV9QU=;
+	s=default; t=1573919462;
+	bh=J8nLv1zzZihBjk9Qf7MzVMFSXvKTV4N1SPSE8aD/4sA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XfTtO6wKl/PgdX9ZXtbMvEO8AwT0ltLifQaHtT+86LAvlJW50dQ4FBFWbBVn0wjuY
-	 iUVGvQD/k0j2Owp1FC86zI96dFuhhaOT9PFc+esKNcrwe/0mO15f0Kp8eq08VFoLWV
-	 lBVCEhz+8fOr+pKGiSOUZ6qNxWx58yRNy1m/5CWg=
+	b=SvThsHJuvdnZHZbYttO7fwup4/pRnWq1+X/WVe7uoYq3oeUqtifqcFHgic0fjjSjf
+	 BNkUscaYHnLJcRt+9eq27oN6DdFyS90OF+x+U2Db8D4PSuBkD5UdWrtugff9RdVsUA
+	 AtLDr38QnUqgbDTLNFHf/b3O0Q2+IRR826USVXvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730651AbfKPPuz (ORCPT
+        id S1730660AbfKPPvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:50:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58734 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:51:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730555AbfKPPuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:50:35 -0500
+        id S1728895AbfKPPuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:50:37 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7E8720B7C;
-        Sat, 16 Nov 2019 15:50:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BA0C21826;
+        Sat, 16 Nov 2019 15:50:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919434;
-        bh=EHA+Fe7eIbG8tt1ANtpom1GPKu0YwoUmtCxEmscV9QU=;
+        s=default; t=1573919437;
+        bh=J8nLv1zzZihBjk9Qf7MzVMFSXvKTV4N1SPSE8aD/4sA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ac1trimyVxl64Tij7YHlAre+WijjmUAV/NRkMMQd4HW5IYamOYhmHow+ssW0wY7Fz
-         MVJ9GuHoMqh3V/tZUOfO5DXtQ4O6IT7oVM913FjZQ053vKLFhN1taMBTdBwdpHWy0+
-         x1ogy93bHyEz2zx1aaDRW5EwGYl6D7bnj5l2yWjs=
+        b=M4oN34CRscBUNuzo+SWpGe5qJh/A8oNkWrK8nzZpTkgVNz6X9fiGTZyqiamHSgbCx
+         N+vpzCKiDVKPmLozJle2BObN2u4g4hFk/JZhYQGNvJdvLlk+4lX05LEG69B/79Fu9F
+         3/4qYKzAlOP+1DsTIPbPXLyTYhjykvhHWH/U4KZU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 132/150] scsi: lpfc: fcoe: Fix link down issue after 1000+ link bounces
-Date:   Sat, 16 Nov 2019 10:47:10 -0500
-Message-Id: <20191116154729.9573-132-sashal@kernel.org>
+Cc:     Mike Manning <mmanning@vyatta.att-mail.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 136/150] vrf: mark skb for multicast or link-local as enslaved to VRF
+Date:   Sat, 16 Nov 2019 10:47:14 -0500
+Message-Id: <20191116154729.9573-136-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -61,130 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Mike Manning <mmanning@vyatta.att-mail.com>
 
-[ Upstream commit 036cad1f1ac9ce03e2db94b8460f98eaf1e1ee4c ]
+[ Upstream commit 6f12fa775530195a501fb090d092c637f32d0cc5 ]
 
-On FCoE adapters, when running link bounce test in a loop, initiator
-failed to login with switch switch and required driver reload to
-recover. Switch reached a point where all subsequent FLOGIs would be
-LS_RJT'd. Further testing showed the condition to be related to not
-performing FCF discovery between FLOGI's.
+The skb for packets that are multicast or to a link-local address are
+not marked as being enslaved to a VRF, if they are received on a socket
+bound to the VRF. This is needed for ND and it is preferable for the
+kernel not to have to deal with the additional use-cases if ll or mcast
+packets are handled as enslaved. However, this does not allow service
+instances listening on unbound and bound to VRF sockets to distinguish
+the VRF used, if packets are sent as multicast or to a link-local
+address. The fix is for the VRF driver to also mark these skb as being
+enslaved to the VRF.
 
-Fix by monitoring FLOGI failures and once a repeated error is seen
-repeat FCF discovery.
-
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Mike Manning <mmanning@vyatta.att-mail.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Tested-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_els.c     |  2 ++
- drivers/scsi/lpfc/lpfc_hbadisc.c | 20 ++++++++++++++++++++
- drivers/scsi/lpfc/lpfc_init.c    |  2 +-
- drivers/scsi/lpfc/lpfc_sli.c     | 11 ++---------
- drivers/scsi/lpfc/lpfc_sli4.h    |  1 +
- 5 files changed, 26 insertions(+), 10 deletions(-)
+ drivers/net/vrf.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
-index ddd29752d96dc..95449f97101d3 100644
---- a/drivers/scsi/lpfc/lpfc_els.c
-+++ b/drivers/scsi/lpfc/lpfc_els.c
-@@ -1152,6 +1152,7 @@ lpfc_cmpl_els_flogi(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
- 			phba->fcf.fcf_flag &= ~FCF_DISCOVERY;
- 			phba->hba_flag &= ~(FCF_RR_INPROG | HBA_DEVLOSS_TMO);
- 			spin_unlock_irq(&phba->hbalock);
-+			phba->fcf.fcf_redisc_attempted = 0; /* reset */
- 			goto out;
- 		}
- 		if (!rc) {
-@@ -1166,6 +1167,7 @@ lpfc_cmpl_els_flogi(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
- 			phba->fcf.fcf_flag &= ~FCF_DISCOVERY;
- 			phba->hba_flag &= ~(FCF_RR_INPROG | HBA_DEVLOSS_TMO);
- 			spin_unlock_irq(&phba->hbalock);
-+			phba->fcf.fcf_redisc_attempted = 0; /* reset */
- 			goto out;
- 		}
- 	}
-diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
-index b970933a218d5..d850077c5e226 100644
---- a/drivers/scsi/lpfc/lpfc_hbadisc.c
-+++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
-@@ -1999,6 +1999,26 @@ int lpfc_sli4_fcf_rr_next_proc(struct lpfc_vport *vport, uint16_t fcf_index)
- 				"failover and change port state:x%x/x%x\n",
- 				phba->pport->port_state, LPFC_VPORT_UNKNOWN);
- 		phba->pport->port_state = LPFC_VPORT_UNKNOWN;
-+
-+		if (!phba->fcf.fcf_redisc_attempted) {
-+			lpfc_unregister_fcf(phba);
-+
-+			rc = lpfc_sli4_redisc_fcf_table(phba);
-+			if (!rc) {
-+				lpfc_printf_log(phba, KERN_INFO, LOG_FIP,
-+						"3195 Rediscover FCF table\n");
-+				phba->fcf.fcf_redisc_attempted = 1;
-+				lpfc_sli4_clear_fcf_rr_bmask(phba);
-+			} else {
-+				lpfc_printf_log(phba, KERN_WARNING, LOG_FIP,
-+						"3196 Rediscover FCF table "
-+						"failed. Status:x%x\n", rc);
-+			}
-+		} else {
-+			lpfc_printf_log(phba, KERN_WARNING, LOG_FIP,
-+					"3197 Already rediscover FCF table "
-+					"attempted. No more retry\n");
-+		}
- 		goto stop_flogi_current_fcf;
- 	} else {
- 		lpfc_printf_log(phba, KERN_INFO, LOG_FIP | LOG_ELS,
-diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index 25612ccf6ff28..15bcd00dd7a23 100644
---- a/drivers/scsi/lpfc/lpfc_init.c
-+++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -4997,7 +4997,7 @@ lpfc_sli4_async_fip_evt(struct lpfc_hba *phba,
- 			break;
- 		}
- 		/* If fast FCF failover rescan event is pending, do nothing */
--		if (phba->fcf.fcf_flag & FCF_REDISC_EVT) {
-+		if (phba->fcf.fcf_flag & (FCF_REDISC_EVT | FCF_REDISC_PEND)) {
- 			spin_unlock_irq(&phba->hbalock);
- 			break;
- 		}
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 6c2b098b76095..ebf7d3cda3677 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -18056,15 +18056,8 @@ lpfc_sli4_fcf_rr_next_index_get(struct lpfc_hba *phba)
- 			goto initial_priority;
- 		lpfc_printf_log(phba, KERN_WARNING, LOG_FIP,
- 				"2844 No roundrobin failover FCF available\n");
--		if (next_fcf_index >= LPFC_SLI4_FCF_TBL_INDX_MAX)
--			return LPFC_FCOE_FCF_NEXT_NONE;
--		else {
--			lpfc_printf_log(phba, KERN_WARNING, LOG_FIP,
--				"3063 Only FCF available idx %d, flag %x\n",
--				next_fcf_index,
--			phba->fcf.fcf_pri[next_fcf_index].fcf_rec.flag);
--			return next_fcf_index;
--		}
-+
-+		return LPFC_FCOE_FCF_NEXT_NONE;
+diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
+index 03e4fcdfeab73..e0cea5c05f0e2 100644
+--- a/drivers/net/vrf.c
++++ b/drivers/net/vrf.c
+@@ -996,24 +996,23 @@ static struct sk_buff *vrf_ip6_rcv(struct net_device *vrf_dev,
+ 				   struct sk_buff *skb)
+ {
+ 	int orig_iif = skb->skb_iif;
+-	bool need_strict;
++	bool need_strict = rt6_need_strict(&ipv6_hdr(skb)->daddr);
++	bool is_ndisc = ipv6_ndisc_frame(skb);
+ 
+-	/* loopback traffic; do not push through packet taps again.
+-	 * Reset pkt_type for upper layers to process skb
++	/* loopback, multicast & non-ND link-local traffic; do not push through
++	 * packet taps again. Reset pkt_type for upper layers to process skb
+ 	 */
+-	if (skb->pkt_type == PACKET_LOOPBACK) {
++	if (skb->pkt_type == PACKET_LOOPBACK || (need_strict && !is_ndisc)) {
+ 		skb->dev = vrf_dev;
+ 		skb->skb_iif = vrf_dev->ifindex;
+ 		IP6CB(skb)->flags |= IP6SKB_L3SLAVE;
+-		skb->pkt_type = PACKET_HOST;
++		if (skb->pkt_type == PACKET_LOOPBACK)
++			skb->pkt_type = PACKET_HOST;
+ 		goto out;
  	}
  
- 	if (next_fcf_index < LPFC_SLI4_FCF_TBL_INDX_MAX &&
-diff --git a/drivers/scsi/lpfc/lpfc_sli4.h b/drivers/scsi/lpfc/lpfc_sli4.h
-index 60200385fe009..a132a83ef233c 100644
---- a/drivers/scsi/lpfc/lpfc_sli4.h
-+++ b/drivers/scsi/lpfc/lpfc_sli4.h
-@@ -265,6 +265,7 @@ struct lpfc_fcf {
- #define FCF_REDISC_EVT	0x100 /* FCF rediscovery event to worker thread */
- #define FCF_REDISC_FOV	0x200 /* Post FCF rediscovery fast failover */
- #define FCF_REDISC_PROG (FCF_REDISC_PEND | FCF_REDISC_EVT)
-+	uint16_t fcf_redisc_attempted;
- 	uint32_t addr_mode;
- 	uint32_t eligible_fcf_cnt;
- 	struct lpfc_fcf_rec current_rec;
+-	/* if packet is NDISC or addressed to multicast or link-local
+-	 * then keep the ingress interface
+-	 */
+-	need_strict = rt6_need_strict(&ipv6_hdr(skb)->daddr);
+-	if (!ipv6_ndisc_frame(skb) && !need_strict) {
++	/* if packet is NDISC then keep the ingress interface */
++	if (!is_ndisc) {
+ 		vrf_rx_stats(vrf_dev, skb->len);
+ 		skb->dev = vrf_dev;
+ 		skb->skb_iif = vrf_dev->ifindex;
 -- 
 2.20.1
 
