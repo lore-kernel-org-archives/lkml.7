@@ -2,56 +2,55 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5106FC43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7107DC43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4C321823
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 467D121843
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:03:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920211;
-	bh=MAOsExUO1LX6olohxHbtXv7sXIynRIuvN8sG2DMYCAI=;
+	s=default; t=1573920215;
+	bh=k/shd09n9VEVvxmHDs9M6T7FrVTmb5hzEyPpUP7pW9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t0O9H/SNoTQhzDo2vejUXGF21ekIwbyuJE+NgEUA1pP4EaCfv1Jhkj/kXwRcAEb9J
-	 N7IKxcwV0Lkdj0AW9he7qwHy8MZoGbLd1i2XdF+Cr4h5LOXDBdmCIOZvM7c4XFmD3I
-	 /yDGSeN0hQl6pfBByCW+ru539zi0RJQ+woMgUB38=
+	b=MeN2o+6iSX3FFUp0wSftPpee1pnBm53SyLo+UDoyS+SfMyIgh2IgBkgwYWIX32Fwz
+	 ayqmO10Ox/2TWm/12Thq6S3gbzPGktWc9psziQNOTcnY3t4ycxX8FFbZ+bRzAGJ5GP
+	 kx08F/AEv5Rwh7VVQGM7dxpBWZ4IhjCQcE0oqP+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730954AbfKPPwB (ORCPT
+        id S1730930AbfKPPwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 16 Nov 2019 10:52:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60842 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:60790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730881AbfKPPv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:51:59 -0500
+        id S1728153AbfKPPv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:51:57 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E2DF20871;
-        Sat, 16 Nov 2019 15:51:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E07020857;
+        Sat, 16 Nov 2019 15:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919518;
-        bh=MAOsExUO1LX6olohxHbtXv7sXIynRIuvN8sG2DMYCAI=;
+        s=default; t=1573919517;
+        bh=k/shd09n9VEVvxmHDs9M6T7FrVTmb5hzEyPpUP7pW9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L2tfFxWQFMJHmHA+rMv4dola2FaeKn5V8snW3FAugl/VKwluBWoVCK6Pid4b6X+fA
-         kwKQA4oRG6vtC5eeroKWp4oXcuKycQ7tmoul8kG++rUzr2afO1rpSwAvPM3oD1Py5F
-         1jXj5nFR8o/BWcB7vQqeMstkQE4KyzlVD7UyZ+00=
+        b=HvVYr8mVDM/0J6WcgVSSyqrXyP3io0ss3E+2IEL7mT88mJMqP0xg3N9GrTgYCGuxd
+         izYiXjbq7iz3Iwk6OSj7dKaRzfgT8RJSPJGNGBaHbrJ8hEmWZ8XuxUipYwPt1v5Q+c
+         LZ9d9beufNEzUPN5Lx5GLMt+jnH9rEWnTHjEU4AY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.9 40/99] rtc: s35390a: Change buf's type to u8 in s35390a_init
-Date:   Sat, 16 Nov 2019 10:50:03 -0500
-Message-Id: <20191116155103.10971-40-sashal@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, sparclinux@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 38/99] sparc: Fix parport build warnings.
+Date:   Sat, 16 Nov 2019 10:50:01 -0500
+Message-Id: <20191116155103.10971-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,42 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: "David S. Miller" <davem@davemloft.net>
 
-[ Upstream commit ef0f02fd69a02b50e468a4ddbe33e3d81671e248 ]
+[ Upstream commit 46b8306480fb424abd525acc1763da1c63a27d8a ]
 
-Clang warns:
+If PARPORT_PC_FIFO is not enabled, do not provide the dma lock
+macros and lock definition.  Otherwise:
 
-drivers/rtc/rtc-s35390a.c:124:27: warning: implicit conversion from
-'int' to 'char' changes value from 192 to -64 [-Wconstant-conversion]
-        buf = S35390A_FLAG_RESET | S35390A_FLAG_24H;
-            ~ ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
-1 warning generated.
+./arch/sparc/include/asm/parport.h:24:24: warning: ‘dma_spin_lock’ defined but not used [-Wunused-variable]
+ static DEFINE_SPINLOCK(dma_spin_lock);
+                        ^~~~~~~~~~~~~
+./include/linux/spinlock_types.h:81:39: note: in definition of macro ‘DEFINE_SPINLOCK’
+ #define DEFINE_SPINLOCK(x) spinlock_t x = __SPIN_LOCK_UNLOCKED(x)
 
-Update buf to be an unsigned 8-bit integer, which matches the buf member
-in struct i2c_msg.
-
-https://github.com/ClangBuiltLinux/linux/issues/145
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-s35390a.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/sparc/include/asm/parport.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/rtc/rtc-s35390a.c b/drivers/rtc/rtc-s35390a.c
-index 5dab4665ca3bd..3e0eea3aa876d 100644
---- a/drivers/rtc/rtc-s35390a.c
-+++ b/drivers/rtc/rtc-s35390a.c
-@@ -106,7 +106,7 @@ static int s35390a_get_reg(struct s35390a *s35390a, int reg, char *buf, int len)
+diff --git a/arch/sparc/include/asm/parport.h b/arch/sparc/include/asm/parport.h
+index f005ccac91cc9..e87c0f81b700e 100644
+--- a/arch/sparc/include/asm/parport.h
++++ b/arch/sparc/include/asm/parport.h
+@@ -20,6 +20,7 @@
   */
- static int s35390a_reset(struct s35390a *s35390a, char *status1)
- {
--	char buf;
-+	u8 buf;
- 	int ret;
- 	unsigned initcount = 0;
+ #define HAS_DMA
  
++#ifdef CONFIG_PARPORT_PC_FIFO
+ static DEFINE_SPINLOCK(dma_spin_lock);
+ 
+ #define claim_dma_lock() \
+@@ -30,6 +31,7 @@ static DEFINE_SPINLOCK(dma_spin_lock);
+ 
+ #define release_dma_lock(__flags) \
+ 	spin_unlock_irqrestore(&dma_spin_lock, __flags);
++#endif
+ 
+ static struct sparc_ebus_info {
+ 	struct ebus_dma_info info;
 -- 
 2.20.1
 
