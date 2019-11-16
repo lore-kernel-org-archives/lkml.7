@@ -2,52 +2,52 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDCDC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C935C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6295821823
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D61F320874
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920648;
-	bh=ciBTAO0/irxf/1CCJl7nrAegNLguTJ7+lSjQc6WKeCA=;
+	s=default; t=1573920652;
+	bh=dG+zSrw7iEHZfFQEuCJ+9sfjj9LTzYBKGyDmPJzLAbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p/Bk3gOCsJBOh24J3wPl4xx002aVfw5rYs4451P1PSgqMu6lQgkXw54VJs7OMfxtY
-	 lp9M8TCSnj+IwsrJs3oFdhhmACEh1yimUSISlRKf83sOI5UoTOIB53y4IlSS2XS76l
-	 40nByPVQpFzhS1bLtxLNbHsPGmD29FROjx+vl8Ik=
+	b=paE6MTA49VO93wRooNlBbCIDoGWFzVA5ix4FxhZIk1rMpRxI4uQKjW3FDYmQDSbUz
+	 uKOJB5lKvXeTeJPvJ6xn3pyWlKBCAFJ4s5aA3rDErE/NVS5+5QLureo65iI2h3Haer
+	 Thg3BainrllFeNu+oYCnE/OmnFV95ZHkcsCRb4jU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730186AbfKPPst (ORCPT
+        id S1731761AbfKPQKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:48:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55902 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:10:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728642AbfKPPsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:48:40 -0500
+        id S1730183AbfKPPss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:48:48 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 100C820870;
-        Sat, 16 Nov 2019 15:48:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B474207FA;
+        Sat, 16 Nov 2019 15:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919320;
-        bh=ciBTAO0/irxf/1CCJl7nrAegNLguTJ7+lSjQc6WKeCA=;
+        s=default; t=1573919327;
+        bh=dG+zSrw7iEHZfFQEuCJ+9sfjj9LTzYBKGyDmPJzLAbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vEzkBOgNs5Q6fIOo8G4EqdbOfqzEiFdwHvroqIkIb26lMhfkNTCmQjeg52xFhVQZ0
-         0yxLsYGK344/pAJh9eazdo8/vGyvwMr6EAfRSdKNf2Y7KxgdM+R6L/ms++FfcIq/VS
-         DA7kml1iYDdNJxJ+GgVccDFNhdsnmbU3XyXDeBm0=
+        b=p5xwfSLOObn9Izk7P4zD4rDmgn881KHNuX8kHtVYGX8UMYaNQX7yDcr18WnEcAMpF
+         r7GnezJOIhaZqt9QOMV/xEWpLK9C0afV0M3NrQyHDURAIrE9HRbL0Dxnu97IWeGh9J
+         P18kW++gfVUmAi/+rgP0Sz8llFrhjBs4dqVxLf90=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 062/150] rtc: s35390a: Change buf's type to u8 in s35390a_init
-Date:   Sat, 16 Nov 2019 10:46:00 -0500
-Message-Id: <20191116154729.9573-62-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 070/150] mfd: max8997: Enale irq-wakeup unconditionally
+Date:   Sat, 16 Nov 2019 10:46:08 -0500
+Message-Id: <20191116154729.9573-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,42 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit ef0f02fd69a02b50e468a4ddbe33e3d81671e248 ]
+[ Upstream commit efddff27c886e729a7f84a7205bd84d7d4af7336 ]
 
-Clang warns:
+IRQ wake up support for MAX8997 driver was initially configured by
+respective property in pdata. However, after the driver conversion to
+device-tree, setting it was left as 'todo'. Nowadays most of other PMIC MFD
+drivers initialized from device-tree assume that they can be an irq wakeup
+source, so enable it also for MAX8997. This fixes support for wakeup from
+MAX8997 RTC alarm.
 
-drivers/rtc/rtc-s35390a.c:124:27: warning: implicit conversion from
-'int' to 'char' changes value from 192 to -64 [-Wconstant-conversion]
-        buf = S35390A_FLAG_RESET | S35390A_FLAG_24H;
-            ~ ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
-1 warning generated.
-
-Update buf to be an unsigned 8-bit integer, which matches the buf member
-in struct i2c_msg.
-
-https://github.com/ClangBuiltLinux/linux/issues/145
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-s35390a.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mfd/max8997.c       | 8 +-------
+ include/linux/mfd/max8997.h | 1 -
+ 2 files changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/drivers/rtc/rtc-s35390a.c b/drivers/rtc/rtc-s35390a.c
-index 7067bca5c20d9..6bfff0a6d6552 100644
---- a/drivers/rtc/rtc-s35390a.c
-+++ b/drivers/rtc/rtc-s35390a.c
-@@ -108,7 +108,7 @@ static int s35390a_get_reg(struct s35390a *s35390a, int reg, char *buf, int len)
+diff --git a/drivers/mfd/max8997.c b/drivers/mfd/max8997.c
+index 2d6e2c3927862..4a2fc59d59016 100644
+--- a/drivers/mfd/max8997.c
++++ b/drivers/mfd/max8997.c
+@@ -155,12 +155,6 @@ static struct max8997_platform_data *max8997_i2c_parse_dt_pdata(
  
- static int s35390a_init(struct s35390a *s35390a)
- {
--	char buf;
-+	u8 buf;
- 	int ret;
- 	unsigned initcount = 0;
+ 	pd->ono = irq_of_parse_and_map(dev->of_node, 1);
  
+-	/*
+-	 * ToDo: the 'wakeup' member in the platform data is more of a linux
+-	 * specfic information. Hence, there is no binding for that yet and
+-	 * not parsed here.
+-	 */
+-
+ 	return pd;
+ }
+ 
+@@ -248,7 +242,7 @@ static int max8997_i2c_probe(struct i2c_client *i2c,
+ 	 */
+ 
+ 	/* MAX8997 has a power button input. */
+-	device_init_wakeup(max8997->dev, pdata->wakeup);
++	device_init_wakeup(max8997->dev, true);
+ 
+ 	return ret;
+ 
+diff --git a/include/linux/mfd/max8997.h b/include/linux/mfd/max8997.h
+index cf815577bd686..3ae1fe743bc34 100644
+--- a/include/linux/mfd/max8997.h
++++ b/include/linux/mfd/max8997.h
+@@ -178,7 +178,6 @@ struct max8997_led_platform_data {
+ struct max8997_platform_data {
+ 	/* IRQ */
+ 	int ono;
+-	int wakeup;
+ 
+ 	/* ---- PMIC ---- */
+ 	struct max8997_regulator_data *regulators;
 -- 
 2.20.1
 
