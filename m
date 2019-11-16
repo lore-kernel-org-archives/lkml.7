@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 703F8C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A863C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 426162073B
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 728E120729
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919079;
-	bh=NjWy5znEkoWXqsJzxRB5cmvhQBP3xr8ifrgF/0d3lR8=;
+	s=default; t=1573919081;
+	bh=LjgfDLWpducmF8pDBK9oB34UqtgHeQLfOEMFR1elg2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UUUOosD2fzE51GdRp4VdGVIXN2xgWCbVFUnbAZCqS5fmUITHRO8VqOukBXcizD9tT
-	 ds3esxI9vwGqJ7OTswPgqYkdcLjSFBhKEOJj79Q6l8w3ReSHLnKsdwIGVvEKdqS5Xg
-	 CpogLNGvNqvLvTZMhVEYqvYa3ooc+6zIOhgd07E0=
+	b=IMMUS6ZZZ/k34woPfQzFLnkRgnIYzMk+AHUNu+Dw4ntu/HxEDxxNcu3JjCNto2SYJ
+	 B7ad0CfWVV5o+TlsUfKmOzcEyYxhv33WFsPF7OleFApQC+yE83YeClEqPhZpCQey1I
+	 IpBSHfI9QUkGcCoxzFZMnaNQvH3iPSfAX8rG1oFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbfKPPoi (ORCPT
+        id S1729042AbfKPPoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:44:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49212 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:44:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728957AbfKPPo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:44:26 -0500
+        id S1728035AbfKPPod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:44:33 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4EDC2073B;
-        Sat, 16 Nov 2019 15:44:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB32D2072D;
+        Sat, 16 Nov 2019 15:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919065;
-        bh=NjWy5znEkoWXqsJzxRB5cmvhQBP3xr8ifrgF/0d3lR8=;
+        s=default; t=1573919072;
+        bh=LjgfDLWpducmF8pDBK9oB34UqtgHeQLfOEMFR1elg2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gxz7qg6n6QYXX2uVIzYXvXOEGOON53WCavqmKLZljIal9eujDJJK9X6mT5aaz1EA0
-         wiFwp8VMOzXlMtbZ4ZmiySiBrvDLBHc2OQrYUQpJ7Ce6INL2bnuAllE1Z0rq06bQJn
-         qXYLrTwMYEpqAVE9YEntroOmG3+ssmy/2h4GoA3Y=
+        b=tftiQqrqblB2hnt7K8SHbtLoSWjgO1088aXgZI/SF2RJcPiBWDsio0ykCL0S1+ISw
+         4+mxrNifaQcSGlkYGp25nsgjwkpNGmxrkqulhjDxmbp+SHZ0kTteIJJo9gMZgwqeZW
+         Bg9qm0e4XGCuGuDULeM7uhGwRqUcPrL0sjiGCUaY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 137/237] i2c: uniphier-f: make driver robust against concurrency
-Date:   Sat, 16 Nov 2019 10:39:32 -0500
-Message-Id: <20191116154113.7417-137-sashal@kernel.org>
+Cc:     Hangbin Liu <liuhangbin@gmail.com>, Ying Xu <yinxu@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 142/237] ipv4/igmp: fix v1/v2 switchback timeout based on rfc3376, 8.12
+Date:   Sat, 16 Nov 2019 10:39:37 -0500
+Message-Id: <20191116154113.7417-142-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -59,97 +59,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit f1fdcbbdf45d9609f3d4063b67e9ea941ba3a58f ]
+[ Upstream commit 966c37f2d77eb44d47af8e919267b1ba675b2eca ]
 
-This is unlikely to happen, but it is possible for a CPU to enter
-the interrupt handler just after wait_for_completion_timeout() has
-expired. If this happens, the hardware is accessed from multiple
-contexts concurrently.
+Similiar with ipv6 mcast commit 89225d1ce6af3 ("net: ipv6: mld: fix v1/v2
+switchback timeout to rfc3810, 9.12.")
 
-Disable the IRQ after wait_for_completion_timeout(), and do nothing
-from the handler when the IRQ is disabled.
+i) RFC3376 8.12. Older Version Querier Present Timeout says:
 
-Fixes: 6a62974b667f ("i2c: uniphier_f: add UniPhier FIFO-builtin I2C driver")
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+   The Older Version Querier Interval is the time-out for transitioning
+   a host back to IGMPv3 mode once an older version query is heard.
+   When an older version query is received, hosts set their Older
+   Version Querier Present Timer to Older Version Querier Interval.
+
+   This value MUST be ((the Robustness Variable) times (the Query
+   Interval in the last Query received)) plus (one Query Response
+   Interval).
+
+Currently we only use a hardcode value IGMP_V1/v2_ROUTER_PRESENT_TIMEOUT.
+Fix it by adding two new items mr_qi(Query Interval) and mr_qri(Query Response
+Interval) in struct in_device.
+
+Now we can calculate the switchback time via (mr_qrv * mr_qi) + mr_qri.
+We need update these values when receive IGMPv3 queries.
+
+Reported-by: Ying Xu <yinxu@redhat.com>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-uniphier-f.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ include/linux/inetdevice.h |  4 ++-
+ net/ipv4/igmp.c            | 53 ++++++++++++++++++++++++++------------
+ 2 files changed, 39 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-uniphier-f.c b/drivers/i2c/busses/i2c-uniphier-f.c
-index bc26ec822e268..b9a0690b4fd73 100644
---- a/drivers/i2c/busses/i2c-uniphier-f.c
-+++ b/drivers/i2c/busses/i2c-uniphier-f.c
-@@ -98,6 +98,7 @@ struct uniphier_fi2c_priv {
- 	unsigned int flags;
- 	unsigned int busy_cnt;
- 	unsigned int clk_cycle;
-+	spinlock_t lock;	/* IRQ synchronization */
- };
+diff --git a/include/linux/inetdevice.h b/include/linux/inetdevice.h
+index c759d1cbcedd8..a64f21a97369a 100644
+--- a/include/linux/inetdevice.h
++++ b/include/linux/inetdevice.h
+@@ -37,7 +37,9 @@ struct in_device {
+ 	unsigned long		mr_v1_seen;
+ 	unsigned long		mr_v2_seen;
+ 	unsigned long		mr_maxdelay;
+-	unsigned char		mr_qrv;
++	unsigned long		mr_qi;		/* Query Interval */
++	unsigned long		mr_qri;		/* Query Response Interval */
++	unsigned char		mr_qrv;		/* Query Robustness Variable */
+ 	unsigned char		mr_gq_running;
+ 	unsigned char		mr_ifc_count;
+ 	struct timer_list	mr_gq_timer;	/* general query timer */
+diff --git a/net/ipv4/igmp.c b/net/ipv4/igmp.c
+index b2240b7f225d5..523d26f5e22e2 100644
+--- a/net/ipv4/igmp.c
++++ b/net/ipv4/igmp.c
+@@ -111,13 +111,10 @@
+ #ifdef CONFIG_IP_MULTICAST
+ /* Parameter names and values are taken from igmp-v2-06 draft */
  
- static void uniphier_fi2c_fill_txfifo(struct uniphier_fi2c_priv *priv,
-@@ -162,7 +163,10 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
- 	struct uniphier_fi2c_priv *priv = dev_id;
- 	u32 irq_status;
+-#define IGMP_V1_ROUTER_PRESENT_TIMEOUT		(400*HZ)
+-#define IGMP_V2_ROUTER_PRESENT_TIMEOUT		(400*HZ)
+ #define IGMP_V2_UNSOLICITED_REPORT_INTERVAL	(10*HZ)
+ #define IGMP_V3_UNSOLICITED_REPORT_INTERVAL	(1*HZ)
++#define IGMP_QUERY_INTERVAL			(125*HZ)
+ #define IGMP_QUERY_RESPONSE_INTERVAL		(10*HZ)
+-#define IGMP_QUERY_ROBUSTNESS_VARIABLE		2
+-
  
-+	spin_lock(&priv->lock);
+ #define IGMP_INITIAL_REPORT_DELAY		(1)
+ 
+@@ -953,13 +950,15 @@ static bool igmp_heard_query(struct in_device *in_dev, struct sk_buff *skb,
+ 
+ 			max_delay = IGMP_QUERY_RESPONSE_INTERVAL;
+ 			in_dev->mr_v1_seen = jiffies +
+-				IGMP_V1_ROUTER_PRESENT_TIMEOUT;
++				(in_dev->mr_qrv * in_dev->mr_qi) +
++				in_dev->mr_qri;
+ 			group = 0;
+ 		} else {
+ 			/* v2 router present */
+ 			max_delay = ih->code*(HZ/IGMP_TIMER_SCALE);
+ 			in_dev->mr_v2_seen = jiffies +
+-				IGMP_V2_ROUTER_PRESENT_TIMEOUT;
++				(in_dev->mr_qrv * in_dev->mr_qi) +
++				in_dev->mr_qri;
+ 		}
+ 		/* cancel the interface change timer */
+ 		in_dev->mr_ifc_count = 0;
+@@ -999,8 +998,21 @@ static bool igmp_heard_query(struct in_device *in_dev, struct sk_buff *skb,
+ 		if (!max_delay)
+ 			max_delay = 1;	/* can't mod w/ 0 */
+ 		in_dev->mr_maxdelay = max_delay;
+-		if (ih3->qrv)
+-			in_dev->mr_qrv = ih3->qrv;
 +
- 	irq_status = readl(priv->membase + UNIPHIER_FI2C_INT);
-+	irq_status &= priv->enabled_irqs;
- 
- 	dev_dbg(&priv->adap.dev,
- 		"interrupt: enabled_irqs=%04x, irq_status=%04x\n",
-@@ -230,6 +234,8 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
- 		goto handled;
- 	}
- 
-+	spin_unlock(&priv->lock);
++		/* RFC3376, 4.1.6. QRV and 4.1.7. QQIC, when the most recently
++		 * received value was zero, use the default or statically
++		 * configured value.
++		 */
++		in_dev->mr_qrv = ih3->qrv ?: net->ipv4.sysctl_igmp_qrv;
++		in_dev->mr_qi = IGMPV3_QQIC(ih3->qqic)*HZ ?: IGMP_QUERY_INTERVAL;
 +
- 	return IRQ_NONE;
- 
- data_done:
-@@ -246,6 +252,8 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
- handled:
- 	uniphier_fi2c_clear_irqs(priv);
- 
-+	spin_unlock(&priv->lock);
++		/* RFC3376, 8.3. Query Response Interval:
++		 * The number of seconds represented by the [Query Response
++		 * Interval] must be less than the [Query Interval].
++		 */
++		if (in_dev->mr_qri >= in_dev->mr_qi)
++			in_dev->mr_qri = (in_dev->mr_qi/HZ - 1)*HZ;
 +
- 	return IRQ_HANDLED;
+ 		if (!group) { /* general query */
+ 			if (ih3->nsrcs)
+ 				return true;	/* no sources allowed */
+@@ -1738,18 +1750,30 @@ void ip_mc_down(struct in_device *in_dev)
+ 	ip_mc_dec_group(in_dev, IGMP_ALL_HOSTS);
  }
  
-@@ -311,7 +319,7 @@ static int uniphier_fi2c_master_xfer_one(struct i2c_adapter *adap,
+-void ip_mc_init_dev(struct in_device *in_dev)
+-{
+ #ifdef CONFIG_IP_MULTICAST
++static void ip_mc_reset(struct in_device *in_dev)
++{
+ 	struct net *net = dev_net(in_dev->dev);
++
++	in_dev->mr_qi = IGMP_QUERY_INTERVAL;
++	in_dev->mr_qri = IGMP_QUERY_RESPONSE_INTERVAL;
++	in_dev->mr_qrv = net->ipv4.sysctl_igmp_qrv;
++}
++#else
++static void ip_mc_reset(struct in_device *in_dev)
++{
++}
+ #endif
++
++void ip_mc_init_dev(struct in_device *in_dev)
++{
+ 	ASSERT_RTNL();
+ 
+ #ifdef CONFIG_IP_MULTICAST
+ 	timer_setup(&in_dev->mr_gq_timer, igmp_gq_timer_expire, 0);
+ 	timer_setup(&in_dev->mr_ifc_timer, igmp_ifc_timer_expire, 0);
+-	in_dev->mr_qrv = net->ipv4.sysctl_igmp_qrv;
+ #endif
++	ip_mc_reset(in_dev);
+ 
+ 	spin_lock_init(&in_dev->mc_tomb_lock);
+ }
+@@ -1759,15 +1783,10 @@ void ip_mc_init_dev(struct in_device *in_dev)
+ void ip_mc_up(struct in_device *in_dev)
  {
- 	struct uniphier_fi2c_priv *priv = i2c_get_adapdata(adap);
- 	bool is_read = msg->flags & I2C_M_RD;
--	unsigned long time_left;
-+	unsigned long time_left, flags;
+ 	struct ip_mc_list *pmc;
+-#ifdef CONFIG_IP_MULTICAST
+-	struct net *net = dev_net(in_dev->dev);
+-#endif
  
- 	dev_dbg(&adap->dev, "%s: addr=0x%02x, len=%d, stop=%d\n",
- 		is_read ? "receive" : "transmit", msg->addr, msg->len, stop);
-@@ -342,6 +350,12 @@ static int uniphier_fi2c_master_xfer_one(struct i2c_adapter *adap,
- 	       priv->membase + UNIPHIER_FI2C_CR);
+ 	ASSERT_RTNL();
  
- 	time_left = wait_for_completion_timeout(&priv->comp, adap->timeout);
-+
-+	spin_lock_irqsave(&priv->lock, flags);
-+	priv->enabled_irqs = 0;
-+	uniphier_fi2c_set_irqs(priv);
-+	spin_unlock_irqrestore(&priv->lock, flags);
-+
- 	if (!time_left) {
- 		dev_err(&adap->dev, "transaction timeout.\n");
- 		uniphier_fi2c_recover(priv);
-@@ -546,6 +560,7 @@ static int uniphier_fi2c_probe(struct platform_device *pdev)
+-#ifdef CONFIG_IP_MULTICAST
+-	in_dev->mr_qrv = net->ipv4.sysctl_igmp_qrv;
+-#endif
++	ip_mc_reset(in_dev);
+ 	ip_mc_inc_group(in_dev, IGMP_ALL_HOSTS);
  
- 	priv->clk_cycle = clk_rate / bus_speed;
- 	init_completion(&priv->comp);
-+	spin_lock_init(&priv->lock);
- 	priv->adap.owner = THIS_MODULE;
- 	priv->adap.algo = &uniphier_fi2c_algo;
- 	priv->adap.dev.parent = dev;
+ 	for_each_pmc_rtnl(in_dev, pmc) {
 -- 
 2.20.1
 
