@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8059FC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E7FC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5001D21479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C163521479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921434;
-	bh=4z89RHmeFDHuAuKOgDLQ9eeVOAGtPmlhUw8to3NyyBE=;
+	s=default; t=1573921438;
+	bh=ItMXgs/Q9kt+48rsthlnVhaH6dBjICpKcSlbQsKI+IQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vHr7pzF2Zo2Zi/DrKClPb07DoQBnWZIWMOCKfEX3sDG2iHHoFT4mPJ+kvAds+dDJz
-	 SuNJOj5ih+PeL9130r7rvcxUjBkTNpoVfNXD5Ur2kiklRqk5sAkg2OUytf7nsjP7Hj
-	 2qqSF6zoPyRpEUHU05R7UeA9xoGSVuPeUy+qs2ik=
+	b=2uwmCQ1Pyx+rPGu78T1dVNa5IOAVXfZx2oCwu2kyFi54kMV3FNL5sPDXkcwbwUdc7
+	 AmI12F6C7FfE04fQoLo8gTuh6nF1VxlNjFD0+krVFmSddNKewWUyxcvJA8LNPpqhvu
+	 iCnA5f06w83FMpCbCnyljPkbYWJhcNdumBWzs2c0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729606AbfKPQXx (ORCPT
+        id S1728435AbfKPPmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:23:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46590 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:42:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728368AbfKPPmr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:42:47 -0500
+        id S1728363AbfKPPmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:42:36 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 879BA20733;
-        Sat, 16 Nov 2019 15:42:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD4DC2083E;
+        Sat, 16 Nov 2019 15:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918966;
-        bh=4z89RHmeFDHuAuKOgDLQ9eeVOAGtPmlhUw8to3NyyBE=;
+        s=default; t=1573918956;
+        bh=ItMXgs/Q9kt+48rsthlnVhaH6dBjICpKcSlbQsKI+IQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1GWyPftyLb0670JiQ14QydhWsp385Oubz63xSlqTVY//yDumsdO6UfmsaTj3Bz+M7
-         6jrYD7amz6eu4kUcjH96tSekNc/tkFTBDjYn2TxCEhUwzsUvjac9MKuFDks1RLo/TI
-         wmOfev9KC7kn6vSfaArlhwAzZaYn6bTHDOpDv8uo=
+        b=VQb7alXoAUWQ221mFX5hlZe2Pm0PP4gW6viRWnEA149MWFqltC+Qu00ApFVeAFdK8
+         68fKtCCMfISeRp3F+sAuHMWVAEvlcRfY7CQT/sOfzPbQMW6iK20ZrR8Bm++7NxONqw
+         29OSiOztYO3wkcLhVp0b1yxlODMG+gud94NfrjWI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 082/237] SUNRPC: Fix a compile warning for cmpxchg64()
-Date:   Sat, 16 Nov 2019 10:38:37 -0500
-Message-Id: <20191116154113.7417-82-sashal@kernel.org>
+Cc:     Philipp Klocke <philipp97kl@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 074/237] ALSA: i2c/cs8427: Fix int to char conversion
+Date:   Sat, 16 Nov 2019 10:38:29 -0500
+Message-Id: <20191116154113.7417-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -59,28 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Philipp Klocke <philipp97kl@gmail.com>
 
-[ Upstream commit e732f4485a150492b286f3efc06f9b34dd6b9995 ]
+[ Upstream commit eb7ebfa3c1989aa8e59d5e68ab3cddd7df1bfb27 ]
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Compiling with clang yields the following warning:
+
+sound/i2c/cs8427.c:140:31: warning: implicit conversion from 'int'
+to 'char' changes value from 160 to -96 [-Wconstant-conversion]
+    data[0] = CS8427_REG_AUTOINC | CS8427_REG_CORU_DATABUF;
+            ~ ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+
+Because CS8427_REG_AUTOINC is defined as 128, it is too big for a
+char field.
+So change data from char to unsigned char, that it can hold the value.
+
+This patch does not change the generated code.
+
+Signed-off-by: Philipp Klocke <philipp97kl@gmail.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/auth_gss/gss_krb5_seal.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/i2c/cs8427.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/auth_gss/gss_krb5_seal.c b/net/sunrpc/auth_gss/gss_krb5_seal.c
-index eaad9bc7a0bdc..e1f0571843c8c 100644
---- a/net/sunrpc/auth_gss/gss_krb5_seal.c
-+++ b/net/sunrpc/auth_gss/gss_krb5_seal.c
-@@ -63,6 +63,7 @@
- #include <linux/sunrpc/gss_krb5.h>
- #include <linux/random.h>
- #include <linux/crypto.h>
-+#include <linux/atomic.h>
+diff --git a/sound/i2c/cs8427.c b/sound/i2c/cs8427.c
+index 2647309bc6757..8afa2f8884660 100644
+--- a/sound/i2c/cs8427.c
++++ b/sound/i2c/cs8427.c
+@@ -118,7 +118,7 @@ static int snd_cs8427_send_corudata(struct snd_i2c_device *device,
+ 	struct cs8427 *chip = device->private_data;
+ 	char *hw_data = udata ?
+ 		chip->playback.hw_udata : chip->playback.hw_status;
+-	char data[32];
++	unsigned char data[32];
+ 	int err, idx;
  
- #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
- # define RPCDBG_FACILITY        RPCDBG_AUTH
+ 	if (!memcmp(hw_data, ndata, count))
 -- 
 2.20.1
 
