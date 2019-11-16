@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5DFC43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6341C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49CE121843
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCFDE21843
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:55:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919734;
-	bh=KyCR4irzEfG7n+3FZsoOJ3KbIgEkN2xASgay6KATBSg=;
+	s=default; t=1573919740;
+	bh=8zZBd4JllggUa0QqNjPyfYaunOJs2rrXmcTVYbNuM+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B7IaeW9WS1VIx0AMOC1mmjUOcE++4HcbnJHlyScfGo1+244j+E20c3k8cUIESyyGh
-	 S0zjLBm7YeY2IYr8ItFxfI1M1o2dwQC8tBxCzBKZrG3mx2/cwtbIdL7NZYo/ic1xGU
-	 s4OAwnFWzDy/mUOv8ZtR3xdQWRLXcur7a7Fssw/U=
+	b=T06BWFaIhjCZzoyMD5vYoIsllIY8w8dxQB4Rb/cEtp4fRjQSF737J6IVixNbrL5t3
+	 Jf6sauWLi3U/hMvtlgBZrvr/xPuecHF+vTOwuSCIGzHWOyt99EoGqLrzOtdZh6uAA6
+	 ziw6AjhevT24DfBRywQj0TGkfM85Gk2R6GbSehKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731626AbfKPPzc (ORCPT
+        id S1731652AbfKPPzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:55:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37490 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:55:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731600AbfKPPzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:55:25 -0500
+        id S1731629AbfKPPze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:55:34 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FFA721903;
-        Sat, 16 Nov 2019 15:55:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 415E621844;
+        Sat, 16 Nov 2019 15:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919725;
-        bh=KyCR4irzEfG7n+3FZsoOJ3KbIgEkN2xASgay6KATBSg=;
+        s=default; t=1573919733;
+        bh=8zZBd4JllggUa0QqNjPyfYaunOJs2rrXmcTVYbNuM+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PaxhJJKopEcQaFsdZLXNNJT6vV305fDaS41iHOxH/ebDsKLEze3toHf4ATKpice02
-         NmuPnXk5etmchN/zmQcL1JcrLJZ7Pe/TaLz3Q5Z2BsSerN/0eCs6DWhkTjqfeJEunj
-         nEGXayahZ/LPHh/TvcGIQAu/fRsmqddq9nRawdhU=
+        b=a5Ip4bZNN3kcaRo3KLfpakroku6a5t5+fbx2Kla/3yEdk3jmyCKXy2i9hKrBpO+kh
+         yse9OKezJzvGDbmBYyLPwgsrC+0Ed1ZT0eKLvJxoG9p6UHdhM8YmUPWA/3m9aKtaR5
+         urL9IBm46U/LhX9QCqKUJpwLszRF13FBzMNnkYaw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 65/77] rtlwifi: rtl8192de: Fix misleading REG_MCUFWDL information
-Date:   Sat, 16 Nov 2019 10:53:27 -0500
-Message-Id: <20191116155339.11909-65-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.4 75/77] pinctrl: zynq: Use define directive for PIN_CONFIG_IO_STANDARD
+Date:   Sat, 16 Nov 2019 10:53:37 -0500
+Message-Id: <20191116155339.11909-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -61,38 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shaokun Zhang <zhangshaokun@hisilicon.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 7d129adff3afbd3a449bc3593f2064ac546d58d3 ]
+[ Upstream commit cd8a145a066a1a3beb0ae615c7cb2ee4217418d7 ]
 
-RT_TRACE shows REG_MCUFWDL value as a decimal value with a '0x'
-prefix, which is somewhat misleading.
+Clang warns when one enumerated type is implicitly converted to another:
 
-Fix it to print hexadecimal, as was intended.
+drivers/pinctrl/pinctrl-zynq.c:985:18: warning: implicit conversion from
+enumeration type 'enum zynq_pin_config_param' to different enumeration
+type 'enum pin_config_param' [-Wenum-conversion]
+        {"io-standard", PIN_CONFIG_IOSTANDARD, zynq_iostd_lvcmos18},
+        ~               ^~~~~~~~~~~~~~~~~~~~~
+drivers/pinctrl/pinctrl-zynq.c:990:16: warning: implicit conversion from
+enumeration type 'enum zynq_pin_config_param' to different enumeration
+type 'enum pin_config_param' [-Wenum-conversion]
+        = { PCONFDUMP(PIN_CONFIG_IOSTANDARD, "IO-standard", NULL, true),
+            ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/pinctrl/pinconf-generic.h:163:11: note: expanded from
+macro 'PCONFDUMP'
+        .param = a, .display = b, .format = c, .has_arg = d     \
+                 ^
+2 warnings generated.
 
-Cc: Ping-Ke Shih <pkshih@realtek.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Acked-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+It is expected that pinctrl drivers can extend pin_config_param because
+of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
+isn't an issue. Most drivers that take advantage of this define the
+PIN_CONFIG variables as constants, rather than enumerated values. Do the
+same thing here so that Clang no longer warns.
+
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-zynq.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c
-index 62ef8209718f1..5bf3712a4d49d 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c
-@@ -234,7 +234,7 @@ static int _rtl92d_fw_init(struct ieee80211_hw *hw)
- 			 rtl_read_byte(rtlpriv, FW_MAC1_READY));
- 	}
- 	RT_TRACE(rtlpriv, COMP_FW, DBG_DMESG,
--		 "Polling FW ready fail!! REG_MCUFWDL:0x%08ul\n",
-+		 "Polling FW ready fail!! REG_MCUFWDL:0x%08x\n",
- 		 rtl_read_dword(rtlpriv, REG_MCUFWDL));
- 	return -1;
- }
+diff --git a/drivers/pinctrl/pinctrl-zynq.c b/drivers/pinctrl/pinctrl-zynq.c
+index d57b5eca7b983..ad12205dd7962 100644
+--- a/drivers/pinctrl/pinctrl-zynq.c
++++ b/drivers/pinctrl/pinctrl-zynq.c
+@@ -967,15 +967,12 @@ enum zynq_io_standards {
+ 	zynq_iostd_max
+ };
+ 
+-/**
+- * enum zynq_pin_config_param - possible pin configuration parameters
+- * @PIN_CONFIG_IOSTANDARD: if the pin can select an IO standard, the argument to
++/*
++ * PIN_CONFIG_IOSTANDARD: if the pin can select an IO standard, the argument to
+  *	this parameter (on a custom format) tells the driver which alternative
+  *	IO standard to use.
+  */
+-enum zynq_pin_config_param {
+-	PIN_CONFIG_IOSTANDARD = PIN_CONFIG_END + 1,
+-};
++#define PIN_CONFIG_IOSTANDARD		(PIN_CONFIG_END + 1)
+ 
+ static const struct pinconf_generic_params zynq_dt_params[] = {
+ 	{"io-standard", PIN_CONFIG_IOSTANDARD, zynq_iostd_lvcmos18},
 -- 
 2.20.1
 
