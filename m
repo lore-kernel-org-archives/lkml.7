@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2904DC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A682AC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E88DF2168B
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7702C21887
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919627;
-	bh=rQb+5GuP0Q7Jt+SdO2I26frx3+3F7Z6HrsaLcbp4ZcY=;
+	s=default; t=1573919629;
+	bh=/UzbN4KAa0Te1SaklwVyPaEjx3xLax6KeNPcYLJw6HE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pB57LWWUmK4ZD660h5niPN9vaq/MR+8vjE/o0q4Y5vBWL6OT/p/S7vHAwQxyEiBzZ
-	 F21MY4cgTIf65Ze0g5/Kr0+iI6oJmJhDwV9smy+ckixsU7yLdQtNlxu6M3/JkAZXpg
-	 V3GHmSQbKCxc6recC0LwR+l0sOAwPxD0vm/Wecc4=
+	b=bmZ10oH3XyBllapZ5gDwHzs48oxk+8pfA1pXxQs1ooaLM12FMdaxbElgjBKaysgKQ
+	 GcV2T3VTIlfWOk0oeIjOZXJzGGOYj6DWN2QtcaRHwRwgiaGWgQwHlK8/1s6t5r1BMi
+	 Lpe88UfMh3DARqmLN2VOxEUnJJ+JS/8PJuICg1Dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731291AbfKPPxp (ORCPT
+        id S1731299AbfKPPxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:53:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34898 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:53:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730463AbfKPPxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:53:42 -0500
+        id S1731289AbfKPPxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:53:44 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E2C621920;
-        Sat, 16 Nov 2019 15:53:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30DB9218DE;
+        Sat, 16 Nov 2019 15:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919621;
-        bh=rQb+5GuP0Q7Jt+SdO2I26frx3+3F7Z6HrsaLcbp4ZcY=;
+        s=default; t=1573919623;
+        bh=/UzbN4KAa0Te1SaklwVyPaEjx3xLax6KeNPcYLJw6HE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DwSb4Z5+D+BeVS/6UqgTktWkPo4Vo8aB9KDM8Z7vHAg7ODLCaLtgwrDp0RccMdUsa
-         QSa9tPlvSVsMKeu2NfGIc3vHowVXDQx9qvV5Kte/FUUz9v9x3Szw2Ye+OpXbcRnf0c
-         vFuqZjv7nSopsdla0iQo/0cHeKZniJFWfmNtrdug=
+        b=JLCLXMUpeHsbHo536OXZXLy6F7HBqrerNS/vZaXBtD5XwblpHGETlXIVQoEpEV4ee
+         QAywW79XtY4FL5TonICTrkhU5gE5mS6sQzYgaL7mpCbXXKWCXcleEdROJSm+8q4kJ3
+         AbpLnK9EK4IoSQNN1X7yM5GHm/TG5H+iP7R8Imk4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 4.4 03/77] gfs2: Fix marking bitmaps non-full
-Date:   Sat, 16 Nov 2019 10:52:25 -0500
-Message-Id: <20191116155339.11909-3-sashal@kernel.org>
+Cc:     Sam Bobroff <sbobroff@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.4 06/77] powerpc/eeh: Fix use of EEH_PE_KEEP on wrong field
+Date:   Sat, 16 Nov 2019 10:52:28 -0500
+Message-Id: <20191116155339.11909-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -60,53 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Sam Bobroff <sbobroff@linux.ibm.com>
 
-[ Upstream commit ec23df2b0cf3e1620f5db77972b7fb735f267eff ]
+[ Upstream commit 473af09b56dc4be68e4af33220ceca6be67aa60d ]
 
-Reservations in gfs can span multiple gfs2_bitmaps (but they won't span
-multiple resource groups).  When removing a reservation, we want to
-clear the GBF_FULL flags of all involved gfs2_bitmaps, not just that of
-the first bitmap.
+eeh_add_to_parent_pe() sometimes removes the EEH_PE_KEEP flag, but it
+incorrectly removes it from pe->type, instead of pe->state.
 
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Reviewed-by: Steven Whitehouse <swhiteho@redhat.com>
+However, rather than clearing it from the correct field, remove it.
+Inspection of the code shows that it can't ever have had any effect
+(even if it had been cleared from the correct field), because the
+field is never tested after it is cleared by the statement in
+question.
+
+The clear statement was added by commit 807a827d4e74 ("powerpc/eeh:
+Keep PE during hotplug"), but it didn't explain why it was necessary.
+
+Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/rgrp.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/eeh_pe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/gfs2/rgrp.c b/fs/gfs2/rgrp.c
-index 9c159e6ad1164..ef432030783b0 100644
---- a/fs/gfs2/rgrp.c
-+++ b/fs/gfs2/rgrp.c
-@@ -645,7 +645,10 @@ static void __rs_deltree(struct gfs2_blkreserv *rs)
- 	RB_CLEAR_NODE(&rs->rs_node);
- 
- 	if (rs->rs_free) {
--		struct gfs2_bitmap *bi = rbm_bi(&rs->rs_rbm);
-+		u64 last_block = gfs2_rbm_to_block(&rs->rs_rbm) +
-+				 rs->rs_free - 1;
-+		struct gfs2_rbm last_rbm = { .rgd = rs->rs_rbm.rgd, };
-+		struct gfs2_bitmap *start, *last;
- 
- 		/* return reserved blocks to the rgrp */
- 		BUG_ON(rs->rs_rbm.rgd->rd_reserved < rs->rs_free);
-@@ -656,7 +659,13 @@ static void __rs_deltree(struct gfs2_blkreserv *rs)
- 		   it will force the number to be recalculated later. */
- 		rgd->rd_extfail_pt += rs->rs_free;
- 		rs->rs_free = 0;
--		clear_bit(GBF_FULL, &bi->bi_flags);
-+		if (gfs2_rbm_from_block(&last_rbm, last_block))
-+			return;
-+		start = rbm_bi(&rs->rs_rbm);
-+		last = rbm_bi(&last_rbm);
-+		do
-+			clear_bit(GBF_FULL, &start->bi_flags);
-+		while (start++ != last);
- 	}
- }
+diff --git a/arch/powerpc/kernel/eeh_pe.c b/arch/powerpc/kernel/eeh_pe.c
+index 304f07cfa2622..4d4c32d0e6cee 100644
+--- a/arch/powerpc/kernel/eeh_pe.c
++++ b/arch/powerpc/kernel/eeh_pe.c
+@@ -367,7 +367,7 @@ int eeh_add_to_parent_pe(struct eeh_dev *edev)
+ 		while (parent) {
+ 			if (!(parent->type & EEH_PE_INVALID))
+ 				break;
+-			parent->type &= ~(EEH_PE_INVALID | EEH_PE_KEEP);
++			parent->type &= ~EEH_PE_INVALID;
+ 			parent = parent->parent;
+ 		}
  
 -- 
 2.20.1
