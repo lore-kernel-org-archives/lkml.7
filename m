@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCBDC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEF0C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D979B208D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39843208D4
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919269;
-	bh=vBFYOrfj1IE1io4Th6lrRDVblv4ioYm1LhZ/3QjbwXI=;
+	s=default; t=1573919275;
+	bh=RaNGM1avCn0CsYb25GEAmkLbFlfaWLEdupcDrqeT2dc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZDNUVPWUuMqkhZJWVeyjbcA542KZoe0bHF4Qr1wp1MyEvYYLToNxPXeeAdyJorc8y
-	 8yC2ZmzGRTY+Zqah4jU1TRtwSM2BRT3VsSx2Yucg8JMkMJEKasZI3j+eGGPr9eZR+S
-	 y6RuC3rIAc3KV6A+7/RdqlGSThTVcD6rAIlVnlXg=
+	b=LCtY+e0cbL+O+dJ/fMccE7WQuuII4kq9Uo2gCR9pp++zBED1/g2litd2gHl+6YLyR
+	 cgJAeeVov0aBtemwixPPo8gZ7pCHqQjiWtEjFCnSsanMG/oRa+rbYsv9JQbg3dWM/e
+	 szcApF8v2WoApJ3cTjx9RkdlA+h/LRfYxbFdHllI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729817AbfKPPrs (ORCPT
+        id S1729842AbfKPPrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:47:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53758 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:47:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729640AbfKPPrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:47:10 -0500
+        id S1729716AbfKPPrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:47:32 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3808B20855;
-        Sat, 16 Nov 2019 15:47:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3378E20740;
+        Sat, 16 Nov 2019 15:47:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919229;
-        bh=vBFYOrfj1IE1io4Th6lrRDVblv4ioYm1LhZ/3QjbwXI=;
+        s=default; t=1573919252;
+        bh=RaNGM1avCn0CsYb25GEAmkLbFlfaWLEdupcDrqeT2dc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qrv1Mcu36ifwDY0mTHiqicnCikOK+0RnmxKMgiVQpVERWe5I+Fikhz0axdw4cDLFg
-         2bAy2nnHJN9HEQNEX0CdU5IOwFIYCTupPooht6IzF7tnh4LCVB/eZ3jmdEmox8NjT5
-         kmknYtwZDC2n1JQYgOnva1RLWnPxgN61auYjvKt4=
+        b=0Y/1BU0qr8KT+r3NoDcW8j435MdZYbyNsSLJJuK1KICCr3TVSjc6i6a98XKRstHN3
+         KkMHaBnlQEtR0SQ2PdH5+yf8GTbzcSbcFRhYSrAKKsMF2dveYKkVAcRybuGZ0cZdWK
+         JFMJZVn55P8Oa/4tYBHPFi1glHnVDVbQKOvmSMeM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 234/237] i2c: uniphier-f: fix timeout error after reading 8 bytes
-Date:   Sat, 16 Nov 2019 10:41:09 -0500
-Message-Id: <20191116154113.7417-234-sashal@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 005/150] synclink_gt(): fix compat_ioctl()
+Date:   Sat, 16 Nov 2019 10:45:03 -0500
+Message-Id: <20191116154729.9573-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
-References: <20191116154113.7417-1-sashal@kernel.org>
+In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
+References: <20191116154729.9573-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,94 +57,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit c2a653deaa81f5a750c0dfcbaf9f8e5195cbe4a5 ]
+[ Upstream commit 27230e51349fde075598c1b59d15e1ff802f3f6e ]
 
-I was totally screwed up in commit eaba68785c2d ("i2c: uniphier-f:
-fix race condition when IRQ is cleared"). Since that commit, if the
-number of read bytes is multiple of the FIFO size (8, 16, 24... bytes),
-the STOP condition could be issued twice, depending on the timing.
-If this happens, the controller will go wrong, resulting in the timeout
-error.
+compat_ptr() for pointer-taking ones...
 
-It was more than 3 years ago when I wrote this driver, so my memory
-about this hardware was vague. Please let me correct the description
-in the commit log of eaba68785c2d.
-
-Clearing the IRQ status on exiting the IRQ handler is absolutely
-fine. This controller makes a pause while any IRQ status is asserted.
-If the IRQ status is cleared first, the hardware may start the next
-transaction before the IRQ handler finishes what it supposed to do.
-
-This partially reverts the bad commit with clear comments so that I
-will never repeat this mistake.
-
-I also investigated what is happening at the last moment of the read
-mode. The UNIPHIER_FI2C_INT_RF interrupt is asserted a bit earlier
-(by half a period of the clock cycle) than UNIPHIER_FI2C_INT_RB.
-
-I consulted a hardware engineer, and I got the following information:
-
-UNIPHIER_FI2C_INT_RF
-    asserted at the falling edge of SCL at the 8th bit.
-
-UNIPHIER_FI2C_INT_RB
-    asserted at the rising edge of SCL at the 9th (ACK) bit.
-
-In order to avoid calling uniphier_fi2c_stop() twice, check the latter
-interrupt. I also commented this because it is obscure hardware internal.
-
-Fixes: eaba68785c2d ("i2c: uniphier-f: fix race condition when IRQ is cleared")
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-uniphier-f.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ drivers/tty/synclink_gt.c | 16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-uniphier-f.c b/drivers/i2c/busses/i2c-uniphier-f.c
-index 928ea9930d17e..dd0687e36a47b 100644
---- a/drivers/i2c/busses/i2c-uniphier-f.c
-+++ b/drivers/i2c/busses/i2c-uniphier-f.c
-@@ -173,8 +173,6 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
- 		"interrupt: enabled_irqs=%04x, irq_status=%04x\n",
- 		priv->enabled_irqs, irq_status);
+diff --git a/drivers/tty/synclink_gt.c b/drivers/tty/synclink_gt.c
+index 636b8ae29b465..344e8c427c7e2 100644
+--- a/drivers/tty/synclink_gt.c
++++ b/drivers/tty/synclink_gt.c
+@@ -1187,14 +1187,13 @@ static long slgt_compat_ioctl(struct tty_struct *tty,
+ 			 unsigned int cmd, unsigned long arg)
+ {
+ 	struct slgt_info *info = tty->driver_data;
+-	int rc = -ENOIOCTLCMD;
++	int rc;
  
--	uniphier_fi2c_clear_irqs(priv, irq_status);
+ 	if (sanity_check(info, tty->name, "compat_ioctl"))
+ 		return -ENODEV;
+ 	DBGINFO(("%s compat_ioctl() cmd=%08X\n", info->device_name, cmd));
+ 
+ 	switch (cmd) {
 -
- 	if (irq_status & UNIPHIER_FI2C_INT_STOP)
- 		goto complete;
- 
-@@ -214,7 +212,13 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
- 
- 	if (irq_status & (UNIPHIER_FI2C_INT_RF | UNIPHIER_FI2C_INT_RB)) {
- 		uniphier_fi2c_drain_rxfifo(priv);
--		if (!priv->len)
-+		/*
-+		 * If the number of bytes to read is multiple of the FIFO size
-+		 * (msg->len == 8, 16, 24, ...), the INT_RF bit is set a little
-+		 * earlier than INT_RB. We wait for INT_RB to confirm the
-+		 * completion of the current message.
-+		 */
-+		if (!priv->len && (irq_status & UNIPHIER_FI2C_INT_RB))
- 			goto data_done;
- 
- 		if (unlikely(priv->flags & UNIPHIER_FI2C_MANUAL_NACK)) {
-@@ -253,6 +257,13 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
+ 	case MGSL_IOCSPARAMS32:
+ 		rc = set_params32(info, compat_ptr(arg));
+ 		break;
+@@ -1214,18 +1213,11 @@ static long slgt_compat_ioctl(struct tty_struct *tty,
+ 	case MGSL_IOCWAITGPIO:
+ 	case MGSL_IOCGXSYNC:
+ 	case MGSL_IOCGXCTRL:
+-	case MGSL_IOCSTXIDLE:
+-	case MGSL_IOCTXENABLE:
+-	case MGSL_IOCRXENABLE:
+-	case MGSL_IOCTXABORT:
+-	case TIOCMIWAIT:
+-	case MGSL_IOCSIF:
+-	case MGSL_IOCSXSYNC:
+-	case MGSL_IOCSXCTRL:
+-		rc = ioctl(tty, cmd, arg);
++		rc = ioctl(tty, cmd, (unsigned long)compat_ptr(arg));
+ 		break;
++	default:
++		rc = ioctl(tty, cmd, arg);
  	}
- 
- handled:
-+	/*
-+	 * This controller makes a pause while any bit of the IRQ status is
-+	 * asserted. Clear the asserted bit to kick the controller just before
-+	 * exiting the handler.
-+	 */
-+	uniphier_fi2c_clear_irqs(priv, irq_status);
-+
- 	spin_unlock(&priv->lock);
- 
- 	return IRQ_HANDLED;
+-
+ 	DBGINFO(("%s compat_ioctl() cmd=%08X rc=%d\n", info->device_name, cmd, rc));
+ 	return rc;
+ }
 -- 
 2.20.1
 
