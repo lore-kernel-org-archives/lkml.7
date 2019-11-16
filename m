@@ -2,51 +2,52 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76366C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF43C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D77D206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E43BA206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:01:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920118;
-	bh=0NAakbf0aFFUr3C1ssYzRRr9w/w1NNglKrosxTZzK+w=;
+	s=default; t=1573920120;
+	bh=XfDiQjvwi/dxFwd5jdxe7CZGUs6C2zCSTVXvUAaR0ic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WX2sjCUgToAe8A+9gNcDNSnxw+Z/ExogKdy5sZnSQJf8A1cL5/PXOmAJFn6ppVrTz
-	 0r2H2/x8bDB6FdiusZEGWj9DSeEOi4DhwteGd+PPggmeAxZVb81IE1G0AOfrUTV7o/
-	 G2PxjpOvG/1+nM+GfORnCO6sMtRccaUTollWyrI8=
+	b=vfd73L1yMgksWiJUn3Sh8KtSmistG3mSECo9xUY5wNeqp+s+nQFP0a844vLTlQVRu
+	 JSVg79uXUY4lTZroN2wpdN8Iht0TEU+yNqRtSkLwKdUhGaEoT7UG8OASCKYE5rbKyp
+	 FXSF/tttSG/wAd0UAeiFT9PSWThxCz+cbe331nVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730741AbfKPQB5 (ORCPT
+        id S1731121AbfKPPxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:01:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34076 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:53:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731128AbfKPPxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:53:06 -0500
+        id S1731102AbfKPPxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:53:01 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46D4D2184B;
-        Sat, 16 Nov 2019 15:53:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8A3521826;
+        Sat, 16 Nov 2019 15:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919585;
-        bh=0NAakbf0aFFUr3C1ssYzRRr9w/w1NNglKrosxTZzK+w=;
+        s=default; t=1573919580;
+        bh=XfDiQjvwi/dxFwd5jdxe7CZGUs6C2zCSTVXvUAaR0ic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DZDwaP8m9Y+N6NBDBlueH05qnjhLzCyNzVTCQbw8uMCo6Me2tT8Yk7ulvICoQ/E+L
-         pOa0wiff3af6mdWWuktAuFz0vmBYC3pmrK5mMY6mWcoNveSoYF4Bw0Pcrm0yIP2tbB
-         igvebNPI1gGiAMuFcrO67z7W/HJDKrGqGWI4aD9s=
+        b=PoOcClXjnMWEtsPBLiqlzl5Qv8W930ea5NOuetNCTk9jeUxrDOUfwW7BvPLMwrLl6
+         m3354RIOJDR0J9bynW4edyhBbHxCIjLnWT8ycva7D2yrL3lJk8X2/m1La7hEhFLDee
+         LxXvDrUglU3fiTFdfnJobmV9BiaDUvj8yHe4cFpY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Richard Guy Briggs <rgb@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
+Cc:     Victor Kamensky <kamensky@cisco.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 77/99] audit: print empty EXECVE args
-Date:   Sat, 16 Nov 2019 10:50:40 -0500
-Message-Id: <20191116155103.10971-77-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 72/99] arm64: makefile fix build of .i file in external module case
+Date:   Sat, 16 Nov 2019 10:50:35 -0500
+Message-Id: <20191116155103.10971-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -59,47 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Guy Briggs <rgb@redhat.com>
+From: Victor Kamensky <kamensky@cisco.com>
 
-[ Upstream commit ea956d8be91edc702a98b7fe1f9463e7ca8c42ab ]
+[ Upstream commit 98356eb0ae499c63e78073ccedd9a5fc5c563288 ]
 
-Empty executable arguments were being skipped when printing out the list
-of arguments in an EXECVE record, making it appear they were somehow
-lost.  Include empty arguments as an itemized empty string.
+After 'a66649dab350 arm64: fix vdso-offsets.h dependency' if
+one will try to build .i file in case of external kernel module,
+build fails complaining that prepare0 target is missing. This
+issue came up with SystemTap when it tries to build variety
+of .i files for its own generated kernel modules trying to
+figure given kernel features/capabilities.
 
-Reproducer:
-	autrace /bin/ls "" "/etc"
-	ausearch --start recent -m execve -i | grep EXECVE
-	type=EXECVE msg=audit(10/03/2018 13:04:03.208:1391) : argc=3 a0=/bin/ls a2=/etc
+The issue is that prepare0 is defined in top level Makefile
+only if KBUILD_EXTMOD is not defined. .i file rule depends
+on prepare and in case KBUILD_EXTMOD defined top level Makefile
+contains empty rule for prepare. But after mentioned commit
+arch/arm64/Makefile would introduce dependency on prepare0
+through its own prepare target.
 
-With fix:
-	type=EXECVE msg=audit(10/03/2018 21:51:38.290:194) : argc=3 a0=/bin/ls a1= a2=/etc
-	type=EXECVE msg=audit(1538617898.290:194): argc=3 a0="/bin/ls" a1="" a2="/etc"
+Fix it to put proper ifdef KBUILD_EXTMOD around code introduced
+by mentioned commit. It matches what top level Makefile does.
 
-Passes audit-testsuite.  GH issue tracker at
-https://github.com/linux-audit/audit-kernel/issues/99
-
-Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-[PM: cleaned up the commit metadata]
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Acked-by: Kevin Brodsky <kevin.brodsky@arm.com>
+Signed-off-by: Victor Kamensky <kamensky@cisco.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/auditsc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-index c2aaf539728fb..854e90be1a023 100644
---- a/kernel/auditsc.c
-+++ b/kernel/auditsc.c
-@@ -1096,7 +1096,7 @@ static void audit_log_execve_info(struct audit_context *context,
- 		}
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index ee94597773fab..8d469aa5fc987 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -134,6 +134,7 @@ archclean:
+ 	$(Q)$(MAKE) $(clean)=$(boot)
+ 	$(Q)$(MAKE) $(clean)=$(boot)/dts
  
- 		/* write as much as we can to the audit log */
--		if (len_buf > 0) {
-+		if (len_buf >= 0) {
- 			/* NOTE: some magic numbers here - basically if we
- 			 *       can't fit a reasonable amount of data into the
- 			 *       existing audit buffer, flush it and start with
++ifeq ($(KBUILD_EXTMOD),)
+ # We need to generate vdso-offsets.h before compiling certain files in kernel/.
+ # In order to do that, we should use the archprepare target, but we can't since
+ # asm-offsets.h is included in some files used to generate vdso-offsets.h, and
+@@ -143,6 +144,7 @@ archclean:
+ prepare: vdso_prepare
+ vdso_prepare: prepare0
+ 	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso include/generated/vdso-offsets.h
++endif
+ 
+ define archhelp
+   echo  '* Image.gz      - Compressed kernel image (arch/$(ARCH)/boot/Image.gz)'
 -- 
 2.20.1
 
