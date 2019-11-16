@@ -2,136 +2,169 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E32C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 07:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A03AC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 07:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E3EE20723
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 07:52:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qWPCg5Bu"
+	by mail.kernel.org (Postfix) with ESMTP id 0122F20723
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 07:52:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbfKPHwh (ORCPT
+        id S1727478AbfKPHwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 02:52:37 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51354 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbfKPHwh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 02:52:37 -0500
-Received: by mail-wm1-f68.google.com with SMTP id q70so11844138wme.1
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 23:52:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2MJkGFAo2CploiZjzVMIvSSTxLbNNOQ2kJ94c7MrbvQ=;
-        b=qWPCg5BumT1Hbc7j6nLO10sM8hrkENDcXbA2pqixSQKBLNV+oRCDyBt8yH3YtcFsPf
-         aEl6G+Ww2FAcPv4dEhzPDUO0qR4V5LT3JnTpEtwQQHiwlkQGq/aXf8/eCL3LaaW11p+v
-         WRxJxZY1qMEMgIsqZ9QWdA9RZjp+wQsZ594CcA7/Zb45ZdfdQ/9SZB9DFYitsEyqH4T+
-         UDMgnkmqQuHZATfGnhxdNVXuItAzBtjOeM/Tfu8aDB/1ddOvWNe3KRwWSkEMUvST3DlC
-         NoltePsWcmb9AvW4p2bTfnhAKCFUvqU8EBZDqUdThqP7nVWyU30K7qv1Bg6ZpaEnttMg
-         YrWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2MJkGFAo2CploiZjzVMIvSSTxLbNNOQ2kJ94c7MrbvQ=;
-        b=gmzZsjcoGGafjWiRe9iE2EGCpABFTz+M34RXL7kJLNzU2oPX81P03f13YHvCrq7Q6+
-         ZYDH6PILhLOr83DcfGYpnl3jEYVQQszqPuN9CU8NR4UbUKX9sOj4VzsAao8bA/QWiDhA
-         iBO9XDf+cNUq91Jl8kQPJv36Vyl1UcuFMZSqYlAHPoI/aToYogkH8sjed/j2IWQ9lOoi
-         ZNkH0hWGb4vApRMrRCll+lVvN7m4H8RxmQVXftY7P+1aigK01YNBxrAABDsPzjgjEHVa
-         Z1eJqbIgaP43/Qa9dePHysj4S47Fxnq8ENlto/rOWXQEwB17W4vybb0uJBclgFIu9+z5
-         ckCA==
-X-Gm-Message-State: APjAAAVYrBsJtCrTlbvfWapiZ5U0XEbvm4boCAoFC97vbVo8i7A65AdV
-        nsZ5dIZi+P/22738AomvOcEDbYypSeGWVZA4boJvrg==
-X-Google-Smtp-Source: APXvYqzQIyjsfoLiraXOh4QeOG0tTjmTBM2OXTT8L+tVLBM9jZONnR13Ut11tGfISahFI0HlkMN7XNcVR5mVKhG2vv0=
-X-Received: by 2002:a1c:6641:: with SMTP id a62mr18481618wmc.54.1573890754483;
- Fri, 15 Nov 2019 23:52:34 -0800 (PST)
+        Sat, 16 Nov 2019 02:52:51 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6240 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726034AbfKPHwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 02:52:51 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9D016F1133B732AF9015;
+        Sat, 16 Nov 2019 15:52:48 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.24) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.439.0; Sat, 16 Nov 2019 15:52:40 +0800
+From:   lqqq341 <liuqi115@hisilicon.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <ak@linux.intel.com>
+CC:     <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <linuxarm@huawei.com>, <john.garry@huawei.com>,
+        <zhangshaokun@hisilicon.com>, <huangdaode@hisilicon.com>,
+        <linyunsheng@huawei.com>, <liuqi115@hisilicon.com>
+Subject: [PATCH] Perf stat: Fix the ratio comments of miss-events
+Date:   Sat, 16 Nov 2019 15:48:41 +0800
+Message-ID: <1573890521-56450-1-git-send-email-liuqi115@hisilicon.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-References: <20191107222315.GA7261@kernel.org> <20191108181533.222053-1-irogers@google.com>
- <20191111120230.GD9791@krava>
-In-Reply-To: <20191111120230.GD9791@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 15 Nov 2019 23:52:23 -0800
-Message-ID: <CAP-5=fVA6y-osb6EHAU50FybpOeFC6x0e7QLk2XmyMfQPnAWDQ@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: report initial event parsing error
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.67.165.24]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 4:02 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Fri, Nov 08, 2019 at 10:15:33AM -0800, Ian Rogers wrote:
-> > Record the first event parsing error and report. Implementing feedback
-> > from Jiri Olsa:
-> > https://lkml.org/lkml/2019/10/28/680
-> >
-> > An example error is:
-> >
-> > $ tools/perf/perf stat -e c/c/
-> > WARNING: multiple event parsing errors
-> > event syntax error: 'c/c/'
-> >                        \___ unknown term
-> >
-> > valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_state,filter_nm,config,config1,config2,name,period,percore
-> >
-> > Initial error:
-> > event syntax error: 'c/c/'
-> >                     \___ Cannot find PMU `c'. Missing kernel support?
->
-> not sure where this got lost or if it was there before,
-> but the index should point to zero to have the 'arrow' aligned
+From: Qi Liu <liuqi115@hisilicon.com>
 
-This happened in:
-448d732cefb3 perf parse: Add parse events handle error
-When the code wasn't clear on the value of idx it was set to -1.
-Fixed in v2 but perhaps there are other instances from 448d732cefb3
-that should be addressed.
+Perf stat displays miss ratio of L1-dcache, L1-icache, dTLB cache,
+iTLB cache and LL-cache. Take L1-dcache for example, its miss ratio
+is caculated as "L1-dcache-load-misses/L1-dcache-loads". So "of all
+L1-dcache hits" is unsuitable to describe it, and "of all L1-dcache
+accesses" seems better. The comments of L1-icache, dTLB cache, iTLB
+cache and LL-cache are fixed in the same way.
 
-Thanks,
-Ian
+Signed-off-by: Qi Liu <liuqi115@hisilicon.com>
+---
+ tools/perf/util/stat-shadow.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
-> jirka
->
->
-> ---
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index a369bbc289b2..6bae9d6edc12 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -1366,7 +1366,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
->                 if (asprintf(&err_str,
->                                 "Cannot find PMU `%s'. Missing kernel support?",
->                                 name) >= 0)
-> -                       parse_events__handle_error(err, -1, err_str, NULL);
-> +                       parse_events__handle_error(err, 0, err_str, NULL);
->                 return -EINVAL;
->         }
->
->
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 2c41d47..a3bdf2b 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -506,7 +506,8 @@ static void print_l1_dcache_misses(struct perf_stat_config *config,
+ 
+ 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+ 
+-	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache hits", ratio);
++	out->print_metric(config, out->ctx, color, "%7.2f%%",
++			  "of all L1-dcache accesses", ratio);
+ }
+ 
+ static void print_l1_icache_misses(struct perf_stat_config *config,
+@@ -527,7 +528,8 @@ static void print_l1_icache_misses(struct perf_stat_config *config,
+ 		ratio = avg / total * 100.0;
+ 
+ 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+-	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-icache hits", ratio);
++	out->print_metric(config, out->ctx, color, "%7.2f%%",
++			  "of all L1-icache accesses", ratio);
+ }
+ 
+ static void print_dtlb_cache_misses(struct perf_stat_config *config,
+@@ -547,7 +549,8 @@ static void print_dtlb_cache_misses(struct perf_stat_config *config,
+ 		ratio = avg / total * 100.0;
+ 
+ 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+-	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all dTLB cache hits", ratio);
++	out->print_metric(config, out->ctx, color, "%7.2f%%",
++			  "of all dTLB cache accesses", ratio);
+ }
+ 
+ static void print_itlb_cache_misses(struct perf_stat_config *config,
+@@ -567,7 +570,8 @@ static void print_itlb_cache_misses(struct perf_stat_config *config,
+ 		ratio = avg / total * 100.0;
+ 
+ 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+-	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all iTLB cache hits", ratio);
++	out->print_metric(config, out->ctx, color, "%7.2f%%",
++			  "of all iTLB cache accesses", ratio);
+ }
+ 
+ static void print_ll_cache_misses(struct perf_stat_config *config,
+@@ -587,7 +591,8 @@ static void print_ll_cache_misses(struct perf_stat_config *config,
+ 		ratio = avg / total * 100.0;
+ 
+ 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+-	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all LL-cache hits", ratio);
++	out->print_metric(config, out->ctx, color, "%7.2f%%",
++			  "of all LL-cache accesses", ratio);
+ }
+ 
+ /*
+@@ -872,7 +877,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 		if (runtime_stat_n(st, STAT_L1_DCACHE, ctx, cpu) != 0)
+ 			print_l1_dcache_misses(config, cpu, evsel, avg, out, st);
+ 		else
+-			print_metric(config, ctxp, NULL, NULL, "of all L1-dcache hits", 0);
++			print_metric(config, ctxp, NULL, NULL,
++				     "of all L1-dcache accesses", 0);
+ 	} else if (
+ 		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
+ 		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_L1I |
+@@ -882,7 +888,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 		if (runtime_stat_n(st, STAT_L1_ICACHE, ctx, cpu) != 0)
+ 			print_l1_icache_misses(config, cpu, evsel, avg, out, st);
+ 		else
+-			print_metric(config, ctxp, NULL, NULL, "of all L1-icache hits", 0);
++			print_metric(config, ctxp, NULL, NULL,
++				     "of all L1-icache accesses", 0);
+ 	} else if (
+ 		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
+ 		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_DTLB |
+@@ -892,7 +899,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 		if (runtime_stat_n(st, STAT_DTLB_CACHE, ctx, cpu) != 0)
+ 			print_dtlb_cache_misses(config, cpu, evsel, avg, out, st);
+ 		else
+-			print_metric(config, ctxp, NULL, NULL, "of all dTLB cache hits", 0);
++			print_metric(config, ctxp, NULL, NULL,
++				     "of all dTLB cache accesses", 0);
+ 	} else if (
+ 		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
+ 		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_ITLB |
+@@ -902,7 +910,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 		if (runtime_stat_n(st, STAT_ITLB_CACHE, ctx, cpu) != 0)
+ 			print_itlb_cache_misses(config, cpu, evsel, avg, out, st);
+ 		else
+-			print_metric(config, ctxp, NULL, NULL, "of all iTLB cache hits", 0);
++			print_metric(config, ctxp, NULL, NULL,
++				     "of all iTLB cache accesses", 0);
+ 	} else if (
+ 		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
+ 		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_LL |
+@@ -912,7 +921,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 		if (runtime_stat_n(st, STAT_LL_CACHE, ctx, cpu) != 0)
+ 			print_ll_cache_misses(config, cpu, evsel, avg, out, st);
+ 		else
+-			print_metric(config, ctxp, NULL, NULL, "of all LL-cache hits", 0);
++			print_metric(config, ctxp, NULL, NULL,
++				     "of all LL-cache accesses", 0);
+ 	} else if (perf_evsel__match(evsel, HARDWARE, HW_CACHE_MISSES)) {
+ 		total = runtime_stat_avg(st, STAT_CACHEREFS, ctx, cpu);
+ 
+-- 
+2.8.1
+
