@@ -2,178 +2,83 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD52C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 18:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2784FC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 18:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2CD20815
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 18:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA67020740
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 18:19:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbfKPSN2 convert rfc822-to-8bit (ORCPT
+        id S1727639AbfKPSTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 13:13:28 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50332 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726009AbfKPSN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 13:13:28 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AB08FB15A;
-        Sat, 16 Nov 2019 18:13:25 +0000 (UTC)
-From:   Nicolai Stange <nstange@suse.de>
-To:     Stephan =?utf-8?Q?M=C3=BCller?= <smueller@chronox.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter\, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>
-Subject: Re: [PATCH v25 01/12] Linux Random Number Generator
-References: <6157374.ptSnyUpaCn@positron.chronox.de>
-        <2787174.DQlWHN5GGo@positron.chronox.de>
-        <2645285.kI0haNqfm4@positron.chronox.de>
-Date:   Sat, 16 Nov 2019 19:13:23 +0100
-In-Reply-To: <2645285.kI0haNqfm4@positron.chronox.de> ("Stephan
- \=\?utf-8\?Q\?M\=C3\=BCller\=22's\?\=
-        message of "Sat, 16 Nov 2019 10:33:20 +0100")
-Message-ID: <87mucvadvg.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        Sat, 16 Nov 2019 13:19:31 -0500
+Received: from sauhun.de ([88.99.104.3]:53710 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726009AbfKPSTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 13:19:31 -0500
+Received: from localhost (unknown [94.230.152.199])
+        by pokefinder.org (Postfix) with ESMTPSA id 5C0342C0523;
+        Sat, 16 Nov 2019 19:19:28 +0100 (CET)
+Date:   Sat, 16 Nov 2019 19:19:27 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] i2c: of: Populate fwnode in of_i2c_get_board_info()
+Message-ID: <20191116181927.GA1765@kunai>
+References: <20191115045049.261104-1-saravanak@google.com>
+ <20191115053201.GA800105@kroah.com>
+ <20191115091035.GA2227@kunai>
+ <20191116125711.GA451566@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fdj2RfSjLxBAspz7"
+Content-Disposition: inline
+In-Reply-To: <20191116125711.GA451566@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephan,
 
-Stephan Müller <smueller@chronox.de> writes:
-
-> +/* Initialize the default DRNG during boot */
-
-I think that this can get called a bit too early through the
-get_random_bytes() invoked from e.g. boot_init_stack_canary(): in
-start_kernel(), there is
-
-	boot_init_stack_canary();
-
-	time_init();
-
-On ARM (at least with arm_arch_timer.c), get_cycles() would return 0
-until
-
-  time_init() => timer_probe() => arch_timer_of_init() =>
-  arch_timer_common_init() => arch_timer_arch_init() =>
-  arch_timer_delay_timer_register() => register_current_timer_delay()
-
-has executed and thus, ...
-
-> +void lrng_drngs_init_cc20(void)
-> +{
-> +	unsigned long flags = 0;
-> +
-> +	if (lrng_get_available())
-> +		return;
-> +
-> +	lrng_sdrng_lock(&lrng_sdrng_init, &flags);
-> +	if (lrng_get_available()) {
-> +		lrng_sdrng_unlock(&lrng_sdrng_init, &flags);
-> +		return;
-> +	}
-> +
-> +	if (random_get_entropy() || random_get_entropy()) {
-> +		/*
-> +		 * As the highres timer is identified here, previous interrupts
-> +		 * obtained during boot time are treated like a lowres-timer
-> +		 * would have been present.
-> +		 */
-> +		lrng_pool_configure(true, LRNG_IRQ_ENTROPY_BITS);
-> +	} else {
-> +		lrng_health_disable();
-> +		lrng_pool_configure(false, LRNG_IRQ_ENTROPY_BITS *
-> +					   LRNG_IRQ_OVERSAMPLING_FACTOR);
-> +		pr_warn("operating without high-resolution timer and applying "
-> +			"IRQ oversampling factor %u\n",
-> +			LRNG_IRQ_OVERSAMPLING_FACTOR);
+--fdj2RfSjLxBAspz7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
-... LRNG thinks that no high-res timer is available even though there
-is:
+> > What would be the advantage? I can also apply it today if you ack it.
+>=20
+> I think it will not build in your tree if you apply it now as this is a
+> new api :)
 
-[    0.000000] lrng_sdrng: operating without high-resolution timer and applying IRQ oversampling factor 10
-[    0.000000] lrng_chacha20: ChaCha20 core initialized
-[    0.000000] lrng_chacha20: ChaCha20 core initialized
-[    0.000014] sched_clock: 32 bits at 1000kHz, resolution 1000ns, wraps every 2147483647500ns
-[    0.000036] clocksource: timer: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1911260446275 ns
-[    0.000114] bcm2835: system timer (irq = 27)
-[    0.000594] arch_timer: cp15 timer(s) running at 19.20MHz (phys).
-[    0.000613] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x46d987e47, max_idle_ns: 440795202767 ns
-[    0.000631] sched_clock: 56 bits at 19MHz, resolution 52ns, wraps every 4398046511078ns
-[    0.000645] Switching to timer-based delay loop, resolution 52ns
+That's a convincing argument :) Have fun with the patch!
 
-Note that this last line comes from aforementioned
-register_current_timer_delay().
-
-Similarly, get_random_bytes() can get called quite early through
-WARN() => warn_slowpath_fmt() => __warn() => print_oops_end_marker() =>
-init_oops_id().
-
-Perhaps it would make sense not to do the (pool + health test)
-initalization "on-demand", but rather make sure it happens at some
-well-defined point after time_init()? Or at least that the pool +
-the health tests get reconfigured eventually?
+Acked-by: Wolfram Sang <wsa@the-dreams.de>
 
 
-Thanks,
+--fdj2RfSjLxBAspz7
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Nicolai
+-----BEGIN PGP SIGNATURE-----
 
-P.S: include/linux/lrng.h needs an #include <linux/errno.h> for
-     CONFIG_LRNG_DRNG_SWITCH=n
+iQIyBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3QPasACgkQFA3kzBSg
+KbahkQ/3f2JRV7424gIx25doZlB4FhqA7AD5JsVtXrddNJsewD8Fd48/7624UqaB
+f7+4cQ6530aeWhfwhirI+eKarHZ1ybzNX2BjDuzs9sF6LG6Vseuo/1B+b3pOBf6M
+7aJvBoxEnFnYWV4eB9S2LdzCgmojjJJ4Apl1M1S4qnbJgJ4cd6u3RqlcWnVdiGgT
+h0Zl/tFEPAHsxHpWMDTHzuTZ0N1i7ME6PmFq+FLDHArBGib5ZiFyEd/ZQ6a8EOIB
+dV+f/bGhKuscHgqclIiK3Sc4Edbwn1IENz8IXH4/Gu1s0rVZ2QdKACspP/RlTf1F
+YQUG198xxT396oQXT7aEvp4wiM7MZt+d+8YU9GApjpJjUw3GnTwE2UU/hJQN3J4g
+Heizx6zDFctoalTbe9jG/6htdKyvxs+jK0NTafM0uIZVV52/F2x6Ga0KUBQnYs4n
+muBsl+9ct/F9HjGEb2US1WCjQnf+NLPfLoVv96kCEaUp9poV3ic3bG4+i2vvph1v
+i3QGzBLq96QjueeAZc1pzYwbarJI1JcDhVDiN0TW5uSwo8qgsTnc+HKpfk+obErx
+Q+1qWK0dqlcWlYX7OykdUmAc1SBNN0qB6yAATog1vr0m404i74H+jaABZ26OPiP5
+MEezS9E4MZC/1qlK0hShxOciMyGU2u3io/kt2q+yS6UzeKRQcQ==
+=D88R
+-----END PGP SIGNATURE-----
 
-
-> +	}
-> +
-> +	lrng_sdrng_reset(&lrng_sdrng_init);
-> +	lrng_cc20_init_state(&secondary_chacha20);
-> +	lrng_state_init_seed_work();
-> +	lrng_sdrng_unlock(&lrng_sdrng_init, &flags);
-> +
-> +	lrng_sdrng_lock(&lrng_sdrng_atomic, &flags);
-> +	lrng_sdrng_reset(&lrng_sdrng_atomic);
-> +	/*
-> +	 * We do not initialize the state of the atomic DRNG as it is identical
-> +	 * to the secondary DRNG at this point.
-> +	 */
-> +	lrng_sdrng_unlock(&lrng_sdrng_atomic, &flags);
-> +
-> +	lrng_trng_init();
-> +
-> +	lrng_set_available();
-> +}
-> +
-> +/* Reset LRNG such that all existing entropy is gone */
-
--- 
-SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-(HRB 36809, AG Nürnberg), GF: Felix Imendörffer
+--fdj2RfSjLxBAspz7--
