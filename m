@@ -2,81 +2,86 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E524DC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 03:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C49EEC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 03:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE9CF2072D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 03:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D7922072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 03:47:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbfKPDns (ORCPT
+        id S1727496AbfKPDrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 22:43:48 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6681 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727290AbfKPDnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 22:43:47 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id EB98DC47404AEEF3A289;
-        Sat, 16 Nov 2019 11:43:44 +0800 (CST)
-Received: from localhost.localdomain (10.90.53.225) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 16 Nov 2019 11:43:39 +0800
-From:   Chen Wandun <chenwandun@huawei.com>
-To:     <davem@davemloft.net>, <joabreu@synopsys.com>,
-        <netdev@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <chenwandun@huawei.com>
-Subject: [PATCH] net: stmmac: remove variable 'ret' set but not used
-Date:   Sat, 16 Nov 2019 11:50:46 +0800
-Message-ID: <1573876246-139122-1-git-send-email-chenwandun@huawei.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+        Fri, 15 Nov 2019 22:47:40 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:35240 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727290AbfKPDrk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 22:47:40 -0500
+Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
+        id 749262A71A; Fri, 15 Nov 2019 22:47:39 -0500 (EST)
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     "Michael Schmitz" <schmitzmic@gmail.com>,
+        "Ondrej Zary" <linux@zary.sk>, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-Id: <1f26ead9dd0dc053fcd27979d69a7ca74b6589b4.1573875417.git.fthain@telegraphics.com.au>
+From:   Finn Thain <fthain@telegraphics.com.au>
+Subject: [PATCH] NCR5380: Call scsi_set_resid() on command completion
+Date:   Sat, 16 Nov 2019 14:36:57 +1100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Most NCR5380 drivers calculate the residual for every data transfer.
+(A few drivers just set it to zero.) Pass this quantity back to the
+scsi mid-layer on command completion.
 
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c: In function stmmac_rx_buf1_len:
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:3460:6: warning: variable ret set but not used [-Wunused-but-set-variable]
-
-Signed-off-by: Chen Wandun <chenwandun@huawei.com>
+Cc: Michael Schmitz <schmitzmic@gmail.com>
+Cc: Ondrej Zary <linux@zary.sk>
+Reviewed-and-tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Tested-by: Ondrej Zary <linux@zary.sk>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/NCR5380.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 39b4efd..7003a30 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3457,7 +3457,7 @@ static unsigned int stmmac_rx_buf1_len(struct stmmac_priv *priv,
- 				       struct dma_desc *p,
- 				       int status, unsigned int len)
- {
--	int ret, coe = priv->hw->rx_csum;
-+	int coe = priv->hw->rx_csum;
- 	unsigned int plen = 0, hlen = 0;
+diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+index d4401c768a0c..3ea2557e7938 100644
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -175,6 +175,19 @@ static inline void advance_sg_buffer(struct scsi_cmnd *cmd)
+ 	}
+ }
  
- 	/* Not first descriptor, buffer is always zero */
-@@ -3465,7 +3465,7 @@ static unsigned int stmmac_rx_buf1_len(struct stmmac_priv *priv,
- 		return 0;
++static inline void set_resid_from_SCp(struct scsi_cmnd *cmd)
++{
++	int resid = cmd->SCp.this_residual;
++	struct scatterlist *s = cmd->SCp.buffer;
++
++	if (s)
++		while (!sg_is_last(s)) {
++			s = sg_next(s);
++			resid += s->length;
++		}
++	scsi_set_resid(cmd, resid);
++}
++
+ /**
+  * NCR5380_poll_politely2 - wait for two chip register values
+  * @hostdata: host private data
+@@ -1807,6 +1820,8 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
+ 					cmd->result |= cmd->SCp.Status;
+ 					cmd->result |= cmd->SCp.Message << 8;
  
- 	/* First descriptor, get split header length */
--	ret = stmmac_get_rx_header_len(priv, p, &hlen);
-+	stmmac_get_rx_header_len(priv, p, &hlen);
- 	if (priv->sph && hlen) {
- 		priv->xstats.rx_split_hdr_pkt_n++;
- 		return hlen;
++					set_resid_from_SCp(cmd);
++
+ 					if (cmd->cmnd[0] == REQUEST_SENSE)
+ 						complete_cmd(instance, cmd);
+ 					else {
 -- 
-2.7.4
+2.23.0
 
