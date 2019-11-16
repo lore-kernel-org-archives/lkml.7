@@ -2,277 +2,80 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A127C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 17:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DA9C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 17:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57588216F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 17:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1318520857
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 17:42:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbfKPRgY (ORCPT
+        id S1728036AbfKPRmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 12:36:24 -0500
-Received: from pietrobattiston.it ([92.243.7.39]:55350 "EHLO
-        jauntuale.pietrobattiston.it" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727532AbfKPRgX (ORCPT
+        Sat, 16 Nov 2019 12:42:02 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:36223 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727895AbfKPRmB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 12:36:23 -0500
-Received: from amalgama (94.105.105.79.dyn.edpnet.net [94.105.105.79])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: giovanni)
-        by jauntuale.pietrobattiston.it (Postfix) with ESMTPSA id 638F7E1E22;
-        Sat, 16 Nov 2019 18:36:21 +0100 (CET)
-Received: by amalgama (Postfix, from userid 1000)
-        id C58C53C0340; Sat, 16 Nov 2019 18:36:20 +0100 (CET)
-From:   Giovanni Mascellani <gio@debian.org>
-To:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Giovanni Mascellani <gio@debian.org>
-Subject: [PATCH v3] dell-smm-hwmon: Add support for disabling automatic BIOS fan control
-Date:   Sat, 16 Nov 2019 18:36:10 +0100
-Message-Id: <20191116173610.208358-1-gio@debian.org>
-X-Mailer: git-send-email 2.24.0
+        Sat, 16 Nov 2019 12:42:01 -0500
+Received: by mail-io1-f72.google.com with SMTP id z12so9908628iop.3
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 09:42:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=EWN//L91CyTslFFeakj+mgyvWWWFpOQoVBvfSDcuags=;
+        b=foFv1SwBHViZAsNThg82FxZSXdMnCGcO6vUARgXCEKLoumCSZ0SXrvjzJvsDTT7yyC
+         k3agOmrpIhUiks+HswKSDbxYuWV0Tn33zYBnhkQBBsMPHzrMYM066kLOD0r6Idl7k9jH
+         v6TyVoKj3Ei+XbCwaOcxD9CnBPl1k20gQcOAcLoHFyIB634swbchW21az7RdILSqPJIC
+         29avf4+I21P0f289La4WK/OscGQWxj2r6LEP3bWhYrQqW9qou1sAovEOEYWd+35RbD47
+         OHLxcxj6t1AWo7QVaVy++PQFIKCdkwldUZiSJcGmZTcuRrTK7nDAYK+/p6it+qB7+TUF
+         koYg==
+X-Gm-Message-State: APjAAAUBPr0FbBrHec3WmjF9qycgAqXBQM5OD2HHnk2ZAIfwTWK06lS2
+        YEBEfFufyGxmygwRmmXVyT5Z216thK34nzkvSy7raLKPWX+U
+X-Google-Smtp-Source: APXvYqyPXHr27XD9qFJx9csZgs2fVi5n7W3qz+3U4f6wnRc6QocEac5JBhTcWn6Bcp6WcLpjvOUYRZWSU1CzyYJ7kWmiELv609xh
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:dd12:: with SMTP id n18mr7609659ilm.9.1573926120871;
+ Sat, 16 Nov 2019 09:42:00 -0800 (PST)
+Date:   Sat, 16 Nov 2019 09:42:00 -0800
+In-Reply-To: <000000000000675cea057e201cbb@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000056b92d05977a3b19@google.com>
+Subject: Re: BUG: unable to handle kernel paging request in slhc_free
+From:   syzbot <syzbot+6c5d567447bfa30f78e2@syzkaller.appspotmail.com>
+To:     akinobu.mita@gmail.com, akpm@linux-foundation.org,
+        davem@davemloft.net, dvyukov@google.com,
+        linux-kernel@vger.kernel.org, mhocko@kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tejaswit@codeaurora.org, torvalds@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch exports standard hwmon pwmX_enable sysfs attribute for
-enabling or disabling automatic fan control by BIOS. Standard value
-"1" is for disabling automatic BIOS fan control and value "2" for
-enabling.
+syzbot has bisected this bug to:
 
-By default BIOS auto mode is enabled by laptop firmware.
+commit e41d58185f1444368873d4d7422f7664a68be61d
+Author: Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed Jul 12 21:34:35 2017 +0000
 
-When BIOS auto mode is enabled, custom fan speed value (set via hwmon
-pwmX sysfs attribute) is overwritten by SMM in few seconds and
-therefore any custom settings are without effect. So this is reason
-why implementing option for disabling BIOS auto mode is needed.
+     fault-inject: support systematic fault injection
 
-So finally this patch allows kernel to set and control fan speed on
-laptops, but it can be dangerous (like setting speed of other fans).
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=144b8772e00000
+start commit:   8fe28cb5 Linux 4.20
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=164b8772e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=124b8772e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7d581260bae0899a
+dashboard link: https://syzkaller.appspot.com/bug?extid=6c5d567447bfa30f78e2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=136130fd400000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1607c563400000
 
-The SMM commands to enable or disable automatic fan control are not
-documented and are not the same on all Dell laptops. Therefore a
-whitelist is used to send the correct codes only on laptopts for which
-they are known.
+Reported-by: syzbot+6c5d567447bfa30f78e2@syzkaller.appspotmail.com
+Fixes: e41d58185f14 ("fault-inject: support systematic fault injection")
 
-This patch was originally developed by Pali Rohár; later Giovanni
-Mascellani implemented the whitelist.
-
-Signed-off-by: Giovanni Mascellani <gio@debian.org>
-Co-Developer-by: Pali Rohár <pali.rohar@gmail.com>
----
- drivers/hwmon/dell-smm-hwmon.c | 119 ++++++++++++++++++++++++++++++---
- 1 file changed, 109 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmon.c
-index 4212d022d253..87f88896cc79 100644
---- a/drivers/hwmon/dell-smm-hwmon.c
-+++ b/drivers/hwmon/dell-smm-hwmon.c
-@@ -68,6 +68,8 @@ static uint i8k_pwm_mult;
- static uint i8k_fan_max = I8K_FAN_HIGH;
- static bool disallow_fan_type_call;
- static bool disallow_fan_support;
-+static unsigned int manual_fan;
-+static unsigned int auto_fan;
- 
- #define I8K_HWMON_HAVE_TEMP1	(1 << 0)
- #define I8K_HWMON_HAVE_TEMP2	(1 << 1)
-@@ -300,6 +302,20 @@ static int i8k_get_fan_nominal_speed(int fan, int speed)
- 	return i8k_smm(&regs) ? : (regs.eax & 0xffff) * i8k_fan_mult;
- }
- 
-+/*
-+ * Enable or disable automatic BIOS fan control support
-+ */
-+static int i8k_enable_fan_auto_mode(bool enable)
-+{
-+	struct smm_regs regs = { };
-+
-+	if (disallow_fan_support)
-+		return -EINVAL;
-+
-+	regs.eax = enable ? auto_fan : manual_fan;
-+	return i8k_smm(&regs);
-+}
-+
- /*
-  * Set the fan speed (off, low, high). Returns the new fan status.
-  */
-@@ -726,6 +742,35 @@ static ssize_t i8k_hwmon_pwm_store(struct device *dev,
- 	return err < 0 ? -EIO : count;
- }
- 
-+static ssize_t i8k_hwmon_pwm_enable_store(struct device *dev,
-+					  struct device_attribute *attr,
-+					  const char *buf, size_t count)
-+{
-+	int err;
-+	bool enable;
-+	unsigned long val;
-+
-+	if (!auto_fan)
-+		return -ENODEV;
-+
-+	err = kstrtoul(buf, 10, &val);
-+	if (err)
-+		return err;
-+
-+	if (val == 1)
-+		enable = false;
-+	else if (val == 2)
-+		enable = true;
-+	else
-+		return -EINVAL;
-+
-+	mutex_lock(&i8k_mutex);
-+	err = i8k_enable_fan_auto_mode(enable);
-+	mutex_unlock(&i8k_mutex);
-+
-+	return err ? -EIO : count;
-+}
-+
- static SENSOR_DEVICE_ATTR_RO(temp1_input, i8k_hwmon_temp, 0);
- static SENSOR_DEVICE_ATTR_RO(temp1_label, i8k_hwmon_temp_label, 0);
- static SENSOR_DEVICE_ATTR_RO(temp2_input, i8k_hwmon_temp, 1);
-@@ -749,12 +794,15 @@ static SENSOR_DEVICE_ATTR_RO(temp10_label, i8k_hwmon_temp_label, 9);
- static SENSOR_DEVICE_ATTR_RO(fan1_input, i8k_hwmon_fan, 0);
- static SENSOR_DEVICE_ATTR_RO(fan1_label, i8k_hwmon_fan_label, 0);
- static SENSOR_DEVICE_ATTR_RW(pwm1, i8k_hwmon_pwm, 0);
-+static SENSOR_DEVICE_ATTR_WO(pwm1_enable, i8k_hwmon_pwm_enable, 0);
- static SENSOR_DEVICE_ATTR_RO(fan2_input, i8k_hwmon_fan, 1);
- static SENSOR_DEVICE_ATTR_RO(fan2_label, i8k_hwmon_fan_label, 1);
- static SENSOR_DEVICE_ATTR_RW(pwm2, i8k_hwmon_pwm, 1);
-+static SENSOR_DEVICE_ATTR_WO(pwm2_enable, i8k_hwmon_pwm_enable, 0);
- static SENSOR_DEVICE_ATTR_RO(fan3_input, i8k_hwmon_fan, 2);
- static SENSOR_DEVICE_ATTR_RO(fan3_label, i8k_hwmon_fan_label, 2);
- static SENSOR_DEVICE_ATTR_RW(pwm3, i8k_hwmon_pwm, 2);
-+static SENSOR_DEVICE_ATTR_WO(pwm3_enable, i8k_hwmon_pwm_enable, 0);
- 
- static struct attribute *i8k_attrs[] = {
- 	&sensor_dev_attr_temp1_input.dev_attr.attr,	/* 0 */
-@@ -780,12 +828,15 @@ static struct attribute *i8k_attrs[] = {
- 	&sensor_dev_attr_fan1_input.dev_attr.attr,	/* 20 */
- 	&sensor_dev_attr_fan1_label.dev_attr.attr,	/* 21 */
- 	&sensor_dev_attr_pwm1.dev_attr.attr,		/* 22 */
--	&sensor_dev_attr_fan2_input.dev_attr.attr,	/* 23 */
--	&sensor_dev_attr_fan2_label.dev_attr.attr,	/* 24 */
--	&sensor_dev_attr_pwm2.dev_attr.attr,		/* 25 */
--	&sensor_dev_attr_fan3_input.dev_attr.attr,	/* 26 */
--	&sensor_dev_attr_fan3_label.dev_attr.attr,	/* 27 */
--	&sensor_dev_attr_pwm3.dev_attr.attr,		/* 28 */
-+	&sensor_dev_attr_pwm1_enable.dev_attr.attr,	/* 23 */
-+	&sensor_dev_attr_fan2_input.dev_attr.attr,	/* 24 */
-+	&sensor_dev_attr_fan2_label.dev_attr.attr,	/* 25 */
-+	&sensor_dev_attr_pwm2.dev_attr.attr,		/* 26 */
-+	&sensor_dev_attr_pwm2_enable.dev_attr.attr,	/* 27 */
-+	&sensor_dev_attr_fan3_input.dev_attr.attr,	/* 28 */
-+	&sensor_dev_attr_fan3_label.dev_attr.attr,	/* 29 */
-+	&sensor_dev_attr_pwm3.dev_attr.attr,		/* 30 */
-+	&sensor_dev_attr_pwm3_enable.dev_attr.attr,	/* 31 */
- 	NULL
- };
- 
-@@ -828,16 +879,20 @@ static umode_t i8k_is_visible(struct kobject *kobj, struct attribute *attr,
- 	    !(i8k_hwmon_flags & I8K_HWMON_HAVE_TEMP10))
- 		return 0;
- 
--	if (index >= 20 && index <= 22 &&
-+	if (index >= 20 && index <= 23 &&
- 	    !(i8k_hwmon_flags & I8K_HWMON_HAVE_FAN1))
- 		return 0;
--	if (index >= 23 && index <= 25 &&
-+	if (index >= 24 && index <= 27 &&
- 	    !(i8k_hwmon_flags & I8K_HWMON_HAVE_FAN2))
- 		return 0;
--	if (index >= 26 && index <= 28 &&
-+	if (index >= 28 && index <= 31 &&
- 	    !(i8k_hwmon_flags & I8K_HWMON_HAVE_FAN3))
- 		return 0;
- 
-+	if ((index == 23 || index == 27 || index == 31) &&
-+	    !auto_fan)
-+		return 0;
-+
- 	return attr->mode;
- }
- 
-@@ -1135,12 +1190,48 @@ static struct dmi_system_id i8k_blacklist_fan_support_dmi_table[] __initdata = {
- 	{ }
- };
- 
-+struct i8k_fan_control_data {
-+	unsigned int manual_fan;
-+	unsigned int auto_fan;
-+};
-+
-+enum i8k_fan_controls {
-+	I8K_FAN_34A3_35A3,
-+};
-+
-+static const struct i8k_fan_control_data i8k_fan_control_data[] = {
-+	[I8K_FAN_34A3_35A3] = {
-+		.manual_fan = 0x34a3,
-+		.auto_fan = 0x35a3,
-+	},
-+};
-+
-+static struct dmi_system_id i8k_whitelist_fan_control[] __initdata = {
-+	{
-+		.ident = "Dell Precision 5530",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Precision 5530"),
-+		},
-+		.driver_data = (void *)&i8k_fan_control_data[I8K_FAN_34A3_35A3],
-+	},
-+	{
-+		.ident = "Dell Latitude E6440",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Latitude E6440"),
-+		},
-+		.driver_data = (void *)&i8k_fan_control_data[I8K_FAN_34A3_35A3],
-+	},
-+	{ }
-+};
-+
- /*
-  * Probe for the presence of a supported laptop.
-  */
- static int __init i8k_probe(void)
- {
--	const struct dmi_system_id *id;
-+	const struct dmi_system_id *id, *fan_control;
- 	int fan, ret;
- 
- 	/*
-@@ -1200,6 +1291,14 @@ static int __init i8k_probe(void)
- 	i8k_fan_max = fan_max ? : I8K_FAN_HIGH;	/* Must not be 0 */
- 	i8k_pwm_mult = DIV_ROUND_UP(255, i8k_fan_max);
- 
-+	fan_control = dmi_first_match(i8k_whitelist_fan_control);
-+	if (fan_control && fan_control->driver_data) {
-+		const struct i8k_fan_control_data *fan_control_data = fan_control->driver_data;
-+		manual_fan = fan_control_data->manual_fan;
-+		auto_fan = fan_control_data->auto_fan;
-+		pr_info("enabling experimental BIOS fan control support\n");
-+	}
-+
- 	if (!fan_mult) {
- 		/*
- 		 * Autodetect fan multiplier based on nominal rpm
--- 
-2.24.0
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
