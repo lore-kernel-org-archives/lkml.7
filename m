@@ -2,130 +2,122 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E59AC43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 11:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCF1C43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 11:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB29206F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 11:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A34B82072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 11:49:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573904971;
+	bh=3HH7HX8fSkkDcgIdzdGuNZMUlhgVA3fS5tQFFqx3jws=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=k6qRHXMX48K504GOZUPgpSUpU5eg2nIBH0m/4+x/p339TiSbc/Br7va4KZNPo1kuN
+	 GUBZyf8Qo6nQpeF0k1Asx0/sTyXV3Cta8YXmnOlN+2MHtAaX5FEcMqB05lg2l5L3pA
+	 VUS0bYqqKxc0e62tnCHr8rkadKQaw/eVTZDBDiMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfKPLqd (ORCPT
+        id S1727493AbfKPLta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 06:46:33 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33096 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726794AbfKPLqc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 06:46:32 -0500
-Received: by mail-wr1-f65.google.com with SMTP id w9so13817127wrr.0;
-        Sat, 16 Nov 2019 03:46:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=hYZLZ+t7zW9QpC69y3DTNhSSDoe8rUBNplslYwkF1mk=;
-        b=hNwHoNzk/uvJrn+JxoCqulz7jJxt2FAzMGnH3MaJkz2T1cx38hbvRHV8pnI504jgaG
-         HSoTCY80cIIKgIZICacgPSvFpqSotzWhKTrBl/KLDwC/24CT0q/bh7gf+Z7eV9782qil
-         XORkOSaXopgaMkGYkyjwvV2JfwfUo4PAbuL95JUuPoUVZSwwEjy1wRUaKeF4R5JjOYc3
-         zVkLmDHAyW033W+035Vnr7e+1zyRYHUv4eGXQoRM2ZHkAD48yMHwpxjoZgdXGBJTVf4R
-         yXGZ6lxe50OEzkwi8WaJcvD5iO/SnaIbcJurFBriBKedcg39ov4Ge39sdO7yIT7DqUOs
-         I2cA==
-X-Gm-Message-State: APjAAAW7U01wOJQHy0njxNi53q9h0YbNF1DXHPt8uABulZPzYzAOgaxr
-        fqZpU58x5+PqHFq1WqCoG34=
-X-Google-Smtp-Source: APXvYqzS7oielao94d4xPw0PIiTo9cBhVJcLFmaaElIt5rw2gXjykFtYdreC24iMgCvRErDEC1QwHg==
-X-Received: by 2002:adf:e94e:: with SMTP id m14mr21057939wrn.233.1573904790163;
-        Sat, 16 Nov 2019 03:46:30 -0800 (PST)
-Received: from localhost.localdomain (2001-1c06-18c6-e000-2463-1bcb-8fa3-05f8.cable.dynamic.v6.ziggo.nl. [2001:1c06:18c6:e000:2463:1bcb:8fa3:5f8])
-        by smtp.gmail.com with ESMTPSA id f17sm11918869wmj.40.2019.11.16.03.46.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Nov 2019 03:46:29 -0800 (PST)
-From:   Kars de Jong <jongk@linux-m68k.org>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kars de Jong <jongk@linux-m68k.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] rtc: msm6242: Remove unneeded msm6242_set()/msm6242_clear() functions
-Date:   Sat, 16 Nov 2019 12:46:20 +0100
-Message-Id: <20191116114620.9193-1-jongk@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Sat, 16 Nov 2019 06:49:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55166 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726794AbfKPLta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 06:49:30 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 507EA20723;
+        Sat, 16 Nov 2019 11:49:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573904969;
+        bh=3HH7HX8fSkkDcgIdzdGuNZMUlhgVA3fS5tQFFqx3jws=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=mh+ioHEL0q6X99zIm5FVogzqT6I4170MCs0nJESj8ta22T72KKgw1Lm0os9xVsahd
+         3gyQ7Ag1BNuKpSuYu2BNSXK1EeebNtcfbqNp+egMLvX/jcW2PYzk+jA7rd/yUhTA7c
+         VE8i+VbwmI3Ccjb/j8/zZSqnp2wZAKAslvEGlC4g=
+Date:   Sat, 16 Nov 2019 11:49:23 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Enric Balletbo Serra <eballetbo@gmail.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH v4 01/17] mfd: cros_ec: Add sensor_count and make
+ check_features public
+Message-ID: <20191116114923.39e9ce3c@archlinux>
+In-Reply-To: <20191111114423.GN3218@dell>
+References: <20191105222652.70226-1-gwendal@chromium.org>
+        <20191105222652.70226-2-gwendal@chromium.org>
+        <CAFqH_50q7y-sL0SyA3BDkZ9_YBX_FL90smtXt7v0Z+BW8nrw3A@mail.gmail.com>
+        <20191111114423.GN3218@dell>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The msm6242_set()/msm6242_clear() functions are used when writing to Control
-Register D to set or clear the HOLD bit when reading the current time from
-the RTC.
+On Mon, 11 Nov 2019 11:44:23 +0000
+Lee Jones <lee.jones@linaro.org> wrote:
 
-Doing this with a read-modify-write cycle will potentially clear an
-interrupt condition which occurs between the read and the write.
+> On Fri, 08 Nov 2019, Enric Balletbo Serra wrote:
+> 
+> > Missatge de Gwendal Grignou <gwendal@chromium.org> del dia dt., 5 de
+> > nov. 2019 a les 23:28:  
+> > >
+> > > Add a new function to return the number of MEMS sensors available in a
+> > > ChromeOS Embedded Controller.
+> > > It uses MOTIONSENSE_CMD_DUMP if available or a specific memory map ACPI
+> > > registers to find out.
+> > >
+> > > Also, make check_features public as it can be useful for other drivers
+> > > to know what the Embedded Controller supports.
+> > >
+> > > Signed-off-by: Gwendal Grignou <gwendal@chromium.org>  
+> > 
+> > Version 3 was acked and I think we can maintain his ack, so:
+> > 
+> > Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> > 
+> > Also,
+> > 
+> > Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > 
+> > Lee, how you would like to handle this? I think will be safe for
+> > patches 1/2/3 go through the platform-chrome tree without an immutable
+> > branch. Patch 3 thought still needs and Ack from you if is fine.  
+> 
+> Please take the entire set, converting:
+> 
+>   s/Acked-for-MFD-by/Acked-by/
+> 
+> ... and send me a pull-request to an immutable branch.
+> 
 
-The datasheet states the following about this:
+Agreed.  Please do an immutable branch for the whole series v5 if everyone
+else is happy with the changes in V5. (I think it was mostly my
+comments on v4 so fingers crossed :)
 
-  When writing the HOLD or 30 second adjust bits of register D, it is
-  necessary to write the IRQ FLAG bit to a "1".
+I'll pull it if / when some follow up changes touch the resulting code
+on the IIO side. Gwendall, if you can highlight if that occurs that
+would be great as well!
 
-Since the only other bits in the register are the 30 second adjust bit
-(which is not used) and the BUSY bit (which is read-only), the
-read-modify-write cycle can be replaced by a simple write with the IRQ FLAG
-bit set to 1 and the other bits (except HOLD) set to 0.
+Thanks,
 
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Tested-by: Kars de Jong <jongk@linux-m68k.org>
-Signed-off-by: Kars de Jong <jongk@linux-m68k.org>
----
- drivers/rtc/rtc-msm6242.c | 20 ++++----------------
- 1 file changed, 4 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/rtc/rtc-msm6242.c b/drivers/rtc/rtc-msm6242.c
-index b1f2bedee77e..80e364baac53 100644
---- a/drivers/rtc/rtc-msm6242.c
-+++ b/drivers/rtc/rtc-msm6242.c
-@@ -88,28 +88,16 @@ static inline void msm6242_write(struct msm6242_priv *priv, unsigned int val,
- 	__raw_writel(val, &priv->regs[reg]);
- }
- 
--static inline void msm6242_set(struct msm6242_priv *priv, unsigned int val,
--			       unsigned int reg)
--{
--	msm6242_write(priv, msm6242_read(priv, reg) | val, reg);
--}
--
--static inline void msm6242_clear(struct msm6242_priv *priv, unsigned int val,
--				 unsigned int reg)
--{
--	msm6242_write(priv, msm6242_read(priv, reg) & ~val, reg);
--}
--
- static void msm6242_lock(struct msm6242_priv *priv)
- {
- 	int cnt = 5;
- 
--	msm6242_set(priv, MSM6242_CD_HOLD, MSM6242_CD);
-+	msm6242_write(priv, MSM6242_CD_HOLD|MSM6242_CD_IRQ_FLAG, MSM6242_CD);
- 
- 	while ((msm6242_read(priv, MSM6242_CD) & MSM6242_CD_BUSY) && cnt) {
--		msm6242_clear(priv, MSM6242_CD_HOLD, MSM6242_CD);
-+		msm6242_write(priv, MSM6242_CD_IRQ_FLAG, MSM6242_CD);
- 		udelay(70);
--		msm6242_set(priv, MSM6242_CD_HOLD, MSM6242_CD);
-+		msm6242_write(priv, MSM6242_CD_HOLD|MSM6242_CD_IRQ_FLAG, MSM6242_CD);
- 		cnt--;
- 	}
- 
-@@ -120,7 +108,7 @@ static void msm6242_lock(struct msm6242_priv *priv)
- 
- static void msm6242_unlock(struct msm6242_priv *priv)
- {
--	msm6242_clear(priv, MSM6242_CD_HOLD, MSM6242_CD);
-+	msm6242_write(priv, MSM6242_CD_IRQ_FLAG, MSM6242_CD);
- }
- 
- static int msm6242_read_time(struct device *dev, struct rtc_time *tm)
--- 
-2.17.1
+Jonathan
 
