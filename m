@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E40C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF84EC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65DBF214DE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABAD1214DE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:28:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921667;
-	bh=/LdlDunYvEq9PMi5iXWMTlTTC/OHVe6NjuwqYWeQ3qE=;
+	s=default; t=1573921685;
+	bh=Sf3cIY4FBXZRehIUMul+h13jBBMHJUAoQ3mb0dOaB0A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mEQzbtHeVPfZ2bFsIQMO4DdJ9vDCQOsf9yIwUENIw7ewTI1XP9u/CK1AMj7cSurT+
-	 PBFeOeWXMAThe8uJI5U53RyGTNWXaX5XQi2zyq+IVc4s5nw18HOm7ew8NalmzcX2ZU
-	 TcFvlRyU+5kTTw3NikxUD50j1zd+dE9bhOfcUj4M=
+	b=YuTfJO7oI52K+tT9H9matLwHNzxuVdx6zFvE7fEeawtlY7JTSrvvRm/+f0xrqnFOO
+	 U7SJIqe52mVq5TZesyaFfrwMJaBeSfoE1uvUhKBuApu1xVRq5Z3Mq165hzz7osANIB
+	 6Jhn+Bhei1wt96incZUagTnw2u2ZCa4fp5KE80xA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730002AbfKPQ1q (ORCPT
+        id S1730040AbfKPQ2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:27:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44688 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:28:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727927AbfKPPlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:41:35 -0500
+        id S1727874AbfKPPl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:41:27 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E1BD2075C;
-        Sat, 16 Nov 2019 15:41:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7D2620718;
+        Sat, 16 Nov 2019 15:41:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918894;
-        bh=/LdlDunYvEq9PMi5iXWMTlTTC/OHVe6NjuwqYWeQ3qE=;
+        s=default; t=1573918887;
+        bh=Sf3cIY4FBXZRehIUMul+h13jBBMHJUAoQ3mb0dOaB0A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gDyEJV8wtMMpx9qoWsVU+bdx5sDf7mqmdTn3IHZKfAEXaWEmltoeqf0ekSVZnxNdS
-         NkHRKSeQtT0ZuU4POH9p64sWZq7deSFeXZL4aFREf3w+6IQtKQoBCHly81MkXLgbQh
-         osnL8jeMOpvNqCbkELmjJfqPO32FVQzrYVLy1h/M=
+        b=NSyNnHI7c1YpURCvhCSGXLv2VCk60uRyLkazMhMiNvRngL70JiKdkxdh3RFsGa/5D
+         zioY/8bWIj2vW651hSaaWB+k/0yVLcI78ZC/G4P56obDoKitqEpVV137dr1Zq53cB2
+         YC792hLX5rSbfiqgSXkxjyBpJ8wr/4QRz2Tnfo38=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rakesh Pillai <pillair@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+Cc:     Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 019/237] ath10k: set probe request oui during driver start
-Date:   Sat, 16 Nov 2019 10:37:34 -0500
-Message-Id: <20191116154113.7417-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 016/237] mt76: do not store aggregation sequence number for null-data frames
+Date:   Sat, 16 Nov 2019 10:37:31 -0500
+Message-Id: <20191116154113.7417-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,65 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rakesh Pillai <pillair@codeaurora.org>
+From: Felix Fietkau <nbd@nbd.name>
 
-[ Upstream commit f1157695c527d4ee949ac83f743f80107751a70c ]
+[ Upstream commit 5155938d8a0fe0e0251435cae02539e81fb8e407 ]
 
-Currently the wmi command for setting probe request
-oui, needed for mac randomization, is sent during
-the mac register. At this time, during the driver
-init the wmi has already been detached. This can
-cause unexpected behavior since the firmware is
-already down and the wmi has been detached.
+Fixes a rare corner case where a BlockAckReq might get the wrong
+sequence number.
 
-Send the wmi command for setting probe request
-oui during the driver start. This will make sure
-that the firmware is started and wmi is initialized
-before we send this command.
-
-Tested HW: WCN3990
-Tested FW: WLAN.HL.2.0-01188-QCAHLSWMTPLZ-1
-
-Fixes: 60e1d0fb290197fe505dff6e4e3b7e4d258dbf60
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/mac.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/net/wireless/mediatek/mt76/tx.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index 1419f9d1505fe..97e6911811176 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -4685,6 +4685,14 @@ static int ath10k_start(struct ieee80211_hw *hw)
- 		goto err_core_stop;
- 	}
+diff --git a/drivers/net/wireless/mediatek/mt76/tx.c b/drivers/net/wireless/mediatek/mt76/tx.c
+index 20447fdce4c33..227e5ebfe3dc2 100644
+--- a/drivers/net/wireless/mediatek/mt76/tx.c
++++ b/drivers/net/wireless/mediatek/mt76/tx.c
+@@ -148,7 +148,8 @@ mt76_check_agg_ssn(struct mt76_txq *mtxq, struct sk_buff *skb)
+ {
+ 	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *) skb->data;
  
-+	if (test_bit(WMI_SERVICE_SPOOF_MAC_SUPPORT, ar->wmi.svc_map)) {
-+		ret = ath10k_wmi_scan_prob_req_oui(ar, ar->mac_addr);
-+		if (ret) {
-+			ath10k_err(ar, "failed to set prob req oui: %i\n", ret);
-+			goto err_core_stop;
-+		}
-+	}
-+
- 	if (test_bit(WMI_SERVICE_ADAPTIVE_OCS, ar->wmi.svc_map)) {
- 		ret = ath10k_wmi_adaptive_qcs(ar, true);
- 		if (ret) {
-@@ -8549,12 +8557,6 @@ int ath10k_mac_register(struct ath10k *ar)
- 	}
+-	if (!ieee80211_is_data_qos(hdr->frame_control))
++	if (!ieee80211_is_data_qos(hdr->frame_control) ||
++	    !ieee80211_is_data_present(hdr->frame_control))
+ 		return;
  
- 	if (test_bit(WMI_SERVICE_SPOOF_MAC_SUPPORT, ar->wmi.svc_map)) {
--		ret = ath10k_wmi_scan_prob_req_oui(ar, ar->mac_addr);
--		if (ret) {
--			ath10k_err(ar, "failed to set prob req oui: %i\n", ret);
--			goto err_dfs_detector_exit;
--		}
--
- 		ar->hw->wiphy->features |=
- 			NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR;
- 	}
+ 	mtxq->agg_ssn = le16_to_cpu(hdr->seq_ctrl) + 0x10;
 -- 
 2.20.1
 
