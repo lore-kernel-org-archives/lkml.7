@@ -2,97 +2,86 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=FAKE_REPLY_C,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E545CC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 12:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E161C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 12:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C174320718
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 12:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4212A20718
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 12:57:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573909036;
+	bh=jSz+kXwPX2CRrUxvd98ksd17zPSRI8eXhTcDK8ZhKXw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IuYKy4N7VFktnbG/DbYjFZSd7w9uASs840OPyTNyqteL+i9od8AjZbAaT/+bCq0of
+	 xqfK6LD9ABKgbf0Td9QQGZiy/AgG3vX0NRRHNgEXz9eGgaDScf+WxOplCiEORy/9I8
+	 SlQI1asWfPTvYHUK4XFzDXdMf6elRVmSN3xaxr5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbfKPMws (ORCPT
+        id S1727579AbfKPM5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 07:52:48 -0500
-Received: from verein.lst.de ([213.95.11.211]:48776 "EHLO verein.lst.de"
+        Sat, 16 Nov 2019 07:57:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727510AbfKPMwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 07:52:47 -0500
-Received: by verein.lst.de (Postfix, from userid 107)
-        id AC45E68BFE; Sat, 16 Nov 2019 13:52:44 +0100 (CET)
-Received: from lst.de (p5B0D82C7.dip0.t-ipconnect.de [91.13.130.199])
-        by verein.lst.de (Postfix) with ESMTPSA id 8EC4068AFE;
-        Sat, 16 Nov 2019 13:52:39 +0100 (CET)
-Date:   Sat, 16 Nov 2019 13:52:33 +0100
-From:   Torsten Duwe <duwe@lst.de>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] regulator: Defer init completion for a while after
- late_initcall
-Message-ID: <20191116125233.GA5570@lst.de>
+        id S1727437AbfKPM5P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 07:57:15 -0500
+Received: from localhost (unknown [84.241.192.145])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10A87206F4;
+        Sat, 16 Nov 2019 12:57:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573909034;
+        bh=jSz+kXwPX2CRrUxvd98ksd17zPSRI8eXhTcDK8ZhKXw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qQuO5nwv7k7wQLXkXUPvOxDRl2fh53AIziBI6/E4BG0xADXhBBt4IlVoe03/dAgTE
+         6JgF2NLj8xxr3DdP/pvI4gGopTMdblutQ90kXszkjE6vBH7VWjoTfqY5VnQ+lVd0vt
+         A0i1bIns53A7BmPj92cDNB84ECVfV7GZITF+Q3hc=
+Date:   Sat, 16 Nov 2019 13:57:11 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] i2c: of: Populate fwnode in of_i2c_get_board_info()
+Message-ID: <20191116125711.GA451566@kroah.com>
+References: <20191115045049.261104-1-saravanak@google.com>
+ <20191115053201.GA800105@kroah.com>
+ <20191115091035.GA2227@kunai>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190904124250.25844-1-broonie@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191115091035.GA2227@kunai>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Fri, Nov 15, 2019 at 10:10:36AM +0100, Wolfram Sang wrote:
+> On Fri, Nov 15, 2019 at 01:32:01PM +0800, Greg Kroah-Hartman wrote:
+> > On Thu, Nov 14, 2019 at 08:50:48PM -0800, Saravana Kannan wrote:
+> > > This allows the of_devlink feature to work across i2c devices too. This
+> > > avoid unnecessary probe deferrals of i2c devices, defers consumers of
+> > > i2c devices till the i2c devices probe, and allows i2c drivers to
+> > > implement sync_state() callbacks.
+> > > 
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > ---
+> > > The of_devlink feature is present in driver-core-next branch. It started
+> > > off with [1] but it has been improving since then.
+> > > 
+> > > [1] -- https://lore.kernel.org/linux-acpi/20190904211126.47518-1-saravanak@google.com/
+> > > 
+> > >  drivers/i2c/i2c-core-of.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > 
+> > Wolfram, I can take this through my tree now if you have no objections
+> > to this.
+> 
+> What would be the advantage? I can also apply it today if you ack it.
 
-On Wed, 4 Sep 2019 13:42:50 +0100 Mark Brown <broonie@kernel.org> wrote:
-[...]
-> with Arm laptops coming on the market it's becoming more of an issue so
-> let's do something about it.
-
-For the record: I try to run a stock distribution kernel (lots of modules)
-on an Olimex Teres-I. The PMIC driver is of course a module.
-
-> In the absence of any better idea just defer the powering off for 30s
-> after late_initcall(), this is obviously a hack but it should mask the
-> issue for now and it's no more arbitrary than late_initcall() itself.
-> Ideally we'd have some heuristics to detect if we're on an affected
-> system and tune or skip the delay appropriately, and there may be some
-> need for a command line option to be added.
-
-Am I the only one having problems with this change? I get
-
-[   11.917136] anx6345 0-0038: 0-0038 supply dvdd12-supply not found, using dummy regulator
-[   11.917174] axp20x-rsb sunxi-rsb-3a3: AXP20x variant AXP803 found
-
-Despite being loaded as a very early module, PMIC init ^^^ only starts now.
-
-[   11.928664] hub 1-0:1.0: 1 port detected
-[   11.943230] anx6345 0-0038: 0-0038 supply dvdd25-supply not found, using dummy regulator
-
-So far, so bad, but lucky me has an U-Boot which already enabled the display
-along with the relevant voltages in the proper sequence.
-
-[   11.981316] [drm] Found ANX6345 (ver. 170) eDP Transmitter
-
-But much later on
-
-[   38.248573] dcdc4: disabling
-[   38.268493] vcc-pd: disabling
-[   38.288446] vdd-edp: disabling
-
-screen goes dark and stays dark. Use count of the regulators is 0. I guess
-this is because the driver code had been returned the dummy instead?
-
-It's a mobile device so in principle there is nothing wrong with powering
-down unused circuitry, and always-on is not an option.
-Am I correct to perceive this solution as not 100% mature yet? The anx6345
-driver in particular needs to do a little "voltage dance" with specific
-timing on the real regulators should the device come up really unpowered,
-so IMHO it's probably neccessary to return EPROBE_DEFER at least in this
-particular case and prepare the driver for it? Or what would be the real
-solution in this case?
-
-	Torsten
-
-
-
+I think it will not build in your tree if you apply it now as this is a
+new api :)
