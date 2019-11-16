@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75847C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA2EC33C9D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DDE020836
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4524E20891
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919166;
-	bh=iPFtIhlFnF1IDIP9CFvA7qpSv6U66EhbaLGNIWWMfT8=;
+	s=default; t=1573919172;
+	bh=2Luct6aeUchWiuAqbQk8IOpLZN3/QWd0Ogx29N2hSO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0M+7brolrOTrTMR85BtO0LnFbaBflDqBnUS15PSd4i0dSs4jeb7TIBeSAeV3zBC5g
-	 YwX9RVySNcf/Cg12S8fZnKZCKfWJm9eT7DG9fbqKqwX/17DrdWczKJTmaDCZOwPy2K
-	 Xxdk6JSJOKrC15D/TabUYtmuySerawX/Lo9ymvko=
+	b=t+ngx+BXF9nAQsoBSqEFCAJ3KKvMb2rmTXwc63r4CEMDtGULG0U77LOlbJBkTZV61
+	 S/T1VY0GEto0XYgmjyodOuJj+8KjI7vdGAyKJeqFzd0l2WGK/WvID17E3dt/AJifNK
+	 6vajlFvLrUIBRxxw/Q9M5u2mglmGwjUqTtxDGofc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729276AbfKPPqE (ORCPT
+        id S1729309AbfKPPqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:46:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51898 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:46:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729229AbfKPPpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:45:54 -0500
+        id S1729271AbfKPPqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:02 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F7472082E;
-        Sat, 16 Nov 2019 15:45:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B63EE207FA;
+        Sat, 16 Nov 2019 15:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919153;
-        bh=iPFtIhlFnF1IDIP9CFvA7qpSv6U66EhbaLGNIWWMfT8=;
+        s=default; t=1573919162;
+        bh=2Luct6aeUchWiuAqbQk8IOpLZN3/QWd0Ogx29N2hSO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BoJRBeju/nJ44CVuVGiHxtCPks3AVzVdmfXm5WxK8X3RCjDf4I0fuOxepBY3omLbg
-         zdl9YBBnRkMq3kVBBB/pAMovISTqSQ1aV8fuKC9+8A0dQeUTVKaLdRmvBpKS3eL47j
-         2HKH5j8OpHxQ+opfjaZ4nn0A7uiBi86Gvi/v2URY=
+        b=LlUBYgEeOXCtKO5CzykNtpRewz3OGoFKeNqp84A/2hRKeI2rbbe4oygBOzo1F8sqZ
+         bJfisXzb3GZ4apRM/UrRScQR8Z+JthNhWFuN70UtDU/jgBnEJUBWgkYkdMspVE3Bqy
+         sfNFf/HULlvXk3YQSVY+S2Q2KR3M2ckdojKfbZqM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jacob Keller <jacob.e.keller@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+Cc:     Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 167/237] fm10k: ensure completer aborts are marked as non-fatal after a resume
-Date:   Sat, 16 Nov 2019 10:40:02 -0500
-Message-Id: <20191116154113.7417-167-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 170/237] net: hns3: bugfix for is_valid_csq_clean_head()
+Date:   Sat, 16 Nov 2019 10:40:05 -0500
+Message-Id: <20191116154113.7417-170-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -59,131 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Keller <jacob.e.keller@intel.com>
+From: Huazhong Tan <tanhuazhong@huawei.com>
 
-[ Upstream commit e330af788998b0de4da4f5bd7ddd087507999800 ]
+[ Upstream commit 6d71ec6cbf74ac9c2823ef751b1baa5b889bb3ac ]
 
-VF drivers can trigger PCIe completer aborts any time they read a queue
-that they don't own. Even in nominal circumstances, it is not possible
-to prevent the VF driver from reading queues it doesn't own. VF drivers
-may attempt to read queues it previously owned, but which it no longer
-does due to a PF reset.
+The HEAD pointer of the hardware command queue maybe equal to the command
+queue's next_to_use in the driver, so that does not belong to the invalid
+HEAD pointer, since the hardware may not process the command in time,
+causing the HEAD pointer to be too late to update. The variables' name
+in this function is unreadable, so give them a more readable one.
 
-Normally these completer aborts aren't an issue. However, on some
-platforms these trigger machine check errors. This is true even if we
-lower their severity from fatal to non-fatal. Indeed, we already have
-code for lowering the severity.
-
-We could attempt to mask these errors conditionally around resets, which
-is the most common time they would occur. However this would essentially
-be a race between the PF and VF drivers, and we may still occasionally
-see machine check exceptions on these strictly configured platforms.
-
-Instead, mask the errors entirely any time we resume VFs. By doing so,
-we prevent the completer aborts from being sent to the parent PCIe
-device, and thus these strict platforms will not upgrade them into
-machine check errors.
-
-Additionally, we don't lose any information by masking these errors,
-because we'll still report VFs which attempt to access queues via the
-FUM_BAD_VF_QACCESS errors.
-
-Without this change, on platforms where completer aborts cause machine
-check exceptions, the VF reading queues it doesn't own could crash the
-host system. Masking the completer abort prevents this, so we should
-mask it for good, and not just around a PCIe reset. Otherwise malicious
-or misconfigured VFs could cause the host system to crash.
-
-Because we are masking the error entirely, there is little reason to
-also keep setting the severity bit, so that code is also removed.
-
-Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: 3ff504908f95 ("net: hns3: fix a dead loop in hclge_cmd_csq_clean")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/fm10k/fm10k_iov.c | 48 ++++++++++++--------
- 1 file changed, 28 insertions(+), 20 deletions(-)
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c   | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/fm10k/fm10k_iov.c b/drivers/net/ethernet/intel/fm10k/fm10k_iov.c
-index e707d717012fa..618032612f52d 100644
---- a/drivers/net/ethernet/intel/fm10k/fm10k_iov.c
-+++ b/drivers/net/ethernet/intel/fm10k/fm10k_iov.c
-@@ -302,6 +302,28 @@ void fm10k_iov_suspend(struct pci_dev *pdev)
- 	}
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+index 68026a5ad7e77..690f62ed87dca 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+@@ -24,15 +24,15 @@ static int hclge_ring_space(struct hclge_cmq_ring *ring)
+ 	return ring->desc_num - used - 1;
  }
  
-+static void fm10k_mask_aer_comp_abort(struct pci_dev *pdev)
-+{
-+	u32 err_mask;
-+	int pos;
-+
-+	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ERR);
-+	if (!pos)
-+		return;
-+
-+	/* Mask the completion abort bit in the ERR_UNCOR_MASK register,
-+	 * preventing the device from reporting these errors to the upstream
-+	 * PCIe root device. This avoids bringing down platforms which upgrade
-+	 * non-fatal completer aborts into machine check exceptions. Completer
-+	 * aborts can occur whenever a VF reads a queue it doesn't own.
-+	 */
-+	pci_read_config_dword(pdev, pos + PCI_ERR_UNCOR_MASK, &err_mask);
-+	err_mask |= PCI_ERR_UNC_COMP_ABORT;
-+	pci_write_config_dword(pdev, pos + PCI_ERR_UNCOR_MASK, err_mask);
-+
-+	mmiowb();
-+}
-+
- int fm10k_iov_resume(struct pci_dev *pdev)
+-static int is_valid_csq_clean_head(struct hclge_cmq_ring *ring, int h)
++static int is_valid_csq_clean_head(struct hclge_cmq_ring *ring, int head)
  {
- 	struct fm10k_intfc *interface = pci_get_drvdata(pdev);
-@@ -317,6 +339,12 @@ int fm10k_iov_resume(struct pci_dev *pdev)
- 	if (!iov_data)
- 		return -ENOMEM;
+-	int u = ring->next_to_use;
+-	int c = ring->next_to_clean;
++	int ntu = ring->next_to_use;
++	int ntc = ring->next_to_clean;
  
-+	/* Lower severity of completer abort error reporting as
-+	 * the VFs can trigger this any time they read a queue
-+	 * that they don't own.
-+	 */
-+	fm10k_mask_aer_comp_abort(pdev);
-+
- 	/* allocate hardware resources for the VFs */
- 	hw->iov.ops.assign_resources(hw, num_vfs, num_vfs);
+-	if (unlikely(h >= ring->desc_num))
+-		return 0;
++	if (ntu > ntc)
++		return head >= ntc && head <= ntu;
  
-@@ -460,20 +488,6 @@ void fm10k_iov_disable(struct pci_dev *pdev)
- 	fm10k_iov_free_data(pdev);
+-	return u > c ? (h > c && h <= u) : (h > c || h <= u);
++	return head >= ntc || head <= ntu;
  }
  
--static void fm10k_disable_aer_comp_abort(struct pci_dev *pdev)
--{
--	u32 err_sev;
--	int pos;
--
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ERR);
--	if (!pos)
--		return;
--
--	pci_read_config_dword(pdev, pos + PCI_ERR_UNCOR_SEVER, &err_sev);
--	err_sev &= ~PCI_ERR_UNC_COMP_ABORT;
--	pci_write_config_dword(pdev, pos + PCI_ERR_UNCOR_SEVER, err_sev);
--}
--
- int fm10k_iov_configure(struct pci_dev *pdev, int num_vfs)
- {
- 	int current_vfs = pci_num_vf(pdev);
-@@ -495,12 +509,6 @@ int fm10k_iov_configure(struct pci_dev *pdev, int num_vfs)
- 
- 	/* allocate VFs if not already allocated */
- 	if (num_vfs && num_vfs != current_vfs) {
--		/* Disable completer abort error reporting as
--		 * the VFs can trigger this any time they read a queue
--		 * that they don't own.
--		 */
--		fm10k_disable_aer_comp_abort(pdev);
--
- 		err = pci_enable_sriov(pdev, num_vfs);
- 		if (err) {
- 			dev_err(&pdev->dev,
+ static int hclge_alloc_cmd_desc(struct hclge_cmq_ring *ring)
 -- 
 2.20.1
 
