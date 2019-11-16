@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F319C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E9FC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF02821479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C157721479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921247;
-	bh=0tPbmlMoHUmKUKg4UP3KeQMU9iKDfEP/BR6bOzr6vMA=;
+	s=default; t=1573921255;
+	bh=6IwEtnWFvebA2WjeoJrOgw49Cjxd6Gji2Y6b46YcP74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2oBTKmmzhphFFK0sVzSW9HPODXz7KxzJHq5yW4NH+fH1iMOj7D0RA54z+sF8It/Wr
-	 YTY8e43UPR9T1Fzl2VSQkqdRwwOrLED7DdR4Uxg5oWjVtUyC7n8TywX7YWfdDwz6GH
-	 u3kPWFMaFJew53rYk0R/oyRZX1IGfr9FheNoDrM0=
+	b=LLiWhfaDw5I0Guar4pEz02VW1gTUO4Zi5XvRhGZCZgfXDK+R/5FvjXpn6fpL9IMKW
+	 2oez0Z5efjssiKOHU1sWg8Vpdv1rdZXCG2QY6Mp/83XUJsKFTBPxJc/s/b5VcdwUf4
+	 Ph7UHNnl0qs2UGaVCpM3Mt/fcCfpJeNp/lBtRc1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbfKPPoX (ORCPT
+        id S1731910AbfKPQUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:44:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48724 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:20:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727880AbfKPPoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:44:14 -0500
+        id S1728914AbfKPPoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:44:19 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E1332073B;
-        Sat, 16 Nov 2019 15:44:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D15772075B;
+        Sat, 16 Nov 2019 15:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919054;
-        bh=0tPbmlMoHUmKUKg4UP3KeQMU9iKDfEP/BR6bOzr6vMA=;
+        s=default; t=1573919058;
+        bh=6IwEtnWFvebA2WjeoJrOgw49Cjxd6Gji2Y6b46YcP74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q9rhmkTjaTKSnRykUWYF07tdz/dju/iLYzHM7HQWrCufnztGFEHFVCiW7PO2kU1ki
-         KNwY5/1qlf3eLJfgYu5ZuKVixOdJKWrchhPlY4W6/Hp5bwzOroq66qvTzjJZkrQ4h0
-         7q1Vow3qxbH576OxqxpeN+lv3liJ5zHessR1O5/c=
+        b=p7/0i2oYYqWPXcm9yVlJoVj3WWzquGy3FwLDDjGb9EO2WzlUvZXAK/caIUqS1Si+d
+         RGcjXujNEEVOXTNJhjqx2RcCtCLL+jTHkNIJsAUUu8bcfc32B+G+l2dQDF75ouGrPW
+         Knh3vFYizg7rsMsbKG7K8SeVJu/kjOE8LlIVGACg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
+Cc:     Andrea Arcangeli <aarcange@redhat.com>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Aaron Tomlin <atomlin@redhat.com>,
+        Jerome Glisse <jglisse@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.19 130/237] mm/page-writeback.c: fix range_cyclic writeback vs writepages deadlock
-Date:   Sat, 16 Nov 2019 10:39:25 -0500
-Message-Id: <20191116154113.7417-130-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 133/237] mm: thp: fix mmu_notifier in migrate_misplaced_transhuge_page()
+Date:   Sat, 16 Nov 2019 10:39:28 -0500
+Message-Id: <20191116154113.7417-133-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -61,245 +64,189 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+From: Andrea Arcangeli <aarcange@redhat.com>
 
-[ Upstream commit 64081362e8ff4587b4554087f3cfc73d3e0a4cd7 ]
+[ Upstream commit 7066f0f933a1fd707bb38781866657769cff7efc ]
 
-We've recently seen a workload on XFS filesystems with a repeatable
-deadlock between background writeback and a multi-process application
-doing concurrent writes and fsyncs to a small range of a file.
+change_huge_pmd() after arming the numa/protnone pmd doesn't flush the TLB
+right away.  do_huge_pmd_numa_page() flushes the TLB before calling
+migrate_misplaced_transhuge_page().  By the time do_huge_pmd_numa_page()
+runs some CPU could still access the page through the TLB.
 
-range_cyclic
-writeback		Process 1		Process 2
+change_huge_pmd() before arming the numa/protnone transhuge pmd calls
+mmu_notifier_invalidate_range_start().  So there's no need of
+mmu_notifier_invalidate_range_start()/mmu_notifier_invalidate_range_only_end()
+sequence in migrate_misplaced_transhuge_page() too, because by the time
+migrate_misplaced_transhuge_page() runs, the pmd mapping has already been
+invalidated in the secondary MMUs.  It has to or if a secondary MMU can
+still write to the page, the migrate_page_copy() would lose data.
 
-xfs_vm_writepages
-  write_cache_pages
-    writeback_index = 2
-    cycled = 0
-    ....
-    find page 2 dirty
-    lock Page 2
-    ->writepage
-      page 2 writeback
-      page 2 clean
-      page 2 added to bio
-    no more pages
-			write()
-			locks page 1
-			dirties page 1
-			locks page 2
-			dirties page 1
-			fsync()
-			....
-			xfs_vm_writepages
-			write_cache_pages
-			  start index 0
-			  find page 1 towrite
-			  lock Page 1
-			  ->writepage
-			    page 1 writeback
-			    page 1 clean
-			    page 1 added to bio
-			  find page 2 towrite
-			  lock Page 2
-			  page 2 is writeback
-			  <blocks>
-						write()
-						locks page 1
-						dirties page 1
-						fsync()
-						....
-						xfs_vm_writepages
-						write_cache_pages
-						  start index 0
+However an explicit mmu_notifier_invalidate_range() is needed before
+migrate_misplaced_transhuge_page() starts copying the data of the
+transhuge page or the below can happen for MMU notifier users sharing the
+primary MMU pagetables and only implementing ->invalidate_range:
 
-    !done && !cycled
-      sets index to 0, restarts lookup
-    find page 1 dirty
-						  find page 1 towrite
-						  lock Page 1
-						  page 1 is writeback
-						  <blocks>
+CPU0		CPU1		GPU sharing linux pagetables using
+                                only ->invalidate_range
+-----------	------------	---------
+				GPU secondary MMU writes to the page
+				mapped by the transhuge pmd
+change_pmd_range()
+mmu..._range_start()
+->invalidate_range_start() noop
+change_huge_pmd()
+set_pmd_at(numa/protnone)
+pmd_unlock()
+		do_huge_pmd_numa_page()
+		CPU TLB flush globally (1)
+		CPU cannot write to page
+		migrate_misplaced_transhuge_page()
+				GPU writes to the page...
+		migrate_page_copy()
+				...GPU stops writing to the page
+CPU TLB flush (2)
+mmu..._range_end() (3)
+->invalidate_range_stop() noop
+->invalidate_range()
+				GPU secondary MMU is invalidated
+				and cannot write to the page anymore
+				(too late)
 
-    lock Page 1
-    <blocks>
+Just like we need a CPU TLB flush (1) because the TLB flush (2) arrives
+too late, we also need a mmu_notifier_invalidate_range() before calling
+migrate_misplaced_transhuge_page(), because the ->invalidate_range() in
+(3) also arrives too late.
 
-DEADLOCK because:
+This requirement is the result of the lazy optimization in
+change_huge_pmd() that releases the pmd_lock without first flushing the
+TLB and without first calling mmu_notifier_invalidate_range().
 
-	- process 1 needs page 2 writeback to complete to make
-	  enough progress to issue IO pending for page 1
-	- writeback needs page 1 writeback to complete so process 2
-	  can progress and unlock the page it is blocked on, then it
-	  can issue the IO pending for page 2
-	- process 2 can't make progress until process 1 issues IO
-	  for page 1
+Even converting the removed mmu_notifier_invalidate_range_only_end() into
+a mmu_notifier_invalidate_range_end() would not have been enough to fix
+this, because it run after migrate_page_copy().
 
-The underlying cause of the problem here is that range_cyclic writeback is
-processing pages in descending index order as we hold higher index pages
-in a structure controlled from above write_cache_pages().  The
-write_cache_pages() caller needs to be able to submit these pages for IO
-before write_cache_pages restarts writeback at mapping index 0 to avoid
-wcp inverting the page lock/writeback wait order.
+After the hugepage data copy is done migrate_misplaced_transhuge_page()
+can proceed and call set_pmd_at without having to flush the TLB nor any
+secondary MMUs because the secondary MMU invalidate, just like the CPU TLB
+flush, has to happen before the migrate_page_copy() is called or it would
+be a bug in the first place (and it was for drivers using
+->invalidate_range()).
 
-generic_writepages() is not susceptible to this bug as it has no private
-context held across write_cache_pages() - filesystems using this
-infrastructure always submit pages in ->writepage immediately and so there
-is no problem with range_cyclic going back to mapping index 0.
+KVM is unaffected because it doesn't implement ->invalidate_range().
 
-However:
-	mpage_writepages() has a private bio context,
-	exofs_writepages() has page_collect
-	fuse_writepages() has fuse_fill_wb_data
-	nfs_writepages() has nfs_pageio_descriptor
-	xfs_vm_writepages() has xfs_writepage_ctx
+The standard PAGE_SIZEd migrate_misplaced_page is less accelerated and
+uses the generic migrate_pages which transitions the pte from
+numa/protnone to a migration entry in try_to_unmap_one() and flushes TLBs
+and all mmu notifiers there before copying the page.
 
-All of these ->writepages implementations can hold pages under writeback
-in their private structures until write_cache_pages() returns, and hence
-they are all susceptible to this deadlock.
-
-Also worth noting is that ext4 has it's own bastardised version of
-write_cache_pages() and so it /may/ have an equivalent deadlock.  I looked
-at the code long enough to understand that it has a similar retry loop for
-range_cyclic writeback reaching the end of the file and then promptly ran
-away before my eyes bled too much.  I'll leave it for the ext4 developers
-to determine if their code is actually has this deadlock and how to fix it
-if it has.
-
-There's a few ways I can see avoid this deadlock.  There's probably more,
-but these are the first I've though of:
-
-1. get rid of range_cyclic altogether
-
-2. range_cyclic always stops at EOF, and we start again from
-writeback index 0 on the next call into write_cache_pages()
-
-2a. wcp also returns EAGAIN to ->writepages implementations to
-indicate range cyclic has hit EOF. writepages implementations can
-then flush the current context and call wpc again to continue. i.e.
-lift the retry into the ->writepages implementation
-
-3. range_cyclic uses trylock_page() rather than lock_page(), and it
-skips pages it can't lock without blocking. It will already do this
-for pages under writeback, so this seems like a no-brainer
-
-3a. all non-WB_SYNC_ALL writeback uses trylock_page() to avoid
-blocking as per pages under writeback.
-
-I don't think #1 is an option - range_cyclic prevents frequently
-dirtied lower file offset from starving background writeback of
-rarely touched higher file offsets.
-
-#2 is simple, and I don't think it will have any impact on
-performance as going back to the start of the file implies an
-immediate seek. We'll have exactly the same number of seeks if we
-switch writeback to another inode, and then come back to this one
-later and restart from index 0.
-
-#2a is pretty much "status quo without the deadlock". Moving the
-retry loop up into the wcp caller means we can issue IO on the
-pending pages before calling wcp again, and so avoid locking or
-waiting on pages in the wrong order. I'm not convinced we need to do
-this given that we get the same thing from #2 on the next writeback
-call from the writeback infrastructure.
-
-#3 is really just a band-aid - it doesn't fix the access/wait
-inversion problem, just prevents it from becoming a deadlock
-situation. I'd prefer we fix the inversion, not sweep it under the
-carpet like this.
-
-#3a is really an optimisation that just so happens to include the
-band-aid fix of #3.
-
-So it seems that the simplest way to fix this issue is to implement
-solution #2
-
-Link: http://lkml.kernel.org/r/20181005054526.21507-1-david@fromorbit.com
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Jan Kara <jack@suse.de>
-Cc: Nicholas Piggin <npiggin@gmail.com>
+Link: http://lkml.kernel.org/r/20181013002430.698-3-aarcange@redhat.com
+Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+Acked-by: Mel Gorman <mgorman@suse.de>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Reviewed-by: Aaron Tomlin <atomlin@redhat.com>
+Cc: Jerome Glisse <jglisse@redhat.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/page-writeback.c | 33 +++++++++++++++------------------
- 1 file changed, 15 insertions(+), 18 deletions(-)
+ mm/huge_memory.c | 14 +++++++++++++-
+ mm/migrate.c     | 19 ++++++-------------
+ 2 files changed, 19 insertions(+), 14 deletions(-)
 
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index ea4fd3af3b4bd..43df0c52e1ccb 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -2149,6 +2149,13 @@ EXPORT_SYMBOL(tag_pages_for_writeback);
-  * not miss some pages (e.g., because some other process has cleared TOWRITE
-  * tag we set). The rule we follow is that TOWRITE tag can be cleared only
-  * by the process clearing the DIRTY tag (and submitting the page for IO).
-+ *
-+ * To avoid deadlocks between range_cyclic writeback and callers that hold
-+ * pages in PageWriteback to aggregate IO until write_cache_pages() returns,
-+ * we do not loop back to the start of the file. Doing so causes a page
-+ * lock/page writeback access order inversion - we should only ever lock
-+ * multiple pages in ascending page->index order, and looping back to the start
-+ * of the file violates that rule and causes deadlocks.
-  */
- int write_cache_pages(struct address_space *mapping,
- 		      struct writeback_control *wbc, writepage_t writepage,
-@@ -2163,7 +2170,6 @@ int write_cache_pages(struct address_space *mapping,
- 	pgoff_t index;
- 	pgoff_t end;		/* Inclusive */
- 	pgoff_t done_index;
--	int cycled;
- 	int range_whole = 0;
- 	int tag;
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 09ce8528bbdd9..4a3bf480d0ea0 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -1603,8 +1603,20 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf, pmd_t pmd)
+ 	 * We are not sure a pending tlb flush here is for a huge page
+ 	 * mapping or not. Hence use the tlb range variant
+ 	 */
+-	if (mm_tlb_flush_pending(vma->vm_mm))
++	if (mm_tlb_flush_pending(vma->vm_mm)) {
+ 		flush_tlb_range(vma, haddr, haddr + HPAGE_PMD_SIZE);
++		/*
++		 * change_huge_pmd() released the pmd lock before
++		 * invalidating the secondary MMUs sharing the primary
++		 * MMU pagetables (with ->invalidate_range()). The
++		 * mmu_notifier_invalidate_range_end() (which
++		 * internally calls ->invalidate_range()) in
++		 * change_pmd_range() will run after us, so we can't
++		 * rely on it here and we need an explicit invalidate.
++		 */
++		mmu_notifier_invalidate_range(vma->vm_mm, haddr,
++					      haddr + HPAGE_PMD_SIZE);
++	}
  
-@@ -2171,23 +2177,17 @@ int write_cache_pages(struct address_space *mapping,
- 	if (wbc->range_cyclic) {
- 		writeback_index = mapping->writeback_index; /* prev offset */
- 		index = writeback_index;
--		if (index == 0)
--			cycled = 1;
--		else
--			cycled = 0;
- 		end = -1;
- 	} else {
- 		index = wbc->range_start >> PAGE_SHIFT;
- 		end = wbc->range_end >> PAGE_SHIFT;
- 		if (wbc->range_start == 0 && wbc->range_end == LLONG_MAX)
- 			range_whole = 1;
--		cycled = 1; /* ignore range_cyclic tests */
- 	}
- 	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
- 		tag = PAGECACHE_TAG_TOWRITE;
- 	else
- 		tag = PAGECACHE_TAG_DIRTY;
--retry:
- 	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
- 		tag_pages_for_writeback(mapping, index, end);
- 	done_index = index;
-@@ -2279,17 +2279,14 @@ int write_cache_pages(struct address_space *mapping,
- 		pagevec_release(&pvec);
- 		cond_resched();
- 	}
--	if (!cycled && !done) {
--		/*
--		 * range_cyclic:
--		 * We hit the last page and there is more work to be done: wrap
--		 * back to the start of the file
--		 */
--		cycled = 1;
--		index = 0;
--		end = writeback_index - 1;
--		goto retry;
--	}
-+
-+	/*
-+	 * If we hit the last page and there is more work to be done: wrap
-+	 * back the index back to the start of the file for the next
-+	 * time we are called.
-+	 */
-+	if (wbc->range_cyclic && !done)
-+		done_index = 0;
- 	if (wbc->range_cyclic || (range_whole && wbc->nr_to_write > 0))
- 		mapping->writeback_index = done_index;
+ 	/*
+ 	 * Migrate the THP to the requested node, returns with page unlocked
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 4d3588c012034..22440a5efb498 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1992,8 +1992,8 @@ int migrate_misplaced_transhuge_page(struct mm_struct *mm,
+ 	int isolated = 0;
+ 	struct page *new_page = NULL;
+ 	int page_lru = page_is_file_cache(page);
+-	unsigned long mmun_start = address & HPAGE_PMD_MASK;
+-	unsigned long mmun_end = mmun_start + HPAGE_PMD_SIZE;
++	unsigned long start = address & HPAGE_PMD_MASK;
++	unsigned long end = start + HPAGE_PMD_SIZE;
  
+ 	new_page = alloc_pages_node(node,
+ 		(GFP_TRANSHUGE_LIGHT | __GFP_THISNODE),
+@@ -2020,11 +2020,9 @@ int migrate_misplaced_transhuge_page(struct mm_struct *mm,
+ 	WARN_ON(PageLRU(new_page));
+ 
+ 	/* Recheck the target PMD */
+-	mmu_notifier_invalidate_range_start(mm, mmun_start, mmun_end);
+ 	ptl = pmd_lock(mm, pmd);
+ 	if (unlikely(!pmd_same(*pmd, entry) || !page_ref_freeze(page, 2))) {
+ 		spin_unlock(ptl);
+-		mmu_notifier_invalidate_range_end(mm, mmun_start, mmun_end);
+ 
+ 		/* Reverse changes made by migrate_page_copy() */
+ 		if (TestClearPageActive(new_page))
+@@ -2055,8 +2053,8 @@ int migrate_misplaced_transhuge_page(struct mm_struct *mm,
+ 	 * new page and page_add_new_anon_rmap guarantee the copy is
+ 	 * visible before the pagetable update.
+ 	 */
+-	flush_cache_range(vma, mmun_start, mmun_end);
+-	page_add_anon_rmap(new_page, vma, mmun_start, true);
++	flush_cache_range(vma, start, end);
++	page_add_anon_rmap(new_page, vma, start, true);
+ 	/*
+ 	 * At this point the pmd is numa/protnone (i.e. non present) and the TLB
+ 	 * has already been flushed globally.  So no TLB can be currently
+@@ -2068,7 +2066,7 @@ int migrate_misplaced_transhuge_page(struct mm_struct *mm,
+ 	 * MADV_DONTNEED won't wait on the pmd lock and it'll skip clearing this
+ 	 * pmd.
+ 	 */
+-	set_pmd_at(mm, mmun_start, pmd, entry);
++	set_pmd_at(mm, start, pmd, entry);
+ 	update_mmu_cache_pmd(vma, address, &entry);
+ 
+ 	page_ref_unfreeze(page, 2);
+@@ -2077,11 +2075,6 @@ int migrate_misplaced_transhuge_page(struct mm_struct *mm,
+ 	set_page_owner_migrate_reason(new_page, MR_NUMA_MISPLACED);
+ 
+ 	spin_unlock(ptl);
+-	/*
+-	 * No need to double call mmu_notifier->invalidate_range() callback as
+-	 * the above pmdp_huge_clear_flush_notify() did already call it.
+-	 */
+-	mmu_notifier_invalidate_range_end(mm, mmun_start, mmun_end);
+ 
+ 	/* Take an "isolate" reference and put new page on the LRU. */
+ 	get_page(new_page);
+@@ -2105,7 +2098,7 @@ int migrate_misplaced_transhuge_page(struct mm_struct *mm,
+ 	ptl = pmd_lock(mm, pmd);
+ 	if (pmd_same(*pmd, entry)) {
+ 		entry = pmd_modify(entry, vma->vm_page_prot);
+-		set_pmd_at(mm, mmun_start, pmd, entry);
++		set_pmd_at(mm, start, pmd, entry);
+ 		update_mmu_cache_pmd(vma, address, &entry);
+ 	}
+ 	spin_unlock(ptl);
 -- 
 2.20.1
 
