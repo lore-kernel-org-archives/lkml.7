@@ -4,57 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E394BC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A887C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEDA520871
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 354AF2182A
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919575;
-	bh=WUThvF9W9hZ6QkLoXYTN4dKMA1CVvi/8L81mNQpwBHA=;
+	s=default; t=1573919579;
+	bh=Ubzdtado8qpF9VSRmYdGAtTkvjECdbzj1U/T/2pUfco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UXN76sorfnUnfCf80O6/ijQ9cZrwbt37PMzKbTlw4DFPh0rKkrt/V9HEtzffmOGFw
-	 Fjs42Q4THEcXXz1gqtXogFb/wvAz+bMzGwy0VSlZhekjvDdLFy3RZocNL4CYnYC9HD
-	 fHU/KGaq4LZPX5jVbaKRc2D3Z64tu3741jMw6yt8=
+	b=t+llJhSVB/bOR6uRUaQfTGNaPEgpgnORG55uNIJumLtHewjzwj3rTrRjUaCQO/DFS
+	 JUBgRA/TJbFStb16+orzLumSO29MvYgLcdgbKl1I7hNyw6+5EwaJAiHK4UZ4WzY0V7
+	 2tWz8y8iVQL3Ar8iTrG4kmCp1L+Fmxvb9bEZtcbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbfKPPwy (ORCPT
+        id S1731092AbfKPPw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:52:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33608 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:52:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727915AbfKPPwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:52:49 -0500
+        id S1727709AbfKPPwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:52:54 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00DBD20859;
-        Sat, 16 Nov 2019 15:52:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B7D620859;
+        Sat, 16 Nov 2019 15:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919569;
-        bh=WUThvF9W9hZ6QkLoXYTN4dKMA1CVvi/8L81mNQpwBHA=;
+        s=default; t=1573919573;
+        bh=Ubzdtado8qpF9VSRmYdGAtTkvjECdbzj1U/T/2pUfco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J+hiUl7HTHQWqFDY/oTpVKNNebqwUaUpeVtZu9F75FQyCZwVvtjn9hc4gf46YtN3l
-         A541Wp8nrKxladTGes3fqla9CSCa96437iOgVyGpYmoIfw2bJ5NpgUr1BA29aivydG
-         y8GioKdBRRfLHNseg7zjuFab85PMJ4HcxErYJFlc=
+        b=xn+gbUI8x6iVR6FvRM0f4HawiJabggGEz8NpmEb4iFVctpi1Y3VJzgS2bEIMN14LB
+         hWcg7NiqHI8nBLjIx35jIte1XtFGQt9QO60yRiqCd6bJTcknyfScEaCiLSUeME+BjG
+         DhhofQrGUDPYqpJaTxAQ8T9ogKeXidUmRgBzRHD8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Ernesto=20A=2E=20Fern=C3=A1ndez?= 
-        <ernesto.mnd.fernandez@gmail.com>,
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        "Ernesto A . Fernndez" <ernesto.mnd.fernandez@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Hin-Tak Leung <htl10@users.sourceforge.net>,
         Vyacheslav Dubeyko <slava@dubeyko.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 65/99] hfsplus: update timestamps on truncate()
-Date:   Sat, 16 Nov 2019 10:50:28 -0500
-Message-Id: <20191116155103.10971-65-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 67/99] fs/hfs/extent.c: fix array out of bounds read of array extent
+Date:   Sat, 16 Nov 2019 10:50:30 -0500
+Message-Id: <20191116155103.10971-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,37 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit dc8844aada735890a6de109bef327f5df36a982e ]
+[ Upstream commit 6c9a3f843a29d6894dfc40df338b91dbd78f0ae3 ]
 
-The vfs takes care of updating ctime and mtime on ftruncate(), but on
-truncate() it must be done by the module.
+Currently extent and index i are both being incremented causing an array
+out of bounds read on extent[i].  Fix this by removing the extraneous
+increment of extent.
 
-This patch can be tested with xfstests generic/313.
+Ernesto said:
 
-Link: http://lkml.kernel.org/r/9beb0913eea37288599e8e1b7cec8768fb52d1b8.1539316825.git.ernesto.mnd.fernandez@gmail.com
-Signed-off-by: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
-Reviewed-by: Vyacheslav Dubeyko <slava@dubeyko.com>
+: This is only triggered when deleting a file with a resource fork.  I
+: may be wrong because the documentation isn't clear, but I don't think
+: you can create those under linux.  So I guess nobody was testing them.
+:
+: > A disk space leak, perhaps?
+:
+: That's what it looks like in general.  hfs_free_extents() won't do
+: anything if the block count doesn't add up, and the error will be
+: ignored.  Now, if the block count randomly does add up, we could see
+: some corruption.
+
+Detected by CoverityScan, CID#711541 ("Out of bounds read")
+
+Link: http://lkml.kernel.org/r/20180831140538.31566-1-colin.king@canonical.com
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Ernesto A. Fernndez <ernesto.mnd.fernandez@gmail.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Hin-Tak Leung <htl10@users.sourceforge.net>
+Cc: Vyacheslav Dubeyko <slava@dubeyko.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/hfsplus/inode.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/hfs/extent.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/hfsplus/inode.c b/fs/hfsplus/inode.c
-index 2e796f8302ffa..cfd380e2743d1 100644
---- a/fs/hfsplus/inode.c
-+++ b/fs/hfsplus/inode.c
-@@ -260,6 +260,7 @@ static int hfsplus_setattr(struct dentry *dentry, struct iattr *attr)
- 		}
- 		truncate_setsize(inode, attr->ia_size);
- 		hfsplus_file_truncate(inode);
-+		inode->i_mtime = inode->i_ctime = current_time(inode);
- 	}
+diff --git a/fs/hfs/extent.c b/fs/hfs/extent.c
+index 16819d2a978b4..cbe4fca96378a 100644
+--- a/fs/hfs/extent.c
++++ b/fs/hfs/extent.c
+@@ -304,7 +304,7 @@ int hfs_free_fork(struct super_block *sb, struct hfs_cat_file *file, int type)
+ 		return 0;
  
- 	setattr_copy(inode, attr);
+ 	blocks = 0;
+-	for (i = 0; i < 3; extent++, i++)
++	for (i = 0; i < 3; i++)
+ 		blocks += be16_to_cpu(extent[i].count);
+ 
+ 	res = hfs_free_extents(sb, extent, blocks, blocks);
 -- 
 2.20.1
 
