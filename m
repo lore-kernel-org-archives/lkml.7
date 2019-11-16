@@ -2,112 +2,70 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D27DC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 12:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C749C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 12:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53EB1206E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 12:04:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573905863;
-	bh=dAjtnLMfO/Nd1pkNrNhg1n5rbr3vsUl0dpG+t3ex+hs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z4WTn1Nr4UbJa1rTjOZgW/ZYeeF0mgs05CK2lJ3NB/IP0wExtUxvgTiCpvSwIlWD8
-	 h3iTM9drQ0hZo7C5Y0Mpwo/sWfMZjPmmHf/m5wQfdP2JEFGVzNS8h3HLsy/fjc8fT5
-	 WdXhfNDBHqWRP4PHvwZbvZgsVKeKCbUN8+9OKcUE=
+	by mail.kernel.org (Postfix) with ESMTP id 4BB6920700
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 12:07:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbfKPMEW (ORCPT
+        id S1727566AbfKPMHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 07:04:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60520 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727331AbfKPMEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 07:04:21 -0500
-Received: from localhost (unknown [84.241.192.145])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4AA5206D3;
-        Sat, 16 Nov 2019 12:04:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573905859;
-        bh=dAjtnLMfO/Nd1pkNrNhg1n5rbr3vsUl0dpG+t3ex+hs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z1e2AcsJWhmZgIQlWh8lEEiF/jtnkKt0qZVWCnNobpMPoZxXDw1QznepQ9aXWnYkh
-         6I9BBfy8/gVVSA7jJ84v5kMx4nSHhdszjlfLYnVt88ApdUNG6DjAy77r3bp5Ollalc
-         +Lp7rKGU+khZy4co3bC/fLO8YIhUhSl2hnzj1EEM=
-Date:   Sat, 16 Nov 2019 13:04:16 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, yu kuai <yukuai3@huawei.com>,
-        rafael@kernel.org, oleg@redhat.com, mchehab+samsung@kernel.org,
-        corbet@lwn.net, tytso@mit.edu, jmorris@namei.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        zhengbin13@huawei.com, yi.zhang@huawei.com,
-        chenxiang66@hisilicon.com, xiexiuqi@huawei.com
-Subject: Re: [RFC] simple_recursive_removal()
-Message-ID: <20191116120416.GA446630@kroah.com>
-References: <20191115083813.65f5523c@gandalf.local.home>
- <20191115134823.GQ26530@ZenIV.linux.org.uk>
- <20191115085805.008870cb@gandalf.local.home>
- <20191115141754.GR26530@ZenIV.linux.org.uk>
- <20191115175423.GS26530@ZenIV.linux.org.uk>
- <20191115184209.GT26530@ZenIV.linux.org.uk>
- <20191115194138.GU26530@ZenIV.linux.org.uk>
- <20191115211820.GV26530@ZenIV.linux.org.uk>
- <20191115162609.2d26d498@gandalf.local.home>
- <20191115221037.GW26530@ZenIV.linux.org.uk>
+        Sat, 16 Nov 2019 07:07:07 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:45330 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727331AbfKPMHG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 07:07:06 -0500
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iVwqr-0002bU-Ba; Sat, 16 Nov 2019 13:06:53 +0100
+Date:   Sat, 16 Nov 2019 13:06:53 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "kernelci.org bot" <bot@kernelci.org>, tomeu.vizoso@collabora.com,
+        guillaume.tucker@collabora.com, mgalka@collabora.com,
+        broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com,
+        enric.balletbo@collabora.com, Andy Lutomirski <luto@kernel.org>,
+        x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Babu Moger <Babu.Moger@amd.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Rik van Riel <riel@surriel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Waiman Long <longman@redhat.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+Subject: Re: next/master bisection: boot on qemu_i386
+Message-ID: <20191116120653.akqtisn6tl4uazlo@linutronix.de>
+References: <5dcf1f39.1c69fb81.409da.a39c@mx.google.com>
+ <alpine.DEB.2.21.1911152327020.28787@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191115221037.GW26530@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <alpine.DEB.2.21.1911152327020.28787@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 10:10:37PM +0000, Al Viro wrote:
-> On Fri, Nov 15, 2019 at 04:26:09PM -0500, Steven Rostedt wrote:
-> > On Fri, 15 Nov 2019 21:18:20 +0000
-> > Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > 
-> > > OK... debugfs and tracefs definitely convert to that; so do, AFAICS,
-> > > spufs and selinuxfs, and I wouldn't be surprised if it could be
-> > > used in a few more places...  securityfs, almost certainly qibfs,
-> > > gadgetfs looks like it could make use of that.  Maybe subrpc
-> > > as well, but I'll need to look in details.  configfs won't,
-> > > unfortunately...
-> > 
-> > Thanks Al for looking into this.
-> > 
-> > I'll try to test it in tracefs, and see if anything breaks. But
-> > probably wont get to it till next week.
+On 2019-11-15 23:28:49 [+0100], Thomas Gleixner wrote:
+> Does the patch below fix it for you?
+
+I can confirm that -next from yesterday with i386_defconfig doesn't boot
+on qemu and boots with this change. (I had to disable selinux because it
+did not compile otherwise here).
+
+Tested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+
+> Thanks,
 > 
-> I'll probably throw that into #next.dcache - if nothing else,
-> that cuts down on the size of patch converting d_subdirs/d_child
-> from list to hlist...
-> 
-> Need to get some sleep first, though - only 5 hours today, so
-> I want to take another look at that thing tomorrow morning -
-> I don't trust my ability to spot obvious bugs right now... ;-/
-> 
-> Oh, well - that at least might finally push the old "kernel-side
-> rm -rf done right" pile of half-baked patches into more useful
-> state, probably superseding most of them.
+> 	tglx
 
-Thanks for doing this.  Sorry for the delay in getting back to this, was
-on a long-haul flight...
-
-Anyway, this looks sane to me.  debugfs "should" not be having a file
-added while a directory is being removed at the same time, but I really
-can't guarantee that someone is trying to do something crazy like that.
-So "heavy" locking is fine with me, this never has to be a "fast"
-operation, it's much more important to get it "correct".
-
-thanks,
-
-greg k-h
+Sebastian
