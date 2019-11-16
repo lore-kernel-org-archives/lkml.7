@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E66AC43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A911C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03E7621479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A33F20815
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920078;
-	bh=luqP4xoGP1K9bacavhN3oKuBE214qMJYyj/o2cLvzy8=;
+	s=default; t=1573920084;
+	bh=I/rpMijM4yMNwtU+bEGKgo77Et0G0y1kjG99Mgh7nHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1oKiXdkU2LPNJcxgcp8VYyL85RxoA3ayiiE1eLFSgrf1HCTHKnclV1wa9jO4yatPB
-	 Y0AzbxuiEjBokmjMtbMfH1JbgzcFjf1D4qCaCW2kQYLqxXudflO2pelg8xB0/0PvRd
-	 IJ7IZ80nPeQlt+TZUK2PSksJqbdSXr9mow9r5MMY=
+	b=B7BDCCeL+IagXFRkBfJVCgZD0LaEEpIqWvaxNp9DPLDSBCE1cVgQL2Gr1hDG20IPZ
+	 +1q7mUioVO/ebWgDmVfD9McIwWcuQsGb5owAopeL2JKU1gPFoJGNUQ7lI/KJTRhYXJ
+	 jIhAQP73qPC9NLejloBjEhosqmLzbZDc6rtdbuHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731192AbfKPPxS (ORCPT
+        id S1731644AbfKPQBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:53:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34240 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:01:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731167AbfKPPxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:53:14 -0500
+        id S1731190AbfKPPxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:53:17 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6754621826;
-        Sat, 16 Nov 2019 15:53:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E54F421882;
+        Sat, 16 Nov 2019 15:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919593;
-        bh=luqP4xoGP1K9bacavhN3oKuBE214qMJYyj/o2cLvzy8=;
+        s=default; t=1573919597;
+        bh=I/rpMijM4yMNwtU+bEGKgo77Et0G0y1kjG99Mgh7nHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XSckj0T4uKpWqGKVTS+sMPYM/6HTHg9srJia4oTBYa8wa9pUR0UvttMF5cap1ykyf
-         iIG4wtD8rVOHYXaGLeHn3WxyIbcN+Dm9N6/Q9F4WJqC7gwvGrphiwkPCUih9IO5/jC
-         VQskYgvD3VbeZvIaDOIy1mzLaLE5rTPMlC7xCYFs=
+        b=DfgvXpTwEuDKYXtXcFBUC2RPGzNHPKvdT2N37SPvyqCp5++qfGzAfRefguY8PKFOP
+         3dB+hQLJUwoT7iYMNei+Y/mxzIkvnxZYnTsRQ5VrDzffmmTUyrMoSCqDVmgaJFVCIK
+         KbnxjLfp29jmN5s9HMcxoZ3GnDMOY9dt9EAxu4rw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+Cc:     Suganath Prabu <suganath-prabu.subramani@broadcom.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 81/99] wireless: airo: potential buffer overflow in sprintf()
-Date:   Sat, 16 Nov 2019 10:50:44 -0500
-Message-Id: <20191116155103.10971-81-sashal@kernel.org>
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 84/99] scsi: mpt3sas: Fix driver modifying persistent data in Manufacturing page11
+Date:   Sat, 16 Nov 2019 10:50:47 -0500
+Message-Id: <20191116155103.10971-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -60,38 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
 
-[ Upstream commit 3d39e1bb1c88f32820c5f9271f2c8c2fb9a52bac ]
+[ Upstream commit 97f35194093362a63b33caba2485521ddabe2c95 ]
 
-It looks like we wanted to print a maximum of BSSList_rid.ssidLen bytes
-of the ssid, but we accidentally use "%*s" (width) instead of "%.*s"
-(precision) so if the ssid doesn't have a NUL terminator this could lead
-to an overflow.
+Currently driver is modifying both current & NVRAM/persistent data in
+Manufacturing page11. Driver should change only current copy of
+Manufacturing page11. It should not modify the persistent data.
 
-Static analysis.  Not tested.
+So removed the section of code where driver is modifying the persistent
+data of Manufacturing page11.
 
-Fixes: e174961ca1a0 ("net: convert print_mac to %pM")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
+Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/cisco/airo.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/mpt3sas/mpt3sas_config.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/net/wireless/cisco/airo.c b/drivers/net/wireless/cisco/airo.c
-index 69b826d229c5b..04939e576ee02 100644
---- a/drivers/net/wireless/cisco/airo.c
-+++ b/drivers/net/wireless/cisco/airo.c
-@@ -5472,7 +5472,7 @@ static int proc_BSSList_open( struct inode *inode, struct file *file ) {
-            we have to add a spin lock... */
- 	rc = readBSSListRid(ai, doLoseSync, &BSSList_rid);
- 	while(rc == 0 && BSSList_rid.index != cpu_to_le16(0xffff)) {
--		ptr += sprintf(ptr, "%pM %*s rssi = %d",
-+		ptr += sprintf(ptr, "%pM %.*s rssi = %d",
- 			       BSSList_rid.bssid,
- 				(int)BSSList_rid.ssidLen,
- 				BSSList_rid.ssid,
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_config.c b/drivers/scsi/mpt3sas/mpt3sas_config.c
+index cebfd734fd769..a9fef0cd382bd 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_config.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_config.c
+@@ -674,10 +674,6 @@ mpt3sas_config_set_manufacturing_pg11(struct MPT3SAS_ADAPTER *ioc,
+ 	r = _config_request(ioc, &mpi_request, mpi_reply,
+ 	    MPT3_CONFIG_PAGE_DEFAULT_TIMEOUT, config_page,
+ 	    sizeof(*config_page));
+-	mpi_request.Action = MPI2_CONFIG_ACTION_PAGE_WRITE_NVRAM;
+-	r = _config_request(ioc, &mpi_request, mpi_reply,
+-	    MPT3_CONFIG_PAGE_DEFAULT_TIMEOUT, config_page,
+-	    sizeof(*config_page));
+  out:
+ 	return r;
+ }
 -- 
 2.20.1
 
