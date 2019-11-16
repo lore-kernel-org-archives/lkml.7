@@ -4,58 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 618B0C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3A7C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30B0020857
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEB0520857
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919557;
-	bh=XGeaBPaoTRyL12hk8l8n/RDBwwRN4upaOnS/zIqnn14=;
+	s=default; t=1573919560;
+	bh=dvvlDb/+0VMhtBKkl1moFhh/et82E8jtpyGoaFbPt7I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nv5zlsNbzY6MBCiAoYjN4omwv9BweOfdmpYsbddxt+Y49MvBb4K/MvwDL+ePybv97
-	 Wpr4k3Uno/UTv66uuCD6+A2V+HURZ0yj2OSbpWnypvsk5fCwPO4b5RlP0EjB+sfvA5
-	 AVl+C7Ii8TORfbJS19ybDFANo2nvLMIiIk6GzHTw=
+	b=s2Hr+3b9nGRRps44YjRWunLEm5oupzT6kNHOBr+nDZjR3okq4LygwMwwAi2IaXFTF
+	 sDOYMDvcgLaeAkNOw7wSQuCiO9QKLDyP91DfD3vWaDbojZSLbknQKFPG8xcnffkkz0
+	 bOiBtCYROEskPYL1XgbckMZXGwJcf0BPNcFi8WAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729588AbfKPPwf (ORCPT
+        id S1731057AbfKPPw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:52:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33300 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:52:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729889AbfKPPwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:52:30 -0500
+        id S1731007AbfKPPwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:52:21 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87F3520859;
-        Sat, 16 Nov 2019 15:52:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42E9020728;
+        Sat, 16 Nov 2019 15:52:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919549;
-        bh=XGeaBPaoTRyL12hk8l8n/RDBwwRN4upaOnS/zIqnn14=;
+        s=default; t=1573919541;
+        bh=dvvlDb/+0VMhtBKkl1moFhh/et82E8jtpyGoaFbPt7I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WUvf6MwO7FnRg6Dwaa2sVt6UwrKFGW2JR/00+rgEjJlIHkfTCeZZu+5/tPHze4KnB
-         yVKC0f1AEhXvx4+9tjrNroQR17Tz+UthT+fyRm6rVp/zIs6bZCdd2FO8yY8LogZpt2
-         Wm15ELzqno/tHOmCYvOp12Srpb5olC139bzwKs44=
+        b=O7dVi7VI6xUFGv7gJYMn0cvHgj6rKot0LCfaaEfKKpAAEDSOYNdtrHN4ufrI6mITe
+         dMDiIlt0g8iRoEfZ4TmAHjN5MlZKwDCr4m++3H+0qHK6rLJw+2xLr8hWudVSP0CO/P
+         I1QmPk7cu79HQHcFJqBDgnqD5FXHVTF70zdM9xSo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Ernesto=20A=2E=20Fern=C3=A1ndez?= 
-        <ernesto.mnd.fernandez@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Viacheslav Dubeyko <slava@dubeyko.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 60/99] hfs: fix BUG on bnode parent update
-Date:   Sat, 16 Nov 2019 10:50:23 -0500
-Message-Id: <20191116155103.10971-60-sashal@kernel.org>
+Cc:     Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 56/99] um: Make line/tty semantics use true write IRQ
+Date:   Sat, 16 Nov 2019 10:50:19 -0500
+Message-Id: <20191116155103.10971-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,43 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
+From: Anton Ivanov <anton.ivanov@cambridgegreys.com>
 
-[ Upstream commit ef75bcc5763d130451a99825f247d301088b790b ]
+[ Upstream commit 917e2fd2c53eb3c4162f5397555cbd394390d4bc ]
 
-hfs_brec_update_parent() may hit BUG_ON() if the first record of both a
-leaf node and its parent are changed, and if this forces the parent to
-be split.  It is not possible for this to happen on a valid hfs
-filesystem because the index nodes have fixed length keys.
+This fixes a long standing bug where large amounts of output
+could freeze the tty (most commonly seen on stdio console).
+While the bug has always been there it became more pronounced
+after moving to the new interrupt controller.
 
-For reasons I ignore, the hfs module does have support for a number of
-hfsplus features.  A corrupt btree header may report variable length
-keys and trigger this BUG, so it's better to fix it.
+The line semantics are now changed to have true IRQ write
+semantics which should further improve the tty/line subsystem
+stability and performance
 
-Link: http://lkml.kernel.org/r/cf9b02d57f806217a2b1bf5db8c3e39730d8f603.1535682463.git.ernesto.mnd.fernandez@gmail.com
-Signed-off-by: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Viacheslav Dubeyko <slava@dubeyko.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/hfs/brec.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/um/drivers/line.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/hfs/brec.c b/fs/hfs/brec.c
-index 2e713673df42f..85dab71bee74f 100644
---- a/fs/hfs/brec.c
-+++ b/fs/hfs/brec.c
-@@ -444,6 +444,7 @@ static int hfs_brec_update_parent(struct hfs_find_data *fd)
- 			/* restore search_key */
- 			hfs_bnode_read_key(node, fd->search_key, 14);
- 		}
-+		new_node = NULL;
+diff --git a/arch/um/drivers/line.c b/arch/um/drivers/line.c
+index 62087028a9ce1..d2ad45c101137 100644
+--- a/arch/um/drivers/line.c
++++ b/arch/um/drivers/line.c
+@@ -260,7 +260,7 @@ static irqreturn_t line_write_interrupt(int irq, void *data)
+ 	if (err == 0) {
+ 		spin_unlock(&line->lock);
+ 		return IRQ_NONE;
+-	} else if (err < 0) {
++	} else if ((err < 0) && (err != -EAGAIN)) {
+ 		line->head = line->buffer;
+ 		line->tail = line->buffer;
  	}
- 
- 	if (!rec && node->parent)
 -- 
 2.20.1
 
