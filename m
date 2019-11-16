@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5530C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2ACC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0B392089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06F222089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920277;
-	bh=05CNfXklO5AkLQeHnG44yjPSeuDjG6GdgTpsbdsJ3LU=;
+	s=default; t=1573920285;
+	bh=zVi3l48Dj1pEq/lXVT7CWip3HEIXhUTRhaX6jVURMJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GjKsBo/1BDjlnllp7o+CV5GpminlLM3aohNOCuLs3wePZ5QHB6K9hFF6R0FI0izqT
-	 nkOdH0mdhlq05AMa/wTT0hUeqK37IEHwWPH+8gRgPQa6Er0ibq1v1OQm+yyhwiSdrW
-	 n8+QuIOdld5oOXIa78u0UqgDMUIyBKEkccdk4gd4=
+	b=arTsdQrDLjcFwad7gFvkR/KMheEBJ2oqeB5l/ImzUic/NCoOP+84ocIV1/UEVtea1
+	 BKJNKiENL8vVvDl1prdrcqYhdqmLQG/rcGrSUjBhUY0XIjTyDy8qZCVS4MYkP6zayk
+	 j7NtesSpvD7xjsX32GwZP0br+6zui4DrOrzu2Ww8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731437AbfKPQEg (ORCPT
+        id S1729702AbfKPQEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:04:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60392 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:04:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729234AbfKPPvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:51:38 -0500
+        id S1730790AbfKPPvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:51:35 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DF9120854;
-        Sat, 16 Nov 2019 15:51:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0A9A20723;
+        Sat, 16 Nov 2019 15:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919498;
-        bh=05CNfXklO5AkLQeHnG44yjPSeuDjG6GdgTpsbdsJ3LU=;
+        s=default; t=1573919495;
+        bh=zVi3l48Dj1pEq/lXVT7CWip3HEIXhUTRhaX6jVURMJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bZsYC00iAtdlmq0jRwLtkGi6MURZwmfvqZsQUhdyV6L9x9Av+C3qlNBUR/4WG1E/F
-         T/VbussOGfL1/UWYILuu+coC8uFBN0F0Ch+D0MUXSz+Cy4eziRhtNJhk9FhZgK2UhC
-         1v34SGtOk6+83DVjFBPd+3KNnKuiv10OFPQeCK8Q=
+        b=1658jAuWJtHucIY4OuBgqjdUrZVWQ+ntPrMNMmssUR57W4y4LQ9h4CmbXf2m9c6fZ
+         5W3+56yf8ibonT+kQoQyA369tu1SozE9JUpUAyVcnRo1Fp2/BVVOF5zHN9lZpLPTUI
+         EVXLcZQz/O3pkmjqYk9uVyoJFvyCOH9KpvhUxkEs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kyeongdon Kim <kyeongdon.kim@lge.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 25/99] net: fix warning in af_unix
-Date:   Sat, 16 Nov 2019 10:49:48 -0500
-Message-Id: <20191116155103.10971-25-sashal@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, dc395x@twibble.org,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 23/99] scsi: dc395x: fix dma API usage in srb_done
+Date:   Sat, 16 Nov 2019 10:49:46 -0500
+Message-Id: <20191116155103.10971-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -59,35 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kyeongdon Kim <kyeongdon.kim@lge.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 33c4368ee2589c165aebd8d388cbd91e9adb9688 ]
+[ Upstream commit 3a5bd7021184dec2946f2a4d7a8943f8a5713e52 ]
 
-This fixes the "'hash' may be used uninitialized in this function"
+We can't just transfer ownership to the CPU and then unmap, as this will
+break with swiotlb.
 
-net/unix/af_unix.c:1041:20: warning: 'hash' may be used uninitialized in this function [-Wmaybe-uninitialized]
-  addr->hash = hash ^ sk->sk_type;
+Instead unmap the command and sense buffer a little earlier in the I/O
+completion handler and get rid of the pci_dma_sync_sg_for_cpu call
+entirely.
 
-Signed-off-by: Kyeongdon Kim <kyeongdon.kim@lge.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/unix/af_unix.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/dc395x.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
-index cecf51a5aec4f..32ae82a5596d9 100644
---- a/net/unix/af_unix.c
-+++ b/net/unix/af_unix.c
-@@ -224,6 +224,8 @@ static inline void unix_release_addr(struct unix_address *addr)
+diff --git a/drivers/scsi/dc395x.c b/drivers/scsi/dc395x.c
+index 5ee7f44cf869b..9da0ac360848f 100644
+--- a/drivers/scsi/dc395x.c
++++ b/drivers/scsi/dc395x.c
+@@ -3450,14 +3450,12 @@ static void srb_done(struct AdapterCtlBlk *acb, struct DeviceCtlBlk *dcb,
+ 		}
+ 	}
  
- static int unix_mkname(struct sockaddr_un *sunaddr, int len, unsigned int *hashp)
- {
-+	*hashp = 0;
+-	if (dir != PCI_DMA_NONE && scsi_sg_count(cmd))
+-		pci_dma_sync_sg_for_cpu(acb->dev, scsi_sglist(cmd),
+-					scsi_sg_count(cmd), dir);
+-
+ 	ckc_only = 0;
+ /* Check Error Conditions */
+       ckc_e:
+ 
++	pci_unmap_srb(acb, srb);
 +
- 	if (len <= sizeof(short) || len > sizeof(*sunaddr))
- 		return -EINVAL;
- 	if (!sunaddr || sunaddr->sun_family != AF_UNIX)
+ 	if (cmd->cmnd[0] == INQUIRY) {
+ 		unsigned char *base = NULL;
+ 		struct ScsiInqData *ptr;
+@@ -3511,7 +3509,6 @@ static void srb_done(struct AdapterCtlBlk *acb, struct DeviceCtlBlk *dcb,
+ 			cmd, cmd->result);
+ 		srb_free_insert(acb, srb);
+ 	}
+-	pci_unmap_srb(acb, srb);
+ 
+ 	cmd->scsi_done(cmd);
+ 	waiting_process_next(acb);
 -- 
 2.20.1
 
