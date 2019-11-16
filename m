@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37494C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 616BFC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10D2120842
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 388B320857
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919532;
-	bh=dG+zSrw7iEHZfFQEuCJ+9sfjj9LTzYBKGyDmPJzLAbU=;
+	s=default; t=1573919535;
+	bh=mDMQRLefT1wXgAOc2ntoJDLCRHpGLUSN9tXIFTlyFbs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1NETVNeMkURH34leS1h9HLVXnQEAsMyvzNx/7BMui3RAYGGX7n0Mj2yMBNz8QXJ7I
-	 tFJWK+nAonrIZ0AxI/zgkaRxoq4p/qgCTW7KjzQGfrobViwIj7gL61Q9Yy+vklK7dE
-	 bUMbT70FtcjHCDsXrsGqIbzGIL7ylw8VzWr3RVZ0=
+	b=Q7y0GSKHjW6TiIMCD385XjLDOEZWDqj7RE3/kALZy+pR5VDaEBD8F25Zh9HdvWuhA
+	 OgmABKl1KLeIra1ew9pgTczVv/YbBpLMuelcryEqt/pnHc71zKEcTSczSVzgcDb42s
+	 6GDFUxc4uOJY8mdDfDFejFL361vIIu0sDHAg2as8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730987AbfKPPwK (ORCPT
+        id S1730997AbfKPPwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:52:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60980 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:52:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729387AbfKPPwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:52:05 -0500
+        id S1730984AbfKPPwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:52:10 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE3C821906;
-        Sat, 16 Nov 2019 15:52:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A3C62077B;
+        Sat, 16 Nov 2019 15:52:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919525;
-        bh=dG+zSrw7iEHZfFQEuCJ+9sfjj9LTzYBKGyDmPJzLAbU=;
+        s=default; t=1573919529;
+        bh=mDMQRLefT1wXgAOc2ntoJDLCRHpGLUSN9tXIFTlyFbs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MbfiH0NS5dAX2UbgKYBsBzkL5qYWtQOCe7pK0GA1nU9j479EFhgn2xQjs+vDKUPHs
-         mTWnSdU99fYqOWJiKe/xba4uhnGuVRvDORgMhbIt1DN2dELf+bVMZn0vImMmGV1OYV
-         KVLgJP7rcqui0nOWEyr2RPtWlkBwGxClxnXFiQmk=
+        b=cmF2G6RGP+aGbTEPyO/qhyA1K+Cjk/Ox3uofs57Tp2obI+K5aF56U+bTCCLQll1mB
+         wQE/0/BKN1JA2qSvYsxa89uPuaOmPanDyaknQAj0m4iQpaPi6/7rbhcKR6zT5bb5oT
+         X4gLTOR+Vtb/dplZSlTOeCBkJ4X30owXE2eAcEnc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 47/99] mfd: max8997: Enale irq-wakeup unconditionally
-Date:   Sat, 16 Nov 2019 10:50:10 -0500
-Message-Id: <20191116155103.10971-47-sashal@kernel.org>
+Cc:     Felipe Rechia <felipe.rechia@datacom.com.br>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 50/99] powerpc/process: Fix flush_all_to_thread for SPE
+Date:   Sat, 16 Nov 2019 10:50:13 -0500
+Message-Id: <20191116155103.10971-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -60,64 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Felipe Rechia <felipe.rechia@datacom.com.br>
 
-[ Upstream commit efddff27c886e729a7f84a7205bd84d7d4af7336 ]
+[ Upstream commit e901378578c62202594cba0f6c076f3df365ec91 ]
 
-IRQ wake up support for MAX8997 driver was initially configured by
-respective property in pdata. However, after the driver conversion to
-device-tree, setting it was left as 'todo'. Nowadays most of other PMIC MFD
-drivers initialized from device-tree assume that they can be an irq wakeup
-source, so enable it also for MAX8997. This fixes support for wakeup from
-MAX8997 RTC alarm.
+Fix a bug introduced by the creation of flush_all_to_thread() for
+processors that have SPE (Signal Processing Engine) and use it to
+compute floating-point operations.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+>From userspace perspective, the problem was seen in attempts of
+computing floating-point operations which should generate exceptions.
+For example:
+
+  fork();
+  float x = 0.0 / 0.0;
+  isnan(x);           // forked process returns False (should be True)
+
+The operation above also should always cause the SPEFSCR FINV bit to
+be set. However, the SPE floating-point exceptions were turned off
+after a fork().
+
+Kernel versions prior to the bug used flush_spe_to_thread(), which
+first saves SPEFSCR register values in tsk->thread and then calls
+giveup_spe(tsk).
+
+After commit 579e633e764e, the save_all() function was called first
+to giveup_spe(), and then the SPEFSCR register values were saved in
+tsk->thread. This would save the SPEFSCR register values after
+disabling SPE for that thread, causing the bug described above.
+
+Fixes 579e633e764e ("powerpc: create flush_all_to_thread()")
+Signed-off-by: Felipe Rechia <felipe.rechia@datacom.com.br>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/max8997.c       | 8 +-------
- include/linux/mfd/max8997.h | 1 -
- 2 files changed, 1 insertion(+), 8 deletions(-)
+ arch/powerpc/kernel/process.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/mfd/max8997.c b/drivers/mfd/max8997.c
-index 2d6e2c3927862..4a2fc59d59016 100644
---- a/drivers/mfd/max8997.c
-+++ b/drivers/mfd/max8997.c
-@@ -155,12 +155,6 @@ static struct max8997_platform_data *max8997_i2c_parse_dt_pdata(
- 
- 	pd->ono = irq_of_parse_and_map(dev->of_node, 1);
- 
--	/*
--	 * ToDo: the 'wakeup' member in the platform data is more of a linux
--	 * specfic information. Hence, there is no binding for that yet and
--	 * not parsed here.
--	 */
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index 47c6c0401b3a2..54c95e7c74cce 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -576,12 +576,11 @@ void flush_all_to_thread(struct task_struct *tsk)
+ 	if (tsk->thread.regs) {
+ 		preempt_disable();
+ 		BUG_ON(tsk != current);
+-		save_all(tsk);
 -
- 	return pd;
- }
+ #ifdef CONFIG_SPE
+ 		if (tsk->thread.regs->msr & MSR_SPE)
+ 			tsk->thread.spefscr = mfspr(SPRN_SPEFSCR);
+ #endif
++		save_all(tsk);
  
-@@ -248,7 +242,7 @@ static int max8997_i2c_probe(struct i2c_client *i2c,
- 	 */
- 
- 	/* MAX8997 has a power button input. */
--	device_init_wakeup(max8997->dev, pdata->wakeup);
-+	device_init_wakeup(max8997->dev, true);
- 
- 	return ret;
- 
-diff --git a/include/linux/mfd/max8997.h b/include/linux/mfd/max8997.h
-index cf815577bd686..3ae1fe743bc34 100644
---- a/include/linux/mfd/max8997.h
-+++ b/include/linux/mfd/max8997.h
-@@ -178,7 +178,6 @@ struct max8997_led_platform_data {
- struct max8997_platform_data {
- 	/* IRQ */
- 	int ono;
--	int wakeup;
- 
- 	/* ---- PMIC ---- */
- 	struct max8997_regulator_data *regulators;
+ 		preempt_enable();
+ 	}
 -- 
 2.20.1
 
