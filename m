@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E59C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA3CC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F28E32089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F38CA21479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919880;
-	bh=i4QKo1c3jisTV2BspdLecAEOwACkSI6dwzcxae6X5fI=;
+	s=default; t=1573919884;
+	bh=GrS/sfvynxkd0Z9uBnjBDVMYI0Mc/xdQEjRQgmhPX4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r95Ahq0D9ievsS6PN0UTEEAarKb82YHgkEgpW9BDpGR2kboR4IeprixHl/LXGhc18
-	 ZAGQFA4w4A/AOmXWueWX+KRCmsLfzbXQi2MOMuwm9bjm+25T+ziZuEShUOeq32jBkD
-	 Pshv5nU98S1Ho3xlm9LaGHZyUtjcliaabRn86v2k=
+	b=R8J/Ba40kHGLxYekrTA86RrcMBmxY0q2nSV7wXkRUhNsaeOhROAlDsC2dFfqT1aWq
+	 SjAs7dOFVv9cMMz27mUSZK09NRIb/nV2LtzvXm1QTghRSkOd8dIa4Yayq+yJgVocI8
+	 fLQRCHPed3dIsbskbMnQnK5KS+XrEXnkoV4siPOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731000AbfKPP56 (ORCPT
+        id S1730109AbfKPPyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:57:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36108 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:54:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730145AbfKPPy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:54:27 -0500
+        id S1731405AbfKPPyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:54:14 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91FB8208E3;
-        Sat, 16 Nov 2019 15:54:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8C162186D;
+        Sat, 16 Nov 2019 15:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919666;
-        bh=i4QKo1c3jisTV2BspdLecAEOwACkSI6dwzcxae6X5fI=;
+        s=default; t=1573919653;
+        bh=GrS/sfvynxkd0Z9uBnjBDVMYI0Mc/xdQEjRQgmhPX4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ghND9pJ10iJPn3seTYiL7rttUJQVIySVfAlYxSW08UQnUsAXPrazLsNrpDXgtoco1
-         pKhMGDPrYk8+79R72fqTvPJxI0h7U8V0Fa+lhlZ7ZLYkSHNEO3idBu8gUBPdOQqxJf
-         /qaYUQE2mk2owMY5Zey8pONJl+F0YrovKgTz8h2Q=
+        b=o1kQhy2zZkJPGCkx3oDbliHrL0l/KdDM1Q5AK5RoV0UGsCLnyxefR8Eqk+72ITBhY
+         bRSK90zzCl2C2s1I71NHjsHQlodb0nJK5ZqehhnSj2TV4H0V6obsmuxRWJR7I6kSEl
+         AtvxQQP1TVaHcw+RqD2EuOwfjhs4MasydY1T/LbM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 39/77] thermal: rcar_thermal: Prevent hardware access during system suspend
-Date:   Sat, 16 Nov 2019 10:53:01 -0500
-Message-Id: <20191116155339.11909-39-sashal@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 27/77] SUNRPC: Fix a compile warning for cmpxchg64()
+Date:   Sat, 16 Nov 2019 10:52:49 -0500
+Message-Id: <20191116155339.11909-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,44 +59,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 3a31386217628ffe2491695be2db933c25dde785 ]
+[ Upstream commit e732f4485a150492b286f3efc06f9b34dd6b9995 ]
 
-On r8a7791/koelsch, sometimes the following message is printed during
-system suspend:
-
-    rcar_thermal e61f0000.thermal: thermal sensor was broken
-
-This happens if the workqueue runs while the device is already
-suspended.  Fix this by using the freezable system workqueue instead,
-cfr. commit 51e20d0e3a60cf46 ("thermal: Prevent polling from happening
-during system suspend").
-
-Fixes: e0a5172e9eec7f0d ("thermal: rcar: add interrupt support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/rcar_thermal.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/sunrpc/auth_gss/gss_krb5_seal.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/thermal/rcar_thermal.c b/drivers/thermal/rcar_thermal.c
-index 13d01edc7a043..487c5cd7516c0 100644
---- a/drivers/thermal/rcar_thermal.c
-+++ b/drivers/thermal/rcar_thermal.c
-@@ -350,8 +350,8 @@ static irqreturn_t rcar_thermal_irq(int irq, void *data)
- 	rcar_thermal_for_each_priv(priv, common) {
- 		if (rcar_thermal_had_changed(priv, status)) {
- 			rcar_thermal_irq_disable(priv);
--			schedule_delayed_work(&priv->work,
--					      msecs_to_jiffies(300));
-+			queue_delayed_work(system_freezable_wq, &priv->work,
-+					   msecs_to_jiffies(300));
- 		}
- 	}
+diff --git a/net/sunrpc/auth_gss/gss_krb5_seal.c b/net/sunrpc/auth_gss/gss_krb5_seal.c
+index 1d74d653e6c05..ad0dcb69395d7 100644
+--- a/net/sunrpc/auth_gss/gss_krb5_seal.c
++++ b/net/sunrpc/auth_gss/gss_krb5_seal.c
+@@ -63,6 +63,7 @@
+ #include <linux/sunrpc/gss_krb5.h>
+ #include <linux/random.h>
+ #include <linux/crypto.h>
++#include <linux/atomic.h>
  
+ #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
+ # define RPCDBG_FACILITY        RPCDBG_AUTH
 -- 
 2.20.1
 
