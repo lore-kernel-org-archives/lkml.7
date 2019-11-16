@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0298AC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A48CC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2F23214DE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD73021479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:18:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921064;
-	bh=9uyfzauE58ZzV9qho2Uq/YQRYCXqOI53XmSwiLS9fDE=;
+	s=default; t=1573921082;
+	bh=0/v6sglde6ETDy/cKQP12kRzT3Ku99PNjbTwDK6rlkA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CIoDZ7D2xNtaLC4spHjwrK49/SnedCkf3GCCtj3w+ENhkbtk38QjlKiXVfOKWYP8s
-	 FgRLlIHGS47Jmk6F2lBxe3+EsxiMyEzyWmpmk+1VHB8+rRpJA1bFvksOgyiN/E/N/9
-	 BAuFljP5tG92lWlIPbx8adYV6/joMrBplAOHCKLw=
+	b=2MYejlSvMC6k1dqajN6s27XKYytpMxlyoeyvmSd7WN5QVctQkqMI589P7PSUDmdDB
+	 YoQtXCY/sgYqZh/wNxNQjfW1lle6oGbDJf0xfEYI31FuYEo91Gml2iMRVa+sPzGS/X
+	 wIS/MOQUrQpTWCdsr/U95EilZsaAbVRxHZUtpCGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732010AbfKPQRn (ORCPT
+        id S1730895AbfKPQSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:17:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53230 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:18:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729461AbfKPPqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:46:44 -0500
+        id S1728764AbfKPPqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:33 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FC932089D;
-        Sat, 16 Nov 2019 15:46:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9B3E20862;
+        Sat, 16 Nov 2019 15:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919203;
-        bh=9uyfzauE58ZzV9qho2Uq/YQRYCXqOI53XmSwiLS9fDE=;
+        s=default; t=1573919193;
+        bh=0/v6sglde6ETDy/cKQP12kRzT3Ku99PNjbTwDK6rlkA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sYkZsYT1FG72hrdW9PICtjdz27y0ivASTwI5YdACbG7yH4erdo4pMWz9yujNO3LYO
-         cX6lx9lUSVCbgcpcbPAwYYRASLd6fCRhVEehJsR22PKsAKxFbHQ8YdfaQ4mqYA+6i2
-         5XWNiaNPs5WtK5VKki4WVt1kVZgwlao07YsbaITA=
+        b=wnsM+9T6493SapgfKsWAS1hR9uyOHGy+kd6Zng+8oBER9SNZkw2pxYqzPnl6XShzZ
+         FN39pSfznh/yexuPNaKwMOMZ2UGLBKLinXG/Ym61qyqSW6Y3nT/0Y6dv5ndodMNHXM
+         aEWTTgFyoyMY/c5qHe96+S9pOe/LQmKfoJuZZepA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 206/237] net: dsa: bcm_sf2: Turn on PHY to allow successful registration
-Date:   Sat, 16 Nov 2019 10:40:41 -0500
-Message-Id: <20191116154113.7417-206-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 201/237] wlcore: Fix the return value in case of error in 'wlcore_vendor_cmd_smart_config_start()'
+Date:   Sat, 16 Nov 2019 10:40:36 -0500
+Message-Id: <20191116154113.7417-201-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -59,44 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit c04a17d2a9ccf1eaba1c5a56f83e997540a70556 ]
+[ Upstream commit 3419348a97bcc256238101129d69b600ceb5cc70 ]
 
-We are binding to the PHY using the SF2 slave MDIO bus that we create,
-binding involves reading the PHY's MII_PHYSID1/2 which won't be possible
-if the PHY is turned off. Temporarily turn it on/off for the bus probing
-to succeeed. This fixes unbind/bind problems where the port connecting
-to that PHY would be in error since it could not connect to it.
+We return 0 unconditionally at the end of
+'wlcore_vendor_cmd_smart_config_start()'.
+However, 'ret' is set to some error codes in several error handling paths
+and we already return some error codes at the beginning of the function.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Return 'ret' instead to propagate the error code.
+
+Fixes: 80ff8063e87c ("wlcore: handle smart config vendor commands")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/bcm_sf2.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/wireless/ti/wlcore/vendor_cmd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index ca3655d28e00f..17cec68e56b4f 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -1099,12 +1099,16 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
- 		return ret;
- 	}
+diff --git a/drivers/net/wireless/ti/wlcore/vendor_cmd.c b/drivers/net/wireless/ti/wlcore/vendor_cmd.c
+index dbe78d8491eff..7f34ec077ee57 100644
+--- a/drivers/net/wireless/ti/wlcore/vendor_cmd.c
++++ b/drivers/net/wireless/ti/wlcore/vendor_cmd.c
+@@ -70,7 +70,7 @@ wlcore_vendor_cmd_smart_config_start(struct wiphy *wiphy,
+ out:
+ 	mutex_unlock(&wl->mutex);
  
-+	bcm_sf2_gphy_enable_set(priv->dev->ds, true);
-+
- 	ret = bcm_sf2_mdio_register(ds);
- 	if (ret) {
- 		pr_err("failed to register MDIO bus\n");
- 		return ret;
- 	}
+-	return 0;
++	return ret;
+ }
  
-+	bcm_sf2_gphy_enable_set(priv->dev->ds, false);
-+
- 	ret = bcm_sf2_cfp_rst(priv);
- 	if (ret) {
- 		pr_err("failed to reset CFP\n");
+ static int
 -- 
 2.20.1
 
