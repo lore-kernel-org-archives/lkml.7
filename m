@@ -2,156 +2,215 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C71F1C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 08:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A6AC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 09:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D3E420723
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 08:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F4582072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 09:20:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bYBP+Mc0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eADdUdIm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbfKPIst (ORCPT
+        id S1727117AbfKPJUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 03:48:49 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35048 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfKPIst (ORCPT
+        Sat, 16 Nov 2019 04:20:55 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36673 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726831AbfKPJUy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 03:48:49 -0500
-Received: by mail-wm1-f68.google.com with SMTP id 8so12934567wmo.0
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 00:48:46 -0800 (PST)
+        Sat, 16 Nov 2019 04:20:54 -0500
+Received: by mail-pf1-f195.google.com with SMTP id b19so7853675pfd.3;
+        Sat, 16 Nov 2019 01:20:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wXK8i3dcP0wrlupZd2syn0RAvq63einR0Js8n3kXDKU=;
-        b=bYBP+Mc0aBAuqpK0IA27BZ/v66eES1UImafLgG20OvK0dZt/CYrruegMIC55VjXffY
-         sZdUbk8h04brIJHW8PLu+oX4QbxttezEZxdVB4lLQETTOclFjroIPfZJP3qTcAskBS6G
-         uZdc1EQuWmjFeTWkOvEd6IDZpPPD/w/E6l9f1ohTLg5feDW/ckxMQrVyH/VqAizzTvhp
-         30zylcW+gVWSGxsw/bBjJsvJG/l9JXEOpsWFbWbbB7uUZOnNutsQg+79Qmsal7FfLwBy
-         nCCEDoCC3v24x7Fl1zu5R9/PJ3GqBNMZf1p9MpdqkMiO4LTtcQCbpr1+zNwkBCj3/9yN
-         DJJQ==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=GGXaHDFHZ+2+1WtNE16sJMzf7vyeAFnb5+gKH7ZhGsQ=;
+        b=eADdUdImeONTuusTm6sLbAaB/+zl0npKpqx00adk3wuTJDA5gTr+loTKl/IJh903OM
+         /O8wmWWK57hQsobqUdU6aY/9yr8sKiut7ZeMocm4niFTBg1nPqx5HaR8L/2NPA12L7U4
+         V4Tg5ssc4ukqrObYzVT/bxvfmbyg49ovyzyZ5XHtn87RwceJAXq+9SlJ1kyNFxYQoqxU
+         dyKsLCBnfqUzGkt9yY/XK5xLngf9jtyfM1lQ0M2GZricXzWFLmpjy1Tk4RI9P5vuV8qT
+         fpPBtzFkVOdUgBsxH2Pp0t6F0O+X0DkwjEPvuo5m2M2uCsdGTXjiFgHYSvwOQrI9hl20
+         UkhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wXK8i3dcP0wrlupZd2syn0RAvq63einR0Js8n3kXDKU=;
-        b=LL8x1Fbb8A648EatUHiv0lSxghVi8BB8TQUXBKcudJDNePC7Azmsi3duYGdltSn9OC
-         EfN0o7hmlcxoS+ENODrD/9vrtY1/I7d+NnJnrOhQuZKjTyW77SfuRajsineoX6bolFq3
-         Pi5XWa8C9KdrExtGwSQTezhFAdQ3zS0Tl3VX1UBWE1pjlZXSPaIZnIYTKna+knOIg63u
-         20hxtBPwF8Pcf01RbLCPb9Vzj6lLO8Lve65WvHHnBxlxao0uVm5vJ+v7WrymFJvzkwPn
-         WEhFDskedwHL3TTXGOA7c1jyglfhRmJSIBcqg7hU2JPOARwiWNAFaodwAmAstUqUCXMv
-         BXzw==
-X-Gm-Message-State: APjAAAWs2g5ob31DeyjfMGYPMEoWU6qCHFnPqymSzQXym/yXsBAF8S+Y
-        +VhhoPuQR2LYZRDYuxTUSXU=
-X-Google-Smtp-Source: APXvYqw4PZvztSBAngMLI49hn91f34UJivYIkbJKvbHV+zh8P07Mp1MiEjQwEVWaOshFXaoSXZhPOg==
-X-Received: by 2002:a1c:9804:: with SMTP id a4mr18594011wme.57.1573894125367;
-        Sat, 16 Nov 2019 00:48:45 -0800 (PST)
-Received: from localhost.localdomain ([104.238.174.53])
-        by smtp.gmail.com with ESMTPSA id g184sm13460814wma.8.2019.11.16.00.48.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Nov 2019 00:48:43 -0800 (PST)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=GGXaHDFHZ+2+1WtNE16sJMzf7vyeAFnb5+gKH7ZhGsQ=;
+        b=GjCKKD4hYDUO7fCkHqBXm/tRLe7vZ/mzxVEIz03ZfA7YsbYTD/77t0fw2xb7HZS5gX
+         1MbXMSwZakrPiFHTju8zwUi8gylLdR7VPZlkLtHomzCnGMpIh2BwAjcbTmj1shusEhmC
+         C+oS+Jja0S+6FDs20S0DOwAP78+sdjs/+xdny5YRP8w4uzJGPRqWMFhVX+z8Xstm95uh
+         IJh2oHaJn/c/BvIBl9oG6WfrEVi7Tre2zxtI0dTWDhAOtspsaIYQ7Chq//lXBKwxF3ZB
+         qaCMCIHq3VhJGVjuChWttbBYlrMw9iNnbm9Uo7rnLrw5GbiaxojYIsCoE0xOmrCplSbI
+         9Ybw==
+X-Gm-Message-State: APjAAAUnB1yekZ/hb6Asz4xkFKTFla2YFMImT+zNRwZYoClOHVjYxH9e
+        03xObiyPAy5TpIb8ArJiv30=
+X-Google-Smtp-Source: APXvYqwQBw6GfezNO8rLaeZ9qWi0JJCVBlWN4XFzwkiENqhWHC+SPvprxLEhu1y9zp6N662a+qQlnw==
+X-Received: by 2002:a63:c04f:: with SMTP id z15mr1859320pgi.52.1573896053697;
+        Sat, 16 Nov 2019 01:20:53 -0800 (PST)
+Received: from nishad ([106.51.232.103])
+        by smtp.gmail.com with ESMTPSA id 67sm13796014pjz.27.2019.11.16.01.20.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 16 Nov 2019 01:20:53 -0800 (PST)
+Date:   Sat, 16 Nov 2019 14:50:45 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Sunil Goutham <sgoutham@marvell.com>,
+        Linu Cherian <lcherian@marvell.com>,
+        Geetha sowjanya <gakula@marvell.com>,
+        Jerin Jacob <jerinj@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [RESEND PATCH] x86/nmi: remove the irqwork for long nmi handler duration warning
-Date:   Sat, 16 Nov 2019 16:48:35 +0800
-Message-Id: <20191116084835.3524-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Joe Perches <joe@perches.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] octeontx2-af: Use the correct style for SPDX License
+ Identifier
+Message-ID: <20191116092042.GA4313@nishad>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First, printk is NMI context safe now since the safe printk has been
-implemented. The safe printk will help us to do such work in its irqwork.
+This patch corrects the SPDX License Identifier style in
+header files related to Marvell OcteonTX2 network devices.
+It uses an expilict block comment for the SPDX License
+Identifier.
 
-Second, the NMI irqwork actually does not work if a NMI handler causes
-watchdog timeout panic. The NMI irqwork have no chance to run in such
-case, while the safe printk will flush its per-cpu buffer before panic.
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
 ---
- arch/x86/include/asm/nmi.h |  1 -
- arch/x86/kernel/nmi.c      | 20 +++++++++-----------
- 2 files changed, 9 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/marvell/octeontx2/af/cgx.h         | 4 ++--
+ drivers/net/ethernet/marvell/octeontx2/af/cgx_fw_if.h   | 4 ++--
+ drivers/net/ethernet/marvell/octeontx2/af/common.h      | 4 ++--
+ drivers/net/ethernet/marvell/octeontx2/af/mbox.h        | 4 ++--
+ drivers/net/ethernet/marvell/octeontx2/af/npc.h         | 4 ++--
+ drivers/net/ethernet/marvell/octeontx2/af/npc_profile.h | 4 ++--
+ drivers/net/ethernet/marvell/octeontx2/af/rvu.h         | 4 ++--
+ drivers/net/ethernet/marvell/octeontx2/af/rvu_reg.h     | 4 ++--
+ drivers/net/ethernet/marvell/octeontx2/af/rvu_struct.h  | 4 ++--
+ 9 files changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
-index 75ded1d13d98..9d5d949e662e 100644
---- a/arch/x86/include/asm/nmi.h
-+++ b/arch/x86/include/asm/nmi.h
-@@ -41,7 +41,6 @@ struct nmiaction {
- 	struct list_head	list;
- 	nmi_handler_t		handler;
- 	u64			max_duration;
--	struct irq_work		irq_work;
- 	unsigned long		flags;
- 	const char		*name;
- };
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index 4df7705022b9..0fa51f80ad73 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -104,18 +104,22 @@ static int __init nmi_warning_debugfs(void)
- }
- fs_initcall(nmi_warning_debugfs);
- 
--static void nmi_max_handler(struct irq_work *w)
-+static void nmi_check_duration(struct nmiaction *action, u64 duration)
- {
--	struct nmiaction *a = container_of(w, struct nmiaction, irq_work);
- 	int remainder_ns, decimal_msecs;
--	u64 whole_msecs = READ_ONCE(a->max_duration);
-+	u64 whole_msecs = READ_ONCE(action->max_duration);
-+
-+	if (duration < nmi_longest_ns || duration < action->max_duration)
-+		return;
-+
-+	action->max_duration = duration;
- 
- 	remainder_ns = do_div(whole_msecs, (1000 * 1000));
- 	decimal_msecs = remainder_ns / 1000;
- 
- 	printk_ratelimited(KERN_INFO
- 		"INFO: NMI handler (%ps) took too long to run: %lld.%03d msecs\n",
--		a->handler, whole_msecs, decimal_msecs);
-+		action->handler, whole_msecs, decimal_msecs);
- }
- 
- static int nmi_handle(unsigned int type, struct pt_regs *regs)
-@@ -142,11 +146,7 @@ static int nmi_handle(unsigned int type, struct pt_regs *regs)
- 		delta = sched_clock() - delta;
- 		trace_nmi_handler(a->handler, (int)delta, thishandled);
- 
--		if (delta < nmi_longest_ns || delta < a->max_duration)
--			continue;
--
--		a->max_duration = delta;
--		irq_work_queue(&a->irq_work);
-+		nmi_check_duration(a, delta);
- 	}
- 
- 	rcu_read_unlock();
-@@ -164,8 +164,6 @@ int __register_nmi_handler(unsigned int type, struct nmiaction *action)
- 	if (!action->handler)
- 		return -EINVAL;
- 
--	init_irq_work(&action->irq_work, nmi_max_handler);
--
- 	raw_spin_lock_irqsave(&desc->lock, flags);
- 
- 	/*
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/cgx.h b/drivers/net/ethernet/marvell/octeontx2/af/cgx.h
+index 206dc5dc1df8..5c1f389e3320 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/cgx.h
++++ b/drivers/net/ethernet/marvell/octeontx2/af/cgx.h
+@@ -1,5 +1,5 @@
+-/* SPDX-License-Identifier: GPL-2.0
+- * Marvell OcteonTx2 CGX driver
++/* SPDX-License-Identifier: GPL-2.0 */
++/*  Marvell OcteonTx2 CGX driver
+  *
+  * Copyright (C) 2018 Marvell International Ltd.
+  *
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/cgx_fw_if.h b/drivers/net/ethernet/marvell/octeontx2/af/cgx_fw_if.h
+index fb3ba4968a9b..473d9751601f 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/cgx_fw_if.h
++++ b/drivers/net/ethernet/marvell/octeontx2/af/cgx_fw_if.h
+@@ -1,5 +1,5 @@
+-/* SPDX-License-Identifier: GPL-2.0
+- * Marvell OcteonTx2 CGX driver
++/* SPDX-License-Identifier: GPL-2.0 */
++/*  Marvell OcteonTx2 CGX driver
+  *
+  * Copyright (C) 2018 Marvell International Ltd.
+  *
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/common.h b/drivers/net/ethernet/marvell/octeontx2/af/common.h
+index e332e82fc066..413c3f254cf8 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/common.h
++++ b/drivers/net/ethernet/marvell/octeontx2/af/common.h
+@@ -1,5 +1,5 @@
+-/* SPDX-License-Identifier: GPL-2.0
+- * Marvell OcteonTx2 RVU Admin Function driver
++/* SPDX-License-Identifier: GPL-2.0 */
++/*  Marvell OcteonTx2 RVU Admin Function driver
+  *
+  * Copyright (C) 2018 Marvell International Ltd.
+  *
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/mbox.h b/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
+index 76a4575d18ff..75439fce0505 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
++++ b/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
+@@ -1,5 +1,5 @@
+-/* SPDX-License-Identifier: GPL-2.0
+- * Marvell OcteonTx2 RVU Admin Function driver
++/* SPDX-License-Identifier: GPL-2.0 */
++/*  Marvell OcteonTx2 RVU Admin Function driver
+  *
+  * Copyright (C) 2018 Marvell International Ltd.
+  *
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/npc.h b/drivers/net/ethernet/marvell/octeontx2/af/npc.h
+index 8d6d90fdfb73..5d4df315a0e1 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/npc.h
++++ b/drivers/net/ethernet/marvell/octeontx2/af/npc.h
+@@ -1,5 +1,5 @@
+-/* SPDX-License-Identifier: GPL-2.0
+- * Marvell OcteonTx2 RVU Admin Function driver
++/* SPDX-License-Identifier: GPL-2.0 */
++/*  Marvell OcteonTx2 RVU Admin Function driver
+  *
+  * Copyright (C) 2018 Marvell International Ltd.
+  *
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/npc_profile.h b/drivers/net/ethernet/marvell/octeontx2/af/npc_profile.h
+index b2ce957605bb..da649f6a5573 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/npc_profile.h
++++ b/drivers/net/ethernet/marvell/octeontx2/af/npc_profile.h
+@@ -1,5 +1,5 @@
+-/* SPDX-License-Identifier: GPL-2.0
+- * Marvell OcteonTx2 RVU Admin Function driver
++/* SPDX-License-Identifier: GPL-2.0 */
++/*  Marvell OcteonTx2 RVU Admin Function driver
+  *
+  * Copyright (C) 2018 Marvell International Ltd.
+  *
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.h b/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
+index c9d60b0554c0..5222e4228905 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
+@@ -1,5 +1,5 @@
+-/* SPDX-License-Identifier: GPL-2.0
+- * Marvell OcteonTx2 RVU Admin Function driver
++/* SPDX-License-Identifier: GPL-2.0 */
++/*  Marvell OcteonTx2 RVU Admin Function driver
+  *
+  * Copyright (C) 2018 Marvell International Ltd.
+  *
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_reg.h b/drivers/net/ethernet/marvell/octeontx2/af/rvu_reg.h
+index 09a8d61f3144..1ea92a2e7cfe 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_reg.h
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_reg.h
+@@ -1,5 +1,5 @@
+-/* SPDX-License-Identifier: GPL-2.0
+- * Marvell OcteonTx2 RVU Admin Function driver
++/* SPDX-License-Identifier: GPL-2.0 */
++/*  Marvell OcteonTx2 RVU Admin Function driver
+  *
+  * Copyright (C) 2018 Marvell International Ltd.
+  *
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_struct.h b/drivers/net/ethernet/marvell/octeontx2/af/rvu_struct.h
+index f920dac74e6c..84a39063a8bb 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_struct.h
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_struct.h
+@@ -1,5 +1,5 @@
+-/* SPDX-License-Identifier: GPL-2.0
+- * Marvell OcteonTx2 RVU Admin Function driver
++/* SPDX-License-Identifier: GPL-2.0 */
++/*  Marvell OcteonTx2 RVU Admin Function driver
+  *
+  * Copyright (C) 2018 Marvell International Ltd.
+  *
 -- 
-2.20.1
+2.17.1
 
