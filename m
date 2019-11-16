@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B166C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AABC43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 348D420803
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3DC02082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573918938;
-	bh=+5WDG++5xSQuxpiwkJ1J9wYvQqH+k4jLnKBFQ/nlJIE=;
+	s=default; t=1573918940;
+	bh=T4Ylin2Dg0jyI71p9QB/r4oozPPJletu7pxesr1Jgvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hGWvvbFtZ8/d5kHmjSmXCzx3A2Shu4ftIpufTrdsMO160G46IadmL1kAqlzmfYbwz
-	 BRR7iOHDvu7+9BrgXPWnJ5n4pAhFGQTMELMl0Tq6/YMKoMb+N2UUSDYyMe8ON0pEI0
-	 Tauqyfo3MxwNyOMWOEphVo2eHEffGhap+nKTRvHo=
+	b=FdwlQdN88lRkQ1STQQWOdPC/6zej41wqxUDHRYv/Yy8cpobYNIGMq8YxSBVsTMt+n
+	 buuI1anDvpkLsf5GEV09qqqjzWjFwoRzNumKVm0Mt12tYlHkpkcZocmHzfPwO0gMex
+	 hpyEiHHX5s4nSlrtEm9+Zjj1L3sHs03AV3fPS0Ig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbfKPPmR (ORCPT
+        id S1728263AbfKPPmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:42:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45730 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:42:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728197AbfKPPmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:42:11 -0500
+        id S1728207AbfKPPmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:42:12 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC51D2082E;
-        Sat, 16 Nov 2019 15:42:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70B902075B;
+        Sat, 16 Nov 2019 15:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1573918931;
-        bh=+5WDG++5xSQuxpiwkJ1J9wYvQqH+k4jLnKBFQ/nlJIE=;
+        bh=T4Ylin2Dg0jyI71p9QB/r4oozPPJletu7pxesr1Jgvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P1RKbQTjvb6I2NNQ9JWoQftmIXz7VOXPmr7gbrRJk4XNNzHssLYpUx8arqVWUBxzI
-         6FObe5xmC4M8kM/QzG+ldb3fvmGsLg3+lS6qQQJ6Xlp4d/7TvXAfNI7b7zfqOQaW0O
-         WDlROR09eGAGA2Eh/eoqpc17GgnoAHR3GqYvaR+M=
+        b=JK/k2yuMOVhwxsjJCdm81tsK5rwMtJHLKpXij77Yv4nB/Ci42zyi3ORAOojMsfEKG
+         E6kPVlDhRAIzM/lhVm0HUnHAZ7fyAalHvia2KOT6UKfIMDSdq06c2kxqdE0EifaQvc
+         ezrXYwecxjpTLo6jB/WrgjpbjONicbstlhoM63FQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Keith Busch <keith.busch@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 058/237] nvme-pci: fix hot removal during error handling
-Date:   Sat, 16 Nov 2019 10:38:13 -0500
-Message-Id: <20191116154113.7417-58-sashal@kernel.org>
+Cc:     Honghui Zhang <honghui.zhang@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 059/237] PCI: mediatek: Fixup MSI enablement logic by enabling MSI before clocks
+Date:   Sat, 16 Nov 2019 10:38:14 -0500
+Message-Id: <20191116154113.7417-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,45 +61,198 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <keith.busch@intel.com>
+From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-[ Upstream commit cb4bfda62afa25b4eee3d635d33fccdd9485dd7c ]
+[ Upstream commit 3828d60fd2ef99f97a677c1f95af2ab3e65e2576 ]
 
-A removal waits for the reset_work to complete. If a surprise removal
-occurs around the same time as an error triggered controller reset, and
-reset work happened to dispatch a command to the removed controller, the
-command won't be recovered since the timeout work doesn't do anything
-during error recovery. We wouldn't want to wait for timeout handling
-anyway, so this patch fixes this by disabling the controller and killing
-admin queues prior to syncing with the reset_work.
+Commit 43e6409db64d ("PCI: mediatek: Add MSI support for MT2712 and
+MT7622") added MSI support but enabled MSI in the wrong place, at a step
+in the probe sequence where clocks were not still enabled.
 
-Signed-off-by: Keith Busch <keith.busch@intel.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fix this issue by calling mtk_pcie_enable_msi() in mtk_pcie_startup_port_v2()
+since clocks are enabled when mtk_pcie_startup_port_v2() is called.
+
+To avoid forward declaration of mtk_pcie_enable_msi(), move the
+mtk_pcie_startup_port_v2() function definition in the file.
+
+Fixes: 43e6409db64d ("PCI: mediatek: Add MSI support for MT2712 and MT7622")
+Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+[lorenzo.pieralisi@arm.com: squashed commit and adapted log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Ryder Lee <ryder.lee@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/pci/controller/pcie-mediatek.c | 143 +++++++++++++------------
+ 1 file changed, 72 insertions(+), 71 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index a64a8bca0d5b9..9479c0db08f62 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2583,13 +2583,12 @@ static void nvme_remove(struct pci_dev *pdev)
- 	struct nvme_dev *dev = pci_get_drvdata(pdev);
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index abedf8ec11bba..dd49033e488d8 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -394,75 +394,6 @@ static struct pci_ops mtk_pcie_ops_v2 = {
+ 	.write = mtk_pcie_config_write,
+ };
  
- 	nvme_change_ctrl_state(&dev->ctrl, NVME_CTRL_DELETING);
+-static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+-{
+-	struct mtk_pcie *pcie = port->pcie;
+-	struct resource *mem = &pcie->mem;
+-	const struct mtk_pcie_soc *soc = port->pcie->soc;
+-	u32 val;
+-	size_t size;
+-	int err;
 -
--	cancel_work_sync(&dev->ctrl.reset_work);
- 	pci_set_drvdata(pdev, NULL);
- 
- 	if (!pci_device_is_present(pdev)) {
- 		nvme_change_ctrl_state(&dev->ctrl, NVME_CTRL_DEAD);
- 		nvme_dev_disable(dev, true);
-+		nvme_dev_remove_admin(dev);
+-	/* MT7622 platforms need to enable LTSSM and ASPM from PCIe subsys */
+-	if (pcie->base) {
+-		val = readl(pcie->base + PCIE_SYS_CFG_V2);
+-		val |= PCIE_CSR_LTSSM_EN(port->slot) |
+-		       PCIE_CSR_ASPM_L1_EN(port->slot);
+-		writel(val, pcie->base + PCIE_SYS_CFG_V2);
+-	}
+-
+-	/* Assert all reset signals */
+-	writel(0, port->base + PCIE_RST_CTRL);
+-
+-	/*
+-	 * Enable PCIe link down reset, if link status changed from link up to
+-	 * link down, this will reset MAC control registers and configuration
+-	 * space.
+-	 */
+-	writel(PCIE_LINKDOWN_RST_EN, port->base + PCIE_RST_CTRL);
+-
+-	/* De-assert PHY, PE, PIPE, MAC and configuration reset	*/
+-	val = readl(port->base + PCIE_RST_CTRL);
+-	val |= PCIE_PHY_RSTB | PCIE_PERSTB | PCIE_PIPE_SRSTB |
+-	       PCIE_MAC_SRSTB | PCIE_CRSTB;
+-	writel(val, port->base + PCIE_RST_CTRL);
+-
+-	/* Set up vendor ID and class code */
+-	if (soc->need_fix_class_id) {
+-		val = PCI_VENDOR_ID_MEDIATEK;
+-		writew(val, port->base + PCIE_CONF_VEND_ID);
+-
+-		val = PCI_CLASS_BRIDGE_PCI;
+-		writew(val, port->base + PCIE_CONF_CLASS_ID);
+-	}
+-
+-	/* 100ms timeout value should be enough for Gen1/2 training */
+-	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
+-				 !!(val & PCIE_PORT_LINKUP_V2), 20,
+-				 100 * USEC_PER_MSEC);
+-	if (err)
+-		return -ETIMEDOUT;
+-
+-	/* Set INTx mask */
+-	val = readl(port->base + PCIE_INT_MASK);
+-	val &= ~INTX_MASK;
+-	writel(val, port->base + PCIE_INT_MASK);
+-
+-	/* Set AHB to PCIe translation windows */
+-	size = mem->end - mem->start;
+-	val = lower_32_bits(mem->start) | AHB2PCIE_SIZE(fls(size));
+-	writel(val, port->base + PCIE_AHB_TRANS_BASE0_L);
+-
+-	val = upper_32_bits(mem->start);
+-	writel(val, port->base + PCIE_AHB_TRANS_BASE0_H);
+-
+-	/* Set PCIe to AXI translation memory space.*/
+-	val = fls(0xffffffff) | WIN_ENABLE;
+-	writel(val, port->base + PCIE_AXI_WINDOW0);
+-
+-	return 0;
+-}
+-
+ static void mtk_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ {
+ 	struct mtk_pcie_port *port = irq_data_get_irq_chip_data(data);
+@@ -639,8 +570,6 @@ static int mtk_pcie_init_irq_domain(struct mtk_pcie_port *port,
+ 		ret = mtk_pcie_allocate_msi_domains(port);
+ 		if (ret)
+ 			return ret;
+-
+-		mtk_pcie_enable_msi(port);
  	}
  
- 	flush_work(&dev->ctrl.reset_work);
+ 	return 0;
+@@ -707,6 +636,78 @@ static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
+ 	return 0;
+ }
+ 
++static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
++{
++	struct mtk_pcie *pcie = port->pcie;
++	struct resource *mem = &pcie->mem;
++	const struct mtk_pcie_soc *soc = port->pcie->soc;
++	u32 val;
++	size_t size;
++	int err;
++
++	/* MT7622 platforms need to enable LTSSM and ASPM from PCIe subsys */
++	if (pcie->base) {
++		val = readl(pcie->base + PCIE_SYS_CFG_V2);
++		val |= PCIE_CSR_LTSSM_EN(port->slot) |
++		       PCIE_CSR_ASPM_L1_EN(port->slot);
++		writel(val, pcie->base + PCIE_SYS_CFG_V2);
++	}
++
++	/* Assert all reset signals */
++	writel(0, port->base + PCIE_RST_CTRL);
++
++	/*
++	 * Enable PCIe link down reset, if link status changed from link up to
++	 * link down, this will reset MAC control registers and configuration
++	 * space.
++	 */
++	writel(PCIE_LINKDOWN_RST_EN, port->base + PCIE_RST_CTRL);
++
++	/* De-assert PHY, PE, PIPE, MAC and configuration reset	*/
++	val = readl(port->base + PCIE_RST_CTRL);
++	val |= PCIE_PHY_RSTB | PCIE_PERSTB | PCIE_PIPE_SRSTB |
++	       PCIE_MAC_SRSTB | PCIE_CRSTB;
++	writel(val, port->base + PCIE_RST_CTRL);
++
++	/* Set up vendor ID and class code */
++	if (soc->need_fix_class_id) {
++		val = PCI_VENDOR_ID_MEDIATEK;
++		writew(val, port->base + PCIE_CONF_VEND_ID);
++
++		val = PCI_CLASS_BRIDGE_PCI;
++		writew(val, port->base + PCIE_CONF_CLASS_ID);
++	}
++
++	/* 100ms timeout value should be enough for Gen1/2 training */
++	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
++				 !!(val & PCIE_PORT_LINKUP_V2), 20,
++				 100 * USEC_PER_MSEC);
++	if (err)
++		return -ETIMEDOUT;
++
++	/* Set INTx mask */
++	val = readl(port->base + PCIE_INT_MASK);
++	val &= ~INTX_MASK;
++	writel(val, port->base + PCIE_INT_MASK);
++
++	if (IS_ENABLED(CONFIG_PCI_MSI))
++		mtk_pcie_enable_msi(port);
++
++	/* Set AHB to PCIe translation windows */
++	size = mem->end - mem->start;
++	val = lower_32_bits(mem->start) | AHB2PCIE_SIZE(fls(size));
++	writel(val, port->base + PCIE_AHB_TRANS_BASE0_L);
++
++	val = upper_32_bits(mem->start);
++	writel(val, port->base + PCIE_AHB_TRANS_BASE0_H);
++
++	/* Set PCIe to AXI translation memory space.*/
++	val = fls(0xffffffff) | WIN_ENABLE;
++	writel(val, port->base + PCIE_AXI_WINDOW0);
++
++	return 0;
++}
++
+ static void __iomem *mtk_pcie_map_bus(struct pci_bus *bus,
+ 				      unsigned int devfn, int where)
+ {
 -- 
 2.20.1
 
