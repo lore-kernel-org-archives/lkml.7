@@ -4,55 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 202F1C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E087FC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DED7421823
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0C6D206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920530;
-	bh=wu8iWbB/vI5j91N6tp1uS1uxExscGnc+y38dgtOkPU8=;
+	s=default; t=1573920545;
+	bh=UuqkYwaEdKSFRzNCtzmdbILIkT501RlWETeJr5f1rEk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UrH60z/hcMdg+nsCM1Ps1ODO/Bl8hTZLjQEjWPQYuOme9c/0qf6v4ULfX5ZZcTW3l
-	 28+UuFkcjBtk+dvy+JBZhYvoseq+OH+c2Zr27noRsm+za9VNF3lkNf8Ezg+VdgUCaB
-	 OC9ON/bV2a8lPjYrUBTXFeeIPbV2Q22N3k/ZUUSk=
+	b=l9A64ejYvE6bknoLyydcqfBNNMJE8hYcU9xERWOQuzXa4zngPBhQ7flgJUppmK4ep
+	 vrfr/zcVdZDrPEg8qpQ8BxcuSbSxMJya7nPl+qSVrpjfmkjyHTtx20xMk5/xeipYZa
+	 z/0QlRkDpr3EqPek9nNdWotGIj3TVDspZJgRYJ88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731829AbfKPQIh (ORCPT
+        id S1730392AbfKPPt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:08:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58044 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:49:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730430AbfKPPuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:50:09 -0500
+        id S1729351AbfKPPtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:49:55 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F068F208CE;
-        Sat, 16 Nov 2019 15:50:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67FAF20855;
+        Sat, 16 Nov 2019 15:49:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919409;
-        bh=wu8iWbB/vI5j91N6tp1uS1uxExscGnc+y38dgtOkPU8=;
+        s=default; t=1573919394;
+        bh=UuqkYwaEdKSFRzNCtzmdbILIkT501RlWETeJr5f1rEk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eg0WVi8nFruoaQCFLLbI8GFET/PYIE/Gamu8qS2OasruC6StqLX5ZDrgmP4qIMMiE
-         99hNh+CbaMU+ae94hhcCbfTpueB4MU0AUxbvrmv6AhuoP6KjUgWwxXTyJ+VxNsLpJM
-         1t6+taH/HutUxQ9gwu5wvrUed8bN9fHidnkiUepI=
+        b=tVtrZIUQpQWBm3ykj9M+/1W0gkczQ0z9vrhI3JRG8PbJkt4a3eVESesiWtqsKtMLe
+         +lZR5jqBG4Lh+sLFEdueV3XvR9fBjvdh9w0h9Aw1Um3OhFukziKj8A4UEpYDSJ3n7g
+         nGBLfIvaFKoTrOx3/Mj5UdefCP+xVTPwY61qkXKw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jon Mason <jdmason@kudzu.us>,
-        "Gerd W . Haeussler" <gerd.haeussler@cesys-it.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-ntb@googlegroups.com,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 107/150] ntb_netdev: fix sleep time mismatch
-Date:   Sat, 16 Nov 2019 10:46:45 -0500
-Message-Id: <20191116154729.9573-107-sashal@kernel.org>
+Cc:     =?UTF-8?q?Ernesto=20A=2E=20Fern=C3=A1ndez?= 
+        <ernesto.mnd.fernandez@gmail.com>,
+        Vyacheslav Dubeyko <slava@dubeyko.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 099/150] hfsplus: fix return value of hfsplus_get_block()
+Date:   Sat, 16 Nov 2019 10:46:37 -0500
+Message-Id: <20191116154729.9573-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,36 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Mason <jdmason@kudzu.us>
+From: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
 
-[ Upstream commit a861594b1b7ffd630f335b351c4e9f938feadb8e ]
+[ Upstream commit 839c3a6a5e1fbc8542d581911b35b2cb5cd29304 ]
 
-The tx_time should be in usecs (according to the comment above the
-variable), but the setting of the timer during the rearming is done in
-msecs.  Change it to match the expected units.
+Direct writes to empty inodes fail with EIO.  The generic direct-io code
+is in part to blame (a patch has been submitted as "direct-io: allow
+direct writes to empty inodes"), but hfsplus is worse affected than the
+other filesystems because the fallback to buffered I/O doesn't happen.
 
-Fixes: e74bfeedad08 ("NTB: Add flow control to the ntb_netdev")
-Suggested-by: Gerd W. Haeussler <gerd.haeussler@cesys-it.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
-Acked-by: Dave Jiang <dave.jiang@intel.com>
+The problem is the return value of hfsplus_get_block() when called with
+!create.  Change it to be more consistent with the other modules.
+
+Link: http://lkml.kernel.org/r/2cd1301404ec7cf1e39c8f11a01a4302f1460ad6.1539195310.git.ernesto.mnd.fernandez@gmail.com
+Signed-off-by: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
+Reviewed-by: Vyacheslav Dubeyko <slava@dubeyko.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ntb_netdev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/hfsplus/extents.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ntb_netdev.c b/drivers/net/ntb_netdev.c
-index 0250aa9ae2cbc..97bf49ad81a6d 100644
---- a/drivers/net/ntb_netdev.c
-+++ b/drivers/net/ntb_netdev.c
-@@ -236,7 +236,7 @@ static void ntb_netdev_tx_timer(unsigned long data)
- 	struct ntb_netdev *dev = netdev_priv(ndev);
+diff --git a/fs/hfsplus/extents.c b/fs/hfsplus/extents.c
+index 284d7fb73e863..58f296bfd4380 100644
+--- a/fs/hfsplus/extents.c
++++ b/fs/hfsplus/extents.c
+@@ -237,7 +237,9 @@ int hfsplus_get_block(struct inode *inode, sector_t iblock,
+ 	ablock = iblock >> sbi->fs_shift;
  
- 	if (ntb_transport_tx_free_entry(dev->qp) < tx_stop) {
--		mod_timer(&dev->tx_timer, jiffies + msecs_to_jiffies(tx_time));
-+		mod_timer(&dev->tx_timer, jiffies + usecs_to_jiffies(tx_time));
- 	} else {
- 		/* Make sure anybody stopping the queue after this sees the new
- 		 * value of ntb_transport_tx_free_entry()
+ 	if (iblock >= hip->fs_blocks) {
+-		if (iblock > hip->fs_blocks || !create)
++		if (!create)
++			return 0;
++		if (iblock > hip->fs_blocks)
+ 			return -EIO;
+ 		if (ablock >= hip->alloc_blocks) {
+ 			res = hfsplus_file_extend(inode, false);
 -- 
 2.20.1
 
