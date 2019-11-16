@@ -2,260 +2,245 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A952BC43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 14:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE00C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 14:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7697E206E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 14:08:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573913335;
-	bh=K6jJzmy2TrOILsCo2E/gp9oUFsW+m5/GXOwqD9PYOy4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GBz+/m4/j/yu1nK+tDfWTIBCqFaR2045t0BeVc3cgZM/mPFkvKOxFDsbDJkvmuiFP
-	 CmlfknFRwcS3ycDD6ZFPLQVlL1TzfMLTf66NfhZQ7Kx481ShbkJDFs98C1oOtVaMCk
-	 wPaDqzB8jJBj8TxAQQ/1F1uCtWhSh11IvMZMs9YY=
+	by mail.kernel.org (Postfix) with ESMTP id DD4E720718
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 14:15:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbfKPOIy (ORCPT
+        id S1727696AbfKPOPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 09:08:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55560 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727551AbfKPOIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 09:08:53 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B77CB20700;
-        Sat, 16 Nov 2019 14:08:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573913332;
-        bh=K6jJzmy2TrOILsCo2E/gp9oUFsW+m5/GXOwqD9PYOy4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=eALBD7t9e87iDstSGl72jIs0OU//eufReQhcCV5DVyH8Q3vSzEBcoKeLjhpqjSpt3
-         4qquQBHUWXShqxlDBSLJrox2uqylhc1bU52Uok+t5P/IYnMlh433/wJAm6DIbLxcxf
-         9hbwzkibx8/0l6SLmCEYEv5C9qtq8tdDCvj+SctY=
-Date:   Sat, 16 Nov 2019 14:08:46 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Song Qiang <songqiang1304521@gmail.com>
-Cc:     lars@metafoo.de, Michael.Hennerich@analog.com,
-        stefan.popa@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net,
-        lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] iio: adc: add driver support for AD5940
-Message-ID: <20191116140846.1b094dc6@archlinux>
-In-Reply-To: <58ef4da3-7640-767d-5f6b-c2c5c680cddb@gmail.com>
-References: <20191108130946.14740-1-songqiang1304521@gmail.com>
-        <20191108130946.14740-2-songqiang1304521@gmail.com>
-        <20191110165529.78a4714a@archlinux>
-        <58ef4da3-7640-767d-5f6b-c2c5c680cddb@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 16 Nov 2019 09:15:12 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:55058 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727672AbfKPOPL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 09:15:11 -0500
+Received: by mail-il1-f198.google.com with SMTP id t67so11654816ill.21
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 06:15:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=r4BpNWbf4xFpW3cj9suOlpyJ+CHQ8j0TEcjFp7mTyoc=;
+        b=je71HriXAiLs+2xj9ue85rj/9iWARqXluyvW8B+ZNOddLU4454wM5ABb1bZJaNI4pA
+         P2pFztukF1iICvveKUGyMeHVNAnMVKHcWB4WXMOHTFvGHn03Vu2HSUkVx7ATMaIrfFa1
+         03mgPQ1ATOCCucoAhHzdumRwU4kQAoiTCAmfgOvWm0Es3gwpJg7KQoDIaX+HUygRK06A
+         SPDDEPdOr0sQEEkYt1ai4PXLtcVaj5JjG4Xmww5HTLNN6QBXLCql1unQ68RTlDKQS0lr
+         EfYnueip1FCZS26z9CCOjNJ9b/iXLcBTL4MC8dOt/oUJ17DqN7MTkUfOe/5fo/KwHHiC
+         snaA==
+X-Gm-Message-State: APjAAAUll3PPH8MwBGGRLxg6N9ex7HJJ4Iq0vvzhQ66SkPHnG4P1tjhQ
+        2WC23kEntXeU5Wp6K4BmLo677W16r122JhPsRnDVAcbGHrIQ
+X-Google-Smtp-Source: APXvYqyC0l37Lcb7JkdxBYMGF3sYIPeYx+diVpPlrKNR2TMovMypf6Ge91HVUDNQdujey7E8zXosuDbnIdQQjaJ4+puzJTay6aeW
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:8906:: with SMTP id n6mr6606620ild.202.1573913708468;
+ Sat, 16 Nov 2019 06:15:08 -0800 (PST)
+Date:   Sat, 16 Nov 2019 06:15:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008026b8059777575c@google.com>
+Subject: possible deadlock in proc_pid_syscall
+From:   syzbot <syzbot+ffc5f92d13ebf6b3e760@syzkaller.appspotmail.com>
+To:     adobriyan@gmail.com, akpm@linux-foundation.org,
+        casey@schaufler-ca.com, christian@brauner.io,
+        keescook@chromium.org, kent.overstreet@gmail.com,
+        khlebnikov@yandex-team.ru, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mhocko@suse.com, shakeelb@google.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Nov 2019 22:05:54 +0800
-Song Qiang <songqiang1304521@gmail.com> wrote:
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    eb70e26c Merge tag 'arm64-fixes' of git://git.kernel.org/p..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10a38772e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7654f9089a2e8c85
+dashboard link: https://syzkaller.appspot.com/bug?extid=ffc5f92d13ebf6b3e760
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+ffc5f92d13ebf6b3e760@syzkaller.appspotmail.com
+
+======================================================
+WARNING: possible circular locking dependency detected
+5.4.0-rc7+ #0 Not tainted
+------------------------------------------------------
+syz-executor.4/16763 is trying to acquire lock:
+ffff8880916fc710 (&sig->cred_guard_mutex){+.+.}, at: lock_trace  
+fs/proc/base.c:406 [inline]
+ffff8880916fc710 (&sig->cred_guard_mutex){+.+.}, at:  
+proc_pid_syscall+0x66/0x3a0 fs/proc/base.c:635
+
+but task is already holding lock:
+ffff8880a02001c0 (&p->lock){+.+.}, at: seq_read+0x6e/0xd70 fs/seq_file.c:161
+
+which lock already depends on the new lock.
 
 
-> >> +static ssize_t ad5940_read_info(struct iio_dev *indio_dev,
-> >> +				uintptr_t private,
-> >> +				const struct iio_chan_spec *chan,
-> >> +				char *buf)
-> >> +{
-> >> +	struct ad5940_state *st = iio_priv(indio_dev);
-> >> +
-> >> +	switch ((u32)private) {
-> >> +	case AD5940_CHANNEL_NAME:  
-> > 
-> > What is the logic here in this magic define?
-> >   
-> 
-> Do you mean this is not necessary? In this driver, 'ad5940_read_info' is
-> only used in name reading, but I was thinking maybe there will be some
-> other stuff to be reading from this in the future.
+the existing dependency chain (in reverse order) is:
 
-That might happen, but you may also extend this by providing more
-callbacks.  Certainly don't put code in place to support things
-that might be added.  Keep it simple.
+-> #3 (&p->lock){+.+.}:
+        lock_acquire+0x158/0x250 kernel/locking/lockdep.c:4487
+        __mutex_lock_common+0x14c/0x2e20 kernel/locking/mutex.c:956
+        __mutex_lock kernel/locking/mutex.c:1103 [inline]
+        mutex_lock_nested+0x1b/0x30 kernel/locking/mutex.c:1118
+        seq_read+0x6e/0xd70 fs/seq_file.c:161
+        proc_reg_read+0x1e2/0x2d0 fs/proc/inode.c:223
+        do_loop_readv_writev fs/read_write.c:714 [inline]
+        do_iter_read+0x4b1/0x5b0 fs/read_write.c:935
+        vfs_readv+0xc2/0x120 fs/read_write.c:997
+        kernel_readv fs/splice.c:359 [inline]
+        default_file_splice_read+0x544/0x8d0 fs/splice.c:414
+        do_splice_to fs/splice.c:877 [inline]
+        splice_direct_to_actor+0x39c/0xac0 fs/splice.c:954
+        do_splice_direct+0x200/0x330 fs/splice.c:1063
+        do_sendfile+0x7e4/0xfd0 fs/read_write.c:1464
+        __do_sys_sendfile64 fs/read_write.c:1525 [inline]
+        __se_sys_sendfile64 fs/read_write.c:1511 [inline]
+        __x64_sys_sendfile64+0x176/0x1b0 fs/read_write.c:1511
+        do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-> 
-> >> +		return sprintf(buf, "%s\n",
-> >> +			st->channel_config[chan->address].channel_name);
-> >> +	default:
-> >> +		return -EINVAL;
-> >> +	}
-> >> +}
-> >> +
+-> #2 (sb_writers#3){.+.+}:
+        lock_acquire+0x158/0x250 kernel/locking/lockdep.c:4487
+        percpu_down_read include/linux/percpu-rwsem.h:40 [inline]
+        __sb_start_write+0xeb/0x430 fs/super.c:1672
+        sb_start_write include/linux/fs.h:1650 [inline]
+        mnt_want_write+0x4a/0xa0 fs/namespace.c:354
+        ovl_want_write+0x77/0x80 fs/overlayfs/util.c:21
+        ovl_create_object+0xaf/0x2d0 fs/overlayfs/dir.c:596
+        ovl_create+0x29/0x30 fs/overlayfs/dir.c:627
+        lookup_open fs/namei.c:3224 [inline]
+        do_last fs/namei.c:3314 [inline]
+        path_openat+0x2236/0x4420 fs/namei.c:3525
+        do_filp_open+0x192/0x3d0 fs/namei.c:3555
+        do_sys_open+0x29f/0x560 fs/open.c:1097
+        ksys_open include/linux/syscalls.h:1385 [inline]
+        __do_sys_creat fs/open.c:1155 [inline]
+        __se_sys_creat fs/open.c:1153 [inline]
+        __x64_sys_creat+0x65/0x70 fs/open.c:1153
+        do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-...
+-> #1 (&ovl_i_mutex_dir_key[depth]){++++}:
+        lock_acquire+0x158/0x250 kernel/locking/lockdep.c:4487
+        down_read+0x39/0x50 kernel/locking/rwsem.c:1495
+        inode_lock_shared include/linux/fs.h:801 [inline]
+        do_last fs/namei.c:3313 [inline]
+        path_openat+0xa9a/0x4420 fs/namei.c:3525
+        do_filp_open+0x192/0x3d0 fs/namei.c:3555
+        do_open_execat+0xff/0x610 fs/exec.c:857
+        __do_execve_file+0x766/0x1cc0 fs/exec.c:1762
+        do_execveat_common fs/exec.c:1868 [inline]
+        do_execve fs/exec.c:1885 [inline]
+        __do_sys_execve fs/exec.c:1961 [inline]
+        __se_sys_execve fs/exec.c:1956 [inline]
+        __x64_sys_execve+0x94/0xb0 fs/exec.c:1956
+        do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-> >> +static int ad5940_of_parse_channel_config(struct iio_dev *indio_dev,
-> >> +					  struct device_node *np)
-> >> +{
-> >> +	struct ad5940_state *st = iio_priv(indio_dev);
-> >> +	struct iio_chan_spec *chan;
-> >> +	struct device_node *child;
-> >> +	u32 channel, ain[2];
-> >> +	int ret;
-> >> +
-> >> +	st->num_channels = of_get_available_child_count(np);
-> >> +	if (!st->num_channels) {
-> >> +		dev_err(indio_dev->dev.parent, "no channel children\n");
-> >> +		return -ENODEV;
-> >> +	}
-> >> +
-> >> +	chan = devm_kcalloc(indio_dev->dev.parent, st->num_channels,
-> >> +			    sizeof(*chan), GFP_KERNEL);
-> >> +	if (!chan)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	st->channel_config = devm_kcalloc(indio_dev->dev.parent,
-> >> +					  st->num_channels,
-> >> +					  sizeof(*st->channel_config),
-> >> +					  GFP_KERNEL);
-> >> +	if (!st->channel_config)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	indio_dev->channels = chan;
-> >> +	indio_dev->num_channels = st->num_channels;
-> >> +
-> >> +	for_each_available_child_of_node(np, child) {
-> >> +		ret = of_property_read_u32(child, "reg", &channel);
-> >> +		if (ret)
-> >> +			goto err;
-> >> +
-> >> +		ret = of_property_read_u32_array(child, "diff-channels",
-> >> +						 ain, 2);
-> >> +		if (ret)
-> >> +			goto err;
-> >> +
-> >> +		ret = of_property_read_string(child, "channel-name",
-> >> +				&st->channel_config[channel].channel_name);
-> >> +		if (ret)
-> >> +			st->channel_config[channel].channel_name = "none-name";  
-> > 
-> > You have this as required I think in the dt properties.  If that is the case then
-> > enforce it and refuse to load the driver if not supplied. Otherwise change
-> > the dt docs to make it optional (which is probably better)
-> >   
-> 
-> I prefer to have name required because a channel here is a combination
-> of some input and some output. Without name, we will have to look into
-> dt to see which input and which output is used in this channel.
+-> #0 (&sig->cred_guard_mutex){+.+.}:
+        check_prev_add kernel/locking/lockdep.c:2476 [inline]
+        check_prevs_add kernel/locking/lockdep.c:2581 [inline]
+        validate_chain+0x161e/0x7bc0 kernel/locking/lockdep.c:2971
+        __lock_acquire+0xc75/0x1be0 kernel/locking/lockdep.c:3955
+        lock_acquire+0x158/0x250 kernel/locking/lockdep.c:4487
+        __mutex_lock_common+0x14c/0x2e20 kernel/locking/mutex.c:956
+        __mutex_lock kernel/locking/mutex.c:1103 [inline]
+        mutex_lock_killable_nested+0x1b/0x30 kernel/locking/mutex.c:1133
+        lock_trace fs/proc/base.c:406 [inline]
+        proc_pid_syscall+0x66/0x3a0 fs/proc/base.c:635
+        proc_single_show+0xd8/0x120 fs/proc/base.c:756
+        seq_read+0x4cd/0xd70 fs/seq_file.c:229
+        do_loop_readv_writev fs/read_write.c:714 [inline]
+        do_iter_read+0x4b1/0x5b0 fs/read_write.c:935
+        vfs_readv fs/read_write.c:997 [inline]
+        do_preadv+0x178/0x290 fs/read_write.c:1089
+        __do_sys_preadv fs/read_write.c:1139 [inline]
+        __se_sys_preadv fs/read_write.c:1134 [inline]
+        __x64_sys_preadv+0x9e/0xb0 fs/read_write.c:1134
+        do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Then don't make it optional.
+other info that might help us debug this:
 
-> 
-> >> +
-> >> +		ret = ad5940_check_channel_indexes(indio_dev->dev.parent, ain);
-> >> +		if (ret) {
-> >> +			dev_err(indio_dev->dev.parent,
-> >> +				"some input channel index does not exist: %d, %d, %d",
-> >> +				channel, ain[0], ain[1]);
-> >> +			goto err;
-> >> +		}
-> >> +
-> >> +		st->channel_config[channel].ain = AD5940_CHANNEL_AINP(ain[0]) |
-> >> +						  AD5940_CHANNEL_AINN(ain[1]);
-> >> +
-> >> +		*chan = ad5940_channel_template;
-> >> +		chan->address = channel;
-> >> +		chan->scan_index = channel;
-> >> +		chan->channel = ain[0];
-> >> +		chan->channel2 = ain[1];
-> >> +
-> >> +		chan++;
-> >> +	}
-> >> +
-> >> +	return 0;
-> >> +err:
-> >> +	of_node_put(child);
-> >> +
-> >> +	return ret;
-> >> +}
-> >> +
-> >> +static int ad5940_config_polarity(struct ad5940_state *st, u32 polarity)
-> >> +{
-> >> +	u32 val;
-> >> +
-> >> +	if (polarity == IRQF_TRIGGER_RISING)
-> >> +		val = AD5940_INTCPOL_POS;
-> >> +	else
-> >> +		val = AD5940_INTCPOL_NEG;
-> >> +
-> >> +	return ad5940_write_reg_mask(st, AD5940_REG_INTCPOL,
-> >> +				     AD5940_INTCPOL_MSK, val);
-> >> +}
-> >> +
-> >> +static int ad5940_config_int_io(struct ad5940_state *st, u8 int_io)
-> >> +{
-> >> +	int ret = 0;
-> >> +
-> >> +	if (int_io == 3)  
-> > 
-> > Switch statement preferred for matches like this.
-> >   
-> >> +		ret = ad5940_write_reg_mask(st, AD5940_REG_GP0CON,
-> >> +					    AD5940_GP0CON_3_MSK,
-> >> +					    AD5940_GP0CON_3_INT);
-> >> +	else if (int_io == 6)
-> >> +		ret = ad5940_write_reg_mask(st, AD5940_REG_GP0CON,
-> >> +					    AD5940_GP0CON_6_MSK,
-> >> +					    AD5940_GP0CON_6_INT);
-> >> +	if (ret < 0)
-> >> +		return ret;
-> >> +
-> >> +	return  ad5940_write_reg(st, AD5940_REG_GP0OEN, BIT(int_io));
-> >> +}
-> >> +
-> >> +static const u32 ad5940_powerup_setting[][2] = {  
-> > 
-> > Hmm. This is not good practice when we have docs for the values.
-> > If we can provide a breakdown into what is being set that would be
-> > great.  I can't find docs immediately for some of these however...
-> >   
-> 
-> We have docs for some of them, but not for all. I got some of the init
-> register values from Analog's example code, which didn't explain much.
-> I'll add comment to these values as much as I can.
+Chain exists of:
+   &sig->cred_guard_mutex --> sb_writers#3 --> &p->lock
 
-Great.
+  Possible unsafe locking scenario:
 
-Jonathan
+        CPU0                    CPU1
+        ----                    ----
+   lock(&p->lock);
+                                lock(sb_writers#3);
+                                lock(&p->lock);
+   lock(&sig->cred_guard_mutex);
 
-> 
-> yours,
-> Song Qiang
-> 
-> >> +	{ 0x0908, 0x02c9 },
-> >> +	{ 0x0c08, 0x206c },
-> >> +	{ 0x21f0, 0x0010 },  
-> > 
-> > This one is is simply saying only 1 repeat conversion for example.
-> > Add some defines and you can make that clear.
-> >   
-> >> +	{ 0x0410, 0x02c9 },
-> >> +	{ 0x0a28, 0x0009 },
-> >> +	{ 0x238c, 0x0104 },
-> >> +	{ 0x0a04, 0x4859 },
-> >> +	{ 0x0a04, 0xf27b },
-> >> +	{ 0x0a00, 0x8009 },
-> >> +	{ 0x22f0, 0x0000 },
-> >> +	{ 0x2230, 0xde87a5af },
-> >> +	{ 0x2250, 0x103f },
-> >> +	{ 0x22b0, 0x203c },
-> >> +	{ 0x2230, 0xde87a5a0 },
-> >> +};
-> >> +  
-> 
-> ...
+  *** DEADLOCK ***
 
+1 lock held by syz-executor.4/16763:
+  #0: ffff8880a02001c0 (&p->lock){+.+.}, at: seq_read+0x6e/0xd70  
+fs/seq_file.c:161
+
+stack backtrace:
+CPU: 0 PID: 16763 Comm: syz-executor.4 Not tainted 5.4.0-rc7+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+  print_circular_bug+0xc2d/0xe60 kernel/locking/lockdep.c:1685
+  check_noncircular+0x206/0x3a0 kernel/locking/lockdep.c:1809
+  check_prev_add kernel/locking/lockdep.c:2476 [inline]
+  check_prevs_add kernel/locking/lockdep.c:2581 [inline]
+  validate_chain+0x161e/0x7bc0 kernel/locking/lockdep.c:2971
+  __lock_acquire+0xc75/0x1be0 kernel/locking/lockdep.c:3955
+  lock_acquire+0x158/0x250 kernel/locking/lockdep.c:4487
+  __mutex_lock_common+0x14c/0x2e20 kernel/locking/mutex.c:956
+  __mutex_lock kernel/locking/mutex.c:1103 [inline]
+  mutex_lock_killable_nested+0x1b/0x30 kernel/locking/mutex.c:1133
+  lock_trace fs/proc/base.c:406 [inline]
+  proc_pid_syscall+0x66/0x3a0 fs/proc/base.c:635
+  proc_single_show+0xd8/0x120 fs/proc/base.c:756
+  seq_read+0x4cd/0xd70 fs/seq_file.c:229
+  do_loop_readv_writev fs/read_write.c:714 [inline]
+  do_iter_read+0x4b1/0x5b0 fs/read_write.c:935
+  vfs_readv fs/read_write.c:997 [inline]
+  do_preadv+0x178/0x290 fs/read_write.c:1089
+  __do_sys_preadv fs/read_write.c:1139 [inline]
+  __se_sys_preadv fs/read_write.c:1134 [inline]
+  __x64_sys_preadv+0x9e/0xb0 fs/read_write.c:1134
+  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45a669
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ff34e552c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000127
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 000000000045a669
+RDX: 00000000000001e3 RSI: 00000000200013c0 RDI: 0000000000000004
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ff34e5536d4
+R13: 00000000004c7ef1 R14: 00000000004dde10 R15: 00000000ffffffff
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
