@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1170CC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E27C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9DD220895
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABDC720895
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:21:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921301;
-	bh=9bch6VTDVZgwC2rRZU7Zqnz8hEruZA8tajpvcVynNb4=;
+	s=default; t=1573921308;
+	bh=9Y+FllgtX9H8rgB0biRlPzQSiJRaRqpAoGAVl3BQjbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SCZZA3MzX5CgCppBir4bp8Xn9oh+ltSRz9yhUJ3vT4oBF5bCVjKdo3fWoyrvNulnx
-	 cPxCO+2Ejfs+4LuIln7WeTj2r5aDgBfhrDk3Cjo7FbbXl8g6rw+CIoFZn2cb8lFEbf
-	 mHbgzWkdrcbzEE9cozRk8tIyZ3OSkl9CJWDQ74SQ=
+	b=j8bU3nMdslw4uZLLQjGe6pZoUYdqsVEJoTMkLZ12yNqGEAdQR5KcwxjKxvMkKc8+L
+	 ScdpSF+S1lpoctilVN9YveQ1IA/RrZE9UEo4hs6NTsFtUcPRyIEXw7dE1Yfw5sykbF
+	 nmTvOxVplOanfBL9wW/7yjG/LtxJNj+gQQIXdgY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732086AbfKPQVk (ORCPT
+        id S1731777AbfKPQVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:21:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47500 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:21:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728750AbfKPPna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:43:30 -0500
+        id S1728734AbfKPPn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:43:27 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 977D32072D;
-        Sat, 16 Nov 2019 15:43:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00F7220733;
+        Sat, 16 Nov 2019 15:43:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919009;
-        bh=9bch6VTDVZgwC2rRZU7Zqnz8hEruZA8tajpvcVynNb4=;
+        s=default; t=1573919007;
+        bh=9Y+FllgtX9H8rgB0biRlPzQSiJRaRqpAoGAVl3BQjbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lugkCPPQuZi/h79ebvk+Iy2gYUhyR17jZqbOHyu0ooEC748c7E45A0uNUN6fRxCCr
-         K6cxl5L6a0rl2or2sOzak87uE98iO5LXyx0AG7awloFID0KjmHo0Qenxe1WzVA4E+i
-         q2CPHA5ww2I2XvKVMeKuoTV1Axl8rhSF6oABYkv8=
+        b=TWURu8VBKgZ/95mm9Stse6cWVRhrVJAtsRGaQrdZRPRy3fCqazGIos0HM0AFqRkoL
+         OXgxT/zMESmJElRqP3zQlHLiyh7z9inVmDdQGLqbQIcikWbkg4oulEONPF3c4GBaC+
+         xFVjE3tQ/1x7kY+4pGgkSWRT1CaoMVIFmrxF5qG8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Yoshitoyo Osaki <osaki.yoshitoyo@socionext.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 113/237] net: socionext: Stop PHY before resetting netsec
-Date:   Sat, 16 Nov 2019 10:39:08 -0500
-Message-Id: <20191116154113.7417-113-sashal@kernel.org>
+Cc:     Sapthagiri Baratam <sapthagiri.baratam@cirrus.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com
+Subject: [PATCH AUTOSEL 4.19 109/237] mfd: arizona: Correct calling of runtime_put_sync
+Date:   Sat, 16 Nov 2019 10:39:04 -0500
+Message-Id: <20191116154113.7417-109-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,112 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahisa Kojima <masahisa.kojima@linaro.org>
+From: Sapthagiri Baratam <sapthagiri.baratam@cirrus.com>
 
-[ Upstream commit 8e850f25b5812aefedec6732732eb10e7b47cb5c ]
+[ Upstream commit 6b269a41a4520f7eb639e61a45ebbb9c9267d5e0 ]
 
-In ndo_stop, driver resets the netsec ethernet controller IP.
-When the netsec IP is reset, HW running mode turns to NRM mode
-and driver has to wait until this mode transition completes.
+Don't call runtime_put_sync when clk32k_ref is ARIZONA_32KZ_MCLK2
+as there is no corresponding runtime_get_sync call.
 
-But mode transition to NRM will not complete if the PHY is
-in normal operation state. Netsec IP requires PHY is in
-power down state when it is reset.
+MCLK1 is not in the AoD power domain so if it is used as 32kHz clock
+source we need to hold a runtime PM reference to keep the device from
+going into low power mode.
 
-This modification stops the PHY before resetting netsec.
-
-Together with this modification, phy_addr is stored in netsec_priv
-structure because ndev->phydev is not yet ready in ndo_init.
-
-Fixes: 533dd11a12f6 ("net: socionext: Add Synquacer NetSec driver")
-Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
-Signed-off-by: Yoshitoyo Osaki <osaki.yoshitoyo@socionext.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: cdd8da8cc66b ("mfd: arizona: Add gating of external MCLKn clocks")
+Signed-off-by: Sapthagiri Baratam <sapthagiri.baratam@cirrus.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/socionext/netsec.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ drivers/mfd/arizona-core.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/socionext/netsec.c b/drivers/net/ethernet/socionext/netsec.c
-index d2caeb9edc044..28d582c18afb9 100644
---- a/drivers/net/ethernet/socionext/netsec.c
-+++ b/drivers/net/ethernet/socionext/netsec.c
-@@ -274,6 +274,7 @@ struct netsec_priv {
- 	struct clk *clk;
- 	u32 msg_enable;
- 	u32 freq;
-+	u32 phy_addr;
- 	bool rx_cksum_offload_flag;
- };
- 
-@@ -1346,11 +1347,11 @@ static int netsec_netdev_stop(struct net_device *ndev)
- 	netsec_uninit_pkt_dring(priv, NETSEC_RING_TX);
- 	netsec_uninit_pkt_dring(priv, NETSEC_RING_RX);
- 
--	ret = netsec_reset_hardware(priv, false);
--
- 	phy_stop(ndev->phydev);
- 	phy_disconnect(ndev->phydev);
- 
-+	ret = netsec_reset_hardware(priv, false);
-+
- 	pm_runtime_put_sync(priv->dev);
- 
- 	return ret;
-@@ -1360,6 +1361,7 @@ static int netsec_netdev_init(struct net_device *ndev)
- {
- 	struct netsec_priv *priv = netdev_priv(ndev);
- 	int ret;
-+	u16 data;
- 
- 	ret = netsec_alloc_dring(priv, NETSEC_RING_TX);
- 	if (ret)
-@@ -1369,6 +1371,11 @@ static int netsec_netdev_init(struct net_device *ndev)
- 	if (ret)
- 		goto err1;
- 
-+	/* set phy power down */
-+	data = netsec_phy_read(priv->mii_bus, priv->phy_addr, MII_BMCR) |
-+		BMCR_PDOWN;
-+	netsec_phy_write(priv->mii_bus, priv->phy_addr, MII_BMCR, data);
-+
- 	ret = netsec_reset_hardware(priv, true);
- 	if (ret)
- 		goto err2;
-@@ -1418,7 +1425,7 @@ static const struct net_device_ops netsec_netdev_ops = {
- };
- 
- static int netsec_of_probe(struct platform_device *pdev,
--			   struct netsec_priv *priv)
-+			   struct netsec_priv *priv, u32 *phy_addr)
- {
- 	priv->phy_np = of_parse_phandle(pdev->dev.of_node, "phy-handle", 0);
- 	if (!priv->phy_np) {
-@@ -1426,6 +1433,8 @@ static int netsec_of_probe(struct platform_device *pdev,
- 		return -EINVAL;
+diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+index 47d6d40f41cd5..a4403a57ddc89 100644
+--- a/drivers/mfd/arizona-core.c
++++ b/drivers/mfd/arizona-core.c
+@@ -52,8 +52,10 @@ int arizona_clk32k_enable(struct arizona *arizona)
+ 			if (ret != 0)
+ 				goto err_ref;
+ 			ret = clk_prepare_enable(arizona->mclk[ARIZONA_MCLK1]);
+-			if (ret != 0)
+-				goto err_pm;
++			if (ret != 0) {
++				pm_runtime_put_sync(arizona->dev);
++				goto err_ref;
++			}
+ 			break;
+ 		case ARIZONA_32KZ_MCLK2:
+ 			ret = clk_prepare_enable(arizona->mclk[ARIZONA_MCLK2]);
+@@ -67,8 +69,6 @@ int arizona_clk32k_enable(struct arizona *arizona)
+ 					 ARIZONA_CLK_32K_ENA);
  	}
  
-+	*phy_addr = of_mdio_parse_addr(&pdev->dev, priv->phy_np);
-+
- 	priv->clk = devm_clk_get(&pdev->dev, NULL); /* get by 'phy_ref_clk' */
- 	if (IS_ERR(priv->clk)) {
- 		dev_err(&pdev->dev, "phy_ref_clk not found\n");
-@@ -1626,12 +1635,14 @@ static int netsec_probe(struct platform_device *pdev)
- 	}
- 
- 	if (dev_of_node(&pdev->dev))
--		ret = netsec_of_probe(pdev, priv);
-+		ret = netsec_of_probe(pdev, priv, &phy_addr);
- 	else
- 		ret = netsec_acpi_probe(pdev, priv, &phy_addr);
- 	if (ret)
- 		goto free_ndev;
- 
-+	priv->phy_addr = phy_addr;
-+
- 	if (!priv->freq) {
- 		dev_err(&pdev->dev, "missing PHY reference clock frequency\n");
- 		ret = -ENODEV;
+-err_pm:
+-	pm_runtime_put_sync(arizona->dev);
+ err_ref:
+ 	if (ret != 0)
+ 		arizona->clk32k_ref--;
 -- 
 2.20.1
 
