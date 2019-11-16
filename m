@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D6DC43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD377C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 464BC20B7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A79B8214DE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:22:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921317;
-	bh=8dmS8o1S1OWyghfPQaJAbhcPEyv6AWCXgS+qPBjMVWE=;
+	s=default; t=1573921327;
+	bh=On0GqOyxsloTEVa6hsuBGk6Zfg6op1AFEmlN8rwIm8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FF6GSb2u0wFbcigfZL4xhiXCjsaCS1dZBHGXHOcxPNXLG5eRWLYyVSJjhqmOMr07k
-	 n0L3M3MJDY+Qt1mxP4ksrtVFhANNUupFNKyaGgYXXiiaRVNB7oc70/giY8nnEl5TjZ
-	 bfUo+X9x6l9x4+whH7LHRK3DakdJKLDgtVRWkSPI=
+	b=1J9fFvBhbQUs/WoYl2cHsRZJttjzdVbDYRiw9Mx0Zs++jK5q3b6WHSNeSN8KcvQpj
+	 H0F9aHhRemO43uT0ikkJL6p8spgLWfezn4MFZrS9uryrwzXpabvJY9kLyD2JrKJA5F
+	 lfHESKXIQzYHd24n6cK0was3IgBbq1sZCTUieqZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732088AbfKPQVz (ORCPT
+        id S1730815AbfKPQWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:21:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47450 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:22:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728725AbfKPPn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:43:27 -0500
+        id S1728693AbfKPPnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:43:22 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EB142072D;
-        Sat, 16 Nov 2019 15:43:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5523207DD;
+        Sat, 16 Nov 2019 15:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919006;
-        bh=8dmS8o1S1OWyghfPQaJAbhcPEyv6AWCXgS+qPBjMVWE=;
+        s=default; t=1573919002;
+        bh=On0GqOyxsloTEVa6hsuBGk6Zfg6op1AFEmlN8rwIm8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SWFnamHmPeOpXYByNutqf8rIRd7MLsZRsOojIIy+4SGTcbCUx+3XdxgviAsrPOzc+
-         ffhb8sBp3R5SHEVS4UKMV1brNmPTy6RgjmSs5U47LlreWpTjNjU8FynlWGh9pZHhz1
-         rA7TxUyTVBE5xQxw+XBkjTk3in7Xbnp/pNcFXAtY=
+        b=QApM3epZXKxZXlA3fT7DxgTL1u3w5bzuDDYzbzjDfTkG1C5msEW1bh+iLgmUfqZoO
+         QJnR29TAM4WdmTlmGGuwlVAxQ/866kOeqBJhLMzSqI8T7a7aX94mTwbma1UqWCBycz
+         S53UZ2SP99xY14cZVCyp+ztDEeyKtzx0rCxksteM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 108/237] net: ethernet: ti: cpsw: unsync mcast entries while switch promisc mode
-Date:   Sat, 16 Nov 2019 10:39:03 -0500
-Message-Id: <20191116154113.7417-108-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 105/237] f2fs: spread f2fs_set_inode_flags()
+Date:   Sat, 16 Nov 2019 10:39:00 -0500
+Message-Id: <20191116154113.7417-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -61,40 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 9737cc99dd14b5b8b9d267618a6061feade8ea68 ]
+[ Upstream commit 9149a5eb606152df158eb7d7da5a34e84b574189 ]
 
-After flushing all mcast entries from the table, the ones contained in
-mc list of ndev are not restored when promisc mode is toggled off,
-because they are considered as synched with ALE, thus, in order to
-restore them after promisc mode - reset syncing info. This fix
-touches only switch mode devices, including single port boards
-like Beagle Bone.
+This patch changes codes as below:
+- use f2fs_set_inode_flags() to update i_flags atomically to avoid
+potential race.
+- synchronize F2FS_I(inode)->i_flags to inode->i_flags in
+f2fs_new_inode().
+- use f2fs_set_inode_flags() to simply codes in f2fs_quota_{on,off}.
 
-Fixes: commit 5da1948969bc
-("net: ethernet: ti: cpsw: fix lost of mcast packets while rx_mode update")
-
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/cpsw.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/f2fs/f2fs.h  | 2 +-
+ fs/f2fs/namei.c | 2 ++
+ fs/f2fs/super.c | 5 ++---
+ 3 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index ef79d2b6070b9..8f93ef74fa407 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -642,6 +642,7 @@ static void cpsw_set_promiscious(struct net_device *ndev, bool enable)
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index fb216488d67a9..c9d19832426b1 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3387,7 +3387,7 @@ static inline void f2fs_set_encrypted_inode(struct inode *inode)
+ {
+ #ifdef CONFIG_F2FS_FS_ENCRYPTION
+ 	file_set_encrypt(inode);
+-	inode->i_flags |= S_ENCRYPTED;
++	f2fs_set_inode_flags(inode);
+ #endif
+ }
  
- 			/* Clear all mcast from ALE */
- 			cpsw_ale_flush_multicast(ale, ALE_ALL_PORTS, -1);
-+			__dev_mc_unsync(ndev, NULL);
+diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
+index 1f67e389169f5..6b23dcbf52f45 100644
+--- a/fs/f2fs/namei.c
++++ b/fs/f2fs/namei.c
+@@ -124,6 +124,8 @@ static struct inode *f2fs_new_inode(struct inode *dir, umode_t mode)
+ 	if (F2FS_I(inode)->i_flags & F2FS_PROJINHERIT_FL)
+ 		set_inode_flag(inode, FI_PROJ_INHERIT);
  
- 			/* Flood All Unicast Packets to Host port */
- 			cpsw_ale_control_set(ale, 0, ALE_P0_UNI_FLOOD, 1);
++	f2fs_set_inode_flags(inode);
++
+ 	trace_f2fs_new_inode(inode, 0);
+ 	return inode;
+ 
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index d9106bbe7df63..7aefb2c35c48f 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1835,8 +1835,7 @@ static int f2fs_quota_on(struct super_block *sb, int type, int format_id,
+ 
+ 	inode_lock(inode);
+ 	F2FS_I(inode)->i_flags |= F2FS_NOATIME_FL | F2FS_IMMUTABLE_FL;
+-	inode_set_flags(inode, S_NOATIME | S_IMMUTABLE,
+-					S_NOATIME | S_IMMUTABLE);
++	f2fs_set_inode_flags(inode);
+ 	inode_unlock(inode);
+ 	f2fs_mark_inode_dirty_sync(inode, false);
+ 
+@@ -1861,7 +1860,7 @@ static int f2fs_quota_off(struct super_block *sb, int type)
+ 
+ 	inode_lock(inode);
+ 	F2FS_I(inode)->i_flags &= ~(F2FS_NOATIME_FL | F2FS_IMMUTABLE_FL);
+-	inode_set_flags(inode, 0, S_NOATIME | S_IMMUTABLE);
++	f2fs_set_inode_flags(inode);
+ 	inode_unlock(inode);
+ 	f2fs_mark_inode_dirty_sync(inode, false);
+ out_put:
 -- 
 2.20.1
 
