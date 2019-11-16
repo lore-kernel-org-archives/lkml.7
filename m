@@ -2,53 +2,51 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5A4C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D59C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D9A121479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:18:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A79AC21479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:19:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921133;
-	bh=HUmds+9b5PGZVPdZ+yxdGP7APAcPSnss65fij7jLvqg=;
+	s=default; t=1573921140;
+	bh=huh3IRdKqGi5hDvKHS1LXuAEpu3NxCzkYXsQqRKcB2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BdLGnQ86qwTx659nBbcXmpNJHokFelf/P/HfXU1qcPqape6HllpHHNaClgSoXR32a
-	 vwrpv/QReQ41MYG1W4k62+Js5TxvUFBLpGBnvGohzu8B8mUEItzjXtDKVNGLs+kREx
-	 +fHcbk8rjE2mwUWNmqis19FPwajYWd6ctCJbH0fs=
+	b=KhgNJWtKW6cQ4OSy3HuVy5ECS8UqyrpYuz5cGduxn9mdmKHEjR+94Z2XgPNMWSorl
+	 WYisnF3g7UE6MQzkoElu9Jud0sD4XiMm5xvOwbM6WpBFXzn+AH3dkf80sdbqRhUTTD
+	 hhKkncjbIzqshGP6u+/NMCd8nfZmo/vkU/Dvq1TM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbfKPPqZ (ORCPT
+        id S1730998AbfKPQS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:46:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52200 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:18:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729229AbfKPPqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:46:05 -0500
+        id S1729356AbfKPPqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:21 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BB4220857;
-        Sat, 16 Nov 2019 15:46:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3534D20855;
+        Sat, 16 Nov 2019 15:46:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919164;
-        bh=HUmds+9b5PGZVPdZ+yxdGP7APAcPSnss65fij7jLvqg=;
+        s=default; t=1573919181;
+        bh=huh3IRdKqGi5hDvKHS1LXuAEpu3NxCzkYXsQqRKcB2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DYpt+74JiTYRynxon1wbtIkFhcyv3BLIvkjfSXasGF2O+5uXQgqRMumtE256O/Yv/
-         tF2FdVzI4jgiEQjpo2GgW7P5fOFEf19MDddRgIRpYME6qvIrA7Nv2+d7scDNAZ42PW
-         gDYMLBfypECepKOBEsxFSx0Gst5aViR8c7ACw67g=
+        b=MYdPWd+31hBcaRVJKysLtxBgKpnrlyjREWww4B/py2LFt1/ZtQLuZP9VZxYXXZ5ZC
+         T3mm5z2xh8JZL4Qb3ZTl76ITv2QEvdghSkYjaXK1FtRBO+5j0AUUWoSIUvZlL7GlQJ
+         Ss4GtYEWN8OTiinQsg8SV9Q2f/StEfU+Z/hUxxUc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jon Mason <jdmason@kudzu.us>,
-        "Gerd W . Haeussler" <gerd.haeussler@cesys-it.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-ntb@googlegroups.com,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 172/237] ntb_netdev: fix sleep time mismatch
-Date:   Sat, 16 Nov 2019 10:40:07 -0500
-Message-Id: <20191116154113.7417-172-sashal@kernel.org>
+Cc:     Richard Guy Briggs <rgb@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 190/237] audit: print empty EXECVE args
+Date:   Sat, 16 Nov 2019 10:40:25 -0500
+Message-Id: <20191116154113.7417-190-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -61,36 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Mason <jdmason@kudzu.us>
+From: Richard Guy Briggs <rgb@redhat.com>
 
-[ Upstream commit a861594b1b7ffd630f335b351c4e9f938feadb8e ]
+[ Upstream commit ea956d8be91edc702a98b7fe1f9463e7ca8c42ab ]
 
-The tx_time should be in usecs (according to the comment above the
-variable), but the setting of the timer during the rearming is done in
-msecs.  Change it to match the expected units.
+Empty executable arguments were being skipped when printing out the list
+of arguments in an EXECVE record, making it appear they were somehow
+lost.  Include empty arguments as an itemized empty string.
 
-Fixes: e74bfeedad08 ("NTB: Add flow control to the ntb_netdev")
-Suggested-by: Gerd W. Haeussler <gerd.haeussler@cesys-it.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
-Acked-by: Dave Jiang <dave.jiang@intel.com>
+Reproducer:
+	autrace /bin/ls "" "/etc"
+	ausearch --start recent -m execve -i | grep EXECVE
+	type=EXECVE msg=audit(10/03/2018 13:04:03.208:1391) : argc=3 a0=/bin/ls a2=/etc
+
+With fix:
+	type=EXECVE msg=audit(10/03/2018 21:51:38.290:194) : argc=3 a0=/bin/ls a1= a2=/etc
+	type=EXECVE msg=audit(1538617898.290:194): argc=3 a0="/bin/ls" a1="" a2="/etc"
+
+Passes audit-testsuite.  GH issue tracker at
+https://github.com/linux-audit/audit-kernel/issues/99
+
+Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+[PM: cleaned up the commit metadata]
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ntb_netdev.c | 2 +-
+ kernel/auditsc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ntb_netdev.c b/drivers/net/ntb_netdev.c
-index b12023bc2cab5..df8d49ad48c38 100644
---- a/drivers/net/ntb_netdev.c
-+++ b/drivers/net/ntb_netdev.c
-@@ -236,7 +236,7 @@ static void ntb_netdev_tx_timer(struct timer_list *t)
- 	struct net_device *ndev = dev->ndev;
+diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+index b2d1f043f17fb..1513873e23bd1 100644
+--- a/kernel/auditsc.c
++++ b/kernel/auditsc.c
+@@ -1107,7 +1107,7 @@ static void audit_log_execve_info(struct audit_context *context,
+ 		}
  
- 	if (ntb_transport_tx_free_entry(dev->qp) < tx_stop) {
--		mod_timer(&dev->tx_timer, jiffies + msecs_to_jiffies(tx_time));
-+		mod_timer(&dev->tx_timer, jiffies + usecs_to_jiffies(tx_time));
- 	} else {
- 		/* Make sure anybody stopping the queue after this sees the new
- 		 * value of ntb_transport_tx_free_entry()
+ 		/* write as much as we can to the audit log */
+-		if (len_buf > 0) {
++		if (len_buf >= 0) {
+ 			/* NOTE: some magic numbers here - basically if we
+ 			 *       can't fit a reasonable amount of data into the
+ 			 *       existing audit buffer, flush it and start with
 -- 
 2.20.1
 
