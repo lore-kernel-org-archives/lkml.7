@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6782BC43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B15C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42A832089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FC682089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920773;
-	bh=pHdX6CY6Rf7zrpKNhcJf+fkTXPMjxTYy8EVKOPNPvA4=;
+	s=default; t=1573920775;
+	bh=Fy1mQC6OBqM/+t1UI6JtqQ78tdA90l/4ZXB8fuX08j8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uRRMWkkJgI3TzLgf5LjHlCe5CSr65weMFWd3wT2FRog7q/5WoteAyvAsUS5MJzLdJ
-	 kkusOov5ocwUPveIrQphXdJb7grCs9BopgDvWZ6YoSa8VtBQBxz4Wpb1Hkbs4VzmIk
-	 idMJv7Bfjrek/Fd5qFOBBi5/31h+Sjp5iSq4FTF0=
+	b=IMdDmKmf8iHuXKIC7GqVsGjJehhWDRP+5wfiZyD9hBnJuA0tADEQHrI8fay99mHMJ
+	 LfBKnQOV+NkADxzFCHTFdJ1XMMIeYlxvevaDd7MNIUnpNdKEXm51d4huZQ/9nV4Pbw
+	 DMFnV9qZb/YccKSruO3fVr37ntUtbjlWbM+X1ctw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729946AbfKPPsI (ORCPT
+        id S1729941AbfKPPsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:48:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54792 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:48:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729855AbfKPPr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:47:56 -0500
+        id S1729853AbfKPPrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:47:55 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 469D0208E3;
-        Sat, 16 Nov 2019 15:47:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F7EE208C0;
+        Sat, 16 Nov 2019 15:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919275;
-        bh=pHdX6CY6Rf7zrpKNhcJf+fkTXPMjxTYy8EVKOPNPvA4=;
+        s=default; t=1573919274;
+        bh=Fy1mQC6OBqM/+t1UI6JtqQ78tdA90l/4ZXB8fuX08j8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fDWoQ1zWgg1YZifMljOlZ6NmZ9XKEnq86y26VjzOeuqH4vys7hLb8TLK2grWdXPGY
-         O+l0dNkkfsREsM8Nv7RxBldnrFjSnL9MAi63iFQHLjvDogoo19qR7V6nFDIZiw6oG2
-         d3E3vv/UwOIGZ7kC24G1OCsKEyexasMPQsUw4IjM=
+        b=yMATsJMEY2Zofg4Du3MxHvDQYxpJaiInlpKal7c6EgIqc4d7ccxBlicSUjKuJyoxw
+         PoUeLUNK5iKecLH8VnGxfJ8DhfGbw18YhU124HNYfEagkv8t5LyYVsoMNZrkKNwbV/
+         aGUxricrzRGRA9ocg/Jz2ZNdPI585skNcTYUJ4uI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 024/150] pwm: lpss: Only set update bit if we are actually changing the settings
-Date:   Sat, 16 Nov 2019 10:45:22 -0500
-Message-Id: <20191116154729.9573-24-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 023/150] pinctrl: sunxi: Fix a memory leak in 'sunxi_pinctrl_build_state()'
+Date:   Sat, 16 Nov 2019 10:45:21 -0500
+Message-Id: <20191116154729.9573-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -59,94 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 2153bbc12f77fb2203276befc0f0dddbfb023bb1 ]
+[ Upstream commit a93a676b079144009f55fff2ab0e34c3b7258c8a ]
 
-According to the datasheet the update bit must be set if the on-time-div
-or the base-unit changes.
+If 'krealloc()' fails, 'pctl->functions' is set to NULL.
+We should instead use a temp variable in order to be able to free the
+previously allocated memeory, in case of OOM.
 
-Now that we properly order device resume on Cherry Trail so that the GFX0
-_PS0 method no longer exits with an error, we end up with a sequence of
-events where we are writing the same values twice in a row.
-
-First the _PS0 method restores the duty cycle of 0% the GPU driver set
-on suspend and then the GPU driver first updates just the enabled bit in
-the pwm_state from 0 to 1, causing us to write the same values again,
-before restoring the pre-suspend duty-cycle in a separate pwm_apply call.
-
-When writing the update bit the second time, without changing any of
-the values the update bit clears immediately / instantly, instead of
-staying 1 for a while as usual. After this the next setting of the update
-bit seems to be ignored, causing the restoring of the pre-suspend
-duty-cycle to not get applied. This makes the backlight come up with
-a 0% dutycycle after suspend/resume.
-
-Any further brightness changes after this do work.
-
-This commit moves the setting of the update bit into pwm_lpss_prepare()
-and only sets the bit if we have actually changed any of the values.
-
-This avoids the setting of the update bit the second time we configure
-the PWM to 0% dutycycle, this fixes the backlight coming up with 0%
-duty-cycle after a suspend/resume.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-lpss.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
-index 4721a264bac25..1e69c1c9ec096 100644
---- a/drivers/pwm/pwm-lpss.c
-+++ b/drivers/pwm/pwm-lpss.c
-@@ -97,7 +97,7 @@ static void pwm_lpss_prepare(struct pwm_lpss_chip *lpwm, struct pwm_device *pwm,
- 	unsigned long long on_time_div;
- 	unsigned long c = lpwm->info->clk_rate, base_unit_range;
- 	unsigned long long base_unit, freq = NSEC_PER_SEC;
--	u32 ctrl;
-+	u32 orig_ctrl, ctrl;
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index 52edf3b5988d5..cc8b86a16da0d 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -1039,6 +1039,7 @@ static int sunxi_pinctrl_add_function(struct sunxi_pinctrl *pctl,
+ static int sunxi_pinctrl_build_state(struct platform_device *pdev)
+ {
+ 	struct sunxi_pinctrl *pctl = platform_get_drvdata(pdev);
++	void *ptr;
+ 	int i;
  
- 	do_div(freq, period_ns);
+ 	/*
+@@ -1105,13 +1106,15 @@ static int sunxi_pinctrl_build_state(struct platform_device *pdev)
+ 	}
  
-@@ -114,13 +114,17 @@ static void pwm_lpss_prepare(struct pwm_lpss_chip *lpwm, struct pwm_device *pwm,
- 	do_div(on_time_div, period_ns);
- 	on_time_div = 255ULL - on_time_div;
+ 	/* And now allocated and fill the array for real */
+-	pctl->functions = krealloc(pctl->functions,
+-				   pctl->nfunctions * sizeof(*pctl->functions),
+-				   GFP_KERNEL);
+-	if (!pctl->functions) {
++	ptr = krealloc(pctl->functions,
++		       pctl->nfunctions * sizeof(*pctl->functions),
++		       GFP_KERNEL);
++	if (!ptr) {
+ 		kfree(pctl->functions);
++		pctl->functions = NULL;
+ 		return -ENOMEM;
+ 	}
++	pctl->functions = ptr;
  
--	ctrl = pwm_lpss_read(pwm);
-+	orig_ctrl = ctrl = pwm_lpss_read(pwm);
- 	ctrl &= ~PWM_ON_TIME_DIV_MASK;
- 	ctrl &= ~(base_unit_range << PWM_BASE_UNIT_SHIFT);
- 	base_unit &= base_unit_range;
- 	ctrl |= (u32) base_unit << PWM_BASE_UNIT_SHIFT;
- 	ctrl |= on_time_div;
--	pwm_lpss_write(pwm, ctrl);
-+
-+	if (orig_ctrl != ctrl) {
-+		pwm_lpss_write(pwm, ctrl);
-+		pwm_lpss_write(pwm, ctrl | PWM_SW_UPDATE);
-+	}
- }
- 
- static inline void pwm_lpss_cond_enable(struct pwm_device *pwm, bool cond)
-@@ -144,7 +148,6 @@ static int pwm_lpss_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 				return ret;
- 			}
- 			pwm_lpss_prepare(lpwm, pwm, state->duty_cycle, state->period);
--			pwm_lpss_write(pwm, pwm_lpss_read(pwm) | PWM_SW_UPDATE);
- 			pwm_lpss_cond_enable(pwm, lpwm->info->bypass == false);
- 			ret = pwm_lpss_wait_for_update(pwm);
- 			if (ret) {
-@@ -157,7 +160,6 @@ static int pwm_lpss_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			if (ret)
- 				return ret;
- 			pwm_lpss_prepare(lpwm, pwm, state->duty_cycle, state->period);
--			pwm_lpss_write(pwm, pwm_lpss_read(pwm) | PWM_SW_UPDATE);
- 			return pwm_lpss_wait_for_update(pwm);
- 		}
- 	} else if (pwm_is_enabled(pwm)) {
+ 	for (i = 0; i < pctl->desc->npins; i++) {
+ 		const struct sunxi_desc_pin *pin = pctl->desc->pins + i;
 -- 
 2.20.1
 
