@@ -2,52 +2,51 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B44DEC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6F3C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C3BB21479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E34721479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:22:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921350;
-	bh=CUQm85ZwFc3ZiJ3wii7Anj20FIV1fgD/Xl2COzvfJSg=;
+	s=default; t=1573921360;
+	bh=8f4xeZaKgSHe+bwCZXSCAB6UIQWCoTjScHY3Svna+w4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W6b2L1OHt8KSfZIphtm2ftV8SjZIY9K4o84TxgpHkAZeWUT2oke/fMIAZbPkle5Xw
-	 NdVUOvQN94NInRD4PSNx11LE1vUccgzIi+y2WRfhRffr2C9z9ZDuMDoB5zpzCpgVKG
-	 CtuEf4u+jmNFZlNLSBykcDPrvO05xAd7RrKaey8g=
+	b=GXIPfFDvQQrI1glvHR9U3zZTI9eBThKKanIb1Un6Iy3GleTDqEByphKeNzs6wnOIt
+	 LI743i4gb3iBHv5TsVTF95W39A1rS1wkJjQh/5LM96KVuadXXxs77xT22Q0s8qyWdu
+	 ha3tQu3Kv7qS6+UGpgxNsTOt5iciBdBt0Mdjo0Rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731967AbfKPQW0 (ORCPT
+        id S1728624AbfKPPnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:22:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47224 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:43:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728656AbfKPPnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:43:17 -0500
+        id S1728579AbfKPPnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:43:11 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABD7F207DD;
-        Sat, 16 Nov 2019 15:43:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 293A52073B;
+        Sat, 16 Nov 2019 15:43:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918997;
-        bh=CUQm85ZwFc3ZiJ3wii7Anj20FIV1fgD/Xl2COzvfJSg=;
+        s=default; t=1573918991;
+        bh=8f4xeZaKgSHe+bwCZXSCAB6UIQWCoTjScHY3Svna+w4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QorIwn+MEykI+H2YPPdKegQmzuj8b1by47sToCgr9z7iyaMWvRNE89l2kXeUiFMzA
-         1Hh5lED21clx35BhepXnsLCB6pcxIGLOrFRjoGoeEUeaSG2bMlRDypLhNf43VcPdhJ
-         vk7DExyfhDDoHdOyDUufqughs1SFphUXXBE/qFDc=
+        b=0p53hj7RihkzfSPlxDhBgu4d/kOZNwysM1t+zbh6+rMg/mdP1qiNzioSQHbHEXpR5
+         nz5YofMo5REbY7wEnqeNHkv+eEqo7k0Q80Qlk3Btj07tYV25MRtmxE4jL1cfxeiSGZ
+         5ZOFTmFlQvhRlKg7LfxI3u1OPGvercL76bzv2GUY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 101/237] rtc: s35390a: Change buf's type to u8 in s35390a_init
-Date:   Sat, 16 Nov 2019 10:38:56 -0500
-Message-Id: <20191116154113.7417-101-sashal@kernel.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 095/237] powerpc/64s/radix: Fix radix__flush_tlb_collapsed_pmd double flushing pmd
+Date:   Sat, 16 Nov 2019 10:38:50 -0500
+Message-Id: <20191116154113.7417-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,42 +59,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit ef0f02fd69a02b50e468a4ddbe33e3d81671e248 ]
+[ Upstream commit dd76ff5af35350fd6d5bb5b069e73b6017f66893 ]
 
-Clang warns:
-
-drivers/rtc/rtc-s35390a.c:124:27: warning: implicit conversion from
-'int' to 'char' changes value from 192 to -64 [-Wconstant-conversion]
-        buf = S35390A_FLAG_RESET | S35390A_FLAG_24H;
-            ~ ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
-1 warning generated.
-
-Update buf to be an unsigned 8-bit integer, which matches the buf member
-in struct i2c_msg.
-
-https://github.com/ClangBuiltLinux/linux/issues/145
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-s35390a.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/mm/tlb-radix.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-s35390a.c b/drivers/rtc/rtc-s35390a.c
-index 77feb603cd4c0..3c64dbb08109a 100644
---- a/drivers/rtc/rtc-s35390a.c
-+++ b/drivers/rtc/rtc-s35390a.c
-@@ -108,7 +108,7 @@ static int s35390a_get_reg(struct s35390a *s35390a, int reg, char *buf, int len)
- 
- static int s35390a_init(struct s35390a *s35390a)
- {
--	char buf;
-+	u8 buf;
- 	int ret;
- 	unsigned initcount = 0;
- 
+diff --git a/arch/powerpc/mm/tlb-radix.c b/arch/powerpc/mm/tlb-radix.c
+index 62be0e5732b70..02bc3ae8522f4 100644
+--- a/arch/powerpc/mm/tlb-radix.c
++++ b/arch/powerpc/mm/tlb-radix.c
+@@ -1071,7 +1071,6 @@ void radix__flush_tlb_collapsed_pmd(struct mm_struct *mm, unsigned long addr)
+ 			goto local;
+ 		}
+ 		_tlbie_va_range(addr, end, pid, PAGE_SIZE, mmu_virtual_psize, true);
+-		goto local;
+ 	} else {
+ local:
+ 		_tlbiel_va_range(addr, end, pid, PAGE_SIZE, mmu_virtual_psize, true);
 -- 
 2.20.1
 
