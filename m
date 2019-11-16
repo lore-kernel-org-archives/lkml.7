@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB1AC43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9678FC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A5320874
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F0F82089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920495;
-	bh=EXrFZR95aAwcDSeymXCCjFEvcW5PY/VBzSqJopYtqCs=;
+	s=default; t=1573920497;
+	bh=IM1t6g1nMjKWhDLnyHsa0pI2DuK8mSYSBKumetio6Ws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IUhLxLY8BO4IGlvu+kayGTYKXM+C9CPe9ycyS5gGV+CJ+mHEvaeilKntP4t0SZjXq
-	 L5MRNPQI82OXVgvHdezy0GM1LhyDBk6yzQkg0DHfB/7Egl2qvf/wG4sF5NxUnLPPXe
-	 Iv6EUpY/KMan0/KqG7b88Q3nPXu/tpYW+F00t7MI=
+	b=Hi83JF1MtkJAvuqYkP31LFXcHPw9hZdBdbOqPQ99jexfT99SFr0TCeIu1p4Z4h0zZ
+	 Wm4pq5PXOwYTCzXrhvHU8ChUX6GDyDWEoV4Ke8ErnXZE7whhBuEClFUr3R97/O+RZH
+	 wqu6dTDebfV/zAgQpLWsxaJIRyAZf3tZWXQCup38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbfKPPuP (ORCPT
+        id S1731425AbfKPQIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:50:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58118 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:08:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729313AbfKPPuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:50:12 -0500
+        id S1729534AbfKPPuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:50:16 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F8E121479;
-        Sat, 16 Nov 2019 15:50:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4509A2168B;
+        Sat, 16 Nov 2019 15:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919411;
-        bh=EXrFZR95aAwcDSeymXCCjFEvcW5PY/VBzSqJopYtqCs=;
+        s=default; t=1573919415;
+        bh=IM1t6g1nMjKWhDLnyHsa0pI2DuK8mSYSBKumetio6Ws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lkkBuissade6iWIYJa6GRUX1S3Y7to6pbFuETQ7YL2thErTGKqfsBQIaS2h6VMs6D
-         vA6WYS7O7d3dhztI6EUuCVJ0EkFZMhYbVCMrL+WIO2frwW+vCwGKXQFUBpdpIsb+tQ
-         fOEPRcjD4DmvE9Zp57dM2K4JVX5vkXaKLQFfxOkg=
+        b=eLEJez6CgxCJj84+RH5Kp2aHhRuLXBF1w0iUtkq0RdL9gpD75P53q0sZoS/y4vLsH
+         90HyMNzuJsoCR+Gpp18oQnVcsbghVUi/QQebQl5d67I8IsgHGFCPxMwiEniMRWpq9m
+         PwhPeZHeAqoLwT0ySIfhjdHz0whpVsq7OBjv56T4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Victor Kamensky <kamensky@cisco.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 110/150] arm64: makefile fix build of .i file in external module case
-Date:   Sat, 16 Nov 2019 10:46:48 -0500
-Message-Id: <20191116154729.9573-110-sashal@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 114/150] sched/topology: Fix off by one bug
+Date:   Sat, 16 Nov 2019 10:46:52 -0500
+Message-Id: <20191116154729.9573-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,55 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Victor Kamensky <kamensky@cisco.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 98356eb0ae499c63e78073ccedd9a5fc5c563288 ]
+[ Upstream commit 993f0b0510dad98b4e6e39506834dab0d13fd539 ]
 
-After 'a66649dab350 arm64: fix vdso-offsets.h dependency' if
-one will try to build .i file in case of external kernel module,
-build fails complaining that prepare0 target is missing. This
-issue came up with SystemTap when it tries to build variety
-of .i files for its own generated kernel modules trying to
-figure given kernel features/capabilities.
+With the addition of the NUMA identity level, we increased @level by
+one and will run off the end of the array in the distance sort loop.
 
-The issue is that prepare0 is defined in top level Makefile
-only if KBUILD_EXTMOD is not defined. .i file rule depends
-on prepare and in case KBUILD_EXTMOD defined top level Makefile
-contains empty rule for prepare. But after mentioned commit
-arch/arm64/Makefile would introduce dependency on prepare0
-through its own prepare target.
-
-Fix it to put proper ifdef KBUILD_EXTMOD around code introduced
-by mentioned commit. It matches what top level Makefile does.
-
-Acked-by: Kevin Brodsky <kevin.brodsky@arm.com>
-Signed-off-by: Victor Kamensky <kamensky@cisco.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Fixed: 051f3ca02e46 ("sched/topology: Introduce NUMA identity node sched domain")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/sched/topology.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index 0c5f70e6d5cfa..8c4bc5a2c61f4 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -149,6 +149,7 @@ archclean:
- 	$(Q)$(MAKE) $(clean)=$(boot)
- 	$(Q)$(MAKE) $(clean)=$(boot)/dts
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 9dcd80ed9d4c1..867d173dab482 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1347,7 +1347,7 @@ void sched_init_numa(void)
+ 	int level = 0;
+ 	int i, j, k;
  
-+ifeq ($(KBUILD_EXTMOD),)
- # We need to generate vdso-offsets.h before compiling certain files in kernel/.
- # In order to do that, we should use the archprepare target, but we can't since
- # asm-offsets.h is included in some files used to generate vdso-offsets.h, and
-@@ -158,6 +159,7 @@ archclean:
- prepare: vdso_prepare
- vdso_prepare: prepare0
- 	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso include/generated/vdso-offsets.h
-+endif
+-	sched_domains_numa_distance = kzalloc(sizeof(int) * nr_node_ids, GFP_KERNEL);
++	sched_domains_numa_distance = kzalloc(sizeof(int) * (nr_node_ids + 1), GFP_KERNEL);
+ 	if (!sched_domains_numa_distance)
+ 		return;
  
- define archhelp
-   echo  '* Image.gz      - Compressed kernel image (arch/$(ARCH)/boot/Image.gz)'
 -- 
 2.20.1
 
