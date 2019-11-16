@@ -2,50 +2,52 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA962C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 142ADC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C007121844
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E09282184B
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921524;
-	bh=le2zbdIiKc8Bmu6gGJJJMKQ60Cd3Om3/rBxr9Gpffj0=;
+	s=default; t=1573921526;
+	bh=RePkeaheWKE+ZnVrEGtOO+X4ZsfaVqbtPRO0k4Nlf8s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pwIpyIgBUK19oM840UHD616q+EpakFpv/1NYxvA3z8LEJLxi6BB/9sY3BacOsGQfw
-	 FtOZy4bq8BbbmCmaorDIYxMJs4aElrHL2jNvCsHlOhEEPBred2aU1tokPhEUobs59D
-	 /hdM0HnJNYLM4q9cpdxGd570GF1uqSkL52q4eP9w=
+	b=YSb0hINcp/vFpquz7yFuR1rNljTO560ED8zIbX+dCVVE+858WWAbCZidCiZ6uftGX
+	 TP0xUy4NL7c8QoDJcRu+f0LAC7BTJYxV5HLLroJVMqEOGGV+GZSlY/vkOVDlu1pNu0
+	 2wbo4UiV0G8WQDjyRYx8MQqR2vJ2Nm37Ati0hTjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbfKPPmF (ORCPT
+        id S1730177AbfKPQZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:42:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45398 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:25:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728042AbfKPPmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:42:00 -0500
+        id S1728152AbfKPPmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:42:07 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B12A72083E;
-        Sat, 16 Nov 2019 15:41:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C22602075B;
+        Sat, 16 Nov 2019 15:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918919;
-        bh=le2zbdIiKc8Bmu6gGJJJMKQ60Cd3Om3/rBxr9Gpffj0=;
+        s=default; t=1573918926;
+        bh=RePkeaheWKE+ZnVrEGtOO+X4ZsfaVqbtPRO0k4Nlf8s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qecyUBO22h9pTmjhXVihhIHkvrZWZuhx1iLIdIedxM/TrpzeLT1uVwTxXhjHAZNSU
-         xsOolStgc420ZjLE/L2sLX7qvr7pM5RWMalzooH7aCD2lscDwNQ4mSjKQyUpa6dNGq
-         vmmiFKXkKwItJgZNRWoP+E2+A+Wc+vGFeo9yTvq8=
+        b=I0ZPuJPdB0reNl80Uci6AEXhYNOEWmBTU1E2QSETlVb9XazJR7wwBYH8IiLjQkbD2
+         tlAniOadOqvxLEnqkQIguE43agQ64D/5hbwokLVbI7Jk2sD8ylEhxmQEsGdA9ULOKQ
+         Eo9KqHeDN+xU7Fw9n6a8F/em4jDx2OCoBdlQi/rA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Omar Sandoval <osandov@fb.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 043/237] amiflop: clean up on errors during setup
-Date:   Sat, 16 Nov 2019 10:37:58 -0500
-Message-Id: <20191116154113.7417-43-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 052/237] scsi: isci: Change sci_controller_start_task's return type to sci_status
+Date:   Sat, 16 Nov 2019 10:38:07 -0500
+Message-Id: <20191116154113.7417-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -58,148 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omar Sandoval <osandov@fb.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 53d0f8dbde89cf6c862c7a62e00c6123e02cba41 ]
+[ Upstream commit 362b5da3dfceada6e74ecdd7af3991bbe42c0c0f ]
 
-The error handling in fd_probe_drives() doesn't clean up at all. Fix it
-up in preparation for converting to blk-mq. While we're here, get rid of
-the commented out amiga_floppy_remove().
+Clang warns when an enumerated type is implicitly converted to another.
 
-Signed-off-by: Omar Sandoval <osandov@fb.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+drivers/scsi/isci/request.c:3476:13: warning: implicit conversion from
+enumeration type 'enum sci_task_status' to different enumeration type
+'enum sci_status' [-Wenum-conversion]
+                        status = sci_controller_start_task(ihost,
+                               ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/scsi/isci/host.c:2744:10: warning: implicit conversion from
+enumeration type 'enum sci_status' to different enumeration type 'enum
+sci_task_status' [-Wenum-conversion]
+                return SCI_SUCCESS;
+                ~~~~~~ ^~~~~~~~~~~
+drivers/scsi/isci/host.c:2753:9: warning: implicit conversion from
+enumeration type 'enum sci_status' to different enumeration type 'enum
+sci_task_status' [-Wenum-conversion]
+        return status;
+        ~~~~~~ ^~~~~~
+
+Avoid all of these implicit conversion by just making
+sci_controller_start_task use sci_status. This silences
+Clang and has no functional change since sci_task_status
+has all of its values mapped to something in sci_status.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/153
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/amiflop.c | 84 ++++++++++++++++++++---------------------
- 1 file changed, 40 insertions(+), 44 deletions(-)
+ drivers/scsi/isci/host.c | 8 ++++----
+ drivers/scsi/isci/host.h | 2 +-
+ drivers/scsi/isci/task.c | 4 ++--
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/block/amiflop.c b/drivers/block/amiflop.c
-index 3aaf6af3ec23d..2158e130744e0 100644
---- a/drivers/block/amiflop.c
-+++ b/drivers/block/amiflop.c
-@@ -1701,11 +1701,41 @@ static const struct block_device_operations floppy_fops = {
- 	.check_events	= amiga_check_events,
- };
- 
-+static struct gendisk *fd_alloc_disk(int drive)
-+{
-+	struct gendisk *disk;
-+
-+	disk = alloc_disk(1);
-+	if (!disk)
-+		goto out;
-+
-+	disk->queue = blk_init_queue(do_fd_request, &amiflop_lock);
-+	if (IS_ERR(disk->queue)) {
-+		disk->queue = NULL;
-+		goto out_put_disk;
-+	}
-+
-+	unit[drive].trackbuf = kmalloc(FLOPPY_MAX_SECTORS * 512, GFP_KERNEL);
-+	if (!unit[drive].trackbuf)
-+		goto out_cleanup_queue;
-+
-+	return disk;
-+
-+out_cleanup_queue:
-+	blk_cleanup_queue(disk->queue);
-+	disk->queue = NULL;
-+out_put_disk:
-+	put_disk(disk);
-+out:
-+	unit[drive].type->code = FD_NODRIVE;
-+	return NULL;
-+}
-+
- static int __init fd_probe_drives(void)
+diff --git a/drivers/scsi/isci/host.c b/drivers/scsi/isci/host.c
+index 1ee3868ade079..7b5deae68d33b 100644
+--- a/drivers/scsi/isci/host.c
++++ b/drivers/scsi/isci/host.c
+@@ -2717,9 +2717,9 @@ enum sci_status sci_controller_continue_io(struct isci_request *ireq)
+  *    the task management request.
+  * @task_request: the handle to the task request object to start.
+  */
+-enum sci_task_status sci_controller_start_task(struct isci_host *ihost,
+-					       struct isci_remote_device *idev,
+-					       struct isci_request *ireq)
++enum sci_status sci_controller_start_task(struct isci_host *ihost,
++					  struct isci_remote_device *idev,
++					  struct isci_request *ireq)
  {
- 	int drive,drives,nomem;
+ 	enum sci_status status;
  
--	printk(KERN_INFO "FD: probing units\nfound ");
-+	pr_info("FD: probing units\nfound");
- 	drives=0;
- 	nomem=0;
- 	for(drive=0;drive<FD_MAX_UNITS;drive++) {
-@@ -1713,27 +1743,17 @@ static int __init fd_probe_drives(void)
- 		fd_probe(drive);
- 		if (unit[drive].type->code == FD_NODRIVE)
- 			continue;
--		disk = alloc_disk(1);
-+
-+		disk = fd_alloc_disk(drive);
- 		if (!disk) {
--			unit[drive].type->code = FD_NODRIVE;
-+			pr_cont(" no mem for fd%d", drive);
-+			nomem = 1;
- 			continue;
- 		}
- 		unit[drive].gendisk = disk;
--
--		disk->queue = blk_init_queue(do_fd_request, &amiflop_lock);
--		if (!disk->queue) {
--			unit[drive].type->code = FD_NODRIVE;
--			continue;
--		}
--
- 		drives++;
--		if ((unit[drive].trackbuf = kmalloc(FLOPPY_MAX_SECTORS * 512, GFP_KERNEL)) == NULL) {
--			printk("no mem for ");
--			unit[drive].type = &drive_types[num_dr_types - 1]; /* FD_NODRIVE */
--			drives--;
--			nomem = 1;
--		}
--		printk("fd%d ",drive);
-+
-+		pr_cont(" fd%d",drive);
- 		disk->major = FLOPPY_MAJOR;
- 		disk->first_minor = drive;
- 		disk->fops = &floppy_fops;
-@@ -1744,11 +1764,11 @@ static int __init fd_probe_drives(void)
+@@ -2728,7 +2728,7 @@ enum sci_task_status sci_controller_start_task(struct isci_host *ihost,
+ 			 "%s: SCIC Controller starting task from invalid "
+ 			 "state\n",
+ 			 __func__);
+-		return SCI_TASK_FAILURE_INVALID_STATE;
++		return SCI_FAILURE_INVALID_STATE;
  	}
- 	if ((drives > 0) || (nomem == 0)) {
- 		if (drives == 0)
--			printk("no drives");
--		printk("\n");
-+			pr_cont(" no drives");
-+		pr_cont("\n");
- 		return drives;
- 	}
--	printk("\n");
-+	pr_cont("\n");
- 	return -ENOMEM;
- }
-  
-@@ -1831,30 +1851,6 @@ static int __init amiga_floppy_probe(struct platform_device *pdev)
- 	return ret;
- }
  
--#if 0 /* not safe to unload */
--static int __exit amiga_floppy_remove(struct platform_device *pdev)
--{
--	int i;
--
--	for( i = 0; i < FD_MAX_UNITS; i++) {
--		if (unit[i].type->code != FD_NODRIVE) {
--			struct request_queue *q = unit[i].gendisk->queue;
--			del_gendisk(unit[i].gendisk);
--			put_disk(unit[i].gendisk);
--			kfree(unit[i].trackbuf);
--			if (q)
--				blk_cleanup_queue(q);
--		}
--	}
--	blk_unregister_region(MKDEV(FLOPPY_MAJOR, 0), 256);
--	free_irq(IRQ_AMIGA_CIAA_TB, NULL);
--	free_irq(IRQ_AMIGA_DSKBLK, NULL);
--	custom.dmacon = DMAF_DISK; /* disable DMA */
--	amiga_chip_free(raw_buf);
--	unregister_blkdev(FLOPPY_MAJOR, "fd");
--}
--#endif
--
- static struct platform_driver amiga_floppy_driver = {
- 	.driver   = {
- 		.name	= "amiga-floppy",
+ 	status = sci_remote_device_start_task(ihost, idev, ireq);
+diff --git a/drivers/scsi/isci/host.h b/drivers/scsi/isci/host.h
+index b3539928073c6..6bc3f022630a2 100644
+--- a/drivers/scsi/isci/host.h
++++ b/drivers/scsi/isci/host.h
+@@ -489,7 +489,7 @@ enum sci_status sci_controller_start_io(
+ 	struct isci_remote_device *idev,
+ 	struct isci_request *ireq);
+ 
+-enum sci_task_status sci_controller_start_task(
++enum sci_status sci_controller_start_task(
+ 	struct isci_host *ihost,
+ 	struct isci_remote_device *idev,
+ 	struct isci_request *ireq);
+diff --git a/drivers/scsi/isci/task.c b/drivers/scsi/isci/task.c
+index 6dcaed0c1fc8c..fb6eba331ac6e 100644
+--- a/drivers/scsi/isci/task.c
++++ b/drivers/scsi/isci/task.c
+@@ -258,7 +258,7 @@ static int isci_task_execute_tmf(struct isci_host *ihost,
+ 				 struct isci_tmf *tmf, unsigned long timeout_ms)
+ {
+ 	DECLARE_COMPLETION_ONSTACK(completion);
+-	enum sci_task_status status = SCI_TASK_FAILURE;
++	enum sci_status status = SCI_FAILURE;
+ 	struct isci_request *ireq;
+ 	int ret = TMF_RESP_FUNC_FAILED;
+ 	unsigned long flags;
+@@ -301,7 +301,7 @@ static int isci_task_execute_tmf(struct isci_host *ihost,
+ 	/* start the TMF io. */
+ 	status = sci_controller_start_task(ihost, idev, ireq);
+ 
+-	if (status != SCI_TASK_SUCCESS) {
++	if (status != SCI_SUCCESS) {
+ 		dev_dbg(&ihost->pdev->dev,
+ 			 "%s: start_io failed - status = 0x%x, request = %p\n",
+ 			 __func__,
 -- 
 2.20.1
 
