@@ -2,53 +2,51 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB2AC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB53C43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 042B32089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB90F21479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919926;
-	bh=ljDiP3g5+8bZOV0s4yL1VTzoE8G8xdTw66PY3Ck1tB4=;
+	s=default; t=1573919937;
+	bh=GQdssR5vvChor4Ev4t2/5349FPN4oSbrjLFcBctu+Y0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=04rucfWFmmz9h9/54qnqjhFsc7RuQHws18QrKCjqV0a0+Iy0V0UTBhQX/e1slaeIr
-	 F5z5IIZV71vT6ivGdNxxX8JJcunYp1BlLwuWSujHQflqY+d10SB6vMo9wxQurZZ4UB
-	 XjntmjzHiMW7WCe66z/wqoOqGG1djEjvmaHPd3Ps=
+	b=K/JfqAD+Hg+UZ3CVx1NEO+Ob3BQgp3kbmQokeAWdhG/hNh9FKxNLDe/WG1HmeB0Ty
+	 RoF0ZvVnwb58G4OOXEYtjiaHI9T+DjXeV5Yb7mMhBi35Oxm3LM+lGw4JLm2Bhw1Ewq
+	 zjA+B/ak4LD0Z70cCoAvtte8bXB537WOp+g4q8i4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731469AbfKPP6o (ORCPT
+        id S1731474AbfKPP64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:58:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35800 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:58:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730379AbfKPPyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:54:15 -0500
+        id S1731400AbfKPPyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:54:12 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36F3A21882;
-        Sat, 16 Nov 2019 15:54:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44B8021823;
+        Sat, 16 Nov 2019 15:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919654;
-        bh=ljDiP3g5+8bZOV0s4yL1VTzoE8G8xdTw66PY3Ck1tB4=;
+        s=default; t=1573919651;
+        bh=GQdssR5vvChor4Ev4t2/5349FPN4oSbrjLFcBctu+Y0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2rWKFo2qr6stwucdl+xBikVcbBgl+N6YB6RSzioFtMzTXOwpOerI7WGEGNx8f1plY
-         DoHqAshw/6PQFoRgiDB+yjaWMXdztbfayEniQJK6V2hkSGJRi9afjVfBqsKfov2gKy
-         ewrxmoeLGRPPsLF+sZNe2k/4KJERLUkJQ5Xrr6ng=
+        b=e1FIfzQAL6DlPjyoV3cWx6ZgXxwCqASmh1K39yIRai3Fg4qJqiYW/3z8xNYnKvi+3
+         Z6oFDu2im9abFem9LD09yOTjBiDObnLYJkZo/r9ziYGjypge3XKA8iQ2qcBzz3qsg0
+         sGCO1xIU6waAVFHWRT4g/3O3sPM9YOI5ZSRxeTAY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.4 28/77] atm: zatm: Fix empty body Clang warnings
-Date:   Sat, 16 Nov 2019 10:52:50 -0500
-Message-Id: <20191116155339.11909-28-sashal@kernel.org>
+Cc:     Mattias Jacobsson <2pi@mok.nu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 26/77] USB: misc: appledisplay: fix backlight update_status return code
+Date:   Sat, 16 Nov 2019 10:52:48 -0500
+Message-Id: <20191116155339.11909-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -61,173 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Mattias Jacobsson <2pi@mok.nu>
 
-[ Upstream commit 64b9d16e2d02ca6e5dc8fcd30cfd52b0ecaaa8f4 ]
+[ Upstream commit 090158555ff8d194a98616034100b16697dd80d0 ]
 
-Clang warns:
+Upon success the update_status handler returns a positive number
+corresponding to the number of bytes transferred by usb_control_msg.
+However the return code of the update_status handler should indicate if
+an error occurred(negative) or how many bytes of the user's input to sysfs
+that was consumed. Return code zero indicates all bytes were consumed.
 
-drivers/atm/zatm.c:513:7: error: while loop has empty body
-[-Werror,-Wempty-body]
-        zwait;
-             ^
-drivers/atm/zatm.c:513:7: note: put the semicolon on a separate line to
-silence this warning
+The bug can for example result in the update_status handler being called
+twice, the second time with only the "unconsumed" part of the user's input
+to sysfs. Effectively setting an incorrect brightness.
 
-Get rid of this warning by using an empty do-while loop. While we're at
-it, add parentheses to make it clear that this is a function-like macro.
+Change the update_status handler to return zero for all successful
+transactions and forward usb_control_msg's error code upon failure.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/42
-Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/atm/zatm.c | 42 +++++++++++++++++++++---------------------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+ drivers/usb/misc/appledisplay.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/atm/zatm.c b/drivers/atm/zatm.c
-index 94712e1c5cf9a..bcdde3e360522 100644
---- a/drivers/atm/zatm.c
-+++ b/drivers/atm/zatm.c
-@@ -126,7 +126,7 @@ static unsigned long dummy[2] = {0,0};
- #define zin_n(r) inl(zatm_dev->base+r*4)
- #define zin(r) inl(zatm_dev->base+uPD98401_##r*4)
- #define zout(v,r) outl(v,zatm_dev->base+uPD98401_##r*4)
--#define zwait while (zin(CMR) & uPD98401_BUSY)
-+#define zwait() do {} while (zin(CMR) & uPD98401_BUSY)
- 
- /* RX0, RX1, TX0, TX1 */
- static const int mbx_entries[NR_MBX] = { 1024,1024,1024,1024 };
-@@ -140,7 +140,7 @@ static const int mbx_esize[NR_MBX] = { 16,16,4,4 }; /* entry size in bytes */
- 
- static void zpokel(struct zatm_dev *zatm_dev,u32 value,u32 addr)
- {
--	zwait;
-+	zwait();
- 	zout(value,CER);
- 	zout(uPD98401_IND_ACC | uPD98401_IA_BALL |
- 	    (uPD98401_IA_TGT_CM << uPD98401_IA_TGT_SHIFT) | addr,CMR);
-@@ -149,10 +149,10 @@ static void zpokel(struct zatm_dev *zatm_dev,u32 value,u32 addr)
- 
- static u32 zpeekl(struct zatm_dev *zatm_dev,u32 addr)
- {
--	zwait;
-+	zwait();
- 	zout(uPD98401_IND_ACC | uPD98401_IA_BALL | uPD98401_IA_RW |
- 	  (uPD98401_IA_TGT_CM << uPD98401_IA_TGT_SHIFT) | addr,CMR);
--	zwait;
-+	zwait();
- 	return zin(CER);
+diff --git a/drivers/usb/misc/appledisplay.c b/drivers/usb/misc/appledisplay.c
+index 993f4da065c3a..dabd1077d03c4 100644
+--- a/drivers/usb/misc/appledisplay.c
++++ b/drivers/usb/misc/appledisplay.c
+@@ -161,8 +161,11 @@ static int appledisplay_bl_update_status(struct backlight_device *bd)
+ 		pdata->msgdata, 2,
+ 		ACD_USB_TIMEOUT);
+ 	mutex_unlock(&pdata->sysfslock);
+-	
+-	return retval;
++
++	if (retval < 0)
++		return retval;
++	else
++		return 0;
  }
  
-@@ -241,7 +241,7 @@ static void refill_pool(struct atm_dev *dev,int pool)
- 	}
- 	if (first) {
- 		spin_lock_irqsave(&zatm_dev->lock, flags);
--		zwait;
-+		zwait();
- 		zout(virt_to_bus(first),CER);
- 		zout(uPD98401_ADD_BAT | (pool << uPD98401_POOL_SHIFT) | count,
- 		    CMR);
-@@ -508,9 +508,9 @@ static int open_rx_first(struct atm_vcc *vcc)
- 	}
- 	if (zatm_vcc->pool < 0) return -EMSGSIZE;
- 	spin_lock_irqsave(&zatm_dev->lock, flags);
--	zwait;
-+	zwait();
- 	zout(uPD98401_OPEN_CHAN,CMR);
--	zwait;
-+	zwait();
- 	DPRINTK("0x%x 0x%x\n",zin(CMR),zin(CER));
- 	chan = (zin(CMR) & uPD98401_CHAN_ADDR) >> uPD98401_CHAN_ADDR_SHIFT;
- 	spin_unlock_irqrestore(&zatm_dev->lock, flags);
-@@ -571,21 +571,21 @@ static void close_rx(struct atm_vcc *vcc)
- 		pos = vcc->vci >> 1;
- 		shift = (1-(vcc->vci & 1)) << 4;
- 		zpokel(zatm_dev,zpeekl(zatm_dev,pos) & ~(0xffff << shift),pos);
--		zwait;
-+		zwait();
- 		zout(uPD98401_NOP,CMR);
--		zwait;
-+		zwait();
- 		zout(uPD98401_NOP,CMR);
- 		spin_unlock_irqrestore(&zatm_dev->lock, flags);
- 	}
- 	spin_lock_irqsave(&zatm_dev->lock, flags);
--	zwait;
-+	zwait();
- 	zout(uPD98401_DEACT_CHAN | uPD98401_CHAN_RT | (zatm_vcc->rx_chan <<
- 	    uPD98401_CHAN_ADDR_SHIFT),CMR);
--	zwait;
-+	zwait();
- 	udelay(10); /* why oh why ... ? */
- 	zout(uPD98401_CLOSE_CHAN | uPD98401_CHAN_RT | (zatm_vcc->rx_chan <<
- 	    uPD98401_CHAN_ADDR_SHIFT),CMR);
--	zwait;
-+	zwait();
- 	if (!(zin(CMR) & uPD98401_CHAN_ADDR))
- 		printk(KERN_CRIT DEV_LABEL "(itf %d): can't close RX channel "
- 		    "%d\n",vcc->dev->number,zatm_vcc->rx_chan);
-@@ -698,7 +698,7 @@ printk("NONONONOO!!!!\n");
- 	skb_queue_tail(&zatm_vcc->tx_queue,skb);
- 	DPRINTK("QRP=0x%08lx\n",zpeekl(zatm_dev,zatm_vcc->tx_chan*VC_SIZE/4+
- 	  uPD98401_TXVC_QRP));
--	zwait;
-+	zwait();
- 	zout(uPD98401_TX_READY | (zatm_vcc->tx_chan <<
- 	    uPD98401_CHAN_ADDR_SHIFT),CMR);
- 	spin_unlock_irqrestore(&zatm_dev->lock, flags);
-@@ -890,12 +890,12 @@ static void close_tx(struct atm_vcc *vcc)
- 	}
- 	spin_lock_irqsave(&zatm_dev->lock, flags);
- #if 0
--	zwait;
-+	zwait();
- 	zout(uPD98401_DEACT_CHAN | (chan << uPD98401_CHAN_ADDR_SHIFT),CMR);
- #endif
--	zwait;
-+	zwait();
- 	zout(uPD98401_CLOSE_CHAN | (chan << uPD98401_CHAN_ADDR_SHIFT),CMR);
--	zwait;
-+	zwait();
- 	if (!(zin(CMR) & uPD98401_CHAN_ADDR))
- 		printk(KERN_CRIT DEV_LABEL "(itf %d): can't close TX channel "
- 		    "%d\n",vcc->dev->number,chan);
-@@ -925,9 +925,9 @@ static int open_tx_first(struct atm_vcc *vcc)
- 	zatm_vcc->tx_chan = 0;
- 	if (vcc->qos.txtp.traffic_class == ATM_NONE) return 0;
- 	spin_lock_irqsave(&zatm_dev->lock, flags);
--	zwait;
-+	zwait();
- 	zout(uPD98401_OPEN_CHAN,CMR);
--	zwait;
-+	zwait();
- 	DPRINTK("0x%x 0x%x\n",zin(CMR),zin(CER));
- 	chan = (zin(CMR) & uPD98401_CHAN_ADDR) >> uPD98401_CHAN_ADDR_SHIFT;
- 	spin_unlock_irqrestore(&zatm_dev->lock, flags);
-@@ -1557,7 +1557,7 @@ static void zatm_phy_put(struct atm_dev *dev,unsigned char value,
- 	struct zatm_dev *zatm_dev;
- 
- 	zatm_dev = ZATM_DEV(dev);
--	zwait;
-+	zwait();
- 	zout(value,CER);
- 	zout(uPD98401_IND_ACC | uPD98401_IA_B0 |
- 	    (uPD98401_IA_TGT_PHY << uPD98401_IA_TGT_SHIFT) | addr,CMR);
-@@ -1569,10 +1569,10 @@ static unsigned char zatm_phy_get(struct atm_dev *dev,unsigned long addr)
- 	struct zatm_dev *zatm_dev;
- 
- 	zatm_dev = ZATM_DEV(dev);
--	zwait;
-+	zwait();
- 	zout(uPD98401_IND_ACC | uPD98401_IA_B0 | uPD98401_IA_RW |
- 	  (uPD98401_IA_TGT_PHY << uPD98401_IA_TGT_SHIFT) | addr,CMR);
--	zwait;
-+	zwait();
- 	return zin(CER) & 0xff;
- }
- 
+ static int appledisplay_bl_get_brightness(struct backlight_device *bd)
 -- 
 2.20.1
 
