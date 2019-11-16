@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5407C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9117C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A43112089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 855B021479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920969;
-	bh=YRIoyCqFbllyk9Rbao0HAflYjxyFvS7VSLfoVAW4XKI=;
+	s=default; t=1573920973;
+	bh=TSfcfKMerSp3xOiFklG5ABCAq1n+d8pMG/0OHuwn+yU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u6CQACWVYRuDuGK72q1zNwhnR1ofWjZHYjn2vY1a0RkYEEAtHuBeZaEM6UscTex+D
-	 ZBzqhay89JTfF74lucguMwhay4NG/m3lpvzZUOeewFC56LqwCL0cElyUfVMKxr+5UN
-	 ylKftc/ezH1Q4f5rlk88isXJCQmZm6UE/Lf0Cr38=
+	b=E+QSWTN/T+5wnMOifOWXTdt9Qa41zkwITOZwiO1rBEKNYOC4Upe4z6oa5JW4evNC3
+	 K/xizWSc2W0TkfoHjWT/5MhSW+b/m5ubTZrIdfGkJ34HzmUeaDIFNQL5aTvojqmjAw
+	 O6gn9xoKv+p6DB9x6MYppTDntnRUpPgfWVZ7e5Q0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729621AbfKPPrF (ORCPT
+        id S1731949AbfKPQQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:47:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52888 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:16:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729419AbfKPPqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:46:31 -0500
+        id S1729589AbfKPPrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:47:05 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B52C820833;
-        Sat, 16 Nov 2019 15:46:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 117C22083E;
+        Sat, 16 Nov 2019 15:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919191;
-        bh=YRIoyCqFbllyk9Rbao0HAflYjxyFvS7VSLfoVAW4XKI=;
+        s=default; t=1573919225;
+        bh=TSfcfKMerSp3xOiFklG5ABCAq1n+d8pMG/0OHuwn+yU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ut1MxyLUNChfpP4BvrP2Xvxu5N7SydHrf6lLioKOmoSsG0n6lIdhUDsTulS7RSZkZ
-         TGUeJmKR6EDHpWpypHG8bSgAuu3vp+6bYTBhlOYW144KeFUI7Ktb3ipECW0Z3ajGtY
-         Tsp9mB+x48+7Wu1EyUEC0tIZU8vSl5ek/QrflQ5M=
+        b=LVVLIxlMj7Swf6PM3zsF/dU/AvZNzXZpl0LfXPun2d/DK87Jbm4lJ0ok78bL7b2Cz
+         byMny3x5PLxTxF6+oHkSJv3g7XJDA5ZezQBpvNga9geNpykJWjZ/lxRHnrkOHeC3iO
+         J4CE2y/P+lhw1Rx7ZQQoe6G4mJ/H/BYGwvOPTrbw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Norris <briannorris@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 200/237] ath10k: snoc: fix unbalanced clock error handling
-Date:   Sat, 16 Nov 2019 10:40:35 -0500
-Message-Id: <20191116154113.7417-200-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 228/237] pinctrl: bcm2835: Use define directive for BCM2835_PINCONF_PARAM_PULL
+Date:   Sat, 16 Nov 2019 10:41:03 -0500
+Message-Id: <20191116154113.7417-228-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -61,37 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 82e60d920e8ad70cd9a280ab156566755f1fe4aa ]
+[ Upstream commit b40ac08ff886302a6aa457fd72e94a969f50e245 ]
 
-Similar to regulator error handling, we should only start tearing down
-the 'i - 1' clock when clock 'i' fails to enable. Otherwise, we might
-end up with an unbalanced clock, where we never successfully enabled the
-clock, but we try to disable it anyway.
+Clang warns when one enumerated type is implicitly converted to another:
 
-Fixes: a6a793f98786 ("ath10k: vote for hardware resources for WCN3990")
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+drivers/pinctrl/bcm/pinctrl-bcm2835.c:707:40: warning: implicit
+conversion from enumeration type 'enum bcm2835_pinconf_param' to
+different enumeration type 'enum pin_config_param' [-Wenum-conversion]
+        configs[0] = pinconf_to_config_packed(BCM2835_PINCONF_PARAM_PULL, pull);
+                     ~~~~~~~~~~~~~~~~~~~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.
+
+It is expected that pinctrl drivers can extend pin_config_param because
+of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
+isn't an issue. Most drivers that take advantage of this define the
+PIN_CONFIG variables as constants, rather than enumerated values. Do the
+same thing here so that Clang no longer warns.
+
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/snoc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
-index fa1843a7e0fda..e2d78f77edb70 100644
---- a/drivers/net/wireless/ath/ath10k/snoc.c
-+++ b/drivers/net/wireless/ath/ath10k/snoc.c
-@@ -1190,7 +1190,7 @@ static int ath10k_wcn3990_clk_init(struct ath10k *ar)
- 	return 0;
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+index 08925d24180b0..1bd3c10ce1893 100644
+--- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
++++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+@@ -72,10 +72,8 @@
+ #define GPIO_REG_OFFSET(p)	((p) / 32)
+ #define GPIO_REG_SHIFT(p)	((p) % 32)
  
- err_clock_config:
--	for (; i >= 0; i--) {
-+	for (i = i - 1; i >= 0; i--) {
- 		clk_info = &ar_snoc->clk[i];
+-enum bcm2835_pinconf_param {
+-	/* argument: bcm2835_pinconf_pull */
+-	BCM2835_PINCONF_PARAM_PULL = (PIN_CONFIG_END + 1),
+-};
++/* argument: bcm2835_pinconf_pull */
++#define BCM2835_PINCONF_PARAM_PULL	(PIN_CONFIG_END + 1)
  
- 		if (!clk_info->handle)
+ struct bcm2835_pinctrl {
+ 	struct device *dev;
 -- 
 2.20.1
 
