@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4B5C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FE8C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07B3121844
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C732021845
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920586;
-	bh=+jRBefN1uwEbzARKvRxsl294CfyeOzMo4klRHllFCY8=;
+	s=default; t=1573920589;
+	bh=/hFGSIbqhRdSb3z0BkOSlqGrwcilsXLi6GZ64g98xaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DX0to6UM5TMARcUz8MvEN1oCfGoi22Uap2Q3c/99BQpK8xCRWNa/l/dWsd4KLc7gN
-	 kJNdjI12x1D7Bm3JRr/WAbNiJ8cnoYOQ1dkCoqnorrBr+jLd/3kRLEsNAHkhgdUtHf
-	 EvdbBVNKtVvk1xxlzENH5PmaBw7bCf6uptUxqAOo=
+	b=1o0jJYa63e4xSd0UkAHZTwIRyNT2QoUj8cHU/EY9vi1ySFM7caUI6Cv3gh8QTJCE5
+	 OswfoO3viU0agFSJNuUl20k7duiW3Y2cMgoCUHyaMdf5x/pCdAyyiRmEWvBW69O2o3
+	 iZ2CJyFgkBlYs7v35riEZ5FeMVKrTvQsl33Aj8no=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730924AbfKPQJo (ORCPT
+        id S1730317AbfKPPtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:09:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57138 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:49:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730330AbfKPPta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:49:30 -0500
+        id S1730296AbfKPPtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:49:21 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD6B1207FA;
-        Sat, 16 Nov 2019 15:49:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E81FA20729;
+        Sat, 16 Nov 2019 15:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919370;
-        bh=+jRBefN1uwEbzARKvRxsl294CfyeOzMo4klRHllFCY8=;
+        s=default; t=1573919361;
+        bh=/hFGSIbqhRdSb3z0BkOSlqGrwcilsXLi6GZ64g98xaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0TG4qG6vsZsAsITgjhxwf+A5gfZSWzwTToeymjPGDZ3YRQQ1mRSxgmHdPd0Cp0yo2
-         EIevT5BwwIcd89CmwS2h1JyroUfTpICBaL1OrPr5c/zqISvdhRot654bu5mAjn28ra
-         KMGFyz0+DnBgtt70+YrgYBCnTxBU6BITW179qKvg=
+        b=FGOf8aviCzUQkIwLUD7zgGfInl78F07fz8YJ2TK9XgVQnhcefIulsThAI5Cie/kPd
+         MHeyNwEPxuS2T+bQO7+QkCSVbNczCsgWhApWJnfvfBHU0uocGov1MpXELBRL4MF2Oc
+         OyQceKwQ/VUpMkd2zM4zxHeTPkmuo/2xmfG3ALvk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joel Stanley <joel@jms.id.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 090/150] selftests/powerpc/signal: Fix out-of-tree build
-Date:   Sat, 16 Nov 2019 10:46:28 -0500
-Message-Id: <20191116154729.9573-90-sashal@kernel.org>
+Cc:     Sabrina Dubroca <sd@queasysnail.net>,
+        Radu Rendec <radu.rendec@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 082/150] macsec: let the administrator set UP state even if lowerdev is down
+Date:   Sat, 16 Nov 2019 10:46:20 -0500
+Message-Id: <20191116154729.9573-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,48 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joel Stanley <joel@jms.id.au>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-[ Upstream commit 27825349d7b238533a47e3d98b8bb0efd886b752 ]
+[ Upstream commit 07bddef9839378bd6f95b393cf24c420529b4ef1 ]
 
-We should use TEST_GEN_PROGS, not TEST_PROGS. That tells the selftests
-makefile (lib.mk) that those tests are generated (built), and so it
-adds the $(OUTPUT) prefix for us, making the out-of-tree build work
-correctly.
+Currently, the kernel doesn't let the administrator set a macsec device
+up unless its lower device is currently up. This is inconsistent, as a
+macsec device that is up won't automatically go down when its lower
+device goes down.
 
-It also means we don't need our own clean rule, lib.mk does it.
+Now that linkstate propagation works, there's really no reason for this
+limitation, so let's remove it.
 
-We also have to update the signal_tm rule to use $(OUTPUT).
-
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
+Reported-by: Radu Rendec <radu.rendec@gmail.com>
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/powerpc/signal/Makefile | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ drivers/net/macsec.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/tools/testing/selftests/powerpc/signal/Makefile b/tools/testing/selftests/powerpc/signal/Makefile
-index a7cbd5082e271..4213978f3ee2c 100644
---- a/tools/testing/selftests/powerpc/signal/Makefile
-+++ b/tools/testing/selftests/powerpc/signal/Makefile
-@@ -1,14 +1,9 @@
- # SPDX-License-Identifier: GPL-2.0
--TEST_PROGS := signal signal_tm
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index 40e8f11f20cbf..9bb65e0af7dd7 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -2798,9 +2798,6 @@ static int macsec_dev_open(struct net_device *dev)
+ 	struct net_device *real_dev = macsec->real_dev;
+ 	int err;
+ 
+-	if (!(real_dev->flags & IFF_UP))
+-		return -ENETDOWN;
 -
--all: $(TEST_PROGS)
--
--$(TEST_PROGS): ../harness.c ../utils.c signal.S
-+TEST_GEN_PROGS := signal signal_tm
- 
- CFLAGS += -maltivec
--signal_tm: CFLAGS += -mhtm
-+$(OUTPUT)/signal_tm: CFLAGS += -mhtm
- 
- include ../../lib.mk
- 
--clean:
--	rm -f $(TEST_PROGS) *.o
-+$(TEST_GEN_PROGS): ../harness.c ../utils.c signal.S
+ 	err = dev_uc_add(real_dev, dev->dev_addr);
+ 	if (err < 0)
+ 		return err;
 -- 
 2.20.1
 
