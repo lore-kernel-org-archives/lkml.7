@@ -4,56 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C71DC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97114C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42BBF214DE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60EEA214DE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:19:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921172;
-	bh=iLeu/7+A59mHww5wMPQ7+f/gfyrQdTMOJFAQRguBkd0=;
+	s=default; t=1573921183;
+	bh=T93k57TIsenFOGGX58LNq3dynzwqIM/Y3j3qkoXDZw4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R4Vt5xYBSaej+nJNuj+RMK/V2dZAhgqrb+hEOyf33ExU+oe96ipB2QttTJJXJ3FGS
-	 CXezSdVAibM2Wsi68U7Kbw1Fxn4Ark2LZC3rSJZbkBntMX4X89vcL3hQS0o/gkZcCb
-	 JBO755/U40Vzb2M5N9vYG8Zee3ziMo+9zTxZV0ZY=
+	b=zln7u+uLgnkbPpiK2z3a9NW4TlD929hiaIbTcVr2LD7ylqZixb90nsw0TVDFmgqva
+	 GOIljR1Vwr7qU0E6z7eE6epBsCXsyBvQN/8CO26e6TOSWbzqzOYHfwkm10y/rINT2s
+	 HtMuhCPS9gLLSQVc7WbH13iayuUR6XhrYH+1EpSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732049AbfKPQTb (ORCPT
+        id S1730131AbfKPQTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:19:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52324 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:19:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729306AbfKPPqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:46:09 -0500
+        id S1729267AbfKPPp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:45:59 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 275CF2086A;
-        Sat, 16 Nov 2019 15:46:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B4762077B;
+        Sat, 16 Nov 2019 15:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919168;
-        bh=iLeu/7+A59mHww5wMPQ7+f/gfyrQdTMOJFAQRguBkd0=;
+        s=default; t=1573919158;
+        bh=T93k57TIsenFOGGX58LNq3dynzwqIM/Y3j3qkoXDZw4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GKnIuVN5+bvLWzD2MSCnXJpfOgeMH2FO6qQ/ZfW2zvmu3H1sq+c+0QyPugSJqgyVw
-         jOKcDOhWex0NbNfBv09PpiR1ESQHMY+a7qJHxpdhxkTDz4El9yKomOyS4FPPb5K+w8
-         jy5FZvTOFDGZaCbNo/MfySuLuC0KcNlHhLVQ5oyQ=
+        b=DDacVGEKW2bE1GynioaYrgaxcUiMcjHWOM3bLxFXnOuaq84u5cxtp9/3YmgD1fy72
+         uGVZwKC3tqv2qej+RKEnaRYeqYIv37+0DP3Bz6knyu0ayrFTMnSEk/dBoK+P2JI4jO
+         0SOgraUPRm2rhGNG38fVnq354oJTWfkbe07jBhaQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roman Gushchin <guro@fb.com>, Mike Galbraith <efault@gmx.de>,
-        Rik van Riel <riel@surriel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, cgroups@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.19 178/237] mm: handle no memcg case in memcg_kmem_charge() properly
-Date:   Sat, 16 Nov 2019 10:40:13 -0500
-Message-Id: <20191116154113.7417-178-sashal@kernel.org>
+Cc:     Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 169/237] net: hns3: bugfix for reporting unknown vector0 interrupt repeatly problem
+Date:   Sat, 16 Nov 2019 10:40:04 -0500
+Message-Id: <20191116154113.7417-169-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -66,66 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Gushchin <guro@fb.com>
+From: Huazhong Tan <tanhuazhong@huawei.com>
 
-[ Upstream commit e68599a3c3ad0f3171a7cb4e48aa6f9a69381902 ]
+[ Upstream commit 0d4411408a7fb9aad0645f23911d9bfdd2ce3177 ]
 
-Mike Galbraith reported a regression caused by the commit 9b6f7e163cd0
-("mm: rework memcg kernel stack accounting") on a system with
-"cgroup_disable=memory" boot option: the system panics with the following
-stack trace:
+The current driver supports handling two vector0 interrupts, reset and
+mailbox. When the hardware reports an interrupt of another type of
+interrupt source, if the driver does not process the interrupt, but
+enables the interrupt, the hardware will repeatedly report the unknown
+interrupt.
 
-  BUG: unable to handle kernel NULL pointer dereference at 00000000000000f8
-  PGD 0 P4D 0
-  Oops: 0002 [#1] PREEMPT SMP PTI
-  CPU: 0 PID: 1 Comm: systemd Not tainted 4.19.0-preempt+ #410
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20180531_142017-buildhw-08.phx2.fed4
-  RIP: 0010:page_counter_try_charge+0x22/0xc0
-  Code: 41 5d c3 c3 0f 1f 40 00 0f 1f 44 00 00 48 85 ff 0f 84 a7 00 00 00 41 56 48 89 f8 49 89 fe 49
-  Call Trace:
-   try_charge+0xcb/0x780
-   memcg_kmem_charge_memcg+0x28/0x80
-   memcg_kmem_charge+0x8b/0x1d0
-   copy_process.part.41+0x1ca/0x2070
-   _do_fork+0xd7/0x3d0
-   do_syscall_64+0x5a/0x180
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Therefore, the driver enables the vector0 interrupt after clearing the
+known type of interrupt source. Other conditions are not enabled.
 
-The problem occurs because get_mem_cgroup_from_current() returns the NULL
-pointer if memory controller is disabled.  Let's check if this is a case
-at the beginning of memcg_kmem_charge() and just return 0 if
-mem_cgroup_disabled() returns true.  This is how we handle this case in
-many other places in the memory controller code.
-
-Link: http://lkml.kernel.org/r/20181029215123.17830-1-guro@fb.com
-Fixes: 9b6f7e163cd0 ("mm: rework memcg kernel stack accounting")
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Reported-by: Mike Galbraith <efault@gmx.de>
-Acked-by: Rik van Riel <riel@surriel.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Shakeel Butt <shakeelb@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: cd8c5c269b1d ("net: hns3: Fix for hclge_reset running repeatly problem")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memcontrol.c | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index e0f7b94a4e9bc..b3220d2102461 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2678,7 +2678,7 @@ int memcg_kmem_charge(struct page *page, gfp_t gfp, int order)
- 	struct mem_cgroup *memcg;
- 	int ret = 0;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 89ca69fa2b97b..0b622d20cd305 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -2574,7 +2574,7 @@ static irqreturn_t hclge_misc_irq_handle(int irq, void *data)
+ 	}
  
--	if (memcg_kmem_bypass())
-+	if (mem_cgroup_disabled() || memcg_kmem_bypass())
- 		return 0;
- 
- 	memcg = get_mem_cgroup_from_current();
+ 	/* clear the source of interrupt if it is not cause by reset */
+-	if (event_cause != HCLGE_VECTOR0_EVENT_RST) {
++	if (event_cause == HCLGE_VECTOR0_EVENT_MBX) {
+ 		hclge_clear_event_cause(hdev, event_cause, clearval);
+ 		hclge_enable_vector(&hdev->misc_vector, true);
+ 	}
 -- 
 2.20.1
 
