@@ -2,237 +2,104 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E51C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 13:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB7FC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 13:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B64620723
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 13:16:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GirAD+vK"
+	by mail.kernel.org (Postfix) with ESMTP id 46941206E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 13:35:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573911317;
+	bh=0N0ewmAfa2QYn131WsF6ctHgrLk9FbCRjBSZRNlTNmI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gaIjB/CjuLdbCmn5l76D07Ovc2V/qkZjDg9HuMbIwCz/9mEdMFPVKpUQ6gXP/nssL
+	 u6ISaVjVP8ETe3EqYFiCD5EyTHEDK3gZrQcwQ8795wPh0GhJXPXHC5fYV9gwF9QoXf
+	 8Q5g1ii12jarEr/Xqv4uzXxK0YMNCqZVgDPFwu30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbfKPNQ0 (ORCPT
+        id S1727603AbfKPNfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 08:16:26 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46163 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727540AbfKPNQY (ORCPT
+        Sat, 16 Nov 2019 08:35:12 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:39293 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727550AbfKPNfL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 08:16:24 -0500
-Received: by mail-wr1-f67.google.com with SMTP id b3so13910043wrs.13
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 05:16:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=tg11cTivSk8CuEqGhmHmDNWvHOysA3jwYAGlqgKbG4c=;
-        b=GirAD+vKxjyd5OFXVVcD73825caTPpQT3zyFYDhPJmQP2+wOrhtIH3Doi0c7zREGmj
-         p1x6DfxjpOLX2Ec/MslH8bQpMTPbvFPrhqstclENzGsx0jJYmeY5UEyKA6dHgIiY//JO
-         qaPC2I+05TfMDm+138SK6j7be0b1aPpocydbxi9HCLMjnzIn4mMkLZM9ZnCFo5suca69
-         ACNkNHfQ9WqlB2ALMDyfuZxiVeCeo59RziqRDnhbm2dRmRDJz0+puD1RaeHpMVQqaa7I
-         8jXOn8UpiFOcHYJF2dF+w3bE/PCL00vm7vWt1xjNkRbUrosteggtbrGXWf3hxv8RpxPS
-         cI2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tg11cTivSk8CuEqGhmHmDNWvHOysA3jwYAGlqgKbG4c=;
-        b=J37VPDK6F+CRei9Mmn05M2431DAM7LU5NLwMFmYB7oCAwBalPdqLPg4UKf/tsGKjdn
-         FGuBUCQBlkLfFQHYjIw1V1sdeRPfZRwEMi/wtAILE+JQ+RYq6ny16hs3NvURcBKx3XWR
-         AOH6tCht7F368p/NkQNCrdp02CKMGI1mULbON372Ia5aC2OXczN9kg20+bx7N0tO4+pr
-         YpcIbf0bpsK2byswWm1uivpBy0+KH2KkGkCsSQw2BKkX7G2gpxBh0wyjC1dgxPu4N6gp
-         CaBG3OaUMNVJgPInz5iU/SdOy85T6aGQ/TTWL1syen/SVqeJJY6NSDPSWmdCAWxotHXi
-         Oclw==
-X-Gm-Message-State: APjAAAVy/w14sSOKXU7Wh6AD2vfVgWlN3DP2BAreFVaN2XKZz/BAGlTZ
-        8YtXmMZPPqlqEFxr5zc4J5b0ag==
-X-Google-Smtp-Source: APXvYqyHW5ijIPfL2Ep4+ox47SbxoujUX+av53dHNyM6NeuTcEWIcEELLwtuNXkWHbejHNtn0zWz/Q==
-X-Received: by 2002:a05:6000:110a:: with SMTP id z10mr19691490wrw.291.1573910180022;
-        Sat, 16 Nov 2019 05:16:20 -0800 (PST)
-Received: from localhost.localdomain ([2a01:e34:ed2f:f020:b462:d85e:9aab:bc1d])
-        by smtp.gmail.com with ESMTPSA id r2sm11128914wma.44.2019.11.16.05.16.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Nov 2019 05:16:19 -0800 (PST)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     rafael@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ulf.hansson@linaro.org
-Subject: [PATCH V2 1/2] cpuidle: Replace use_deepest_state flag by forced_idle_latency_limit_ns
-Date:   Sat, 16 Nov 2019 14:16:12 +0100
-Message-Id: <20191116131613.15733-1-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Sat, 16 Nov 2019 08:35:11 -0500
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iVyEH-0002yS-Dr; Sat, 16 Nov 2019 14:35:09 +0100
+Date:   Sat, 16 Nov 2019 13:35:08 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH] irqchip/gic: Check interrupt type validity
+Message-ID: <20191116133508.25234f26@why>
+In-Reply-To: <20191023195620.23415-1-f.fainelli@gmail.com>
+References: <20191023195620.23415-1-f.fainelli@gmail.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: f.fainelli@gmail.com, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, tglx@linutronix.de, jason@lakedaemon.net
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We want to specify a latency constraint when choosing an idle state at
-play_idle time. Instead of duplicating the information in the
-structure or propagate the latency in the call stack, change the
-use_deepest_state by forced_latency_limit_ns to introduce this
-constraint. The idea being that when it is set, idle is forced
-(i.e. no governors), but there is a latency limit for the state to
-use.
+On Wed, 23 Oct 2019 12:56:19 -0700
+Florian Fainelli <f.fainelli@gmail.com> wrote:
 
-A zero latency constraint means "do not use the deepest idle state
-path" as the 'use_deepest_state' boolean was used in the
-cpuidle_idle_call.
+> In case the interrupt property specifies a type parameter that is not
+> GIC_SPI (0) or GIC_PPIC (1), do not attempt to translate the interrupt
+> and return -EINVAL instead.
+> 
+> Fixes: f833f57ff254 ("irqchip: Convert all alloc/xlate users from of_node to fwnode")
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+> Marc,
+> 
+> Regardless of whether my attempt to use SGI moves any further, this
+> seems appropriate to do since we should not be trying to translate
+> incorrectly specified interrupts. Thanks!
+> 
+>  drivers/irqchip/irq-gic.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+> index 30ab623343d3..fc47e655618d 100644
+> --- a/drivers/irqchip/irq-gic.c
+> +++ b/drivers/irqchip/irq-gic.c
+> @@ -1005,6 +1005,9 @@ static int gic_irq_domain_translate(struct irq_domain *d,
+>  		if (fwspec->param_count < 3)
+>  			return -EINVAL;
+>  
+> +		if (fwspec->param[0] > 1)
+> +			return -EINVAL;
+> +
+>  		/* Get the interrupt number and add 16 to skip over SGIs */
+>  		*hwirq = fwspec->param[1] + 16;
+>  
 
-In addition add the play_idle_precise() function getting a nanosec
-base latency constraint as parameter. The play_idle() function becomes
-a wrapper passing an U64_MAX to play_idle_precise().
+I'm in two minds about this.
 
-Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- drivers/cpuidle/cpuidle.c | 10 +++++-----
- include/linux/cpu.h       |  6 +++++-
- include/linux/cpuidle.h   |  6 +++---
- kernel/sched/idle.c       | 14 +++++++-------
- 4 files changed, 20 insertions(+), 16 deletions(-)
+The usual stance is that the kernel is not a validation suite for DT
+files, but on the other hand we already do some of that two lines above
+(a consequence of kernel and DT binding lockstep development...). Do we
+really want to add more of this? Or should we put more effort in static
+validation of DT files and actually remove these checks?
 
-diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-index 44ae39f2b47a..62226fadc02d 100644
---- a/drivers/cpuidle/cpuidle.c
-+++ b/drivers/cpuidle/cpuidle.c
-@@ -100,19 +100,19 @@ static int find_deepest_state(struct cpuidle_driver *drv,
- 
- /**
-  * cpuidle_use_deepest_state - Set/clear governor override flag.
-- * @enable: New value of the flag.
-+ * @latency_limit_ns: A latency limit constraint
-  *
-- * Set/unset the current CPU to use the deepest idle state (override governors
-- * going forward if set).
-+ * Set/unset the current CPU to use the deepest idle state with the exit
-+ * latency within @latency_limit_ns
-  */
--void cpuidle_use_deepest_state(bool enable)
-+void cpuidle_use_deepest_state(u64 latency_limit_ns)
- {
- 	struct cpuidle_device *dev;
- 
- 	preempt_disable();
- 	dev = cpuidle_get_device();
- 	if (dev)
--		dev->use_deepest_state = enable;
-+		dev->forced_idle_latency_limit_ns = latency_limit_ns;
- 	preempt_enable();
- }
- 
-diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-index d0633ebdaa9c..4c9694e209a5 100644
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -179,7 +179,11 @@ void arch_cpu_idle_dead(void);
- int cpu_report_state(int cpu);
- int cpu_check_up_prepare(int cpu);
- void cpu_set_state_online(int cpu);
--void play_idle(unsigned long duration_us);
-+void play_idle_precise(u64 duration_ns, u64 latency_ns);
-+static inline void play_idle(unsigned long duration_us)
-+{
-+	play_idle_precise(duration_us * NSEC_PER_USEC, U64_MAX);
-+}
- 
- #ifdef CONFIG_HOTPLUG_CPU
- bool cpu_wait_death(unsigned int cpu, int seconds);
-diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-index d23a3b1ddcf6..1f3f4dd01e48 100644
---- a/include/linux/cpuidle.h
-+++ b/include/linux/cpuidle.h
-@@ -83,7 +83,6 @@ struct cpuidle_driver_kobj;
- struct cpuidle_device {
- 	unsigned int		registered:1;
- 	unsigned int		enabled:1;
--	unsigned int		use_deepest_state:1;
- 	unsigned int		poll_time_limit:1;
- 	unsigned int		cpu;
- 	ktime_t			next_hrtimer;
-@@ -91,6 +90,7 @@ struct cpuidle_device {
- 	int			last_state_idx;
- 	int			last_residency;
- 	u64			poll_limit_ns;
-+	u64			forced_idle_latency_limit_ns;
- 	struct cpuidle_state_usage	states_usage[CPUIDLE_STATE_MAX];
- 	struct cpuidle_state_kobj *kobjs[CPUIDLE_STATE_MAX];
- 	struct cpuidle_driver_kobj *kobj_driver;
-@@ -210,7 +210,7 @@ extern int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
- 				      struct cpuidle_device *dev);
- extern int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
- 				struct cpuidle_device *dev);
--extern void cpuidle_use_deepest_state(bool enable);
-+extern void cpuidle_use_deepest_state(u64 latency_limit_ns);
- #else
- static inline int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
- 					     struct cpuidle_device *dev)
-@@ -218,7 +218,7 @@ static inline int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
- static inline int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
- 				       struct cpuidle_device *dev)
- {return -ENODEV; }
--static inline void cpuidle_use_deepest_state(bool enable)
-+static inline void cpuidle_use_deepest_state(u64 latency_limit_ns)
- {
- }
- #endif
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index 8dad5aa600ea..0a817e907192 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -165,7 +165,7 @@ static void cpuidle_idle_call(void)
- 	 * until a proper wakeup interrupt happens.
- 	 */
- 
--	if (idle_should_enter_s2idle() || dev->use_deepest_state) {
-+	if (idle_should_enter_s2idle() || dev->forced_idle_latency_limit_ns) {
- 		if (idle_should_enter_s2idle()) {
- 			rcu_idle_enter();
- 
-@@ -311,7 +311,7 @@ static enum hrtimer_restart idle_inject_timer_fn(struct hrtimer *timer)
- 	return HRTIMER_NORESTART;
- }
- 
--void play_idle(unsigned long duration_us)
-+void play_idle_precise(u64 duration_ns, u64 latency_ns)
- {
- 	struct idle_timer it;
- 
-@@ -323,29 +323,29 @@ void play_idle(unsigned long duration_us)
- 	WARN_ON_ONCE(current->nr_cpus_allowed != 1);
- 	WARN_ON_ONCE(!(current->flags & PF_KTHREAD));
- 	WARN_ON_ONCE(!(current->flags & PF_NO_SETAFFINITY));
--	WARN_ON_ONCE(!duration_us);
-+	WARN_ON_ONCE(!duration_ns);
- 
- 	rcu_sleep_check();
- 	preempt_disable();
- 	current->flags |= PF_IDLE;
--	cpuidle_use_deepest_state(true);
-+	cpuidle_use_deepest_state(latency_ns);
- 
- 	it.done = 0;
- 	hrtimer_init_on_stack(&it.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
- 	it.timer.function = idle_inject_timer_fn;
--	hrtimer_start(&it.timer, ns_to_ktime(duration_us * NSEC_PER_USEC),
-+	hrtimer_start(&it.timer, ns_to_ktime(duration_ns),
- 		      HRTIMER_MODE_REL_PINNED);
- 
- 	while (!READ_ONCE(it.done))
- 		do_idle();
- 
--	cpuidle_use_deepest_state(false);
-+	cpuidle_use_deepest_state(0);
- 	current->flags &= ~PF_IDLE;
- 
- 	preempt_fold_need_resched();
- 	preempt_enable();
- }
--EXPORT_SYMBOL_GPL(play_idle);
-+EXPORT_SYMBOL_GPL(play_idle_precise);
- 
- void cpu_startup_entry(enum cpuhp_state state)
- {
+	M.
 -- 
-2.17.1
-
+Jazz is not dead. It just smells funny...
