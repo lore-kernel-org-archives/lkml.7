@@ -2,137 +2,120 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F493C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B16DEC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68CB221479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D49B21479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921087;
-	bh=PoAjATiyMw59a4B+QqOkZq9Qem/RNBGHAwCV08vIXVA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=yFCvYVF8fDm1wE/gK6EFZ+wsVQQex4pnri77wt/64z+gu0X7eYzS4ttnZNQzrWmF0
-	 1gdBjgxo0mkfnj2ScrIwI0P21kjBWZVZWAOQ+EnBqh4HL5l+kMbyfGkgeC7Fjh8ffs
-	 7ohDg5EW2PJDcXXL0LGfX9ckZgsEJm0iONs2aGJE=
+	s=default; t=1573921095;
+	bh=1EzmoxlhEX6IlHcaaJRCa8HqlvFEPSAV4f3se9ynVhc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UYc7H/DGr8eTpZ1O+OP8ctvs2EjnHn/Tfdm1s5YDW0CWaSaZtJj9OTR1DDpgqfLIl
+	 loRdFxHZbiFm7+AlXYAlOTctZ2AA7brvvE1awSf4NbrTy7Y6nnnBGs/iKeJc/cm9Dy
+	 xbdq0jaYeUi/RtU83+b1ht3RYA1P4CuX6gk8nbnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731725AbfKPQSG (ORCPT
+        id S1732018AbfKPQSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:18:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35438 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:18:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729820AbfKPQR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 11:17:58 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729415AbfKPPqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:31 -0500
+Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AE0021844;
-        Sat, 16 Nov 2019 16:17:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB9022084D;
+        Sat, 16 Nov 2019 15:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573921078;
-        bh=PoAjATiyMw59a4B+QqOkZq9Qem/RNBGHAwCV08vIXVA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NiwuN3cA5wNzoy+x+tLZQfyxvfyWNPzhLN6tZr4PAOrsYM5JegUavQuoUHPsTD8xk
-         W7IrhDvv90baPuGBVxR33GKjGPY8OXFsepKcSuvuzXQLvaYJLs80YkOCVDbTnX6Z8u
-         dH145/up7L911obt7v5ID9W3H/3IcMgPi51jqtx0=
-Date:   Sat, 16 Nov 2019 16:17:53 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Tachici <alexandru.tachici@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <lars@metafoo.de>
-Subject: Re: [PATCH] iio: dac: ad7303: use regulator get optional to check
- for ext supply
-Message-ID: <20191116161753.24d620df@archlinux>
-In-Reply-To: <20191113083303.2229-1-alexandru.tachici@analog.com>
-References: <20191113083303.2229-1-alexandru.tachici@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1573919190;
+        bh=1EzmoxlhEX6IlHcaaJRCa8HqlvFEPSAV4f3se9ynVhc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NaVDqJaakFW+afZbvoAh7cAArTzNxlBY3YGjjY4uPIPGj+Ct4IgvOTR277sjbIK8G
+         a/AGcalzGPgeRZGGjWvUQAMk+e2YXYzkXy55n+dwunlLVsKd8o0KikZOSTVH/dvR6K
+         zw2Bn8q6czlhqsonqTruEd/9rpe1HCBuadHbgprA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Lior David <liord@codeaurora.org>,
+        Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 199/237] wil6210: fix locking in wmi_call
+Date:   Sat, 16 Nov 2019 10:40:34 -0500
+Message-Id: <20191116154113.7417-199-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
+References: <20191116154113.7417-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019 10:33:03 +0200
-Alexandru Tachici <alexandru.tachici@analog.com> wrote:
+From: Lior David <liord@codeaurora.org>
 
-> Previously, the code was using the of_read_property_bool() to check if
-> an external regulator was provided. However, this is redundant, as it's
-> more simple/direct to just ask the regulator is provided, via a
-> `devm_regulator_get_optional()` call.
-> 
-> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+[ Upstream commit dc57731dbd535880fe6ced31c229262c34df7d64 ]
 
-Hi.
-I agree in principle but I don't think devm_regulator_get_optional
-returns NULL when a regulator isn't supplied.
+Switch from spin_lock to spin_lock_irqsave, because
+wmi_ev_lock is used inside interrupt handler.
 
-Thanks,
+Signed-off-by: Lior David <liord@codeaurora.org>
+Signed-off-by: Maya Erez <merez@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/ath/wil6210/wmi.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-Jonathan
-
-> ---
->  drivers/iio/dac/ad7303.c | 23 +++++------------------
->  1 file changed, 5 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/iio/dac/ad7303.c b/drivers/iio/dac/ad7303.c
-> index 14bbac6bee98..e0c5fed4475c 100644
-> --- a/drivers/iio/dac/ad7303.c
-> +++ b/drivers/iio/dac/ad7303.c
-> @@ -12,7 +12,6 @@
->  #include <linux/slab.h>
->  #include <linux/sysfs.h>
->  #include <linux/regulator/consumer.h>
-> -#include <linux/of.h>
->  
->  #include <linux/iio/iio.h>
->  #include <linux/iio/sysfs.h>
-> @@ -202,7 +201,6 @@ static int ad7303_probe(struct spi_device *spi)
->  	const struct spi_device_id *id = spi_get_device_id(spi);
->  	struct iio_dev *indio_dev;
->  	struct ad7303_state *st;
-> -	bool ext_ref;
->  	int ret;
->  
->  	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-> @@ -224,24 +222,13 @@ static int ad7303_probe(struct spi_device *spi)
->  	if (ret)
->  		return ret;
->  
-> -	if (spi->dev.of_node) {
-> -		ext_ref = of_property_read_bool(spi->dev.of_node,
-> -				"REF-supply");
-> -	} else {
-> -		struct ad7303_platform_data *pdata = spi->dev.platform_data;
-> -		if (pdata && pdata->use_external_ref)
-> -			ext_ref = true;
-> -		else
-> -		    ext_ref = false;
-> +	st->vref_reg = devm_regulator_get_optional(&spi->dev, "REF");
-> +	if (IS_ERR(st->vref_reg)) {
-> +		ret = PTR_ERR(st->vref_reg);
-
-devm_regulator_get_optional returns a ptr  encoding -ENODEV if the
-regulator is not supplied.  That isn't an error here so needs to be
-handled differently from other error codes.
-
-> +		goto err_disable_vdd_reg;
->  	}
->  
-> -	if (ext_ref) {
-> -		st->vref_reg = devm_regulator_get(&spi->dev, "REF");
-> -		if (IS_ERR(st->vref_reg)) {
-> -			ret = PTR_ERR(st->vref_reg);
-> -			goto err_disable_vdd_reg;
-> -		}
-> -
-> +	if (st->vref_reg) {
->  		ret = regulator_enable(st->vref_reg);
->  		if (ret)
->  			goto err_disable_vdd_reg;
+diff --git a/drivers/net/wireless/ath/wil6210/wmi.c b/drivers/net/wireless/ath/wil6210/wmi.c
+index 2010f771478df..8a603432f5317 100644
+--- a/drivers/net/wireless/ath/wil6210/wmi.c
++++ b/drivers/net/wireless/ath/wil6210/wmi.c
+@@ -1639,16 +1639,17 @@ int wmi_call(struct wil6210_priv *wil, u16 cmdid, u8 mid, void *buf, u16 len,
+ {
+ 	int rc;
+ 	unsigned long remain;
++	ulong flags;
+ 
+ 	mutex_lock(&wil->wmi_mutex);
+ 
+-	spin_lock(&wil->wmi_ev_lock);
++	spin_lock_irqsave(&wil->wmi_ev_lock, flags);
+ 	wil->reply_id = reply_id;
+ 	wil->reply_mid = mid;
+ 	wil->reply_buf = reply;
+ 	wil->reply_size = reply_size;
+ 	reinit_completion(&wil->wmi_call);
+-	spin_unlock(&wil->wmi_ev_lock);
++	spin_unlock_irqrestore(&wil->wmi_ev_lock, flags);
+ 
+ 	rc = __wmi_send(wil, cmdid, mid, buf, len);
+ 	if (rc)
+@@ -1668,12 +1669,12 @@ int wmi_call(struct wil6210_priv *wil, u16 cmdid, u8 mid, void *buf, u16 len,
+ 	}
+ 
+ out:
+-	spin_lock(&wil->wmi_ev_lock);
++	spin_lock_irqsave(&wil->wmi_ev_lock, flags);
+ 	wil->reply_id = 0;
+ 	wil->reply_mid = U8_MAX;
+ 	wil->reply_buf = NULL;
+ 	wil->reply_size = 0;
+-	spin_unlock(&wil->wmi_ev_lock);
++	spin_unlock_irqrestore(&wil->wmi_ev_lock, flags);
+ 
+ 	mutex_unlock(&wil->wmi_mutex);
+ 
+-- 
+2.20.1
 
