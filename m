@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E27C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B76EC43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABDC720895
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06DC720B7C
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:21:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921308;
-	bh=9Y+FllgtX9H8rgB0biRlPzQSiJRaRqpAoGAVl3BQjbk=;
+	s=default; t=1573921314;
+	bh=QGsz8Ks1Tojt059lcycjgRGYNsiZ059yMmZcprWBtGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j8bU3nMdslw4uZLLQjGe6pZoUYdqsVEJoTMkLZ12yNqGEAdQR5KcwxjKxvMkKc8+L
-	 ScdpSF+S1lpoctilVN9YveQ1IA/RrZE9UEo4hs6NTsFtUcPRyIEXw7dE1Yfw5sykbF
-	 nmTvOxVplOanfBL9wW/7yjG/LtxJNj+gQQIXdgY4=
+	b=ht1oZymuz/p+C7KW5fUvHBGkljqOdD067+FobIX4xH2g+J6zuGxIr4pDXN+4MPmb1
+	 +fPxolYj3cKtjVaP/mBVgFzlk5GLSy+dyYSlqNE27XT5Mm1UcO1u3CZ0yR8YGRS8qz
+	 hvw87IrGsjpyqS2SKjEM8jNXfb/DoqhZ971WnqPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731777AbfKPQVr (ORCPT
+        id S1728729AbfKPPn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:21:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47480 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728734AbfKPPn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 16 Nov 2019 10:43:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728702AbfKPPnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:43:23 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00F7220733;
-        Sat, 16 Nov 2019 15:43:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 253FE20833;
+        Sat, 16 Nov 2019 15:43:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919007;
-        bh=9Y+FllgtX9H8rgB0biRlPzQSiJRaRqpAoGAVl3BQjbk=;
+        s=default; t=1573919003;
+        bh=QGsz8Ks1Tojt059lcycjgRGYNsiZ059yMmZcprWBtGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TWURu8VBKgZ/95mm9Stse6cWVRhrVJAtsRGaQrdZRPRy3fCqazGIos0HM0AFqRkoL
-         OXgxT/zMESmJElRqP3zQlHLiyh7z9inVmDdQGLqbQIcikWbkg4oulEONPF3c4GBaC+
-         xFVjE3tQ/1x7kY+4pGgkSWRT1CaoMVIFmrxF5qG8=
+        b=ZoCLRx8n4/uUk8vPx22f7HT00O15SdXJ/xrAN+84EoiLUMY0x5ihjCjLUhSV+0QdS
+         HBG+0gANwbdSMB5tZ4AUsQaptb+OW/de2wKNDElvbSTqsxN1KcsBKcgzWTt9/OOsiI
+         sV4zmvZTHqoQKSPvwAClUTEfmZFfXajaQJBbZHNc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sapthagiri Baratam <sapthagiri.baratam@cirrus.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com
-Subject: [PATCH AUTOSEL 4.19 109/237] mfd: arizona: Correct calling of runtime_put_sync
-Date:   Sat, 16 Nov 2019 10:39:04 -0500
-Message-Id: <20191116154113.7417-109-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 107/237] qlcnic: fix a return in qlcnic_dcb_get_capability()
+Date:   Sat, 16 Nov 2019 10:39:02 -0500
+Message-Id: <20191116154113.7417-107-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,52 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sapthagiri Baratam <sapthagiri.baratam@cirrus.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 6b269a41a4520f7eb639e61a45ebbb9c9267d5e0 ]
+[ Upstream commit c94f026fb742b2d3199422751dbc4f6fc0e753d8 ]
 
-Don't call runtime_put_sync when clk32k_ref is ARIZONA_32KZ_MCLK2
-as there is no corresponding runtime_get_sync call.
+These functions are supposed to return one on failure and zero on
+success.  Returning a zero here could cause uninitialized variable
+bugs in several of the callers.  For example:
 
-MCLK1 is not in the AoD power domain so if it is used as 32kHz clock
-source we need to hold a runtime PM reference to keep the device from
-going into low power mode.
+    drivers/scsi/cxgbi/cxgb4i/cxgb4i.c:1660 get_iscsi_dcb_priority()
+    error: uninitialized symbol 'caps'.
 
-Fixes: cdd8da8cc66b ("mfd: arizona: Add gating of external MCLKn clocks")
-Signed-off-by: Sapthagiri Baratam <sapthagiri.baratam@cirrus.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Fixes: 48365e485275 ("qlcnic: dcb: Add support for CEE Netlink interface.")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/arizona-core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-index 47d6d40f41cd5..a4403a57ddc89 100644
---- a/drivers/mfd/arizona-core.c
-+++ b/drivers/mfd/arizona-core.c
-@@ -52,8 +52,10 @@ int arizona_clk32k_enable(struct arizona *arizona)
- 			if (ret != 0)
- 				goto err_ref;
- 			ret = clk_prepare_enable(arizona->mclk[ARIZONA_MCLK1]);
--			if (ret != 0)
--				goto err_pm;
-+			if (ret != 0) {
-+				pm_runtime_put_sync(arizona->dev);
-+				goto err_ref;
-+			}
- 			break;
- 		case ARIZONA_32KZ_MCLK2:
- 			ret = clk_prepare_enable(arizona->mclk[ARIZONA_MCLK2]);
-@@ -67,8 +69,6 @@ int arizona_clk32k_enable(struct arizona *arizona)
- 					 ARIZONA_CLK_32K_ENA);
- 	}
+diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c
+index 4b76c69fe86d2..834208e55f7b8 100644
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_dcb.c
+@@ -883,7 +883,7 @@ static u8 qlcnic_dcb_get_capability(struct net_device *netdev, int capid,
+ 	struct qlcnic_adapter *adapter = netdev_priv(netdev);
  
--err_pm:
--	pm_runtime_put_sync(arizona->dev);
- err_ref:
- 	if (ret != 0)
- 		arizona->clk32k_ref--;
+ 	if (!test_bit(QLCNIC_DCB_STATE, &adapter->dcb->state))
+-		return 0;
++		return 1;
+ 
+ 	switch (capid) {
+ 	case DCB_CAP_ATTR_PG:
 -- 
 2.20.1
 
