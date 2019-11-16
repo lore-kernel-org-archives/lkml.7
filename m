@@ -2,175 +2,162 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3EC0C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 10:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B0FC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 10:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C91520723
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 10:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 623D820715
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 10:22:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="biOQ3SJP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bwy5IIi/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbfKPKLw (ORCPT
+        id S1727378AbfKPKWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 05:11:52 -0500
-Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25854 "EHLO
-        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726794AbfKPKLw (ORCPT
+        Sat, 16 Nov 2019 05:22:02 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:44809 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726794AbfKPKWC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 05:11:52 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1573899080; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=AqADR5nbwXxYeFAnDtd5/PbWa+RlLRuvsdqZgMZFS0rK452GKnsaN8b1M9vTlYn4ZKs8f8zeVrp2L6q0L+cqNFvc++bPxqf4xfplgaVre0tTV+Air/hCuq57kzWASnQ/lqW5L/64NHpvK6kdqC8yNobRoyZbFpBzm+chdNrbuJo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1573899080; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=4RTZRN3gPV3RsDvKXTvTiC6YZxmdLTZQowmHVUeiWH0=; 
-        b=TYQsIpRlM37BPRXq6t4ZBkAcEyvHe9sAUJNU2fB4MlHjNr9wk4tDD/A0qsE1PUDvn1bBPsz4GHrH3ARiw+PpdXGGcCXzTla8sioe4LEDBWbOUnISjksyrViUatdhdFwmluHVUEXDCqFh58uO4FETy3nPaOKkdBW2o26EdRa/AGs=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
-  b=RuRPd06x7O4MMi3cUl9qTnDy9vMNnGKOoU+gVqxFaqbjfZ677l6YITGHpxcnWCy0Et5cgp9chpZw
-    p8uX38zmrTMzuUspJO+jwSRJNNkw4p4tiIMOiSfnAVmz0voEWFkY  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1573899080;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        l=3711; bh=4RTZRN3gPV3RsDvKXTvTiC6YZxmdLTZQowmHVUeiWH0=;
-        b=biOQ3SJPAzUca1q7STwGcMlniJx+KmYRRAvUjCvpmcQawOzf2FEIXrTF2Quc1j6U
-        0a5lq3cOjcVZoAVXdwPJmr1HUp5FYZAMRkTBDzShSboUGB0CLfel6whS2ByaMjSNXbm
-        +KK3V7fgW2wm6QWhchbxzaEI+UW2Ls0Jek37XmKw=
-Received: from [192.168.88.128] (222.211.204.220 [222.211.204.220]) by mx.zohomail.com
-        with SMTPS id 157389907975869.64945352199459; Sat, 16 Nov 2019 02:11:19 -0800 (PST)
-Subject: Re: [PATCH 2/2] MIPS: Ingenic: Disable abandoned HPTLB function.
-To:     Paul Burton <paulburton@kernel.org>
-References: <1571909341-10108-1-git-send-email-zhouyanjie@zoho.com>
- <1571909341-10108-3-git-send-email-zhouyanjie@zoho.com>
- <20191115213716.wt4wn2moj3fup4dc@lantea.localdomain>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ralf@linux-mips.org, jhogan@kernel.org, gregkh@linuxfoundation.org,
-        paul.burton@mips.com, chenhc@lemote.com, paul@crapouillou.net,
-        tglx@linutronix.de, jiaxun.yang@flygoat.com
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-Message-ID: <5DCFCB41.3090807@zoho.com>
-Date:   Sat, 16 Nov 2019 18:11:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Sat, 16 Nov 2019 05:22:02 -0500
+Received: by mail-ua1-f65.google.com with SMTP id r22so3785089uam.11
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 02:22:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/zM1LIB9mEaNWRIyx5CUYi/bUE6U9z8snfaBDf2sH6g=;
+        b=bwy5IIi/emtMBlbh0isyZKPqssD/qdGLdDQfqfX8rcD4/uztpQt+6sZkhDQlyOtDnL
+         i1f3IiDzNovVtntFXUXXoELhLdQBCzgjt2JjePE5WOILcPtQmKzrKbNI2txjx0Bv/VcP
+         ttX6xKdnX6j98hdHHbtkR1ulpR+YZFRsvWXZaJRT1X1J1vRzQaF5vsQzAwoTOvnt037J
+         B6oOLez2J1W4In77hjoxH5VTk46WMPbMZ+YKSJp5+NarJDEFju0Et4L+jBBhj26c74Z9
+         KgehU969UQkUi+f2FKRaOL231vmuall5mmev2mm9lxHJs8kUf7102xF/lkZzDVhVe0qB
+         8nXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/zM1LIB9mEaNWRIyx5CUYi/bUE6U9z8snfaBDf2sH6g=;
+        b=Fg5Iy3xjaOYzA8in1qwOvcWAeCmw0ANNuB/9iALCDJ4J/7rxNnczRUndB6W9wPw09G
+         XKhkQ2Qdw4TEWgUTsXDcO7G6MQ4TVyYkr7h2PiyNGunIPpL1ObJk4kJikW0Xn0rADXRR
+         IlIPrQfMkm5xjFpwV2Zjq/M//BenCp0KIBSK2Pnn93kxD2t0RGhTnnBANgKTzO40XE9q
+         aUGWVKlgEgmU8pXXNxcPKMn0vnXoRW5dBxrgl18/iTYVnLpOutuOX/RjsCWNliUGafJo
+         SI+GC0UvWsJD1JMlzeK+0jM6mH/rn0m8LkglGmECkfudhXombADZNS6DfxRT7XKSMDTV
+         kKlQ==
+X-Gm-Message-State: APjAAAWDgTJXybNM8lUpREKQgPccNLGG0h7oYfC0Am3W7eyRn5dT9JDM
+        BYRUMZCTljAQSI9k0KfRZrv3IpnfbvEoAE9tzW/9uron
+X-Google-Smtp-Source: APXvYqwgUP1DSPg7dEiOzDNWgUvay2NuWodBFJo972YhV16CKuOwCOKOZ2+AyavTofud4aGnRCs4zL6EGRzJ88ViqNU=
+X-Received: by 2002:ab0:252:: with SMTP id 76mr11360818uas.32.1573899720585;
+ Sat, 16 Nov 2019 02:22:00 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191115213716.wt4wn2moj3fup4dc@lantea.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+References: <20191114182346.22675-1-oshpigelman@habana.ai> <20191114182346.22675-8-oshpigelman@habana.ai>
+In-Reply-To: <20191114182346.22675-8-oshpigelman@habana.ai>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Sat, 16 Nov 2019 12:21:34 +0200
+Message-ID: <CAFCwf102yW=5e=3t+ho5Hxboa2LkqrjtZTZ6KAP7v+TT=82KZw@mail.gmail.com>
+Subject: Re: [PATCH 8/8] habanalabs: remove unnecessary checks
+To:     Omer Shpigelman <oshpigelman@habana.ai>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
-
-On 2019=E5=B9=B411=E6=9C=8816=E6=97=A5 05:37, Paul Burton wrote:
-> Hi Zhou,
+On Thu, Nov 14, 2019 at 8:24 PM Omer Shpigelman <oshpigelman@habana.ai> wrote:
 >
-> On Thu, Oct 24, 2019 at 05:29:01PM +0800, Zhou Yanjie wrote:
->> JZ4760/JZ4770/JZ4775/X1000/X1500 has an abandoned huge page
->> tlb, write 0xa9000000 to cp0 config5 sel4 to disable this
->> function to prevent getting stuck.
-> Can you describe how we "get stuck"?
-
-When the kernel is started, it will be stuck in the "Run /init as init=20
-process"
-according to the log information. After using the debug probe, it is found
-that tlbmiss occurred when the run init was started, and entered the=20
-infinite
-loop in the "tlb-funcs.S".
-
-> What actually goes wrong on the
-> affected CPUs? Do they misinterpret EntryLo values? Which bits do they
-> misinterpret?
-
-According to Ingenic's explanation, this is because the=20
-JZ4760/JZ4770/JZ4775/X1000
-use the same core (both belong to PRID_COMP_INGENIC_D1). This core is=20
-not fully
-implemented in VTLB at design time, but only implements the 4K page mode.
-Support for larger pages was implemented by a component called HPTLB that
-they designed themselves, but this component was later discarded, so write
-0xa9000000 to cp0 register5 sel4 to turn off HPTLB mode and return to VTLB
-mode. The actual test also shows that the kernel will no longer be stuck in
-the "Run / init as init process" after shutting down the HPTLB mode, and ca=
-n
-boot to the shell normally.
-
+> Now that the VA block free list is not updated on context close in order
+> to optimize this flow, no need in the sanity checks of the list contents
+> as these will fail for sure.
+> In addition, remove the "context closing with VA in use" print during hard
+> reset as this situation is a side effect of the failure that caused the
+> hard reset.
 >
->> Confirmed by Ingenic,
->> this operation will not adversely affect processors
->> without HPTLB function.
->>
->> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
->> ---
->>   arch/mips/kernel/cpu-probe.c | 16 ++++++++++++++--
->>   1 file changed, 14 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
->> index 16033a4..cfebf8c 100644
->> --- a/arch/mips/kernel/cpu-probe.c
->> +++ b/arch/mips/kernel/cpu-probe.c
->> @@ -1966,11 +1966,23 @@ static inline void cpu_probe_ingenic(struct cpui=
-nfo_mips *c, unsigned int cpu)
->>   =09}
->>  =20
->>   =09/*
->> -=09 * The config0 register in the Xburst CPUs with a processor ID of
->> +=09 * The config0 register in the XBurst CPUs with a processor ID of
->> +=09 * PRID_COMP_INGENIC_D1 has an abandoned huge page tlb, write
->> +=09 * 0xa9000000 to cp0 config5 sel4 to disable this function to
-> Saying "config5" suggests $16 sel 5 to me - Config5 is after all an
-> architecturally defined register & it's not this one. It'd be better to
-> say "cop0 register 5 sel 4".
-
-Sure, I'll change it in v2.
-
->> +=09 * prevent getting stuck.
->> +=09 */
->> +=09if ((c->processor_id & PRID_COMP_MASK) =3D=3D PRID_COMP_INGENIC_D1) =
-{
->> +=09=09__asm__ (
->> +=09=09=09"li    $2, 0xa9000000 \n\t"
->> +=09=09=09"mtc0  $2, $5, 4      \n\t"
->> +=09=09=09"nop                  \n\t"
->> +=09=09=09::"r"(2));
-> I'd prefer that you add #defines to asm/mipsregs.h to provide a
-> write_c0_X() function where X is replaced with whatever the name of this
-> register is, and preferably also #define macros describing the fields
-> present in the register. Writing a magic number isn't ideal.
-
-Sure, I'll change it in v2.
-
->> +=09/*
->> +=09 * The config0 register in the XBurst CPUs with a processor ID of
->>   =09 * PRID_COMP_INGENIC_D0 report themselves as MIPS32r2 compatible,
->>   =09 * but they don't actually support this ISA.
->>   =09 */
->> -=09if ((c->processor_id & PRID_COMP_MASK) =3D=3D PRID_COMP_INGENIC_D0)
->> +=09} else if ((c->processor_id & PRID_COMP_MASK) =3D=3D PRID_COMP_INGEN=
-IC_D0)
-> It might be cleaner to use a switch statement rather than writing out
-> the & PRID_COMP_MASK condition twice?
-
-Sure, I'll change it in v2.
-
-Thanks and best regards!
-
+> Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
+> ---
+>  drivers/misc/habanalabs/memory.c | 40 +++++++-------------------------
+>  1 file changed, 9 insertions(+), 31 deletions(-)
 >
-> Thanks,
->      Paul
-
-
-
+> diff --git a/drivers/misc/habanalabs/memory.c b/drivers/misc/habanalabs/memory.c
+> index fa9462ee9d6f..b009ac4c62c0 100644
+> --- a/drivers/misc/habanalabs/memory.c
+> +++ b/drivers/misc/habanalabs/memory.c
+> @@ -544,7 +544,6 @@ static u64 get_va_block(struct hl_device *hdev,
+>                 /* calc the first possible aligned addr */
+>                 valid_start = va_block->start;
+>
+> -
+>                 if (valid_start & (page_size - 1)) {
+>                         valid_start &= page_mask;
+>                         valid_start += page_size;
+> @@ -1589,43 +1588,16 @@ int hl_vm_ctx_init(struct hl_ctx *ctx)
+>   * @hdev                : pointer to the habanalabs structure
+>   * va_range             : pointer to virtual addresses range
+>   *
+> - * This function initializes the following:
+> - * - Checks that the given range contains the whole initial range
+> + * This function does the following:
+>   * - Frees the virtual addresses block list and its lock
+>   */
+>  static void hl_va_range_fini(struct hl_device *hdev,
+>                 struct hl_va_range *va_range)
+>  {
+> -       struct hl_vm_va_block *va_block;
+> -
+> -       if (list_empty(&va_range->list)) {
+> -               dev_warn(hdev->dev,
+> -                               "va list should not be empty on cleanup!\n");
+> -               goto out;
+> -       }
+> -
+> -       if (!list_is_singular(&va_range->list)) {
+> -               dev_warn(hdev->dev,
+> -                       "va list should not contain multiple blocks on cleanup!\n");
+> -               goto free_va_list;
+> -       }
+> -
+> -       va_block = list_first_entry(&va_range->list, typeof(*va_block), node);
+> -
+> -       if (va_block->start != va_range->start_addr ||
+> -               va_block->end != va_range->end_addr) {
+> -               dev_warn(hdev->dev,
+> -                       "wrong va block on cleanup, from 0x%llx to 0x%llx\n",
+> -                               va_block->start, va_block->end);
+> -               goto free_va_list;
+> -       }
+> -
+> -free_va_list:
+>         mutex_lock(&va_range->lock);
+>         clear_va_list_locked(hdev, &va_range->list);
+>         mutex_unlock(&va_range->lock);
+>
+> -out:
+>         mutex_destroy(&va_range->lock);
+>  }
+>
+> @@ -1660,8 +1632,14 @@ void hl_vm_ctx_fini(struct hl_ctx *ctx)
+>
+>         hl_debugfs_remove_ctx_mem_hash(hdev, ctx);
+>
+> -       if (!hash_empty(ctx->mem_hash))
+> -               dev_notice(hdev->dev, "ctx is freed while it has va in use\n");
+> +       /*
+> +        * Clearly something went wrong on hard reset so no point in printing
+> +        * another side effect error
+> +        */
+> +       if (!hdev->hard_reset_pending && !hash_empty(ctx->mem_hash))
+> +               dev_notice(hdev->dev,
+> +                               "ctx %d is freed while it has va in use\n",
+> +                               ctx->asid);
+>
+>         hash_for_each_safe(ctx->mem_hash, i, tmp_node, hnode, node) {
+>                 dev_dbg(hdev->dev,
+> --
+> 2.17.1
+>
+This patch-set is:
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
