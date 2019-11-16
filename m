@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B290BC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF47C33C8C
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89251208C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC86920729
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919262;
-	bh=kpwFn9Sc0MqKe83RqXYHAMb6fci+1VqMYohUynAsflo=;
+	s=default; t=1573919267;
+	bh=9OXAevLG4BgzRbZksXQkB08q/O8Khxr4GuRBGW5lZdM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZW3O4++HvrKy/cWuR+5Fi8zIWG0cqTF9PcN/zfHFbrOsV9++XxxySJ37q0Rhut9Bu
-	 vqahKYXn0ar0HS5tylU+kOAdbthbZohJoTRLTaRMQV0bAJ0n0ozyIh5rTkjOfXFMtn
-	 suRIB1dMzK+MsfCg2fPpqjQFtQaSWAQ9faaU7KEQ=
+	b=OyAABGDXA/x5fqXzUJONpla7f3/um8b2/m/2ycJYIb0i5xe7tEG90ifaiMcXZtunO
+	 p59SMkOV/j5XT/vC3d84OBFp2OeXbvZ+mu1JdomOkSbIMLctW0XoJ13TDf/8m99x/9
+	 XDhfF8g9PAAx4GIgSeRQOeafQMj6PYJfh7r9oisM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729760AbfKPPrl (ORCPT
+        id S1729795AbfKPPrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:47:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53666 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:47:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729590AbfKPPrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:47:03 -0500
+        id S1728902AbfKPPrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:47:08 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8392208C0;
-        Sat, 16 Nov 2019 15:47:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 422E12084F;
+        Sat, 16 Nov 2019 15:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919222;
-        bh=kpwFn9Sc0MqKe83RqXYHAMb6fci+1VqMYohUynAsflo=;
+        s=default; t=1573919227;
+        bh=9OXAevLG4BgzRbZksXQkB08q/O8Khxr4GuRBGW5lZdM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a29uFegIVK4un+F882O4vXwR1DsN6Z6JqKYw2CHrj6n1ycMY3npVDTzYYhRnKDIil
-         fRvaqCTE2YN6N8SnPBTXpJ+ocd7oeVb8iOKsLNTSWy2SFMj0ieLDsBzYdc8YER+1Zi
-         U11Xc/9Ly4nELU6xyj0aveASfQOynZqSzcBMBjaA=
+        b=LyT3NY6+3F1hZwqRMEPTh3fVnV+2VOYr0hNxZva2zE0l9iT5r1ogX+v3h8n/Sm7GX
+         aiVX9uluQ8ctFuV1huFLFP2KlDfCHAZcMpPufocgRNauIW6vdlQjQSLnB3QzmVu3po
+         qq3Dar/3fWROFFHgZSfPZcfR7c+pmDxxaTOFtlU4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Quentin Monnet <quentin.monnet@netronome.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 225/237] tools: bpftool: pass an argument to silence open_obj_pinned()
-Date:   Sat, 16 Nov 2019 10:41:00 -0500
-Message-Id: <20191116154113.7417-225-sashal@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 231/237] PCI: keystone: Use quirk to limit MRRS for K2G
+Date:   Sat, 16 Nov 2019 10:41:06 -0500
+Message-Id: <20191116154113.7417-231-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -61,104 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quentin Monnet <quentin.monnet@netronome.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit f120919f9905a2cad9dea792a28a11fb623f72c1 ]
+[ Upstream commit 148e340c0696369fadbbddc8f4bef801ed247d71 ]
 
-Function open_obj_pinned() prints error messages when it fails to open a
-link in the BPF virtual file system. However, in some occasions it is
-not desirable to print an error, for example when we parse all links
-under the bpffs root, and the error is due to some paths actually being
-symbolic links.
+PCI controller in K2G also has a limitation that memory read request
+size (MRRS) must not exceed 256 bytes. Use the quirk to limit MRRS
+(added for K2HK, K2L and K2E) for K2G as well.
 
-Example output:
-
-    # ls -l /sys/fs/bpf/
-    lrwxrwxrwx 1 root root 0 Oct 18 19:00 ip -> /sys/fs/bpf/tc/
-    drwx------ 3 root root 0 Oct 18 19:00 tc
-    lrwxrwxrwx 1 root root 0 Oct 18 19:00 xdp -> /sys/fs/bpf/tc/
-
-    # bpftool --bpffs prog show
-    Error: bpf obj get (/sys/fs/bpf): Permission denied
-    Error: bpf obj get (/sys/fs/bpf): Permission denied
-
-    # strace -e bpf bpftool --bpffs prog show
-    bpf(BPF_OBJ_GET, {pathname="/sys/fs/bpf/ip", bpf_fd=0}, 72) = -1 EACCES (Permission denied)
-    Error: bpf obj get (/sys/fs/bpf): Permission denied
-    bpf(BPF_OBJ_GET, {pathname="/sys/fs/bpf/xdp", bpf_fd=0}, 72) = -1 EACCES (Permission denied)
-    Error: bpf obj get (/sys/fs/bpf): Permission denied
-    ...
-
-To fix it, pass a bool as a second argument to the function, and prevent
-it from printing an error when the argument is set to true.
-
-Signed-off-by: Quentin Monnet <quentin.monnet@netronome.com>
-Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/common.c | 15 ++++++++-------
- tools/bpf/bpftool/main.h   |  2 +-
- 2 files changed, 9 insertions(+), 8 deletions(-)
+ drivers/pci/controller/dwc/pci-keystone.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/bpf/bpftool/common.c b/tools/bpf/bpftool/common.c
-index be7aebff0c1e5..158469f57461d 100644
---- a/tools/bpf/bpftool/common.c
-+++ b/tools/bpf/bpftool/common.c
-@@ -130,16 +130,17 @@ static int mnt_bpffs(const char *target, char *buff, size_t bufflen)
- 	return 0;
- }
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index 5e199e7d2d4fd..765357b87ff69 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -36,6 +36,7 @@
+ #define PCIE_RC_K2HK		0xb008
+ #define PCIE_RC_K2E		0xb009
+ #define PCIE_RC_K2L		0xb00a
++#define PCIE_RC_K2G		0xb00b
  
--int open_obj_pinned(char *path)
-+int open_obj_pinned(char *path, bool quiet)
- {
- 	int fd;
+ #define to_keystone_pcie(x)	dev_get_drvdata((x)->dev)
  
- 	fd = bpf_obj_get(path);
- 	if (fd < 0) {
--		p_err("bpf obj get (%s): %s", path,
--		      errno == EACCES && !is_bpffs(dirname(path)) ?
--		    "directory not in bpf file system (bpffs)" :
--		    strerror(errno));
-+		if (!quiet)
-+			p_err("bpf obj get (%s): %s", path,
-+			      errno == EACCES && !is_bpffs(dirname(path)) ?
-+			    "directory not in bpf file system (bpffs)" :
-+			    strerror(errno));
- 		return -1;
- 	}
+@@ -50,6 +51,8 @@ static void quirk_limit_mrrs(struct pci_dev *dev)
+ 		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
+ 		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2L),
+ 		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
++		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2G),
++		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
+ 		{ 0, },
+ 	};
  
-@@ -151,7 +152,7 @@ int open_obj_pinned_any(char *path, enum bpf_obj_type exp_type)
- 	enum bpf_obj_type type;
- 	int fd;
- 
--	fd = open_obj_pinned(path);
-+	fd = open_obj_pinned(path, false);
- 	if (fd < 0)
- 		return -1;
- 
-@@ -384,7 +385,7 @@ int build_pinned_obj_table(struct pinned_obj_table *tab,
- 		while ((ftse = fts_read(fts))) {
- 			if (!(ftse->fts_info & FTS_F))
- 				continue;
--			fd = open_obj_pinned(ftse->fts_path);
-+			fd = open_obj_pinned(ftse->fts_path, true);
- 			if (fd < 0)
- 				continue;
- 
-diff --git a/tools/bpf/bpftool/main.h b/tools/bpf/bpftool/main.h
-index 238e734d75b3e..057a227bdb9f9 100644
---- a/tools/bpf/bpftool/main.h
-+++ b/tools/bpf/bpftool/main.h
-@@ -126,7 +126,7 @@ int cmd_select(const struct cmd *cmds, int argc, char **argv,
- int get_fd_type(int fd);
- const char *get_fd_type_name(enum bpf_obj_type type);
- char *get_fdinfo(int fd, const char *key);
--int open_obj_pinned(char *path);
-+int open_obj_pinned(char *path, bool quiet);
- int open_obj_pinned_any(char *path, enum bpf_obj_type exp_type);
- int do_pin_any(int argc, char **argv, int (*get_fd_by_id)(__u32));
- int do_pin_fd(int fd, const char *name);
 -- 
 2.20.1
 
