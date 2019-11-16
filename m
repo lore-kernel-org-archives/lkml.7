@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33275C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1E4C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A81A214DE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E4B214DE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921115;
-	bh=nOskZj0L/b7ymmq40aLThte2XvXczGSoKhi6G9WlnOo=;
+	s=default; t=1573921118;
+	bh=QvQ27XNzzcAgPS7U8JGTJIggurF2PvKbrINkZNsf99U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rzFx+Ig9/R0PsBV1EUJU5euiI65FOT4BHjntICFvZRmMq2+ZU7tT/h4xWGNIuA+L0
-	 Jwr+RgHt5TPLzvcXS+gx8rL4JYNH4WbCnVb5Vckf8ImCOpG+iv1uQO6V/6l133+jom
-	 C3xVRR7hZE/JbSKzu1vm6G1wOzKGH6kC11jKZGjI=
+	b=EDrsFPPsbZ/h1lrDhbJ6v7BPsLVwOQOgPu93rVdUFOsvGWALoXIMaW+EmP5+V0+89
+	 H0oOE2iPkQgOJqwL07eLFnLIKEacDgeRUZ8rMnPThjm4Wh/aq6+tlsOVM4kJy/1GNi
+	 INoXsJ1yMLRlmaawV8e8yr2uh6xwVGhpbXWp8a/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732037AbfKPQSe (ORCPT
+        id S1732041AbfKPQSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:18:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52822 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:18:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729280AbfKPPq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:46:29 -0500
+        id S1729395AbfKPPq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:28 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65B9B2083B;
-        Sat, 16 Nov 2019 15:46:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0530D207FA;
+        Sat, 16 Nov 2019 15:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919188;
-        bh=nOskZj0L/b7ymmq40aLThte2XvXczGSoKhi6G9WlnOo=;
+        s=default; t=1573919187;
+        bh=QvQ27XNzzcAgPS7U8JGTJIggurF2PvKbrINkZNsf99U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mGlWnYCBBIA5NHgiP9+8EHBgGPsBWvG/OIVsMAwuz2ry7CCV9FWTiqcZ/B2Xnj4lt
-         0AOx+ZAYqi6wIrH7Oryhx4lS49s7hYUG1su9kQs38SnQb0iFXO0k18El9e9t7JxeYa
-         0CaX9vJijIFD1kvC8ZiEp7XmxtsGGEuCoaSJHpyk=
+        b=RoDAhUpTQON7kOHyf1AC47HQmsNg5P1WWQjQrsf1o/wiQEJGxoJQeK+NihQJPka0k
+         I11Kiv6G5qQl5REDJurfZ7B6bmkYShIDn8N7V9ew578sOyACFGqg55LGjN3QX83zuP
+         8i3FdbOh//0WJcENcLVK7qfsxr5y+vRo0u9D9ls0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 197/237] wil6210: fix L2 RX status handling
-Date:   Sat, 16 Nov 2019 10:40:32 -0500
-Message-Id: <20191116154113.7417-197-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Nikolay Borisov <nborisov@suse.com>,
+        Changbin Du <changbin.du@gmail.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 195/237] btrfs: avoid link error with CONFIG_NO_AUTO_INLINE
+Date:   Sat, 16 Nov 2019 10:40:30 -0500
+Message-Id: <20191116154113.7417-195-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -61,62 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maya Erez <merez@codeaurora.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 04de15010aa42a92add66b159e3ae44b4287390f ]
+[ Upstream commit 7e17916b35797396f681a3270245fd29c1e4c250 ]
 
-L2 RX status errors should not be treated as a bitmap and the actual
-error values should be checked.
-Print L2 errors as wil_err_ratelimited for easier debugging
-when such errors occurs.
+Note: this patch fixes a problem in a feature outside of btrfs ("kernel
+hacking: add a config option to disable compiler auto-inlining") and is
+applied ahead of time due to cross-subsystem dependencies.
 
-Signed-off-by: Maya Erez <merez@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+On 32-bit ARM with gcc-8, I see a link error with the addition of the
+CONFIG_NO_AUTO_INLINE option:
+
+fs/btrfs/super.o: In function `btrfs_statfs':
+super.c:(.text+0x67b8): undefined reference to `__aeabi_uldivmod'
+super.c:(.text+0x67fc): undefined reference to `__aeabi_uldivmod'
+super.c:(.text+0x6858): undefined reference to `__aeabi_uldivmod'
+super.c:(.text+0x6920): undefined reference to `__aeabi_uldivmod'
+super.c:(.text+0x693c): undefined reference to `__aeabi_uldivmod'
+fs/btrfs/super.o:super.c:(.text+0x6958): more undefined references to `__aeabi_uldivmod' follow
+
+So far this is the only file that shows the behavior, so I'd propose
+to just work around it by marking the functions as 'static inline'
+that normally get inlined here.
+
+The reference to __aeabi_uldivmod comes from a div_u64() which has an
+optimization for a constant division that uses a straight '/' operator
+when the result should be known to the compiler. My interpretation is
+that as we turn off inlining, gcc still expects the result to be constant
+but fails to use that constant value.
+
+Link: https://lkml.kernel.org/r/20181103153941.1881966-1-arnd@arndb.de
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: Changbin Du <changbin.du@gmail.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+[ add the note ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/wil6210/txrx_edma.c | 23 ++++++++++----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ fs/btrfs/super.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/wil6210/txrx_edma.c b/drivers/net/wireless/ath/wil6210/txrx_edma.c
-index 409a6fa8b6c8f..5fa8d6ad66482 100644
---- a/drivers/net/wireless/ath/wil6210/txrx_edma.c
-+++ b/drivers/net/wireless/ath/wil6210/txrx_edma.c
-@@ -808,23 +808,24 @@ static int wil_rx_error_check_edma(struct wil6210_priv *wil,
- 		wil_dbg_txrx(wil, "L2 RX error, l2_rx_status=0x%x\n",
- 			     l2_rx_status);
- 		/* Due to HW issue, KEY error will trigger a MIC error */
--		if (l2_rx_status & WIL_RX_EDMA_ERROR_MIC) {
--			wil_dbg_txrx(wil,
--				     "L2 MIC/KEY error, dropping packet\n");
-+		if (l2_rx_status == WIL_RX_EDMA_ERROR_MIC) {
-+			wil_err_ratelimited(wil,
-+					    "L2 MIC/KEY error, dropping packet\n");
- 			stats->rx_mic_error++;
- 		}
--		if (l2_rx_status & WIL_RX_EDMA_ERROR_KEY) {
--			wil_dbg_txrx(wil, "L2 KEY error, dropping packet\n");
-+		if (l2_rx_status == WIL_RX_EDMA_ERROR_KEY) {
-+			wil_err_ratelimited(wil,
-+					    "L2 KEY error, dropping packet\n");
- 			stats->rx_key_error++;
- 		}
--		if (l2_rx_status & WIL_RX_EDMA_ERROR_REPLAY) {
--			wil_dbg_txrx(wil,
--				     "L2 REPLAY error, dropping packet\n");
-+		if (l2_rx_status == WIL_RX_EDMA_ERROR_REPLAY) {
-+			wil_err_ratelimited(wil,
-+					    "L2 REPLAY error, dropping packet\n");
- 			stats->rx_replay++;
- 		}
--		if (l2_rx_status & WIL_RX_EDMA_ERROR_AMSDU) {
--			wil_dbg_txrx(wil,
--				     "L2 AMSDU error, dropping packet\n");
-+		if (l2_rx_status == WIL_RX_EDMA_ERROR_AMSDU) {
-+			wil_err_ratelimited(wil,
-+					    "L2 AMSDU error, dropping packet\n");
- 			stats->rx_amsdu_error++;
- 		}
- 		return -EFAULT;
+diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+index 8888337a95b64..ddbad8d509490 100644
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -1919,7 +1919,7 @@ static int btrfs_remount(struct super_block *sb, int *flags, char *data)
+ }
+ 
+ /* Used to sort the devices by max_avail(descending sort) */
+-static int btrfs_cmp_device_free_bytes(const void *dev_info1,
++static inline int btrfs_cmp_device_free_bytes(const void *dev_info1,
+ 				       const void *dev_info2)
+ {
+ 	if (((struct btrfs_device_info *)dev_info1)->max_avail >
+@@ -1948,8 +1948,8 @@ static inline void btrfs_descending_sort_devices(
+  * The helper to calc the free space on the devices that can be used to store
+  * file data.
+  */
+-static int btrfs_calc_avail_data_space(struct btrfs_fs_info *fs_info,
+-				       u64 *free_bytes)
++static inline int btrfs_calc_avail_data_space(struct btrfs_fs_info *fs_info,
++					      u64 *free_bytes)
+ {
+ 	struct btrfs_device_info *devices_info;
+ 	struct btrfs_fs_devices *fs_devices = fs_info->fs_devices;
 -- 
 2.20.1
 
