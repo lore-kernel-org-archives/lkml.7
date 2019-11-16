@@ -7,44 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE77CC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD05C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C44020815
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F217C20815
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:00:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920011;
-	bh=5XTVctNyzk6Pgxq8rjqvXvZW0PO39MZ7Adbv+jjPc3k=;
+	s=default; t=1573920017;
+	bh=6je34wnW9tnycplKf4r69UXfLC8g/37BuLjL0ZEKLJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xj3y/aPtBevitNSnxVET5YaC6IRS+hjHmUnNysWXDULskHVPvicjYt2PrDj4zTNeH
-	 bAllWy6atx7wtuAyj5E2KMbVtqYOpXfB+glO1zjXTPnX9+s9e4W7HpNdWmjY5dGWrl
-	 2FZ6g8jg/illekEeKw72JNtqYOK/N7vmipJq7sBE=
+	b=XAcCn9RpCqFP95R0jM/wkaTzd+fKB/o3SfrOgwOLeVvOKDZx/M1qvwtdFvQIuxjes
+	 J/xphx+M3DESAkBdzF4aXIkPmMccCAGgJMsG4JNsk8s+Zp9TIjT5hYMsD5f5iLWbWU
+	 tx6anKPU7pirN7JB7iAklfFtjZrDCjA4AZO0KmTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731507AbfKPQAK (ORCPT
+        id S1731035AbfKPQAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:00:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34924 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:00:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731281AbfKPPxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:53:43 -0500
+        id S1729935AbfKPPxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:53:41 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC4D32184B;
-        Sat, 16 Nov 2019 15:53:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D51721479;
+        Sat, 16 Nov 2019 15:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919622;
-        bh=5XTVctNyzk6Pgxq8rjqvXvZW0PO39MZ7Adbv+jjPc3k=;
+        s=default; t=1573919620;
+        bh=6je34wnW9tnycplKf4r69UXfLC8g/37BuLjL0ZEKLJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ts8Ja9qe5An7knPP+Z6EqnyCtd7puk+woZNdySX+6vob245c51ojR5IAmBNn55urO
-         plYpwy8OO2Y28O4e9jrHHPFB3vdluzGMIDZJdJxs6y1iYvE+xk0sw0O+bxKrA+hZks
-         wBF8t8YXwzQnLOFMe4nzxiF5tJjOHAQz5jbUCuSk=
+        b=NHCNs5ud236ajRZHyYI9T4HAYc6ta3N/GZ0iNM+xYtb3ZTd4lW28hsvnEzxI4hBrn
+         0bCU3ecsBce9PD1lhUeaTlz7u4rgqq7LSwhPMwgNG/9qAhjS0nyyiA9xEJsn08OO2T
+         gFOevMnHyl9+maF4p1aGQ6B8Fv0+V9dzjqqFseC0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 04/77] synclink_gt(): fix compat_ioctl()
-Date:   Sat, 16 Nov 2019 10:52:26 -0500
-Message-Id: <20191116155339.11909-4-sashal@kernel.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Petr Mladek <pmladek@suse.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 02/77] printk: fix integer overflow in setup_log_buf()
+Date:   Sat, 16 Nov 2019 10:52:24 -0500
+Message-Id: <20191116155339.11909-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -57,60 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-[ Upstream commit 27230e51349fde075598c1b59d15e1ff802f3f6e ]
+[ Upstream commit d2130e82e9454304e9b91ba9da551b5989af8c27 ]
 
-compat_ptr() for pointer-taking ones...
+The way we calculate logbuf free space percentage overflows signed
+integer:
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+	int free;
+
+	free = __LOG_BUF_LEN - log_next_idx;
+	pr_info("early log buf free: %u(%u%%)\n",
+		free, (free * 100) / __LOG_BUF_LEN);
+
+We support LOG_BUF_LEN of up to 1<<25 bytes. Since setup_log_buf() is
+called during early init, logbuf is mostly empty, so
+
+	__LOG_BUF_LEN - log_next_idx
+
+is close to 1<<25. Thus when we multiply it by 100, we overflow signed
+integer value range: 100 is 2^6 + 2^5 + 2^2.
+
+Example, booting with LOG_BUF_LEN 1<<25 and log_buf_len=2G
+boot param:
+
+[    0.075317] log_buf_len: -2147483648 bytes
+[    0.075319] early log buf free: 33549896(-28%)
+
+Make "free" unsigned integer and use appropriate printk() specifier.
+
+Link: http://lkml.kernel.org/r/20181010113308.9337-1-sergey.senozhatsky@gmail.com
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/synclink_gt.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+ kernel/printk/printk.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/synclink_gt.c b/drivers/tty/synclink_gt.c
-index 6fc39fbfc2755..b5145e8bdf0a2 100644
---- a/drivers/tty/synclink_gt.c
-+++ b/drivers/tty/synclink_gt.c
-@@ -1192,14 +1192,13 @@ static long slgt_compat_ioctl(struct tty_struct *tty,
- 			 unsigned int cmd, unsigned long arg)
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 5a1b2a914b4e5..2938e5c8561ad 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -931,7 +931,7 @@ void __init setup_log_buf(int early)
  {
- 	struct slgt_info *info = tty->driver_data;
--	int rc = -ENOIOCTLCMD;
-+	int rc;
+ 	unsigned long flags;
+ 	char *new_log_buf;
+-	int free;
++	unsigned int free;
  
- 	if (sanity_check(info, tty->name, "compat_ioctl"))
- 		return -ENODEV;
- 	DBGINFO(("%s compat_ioctl() cmd=%08X\n", info->device_name, cmd));
- 
- 	switch (cmd) {
--
- 	case MGSL_IOCSPARAMS32:
- 		rc = set_params32(info, compat_ptr(arg));
- 		break;
-@@ -1219,18 +1218,11 @@ static long slgt_compat_ioctl(struct tty_struct *tty,
- 	case MGSL_IOCWAITGPIO:
- 	case MGSL_IOCGXSYNC:
- 	case MGSL_IOCGXCTRL:
--	case MGSL_IOCSTXIDLE:
--	case MGSL_IOCTXENABLE:
--	case MGSL_IOCRXENABLE:
--	case MGSL_IOCTXABORT:
--	case TIOCMIWAIT:
--	case MGSL_IOCSIF:
--	case MGSL_IOCSXSYNC:
--	case MGSL_IOCSXCTRL:
--		rc = ioctl(tty, cmd, arg);
-+		rc = ioctl(tty, cmd, (unsigned long)compat_ptr(arg));
- 		break;
-+	default:
-+		rc = ioctl(tty, cmd, arg);
- 	}
--
- 	DBGINFO(("%s compat_ioctl() cmd=%08X rc=%d\n", info->device_name, cmd, rc));
- 	return rc;
- }
+ 	if (log_buf != __log_buf)
+ 		return;
 -- 
 2.20.1
 
