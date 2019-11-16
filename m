@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6B9C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78412C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 625462089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 518B62089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:06:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920373;
-	bh=XRbu216x41VlCbMrwQejgg8e7awRwMdwlAm6BBlFN/k=;
+	s=default; t=1573920378;
+	bh=oh0ks+X54M4go9LLQLOV8qujEqe3WNtVIJ2zrYgMEqc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KVssT8O6EIwLv422WjJKYhbPn2V/SbLKUD3vPugh3Eqrq5ERi1TRPRnAZRh7PS3vz
-	 u9DoqU24mCy2bjYRCcAsdOsgkRS/HvkwtcR1Phzmnzv8Z+L2OPPZrVdT6yoP/QUKy0
-	 daPnQXejIUvZ/yt/O8hG9CHqgtPtoxzcEZKrDOAE=
+	b=hkn5x9hOvn9cGAJHN1R6Kp4stbgTBALtYue4dAaJ07lfqirq3FfNpinzyPeGUuTs9
+	 uumlxTSCOGVQNeUD4Uf/cI5+GjbXIwezXDq4J3OJBGStQovH7BSwte+rLMSrPa2Q4a
+	 00RmdiY68/JDP2qG/9pgUUgoIS4/57bffxJRVfSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbfKPPu7 (ORCPT
+        id S1731717AbfKPQGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:50:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58784 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:06:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730570AbfKPPug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:50:36 -0500
+        id S1730492AbfKPPuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:50:51 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE94E20729;
-        Sat, 16 Nov 2019 15:50:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 737AD2182A;
+        Sat, 16 Nov 2019 15:50:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919436;
-        bh=XRbu216x41VlCbMrwQejgg8e7awRwMdwlAm6BBlFN/k=;
+        s=default; t=1573919450;
+        bh=oh0ks+X54M4go9LLQLOV8qujEqe3WNtVIJ2zrYgMEqc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y/9olmtIKOjkubydXzt6BJlDFyVJV7M8d5wpgBBKTYuo+4yPPP7txi4I5kyVv74I4
-         YkeGtTXiDR5I4KrCY67d2aI4oEZ15j4uOf3hI1bnrEqYqOhLqGQRlmfD/PWbiNOfiy
-         fa4+fAnZ9jQoxszc51+Y4lueYT+kCoGOzF/lXy6k=
+        b=TlDOMyccMMfzOFDeIHu0jL07O80EUa4AQNf3e+gx0yhRowXFnwzKDX3HUTDASPKn0
+         4DTQnXt3bRrtShDf+OrULKro4rOaBtJrw67JMDqsT0l6nPVO/uoqIXO59BwPnhwP04
+         RCbmGZOYs2/RX6kli3oLYHhoLwFfvJfMvyYs2Kj0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tycho Andersen <tycho@tycho.ws>,
-        David Teigland <teigland@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 4.14 135/150] dlm: don't leak kernel pointer to userspace
-Date:   Sat, 16 Nov 2019 10:47:13 -0500
-Message-Id: <20191116154729.9573-135-sashal@kernel.org>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 150/150] cfg80211: call disconnect_wk when AP stops
+Date:   Sat, 16 Nov 2019 10:47:28 -0500
+Message-Id: <20191116154729.9573-150-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -59,42 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tycho Andersen <tycho@tycho.ws>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 9de30f3f7f4d31037cfbb7c787e1089c1944b3a7 ]
+[ Upstream commit e005bd7ddea06784c1eb91ac5bb6b171a94f3b05 ]
 
-In copy_result_to_user(), we first create a struct dlm_lock_result, which
-contains a struct dlm_lksb, the last member of which is a pointer to the
-lvb. Unfortunately, we copy the entire struct dlm_lksb to the result
-struct, which is then copied to userspace at the end of the function,
-leaking the contents of sb_lvbptr, which is a valid kernel pointer in some
-cases (indeed, later in the same function the data it points to is copied
-to userspace).
+Since we now prevent regulatory restore during STA disconnect
+if concurrent AP interfaces are active, we need to reschedule
+this check when the AP state changes. This fixes never doing
+a restore when an AP is the last interface to stop. Or to put
+it another way: we need to re-check after anything we check
+here changes.
 
-It is an error to leak kernel pointers to userspace, as it undermines KASLR
-protections (see e.g. 65eea8edc31 ("floppy: Do not copy a kernel pointer to
-user memory in FDGETPRM ioctl") for another example of this).
-
-Signed-off-by: Tycho Andersen <tycho@tycho.ws>
-Signed-off-by: David Teigland <teigland@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 113f3aaa81bd ("cfg80211: Prevent regulatory restore during STA disconnect in concurrent interfaces")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/dlm/user.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/wireless/ap.c   | 2 ++
+ net/wireless/core.h | 2 ++
+ net/wireless/sme.c  | 2 +-
+ 3 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/fs/dlm/user.c b/fs/dlm/user.c
-index d18e7a539f116..1f0c071d4a861 100644
---- a/fs/dlm/user.c
-+++ b/fs/dlm/user.c
-@@ -702,7 +702,7 @@ static int copy_result_to_user(struct dlm_user_args *ua, int compat,
- 	result.version[0] = DLM_DEVICE_VERSION_MAJOR;
- 	result.version[1] = DLM_DEVICE_VERSION_MINOR;
- 	result.version[2] = DLM_DEVICE_VERSION_PATCH;
--	memcpy(&result.lksb, &ua->lksb, sizeof(struct dlm_lksb));
-+	memcpy(&result.lksb, &ua->lksb, offsetof(struct dlm_lksb, sb_lvbptr));
- 	result.user_lksb = ua->user_lksb;
+diff --git a/net/wireless/ap.c b/net/wireless/ap.c
+index 63682176c96cb..c4bd3ecef5089 100644
+--- a/net/wireless/ap.c
++++ b/net/wireless/ap.c
+@@ -40,6 +40,8 @@ int __cfg80211_stop_ap(struct cfg80211_registered_device *rdev,
+ 		cfg80211_sched_dfs_chan_update(rdev);
+ 	}
  
- 	/* FIXME: dlm1 provides for the user's bastparam/addr to not be updated
++	schedule_work(&cfg80211_disconnect_work);
++
+ 	return err;
+ }
+ 
+diff --git a/net/wireless/core.h b/net/wireless/core.h
+index 90f90c7d8bf9b..507ec6446eb67 100644
+--- a/net/wireless/core.h
++++ b/net/wireless/core.h
+@@ -429,6 +429,8 @@ void cfg80211_process_wdev_events(struct wireless_dev *wdev);
+ bool cfg80211_does_bw_fit_range(const struct ieee80211_freq_range *freq_range,
+ 				u32 center_freq_khz, u32 bw_khz);
+ 
++extern struct work_struct cfg80211_disconnect_work;
++
+ /**
+  * cfg80211_chandef_dfs_usable - checks if chandef is DFS usable
+  * @wiphy: the wiphy to validate against
+diff --git a/net/wireless/sme.c b/net/wireless/sme.c
+index 66cccd16c24af..8344153800e27 100644
+--- a/net/wireless/sme.c
++++ b/net/wireless/sme.c
+@@ -667,7 +667,7 @@ static void disconnect_work(struct work_struct *work)
+ 	rtnl_unlock();
+ }
+ 
+-static DECLARE_WORK(cfg80211_disconnect_work, disconnect_work);
++DECLARE_WORK(cfg80211_disconnect_work, disconnect_work);
+ 
+ 
+ /*
 -- 
 2.20.1
 
