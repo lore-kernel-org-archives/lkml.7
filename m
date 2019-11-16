@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FD1C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 01:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E20C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 01:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56D7A2073A
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 01:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91E6D20733
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 01:19:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kR4lOIKr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vzF2vCp2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfKPBTE (ORCPT
+        id S1727482AbfKPBTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 20:19:04 -0500
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:51700 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727415AbfKPBTC (ORCPT
+        Fri, 15 Nov 2019 20:19:08 -0500
+Received: from mail-qv1-f74.google.com ([209.85.219.74]:34268 "EHLO
+        mail-qv1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727415AbfKPBTG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 20:19:02 -0500
-Received: by mail-pf1-f202.google.com with SMTP id 198so9053015pfz.18
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 17:19:01 -0800 (PST)
+        Fri, 15 Nov 2019 20:19:06 -0500
+Received: by mail-qv1-f74.google.com with SMTP id y24so7913449qvh.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 17:19:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=MfnX4kum6LtTgP0OLyI7zsgIzIn3npJAZpvCxVBFYIU=;
-        b=kR4lOIKrvl1eAITYL9TiO77HTDSVmMGY6VS1nm3O1d0sNu7QiyxX46hAySkxKCMtyb
-         wbT4QsF/01KoErsnbL2LSwK4gy8kBQZUuUYO4njTG9uN+9mvKfIyKJA7qrbIJLZLBEOM
-         UHnPR82SJWNFc2J+1xowjuE7zg3gj2iDW4qLu+0OAzM4WZwjHdT2LCwa/bx6msmV27wy
-         ABJhv/DwkocHzC1XfbGXJw608uHHCXd2h2CLvqKIXHNBoBnAuG82t+wE6fGGkl7P9B/o
-         I4xq7cDTAs9hs6pIy5+ZZWhGN96JLNLrkIB3WSEcYdMYmjMEIp/gVvUvdymbR0335lTs
-         Pupg==
+        bh=aBmFfoHDy2MA7WxjeZxqFYu+YzVSe4daO8WMbbeAXKE=;
+        b=vzF2vCp28dqBCcFIVoLtAzaLQ2RTtrfIGaDX/E7izQH5eBJ3/m8GURwr2jqYFtLaim
+         ekVKZ6wgivyVtJsUlnnsB5nhc39kPfwx6eQ02Vf0NFKZpK5Ksc4B2v/V9q9TettxlftJ
+         7/+ogZCXEOfjj1xCNM1GndJjbguM8oR+pXLsCm3dKmBa36QJzROvvYJ7tScuhw/0U1WJ
+         MoT8eS3mgFIgV+HjKIa1I78s7xBS9PeI+HRwKz2Y0G7DcbSzm9uTy6rr/OeBMNuSqpTY
+         6jQmUPnBnaT2LSCMgFJAhjJcjU+gGXtJMENgp776v5VKL2zCyzYbcTypKWL1bV4AyINI
+         FdtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=MfnX4kum6LtTgP0OLyI7zsgIzIn3npJAZpvCxVBFYIU=;
-        b=dtGVlONnjX/+scQnNNohiS94J/2kVtzuPoKLd4kqYnWdqwyeOWEeZ4vDIjZMMwevGi
-         nrtZQ0+dr31oj27SyY25hoUjscfcWHyh7FfELeb95/rTGdb5VqD3RZc6Wke/zcoNhBZP
-         CyOVfeiPEAcYV7ubHEn9LsnJPAvU62yOrdUVoT3YEfAXrEI9QPuszT2q8IB5BOohxnDC
-         7CvnCdzA8SRNHPZqfZSeIRDCWN7vMUS152gDzWKfKMYKqBZezOtFWTuVqKVzOAXXg9Lz
-         sVBGOUAXsRFFw2foQlGoaST6R04ZkSuz/yrb87EFi0r5TNueAQltPET1WlnPH1Utj1lp
-         IFbg==
-X-Gm-Message-State: APjAAAXoub72cSEsNaWp/mgtrwmjMy2nZPafqD5cNjtGgTPWYWpW1cJk
-        /uiFjbSCGZRZMCUlFYlDuGAgTKSI+N5x
-X-Google-Smtp-Source: APXvYqz9JLdoAf9gKLwXFLA7Qbn0yf4uda7UqHbOaKQt70ssve+JpXr/7KbIKURMD1yTW3g7Sra4p0WWP3GB
-X-Received: by 2002:a63:4c43:: with SMTP id m3mr4620095pgl.315.1573867140835;
- Fri, 15 Nov 2019 17:19:00 -0800 (PST)
-Date:   Fri, 15 Nov 2019 17:18:39 -0800
+        bh=aBmFfoHDy2MA7WxjeZxqFYu+YzVSe4daO8WMbbeAXKE=;
+        b=dz1cdIRaVV8V1Hi8gZoMoVjHEkBwKahFCMjdZnLNlvhgYneT8xcQ/PWLy/LIJUDMgD
+         1NYj3WQmvKpFSLvOtYJ0H95A1SZdQA074j07tyeuMl32BuugT9zFr+vG/DUeKF/5ZZ7y
+         7Ci2dHLvg9batQA4a0+SJGKGgGMNZXUIRyEitlCW/XavnQp4V66nQlrIo+FNYBm3jCKf
+         dtnmL/H2lfz5NrpiV45aHUfkkZEH4D7vLbgvLFnuQ1CcfR/65KeU5BmFxNe/yGdmBUQn
+         ZcEvT926kDeFzX0Qh7Y49v73cb5LnjkJqbaTcQ9bPgqtkaLQkIZvzcd8xCyquSM9XcpH
+         1LQg==
+X-Gm-Message-State: APjAAAWBP2KoxZPUPkWBpT07jHOGuugimFRfbzkrVBLMWh0gaxlUeLt/
+        IvUASC6B33yjDWLXQASezpJX1OSJN/rh
+X-Google-Smtp-Source: APXvYqxJbJML7gydfNzyd1xLyLOC6XzbVqPAtoNAsK0bKXSyQGN4BsvbE9WmUsb1n6iqOMn8DMZwFYVu/I/4
+X-Received: by 2002:ae9:c30e:: with SMTP id n14mr15358727qkg.24.1573867143681;
+ Fri, 15 Nov 2019 17:19:03 -0800 (PST)
+Date:   Fri, 15 Nov 2019 17:18:40 -0800
 In-Reply-To: <20191116011845.177150-1-irogers@google.com>
-Message-Id: <20191116011845.177150-5-irogers@google.com>
+Message-Id: <20191116011845.177150-6-irogers@google.com>
 Mime-Version: 1.0
 References: <20191114003042.85252-1-irogers@google.com> <20191116011845.177150-1-irogers@google.com>
 X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-Subject: [PATCH v4 04/10] perf: Add per perf_cpu_context min_heap storage
+Subject: [PATCH v4 05/10] perf/cgroup: Grow per perf_cpu_context heap storage
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -93,130 +93,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The storage required for visit_groups_merge's min heap needs to vary in
-order to support more iterators, such as when multiple nested cgroups'
-events are being visited. This change allows for 2 iterators and doesn't
-support growth.
-Based-on-work-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Allow the per-CPU min heap storage to have sufficient space for per-cgroup
+iterators.
 
+Based-on-work-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- include/linux/perf_event.h |  7 ++++++
- kernel/events/core.c       | 46 ++++++++++++++++++++++++++++----------
- 2 files changed, 41 insertions(+), 12 deletions(-)
+ kernel/events/core.c | 47 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 011dcbdbccc2..b3580afbf358 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -835,6 +835,13 @@ struct perf_cpu_context {
- 	int				sched_cb_usage;
- 
- 	int				online;
-+	/*
-+	 * Per-CPU storage for iterators used in visit_groups_merge. The default
-+	 * storage is of size 2 to hold the CPU and any CPU event iterators.
-+	 */
-+	int				itr_storage_cap;
-+	struct perf_event		**itr_storage;
-+	struct perf_event		*itr_default[2];
- };
- 
- struct perf_output_handle {
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index b0e89a488e3d..a1c44d09eff8 100644
+index a1c44d09eff8..8817c645bef9 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -3403,32 +3403,45 @@ static void __heap_add(struct min_max_heap *heap, struct perf_event *event)
- 	}
+@@ -892,6 +892,47 @@ static inline void perf_cgroup_sched_in(struct task_struct *prev,
+ 	rcu_read_unlock();
  }
  
--static noinline int visit_groups_merge(struct perf_event_groups *groups,
--				int cpu,
-+static noinline int visit_groups_merge(struct perf_cpu_context *cpuctx,
-+				struct perf_event_groups *groups, int cpu,
- 				int (*func)(struct perf_event *, void *),
- 				void *data)
- {
- 	/* Space for per CPU and/or any CPU event iterators. */
- 	struct perf_event *itrs[2];
--	struct min_max_heap event_heap = {
--		.data = itrs,
--		.size = 0,
--		.cap = ARRAY_SIZE(itrs),
--	};
-+	struct min_max_heap event_heap;
-+	struct perf_event **evt;
- 	struct perf_event *next;
- 	int ret;
- 
--	__heap_add(&event_heap, perf_event_groups_first(groups, -1));
-+	if (cpuctx) {
-+		event_heap = (struct min_max_heap){
-+			.data = cpuctx->itr_storage,
-+			.size = 0,
-+			.cap = cpuctx->itr_storage_cap,
-+		};
-+	} else {
-+		event_heap = (struct min_max_heap){
-+			.data = itrs,
-+			.size = 0,
-+			.cap = ARRAY_SIZE(itrs),
-+		};
-+		/* Events not within a CPU context may be on any CPU. */
-+		__heap_add(&event_heap, perf_event_groups_first(groups, -1));
++static int perf_cgroup_ensure_storage(struct perf_event *event,
++				struct cgroup_subsys_state *css)
++{
++	struct perf_cpu_context *cpuctx;
++	struct perf_event **storage;
++	int cpu, itr_cap, ret = 0;
++
++	/*
++	 * Allow storage to have sufficent space for an iterator for each
++	 * possibly nested cgroup plus an iterator for events with no cgroup.
++	 */
++	for (itr_cap = 1; css; css = css->parent)
++		itr_cap++;
++
++	for_each_possible_cpu(cpu) {
++		cpuctx = per_cpu_ptr(event->pmu->pmu_cpu_context, cpu);
++		if (itr_cap <= cpuctx->itr_storage_cap)
++			continue;
++
++		storage = kmalloc_node(itr_cap * sizeof(struct perf_event *),
++				       GFP_KERNEL, cpu_to_node(cpu));
++		if (!storage) {
++			ret = -ENOMEM;
++			break;
++		}
++
++		raw_spin_lock_irq(&cpuctx->ctx.lock);
++		if (cpuctx->itr_storage_cap < itr_cap) {
++			swap(cpuctx->itr_storage, storage);
++			if (storage == cpuctx->itr_default)
++				storage = NULL;
++			cpuctx->itr_storage_cap = itr_cap;
++		}
++		raw_spin_unlock_irq(&cpuctx->ctx.lock);
++
++		kfree(storage);
 +	}
-+	evt = event_heap.data;
 +
- 	__heap_add(&event_heap, perf_event_groups_first(groups, cpu));
- 
- 	min_max_heapify_all(&event_heap, &perf_min_heap);
- 
- 	while (event_heap.size) {
--		ret = func(itrs[0], data);
-+		ret = func(*evt, data);
- 		if (ret)
- 			return ret;
- 
--		next = perf_event_groups_next(itrs[0]);
-+		next = perf_event_groups_next(*evt);
- 		if (next) {
- 			min_max_heap_pop_push(&event_heap, &next,
- 					&perf_min_heap);
-@@ -3503,7 +3516,10 @@ ctx_pinned_sched_in(struct perf_event_context *ctx,
- 		.can_add_hw = 1,
- 	};
- 
--	visit_groups_merge(&ctx->pinned_groups,
-+	if (ctx != &cpuctx->ctx)
-+		cpuctx = NULL;
++	return ret;
++}
 +
-+	visit_groups_merge(cpuctx, &ctx->pinned_groups,
- 			   smp_processor_id(),
- 			   pinned_sched_in, &sid);
- }
-@@ -3518,7 +3534,10 @@ ctx_flexible_sched_in(struct perf_event_context *ctx,
- 		.can_add_hw = 1,
- 	};
- 
--	visit_groups_merge(&ctx->flexible_groups,
-+	if (ctx != &cpuctx->ctx)
-+		cpuctx = NULL;
-+
-+	visit_groups_merge(cpuctx, &ctx->flexible_groups,
- 			   smp_processor_id(),
- 			   flexible_sched_in, &sid);
- }
-@@ -10185,6 +10204,9 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
- 		cpuctx->online = cpumask_test_cpu(cpu, perf_online_mask);
- 
- 		__perf_mux_hrtimer_init(cpuctx, cpu);
-+
-+		cpuctx->itr_storage_cap = ARRAY_SIZE(cpuctx->itr_default);
-+		cpuctx->itr_storage = cpuctx->itr_default;
+ static inline int perf_cgroup_connect(int fd, struct perf_event *event,
+ 				      struct perf_event_attr *attr,
+ 				      struct perf_event *group_leader)
+@@ -911,6 +952,10 @@ static inline int perf_cgroup_connect(int fd, struct perf_event *event,
+ 		goto out;
  	}
  
- got_cpu_context:
++	ret = perf_cgroup_ensure_storage(event, css);
++	if (ret)
++		goto out;
++
+ 	cgrp = container_of(css, struct perf_cgroup, css);
+ 	event->cgrp = cgrp;
+ 
+@@ -3421,6 +3466,8 @@ static noinline int visit_groups_merge(struct perf_cpu_context *cpuctx,
+ 			.size = 0,
+ 			.cap = cpuctx->itr_storage_cap,
+ 		};
++
++		lockdep_assert_held(&cpuctx->ctx.lock);
+ 	} else {
+ 		event_heap = (struct min_max_heap){
+ 			.data = itrs,
 -- 
 2.24.0.432.g9d3f5f5b63-goog
 
