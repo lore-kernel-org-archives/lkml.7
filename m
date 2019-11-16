@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2530C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0E4C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BCCA206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 375A7206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920418;
-	bh=5dEbdlruILwkWbOUiIwYdpi3k5zAZe2wyIRORJgY8cw=;
+	s=default; t=1573920425;
+	bh=JFkH838InWF4Uk6kpUipLTfcZq+Or1Xb9dh4tiaBm7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sGFd1AQr3EVF46uqdLmz/q07NVmKk9cJJGAo7A5I1R1dxcDpN9f2wbe6LK57g7Mur
-	 lU8AjBjdEprPpUZ5W+oM6AMBxQaDMVedqiTC0xPBf7Lpyw+JeC5f1+eClnlbVTVvVa
-	 stkSCWq2yFynj1EsSMTmWbcuheXt3muCE/IEjSDc=
+	b=Sl7RtDp/J8yd6htsNfmKeMR+BvAdSjsmzqzGEBVnqChZq92GeBECoZLx98F8BaaB3
+	 nXTxSRJOdTbZZ3ZE5TaV751jN9OSNAYy71B4yJfYhO5CUBixAaP0clYC0W9UcvOnRT
+	 gLT71OEV8CwwCOKz8jzXQg0yQoDDGYjw9y/gFwtg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731770AbfKPQG5 (ORCPT
+        id S1730584AbfKPPuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:06:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58968 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:50:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730009AbfKPPun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:50:43 -0500
+        id S1729581AbfKPPuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:50:25 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3353820729;
-        Sat, 16 Nov 2019 15:50:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39ACA208A1;
+        Sat, 16 Nov 2019 15:50:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919442;
-        bh=5dEbdlruILwkWbOUiIwYdpi3k5zAZe2wyIRORJgY8cw=;
+        s=default; t=1573919424;
+        bh=JFkH838InWF4Uk6kpUipLTfcZq+Or1Xb9dh4tiaBm7U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SmSIDmoYRnkTnrIpK7G8EIU5TUuQEKPqlK2iVaNIoV2Xf3qZUexqno4FjrIFclF7q
-         S82c4mlr2WnP4UGF3t/1kzWbUYbevqK549qUxd4lHAKkMcd1VBzO3AYHSWHWF1pLwh
-         jELPB9HqWNp8ckiIfWfpv+FYg7W7WHiPTBks5Td0=
+        b=tyIYieQF5HpazwYdveFlpukoOWmr2U7zTmOk/1bEWIzf7ipfwvAyhU8iVhuzGXeY0
+         0xiAwvEIYU4Y5OW+FB9QO+q/YxNDRQtyIZHyLSkjLxDrNfInsfdsEkyyevPuvHdlrx
+         EmrD68NC16Z1C9c2heNYn5JInFJWC80T76mVgspw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Barmann <david.barmann@stackpath.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 139/150] sock: Reset dst when changing sk_mark via setsockopt
-Date:   Sat, 16 Nov 2019 10:47:17 -0500
-Message-Id: <20191116154729.9573-139-sashal@kernel.org>
+Cc:     Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 123/150] brcmsmac: never log "tid x is not agg'able" by default
+Date:   Sat, 16 Nov 2019 10:47:01 -0500
+Message-Id: <20191116154729.9573-123-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,44 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Barmann <david.barmann@stackpath.com>
+From: Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>
 
-[ Upstream commit 50254256f382c56bde87d970f3d0d02fdb76ec70 ]
+[ Upstream commit 96fca788e5788b7ea3b0050eb35a343637e0a465 ]
 
-When setting the SO_MARK socket option, if the mark changes, the dst
-needs to be reset so that a new route lookup is performed.
+This message greatly spams the log under heavy Tx of frames with BK access
+class which is especially true when operating as AP. It is also not informative
+as the "agg'ablity" of TIDs are set once and never change.
+Fix this by logging only in debug mode.
 
-This fixes the case where an application wants to change routing by
-setting a new sk_mark.  If this is done after some packets have already
-been sent, the dst is cached and has no effect.
-
-Signed-off-by: David Barmann <david.barmann@stackpath.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/sock.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ .../net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c    | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 7ccbcd853cbce..78c9aa310ce6b 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -985,10 +985,12 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
- 			clear_bit(SOCK_PASSSEC, &sock->flags);
- 		break;
- 	case SO_MARK:
--		if (!ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN))
-+		if (!ns_capable(sock_net(sk)->user_ns, CAP_NET_ADMIN)) {
- 			ret = -EPERM;
--		else
-+		} else if (val != sk->sk_mark) {
- 			sk->sk_mark = val;
-+			sk_dst_reset(sk);
-+		}
- 		break;
- 
- 	case SO_RXQ_OVFL:
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
+index 257968fb3111f..66f1f41b13803 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
+@@ -846,8 +846,8 @@ brcms_ops_ampdu_action(struct ieee80211_hw *hw,
+ 		status = brcms_c_aggregatable(wl->wlc, tid);
+ 		spin_unlock_bh(&wl->lock);
+ 		if (!status) {
+-			brcms_err(wl->wlc->hw->d11core,
+-				  "START: tid %d is not agg\'able\n", tid);
++			brcms_dbg_ht(wl->wlc->hw->d11core,
++				     "START: tid %d is not agg\'able\n", tid);
+ 			return -EINVAL;
+ 		}
+ 		ieee80211_start_tx_ba_cb_irqsafe(vif, sta->addr, tid);
 -- 
 2.20.1
 
