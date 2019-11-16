@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A386C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82049C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D646A20833
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5025C20729
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:43:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919017;
-	bh=Wux2/6xePSbFE+QWcjf/7uQCjFGCFXhh9IaB2o/078A=;
+	s=default; t=1573919019;
+	bh=mUCR23AAMHP7FiMfk5lBhT3X/eTAIhQFLugWPOV1dys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l7fNQfu69eCu1f7ZDihesSY/pHb7z+kQ+XRL8oaYtQmdc25wB+0JBfhlFbBfaHQP6
-	 sRNufqalxbgHn80Pod0Yk87Iq7+tve6u4FeMoG+fzBnFnQarmBDEbtf+aUvGGRLSGM
-	 49t3fuFmXCxhN+SHtIVHFb2Q1K/r6VlxtYdhwMxI=
+	b=d0X5zv0kbAuZTvcckMhqso2XASiFQoYGb4TUVUwFyr/PSvLZU/eDhE3S1w4ErA1Qw
+	 jcF0XeEOxAyYRoTDKEqf770e2agK2r0mZPsCpI6p6VbuV1/VW7jvcr4ZAlMpzpsvLM
+	 glpmjnt/1ywKFYaUL4AIE36H6koX/7MWWroDmr6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbfKPPng (ORCPT
+        id S1728788AbfKPPnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:43:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47490 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:43:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728748AbfKPPn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:43:29 -0500
+        id S1728697AbfKPPne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:43:34 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 040422075B;
-        Sat, 16 Nov 2019 15:43:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 455902075B;
+        Sat, 16 Nov 2019 15:43:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919009;
-        bh=Wux2/6xePSbFE+QWcjf/7uQCjFGCFXhh9IaB2o/078A=;
+        s=default; t=1573919013;
+        bh=mUCR23AAMHP7FiMfk5lBhT3X/eTAIhQFLugWPOV1dys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qF07+Y2GztU7x7RZw2z1b9eAXOiCK7/uurqGcpaLXfYMKhKHosQ6s7xQrv7hkzzNP
-         U2Z832t9C3ij7UuewRPRzOij3r2JLc2Uy/pn9yfMbBvGXAEKQBbBHt21NGgLFf7yrW
-         p2OXi+eXD7SEQyGrwxBFRNi+HssAJ+uzNYWJCugg=
+        b=xPUA97ii4w2GQDYn1GpkZuZF865JdU7fX4aLnmltBpA4e+7lmZScvexuephSl5Hfa
+         OmjmPcBZjPMAbYfRFXvm4MKN+rBUcB+EYyZHhKRGT9n40kCFvTyzb+kclnKZM0/JDl
+         +m0URu1dzVBAb5aviTHFbcVYqXCcoL99xVXXiT7A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 112/237] mfd: max8997: Enale irq-wakeup unconditionally
-Date:   Sat, 16 Nov 2019 10:39:07 -0500
-Message-Id: <20191116154113.7417-112-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 116/237] selftests/ftrace: Fix to test kprobe $comm arg only if available
+Date:   Sat, 16 Nov 2019 10:39:11 -0500
+Message-Id: <20191116154113.7417-116-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,64 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit efddff27c886e729a7f84a7205bd84d7d4af7336 ]
+[ Upstream commit 2452c96e617a0ff6fb2692e55217a3fa57a7322c ]
 
-IRQ wake up support for MAX8997 driver was initially configured by
-respective property in pdata. However, after the driver conversion to
-device-tree, setting it was left as 'todo'. Nowadays most of other PMIC MFD
-drivers initialized from device-tree assume that they can be an irq wakeup
-source, so enable it also for MAX8997. This fixes support for wakeup from
-MAX8997 RTC alarm.
+Test $comm in kprobe-event argument syntax testcase
+only if it is supported on the kernel because
+$comm has been introduced 4.8 kernel.
+So on older stable kernel, it should be skipped.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Shuah Khan (Samsung OSG) <shuah@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/max8997.c       | 8 +-------
- include/linux/mfd/max8997.h | 1 -
- 2 files changed, 1 insertion(+), 8 deletions(-)
+ .../selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc       | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/mfd/max8997.c b/drivers/mfd/max8997.c
-index 3f554c4475218..d1495d76bf2c3 100644
---- a/drivers/mfd/max8997.c
-+++ b/drivers/mfd/max8997.c
-@@ -153,12 +153,6 @@ static struct max8997_platform_data *max8997_i2c_parse_dt_pdata(
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
+index d026ff4e562f3..92ffb3bd33d82 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
+@@ -78,8 +78,11 @@ test_badarg "\$stackp" "\$stack0+10" "\$stack1-10"
+ echo "r ${PROBEFUNC} \$retval" > kprobe_events
+ ! echo "p ${PROBEFUNC} \$retval" > kprobe_events
  
- 	pd->ono = irq_of_parse_and_map(dev->of_node, 1);
++# $comm was introduced in 4.8, older kernels reject it.
++if grep -A1 "fetcharg:" README | grep -q '\$comm' ; then
+ : "Comm access"
+ test_goodarg "\$comm"
++fi
  
--	/*
--	 * ToDo: the 'wakeup' member in the platform data is more of a linux
--	 * specfic information. Hence, there is no binding for that yet and
--	 * not parsed here.
--	 */
--
- 	return pd;
- }
- 
-@@ -246,7 +240,7 @@ static int max8997_i2c_probe(struct i2c_client *i2c,
- 	 */
- 
- 	/* MAX8997 has a power button input. */
--	device_init_wakeup(max8997->dev, pdata->wakeup);
-+	device_init_wakeup(max8997->dev, true);
- 
- 	return ret;
- 
-diff --git a/include/linux/mfd/max8997.h b/include/linux/mfd/max8997.h
-index cf815577bd686..3ae1fe743bc34 100644
---- a/include/linux/mfd/max8997.h
-+++ b/include/linux/mfd/max8997.h
-@@ -178,7 +178,6 @@ struct max8997_led_platform_data {
- struct max8997_platform_data {
- 	/* IRQ */
- 	int ono;
--	int wakeup;
- 
- 	/* ---- PMIC ---- */
- 	struct max8997_regulator_data *regulators;
+ : "Indirect memory access"
+ test_goodarg "+0(${GOODREG})" "-0(${GOODREG})" "+10(\$stack)" \
 -- 
 2.20.1
 
