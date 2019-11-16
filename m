@@ -4,49 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 211EFC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD85CC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E147421845
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9620C21843
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:05:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920319;
-	bh=Cm8oqydL25NKOv9Ru7j+5HUTOOWMEduozul5gSK8JoY=;
+	s=default; t=1573920324;
+	bh=x6hLt6z0ctPoVuvek0M26yoPRBeU6LO5WwNb4a7OFWs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H9SKcRmJF2Cl/L4Jy0JJiK+02Y5JFmY/qKkI+JM7iQ+aubh0kmcObtlwDrv65gen6
-	 gDUNvoNv7x3bCEmZCGoaCeKtwOvR+m4v1qx04t2FstQW8GF7yxskpjfG2Kh3uOJS6F
-	 o6tyH+YG/EFCr0Wv4ITW79Nld27fCVg+L9xbgmec=
+	b=kO+EBsdU/yngvjNXoJEV8EVOBAGt31zjZcEUNOG+2HtCQoirN+R9wMd+g7N0iuumg
+	 OGw1rOq1RIIBmJHF+4u6WfoVpRscXWF7p6HXk4iUOepkVCRqgICl7Dz5F125UeOnsp
+	 KHVXdlSGBAGHOKzipWBOS/jxb8yCjCwAZyIkz+4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730735AbfKPPvX (ORCPT
+        id S1731275AbfKPQFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:51:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59866 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:05:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730707AbfKPPvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:51:17 -0500
+        id S1727829AbfKPPvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:51:20 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AEF3208CE;
-        Sat, 16 Nov 2019 15:51:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54CFB208CE;
+        Sat, 16 Nov 2019 15:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919476;
-        bh=Cm8oqydL25NKOv9Ru7j+5HUTOOWMEduozul5gSK8JoY=;
+        s=default; t=1573919479;
+        bh=x6hLt6z0ctPoVuvek0M26yoPRBeU6LO5WwNb4a7OFWs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tiNOboaqMNlnHFR0qGu9SyfjnLr4lQ/twD6dBHlaau895Gk5fxjOB/vL+teX7RdIK
-         20WiU6kRfGGJtNyrTZFHg17mq8Lj1C6SB3Lsvccs/rE1rvYkii65niTnf1PRieNs5Q
-         jxv3zqHu9Y+T8FAz+JlTeDGjf3ubhBLJVr5+vJAo=
+        b=HU8umuJVVCuBeAFP9ZjEBzCp0PxOt9exApRUB5XTf8rYTz8qCnSlCLHAH4B8Dg+km
+         MnTR48hrySHKXFxyRgnpG4Z9qcM6kIHRhbXXmlvEoUSJXMlHzdsmMQibCBJzGRBkMk
+         tHKQxSG5845X5S585+TULAsizrgTaL2P7hpX5D/s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 10/99] mmc: mediatek: fix cannot receive new request when msdc_cmd_is_ready fail
-Date:   Sat, 16 Nov 2019 10:49:33 -0500
-Message-Id: <20191116155103.10971-10-sashal@kernel.org>
+Cc:     Duncan Laurie <dlaurie@chromium.org>,
+        Vadim Bendebury <vbendeb@chromium.org>,
+        Stefan Reinauer <reinauer@chromium.org>,
+        Furquan Shaikh <furquan@google.com>,
+        Furquan Shaikh <furquan@chromium.org>,
+        Aaron Durbin <adurbin@chromium.org>,
+        Justin TerAvest <teravest@chromium.org>,
+        Ross Zwisler <zwisler@google.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 12/99] gsmi: Fix bug in append_to_eventlog sysfs handler
+Date:   Sat, 16 Nov 2019 10:49:35 -0500
+Message-Id: <20191116155103.10971-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -59,43 +67,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaotian Jing <chaotian.jing@mediatek.com>
+From: Duncan Laurie <dlaurie@chromium.org>
 
-[ Upstream commit f38a9774ddde9d79b3487dd888edd8b8623552af ]
+[ Upstream commit 655603de68469adaff16842ac17a5aec9c9ce89b ]
 
-when msdc_cmd_is_ready return fail, the req_timeout work has not been
-inited and cancel_delayed_work() will return false, then, the request
-return directly and never call mmc_request_done().
+The sysfs handler should return the number of bytes consumed, which in the
+case of a successful write is the entire buffer.  Also fix a bug where
+param.data_len was being set to (count - (2 * sizeof(u32))) instead of just
+(count - sizeof(u32)).  The latter is correct because we skip over the
+leading u32 which is our param.type, but we were also incorrectly
+subtracting sizeof(u32) on the line where we were actually setting
+param.data_len:
 
-so need call mod_delayed_work() before msdc_cmd_is_ready()
+	param.data_len = count - sizeof(u32);
 
-Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+This meant that for our example event.kernel_software_watchdog with total
+length 10 bytes, param.data_len was just 2 prior to this change.
+
+To test, successfully append an event to the log with gsmi sysfs.
+This sample event is for a "Kernel Software Watchdog"
+
+> xxd -g 1 event.kernel_software_watchdog
+0000000: 01 00 00 00 ad de 06 00 00 00
+
+> cat event.kernel_software_watchdog > /sys/firmware/gsmi/append_to_eventlog
+
+> mosys eventlog list | tail -1
+14 | 2012-06-25 10:14:14 | Kernl Event | Software Watchdog
+
+Signed-off-by: Duncan Laurie <dlaurie@chromium.org>
+Reviewed-by: Vadim Bendebury <vbendeb@chromium.org>
+Reviewed-by: Stefan Reinauer <reinauer@chromium.org>
+Signed-off-by: Furquan Shaikh <furquan@google.com>
+Tested-by: Furquan Shaikh <furquan@chromium.org>
+Reviewed-by: Aaron Durbin <adurbin@chromium.org>
+Reviewed-by: Justin TerAvest <teravest@chromium.org>
+[zwisler: updated changelog for 2nd bug fix and upstream]
+Signed-off-by: Ross Zwisler <zwisler@google.com>
+Reviewed-by: Guenter Roeck <groeck@chromium.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/mtk-sd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/google/gsmi.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-index 6f9535e5e584b..7fc6ce3811421 100644
---- a/drivers/mmc/host/mtk-sd.c
-+++ b/drivers/mmc/host/mtk-sd.c
-@@ -870,6 +870,7 @@ static void msdc_start_command(struct msdc_host *host,
- 	WARN_ON(host->cmd);
- 	host->cmd = cmd;
+diff --git a/drivers/firmware/google/gsmi.c b/drivers/firmware/google/gsmi.c
+index c463871609764..98cdfc2ee0dff 100644
+--- a/drivers/firmware/google/gsmi.c
++++ b/drivers/firmware/google/gsmi.c
+@@ -480,11 +480,10 @@ static ssize_t eventlog_write(struct file *filp, struct kobject *kobj,
+ 	if (count < sizeof(u32))
+ 		return -EINVAL;
+ 	param.type = *(u32 *)buf;
+-	count -= sizeof(u32);
+ 	buf += sizeof(u32);
  
-+	mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
- 	if (!msdc_cmd_is_ready(host, mrq, cmd))
- 		return;
+ 	/* The remaining buffer is the data payload */
+-	if (count > gsmi_dev.data_buf->length)
++	if ((count - sizeof(u32)) > gsmi_dev.data_buf->length)
+ 		return -EINVAL;
+ 	param.data_len = count - sizeof(u32);
  
-@@ -881,7 +882,6 @@ static void msdc_start_command(struct msdc_host *host,
+@@ -504,7 +503,7 @@ static ssize_t eventlog_write(struct file *filp, struct kobject *kobj,
  
- 	cmd->error = 0;
- 	rawcmd = msdc_cmd_prepare_raw_cmd(host, mrq, cmd);
--	mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
+ 	spin_unlock_irqrestore(&gsmi_dev.lock, flags);
  
- 	sdr_set_bits(host->base + MSDC_INTEN, cmd_ints_mask);
- 	writel(cmd->arg, host->base + SDC_ARG);
+-	return rc;
++	return (rc == 0) ? count : rc;
+ 
+ }
+ 
 -- 
 2.20.1
 
