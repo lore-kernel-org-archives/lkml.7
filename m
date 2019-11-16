@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1567CC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB1AC43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEC9720874
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73A5320874
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920492;
-	bh=EbbfNz2ZlOjuyLlZQPVnXYerkBR9NFHbNmfKODEnyRs=;
+	s=default; t=1573920495;
+	bh=EXrFZR95aAwcDSeymXCCjFEvcW5PY/VBzSqJopYtqCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IXrElLKJbR2gvfxW3DM0X9EXlx7h4GumUQ8I/DO875/JWKoBMcMbaQjFK4Ps8VDcG
-	 Ht5M0jmlYL4MXsn9VuEH2ZFcGwWGAAKfmPNjY+kOg+0/SF/i3FiX6QHxhLMOrEq8rz
-	 ON+Iau3XK72MV0FDiX11pyNITUbm5uBHroInPnW8=
+	b=IUhLxLY8BO4IGlvu+kayGTYKXM+C9CPe9ycyS5gGV+CJ+mHEvaeilKntP4t0SZjXq
+	 L5MRNPQI82OXVgvHdezy0GM1LhyDBk6yzQkg0DHfB/7Egl2qvf/wG4sF5NxUnLPPXe
+	 Iv6EUpY/KMan0/KqG7b88Q3nPXu/tpYW+F00t7MI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730906AbfKPQIK (ORCPT
+        id S1728185AbfKPPuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:08:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58244 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:50:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730466AbfKPPuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:50:17 -0500
+        id S1729313AbfKPPuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:50:12 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B0DF208A1;
-        Sat, 16 Nov 2019 15:50:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F8E121479;
+        Sat, 16 Nov 2019 15:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919416;
-        bh=EbbfNz2ZlOjuyLlZQPVnXYerkBR9NFHbNmfKODEnyRs=;
+        s=default; t=1573919411;
+        bh=EXrFZR95aAwcDSeymXCCjFEvcW5PY/VBzSqJopYtqCs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VaLC2NuGIdgFIsLfVWqIWLQNeLFL0K2giLvTHwHfO+sixA01V1SNOT+1lHLiEI3HF
-         W0oMKAVLM4HBPYSJjOipiZzQOtrxh3jGXupLYVMGU9qkG+Q2qlq4aLoaEys8ukjYOL
-         ISVYkWSh5iOF84ShcY/Tim3fuv7OjxZbq2TW19Os=
+        b=lkkBuissade6iWIYJa6GRUX1S3Y7to6pbFuETQ7YL2thErTGKqfsBQIaS2h6VMs6D
+         vA6WYS7O7d3dhztI6EUuCVJ0EkFZMhYbVCMrL+WIO2frwW+vCwGKXQFUBpdpIsb+tQ
+         fOEPRcjD4DmvE9Zp57dM2K4JVX5vkXaKLQFfxOkg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar.Eggemann@arm.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, patrick.bellasi@arm.com,
-        vincent.guittot@linaro.org, Ingo Molnar <mingo@kernel.org>,
+Cc:     Victor Kamensky <kamensky@cisco.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 115/150] sched/fair: Don't increase sd->balance_interval on newidle balance
-Date:   Sat, 16 Nov 2019 10:46:53 -0500
-Message-Id: <20191116154729.9573-115-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 110/150] arm64: makefile fix build of .i file in external module case
+Date:   Sat, 16 Nov 2019 10:46:48 -0500
+Message-Id: <20191116154729.9573-110-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -63,75 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Schneider <valentin.schneider@arm.com>
+From: Victor Kamensky <kamensky@cisco.com>
 
-[ Upstream commit 3f130a37c442d5c4d66531b240ebe9abfef426b5 ]
+[ Upstream commit 98356eb0ae499c63e78073ccedd9a5fc5c563288 ]
 
-When load_balance() fails to move some load because of task affinity,
-we end up increasing sd->balance_interval to delay the next periodic
-balance in the hopes that next time we look, that annoying pinned
-task(s) will be gone.
+After 'a66649dab350 arm64: fix vdso-offsets.h dependency' if
+one will try to build .i file in case of external kernel module,
+build fails complaining that prepare0 target is missing. This
+issue came up with SystemTap when it tries to build variety
+of .i files for its own generated kernel modules trying to
+figure given kernel features/capabilities.
 
-However, idle_balance() pays no attention to sd->balance_interval, yet
-it will still lead to an increase in balance_interval in case of
-pinned tasks.
+The issue is that prepare0 is defined in top level Makefile
+only if KBUILD_EXTMOD is not defined. .i file rule depends
+on prepare and in case KBUILD_EXTMOD defined top level Makefile
+contains empty rule for prepare. But after mentioned commit
+arch/arm64/Makefile would introduce dependency on prepare0
+through its own prepare target.
 
-If we're going through several newidle balances (e.g. we have a
-periodic task), this can lead to a huge increase of the
-balance_interval in a very small amount of time.
+Fix it to put proper ifdef KBUILD_EXTMOD around code introduced
+by mentioned commit. It matches what top level Makefile does.
 
-To prevent that, don't increase the balance interval when going
-through a newidle balance.
-
-This is a similar approach to what is done in commit 58b26c4c0257
-("sched: Increment cache_nice_tries only on periodic lb"), where we
-disregard newidle balance and rely on periodic balance for more stable
-results.
-
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Dietmar.Eggemann@arm.com
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: patrick.bellasi@arm.com
-Cc: vincent.guittot@linaro.org
-Link: http://lkml.kernel.org/r/1537974727-30788-2-git-send-email-valentin.schneider@arm.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Kevin Brodsky <kevin.brodsky@arm.com>
+Signed-off-by: Victor Kamensky <kamensky@cisco.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ arch/arm64/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index feeb52880d353..67433fbdcb5a4 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -8319,13 +8319,22 @@ static int load_balance(int this_cpu, struct rq *this_rq,
- 	sd->nr_balance_failed = 0;
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index 0c5f70e6d5cfa..8c4bc5a2c61f4 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -149,6 +149,7 @@ archclean:
+ 	$(Q)$(MAKE) $(clean)=$(boot)
+ 	$(Q)$(MAKE) $(clean)=$(boot)/dts
  
- out_one_pinned:
-+	ld_moved = 0;
-+
-+	/*
-+	 * idle_balance() disregards balance intervals, so we could repeatedly
-+	 * reach this code, which would lead to balance_interval skyrocketting
-+	 * in a short amount of time. Skip the balance_interval increase logic
-+	 * to avoid that.
-+	 */
-+	if (env.idle == CPU_NEWLY_IDLE)
-+		goto out;
-+
- 	/* tune up the balancing interval */
- 	if (((env.flags & LBF_ALL_PINNED) &&
- 			sd->balance_interval < MAX_PINNED_INTERVAL) ||
- 			(sd->balance_interval < sd->max_interval))
- 		sd->balance_interval *= 2;
--
--	ld_moved = 0;
- out:
- 	return ld_moved;
- }
++ifeq ($(KBUILD_EXTMOD),)
+ # We need to generate vdso-offsets.h before compiling certain files in kernel/.
+ # In order to do that, we should use the archprepare target, but we can't since
+ # asm-offsets.h is included in some files used to generate vdso-offsets.h, and
+@@ -158,6 +159,7 @@ archclean:
+ prepare: vdso_prepare
+ vdso_prepare: prepare0
+ 	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso include/generated/vdso-offsets.h
++endif
+ 
+ define archhelp
+   echo  '* Image.gz      - Compressed kernel image (arch/$(ARCH)/boot/Image.gz)'
 -- 
 2.20.1
 
