@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEA9C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 01:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5153C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 01:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF8DA20733
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 01:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98D0920733
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 01:20:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JnOR++G1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SLjyuWZn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbfKPBUC (ORCPT
+        id S1727601AbfKPBUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 20:20:02 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41962 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbfKPBUC (ORCPT
+        Fri, 15 Nov 2019 20:20:46 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45456 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbfKPBUq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 20:20:02 -0500
-Received: by mail-wr1-f67.google.com with SMTP id b18so11402223wrj.8
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 17:20:01 -0800 (PST)
+        Fri, 15 Nov 2019 20:20:46 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z10so12835692wrs.12
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 17:20:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QTpUnVTihwBZz4hpsJtod/7VpEMVOsKpXr22lx70xUo=;
-        b=JnOR++G16eQtJ0Wq/tVSl+kCJk7giA7NfFLOOMF2kubJJvffrEPbhOAeCuJxzwSsTA
-         3AY2P7DloE5nLc5KPpp6xhwWy2ysrEXvYzqHRX/QTKyDyKAgpAt6SbGNZ9Do8t4MrH/3
-         ERU9hDn3YgzqP6e57q1VHF4mK08o6V3vkwh5iX7+aMiy/soeTqeZj68Ak6DCY6wEn89d
-         plk+ViIm35JnI4oXnS10lb90W62H0gXfU3MMjLrojeTAPXJ3mDTvQAZ3YUpYQ+NwfnKk
-         Q7muZ8HGgTQZhAYcDMNbqZqeesHn9JyYjpMU+75rYpPASWXnoSblqJJQhZEX2WuF/urs
-         1FfA==
+        bh=eH3rV54eSSKEAob9LDRsJb0Vwhybzb7lax4DLdENnBM=;
+        b=SLjyuWZnZj2O+hY/SATkN32JsmzFet1TbGYjq7YUjI66FdCELUcO+dJqSFKE7R5/pF
+         KFmDZLM5WcaE7BGyv47S8PjOHvXyYr73ZinKwooarmpowwaPuQq3yREegkUOyFM2MdSS
+         doSGkZe7X78P8v1cuFhInrdjLDFir4XHBbBOtdu+GDY/NnY9Fqcb/MJoJRicx43sutvX
+         IjPP7fabGYIiA26B6FnWbtdPt2W8B6a5APtOxw1l3gL2VAp9sOzwK735cDt1vwPdsuGm
+         TnQmV/BGAmXOha4/C/+oFjFAOyMfGWd116rjxW1/ivIxB16i2kbaM0QZXN7k+7BUYP2P
+         1yzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QTpUnVTihwBZz4hpsJtod/7VpEMVOsKpXr22lx70xUo=;
-        b=lhG9V1Uv5Jhpp2KSHYIIXQ40QcNKOn174PLXhzFeRi91WPQmYF4sVGyem+JWrG+6Oj
-         +pE6MVCqZ9MwBi9xPFA04HA6qblkSLeo61nu6MCdgG6IOzw7/70ssfnzZRLJmnS+rdE2
-         S1qtFyNkASDSd6APMO+3IUYFZet7PE2aNRN5OyQo9EGcTfcDbvjSSK/UgFHagnVg++Yh
-         kLv0JVv90XQRxIsNpJZ0AVbmIfx+BZ+6cUs4O+oLz5kAaCX+s/nDr+ihOlD75JZ/wK1h
-         DRcuei+TpcuSyOcnnY8VGg5wdwB741nAzisGkWNOAGw8uVxqLlFf/5RTVFWp/9gZ4Lb2
-         e71Q==
-X-Gm-Message-State: APjAAAUvGOmnvzRyUoEv5ah1wiv6FVAW6vT+Fr+h/OmccxRtVILFVvsN
-        4lJWwOzxRrtFlamqNHooAkM5Oq/iwjm4H9JcBAXTBQ==
-X-Google-Smtp-Source: APXvYqwJn0IGSoa08aCMkQ1CK0/l8R0gRJBD+7+IkLJrE8vH4x8owInRwB2Sw7jhFU8ODvW6Apr4ez56VqT3V8UBYVI=
-X-Received: by 2002:adf:91e1:: with SMTP id 88mr19864673wri.16.1573867199840;
- Fri, 15 Nov 2019 17:19:59 -0800 (PST)
+        bh=eH3rV54eSSKEAob9LDRsJb0Vwhybzb7lax4DLdENnBM=;
+        b=lPf635naBqBbFN9Cn3kXtwkheUgn2PJTNH2ek4hZlQAsltkNSvi0Pl4OQXGFinCEgU
+         7wVHyvBA5SS3oUczqZdEWCRWSWRUU5jD0Xb8C6uySa7IZVvTertW4X2LFoE/RpKE2ZNx
+         Sacu+Pmxr4PtPM20Ovp+2EqrBuGTrjB0IguI7gXtReu4D353I++H9A2yPRxBtGyBCkU+
+         Om/HBgUHsIzeaPL9H0DusapJ61PyujOGT6dWrMNTATdsxEKbT5FzNMPjTV8qIwwBLpcn
+         Iznv5rRAYbSv2pDTcx7ih9Kot7CLEbMQmvolkBq1CcEXC0S0hXAvSy2cFNZM9ItLFxfk
+         j0Tw==
+X-Gm-Message-State: APjAAAWGDQ6cZGCGHmhd3mR9dUJ3oUSekQ+M8bmDfaTlyqRQzBR13l++
+        vUFg5nBKUjHB59kLPpX+pU+z3dKaMIFXc730RPgyTg==
+X-Google-Smtp-Source: APXvYqz1+QEDZY3LSTxdZr+kAmqJNtyoSXLxv0EUjt6FH6mAgIyuj/Dnt6NO3zBE6UW68rhg0ZRF/A65RS6uPimAJS0=
+X-Received: by 2002:adf:f1c7:: with SMTP id z7mr19994449wro.355.1573867243556;
+ Fri, 15 Nov 2019 17:20:43 -0800 (PST)
 MIME-Version: 1.0
-References: <20191114003042.85252-1-irogers@google.com> <20191114003042.85252-5-irogers@google.com>
- <20191114095114.GP4131@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191114095114.GP4131@hirez.programming.kicks-ass.net>
+References: <20191114003042.85252-1-irogers@google.com> <20191114003042.85252-8-irogers@google.com>
+ <20191114100312.GR4131@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191114100312.GR4131@hirez.programming.kicks-ass.net>
 From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 15 Nov 2019 17:19:48 -0800
-Message-ID: <CAP-5=fVj42gS8oQAG+jp3A+VJQcAHTexaO_4mNvLhdopf6B8vg@mail.gmail.com>
-Subject: Re: [PATCH v3 04/10] perf: Add per perf_cpu_context min_heap storage
+Date:   Fri, 15 Nov 2019 17:20:32 -0800
+Message-ID: <CAP-5=fWy0r277xsrvZii5uSiC27GkrBVQdkf+EBOtPSSNaBC2A@mail.gmail.com>
+Subject: Re: [PATCH v3 07/10] perf: simplify and rename visit_groups_merge
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -91,44 +91,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 1:51 AM Peter Zijlstra <peterz@infradead.org> wrote:
+On Thu, Nov 14, 2019 at 2:03 AM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> On Wed, Nov 13, 2019 at 04:30:36PM -0800, Ian Rogers wrote:
-> > +     if (cpuctx) {
-> > +             event_heap = (struct min_max_heap){
-> > +                     .data = cpuctx->itr_storage,
-> > +                     .size = 0,
+> On Wed, Nov 13, 2019 at 04:30:39PM -0800, Ian Rogers wrote:
+> > To enable a future caching optimization, pass in whether
+> > visit_groups_merge is operating on pinned or flexible groups. The
+> > is_pinned argument makes the func argument redundant, rename the
+> > function to ctx_groups_sched_in as it just schedules pinned or flexible
+> > groups in. Compute the cpu and groups arguments locally to reduce the
+> > argument list size. Remove sched_in_data as it repeats arguments already
+> > passed in. Remove the unused data argument to pinned_sched_in.
 >
-> C guarantees that unnamed fields get to be 0
+> Where did my first two patches go? Why aren't
+> {pinned,flexible}_sched_in() merged?
 
-Agreed, this is kept here to aid readability. Do you feel strongly
-about not having this? It appears to be kept elsewhere for clarity
-too:
-$ grep -r "\..*= 0," arch/ kernel/ tools/|wc -l
-2528
+I've merged these 2 patches except for the helper function which is
+now trivial with the pinned boolean.
 
-> > +                     .cap = cpuctx->itr_storage_cap,
-> > +             };
-> > +     } else {
-> > +             event_heap = (struct min_max_heap){
-> > +                     .data = itrs,
-> > +                     .size = 0,
->
-> idem.
->
-> > +                     .cap = ARRAY_SIZE(itrs),
-> > +             };
-> > +             /* Events not within a CPU context may be on any CPU. */
-> > +             __heap_add(&event_heap, perf_event_groups_first(groups, -1));
-> > +
->
-> suprious whitespace
-
-Done.
-
-
-
-> > +     }
-> > +     evt = event_heap.data;
-> > +
-> >       __heap_add(&event_heap, perf_event_groups_first(groups, cpu));
+Thanks,
+Ian
