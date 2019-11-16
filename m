@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0E4C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806B1C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 375A7206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F5662089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:07:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920425;
-	bh=JFkH838InWF4Uk6kpUipLTfcZq+Or1Xb9dh4tiaBm7U=;
+	s=default; t=1573920430;
+	bh=GL2BxTNj0E0U6b50Cgt11UhBHTzZtJbYm0AmbFQSoMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sl7RtDp/J8yd6htsNfmKeMR+BvAdSjsmzqzGEBVnqChZq92GeBECoZLx98F8BaaB3
-	 nXTxSRJOdTbZZ3ZE5TaV751jN9OSNAYy71B4yJfYhO5CUBixAaP0clYC0W9UcvOnRT
-	 gLT71OEV8CwwCOKz8jzXQg0yQoDDGYjw9y/gFwtg=
+	b=ysXT3HIS+P6SFKiAbE7hewqaabhoyEYvMqOeLLtBypFDiDKD/gpUN9ftHl8To/mul
+	 yvaTfEMsZS+dRX6EsJl2NV8VG+roJqVjSX9+GaA1jU7I9QSe4h8Fd/4T9OkyIIn1jF
+	 t7JwZGkq7z3fEkOCpC645uFeolzhLHm120JKdDxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730584AbfKPPuj (ORCPT
+        id S1731454AbfKPQHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:50:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58424 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:07:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729581AbfKPPuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:50:25 -0500
+        id S1730579AbfKPPuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:50:39 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39ACA208A1;
-        Sat, 16 Nov 2019 15:50:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C2FA21843;
+        Sat, 16 Nov 2019 15:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919424;
-        bh=JFkH838InWF4Uk6kpUipLTfcZq+Or1Xb9dh4tiaBm7U=;
+        s=default; t=1573919439;
+        bh=GL2BxTNj0E0U6b50Cgt11UhBHTzZtJbYm0AmbFQSoMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tyIYieQF5HpazwYdveFlpukoOWmr2U7zTmOk/1bEWIzf7ipfwvAyhU8iVhuzGXeY0
-         0xiAwvEIYU4Y5OW+FB9QO+q/YxNDRQtyIZHyLSkjLxDrNfInsfdsEkyyevPuvHdlrx
-         EmrD68NC16Z1C9c2heNYn5JInFJWC80T76mVgspw=
+        b=MxYwTQkOdEXYrns8wj+NBIdq9aLEm3fxnNHnBzznvwG/afSdN0jYt/D5qdlYyoqkG
+         FIjYOY/uezWX56rcJ2sOp/cMBmZuNQECmADN2pNj0mjW5/3b1dDT30ZYXjPSmxnYns
+         1ESG1kfc2Iq+WmnKHtS3A/GVMv0PeriD7i5tEE4Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 123/150] brcmsmac: never log "tid x is not agg'able" by default
-Date:   Sat, 16 Nov 2019 10:47:01 -0500
-Message-Id: <20191116154729.9573-123-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
+        devel@acpica.org
+Subject: [PATCH AUTOSEL 4.14 137/150] ACPICA: Use %d for signed int print formatting instead of %u
+Date:   Sat, 16 Nov 2019 10:47:15 -0500
+Message-Id: <20191116154729.9573-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -62,37 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 96fca788e5788b7ea3b0050eb35a343637e0a465 ]
+[ Upstream commit f8ddf49b420112e28bdd23d7ad52d7991a0ccbe3 ]
 
-This message greatly spams the log under heavy Tx of frames with BK access
-class which is especially true when operating as AP. It is also not informative
-as the "agg'ablity" of TIDs are set once and never change.
-Fix this by logging only in debug mode.
+Fix warnings found using static analysis with cppcheck, use %d printf
+format specifier for signed ints rather than %u
 
-Signed-off-by: Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c    | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/power/acpi/tools/acpidump/apmain.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
-index 257968fb3111f..66f1f41b13803 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
-@@ -846,8 +846,8 @@ brcms_ops_ampdu_action(struct ieee80211_hw *hw,
- 		status = brcms_c_aggregatable(wl->wlc, tid);
- 		spin_unlock_bh(&wl->lock);
- 		if (!status) {
--			brcms_err(wl->wlc->hw->d11core,
--				  "START: tid %d is not agg\'able\n", tid);
-+			brcms_dbg_ht(wl->wlc->hw->d11core,
-+				     "START: tid %d is not agg\'able\n", tid);
- 			return -EINVAL;
- 		}
- 		ieee80211_start_tx_ba_cb_irqsafe(vif, sta->addr, tid);
+diff --git a/tools/power/acpi/tools/acpidump/apmain.c b/tools/power/acpi/tools/acpidump/apmain.c
+index 943b6b6146834..bed0794e3295f 100644
+--- a/tools/power/acpi/tools/acpidump/apmain.c
++++ b/tools/power/acpi/tools/acpidump/apmain.c
+@@ -139,7 +139,7 @@ static int ap_insert_action(char *argument, u32 to_be_done)
+ 
+ 	current_action++;
+ 	if (current_action > AP_MAX_ACTIONS) {
+-		fprintf(stderr, "Too many table options (max %u)\n",
++		fprintf(stderr, "Too many table options (max %d)\n",
+ 			AP_MAX_ACTIONS);
+ 		return (-1);
+ 	}
 -- 
 2.20.1
 
