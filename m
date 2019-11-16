@@ -2,389 +2,146 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_QP_LONG_LINE,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2498BC43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2473DC43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF7BA21844
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1AE52168B
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:51:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="xDDrhd9i"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FWLT9g4U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbfKPQv2 (ORCPT
+        id S1727978AbfKPQvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:51:28 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36623 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727845AbfKPQv1 (ORCPT
+        Sat, 16 Nov 2019 11:51:55 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36875 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727852AbfKPQvy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 11:51:27 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k13so7438027pgh.3
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 08:51:27 -0800 (PST)
+        Sat, 16 Nov 2019 11:51:54 -0500
+Received: by mail-pl1-f194.google.com with SMTP id bb5so6891408plb.4
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 08:51:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=K9dzo1Lpl/E8eQcOkXHQEfmmSekoCsu3mvK4T8VA6ms=;
-        b=xDDrhd9i3eXCIiOH+UeBc69E1x6O7SGIiFaTPPLESKjLU0oHdgKQ94YJ+kT8wGoMXN
-         Utdc9qKlJAAgohJFN5oLJ2u199xvO3OLZwC+EMK0WTdDpBuIuPi63NM5wn/tra14vpB9
-         yrMyb/pk/JYyDv4QMdqXsH+MSYIrrRP8AsUA+T8uthmlZPf3spg6kVxJXQZ4JR2zUSvF
-         qZjIWAPilJ3R9C+7/FDMB0iW6ktBs5K6mCMEJHKtPRGuFP+RcoY1QfouxPfJmWIKxDSA
-         XqiP42hO7w14RTPtCwY9JIsLaDBhlb/FH1Arov8LKYqGjZYNn9lzy2wlBW0gtDAXwldV
-         AtGw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qMrORyW5nMBpE9AKOmWgk4rweWdkIqw2wY8VYo1ZNuw=;
+        b=FWLT9g4UFegz5m0n49tzVHJELmdKRgGFBqeSyhH9+FGXPuU/C8e/gyZWv7yn1tANhK
+         VKM2LufO6BnJJJlwaa/d3biZEHAZC6y0q+kz7alcmYmISgt3Z1iG5CVQTS9ZMXR4EQaJ
+         4BUD1Z1B1URfSHVby2nSxdFlqc3D7Wh7d2VMkoLy8h5znZJNtTYN00Hgtqw8/2i5t/rG
+         OXR1OkK+OeH8Jc2DB+8ujlZmyy6XdgGLti2bk5U/wnG890y8edvyIt34wLjl3d3GUkeG
+         bwH5o1LIMSvXqysFyr2A3cLDbYpUGZohilzecher/Mpb/pYMo1Ojuq38aCBUjayT+OQA
+         iFqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=K9dzo1Lpl/E8eQcOkXHQEfmmSekoCsu3mvK4T8VA6ms=;
-        b=Z57r16dgVuXt0ec9tlZxD8mMruQCt2lxZvL1YTnzGyh9xgRp9M4x4S3M4PQiwDwzz4
-         9bqIVcNZ7uer73Yci0B8ecyc6QlHVWIbcKgnL/xqaTvmc7CrYFHUQCfk3wxJUIoiRZIE
-         bm5lTeKSpEgRtxlRXcjBHVp8lRNT2zppbxO5casHl855oR+XI1se1ssOtsUMczZ1QJEO
-         b3BoS5Vj3ydGyPcMtqbwYns/bogHJv2T/Vnkkgz+ab5DNKVlp85VNKRTeabMSih+GBh3
-         6MFuhQbAR6q+vDYzSq94P0eS0mPBrAWiyvT1uTnE2ELuc+Ydnrm18eM9YdzCU6+PF9Ig
-         GOIA==
-X-Gm-Message-State: APjAAAU27dxHwjPs0TNJjzhla4bGCDvFssKft/t+T19VPzdzuLRyWzd/
-        EFPMjBNAn64mPwgOvFR2DppB3O1VHzU=
-X-Google-Smtp-Source: APXvYqx8wTqCWL2tU92aJbfsbqGbhCVdt7/4hFudVU8+sRtBBXE/y1Lpgg2RunR5AdNC5aFfrOSqLQ==
-X-Received: by 2002:a63:77c3:: with SMTP id s186mr23095280pgc.370.1573923086271;
-        Sat, 16 Nov 2019 08:51:26 -0800 (PST)
-Received: from ?IPv6:2600:1010:b01b:e50d:6d7c:21:d243:910c? ([2600:1010:b01b:e50d:6d7c:21:d243:910c])
-        by smtp.gmail.com with ESMTPSA id d139sm18147514pfd.162.2019.11.16.08.51.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 Nov 2019 08:51:25 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v25 12/12] LRNG - add interface for gathering of raw entropy
-Date:   Sat, 16 Nov 2019 08:51:24 -0800
-Message-Id: <6950B235-6231-4DFF-A375-54A70C548B2E@amacapital.net>
-References: <3610406.x8mDjznOIz@positron.chronox.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>
-In-Reply-To: <3610406.x8mDjznOIz@positron.chronox.de>
-To:     =?utf-8?Q?Stephan_M=C3=BCller?= <smueller@chronox.de>
-X-Mailer: iPhone Mail (17A878)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qMrORyW5nMBpE9AKOmWgk4rweWdkIqw2wY8VYo1ZNuw=;
+        b=GKugcPY60Rob7/FJzXmimtIQQncpqqW4sJJExh+1fwUybWgoxwbvbYVKcgeOmeo/eV
+         vtTJg5XLF2gLf04mvtCOmjQ6E6JvGgXcEQha48QqojsBzUUac2fqYX2AN1q3EZoCkjsb
+         ZS6V+AyGdbyG9CVynzUtK+4nJfmo/BH/G/GJ8bmVo6XIAP8pMHiLxo09U9BcBBQVXly2
+         CNAU2DdBS5OO9P960X3XuBoMIPs4cL4kI6Rf0fuWjHwEZVJLJ8Y/JrtvW88Y+IbCfVng
+         UrXeDcUi2GG6dMsmKjS3Wu1Mxj8CbEjZVSCgVjRpnbMd6QRqYnu+pJvVReDXXGPAg2Iy
+         lXkg==
+X-Gm-Message-State: APjAAAVYBTFfqLUizRkcVTUUZ7N0EBqPhZje2ii/L8q9DqtojXy0yeJ7
+        HgRZYF42kXkU+DRWT+edS2eYHQ==
+X-Google-Smtp-Source: APXvYqxJB5qRcG+X9uSTKdLLV9ptpXEDL2uxLwsGNWjwy+IdDODv15+CLgU5miYSqIeiizqzRyaSOA==
+X-Received: by 2002:a17:90a:a40f:: with SMTP id y15mr28378509pjp.106.1573923113464;
+        Sat, 16 Nov 2019 08:51:53 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id x12sm14425032pfm.130.2019.11.16.08.51.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 Nov 2019 08:51:52 -0800 (PST)
+Date:   Sat, 16 Nov 2019 08:51:50 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     sboyd@kernel.org, mturquette@baylibre.com, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jonathan@marek.ca
+Subject: Re: [PATCH] clk: qcom: mmcc8974: move gfx3d_clk_src from the mmcc to
+ rpm
+Message-ID: <20191116165150.GB25371@yoga>
+References: <20191115123931.18919-1-masneyb@onstation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115123931.18919-1-masneyb@onstation.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri 15 Nov 04:39 PST 2019, Brian Masney wrote:
 
+> gfx3d_clk_src for msm8974 was introduced into the MMCC by
+> commit d8b212014e69 ("clk: qcom: Add support for MSM8974's multimedia
+> clock controller (MMCC)") to ensure that all of the clocks for
+> this platform are documented upstream. This clock actually belongs
+> on the RPM. Since then, commit 685dc94b7d8f ("clk: qcom: smd-rpmcc:
+> Add msm8974 clocks") was introduced, which contains the proper
+> definition for gfx3d_clk_src. Let's drop the definition from the
+> mmcc and register the clock with the rpm instead.
+> 
+> This change was tested on a Nexus 5 (hammerhead) phone.
+> 
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
 
-> On Nov 16, 2019, at 1:40 AM, Stephan M=C3=BCller <smueller@chronox.de> wro=
-te:
->=20
-> =EF=BB=BFThe test interface allows a privileged process to capture the raw=
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-> unconditioned noise that is collected by the LRNG for statistical
-> analysis. Extracted noise data is not used to seed the LRNG. This
-> is a test interface and not appropriate for production systems.
-> Yet, the interface is considered to be sufficiently secured for
-> production systems.
->=20
-> Access to the data is given through the lrng_raw debugfs file. The
-> data buffer should be multiples of sizeof(u32) to fill the entire
-> buffer. Using the option lrng_testing.boot_test=3D1 the raw noise of
-> the first 1000 entropy events since boot can be sampled.
->=20
-> This test interface allows generating the data required for
-> analysis whether the LRNG is in compliance with SP800-90B
-> sections 3.1.3 and 3.1.4.
->=20
-> CC: "Eric W. Biederman" <ebiederm@xmission.com>
-> CC: "Alexander E. Patrakov" <patrakov@gmail.com>
-> CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
-> CC: "Theodore Y. Ts'o" <tytso@mit.edu>
-> CC: Willy Tarreau <w@1wt.eu>
-> CC: Matthew Garrett <mjg59@srcf.ucam.org>
-> CC: Vito Caputo <vcaputo@pengaru.com>
-> CC: Andreas Dilger <adilger.kernel@dilger.ca>
-> CC: Jan Kara <jack@suse.cz>
-> CC: Ray Strode <rstrode@redhat.com>
-> CC: William Jon McCann <mccann@jhu.edu>
-> CC: zhangjs <zachary@baishancloud.com>
-> CC: Andy Lutomirski <luto@kernel.org>
-> CC: Florian Weimer <fweimer@redhat.com>
-> CC: Lennart Poettering <mzxreary@0pointer.de>
-> CC: Nicolai Stange <nstange@suse.de>
-> Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
-> Tested-by: Roman Drahtm=C3=BCller <draht@schaltsekun.de>
-> Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
-> Tested-by: Neil Horman <nhorman@redhat.com>
-> Signed-off-by: Stephan Mueller <smueller@chronox.de>
 > ---
-> drivers/char/lrng/Kconfig        |  16 ++
-> drivers/char/lrng/Makefile       |   1 +
-> drivers/char/lrng/lrng_testing.c | 324 +++++++++++++++++++++++++++++++
-> 3 files changed, 341 insertions(+)
-> create mode 100644 drivers/char/lrng/lrng_testing.c
->=20
-> diff --git a/drivers/char/lrng/Kconfig b/drivers/char/lrng/Kconfig
-> index e6ca3acc1e48..4ccc710832ef 100644
-> --- a/drivers/char/lrng/Kconfig
-> +++ b/drivers/char/lrng/Kconfig
-> @@ -169,4 +169,20 @@ config LRNG_APT_CUTOFF
->    default 325 if !LRNG_APT_BROKEN
->    default 32 if LRNG_APT_BROKEN
->=20
-> +config LRNG_TESTING
-> +    bool "Enable entropy test interface to LRNG noise source"
-> +    select CONFIG_DEBUG_FS
-> +    help
-> +      The test interface allows a privileged process to capture
-> +      the raw unconditioned noise that is collected by the LRNG
-> +      for statistical analysis. Extracted noise data is not used
-> +      to seed the LRNG.
-> +
-> +      The raw noise data can be obtained using the lrng_raw
-> +      debugfs file. Using the option lrng_testing.boot_test=3D1
-> +      the raw noise of the first 1000 entropy events since boot
-> +      can be sampled.
-> +
-> +      If unsure, say N.
-> +
-> endif # LRNG
-> diff --git a/drivers/char/lrng/Makefile b/drivers/char/lrng/Makefile
-> index 0713e9c0aa6e..c0b6cc4301fe 100644
-> --- a/drivers/char/lrng/Makefile
-> +++ b/drivers/char/lrng/Makefile
-> @@ -16,3 +16,4 @@ obj-$(CONFIG_LRNG_KCAPI)    +=3D lrng_kcapi.o
-> obj-$(CONFIG_LRNG_JENT)        +=3D lrng_jent.o
-> obj-$(CONFIG_LRNG_TRNG_SUPPORT)    +=3D lrng_trng.o
-> obj-$(CONFIG_LRNG_HEALTH_TESTS)    +=3D lrng_health.o
-> +obj-$(CONFIG_LRNG_TESTING)    +=3D lrng_testing.o
-> diff --git a/drivers/char/lrng/lrng_testing.c b/drivers/char/lrng/lrng_tes=
-ting.c
-> new file mode 100644
-> index 000000000000..5c33d3bd2172
-> --- /dev/null
-> +++ b/drivers/char/lrng/lrng_testing.c
-> @@ -0,0 +1,324 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-> +/*
-> + * Linux Random Number Generator (LRNG) Raw entropy collection tool
-> + *
-> + * Copyright (C) 2019, Stephan Mueller <smueller@chronox.de>
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/atomic.h>
-> +#include <linux/bug.h>
-> +#include <linux/debugfs.h>
-> +#include <linux/module.h>
-> +#include <linux/sched.h>
-> +#include <linux/sched/signal.h>
-> +#include <linux/slab.h>
-> +#include <linux/string.h>
-> +#include <linux/types.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/workqueue.h>
-> +#include <asm/errno.h>
-> +
-> +#include "lrng_internal.h"
-> +
-> +#define LRNG_TESTING_RINGBUFFER_SIZE    1024
-> +#define LRNG_TESTING_RINGBUFFER_MASK    (LRNG_TESTING_RINGBUFFER_SIZE - 1=
-)
-> +
-> +static u32 lrng_testing_rb[LRNG_TESTING_RINGBUFFER_SIZE];
-> +static atomic_t lrng_rb_reader =3D ATOMIC_INIT(0);
-> +static atomic_t lrng_rb_writer =3D ATOMIC_INIT(0);
-> +static atomic_t lrng_rb_first_in =3D ATOMIC_INIT(0);
-> +static atomic_t lrng_testing_enabled =3D ATOMIC_INIT(0);
-> +
-> +static DECLARE_WAIT_QUEUE_HEAD(lrng_raw_read_wait);
-> +
-> +static u32 boot_test =3D 0;
-> +module_param(boot_test, uint, 0644);
-> +MODULE_PARM_DESC(boot_test, "Enable gathering boot time entropy of the fi=
-rst"
-> +                " entropy events");
-> +
-> +static inline void lrng_raw_entropy_reset(void)
-> +{
-> +    atomic_set(&lrng_rb_reader, 0);
-> +    atomic_set(&lrng_rb_writer, 0);
-> +    atomic_set(&lrng_rb_first_in, 0);
-> +}
-> +
-> +static void lrng_raw_entropy_init(void)
-> +{
-> +    /*
-> +     * The boot time testing implies we have a running test. If the
-> +     * caller wants to clear it, he has to unset the boot_test flag
-> +     * at runtime via sysfs to enable regular runtime testing
-> +     */
-> +    if (boot_test)
-> +        return;
-> +
-> +    lrng_raw_entropy_reset();
-> +    atomic_set(&lrng_testing_enabled, 1);
-> +    pr_warn("Enabling raw entropy collection\n");
-> +}
-> +
-> +static void lrng_raw_entropy_fini(void)
-> +{
-> +    if (boot_test)
-> +        return;
-> +
-> +    lrng_raw_entropy_reset();
-> +    atomic_set(&lrng_testing_enabled, 0);
-> +    pr_warn("Disabling raw entropy collection\n");
-> +}
-> +
-> +bool lrng_raw_entropy_store(u32 value)
-> +{
-> +    unsigned int write_ptr;
-> +    unsigned int read_ptr;
-> +
-> +    if (!atomic_read(&lrng_testing_enabled) && !boot_test)
-> +        return false;
-> +
-> +    write_ptr =3D (unsigned int)atomic_add_return_relaxed(1, &lrng_rb_wri=
-ter);
-> +    read_ptr =3D (unsigned int)atomic_read(&lrng_rb_reader);
-
-Am I correct in assuming that this function can be called concurrently in di=
-fferent threads or CPUs?
-
-> +
-> +    /*
-> +     * Disable entropy testing for boot time testing after ring buffer
-> +     * is filled.
-> +     */
-> +    if (boot_test && write_ptr > LRNG_TESTING_RINGBUFFER_SIZE) {
-> +        pr_warn_once("Boot time entropy collection test disabled\n");
-> +        return false;
-> +    }
-> +
-> +    if (boot_test && !atomic_read(&lrng_rb_first_in))
-> +        pr_warn("Boot time entropy collection test enabled\n");
-> +
-> +    lrng_testing_rb[write_ptr & LRNG_TESTING_RINGBUFFER_MASK] =3D value;
-
-You=E2=80=99re writing *somewhere*, but not necessarily to the first open sl=
-ot.
-
-> +
-> +    /* We got at least one event, enable the reader now. */
-> +    atomic_set(&lrng_rb_first_in, 1);
-
-But not necessarily in position 0.
-
-> +
-> +    if (wq_has_sleeper(&lrng_raw_read_wait))
-> +        wake_up_interruptible(&lrng_raw_read_wait);
-> +
-> +    /*
-> +     * Our writer is taking over the reader - this means the reader
-> +     * one full ring buffer available. Thus we "push" the reader ahead
-> +     * to guarantee that he will be able to consume the full ring.
-> +     */
-> +    if (!boot_test &&
-> +        ((write_ptr & LRNG_TESTING_RINGBUFFER_MASK) =3D=3D
-> +        (read_ptr & LRNG_TESTING_RINGBUFFER_MASK)))
-> +        atomic_inc_return_relaxed(&lrng_rb_reader);
-
-Because you did a relaxed increment above, you don=E2=80=99t actually know t=
-his. Maybe it=E2=80=99s okay, but this is way too subtle.
-
-I think you should have a mutex for the read side and put all the complicate=
-d accounting inside the mutex.  If the reader can=E2=80=99t figure out that t=
-he read pointer is too far behind the write pointer, then fix the reader.
-
-I also don=E2=80=99t see how the reader is supposed to know how much data ha=
-s actually been written.  You don=E2=80=99t have any variable that says =E2=80=
-=9Call words up to X have been written=E2=80=9D.
-
-I think you should stop trying to make the write side wait free. Instead, co=
-nsider either using a lock or making it unreliable.  For the former, just sk=
-ip taking the lock if testing is off. For the latter, read write_ptr, write (=
-using WRITE_ONCE) your data, then cmpxchg the write ptr from the value you r=
-ead to that value plus one.  And make sure that the reader never tries to re=
-ad the first unwritten slot, i.e. never let the reader catch all the way up.=
-
-
-I=E2=80=99m also curious why you need entirely different infrastructure for t=
-esting as for normal operation.
-
-> +
-> +    return true;
-> +}
-> +
-> +static inline bool lrng_raw_have_data(void)
-> +{
-> +    unsigned int read_ptr =3D (unsigned int)atomic_read(&lrng_rb_reader);=
-
-> +    unsigned int write_ptr =3D (unsigned int)atomic_read(&lrng_rb_writer)=
-;
-> +
-> +    return (atomic_read(&lrng_rb_first_in) &&
-> +        (write_ptr & LRNG_TESTING_RINGBUFFER_MASK) !=3D
-> +         (read_ptr & LRNG_TESTING_RINGBUFFER_MASK));
-> +}
-> +
-> +static int lrng_raw_entropy_reader(u8 *outbuf, u32 outbuflen)
-> +{
-> +    int collected_data =3D 0;
-> +
-> +    if (!atomic_read(&lrng_testing_enabled) && !boot_test)
-> +        return -EAGAIN;
-> +
-> +    if (!atomic_read(&lrng_rb_first_in)) {
-> +        wait_event_interruptible(lrng_raw_read_wait,
-> +                     lrng_raw_have_data());
-> +        if (signal_pending(current))
-> +            return -ERESTARTSYS;
-> +    }
-> +
-> +    while (outbuflen) {
-> +        unsigned int read_ptr =3D
-> +            (unsigned int)atomic_add_return_relaxed(
-> +                            1, &lrng_rb_reader);
-> +        unsigned int write_ptr =3D
-> +            (unsigned int)atomic_read(&lrng_rb_writer);
-> +
-> +        /*
-> +         * For boot time testing, only output one round of ring buffer.
-> +         */
-> +        if (boot_test && read_ptr > LRNG_TESTING_RINGBUFFER_SIZE) {
-> +            collected_data =3D -ENOMSG;
-> +            goto out;
-> +        }
-> +
-> +        /* We reached the writer */
-> +        if (!boot_test && ((write_ptr & LRNG_TESTING_RINGBUFFER_MASK) =3D=
-=3D
-> +            (read_ptr & LRNG_TESTING_RINGBUFFER_MASK))) {
-> +         =20
-
-This is wrong. The fact that you haven=E2=80=99t reached the writer does not=
- imply that you=E2=80=99re about to read valid data.
-
+>  drivers/clk/qcom/clk-smd-rpm.c  |  2 ++
+>  drivers/clk/qcom/mmcc-msm8974.c | 13 -------------
+>  2 files changed, 2 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
+> index 60aae7543608..2db31dbe47e9 100644
+> --- a/drivers/clk/qcom/clk-smd-rpm.c
+> +++ b/drivers/clk/qcom/clk-smd-rpm.c
+> @@ -486,6 +486,8 @@ static struct clk_smd_rpm *msm8974_clks[] = {
+>  	[RPM_SMD_MMSSNOC_AHB_CLK]	= &msm8974_mmssnoc_ahb_clk,
+>  	[RPM_SMD_MMSSNOC_AHB_A_CLK]	= &msm8974_mmssnoc_ahb_a_clk,
+>  	[RPM_SMD_BIMC_CLK]		= &msm8974_bimc_clk,
+> +	[RPM_SMD_GFX3D_CLK_SRC]		= &msm8974_gfx3d_clk_src,
+> +	[RPM_SMD_GFX3D_A_CLK_SRC]	= &msm8974_gfx3d_a_clk_src,
+>  	[RPM_SMD_BIMC_A_CLK]		= &msm8974_bimc_a_clk,
+>  	[RPM_SMD_OCMEMGX_CLK]		= &msm8974_ocmemgx_clk,
+>  	[RPM_SMD_OCMEMGX_A_CLK]		= &msm8974_ocmemgx_a_clk,
+> diff --git a/drivers/clk/qcom/mmcc-msm8974.c b/drivers/clk/qcom/mmcc-msm8974.c
+> index bcb0a397ef91..015426262d08 100644
+> --- a/drivers/clk/qcom/mmcc-msm8974.c
+> +++ b/drivers/clk/qcom/mmcc-msm8974.c
+> @@ -452,18 +452,6 @@ static struct clk_rcg2 mdp_clk_src = {
+>  	},
+>  };
+>  
+> -static struct clk_rcg2 gfx3d_clk_src = {
+> -	.cmd_rcgr = 0x4000,
+> -	.hid_width = 5,
+> -	.parent_map = mmcc_xo_mmpll0_1_2_gpll0_map,
+> -	.clkr.hw.init = &(struct clk_init_data){
+> -		.name = "gfx3d_clk_src",
+> -		.parent_names = mmcc_xo_mmpll0_1_2_gpll0,
+> -		.num_parents = 5,
+> -		.ops = &clk_rcg2_ops,
+> -	},
+> -};
+> -
+>  static struct freq_tbl ftbl_camss_jpeg_jpeg0_2_clk[] = {
+>  	F(75000000, P_GPLL0, 8, 0, 0),
+>  	F(133330000, P_GPLL0, 4.5, 0, 0),
+> @@ -2411,7 +2399,6 @@ static struct clk_regmap *mmcc_msm8974_clocks[] = {
+>  	[VFE0_CLK_SRC] = &vfe0_clk_src.clkr,
+>  	[VFE1_CLK_SRC] = &vfe1_clk_src.clkr,
+>  	[MDP_CLK_SRC] = &mdp_clk_src.clkr,
+> -	[GFX3D_CLK_SRC] = &gfx3d_clk_src.clkr,
+>  	[JPEG0_CLK_SRC] = &jpeg0_clk_src.clkr,
+>  	[JPEG1_CLK_SRC] = &jpeg1_clk_src.clkr,
+>  	[JPEG2_CLK_SRC] = &jpeg2_clk_src.clkr,
+> -- 
+> 2.21.0
+> 
