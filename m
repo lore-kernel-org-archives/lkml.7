@@ -2,52 +2,51 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9306C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BE1C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A77B221845
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E340C21844
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920595;
-	bh=pal9hfN4N0D5eIJxzhWWfFKR/tR1Zz4LVav7/9eRo0Y=;
+	s=default; t=1573920600;
+	bh=by66fafWIkFfkatStvHYRKlIhFEru2T56686wGJEHj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0gucooW6M8SoEQ0kzGFzbmkgIH5HqXkLIYLB8wZCe9DclZOg+N6JbQpTYOkFxyTaA
-	 ctcbJAnp3HBNlWSAnuthl02peL1qAbvemKMlrJuLmJ2sM5Qx5jo2jQ2dZ4ccga77rt
-	 XRfVaA+e6dWj4nmzNzTdFxof461miXJscZkePk/U=
+	b=s2ql6kh0vHHYqMcI2B3euXoKjNITvSr89c0B2QRVtg+KDWqMyErOqMbcpyV5Y9fBM
+	 jyY04DCqbyyCTPk40JcrSQQOJIITrVCi36TUtkGPcLc6PQkumY3/jbqd+V+C5kaSk0
+	 LWbmvhAS6JQ7pJLpCgejdR0O6sUWRiE4OfWKg56g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731162AbfKPQJx (ORCPT
+        id S1731729AbfKPQJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:09:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57114 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:09:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727984AbfKPPt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:49:28 -0500
+        id S1730309AbfKPPtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:49:24 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E62FA208C0;
-        Sat, 16 Nov 2019 15:49:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C18A521739;
+        Sat, 16 Nov 2019 15:49:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919368;
-        bh=pal9hfN4N0D5eIJxzhWWfFKR/tR1Zz4LVav7/9eRo0Y=;
+        s=default; t=1573919364;
+        bh=by66fafWIkFfkatStvHYRKlIhFEru2T56686wGJEHj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=enja6y6OcGBSvRgzpE8XZxGyy63XoxhZnbUOxnsVusMGB/6DkRUv7kRutvKyywXWt
-         X53DWb3MFMrKSd/PMuJdpwgCfvp0ZCZz4lduhli822GjK9qaKxK7Txc+ksq2r0uClZ
-         Eo+R6ExDLtoVTWudnIhaWUmJAUyUboubz2rfSNTM=
+        b=OVIL00A9sd8tJO+omqtY1c/ca4++HUxhOV075oOIzBZ+xmPV73nmucQMw6ApWYr9P
+         tiTr1vwcaxCf421Zn78DIYXcHMWdqhMw86MhlxrdgSQ5GkVN2UinRqn3FsX9vxb6XL
+         8CBejRsXrIoVubnNvdHBQPbyLyIhZQpyuaOxpMAo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joel Stanley <joel@jms.id.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 089/150] powerpc/xmon: Relax frame size for clang
-Date:   Sat, 16 Nov 2019 10:46:27 -0500
-Message-Id: <20191116154729.9573-89-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 086/150] i2c: uniphier-f: fix race condition when IRQ is cleared
+Date:   Sat, 16 Nov 2019 10:46:24 -0500
+Message-Id: <20191116154729.9573-86-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,47 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joel Stanley <joel@jms.id.au>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit 9c87156cce5a63735d1218f0096a65c50a7a32aa ]
+[ Upstream commit eaba68785c2d24ebf1f0d46c24e11b79cc2f94c7 ]
 
-When building with clang (8 trunk, 7.0 release) the frame size limit is
-hit:
+The current IRQ handler clears all the IRQ status bits when it bails
+out. This is dangerous because it might clear away the status bits
+that have just been set while processing the current handler. If this
+happens, the IRQ event for the latest transfer is lost forever.
 
- arch/powerpc/xmon/xmon.c:452:12: warning: stack frame size of 2576
- bytes in function 'xmon_core' [-Wframe-larger-than=]
+The IRQ status bits must be cleared *before* the next transfer is
+kicked.
 
-Some investigation by Naveen indicates this is due to clang saving the
-addresses to printf format strings on the stack.
-
-While this issue is investigated, bump up the frame size limit for xmon
-when building with clang.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/252
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: 6a62974b667f ("i2c: uniphier_f: add UniPhier FIFO-builtin I2C driver")
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/xmon/Makefile | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/i2c/busses/i2c-uniphier-f.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/xmon/Makefile b/arch/powerpc/xmon/Makefile
-index 549e99e71112b..ac5ee067aa512 100644
---- a/arch/powerpc/xmon/Makefile
-+++ b/arch/powerpc/xmon/Makefile
-@@ -13,6 +13,12 @@ UBSAN_SANITIZE := n
- ORIG_CFLAGS := $(KBUILD_CFLAGS)
- KBUILD_CFLAGS = $(subst -mno-sched-epilog,,$(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS)))
+diff --git a/drivers/i2c/busses/i2c-uniphier-f.c b/drivers/i2c/busses/i2c-uniphier-f.c
+index bbd5b137aa216..928ea9930d17e 100644
+--- a/drivers/i2c/busses/i2c-uniphier-f.c
++++ b/drivers/i2c/busses/i2c-uniphier-f.c
+@@ -143,9 +143,10 @@ static void uniphier_fi2c_set_irqs(struct uniphier_fi2c_priv *priv)
+ 	writel(priv->enabled_irqs, priv->membase + UNIPHIER_FI2C_IE);
+ }
  
-+ifdef CONFIG_CC_IS_CLANG
-+# clang stores addresses on the stack causing the frame size to blow
-+# out. See https://github.com/ClangBuiltLinux/linux/issues/252
-+KBUILD_CFLAGS += -Wframe-larger-than=4096
-+endif
+-static void uniphier_fi2c_clear_irqs(struct uniphier_fi2c_priv *priv)
++static void uniphier_fi2c_clear_irqs(struct uniphier_fi2c_priv *priv,
++				     u32 mask)
+ {
+-	writel(-1, priv->membase + UNIPHIER_FI2C_IC);
++	writel(mask, priv->membase + UNIPHIER_FI2C_IC);
+ }
+ 
+ static void uniphier_fi2c_stop(struct uniphier_fi2c_priv *priv)
+@@ -172,6 +173,8 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
+ 		"interrupt: enabled_irqs=%04x, irq_status=%04x\n",
+ 		priv->enabled_irqs, irq_status);
+ 
++	uniphier_fi2c_clear_irqs(priv, irq_status);
 +
- ccflags-$(CONFIG_PPC64) := $(NO_MINIMAL_TOC)
+ 	if (irq_status & UNIPHIER_FI2C_INT_STOP)
+ 		goto complete;
  
- obj-y			+= xmon.o nonstdio.o spr_access.o
+@@ -250,8 +253,6 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
+ 	}
+ 
+ handled:
+-	uniphier_fi2c_clear_irqs(priv);
+-
+ 	spin_unlock(&priv->lock);
+ 
+ 	return IRQ_HANDLED;
+@@ -340,7 +341,7 @@ static int uniphier_fi2c_master_xfer_one(struct i2c_adapter *adap,
+ 		priv->flags |= UNIPHIER_FI2C_STOP;
+ 
+ 	reinit_completion(&priv->comp);
+-	uniphier_fi2c_clear_irqs(priv);
++	uniphier_fi2c_clear_irqs(priv, U32_MAX);
+ 	writel(UNIPHIER_FI2C_RST_TBRST | UNIPHIER_FI2C_RST_RBRST,
+ 	       priv->membase + UNIPHIER_FI2C_RST);	/* reset TX/RX FIFO */
+ 
 -- 
 2.20.1
 
