@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59693C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF87C43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 307EE2083E
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A552F2083E
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919387;
-	bh=jVnLETnGPfxAFSTB/kINL/wkeobz7QLCRb02W0EwSyE=;
+	s=default; t=1573919388;
+	bh=BZ47EP3bX73SeH4D91epy1Eo8HBrWZQvtoUKao3oJ0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j+a9UtEtAFvREQ2b41YaeBDzbl9qGCjo7Hgv496tgJq4VK9FfkK/ZBstKRdWKd+lV
-	 s+Kmawqz+dCyksowuGRqP8d7pOohqAjPrKgk38uT/c0QU9esqoxsV7uQMXT1uzxv4M
-	 HJr+tiAgFhZPMuKwUgykuAxo3s59dgGDNdCDNhIM=
+	b=dZ2Pr5urIA9l21wFDpJ5K00cJ45xpCrFA8SmmQVvi3rs3pibE5tazH0RkRNl/b1OM
+	 gpFxqAzAXv8rwVlft0Pn70YW3Ru+2x/ugBmNszGhkPdfdP73O485FxMKsIPXGoaUxI
+	 LWaTGLuymb1rDBExsNnSuMwrXvaj7u5BAl8AfcfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728367AbfKPPtp (ORCPT
+        id S1728970AbfKPPtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:49:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57276 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:49:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730365AbfKPPtj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:49:39 -0500
+        id S1730358AbfKPPti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:49:38 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E84D720885;
-        Sat, 16 Nov 2019 15:49:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 163A720870;
+        Sat, 16 Nov 2019 15:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919379;
-        bh=jVnLETnGPfxAFSTB/kINL/wkeobz7QLCRb02W0EwSyE=;
+        s=default; t=1573919377;
+        bh=BZ47EP3bX73SeH4D91epy1Eo8HBrWZQvtoUKao3oJ0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J5tEZF173mxYvNXaLeKFhUWsUOtT7HWniJFQWT6vlwWNzYGuI3lpy+oRv28DECHky
-         MMiX2qtamV54NoHzxbT+QYZwOwXHLkPhKF74/MM8FAe28aDBnNpVsRvxTYaT1XtkzB
-         UBHFe6xbtEt1+fdNUaB+QonilT56+5NPoev1hsHk=
+        b=wWQR8L/7llHp5OSLZewtMN++F9TxtJOUh4nG/YI//gg9M3Rnwwh2OOlzcSyS6UmuI
+         ovHEN2LzmxJ+oNOU3b4HWnLTbiIX1b6Vmpc8RYiS8dArHjS694q99hs0xnQeom/MMl
+         EdvRqDsIBrUw0EEzrZjHC9u99Qn4cq1kwW86cGf8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Ernesto=20A=2E=20Fern=C3=A1ndez?= 
-        <ernesto.mnd.fernandez@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Yury Norov <ynorov@caviumnetworks.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 095/150] hfsplus: fix BUG on bnode parent update
-Date:   Sat, 16 Nov 2019 10:46:33 -0500
-Message-Id: <20191116154729.9573-95-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 094/150] linux/bitmap.h: fix type of nbits in bitmap_shift_right()
+Date:   Sat, 16 Nov 2019 10:46:32 -0500
+Message-Id: <20191116154729.9573-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,54 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-[ Upstream commit 19a9d0f1acf75e8be8cfba19c1a34e941846fa2b ]
+[ Upstream commit d9873969fa8725dc6a5a21ab788c057fd8719751 ]
 
-Creating, renaming or deleting a file may hit BUG_ON() if the first
-record of both a leaf node and its parent are changed, and if this
-forces the parent to be split.  This bug is triggered by xfstests
-generic/027, somewhat rarely; here is a more reliable reproducer:
+Most other bitmap API, including the OOL version __bitmap_shift_right,
+take unsigned nbits.  This was accidentally left out from 2fbad29917c98.
 
-  truncate -s 50M fs.iso
-  mkfs.hfsplus fs.iso
-  mount fs.iso /mnt
-  i=1000
-  while [ $i -le 2400 ]; do
-    touch /mnt/$i &>/dev/null
-    ((++i))
-  done
-  i=2400
-  while [ $i -ge 1000 ]; do
-    mv /mnt/$i /mnt/$(perl -e "print $i x61") &>/dev/null
-    ((--i))
-  done
-
-The issue is that a newly created bnode is being put twice.  Reset
-new_node to NULL in hfs_brec_update_parent() before reaching goto again.
-
-Link: http://lkml.kernel.org/r/5ee1db09b60373a15890f6a7c835d00e76bf601d.1535682461.git.ernesto.mnd.fernandez@gmail.com
-Signed-off-by: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
-Cc: Christoph Hellwig <hch@infradead.org>
+Link: http://lkml.kernel.org/r/20180818131623.8755-5-linux@rasmusvillemoes.dk
+Fixes: 2fbad29917c98 ("lib: bitmap: change bitmap_shift_right to take unsigned parameters")
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Reported-by: Yury Norov <ynorov@caviumnetworks.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/hfsplus/brec.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/bitmap.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/hfsplus/brec.c b/fs/hfsplus/brec.c
-index d3f36982f6858..0f53a486d2c18 100644
---- a/fs/hfsplus/brec.c
-+++ b/fs/hfsplus/brec.c
-@@ -448,6 +448,7 @@ static int hfs_brec_update_parent(struct hfs_find_data *fd)
- 			/* restore search_key */
- 			hfs_bnode_read_key(node, fd->search_key, 14);
- 		}
-+		new_node = NULL;
- 	}
+diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
+index 1990b88bd0ab2..aec255fb62aad 100644
+--- a/include/linux/bitmap.h
++++ b/include/linux/bitmap.h
+@@ -355,7 +355,7 @@ static __always_inline void bitmap_clear(unsigned long *map, unsigned int start,
+ }
  
- 	if (!rec && node->parent)
+ static inline void bitmap_shift_right(unsigned long *dst, const unsigned long *src,
+-				unsigned int shift, int nbits)
++				unsigned int shift, unsigned int nbits)
+ {
+ 	if (small_const_nbits(nbits))
+ 		*dst = (*src & BITMAP_LAST_WORD_MASK(nbits)) >> shift;
 -- 
 2.20.1
 
