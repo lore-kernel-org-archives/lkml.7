@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2FCC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2461C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBAA21823
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B836A214DE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920812;
-	bh=wk9K6+R12aMkBHHoJ+8wPEfa30a10Re55114L6oEtzQ=;
+	s=default; t=1573920816;
+	bh=nmvde+ljFulYf6/7LnCn9UVguBbRoL7WmjxVtLajoyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mhiRTPLFwnvOHytTHZSDV+oTwgYRLd/mkSjL3Iy2v4vW5YAo2SUkUBK4dWkEiiQGK
-	 Bgc2urug0hL7NPweWm40s8ZfcrSfD7cdIutu2LHpu98SOqaC5Uk0EoMkSyKfOnFaVi
-	 2LbzDHRuLaQIK7gU55YWxF95ByErXVKh+wZ54ydo=
+	b=jwT+++WmxMPv3aUQPtQQZw8hO9BXT8q0IxAt6sWQcHf3nrZbRkplnKOjKveUkpMkX
+	 e/kc5UvJRfWHyH1lj+4J/rd9pWlivTCx6t0OZzWJLUpXywGqp+xthZYaFFPUJXX1QP
+	 i3ST9Cf5ZPZH+UQZABIeSGzPuwvjRQ62nvedBEEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729894AbfKPPsA (ORCPT
+        id S1731897AbfKPQNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:48:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54518 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:13:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729774AbfKPPro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:47:44 -0500
+        id S1729768AbfKPPr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:47:59 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFE3B208E3;
-        Sat, 16 Nov 2019 15:47:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8122620729;
+        Sat, 16 Nov 2019 15:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919264;
-        bh=wk9K6+R12aMkBHHoJ+8wPEfa30a10Re55114L6oEtzQ=;
+        s=default; t=1573919278;
+        bh=nmvde+ljFulYf6/7LnCn9UVguBbRoL7WmjxVtLajoyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x+mhpQOs08cu0O4AUYN1jyGqurCQKKZnFBN5G3+pdNknS5VNqHlQJ33YNYOW5+vVs
-         UnpAQm9VNUhy/1V7+HGs63PGOfgPvHZFNHZw/e6Uflllcm2KxXMf68IWGOPDC5PLl4
-         nCv3zR/DREhbFa/2pPZ7ppCS3GavwS4qpPPIMEUo=
+        b=tBlf6j+foTzNpIEZR0kD7Rxjv42sWCPaH16ipE+ssfc/i8drjLGwCgqPQ/mTECJee
+         /wxYrXWPzYlxi1zWEByN5cM5vwJoDRz0jis95kXUk9wylpt4eqFkZvAvz+hnEJF0y9
+         xUY23wld7tl7tbCWMe+8O2hghTb52T96tkOZV6l8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 015/150] mmc: mediatek: fix cannot receive new request when msdc_cmd_is_ready fail
-Date:   Sat, 16 Nov 2019 10:45:13 -0500
-Message-Id: <20191116154729.9573-15-sashal@kernel.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 029/150] KVM: nVMX: move check_vmentry_postreqs() call to nested_vmx_enter_non_root_mode()
+Date:   Sat, 16 Nov 2019 10:45:27 -0500
+Message-Id: <20191116154729.9573-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -59,43 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaotian Jing <chaotian.jing@mediatek.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit f38a9774ddde9d79b3487dd888edd8b8623552af ]
+[ Upstream commit 7671ce21b13b9596163a29f4712cb2451a9b97dc ]
 
-when msdc_cmd_is_ready return fail, the req_timeout work has not been
-inited and cancel_delayed_work() will return false, then, the request
-return directly and never call mmc_request_done().
+In preparation of supporting checkpoint/restore for nested state,
+commit ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_run()")
+modified check_vmentry_postreqs() to only perform the guest EFER
+consistency checks when nested_run_pending is true.  But, in the
+normal nested VMEntry flow, nested_run_pending is only set after
+check_vmentry_postreqs(), i.e. the consistency check is being skipped.
 
-so need call mod_delayed_work() before msdc_cmd_is_ready()
+Alternatively, nested_run_pending could be set prior to calling
+check_vmentry_postreqs() in nested_vmx_run(), but placing the
+consistency checks in nested_vmx_enter_non_root_mode() allows us
+to split prepare_vmcs02() and interleave the preparation with
+the consistency checks without having to change the call sites
+of nested_vmx_enter_non_root_mode().  In other words, the rest
+of the consistency check code in nested_vmx_run() will be joining
+the postreqs checks in future patches.
 
-Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: ca0bde28f2ed ("kvm: nVMX: Split VMCS checks from nested_vmx_run()")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Jim Mattson <jmattson@google.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/mtk-sd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/vmx.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-index 267f7ab08420e..a2ac9938d9459 100644
---- a/drivers/mmc/host/mtk-sd.c
-+++ b/drivers/mmc/host/mtk-sd.c
-@@ -885,6 +885,7 @@ static void msdc_start_command(struct msdc_host *host,
- 	WARN_ON(host->cmd);
- 	host->cmd = cmd;
+diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+index bba42eb3cc124..ae34b482e9109 100644
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -11427,6 +11427,9 @@ static int enter_vmx_non_root_mode(struct kvm_vcpu *vcpu, bool from_vmentry)
+ 	u32 msr_entry_idx;
+ 	u32 exit_qual;
  
-+	mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
- 	if (!msdc_cmd_is_ready(host, mrq, cmd))
- 		return;
++	if (from_vmentry && check_vmentry_postreqs(vcpu, vmcs12, exit_qual))
++		return EXIT_REASON_INVALID_STATE;
++
+ 	enter_guest_mode(vcpu);
  
-@@ -896,7 +897,6 @@ static void msdc_start_command(struct msdc_host *host,
+ 	if (!(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS))
+@@ -11525,13 +11528,6 @@ static int nested_vmx_run(struct kvm_vcpu *vcpu, bool launch)
+ 	 */
+ 	skip_emulated_instruction(vcpu);
  
- 	cmd->error = 0;
- 	rawcmd = msdc_cmd_prepare_raw_cmd(host, mrq, cmd);
--	mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
- 
- 	sdr_set_bits(host->base + MSDC_INTEN, cmd_ints_mask);
- 	writel(cmd->arg, host->base + SDC_ARG);
+-	ret = check_vmentry_postreqs(vcpu, vmcs12, &exit_qual);
+-	if (ret) {
+-		nested_vmx_entry_failure(vcpu, vmcs12,
+-					 EXIT_REASON_INVALID_STATE, exit_qual);
+-		return 1;
+-	}
+-
+ 	/*
+ 	 * We're finally done with prerequisite checking, and can start with
+ 	 * the nested entry.
 -- 
 2.20.1
 
