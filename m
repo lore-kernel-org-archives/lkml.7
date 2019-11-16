@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00654C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9596BC43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C434D20815
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6415E21739
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:57:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919818;
-	bh=38cFfSRhgYWumSAWefucCnUybSTkCpovcGLVhPczBAA=;
+	s=default; t=1573919825;
+	bh=1if7UKxrnuKULhgfLRnjL/YU3HPFb52+8g35z/wSD0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jKZkOozNuTQBeB+VhfWAGdGayotbPSSIdFvttCoII/A36XxVQ9xUQ8dhjd37pPk9m
-	 uEqqvTGsJIc2XlYbeSTV3mZtEmtjJR/jA59kZSGUFenJEHLawtaRKkD9u40gDSFJ8V
-	 eol9LFXebZafCL8HP083jiJLDjFOUA1COgHpk960=
+	b=Fvgl4ZBl+woZcdH8De40cfljpjqh5lMkI2h2YKPaVdxVWdsmbQfZRQZKRxd8dOGWT
+	 hy+WfO9COxr3RTxcvYBuSqnOY+fclv2Mv2tfjMMBSSFgkWAidkZgG9yjV/X7yyMvOE
+	 xcJ9RXHxVwshmBfmbdECHDvBnoI2j7IDrCqA5JiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731590AbfKPPzV (ORCPT
+        id S1731751AbfKPP5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:55:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37126 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:57:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730010AbfKPPzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:55:11 -0500
+        id S1731578AbfKPPzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:55:20 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4185C2168B;
-        Sat, 16 Nov 2019 15:55:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB64C218AE;
+        Sat, 16 Nov 2019 15:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919710;
-        bh=38cFfSRhgYWumSAWefucCnUybSTkCpovcGLVhPczBAA=;
+        s=default; t=1573919720;
+        bh=1if7UKxrnuKULhgfLRnjL/YU3HPFb52+8g35z/wSD0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eCOnilTXuNFRbP1JiWYWD0mARERDR5TLilCkg37Vd5mh9K+3/LDdraU8IyMcKaXNI
-         Vvj4ITWml46hqbNOOiWcmgX9yhABBeyxJzkrp9h8FZa4S5bWzaokRIZWNPBrqcoIOm
-         WU6QrtO0Bi8injQ+ElGMYs4XwLKTLAidvc8jJvR4=
+        b=RRkGEL1ISPusSZQd3rtctNefmKeFO9Jx7AijtU0ZPrrT7f23OJHkEd/jSn5Pum8Wp
+         zwb27b+iMeuhXP/3mMiP77MUzg1bmSTZ+XKRSnZYcK/rDTAqSN0EgMcObO2LFSiDW9
+         lv6l6W4/d05702fPJNauWw8F3WxqElQEMQNsxVvg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Jiang <dave.jiang@intel.com>, Lucas Van <lucas.van@intel.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
-        linux-ntb@googlegroups.com
-Subject: [PATCH AUTOSEL 4.4 55/77] ntb: intel: fix return value for ndev_vec_mask()
-Date:   Sat, 16 Nov 2019 10:53:17 -0500
-Message-Id: <20191116155339.11909-55-sashal@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 62/77] rtl8xxxu: Fix missing break in switch
+Date:   Sat, 16 Nov 2019 10:53:24 -0500
+Message-Id: <20191116155339.11909-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -59,37 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Jiang <dave.jiang@intel.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit 7756e2b5d68c36e170a111dceea22f7365f83256 ]
+[ Upstream commit 307b00c5e695857ca92fc6a4b8ab6c48f988a1b1 ]
 
-ndev_vec_mask() should be returning u64 mask value instead of int.
-Otherwise the mask value returned can be incorrect for larger
-vectors.
+Add missing break statement in order to prevent the code from falling
+through to the default case.
 
-Fixes: e26a5843f7f5 ("NTB: Split ntb_hw_intel and ntb_transport drivers")
-
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Tested-by: Lucas Van <lucas.van@intel.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Fixes: 26f1fad29ad9 ("New driver: rtl8xxxu (mac80211)")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/hw/intel/ntb_hw_intel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/ntb/hw/intel/ntb_hw_intel.c b/drivers/ntb/hw/intel/ntb_hw_intel.c
-index a198f82982582..2898b39c065e3 100644
---- a/drivers/ntb/hw/intel/ntb_hw_intel.c
-+++ b/drivers/ntb/hw/intel/ntb_hw_intel.c
-@@ -330,7 +330,7 @@ static inline int ndev_db_clear_mask(struct intel_ntb_dev *ndev, u64 db_bits,
- 	return 0;
- }
- 
--static inline int ndev_vec_mask(struct intel_ntb_dev *ndev, int db_vector)
-+static inline u64 ndev_vec_mask(struct intel_ntb_dev *ndev, int db_vector)
- {
- 	u64 shift, mask;
- 
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.c
+index 7d820c3953754..52def14d55d33 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.c
+@@ -5331,6 +5331,7 @@ static int rtl8xxxu_set_key(struct ieee80211_hw *hw, enum set_key_cmd cmd,
+ 		break;
+ 	case WLAN_CIPHER_SUITE_TKIP:
+ 		key->flags |= IEEE80211_KEY_FLAG_GENERATE_MMIC;
++		break;
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
 -- 
 2.20.1
 
