@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1E4C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABDC2C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E4B214DE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7960321479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:18:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921118;
-	bh=QvQ27XNzzcAgPS7U8JGTJIggurF2PvKbrINkZNsf99U=;
+	s=default; t=1573921130;
+	bh=xdFKgEX7Pl/f6BxecuW2mYaqqpQDVVagDCzXcf2Qhhw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EDrsFPPsbZ/h1lrDhbJ6v7BPsLVwOQOgPu93rVdUFOsvGWALoXIMaW+EmP5+V0+89
-	 H0oOE2iPkQgOJqwL07eLFnLIKEacDgeRUZ8rMnPThjm4Wh/aq6+tlsOVM4kJy/1GNi
-	 INoXsJ1yMLRlmaawV8e8yr2uh6xwVGhpbXWp8a/4=
+	b=cKt4EjfpMibsT1Qh/MsayjDTnTpFijmv/BA3SAxdaDbxjmVMidG62xQl6JrZJUvPX
+	 jOZSWYGLxSLiGqP/2+KsRG6Tcc4owz/3/HkJn+SId0fUyCKkO/a3iDB1675BG/t2hk
+	 H2K6xM4xH3zFAzS6SwAncvjRl0mAVom9WSx+4ApQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732041AbfKPQSh (ORCPT
+        id S1730588AbfKPQSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:18:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52796 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:18:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729395AbfKPPq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:46:28 -0500
+        id S1728733AbfKPPq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:26 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0530D207FA;
-        Sat, 16 Nov 2019 15:46:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A970A2077B;
+        Sat, 16 Nov 2019 15:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919187;
-        bh=QvQ27XNzzcAgPS7U8JGTJIggurF2PvKbrINkZNsf99U=;
+        s=default; t=1573919185;
+        bh=xdFKgEX7Pl/f6BxecuW2mYaqqpQDVVagDCzXcf2Qhhw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RoDAhUpTQON7kOHyf1AC47HQmsNg5P1WWQjQrsf1o/wiQEJGxoJQeK+NihQJPka0k
-         I11Kiv6G5qQl5REDJurfZ7B6bmkYShIDn8N7V9ew578sOyACFGqg55LGjN3QX83zuP
-         8i3FdbOh//0WJcENcLVK7qfsxr5y+vRo0u9D9ls0=
+        b=GpT5NiT8iRaA1/QPLJzQ/Yt+B3gnhAFSRhFS2xa9A5kx562G7/LbwCaXTnyGfhCab
+         aaC71vb9w8vTpRz5VTAMCLnymMXSOX9Yw/MB4CAU0GBowkBQgsypJBgm8Po+TONX28
+         6Q+8W0Zz3e9jqsJY0KBXOfItei47tr9dpPLD4B2s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Nikolay Borisov <nborisov@suse.com>,
-        Changbin Du <changbin.du@gmail.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 195/237] btrfs: avoid link error with CONFIG_NO_AUTO_INLINE
-Date:   Sat, 16 Nov 2019 10:40:30 -0500
-Message-Id: <20191116154113.7417-195-sashal@kernel.org>
+Cc:     Nickhu <nickhu@andestech.com>,
+        Greentime Hu <greentime@andestech.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 193/237] nds32: Fix bug in bitfield.h
+Date:   Sat, 16 Nov 2019 10:40:28 -0500
+Message-Id: <20191116154113.7417-193-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,70 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Nickhu <nickhu@andestech.com>
 
-[ Upstream commit 7e17916b35797396f681a3270245fd29c1e4c250 ]
+[ Upstream commit 9aaafac8cffa1c1edb66e19a63841b7c86be07ca ]
 
-Note: this patch fixes a problem in a feature outside of btrfs ("kernel
-hacking: add a config option to disable compiler auto-inlining") and is
-applied ahead of time due to cross-subsystem dependencies.
+There two bitfield bug for perfomance counter
+in bitfield.h:
 
-On 32-bit ARM with gcc-8, I see a link error with the addition of the
-CONFIG_NO_AUTO_INLINE option:
+	PFM_CTL_offSEL1		21 --> 16
+	PFM_CTL_offSEL2		27 --> 22
 
-fs/btrfs/super.o: In function `btrfs_statfs':
-super.c:(.text+0x67b8): undefined reference to `__aeabi_uldivmod'
-super.c:(.text+0x67fc): undefined reference to `__aeabi_uldivmod'
-super.c:(.text+0x6858): undefined reference to `__aeabi_uldivmod'
-super.c:(.text+0x6920): undefined reference to `__aeabi_uldivmod'
-super.c:(.text+0x693c): undefined reference to `__aeabi_uldivmod'
-fs/btrfs/super.o:super.c:(.text+0x6958): more undefined references to `__aeabi_uldivmod' follow
+This commit fix it.
 
-So far this is the only file that shows the behavior, so I'd propose
-to just work around it by marking the functions as 'static inline'
-that normally get inlined here.
-
-The reference to __aeabi_uldivmod comes from a div_u64() which has an
-optimization for a constant division that uses a straight '/' operator
-when the result should be known to the compiler. My interpretation is
-that as we turn off inlining, gcc still expects the result to be constant
-but fails to use that constant value.
-
-Link: https://lkml.kernel.org/r/20181103153941.1881966-1-arnd@arndb.de
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: Changbin Du <changbin.du@gmail.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-[ add the note ]
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Nickhu <nickhu@andestech.com>
+Acked-by: Greentime Hu <greentime@andestech.com>
+Signed-off-by: Greentime Hu <greentime@andestech.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/super.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/nds32/include/asm/bitfield.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
-index 8888337a95b64..ddbad8d509490 100644
---- a/fs/btrfs/super.c
-+++ b/fs/btrfs/super.c
-@@ -1919,7 +1919,7 @@ static int btrfs_remount(struct super_block *sb, int *flags, char *data)
- }
+diff --git a/arch/nds32/include/asm/bitfield.h b/arch/nds32/include/asm/bitfield.h
+index 8e84fc385b946..19b2841219adf 100644
+--- a/arch/nds32/include/asm/bitfield.h
++++ b/arch/nds32/include/asm/bitfield.h
+@@ -692,8 +692,8 @@
+ #define PFM_CTL_offKU1		13	/* Enable user mode event counting for PFMC1 */
+ #define PFM_CTL_offKU2		14	/* Enable user mode event counting for PFMC2 */
+ #define PFM_CTL_offSEL0		15	/* The event selection for PFMC0 */
+-#define PFM_CTL_offSEL1		21	/* The event selection for PFMC1 */
+-#define PFM_CTL_offSEL2		27	/* The event selection for PFMC2 */
++#define PFM_CTL_offSEL1		16	/* The event selection for PFMC1 */
++#define PFM_CTL_offSEL2		22	/* The event selection for PFMC2 */
+ /* bit 28:31 reserved */
  
- /* Used to sort the devices by max_avail(descending sort) */
--static int btrfs_cmp_device_free_bytes(const void *dev_info1,
-+static inline int btrfs_cmp_device_free_bytes(const void *dev_info1,
- 				       const void *dev_info2)
- {
- 	if (((struct btrfs_device_info *)dev_info1)->max_avail >
-@@ -1948,8 +1948,8 @@ static inline void btrfs_descending_sort_devices(
-  * The helper to calc the free space on the devices that can be used to store
-  * file data.
-  */
--static int btrfs_calc_avail_data_space(struct btrfs_fs_info *fs_info,
--				       u64 *free_bytes)
-+static inline int btrfs_calc_avail_data_space(struct btrfs_fs_info *fs_info,
-+					      u64 *free_bytes)
- {
- 	struct btrfs_device_info *devices_info;
- 	struct btrfs_fs_devices *fs_devices = fs_info->fs_devices;
+ #define PFM_CTL_mskEN0		( 0x01  << PFM_CTL_offEN0 )
 -- 
 2.20.1
 
