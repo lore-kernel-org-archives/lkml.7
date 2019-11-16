@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B781AC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D01C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E72021479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B1C214DE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921405;
-	bh=sgtYBds0vlLgYVSZg75gyqmnkTu5AZWC7qxCtXuwRSU=;
+	s=default; t=1573921409;
+	bh=Dj2rTLwWDO1pOTVTST4jx2q+awzIqfqNPlMUZC3OWqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NVuujXjU2UG+3WxZo3BU9zr65+6LhHiyh8ylTis/7pyo87tBAeRN460cg0EE0MMr4
-	 +l+CFhrV5934gBrkLyKHxx81jNL5w175D40O7mUPlxTcqp2bWRVdhD6JS1HrrsoVnF
-	 czYZRLMH9A+gKzotd8sD3O+m8q8JWLiX3x9S84hE=
+	b=tX0dZ7MqrsM7m8j/KXy2WNb3Qd724yY1N8rdoDZJh9KtsxkaNrxtjcfyGJM97WeFk
+	 3zwmA989za0Og3Zzpie7gB6MNHyZ/cuYhsr65zfoP/sxV2wZHzv4xWOmo5slfils0Y
+	 qWA96wqe5W+ykkfLQC78EjmwL/iOX/NGP5ImDo9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728526AbfKPPm5 (ORCPT
+        id S1728501AbfKPPmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:42:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46648 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:42:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728485AbfKPPmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:42:51 -0500
+        id S1728408AbfKPPmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:42:44 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C39B420733;
-        Sat, 16 Nov 2019 15:42:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11D9C2084E;
+        Sat, 16 Nov 2019 15:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918971;
-        bh=sgtYBds0vlLgYVSZg75gyqmnkTu5AZWC7qxCtXuwRSU=;
+        s=default; t=1573918963;
+        bh=Dj2rTLwWDO1pOTVTST4jx2q+awzIqfqNPlMUZC3OWqM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ehl8uc5HXzzkhqib2b5a6Ok3+AHhCerbVuEIeaPkqtm1iCDAfLrYoi4A4k1CIBvPz
-         XSI9UphBFB2TkD0zb7hgVXqc2H6kEdKj7kuv+cdaAZ1srl/O7oiIuR/2Bs7cLIbQvv
-         AbW685RxwhSDYnQe/kd9UswjfU6HVkfxBDU5PmGU=
+        b=YWSwGJDYb0S1qe158zQ5AN5ZFUc5s+vMe4qlzglMtPiQfXg7OmMf6hfWTPINHx/gY
+         FkIBKZAPOxqz7ziL1MEON0X3SPKXO4RcGoqPHsdX+RIITzSg6V0Qfyo7xGFCuREECu
+         eYFgCC5a+GprUrPgxSCt5x5gJXZASEnge1V2EW/g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.19 086/237] swiotlb: do not panic on mapping failures
-Date:   Sat, 16 Nov 2019 10:38:41 -0500
-Message-Id: <20191116154113.7417-86-sashal@kernel.org>
+Cc:     Xin Long <lucien.xin@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-sctp@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 079/237] sctp: use sk_wmem_queued to check for writable space
+Date:   Sat, 16 Nov 2019 10:38:34 -0500
+Message-Id: <20191116154113.7417-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,81 +60,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 8088546832aa2c0d8f99dd56edf6384f8a9b63b3 ]
+[ Upstream commit cd305c74b0f8b49748a79a8f67fc8e5e3e0c4794 ]
 
-All properly written drivers now have error handling in the
-dma_map_single / dma_map_page callers.  As swiotlb_tbl_map_single already
-prints a useful warning when running out of swiotlb pool space we can
-also remove swiotlb_full entirely as it serves no purpose now.
+sk->sk_wmem_queued is used to count the size of chunks in out queue
+while sk->sk_wmem_alloc is for counting the size of chunks has been
+sent. sctp is increasing both of them before enqueuing the chunks,
+and using sk->sk_wmem_alloc to check for writable space.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+However, sk_wmem_alloc is also increased by 1 for the skb allocked
+for sending in sctp_packet_transmit() but it will not wake up the
+waiters when sk_wmem_alloc is decreased in this skb's destructor.
+
+If msg size is equal to sk_sndbuf and sendmsg is waiting for sndbuf,
+the check 'msg_len <= sctp_wspace(asoc)' in sctp_wait_for_sndbuf()
+will keep waiting if there's a skb allocked in sctp_packet_transmit,
+and later even if this skb got freed, the waiting thread will never
+get waked up.
+
+This issue has been there since very beginning, so we change to use
+sk->sk_wmem_queued to check for writable space as sk_wmem_queued is
+not increased for the skb allocked for sending, also as TCP does.
+
+SOCK_SNDBUF_LOCK check is also removed here as it's for tx buf auto
+tuning which I will add in another patch.
+
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/dma/swiotlb.c | 33 +--------------------------------
- 1 file changed, 1 insertion(+), 32 deletions(-)
+ net/sctp/socket.c | 38 +++++++++-----------------------------
+ 1 file changed, 9 insertions(+), 29 deletions(-)
 
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index 4f8a6dbf0b609..2a8c41f12d450 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -761,34 +761,6 @@ static bool swiotlb_free_buffer(struct device *dev, size_t size,
- 	return true;
+diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+index c766315527226..e7a11cd7633f5 100644
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -83,7 +83,7 @@
+ #include <net/sctp/stream_sched.h>
+ 
+ /* Forward declarations for internal helper functions. */
+-static int sctp_writeable(struct sock *sk);
++static bool sctp_writeable(struct sock *sk);
+ static void sctp_wfree(struct sk_buff *skb);
+ static int sctp_wait_for_sndbuf(struct sctp_association *asoc, long *timeo_p,
+ 				size_t msg_len);
+@@ -119,25 +119,10 @@ static void sctp_enter_memory_pressure(struct sock *sk)
+ /* Get the sndbuf space available at the time on the association.  */
+ static inline int sctp_wspace(struct sctp_association *asoc)
+ {
+-	int amt;
++	struct sock *sk = asoc->base.sk;
+ 
+-	if (asoc->ep->sndbuf_policy)
+-		amt = asoc->sndbuf_used;
+-	else
+-		amt = sk_wmem_alloc_get(asoc->base.sk);
+-
+-	if (amt >= asoc->base.sk->sk_sndbuf) {
+-		if (asoc->base.sk->sk_userlocks & SOCK_SNDBUF_LOCK)
+-			amt = 0;
+-		else {
+-			amt = sk_stream_wspace(asoc->base.sk);
+-			if (amt < 0)
+-				amt = 0;
+-		}
+-	} else {
+-		amt = asoc->base.sk->sk_sndbuf - amt;
+-	}
+-	return amt;
++	return asoc->ep->sndbuf_policy ? sk->sk_sndbuf - asoc->sndbuf_used
++				       : sk_stream_wspace(sk);
  }
  
--static void
--swiotlb_full(struct device *dev, size_t size, enum dma_data_direction dir,
--	     int do_panic)
--{
--	if (swiotlb_force == SWIOTLB_NO_FORCE)
--		return;
--
--	/*
--	 * Ran out of IOMMU space for this operation. This is very bad.
--	 * Unfortunately the drivers cannot handle this operation properly.
--	 * unless they check for dma_mapping_error (most don't)
--	 * When the mapping is small enough return a static buffer to limit
--	 * the damage, or panic when the transfer is too big.
--	 */
--	dev_err_ratelimited(dev, "DMA: Out of SW-IOMMU space for %zu bytes\n",
--			    size);
--
--	if (size <= io_tlb_overflow || !do_panic)
--		return;
--
--	if (dir == DMA_BIDIRECTIONAL)
--		panic("DMA: Random memory could be DMA accessed\n");
--	if (dir == DMA_FROM_DEVICE)
--		panic("DMA: Random memory could be DMA written\n");
--	if (dir == DMA_TO_DEVICE)
--		panic("DMA: Random memory could be DMA read\n");
--}
--
- /*
-  * Map a single buffer of the indicated size for DMA in streaming mode.  The
-  * physical address to use is returned.
-@@ -817,10 +789,8 @@ dma_addr_t swiotlb_map_page(struct device *dev, struct page *page,
+ /* Increment the used sndbuf space count of the corresponding association by
+@@ -1928,10 +1913,10 @@ static int sctp_sendmsg_to_asoc(struct sctp_association *asoc,
+ 		asoc->pmtu_pending = 0;
+ 	}
  
- 	/* Oh well, have to allocate and map a bounce buffer. */
- 	map = map_single(dev, phys, size, dir, attrs);
--	if (map == SWIOTLB_MAP_ERROR) {
--		swiotlb_full(dev, size, dir, 1);
-+	if (map == SWIOTLB_MAP_ERROR)
- 		return __phys_to_dma(dev, io_tlb_overflow_buffer);
--	}
+-	if (sctp_wspace(asoc) < msg_len)
++	if (sctp_wspace(asoc) < (int)msg_len)
+ 		sctp_prsctp_prune(asoc, sinfo, msg_len - sctp_wspace(asoc));
  
- 	dev_addr = __phys_to_dma(dev, map);
+-	if (!sctp_wspace(asoc)) {
++	if (sctp_wspace(asoc) <= 0) {
+ 		timeo = sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
+ 		err = sctp_wait_for_sndbuf(asoc, &timeo, msg_len);
+ 		if (err)
+@@ -8516,7 +8501,7 @@ static int sctp_wait_for_sndbuf(struct sctp_association *asoc, long *timeo_p,
+ 			goto do_error;
+ 		if (signal_pending(current))
+ 			goto do_interrupted;
+-		if (msg_len <= sctp_wspace(asoc))
++		if ((int)msg_len <= sctp_wspace(asoc))
+ 			break;
  
-@@ -954,7 +924,6 @@ swiotlb_map_sg_attrs(struct device *hwdev, struct scatterlist *sgl, int nelems,
- 			if (map == SWIOTLB_MAP_ERROR) {
- 				/* Don't panic here, we expect map_sg users
- 				   to do proper error handling. */
--				swiotlb_full(hwdev, sg->length, dir, 0);
- 				attrs |= DMA_ATTR_SKIP_CPU_SYNC;
- 				swiotlb_unmap_sg_attrs(hwdev, sgl, i, dir,
- 						       attrs);
+ 		/* Let another process have a go.  Since we are going
+@@ -8591,14 +8576,9 @@ void sctp_write_space(struct sock *sk)
+  * UDP-style sockets or TCP-style sockets, this code should work.
+  *  - Daisy
+  */
+-static int sctp_writeable(struct sock *sk)
++static bool sctp_writeable(struct sock *sk)
+ {
+-	int amt = 0;
+-
+-	amt = sk->sk_sndbuf - sk_wmem_alloc_get(sk);
+-	if (amt < 0)
+-		amt = 0;
+-	return amt;
++	return sk->sk_sndbuf > sk->sk_wmem_queued;
+ }
+ 
+ /* Wait for an association to go into ESTABLISHED state. If timeout is 0,
 -- 
 2.20.1
 
