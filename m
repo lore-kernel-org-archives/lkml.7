@@ -2,130 +2,88 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A01FC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 03:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F28F1C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 03:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0772220700
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 03:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7E532072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 03:36:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbfKPDRS (ORCPT
+        id S1727388AbfKPDgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 22:17:18 -0500
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:49238 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727418AbfKPDRR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 22:17:17 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R691e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0TiBsg6x_1573874111;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TiBsg6x_1573874111)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 16 Nov 2019 11:15:11 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     alex.shi@linux.alibaba.com, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
-        willy@infradead.org
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v3 6/7] mm/lru: likely enhancement
-Date:   Sat, 16 Nov 2019 11:15:05 +0800
-Message-Id: <1573874106-23802-7-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1573874106-23802-1-git-send-email-alex.shi@linux.alibaba.com>
-References: <1573874106-23802-1-git-send-email-alex.shi@linux.alibaba.com>
+        Fri, 15 Nov 2019 22:36:35 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6239 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727290AbfKPDgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 22:36:35 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 459D3232D7737EC5CC9D;
+        Sat, 16 Nov 2019 11:36:33 +0800 (CST)
+Received: from localhost.localdomain (10.90.53.225) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Sat, 16 Nov 2019 11:36:27 +0800
+From:   Chen Wandun <chenwandun@huawei.com>
+To:     <alexander.deucher@amd.com>, <evan.quan@amd.com>,
+        <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <chenwandun@huawei.com>
+Subject: [PATCH] drm/amd/powerplay: remove variable 'result' set but not used
+Date:   Sat, 16 Nov 2019 11:43:19 +0800
+Message-ID: <1573875799-83572-1-git-send-email-chenwandun@huawei.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use likely() to remove speculations according to pagevec usage.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: Chris Down <chris@chrisdown.name>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org
-Cc: cgroups@vger.kernel.org
-Cc: linux-mm@kvack.org
+drivers/gpu/drm/amd/amdgpu/../powerplay/smumgr/vegam_smumgr.c: In function vegam_populate_smc_boot_level:
+drivers/gpu/drm/amd/amdgpu/../powerplay/smumgr/vegam_smumgr.c:1364:6: warning: variable result set but not used [-Wunused-but-set-variable]
+
+Signed-off-by: Chen Wandun <chenwandun@huawei.com>
 ---
- include/linux/memcontrol.h | 8 ++++----
- mm/memcontrol.c            | 4 ++--
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index eaec01fb627f..5c49fe1ee9fe 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -1297,12 +1297,12 @@ static inline struct lruvec *relock_page_lruvec_irq(struct page *page,
- 	struct pglist_data *pgdat = page_pgdat(page);
- 	struct lruvec *lruvec;
+diff --git a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c b/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
+index 2068eb0..fad78bf 100644
+--- a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
++++ b/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
+@@ -1361,20 +1361,19 @@ static int vegam_populate_smc_uvd_level(struct pp_hwmgr *hwmgr,
+ static int vegam_populate_smc_boot_level(struct pp_hwmgr *hwmgr,
+ 		struct SMU75_Discrete_DpmTable *table)
+ {
+-	int result = 0;
+ 	struct smu7_hwmgr *data = (struct smu7_hwmgr *)(hwmgr->backend);
  
--	if (!locked_lruvec)
-+	if (unlikely(!locked_lruvec))
- 		goto lock;
+ 	table->GraphicsBootLevel = 0;
+ 	table->MemoryBootLevel = 0;
  
- 	lruvec = mem_cgroup_page_lruvec(page, pgdat);
+ 	/* find boot level from dpm table */
+-	result = phm_find_boot_level(&(data->dpm_table.sclk_table),
+-			data->vbios_boot_state.sclk_bootup_value,
+-			(uint32_t *)&(table->GraphicsBootLevel));
++	phm_find_boot_level(&(data->dpm_table.sclk_table),
++			    data->vbios_boot_state.sclk_bootup_value,
++			    (uint32_t *)&(table->GraphicsBootLevel));
  
--	if (locked_lruvec == lruvec)
-+	if (likely(locked_lruvec == lruvec))
- 		return lruvec;
+-	result = phm_find_boot_level(&(data->dpm_table.mclk_table),
+-			data->vbios_boot_state.mclk_bootup_value,
+-			(uint32_t *)&(table->MemoryBootLevel));
++	phm_find_boot_level(&(data->dpm_table.mclk_table),
++			    data->vbios_boot_state.mclk_bootup_value,
++			    (uint32_t *)&(table->MemoryBootLevel));
  
- 	spin_unlock_irq(&locked_lruvec->lru_lock);
-@@ -1319,12 +1319,12 @@ static inline struct lruvec *relock_page_lruvec_irqsave(struct page *page,
- 	struct pglist_data *pgdat = page_pgdat(page);
- 	struct lruvec *lruvec;
- 
--	if (!locked_lruvec)
-+	if (unlikely(!locked_lruvec))
- 		goto lock;
- 
- 	lruvec = mem_cgroup_page_lruvec(page, pgdat);
- 
--	if (locked_lruvec == lruvec)
-+	if (likely(locked_lruvec == lruvec))
- 		return lruvec;
- 
- 	spin_unlock_irqrestore(&locked_lruvec->lru_lock, locked_lruvec->irqflags);
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index cf274739e619..75b8480bed69 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1256,7 +1256,7 @@ struct lruvec *lock_page_lruvec_irq(struct page *page,
- 	spin_lock_irq(&lruvec->lru_lock);
- 
- 	/* lruvec may changed in commit_charge() */
--	if (lruvec != mem_cgroup_page_lruvec(page, pgdat)) {
-+	if (unlikely(lruvec != mem_cgroup_page_lruvec(page, pgdat))) {
- 		spin_unlock_irq(&lruvec->lru_lock);
- 		goto again;
- 	}
-@@ -1274,7 +1274,7 @@ struct lruvec *lock_page_lruvec_irqsave(struct page *page,
- 	spin_lock_irqsave(&lruvec->lru_lock, lruvec->irqflags);
- 
- 	/* lruvec may changed in commit_charge() */
--	if (lruvec != mem_cgroup_page_lruvec(page, pgdat)) {
-+	if (unlikely(lruvec != mem_cgroup_page_lruvec(page, pgdat))) {
- 		spin_unlock_irqrestore(&lruvec->lru_lock, lruvec->irqflags);
- 		goto again;
- 	}
+ 	table->BootVddc  = data->vbios_boot_state.vddc_bootup_value *
+ 			VOLTAGE_SCALE;
 -- 
-1.8.3.1
+2.7.4
 
