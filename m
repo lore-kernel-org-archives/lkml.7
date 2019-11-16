@@ -7,78 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB402C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75847C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B13CC20833
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DDE020836
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919162;
-	bh=BGVEmFHLvjGZOll6shoHOgq10KG5rn1aBv9tgolO9tc=;
+	s=default; t=1573919166;
+	bh=iPFtIhlFnF1IDIP9CFvA7qpSv6U66EhbaLGNIWWMfT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=te2O4IK3t16xTGWd3T+pii+9sEqIZ98Q/8eNSOHAluq9J+OUZtYYzWMTQ6O46+J3N
-	 lGG9EvGBV4jSESMZ6BMOg9HzHlryBOF8Zb+T6IPmOmszyNcTpIwCl9mob6WIC4YGrK
-	 /Ki5IT7RY4KjjKhgmKe/l6kBe7Ud3LIc8r45/bfM=
+	b=0M+7brolrOTrTMR85BtO0LnFbaBflDqBnUS15PSd4i0dSs4jeb7TIBeSAeV3zBC5g
+	 YwX9RVySNcf/Cg12S8fZnKZCKfWJm9eT7DG9fbqKqwX/17DrdWczKJTmaDCZOwPy2K
+	 Xxdk6JSJOKrC15D/TabUYtmuySerawX/Lo9ymvko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728527AbfKPPqB (ORCPT
+        id S1729276AbfKPPqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:46:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51806 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:46:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729234AbfKPPpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:45:52 -0500
+        id S1729229AbfKPPpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:45:54 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA33D207DD;
-        Sat, 16 Nov 2019 15:45:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F7472082E;
+        Sat, 16 Nov 2019 15:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919152;
-        bh=BGVEmFHLvjGZOll6shoHOgq10KG5rn1aBv9tgolO9tc=;
+        s=default; t=1573919153;
+        bh=iPFtIhlFnF1IDIP9CFvA7qpSv6U66EhbaLGNIWWMfT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MGOA/4up7q0CK/2gMhWeliF4QoKGK6pJK+zA0cnC92/mOSnujLQ1gyU2/HWaSod4C
-         U2EKR5W/y4hhaWvXv3OtSi/+OUCe/3MoWvYGb+Fp+kfBmtgh9kA27fcRO38msRKaZj
-         w7Io/TGawz/1JgnjcGifHCudmUo/JpYunKcGpP7Y=
+        b=BoJRBeju/nJ44CVuVGiHxtCPks3AVzVdmfXm5WxK8X3RCjDf4I0fuOxepBY3omLbg
+         zdl9YBBnRkMq3kVBBB/pAMovISTqSQ1aV8fuKC9+8A0dQeUTVKaLdRmvBpKS3eL47j
+         2HKH5j8OpHxQ+opfjaZ4nn0A7uiBi86Gvi/v2URY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Rashmica Gupta <rashmica.g@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        John Allen <jallen@linux.vnet.ibm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Len Brown <lenb@kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        YASUAKI ISHIMATSU <yasu.isimatu@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 165/237] powerpc/powernv: hold device_hotplug_lock when calling device_online()
-Date:   Sat, 16 Nov 2019 10:40:00 -0500
-Message-Id: <20191116154113.7417-165-sashal@kernel.org>
+Cc:     Jacob Keller <jacob.e.keller@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 167/237] fm10k: ensure completer aborts are marked as non-fatal after a resume
+Date:   Sat, 16 Nov 2019 10:40:02 -0500
+Message-Id: <20191116154113.7417-167-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -91,69 +59,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Jacob Keller <jacob.e.keller@intel.com>
 
-[ Upstream commit cec1680591d6d5b10ecc10f370210089416e98af ]
+[ Upstream commit e330af788998b0de4da4f5bd7ddd087507999800 ]
 
-device_online() should be called with device_hotplug_lock() held.
+VF drivers can trigger PCIe completer aborts any time they read a queue
+that they don't own. Even in nominal circumstances, it is not possible
+to prevent the VF driver from reading queues it doesn't own. VF drivers
+may attempt to read queues it previously owned, but which it no longer
+does due to a PF reset.
 
-Link: http://lkml.kernel.org/r/20180925091457.28651-5-david@redhat.com
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Pavel Tatashin <pavel.tatashin@microsoft.com>
-Reviewed-by: Rashmica Gupta <rashmica.g@gmail.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Rashmica Gupta <rashmica.g@gmail.com>
-Cc: Balbir Singh <bsingharora@gmail.com>
-Cc: Michael Neuling <mikey@neuling.org>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: John Allen <jallen@linux.vnet.ibm.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Mathieu Malaterre <malat@debian.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Philippe Ombredanne <pombredanne@nexb.com>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: YASUAKI ISHIMATSU <yasu.isimatu@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Normally these completer aborts aren't an issue. However, on some
+platforms these trigger machine check errors. This is true even if we
+lower their severity from fatal to non-fatal. Indeed, we already have
+code for lowering the severity.
+
+We could attempt to mask these errors conditionally around resets, which
+is the most common time they would occur. However this would essentially
+be a race between the PF and VF drivers, and we may still occasionally
+see machine check exceptions on these strictly configured platforms.
+
+Instead, mask the errors entirely any time we resume VFs. By doing so,
+we prevent the completer aborts from being sent to the parent PCIe
+device, and thus these strict platforms will not upgrade them into
+machine check errors.
+
+Additionally, we don't lose any information by masking these errors,
+because we'll still report VFs which attempt to access queues via the
+FUM_BAD_VF_QACCESS errors.
+
+Without this change, on platforms where completer aborts cause machine
+check exceptions, the VF reading queues it doesn't own could crash the
+host system. Masking the completer abort prevents this, so we should
+mask it for good, and not just around a PCIe reset. Otherwise malicious
+or misconfigured VFs could cause the host system to crash.
+
+Because we are masking the error entirely, there is little reason to
+also keep setting the severity bit, so that code is also removed.
+
+Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/powernv/memtrace.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/intel/fm10k/fm10k_iov.c | 48 ++++++++++++--------
+ 1 file changed, 28 insertions(+), 20 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/memtrace.c b/arch/powerpc/platforms/powernv/memtrace.c
-index 232bf5987f91d..dd3cc4632b9ae 100644
---- a/arch/powerpc/platforms/powernv/memtrace.c
-+++ b/arch/powerpc/platforms/powernv/memtrace.c
-@@ -244,9 +244,11 @@ static int memtrace_online(void)
- 		 * we need to online the memory ourselves.
- 		 */
- 		if (!memhp_auto_online) {
-+			lock_device_hotplug();
- 			walk_memory_range(PFN_DOWN(ent->start),
- 					  PFN_UP(ent->start + ent->size - 1),
- 					  NULL, online_mem_block);
-+			unlock_device_hotplug();
- 		}
+diff --git a/drivers/net/ethernet/intel/fm10k/fm10k_iov.c b/drivers/net/ethernet/intel/fm10k/fm10k_iov.c
+index e707d717012fa..618032612f52d 100644
+--- a/drivers/net/ethernet/intel/fm10k/fm10k_iov.c
++++ b/drivers/net/ethernet/intel/fm10k/fm10k_iov.c
+@@ -302,6 +302,28 @@ void fm10k_iov_suspend(struct pci_dev *pdev)
+ 	}
+ }
  
- 		/*
++static void fm10k_mask_aer_comp_abort(struct pci_dev *pdev)
++{
++	u32 err_mask;
++	int pos;
++
++	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ERR);
++	if (!pos)
++		return;
++
++	/* Mask the completion abort bit in the ERR_UNCOR_MASK register,
++	 * preventing the device from reporting these errors to the upstream
++	 * PCIe root device. This avoids bringing down platforms which upgrade
++	 * non-fatal completer aborts into machine check exceptions. Completer
++	 * aborts can occur whenever a VF reads a queue it doesn't own.
++	 */
++	pci_read_config_dword(pdev, pos + PCI_ERR_UNCOR_MASK, &err_mask);
++	err_mask |= PCI_ERR_UNC_COMP_ABORT;
++	pci_write_config_dword(pdev, pos + PCI_ERR_UNCOR_MASK, err_mask);
++
++	mmiowb();
++}
++
+ int fm10k_iov_resume(struct pci_dev *pdev)
+ {
+ 	struct fm10k_intfc *interface = pci_get_drvdata(pdev);
+@@ -317,6 +339,12 @@ int fm10k_iov_resume(struct pci_dev *pdev)
+ 	if (!iov_data)
+ 		return -ENOMEM;
+ 
++	/* Lower severity of completer abort error reporting as
++	 * the VFs can trigger this any time they read a queue
++	 * that they don't own.
++	 */
++	fm10k_mask_aer_comp_abort(pdev);
++
+ 	/* allocate hardware resources for the VFs */
+ 	hw->iov.ops.assign_resources(hw, num_vfs, num_vfs);
+ 
+@@ -460,20 +488,6 @@ void fm10k_iov_disable(struct pci_dev *pdev)
+ 	fm10k_iov_free_data(pdev);
+ }
+ 
+-static void fm10k_disable_aer_comp_abort(struct pci_dev *pdev)
+-{
+-	u32 err_sev;
+-	int pos;
+-
+-	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ERR);
+-	if (!pos)
+-		return;
+-
+-	pci_read_config_dword(pdev, pos + PCI_ERR_UNCOR_SEVER, &err_sev);
+-	err_sev &= ~PCI_ERR_UNC_COMP_ABORT;
+-	pci_write_config_dword(pdev, pos + PCI_ERR_UNCOR_SEVER, err_sev);
+-}
+-
+ int fm10k_iov_configure(struct pci_dev *pdev, int num_vfs)
+ {
+ 	int current_vfs = pci_num_vf(pdev);
+@@ -495,12 +509,6 @@ int fm10k_iov_configure(struct pci_dev *pdev, int num_vfs)
+ 
+ 	/* allocate VFs if not already allocated */
+ 	if (num_vfs && num_vfs != current_vfs) {
+-		/* Disable completer abort error reporting as
+-		 * the VFs can trigger this any time they read a queue
+-		 * that they don't own.
+-		 */
+-		fm10k_disable_aer_comp_abort(pdev);
+-
+ 		err = pci_enable_sriov(pdev, num_vfs);
+ 		if (err) {
+ 			dev_err(&pdev->dev,
 -- 
 2.20.1
 
