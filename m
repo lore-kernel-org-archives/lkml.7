@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D4BC43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE651C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 756D521847
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A780221845
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920993;
-	bh=yztD/eG3vMr/Rvs0vWXMhNLFKFHrlrDPs/mf4F4zuqc=;
+	s=default; t=1573920996;
+	bh=2Wlb3YZLDLsri+AOZgu2/8+1BzXQy5enQQEq+o4T+ec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U25rvxyygZIfw7m3rS4Uh9u4Qy8qI51Iq6xXkwiwGnpyuC96edlBLCkzhLYk8eyUv
-	 NarVjN7KVY5Uvf0QXxEZnQK/wGBL1VZAEhGo41lTqgrFauwCCGBYls4fs0/iFELC6O
-	 bpaV91V6F8wln8p800Muh65qnFb/mmwjcuXtDTF4=
+	b=nSXNxJUxw1tVtQvQHeKDkYCaJUEOJfygkxSJJEEhqd2qBE1GsNgC1+8UFm1CViAH5
+	 Dily3t0MvSy8+VYvGo2clYUh86i2sMeSBI3dy34bWaafXBhGDoTM08BK6npyIx/K+K
+	 6fBEi34qemj/uf4SbYJoFEVOUP/xgbiSurlb5pTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729593AbfKPPrC (ORCPT
+        id S1729584AbfKPPrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:47:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52788 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:47:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729388AbfKPPq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:46:27 -0500
+        id S1728005AbfKPPqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:24 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4209020830;
-        Sat, 16 Nov 2019 15:46:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A24CE2077B;
+        Sat, 16 Nov 2019 15:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919186;
-        bh=yztD/eG3vMr/Rvs0vWXMhNLFKFHrlrDPs/mf4F4zuqc=;
+        s=default; t=1573919184;
+        bh=2Wlb3YZLDLsri+AOZgu2/8+1BzXQy5enQQEq+o4T+ec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OcNZg48p29k8GoM2Khl9YjEd//n+fJqNjaoIt+SERnq0j2y6b3aVCY4Dy91wRwhcr
-         uHS3c3HG4QUW1PMEAqJnbeY64T/df9eHYn2Pjyhd5tghl1tH5ztGstyr7vDEMn1wb4
-         mk9CE51HQgljxU7YxeJOTfmoG89ZHL9QNxVe60f8=
+        b=sqoSDrdJ+xpHDojuI2ZxA8eoqYTJpyMwjJYDrnkv/rUCQ4qrthsYBnfKyh/mNdJ3e
+         m3nprN5a7pHTZBtyq0Z37Ty/XSFgIaf1f3pIi6t2i1palCiNemEFIJY/ddDK9gG5I/
+         mjD3KDyUrjRd1Vu9Yrn9LgYtkKux8u/PRw9hvIjM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 194/237] media: ov13858: Check for possible null pointer
-Date:   Sat, 16 Nov 2019 10:40:29 -0500
-Message-Id: <20191116154113.7417-194-sashal@kernel.org>
+Cc:     Taehee Yoo <ap420073@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 192/237] net: bpfilter: fix iptables failure if bpfilter_umh is disabled
+Date:   Sat, 16 Nov 2019 10:40:27 -0500
+Message-Id: <20191116154113.7417-192-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,44 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 35629182eb8f931b0de6ed38c0efac58e922c801 ]
+[ Upstream commit 97adaddaa6db7a8af81b9b11e30cbe3628cd6700 ]
 
-Check for possible null pointer to avoid crash.
+When iptables command is executed, ip_{set/get}sockopt() try to upload
+bpfilter.ko if bpfilter is enabled. if it couldn't find bpfilter.ko,
+command is failed.
+bpfilter.ko is generated if CONFIG_BPFILTER_UMH is enabled.
+ip_{set/get}sockopt() only checks CONFIG_BPFILTER.
+So that if CONFIG_BPFILTER is enabled and CONFIG_BPFILTER_UMH is disabled,
+iptables command is always failed.
 
-Signed-off-by: Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+test config:
+   CONFIG_BPFILTER=y
+   # CONFIG_BPFILTER_UMH is not set
+
+test command:
+   %iptables -L
+   iptables: No chain/target/match by that name.
+
+Fixes: d2ba09c17a06 ("net: add skeleton of bpfilter kernel module")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov13858.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/ipv4/ip_sockglue.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/i2c/ov13858.c b/drivers/media/i2c/ov13858.c
-index a66f6201f53c7..cf28381a903e3 100644
---- a/drivers/media/i2c/ov13858.c
-+++ b/drivers/media/i2c/ov13858.c
-@@ -1612,7 +1612,8 @@ static int ov13858_init_controls(struct ov13858 *ov13858)
- 				OV13858_NUM_OF_LINK_FREQS - 1,
- 				0,
- 				link_freq_menu_items);
--	ov13858->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
-+	if (ov13858->link_freq)
-+		ov13858->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
+index b7a26120d5521..82f341e84faec 100644
+--- a/net/ipv4/ip_sockglue.c
++++ b/net/ipv4/ip_sockglue.c
+@@ -1244,7 +1244,7 @@ int ip_setsockopt(struct sock *sk, int level,
+ 		return -ENOPROTOOPT;
  
- 	pixel_rate_max = link_freq_to_pixel_rate(link_freq_menu_items[0]);
- 	pixel_rate_min = link_freq_to_pixel_rate(link_freq_menu_items[1]);
-@@ -1635,7 +1636,8 @@ static int ov13858_init_controls(struct ov13858 *ov13858)
- 	ov13858->hblank = v4l2_ctrl_new_std(
- 				ctrl_hdlr, &ov13858_ctrl_ops, V4L2_CID_HBLANK,
- 				hblank, hblank, 1, hblank);
--	ov13858->hblank->flags |= V4L2_CTRL_FLAG_READ_ONLY;
-+	if (ov13858->hblank)
-+		ov13858->hblank->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+ 	err = do_ip_setsockopt(sk, level, optname, optval, optlen);
+-#ifdef CONFIG_BPFILTER
++#if IS_ENABLED(CONFIG_BPFILTER_UMH)
+ 	if (optname >= BPFILTER_IPT_SO_SET_REPLACE &&
+ 	    optname < BPFILTER_IPT_SET_MAX)
+ 		err = bpfilter_ip_set_sockopt(sk, optname, optval, optlen);
+@@ -1557,7 +1557,7 @@ int ip_getsockopt(struct sock *sk, int level,
+ 	int err;
  
- 	exposure_max = mode->vts_def - 8;
- 	ov13858->exposure = v4l2_ctrl_new_std(
+ 	err = do_ip_getsockopt(sk, level, optname, optval, optlen, 0);
+-#ifdef CONFIG_BPFILTER
++#if IS_ENABLED(CONFIG_BPFILTER_UMH)
+ 	if (optname >= BPFILTER_IPT_SO_GET_INFO &&
+ 	    optname < BPFILTER_IPT_GET_MAX)
+ 		err = bpfilter_ip_get_sockopt(sk, optname, optval, optlen);
+@@ -1594,7 +1594,7 @@ int compat_ip_getsockopt(struct sock *sk, int level, int optname,
+ 	err = do_ip_getsockopt(sk, level, optname, optval, optlen,
+ 		MSG_CMSG_COMPAT);
+ 
+-#ifdef CONFIG_BPFILTER
++#if IS_ENABLED(CONFIG_BPFILTER_UMH)
+ 	if (optname >= BPFILTER_IPT_SO_GET_INFO &&
+ 	    optname < BPFILTER_IPT_GET_MAX)
+ 		err = bpfilter_ip_get_sockopt(sk, optname, optval, optlen);
 -- 
 2.20.1
 
