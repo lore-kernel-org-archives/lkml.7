@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A5FC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 05:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42158C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 05:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B3E2084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 05:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 248D420830
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 05:53:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbfKPFxR (ORCPT
+        id S1727518AbfKPFxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 00:53:17 -0500
-Received: from mga12.intel.com ([192.55.52.136]:28365 "EHLO mga12.intel.com"
+        Sat, 16 Nov 2019 00:53:15 -0500
+Received: from mga14.intel.com ([192.55.52.115]:32565 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726287AbfKPFwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725905AbfKPFwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 16 Nov 2019 00:52:45 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 21:52:43 -0800
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 21:52:44 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,311,1569308400"; 
-   d="scan'208";a="199421724"
+   d="scan'208";a="208612461"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga008.jf.intel.com with ESMTP; 15 Nov 2019 21:52:43 -0800
+  by orsmga006.jf.intel.com with ESMTP; 15 Nov 2019 21:52:43 -0800
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id EB115300FFC; Fri, 15 Nov 2019 21:52:43 -0800 (PST)
+        id D9215300FDE; Fri, 15 Nov 2019 21:52:43 -0800 (PST)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
 Cc:     jolsa@kernel.org, linux-kernel@vger.kernel.org,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v7 05/12] perf evsel: Add iterator to iterate over events ordered by CPU
-Date:   Fri, 15 Nov 2019 21:52:22 -0800
-Message-Id: <20191116055229.62002-6-andi@firstfloor.org>
+Subject: [PATCH v7 02/12] perf affinity: Add infrastructure to save/restore affinity
+Date:   Fri, 15 Nov 2019 21:52:19 -0800
+Message-Id: <20191116055229.62002-3-andi@firstfloor.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191116055229.62002-1-andi@firstfloor.org>
 References: <20191116055229.62002-1-andi@firstfloor.org>
@@ -49,116 +49,152 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Add some common code that is needed to iterate over all events
-in CPU order. Used in followon patches
+The kernel perf subsystem has to IPI to the target CPU for many
+operations. On systems with many CPUs and when managing many events the
+overhead can be dominated by lots of IPIs.
+
+An alternative is to set up CPU affinity in the perf tool, then set up
+all the events for that CPU, and then move on to the next CPU.
+
+Add some affinity management infrastructure to enable such a model.
+Used in followon patches.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
 ---
 
-v2: Add cpumap__for_each_cpu macro to factor out some common code
-v3: Drop cpumap__for_each_cpu macro again, replace with evlist__for_each_cpu
-Add new evlist__for_each_cpu
-Don't compute cpus nr in cpu_index iterator init, just use all_cpus
-v4:
-Remove __next, move into skip
-Add _no_inc
-Move initialization into iterator macro
-Rename cpu_index to cpu_iter
+v2: Use linux/bitmap.h functions.
+v3: Add affinity.c to the python-ext-sources to fix the python
+interface.  Thanks 0day!
 ---
- tools/perf/util/cpumap.h |  1 +
- tools/perf/util/evlist.c | 32 ++++++++++++++++++++++++++++++++
- tools/perf/util/evlist.h |  8 ++++++++
- tools/perf/util/evsel.h  |  1 +
- 4 files changed, 42 insertions(+)
+ tools/perf/util/Build              |  1 +
+ tools/perf/util/affinity.c         | 72 ++++++++++++++++++++++++++++++
+ tools/perf/util/affinity.h         | 15 +++++++
+ tools/perf/util/python-ext-sources |  1 +
+ 4 files changed, 89 insertions(+)
+ create mode 100644 tools/perf/util/affinity.c
+ create mode 100644 tools/perf/util/affinity.h
 
-diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-index 57943f3685f8..3a442f021468 100644
---- a/tools/perf/util/cpumap.h
-+++ b/tools/perf/util/cpumap.h
-@@ -63,4 +63,5 @@ int cpu_map__build_map(struct perf_cpu_map *cpus, struct perf_cpu_map **res,
- 
- int cpu_map__cpu(struct perf_cpu_map *cpus, int idx);
- bool cpu_map__has(struct perf_cpu_map *cpus, int cpu);
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index aab05e2c01a5..07da6c790b63 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -77,6 +77,7 @@ perf-y += sort.o
+ perf-y += hist.o
+ perf-y += util.o
+ perf-y += cpumap.o
++perf-y += affinity.o
+ perf-y += cputopo.o
+ perf-y += cgroup.o
+ perf-y += target.o
+diff --git a/tools/perf/util/affinity.c b/tools/perf/util/affinity.c
+new file mode 100644
+index 000000000000..e197b0416f56
+--- /dev/null
++++ b/tools/perf/util/affinity.c
+@@ -0,0 +1,72 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Manage affinity to optimize IPIs inside the kernel perf API. */
++#define _GNU_SOURCE 1
++#include <sched.h>
++#include <stdlib.h>
++#include <linux/bitmap.h>
++#include "perf.h"
++#include "cpumap.h"
++#include "affinity.h"
 +
- #endif /* __PERF_CPUMAP_H */
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index fdce590d2278..dae6e846b2f8 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -342,6 +342,38 @@ static int perf_evlist__nr_threads(struct evlist *evlist,
- 		return perf_thread_map__nr(evlist->core.threads);
- }
- 
-+void evlist__cpu_iter_start(struct evlist *evlist)
++static int get_cpu_set_size(void)
 +{
-+	struct evsel *pos;
-+
++	int sz = cpu__max_cpu() + 8 - 1;
 +	/*
-+	 * Reset the per evsel cpu_iter. This is needed because
-+	 * each evsel's cpumap may have a different index space,
-+	 * and some operations need the index to modify
-+	 * the FD xyarray (e.g. open, close)
++	 * sched_getaffinity doesn't like masks smaller than the kernel.
++	 * Hopefully that's big enough.
 +	 */
-+	evlist__for_each_entry(evlist, pos)
-+		pos->cpu_iter = 0;
++	if (sz < 4096)
++		sz = 4096;
++	return sz/8;
 +}
 +
-+bool evsel__cpu_iter_skip_no_inc(struct evsel *ev, int cpu)
++int affinity__setup(struct affinity *a)
 +{
-+	if (ev->cpu_iter >= ev->core.cpus->nr)
-+		return true;
-+	if (cpu >= 0 && ev->core.cpus->map[ev->cpu_iter] != cpu)
-+		return true;
-+	return false;
-+}
++	int cpu_set_size = get_cpu_set_size();
 +
-+bool evsel__cpu_iter_skip(struct evsel *ev, int cpu)
-+{
-+	if (!evsel__cpu_iter_skip_no_inc(ev, cpu)) {
-+		ev->cpu_iter++;
-+		return false;
++	a->orig_cpus = bitmap_alloc(cpu_set_size*8);
++	if (!a->orig_cpus)
++		return -1;
++	sched_getaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
++	a->sched_cpus = bitmap_alloc(cpu_set_size*8);
++	if (!a->sched_cpus) {
++		free(a->orig_cpus);
++		return -1;
 +	}
-+	return true;
++	bitmap_zero((unsigned long *)a->sched_cpus, cpu_set_size);
++	a->changed = false;
++	return 0;
 +}
 +
- void evlist__disable(struct evlist *evlist)
- {
- 	struct evsel *pos;
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 13051409fd22..12606efc1f7c 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -333,9 +333,17 @@ void perf_evlist__to_front(struct evlist *evlist,
- #define evlist__for_each_entry_safe(evlist, tmp, evsel) \
- 	__evlist__for_each_entry_safe(&(evlist)->core.entries, tmp, evsel)
- 
-+#define evlist__for_each_cpu(evlist, index, cpu)	\
-+	evlist__cpu_iter_start(evlist);			\
-+	perf_cpu_map__for_each_cpu (cpu, index, (evlist)->core.all_cpus)
++/*
++ * perf_event_open does an IPI internally to the target CPU.
++ * It is more efficient to change perf's affinity to the target
++ * CPU and then set up all events on that CPU, so we amortize
++ * CPU communication.
++ */
++void affinity__set(struct affinity *a, int cpu)
++{
++	int cpu_set_size = get_cpu_set_size();
 +
- void perf_evlist__set_tracking_event(struct evlist *evlist,
- 				     struct evsel *tracking_evsel);
- 
-+void evlist__cpu_iter_start(struct evlist *evlist);
-+bool evsel__cpu_iter_skip(struct evsel *ev, int cpu);
-+bool evsel__cpu_iter_skip_no_inc(struct evsel *ev, int cpu);
++	if (cpu == -1)
++		return;
++	a->changed = true;
++	set_bit(cpu, a->sched_cpus);
++	/*
++	 * We ignore errors because affinity is just an optimization.
++	 * This could happen for example with isolated CPUs or cpusets.
++	 * In this case the IPIs inside the kernel's perf API still work.
++	 */
++	sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->sched_cpus);
++	clear_bit(cpu, a->sched_cpus);
++}
 +
- struct evsel *
- perf_evlist__find_evsel_by_str(struct evlist *evlist, const char *str);
- 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index ddc5ee6f6592..b10d5ba21966 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -95,6 +95,7 @@ struct evsel {
- 	bool			collect_stat;
- 	bool			weak_group;
- 	bool			percore;
-+	int			cpu_iter;
- 	const char		*pmu_name;
- 	struct {
- 		perf_evsel__sb_cb_t	*cb;
++void affinity__cleanup(struct affinity *a)
++{
++	int cpu_set_size = get_cpu_set_size();
++
++	if (a->changed)
++		sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
++	free(a->sched_cpus);
++	free(a->orig_cpus);
++}
+diff --git a/tools/perf/util/affinity.h b/tools/perf/util/affinity.h
+new file mode 100644
+index 000000000000..008e2c3995b9
+--- /dev/null
++++ b/tools/perf/util/affinity.h
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0
++#ifndef AFFINITY_H
++#define AFFINITY_H 1
++
++struct affinity {
++	unsigned long *orig_cpus;
++	unsigned long *sched_cpus;
++	bool changed;
++};
++
++void affinity__cleanup(struct affinity *a);
++void affinity__set(struct affinity *a, int cpu);
++int affinity__setup(struct affinity *a);
++
++#endif
+diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
+index 9af183860fbd..e7279ea6043a 100644
+--- a/tools/perf/util/python-ext-sources
++++ b/tools/perf/util/python-ext-sources
+@@ -33,3 +33,4 @@ util/trace-event.c
+ util/string.c
+ util/symbol_fprintf.c
+ util/units.c
++util/affinity.c
 -- 
 2.23.0
 
