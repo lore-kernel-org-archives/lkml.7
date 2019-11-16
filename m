@@ -2,304 +2,176 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0C5C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 05:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DF1C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 05:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18E462084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 05:54:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="bsyQAeTf"
+	by mail.kernel.org (Postfix) with ESMTP id 8E4F42084F
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 05:55:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbfKPFyi (ORCPT
+        id S1727576AbfKPFzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 00:54:38 -0500
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:52926 "EHLO
-        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbfKPFyh (ORCPT
+        Sat, 16 Nov 2019 00:55:01 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:34537 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727557AbfKPFzB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 00:54:37 -0500
-Received: by mail-wm1-f47.google.com with SMTP id l1so11680403wme.2
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 21:54:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=mRqW6zthPLcHBh4LlAfUIeqD/Iv45YY4zHt9yE8+dGA=;
-        b=bsyQAeTffxoDun/10FTAUhud1UqsgNjhx62iY/d+Dqq4drawJ7t6Wqwu4FYJerEt/m
-         2ZsEOWAF+LXvYJYeyDA9u0CNEiuaSmxaVa0myZEPJAjwr4sm/2HfddFBFCd2zJ4eusiy
-         BjrBcuA+GdFJUxZQvIZw4MtYYufzCwypL7xwBS6JUYs6ayvea1fjtRU30TzUxcCWppr/
-         0FpPFk6kYTW3LA//8BmkMn+hePaaZRd/TlBKpwi+yqAVY+JA7I/A/VS9KWQC3q+NV8mS
-         vch4LTKZ3nZ1b6EfNIlw3IillZBkFXh7OLRs62xBdsvwCTMs34HoHgta5g4uC7aEHLus
-         fUBw==
+        Sat, 16 Nov 2019 00:55:01 -0500
+Received: by mail-il1-f199.google.com with SMTP id m12so10934150ilq.1
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 21:55:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=mRqW6zthPLcHBh4LlAfUIeqD/Iv45YY4zHt9yE8+dGA=;
-        b=TJJ+Lp5Zm/4jrriFHHL7IJJegPV3vtsi+RrxC6E7xAmPtThP1XXaaMJGkXSs3ILwy2
-         YDxtWuhua+wSFNwCrwFQAz4jqfJDB1G9dQSyJVEvrWyptCYc6xH+EKqXwQx2Lm5Bzw87
-         fTqZVbD6Gc9H0YHSPwd4MbnC05LlysuG3KtV5gGM7yjzWFLuOf3dKyqtLnAiDtIw/usz
-         eFMnv1057GWmtXkLDV55SjdWWv2h/mNlARnFhx1K62W2HJ/BxAdIJDWT3CaWmnfX75Nr
-         4dDGC/hFuDbGYgfB9IBxC2qQan7tJNGabSmq6O4cT/RO71blrJymdR8+3KJws3RpkjUQ
-         kEAA==
-X-Gm-Message-State: APjAAAWHRl7JR3ZntokeSDYyB4snoLexeW7C9riqNhm6vJq4U2Gd6TXm
-        bpw9OIoX850b5HRdiXSfVyK3Zg==
-X-Google-Smtp-Source: APXvYqyIYg+CVgR8kiSO/8JtF/TM61sgmJn2Q6X/fXpS7x59JGY945o7u28IgweCmdMRjNu8aCsZhQ==
-X-Received: by 2002:a1c:e915:: with SMTP id q21mr16802598wmc.148.1573883674570;
-        Fri, 15 Nov 2019 21:54:34 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id n13sm12042360wmi.25.2019.11.15.21.54.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 21:54:33 -0800 (PST)
-Message-ID: <5dcf8f19.1c69fb81.c02f3.91f2@mx.google.com>
-Date:   Fri, 15 Nov 2019 21:54:33 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=dXuE6yVQzJvOqytcSaHG0bqqilbG2j3QAqOwagl/p+c=;
+        b=huQAZ+Ns7fGWd06VtPMo7OAmAYBGfzMtWk0cjYTKDI3+7jIcwU2VPYbvOV5MahLB1i
+         ce0AIBgxC8rluSRqnMElNFJS1NhzQInV00jrexT0X9pSW5hIMFZLg+SIMhuiPV9EMMVN
+         K4yelrRnsOf4vzzv5+SOosbgwUI4bQg4wmdEqRXtAxHab/XZf089tgOLbGIdH46VoqRj
+         FSAOqNC0GPjGHLnVX6d1Nif2Ui/Y5RheqUeRznHYRF3g9FzGtL5X74pSK2K1f2X33BPP
+         Ra1TrxbpUW7kuEcmIk3MvUYsVFB9mOyXkqv0hpPxEgUB0nKkdWW1YVuTIXMWFcYciJ/c
+         hcGA==
+X-Gm-Message-State: APjAAAUITa7Uue/rOEMIix7maVIwVcgcp1/S5S55Hf0q/g0ctekNYiRl
+        l6K6E+2/G4P2RUHIpIQyrhOznObm/bfjN85bs338Y1ZhVuE0
+X-Google-Smtp-Source: APXvYqyEqTcdjT71yvmPMzko+ZqzB53EgTrIeU1q8kq16pRC0ZofyGrbd4WMDNRIJgW0Mfr4/fwmwWXBIy5e1AfxMGO9tgXhfdme
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Lab-Name: lab-baylibre
-X-Kernelci-Branch: for-next
-X-Kernelci-Tree: rmk
-X-Kernelci-Report-Type: bisect
-X-Kernelci-Kernel: v5.4-rc5-26-gb6c3c42cfda0
-Subject: rmk/for-next bisection: boot on ox820-cloudengines-pogoplug-series-3
-To:     Ard Biesheuvel <ardb@kernel.org>, tomeu.vizoso@collabora.com,
-        guillaume.tucker@collabora.com, mgalka@collabora.com,
-        Russell King <rmk+kernel@armlinux.org.uk>, broonie@kernel.org,
-        matthew.hart@linaro.org, khilman@baylibre.com,
-        enric.balletbo@collabora.com,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Marc Zyngier <maz@kernel.org>
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     "kernelci.org bot" <bot@kernelci.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Stefan Agner <stefan@agner.ch>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org
+X-Received: by 2002:a92:c6d0:: with SMTP id v16mr4756379ilm.274.1573883700380;
+ Fri, 15 Nov 2019 21:55:00 -0800 (PST)
+Date:   Fri, 15 Nov 2019 21:55:00 -0800
+In-Reply-To: <5dceec29.1c69fb81.4c2d0.e24d@mx.google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e10d500597705abf@google.com>
+Subject: Re: KASAN: use-after-free Read in chaoskey_disconnect
+From:   syzbot <syzbot+6d8505fcdf25f00ac276@syzkaller.appspotmail.com>
+To:     alexandre.belloni@bootlin.com, andreyknvl@google.com,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        lvivier@redhat.com, mchehab@kernel.org, mpm@selenic.com,
+        swboyd@chromium.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-*                                                               *
-* If you do send a fix, please include this trailer:            *
-*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-*                                                               *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Hello,
 
-rmk/for-next bisection: boot on ox820-cloudengines-pogoplug-series-3
+syzbot has tested the proposed patch but the reproducer still triggered  
+crash:
+KASAN: use-after-free Read in chaoskey_disconnect
 
-Summary:
-  Start:      b6c3c42cfda0 ARM: 8938/1: kernel: initialize broadcast hrtime=
-r based clock event device
-  Details:    https://kernelci.org/boot/id/5dcf3f0359b514dc84cf54c8
-  Plain log:  https://storage.kernelci.org//rmk/for-next/v5.4-rc5-26-gb6c3c=
-42cfda0/arm/oxnas_v6_defconfig/gcc-8/lab-baylibre/boot-ox820-cloudengines-p=
-ogoplug-series-3.txt
-  HTML log:   https://storage.kernelci.org//rmk/for-next/v5.4-rc5-26-gb6c3c=
-42cfda0/arm/oxnas_v6_defconfig/gcc-8/lab-baylibre/boot-ox820-cloudengines-p=
-ogoplug-series-3.html
-  Result:     ea70bf6e92c5 ARM: 8935/1: decompressor: avoid CP15 barrier in=
-structions in v7 cache setup code
+usb 5-1: USB disconnect, device number 2
+==================================================================
+BUG: KASAN: use-after-free in atomic_read  
+include/asm-generic/atomic-instrumented.h:26 [inline]
+BUG: KASAN: use-after-free in refcount_inc_not_zero_checked+0x72/0x1e0  
+lib/refcount.c:123
+Read of size 4 at addr ffff8881d3106020 by task kworker/0:1/12
 
-Checks:
-  revert:     PASS
-  verify:     PASS
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.4.0-rc5+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
+  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
+  kasan_report+0xe/0x20 mm/kasan/common.c:634
+  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+  check_memory_region+0x128/0x190 mm/kasan/generic.c:192
+  atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
+  refcount_inc_not_zero_checked+0x72/0x1e0 lib/refcount.c:123
+  refcount_inc_checked+0x12/0x60 lib/refcount.c:156
+  get_task_struct include/linux/sched/task.h:110 [inline]
+  kthread_stop+0x6c/0x610 kernel/kthread.c:554
+  hwrng_unregister+0x190/0x210 drivers/char/hw_random/core.c:538
+  chaoskey_disconnect+0x1b2/0x200 drivers/usb/misc/chaoskey.c:232
+  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
+  __device_release_driver drivers/base/dd.c:1134 [inline]
+  device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
+  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:532
+  device_del+0x420/0xb20 drivers/base/core.c:2376
+  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
+  usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2200
+  hub_port_connect drivers/usb/core/hub.c:5035 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
+  port_event drivers/usb/core/hub.c:5470 [inline]
+  hub_event+0x16f2/0x3800 drivers/usb/core/hub.c:5552
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  process_scheduled_works kernel/workqueue.c:2331 [inline]
+  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-Parameters:
-  Tree:       rmk
-  URL:        git://git.armlinux.org.uk/~rmk/linux-arm.git
-  Branch:     for-next
-  Target:     ox820-cloudengines-pogoplug-series-3
-  CPU arch:   arm
-  Lab:        lab-baylibre
-  Compiler:   gcc-8
-  Config:     oxnas_v6_defconfig
-  Test suite: boot
+Allocated by task 2:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:510 [inline]
+  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:483
+  slab_post_alloc_hook mm/slab.h:584 [inline]
+  slab_alloc_node mm/slub.c:2779 [inline]
+  kmem_cache_alloc_node+0xdc/0x310 mm/slub.c:2815
+  alloc_task_struct_node kernel/fork.c:169 [inline]
+  dup_task_struct kernel/fork.c:865 [inline]
+  copy_process+0x4201/0x6470 kernel/fork.c:1851
+  _do_fork+0x129/0xec0 kernel/fork.c:2366
+  kernel_thread+0xaa/0xe0 kernel/fork.c:2453
+  create_kthread kernel/kthread.c:278 [inline]
+  kthreadd+0x4a2/0x680 kernel/kthread.c:596
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-Breaking commit found:
+Freed by task 9:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  kasan_set_free_info mm/kasan/common.c:332 [inline]
+  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:471
+  slab_free_hook mm/slub.c:1424 [inline]
+  slab_free_freelist_hook mm/slub.c:1475 [inline]
+  slab_free mm/slub.c:3025 [inline]
+  kmem_cache_free+0xb9/0x380 mm/slub.c:3041
+  __put_task_struct+0x1e2/0x4c0 kernel/fork.c:748
+  put_task_struct include/linux/sched/task.h:119 [inline]
+  delayed_put_task_struct+0x1b4/0x2c0 kernel/exit.c:182
+  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
+  rcu_do_batch kernel/rcu/tree.c:2157 [inline]
+  rcu_core+0x630/0x1ca0 kernel/rcu/tree.c:2377
+  __do_softirq+0x221/0x912 kernel/softirq.c:292
 
----------------------------------------------------------------------------=
-----
-commit ea70bf6e92c5d8cf38c8a077e0eded091c275899
-Author: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri Nov 8 13:46:50 2019 +0100
+The buggy address belongs to the object at ffff8881d3106000
+  which belongs to the cache task_struct of size 5888
+The buggy address is located 32 bytes inside of
+  5888-byte region [ffff8881d3106000, ffff8881d3107700)
+The buggy address belongs to the page:
+page:ffffea00074c4000 refcount:1 mapcount:0 mapping:ffff8881da116000  
+index:0xffff8881d3101800 compound_mapcount: 0
+flags: 0x200000000010200(slab|head)
+raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da116000
+raw: ffff8881d3101800 0000000080050004 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
 
-    ARM: 8935/1: decompressor: avoid CP15 barrier instructions in v7 cache =
-setup code
-    =
-
-    Commit e17b1af96b2afc38e684aa2f1033387e2ed10029
-    =
-
-      "ARM: 8857/1: efi: enable CP15 DMB instructions before cleaning the c=
-ache"
-    =
-
-    added some explicit handling of the CP15BEN bit in the SCTLR system
-    register, to ensure that CP15 barrier instructions are enabled, even
-    if we enter the decompressor via the EFI stub.
-    =
-
-    However, as it turns out, there are other ways in which we may end up
-    using CP15 barrier instructions without them being enabled. I.e., when
-    the decompressor startup code skips the cache_on() initially, we end
-    up calling cache_clean_flush() with the caches and MMU off, in which
-    case the CP15BEN bit in SCTLR may not be programmed either. And in
-    fact, cache_on() itself issues CP15 barrier instructions before actually
-    enabling them by programming the new SCTLR value (and issuing an ISB)
-    =
-
-    Since all these routines are specific to v7, let's clean this up by
-    using the ordinary v7 barrier instructions in the v7 specific cache
-    handling routines, so that we never rely on the CP15 ones. This also
-    avoids the issue where a barrier is required between programming SCTLR
-    and using the CP15 barrier instructions, which would result in two
-    different kinds of barriers being used in the same function.
-    =
-
-    Acked-by: Marc Zyngier <maz@kernel.org>
-    Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-    Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-
-diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/hea=
-d.S
-index 95238146b7f2..fe279816b298 100644
---- a/arch/arm/boot/compressed/head.S
-+++ b/arch/arm/boot/compressed/head.S
-@@ -656,6 +656,21 @@ params:		ldr	r0, =3D0x10000100		@ params_phys for RPC
- 		.align
- #endif
- =
-
-+		.macro	v7dsb
-+ ARM(		.inst	0xf57ff04f		@ v7+ dsb	)
-+ THUMB(		dsb						)
-+		.endm
-+
-+		.macro	v7dmb
-+ ARM(		.inst	0xf57ff05f		@ v7+ dmb	)
-+ THUMB(		dmb						)
-+		.endm
-+
-+		.macro	v7isb
-+ ARM(		.inst	0xf57ff06f		@ v7+ isb	)
-+ THUMB(		isb						)
-+		.endm
-+
- /*
-  * Turn on the cache.  We need to setup some page tables so that we
-  * can have both the I and D caches on.
-@@ -827,7 +842,7 @@ __armv7_mmu_cache_on:
- 		movne	r6, #CB_BITS | 0x02	@ !XN
- 		blne	__setup_mmu
- 		mov	r0, #0
--		mcr	p15, 0, r0, c7, c10, 4	@ drain write buffer
-+		v7dsb				@ drain write buffer
- 		tst	r11, #0xf		@ VMSA
- 		mcrne	p15, 0, r0, c8, c7, 0	@ flush I,D TLBs
- #endif
-@@ -849,11 +864,11 @@ __armv7_mmu_cache_on:
- 		mcrne	p15, 0, r1, c3, c0, 0	@ load domain access control
- 		mcrne   p15, 0, r6, c2, c0, 2   @ load ttb control
- #endif
--		mcr	p15, 0, r0, c7, c5, 4	@ ISB
-+		v7isb
- 		mcr	p15, 0, r0, c1, c0, 0	@ load control register
- 		mrc	p15, 0, r0, c1, c0, 0	@ and read it back
- 		mov	r0, #0
--		mcr	p15, 0, r0, c7, c5, 4	@ ISB
-+		v7isb
- 		mov	pc, r12
- =
-
- __fa526_cache_on:
-@@ -1154,8 +1169,8 @@ __armv7_mmu_cache_off:
- 		mcr	p15, 0, r0, c8, c7, 0	@ invalidate whole TLB
- #endif
- 		mcr	p15, 0, r0, c7, c5, 6	@ invalidate BTC
--		mcr	p15, 0, r0, c7, c10, 4	@ DSB
--		mcr	p15, 0, r0, c7, c5, 4	@ ISB
-+		v7dsb
-+		v7isb
- 		mov	pc, r12
- =
-
- /*
-@@ -1218,7 +1233,7 @@ __armv7_mmu_cache_flush:
- 		mcr	p15, 0, r10, c7, c14, 0	@ clean+invalidate D
- 		b	iflush
- hierarchical:
--		mcr	p15, 0, r10, c7, c10, 5	@ DMB
-+		v7dmb
- 		stmfd	sp!, {r0-r7, r9-r11}
- 		mrc	p15, 1, r0, c0, c0, 1	@ read clidr
- 		ands	r3, r0, #0x7000000	@ extract loc from clidr
-@@ -1232,7 +1247,7 @@ loop1:
- 		cmp	r1, #2			@ see what cache we have at this level
- 		blt	skip			@ skip if no cache, or just i-cache
- 		mcr	p15, 2, r10, c0, c0, 0	@ select current cache level in cssr
--		mcr	p15, 0, r10, c7, c5, 4	@ isb to sych the new cssr&csidr
-+		v7isb				@ isb to sych the new cssr&csidr
- 		mrc	p15, 1, r1, c0, c0, 0	@ read the new csidr
- 		and	r2, r1, #7		@ extract the length of the cache lines
- 		add	r2, r2, #4		@ add 4 (line length offset)
-@@ -1264,10 +1279,10 @@ finished:
- 		mov	r10, #0			@ switch back to cache level 0
- 		mcr	p15, 2, r10, c0, c0, 0	@ select current cache level in cssr
- iflush:
--		mcr	p15, 0, r10, c7, c10, 4	@ DSB
-+		v7dsb
- 		mcr	p15, 0, r10, c7, c5, 0	@ invalidate I+BTB
--		mcr	p15, 0, r10, c7, c10, 4	@ DSB
--		mcr	p15, 0, r10, c7, c5, 4	@ ISB
-+		v7dsb
-+		v7isb
- 		mov	pc, lr
- =
-
- __armv5tej_mmu_cache_flush:
----------------------------------------------------------------------------=
-----
+Memory state around the buggy address:
+  ffff8881d3105f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff8881d3105f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ffff8881d3106000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                ^
+  ffff8881d3106080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8881d3106100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
 
-Git bisection log:
+Tested on:
 
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [cb73737ea1d27181f5c4bfb1288e97f3e8a4abc7] ARM: 8928/1: ARM_ERRATA_=
-775420: Spelling s/date/data/
-git bisect good cb73737ea1d27181f5c4bfb1288e97f3e8a4abc7
-# bad: [b6c3c42cfda04b0119a0ac46c2a06006f38522d7] ARM: 8938/1: kernel: init=
-ialize broadcast hrtimer based clock event device
-git bisect bad b6c3c42cfda04b0119a0ac46c2a06006f38522d7
-# good: [052e76a31b4a64d7678e270d498e1bc36c342f88] ARM: 8931/1: Add clock_g=
-etres entry point
-git bisect good 052e76a31b4a64d7678e270d498e1bc36c342f88
-# good: [44700c1ea9afeb9c5093dba7794117fda7c5c955] ARM: 8934/1: Revert "efi=
-: enable CP15 DMB instructions before cleaning the cache"
-git bisect good 44700c1ea9afeb9c5093dba7794117fda7c5c955
-# bad: [7f586a0a683ec37ac25bee24381e24c66dfe32b8] ARM: 8937/1: spectre-v2: =
-remove Brahma-B53 from hardening
-git bisect bad 7f586a0a683ec37ac25bee24381e24c66dfe32b8
-# bad: [ea70bf6e92c5d8cf38c8a077e0eded091c275899] ARM: 8935/1: decompressor=
-: avoid CP15 barrier instructions in v7 cache setup code
-git bisect bad ea70bf6e92c5d8cf38c8a077e0eded091c275899
-# first bad commit: [ea70bf6e92c5d8cf38c8a077e0eded091c275899] ARM: 8935/1:=
- decompressor: avoid CP15 barrier instructions in v7 cache setup code
----------------------------------------------------------------------------=
-----
+commit:         ff6409a6 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=16dd8772e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3230c37d442895b7
+dashboard link: https://syzkaller.appspot.com/bug?extid=6d8505fcdf25f00ac276
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=14236abae00000
+
