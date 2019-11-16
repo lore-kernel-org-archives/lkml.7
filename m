@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A486C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7069DC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CC0220718
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35C252075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573918891;
-	bh=wtjYU+nHjHQOYZA/U7nBjkeTi8Gils3V5XygPliyQmI=;
+	s=default; t=1573918900;
+	bh=30FkFKk0NxEOy+6Bj802DFapeTmG8/Wur0OjpwyjWbg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UbVHxebIBfwxeE5l77VyyjKjbokY+9r7q5sU+ymqTs6wmYEdjiJOR4XKJWMZT3oie
-	 /AvdalX+/CUhnqMlwlOpcvZSwXR6zFJU2lJ2ZsreBAnHHubTt7/njkrxdBIWDNijrJ
-	 zrJ6nFD8olx+s4hkT30Viwm00l1Ksd1hi33eolvI=
+	b=QuNFOXmyV0yq11Qjv0uUVCzLynAOqZ+uAITAtvj/QlMw0T5DjlWrBDPAW6+Gj+AYO
+	 I8MJGZ/0k4ocysO+BQixwd7Nz4+9bvGU0hLdfraXv6tBsMOv2+/xRm2CUMIDpyQ+SY
+	 dM1aiFxdQunVcKes79OcfCVtDzanIe2vnxnzjbno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbfKPPl3 (ORCPT
+        id S1727959AbfKPPlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:41:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44456 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:41:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727856AbfKPPlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:41:24 -0500
+        id S1727885AbfKPPla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:41:30 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2926020730;
-        Sat, 16 Nov 2019 15:41:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E5FD20740;
+        Sat, 16 Nov 2019 15:41:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918884;
-        bh=wtjYU+nHjHQOYZA/U7nBjkeTi8Gils3V5XygPliyQmI=;
+        s=default; t=1573918889;
+        bh=30FkFKk0NxEOy+6Bj802DFapeTmG8/Wur0OjpwyjWbg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cb/ebQ3/iq8YDPq0YyQJ2O13Qa9Z9BCZJmzux4/sdWYA2aP6/ZXPVZ1akdAfewA3R
-         gL1OwiIJ4Xe6lrgkL9Tx8LbjAK8XN00Xl82HTIAwV1gPhwiPRaeBRUhwFXtGcAmdWl
-         MmP5+EqnlDO+7pBxZRDzvKxJJ/UUJivjIiFGOEWk=
+        b=vtY9IZdFdJzGwXWS/EYR5+OKH5pgagk35dtji48Q6oXHrKRM9SUJo7SFlguFyY8Pv
+         BZjwrlFvpAP73+CGEX1eNRYpH3h8DWVE0h7mmxNFFuYqEBE6AB7LwilfM5C+esBLe0
+         mBMIMBhqPq2zsWWCxepTllV23/znIFPu0P8M0CLw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joel Stanley <joel@jms.id.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 012/237] powerpc/boot: Disable vector instructions
-Date:   Sat, 16 Nov 2019 10:37:27 -0500
-Message-Id: <20191116154113.7417-12-sashal@kernel.org>
+Cc:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 017/237] mt76x0: phy: fix restore phase in mt76x0_phy_recalibrate_after_assoc
+Date:   Sat, 16 Nov 2019 10:37:32 -0500
+Message-Id: <20191116154113.7417-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -59,42 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joel Stanley <joel@jms.id.au>
+From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
 
-[ Upstream commit e8e132e6885962582784b6fa16a80d07ea739c0f ]
+[ Upstream commit 4df942733fd26d9378a4a00619be348c771e0190 ]
 
-This will avoid auto-vectorisation when building with higher
-optimisation levels.
+Fix restore value configured in MT_BBP(IBI, 9) register in
+mt76x0_phy_recalibrate_after_assoc routine.
 
-We don't know if the machine can support VSX and even if it's present
-it's probably not going to be enabled at this point in boot.
-
-These flag were both added prior to GCC 4.6 which is the minimum
-compiler version supported by upstream, thanks to Segher for the
-details.
-
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: 10de7a8b4ab9 ("mt76x0: phy files")
+Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/boot/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mt76x0/phy.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
-index 25e3184f11f78..7d5ddf53750ce 100644
---- a/arch/powerpc/boot/Makefile
-+++ b/arch/powerpc/boot/Makefile
-@@ -32,8 +32,8 @@ else
- endif
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x0/phy.c b/drivers/net/wireless/mediatek/mt76/mt76x0/phy.c
+index 14e8c575f6c3e..924c761f34fd9 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x0/phy.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x0/phy.c
+@@ -793,9 +793,8 @@ void mt76x0_phy_recalibrate_after_assoc(struct mt76x0_dev *dev)
+ 	mt76_wr(dev, MT_TX_ALC_CFG_0, 0);
+ 	usleep_range(500, 700);
  
- BOOTCFLAGS    := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
--		 -fno-strict-aliasing -Os -msoft-float -pipe \
--		 -fomit-frame-pointer -fno-builtin -fPIC -nostdinc \
-+		 -fno-strict-aliasing -Os -msoft-float -mno-altivec -mno-vsx \
-+		 -pipe -fomit-frame-pointer -fno-builtin -fPIC -nostdinc \
- 		 -D$(compress-y)
+-	reg_val = mt76_rr(dev, 0x2124);
+-	reg_val &= 0xffffff7e;
+-	mt76_wr(dev, 0x2124, reg_val);
++	reg_val = mt76_rr(dev, MT_BBP(IBI, 9));
++	mt76_wr(dev, MT_BBP(IBI, 9), 0xffffff7e);
  
- ifdef CONFIG_PPC64_BOOT_WRAPPER
+ 	mt76x0_mcu_calibrate(dev, MCU_CAL_RXDCOC, 0);
+ 
+@@ -806,7 +805,7 @@ void mt76x0_phy_recalibrate_after_assoc(struct mt76x0_dev *dev)
+ 	mt76x0_mcu_calibrate(dev, MCU_CAL_RXIQ, is_5ghz);
+ 	mt76x0_mcu_calibrate(dev, MCU_CAL_RX_GROUP_DELAY, is_5ghz);
+ 
+-	mt76_wr(dev, 0x2124, reg_val);
++	mt76_wr(dev, MT_BBP(IBI, 9), reg_val);
+ 	mt76_wr(dev, MT_TX_ALC_CFG_0, tx_alc);
+ 	msleep(100);
+ 
 -- 
 2.20.1
 
