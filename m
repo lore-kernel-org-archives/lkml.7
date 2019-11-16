@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0331C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CFBC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83683206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47D48206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:02:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920144;
-	bh=uOQtTCLHEwtW2ut6Q0nPb0g093HpDJgAfOS0CS1GpVI=;
+	s=default; t=1573920153;
+	bh=8Kv7niCE8O2wh2JRY/jGBmWd1SUqQ/uG75wLCFEuY+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R2PODoDsFYmGTrEvcpmscvuaOQ/ZMdZV8sZWjrrTqR2d0UVj7wCxWosUwCwU5AeTW
-	 gN0PsPFNFHdc6MJ6iTji0IoiyE0vZoi1GMmoVGL+puDGjfI3XaWxKQ4/sUkHW4M/qg
-	 oGdu29f/QltTrASJ7V17ALcBH8iSmGJgES+N8zIg=
+	b=Pw3nR2g6UcD+TAAxswZ6xWY6CgGXrAGhh66Ojaq+kYFxdoNdUAp2Sn/lukIOvkAcH
+	 JTHz/rYoXw1sQce+1x+rVy25yE6m0FO1jRWDJD5fBwX7Rf6qlMx/wjlMkb1h3eoPTQ
+	 0ReEQi6TRjtSKiLs3PW1Cqf6bu2c33/t3GbLdHUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731414AbfKPQCW (ORCPT
+        id S1731442AbfKPQCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:02:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33820 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:02:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727709AbfKPPw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:52:58 -0500
+        id S1729162AbfKPPwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:52:51 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C5DB20871;
-        Sat, 16 Nov 2019 15:52:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 053F020859;
+        Sat, 16 Nov 2019 15:52:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919578;
-        bh=uOQtTCLHEwtW2ut6Q0nPb0g093HpDJgAfOS0CS1GpVI=;
+        s=default; t=1573919571;
+        bh=8Kv7niCE8O2wh2JRY/jGBmWd1SUqQ/uG75wLCFEuY+c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MPXl1wM/3dcu9uSFWGOfJuF/DMDY92BY5ZfC8alYbttcWzJ7dOLhuZgJhO1s48Y7d
-         JeRJLD+Q++Bubl6trSTTe13onecU79lj327eyzFbPKFLjAOufzmLS4HRDnUqDAA3CW
-         NHkRe8uy87ESi8/EQ25F+QjXxPq/1hSQ3vh3H4VM=
+        b=F0rjAnV2C+Ow0lJnUvOE4dMESgSp2BkVFfXLmy3HTenra/rE33d9xXDC20kVb+iJl
+         eg/uNyzp43ntMe992YsrTjFSdOH6LdKnsL6kct24LLvKRdGr4OJeYSf1o8Wks4mv9b
+         GMbzmVmsYon9VfmeUIrszBdXcXrut4diOwOlpPpI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 69/99] igb: shorten maximum PHC timecounter update interval
-Date:   Sat, 16 Nov 2019 10:50:32 -0500
-Message-Id: <20191116155103.10971-69-sashal@kernel.org>
+Cc:     =?UTF-8?q?Ernesto=20A=2E=20Fern=C3=A1ndez?= 
+        <ernesto.mnd.fernandez@gmail.com>,
+        Vyacheslav Dubeyko <slava@dubeyko.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 66/99] hfs: update timestamp on truncate()
+Date:   Sat, 16 Nov 2019 10:50:29 -0500
+Message-Id: <20191116155103.10971-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,54 +63,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miroslav Lichvar <mlichvar@redhat.com>
+From: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
 
-[ Upstream commit 094bf4d0e9657f6ea1ee3d7e07ce3970796949ce ]
+[ Upstream commit 8cd3cb5061730af085a3f9890a3352f162b4e20c ]
 
-The timecounter needs to be updated at least once per ~550 seconds in
-order to avoid a 40-bit SYSTIM timestamp to be misinterpreted as an old
-timestamp.
+The vfs takes care of updating mtime on ftruncate(), but on truncate() it
+must be done by the module.
 
-Since commit 500462a9d ("timers: Switch to a non-cascading wheel"),
-scheduling of delayed work seems to be less accurate and a requested
-delay of 540 seconds may actually be longer than 550 seconds. Shorten
-the delay to 480 seconds to be sure the timecounter is updated in time.
-
-This fixes an issue with HW timestamps on 82580/I350/I354 being off by
-~1100 seconds for few seconds every ~9 minutes.
-
-Cc: Jacob Keller <jacob.e.keller@intel.com>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Link: http://lkml.kernel.org/r/e1611eda2985b672ed2d8677350b4ad8c2d07e8a.1539316825.git.ernesto.mnd.fernandez@gmail.com
+Signed-off-by: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
+Reviewed-by: Vyacheslav Dubeyko <slava@dubeyko.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/igb/igb_ptp.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/hfs/inode.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/igb/igb_ptp.c b/drivers/net/ethernet/intel/igb/igb_ptp.c
-index 9eb9b68f8935e..ae1f963b60923 100644
---- a/drivers/net/ethernet/intel/igb/igb_ptp.c
-+++ b/drivers/net/ethernet/intel/igb/igb_ptp.c
-@@ -65,9 +65,15 @@
-  *
-  * The 40 bit 82580 SYSTIM overflows every
-  *   2^40 * 10^-9 /  60  = 18.3 minutes.
-+ *
-+ * SYSTIM is converted to real time using a timecounter. As
-+ * timecounter_cyc2time() allows old timestamps, the timecounter
-+ * needs to be updated at least once per half of the SYSTIM interval.
-+ * Scheduling of delayed work is not very accurate, so we aim for 8
-+ * minutes to be sure the actual interval is shorter than 9.16 minutes.
-  */
+diff --git a/fs/hfs/inode.c b/fs/hfs/inode.c
+index f776acf2378a1..de0d6d4c46b68 100644
+--- a/fs/hfs/inode.c
++++ b/fs/hfs/inode.c
+@@ -641,6 +641,8 @@ int hfs_inode_setattr(struct dentry *dentry, struct iattr * attr)
  
--#define IGB_SYSTIM_OVERFLOW_PERIOD	(HZ * 60 * 9)
-+#define IGB_SYSTIM_OVERFLOW_PERIOD	(HZ * 60 * 8)
- #define IGB_PTP_TX_TIMEOUT		(HZ * 15)
- #define INCPERIOD_82576			BIT(E1000_TIMINCA_16NS_SHIFT)
- #define INCVALUE_82576_MASK		GENMASK(E1000_TIMINCA_16NS_SHIFT - 1, 0)
+ 		truncate_setsize(inode, attr->ia_size);
+ 		hfs_file_truncate(inode);
++		inode->i_atime = inode->i_mtime = inode->i_ctime =
++						  current_time(inode);
+ 	}
+ 
+ 	setattr_copy(inode, attr);
 -- 
 2.20.1
 
