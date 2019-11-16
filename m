@@ -2,230 +2,253 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F59C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 12:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B879C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 12:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC70E206E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 12:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E2A720723
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 12:33:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573907583;
+	bh=VnvQdipurI576XqpK1RMhLt/EwVsGmg7qnqVRh6cZyc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sgtbOvRcYgDhNkAi4SrLLbOTntaShbXDWmByA91z6qCN/1IWsW5rBuCsvm67insDj
+	 IbF9rSWovvHvu1wpBKiFYv3y2xSylNm4SpohhSTwyeMG6a6h3PbcQW0aPsrZAlgsiC
+	 +2UW6yVe6bhAQ2u8Sw+7bBl2YpxpfSx/TaaajOcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbfKPMZg (ORCPT
+        id S1727579AbfKPMc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 07:25:36 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:45368 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727471AbfKPMZg (ORCPT
+        Sat, 16 Nov 2019 07:32:56 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:39359 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727496AbfKPMc4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 07:25:36 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        Sat, 16 Nov 2019 07:32:56 -0500
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
         (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iVx8h-0002om-T0; Sat, 16 Nov 2019 13:25:20 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 86FDB1C1923;
-        Sat, 16 Nov 2019 13:25:19 +0100 (CET)
-Date:   Sat, 16 Nov 2019 12:25:19 -0000
-From:   "tip-bot2 for Waiman Long" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/pti] x86/speculation: Fix incorrect MDS/TAA mitigation status
-Cc:     Waiman Long <longman@redhat.com>, Borislav Petkov <bp@suse.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        linux-doc@vger.kernel.org, Mark Gross <mgross@linux.intel.com>,
-        <stable@vger.kernel.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        (envelope-from <maz@kernel.org>)
+        id 1iVxFz-0002Zo-Ma; Sat, 16 Nov 2019 13:32:51 +0100
+Date:   Sat, 16 Nov 2019 12:32:44 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     "kernelci.org bot" <bot@kernelci.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ardb@kernel.org>, tomeu.vizoso@collabora.com,
+        Guillaume Tucker <guillaume.tucker@collabora.com>,
+        mgalka@collabora.com, Russell King <rmk+kernel@armlinux.org.uk>,
+        Mark Brown <broonie@kernel.org>,
+        Matt Hart <matthew.hart@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Tyler Hicks <tyhicks@canonical.com>, "x86-ml" <x86@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191115161445.30809-2-longman@redhat.com>
-References: <20191115161445.30809-2-longman@redhat.com>
+        Stefan Agner <stefan@agner.ch>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: rmk/for-next bisection: boot on
+ ox820-cloudengines-pogoplug-series-3
+Message-ID: <20191116123244.7be79023@why>
+In-Reply-To: <CAKv+Gu_r2Cb3d3OXaOdYy+4V9noL6exJoK6pHevUm2WfPzsr1g@mail.gmail.com>
+References: <5dcf8f19.1c69fb81.c02f3.91f2@mx.google.com>
+        <CAKv+Gu_r2Cb3d3OXaOdYy+4V9noL6exJoK6pHevUm2WfPzsr1g@mail.gmail.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Message-ID: <157390711950.12247.3359773169258462200.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: ard.biesheuvel@linaro.org, bot@kernelci.org, arnd@arndb.de, ardb@kernel.org, tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com, mgalka@collabora.com, rmk+kernel@armlinux.org.uk, broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com, enric.balletbo@collabora.com, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, tglx@linutronix.de, stefan@agner.ch, nico@fluxnic.net, ndesaulniers@google.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/pti branch of tip:
+On Sat, 16 Nov 2019 10:26:27 +0000
+Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
 
-Commit-ID:     64870ed1b12e235cfca3f6c6da75b542c973ff78
-Gitweb:        https://git.kernel.org/tip/64870ed1b12e235cfca3f6c6da75b542c973ff78
-Author:        Waiman Long <longman@redhat.com>
-AuthorDate:    Fri, 15 Nov 2019 11:14:44 -05:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Sat, 16 Nov 2019 13:17:49 +01:00
+> (+ Arnd)
+> 
+> On Sat, 16 Nov 2019 at 05:54, kernelci.org bot <bot@kernelci.org> wrote:
+> >
+> > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> > * This automated bisection report was sent to you on the basis  *
+> > * that you may be involved with the breaking commit it has      *
+> > * found.  No manual investigation has been done to verify it,   *
+> > * and the root cause of the problem may be somewhere else.      *
+> > *                                                               *
+> > * If you do send a fix, please include this trailer:            *
+> > *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+> > *                                                               *
+> > * Hope this helps!                                              *
+> > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> >
+> > rmk/for-next bisection: boot on ox820-cloudengines-pogoplug-series-3
+> >
+> > Summary:
+> >   Start:      b6c3c42cfda0 ARM: 8938/1: kernel: initialize broadcast hrtimer based clock event device
+> >   Details:    https://kernelci.org/boot/id/5dcf3f0359b514dc84cf54c8
+> >   Plain log:  https://storage.kernelci.org//rmk/for-next/v5.4-rc5-26-gb6c3c42cfda0/arm/oxnas_v6_defconfig/gcc-8/lab-baylibre/boot-ox820-cloudengines-pogoplug-series-3.txt
+> >   HTML log:   https://storage.kernelci.org//rmk/for-next/v5.4-rc5-26-gb6c3c42cfda0/arm/oxnas_v6_defconfig/gcc-8/lab-baylibre/boot-ox820-cloudengines-pogoplug-series-3.html
+> >   Result:     ea70bf6e92c5 ARM: 8935/1: decompressor: avoid CP15 barrier instructions in v7 cache setup code
+> >  
+> 
+> OK, so this regression is caused by the fact that the 'armv7' cache
+> maintenance routines in the decompressor are also used for ARMv6 cores
+> if they implement the CPUID extension, which I failed to realise when
+> I sent this patch.
 
-x86/speculation: Fix incorrect MDS/TAA mitigation status
+Nobody expects the 11MPcore... :-(.
 
-For MDS vulnerable processors with TSX support, enabling either MDS or
-TAA mitigations will enable the use of VERW to flush internal processor
-buffers at the right code path. IOW, they are either both mitigated
-or both not. However, if the command line options are inconsistent,
-the vulnerabilites sysfs files may not report the mitigation status
-correctly.
+> There are roughly three ways to deal with this:
+> 1) add a mask/val match pair for ARM11MPcore and ARM1176 that hardwire
+> them to the ARMv6 routines, even though they implement the CPUID
+> extension. This would be very easy, but assumes that those two cores
+> are the only ones that are affected by this.
+> 2) modify the v7 routines to check for the L1Hvd MMFR1 attribute (in
+> the flush routine) and for the CP15BEN SCTLR bit (in the on/off
+> routines), and jump to the respective v6 variants if the CPU turns out
+> not to support the v7 one.
+> 3) revert the patch, and just enable the CP15 barriers (and issue a v7
+> barrier) in the v7 on() and flush() routines.
+> 
+> I am leaning towards the latter, since it is the most straightforward,
+> even though it mixes v7 and cp15 barriers in the same function, but
+> that was mostly a cosmetic concern anyway.
 
-For example, with only the "mds=off" option:
+A potential alternative is to check for the presence of architected
+barriers in a macro (see the hack below). I've given it a go as a 32bit
+guest on an A72 box, both as ARM and Thumb, and nothing caught fire. Of
+course, it remains to be seen whether it works on a v6 machine (I don't
+think I have any left in my zoo -- please don't send me any), and more
+importantly whether we want to carry this kind of horror...
 
-  vulnerabilities/mds:Vulnerable; SMT vulnerable
-  vulnerabilities/tsx_async_abort:Mitigation: Clear CPU buffers; SMT vulnerable
+	M.
 
-The mds vulnerabilities file has wrong status in this case. Similarly,
-the taa vulnerability file will be wrong with mds mitigation on, but
-taa off.
-
-Change taa_select_mitigation() to sync up the two mitigation status
-and have them turned off if both "mds=off" and "tsx_async_abort=off"
-are present.
-
-Update documentation to emphasize the fact that both "mds=off" and
-"tsx_async_abort=off" have to be specified together for processors that
-are affected by both TAA and MDS to be effective.
-
- [ bp: Massage and add kernel-parameters.txt change too. ]
-
-Fixes: 1b42f017415b ("x86/speculation/taa: Add mitigation for TSX Async Abort")
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: linux-doc@vger.kernel.org
-Cc: Mark Gross <mgross@linux.intel.com>
-Cc: <stable@vger.kernel.org>
-Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Tyler Hicks <tyhicks@canonical.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191115161445.30809-2-longman@redhat.com
----
- Documentation/admin-guide/hw-vuln/mds.rst             |  7 ++--
- Documentation/admin-guide/hw-vuln/tsx_async_abort.rst |  5 ++-
- Documentation/admin-guide/kernel-parameters.txt       | 11 ++++++-
- arch/x86/kernel/cpu/bugs.c                            | 17 ++++++++--
- 4 files changed, 35 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/admin-guide/hw-vuln/mds.rst b/Documentation/admin-guide/hw-vuln/mds.rst
-index e3a796c..2d19c9f 100644
---- a/Documentation/admin-guide/hw-vuln/mds.rst
-+++ b/Documentation/admin-guide/hw-vuln/mds.rst
-@@ -265,8 +265,11 @@ time with the option "mds=". The valid arguments for this option are:
+diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
+index ec14687aea3c..144de4b08547 100644
+--- a/arch/arm/boot/compressed/head.S
++++ b/arch/arm/boot/compressed/head.S
+@@ -656,19 +656,40 @@ params:		ldr	r0, =0x10000100		@ params_phys for RPC
+ 		.align
+ #endif
  
-   ============  =============================================================
- 
--Not specifying this option is equivalent to "mds=full".
--
-+Not specifying this option is equivalent to "mds=full". For processors
-+that are affected by both TAA (TSX Asynchronous Abort) and MDS,
-+specifying just "mds=off" without an accompanying "tsx_async_abort=off"
-+will have no effect as the same mitigation is used for both
-+vulnerabilities.
- 
- Mitigation selection guide
- --------------------------
-diff --git a/Documentation/admin-guide/hw-vuln/tsx_async_abort.rst b/Documentation/admin-guide/hw-vuln/tsx_async_abort.rst
-index fddbd75..af6865b 100644
---- a/Documentation/admin-guide/hw-vuln/tsx_async_abort.rst
-+++ b/Documentation/admin-guide/hw-vuln/tsx_async_abort.rst
-@@ -174,7 +174,10 @@ the option "tsx_async_abort=". The valid arguments for this option are:
-                 CPU is not vulnerable to cross-thread TAA attacks.
-   ============  =============================================================
- 
--Not specifying this option is equivalent to "tsx_async_abort=full".
-+Not specifying this option is equivalent to "tsx_async_abort=full". For
-+processors that are affected by both TAA and MDS, specifying just
-+"tsx_async_abort=off" without an accompanying "mds=off" will have no
-+effect as the same mitigation is used for both vulnerabilities.
- 
- The kernel command line also allows to control the TSX feature using the
- parameter "tsx=" on CPUs which support TSX control. MSR_IA32_TSX_CTRL is used
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 8dee8f6..9983ac7 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2473,6 +2473,12 @@
- 				     SMT on vulnerable CPUs
- 			off        - Unconditionally disable MDS mitigation
- 
-+			On TAA-affected machines, mds=off can be prevented by
-+			an active TAA mitigation as both vulnerabilities are
-+			mitigated with the same mechanism so in order to disable
-+			this mitigation, you need to specify tsx_async_abort=off
-+			too.
+-		.macro	v7dsb
++		@ Check for architected barrier instructions
++		@ Branch to the tgt label if v7 barriers are
++		@ not available. Corrupts the tmp register
++		@ as well as the flags.
++		.macro	no_v7_barrier, tmp, tgt
++		mrc	p15, 0, \tmp, c0, c2, 4 @ ID_ISAR4
++		tst	\tmp, #0xf << 16
++		beq	\tgt
++		.endm
 +
- 			Not specifying this option is equivalent to
- 			mds=full.
++		@ The following macros will use zreg as a temp
++		@ register, and will zero it after use.
++		.macro	__dsb, zreg
++		no_v7_barrier	\zreg, .L__dsb\@
+  ARM(		.inst	0xf57ff04f		@ v7+ dsb	)
+  THUMB(		dsb						)
++		mov	\zreg, #0
++.L__dsb\@:	mcreq	p15, 0, \zreg, c7, c10, 4 @ dsb
+ 		.endm
  
-@@ -4931,6 +4937,11 @@
- 				     vulnerable to cross-thread TAA attacks.
- 			off        - Unconditionally disable TAA mitigation
+-		.macro	v7dmb
++		.macro	__dmb, zreg
++		no_v7_barrier	\zreg, .L__dmb\@
+  ARM(		.inst	0xf57ff05f		@ v7+ dmb	)
+  THUMB(		dmb						)
++		mov	\zreg, #0
++.L__dmb\@:	mcreq	p15, 0, \zreg, c7, c10, 5 @ dmb
+ 		.endm
  
-+			On MDS-affected machines, tsx_async_abort=off can be
-+			prevented by an active MDS mitigation as both vulnerabilities
-+			are mitigated with the same mechanism so in order to disable
-+			this mitigation, you need to specify mds=off too.
-+
- 			Not specifying this option is equivalent to
- 			tsx_async_abort=full.  On CPUs which are MDS affected
- 			and deploy MDS mitigation, TAA mitigation is not
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 4c7b0fa..cb513ea 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -304,8 +304,12 @@ static void __init taa_select_mitigation(void)
- 		return;
- 	}
+-		.macro	v7isb
++		.macro	__isb, zreg
++		no_v7_barrier	\zreg, .L__isb\@
+  ARM(		.inst	0xf57ff06f		@ v7+ isb	)
+  THUMB(		isb						)
++		mov	\zreg, #0
++.L__isb\@:	mcreq	p15, 0, \zreg, c7, c5, 4 @ isb
+ 		.endm
  
--	/* TAA mitigation is turned off on the cmdline (tsx_async_abort=off) */
--	if (taa_mitigation == TAA_MITIGATION_OFF)
-+	/*
-+	 * TAA mitigation via VERW is turned off if both
-+	 * tsx_async_abort=off and mds=off are specified.
-+	 */
-+	if (taa_mitigation == TAA_MITIGATION_OFF &&
-+	    mds_mitigation == MDS_MITIGATION_OFF)
- 		goto out;
+ /*
+@@ -841,8 +862,7 @@ __armv7_mmu_cache_on:
+ 		tst	r11, #0xf		@ VMSA
+ 		movne	r6, #CB_BITS | 0x02	@ !XN
+ 		blne	__setup_mmu
+-		mov	r0, #0
+-		v7dsb				@ drain write buffer
++		__dsb	r0			@ drain write buffer
+ 		tst	r11, #0xf		@ VMSA
+ 		mcrne	p15, 0, r0, c8, c7, 0	@ flush I,D TLBs
+ #endif
+@@ -864,11 +884,10 @@ __armv7_mmu_cache_on:
+ 		mcrne	p15, 0, r1, c3, c0, 0	@ load domain access control
+ 		mcrne   p15, 0, r6, c2, c0, 2   @ load ttb control
+ #endif
+-		v7isb
++		__isb	lr
+ 		mcr	p15, 0, r0, c1, c0, 0	@ load control register
+ 		mrc	p15, 0, r0, c1, c0, 0	@ and read it back
+-		mov	r0, #0
+-		v7isb
++		__isb	r0
+ 		mov	pc, r12
  
- 	if (boot_cpu_has(X86_FEATURE_MD_CLEAR))
-@@ -339,6 +343,15 @@ static void __init taa_select_mitigation(void)
- 	if (taa_nosmt || cpu_mitigations_auto_nosmt())
- 		cpu_smt_disable(false);
+ __fa526_cache_on:
+@@ -1169,8 +1188,8 @@ __armv7_mmu_cache_off:
+ 		mcr	p15, 0, r0, c8, c7, 0	@ invalidate whole TLB
+ #endif
+ 		mcr	p15, 0, r0, c7, c5, 6	@ invalidate BTC
+-		v7dsb
+-		v7isb
++		__dsb	r0
++		__isb	r0
+ 		mov	pc, r12
  
-+	/*
-+	 * Update MDS mitigation, if necessary, as the mds_user_clear is
-+	 * now enabled for TAA mitigation.
-+	 */
-+	if (mds_mitigation == MDS_MITIGATION_OFF &&
-+	    boot_cpu_has_bug(X86_BUG_MDS)) {
-+		mds_mitigation = MDS_MITIGATION_FULL;
-+		mds_select_mitigation();
-+	}
- out:
- 	pr_info("%s\n", taa_strings[taa_mitigation]);
- }
+ /*
+@@ -1233,7 +1252,7 @@ __armv7_mmu_cache_flush:
+ 		mcr	p15, 0, r10, c7, c14, 0	@ clean+invalidate D
+ 		b	iflush
+ hierarchical:
+-		v7dmb
++		__dmb	r10
+ 		stmfd	sp!, {r0-r7, r9-r11}
+ 		mrc	p15, 1, r0, c0, c0, 1	@ read clidr
+ 		ands	r3, r0, #0x7000000	@ extract loc from clidr
+@@ -1247,7 +1266,7 @@ loop1:
+ 		cmp	r1, #2			@ see what cache we have at this level
+ 		blt	skip			@ skip if no cache, or just i-cache
+ 		mcr	p15, 2, r10, c0, c0, 0	@ select current cache level in cssr
+-		v7isb				@ isb to sych the new cssr&csidr
++		__isb	r1			@ isb to sych the new cssr&csidr
+ 		mrc	p15, 1, r1, c0, c0, 0	@ read the new csidr
+ 		and	r2, r1, #7		@ extract the length of the cache lines
+ 		add	r2, r2, #4		@ add 4 (line length offset)
+@@ -1279,10 +1298,10 @@ finished:
+ 		mov	r10, #0			@ switch back to cache level 0
+ 		mcr	p15, 2, r10, c0, c0, 0	@ select current cache level in cssr
+ iflush:
+-		v7dsb
++		__dsb	r10
+ 		mcr	p15, 0, r10, c7, c5, 0	@ invalidate I+BTB
+-		v7dsb
+-		v7isb
++		__dsb	r10
++		__isb	r10
+ 		mov	pc, lr
+ 
+ __armv5tej_mmu_cache_flush:
+
+-- 
+Jazz is not dead. It just smells funny...
