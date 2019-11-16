@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAF3C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFD5C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 911302089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 051562089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920634;
-	bh=7Zb84RMymvrQrGc5whayYZnaI5yyN4gn14MocjTCebU=;
+	s=default; t=1573920641;
+	bh=Cyz/ltkVZ79YYSWUegWFEuN6IGPYYvpiwX20k9pvej8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=njEAZAQC3BjDWKbYZiS4NVYU0TsFFP8Z/AA8yz3fK3pqG7ccm+lnmqsJyahQgAuhr
-	 FLhLhvKHxOsr6uyi/o8VaYU+xQwnf1G1FzDhG2cv5Bs4FtS9ASLbD0EeOv1FpDkHqw
-	 nDiYTURAhQDoZcSNqI52K20pjf5rOAQo/IPrCSuI=
+	b=DrpD1KtcTFk31X6vQL/qaEVP3m8PUnrPsK0lBDBq8PXI6arCWpwzGgUhfZaNQPOf+
+	 /SY8NjEVPBoaRysrBaD/0zPtvFe9rKsVshiWHmqLgMieXrKWu0iz8xVvCwsHolMUpy
+	 kXyAmfsQ5xOozzml7h3CG7oPeje+X3LS4WNT1wkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731719AbfKPQKd (ORCPT
+        id S1730209AbfKPPsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:10:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56270 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:48:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730216AbfKPPsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:48:54 -0500
+        id S1728795AbfKPPsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:48:41 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B9E820870;
-        Sat, 16 Nov 2019 15:48:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6E7420895;
+        Sat, 16 Nov 2019 15:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919333;
-        bh=7Zb84RMymvrQrGc5whayYZnaI5yyN4gn14MocjTCebU=;
+        s=default; t=1573919321;
+        bh=Cyz/ltkVZ79YYSWUegWFEuN6IGPYYvpiwX20k9pvej8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v5dj0KByEFMWNhJSN+UUBBoQJtCk3BPNHlm6MOKOhmRFynYN5KEKaiBvFwHBNUkdA
-         FS81n79opGvHwYe2k1meWOuidvf9RNjhppKn8QYSEWb9ToOY6mZ8InX4sMDzU/PIYf
-         hqyLD0U1HQLv7S2kXCfZz77+DpTqW4stDG+mi+6I=
+        b=2DuFa7T3CdrK5/vnYSSW0UvUp46eF9Ki9C1f668E7RUJDbV7njf7SY7iBQSP+NNCQ
+         Ee2v6NjGpmjAhFyAXd69S466ZqK70VO3IFw2oPhi+eXPsNF+jL6B+O9eGpJ7/TIv3W
+         3/56Z00PHaEg6cvD48p92KHO37b9/feP8naHyA4g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>, Song Liu <songliubraving@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 075/150] bpf: devmap: fix wrong interface selection in notifier_call
-Date:   Sat, 16 Nov 2019 10:46:13 -0500
-Message-Id: <20191116154729.9573-75-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Weichao Guo <guoweichao@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.14 063/150] f2fs: fix to spread clear_cold_data()
+Date:   Sat, 16 Nov 2019 10:46:01 -0500
+Message-Id: <20191116154729.9573-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,42 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit f592f804831f1cf9d1f9966f58c80f150e6829b5 ]
+[ Upstream commit 2baf07818549c8bb8d7b3437e889b86eab56d38e ]
 
-The dev_map_notification() removes interface in devmap if
-unregistering interface's ifindex is same.
-But only checking ifindex is not enough because other netns can have
-same ifindex. so that wrong interface selection could occurred.
-Hence netdev pointer comparison code is added.
+We need to drop PG_checked flag on page as well when we clear PG_uptodate
+flag, in order to avoid treating the page as GCing one later.
 
-v2: compare netdev pointer instead of using net_eq() (Daniel Borkmann)
-v1: Initial patch
-
-Fixes: 2ddf71e23cc2 ("net: add notifier hooks for devmap bpf map")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Weichao Guo <guoweichao@huawei.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/devmap.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/f2fs/data.c    | 8 +++++++-
+ fs/f2fs/dir.c     | 1 +
+ fs/f2fs/segment.c | 4 +++-
+ 3 files changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-index 482bf42e21a41..1060eee6c8d5f 100644
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -388,8 +388,7 @@ static int dev_map_notification(struct notifier_block *notifier,
- 				struct bpf_dtab_netdev *dev, *odev;
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index cc57294451940..ac3fa4bbed2d9 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -1445,6 +1445,7 @@ int do_write_data_page(struct f2fs_io_info *fio)
+ 	/* This page is already truncated */
+ 	if (fio->old_blkaddr == NULL_ADDR) {
+ 		ClearPageUptodate(page);
++		clear_cold_data(page);
+ 		goto out_writepage;
+ 	}
+ got_it:
+@@ -1597,8 +1598,10 @@ static int __write_data_page(struct page *page, bool *submitted,
  
- 				dev = READ_ONCE(dtab->netdev_map[i]);
--				if (!dev ||
--				    dev->dev->ifindex != netdev->ifindex)
-+				if (!dev || netdev != dev->dev)
- 					continue;
- 				odev = cmpxchg(&dtab->netdev_map[i], dev, NULL);
- 				if (dev == odev)
+ out:
+ 	inode_dec_dirty_pages(inode);
+-	if (err)
++	if (err) {
+ 		ClearPageUptodate(page);
++		clear_cold_data(page);
++	}
+ 
+ 	if (wbc->for_reclaim) {
+ 		f2fs_submit_merged_write_cond(sbi, inode, 0, page->index, DATA);
+@@ -2158,6 +2161,8 @@ void f2fs_invalidate_page(struct page *page, unsigned int offset,
+ 		}
+ 	}
+ 
++	clear_cold_data(page);
++
+ 	/* This is atomic written page, keep Private */
+ 	if (IS_ATOMIC_WRITTEN_PAGE(page))
+ 		return drop_inmem_page(inode, page);
+@@ -2176,6 +2181,7 @@ int f2fs_release_page(struct page *page, gfp_t wait)
+ 	if (IS_ATOMIC_WRITTEN_PAGE(page))
+ 		return 0;
+ 
++	clear_cold_data(page);
+ 	set_page_private(page, 0);
+ 	ClearPagePrivate(page);
+ 	return 1;
+diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+index c0c933ad43c8d..4abefd841b6c7 100644
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -745,6 +745,7 @@ void f2fs_delete_entry(struct f2fs_dir_entry *dentry, struct page *page,
+ 		clear_page_dirty_for_io(page);
+ 		ClearPagePrivate(page);
+ 		ClearPageUptodate(page);
++		clear_cold_data(page);
+ 		inode_dec_dirty_pages(dir);
+ 		remove_dirty_inode(dir);
+ 	}
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 9e5fca35e47d0..2cd0d126ef8fa 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -251,8 +251,10 @@ static int __revoke_inmem_pages(struct inode *inode,
+ 		}
+ next:
+ 		/* we don't need to invalidate this in the sccessful status */
+-		if (drop || recover)
++		if (drop || recover) {
+ 			ClearPageUptodate(page);
++			clear_cold_data(page);
++		}
+ 		set_page_private(page, 0);
+ 		ClearPagePrivate(page);
+ 		f2fs_put_page(page, 1);
 -- 
 2.20.1
 
