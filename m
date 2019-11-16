@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8ED1C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202F1C43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B99206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED7421823
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920527;
-	bh=cZPT0WojLQHBwL1aDDdvZwNQLqnruWSL0DxO3nlIPMU=;
+	s=default; t=1573920530;
+	bh=wu8iWbB/vI5j91N6tp1uS1uxExscGnc+y38dgtOkPU8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hy1UnA1R65sbTQZHVC64JjCv7cH/xw97AQAhLFaG9ugB/onZtL84NW78ooouZjJ1T
-	 iLT7kPEqK3pFA7dJURxQWfOj2yenooNLf7kvD2d5DlUSQkLwOSgcJMAGauKIrrIXyF
-	 ZImU7wL9i/n23cmBPUb0oG1ZNeeEL0Akgk1azLus=
+	b=UrH60z/hcMdg+nsCM1Ps1ODO/Bl8hTZLjQEjWPQYuOme9c/0qf6v4ULfX5ZZcTW3l
+	 28+UuFkcjBtk+dvy+JBZhYvoseq+OH+c2Zr27noRsm+za9VNF3lkNf8Ezg+VdgUCaB
+	 OC9ON/bV2a8lPjYrUBTXFeeIPbV2Q22N3k/ZUUSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731327AbfKPQIj (ORCPT
+        id S1731829AbfKPQIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:08:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58086 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:08:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730432AbfKPPuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:50:10 -0500
+        id S1730430AbfKPPuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:50:09 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7C5320885;
-        Sat, 16 Nov 2019 15:50:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F068F208CE;
+        Sat, 16 Nov 2019 15:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919410;
-        bh=cZPT0WojLQHBwL1aDDdvZwNQLqnruWSL0DxO3nlIPMU=;
+        s=default; t=1573919409;
+        bh=wu8iWbB/vI5j91N6tp1uS1uxExscGnc+y38dgtOkPU8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ya1oX8DTVlixJ23cD+f00T06LYGZYhLSUzlQmYCu0VWXfGoHlAMvbjIBYQOCsbpeX
-         Vr2XLxp2IIfoXhUKaG9m8x/qy4VWRzb08aHJgDKLjNkkbDfHuIs53gBcl9jfcqD80/
-         W3deHQuFcGPNhx6ggKhEBNjJR9nSGyugZtKy4UQI=
+        b=Eg0WVi8nFruoaQCFLLbI8GFET/PYIE/Gamu8qS2OasruC6StqLX5ZDrgmP4qIMMiE
+         99hNh+CbaMU+ae94hhcCbfTpueB4MU0AUxbvrmv6AhuoP6KjUgWwxXTyJ+VxNsLpJM
+         1t6+taH/HutUxQ9gwu5wvrUed8bN9fHidnkiUepI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Jiang <dave.jiang@intel.com>, Lucas Van <lucas.van@intel.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
-        linux-ntb@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 108/150] ntb: intel: fix return value for ndev_vec_mask()
-Date:   Sat, 16 Nov 2019 10:46:46 -0500
-Message-Id: <20191116154729.9573-108-sashal@kernel.org>
+Cc:     Jon Mason <jdmason@kudzu.us>,
+        "Gerd W . Haeussler" <gerd.haeussler@cesys-it.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-ntb@googlegroups.com,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 107/150] ntb_netdev: fix sleep time mismatch
+Date:   Sat, 16 Nov 2019 10:46:45 -0500
+Message-Id: <20191116154729.9573-107-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -59,37 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Jiang <dave.jiang@intel.com>
+From: Jon Mason <jdmason@kudzu.us>
 
-[ Upstream commit 7756e2b5d68c36e170a111dceea22f7365f83256 ]
+[ Upstream commit a861594b1b7ffd630f335b351c4e9f938feadb8e ]
 
-ndev_vec_mask() should be returning u64 mask value instead of int.
-Otherwise the mask value returned can be incorrect for larger
-vectors.
+The tx_time should be in usecs (according to the comment above the
+variable), but the setting of the timer during the rearming is done in
+msecs.  Change it to match the expected units.
 
-Fixes: e26a5843f7f5 ("NTB: Split ntb_hw_intel and ntb_transport drivers")
-
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Tested-by: Lucas Van <lucas.van@intel.com>
+Fixes: e74bfeedad08 ("NTB: Add flow control to the ntb_netdev")
+Suggested-by: Gerd W. Haeussler <gerd.haeussler@cesys-it.com>
 Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Acked-by: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/hw/intel/ntb_hw_intel.c | 2 +-
+ drivers/net/ntb_netdev.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ntb/hw/intel/ntb_hw_intel.c b/drivers/ntb/hw/intel/ntb_hw_intel.c
-index 2557e2c05b90c..58068f1447bb2 100644
---- a/drivers/ntb/hw/intel/ntb_hw_intel.c
-+++ b/drivers/ntb/hw/intel/ntb_hw_intel.c
-@@ -348,7 +348,7 @@ static inline int ndev_db_clear_mask(struct intel_ntb_dev *ndev, u64 db_bits,
- 	return 0;
- }
+diff --git a/drivers/net/ntb_netdev.c b/drivers/net/ntb_netdev.c
+index 0250aa9ae2cbc..97bf49ad81a6d 100644
+--- a/drivers/net/ntb_netdev.c
++++ b/drivers/net/ntb_netdev.c
+@@ -236,7 +236,7 @@ static void ntb_netdev_tx_timer(unsigned long data)
+ 	struct ntb_netdev *dev = netdev_priv(ndev);
  
--static inline int ndev_vec_mask(struct intel_ntb_dev *ndev, int db_vector)
-+static inline u64 ndev_vec_mask(struct intel_ntb_dev *ndev, int db_vector)
- {
- 	u64 shift, mask;
- 
+ 	if (ntb_transport_tx_free_entry(dev->qp) < tx_stop) {
+-		mod_timer(&dev->tx_timer, jiffies + msecs_to_jiffies(tx_time));
++		mod_timer(&dev->tx_timer, jiffies + usecs_to_jiffies(tx_time));
+ 	} else {
+ 		/* Make sure anybody stopping the queue after this sees the new
+ 		 * value of ntb_transport_tx_free_entry()
 -- 
 2.20.1
 
