@@ -2,51 +2,52 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5E9C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B44CC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E3D720815
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 408BA2089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:59:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919957;
-	bh=XfgCfnrwVlI0xhEffsc94hS7kRvulEZZSEhyKm4+mSc=;
+	s=default; t=1573919960;
+	bh=detVZUwgRyHVtddSUN/iavcWIqSHjmcqFrt8yqmE6bQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gkASq1DjsHKi9vGXxx2oeXJorYhDjzzwG8fWT0DSXcoeKBI1dhDBEn5bAA/9Up9Bs
-	 m741wZF+0rRwTmpHPDFpKKxcv3JSU8rgK8Vd4/pFoi1KzooK6vU2XxLJ6xUjr2WFfQ
-	 kfdNc+Fen4Z/p6nkAPlQIckg7UjCeWPs6DlshRQc=
+	b=J0tKKrAEPHnrHPfzmEFDI8ITql0rVilCp6snBpGvUu5FqT+y0oPEZzlkeyvcL3UIz
+	 2MC+eHokSkxc5FhUp06rZkYgQtQfVRF8d4yzYeregVyhtSRGlv+lC+7wwXpIyvQhRN
+	 JZ/125mBuS1YyIlTeFaLFgF8qGIAuoxjlYlaviTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731364AbfKPPx7 (ORCPT
+        id S1731267AbfKPP7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:53:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35262 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:59:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731344AbfKPPx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:53:56 -0500
+        id S1729287AbfKPPx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:53:58 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 312E621887;
-        Sat, 16 Nov 2019 15:53:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F4C3218BA;
+        Sat, 16 Nov 2019 15:53:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919635;
-        bh=XfgCfnrwVlI0xhEffsc94hS7kRvulEZZSEhyKm4+mSc=;
+        s=default; t=1573919636;
+        bh=detVZUwgRyHVtddSUN/iavcWIqSHjmcqFrt8yqmE6bQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CnMVJewYEYu+Y09R/Xse3P/Vyr7qB+p9rXmhLx/v5BXF2zL9ceus3TdxZEM+4yg1v
-         qikRulBDn9fV32nDZnBI/7MmEbqed+paOFggSr6fEscn4dPXKnvxBcG0R+BnPZZ2Nw
-         QUq/M8MyJjR99RgvchXtA5kgb7tTKWiRvFsaPuFE=
+        b=rv7SEE1ar9Ug+XgiJk7m/HRNNktSEtj93ZbgtPhUjT7PrJURppH/BDQYjRLcH3yPz
+         U/L7Z6z6Pl68PnAKTJ4A7MSfWyJHxuzR5kjnDwVXsxKa/EkLZJ58sk1oU+vmGTB4tW
+         mxuVhq/twTU35wcquf6DGpNYW5smJDcXZdoReFhE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Uros Bizjak <ubizjak@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 15/77] KVM/x86: Fix invvpid and invept register operand size in 64-bit mode
-Date:   Sat, 16 Nov 2019 10:52:37 -0500
-Message-Id: <20191116155339.11909-15-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.4 17/77] scsi: isci: Change sci_controller_start_task's return type to sci_status
+Date:   Sat, 16 Nov 2019 10:52:39 -0500
+Message-Id: <20191116155339.11909-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -59,43 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uros Bizjak <ubizjak@gmail.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 5ebb272b2ea7e02911a03a893f8d922d49f9bb4a ]
+[ Upstream commit 362b5da3dfceada6e74ecdd7af3991bbe42c0c0f ]
 
-Register operand size of invvpid and invept instruction in 64-bit mode
-has always 64 bits. Adjust inline function argument type to reflect
-correct size.
+Clang warns when an enumerated type is implicitly converted to another.
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+drivers/scsi/isci/request.c:3476:13: warning: implicit conversion from
+enumeration type 'enum sci_task_status' to different enumeration type
+'enum sci_status' [-Wenum-conversion]
+                        status = sci_controller_start_task(ihost,
+                               ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/scsi/isci/host.c:2744:10: warning: implicit conversion from
+enumeration type 'enum sci_status' to different enumeration type 'enum
+sci_task_status' [-Wenum-conversion]
+                return SCI_SUCCESS;
+                ~~~~~~ ^~~~~~~~~~~
+drivers/scsi/isci/host.c:2753:9: warning: implicit conversion from
+enumeration type 'enum sci_status' to different enumeration type 'enum
+sci_task_status' [-Wenum-conversion]
+        return status;
+        ~~~~~~ ^~~~~~
+
+Avoid all of these implicit conversion by just making
+sci_controller_start_task use sci_status. This silences
+Clang and has no functional change since sci_task_status
+has all of its values mapped to something in sci_status.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/153
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/vmx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/isci/host.c | 8 ++++----
+ drivers/scsi/isci/host.h | 2 +-
+ drivers/scsi/isci/task.c | 4 ++--
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index f8f9d1b368bf8..a3aa07b2f61e1 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -1299,7 +1299,7 @@ static int __find_msr_index(struct vcpu_vmx *vmx, u32 msr)
- 	return -1;
- }
- 
--static inline void __invvpid(int ext, u16 vpid, gva_t gva)
-+static inline void __invvpid(unsigned long ext, u16 vpid, gva_t gva)
+diff --git a/drivers/scsi/isci/host.c b/drivers/scsi/isci/host.c
+index 609dafd661d14..da4583a2fa23e 100644
+--- a/drivers/scsi/isci/host.c
++++ b/drivers/scsi/isci/host.c
+@@ -2717,9 +2717,9 @@ enum sci_status sci_controller_continue_io(struct isci_request *ireq)
+  *    the task management request.
+  * @task_request: the handle to the task request object to start.
+  */
+-enum sci_task_status sci_controller_start_task(struct isci_host *ihost,
+-					       struct isci_remote_device *idev,
+-					       struct isci_request *ireq)
++enum sci_status sci_controller_start_task(struct isci_host *ihost,
++					  struct isci_remote_device *idev,
++					  struct isci_request *ireq)
  {
-     struct {
- 	u64 vpid : 16;
-@@ -1313,7 +1313,7 @@ static inline void __invvpid(int ext, u16 vpid, gva_t gva)
- 		  : : "a"(&operand), "c"(ext) : "cc", "memory");
- }
+ 	enum sci_status status;
  
--static inline void __invept(int ext, u64 eptp, gpa_t gpa)
-+static inline void __invept(unsigned long ext, u64 eptp, gpa_t gpa)
+@@ -2728,7 +2728,7 @@ enum sci_task_status sci_controller_start_task(struct isci_host *ihost,
+ 			 "%s: SCIC Controller starting task from invalid "
+ 			 "state\n",
+ 			 __func__);
+-		return SCI_TASK_FAILURE_INVALID_STATE;
++		return SCI_FAILURE_INVALID_STATE;
+ 	}
+ 
+ 	status = sci_remote_device_start_task(ihost, idev, ireq);
+diff --git a/drivers/scsi/isci/host.h b/drivers/scsi/isci/host.h
+index 22a9bb1abae14..15dc6e0d8deb0 100644
+--- a/drivers/scsi/isci/host.h
++++ b/drivers/scsi/isci/host.h
+@@ -490,7 +490,7 @@ enum sci_status sci_controller_start_io(
+ 	struct isci_remote_device *idev,
+ 	struct isci_request *ireq);
+ 
+-enum sci_task_status sci_controller_start_task(
++enum sci_status sci_controller_start_task(
+ 	struct isci_host *ihost,
+ 	struct isci_remote_device *idev,
+ 	struct isci_request *ireq);
+diff --git a/drivers/scsi/isci/task.c b/drivers/scsi/isci/task.c
+index 6dcaed0c1fc8c..fb6eba331ac6e 100644
+--- a/drivers/scsi/isci/task.c
++++ b/drivers/scsi/isci/task.c
+@@ -258,7 +258,7 @@ static int isci_task_execute_tmf(struct isci_host *ihost,
+ 				 struct isci_tmf *tmf, unsigned long timeout_ms)
  {
- 	struct {
- 		u64 eptp, gpa;
+ 	DECLARE_COMPLETION_ONSTACK(completion);
+-	enum sci_task_status status = SCI_TASK_FAILURE;
++	enum sci_status status = SCI_FAILURE;
+ 	struct isci_request *ireq;
+ 	int ret = TMF_RESP_FUNC_FAILED;
+ 	unsigned long flags;
+@@ -301,7 +301,7 @@ static int isci_task_execute_tmf(struct isci_host *ihost,
+ 	/* start the TMF io. */
+ 	status = sci_controller_start_task(ihost, idev, ireq);
+ 
+-	if (status != SCI_TASK_SUCCESS) {
++	if (status != SCI_SUCCESS) {
+ 		dev_dbg(&ihost->pdev->dev,
+ 			 "%s: start_io failed - status = 0x%x, request = %p\n",
+ 			 __func__,
 -- 
 2.20.1
 
