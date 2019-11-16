@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0D2C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D90A8C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE6F320718
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F2920748
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:41:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573918884;
-	bh=uWZClTrsqmEFx8byq1mK09fgpItzYGHhc8KLTIkX/1U=;
+	s=default; t=1573918889;
+	bh=4Bq9zUx7ceP48+ET5OQc8d7++KgI10SHReEseY/1MN0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G0xp2l+E3ulj69dfYMuhwUBzAj5RfQqZh7Wn2amkXXJT7SHSI7U5vQo/gktjjvJgY
-	 spyF2vEqUcEBHi7sOZh1VyACMm9Trsg85Ky3mso+Ozo/godMZovZddCoMX7hZUF/4R
-	 2HO8qtUMHejeKRcim4Ucn6ZylhTEhz2Q4g7eMaIw=
+	b=0FCidD8B6QUO/yX5b4+h8BLS+lNC1zMljV/inUusktQ9Fwl7snVxSGUbdyUwlQTyk
+	 kpFtG7CXHcl8Ywx9kBqUAeIgVLi8N3BOYrFVavmlWVhl+cl34ZfACX5+TW8DN8YY2R
+	 eTOR4ZUEb/2QG2NiOiK101hGtAfrv/f6yU64pkFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727675AbfKPPlX (ORCPT
+        id S1727867AbfKPPl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:41:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44308 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:41:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727830AbfKPPlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:41:20 -0500
+        id S1727702AbfKPPlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:41:22 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C33820730;
-        Sat, 16 Nov 2019 15:41:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B09A20718;
+        Sat, 16 Nov 2019 15:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918879;
-        bh=uWZClTrsqmEFx8byq1mK09fgpItzYGHhc8KLTIkX/1U=;
+        s=default; t=1573918882;
+        bh=4Bq9zUx7ceP48+ET5OQc8d7++KgI10SHReEseY/1MN0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HE/rOSQzwYjhIJpIj6M2ykxTXZuh5t+0d8DsU4R1oH8lifnaJ5J8nrSOhr5ifxBo/
-         sLlciVkJtFvRGa7vy07LaqaIbxPww3lkZ0YGFTNkbBHme/LouxZTyyeTj6m+piSODK
-         +QCVt51DRL2/wDmH3DrFf/48dcCou/MugiEOnXc4=
+        b=zNB9pdymWpuqxlvMM9lJqPF/6bnqxMSuAy9ChSpKhfjvxWoxILX1LJr8RzFGm3o2a
+         w8IDnc1E7QYSMPGXxrJDFJ46kO+DXB6DwXkrjGIW2Tcmysc2bQ8dNdnwPYlI7dpxav
+         7SvgqZfDvVVKoxmAwZJjFvgRImzMVG/qFjG7bKnY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Geoff Levand <geoff@infradead.org>,
+Cc:     Joel Stanley <joel@jms.id.au>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 010/237] powerpc: Fix signedness bug in update_flash_db()
-Date:   Sat, 16 Nov 2019 10:37:25 -0500
-Message-Id: <20191116154113.7417-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 011/237] powerpc/boot: Fix opal console in boot wrapper
+Date:   Sat, 16 Nov 2019 10:37:26 -0500
+Message-Id: <20191116154113.7417-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,38 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Joel Stanley <joel@jms.id.au>
 
-[ Upstream commit 014704e6f54189a203cc14c7c0bb411b940241bc ]
+[ Upstream commit 1a855eaccf353f7ed1d51a3d4b3af727ccbd81ca ]
 
-The "count < sizeof(struct os_area_db)" comparison is type promoted to
-size_t so negative values of "count" are treated as very high values
-and we accidentally return success instead of a negative error code.
+As of commit 10c77dba40ff ("powerpc/boot: Fix build failure in 32-bit
+boot wrapper") the opal code is hidden behind CONFIG_PPC64_BOOT_WRAPPER,
+but the boot wrapper avoids include/linux, so it does not get the normal
+Kconfig flags.
 
-This doesn't really change runtime much but it fixes a static checker
-warning.
+We can drop the guard entirely as in commit f8e8e69cea49 ("powerpc/boot:
+Only build OPAL code when necessary") the makefile only includes opal.c
+in the build if CONFIG_PPC64_BOOT_WRAPPER is set.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Geoff Levand <geoff@infradead.org>
+Fixes: 10c77dba40ff ("powerpc/boot: Fix build failure in 32-bit boot wrapper")
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/ps3/os-area.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/boot/opal.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-diff --git a/arch/powerpc/platforms/ps3/os-area.c b/arch/powerpc/platforms/ps3/os-area.c
-index cdbfc5cfd6f38..f5387ad822798 100644
---- a/arch/powerpc/platforms/ps3/os-area.c
-+++ b/arch/powerpc/platforms/ps3/os-area.c
-@@ -664,7 +664,7 @@ static int update_flash_db(void)
- 	db_set_64(db, &os_area_db_id_rtc_diff, saved_params.rtc_diff);
+diff --git a/arch/powerpc/boot/opal.c b/arch/powerpc/boot/opal.c
+index 0272570d02de1..dfb199ef5b949 100644
+--- a/arch/powerpc/boot/opal.c
++++ b/arch/powerpc/boot/opal.c
+@@ -13,8 +13,6 @@
+ #include <libfdt.h>
+ #include "../include/asm/opal-api.h"
  
- 	count = os_area_flash_write(db, sizeof(struct os_area_db), pos);
--	if (count < sizeof(struct os_area_db)) {
-+	if (count < 0 || count < sizeof(struct os_area_db)) {
- 		pr_debug("%s: os_area_flash_write failed %zd\n", __func__,
- 			 count);
- 		error = count < 0 ? count : -EIO;
+-#ifdef CONFIG_PPC64_BOOT_WRAPPER
+-
+ /* Global OPAL struct used by opal-call.S */
+ struct opal {
+ 	u64 base;
+@@ -101,9 +99,3 @@ int opal_console_init(void *devp, struct serial_console_data *scdp)
+ 
+ 	return 0;
+ }
+-#else
+-int opal_console_init(void *devp, struct serial_console_data *scdp)
+-{
+-	return -1;
+-}
+-#endif /* __powerpc64__ */
 -- 
 2.20.1
 
