@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6528C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0065FC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED7A214DE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBCC420895
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:21:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921282;
-	bh=QapvbyAR0UCwp5TQJRgpF5BAlHZWPUtIxkqmXmTEBlI=;
+	s=default; t=1573921291;
+	bh=v07zbc7vShP28g0iL9bjsCC4WxDrC1Mp4bhpHU4L4qA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y6BD4AOv2NKx7CyKKKSMBTmfCRO8av+y6BeKC/xjj5DLzAY3jq1UDADNqJUYTytYH
-	 /XOUDk6mECnINkMhdpe+oBA6KPBSyaJZ6zCuO3qt3C6WMlfJMOqfCZaqkZ+hpuCbPx
-	 cLjsMRqzO7hJ5cGyr2dpYCTKDKjcUk9H8yt2USpc=
+	b=2J+cmahZvq+HzR3fHay5IvviklqPELKBWaXoZex2gBTweoJsJsat3yaL3XCIbX3Vb
+	 zuF52ovn0pXvFk1zey42pv8qS+5LLaEJvndJnF6NwAKI33AHAM03JldpJH9tdYfaDj
+	 CEI0CnmIlWNcePJpD1q7Butb24wFXxeNCKeKq+PE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732075AbfKPQVV (ORCPT
+        id S1730701AbfKPQVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:21:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47696 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:21:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728777AbfKPPng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:43:36 -0500
+        id S1728738AbfKPPnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:43:31 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7135620729;
-        Sat, 16 Nov 2019 15:43:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E157320815;
+        Sat, 16 Nov 2019 15:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919015;
-        bh=QapvbyAR0UCwp5TQJRgpF5BAlHZWPUtIxkqmXmTEBlI=;
+        s=default; t=1573919011;
+        bh=v07zbc7vShP28g0iL9bjsCC4WxDrC1Mp4bhpHU4L4qA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HfT59ara3/2VtDWsfvuSZwURMpD3v2RHpJTGp53pzDt0mZDtt4ahZRfZj3Ylg9G0M
-         LgqsXadZdA2RM0WPFeQx4CngxYv8YwhkCbmPRCzSRJiHir7M7Eey3pDDEeyIhhO+Ch
-         /jDYQs0ibWkTdJHdSrupbs0wC3dFXU/FactJ4nsE=
+        b=iEK037BfSHhBFty++qGjzYyEQu/KxU+dCxUTFzIYt712bIc5dfalT6V9NYgThTMP0
+         dV/sfWPggheOVOCP4EQ++7Zq4tOT0hZ6Qba6WGY2rM0scwqFoxA4wLVF0sJkMok/Ge
+         IrfsKevIYM8keufkBpo+6o0wJbfM6ys7oAJC5xjU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Shuah Khan (Samsung OSG)" <shuah@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 117/237] selftests: watchdog: fix message when /dev/watchdog open fails
-Date:   Sat, 16 Nov 2019 10:39:12 -0500
-Message-Id: <20191116154113.7417-117-sashal@kernel.org>
+Cc:     Keiji Hayashibara <hayashibara.keiji@socionext.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 115/237] spi: uniphier: fix incorrect property items
+Date:   Sat, 16 Nov 2019 10:39:10 -0500
+Message-Id: <20191116154113.7417-115-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -59,41 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Shuah Khan (Samsung OSG)" <shuah@kernel.org>
+From: Keiji Hayashibara <hayashibara.keiji@socionext.com>
 
-[ Upstream commit 9a244229a4b850b11952a0df79607c69b18fd8df ]
+[ Upstream commit 3511ba7d4ca6f39e2d060bb94e42a41ad1fee7bf ]
 
-When /dev/watchdog open fails, watchdog exits with "watchdog not enabled"
-message. This is incorrect when open fails due to insufficient privilege.
+This commit fixes incorrect property because it was different
+from the actual.
+The parameters of '#address-cells' and '#size-cells' were removed,
+and 'interrupts', 'pinctrl-names' and 'pinctrl-0' were added.
 
-Fix message to clearly state the reason when open fails with EACCESS when
-a non-root user runs it.
-
-Signed-off-by: Shuah Khan (Samsung OSG) <shuah@kernel.org>
+Fixes: 4dcd5c2781f3 ("spi: add DT bindings for UniPhier SPI controller")
+Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/watchdog/watchdog-test.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/spi/spi-uniphier.txt       | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/tools/testing/selftests/watchdog/watchdog-test.c b/tools/testing/selftests/watchdog/watchdog-test.c
-index 6e290874b70e2..e029e2017280f 100644
---- a/tools/testing/selftests/watchdog/watchdog-test.c
-+++ b/tools/testing/selftests/watchdog/watchdog-test.c
-@@ -89,7 +89,13 @@ int main(int argc, char *argv[])
- 	fd = open("/dev/watchdog", O_WRONLY);
+diff --git a/Documentation/devicetree/bindings/spi/spi-uniphier.txt b/Documentation/devicetree/bindings/spi/spi-uniphier.txt
+index 504a4ecfc7b16..b04e66a52de5d 100644
+--- a/Documentation/devicetree/bindings/spi/spi-uniphier.txt
++++ b/Documentation/devicetree/bindings/spi/spi-uniphier.txt
+@@ -5,18 +5,20 @@ UniPhier SoCs have SCSSI which supports SPI single channel.
+ Required properties:
+  - compatible: should be "socionext,uniphier-scssi"
+  - reg: address and length of the spi master registers
+- - #address-cells: must be <1>, see spi-bus.txt
+- - #size-cells: must be <0>, see spi-bus.txt
+- - clocks: A phandle to the clock for the device.
+- - resets: A phandle to the reset control for the device.
++ - interrupts: a single interrupt specifier
++ - pinctrl-names: should be "default"
++ - pinctrl-0: pin control state for the default mode
++ - clocks: a phandle to the clock for the device
++ - resets: a phandle to the reset control for the device
  
- 	if (fd == -1) {
--		printf("Watchdog device not enabled.\n");
-+		if (errno == ENOENT)
-+			printf("Watchdog device not enabled.\n");
-+		else if (errno == EACCES)
-+			printf("Run watchdog as root.\n");
-+		else
-+			printf("Watchdog device open failed %s\n",
-+				strerror(errno));
- 		exit(-1);
- 	}
+ Example:
  
+ spi0: spi@54006000 {
+ 	compatible = "socionext,uniphier-scssi";
+ 	reg = <0x54006000 0x100>;
+-	#address-cells = <1>;
+-	#size-cells = <0>;
++	interrupts = <0 39 4>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_spi0>;
+ 	clocks = <&peri_clk 11>;
+ 	resets = <&peri_rst 11>;
+ };
 -- 
 2.20.1
 
