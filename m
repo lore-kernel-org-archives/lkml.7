@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2544FC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD21CC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4276206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 951D121823
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920625;
-	bh=KwhayJfvVXO1VVoCQrUPX1fidenkw2bHYQcKqslR7Xs=;
+	s=default; t=1573920629;
+	bh=MdXxU8oNnNxUNykFVPJPxOfa36YJHrJlrvzu5GMEQSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SYCBNCOCSoZbu1GooKG0xfCk2KqsLpFdFFaDlL+wPxiptHF0WSLxBpDRBz9uZ+naO
-	 WOhzuSJ9rtZQAOcwYlLaOa1CJd0fbYKP9hLrPkHHXaWcPfDW+9UN0giP+GEkmBpG9G
-	 dfg6sctKfsMeENmyONTTnL3CPFgZFBJ9E2SfgiRQ=
+	b=aBEVeM7SG6q9TjGDvmWheCfhgP/GGIIpi7IQ3s6W1ll6U+PErG4pPwXBjl/QBz7kf
+	 OUTctBrurUoM7/8qVWhpHWn8yejfjdSTQovIrsBiKlC8Xb9Oxijkt0EPmokeoFaKxQ
+	 Y5oQyAsXoil24zSp+gwui+kYkK+UlnCGLEqQv0Q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730228AbfKPPs4 (ORCPT
+        id S1730685AbfKPQK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:48:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56044 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:10:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730171AbfKPPsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:48:46 -0500
+        id S1730223AbfKPPs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:48:56 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29D1A2086A;
-        Sat, 16 Nov 2019 15:48:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6583120729;
+        Sat, 16 Nov 2019 15:48:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919325;
-        bh=KwhayJfvVXO1VVoCQrUPX1fidenkw2bHYQcKqslR7Xs=;
+        s=default; t=1573919335;
+        bh=MdXxU8oNnNxUNykFVPJPxOfa36YJHrJlrvzu5GMEQSU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OFBjE6HwKxfOHmwp5YLqPBH60Je/gEvsVYe06uE8gP3OorvWKwLHCkcOu+lVQs/uB
-         NqLfcoC0vBHcaLw1yXvyeXKZ60/QBfpAsdmQ4LVXm2tG1PBL3rdzpQEg3wFLh7nH8Q
-         RSTYNtCCLCUv9x5LePdnT1Fyq4j81Q0dRwL6mA70=
+        b=NucvSvLM16+7ngiVuF/tnsj4keI8e5+XH+IpXnmZKfFh/K0JGs07Wcr8/zH/dzeh+
+         zD6b+QpI/2DjnNLO5gRNZneeyvfbjw+obpVqF5Am57pp335c81SFufSebjiYD8wQQV
+         X5FacWpuxFi4rjNYHkeXYHBzsEAcdlj/ef6j6uao=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sapthagiri Baratam <sapthagiri.baratam@cirrus.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com
-Subject: [PATCH AUTOSEL 4.14 067/150] mfd: arizona: Correct calling of runtime_put_sync
-Date:   Sat, 16 Nov 2019 10:46:05 -0500
-Message-Id: <20191116154729.9573-67-sashal@kernel.org>
+Cc:     Felipe Rechia <felipe.rechia@datacom.com.br>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 076/150] powerpc/process: Fix flush_all_to_thread for SPE
+Date:   Sat, 16 Nov 2019 10:46:14 -0500
+Message-Id: <20191116154729.9573-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,52 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sapthagiri Baratam <sapthagiri.baratam@cirrus.com>
+From: Felipe Rechia <felipe.rechia@datacom.com.br>
 
-[ Upstream commit 6b269a41a4520f7eb639e61a45ebbb9c9267d5e0 ]
+[ Upstream commit e901378578c62202594cba0f6c076f3df365ec91 ]
 
-Don't call runtime_put_sync when clk32k_ref is ARIZONA_32KZ_MCLK2
-as there is no corresponding runtime_get_sync call.
+Fix a bug introduced by the creation of flush_all_to_thread() for
+processors that have SPE (Signal Processing Engine) and use it to
+compute floating-point operations.
 
-MCLK1 is not in the AoD power domain so if it is used as 32kHz clock
-source we need to hold a runtime PM reference to keep the device from
-going into low power mode.
+>From userspace perspective, the problem was seen in attempts of
+computing floating-point operations which should generate exceptions.
+For example:
 
-Fixes: cdd8da8cc66b ("mfd: arizona: Add gating of external MCLKn clocks")
-Signed-off-by: Sapthagiri Baratam <sapthagiri.baratam@cirrus.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+  fork();
+  float x = 0.0 / 0.0;
+  isnan(x);           // forked process returns False (should be True)
+
+The operation above also should always cause the SPEFSCR FINV bit to
+be set. However, the SPE floating-point exceptions were turned off
+after a fork().
+
+Kernel versions prior to the bug used flush_spe_to_thread(), which
+first saves SPEFSCR register values in tsk->thread and then calls
+giveup_spe(tsk).
+
+After commit 579e633e764e, the save_all() function was called first
+to giveup_spe(), and then the SPEFSCR register values were saved in
+tsk->thread. This would save the SPEFSCR register values after
+disabling SPE for that thread, causing the bug described above.
+
+Fixes 579e633e764e ("powerpc: create flush_all_to_thread()")
+Signed-off-by: Felipe Rechia <felipe.rechia@datacom.com.br>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/arizona-core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/powerpc/kernel/process.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-index d8e3184bd27ca..ad8a5296c50ba 100644
---- a/drivers/mfd/arizona-core.c
-+++ b/drivers/mfd/arizona-core.c
-@@ -52,8 +52,10 @@ int arizona_clk32k_enable(struct arizona *arizona)
- 			if (ret != 0)
- 				goto err_ref;
- 			ret = clk_prepare_enable(arizona->mclk[ARIZONA_MCLK1]);
--			if (ret != 0)
--				goto err_pm;
-+			if (ret != 0) {
-+				pm_runtime_put_sync(arizona->dev);
-+				goto err_ref;
-+			}
- 			break;
- 		case ARIZONA_32KZ_MCLK2:
- 			ret = clk_prepare_enable(arizona->mclk[ARIZONA_MCLK2]);
-@@ -67,8 +69,6 @@ int arizona_clk32k_enable(struct arizona *arizona)
- 					 ARIZONA_CLK_32K_ENA);
- 	}
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index 5e5da2073fdff..ba0d4f9a99bac 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -567,12 +567,11 @@ void flush_all_to_thread(struct task_struct *tsk)
+ 	if (tsk->thread.regs) {
+ 		preempt_disable();
+ 		BUG_ON(tsk != current);
+-		save_all(tsk);
+-
+ #ifdef CONFIG_SPE
+ 		if (tsk->thread.regs->msr & MSR_SPE)
+ 			tsk->thread.spefscr = mfspr(SPRN_SPEFSCR);
+ #endif
++		save_all(tsk);
  
--err_pm:
--	pm_runtime_put_sync(arizona->dev);
- err_ref:
- 	if (ret != 0)
- 		arizona->clk32k_ref--;
+ 		preempt_enable();
+ 	}
 -- 
 2.20.1
 
