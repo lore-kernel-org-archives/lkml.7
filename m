@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A142C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD76C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE9921479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5FA52086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919280;
-	bh=A6r981WiwlLsuLjXzBrf8L+e7ByY9YU5xFewKaitogw=;
+	s=default; t=1573919283;
+	bh=ruhtO+Dneox2Nh1Nq6tH35cjmE/6vNUwLM6D2ixRwe0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pcSteeMiMLlUxpjRQ9ZaWOGhCU/A9t3xDwnUJQoeVIiRatuVJUztr/WySWgL7sJQE
-	 55LQ5xeTYfLnUkURvi/V2JltaaAq9kR1gURGsoSCdb/6iETg8oOF2GXVaoYCMg0gtR
-	 BoY7Jq+WzXhfsx0Y822s+MQFVfiDxr6/6ARmKdpA=
+	b=RqGOq8ZTJz3TA5yjAP0sWHuasCUV7yNNm8MspQYOh9A83e5Tsb3WRYPjpSvZOquHj
+	 zw2pOM48RvyugmwmHHpQ4aDe5eaTFMCOvIOatO0wpTht9F2uwv7kl8xXndSl9QfWoL
+	 F6OmvAEPRM+ipynHOz5+NQZYf///ywlzGlI8q/WI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729883AbfKPPr6 (ORCPT
+        id S1729913AbfKPPsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:47:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54484 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:48:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729768AbfKPPrn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:47:43 -0500
+        id S1729776AbfKPPrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:47:45 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B8F22083E;
-        Sat, 16 Nov 2019 15:47:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F4A7214DE;
+        Sat, 16 Nov 2019 15:47:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919262;
-        bh=A6r981WiwlLsuLjXzBrf8L+e7ByY9YU5xFewKaitogw=;
+        s=default; t=1573919264;
+        bh=ruhtO+Dneox2Nh1Nq6tH35cjmE/6vNUwLM6D2ixRwe0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PMahVZGZUSG0KR999dMyr/XtP2yS6l1xJs2F1onPD1LTOzUr/5SVuBUV7tDhnkiZW
-         szMuV8mYESU1uir/Hka+8hXH84yxiq8/IuEru3reJhfgDR/8hWV+8V4vsjpDfddFDn
-         eI26SzUob0zTXuC1f9KscnkS9LyrrfeNy8+TBy2I=
+        b=EB0yzlTe/q1y5I3ZwmfMBp8qNDGwZ1yOpvb+QV7yLzeAEpOun3y2OGAk6G6h606Qx
+         2gsACX0UnmPSotcH2GY03+ctHoDLkprtVXMhylqf3ZLtljBDQkBkGbQJw1MHBzRekl
+         QadxDP2a7aFJ53SQEBij6f7o0OG4uJ9Nx0c0IOYM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Ondrej Zary <linux@rainbow-software.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 013/150] cdrom: don't attempt to fiddle with cdo->capability
-Date:   Sat, 16 Nov 2019 10:45:11 -0500
-Message-Id: <20191116154729.9573-13-sashal@kernel.org>
+Cc:     Liu Bo <bo.liu@linux.alibaba.com>, David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 016/150] Btrfs: fix alignment in declaration and prototype of btrfs_get_extent
+Date:   Sat, 16 Nov 2019 10:45:14 -0500
+Message-Id: <20191116154729.9573-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -59,78 +58,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Liu Bo <bo.liu@linux.alibaba.com>
 
-[ Upstream commit 8f94004e2a51a3ea195cf3447eb5d5906f36d8b3 ]
+[ Upstream commit de2c6615dcddf2af868c5cbd1db2e9e73b4beb58 ]
 
-We can't modify cdo->capability as it is defined as a const.
-Change the modification hack to just WARN_ON_ONCE() if we hit
-any of the invalid combinations.
+This fixes btrfs_get_extent to be consistent with our existing
+declaration style.
 
-This fixes a regression for pcd, which doesn't work after the
-constify patch.
+Note: For the record, indentation styles that are accepted are both,
+aligning under the opening ( and tab or double tab indentation on the
+next line.  Preferrably not spliting the type or long expressions in the
+argument lists.
 
-Fixes: 853fe1bf7554 ("cdrom: Make device operations read-only")
-Tested-by: Ondrej Zary <linux@rainbow-software.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Liu Bo <bo.liu@linux.alibaba.com>
+[ add note ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cdrom/cdrom.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ fs/btrfs/ctree.h | 4 ++--
+ fs/btrfs/inode.c | 6 +++---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index ea6558d4864c0..90dd8e7291dab 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -410,10 +410,10 @@ static int cdrom_get_disc_info(struct cdrom_device_info *cdi,
-  * hack to have the capability flags defined const, while we can still
-  * change it here without gcc complaining at every line.
+diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
+index 588760c49fe28..087a1e842c508 100644
+--- a/fs/btrfs/ctree.h
++++ b/fs/btrfs/ctree.h
+@@ -3198,8 +3198,8 @@ long btrfs_ioctl_trans_end(struct file *file);
+ struct inode *btrfs_iget(struct super_block *s, struct btrfs_key *location,
+ 			 struct btrfs_root *root, int *was_new);
+ struct extent_map *btrfs_get_extent(struct btrfs_inode *inode,
+-		struct page *page, size_t pg_offset,
+-		u64 start, u64 end, int create);
++				    struct page *page, size_t pg_offset,
++				    u64 start, u64 end, int create);
+ int btrfs_update_inode(struct btrfs_trans_handle *trans,
+ 			      struct btrfs_root *root,
+ 			      struct inode *inode);
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index ddc1d1d1a29f2..33bf60910b8d7 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -7066,9 +7066,9 @@ static noinline int uncompress_inline(struct btrfs_path *path,
+  * This also copies inline extents directly into the page.
   */
--#define ENSURE(call, bits)			\
--do {						\
--	if (cdo->call == NULL)			\
--		*change_capability &= ~(bits);	\
-+#define ENSURE(cdo, call, bits)					\
-+do {								\
-+	if (cdo->call == NULL)					\
-+		WARN_ON_ONCE((cdo)->capability & (bits));	\
- } while (0)
- 
- /*
-@@ -589,7 +589,6 @@ int register_cdrom(struct cdrom_device_info *cdi)
+ struct extent_map *btrfs_get_extent(struct btrfs_inode *inode,
+-		struct page *page,
+-	    size_t pg_offset, u64 start, u64 len,
+-		int create)
++				    struct page *page,
++				    size_t pg_offset, u64 start, u64 len,
++				    int create)
  {
- 	static char banner_printed;
- 	const struct cdrom_device_ops *cdo = cdi->ops;
--	int *change_capability = (int *)&cdo->capability; /* hack */
- 
- 	cd_dbg(CD_OPEN, "entering register_cdrom\n");
- 
-@@ -601,16 +600,16 @@ int register_cdrom(struct cdrom_device_info *cdi)
- 		cdrom_sysctl_register();
- 	}
- 
--	ENSURE(drive_status, CDC_DRIVE_STATUS);
-+	ENSURE(cdo, drive_status, CDC_DRIVE_STATUS);
- 	if (cdo->check_events == NULL && cdo->media_changed == NULL)
--		*change_capability = ~(CDC_MEDIA_CHANGED | CDC_SELECT_DISC);
--	ENSURE(tray_move, CDC_CLOSE_TRAY | CDC_OPEN_TRAY);
--	ENSURE(lock_door, CDC_LOCK);
--	ENSURE(select_speed, CDC_SELECT_SPEED);
--	ENSURE(get_last_session, CDC_MULTI_SESSION);
--	ENSURE(get_mcn, CDC_MCN);
--	ENSURE(reset, CDC_RESET);
--	ENSURE(generic_packet, CDC_GENERIC_PACKET);
-+		WARN_ON_ONCE(cdo->capability & (CDC_MEDIA_CHANGED | CDC_SELECT_DISC));
-+	ENSURE(cdo, tray_move, CDC_CLOSE_TRAY | CDC_OPEN_TRAY);
-+	ENSURE(cdo, lock_door, CDC_LOCK);
-+	ENSURE(cdo, select_speed, CDC_SELECT_SPEED);
-+	ENSURE(cdo, get_last_session, CDC_MULTI_SESSION);
-+	ENSURE(cdo, get_mcn, CDC_MCN);
-+	ENSURE(cdo, reset, CDC_RESET);
-+	ENSURE(cdo, generic_packet, CDC_GENERIC_PACKET);
- 	cdi->mc_flags = 0;
- 	cdi->options = CDO_USE_FFLAGS;
- 
+ 	struct btrfs_fs_info *fs_info = btrfs_sb(inode->vfs_inode.i_sb);
+ 	int ret;
 -- 
 2.20.1
 
