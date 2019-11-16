@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0FCC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 09:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EF5C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 09:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7C220723
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 09:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E6D20723
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 09:42:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="ia89zB7j"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="C981fbOJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbfKPJmc (ORCPT
+        id S1727422AbfKPJlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 04:42:32 -0500
-Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.122]:26609 "EHLO
-        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727174AbfKPJls (ORCPT
+        Sat, 16 Nov 2019 04:41:47 -0500
+Received: from mo4-p03-ob.smtp.rzone.de ([81.169.146.172]:22280 "EHLO
+        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727242AbfKPJlq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 04:41:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573897304;
+        Sat, 16 Nov 2019 04:41:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573897303;
         s=strato-dkim-0002; d=chronox.de;
         h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=g3w1UgCBZOFh/2ZcZqJUJO/5hoGb2/3CpTa4uVbSCp4=;
-        b=ia89zB7jMnSrEiCwpbTiCuztMee/ZJkZ416K5QOrhYQqDL7eyqfiFK6uI1lFdCKFTO
-        /Q0nuqfIfg8C1bjTSpkyx50Ff72qZgZ39PJdLIYEseh2cH4TmGYFDVzEqDEFZ9AjzB3d
-        q51Uy1XXQHppb5QNw6FDibEl9j7JbV8SbLmntNYFUngt3vQ0uzaGdWKDbwKyLryz9c3A
-        IX9uv/BtGcnyD8bKoKuIMafoeTE4DAB27fyQNfOpv0XGcmqOb46opYLdF5icxDQKK3s7
-        vEcAq7EFSsz/H7/Bw7bi94D8f5jZbC7DQC549IaVcF2t8pF0qBCnWtQ4FYn+n7KXQ7cL
-        caiA==
+        bh=aPZ/5dq1Q5Q0xxxZcch63UgLnu9JOzeEUdd+tUFCBSE=;
+        b=C981fbOJiDHf4bG3taTRbVrVJshMnolYxUlWabcOZ340MP5M+IBbKZNNlY16bNwtvB
+        odbRjEVVs6cQSxXW/5xwvSsKsJ2B6Ajf8s63hIExwRBs3rIV2fd5fBtvMV5sKT8CaGes
+        i/Ys6tdu4V0f48AiQiXEGdDbtdmpObjPLMZbUdM+D4aHD4MyiMLmPhzQOxRSGFqbVpwj
+        CZ6vaVMiXGBSpy7hi/drBEb1nQNLTa6z/HHaxjv8WuMTN7RcrBt5RtmbRNsuWer9IcDN
+        xzM25Ju/R6odDRpGHs/YSmlEiuRidOAjU/Iap2ga3EiiqpzOCPMNlYSubHXWiXco84qZ
+        8UhQ==
 X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9x2YdNp5OujZ6kplo"
 X-RZG-CLASS-ID: mo00
 Received: from positron.chronox.de
         by smtp.strato.de (RZmta 44.29.0 SBL|AUTH)
-        with ESMTPSA id N09a57vAG9eaRIH
+        with ESMTPSA id N09a57vAG9eWRIB
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
         (Client did not present a certificate);
-        Sat, 16 Nov 2019 10:40:36 +0100 (CET)
+        Sat, 16 Nov 2019 10:40:32 +0100 (CET)
 From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
 To:     Arnd Bergmann <arnd@arndb.de>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -65,9 +65,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
         Roman Drahtmueller <draht@schaltsekun.de>,
         Neil Horman <nhorman@redhat.com>
-Subject: [PATCH v25 02/12] LRNG - allocate one SDRNG instance per NUMA node
-Date:   Sat, 16 Nov 2019 10:33:44 +0100
-Message-ID: <3759500.8VvTC6uiIP@positron.chronox.de>
+Subject: [PATCH v25 08/12] crypto: provide access to a static Jitter RNG state
+Date:   Sat, 16 Nov 2019 10:36:25 +0100
+Message-ID: <4886699.5igGNpkUo8@positron.chronox.de>
 In-Reply-To: <2787174.DQlWHN5GGo@positron.chronox.de>
 References: <6157374.ptSnyUpaCn@positron.chronox.de> <2787174.DQlWHN5GGo@positron.chronox.de>
 MIME-Version: 1.0
@@ -78,21 +78,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to improve NUMA-locality when serving getrandom(2) requests,
-allocate one DRNG instance per node.
-
-The SDRNG instance that is present right from the start of the kernel is
-reused as the first per-NUMA-node SDRNG. For all remaining online NUMA
-nodes a new SDRNG instance is allocated.
-
-During boot time, the multiple SDRNG instances are seeded sequentially.
-With this, the first SDRNG instance (referenced as the initial SDRNG
-in the code) is completely seeded with 256 bits of entropy before the
-next SDRNG instance is completely seeded.
-
-When random numbers are requested, the NUMA-node-local SDRNG is checked
-whether it has been already fully seeded. If this is not the case, the
-initial SDRNG is used to serve the request.
+To support the LRNG operation which uses the Jitter RNG separately
+from the kernel crypto API, at a time where potentially the regular
+memory management is not yet initialized, the Jitter RNG needs to
+provide a state whose memory is defined at compile time. As only once
+instance will ever be needed by the LRNG, define once static memory
+block which is solely to be used by the LRNG.
 
 CC: "Eric W. Biederman" <ebiederm@xmission.com>
 CC: "Alexander E. Patrakov" <patrakov@gmail.com>
@@ -110,156 +101,45 @@ CC: Andy Lutomirski <luto@kernel.org>
 CC: Florian Weimer <fweimer@redhat.com>
 CC: Lennart Poettering <mzxreary@0pointer.de>
 CC: Nicolai Stange <nstange@suse.de>
-Reviewed-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
 Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
 Tested-by: Roman Drahtm=FCller <draht@schaltsekun.de>
 Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
 Tested-by: Neil Horman <nhorman@redhat.com>
 Signed-off-by: Stephan Mueller <smueller@chronox.de>
 =2D--
- drivers/char/lrng/Makefile        |   2 +
- drivers/char/lrng/lrng_internal.h |   5 ++
- drivers/char/lrng/lrng_numa.c     | 101 ++++++++++++++++++++++++++++++
- 3 files changed, 108 insertions(+)
- create mode 100644 drivers/char/lrng/lrng_numa.c
+ crypto/jitterentropy.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/drivers/char/lrng/Makefile b/drivers/char/lrng/Makefile
-index 2761623715d2..a00cddb45773 100644
-=2D-- a/drivers/char/lrng/Makefile
-+++ b/drivers/char/lrng/Makefile
-@@ -7,3 +7,5 @@ obj-y				+=3D lrng_pool.o lrng_aux.o \
- 				   lrng_sw_noise.o lrng_archrandom.o \
- 				   lrng_sdrng.o lrng_chacha20.o \
- 				   lrng_interfaces.o \
-+
-+obj-$(CONFIG_NUMA)		+=3D lrng_numa.o
-diff --git a/drivers/char/lrng/lrng_internal.h b/drivers/char/lrng/lrng_int=
-ernal.h
-index a3d9e0bce884..e1f9b6b166fd 100644
-=2D-- a/drivers/char/lrng/lrng_internal.h
-+++ b/drivers/char/lrng/lrng_internal.h
-@@ -250,8 +250,13 @@ int lrng_sdrng_get_sleep(u8 *outbuf, u32 outbuflen);
- void lrng_sdrng_force_reseed(void);
- void lrng_sdrng_seed_work(struct work_struct *dummy);
+diff --git a/crypto/jitterentropy.c b/crypto/jitterentropy.c
+index 77fa2120fe0c..3a815495f778 100644
+=2D-- a/crypto/jitterentropy.c
++++ b/crypto/jitterentropy.c
+@@ -644,3 +644,26 @@ int jent_entropy_init(void)
 =20
-+#ifdef CONFIG_NUMA
-+struct lrng_sdrng **lrng_sdrng_instances(void);
-+void lrng_drngs_numa_alloc(void);
-+#else	/* CONFIG_NUMA */
- static inline struct lrng_sdrng **lrng_sdrng_instances(void) { return NULL=
-; }
- static inline void lrng_drngs_numa_alloc(void) { return; }
-+#endif /* CONFIG_NUMA */
-=20
- /************************** Health Test linking code *********************=
-*****/
-=20
-diff --git a/drivers/char/lrng/lrng_numa.c b/drivers/char/lrng/lrng_numa.c
-new file mode 100644
-index 000000000000..5401f927919a
-=2D-- /dev/null
-+++ b/drivers/char/lrng/lrng_numa.c
-@@ -0,0 +1,101 @@
-+// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-+/*
-+ * LRNG NUMA support
-+ *
-+ * Copyright (C) 2016 - 2019, Stephan Mueller <smueller@chronox.de>
-+ */
+ 	return 0;
+ }
 +
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/lrng.h>
-+#include <linux/slab.h>
-+
-+#include "lrng_internal.h"
-+
-+static struct lrng_sdrng **lrng_sdrng __read_mostly =3D NULL;
-+
-+struct lrng_sdrng **lrng_sdrng_instances(void)
++struct rand_data *jent_lrng_entropy_collector(void)
 +{
-+	return lrng_sdrng;
-+}
++	static unsigned char lrng_jent_mem[JENT_MEMORY_SIZE];
++	static struct rand_data lrng_jent_state =3D {
++		.data		=3D 0,
++		.old_data	=3D 0,
++		.prev_time	=3D 0,
++		.last_delta	=3D 0,
++		.last_delta2	=3D 0,
++		.osr		=3D 1,
++		.mem		=3D lrng_jent_mem,
++		.memlocation	=3D 0,
++		.memblocks	=3D JENT_MEMORY_BLOCKSIZE,
++		.memblocksize	=3D JENT_MEMORY_BLOCKS,
++		.memaccessloops	=3D JENT_MEMORY_ACCESSLOOPS,
++	};
 +
-+/* Allocate the data structures for the per-NUMA node DRNGs */
-+static void _lrng_drngs_numa_alloc(struct work_struct *work)
-+{
-+	struct lrng_sdrng **sdrngs;
-+	struct lrng_sdrng *lrng_sdrng_init =3D lrng_sdrng_init_instance();
-+	u32 node;
-+	bool init_sdrng_used =3D false;
++	if (jent_entropy_init())
++		return NULL;
 +
-+	mutex_lock(&lrng_crypto_cb_update);
-+
-+	/* per-NUMA-node DRNGs are already present */
-+	if (lrng_sdrng)
-+		goto unlock;
-+
-+	sdrngs =3D kcalloc(nr_node_ids, sizeof(void *), GFP_KERNEL|__GFP_NOFAIL);
-+	for_each_online_node(node) {
-+		struct lrng_sdrng *sdrng;
-+
-+		if (!init_sdrng_used) {
-+			sdrngs[node] =3D lrng_sdrng_init;
-+			init_sdrng_used =3D true;
-+			continue;
-+		}
-+
-+		sdrng =3D kmalloc_node(sizeof(struct lrng_sdrng),
-+				     GFP_KERNEL|__GFP_NOFAIL, node);
-+		memset(sdrng, 0, sizeof(lrng_sdrng));
-+
-+		sdrng->crypto_cb =3D lrng_sdrng_init->crypto_cb;
-+		sdrng->sdrng =3D sdrng->crypto_cb->lrng_drng_alloc(
-+					LRNG_DRNG_SECURITY_STRENGTH_BYTES);
-+		if (IS_ERR(sdrng->sdrng)) {
-+			kfree(sdrng);
-+			goto err;
-+		}
-+
-+		mutex_init(&sdrng->lock);
-+		spin_lock_init(&sdrng->spin_lock);
-+
-+		/*
-+		 * No reseeding of NUMA DRNGs from previous DRNGs as this
-+		 * would complicate the code. Let it simply reseed.
-+		 */
-+		lrng_sdrng_reset(sdrng);
-+		sdrngs[node] =3D sdrng;
-+
-+		lrng_pool_inc_numa_node();
-+		pr_info("secondary DRNG for NUMA node %d allocated\n", node);
-+	}
-+
-+	/* Ensure that all NUMA nodes receive changed memory here. */
-+	mb();
-+
-+	if (!cmpxchg(&lrng_sdrng, NULL, sdrngs))
-+		goto unlock;
-+
-+err:
-+	for_each_online_node(node) {
-+		struct lrng_sdrng *sdrng =3D sdrngs[node];
-+
-+		if (sdrng =3D=3D lrng_sdrng_init)
-+			continue;
-+
-+		if (sdrng) {
-+			sdrng->crypto_cb->lrng_drng_dealloc(sdrng->sdrng);
-+			kfree(sdrng);
-+		}
-+	}
-+	kfree(sdrngs);
-+
-+unlock:
-+	mutex_unlock(&lrng_crypto_cb_update);
-+}
-+
-+static DECLARE_WORK(lrng_drngs_numa_alloc_work, _lrng_drngs_numa_alloc);
-+
-+void lrng_drngs_numa_alloc(void)
-+{
-+	schedule_work(&lrng_drngs_numa_alloc_work);
++	return &lrng_jent_state;
 +}
 =2D-=20
 2.23.0
