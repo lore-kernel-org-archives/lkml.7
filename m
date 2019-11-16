@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9638FC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CB2C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 626EF2089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A6DE21823
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920723;
-	bh=ZbZQWLNVEAwI0OA//as0xFt12U2YZ+kzigbVogJ9SX0=;
+	s=default; t=1573920726;
+	bh=3mBeHU26KDoJnerDrK7TIAfbbYuBh2vF/7RxufJMUZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QKZ8HNNeJaYfRWM45Sv/YeMGn/4LOKjREnagH1V8nlEfV3UfbhFVt9vr9Efo8dEX3
-	 TcdvEH4NdwjPANrQNMIJn1fmwltFGgTxKhUMW0AVGHboL4hcdJCJIeED7MAAgf7WHW
-	 boZCNEpAXEE2rrAm1YKT1HDg+8KOxO4EUUC5eiDo=
+	b=CWhINLy4IyROtyNOdn9i/Q13u1zs3tsrtMM/03BwhQoZy526lcRF755az0HLjgE+V
+	 Z0FZLfaX/7WKMR4N2PHwjqMl3irH8h2y7TieP7PPUexcZoh+5cQVz9i+ZAPD7kpCF4
+	 +ErYbWdX5/anQgigzsgRfvzBDnMU3t+WEc6l3TfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbfKPPs3 (ORCPT
+        id S1731867AbfKPQMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:48:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55278 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:12:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728581AbfKPPsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:48:17 -0500
+        id S1728735AbfKPPs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:48:29 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 343BA2086A;
-        Sat, 16 Nov 2019 15:48:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 262442081E;
+        Sat, 16 Nov 2019 15:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919296;
-        bh=ZbZQWLNVEAwI0OA//as0xFt12U2YZ+kzigbVogJ9SX0=;
+        s=default; t=1573919309;
+        bh=3mBeHU26KDoJnerDrK7TIAfbbYuBh2vF/7RxufJMUZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vMfXWQSX/Vb/q5DhvB/5UtWvxEZ5b9VaMwnGBZ0VK+vf1cQJJqy+AcstF6aL3pxdx
-         aWQPEOAMNhNDctYYMpORkXwIIelNda3mSRiTJ/YpODoCiXXrNVeT3H+Kxj8wi4Q38R
-         Atcx7X1iQsmG+YZMzjhnFQlvYu9mLd03ZSq3jqh4=
+        b=m5FrDMJWjdpJ0BWoI/IfI32LA5WwdEVKXxEWZTdoSEmMOlhcXjyAEj3+O3EMzxeCG
+         VhnORyuPSATJ1JLOez4eBM2ho7DLly5Ajq5DD0InoBKuhGKG/6PI57chWf4sZcp69V
+         hqxS9I4Xtfn04vY1D9BSAzt3A+Z6eWrzAhL+cwug=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Netanel Belgazal <netanel@amazon.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 043/150] net: ena: Fix Kconfig dependency on X86
-Date:   Sat, 16 Nov 2019 10:45:41 -0500
-Message-Id: <20191116154729.9573-43-sashal@kernel.org>
+Cc:     Heinz Mauelshagen <heinzm@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 052/150] dm raid: avoid bitmap with raid4/5/6 journal device
+Date:   Sat, 16 Nov 2019 10:45:50 -0500
+Message-Id: <20191116154729.9573-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -59,35 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Netanel Belgazal <netanel@amazon.com>
+From: Heinz Mauelshagen <heinzm@redhat.com>
 
-[ Upstream commit 8c590f9776386b8f697fd0b7ed6142ae6e3de79e ]
+[ Upstream commit d857ad75edf3c0066fcd920746f9dc75382b3324 ]
 
-The Kconfig limitation of X86 is to too wide.
-The ENA driver only requires a little endian dependency.
+With raid4/5/6, journal device and write intent bitmap are mutually exclusive.
 
-Change the dependency to be on little endian CPU.
-
-Signed-off-by: Netanel Belgazal <netanel@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Heinz Mauelshagen <heinzm@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/Kconfig | 2 +-
+ drivers/md/dm-raid.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/amazon/Kconfig b/drivers/net/ethernet/amazon/Kconfig
-index 99b30353541ab..9e87d7b8360f5 100644
---- a/drivers/net/ethernet/amazon/Kconfig
-+++ b/drivers/net/ethernet/amazon/Kconfig
-@@ -17,7 +17,7 @@ if NET_VENDOR_AMAZON
+diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
+index 151211b4cb1ba..2c5912e755148 100644
+--- a/drivers/md/dm-raid.c
++++ b/drivers/md/dm-raid.c
+@@ -2441,7 +2441,7 @@ static int super_validate(struct raid_set *rs, struct md_rdev *rdev)
+ 	}
  
- config ENA_ETHERNET
- 	tristate "Elastic Network Adapter (ENA) support"
--	depends on (PCI_MSI && X86)
-+	depends on PCI_MSI && !CPU_BIG_ENDIAN
- 	---help---
- 	  This driver supports Elastic Network Adapter (ENA)"
+ 	/* Enable bitmap creation for RAID levels != 0 */
+-	mddev->bitmap_info.offset = rt_is_raid0(rs->raid_type) ? 0 : to_sector(4096);
++	mddev->bitmap_info.offset = (rt_is_raid0(rs->raid_type) || rs->journal_dev.dev) ? 0 : to_sector(4096);
+ 	mddev->bitmap_info.default_offset = mddev->bitmap_info.offset;
  
+ 	if (!test_and_clear_bit(FirstUse, &rdev->flags)) {
 -- 
 2.20.1
 
