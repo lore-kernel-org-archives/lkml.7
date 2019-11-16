@@ -2,139 +2,135 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCB9C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 00:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 238F7C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 00:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09CC420730
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 00:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA1D2206D6
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 00:21:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bzwXzcLi"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y1GqM6VL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbfKPAMW (ORCPT
+        id S1727399AbfKPAVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 19:12:22 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31959 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727183AbfKPAMW (ORCPT
+        Fri, 15 Nov 2019 19:21:33 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46811 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727216AbfKPAVc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 19:12:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573863141;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YucaLxiSa+lbBdWZEiOMixRcsCv7ML3d3r0Ac+pjQcY=;
-        b=bzwXzcLij/PLQ/XEbggwW3DKDYl+dFkc2EoOD0AWGDUuY7xpGB97XX9bAfQsPc0enIoS4S
-        oF2zwOKXFEdwlx0YhIQk/a1Mb7hr2kkW6pAUMNFwqIcfb59jHSeanrV1hXaHZWJFGq4aXd
-        6rlCxE5pnAQs2faJ+989NSSia7gaYQM=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-426-a0MZMA09P_WGItiTfoaftQ-1; Fri, 15 Nov 2019 19:12:20 -0500
-Received: by mail-wr1-f71.google.com with SMTP id p6so9326161wrs.5
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 16:12:19 -0800 (PST)
+        Fri, 15 Nov 2019 19:21:32 -0500
+Received: by mail-pl1-f196.google.com with SMTP id l4so5763482plt.13
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 16:21:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:subject:from:user-agent:date;
+        bh=UiFGe1ZptxBlAKxNM72C7gs1lEaFQWlmt9mtqRezKHM=;
+        b=Y1GqM6VL0BBiSy4Nlkblk4sJJTHGXh7Ja1fH72VPY0iJZpxMj0Ij0onnQSvRxyFK+f
+         ddw/6pJW1Upx1wi451QOlBmvtWKZAQWOJzChMAlkGFppxvTDzC1LSQfwCudoqqE2omH0
+         Yk7mD/l1tYMjvi7mhUL7YHG193JvZ4c5ngpqE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=XgPDDVC4pj4uBAGw7ABCh7Q7KCQNqcWlZruL9lBUGm4=;
-        b=enIDLZF8HZ1bnpfLnirKNPMbpNu0uLOPbnonNpkZNwy7tSasD9nMIgW9aAO2WfbXmI
-         icUuZixe8KHprXPCGOqjDz+JufvKO4RVu1aETWVeh19sDdKUa2g7vXsYcxzhxD28wR0l
-         PT8Q2LdxH1o2G3E1zxXpxXowhBJdmkS+dDkfGvPSnc1y+MIE//Hrf4jk9bd8Wr1teU1b
-         AbCfzVb9Ap7Vf8aWV1Ar8l8ngBNk/Ew3dVgjVBfi1H73Ehwdw+cLcLFZJUM7M8fWZ5Sw
-         wld0oolKB8LTePskBEr7EErME3+nVU+Q9/2cDpvDLkyTN1UR0UAcVqV28M2YXb9lkWpA
-         MNgA==
-X-Gm-Message-State: APjAAAXYo8mF4iKXIjBqHTIVeu/4zMlMgeKH4K7hd3l9Sm3kbNPU/zqB
-        +loDpDWT3HnyQtISSrHUtv81FGopvd4xci6WByZ0UVE1z3oaxuWUbnCfNeaExAbD9rMd/UnM4EY
-        TdcvAgJGm1LUw7IkO5bY0dper
-X-Received: by 2002:adf:e312:: with SMTP id b18mr4650614wrj.203.1573863138983;
-        Fri, 15 Nov 2019 16:12:18 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzuVcbtdtlvJftih7/AXWTYumzxtiDyUUaIJ6IUYkm08DAAbDt3jr5OSJ1vjIQacxYbq6hTSg==
-X-Received: by 2002:adf:e312:: with SMTP id b18mr4650602wrj.203.1573863138778;
-        Fri, 15 Nov 2019 16:12:18 -0800 (PST)
-Received: from [192.168.3.122] (p4FF23E4C.dip0.t-ipconnect.de. [79.242.62.76])
-        by smtp.gmail.com with ESMTPSA id f13sm12841564wrq.96.2019.11.15.16.12.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Nov 2019 16:12:18 -0800 (PST)
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v3] mm/memory_hotplug: Fix try_offline_node()
-Date:   Sat, 16 Nov 2019 01:12:16 +0100
-Message-Id: <E2EAC147-4F23-4B12-9C80-42FE28F03D26@redhat.com>
-References: <20191115160833.beda52bc6f1145bc81960ba7@linux-foundation.org>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Tang Chen <tangchen@cn.fujitsu.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>
-In-Reply-To: <20191115160833.beda52bc6f1145bc81960ba7@linux-foundation.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-X-Mailer: iPhone Mail (17A878)
-X-MC-Unique: a0MZMA09P_WGItiTfoaftQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:subject:from
+         :user-agent:date;
+        bh=UiFGe1ZptxBlAKxNM72C7gs1lEaFQWlmt9mtqRezKHM=;
+        b=WHRtxmBoWPZ78MUWfqH0RBWETadHtGtGnHdDKsw73T3R3HfaxXlFnfoz7GkK7ZaBVD
+         68+I2S2pnnoa0Y33q8+bJj2Z+wIob+PIBIeDnSe43bGoTm+M+KyokHusVwku68IM2rse
+         Un9DZ3fXcDBZLkWsOO3nM4Nqbx/ZZdEfSSAv9PpqF5GzNIvcoBlCd8GDspEq4DQR++vx
+         DAy39SWYtASZ9jRnbz5i0CE4G6ZDXbnsU8wc4Vmg7urfMxTdV1Ua3pUo/11lUO8wnFUe
+         6VLKTUqlB4+uEui9qahrBvRNINR+J3LKc4KkG6TlV1X8zlogIGCCmdMKCFQrxAFcmT9u
+         NwzA==
+X-Gm-Message-State: APjAAAVKcD4US+7CkmFbtTpyO9JReJwcMxlUgpZm4XGiX4D9+TOM2DWK
+        NnxQJ/lAn5IYdRzkIlt3XtUe2w==
+X-Google-Smtp-Source: APXvYqw+wsCa7XS8lSHe7s8aY0RZs/GZA8FpNaIPtlOCDBAb9htlfUSM8Hs0kMLXQOcRQsfU/WEQpw==
+X-Received: by 2002:a17:902:6b47:: with SMTP id g7mr2496208plt.160.1573863690575;
+        Fri, 15 Nov 2019 16:21:30 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id hi2sm9313474pjb.22.2019.11.15.16.21.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2019 16:21:29 -0800 (PST)
+Message-ID: <5dcf4109.1c69fb81.ef683.dbd7@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1573593774-12539-11-git-send-email-eberman@codeaurora.org>
+References: <1573593774-12539-1-git-send-email-eberman@codeaurora.org> <1573593774-12539-11-git-send-email-eberman@codeaurora.org>
+Cc:     Elliot Berman <eberman@codeaurora.org>, tsoni@codeaurora.org,
+        sidgup@codeaurora.org, psodagud@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Elliot Berman <eberman@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, saiprakash.ranjan@codeaurora.org
+Subject: Re: [PATCH v2 10/18] firmware: qcom_scm-64: Improve SMC convention detection
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Fri, 15 Nov 2019 16:21:28 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Elliot Berman (2019-11-12 13:22:46)
+> diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-6=
+4.c
+> index 977654bb..b82b450 100644
+> --- a/drivers/firmware/qcom_scm-64.c
+> +++ b/drivers/firmware/qcom_scm-64.c
+> @@ -302,21 +302,20 @@ int __qcom_scm_hdcp_req(struct device *dev, struct =
+qcom_scm_hdcp_req *req,
+> =20
+>  void __qcom_scm_init(void)
+>  {
+> -       u64 cmd;
+> -       struct arm_smccc_res res;
+> -       u32 function =3D SMCCC_FUNCNUM(QCOM_SCM_SVC_INFO, QCOM_SCM_INFO_I=
+S_CALL_AVAIL);
+> -
+> -       /* First try a SMC64 call */
+> -       cmd =3D ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL, ARM_SMCCC_SMC_64,
+> -                                ARM_SMCCC_OWNER_SIP, function);
+> -
+> -       arm_smccc_smc(cmd, QCOM_SCM_ARGS(1), cmd & (~BIT(ARM_SMCCC_TYPE_S=
+HIFT)),
+> -                     0, 0, 0, 0, 0, &res);
+> -
+> -       if (!res.a0 && res.a1)
+> -               qcom_smccc_convention =3D ARM_SMCCC_SMC_64;
+> -       else
+> -               qcom_smccc_convention =3D ARM_SMCCC_SMC_32;
+> +       qcom_smccc_convention =3D ARM_SMCCC_SMC_64;
+> +       if (__qcom_scm_is_call_available(NULL, QCOM_SCM_SVC_INFO,
+> +                       QCOM_SCM_INFO_IS_CALL_AVAIL) =3D=3D 1)
 
+Is this asking if the "is call available function" is available by using
+the is call available function? That is recursive. Isn't that why we
+make a manually open coded SMC call to see if it works? If this isn't
+going to work we may want to just have a property in DT that tells us
+what to do.
 
-> Am 16.11.2019 um 01:08 schrieb Andrew Morton <akpm@linux-foundation.org>:
->=20
-> =EF=BB=BFOn Thu, 7 Nov 2019 19:58:45 -0800 Andrew Morton <akpm@linux-foun=
-dation.org> wrote:
->=20
->> On Thu, 7 Nov 2019 00:14:13 +0100 David Hildenbrand <david@redhat.com> w=
-rote:
->>=20
->>>> +    /*
->>>> +     * Especially offline memory blocks might not be spanned by the
->>>> +     * node. They will get spanned by the node once they get onlined.
->>>> +     * However, they link to the node in sysfs and can get onlined la=
-ter.
->>>> +     */
->>>> +    rc =3D for_each_memory_block(&nid, check_no_memblock_for_node_cb)=
-;
->>>> +    if (rc)
->>>>          return;
->>>> -    }
->>>>=20
->>>>      if (check_cpu_on_node(pgdat))
->>>>          return;
->>>>=20
->>>=20
->>> @Andrew, can you queued this one instead of v1 so we can give this some=
-=20
->>> more testing? Thanks!
->>=20
->> Sure.
->>=20
->> We have a tested-by but no reviewed-by or acked-by :(
->>=20
->> Null pointer derefs are unpopular.  Should we cc:stable?
->=20
-> <Crickets>
->=20
-> I added cc:stable and shall send it upstream unreviewed.
+> +               goto out;
+> +
+> +       qcom_smccc_convention =3D ARM_SMCCC_SMC_32;
+> +       if (__qcom_scm_is_call_available(NULL, QCOM_SCM_SVC_INFO,
+> +                       QCOM_SCM_INFO_IS_CALL_AVAIL) =3D=3D 1)
+> +               goto out;
+> +
+> +       qcom_smccc_convention =3D -1;
+> +       BUG();
 
-Yes, please cc:stable at as mentioned in the patch comments (below the desc=
-ription). Maybe we=E2=80=98ll find somebody last minute to review ... thank=
-s!
+This BUG() is new and not mentioned in the commit text. Why can't we
+just start failing all scm calls if we can't detect the calling
+convention?
 
->=20
+> +out:
+> +       pr_debug("QCOM SCM SMC Convention: %llu\n", qcom_smccc_convention=
+);
+
+Maybe pr_info() is more appropriate. PSCI currently prints out the
+version info so maybe printing something like "QCOM SCM SMC_64 calling
+convention" will be useful for early debugging.
 
