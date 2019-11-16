@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6503C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B878BC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F35D21887
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF2F21887
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920755;
-	bh=iXfACO8Pm8LpVXh1BTAos9wmSTAnSHOJJbxnjyM1o1k=;
+	s=default; t=1573920758;
+	bh=hyGOFn3YZetm72mwECSkAUsfLoBdMx0Ka7hvxQTUnmk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GHsXgPJXZYP0W6ZpEiI8naGs+fYBIQm5efScF3f6jdqFZmPdBlGO0OKO3zPgBblJ7
-	 rHfVaE37EBT2ZfWObecJaA9GPeIG0dapc9yzohGT0UJ9IMmPL/22UlyVgoDpK/mlOb
-	 JeL3fz/xxAo4AN9NmWydNJc12zXwxCWLZHetGYts=
+	b=aqcNVqYW9IDVVkHfQZPFnN19K6AtD8bmW3VINkGrGg4f4TC7zpQ5q+hyIrGWuVzkw
+	 bRG55p61+n0+Gfs8GjCrgxgtFiLGMbmoLRZBwpSkufpig27XQRJ8OhXAagEUeQSqVy
+	 +vHm8cSfq/cNJ0s2YgDMG7RkGXzCT/Yz1bz1fCcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730000AbfKPPsS (ORCPT
+        id S1731882AbfKPQMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:48:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55206 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:12:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728657AbfKPPsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:48:15 -0500
+        id S1728984AbfKPPsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:48:18 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C044920729;
-        Sat, 16 Nov 2019 15:48:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17745207FA;
+        Sat, 16 Nov 2019 15:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919294;
-        bh=iXfACO8Pm8LpVXh1BTAos9wmSTAnSHOJJbxnjyM1o1k=;
+        s=default; t=1573919297;
+        bh=hyGOFn3YZetm72mwECSkAUsfLoBdMx0Ka7hvxQTUnmk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QYpMPOnmkoqD74Z2Kcjmw9Deg7BW6Stkez72hR/yZu7bWVKl88l2JA/yKuXzEAGWw
-         pgqUWWncuvX0VwN3X36yXTmddPYTefxgumE+s6FNwI0X+KCRFVQCpDNsoD7+XcQPX+
-         MgeS1W/Q8kzxuZ/ykA/AETCH80FPGcxQp88Am1pQ=
+        b=skPwgdkOMZVWDGHFXhgNYCXeAiNc5OZjFcJCn6o342MFya2wiceeNbf6h89kQCv0U
+         cm0xWOn+/VsA+jhJumhQubAdhRIKqTgZkzzeR9Zzyo5t4HTH+5dBOKChnXGJZfDRiv
+         nWoqOs4bdxdAVhSCNOJtVd2MgTcJzyr4L/7aA5oA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 041/150] net: dsa: mv88e6xxx: Fix 88E6141/6341 2500mbps SERDES speed
-Date:   Sat, 16 Nov 2019 10:45:39 -0500
-Message-Id: <20191116154729.9573-41-sashal@kernel.org>
+Cc:     Dave Chinner <dchinner@redhat.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 044/150] xfs: fix use-after-free race in xfs_buf_rele
+Date:   Sat, 16 Nov 2019 10:45:42 -0500
+Message-Id: <20191116154729.9573-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,105 +60,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Behún <marek.behun@nic.cz>
+From: Dave Chinner <dchinner@redhat.com>
 
-[ Upstream commit 26422340da467538cd65eaa9c65538039ee99c8c ]
+[ Upstream commit 37fd1678245f7a5898c1b05128bc481fb403c290 ]
 
-This is a fix for the port_set_speed method for the Topaz family.
-Currently the same method is used as for the Peridot family, but
-this is wrong for the SERDES port.
+When looking at a 4.18 based KASAN use after free report, I noticed
+that racing xfs_buf_rele() may race on dropping the last reference
+to the buffer and taking the buffer lock. This was the symptom
+displayed by the KASAN report, but the actual issue that was
+reported had already been fixed in 4.19-rc1 by commit e339dd8d8b04
+("xfs: use sync buffer I/O for sync delwri queue submission").
 
-On Topaz, the SERDES port is port 5, not 9 and 10 as in Peridot.
-Moreover setting alt_bit on Topaz only makes sense for port 0 (for
-(differentiating 100mbps vs 200mbps). The SERDES port does not
-support more than 2500mbps, so alt_bit does not make any difference.
+Despite this, I think there is still an issue with xfs_buf_rele()
+in this code:
 
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+        release = atomic_dec_and_lock(&bp->b_hold, &pag->pag_buf_lock);
+        spin_lock(&bp->b_lock);
+        if (!release) {
+.....
+
+If two threads race on the b_lock after both dropping a reference
+and one getting dropping the last reference so release = true, we
+end up with:
+
+CPU 0				CPU 1
+atomic_dec_and_lock()
+				atomic_dec_and_lock()
+				spin_lock(&bp->b_lock)
+spin_lock(&bp->b_lock)
+<spins>
+				<release = true bp->b_lru_ref = 0>
+				<remove from lists>
+				freebuf = true
+				spin_unlock(&bp->b_lock)
+				xfs_buf_free(bp)
+<gets lock, reading and writing freed memory>
+<accesses freed memory>
+spin_unlock(&bp->b_lock) <reads/writes freed memory>
+
+IOWs, we can't safely take bp->b_lock after dropping the hold
+reference because the buffer may go away at any time after we
+drop that reference. However, this can be fixed simply by taking the
+bp->b_lock before we drop the reference.
+
+It is safe to nest the pag_buf_lock inside bp->b_lock as the
+pag_buf_lock is only used to serialise against lookup in
+xfs_buf_find() and no other locks are held over or under the
+pag_buf_lock there. Make this clear by documenting the buffer lock
+orders at the top of the file.
+
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com
+Signed-off-by: Dave Chinner <david@fromorbit.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c |  4 ++--
- drivers/net/dsa/mv88e6xxx/port.c | 25 +++++++++++++++++++++++--
- drivers/net/dsa/mv88e6xxx/port.h |  1 +
- 3 files changed, 26 insertions(+), 4 deletions(-)
+ fs/xfs/xfs_buf.c | 38 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 37 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index 0fff1502267a4..be17194487c68 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -2527,7 +2527,7 @@ static const struct mv88e6xxx_ops mv88e6141_ops = {
- 	.port_set_link = mv88e6xxx_port_set_link,
- 	.port_set_duplex = mv88e6xxx_port_set_duplex,
- 	.port_set_rgmii_delay = mv88e6390_port_set_rgmii_delay,
--	.port_set_speed = mv88e6390_port_set_speed,
-+	.port_set_speed = mv88e6341_port_set_speed,
- 	.port_tag_remap = mv88e6095_port_tag_remap,
- 	.port_set_frame_mode = mv88e6351_port_set_frame_mode,
- 	.port_set_egress_floods = mv88e6352_port_set_egress_floods,
-@@ -3029,7 +3029,7 @@ static const struct mv88e6xxx_ops mv88e6341_ops = {
- 	.port_set_link = mv88e6xxx_port_set_link,
- 	.port_set_duplex = mv88e6xxx_port_set_duplex,
- 	.port_set_rgmii_delay = mv88e6390_port_set_rgmii_delay,
--	.port_set_speed = mv88e6390_port_set_speed,
-+	.port_set_speed = mv88e6341_port_set_speed,
- 	.port_tag_remap = mv88e6095_port_tag_remap,
- 	.port_set_frame_mode = mv88e6351_port_set_frame_mode,
- 	.port_set_egress_floods = mv88e6352_port_set_egress_floods,
-diff --git a/drivers/net/dsa/mv88e6xxx/port.c b/drivers/net/dsa/mv88e6xxx/port.c
-index 2cffecfe86e3b..fd0a88c56031a 100644
---- a/drivers/net/dsa/mv88e6xxx/port.c
-+++ b/drivers/net/dsa/mv88e6xxx/port.c
-@@ -203,8 +203,11 @@ static int mv88e6xxx_port_set_speed(struct mv88e6xxx_chip *chip, int port,
- 		ctrl = MV88E6XXX_PORT_MAC_CTL_SPEED_1000;
- 		break;
- 	case 2500:
--		ctrl = MV88E6390_PORT_MAC_CTL_SPEED_10000 |
--			MV88E6390_PORT_MAC_CTL_ALTSPEED;
-+		if (alt_bit)
-+			ctrl = MV88E6390_PORT_MAC_CTL_SPEED_10000 |
-+				MV88E6390_PORT_MAC_CTL_ALTSPEED;
-+		else
-+			ctrl = MV88E6390_PORT_MAC_CTL_SPEED_10000;
- 		break;
- 	case 10000:
- 		/* all bits set, fall through... */
-@@ -266,6 +269,24 @@ int mv88e6185_port_set_speed(struct mv88e6xxx_chip *chip, int port, int speed)
- 	return mv88e6xxx_port_set_speed(chip, port, speed, false, false);
- }
+diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+index e4a623956df57..e5970ecdfd585 100644
+--- a/fs/xfs/xfs_buf.c
++++ b/fs/xfs/xfs_buf.c
+@@ -58,6 +58,32 @@ static kmem_zone_t *xfs_buf_zone;
+ #define xb_to_gfp(flags) \
+ 	((((flags) & XBF_READ_AHEAD) ? __GFP_NORETRY : GFP_NOFS) | __GFP_NOWARN)
  
-+/* Support 10, 100, 200, 1000, 2500 Mbps (e.g. 88E6341) */
-+int mv88e6341_port_set_speed(struct mv88e6xxx_chip *chip, int port, int speed)
-+{
-+	if (speed == SPEED_MAX)
-+		speed = port < 5 ? 1000 : 2500;
-+
-+	if (speed > 2500)
-+		return -EOPNOTSUPP;
-+
-+	if (speed == 200 && port != 0)
-+		return -EOPNOTSUPP;
-+
-+	if (speed == 2500 && port < 5)
-+		return -EOPNOTSUPP;
-+
-+	return mv88e6xxx_port_set_speed(chip, port, speed, !port, true);
-+}
-+
- /* Support 10, 100, 200, 1000 Mbps (e.g. 88E6352 family) */
- int mv88e6352_port_set_speed(struct mv88e6xxx_chip *chip, int port, int speed)
- {
-diff --git a/drivers/net/dsa/mv88e6xxx/port.h b/drivers/net/dsa/mv88e6xxx/port.h
-index ccdc67fe90799..8a645683cf6b1 100644
---- a/drivers/net/dsa/mv88e6xxx/port.h
-+++ b/drivers/net/dsa/mv88e6xxx/port.h
-@@ -262,6 +262,7 @@ int mv88e6xxx_port_set_duplex(struct mv88e6xxx_chip *chip, int port, int dup);
++/*
++ * Locking orders
++ *
++ * xfs_buf_ioacct_inc:
++ * xfs_buf_ioacct_dec:
++ *	b_sema (caller holds)
++ *	  b_lock
++ *
++ * xfs_buf_stale:
++ *	b_sema (caller holds)
++ *	  b_lock
++ *	    lru_lock
++ *
++ * xfs_buf_rele:
++ *	b_lock
++ *	  pag_buf_lock
++ *	    lru_lock
++ *
++ * xfs_buftarg_wait_rele
++ *	lru_lock
++ *	  b_lock (trylock due to inversion)
++ *
++ * xfs_buftarg_isolate
++ *	lru_lock
++ *	  b_lock (trylock due to inversion)
++ */
  
- int mv88e6065_port_set_speed(struct mv88e6xxx_chip *chip, int port, int speed);
- int mv88e6185_port_set_speed(struct mv88e6xxx_chip *chip, int port, int speed);
-+int mv88e6341_port_set_speed(struct mv88e6xxx_chip *chip, int port, int speed);
- int mv88e6352_port_set_speed(struct mv88e6xxx_chip *chip, int port, int speed);
- int mv88e6390_port_set_speed(struct mv88e6xxx_chip *chip, int port, int speed);
- int mv88e6390x_port_set_speed(struct mv88e6xxx_chip *chip, int port, int speed);
+ static inline int
+ xfs_buf_is_vmapped(
+@@ -983,8 +1009,18 @@ xfs_buf_rele(
+ 
+ 	ASSERT(atomic_read(&bp->b_hold) > 0);
+ 
+-	release = atomic_dec_and_lock(&bp->b_hold, &pag->pag_buf_lock);
++	/*
++	 * We grab the b_lock here first to serialise racing xfs_buf_rele()
++	 * calls. The pag_buf_lock being taken on the last reference only
++	 * serialises against racing lookups in xfs_buf_find(). IOWs, the second
++	 * to last reference we drop here is not serialised against the last
++	 * reference until we take bp->b_lock. Hence if we don't grab b_lock
++	 * first, the last "release" reference can win the race to the lock and
++	 * free the buffer before the second-to-last reference is processed,
++	 * leading to a use-after-free scenario.
++	 */
+ 	spin_lock(&bp->b_lock);
++	release = atomic_dec_and_lock(&bp->b_hold, &pag->pag_buf_lock);
+ 	if (!release) {
+ 		/*
+ 		 * Drop the in-flight state if the buffer is already on the LRU
 -- 
 2.20.1
 
