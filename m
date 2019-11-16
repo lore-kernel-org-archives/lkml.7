@@ -2,98 +2,122 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA66C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB12DC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDA87206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920550;
-	bh=gBTeW+pCyoMom3SAv8uExhGU7eCyM3+qFj3QzheXUr0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NYIPtBO/hVzHD+/FVh5bEDH++Q3t6HsdPRO1R5SGorcTwfIFJJi7bTFWvznavN6wL
-	 K01GO264pzx0Sc+jPQnBSgIOVFZhDj4fhiUqvmURMIjw1fANt6APGzhsUzxydNvgvK
-	 zmO5vqRmRy/uTVuLQ5lfsnDfABcYFplNtGen7BcU=
+	by mail.kernel.org (Postfix) with ESMTP id 8FE93206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="bS92H15s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731100AbfKPQJJ (ORCPT
+        id S1731421AbfKPQJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:09:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730390AbfKPPt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:49:59 -0500
-Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13E1E20855;
-        Sat, 16 Nov 2019 15:49:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919398;
-        bh=gBTeW+pCyoMom3SAv8uExhGU7eCyM3+qFj3QzheXUr0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LDe07VVpk3hztuaIbHmodKd8VMKZ9Hhg1Vop+wWrbRWLV2CJAjNFxLUO8degtQq5R
-         XjQyfgJxqKmRoWx31eyFqz1CceJY4kDKxZ2T7RNkfqSHT3YF8CMSss2Azw2fGaF67a
-         ZYE7XgFUbZa+SJsbmy0jNEwT4ufHoABhMr+3KAIU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Ernesto=20A=2E=20Fern=C3=A1ndez?= 
-        <ernesto.mnd.fernandez@gmail.com>,
-        Vyacheslav Dubeyko <slava@dubeyko.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 101/150] hfsplus: update timestamps on truncate()
-Date:   Sat, 16 Nov 2019 10:46:39 -0500
-Message-Id: <20191116154729.9573-101-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
-References: <20191116154729.9573-1-sashal@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Sat, 16 Nov 2019 11:09:17 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46758 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731085AbfKPQJN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 11:09:13 -0500
+Received: by mail-pl1-f194.google.com with SMTP id l4so6831246plt.13
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 08:09:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=rbbVOSmMuRnIGDknBjXXfC0fBPASDKYoYUrmo5eNFgM=;
+        b=bS92H15s+5qWORaPy/KpGyd9SsgC655KqQYuSsU9pKNGfk9SJTLqRih+4XIq+ZkOS2
+         +/poIX3KAggHJsmIL0jJM+EurfmUKZRoJ9Bb5rc9SAaN4mUnuVL0u4psU6cMne+FN7vp
+         37n6UpKt+0TZ3XSqaIb7jbEgq6pL0UEzQ6MkRCpb5Id5hwADu+fONtfsT2zYci08+irc
+         miWPM6cogv/xFmoqjRR41ZkQlbnm7Oql0Oxp4oS3u9d+DJyiLsEyCDgbacdlxGsCwHWr
+         ZGwZtccBiL2U/y9DsrLyrdaGrRPsceSG8ipedytZVQBCAmEN0NK/dNnPTzzBSvM1VLxH
+         9XgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=rbbVOSmMuRnIGDknBjXXfC0fBPASDKYoYUrmo5eNFgM=;
+        b=F57FyZTnqn6CC30lMfx1naGBjDG16NU1HDsR8OCnaEw/y9MWeQjOkpTlwqUGA73q72
+         KUlPZluqOpIHSwf77zRddrdOpQQnY1ePWkfy8FsG04Isd4Fyw7NGtzBFFm4pVUxFFT3y
+         Hrn5FKwozAhfWqANh14JQFymWba6Pm53++hN7L0GnnT3Mne3b/BF9Ozapx6XBgRWl1DT
+         +Guefmyxgg/2KDvjamOXEi62AK9PmzlzoAi6xQ58TCNtELDL7D1JCU6+BvbcvVq3ZkFQ
+         WMzc2w42aOE0WQ7r3krgqWTsbe5vA7PxaaDeKQLhnKsh/DjAlvICGCnTXOWBxAiwFqgo
+         d0Qw==
+X-Gm-Message-State: APjAAAVNdaxBkJHXb6ipgj+z+J8fVlBajUMaCqTF/tXTgfthWHaWcg6x
+        T7qDwbZ3HZfrREWeKkyexSYzMk1RMtRRyQ==
+X-Google-Smtp-Source: APXvYqzE6Pi8rl2FiPhLgHMfAfWxumnilALnvG8Q4I2VlRDOhJtY5abcO5MMFPuq46JoQGSuS01GjA==
+X-Received: by 2002:a17:90b:3015:: with SMTP id hg21mr27434228pjb.96.1573920552189;
+        Sat, 16 Nov 2019 08:09:12 -0800 (PST)
+Received: from ?IPv6:2601:646:c200:1ef2:28e6:fc7a:c382:8b6f? ([2601:646:c200:1ef2:28e6:fc7a:c382:8b6f])
+        by smtp.gmail.com with ESMTPSA id r33sm13936396pjb.5.2019.11.16.08.09.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 16 Nov 2019 08:09:11 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v25 10/12] LRNG - add TRNG support
+Date:   Sat, 16 Nov 2019 08:09:09 -0800
+Message-Id: <DDB907EA-3FCC-40C7-B55B-A84BC77FD7A1@amacapital.net>
+References: <5390778.VeFRgus4bQ@positron.chronox.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>
+In-Reply-To: <5390778.VeFRgus4bQ@positron.chronox.de>
+To:     =?utf-8?Q?Stephan_M=C3=BCller?= <smueller@chronox.de>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
 
-[ Upstream commit dc8844aada735890a6de109bef327f5df36a982e ]
 
-The vfs takes care of updating ctime and mtime on ftruncate(), but on
-truncate() it must be done by the module.
+> On Nov 16, 2019, at 1:40 AM, Stephan M=C3=BCller <smueller@chronox.de> wro=
+te:
+>=20
+> =EF=BB=BFThe True Random Number Generator (TRNG) provides a random number
+> generator with prediction resistance (SP800-90A terminology) or an NTG.1
+> (AIS 31 terminology).
+>=20
 
-This patch can be tested with xfstests generic/313.
+...
 
-Link: http://lkml.kernel.org/r/9beb0913eea37288599e8e1b7cec8768fb52d1b8.1539316825.git.ernesto.mnd.fernandez@gmail.com
-Signed-off-by: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
-Reviewed-by: Vyacheslav Dubeyko <slava@dubeyko.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/hfsplus/inode.c | 1 +
- 1 file changed, 1 insertion(+)
+> The secondary DRNGs seed from the TRNG if it is present. In addition,
+> the /dev/random device accesses the TRNG.
+>=20
+> If the TRNG is disabled, the secondary DRNGs seed from the entropy pool
+> and /dev/random behaves like getrandom(2).
 
-diff --git a/fs/hfsplus/inode.c b/fs/hfsplus/inode.c
-index 190c60efbc998..5b31f4730ee9c 100644
---- a/fs/hfsplus/inode.c
-+++ b/fs/hfsplus/inode.c
-@@ -262,6 +262,7 @@ static int hfsplus_setattr(struct dentry *dentry, struct iattr *attr)
- 		}
- 		truncate_setsize(inode, attr->ia_size);
- 		hfsplus_file_truncate(inode);
-+		inode->i_mtime = inode->i_ctime = current_time(inode);
- 	}
- 
- 	setattr_copy(inode, attr);
--- 
-2.20.1
+As mentioned before, I don=E2=80=99t like this API.  An application that, fo=
+r some reason, needs a TRNG, should have an API by which it either gets a TR=
+NG or an error. Similarly, an application that wants cryptographically secur=
+e random numbers efficiently should have an API that does that.  With your d=
+esign, /dev/random tries to cater to both use cases, but one of the use case=
+s fails depending on kernel config.
 
+I think /dev/random should wait for enough entropy to initialize the system b=
+ut should not block after that. A TRNG should have an entirely new API that i=
+s better than /dev/random.
