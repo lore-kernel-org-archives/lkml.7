@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47977C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260A4C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C8542081E
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E408620885
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919308;
-	bh=AEKuXHxzOlWw1jjhUhJvnxQdyfazbBauDavrgiai+r0=;
+	s=default; t=1573919314;
+	bh=J1to47OMKRkj9YZVUv1UjENY/JLzYU8gnUrjNEuIuok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=joPi1q9UBJvsMntNBt8K9x+jDFGuLtJL6QvoXjbewgVP6JDqnkDYuZCUvwn106PuJ
-	 cE8PHB8inB2ITkDGYu54Hw/8dPWy3/OTMCFUDlrPRJwSGrS85LssG+GoWR017o9vxa
-	 yQtbLD2uN9dpgGW9wBhP0nbaUeERuodxQ8TdFuWU=
+	b=1bhqQP6d/rf/uqIbkaUyx+v9Ql+Fegag4E7HfQla/gsKszjGuJR9E2DXuSOtF7JS7
+	 bkGhVarxJufD4LE2od/b57VugY1lWmZ95+arqZwHNUzegv7NVXkcIHpJUNge770Oas
+	 FvArWXAcxdGzgHrOnA6yC4kPFwK7Im9vNVXhvnng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbfKPPs1 (ORCPT
+        id S1730082AbfKPPsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:48:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55136 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:48:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729967AbfKPPsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:48:12 -0500
+        id S1730014AbfKPPsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:48:20 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD19320815;
-        Sat, 16 Nov 2019 15:48:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BB22208CD;
+        Sat, 16 Nov 2019 15:48:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919292;
-        bh=AEKuXHxzOlWw1jjhUhJvnxQdyfazbBauDavrgiai+r0=;
+        s=default; t=1573919299;
+        bh=J1to47OMKRkj9YZVUv1UjENY/JLzYU8gnUrjNEuIuok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l3PLFyjpRSafXWmJ9lZ2xfuAXxs9AkGdDZTuv3B8VtUHCUGd0GwL0BpMo4xIYqrTX
-         OPvj+3Ai94HWiSUnlzVpCT7Y8OF+7KUhFmZekQdcg3fx+mrgiQ1B5Vi+HVvQGvAN2Z
-         aL1ptYBCi3mkdnXrLJWdzRIcbcWCQlk2VMbP58Iw=
+        b=c3lRVnwQcniJuFnm21I8RTGNQevOD9XB3SuFVBfhONmsT8zJFjVR7mGZcCUkKVemR
+         xSkBJzJ268GuxIRNn8XAN0JKcU+BKWevMkHmANCdC1p8pK1yZZYKBOloAFKym7eEpX
+         fF0hsix1M1jbJ+ReSBx0maWb3OENvu16H9Mi9mwU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 038/150] ASoC: tegra_sgtl5000: fix device_node refcounting
-Date:   Sat, 16 Nov 2019 10:45:36 -0500
-Message-Id: <20191116154729.9573-38-sashal@kernel.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 046/150] PM / Domains: Deal with multiple states but no governor in genpd
+Date:   Sat, 16 Nov 2019 10:45:44 -0500
+Message-Id: <20191116154729.9573-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,72 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit a85227da2dcc291b762c8482a505bc7d0d2d4b07 ]
+[ Upstream commit 2c9b7f8772033cc8bafbd4eefe2ca605bf3eb094 ]
 
-Similar to the following:
+A caller of pm_genpd_init() that provides some states for the genpd via the
+->states pointer in the struct generic_pm_domain, should also provide a
+governor. This because it's the job of the governor to pick a state that
+satisfies the constraints.
 
-commit 4321723648b0 ("ASoC: tegra_alc5632: fix device_node refcounting")
+Therefore, let's print a warning to inform the user about such bogus
+configuration and avoid to bail out, by instead picking the shallowest
+state before genpd invokes the ->power_off() callback.
 
-commit 7c5dfd549617 ("ASoC: tegra: fix device_node refcounting")
-
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Lina Iyer <ilina@codeaurora.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/tegra/tegra_sgtl5000.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ drivers/base/power/domain.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/sound/soc/tegra/tegra_sgtl5000.c b/sound/soc/tegra/tegra_sgtl5000.c
-index 45a4aa9d2a479..901457da25ec3 100644
---- a/sound/soc/tegra/tegra_sgtl5000.c
-+++ b/sound/soc/tegra/tegra_sgtl5000.c
-@@ -149,14 +149,14 @@ static int tegra_sgtl5000_driver_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev,
- 			"Property 'nvidia,i2s-controller' missing/invalid\n");
- 		ret = -EINVAL;
--		goto err;
-+		goto err_put_codec_of_node;
+diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+index c276ba1c0a19e..e811f24148897 100644
+--- a/drivers/base/power/domain.c
++++ b/drivers/base/power/domain.c
+@@ -369,6 +369,10 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
+ 			return -EAGAIN;
  	}
  
- 	tegra_sgtl5000_dai.platform_of_node = tegra_sgtl5000_dai.cpu_of_node;
- 
- 	ret = tegra_asoc_utils_init(&machine->util_data, &pdev->dev);
- 	if (ret)
--		goto err;
-+		goto err_put_cpu_of_node;
- 
- 	ret = snd_soc_register_card(card);
- 	if (ret) {
-@@ -169,6 +169,13 @@ static int tegra_sgtl5000_driver_probe(struct platform_device *pdev)
- 
- err_fini_utils:
- 	tegra_asoc_utils_fini(&machine->util_data);
-+err_put_cpu_of_node:
-+	of_node_put(tegra_sgtl5000_dai.cpu_of_node);
-+	tegra_sgtl5000_dai.cpu_of_node = NULL;
-+	tegra_sgtl5000_dai.platform_of_node = NULL;
-+err_put_codec_of_node:
-+	of_node_put(tegra_sgtl5000_dai.codec_of_node);
-+	tegra_sgtl5000_dai.codec_of_node = NULL;
- err:
- 	return ret;
- }
-@@ -183,6 +190,12 @@ static int tegra_sgtl5000_driver_remove(struct platform_device *pdev)
- 
- 	tegra_asoc_utils_fini(&machine->util_data);
- 
-+	of_node_put(tegra_sgtl5000_dai.cpu_of_node);
-+	tegra_sgtl5000_dai.cpu_of_node = NULL;
-+	tegra_sgtl5000_dai.platform_of_node = NULL;
-+	of_node_put(tegra_sgtl5000_dai.codec_of_node);
-+	tegra_sgtl5000_dai.codec_of_node = NULL;
++	/* Default to shallowest state. */
++	if (!genpd->gov)
++		genpd->state_idx = 0;
 +
- 	return ret;
- }
+ 	if (genpd->power_off) {
+ 		int ret;
  
+@@ -1598,6 +1602,8 @@ int pm_genpd_init(struct generic_pm_domain *genpd,
+ 		ret = genpd_set_default_power_state(genpd);
+ 		if (ret)
+ 			return ret;
++	} else if (!gov) {
++		pr_warn("%s : no governor for states\n", genpd->name);
+ 	}
+ 
+ 	mutex_lock(&gpd_list_lock);
 -- 
 2.20.1
 
