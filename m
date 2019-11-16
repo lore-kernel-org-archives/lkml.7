@@ -2,52 +2,52 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F51C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5106FC43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2100621823
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E4C321823
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:03:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920202;
-	bh=vm84ASlpradK3YRp36649IF0WvfGXEHeTtm8gY3B1AY=;
+	s=default; t=1573920211;
+	bh=MAOsExUO1LX6olohxHbtXv7sXIynRIuvN8sG2DMYCAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I7Kt/kFRUItLaY+mZ3Uk0FZ9uQ+tiDfLjS9KabUltYCNxxxEpbTYTGFu0ekanRG3z
-	 vuu+pIXi0bsJAPbHXVKZozWl2YXpBvoqO/qdrq8CDz5zM98HCc1VA250S18/1FiZQk
-	 8ASS9/e2Bgtlb/h+u2V719dAlQxyGvmvm4mlmDvw=
+	b=t0O9H/SNoTQhzDo2vejUXGF21ekIwbyuJE+NgEUA1pP4EaCfv1Jhkj/kXwRcAEb9J
+	 N7IKxcwV0Lkdj0AW9he7qwHy8MZoGbLd1i2XdF+Cr4h5LOXDBdmCIOZvM7c4XFmD3I
+	 /yDGSeN0hQl6pfBByCW+ru539zi0RJQ+woMgUB38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731578AbfKPQDR (ORCPT
+        id S1730954AbfKPPwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:03:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60936 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:52:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730061AbfKPPwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:52:04 -0500
+        id S1730881AbfKPPv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:51:59 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1730220B7C;
-        Sat, 16 Nov 2019 15:52:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E2DF20871;
+        Sat, 16 Nov 2019 15:51:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919524;
-        bh=vm84ASlpradK3YRp36649IF0WvfGXEHeTtm8gY3B1AY=;
+        s=default; t=1573919518;
+        bh=MAOsExUO1LX6olohxHbtXv7sXIynRIuvN8sG2DMYCAI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l3Pec1SGmiaWs8IdNfu0L9pA+n2FUkGCz6HQAJjmK3+FWfdTYtDMfmA8qFqTqKWbp
-         CKTpuamxdIzRVpQZlMU0vBXrOqwfkdtveyKUEkXX+TYkZMFTk739/O+1KDU9moWUa2
-         ahwOh+jPG6uZc73hPAmNL3g376pKEkWzk28EhOv4=
+        b=L2tfFxWQFMJHmHA+rMv4dola2FaeKn5V8snW3FAugl/VKwluBWoVCK6Pid4b6X+fA
+         kwKQA4oRG6vtC5eeroKWp4oXcuKycQ7tmoul8kG++rUzr2afO1rpSwAvPM3oD1Py5F
+         1jXj5nFR8o/BWcB7vQqeMstkQE4KyzlVD7UyZ+00=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabio Estevam <fabio.estevam@nxp.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 46/99] mfd: mc13xxx-core: Fix PMIC shutdown when reading ADC values
-Date:   Sat, 16 Nov 2019 10:50:09 -0500
-Message-Id: <20191116155103.10971-46-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.9 40/99] rtc: s35390a: Change buf's type to u8 in s35390a_init
+Date:   Sat, 16 Nov 2019 10:50:03 -0500
+Message-Id: <20191116155103.10971-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -60,57 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam@nxp.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 55143439b7b501882bea9d95a54adfe00ffc79a3 ]
+[ Upstream commit ef0f02fd69a02b50e468a4ddbe33e3d81671e248 ]
 
-When trying to read any MC13892 ADC channel on a imx51-babbage board:
+Clang warns:
 
-The MC13892 PMIC shutdowns completely.
+drivers/rtc/rtc-s35390a.c:124:27: warning: implicit conversion from
+'int' to 'char' changes value from 192 to -64 [-Wconstant-conversion]
+        buf = S35390A_FLAG_RESET | S35390A_FLAG_24H;
+            ~ ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+1 warning generated.
 
-After debugging this issue and comparing the MC13892 and MC13783
-initializations done in the vendor kernel, it was noticed that the
-CHRGRAWDIV bit of the ADC0 register was not being set.
+Update buf to be an unsigned 8-bit integer, which matches the buf member
+in struct i2c_msg.
 
-This bit is set by default after power on, but the driver was
-clearing it.
-
-After setting this bit it is possible to read the ADC values correctly.
-
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
-Tested-by: Chris Healy <cphealy@gmail.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+https://github.com/ClangBuiltLinux/linux/issues/145
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/mc13xxx-core.c  | 3 ++-
- include/linux/mfd/mc13xxx.h | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/rtc/rtc-s35390a.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/mc13xxx-core.c b/drivers/mfd/mc13xxx-core.c
-index 6c16f170529f5..75d52034f89da 100644
---- a/drivers/mfd/mc13xxx-core.c
-+++ b/drivers/mfd/mc13xxx-core.c
-@@ -278,7 +278,8 @@ int mc13xxx_adc_do_conversion(struct mc13xxx *mc13xxx, unsigned int mode,
- 	if (ret)
- 		goto out;
- 
--	adc0 = MC13XXX_ADC0_ADINC1 | MC13XXX_ADC0_ADINC2;
-+	adc0 = MC13XXX_ADC0_ADINC1 | MC13XXX_ADC0_ADINC2 |
-+	       MC13XXX_ADC0_CHRGRAWDIV;
- 	adc1 = MC13XXX_ADC1_ADEN | MC13XXX_ADC1_ADTRIGIGN | MC13XXX_ADC1_ASC;
- 
- 	if (channel > 7)
-diff --git a/include/linux/mfd/mc13xxx.h b/include/linux/mfd/mc13xxx.h
-index 638222e43e489..93011c61aafd2 100644
---- a/include/linux/mfd/mc13xxx.h
-+++ b/include/linux/mfd/mc13xxx.h
-@@ -247,6 +247,7 @@ struct mc13xxx_platform_data {
- #define MC13XXX_ADC0_TSMOD0		(1 << 12)
- #define MC13XXX_ADC0_TSMOD1		(1 << 13)
- #define MC13XXX_ADC0_TSMOD2		(1 << 14)
-+#define MC13XXX_ADC0_CHRGRAWDIV		(1 << 15)
- #define MC13XXX_ADC0_ADINC1		(1 << 16)
- #define MC13XXX_ADC0_ADINC2		(1 << 17)
+diff --git a/drivers/rtc/rtc-s35390a.c b/drivers/rtc/rtc-s35390a.c
+index 5dab4665ca3bd..3e0eea3aa876d 100644
+--- a/drivers/rtc/rtc-s35390a.c
++++ b/drivers/rtc/rtc-s35390a.c
+@@ -106,7 +106,7 @@ static int s35390a_get_reg(struct s35390a *s35390a, int reg, char *buf, int len)
+  */
+ static int s35390a_reset(struct s35390a *s35390a, char *status1)
+ {
+-	char buf;
++	u8 buf;
+ 	int ret;
+ 	unsigned initcount = 0;
  
 -- 
 2.20.1
