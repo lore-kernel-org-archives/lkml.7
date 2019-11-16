@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C39ACC43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7F3C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93ED82089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AD852089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920576;
-	bh=S0mzF6aUuCpWNC8VmiehPqJiME194Ey3syXdysl0clM=;
+	s=default; t=1573920579;
+	bh=PZrL9vWqCTiFw2xV4xCtIutuGc0aIhE7zE1PDg4v3/M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q+WxgeyY1e3o82brJPRyX+bDjY9xfrSHz2j+gNu6yAvDNxfdvId0BvIhJxmp0cHo4
-	 Q5vA8rVA+UlZZ75z55tOda+LE3+yZsYUsm5coDm/+grOS5ESxkS+IeBrlg8MJy8Gi3
-	 MumsWo/zHqn56+WFUF6xdmI8vVbzqwIQz3RqobNI=
+	b=aPVTpAGhFSazbE9a8gUM8o9Dv/IwUj06j+9i6gphRyHEYc6ZGvBLKLmVEc2MvNXL8
+	 23gD7G4wv2uZg3AfDF4BAQFL1YktFF/Z3fIcFXlDb/x4E9dBGM6C+JyFHiieDWCZOD
+	 h8LeBvHp0IMolj8HGQj0BSkGHCs4pmHHvFICqYHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730356AbfKPPth (ORCPT
+        id S1727993AbfKPPtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:49:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57160 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:49:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730279AbfKPPtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:49:32 -0500
+        id S1730320AbfKPPt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:49:26 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8000620870;
-        Sat, 16 Nov 2019 15:49:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A93020870;
+        Sat, 16 Nov 2019 15:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919371;
-        bh=S0mzF6aUuCpWNC8VmiehPqJiME194Ey3syXdysl0clM=;
+        s=default; t=1573919365;
+        bh=PZrL9vWqCTiFw2xV4xCtIutuGc0aIhE7zE1PDg4v3/M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hoGZFIijQRPC0rpSWowznCHDynvU764TikZSv4StvDJgY8rDLUG61zFd4kHhEVYHH
-         TJyVqiLHLGtSSO0sYyDCG/jFvLhhsRQAFFrApmbBNttthgOWFtmf5/mONou2LUg7Ae
-         qDfQ1ykp3OaELrwsT+gaBqfnI9z70WFnmwCG+T7M=
+        b=V6PlZZqPcDvDOiHGjIkG32U1y3ENQJy61urFVoYSC2juGfZ6AFu0g5rF1MtgaocKN
+         B92O05DB69DTfpetnmcGg9oS9fX3dhMDobdmVqugzmhvazuJTj4zN0qwoXT6+sr3Ut
+         YsNxHu0U2l4+xVhwfpbtNvIBTNzUa956S/aQH8Vc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 091/150] selftests/powerpc/switch_endian: Fix out-of-tree build
-Date:   Sat, 16 Nov 2019 10:46:29 -0500
-Message-Id: <20191116154729.9573-91-sashal@kernel.org>
+Cc:     Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 087/150] um: Make line/tty semantics use true write IRQ
+Date:   Sat, 16 Nov 2019 10:46:25 -0500
+Message-Id: <20191116154729.9573-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -59,31 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Anton Ivanov <anton.ivanov@cambridgegreys.com>
 
-[ Upstream commit 266bac361d5677e61a6815bd29abeb3bdced2b07 ]
+[ Upstream commit 917e2fd2c53eb3c4162f5397555cbd394390d4bc ]
 
-For the out-of-tree build to work we need to tell switch_endian_test
-to look for check-reversed.S in $(OUTPUT).
+This fixes a long standing bug where large amounts of output
+could freeze the tty (most commonly seen on stdio console).
+While the bug has always been there it became more pronounced
+after moving to the new interrupt controller.
 
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+The line semantics are now changed to have true IRQ write
+semantics which should further improve the tty/line subsystem
+stability and performance
+
+Signed-off-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/powerpc/switch_endian/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ arch/um/drivers/line.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/powerpc/switch_endian/Makefile b/tools/testing/selftests/powerpc/switch_endian/Makefile
-index 30b8ff8fb82e7..e4cedfe9753d7 100644
---- a/tools/testing/selftests/powerpc/switch_endian/Makefile
-+++ b/tools/testing/selftests/powerpc/switch_endian/Makefile
-@@ -7,6 +7,7 @@ EXTRA_CLEAN = $(OUTPUT)/*.o $(OUTPUT)/check-reversed.S
- 
- include ../../lib.mk
- 
-+$(OUTPUT)/switch_endian_test: ASFLAGS += -I $(OUTPUT)
- $(OUTPUT)/switch_endian_test: $(OUTPUT)/check-reversed.S
- 
- $(OUTPUT)/check-reversed.o: $(OUTPUT)/check.o
+diff --git a/arch/um/drivers/line.c b/arch/um/drivers/line.c
+index 366e57f5e8d63..7e524efed5848 100644
+--- a/arch/um/drivers/line.c
++++ b/arch/um/drivers/line.c
+@@ -261,7 +261,7 @@ static irqreturn_t line_write_interrupt(int irq, void *data)
+ 	if (err == 0) {
+ 		spin_unlock(&line->lock);
+ 		return IRQ_NONE;
+-	} else if (err < 0) {
++	} else if ((err < 0) && (err != -EAGAIN)) {
+ 		line->head = line->buffer;
+ 		line->tail = line->buffer;
+ 	}
 -- 
 2.20.1
 
