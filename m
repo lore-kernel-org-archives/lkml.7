@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34620C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F10C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 079AC2089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D1C521823
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:06:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920390;
-	bh=vBFYOrfj1IE1io4Th6lrRDVblv4ioYm1LhZ/3QjbwXI=;
+	s=default; t=1573920395;
+	bh=gZtgvh8qFeJ0rwP1uNVOTHy9jivYcPY13ibJR/gnb4Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hOn/tbdKPTysuxeOxRsuFVA1SA/LXDWAtbpYxqY6iEy996dF4KDZerXQDYFFsVqwn
-	 /EdmKNtMJ2CBS+QnMBLmZoY/qXrxH+cp9CBhDJede/NfDyaacXD9xSVRVdptqWuFX3
-	 qTZ3dW+wqZsfMqLN+jRkf4wuFSLkFIKpzHMWx5aw=
+	b=YQjaONbv9Q39bMyXJLYM6FdBVOzxgx46US5ISK14ySa/MBomCFmFWnN+kzeUK/a4M
+	 VgDQwRdDWrcGWa7m3qSGdl1u3j9R8VfpNUkT/m6M+r1LR1/oe1NhlauZDORtrDTkji
+	 NKti53XnqqBUQ+0PgG5aZOJPAVtr1y7qdb9LbnsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730634AbfKPQG3 (ORCPT
+        id S1731733AbfKPQGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:06:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59158 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:06:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730625AbfKPPut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:50:49 -0500
+        id S1730613AbfKPPuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:50:46 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76AFC21826;
-        Sat, 16 Nov 2019 15:50:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F45020729;
+        Sat, 16 Nov 2019 15:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919448;
-        bh=vBFYOrfj1IE1io4Th6lrRDVblv4ioYm1LhZ/3QjbwXI=;
+        s=default; t=1573919445;
+        bh=gZtgvh8qFeJ0rwP1uNVOTHy9jivYcPY13ibJR/gnb4Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QDjgWBGjDjiT8pQN0bIj08BqOXQlRlGns4YaOjGmit/SeFgrZiDF/6jVJiOxxZrCg
-         jelsM9pQL6Eqpu8ZPIIEsB8DSkoNuiqTxFKIfQStsRFbS9Q1DFZ4YMv+sJLpL8ZYYU
-         WqR3k8PMR+Twxw6LrOjxVyVWaWIr1dohm2vPVL+0=
+        b=EON9I6ddyOSiwpPweBV8wEt2ZEIj3j/Uov9zDl/q7oCSh96B9NmKY4v/IUq6cUW3H
+         nkkRlCaUzQrjDa9AZYBDcyljxWblz11KHAcXchUOQRC8Mgk3A2wvUHy23yS7uXhZmV
+         kkC+qnMBwAKm1cxL/LiGqiRCpHUe5AMML7sU0yPA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 147/150] i2c: uniphier-f: fix timeout error after reading 8 bytes
-Date:   Sat, 16 Nov 2019 10:47:25 -0500
-Message-Id: <20191116154729.9573-147-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 144/150] pinctrl: zynq: Use define directive for PIN_CONFIG_IO_STANDARD
+Date:   Sat, 16 Nov 2019 10:47:22 -0500
+Message-Id: <20191116154729.9573-144-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -59,94 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit c2a653deaa81f5a750c0dfcbaf9f8e5195cbe4a5 ]
+[ Upstream commit cd8a145a066a1a3beb0ae615c7cb2ee4217418d7 ]
 
-I was totally screwed up in commit eaba68785c2d ("i2c: uniphier-f:
-fix race condition when IRQ is cleared"). Since that commit, if the
-number of read bytes is multiple of the FIFO size (8, 16, 24... bytes),
-the STOP condition could be issued twice, depending on the timing.
-If this happens, the controller will go wrong, resulting in the timeout
-error.
+Clang warns when one enumerated type is implicitly converted to another:
 
-It was more than 3 years ago when I wrote this driver, so my memory
-about this hardware was vague. Please let me correct the description
-in the commit log of eaba68785c2d.
+drivers/pinctrl/pinctrl-zynq.c:985:18: warning: implicit conversion from
+enumeration type 'enum zynq_pin_config_param' to different enumeration
+type 'enum pin_config_param' [-Wenum-conversion]
+        {"io-standard", PIN_CONFIG_IOSTANDARD, zynq_iostd_lvcmos18},
+        ~               ^~~~~~~~~~~~~~~~~~~~~
+drivers/pinctrl/pinctrl-zynq.c:990:16: warning: implicit conversion from
+enumeration type 'enum zynq_pin_config_param' to different enumeration
+type 'enum pin_config_param' [-Wenum-conversion]
+        = { PCONFDUMP(PIN_CONFIG_IOSTANDARD, "IO-standard", NULL, true),
+            ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/pinctrl/pinconf-generic.h:163:11: note: expanded from
+macro 'PCONFDUMP'
+        .param = a, .display = b, .format = c, .has_arg = d     \
+                 ^
+2 warnings generated.
 
-Clearing the IRQ status on exiting the IRQ handler is absolutely
-fine. This controller makes a pause while any IRQ status is asserted.
-If the IRQ status is cleared first, the hardware may start the next
-transaction before the IRQ handler finishes what it supposed to do.
+It is expected that pinctrl drivers can extend pin_config_param because
+of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
+isn't an issue. Most drivers that take advantage of this define the
+PIN_CONFIG variables as constants, rather than enumerated values. Do the
+same thing here so that Clang no longer warns.
 
-This partially reverts the bad commit with clear comments so that I
-will never repeat this mistake.
-
-I also investigated what is happening at the last moment of the read
-mode. The UNIPHIER_FI2C_INT_RF interrupt is asserted a bit earlier
-(by half a period of the clock cycle) than UNIPHIER_FI2C_INT_RB.
-
-I consulted a hardware engineer, and I got the following information:
-
-UNIPHIER_FI2C_INT_RF
-    asserted at the falling edge of SCL at the 8th bit.
-
-UNIPHIER_FI2C_INT_RB
-    asserted at the rising edge of SCL at the 9th (ACK) bit.
-
-In order to avoid calling uniphier_fi2c_stop() twice, check the latter
-interrupt. I also commented this because it is obscure hardware internal.
-
-Fixes: eaba68785c2d ("i2c: uniphier-f: fix race condition when IRQ is cleared")
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-uniphier-f.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ drivers/pinctrl/pinctrl-zynq.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-uniphier-f.c b/drivers/i2c/busses/i2c-uniphier-f.c
-index 928ea9930d17e..dd0687e36a47b 100644
---- a/drivers/i2c/busses/i2c-uniphier-f.c
-+++ b/drivers/i2c/busses/i2c-uniphier-f.c
-@@ -173,8 +173,6 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
- 		"interrupt: enabled_irqs=%04x, irq_status=%04x\n",
- 		priv->enabled_irqs, irq_status);
+diff --git a/drivers/pinctrl/pinctrl-zynq.c b/drivers/pinctrl/pinctrl-zynq.c
+index a0daf27042bd0..90fd37e8207bf 100644
+--- a/drivers/pinctrl/pinctrl-zynq.c
++++ b/drivers/pinctrl/pinctrl-zynq.c
+@@ -971,15 +971,12 @@ enum zynq_io_standards {
+ 	zynq_iostd_max
+ };
  
--	uniphier_fi2c_clear_irqs(priv, irq_status);
--
- 	if (irq_status & UNIPHIER_FI2C_INT_STOP)
- 		goto complete;
+-/**
+- * enum zynq_pin_config_param - possible pin configuration parameters
+- * @PIN_CONFIG_IOSTANDARD: if the pin can select an IO standard, the argument to
++/*
++ * PIN_CONFIG_IOSTANDARD: if the pin can select an IO standard, the argument to
+  *	this parameter (on a custom format) tells the driver which alternative
+  *	IO standard to use.
+  */
+-enum zynq_pin_config_param {
+-	PIN_CONFIG_IOSTANDARD = PIN_CONFIG_END + 1,
+-};
++#define PIN_CONFIG_IOSTANDARD		(PIN_CONFIG_END + 1)
  
-@@ -214,7 +212,13 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
- 
- 	if (irq_status & (UNIPHIER_FI2C_INT_RF | UNIPHIER_FI2C_INT_RB)) {
- 		uniphier_fi2c_drain_rxfifo(priv);
--		if (!priv->len)
-+		/*
-+		 * If the number of bytes to read is multiple of the FIFO size
-+		 * (msg->len == 8, 16, 24, ...), the INT_RF bit is set a little
-+		 * earlier than INT_RB. We wait for INT_RB to confirm the
-+		 * completion of the current message.
-+		 */
-+		if (!priv->len && (irq_status & UNIPHIER_FI2C_INT_RB))
- 			goto data_done;
- 
- 		if (unlikely(priv->flags & UNIPHIER_FI2C_MANUAL_NACK)) {
-@@ -253,6 +257,13 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
- 	}
- 
- handled:
-+	/*
-+	 * This controller makes a pause while any bit of the IRQ status is
-+	 * asserted. Clear the asserted bit to kick the controller just before
-+	 * exiting the handler.
-+	 */
-+	uniphier_fi2c_clear_irqs(priv, irq_status);
-+
- 	spin_unlock(&priv->lock);
- 
- 	return IRQ_HANDLED;
+ static const struct pinconf_generic_params zynq_dt_params[] = {
+ 	{"io-standard", PIN_CONFIG_IOSTANDARD, zynq_iostd_lvcmos18},
 -- 
 2.20.1
 
