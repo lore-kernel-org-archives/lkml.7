@@ -2,541 +2,215 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD595C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 17:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F009CC43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 17:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E9D321847
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 17:12:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573924329;
-	bh=Cgl3QGX61J4ah0YvXTpRjFWq+vurvM+aPGtx1yLb+2c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Npyv0A7ETX4XqTnftB7LoHwR2H4mDrxdJYnpmmpVNeUUDQ1a0OFwj8h72FaanXek3
-	 BTwyZRaUTuHsLTFcvDBG3OrgxMKsyLEEsHxu9MPdMYNzVWyOGmMg7Q4wX5XvdTKTGW
-	 ug8tlGYIFLxUUtC6paLHWNvtoI8UAv1ih1ezN4mg=
+	by mail.kernel.org (Postfix) with ESMTP id C312E214E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 17:12:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbfKPRMI (ORCPT
+        id S1728132AbfKPRM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 12:12:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727568AbfKPRMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 12:12:08 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sat, 16 Nov 2019 12:12:28 -0500
+Received: from pietrobattiston.it ([92.243.7.39]:54826 "EHLO
+        jauntuale.pietrobattiston.it" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727568AbfKPRM1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 12:12:27 -0500
+Received: from amalgama (unknown [IPv6:2a02:578:85b0:500:2a18:9d59:67ec:cc90])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BA97214E0;
-        Sat, 16 Nov 2019 17:12:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573924327;
-        bh=Cgl3QGX61J4ah0YvXTpRjFWq+vurvM+aPGtx1yLb+2c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LZycKMFF8C52YSkqij+ypXyn0GHTSdIGu9Sq+Yu3nLfT5dpe7KQ9DVcJXXVWincqd
-         +ENo/3kuVZ1jcoeqKxC6iOZ/qLysoDe4jCWRSvbBUyn/muySXkicGRSc83hXaoH4QT
-         P8ML4yJUQRzAxN3vqQu/EBbB0MpLqOg97Hw0GKvI=
-Date:   Sat, 16 Nov 2019 16:58:32 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <pmeerw@pmeerw.net>, <gregkh@linuxfoundation.org>,
-        <linux-iio@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        <linux-kernel@vger.kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, <biabeniamin@outlook.com>,
-        <knaack.h@gmx.de>, <robh+dt@kernel.org>,
-        Paul Cercueil <paul.cercueil@analog.com>
-Subject: Re: [PATCH v5 1/4] iio: adc: Add support for AD7091R5 ADC
-Message-ID: <20191116165832.2dcb48c2@archlinux>
-In-Reply-To: <20191115135723.12219-1-beniamin.bia@analog.com>
-References: <20191115135723.12219-1-beniamin.bia@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        (Authenticated sender: giovanni)
+        by jauntuale.pietrobattiston.it (Postfix) with ESMTPSA id A65DAE1E98;
+        Sat, 16 Nov 2019 18:12:24 +0100 (CET)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        by amalgama (Postfix) with ESMTP id 15C803C0340;
+        Sat, 16 Nov 2019 18:12:24 +0100 (CET)
+Subject: Re: [PATCH v2] dell-smm-hwmon: Add support for disabling automatic
+ BIOS fan control
+To:     Guenter Roeck <linux@roeck-us.net>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191116140649.114592-1-gio@debian.org>
+ <20191116145845.xmhki3ckza26eoln@pali>
+ <7bc8ec9a-f559-96c8-36fd-6e11a1420626@roeck-us.net>
+From:   Giovanni Mascellani <gio@debian.org>
+Autocrypt: addr=gio@debian.org; prefer-encrypt=mutual; keydata=
+ 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
+ uq3/WmRPv8r10mXRkWvDuXvi
+Organization: Debian
+Message-ID: <e938f226-f9f1-0c17-865c-45942e9287e8@debian.org>
+Date:   Sat, 16 Nov 2019 18:12:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <7bc8ec9a-f559-96c8-36fd-6e11a1420626@roeck-us.net>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="UBAF0jBTKr1VOH9v6J4ZmEI2uTbgQsYj0"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 15:57:20 +0200
-Beniamin Bia <beniamin.bia@analog.com> wrote:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--UBAF0jBTKr1VOH9v6J4ZmEI2uTbgQsYj0
+Content-Type: multipart/mixed; boundary="AF1lTDNJxtzHz7OsqvLfVNraXivuaePcO";
+ protected-headers="v1"
+From: Giovanni Mascellani <gio@debian.org>
+To: Guenter Roeck <linux@roeck-us.net>, =?UTF-8?Q?Pali_Roh=c3=a1r?=
+ <pali.rohar@gmail.com>
+Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <e938f226-f9f1-0c17-865c-45942e9287e8@debian.org>
+Subject: Re: [PATCH v2] dell-smm-hwmon: Add support for disabling automatic
+ BIOS fan control
+References: <20191116140649.114592-1-gio@debian.org>
+ <20191116145845.xmhki3ckza26eoln@pali>
+ <7bc8ec9a-f559-96c8-36fd-6e11a1420626@roeck-us.net>
+In-Reply-To: <7bc8ec9a-f559-96c8-36fd-6e11a1420626@roeck-us.net>
 
-> From: Paul Cercueil <paul.cercueil@analog.com>
-> 
-> AD7091R5 is 4-Channel, I2C, Ultra Low Power,12-Bit ADC.
-> 
-> This driver will also support AD7091R2/4/8 in the future.
-> 
-> Datasheet:
-> Link: https://www.analog.com/media/en/technical-documentation/data-sheets/ad7091r-5.pdf
-> 
-> Signed-off-by: Paul Cercueil <paul.cercueil@analog.com>
-> Co-developed-by: Beniamin Bia <beniamin.bia@analog.com>
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+--AF1lTDNJxtzHz7OsqvLfVNraXivuaePcO
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+Hi,
 
-Jonathan
+Il 16/11/19 16:53, Guenter Roeck ha scritto:
+>>> =C2=A0 @@ -1135,12 +1183,48 @@ static struct dmi_system_id
+>>> i8k_blacklist_fan_support_dmi_table[] __initdata =3D {
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { }
+>>> =C2=A0 };
+>>> =C2=A0 +struct i8k_manual_fan_data {
+>>> +=C2=A0=C2=A0=C2=A0 unsigned int smm_manual_fan;
+>>> +=C2=A0=C2=A0=C2=A0 unsigned int smm_auto_fan;
+>>> +};
+>>
+>> Just cosmetic suggestion: As this structure contains data for both
+>> manual and automatic mode I would not use "manual" in name. But e.g.
+>> something like "i8k_bios_fan_control_data"...
+>>
+> Or i8k_fan_control_data. Also, "manual" and "auto" for the variable
+> names would be sufficient.
 
-> ---
-> Changes in v5:
-> -nothing changed
-> 
->  drivers/iio/adc/Kconfig        |   7 +
->  drivers/iio/adc/Makefile       |   1 +
->  drivers/iio/adc/ad7091r-base.c | 260 +++++++++++++++++++++++++++++++++
->  drivers/iio/adc/ad7091r-base.h |  25 ++++
->  drivers/iio/adc/ad7091r5.c     | 108 ++++++++++++++
->  5 files changed, 401 insertions(+)
->  create mode 100644 drivers/iio/adc/ad7091r-base.c
->  create mode 100644 drivers/iio/adc/ad7091r-base.h
->  create mode 100644 drivers/iio/adc/ad7091r5.c
-> 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 7e3286265a38..80b1b9551749 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -22,6 +22,13 @@ config AD7124
->  	  To compile this driver as a module, choose M here: the module will be
->  	  called ad7124.
->  
-> +config AD7091R5
-> +	tristate "Analog Devices AD7091R5 ADC Driver"
-> +	depends on I2C
-> +	select REGMAP_I2C
-> +	help
-> +	  Say yes here to build support for Analog Devices AD7091R-5 ADC.
-> +
->  config AD7266
->  	tristate "Analog Devices AD7265/AD7266 ADC driver"
->  	depends on SPI_MASTER
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index ef9cc485fb67..55e44735aaac 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -6,6 +6,7 @@
->  # When adding new entries keep the list in alphabetical order
->  obj-$(CONFIG_AD_SIGMA_DELTA) += ad_sigma_delta.o
->  obj-$(CONFIG_AD7124) += ad7124.o
-> +obj-$(CONFIG_AD7091R5) += ad7091r5.o ad7091r-base.o
->  obj-$(CONFIG_AD7266) += ad7266.o
->  obj-$(CONFIG_AD7291) += ad7291.o
->  obj-$(CONFIG_AD7298) += ad7298.o
-> diff --git a/drivers/iio/adc/ad7091r-base.c b/drivers/iio/adc/ad7091r-base.c
-> new file mode 100644
-> index 000000000000..854de7c654c2
-> --- /dev/null
-> +++ b/drivers/iio/adc/ad7091r-base.c
-> @@ -0,0 +1,260 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * AD7091RX Analog to Digital converter driver
-> + *
-> + * Copyright 2014-2019 Analog Devices Inc.
-> + */
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/iio/events.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +
-> +#include "ad7091r-base.h"
-> +
-> +#define AD7091R_REG_RESULT  0
-> +#define AD7091R_REG_CHANNEL 1
-> +#define AD7091R_REG_CONF    2
-> +#define AD7091R_REG_ALERT   3
-> +#define AD7091R_REG_CH_LOW_LIMIT(ch) ((ch) * 3 + 4)
-> +#define AD7091R_REG_CH_HIGH_LIMIT(ch) ((ch) * 3 + 5)
-> +#define AD7091R_REG_CH_HYSTERESIS(ch) ((ch) * 3 + 6)
-> +
-> +/* AD7091R_REG_RESULT */
-> +#define AD7091R_REG_RESULT_CH_ID(x)	    (((x) >> 13) & 0x3)
-> +#define AD7091R_REG_RESULT_CONV_RESULT(x)   ((x) & 0xfff)
-> +
-> +/* AD7091R_REG_CONF */
-> +#define AD7091R_REG_CONF_AUTO   BIT(8)
-> +#define AD7091R_REG_CONF_CMD    BIT(10)
-> +
-> +#define AD7091R_REG_CONF_MODE_MASK  \
-> +	(AD7091R_REG_CONF_AUTO | AD7091R_REG_CONF_CMD)
-> +
-> +enum ad7091r_mode {
-> +	AD7091R_MODE_SAMPLE,
-> +	AD7091R_MODE_COMMAND,
-> +	AD7091R_MODE_AUTOCYCLE,
-> +};
-> +
-> +struct ad7091r_state {
-> +	struct device *dev;
-> +	struct regmap *map;
-> +	const struct ad7091r_chip_info *chip_info;
-> +	enum ad7091r_mode mode;
-> +	struct mutex lock; /*lock to prevent concurent reads */
-> +};
-> +
-> +static int ad7091r_set_mode(struct ad7091r_state *st, enum ad7091r_mode mode)
-> +{
-> +	int ret, conf;
-> +
-> +	switch (mode) {
-> +	case AD7091R_MODE_SAMPLE:
-> +		conf = 0;
-> +		break;
-> +	case AD7091R_MODE_COMMAND:
-> +		conf = AD7091R_REG_CONF_CMD;
-> +		break;
-> +	case AD7091R_MODE_AUTOCYCLE:
-> +		conf = AD7091R_REG_CONF_AUTO;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = regmap_update_bits(st->map, AD7091R_REG_CONF,
-> +				 AD7091R_REG_CONF_MODE_MASK, conf);
-> +	if (ret)
-> +		return ret;
-> +
-> +	st->mode = mode;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ad7091r_set_channel(struct ad7091r_state *st, unsigned int channel)
-> +{
-> +	unsigned int dummy;
-> +	int ret;
-> +
-> +	/* AD7091R_REG_CHANNEL specified which channels to be converted */
-> +	ret = regmap_write(st->map, AD7091R_REG_CHANNEL,
-> +			BIT(channel) | (BIT(channel) << 8));
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * There is a latency of one conversion before the channel conversion
-> +	 * sequence is updated
-> +	 */
-> +	return regmap_read(st->map, AD7091R_REG_RESULT, &dummy);
-> +}
-> +
-> +static int ad7091r_read_one(struct iio_dev *iio_dev,
-> +		unsigned int channel, unsigned int *read_val)
-> +{
-> +	struct ad7091r_state *st = iio_priv(iio_dev);
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	ret = ad7091r_set_channel(st, channel);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_read(st->map, AD7091R_REG_RESULT, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (AD7091R_REG_RESULT_CH_ID(val) != channel)
-> +		return -EIO;
-> +
-> +	*read_val = AD7091R_REG_RESULT_CONV_RESULT(val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ad7091r_read_raw(struct iio_dev *iio_dev,
-> +			   struct iio_chan_spec const *chan,
-> +			   int *val, int *val2, long m)
-> +{
-> +	struct ad7091r_state *st = iio_priv(iio_dev);
-> +	unsigned int read_val;
-> +	int ret;
-> +
-> +	mutex_lock(&st->lock);
-> +
-> +	switch (m) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		if (st->mode != AD7091R_MODE_COMMAND) {
-> +			ret = -EBUSY;
-> +			goto unlock;
-> +		}
-> +
-> +		ret = ad7091r_read_one(iio_dev, chan->channel, &read_val);
-> +		if (ret)
-> +			goto unlock;
-> +
-> +		*val = read_val;
-> +		ret = IIO_VAL_INT;
-> +		break;
-> +
-> +	default:
-> +		ret = -EINVAL;
-> +		break;
-> +	}
-> +
-> +unlock:
-> +	mutex_unlock(&st->lock);
-> +	return ret;
-> +}
-> +
-> +static const struct iio_info ad7091r_info = {
-> +	.read_raw = ad7091r_read_raw,
-> +};
-> +
-> +static irqreturn_t ad7091r_event_handler(int irq, void *private)
-> +{
-> +	struct ad7091r_state *st = (struct ad7091r_state *) private;
-> +	struct iio_dev *iio_dev = dev_get_drvdata(st->dev);
-> +	unsigned int i, read_val;
-> +	int ret;
-> +	s64 timestamp = iio_get_time_ns(iio_dev);
-> +
-> +	ret = regmap_read(st->map, AD7091R_REG_ALERT, &read_val);
-> +	if (ret)
-> +		return IRQ_HANDLED;
-> +
-> +	for (i = 0; i < st->chip_info->num_channels; i++) {
-> +		if (read_val & BIT(i * 2))
-> +			iio_push_event(iio_dev,
-> +					IIO_UNMOD_EVENT_CODE(IIO_VOLTAGE, i,
-> +						IIO_EV_TYPE_THRESH,
-> +						IIO_EV_DIR_RISING), timestamp);
-> +		if (read_val & BIT(i * 2 + 1))
-> +			iio_push_event(iio_dev,
-> +					IIO_UNMOD_EVENT_CODE(IIO_VOLTAGE, i,
-> +						IIO_EV_TYPE_THRESH,
-> +						IIO_EV_DIR_FALLING), timestamp);
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +int ad7091r_probe(struct device *dev, const char *name,
-> +		const struct ad7091r_chip_info *chip_info,
-> +		struct regmap *map, int irq)
-> +{
-> +	struct iio_dev *iio_dev;
-> +	struct ad7091r_state *st;
-> +	int ret;
-> +
-> +	iio_dev = devm_iio_device_alloc(dev, sizeof(*st));
-> +	if (!iio_dev)
-> +		return -ENOMEM;
-> +
-> +	st = iio_priv(iio_dev);
-> +	st->dev = dev;
-> +	st->chip_info = chip_info;
-> +	st->map = map;
-> +
-> +	iio_dev->dev.parent = dev;
-> +	iio_dev->name = name;
-> +	iio_dev->info = &ad7091r_info;
-> +	iio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +	iio_dev->num_channels = chip_info->num_channels;
-> +	iio_dev->channels = chip_info->channels;
-> +
-> +	if (irq) {
-> +		ret = devm_request_threaded_irq(dev, irq, NULL,
-> +				ad7091r_event_handler,
-> +				IRQF_TRIGGER_FALLING | IRQF_ONESHOT, name, st);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	/* Use command mode by default to convert only desired channels*/
-> +	ret = ad7091r_set_mode(st, AD7091R_MODE_COMMAND);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_iio_device_register(dev, iio_dev);
-> +}
-> +EXPORT_SYMBOL_GPL(ad7091r_probe);
-> +
-> +static bool ad7091r_writeable_reg(struct device *dev, unsigned int reg)
-> +{
-> +	switch (reg) {
-> +	case AD7091R_REG_RESULT:
-> +	case AD7091R_REG_ALERT:
-> +		return false;
-> +	default:
-> +		return true;
-> +	}
-> +}
-> +
-> +static bool ad7091r_volatile_reg(struct device *dev, unsigned int reg)
-> +{
-> +	switch (reg) {
-> +	case AD7091R_REG_RESULT:
-> +	case AD7091R_REG_ALERT:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +const struct regmap_config ad7091r_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 16,
-> +	.writeable_reg = ad7091r_writeable_reg,
-> +	.volatile_reg = ad7091r_volatile_reg,
-> +};
-> +EXPORT_SYMBOL_GPL(ad7091r_regmap_config);
-> +
-> +MODULE_AUTHOR("Beniamin Bia <beniamin.bia@analog.com>");
-> +MODULE_DESCRIPTION("Analog Devices AD7091Rx multi-channel converters");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/iio/adc/ad7091r-base.h b/drivers/iio/adc/ad7091r-base.h
-> new file mode 100644
-> index 000000000000..b0b4fe01a681
-> --- /dev/null
-> +++ b/drivers/iio/adc/ad7091r-base.h
-> @@ -0,0 +1,25 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * AD7091RX Analog to Digital converter driver
-> + *
-> + * Copyright 2014-2019 Analog Devices Inc.
-> + */
-> +
-> +#ifndef __DRIVERS_IIO_ADC_AD7091R_BASE_H__
-> +#define __DRIVERS_IIO_ADC_AD7091R_BASE_H__
-> +
-> +struct device;
-> +struct ad7091r_state;
-> +
-> +struct ad7091r_chip_info {
-> +	unsigned int num_channels;
-> +	const struct iio_chan_spec *channels;
-> +};
-> +
-> +extern const struct regmap_config ad7091r_regmap_config;
-> +
-> +int ad7091r_probe(struct device *dev, const char *name,
-> +		const struct ad7091r_chip_info *chip_info,
-> +		struct regmap *map, int irq);
-> +
-> +#endif /* __DRIVERS_IIO_ADC_AD7091R_BASE_H__ */
-> diff --git a/drivers/iio/adc/ad7091r5.c b/drivers/iio/adc/ad7091r5.c
-> new file mode 100644
-> index 000000000000..30ff0108a6ed
-> --- /dev/null
-> +++ b/drivers/iio/adc/ad7091r5.c
-> @@ -0,0 +1,108 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * AD7091R5 Analog to Digital converter driver
-> + *
-> + * Copyright 2014-2019 Analog Devices Inc.
-> + */
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +
-> +#include "ad7091r-base.h"
-> +
-> +static const struct iio_event_spec ad7091r5_events[] = {
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_RISING,
-> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
-> +				 BIT(IIO_EV_INFO_ENABLE),
-> +	},
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_FALLING,
-> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
-> +				 BIT(IIO_EV_INFO_ENABLE),
-> +	},
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_EITHER,
-> +		.mask_separate = BIT(IIO_EV_INFO_HYSTERESIS),
-> +	},
-> +};
-> +
-> +#define AD7091R_CHANNEL(idx, bits, ev, num_ev) { \
-> +	.type = IIO_VOLTAGE, \
-> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
-> +	.indexed = 1, \
-> +	.channel = idx, \
-> +	.event_spec = ev, \
-> +	.num_event_specs = num_ev, \
-> +}
-> +static const struct iio_chan_spec ad7091r5_channels_irq[] = {
-> +	AD7091R_CHANNEL(0, 12, ad7091r5_events, ARRAY_SIZE(ad7091r5_events)),
-> +	AD7091R_CHANNEL(1, 12, ad7091r5_events, ARRAY_SIZE(ad7091r5_events)),
-> +	AD7091R_CHANNEL(2, 12, ad7091r5_events, ARRAY_SIZE(ad7091r5_events)),
-> +	AD7091R_CHANNEL(3, 12, ad7091r5_events, ARRAY_SIZE(ad7091r5_events)),
-> +};
-> +
-> +static const struct iio_chan_spec ad7091r5_channels_noirq[] = {
-> +	AD7091R_CHANNEL(0, 12, NULL, 0),
-> +	AD7091R_CHANNEL(1, 12, NULL, 0),
-> +	AD7091R_CHANNEL(2, 12, NULL, 0),
-> +	AD7091R_CHANNEL(3, 12, NULL, 0),
-> +};
-> +
-> +static const struct ad7091r_chip_info ad7091r5_chip_info_irq = {
-> +	.channels = ad7091r5_channels_irq,
-> +	.num_channels = ARRAY_SIZE(ad7091r5_channels_irq),
-> +};
-> +
-> +static const struct ad7091r_chip_info ad7091r5_chip_info_noirq = {
-> +	.channels = ad7091r5_channels_noirq,
-> +	.num_channels = ARRAY_SIZE(ad7091r5_channels_noirq),
-> +};
-> +
-> +static int ad7091r5_i2c_probe(struct i2c_client *i2c,
-> +		const struct i2c_device_id *id)
-> +{
-> +	const struct ad7091r_chip_info *chip_info;
-> +	struct regmap *map = devm_regmap_init_i2c(i2c, &ad7091r_regmap_config);
-> +
-> +	if (IS_ERR(map))
-> +		return PTR_ERR(map);
-> +
-> +	if (i2c->irq)
-> +		chip_info = &ad7091r5_chip_info_irq;
-> +	else
-> +		chip_info = &ad7091r5_chip_info_noirq;
-> +
-> +	return ad7091r_probe(&i2c->dev, id->name, chip_info, map, i2c->irq);
-> +}
-> +
-> +static const struct of_device_id ad7091r5_dt_ids[] = {
-> +	{ .compatible = "adi,ad7091r5" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, ad7091r5_dt_ids);
-> +
-> +static const struct i2c_device_id ad7091r5_i2c_ids[] = {
-> +	{"ad7091r5", 0},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, ad7091r5_i2c_ids);
-> +
-> +static struct i2c_driver ad7091r5_driver = {
-> +	.driver = {
-> +		.name = "ad7091r5",
-> +		.of_match_table = ad7091r5_dt_ids,
-> +	},
-> +	.probe = ad7091r5_i2c_probe,
-> +	.id_table = ad7091r5_i2c_ids,
-> +};
-> +module_i2c_driver(ad7091r5_driver);
-> +
-> +MODULE_AUTHOR("Beniamin Bia <beniamin.bia@analog.com>");
-> +MODULE_DESCRIPTION("Analog Devices AD7091R5 multi-channel ADC driver");
-> +MODULE_LICENSE("GPL v2");
+"auto" is a keyword, so I cannot use it. I've left "manual_fan" and
+"auto_fan" therefore.
 
+Thanks and ack for all the other changes. I'll submit the updated patch
+shortly.
+
+Giovanni.
+--=20
+Giovanni Mascellani <g.mascellani@gmail.com>
+Postdoc researcher - Universit=C3=A9 Libre de Bruxelles
+
+
+--AF1lTDNJxtzHz7OsqvLfVNraXivuaePcO--
+
+--UBAF0jBTKr1VOH9v6J4ZmEI2uTbgQsYj0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSiBF6hBvCQNcghJEaNr8EMz954SQUCXdAt+AAKCRCNr8EMz954
+SS/uAP98uW2kcCtA2bTjPJ/n6JizaIgnv1gxlsSYT3q9ijPL7QD9HJ7EcIsRZl0H
+fC8tmsABITDhiB0d4FzlKA+6m5PbogI=
+=A8oe
+-----END PGP SIGNATURE-----
+
+--UBAF0jBTKr1VOH9v6J4ZmEI2uTbgQsYj0--
