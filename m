@@ -2,70 +2,71 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D841C43215
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11683C432C3
 	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 07:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0795520730
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 07:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C26042072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 07:49:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OnqqB6zA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e8M7kz7c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbfKPHtZ (ORCPT
+        id S1726595AbfKPHq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 02:49:25 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54834 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbfKPHtZ (ORCPT
+        Sat, 16 Nov 2019 02:46:59 -0500
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:36913 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbfKPHq7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 02:49:25 -0500
-Received: by mail-wm1-f67.google.com with SMTP id z26so11820146wmi.4
-        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 23:49:23 -0800 (PST)
+        Sat, 16 Nov 2019 02:46:59 -0500
+Received: by mail-pl1-f201.google.com with SMTP id w17so7799607plp.4
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 23:46:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=wrU9oNm+m55B0W8NFjsrIht/+mTQtS5ufyY+zIn4ZzU=;
-        b=OnqqB6zAgc0Kl4pYd4aSiHtVcXDvOOaDYZL8BfRbDyf87Bz8JAIboY3pjGD6m4KxZz
-         +aEWt/iLz1tKtlWkCZ/so6OuGR+Y0b6s65hv50pzubV+f9RXxz0tG1AaKrp5pPoEd4il
-         H7FueI9GwiPAMVw+6T8oWgLMIyAwp6DjMMJp/njT43JIpiSLX9Qy3MJmD66xt1HB0rew
-         6+fYjfT/yWAWlNSTEheboxtNmZiCMvqes4ml9D8lVC8hjo/RNilG+NkkxyiqndAyDItL
-         nllDS0YtVTT/cawjQ2Na7nNNqcjXmETZiLu0ZGsoo53HUWBczht9Z2Impz8Fz7gK4GOf
-         CZDQ==
+        bh=Uu95jBLOlzihXxtu6G70UP8AO6jB98GbXHnj6y1iYf8=;
+        b=e8M7kz7cisVtHjh9wSZNoQn4rIvLZPnWRXVjbAfe3g0cuSXVATDG7/jS3kLSzg5R79
+         qb841gvIvzlhsB6qSfUonby+nyqPHKPXmtYJm1c5VeSU8/PYxplnD0C9+WNkYmWe7Q1Q
+         OPSHlTqFqywSyofeW2vdrGfabhBmYk1dv0ht0ird/+lXYS8olWzqCDfYgwloFS826jd4
+         eQZ4bb/Z+OmsI374Swo32WuuY3Uk678OIRca6BPmKSc90HlsRzpMZMVAWdT93OuDwJ4p
+         GoSxxhLZBDR0rh/i7gg3VC8yLZ4xudtgXn/OD1T6HrJ+QRpy2n5k34uBMJWWv/pyAMlx
+         7FNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wrU9oNm+m55B0W8NFjsrIht/+mTQtS5ufyY+zIn4ZzU=;
-        b=FDRJBxko4/V6Lrm8qrbz5YGhdkc5YWgdo/dJWUy13eTo9cS0gzYyineOQ8SPlv8l3W
-         B5Hi5lpqPTPG8l9XTnZIDRCCiJcb4/pglEcyc1Ns4Oj7K79tnLfACDUa9o1es3lNuv3g
-         llY9eI41zonovP9PQc36U2nes1uGR4cDOGO4gMd6ROFnLl+s/LkEAgA+/KX1uN/BhGxR
-         YPHe07QxU/pqyL0ILxMGjc/4UyjfALiHxI7nMSojNj7Y+GICxnp8FXL8twW7EYPJLkU3
-         /gsQdm4MFwDmYrBiQcxz2iCfvEp7l0tExeuUjv8ahtlksRreyKiPWrdYu+UYuQCfIUwk
-         HcHA==
-X-Gm-Message-State: APjAAAWTHBQoSI2+1Fksedf/meQUhoWtQcQKn8TNl7XF9oPm1JrzptdY
-        LntaPZjW1s2Mv3lUzBywJ0fKwpE8isFgZktZuWyT7A==
-X-Google-Smtp-Source: APXvYqxN9tEkdJJjcZLwbRx7aPwN6Bp5OBx7h7U4ZY1KJj5bVXNsCVyqUfMiNg5LRjCPKVJeKHHR3LZiNgn4KRenY3U=
-X-Received: by 2002:a05:600c:218c:: with SMTP id e12mr14565355wme.30.1573890562501;
- Fri, 15 Nov 2019 23:49:22 -0800 (PST)
-MIME-Version: 1.0
-References: <20191107222315.GA7261@kernel.org> <20191108181533.222053-1-irogers@google.com>
- <20191111120220.GC9791@krava>
-In-Reply-To: <20191111120220.GC9791@krava>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=Uu95jBLOlzihXxtu6G70UP8AO6jB98GbXHnj6y1iYf8=;
+        b=fq5eUvt9WcXHp5NYh1efqQJNEGuqwQMrKO6Tde4X9+mwnE9sYJ0i0y0oaukqdw+nSL
+         Y4dXGQzvEjcWbO4mdOcxkVRdxDQxAuDvSSz6qhoO/C4IxlqsFEZKFIQh6HxevmLb238d
+         Mts9hnrPfKdSsPNUNGW3fvuY3h5xU7l9tE3ZNdmWjCNWSbVP863YdTb/gmA81v3ren4X
+         y8A0VmRUd0xZSmciqbmSStgk1bhlY0+Xj8O3t0chNs7a1y3jXO4YKZzgTjdLmoq4Tifi
+         ydFR6C3c4B9umljgL69RQ2aLO4xDmzyWSWxhiYukzczUyADe7PEE4b5cCJ7O37BruMUV
+         we9Q==
+X-Gm-Message-State: APjAAAUxIBDKal+0TrOARdHmhCjAh1psMOTn01OJLphVX8zAPuqNvNap
+        wJaAWP7Vy1zYgnoxxlsjX7LYKdEpcRMo
+X-Google-Smtp-Source: APXvYqy3JkwVumxUvtDMYhiA+bh0H6D6PqgDM6f3FQvZbYi4+OOgKizsGECNtCafRBaGoBzyPaVNNXoStfAj
+X-Received: by 2002:a63:de08:: with SMTP id f8mr20819188pgg.107.1573890416655;
+ Fri, 15 Nov 2019 23:46:56 -0800 (PST)
+Date:   Fri, 15 Nov 2019 23:46:52 -0800
+In-Reply-To: <20191108181533.222053-1-irogers@google.com>
+Message-Id: <20191116074652.9960-1-irogers@google.com>
+Mime-Version: 1.0
+References: <20191108181533.222053-1-irogers@google.com>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+Subject: [PATCH v2] perf tools: report initial event parsing error
 From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 15 Nov 2019 23:49:10 -0800
-Message-ID: <CAP-5=fUyVyg888bB-4K3o73kQbqo=G=8T9OFy0C=qtWTJjCOrw@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: report initial event parsing error
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         Anju T Sudhakar <anju@linux.vnet.ibm.com>,
@@ -77,44 +78,303 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Davidlohr Bueso <dave@stgolabs.net>,
         Thomas Gleixner <tglx@linutronix.de>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
+        linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 4:02 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Fri, Nov 08, 2019 at 10:15:33AM -0800, Ian Rogers wrote:
->
-> SNIP
->
-> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> > index 43c05eae1768..46a72ecac427 100644
-> > --- a/tools/perf/builtin-trace.c
-> > +++ b/tools/perf/builtin-trace.c
-> > @@ -3016,11 +3016,18 @@ static bool evlist__add_vfs_getname(struct evlist *evlist)
-> >  {
-> >       bool found = false;
-> >       struct evsel *evsel, *tmp;
-> > -     struct parse_events_error err = { .idx = 0, };
-> > -     int ret = parse_events(evlist, "probe:vfs_getname*", &err);
-> > +     struct parse_events_error err;
-> > +     int ret;
-> >
-> > -     if (ret)
-> > +     bzero(&err, sizeof(err));
->
-> hum, what's the problem with the zero init above?
+Record the first event parsing error and report. Implementing feedback
+from Jiri Olsa:
+https://lkml.org/lkml/2019/10/28/680
 
-There are 3 patterns for initializing parse_events_error in the code,
-bzero, memset and {.idx =0,}. I made all instances use bzero for
-consistency.
+An example error is:
 
-Thanks,
-Ian
+$ tools/perf/perf stat -e c/c/
+WARNING: multiple event parsing errors
+event syntax error: 'c/c/'
+                       \___ unknown term
 
-> jirka
->
+valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_state,filter_nm,config,config1,config2,name,period,percore
+
+Initial error:
+event syntax error: 'c/c/'
+                    \___ Cannot find PMU `c'. Missing kernel support?
+Run 'perf list' for a list of valid events
+
+ Usage: perf stat [<options>] [<command>]
+
+    -e, --event <event>   event selector. use 'perf list' to list available events
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/arch/powerpc/util/kvm-stat.c |  4 +-
+ tools/perf/builtin-stat.c               |  2 +
+ tools/perf/builtin-trace.c              | 16 +++--
+ tools/perf/tests/parse-events.c         |  3 +-
+ tools/perf/util/metricgroup.c           |  2 +-
+ tools/perf/util/parse-events.c          | 78 ++++++++++++++++++-------
+ tools/perf/util/parse-events.h          |  4 ++
+ 7 files changed, 80 insertions(+), 29 deletions(-)
+
+diff --git a/tools/perf/arch/powerpc/util/kvm-stat.c b/tools/perf/arch/powerpc/util/kvm-stat.c
+index 9cc1c4a9dec4..16807269317c 100644
+--- a/tools/perf/arch/powerpc/util/kvm-stat.c
++++ b/tools/perf/arch/powerpc/util/kvm-stat.c
+@@ -113,10 +113,10 @@ static int is_tracepoint_available(const char *str, struct evlist *evlist)
+ 	struct parse_events_error err;
+ 	int ret;
+ 
+-	err.str = NULL;
++	bzero(&err, sizeof(err));
+ 	ret = parse_events(evlist, str, &err);
+ 	if (err.str)
+-		pr_err("%s : %s\n", str, err.str);
++		parse_events_print_error(&err, "tracepoint");
+ 	return ret;
+ }
+ 
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 5964e808d73d..0a15253b438c 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1307,6 +1307,7 @@ static int add_default_attributes(void)
+ 	if (stat_config.null_run)
+ 		return 0;
+ 
++	bzero(&errinfo, sizeof(errinfo));
+ 	if (transaction_run) {
+ 		/* Handle -T as -M transaction. Once platform specific metrics
+ 		 * support has been added to the json files, all archictures
+@@ -1364,6 +1365,7 @@ static int add_default_attributes(void)
+ 			return -1;
+ 		}
+ 		if (err) {
++			parse_events_print_error(&errinfo, smi_cost_attrs);
+ 			fprintf(stderr, "Cannot set up SMI cost events\n");
+ 			return -1;
+ 		}
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 43c05eae1768..46a72ecac427 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3016,11 +3016,18 @@ static bool evlist__add_vfs_getname(struct evlist *evlist)
+ {
+ 	bool found = false;
+ 	struct evsel *evsel, *tmp;
+-	struct parse_events_error err = { .idx = 0, };
+-	int ret = parse_events(evlist, "probe:vfs_getname*", &err);
++	struct parse_events_error err;
++	int ret;
+ 
+-	if (ret)
++	bzero(&err, sizeof(err));
++	ret = parse_events(evlist, "probe:vfs_getname*", &err);
++	if (ret) {
++		free(err.str);
++		free(err.help);
++		free(err.first_str);
++		free(err.first_help);
+ 		return false;
++	}
+ 
+ 	evlist__for_each_entry_safe(evlist, evsel, tmp) {
+ 		if (!strstarts(perf_evsel__name(evsel), "probe:vfs_getname"))
+@@ -4832,8 +4839,9 @@ int cmd_trace(int argc, const char **argv)
+ 	 * wrong in more detail.
+ 	 */
+ 	if (trace.perfconfig_events != NULL) {
+-		struct parse_events_error parse_err = { .idx = 0, };
++		struct parse_events_error parse_err;
+ 
++		bzero(&parse_err, sizeof(parse_err));
+ 		err = parse_events(trace.evlist, trace.perfconfig_events, &parse_err);
+ 		if (err) {
+ 			parse_events_print_error(&parse_err, trace.perfconfig_events);
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index 25e0ed2eedfc..091c3aeccc27 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -1768,10 +1768,11 @@ static struct terms_test test__terms[] = {
+ 
+ static int test_event(struct evlist_test *e)
+ {
+-	struct parse_events_error err = { .idx = 0, };
++	struct parse_events_error err;
+ 	struct evlist *evlist;
+ 	int ret;
+ 
++	bzero(&err, sizeof(err));
+ 	if (e->valid && !e->valid()) {
+ 		pr_debug("... SKIP");
+ 		return 0;
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index a7c0424dbda3..6a4d350d5cdb 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -523,7 +523,7 @@ int metricgroup__parse_groups(const struct option *opt,
+ 	if (ret)
+ 		return ret;
+ 	pr_debug("adding %s\n", extra_events.buf);
+-	memset(&parse_error, 0, sizeof(struct parse_events_error));
++	bzero(&parse_error, sizeof(parse_error));
+ 	ret = parse_events(perf_evlist, extra_events.buf, &parse_error);
+ 	if (ret) {
+ 		parse_events_print_error(&parse_error, extra_events.buf);
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 6d18ff9bce49..6bae9d6edc12 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -189,12 +189,29 @@ void parse_events__handle_error(struct parse_events_error *err, int idx,
+ 		free(help);
+ 		return;
+ 	}
+-	WARN_ONCE(err->str, "WARNING: multiple event parsing errors\n");
+-	err->idx = idx;
+-	free(err->str);
+-	err->str = str;
+-	free(err->help);
+-	err->help = help;
++	switch (err->num_errors) {
++	case 0:
++		err->idx = idx;
++		err->str = str;
++		err->help = help;
++		break;
++	case 1:
++		err->first_idx = err->idx;
++		err->idx = idx;
++		err->first_str = err->str;
++		err->str = str;
++		err->first_help = err->help;
++		err->help = help;
++		break;
++	default:
++		WARN_ONCE(1, "WARNING: multiple event parsing errors\n");
++		free(err->str);
++		err->str = str;
++		free(err->help);
++		err->help = help;
++		break;
++	}
++	err->num_errors++;
+ }
+ 
+ struct tracepoint_path *tracepoint_id_to_path(u64 config)
+@@ -1349,7 +1366,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 		if (asprintf(&err_str,
+ 				"Cannot find PMU `%s'. Missing kernel support?",
+ 				name) >= 0)
+-			parse_events__handle_error(err, -1, err_str, NULL);
++			parse_events__handle_error(err, 0, err_str, NULL);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -2007,15 +2024,14 @@ static int get_term_width(void)
+ 	return ws.ws_col > MAX_WIDTH ? MAX_WIDTH : ws.ws_col;
+ }
+ 
+-void parse_events_print_error(struct parse_events_error *err,
+-			      const char *event)
++static void __parse_events_print_error(int err_idx, const char *err_str,
++				const char *err_help, const char *event)
+ {
+ 	const char *str = "invalid or unsupported event: ";
+ 	char _buf[MAX_WIDTH];
+ 	char *buf = (char *) event;
+ 	int idx = 0;
+-
+-	if (err->str) {
++	if (err_str) {
+ 		/* -2 for extra '' in the final fprintf */
+ 		int width       = get_term_width() - 2;
+ 		int len_event   = strlen(event);
+@@ -2038,8 +2054,8 @@ void parse_events_print_error(struct parse_events_error *err,
+ 		buf = _buf;
+ 
+ 		/* We're cutting from the beginning. */
+-		if (err->idx > max_err_idx)
+-			cut = err->idx - max_err_idx;
++		if (err_idx > max_err_idx)
++			cut = err_idx - max_err_idx;
+ 
+ 		strncpy(buf, event + cut, max_len);
+ 
+@@ -2052,16 +2068,33 @@ void parse_events_print_error(struct parse_events_error *err,
+ 			buf[max_len] = 0;
+ 		}
+ 
+-		idx = len_str + err->idx - cut;
++		idx = len_str + err_idx - cut;
+ 	}
+ 
+ 	fprintf(stderr, "%s'%s'\n", str, buf);
+ 	if (idx) {
+-		fprintf(stderr, "%*s\\___ %s\n", idx + 1, "", err->str);
+-		if (err->help)
+-			fprintf(stderr, "\n%s\n", err->help);
+-		zfree(&err->str);
+-		zfree(&err->help);
++		fprintf(stderr, "%*s\\___ %s\n", idx + 1, "", err_str);
++		if (err_help)
++			fprintf(stderr, "\n%s\n", err_help);
++	}
++}
++
++void parse_events_print_error(struct parse_events_error *err,
++			      const char *event)
++{
++	if (!err->num_errors)
++		return;
++
++	__parse_events_print_error(err->idx, err->str, err->help, event);
++	zfree(&err->str);
++	zfree(&err->help);
++
++	if (err->num_errors > 1) {
++		fputs("\nInitial error:\n", stderr);
++		__parse_events_print_error(err->first_idx, err->first_str,
++					err->first_help, event);
++		zfree(&err->first_str);
++		zfree(&err->first_help);
+ 	}
+ }
+ 
+@@ -2071,8 +2104,11 @@ int parse_events_option(const struct option *opt, const char *str,
+ 			int unset __maybe_unused)
+ {
+ 	struct evlist *evlist = *(struct evlist **)opt->value;
+-	struct parse_events_error err = { .idx = 0, };
+-	int ret = parse_events(evlist, str, &err);
++	struct parse_events_error err;
++	int ret;
++
++	bzero(&err, sizeof(err));
++	ret = parse_events(evlist, str, &err);
+ 
+ 	if (ret) {
+ 		parse_events_print_error(&err, str);
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index 5ee8ac93840c..ff367f248fe8 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -110,9 +110,13 @@ struct parse_events_term {
+ };
+ 
+ struct parse_events_error {
++	int   num_errors;       /* number of errors encountered */
+ 	int   idx;	/* index in the parsed string */
+ 	char *str;      /* string to display at the index */
+ 	char *help;	/* optional help string */
++	int   first_idx;/* as above, but for the first encountered error */
++	char *first_str;
++	char *first_help;
+ };
+ 
+ struct parse_events_state {
+-- 
+2.24.0.432.g9d3f5f5b63-goog
+
