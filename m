@@ -6,39 +6,38 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F009CC43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 17:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A40C43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 17:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C312E214E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 17:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCA222168B
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 17:14:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbfKPRM2 (ORCPT
+        id S1728031AbfKPRO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 12:12:28 -0500
-Received: from pietrobattiston.it ([92.243.7.39]:54826 "EHLO
+        Sat, 16 Nov 2019 12:14:57 -0500
+Received: from pietrobattiston.it ([92.243.7.39]:54894 "EHLO
         jauntuale.pietrobattiston.it" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727568AbfKPRM1 (ORCPT
+        by vger.kernel.org with ESMTP id S1727532AbfKPRO5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 12:12:27 -0500
+        Sat, 16 Nov 2019 12:14:57 -0500
 Received: from amalgama (unknown [IPv6:2a02:578:85b0:500:2a18:9d59:67ec:cc90])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
         (Authenticated sender: giovanni)
-        by jauntuale.pietrobattiston.it (Postfix) with ESMTPSA id A65DAE1E98;
-        Sat, 16 Nov 2019 18:12:24 +0100 (CET)
+        by jauntuale.pietrobattiston.it (Postfix) with ESMTPSA id 2718EE1E98;
+        Sat, 16 Nov 2019 18:14:54 +0100 (CET)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
-        by amalgama (Postfix) with ESMTP id 15C803C0340;
-        Sat, 16 Nov 2019 18:12:24 +0100 (CET)
-Subject: Re: [PATCH v2] dell-smm-hwmon: Add support for disabling automatic
- BIOS fan control
-To:     Guenter Roeck <linux@roeck-us.net>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
-Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191116140649.114592-1-gio@debian.org>
- <20191116145845.xmhki3ckza26eoln@pali>
- <7bc8ec9a-f559-96c8-36fd-6e11a1420626@roeck-us.net>
+        by amalgama (Postfix) with ESMTP id 697393C0340;
+        Sat, 16 Nov 2019 18:14:53 +0100 (CET)
+Subject: Re: [PATCH] hwmon: (dell-smm-hwmon) Disable BIOS fan control on
+ SET_FAN
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191114211408.22123-1-gio@debian.org>
+ <20191116150310.dlhjrr3kyh7fsykf@pali>
 From:   Giovanni Mascellani <gio@debian.org>
 Autocrypt: addr=gio@debian.org; prefer-encrypt=mutual; keydata=
  mQINBEuFs48BEACkd+0TjHZ81/gFb0yEsiVhFJ5S3CaAQcFloMQ0PO/CPv4fMpOzL3tfko5Y
@@ -131,66 +130,53 @@ Autocrypt: addr=gio@debian.org; prefer-encrypt=mutual; keydata=
  XRbSaA8z+zlgPDPe+KWg8b1ekx4jks6bzOJJTABo/ybdjLkky4iKg1cqmlKn+zH6z2K5lmc3
  uq3/WmRPv8r10mXRkWvDuXvi
 Organization: Debian
-Message-ID: <e938f226-f9f1-0c17-865c-45942e9287e8@debian.org>
-Date:   Sat, 16 Nov 2019 18:12:23 +0100
+Message-ID: <511eaace-6615-2bf0-9872-48f888353833@debian.org>
+Date:   Sat, 16 Nov 2019 18:14:53 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <7bc8ec9a-f559-96c8-36fd-6e11a1420626@roeck-us.net>
+In-Reply-To: <20191116150310.dlhjrr3kyh7fsykf@pali>
 Content-Type: multipart/signed; micalg=pgp-sha512;
  protocol="application/pgp-signature";
- boundary="UBAF0jBTKr1VOH9v6J4ZmEI2uTbgQsYj0"
+ boundary="fkBRau9TygiuBZDBOiCrq31qLIlRxFHNt"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---UBAF0jBTKr1VOH9v6J4ZmEI2uTbgQsYj0
-Content-Type: multipart/mixed; boundary="AF1lTDNJxtzHz7OsqvLfVNraXivuaePcO";
+--fkBRau9TygiuBZDBOiCrq31qLIlRxFHNt
+Content-Type: multipart/mixed; boundary="28965gwixxR9CPzLgyTdScrN9eTw5BiVc";
  protected-headers="v1"
 From: Giovanni Mascellani <gio@debian.org>
-To: Guenter Roeck <linux@roeck-us.net>, =?UTF-8?Q?Pali_Roh=c3=a1r?=
- <pali.rohar@gmail.com>
-Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <e938f226-f9f1-0c17-865c-45942e9287e8@debian.org>
-Subject: Re: [PATCH v2] dell-smm-hwmon: Add support for disabling automatic
- BIOS fan control
-References: <20191116140649.114592-1-gio@debian.org>
- <20191116145845.xmhki3ckza26eoln@pali>
- <7bc8ec9a-f559-96c8-36fd-6e11a1420626@roeck-us.net>
-In-Reply-To: <7bc8ec9a-f559-96c8-36fd-6e11a1420626@roeck-us.net>
+To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <511eaace-6615-2bf0-9872-48f888353833@debian.org>
+Subject: Re: [PATCH] hwmon: (dell-smm-hwmon) Disable BIOS fan control on
+ SET_FAN
+References: <20191114211408.22123-1-gio@debian.org>
+ <20191116150310.dlhjrr3kyh7fsykf@pali>
+In-Reply-To: <20191116150310.dlhjrr3kyh7fsykf@pali>
 
---AF1lTDNJxtzHz7OsqvLfVNraXivuaePcO
+--28965gwixxR9CPzLgyTdScrN9eTw5BiVc
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Il 16/11/19 16:03, Pali Roh=C3=A1r ha scritto:
+> In my old notes I have written these two comments:
+>=20
+> 0x30a3  disable the Fn- key combinations (except the volume functions) =
+key and disable BIOS auto fan control (no args)
+> 0x31a3  enable the Fn- key combinations (except the volume functions) k=
+ey and enable BIOS auto fan control (no args)
 
-Il 16/11/19 16:53, Guenter Roeck ha scritto:
->>> =C2=A0 @@ -1135,12 +1183,48 @@ static struct dmi_system_id
->>> i8k_blacklist_fan_support_dmi_table[] __initdata =3D {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { }
->>> =C2=A0 };
->>> =C2=A0 +struct i8k_manual_fan_data {
->>> +=C2=A0=C2=A0=C2=A0 unsigned int smm_manual_fan;
->>> +=C2=A0=C2=A0=C2=A0 unsigned int smm_auto_fan;
->>> +};
->>
->> Just cosmetic suggestion: As this structure contains data for both
->> manual and automatic mode I would not use "manual" in name. But e.g.
->> something like "i8k_bios_fan_control_data"...
->>
-> Or i8k_fan_control_data. Also, "manual" and "auto" for the variable
-> names would be sufficient.
-
-"auto" is a keyword, so I cannot use it. I've left "manual_fan" and
-"auto_fan" therefore.
-
-Thanks and ack for all the other changes. I'll submit the updated patch
-shortly.
+This does not seem to happen on my laptop: both command pairs set and
+unset auto fan control, without other apparent effects. However, I have
+dropped 0x30a3 and 0x31a3, since 0x34a3 and 0x35a3 are known to work on
+all laptops where at least one command pair is known to work, and there
+are no known side effects.
 
 Giovanni.
 --=20
@@ -198,19 +184,19 @@ Giovanni Mascellani <g.mascellani@gmail.com>
 Postdoc researcher - Universit=C3=A9 Libre de Bruxelles
 
 
---AF1lTDNJxtzHz7OsqvLfVNraXivuaePcO--
+--28965gwixxR9CPzLgyTdScrN9eTw5BiVc--
 
---UBAF0jBTKr1VOH9v6J4ZmEI2uTbgQsYj0
+--fkBRau9TygiuBZDBOiCrq31qLIlRxFHNt
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEARYKAB0WIQSiBF6hBvCQNcghJEaNr8EMz954SQUCXdAt+AAKCRCNr8EMz954
-SS/uAP98uW2kcCtA2bTjPJ/n6JizaIgnv1gxlsSYT3q9ijPL7QD9HJ7EcIsRZl0H
-fC8tmsABITDhiB0d4FzlKA+6m5PbogI=
-=A8oe
+iHUEARYKAB0WIQSiBF6hBvCQNcghJEaNr8EMz954SQUCXdAujQAKCRCNr8EMz954
+SRqOAP9UCmNJ2daUR+kcLDpLSfMTkLMLmbLwaselWik5PVb8LgEAssFGtOWPUY38
+VgWPdMhs9o/LCyXhqvh9AEyZLBQ/1wk=
+=uWEL
 -----END PGP SIGNATURE-----
 
---UBAF0jBTKr1VOH9v6J4ZmEI2uTbgQsYj0--
+--fkBRau9TygiuBZDBOiCrq31qLIlRxFHNt--
