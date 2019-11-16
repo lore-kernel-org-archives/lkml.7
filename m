@@ -2,95 +2,101 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A1CC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 03:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD15C43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 03:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B26C20730
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 03:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C9C20740
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 03:15:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfKPDBF (ORCPT
+        id S1727414AbfKPDPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 22:01:05 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56826 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727181AbfKPDBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 22:01:05 -0500
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C094365A3DAFF918123B;
-        Sat, 16 Nov 2019 11:01:03 +0800 (CST)
-Received: from localhost.localdomain (10.90.53.225) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 16 Nov 2019 11:00:52 +0800
-From:   Chen Wandun <chenwandun@huawei.com>
-To:     <tyreld@linux.ibm.com>, <mpe@ellerman.id.au>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <mahesh@linux.vnet.ibm.com>, <paulus@samba.org>
-CC:     <chenwandun@huawei.com>
-Subject: [PATCH] powerpc/pseries: remove variable 'status' set but not used
-Date:   Sat, 16 Nov 2019 11:07:30 +0800
-Message-ID: <1573873650-62511-1-git-send-email-chenwandun@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 15 Nov 2019 22:15:14 -0500
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:38471 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727215AbfKPDPN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 15 Nov 2019 22:15:13 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TiBwoht_1573874108;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TiBwoht_1573874108)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 16 Nov 2019 11:15:08 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     alex.shi@linux.alibaba.com, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        willy@infradead.org
+Subject: [PATCH v3 0/8] per lruvec lru_lock for memcg
+Date:   Sat, 16 Nov 2019 11:14:59 +0800
+Message-Id: <1573874106-23802-1-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Hi all,
 
-arch/powerpc/platforms/pseries/ras.c: In function ras_epow_interrupt:
-arch/powerpc/platforms/pseries/ras.c:319:6: warning: variable status set but not used [-Wunused-but-set-variable]
+This patchset move lru_lock into lruvec, give a lru_lock for each of
+lruvec, thus bring a lru_lock for each of memcg per node.
 
-Signed-off-by: Chen Wandun <chenwandun@huawei.com>
----
- arch/powerpc/platforms/pseries/ras.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+According to Daniel Jordan's suggestion, I run 64 'dd' with on 32
+containers on my 2s* 8 core * HT box with the modefied case:
+  https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice
 
-diff --git a/arch/powerpc/platforms/pseries/ras.c b/arch/powerpc/platforms/pseries/ras.c
-index 1d7f973..4a61d0f 100644
---- a/arch/powerpc/platforms/pseries/ras.c
-+++ b/arch/powerpc/platforms/pseries/ras.c
-@@ -316,12 +316,11 @@ static irqreturn_t ras_hotplug_interrupt(int irq, void *dev_id)
- /* Handle environmental and power warning (EPOW) interrupts. */
- static irqreturn_t ras_epow_interrupt(int irq, void *dev_id)
- {
--	int status;
- 	int state;
- 	int critical;
- 
--	status = rtas_get_sensor_fast(EPOW_SENSOR_TOKEN, EPOW_SENSOR_INDEX,
--				      &state);
-+	rtas_get_sensor_fast(EPOW_SENSOR_TOKEN, EPOW_SENSOR_INDEX,
-+			     &state);
- 
- 	if (state > 3)
- 		critical = 1;		/* Time Critical */
-@@ -330,12 +329,12 @@ static irqreturn_t ras_epow_interrupt(int irq, void *dev_id)
- 
- 	spin_lock(&ras_log_buf_lock);
- 
--	status = rtas_call(ras_check_exception_token, 6, 1, NULL,
--			   RTAS_VECTOR_EXTERNAL_INTERRUPT,
--			   virq_to_hw(irq),
--			   RTAS_EPOW_WARNING,
--			   critical, __pa(&ras_log_buf),
--				rtas_get_error_log_max());
-+	rtas_call(ras_check_exception_token, 6, 1, NULL,
-+		  RTAS_VECTOR_EXTERNAL_INTERRUPT,
-+		  virq_to_hw(irq),
-+		  RTAS_EPOW_WARNING,
-+		  critical, __pa(&ras_log_buf),
-+		  rtas_get_error_log_max());
- 
- 	log_error(ras_log_buf, ERR_TYPE_RTAS_LOG, 0);
- 
+With this change above lru_lock censitive testing improved 17% with multiple
+containers scenario. And no performance lose w/o mem_cgroup.
+
+Thanks Hugh Dickins and Konstantin Khlebnikov, they both bring the same idea
+7 years ago. Now I believe considering my testing result, and google internal
+using fact. This feather is clearly benefit multi-container user.
+
+So I like to introduce it here.
+
+v3: rebase on linux-next, and fold the relock fix patch into introduceing patch
+
+v2: bypass a performance regression bug and fix some function issues
+
+v1: initial version, aim testing show 5% performance incrase
+
+Alex Shi (7):
+  mm/lru: add per lruvec lock for memcg
+  mm/lruvec: add irqsave flags into lruvec struct
+  mm/lru: replace pgdat lru_lock with lruvec lock
+  mm/lru: only change the lru_lock iff page's lruvec is different
+  mm/pgdat: remove pgdat lru_lock
+  mm/lru: likely enhancement
+  mm/lru: revise the comments of lru_lock
+
+ Documentation/admin-guide/cgroup-v1/memcg_test.rst | 15 +----
+ Documentation/admin-guide/cgroup-v1/memory.rst     |  6 +-
+ Documentation/trace/events-kmem.rst                |  2 +-
+ Documentation/vm/unevictable-lru.rst               | 22 +++----
+ include/linux/memcontrol.h                         | 67 +++++++++++++++++++
+ include/linux/mm_types.h                           |  2 +-
+ include/linux/mmzone.h                             |  7 +-
+ mm/compaction.c                                    | 62 +++++++++++------
+ mm/filemap.c                                       |  4 +-
+ mm/huge_memory.c                                   | 16 ++---
+ mm/memcontrol.c                                    | 64 ++++++++++++++----
+ mm/mlock.c                                         | 27 ++++----
+ mm/mmzone.c                                        |  1 +
+ mm/page_alloc.c                                    |  1 -
+ mm/page_idle.c                                     |  5 +-
+ mm/rmap.c                                          |  2 +-
+ mm/swap.c                                          | 77 +++++++++-------------
+ mm/vmscan.c                                        | 74 +++++++++++----------
+ 18 files changed, 277 insertions(+), 177 deletions(-)
+
 -- 
-2.7.4
+1.8.3.1
 
