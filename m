@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7138CC43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27577C43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 407902184B
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB29B21844
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919584;
-	bh=OqVoey58BstSGCzT7Cy3FNTTDtc2UNvTtORa3PHd4co=;
+	s=default; t=1573919588;
+	bh=AOzwc6nHGmg4oVDPLB8ouoaKqwdKAmVHFY5iyrSIGYQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CQ3e9g5YoMtPfngkj1QAUFj7xoi04T9Sop/JjfXcw14HFberwQ199fERYNt/1lKcS
-	 lfsb9mG+W+UH1q79ZZ3dbDIPA/iSUqKoCE2WhTV5c1dgv77rjwV6GRiaaMEduCQS3y
-	 cyfuqMTdA553bRdurZ1YuebLwZkaMtTQKooe21Pw=
+	b=Q7KFM6YYqtkorelXeyVZyW8BbsJrOtyLKbx9SP/PafPuSZ6Kb6xyyTeOrg26hS6/h
+	 8ZrtUSrytGDmHQXd2b9m3XcTG1vD8dAtWRTX+UQkgCeokpMsi15KamvFjQEBuHJ8gv
+	 axG1D/9tNFteyMPnZBHgssiB76+P+hF2mrCYdzGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731116AbfKPPxC (ORCPT
+        id S1730360AbfKPPxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:53:02 -0500
+        Sat, 16 Nov 2019 10:53:06 -0500
 Received: from mail.kernel.org ([198.145.29.99]:33886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731100AbfKPPxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:53:00 -0500
+        id S1730352AbfKPPxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:53:01 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43C9721843;
-        Sat, 16 Nov 2019 15:52:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96D7C2182A;
+        Sat, 16 Nov 2019 15:53:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919579;
-        bh=OqVoey58BstSGCzT7Cy3FNTTDtc2UNvTtORa3PHd4co=;
+        s=default; t=1573919581;
+        bh=AOzwc6nHGmg4oVDPLB8ouoaKqwdKAmVHFY5iyrSIGYQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dw7mF31MPbrvHNeMrskGCOyQVU5+99E28+Ce0prGZjWjJR2YOsJmJZNXD6Xe9rIlq
-         5IfOp6WkWUEdxrPlbyxdLX2/vVMnQtHbPY7RoGmKrR38rB99utAeJt0XgSa3EHy/mN
-         z1Y22BARv9A2w3fGL/jKn3+kbyeMTgFoNZgyWQBI=
+        b=R0WcHKEFiIkap4WluH5kyRo7tpjSK2U1cCFpmRKOPutu9KlH366eaR7eau0U08p+g
+         Y0gGL5xhBeIgqRFklxboGrxHagXkg1cBHSrVLvPCbFxVnADn65NN5seJ2HKwszW6jp
+         7fG7lSEmqbQreVwXZuTFy21166s4eAaPYA9MT4Hg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Jiang <dave.jiang@intel.com>, Lucas Van <lucas.van@intel.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
-        linux-ntb@googlegroups.com
-Subject: [PATCH AUTOSEL 4.9 71/99] ntb: intel: fix return value for ndev_vec_mask()
-Date:   Sat, 16 Nov 2019 10:50:34 -0500
-Message-Id: <20191116155103.10971-71-sashal@kernel.org>
+Cc:     Changwei Ge <ge.changwei@h3c.com>,
+        Guozhonghua <guozhonghua@h3c.com>, Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <jiangqi903@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 73/99] ocfs2: don't put and assigning null to bh allocated outside
+Date:   Sat, 16 Nov 2019 10:50:36 -0500
+Message-Id: <20191116155103.10971-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -59,36 +64,213 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Jiang <dave.jiang@intel.com>
+From: Changwei Ge <ge.changwei@h3c.com>
 
-[ Upstream commit 7756e2b5d68c36e170a111dceea22f7365f83256 ]
+[ Upstream commit cf76c78595ca87548ca5e45c862ac9e0949c4687 ]
 
-ndev_vec_mask() should be returning u64 mask value instead of int.
-Otherwise the mask value returned can be incorrect for larger
-vectors.
+ocfs2_read_blocks() and ocfs2_read_blocks_sync() are both used to read
+several blocks from disk.  Currently, the input argument *bhs* can be
+NULL or NOT.  It depends on the caller's behavior.  If the function
+fails in reading blocks from disk, the corresponding bh will be assigned
+to NULL and put.
 
-Fixes: e26a5843f7f5 ("NTB: Split ntb_hw_intel and ntb_transport drivers")
+Obviously, above process for non-NULL input bh is not appropriate.
+Because the caller doesn't even know its bhs are put and re-assigned.
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Tested-by: Lucas Van <lucas.van@intel.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+If buffer head is managed by caller, ocfs2_read_blocks and
+ocfs2_read_blocks_sync() should not evaluate it to NULL.  It will cause
+caller accessing illegal memory, thus crash.
+
+Link: http://lkml.kernel.org/r/HK2PR06MB045285E0F4FBB561F9F2F9B3D5680@HK2PR06MB0452.apcprd06.prod.outlook.com
+Signed-off-by: Changwei Ge <ge.changwei@h3c.com>
+Reviewed-by: Guozhonghua <guozhonghua@h3c.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Joseph Qi <jiangqi903@gmail.com>
+Cc: Changwei Ge <ge.changwei@h3c.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/hw/intel/ntb_hw_intel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ocfs2/buffer_head_io.c | 77 ++++++++++++++++++++++++++++++---------
+ 1 file changed, 59 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/ntb/hw/intel/ntb_hw_intel.c b/drivers/ntb/hw/intel/ntb_hw_intel.c
-index 7310a261c858b..e175cbeba266f 100644
---- a/drivers/ntb/hw/intel/ntb_hw_intel.c
-+++ b/drivers/ntb/hw/intel/ntb_hw_intel.c
-@@ -330,7 +330,7 @@ static inline int ndev_db_clear_mask(struct intel_ntb_dev *ndev, u64 db_bits,
- 	return 0;
+diff --git a/fs/ocfs2/buffer_head_io.c b/fs/ocfs2/buffer_head_io.c
+index 935bac253991b..1403c88f2b053 100644
+--- a/fs/ocfs2/buffer_head_io.c
++++ b/fs/ocfs2/buffer_head_io.c
+@@ -98,25 +98,34 @@ int ocfs2_write_block(struct ocfs2_super *osb, struct buffer_head *bh,
+ 	return ret;
  }
  
--static inline int ndev_vec_mask(struct intel_ntb_dev *ndev, int db_vector)
-+static inline u64 ndev_vec_mask(struct intel_ntb_dev *ndev, int db_vector)
++/* Caller must provide a bhs[] with all NULL or non-NULL entries, so it
++ * will be easier to handle read failure.
++ */
+ int ocfs2_read_blocks_sync(struct ocfs2_super *osb, u64 block,
+ 			   unsigned int nr, struct buffer_head *bhs[])
  {
- 	u64 shift, mask;
+ 	int status = 0;
+ 	unsigned int i;
+ 	struct buffer_head *bh;
++	int new_bh = 0;
+ 
+ 	trace_ocfs2_read_blocks_sync((unsigned long long)block, nr);
+ 
+ 	if (!nr)
+ 		goto bail;
+ 
++	/* Don't put buffer head and re-assign it to NULL if it is allocated
++	 * outside since the caller can't be aware of this alternation!
++	 */
++	new_bh = (bhs[0] == NULL);
++
+ 	for (i = 0 ; i < nr ; i++) {
+ 		if (bhs[i] == NULL) {
+ 			bhs[i] = sb_getblk(osb->sb, block++);
+ 			if (bhs[i] == NULL) {
+ 				status = -ENOMEM;
+ 				mlog_errno(status);
+-				goto bail;
++				break;
+ 			}
+ 		}
+ 		bh = bhs[i];
+@@ -156,9 +165,26 @@ int ocfs2_read_blocks_sync(struct ocfs2_super *osb, u64 block,
+ 		submit_bh(REQ_OP_READ, 0, bh);
+ 	}
+ 
++read_failure:
+ 	for (i = nr; i > 0; i--) {
+ 		bh = bhs[i - 1];
+ 
++		if (unlikely(status)) {
++			if (new_bh && bh) {
++				/* If middle bh fails, let previous bh
++				 * finish its read and then put it to
++				 * aovoid bh leak
++				 */
++				if (!buffer_jbd(bh))
++					wait_on_buffer(bh);
++				put_bh(bh);
++				bhs[i - 1] = NULL;
++			} else if (bh && buffer_uptodate(bh)) {
++				clear_buffer_uptodate(bh);
++			}
++			continue;
++		}
++
+ 		/* No need to wait on the buffer if it's managed by JBD. */
+ 		if (!buffer_jbd(bh))
+ 			wait_on_buffer(bh);
+@@ -168,8 +194,7 @@ int ocfs2_read_blocks_sync(struct ocfs2_super *osb, u64 block,
+ 			 * so we can safely record this and loop back
+ 			 * to cleanup the other buffers. */
+ 			status = -EIO;
+-			put_bh(bh);
+-			bhs[i - 1] = NULL;
++			goto read_failure;
+ 		}
+ 	}
+ 
+@@ -177,6 +202,9 @@ int ocfs2_read_blocks_sync(struct ocfs2_super *osb, u64 block,
+ 	return status;
+ }
+ 
++/* Caller must provide a bhs[] with all NULL or non-NULL entries, so it
++ * will be easier to handle read failure.
++ */
+ int ocfs2_read_blocks(struct ocfs2_caching_info *ci, u64 block, int nr,
+ 		      struct buffer_head *bhs[], int flags,
+ 		      int (*validate)(struct super_block *sb,
+@@ -186,6 +214,7 @@ int ocfs2_read_blocks(struct ocfs2_caching_info *ci, u64 block, int nr,
+ 	int i, ignore_cache = 0;
+ 	struct buffer_head *bh;
+ 	struct super_block *sb = ocfs2_metadata_cache_get_super(ci);
++	int new_bh = 0;
+ 
+ 	trace_ocfs2_read_blocks_begin(ci, (unsigned long long)block, nr, flags);
+ 
+@@ -211,6 +240,11 @@ int ocfs2_read_blocks(struct ocfs2_caching_info *ci, u64 block, int nr,
+ 		goto bail;
+ 	}
+ 
++	/* Don't put buffer head and re-assign it to NULL if it is allocated
++	 * outside since the caller can't be aware of this alternation!
++	 */
++	new_bh = (bhs[0] == NULL);
++
+ 	ocfs2_metadata_cache_io_lock(ci);
+ 	for (i = 0 ; i < nr ; i++) {
+ 		if (bhs[i] == NULL) {
+@@ -219,7 +253,8 @@ int ocfs2_read_blocks(struct ocfs2_caching_info *ci, u64 block, int nr,
+ 				ocfs2_metadata_cache_io_unlock(ci);
+ 				status = -ENOMEM;
+ 				mlog_errno(status);
+-				goto bail;
++				/* Don't forget to put previous bh! */
++				break;
+ 			}
+ 		}
+ 		bh = bhs[i];
+@@ -313,16 +348,27 @@ int ocfs2_read_blocks(struct ocfs2_caching_info *ci, u64 block, int nr,
+ 		}
+ 	}
+ 
+-	status = 0;
+-
++read_failure:
+ 	for (i = (nr - 1); i >= 0; i--) {
+ 		bh = bhs[i];
+ 
+ 		if (!(flags & OCFS2_BH_READAHEAD)) {
+-			if (status) {
+-				/* Clear the rest of the buffers on error */
+-				put_bh(bh);
+-				bhs[i] = NULL;
++			if (unlikely(status)) {
++				/* Clear the buffers on error including those
++				 * ever succeeded in reading
++				 */
++				if (new_bh && bh) {
++					/* If middle bh fails, let previous bh
++					 * finish its read and then put it to
++					 * aovoid bh leak
++					 */
++					if (!buffer_jbd(bh))
++						wait_on_buffer(bh);
++					put_bh(bh);
++					bhs[i] = NULL;
++				} else if (bh && buffer_uptodate(bh)) {
++					clear_buffer_uptodate(bh);
++				}
+ 				continue;
+ 			}
+ 			/* We know this can't have changed as we hold the
+@@ -340,9 +386,7 @@ int ocfs2_read_blocks(struct ocfs2_caching_info *ci, u64 block, int nr,
+ 				 * uptodate. */
+ 				status = -EIO;
+ 				clear_buffer_needs_validate(bh);
+-				put_bh(bh);
+-				bhs[i] = NULL;
+-				continue;
++				goto read_failure;
+ 			}
+ 
+ 			if (buffer_needs_validate(bh)) {
+@@ -352,11 +396,8 @@ int ocfs2_read_blocks(struct ocfs2_caching_info *ci, u64 block, int nr,
+ 				BUG_ON(buffer_jbd(bh));
+ 				clear_buffer_needs_validate(bh);
+ 				status = validate(sb, bh);
+-				if (status) {
+-					put_bh(bh);
+-					bhs[i] = NULL;
+-					continue;
+-				}
++				if (status)
++					goto read_failure;
+ 			}
+ 		}
  
 -- 
 2.20.1
