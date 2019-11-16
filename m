@@ -2,51 +2,52 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25853C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC691C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F16FF20874
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E01206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920656;
-	bh=G+bUnZIIGo0TF/ZYi61/DRntB0hbkjdnF5/2+ThSJ3w=;
+	s=default; t=1573920660;
+	bh=rh03igqzqmJ/spz57UkA4AWPIpnxHGzKIwHeAdn90AY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s9Adgtr1cukBT173bxIWoUJ/25cKkVpe4eRbdUO0NxnH8srFIyz93y79vxR3FpwFS
-	 yEs67Tj6vSTFuj8Osb8yDo7ruJokiFFKR2gwAWSUmx4xiYpG+lh5ezmau5C7pHROHq
-	 9Gs7jV2aEqrazkBYjEjgt+vQhbHQBE/h775IYLRc=
+	b=C2+sdn28thEb+rT/MtSc6GhnRHiSCm74TJIYJcEtJSbqLb+2yWu4TbR2asOLv9rFT
+	 zSGNovdvvKDrVmLb7JJX3VkN/f0OoLzv6Hj5yT6v/slF3pERoZs90Q9KmbVHKCUq/N
+	 Nq+Gqenaz72hAeXjKrzl2M+KDR2/1++voUQ3b1hM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730512AbfKPQKu (ORCPT
+        id S1731767AbfKPQK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:10:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56166 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:10:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728144AbfKPPst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:48:49 -0500
+        id S1730178AbfKPPsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:48:47 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B95E620729;
-        Sat, 16 Nov 2019 15:48:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F5F220891;
+        Sat, 16 Nov 2019 15:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919329;
-        bh=G+bUnZIIGo0TF/ZYi61/DRntB0hbkjdnF5/2+ThSJ3w=;
+        s=default; t=1573919326;
+        bh=rh03igqzqmJ/spz57UkA4AWPIpnxHGzKIwHeAdn90AY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aJvBxZ+hh1nEjjt/ZlHfrS3zOmcYEzP2oRu9eZaPTTcHexXr7GgbG7Ywhskc6rkg+
-         T7wvBsGbWsRA7oNeusIVPePrUS7AYaRabpJBIZLVRdGlgoBk1TUsmbN2+51lMzxHmd
-         TBZE7Wt7SaZj1aA3K+dXPi4Df6okQ3045cSe1+Dw=
+        b=CxAlSTNrYFfP1ONT7cbn4x4kYoZNbyh0KlGoR9V3wnK7JJE8KsGWOO55xMh3mzWKD
+         SZxAyr/90TNtpRG+Jxmo8b8rV0y6SJdhnxtd3yIIe2QsBCXQEnu0DGTj1jVrBrA3VA
+         gPccRkwISCoTuiLxZY20/YiHI1P0/mmom0vwnsjQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 071/150] selftests/ftrace: Fix to test kprobe $comm arg only if available
-Date:   Sat, 16 Nov 2019 10:46:09 -0500
-Message-Id: <20191116154729.9573-71-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 069/150] mfd: intel_soc_pmic_bxtwc: Chain power button IRQs as well
+Date:   Sat, 16 Nov 2019 10:46:07 -0500
+Message-Id: <20191116154729.9573-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -59,38 +60,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 2452c96e617a0ff6fb2692e55217a3fa57a7322c ]
+[ Upstream commit 9f8ddee1dab836ca758ca8fc555ab5a3aaa5d3fd ]
 
-Test $comm in kprobe-event argument syntax testcase
-only if it is supported on the kernel because
-$comm has been introduced 4.8 kernel.
-So on older stable kernel, it should be skipped.
+Power button IRQ actually has a second level of interrupts to
+distinguish between UI and POWER buttons. Moreover, current
+implementation looks awkward in approach to handle second level IRQs by
+first level related IRQ chip.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Shuah Khan (Samsung OSG) <shuah@kernel.org>
+To address above issues, split power button IRQ to be chained as well.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc       | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/mfd/intel_soc_pmic_bxtwc.c | 41 ++++++++++++++++++++++--------
+ include/linux/mfd/intel_soc_pmic.h |  1 +
+ 2 files changed, 32 insertions(+), 10 deletions(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
-index 231bcd2c4eb59..1e7ac6f3362ff 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
-@@ -71,8 +71,11 @@ test_badarg "\$stackp" "\$stack0+10" "\$stack1-10"
- echo "r ${PROBEFUNC} \$retval" > kprobe_events
- ! echo "p ${PROBEFUNC} \$retval" > kprobe_events
+diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_pmic_bxtwc.c
+index 15bc052704a6d..9ca1f8c015de9 100644
+--- a/drivers/mfd/intel_soc_pmic_bxtwc.c
++++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
+@@ -31,8 +31,8 @@
  
-+# $comm was introduced in 4.8, older kernels reject it.
-+if grep -A1 "fetcharg:" README | grep -q '\$comm' ; then
- : "Comm access"
- test_goodarg "\$comm"
-+fi
+ /* Interrupt Status Registers */
+ #define BXTWC_IRQLVL1		0x4E02
+-#define BXTWC_PWRBTNIRQ		0x4E03
  
- : "Indirect memory access"
- test_goodarg "+0(${GOODREG})" "-0(${GOODREG})" "+10(\$stack)" \
++#define BXTWC_PWRBTNIRQ		0x4E03
+ #define BXTWC_THRM0IRQ		0x4E04
+ #define BXTWC_THRM1IRQ		0x4E05
+ #define BXTWC_THRM2IRQ		0x4E06
+@@ -47,10 +47,9 @@
+ 
+ /* Interrupt MASK Registers */
+ #define BXTWC_MIRQLVL1		0x4E0E
+-#define BXTWC_MPWRTNIRQ		0x4E0F
+-
+ #define BXTWC_MIRQLVL1_MCHGR	BIT(5)
+ 
++#define BXTWC_MPWRBTNIRQ	0x4E0F
+ #define BXTWC_MTHRM0IRQ		0x4E12
+ #define BXTWC_MTHRM1IRQ		0x4E13
+ #define BXTWC_MTHRM2IRQ		0x4E14
+@@ -66,9 +65,7 @@
+ /* Whiskey Cove PMIC share same ACPI ID between different platforms */
+ #define BROXTON_PMIC_WC_HRV	4
+ 
+-/* Manage in two IRQ chips since mask registers are not consecutive */
+ enum bxtwc_irqs {
+-	/* Level 1 */
+ 	BXTWC_PWRBTN_LVL1_IRQ = 0,
+ 	BXTWC_TMU_LVL1_IRQ,
+ 	BXTWC_THRM_LVL1_IRQ,
+@@ -77,9 +74,11 @@ enum bxtwc_irqs {
+ 	BXTWC_CHGR_LVL1_IRQ,
+ 	BXTWC_GPIO_LVL1_IRQ,
+ 	BXTWC_CRIT_LVL1_IRQ,
++};
+ 
+-	/* Level 2 */
+-	BXTWC_PWRBTN_IRQ,
++enum bxtwc_irqs_pwrbtn {
++	BXTWC_PWRBTN_IRQ = 0,
++	BXTWC_UIBTN_IRQ,
+ };
+ 
+ enum bxtwc_irqs_bcu {
+@@ -113,7 +112,10 @@ static const struct regmap_irq bxtwc_regmap_irqs[] = {
+ 	REGMAP_IRQ_REG(BXTWC_CHGR_LVL1_IRQ, 0, BIT(5)),
+ 	REGMAP_IRQ_REG(BXTWC_GPIO_LVL1_IRQ, 0, BIT(6)),
+ 	REGMAP_IRQ_REG(BXTWC_CRIT_LVL1_IRQ, 0, BIT(7)),
+-	REGMAP_IRQ_REG(BXTWC_PWRBTN_IRQ, 1, 0x03),
++};
++
++static const struct regmap_irq bxtwc_regmap_irqs_pwrbtn[] = {
++	REGMAP_IRQ_REG(BXTWC_PWRBTN_IRQ, 0, 0x01),
+ };
+ 
+ static const struct regmap_irq bxtwc_regmap_irqs_bcu[] = {
+@@ -125,7 +127,7 @@ static const struct regmap_irq bxtwc_regmap_irqs_adc[] = {
+ };
+ 
+ static const struct regmap_irq bxtwc_regmap_irqs_chgr[] = {
+-	REGMAP_IRQ_REG(BXTWC_USBC_IRQ, 0, BIT(5)),
++	REGMAP_IRQ_REG(BXTWC_USBC_IRQ, 0, 0x20),
+ 	REGMAP_IRQ_REG(BXTWC_CHGR0_IRQ, 0, 0x1f),
+ 	REGMAP_IRQ_REG(BXTWC_CHGR1_IRQ, 1, 0x1f),
+ };
+@@ -144,7 +146,16 @@ static struct regmap_irq_chip bxtwc_regmap_irq_chip = {
+ 	.mask_base = BXTWC_MIRQLVL1,
+ 	.irqs = bxtwc_regmap_irqs,
+ 	.num_irqs = ARRAY_SIZE(bxtwc_regmap_irqs),
+-	.num_regs = 2,
++	.num_regs = 1,
++};
++
++static struct regmap_irq_chip bxtwc_regmap_irq_chip_pwrbtn = {
++	.name = "bxtwc_irq_chip_pwrbtn",
++	.status_base = BXTWC_PWRBTNIRQ,
++	.mask_base = BXTWC_MPWRBTNIRQ,
++	.irqs = bxtwc_regmap_irqs_pwrbtn,
++	.num_irqs = ARRAY_SIZE(bxtwc_regmap_irqs_pwrbtn),
++	.num_regs = 1,
+ };
+ 
+ static struct regmap_irq_chip bxtwc_regmap_irq_chip_tmu = {
+@@ -472,6 +483,16 @@ static int bxtwc_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	ret = bxtwc_add_chained_irq_chip(pmic, pmic->irq_chip_data,
++					 BXTWC_PWRBTN_LVL1_IRQ,
++					 IRQF_ONESHOT,
++					 &bxtwc_regmap_irq_chip_pwrbtn,
++					 &pmic->irq_chip_data_pwrbtn);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to add PWRBTN IRQ chip\n");
++		return ret;
++	}
++
+ 	ret = bxtwc_add_chained_irq_chip(pmic, pmic->irq_chip_data,
+ 					 BXTWC_TMU_LVL1_IRQ,
+ 					 IRQF_ONESHOT,
+diff --git a/include/linux/mfd/intel_soc_pmic.h b/include/linux/mfd/intel_soc_pmic.h
+index 5aacdb017a9f6..806a4f095312b 100644
+--- a/include/linux/mfd/intel_soc_pmic.h
++++ b/include/linux/mfd/intel_soc_pmic.h
+@@ -25,6 +25,7 @@ struct intel_soc_pmic {
+ 	int irq;
+ 	struct regmap *regmap;
+ 	struct regmap_irq_chip_data *irq_chip_data;
++	struct regmap_irq_chip_data *irq_chip_data_pwrbtn;
+ 	struct regmap_irq_chip_data *irq_chip_data_tmu;
+ 	struct regmap_irq_chip_data *irq_chip_data_bcu;
+ 	struct regmap_irq_chip_data *irq_chip_data_adc;
 -- 
 2.20.1
 
