@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7F3C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4B5C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AD852089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07B3121844
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:09:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920579;
-	bh=PZrL9vWqCTiFw2xV4xCtIutuGc0aIhE7zE1PDg4v3/M=;
+	s=default; t=1573920586;
+	bh=+jRBefN1uwEbzARKvRxsl294CfyeOzMo4klRHllFCY8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aPVTpAGhFSazbE9a8gUM8o9Dv/IwUj06j+9i6gphRyHEYc6ZGvBLKLmVEc2MvNXL8
-	 23gD7G4wv2uZg3AfDF4BAQFL1YktFF/Z3fIcFXlDb/x4E9dBGM6C+JyFHiieDWCZOD
-	 h8LeBvHp0IMolj8HGQj0BSkGHCs4pmHHvFICqYHo=
+	b=DX0to6UM5TMARcUz8MvEN1oCfGoi22Uap2Q3c/99BQpK8xCRWNa/l/dWsd4KLc7gN
+	 kJNdjI12x1D7Bm3JRr/WAbNiJ8cnoYOQ1dkCoqnorrBr+jLd/3kRLEsNAHkhgdUtHf
+	 EvdbBVNKtVvk1xxlzENH5PmaBw7bCf6uptUxqAOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbfKPPtf (ORCPT
+        id S1730924AbfKPQJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:49:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57040 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:09:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730320AbfKPPt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:49:26 -0500
+        id S1730330AbfKPPta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:49:30 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A93020870;
-        Sat, 16 Nov 2019 15:49:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD6B1207FA;
+        Sat, 16 Nov 2019 15:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919365;
-        bh=PZrL9vWqCTiFw2xV4xCtIutuGc0aIhE7zE1PDg4v3/M=;
+        s=default; t=1573919370;
+        bh=+jRBefN1uwEbzARKvRxsl294CfyeOzMo4klRHllFCY8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V6PlZZqPcDvDOiHGjIkG32U1y3ENQJy61urFVoYSC2juGfZ6AFu0g5rF1MtgaocKN
-         B92O05DB69DTfpetnmcGg9oS9fX3dhMDobdmVqugzmhvazuJTj4zN0qwoXT6+sr3Ut
-         YsNxHu0U2l4+xVhwfpbtNvIBTNzUa956S/aQH8Vc=
+        b=0TG4qG6vsZsAsITgjhxwf+A5gfZSWzwTToeymjPGDZ3YRQQ1mRSxgmHdPd0Cp0yo2
+         EIevT5BwwIcd89CmwS2h1JyroUfTpICBaL1OrPr5c/zqISvdhRot654bu5mAjn28ra
+         KMGFyz0+DnBgtt70+YrgYBCnTxBU6BITW179qKvg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 087/150] um: Make line/tty semantics use true write IRQ
-Date:   Sat, 16 Nov 2019 10:46:25 -0500
-Message-Id: <20191116154729.9573-87-sashal@kernel.org>
+Cc:     Joel Stanley <joel@jms.id.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 090/150] selftests/powerpc/signal: Fix out-of-tree build
+Date:   Sat, 16 Nov 2019 10:46:28 -0500
+Message-Id: <20191116154729.9573-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -59,39 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+From: Joel Stanley <joel@jms.id.au>
 
-[ Upstream commit 917e2fd2c53eb3c4162f5397555cbd394390d4bc ]
+[ Upstream commit 27825349d7b238533a47e3d98b8bb0efd886b752 ]
 
-This fixes a long standing bug where large amounts of output
-could freeze the tty (most commonly seen on stdio console).
-While the bug has always been there it became more pronounced
-after moving to the new interrupt controller.
+We should use TEST_GEN_PROGS, not TEST_PROGS. That tells the selftests
+makefile (lib.mk) that those tests are generated (built), and so it
+adds the $(OUTPUT) prefix for us, making the out-of-tree build work
+correctly.
 
-The line semantics are now changed to have true IRQ write
-semantics which should further improve the tty/line subsystem
-stability and performance
+It also means we don't need our own clean rule, lib.mk does it.
 
-Signed-off-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+We also have to update the signal_tm rule to use $(OUTPUT).
+
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/drivers/line.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/powerpc/signal/Makefile | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/arch/um/drivers/line.c b/arch/um/drivers/line.c
-index 366e57f5e8d63..7e524efed5848 100644
---- a/arch/um/drivers/line.c
-+++ b/arch/um/drivers/line.c
-@@ -261,7 +261,7 @@ static irqreturn_t line_write_interrupt(int irq, void *data)
- 	if (err == 0) {
- 		spin_unlock(&line->lock);
- 		return IRQ_NONE;
--	} else if (err < 0) {
-+	} else if ((err < 0) && (err != -EAGAIN)) {
- 		line->head = line->buffer;
- 		line->tail = line->buffer;
- 	}
+diff --git a/tools/testing/selftests/powerpc/signal/Makefile b/tools/testing/selftests/powerpc/signal/Makefile
+index a7cbd5082e271..4213978f3ee2c 100644
+--- a/tools/testing/selftests/powerpc/signal/Makefile
++++ b/tools/testing/selftests/powerpc/signal/Makefile
+@@ -1,14 +1,9 @@
+ # SPDX-License-Identifier: GPL-2.0
+-TEST_PROGS := signal signal_tm
+-
+-all: $(TEST_PROGS)
+-
+-$(TEST_PROGS): ../harness.c ../utils.c signal.S
++TEST_GEN_PROGS := signal signal_tm
+ 
+ CFLAGS += -maltivec
+-signal_tm: CFLAGS += -mhtm
++$(OUTPUT)/signal_tm: CFLAGS += -mhtm
+ 
+ include ../../lib.mk
+ 
+-clean:
+-	rm -f $(TEST_PROGS) *.o
++$(TEST_GEN_PROGS): ../harness.c ../utils.c signal.S
 -- 
 2.20.1
 
