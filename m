@@ -2,154 +2,148 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A499C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 04:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53200C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 04:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11FC02072D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 04:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C5EF2073B
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 04:38:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VR2eWIld"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KJtGujYN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfKPEak (ORCPT
+        id S1727421AbfKPEiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 15 Nov 2019 23:30:40 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37386 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727323AbfKPEaj (ORCPT
+        Fri, 15 Nov 2019 23:38:15 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:34932 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727323AbfKPEiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 15 Nov 2019 23:30:39 -0500
-Received: by mail-pg1-f196.google.com with SMTP id z24so6919395pgu.4;
-        Fri, 15 Nov 2019 20:30:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=SkujBsob3P6ItMuWCYwuPYMaNG9tU8x/NtegFwuF1go=;
-        b=VR2eWIld+o4KDr4HB/rWje8CjMYMcru8OB0BPDIcJ1efZ6uwL0X1dlzpP6z2mANoBs
-         L+yzWVxt8gdlWYoyE3FmS3mk5BVvrUZ2Fb/I8TlUs4WvRYLwqFW9GOrH8XnMh92nH9ej
-         yRXgAcI3QjnDk0CkZJgt6rJFdA4XqFryfhKTLsMqOzmxt6Jw2llSPGVVjnlpXvoWsvC6
-         GcJUzNlXSF7KHK/RtOkewgEBgtyiTiamJTucfXidDm/iL/7PiCI/ZVkyDF/u9nN2go13
-         KXaJfhJAzDYyHo7avClnCTGQCR30Z8i0q5Pi67Fen13WOL190brXc1OjfxH0JK2gPKXB
-         i8vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=SkujBsob3P6ItMuWCYwuPYMaNG9tU8x/NtegFwuF1go=;
-        b=iFN3iA+nFXBgmkjjlCAzfQL7wjDbZhQJRjuB/29xNkM4XQS0nqDUFYlg3a+7yVzvs9
-         qM1zkhV29vYSpDpEa3nXk2DjdE76F/bnsg/O0q4NdBMXWDwvD5/+uWpCFgneKkW35E/h
-         fhduM5X/JWb+lsPQWyIGstHXFUQb2ono2ZxGrwu8jWElDsdIAiFD8Dk+XSddLpr1ECzI
-         HfXecZvPpK0ZNrw9SEzDUWXH/lxFfn9UO3NMHZl3le/CGXZcUmo7vcmn4Psgb9wmuIop
-         mChKWWhe4qAbks8ST6NgvyhiMPKP+lp0CqaZvPRC7AdBD5hHJPjq5c/icx6KH1u65QIX
-         csDQ==
-X-Gm-Message-State: APjAAAVNv/zSBNB8p98eZpXMBOkx8WytmPWd31rmafcHjw65j18ZjAi1
-        FEdjTiv3TrbYgokH6lhTMgtscW2s
-X-Google-Smtp-Source: APXvYqwBAjrFzq+CixRblcGYoIwET6XjDQ/AO1eSnpQ3N3oWiHgb3PNq29vELRUcbk3WXBDFsTU0Iw==
-X-Received: by 2002:a63:6483:: with SMTP id y125mr4392067pgb.444.1573878638701;
-        Fri, 15 Nov 2019 20:30:38 -0800 (PST)
-Received: from [192.168.1.101] (122-58-182-39-adsl.sparkbb.co.nz. [122.58.182.39])
-        by smtp.gmail.com with ESMTPSA id a66sm12640834pfb.166.2019.11.15.20.30.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Nov 2019 20:30:38 -0800 (PST)
-Subject: Re: [PATCH] esp_scsi: Clear Transfer Count registers before PIO
- transfers
-To:     Finn Thain <fthain@telegraphics.com.au>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-References: <2bbb6359d542f5882be67c415ecc25ad2d9eeb5e.1573875417.git.fthain@telegraphics.com.au>
-Cc:     Kars de Jong <jongk@linux-m68k.org>, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Michael Schmitz <schmitzmic@gmail.com>
-Message-ID: <36712461-b94c-4aff-8664-3896c2cf2524@gmail.com>
-Date:   Sat, 16 Nov 2019 17:30:32 +1300
-User-Agent: Mozilla/5.0 (X11; Linux ppc; rv:45.0) Gecko/20100101
- Icedove/45.4.0
+        Fri, 15 Nov 2019 23:38:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NcGo6y3a7xQQOSK5TngZP8uR7CqYMj91tUhuMqf+9Ns=; b=KJtGujYNRdJwEveOIs3XLtio4
+        XHcsmagpcP1yaA2N+7UrIE8V88n7OW4Do7IfTCYeR+d4q8v+G3r8Zir+Cp+wqGKc7HcyXxooyXm1i
+        jUE+uYz62ZT+621BjFs/KBU3haXSa51WqN5sxZOr6xU5RH76Y/Sz5sUAwn8r5wYzwdM5mfHtQUUs2
+        ZrfmLVkLLS3h61l7VCJuzpkz68DUwA0bDfpS9kSDMtYs2EMRC5HTkOW19cMl/t9SIEyiGCRFhHR5D
+        Twd3LrtrHICHuFYKljsa+iVV+hFFYEI2DXYCf/BJPck0X727I4xYwpczptlMf5e6Dk3CiwXvaYxO3
+        s/HDUXKow==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iVpqY-00079E-6F; Sat, 16 Nov 2019 04:38:06 +0000
+Date:   Fri, 15 Nov 2019 20:38:06 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH v3 3/7] mm/lru: replace pgdat lru_lock with lruvec lock
+Message-ID: <20191116043806.GD20752@bombadil.infradead.org>
+References: <1573874106-23802-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1573874106-23802-4-git-send-email-alex.shi@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <2bbb6359d542f5882be67c415ecc25ad2d9eeb5e.1573875417.git.fthain@telegraphics.com.au>
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573874106-23802-4-git-send-email-alex.shi@linux.alibaba.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Finn,
+On Sat, Nov 16, 2019 at 11:15:02AM +0800, Alex Shi wrote:
+> This is the main patch to replace per node lru_lock with per memcg
+> lruvec lock. It also fold the irqsave flags into lruvec.
 
-Am 16.11.2019 um 16:36 schrieb Finn Thain:
-> The zorro_esp driver uses both PIO and DMA transfers. If a failed DMA
-> transfer happened to be followed by a PIO transfer, the TCLOW and TCMED
-> registers would not get cleared. It is theoretically possible that the
-> stale value from the transfer counter or the TCLOW/TCMED registers
-> could then be used by the controller and the driver. Avoid that by
-> clearing these registers before each PIO transfer.
+I have to say, I don't love the part where we fold the irqsave flags
+into the lruvec.  I know it saves us an argument, but it opens up the
+possibility of mismatched expectations.  eg we currently have:
 
-I believe you also need to send a DMA NOP command to the ESP:
+static void __split_huge_page(struct page *page, struct list_head *list,
+			struct lruvec *lruvec, pgoff_t end)
+{
+...
+	spin_unlock_irqrestore(&lruvec->lru_lock, lruvec->irqflags);
 
-"Values
-written to these two registers will be stored inter-
-nally and loaded into the transfer counter by any
-DMA command. These values remain unchanged
-while the transfer counter decrements. Thus,
-successive blocks of equal size may be transferred
-without reprogramming the count. They may be
-reprogrammed any time after the previous DMA
-operation has started, whether it has finished or
-not."
+so if we introduce a new caller, we have to be certain that this caller
+is also using lock_page_lruvec_irqsave() and not lock_page_lruvec_irq().
+I can't think of a way to make the compiler enforce that, and if we don't,
+then we can get some odd crashes with interrupts being unexpectedly
+enabled or disabled, depending on how ->irqflags was used last.
 
-"Any DMA command will load the transfer count into
-the counter. A DMA NOP (80h) will load the
-counter while the non-DMA NOP (OOh) will not."
+So it makes the code more subtle.  And that's not a good thing.
 
-(53CF64_96-2 data book)
-
-Without the DMA NOP, the transfer counts will remain as they were left 
-by the prematurely terminated DMA command.
-
-Cheers,
-
-	Michael
-
->
-> Cc: Michael Schmitz <schmitzmic@gmail.com>
-> Cc: Kars de Jong <jongk@linux-m68k.org>
-> Tested-by: Stan Johnson <userm57@yahoo.com>
-> Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-> ---
->  drivers/scsi/esp_scsi.c | 3 +++
->  drivers/scsi/mac_esp.c  | 2 --
->  2 files changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/scsi/esp_scsi.c b/drivers/scsi/esp_scsi.c
-> index bb88995a12c7..afbef83f5dd9 100644
-> --- a/drivers/scsi/esp_scsi.c
-> +++ b/drivers/scsi/esp_scsi.c
-> @@ -2835,6 +2835,9 @@ void esp_send_pio_cmd(struct esp *esp, u32 addr, u32 esp_count,
->  	cmd &= ~ESP_CMD_DMA;
->  	esp->send_cmd_error = 0;
->
-> +	esp_write8(0, ESP_TCLOW);
-> +	esp_write8(0, ESP_TCMED);
+> +static inline struct lruvec *lock_page_lruvec_irq(struct page *page,
+> +						struct pglist_data *pgdat)
+> +{
+> +	struct lruvec *lruvec = mem_cgroup_page_lruvec(page, pgdat);
 > +
->  	if (write) {
->  		u8 *dst = (u8 *)addr;
->  		u8 mask = ~(phase == ESP_MIP ? ESP_INTR_FDONE : ESP_INTR_BSERV);
-> diff --git a/drivers/scsi/mac_esp.c b/drivers/scsi/mac_esp.c
-> index 1c78bc10c790..797579247e47 100644
-> --- a/drivers/scsi/mac_esp.c
-> +++ b/drivers/scsi/mac_esp.c
-> @@ -361,8 +361,6 @@ static int esp_mac_probe(struct platform_device *dev)
->  	esp->flags = ESP_FLAG_NO_DMA_MAP;
->  	if (mep->pdma_io == NULL) {
->  		printk(KERN_INFO PFX "using PIO for controller %d\n", dev->id);
-> -		esp_write8(0, ESP_TCLOW);
-> -		esp_write8(0, ESP_TCMED);
->  		esp->flags |= ESP_FLAG_DISABLE_SYNC;
->  		mac_esp_ops.send_dma_cmd = esp_send_pio_cmd;
->  	} else {
->
+> +	spin_lock_irq(&lruvec->lru_lock);
+> +
+> +	return lruvec;
+> +}
+
+...
+
+> +static struct lruvec *lock_page_lru(struct page *page, int *isolated)
+>  {
+>  	pg_data_t *pgdat = page_pgdat(page);
+> +	struct lruvec *lruvec = lock_page_lruvec_irq(page, pgdat);
+>  
+> -	spin_lock_irq(&pgdat->lru_lock);
+>  	if (PageLRU(page)) {
+> -		struct lruvec *lruvec;
+>  
+> -		lruvec = mem_cgroup_page_lruvec(page, pgdat);
+>  		ClearPageLRU(page);
+>  		del_page_from_lru_list(page, lruvec, page_lru(page));
+>  		*isolated = 1;
+>  	} else
+>  		*isolated = 0;
+> +
+> +	return lruvec;
+>  }
+
+But what if the page is !PageLRU?  What lruvec did we just lock?
+According to the comments on mem_cgroup_page_lruvec(),
+
+ * This function is only safe when following the LRU page isolation
+ * and putback protocol: the LRU lock must be held, and the page must
+ * either be PageLRU() or the caller must have isolated/allocated it.
+
+and now it's being called in order to find out which LRU lock to take.
+So this comment needs to be updated, if it's wrong, or this patch has
+a race.
+
