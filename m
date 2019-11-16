@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C339C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4E9C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7238206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A96C62089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:02:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920158;
-	bh=QTntiOm27ELfX+4pHEMJoOCTT0p1VFvY5sE0aEjOdi0=;
+	s=default; t=1573920165;
+	bh=99+ozqhw15jcn46i8tnsS5mRIbqSjBnEL4IOQNmNxSk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u6TGPLy2KxGe6MlBHSeGGhR5ZPyZ0QTVP8++tWbRnR8Z7F8jBUJOVeh3zskhNShY3
-	 0L5epnKI6QM/kv7KecFh8dht0hT7m24M5ejf3Ad6gDuXfrg4nBBOPtzywzh3M3WmKA
-	 qDcJoKBaaQU8aybNb7tEUVXdPAtfnEGon6Oddmzo=
+	b=balvXfHGyZw4EEkA43qDsrLCISDmk5APBUuVO2e1G0kcglzEgU1JJQ1BwDKD5LeI0
+	 bs44lPljL9ZIrrgJ9KC0gLh2HQ/WfwHJxfQ2RolPebrM4ouZfcGDU0dQ+0xq4DtN+G
+	 edMcyRckBu5dk+c43sVdQEu91ol7hAp14OTYQUjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731519AbfKPQCh (ORCPT
+        id S1731539AbfKPQCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:02:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33556 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:02:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729684AbfKPPwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:52:46 -0500
+        id S1729580AbfKPPw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:52:28 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A1A820859;
-        Sat, 16 Nov 2019 15:52:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75F0020728;
+        Sat, 16 Nov 2019 15:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919565;
-        bh=QTntiOm27ELfX+4pHEMJoOCTT0p1VFvY5sE0aEjOdi0=;
+        s=default; t=1573919547;
+        bh=99+ozqhw15jcn46i8tnsS5mRIbqSjBnEL4IOQNmNxSk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fNIcLmZy1xRYHtYh6oMMEDTPAwFtUNMeFu40NhzmBZEFP0uXL4nUXEMQGE0yPpS6W
-         zmSca6SXG5N248fK/8dbCs7HcdDlDj1dcW+muh7iJYAM/TvQDpSydd2Hy0ADHBZ3WS
-         Oe9rIkEFP4RvG8FBpA2Xkap20FY95ZtqSEpM+wqE=
+        b=R6aVHjVJ5vkFkCnqvt927L09VDD6extVEfS6YSVPMoYNUm+qXkPop9D4P9lPefv0f
+         6wCrlj9IchwnCDqBg9BKgfRJ4yg+FtY86bIrTb/nT7c6k/KTRBC4lDzGMb3Wy/2dCX
+         S67Zr/iN4aWuF0uC5Myk4jhlwkJ08JtITqrBJOPk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     =?UTF-8?q?Ernesto=20A=2E=20Fern=C3=A1ndez?= 
         <ernesto.mnd.fernandez@gmail.com>,
-        Vyacheslav Dubeyko <slava@dubeyko.com>,
+        Christoph Hellwig <hch@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 63/99] hfsplus: fix return value of hfsplus_get_block()
-Date:   Sat, 16 Nov 2019 10:50:26 -0500
-Message-Id: <20191116155103.10971-63-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 59/99] hfsplus: fix BUG on bnode parent update
+Date:   Sat, 16 Nov 2019 10:50:22 -0500
+Message-Id: <20191116155103.10971-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -65,41 +65,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
 
-[ Upstream commit 839c3a6a5e1fbc8542d581911b35b2cb5cd29304 ]
+[ Upstream commit 19a9d0f1acf75e8be8cfba19c1a34e941846fa2b ]
 
-Direct writes to empty inodes fail with EIO.  The generic direct-io code
-is in part to blame (a patch has been submitted as "direct-io: allow
-direct writes to empty inodes"), but hfsplus is worse affected than the
-other filesystems because the fallback to buffered I/O doesn't happen.
+Creating, renaming or deleting a file may hit BUG_ON() if the first
+record of both a leaf node and its parent are changed, and if this
+forces the parent to be split.  This bug is triggered by xfstests
+generic/027, somewhat rarely; here is a more reliable reproducer:
 
-The problem is the return value of hfsplus_get_block() when called with
-!create.  Change it to be more consistent with the other modules.
+  truncate -s 50M fs.iso
+  mkfs.hfsplus fs.iso
+  mount fs.iso /mnt
+  i=1000
+  while [ $i -le 2400 ]; do
+    touch /mnt/$i &>/dev/null
+    ((++i))
+  done
+  i=2400
+  while [ $i -ge 1000 ]; do
+    mv /mnt/$i /mnt/$(perl -e "print $i x61") &>/dev/null
+    ((--i))
+  done
 
-Link: http://lkml.kernel.org/r/2cd1301404ec7cf1e39c8f11a01a4302f1460ad6.1539195310.git.ernesto.mnd.fernandez@gmail.com
+The issue is that a newly created bnode is being put twice.  Reset
+new_node to NULL in hfs_brec_update_parent() before reaching goto again.
+
+Link: http://lkml.kernel.org/r/5ee1db09b60373a15890f6a7c835d00e76bf601d.1535682461.git.ernesto.mnd.fernandez@gmail.com
 Signed-off-by: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
-Reviewed-by: Vyacheslav Dubeyko <slava@dubeyko.com>
+Cc: Christoph Hellwig <hch@infradead.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/hfsplus/extents.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/hfsplus/brec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/hfsplus/extents.c b/fs/hfsplus/extents.c
-index ce0b8f8374081..d93c051559cb8 100644
---- a/fs/hfsplus/extents.c
-+++ b/fs/hfsplus/extents.c
-@@ -236,7 +236,9 @@ int hfsplus_get_block(struct inode *inode, sector_t iblock,
- 	ablock = iblock >> sbi->fs_shift;
+diff --git a/fs/hfsplus/brec.c b/fs/hfsplus/brec.c
+index 1002a0c08319b..20ce698251ad1 100644
+--- a/fs/hfsplus/brec.c
++++ b/fs/hfsplus/brec.c
+@@ -447,6 +447,7 @@ static int hfs_brec_update_parent(struct hfs_find_data *fd)
+ 			/* restore search_key */
+ 			hfs_bnode_read_key(node, fd->search_key, 14);
+ 		}
++		new_node = NULL;
+ 	}
  
- 	if (iblock >= hip->fs_blocks) {
--		if (iblock > hip->fs_blocks || !create)
-+		if (!create)
-+			return 0;
-+		if (iblock > hip->fs_blocks)
- 			return -EIO;
- 		if (ablock >= hip->alloc_blocks) {
- 			res = hfsplus_file_extend(inode, false);
+ 	if (!rec && node->parent)
 -- 
 2.20.1
 
