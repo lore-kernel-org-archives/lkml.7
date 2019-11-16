@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF43C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D24C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E43BA206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB8AB206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920120;
-	bh=XfDiQjvwi/dxFwd5jdxe7CZGUs6C2zCSTVXvUAaR0ic=;
+	s=default; t=1573920122;
+	bh=55QJa0/qN3W+hhW2WiN2ehyXwX7TS3HfPxyJsp8ucvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vfd73L1yMgksWiJUn3Sh8KtSmistG3mSECo9xUY5wNeqp+s+nQFP0a844vLTlQVRu
-	 JSVg79uXUY4lTZroN2wpdN8Iht0TEU+yNqRtSkLwKdUhGaEoT7UG8OASCKYE5rbKyp
-	 FXSF/tttSG/wAd0UAeiFT9PSWThxCz+cbe331nVs=
+	b=YvclhsDNFgK0HHIFCezn/3L5u5FBNGp3EqfOQZWOhLaVqcfwqwr264qIU3IfVKbrs
+	 Vvl6kd47eWxvLySCYEu4jofwL9f2fBiv1ZELZeTI/Gkx6lqG88goTUawWX1K/JJM/Z
+	 m78z8eUXn8Tv53HqJJeTlUF7Zj6O7cifeT0DJ9iQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731121AbfKPPxE (ORCPT
+        id S1731680AbfKPQCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:53:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33910 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:02:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731102AbfKPPxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:53:01 -0500
+        id S1731119AbfKPPxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:53:04 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8A3521826;
-        Sat, 16 Nov 2019 15:52:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5BCA21826;
+        Sat, 16 Nov 2019 15:53:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919580;
-        bh=XfDiQjvwi/dxFwd5jdxe7CZGUs6C2zCSTVXvUAaR0ic=;
+        s=default; t=1573919584;
+        bh=55QJa0/qN3W+hhW2WiN2ehyXwX7TS3HfPxyJsp8ucvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PoOcClXjnMWEtsPBLiqlzl5Qv8W930ea5NOuetNCTk9jeUxrDOUfwW7BvPLMwrLl6
-         m3354RIOJDR0J9bynW4edyhBbHxCIjLnWT8ycva7D2yrL3lJk8X2/m1La7hEhFLDee
-         LxXvDrUglU3fiTFdfnJobmV9BiaDUvj8yHe4cFpY=
+        b=R9vmQGk58HLX1xyx67Oj45H9Rnb0GLJbtS41DbNrjttiqiQPSIq0EIH/JZ0xs86Kj
+         Ia5l36zm7u7VBOimoi83fUNKYNb8iKooT5wOSQbmd+fKPmg0Y6c9GGfPwk2eMLtdyC
+         ZjmiVZ0hOct2dJQMPOH2VFpA0f2pHZ4N8jR7SIfM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Victor Kamensky <kamensky@cisco.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 72/99] arm64: makefile fix build of .i file in external module case
-Date:   Sat, 16 Nov 2019 10:50:35 -0500
-Message-Id: <20191116155103.10971-72-sashal@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 75/99] net: do not abort bulk send on BQL status
+Date:   Sat, 16 Nov 2019 10:50:38 -0500
+Message-Id: <20191116155103.10971-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -60,55 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Victor Kamensky <kamensky@cisco.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 98356eb0ae499c63e78073ccedd9a5fc5c563288 ]
+[ Upstream commit fe60faa5063822f2d555f4f326c7dd72a60929bf ]
 
-After 'a66649dab350 arm64: fix vdso-offsets.h dependency' if
-one will try to build .i file in case of external kernel module,
-build fails complaining that prepare0 target is missing. This
-issue came up with SystemTap when it tries to build variety
-of .i files for its own generated kernel modules trying to
-figure given kernel features/capabilities.
+Before calling dev_hard_start_xmit(), upper layers tried
+to cook optimal skb list based on BQL budget.
 
-The issue is that prepare0 is defined in top level Makefile
-only if KBUILD_EXTMOD is not defined. .i file rule depends
-on prepare and in case KBUILD_EXTMOD defined top level Makefile
-contains empty rule for prepare. But after mentioned commit
-arch/arm64/Makefile would introduce dependency on prepare0
-through its own prepare target.
+Problem is that GSO packets can end up comsuming more than
+the BQL budget.
 
-Fix it to put proper ifdef KBUILD_EXTMOD around code introduced
-by mentioned commit. It matches what top level Makefile does.
+Breaking the loop is not useful, since requeued packets
+are ahead of any packets still in the qdisc.
 
-Acked-by: Kevin Brodsky <kevin.brodsky@arm.com>
-Signed-off-by: Victor Kamensky <kamensky@cisco.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+It is also more expensive, since next TX completion will
+push these packets later, while skbs are not in cpu caches.
+
+It is also a behavior difference with TSO packets, that can
+break the BQL limit by a large amount.
+
+Note that drivers should use __netdev_tx_sent_queue()
+in order to have optimal xmit_more support, and avoid
+useless atomic operations as shown in the following patch.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
+ net/core/dev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index ee94597773fab..8d469aa5fc987 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -134,6 +134,7 @@ archclean:
- 	$(Q)$(MAKE) $(clean)=$(boot)
- 	$(Q)$(MAKE) $(clean)=$(boot)/dts
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 547b4daae5cad..c6fb7e61cb405 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -2997,7 +2997,7 @@ struct sk_buff *dev_hard_start_xmit(struct sk_buff *first, struct net_device *de
+ 		}
  
-+ifeq ($(KBUILD_EXTMOD),)
- # We need to generate vdso-offsets.h before compiling certain files in kernel/.
- # In order to do that, we should use the archprepare target, but we can't since
- # asm-offsets.h is included in some files used to generate vdso-offsets.h, and
-@@ -143,6 +144,7 @@ archclean:
- prepare: vdso_prepare
- vdso_prepare: prepare0
- 	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso include/generated/vdso-offsets.h
-+endif
- 
- define archhelp
-   echo  '* Image.gz      - Compressed kernel image (arch/$(ARCH)/boot/Image.gz)'
+ 		skb = next;
+-		if (netif_xmit_stopped(txq) && skb) {
++		if (netif_tx_queue_stopped(txq) && skb) {
+ 			rc = NETDEV_TX_BUSY;
+ 			break;
+ 		}
 -- 
 2.20.1
 
