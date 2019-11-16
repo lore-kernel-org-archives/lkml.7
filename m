@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B15C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA7FC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC682089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62BD02089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920775;
-	bh=Fy1mQC6OBqM/+t1UI6JtqQ78tdA90l/4ZXB8fuX08j8=;
+	s=default; t=1573920778;
+	bh=3wMnnIJXfnWk142yJD3BMJNJy478q2HaJSDSh7be0mA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IMdDmKmf8iHuXKIC7GqVsGjJehhWDRP+5wfiZyD9hBnJuA0tADEQHrI8fay99mHMJ
-	 LfBKnQOV+NkADxzFCHTFdJ1XMMIeYlxvevaDd7MNIUnpNdKEXm51d4huZQ/9nV4Pbw
-	 DMFnV9qZb/YccKSruO3fVr37ntUtbjlWbM+X1ctw=
+	b=l1n8RzqDf664xdWhmCJpmt0MB/Z8vYg5jAnBA043A0kMOoU3qxQ06sDCZzq0/3PXq
+	 8x/qj/hmxP5YumJE36CiNg5MLbo4q3GhfXjjTnU0+sM1BiLe/IRbRjmmaUPFRt30Rf
+	 zoVLBC2eq5MXYC8KXUEs1FQL1pQjDtvdOcMc42b8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729941AbfKPPsG (ORCPT
+        id S1731198AbfKPQM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:48:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54744 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:12:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729853AbfKPPrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:47:55 -0500
+        id S1729942AbfKPPsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:48:07 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F7EE208C0;
-        Sat, 16 Nov 2019 15:47:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F8582086A;
+        Sat, 16 Nov 2019 15:48:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919274;
-        bh=Fy1mQC6OBqM/+t1UI6JtqQ78tdA90l/4ZXB8fuX08j8=;
+        s=default; t=1573919286;
+        bh=3wMnnIJXfnWk142yJD3BMJNJy478q2HaJSDSh7be0mA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yMATsJMEY2Zofg4Du3MxHvDQYxpJaiInlpKal7c6EgIqc4d7ccxBlicSUjKuJyoxw
-         PoUeLUNK5iKecLH8VnGxfJ8DhfGbw18YhU124HNYfEagkv8t5LyYVsoMNZrkKNwbV/
-         aGUxricrzRGRA9ocg/Jz2ZNdPI585skNcTYUJ4uI=
+        b=ZNNoQJlSwclmqV8l1fpbYM1yCAnmuDdeaj8aOgxhqSyDPI6J5UzmS0UrRYP/E6mvD
+         mS+lgM5GSg82LMFCQbE2NhQZxID2H4UxUxpGdpNXrQErFgoWBOfqt8myIUyB8rA83f
+         leBrflJzGUcWTqx5xzD3PwepET+DtTnx/Y3be6Gs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 023/150] pinctrl: sunxi: Fix a memory leak in 'sunxi_pinctrl_build_state()'
-Date:   Sat, 16 Nov 2019 10:45:21 -0500
-Message-Id: <20191116154729.9573-23-sashal@kernel.org>
+Cc:     Lubomir Rintel <lkundrak@v3.sk>, Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 036/150] clk: mmp2: fix the clock id for sdh2_clk and sdh3_clk
+Date:   Sat, 16 Nov 2019 10:45:34 -0500
+Message-Id: <20191116154729.9573-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,54 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-[ Upstream commit a93a676b079144009f55fff2ab0e34c3b7258c8a ]
+[ Upstream commit 4917fb90eec7c26dac1497ada3bd4a325f670fcc ]
 
-If 'krealloc()' fails, 'pctl->functions' is set to NULL.
-We should instead use a temp variable in order to be able to free the
-previously allocated memeory, in case of OOM.
+A typo that makes it impossible to get the correct clocks for
+MMP2_CLK_SDH2 and MMP2_CLK_SDH3.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Fixes: 1ec770d92a62 ("clk: mmp: add mmp2 DT support for clock driver")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sunxi/pinctrl-sunxi.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/clk/mmp/clk-of-mmp2.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index 52edf3b5988d5..cc8b86a16da0d 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -1039,6 +1039,7 @@ static int sunxi_pinctrl_add_function(struct sunxi_pinctrl *pctl,
- static int sunxi_pinctrl_build_state(struct platform_device *pdev)
- {
- 	struct sunxi_pinctrl *pctl = platform_get_drvdata(pdev);
-+	void *ptr;
- 	int i;
- 
- 	/*
-@@ -1105,13 +1106,15 @@ static int sunxi_pinctrl_build_state(struct platform_device *pdev)
- 	}
- 
- 	/* And now allocated and fill the array for real */
--	pctl->functions = krealloc(pctl->functions,
--				   pctl->nfunctions * sizeof(*pctl->functions),
--				   GFP_KERNEL);
--	if (!pctl->functions) {
-+	ptr = krealloc(pctl->functions,
-+		       pctl->nfunctions * sizeof(*pctl->functions),
-+		       GFP_KERNEL);
-+	if (!ptr) {
- 		kfree(pctl->functions);
-+		pctl->functions = NULL;
- 		return -ENOMEM;
- 	}
-+	pctl->functions = ptr;
- 
- 	for (i = 0; i < pctl->desc->npins; i++) {
- 		const struct sunxi_desc_pin *pin = pctl->desc->pins + i;
+diff --git a/drivers/clk/mmp/clk-of-mmp2.c b/drivers/clk/mmp/clk-of-mmp2.c
+index 0fc75c3959570..d083b860f0833 100644
+--- a/drivers/clk/mmp/clk-of-mmp2.c
++++ b/drivers/clk/mmp/clk-of-mmp2.c
+@@ -227,8 +227,8 @@ static struct mmp_param_gate_clk apmu_gate_clks[] = {
+ 	/* The gate clocks has mux parent. */
+ 	{MMP2_CLK_SDH0, "sdh0_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH0, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
+ 	{MMP2_CLK_SDH1, "sdh1_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH1, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
+-	{MMP2_CLK_SDH1, "sdh2_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH2, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
+-	{MMP2_CLK_SDH1, "sdh3_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH3, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
++	{MMP2_CLK_SDH2, "sdh2_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH2, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
++	{MMP2_CLK_SDH3, "sdh3_clk", "sdh_mix_clk", CLK_SET_RATE_PARENT, APMU_SDH3, 0x1b, 0x1b, 0x0, 0, &sdh_lock},
+ 	{MMP2_CLK_DISP0, "disp0_clk", "disp0_div", CLK_SET_RATE_PARENT, APMU_DISP0, 0x1b, 0x1b, 0x0, 0, &disp0_lock},
+ 	{MMP2_CLK_DISP0_SPHY, "disp0_sphy_clk", "disp0_sphy_div", CLK_SET_RATE_PARENT, APMU_DISP0, 0x1024, 0x1024, 0x0, 0, &disp0_lock},
+ 	{MMP2_CLK_DISP1, "disp1_clk", "disp1_div", CLK_SET_RATE_PARENT, APMU_DISP1, 0x1b, 0x1b, 0x0, 0, &disp1_lock},
 -- 
 2.20.1
 
