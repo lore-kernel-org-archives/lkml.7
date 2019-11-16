@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A42C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0C4C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7D772081E
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18A852081E
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919352;
-	bh=vm84ASlpradK3YRp36649IF0WvfGXEHeTtm8gY3B1AY=;
+	s=default; t=1573919356;
+	bh=10WOfMG8uWhuBI/BUbcgjMuv9twpfwR//L0iuBIhDvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gS3Ep+IlKUSsfp1pBv1zQCzOy0RWc/7dOiEYff8F6wZvnoPLZpjAhwvap+KXevIoN
-	 7FNwdTKJ/41AK59Hmr+MiUyvx9UGwV/VltQEvl+9ZGJ45fdJHKfo8xSrnz+9Svp2SG
-	 e1iLcplSq7VgT1CKLeJIhqcNbNtFb5pmnTdJGrzc=
+	b=D4OuTSCngvBkXHJKlhFD2YfPSdp0kpCP2qWruYhFxumUjzrx3qFuCsDktJli0bbhx
+	 jk/w6SYqGD1Zb26iD2to3/UT0YSt63eeNdMz8FYl9kUJL24RPpYO26ObGkrG3O92qf
+	 4J1ilKMU9CuC3WV/AU9ibY4lOdH4CX/f1BRIr02o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730237AbfKPPs6 (ORCPT
+        id S1730238AbfKPPtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:48:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56084 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:49:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730177AbfKPPsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:48:46 -0500
+        id S1728876AbfKPPtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:49:11 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C774020729;
-        Sat, 16 Nov 2019 15:48:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A868E20729;
+        Sat, 16 Nov 2019 15:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919326;
-        bh=vm84ASlpradK3YRp36649IF0WvfGXEHeTtm8gY3B1AY=;
+        s=default; t=1573919350;
+        bh=10WOfMG8uWhuBI/BUbcgjMuv9twpfwR//L0iuBIhDvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K6q0zvd9GqAsgtnTX7L30hSkLGakCElKsmoNQhPl6krOdoSZ0ll98Q8+I/5uaUnb9
-         h4kxEmH+fGbe2W4uOFo3o5zqxNmSqNuuRK/ibvmsHJF80AvCqpm3i/27d9FNyBP4gr
-         jwtga3XPdB0qnzEE+9q96R6clvqUi7FqgRZ/iGf8=
+        b=M4PpV3D7lQgNHLBobRUOIyJ+AckFXbgnshyyakOkD0HIiATE4Drx+8CqoeOl+lrTk
+         wZEa5pHK1a2YWnp52MTdd5Xp1O2tiVc6yC29xSJ9inMczyWsxhCunh3jfLx0i6VtTR
+         0qfxyw4c3dXAxrmnNuqoqW3Cj2bunwywA1jZQaE0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabio Estevam <fabio.estevam@nxp.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Kyeongdon Kim <kyeongdon.kim@lge.com>,
+        Alexander Potapenko <glider@google.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 068/150] mfd: mc13xxx-core: Fix PMIC shutdown when reading ADC values
-Date:   Sat, 16 Nov 2019 10:46:06 -0500
-Message-Id: <20191116154729.9573-68-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 078/150] arm64: lib: use C string functions with KASAN enabled
+Date:   Sat, 16 Nov 2019 10:46:16 -0500
+Message-Id: <20191116154729.9573-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,58 +65,221 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam@nxp.com>
+From: Andrey Ryabinin <aryabinin@virtuozzo.com>
 
-[ Upstream commit 55143439b7b501882bea9d95a54adfe00ffc79a3 ]
+[ Upstream commit 19a2ca0fb560fd7be7b5293c6b652c6d6078dcde ]
 
-When trying to read any MC13892 ADC channel on a imx51-babbage board:
+ARM64 has asm implementation of memchr(), memcmp(), str[r]chr(),
+str[n]cmp(), str[n]len().  KASAN don't see memory accesses in asm code,
+thus it can potentially miss many bugs.
 
-The MC13892 PMIC shutdowns completely.
+Ifdef out __HAVE_ARCH_* defines of these functions when KASAN is enabled,
+so the generic implementations from lib/string.c will be used.
 
-After debugging this issue and comparing the MC13892 and MC13783
-initializations done in the vendor kernel, it was noticed that the
-CHRGRAWDIV bit of the ADC0 register was not being set.
+We can't just remove the asm functions because efistub uses them.  And we
+can't have two non-weak functions either, so declare the asm functions as
+weak.
 
-This bit is set by default after power on, but the driver was
-clearing it.
-
-After setting this bit it is possible to read the ADC values correctly.
-
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
-Tested-by: Chris Healy <cphealy@gmail.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Link: http://lkml.kernel.org/r/20180920135631.23833-2-aryabinin@virtuozzo.com
+Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Reported-by: Kyeongdon Kim <kyeongdon.kim@lge.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/mc13xxx-core.c  | 3 ++-
- include/linux/mfd/mc13xxx.h | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/string.h | 14 ++++++++------
+ arch/arm64/kernel/arm64ksyms.c  |  7 +++++--
+ arch/arm64/lib/memchr.S         |  2 +-
+ arch/arm64/lib/memcmp.S         |  2 +-
+ arch/arm64/lib/strchr.S         |  2 +-
+ arch/arm64/lib/strcmp.S         |  2 +-
+ arch/arm64/lib/strlen.S         |  2 +-
+ arch/arm64/lib/strncmp.S        |  2 +-
+ arch/arm64/lib/strnlen.S        |  2 +-
+ arch/arm64/lib/strrchr.S        |  2 +-
+ 10 files changed, 21 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/mfd/mc13xxx-core.c b/drivers/mfd/mc13xxx-core.c
-index 6c16f170529f5..75d52034f89da 100644
---- a/drivers/mfd/mc13xxx-core.c
-+++ b/drivers/mfd/mc13xxx-core.c
-@@ -278,7 +278,8 @@ int mc13xxx_adc_do_conversion(struct mc13xxx *mc13xxx, unsigned int mode,
- 	if (ret)
- 		goto out;
+diff --git a/arch/arm64/include/asm/string.h b/arch/arm64/include/asm/string.h
+index dd95d33a5bd5d..03a6c256b7ec4 100644
+--- a/arch/arm64/include/asm/string.h
++++ b/arch/arm64/include/asm/string.h
+@@ -16,6 +16,7 @@
+ #ifndef __ASM_STRING_H
+ #define __ASM_STRING_H
  
--	adc0 = MC13XXX_ADC0_ADINC1 | MC13XXX_ADC0_ADINC2;
-+	adc0 = MC13XXX_ADC0_ADINC1 | MC13XXX_ADC0_ADINC2 |
-+	       MC13XXX_ADC0_CHRGRAWDIV;
- 	adc1 = MC13XXX_ADC1_ADEN | MC13XXX_ADC1_ADTRIGIGN | MC13XXX_ADC1_ASC;
++#ifndef CONFIG_KASAN
+ #define __HAVE_ARCH_STRRCHR
+ extern char *strrchr(const char *, int c);
  
- 	if (channel > 7)
-diff --git a/include/linux/mfd/mc13xxx.h b/include/linux/mfd/mc13xxx.h
-index 638222e43e489..93011c61aafd2 100644
---- a/include/linux/mfd/mc13xxx.h
-+++ b/include/linux/mfd/mc13xxx.h
-@@ -247,6 +247,7 @@ struct mc13xxx_platform_data {
- #define MC13XXX_ADC0_TSMOD0		(1 << 12)
- #define MC13XXX_ADC0_TSMOD1		(1 << 13)
- #define MC13XXX_ADC0_TSMOD2		(1 << 14)
-+#define MC13XXX_ADC0_CHRGRAWDIV		(1 << 15)
- #define MC13XXX_ADC0_ADINC1		(1 << 16)
- #define MC13XXX_ADC0_ADINC2		(1 << 17)
+@@ -34,6 +35,13 @@ extern __kernel_size_t strlen(const char *);
+ #define __HAVE_ARCH_STRNLEN
+ extern __kernel_size_t strnlen(const char *, __kernel_size_t);
  
++#define __HAVE_ARCH_MEMCMP
++extern int memcmp(const void *, const void *, size_t);
++
++#define __HAVE_ARCH_MEMCHR
++extern void *memchr(const void *, int, __kernel_size_t);
++#endif
++
+ #define __HAVE_ARCH_MEMCPY
+ extern void *memcpy(void *, const void *, __kernel_size_t);
+ extern void *__memcpy(void *, const void *, __kernel_size_t);
+@@ -42,16 +50,10 @@ extern void *__memcpy(void *, const void *, __kernel_size_t);
+ extern void *memmove(void *, const void *, __kernel_size_t);
+ extern void *__memmove(void *, const void *, __kernel_size_t);
+ 
+-#define __HAVE_ARCH_MEMCHR
+-extern void *memchr(const void *, int, __kernel_size_t);
+-
+ #define __HAVE_ARCH_MEMSET
+ extern void *memset(void *, int, __kernel_size_t);
+ extern void *__memset(void *, int, __kernel_size_t);
+ 
+-#define __HAVE_ARCH_MEMCMP
+-extern int memcmp(const void *, const void *, size_t);
+-
+ #ifdef CONFIG_ARCH_HAS_UACCESS_FLUSHCACHE
+ #define __HAVE_ARCH_MEMCPY_FLUSHCACHE
+ void memcpy_flushcache(void *dst, const void *src, size_t cnt);
+diff --git a/arch/arm64/kernel/arm64ksyms.c b/arch/arm64/kernel/arm64ksyms.c
+index 66be504edb6cf..9eedf839e7393 100644
+--- a/arch/arm64/kernel/arm64ksyms.c
++++ b/arch/arm64/kernel/arm64ksyms.c
+@@ -44,20 +44,23 @@ EXPORT_SYMBOL(__arch_copy_in_user);
+ EXPORT_SYMBOL(memstart_addr);
+ 
+ 	/* string / mem functions */
++#ifndef CONFIG_KASAN
+ EXPORT_SYMBOL(strchr);
+ EXPORT_SYMBOL(strrchr);
+ EXPORT_SYMBOL(strcmp);
+ EXPORT_SYMBOL(strncmp);
+ EXPORT_SYMBOL(strlen);
+ EXPORT_SYMBOL(strnlen);
++EXPORT_SYMBOL(memcmp);
++EXPORT_SYMBOL(memchr);
++#endif
++
+ EXPORT_SYMBOL(memset);
+ EXPORT_SYMBOL(memcpy);
+ EXPORT_SYMBOL(memmove);
+ EXPORT_SYMBOL(__memset);
+ EXPORT_SYMBOL(__memcpy);
+ EXPORT_SYMBOL(__memmove);
+-EXPORT_SYMBOL(memchr);
+-EXPORT_SYMBOL(memcmp);
+ 
+ 	/* atomic bitops */
+ EXPORT_SYMBOL(set_bit);
+diff --git a/arch/arm64/lib/memchr.S b/arch/arm64/lib/memchr.S
+index 4444c1d25f4bb..0f164a4baf52a 100644
+--- a/arch/arm64/lib/memchr.S
++++ b/arch/arm64/lib/memchr.S
+@@ -30,7 +30,7 @@
+  * Returns:
+  *	x0 - address of first occurrence of 'c' or 0
+  */
+-ENTRY(memchr)
++WEAK(memchr)
+ 	and	w1, w1, #0xff
+ 1:	subs	x2, x2, #1
+ 	b.mi	2f
+diff --git a/arch/arm64/lib/memcmp.S b/arch/arm64/lib/memcmp.S
+index 2a4e239bd17a0..fb295f52e9f87 100644
+--- a/arch/arm64/lib/memcmp.S
++++ b/arch/arm64/lib/memcmp.S
+@@ -58,7 +58,7 @@ pos		.req	x11
+ limit_wd	.req	x12
+ mask		.req	x13
+ 
+-ENTRY(memcmp)
++WEAK(memcmp)
+ 	cbz	limit, .Lret0
+ 	eor	tmp1, src1, src2
+ 	tst	tmp1, #7
+diff --git a/arch/arm64/lib/strchr.S b/arch/arm64/lib/strchr.S
+index dae0cf5591f99..7c83091d1bcdd 100644
+--- a/arch/arm64/lib/strchr.S
++++ b/arch/arm64/lib/strchr.S
+@@ -29,7 +29,7 @@
+  * Returns:
+  *	x0 - address of first occurrence of 'c' or 0
+  */
+-ENTRY(strchr)
++WEAK(strchr)
+ 	and	w1, w1, #0xff
+ 1:	ldrb	w2, [x0], #1
+ 	cmp	w2, w1
+diff --git a/arch/arm64/lib/strcmp.S b/arch/arm64/lib/strcmp.S
+index 471fe61760ef6..7d5d15398bfbc 100644
+--- a/arch/arm64/lib/strcmp.S
++++ b/arch/arm64/lib/strcmp.S
+@@ -60,7 +60,7 @@ tmp3		.req	x9
+ zeroones	.req	x10
+ pos		.req	x11
+ 
+-ENTRY(strcmp)
++WEAK(strcmp)
+ 	eor	tmp1, src1, src2
+ 	mov	zeroones, #REP8_01
+ 	tst	tmp1, #7
+diff --git a/arch/arm64/lib/strlen.S b/arch/arm64/lib/strlen.S
+index 55ccc8e24c084..8e0b14205dcb4 100644
+--- a/arch/arm64/lib/strlen.S
++++ b/arch/arm64/lib/strlen.S
+@@ -56,7 +56,7 @@ pos		.req	x12
+ #define REP8_7f 0x7f7f7f7f7f7f7f7f
+ #define REP8_80 0x8080808080808080
+ 
+-ENTRY(strlen)
++WEAK(strlen)
+ 	mov	zeroones, #REP8_01
+ 	bic	src, srcin, #15
+ 	ands	tmp1, srcin, #15
+diff --git a/arch/arm64/lib/strncmp.S b/arch/arm64/lib/strncmp.S
+index e267044761c6f..66bd145935d9e 100644
+--- a/arch/arm64/lib/strncmp.S
++++ b/arch/arm64/lib/strncmp.S
+@@ -64,7 +64,7 @@ limit_wd	.req	x13
+ mask		.req	x14
+ endloop		.req	x15
+ 
+-ENTRY(strncmp)
++WEAK(strncmp)
+ 	cbz	limit, .Lret0
+ 	eor	tmp1, src1, src2
+ 	mov	zeroones, #REP8_01
+diff --git a/arch/arm64/lib/strnlen.S b/arch/arm64/lib/strnlen.S
+index eae38da6e0bb3..355be04441fe6 100644
+--- a/arch/arm64/lib/strnlen.S
++++ b/arch/arm64/lib/strnlen.S
+@@ -59,7 +59,7 @@ limit_wd	.req	x14
+ #define REP8_7f 0x7f7f7f7f7f7f7f7f
+ #define REP8_80 0x8080808080808080
+ 
+-ENTRY(strnlen)
++WEAK(strnlen)
+ 	cbz	limit, .Lhit_limit
+ 	mov	zeroones, #REP8_01
+ 	bic	src, srcin, #15
+diff --git a/arch/arm64/lib/strrchr.S b/arch/arm64/lib/strrchr.S
+index 61eabd9a289a6..f3b9f8e2917c6 100644
+--- a/arch/arm64/lib/strrchr.S
++++ b/arch/arm64/lib/strrchr.S
+@@ -29,7 +29,7 @@
+  * Returns:
+  *	x0 - address of last occurrence of 'c' or 0
+  */
+-ENTRY(strrchr)
++WEAK(strrchr)
+ 	mov	x3, #0
+ 	and	w1, w1, #0xff
+ 1:	ldrb	w2, [x0], #1
 -- 
 2.20.1
 
