@@ -2,52 +2,51 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CD5C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95863C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B109207FA
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F9FC20729
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919336;
-	bh=dP+PCoNwoOWfPuFe01TtS/TXqgxB3zZdYBB2ROF1FZs=;
+	s=default; t=1573919340;
+	bh=QapvbyAR0UCwp5TQJRgpF5BAlHZWPUtIxkqmXmTEBlI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oAOJpPqgMKcGztneNdovALIILn8NFfThe5gUUxnn44qOzboB7U9AeZMTF4E9No9jq
-	 R/c8uwha8OI2nFfrxkCzSIxpizUecjXztIK2vDrQ5dbBuGDwg8SkoxJJDdF/GachWT
-	 ccW4GrVHVVDK/NngnQ285REbV3SZVwPNPU8SfjVg=
+	b=g5PkapfY1eQ4OFAdXjKcUZPVXlxa+qjc+2I6zSFiNHE16ouQIV7rzzBc5N0RmZ/iJ
+	 7mnghRpOseGJalaOwOvJkYr1ICwo1YThm2Qp3+L/qGbNprIoDLM5Eu0LBcjCFMrT3p
+	 tqWdd7txQDJKqU4YdPpc/N+iIA0ac2K4pY/dB1Do=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbfKPPsz (ORCPT
+        id S1730252AbfKPPs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:48:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55962 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:48:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728774AbfKPPsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:48:42 -0500
+        id S1730190AbfKPPsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:48:51 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72C4C208E3;
-        Sat, 16 Nov 2019 15:48:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8668020729;
+        Sat, 16 Nov 2019 15:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919322;
-        bh=dP+PCoNwoOWfPuFe01TtS/TXqgxB3zZdYBB2ROF1FZs=;
+        s=default; t=1573919330;
+        bh=QapvbyAR0UCwp5TQJRgpF5BAlHZWPUtIxkqmXmTEBlI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WRQkIddXCKvEt4risY8XLJwDMeq93FTF55IRTYPXvvoGwFERmd7uWFciNAN9TDpI/
-         jzWeI/7DeDUkrtL8OICb2lFsCpL9oKdsFEsFaIZq3m0dJ95iQ+MOH8zmJNyfA6qn6B
-         M28pCK2UOsJclRSENAnXVICoOcuatbC9uIaVOjhc=
+        b=fv+690B9DzP4h2LiqZsY6UWcLvxYQi6WbHGi2YP8rW20GyY4IQLBvmOdE1IJ36K0d
+         /Np8FPNPCcFPuZNTKTN0k0CjeYtNBf9GtSD/ah7fotG/KDRIyT6Dy145592qWJxbCF
+         bpJJW39zcu3WUOvjFeNinIdKmah1sx99ChJv+xKM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 064/150] mISDN: Fix type of switch control variable in ctrl_teimanager
-Date:   Sat, 16 Nov 2019 10:46:02 -0500
-Message-Id: <20191116154729.9573-64-sashal@kernel.org>
+Cc:     "Shuah Khan (Samsung OSG)" <shuah@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 072/150] selftests: watchdog: fix message when /dev/watchdog open fails
+Date:   Sat, 16 Nov 2019 10:46:10 -0500
+Message-Id: <20191116154729.9573-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,68 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: "Shuah Khan (Samsung OSG)" <shuah@kernel.org>
 
-[ Upstream commit aeb5e02aca91522733eb1db595ac607d30c87767 ]
+[ Upstream commit 9a244229a4b850b11952a0df79607c69b18fd8df ]
 
-Clang warns (trimmed for brevity):
+When /dev/watchdog open fails, watchdog exits with "watchdog not enabled"
+message. This is incorrect when open fails due to insufficient privilege.
 
-drivers/isdn/mISDN/tei.c:1193:7: warning: overflow converting case value
-to switch condition type (2147764552 to 18446744071562348872) [-Wswitch]
-        case IMHOLD_L1:
-             ^
-drivers/isdn/mISDN/tei.c:1187:7: warning: overflow converting case value
-to switch condition type (2147764550 to 18446744071562348870) [-Wswitch]
-        case IMCLEAR_L2:
-             ^
-2 warnings generated.
+Fix message to clearly state the reason when open fails with EACCESS when
+a non-root user runs it.
 
-The root cause is that the _IOC macro can generate really large numbers,
-which don't find into type int. My research into how GCC and Clang are
-handling this at a low level didn't prove fruitful and surveying the
-kernel tree shows that aside from here and a few places in the scsi
-subsystem, everything that uses _IOC is at least of type 'unsigned int'.
-Make that change here because as nothing in this function cares about
-the signedness of the variable and it removes ambiguity, which is never
-good when dealing with compilers.
-
-While we're here, remove the unnecessary local variable ret (just return
--EINVAL and 0 directly).
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/67
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Shuah Khan (Samsung OSG) <shuah@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/isdn/mISDN/tei.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ tools/testing/selftests/watchdog/watchdog-test.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/isdn/mISDN/tei.c b/drivers/isdn/mISDN/tei.c
-index 12d9e5f4beb1f..58635b5f296f0 100644
---- a/drivers/isdn/mISDN/tei.c
-+++ b/drivers/isdn/mISDN/tei.c
-@@ -1180,8 +1180,7 @@ static int
- ctrl_teimanager(struct manager *mgr, void *arg)
- {
- 	/* currently we only have one option */
--	int	*val = (int *)arg;
--	int	ret = 0;
-+	unsigned int *val = (unsigned int *)arg;
+diff --git a/tools/testing/selftests/watchdog/watchdog-test.c b/tools/testing/selftests/watchdog/watchdog-test.c
+index 6e290874b70e2..e029e2017280f 100644
+--- a/tools/testing/selftests/watchdog/watchdog-test.c
++++ b/tools/testing/selftests/watchdog/watchdog-test.c
+@@ -89,7 +89,13 @@ int main(int argc, char *argv[])
+ 	fd = open("/dev/watchdog", O_WRONLY);
  
- 	switch (val[0]) {
- 	case IMCLEAR_L2:
-@@ -1197,9 +1196,9 @@ ctrl_teimanager(struct manager *mgr, void *arg)
- 			test_and_clear_bit(OPTION_L1_HOLD, &mgr->options);
- 		break;
- 	default:
--		ret = -EINVAL;
-+		return -EINVAL;
+ 	if (fd == -1) {
+-		printf("Watchdog device not enabled.\n");
++		if (errno == ENOENT)
++			printf("Watchdog device not enabled.\n");
++		else if (errno == EACCES)
++			printf("Run watchdog as root.\n");
++		else
++			printf("Watchdog device open failed %s\n",
++				strerror(errno));
+ 		exit(-1);
  	}
--	return ret;
-+	return 0;
- }
  
- /* This function does create a L2 for fixed TEI in NT Mode */
 -- 
 2.20.1
 
