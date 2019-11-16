@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95639C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C92E0C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60AC32089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B6121479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:14:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920845;
-	bh=lk+Xh0MaiD1FoRGNeq29i40Di3Mj0VgeUVYmCBBoJno=;
+	s=default; t=1573920851;
+	bh=gUbBaBqeNzDCPkiKzKsFnWC4UNaWjQUjPjfR/d+HDI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wEzIZ94b1denJSKruZL05KyuFiZwiiitUPmg0I/hBQ0OevkTuhMYDp8x4wsm33YGO
-	 8z3fVEqZH+lLUYr/NhLZGa/SFbP6PZHpSatEViSJlG0hrvn5btsSyNEWff0npl7W8f
-	 /FrJBPoZldDH0Nc4Lkya4JSn8GNeWDLEkAJWZzT8=
+	b=jWV7CkKsaEeI2lkUV+mQlHAW26QNcsY02uw0z2RSNzDYGoTpAW9vMtWU8zKQOK/6i
+	 elDm/6lEhGYv/Dydq2/z7384NdUFntLQghw9dxipqNXJEpjA2de1WIJsE58RdURYge
+	 nxP8RZoloQD/gKEt5kMIVmusqeOO4NkOnALKnaBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731916AbfKPQOD (ORCPT
+        id S1730910AbfKPQOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:14:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54730 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:14:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728458AbfKPPry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729843AbfKPPry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 16 Nov 2019 10:47:54 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C2652086A;
-        Sat, 16 Nov 2019 15:47:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7569B20729;
+        Sat, 16 Nov 2019 15:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919274;
-        bh=lk+Xh0MaiD1FoRGNeq29i40Di3Mj0VgeUVYmCBBoJno=;
+        s=default; t=1573919273;
+        bh=gUbBaBqeNzDCPkiKzKsFnWC4UNaWjQUjPjfR/d+HDI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ygkS7N6wjRqLBg1qvRb0YJ9C0VtBqo/ewZavPGUdPnleUCANYrJRVQ2/aFrA/F4LJ
-         ibpRvoMnZNBPTKcVdKWap1i8d8u86uermwstMP3lYGWqTFc78tm9/eN/9GcZZJcjqG
-         Depv/gkmwN4TmOM3KJBDJTWDkYd+8zb6SYofi3YA=
+        b=t1W1/f8w71PDGbyV+GruGhmPPLHSLWwIbm/0zGtts5yZ7WKeQ+TxK/ZZWbCQKmDW0
+         npDv1yCwdFVoNz0ZMlk6IpEVI8fNzhgqOpjeuYAIIM1arjkctn5+dHh0QXu1Y2J2vV
+         QWk05ru37kfW4RA7CWnIMr4XgKzqNPaKIihguoTM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Devesh Sharma <devesh.sharma@broadcom.com>,
-        Selvin Xavier <selvin.xavier@broadcom.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 022/150] RDMA/bnxt_re: Fix qp async event reporting
-Date:   Sat, 16 Nov 2019 10:45:20 -0500
-Message-Id: <20191116154729.9573-22-sashal@kernel.org>
+Cc:     Angelo Dureghello <angelo@sysam.it>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-m68k@lists.linux-m68k.org
+Subject: [PATCH AUTOSEL 4.14 021/150] m68k: fix command-line parsing when passed from u-boot
+Date:   Sat, 16 Nov 2019 10:45:19 -0500
+Message-Id: <20191116154729.9573-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,47 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Devesh Sharma <devesh.sharma@broadcom.com>
+From: Angelo Dureghello <angelo@sysam.it>
 
-[ Upstream commit 4c01f2e3a906a0d2d798be5751c331cf501bc129 ]
+[ Upstream commit 381fdd62c38344a771aed06adaf14aae65c47454 ]
 
-Reports affiliated async event on the qp-async event channel instead of
-global event channel.
+This patch fixes command_line array zero-terminated
+one byte over the end of the array, causing boot to hang.
 
-Signed-off-by: Devesh Sharma <devesh.sharma@broadcom.com>
-Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Angelo Dureghello <angelo@sysam.it>
+Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/bnxt_re/main.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/m68k/kernel/uboot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
-index bf811b23bc953..7d00b6a53ed8c 100644
---- a/drivers/infiniband/hw/bnxt_re/main.c
-+++ b/drivers/infiniband/hw/bnxt_re/main.c
-@@ -782,12 +782,17 @@ static void bnxt_re_dispatch_event(struct ib_device *ibdev, struct ib_qp *qp,
- 	struct ib_event ib_event;
+diff --git a/arch/m68k/kernel/uboot.c b/arch/m68k/kernel/uboot.c
+index b29c3b241e1bb..1070828770645 100644
+--- a/arch/m68k/kernel/uboot.c
++++ b/arch/m68k/kernel/uboot.c
+@@ -102,5 +102,5 @@ __init void process_uboot_commandline(char *commandp, int size)
+ 	}
  
- 	ib_event.device = ibdev;
--	if (qp)
-+	if (qp) {
- 		ib_event.element.qp = qp;
--	else
-+		ib_event.event = event;
-+		if (qp->event_handler)
-+			qp->event_handler(&ib_event, qp->qp_context);
-+
-+	} else {
- 		ib_event.element.port_num = port_num;
--	ib_event.event = event;
--	ib_dispatch_event(&ib_event);
-+		ib_event.event = event;
-+		ib_dispatch_event(&ib_event);
-+	}
+ 	parse_uboot_commandline(commandp, len);
+-	commandp[size - 1] = 0;
++	commandp[len - 1] = 0;
  }
- 
- #define HWRM_QUEUE_PRI2COS_QCFG_INPUT_FLAGS_IVLAN      0x02
 -- 
 2.20.1
 
