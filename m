@@ -2,189 +2,79 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83862C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 11:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20059C43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 11:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF9420729
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 11:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 028EA20723
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 11:37:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbfKPLga (ORCPT
+        id S1727525AbfKPLht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 06:36:30 -0500
-Received: from mga17.intel.com ([192.55.52.151]:37564 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726794AbfKPLga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 06:36:30 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Nov 2019 03:36:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,312,1569308400"; 
-   d="scan'208";a="236375360"
-Received: from twinkler-lnx.jer.intel.com ([10.12.91.155])
-  by fmsmga002.fm.intel.com with ESMTP; 16 Nov 2019 03:36:27 -0800
-From:   Tomas Winkler <tomas.winkler@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Tomas Winkler <tomas.winkler@intel.com>
-Subject: [char-misc-next] mei: bus: add more client attributes to sysfs
-Date:   Sat, 16 Nov 2019 16:21:36 +0200
-Message-Id: <20191116142136.17535-1-tomas.winkler@intel.com>
-X-Mailer: git-send-email 2.21.0
+        Sat, 16 Nov 2019 06:37:49 -0500
+Received: from smtpq3.tb.mail.iss.as9143.net ([212.54.42.166]:43306 "EHLO
+        smtpq3.tb.mail.iss.as9143.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726794AbfKPLht (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 06:37:49 -0500
+X-Greylist: delayed 1201 seconds by postgrey-1.27 at vger.kernel.org; Sat, 16 Nov 2019 06:37:48 EST
+Received: from [212.54.42.137] (helo=smtp6.tb.mail.iss.as9143.net)
+        by smtpq3.tb.mail.iss.as9143.net with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <jongk@linux-m68k.org>)
+        id 1iVw5K-0001uT-Ao; Sat, 16 Nov 2019 12:17:46 +0100
+Received: from mail-wr1-f49.google.com ([209.85.221.49])
+        by smtp6.tb.mail.iss.as9143.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <jongk@linux-m68k.org>)
+        id 1iVw5K-0002In-6g; Sat, 16 Nov 2019 12:17:46 +0100
+Received: by mail-wr1-f49.google.com with SMTP id z10so13713397wrs.12;
+        Sat, 16 Nov 2019 03:17:46 -0800 (PST)
+X-Gm-Message-State: APjAAAUdkn0Ngv2jDyck1lAK/7xwHBF07YKWZrVL97tedxHaaE18o93m
+        5nO044Czncv3fD/U4jZTj6tCLi6DTZJ5/CdXB3g=
+X-Google-Smtp-Source: APXvYqw/7lcFxT9yyKE9hWbxK5yt8guWAVH+vLioGfHCfHYgbjwitQxb/z5XuyfCKtxcES40TIOGkaHEdv0M6kJVLIk=
+X-Received: by 2002:a05:6000:14a:: with SMTP id r10mr9800680wrx.310.1573903065942;
+ Sat, 16 Nov 2019 03:17:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191116110548.8562-1-jongk@linux-m68k.org>
+In-Reply-To: <20191116110548.8562-1-jongk@linux-m68k.org>
+From:   Kars de Jong <jongk@linux-m68k.org>
+Date:   Sat, 16 Nov 2019 12:17:34 +0100
+X-Gmail-Original-Message-ID: <CACz-3rhCfnvHALYx75-aUyJWTHh3Cb9=KLfVuGh+L=FR6cJ33A@mail.gmail.com>
+Message-ID: <CACz-3rhCfnvHALYx75-aUyJWTHh3Cb9=KLfVuGh+L=FR6cJ33A@mail.gmail.com>
+Subject: Re: [PATCH] rtc: msm6242: Fix reading of 10-hour digit
+To:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: text/plain; charset="UTF-8"
+X-SourceIP: 209.85.221.49
+X-Authenticated-Sender: karsdejong@home.nl (via SMTP)
+X-Ziggo-spambar: /
+X-Ziggo-spamscore: 0.0
+X-Ziggo-spamreport: CMAE Analysis: v=2.3 cv=WMwBoUkR c=1 sm=1 tr=0 a=9+rZDBEiDlHhcck0kWbJtElFXBc=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=MeAgGD-zjQ4A:10 a=tBb2bbeoAAAA:8 a=b38HSYhmjrW_fiXeJ8EA:9 a=QEXdDO2ut3YA:10 a=Oj-tNtZlA1e06AYgeCfH:22
+X-Ziggo-Spam-Status: No
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Usyskin <alexander.usyskin@intel.com>
+Forgot to add:
 
-Export more client attributes via sysfs that are usually obtained
-upon connection. In some cases, for example a monitoring application
-may wish to know the attributes without actually performing the connection.
-Added attributes:
-max number of connections, fixed address, max message length.
+Fixes: 4f9b9bba1dd1 ("rtc: Add an RTC driver for the Oki MSM6242")
 
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
----
- Documentation/ABI/testing/sysfs-bus-mei | 21 +++++++++++++++
- drivers/misc/mei/bus.c                  | 33 +++++++++++++++++++++++
- drivers/misc/mei/client.h               | 36 +++++++++++++++++++++++++
- 3 files changed, 90 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-mei b/Documentation/ABI/testing/sysfs-bus-mei
-index 3f8701e8fa24..3d37e2796d5a 100644
---- a/Documentation/ABI/testing/sysfs-bus-mei
-+++ b/Documentation/ABI/testing/sysfs-bus-mei
-@@ -26,3 +26,24 @@ KernelVersion:	4.3
- Contact:	Tomas Winkler <tomas.winkler@intel.com>
- Description:	Stores mei client protocol version
- 		Format: %d
-+
-+What:		/sys/bus/mei/devices/.../max_conn
-+Date:		Nov 2019
-+KernelVersion:	5.5
-+Contact:	Tomas Winkler <tomas.winkler@intel.com>
-+Description:	Stores mei client maximum number of connections
-+		Format: %d
-+
-+What:		/sys/bus/mei/devices/.../fixed
-+Date:		Nov 2019
-+KernelVersion:	5.5
-+Contact:	Tomas Winkler <tomas.winkler@intel.com>
-+Description:	Stores mei client fixed address, if any
-+		Format: %d
-+
-+What:		/sys/bus/mei/devices/.../max_len
-+Date:		Nov 2019
-+KernelVersion:	5.5
-+Contact:	Tomas Winkler <tomas.winkler@intel.com>
-+Description:	Stores mei client maximum message length
-+		Format: %d
-diff --git a/drivers/misc/mei/bus.c b/drivers/misc/mei/bus.c
-index 53bb394ccba6..a0a495c95e3c 100644
---- a/drivers/misc/mei/bus.c
-+++ b/drivers/misc/mei/bus.c
-@@ -791,11 +791,44 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
- }
- static DEVICE_ATTR_RO(modalias);
- 
-+static ssize_t max_conn_show(struct device *dev, struct device_attribute *a,
-+			     char *buf)
-+{
-+	struct mei_cl_device *cldev = to_mei_cl_device(dev);
-+	u8 maxconn = mei_me_cl_max_conn(cldev->me_cl);
-+
-+	return scnprintf(buf, PAGE_SIZE, "%d", maxconn);
-+}
-+static DEVICE_ATTR_RO(max_conn);
-+
-+static ssize_t fixed_show(struct device *dev, struct device_attribute *a,
-+			  char *buf)
-+{
-+	struct mei_cl_device *cldev = to_mei_cl_device(dev);
-+	u8 fixed = mei_me_cl_fixed(cldev->me_cl);
-+
-+	return scnprintf(buf, PAGE_SIZE, "%d", fixed);
-+}
-+static DEVICE_ATTR_RO(fixed);
-+
-+static ssize_t max_len_show(struct device *dev, struct device_attribute *a,
-+			    char *buf)
-+{
-+	struct mei_cl_device *cldev = to_mei_cl_device(dev);
-+	u32 maxlen = mei_me_cl_max_len(cldev->me_cl);
-+
-+	return scnprintf(buf, PAGE_SIZE, "%u", maxlen);
-+}
-+static DEVICE_ATTR_RO(max_len);
-+
- static struct attribute *mei_cldev_attrs[] = {
- 	&dev_attr_name.attr,
- 	&dev_attr_uuid.attr,
- 	&dev_attr_version.attr,
- 	&dev_attr_modalias.attr,
-+	&dev_attr_max_conn.attr,
-+	&dev_attr_fixed.attr,
-+	&dev_attr_max_len.attr,
- 	NULL,
- };
- ATTRIBUTE_GROUPS(mei_cldev);
-diff --git a/drivers/misc/mei/client.h b/drivers/misc/mei/client.h
-index c1f9e810cf81..2f8954def591 100644
---- a/drivers/misc/mei/client.h
-+++ b/drivers/misc/mei/client.h
-@@ -69,6 +69,42 @@ static inline u8 mei_me_cl_ver(const struct mei_me_client *me_cl)
- 	return me_cl->props.protocol_version;
- }
- 
-+/**
-+ * mei_me_cl_max_conn - return me client max number of connections
-+ *
-+ * @me_cl: me client
-+ *
-+ * Return: me client max number of connections
-+ */
-+static inline u8 mei_me_cl_max_conn(const struct mei_me_client *me_cl)
-+{
-+	return me_cl->props.max_number_of_connections;
-+}
-+
-+/**
-+ * mei_me_cl_fixed - return me client fixed address, if any
-+ *
-+ * @me_cl: me client
-+ *
-+ * Return: me client fixed address
-+ */
-+static inline u8 mei_me_cl_fixed(const struct mei_me_client *me_cl)
-+{
-+	return me_cl->props.fixed_address;
-+}
-+
-+/**
-+ * mei_me_cl_max_len - return me client max msg length
-+ *
-+ * @me_cl: me client
-+ *
-+ * Return: me client max msg length
-+ */
-+static inline u32 mei_me_cl_max_len(const struct mei_me_client *me_cl)
-+{
-+	return me_cl->props.max_msg_length;
-+}
-+
- /*
-  * MEI IO Functions
-  */
--- 
-2.21.0
-
+Op za 16 nov. 2019 om 12:06 schreef Kars de Jong <jongk@linux-m68k.org>:
+>
+> The driver was reading the wrong register as the 10-hour digit due to
+> a misplaced ')'. It was in fact reading the 1-second digit register due
+> to this bug.
+>
+> Also remove the use of a magic number for the hour mask and use the define
+> for it which was already present.
+>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Tested-by: Kars de Jong <jongk@linux-m68k.org>
+> Signed-off-by: Kars de Jong <jongk@linux-m68k.org>
