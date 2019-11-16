@@ -4,55 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0C4C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765C0C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18A852081E
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 476D420729
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919356;
-	bh=10WOfMG8uWhuBI/BUbcgjMuv9twpfwR//L0iuBIhDvc=;
+	s=default; t=1573919360;
+	bh=aW5Ar4ANm3BKPcJUCMq5Yl//RA9dUjj3BwoLt6fqEDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D4OuTSCngvBkXHJKlhFD2YfPSdp0kpCP2qWruYhFxumUjzrx3qFuCsDktJli0bbhx
-	 jk/w6SYqGD1Zb26iD2to3/UT0YSt63eeNdMz8FYl9kUJL24RPpYO26ObGkrG3O92qf
-	 4J1ilKMU9CuC3WV/AU9ibY4lOdH4CX/f1BRIr02o=
+	b=OEZrKDHfvc6hGxiSIlSsk4bxNw5qQS8kQle5QqeAfs8MluWdVxSP2z0qba/T3VrGU
+	 1/eIbir2x5NFp7BB2kr8FrDbhgHaX9jX3QvjS8C2tJ7AJhm/jitAvsDmI00urNU7GC
+	 mDybmyVmpKGC0aLKTwZCRTdZPXc1sEhCq37HRL7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730238AbfKPPtN (ORCPT
+        id S1729213AbfKPPtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:49:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56590 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:49:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728876AbfKPPtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:49:11 -0500
+        id S1729188AbfKPPtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:49:16 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A868E20729;
-        Sat, 16 Nov 2019 15:49:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03C8120855;
+        Sat, 16 Nov 2019 15:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919350;
-        bh=10WOfMG8uWhuBI/BUbcgjMuv9twpfwR//L0iuBIhDvc=;
+        s=default; t=1573919354;
+        bh=aW5Ar4ANm3BKPcJUCMq5Yl//RA9dUjj3BwoLt6fqEDA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M4PpV3D7lQgNHLBobRUOIyJ+AckFXbgnshyyakOkD0HIiATE4Drx+8CqoeOl+lrTk
-         wZEa5pHK1a2YWnp52MTdd5Xp1O2tiVc6yC29xSJ9inMczyWsxhCunh3jfLx0i6VtTR
-         0qfxyw4c3dXAxrmnNuqoqW3Cj2bunwywA1jZQaE0=
+        b=l7c4TcxVQ5QKimr+egIfbghGJPQVvLiXwZzdVen5MyirUYrtxnY24bu/2p4FXXqbK
+         x0Pjy0n3zORt9O6hfh6imw+zAd7j18Yg/xIWM0bRUB3IruXLipumdDEWQYb3B756vu
+         Q3QqJS44cB9b5ahKmcsug9Ovg66ZNovZI1QCsYVs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Kyeongdon Kim <kyeongdon.kim@lge.com>,
-        Alexander Potapenko <glider@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+Cc:     Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 078/150] arm64: lib: use C string functions with KASAN enabled
-Date:   Sat, 16 Nov 2019 10:46:16 -0500
-Message-Id: <20191116154729.9573-78-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.14 080/150] mm/page-writeback.c: fix range_cyclic writeback vs writepages deadlock
+Date:   Sat, 16 Nov 2019 10:46:18 -0500
+Message-Id: <20191116154729.9573-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -65,221 +61,245 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Ryabinin <aryabinin@virtuozzo.com>
+From: Dave Chinner <dchinner@redhat.com>
 
-[ Upstream commit 19a2ca0fb560fd7be7b5293c6b652c6d6078dcde ]
+[ Upstream commit 64081362e8ff4587b4554087f3cfc73d3e0a4cd7 ]
 
-ARM64 has asm implementation of memchr(), memcmp(), str[r]chr(),
-str[n]cmp(), str[n]len().  KASAN don't see memory accesses in asm code,
-thus it can potentially miss many bugs.
+We've recently seen a workload on XFS filesystems with a repeatable
+deadlock between background writeback and a multi-process application
+doing concurrent writes and fsyncs to a small range of a file.
 
-Ifdef out __HAVE_ARCH_* defines of these functions when KASAN is enabled,
-so the generic implementations from lib/string.c will be used.
+range_cyclic
+writeback		Process 1		Process 2
 
-We can't just remove the asm functions because efistub uses them.  And we
-can't have two non-weak functions either, so declare the asm functions as
-weak.
+xfs_vm_writepages
+  write_cache_pages
+    writeback_index = 2
+    cycled = 0
+    ....
+    find page 2 dirty
+    lock Page 2
+    ->writepage
+      page 2 writeback
+      page 2 clean
+      page 2 added to bio
+    no more pages
+			write()
+			locks page 1
+			dirties page 1
+			locks page 2
+			dirties page 1
+			fsync()
+			....
+			xfs_vm_writepages
+			write_cache_pages
+			  start index 0
+			  find page 1 towrite
+			  lock Page 1
+			  ->writepage
+			    page 1 writeback
+			    page 1 clean
+			    page 1 added to bio
+			  find page 2 towrite
+			  lock Page 2
+			  page 2 is writeback
+			  <blocks>
+						write()
+						locks page 1
+						dirties page 1
+						fsync()
+						....
+						xfs_vm_writepages
+						write_cache_pages
+						  start index 0
 
-Link: http://lkml.kernel.org/r/20180920135631.23833-2-aryabinin@virtuozzo.com
-Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Reported-by: Kyeongdon Kim <kyeongdon.kim@lge.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
+    !done && !cycled
+      sets index to 0, restarts lookup
+    find page 1 dirty
+						  find page 1 towrite
+						  lock Page 1
+						  page 1 is writeback
+						  <blocks>
+
+    lock Page 1
+    <blocks>
+
+DEADLOCK because:
+
+	- process 1 needs page 2 writeback to complete to make
+	  enough progress to issue IO pending for page 1
+	- writeback needs page 1 writeback to complete so process 2
+	  can progress and unlock the page it is blocked on, then it
+	  can issue the IO pending for page 2
+	- process 2 can't make progress until process 1 issues IO
+	  for page 1
+
+The underlying cause of the problem here is that range_cyclic writeback is
+processing pages in descending index order as we hold higher index pages
+in a structure controlled from above write_cache_pages().  The
+write_cache_pages() caller needs to be able to submit these pages for IO
+before write_cache_pages restarts writeback at mapping index 0 to avoid
+wcp inverting the page lock/writeback wait order.
+
+generic_writepages() is not susceptible to this bug as it has no private
+context held across write_cache_pages() - filesystems using this
+infrastructure always submit pages in ->writepage immediately and so there
+is no problem with range_cyclic going back to mapping index 0.
+
+However:
+	mpage_writepages() has a private bio context,
+	exofs_writepages() has page_collect
+	fuse_writepages() has fuse_fill_wb_data
+	nfs_writepages() has nfs_pageio_descriptor
+	xfs_vm_writepages() has xfs_writepage_ctx
+
+All of these ->writepages implementations can hold pages under writeback
+in their private structures until write_cache_pages() returns, and hence
+they are all susceptible to this deadlock.
+
+Also worth noting is that ext4 has it's own bastardised version of
+write_cache_pages() and so it /may/ have an equivalent deadlock.  I looked
+at the code long enough to understand that it has a similar retry loop for
+range_cyclic writeback reaching the end of the file and then promptly ran
+away before my eyes bled too much.  I'll leave it for the ext4 developers
+to determine if their code is actually has this deadlock and how to fix it
+if it has.
+
+There's a few ways I can see avoid this deadlock.  There's probably more,
+but these are the first I've though of:
+
+1. get rid of range_cyclic altogether
+
+2. range_cyclic always stops at EOF, and we start again from
+writeback index 0 on the next call into write_cache_pages()
+
+2a. wcp also returns EAGAIN to ->writepages implementations to
+indicate range cyclic has hit EOF. writepages implementations can
+then flush the current context and call wpc again to continue. i.e.
+lift the retry into the ->writepages implementation
+
+3. range_cyclic uses trylock_page() rather than lock_page(), and it
+skips pages it can't lock without blocking. It will already do this
+for pages under writeback, so this seems like a no-brainer
+
+3a. all non-WB_SYNC_ALL writeback uses trylock_page() to avoid
+blocking as per pages under writeback.
+
+I don't think #1 is an option - range_cyclic prevents frequently
+dirtied lower file offset from starving background writeback of
+rarely touched higher file offsets.
+
+#2 is simple, and I don't think it will have any impact on
+performance as going back to the start of the file implies an
+immediate seek. We'll have exactly the same number of seeks if we
+switch writeback to another inode, and then come back to this one
+later and restart from index 0.
+
+#2a is pretty much "status quo without the deadlock". Moving the
+retry loop up into the wcp caller means we can issue IO on the
+pending pages before calling wcp again, and so avoid locking or
+waiting on pages in the wrong order. I'm not convinced we need to do
+this given that we get the same thing from #2 on the next writeback
+call from the writeback infrastructure.
+
+#3 is really just a band-aid - it doesn't fix the access/wait
+inversion problem, just prevents it from becoming a deadlock
+situation. I'd prefer we fix the inversion, not sweep it under the
+carpet like this.
+
+#3a is really an optimisation that just so happens to include the
+band-aid fix of #3.
+
+So it seems that the simplest way to fix this issue is to implement
+solution #2
+
+Link: http://lkml.kernel.org/r/20181005054526.21507-1-david@fromorbit.com
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Jan Kara <jack@suse.de>
+Cc: Nicholas Piggin <npiggin@gmail.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/string.h | 14 ++++++++------
- arch/arm64/kernel/arm64ksyms.c  |  7 +++++--
- arch/arm64/lib/memchr.S         |  2 +-
- arch/arm64/lib/memcmp.S         |  2 +-
- arch/arm64/lib/strchr.S         |  2 +-
- arch/arm64/lib/strcmp.S         |  2 +-
- arch/arm64/lib/strlen.S         |  2 +-
- arch/arm64/lib/strncmp.S        |  2 +-
- arch/arm64/lib/strnlen.S        |  2 +-
- arch/arm64/lib/strrchr.S        |  2 +-
- 10 files changed, 21 insertions(+), 16 deletions(-)
+ mm/page-writeback.c | 33 +++++++++++++++------------------
+ 1 file changed, 15 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm64/include/asm/string.h b/arch/arm64/include/asm/string.h
-index dd95d33a5bd5d..03a6c256b7ec4 100644
---- a/arch/arm64/include/asm/string.h
-+++ b/arch/arm64/include/asm/string.h
-@@ -16,6 +16,7 @@
- #ifndef __ASM_STRING_H
- #define __ASM_STRING_H
- 
-+#ifndef CONFIG_KASAN
- #define __HAVE_ARCH_STRRCHR
- extern char *strrchr(const char *, int c);
- 
-@@ -34,6 +35,13 @@ extern __kernel_size_t strlen(const char *);
- #define __HAVE_ARCH_STRNLEN
- extern __kernel_size_t strnlen(const char *, __kernel_size_t);
- 
-+#define __HAVE_ARCH_MEMCMP
-+extern int memcmp(const void *, const void *, size_t);
-+
-+#define __HAVE_ARCH_MEMCHR
-+extern void *memchr(const void *, int, __kernel_size_t);
-+#endif
-+
- #define __HAVE_ARCH_MEMCPY
- extern void *memcpy(void *, const void *, __kernel_size_t);
- extern void *__memcpy(void *, const void *, __kernel_size_t);
-@@ -42,16 +50,10 @@ extern void *__memcpy(void *, const void *, __kernel_size_t);
- extern void *memmove(void *, const void *, __kernel_size_t);
- extern void *__memmove(void *, const void *, __kernel_size_t);
- 
--#define __HAVE_ARCH_MEMCHR
--extern void *memchr(const void *, int, __kernel_size_t);
--
- #define __HAVE_ARCH_MEMSET
- extern void *memset(void *, int, __kernel_size_t);
- extern void *__memset(void *, int, __kernel_size_t);
- 
--#define __HAVE_ARCH_MEMCMP
--extern int memcmp(const void *, const void *, size_t);
--
- #ifdef CONFIG_ARCH_HAS_UACCESS_FLUSHCACHE
- #define __HAVE_ARCH_MEMCPY_FLUSHCACHE
- void memcpy_flushcache(void *dst, const void *src, size_t cnt);
-diff --git a/arch/arm64/kernel/arm64ksyms.c b/arch/arm64/kernel/arm64ksyms.c
-index 66be504edb6cf..9eedf839e7393 100644
---- a/arch/arm64/kernel/arm64ksyms.c
-+++ b/arch/arm64/kernel/arm64ksyms.c
-@@ -44,20 +44,23 @@ EXPORT_SYMBOL(__arch_copy_in_user);
- EXPORT_SYMBOL(memstart_addr);
- 
- 	/* string / mem functions */
-+#ifndef CONFIG_KASAN
- EXPORT_SYMBOL(strchr);
- EXPORT_SYMBOL(strrchr);
- EXPORT_SYMBOL(strcmp);
- EXPORT_SYMBOL(strncmp);
- EXPORT_SYMBOL(strlen);
- EXPORT_SYMBOL(strnlen);
-+EXPORT_SYMBOL(memcmp);
-+EXPORT_SYMBOL(memchr);
-+#endif
-+
- EXPORT_SYMBOL(memset);
- EXPORT_SYMBOL(memcpy);
- EXPORT_SYMBOL(memmove);
- EXPORT_SYMBOL(__memset);
- EXPORT_SYMBOL(__memcpy);
- EXPORT_SYMBOL(__memmove);
--EXPORT_SYMBOL(memchr);
--EXPORT_SYMBOL(memcmp);
- 
- 	/* atomic bitops */
- EXPORT_SYMBOL(set_bit);
-diff --git a/arch/arm64/lib/memchr.S b/arch/arm64/lib/memchr.S
-index 4444c1d25f4bb..0f164a4baf52a 100644
---- a/arch/arm64/lib/memchr.S
-+++ b/arch/arm64/lib/memchr.S
-@@ -30,7 +30,7 @@
-  * Returns:
-  *	x0 - address of first occurrence of 'c' or 0
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index e001de5ac50cb..a40c075fd8f1e 100644
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -2150,6 +2150,13 @@ EXPORT_SYMBOL(tag_pages_for_writeback);
+  * not miss some pages (e.g., because some other process has cleared TOWRITE
+  * tag we set). The rule we follow is that TOWRITE tag can be cleared only
+  * by the process clearing the DIRTY tag (and submitting the page for IO).
++ *
++ * To avoid deadlocks between range_cyclic writeback and callers that hold
++ * pages in PageWriteback to aggregate IO until write_cache_pages() returns,
++ * we do not loop back to the start of the file. Doing so causes a page
++ * lock/page writeback access order inversion - we should only ever lock
++ * multiple pages in ascending page->index order, and looping back to the start
++ * of the file violates that rule and causes deadlocks.
   */
--ENTRY(memchr)
-+WEAK(memchr)
- 	and	w1, w1, #0xff
- 1:	subs	x2, x2, #1
- 	b.mi	2f
-diff --git a/arch/arm64/lib/memcmp.S b/arch/arm64/lib/memcmp.S
-index 2a4e239bd17a0..fb295f52e9f87 100644
---- a/arch/arm64/lib/memcmp.S
-+++ b/arch/arm64/lib/memcmp.S
-@@ -58,7 +58,7 @@ pos		.req	x11
- limit_wd	.req	x12
- mask		.req	x13
+ int write_cache_pages(struct address_space *mapping,
+ 		      struct writeback_control *wbc, writepage_t writepage,
+@@ -2164,7 +2171,6 @@ int write_cache_pages(struct address_space *mapping,
+ 	pgoff_t index;
+ 	pgoff_t end;		/* Inclusive */
+ 	pgoff_t done_index;
+-	int cycled;
+ 	int range_whole = 0;
+ 	int tag;
  
--ENTRY(memcmp)
-+WEAK(memcmp)
- 	cbz	limit, .Lret0
- 	eor	tmp1, src1, src2
- 	tst	tmp1, #7
-diff --git a/arch/arm64/lib/strchr.S b/arch/arm64/lib/strchr.S
-index dae0cf5591f99..7c83091d1bcdd 100644
---- a/arch/arm64/lib/strchr.S
-+++ b/arch/arm64/lib/strchr.S
-@@ -29,7 +29,7 @@
-  * Returns:
-  *	x0 - address of first occurrence of 'c' or 0
-  */
--ENTRY(strchr)
-+WEAK(strchr)
- 	and	w1, w1, #0xff
- 1:	ldrb	w2, [x0], #1
- 	cmp	w2, w1
-diff --git a/arch/arm64/lib/strcmp.S b/arch/arm64/lib/strcmp.S
-index 471fe61760ef6..7d5d15398bfbc 100644
---- a/arch/arm64/lib/strcmp.S
-+++ b/arch/arm64/lib/strcmp.S
-@@ -60,7 +60,7 @@ tmp3		.req	x9
- zeroones	.req	x10
- pos		.req	x11
+@@ -2172,23 +2178,17 @@ int write_cache_pages(struct address_space *mapping,
+ 	if (wbc->range_cyclic) {
+ 		writeback_index = mapping->writeback_index; /* prev offset */
+ 		index = writeback_index;
+-		if (index == 0)
+-			cycled = 1;
+-		else
+-			cycled = 0;
+ 		end = -1;
+ 	} else {
+ 		index = wbc->range_start >> PAGE_SHIFT;
+ 		end = wbc->range_end >> PAGE_SHIFT;
+ 		if (wbc->range_start == 0 && wbc->range_end == LLONG_MAX)
+ 			range_whole = 1;
+-		cycled = 1; /* ignore range_cyclic tests */
+ 	}
+ 	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
+ 		tag = PAGECACHE_TAG_TOWRITE;
+ 	else
+ 		tag = PAGECACHE_TAG_DIRTY;
+-retry:
+ 	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
+ 		tag_pages_for_writeback(mapping, index, end);
+ 	done_index = index;
+@@ -2296,17 +2296,14 @@ int write_cache_pages(struct address_space *mapping,
+ 		pagevec_release(&pvec);
+ 		cond_resched();
+ 	}
+-	if (!cycled && !done) {
+-		/*
+-		 * range_cyclic:
+-		 * We hit the last page and there is more work to be done: wrap
+-		 * back to the start of the file
+-		 */
+-		cycled = 1;
+-		index = 0;
+-		end = writeback_index - 1;
+-		goto retry;
+-	}
++
++	/*
++	 * If we hit the last page and there is more work to be done: wrap
++	 * back the index back to the start of the file for the next
++	 * time we are called.
++	 */
++	if (wbc->range_cyclic && !done)
++		done_index = 0;
+ 	if (wbc->range_cyclic || (range_whole && wbc->nr_to_write > 0))
+ 		mapping->writeback_index = done_index;
  
--ENTRY(strcmp)
-+WEAK(strcmp)
- 	eor	tmp1, src1, src2
- 	mov	zeroones, #REP8_01
- 	tst	tmp1, #7
-diff --git a/arch/arm64/lib/strlen.S b/arch/arm64/lib/strlen.S
-index 55ccc8e24c084..8e0b14205dcb4 100644
---- a/arch/arm64/lib/strlen.S
-+++ b/arch/arm64/lib/strlen.S
-@@ -56,7 +56,7 @@ pos		.req	x12
- #define REP8_7f 0x7f7f7f7f7f7f7f7f
- #define REP8_80 0x8080808080808080
- 
--ENTRY(strlen)
-+WEAK(strlen)
- 	mov	zeroones, #REP8_01
- 	bic	src, srcin, #15
- 	ands	tmp1, srcin, #15
-diff --git a/arch/arm64/lib/strncmp.S b/arch/arm64/lib/strncmp.S
-index e267044761c6f..66bd145935d9e 100644
---- a/arch/arm64/lib/strncmp.S
-+++ b/arch/arm64/lib/strncmp.S
-@@ -64,7 +64,7 @@ limit_wd	.req	x13
- mask		.req	x14
- endloop		.req	x15
- 
--ENTRY(strncmp)
-+WEAK(strncmp)
- 	cbz	limit, .Lret0
- 	eor	tmp1, src1, src2
- 	mov	zeroones, #REP8_01
-diff --git a/arch/arm64/lib/strnlen.S b/arch/arm64/lib/strnlen.S
-index eae38da6e0bb3..355be04441fe6 100644
---- a/arch/arm64/lib/strnlen.S
-+++ b/arch/arm64/lib/strnlen.S
-@@ -59,7 +59,7 @@ limit_wd	.req	x14
- #define REP8_7f 0x7f7f7f7f7f7f7f7f
- #define REP8_80 0x8080808080808080
- 
--ENTRY(strnlen)
-+WEAK(strnlen)
- 	cbz	limit, .Lhit_limit
- 	mov	zeroones, #REP8_01
- 	bic	src, srcin, #15
-diff --git a/arch/arm64/lib/strrchr.S b/arch/arm64/lib/strrchr.S
-index 61eabd9a289a6..f3b9f8e2917c6 100644
---- a/arch/arm64/lib/strrchr.S
-+++ b/arch/arm64/lib/strrchr.S
-@@ -29,7 +29,7 @@
-  * Returns:
-  *	x0 - address of last occurrence of 'c' or 0
-  */
--ENTRY(strrchr)
-+WEAK(strrchr)
- 	mov	x3, #0
- 	and	w1, w1, #0xff
- 1:	ldrb	w2, [x0], #1
 -- 
 2.20.1
 
