@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA614C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1C8C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4AEC218AE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4A3E21882
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919654;
-	bh=+MSac9lGQ3g4tukeHIJJKFOOP18cM1X5Kz249xwJKOY=;
+	s=default; t=1573919659;
+	bh=H6bctPRfq8XqJuzYNECQWMiThWRjYOGOSX2ux+jZzI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sOa8g3NVbo5FMzv+O/ST8FgLNjyKn1LB2Lv6GJCYJkmU9OyUEOPM1n/EmEQTgDZln
-	 OBvraqdOMgyxV/zKHw5n9uU/aFyD65DqWZLAdKh6958CQxvoY5Zn4cwMlHcPa6QYXJ
-	 yshZzS4KCS5vt9f3eEMYPc/61nciW0QPpNcP7xcA=
+	b=bwpqNJAVOTmDu5R0GVh3dwHgwNC5g7XIATNmDH9q+4JVp+Bn2qP8MjfFDuRVLFDRU
+	 wKm4XUk9au7eRXXD6xpiqnYiEoL/GtHvJv80KseVXZaEJHPl6N2hAqk4Im5lgVYuiW
+	 3jGtMa9D9Wi3s311ZzRTwXVZr6CyMUR+ve+5EVH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbfKPPyM (ORCPT
+        id S1731418AbfKPPyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:54:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35428 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:54:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731373AbfKPPyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:54:02 -0500
+        id S1731388AbfKPPyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:54:04 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C72220B7C;
-        Sat, 16 Nov 2019 15:54:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDB8421920;
+        Sat, 16 Nov 2019 15:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919641;
-        bh=+MSac9lGQ3g4tukeHIJJKFOOP18cM1X5Kz249xwJKOY=;
+        s=default; t=1573919644;
+        bh=H6bctPRfq8XqJuzYNECQWMiThWRjYOGOSX2ux+jZzI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ud9eQNW5TP1X106S7MpeAC+VwsFMVR7DIO4oZxtsmt8Urc92Cn/KX9I9rbgwsnkZn
-         yBgtOUZAxrhAXzJ79qPJ50yFeKupja2jfFRlmtIZQI2Ek8+7slKe/Rm20k9KRrW7IC
-         PZPmivlilhBFxvzcgl9QdeDCHQdTdSwUYgbQ9IJM=
+        b=o19lAeaZjt+dpcPLUY9/6AaHYHr+vcfw3CK9HwLnx4PLwjbCK8ec/rJzzIX73FLWy
+         U9HsM8xAeJ90kGgkMc0qX+baO3w0oXVMQCJBf6z9Ccw6ukos/OfDnGewy9P1G7P1x6
+         zWwkGwvhEQ9XXBFRPyG9yp2uEfA0De+DixifRpKc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, dc395x@twibble.org,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 21/77] scsi: dc395x: fix DMA API usage in sg_update_list
-Date:   Sat, 16 Nov 2019 10:52:43 -0500
-Message-Id: <20191116155339.11909-21-sashal@kernel.org>
+Cc:     Kyeongdon Kim <kyeongdon.kim@lge.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 22/77] net: fix warning in af_unix
+Date:   Sat, 16 Nov 2019 10:52:44 -0500
+Message-Id: <20191116155339.11909-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -60,36 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Kyeongdon Kim <kyeongdon.kim@lge.com>
 
-[ Upstream commit 6c404a68bf83b4135a8a9aa1c388ebdf98e8ba7f ]
+[ Upstream commit 33c4368ee2589c165aebd8d388cbd91e9adb9688 ]
 
-We need to transfer device ownership to the CPU before we can manipulate
-the mapped data.
+This fixes the "'hash' may be used uninitialized in this function"
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+net/unix/af_unix.c:1041:20: warning: 'hash' may be used uninitialized in this function [-Wmaybe-uninitialized]
+  addr->hash = hash ^ sk->sk_type;
+
+Signed-off-by: Kyeongdon Kim <kyeongdon.kim@lge.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/dc395x.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/unix/af_unix.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/dc395x.c b/drivers/scsi/dc395x.c
-index 9da0ac360848f..830b2d2dcf206 100644
---- a/drivers/scsi/dc395x.c
-+++ b/drivers/scsi/dc395x.c
-@@ -1972,6 +1972,11 @@ static void sg_update_list(struct ScsiReqBlk *srb, u32 left)
- 			xferred -= psge->length;
- 		} else {
- 			/* Partial SG entry done */
-+			pci_dma_sync_single_for_cpu(srb->dcb->
-+					    acb->dev,
-+					    srb->sg_bus_addr,
-+					    SEGMENTX_LEN,
-+					    PCI_DMA_TODEVICE);
- 			psge->length -= xferred;
- 			psge->address += xferred;
- 			srb->sg_index = idx;
+diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+index b1a72615fdc30..b5e2ef242efe7 100644
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -224,6 +224,8 @@ static inline void unix_release_addr(struct unix_address *addr)
+ 
+ static int unix_mkname(struct sockaddr_un *sunaddr, int len, unsigned int *hashp)
+ {
++	*hashp = 0;
++
+ 	if (len <= sizeof(short) || len > sizeof(*sunaddr))
+ 		return -EINVAL;
+ 	if (!sunaddr || sunaddr->sun_family != AF_UNIX)
 -- 
 2.20.1
 
