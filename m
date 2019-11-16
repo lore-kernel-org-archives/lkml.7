@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE651C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B42AEC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A780221845
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C4122089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920996;
-	bh=2Wlb3YZLDLsri+AOZgu2/8+1BzXQy5enQQEq+o4T+ec=;
+	s=default; t=1573921003;
+	bh=O4jI/UD5cwgEfztd/WN3i8vXnYRkU/s8BThrOIUqah0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nSXNxJUxw1tVtQvQHeKDkYCaJUEOJfygkxSJJEEhqd2qBE1GsNgC1+8UFm1CViAH5
-	 Dily3t0MvSy8+VYvGo2clYUh86i2sMeSBI3dy34bWaafXBhGDoTM08BK6npyIx/K+K
-	 6fBEi34qemj/uf4SbYJoFEVOUP/xgbiSurlb5pTo=
+	b=C+bcLqVYb6qqewDqd5GqMhgpXKBDfZq6Vr0iOzG3JtLqsldpxmP0KgqXqAP4emSKX
+	 E1ckXoDi/UFxfq3a+D1MKkUR1x1Lbwf2g780MXfHKh2jYEtGks3jp1Wlu2WkeA91gN
+	 ABuRjq6aHpL4JSxljvHkmnjDHoHw6Hq5vZarY7zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729584AbfKPPrB (ORCPT
+        id S1731712AbfKPQQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:47:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52736 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:16:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728005AbfKPPqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:46:24 -0500
+        id S1729573AbfKPPq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:59 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A24CE2077B;
-        Sat, 16 Nov 2019 15:46:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E34520B7C;
+        Sat, 16 Nov 2019 15:46:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919184;
-        bh=2Wlb3YZLDLsri+AOZgu2/8+1BzXQy5enQQEq+o4T+ec=;
+        s=default; t=1573919218;
+        bh=O4jI/UD5cwgEfztd/WN3i8vXnYRkU/s8BThrOIUqah0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sqoSDrdJ+xpHDojuI2ZxA8eoqYTJpyMwjJYDrnkv/rUCQ4qrthsYBnfKyh/mNdJ3e
-         m3nprN5a7pHTZBtyq0Z37Ty/XSFgIaf1f3pIi6t2i1palCiNemEFIJY/ddDK9gG5I/
-         mjD3KDyUrjRd1Vu9Yrn9LgYtkKux8u/PRw9hvIjM=
+        b=gab8qWMzy30WpCcUr+EWBSmSilrx/XJ48h8zW+cJe/HQs11qmaBAP1iAVjsySzvf4
+         driQa7BU9WVBDc1vGogbVQn3NQdqzfdPn8ds25MZwex72MyhhBXIy+AoG43VZe1y6G
+         9YqCycosLVwiagTsjJ4IFb8kUajxlqqFu/zfcfHg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 192/237] net: bpfilter: fix iptables failure if bpfilter_umh is disabled
-Date:   Sat, 16 Nov 2019 10:40:27 -0500
-Message-Id: <20191116154113.7417-192-sashal@kernel.org>
+Cc:     Frank Rowand <frank.rowand@sony.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Alan Tull <atull@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 224/237] of: unittest: initialize args before calling of_*parse_*()
+Date:   Sat, 16 Nov 2019 10:40:59 -0500
+Message-Id: <20191116154113.7417-224-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,65 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Frank Rowand <frank.rowand@sony.com>
 
-[ Upstream commit 97adaddaa6db7a8af81b9b11e30cbe3628cd6700 ]
+[ Upstream commit eeb07c573ec307c53fe2f6ac6d8d11c261f64006 ]
 
-When iptables command is executed, ip_{set/get}sockopt() try to upload
-bpfilter.ko if bpfilter is enabled. if it couldn't find bpfilter.ko,
-command is failed.
-bpfilter.ko is generated if CONFIG_BPFILTER_UMH is enabled.
-ip_{set/get}sockopt() only checks CONFIG_BPFILTER.
-So that if CONFIG_BPFILTER is enabled and CONFIG_BPFILTER_UMH is disabled,
-iptables command is always failed.
+Callers of of_irq_parse_one() blindly use the pointer args.np
+without checking whether of_irq_parse_one() had an error and
+thus did not set the value of args.np.  Initialize args to
+zero so that using the format "%pOF" to show the value of
+args.np will show "(null)" when of_irq_parse_one() has an
+error.  This prevents the dereference of a random value.
 
-test config:
-   CONFIG_BPFILTER=y
-   # CONFIG_BPFILTER_UMH is not set
+Make the same fix for callers of of_parse_phandle_with_args()
+and of_parse_phandle_with_args_map().
 
-test command:
-   %iptables -L
-   iptables: No chain/target/match by that name.
-
-Fixes: d2ba09c17a06 ("net: add skeleton of bpfilter kernel module")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Tested-by: Alan Tull <atull@kernel.org>
+Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/ip_sockglue.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/of/unittest.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
-index b7a26120d5521..82f341e84faec 100644
---- a/net/ipv4/ip_sockglue.c
-+++ b/net/ipv4/ip_sockglue.c
-@@ -1244,7 +1244,7 @@ int ip_setsockopt(struct sock *sk, int level,
- 		return -ENOPROTOOPT;
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index e8997cdb228cb..68f52966bbc04 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -375,6 +375,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
+ 	for (i = 0; i < 8; i++) {
+ 		bool passed = true;
  
- 	err = do_ip_setsockopt(sk, level, optname, optval, optlen);
--#ifdef CONFIG_BPFILTER
-+#if IS_ENABLED(CONFIG_BPFILTER_UMH)
- 	if (optname >= BPFILTER_IPT_SO_SET_REPLACE &&
- 	    optname < BPFILTER_IPT_SET_MAX)
- 		err = bpfilter_ip_set_sockopt(sk, optname, optval, optlen);
-@@ -1557,7 +1557,7 @@ int ip_getsockopt(struct sock *sk, int level,
- 	int err;
++		memset(&args, 0, sizeof(args));
+ 		rc = of_parse_phandle_with_args(np, "phandle-list",
+ 						"#phandle-cells", i, &args);
  
- 	err = do_ip_getsockopt(sk, level, optname, optval, optlen, 0);
--#ifdef CONFIG_BPFILTER
-+#if IS_ENABLED(CONFIG_BPFILTER_UMH)
- 	if (optname >= BPFILTER_IPT_SO_GET_INFO &&
- 	    optname < BPFILTER_IPT_GET_MAX)
- 		err = bpfilter_ip_get_sockopt(sk, optname, optval, optlen);
-@@ -1594,7 +1594,7 @@ int compat_ip_getsockopt(struct sock *sk, int level, int optname,
- 	err = do_ip_getsockopt(sk, level, optname, optval, optlen,
- 		MSG_CMSG_COMPAT);
+@@ -428,6 +429,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
+ 	}
  
--#ifdef CONFIG_BPFILTER
-+#if IS_ENABLED(CONFIG_BPFILTER_UMH)
- 	if (optname >= BPFILTER_IPT_SO_GET_INFO &&
- 	    optname < BPFILTER_IPT_GET_MAX)
- 		err = bpfilter_ip_get_sockopt(sk, optname, optval, optlen);
+ 	/* Check for missing list property */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args(np, "phandle-list-missing",
+ 					"#phandle-cells", 0, &args);
+ 	unittest(rc == -ENOENT, "expected:%i got:%i\n", -ENOENT, rc);
+@@ -436,6 +438,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
+ 	unittest(rc == -ENOENT, "expected:%i got:%i\n", -ENOENT, rc);
+ 
+ 	/* Check for missing cells property */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args(np, "phandle-list",
+ 					"#phandle-cells-missing", 0, &args);
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+@@ -444,6 +447,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+ 
+ 	/* Check for bad phandle in list */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args(np, "phandle-list-bad-phandle",
+ 					"#phandle-cells", 0, &args);
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+@@ -452,6 +456,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+ 
+ 	/* Check for incorrectly formed argument list */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args(np, "phandle-list-bad-args",
+ 					"#phandle-cells", 1, &args);
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+@@ -502,6 +507,7 @@ static void __init of_unittest_parse_phandle_with_args_map(void)
+ 	for (i = 0; i < 8; i++) {
+ 		bool passed = true;
+ 
++		memset(&args, 0, sizeof(args));
+ 		rc = of_parse_phandle_with_args_map(np, "phandle-list",
+ 						    "phandle", i, &args);
+ 
+@@ -559,21 +565,25 @@ static void __init of_unittest_parse_phandle_with_args_map(void)
+ 	}
+ 
+ 	/* Check for missing list property */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args_map(np, "phandle-list-missing",
+ 					    "phandle", 0, &args);
+ 	unittest(rc == -ENOENT, "expected:%i got:%i\n", -ENOENT, rc);
+ 
+ 	/* Check for missing cells,map,mask property */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args_map(np, "phandle-list",
+ 					    "phandle-missing", 0, &args);
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+ 
+ 	/* Check for bad phandle in list */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args_map(np, "phandle-list-bad-phandle",
+ 					    "phandle", 0, &args);
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+ 
+ 	/* Check for incorrectly formed argument list */
++	memset(&args, 0, sizeof(args));
+ 	rc = of_parse_phandle_with_args_map(np, "phandle-list-bad-args",
+ 					    "phandle", 1, &args);
+ 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
+@@ -783,7 +793,7 @@ static void __init of_unittest_parse_interrupts(void)
+ 	for (i = 0; i < 4; i++) {
+ 		bool passed = true;
+ 
+-		args.args_count = 0;
++		memset(&args, 0, sizeof(args));
+ 		rc = of_irq_parse_one(np, i, &args);
+ 
+ 		passed &= !rc;
+@@ -804,7 +814,7 @@ static void __init of_unittest_parse_interrupts(void)
+ 	for (i = 0; i < 4; i++) {
+ 		bool passed = true;
+ 
+-		args.args_count = 0;
++		memset(&args, 0, sizeof(args));
+ 		rc = of_irq_parse_one(np, i, &args);
+ 
+ 		/* Test the values from tests-phandle.dtsi */
+@@ -860,6 +870,7 @@ static void __init of_unittest_parse_interrupts_extended(void)
+ 	for (i = 0; i < 7; i++) {
+ 		bool passed = true;
+ 
++		memset(&args, 0, sizeof(args));
+ 		rc = of_irq_parse_one(np, i, &args);
+ 
+ 		/* Test the values from tests-phandle.dtsi */
 -- 
 2.20.1
 
