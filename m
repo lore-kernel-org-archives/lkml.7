@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A46C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B18DC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12B60214DE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC105214DE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:27:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921631;
-	bh=1UHd5Z+iO61oz8qaxXgGlqrU6/ESGUcvWsJ5GK3etOY=;
+	s=default; t=1573921638;
+	bh=UO3XCC42t0obPxpUMFWs3bkB7qRjPJ5pyIs/hvKqYnY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o2149i77rgo0xtdcJzJL+wxEHdGNJcD7Cy0dMR1+bBBx2tCaJUXi5AGNbkKZ76/Jh
-	 NgDuAxKq5YeDpV1tC+JxMNU+dT/6orgpM+WWkK6Wv0Hy+RmivMcn1b9Ux/emNhAjpq
-	 ql4yZIZBxyNMdvQBktPNqGA85Q3J4QLlGEhZ+9Nk=
+	b=PGJCNkCyl/YTWo3SPD0JDrvz/uiBQkmRmnrS8CxQs7/XBd6V7JOx42m7Lo2VB7sSk
+	 nUEbXo+jhaCO8+6wHY0noOxf9B3bUl409cT15RWmvJufZtKR6S0MzpesUfdb+6SvFA
+	 bp2YdCgKMiCLL6ZNCUxDGOGcGR2jhXcKappUtKEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732091AbfKPQ1K (ORCPT
+        id S1728449AbfKPQ1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:27:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44886 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:27:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727962AbfKPPlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727958AbfKPPlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 16 Nov 2019 10:41:39 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2103320830;
-        Sat, 16 Nov 2019 15:41:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77BEC207DD;
+        Sat, 16 Nov 2019 15:41:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918899;
-        bh=1UHd5Z+iO61oz8qaxXgGlqrU6/ESGUcvWsJ5GK3etOY=;
+        s=default; t=1573918898;
+        bh=UO3XCC42t0obPxpUMFWs3bkB7qRjPJ5pyIs/hvKqYnY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J8MYdDZRxS10ql0g6lEnXSQiHHdYXMXNp0FddstZmy0SCLtnlLwZoSVcD7v8Diff5
-         vQWCrhMRB0gJusD0dbsLL+K6dln4EG5bEO2tw1d38F67Y3ssExtp6OO0xWQcU2Cp3Z
-         aQRXnIQ1uF/y5FgKi0L39YCh/ZeS4A6hFDQsgC1w=
+        b=eaUvNw3DnqYaGrVa1BUAq+bmllDgryEb8i3ElSHsFgXYS64R8ehJ9kVwLUdBljVmR
+         htc0M8d65fIa3buSHa4T5IrJUiozRw5dANK6Wsfsya7QTVdfvVWLHQ6l2dtFMvHSHs
+         i+aEO0wA+NnDkuDrJGITHGXikaIRzcG585me9k0I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Su Yue <suy.fnst@cn.fujitsu.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 027/237] btrfs: defrag: use btrfs_mod_outstanding_extents in cluster_pages_for_defrag
-Date:   Sat, 16 Nov 2019 10:37:42 -0500
-Message-Id: <20191116154113.7417-27-sashal@kernel.org>
+Cc:     Honghui Zhang <honghui.zhang@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 026/237] PCI: mediatek: Fix class type for MT7622 to PCI_CLASS_BRIDGE_PCI
+Date:   Sat, 16 Nov 2019 10:37:41 -0500
+Message-Id: <20191116154113.7417-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -58,38 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Su Yue <suy.fnst@cn.fujitsu.com>
+From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-[ Upstream commit 28c4a3e21ad030d7571ee9b1b246a5cbfd886627 ]
+[ Upstream commit a7f172ab6a8e755e60311f27512034b0441ef421 ]
 
-Since commit 8b62f87bad9c ("Btrfs: rework outstanding_extents"),
-manual operations of outstanding_extent in btrfs_inode are replaced by
-btrfs_mod_outstanding_extents().
-The one in cluster_pages_for_defrag seems to be lost, so replace it
-of btrfs_mod_outstanding_extents().
+commit 101c92dc80c8 ("PCI: mediatek: Set up vendor ID and class
+type for MT7622") erroneously set the class type for MT7622 to
+PCI_CLASS_BRIDGE_HOST.
 
-Fixes: 8b62f87bad9c ("Btrfs: rework outstanding_extents")
-Signed-off-by: Su Yue <suy.fnst@cn.fujitsu.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+The PCIe controller of MT7622 integrates a Root Port that has type 1
+configuration space header and related bridge windows.
+
+The HW default value of this bridge's class type is invalid.
+
+Fix its class type and set it to PCI_CLASS_BRIDGE_PCI to
+match the hardware implementation.
+
+Fixes: 101c92dc80c8 ("PCI: mediatek: Set up vendor ID and class type for MT7622")
+Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+[lorenzo.pieralisi@arm.com: reworked the commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Ryder Lee <ryder.lee@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/ioctl.c | 2 +-
+ drivers/pci/controller/pcie-mediatek.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-index 7592beb53fc4e..00ff4349b4579 100644
---- a/fs/btrfs/ioctl.c
-+++ b/fs/btrfs/ioctl.c
-@@ -1337,7 +1337,7 @@ static int cluster_pages_for_defrag(struct inode *inode,
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index c5ff6ca65eab2..abedf8ec11bba 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -432,7 +432,7 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+ 		val = PCI_VENDOR_ID_MEDIATEK;
+ 		writew(val, port->base + PCIE_CONF_VEND_ID);
  
- 	if (i_done != page_cnt) {
- 		spin_lock(&BTRFS_I(inode)->lock);
--		BTRFS_I(inode)->outstanding_extents++;
-+		btrfs_mod_outstanding_extents(BTRFS_I(inode), 1);
- 		spin_unlock(&BTRFS_I(inode)->lock);
- 		btrfs_delalloc_release_space(inode, data_reserved,
- 				start_index << PAGE_SHIFT,
+-		val = PCI_CLASS_BRIDGE_HOST;
++		val = PCI_CLASS_BRIDGE_PCI;
+ 		writew(val, port->base + PCIE_CONF_CLASS_ID);
+ 	}
+ 
 -- 
 2.20.1
 
