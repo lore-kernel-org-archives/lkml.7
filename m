@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9678FC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76545C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F0F82089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F57B21823
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:08:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920497;
-	bh=IM1t6g1nMjKWhDLnyHsa0pI2DuK8mSYSBKumetio6Ws=;
+	s=default; t=1573920500;
+	bh=J0/R4Z5BY+02R0pbRuvu0OdHWnNZFRHfN+3UcXMO7bk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hi83JF1MtkJAvuqYkP31LFXcHPw9hZdBdbOqPQ99jexfT99SFr0TCeIu1p4Z4h0zZ
-	 Wm4pq5PXOwYTCzXrhvHU8ChUX6GDyDWEoV4Ke8ErnXZE7whhBuEClFUr3R97/O+RZH
-	 wqu6dTDebfV/zAgQpLWsxaJIRyAZf3tZWXQCup38=
+	b=wJr6nw42UcQ8HsNlRCr8kApQqmkhQEDDtzo85rOw3vEJ0oZZoswHZzDGPI5jZJN1g
+	 qtVdUIJY/W+evRzlSmlM0/CDrhn81m9dLSn75rZ0ZVhb3EXEbIle4M2v5tKIOxewPH
+	 6wnAFKwitSO3M+pOy2KoizNUtxzy2IJlqh6mej48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731425AbfKPQIQ (ORCPT
+        id S1730445AbfKPPuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:08:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58220 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:50:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729534AbfKPPuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:50:16 -0500
+        id S1730415AbfKPPuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:50:07 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4509A2168B;
-        Sat, 16 Nov 2019 15:50:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25DE1208A1;
+        Sat, 16 Nov 2019 15:50:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919415;
-        bh=IM1t6g1nMjKWhDLnyHsa0pI2DuK8mSYSBKumetio6Ws=;
+        s=default; t=1573919406;
+        bh=J0/R4Z5BY+02R0pbRuvu0OdHWnNZFRHfN+3UcXMO7bk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eLEJez6CgxCJj84+RH5Kp2aHhRuLXBF1w0iUtkq0RdL9gpD75P53q0sZoS/y4vLsH
-         90HyMNzuJsoCR+Gpp18oQnVcsbghVUi/QQebQl5d67I8IsgHGFCPxMwiEniMRWpq9m
-         PwhPeZHeAqoLwT0ySIfhjdHz0whpVsq7OBjv56T4=
+        b=LJr7BlBgL0W2gVGZwGVazD5NIZY5Hk5p9iamJESK+q2umdDF02kJdlH72BTW5Paug
+         5FApyGPoJIOEnq3G1NfxNjCITOZx/mm4mzoZpk0T4HCGsK0NUNO4J0fIYNEdThYPEp
+         ELZQmGA3j+EYFi70KKC2MbAO6+ZII5xS2kEem4oQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
+        Jacob Keller <jacob.e.keller@intel.com>,
+        Richard Cochran <richardcochran@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 114/150] sched/topology: Fix off by one bug
-Date:   Sat, 16 Nov 2019 10:46:52 -0500
-Message-Id: <20191116154729.9573-114-sashal@kernel.org>
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 105/150] igb: shorten maximum PHC timecounter update interval
+Date:   Sat, 16 Nov 2019 10:46:43 -0500
+Message-Id: <20191116154729.9573-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,38 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Miroslav Lichvar <mlichvar@redhat.com>
 
-[ Upstream commit 993f0b0510dad98b4e6e39506834dab0d13fd539 ]
+[ Upstream commit 094bf4d0e9657f6ea1ee3d7e07ce3970796949ce ]
 
-With the addition of the NUMA identity level, we increased @level by
-one and will run off the end of the array in the distance sort loop.
+The timecounter needs to be updated at least once per ~550 seconds in
+order to avoid a 40-bit SYSTIM timestamp to be misinterpreted as an old
+timestamp.
 
-Fixed: 051f3ca02e46 ("sched/topology: Introduce NUMA identity node sched domain")
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
+Since commit 500462a9d ("timers: Switch to a non-cascading wheel"),
+scheduling of delayed work seems to be less accurate and a requested
+delay of 540 seconds may actually be longer than 550 seconds. Shorten
+the delay to 480 seconds to be sure the timecounter is updated in time.
+
+This fixes an issue with HW timestamps on 82580/I350/I354 being off by
+~1100 seconds for few seconds every ~9 minutes.
+
+Cc: Jacob Keller <jacob.e.keller@intel.com>
+Cc: Richard Cochran <richardcochran@gmail.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/topology.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/intel/igb/igb_ptp.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 9dcd80ed9d4c1..867d173dab482 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1347,7 +1347,7 @@ void sched_init_numa(void)
- 	int level = 0;
- 	int i, j, k;
+diff --git a/drivers/net/ethernet/intel/igb/igb_ptp.c b/drivers/net/ethernet/intel/igb/igb_ptp.c
+index 0746b19ec6d37..295d27f331042 100644
+--- a/drivers/net/ethernet/intel/igb/igb_ptp.c
++++ b/drivers/net/ethernet/intel/igb/igb_ptp.c
+@@ -65,9 +65,15 @@
+  *
+  * The 40 bit 82580 SYSTIM overflows every
+  *   2^40 * 10^-9 /  60  = 18.3 minutes.
++ *
++ * SYSTIM is converted to real time using a timecounter. As
++ * timecounter_cyc2time() allows old timestamps, the timecounter
++ * needs to be updated at least once per half of the SYSTIM interval.
++ * Scheduling of delayed work is not very accurate, so we aim for 8
++ * minutes to be sure the actual interval is shorter than 9.16 minutes.
+  */
  
--	sched_domains_numa_distance = kzalloc(sizeof(int) * nr_node_ids, GFP_KERNEL);
-+	sched_domains_numa_distance = kzalloc(sizeof(int) * (nr_node_ids + 1), GFP_KERNEL);
- 	if (!sched_domains_numa_distance)
- 		return;
- 
+-#define IGB_SYSTIM_OVERFLOW_PERIOD	(HZ * 60 * 9)
++#define IGB_SYSTIM_OVERFLOW_PERIOD	(HZ * 60 * 8)
+ #define IGB_PTP_TX_TIMEOUT		(HZ * 15)
+ #define INCPERIOD_82576			BIT(E1000_TIMINCA_16NS_SHIFT)
+ #define INCVALUE_82576_MASK		GENMASK(E1000_TIMINCA_16NS_SHIFT - 1, 0)
 -- 
 2.20.1
 
