@@ -2,52 +2,52 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617B2C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DADAC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A220206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02D4D206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920401;
-	bh=SKDZpY9gfO13SASawCeW4cUWQ4spZq5Ne+lfp2vOYwI=;
+	s=default; t=1573920405;
+	bh=d9y+8teIU6Z3Uw7Gq33J3Sg7jR+MWOtnLwmYSK1PHvo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gqUvyc+ZVd146J3f0kx3J5CE4MxV/JWn2WO/T5nso8pkmSu3OFueVOiK1peuigA9+
-	 mSbrxnYT7nb+YKLEgF8u3zBqO133wt5p57W4zAtBuMMxyn9YELFzMXkdhpdH0Ustfb
-	 Jw4ZdCAXaRk0CHHCpZDWlAe4Y/2rDsNWIuy9vz5g=
+	b=gLAYBFGrpyplbaAULds0doJ7bs67I65p7U2LLPW7O648+vAsSNDmGynRkBEfQJMT9
+	 7wAT59bdU7YtGCfKCRY4psjNPrJq/bndkXFe13B2Mcg2/xVSMJMzwkYn+KTXDpGDDm
+	 pjZbZ2vYghX+BsVmHXPYqI1/q96W5L1S5PWTznho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731746AbfKPQGk (ORCPT
+        id S1731758AbfKPQGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:06:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59052 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:06:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729664AbfKPPup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:50:45 -0500
+        id S1729233AbfKPPuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:50:44 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98CFD21826;
-        Sat, 16 Nov 2019 15:50:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54D59217D6;
+        Sat, 16 Nov 2019 15:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919444;
-        bh=SKDZpY9gfO13SASawCeW4cUWQ4spZq5Ne+lfp2vOYwI=;
+        s=default; t=1573919443;
+        bh=d9y+8teIU6Z3Uw7Gq33J3Sg7jR+MWOtnLwmYSK1PHvo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GVUZc3sfTMANqc2vShdQ9Kbe+5gYCb0Aa8qL3fh7rIjNfcgrEIhar5S3sO1LZ8nTz
-         tbEHMTZj/b+Hcu5IL4zGHVI1OTdZ9Szic6Scd+CJoFINthyfx/qUPsCCJBaNXHcvUT
-         lULLN2Kvxo5bj7uFFt6lnXGRXZnny2EHZcqwCBvM=
+        b=vyMthJq5dXHmb49hbOXBFli7WpdTE0Z2JRnZ3PD1DGS0OTGhykqqF4s0zrFHAu8lh
+         jyaKRwUzegPX7rRKk53IHNdjjLUyW2JQTTM9v9n4dOPQHUcIDHe5LCYeo5Qj+mYI5H
+         hWHPE5WavQK+0A6ZlGldKXobTEriJOi1wCNfJtww=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 143/150] pinctrl: lpc18xx: Use define directive for PIN_CONFIG_GPIO_PIN_INT
-Date:   Sat, 16 Nov 2019 10:47:21 -0500
-Message-Id: <20191116154729.9573-143-sashal@kernel.org>
+Cc:     Sriram R <srirrama@codeaurora.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 141/150] cfg80211: Prevent regulatory restore during STA disconnect in concurrent interfaces
+Date:   Sat, 16 Nov 2019 10:47:19 -0500
+Message-Id: <20191116154729.9573-141-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,63 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Sriram R <srirrama@codeaurora.org>
 
-[ Upstream commit f24bfb39975c241374cadebbd037c17960cf1412 ]
+[ Upstream commit 113f3aaa81bd56aba02659786ed65cbd9cb9a6fc ]
 
-Clang warns when one enumerated type is implicitly converted to another:
+Currently when an AP and STA interfaces are active in the same or different
+radios, regulatory settings are restored whenever the STA disconnects. This
+restores all channel information including dfs states in all radios.
+For example, if an AP interface is active in one radio and STA in another,
+when radar is detected on the AP interface, the dfs state of the channel
+will be changed to UNAVAILABLE. But when the STA interface disconnects,
+this issues a regulatory disconnect hint which restores all regulatory
+settings in all the radios attached and thereby losing the stored dfs
+state on the other radio where the channel was marked as unavailable
+earlier. Hence prevent such regulatory restore whenever another active
+beaconing interface is present in the same or other radios.
 
-drivers/pinctrl/pinctrl-lpc18xx.c:643:29: warning: implicit conversion
-from enumeration type 'enum lpc18xx_pin_config_param' to different
-enumeration type 'enum pin_config_param' [-Wenum-conversion]
-        {"nxp,gpio-pin-interrupt", PIN_CONFIG_GPIO_PIN_INT, 0},
-        ~                          ^~~~~~~~~~~~~~~~~~~~~~~
-drivers/pinctrl/pinctrl-lpc18xx.c:648:12: warning: implicit conversion
-from enumeration type 'enum lpc18xx_pin_config_param' to different
-enumeration type 'enum pin_config_param' [-Wenum-conversion]
-        PCONFDUMP(PIN_CONFIG_GPIO_PIN_INT, "gpio pin int", NULL, true),
-        ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/pinctrl/pinconf-generic.h:163:11: note: expanded from
-macro 'PCONFDUMP'
-        .param = a, .display = b, .format = c, .has_arg = d     \
-                 ^
-2 warnings generated.
-
-It is expected that pinctrl drivers can extend pin_config_param because
-of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
-isn't an issue. Most drivers that take advantage of this define the
-PIN_CONFIG variables as constants, rather than enumerated values. Do the
-same thing here so that Clang no longer warns.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/140
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sriram R <srirrama@codeaurora.org>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-lpc18xx.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ net/wireless/sme.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-lpc18xx.c b/drivers/pinctrl/pinctrl-lpc18xx.c
-index d090f37ca4a11..8b4e3582af6e0 100644
---- a/drivers/pinctrl/pinctrl-lpc18xx.c
-+++ b/drivers/pinctrl/pinctrl-lpc18xx.c
-@@ -630,14 +630,8 @@ static const struct pinctrl_pin_desc lpc18xx_pins[] = {
- 	LPC18XX_PIN(i2c0_sda, PIN_I2C0_SDA),
- };
- 
--/**
-- * enum lpc18xx_pin_config_param - possible pin configuration parameters
-- * @PIN_CONFIG_GPIO_PIN_INT: route gpio to the gpio pin interrupt
-- * 	controller.
-- */
--enum lpc18xx_pin_config_param {
--	PIN_CONFIG_GPIO_PIN_INT = PIN_CONFIG_END + 1,
--};
-+/* PIN_CONFIG_GPIO_PIN_INT: route gpio to the gpio pin interrupt controller */
-+#define PIN_CONFIG_GPIO_PIN_INT		(PIN_CONFIG_END + 1)
- 
- static const struct pinconf_generic_params lpc18xx_params[] = {
- 	{"nxp,gpio-pin-interrupt", PIN_CONFIG_GPIO_PIN_INT, 0},
+diff --git a/net/wireless/sme.c b/net/wireless/sme.c
+index d014aea07160c..66cccd16c24af 100644
+--- a/net/wireless/sme.c
++++ b/net/wireless/sme.c
+@@ -642,11 +642,15 @@ static bool cfg80211_is_all_idle(void)
+ 	 * All devices must be idle as otherwise if you are actively
+ 	 * scanning some new beacon hints could be learned and would
+ 	 * count as new regulatory hints.
++	 * Also if there is any other active beaconing interface we
++	 * need not issue a disconnect hint and reset any info such
++	 * as chan dfs state, etc.
+ 	 */
+ 	list_for_each_entry(rdev, &cfg80211_rdev_list, list) {
+ 		list_for_each_entry(wdev, &rdev->wiphy.wdev_list, list) {
+ 			wdev_lock(wdev);
+-			if (wdev->conn || wdev->current_bss)
++			if (wdev->conn || wdev->current_bss ||
++			    cfg80211_beaconing_iface_active(wdev))
+ 				is_all_idle = false;
+ 			wdev_unlock(wdev);
+ 		}
 -- 
 2.20.1
 
