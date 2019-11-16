@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 023F6C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D6CDC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D03872184B
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE44421847
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919468;
-	bh=NTM8CJ9PHb5mufU8UMamaiDxsdIWtBjO8nryc/eljy0=;
+	s=default; t=1573919474;
+	bh=hZs1P9plDIJ8W2ENJ7RonhFFJIGU5K6ekGDrHHqkUQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LExGSByKFdjFRFr06w3nBnY4YnX3rCcE9fx5RDAS9Q3c7jNIUrgItxYCcFTXEucR/
-	 XO4RJb5CN5m4fHacYvex05xagMfbioY4SQfW2pc21pPKaVoiaJUELVE2C38RYuL3UF
-	 bB9HM1NEBuybxjts/JE7FXsK7e0M2p3GPDWbt9DQ=
+	b=I90K1CznfVYIMoeobz5txhLct6m1pcCAN5aDYEnjYjZbZCphzAS/m6ar37joGkozb
+	 v1AfDAw/GSdoTzxyYFSqcvR75FbnLHwnZFApS/GACi9AaI3QQLFJO/NB1/+VcDAOHc
+	 5ho8GFrO7QKXGlvS7nwarjBAiXO7i8QyPkmqFEjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730670AbfKPPvH (ORCPT
+        id S1730690AbfKPPvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:51:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59034 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:51:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730606AbfKPPuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:50:44 -0500
+        id S1730624AbfKPPus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:50:48 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0D7A214E0;
-        Sat, 16 Nov 2019 15:50:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4705120891;
+        Sat, 16 Nov 2019 15:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919444;
-        bh=NTM8CJ9PHb5mufU8UMamaiDxsdIWtBjO8nryc/eljy0=;
+        s=default; t=1573919447;
+        bh=hZs1P9plDIJ8W2ENJ7RonhFFJIGU5K6ekGDrHHqkUQw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h2F55KcF+aN2jNMLE+Tnawq56CnrzAKDII1h77x92PcmCz+PxJ1V3qNW7uRbKBvDL
-         0bEHf5NJRNvrtbHp8rMvi7b+YNAQRh/bak6+SCpfURr0OtrhgWRQmVJ/QJEtxdmUFN
-         T0f5Dm0qDkNi9A/oPiyIXPplrghYBdNcU3hlT6r4=
+        b=SRayVvUSTCxczMo+kdZRUht1u6fh42BviXqFflJWEsxIZ2G8mLSp7L759bz7rO+D2
+         H7DxXLWTd3qK/ySUiSSh0YYXfS85JKDgsfzOCzSxbYUx7CTbt/dmTTAq83yjdV4gag
+         PBsZfLMRXhwM0gxCmRTstS4Gck+SBIq0/r7qYdaY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Masney <masneyb@onstation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 142/150] pinctrl: qcom: spmi-gpio: fix gpio-hog related boot issues
-Date:   Sat, 16 Nov 2019 10:47:20 -0500
-Message-Id: <20191116154729.9573-142-sashal@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 145/150] PCI: keystone: Use quirk to limit MRRS for K2G
+Date:   Sat, 16 Nov 2019 10:47:23 -0500
+Message-Id: <20191116154729.9573-145-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,60 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Masney <masneyb@onstation.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit 149a96047237574b756d872007c006acd0cc6687 ]
+[ Upstream commit 148e340c0696369fadbbddc8f4bef801ed247d71 ]
 
-When attempting to setup up a gpio hog, device probing would repeatedly
-fail with -EPROBE_DEFERED errors. It was caused by a circular dependency
-between the gpio and pinctrl frameworks. If the gpio-ranges property is
-present in device tree, then the gpio framework will handle the gpio pin
-registration and eliminate the circular dependency.
+PCI controller in K2G also has a limitation that memory read request
+size (MRRS) must not exceed 256 bytes. Use the quirk to limit MRRS
+(added for K2HK, K2L and K2E) for K2G as well.
 
-See Christian Lamparter's commit a86caa9ba5d7 ("pinctrl: msm: fix
-gpio-hog related boot issues") for a detailed commit message that
-explains the issue in much more detail. The code comment in this commit
-came from Christian's commit.
-
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ drivers/pci/dwc/pci-keystone.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index 22aaf4375fac0..0f0049dfaa3a1 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -1023,10 +1023,23 @@ static int pmic_gpio_probe(struct platform_device *pdev)
- 		return ret;
- 	}
+diff --git a/drivers/pci/dwc/pci-keystone.c b/drivers/pci/dwc/pci-keystone.c
+index 9bc52e4cf52a0..3ea8288c16053 100644
+--- a/drivers/pci/dwc/pci-keystone.c
++++ b/drivers/pci/dwc/pci-keystone.c
+@@ -39,6 +39,7 @@
+ #define PCIE_RC_K2HK		0xb008
+ #define PCIE_RC_K2E		0xb009
+ #define PCIE_RC_K2L		0xb00a
++#define PCIE_RC_K2G		0xb00b
  
--	ret = gpiochip_add_pin_range(&state->chip, dev_name(dev), 0, 0, npins);
--	if (ret) {
--		dev_err(dev, "failed to add pin range\n");
--		goto err_range;
-+	/*
-+	 * For DeviceTree-supported systems, the gpio core checks the
-+	 * pinctrl's device node for the "gpio-ranges" property.
-+	 * If it is present, it takes care of adding the pin ranges
-+	 * for the driver. In this case the driver can skip ahead.
-+	 *
-+	 * In order to remain compatible with older, existing DeviceTree
-+	 * files which don't set the "gpio-ranges" property or systems that
-+	 * utilize ACPI the driver has to call gpiochip_add_pin_range().
-+	 */
-+	if (!of_property_read_bool(dev->of_node, "gpio-ranges")) {
-+		ret = gpiochip_add_pin_range(&state->chip, dev_name(dev), 0, 0,
-+					     npins);
-+		if (ret) {
-+			dev_err(dev, "failed to add pin range\n");
-+			goto err_range;
-+		}
- 	}
+ #define to_keystone_pcie(x)	dev_get_drvdata((x)->dev)
  
- 	return 0;
+@@ -53,6 +54,8 @@ static void quirk_limit_mrrs(struct pci_dev *dev)
+ 		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
+ 		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2L),
+ 		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
++		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2G),
++		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
+ 		{ 0, },
+ 	};
+ 
 -- 
 2.20.1
 
