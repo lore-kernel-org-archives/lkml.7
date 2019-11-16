@@ -2,53 +2,51 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 517F2C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5A5C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D18206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8538206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920240;
-	bh=zI3xcxvCQysGTBFWmHA5NurhjEb3GfQ/9uuZ9tBRuQs=;
+	s=default; t=1573920250;
+	bh=GrS/sfvynxkd0Z9uBnjBDVMYI0Mc/xdQEjRQgmhPX4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eXQhVRgEldoIoOAY00Xr4QNlYvhqXuamstS0aVV2gaednydVmi8dVCwbKPqBQo70Q
-	 wba55Klx+WjfecdV+wLVpc30phIEsar4s/v1KDWV7b4htj7tv9Fp/ZEwfAUDR/qHnK
-	 aAHoVLy+fSarRs+VdAb0C1Im++tBJZmQjPTpTywo=
+	b=jFZVV9jQOqKE8qpGp9KAFLb7sjrYpklIf+VFR+jrn5VhkdwEqRdQUsSFAKvZG5TBE
+	 QvrPBVvtP3EPFb4H2iOs8Ue+KKDbjN4QXV5B/eioopmzfsro3QD2OwmpXpL3503Y/d
+	 uC76UiZqSUDNostwpOHVIwJd5sCJBXTOJ/UA8MRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731148AbfKPQD6 (ORCPT
+        id S1729746AbfKPQEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:03:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60710 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:04:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730854AbfKPPvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:51:54 -0500
+        id S1729692AbfKPPvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:51:52 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A614120871;
-        Sat, 16 Nov 2019 15:51:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47A7320857;
+        Sat, 16 Nov 2019 15:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919513;
-        bh=zI3xcxvCQysGTBFWmHA5NurhjEb3GfQ/9uuZ9tBRuQs=;
+        s=default; t=1573919511;
+        bh=GrS/sfvynxkd0Z9uBnjBDVMYI0Mc/xdQEjRQgmhPX4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qShnZ5n0KQwoZQ/EUn6VeUoikFCKDgFj2wNAr7tvAbDJ2HEodIpwq3Ix0j493X+8w
-         DaBjx0f8kd69WIhv3jbrs6IrD+4Q8vtzytR2iK+JcPkoObHilPr629BLkC4/G4ysy1
-         WYK6sfk+YmIKKyP/YFTrFDJhMNTmpuq+vYTZ9amU=
+        b=n1OFR84Mt5dv3dzMiOPuuNLnSYD2uKrlfVkmIAy6sKclosCL1vIJxz95e1445ny7n
+         8N3c24R3YydST57VxZnWllgbHei3D+LBj4SxMxlKCKJGVdVjFwfO+zp+fSXCSyHSzP
+         z6JRRETCous2in6WmUMbVJU33ORt5acLOOJLp1Yo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.9 35/99] atm: zatm: Fix empty body Clang warnings
-Date:   Sat, 16 Nov 2019 10:49:58 -0500
-Message-Id: <20191116155103.10971-35-sashal@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 33/99] SUNRPC: Fix a compile warning for cmpxchg64()
+Date:   Sat, 16 Nov 2019 10:49:56 -0500
+Message-Id: <20191116155103.10971-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -61,173 +59,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 64b9d16e2d02ca6e5dc8fcd30cfd52b0ecaaa8f4 ]
+[ Upstream commit e732f4485a150492b286f3efc06f9b34dd6b9995 ]
 
-Clang warns:
-
-drivers/atm/zatm.c:513:7: error: while loop has empty body
-[-Werror,-Wempty-body]
-        zwait;
-             ^
-drivers/atm/zatm.c:513:7: note: put the semicolon on a separate line to
-silence this warning
-
-Get rid of this warning by using an empty do-while loop. While we're at
-it, add parentheses to make it clear that this is a function-like macro.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/42
-Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/atm/zatm.c | 42 +++++++++++++++++++++---------------------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+ net/sunrpc/auth_gss/gss_krb5_seal.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/atm/zatm.c b/drivers/atm/zatm.c
-index a0b88f1489905..e23e2672a1d6b 100644
---- a/drivers/atm/zatm.c
-+++ b/drivers/atm/zatm.c
-@@ -126,7 +126,7 @@ static unsigned long dummy[2] = {0,0};
- #define zin_n(r) inl(zatm_dev->base+r*4)
- #define zin(r) inl(zatm_dev->base+uPD98401_##r*4)
- #define zout(v,r) outl(v,zatm_dev->base+uPD98401_##r*4)
--#define zwait while (zin(CMR) & uPD98401_BUSY)
-+#define zwait() do {} while (zin(CMR) & uPD98401_BUSY)
+diff --git a/net/sunrpc/auth_gss/gss_krb5_seal.c b/net/sunrpc/auth_gss/gss_krb5_seal.c
+index 1d74d653e6c05..ad0dcb69395d7 100644
+--- a/net/sunrpc/auth_gss/gss_krb5_seal.c
++++ b/net/sunrpc/auth_gss/gss_krb5_seal.c
+@@ -63,6 +63,7 @@
+ #include <linux/sunrpc/gss_krb5.h>
+ #include <linux/random.h>
+ #include <linux/crypto.h>
++#include <linux/atomic.h>
  
- /* RX0, RX1, TX0, TX1 */
- static const int mbx_entries[NR_MBX] = { 1024,1024,1024,1024 };
-@@ -140,7 +140,7 @@ static const int mbx_esize[NR_MBX] = { 16,16,4,4 }; /* entry size in bytes */
- 
- static void zpokel(struct zatm_dev *zatm_dev,u32 value,u32 addr)
- {
--	zwait;
-+	zwait();
- 	zout(value,CER);
- 	zout(uPD98401_IND_ACC | uPD98401_IA_BALL |
- 	    (uPD98401_IA_TGT_CM << uPD98401_IA_TGT_SHIFT) | addr,CMR);
-@@ -149,10 +149,10 @@ static void zpokel(struct zatm_dev *zatm_dev,u32 value,u32 addr)
- 
- static u32 zpeekl(struct zatm_dev *zatm_dev,u32 addr)
- {
--	zwait;
-+	zwait();
- 	zout(uPD98401_IND_ACC | uPD98401_IA_BALL | uPD98401_IA_RW |
- 	  (uPD98401_IA_TGT_CM << uPD98401_IA_TGT_SHIFT) | addr,CMR);
--	zwait;
-+	zwait();
- 	return zin(CER);
- }
- 
-@@ -241,7 +241,7 @@ static void refill_pool(struct atm_dev *dev,int pool)
- 	}
- 	if (first) {
- 		spin_lock_irqsave(&zatm_dev->lock, flags);
--		zwait;
-+		zwait();
- 		zout(virt_to_bus(first),CER);
- 		zout(uPD98401_ADD_BAT | (pool << uPD98401_POOL_SHIFT) | count,
- 		    CMR);
-@@ -508,9 +508,9 @@ static int open_rx_first(struct atm_vcc *vcc)
- 	}
- 	if (zatm_vcc->pool < 0) return -EMSGSIZE;
- 	spin_lock_irqsave(&zatm_dev->lock, flags);
--	zwait;
-+	zwait();
- 	zout(uPD98401_OPEN_CHAN,CMR);
--	zwait;
-+	zwait();
- 	DPRINTK("0x%x 0x%x\n",zin(CMR),zin(CER));
- 	chan = (zin(CMR) & uPD98401_CHAN_ADDR) >> uPD98401_CHAN_ADDR_SHIFT;
- 	spin_unlock_irqrestore(&zatm_dev->lock, flags);
-@@ -571,21 +571,21 @@ static void close_rx(struct atm_vcc *vcc)
- 		pos = vcc->vci >> 1;
- 		shift = (1-(vcc->vci & 1)) << 4;
- 		zpokel(zatm_dev,zpeekl(zatm_dev,pos) & ~(0xffff << shift),pos);
--		zwait;
-+		zwait();
- 		zout(uPD98401_NOP,CMR);
--		zwait;
-+		zwait();
- 		zout(uPD98401_NOP,CMR);
- 		spin_unlock_irqrestore(&zatm_dev->lock, flags);
- 	}
- 	spin_lock_irqsave(&zatm_dev->lock, flags);
--	zwait;
-+	zwait();
- 	zout(uPD98401_DEACT_CHAN | uPD98401_CHAN_RT | (zatm_vcc->rx_chan <<
- 	    uPD98401_CHAN_ADDR_SHIFT),CMR);
--	zwait;
-+	zwait();
- 	udelay(10); /* why oh why ... ? */
- 	zout(uPD98401_CLOSE_CHAN | uPD98401_CHAN_RT | (zatm_vcc->rx_chan <<
- 	    uPD98401_CHAN_ADDR_SHIFT),CMR);
--	zwait;
-+	zwait();
- 	if (!(zin(CMR) & uPD98401_CHAN_ADDR))
- 		printk(KERN_CRIT DEV_LABEL "(itf %d): can't close RX channel "
- 		    "%d\n",vcc->dev->number,zatm_vcc->rx_chan);
-@@ -699,7 +699,7 @@ printk("NONONONOO!!!!\n");
- 	skb_queue_tail(&zatm_vcc->tx_queue,skb);
- 	DPRINTK("QRP=0x%08lx\n",zpeekl(zatm_dev,zatm_vcc->tx_chan*VC_SIZE/4+
- 	  uPD98401_TXVC_QRP));
--	zwait;
-+	zwait();
- 	zout(uPD98401_TX_READY | (zatm_vcc->tx_chan <<
- 	    uPD98401_CHAN_ADDR_SHIFT),CMR);
- 	spin_unlock_irqrestore(&zatm_dev->lock, flags);
-@@ -891,12 +891,12 @@ static void close_tx(struct atm_vcc *vcc)
- 	}
- 	spin_lock_irqsave(&zatm_dev->lock, flags);
- #if 0
--	zwait;
-+	zwait();
- 	zout(uPD98401_DEACT_CHAN | (chan << uPD98401_CHAN_ADDR_SHIFT),CMR);
- #endif
--	zwait;
-+	zwait();
- 	zout(uPD98401_CLOSE_CHAN | (chan << uPD98401_CHAN_ADDR_SHIFT),CMR);
--	zwait;
-+	zwait();
- 	if (!(zin(CMR) & uPD98401_CHAN_ADDR))
- 		printk(KERN_CRIT DEV_LABEL "(itf %d): can't close TX channel "
- 		    "%d\n",vcc->dev->number,chan);
-@@ -926,9 +926,9 @@ static int open_tx_first(struct atm_vcc *vcc)
- 	zatm_vcc->tx_chan = 0;
- 	if (vcc->qos.txtp.traffic_class == ATM_NONE) return 0;
- 	spin_lock_irqsave(&zatm_dev->lock, flags);
--	zwait;
-+	zwait();
- 	zout(uPD98401_OPEN_CHAN,CMR);
--	zwait;
-+	zwait();
- 	DPRINTK("0x%x 0x%x\n",zin(CMR),zin(CER));
- 	chan = (zin(CMR) & uPD98401_CHAN_ADDR) >> uPD98401_CHAN_ADDR_SHIFT;
- 	spin_unlock_irqrestore(&zatm_dev->lock, flags);
-@@ -1559,7 +1559,7 @@ static void zatm_phy_put(struct atm_dev *dev,unsigned char value,
- 	struct zatm_dev *zatm_dev;
- 
- 	zatm_dev = ZATM_DEV(dev);
--	zwait;
-+	zwait();
- 	zout(value,CER);
- 	zout(uPD98401_IND_ACC | uPD98401_IA_B0 |
- 	    (uPD98401_IA_TGT_PHY << uPD98401_IA_TGT_SHIFT) | addr,CMR);
-@@ -1571,10 +1571,10 @@ static unsigned char zatm_phy_get(struct atm_dev *dev,unsigned long addr)
- 	struct zatm_dev *zatm_dev;
- 
- 	zatm_dev = ZATM_DEV(dev);
--	zwait;
-+	zwait();
- 	zout(uPD98401_IND_ACC | uPD98401_IA_B0 | uPD98401_IA_RW |
- 	  (uPD98401_IA_TGT_PHY << uPD98401_IA_TGT_SHIFT) | addr,CMR);
--	zwait;
-+	zwait();
- 	return zin(CER) & 0xff;
- }
- 
+ #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
+ # define RPCDBG_FACILITY        RPCDBG_AUTH
 -- 
 2.20.1
 
