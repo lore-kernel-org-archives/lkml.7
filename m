@@ -2,193 +2,158 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA789C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 13:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B00EC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 13:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5AC20730
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 13:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63AA820700
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 13:16:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cDvYjLtS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbfKPNFD (ORCPT
+        id S1727601AbfKPNQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 08:05:03 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:42316 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727437AbfKPNFD (ORCPT
+        Sat, 16 Nov 2019 08:16:24 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45469 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727510AbfKPNQX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 08:05:03 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TiEXByO_1573909496;
-Received: from C02XQCBJJG5H.local(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0TiEXByO_1573909496)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 16 Nov 2019 21:04:57 +0800
-From:   Lai Jiangshan <laijs@linux.alibaba.com>
-Subject: Re: [PATCH 08/11] rcu: don't use negative ->rcu_read_lock_nesting
-To:     paulmck@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
-References: <20191031100806.1326-1-laijs@linux.alibaba.com>
- <20191031100806.1326-9-laijs@linux.alibaba.com>
- <20191101123323.GC17910@paulmck-ThinkPad-P72>
-Message-ID: <3437ee3f-2807-16eb-5e9b-77189fa31cdf@linux.alibaba.com>
-Date:   Sat, 16 Nov 2019 21:04:56 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191101123323.GC17910@paulmck-ThinkPad-P72>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Sat, 16 Nov 2019 08:16:23 -0500
+Received: by mail-wr1-f68.google.com with SMTP id z10so13908000wrs.12
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 05:16:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=fBRrOeFjzqnzfONE7OUt/W61tGgjVczN6HnwGIweIMY=;
+        b=cDvYjLtSsqqISLupyBqRuzfoSBOW3mxJFlXdyx1Unip7m5FZH48Kkg/f7grqZn13QW
+         qeHa72WXEHUifndhqySQZsiRK+iRvTG+DAZV2oqKFKS4Ca4GxV5dgGKWkKXVS3u102+O
+         ZXdGtFhk8xwb1kPwzG+pOLiUYI3Y34FAdlWZYx0c8NB8J4lGPoGUVD5gcY0aR6umhP7n
+         e/7GunXSLOK7fi58FbbDsN3P10gJFd93CWJUL4oKk/e4EvkBRD4cbuwcPwCZ1vNrJiCE
+         NrTqNDmOgtCCZNuH6EKGUdYwHaSsz4y6qZnb6ayjUDK/Yhcb8fxyxeHlYRDPxgHpcjkS
+         hYcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=fBRrOeFjzqnzfONE7OUt/W61tGgjVczN6HnwGIweIMY=;
+        b=Lq7ds6ONHXs+ecT93NH69VG7Y5UeAjNLXdtsHg7LPtTrFivFNZ3cDX+TMBP4tn+c0d
+         PrGXyL5aucn7FdgQqqbjks071zKK5mtgnVEDZfBFhWasSVuH96GPNZjWxNVwuJOg2fhr
+         TUbRo0cwau0LPDxG3Iv5WbnhHEzKBEaMYXaP4rlEvaHAw2LxcPVRac9MK0abBbYWBreK
+         6QDw60Vp44ZJNup+BZZJVa64znVLFjq4KEZslPJaRDaf1JuSfXADOk0iLCxRJjLme2VL
+         2D1HzxZRfNWZahi6U/1P+ynN36BdX90y1H9GsK6vRbs5MeF62rmVgf73bCWpvTcvxKky
+         oZEA==
+X-Gm-Message-State: APjAAAWdNE68N6qrlKbuSNlxzyeWyz6u6WsuIz0SFNCOMwHTxy8B3+sJ
+        d9SKYYK4pePQyVdGcGyJ/rzexw==
+X-Google-Smtp-Source: APXvYqxU+Ce984OIm+gEBSmPBiLEdlT1QPAD52gaDJ94Lrikl70nHZBdVaaGDkqzmNzdcHbIPoBUVQ==
+X-Received: by 2002:adf:db41:: with SMTP id f1mr19862644wrj.351.1573910180899;
+        Sat, 16 Nov 2019 05:16:20 -0800 (PST)
+Received: from localhost.localdomain ([2a01:e34:ed2f:f020:b462:d85e:9aab:bc1d])
+        by smtp.gmail.com with ESMTPSA id r2sm11128914wma.44.2019.11.16.05.16.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 Nov 2019 05:16:20 -0800 (PST)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     rafael@kernel.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ulf.hansson@linaro.org
+Subject: [PATCH V2 2/2] cpuidle: Use the latency to call find_deepest_idle_state
+Date:   Sat, 16 Nov 2019 14:16:13 +0100
+Message-Id: <20191116131613.15733-2-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191116131613.15733-1-daniel.lezcano@linaro.org>
+References: <20191116131613.15733-1-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As the dev->forced_idle_latency_limit_ns is filled with the latency
+value when this function is called, use it as a parameter to the
+find_deepest_idle_state() function.
 
+Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/cpuidle/cpuidle.c | 7 +++++--
+ include/linux/cpuidle.h   | 6 ++++--
+ kernel/sched/idle.c       | 8 +++++++-
+ 3 files changed, 16 insertions(+), 5 deletions(-)
 
-On 2019/11/1 8:33 下午, Paul E. McKenney wrote:
-> On Thu, Oct 31, 2019 at 10:08:03AM +0000, Lai Jiangshan wrote:
->> Negative ->rcu_read_lock_nesting was introduced to prevent
->> scheduler deadlock which was just prevented by deferred qs.
->> So negative ->rcu_read_lock_nesting is useless now and
->> rcu_read_unlock() can be simplified.
->>
->> And negative ->rcu_read_lock_nesting is bug-prone,
->> it is good to kill it.
->>
->> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
->> ---
->>   kernel/rcu/tree_exp.h    | 30 ++----------------------------
->>   kernel/rcu/tree_plugin.h | 21 +++++----------------
->>   2 files changed, 7 insertions(+), 44 deletions(-)
->>
->> diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
->> index c0d06bce35ea..9dcbd2734620 100644
->> --- a/kernel/rcu/tree_exp.h
->> +++ b/kernel/rcu/tree_exp.h
->> @@ -621,11 +621,11 @@ static void rcu_exp_handler(void *unused)
->>   	 * report the quiescent state, otherwise defer.
->>   	 */
->>   	if (!t->rcu_read_lock_nesting) {
->> +		rdp->exp_deferred_qs = true;
->>   		if (!(preempt_count() & (PREEMPT_MASK | SOFTIRQ_MASK)) ||
->>   		    rcu_dynticks_curr_cpu_in_eqs()) {
->> -			rcu_report_exp_rdp(rdp);
->> +			rcu_preempt_deferred_qs(t);
->>   		} else {
->> -			rdp->exp_deferred_qs = true;
->>   			set_tsk_need_resched(t);
->>   			set_preempt_need_resched();
->>   		}
->> @@ -646,32 +646,6 @@ static void rcu_exp_handler(void *unused)
->>   		WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
->>   		return;
->>   	}
->> -
->> -	/*
->> -	 * The final and least likely case is where the interrupted
->> -	 * code was just about to or just finished exiting the RCU-preempt
->> -	 * read-side critical section, and no, we can't tell which.
->> -	 * So either way, set ->deferred_qs to flag later code that
->> -	 * a quiescent state is required.
->> -	 *
->> -	 * If the CPU is fully enabled (or if some buggy RCU-preempt
->> -	 * read-side critical section is being used from idle), just
->> -	 * invoke rcu_preempt_deferred_qs() to immediately report the
->> -	 * quiescent state.  We cannot use rcu_read_unlock_special()
->> -	 * because we are in an interrupt handler, which will cause that
->> -	 * function to take an early exit without doing anything.
->> -	 *
->> -	 * Otherwise, force a context switch after the CPU enables everything.
->> -	 */
->> -	rdp->exp_deferred_qs = true;
->> -	if (rcu_preempt_need_deferred_qs(t) &&
->> -	    (!(preempt_count() & (PREEMPT_MASK | SOFTIRQ_MASK)) ||
->> -	    WARN_ON_ONCE(rcu_dynticks_curr_cpu_in_eqs()))) {
->> -		rcu_preempt_deferred_qs(t);
->> -	} else {
->> -		set_tsk_need_resched(t);
->> -		set_preempt_need_resched();
->> -	}
->>   }
->>   
->>   /* PREEMPTION=y, so no PREEMPTION=n expedited grace period to clean up after. */
->> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
->> index dbded2b8c792..c62631c79463 100644
->> --- a/kernel/rcu/tree_plugin.h
->> +++ b/kernel/rcu/tree_plugin.h
->> @@ -344,8 +344,6 @@ static int rcu_preempt_blocked_readers_cgp(struct rcu_node *rnp)
->>   }
->>   
->>   /* Bias and limit values for ->rcu_read_lock_nesting. */
->> -#define RCU_NEST_BIAS INT_MAX
->> -#define RCU_NEST_NMAX (-INT_MAX / 2)
->>   #define RCU_NEST_PMAX (INT_MAX / 2)
->>   
->>   /*
->> @@ -373,21 +371,15 @@ void __rcu_read_unlock(void)
->>   {
->>   	struct task_struct *t = current;
->>   
->> -	if (t->rcu_read_lock_nesting != 1) {
->> -		--t->rcu_read_lock_nesting;
->> -	} else {
->> +	if (--t->rcu_read_lock_nesting == 0) {
->>   		barrier();  /* critical section before exit code. */
->> -		t->rcu_read_lock_nesting = -RCU_NEST_BIAS;
->> -		barrier();  /* assign before ->rcu_read_unlock_special load */
-> 
-> But if we take an interrupt here, and the interrupt handler contains
-> an RCU read-side critical section, don't we end up in the same hole
-> that resulted in this article when the corresponding rcu_read_unlock()
-> executes?  https://lwn.net/Articles/453002/
-> 
-> 
-
-Hello, Paul
-
-I'm replying the email of V1, which is relying on deferred_qs changes
-in [PATCH 07/11] (V1).
-([PATCH 04/11](V1) relies on it too as you pointed out)
-
-I hope I can answer the question wrt https://lwn.net/Articles/453002/
-maybe partially.
-
-With the help of deferred_qs mechanism and the special.b.deferred_qs
-bit, I HOPED rcu_read_unlock_special() can find if itself is
-risking in scheduler locks via special.b.deferred_qs bit.
-
---t->rcu_read_lock_nesting;
-//outmost rcu c.s, rcu_read_lock_nesting is 0. but special is not zero
-INTERRUPT
-  // the fallowing code will normally be in_interrupt()
-  // or NOT in_interrupt() when wakeup_softirqd() in invoke_softirq()
-  // or NOT in_interrupt() when preempt_shedule_irq()
-  // or other cases I missed.
-  scheduler_lock()
-  rcu_read_lock()
-  rcu_read_unlock()
-   // special has been set but with no special.b.deferred_qs
-   rcu_read_unlock_special()
-    raise_softirq_irqoff()
-     wake_up() when !in_interrupt() // dead lock
-
-preempt_shedule_irq() is guaranteed to clear rcu_read_unlock_special
-when rcu_read_lock_nesting = 0 before calling into scheduler locks.
-
-But, at least, what caused my hope to be failed was the case
-wakeup_softirqd() in invoke_softirq() (which was once protected by
-softirq in about 2 years between ec433f0c5152 and facd8b80c67a).
-I don't think it is hard to fix it if we keep using
-special.b.deferred_qs as this V1 series.
-
-Thanks
-Lai
+diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+index 62226fadc02d..a02b701fc289 100644
+--- a/drivers/cpuidle/cpuidle.c
++++ b/drivers/cpuidle/cpuidle.c
+@@ -122,9 +122,12 @@ void cpuidle_use_deepest_state(u64 latency_limit_ns)
+  * @dev: cpuidle device for the given CPU.
+  */
+ int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
+-			       struct cpuidle_device *dev)
++			       struct cpuidle_device *dev,
++			       u64 latency_limit_ns)
+ {
+-	return find_deepest_state(drv, dev, UINT_MAX, 0, false);
++	return find_deepest_state(drv, dev,
++				  div_u64(latency_limit_ns, NSEC_PER_USEC),
++				  0, false);
+ }
+ 
+ #ifdef CONFIG_SUSPEND
+diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
+index 1f3f4dd01e48..b60f35b7d53e 100644
+--- a/include/linux/cpuidle.h
++++ b/include/linux/cpuidle.h
+@@ -207,13 +207,15 @@ static inline struct cpuidle_device *cpuidle_get_device(void) {return NULL; }
+ 
+ #ifdef CONFIG_CPU_IDLE
+ extern int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
+-				      struct cpuidle_device *dev);
++				      struct cpuidle_device *dev,
++				      u64 latency_limit_ns);
+ extern int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
+ 				struct cpuidle_device *dev);
+ extern void cpuidle_use_deepest_state(u64 latency_limit_ns);
+ #else
+ static inline int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
+-					     struct cpuidle_device *dev)
++					     struct cpuidle_device *dev,
++					     u64 latency_limit_ns)
+ {return -ENODEV; }
+ static inline int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
+ 				       struct cpuidle_device *dev)
+diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+index 0a817e907192..fd4a8747e602 100644
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -166,6 +166,9 @@ static void cpuidle_idle_call(void)
+ 	 */
+ 
+ 	if (idle_should_enter_s2idle() || dev->forced_idle_latency_limit_ns) {
++
++		u64 latency_limit_ns = dev->forced_idle_latency_limit_ns;
++
+ 		if (idle_should_enter_s2idle()) {
+ 			rcu_idle_enter();
+ 
+@@ -176,12 +179,15 @@ static void cpuidle_idle_call(void)
+ 			}
+ 
+ 			rcu_idle_exit();
++
++			latency_limit_ns = U64_MAX;
+ 		}
+ 
+ 		tick_nohz_idle_stop_tick();
+ 		rcu_idle_enter();
+ 
+-		next_state = cpuidle_find_deepest_state(drv, dev);
++		next_state = cpuidle_find_deepest_state(drv, dev,
++							latency_limit_ns);
+ 		call_cpuidle(drv, dev, next_state);
+ 	} else {
+ 		bool stop_tick = true;
+-- 
+2.17.1
 
