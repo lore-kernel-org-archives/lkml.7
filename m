@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDA6C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26157C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0186721843
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E47412089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:01:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920061;
-	bh=+b7XbhtV2SJd920chfqcm33XBuq5ITAN0wNx3EFhWpA=;
+	s=default; t=1573920067;
+	bh=5Z8syyPxu+RIe5Hu9MJdInqhpQxBkHwU4Q6mZlg2V8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OYP8pUeClP8cIBIpsw33/qzvQovEWesivIjRioI8VE23pM9rcDQwDspGfx694o5iV
-	 aNdcAeiT3lF+xg4bTRWcSQbDxqwYlYbUrdfF9uINOmfyiiRDY2+pIXVJMJmB2yPley
-	 ZeaGCrvWDwrBpC+RPlfuQoNyiflooceDHOwUZU3g=
+	b=HvuGwKgiPiTAlywoZNc867jOhzXMbsIKN/wfDQmWV2Po6RJ3PnyGDXsJHwNPEqXrO
+	 DYpancLqmmaJi0IHWPvLIjlvfPqMB5lfzG2iZZcWfbcQkAtgONxcgTrNd2vv8ffnGZ
+	 9u6jS/QMxY73gOcp71PAmrNCYO+cDdzXVwtvkbH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731610AbfKPQA7 (ORCPT
+        id S1731634AbfKPQBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:00:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34330 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:01:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731206AbfKPPxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:53:21 -0500
+        id S1731204AbfKPPxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:53:20 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8911D21823;
-        Sat, 16 Nov 2019 15:53:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9DB2218A3;
+        Sat, 16 Nov 2019 15:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1573919600;
-        bh=+b7XbhtV2SJd920chfqcm33XBuq5ITAN0wNx3EFhWpA=;
+        bh=5Z8syyPxu+RIe5Hu9MJdInqhpQxBkHwU4Q6mZlg2V8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W9PI6W2RZPHZUoBMEbiwToPtTyVK3yR0dt1DbZPbXuthYVo+It1ugF5ihTtRYOQnS
-         GU5Rwjv9/BYbNnr9Y2ZhFtW9hRSIWhT/tuUZjvHGrWireTTp0SgwoOEEQnFuVBEibz
-         /E9+M5/AFWKBf8zA7ZARgijJLY9ywplUNA1PuVYo=
+        b=EHEcGMtJR5he/cNv7e7QD8c//hnbqvcotU12MP0Gbn9XQXEaBjRGZ0JSdImnIcYDn
+         NY+3Y5fJJ+MM9JfGxytrEILXbGJo+xI5aHBpSVGE5oabiAPdfE2XeRz1vsXu8gOwUh
+         IxvmF82CfV/NRoMFjsRY76vZstQLgZKz7CF1A16s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Manning <mmanning@vyatta.att-mail.com>,
-        David Ahern <dsahern@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 89/99] vrf: mark skb for multicast or link-local as enslaved to VRF
-Date:   Sat, 16 Nov 2019 10:50:52 -0500
-Message-Id: <20191116155103.10971-89-sashal@kernel.org>
+Cc:     Tycho Andersen <tycho@tycho.ws>,
+        David Teigland <teigland@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 4.9 88/99] dlm: don't leak kernel pointer to userspace
+Date:   Sat, 16 Nov 2019 10:50:51 -0500
+Message-Id: <20191116155103.10971-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -60,67 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Manning <mmanning@vyatta.att-mail.com>
+From: Tycho Andersen <tycho@tycho.ws>
 
-[ Upstream commit 6f12fa775530195a501fb090d092c637f32d0cc5 ]
+[ Upstream commit 9de30f3f7f4d31037cfbb7c787e1089c1944b3a7 ]
 
-The skb for packets that are multicast or to a link-local address are
-not marked as being enslaved to a VRF, if they are received on a socket
-bound to the VRF. This is needed for ND and it is preferable for the
-kernel not to have to deal with the additional use-cases if ll or mcast
-packets are handled as enslaved. However, this does not allow service
-instances listening on unbound and bound to VRF sockets to distinguish
-the VRF used, if packets are sent as multicast or to a link-local
-address. The fix is for the VRF driver to also mark these skb as being
-enslaved to the VRF.
+In copy_result_to_user(), we first create a struct dlm_lock_result, which
+contains a struct dlm_lksb, the last member of which is a pointer to the
+lvb. Unfortunately, we copy the entire struct dlm_lksb to the result
+struct, which is then copied to userspace at the end of the function,
+leaking the contents of sb_lvbptr, which is a valid kernel pointer in some
+cases (indeed, later in the same function the data it points to is copied
+to userspace).
 
-Signed-off-by: Mike Manning <mmanning@vyatta.att-mail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Tested-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+It is an error to leak kernel pointers to userspace, as it undermines KASLR
+protections (see e.g. 65eea8edc31 ("floppy: Do not copy a kernel pointer to
+user memory in FDGETPRM ioctl") for another example of this).
+
+Signed-off-by: Tycho Andersen <tycho@tycho.ws>
+Signed-off-by: David Teigland <teigland@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vrf.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ fs/dlm/user.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
-index 3b6e908d31646..39aafe69d3b12 100644
---- a/drivers/net/vrf.c
-+++ b/drivers/net/vrf.c
-@@ -967,24 +967,23 @@ static struct sk_buff *vrf_ip6_rcv(struct net_device *vrf_dev,
- 				   struct sk_buff *skb)
- {
- 	int orig_iif = skb->skb_iif;
--	bool need_strict;
-+	bool need_strict = rt6_need_strict(&ipv6_hdr(skb)->daddr);
-+	bool is_ndisc = ipv6_ndisc_frame(skb);
+diff --git a/fs/dlm/user.c b/fs/dlm/user.c
+index 9ac65914ab5b0..57f2aacec97f5 100644
+--- a/fs/dlm/user.c
++++ b/fs/dlm/user.c
+@@ -700,7 +700,7 @@ static int copy_result_to_user(struct dlm_user_args *ua, int compat,
+ 	result.version[0] = DLM_DEVICE_VERSION_MAJOR;
+ 	result.version[1] = DLM_DEVICE_VERSION_MINOR;
+ 	result.version[2] = DLM_DEVICE_VERSION_PATCH;
+-	memcpy(&result.lksb, &ua->lksb, sizeof(struct dlm_lksb));
++	memcpy(&result.lksb, &ua->lksb, offsetof(struct dlm_lksb, sb_lvbptr));
+ 	result.user_lksb = ua->user_lksb;
  
--	/* loopback traffic; do not push through packet taps again.
--	 * Reset pkt_type for upper layers to process skb
-+	/* loopback, multicast & non-ND link-local traffic; do not push through
-+	 * packet taps again. Reset pkt_type for upper layers to process skb
- 	 */
--	if (skb->pkt_type == PACKET_LOOPBACK) {
-+	if (skb->pkt_type == PACKET_LOOPBACK || (need_strict && !is_ndisc)) {
- 		skb->dev = vrf_dev;
- 		skb->skb_iif = vrf_dev->ifindex;
- 		IP6CB(skb)->flags |= IP6SKB_L3SLAVE;
--		skb->pkt_type = PACKET_HOST;
-+		if (skb->pkt_type == PACKET_LOOPBACK)
-+			skb->pkt_type = PACKET_HOST;
- 		goto out;
- 	}
- 
--	/* if packet is NDISC or addressed to multicast or link-local
--	 * then keep the ingress interface
--	 */
--	need_strict = rt6_need_strict(&ipv6_hdr(skb)->daddr);
--	if (!ipv6_ndisc_frame(skb) && !need_strict) {
-+	/* if packet is NDISC then keep the ingress interface */
-+	if (!is_ndisc) {
- 		vrf_rx_stats(vrf_dev, skb->len);
- 		skb->dev = vrf_dev;
- 		skb->skb_iif = vrf_dev->ifindex;
+ 	/* FIXME: dlm1 provides for the user's bastparam/addr to not be updated
 -- 
 2.20.1
 
