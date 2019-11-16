@@ -2,52 +2,51 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B50F8C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76366C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC9A2089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D77D206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920102;
-	bh=eGI2FMmDfPDYoCg1ZCjAMD3yPyrwIpkZXMOAqPWr9GM=;
+	s=default; t=1573920118;
+	bh=0NAakbf0aFFUr3C1ssYzRRr9w/w1NNglKrosxTZzK+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MrlP43IcLhMtAz08kQ/PWzzMHKSCpYNxvhz24K2N0ckeOZPHabZDJ3Melr7UlT2ix
-	 +waKy3dsOTZJJfSf7unIqMsDGTacNrU0iL/dfUbEmr+Qd38g904ZPi/dgWm/hdYHBY
-	 EUN0NOquO51WnBV+LRRNnOzVKt5KT1rgeKY+fln4=
+	b=WX2sjCUgToAe8A+9gNcDNSnxw+Z/ExogKdy5sZnSQJf8A1cL5/PXOmAJFn6ppVrTz
+	 0r2H2/x8bDB6FdiusZEGWj9DSeEOi4DhwteGd+PPggmeAxZVb81IE1G0AOfrUTV7o/
+	 G2PxjpOvG/1+nM+GfORnCO6sMtRccaUTollWyrI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731674AbfKPQBk (ORCPT
+        id S1730741AbfKPQB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:01:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34110 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:01:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728768AbfKPPxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:53:08 -0500
+        id S1731128AbfKPPxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:53:06 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FB4920871;
-        Sat, 16 Nov 2019 15:53:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46D4D2184B;
+        Sat, 16 Nov 2019 15:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919587;
-        bh=eGI2FMmDfPDYoCg1ZCjAMD3yPyrwIpkZXMOAqPWr9GM=;
+        s=default; t=1573919585;
+        bh=0NAakbf0aFFUr3C1ssYzRRr9w/w1NNglKrosxTZzK+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hK4ZViaSTS5zqoAUcfTkpmw3U0LpuMsnFJb5zuRkuQJRTX4r9S4Ebl4sppkEFu40c
-         Je6vXiFHYudYOzCkGzwZUcAGxsKEcyIaK7bUTRVwuyWKMGSWeQmsLssa44MM8LhHNv
-         rrFCe99jY+oS+MCaJhSv5gG+CrEZivEtJe7G7MWw=
+        b=DZDwaP8m9Y+N6NBDBlueH05qnjhLzCyNzVTCQbw8uMCo6Me2tT8Yk7ulvICoQ/E+L
+         pOa0wiff3af6mdWWuktAuFz0vmBYC3pmrK5mMY6mWcoNveSoYF4Bw0Pcrm0yIP2tbB
+         igvebNPI1gGiAMuFcrO67z7W/HJDKrGqGWI4aD9s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 78/99] wlcore: Fix the return value in case of error in 'wlcore_vendor_cmd_smart_config_start()'
-Date:   Sat, 16 Nov 2019 10:50:41 -0500
-Message-Id: <20191116155103.10971-78-sashal@kernel.org>
+Cc:     Richard Guy Briggs <rgb@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 77/99] audit: print empty EXECVE args
+Date:   Sat, 16 Nov 2019 10:50:40 -0500
+Message-Id: <20191116155103.10971-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -60,38 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Richard Guy Briggs <rgb@redhat.com>
 
-[ Upstream commit 3419348a97bcc256238101129d69b600ceb5cc70 ]
+[ Upstream commit ea956d8be91edc702a98b7fe1f9463e7ca8c42ab ]
 
-We return 0 unconditionally at the end of
-'wlcore_vendor_cmd_smart_config_start()'.
-However, 'ret' is set to some error codes in several error handling paths
-and we already return some error codes at the beginning of the function.
+Empty executable arguments were being skipped when printing out the list
+of arguments in an EXECVE record, making it appear they were somehow
+lost.  Include empty arguments as an itemized empty string.
 
-Return 'ret' instead to propagate the error code.
+Reproducer:
+	autrace /bin/ls "" "/etc"
+	ausearch --start recent -m execve -i | grep EXECVE
+	type=EXECVE msg=audit(10/03/2018 13:04:03.208:1391) : argc=3 a0=/bin/ls a2=/etc
 
-Fixes: 80ff8063e87c ("wlcore: handle smart config vendor commands")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+With fix:
+	type=EXECVE msg=audit(10/03/2018 21:51:38.290:194) : argc=3 a0=/bin/ls a1= a2=/etc
+	type=EXECVE msg=audit(1538617898.290:194): argc=3 a0="/bin/ls" a1="" a2="/etc"
+
+Passes audit-testsuite.  GH issue tracker at
+https://github.com/linux-audit/audit-kernel/issues/99
+
+Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+[PM: cleaned up the commit metadata]
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ti/wlcore/vendor_cmd.c | 2 +-
+ kernel/auditsc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ti/wlcore/vendor_cmd.c b/drivers/net/wireless/ti/wlcore/vendor_cmd.c
-index fd4e9ba176c9b..332a3a5c1c900 100644
---- a/drivers/net/wireless/ti/wlcore/vendor_cmd.c
-+++ b/drivers/net/wireless/ti/wlcore/vendor_cmd.c
-@@ -66,7 +66,7 @@ wlcore_vendor_cmd_smart_config_start(struct wiphy *wiphy,
- out:
- 	mutex_unlock(&wl->mutex);
+diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+index c2aaf539728fb..854e90be1a023 100644
+--- a/kernel/auditsc.c
++++ b/kernel/auditsc.c
+@@ -1096,7 +1096,7 @@ static void audit_log_execve_info(struct audit_context *context,
+ 		}
  
--	return 0;
-+	return ret;
- }
- 
- static int
+ 		/* write as much as we can to the audit log */
+-		if (len_buf > 0) {
++		if (len_buf >= 0) {
+ 			/* NOTE: some magic numbers here - basically if we
+ 			 *       can't fit a reasonable amount of data into the
+ 			 *       existing audit buffer, flush it and start with
 -- 
 2.20.1
 
