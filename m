@@ -4,56 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0A3C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A72C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ACEB20729
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0492077B
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:45:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919117;
-	bh=E+RV+V5GqUEVh+5/7i2GMWYmoYVrO8d3sKC+gt0ybnM=;
+	s=default; t=1573919122;
+	bh=/X42qqck8nkLc0mAmS/qSEjM3OBOAqD15gc7gZhyWjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FxpXms1Sc6o49ppOUHZNtepNqd6OP9H9EEceuwZfOPS8TTx5XbaQusA880Q2Zdsk7
-	 sHrQx/jxAv4YNqDghIr2nTY7HXPCkwIL6jizeQ59lCYfdHHYGmhO0U9uCZiDe3DaO3
-	 yaKd9/kXeWvg8v22clLRCrFUG35R1Bf2b5eXNj8M=
+	b=YFy3nxyesYIjKqv3cGcHRNeNWvN7y2Ev1NI+i7FGHoSe1FAIol/jizsuRDdRqyP+C
+	 v422Ab0EPkEmMi30Mv+S9KvSg5dG1ii7+DUhphHY2CngPYPoG36uiXEPpjvgkQJ1q4
+	 EYW6zd6LjbQm6BcBAT3FiE1ax0e5kbjOW++2V9ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729152AbfKPPpP (ORCPT
+        id S1729110AbfKPPpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:45:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50478 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:45:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729110AbfKPPpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:45:12 -0500
+        id S1729067AbfKPPos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:44:48 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA72520740;
-        Sat, 16 Nov 2019 15:45:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB405207FA;
+        Sat, 16 Nov 2019 15:44:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919111;
-        bh=E+RV+V5GqUEVh+5/7i2GMWYmoYVrO8d3sKC+gt0ybnM=;
+        s=default; t=1573919087;
+        bh=/X42qqck8nkLc0mAmS/qSEjM3OBOAqD15gc7gZhyWjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zwVnzVIP/sp0UT+fih2RBNC41ji392uDViRbeWlYZeZ1+EHPNakBHDE1NswXWpxYV
-         FcyDErPhJ9Ynznkl2y3zCfBw8aJ+EiTdgNdGX4WrScqLdlAKgjx4hQQk+u8ei5bsNl
-         JbcTJ3aOpSNnaiGC09TzY5+HxFQ4pGZ9wbBHBnrg=
+        b=Ue3wTW4bGDhHFAl9i7h2KsOf0DL2XOD9FxydrFnJyTLMWSbbnzwemvB4ZpL8cbVIT
+         KhR4xBB2tLr1URar4G4MAkU5bAoT7tAaeuWpWCzen7NzDu89gPpQUXV2fMWClYpKA5
+         +4aUMv0IlQTg70zxLxKNSE+K5RAdMa2Zns8D1Y+Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Ernesto=20A=2E=20Fern=C3=A1ndez?= 
-        <ernesto.mnd.fernandez@gmail.com>, Christoph Hellwig <hch@lst.de>,
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Keith Busch <keith.busch@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        YueHaibing <yuehaibing@huawei.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 155/237] hfsplus: prevent btree data loss on ENOSPC
-Date:   Sat, 16 Nov 2019 10:39:50 -0500
-Message-Id: <20191116154113.7417-155-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.19 149/237] mm/gup_benchmark.c: prevent integer overflow in ioctl
+Date:   Sat, 16 Nov 2019 10:39:44 -0500
+Message-Id: <20191116154113.7417-149-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,215 +66,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit d92915c35bfaf763d78bf1d5ac7f183420e3bd99 ]
+[ Upstream commit 4b408c74ee5a0b74fc9265c2fe39b0e7dec7c056 ]
 
-Inserting or deleting a record in a btree may require splitting several of
-its nodes.  If we hit ENOSPC halfway through, the new nodes will be left
-orphaned and their records will be lost.  This could mean lost inodes,
-extents or xattrs.
+The concern here is that "gup->size" is a u64 and "nr_pages" is unsigned
+long.  On 32 bit systems we could trick the kernel into allocating fewer
+pages than expected.
 
-Henceforth, check the available disk space before making any changes.
-This still leaves the potential problem of corruption on ENOMEM.
-
-The patch can be tested with xfstests generic/027.
-
-Link: http://lkml.kernel.org/r/4596eef22fbda137b4ffa0272d92f0da15364421.1536269129.git.ernesto.mnd.fernandez@gmail.com
-Signed-off-by: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
-Cc: Christoph Hellwig <hch@lst.de>
+Link: http://lkml.kernel.org/r/20181025061546.hnhkv33diogf2uis@kili.mountain
+Fixes: 64c349f4ae78 ("mm: add infrastructure for get_user_pages_fast() benchmarking")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/hfsplus/attributes.c | 10 ++++++++++
- fs/hfsplus/btree.c      | 44 ++++++++++++++++++++++++++---------------
- fs/hfsplus/catalog.c    | 24 ++++++++++++++++++++++
- fs/hfsplus/extents.c    |  4 ++++
- fs/hfsplus/hfsplus_fs.h |  2 ++
- 5 files changed, 68 insertions(+), 16 deletions(-)
+ mm/gup_benchmark.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/hfsplus/attributes.c b/fs/hfsplus/attributes.c
-index 2bab6b3cdba48..e6d554476db41 100644
---- a/fs/hfsplus/attributes.c
-+++ b/fs/hfsplus/attributes.c
-@@ -217,6 +217,11 @@ int hfsplus_create_attr(struct inode *inode,
- 	if (err)
- 		goto failed_init_create_attr;
+diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
+index 7405c9d89d651..7e6f2d2dafb55 100644
+--- a/mm/gup_benchmark.c
++++ b/mm/gup_benchmark.c
+@@ -23,6 +23,9 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
+ 	int nr;
+ 	struct page **pages;
  
-+	/* Fail early and avoid ENOSPC during the btree operation */
-+	err = hfs_bmap_reserve(fd.tree, fd.tree->depth + 1);
-+	if (err)
-+		goto failed_create_attr;
++	if (gup->size > ULONG_MAX)
++		return -EINVAL;
 +
- 	if (name) {
- 		err = hfsplus_attr_build_key(sb, fd.search_key,
- 						inode->i_ino, name);
-@@ -313,6 +318,11 @@ int hfsplus_delete_attr(struct inode *inode, const char *name)
- 	if (err)
- 		return err;
- 
-+	/* Fail early and avoid ENOSPC during the btree operation */
-+	err = hfs_bmap_reserve(fd.tree, fd.tree->depth);
-+	if (err)
-+		goto out;
-+
- 	if (name) {
- 		err = hfsplus_attr_build_key(sb, fd.search_key,
- 						inode->i_ino, name);
-diff --git a/fs/hfsplus/btree.c b/fs/hfsplus/btree.c
-index 3de3bc4918b55..66774f4cb4fd5 100644
---- a/fs/hfsplus/btree.c
-+++ b/fs/hfsplus/btree.c
-@@ -342,26 +342,21 @@ static struct hfs_bnode *hfs_bmap_new_bmap(struct hfs_bnode *prev, u32 idx)
- 	return node;
- }
- 
--struct hfs_bnode *hfs_bmap_alloc(struct hfs_btree *tree)
-+/* Make sure @tree has enough space for the @rsvd_nodes */
-+int hfs_bmap_reserve(struct hfs_btree *tree, int rsvd_nodes)
- {
--	struct hfs_bnode *node, *next_node;
--	struct page **pagep;
--	u32 nidx, idx;
--	unsigned off;
--	u16 off16;
--	u16 len;
--	u8 *data, byte, m;
--	int i;
-+	struct inode *inode = tree->inode;
-+	struct hfsplus_inode_info *hip = HFSPLUS_I(inode);
-+	u32 count;
-+	int res;
- 
--	while (!tree->free_nodes) {
--		struct inode *inode = tree->inode;
--		struct hfsplus_inode_info *hip = HFSPLUS_I(inode);
--		u32 count;
--		int res;
-+	if (rsvd_nodes <= 0)
-+		return 0;
- 
-+	while (tree->free_nodes < rsvd_nodes) {
- 		res = hfsplus_file_extend(inode, hfs_bnode_need_zeroout(tree));
- 		if (res)
--			return ERR_PTR(res);
-+			return res;
- 		hip->phys_size = inode->i_size =
- 			(loff_t)hip->alloc_blocks <<
- 				HFSPLUS_SB(tree->sb)->alloc_blksz_shift;
-@@ -369,9 +364,26 @@ struct hfs_bnode *hfs_bmap_alloc(struct hfs_btree *tree)
- 			hip->alloc_blocks << HFSPLUS_SB(tree->sb)->fs_shift;
- 		inode_set_bytes(inode, inode->i_size);
- 		count = inode->i_size >> tree->node_size_shift;
--		tree->free_nodes = count - tree->node_count;
-+		tree->free_nodes += count - tree->node_count;
- 		tree->node_count = count;
- 	}
-+	return 0;
-+}
-+
-+struct hfs_bnode *hfs_bmap_alloc(struct hfs_btree *tree)
-+{
-+	struct hfs_bnode *node, *next_node;
-+	struct page **pagep;
-+	u32 nidx, idx;
-+	unsigned off;
-+	u16 off16;
-+	u16 len;
-+	u8 *data, byte, m;
-+	int i, res;
-+
-+	res = hfs_bmap_reserve(tree, 1);
-+	if (res)
-+		return ERR_PTR(res);
- 
- 	nidx = 0;
- 	node = hfs_bnode_find(tree, nidx);
-diff --git a/fs/hfsplus/catalog.c b/fs/hfsplus/catalog.c
-index a196369ba779f..35472cba750e1 100644
---- a/fs/hfsplus/catalog.c
-+++ b/fs/hfsplus/catalog.c
-@@ -265,6 +265,14 @@ int hfsplus_create_cat(u32 cnid, struct inode *dir,
- 	if (err)
- 		return err;
- 
-+	/*
-+	 * Fail early and avoid ENOSPC during the btree operations. We may
-+	 * have to split the root node at most once.
-+	 */
-+	err = hfs_bmap_reserve(fd.tree, 2 * fd.tree->depth);
-+	if (err)
-+		goto err2;
-+
- 	hfsplus_cat_build_key_with_cnid(sb, fd.search_key, cnid);
- 	entry_size = hfsplus_fill_cat_thread(sb, &entry,
- 		S_ISDIR(inode->i_mode) ?
-@@ -333,6 +341,14 @@ int hfsplus_delete_cat(u32 cnid, struct inode *dir, const struct qstr *str)
- 	if (err)
- 		return err;
- 
-+	/*
-+	 * Fail early and avoid ENOSPC during the btree operations. We may
-+	 * have to split the root node at most once.
-+	 */
-+	err = hfs_bmap_reserve(fd.tree, 2 * (int)fd.tree->depth - 2);
-+	if (err)
-+		goto out;
-+
- 	if (!str) {
- 		int len;
- 
-@@ -433,6 +449,14 @@ int hfsplus_rename_cat(u32 cnid,
- 		return err;
- 	dst_fd = src_fd;
- 
-+	/*
-+	 * Fail early and avoid ENOSPC during the btree operations. We may
-+	 * have to split the root node at most twice.
-+	 */
-+	err = hfs_bmap_reserve(src_fd.tree, 4 * (int)src_fd.tree->depth - 1);
-+	if (err)
-+		goto out;
-+
- 	/* find the old dir entry and read the data */
- 	err = hfsplus_cat_build_key(sb, src_fd.search_key,
- 			src_dir->i_ino, src_name);
-diff --git a/fs/hfsplus/extents.c b/fs/hfsplus/extents.c
-index 8e0f59767694b..8a8893d522ef3 100644
---- a/fs/hfsplus/extents.c
-+++ b/fs/hfsplus/extents.c
-@@ -100,6 +100,10 @@ static int __hfsplus_ext_write_extent(struct inode *inode,
- 	if (hip->extent_state & HFSPLUS_EXT_NEW) {
- 		if (res != -ENOENT)
- 			return res;
-+		/* Fail early and avoid ENOSPC during the btree operation */
-+		res = hfs_bmap_reserve(fd->tree, fd->tree->depth + 1);
-+		if (res)
-+			return res;
- 		hfs_brec_insert(fd, hip->cached_extents,
- 				sizeof(hfsplus_extent_rec));
- 		hip->extent_state &= ~(HFSPLUS_EXT_DIRTY | HFSPLUS_EXT_NEW);
-diff --git a/fs/hfsplus/hfsplus_fs.h b/fs/hfsplus/hfsplus_fs.h
-index 8e039435958a8..dd7ad9f13e3aa 100644
---- a/fs/hfsplus/hfsplus_fs.h
-+++ b/fs/hfsplus/hfsplus_fs.h
-@@ -311,6 +311,7 @@ static inline unsigned short hfsplus_min_io_size(struct super_block *sb)
- #define hfs_btree_open hfsplus_btree_open
- #define hfs_btree_close hfsplus_btree_close
- #define hfs_btree_write hfsplus_btree_write
-+#define hfs_bmap_reserve hfsplus_bmap_reserve
- #define hfs_bmap_alloc hfsplus_bmap_alloc
- #define hfs_bmap_free hfsplus_bmap_free
- #define hfs_bnode_read hfsplus_bnode_read
-@@ -395,6 +396,7 @@ u32 hfsplus_calc_btree_clump_size(u32 block_size, u32 node_size, u64 sectors,
- struct hfs_btree *hfs_btree_open(struct super_block *sb, u32 id);
- void hfs_btree_close(struct hfs_btree *tree);
- int hfs_btree_write(struct hfs_btree *tree);
-+int hfs_bmap_reserve(struct hfs_btree *tree, int rsvd_nodes);
- struct hfs_bnode *hfs_bmap_alloc(struct hfs_btree *tree);
- void hfs_bmap_free(struct hfs_bnode *node);
- 
+ 	nr_pages = gup->size / PAGE_SIZE;
+ 	pages = kvcalloc(nr_pages, sizeof(void *), GFP_KERNEL);
+ 	if (!pages)
 -- 
 2.20.1
 
