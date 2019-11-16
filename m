@@ -2,53 +2,51 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC402C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F8DC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C23C20815
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3057220815
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:59:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919963;
-	bh=ATMUg45hUGGfFNrsUroPDxBOa8WLEKS7zRKcEHMmwRg=;
+	s=default; t=1573919972;
+	bh=cPliugyUoPKqEYajZaa+5EhjP4iV/yZw1O40DFpuI2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OTFbQ2LDBTizBrhcHFQfP8jTushDMHpIlRbB0Vk3K17dhxeoSCxZ9of3FGQxULwOX
-	 rKoPvl/5jfPD9DJ3otLcFeoaBTadqsFRUTP7ZkEC5qgbC8AP4tLQAe8kWQIxZQnxQe
-	 OiRgE12bBMNFcjxICD6WsSnzNjPQpJyJVYSbGyq8=
+	b=i84R2T55ihmHmsWTHFinu/C2Z9iMCtTxdHotNQee2kpNpyH0Fx9AY1Ci93Bxqb2jX
+	 1UcfcVNHFU2lTn6R4z5F1dPD1nPBO60R2qA2lgMHshVATGlwIxCSQkyb+ypXMbaOWP
+	 EmmHUP0eUqDzkwIpCh8rS4p1YLgPxyivHmE4WfMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731071AbfKPP7V (ORCPT
+        id S1731341AbfKPPxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:59:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35300 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:53:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730535AbfKPPx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:53:58 -0500
+        id S1731302AbfKPPxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:53:49 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BCDC21920;
-        Sat, 16 Nov 2019 15:53:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48B89218DE;
+        Sat, 16 Nov 2019 15:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919637;
-        bh=ATMUg45hUGGfFNrsUroPDxBOa8WLEKS7zRKcEHMmwRg=;
+        s=default; t=1573919628;
+        bh=cPliugyUoPKqEYajZaa+5EhjP4iV/yZw1O40DFpuI2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2A2UXtSJ9QCJKyw3EORnc+zY0H7HVTyxElQQixE29NDq7Yc/5DtwKAKyXvhZlx5uy
-         uJc/r7qIhFyJMOAeqeRJeQk0dNA0CGl/Z92Y7YDuAnzsUwPNe2uz64gTs4ImAyeGK1
-         RFj8/bWH3+8w+bDACv6gyjSRbKQcBVOLlGMcbbsw=
+        b=nv4Fktz6Hp7I95e2seudfh1iupz46ADQWmdL1vTLK26l8o1hVyhzUEV1o0l4Ms4jZ
+         HLGmEFvHB7nM/aXMZXgKEH6FtOlO9nPc2Ct8kwn2ILedetWJyLllZBWMdl3J6KpIee
+         ho4R9Aomw4q3y4xd/nabocurSSKvVVihwqsgeipY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, open-iscsi@googlegroups.com,
-        linux-scsi@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.4 18/77] scsi: iscsi_tcp: Explicitly cast param in iscsi_sw_tcp_host_get_param
-Date:   Sat, 16 Nov 2019 10:52:40 -0500
-Message-Id: <20191116155339.11909-18-sashal@kernel.org>
+Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 09/77] mmc: mediatek: fix cannot receive new request when msdc_cmd_is_ready fail
+Date:   Sat, 16 Nov 2019 10:52:31 -0500
+Message-Id: <20191116155339.11909-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -61,46 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Chaotian Jing <chaotian.jing@mediatek.com>
 
-[ Upstream commit 20054597f169090109fc3f0dfa1a48583f4178a4 ]
+[ Upstream commit f38a9774ddde9d79b3487dd888edd8b8623552af ]
 
-Clang warns when one enumerated type is implicitly converted to another.
+when msdc_cmd_is_ready return fail, the req_timeout work has not been
+inited and cancel_delayed_work() will return false, then, the request
+return directly and never call mmc_request_done().
 
-drivers/scsi/iscsi_tcp.c:803:15: warning: implicit conversion from
-enumeration type 'enum iscsi_host_param' to different enumeration type
-'enum iscsi_param' [-Wenum-conversion]
-                                                 &addr, param, buf);
-                                                        ^~~~~
-1 warning generated.
+so need call mod_delayed_work() before msdc_cmd_is_ready()
 
-iscsi_conn_get_addr_param handles ISCSI_HOST_PARAM_IPADDRESS just fine
-so add an explicit cast to iscsi_param to make it clear to Clang that
-this is expected behavior.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/153
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/iscsi_tcp.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/mmc/host/mtk-sd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/iscsi_tcp.c b/drivers/scsi/iscsi_tcp.c
-index 0b8af186e7078..fccb8991bd5b7 100644
---- a/drivers/scsi/iscsi_tcp.c
-+++ b/drivers/scsi/iscsi_tcp.c
-@@ -788,7 +788,8 @@ static int iscsi_sw_tcp_host_get_param(struct Scsi_Host *shost,
- 			return rc;
+diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+index 0bf0d0e9dbdba..5ef25463494f4 100644
+--- a/drivers/mmc/host/mtk-sd.c
++++ b/drivers/mmc/host/mtk-sd.c
+@@ -846,6 +846,7 @@ static void msdc_start_command(struct msdc_host *host,
+ 	WARN_ON(host->cmd);
+ 	host->cmd = cmd;
  
- 		return iscsi_conn_get_addr_param((struct sockaddr_storage *)
--						 &addr, param, buf);
-+						 &addr,
-+						 (enum iscsi_param)param, buf);
- 	default:
- 		return iscsi_host_get_param(shost, param, buf);
- 	}
++	mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
+ 	if (!msdc_cmd_is_ready(host, mrq, cmd))
+ 		return;
+ 
+@@ -857,7 +858,6 @@ static void msdc_start_command(struct msdc_host *host,
+ 
+ 	cmd->error = 0;
+ 	rawcmd = msdc_cmd_prepare_raw_cmd(host, mrq, cmd);
+-	mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
+ 
+ 	sdr_set_bits(host->base + MSDC_INTEN, cmd_ints_mask);
+ 	writel(cmd->arg, host->base + SDC_ARG);
 -- 
 2.20.1
 
