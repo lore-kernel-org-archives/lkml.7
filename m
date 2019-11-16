@@ -2,228 +2,306 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC731C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 08:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35097C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 08:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C52520733
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 08:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED60820723
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 08:48:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XWnuclkq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y/4486Ei"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfKPIVI (ORCPT
+        id S1727014AbfKPIr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 03:21:08 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43364 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbfKPIVI (ORCPT
+        Sat, 16 Nov 2019 03:47:56 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45304 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfKPIr4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 03:21:08 -0500
-Received: by mail-ot1-f67.google.com with SMTP id l14so10104834oti.10
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 00:21:07 -0800 (PST)
+        Sat, 16 Nov 2019 03:47:56 -0500
+Received: by mail-lf1-f66.google.com with SMTP id v8so9812881lfa.12
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 00:47:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=IAbPck/tyWYpcH6q1DqU0wF9VrcqMWHjsvfsasMdJQ8=;
-        b=XWnuclkqZMItq+/ksJ8Y1qa9/9oIF2fdvK7zku42Z8ODKYKzpWGUzZ/8O3BaVjf7Ag
-         P71ZJ18PYDh/S+GcXJv7JbUHBfrVxcoQ8Tvy3/rDGiRsih1j0Zfw3p0aX5sUwbDmnNzp
-         UJbeoNYdVfNU8lrJD/bixaoQ7gvdzCi0y77rY6eMix67aCD4LLAxKMFtrjIBZplbOSLa
-         whiths2ljXaRVaJ66Ty6f/l0eqANuJrB5x+g554vTxKefToWIvkl2VMJofQLrWCYVNFN
-         uMyJ4CtcCuhbdCcrnripCXXi0U9CRkogJhOh3chGjPKJVPuRp3IpvYuKiS5dSot+QvZ1
-         UFSg==
+        bh=bp91uD0/PiW/BRpY7HaS8KieB9FSTnD2w31WsW+jdmY=;
+        b=y/4486Eimo018DrcBEqfmHn2cw4vwyZQL2FCCIS1qbeA6plSyTD641cf2JiLmZfIuo
+         4f0qXk8sgbQTXuOb/5CIVc6wl0W5vCcFS25hiBBIp9Fq2tktamU1gw7VQNYUpzoUaHMu
+         ycZsSZbULIx8Olov6AhZCOyf2wnVMOJSvf4o1A+uxVRblkzfC0IatMiqu6G5df85zk9a
+         Io1BLR+3IbByD/Qq3QcLtR3qugFClG7AUpW/HFFWBH1sz3hAGw64mo7WSgsVWbyPfJVa
+         BBbIaNGv5XC7DOSBrgZLLhPkuJAy67DG3p5TCdVdJ8iDVWKax6JIx59FE/uv+cRyWYji
+         SyLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IAbPck/tyWYpcH6q1DqU0wF9VrcqMWHjsvfsasMdJQ8=;
-        b=UiXPOXyecTswvOOwV30YXZkH0MLlBGuRQIJuTZHjDxQDZY7clcbUB8+WwRhrYiIdI0
-         Xgf3IT9KMGpVtFd0xz7B6AeTDwOGM+8AH1lXcz/4pwcvcRoHNon9N1SXNDyV431Go4XL
-         uG61arCN+m5KXJdgliSojatpmnIK5DL2dcTVm4TU5rHQ5W+0mztBGxbvRcCHSmD3unNI
-         o6dAfLMWPowHyhbSsaPaTeh8TsjWXmTYedgPML07cpqsibaUT3bdsMZFFKnrWHnJUxTN
-         4TK8NuFOKyhC93YWoF6QMfKrI27FT3RpZuKO+c/AXPzuQuAC7YeNpB86N+ez0Iklzdu6
-         kldw==
-X-Gm-Message-State: APjAAAW0B5ASKEWBINZ6JTKCnFJ6BdnnuVAIphjBtGHbJQDKV+1TjCmz
-        ir057p1JjoixnuzLmjCEPPGuBE2Wj0F16BTDq6OWSA==
-X-Google-Smtp-Source: APXvYqyFoD1MoXKYzcJ0ETjr8RD5raPWnHWPSZdYf70aViyP/iAqqE28rDX/p+nlWotCJAjaCdGBcwat07yGzdHKecY=
-X-Received: by 2002:a9d:3d76:: with SMTP id a109mr14975357otc.233.1573892466111;
- Sat, 16 Nov 2019 00:21:06 -0800 (PST)
+        bh=bp91uD0/PiW/BRpY7HaS8KieB9FSTnD2w31WsW+jdmY=;
+        b=Wkin6xt2vpDfatmpLDEkmGNfdKIUv7NEhVq/5BwSKS3RMR+Gm1MqP0VmetFEZpOcFa
+         ax/rbLNjGBRDU5GQRerk0Lvaxhgb+bndnUlN8t7B5KQ6oAlKRCQWgpuy+8IcPp0QmFgm
+         o4TVPA7R1ROMU2zb2df735NIovYGdetSJ9exqbEncuZzLBS7ZPoy1YcBEW66c+ZRsxu6
+         Zz3yqvgqEE27Jt+eyCFhBGQiTxfredIUlBTQqfYuu8+AONRukb292T4x7o4KvphurDNx
+         RAYTDMvX8ptlyrVcuX7cfJh2zJaDnmaPb4qJnVwEQBa8dITCL66rUgeDKTQt5HOaJLaD
+         unRA==
+X-Gm-Message-State: APjAAAWhyjZkRtKRdlJ4Czn/+hjmzEGKGR4zhoRUQnW2fEqF4eTlMW5x
+        oLOJHXqiL5B0Bw2gOr0x9awzOOr5mVU/znsKSMBNXQ==
+X-Google-Smtp-Source: APXvYqzMLc7nuk9MO3TViXexHb2VFT5V9zfY78caMJQJZvQ3BdJcJwM2SZ/Hh81F2Ka+cDnlzaN/kpIyULvjcA/Io38=
+X-Received: by 2002:a19:800a:: with SMTP id b10mr14490861lfd.15.1573894073025;
+ Sat, 16 Nov 2019 00:47:53 -0800 (PST)
 MIME-Version: 1.0
-References: <20191114180303.66955-1-elver@google.com> <20191114195046.GP2865@paulmck-ThinkPad-P72>
- <20191114213303.GA237245@google.com> <20191114221559.GS2865@paulmck-ThinkPad-P72>
- <CANpmjNPxAOUAxXHd9tka5gCjR_rNKmBk+k5UzRsXT0a0CtNorw@mail.gmail.com>
- <20191115164159.GU2865@paulmck-ThinkPad-P72> <CANpmjNPy2RDBUhV-j-APzwYr-_x2V9QwgPTYZph36rCpEVqZSQ@mail.gmail.com>
- <20191115204321.GX2865@paulmck-ThinkPad-P72>
-In-Reply-To: <20191115204321.GX2865@paulmck-ThinkPad-P72>
-From:   Marco Elver <elver@google.com>
-Date:   Sat, 16 Nov 2019 09:20:54 +0100
-Message-ID: <CANpmjNN0JCgEOC=AhKN7pH9OpmzbNB94mioP0FN9ueCQUfKzBQ@mail.gmail.com>
-Subject: Re: [PATCH v4 00/10] Add Kernel Concurrency Sanitizer (KCSAN)
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Alexander Potapenko <glider@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Howells <dhowells@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+References: <1573751251-3505-1-git-send-email-vincent.guittot@linaro.org> <20191115215228.GN3079@worktop.programming.kicks-ass.net>
+In-Reply-To: <20191115215228.GN3079@worktop.programming.kicks-ass.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Sat, 16 Nov 2019 09:47:41 +0100
+Message-ID: <CAKfTPtDyZ5gom41S-8Nu+BMK7hPijWoZPqo0HFYkRnNmWo1UTA@mail.gmail.com>
+Subject: Re: [PATCH v4] sched/freq: move call to cpufreq_update_util
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Doug Smythies <dsmythies@telus.net>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-efi@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
+        Sargun Dhillon <sargun@sargun.me>, Tejun Heo <tj@kernel.org>,
+        Xie XiuQi <xiexiuqi@huawei.com>, xiezhipeng1@huawei.com,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 at 21:43, Paul E. McKenney <paulmck@kernel.org> wrote:
+On Fri, 15 Nov 2019 at 22:52, Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> On Fri, Nov 15, 2019 at 06:14:46PM +0100, Marco Elver wrote:
-> > On Fri, 15 Nov 2019 at 17:42, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > >
-> > > On Fri, Nov 15, 2019 at 01:02:08PM +0100, Marco Elver wrote:
-> > > > On Thu, 14 Nov 2019 at 23:16, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > > >
-> > > > > On Thu, Nov 14, 2019 at 10:33:03PM +0100, Marco Elver wrote:
-> > > > > > On Thu, 14 Nov 2019, Paul E. McKenney wrote:
-> > > > > >
-> > > > > > > On Thu, Nov 14, 2019 at 07:02:53PM +0100, Marco Elver wrote:
-> > > > > > > > This is the patch-series for the Kernel Concurrency Sanitizer (KCSAN).
-> > > > > > > > KCSAN is a sampling watchpoint-based *data race detector*. More details
-> > > > > > > > are included in **Documentation/dev-tools/kcsan.rst**. This patch-series
-> > > > > > > > only enables KCSAN for x86, but we expect adding support for other
-> > > > > > > > architectures is relatively straightforward (we are aware of
-> > > > > > > > experimental ARM64 and POWER support).
-> > > > > > > >
-> > > > > > > > To gather early feedback, we announced KCSAN back in September, and have
-> > > > > > > > integrated the feedback where possible:
-> > > > > > > > http://lkml.kernel.org/r/CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com
-> > > > > > > >
-> > > > > > > > The current list of known upstream fixes for data races found by KCSAN
-> > > > > > > > can be found here:
-> > > > > > > > https://github.com/google/ktsan/wiki/KCSAN#upstream-fixes-of-data-races-found-by-kcsan
-> > > > > > > >
-> > > > > > > > We want to point out and acknowledge the work surrounding the LKMM,
-> > > > > > > > including several articles that motivate why data races are dangerous
-> > > > > > > > [1, 2], justifying a data race detector such as KCSAN.
-> > > > > > > >
-> > > > > > > > [1] https://lwn.net/Articles/793253/
-> > > > > > > > [2] https://lwn.net/Articles/799218/
-> > > > > > >
-> > > > > > > I queued this and ran a quick rcutorture on it, which completed
-> > > > > > > successfully with quite a few reports.
-> > > > > >
-> > > > > > Great. Many thanks for queuing this in -rcu. And regarding merge window
-> > > > > > you mentioned, we're fine with your assumption to targeting the next
-> > > > > > (v5.6) merge window.
-> > > > > >
-> > > > > > I've just had a look at linux-next to check what a future rebase
-> > > > > > requires:
-> > > > > >
-> > > > > > - There is a change in lib/Kconfig.debug and moving KCSAN to the
-> > > > > >   "Generic Kernel Debugging Instruments" section seems appropriate.
-> > > > > > - bitops-instrumented.h was removed and split into 3 files, and needs
-> > > > > >   re-inserting the instrumentation into the right places.
-> > > > > >
-> > > > > > Otherwise there are no issues. Let me know what you recommend.
-> > > > >
-> > > > > Sounds good!
-> > > > >
-> > > > > I will be rebasing onto v5.5-rc1 shortly after it comes out.  My usual
-> > > > > approach is to fix any conflicts during that rebasing operation.
-> > > > > Does that make sense, or would you prefer to send me a rebased stack at
-> > > > > that point?  Either way is fine for me.
-> > > >
-> > > > That's fine with me, thanks!  To avoid too much additional churn on
-> > > > your end, I just replied to the bitops patch with a version that will
-> > > > apply with the change to bitops-instrumented infrastructure.
-> > >
-> > > My first thought was to replace 8/10 of the previous version of your
-> > > patch in -rcu (047ca266cfab "asm-generic, kcsan: Add KCSAN instrumentation
-> > > for bitops"), but this does not apply.  So I am guessing that I instead
-> > > do this substitution when a rebase onto -rc1..
-> > >
-> > > Except...
-> > >
-> > > > Also considering the merge window, we had a discussion and there are
-> > > > some arguments for targeting the v5.5 merge window:
-> > > > - we'd unblock ARM and POWER ports;
-> > > > - we'd unblock people wanting to use the data_race macro;
-> > > > - we'd unblock syzbot just tracking upstream;
-> > > > Unless there are strong reasons to not target v5.5, I leave it to you
-> > > > if you think it's appropriate.
-> > >
-> > > My normal process is to send the pull request shortly after -rc5 comes
-> > > out, but you do call out some benefits of getting it in sooner, so...
-> > >
-> > > What I will do is to rebase your series onto (say) -rc7, test it, and
-> > > see about an RFC pull request.
-> > >
-> > > One possible complication is the new 8/10 patch.  But maybe it will
-> > > apply against -rc7?
-> > >
-> > > Another possible complication is this:
-> > >
-> > > scripts/kconfig/conf  --syncconfig Kconfig
-> > > *
-> > > * Restart config...
-> > > *
-> > > *
-> > > * KCSAN: watchpoint-based dynamic data race detector
-> > > *
-> > > KCSAN: watchpoint-based dynamic data race detector (KCSAN) [N/y/?] (NEW)
-> > >
-> > > Might be OK in this case because it is quite obvious what it is doing.
-> > > (Avoiding pain from this is the reason that CONFIG_RCU_EXPERT exists.)
-> > >
-> > > But I will just mention this in the pull request.
-> > >
-> > > If there is a -rc8, there is of course a higher probability of making it
-> > > into the next merge window.
-> > >
-> > > Fair enough?
+> On Thu, Nov 14, 2019 at 06:07:31PM +0100, Vincent Guittot wrote:
+> > update_cfs_rq_load_avg() calls cfs_rq_util_change() everytime pelt decays,
+> > which might be inefficient when cpufreq driver has rate limitation.
 > >
-> > Totally fine with that, sounds like a good plan, thanks!
+> > When a task is attached on a CPU, we have call path:
 > >
-> > If it helps, in theory we can also drop and delay the bitops
-> > instrumentation patch until the new bitops instrumentation
-> > infrastructure is in 5.5-rc1. There won't be any false positives if
-> > this is missing, we might just miss a few data races until we have it.
+> > update_load_avg()
+> >   update_cfs_rq_load_avg()
+> >     cfs_rq_util_change -- > trig frequency update
+> >   attach_entity_load_avg()
+> >     cfs_rq_util_change -- > trig frequency update
+> >
+> > The 1st frequency update will not take into account the utilization of the
+> > newly attached task and the 2nd one might be discard because of rate
+> > limitation of the cpufreq driver.
+> >
+> > update_cfs_rq_load_avg() is only called by update_blocked_averages()
+> > and update_load_avg() so we can move the call to
+> > cfs_rq_util_change/cpufreq_update_util() into these 2 functions. It's also
+> > interesting to notice that update_load_avg() already calls directly
+> > cfs_rq_util_change() for !SMP case.
+> >
+> > This changes will also ensure that cpufreq_update_util() is called even
+> > when there is no more CFS rq in the leaf_cfs_rq_list to update but only
+> > irq, rt or dl pelt signals.
+> >
+> > Reported-by: Doug Smythies <dsmythies@telus.net>
+> > Fixes: 039ae8bcf7a5 ("sched/fair: Fix O(nr_cgroups) in the load balancing path")
+> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> > ---
 >
-> That sounds advisable for an attempt to hit this coming merge window.
+> OK, but shall we write it like so instead?
+
+Yes. Looks good to me
+
 >
-> So just to make sure I understand, I drop 8/10 and keep the rest during
-> a rebase to 5.4-rc7, correct?
-
-Yes, that's right.
-
-Many thanks,
--- Marco
+> ---
+>  kernel/sched/fair.c | 111 +++++++++++++++++++++++++++++-----------------------
+>  1 file changed, 62 insertions(+), 49 deletions(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 545bcb90b4de..7a762266c335 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -3508,9 +3508,6 @@ update_cfs_rq_load_avg(u64 now, struct cfs_rq *cfs_rq)
+>         cfs_rq->load_last_update_time_copy = sa->last_update_time;
+>  #endif
+>
+> -       if (decayed)
+> -               cfs_rq_util_change(cfs_rq, 0);
+> -
+>         return decayed;
+>  }
+>
+> @@ -3620,8 +3617,12 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
+>                 attach_entity_load_avg(cfs_rq, se, SCHED_CPUFREQ_MIGRATION);
+>                 update_tg_load_avg(cfs_rq, 0);
+>
+> -       } else if (decayed && (flags & UPDATE_TG))
+> -               update_tg_load_avg(cfs_rq, 0);
+> +       } else if (decayed) {
+> +               cfs_rq_util_change(cfs_rq, 0);
+> +
+> +               if (flags & UPDATE_TG)
+> +                       update_tg_load_avg(cfs_rq, 0);
+> +       }
+>  }
+>
+>  #ifndef CONFIG_64BIT
+> @@ -7428,6 +7429,28 @@ static inline bool others_have_blocked(struct rq *rq) { return false; }
+>  static inline void update_blocked_load_status(struct rq *rq, bool has_blocked) {}
+>  #endif
+>
+> +static bool __update_blocked_others(struct rq *rq, bool *done)
+> +{
+> +       const struct sched_class *curr_class;
+> +       u64 now = rq_clock_pelt(rq);
+> +       bool decayed;
+> +
+> +       /*
+> +        * update_load_avg() can call cpufreq_update_util(). Make sure that RT,
+> +        * DL and IRQ signals have been updated before updating CFS.
+> +        */
+> +       curr_class = rq->curr->sched_class;
+> +
+> +       decayed = update_rt_rq_load_avg(now, rq, curr_class == &rt_sched_class) |
+> +                 update_dl_rq_load_avg(now, rq, curr_class == &dl_sched_class) |
+> +                 update_irq_load_avg(rq, 0);
+> +
+> +       if (others_have_blocked(rq))
+> +               *done = false;
+> +
+> +       return decayed;
+> +}
+> +
+>  #ifdef CONFIG_FAIR_GROUP_SCHED
+>
+>  static inline bool cfs_rq_is_decayed(struct cfs_rq *cfs_rq)
+> @@ -7447,29 +7470,11 @@ static inline bool cfs_rq_is_decayed(struct cfs_rq *cfs_rq)
+>         return true;
+>  }
+>
+> -static void update_blocked_averages(int cpu)
+> +static bool __update_blocked_fair(struct rq *rq, bool *done)
+>  {
+> -       struct rq *rq = cpu_rq(cpu);
+>         struct cfs_rq *cfs_rq, *pos;
+> -       const struct sched_class *curr_class;
+> -       struct rq_flags rf;
+> -       bool done = true;
+> -
+> -       rq_lock_irqsave(rq, &rf);
+> -       update_rq_clock(rq);
+> -
+> -       /*
+> -        * update_cfs_rq_load_avg() can call cpufreq_update_util(). Make sure
+> -        * that RT, DL and IRQ signals have been updated before updating CFS.
+> -        */
+> -       curr_class = rq->curr->sched_class;
+> -       update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
+> -       update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
+> -       update_irq_load_avg(rq, 0);
+> -
+> -       /* Don't need periodic decay once load/util_avg are null */
+> -       if (others_have_blocked(rq))
+> -               done = false;
+> +       bool decayed = false;
+> +       int cpu = cpu_of(rq);
+>
+>         /*
+>          * Iterates the task_group tree in a bottom up fashion, see
+> @@ -7478,9 +7483,13 @@ static void update_blocked_averages(int cpu)
+>         for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos) {
+>                 struct sched_entity *se;
+>
+> -               if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq))
+> +               if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq)) {
+>                         update_tg_load_avg(cfs_rq, 0);
+>
+> +                       if (cfs_rq == &rq->cfs)
+> +                               decayed = true;
+> +               }
+> +
+>                 /* Propagate pending load changes to the parent, if any: */
+>                 se = cfs_rq->tg->se[cpu];
+>                 if (se && !skip_blocked_update(se))
+> @@ -7495,11 +7504,10 @@ static void update_blocked_averages(int cpu)
+>
+>                 /* Don't need periodic decay once load/util_avg are null */
+>                 if (cfs_rq_has_blocked(cfs_rq))
+> -                       done = false;
+> +                       *done = false;
+>         }
+>
+> -       update_blocked_load_status(rq, !done);
+> -       rq_unlock_irqrestore(rq, &rf);
+> +       return decayed;
+>  }
+>
+>  /*
+> @@ -7549,29 +7557,16 @@ static unsigned long task_h_load(struct task_struct *p)
+>                         cfs_rq_load_avg(cfs_rq) + 1);
+>  }
+>  #else
+> -static inline void update_blocked_averages(int cpu)
+> +static bool __update_blocked_fair(struct rq *rq, bool *done)
+>  {
+> -       struct rq *rq = cpu_rq(cpu);
+>         struct cfs_rq *cfs_rq = &rq->cfs;
+> -       const struct sched_class *curr_class;
+> -       struct rq_flags rf;
+> -
+> -       rq_lock_irqsave(rq, &rf);
+> -       update_rq_clock(rq);
+> -
+> -       /*
+> -        * update_cfs_rq_load_avg() can call cpufreq_update_util(). Make sure
+> -        * that RT, DL and IRQ signals have been updated before updating CFS.
+> -        */
+> -       curr_class = rq->curr->sched_class;
+> -       update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
+> -       update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
+> -       update_irq_load_avg(rq, 0);
+> +       bool decayed;
+>
+> -       update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
+> +       decayed = update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
+> +       if (cfs_rq_has_blocked(cfs_rq))
+> +               *done = false;
+>
+> -       update_blocked_load_status(rq, cfs_rq_has_blocked(cfs_rq) || others_have_blocked(rq));
+> -       rq_unlock_irqrestore(rq, &rf);
+> +       return decayed;
+>  }
+>
+>  static unsigned long task_h_load(struct task_struct *p)
+> @@ -7580,6 +7575,24 @@ static unsigned long task_h_load(struct task_struct *p)
+>  }
+>  #endif
+>
+> +static void update_blocked_averages(int cpu)
+> +{
+> +       bool decayed = false, done = true;
+> +       struct rq *rq = cpu_rq(cpu);
+> +       struct rq_flags rf;
+> +
+> +       rq_lock_irqsave(rq, &rf);
+> +       update_rq_clock(rq);
+> +
+> +       decayed |= __update_blocked_others(rq, &done);
+> +       decayed |= __update_blocked_fair(rq, &done);
+> +
+> +       update_blocked_load_status(rq, !done);
+> +       if (decayed)
+> +               cpufreq_update_util(rq, 0);
+> +       rq_unlock_irqrestore(rq, &rf);
+> +}
+> +
+>  /********** Helpers for find_busiest_group ************************/
+>
+>  /*
+>
