@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6B7C43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 132C9C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 879CA20857
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D186920728
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919548;
-	bh=Yvtuzvt96j/m3vUDcrPWoNYcOPxSaH8nSvE4tz47aU0=;
+	s=default; t=1573919552;
+	bh=RO3NcGmMVyAPo8SoPW9CsQgCU3aD96mHNIyXuVrwtxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fUC8hE9soOFgazLOL4Q4YrsFAdo30AkHs3RG070tWZzUc+P3cvrjI6wOX+p+IbKCs
-	 xEiMWDCNGQjDm7xA6hZN3OAQs71lDKJglz8Xjiq4g7zqN+J/b4REsz0WyVnN1pEng/
-	 tzhMNmd2mMEfee/Ho95NKsF4oOI42qbHS1u38GZ8=
+	b=EhMJbwEXRwH3iBDaRgyZwt+K7soeWzIdGvmxlaaF7spE//yP2VCdfaRPBPcM/uRdx
+	 x2RLemofuxqQxp+czxuZi48pmYYjDJAln/CowHUoRseWKbyg54SjueKS3wOC/9wqcA
+	 SkfAJ31pYiIIzMnMBWQzKr/gyxGj7S6jpj15FoWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731048AbfKPPw1 (ORCPT
+        id S1728025AbfKPPwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:52:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33176 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:52:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729553AbfKPPwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:52:24 -0500
+        id S1730199AbfKPPw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:52:26 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 556572077B;
-        Sat, 16 Nov 2019 15:52:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 983342084B;
+        Sat, 16 Nov 2019 15:52:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919543;
-        bh=Yvtuzvt96j/m3vUDcrPWoNYcOPxSaH8nSvE4tz47aU0=;
+        s=default; t=1573919545;
+        bh=RO3NcGmMVyAPo8SoPW9CsQgCU3aD96mHNIyXuVrwtxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bOYiGmFajnBS6x8+yNeHd3c+qvitsKVp3rSxv3bYe4GBjt4Q3G/tvU7h8FiAxPb7E
-         7V7eKzycvWmwbvQ+J66Zw1/4FHAomM7BSLi9Q1KIdkp4yVCHXQPwSwNHNSyzWppRpt
-         sT1vfBYG8ZGT98DFu+SmdIXjdnFbvSZ6erHnJBb8=
+        b=Rj2RYEtDcL7nZ6AEyceb4ImsUufyxnmkTkRhgOvvqTOHoeZiXTOJDq2uu2fio2ohz
+         Owe0Fuf07Lg4UBBkNNq99RFuIeX4WhlaHvQ/Tq+BtL3tlnGc9xMF1pHN+knh597V+3
+         81MYAxm5eWcv8WKD7rcpDDwv7CoH/nskbixK8rlQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
         Yury Norov <ynorov@caviumnetworks.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
         Sudeep Holla <sudeep.holla@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 57/99] linux/bitmap.h: handle constant zero-size bitmaps correctly
-Date:   Sat, 16 Nov 2019 10:50:20 -0500
-Message-Id: <20191116155103.10971-57-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 58/99] linux/bitmap.h: fix type of nbits in bitmap_shift_right()
+Date:   Sat, 16 Nov 2019 10:50:21 -0500
+Message-Id: <20191116155103.10971-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -65,56 +65,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-[ Upstream commit 7275b097851a5e2e0dd4da039c7e96b59ac5314e ]
+[ Upstream commit d9873969fa8725dc6a5a21ab788c057fd8719751 ]
 
-The static inlines in bitmap.h do not handle a compile-time constant
-nbits==0 correctly (they dereference the passed src or dst pointers,
-despite only 0 words being valid to access).  I had the 0-day buildbot
-chew on a patch [1] that would cause build failures for such cases without
-complaining, suggesting that we don't have any such users currently, at
-least for the 70 .config/arch combinations that was built.  Should any
-turn up, make sure they use the out-of-line versions, which do handle
-nbits==0 correctly.
+Most other bitmap API, including the OOL version __bitmap_shift_right,
+take unsigned nbits.  This was accidentally left out from 2fbad29917c98.
 
-This is of course not the most efficient, but it's much less churn than
-teaching all the static inlines an "if (zero_const_nbits())", and since we
-don't have any current instances, this doesn't affect existing code at
-all.
-
-[1] lkml.kernel.org/r/20180815085539.27485-1-linux@rasmusvillemoes.dk
-
-Link: http://lkml.kernel.org/r/20180818131623.8755-3-linux@rasmusvillemoes.dk
+Link: http://lkml.kernel.org/r/20180818131623.8755-5-linux@rasmusvillemoes.dk
+Fixes: 2fbad29917c98 ("lib: bitmap: change bitmap_shift_right to take unsigned parameters")
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Reported-by: Yury Norov <ynorov@caviumnetworks.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Yury Norov <ynorov@caviumnetworks.com>
 Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Cc: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/bitmap.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ include/linux/bitmap.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
-index 3b77588a93602..dc56304ac829f 100644
+index dc56304ac829f..dec03c0dbc214 100644
 --- a/include/linux/bitmap.h
 +++ b/include/linux/bitmap.h
-@@ -185,8 +185,13 @@ extern int bitmap_print_to_pagebuf(bool list, char *buf,
- #define BITMAP_FIRST_WORD_MASK(start) (~0UL << ((start) & (BITS_PER_LONG - 1)))
- #define BITMAP_LAST_WORD_MASK(nbits) (~0UL >> (-(nbits) & (BITS_PER_LONG - 1)))
+@@ -321,7 +321,7 @@ static __always_inline int bitmap_weight(const unsigned long *src, unsigned int
+ }
  
-+/*
-+ * The static inlines below do not handle constant nbits==0 correctly,
-+ * so make such users (should any ever turn up) call the out-of-line
-+ * versions.
-+ */
- #define small_const_nbits(nbits) \
--	(__builtin_constant_p(nbits) && (nbits) <= BITS_PER_LONG)
-+	(__builtin_constant_p(nbits) && (nbits) <= BITS_PER_LONG && (nbits) > 0)
- 
- static inline void bitmap_zero(unsigned long *dst, unsigned int nbits)
+ static inline void bitmap_shift_right(unsigned long *dst, const unsigned long *src,
+-				unsigned int shift, int nbits)
++				unsigned int shift, unsigned int nbits)
  {
+ 	if (small_const_nbits(nbits))
+ 		*dst = (*src & BITMAP_LAST_WORD_MASK(nbits)) >> shift;
 -- 
 2.20.1
 
