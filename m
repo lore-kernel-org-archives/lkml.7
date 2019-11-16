@@ -2,222 +2,233 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4DAC43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F95C43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7640F20700
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1596220730
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573917777;
-	bh=jWnniCxtWs1Awb4m3wt7Ib2Si3DnLRCkXA/19wju3a0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=K6bXu7aEgSJSGgO9hQ4OhjDTl7jCdrYo8C3hUCzNPTA3b1B3n/+JCbQqZr3hTLVpe
-	 /BS1xBjgv3vY0AocqSmigneMcnXl4ezXQ6881FMIAx1F6Gom6KKL5qwhrZnUsCvo+q
-	 h3d/B+gdLRv4V9gvEfiynoVX4K8gDeGpWUlM/ibE=
+	s=default; t=1573918499;
+	bh=4JKeG1UGiGuAI6kdmw4o2vLC7dkENZs/jJmsBEWfHmY=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=hkLix9bFSrIzqvVQtsvIhsRYh7YSAFnLeqXqJSsMKpgbz0hYwzthb8y1XEw2xcjbI
+	 2TXxzcss0E0b/BFwIa0s425ElZZMAPnJW5x3WQCXP52gYFO0Af+LzL7siEItQ4b58g
+	 DBnln6RAXQLQZIh0ob3Zn5haUVvfxuLxa7HstjtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbfKPPW4 (ORCPT
+        id S1727785AbfKPPe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:22:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54572 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:34:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727646AbfKPPW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:22:56 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S1727737AbfKPPe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:34:56 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74E1A20700;
-        Sat, 16 Nov 2019 15:22:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C127720700;
+        Sat, 16 Nov 2019 15:34:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573917775;
-        bh=jWnniCxtWs1Awb4m3wt7Ib2Si3DnLRCkXA/19wju3a0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Hj529MRIXWbYITy3lMsjxDcjJj/4xhnTjRN8HpvZPVqMXlt/pG7iHsQYA9UG3YGim
-         IKdRfCuVFB4C3pu4ru+8uoveu3gDQpmgc3mk8RUvE5X0ZfV1yKuYVAbK1/diQUVbL3
-         LnjSVTwaUFn9JCjVKrMhgzom+Ui1b15X832+8Zas=
-Date:   Sat, 16 Nov 2019 15:22:49 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>,
-        Dragos Bogdan <dragos.bogdan@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: Re: [PATCH v4 1/2] dt-bindings: iio: adc: Add dt-schema for AD7292
-Message-ID: <20191116152249.483e1eaf@archlinux>
-In-Reply-To: <CAL_JsqJY6YMC2ba4DNFnsq=XESOoUTDA6Q+Y7gutMT0VN--DNw@mail.gmail.com>
-References: <cover.1573145089.git.marcelo.schmitt1@gmail.com>
-        <a8c614894252bb139a213b8c0219f3f46210b136.1573145089.git.marcelo.schmitt1@gmail.com>
-        <20191112193942.GA27334@bogus>
-        <20191113145159.vw7icflfve7dnefm@smtp.gmail.com>
-        <CAL_JsqJY6YMC2ba4DNFnsq=XESOoUTDA6Q+Y7gutMT0VN--DNw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1573918494;
+        bh=4JKeG1UGiGuAI6kdmw4o2vLC7dkENZs/jJmsBEWfHmY=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=X3NPg89cEppRZ2Ufq25iO1k0ekjtPtTbIbLTVTHxQEgDEvkP6XY3DfvqN9EuLqcYL
+         KV45r1lccVl2DxriNAereFYnXilzKUOtwW1UxLXr2OiBha8f6K6lX+6lbrXXj0a8D1
+         CDQ0FwllS5o4jPei//ti4OGZ/sYxrI7wBQgCie1c=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 940BA35227AD; Sat, 16 Nov 2019 07:34:54 -0800 (PST)
+Date:   Sat, 16 Nov 2019 07:34:54 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Alexander Potapenko <glider@google.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Howells <dhowells@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-efi@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [PATCH v4 00/10] Add Kernel Concurrency Sanitizer (KCSAN)
+Message-ID: <20191116153454.GC2865@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191114180303.66955-1-elver@google.com>
+ <20191114195046.GP2865@paulmck-ThinkPad-P72>
+ <20191114213303.GA237245@google.com>
+ <20191114221559.GS2865@paulmck-ThinkPad-P72>
+ <CANpmjNPxAOUAxXHd9tka5gCjR_rNKmBk+k5UzRsXT0a0CtNorw@mail.gmail.com>
+ <20191115164159.GU2865@paulmck-ThinkPad-P72>
+ <CANpmjNPy2RDBUhV-j-APzwYr-_x2V9QwgPTYZph36rCpEVqZSQ@mail.gmail.com>
+ <20191115204321.GX2865@paulmck-ThinkPad-P72>
+ <CANpmjNN0JCgEOC=AhKN7pH9OpmzbNB94mioP0FN9ueCQUfKzBQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNN0JCgEOC=AhKN7pH9OpmzbNB94mioP0FN9ueCQUfKzBQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019 11:06:45 -0600
-Rob Herring <robh@kernel.org> wrote:
-
-> On Wed, Nov 13, 2019 at 8:52 AM Marcelo Schmitt
-> <marcelo.schmitt1@gmail.com> wrote:
+On Sat, Nov 16, 2019 at 09:20:54AM +0100, Marco Elver wrote:
+> On Fri, 15 Nov 2019 at 21:43, Paul E. McKenney <paulmck@kernel.org> wrote:
 > >
-> > Hi Rob,
-> >
-> > Thanks for reviewing the binding doc again.
-> > Aparently, this patch was added to Greg KH's staging tree.
-> > What is the right procedure in this case? Should I send a v5 patchset or
-> > just send a patch for this doc?  
-> 
-> You need to do an incremental patch. Greg doesn't rebase.
-Sorry. I jumped the gun a bit here.  Send me an incremental patch and
-we'll get it queued up.  As it can be considered 'a license fix'
-we can get it lined up for straight after the merge window.
-
-Thanks,
-
-Jonathan
-
-
-> 
-> > In any case, I still have some doubts about the maximum constraint of
-> > the channel property. Comments inline.
-> >
-> >
-> > Thanks
-> >
-> > Marcelo
-> >
-> > On 11/12, Rob Herring wrote:  
-> > > On Fri, Nov 08, 2019 at 10:56:09AM -0300, Marcelo Schmitt wrote:  
-> > > > Add a devicetree schema for AD7292 monitor and control system.
+> > On Fri, Nov 15, 2019 at 06:14:46PM +0100, Marco Elver wrote:
+> > > On Fri, 15 Nov 2019 at 17:42, Paul E. McKenney <paulmck@kernel.org> wrote:
 > > > >
-> > > > Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> > > > ---
-> > > > Changelog V3 -> V4:
-> > > > - updated SPDX identifier to GPL-2.0-only
-> > > > - changed maxitems constraint on channel property
+> > > > On Fri, Nov 15, 2019 at 01:02:08PM +0100, Marco Elver wrote:
+> > > > > On Thu, 14 Nov 2019 at 23:16, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > > > >
+> > > > > > On Thu, Nov 14, 2019 at 10:33:03PM +0100, Marco Elver wrote:
+> > > > > > > On Thu, 14 Nov 2019, Paul E. McKenney wrote:
+> > > > > > >
+> > > > > > > > On Thu, Nov 14, 2019 at 07:02:53PM +0100, Marco Elver wrote:
+> > > > > > > > > This is the patch-series for the Kernel Concurrency Sanitizer (KCSAN).
+> > > > > > > > > KCSAN is a sampling watchpoint-based *data race detector*. More details
+> > > > > > > > > are included in **Documentation/dev-tools/kcsan.rst**. This patch-series
+> > > > > > > > > only enables KCSAN for x86, but we expect adding support for other
+> > > > > > > > > architectures is relatively straightforward (we are aware of
+> > > > > > > > > experimental ARM64 and POWER support).
+> > > > > > > > >
+> > > > > > > > > To gather early feedback, we announced KCSAN back in September, and have
+> > > > > > > > > integrated the feedback where possible:
+> > > > > > > > > http://lkml.kernel.org/r/CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com
+> > > > > > > > >
+> > > > > > > > > The current list of known upstream fixes for data races found by KCSAN
+> > > > > > > > > can be found here:
+> > > > > > > > > https://github.com/google/ktsan/wiki/KCSAN#upstream-fixes-of-data-races-found-by-kcsan
+> > > > > > > > >
+> > > > > > > > > We want to point out and acknowledge the work surrounding the LKMM,
+> > > > > > > > > including several articles that motivate why data races are dangerous
+> > > > > > > > > [1, 2], justifying a data race detector such as KCSAN.
+> > > > > > > > >
+> > > > > > > > > [1] https://lwn.net/Articles/793253/
+> > > > > > > > > [2] https://lwn.net/Articles/799218/
+> > > > > > > >
+> > > > > > > > I queued this and ran a quick rcutorture on it, which completed
+> > > > > > > > successfully with quite a few reports.
+> > > > > > >
+> > > > > > > Great. Many thanks for queuing this in -rcu. And regarding merge window
+> > > > > > > you mentioned, we're fine with your assumption to targeting the next
+> > > > > > > (v5.6) merge window.
+> > > > > > >
+> > > > > > > I've just had a look at linux-next to check what a future rebase
+> > > > > > > requires:
+> > > > > > >
+> > > > > > > - There is a change in lib/Kconfig.debug and moving KCSAN to the
+> > > > > > >   "Generic Kernel Debugging Instruments" section seems appropriate.
+> > > > > > > - bitops-instrumented.h was removed and split into 3 files, and needs
+> > > > > > >   re-inserting the instrumentation into the right places.
+> > > > > > >
+> > > > > > > Otherwise there are no issues. Let me know what you recommend.
+> > > > > >
+> > > > > > Sounds good!
+> > > > > >
+> > > > > > I will be rebasing onto v5.5-rc1 shortly after it comes out.  My usual
+> > > > > > approach is to fix any conflicts during that rebasing operation.
+> > > > > > Does that make sense, or would you prefer to send me a rebased stack at
+> > > > > > that point?  Either way is fine for me.
+> > > > >
+> > > > > That's fine with me, thanks!  To avoid too much additional churn on
+> > > > > your end, I just replied to the bitops patch with a version that will
+> > > > > apply with the change to bitops-instrumented infrastructure.
 > > > >
-> > > >  .../bindings/iio/adc/adi,ad7292.yaml          | 104 ++++++++++++++++++
-> > > >  MAINTAINERS                                   |   7 ++
-> > > >  2 files changed, 111 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> > > > My first thought was to replace 8/10 of the previous version of your
+> > > > patch in -rcu (047ca266cfab "asm-generic, kcsan: Add KCSAN instrumentation
+> > > > for bitops"), but this does not apply.  So I am guessing that I instead
+> > > > do this substitution when a rebase onto -rc1..
 > > > >
-> > > > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..b68be3aaf587
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> > > > @@ -0,0 +1,104 @@
-> > > > +# SPDX-License-Identifier: GPL-2.0-only  
+> > > > Except...
+> > > >
+> > > > > Also considering the merge window, we had a discussion and there are
+> > > > > some arguments for targeting the v5.5 merge window:
+> > > > > - we'd unblock ARM and POWER ports;
+> > > > > - we'd unblock people wanting to use the data_race macro;
+> > > > > - we'd unblock syzbot just tracking upstream;
+> > > > > Unless there are strong reasons to not target v5.5, I leave it to you
+> > > > > if you think it's appropriate.
+> > > >
+> > > > My normal process is to send the pull request shortly after -rc5 comes
+> > > > out, but you do call out some benefits of getting it in sooner, so...
+> > > >
+> > > > What I will do is to rebase your series onto (say) -rc7, test it, and
+> > > > see about an RFC pull request.
+> > > >
+> > > > One possible complication is the new 8/10 patch.  But maybe it will
+> > > > apply against -rc7?
+> > > >
+> > > > Another possible complication is this:
+> > > >
+> > > > scripts/kconfig/conf  --syncconfig Kconfig
+> > > > *
+> > > > * Restart config...
+> > > > *
+> > > > *
+> > > > * KCSAN: watchpoint-based dynamic data race detector
+> > > > *
+> > > > KCSAN: watchpoint-based dynamic data race detector (KCSAN) [N/y/?] (NEW)
+> > > >
+> > > > Might be OK in this case because it is quite obvious what it is doing.
+> > > > (Avoiding pain from this is the reason that CONFIG_RCU_EXPERT exists.)
+> > > >
+> > > > But I will just mention this in the pull request.
+> > > >
+> > > > If there is a -rc8, there is of course a higher probability of making it
+> > > > into the next merge window.
+> > > >
+> > > > Fair enough?
 > > >
-> > > Sigh, I gave you the exact line to use:
+> > > Totally fine with that, sounds like a good plan, thanks!
 > > >
-> > > # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > >
-> > > I've said to dual license with (GPL-2.0-only OR BSD-2-Clause) and people
-> > > think I mean to pick one. So now I just give the whole line. I don't
-> > > know how to be clearer.  
+> > > If it helps, in theory we can also drop and delay the bitops
+> > > instrumentation patch until the new bitops instrumentation
+> > > infrastructure is in 5.5-rc1. There won't be any false positives if
+> > > this is missing, we might just miss a few data races until we have it.
 > >
-> > I thought I could use just GPL-2.0 since the driver code is GPL-2.0.
-> > Anyway, I'll use the above line to specify the dt-binding license.
-> >  
-> > >  
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/iio/adc/adi,ad7292.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Analog Devices AD7292 10-Bit Monitor and Control System
-> > > > +
-> > > > +maintainers:
-> > > > +  - Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> > > > +
-> > > > +description: |
-> > > > +  Analog Devices AD7292 10-Bit Monitor and Control System with ADC, DACs,
-> > > > +  Temperature Sensor, and GPIOs
-> > > > +
-> > > > +  Specifications about the part can be found at:
-> > > > +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    enum:
-> > > > +      - adi,ad7292
-> > > > +
-> > > > +  reg:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  vref-supply:
-> > > > +    description: |
-> > > > +      The regulator supply for ADC and DAC reference voltage.
-> > > > +
-> > > > +  spi-cpha: true
-> > > > +
-> > > > +  '#address-cells':
-> > > > +    const: 1
-> > > > +
-> > > > +  '#size-cells':
-> > > > +    const: 0
-> > > > +
-> > > > +required:
-> > > > +  - compatible
-> > > > +  - reg
-> > > > +  - spi-cpha
-> > > > +
-> > > > +patternProperties:
-> > > > +  "^channel@[0-7]$":
-> > > > +    type: object
-> > > > +    description: |
-> > > > +      Represents the external channels which are connected to the ADC.
-> > > > +      See Documentation/devicetree/bindings/iio/adc/adc.txt.
-> > > > +
-> > > > +    properties:
-> > > > +      reg:
-> > > > +        description: |
-> > > > +          The channel number. It can have up to 8 channels numbered from 0 to 7.
-> > > > +        items:
-> > > > +          maximum: 7  
-> > >
-> > > Not what I said either. A slight but important difference in that you
-> > > are missing a '-' to make 'items' a list rather than a schema/dict.
-> > >
-> > > Update dt-schema. This should give a warning now.  
+> > That sounds advisable for an attempt to hit this coming merge window.
 > >
-> > I'm confused, I don't know how to make this doc the way you want.
-> > I pulled the updates from the master branch of dt-schema repo and
-> > reinstalled it.
-> > Then I tried
-> >         items:
-> >           - maximum: 7
-> > I've tried
-> >         - items:
-> >             maximum: 7
-> > I also tried
-> >         - items:
-> >           maximum: 7
-> > all gave me parsing errors when processing the ad7292 schema with
-> > 'make dt_binding_check' and also with 'make -k dt_binding_check'.
-> > Am I using the right branch? Should I pull from a branch other than the
-> > master?  
+> > So just to make sure I understand, I drop 8/10 and keep the rest during
+> > a rebase to 5.4-rc7, correct?
 > 
-> Sorry, my fault there. The meta-schema requires 'minimum' if you give
-> 'maximum'. So:
-> 
->         items:
->           - minimum: 0
->             maximum: 7
-> 
-> The error message was less than useful, but I think I have a fix for that too.
-> 
-> Rob
+> Yes, that's right.
 
+Very good, I just now pushed a "kcsan" branch on -rcu, and am running
+rcutorture, first without KCSAN enabled and then with it turned on.
+If all that works out, I set my -next branch to that point and see what
+-next testing and kbuild test robot think about it.  If all goes well,
+an RFC pull request.
+
+Look OK?
+
+							Thanx, Paul
