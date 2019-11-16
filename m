@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF59FC43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D4BC43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A078C214DE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 756D521847
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920988;
-	bh=kZ8zWA2dW+43AmUKUBWUQPRKVQv73HqDZw+2W139/QY=;
+	s=default; t=1573920993;
+	bh=yztD/eG3vMr/Rvs0vWXMhNLFKFHrlrDPs/mf4F4zuqc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pmNI47B4lyuFI9VQDP7kemsTWJaUZjAsHyJCoUVRZvt5DXy2Pv6IZk9wAsot7hpD5
-	 JbGEEnJd9bKBYpoThflhq1HfQyuZ51+iZNTkfgW6hyX0IwyYiIWmIWbrAj2bHR/YuC
-	 rLtynzXKieWACrkHLmIN77Njh9zUUI/72LgWncps=
+	b=U25rvxyygZIfw7m3rS4Uh9u4Qy8qI51Iq6xXkwiwGnpyuC96edlBLCkzhLYk8eyUv
+	 NarVjN7KVY5Uvf0QXxEZnQK/wGBL1VZAEhGo41lTqgrFauwCCGBYls4fs0/iFELC6O
+	 bpaV91V6F8wln8p800Muh65qnFb/mmwjcuXtDTF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731202AbfKPQQ1 (ORCPT
+        id S1729593AbfKPPrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:16:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53676 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:47:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729597AbfKPPrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:47:03 -0500
+        id S1729388AbfKPPq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:27 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62F8D2133F;
-        Sat, 16 Nov 2019 15:47:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4209020830;
+        Sat, 16 Nov 2019 15:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919222;
-        bh=kZ8zWA2dW+43AmUKUBWUQPRKVQv73HqDZw+2W139/QY=;
+        s=default; t=1573919186;
+        bh=yztD/eG3vMr/Rvs0vWXMhNLFKFHrlrDPs/mf4F4zuqc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b4ggr0lHaemtpOzYvpM3QVjjjyV1n/ND5yHRmN/6bcVbn4sen8rcAKOEebXCc+ju7
-         Yd47gmL43zIPUfUYaLjlsP1w32tWFXDYbIx3pENgVodIhVoDQDYjoNJNR1rcx6WJv1
-         xwPlw1r4b3pMnbLru0uRHfASeZGvmHDSZhx8wGCI=
+        b=OcNZg48p29k8GoM2Khl9YjEd//n+fJqNjaoIt+SERnq0j2y6b3aVCY4Dy91wRwhcr
+         uHS3c3HG4QUW1PMEAqJnbeY64T/df9eHYn2Pjyhd5tghl1tH5ztGstyr7vDEMn1wb4
+         mk9CE51HQgljxU7YxeJOTfmoG89ZHL9QNxVe60f8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sriram R <srirrama@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 226/237] cfg80211: Prevent regulatory restore during STA disconnect in concurrent interfaces
-Date:   Sat, 16 Nov 2019 10:41:01 -0500
-Message-Id: <20191116154113.7417-226-sashal@kernel.org>
+Cc:     Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 194/237] media: ov13858: Check for possible null pointer
+Date:   Sat, 16 Nov 2019 10:40:29 -0500
+Message-Id: <20191116154113.7417-194-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,50 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sriram R <srirrama@codeaurora.org>
+From: Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>
 
-[ Upstream commit 113f3aaa81bd56aba02659786ed65cbd9cb9a6fc ]
+[ Upstream commit 35629182eb8f931b0de6ed38c0efac58e922c801 ]
 
-Currently when an AP and STA interfaces are active in the same or different
-radios, regulatory settings are restored whenever the STA disconnects. This
-restores all channel information including dfs states in all radios.
-For example, if an AP interface is active in one radio and STA in another,
-when radar is detected on the AP interface, the dfs state of the channel
-will be changed to UNAVAILABLE. But when the STA interface disconnects,
-this issues a regulatory disconnect hint which restores all regulatory
-settings in all the radios attached and thereby losing the stored dfs
-state on the other radio where the channel was marked as unavailable
-earlier. Hence prevent such regulatory restore whenever another active
-beaconing interface is present in the same or other radios.
+Check for possible null pointer to avoid crash.
 
-Signed-off-by: Sriram R <srirrama@codeaurora.org>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/sme.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/media/i2c/ov13858.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/net/wireless/sme.c b/net/wireless/sme.c
-index d536b07582f8c..c7047c7b4e80f 100644
---- a/net/wireless/sme.c
-+++ b/net/wireless/sme.c
-@@ -642,11 +642,15 @@ static bool cfg80211_is_all_idle(void)
- 	 * All devices must be idle as otherwise if you are actively
- 	 * scanning some new beacon hints could be learned and would
- 	 * count as new regulatory hints.
-+	 * Also if there is any other active beaconing interface we
-+	 * need not issue a disconnect hint and reset any info such
-+	 * as chan dfs state, etc.
- 	 */
- 	list_for_each_entry(rdev, &cfg80211_rdev_list, list) {
- 		list_for_each_entry(wdev, &rdev->wiphy.wdev_list, list) {
- 			wdev_lock(wdev);
--			if (wdev->conn || wdev->current_bss)
-+			if (wdev->conn || wdev->current_bss ||
-+			    cfg80211_beaconing_iface_active(wdev))
- 				is_all_idle = false;
- 			wdev_unlock(wdev);
- 		}
+diff --git a/drivers/media/i2c/ov13858.c b/drivers/media/i2c/ov13858.c
+index a66f6201f53c7..cf28381a903e3 100644
+--- a/drivers/media/i2c/ov13858.c
++++ b/drivers/media/i2c/ov13858.c
+@@ -1612,7 +1612,8 @@ static int ov13858_init_controls(struct ov13858 *ov13858)
+ 				OV13858_NUM_OF_LINK_FREQS - 1,
+ 				0,
+ 				link_freq_menu_items);
+-	ov13858->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
++	if (ov13858->link_freq)
++		ov13858->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+ 
+ 	pixel_rate_max = link_freq_to_pixel_rate(link_freq_menu_items[0]);
+ 	pixel_rate_min = link_freq_to_pixel_rate(link_freq_menu_items[1]);
+@@ -1635,7 +1636,8 @@ static int ov13858_init_controls(struct ov13858 *ov13858)
+ 	ov13858->hblank = v4l2_ctrl_new_std(
+ 				ctrl_hdlr, &ov13858_ctrl_ops, V4L2_CID_HBLANK,
+ 				hblank, hblank, 1, hblank);
+-	ov13858->hblank->flags |= V4L2_CTRL_FLAG_READ_ONLY;
++	if (ov13858->hblank)
++		ov13858->hblank->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+ 
+ 	exposure_max = mode->vts_def - 8;
+ 	ov13858->exposure = v4l2_ctrl_new_std(
 -- 
 2.20.1
 
