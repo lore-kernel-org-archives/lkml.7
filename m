@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5802C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFD0C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFBB721479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9FC7214DE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920742;
-	bh=zVi3l48Dj1pEq/lXVT7CWip3HEIXhUTRhaX6jVURMJE=;
+	s=default; t=1573920747;
+	bh=pz831w1FYuAKytC2tJGnO7bVucvEVuEDHUgUhpkzv/Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qn6WOnkZih9Mwy776lUSPpp0PpG8PVfNNRo51fvRq5oKWJsaQNwjm++803qS+9kQ3
-	 PmIVycsPlCXOQ5BwR/IJWkDwc/UvpjPPOqr+JcIR9cpNvFfi6qm2uLE9zFGB+NFm5n
-	 xmv9ciGgWrlct2W4JQrop47cwx87gq/X18RF9fL0=
+	b=EsrfnpGBLDSMtPArMjwDjf/UVaH9Q2fVl8XQ68RbLe8UGYuRtaz2KIfjCjJUl5YwW
+	 PDrfCaKg0rYFVVKooy0e1mAxabeQsmZ3eVratW3zwB1g4KT2Xq1zXrSN4m9P2pucPw
+	 AsFZp9ilQ2WLXilunZD0MghvgpbhDDOnFo/tSZGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730027AbfKPPsX (ORCPT
+        id S1730972AbfKPQMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:48:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55156 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:12:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729078AbfKPPsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:48:13 -0500
+        id S1729092AbfKPPsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:48:22 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 621592088F;
-        Sat, 16 Nov 2019 15:48:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60FD62086A;
+        Sat, 16 Nov 2019 15:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919292;
-        bh=zVi3l48Dj1pEq/lXVT7CWip3HEIXhUTRhaX6jVURMJE=;
+        s=default; t=1573919301;
+        bh=pz831w1FYuAKytC2tJGnO7bVucvEVuEDHUgUhpkzv/Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mpdXb26m2kOK372hMUbWpehWywo2WzVe9khhOOkZ+ue5kZX6CO+euP/DjJkEgxVbk
-         9F74Rke83Fq65Ier/ICx+1Cgv0abU7ykr3dJKLP3fl165ca3UDK4rvW6trpEGKSEiE
-         edyjdk1dSkmFGqsbYYignzOx9iuuLqExUdNCmPV8=
+        b=vRlDzYKAA7vDaBy0PNJ7Q4jhq8k2RUVJLY0q80k8CPNGNA+mdmmc5tgn1R3K6fS6Z
+         vXts6MRPmlbIhZBi/fSaW9SU+5p3nT8yvOXAkgIUCU6MaBPOpuU7HdFo0Zw+0Vmp/3
+         IEBjL2SMg3zvRDxQy5XMJXrzztLf4PPxYsruWntQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, dc395x@twibble.org,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 039/150] scsi: dc395x: fix dma API usage in srb_done
-Date:   Sat, 16 Nov 2019 10:45:37 -0500
-Message-Id: <20191116154729.9573-39-sashal@kernel.org>
+Cc:     Philipp Klocke <philipp97kl@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 047/150] ALSA: i2c/cs8427: Fix int to char conversion
+Date:   Sat, 16 Nov 2019 10:45:45 -0500
+Message-Id: <20191116154729.9573-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,53 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Philipp Klocke <philipp97kl@gmail.com>
 
-[ Upstream commit 3a5bd7021184dec2946f2a4d7a8943f8a5713e52 ]
+[ Upstream commit eb7ebfa3c1989aa8e59d5e68ab3cddd7df1bfb27 ]
 
-We can't just transfer ownership to the CPU and then unmap, as this will
-break with swiotlb.
+Compiling with clang yields the following warning:
 
-Instead unmap the command and sense buffer a little earlier in the I/O
-completion handler and get rid of the pci_dma_sync_sg_for_cpu call
-entirely.
+sound/i2c/cs8427.c:140:31: warning: implicit conversion from 'int'
+to 'char' changes value from 160 to -96 [-Wconstant-conversion]
+    data[0] = CS8427_REG_AUTOINC | CS8427_REG_CORU_DATABUF;
+            ~ ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Because CS8427_REG_AUTOINC is defined as 128, it is too big for a
+char field.
+So change data from char to unsigned char, that it can hold the value.
+
+This patch does not change the generated code.
+
+Signed-off-by: Philipp Klocke <philipp97kl@gmail.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/dc395x.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ sound/i2c/cs8427.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/dc395x.c b/drivers/scsi/dc395x.c
-index 5ee7f44cf869b..9da0ac360848f 100644
---- a/drivers/scsi/dc395x.c
-+++ b/drivers/scsi/dc395x.c
-@@ -3450,14 +3450,12 @@ static void srb_done(struct AdapterCtlBlk *acb, struct DeviceCtlBlk *dcb,
- 		}
- 	}
+diff --git a/sound/i2c/cs8427.c b/sound/i2c/cs8427.c
+index 7e21621e492a4..7fd1b40008838 100644
+--- a/sound/i2c/cs8427.c
++++ b/sound/i2c/cs8427.c
+@@ -118,7 +118,7 @@ static int snd_cs8427_send_corudata(struct snd_i2c_device *device,
+ 	struct cs8427 *chip = device->private_data;
+ 	char *hw_data = udata ?
+ 		chip->playback.hw_udata : chip->playback.hw_status;
+-	char data[32];
++	unsigned char data[32];
+ 	int err, idx;
  
--	if (dir != PCI_DMA_NONE && scsi_sg_count(cmd))
--		pci_dma_sync_sg_for_cpu(acb->dev, scsi_sglist(cmd),
--					scsi_sg_count(cmd), dir);
--
- 	ckc_only = 0;
- /* Check Error Conditions */
-       ckc_e:
- 
-+	pci_unmap_srb(acb, srb);
-+
- 	if (cmd->cmnd[0] == INQUIRY) {
- 		unsigned char *base = NULL;
- 		struct ScsiInqData *ptr;
-@@ -3511,7 +3509,6 @@ static void srb_done(struct AdapterCtlBlk *acb, struct DeviceCtlBlk *dcb,
- 			cmd, cmd->result);
- 		srb_free_insert(acb, srb);
- 	}
--	pci_unmap_srb(acb, srb);
- 
- 	cmd->scsi_done(cmd);
- 	waiting_process_next(acb);
+ 	if (!memcmp(hw_data, ndata, count))
 -- 
 2.20.1
 
