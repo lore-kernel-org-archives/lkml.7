@@ -2,77 +2,171 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55041C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B8FC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B3AE214DE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:23:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921388;
-	bh=uGuhx40PSVACD1w2xbCF83UlRktCW3KrF5PatnpxlxU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=UCJaD90jmzkMoHUaHBqlucBQR1ckef6a8pcjt4P+RgGI5SBypnJH698A38OYZ57xx
-	 Ln1f3eO4/k3hII3bK1/ODTTAC3rKqws0K3xZpbFJTu3U8fGS31SAlo5dDTUbBH6kvY
-	 TNm6I2iBQRYJNJXkjAdY3/UuHNosP9WTklU0kuy0=
+	by mail.kernel.org (Postfix) with ESMTP id 0E79B214DE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:23:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QV7A147B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732097AbfKPQXG (ORCPT
+        id S1732045AbfKPQXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:23:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729294AbfKPQXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 16 Nov 2019 11:23:03 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BABE21479;
-        Sat, 16 Nov 2019 16:23:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573921382;
-        bh=uGuhx40PSVACD1w2xbCF83UlRktCW3KrF5PatnpxlxU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fxaPmIIPIPk2Nm0smKAbyYykUNypy9xrYa+I/tr604z7UBEBPjvxuSqbO0hrT1Eca
-         ewm/cVlaVwg1YCwUWpANv9X4UwcizgD3TeEiuTW9FVig15TYdFNIM4bGH6S93H2zzO
-         xB9HtSCDIiCyu0T5tswPQeYVixdJt+vsz6apnQEY=
-Date:   Sat, 16 Nov 2019 16:22:57 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>, knaack.h@gmx.de,
-        lars@metafoo.de, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pmeerw@pmeerw.net
-Subject: Re: [PATCH] iio: buffer-dmaengine: Use dma_request_chan() directly
- for channel request
-Message-ID: <20191116162257.550f62d6@archlinux>
-In-Reply-To: <20191114043318.GE952516@vkoul-mobl>
-References: <20191113092453.30838-1-peter.ujfalusi@ti.com>
-        <20191114043318.GE952516@vkoul-mobl>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Received: from mail-il1-f193.google.com ([209.85.166.193]:46531 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728589AbfKPQXA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 11:23:00 -0500
+Received: by mail-il1-f193.google.com with SMTP id q1so11983559ile.13;
+        Sat, 16 Nov 2019 08:22:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cGFJ1UHhdiIJEXOLGXqJSQjnNZL8uc3rgdnRctzpxO8=;
+        b=QV7A147BcDqcwv+64KmJqy7g4WfpYsm+HaDVJzDbChVyz1FSbc+3XjWg7GsZXk9Gdg
+         6j28bmx8Z76qAf/uv6xMSznCQsx63zkFJXYvjWxbSQPZDxKx19th/30FKKGp59H7m6KF
+         GA4oo0XTZl3yweQT61wv4mtKdX+qJjiW3s3qCdb+W0fVpdKYdPAq4/ygzTYnmWQ0X7ZX
+         XAOk0SLRwj969h5oL0ltAd3YeHrLhJ7q8jZA5yD6Ma9nTz+AOfONhWvcjT0mKobBnj3/
+         UGnnxQmQuR/RFNnc+cpcUYm5EeH7WP0uLSIvAvOljRvyfi8Gky0KKuNI6hRZN7ArwrL5
+         lv7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cGFJ1UHhdiIJEXOLGXqJSQjnNZL8uc3rgdnRctzpxO8=;
+        b=gxXA5444UFFdSxrerPVEAm/iihhP44PBL/odwBWvJr65BCCNP1FjPtPpskPa7SDMmK
+         G58xgTYwCqhweZyamri7M8qNpCdqX3j4yX2zAN6eRl0jhAvZiFMWflKUs6+HOLti/LU2
+         odC4xT7QZV/kWeCLFnvgxQrMm4CuVsgmYwnIuayakESVMIhshekCqIuLFNwWmOw17Bmv
+         p31dcRZce6+7xt9An462OBBaRz2tLhxae4U0Fr1NM4eT+xrIQRa0N6xa9cIJ2uUaTq4n
+         TuLM2uIjr9nCfuO1bANN+llf22gJ9JLeBhdEp0MosVYucQPcJGC61e8pp2bwOidhYwDk
+         pbCA==
+X-Gm-Message-State: APjAAAXRxI3Yw57wMtCiSbBGDvBxHjk0c6PAVlkgmXCtSFpQyOLa3Zhe
+        4Sh3mIwp66NHNRKxZywbwT/6GyVwcxQxhYErLlbZnRUX
+X-Google-Smtp-Source: APXvYqx1R8rTJgYa6Kg9YWmHBdE/q+WJXVJOhIsP/ndz5fykjzfUIkaZTuN/os8z6qJWgW/RX5NOiLkI2+rIaNmQyC4=
+X-Received: by 2002:a92:b656:: with SMTP id s83mr6767761ili.282.1573921379066;
+ Sat, 16 Nov 2019 08:22:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191116154113.7417-1-sashal@kernel.org> <20191116154113.7417-100-sashal@kernel.org>
+In-Reply-To: <20191116154113.7417-100-sashal@kernel.org>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Sat, 16 Nov 2019 17:23:28 +0100
+Message-ID: <CAOi1vP8ZTyaGsn-hXtnr+AnCrEQfSB6sTLYwkkZ8P1oY9EgPXg@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 4.19 100/237] libceph: don't consume a ref on
+ pagelist in ceph_msg_data_add_pagelist()
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Nov 2019 10:03:18 +0530
-Vinod Koul <vkoul@kernel.org> wrote:
+On Sat, Nov 16, 2019 at 4:43 PM Sasha Levin <sashal@kernel.org> wrote:
+>
+> From: Ilya Dryomov <idryomov@gmail.com>
+>
+> [ Upstream commit 894868330a1e038ea4a65dbb81741eef70ad71b1 ]
+>
+> Because send_mds_reconnect() wants to send a message with a pagelist
+> and pass the ownership to the messenger, ceph_msg_data_add_pagelist()
+> consumes a ref which is then put in ceph_msg_data_destroy().  This
+> makes managing pagelists in the OSD client (where they are wrapped in
+> ceph_osd_data) unnecessarily hard because the handoff only happens in
+> ceph_osdc_start_request() instead of when the pagelist is passed to
+> ceph_osd_data_pagelist_init().  I counted several memory leaks on
+> various error paths.
+>
+> Fix up ceph_msg_data_add_pagelist() and carry a pagelist ref in
+> ceph_osd_data.
+>
+> Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  fs/ceph/mds_client.c  | 2 +-
+>  net/ceph/messenger.c  | 1 +
+>  net/ceph/osd_client.c | 8 ++++++++
+>  3 files changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+> index 09db6d08614d2..94494d05a94cb 100644
+> --- a/fs/ceph/mds_client.c
+> +++ b/fs/ceph/mds_client.c
+> @@ -2184,7 +2184,6 @@ static struct ceph_msg *create_request_message(struct ceph_mds_client *mdsc,
+>
+>         if (req->r_pagelist) {
+>                 struct ceph_pagelist *pagelist = req->r_pagelist;
+> -               refcount_inc(&pagelist->refcnt);
+>                 ceph_msg_data_add_pagelist(msg, pagelist);
+>                 msg->hdr.data_len = cpu_to_le32(pagelist->length);
+>         } else {
+> @@ -3289,6 +3288,7 @@ static void send_mds_reconnect(struct ceph_mds_client *mdsc,
+>         mutex_unlock(&mdsc->mutex);
+>
+>         up_read(&mdsc->snap_rwsem);
+> +       ceph_pagelist_release(pagelist);
+>         return;
+>
+>  fail:
+> diff --git a/net/ceph/messenger.c b/net/ceph/messenger.c
+> index f7d7f32ac673c..2c8cd339d59ea 100644
+> --- a/net/ceph/messenger.c
+> +++ b/net/ceph/messenger.c
+> @@ -3323,6 +3323,7 @@ void ceph_msg_data_add_pagelist(struct ceph_msg *msg,
+>
+>         data = ceph_msg_data_create(CEPH_MSG_DATA_PAGELIST);
+>         BUG_ON(!data);
+> +       refcount_inc(&pagelist->refcnt);
+>         data->pagelist = pagelist;
+>
+>         list_add_tail(&data->links, &msg->data);
+> diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
+> index 76c41a84550e7..c3494c1fb3a9a 100644
+> --- a/net/ceph/osd_client.c
+> +++ b/net/ceph/osd_client.c
+> @@ -126,6 +126,9 @@ static void ceph_osd_data_init(struct ceph_osd_data *osd_data)
+>         osd_data->type = CEPH_OSD_DATA_TYPE_NONE;
+>  }
+>
+> +/*
+> + * Consumes @pages if @own_pages is true.
+> + */
+>  static void ceph_osd_data_pages_init(struct ceph_osd_data *osd_data,
+>                         struct page **pages, u64 length, u32 alignment,
+>                         bool pages_from_pool, bool own_pages)
+> @@ -138,6 +141,9 @@ static void ceph_osd_data_pages_init(struct ceph_osd_data *osd_data,
+>         osd_data->own_pages = own_pages;
+>  }
+>
+> +/*
+> + * Consumes a ref on @pagelist.
+> + */
+>  static void ceph_osd_data_pagelist_init(struct ceph_osd_data *osd_data,
+>                         struct ceph_pagelist *pagelist)
+>  {
+> @@ -362,6 +368,8 @@ static void ceph_osd_data_release(struct ceph_osd_data *osd_data)
+>                 num_pages = calc_pages_for((u64)osd_data->alignment,
+>                                                 (u64)osd_data->length);
+>                 ceph_release_page_vector(osd_data->pages, num_pages);
+> +       } else if (osd_data->type == CEPH_OSD_DATA_TYPE_PAGELIST) {
+> +               ceph_pagelist_release(osd_data->pagelist);
+>         }
+>         ceph_osd_data_init(osd_data);
+>  }
 
-> On 13-11-19, 11:24, Peter Ujfalusi wrote:
-> > dma_request_slave_channel_reason() is:
-> > #define dma_request_slave_channel_reason(dev, name) \
-> > 	dma_request_chan(dev, name)  
-> 
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> 
+Hi Sasha,
 
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
+This commit was part of a larger series and shouldn't be backported on
+its own.  Please drop it.
 
 Thanks,
 
-Jonathan
+                Ilya
