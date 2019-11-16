@@ -2,68 +2,119 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A4BC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 14:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0710BC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 14:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E22206E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 14:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D13F320700
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 14:58:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573916313;
+	bh=nqj7UgNe0Y4TorqsN/gXEjpreuWHhGzDviu/NK0eTGY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1+goWCVB5p58MYoN2U4izaE9eu19XqpeGi7EhFz+D9JCRECcLbrOLaiaJPtJfaSrx
+	 A4xh+Zc8j3wDblJ6Ul+UCJJ1TeM3miKDIUMHSe8R1ppRR8yn85lX46Y6aEWaB/LOX9
+	 RVoZbxP0a1vkEkXroTvY8XoQQpX7Ax1nFBS+0/mg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727711AbfKPOpV (ORCPT
+        id S1727731AbfKPO62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 09:45:21 -0500
-Received: from mga14.intel.com ([192.55.52.115]:33990 "EHLO mga14.intel.com"
+        Sat, 16 Nov 2019 09:58:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727589AbfKPOpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 09:45:20 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Nov 2019 06:45:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,312,1569308400"; 
-   d="scan'208";a="258009379"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 Nov 2019 06:45:19 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 88F8C300FDE; Sat, 16 Nov 2019 06:45:19 -0800 (PST)
-From:   Andi Kleen <ak@linux.intel.com>
-To:     lqqq341 <liuqi115@hisilicon.com>
-Cc:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <linuxarm@huawei.com>, <john.garry@huawei.com>,
-        <zhangshaokun@hisilicon.com>, <huangdaode@hisilicon.com>,
-        <linyunsheng@huawei.com>
-Subject: Re: [PATCH] Perf stat: Fix the ratio comments of miss-events
-References: <1573890521-56450-1-git-send-email-liuqi115@hisilicon.com>
-Date:   Sat, 16 Nov 2019 06:45:19 -0800
-In-Reply-To: <1573890521-56450-1-git-send-email-liuqi115@hisilicon.com>
-        (lqqq's message of "Sat, 16 Nov 2019 15:48:41 +0800")
-Message-ID: <87pnhrg9s0.fsf@linux.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        id S1727123AbfKPO61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 09:58:27 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6810206E1;
+        Sat, 16 Nov 2019 14:58:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573916306;
+        bh=nqj7UgNe0Y4TorqsN/gXEjpreuWHhGzDviu/NK0eTGY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QVmsY/9yc7WAqHURPRvwYQp9if/HCsbC7uuA8wgiI30LncE8VOxnkm81x4xlLGGMS
+         +u0DVtmTf24lRld1uMYn7vx1KUwqI+pVEdpEJJ25KN1rPP4fpUZSmChFREr0EAshUh
+         CsS4GbWha/LIQQfZe3mLqufeUIq3dN8oxL681T1Q=
+Date:   Sat, 16 Nov 2019 14:58:21 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
+        <denis.ciocca@st.com>, <tglx@linutronix.de>,
+        <alexios.zavras@intel.com>, <allison@lohutok.net>,
+        <linus.walleij@linaro.org>, <ladis@linux-mips.org>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 -next] iio: st_accel: Fix unused variable warning
+Message-ID: <20191116145821.1ac46310@archlinux>
+In-Reply-To: <20191111032115.3008-1-yuehaibing@huawei.com>
+References: <20191101134741.25108-1-yuehaibing@huawei.com>
+        <20191111032115.3008-1-yuehaibing@huawei.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-lqqq341 <liuqi115@hisilicon.com> writes:
+On Mon, 11 Nov 2019 11:21:15 +0800
+YueHaibing <yuehaibing@huawei.com> wrote:
 
-> From: Qi Liu <liuqi115@hisilicon.com>
->
-> Perf stat displays miss ratio of L1-dcache, L1-icache, dTLB cache,
-> iTLB cache and LL-cache. Take L1-dcache for example, its miss ratio
-> is caculated as "L1-dcache-load-misses/L1-dcache-loads". So "of all
-> L1-dcache hits" is unsuitable to describe it, and "of all L1-dcache
-> accesses" seems better. The comments of L1-icache, dTLB cache, iTLB
-> cache and LL-cache are fixed in the same way.
+> drivers/iio/accel/st_accel_core.c:1005:44: warning:
+>  mount_matrix_ext_info defined but not used [-Wunused-const-variable=]
+> 
+> Using stub helper while CONFIG_ACPI is disabled to fix it.
+> 
+> Suggested-by: Ladislav Michl <ladis@linux-mips.org>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Applied to the fixes-togreg branch of iio.git as I've now closed for new
+things for the coming merge window.  This will go upstream after the merge
+window closes and probably hit around rc2.  Thanks for cleaning this up.
 
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Jonathan
 
--Andi
+> ---
+>  drivers/iio/accel/st_accel_core.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
+> index 7b83764..7320275 100644
+> --- a/drivers/iio/accel/st_accel_core.c
+> +++ b/drivers/iio/accel/st_accel_core.c
+> @@ -992,6 +992,7 @@ static const struct iio_trigger_ops st_accel_trigger_ops = {
+>  #define ST_ACCEL_TRIGGER_OPS NULL
+>  #endif
+>  
+> +#ifdef CONFIG_ACPI
+>  static const struct iio_mount_matrix *
+>  get_mount_matrix(const struct iio_dev *indio_dev,
+>  		 const struct iio_chan_spec *chan)
+> @@ -1012,7 +1013,6 @@ static const struct iio_chan_spec_ext_info mount_matrix_ext_info[] = {
+>  static int apply_acpi_orientation(struct iio_dev *indio_dev,
+>  				  struct iio_chan_spec *channels)
+>  {
+> -#ifdef CONFIG_ACPI
+>  	struct st_sensor_data *adata = iio_priv(indio_dev);
+>  	struct acpi_buffer buffer = {ACPI_ALLOCATE_BUFFER, NULL};
+>  	struct acpi_device *adev;
+> @@ -1140,10 +1140,14 @@ static int apply_acpi_orientation(struct iio_dev *indio_dev,
+>  out:
+>  	kfree(buffer.pointer);
+>  	return ret;
+> +}
+>  #else /* !CONFIG_ACPI */
+> +static int apply_acpi_orientation(struct iio_dev *indio_dev,
+> +				  struct iio_chan_spec *channels)
+> +{
+>  	return 0;
+> -#endif
+>  }
+> +#endif
+>  
+>  /*
+>   * st_accel_get_settings() - get sensor settings from device name
+
