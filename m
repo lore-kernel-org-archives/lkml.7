@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8CBC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCCAC43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42BDB21479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75C4C21479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:23:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921426;
-	bh=JsC3oQ7k2jnfFKtbfYMCHgatAefXE5BD7sW+AdDdzsY=;
+	s=default; t=1573921429;
+	bh=jTWzCOQwRiWhKbKWMLAjSFDku8KDuyLw1gEEl2r4qbs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MfeNcdQMS5+FAexB647cz6lO/00hnkH1AJgB+rW6b7QCKjEQfoWfV5Nr2dFw5uVGM
-	 M7molTp5RIGJMiR4ykbhOGa/mPf2+ODx7V8c0oWox3iVZCNx1Ox2uTXqOyUS/abwkp
-	 tb/yzDiloWvwiRwcW42K1oTDe6SsynX5d+EBNrC4=
+	b=X8uJXUgazhJP+zpJFGgelCsR7JkcLo9mceB2q3I+4+U/pvax6mt+8w6QHYW+3UkO9
+	 my+P4YJ00PRfVS55N1SpX5YnEm0fB9D6UJ/CZBFlZw8u3oUlsVKyI99qiaq5ILXByd
+	 0Xel39gO9dFUfjZT6kaDyUvOnyK27SkKZJ8U/ibo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729528AbfKPQXp (ORCPT
+        id S1728445AbfKPPmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:23:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46602 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:42:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728448AbfKPPmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:42:49 -0500
+        id S1728368AbfKPPmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:42:37 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 337D7207DD;
-        Sat, 16 Nov 2019 15:42:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E8C72086A;
+        Sat, 16 Nov 2019 15:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918967;
-        bh=JsC3oQ7k2jnfFKtbfYMCHgatAefXE5BD7sW+AdDdzsY=;
+        s=default; t=1573918956;
+        bh=jTWzCOQwRiWhKbKWMLAjSFDku8KDuyLw1gEEl2r4qbs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=00N1zSnlcW3BnXkYpXi+rva69fpJC/FHqe1BL2w5K/eFEIP0XPmvs+XeiB4k9sl4T
-         kJnMujaFK+X0o0fiC9rZ5aeU7DclqN56sQl9w1RVGsjp89JVtfXaIbw2ZQvrg/gVZr
-         q1qECgahiRBDH6rUDy6DFF8dZbxMh8Fa7GPq3PuQ=
+        b=gC2B32sO2rm4bVWXVglD9ZTSsKM+8S4L2WIeSa4ErNGULl5u/gMJMIoJ7DXB3WeKP
+         47YF245JtUfBNOqVjcptJjWkMWXyycFehbQ89UuznyHoloJjVWYzARmwkUQC7faXSj
+         gxlDb0YhK8ys52poQti3F2IA2yiFNi8/qSyNuw/E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 083/237] sunrpc: safely reallow resvport min/max inversion
-Date:   Sat, 16 Nov 2019 10:38:38 -0500
-Message-Id: <20191116154113.7417-83-sashal@kernel.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 075/237] macintosh/windfarm_smu_sat: Fix debug output
+Date:   Sat, 16 Nov 2019 10:38:30 -0500
+Message-Id: <20191116154113.7417-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,122 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-[ Upstream commit 826799e66e8683e5698e140bb9ef69afc8c0014e ]
+[ Upstream commit fc0c8b36d379a046525eacb9c3323ca635283757 ]
 
-Commits ffb6ca33b04b and e08ea3a96fc7 prevent setting xprt_min_resvport
-greater than xprt_max_resvport, but may also break simple code that sets
-one parameter then the other, if the new range does not overlap the old.
+There's some antiquated debug output that's trying
+to do a hand-made hexdump and turning into horrible
+1-byte-per-line output these days.
 
-Also it looks racy to me, unless there's some serialization I'm not
-seeing.  Granted it would probably require malicious privileged processes
-(unless there's a chance these might eventually be settable in unprivileged
-containers), but still it seems better not to let userspace panic the
-kernel.
+Use print_hex_dump() instead
 
-Simpler seems to be to allow setting the parameters to whatever you want
-but interpret xprt_min_resvport > xprt_max_resvport as the empty range.
-
-Fixes: ffb6ca33b04b "sunrpc: Prevent resvport min/max inversion..."
-Fixes: e08ea3a96fc7 "sunrpc: Prevent rexvport min/max inversion..."
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprtsock.c | 34 ++++++++++++++++++----------------
- 1 file changed, 18 insertions(+), 16 deletions(-)
+ drivers/macintosh/windfarm_smu_sat.c | 25 +++++++------------------
+ 1 file changed, 7 insertions(+), 18 deletions(-)
 
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 7d8cce1dfcad3..adecfd40953f6 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -129,7 +129,7 @@ static struct ctl_table xs_tunables_table[] = {
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
- 		.extra1		= &xprt_min_resvport_limit,
--		.extra2		= &xprt_max_resvport
-+		.extra2		= &xprt_max_resvport_limit
- 	},
- 	{
- 		.procname	= "max_resvport",
-@@ -137,7 +137,7 @@ static struct ctl_table xs_tunables_table[] = {
- 		.maxlen		= sizeof(unsigned int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= &xprt_min_resvport,
-+		.extra1		= &xprt_min_resvport_limit,
- 		.extra2		= &xprt_max_resvport_limit
- 	},
- 	{
-@@ -1773,11 +1773,17 @@ static void xs_udp_timer(struct rpc_xprt *xprt, struct rpc_task *task)
- 	spin_unlock_bh(&xprt->transport_lock);
- }
+diff --git a/drivers/macintosh/windfarm_smu_sat.c b/drivers/macintosh/windfarm_smu_sat.c
+index da7f4fc1a51d1..a0f61eb853c55 100644
+--- a/drivers/macintosh/windfarm_smu_sat.c
++++ b/drivers/macintosh/windfarm_smu_sat.c
+@@ -22,14 +22,6 @@
  
--static unsigned short xs_get_random_port(void)
-+static int xs_get_random_port(void)
- {
--	unsigned short range = xprt_max_resvport - xprt_min_resvport + 1;
--	unsigned short rand = (unsigned short) prandom_u32() % range;
--	return rand + xprt_min_resvport;
-+	unsigned short min = xprt_min_resvport, max = xprt_max_resvport;
-+	unsigned short range;
-+	unsigned short rand;
+ #define VERSION "1.0"
+ 
+-#define DEBUG
+-
+-#ifdef DEBUG
+-#define DBG(args...)	printk(args)
+-#else
+-#define DBG(args...)	do { } while(0)
+-#endif
+-
+ /* If the cache is older than 800ms we'll refetch it */
+ #define MAX_AGE		msecs_to_jiffies(800)
+ 
+@@ -106,13 +98,10 @@ struct smu_sdbp_header *smu_sat_get_sdb_partition(unsigned int sat_id, int id,
+ 		buf[i+2] = data[3];
+ 		buf[i+3] = data[2];
+ 	}
+-#ifdef DEBUG
+-	DBG(KERN_DEBUG "sat %d partition %x:", sat_id, id);
+-	for (i = 0; i < len; ++i)
+-		DBG(" %x", buf[i]);
+-	DBG("\n");
+-#endif
+ 
++	printk(KERN_DEBUG "sat %d partition %x:", sat_id, id);
++	print_hex_dump(KERN_DEBUG, "  ", DUMP_PREFIX_OFFSET,
++		       16, 1, buf, len, false);
+ 	if (size)
+ 		*size = len;
+ 	return (struct smu_sdbp_header *) buf;
+@@ -132,13 +121,13 @@ static int wf_sat_read_cache(struct wf_sat *sat)
+ 	if (err < 0)
+ 		return err;
+ 	sat->last_read = jiffies;
 +
-+	if (max < min)
-+		return -EADDRINUSE;
-+	range = max - min + 1;
-+	rand = (unsigned short) prandom_u32() % range;
-+	return rand + min;
- }
- 
- /**
-@@ -1833,9 +1839,9 @@ static void xs_set_srcport(struct sock_xprt *transport, struct socket *sock)
- 		transport->srcport = xs_sock_getport(sock);
- }
- 
--static unsigned short xs_get_srcport(struct sock_xprt *transport)
-+static int xs_get_srcport(struct sock_xprt *transport)
- {
--	unsigned short port = transport->srcport;
-+	int port = transport->srcport;
- 
- 	if (port == 0 && transport->xprt.resvport)
- 		port = xs_get_random_port();
-@@ -1856,7 +1862,7 @@ static int xs_bind(struct sock_xprt *transport, struct socket *sock)
- {
- 	struct sockaddr_storage myaddr;
- 	int err, nloop = 0;
--	unsigned short port = xs_get_srcport(transport);
-+	int port = xs_get_srcport(transport);
- 	unsigned short last;
- 
- 	/*
-@@ -1874,8 +1880,8 @@ static int xs_bind(struct sock_xprt *transport, struct socket *sock)
- 	 * transport->xprt.resvport == 1) xs_get_srcport above will
- 	 * ensure that port is non-zero and we will bind as needed.
- 	 */
--	if (port == 0)
--		return 0;
-+	if (port <= 0)
-+		return port;
- 
- 	memcpy(&myaddr, &transport->srcaddr, transport->xprt.addrlen);
- 	do {
-@@ -3317,12 +3323,8 @@ static int param_set_uint_minmax(const char *val,
- 
- static int param_set_portnr(const char *val, const struct kernel_param *kp)
- {
--	if (kp->arg == &xprt_min_resvport)
--		return param_set_uint_minmax(val, kp,
--			RPC_MIN_RESVPORT,
--			xprt_max_resvport);
- 	return param_set_uint_minmax(val, kp,
--			xprt_min_resvport,
-+			RPC_MIN_RESVPORT,
- 			RPC_MAX_RESVPORT);
- }
- 
+ #ifdef LOTSA_DEBUG
+ 	{
+ 		int i;
+-		DBG(KERN_DEBUG "wf_sat_get: data is");
+-		for (i = 0; i < 16; ++i)
+-			DBG(" %.2x", sat->cache[i]);
+-		DBG("\n");
++		printk(KERN_DEBUG "wf_sat_get: data is");
++		print_hex_dump(KERN_DEBUG, "  ", DUMP_PREFIX_OFFSET,
++			       16, 1, sat->cache, 16, false);
+ 	}
+ #endif
+ 	return 0;
 -- 
 2.20.1
 
