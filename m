@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E59CEC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 10:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18261C43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 10:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE2FF20715
+	by mail.kernel.org (Postfix) with ESMTP id E696920728
 	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 10:33:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TBhghe/v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SwkKbHfa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727496AbfKPKdg (ORCPT
+        id S1727518AbfKPKdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 05:33:36 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40003 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727000AbfKPKdf (ORCPT
+        Sat, 16 Nov 2019 05:33:38 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55622 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727000AbfKPKdh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 05:33:35 -0500
-Received: by mail-wr1-f68.google.com with SMTP id q15so851756wrw.7
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 02:33:34 -0800 (PST)
+        Sat, 16 Nov 2019 05:33:37 -0500
+Received: by mail-wm1-f67.google.com with SMTP id b11so12122989wmb.5
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 02:33:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fL8qsLGBM/IPR09zWS//pHasnl5f9Z89rLX6wisoxpA=;
-        b=TBhghe/vbOYFS/uL4Dy5rLFlGWL5LiiXZGZHJXvCX/LyJpJWBY6QoUFwdlLtIhoQd6
-         nyTiuxYNQ91iJtVGJH4pIEgTcLD/M8S1U4f84qw6j04M0MGFV+7tbm7m+Bgqx/DUypLu
-         aqN0QKgITHOk9SoQmEiytOB8DfNLEh1W4R7woa6+wVguqDdK+EeaT6PO6SD6CeTy6RI/
-         ygeNVbt+AHhuDiMOBhXRjSbQnViJWNfqdmKNUvO5g7TMHzXe+Z0hwSy5wFA5yFvoduuw
-         t5Pf/PZ0XlqgWE5GPB0JMXKQLI1rO0IQPsmC65JGE4IY7Mt4IJmBY/UIC3JxkuOzlKQw
-         Gc/w==
+        bh=u7sWlRTtJZbCyQnn5ZHc11ljJpmynwZ/nJM+RgdZP2o=;
+        b=SwkKbHfaAbum+MGOrn+cu1cRUiYfp4mF3D4hRoQ4BXPVL0KijwmWXGHzxfzNOOSEvY
+         Xo6ONhiK59Cbkka6EulGbXOOLtofXbqGXleV50w7YBJnjhYw7OuXBJBDGEF1zoFsrvAt
+         +nHYUq0GCehSPjP1xvU2VdYZjvHpumFejmgQas2Yjj8thdVlFbR8R5LWqt8q0Ytmj0v1
+         bVfJvBCUdPQFj8wv3ufidMFl8SD5IwUCT1NnzzQ085asGsm1q5FmHNfjzYMOaBYh11df
+         8NmPjYFEq1USFgYHAcuDa/zvgZLbc4YptreNqQlUb4rleKs0j7gM13w+FL+bIShqQ5iw
+         qjgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=fL8qsLGBM/IPR09zWS//pHasnl5f9Z89rLX6wisoxpA=;
-        b=j54x/+gqFGhlUaxVOlsmYxhHSxBPiqYQ1mOc2M/bUIMLHdg7wVAgGkqdBssnwlCto8
-         K5Btk6bUrJrP1GLjFhf4j2WZ3R+C4WBETQHgoKB9LocFntu3SrfSVt1D7T4MtopA7b75
-         8s0EMBR0Z2a9xmJEcD/Ne0KwjMbU1/WYp+umHKREEWXoOCtxHQhuYDAB7rlSKxfkccJL
-         zDhL+ivsU2x+DqUYTEkh5RmD+H9LqjFHe9TGUeXoBgoMB4TcWfUM5Y+nDwZugFeK5ETw
-         giLlGEETf9tSfUhCF8ieHGVC3mKdrGE77rCl9YiH/C54Mwr7QvpOFZHPTkg1YVjBYhm1
-         o/PA==
-X-Gm-Message-State: APjAAAWqx1n+TtyKsOezhfG7uw5suPrQYt87xdajooB9EIYko98rhSMR
-        42fDXTdhY0siUgfUsB8mWnh828hbjsg=
-X-Google-Smtp-Source: APXvYqwaHgQXVHhsknYTntlZp7XJSoEPrduFM2tzyZxSUQj9oq3ZtYk+KJ9586R11tsBbQ1lahxQuQ==
-X-Received: by 2002:adf:f20d:: with SMTP id p13mr19164875wro.325.1573900413478;
-        Sat, 16 Nov 2019 02:33:33 -0800 (PST)
+        bh=u7sWlRTtJZbCyQnn5ZHc11ljJpmynwZ/nJM+RgdZP2o=;
+        b=pVjDGLHFCZbJxRdUNcj2cBBS2PZW/YAF9yEAQjJ0tUdk/OEYuIbBFNPA++8q9V0ZPL
+         rzjZV4zlocXhAiusAsxEIuVhO1rFntbj4OEfU+FU48C/lEICZv/Cb0ufw2pfSFMDvkVT
+         niyPr25fZ3FS4gpsh0qlzog1WNArU9GdjL0GnH2aXvPhQn955iWn1dac0iF7vssLHi0s
+         9Qt5QN2zwSF/vkVQcsYcYL4CR34/5Pw1UURu4EJH1/87VLOwLInbD1qrjhrL3S+aijts
+         WDuWRQKuT1MfXmBsYuUy/Xy/cxSt+UEvGbJEQiFfHUXe2itqt4T14ne/oK/DVXNWYNy+
+         X4pg==
+X-Gm-Message-State: APjAAAU9XcRX8Sz8wICxp0nm28AiSxWV1eVFfvBP5JjLVxcIAOdr6TBZ
+        rh5yA+ixVlmzNi1Py3H0MkcmkDy7JX0=
+X-Google-Smtp-Source: APXvYqxZ8UVbB+zy1Bv0f9sgpKENicxNcTem6ozka/GXsxwDo7Qrr4xhih0i6K7EU8XjxPZ81lYEHg==
+X-Received: by 2002:a05:600c:2253:: with SMTP id a19mr19706122wmm.97.1573900414620;
+        Sat, 16 Nov 2019 02:33:34 -0800 (PST)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id t14sm14680522wrw.87.2019.11.16.02.33.32
+        by smtp.gmail.com with ESMTPSA id t14sm14680522wrw.87.2019.11.16.02.33.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Nov 2019 02:33:32 -0800 (PST)
+        Sat, 16 Nov 2019 02:33:34 -0800 (PST)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
         ttayar@habana.ai
 Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH 2/3] habanalabs: use defines for F/W files
-Date:   Sat, 16 Nov 2019 12:33:28 +0200
-Message-Id: <20191116103329.30171-2-oded.gabbay@gmail.com>
+Subject: [PATCH 3/3] habanalabs: make code more concise
+Date:   Sat, 16 Nov 2019 12:33:29 +0200
+Message-Id: <20191116103329.30171-3-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191116103329.30171-1-oded.gabbay@gmail.com>
 References: <20191116103329.30171-1-oded.gabbay@gmail.com>
@@ -71,58 +71,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make the code more concise and maintainable by using defines for the F/W
-files.
+Instead of doing if inside if, just write them with && operator.
 
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/goya/goya.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/misc/habanalabs/habanalabs_ioctl.c | 22 +++++++++-------------
+ 1 file changed, 9 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 70bdaeffb6ce..c8d16aa4382c 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -72,6 +72,9 @@
-  *
-  */
+diff --git a/drivers/misc/habanalabs/habanalabs_ioctl.c b/drivers/misc/habanalabs/habanalabs_ioctl.c
+index 02d7491fa28f..5d9c269d99db 100644
+--- a/drivers/misc/habanalabs/habanalabs_ioctl.c
++++ b/drivers/misc/habanalabs/habanalabs_ioctl.c
+@@ -60,7 +60,7 @@ static int hw_ip_info(struct hl_device *hdev, struct hl_info_args *args)
+ 	hw_ip.tpc_enabled_mask = prop->tpc_enabled_mask;
+ 	hw_ip.sram_size = prop->sram_size - sram_kmd_size;
+ 	hw_ip.dram_size = prop->dram_size - dram_kmd_size;
+-	if (hw_ip.dram_size > 0)
++	if (hw_ip.dram_size > PAGE_SIZE)
+ 		hw_ip.dram_enabled = 1;
+ 	hw_ip.num_of_events = prop->num_of_events;
  
-+#define GOYA_UBOOT_FW_FILE	"habanalabs/goya/goya-u-boot.bin"
-+#define GOYA_LINUX_FW_FILE	"habanalabs/goya/goya-fit.itb"
+@@ -184,17 +184,14 @@ static int debug_coresight(struct hl_device *hdev, struct hl_debug_args *args)
+ 		goto out;
+ 	}
+ 
+-	if (output) {
+-		if (copy_to_user((void __user *) (uintptr_t) args->output_ptr,
+-					output,
+-					args->output_size)) {
+-			dev_err(hdev->dev,
+-				"copy to user failed in debug ioctl\n");
+-			rc = -EFAULT;
+-			goto out;
+-		}
++	if (output && copy_to_user((void __user *) (uintptr_t) args->output_ptr,
++					output, args->output_size)) {
++		dev_err(hdev->dev, "copy to user failed in debug ioctl\n");
++		rc = -EFAULT;
++		goto out;
+ 	}
+ 
 +
- #define GOYA_MMU_REGS_NUM		63
+ out:
+ 	kfree(params);
+ 	kfree(output);
+@@ -434,9 +431,8 @@ static long _hl_ioctl(struct file *filep, unsigned int cmd, unsigned long arg,
  
- #define GOYA_DMA_POOL_BLK_SIZE		0x100		/* 256 bytes */
-@@ -2163,13 +2166,11 @@ static void goya_halt_engines(struct hl_device *hdev, bool hard_reset)
-  */
- static int goya_push_uboot_to_device(struct hl_device *hdev)
- {
--	char fw_name[200];
- 	void __iomem *dst;
+ 	retcode = func(hpriv, kdata);
  
--	snprintf(fw_name, sizeof(fw_name), "habanalabs/goya/goya-u-boot.bin");
- 	dst = hdev->pcie_bar[SRAM_CFG_BAR_ID] + UBOOT_FW_OFFSET;
+-	if (cmd & IOC_OUT)
+-		if (copy_to_user((void __user *)arg, kdata, usize))
+-			retcode = -EFAULT;
++	if ((cmd & IOC_OUT) && copy_to_user((void __user *)arg, kdata, usize))
++		retcode = -EFAULT;
  
--	return hl_fw_push_fw_to_device(hdev, fw_name, dst);
-+	return hl_fw_push_fw_to_device(hdev, GOYA_UBOOT_FW_FILE, dst);
- }
- 
- /*
-@@ -2182,13 +2183,11 @@ static int goya_push_uboot_to_device(struct hl_device *hdev)
-  */
- static int goya_push_linux_to_device(struct hl_device *hdev)
- {
--	char fw_name[200];
- 	void __iomem *dst;
- 
--	snprintf(fw_name, sizeof(fw_name), "habanalabs/goya/goya-fit.itb");
- 	dst = hdev->pcie_bar[DDR_BAR_ID] + LINUX_FW_OFFSET;
- 
--	return hl_fw_push_fw_to_device(hdev, fw_name, dst);
-+	return hl_fw_push_fw_to_device(hdev, GOYA_LINUX_FW_FILE, dst);
- }
- 
- static int goya_pldm_init_cpu(struct hl_device *hdev)
+ out_err:
+ 	if (retcode)
 -- 
 2.17.1
 
