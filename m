@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A682AC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CE1C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7702C21887
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 239D321887
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919629;
-	bh=/UzbN4KAa0Te1SaklwVyPaEjx3xLax6KeNPcYLJw6HE=;
+	s=default; t=1573919631;
+	bh=l4vparjXE7s9TQNJo7G5ramjuZ7Osol/anGZJCpStGk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bmZ10oH3XyBllapZ5gDwHzs48oxk+8pfA1pXxQs1ooaLM12FMdaxbElgjBKaysgKQ
-	 GcV2T3VTIlfWOk0oeIjOZXJzGGOYj6DWN2QtcaRHwRwgiaGWgQwHlK8/1s6t5r1BMi
-	 Lpe88UfMh3DARqmLN2VOxEUnJJ+JS/8PJuICg1Dk=
+	b=0SQv5SK+FXqO4lXgeX3pLEeQcHclrcit/Q+HF6Hu2yuQjyvUdFMRhBDlbJXN06G4k
+	 qOBV0JSv0+f6gNoI8vD3zhlAyjZ7Vz1sKpN0UQvpYHS6pQWmmTKERujCB4d3OcEy00
+	 4KfZRslePtws1okvk55DCJRI5Ae4/s4rKFwu1wfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731299AbfKPPxr (ORCPT
+        id S1731322AbfKPPxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:53:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34954 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:53:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731289AbfKPPxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:53:44 -0500
+        id S1731289AbfKPPxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:53:48 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30DB9218DE;
-        Sat, 16 Nov 2019 15:53:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5DB821887;
+        Sat, 16 Nov 2019 15:53:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919623;
-        bh=/UzbN4KAa0Te1SaklwVyPaEjx3xLax6KeNPcYLJw6HE=;
+        s=default; t=1573919628;
+        bh=l4vparjXE7s9TQNJo7G5ramjuZ7Osol/anGZJCpStGk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JLCLXMUpeHsbHo536OXZXLy6F7HBqrerNS/vZaXBtD5XwblpHGETlXIVQoEpEV4ee
-         QAywW79XtY4FL5TonICTrkhU5gE5mS6sQzYgaL7mpCbXXKWCXcleEdROJSm+8q4kJ3
-         AbpLnK9EK4IoSQNN1X7yM5GHm/TG5H+iP7R8Imk4=
+        b=LANEmuhi0A7h63ROWAeWd1S4H3Oc+KR2ODsaY3JcHVoMF2RJfwyUzK4XFxlw8m6Pp
+         Ya7KAFkLEql0bzYswL8lu9siMAUeuIw6Zp+IRmMUW14SGcSKy7cME59ITHDcf+mx5t
+         UcKYvSb0105rRWG4b93QzMhcDv1MJzbD9ejo7xf0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sam Bobroff <sbobroff@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.4 06/77] powerpc/eeh: Fix use of EEH_PE_KEEP on wrong field
-Date:   Sat, 16 Nov 2019 10:52:28 -0500
-Message-Id: <20191116155339.11909-6-sashal@kernel.org>
+Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 08/77] spi: sh-msiof: fix deferred probing
+Date:   Sat, 16 Nov 2019 10:52:30 -0500
+Message-Id: <20191116155339.11909-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -59,41 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Bobroff <sbobroff@linux.ibm.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-[ Upstream commit 473af09b56dc4be68e4af33220ceca6be67aa60d ]
+[ Upstream commit f34c6e6257aa477cdfe7e9bbbecd3c5648ecda69 ]
 
-eeh_add_to_parent_pe() sometimes removes the EEH_PE_KEEP flag, but it
-incorrectly removes it from pe->type, instead of pe->state.
+Since commit 9ec36cafe43b ("of/irq: do irq resolution in platform_get_irq")
+platform_get_irq() can return -EPROBE_DEFER. However, the driver overrides
+an error returned by that function with -ENOENT which breaks the deferred
+probing. Propagate upstream an error code returned by platform_get_irq()
+and remove the bogus "platform" from the error message, while at it...
 
-However, rather than clearing it from the correct field, remove it.
-Inspection of the code shows that it can't ever have had any effect
-(even if it had been cleared from the correct field), because the
-field is never tested after it is cleared by the statement in
-question.
-
-The clear statement was added by commit 807a827d4e74 ("powerpc/eeh:
-Keep PE during hotplug"), but it didn't explain why it was necessary.
-
-Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: 9ec36cafe43b ("of/irq: do irq resolution in platform_get_irq")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/eeh_pe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-sh-msiof.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kernel/eeh_pe.c b/arch/powerpc/kernel/eeh_pe.c
-index 304f07cfa2622..4d4c32d0e6cee 100644
---- a/arch/powerpc/kernel/eeh_pe.c
-+++ b/arch/powerpc/kernel/eeh_pe.c
-@@ -367,7 +367,7 @@ int eeh_add_to_parent_pe(struct eeh_dev *edev)
- 		while (parent) {
- 			if (!(parent->type & EEH_PE_INVALID))
- 				break;
--			parent->type &= ~(EEH_PE_INVALID | EEH_PE_KEEP);
-+			parent->type &= ~EEH_PE_INVALID;
- 			parent = parent->parent;
- 		}
+diff --git a/drivers/spi/spi-sh-msiof.c b/drivers/spi/spi-sh-msiof.c
+index 03b566848da63..b4f136d04a2b1 100644
+--- a/drivers/spi/spi-sh-msiof.c
++++ b/drivers/spi/spi-sh-msiof.c
+@@ -1198,8 +1198,8 @@ static int sh_msiof_spi_probe(struct platform_device *pdev)
+ 
+ 	i = platform_get_irq(pdev, 0);
+ 	if (i < 0) {
+-		dev_err(&pdev->dev, "cannot get platform IRQ\n");
+-		ret = -ENOENT;
++		dev_err(&pdev->dev, "cannot get IRQ\n");
++		ret = i;
+ 		goto err1;
+ 	}
  
 -- 
 2.20.1
