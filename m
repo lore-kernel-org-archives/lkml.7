@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F08C9C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F319C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C18B821479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF02821479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921243;
-	bh=mWW3zUmpWqa8PsbRflRCuBiivAf9/7lamvMNjRLzUvc=;
+	s=default; t=1573921247;
+	bh=0tPbmlMoHUmKUKg4UP3KeQMU9iKDfEP/BR6bOzr6vMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2YZFE6NGOHNRzIKubsjgrQYLW9MrtGZY8at4k4nbokuPNId9YmOzQbJpWIfrmT8tG
-	 4UWEGUkS7kQpH0q/mCLMSTu4D7nnFUrD3nRWTMFN0PM636bO2Z7cp55YAkORqKusDr
-	 hinGCqepTjwwVeLPLNJ+hfeVuoZ1+BtLMNhtempk=
+	b=2oBTKmmzhphFFK0sVzSW9HPODXz7KxzJHq5yW4NH+fH1iMOj7D0RA54z+sF8It/Wr
+	 YTY8e43UPR9T1Fzl2VSQkqdRwwOrLED7DdR4Uxg5oWjVtUyC7n8TywX7YWfdDwz6GH
+	 u3kPWFMaFJew53rYk0R/oyRZX1IGfr9FheNoDrM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731813AbfKPQUm (ORCPT
+        id S1728945AbfKPPoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:20:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49190 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:44:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728951AbfKPPoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:44:25 -0500
+        id S1727880AbfKPPoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:44:14 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19A9020815;
-        Sat, 16 Nov 2019 15:44:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E1332073B;
+        Sat, 16 Nov 2019 15:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919064;
-        bh=mWW3zUmpWqa8PsbRflRCuBiivAf9/7lamvMNjRLzUvc=;
+        s=default; t=1573919054;
+        bh=0tPbmlMoHUmKUKg4UP3KeQMU9iKDfEP/BR6bOzr6vMA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D8KYDIXPgrdwqNyb+ZWF3InfmVqKiOyO7jsio7B5wHCJ6lOiyCG0SYrl0lhy5f5+m
-         n06Y3FCbVh9XKCLOcSFHW4wpDnXJJSKbrB1JSHs07iiyzNY0l13jemR40I0YNLXsHr
-         uvkxOlXWlz+mFCmIrQm02E9TKWaZh9aBE3Edtztw=
+        b=q9rhmkTjaTKSnRykUWYF07tdz/dju/iLYzHM7HQWrCufnztGFEHFVCiW7PO2kU1ki
+         KNwY5/1qlf3eLJfgYu5ZuKVixOdJKWrchhPlY4W6/Hp5bwzOroq66qvTzjJZkrQ4h0
+         7q1Vow3qxbH576OxqxpeN+lv3liJ5zHessR1O5/c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jianchao Wang <jianchao.w.wang@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 136/237] block: fix the DISCARD request merge
-Date:   Sat, 16 Nov 2019 10:39:31 -0500
-Message-Id: <20191116154113.7417-136-sashal@kernel.org>
+Cc:     Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.19 130/237] mm/page-writeback.c: fix range_cyclic writeback vs writepages deadlock
+Date:   Sat, 16 Nov 2019 10:39:25 -0500
+Message-Id: <20191116154113.7417-130-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,111 +61,245 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jianchao Wang <jianchao.w.wang@oracle.com>
+From: Dave Chinner <dchinner@redhat.com>
 
-[ Upstream commit 69840466086d2248898020a08dda52732686c4e6 ]
+[ Upstream commit 64081362e8ff4587b4554087f3cfc73d3e0a4cd7 ]
 
-There are two cases when handle DISCARD merge.
-If max_discard_segments == 1, the bios/requests need to be contiguous
-to merge. If max_discard_segments > 1, it takes every bio as a range
-and different range needn't to be contiguous.
+We've recently seen a workload on XFS filesystems with a repeatable
+deadlock between background writeback and a multi-process application
+doing concurrent writes and fsyncs to a small range of a file.
 
-But now, attempt_merge screws this up. It always consider contiguity
-for DISCARD for the case max_discard_segments > 1 and cannot merge
-contiguous DISCARD for the case max_discard_segments == 1, because
-rq_attempt_discard_merge always returns false in this case.
-This patch fixes both of the two cases above.
+range_cyclic
+writeback		Process 1		Process 2
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jianchao Wang <jianchao.w.wang@oracle.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+xfs_vm_writepages
+  write_cache_pages
+    writeback_index = 2
+    cycled = 0
+    ....
+    find page 2 dirty
+    lock Page 2
+    ->writepage
+      page 2 writeback
+      page 2 clean
+      page 2 added to bio
+    no more pages
+			write()
+			locks page 1
+			dirties page 1
+			locks page 2
+			dirties page 1
+			fsync()
+			....
+			xfs_vm_writepages
+			write_cache_pages
+			  start index 0
+			  find page 1 towrite
+			  lock Page 1
+			  ->writepage
+			    page 1 writeback
+			    page 1 clean
+			    page 1 added to bio
+			  find page 2 towrite
+			  lock Page 2
+			  page 2 is writeback
+			  <blocks>
+						write()
+						locks page 1
+						dirties page 1
+						fsync()
+						....
+						xfs_vm_writepages
+						write_cache_pages
+						  start index 0
+
+    !done && !cycled
+      sets index to 0, restarts lookup
+    find page 1 dirty
+						  find page 1 towrite
+						  lock Page 1
+						  page 1 is writeback
+						  <blocks>
+
+    lock Page 1
+    <blocks>
+
+DEADLOCK because:
+
+	- process 1 needs page 2 writeback to complete to make
+	  enough progress to issue IO pending for page 1
+	- writeback needs page 1 writeback to complete so process 2
+	  can progress and unlock the page it is blocked on, then it
+	  can issue the IO pending for page 2
+	- process 2 can't make progress until process 1 issues IO
+	  for page 1
+
+The underlying cause of the problem here is that range_cyclic writeback is
+processing pages in descending index order as we hold higher index pages
+in a structure controlled from above write_cache_pages().  The
+write_cache_pages() caller needs to be able to submit these pages for IO
+before write_cache_pages restarts writeback at mapping index 0 to avoid
+wcp inverting the page lock/writeback wait order.
+
+generic_writepages() is not susceptible to this bug as it has no private
+context held across write_cache_pages() - filesystems using this
+infrastructure always submit pages in ->writepage immediately and so there
+is no problem with range_cyclic going back to mapping index 0.
+
+However:
+	mpage_writepages() has a private bio context,
+	exofs_writepages() has page_collect
+	fuse_writepages() has fuse_fill_wb_data
+	nfs_writepages() has nfs_pageio_descriptor
+	xfs_vm_writepages() has xfs_writepage_ctx
+
+All of these ->writepages implementations can hold pages under writeback
+in their private structures until write_cache_pages() returns, and hence
+they are all susceptible to this deadlock.
+
+Also worth noting is that ext4 has it's own bastardised version of
+write_cache_pages() and so it /may/ have an equivalent deadlock.  I looked
+at the code long enough to understand that it has a similar retry loop for
+range_cyclic writeback reaching the end of the file and then promptly ran
+away before my eyes bled too much.  I'll leave it for the ext4 developers
+to determine if their code is actually has this deadlock and how to fix it
+if it has.
+
+There's a few ways I can see avoid this deadlock.  There's probably more,
+but these are the first I've though of:
+
+1. get rid of range_cyclic altogether
+
+2. range_cyclic always stops at EOF, and we start again from
+writeback index 0 on the next call into write_cache_pages()
+
+2a. wcp also returns EAGAIN to ->writepages implementations to
+indicate range cyclic has hit EOF. writepages implementations can
+then flush the current context and call wpc again to continue. i.e.
+lift the retry into the ->writepages implementation
+
+3. range_cyclic uses trylock_page() rather than lock_page(), and it
+skips pages it can't lock without blocking. It will already do this
+for pages under writeback, so this seems like a no-brainer
+
+3a. all non-WB_SYNC_ALL writeback uses trylock_page() to avoid
+blocking as per pages under writeback.
+
+I don't think #1 is an option - range_cyclic prevents frequently
+dirtied lower file offset from starving background writeback of
+rarely touched higher file offsets.
+
+#2 is simple, and I don't think it will have any impact on
+performance as going back to the start of the file implies an
+immediate seek. We'll have exactly the same number of seeks if we
+switch writeback to another inode, and then come back to this one
+later and restart from index 0.
+
+#2a is pretty much "status quo without the deadlock". Moving the
+retry loop up into the wcp caller means we can issue IO on the
+pending pages before calling wcp again, and so avoid locking or
+waiting on pages in the wrong order. I'm not convinced we need to do
+this given that we get the same thing from #2 on the next writeback
+call from the writeback infrastructure.
+
+#3 is really just a band-aid - it doesn't fix the access/wait
+inversion problem, just prevents it from becoming a deadlock
+situation. I'd prefer we fix the inversion, not sweep it under the
+carpet like this.
+
+#3a is really an optimisation that just so happens to include the
+band-aid fix of #3.
+
+So it seems that the simplest way to fix this issue is to implement
+solution #2
+
+Link: http://lkml.kernel.org/r/20181005054526.21507-1-david@fromorbit.com
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Jan Kara <jack@suse.de>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-merge.c | 46 ++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 36 insertions(+), 10 deletions(-)
+ mm/page-writeback.c | 33 +++++++++++++++------------------
+ 1 file changed, 15 insertions(+), 18 deletions(-)
 
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 2e042190a4f1c..1dced51de1c6c 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -669,6 +669,31 @@ static void blk_account_io_merge(struct request *req)
- 		part_stat_unlock();
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index ea4fd3af3b4bd..43df0c52e1ccb 100644
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -2149,6 +2149,13 @@ EXPORT_SYMBOL(tag_pages_for_writeback);
+  * not miss some pages (e.g., because some other process has cleared TOWRITE
+  * tag we set). The rule we follow is that TOWRITE tag can be cleared only
+  * by the process clearing the DIRTY tag (and submitting the page for IO).
++ *
++ * To avoid deadlocks between range_cyclic writeback and callers that hold
++ * pages in PageWriteback to aggregate IO until write_cache_pages() returns,
++ * we do not loop back to the start of the file. Doing so causes a page
++ * lock/page writeback access order inversion - we should only ever lock
++ * multiple pages in ascending page->index order, and looping back to the start
++ * of the file violates that rule and causes deadlocks.
+  */
+ int write_cache_pages(struct address_space *mapping,
+ 		      struct writeback_control *wbc, writepage_t writepage,
+@@ -2163,7 +2170,6 @@ int write_cache_pages(struct address_space *mapping,
+ 	pgoff_t index;
+ 	pgoff_t end;		/* Inclusive */
+ 	pgoff_t done_index;
+-	int cycled;
+ 	int range_whole = 0;
+ 	int tag;
+ 
+@@ -2171,23 +2177,17 @@ int write_cache_pages(struct address_space *mapping,
+ 	if (wbc->range_cyclic) {
+ 		writeback_index = mapping->writeback_index; /* prev offset */
+ 		index = writeback_index;
+-		if (index == 0)
+-			cycled = 1;
+-		else
+-			cycled = 0;
+ 		end = -1;
+ 	} else {
+ 		index = wbc->range_start >> PAGE_SHIFT;
+ 		end = wbc->range_end >> PAGE_SHIFT;
+ 		if (wbc->range_start == 0 && wbc->range_end == LLONG_MAX)
+ 			range_whole = 1;
+-		cycled = 1; /* ignore range_cyclic tests */
  	}
- }
-+/*
-+ * Two cases of handling DISCARD merge:
-+ * If max_discard_segments > 1, the driver takes every bio
-+ * as a range and send them to controller together. The ranges
-+ * needn't to be contiguous.
-+ * Otherwise, the bios/requests will be handled as same as
-+ * others which should be contiguous.
-+ */
-+static inline bool blk_discard_mergable(struct request *req)
-+{
-+	if (req_op(req) == REQ_OP_DISCARD &&
-+	    queue_max_discard_segments(req->q) > 1)
-+		return true;
-+	return false;
-+}
+ 	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
+ 		tag = PAGECACHE_TAG_TOWRITE;
+ 	else
+ 		tag = PAGECACHE_TAG_DIRTY;
+-retry:
+ 	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
+ 		tag_pages_for_writeback(mapping, index, end);
+ 	done_index = index;
+@@ -2279,17 +2279,14 @@ int write_cache_pages(struct address_space *mapping,
+ 		pagevec_release(&pvec);
+ 		cond_resched();
+ 	}
+-	if (!cycled && !done) {
+-		/*
+-		 * range_cyclic:
+-		 * We hit the last page and there is more work to be done: wrap
+-		 * back to the start of the file
+-		 */
+-		cycled = 1;
+-		index = 0;
+-		end = writeback_index - 1;
+-		goto retry;
+-	}
 +
-+enum elv_merge blk_try_req_merge(struct request *req, struct request *next)
-+{
-+	if (blk_discard_mergable(req))
-+		return ELEVATOR_DISCARD_MERGE;
-+	else if (blk_rq_pos(req) + blk_rq_sectors(req) == blk_rq_pos(next))
-+		return ELEVATOR_BACK_MERGE;
-+
-+	return ELEVATOR_NO_MERGE;
-+}
++	/*
++	 * If we hit the last page and there is more work to be done: wrap
++	 * back the index back to the start of the file for the next
++	 * time we are called.
++	 */
++	if (wbc->range_cyclic && !done)
++		done_index = 0;
+ 	if (wbc->range_cyclic || (range_whole && wbc->nr_to_write > 0))
+ 		mapping->writeback_index = done_index;
  
- /*
-  * For non-mq, this has to be called with the request spinlock acquired.
-@@ -686,12 +711,6 @@ static struct request *attempt_merge(struct request_queue *q,
- 	if (req_op(req) != req_op(next))
- 		return NULL;
- 
--	/*
--	 * not contiguous
--	 */
--	if (blk_rq_pos(req) + blk_rq_sectors(req) != blk_rq_pos(next))
--		return NULL;
--
- 	if (rq_data_dir(req) != rq_data_dir(next)
- 	    || req->rq_disk != next->rq_disk
- 	    || req_no_special_merge(next))
-@@ -715,11 +734,19 @@ static struct request *attempt_merge(struct request_queue *q,
- 	 * counts here. Handle DISCARDs separately, as they
- 	 * have separate settings.
- 	 */
--	if (req_op(req) == REQ_OP_DISCARD) {
-+
-+	switch (blk_try_req_merge(req, next)) {
-+	case ELEVATOR_DISCARD_MERGE:
- 		if (!req_attempt_discard_merge(q, req, next))
- 			return NULL;
--	} else if (!ll_merge_requests_fn(q, req, next))
-+		break;
-+	case ELEVATOR_BACK_MERGE:
-+		if (!ll_merge_requests_fn(q, req, next))
-+			return NULL;
-+		break;
-+	default:
- 		return NULL;
-+	}
- 
- 	/*
- 	 * If failfast settings disagree or any of the two is already
-@@ -843,8 +870,7 @@ bool blk_rq_merge_ok(struct request *rq, struct bio *bio)
- 
- enum elv_merge blk_try_merge(struct request *rq, struct bio *bio)
- {
--	if (req_op(rq) == REQ_OP_DISCARD &&
--	    queue_max_discard_segments(rq->q) > 1)
-+	if (blk_discard_mergable(rq))
- 		return ELEVATOR_DISCARD_MERGE;
- 	else if (blk_rq_pos(rq) + blk_rq_sectors(rq) == bio->bi_iter.bi_sector)
- 		return ELEVATOR_BACK_MERGE;
 -- 
 2.20.1
 
