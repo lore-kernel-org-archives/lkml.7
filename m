@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E89B0C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37494C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B518B20842
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10D2120842
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919529;
-	bh=20y6msOi7lmlQ6mQ3DWuL9/PRbBq+fbqGSZPVLo2ebQ=;
+	s=default; t=1573919532;
+	bh=dG+zSrw7iEHZfFQEuCJ+9sfjj9LTzYBKGyDmPJzLAbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1OxsubXSQ/Dopv6nGmNsX7F93xCzk8A0bTDTVzotDrq/xqsTFft9z+oZNPSVLIZ5Z
-	 HuHH9ephdqs7ji9tD8o4C3YmKHlDPPDkHg/5jO65xPmZ5uRo5X8zt98eZ6HImnlbAc
-	 LGc7p8+6nXhpLhvGHIvbFOee/OEM8u9ruFCvCt8E=
+	b=1NETVNeMkURH34leS1h9HLVXnQEAsMyvzNx/7BMui3RAYGGX7n0Mj2yMBNz8QXJ7I
+	 tFJWK+nAonrIZ0AxI/zgkaRxoq4p/qgCTW7KjzQGfrobViwIj7gL61Q9Yy+vklK7dE
+	 bUMbT70FtcjHCDsXrsGqIbzGIL7ylw8VzWr3RVZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730077AbfKPPwI (ORCPT
+        id S1730987AbfKPPwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:52:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60910 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:52:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730964AbfKPPwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:52:03 -0500
+        id S1729387AbfKPPwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:52:05 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1F1E20857;
-        Sat, 16 Nov 2019 15:52:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE3C821906;
+        Sat, 16 Nov 2019 15:52:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919523;
-        bh=20y6msOi7lmlQ6mQ3DWuL9/PRbBq+fbqGSZPVLo2ebQ=;
+        s=default; t=1573919525;
+        bh=dG+zSrw7iEHZfFQEuCJ+9sfjj9LTzYBKGyDmPJzLAbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1MounI3om4lsBd5TlhZISoV9L21Zc9G2m0T+V/y7XX8BHPonJe8/9VEEHo3Ih9y2C
-         Qy8TJVVyuM3HGxukFjLcklFsBNZ2wr8BgSKBDACSVDlfX4ebqmdwbvCisd7nUQUUGC
-         Gvfo5sOF20HAyKRqeG9vCosvYf1lmJ4Ot2EWgTBE=
+        b=MbfiH0NS5dAX2UbgKYBsBzkL5qYWtQOCe7pK0GA1nU9j479EFhgn2xQjs+vDKUPHs
+         mTWnSdU99fYqOWJiKe/xba4uhnGuVRvDORgMhbIt1DN2dELf+bVMZn0vImMmGV1OYV
+         KVLgJP7rcqui0nOWEyr2RPtWlkBwGxClxnXFiQmk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 44/99] net: ethernet: ti: cpsw: unsync mcast entries while switch promisc mode
-Date:   Sat, 16 Nov 2019 10:50:07 -0500
-Message-Id: <20191116155103.10971-44-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 47/99] mfd: max8997: Enale irq-wakeup unconditionally
+Date:   Sat, 16 Nov 2019 10:50:10 -0500
+Message-Id: <20191116155103.10971-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -61,40 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 9737cc99dd14b5b8b9d267618a6061feade8ea68 ]
+[ Upstream commit efddff27c886e729a7f84a7205bd84d7d4af7336 ]
 
-After flushing all mcast entries from the table, the ones contained in
-mc list of ndev are not restored when promisc mode is toggled off,
-because they are considered as synched with ALE, thus, in order to
-restore them after promisc mode - reset syncing info. This fix
-touches only switch mode devices, including single port boards
-like Beagle Bone.
+IRQ wake up support for MAX8997 driver was initially configured by
+respective property in pdata. However, after the driver conversion to
+device-tree, setting it was left as 'todo'. Nowadays most of other PMIC MFD
+drivers initialized from device-tree assume that they can be an irq wakeup
+source, so enable it also for MAX8997. This fixes support for wakeup from
+MAX8997 RTC alarm.
 
-Fixes: commit 5da1948969bc
-("net: ethernet: ti: cpsw: fix lost of mcast packets while rx_mode update")
-
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/cpsw.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mfd/max8997.c       | 8 +-------
+ include/linux/mfd/max8997.h | 1 -
+ 2 files changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index d7cb205fe7e26..892b06852e150 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -590,6 +590,7 @@ static void cpsw_set_promiscious(struct net_device *ndev, bool enable)
+diff --git a/drivers/mfd/max8997.c b/drivers/mfd/max8997.c
+index 2d6e2c3927862..4a2fc59d59016 100644
+--- a/drivers/mfd/max8997.c
++++ b/drivers/mfd/max8997.c
+@@ -155,12 +155,6 @@ static struct max8997_platform_data *max8997_i2c_parse_dt_pdata(
  
- 			/* Clear all mcast from ALE */
- 			cpsw_ale_flush_multicast(ale, ALE_ALL_PORTS, -1);
-+			__dev_mc_unsync(ndev, NULL);
+ 	pd->ono = irq_of_parse_and_map(dev->of_node, 1);
  
- 			/* Flood All Unicast Packets to Host port */
- 			cpsw_ale_control_set(ale, 0, ALE_P0_UNI_FLOOD, 1);
+-	/*
+-	 * ToDo: the 'wakeup' member in the platform data is more of a linux
+-	 * specfic information. Hence, there is no binding for that yet and
+-	 * not parsed here.
+-	 */
+-
+ 	return pd;
+ }
+ 
+@@ -248,7 +242,7 @@ static int max8997_i2c_probe(struct i2c_client *i2c,
+ 	 */
+ 
+ 	/* MAX8997 has a power button input. */
+-	device_init_wakeup(max8997->dev, pdata->wakeup);
++	device_init_wakeup(max8997->dev, true);
+ 
+ 	return ret;
+ 
+diff --git a/include/linux/mfd/max8997.h b/include/linux/mfd/max8997.h
+index cf815577bd686..3ae1fe743bc34 100644
+--- a/include/linux/mfd/max8997.h
++++ b/include/linux/mfd/max8997.h
+@@ -178,7 +178,6 @@ struct max8997_led_platform_data {
+ struct max8997_platform_data {
+ 	/* IRQ */
+ 	int ono;
+-	int wakeup;
+ 
+ 	/* ---- PMIC ---- */
+ 	struct max8997_regulator_data *regulators;
 -- 
 2.20.1
 
