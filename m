@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42158C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 05:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C28C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 05:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 248D420830
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 05:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB22920830
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 05:53:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbfKPFxP (ORCPT
+        id S1727544AbfKPFx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 00:53:15 -0500
-Received: from mga14.intel.com ([192.55.52.115]:32565 "EHLO mga14.intel.com"
+        Sat, 16 Nov 2019 00:53:26 -0500
+Received: from mga12.intel.com ([192.55.52.136]:28365 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbfKPFwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725840AbfKPFwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 16 Nov 2019 00:52:45 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 21:52:44 -0800
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Nov 2019 21:52:43 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,311,1569308400"; 
-   d="scan'208";a="208612461"
+   d="scan'208";a="199421723"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga006.jf.intel.com with ESMTP; 15 Nov 2019 21:52:43 -0800
+  by orsmga008.jf.intel.com with ESMTP; 15 Nov 2019 21:52:43 -0800
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id D9215300FDE; Fri, 15 Nov 2019 21:52:43 -0800 (PST)
+        id E5203300FDE; Fri, 15 Nov 2019 21:52:43 -0800 (PST)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
 Cc:     jolsa@kernel.org, linux-kernel@vger.kernel.org,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v7 02/12] perf affinity: Add infrastructure to save/restore affinity
-Date:   Fri, 15 Nov 2019 21:52:19 -0800
-Message-Id: <20191116055229.62002-3-andi@firstfloor.org>
+Subject: [PATCH v7 04/12] perf evlist: Maintain evlist->all_cpus
+Date:   Fri, 15 Nov 2019 21:52:21 -0800
+Message-Id: <20191116055229.62002-5-andi@firstfloor.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191116055229.62002-1-andi@firstfloor.org>
 References: <20191116055229.62002-1-andi@firstfloor.org>
@@ -49,152 +49,186 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-The kernel perf subsystem has to IPI to the target CPU for many
-operations. On systems with many CPUs and when managing many events the
-overhead can be dominated by lots of IPIs.
+Maintain a cpumap in the evlist that is the union of all the cpus
+of the events.
 
-An alternative is to set up CPU affinity in the perf tool, then set up
-all the events for that CPU, and then move on to the next CPU.
-
-Add some affinity management infrastructure to enable such a model.
-Used in followon patches.
+This needs a cpumap merge operation, which is added together
+with tests.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
+v2:
+Add tests for cpu map merge
+Fix handling of duplicates
+Rename _update to _merge
+Factor out sorting.
+Fix handling of NULL maps in merge
+v3:
+Add comments and empty lines to _merge
 ---
+ tools/perf/lib/cpumap.c                  | 57 ++++++++++++++++++++++++
+ tools/perf/lib/evlist.c                  |  1 +
+ tools/perf/lib/include/internal/evlist.h |  1 +
+ tools/perf/lib/include/perf/cpumap.h     |  2 +
+ tools/perf/tests/builtin-test.c          |  5 +++
+ tools/perf/tests/cpumap.c                | 16 +++++++
+ tools/perf/tests/tests.h                 |  1 +
+ 7 files changed, 83 insertions(+)
 
-v2: Use linux/bitmap.h functions.
-v3: Add affinity.c to the python-ext-sources to fix the python
-interface.  Thanks 0day!
----
- tools/perf/util/Build              |  1 +
- tools/perf/util/affinity.c         | 72 ++++++++++++++++++++++++++++++
- tools/perf/util/affinity.h         | 15 +++++++
- tools/perf/util/python-ext-sources |  1 +
- 4 files changed, 89 insertions(+)
- create mode 100644 tools/perf/util/affinity.c
- create mode 100644 tools/perf/util/affinity.h
-
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index aab05e2c01a5..07da6c790b63 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -77,6 +77,7 @@ perf-y += sort.o
- perf-y += hist.o
- perf-y += util.o
- perf-y += cpumap.o
-+perf-y += affinity.o
- perf-y += cputopo.o
- perf-y += cgroup.o
- perf-y += target.o
-diff --git a/tools/perf/util/affinity.c b/tools/perf/util/affinity.c
-new file mode 100644
-index 000000000000..e197b0416f56
---- /dev/null
-+++ b/tools/perf/util/affinity.c
-@@ -0,0 +1,72 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Manage affinity to optimize IPIs inside the kernel perf API. */
-+#define _GNU_SOURCE 1
-+#include <sched.h>
-+#include <stdlib.h>
-+#include <linux/bitmap.h>
-+#include "perf.h"
-+#include "cpumap.h"
-+#include "affinity.h"
-+
-+static int get_cpu_set_size(void)
-+{
-+	int sz = cpu__max_cpu() + 8 - 1;
-+	/*
-+	 * sched_getaffinity doesn't like masks smaller than the kernel.
-+	 * Hopefully that's big enough.
-+	 */
-+	if (sz < 4096)
-+		sz = 4096;
-+	return sz/8;
-+}
-+
-+int affinity__setup(struct affinity *a)
-+{
-+	int cpu_set_size = get_cpu_set_size();
-+
-+	a->orig_cpus = bitmap_alloc(cpu_set_size*8);
-+	if (!a->orig_cpus)
-+		return -1;
-+	sched_getaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
-+	a->sched_cpus = bitmap_alloc(cpu_set_size*8);
-+	if (!a->sched_cpus) {
-+		free(a->orig_cpus);
-+		return -1;
-+	}
-+	bitmap_zero((unsigned long *)a->sched_cpus, cpu_set_size);
-+	a->changed = false;
-+	return 0;
-+}
+diff --git a/tools/perf/lib/cpumap.c b/tools/perf/lib/cpumap.c
+index d81656b4635e..f93f4e703e4c 100644
+--- a/tools/perf/lib/cpumap.c
++++ b/tools/perf/lib/cpumap.c
+@@ -286,3 +286,60 @@ int perf_cpu_map__max(struct perf_cpu_map *map)
+ 
+ 	return max;
+ }
 +
 +/*
-+ * perf_event_open does an IPI internally to the target CPU.
-+ * It is more efficient to change perf's affinity to the target
-+ * CPU and then set up all events on that CPU, so we amortize
-+ * CPU communication.
++ * Merge two cpumaps
++ *
++ * orig either gets freed and replaced with a new map, or reused
++ * with no reference count change (similar to "realloc")
++ * other has its reference count increased.
 + */
-+void affinity__set(struct affinity *a, int cpu)
++
++struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
++					 struct perf_cpu_map *other)
 +{
-+	int cpu_set_size = get_cpu_set_size();
++	int *tmp_cpus;
++	int tmp_len;
++	int i, j, k;
++	struct perf_cpu_map *merged;
 +
-+	if (cpu == -1)
-+		return;
-+	a->changed = true;
-+	set_bit(cpu, a->sched_cpus);
-+	/*
-+	 * We ignore errors because affinity is just an optimization.
-+	 * This could happen for example with isolated CPUs or cpusets.
-+	 * In this case the IPIs inside the kernel's perf API still work.
-+	 */
-+	sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->sched_cpus);
-+	clear_bit(cpu, a->sched_cpus);
++	if (!orig && !other)
++		return NULL;
++	if (!orig) {
++		perf_cpu_map__get(other);
++		return other;
++	}
++	if (!other)
++		return orig;
++	if (orig->nr == other->nr &&
++	    !memcmp(orig->map, other->map, orig->nr * sizeof(int)))
++		return orig;
++
++	tmp_len = orig->nr + other->nr;
++	tmp_cpus = malloc(tmp_len * sizeof(int));
++	if (!tmp_cpus)
++		return NULL;
++
++	/* Standard merge algorithm from wikipedia */
++	i = j = k = 0;
++	while (i < orig->nr && j < other->nr) {
++		if (orig->map[i] <= other->map[j]) {
++			if (orig->map[i] == other->map[j])
++				j++;
++			tmp_cpus[k++] = orig->map[i++];
++		} else
++			tmp_cpus[k++] = other->map[j++];
++	}
++
++	while (i < orig->nr)
++		tmp_cpus[k++] = orig->map[i++];
++
++	while (j < other->nr)
++		tmp_cpus[k++] = other->map[j++];
++	assert(k <= tmp_len);
++
++	merged = cpu_map__trim_new(k, tmp_cpus);
++	free(tmp_cpus);
++	perf_cpu_map__put(orig);
++	return merged;
 +}
+diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
+index 205ddbb80bc1..ae9e65aa2491 100644
+--- a/tools/perf/lib/evlist.c
++++ b/tools/perf/lib/evlist.c
+@@ -54,6 +54,7 @@ static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
+ 
+ 	perf_thread_map__put(evsel->threads);
+ 	evsel->threads = perf_thread_map__get(evlist->threads);
++	evlist->all_cpus = perf_cpu_map__merge(evlist->all_cpus, evsel->cpus);
+ }
+ 
+ static void perf_evlist__propagate_maps(struct perf_evlist *evlist)
+diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
+index a2fbccf1922f..74dc8c3f0b66 100644
+--- a/tools/perf/lib/include/internal/evlist.h
++++ b/tools/perf/lib/include/internal/evlist.h
+@@ -18,6 +18,7 @@ struct perf_evlist {
+ 	int			 nr_entries;
+ 	bool			 has_user_cpus;
+ 	struct perf_cpu_map	*cpus;
++	struct perf_cpu_map	*all_cpus;
+ 	struct perf_thread_map	*threads;
+ 	int			 nr_mmaps;
+ 	size_t			 mmap_len;
+diff --git a/tools/perf/lib/include/perf/cpumap.h b/tools/perf/lib/include/perf/cpumap.h
+index ac9aa497f84a..6a17ad730cbc 100644
+--- a/tools/perf/lib/include/perf/cpumap.h
++++ b/tools/perf/lib/include/perf/cpumap.h
+@@ -12,6 +12,8 @@ LIBPERF_API struct perf_cpu_map *perf_cpu_map__dummy_new(void);
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list);
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__read(FILE *file);
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__get(struct perf_cpu_map *map);
++LIBPERF_API struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
++						     struct perf_cpu_map *other);
+ LIBPERF_API void perf_cpu_map__put(struct perf_cpu_map *map);
+ LIBPERF_API int perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx);
+ LIBPERF_API int perf_cpu_map__nr(const struct perf_cpu_map *cpus);
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 8b286e9b7549..5fa37cf7f283 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -259,6 +259,11 @@ static struct test generic_tests[] = {
+ 		.desc = "Print cpu map",
+ 		.func = test__cpu_map_print,
+ 	},
++	{
++		.desc = "Merge cpu map",
++		.func = test__cpu_map_merge,
++	},
 +
-+void affinity__cleanup(struct affinity *a)
+ 	{
+ 		.desc = "Probe SDT events",
+ 		.func = test__sdt_event,
+diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
+index 8a0d236202b0..4ac56741ac5f 100644
+--- a/tools/perf/tests/cpumap.c
++++ b/tools/perf/tests/cpumap.c
+@@ -120,3 +120,19 @@ int test__cpu_map_print(struct test *test __maybe_unused, int subtest __maybe_un
+ 	TEST_ASSERT_VAL("failed to convert map", cpu_map_print("1-10,12-20,22-30,32-40"));
+ 	return 0;
+ }
++
++int test__cpu_map_merge(struct test *test __maybe_unused, int subtest __maybe_unused)
 +{
-+	int cpu_set_size = get_cpu_set_size();
++	struct perf_cpu_map *a = perf_cpu_map__new("4,2,1");
++	struct perf_cpu_map *b = perf_cpu_map__new("4,5,7");
++	struct perf_cpu_map *c = perf_cpu_map__merge(a, b);
++	char buf[100];
 +
-+	if (a->changed)
-+		sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
-+	free(a->sched_cpus);
-+	free(a->orig_cpus);
++	TEST_ASSERT_VAL("failed to merge map: bad nr", c->nr == 5);
++	cpu_map__snprint(c, buf, sizeof(buf));
++	TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "1-2,4-5,7"));
++	perf_cpu_map__put(a);
++	perf_cpu_map__put(b);
++	perf_cpu_map__put(c);
++	return 0;
 +}
-diff --git a/tools/perf/util/affinity.h b/tools/perf/util/affinity.h
-new file mode 100644
-index 000000000000..008e2c3995b9
---- /dev/null
-+++ b/tools/perf/util/affinity.h
-@@ -0,0 +1,15 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#ifndef AFFINITY_H
-+#define AFFINITY_H 1
-+
-+struct affinity {
-+	unsigned long *orig_cpus;
-+	unsigned long *sched_cpus;
-+	bool changed;
-+};
-+
-+void affinity__cleanup(struct affinity *a);
-+void affinity__set(struct affinity *a, int cpu);
-+int affinity__setup(struct affinity *a);
-+
-+#endif
-diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
-index 9af183860fbd..e7279ea6043a 100644
---- a/tools/perf/util/python-ext-sources
-+++ b/tools/perf/util/python-ext-sources
-@@ -33,3 +33,4 @@ util/trace-event.c
- util/string.c
- util/symbol_fprintf.c
- util/units.c
-+util/affinity.c
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index 9837b6e93023..44b184fd869f 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -98,6 +98,7 @@ int test__event_update(struct test *test, int subtest);
+ int test__event_times(struct test *test, int subtest);
+ int test__backward_ring_buffer(struct test *test, int subtest);
+ int test__cpu_map_print(struct test *test, int subtest);
++int test__cpu_map_merge(struct test *test, int subtest);
+ int test__sdt_event(struct test *test, int subtest);
+ int test__is_printable_array(struct test *test, int subtest);
+ int test__bitmap_print(struct test *test, int subtest);
 -- 
 2.23.0
 
