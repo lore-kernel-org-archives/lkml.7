@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15180C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30226C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7D0221479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F02DD21479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919616;
-	bh=B0Njg5yOngXhHDvGrWZ4jBKX4MpUpoK1cGw/PDSWp/c=;
+	s=default; t=1573919619;
+	bh=SD1+ZK9OmCUCUovyv9SYJ8BesDSNpcNeA9aYJoHtpTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pa8iw8GdYR4QpBDBlrbYVLP4RGd8YZF/fa8jfqnS0KT2Jq18YKc310cK0rceKOxS7
-	 0glvC2CNeOkWN0ifj9MRzNB9Z8AV+oD+JemniKzGXrO2H4+HJ3g9wfB+0Pn8Ra2A3Z
-	 bZmD1uHVBBNXRlqXYlx8l8QUTZuqVgYSBsqrjJII=
+	b=Xl0NcSKlwoJGXJhc+j2GhjctK7e3dWbu+YArZgNriKkeAiMIAvyrAiM8SIFPn3icT
+	 eNLorUAmAWD4aEr+tOctBOpz2PAKDL21Mc0X7R5RNfB4aUZlJJbmGDMfsf01VQ8n6y
+	 rApUYxfDn3HbSbeU8Yy3p5pz1X7xKaTeJ4YD3gV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731278AbfKPPxf (ORCPT
+        id S1731270AbfKPPxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:53:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34656 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:53:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731258AbfKPPxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730507AbfKPPxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 16 Nov 2019 10:53:32 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25AAF2168B;
-        Sat, 16 Nov 2019 15:53:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50DB3218A3;
+        Sat, 16 Nov 2019 15:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919612;
-        bh=B0Njg5yOngXhHDvGrWZ4jBKX4MpUpoK1cGw/PDSWp/c=;
+        s=default; t=1573919611;
+        bh=SD1+ZK9OmCUCUovyv9SYJ8BesDSNpcNeA9aYJoHtpTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q0PZek3q7sxS9Afet8LJCiI3GuvXHBOD26+gSGP7aLQnwt9ZqKd3CuV2ByvO8kO0/
-         +I7inij3aj1upbU1WFaEMTrWTMqr1Mrs2eZ+spsEBHjVMdBmpntXxVo3snHJS4F5la
-         HoGPyGGwzj49K6HEozWX+V6nMUeGko6Db+q3TdcU=
+        b=rwJtf+A1puAUUoh4+J9RzbuPUGDK3eDg5Y8SdBwV2rJFdcBAlVNiCOddWHrSDpc+A
+         v2DI9NMNUpnGmy8+TajxWsdZuqr6txCRxxBBZVOZplsAyfpc97Eb0J80iZSpRNXhAA
+         D67V778dvkoOIaJIco5H0nXeVjTyaEw9DW02Mc0E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Ahern <dsahern@gmail.com>,
-        Donald Sharp <sharpd@cumulusnetworks.com>,
-        Mike Manning <mmanning@vyatta.att-mail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 99/99] ipv6: Fix handling of LLA with VRF and sockets bound to VRF
-Date:   Sat, 16 Nov 2019 10:51:02 -0500
-Message-Id: <20191116155103.10971-99-sashal@kernel.org>
+Cc:     zhong jiang <zhongjiang@huawei.com>,
+        Yang yingliang <yangyingliang@huawei.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 98/99] mm/memory_hotplug: Do not unlock when fails to take the device_hotplug_lock
+Date:   Sat, 16 Nov 2019 10:51:01 -0500
+Message-Id: <20191116155103.10971-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -61,48 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: zhong jiang <zhongjiang@huawei.com>
 
-[ Upstream commit c2027d1e17582903e368abf5d4838b22a98f2b7b ]
+[ Upstream commit d2ab99403ee00d8014e651728a4702ea1ae5e52c ]
 
-A recent commit allows sockets bound to a VRF to receive ipv6 link local
-packets. However, it only works for UDP and worse TCP connection attempts
-to the LLA with the only listener bound to the VRF just hang where as
-before the client gets a reset and connection refused. Fix by adjusting
-ir_iif for LL addresses and packets received through a device enslaved
-to a VRF.
+When adding the memory by probing memory block in sysfs interface, there is an
+obvious issue that we will unlock the device_hotplug_lock when fails to takes it.
 
-Fixes: 6f12fa775530 ("vrf: mark skb for multicast or link-local as enslaved to VRF")
-Reported-by: Donald Sharp <sharpd@cumulusnetworks.com>
-Cc: Mike Manning <mmanning@vyatta.att-mail.com>
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+That issue was introduced in Commit 8df1d0e4a265
+("mm/memory_hotplug: make add_memory() take the device_hotplug_lock")
+
+We should drop out in time when fails to take the device_hotplug_lock.
+
+Fixes: 8df1d0e4a265 ("mm/memory_hotplug: make add_memory() take the device_hotplug_lock")
+Reported-by: Yang yingliang <yangyingliang@huawei.com>
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/tcp_ipv6.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/base/memory.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index 4953466cf98f0..54e2557335c1c 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -693,6 +693,7 @@ static void tcp_v6_init_req(struct request_sock *req,
- 			    const struct sock *sk_listener,
- 			    struct sk_buff *skb)
- {
-+	bool l3_slave = ipv6_l3mdev_skb(TCP_SKB_CB(skb)->header.h6.flags);
- 	struct inet_request_sock *ireq = inet_rsk(req);
- 	const struct ipv6_pinfo *np = inet6_sk(sk_listener);
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index 9f96f1b43c15f..6a3694a4843f8 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -502,7 +502,7 @@ memory_probe_store(struct device *dev, struct device_attribute *attr,
  
-@@ -700,7 +701,7 @@ static void tcp_v6_init_req(struct request_sock *req,
- 	ireq->ir_v6_loc_addr = ipv6_hdr(skb)->daddr;
+ 	ret = lock_device_hotplug_sysfs();
+ 	if (ret)
+-		goto out;
++		return ret;
  
- 	/* So that link locals have meaning */
--	if (!sk_listener->sk_bound_dev_if &&
-+	if ((!sk_listener->sk_bound_dev_if || l3_slave) &&
- 	    ipv6_addr_type(&ireq->ir_v6_rmt_addr) & IPV6_ADDR_LINKLOCAL)
- 		ireq->ir_iif = tcp_v6_iif(skb);
- 
+ 	nid = memory_add_physaddr_to_nid(phys_addr);
+ 	ret = __add_memory(nid, phys_addr,
 -- 
 2.20.1
 
