@@ -2,59 +2,52 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED11C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1D4C43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32CD72184B
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA3F2184B
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919638;
-	bh=kFJth200sPmtszgT2RYC2hQ65ZwtwIBT34N2U7ZQ2VA=;
+	s=default; t=1573919643;
+	bh=MmcJ9yyJiqzSZ3u8XL93f5OPWh7yjOKwUHGqn3LdkBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qWqF17ZLooJFv8opkhw+NMpq4UKEdquB/+9xjtEOXatU2Exg9fZ5BbmggC9wLAasB
-	 iQkXCdE6Y/Jwcrni2WpGp/equphNwUW6bzArGCzII/oz6WvplgRRTsKmjVIWdqvToq
-	 9doBDv9oB0LkfJKUcDJPrww36su+p4f/tYaKRsIQ=
+	b=ptUlGirWaCDhrHuo6b0vfelshetcbxPg0Q5TXxPNLn9fsOJWmLahPUF7oPGiq03Lk
+	 nJZwDLiUSPN0LuKt0FTwN7C5h1FaeA/djZGzHoP3lilcT7UVcVW1/p2FDS3UPj7drB
+	 XQwqSB6RHDBp8PtqDU/BFFzA73NdBZXObGUwVw8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731352AbfKPPx4 (ORCPT
+        id S1731374AbfKPPyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:53:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35174 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:54:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731326AbfKPPxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:53:52 -0500
+        id S1728699AbfKPPx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:53:56 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F951218DE;
-        Sat, 16 Nov 2019 15:53:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C24A1218DE;
+        Sat, 16 Nov 2019 15:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919631;
-        bh=kFJth200sPmtszgT2RYC2hQ65ZwtwIBT34N2U7ZQ2VA=;
+        s=default; t=1573919636;
+        bh=MmcJ9yyJiqzSZ3u8XL93f5OPWh7yjOKwUHGqn3LdkBA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z7mz6469LWzeMbMjOEv63giBfW+8OJCu/DM36vilLQ6hF7aHVnYvUSoTiFYSyyFhq
-         VgoIrigDfTTp6GaNFgv/5Sy68S8e9pRfk7rtD5cWhxAwAPa2kHNlfXkQVlbfDtqSdZ
-         5O02sT3e2oDotYz6fFnCQ8lkneHCna8HA4PG4Moc=
+        b=Uv9E/aiOXrS12EFyTo5pmnYC2yUs4HeTB7YPTRAs44j1uhHnJbPs2HiwML7NHP95u
+         okc7hK5BXc/HKcTfDWHOmvcKg16qhz1SKLswSnh6TJc0pZ1TY5UEX+XOeX5FTbuZd5
+         HuCXX70GBm18DNwWboVjtntuYG3SHFQTy54WwKe8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Duncan Laurie <dlaurie@chromium.org>,
-        Vadim Bendebury <vbendeb@chromium.org>,
-        Stefan Reinauer <reinauer@chromium.org>,
-        Furquan Shaikh <furquan@google.com>,
-        Furquan Shaikh <furquan@chromium.org>,
-        Aaron Durbin <adurbin@chromium.org>,
-        Justin TerAvest <teravest@chromium.org>,
-        Ross Zwisler <zwisler@google.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 11/77] gsmi: Fix bug in append_to_eventlog sysfs handler
-Date:   Sat, 16 Nov 2019 10:52:33 -0500
-Message-Id: <20191116155339.11909-11-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.4 16/77] scsi: isci: Use proper enumerated type in atapi_d2h_reg_frame_handler
+Date:   Sat, 16 Nov 2019 10:52:38 -0500
+Message-Id: <20191116155339.11909-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -67,76 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Duncan Laurie <dlaurie@chromium.org>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 655603de68469adaff16842ac17a5aec9c9ce89b ]
+[ Upstream commit e9e9a103528c7e199ead6e5374c9c52cf16b5802 ]
 
-The sysfs handler should return the number of bytes consumed, which in the
-case of a successful write is the entire buffer.  Also fix a bug where
-param.data_len was being set to (count - (2 * sizeof(u32))) instead of just
-(count - sizeof(u32)).  The latter is correct because we skip over the
-leading u32 which is our param.type, but we were also incorrectly
-subtracting sizeof(u32) on the line where we were actually setting
-param.data_len:
+Clang warns when one enumerated type is implicitly converted to another.
 
-	param.data_len = count - sizeof(u32);
+drivers/scsi/isci/request.c:1629:13: warning: implicit conversion from
+enumeration type 'enum sci_io_status' to different enumeration type
+'enum sci_status' [-Wenum-conversion]
+                        status = SCI_IO_FAILURE_RESPONSE_VALID;
+                               ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/scsi/isci/request.c:1631:12: warning: implicit conversion from
+enumeration type 'enum sci_io_status' to different enumeration type
+'enum sci_status' [-Wenum-conversion]
+                status = SCI_IO_FAILURE_RESPONSE_VALID;
+                       ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This meant that for our example event.kernel_software_watchdog with total
-length 10 bytes, param.data_len was just 2 prior to this change.
+status is of type sci_status but SCI_IO_FAILURE_RESPONSE_VALID is of
+type sci_io_status. Use SCI_FAILURE_IO_RESPONSE_VALID, which is from
+sci_status and has SCI_IO_FAILURE_RESPONSE_VALID's exact value since
+that is what SCI_IO_FAILURE_RESPONSE_VALID is mapped to in the isci.h
+file.
 
-To test, successfully append an event to the log with gsmi sysfs.
-This sample event is for a "Kernel Software Watchdog"
-
-> xxd -g 1 event.kernel_software_watchdog
-0000000: 01 00 00 00 ad de 06 00 00 00
-
-> cat event.kernel_software_watchdog > /sys/firmware/gsmi/append_to_eventlog
-
-> mosys eventlog list | tail -1
-14 | 2012-06-25 10:14:14 | Kernl Event | Software Watchdog
-
-Signed-off-by: Duncan Laurie <dlaurie@chromium.org>
-Reviewed-by: Vadim Bendebury <vbendeb@chromium.org>
-Reviewed-by: Stefan Reinauer <reinauer@chromium.org>
-Signed-off-by: Furquan Shaikh <furquan@google.com>
-Tested-by: Furquan Shaikh <furquan@chromium.org>
-Reviewed-by: Aaron Durbin <adurbin@chromium.org>
-Reviewed-by: Justin TerAvest <teravest@chromium.org>
-[zwisler: updated changelog for 2nd bug fix and upstream]
-Signed-off-by: Ross Zwisler <zwisler@google.com>
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://github.com/ClangBuiltLinux/linux/issues/153
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/google/gsmi.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/scsi/isci/request.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/firmware/google/gsmi.c b/drivers/firmware/google/gsmi.c
-index f1ab05ea56bbc..3c117559f102f 100644
---- a/drivers/firmware/google/gsmi.c
-+++ b/drivers/firmware/google/gsmi.c
-@@ -480,11 +480,10 @@ static ssize_t eventlog_write(struct file *filp, struct kobject *kobj,
- 	if (count < sizeof(u32))
- 		return -EINVAL;
- 	param.type = *(u32 *)buf;
--	count -= sizeof(u32);
- 	buf += sizeof(u32);
+diff --git a/drivers/scsi/isci/request.c b/drivers/scsi/isci/request.c
+index cfd0084f1cd2b..224c9c60834cd 100644
+--- a/drivers/scsi/isci/request.c
++++ b/drivers/scsi/isci/request.c
+@@ -1626,9 +1626,9 @@ static enum sci_status atapi_d2h_reg_frame_handler(struct isci_request *ireq,
  
- 	/* The remaining buffer is the data payload */
--	if (count > gsmi_dev.data_buf->length)
-+	if ((count - sizeof(u32)) > gsmi_dev.data_buf->length)
- 		return -EINVAL;
- 	param.data_len = count - sizeof(u32);
+ 	if (status == SCI_SUCCESS) {
+ 		if (ireq->stp.rsp.status & ATA_ERR)
+-			status = SCI_IO_FAILURE_RESPONSE_VALID;
++			status = SCI_FAILURE_IO_RESPONSE_VALID;
+ 	} else {
+-		status = SCI_IO_FAILURE_RESPONSE_VALID;
++		status = SCI_FAILURE_IO_RESPONSE_VALID;
+ 	}
  
-@@ -504,7 +503,7 @@ static ssize_t eventlog_write(struct file *filp, struct kobject *kobj,
- 
- 	spin_unlock_irqrestore(&gsmi_dev.lock, flags);
- 
--	return rc;
-+	return (rc == 0) ? count : rc;
- 
- }
- 
+ 	if (status != SCI_SUCCESS) {
 -- 
 2.20.1
 
