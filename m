@@ -2,52 +2,53 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0A6C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5407C43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB0F02089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A43112089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920966;
-	bh=joWvDbyWmwlaBdQTIKjS8/wZr1JeRCpZe/Ec4J4cdhA=;
+	s=default; t=1573920969;
+	bh=YRIoyCqFbllyk9Rbao0HAflYjxyFvS7VSLfoVAW4XKI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Piny+UU/0Q5Wac6Orb2+PbQHZ8YqkKYeT1y/sw/4gR/sPgeuSPwy4bu8jaBh4GtpE
-	 C0qrMqGwDxTSoy7Qv5V3TLNpx/GrFjQ5LDv/IRIWqHzRCLk0yLnETyNLehH8HMiONo
-	 WlX3XhqvEhJVB1nzhsYlncVANR3DKdfEFMSYqOBE=
+	b=u6CQACWVYRuDuGK72q1zNwhnR1ofWjZHYjn2vY1a0RkYEEAtHuBeZaEM6UscTex+D
+	 ZBzqhay89JTfF74lucguMwhay4NG/m3lpvzZUOeewFC56LqwCL0cElyUfVMKxr+5UN
+	 ylKftc/ezH1Q4f5rlk88isXJCQmZm6UE/Lf0Cr38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731879AbfKPQQF (ORCPT
+        id S1729621AbfKPPrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:16:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53718 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:47:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729625AbfKPPrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:47:07 -0500
+        id S1729419AbfKPPqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:31 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB78C2084F;
-        Sat, 16 Nov 2019 15:47:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B52C820833;
+        Sat, 16 Nov 2019 15:46:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919226;
-        bh=joWvDbyWmwlaBdQTIKjS8/wZr1JeRCpZe/Ec4J4cdhA=;
+        s=default; t=1573919191;
+        bh=YRIoyCqFbllyk9Rbao0HAflYjxyFvS7VSLfoVAW4XKI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jWq54rnu2mOcs1J5vVAETXXQOQkR/Aj/Ni6ugaiohXCAzwiRqat9oJRngrIUYCOIm
-         sy4HJSjnzQxiY9d5X5irBifUGo7P1O6zkfFdpp5avv0VeeTmooLZngq066N9YKiR5/
-         ZldgFt4qpEYWyQIlaDsQTQQ7g/5g6upPXkB9R1PM=
+        b=Ut1MxyLUNChfpP4BvrP2Xvxu5N7SydHrf6lLioKOmoSsG0n6lIdhUDsTulS7RSZkZ
+         TGUeJmKR6EDHpWpypHG8bSgAuu3vp+6bYTBhlOYW144KeFUI7Ktb3ipECW0Z3ajGtY
+         Tsp9mB+x48+7Wu1EyUEC0tIZU8vSl5ek/QrflQ5M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 229/237] pinctrl: lpc18xx: Use define directive for PIN_CONFIG_GPIO_PIN_INT
-Date:   Sat, 16 Nov 2019 10:41:04 -0500
-Message-Id: <20191116154113.7417-229-sashal@kernel.org>
+Cc:     Brian Norris <briannorris@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 200/237] ath10k: snoc: fix unbalanced clock error handling
+Date:   Sat, 16 Nov 2019 10:40:35 -0500
+Message-Id: <20191116154113.7417-200-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,63 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Brian Norris <briannorris@chromium.org>
 
-[ Upstream commit f24bfb39975c241374cadebbd037c17960cf1412 ]
+[ Upstream commit 82e60d920e8ad70cd9a280ab156566755f1fe4aa ]
 
-Clang warns when one enumerated type is implicitly converted to another:
+Similar to regulator error handling, we should only start tearing down
+the 'i - 1' clock when clock 'i' fails to enable. Otherwise, we might
+end up with an unbalanced clock, where we never successfully enabled the
+clock, but we try to disable it anyway.
 
-drivers/pinctrl/pinctrl-lpc18xx.c:643:29: warning: implicit conversion
-from enumeration type 'enum lpc18xx_pin_config_param' to different
-enumeration type 'enum pin_config_param' [-Wenum-conversion]
-        {"nxp,gpio-pin-interrupt", PIN_CONFIG_GPIO_PIN_INT, 0},
-        ~                          ^~~~~~~~~~~~~~~~~~~~~~~
-drivers/pinctrl/pinctrl-lpc18xx.c:648:12: warning: implicit conversion
-from enumeration type 'enum lpc18xx_pin_config_param' to different
-enumeration type 'enum pin_config_param' [-Wenum-conversion]
-        PCONFDUMP(PIN_CONFIG_GPIO_PIN_INT, "gpio pin int", NULL, true),
-        ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/pinctrl/pinconf-generic.h:163:11: note: expanded from
-macro 'PCONFDUMP'
-        .param = a, .display = b, .format = c, .has_arg = d     \
-                 ^
-2 warnings generated.
-
-It is expected that pinctrl drivers can extend pin_config_param because
-of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
-isn't an issue. Most drivers that take advantage of this define the
-PIN_CONFIG variables as constants, rather than enumerated values. Do the
-same thing here so that Clang no longer warns.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/140
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: a6a793f98786 ("ath10k: vote for hardware resources for WCN3990")
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-lpc18xx.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ drivers/net/wireless/ath/ath10k/snoc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-lpc18xx.c b/drivers/pinctrl/pinctrl-lpc18xx.c
-index 190f17e4bbdaf..1d3b88e6ab862 100644
---- a/drivers/pinctrl/pinctrl-lpc18xx.c
-+++ b/drivers/pinctrl/pinctrl-lpc18xx.c
-@@ -630,14 +630,8 @@ static const struct pinctrl_pin_desc lpc18xx_pins[] = {
- 	LPC18XX_PIN(i2c0_sda, PIN_I2C0_SDA),
- };
+diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
+index fa1843a7e0fda..e2d78f77edb70 100644
+--- a/drivers/net/wireless/ath/ath10k/snoc.c
++++ b/drivers/net/wireless/ath/ath10k/snoc.c
+@@ -1190,7 +1190,7 @@ static int ath10k_wcn3990_clk_init(struct ath10k *ar)
+ 	return 0;
  
--/**
-- * enum lpc18xx_pin_config_param - possible pin configuration parameters
-- * @PIN_CONFIG_GPIO_PIN_INT: route gpio to the gpio pin interrupt
-- * 	controller.
-- */
--enum lpc18xx_pin_config_param {
--	PIN_CONFIG_GPIO_PIN_INT = PIN_CONFIG_END + 1,
--};
-+/* PIN_CONFIG_GPIO_PIN_INT: route gpio to the gpio pin interrupt controller */
-+#define PIN_CONFIG_GPIO_PIN_INT		(PIN_CONFIG_END + 1)
+ err_clock_config:
+-	for (; i >= 0; i--) {
++	for (i = i - 1; i >= 0; i--) {
+ 		clk_info = &ar_snoc->clk[i];
  
- static const struct pinconf_generic_params lpc18xx_params[] = {
- 	{"nxp,gpio-pin-interrupt", PIN_CONFIG_GPIO_PIN_INT, 0},
+ 		if (!clk_info->handle)
 -- 
 2.20.1
 
