@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF78C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E030C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04C5420740
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D9220740
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919242;
-	bh=K6SV6E2fk/vQUx9u9jTQu3pwQlpbEddX+FJVxsoihFk=;
+	s=default; t=1573919244;
+	bh=PBdKjAcHh0/xYmzKeZZ8qeouI77njMrZJRvV4742/wA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TpjblgGlXZwYPeOejswH03NlUOhH0kByhxlTeAVCnzMrauDZhZoUUmySgc1z6RWJS
-	 oPxte2ZKW5HW4IfdqA9HI83vEBMrtgTEEjB0hs5yCwYkPTXXmgv9V8S8VyF0f1m8gB
-	 3EAYK3+sQC49Vuzp2kZ9jO61QKXXlCYEHL5NlL9E=
+	b=pzbSngfGf3XpOuVOE1R9RZGzshRhcPIJSY3DGuXR3nM9o3RIHdwohwKX/wey3j6Uf
+	 Ay0z90LSMmgJh281n5jckG82+eLbbtkFwpwiGqMM3r4wD0y5BmggliElMU8axGPsRR
+	 RxygNXOAeoPZCgT5ersXQU7WYLwJYYgbFUpoCNsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729682AbfKPPrU (ORCPT
+        id S1729690AbfKPPrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:47:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53218 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:47:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729479AbfKPPqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:46:43 -0500
+        id S1729486AbfKPPqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:45 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC5AA20898;
-        Sat, 16 Nov 2019 15:46:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2233E20891;
+        Sat, 16 Nov 2019 15:46:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919203;
-        bh=K6SV6E2fk/vQUx9u9jTQu3pwQlpbEddX+FJVxsoihFk=;
+        s=default; t=1573919204;
+        bh=PBdKjAcHh0/xYmzKeZZ8qeouI77njMrZJRvV4742/wA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kj9CzMvuWmhBftY5IqK3UZ9YpI+dLLh6HbgER8AhjRfBHY4txgrK7N2FndyqY0cI6
-         cU98V9K/u/GN4+gNrCiIMTPYjxHzGHNFvEWSq6XTYA5k0K04CfTwe7sOgfWjB3KI/h
-         QjKqrLa9qhnVvUOETmg6BwPR81qME7qXQ1glZfEI=
+        b=0QkpbPys4DyDwA1k5+xcMW1XeBKKd1Irk7dAW+xenkNb/LabV8XEW3UDfsCw6JQLr
+         hdm0BTyDoh4pbIrs2lhjjlMw/nYbv3aSJJ8te6mto1WHuCiGVGaAm3fQ2GRMZj8xTb
+         rCbILEpiprPciTMjzSzYZowYoR4ZBJ5xKCgdRotg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+Cc:     Suganath Prabu <suganath-prabu.subramani@broadcom.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 205/237] rtlwifi: rtl8192de: Fix misleading REG_MCUFWDL information
-Date:   Sat, 16 Nov 2019 10:40:40 -0500
-Message-Id: <20191116154113.7417-205-sashal@kernel.org>
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 207/237] scsi: mpt3sas: Fix Sync cache command failure during driver unload
+Date:   Sat, 16 Nov 2019 10:40:42 -0500
+Message-Id: <20191116154113.7417-207-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -61,38 +62,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shaokun Zhang <zhangshaokun@hisilicon.com>
+From: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
 
-[ Upstream commit 7d129adff3afbd3a449bc3593f2064ac546d58d3 ]
+[ Upstream commit 9029a72500b95578a35877a43473b82cb0386c53 ]
 
-RT_TRACE shows REG_MCUFWDL value as a decimal value with a '0x'
-prefix, which is somewhat misleading.
+This is to fix SYNC CACHE and START STOP command failures with
+DID_NO_CONNECT during driver unload.
 
-Fix it to print hexadecimal, as was intended.
+In driver's IO submission patch (i.e. in driver's .queuecommand()) driver
+won't allow any SCSI commands to the IOC when ioc->remove_host flag is set
+and hence SYNC CACHE commands which are issued to the target drives (where
+write cache is enabled) during driver unload time is failed with
+DID_NO_CONNECT status.
 
-Cc: Ping-Ke Shih <pkshih@realtek.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Acked-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Now modified the driver to allow SYNC CACHE and START STOP commands to IOC,
+even when remove_host flag is set.
+
+Signed-off-by: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
+Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/mpt3sas/mpt3sas_scsih.c | 36 +++++++++++++++++++++++++++-
+ 1 file changed, 35 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c
-index 85cedd083d2b8..75bfa9dfef4aa 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/fw.c
-@@ -173,7 +173,7 @@ static int _rtl92d_fw_init(struct ieee80211_hw *hw)
- 			 rtl_read_byte(rtlpriv, FW_MAC1_READY));
- 	}
- 	RT_TRACE(rtlpriv, COMP_FW, DBG_DMESG,
--		 "Polling FW ready fail!! REG_MCUFWDL:0x%08ul\n",
-+		 "Polling FW ready fail!! REG_MCUFWDL:0x%08x\n",
- 		 rtl_read_dword(rtlpriv, REG_MCUFWDL));
- 	return -1;
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+index 73d661a0ecbb9..d3c944d997039 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+@@ -3791,6 +3791,40 @@ _scsih_tm_tr_complete(struct MPT3SAS_ADAPTER *ioc, u16 smid, u8 msix_index,
+ 	return _scsih_check_for_pending_tm(ioc, smid);
  }
+ 
++/** _scsih_allow_scmd_to_device - check whether scmd needs to
++ *				 issue to IOC or not.
++ * @ioc: per adapter object
++ * @scmd: pointer to scsi command object
++ *
++ * Returns true if scmd can be issued to IOC otherwise returns false.
++ */
++inline bool _scsih_allow_scmd_to_device(struct MPT3SAS_ADAPTER *ioc,
++	struct scsi_cmnd *scmd)
++{
++
++	if (ioc->pci_error_recovery)
++		return false;
++
++	if (ioc->hba_mpi_version_belonged == MPI2_VERSION) {
++		if (ioc->remove_host)
++			return false;
++
++		return true;
++	}
++
++	if (ioc->remove_host) {
++
++		switch (scmd->cmnd[0]) {
++		case SYNCHRONIZE_CACHE:
++		case START_STOP:
++			return true;
++		default:
++			return false;
++		}
++	}
++
++	return true;
++}
+ 
+ /**
+  * _scsih_sas_control_complete - completion routine
+@@ -4623,7 +4657,7 @@ scsih_qcmd(struct Scsi_Host *shost, struct scsi_cmnd *scmd)
+ 		return 0;
+ 	}
+ 
+-	if (ioc->pci_error_recovery || ioc->remove_host) {
++	if (!(_scsih_allow_scmd_to_device(ioc, scmd))) {
+ 		scmd->result = DID_NO_CONNECT << 16;
+ 		scmd->scsi_done(scmd);
+ 		return 0;
 -- 
 2.20.1
 
