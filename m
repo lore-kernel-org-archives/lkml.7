@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7610C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79951C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF3E206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4807C206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920345;
-	bh=qls5kbsWPuCDNYYjX0eEPWKHkVav8I4/1tEG+ikA4aA=;
+	s=default; t=1573920356;
+	bh=ICBpKs12ZejgGbxnsIPoiqox3+96tRhrr5TqFqHAmGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GKJJv3Yg5VFEFkaHtxLOil7nfuH0mT0D3Afuhii5gy4WWtzm22kP4y+vgEauV4/pl
-	 8MIp8Jtp5SiblcmNmX9IhisTMWKq8YhYTmgbve28Yb6/0iW6tnHT7hMNhQxoEZ9uzC
-	 HnjiR151pl2tgB/X3Ot/xGAqRnWDwAs/EDNNH/AQ=
+	b=PbrdPfhrLePnVFBqutZNd5EkmJu/r5EJ49W8Si2xy1HU6+uDZBNzvgAae7rdya1Ik
+	 LjaqWgtbCJ9Al/dpmk4h0zVKxtKyxKlKT7ZXeKj6WfoI+jLFc80TuXHqjpOZ65lFgv
+	 t+QN1Hcc8nUY/2FxvB3znHmVUT1EjtEOdieK1/Z8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731693AbfKPQFi (ORCPT
+        id S1730680AbfKPPvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:05:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59810 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:51:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730701AbfKPPvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:51:15 -0500
+        id S1728130AbfKPPus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:50:48 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 117592184B;
-        Sat, 16 Nov 2019 15:51:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D03F120729;
+        Sat, 16 Nov 2019 15:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919475;
-        bh=qls5kbsWPuCDNYYjX0eEPWKHkVav8I4/1tEG+ikA4aA=;
+        s=default; t=1573919448;
+        bh=ICBpKs12ZejgGbxnsIPoiqox3+96tRhrr5TqFqHAmGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JAcu5bxGZSMDVslU8MZc2qHQpZgj2zfpJkU/Gh06xElMACqRyGYfpCGi5yX09AHBZ
-         q7y9CWwZaXtlx5Q46wCFjZ1lRPbVMm/3EZDxJdXbUNVR8sIJMpZ12Fn10tq24fZFb/
-         B3Px2yZMswFvUYYNlBiJlkTcWvxWEoUk0qG+L9oU=
+        b=bCzADZsTEQuz8k+DxNtsmtS4f9Pa/toEatMyzyP5egIE6/03s8w0yWE7YuuZkhYjM
+         +Jncefk9XBNg/JlnmlmcqoNASdPQ9beTdOmTINaqQ19oAI13UAs8DdvHDfQXlVDrIS
+         sU8hKWsBr3hhSsGQX4Hn1GDWZZIdpAni6qeqD3kE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+Cc:     Vignesh R <vigneshr@ti.com>, David Lechner <david@lechnology.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 09/99] spi: sh-msiof: fix deferred probing
-Date:   Sat, 16 Nov 2019 10:49:32 -0500
-Message-Id: <20191116155103.10971-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 146/150] spi: omap2-mcspi: Fix DMA and FIFO event trigger size mismatch
+Date:   Sat, 16 Nov 2019 10:47:24 -0500
+Message-Id: <20191116154729.9573-146-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
-References: <20191116155103.10971-1-sashal@kernel.org>
+In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
+References: <20191116154729.9573-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,39 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+From: Vignesh R <vigneshr@ti.com>
 
-[ Upstream commit f34c6e6257aa477cdfe7e9bbbecd3c5648ecda69 ]
+[ Upstream commit baf8b9f8d260c55a86405f70a384c29cda888476 ]
 
-Since commit 9ec36cafe43b ("of/irq: do irq resolution in platform_get_irq")
-platform_get_irq() can return -EPROBE_DEFER. However, the driver overrides
-an error returned by that function with -ENOENT which breaks the deferred
-probing. Propagate upstream an error code returned by platform_get_irq()
-and remove the bogus "platform" from the error message, while at it...
+Commit b682cffa3ac6 ("spi: omap2-mcspi: Set FIFO DMA trigger level to word length")
+broke SPI transfers where bits_per_word != 8. This is because of
+mimsatch between McSPI FIFO level event trigger size (SPI word length) and
+DMA request size(word length * maxburst). This leads to data
+corruption, lockup and errors like:
 
-Fixes: 9ec36cafe43b ("of/irq: do irq resolution in platform_get_irq")
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+	spi1.0: EOW timed out
+
+Fix this by setting DMA maxburst size to 1 so that
+McSPI FIFO level event trigger size matches DMA request size.
+
+Fixes: b682cffa3ac6 ("spi: omap2-mcspi: Set FIFO DMA trigger level to word length")
+Cc: stable@vger.kernel.org
+Reported-by: David Lechner <david@lechnology.com>
+Tested-by: David Lechner <david@lechnology.com>
+Signed-off-by: Vignesh R <vigneshr@ti.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-sh-msiof.c | 4 ++--
+ drivers/spi/spi-omap2-mcspi.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-sh-msiof.c b/drivers/spi/spi-sh-msiof.c
-index 711ea523b3251..8a69148a962a8 100644
---- a/drivers/spi/spi-sh-msiof.c
-+++ b/drivers/spi/spi-sh-msiof.c
-@@ -1198,8 +1198,8 @@ static int sh_msiof_spi_probe(struct platform_device *pdev)
+diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
+index 517d0ade586bd..1db4d3c1d2bfa 100644
+--- a/drivers/spi/spi-omap2-mcspi.c
++++ b/drivers/spi/spi-omap2-mcspi.c
+@@ -625,8 +625,8 @@ omap2_mcspi_txrx_dma(struct spi_device *spi, struct spi_transfer *xfer)
+ 	cfg.dst_addr = cs->phys + OMAP2_MCSPI_TX0;
+ 	cfg.src_addr_width = width;
+ 	cfg.dst_addr_width = width;
+-	cfg.src_maxburst = es;
+-	cfg.dst_maxburst = es;
++	cfg.src_maxburst = 1;
++	cfg.dst_maxburst = 1;
  
- 	i = platform_get_irq(pdev, 0);
- 	if (i < 0) {
--		dev_err(&pdev->dev, "cannot get platform IRQ\n");
--		ret = -ENOENT;
-+		dev_err(&pdev->dev, "cannot get IRQ\n");
-+		ret = i;
- 		goto err1;
- 	}
- 
+ 	rx = xfer->rx_buf;
+ 	tx = xfer->tx_buf;
 -- 
 2.20.1
 
