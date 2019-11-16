@@ -2,52 +2,52 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA826C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA06C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C03CB20854
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6018320857
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919517;
-	bh=AV/zQ3grI4g6c2Q6sjeaJCpxGDoltA1NpCB4s6lo8/0=;
+	s=default; t=1573919524;
+	bh=krZDS5Xres+b4gBKMkpeIRgF9Ij2mTybHD+luW0D7ys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TCHYQJpcRIzYwR3484OwIwUSG1ep/rFkG3FXsL8uFsE2uwwy0hAWXhGMZSQVJc+En
-	 WYcDInh+nje/dCYAMx9tLMscqfMyWkpNITkpoZ2K8aCiwlWrVHRwLmiTiTkJxw1bUT
-	 G0q/ZB7mLkYMAmCdgvy/Vo/Z16SHdawqRApzKMBA=
+	b=dwKeVmG0WuS1QMWrzUPp9hMUhOHd4fQ90rMY/Dawnio+XlPv0F0Qy316Mf2oUDryb
+	 qDOcFfh8bGffR8TJty8ZqFLOHyoaMVlP6X5guYE4eB+75vD89OHa18755xmLuz5n8b
+	 17WUhgUSo/SHNs3aoHJ8VxuWFgzJuqpKSFo8ZftI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730870AbfKPPv4 (ORCPT
+        id S1730039AbfKPPwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:51:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60682 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:52:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730848AbfKPPvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:51:53 -0500
+        id S1730898AbfKPPwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:52:00 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D89CE20859;
-        Sat, 16 Nov 2019 15:51:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B844A2168B;
+        Sat, 16 Nov 2019 15:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919512;
-        bh=AV/zQ3grI4g6c2Q6sjeaJCpxGDoltA1NpCB4s6lo8/0=;
+        s=default; t=1573919520;
+        bh=krZDS5Xres+b4gBKMkpeIRgF9Ij2mTybHD+luW0D7ys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b4yIvZnbYaQquROQWgvPxWIXsSZ4PLahV7uz4mK+b5RMvB7fUE9jrDtOI0sOhkb0R
-         lSvOZT3tDiqWMPn3KiyPU51S/bupN+jx2SkF8TnnBXtzpl2rIopudrXIg8eLd9reSe
-         kCi0uCLp5S3GjyU0lytnk5ffh87oWWdj8IftqQXk=
+        b=zsw5+hD2ZKDeMdelTtYdqmcCRTkpWg3lHu4m8fVm7Omd5GKLUbo/FZVi5knCOujlF
+         0eMYr9LIFBTLh0+ZbwAV4DJPiRz4PdekWaIczXO9m3pTwIV+bzt22+Edxs4ljn00Fm
+         O9FJKab7qq0i+tVxbQ2RoczoOxxoqdZDn2AGHHcw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 34/99] sunrpc: safely reallow resvport min/max inversion
-Date:   Sat, 16 Nov 2019 10:49:57 -0500
-Message-Id: <20191116155103.10971-34-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.9 42/99] mISDN: Fix type of switch control variable in ctrl_teimanager
+Date:   Sat, 16 Nov 2019 10:50:05 -0500
+Message-Id: <20191116155103.10971-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -60,122 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 826799e66e8683e5698e140bb9ef69afc8c0014e ]
+[ Upstream commit aeb5e02aca91522733eb1db595ac607d30c87767 ]
 
-Commits ffb6ca33b04b and e08ea3a96fc7 prevent setting xprt_min_resvport
-greater than xprt_max_resvport, but may also break simple code that sets
-one parameter then the other, if the new range does not overlap the old.
+Clang warns (trimmed for brevity):
 
-Also it looks racy to me, unless there's some serialization I'm not
-seeing.  Granted it would probably require malicious privileged processes
-(unless there's a chance these might eventually be settable in unprivileged
-containers), but still it seems better not to let userspace panic the
-kernel.
+drivers/isdn/mISDN/tei.c:1193:7: warning: overflow converting case value
+to switch condition type (2147764552 to 18446744071562348872) [-Wswitch]
+        case IMHOLD_L1:
+             ^
+drivers/isdn/mISDN/tei.c:1187:7: warning: overflow converting case value
+to switch condition type (2147764550 to 18446744071562348870) [-Wswitch]
+        case IMCLEAR_L2:
+             ^
+2 warnings generated.
 
-Simpler seems to be to allow setting the parameters to whatever you want
-but interpret xprt_min_resvport > xprt_max_resvport as the empty range.
+The root cause is that the _IOC macro can generate really large numbers,
+which don't find into type int. My research into how GCC and Clang are
+handling this at a low level didn't prove fruitful and surveying the
+kernel tree shows that aside from here and a few places in the scsi
+subsystem, everything that uses _IOC is at least of type 'unsigned int'.
+Make that change here because as nothing in this function cares about
+the signedness of the variable and it removes ambiguity, which is never
+good when dealing with compilers.
 
-Fixes: ffb6ca33b04b "sunrpc: Prevent resvport min/max inversion..."
-Fixes: e08ea3a96fc7 "sunrpc: Prevent rexvport min/max inversion..."
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+While we're here, remove the unnecessary local variable ret (just return
+-EINVAL and 0 directly).
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/67
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprtsock.c | 34 ++++++++++++++++++----------------
- 1 file changed, 18 insertions(+), 16 deletions(-)
+ drivers/isdn/mISDN/tei.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 280fb31787084..f3f05148922a1 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -124,7 +124,7 @@ static struct ctl_table xs_tunables_table[] = {
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
- 		.extra1		= &xprt_min_resvport_limit,
--		.extra2		= &xprt_max_resvport
-+		.extra2		= &xprt_max_resvport_limit
- 	},
- 	{
- 		.procname	= "max_resvport",
-@@ -132,7 +132,7 @@ static struct ctl_table xs_tunables_table[] = {
- 		.maxlen		= sizeof(unsigned int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= &xprt_min_resvport,
-+		.extra1		= &xprt_min_resvport_limit,
- 		.extra2		= &xprt_max_resvport_limit
- 	},
- 	{
-@@ -1737,11 +1737,17 @@ static void xs_udp_timer(struct rpc_xprt *xprt, struct rpc_task *task)
- 	xprt_adjust_cwnd(xprt, task, -ETIMEDOUT);
+diff --git a/drivers/isdn/mISDN/tei.c b/drivers/isdn/mISDN/tei.c
+index 592f597d89518..8261afbbafb05 100644
+--- a/drivers/isdn/mISDN/tei.c
++++ b/drivers/isdn/mISDN/tei.c
+@@ -1180,8 +1180,7 @@ static int
+ ctrl_teimanager(struct manager *mgr, void *arg)
+ {
+ 	/* currently we only have one option */
+-	int	*val = (int *)arg;
+-	int	ret = 0;
++	unsigned int *val = (unsigned int *)arg;
+ 
+ 	switch (val[0]) {
+ 	case IMCLEAR_L2:
+@@ -1197,9 +1196,9 @@ ctrl_teimanager(struct manager *mgr, void *arg)
+ 			test_and_clear_bit(OPTION_L1_HOLD, &mgr->options);
+ 		break;
+ 	default:
+-		ret = -EINVAL;
++		return -EINVAL;
+ 	}
+-	return ret;
++	return 0;
  }
  
--static unsigned short xs_get_random_port(void)
-+static int xs_get_random_port(void)
- {
--	unsigned short range = xprt_max_resvport - xprt_min_resvport + 1;
--	unsigned short rand = (unsigned short) prandom_u32() % range;
--	return rand + xprt_min_resvport;
-+	unsigned short min = xprt_min_resvport, max = xprt_max_resvport;
-+	unsigned short range;
-+	unsigned short rand;
-+
-+	if (max < min)
-+		return -EADDRINUSE;
-+	range = max - min + 1;
-+	rand = (unsigned short) prandom_u32() % range;
-+	return rand + min;
- }
- 
- /**
-@@ -1798,9 +1804,9 @@ static void xs_set_srcport(struct sock_xprt *transport, struct socket *sock)
- 		transport->srcport = xs_sock_getport(sock);
- }
- 
--static unsigned short xs_get_srcport(struct sock_xprt *transport)
-+static int xs_get_srcport(struct sock_xprt *transport)
- {
--	unsigned short port = transport->srcport;
-+	int port = transport->srcport;
- 
- 	if (port == 0 && transport->xprt.resvport)
- 		port = xs_get_random_port();
-@@ -1821,7 +1827,7 @@ static int xs_bind(struct sock_xprt *transport, struct socket *sock)
- {
- 	struct sockaddr_storage myaddr;
- 	int err, nloop = 0;
--	unsigned short port = xs_get_srcport(transport);
-+	int port = xs_get_srcport(transport);
- 	unsigned short last;
- 
- 	/*
-@@ -1839,8 +1845,8 @@ static int xs_bind(struct sock_xprt *transport, struct socket *sock)
- 	 * transport->xprt.resvport == 1) xs_get_srcport above will
- 	 * ensure that port is non-zero and we will bind as needed.
- 	 */
--	if (port == 0)
--		return 0;
-+	if (port <= 0)
-+		return port;
- 
- 	memcpy(&myaddr, &transport->srcaddr, transport->xprt.addrlen);
- 	do {
-@@ -3223,12 +3229,8 @@ static int param_set_uint_minmax(const char *val,
- 
- static int param_set_portnr(const char *val, const struct kernel_param *kp)
- {
--	if (kp->arg == &xprt_min_resvport)
--		return param_set_uint_minmax(val, kp,
--			RPC_MIN_RESVPORT,
--			xprt_max_resvport);
- 	return param_set_uint_minmax(val, kp,
--			xprt_min_resvport,
-+			RPC_MIN_RESVPORT,
- 			RPC_MAX_RESVPORT);
- }
- 
+ /* This function does create a L2 for fixed TEI in NT Mode */
 -- 
 2.20.1
 
