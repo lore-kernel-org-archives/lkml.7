@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EBCC43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6E1C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBEAA206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DAD8206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920459;
-	bh=v5l74EKbWgA7xuDajmxN81xwZrHg0s9j8HKcj2TwGZo=;
+	s=default; t=1573920469;
+	bh=Y4lAoQyQxZwgpe8S14AlWKNoT/13S/b0oclnwxddKWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0fKJ3qszq+HEk8j+ehFtKcap5bWldjUzalwGy8a8P+XcvrMnlDbdqYvMacr9nbZH9
-	 +s8aJEIjY+AW/3VppYfizskGlV4Gwb/amcgGGlAfIl1zR19tDcMrdkkII8AJdKTNXY
-	 RvbU+qovK7XeBErlBSmcE3lFGOhLLVWew2Zz5/eE=
+	b=KKliNqdFdBFnGCiHU6LiSrF96xYrmoNTWICAV0DCV370Qvf3aBJ3mBzH3BK/TWlXt
+	 kMpYwHtFdtVoVMEfZEBPKuPj8o0tMBC795ZiztBU+5XM9dVoko+mLa/0qSepZ4Y96k
+	 bAkyELFfdy+AX0vpTKHq8APw8DJUQbE9M4NYc+O8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731802AbfKPQHh (ORCPT
+        id S1730506AbfKPPuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:07:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58456 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:50:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729123AbfKPPu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:50:27 -0500
+        id S1729080AbfKPPuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:50:17 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68D362083E;
-        Sat, 16 Nov 2019 15:50:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2C8F21823;
+        Sat, 16 Nov 2019 15:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919426;
-        bh=v5l74EKbWgA7xuDajmxN81xwZrHg0s9j8HKcj2TwGZo=;
+        s=default; t=1573919417;
+        bh=Y4lAoQyQxZwgpe8S14AlWKNoT/13S/b0oclnwxddKWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H4Om+k2Dg1Sf8Z21krZhFZh+8CZ+dzzuQg3CNYgf03m81gSgodO8NkRKEm8lBdhP9
-         bxPTsb3JWEczAAfI5aGxpZcOiJyqe5xD3/EgJ+oN565No6dQmXKh72eK1NTmO078Y8
-         kE/vjUNIUrAyfjd30cs/OoIEj05u6SM/7RShC3uk=
+        b=pQ3qO/z4rrg30wuzjmUYSqC0QrBFPUCQAQ1Cgf0H5ZMqsJNDhP8iGni0fPIhFj/i5
+         RcTTviVlr+LUZXfhA4+iRbdDhqls4NjgHydm8Ef6Fnz/oKfFh7wgM00wRGr1uxz+FN
+         ePavOa9wtirMlMA0PhPcrhHEoIYBwF8HiUB2HF08=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 124/150] wireless: airo: potential buffer overflow in sprintf()
-Date:   Sat, 16 Nov 2019 10:47:02 -0500
-Message-Id: <20191116154729.9573-124-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        dev@openvswitch.org
+Subject: [PATCH AUTOSEL 4.14 116/150] openvswitch: fix linking without CONFIG_NF_CONNTRACK_LABELS
+Date:   Sat, 16 Nov 2019 10:46:54 -0500
+Message-Id: <20191116154729.9573-116-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,38 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 3d39e1bb1c88f32820c5f9271f2c8c2fb9a52bac ]
+[ Upstream commit a277d516de5f498c91d91189717ef7e01102ad27 ]
 
-It looks like we wanted to print a maximum of BSSList_rid.ssidLen bytes
-of the ssid, but we accidentally use "%*s" (width) instead of "%.*s"
-(precision) so if the ssid doesn't have a NUL terminator this could lead
-to an overflow.
+When CONFIG_CC_OPTIMIZE_FOR_DEBUGGING is enabled, the compiler
+fails to optimize out a dead code path, which leads to a link failure:
 
-Static analysis.  Not tested.
+net/openvswitch/conntrack.o: In function `ovs_ct_set_labels':
+conntrack.c:(.text+0x2e60): undefined reference to `nf_connlabels_replace'
 
-Fixes: e174961ca1a0 ("net: convert print_mac to %pM")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+In this configuration, we can take a shortcut, and completely
+remove the contrack label code. This may also help the regular
+optimization.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/cisco/airo.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/openvswitch/conntrack.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/cisco/airo.c b/drivers/net/wireless/cisco/airo.c
-index 54201c02fdb8b..fc49255bab009 100644
---- a/drivers/net/wireless/cisco/airo.c
-+++ b/drivers/net/wireless/cisco/airo.c
-@@ -5464,7 +5464,7 @@ static int proc_BSSList_open( struct inode *inode, struct file *file ) {
-            we have to add a spin lock... */
- 	rc = readBSSListRid(ai, doLoseSync, &BSSList_rid);
- 	while(rc == 0 && BSSList_rid.index != cpu_to_le16(0xffff)) {
--		ptr += sprintf(ptr, "%pM %*s rssi = %d",
-+		ptr += sprintf(ptr, "%pM %.*s rssi = %d",
- 			       BSSList_rid.bssid,
- 				(int)BSSList_rid.ssidLen,
- 				BSSList_rid.ssid,
+diff --git a/net/openvswitch/conntrack.c b/net/openvswitch/conntrack.c
+index 0171b27a2b81b..48d81857961ca 100644
+--- a/net/openvswitch/conntrack.c
++++ b/net/openvswitch/conntrack.c
+@@ -1083,7 +1083,8 @@ static int ovs_ct_commit(struct net *net, struct sw_flow_key *key,
+ 					 &info->labels.mask);
+ 		if (err)
+ 			return err;
+-	} else if (labels_nonzero(&info->labels.mask)) {
++	} else if (IS_ENABLED(CONFIG_NF_CONNTRACK_LABELS) &&
++		   labels_nonzero(&info->labels.mask)) {
+ 		err = ovs_ct_set_labels(ct, key, &info->labels.value,
+ 					&info->labels.mask);
+ 		if (err)
 -- 
 2.20.1
 
