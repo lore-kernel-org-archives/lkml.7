@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6630C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6670C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B531E21479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DC5921479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921583;
-	bh=6eykspN3cd2v1dC2FZs8AixH9I5Z7C5N1now7YBSKs8=;
+	s=default; t=1573921590;
+	bh=cTbj6kOszfLz/oxz/9GOU8X8ThfPuqYFmp+Zf3cX2vg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2uac9Ho9qcE+9rpyvzHqmpyLLln9oB7wkLa60ZLgEMDx5WcSeZ4RgNlAOuGncD2xV
-	 JWoqcYlv5UB1sWUo5T7l4xgimEsn8tFluFBO1qOLqpta9aTxCXlSsqU3fOv0M3z+Hf
-	 vOPUHqb5yn/1fHrL4PZ/ifSyWkpszaXycxcALlf4=
+	b=fqkJAC6pmrdscAwMTNCask8xrPJXmHBJtUmEr8i4WYy37ENEFYL2aKSw6rFwu84ms
+	 AZuCRYUAcqbbav0NUy17w34b4V9r5K6XlvHaiG5TYEMPtRzKguUzrQmBUcwJCdES/B
+	 +EQ6R+1zQvGxz/z+evozzBTD2P+FBuqntWykycGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbfKPPl5 (ORCPT
+        id S1731641AbfKPQ03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:41:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45176 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:26:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728024AbfKPPlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:41:51 -0500
+        id S1727804AbfKPPlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:41:55 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7BCB20833;
-        Sat, 16 Nov 2019 15:41:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D02F2075E;
+        Sat, 16 Nov 2019 15:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918911;
-        bh=6eykspN3cd2v1dC2FZs8AixH9I5Z7C5N1now7YBSKs8=;
+        s=default; t=1573918914;
+        bh=cTbj6kOszfLz/oxz/9GOU8X8ThfPuqYFmp+Zf3cX2vg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KUeqWWM4PIyauU9lugAMBZBc8zKZUlUvpUEeZ2EaBuhZ9JVDEBEecmvxhsZOYj0Eh
-         wWugueQxrCb67UMzCT0bLC4wENwx0olqdC53UevRAPBjEttpY0bV/3eGARe2FunanK
-         iaV1FpCqkQGMnjPrEOPR8ny3yFNU8dgCZ5c8BaZI=
+        b=uMJUzoFbOLWkXF0tTeIoqeDFDDnmQ0yWTv8ggkMJt7zaC9CWZxQdcuUV8Xv1vtqBJ
+         VxWjyh6Ft+mTsuewIDyV4c360LsoArH50cd9psPugFare7Zj462IoZeSBo8ZHorCKB
+         TSlwSnD9IsUWPUFcRBU5xXXTfG+MOEGh14SQtRKI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luo Jiaxing <luojiaxing@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 034/237] scsi: hisi_sas: Feed back linkrate(max/min) when re-attached
-Date:   Sat, 16 Nov 2019 10:37:49 -0500
-Message-Id: <20191116154113.7417-34-sashal@kernel.org>
+Cc:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 037/237] net: ethernet: ti: cpsw: fix lost of mcast packets while rx_mode update
+Date:   Sat, 16 Nov 2019 10:37:52 -0500
+Message-Id: <20191116154113.7417-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,41 +60,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo Jiaxing <luojiaxing@huawei.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 
-[ Upstream commit 5a54691f874ab29ec82f08bc6936866a3ccdaa91 ]
+[ Upstream commit 5da1948969bc1991920987ce4361ea56046e5a98 ]
 
-At directly attached situation, if the user modifies the sysfs interface
-of maximum_linkrate and minimum_linkrate to renegotiate the linkrate
-between SAS controller and target, the value of both files mentioned
-above should have change to user setting after renegotiate is over, but
-it remains unchanged.
+Whenever kernel or user decides to call rx mode update, it clears
+every multicast entry from forwarding table and in some time adds
+it again. This time can be enough to drop incoming multicast packets.
 
-To fix this bug, maximum_linkrate and minimum_linkrate will be directly
-fed back to relevant sas_phy structure.
+That's why clear only staled multicast entries and update or add new
+one afterwards.
 
-Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/hisi_sas/hisi_sas_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/ti/cpsw.c | 46 +++++++++++++++++++++-------------
+ 1 file changed, 28 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index fd9d82c9033de..e9747379384b2 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -906,6 +906,9 @@ static void hisi_sas_phy_set_linkrate(struct hisi_hba *hisi_hba, int phy_no,
- 	_r.maximum_linkrate = max;
- 	_r.minimum_linkrate = min;
+diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+index 1afed85550c0a..ef79d2b6070b9 100644
+--- a/drivers/net/ethernet/ti/cpsw.c
++++ b/drivers/net/ethernet/ti/cpsw.c
+@@ -570,7 +570,7 @@ static inline int cpsw_get_slave_port(u32 slave_num)
+ 	return slave_num + 1;
+ }
  
-+	sas_phy->phy->maximum_linkrate = max;
-+	sas_phy->phy->minimum_linkrate = min;
+-static void cpsw_add_mcast(struct cpsw_priv *priv, u8 *addr)
++static void cpsw_add_mcast(struct cpsw_priv *priv, const u8 *addr)
+ {
+ 	struct cpsw_common *cpsw = priv->cpsw;
+ 
+@@ -662,16 +662,35 @@ static void cpsw_set_promiscious(struct net_device *ndev, bool enable)
+ 	}
+ }
+ 
+-static void cpsw_ndo_set_rx_mode(struct net_device *ndev)
++static int cpsw_add_mc_addr(struct net_device *ndev, const u8 *addr)
++{
++	struct cpsw_priv *priv = netdev_priv(ndev);
 +
- 	hisi_hba->hw->phy_disable(hisi_hba, phy_no);
- 	msleep(100);
- 	hisi_hba->hw->phy_set_linkrate(hisi_hba, phy_no, &_r);
++	cpsw_add_mcast(priv, addr);
++	return 0;
++}
++
++static int cpsw_del_mc_addr(struct net_device *ndev, const u8 *addr)
+ {
+ 	struct cpsw_priv *priv = netdev_priv(ndev);
+ 	struct cpsw_common *cpsw = priv->cpsw;
+-	int vid;
++	int vid, flags;
+ 
+-	if (cpsw->data.dual_emac)
++	if (cpsw->data.dual_emac) {
+ 		vid = cpsw->slaves[priv->emac_port].port_vlan;
+-	else
+-		vid = cpsw->data.default_vlan;
++		flags = ALE_VLAN;
++	} else {
++		vid = 0;
++		flags = 0;
++	}
++
++	cpsw_ale_del_mcast(cpsw->ale, addr, 0, flags, vid);
++	return 0;
++}
++
++static void cpsw_ndo_set_rx_mode(struct net_device *ndev)
++{
++	struct cpsw_common *cpsw = ndev_to_cpsw(ndev);
+ 
+ 	if (ndev->flags & IFF_PROMISC) {
+ 		/* Enable promiscuous mode */
+@@ -684,19 +703,9 @@ static void cpsw_ndo_set_rx_mode(struct net_device *ndev)
+ 	}
+ 
+ 	/* Restore allmulti on vlans if necessary */
+-	cpsw_ale_set_allmulti(cpsw->ale, priv->ndev->flags & IFF_ALLMULTI);
+-
+-	/* Clear all mcast from ALE */
+-	cpsw_ale_flush_multicast(cpsw->ale, ALE_ALL_PORTS, vid);
++	cpsw_ale_set_allmulti(cpsw->ale, ndev->flags & IFF_ALLMULTI);
+ 
+-	if (!netdev_mc_empty(ndev)) {
+-		struct netdev_hw_addr *ha;
+-
+-		/* program multicast address list into ALE register */
+-		netdev_for_each_mc_addr(ha, ndev) {
+-			cpsw_add_mcast(priv, ha->addr);
+-		}
+-	}
++	__dev_mc_sync(ndev, cpsw_add_mc_addr, cpsw_del_mc_addr);
+ }
+ 
+ static void cpsw_intr_enable(struct cpsw_common *cpsw)
+@@ -1956,6 +1965,7 @@ static int cpsw_ndo_stop(struct net_device *ndev)
+ 	struct cpsw_common *cpsw = priv->cpsw;
+ 
+ 	cpsw_info(priv, ifdown, "shutting down cpsw device\n");
++	__dev_mc_unsync(priv->ndev, cpsw_del_mc_addr);
+ 	netif_tx_stop_all_queues(priv->ndev);
+ 	netif_carrier_off(priv->ndev);
+ 
 -- 
 2.20.1
 
