@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 283F6C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34620C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7BBF21843
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 079AC2089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:06:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920385;
-	bh=3mmOq32V0Wmhic/ngarUJuG2Q8A/YOgyAwDdDnCgk5k=;
+	s=default; t=1573920390;
+	bh=vBFYOrfj1IE1io4Th6lrRDVblv4ioYm1LhZ/3QjbwXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ApYtMBh/WmMQkBUZNsK+Ty3l8ioHGXeP8gpAr1vjEO8L/Vd5uOM4oW2MYr8hJg5/C
-	 egFJZfbFX7l/dP2SbMfZjtSW+e4QxNUBgPba0QVAtHnEO0VfXJfEzEyIsKBZfGt2gq
-	 nOGtysxuOVkM4l9nqrqdWXl32/aIZ9wlzdLVi3Mk=
+	b=hOn/tbdKPTysuxeOxRsuFVA1SA/LXDWAtbpYxqY6iEy996dF4KDZerXQDYFFsVqwn
+	 /EdmKNtMJ2CBS+QnMBLmZoY/qXrxH+cp9CBhDJede/NfDyaacXD9xSVRVdptqWuFX3
+	 qTZ3dW+wqZsfMqLN+jRkf4wuFSLkFIKpzHMWx5aw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731160AbfKPQGX (ORCPT
+        id S1730634AbfKPQG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:06:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59224 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:06:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730635AbfKPPuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:50:50 -0500
+        id S1730625AbfKPPut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:50:49 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7A13214E0;
-        Sat, 16 Nov 2019 15:50:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76AFC21826;
+        Sat, 16 Nov 2019 15:50:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919450;
-        bh=3mmOq32V0Wmhic/ngarUJuG2Q8A/YOgyAwDdDnCgk5k=;
+        s=default; t=1573919448;
+        bh=vBFYOrfj1IE1io4Th6lrRDVblv4ioYm1LhZ/3QjbwXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Su4qA54wGzInwGyMgy5YDA5wRYIFfMIHf4aHkyx6tuAdPT8Tz68xM5FrWMsMe0wrX
-         Gwj/hF9T8zygRRJCA4TiyThx0JDIdO9yP5cztipvNYSfYbIKl+I0XY02FS6Sg8bsDn
-         kJwvhYsAQq5wJMlapeV96LH7UfNspSb9yy3TnZPU=
+        b=QDjgWBGjDjiT8pQN0bIj08BqOXQlRlGns4YaOjGmit/SeFgrZiDF/6jVJiOxxZrCg
+         jelsM9pQL6Eqpu8ZPIIEsB8DSkoNuiqTxFKIfQStsRFbS9Q1DFZ4YMv+sJLpL8ZYYU
+         WqR3k8PMR+Twxw6LrOjxVyVWaWIr1dohm2vPVL+0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Ahern <dsahern@gmail.com>,
-        Donald Sharp <sharpd@cumulusnetworks.com>,
-        Mike Manning <mmanning@vyatta.att-mail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 149/150] ipv6: Fix handling of LLA with VRF and sockets bound to VRF
-Date:   Sat, 16 Nov 2019 10:47:27 -0500
-Message-Id: <20191116154729.9573-149-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 147/150] i2c: uniphier-f: fix timeout error after reading 8 bytes
+Date:   Sat, 16 Nov 2019 10:47:25 -0500
+Message-Id: <20191116154729.9573-147-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -61,48 +59,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit c2027d1e17582903e368abf5d4838b22a98f2b7b ]
+[ Upstream commit c2a653deaa81f5a750c0dfcbaf9f8e5195cbe4a5 ]
 
-A recent commit allows sockets bound to a VRF to receive ipv6 link local
-packets. However, it only works for UDP and worse TCP connection attempts
-to the LLA with the only listener bound to the VRF just hang where as
-before the client gets a reset and connection refused. Fix by adjusting
-ir_iif for LL addresses and packets received through a device enslaved
-to a VRF.
+I was totally screwed up in commit eaba68785c2d ("i2c: uniphier-f:
+fix race condition when IRQ is cleared"). Since that commit, if the
+number of read bytes is multiple of the FIFO size (8, 16, 24... bytes),
+the STOP condition could be issued twice, depending on the timing.
+If this happens, the controller will go wrong, resulting in the timeout
+error.
 
-Fixes: 6f12fa775530 ("vrf: mark skb for multicast or link-local as enslaved to VRF")
-Reported-by: Donald Sharp <sharpd@cumulusnetworks.com>
-Cc: Mike Manning <mmanning@vyatta.att-mail.com>
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+It was more than 3 years ago when I wrote this driver, so my memory
+about this hardware was vague. Please let me correct the description
+in the commit log of eaba68785c2d.
+
+Clearing the IRQ status on exiting the IRQ handler is absolutely
+fine. This controller makes a pause while any IRQ status is asserted.
+If the IRQ status is cleared first, the hardware may start the next
+transaction before the IRQ handler finishes what it supposed to do.
+
+This partially reverts the bad commit with clear comments so that I
+will never repeat this mistake.
+
+I also investigated what is happening at the last moment of the read
+mode. The UNIPHIER_FI2C_INT_RF interrupt is asserted a bit earlier
+(by half a period of the clock cycle) than UNIPHIER_FI2C_INT_RB.
+
+I consulted a hardware engineer, and I got the following information:
+
+UNIPHIER_FI2C_INT_RF
+    asserted at the falling edge of SCL at the 8th bit.
+
+UNIPHIER_FI2C_INT_RB
+    asserted at the rising edge of SCL at the 9th (ACK) bit.
+
+In order to avoid calling uniphier_fi2c_stop() twice, check the latter
+interrupt. I also commented this because it is obscure hardware internal.
+
+Fixes: eaba68785c2d ("i2c: uniphier-f: fix race condition when IRQ is cleared")
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/tcp_ipv6.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-uniphier-f.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index 7b4ce3f9e2f4e..5ec73cf386dfe 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -718,6 +718,7 @@ static void tcp_v6_init_req(struct request_sock *req,
- 			    const struct sock *sk_listener,
- 			    struct sk_buff *skb)
- {
-+	bool l3_slave = ipv6_l3mdev_skb(TCP_SKB_CB(skb)->header.h6.flags);
- 	struct inet_request_sock *ireq = inet_rsk(req);
- 	const struct ipv6_pinfo *np = inet6_sk(sk_listener);
+diff --git a/drivers/i2c/busses/i2c-uniphier-f.c b/drivers/i2c/busses/i2c-uniphier-f.c
+index 928ea9930d17e..dd0687e36a47b 100644
+--- a/drivers/i2c/busses/i2c-uniphier-f.c
++++ b/drivers/i2c/busses/i2c-uniphier-f.c
+@@ -173,8 +173,6 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
+ 		"interrupt: enabled_irqs=%04x, irq_status=%04x\n",
+ 		priv->enabled_irqs, irq_status);
  
-@@ -725,7 +726,7 @@ static void tcp_v6_init_req(struct request_sock *req,
- 	ireq->ir_v6_loc_addr = ipv6_hdr(skb)->daddr;
+-	uniphier_fi2c_clear_irqs(priv, irq_status);
+-
+ 	if (irq_status & UNIPHIER_FI2C_INT_STOP)
+ 		goto complete;
  
- 	/* So that link locals have meaning */
--	if (!sk_listener->sk_bound_dev_if &&
-+	if ((!sk_listener->sk_bound_dev_if || l3_slave) &&
- 	    ipv6_addr_type(&ireq->ir_v6_rmt_addr) & IPV6_ADDR_LINKLOCAL)
- 		ireq->ir_iif = tcp_v6_iif(skb);
+@@ -214,7 +212,13 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
  
+ 	if (irq_status & (UNIPHIER_FI2C_INT_RF | UNIPHIER_FI2C_INT_RB)) {
+ 		uniphier_fi2c_drain_rxfifo(priv);
+-		if (!priv->len)
++		/*
++		 * If the number of bytes to read is multiple of the FIFO size
++		 * (msg->len == 8, 16, 24, ...), the INT_RF bit is set a little
++		 * earlier than INT_RB. We wait for INT_RB to confirm the
++		 * completion of the current message.
++		 */
++		if (!priv->len && (irq_status & UNIPHIER_FI2C_INT_RB))
+ 			goto data_done;
+ 
+ 		if (unlikely(priv->flags & UNIPHIER_FI2C_MANUAL_NACK)) {
+@@ -253,6 +257,13 @@ static irqreturn_t uniphier_fi2c_interrupt(int irq, void *dev_id)
+ 	}
+ 
+ handled:
++	/*
++	 * This controller makes a pause while any bit of the IRQ status is
++	 * asserted. Clear the asserted bit to kick the controller just before
++	 * exiting the handler.
++	 */
++	uniphier_fi2c_clear_irqs(priv, irq_status);
++
+ 	spin_unlock(&priv->lock);
+ 
+ 	return IRQ_HANDLED;
 -- 
 2.20.1
 
