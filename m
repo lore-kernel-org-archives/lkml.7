@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6558AC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA776C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FE1921845
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C387C2182A
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919482;
-	bh=LZp/NX6ULwok7KISCfKKkJI5x6JyKuh3DkWBM1uLWIw=;
+	s=default; t=1573919486;
+	bh=XP4W78k7tWdh+OxHKfg/hOgoXSYlnsAKcT0blXHT8RY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sX3xxBBcHiNySZ4+D/O0qAHK2NW9Hc/pf2DUVX3ZaWBPpjsIdGF6EbiXsO1wV5kh9
-	 ZyUrgp47TcBLEMUQplzOz167H9HL0kE0FwAxTFrGEnl2svSLHXsg9UZLNth0tTYbRK
-	 tfrc8M+/ceePFeDTCJWu95cQEjh2P81fTeuy51CI=
+	b=t8uB+Gn4/01aPc4E4/ojzlwG189XecxiP+Fho+Yg6/lvBskd5v9Ym97QvimtfyBax
+	 M5+8jKDJVFaGemOFXNwRyKvO2bOIf3Q32zkME2NrnL6K5LQx/mL2umR0eJmiLTUX0n
+	 xTrn/DhE5egDPsCmO7II9lw59YQmSxgjPQI3Zkcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730724AbfKPPvV (ORCPT
+        id S1730746AbfKPPvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:51:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59646 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:51:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729764AbfKPPvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:51:08 -0500
+        id S1730732AbfKPPvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:51:22 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69892208E3;
-        Sat, 16 Nov 2019 15:51:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB9D1214DE;
+        Sat, 16 Nov 2019 15:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919467;
-        bh=LZp/NX6ULwok7KISCfKKkJI5x6JyKuh3DkWBM1uLWIw=;
+        s=default; t=1573919482;
+        bh=XP4W78k7tWdh+OxHKfg/hOgoXSYlnsAKcT0blXHT8RY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v5chSdNmfPhLnlgG/cD2pthSj83qiMUoEd+GXmvn6DUbZ1hx+pypEcHU0bBZ22LO9
-         0Zb9w14/q4s6xS9D0dWwsa6+I/SJP85e1Y+8COh6fC7knW4yOY2R036t6xhvBz/Dbt
-         1rF4KXGdGgg8vrTmKEIRxpyJ8CA4w8maYQGjecTg=
+        b=MT4dV/5SC8c4lu8P478DZp95Zq04ym0CpVpv/9mwjTazcfLTbNOU88IDmQyqWFf5K
+         kiy/fe/dwhWs5EPEIcwgEbjr5cnpdZAEH1w/kjulK2hJN5YYmnn73pMcvzc492HkF/
+         NItIylfT38UO9skLh//Dx3W63N5Qmx6jhMmiqBjA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Geoff Levand <geoff@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 05/99] powerpc: Fix signedness bug in update_flash_db()
-Date:   Sat, 16 Nov 2019 10:49:28 -0500
-Message-Id: <20191116155103.10971-5-sashal@kernel.org>
+Cc:     Wenwen Wang <wang6495@umn.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 13/99] misc: mic: fix a DMA pool free failure
+Date:   Sat, 16 Nov 2019 10:49:36 -0500
+Message-Id: <20191116155103.10971-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -60,38 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Wenwen Wang <wang6495@umn.edu>
 
-[ Upstream commit 014704e6f54189a203cc14c7c0bb411b940241bc ]
+[ Upstream commit 6b995f4eec34745f6cb20d66d5277611f0b3c3fa ]
 
-The "count < sizeof(struct os_area_db)" comparison is type promoted to
-size_t so negative values of "count" are treated as very high values
-and we accidentally return success instead of a negative error code.
+In _scif_prog_signal(), the boolean variable 'x100' is used to indicate
+whether the MIC Coprocessor is X100. If 'x100' is true, the status
+descriptor will be used to write the value to the destination. Otherwise, a
+DMA pool will be allocated for this purpose. Specifically, if the DMA pool
+is allocated successfully, two memory addresses will be returned. One is
+for the CPU and the other is for the device to access the DMA pool. The
+former is stored to the variable 'status' and the latter is stored to the
+variable 'src'. After the allocation, the address in 'src' is saved to
+'status->src_dma_addr', which is actually in the DMA pool, and 'src' is
+then modified.
 
-This doesn't really change runtime much but it fixes a static checker
-warning.
+Later on, if an error occurs, the execution flow will transfer to the label
+'dma_fail', which will check 'x100' and free up the allocated DMA pool if
+'x100' is false. The point here is that 'status->src_dma_addr' is used for
+freeing up the DMA pool. As mentioned before, 'status->src_dma_addr' is in
+the DMA pool. And thus, the device is able to modify this data. This can
+potentially cause failures when freeing up the DMA pool because of the
+modified device address.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Geoff Levand <geoff@infradead.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+This patch avoids the above issue by using the variable 'src' (with
+necessary calculation) to free up the DMA pool.
+
+Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/ps3/os-area.c | 2 +-
+ drivers/misc/mic/scif/scif_fence.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/ps3/os-area.c b/arch/powerpc/platforms/ps3/os-area.c
-index 3db53e8aff927..9b2ef76578f06 100644
---- a/arch/powerpc/platforms/ps3/os-area.c
-+++ b/arch/powerpc/platforms/ps3/os-area.c
-@@ -664,7 +664,7 @@ static int update_flash_db(void)
- 	db_set_64(db, &os_area_db_id_rtc_diff, saved_params.rtc_diff);
- 
- 	count = os_area_flash_write(db, sizeof(struct os_area_db), pos);
--	if (count < sizeof(struct os_area_db)) {
-+	if (count < 0 || count < sizeof(struct os_area_db)) {
- 		pr_debug("%s: os_area_flash_write failed %zd\n", __func__,
- 			 count);
- 		error = count < 0 ? count : -EIO;
+diff --git a/drivers/misc/mic/scif/scif_fence.c b/drivers/misc/mic/scif/scif_fence.c
+index cac3bcc308a7e..7bb929f05d852 100644
+--- a/drivers/misc/mic/scif/scif_fence.c
++++ b/drivers/misc/mic/scif/scif_fence.c
+@@ -272,7 +272,7 @@ static int _scif_prog_signal(scif_epd_t epd, dma_addr_t dst, u64 val)
+ dma_fail:
+ 	if (!x100)
+ 		dma_pool_free(ep->remote_dev->signal_pool, status,
+-			      status->src_dma_addr);
++			      src - offsetof(struct scif_status, val));
+ alloc_fail:
+ 	return err;
+ }
 -- 
 2.20.1
 
