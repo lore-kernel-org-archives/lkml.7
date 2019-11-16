@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29AFFC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 11:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B89DC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 11:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0030320723
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 11:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 543E120723
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 11:41:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="FUWeFJQP"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="VE4bZXsL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727515AbfKPLlZ (ORCPT
+        id S1727550AbfKPLla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 06:41:25 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51894 "EHLO
+        Sat, 16 Nov 2019 06:41:30 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35916 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726794AbfKPLlZ (ORCPT
+        with ESMTP id S1727530AbfKPLl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 06:41:25 -0500
-Received: by mail-wm1-f66.google.com with SMTP id q70so12224960wme.1
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 03:41:24 -0800 (PST)
+        Sat, 16 Nov 2019 06:41:28 -0500
+Received: by mail-wm1-f66.google.com with SMTP id c22so13211387wmd.1
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 03:41:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9qrbBm1fL62NwECBN+3glE+N1as0J/NyBOFPV+RHSPg=;
-        b=FUWeFJQPe7xIzamd5joY0TZn2ICzDMAdR0UP0/kbwZecxanpjgHKCIH2HiHcTW3IrD
-         HHMsF0uOQlBekIwAo2lKkzSBGRs9meIn2OcL1EagZ4kF+ogadMnEVSnv/UMtpZKs4z58
-         06mxx/5O0wGASoSt+sxQhEfx5lGOTuHh+2/cMOsvwIRV4hw89sADsQZAWtuIPMPURJ0j
-         ErQ6DcMtJTDWnJf4cQy8qBA8ktgbmnmvoqur3vl5XWBN35DDnNtVcH3IF7iAlWkP/I6p
-         YcQTfD2GPho+PkD/38XEIbT5oQHET5Om0OqgsaWJEyAlBCUeE8zOvCUTpC4juDBHFJoZ
-         TjmA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=fyZmBKcSsP1bjro74AAm7I1X0iJjVg8/a1KtBSbgjHA=;
+        b=VE4bZXsLrwAphnxBM8KjcExuC86t7mBgqn2W3oJdvMspYfHJbuMtJsBh19Zl2l9joI
+         tY/8N9P/9bJiEH3MQ7IqZmSWxquqB8SlY9lq6tdjbVJQuljhktuJoUZbCdrucRtaSi7E
+         vFj7kvDcIRVg2bq4HtHZ12MrodgFND+/HKr+s2KRAHM08HNdS4TJnq8R2PiycrOtvAaL
+         niYprLwLypbHzazbpqFoPNo/PiHTKxSddYt+7BhPNRqqP5FhHHcYEAPdn0ZYE78krJkS
+         kdUNmrQzAxMt/w6p/YmKi0x9wNquzSRpQ6FXeZuCSCqhY+Y7WwzXV3aJrz5cqqBvzRUd
+         BB5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9qrbBm1fL62NwECBN+3glE+N1as0J/NyBOFPV+RHSPg=;
-        b=TXKOEhPXynxcjI3n05i/uy71hKqM/qhHRBP3XVWqzCx98cLGnnD7yuvEOcBY6mJ6Rp
-         22Nj89kHUtegNup8UYRiVtBpDmRN0ZsRCkIsUcnB2Sqd3BeveOJnTfDMbycAKJp6e6LX
-         SVOhl+0g1EzbkCXbf9DvxiKcN5YZhNpexTHKgQC+V9BQW52mA2WI3RMhFVaDp5mTQ7OD
-         b0Os+lpa+3Hcfn5OXVEE0BBdZ7Cy0Efvqb/2z7fqsJTfCO2I6rn4nft/I6M2LTx5Zkw4
-         Z8YRvb/sDWRq+P3UHzQMhFIttNcONFWVngl8ZM/odLPPhnx+SQ4l11xdLTBWe5R63JyP
-         QbmQ==
-X-Gm-Message-State: APjAAAXDahw7yKhoGM02fDHDRwtaBkTrXU4e+sCddijmSZO1hNIwvQkk
-        bNDn1pO4S0rSglpFUJFv/Y6mDA==
-X-Google-Smtp-Source: APXvYqxd3+/pvXHp+aXQvAUHFjmjZyEe3Wr02QAA/72ZOBUitdXD7hE7GEdnDudUfo1+6/HqB0HC5A==
-X-Received: by 2002:a1c:9917:: with SMTP id b23mr19488879wme.42.1573904483443;
-        Sat, 16 Nov 2019 03:41:23 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=fyZmBKcSsP1bjro74AAm7I1X0iJjVg8/a1KtBSbgjHA=;
+        b=FcEywwWkrr6dNCx5GevO2D+5xHWuNQC9pImsQcuZUB1R6apbPvNpup40k5L8Y/lBZO
+         cZBHIBzORvmSuH1MS776VG1Zdjzfmt5kbHuvQoua4GrzwRMm/io5t4FqYFGrhjHmB6KR
+         9ygSUJsD5SNnkTU/R3mx8+Tl5e1ICdyIRJ2iKGHVZjYie6UrryR2h9x8yM00fVk6Oc9F
+         3L/yRjZZp7seRQvlYEVGn+LK/E+YL6SPBFWrOyl36rPFs5T0Q6GJSZEA8apwYx9C8ywi
+         HkgnY9ejZ6IuSp9zW7ZUB3ULe82qJFm3MOvhW/poNkZUg2AePu/NkRw5XmIObh9At9Rs
+         +3Dw==
+X-Gm-Message-State: APjAAAX6SrP+ZOq52dYBBQ4jgI3CovfZE5PzmkayjNWul6oM/UIUoxVs
+        GZcnDU2LBPFWYwV1aTJqZ7h8AQ==
+X-Google-Smtp-Source: APXvYqy27qRYzRac5x1AMY19+A/S4MLoXMsT8wAnfE9JRrwtPgSjJJnVX3Rh2SYvj90R1XobwU9oMw==
+X-Received: by 2002:a7b:c94e:: with SMTP id i14mr18944185wml.174.1573904486618;
+        Sat, 16 Nov 2019 03:41:26 -0800 (PST)
 Received: from localhost.localdomain ([213.220.153.21])
-        by smtp.gmail.com with ESMTPSA id x5sm12539189wmj.7.2019.11.16.03.41.21
+        by smtp.gmail.com with ESMTPSA id x5sm12539189wmj.7.2019.11.16.03.41.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Nov 2019 03:41:22 -0800 (PST)
+        Sat, 16 Nov 2019 03:41:25 -0800 (PST)
 From:   Christian Brauner <christian@brauner.io>
 To:     mtk.manpages@gmail.com
 Cc:     adrian@lisas.de, akpm@linux-foundation.org, arnd@arndb.de,
@@ -64,10 +64,12 @@ Cc:     adrian@lisas.de, akpm@linux-foundation.org, arnd@arndb.de,
         keescook@chromium.org, linux-api@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-man@vger.kernel.org,
         mingo@elte.hu, oleg@redhat.com, xemul@virtuozzo.com
-Subject: [PATCH 1/3] clone.2: Fix typos
-Date:   Sat, 16 Nov 2019 12:41:12 +0100
-Message-Id: <20191116114114.7066-1-christian@brauner.io>
+Subject: [PATCH 3/3] clone.2: Use pid_t for clone3() {child,parent}_tid
+Date:   Sat, 16 Nov 2019 12:41:14 +0100
+Message-Id: <20191116114114.7066-3-christian@brauner.io>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191116114114.7066-1-christian@brauner.io>
+References: <20191116114114.7066-1-christian@brauner.io>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,8 +79,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christian Brauner <christian.brauner@ubuntu.com>
 
-Fix two spelling mistakes in manpage describing the clone{2,3}()
-syscalls/syscall wrappers.
+Advertise to userspace that they should use proper pid_t types for
+arguments returning a pid.
+The kernel-internal struct kernel_clone_args currently uses int as type
+and since POSIX mandates that pid_t is a signed integer type and glibc
+and friends use int this is not an issue. After the merge window for
+v5.5 closes we can switch struct kernel_clone_args over to using pid_t
+as well without any danger in regressing current userspace.
+Also note, that the new set tid feature which will be merged for v5.5
+uses pid_t types as well.
 
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
@@ -86,26 +95,21 @@ Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/man2/clone.2 b/man2/clone.2
-index f67a60067..57a9eaba7 100644
+index faff2ada6..bf2d7c731 100644
 --- a/man2/clone.2
 +++ b/man2/clone.2
-@@ -70,12 +70,12 @@ create a new ("child") process, in a manner similar to
- .PP
- By contrast with
- .BR fork (2),
--these system cals provide more precise control over what pieces of execution
-+these system calls provide more precise control over what pieces of execution
- context are shared between the calling process and the child process.
- For example, using these system calls, the caller can control whether
- or not the two processes share the virtual address space,
- the table of file descriptors, and the table of signal handlers.
--These system calls also allow the new child process to placed
-+These system calls also allow the new child process to be placed
- in separate
- .BR namespaces (7).
- .PP
-
-base-commit: 91243dad42a7a62df73e3b1dfbb810adc1b8b654
+@@ -183,9 +183,9 @@ is a structure of the following form:
+ struct clone_args {
+     u64 flags;        /* Flags bit mask */
+     u64 pidfd;        /* Where to store PID file descriptor
+-                         (\fIint *\fP) */
++                         (\fIpid_t *\fP) */
+     u64 child_tid;    /* Where to store child TID,
+-                         in child's memory (\fIint *\fP) */
++                         in child's memory (\fIpid_t *\fP) */
+     u64 parent_tid;   /* Where to store child TID,
+                          in parent's memory (\fIint *\fP) */
+     u64 exit_signal;  /* Signal to deliver to parent on
 -- 
 2.24.0
 
