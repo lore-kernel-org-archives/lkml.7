@@ -2,245 +2,454 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE00C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 14:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AC4C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 14:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD4E720718
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 14:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1A420728
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 14:15:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573913718;
+	bh=piyV77lXMMoB+wdksSwNS9KwJ6eaq68JWcgO3MjhNH8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jyVd+3e1J9QaQp1T9WtwVTfV9yv8m+rol2Qw5ybOPGOKEDKs5h26BR1LOFSOHlUH4
+	 giL1KZBufwgq6vCurC9T4wxtJ0hB5fxCl4z0OJ0dnWB3l3EHaWPf/OB1PjMSx3mRdn
+	 mtiCWxzXXykgAEVWjJ33yXCoHJ7WGajddB180xsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbfKPOPM (ORCPT
+        id S1727716AbfKPOPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 09:15:12 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:55058 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727672AbfKPOPL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 09:15:11 -0500
-Received: by mail-il1-f198.google.com with SMTP id t67so11654816ill.21
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 06:15:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=r4BpNWbf4xFpW3cj9suOlpyJ+CHQ8j0TEcjFp7mTyoc=;
-        b=je71HriXAiLs+2xj9ue85rj/9iWARqXluyvW8B+ZNOddLU4454wM5ABb1bZJaNI4pA
-         P2pFztukF1iICvveKUGyMeHVNAnMVKHcWB4WXMOHTFvGHn03Vu2HSUkVx7ATMaIrfFa1
-         03mgPQ1ATOCCucoAhHzdumRwU4kQAoiTCAmfgOvWm0Es3gwpJg7KQoDIaX+HUygRK06A
-         SPDDEPdOr0sQEEkYt1ai4PXLtcVaj5JjG4Xmww5HTLNN6QBXLCql1unQ68RTlDKQS0lr
-         EfYnueip1FCZS26z9CCOjNJ9b/iXLcBTL4MC8dOt/oUJ17DqN7MTkUfOe/5fo/KwHHiC
-         snaA==
-X-Gm-Message-State: APjAAAUll3PPH8MwBGGRLxg6N9ex7HJJ4Iq0vvzhQ66SkPHnG4P1tjhQ
-        2WC23kEntXeU5Wp6K4BmLo677W16r122JhPsRnDVAcbGHrIQ
-X-Google-Smtp-Source: APXvYqyC0l37Lcb7JkdxBYMGF3sYIPeYx+diVpPlrKNR2TMovMypf6Ge91HVUDNQdujey7E8zXosuDbnIdQQjaJ4+puzJTay6aeW
+        Sat, 16 Nov 2019 09:15:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727672AbfKPOPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 09:15:15 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A70E20700;
+        Sat, 16 Nov 2019 14:15:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573913714;
+        bh=piyV77lXMMoB+wdksSwNS9KwJ6eaq68JWcgO3MjhNH8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=T6CeaixqBvhbyXRdR+1jYP4dX+8xt88hVL0bjW1r88vC1+AElgj+AYY1ojhwCcNeG
+         iFA3glibDLFLFk3He6EbC0hHdvuiHmtmKU3ax5VqqYCNO1RfHu78WO4Fept7PAAxR5
+         yFBeGy5OfrUYsU0AKO6mchTX/o3WlW0ABPh2LIwo=
+Date:   Sat, 16 Nov 2019 14:15:08 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Song Qiang <songqiang1304521@gmail.com>
+Cc:     lars@metafoo.de, Michael.Hennerich@analog.com,
+        stefan.popa@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net,
+        lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: iio: adc: add support for AD5940
+Message-ID: <20191116141508.6b78969d@archlinux>
+In-Reply-To: <7ac0ec98-b405-6450-fc38-ac6a47fd6d3e@gmail.com>
+References: <20191108130946.14740-1-songqiang1304521@gmail.com>
+        <20191110162608.21b40714@archlinux>
+        <7ac0ec98-b405-6450-fc38-ac6a47fd6d3e@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-Received: by 2002:a92:8906:: with SMTP id n6mr6606620ild.202.1573913708468;
- Sat, 16 Nov 2019 06:15:08 -0800 (PST)
-Date:   Sat, 16 Nov 2019 06:15:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008026b8059777575c@google.com>
-Subject: possible deadlock in proc_pid_syscall
-From:   syzbot <syzbot+ffc5f92d13ebf6b3e760@syzkaller.appspotmail.com>
-To:     adobriyan@gmail.com, akpm@linux-foundation.org,
-        casey@schaufler-ca.com, christian@brauner.io,
-        keescook@chromium.org, kent.overstreet@gmail.com,
-        khlebnikov@yandex-team.ru, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mhocko@suse.com, shakeelb@google.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, 14 Nov 2019 21:32:06 +0800
+Song Qiang <songqiang1304521@gmail.com> wrote:
 
-syzbot found the following crash on:
+> On 11/11/19 12:26 AM, Jonathan Cameron wrote:
+> > On Fri,  8 Nov 2019 21:09:44 +0800
+> > Song Qiang <songqiang1304521@gmail.com> wrote:
+> >   
+> >> Add yaml devicetree description file and a header file for
+> >> helping configure positive and negtive input of AD5940.
+> >>
+> >> Signed-off-by: Song Qiang <songqiang1304521@gmail.com>  
+> > Ouch. This is a very complex device, so I'm guessing this is the tip
+> > of the iceberg when it comes to the eventual binding.
+> > For reference of others this has a similarly complex DAC and
+> > TIA + some excitation voltage generators (DDS).
+> > 
+> > Anyhow, a few comments inline but I'll definitely be looking for
+> > a dt maintainer input on this one.
+> > 
+> > Thanks,
+> > 
+> > Jonathan
+> >   
+> 
+> Thanks, this is the first part support of the driver.
+> 
+> >> ---
+> >>  .../bindings/iio/adc/adi,ad5940.yaml          | 240 ++++++++++++++++++
+> >>  include/dt-bindings/iio/adc/adi,ad5940.h      |  52 ++++
+> >>  2 files changed, 292 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml
+> >>  create mode 100644 include/dt-bindings/iio/adc/adi,ad5940.h
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml
+> >> new file mode 100644
+> >> index 000000000000..f7f034fdd8ec
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad5940.yaml
+> >> @@ -0,0 +1,240 @@
+> >> +# SPDX-License-Identifier: GPL-2.0  
+> > For new bindings, preference is to include a dual license
+> > (GPL-2.0-only OR BSD-2-Clause)
+> > 
+> > If Analog is fine doing this that would be great.
+> >   
+> 
+> I'll consult my mentor about this.
+> 
+> >> +# Copyright 2019 Analog Devices Inc.
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad5940.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Analog Devices AD5940 Device Tree Bindings
+> >> +
+> >> +maintainers:
+> >> +  - Song Qiang <songqiang1304521@gmail.com>
+> >> +
+> >> +description: |
+> >> +  Analog Devices AD5940 High Precision, Impedance, and Electrochemical Front End.
+> >> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD5940.pdf
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    enum:
+> >> +      - adi,ad5940
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +
+> >> +  vref-supply:
+> >> +    description:
+> >> +      The regulator to be used to supply the reference voltage.
+> >> +    maxItems: 1  
+> > 
+> > It's worth taking a look at similar patch reviews to pick up on things
+> > that are common issues.  Rob has pointed out a few times recently that
+> > vref-supply can only ever have one item, so no need for maxItems.
+> >   
+> 
+> That's right, thanks.
+> 
+> >> +
+> >> +  adi,interrupt-io:
+> >> +    description:
+> >> +      Output GPIO index of interrupt controller of AD5940.
+> >> +    maxItems: 1  
+> > 
+> > I'm fairly sure an enum can only have one entry so don't think this is
+> > needed.
+> >   
+> >> +    allOf:
+> >> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> >> +      - enum: [0, 3, 6, 7]
+> >> +
+> >> +  '#address-cells':
+> >> +    const: 1
+> >> +
+> >> +  '#size-cells':
+> >> +    const: 0
+> >> +
+> >> +required:
+> >> +  - compatible
+> >> +  - reg
+> >> +  - interrupts
+> >> +  - adi,interrupt-io
+> >> +
+> >> +patternProperties:
+> >> +  # 'channel@0-255'  
+> > 
+> > Really?  That is a lot of channels.  Superficially it looks like a much
+> > smaller number of possibilities from the datasheet.
+> >   
+> 
+> This device has some positive inputs and some negative inputs. A channel
+> here is a combination of one positive input and one negative input.
+> These channels I listed in examples are only suggested combinations in
+> the datasheet, while other combinations are all possible. So I was
+> thinking to not limit the total count of channels here. I failed to find
+> examples of doing this kind of stuff in the tree.
 
-HEAD commit:    eb70e26c Merge tag 'arm64-fixes' of git://git.kernel.org/p..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10a38772e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7654f9089a2e8c85
-dashboard link: https://syzkaller.appspot.com/bug?extid=ffc5f92d13ebf6b3e760
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
+As we are putting the controls for these in DT, we are making the claim
+that they are inherently part of the 'hardware'.   The fully flexibility
+probably doesn't make sense even if the hardware supports it.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+I'd be tempted to just not specify a limit at all, but rely on the type
+of 'reg' to provide an ultimate limit.  That gets rid of a lot
+of the complexity in the binding.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+ffc5f92d13ebf6b3e760@syzkaller.appspotmail.com
+Reality is that for a device like this you aren't going to have more
+channels than postive inputs because the vast majority of the time
+there is little reason to measure a given input against multiple
+references.
 
-======================================================
-WARNING: possible circular locking dependency detected
-5.4.0-rc7+ #0 Not tainted
-------------------------------------------------------
-syz-executor.4/16763 is trying to acquire lock:
-ffff8880916fc710 (&sig->cred_guard_mutex){+.+.}, at: lock_trace  
-fs/proc/base.c:406 [inline]
-ffff8880916fc710 (&sig->cred_guard_mutex){+.+.}, at:  
-proc_pid_syscall+0x66/0x3a0 fs/proc/base.c:635
+Thanks,
 
-but task is already holding lock:
-ffff8880a02001c0 (&p->lock){+.+.}, at: seq_read+0x6e/0xd70 fs/seq_file.c:161
+Jonathan
+> 
+> yours,
+> Song Qiang
+> 
+> >> +  "^channel@([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$":
+> >> +    type: object
+> >> +    description: |
+> >> +      Represents the external channels which are connected to the ADC.
+> >> +      See Documentation/devicetree/bindings/iio/adc/adc.txt.
+> >> +    properties:
+> >> +      reg:
+> >> +        description:
+> >> +          Index of this channel, must be starting from 0.
+> >> +        maxItems: 1
+> >> +
+> >> +      diff-channels:
+> >> +        description:
+> >> +          Positive input and negtive input of the ADC buffer of this channel.
+> >> +          Input candidates are defined in include/dt-bindings/iio/adc/adi,ad5940.h.
+> >> +        minItems: 2
+> >> +        maxItems: 2
+> >> +        items:
+> >> +          - description: Positive input channel
+> >> +          - enum:
+> >> +            - AD5940_ADC_INPUTP_EXCITATION
+> >> +            - AD5940_ADC_INPUTP_FLOATING
+> >> +            - AD5940_ADC_INPUTP_HSTIA
+> >> +            - AD5940_ADC_INPUTP_LPTIA_LP
+> >> +            - AD5940_ADC_INPUTP_AIN0
+> >> +            - AD5940_ADC_INPUTP_AIN1
+> >> +            - AD5940_ADC_INPUTP_AIN2
+> >> +            - AD5940_ADC_INPUTP_AIN3
+> >> +            - AD5940_ADC_INPUTP_AVDD_2
+> >> +            - AD5940_ADC_INPUTP_DVDD_2
+> >> +            - AD5940_ADC_INPUTP_AVDD_REG_2
+> >> +            - AD5940_ADC_INPUTP_TEMP
+> >> +            - AD5940_ADC_INPUTP_VBIAS_CAP
+> >> +            - AD5940_ADC_INPUTP_DE0
+> >> +            - AD5940_ADC_INPUTP_SE0
+> >> +            - AD5940_ADC_INPUTP_VREF_2V5_2
+> >> +            - AD5940_ADC_INPUTP_VREF_1V82
+> >> +            - AD5940_ADC_INPUTP_P_TEMP_N
+> >> +            - AD5940_ADC_INPUTP_AIN4
+> >> +            - AD5940_ADC_INPUTP_AIN6
+> >> +            - AD5940_ADC_INPUTP_VZERO
+> >> +            - AD5940_ADC_INPUTP_VBIAS0
+> >> +            - AD5940_ADC_INPUTP_VCE0
+> >> +            - AD5940_ADC_INPUTP_VRE0
+> >> +            - AD5940_ADC_INPUTP_VCE0_2
+> >> +            - AD5940_ADC_INPUTP_LPTIA
+> >> +            - AD5940_ADC_INPUTP_AGND_REF
+> >> +
+> >> +          - description: Negtive input channel
+> >> +          - enum:
+> >> +              # Negtive input candidates
+> >> +              - AD5940_ADC_INPUTN_FLOATING
+> >> +              - AD5940_ADC_INPUTN_HSTIA
+> >> +              - AD5940_ADC_INPUTN_LPTIA
+> >> +              - AD5940_ADC_INPUTN_AIN0
+> >> +              - AD5940_ADC_INPUTN_AIN1
+> >> +              - AD5940_ADC_INPUTN_AIN2
+> >> +              - AD5940_ADC_INPUTN_AIN3
+> >> +              - AD5940_ADC_INPUTN_VBIAS_CA8
+> >> +              - AD5940_ADC_INPUTN_TEMP_N
+> >> +              - AD5940_ADC_INPUTN_AIN4
+> >> +              - AD5940_ADC_INPUTN_AIN6
+> >> +              - AD5940_ADC_INPUTN_VZERO
+> >> +              - AD5940_ADC_INPUTN_VBIAS0
+> >> +              - AD5940_ADC_INPUTN_EXCITATION
+> >> +
+> >> +      channel-name:
+> >> +        description:
+> >> +          Any string format name you would like to assign to this channel.
+> >> +        maxItems: 1
+> >> +
+> >> +    required:
+> >> +      - reg
+> >> +      - diff-channels
+> >> +      - channel-name
+> >> +
+> >> +examples:
+> >> +  - |
+> >> +    ad5940: ad5940@0 {
+> >> +      compatible = "adi,ad5940";
+> >> +      reg = <0>;
+> >> +      spi-max-frequency = <16000000>;
+> >> +      vref-supply = <&adc_vref>;
+> >> +      interrupt-parent = <&gpio>;
+> >> +      interrupts = <24 2>;
+> >> +
+> >> +      adi,interrupt-io = <0>;
+> >> +
+> >> +      #address-cells = <1>;
+> >> +      #size-cells = <0>;
+> >> +
+> >> +      channel@0 {
+> >> +        reg = <0>;
+> >> +        diff-channels = <AD5940_ADC_INPUTP_VCE0
+> >> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> >> +        channel-name = "Vce-Vbias";
+> >> +      };
+> >> +
+> >> +      channel@1 {
+> >> +        reg = <1>;
+> >> +        diff-channels = <AD5940_ADC_INPUTP_VRE0
+> >> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> >> +        channel-name = "Vre-Vbias";
+> >> +      };
+> >> +
+> >> +      channel@2 {
+> >> +        reg = <2>;
+> >> +        diff-channels = <AD5940_ADC_INPUTP_SE0
+> >> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> >> +        channel-name = "Vse-Vbias";
+> >> +      };
+> >> +
+> >> +      channel@3 {
+> >> +        reg = <3>;
+> >> +        diff-channels = <AD5940_ADC_INPUTP_DE0
+> >> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> >> +        channel-name = "Vde-Vbias";
+> >> +      };
+> >> +
+> >> +      channel@4 {
+> >> +        reg = <4>;
+> >> +        diff-channels = <AD5940_ADC_INPUTP_AIN0
+> >> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> >> +        channel-name = "ain0-Vbias";
+> >> +      };
+> >> +
+> >> +      channel@5 {
+> >> +        reg = <5>;
+> >> +        diff-channels = <AD5940_ADC_INPUTP_AIN1
+> >> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> >> +        channel-name = "ain1-Vbias";
+> >> +      };
+> >> +
+> >> +      channel@6 {
+> >> +        reg = <6>;
+> >> +        diff-channels = <AD5940_ADC_INPUTP_AIN2
+> >> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> >> +        channel-name = "ain2-Vbias";
+> >> +      };
+> >> +
+> >> +      channel@7 {
+> >> +        reg = <7>;
+> >> +        diff-channels = <AD5940_ADC_INPUTP_AIN3
+> >> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> >> +        channel-name = "ain3-Vbias";
+> >> +      };
+> >> +
+> >> +      channel@8 {
+> >> +        reg = <8>;
+> >> +        diff-channels = <AD5940_ADC_INPUTP_AIN4
+> >> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> >> +        channel-name = "ain4-Vbias";
+> >> +      };
+> >> +
+> >> +      channel@9 {
+> >> +        reg = <9>;
+> >> +        diff-channels = <AD5940_ADC_INPUTP_AIN6
+> >> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> >> +        channel-name = "ain6-Vbias";
+> >> +      };
+> >> +
+> >> +      channel@10 {
+> >> +        reg = <10>;
+> >> +        diff-channels = <AD5940_ADC_INPUTP_LPTIA_LP
+> >> +                         AD5940_ADC_INPUTN_LPTIA>;
+> >> +        channel-name = "Low power TIA DC";
+> >> +      };
+> >> +
+> >> +      channel@11 {
+> >> +        reg = <11>;
+> >> +        diff-channels = <AD5940_ADC_INPUTP_LPTIA
+> >> +                         AD5940_ADC_INPUTN_LPTIA>;
+> >> +        channel-name = "Low power TIA AC";
+> >> +      };
+> >> +
+> >> +      channel@12 {
+> >> +        reg = <12>;
+> >> +        diff-channels = <AD5940_ADC_INPUTP_HSTIA
+> >> +                         AD5940_ADC_INPUTN_HSTIA>;
+> >> +        channel-name = "High Speed TIA";
+> >> +      };
+> >> +
+> >> +      channel@13 {
+> >> +        reg = <13>;
+> >> +        diff-channels = <AD5940_ADC_INPUTP_TEMP
+> >> +                         AD5940_ADC_INPUTN_VBIAS0>;
+> >> +        channel-name = "Temperature";
+> >> +      };
+> >> +    };
+> >> diff --git a/include/dt-bindings/iio/adc/adi,ad5940.h b/include/dt-bindings/iio/adc/adi,ad5940.h
+> >> new file mode 100644
+> >> index 000000000000..c17826f2f654
+> >> --- /dev/null
+> >> +++ b/include/dt-bindings/iio/adc/adi,ad5940.h
+> >> @@ -0,0 +1,52 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0 */
+> >> +/*
+> >> + * This header provides constants for configuring the AD5940 AFE
+> >> + */
+> >> +
+> >> +#ifndef _DT_BINDINGS_IIO_ADC_AD5940_H
+> >> +#define _DT_BINDINGS_IIO_ADC_AD5940_H
+> >> +
+> >> +#define AD5940_ADC_INPUTN_FLOATING	0
+> >> +#define AD5940_ADC_INPUTN_HSTIA		1
+> >> +#define AD5940_ADC_INPUTN_LPTIA		2
+> >> +#define AD5940_ADC_INPUTN_AIN0		4
+> >> +#define AD5940_ADC_INPUTN_AIN1		5
+> >> +#define AD5940_ADC_INPUTN_AIN2		6
+> >> +#define AD5940_ADC_INPUTN_AIN3		7
+> >> +#define AD5940_ADC_INPUTN_VBIAS_CA8	10
+> >> +#define AD5940_ADC_INPUTN_TEMP_N	11
+> >> +#define AD5940_ADC_INPUTN_AIN4		12
+> >> +#define AD5940_ADC_INPUTN_AIN6		14
+> >> +#define AD5940_ADC_INPUTN_VZERO		16
+> >> +#define AD5940_ADC_INPUTN_VBIAS0	17
+> >> +#define AD5940_ADC_INPUTN_EXCITATION	20
+> >> +
+> >> +#define AD5940_ADC_INPUTP_FLOATING	0
+> >> +#define AD5940_ADC_INPUTP_HSTIA		1
+> >> +#define AD5940_ADC_INPUTP_LPTIA_LP	2
+> >> +#define AD5940_ADC_INPUTP_AIN0		4
+> >> +#define AD5940_ADC_INPUTP_AIN1		5
+> >> +#define AD5940_ADC_INPUTP_AIN2		6
+> >> +#define AD5940_ADC_INPUTP_AIN3		7
+> >> +#define AD5940_ADC_INPUTP_AVDD_2	8
+> >> +#define AD5940_ADC_INPUTP_DVDD_2	9
+> >> +#define AD5940_ADC_INPUTP_AVDD_REG_2	10
+> >> +#define AD5940_ADC_INPUTP_TEMP		11
+> >> +#define AD5940_ADC_INPUTP_VBIAS_CAP	12
+> >> +#define AD5940_ADC_INPUTP_DE0		13
+> >> +#define AD5940_ADC_INPUTP_SE0		14
+> >> +#define AD5940_ADC_INPUTP_VREF_2V5_2	16
+> >> +#define AD5940_ADC_INPUTP_VREF_1V82	18
+> >> +#define AD5940_ADC_INPUTP_P_TEMP_N	19
+> >> +#define AD5940_ADC_INPUTP_AIN4		20
+> >> +#define AD5940_ADC_INPUTP_AIN6		22
+> >> +#define AD5940_ADC_INPUTP_VZERO		23
+> >> +#define AD5940_ADC_INPUTP_VBIAS0	24
+> >> +#define AD5940_ADC_INPUTP_VCE0		25
+> >> +#define AD5940_ADC_INPUTP_VRE0		26
+> >> +#define AD5940_ADC_INPUTP_VCE0_2	31
+> >> +#define AD5940_ADC_INPUTP_LPTIA		33
+> >> +#define AD5940_ADC_INPUTP_AGND_REF	35
+> >> +#define AD5940_ADC_INPUTP_EXCITATION	36
+> >> +
+> >> +#endif /* _DT_BINDINGS_IIO_ADC_AD5940 */  
+> >   
 
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #3 (&p->lock){+.+.}:
-        lock_acquire+0x158/0x250 kernel/locking/lockdep.c:4487
-        __mutex_lock_common+0x14c/0x2e20 kernel/locking/mutex.c:956
-        __mutex_lock kernel/locking/mutex.c:1103 [inline]
-        mutex_lock_nested+0x1b/0x30 kernel/locking/mutex.c:1118
-        seq_read+0x6e/0xd70 fs/seq_file.c:161
-        proc_reg_read+0x1e2/0x2d0 fs/proc/inode.c:223
-        do_loop_readv_writev fs/read_write.c:714 [inline]
-        do_iter_read+0x4b1/0x5b0 fs/read_write.c:935
-        vfs_readv+0xc2/0x120 fs/read_write.c:997
-        kernel_readv fs/splice.c:359 [inline]
-        default_file_splice_read+0x544/0x8d0 fs/splice.c:414
-        do_splice_to fs/splice.c:877 [inline]
-        splice_direct_to_actor+0x39c/0xac0 fs/splice.c:954
-        do_splice_direct+0x200/0x330 fs/splice.c:1063
-        do_sendfile+0x7e4/0xfd0 fs/read_write.c:1464
-        __do_sys_sendfile64 fs/read_write.c:1525 [inline]
-        __se_sys_sendfile64 fs/read_write.c:1511 [inline]
-        __x64_sys_sendfile64+0x176/0x1b0 fs/read_write.c:1511
-        do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #2 (sb_writers#3){.+.+}:
-        lock_acquire+0x158/0x250 kernel/locking/lockdep.c:4487
-        percpu_down_read include/linux/percpu-rwsem.h:40 [inline]
-        __sb_start_write+0xeb/0x430 fs/super.c:1672
-        sb_start_write include/linux/fs.h:1650 [inline]
-        mnt_want_write+0x4a/0xa0 fs/namespace.c:354
-        ovl_want_write+0x77/0x80 fs/overlayfs/util.c:21
-        ovl_create_object+0xaf/0x2d0 fs/overlayfs/dir.c:596
-        ovl_create+0x29/0x30 fs/overlayfs/dir.c:627
-        lookup_open fs/namei.c:3224 [inline]
-        do_last fs/namei.c:3314 [inline]
-        path_openat+0x2236/0x4420 fs/namei.c:3525
-        do_filp_open+0x192/0x3d0 fs/namei.c:3555
-        do_sys_open+0x29f/0x560 fs/open.c:1097
-        ksys_open include/linux/syscalls.h:1385 [inline]
-        __do_sys_creat fs/open.c:1155 [inline]
-        __se_sys_creat fs/open.c:1153 [inline]
-        __x64_sys_creat+0x65/0x70 fs/open.c:1153
-        do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #1 (&ovl_i_mutex_dir_key[depth]){++++}:
-        lock_acquire+0x158/0x250 kernel/locking/lockdep.c:4487
-        down_read+0x39/0x50 kernel/locking/rwsem.c:1495
-        inode_lock_shared include/linux/fs.h:801 [inline]
-        do_last fs/namei.c:3313 [inline]
-        path_openat+0xa9a/0x4420 fs/namei.c:3525
-        do_filp_open+0x192/0x3d0 fs/namei.c:3555
-        do_open_execat+0xff/0x610 fs/exec.c:857
-        __do_execve_file+0x766/0x1cc0 fs/exec.c:1762
-        do_execveat_common fs/exec.c:1868 [inline]
-        do_execve fs/exec.c:1885 [inline]
-        __do_sys_execve fs/exec.c:1961 [inline]
-        __se_sys_execve fs/exec.c:1956 [inline]
-        __x64_sys_execve+0x94/0xb0 fs/exec.c:1956
-        do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #0 (&sig->cred_guard_mutex){+.+.}:
-        check_prev_add kernel/locking/lockdep.c:2476 [inline]
-        check_prevs_add kernel/locking/lockdep.c:2581 [inline]
-        validate_chain+0x161e/0x7bc0 kernel/locking/lockdep.c:2971
-        __lock_acquire+0xc75/0x1be0 kernel/locking/lockdep.c:3955
-        lock_acquire+0x158/0x250 kernel/locking/lockdep.c:4487
-        __mutex_lock_common+0x14c/0x2e20 kernel/locking/mutex.c:956
-        __mutex_lock kernel/locking/mutex.c:1103 [inline]
-        mutex_lock_killable_nested+0x1b/0x30 kernel/locking/mutex.c:1133
-        lock_trace fs/proc/base.c:406 [inline]
-        proc_pid_syscall+0x66/0x3a0 fs/proc/base.c:635
-        proc_single_show+0xd8/0x120 fs/proc/base.c:756
-        seq_read+0x4cd/0xd70 fs/seq_file.c:229
-        do_loop_readv_writev fs/read_write.c:714 [inline]
-        do_iter_read+0x4b1/0x5b0 fs/read_write.c:935
-        vfs_readv fs/read_write.c:997 [inline]
-        do_preadv+0x178/0x290 fs/read_write.c:1089
-        __do_sys_preadv fs/read_write.c:1139 [inline]
-        __se_sys_preadv fs/read_write.c:1134 [inline]
-        __x64_sys_preadv+0x9e/0xb0 fs/read_write.c:1134
-        do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-other info that might help us debug this:
-
-Chain exists of:
-   &sig->cred_guard_mutex --> sb_writers#3 --> &p->lock
-
-  Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock(&p->lock);
-                                lock(sb_writers#3);
-                                lock(&p->lock);
-   lock(&sig->cred_guard_mutex);
-
-  *** DEADLOCK ***
-
-1 lock held by syz-executor.4/16763:
-  #0: ffff8880a02001c0 (&p->lock){+.+.}, at: seq_read+0x6e/0xd70  
-fs/seq_file.c:161
-
-stack backtrace:
-CPU: 0 PID: 16763 Comm: syz-executor.4 Not tainted 5.4.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x1fb/0x318 lib/dump_stack.c:118
-  print_circular_bug+0xc2d/0xe60 kernel/locking/lockdep.c:1685
-  check_noncircular+0x206/0x3a0 kernel/locking/lockdep.c:1809
-  check_prev_add kernel/locking/lockdep.c:2476 [inline]
-  check_prevs_add kernel/locking/lockdep.c:2581 [inline]
-  validate_chain+0x161e/0x7bc0 kernel/locking/lockdep.c:2971
-  __lock_acquire+0xc75/0x1be0 kernel/locking/lockdep.c:3955
-  lock_acquire+0x158/0x250 kernel/locking/lockdep.c:4487
-  __mutex_lock_common+0x14c/0x2e20 kernel/locking/mutex.c:956
-  __mutex_lock kernel/locking/mutex.c:1103 [inline]
-  mutex_lock_killable_nested+0x1b/0x30 kernel/locking/mutex.c:1133
-  lock_trace fs/proc/base.c:406 [inline]
-  proc_pid_syscall+0x66/0x3a0 fs/proc/base.c:635
-  proc_single_show+0xd8/0x120 fs/proc/base.c:756
-  seq_read+0x4cd/0xd70 fs/seq_file.c:229
-  do_loop_readv_writev fs/read_write.c:714 [inline]
-  do_iter_read+0x4b1/0x5b0 fs/read_write.c:935
-  vfs_readv fs/read_write.c:997 [inline]
-  do_preadv+0x178/0x290 fs/read_write.c:1089
-  __do_sys_preadv fs/read_write.c:1139 [inline]
-  __se_sys_preadv fs/read_write.c:1134 [inline]
-  __x64_sys_preadv+0x9e/0xb0 fs/read_write.c:1134
-  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45a669
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ff34e552c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000127
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 000000000045a669
-RDX: 00000000000001e3 RSI: 00000000200013c0 RDI: 0000000000000004
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007ff34e5536d4
-R13: 00000000004c7ef1 R14: 00000000004dde10 R15: 00000000ffffffff
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
