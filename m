@@ -4,55 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C96FFC33C8C
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AB7C43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2DC208D4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 572D220855
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919409;
-	bh=veA1u/NFRMPjxmg2z9Ts0nba0JTcv5GCfC6drOMXbiQ=;
+	s=default; t=1573919421;
+	bh=l6iiVA3E9iGMZdpQYcBruEKsw7d0YFm93jzD7sppr0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bKIiBVSgjkwMKgreDIjorjG3GwQAJHk8GhiCZj2YFlImDYkwhBWVXfWF+4ZXb4VLy
-	 tmrlAP52PoHfWrvXojrhq1/f4plkj+TVPEBnJx1jQSVP1mgMAhLBgTHbBO3++ilumO
-	 QodVSWtyif/0Nu7GVjTGAeW1lP0jIGCuk8y/JARM=
+	b=NF5rNoycMi+xOFeLOXE5mhdXQgnmqGY1PgUwryIfSobVJ+vTc4FbfoBmjgHQYb1Mj
+	 3HFzYcaALFToDCOa9quVBKoD3TtrMxanz4Y3TArD+ZFJoQaQvWV31B6fNdeUjz+qF+
+	 ndjPSOsVzr0DxSSKwqSNqL1CPHZRQejrkcrl4Syw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730419AbfKPPuH (ORCPT
+        id S1730489AbfKPPuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:50:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57794 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:50:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730403AbfKPPuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:50:03 -0500
+        id S1730452AbfKPPuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:50:15 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBAB320855;
-        Sat, 16 Nov 2019 15:50:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A359B20855;
+        Sat, 16 Nov 2019 15:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919402;
-        bh=veA1u/NFRMPjxmg2z9Ts0nba0JTcv5GCfC6drOMXbiQ=;
+        s=default; t=1573919415;
+        bh=l6iiVA3E9iGMZdpQYcBruEKsw7d0YFm93jzD7sppr0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YTNy6KmnVkAu+HKInPHBCr4YwKW43UGjcXj42HPE/zGJ1QhW71KWqJaCcXc4APNZF
-         CN/Vdf5RXmbwKHZLrkX4O4mR49gWpgy78Ez2a0zrzpSYW4NWBjPzGuBMU5EOp1UtJP
-         njHJsL6G5pMhclNlzHkdPK3A8QclQk6UAkADg5xo=
+        b=HfscN+AYeXrziaHkKN7DLsU8Yeczom/K0KC6EgzpvVUAEmJwbO6Hj53zDMR2VFxzz
+         a/DFfzfCL/yEbH4OvYuTedFtDuQFDvcRanI0D0rEOsX3btXz1fATIhQvRXizct7t+2
+         0HSb2ZH0MCusbsmbbEjI0QLXxVJCjftFFoyN/4pc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        "Ernesto A . Fernndez" <ernesto.mnd.fernandez@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Hin-Tak Leung <htl10@users.sourceforge.net>,
-        Vyacheslav Dubeyko <slava@dubeyko.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 103/150] fs/hfs/extent.c: fix array out of bounds read of array extent
-Date:   Sat, 16 Nov 2019 10:46:41 -0500
-Message-Id: <20191116154729.9573-103-sashal@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 113/150] net: do not abort bulk send on BQL status
+Date:   Sat, 16 Nov 2019 10:46:51 -0500
+Message-Id: <20191116154729.9573-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -65,56 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 6c9a3f843a29d6894dfc40df338b91dbd78f0ae3 ]
+[ Upstream commit fe60faa5063822f2d555f4f326c7dd72a60929bf ]
 
-Currently extent and index i are both being incremented causing an array
-out of bounds read on extent[i].  Fix this by removing the extraneous
-increment of extent.
+Before calling dev_hard_start_xmit(), upper layers tried
+to cook optimal skb list based on BQL budget.
 
-Ernesto said:
+Problem is that GSO packets can end up comsuming more than
+the BQL budget.
 
-: This is only triggered when deleting a file with a resource fork.  I
-: may be wrong because the documentation isn't clear, but I don't think
-: you can create those under linux.  So I guess nobody was testing them.
-:
-: > A disk space leak, perhaps?
-:
-: That's what it looks like in general.  hfs_free_extents() won't do
-: anything if the block count doesn't add up, and the error will be
-: ignored.  Now, if the block count randomly does add up, we could see
-: some corruption.
+Breaking the loop is not useful, since requeued packets
+are ahead of any packets still in the qdisc.
 
-Detected by CoverityScan, CID#711541 ("Out of bounds read")
+It is also more expensive, since next TX completion will
+push these packets later, while skbs are not in cpu caches.
 
-Link: http://lkml.kernel.org/r/20180831140538.31566-1-colin.king@canonical.com
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Ernesto A. Fernndez <ernesto.mnd.fernandez@gmail.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Hin-Tak Leung <htl10@users.sourceforge.net>
-Cc: Vyacheslav Dubeyko <slava@dubeyko.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+It is also a behavior difference with TSO packets, that can
+break the BQL limit by a large amount.
+
+Note that drivers should use __netdev_tx_sent_queue()
+in order to have optimal xmit_more support, and avoid
+useless atomic operations as shown in the following patch.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/hfs/extent.c | 2 +-
+ net/core/dev.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/hfs/extent.c b/fs/hfs/extent.c
-index 5f1ff97a3b987..263d5028d9d18 100644
---- a/fs/hfs/extent.c
-+++ b/fs/hfs/extent.c
-@@ -304,7 +304,7 @@ int hfs_free_fork(struct super_block *sb, struct hfs_cat_file *file, int type)
- 		return 0;
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 9d6beb9de924b..3ce68484ed5aa 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -3029,7 +3029,7 @@ struct sk_buff *dev_hard_start_xmit(struct sk_buff *first, struct net_device *de
+ 		}
  
- 	blocks = 0;
--	for (i = 0; i < 3; extent++, i++)
-+	for (i = 0; i < 3; i++)
- 		blocks += be16_to_cpu(extent[i].count);
- 
- 	res = hfs_free_extents(sb, extent, blocks, blocks);
+ 		skb = next;
+-		if (netif_xmit_stopped(txq) && skb) {
++		if (netif_tx_queue_stopped(txq) && skb) {
+ 			rc = NETDEV_TX_BUSY;
+ 			break;
+ 		}
 -- 
 2.20.1
 
