@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFA1C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF890C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 643DA206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88DA0206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920193;
-	bh=G+bUnZIIGo0TF/ZYi61/DRntB0hbkjdnF5/2+ThSJ3w=;
+	s=default; t=1573920199;
+	bh=6MsO48qqDlueLw2rlZAnHoxYP3IEV8AjklsM9jZxRY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n/zjYGkN3H5WLiNkEMHLDPEi4EJ+UMWsuf5viSGL4mySf5xiMIpFxL+8K+IbPnezB
-	 cMkg8CwwtxOnMXNy9VU4HAfw5QEZLcr71oLf5ZUnwNuP4urqLywBzErnfAGF+jlc8V
-	 Pv2iqmHf7OJLkhsXnHmOZsoi7IBy2X3L4jFKUmNY=
+	b=F4Y3laRjuNgqEzdEu3Da3vrIe2wrRZrSnFo4on/tc2OIB3kj/XB33VlDU61MEg7h+
+	 jIxcy5hdMRKVSxxjsM5s9/mitpXy14kV+cm/b2EGo+Fgc9DoxgCT/p4a+7td4f4nM3
+	 g10T3Tu8Th1UT4/mAa0IPhMWBLO32H0wlFqyuXsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731576AbfKPQDM (ORCPT
+        id S1731206AbfKPQDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:03:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32794 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:03:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730030AbfKPPwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:52:07 -0500
+        id S1730898AbfKPPwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:52:04 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1FB220857;
-        Sat, 16 Nov 2019 15:52:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60AE120871;
+        Sat, 16 Nov 2019 15:52:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919526;
-        bh=G+bUnZIIGo0TF/ZYi61/DRntB0hbkjdnF5/2+ThSJ3w=;
+        s=default; t=1573919523;
+        bh=6MsO48qqDlueLw2rlZAnHoxYP3IEV8AjklsM9jZxRY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kHVDNIYMKDr2AXNbQojkNnPx/jDrDByK78Zo9lvXIaDP2k6m+hqLmv62JOyeiGurm
-         iGRUFdHiZmkkBe0eaO+2YbWf2OBRuOi0z60EScR4Ilmve+Ox8coroiEZ/Ap8kfiPIl
-         TURmL51Mg0+kWdSrCJy3fu1HRJQLbQEr0+IK/Hf8=
+        b=zhoos4PhqkPevRgQEjWcypbxmT0a4M+lNGmU+oNOaxldgD9TUC/UrJ4wPJmFIHi9d
+         +/GAjlIC1GXMwe9vfoScWHufFurF4NZ5LSIVMtRGlUcUM25tLk46t26YKomaADQRKw
+         FzOrvE9WXrkhJUMdBIogmXb5JpoFus17iu8WYSMI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 48/99] selftests/ftrace: Fix to test kprobe $comm arg only if available
-Date:   Sat, 16 Nov 2019 10:50:11 -0500
-Message-Id: <20191116155103.10971-48-sashal@kernel.org>
+Cc:     Sapthagiri Baratam <sapthagiri.baratam@cirrus.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com
+Subject: [PATCH AUTOSEL 4.9 45/99] mfd: arizona: Correct calling of runtime_put_sync
+Date:   Sat, 16 Nov 2019 10:50:08 -0500
+Message-Id: <20191116155103.10971-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -59,38 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Sapthagiri Baratam <sapthagiri.baratam@cirrus.com>
 
-[ Upstream commit 2452c96e617a0ff6fb2692e55217a3fa57a7322c ]
+[ Upstream commit 6b269a41a4520f7eb639e61a45ebbb9c9267d5e0 ]
 
-Test $comm in kprobe-event argument syntax testcase
-only if it is supported on the kernel because
-$comm has been introduced 4.8 kernel.
-So on older stable kernel, it should be skipped.
+Don't call runtime_put_sync when clk32k_ref is ARIZONA_32KZ_MCLK2
+as there is no corresponding runtime_get_sync call.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Shuah Khan (Samsung OSG) <shuah@kernel.org>
+MCLK1 is not in the AoD power domain so if it is used as 32kHz clock
+source we need to hold a runtime PM reference to keep the device from
+going into low power mode.
+
+Fixes: cdd8da8cc66b ("mfd: arizona: Add gating of external MCLKn clocks")
+Signed-off-by: Sapthagiri Baratam <sapthagiri.baratam@cirrus.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc       | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/mfd/arizona-core.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
-index 231bcd2c4eb59..1e7ac6f3362ff 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
-@@ -71,8 +71,11 @@ test_badarg "\$stackp" "\$stack0+10" "\$stack1-10"
- echo "r ${PROBEFUNC} \$retval" > kprobe_events
- ! echo "p ${PROBEFUNC} \$retval" > kprobe_events
+diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+index 0556a9749dbe0..1f0c2b594654e 100644
+--- a/drivers/mfd/arizona-core.c
++++ b/drivers/mfd/arizona-core.c
+@@ -52,8 +52,10 @@ int arizona_clk32k_enable(struct arizona *arizona)
+ 			if (ret != 0)
+ 				goto err_ref;
+ 			ret = clk_prepare_enable(arizona->mclk[ARIZONA_MCLK1]);
+-			if (ret != 0)
+-				goto err_pm;
++			if (ret != 0) {
++				pm_runtime_put_sync(arizona->dev);
++				goto err_ref;
++			}
+ 			break;
+ 		case ARIZONA_32KZ_MCLK2:
+ 			ret = clk_prepare_enable(arizona->mclk[ARIZONA_MCLK2]);
+@@ -67,8 +69,6 @@ int arizona_clk32k_enable(struct arizona *arizona)
+ 					 ARIZONA_CLK_32K_ENA);
+ 	}
  
-+# $comm was introduced in 4.8, older kernels reject it.
-+if grep -A1 "fetcharg:" README | grep -q '\$comm' ; then
- : "Comm access"
- test_goodarg "\$comm"
-+fi
- 
- : "Indirect memory access"
- test_goodarg "+0(${GOODREG})" "-0(${GOODREG})" "+10(\$stack)" \
+-err_pm:
+-	pm_runtime_put_sync(arizona->dev);
+ err_ref:
+ 	if (ret != 0)
+ 		arizona->clk32k_ref--;
 -- 
 2.20.1
 
