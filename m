@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F08CBC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0C7C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5CC9216F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2882321823
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921597;
-	bh=y5GylDGsCz7qIrBi3/WJS/VV0/tGA8o9bj7XaPDIqYk=;
+	s=default; t=1573921601;
+	bh=gUbBaBqeNzDCPkiKzKsFnWC4UNaWjQUjPjfR/d+HDI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xs8zchgP9rNb+9gLUpsR5YM4+BGr3cWyz3dzwwprrlRrwERDDKwyPIDqmfLeUZf9b
-	 3DctfWL7MedtP7YGSloroMlxETTsfft9baoTewvCYhVi8XYtcikJSXnBDBk/7i0eMQ
-	 47oDvh46fZ7uMEJj+AKThw5xY1kY5Vy0tNPtrEP0=
+	b=K0MpiG5Y1Bdj6KvpI9WRK3fEQlNqFHD6EjZPJapp97Sr3CFAIlYjROCoIrvsHOKSZ
+	 ePWw6OSORMF7hijdEIxZXt6iZQKeiEFfjRhuT8H31b5HEhZnMzxldSRZMYQbOyCvGM
+	 nLFJs50BF0QX4jMYgJV1cFnc7tSGSg8xkkHu2kkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732054AbfKPQ0g (ORCPT
+        id S1732071AbfKPQ0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:26:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45210 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:26:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728029AbfKPPlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:41:53 -0500
+        id S1728020AbfKPPlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:41:50 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C7692084B;
-        Sat, 16 Nov 2019 15:41:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C8A42075E;
+        Sat, 16 Nov 2019 15:41:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918912;
-        bh=y5GylDGsCz7qIrBi3/WJS/VV0/tGA8o9bj7XaPDIqYk=;
+        s=default; t=1573918910;
+        bh=gUbBaBqeNzDCPkiKzKsFnWC4UNaWjQUjPjfR/d+HDI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aXZgbZzYIsW2LDqYUzi4yNCtw2SUlHMrmwvfcyHRH3yZDKc0F+OXNS/tCY8ryd9ct
-         r79yv9ubxmoFGhvvIqH4tC4DM29o54vtCLS0KI3Lredk5fGh5epeB3Ay/lXjGrrMGB
-         BgwGEHnkCGWUuBGHb2kgt1VaeaW71m1QmwL1qG6A=
+        b=KUkYgC+DYrutt+zuntrPFTuebGKE1/UXppdWv81cWndTM1Eg3p386j84QG4ta9edw
+         yaWffE45B/qARm5ZaSIsA0wtep5n3TYU5lgJtZ0/PdzJuy3LBWjeFgFB/rpmuaHnXS
+         RI6Jwt1ViK5Dga7w1f9gZquNLIPprHXQNl6wbYS8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiang Chen <chenxiang66@hisilicon.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 036/237] scsi: hisi_sas: Free slot later in slot_complete_vx_hw()
-Date:   Sat, 16 Nov 2019 10:37:51 -0500
-Message-Id: <20191116154113.7417-36-sashal@kernel.org>
+Cc:     Angelo Dureghello <angelo@sysam.it>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-m68k@lists.linux-m68k.org
+Subject: [PATCH AUTOSEL 4.19 033/237] m68k: fix command-line parsing when passed from u-boot
+Date:   Sat, 16 Nov 2019 10:37:48 -0500
+Message-Id: <20191116154113.7417-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,70 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiang Chen <chenxiang66@hisilicon.com>
+From: Angelo Dureghello <angelo@sysam.it>
 
-[ Upstream commit 3e178f3ecfcf91a258e832b0f0843a4cfd9059ac ]
+[ Upstream commit 381fdd62c38344a771aed06adaf14aae65c47454 ]
 
-If an SSP/SMP IO times out, it may be actually in reality be
-simultaneously processing completion of the slot in
-slot_complete_vx_hw().
+This patch fixes command_line array zero-terminated
+one byte over the end of the array, causing boot to hang.
 
-Then if the slot is freed in slot_complete_vx_hw() (this IPTT is freed
-and it may be re-used by other slot), and we may abort the wrong slot in
-hisi_sas_abort_task().
-
-So to solve the issue, free the slot after the check of
-SAS_TASK_STATE_ABORTED in slot_complete_vx_hw().
-
-Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Angelo Dureghello <angelo@sysam.it>
+Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c | 2 +-
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/m68k/kernel/uboot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-index 1c4ea58da1ae1..c4774d63d5d04 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-@@ -2481,7 +2481,6 @@ slot_complete_v2_hw(struct hisi_hba *hisi_hba, struct hisi_sas_slot *slot)
+diff --git a/arch/m68k/kernel/uboot.c b/arch/m68k/kernel/uboot.c
+index b29c3b241e1bb..1070828770645 100644
+--- a/arch/m68k/kernel/uboot.c
++++ b/arch/m68k/kernel/uboot.c
+@@ -102,5 +102,5 @@ __init void process_uboot_commandline(char *commandp, int size)
  	}
  
- out:
--	hisi_sas_slot_task_free(hisi_hba, task, slot);
- 	sts = ts->stat;
- 	spin_lock_irqsave(&task->task_state_lock, flags);
- 	if (task->task_state_flags & SAS_TASK_STATE_ABORTED) {
-@@ -2491,6 +2490,7 @@ slot_complete_v2_hw(struct hisi_hba *hisi_hba, struct hisi_sas_slot *slot)
- 	}
- 	task->task_state_flags |= SAS_TASK_STATE_DONE;
- 	spin_unlock_irqrestore(&task->task_state_lock, flags);
-+	hisi_sas_slot_task_free(hisi_hba, task, slot);
- 
- 	if (!is_internal && (task->task_proto != SAS_PROTOCOL_SMP)) {
- 		spin_lock_irqsave(&device->done_lock, flags);
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index 3922b17e2ea39..fb2a5969181b5 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -1749,7 +1749,6 @@ slot_complete_v3_hw(struct hisi_hba *hisi_hba, struct hisi_sas_slot *slot)
- 	}
- 
- out:
--	hisi_sas_slot_task_free(hisi_hba, task, slot);
- 	sts = ts->stat;
- 	spin_lock_irqsave(&task->task_state_lock, flags);
- 	if (task->task_state_flags & SAS_TASK_STATE_ABORTED) {
-@@ -1759,6 +1758,7 @@ slot_complete_v3_hw(struct hisi_hba *hisi_hba, struct hisi_sas_slot *slot)
- 	}
- 	task->task_state_flags |= SAS_TASK_STATE_DONE;
- 	spin_unlock_irqrestore(&task->task_state_lock, flags);
-+	hisi_sas_slot_task_free(hisi_hba, task, slot);
- 
- 	if (!is_internal && (task->task_proto != SAS_PROTOCOL_SMP)) {
- 		spin_lock_irqsave(&device->done_lock, flags);
+ 	parse_uboot_commandline(commandp, len);
+-	commandp[size - 1] = 0;
++	commandp[len - 1] = 0;
+ }
 -- 
 2.20.1
 
