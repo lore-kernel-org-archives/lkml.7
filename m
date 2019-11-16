@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C76FAC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 915FCC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA1E21479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D8AC20815
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919797;
-	bh=Ya4z3h/D1ptB65uMeIAiGYXdMxZBBFenfL6jQ59dGu8=;
+	s=default; t=1573919804;
+	bh=tOajLgzf+6n6vOATerHhVPn4sqkI079tnrqMck6Rxzg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o64r5EuklFsIJHykN2nSPPqOxq2+68BB8kvZffUi6VfzKGpBNgcvsEKzcBHDIOL3e
-	 hKIc5vy6fEuwN/+QKogwd7Nf9Zi23kPUpXJGGPK9OrGQ/OFc+2b8m4lq26cPfnPZAT
-	 XHtL4U+4I4SuR9ajlYtvXs3scGA5E0d2Z55Ct7wc=
+	b=bH7g2oHtZafZaO2fanQFhy7mROMxZiCA+RPi7uTYT87U7/lPXvDdBlOCbE46/RmXw
+	 HG/36SXfCb76AWmdIy5aqoueGy/U22C0wss8b/Zx1O6IIy67VAvzPG7MRPadtpjU/u
+	 IvFYsOJu/9pFD3d9/YUA3ydxYis2Fh0NhemU/dEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731217AbfKPP4g (ORCPT
+        id S1731709AbfKPP4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:56:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37502 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:56:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731562AbfKPPz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:55:26 -0500
+        id S1729128AbfKPPzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:55:23 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAD032192D;
-        Sat, 16 Nov 2019 15:55:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAAF321920;
+        Sat, 16 Nov 2019 15:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919726;
-        bh=Ya4z3h/D1ptB65uMeIAiGYXdMxZBBFenfL6jQ59dGu8=;
+        s=default; t=1573919723;
+        bh=tOajLgzf+6n6vOATerHhVPn4sqkI079tnrqMck6Rxzg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zobJt+1NTk9N7q0Zsvi+/pQyxmDRC04mIsIU2GjnCxUhGJ2RPB0ZrIB8PRC2HQhLy
-         WsN2AHg5LQcicObk/KhjsphtMuzsi//WQGzy0DlG+cmOPGJk08VGjqrq5dbNkQlNmf
-         Rj7DsllcJmFm9YgObUeOU76uvJOEYelEpzBlaK48=
+        b=RLwTOr8MTNboPQY4PgD8Vgm7m6TdYAOwLLPnRQn4zUQYZPs2R/R221LGH/qxIii3B
+         zMuKcH6LCi7zCtvs1hOsb3dgtgLVIshT3Mt4egscMhOgUXaibJa+ZCG+exHdQVsyjU
+         adFbBxNsLTKd/USKNEJ7BDTyoeXS8K+ABMoikBd0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Suganath Prabu <suganath-prabu.subramani@broadcom.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 66/77] scsi: mpt3sas: Fix Sync cache command failure during driver unload
-Date:   Sat, 16 Nov 2019 10:53:28 -0500
-Message-Id: <20191116155339.11909-66-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 64/77] wireless: airo: potential buffer overflow in sprintf()
+Date:   Sat, 16 Nov 2019 10:53:26 -0500
+Message-Id: <20191116155339.11909-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -62,85 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 9029a72500b95578a35877a43473b82cb0386c53 ]
+[ Upstream commit 3d39e1bb1c88f32820c5f9271f2c8c2fb9a52bac ]
 
-This is to fix SYNC CACHE and START STOP command failures with
-DID_NO_CONNECT during driver unload.
+It looks like we wanted to print a maximum of BSSList_rid.ssidLen bytes
+of the ssid, but we accidentally use "%*s" (width) instead of "%.*s"
+(precision) so if the ssid doesn't have a NUL terminator this could lead
+to an overflow.
 
-In driver's IO submission patch (i.e. in driver's .queuecommand()) driver
-won't allow any SCSI commands to the IOC when ioc->remove_host flag is set
-and hence SYNC CACHE commands which are issued to the target drives (where
-write cache is enabled) during driver unload time is failed with
-DID_NO_CONNECT status.
+Static analysis.  Not tested.
 
-Now modified the driver to allow SYNC CACHE and START STOP commands to IOC,
-even when remove_host flag is set.
-
-Signed-off-by: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
-Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: e174961ca1a0 ("net: convert print_mac to %pM")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/mpt3sas/mpt3sas_scsih.c | 36 +++++++++++++++++++++++++++-
- 1 file changed, 35 insertions(+), 1 deletion(-)
+ drivers/net/wireless/airo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-index 7d67a68bcc624..8735e4257028a 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-@@ -3254,6 +3254,40 @@ _scsih_tm_tr_complete(struct MPT3SAS_ADAPTER *ioc, u16 smid, u8 msix_index,
- 	return _scsih_check_for_pending_tm(ioc, smid);
- }
- 
-+/** _scsih_allow_scmd_to_device - check whether scmd needs to
-+ *				 issue to IOC or not.
-+ * @ioc: per adapter object
-+ * @scmd: pointer to scsi command object
-+ *
-+ * Returns true if scmd can be issued to IOC otherwise returns false.
-+ */
-+inline bool _scsih_allow_scmd_to_device(struct MPT3SAS_ADAPTER *ioc,
-+	struct scsi_cmnd *scmd)
-+{
-+
-+	if (ioc->pci_error_recovery)
-+		return false;
-+
-+	if (ioc->hba_mpi_version_belonged == MPI2_VERSION) {
-+		if (ioc->remove_host)
-+			return false;
-+
-+		return true;
-+	}
-+
-+	if (ioc->remove_host) {
-+
-+		switch (scmd->cmnd[0]) {
-+		case SYNCHRONIZE_CACHE:
-+		case START_STOP:
-+			return true;
-+		default:
-+			return false;
-+		}
-+	}
-+
-+	return true;
-+}
- 
- /**
-  * _scsih_sas_control_complete - completion routine
-@@ -3880,7 +3914,7 @@ scsih_qcmd(struct Scsi_Host *shost, struct scsi_cmnd *scmd)
- 		return 0;
- 	}
- 
--	if (ioc->pci_error_recovery || ioc->remove_host) {
-+	if (!(_scsih_allow_scmd_to_device(ioc, scmd))) {
- 		scmd->result = DID_NO_CONNECT << 16;
- 		scmd->scsi_done(scmd);
- 		return 0;
+diff --git a/drivers/net/wireless/airo.c b/drivers/net/wireless/airo.c
+index 17c40f06f13e5..82d24f2b9c190 100644
+--- a/drivers/net/wireless/airo.c
++++ b/drivers/net/wireless/airo.c
+@@ -5484,7 +5484,7 @@ static int proc_BSSList_open( struct inode *inode, struct file *file ) {
+            we have to add a spin lock... */
+ 	rc = readBSSListRid(ai, doLoseSync, &BSSList_rid);
+ 	while(rc == 0 && BSSList_rid.index != cpu_to_le16(0xffff)) {
+-		ptr += sprintf(ptr, "%pM %*s rssi = %d",
++		ptr += sprintf(ptr, "%pM %.*s rssi = %d",
+ 			       BSSList_rid.bssid,
+ 				(int)BSSList_rid.ssidLen,
+ 				BSSList_rid.ssid,
 -- 
 2.20.1
 
