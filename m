@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F0FC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7DEC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 877402075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29C4B2082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573918924;
-	bh=exWk14fngb1BXqFLHVNg9jbsZqzBTXvvlD/nSx7Ny2Q=;
+	s=default; t=1573918930;
+	bh=E4lEx/M3dpUWK1f5P4pR88zODDCCQts5gWFfasn091I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jAoT88yGtY6NWEJ6I6JoERZhVYu1a3ZtYqUteBNdv9wFTeSv4dm/5LiP73XKiwnv8
-	 jdzm/EXQPq7ZzDnYpKcjI4d6iRVnNlrWAB7CPZesiQ7zZDEAbEngguH5UVdFClz0I9
-	 z6yYySqmk9UtqciohM065yUA/8cvv26K466f92vU=
+	b=sjlhY3dfqtZhxvNbEPmMjipBTdoxBpdV38T3uE3O7wPkkfnZqsc85Ez5a2p4AZzWo
+	 Y4ci6qnBtaHj893y3lTo2bRRm62ZATHZ6N1+LRVbo/0DNmjOgI7mIAVMqRiTVTbdeZ
+	 n9tixiNhndRiLG7KPSzDB0H9NM6n77oTE7OQj7do=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbfKPPmD (ORCPT
+        id S1728192AbfKPPmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:42:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45354 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:42:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728060AbfKPPl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:41:58 -0500
+        id S1728142AbfKPPmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:42:05 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82519207FA;
-        Sat, 16 Nov 2019 15:41:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 228082084B;
+        Sat, 16 Nov 2019 15:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918916;
-        bh=exWk14fngb1BXqFLHVNg9jbsZqzBTXvvlD/nSx7Ny2Q=;
+        s=default; t=1573918924;
+        bh=E4lEx/M3dpUWK1f5P4pR88zODDCCQts5gWFfasn091I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iz9PEi7qdmdwtuwhN0lZ+WHlQTyuqPmOa++f+/qyhAaaavri2V9ZuQolue7uT57gD
-         2rTnepnwz5dDKSNunsMVcOMMiYJ+WfyPAJ9RFZRaNTxvWOgJwX+QryLH4yFvK2RRGe
-         ZLh0PR0NF2OaYAgTCiPvRqFBXzrWCIXe0ssA4dkA=
+        b=aE302id1U8tTECaRS7EwrMQCGFXuD0XaTS1smPL64MD2jtcU+qF4IKREAhBEbJIuP
+         btOcBGt3xq5Pz21imxUowLrHWgUXf6Rj68yD6RHp1j1JgtcC6n2AnOY/au/gznsTx2
+         4uyQUs9JJrTLr1MOdCTOWb74504vldYDzYZ4oEek=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Selvin Xavier <selvin.xavier@broadcom.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 040/237] RDMA/bnxt_re: Avoid resource leak in case the NQ registration fails
-Date:   Sat, 16 Nov 2019 10:37:55 -0500
-Message-Id: <20191116154113.7417-40-sashal@kernel.org>
+Cc:     Joseph Lo <josephl@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 050/237] clk: tegra: Fixes for MBIST work around
+Date:   Sat, 16 Nov 2019 10:38:05 -0500
+Message-Id: <20191116154113.7417-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -59,141 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Selvin Xavier <selvin.xavier@broadcom.com>
+From: Joseph Lo <josephl@nvidia.com>
 
-[ Upstream commit 5df950994934814a8b91f0cf9f653842d2ba082d ]
+[ Upstream commit a4dbbceeee3e0ba670875a147237d6566de78840 ]
 
-In case the NQ alloc/enable fails, free up the already allocated/enabled
-NQ before reporting failure. Also, track the alloc/enable using proper
-state checking.
+Fix some incorrect data in LVL2 offset and bit mask.
 
-Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: e403d0057343 ("clk: tegra: MBIST work around for Tegra210")
+Signed-off-by: Joseph Lo <josephl@nvidia.com>
+Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/bnxt_re/bnxt_re.h |  2 ++
- drivers/infiniband/hw/bnxt_re/main.c    | 31 ++++++++++++++++++-------
- 2 files changed, 24 insertions(+), 9 deletions(-)
+ drivers/clk/tegra/clk-tegra210.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/hw/bnxt_re/bnxt_re.h b/drivers/infiniband/hw/bnxt_re/bnxt_re.h
-index 96f76896488da..802942adea8e8 100644
---- a/drivers/infiniband/hw/bnxt_re/bnxt_re.h
-+++ b/drivers/infiniband/hw/bnxt_re/bnxt_re.h
-@@ -120,6 +120,8 @@ struct bnxt_re_dev {
- #define BNXT_RE_FLAG_HAVE_L2_REF		3
- #define BNXT_RE_FLAG_RCFW_CHANNEL_EN		4
- #define BNXT_RE_FLAG_QOS_WORK_REG		5
-+#define BNXT_RE_FLAG_RESOURCES_ALLOCATED	7
-+#define BNXT_RE_FLAG_RESOURCES_INITIALIZED	8
- #define BNXT_RE_FLAG_ISSUE_ROCE_STATS          29
- 	struct net_device		*netdev;
- 	unsigned int			version, major, minor;
-diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
-index 7ffad368c5fa1..589b0d4677d52 100644
---- a/drivers/infiniband/hw/bnxt_re/main.c
-+++ b/drivers/infiniband/hw/bnxt_re/main.c
-@@ -864,10 +864,8 @@ static void bnxt_re_cleanup_res(struct bnxt_re_dev *rdev)
- {
- 	int i;
- 
--	if (rdev->nq[0].hwq.max_elements) {
--		for (i = 1; i < rdev->num_msix; i++)
--			bnxt_qplib_disable_nq(&rdev->nq[i - 1]);
--	}
-+	for (i = 1; i < rdev->num_msix; i++)
-+		bnxt_qplib_disable_nq(&rdev->nq[i - 1]);
- 
- 	if (rdev->qplib_res.rcfw)
- 		bnxt_qplib_cleanup_res(&rdev->qplib_res);
-@@ -876,6 +874,7 @@ static void bnxt_re_cleanup_res(struct bnxt_re_dev *rdev)
- static int bnxt_re_init_res(struct bnxt_re_dev *rdev)
- {
- 	int rc = 0, i;
-+	int num_vec_enabled = 0;
- 
- 	bnxt_qplib_init_res(&rdev->qplib_res);
- 
-@@ -891,9 +890,13 @@ static int bnxt_re_init_res(struct bnxt_re_dev *rdev)
- 				"Failed to enable NQ with rc = 0x%x", rc);
- 			goto fail;
- 		}
-+		num_vec_enabled++;
- 	}
- 	return 0;
- fail:
-+	for (i = num_vec_enabled; i >= 0; i--)
-+		bnxt_qplib_disable_nq(&rdev->nq[i]);
-+
- 	return rc;
- }
- 
-@@ -925,6 +928,7 @@ static void bnxt_re_free_res(struct bnxt_re_dev *rdev)
- static int bnxt_re_alloc_res(struct bnxt_re_dev *rdev)
- {
- 	int rc = 0, i;
-+	int num_vec_created = 0;
- 
- 	/* Configure and allocate resources for qplib */
- 	rdev->qplib_res.rcfw = &rdev->rcfw;
-@@ -951,7 +955,7 @@ static int bnxt_re_alloc_res(struct bnxt_re_dev *rdev)
- 		if (rc) {
- 			dev_err(rdev_to_dev(rdev), "Alloc Failed NQ%d rc:%#x",
- 				i, rc);
--			goto dealloc_dpi;
-+			goto free_nq;
- 		}
- 		rc = bnxt_re_net_ring_alloc
- 			(rdev, rdev->nq[i].hwq.pbl[PBL_LVL_0].pg_map_arr,
-@@ -964,14 +968,17 @@ static int bnxt_re_alloc_res(struct bnxt_re_dev *rdev)
- 			dev_err(rdev_to_dev(rdev),
- 				"Failed to allocate NQ fw id with rc = 0x%x",
- 				rc);
-+			bnxt_qplib_free_nq(&rdev->nq[i]);
- 			goto free_nq;
- 		}
-+		num_vec_created++;
- 	}
- 	return 0;
- free_nq:
--	for (i = 0; i < rdev->num_msix - 1; i++)
-+	for (i = num_vec_created; i >= 0; i--) {
-+		bnxt_re_net_ring_free(rdev, rdev->nq[i].ring_id);
- 		bnxt_qplib_free_nq(&rdev->nq[i]);
--dealloc_dpi:
-+	}
- 	bnxt_qplib_dealloc_dpi(&rdev->qplib_res,
- 			       &rdev->qplib_res.dpi_tbl,
- 			       &rdev->dpi_privileged);
-@@ -1206,8 +1213,11 @@ static void bnxt_re_ib_unreg(struct bnxt_re_dev *rdev)
- 	if (test_and_clear_bit(BNXT_RE_FLAG_QOS_WORK_REG, &rdev->flags))
- 		cancel_delayed_work(&rdev->worker);
- 
--	bnxt_re_cleanup_res(rdev);
--	bnxt_re_free_res(rdev);
-+	if (test_and_clear_bit(BNXT_RE_FLAG_RESOURCES_INITIALIZED,
-+			       &rdev->flags))
-+		bnxt_re_cleanup_res(rdev);
-+	if (test_and_clear_bit(BNXT_RE_FLAG_RESOURCES_ALLOCATED, &rdev->flags))
-+		bnxt_re_free_res(rdev);
- 
- 	if (test_and_clear_bit(BNXT_RE_FLAG_RCFW_CHANNEL_EN, &rdev->flags)) {
- 		rc = bnxt_qplib_deinit_rcfw(&rdev->rcfw);
-@@ -1337,12 +1347,15 @@ static int bnxt_re_ib_reg(struct bnxt_re_dev *rdev)
- 		pr_err("Failed to allocate resources: %#x\n", rc);
- 		goto fail;
- 	}
-+	set_bit(BNXT_RE_FLAG_RESOURCES_ALLOCATED, &rdev->flags);
- 	rc = bnxt_re_init_res(rdev);
- 	if (rc) {
- 		pr_err("Failed to initialize resources: %#x\n", rc);
- 		goto fail;
- 	}
- 
-+	set_bit(BNXT_RE_FLAG_RESOURCES_INITIALIZED, &rdev->flags);
-+
- 	if (!rdev->is_virtfn) {
- 		rc = bnxt_re_setup_qos(rdev);
- 		if (rc)
+diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+index 080bfa24863ee..7264e97310348 100644
+--- a/drivers/clk/tegra/clk-tegra210.c
++++ b/drivers/clk/tegra/clk-tegra210.c
+@@ -2603,7 +2603,7 @@ static struct tegra210_domain_mbist_war tegra210_pg_mbist_war[] = {
+ 	[TEGRA_POWERGATE_MPE] = {
+ 		.handle_lvl2_ovr = tegra210_generic_mbist_war,
+ 		.lvl2_offset = LVL2_CLK_GATE_OVRE,
+-		.lvl2_mask = BIT(2),
++		.lvl2_mask = BIT(29),
+ 	},
+ 	[TEGRA_POWERGATE_SOR] = {
+ 		.handle_lvl2_ovr = tegra210_generic_mbist_war,
+@@ -2654,14 +2654,14 @@ static struct tegra210_domain_mbist_war tegra210_pg_mbist_war[] = {
+ 		.num_clks = ARRAY_SIZE(nvdec_slcg_clkids),
+ 		.clk_init_data = nvdec_slcg_clkids,
+ 		.handle_lvl2_ovr = tegra210_generic_mbist_war,
+-		.lvl2_offset = LVL2_CLK_GATE_OVRC,
++		.lvl2_offset = LVL2_CLK_GATE_OVRE,
+ 		.lvl2_mask = BIT(9) | BIT(31),
+ 	},
+ 	[TEGRA_POWERGATE_NVJPG] = {
+ 		.num_clks = ARRAY_SIZE(nvjpg_slcg_clkids),
+ 		.clk_init_data = nvjpg_slcg_clkids,
+ 		.handle_lvl2_ovr = tegra210_generic_mbist_war,
+-		.lvl2_offset = LVL2_CLK_GATE_OVRC,
++		.lvl2_offset = LVL2_CLK_GATE_OVRE,
+ 		.lvl2_mask = BIT(9) | BIT(31),
+ 	},
+ 	[TEGRA_POWERGATE_AUD] = {
 -- 
 2.20.1
 
