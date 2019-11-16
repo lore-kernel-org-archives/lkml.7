@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA8AC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BABC43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19D9C20733
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22C8F20815
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919055;
-	bh=p9rxlh9iXXQvXzQWkVDUbPxKMIiAfjzCTTSipkRAAMc=;
+	s=default; t=1573919057;
+	bh=d9nxKcst+qQU3OV1rFInKjs+FqAyZY6FfLLPYATbVhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HnrJzFO2hJrEg3UKmNcPqbFkb0uUcsIRFK+vPqh420d+VWscwDVL8IUXBlZ5C9OWE
-	 H8a6l6+a1khZNjaeBjT3OajR6mHeTDusWSvpCiA/CyzQQp5ejwfkDGU+XUMK8HH2S6
-	 yDlfcBAt0JRYulPymGC6Hau1jQCUYsZp64yYw/MQ=
+	b=tH5ON5synvGpkNnGPvJiuAyXFZWr7bs5t+T1qjG/369EqQrtXau/jXwm25EZi/b2Z
+	 EWHtNUY27q39FxfBLoLindDmBuqXyM+zkSEM9qsdlv0m2tDnQD0jGatrR4irJIwTDB
+	 yhxxQoZDivTis1a/DZsYwaBHWMbATVCQL9dDpoxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbfKPPoN (ORCPT
+        id S1727986AbfKPPoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:44:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48636 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:44:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727880AbfKPPoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:44:11 -0500
+        id S1727948AbfKPPoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:44:13 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0425F20733;
-        Sat, 16 Nov 2019 15:44:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5E242072D;
+        Sat, 16 Nov 2019 15:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919050;
-        bh=p9rxlh9iXXQvXzQWkVDUbPxKMIiAfjzCTTSipkRAAMc=;
+        s=default; t=1573919053;
+        bh=d9nxKcst+qQU3OV1rFInKjs+FqAyZY6FfLLPYATbVhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i8DekjuQGmL1LHozTYKI81d1Xsh4x3zhNQ/C9AD1HK7kcYtqNAFSE23feM1a8y0P2
-         ffOz31VIo7e7ZNyfxkCD5VKyGuVYot4zGgQd1LsaeQFa2L6theqdJ1Xjbht0+e1lEi
-         2jr8x0bqIWHwn/SDZs8NYdY3NUcA/MjU4AvnBfUc=
+        b=MJpahdwDRw4kEcMdqPMtCEcOKt8Ht5zr6xxmKknL4uXHA0RSHw8igCIHJCGaOMHL/
+         ItDQtdDBgVALVxqoCRw1fVRL/uxWseic0YTgcrZeljprCA4vcpLpgbeRP9Z5lTSmjF
+         3jtbTBc2ZcmWOGM3J4MhoSzx2cuYUbW5YCDJmfxk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Kyeongdon Kim <kyeongdon.kim@lge.com>,
-        Alexander Potapenko <glider@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <jiangqi903@gmail.com>,
+        Changwei Ge <ge.changwei@h3c.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 128/237] arm64: lib: use C string functions with KASAN enabled
-Date:   Sat, 16 Nov 2019 10:39:23 -0500
-Message-Id: <20191116154113.7417-128-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 129/237] fs/ocfs2/dlm/dlmdebug.c: fix a sleep-in-atomic-context bug in dlm_print_one_mle()
+Date:   Sat, 16 Nov 2019 10:39:24 -0500
+Message-Id: <20191116154113.7417-129-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -65,221 +65,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Ryabinin <aryabinin@virtuozzo.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 19a2ca0fb560fd7be7b5293c6b652c6d6078dcde ]
+[ Upstream commit 999865764f5f128896402572b439269acb471022 ]
 
-ARM64 has asm implementation of memchr(), memcmp(), str[r]chr(),
-str[n]cmp(), str[n]len().  KASAN don't see memory accesses in asm code,
-thus it can potentially miss many bugs.
+The kernel module may sleep with holding a spinlock.
 
-Ifdef out __HAVE_ARCH_* defines of these functions when KASAN is enabled,
-so the generic implementations from lib/string.c will be used.
+The function call paths (from bottom to top) in Linux-4.16 are:
 
-We can't just remove the asm functions because efistub uses them.  And we
-can't have two non-weak functions either, so declare the asm functions as
-weak.
+[FUNC] get_zeroed_page(GFP_NOFS)
+fs/ocfs2/dlm/dlmdebug.c, 332: get_zeroed_page in dlm_print_one_mle
+fs/ocfs2/dlm/dlmmaster.c, 240: dlm_print_one_mle in __dlm_put_mle
+fs/ocfs2/dlm/dlmmaster.c, 255: __dlm_put_mle in dlm_put_mle
+fs/ocfs2/dlm/dlmmaster.c, 254: spin_lock in dlm_put_ml
 
-Link: http://lkml.kernel.org/r/20180920135631.23833-2-aryabinin@virtuozzo.com
-Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Reported-by: Kyeongdon Kim <kyeongdon.kim@lge.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
+[FUNC] get_zeroed_page(GFP_NOFS)
+fs/ocfs2/dlm/dlmdebug.c, 332: get_zeroed_page in dlm_print_one_mle
+fs/ocfs2/dlm/dlmmaster.c, 240: dlm_print_one_mle in __dlm_put_mle
+fs/ocfs2/dlm/dlmmaster.c, 222: __dlm_put_mle in dlm_put_mle_inuse
+fs/ocfs2/dlm/dlmmaster.c, 219: spin_lock in dlm_put_mle_inuse
+
+To fix this bug, GFP_NOFS is replaced with GFP_ATOMIC.
+
+This bug is found by my static analysis tool DSAC.
+
+Link: http://lkml.kernel.org/r/20180901112528.27025-1-baijiaju1990@gmail.com
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Joseph Qi <jiangqi903@gmail.com>
+Cc: Changwei Ge <ge.changwei@h3c.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/string.h | 14 ++++++++------
- arch/arm64/kernel/arm64ksyms.c  |  7 +++++--
- arch/arm64/lib/memchr.S         |  2 +-
- arch/arm64/lib/memcmp.S         |  2 +-
- arch/arm64/lib/strchr.S         |  2 +-
- arch/arm64/lib/strcmp.S         |  2 +-
- arch/arm64/lib/strlen.S         |  2 +-
- arch/arm64/lib/strncmp.S        |  2 +-
- arch/arm64/lib/strnlen.S        |  2 +-
- arch/arm64/lib/strrchr.S        |  2 +-
- 10 files changed, 21 insertions(+), 16 deletions(-)
+ fs/ocfs2/dlm/dlmdebug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/string.h b/arch/arm64/include/asm/string.h
-index dd95d33a5bd5d..03a6c256b7ec4 100644
---- a/arch/arm64/include/asm/string.h
-+++ b/arch/arm64/include/asm/string.h
-@@ -16,6 +16,7 @@
- #ifndef __ASM_STRING_H
- #define __ASM_STRING_H
+diff --git a/fs/ocfs2/dlm/dlmdebug.c b/fs/ocfs2/dlm/dlmdebug.c
+index 9b984cae4c4e0..1d6dc8422899b 100644
+--- a/fs/ocfs2/dlm/dlmdebug.c
++++ b/fs/ocfs2/dlm/dlmdebug.c
+@@ -329,7 +329,7 @@ void dlm_print_one_mle(struct dlm_master_list_entry *mle)
+ {
+ 	char *buf;
  
-+#ifndef CONFIG_KASAN
- #define __HAVE_ARCH_STRRCHR
- extern char *strrchr(const char *, int c);
- 
-@@ -34,6 +35,13 @@ extern __kernel_size_t strlen(const char *);
- #define __HAVE_ARCH_STRNLEN
- extern __kernel_size_t strnlen(const char *, __kernel_size_t);
- 
-+#define __HAVE_ARCH_MEMCMP
-+extern int memcmp(const void *, const void *, size_t);
-+
-+#define __HAVE_ARCH_MEMCHR
-+extern void *memchr(const void *, int, __kernel_size_t);
-+#endif
-+
- #define __HAVE_ARCH_MEMCPY
- extern void *memcpy(void *, const void *, __kernel_size_t);
- extern void *__memcpy(void *, const void *, __kernel_size_t);
-@@ -42,16 +50,10 @@ extern void *__memcpy(void *, const void *, __kernel_size_t);
- extern void *memmove(void *, const void *, __kernel_size_t);
- extern void *__memmove(void *, const void *, __kernel_size_t);
- 
--#define __HAVE_ARCH_MEMCHR
--extern void *memchr(const void *, int, __kernel_size_t);
--
- #define __HAVE_ARCH_MEMSET
- extern void *memset(void *, int, __kernel_size_t);
- extern void *__memset(void *, int, __kernel_size_t);
- 
--#define __HAVE_ARCH_MEMCMP
--extern int memcmp(const void *, const void *, size_t);
--
- #ifdef CONFIG_ARCH_HAS_UACCESS_FLUSHCACHE
- #define __HAVE_ARCH_MEMCPY_FLUSHCACHE
- void memcpy_flushcache(void *dst, const void *src, size_t cnt);
-diff --git a/arch/arm64/kernel/arm64ksyms.c b/arch/arm64/kernel/arm64ksyms.c
-index d894a20b70b28..72f63a59b0088 100644
---- a/arch/arm64/kernel/arm64ksyms.c
-+++ b/arch/arm64/kernel/arm64ksyms.c
-@@ -44,20 +44,23 @@ EXPORT_SYMBOL(__arch_copy_in_user);
- EXPORT_SYMBOL(memstart_addr);
- 
- 	/* string / mem functions */
-+#ifndef CONFIG_KASAN
- EXPORT_SYMBOL(strchr);
- EXPORT_SYMBOL(strrchr);
- EXPORT_SYMBOL(strcmp);
- EXPORT_SYMBOL(strncmp);
- EXPORT_SYMBOL(strlen);
- EXPORT_SYMBOL(strnlen);
-+EXPORT_SYMBOL(memcmp);
-+EXPORT_SYMBOL(memchr);
-+#endif
-+
- EXPORT_SYMBOL(memset);
- EXPORT_SYMBOL(memcpy);
- EXPORT_SYMBOL(memmove);
- EXPORT_SYMBOL(__memset);
- EXPORT_SYMBOL(__memcpy);
- EXPORT_SYMBOL(__memmove);
--EXPORT_SYMBOL(memchr);
--EXPORT_SYMBOL(memcmp);
- 
- 	/* atomic bitops */
- EXPORT_SYMBOL(set_bit);
-diff --git a/arch/arm64/lib/memchr.S b/arch/arm64/lib/memchr.S
-index 4444c1d25f4bb..0f164a4baf52a 100644
---- a/arch/arm64/lib/memchr.S
-+++ b/arch/arm64/lib/memchr.S
-@@ -30,7 +30,7 @@
-  * Returns:
-  *	x0 - address of first occurrence of 'c' or 0
-  */
--ENTRY(memchr)
-+WEAK(memchr)
- 	and	w1, w1, #0xff
- 1:	subs	x2, x2, #1
- 	b.mi	2f
-diff --git a/arch/arm64/lib/memcmp.S b/arch/arm64/lib/memcmp.S
-index 2a4e239bd17a0..fb295f52e9f87 100644
---- a/arch/arm64/lib/memcmp.S
-+++ b/arch/arm64/lib/memcmp.S
-@@ -58,7 +58,7 @@ pos		.req	x11
- limit_wd	.req	x12
- mask		.req	x13
- 
--ENTRY(memcmp)
-+WEAK(memcmp)
- 	cbz	limit, .Lret0
- 	eor	tmp1, src1, src2
- 	tst	tmp1, #7
-diff --git a/arch/arm64/lib/strchr.S b/arch/arm64/lib/strchr.S
-index dae0cf5591f99..7c83091d1bcdd 100644
---- a/arch/arm64/lib/strchr.S
-+++ b/arch/arm64/lib/strchr.S
-@@ -29,7 +29,7 @@
-  * Returns:
-  *	x0 - address of first occurrence of 'c' or 0
-  */
--ENTRY(strchr)
-+WEAK(strchr)
- 	and	w1, w1, #0xff
- 1:	ldrb	w2, [x0], #1
- 	cmp	w2, w1
-diff --git a/arch/arm64/lib/strcmp.S b/arch/arm64/lib/strcmp.S
-index 471fe61760ef6..7d5d15398bfbc 100644
---- a/arch/arm64/lib/strcmp.S
-+++ b/arch/arm64/lib/strcmp.S
-@@ -60,7 +60,7 @@ tmp3		.req	x9
- zeroones	.req	x10
- pos		.req	x11
- 
--ENTRY(strcmp)
-+WEAK(strcmp)
- 	eor	tmp1, src1, src2
- 	mov	zeroones, #REP8_01
- 	tst	tmp1, #7
-diff --git a/arch/arm64/lib/strlen.S b/arch/arm64/lib/strlen.S
-index 55ccc8e24c084..8e0b14205dcb4 100644
---- a/arch/arm64/lib/strlen.S
-+++ b/arch/arm64/lib/strlen.S
-@@ -56,7 +56,7 @@ pos		.req	x12
- #define REP8_7f 0x7f7f7f7f7f7f7f7f
- #define REP8_80 0x8080808080808080
- 
--ENTRY(strlen)
-+WEAK(strlen)
- 	mov	zeroones, #REP8_01
- 	bic	src, srcin, #15
- 	ands	tmp1, srcin, #15
-diff --git a/arch/arm64/lib/strncmp.S b/arch/arm64/lib/strncmp.S
-index e267044761c6f..66bd145935d9e 100644
---- a/arch/arm64/lib/strncmp.S
-+++ b/arch/arm64/lib/strncmp.S
-@@ -64,7 +64,7 @@ limit_wd	.req	x13
- mask		.req	x14
- endloop		.req	x15
- 
--ENTRY(strncmp)
-+WEAK(strncmp)
- 	cbz	limit, .Lret0
- 	eor	tmp1, src1, src2
- 	mov	zeroones, #REP8_01
-diff --git a/arch/arm64/lib/strnlen.S b/arch/arm64/lib/strnlen.S
-index eae38da6e0bb3..355be04441fe6 100644
---- a/arch/arm64/lib/strnlen.S
-+++ b/arch/arm64/lib/strnlen.S
-@@ -59,7 +59,7 @@ limit_wd	.req	x14
- #define REP8_7f 0x7f7f7f7f7f7f7f7f
- #define REP8_80 0x8080808080808080
- 
--ENTRY(strnlen)
-+WEAK(strnlen)
- 	cbz	limit, .Lhit_limit
- 	mov	zeroones, #REP8_01
- 	bic	src, srcin, #15
-diff --git a/arch/arm64/lib/strrchr.S b/arch/arm64/lib/strrchr.S
-index f8e2784d57521..ea84924d59901 100644
---- a/arch/arm64/lib/strrchr.S
-+++ b/arch/arm64/lib/strrchr.S
-@@ -29,7 +29,7 @@
-  * Returns:
-  *	x0 - address of last occurrence of 'c' or 0
-  */
--ENTRY(strrchr)
-+WEAK(strrchr)
- 	mov	x3, #0
- 	and	w1, w1, #0xff
- 1:	ldrb	w2, [x0], #1
+-	buf = (char *) get_zeroed_page(GFP_NOFS);
++	buf = (char *) get_zeroed_page(GFP_ATOMIC);
+ 	if (buf) {
+ 		dump_mle(mle, buf, PAGE_SIZE - 1);
+ 		free_page((unsigned long)buf);
 -- 
 2.20.1
 
