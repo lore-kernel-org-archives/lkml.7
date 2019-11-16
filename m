@@ -7,46 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 616BFC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF8AC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 388B320857
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 866BC20859
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:52:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919535;
-	bh=mDMQRLefT1wXgAOc2ntoJDLCRHpGLUSN9tXIFTlyFbs=;
+	s=default; t=1573919537;
+	bh=+FbwtVexOLimGFpjt3lzrQHpz3nlo14QU2WhTo5OPfY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q7y0GSKHjW6TiIMCD385XjLDOEZWDqj7RE3/kALZy+pR5VDaEBD8F25Zh9HdvWuhA
-	 OgmABKl1KLeIra1ew9pgTczVv/YbBpLMuelcryEqt/pnHc71zKEcTSczSVzgcDb42s
-	 6GDFUxc4uOJY8mdDfDFejFL361vIIu0sDHAg2as8=
+	b=IMY0B54aBMmzNho0Ot+ZfcF0IjEPPh919UwLRckrIpASf+bIQ2gMBe7fPz/Ukv+ls
+	 /sgLZJre2T7p4witCpy1e2xMts9KNqPDiczg52FTGNikroqcf2d+oS7oj9dx85TZCT
+	 cSagO726CSKFLmUaI/mFOz735ECsKKTf4Dw/DKzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730997AbfKPPwO (ORCPT
+        id S1731004AbfKPPwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:52:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32838 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:52:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730984AbfKPPwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:52:10 -0500
+        id S1730158AbfKPPwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:52:14 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A3C62077B;
-        Sat, 16 Nov 2019 15:52:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 360F420728;
+        Sat, 16 Nov 2019 15:52:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919529;
-        bh=mDMQRLefT1wXgAOc2ntoJDLCRHpGLUSN9tXIFTlyFbs=;
+        s=default; t=1573919533;
+        bh=+FbwtVexOLimGFpjt3lzrQHpz3nlo14QU2WhTo5OPfY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cmF2G6RGP+aGbTEPyO/qhyA1K+Cjk/Ox3uofs57Tp2obI+K5aF56U+bTCCLQll1mB
-         wQE/0/BKN1JA2qSvYsxa89uPuaOmPanDyaknQAj0m4iQpaPi6/7rbhcKR6zT5bb5oT
-         X4gLTOR+Vtb/dplZSlTOeCBkJ4X30owXE2eAcEnc=
+        b=nSRSNyN/fwW58vY1NFSH2zfqL9GNvL6SoV5bF41oDd7O25srguJaQ/YEQb9E18VYJ
+         Qo+W2cvZ0vA+qZW5j//8WxzdlS0Ep+RQQd40aHUjrYLkA7FWacWlrfsyWrsA8mUT5G
+         nPE5N8jc6GvFeL3zXixL9tUK1awjmZ6uTJTBrnyg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Felipe Rechia <felipe.rechia@datacom.com.br>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 50/99] powerpc/process: Fix flush_all_to_thread for SPE
-Date:   Sat, 16 Nov 2019 10:50:13 -0500
-Message-Id: <20191116155103.10971-50-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <jiangqi903@gmail.com>,
+        Changwei Ge <ge.changwei@h3c.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 52/99] fs/ocfs2/dlm/dlmdebug.c: fix a sleep-in-atomic-context bug in dlm_print_one_mle()
+Date:   Sat, 16 Nov 2019 10:50:15 -0500
+Message-Id: <20191116155103.10971-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -59,61 +65,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felipe Rechia <felipe.rechia@datacom.com.br>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit e901378578c62202594cba0f6c076f3df365ec91 ]
+[ Upstream commit 999865764f5f128896402572b439269acb471022 ]
 
-Fix a bug introduced by the creation of flush_all_to_thread() for
-processors that have SPE (Signal Processing Engine) and use it to
-compute floating-point operations.
+The kernel module may sleep with holding a spinlock.
 
->From userspace perspective, the problem was seen in attempts of
-computing floating-point operations which should generate exceptions.
-For example:
+The function call paths (from bottom to top) in Linux-4.16 are:
 
-  fork();
-  float x = 0.0 / 0.0;
-  isnan(x);           // forked process returns False (should be True)
+[FUNC] get_zeroed_page(GFP_NOFS)
+fs/ocfs2/dlm/dlmdebug.c, 332: get_zeroed_page in dlm_print_one_mle
+fs/ocfs2/dlm/dlmmaster.c, 240: dlm_print_one_mle in __dlm_put_mle
+fs/ocfs2/dlm/dlmmaster.c, 255: __dlm_put_mle in dlm_put_mle
+fs/ocfs2/dlm/dlmmaster.c, 254: spin_lock in dlm_put_ml
 
-The operation above also should always cause the SPEFSCR FINV bit to
-be set. However, the SPE floating-point exceptions were turned off
-after a fork().
+[FUNC] get_zeroed_page(GFP_NOFS)
+fs/ocfs2/dlm/dlmdebug.c, 332: get_zeroed_page in dlm_print_one_mle
+fs/ocfs2/dlm/dlmmaster.c, 240: dlm_print_one_mle in __dlm_put_mle
+fs/ocfs2/dlm/dlmmaster.c, 222: __dlm_put_mle in dlm_put_mle_inuse
+fs/ocfs2/dlm/dlmmaster.c, 219: spin_lock in dlm_put_mle_inuse
 
-Kernel versions prior to the bug used flush_spe_to_thread(), which
-first saves SPEFSCR register values in tsk->thread and then calls
-giveup_spe(tsk).
+To fix this bug, GFP_NOFS is replaced with GFP_ATOMIC.
 
-After commit 579e633e764e, the save_all() function was called first
-to giveup_spe(), and then the SPEFSCR register values were saved in
-tsk->thread. This would save the SPEFSCR register values after
-disabling SPE for that thread, causing the bug described above.
+This bug is found by my static analysis tool DSAC.
 
-Fixes 579e633e764e ("powerpc: create flush_all_to_thread()")
-Signed-off-by: Felipe Rechia <felipe.rechia@datacom.com.br>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: http://lkml.kernel.org/r/20180901112528.27025-1-baijiaju1990@gmail.com
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Joseph Qi <jiangqi903@gmail.com>
+Cc: Changwei Ge <ge.changwei@h3c.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/process.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/ocfs2/dlm/dlmdebug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-index 47c6c0401b3a2..54c95e7c74cce 100644
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -576,12 +576,11 @@ void flush_all_to_thread(struct task_struct *tsk)
- 	if (tsk->thread.regs) {
- 		preempt_disable();
- 		BUG_ON(tsk != current);
--		save_all(tsk);
--
- #ifdef CONFIG_SPE
- 		if (tsk->thread.regs->msr & MSR_SPE)
- 			tsk->thread.spefscr = mfspr(SPRN_SPEFSCR);
- #endif
-+		save_all(tsk);
+diff --git a/fs/ocfs2/dlm/dlmdebug.c b/fs/ocfs2/dlm/dlmdebug.c
+index e7b760deefaee..32d60f69db24c 100644
+--- a/fs/ocfs2/dlm/dlmdebug.c
++++ b/fs/ocfs2/dlm/dlmdebug.c
+@@ -329,7 +329,7 @@ void dlm_print_one_mle(struct dlm_master_list_entry *mle)
+ {
+ 	char *buf;
  
- 		preempt_enable();
- 	}
+-	buf = (char *) get_zeroed_page(GFP_NOFS);
++	buf = (char *) get_zeroed_page(GFP_ATOMIC);
+ 	if (buf) {
+ 		dump_mle(mle, buf, PAGE_SIZE - 1);
+ 		free_page((unsigned long)buf);
 -- 
 2.20.1
 
