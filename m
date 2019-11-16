@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 107EFC43215
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB69C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD36020740
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3154920740
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:45:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919096;
-	bh=t6h2MdHKYMubMCHj2hQ1lpKMgX+mo2ybIpeMq9ud7/4=;
+	s=default; t=1573919106;
+	bh=qgKnA8ercINp8dTih9WIGTCvC7aWFs7CarrmJcobrQ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FMlgEYXSmvopM8I9gamFc70DLaZs39nh4bEJt03HzUrYEM8/bQRyBmqEsVkJhTJje
-	 pD9AoOA1cPWZpOZEvgWN0U41FmRuj9fyiGESS1LLbvfG8puYBRH89gXNqBgIMeY/YG
-	 J49N5Caoiw2f8eBPH3eOX74LJdD2youIZKU04atc=
+	b=oFNHWFHQbQJLXq0k8bJOPIVnhSyZRwleT5gLRIMxIqAVeKc8qVtZk3vzkA8yFzTj4
+	 5yu/7tF4SBg3D7OaLrKJOTKD+EASfZ+QjUTlFEROd3wDB7Vim5OKvIGvTpzB0Xvlv0
+	 E0hwzCjHOiAgE8/9UudCM8DppEWqXIVLmscm9xY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbfKPPoz (ORCPT
+        id S1729119AbfKPPpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:44:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49970 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:45:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729079AbfKPPou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:44:50 -0500
+        id S1729095AbfKPPo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:44:56 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92C622073B;
-        Sat, 16 Nov 2019 15:44:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D8B92075B;
+        Sat, 16 Nov 2019 15:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919090;
-        bh=t6h2MdHKYMubMCHj2hQ1lpKMgX+mo2ybIpeMq9ud7/4=;
+        s=default; t=1573919095;
+        bh=qgKnA8ercINp8dTih9WIGTCvC7aWFs7CarrmJcobrQ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cU+8BEq6qUyV3CbG8xn0gb5AfXUPLovrAe+rSkrRyYrWP1PDyzLMyuLuYmFWsXZlO
-         01ckk2tTZRTXMzNNEymaWmhOJnirlPmDL6dgspTFrVpwuh4UhdVC5bovVVZegHMYRN
-         ucV/7Ey1ujTm2AZjhR8Kzbrv/KKpIw6zZ732tZ3A=
+        b=i7CfAuj02QQ3h2/y7m6KvD3okRqSm7qkDBtidWjxlP7S2XdsXIUxZet5xOL8deu23
+         PnBaO3kCCZinzvAZSi20AFwO0mHzYMKDX57T6Ga6MKa8wSvXYrEkpAPvblOqaaC8AB
+         lJE3NHoQweF8EBDj5NogAf5PjnqRA7CGrkIaBUEk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
@@ -48,9 +48,9 @@ Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 150/237] linux/bitmap.h: handle constant zero-size bitmaps correctly
-Date:   Sat, 16 Nov 2019 10:39:45 -0500
-Message-Id: <20191116154113.7417-150-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 152/237] lib/bitmap.c: fix remaining space computation in bitmap_print_to_pagebuf
+Date:   Sat, 16 Nov 2019 10:39:47 -0500
+Message-Id: <20191116154113.7417-152-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -65,25 +65,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-[ Upstream commit 7275b097851a5e2e0dd4da039c7e96b59ac5314e ]
+[ Upstream commit ce1091d471107dbf6f91db66a480a25950c9b9ff ]
 
-The static inlines in bitmap.h do not handle a compile-time constant
-nbits==0 correctly (they dereference the passed src or dst pointers,
-despite only 0 words being valid to access).  I had the 0-day buildbot
-chew on a patch [1] that would cause build failures for such cases without
-complaining, suggesting that we don't have any such users currently, at
-least for the 70 .config/arch combinations that was built.  Should any
-turn up, make sure they use the out-of-line versions, which do handle
-nbits==0 correctly.
+For various alignments of buf, the current expression computes
 
-This is of course not the most efficient, but it's much less churn than
-teaching all the static inlines an "if (zero_const_nbits())", and since we
-don't have any current instances, this doesn't affect existing code at
-all.
+4096 ok
+4095 ok
+8190
+8189
+...
+4097
 
-[1] lkml.kernel.org/r/20180815085539.27485-1-linux@rasmusvillemoes.dk
+i.e., if the caller has already written two bytes into the page buffer,
+len is 8190 rather than 4094, because PTR_ALIGN aligns up to the next
+boundary.  So if the printed version of the bitmap is huge, scnprintf()
+ends up writing beyond the page boundary.
 
-Link: http://lkml.kernel.org/r/20180818131623.8755-3-linux@rasmusvillemoes.dk
+I don't think any current callers actually write anything before
+bitmap_print_to_pagebuf, but the API seems to be designed to allow it.
+
+[akpm@linux-foundation.org: use offset_in_page(), per Andy]
+[akpm@linux-foundation.org: include mm.h for offset_in_page()]
+Link: http://lkml.kernel.org/r/20180818131623.8755-7-linux@rasmusvillemoes.dk
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: Yury Norov <ynorov@caviumnetworks.com>
@@ -93,28 +96,41 @@ Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/bitmap.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ lib/bitmap.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
-index acf5e8df3504f..a9805bacbd7ca 100644
---- a/include/linux/bitmap.h
-+++ b/include/linux/bitmap.h
-@@ -204,8 +204,13 @@ extern int bitmap_print_to_pagebuf(bool list, char *buf,
- #define BITMAP_FIRST_WORD_MASK(start) (~0UL << ((start) & (BITS_PER_LONG - 1)))
- #define BITMAP_LAST_WORD_MASK(nbits) (~0UL >> (-(nbits) & (BITS_PER_LONG - 1)))
- 
-+/*
-+ * The static inlines below do not handle constant nbits==0 correctly,
-+ * so make such users (should any ever turn up) call the out-of-line
-+ * versions.
-+ */
- #define small_const_nbits(nbits) \
--	(__builtin_constant_p(nbits) && (nbits) <= BITS_PER_LONG)
-+	(__builtin_constant_p(nbits) && (nbits) <= BITS_PER_LONG && (nbits) > 0)
- 
- static inline void bitmap_zero(unsigned long *dst, unsigned int nbits)
+diff --git a/lib/bitmap.c b/lib/bitmap.c
+index 2fd07f6df0b85..c4ca9ceb09fe3 100644
+--- a/lib/bitmap.c
++++ b/lib/bitmap.c
+@@ -13,6 +13,7 @@
+ #include <linux/bitops.h>
+ #include <linux/bug.h>
+ #include <linux/kernel.h>
++#include <linux/mm.h>
+ #include <linux/slab.h>
+ #include <linux/string.h>
+ #include <linux/uaccess.h>
+@@ -466,14 +467,15 @@ EXPORT_SYMBOL(bitmap_parse_user);
+  * ranges if list is specified or hex digits grouped into comma-separated
+  * sets of 8 digits/set. Returns the number of characters written to buf.
+  *
+- * It is assumed that @buf is a pointer into a PAGE_SIZE area and that
+- * sufficient storage remains at @buf to accommodate the
+- * bitmap_print_to_pagebuf() output.
++ * It is assumed that @buf is a pointer into a PAGE_SIZE, page-aligned
++ * area and that sufficient storage remains at @buf to accommodate the
++ * bitmap_print_to_pagebuf() output. Returns the number of characters
++ * actually printed to @buf, excluding terminating '\0'.
+  */
+ int bitmap_print_to_pagebuf(bool list, char *buf, const unsigned long *maskp,
+ 			    int nmaskbits)
  {
+-	ptrdiff_t len = PTR_ALIGN(buf + PAGE_SIZE - 1, PAGE_SIZE) - buf;
++	ptrdiff_t len = PAGE_SIZE - offset_in_page(buf);
+ 	int n = 0;
+ 
+ 	if (len > 1)
 -- 
 2.20.1
 
