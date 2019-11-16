@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6660C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9C3C33C8C
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F1E20740
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD26F20729
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919229;
-	bh=9BUY48yvrLMhHqxYllnn6XxLMqRsZnTGF692jic1HTQ=;
+	s=default; t=1573919232;
+	bh=/qskU+Rb0nZDn2tSBNtS2ClPWcweMC/WHlCVXemRU+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cQHf86sXpVumC61xd90GaYlpj81s3ru7L418y5LOLQhH6J+EoItijPZfEQ6gH5K/R
-	 y5KIVTMevon56GVQR2Wi2eWFtajYIKLaHJH6uf6KRVQ/x8CxFTKBZgHHEyr1EX16fx
-	 S7rGtHmLLJvxhWMNcGDV6TXNhdpxGN+FTbMZBJ4o=
+	b=sCDKay1g3GOmgOG0Oi/jDjn6sSbfVz4wcF0yR72O4LirKqxZhnDzH3Ef5FEZ/uWBe
+	 rg52k1ohKvpfS31TPRW92V0lG2zP44cthAtpOvIxOZjE03OhtMsc8B2HVP2rBAtslz
+	 mblQa4IMhP7cKlcTapAb9b/xa/Cjb3+WGw4np8N8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729632AbfKPPrH (ORCPT
+        id S1729650AbfKPPrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:47:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52962 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:47:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728775AbfKPPqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:46:34 -0500
+        id S1729445AbfKPPqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:37 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE4F620869;
-        Sat, 16 Nov 2019 15:46:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C44A2084E;
+        Sat, 16 Nov 2019 15:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919194;
-        bh=9BUY48yvrLMhHqxYllnn6XxLMqRsZnTGF692jic1HTQ=;
+        s=default; t=1573919196;
+        bh=/qskU+Rb0nZDn2tSBNtS2ClPWcweMC/WHlCVXemRU+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qHUlFTwlZgLgRKWSRG79p2IUGIqXqsb2biBmcEnNNsg1Bdhu5fPi4cbWWtA8Og6gP
-         7223qYvu0qrW5K7dLYzS4DEZInILhVlqHdf66lAxwFAEZL1HDgL/BzNfEm2MHPJhg+
-         w7YgGzjMLNQIoUmmbJjR1Ux24G+vUOpcVy6E2qH4=
+        b=oA3jqOl4+3YnaSIJ30E+THgBtmlALltw+E93LkJjBml2cLHq60Whg/UEebsFCFBUN
+         J+5K4Z05hSel1TBjZsFc7/IFJrS1WSqIyBGfxOYvBSExsTLqmc78n9dpZwdW0OLAKb
+         Iufxan+0hkrYa2yUPWlGD3RQ1XfdKycwaIvJYtBQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+Cc:     Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 202/237] rtl8xxxu: Fix missing break in switch
-Date:   Sat, 16 Nov 2019 10:40:37 -0500
-Message-Id: <20191116154113.7417-202-sashal@kernel.org>
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 203/237] brcmsmac: never log "tid x is not agg'able" by default
+Date:   Sat, 16 Nov 2019 10:40:38 -0500
+Message-Id: <20191116154113.7417-203-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,33 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>
 
-[ Upstream commit 307b00c5e695857ca92fc6a4b8ab6c48f988a1b1 ]
+[ Upstream commit 96fca788e5788b7ea3b0050eb35a343637e0a465 ]
 
-Add missing break statement in order to prevent the code from falling
-through to the default case.
+This message greatly spams the log under heavy Tx of frames with BK access
+class which is especially true when operating as AP. It is also not informative
+as the "agg'ablity" of TIDs are set once and never change.
+Fix this by logging only in debug mode.
 
-Fixes: 26f1fad29ad9 ("New driver: rtl8xxxu (mac80211)")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c    | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-index 505ab1b055ff4..2b4fcdf4ec5bb 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-@@ -5691,6 +5691,7 @@ static int rtl8xxxu_set_key(struct ieee80211_hw *hw, enum set_key_cmd cmd,
- 		break;
- 	case WLAN_CIPHER_SUITE_TKIP:
- 		key->flags |= IEEE80211_KEY_FLAG_GENERATE_MMIC;
-+		break;
- 	default:
- 		return -EOPNOTSUPP;
- 	}
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
+index 23118207b661e..9657b992f90e1 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
+@@ -846,8 +846,8 @@ brcms_ops_ampdu_action(struct ieee80211_hw *hw,
+ 		status = brcms_c_aggregatable(wl->wlc, tid);
+ 		spin_unlock_bh(&wl->lock);
+ 		if (!status) {
+-			brcms_err(wl->wlc->hw->d11core,
+-				  "START: tid %d is not agg\'able\n", tid);
++			brcms_dbg_ht(wl->wlc->hw->d11core,
++				     "START: tid %d is not agg\'able\n", tid);
+ 			return -EINVAL;
+ 		}
+ 		ieee80211_start_tx_ba_cb_irqsafe(vif, sta->addr, tid);
 -- 
 2.20.1
 
