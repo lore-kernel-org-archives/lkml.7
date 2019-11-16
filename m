@@ -8,107 +8,121 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64564C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 10:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E59CEC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 10:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3037B20715
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 10:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE2FF20715
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 10:33:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZJUXAxnO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TBhghe/v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfKPKdf (ORCPT
+        id S1727496AbfKPKdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 05:33:35 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36798 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726748AbfKPKde (ORCPT
+        Sat, 16 Nov 2019 05:33:36 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40003 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727000AbfKPKdf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 05:33:34 -0500
-Received: by mail-wr1-f67.google.com with SMTP id r10so13666115wrx.3
-        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 02:33:33 -0800 (PST)
+        Sat, 16 Nov 2019 05:33:35 -0500
+Received: by mail-wr1-f68.google.com with SMTP id q15so851756wrw.7
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 02:33:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=qNVGXN+GDJA59Rb9ctl+x+5UfCct52bd8ygJlsl5jNg=;
-        b=ZJUXAxnOzruLmUIgDcjoIs1v9fc/CD0ZdLw6KIkHmkB7oRA7OkdITj9hb2tiv9Cb0i
-         Ly7p1EKEaJYZFU69mrHm+rKKI46pWL56J2Dayc4e2gLiAZxdjeHrfru+at61Qjfz33bF
-         OyI5YEfwgVsuhCxMFGLiZIHfta34itunGzIvgP8dYRWS6ufSV1OhoK5V3nuy7WcpLWG3
-         5dmXpA0dTHy8ze5O8KZFVAVR4PHs6IlAYARPnjV/Xpl+jm48B6d1A8OcAgsrbPh23VWe
-         OPUlyk+X2Y1gXLzwrWyFW1eqY8mxO28CNAQ1s+65VQrhghyh4GoEUsRM3E1gJOSYUXJR
-         gROw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=fL8qsLGBM/IPR09zWS//pHasnl5f9Z89rLX6wisoxpA=;
+        b=TBhghe/vbOYFS/uL4Dy5rLFlGWL5LiiXZGZHJXvCX/LyJpJWBY6QoUFwdlLtIhoQd6
+         nyTiuxYNQ91iJtVGJH4pIEgTcLD/M8S1U4f84qw6j04M0MGFV+7tbm7m+Bgqx/DUypLu
+         aqN0QKgITHOk9SoQmEiytOB8DfNLEh1W4R7woa6+wVguqDdK+EeaT6PO6SD6CeTy6RI/
+         ygeNVbt+AHhuDiMOBhXRjSbQnViJWNfqdmKNUvO5g7TMHzXe+Z0hwSy5wFA5yFvoduuw
+         t5Pf/PZ0XlqgWE5GPB0JMXKQLI1rO0IQPsmC65JGE4IY7Mt4IJmBY/UIC3JxkuOzlKQw
+         Gc/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=qNVGXN+GDJA59Rb9ctl+x+5UfCct52bd8ygJlsl5jNg=;
-        b=bxhw1DTd+MI8rcCv2qHHu6VxtKsxGv4ySXvGqtAN//9isdrISM+sREr1brTQeuJ6oF
-         Z7Wkjy29s2xKr3FqDzi0OuJkqkyAsZIJLhxPxhKDpgm8g/kqFUVczWu638rmNTJVUT+9
-         Pur9jGgPTFvEiYNOD4qBzGRQIQIoEN8NqOX3CpuJCGID8mI75uOgCkrM5uJEGHHOm20J
-         KMOndwQGos5DowgSJCRMVxTAttfCjkw8x5orM5HgNunZ2kMHXEmpfwM0SBVi6CqGFlqy
-         dtGCz2DtH4w9G7IQlZMKtghxZySgg+yWnOMjAeCpoFD1+ryUrVSZP/v2sPskZmvU6//N
-         DLfg==
-X-Gm-Message-State: APjAAAW+1KvXQnm9Yg8p6pa5V67ajrnY/sqyLrQ+d9cV1nCMv185UZtq
-        jjZYSoWU6dQU8yAuJD1/4cM33jJXYOk=
-X-Google-Smtp-Source: APXvYqx41798O9HsgFjjABijiq/ld2pY8LBMzutsE1bOuO7o/CsKrymurotKtf2txDgwW+QJFCdEyw==
-X-Received: by 2002:adf:f50b:: with SMTP id q11mr6885610wro.343.1573900412143;
-        Sat, 16 Nov 2019 02:33:32 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=fL8qsLGBM/IPR09zWS//pHasnl5f9Z89rLX6wisoxpA=;
+        b=j54x/+gqFGhlUaxVOlsmYxhHSxBPiqYQ1mOc2M/bUIMLHdg7wVAgGkqdBssnwlCto8
+         K5Btk6bUrJrP1GLjFhf4j2WZ3R+C4WBETQHgoKB9LocFntu3SrfSVt1D7T4MtopA7b75
+         8s0EMBR0Z2a9xmJEcD/Ne0KwjMbU1/WYp+umHKREEWXoOCtxHQhuYDAB7rlSKxfkccJL
+         zDhL+ivsU2x+DqUYTEkh5RmD+H9LqjFHe9TGUeXoBgoMB4TcWfUM5Y+nDwZugFeK5ETw
+         giLlGEETf9tSfUhCF8ieHGVC3mKdrGE77rCl9YiH/C54Mwr7QvpOFZHPTkg1YVjBYhm1
+         o/PA==
+X-Gm-Message-State: APjAAAWqx1n+TtyKsOezhfG7uw5suPrQYt87xdajooB9EIYko98rhSMR
+        42fDXTdhY0siUgfUsB8mWnh828hbjsg=
+X-Google-Smtp-Source: APXvYqwaHgQXVHhsknYTntlZp7XJSoEPrduFM2tzyZxSUQj9oq3ZtYk+KJ9586R11tsBbQ1lahxQuQ==
+X-Received: by 2002:adf:f20d:: with SMTP id p13mr19164875wro.325.1573900413478;
+        Sat, 16 Nov 2019 02:33:33 -0800 (PST)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id t14sm14680522wrw.87.2019.11.16.02.33.31
+        by smtp.gmail.com with ESMTPSA id t14sm14680522wrw.87.2019.11.16.02.33.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Nov 2019 02:33:31 -0800 (PST)
+        Sat, 16 Nov 2019 02:33:32 -0800 (PST)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
         ttayar@habana.ai
 Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH 1/3] habanalabs: remove prints on successful device initialization
-Date:   Sat, 16 Nov 2019 12:33:27 +0200
-Message-Id: <20191116103329.30171-1-oded.gabbay@gmail.com>
+Subject: [PATCH 2/3] habanalabs: use defines for F/W files
+Date:   Sat, 16 Nov 2019 12:33:28 +0200
+Message-Id: <20191116103329.30171-2-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191116103329.30171-1-oded.gabbay@gmail.com>
+References: <20191116103329.30171-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Successful device initialization is mentioned in kernel log with the
-message "Successfully added device to habanalabs driver". There is no point
-of spamming the log with additional messages about successful queue
-testing, which are implied by the above mentioned message.
+Make the code more concise and maintainable by using defines for the F/W
+files.
 
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/firmware_if.c | 5 +----
- drivers/misc/habanalabs/goya/goya.c   | 3 ---
- 2 files changed, 1 insertion(+), 7 deletions(-)
+ drivers/misc/habanalabs/goya/goya.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/firmware_if.c b/drivers/misc/habanalabs/firmware_if.c
-index ea2ca67fbfbf..f5bd03171dac 100644
---- a/drivers/misc/habanalabs/firmware_if.c
-+++ b/drivers/misc/habanalabs/firmware_if.c
-@@ -143,10 +143,7 @@ int hl_fw_test_cpu_queue(struct hl_device *hdev)
- 			sizeof(test_pkt), HL_DEVICE_TIMEOUT_USEC, &result);
- 
- 	if (!rc) {
--		if (result == ARMCP_PACKET_FENCE_VAL)
--			dev_info(hdev->dev,
--				"queue test on CPU queue succeeded\n");
--		else
-+		if (result != ARMCP_PACKET_FENCE_VAL)
- 			dev_err(hdev->dev,
- 				"CPU queue test failed (0x%08lX)\n", result);
- 	} else {
 diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 2935e84fe7d8..70bdaeffb6ce 100644
+index 70bdaeffb6ce..c8d16aa4382c 100644
 --- a/drivers/misc/habanalabs/goya/goya.c
 +++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -3006,9 +3006,6 @@ int goya_test_queue(struct hl_device *hdev, u32 hw_queue_id)
- 			"H/W queue %d test failed (scratch(0x%08llX) == 0x%08X)\n",
- 			hw_queue_id, (unsigned long long) fence_dma_addr, tmp);
- 		rc = -EIO;
--	} else {
--		dev_info(hdev->dev, "queue test on H/W queue %d succeeded\n",
--			hw_queue_id);
- 	}
+@@ -72,6 +72,9 @@
+  *
+  */
  
- free_pkt:
++#define GOYA_UBOOT_FW_FILE	"habanalabs/goya/goya-u-boot.bin"
++#define GOYA_LINUX_FW_FILE	"habanalabs/goya/goya-fit.itb"
++
+ #define GOYA_MMU_REGS_NUM		63
+ 
+ #define GOYA_DMA_POOL_BLK_SIZE		0x100		/* 256 bytes */
+@@ -2163,13 +2166,11 @@ static void goya_halt_engines(struct hl_device *hdev, bool hard_reset)
+  */
+ static int goya_push_uboot_to_device(struct hl_device *hdev)
+ {
+-	char fw_name[200];
+ 	void __iomem *dst;
+ 
+-	snprintf(fw_name, sizeof(fw_name), "habanalabs/goya/goya-u-boot.bin");
+ 	dst = hdev->pcie_bar[SRAM_CFG_BAR_ID] + UBOOT_FW_OFFSET;
+ 
+-	return hl_fw_push_fw_to_device(hdev, fw_name, dst);
++	return hl_fw_push_fw_to_device(hdev, GOYA_UBOOT_FW_FILE, dst);
+ }
+ 
+ /*
+@@ -2182,13 +2183,11 @@ static int goya_push_uboot_to_device(struct hl_device *hdev)
+  */
+ static int goya_push_linux_to_device(struct hl_device *hdev)
+ {
+-	char fw_name[200];
+ 	void __iomem *dst;
+ 
+-	snprintf(fw_name, sizeof(fw_name), "habanalabs/goya/goya-fit.itb");
+ 	dst = hdev->pcie_bar[DDR_BAR_ID] + LINUX_FW_OFFSET;
+ 
+-	return hl_fw_push_fw_to_device(hdev, fw_name, dst);
++	return hl_fw_push_fw_to_device(hdev, GOYA_LINUX_FW_FILE, dst);
+ }
+ 
+ static int goya_pldm_init_cpu(struct hl_device *hdev)
 -- 
 2.17.1
 
