@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD05C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 464C3C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F217C20815
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F6420815
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920017;
-	bh=6je34wnW9tnycplKf4r69UXfLC8g/37BuLjL0ZEKLJU=;
+	s=default; t=1573920023;
+	bh=1obXavLzHsCeZUAaQ/cIka7JXtrr6Qjcv2jjQ2VJJkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XAcCn9RpCqFP95R0jM/wkaTzd+fKB/o3SfrOgwOLeVvOKDZx/M1qvwtdFvQIuxjes
-	 J/xphx+M3DESAkBdzF4aXIkPmMccCAGgJMsG4JNsk8s+Zp9TIjT5hYMsD5f5iLWbWU
-	 tx6anKPU7pirN7JB7iAklfFtjZrDCjA4AZO0KmTU=
+	b=QItoc3711LdiXqV5iw/mvUgQ8kKcQjKJ4GerQ/cRtBT+LQ2xR4MSBwwz4mWzYLsbY
+	 JejpTY4UP2kcRNC3jCVko0fTUiUHcw04uyoNwYfdJeJEW4PP0BVPgSH+vroDccjjqg
+	 6uqq+bVRvJH+FEKOFUSxs4YFbSdlFuAVbMDiQoUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731035AbfKPQAQ (ORCPT
+        id S1731566AbfKPQAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:00:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34886 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:00:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729935AbfKPPxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:53:41 -0500
+        id S1731254AbfKPPxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:53:31 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D51721479;
-        Sat, 16 Nov 2019 15:53:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99F1E21882;
+        Sat, 16 Nov 2019 15:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919620;
-        bh=6je34wnW9tnycplKf4r69UXfLC8g/37BuLjL0ZEKLJU=;
+        s=default; t=1573919610;
+        bh=1obXavLzHsCeZUAaQ/cIka7JXtrr6Qjcv2jjQ2VJJkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NHCNs5ud236ajRZHyYI9T4HAYc6ta3N/GZ0iNM+xYtb3ZTd4lW28hsvnEzxI4hBrn
-         0bCU3ecsBce9PD1lhUeaTlz7u4rgqq7LSwhPMwgNG/9qAhjS0nyyiA9xEJsn08OO2T
-         gFOevMnHyl9+maF4p1aGQ6B8Fv0+V9dzjqqFseC0=
+        b=SS/gvfnI1VU2qi7F8Jg1XMgKd1aiN/fHw6g3dNNCx+hwMJKxFO89v+z0WYqO1Ru5b
+         N5sAWWBfQQU5dFiyze3lJm+myG/CH5BAY2pGIBLU4EvP1kg6AUxRpQHqMbcOU1Kqd3
+         fzdP8K+OI1ESFoeJNEVluXWuvM2KYyhXvweXcgOI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Petr Mladek <pmladek@suse.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 02/77] printk: fix integer overflow in setup_log_buf()
-Date:   Sat, 16 Nov 2019 10:52:24 -0500
-Message-Id: <20191116155339.11909-2-sashal@kernel.org>
+Cc:     Vignesh R <vigneshr@ti.com>, David Lechner <david@lechnology.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 97/99] spi: omap2-mcspi: Fix DMA and FIFO event trigger size mismatch
+Date:   Sat, 16 Nov 2019 10:51:00 -0500
+Message-Id: <20191116155103.10971-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
-References: <20191116155339.11909-1-sashal@kernel.org>
+In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
+References: <20191116155103.10971-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,59 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+From: Vignesh R <vigneshr@ti.com>
 
-[ Upstream commit d2130e82e9454304e9b91ba9da551b5989af8c27 ]
+[ Upstream commit baf8b9f8d260c55a86405f70a384c29cda888476 ]
 
-The way we calculate logbuf free space percentage overflows signed
-integer:
+Commit b682cffa3ac6 ("spi: omap2-mcspi: Set FIFO DMA trigger level to word length")
+broke SPI transfers where bits_per_word != 8. This is because of
+mimsatch between McSPI FIFO level event trigger size (SPI word length) and
+DMA request size(word length * maxburst). This leads to data
+corruption, lockup and errors like:
 
-	int free;
+	spi1.0: EOW timed out
 
-	free = __LOG_BUF_LEN - log_next_idx;
-	pr_info("early log buf free: %u(%u%%)\n",
-		free, (free * 100) / __LOG_BUF_LEN);
+Fix this by setting DMA maxburst size to 1 so that
+McSPI FIFO level event trigger size matches DMA request size.
 
-We support LOG_BUF_LEN of up to 1<<25 bytes. Since setup_log_buf() is
-called during early init, logbuf is mostly empty, so
-
-	__LOG_BUF_LEN - log_next_idx
-
-is close to 1<<25. Thus when we multiply it by 100, we overflow signed
-integer value range: 100 is 2^6 + 2^5 + 2^2.
-
-Example, booting with LOG_BUF_LEN 1<<25 and log_buf_len=2G
-boot param:
-
-[    0.075317] log_buf_len: -2147483648 bytes
-[    0.075319] early log buf free: 33549896(-28%)
-
-Make "free" unsigned integer and use appropriate printk() specifier.
-
-Link: http://lkml.kernel.org/r/20181010113308.9337-1-sergey.senozhatsky@gmail.com
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+Fixes: b682cffa3ac6 ("spi: omap2-mcspi: Set FIFO DMA trigger level to word length")
+Cc: stable@vger.kernel.org
+Reported-by: David Lechner <david@lechnology.com>
+Tested-by: David Lechner <david@lechnology.com>
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/printk/printk.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-omap2-mcspi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 5a1b2a914b4e5..2938e5c8561ad 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -931,7 +931,7 @@ void __init setup_log_buf(int early)
- {
- 	unsigned long flags;
- 	char *new_log_buf;
--	int free;
-+	unsigned int free;
+diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
+index bc136fe3a2829..ccb6f98550da4 100644
+--- a/drivers/spi/spi-omap2-mcspi.c
++++ b/drivers/spi/spi-omap2-mcspi.c
+@@ -625,8 +625,8 @@ omap2_mcspi_txrx_dma(struct spi_device *spi, struct spi_transfer *xfer)
+ 	cfg.dst_addr = cs->phys + OMAP2_MCSPI_TX0;
+ 	cfg.src_addr_width = width;
+ 	cfg.dst_addr_width = width;
+-	cfg.src_maxburst = es;
+-	cfg.dst_maxburst = es;
++	cfg.src_maxburst = 1;
++	cfg.dst_maxburst = 1;
  
- 	if (log_buf != __log_buf)
- 		return;
+ 	rx = xfer->rx_buf;
+ 	tx = xfer->tx_buf;
 -- 
 2.20.1
 
