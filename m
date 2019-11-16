@@ -2,155 +2,112 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A93C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06502C43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA62421479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aWDwUslp"
+	by mail.kernel.org (Postfix) with ESMTP id C7AF321479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:12:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573920737;
+	bh=m09NQk/hf9MktbOGeBLi3nTN2WP7IyVR6LenXFTYOpY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rraAlbOVWHAFhGRlHoDup0k6C4huknolQLr9eUAXC4YL86nlMZAkNtxuUoN/UwVyo
+	 edeTaBd2ecukvWGbE8uQkPgy2qVqkHpH0kC0GJ/2yxn2M/n9cPtSBHl/jlY3T/K9pn
+	 7E3IYwAAssLNNatMgpmuG3wwZzlxoVW6rMAP2qtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731873AbfKPQMJ (ORCPT
+        id S1731878AbfKPQMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:12:09 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46399 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728735AbfKPQMH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 11:12:07 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 193so8111751pfc.13;
-        Sat, 16 Nov 2019 08:12:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DLBwNS04s3vTncd8h6wYjqP9/zqj5Hw6C3ovDZPMJNw=;
-        b=aWDwUslpmIQVa4GYtfBvd2CMsrtdrtzAXSurvFxn9mgpdxN5BKh64sYvKAAbYDKfSj
-         4YMXLI9Fua6OvuYxk9aWHHjKqdWTtquxgyU2Ekugjx0AhH0B2lhuJMJVRi+yk65QDRdh
-         CoQCd0F3l4D53DhJkRKl2tlal42XOJ5NtiyXPDIMbxtijjHPxUlqeCwzdUwgjDihryL/
-         CJ5cwucFeg0xSf4TYkBeyf3doCOFGOg+Q1odrSMKSHCCaWOwWiJ4brhdjJUtyYBT8cDS
-         0TMlKeK9t/aA+6JqhkkAPhqn1+7XTFmvaVvt4Y/wY6Y5CY47hgLvCakN7MxAv9gtLu9L
-         ul6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DLBwNS04s3vTncd8h6wYjqP9/zqj5Hw6C3ovDZPMJNw=;
-        b=cfeqYPL+SoFf8U+8bvoEg5s0TeoI9o4k36GLDONPzR0BwGYnJP7nmBFUu0erfxWaQ+
-         8pLM0Xmey4i3Uod/d29auQhK+IJqeJb+Z+UHlFFh681PzBaW9IF1dUgPD5RYMQJPSzdV
-         cEx+DOX66IiHJrGt0vGXZhBNAc6EcDsSojlQ/p5jHJ9vmLOk6YKUsa9kcjpRuLaHwzjq
-         39Db13FJAzWbpdPp0u/uITIUlOWcgoG5Y3bq+oO97SNAUCPylU1366HeT02bNMFjMpHm
-         uNMWsjC4C47WzxLfIzFdJUzlLx+Ztwcu946HDTp8vW1ts2s0niEW3lapdy8l0pVzyfDi
-         k2Zg==
-X-Gm-Message-State: APjAAAXOf5eyRQ09S+fFTmZjGRMvwZrOeq3U8Qjr50yeJoz9Yw9t0ARm
-        Ss8ZZf1YHbMDweYoB9Z91yeJvutk
-X-Google-Smtp-Source: APXvYqyUjaIuhyaRHuw7HuQ7JdypEFfmmQ6CWLzYfMZsoL54sdj1Me9cxMFnQnrWwYl56ebRbcqIPA==
-X-Received: by 2002:a63:e156:: with SMTP id h22mr7865038pgk.266.1573920726128;
-        Sat, 16 Nov 2019 08:12:06 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 83sm14198063pgh.86.2019.11.16.08.12.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 16 Nov 2019 08:12:05 -0800 (PST)
-Date:   Sat, 16 Nov 2019 08:12:04 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Eugen.Hristev@microchip.com
-Cc:     wim@linux-watchdog.org, robh+dt@kernel.org,
-        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Nicolas.Ferre@microchip.com, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] watchdog: sama5d4_wdt: cleanup the bit definitions
-Message-ID: <20191116161204.GA22568@roeck-us.net>
-References: <1573806579-7981-1-git-send-email-eugen.hristev@microchip.com>
+        Sat, 16 Nov 2019 11:12:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730032AbfKPPsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:48:25 -0500
+Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51001207FA;
+        Sat, 16 Nov 2019 15:48:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573919304;
+        bh=m09NQk/hf9MktbOGeBLi3nTN2WP7IyVR6LenXFTYOpY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=E+EiG+4NQQNKl5myCF263slnxWJYUSXFx1WfJ7/F9fhlaLHlIagfoC4rcuDexD0S4
+         UpPbtOT5LTA1qE0dThehsBz1Dv36yct/V6K+WPrRy4DBdGwGNsVrWgcO8qEdz9xeZq
+         V0UUV6RaeR7U+uBRukJUSGT7aMEkEnJCk8TSx1X0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jon Derrick <jonathan.derrick@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 049/150] PCI: vmd: Detach resources after stopping root bus
+Date:   Sat, 16 Nov 2019 10:45:47 -0500
+Message-Id: <20191116154729.9573-49-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
+References: <20191116154729.9573-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573806579-7981-1-git-send-email-eugen.hristev@microchip.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 08:30:13AM +0000, Eugen.Hristev@microchip.com wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> Cleanup the macro definitions to use BIT and align with two spaces.
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+From: Jon Derrick <jonathan.derrick@intel.com>
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+[ Upstream commit dc8af3a827df6d4bb925d3b81b7ec94a7cce9482 ]
 
-> ---
-> Changes in v4:
-> - added UL suffix to value macros to avoid compile warnings
-> - modified file header to include new copyright and datasheet
-> - include linux/bits.h
-> 
-> Changes in v3:
-> - new patch as requested from review on ML
-> 
->  drivers/watchdog/at91sam9_wdt.h | 34 +++++++++++++++++++---------------
->  1 file changed, 19 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/watchdog/at91sam9_wdt.h b/drivers/watchdog/at91sam9_wdt.h
-> index 390941c..abfe34d 100644
-> --- a/drivers/watchdog/at91sam9_wdt.h
-> +++ b/drivers/watchdog/at91sam9_wdt.h
-> @@ -4,33 +4,37 @@
->   *
->   * Copyright (C) 2007 Andrew Victor
->   * Copyright (C) 2007 Atmel Corporation.
-> + * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries
->   *
->   * Watchdog Timer (WDT) - System peripherals regsters.
->   * Based on AT91SAM9261 datasheet revision D.
-> + * Based on SAM9X60 datasheet.
->   *
->   */
->  
->  #ifndef AT91_WDT_H
->  #define AT91_WDT_H
->  
-> +#include <linux/bits.h>
-> +
->  #define AT91_WDT_CR		0x00			/* Watchdog Control Register */
-> -#define		AT91_WDT_WDRSTT		(1    << 0)		/* Restart */
-> -#define		AT91_WDT_KEY		(0xa5 << 24)		/* KEY Password */
-> +#define  AT91_WDT_WDRSTT	BIT(0)			/* Restart */
-> +#define  AT91_WDT_KEY		(0xa5UL << 24)		/* KEY Password */
->  
->  #define AT91_WDT_MR		0x04			/* Watchdog Mode Register */
-> -#define		AT91_WDT_WDV		(0xfff << 0)		/* Counter Value */
-> -#define			AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
-> -#define		AT91_WDT_WDFIEN		(1     << 12)		/* Fault Interrupt Enable */
-> -#define		AT91_WDT_WDRSTEN	(1     << 13)		/* Reset Processor */
-> -#define		AT91_WDT_WDRPROC	(1     << 14)		/* Timer Restart */
-> -#define		AT91_WDT_WDDIS		(1     << 15)		/* Watchdog Disable */
-> -#define		AT91_WDT_WDD		(0xfff << 16)		/* Delta Value */
-> -#define			AT91_WDT_SET_WDD(x)	(((x) << 16) & AT91_WDT_WDD)
-> -#define		AT91_WDT_WDDBGHLT	(1     << 28)		/* Debug Halt */
-> -#define		AT91_WDT_WDIDLEHLT	(1     << 29)		/* Idle Halt */
-> +#define  AT91_WDT_WDV		(0xfffUL << 0)		/* Counter Value */
-> +#define  AT91_WDT_SET_WDV(x)	((x) & AT91_WDT_WDV)
-> +#define  AT91_WDT_WDFIEN	BIT(12)		/* Fault Interrupt Enable */
-> +#define  AT91_WDT_WDRSTEN	BIT(13)		/* Reset Processor */
-> +#define  AT91_WDT_WDRPROC	BIT(14)		/* Timer Restart */
-> +#define  AT91_WDT_WDDIS		BIT(15)		/* Watchdog Disable */
-> +#define  AT91_WDT_WDD		(0xfffUL << 16)		/* Delta Value */
-> +#define  AT91_WDT_SET_WDD(x)	(((x) << 16) & AT91_WDT_WDD)
-> +#define  AT91_WDT_WDDBGHLT	BIT(28)		/* Debug Halt */
-> +#define  AT91_WDT_WDIDLEHLT	BIT(29)		/* Idle Halt */
->  
-> -#define AT91_WDT_SR		0x08			/* Watchdog Status Register */
-> -#define		AT91_WDT_WDUNF		(1 << 0)		/* Watchdog Underflow */
-> -#define		AT91_WDT_WDERR		(1 << 1)		/* Watchdog Error */
-> +#define AT91_WDT_SR		0x08		/* Watchdog Status Register */
-> +#define  AT91_WDT_WDUNF		BIT(0)		/* Watchdog Underflow */
-> +#define  AT91_WDT_WDERR		BIT(1)		/* Watchdog Error */
->  
->  #endif
+The VMD removal path calls pci_stop_root_busi(), which tears down the pcie
+tree, including detaching all of the attached drivers. During driver
+detachment, devices may use pci_release_region() to release resources.
+This path relies on the resource being accessible in resource tree.
+
+By detaching the child domain from the parent resource domain prior to
+stopping the bus, we are preventing the list traversal from finding the
+resource to be freed. If we instead detach the resource after stopping
+the bus, we will have properly freed the resource and detaching is
+simply accounting at that point.
+
+Without this order, the resource is never freed and is orphaned on VMD
+removal, leading to a warning:
+
+[  181.940162] Trying to free nonexistent resource <e5a10000-e5a13fff>
+
+Fixes: 2c2c5c5cd213 ("x86/PCI: VMD: Attach VMD resources to parent domain's resource tree")
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+[lorenzo.pieralisi@arm.com: updated commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Keith Busch <keith.busch@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/host/vmd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/host/vmd.c b/drivers/pci/host/vmd.c
+index 2537b022f42d4..af6d5da10ea5f 100644
+--- a/drivers/pci/host/vmd.c
++++ b/drivers/pci/host/vmd.c
+@@ -753,12 +753,12 @@ static void vmd_remove(struct pci_dev *dev)
+ {
+ 	struct vmd_dev *vmd = pci_get_drvdata(dev);
+ 
+-	vmd_detach_resources(vmd);
+ 	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
+ 	pci_stop_root_bus(vmd->bus);
+ 	pci_remove_root_bus(vmd->bus);
+ 	vmd_cleanup_srcu(vmd);
+ 	vmd_teardown_dma_ops(vmd);
++	vmd_detach_resources(vmd);
+ 	irq_domain_remove(vmd->irq_domain);
+ }
+ 
+-- 
+2.20.1
+
