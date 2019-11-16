@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A890CC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B61C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8070921479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D46221479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921364;
-	bh=XR5WvofJzj0e2g0fbgE8Wpx6sS5fNscbX+8F20oWjZo=;
+	s=default; t=1573921372;
+	bh=hi6mJMVKv1MtVb2EHx6lfLPaOf6PJf+kSEYgHZKgl5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bMY3A8Z0efginsMPGVy6Erl/nPRH2dI6rsHq4LVFHQLEJ5JLYVrBPk/CT1X1COVCj
-	 /MjUBVcwF7apOElRWl7Hb3YgD0PgaAuoHzL9WIQUFuHpxSKWVeE0PxhKHhNQTo7qBp
-	 aFrQxEbZpLbX8VnUqg6tFuA/V/CbUDLFAbdzQb44=
+	b=KA+hsC/m7lWtz7HPYCtFNwK3bDEhxOUVX4k1JYGcJ/xea9PZcCdRXpuoerbT9JQA4
+	 6BbBu6CKUi0aBZXxEi3OQXdfgptvxPydkYsqAjkTgWKW24YrPeWK8DfMthhvtJf6pL
+	 dtiu9zYl3h9C2KVQYyDZ1fYaVprIPW0007Eo6EY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729701AbfKPQWn (ORCPT
+        id S1728598AbfKPPnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:22:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47088 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:43:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728614AbfKPPnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:43:12 -0500
+        id S1728568AbfKPPnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:43:04 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C92C52072D;
-        Sat, 16 Nov 2019 15:43:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 098062077B;
+        Sat, 16 Nov 2019 15:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918992;
-        bh=XR5WvofJzj0e2g0fbgE8Wpx6sS5fNscbX+8F20oWjZo=;
+        s=default; t=1573918983;
+        bh=hi6mJMVKv1MtVb2EHx6lfLPaOf6PJf+kSEYgHZKgl5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DBsb5JGL9l6T+mNo9dPTIdP0v56UCCxHCRSwg2U+XtzSbSV4vYs9AL3BQkporfnXB
-         9G0CX3/graOZk6G8NEuntMxU2oVcXjk5JC6+LYneGwKXBZh7YEiUGoIDdcfcUTctJ2
-         JSk75SJQc8d69aQpRIMRwq2cQK0RUWQ303D6bFUM=
+        b=Adup1n/oNG/y69rQUzI0bFMHDWALzR8dQja8gsp+NXoKImRzxrrNzjUAZgIzDA/by
+         Ky5f3b+FLOIyOKqdl49VOmyjlplK0iENM0ZeBJT3AUDNGQpECxca+2pv8DR/+azAFZ
+         d7I3sAo2dxQKTwHQwSVefQwb3y8Y35iFid1fH4lI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Quentin Monnet <quentin.monnet@netronome.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 096/237] selftests/bpf: fix return value comparison for tests in test_libbpf.sh
-Date:   Sat, 16 Nov 2019 10:38:51 -0500
-Message-Id: <20191116154113.7417-96-sashal@kernel.org>
+Cc:     Aravinda Prasad <aravinda@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 091/237] powerpc/pseries: Export raw per-CPU VPA data via debugfs
+Date:   Sat, 16 Nov 2019 10:38:46 -0500
+Message-Id: <20191116154113.7417-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -62,40 +59,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quentin Monnet <quentin.monnet@netronome.com>
+From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
 
-[ Upstream commit c5fa5d602221362f8341ecd9e32d83194abf5bd9 ]
+[ Upstream commit c6c26fb55e8e4b3fc376be5611685990a17de27a ]
 
-The return value for each test in test_libbpf.sh is compared with
+This patch exports the raw per-CPU VPA data via debugfs.
+A per-CPU file is created which exports the VPA data of
+that CPU to help debug some of the VPA related issues or
+to analyze the per-CPU VPA related statistics.
 
-    if (( $? == 0 )) ; then ...
+v3: Removed offline CPU check.
 
-This works well with bash, but not with dash, that /bin/sh is aliased to
-on some systems (such as Ubuntu).
+v2: Included offline CPU check and other review comments.
 
-Let's replace this comparison by something that works on both shells.
-
-Signed-off-by: Quentin Monnet <quentin.monnet@netronome.com>
-Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_libbpf.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/lpar.c | 54 +++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-diff --git a/tools/testing/selftests/bpf/test_libbpf.sh b/tools/testing/selftests/bpf/test_libbpf.sh
-index 8b1bc96d8e0cc..2989b2e2d856d 100755
---- a/tools/testing/selftests/bpf/test_libbpf.sh
-+++ b/tools/testing/selftests/bpf/test_libbpf.sh
-@@ -6,7 +6,7 @@ export TESTNAME=test_libbpf
- # Determine selftest success via shell exit code
- exit_handler()
- {
--	if (( $? == 0 )); then
-+	if [ $? -eq 0 ]; then
- 		echo "selftests: $TESTNAME [PASS]";
- 	else
- 		echo "$TESTNAME: failed at file $LAST_LOADED" 1>&2
+diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
+index ea602f7f97ce1..49e3a88b6a0c1 100644
+--- a/arch/powerpc/platforms/pseries/lpar.c
++++ b/arch/powerpc/platforms/pseries/lpar.c
+@@ -48,6 +48,7 @@
+ #include <asm/kexec.h>
+ #include <asm/fadump.h>
+ #include <asm/asm-prototypes.h>
++#include <asm/debugfs.h>
+ 
+ #include "pseries.h"
+ 
+@@ -1032,3 +1033,56 @@ static int __init reserve_vrma_context_id(void)
+ 	return 0;
+ }
+ machine_device_initcall(pseries, reserve_vrma_context_id);
++
++#ifdef CONFIG_DEBUG_FS
++/* debugfs file interface for vpa data */
++static ssize_t vpa_file_read(struct file *filp, char __user *buf, size_t len,
++			      loff_t *pos)
++{
++	int cpu = (long)filp->private_data;
++	struct lppaca *lppaca = &lppaca_of(cpu);
++
++	return simple_read_from_buffer(buf, len, pos, lppaca,
++				sizeof(struct lppaca));
++}
++
++static const struct file_operations vpa_fops = {
++	.open		= simple_open,
++	.read		= vpa_file_read,
++	.llseek		= default_llseek,
++};
++
++static int __init vpa_debugfs_init(void)
++{
++	char name[16];
++	long i;
++	static struct dentry *vpa_dir;
++
++	if (!firmware_has_feature(FW_FEATURE_SPLPAR))
++		return 0;
++
++	vpa_dir = debugfs_create_dir("vpa", powerpc_debugfs_root);
++	if (!vpa_dir) {
++		pr_warn("%s: can't create vpa root dir\n", __func__);
++		return -ENOMEM;
++	}
++
++	/* set up the per-cpu vpa file*/
++	for_each_possible_cpu(i) {
++		struct dentry *d;
++
++		sprintf(name, "cpu-%ld", i);
++
++		d = debugfs_create_file(name, 0400, vpa_dir, (void *)i,
++					&vpa_fops);
++		if (!d) {
++			pr_warn("%s: can't create per-cpu vpa file\n",
++					__func__);
++			return -ENOMEM;
++		}
++	}
++
++	return 0;
++}
++machine_arch_initcall(pseries, vpa_debugfs_init);
++#endif /* CONFIG_DEBUG_FS */
 -- 
 2.20.1
 
