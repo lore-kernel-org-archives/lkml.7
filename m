@@ -2,174 +2,220 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B715C432C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 22:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF8FC432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 22:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B13A206DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 22:39:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s3WwVZao"
+	by mail.kernel.org (Postfix) with ESMTP id D042C206E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 22:44:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727654AbfKPWjQ (ORCPT
+        id S1727684AbfKPWox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 17:39:16 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:44388 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727273AbfKPWjQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 17:39:16 -0500
-Received: by mail-qt1-f196.google.com with SMTP id o11so15362175qtr.11;
-        Sat, 16 Nov 2019 14:39:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aX8mGPTbdQXT0xNpXs7SlRGxktUQfT895JsrbKFJ2is=;
-        b=s3WwVZaoZ/s1vy21izBSUJANSKA+E4NsggLMl8ocwSrvfeVuMfCJQvc0+Gh5kUT33f
-         ISrMQsRpqw4vOsncLbf8Yknzfi5fEokDtA4Lxs44otnORpuJ4PehB/RZcEj4gShKivE5
-         f3hKAB9FgHweeCN3s2zmf1c4Tn6GLDRVEFgMeobCxgV/Cb+skPJ3R1mz46oTOTi7zZvW
-         MP0Icp86vm78vHBb9MjBQVX+Gdj4EMgkii7Ytq0B79JlO5MJktZNOyT+norQiYyL+SWT
-         J6zhuJJ9tXwYEMGAlXJLwq+ykqz97+RhstgPhHPPDdZKLOJ79vV+kPHDMseIt/nukBEr
-         qMZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aX8mGPTbdQXT0xNpXs7SlRGxktUQfT895JsrbKFJ2is=;
-        b=CaVNx9iC9yMBrgkYHYbd8Alb3FDBsU47WN5VlDkMBDT6QyNTDho1/XYjmzJXT/V5nt
-         4F5AAyBmaz9HiQa3ab+vZIxfqX9oVgYajErKsEO3Jb8093rmaTNZPLd/cP7dLMsmXutn
-         /b43Z3LkQGFAtmYng0YcFtviK9bOiZpmFg3jbdNS0UM9KazeEWmDWDohtOe+3JGa267g
-         8LG8YXsecDZkzHJQBCqtrWXoFyM187WWOkaKt3z+j+7mB97bzRqSpbErkQQvm+c+i1aP
-         PI7hmO30uYMnfLH1kIPJOXL43qoHLTWZpS4SQMlKVwYae/0sfG/u9iToc/5w4zZgxdvg
-         YakA==
-X-Gm-Message-State: APjAAAXmodfNSlDvIuoZyEU60ya2g3wwJyHpd66ggJB8onC3uiDwPe8+
-        v8l03htmQWM2JEUm/x3eBcy72Ggyizw=
-X-Google-Smtp-Source: APXvYqyfOaN6y7XbF2PjiITx1gA7m45coaxDcDmUYKeQ3yYfkSGHJTBQlgO2BTs8ZFE4OuiFCIGVnw==
-X-Received: by 2002:ac8:3711:: with SMTP id o17mr21147985qtb.159.1573943954606;
-        Sat, 16 Nov 2019 14:39:14 -0800 (PST)
-Received: from localhost.localdomain ([194.59.251.92])
-        by smtp.gmail.com with ESMTPSA id 70sm6174248qkj.48.2019.11.16.14.39.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Nov 2019 14:39:14 -0800 (PST)
-From:   Forest Crossman <cyrozap@gmail.com>
-To:     linux-media@vger.kernel.org
-Cc:     Forest Crossman <cyrozap@gmail.com>, linux-kernel@vger.kernel.org,
-        mchehab@kernel.org
-Subject: [PATCH] media: cx23885: Add support for AVerMedia CE310B
-Date:   Sat, 16 Nov 2019 16:38:40 -0600
-Message-Id: <20191116223840.2150-1-cyrozap@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Sat, 16 Nov 2019 17:44:53 -0500
+Received: from foss.arm.com ([217.140.110.172]:47144 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727273AbfKPWox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 17:44:53 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 551CF31B;
+        Sat, 16 Nov 2019 14:44:52 -0800 (PST)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 611D33F6C4;
+        Sat, 16 Nov 2019 14:44:51 -0800 (PST)
+Subject: Re: [GIT PULL] scheduler fixes
+To:     Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20191116213742.GA7450@gmail.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <ab6f2b5a-57f0-6723-c62f-91a8ce6eddac@arm.com>
+Date:   Sat, 16 Nov 2019 22:44:40 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191116213742.GA7450@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The AVerMedia CE310B is a simple composite + S-Video + stereo audio
-capture card, and uses only the CX23888 to perform all of these
-functions.
+Hi,
 
-I've tested both video inputs and the audio interface and confirmed that
-they're all working. However, there are some issues:
+On 16/11/2019 21:37, Ingo Molnar wrote:
+> Peter Zijlstra (1):
+>       sched/core: Avoid spurious lock dependencies
+> 
+> Qais Yousef (1):
+>       sched/uclamp: Fix incorrect condition
+> 
+> Valentin Schneider (2):
+>       sched/uclamp: Fix overzealous type replacement
 
-* Sometimes when I switch inputs the video signal turns black and can't
-  be recovered until the system is rebooted. I haven't been able to
-  determine the cause of this behavior, nor have I found a solution to
-  fix it or any workarounds other than rebooting.
-* The card sometimes seems to have trouble syncing to the video signal,
-  and some of the VBI data appears as noise at the top of the frame, but
-  I assume that to be a result of my very noisy RF environment and the
-  card's unshielded input traces rather than a configuration issue.
+This one got a v2 (was missing one location), acked by Vincent:
 
-Signed-off-by: Forest Crossman <cyrozap@gmail.com>
----
- drivers/media/pci/cx23885/cx23885-cards.c | 24 +++++++++++++++++++++++
- drivers/media/pci/cx23885/cx23885-video.c |  3 ++-
- drivers/media/pci/cx23885/cx23885.h       |  1 +
- 3 files changed, 27 insertions(+), 1 deletion(-)
+  20191115103908.27610-1-valentin.schneider@arm.com
 
-diff --git a/drivers/media/pci/cx23885/cx23885-cards.c b/drivers/media/pci/cx23885/cx23885-cards.c
-index 8644205d3cd3..8e5a2c580821 100644
---- a/drivers/media/pci/cx23885/cx23885-cards.c
-+++ b/drivers/media/pci/cx23885/cx23885-cards.c
-@@ -801,6 +801,25 @@ struct cx23885_board cx23885_boards[] = {
- 		.name		= "Hauppauge WinTV-Starburst2",
- 		.portb		= CX23885_MPEG_DVB,
- 	},
-+	[CX23885_BOARD_AVERMEDIA_CE310B] = {
-+		.name		= "AVerMedia CE310B",
-+		.porta		= CX23885_ANALOG_VIDEO,
-+		.force_bff	= 1,
-+		.input          = {{
-+			.type   = CX23885_VMUX_COMPOSITE1,
-+			.vmux   = CX25840_VIN1_CH1 |
-+				  CX25840_NONE_CH2 |
-+				  CX25840_NONE0_CH3,
-+			.amux   = CX25840_AUDIO7,
-+		}, {
-+			.type   = CX23885_VMUX_SVIDEO,
-+			.vmux   = CX25840_VIN8_CH1 |
-+				  CX25840_NONE_CH2 |
-+				  CX25840_VIN7_CH3 |
-+				  CX25840_SVIDEO_ON,
-+			.amux   = CX25840_AUDIO7,
-+		} },
-+	},
- };
- const unsigned int cx23885_bcount = ARRAY_SIZE(cx23885_boards);
- 
-@@ -1124,6 +1143,10 @@ struct cx23885_subid cx23885_subids[] = {
- 		.subvendor = 0x0070,
- 		.subdevice = 0xf02a,
- 		.card      = CX23885_BOARD_HAUPPAUGE_STARBURST2,
-+	}, {
-+		.subvendor = 0x1461,
-+		.subdevice = 0x3100,
-+		.card      = CX23885_BOARD_AVERMEDIA_CE310B,
- 	},
- };
- const unsigned int cx23885_idcount = ARRAY_SIZE(cx23885_subids);
-@@ -2348,6 +2371,7 @@ void cx23885_card_setup(struct cx23885_dev *dev)
- 	case CX23885_BOARD_DVBSKY_T982:
- 	case CX23885_BOARD_VIEWCAST_260E:
- 	case CX23885_BOARD_VIEWCAST_460E:
-+	case CX23885_BOARD_AVERMEDIA_CE310B:
- 		dev->sd_cx25840 = v4l2_i2c_new_subdev(&dev->v4l2_dev,
- 				&dev->i2c_bus[2].i2c_adap,
- 				"cx25840", 0x88 >> 1, NULL);
-diff --git a/drivers/media/pci/cx23885/cx23885-video.c b/drivers/media/pci/cx23885/cx23885-video.c
-index 8098b15493de..7fc408ee4934 100644
---- a/drivers/media/pci/cx23885/cx23885-video.c
-+++ b/drivers/media/pci/cx23885/cx23885-video.c
-@@ -257,7 +257,8 @@ static int cx23885_video_mux(struct cx23885_dev *dev, unsigned int input)
- 		(dev->board == CX23885_BOARD_MYGICA_X8507) ||
- 		(dev->board == CX23885_BOARD_AVERMEDIA_HC81R) ||
- 		(dev->board == CX23885_BOARD_VIEWCAST_260E) ||
--		(dev->board == CX23885_BOARD_VIEWCAST_460E)) {
-+		(dev->board == CX23885_BOARD_VIEWCAST_460E) ||
-+		(dev->board == CX23885_BOARD_AVERMEDIA_CE310B)) {
- 		/* Configure audio routing */
- 		v4l2_subdev_call(dev->sd_cx25840, audio, s_routing,
- 			INPUT(input)->amux, 0, 0);
-diff --git a/drivers/media/pci/cx23885/cx23885.h b/drivers/media/pci/cx23885/cx23885.h
-index a95a2e4c6a0d..c472498e57c4 100644
---- a/drivers/media/pci/cx23885/cx23885.h
-+++ b/drivers/media/pci/cx23885/cx23885.h
-@@ -101,6 +101,7 @@
- #define CX23885_BOARD_HAUPPAUGE_STARBURST2     59
- #define CX23885_BOARD_HAUPPAUGE_QUADHD_DVB_885 60
- #define CX23885_BOARD_HAUPPAUGE_QUADHD_ATSC_885 61
-+#define CX23885_BOARD_AVERMEDIA_CE310B         62
- 
- #define GPIO_0 0x00000001
- #define GPIO_1 0x00000002
--- 
-2.24.0
+>       sched/topology, cpuset: Account for housekeeping CPUs to avoid empty cpumasks
 
+And this one is no longer needed, as Michal & I understood (IOW the fix in
+rc6 is sufficient), see:
+
+  c425c5cb-ba8a-e5f6-d91c-5479779cfb7a@arm.com
+
+> 
+> Vincent Guittot (1):
+>       sched/pelt: Fix update of blocked PELT ordering
+> 
+> 
+>  kernel/cgroup/cpuset.c |  8 +++++++-
+>  kernel/sched/core.c    |  9 +++++----
+>  kernel/sched/fair.c    | 29 ++++++++++++++++++++---------
+>  kernel/sched/sched.h   |  2 +-
+>  4 files changed, 33 insertions(+), 15 deletions(-)
+> 
+> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> index c87ee6412b36..e4c10785dc7c 100644
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -798,8 +798,14 @@ static int generate_sched_domains(cpumask_var_t **domains,
+>  		    cpumask_subset(cp->cpus_allowed, top_cpuset.effective_cpus))
+>  			continue;
+>  
+> +		/*
+> +		 * Skip cpusets that would lead to an empty sched domain.
+> +		 * That could be because effective_cpus is empty, or because
+> +		 * it's only spanning CPUs outside the housekeeping mask.
+> +		 */
+>  		if (is_sched_load_balance(cp) &&
+> -		    !cpumask_empty(cp->effective_cpus))
+> +		    cpumask_intersects(cp->effective_cpus,
+> +				       housekeeping_cpumask(HK_FLAG_DOMAIN)))
+>  			csa[csn++] = cp;
+>  
+>  		/* skip @cp's subtree if not a partition root */
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 0f2eb3629070..a4f76d3f5011 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -853,7 +853,7 @@ static inline void uclamp_idle_reset(struct rq *rq, enum uclamp_id clamp_id,
+>  }
+>  
+>  static inline
+> -enum uclamp_id uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
+> +unsigned int uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
+>  				   unsigned int clamp_value)
+>  {
+>  	struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
+> @@ -918,7 +918,7 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
+>  	return uc_req;
+>  }
+>  
+> -enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
+> +unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
+>  {
+>  	struct uclamp_se uc_eff;
+>  
+> @@ -1065,7 +1065,7 @@ uclamp_update_active(struct task_struct *p, enum uclamp_id clamp_id)
+>  	 * affecting a valid clamp bucket, the next time it's enqueued,
+>  	 * it will already see the updated clamp bucket value.
+>  	 */
+> -	if (!p->uclamp[clamp_id].active) {
+> +	if (p->uclamp[clamp_id].active) {
+>  		uclamp_rq_dec_id(rq, p, clamp_id);
+>  		uclamp_rq_inc_id(rq, p, clamp_id);
+>  	}
+> @@ -6019,10 +6019,11 @@ void init_idle(struct task_struct *idle, int cpu)
+>  	struct rq *rq = cpu_rq(cpu);
+>  	unsigned long flags;
+>  
+> +	__sched_fork(0, idle);
+> +
+>  	raw_spin_lock_irqsave(&idle->pi_lock, flags);
+>  	raw_spin_lock(&rq->lock);
+>  
+> -	__sched_fork(0, idle);
+>  	idle->state = TASK_RUNNING;
+>  	idle->se.exec_start = sched_clock();
+>  	idle->flags |= PF_IDLE;
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 22a2fed29054..69a81a5709ff 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -7547,6 +7547,19 @@ static void update_blocked_averages(int cpu)
+>  	rq_lock_irqsave(rq, &rf);
+>  	update_rq_clock(rq);
+>  
+> +	/*
+> +	 * update_cfs_rq_load_avg() can call cpufreq_update_util(). Make sure
+> +	 * that RT, DL and IRQ signals have been updated before updating CFS.
+> +	 */
+> +	curr_class = rq->curr->sched_class;
+> +	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
+> +	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
+> +	update_irq_load_avg(rq, 0);
+> +
+> +	/* Don't need periodic decay once load/util_avg are null */
+> +	if (others_have_blocked(rq))
+> +		done = false;
+> +
+>  	/*
+>  	 * Iterates the task_group tree in a bottom up fashion, see
+>  	 * list_add_leaf_cfs_rq() for details.
+> @@ -7574,14 +7587,6 @@ static void update_blocked_averages(int cpu)
+>  			done = false;
+>  	}
+>  
+> -	curr_class = rq->curr->sched_class;
+> -	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
+> -	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
+> -	update_irq_load_avg(rq, 0);
+> -	/* Don't need periodic decay once load/util_avg are null */
+> -	if (others_have_blocked(rq))
+> -		done = false;
+> -
+>  	update_blocked_load_status(rq, !done);
+>  	rq_unlock_irqrestore(rq, &rf);
+>  }
+> @@ -7642,12 +7647,18 @@ static inline void update_blocked_averages(int cpu)
+>  
+>  	rq_lock_irqsave(rq, &rf);
+>  	update_rq_clock(rq);
+> -	update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
+>  
+> +	/*
+> +	 * update_cfs_rq_load_avg() can call cpufreq_update_util(). Make sure
+> +	 * that RT, DL and IRQ signals have been updated before updating CFS.
+> +	 */
+>  	curr_class = rq->curr->sched_class;
+>  	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
+>  	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
+>  	update_irq_load_avg(rq, 0);
+> +
+> +	update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
+> +
+>  	update_blocked_load_status(rq, cfs_rq_has_blocked(cfs_rq) || others_have_blocked(rq));
+>  	rq_unlock_irqrestore(rq, &rf);
+>  }
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index c8870c5bd7df..49ed949f850c 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -2309,7 +2309,7 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
+>  #endif /* CONFIG_CPU_FREQ */
+>  
+>  #ifdef CONFIG_UCLAMP_TASK
+> -enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
+> +unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
+>  
+>  static __always_inline
+>  unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
+> 
