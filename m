@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E98CC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 522CFC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB81C206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C0FE2089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920261;
-	bh=KzaYq/ZxefBgTK1mWLIBUbunCDUrWNx+9I10MwP1UNU=;
+	s=default; t=1573920263;
+	bh=tGyuerj4tgHb0qQhYD5ienk8WW7ZV2NkS0UB4aqLey4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b7jmTzM5P7Knx9RDxlpdZaEIKvm+pswmjRDYSLzXVucTh3VVl5Z9u8E5jNO9j+IzE
-	 KfWDLgBX77uWaVObCjXfnLUxnn6cMBSRk7F7hfkDRByH740lMAPurKUQTHQyawe9FT
-	 VQt6YLAeXZU/lwUBlAPZe59o7jcMZ+uRrlORnynY=
+	b=ICs/ar7O0Yw4AUhuM3HKS/uo3wIOC6twUnpkWuRDbo0V1Z9uErgQnSGnPYI7PgRaf
+	 7IHFg+IBPZ3yYVfdjhq1U8P924HFm1tDA0Hu5dQ1plZ+hKemuV9SuY6v27q0I004q0
+	 dNleWMUzmieIuPpoIB0UOJD8z3hX7Sx3fXs43Yg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731295AbfKPQET (ORCPT
+        id S1730443AbfKPQEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:04:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60628 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:04:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729098AbfKPPvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:51:50 -0500
+        id S1730832AbfKPPvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:51:45 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 664D020857;
-        Sat, 16 Nov 2019 15:51:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E56B20859;
+        Sat, 16 Nov 2019 15:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919509;
-        bh=KzaYq/ZxefBgTK1mWLIBUbunCDUrWNx+9I10MwP1UNU=;
+        s=default; t=1573919505;
+        bh=tGyuerj4tgHb0qQhYD5ienk8WW7ZV2NkS0UB4aqLey4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q0QI+rM6V/1a5Ey1uFc47U+zR5RVMRq2xCF8m/CE+dl59suh8NHtM8IeynY2bQp2r
-         x7Coy2sf+fqA9JSXJqS9Gjxs6NOJjnuNDTC2OdXKNbZKDSt22bCR9cJ4xyuuvnejj/
-         RgbntenUNou4ReFqxXc/YB2E/Uwa0m84GquT/yZk=
+        b=cmVjvydMFz2JEeQvBZUNL2REv+4XMpbh9/c88ADtbPTGngJCpUS2ZkZam8jo5quau
+         HvdM5Q5ImnKjaX2F/z+HE41Ywdm8NtmDJpxFmvaU6OwCCat8gj5ajz5rSZEpLLC5Qz
+         J+u3krxsi5rm+Uk3bTzkyVo/yBZq1BYdJwCqrSC0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 32/99] usbip: tools: fix atoi() on non-null terminated string
-Date:   Sat, 16 Nov 2019 10:49:55 -0500
-Message-Id: <20191116155103.10971-32-sashal@kernel.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 30/99] macintosh/windfarm_smu_sat: Fix debug output
+Date:   Sat, 16 Nov 2019 10:49:53 -0500
+Message-Id: <20191116155103.10971-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -59,58 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-[ Upstream commit e325808c0051b16729ffd472ff887c6cae5c6317 ]
+[ Upstream commit fc0c8b36d379a046525eacb9c3323ca635283757 ]
 
-Currently the call to atoi is being passed a single char string
-that is not null terminated, so there is a potential read overrun
-along the stack when parsing for an integer value.  Fix this by
-instead using a 2 char string that is initialized to all zeros
-to ensure that a 1 char read into the string is always terminated
-with a \0.
+There's some antiquated debug output that's trying
+to do a hand-made hexdump and turning into horrible
+1-byte-per-line output these days.
 
-Detected by cppcheck:
-"Invalid atoi() argument nr 1. A nul-terminated string is required."
+Use print_hex_dump() instead
 
-Fixes: 3391ba0e2792 ("usbip: tools: Extract generic code to be shared with vudc backend")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/usb/usbip/libsrc/usbip_host_common.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/macintosh/windfarm_smu_sat.c | 25 +++++++------------------
+ 1 file changed, 7 insertions(+), 18 deletions(-)
 
-diff --git a/tools/usb/usbip/libsrc/usbip_host_common.c b/tools/usb/usbip/libsrc/usbip_host_common.c
-index 6ff7b601f8545..f5ad219a324e8 100644
---- a/tools/usb/usbip/libsrc/usbip_host_common.c
-+++ b/tools/usb/usbip/libsrc/usbip_host_common.c
-@@ -43,7 +43,7 @@ static int32_t read_attr_usbip_status(struct usbip_usb_device *udev)
- 	int size;
- 	int fd;
- 	int length;
--	char status;
-+	char status[2] = { 0 };
- 	int value = 0;
+diff --git a/drivers/macintosh/windfarm_smu_sat.c b/drivers/macintosh/windfarm_smu_sat.c
+index ad6223e883404..3d310dd60a0be 100644
+--- a/drivers/macintosh/windfarm_smu_sat.c
++++ b/drivers/macintosh/windfarm_smu_sat.c
+@@ -22,14 +22,6 @@
  
- 	size = snprintf(status_attr_path, sizeof(status_attr_path),
-@@ -61,14 +61,14 @@ static int32_t read_attr_usbip_status(struct usbip_usb_device *udev)
- 		return -1;
+ #define VERSION "1.0"
+ 
+-#define DEBUG
+-
+-#ifdef DEBUG
+-#define DBG(args...)	printk(args)
+-#else
+-#define DBG(args...)	do { } while(0)
+-#endif
+-
+ /* If the cache is older than 800ms we'll refetch it */
+ #define MAX_AGE		msecs_to_jiffies(800)
+ 
+@@ -106,13 +98,10 @@ struct smu_sdbp_header *smu_sat_get_sdb_partition(unsigned int sat_id, int id,
+ 		buf[i+2] = data[3];
+ 		buf[i+3] = data[2];
  	}
+-#ifdef DEBUG
+-	DBG(KERN_DEBUG "sat %d partition %x:", sat_id, id);
+-	for (i = 0; i < len; ++i)
+-		DBG(" %x", buf[i]);
+-	DBG("\n");
+-#endif
  
--	length = read(fd, &status, 1);
-+	length = read(fd, status, 1);
- 	if (length < 0) {
- 		err("error reading attribute %s", status_attr_path);
- 		close(fd);
- 		return -1;
++	printk(KERN_DEBUG "sat %d partition %x:", sat_id, id);
++	print_hex_dump(KERN_DEBUG, "  ", DUMP_PREFIX_OFFSET,
++		       16, 1, buf, len, false);
+ 	if (size)
+ 		*size = len;
+ 	return (struct smu_sdbp_header *) buf;
+@@ -132,13 +121,13 @@ static int wf_sat_read_cache(struct wf_sat *sat)
+ 	if (err < 0)
+ 		return err;
+ 	sat->last_read = jiffies;
++
+ #ifdef LOTSA_DEBUG
+ 	{
+ 		int i;
+-		DBG(KERN_DEBUG "wf_sat_get: data is");
+-		for (i = 0; i < 16; ++i)
+-			DBG(" %.2x", sat->cache[i]);
+-		DBG("\n");
++		printk(KERN_DEBUG "wf_sat_get: data is");
++		print_hex_dump(KERN_DEBUG, "  ", DUMP_PREFIX_OFFSET,
++			       16, 1, sat->cache, 16, false);
  	}
- 
--	value = atoi(&status);
-+	value = atoi(status);
- 
- 	return value;
- }
+ #endif
+ 	return 0;
 -- 
 2.20.1
 
