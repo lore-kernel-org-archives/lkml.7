@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D01C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F676C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95B1C214DE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4897D214DE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:23:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573921409;
-	bh=Dj2rTLwWDO1pOTVTST4jx2q+awzIqfqNPlMUZC3OWqM=;
+	s=default; t=1573921413;
+	bh=Mr7tKvRZ502cywgXVcx/jiSQvnfQj4wn5VzQkntfH5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tX0dZ7MqrsM7m8j/KXy2WNb3Qd724yY1N8rdoDZJh9KtsxkaNrxtjcfyGJM97WeFk
-	 3zwmA989za0Og3Zzpie7gB6MNHyZ/cuYhsr65zfoP/sxV2wZHzv4xWOmo5slfils0Y
-	 qWA96wqe5W+ykkfLQC78EjmwL/iOX/NGP5ImDo9Q=
+	b=RbMYWcpGa+9or/H0jd2OXpl4Iu+zsdjFpazTnpkaQqlBB7OLvI1JYkGnnR6Ujsv9e
+	 +xj+Dmlau9yuhOmK0DONed6b3g2DyOjl4jwlqcxGjhXLTxpHTS6JGa6q/inwm92ZCY
+	 9zoBW1vMHyOqeQW0/doL2bVHU1CpwvSxczdafNv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbfKPPmy (ORCPT
+        id S1729201AbfKPQXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:42:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46518 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:23:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728408AbfKPPmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:42:44 -0500
+        id S1728489AbfKPPmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:42:52 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11D9C2084E;
-        Sat, 16 Nov 2019 15:42:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69E222083B;
+        Sat, 16 Nov 2019 15:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918963;
-        bh=Dj2rTLwWDO1pOTVTST4jx2q+awzIqfqNPlMUZC3OWqM=;
+        s=default; t=1573918971;
+        bh=Mr7tKvRZ502cywgXVcx/jiSQvnfQj4wn5VzQkntfH5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YWSwGJDYb0S1qe158zQ5AN5ZFUc5s+vMe4qlzglMtPiQfXg7OmMf6hfWTPINHx/gY
-         FkIBKZAPOxqz7ziL1MEON0X3SPKXO4RcGoqPHsdX+RIITzSg6V0Qfyo7xGFCuREECu
-         eYFgCC5a+GprUrPgxSCt5x5gJXZASEnge1V2EW/g=
+        b=Z/RWTECYg/NG/Xf5dj/3oRZNxHSraP4rpttLTcqSGgkFsAwlDssWnUyPgmmo2ONuz
+         k4cO4mvGfzs+UorOhgldLWSxDZYMjGgIl7uwf4YxFWc/6BfwEGEhH9UvuPeMgXILvL
+         c6Msf2/mbKGmJHDnrIrvGUWFV9uK9qPEpXXqRUQ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xin Long <lucien.xin@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-sctp@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 079/237] sctp: use sk_wmem_queued to check for writable space
-Date:   Sat, 16 Nov 2019 10:38:34 -0500
-Message-Id: <20191116154113.7417-79-sashal@kernel.org>
+Cc:     Vignesh R <vigneshr@ti.com>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 087/237] spi: omap2-mcspi: Set FIFO DMA trigger level to word length
+Date:   Sat, 16 Nov 2019 10:38:42 -0500
+Message-Id: <20191116154113.7417-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -60,120 +58,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Vignesh R <vigneshr@ti.com>
 
-[ Upstream commit cd305c74b0f8b49748a79a8f67fc8e5e3e0c4794 ]
+[ Upstream commit b682cffa3ac6d9d9e16e9b413c45caee3b391fab ]
 
-sk->sk_wmem_queued is used to count the size of chunks in out queue
-while sk->sk_wmem_alloc is for counting the size of chunks has been
-sent. sctp is increasing both of them before enqueuing the chunks,
-and using sk->sk_wmem_alloc to check for writable space.
+McSPI has 32 byte FIFO in Transmit-Receive mode. Current code tries to
+configuration FIFO watermark level for DMA trigger to be GCD of transfer
+length and max FIFO size which would mean trigger level may be set to 32
+for transmit-receive mode if length is aligned. This does not work in
+case of SPI slave mode where FIFO always needs to have data ready
+whenever master starts the clock. With DMA trigger size of 32 there will
+be a small window during slave TX where DMA is still putting data into
+FIFO but master would have started clock for next byte, resulting in
+shifting out of stale data. Similarly, on Slave RX side there may be RX
+FIFO overflow
+Fix this by setting FIFO watermark for DMA trigger to word
+length. This means DMA is triggered as soon as FIFO has space for word
+length bytes and DMA would make sure FIFO is almost always full
+therefore improving FIFO occupancy in both master and slave mode.
 
-However, sk_wmem_alloc is also increased by 1 for the skb allocked
-for sending in sctp_packet_transmit() but it will not wake up the
-waiters when sk_wmem_alloc is decreased in this skb's destructor.
-
-If msg size is equal to sk_sndbuf and sendmsg is waiting for sndbuf,
-the check 'msg_len <= sctp_wspace(asoc)' in sctp_wait_for_sndbuf()
-will keep waiting if there's a skb allocked in sctp_packet_transmit,
-and later even if this skb got freed, the waiting thread will never
-get waked up.
-
-This issue has been there since very beginning, so we change to use
-sk->sk_wmem_queued to check for writable space as sk_wmem_queued is
-not increased for the skb allocked for sending, also as TCP does.
-
-SOCK_SNDBUF_LOCK check is also removed here as it's for tx buf auto
-tuning which I will add in another patch.
-
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sctp/socket.c | 38 +++++++++-----------------------------
- 1 file changed, 9 insertions(+), 29 deletions(-)
+ drivers/spi/spi-omap2-mcspi.c | 26 +++++++-------------------
+ 1 file changed, 7 insertions(+), 19 deletions(-)
 
-diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-index c766315527226..e7a11cd7633f5 100644
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -83,7 +83,7 @@
- #include <net/sctp/stream_sched.h>
+diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
+index e2be7da743438..f50cb8a4b4138 100644
+--- a/drivers/spi/spi-omap2-mcspi.c
++++ b/drivers/spi/spi-omap2-mcspi.c
+@@ -299,7 +299,7 @@ static void omap2_mcspi_set_fifo(const struct spi_device *spi,
+ 	struct omap2_mcspi_cs *cs = spi->controller_state;
+ 	struct omap2_mcspi *mcspi;
+ 	unsigned int wcnt;
+-	int max_fifo_depth, fifo_depth, bytes_per_word;
++	int max_fifo_depth, bytes_per_word;
+ 	u32 chconf, xferlevel;
  
- /* Forward declarations for internal helper functions. */
--static int sctp_writeable(struct sock *sk);
-+static bool sctp_writeable(struct sock *sk);
- static void sctp_wfree(struct sk_buff *skb);
- static int sctp_wait_for_sndbuf(struct sctp_association *asoc, long *timeo_p,
- 				size_t msg_len);
-@@ -119,25 +119,10 @@ static void sctp_enter_memory_pressure(struct sock *sk)
- /* Get the sndbuf space available at the time on the association.  */
- static inline int sctp_wspace(struct sctp_association *asoc)
- {
--	int amt;
-+	struct sock *sk = asoc->base.sk;
+ 	mcspi = spi_master_get_devdata(master);
+@@ -315,10 +315,6 @@ static void omap2_mcspi_set_fifo(const struct spi_device *spi,
+ 		else
+ 			max_fifo_depth = OMAP2_MCSPI_MAX_FIFODEPTH;
  
--	if (asoc->ep->sndbuf_policy)
--		amt = asoc->sndbuf_used;
--	else
--		amt = sk_wmem_alloc_get(asoc->base.sk);
+-		fifo_depth = gcd(t->len, max_fifo_depth);
+-		if (fifo_depth < 2 || fifo_depth % bytes_per_word != 0)
+-			goto disable_fifo;
 -
--	if (amt >= asoc->base.sk->sk_sndbuf) {
--		if (asoc->base.sk->sk_userlocks & SOCK_SNDBUF_LOCK)
--			amt = 0;
--		else {
--			amt = sk_stream_wspace(asoc->base.sk);
--			if (amt < 0)
--				amt = 0;
--		}
--	} else {
--		amt = asoc->base.sk->sk_sndbuf - amt;
--	}
--	return amt;
-+	return asoc->ep->sndbuf_policy ? sk->sk_sndbuf - asoc->sndbuf_used
-+				       : sk_stream_wspace(sk);
- }
+ 		wcnt = t->len / bytes_per_word;
+ 		if (wcnt > OMAP2_MCSPI_MAX_FIFOWCNT)
+ 			goto disable_fifo;
+@@ -326,16 +322,17 @@ static void omap2_mcspi_set_fifo(const struct spi_device *spi,
+ 		xferlevel = wcnt << 16;
+ 		if (t->rx_buf != NULL) {
+ 			chconf |= OMAP2_MCSPI_CHCONF_FFER;
+-			xferlevel |= (fifo_depth - 1) << 8;
++			xferlevel |= (bytes_per_word - 1) << 8;
+ 		}
++
+ 		if (t->tx_buf != NULL) {
+ 			chconf |= OMAP2_MCSPI_CHCONF_FFET;
+-			xferlevel |= fifo_depth - 1;
++			xferlevel |= bytes_per_word - 1;
+ 		}
  
- /* Increment the used sndbuf space count of the corresponding association by
-@@ -1928,10 +1913,10 @@ static int sctp_sendmsg_to_asoc(struct sctp_association *asoc,
- 		asoc->pmtu_pending = 0;
+ 		mcspi_write_reg(master, OMAP2_MCSPI_XFERLEVEL, xferlevel);
+ 		mcspi_write_chconf0(spi, chconf);
+-		mcspi->fifo_depth = fifo_depth;
++		mcspi->fifo_depth = max_fifo_depth;
+ 
+ 		return;
+ 	}
+@@ -585,7 +582,6 @@ omap2_mcspi_txrx_dma(struct spi_device *spi, struct spi_transfer *xfer)
+ 	struct dma_slave_config	cfg;
+ 	enum dma_slave_buswidth width;
+ 	unsigned es;
+-	u32			burst;
+ 	void __iomem		*chstat_reg;
+ 	void __iomem            *irqstat_reg;
+ 	int			wait_res;
+@@ -605,22 +601,14 @@ omap2_mcspi_txrx_dma(struct spi_device *spi, struct spi_transfer *xfer)
  	}
  
--	if (sctp_wspace(asoc) < msg_len)
-+	if (sctp_wspace(asoc) < (int)msg_len)
- 		sctp_prsctp_prune(asoc, sinfo, msg_len - sctp_wspace(asoc));
- 
--	if (!sctp_wspace(asoc)) {
-+	if (sctp_wspace(asoc) <= 0) {
- 		timeo = sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
- 		err = sctp_wait_for_sndbuf(asoc, &timeo, msg_len);
- 		if (err)
-@@ -8516,7 +8501,7 @@ static int sctp_wait_for_sndbuf(struct sctp_association *asoc, long *timeo_p,
- 			goto do_error;
- 		if (signal_pending(current))
- 			goto do_interrupted;
--		if (msg_len <= sctp_wspace(asoc))
-+		if ((int)msg_len <= sctp_wspace(asoc))
- 			break;
- 
- 		/* Let another process have a go.  Since we are going
-@@ -8591,14 +8576,9 @@ void sctp_write_space(struct sock *sk)
-  * UDP-style sockets or TCP-style sockets, this code should work.
-  *  - Daisy
-  */
--static int sctp_writeable(struct sock *sk)
-+static bool sctp_writeable(struct sock *sk)
- {
--	int amt = 0;
+ 	count = xfer->len;
+-	burst = 1;
 -
--	amt = sk->sk_sndbuf - sk_wmem_alloc_get(sk);
--	if (amt < 0)
--		amt = 0;
--	return amt;
-+	return sk->sk_sndbuf > sk->sk_wmem_queued;
- }
+-	if (mcspi->fifo_depth > 0) {
+-		if (count > mcspi->fifo_depth)
+-			burst = mcspi->fifo_depth / es;
+-		else
+-			burst = count / es;
+-	}
  
- /* Wait for an association to go into ESTABLISHED state. If timeout is 0,
+ 	memset(&cfg, 0, sizeof(cfg));
+ 	cfg.src_addr = cs->phys + OMAP2_MCSPI_RX0;
+ 	cfg.dst_addr = cs->phys + OMAP2_MCSPI_TX0;
+ 	cfg.src_addr_width = width;
+ 	cfg.dst_addr_width = width;
+-	cfg.src_maxburst = burst;
+-	cfg.dst_maxburst = burst;
++	cfg.src_maxburst = es;
++	cfg.dst_maxburst = es;
+ 
+ 	rx = xfer->rx_buf;
+ 	tx = xfer->tx_buf;
 -- 
 2.20.1
 
