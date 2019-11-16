@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEFDC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA83C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8752089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 644752089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920785;
-	bh=+NB0s+LCRAxdroStWyCsfEPiUhK5zPehk0eeSME6j/Y=;
+	s=default; t=1573920789;
+	bh=phxjke+MdZknIuPKAZ3hQGzWF9cgS8GpyWlJh7zQ7/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V89RHg94oUmS1i+tVKmSl8xtmkGNxL2WcUArK57e/79eXLxwkfqy9OdseRVtcWOy0
-	 Esq70SnrxCcYRbO+nhnO6egXs8/9nk0vbbRl6HnSTvm70DnoDpKuCNBATcwGCBU/dJ
-	 pamGRTGqxlOo0XGBVC+hyX3cCR50wMtNSuzUyRVc=
+	b=R6PjzBXJ17UBGNCa1rXRD3xqiCc8lz4zxK393nmwZo+4HXElQfL3RCoYxeiBvLhyQ
+	 CiNP4Ju0AC3LTooxW4XtRoM35oIiF+k2mB/vzOvRzww+XgKtLXjoPetB9MVviJuorg
+	 rXP7DMetpF/+XDErL2VwB1aIY1gnlrIRZ+RBdedg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731204AbfKPQNE (ORCPT
+        id S1729923AbfKPPsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:13:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55046 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:48:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729927AbfKPPsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:48:05 -0500
+        id S1729785AbfKPPrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:47:45 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5630420855;
-        Sat, 16 Nov 2019 15:48:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EED132083E;
+        Sat, 16 Nov 2019 15:47:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919284;
-        bh=+NB0s+LCRAxdroStWyCsfEPiUhK5zPehk0eeSME6j/Y=;
+        s=default; t=1573919265;
+        bh=phxjke+MdZknIuPKAZ3hQGzWF9cgS8GpyWlJh7zQ7/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HKJYyvff/NB5qVseErzFzLIn3+kEpIRFweDitfIBniWK11I/rN3uKQLTy2haPhQdi
-         T17+VePeQaRU4FsB0ZxWoObvoPsMRIYhiuiv6q066IDxNjwB0fPkfDaDMX6ajyHLmT
-         5NESn7UOfnkebIpf7ahFVWZS8oV8FjdED+bi3oYo=
+        b=zH2aYL+SpzGSGjsnYa7abAKN5WXsbMLNpsTDHmaDmFpJyy3u3DWV5FNMOfm63P2oX
+         p+kVpswDKHpKFHCgflw1j/0emze4KC8QBSSP6pysxRwCjD+YQ9HvAsynlKtkq0/aXN
+         HXxt7ywhQlfGDlKd1YwwrnFR4rfGc89MUJTs1YVY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        James Smart <james.smart@broadcom.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 035/150] nvmet-fcloop: suppress a compiler warning
-Date:   Sat, 16 Nov 2019 10:45:33 -0500
-Message-Id: <20191116154729.9573-35-sashal@kernel.org>
+Cc:     Nikolay Borisov <nborisov@suse.com>,
+        Lu Fengqi <lufq.fnst@cn.fujitsu.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 017/150] btrfs: handle error of get_old_root
+Date:   Sat, 16 Nov 2019 10:45:15 -0500
+Message-Id: <20191116154729.9573-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
 References: <20191116154729.9573-1-sashal@kernel.org>
@@ -60,40 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Nikolay Borisov <nborisov@suse.com>
 
-[ Upstream commit 1216e9ef18b84f4fb5934792368fb01eb3540520 ]
+[ Upstream commit 315bed43fea532650933e7bba316a7601d439edf ]
 
-Building with W=1 enables the compiler warning -Wimplicit-fallthrough=3. That
-option does not recognize the fall-through comment in the fcloop driver. Add
-a fall-through comment that is recognized for -Wimplicit-fallthrough=3. This
-patch avoids that the compiler reports the following warning when building
-with W=1:
+In btrfs_search_old_slot get_old_root is always used with the assumption
+it cannot fail. However, this is not true in rare circumstance it can
+fail and return null. This will lead to null point dereference when the
+header is read. Fix this by checking the return value and properly
+handling NULL by setting ret to -EIO and returning gracefully.
 
-drivers/nvme/target/fcloop.c:647:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   if (op == NVMET_FCOP_READDATA)
-      ^
-
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Coverity-id: 1087503
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: Lu Fengqi <lufq.fnst@cn.fujitsu.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/target/fcloop.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/btrfs/ctree.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/nvme/target/fcloop.c b/drivers/nvme/target/fcloop.c
-index 0b0a4825b3eb1..096523d8dd422 100644
---- a/drivers/nvme/target/fcloop.c
-+++ b/drivers/nvme/target/fcloop.c
-@@ -535,6 +535,7 @@ fcloop_fcp_op(struct nvmet_fc_target_port *tgtport,
- 			break;
+diff --git a/fs/btrfs/ctree.c b/fs/btrfs/ctree.c
+index 27983fd657abd..d2263caff3070 100644
+--- a/fs/btrfs/ctree.c
++++ b/fs/btrfs/ctree.c
+@@ -2988,6 +2988,10 @@ int btrfs_search_old_slot(struct btrfs_root *root, const struct btrfs_key *key,
  
- 		/* Fall-Thru to RSP handling */
-+		/* FALLTHRU */
+ again:
+ 	b = get_old_root(root, time_seq);
++	if (!b) {
++		ret = -EIO;
++		goto done;
++	}
+ 	level = btrfs_header_level(b);
+ 	p->locks[level] = BTRFS_READ_LOCK;
  
- 	case NVMET_FCOP_RSP:
- 		if (fcpreq) {
 -- 
 2.20.1
 
