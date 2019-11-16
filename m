@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC28C43141
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9F6C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD5E921845
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:05:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6318C206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:05:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920333;
-	bh=yaJoh/7AyG+itmJ2dxC94svgjgemr1sqw9xtDGBeWVA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=tvabFVuodMFeegf34ATe+y2+cQZ7DM3sAPCHtcwqxvGIBerkLhH4iq5bvKUr4sWAY
-	 hYYHrb+Muzwfp0KzUKLzYq0AScmRU8uKTzQoLoHC7H0Di+5s7d+XIeiISoTTPMOwAi
-	 w++RO8/G/k44sXxheuKsIK8+A2UpFE8Hl8LIcRqA=
+	s=default; t=1573920338;
+	bh=pGb1BqwB7ESBJvqdqPLH3dpMcxPSPCZBWyBfFsXlnac=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=e7X3YS9aFK99zRx+PDXNXXVCcHPLfj++5MfBuxXYqb09tgn6RTq++5nGnfZ+CB9HL
+	 +8VKebcCfdrn0iVhxbAyh7NJv7vedcsqRW6KLrJ+4JXnF2tRJ8gMQAdGo/j4PQoEpz
+	 Jc9ECki20LbPZsQu52tyfyp5onCOHGcflNc3nDX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbfKPPvR (ORCPT
+        id S1731647AbfKPQFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:51:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59534 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:05:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730587AbfKPPvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:51:04 -0500
+        id S1730699AbfKPPvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:51:15 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C65F620885;
-        Sat, 16 Nov 2019 15:51:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 364E221846;
+        Sat, 16 Nov 2019 15:51:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919464;
-        bh=yaJoh/7AyG+itmJ2dxC94svgjgemr1sqw9xtDGBeWVA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=0h/Aj0PnerJ9cIVHFgeCtcmItK5BcoFavHXKWHVDS3WL4IqXiniUC3/Vfdeo7ey1e
-         bsz8DvButf96O3qnZVZStQyLSUmS2hCrtK2b/2VQ6ZIvDrSjjtjdZg5xyOvo+o98NE
-         dYE74uvb5L6nxDOYLiC0XiW9zLmejyDPHwqfLU5Y=
+        s=default; t=1573919474;
+        bh=pGb1BqwB7ESBJvqdqPLH3dpMcxPSPCZBWyBfFsXlnac=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RPB2h6KhUe/VfpPlJAWfz1t11ZbIXZIG0wx6ZZzQIvN9Qg879LvQ5ApdKlD68R1/n
+         TO1fglEAPAdvDNQ57B9OEECYQb96QXnvHhPh9ZBIeqCZDinhev7fDiVaI1tDGa3NA+
+         QIEStu9T2CTePZK4el8wbP5eqZfFDNsXOaUH8FYs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 01/99] ALSA: isight: fix leak of reference to firewire unit in error path of .probe callback
-Date:   Sat, 16 Nov 2019 10:49:24 -0500
-Message-Id: <20191116155103.10971-1-sashal@kernel.org>
+Cc:     Carl Huang <cjhuang@codeaurora.org>,
+        Brian Norris <briannorris@chomium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 08/99] ath10k: allocate small size dma memory in ath10k_pci_diag_write_mem
+Date:   Sat, 16 Nov 2019 10:49:31 -0500
+Message-Id: <20191116155103.10971-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
+References: <20191116155103.10971-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -56,50 +61,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Carl Huang <cjhuang@codeaurora.org>
 
-[ Upstream commit 51e68fb0929c29e47e9074ca3e99ffd6021a1c5a ]
+[ Upstream commit 0738b4998c6d1caf9ca2447b946709a7278c70f1 ]
 
-In some error paths, reference count of firewire unit is not decreased.
-This commit fixes the bug.
+ath10k_pci_diag_write_mem may allocate big size of the dma memory
+based on the parameter nbytes. Take firmware diag download as
+example, the biggest size is about 500K. In some systems, the
+allocation is likely to fail because it can't acquire such a large
+contiguous dma memory.
 
-Fixes: 5b14ec25a79b('ALSA: firewire: release reference count of firewire unit in .remove callback of bus driver')
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+The fix is to allocate a small size dma memory. In the loop,
+driver copies the data to the allocated dma memory and writes to
+the destination until all the data is written.
+
+Tested with QCA6174 PCI with
+firmware-6.bin_WLAN.RM.4.4.1-00119-QCARMSWP-1, this also affects
+QCA9377 PCI.
+
+Signed-off-by: Carl Huang <cjhuang@codeaurora.org>
+Reviewed-by: Brian Norris <briannorris@chomium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/firewire/isight.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/wireless/ath/ath10k/pci.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
-diff --git a/sound/firewire/isight.c b/sound/firewire/isight.c
-index 48d6dca471c6b..6c8daf5b391ff 100644
---- a/sound/firewire/isight.c
-+++ b/sound/firewire/isight.c
-@@ -639,7 +639,7 @@ static int isight_probe(struct fw_unit *unit,
- 	if (!isight->audio_base) {
- 		dev_err(&unit->device, "audio unit base not found\n");
- 		err = -ENXIO;
--		goto err_unit;
-+		goto error;
+diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
+index 25b8d501d437e..176cf4fef6296 100644
+--- a/drivers/net/wireless/ath/ath10k/pci.c
++++ b/drivers/net/wireless/ath/ath10k/pci.c
+@@ -1039,10 +1039,9 @@ int ath10k_pci_diag_write_mem(struct ath10k *ar, u32 address,
+ 	struct ath10k_pci *ar_pci = ath10k_pci_priv(ar);
+ 	int ret = 0;
+ 	u32 *buf;
+-	unsigned int completed_nbytes, orig_nbytes, remaining_bytes;
++	unsigned int completed_nbytes, alloc_nbytes, remaining_bytes;
+ 	struct ath10k_ce_pipe *ce_diag;
+ 	void *data_buf = NULL;
+-	u32 ce_data;	/* Host buffer address in CE space */
+ 	dma_addr_t ce_data_base = 0;
+ 	int i;
+ 
+@@ -1056,9 +1055,10 @@ int ath10k_pci_diag_write_mem(struct ath10k *ar, u32 address,
+ 	 *   1) 4-byte alignment
+ 	 *   2) Buffer in DMA-able space
+ 	 */
+-	orig_nbytes = nbytes;
++	alloc_nbytes = min_t(unsigned int, nbytes, DIAG_TRANSFER_LIMIT);
++
+ 	data_buf = (unsigned char *)dma_alloc_coherent(ar->dev,
+-						       orig_nbytes,
++						       alloc_nbytes,
+ 						       &ce_data_base,
+ 						       GFP_ATOMIC);
+ 	if (!data_buf) {
+@@ -1066,9 +1066,6 @@ int ath10k_pci_diag_write_mem(struct ath10k *ar, u32 address,
+ 		goto done;
  	}
- 	fw_iso_resources_init(&isight->resources, unit);
  
-@@ -668,12 +668,12 @@ static int isight_probe(struct fw_unit *unit,
- 	dev_set_drvdata(&unit->device, isight);
- 
- 	return 0;
+-	/* Copy caller's data to allocated DMA buf */
+-	memcpy(data_buf, data, orig_nbytes);
 -
--err_unit:
--	fw_unit_put(isight->unit);
--	mutex_destroy(&isight->mutex);
- error:
- 	snd_card_free(card);
+ 	/*
+ 	 * The address supplied by the caller is in the
+ 	 * Target CPU virtual address space.
+@@ -1081,12 +1078,14 @@ int ath10k_pci_diag_write_mem(struct ath10k *ar, u32 address,
+ 	 */
+ 	address = ath10k_pci_targ_cpu_to_ce_addr(ar, address);
+ 
+-	remaining_bytes = orig_nbytes;
+-	ce_data = ce_data_base;
++	remaining_bytes = nbytes;
+ 	while (remaining_bytes) {
+ 		/* FIXME: check cast */
+ 		nbytes = min_t(int, remaining_bytes, DIAG_TRANSFER_LIMIT);
+ 
++		/* Copy caller's data to allocated DMA buf */
++		memcpy(data_buf, data, nbytes);
 +
-+	mutex_destroy(&isight->mutex);
-+	fw_unit_put(isight->unit);
-+
- 	return err;
- }
+ 		/* Set up to receive directly into Target(!) address */
+ 		ret = __ath10k_ce_rx_post_buf(ce_diag, &address, address);
+ 		if (ret != 0)
+@@ -1096,7 +1095,7 @@ int ath10k_pci_diag_write_mem(struct ath10k *ar, u32 address,
+ 		 * Request CE to send caller-supplied data that
+ 		 * was copied to bounce buffer to Target(!) address.
+ 		 */
+-		ret = ath10k_ce_send_nolock(ce_diag, NULL, (u32)ce_data,
++		ret = ath10k_ce_send_nolock(ce_diag, NULL, ce_data_base,
+ 					    nbytes, 0, 0);
+ 		if (ret != 0)
+ 			goto done;
+@@ -1137,12 +1136,12 @@ int ath10k_pci_diag_write_mem(struct ath10k *ar, u32 address,
+ 
+ 		remaining_bytes -= nbytes;
+ 		address += nbytes;
+-		ce_data += nbytes;
++		data += nbytes;
+ 	}
+ 
+ done:
+ 	if (data_buf) {
+-		dma_free_coherent(ar->dev, orig_nbytes, data_buf,
++		dma_free_coherent(ar->dev, alloc_nbytes, data_buf,
+ 				  ce_data_base);
+ 	}
  
 -- 
 2.20.1
