@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7DEC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B166C43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29C4B2082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 348D420803
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573918930;
-	bh=E4lEx/M3dpUWK1f5P4pR88zODDCCQts5gWFfasn091I=;
+	s=default; t=1573918938;
+	bh=+5WDG++5xSQuxpiwkJ1J9wYvQqH+k4jLnKBFQ/nlJIE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sjlhY3dfqtZhxvNbEPmMjipBTdoxBpdV38T3uE3O7wPkkfnZqsc85Ez5a2p4AZzWo
-	 Y4ci6qnBtaHj893y3lTo2bRRm62ZATHZ6N1+LRVbo/0DNmjOgI7mIAVMqRiTVTbdeZ
-	 n9tixiNhndRiLG7KPSzDB0H9NM6n77oTE7OQj7do=
+	b=hGWvvbFtZ8/d5kHmjSmXCzx3A2Shu4ftIpufTrdsMO160G46IadmL1kAqlzmfYbwz
+	 BRR7iOHDvu7+9BrgXPWnJ5n4pAhFGQTMELMl0Tq6/YMKoMb+N2UUSDYyMe8ON0pEI0
+	 Tauqyfo3MxwNyOMWOEphVo2eHEffGhap+nKTRvHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbfKPPmJ (ORCPT
+        id S1728251AbfKPPmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:42:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45522 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:42:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728142AbfKPPmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:42:05 -0500
+        id S1728197AbfKPPmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:42:11 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 228082084B;
-        Sat, 16 Nov 2019 15:42:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC51D2082E;
+        Sat, 16 Nov 2019 15:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573918924;
-        bh=E4lEx/M3dpUWK1f5P4pR88zODDCCQts5gWFfasn091I=;
+        s=default; t=1573918931;
+        bh=+5WDG++5xSQuxpiwkJ1J9wYvQqH+k4jLnKBFQ/nlJIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aE302id1U8tTECaRS7EwrMQCGFXuD0XaTS1smPL64MD2jtcU+qF4IKREAhBEbJIuP
-         btOcBGt3xq5Pz21imxUowLrHWgUXf6Rj68yD6RHp1j1JgtcC6n2AnOY/au/gznsTx2
-         4uyQUs9JJrTLr1MOdCTOWb74504vldYDzYZ4oEek=
+        b=P1RKbQTjvb6I2NNQ9JWoQftmIXz7VOXPmr7gbrRJk4XNNzHssLYpUx8arqVWUBxzI
+         6FObe5xmC4M8kM/QzG+ldb3fvmGsLg3+lS6qQQJ6Xlp4d/7TvXAfNI7b7zfqOQaW0O
+         WDlROR09eGAGA2Eh/eoqpc17GgnoAHR3GqYvaR+M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joseph Lo <josephl@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 050/237] clk: tegra: Fixes for MBIST work around
-Date:   Sat, 16 Nov 2019 10:38:05 -0500
-Message-Id: <20191116154113.7417-50-sashal@kernel.org>
+Cc:     Keith Busch <keith.busch@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 058/237] nvme-pci: fix hot removal during error handling
+Date:   Sat, 16 Nov 2019 10:38:13 -0500
+Message-Id: <20191116154113.7417-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -62,53 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joseph Lo <josephl@nvidia.com>
+From: Keith Busch <keith.busch@intel.com>
 
-[ Upstream commit a4dbbceeee3e0ba670875a147237d6566de78840 ]
+[ Upstream commit cb4bfda62afa25b4eee3d635d33fccdd9485dd7c ]
 
-Fix some incorrect data in LVL2 offset and bit mask.
+A removal waits for the reset_work to complete. If a surprise removal
+occurs around the same time as an error triggered controller reset, and
+reset work happened to dispatch a command to the removed controller, the
+command won't be recovered since the timeout work doesn't do anything
+during error recovery. We wouldn't want to wait for timeout handling
+anyway, so this patch fixes this by disabling the controller and killing
+admin queues prior to syncing with the reset_work.
 
-Fixes: e403d0057343 ("clk: tegra: MBIST work around for Tegra210")
-Signed-off-by: Joseph Lo <josephl@nvidia.com>
-Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Keith Busch <keith.busch@intel.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/tegra/clk-tegra210.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/nvme/host/pci.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
-index 080bfa24863ee..7264e97310348 100644
---- a/drivers/clk/tegra/clk-tegra210.c
-+++ b/drivers/clk/tegra/clk-tegra210.c
-@@ -2603,7 +2603,7 @@ static struct tegra210_domain_mbist_war tegra210_pg_mbist_war[] = {
- 	[TEGRA_POWERGATE_MPE] = {
- 		.handle_lvl2_ovr = tegra210_generic_mbist_war,
- 		.lvl2_offset = LVL2_CLK_GATE_OVRE,
--		.lvl2_mask = BIT(2),
-+		.lvl2_mask = BIT(29),
- 	},
- 	[TEGRA_POWERGATE_SOR] = {
- 		.handle_lvl2_ovr = tegra210_generic_mbist_war,
-@@ -2654,14 +2654,14 @@ static struct tegra210_domain_mbist_war tegra210_pg_mbist_war[] = {
- 		.num_clks = ARRAY_SIZE(nvdec_slcg_clkids),
- 		.clk_init_data = nvdec_slcg_clkids,
- 		.handle_lvl2_ovr = tegra210_generic_mbist_war,
--		.lvl2_offset = LVL2_CLK_GATE_OVRC,
-+		.lvl2_offset = LVL2_CLK_GATE_OVRE,
- 		.lvl2_mask = BIT(9) | BIT(31),
- 	},
- 	[TEGRA_POWERGATE_NVJPG] = {
- 		.num_clks = ARRAY_SIZE(nvjpg_slcg_clkids),
- 		.clk_init_data = nvjpg_slcg_clkids,
- 		.handle_lvl2_ovr = tegra210_generic_mbist_war,
--		.lvl2_offset = LVL2_CLK_GATE_OVRC,
-+		.lvl2_offset = LVL2_CLK_GATE_OVRE,
- 		.lvl2_mask = BIT(9) | BIT(31),
- 	},
- 	[TEGRA_POWERGATE_AUD] = {
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index a64a8bca0d5b9..9479c0db08f62 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -2583,13 +2583,12 @@ static void nvme_remove(struct pci_dev *pdev)
+ 	struct nvme_dev *dev = pci_get_drvdata(pdev);
+ 
+ 	nvme_change_ctrl_state(&dev->ctrl, NVME_CTRL_DELETING);
+-
+-	cancel_work_sync(&dev->ctrl.reset_work);
+ 	pci_set_drvdata(pdev, NULL);
+ 
+ 	if (!pci_device_is_present(pdev)) {
+ 		nvme_change_ctrl_state(&dev->ctrl, NVME_CTRL_DEAD);
+ 		nvme_dev_disable(dev, true);
++		nvme_dev_remove_admin(dev);
+ 	}
+ 
+ 	flush_work(&dev->ctrl.reset_work);
 -- 
 2.20.1
 
