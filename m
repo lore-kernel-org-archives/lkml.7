@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0EBC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7413FC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B880221479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4260620857
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919501;
-	bh=+MSac9lGQ3g4tukeHIJJKFOOP18cM1X5Kz249xwJKOY=;
+	s=default; t=1573919504;
+	bh=ZbZQWLNVEAwI0OA//as0xFt12U2YZ+kzigbVogJ9SX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lHVk09OSxemKlPeIK59fgSDsqB2mH1o9Q1eOo0w8hlGSGw/bCk/HSui1jo/okbjNU
-	 tWw0OkdyKPXCqxDgGdl3voJfaQNoW0t7J2jPlaOtSQJvgZmLV//fFySXh77X3n6U4T
-	 CZEjX73j6p553ymlaowtYhWION07jupz1IhZ3+ho=
+	b=vfccBtwY+8D6KJBihY9Dl3UBnxzYM7YSEzAN0WHiiUvBbm/2Ql4tA9h4bJ61xS0Ve
+	 2FYKb8knWP0yF/2h3+BR6EAs/v9VXYijY9z6M6AqmdWsd3LtRlKH9clvSA5Vj5Wjar
+	 qeFdJJVViNAaD3ARbLmZXvevdQECrlUCvAHhfSiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730814AbfKPPvk (ORCPT
+        id S1730825AbfKPPvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:51:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60326 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:51:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730797AbfKPPvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:51:36 -0500
+        id S1730805AbfKPPvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:51:39 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61D9320728;
-        Sat, 16 Nov 2019 15:51:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEF7420871;
+        Sat, 16 Nov 2019 15:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919495;
-        bh=+MSac9lGQ3g4tukeHIJJKFOOP18cM1X5Kz249xwJKOY=;
+        s=default; t=1573919499;
+        bh=ZbZQWLNVEAwI0OA//as0xFt12U2YZ+kzigbVogJ9SX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A6WmdOaKgLP3iH6saYh+277DwQ2IsFlMC7heV9R/EK9IU38ABLgr5XOGIl+/7ME4j
-         wzoJGH5Txx3xu79/TtBPIU1P7bT+cYhikdH1IoyOVhAXaKm80wkpEZKlagvn5mXeEt
-         h80X1R/5KZ90CUw1y9S9eiQxPjVJq2C72Qf+oikk=
+        b=kmAKKDu1Qq8K1a/vMemjlsL063LRAabFDtKy4wlM1ts3G21sWNNe40e91P/mK4Wvb
+         j/H/jDWe3HqL+3y0hfHry+pw9K047x7POHUTRIyyWb+a5qC7MpT2jlMfRCujo5g9Tz
+         gWMs/0lpUy0H1LBM3G8yfzW1u7fqcfYJbIu2qOOI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, dc395x@twibble.org,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 24/99] scsi: dc395x: fix DMA API usage in sg_update_list
-Date:   Sat, 16 Nov 2019 10:49:47 -0500
-Message-Id: <20191116155103.10971-24-sashal@kernel.org>
+Cc:     Netanel Belgazal <netanel@amazon.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 26/99] net: ena: Fix Kconfig dependency on X86
+Date:   Sat, 16 Nov 2019 10:49:49 -0500
+Message-Id: <20191116155103.10971-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155103.10971-1-sashal@kernel.org>
 References: <20191116155103.10971-1-sashal@kernel.org>
@@ -60,36 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Netanel Belgazal <netanel@amazon.com>
 
-[ Upstream commit 6c404a68bf83b4135a8a9aa1c388ebdf98e8ba7f ]
+[ Upstream commit 8c590f9776386b8f697fd0b7ed6142ae6e3de79e ]
 
-We need to transfer device ownership to the CPU before we can manipulate
-the mapped data.
+The Kconfig limitation of X86 is to too wide.
+The ENA driver only requires a little endian dependency.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Change the dependency to be on little endian CPU.
+
+Signed-off-by: Netanel Belgazal <netanel@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/dc395x.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/ethernet/amazon/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/dc395x.c b/drivers/scsi/dc395x.c
-index 9da0ac360848f..830b2d2dcf206 100644
---- a/drivers/scsi/dc395x.c
-+++ b/drivers/scsi/dc395x.c
-@@ -1972,6 +1972,11 @@ static void sg_update_list(struct ScsiReqBlk *srb, u32 left)
- 			xferred -= psge->length;
- 		} else {
- 			/* Partial SG entry done */
-+			pci_dma_sync_single_for_cpu(srb->dcb->
-+					    acb->dev,
-+					    srb->sg_bus_addr,
-+					    SEGMENTX_LEN,
-+					    PCI_DMA_TODEVICE);
- 			psge->length -= xferred;
- 			psge->address += xferred;
- 			srb->sg_index = idx;
+diff --git a/drivers/net/ethernet/amazon/Kconfig b/drivers/net/ethernet/amazon/Kconfig
+index 99b30353541ab..9e87d7b8360f5 100644
+--- a/drivers/net/ethernet/amazon/Kconfig
++++ b/drivers/net/ethernet/amazon/Kconfig
+@@ -17,7 +17,7 @@ if NET_VENDOR_AMAZON
+ 
+ config ENA_ETHERNET
+ 	tristate "Elastic Network Adapter (ENA) support"
+-	depends on (PCI_MSI && X86)
++	depends on PCI_MSI && !CPU_BIG_ENDIAN
+ 	---help---
+ 	  This driver supports Elastic Network Adapter (ENA)"
+ 
 -- 
 2.20.1
 
