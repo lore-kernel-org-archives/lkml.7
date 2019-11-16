@@ -2,114 +2,103 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D0BC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 06:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7080FC43215
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 06:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3438206DC
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 06:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 420FE206B6
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 06:44:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IkSXVvRE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="etF6/auc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbfKPGbg (ORCPT
+        id S1726258AbfKPGoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 01:31:36 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28200 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726053AbfKPGbf (ORCPT
+        Sat, 16 Nov 2019 01:44:21 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46176 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726154AbfKPGoU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 01:31:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573885894;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=URLGBy0jbWCpZ5Oji1iU0vanCkzWQRPQdGmQYj3K+G0=;
-        b=IkSXVvRErlHQv1Nqo0YfjsDaqUZdgQGIYHtWBuE5t80W7feSii9UYOiBGapizv4rF6MfFv
-        d1SI8YMSm6R1QD63ThJNnAEjwgqUjH2U01mmdcKSGITOEuQ3wdG5gBjbt3VdsxeQr1yHQu
-        TUDM9xrOC9BHsiuV4TNf2kGwvtu8Vb8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-92-oMPLbFuQNrWyZmNUOJNcOA-1; Sat, 16 Nov 2019 01:31:31 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B82011005500;
-        Sat, 16 Nov 2019 06:31:29 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6AF54608D8;
-        Sat, 16 Nov 2019 06:31:12 +0000 (UTC)
-Date:   Sat, 16 Nov 2019 14:31:06 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>
-Subject: Re: single aio thread is migrated crazily by scheduler
-Message-ID: <20191116063106.GA18194@ming.t460p>
-References: <20191114113153.GB4213@ming.t460p>
- <20191114235415.GL4614@dread.disaster.area>
- <20191115010824.GC4847@ming.t460p>
- <20191115045634.GN4614@dread.disaster.area>
- <20191115070843.GA24246@ming.t460p>
- <20191115234005.GO4614@dread.disaster.area>
+        Sat, 16 Nov 2019 01:44:20 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 193so7701600pfc.13
+        for <linux-kernel@vger.kernel.org>; Fri, 15 Nov 2019 22:44:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=83mOzCZrk2hLeBIavxFW02Ub7zgigDrZgcfo7Rp02xE=;
+        b=etF6/auczY/PHyj2EW/5m9MAfa7+4KhKO2DKDAQqUiiJ/HJycDvebsWhFyy7ltErNz
+         GPdUetQoCqDTxijT0aZPIe5TPLoBcuI/HcwwSLoQvfsRwKrEcXKyfNi58/nXbyswpqjH
+         BprxdonwAHRWF6P4gsThGhzKQh/Py9iApmDHlM3sQN6OXVP0V9y6jMAMLR3TIIUCIAOs
+         wiAUpDM/MxLmyKx/CsTNelNQqSJLaS4PsRhsYQm37K7kVfWPrj01BPVG5X/0yGHts/rX
+         wRCVlVZ2lrtpKQbhURCDfqzz26gKxLE7PQlrRpXzosM17VsQnO3aK56Z84Nzqk9noZcq
+         43eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=83mOzCZrk2hLeBIavxFW02Ub7zgigDrZgcfo7Rp02xE=;
+        b=lVLj7FZbZnDhySyQJILgT0PG+Y9NTwihfusZEvvIEQgZm4xuOMLlGrgH5ENPlR8mCM
+         GqSVq2e1+cfMASzAitLFnTh62u6NEIYTNvXtpV1udpLhiBMntll3QS99bGkKyZsf8R7l
+         +eJe81K+BKiSZcC8D6QqV2gNBlIeCZ7faFacoxoC1nCiuWqdFL4/OxPdQZzwC3k86wxK
+         Xj4YhXzejh2T+wJLdoWLCKpLoNehu3B8OHBze4djhP0fs6miisJEVGP8v3bCYukXJu8q
+         0PzoqpbLHe5HRBT7O3MhIIaYpZEX8Ye646Gj+tcL+NfVka3Pv29j/aRFU7pc3coAVBFy
+         J4jg==
+X-Gm-Message-State: APjAAAUiZUQdvzaQDTNU27bAyyzb7TG8nezRAFbSQALwb1hRi9JmL8Dy
+        sEjbmG4v+k6dqOEQHcA6DPiXLQ==
+X-Google-Smtp-Source: APXvYqwkM4lZh6cRGZMVmRD+7muqSOChY7AWDb7zXeO/JwqTvRigHw1HpZUm08pwffapf4Vo4sOuEg==
+X-Received: by 2002:a63:5164:: with SMTP id r36mr7664120pgl.143.1573886659746;
+        Fri, 15 Nov 2019 22:44:19 -0800 (PST)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id f26sm10985615pgf.22.2019.11.15.22.44.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2019 22:44:18 -0800 (PST)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: msm8998-mtp: Add alias for blsp1_uart3
+Date:   Fri, 15 Nov 2019 22:44:15 -0800
+Message-Id: <20191116064415.159899-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191115234005.GO4614@dread.disaster.area>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: oMPLbFuQNrWyZmNUOJNcOA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 16, 2019 at 10:40:05AM +1100, Dave Chinner wrote:
-> On Fri, Nov 15, 2019 at 03:08:43PM +0800, Ming Lei wrote:
-> > On Fri, Nov 15, 2019 at 03:56:34PM +1100, Dave Chinner wrote:
-> > > On Fri, Nov 15, 2019 at 09:08:24AM +0800, Ming Lei wrote:
-> > I can reproduce the issue with 4k block size on another RH system, and
-> > the login info of that system has been shared to you in RH BZ.
-> >=20
-> > 1)
-> > sysctl kernel.sched_min_granularity_ns=3D10000000
-> > sysctl kernel.sched_wakeup_granularity_ns=3D15000000
->=20
-> So, these settings definitely influence behaviour.
->=20
-> If these are set to kernel defaults (4ms and 3ms each):
->=20
-> sysctl kernel.sched_min_granularity_ns=3D4000000
-> sysctl kernel.sched_wakeup_granularity_ns=3D3000000
->=20
-> The migration problem largely goes away - the fio task migration
-> event count goes from ~2,000 a run down to 200/run.
->=20
-> That indicates that the migration trigger is likely load/timing
-> based. The analysis below is based on the 10/15ms numbers above,
-> because it makes it so much easier to reproduce.
+The msm_serial driver uses a simple counter to determine which port to
+use when no alias is defined, but there's no logic to prevent this from
+not colliding with what's defined by the aliases. As a result either
+none or all of the active msm_serial instances must be listed as
+aliases.
 
-On another machine, './xfs_complete 512' may be migrated 11~12K/sec,
-which don't need to change the above two kernel sched defaults, however
-the fio io thread only takes 40% CPU.=20
+Define blsp1_uart3 as "serial1" to mitigate this problem.
 
-'./xfs_complete 4k' on this machine, the fio IO CPU utilization is >=3D 98%=
-.
+Fixes: 4cffb9f2c700 ("arm64: dts: qcom: msm8998-mtp: Enable bluetooth")
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-
-Thanks,
-Ming
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+index 5f101a20a20a..e08fcb426bbf 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+@@ -9,6 +9,7 @@
+ / {
+ 	aliases {
+ 		serial0 = &blsp2_uart1;
++		serial1 = &blsp1_uart3;
+ 	};
+ 
+ 	chosen {
+-- 
+2.23.0
 
