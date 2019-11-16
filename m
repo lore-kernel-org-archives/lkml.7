@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC74C33C8C
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B28C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B944621739
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7BF82089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919908;
-	bh=tGyuerj4tgHb0qQhYD5ienk8WW7ZV2NkS0UB4aqLey4=;
+	s=default; t=1573919914;
+	bh=k/shd09n9VEVvxmHDs9M6T7FrVTmb5hzEyPpUP7pW9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yu8GbsTi5g9Ml9N+Vm17MOcJTpCtstkDtbmysSjGDtUGYBye3kww+irgkJ2lkrOxK
-	 TmWyr6mTMo6LBM0BTwXTAkkuuTGuawQlxAza4MUGfF7SdiUoOot9dzpRU031gdasW7
-	 IZBfZhddyfTwGoHn8DS//D+vL5DXG586Tu6Eca/w=
+	b=qUWTZQjBqFZDOtjTfBxb1w0fTECoCyAQZWRo+MI1AUb1QSl5rgnNoJUFY/PVzN74K
+	 9pz9P9w8hobEVlbx4Ut/tumIX07Apw/3i1TFh/E8GtV3opv77B40wI5EOYviOxQMA4
+	 flQXe/qsTDLRok9fyLTcug1HTU19nA7gT0/zS3UY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731427AbfKPPyV (ORCPT
+        id S1731396AbfKPP6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:54:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35652 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:58:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730350AbfKPPyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:54:09 -0500
+        id S1730157AbfKPPyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:54:19 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29C3721920;
-        Sat, 16 Nov 2019 15:54:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2B882186D;
+        Sat, 16 Nov 2019 15:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919648;
-        bh=tGyuerj4tgHb0qQhYD5ienk8WW7ZV2NkS0UB4aqLey4=;
+        s=default; t=1573919659;
+        bh=k/shd09n9VEVvxmHDs9M6T7FrVTmb5hzEyPpUP7pW9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nVDeWnJEOrLfUxyVN3AD3+Qd8EYEl8XQYBCuX1XK3yK2eK+vV6WoTdOfxVzjt8759
-         bsoMZHoQhP+SLZdWuE70xdFnNc7JNQmLCRMa4eETZzsK+zaLy7EIaTYda8lXHnxAJF
-         7cdUDcFjja9enHJVa5//JhzJsW7OMZRRnqAZoIeY=
+        b=J2pycUh2fjXM95VcGQzIx9RT1qSusi/NkrZg96OK4sHPvJmuzd75nDvnvDoJAf+/r
+         Tm4Y4nXKhWKaJqdRz3idxAdo7PGBRvJJcC4ghUZpl06io/Phk8Y4M1cMWE+5R+ZKc9
+         HbaQWB52v15YVKB1jyQz0Zv+qXS6VneQz4m47J+A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.4 25/77] macintosh/windfarm_smu_sat: Fix debug output
-Date:   Sat, 16 Nov 2019 10:52:47 -0500
-Message-Id: <20191116155339.11909-25-sashal@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, sparclinux@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 31/77] sparc: Fix parport build warnings.
+Date:   Sat, 16 Nov 2019 10:52:53 -0500
+Message-Id: <20191116155339.11909-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,77 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+From: "David S. Miller" <davem@davemloft.net>
 
-[ Upstream commit fc0c8b36d379a046525eacb9c3323ca635283757 ]
+[ Upstream commit 46b8306480fb424abd525acc1763da1c63a27d8a ]
 
-There's some antiquated debug output that's trying
-to do a hand-made hexdump and turning into horrible
-1-byte-per-line output these days.
+If PARPORT_PC_FIFO is not enabled, do not provide the dma lock
+macros and lock definition.  Otherwise:
 
-Use print_hex_dump() instead
+./arch/sparc/include/asm/parport.h:24:24: warning: ‘dma_spin_lock’ defined but not used [-Wunused-variable]
+ static DEFINE_SPINLOCK(dma_spin_lock);
+                        ^~~~~~~~~~~~~
+./include/linux/spinlock_types.h:81:39: note: in definition of macro ‘DEFINE_SPINLOCK’
+ #define DEFINE_SPINLOCK(x) spinlock_t x = __SPIN_LOCK_UNLOCKED(x)
 
-Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/macintosh/windfarm_smu_sat.c | 25 +++++++------------------
- 1 file changed, 7 insertions(+), 18 deletions(-)
+ arch/sparc/include/asm/parport.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/macintosh/windfarm_smu_sat.c b/drivers/macintosh/windfarm_smu_sat.c
-index ad6223e883404..3d310dd60a0be 100644
---- a/drivers/macintosh/windfarm_smu_sat.c
-+++ b/drivers/macintosh/windfarm_smu_sat.c
-@@ -22,14 +22,6 @@
+diff --git a/arch/sparc/include/asm/parport.h b/arch/sparc/include/asm/parport.h
+index f005ccac91cc9..e87c0f81b700e 100644
+--- a/arch/sparc/include/asm/parport.h
++++ b/arch/sparc/include/asm/parport.h
+@@ -20,6 +20,7 @@
+  */
+ #define HAS_DMA
  
- #define VERSION "1.0"
++#ifdef CONFIG_PARPORT_PC_FIFO
+ static DEFINE_SPINLOCK(dma_spin_lock);
  
--#define DEBUG
--
--#ifdef DEBUG
--#define DBG(args...)	printk(args)
--#else
--#define DBG(args...)	do { } while(0)
--#endif
--
- /* If the cache is older than 800ms we'll refetch it */
- #define MAX_AGE		msecs_to_jiffies(800)
+ #define claim_dma_lock() \
+@@ -30,6 +31,7 @@ static DEFINE_SPINLOCK(dma_spin_lock);
  
-@@ -106,13 +98,10 @@ struct smu_sdbp_header *smu_sat_get_sdb_partition(unsigned int sat_id, int id,
- 		buf[i+2] = data[3];
- 		buf[i+3] = data[2];
- 	}
--#ifdef DEBUG
--	DBG(KERN_DEBUG "sat %d partition %x:", sat_id, id);
--	for (i = 0; i < len; ++i)
--		DBG(" %x", buf[i]);
--	DBG("\n");
--#endif
+ #define release_dma_lock(__flags) \
+ 	spin_unlock_irqrestore(&dma_spin_lock, __flags);
++#endif
  
-+	printk(KERN_DEBUG "sat %d partition %x:", sat_id, id);
-+	print_hex_dump(KERN_DEBUG, "  ", DUMP_PREFIX_OFFSET,
-+		       16, 1, buf, len, false);
- 	if (size)
- 		*size = len;
- 	return (struct smu_sdbp_header *) buf;
-@@ -132,13 +121,13 @@ static int wf_sat_read_cache(struct wf_sat *sat)
- 	if (err < 0)
- 		return err;
- 	sat->last_read = jiffies;
-+
- #ifdef LOTSA_DEBUG
- 	{
- 		int i;
--		DBG(KERN_DEBUG "wf_sat_get: data is");
--		for (i = 0; i < 16; ++i)
--			DBG(" %.2x", sat->cache[i]);
--		DBG("\n");
-+		printk(KERN_DEBUG "wf_sat_get: data is");
-+		print_hex_dump(KERN_DEBUG, "  ", DUMP_PREFIX_OFFSET,
-+			       16, 1, sat->cache, 16, false);
- 	}
- #endif
- 	return 0;
+ static struct sparc_ebus_info {
+ 	struct ebus_dma_info info;
 -- 
 2.20.1
 
