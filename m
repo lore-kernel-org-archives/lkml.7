@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A3EC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC12C43141
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D69912089D
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 058CB2089D
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 15:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573919984;
-	bh=g8qwpXtgl8IM5Jzu0ga/wmRPoMvRpo/KhSdJYLHxgnk=;
+	s=default; t=1573919988;
+	bh=+BzdJ6LDlqS6iccz6NVyrV0+MjE0C9nKxm+/FH2c3oA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CdNEPuJhvy++EbYx/e56JL/KPiEFfeRdzxOhXsoYYkclfjQFZvL9nePKJR+B+n60b
-	 ZQYYxlergfoi0oO01JIVfMoyETi8VUDbuN+2tePL0i1wZFI1FrNOOIoPwy6srGixJD
-	 oSCKItoWSA4LhMaT0ryy9fHlWzJHQ0Y+gDBcwcEU=
+	b=kajCY9uBWepAiB2TBY3i101Ssf81bduioIKciXpayIJ5qyAM4HegHHw8uEdr/X8mc
+	 KlPSwLWA+OU0cZpUTwB4bLKr920n4naqHNQJkFziFO8xX9Tn+SVys3XnUh+HUhfAXX
+	 JfCyjFL+56fHKVyHdALouaeeCSEnyJ/NM46oBL+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730958AbfKPP7n (ORCPT
+        id S1731331AbfKPPxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:59:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35220 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:53:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731333AbfKPPxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:53:54 -0500
+        id S1729947AbfKPPxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:53:48 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76E902184B;
-        Sat, 16 Nov 2019 15:53:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2284E219F9;
+        Sat, 16 Nov 2019 15:53:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919633;
-        bh=g8qwpXtgl8IM5Jzu0ga/wmRPoMvRpo/KhSdJYLHxgnk=;
+        s=default; t=1573919627;
+        bh=+BzdJ6LDlqS6iccz6NVyrV0+MjE0C9nKxm+/FH2c3oA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MiISpFT/2UsTGfXDndiy2fp78fMbNlt7GpTOUBFtyjW9hmNqPxCwXEFm2XCwUxDS0
-         hTY9H+pgMTys2OgG/DeRee71iNVwUFbGS3Sk3j77agR5tBE8NMGpjPVUgvk8Ooc619
-         8Q2mm/QA7b3naG/1RE48/p0UCF5xr/mLjkP1SBho=
+        b=ms3Jbv5Aam70b3NYyIDlOUuSvBGTx7jmvb5s8VZOPKpZPJKlCC5CY4PfipjPsBccr
+         QbxQFVadn4TyDBS9m3CO0GPKuwKV1TZMMfRJA/ENdbsxq3DSqBKvXzLEcAqSwab5m7
+         hKUXzwMKw83ny0h3k4NEByJu8LjHK6+4qq8eqquA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wang6495@umn.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 12/77] misc: mic: fix a DMA pool free failure
-Date:   Sat, 16 Nov 2019 10:52:34 -0500
-Message-Id: <20191116155339.11909-12-sashal@kernel.org>
+Cc:     Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 07/77] brcmsmac: AP mode: update beacon when TIM changes
+Date:   Sat, 16 Nov 2019 10:52:29 -0500
+Message-Id: <20191116155339.11909-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116155339.11909-1-sashal@kernel.org>
 References: <20191116155339.11909-1-sashal@kernel.org>
@@ -59,52 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wang6495@umn.edu>
+From: Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>
 
-[ Upstream commit 6b995f4eec34745f6cb20d66d5277611f0b3c3fa ]
+[ Upstream commit 2258ee58baa554609a3cc3996276e4276f537b6d ]
 
-In _scif_prog_signal(), the boolean variable 'x100' is used to indicate
-whether the MIC Coprocessor is X100. If 'x100' is true, the status
-descriptor will be used to write the value to the destination. Otherwise, a
-DMA pool will be allocated for this purpose. Specifically, if the DMA pool
-is allocated successfully, two memory addresses will be returned. One is
-for the CPU and the other is for the device to access the DMA pool. The
-former is stored to the variable 'status' and the latter is stored to the
-variable 'src'. After the allocation, the address in 'src' is saved to
-'status->src_dma_addr', which is actually in the DMA pool, and 'src' is
-then modified.
+Beacons are not updated to reflect TIM changes. This is not compliant with
+power-saving client stations as the beacons do not have valid TIM and can
+cause the network to stall at random occasions and to have highly variable
+latencies.
+Fix it by updating beacon templates on mac80211 set_tim callback.
 
-Later on, if an error occurs, the execution flow will transfer to the label
-'dma_fail', which will check 'x100' and free up the allocated DMA pool if
-'x100' is false. The point here is that 'status->src_dma_addr' is used for
-freeing up the DMA pool. As mentioned before, 'status->src_dma_addr' is in
-the DMA pool. And thus, the device is able to modify this data. This can
-potentially cause failures when freeing up the DMA pool because of the
-modified device address.
+Addresses an issue described in:
+https://marc.info/?i=20180911163534.21312d08%20()%20manjaro
 
-This patch avoids the above issue by using the variable 'src' (with
-necessary calculation) to free up the DMA pool.
-
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ali MJ Al-Nasrawy <alimjalnasrawy@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/mic/scif/scif_fence.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../wireless/brcm80211/brcmsmac/mac80211_if.c | 26 +++++++++++++++++++
+ .../net/wireless/brcm80211/brcmsmac/main.h    |  1 +
+ 2 files changed, 27 insertions(+)
 
-diff --git a/drivers/misc/mic/scif/scif_fence.c b/drivers/misc/mic/scif/scif_fence.c
-index 7f2c96f570667..6821d9d415854 100644
---- a/drivers/misc/mic/scif/scif_fence.c
-+++ b/drivers/misc/mic/scif/scif_fence.c
-@@ -271,7 +271,7 @@ static int _scif_prog_signal(scif_epd_t epd, dma_addr_t dst, u64 val)
- dma_fail:
- 	if (!x100)
- 		dma_pool_free(ep->remote_dev->signal_pool, status,
--			      status->src_dma_addr);
-+			      src - offsetof(struct scif_status, val));
- alloc_fail:
- 	return err;
+diff --git a/drivers/net/wireless/brcm80211/brcmsmac/mac80211_if.c b/drivers/net/wireless/brcm80211/brcmsmac/mac80211_if.c
+index 61ae2768132a0..e3b01d804cf24 100644
+--- a/drivers/net/wireless/brcm80211/brcmsmac/mac80211_if.c
++++ b/drivers/net/wireless/brcm80211/brcmsmac/mac80211_if.c
+@@ -502,6 +502,7 @@ brcms_ops_add_interface(struct ieee80211_hw *hw, struct ieee80211_vif *vif)
+ 	}
+ 
+ 	spin_lock_bh(&wl->lock);
++	wl->wlc->vif = vif;
+ 	wl->mute_tx = false;
+ 	brcms_c_mute(wl->wlc, false);
+ 	if (vif->type == NL80211_IFTYPE_STATION)
+@@ -519,6 +520,11 @@ brcms_ops_add_interface(struct ieee80211_hw *hw, struct ieee80211_vif *vif)
+ static void
+ brcms_ops_remove_interface(struct ieee80211_hw *hw, struct ieee80211_vif *vif)
+ {
++	struct brcms_info *wl = hw->priv;
++
++	spin_lock_bh(&wl->lock);
++	wl->wlc->vif = NULL;
++	spin_unlock_bh(&wl->lock);
  }
+ 
+ static int brcms_ops_config(struct ieee80211_hw *hw, u32 changed)
+@@ -937,6 +943,25 @@ static void brcms_ops_set_tsf(struct ieee80211_hw *hw,
+ 	spin_unlock_bh(&wl->lock);
+ }
+ 
++static int brcms_ops_beacon_set_tim(struct ieee80211_hw *hw,
++				 struct ieee80211_sta *sta, bool set)
++{
++	struct brcms_info *wl = hw->priv;
++	struct sk_buff *beacon = NULL;
++	u16 tim_offset = 0;
++
++	spin_lock_bh(&wl->lock);
++	if (wl->wlc->vif)
++		beacon = ieee80211_beacon_get_tim(hw, wl->wlc->vif,
++						  &tim_offset, NULL);
++	if (beacon)
++		brcms_c_set_new_beacon(wl->wlc, beacon, tim_offset,
++				       wl->wlc->vif->bss_conf.dtim_period);
++	spin_unlock_bh(&wl->lock);
++
++	return 0;
++}
++
+ static const struct ieee80211_ops brcms_ops = {
+ 	.tx = brcms_ops_tx,
+ 	.start = brcms_ops_start,
+@@ -955,6 +980,7 @@ static const struct ieee80211_ops brcms_ops = {
+ 	.flush = brcms_ops_flush,
+ 	.get_tsf = brcms_ops_get_tsf,
+ 	.set_tsf = brcms_ops_set_tsf,
++	.set_tim = brcms_ops_beacon_set_tim,
+ };
+ 
+ void brcms_dpc(unsigned long data)
+diff --git a/drivers/net/wireless/brcm80211/brcmsmac/main.h b/drivers/net/wireless/brcm80211/brcmsmac/main.h
+index c4d135cff04ad..9f76b880814e8 100644
+--- a/drivers/net/wireless/brcm80211/brcmsmac/main.h
++++ b/drivers/net/wireless/brcm80211/brcmsmac/main.h
+@@ -563,6 +563,7 @@ struct brcms_c_info {
+ 
+ 	struct wiphy *wiphy;
+ 	struct scb pri_scb;
++	struct ieee80211_vif *vif;
+ 
+ 	struct sk_buff *beacon;
+ 	u16 beacon_tim_offset;
 -- 
 2.20.1
 
