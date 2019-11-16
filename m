@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9117C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D161C432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 855B021479
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4BD21479
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:16:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920973;
-	bh=TSfcfKMerSp3xOiFklG5ABCAq1n+d8pMG/0OHuwn+yU=;
+	s=default; t=1573920977;
+	bh=LeuDf/I7ZPQA6VJiMkvQSsm3CQHvloLielawHcYlLlc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E+QSWTN/T+5wnMOifOWXTdt9Qa41zkwITOZwiO1rBEKNYOC4Upe4z6oa5JW4evNC3
-	 K/xizWSc2W0TkfoHjWT/5MhSW+b/m5ubTZrIdfGkJ34HzmUeaDIFNQL5aTvojqmjAw
-	 O6gn9xoKv+p6DB9x6MYppTDntnRUpPgfWVZ7e5Q0=
+	b=hXWoGernWzxM5u2KFzREw1FesIurvvkfTd2skY9gYztzbigo02mDQpR/xqY6PYvjU
+	 cmcowqLw68boVEdaRHaYAIpzis7nJB81sl9qqRiawE4H9y8kOFDVCtPWgPzAllUSDM
+	 p2mmgoetxFx7/g3qydR3GtpDTa2GnxEln01t1Sks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731949AbfKPQQM (ORCPT
+        id S1729611AbfKPPrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 11:16:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53704 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 10:47:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729589AbfKPPrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:47:05 -0500
+        id S1729398AbfKPPq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:46:28 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 117C22083E;
-        Sat, 16 Nov 2019 15:47:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A061220836;
+        Sat, 16 Nov 2019 15:46:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919225;
-        bh=TSfcfKMerSp3xOiFklG5ABCAq1n+d8pMG/0OHuwn+yU=;
+        s=default; t=1573919188;
+        bh=LeuDf/I7ZPQA6VJiMkvQSsm3CQHvloLielawHcYlLlc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LVVLIxlMj7Swf6PM3zsF/dU/AvZNzXZpl0LfXPun2d/DK87Jbm4lJ0ok78bL7b2Cz
-         byMny3x5PLxTxF6+oHkSJv3g7XJDA5ZezQBpvNga9geNpykJWjZ/lxRHnrkOHeC3iO
-         J4CE2y/P+lhw1Rx7ZQQoe6G4mJ/H/BYGwvOPTrbw=
+        b=VgwZr/nWC7flsPOneMaoASDjPI+6hmiWW5VfWJJyD8v16YL1IKJ+BeLQ2D1iafctW
+         Ht+XK4jv/HZO4qGbX50vAdkvJb7fGZ2BX1bRlo7zpto5Ks4oCUelszj4vDbvhNAajL
+         osaHi8L1DDlrM0OlH49TfQyJeFwFlzSDVy6YgoWY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 228/237] pinctrl: bcm2835: Use define directive for BCM2835_PINCONF_PARAM_PULL
-Date:   Sat, 16 Nov 2019 10:41:03 -0500
-Message-Id: <20191116154113.7417-228-sashal@kernel.org>
+Cc:     Ahmad Masri <amasri@codeaurora.org>,
+        Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 196/237] wil6210: fix debugfs memory access alignment
+Date:   Sat, 16 Nov 2019 10:40:31 -0500
+Message-Id: <20191116154113.7417-196-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
 References: <20191116154113.7417-1-sashal@kernel.org>
@@ -61,50 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Ahmad Masri <amasri@codeaurora.org>
 
-[ Upstream commit b40ac08ff886302a6aa457fd72e94a969f50e245 ]
+[ Upstream commit 84ec040d0fb25197584d28a0dedc355503cd19b9 ]
 
-Clang warns when one enumerated type is implicitly converted to another:
+All wil6210 device memory access should be 4 bytes aligned. In io
+blob wil6210 did not force alignment for read function, this caused
+alignment fault on some platforms.
+Fixing that by accessing all 4 lower bytes and return to host the
+requested data.
 
-drivers/pinctrl/bcm/pinctrl-bcm2835.c:707:40: warning: implicit
-conversion from enumeration type 'enum bcm2835_pinconf_param' to
-different enumeration type 'enum pin_config_param' [-Wenum-conversion]
-        configs[0] = pinconf_to_config_packed(BCM2835_PINCONF_PARAM_PULL, pull);
-                     ~~~~~~~~~~~~~~~~~~~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~~~~~
-1 warning generated.
-
-It is expected that pinctrl drivers can extend pin_config_param because
-of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
-isn't an issue. Most drivers that take advantage of this define the
-PIN_CONFIG variables as constants, rather than enumerated values. Do the
-same thing here so that Clang no longer warns.
-
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Ahmad Masri <amasri@codeaurora.org>
+Signed-off-by: Maya Erez <merez@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/net/wireless/ath/wil6210/debugfs.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-index 08925d24180b0..1bd3c10ce1893 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -72,10 +72,8 @@
- #define GPIO_REG_OFFSET(p)	((p) / 32)
- #define GPIO_REG_SHIFT(p)	((p) % 32)
+diff --git a/drivers/net/wireless/ath/wil6210/debugfs.c b/drivers/net/wireless/ath/wil6210/debugfs.c
+index 51c3330bc316f..12b8cb698f64d 100644
+--- a/drivers/net/wireless/ath/wil6210/debugfs.c
++++ b/drivers/net/wireless/ath/wil6210/debugfs.c
+@@ -662,10 +662,10 @@ static ssize_t wil_read_file_ioblob(struct file *file, char __user *user_buf,
+ 	enum { max_count = 4096 };
+ 	struct wil_blob_wrapper *wil_blob = file->private_data;
+ 	struct wil6210_priv *wil = wil_blob->wil;
+-	loff_t pos = *ppos;
++	loff_t aligned_pos, pos = *ppos;
+ 	size_t available = wil_blob->blob.size;
+ 	void *buf;
+-	size_t ret;
++	size_t unaligned_bytes, aligned_count, ret;
+ 	int rc;
  
--enum bcm2835_pinconf_param {
--	/* argument: bcm2835_pinconf_pull */
--	BCM2835_PINCONF_PARAM_PULL = (PIN_CONFIG_END + 1),
--};
-+/* argument: bcm2835_pinconf_pull */
-+#define BCM2835_PINCONF_PARAM_PULL	(PIN_CONFIG_END + 1)
+ 	if (test_bit(wil_status_suspending, wil_blob->wil->status) ||
+@@ -683,7 +683,12 @@ static ssize_t wil_read_file_ioblob(struct file *file, char __user *user_buf,
+ 	if (count > max_count)
+ 		count = max_count;
  
- struct bcm2835_pinctrl {
- 	struct device *dev;
+-	buf = kmalloc(count, GFP_KERNEL);
++	/* set pos to 4 bytes aligned */
++	unaligned_bytes = pos % 4;
++	aligned_pos = pos - unaligned_bytes;
++	aligned_count = count + unaligned_bytes;
++
++	buf = kmalloc(aligned_count, GFP_KERNEL);
+ 	if (!buf)
+ 		return -ENOMEM;
+ 
+@@ -694,9 +699,9 @@ static ssize_t wil_read_file_ioblob(struct file *file, char __user *user_buf,
+ 	}
+ 
+ 	wil_memcpy_fromio_32(buf, (const void __iomem *)
+-			     wil_blob->blob.data + pos, count);
++			     wil_blob->blob.data + aligned_pos, aligned_count);
+ 
+-	ret = copy_to_user(user_buf, buf, count);
++	ret = copy_to_user(user_buf, buf + unaligned_bytes, count);
+ 
+ 	wil_pm_runtime_put(wil);
+ 
 -- 
 2.20.1
 
