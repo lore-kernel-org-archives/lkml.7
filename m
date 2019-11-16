@@ -2,130 +2,98 @@ Return-Path: <SRS0=try7=ZI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=BAD_ENC_HEADER,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF615C432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 23:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235C5C432C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 23:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A46D20730
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 23:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E213120733
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 23:45:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="wLK02EoX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbfKPXhB convert rfc822-to-8bit (ORCPT
+        id S1727715AbfKPXpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 18:37:01 -0500
-Received: from out01.mta.xmission.com ([166.70.13.231]:34825 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727629AbfKPXhB (ORCPT
+        Sat, 16 Nov 2019 18:45:22 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45902 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727654AbfKPXpW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 18:37:01 -0500
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1iW7ca-0004q7-ES; Sat, 16 Nov 2019 16:36:52 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1iW7cZ-0002Kz-8i; Sat, 16 Nov 2019 16:36:52 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Stephan =?utf-8?Q?M=C3=BCller?= <smueller@chronox.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter\, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>
-References: <6157374.ptSnyUpaCn@positron.chronox.de>
-        <2787174.DQlWHN5GGo@positron.chronox.de>
-        <2476454.l8LQlgn7Hv@positron.chronox.de>
-Date:   Sat, 16 Nov 2019 17:36:25 -0600
-In-Reply-To: <2476454.l8LQlgn7Hv@positron.chronox.de> ("Stephan
- \=\?utf-8\?Q\?M\=C3\=BCller\=22's\?\=
-        message of "Sat, 16 Nov 2019 10:34:12 +0100")
-Message-ID: <87k17z4cna.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Sat, 16 Nov 2019 18:45:22 -0500
+Received: by mail-lf1-f68.google.com with SMTP id v8so10815545lfa.12
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 15:45:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uHCSh9nUOq2gFA4SxZmd/Wi02WzaMYqqbesRp/X675Y=;
+        b=wLK02EoXQvN26ZZudLxdxZ6YijJkH6FgZGzeS3k8aWYHx7h9tuHSqK9HVr4UVWILR/
+         xv/5NNzXXTIjGp8GT1+yteESR+V3WD56gEfqoOrXehYgBGS7AbwSRVUbzTdJ7gpPd9vp
+         y3U+t4dfmR3K0nj258P+OfrCWvgAl/p8GgxpMHzfK0Co4TvHMUk7qxje+TavO+s+sJkI
+         alxm9RnXgR53GpnoI5kPIKOreqknqTlT4uAZWqZV4ZoG1NB8YfxW292nSJzvzRX4Vd+H
+         Ve8APFXQJtUaulaukAbLbi6AoX+ihDzSwF3SMrTbzqe9ENZky10Ii3qRhiRKREtHVeh6
+         jCSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uHCSh9nUOq2gFA4SxZmd/Wi02WzaMYqqbesRp/X675Y=;
+        b=Xxqi4RzSMKHIJwFzffHUfRpiUEO8vmdQ+QlvVVSaZcYFB5t97flDazxEk/dAjPBI6c
+         FFpUjt07j2uJy8Qi9qB9IMtLuSIESD7p+Xp2G+jVC/tR+NHMe9wDZa1lVQ1NuaJI/0pD
+         9TbW25fw/pwdv/bjw1rR+15JbbyTB3Zn2jUG2IurvL1h42IAV/1y2v+gxgOgQ8g/Lkjt
+         uJ1jbNx12Stj3I3n6eEn+SrsL0yp+CH/z5J2wZRB0d9xlD4Q2nFkE2lf39d+cHo8FQho
+         5/pyp55E88bo+I8WXg5dovC7YGN4bZ/UYLI9qNVD9eHqjbhwI+mt+b0ZCCNHGHBo14Dq
+         pdGg==
+X-Gm-Message-State: APjAAAVsvmjByuNQjwrLLQVvmeyXaJkXA51OOWuU5+4/sBa2rlN1cK/3
+        NSvYy8q0KsEBdj8G2yhFiPVPGQ==
+X-Google-Smtp-Source: APXvYqzU7+KlWfCx4jmUs3DZSGvn/oTnC5pEfy07wppBTfZc9fuStdWbiaf3atYujRM8J9TEWeFFIw==
+X-Received: by 2002:ac2:5a5b:: with SMTP id r27mr2335425lfn.186.1573947918486;
+        Sat, 16 Nov 2019 15:45:18 -0800 (PST)
+Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
+        by smtp.gmail.com with ESMTPSA id f20sm393609lfc.4.2019.11.16.15.45.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 16 Nov 2019 15:45:17 -0800 (PST)
+Date:   Sat, 16 Nov 2019 15:40:48 -0800
+From:   Olof Johansson <olof@lixom.net>
+To:     Jens Wiklander <jens.wiklander@linaro.org>
+Cc:     arm@kernel.org, soc@kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [GIT PULL] tee subsys fixes for v5.4 (take two)
+Message-ID: <20191116234048.oas2rlfwxlz65jvp@localhost>
+References: <20191115105353.GA26176@jax>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-XM-SPF: eid=1iW7cZ-0002Kz-8i;;;mid=<87k17z4cna.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+jtMUClcEVigt0J0xFKcebuOvgMEa2yOk=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v25 03/12] LRNG - /proc interface
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115105353.GA26176@jax>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephan Müller <smueller@chronox.de> writes:
+On Fri, Nov 15, 2019 at 11:53:53AM +0100, Jens Wiklander wrote:
+> Hello arm-soc maintainers,
+> 
+> Please pull these OP-TEE driver fixes. There's one user-after-free issue if
+> in the error handling path when the OP-TEE driver is initializing. There's
+> also one fix to to register dynamically allocated shared memory needed by
+> kernel clients communicating with secure world via memory references.
+> 
+> "tee: optee: Fix dynamic shm pool allocations" is now from version 2 which
+> includes a fix up with a small but vital dependency.
+> 
+> If you think it's too late for v5.4 please queue this for v5.5 instead.
 
-> The LRNG /proc interface provides the same files as the legacy
-> /dev/random. These files behave identically. Yet, all files are
-> documented at [1].
+Hi,
 
-For someone who works in this area a lot this description is confusing.
+I noticed you based this on -rc3 -- all our other branches are on -rc2 or
+older.
 
-You are talking about sysctls not ordinary proc files.
+Anyway, I brought this in to the fixes branch, it's the only thing we have
+queued up at this time so I'll give it a few days in -next before I send it in.
 
-You don't have a call register_sysctl.  If you want your own
-implementation of these sysctls that would seem to be the way to get
-them.  Teach each implementation to register their own set of sysctls
-if they are enabled.
 
-The entire structure of the code you are adding I have quite confusing,
-and a bit messing.
-
-Why add a declaration of random_table in patch 1 and then delete that
-declaration in patch 3?  Nothing uses that declaration until this point.
-
-What is the point of adding an extern declaration just before you
-declare the table itself?  As I understand the C language that achieves
-nothing.  I understand that is what the existing code in
-drivers/char/random.c does but that is equally buggy there.
-
-I also don't understand why you don't modify the existing random
-generator code into the form you want?  What is the point of a
-side-by-side replacement?  Especially since only one of them can
-be compiled into the kernel at the same time?
-
-This build a replacement and then switch over seems like a recipe for
-loosing the lessons of history because you are not making incremental
-changes that can be clearly understood, reviewed and bisected.
-
-As I read your patchset until this change your code will fail to compile
-in an ordinary configuration with proc enabled.  Have you even tested
-compiling your patchset one patch at a time?
-
-For me a great reorganization to impelment a better structure that fails
-to have a good structure on the usual merits makes me dubious about the
-entire thing.  As it can be a sign the author was pushing so hard to
-make things work he stopped looking at problematic details.
-
-Dubious-by: "Eric W. Biederman" <ebiederm@xmission.com>
-
-Eric
-
-> +
-> +extern struct ctl_table random_table[];
-> +struct ctl_table random_table[] = {
-> +	{
+-Olof
