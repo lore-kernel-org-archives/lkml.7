@@ -4,54 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7263EC432C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB2AC432C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B6E7214DE
-	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A363D214DE
+	for <linux-kernel@archiver.kernel.org>; Sat, 16 Nov 2019 16:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573920901;
-	bh=Obg1p7S3J0MkR3yuSxhUyoV5Ni3xlnofF+hMIyYxgDk=;
+	s=default; t=1573920905;
+	bh=7Jtc+OPj6lJy4u5O+w2EvlERek4r1QK+X5iuHSA0rN0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ihKi8EDR81pFKPpRnFkOT4LevL1IShKYZ1OuTXI/UfDLfEn67btI34usfKKoeacLI
-	 PcjX76p1I6SHxZgn60zO35SMOrHH3svhErtNIwGE3sL4tqhFILVLynk1g8KrXJwArk
-	 Zshwmbc7topnMKSEwd/h4w6Z1EIklRPQq/BcXfpM=
+	b=LXooHVBnisSy6k3vr2bNsA72UpFW2X0b+gwjJGxMd54Wl4IeD7pk8H6iWuYiEvlEA
+	 ySK5N01r+AghIBO9JdNOv3QZxFKd/Fub/tHhoo5fxGHiDnpwV1XcJbzn1K1YYXJhzd
+	 Gqf8/KnUCTsutK3AkDvaqBxUiiT1GuY4X3OLNpDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729743AbfKPPrh (ORCPT
+        id S1730354AbfKPQPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 10:47:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53518 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 11:15:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729554AbfKPPqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 10:46:55 -0500
+        id S1728698AbfKPPrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:47:36 -0500
 Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BCBE208C0;
-        Sat, 16 Nov 2019 15:46:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D21FD208D4;
+        Sat, 16 Nov 2019 15:47:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573919214;
-        bh=Obg1p7S3J0MkR3yuSxhUyoV5Ni3xlnofF+hMIyYxgDk=;
+        s=default; t=1573919256;
+        bh=7Jtc+OPj6lJy4u5O+w2EvlERek4r1QK+X5iuHSA0rN0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y9RY9sjI7MSw4DjXRueGmKcYitI/LBTjCNvc0djIo5bGNBOY6gaJZ3rx/NcoE3uhp
-         fKSSEb2glfdEo+tRlzng/a+hJW5eKQL4g+NDXeuBqAr9OI2o6sCf38zkZMws/gZlX3
-         9QnjeEK4YWHlLBP+hD2d2lPkvi//hStANeqcQGRI=
+        b=1D8Of+tqmkSixvOYysSo1uRtCnRvQr4HMprdjTWRNzgsf+sXlkPUkdxEnK7JgfRdJ
+         5jVZyE69dmE9Xj8H35w5KxoG1T1mtmMulTXhg/8QCOHrVa0UfOsQU+IYBWnsBU8nbu
+         mxiquQa9MJZg5QyEfLkqifBkgHF24i6f7YH6QKh4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
-        devel@acpica.org
-Subject: [PATCH AUTOSEL 4.19 220/237] ACPICA: Use %d for signed int print formatting instead of %u
-Date:   Sat, 16 Nov 2019 10:40:55 -0500
-Message-Id: <20191116154113.7417-220-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Borislav Petkov <bp@suse.de>,
+        David Daney <david.daney@cavium.com>,
+        Jan Glauber <jglauber@cavium.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sergey Temerkhanov <s.temerkhanov@gmail.com>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 009/150] EDAC, thunderx: Fix memory leak in thunderx_l2c_threaded_isr()
+Date:   Sat, 16 Nov 2019 10:45:07 -0500
+Message-Id: <20191116154729.9573-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
-References: <20191116154113.7417-1-sashal@kernel.org>
+In-Reply-To: <20191116154729.9573-1-sashal@kernel.org>
+References: <20191116154729.9573-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,34 +64,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit f8ddf49b420112e28bdd23d7ad52d7991a0ccbe3 ]
+[ Upstream commit d8c27ba86a2fd806d3957e5a9b30e66dfca2a61d ]
 
-Fix warnings found using static analysis with cppcheck, use %d printf
-format specifier for signed ints rather than %u
+Fix memory leak in L2c threaded interrupt handler.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+ [ bp: Rewrite commit message. ]
+
+Fixes: 41003396f932 ("EDAC, thunderx: Add Cavium ThunderX EDAC driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+CC: David Daney <david.daney@cavium.com>
+CC: Jan Glauber <jglauber@cavium.com>
+CC: Mauro Carvalho Chehab <mchehab@kernel.org>
+CC: Sergey Temerkhanov <s.temerkhanov@gmail.com>
+CC: linux-edac <linux-edac@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20181013102843.GG16086@mwanda
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/acpi/tools/acpidump/apmain.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/edac/thunderx_edac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/power/acpi/tools/acpidump/apmain.c b/tools/power/acpi/tools/acpidump/apmain.c
-index db213171f8d99..2d9b94b631cb9 100644
---- a/tools/power/acpi/tools/acpidump/apmain.c
-+++ b/tools/power/acpi/tools/acpidump/apmain.c
-@@ -106,7 +106,7 @@ static int ap_insert_action(char *argument, u32 to_be_done)
- 
- 	current_action++;
- 	if (current_action > AP_MAX_ACTIONS) {
--		fprintf(stderr, "Too many table options (max %u)\n",
-+		fprintf(stderr, "Too many table options (max %d)\n",
- 			AP_MAX_ACTIONS);
- 		return (-1);
+diff --git a/drivers/edac/thunderx_edac.c b/drivers/edac/thunderx_edac.c
+index f35d87519a3e8..dfefa39e93519 100644
+--- a/drivers/edac/thunderx_edac.c
++++ b/drivers/edac/thunderx_edac.c
+@@ -1905,7 +1905,7 @@ static irqreturn_t thunderx_l2c_threaded_isr(int irq, void *irq_id)
+ 	default:
+ 		dev_err(&l2c->pdev->dev, "Unsupported device: %04x\n",
+ 			l2c->pdev->device);
+-		return IRQ_NONE;
++		goto err_free;
  	}
+ 
+ 	while (CIRC_CNT(l2c->ring_head, l2c->ring_tail,
+@@ -1927,7 +1927,7 @@ static irqreturn_t thunderx_l2c_threaded_isr(int irq, void *irq_id)
+ 		l2c->ring_tail++;
+ 	}
+ 
+-	return IRQ_HANDLED;
++	ret = IRQ_HANDLED;
+ 
+ err_free:
+ 	kfree(other);
 -- 
 2.20.1
 
