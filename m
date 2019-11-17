@@ -2,90 +2,96 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C14C4C43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F30C432C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F19206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C969520727
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:24:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbfKQLRn (ORCPT
+        id S1726137AbfKQLYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 06:17:43 -0500
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:40399
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725974AbfKQLRn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 06:17:43 -0500
-X-IronPort-AV: E=Sophos;i="5.68,316,1569276000"; 
-   d="scan'208";a="327005876"
-Received: from abo-228-123-68.mrs.modulonet.fr (HELO hadrien) ([85.68.123.228])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Nov 2019 12:17:20 +0100
-Date:   Sun, 17 Nov 2019 12:17:19 +0100 (CET)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Eddie James <eajames@linux.ibm.com>
-cc:     linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        andrew@aj.id.au, joel@jms.id.au, maz@kernel.org,
-        jason@lakedaemon.net, tglx@linutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        kbuild-all@lists.01.org
-Subject: Re: [PATCH 06/12] drivers/soc: Add Aspeed XDMA Engine Driver (fwd)
-Message-ID: <alpine.DEB.2.21.1911171216090.2641@hadrien>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 17 Nov 2019 06:24:18 -0500
+Received: from sauhun.de ([88.99.104.3]:33952 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726027AbfKQLYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 06:24:18 -0500
+Received: from localhost (249.157.broadband6.iol.cz [88.101.157.249])
+        by pokefinder.org (Postfix) with ESMTPSA id 905EE2C01C5;
+        Sun, 17 Nov 2019 12:24:15 +0100 (CET)
+Date:   Sun, 17 Nov 2019 12:24:14 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Michael Cheng <ccheng@broadcom.com>,
+        Shreesha Rajashekar <shreesha.rajashekar@broadcom.com>,
+        Lori Hikichi <lori.hikichi@broadcom.com>,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Icarus Chau <icarus.chau@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Shivaraj Shetty <sshetty1@broadcom.com>
+Subject: Re: [PATCH v2 1/1] i2c: iproc: Add i2c repeated start capability
+Message-ID: <20191117112414.GA2522@kunai>
+References: <1569825869-30640-1-git-send-email-rayagonda.kokatanur@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
+Content-Disposition: inline
+In-Reply-To: <1569825869-30640-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please check on the missing iounmap issue.  Patches have beenf
-forwarded for the other issues.
 
-julia
+--a8Wt8u1KmwUX3Y2C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
----------- Forwarded message ----------
-Date: Sun, 17 Nov 2019 16:34:53 +0800
-From: kbuild test robot <lkp@intel.com>
-To: kbuild@lists.01.org
-Cc: Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH 06/12] drivers/soc: Add Aspeed XDMA Engine Driver
+On Mon, Sep 30, 2019 at 12:14:29PM +0530, Rayagonda Kokatanur wrote:
+> From: Lori Hikichi <lori.hikichi@broadcom.com>
+>=20
+> Enable handling of i2c repeated start. The current code
+> handles a multi msg i2c transfer as separate i2c bus
+> transactions. This change will now handle this case
+> using the i2c repeated start protocol. The number of msgs
+> in a transfer is limited to two, and must be a write
+> followed by a read.
+>=20
+> Signed-off-by: Lori Hikichi <lori.hikichi@broadcom.com>
+> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> Signed-off-by: Icarus Chau <icarus.chau@broadcom.com>
+> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> Signed-off-by: Shivaraj Shetty <sshetty1@broadcom.com>
 
-In-Reply-To: <1573244313-9190-7-git-send-email-eajames@linux.ibm.com>
-References: <1573244313-9190-7-git-send-email-eajames@linux.ibm.com>
+For the record, applied to for-next, thanks!
 
-Hi Eddie,
 
-I love your patch! Perhaps something to improve:
+--a8Wt8u1KmwUX3Y2C
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[auto build test WARNING on joel-aspeed/for-next]
-[also build test WARNING on v5.4-rc7 next-20191115]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+-----BEGIN PGP SIGNATURE-----
 
-url:    https://github.com/0day-ci/linux/commits/Eddie-James/Aspeed-Add-SCU-interrupt-controller-and-XDMA-engine-drivers/20191110-064846
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/joel/aspeed.git for-next
-:::::: branch date: 7 days ago
-:::::: commit date: 7 days ago
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3RLdoACgkQFA3kzBSg
+KbbR8BAAgv5t3EtMRE6JTFFM+VTv8HR+Q2hZ9Ux/MexO/h8bmlfQWyNiXeXgyMoI
+ptX7un5Af/irMK+JUJgPbQB3akcMfN6Tzw1U3ziuK64yFI4yY6zQsWk3r7GBbHao
+UpWWFiW07i3w9bArwih3FafSNghCNh8hbWgRd4JgyIOoWRpL4LCP9AdwBkToqBhh
+TYmXwuWXoZkWu6lcgMSX6XkH2qoB1VughKwY3Lksol+FwnfAuNL1NEWhiLlHR60C
+bkiYw7YiwcDizCXrvq9cuW0/MaVZIXCw8NmBP42c9PBcMJKH0s3peed3wKn7Xh+8
+r1t465ysiOY7RjWSt6Ve2GVl4wsS1fcW9qrVWLXvc1wWhe3SJaCPMjVRyIH1iQ+n
+0OBu+7VLekV/ChF4TTMZmfeZo+uABcUQSaguJq3tygo22KIyeSQYOt4u3M713m3s
+zcw/27aKYLDkHTGpW9oB1+rdSXeRUfqmoebzfoPPr4Jax2zkThCQfzeg9ovwJNe7
+WfEIcpA438Z8ZIdieCGRN4CEJkhP2yPvNDs059JrshyIaloFuFPhSOoffTOvPJro
+O1vXOiME8ljS4OA/I9yuaGs0oEEJlj1vKwrNCjvZjU/gkFwNYAFAsm2lapvn9SvP
+hyM3xLZT9HLyww1k4ARjSHEzD9e6SKGaeeWnZUVKQvK6h+POWRs=
+=IufB
+-----END PGP SIGNATURE-----
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-
->> drivers/soc/aspeed/aspeed-xdma.c:614:2-8: ERROR: missing iounmap; ioremap on line 580 and execution via conditional on line 612
---
->> drivers/soc/aspeed/aspeed-xdma.c:756:2-9: line 756 is redundant because platform_get_irq() already prints an error
---
->> drivers/soc/aspeed/aspeed-xdma.c:610:2-3: Unneeded semicolon
-   drivers/soc/aspeed/aspeed-xdma.c:738:2-3: Unneeded semicolon
-
-Please review and possibly fold the followup patch.
-
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+--a8Wt8u1KmwUX3Y2C--
