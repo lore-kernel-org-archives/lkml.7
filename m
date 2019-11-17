@@ -2,86 +2,199 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A4BC432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 08:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFABC43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 08:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B274620730
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 08:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E03ED20740
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 08:58:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NfiaNUE/";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="RsQjte3J"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VMwFC2wd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbfKQIKM (ORCPT
+        id S1726104AbfKQI6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 03:10:12 -0500
-Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:38168
-        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725283AbfKQIKM (ORCPT
+        Sun, 17 Nov 2019 03:58:17 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:46442 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbfKQI6R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 03:10:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1573977989;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=hlHVQMXwJQJ4/NEGFptUUYWXjBSrUibkwRWXPfizBGw=;
-        b=NfiaNUE/gU0W3ZdeEgUtqulJshrxGpNkKrB/u4F5fjrASHj88fQ7DXF13/YJav6d
-        es7GjhUFz1wQLZGx+7vM8EEt1hgPGFvFIqL0vSt/9BIemHntiyfLc6GvwBr6mE1Djgx
-        hgvlgImxWKzUk+EOG8VC8sMe64QIM2ecdnDUBzxE=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1573977989;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=hlHVQMXwJQJ4/NEGFptUUYWXjBSrUibkwRWXPfizBGw=;
-        b=RsQjte3JmAkCnKT+wuPbuZxgWuLM5sSw5FvNGVhcX98NPCvuoJIOcwGqRRTALdv+
-        tPTiNpYzITRCoXsoeOj1ZuLzhFEjURQxGP6myqSXR6O0ATFt6BWlft4+nZWB1QCysYU
-        v8qJEM4qNQUEhD7PkiPnRCSGOH3eVtIIwCEbvT90=
+        Sun, 17 Nov 2019 03:58:17 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAH8s1vQ149506;
+        Sun, 17 Nov 2019 08:58:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=1u2ztYk0IAZBqMVrZBfzmUSNb952oa7sXB/iqEXknJY=;
+ b=VMwFC2wdsmFrI9HYJJbWusT9LsBuCZvVRQRFwi5oC9iGxyYu5yzBnsIEJJjsFMSRLwX9
+ RksFjmNvtpGvTHFa5ZRzxRBMhI0x/iS2Jez0vY3OpFzw7qi3/JtbSYXaO6sg031heWAI
+ D0bwQUx1dKZhRhDTE1QsKcKCkTMxMmiTKmG+doN+ca/WmQZnfxIPjA5CCRqYl5WnQaPc
+ U3nqZwbQeI5nk1NxxaAD8g61ikEVV1S6MmXmj5ciGUVObua3GLAh0SfXyi+ysYw7vqYX
+ uHrhAcR8/ld84YKWFiPEqDVTtx5TovfZNnK+0IwjDiGr66kk3J1beRBTekGwAqSQwD3m ag== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2wa92pb82k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 17 Nov 2019 08:58:09 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAH8r51U126207;
+        Sun, 17 Nov 2019 08:58:09 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2watmhf52v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 17 Nov 2019 08:58:09 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAH8w3uN019422;
+        Sun, 17 Nov 2019 08:58:03 GMT
+Received: from [10.191.18.30] (/10.191.18.30)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 17 Nov 2019 00:58:03 -0800
+Subject: Re: [PATCH RESEND v2 3/4] cpuidle-haltpoll: ensure cpu_halt_poll_us
+ in right scope
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     linux-kernel@vger.kernel.org, pbonzini@redhat.com,
+        rkrcmar@redhat.com, rafael.j.wysocki@intel.com,
+        joao.m.martins@oracle.com, mtosatti@redhat.com,
+        kvm@vger.kernel.org, linux-pm@vger.kernel.org
+References: <1573041302-4904-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1573041302-4904-4-git-send-email-zhenzhong.duan@oracle.com>
+ <6161954.sKiXg2khOt@kreacher>
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <5ff7cb30-b6fb-d9df-ee8d-bf21b95c9cb1@oracle.com>
+Date:   Sun, 17 Nov 2019 16:57:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 17 Nov 2019 08:06:29 +0000
-From:   merez@codeaurora.org
-To:     Colin King <colin.king@canonical.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
-        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] wil6210: fix break that is never reached because of
- zero'ing of a retry counter
-In-Reply-To: <20191115120953.48137-1-colin.king@canonical.com>
-References: <20191115120953.48137-1-colin.king@canonical.com>
-Message-ID: <0101016e78662264-7ebb46fa-638f-4817-b76a-ed66524d25be-000000@us-west-2.amazonses.com>
-X-Sender: merez@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2019.11.17-54.240.27.21
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+In-Reply-To: <6161954.sKiXg2khOt@kreacher>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9443 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911170086
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9443 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911170086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-15 14:09, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There is a check on the retry counter invalid_buf_id_retry that is 
-> always
-> false because invalid_buf_id_retry is initialized to zero on each 
-> iteration
-> of a while-loop.  Fix this by initializing the retry counter before the
-> while-loop starts.
-> 
-> Addresses-Coverity: ("Logically dead code")
-> Fixes: b4a967b7d0f5 ("wil6210: reset buff id in status message after
-> completion")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
-> 
-> Note: not tested, so I'm not sure if the loop retry threshold is high 
-> enough
-> 
-> ---
+On 2019/11/15 18:45, Rafael J. Wysocki wrote:
 
-Reviewed-by: Maya Erez <merez@codeaurora.org>
+> On Wednesday, November 6, 2019 12:55:01 PM CET Zhenzhong Duan wrote:
+>> As user can adjust guest_halt_poll_grow_start and guest_halt_poll_ns
+>> which leads to cpu_halt_poll_us beyond the two boundaries. This patch
+>> ensures cpu_halt_poll_us in that scope.
+>>
+>> If guest_halt_poll_shrink is 0, shrink the cpu_halt_poll_us to
+>> guest_halt_poll_grow_start instead of 0. To disable poll we can set
+>> guest_halt_poll_ns to 0.
+>>
+>> If user wrongly set guest_halt_poll_grow_start > guest_halt_poll_ns > 0,
+>> guest_halt_poll_ns take precedency and poll time is a fixed value of
+>> guest_halt_poll_ns.
+>>
+>> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+>> ---
+>>   drivers/cpuidle/governors/haltpoll.c | 28 +++++++++++++---------------
+>>   1 file changed, 13 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/drivers/cpuidle/governors/haltpoll.c b/drivers/cpuidle/governors/haltpoll.c
+>> index 660859d..4a39df4 100644
+>> --- a/drivers/cpuidle/governors/haltpoll.c
+>> +++ b/drivers/cpuidle/governors/haltpoll.c
+>> @@ -97,32 +97,30 @@ static int haltpoll_select(struct cpuidle_driver *drv,
+>>   
+>>   static void adjust_poll_limit(struct cpuidle_device *dev, unsigned int block_us)
+>>   {
+>> -	unsigned int val;
+>> +	unsigned int val = dev->poll_limit_ns;
+> Not necessary to initialize it here.
+
+Then an random val may bypass all the check and get assigned to dev->poll_limit_ns
+
+if guest_halt_poll_grow_start< block_ns< uninitialized val< guest_halt_poll_ns
+
+With my change, dev->poll_limit_ns will not be changed in that case, logic same as original code.
+
+>
+>>   	u64 block_ns = block_us*NSEC_PER_USEC;
+>>   
+>>   	/* Grow cpu_halt_poll_us if
+>> -	 * cpu_halt_poll_us < block_ns < guest_halt_poll_us
+>> +	 * cpu_halt_poll_us < block_ns <= guest_halt_poll_us
+> You could update the comment to say "dev->poll_limit_ns" instead of
+> "cpu_halt_poll_us" while at it.
+
+Will do, also guest_halt_poll_us to guest_halt_poll_ns
+
+>
+>>   	 */
+>> -	if (block_ns > dev->poll_limit_ns && block_ns <= guest_halt_poll_ns) {
+>> +	if (block_ns > dev->poll_limit_ns && block_ns <= guest_halt_poll_ns &&
+>> +	    guest_halt_poll_grow)
+> The "{" brace is still needed as per the coding style and I'm not sure why
+> to avoid guest_halt_poll_grow equal to zero here?
+
+Will add "{}" and remove guest_halt_poll_grow check. My inital thought was to prevent
+
+dev->poll_limit_ns get shrinked with guest_halt_poll_grow=0.
+
+>
+>>   		val = dev->poll_limit_ns * guest_halt_poll_grow;
+>> -
+>> -		if (val < guest_halt_poll_grow_start)
+>> -			val = guest_halt_poll_grow_start;
+>> -		if (val > guest_halt_poll_ns)
+>> -			val = guest_halt_poll_ns;
+>> -
+>> -		dev->poll_limit_ns = val;
+>> -	} else if (block_ns > guest_halt_poll_ns &&
+>> -		   guest_halt_poll_allow_shrink) {
+>> +	else if (block_ns > guest_halt_poll_ns &&
+>> +		 guest_halt_poll_allow_shrink) {
+>>   		unsigned int shrink = guest_halt_poll_shrink;
+>>   
+>> -		val = dev->poll_limit_ns;
+>>   		if (shrink == 0)
+>> -			val = 0;
+>> +			val = guest_halt_poll_grow_start;
+> That's going to be corrected below, so the original code would be fine.
+
+val was assigned twice using 'val = 0' while it's once with my change, optimal a bit?
+
+>
+>>   		else
+>>   			val /= shrink;
+> Here you can do
+>
+> 			val = dev->poll_limit_ns / shrink;
+
+Any special reason？Looks no difference for me.
+
+>
+>> -		dev->poll_limit_ns = val;
+>>   	}
+>> +	if (val < guest_halt_poll_grow_start)
+>> +		val = guest_halt_poll_grow_start;
+> Note that guest_halt_poll_grow_start is in us (as per the comment next to its
+> definition and the initial value).  That is a bug in the original code too,
+> but anyway.
+
+Good catch! will fix the comment. The default 50000ns vs 50000us, looks author means ns.
+guest_halt_poll_ns defaults to 200000, also hints ns for guest_halt_poll_grow_start.
+
+Thanks
+
+Zhenzhong
+
