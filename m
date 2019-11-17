@@ -2,162 +2,92 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92283C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 17:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11479C432C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 17:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6647520730
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 17:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0AAB206D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 17:25:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rAL3k/nR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726089AbfKQRIO (ORCPT
+        id S1726119AbfKQRZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 12:08:14 -0500
-Received: from mx2.suse.de ([195.135.220.15]:48554 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726032AbfKQRIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 12:08:14 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AA5C3AC11;
-        Sun, 17 Nov 2019 17:08:11 +0000 (UTC)
-Subject: Re: [PATCH v3 8/8] ARM: realtek: Enable RTD1195 arch timer
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        James Tai <james.tai@realtek.com>
-References: <20191117072109.20402-1-afaerber@suse.de>
- <20191117072109.20402-9-afaerber@suse.de> <20191117110214.6b160b2e@why>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <7015e4c4-f999-d2e8-fd1f-e15e74a0d092@suse.de>
-Date:   Sun, 17 Nov 2019 18:08:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Sun, 17 Nov 2019 12:25:02 -0500
+Received: from mail-pl1-f170.google.com ([209.85.214.170]:34420 "EHLO
+        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfKQRZB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 12:25:01 -0500
+Received: by mail-pl1-f170.google.com with SMTP id h13so8307261plr.1;
+        Sun, 17 Nov 2019 09:25:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3mg4B929k021pDFFZfZsroPj1OaELDXqTHfnRQbTk54=;
+        b=rAL3k/nR/SyEPeEbXtfeNLh/FPCVC8U5jI5UxoS5O2wt/SWbQfTDzpq2IwCqqF5bgv
+         D9y0NIbIFCqhNRC5wIEy7xHOeE5VeWo1VREBftV3hh6eFq6G+so00raV/zXd7LcP/1Wd
+         15pnQJrO8OSrSBAUFfpnV0zJOSC7/cAuWB/LvpQ6EsrMVeCEgQ2GkvLFElXmugM9taP0
+         WYhaxU7605IBSmY4wsR/K75YbYFtS7mCPdkjrdJb7Uz8vYGAXo8HWLKgn+rF9esD17TV
+         +kTNkVkPaQ/AmB+dbnGXxIKxiyzXPm6frkG6D/Q7XldaC600YxX9lp8asHtFZm2Vm7Cy
+         4cdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3mg4B929k021pDFFZfZsroPj1OaELDXqTHfnRQbTk54=;
+        b=fix3I07H/EE7T3Cw7qfUTFuHBmC0D5OL0Ivtv+oI/6EVTwbOl9CdUyd4ZwqrxuYwOf
+         sj91n9CZRqUhdjoW8u4FSf7OrCqgSTHy1hdro2HFmdmE/7+sShhxHTKKs00bYac+DmMB
+         W/3FyyCooYXswwW3RpNrgE3G99QDbZsDA0TJH3pGIKWIpHsLt0nZ+moxMmHDiqtu9FuH
+         oCzwGYEvNdnB3E96Gau8QY/mQ3+EzGVHYlPeuIG/GZPtK/M4/lWVPrjFAzqa/Ol9HSkZ
+         wD+nqKgxOmWyFmd9dge9tppbwcSO+W7V666sG0xF0uDCC2ra+q1voh+ic2gEaXLc8e2U
+         jjhA==
+X-Gm-Message-State: APjAAAVs2oeC0l6KRkpvlIFxFow/lcWzb/HyW9Mkt/907w0D9jgIcYqQ
+        iwVhJ6ofElHO05KEhYlg3d8=
+X-Google-Smtp-Source: APXvYqxzEgApSa2STdoF9ak0XLXHbwK/CwNWTpJRxaegReLY76KfXH1CVtwoe36fbS9tpOpEq4GVAQ==
+X-Received: by 2002:a17:90a:634a:: with SMTP id v10mr34135336pjs.4.1574011500915;
+        Sun, 17 Nov 2019 09:25:00 -0800 (PST)
+Received: from localhost.localdomain ([2402:3a80:1662:ba74:f9a6:2aa3:8a9a:5581])
+        by smtp.googlemail.com with ESMTPSA id x13sm18146302pfc.46.2019.11.17.09.24.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Nov 2019 09:25:00 -0800 (PST)
+From:   Jaskaran Singh <jaskaransingh7654321@gmail.com>
+To:     corbet@lwn.net
+Cc:     raven@themaw.net, akpm@linux-foundation.org,
+        jaskaransingh7654321@gmail.com, mchehab+samsung@kernel.org,
+        neilb@suse.com, christian@brauner.io, mszeredi@redhat.com,
+        ebiggers@google.com, tobin@kernel.org, stefanha@redhat.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v2 0/3] docs: filesystems: convert autofs.txt to reST
+Date:   Sun, 17 Nov 2019 22:54:33 +0530
+Message-Id: <20191117172436.8831-1-jaskaransingh7654321@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20191117110214.6b160b2e@why>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 17.11.19 um 12:02 schrieb Marc Zyngier:
-> On Sun, 17 Nov 2019 08:21:09 +0100
-> Andreas Färber <afaerber@suse.de> wrote:
-> 
->> Without this magic write the timer doesn't work and boot gets stuck.
->>
->> Signed-off-by: Andreas Färber <afaerber@suse.de>
->> ---
->>  What is the name of the register 0xff018000?
->>  Is 0x1 a BIT(0) write, or how are the register bits defined?
->>  Is this a reset or a clock gate? How should we model it in DT?
+The following patch series is for converting autofs.txt to reST, and
+updating some of the content.
 
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changes from v1:
+----------------
+- Split patch into multiple logical changes as per Jonathan Corbet's
+  request.
+- Few more formatting changes and fixes, as pointed out by Jonathan.
+- Add short description of master map used by autofs.
 
->>  
->>  v2 -> v3: Unchanged
->>  
->>  v2: New
->>  
->>  arch/arm/mach-realtek/rtd1195.c | 16 ++++++++++++++++
->>  1 file changed, 16 insertions(+)
->>
->> diff --git a/arch/arm/mach-realtek/rtd1195.c b/arch/arm/mach-realtek/rtd1195.c
->> index b31a4066be87..0532379c74f5 100644
->> --- a/arch/arm/mach-realtek/rtd1195.c
->> +++ b/arch/arm/mach-realtek/rtd1195.c
->> @@ -5,6 +5,9 @@
->>   * Copyright (c) 2017-2019 Andreas Färber
->>   */
->>  
->> +#include <linux/clk-provider.h>
->> +#include <linux/clocksource.h>
->> +#include <linux/io.h>
->>  #include <linux/memblock.h>
->>  #include <asm/mach/arch.h>
->>  
->> @@ -24,6 +27,18 @@ static void __init rtd1195_reserve(void)
->>  	rtd1195_memblock_remove(0x18100000, 0x01000000);
->>  }
->>  
->> +static void __init rtd1195_init_time(void)
->> +{
->> +	void __iomem *base;
->> +
->> +	base = ioremap(0xff018000, 4);
->> +	writel(0x1, base);
->> +	iounmap(base);
->> +
->> +	of_clk_init(NULL);
->> +	timer_probe();
->> +}
-> 
-> Gawd... Why isn't this set from the bootloader? By the time the kernel
-> starts, everything should be up and running. What is it going to do
-> when you kexec? Shouldn't this be a read/modify/write sequence?
-
-Again, I can't comment on why their BSP bootloaders don't do things the
-expected way. The list of issues is long, and the newest U-Boot I've
-seen for RTD1395 was v2015.07 based, still downstream and pre-EBBR.
-And before we get a .dts merged into the kernel with all needed nodes
-(network, eMMC, etc.), there is zero chance of a mainline U-Boot anyway.
-
-v2 did not get any review from Realtek, so for this v3 I explicitly
-spelled out my register questions above, in case the term "magic" was
-not enough to prompt an actual explanation of what this is doing...
-
-Only change that I can apply right now will be to turn this writel()
-into a writel_relaxed(). Tested OK.
-
-Original one-line BSP code:
-https://github.com/BPI-SINOVOIP/BPI-M4-bsp/blob/master/linux-rtk/arch/arm/mach-rtd119x/rtd119x.c#L105
-
-In my testing, all I can tell is that on both X1000 and Horseradish the
-register value is 0x0 before above BSP-inspired write of 0x1.
-So BIT(0) might be a clock gate enable or a reset deassert, or it might
-be a larger field meaning something else.
-
-For now, my small Busybox initrd is not capable of testing kexec, but I
-don't foresee a problem here, given the observed register values.
-(Unlike RTD1295, RTD1195 does not have native AHCI support for rootfs.)
-
-Given the odd location of this register right after GICV rather than on
-their r-bus, can you rule out that this is some standard Arm register?
-
-Note that this patch is intentionally separate and last in this series,
-precisely due to this expected contentious discussion. :) But as there
-seems no realistic chance of anyone implementing a new U-Boot anytime
-soon, we'll have to live with some such ugly solution to unblock boot.
+ autofs.rst |  273 ++++++++++++++++++++++++++++++++-----------------------------
+ index.rst  |    1 
+ 2 files changed, 148 insertions(+), 126 deletions(-)
 
 
-Slightly related to this .init_time hook, I am facing an issue for SMP
-where my ioremap() fails in .smp_init_cpus if I don't implement a
-.map_io hook here, providing an old-style fixed mapping for r-bus. Later
-ioremap()s in actual drivers in that same r-bus space do succeed.
-
-And for the record, RTD1295 and RTD1395 still don't have SMP in mainline
-either because they're not implementing it via PSCI; RTD1619 appears to
-be the first to do that in BL31. No public BL31 code [1] that we might
-fix, nor any public documentation on how we might experimentally replace
-BL31 with one written from scratch, so I'm carrying non-upstreamable
-patches (marked "HACK:") hacking up arm64 spin-table to use different
-addresses and widths to bring them up. :/
-
-Regards,
-Andreas
-
-[1] https://github.com/ARM-software/arm-trusted-firmware/tree/master/plat
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
