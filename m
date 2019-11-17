@@ -2,115 +2,103 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 694B8C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 09:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A143C43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 10:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E858220727
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 09:52:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="CYTJS3OP"
+	by mail.kernel.org (Postfix) with ESMTP id 3490220740
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 10:16:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbfKQJwk (ORCPT
+        id S1726063AbfKQKQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 04:52:40 -0500
-Received: from mail.dlink.ru ([178.170.168.18]:37258 "EHLO fd.dlink.ru"
+        Sun, 17 Nov 2019 05:16:56 -0500
+Received: from lnfm1.sai.msu.ru ([93.180.26.255]:44716 "EHLO lnfm1.sai.msu.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725953AbfKQJwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 04:52:40 -0500
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id 44A741B20C5D; Sun, 17 Nov 2019 12:52:35 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 44A741B20C5D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1573984355; bh=kb0YVBramWtjA/Ad8wxxFedgfyiwwLDzdL9qmwmkwJo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=CYTJS3OPFdbnqAqD6h9NnT5GP96M+sKXbB5l2quB1ODwLZ2oRj8lF8SMe3fQnKBrx
-         eGlDMkBsi6YPE0BtsF4dpyMVNNE4XzANSawajT2/yphkVDHVOtp5uoTfmfHy90cZhg
-         LXfVWQAU8GF+SLSwmSAA6dBrnKKYolIuygqq/w5c=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id 903E41B202CB;
-        Sun, 17 Nov 2019 12:52:24 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 903E41B202CB
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id 57C4B1B2022F;
-        Sun, 17 Nov 2019 12:52:24 +0300 (MSK)
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Sun, 17 Nov 2019 12:52:24 +0300 (MSK)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Sun, 17 Nov 2019 12:52:24 +0300
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     David Miller <davem@davemloft.net>
-Cc:     ecree@solarflare.com, jiri@mellanox.com, edumazet@google.com,
-        idosch@mellanox.com, pabeni@redhat.com, petrm@mellanox.com,
-        sd@queasysnail.net, f.fainelli@gmail.com,
-        jaswinder.singh@linaro.org, manishc@marvell.com,
-        GR-Linux-NIC-Dev@marvell.com, johannes.berg@intel.com,
-        emmanuel.grumbach@intel.com, luciano.coelho@intel.com,
-        linuxwifi@intel.com, kvalo@codeaurora.org, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 net-next] net: core: allow fast GRO for skbs with
- Ethernet header in head
-In-Reply-To: <20191116.130101.268806870571558138.davem@davemloft.net>
-References: <20191115091135.13487-1-alobakin@dlink.ru>
- <20191116.130101.268806870571558138.davem@davemloft.net>
-User-Agent: Roundcube Webmail/1.4.0
-Message-ID: <5622418d39ce3ebc3d526d3e16c8546b@dlink.ru>
-X-Sender: alobakin@dlink.ru
+        id S1726007AbfKQKQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 05:16:56 -0500
+Received: from dragon.sai.msu.ru (dragon.sai.msu.ru [93.180.26.172])
+        by lnfm1.sai.msu.ru (8.14.1/8.12.8) with ESMTP id xAHAFqoA011611;
+        Sun, 17 Nov 2019 13:15:57 +0300
+Received: from oak.local (unknown [92.243.181.209])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client did not present a certificate)
+        by dragon.sai.msu.ru (Postfix) with ESMTPSA id 335C137923;
+        Sun, 17 Nov 2019 13:15:53 +0300 (MSK)
+From:   "Matwey V. Kornilov" <matwey@sai.msu.ru>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Akash Gajjar <akash@openedev.com>,
+        "Matwey V. Kornilov" <matwey@sai.msu.ru>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Rockchip SoC
+        support),
+        linux-rockchip@lists.infradead.org (open list:ARM/Rockchip SoC support),
+        linux-kernel@vger.kernel.org (open list)
+Cc:     matwey.kornilov@gmail.com,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Rockchip SoC
+        support),
+        linux-rockchip@lists.infradead.org (open list:ARM/Rockchip SoC support),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] arm64: dts: rockchip: Enable PCIe for Radxa Rock Pi 4 board
+Date:   Sun, 17 Nov 2019 13:15:37 +0300
+Message-Id: <20191117101545.6406-1-matwey@sai.msu.ru>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Miller wrote 17.11.2019 00:01:
+Radxa Rock Pi 4 is equipped with M.2 PCIe slot,
+so enable PCIe for the board.
 
-> From: Alexander Lobakin <alobakin@dlink.ru>
-> Date: Fri, 15 Nov 2019 12:11:35 +0300
-> 
->> Commit 78d3fd0b7de8 ("gro: Only use skb_gro_header for completely
->> non-linear packets") back in May'09 (v2.6.31-rc1) has changed the
->> original condition '!skb_headlen(skb)' to
->> 'skb->mac_header == skb->tail' in gro_reset_offset() saying: "Since
->> the drivers that need this optimisation all provide completely
->> non-linear packets" (note that this condition has become the current
->> 'skb_mac_header(skb) == skb_tail_pointer(skb)' later with commmit
->> ced14f6804a9 ("net: Correct comparisons and calculations using
->> skb->tail and skb-transport_header") without any functional changes).
->> 
->> For now, we have the following rough statistics for v5.4-rc7:
->> 1) napi_gro_frags: 14
->> 2) napi_gro_receive with skb->head containing (most of) payload: 83
->> 3) napi_gro_receive with skb->head containing all the headers: 20
->> 4) napi_gro_receive with skb->head containing only Ethernet header: 2
->> 
->> With the current condition, fast GRO with the usage of
->> NAPI_GRO_CB(skb)->frag0 is available only in the [1] case.
->> Packets pushed by [2] and [3] go through the 'slow' path, but
->> it's not a problem for them as they already contain all the needed
->> headers in skb->head, so pskb_may_pull() only moves skb->data.
->> 
->> The layout of skbs in the fourth [4] case at the moment of
->> dev_gro_receive() is identical to skbs that have come through [1],
->> as napi_frags_skb() pulls Ethernet header to skb->head. The only
->> difference is that the mentioned condition is always false for them,
->> because skb_put() and friends irreversibly alter the tail pointer.
->> They also go through the 'slow' path, but now every single
->> pskb_may_pull() in every single .gro_receive() will call the *really*
->> slow __pskb_pull_tail() to pull headers to head. This significantly
->> decreases the overall performance for no visible reasons.
->  ...
->> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-> 
-> Applied to net-next, thanks.
+The changes has been tested with Intel SSD 660p series device.
 
-Thank you!
+    01:00.0 Class 0108: Device 8086:f1a8 (rev 03)
 
-Regards,
-ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
+Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
+---
+
+Changes since v1:
+ - add vpcie3v3-supply
+
+ arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
+index 1ae1ebd4efdd..01f8effd8206 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
+@@ -463,6 +463,21 @@
+ 	pmu1830-supply = <&vcc_3v0>;
+ };
+ 
++&pcie_phy {
++	status = "okay";
++};
++
++&pcie0 {
++	status = "okay";
++
++	ep-gpios = <&gpio4 RK_PD3 GPIO_ACTIVE_HIGH>;
++	max-link-speed = <2>;
++	num-lanes = <4>;
++	pinctrl-0 = <&pcie_clkreqnb_cpm>;
++	pinctrl-names = "default";
++	vpcie3v3-supply = <&vcc3v3_pcie>;
++};
++
+ &pinctrl {
+ 	bt {
+ 		bt_enable_h: bt-enable-h {
+-- 
+2.16.4
+
