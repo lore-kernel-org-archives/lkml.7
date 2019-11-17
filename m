@@ -2,129 +2,170 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACF9C43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 16:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F3DC43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 16:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9242C2075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 16:13:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="H6tt7LXs"
+	by mail.kernel.org (Postfix) with ESMTP id 2B3B32075E
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 16:22:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574007744;
+	bh=nZHPS6OD6CHQcikdtIXqbB3AUTkqxrLsnHE3H1ZEkaQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=LwZgSJyGLyOLdDxHYWnoxeQi/u8JTC2gmbAi+w4MZf8DKr9vuKBYmBjmBdRqoXHuG
+	 XQBvV2cbfmrkzHevzz/2z6irh36MCszyIlKcsGgsHdRp0L9ScsdkmraHEv6vaTVldw
+	 JBtBJ1GrtBEz6hJrQIBnk8leg9PqYRTQEuVMBW8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfKQQNU (ORCPT
+        id S1726334AbfKQQWX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 11:13:20 -0500
-Received: from cmta19.telus.net ([209.171.16.92]:38674 "EHLO cmta19.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbfKQQNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 11:13:20 -0500
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id WNApi85OLhFQMWNAqijTzR; Sun, 17 Nov 2019 09:13:18 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1574007198; bh=/83FfEBDfmvBw04Q4UuVZoxQgu1KAV2tcdoKts6VNow=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=H6tt7LXs3vrKYjyHpu0ZwWsQqbDJ2mZAsPyvA1QEIOOKOpRs2S8cdj3pnSyFeJzzy
-         kerZ2ZLXPlU+3fRpQ1UTA5eAU6f6KW+e8Vk1PgG7Na/gQpBTUGbvGU+0eFDqNKjvid
-         NKKED9MVFkrhfECmF0FiU5gtARz4aw/02ZD0Rels1lXZZpykE8QstDWKumMFnPEnGC
-         IzoJWy3ZZeQffjz5i1ZZagIJ50jlHp+hcEQYWbNNQoPsY+/zrWqmBVJ0aU+gaZuqcw
-         VbzQ3pSSJFzb7VtT28wTP7SrPwDymLtZHwiNhAN85fxXcOpcMX4iqnLp0gkYmu2oFl
-         wGRfgTLx3g5vA==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=ZPWpZkzb c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=kj9zAlcOel0A:10 a=FGbulvE0AAAA:8 a=pk_skBFnF1ww1f-5cLQA:9 a=CjuIK1q_8ugA:10
- a=svzTaB3SJmTkU8mK-ULk:22
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
-        "'Linux PM'" <linux-pm@vger.kernel.org>
-Cc:     "'Linux ACPI'" <linux-acpi@vger.kernel.org>,
-        "'LKML'" <linux-kernel@vger.kernel.org>,
-        "'Viresh Kumar'" <viresh.kumar@linaro.org>,
-        "'Sudeep Holla'" <sudeep.holla@arm.com>,
-        "'Dmitry Osipenko'" <digetx@gmail.com>
-References: <2811202.iOFZ6YHztY@kreacher> <4551555.oysnf1Sd0E@kreacher> 
-In-Reply-To: 
-Subject: RE: [RFT][PATCH 1/3] PM: QoS: Introduce frequency QoS
-Date:   Sun, 17 Nov 2019 08:13:13 -0800
-Message-ID: <000001d59d61$eb4e6670$c1eb3350$@net>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdWED0vlByLFQ8J4Rz2jUgcX377w8gZBYsHgABMAilA=
-X-CMAE-Envelope: MS4wfF/JGJ1eYjQlKjqKAe7kaaAk7UWmlqKC95adLwFboHlEdj7PHS/9oAHE45UqhqPtIXG3Fc54CD2dNHhLK1dUe4vw7P1Ktg5Ej4Pe5QGBHX/lxoh7SivR
- dqb40cloNjo8AMaFPrU/HLIZ7X5vtt06Ss71oGVvt9jW+lAhRkUEjYtAD6Re4TvTP60tCpRQs68lYqL65SeE8CVx9O24hya8oeCljFt5CkeXQlSK/BOSZRI+
- +CBT9jpq2qWQakOmi26Xr+h6aNomPefKY6n72qjMQ/daGG/Gk7SkxgCt0ixPBDcvN1LtBASHd0DFqPELMSSIV81SLuQB3/M7w/sprzQEXfm3tTUTGojnY1l0
- hlCdbJWtvOOOV3E8EAPCgpWnZHGG8A==
+        Sun, 17 Nov 2019 11:22:23 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:44332 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726069AbfKQQWX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 11:22:23 -0500
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iWNJa-0007rk-Jx; Sun, 17 Nov 2019 17:22:18 +0100
+Date:   Sun, 17 Nov 2019 16:22:10 +0000
+Message-ID: <86a78ujwwd.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Andreas =?UTF-8?B?RsOkcmJlcg==?= <afaerber@suse.de>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        James Tai <james.tai@realtek.com>
+Subject: Re: [PATCH v3 3/8] ARM: dts: Prepare Realtek RTD1195 and MeLE X1000
+In-Reply-To: <61bf74ad-b4a1-f443-bf99-be354b4d942b@suse.de>
+References: <20191117072109.20402-1-afaerber@suse.de>
+        <20191117072109.20402-4-afaerber@suse.de>
+        <20191117104726.2b1fccb8@why>
+        <61bf74ad-b4a1-f443-bf99-be354b4d942b@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: Approximate
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: afaerber@suse.de, linux-realtek-soc@lists.infradead.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, james.tai@realtek.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Apologies if people are getting this e-mail twice.
-Because it had an attachment, I think it got deleted
-from list distribution.
+On Sun, 17 Nov 2019 15:40:59 +0000,
+Andreas Färber <afaerber@suse.de> wrote:
+> 
+> Hi Marc,
+> 
+> Am 17.11.19 um 11:47 schrieb Marc Zyngier:
+> > On Sun, 17 Nov 2019 08:21:04 +0100
+> > Andreas Färber <afaerber@suse.de> wrote:
+> >> Add Device Trees for Realtek RTD1195 SoC and MeLE X1000 TV box.
+> >>
+> >> Reuse the existing RTD1295 watchdog compatible for now.
+> >>
+> >> Reviewed-by: Rob Herring <robh@kernel.org>
+> >> [AF: Fixed r-bus size, fixed GIC CPU mask, updated memreserve]
+> >> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> >> ---
+> >>  v2 -> v3:
+> >>  * Fixed r-bus size in /soc ranges from 0x1000000 to 0x70000 (James)
+> >>  * Adjusted /memreserve/ to close gap from 0xa800 to 0xc000 for full 0x100000
+> >>  * Changed arch timer from GIC_CPU_MASK_RAW(0xf) to GIC_CPU_MASK_SIMPLE(2)
+> >>    squashed from RTD1395 v1 series
+> >>  
+> >>  v1 -> v2:
+> >>  * Dropped /memreserve/ and reserved-memory nodes for peripherals and NOR (Rob)
+> >>  * Carved them out from memory reg instead (Rob)
+> >>  * Converted some /memreserve/s to reserved-memory nodes
+> >>  
+> >>  arch/arm/boot/dts/Makefile               |   2 +
+> >>  arch/arm/boot/dts/rtd1195-mele-x1000.dts |  31 ++++++++
+> >>  arch/arm/boot/dts/rtd1195.dtsi           | 127 +++++++++++++++++++++++++++++++
+> >>  3 files changed, 160 insertions(+)
+> >>  create mode 100644 arch/arm/boot/dts/rtd1195-mele-x1000.dts
+> >>  create mode 100644 arch/arm/boot/dts/rtd1195.dtsi
 
-On 2019.11.16 23:35 Doug Smythies wrote:
-> On 2019.10.16 03:41 Rafael J. Wysocki wrote:
->
-> ... deleted ...
->
-> Hi Rafael,
->
-> Not sure, but I think it is this one that
-> causes complaining when I try to set the
-> intel_pstate driver to passive mode.
-> I started from active mode, powersave governor,
-> no HWP.
->
-> Kernel: 5.4-rc7
->
-> I did not go back and try previous 5.4 RCs.
-> I did try kernel 5.3-rc8, because I already had
-> it installed, and it worked fine.
->
-> I use a script (for years), run as sudo:
->
-> doug@s15:~/temp$ cat set_cpu_passive
-> #! /bin/bash
-> cat /sys/devices/system/cpu/intel_pstate/status
-> echo passive > /sys/devices/system/cpu/intel_pstate/status
-> cat /sys/devices/system/cpu/intel_pstate/status
->
-> And I get this (very small excerpt):
->
-> freq_qos_add_request() called for active request
-> WARNING: CPU: 1 PID: 2758 at kernel/power/qos.c:763 freq_qos_add_request+0x4c/0xa0
-> CPU: 1 PID: 2758 Comm: set_cpu_passive Not tainted 5.4.0-rc7-stock #727
-> Failed to add freq constraint for CPU0 (-22)
->
-> freq_qos_add_request() called for active request
-> WARNING: CPU: 1 PID: 2758 at kernel/power/qos.c:763 freq_qos_add_request+0x4c/0xa0
-> CPU: 1 PID: 2758 Comm: set_cpu_passive Tainted: G        W         5.4.0-rc7-stock #727
-> Failed to add freq constraint for CPU1 (-22)
->
-> ...
->
-> I'll attach the whole thing, but it will likely get removed
-> from the general list e-mails.
->
-> ... Doug
+[...]
 
-I forgot to mention, other than the error messages,
-things seems to work fine.
+> >> +	timer {
+> >> +		compatible = "arm,armv7-timer";
+> >> +		interrupts = <GIC_PPI 13
+> >> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+> >> +			     <GIC_PPI 14
+> >> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+> >> +			     <GIC_PPI 11
+> >> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+> >> +			     <GIC_PPI 10
+> >> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
+> >> +		clock-frequency = <27000000>;
+> > 
+> > This is 2019, and yet it feels like 2011. This should be setup in the
+> > bootloader, not in DT...
+> 
+> What exactly - the whole node, the GIC CPU mask, the
+> clock-frequency?
 
-If anyone wants to see what was the attachment, it
-is here (for a few days):
+The clock frequency. Having to rely on such hacks 8 years down the
+line makes me feel like we've achieved nothing...
+</depressed>
 
-http://www.smythies.com/~doug/temp_kernel/rjw.txt
+> Please compare previous submissions: It's a v2012.07 based downstream
+> U-Boot that I don't have GPL sources of. It doesn't even fill in the
+> /memory@0 node.
 
+Qualeetee...
 
+> >> +		gic: interrupt-controller@ff011000 {
+> >> +			compatible = "arm,cortex-a7-gic";
+> >> +			reg = <0xff011000 0x1000>,
+> >> +			      <0xff012000 0x2000>;
+> >> +			interrupt-controller;
+> >> +			#interrupt-cells = <3>;
+> > 
+> > You know what I'm going to say: GICH and GI[C]V are missing, as well as
+> > the maintenance interrupt. This is all bog-standard HW (most probably a
+> > GIC400), so there is no reason for this information not to be present.
+> 
+> Yes, and if you look at my rtd1295-next branch referenced in the cover
+> letter, you will find that I do have follow-up patches adding GICH and
+> GICV, also a guess for the GICV interrupt, and in a different patch [1]
+> I have specifically reminded Realtek to review the v2 of this patch
+> please, which still hasn't happened yet...
+> 
+> I inquired for the RTD1619 patch, and James replied that for its GICv3
+> they supposedly do _not_ have the optional GICH and GICV [1].
+
+Which is expected. Cortex-A55 doesn't have a GICv2 CPU interface
+built-in, and thus doesn't not have the compatibility interface when
+coupled with a GICv3 implementation.
+
+In your case, Cortex A7 has all the required HW, and the required
+values can be derived from the public TRM.
+
+> Thus I am waiting on their input for whether they have it on RTD1195.
+> The U-Boot that I have on this device does not boot the kernel in HYP
+> mode, so I cannot test KVM myself. Same issue on the Horseradish
+> EVB.
+
+Given the vintage of the bootloader, I'm pretty sure he system boots
+in secure mode, so it'd just be a matter of switching to non-secure.
+Just use the existing bootloader as something that initialises memory
+for you and boot a modern u-boot from there.
+
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
