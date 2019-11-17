@@ -2,47 +2,46 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31035C432C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 12:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95170C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 13:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10CE620727
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 12:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A1BE2075C
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 13:01:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726097AbfKQMxC (ORCPT
+        id S1726124AbfKQNBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 07:53:02 -0500
-Received: from mailoutvs20.siol.net ([185.57.226.211]:41108 "EHLO
+        Sun, 17 Nov 2019 08:01:08 -0500
+Received: from mailoutvs49.siol.net ([185.57.226.240]:57358 "EHLO
         mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726037AbfKQMxC (ORCPT
+        with ESMTP id S1726037AbfKQNBH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 07:53:02 -0500
+        Sun, 17 Nov 2019 08:01:07 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id EEA88522B56;
-        Sun, 17 Nov 2019 13:52:58 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+        by mail.siol.net (Postfix) with ESMTP id 0B4B9523780;
+        Sun, 17 Nov 2019 14:01:05 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
 Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Cc8JBiWqQWmV; Sun, 17 Nov 2019 13:52:58 +0100 (CET)
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id baLIesOeibEY; Sun, 17 Nov 2019 14:01:04 +0100 (CET)
 Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id AE514522A5A;
-        Sun, 17 Nov 2019 13:52:58 +0100 (CET)
+        by mail.siol.net (Postfix) with ESMTPS id BD1B7522BA0;
+        Sun, 17 Nov 2019 14:01:04 +0100 (CET)
 Received: from localhost.localdomain (cpe-86-58-102-7.static.triera.net [86.58.102.7])
         (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id C6E5F522B5D;
-        Sun, 17 Nov 2019 13:52:55 +0100 (CET)
+        by mail.siol.net (Postfix) with ESMTPSA id 663B4523A9E;
+        Sun, 17 Nov 2019 14:01:04 +0100 (CET)
 From:   Jernej Skrabec <jernej.skrabec@siol.net>
 To:     mripard@kernel.org, wens@csie.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: sun8i: h3: Add rc map for Beelink X2
-Date:   Sun, 17 Nov 2019 13:52:50 +0100
-Message-Id: <20191117125250.1339829-1-jernej.skrabec@siol.net>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] sunxi: dts: tanix-tx6: Add rc map
+Date:   Sun, 17 Nov 2019 14:00:56 +0100
+Message-Id: <20191117130058.1341989-1-jernej.skrabec@siol.net>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -51,26 +50,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Beelink X2 box comes with a remote. Add a mapping for it.
+This series adds "rc-tanix-tx5max" to rc bindings and to Tanix TX6 dts.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- arch/arm/boot/dts/sun8i-h3-beelink-x2.dts | 1 +
- 1 file changed, 1 insertion(+)
+Superseeds https://lore.kernel.org/patchwork/patch/1143781/
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts b/arch/arm/boot/dt=
-s/sun8i-h3-beelink-x2.dts
-index ac9e26b1d906..45a24441ff18 100644
---- a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-@@ -143,6 +143,7 @@ hdmi_out_con: endpoint {
- };
-=20
- &ir {
-+	linux,rc-map-name =3D "rc-tanix-tx3mini";
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&r_ir_rx_pin>;
- 	status =3D "okay";
+Best regards,
+Jernej
+
+Changes from v1:
+- add entry to rc.yaml
+
+Jernej Skrabec (2):
+  media: dt-bindings: media: add new rc map name
+  arm64: dts: allwinner: h6: tanix-tx6: Add IR remote mapping
+
+ Documentation/devicetree/bindings/media/rc.yaml       | 1 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts | 1 +
+ 2 files changed, 2 insertions(+)
+
 --=20
 2.24.0
 
