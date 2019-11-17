@@ -2,239 +2,92 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3FCC43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 23:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7F0C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 23:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74FEB20729
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 23:43:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kudzu-us.20150623.gappssmtp.com header.i=@kudzu-us.20150623.gappssmtp.com header.b="Az+/I7lH"
+	by mail.kernel.org (Postfix) with ESMTP id 3F2CE20727
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 23:47:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfKQXnU (ORCPT
+        id S1726336AbfKQXrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 18:43:20 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42711 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfKQXnU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 18:43:20 -0500
-Received: by mail-io1-f68.google.com with SMTP id k13so16654732ioa.9
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 15:43:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gO7JzUs1xTIM39SPuA1vE59ZvFKWnOGozjWoKCw6sXM=;
-        b=Az+/I7lHFbVkaqL0FbrZvY677NI4pv3eUdMA62AcQbO5wA8DkVp2aPGoeqPfNUHrfk
-         ABbcIlJ3QZYcb2ZRXeOPWDoYZYdK7Hsd/IXtODfXxESV5YhUplhKbnDbA3XcvFhDCwqb
-         KL7FtPqb5sqgz8GUYYLRUu/TwH7yyyqlNQZaBWsJKn7Oe9k7pjMsSk4zA/mPDXhKLba1
-         JXQ06DOymgUDoRGDrI+OXJvFSy4c5ojZII3n8c1xCqkfJVeDdYSYBsBn5zGDSIz6cj3g
-         9uAVPhrBop0Tf7I70i87w/avt6Azg7K2aB/jCR+nE0NPTKjmyCYL2O3b6eVnk4obuWFi
-         9WUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gO7JzUs1xTIM39SPuA1vE59ZvFKWnOGozjWoKCw6sXM=;
-        b=UZgKwZjfogLivTFWshGw8YDzG/evKsrVEIe/UQ+/adK2bHOwaQxx0F7m7rrfaMFI2M
-         Je9p0P003/pzxyaL2dY3DmLeOOzEPVPEktmt0OTPCEJ4JIMEoVEyiff6feoPIkLBvXKz
-         CWskqlRaD3vj/ghJZGvCboLd+E2mjt2Y28XQRjQAaADUjQ3e774UedNNGjo9RW6y4xlI
-         zsyJOh4Pc2AhKV3GruoA3rrfOfSe5kvlOJnnVhzkClHh8Yr0jJ2byc668XJVIIm14Sf5
-         Z9QGKXR77xrNapMoFmd9MI6NCupKlPEMT1I5ZrZckx1RRAVu+NKd+PaODESHntH/i50u
-         HPTw==
-X-Gm-Message-State: APjAAAURf9+Mmpe0rM/hhUHNGs9Kl//nTk7sTsmr22k21QkBymjaCJ4+
-        /gV8wGK7m5JKB0oavCnbssXSwfY/nEGNOhYDx2xdxQ==
-X-Google-Smtp-Source: APXvYqyP4+EazzeJvuLahCx5eNJx2OzlF33tiVwK2gEty2XmZRMI1J2A/D4UNEfOJ+qepdEtHRIpZaLePpX0plJOIJc=
-X-Received: by 2002:a5d:938d:: with SMTP id c13mr5053836iol.159.1574034198746;
- Sun, 17 Nov 2019 15:43:18 -0800 (PST)
+        Sun, 17 Nov 2019 18:47:43 -0500
+Received: from smtp.gentoo.org ([140.211.166.183]:54110 "EHLO smtp.gentoo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726268AbfKQXrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 18:47:42 -0500
+Received: from grubbs.orbis-terrarum.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by smtp.gentoo.org (Postfix) with ESMTPS id AE51234CF2F
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 23:47:41 +0000 (UTC)
+Received: (qmail 22676 invoked by uid 129); 17 Nov 2019 23:47:34 -0000
+X-HELO: bohr-int.orbis-terrarum.net
+Authentication-Results: orbis-terrarum.net; auth=pass (plain) smtp.auth=robbat2-bohr@orbis-terrarum.net; iprev=fail; iprev=fail
+Received: from node-1w7jr9qta5qnztyeulvvtjk1k.ipv6.telus.net (HELO bohr-int.orbis-terrarum.net) (2001:569:7c26:ae00:4988:d144:fb03:3538)
+ by orbis-terrarum.net (qpsmtpd/0.95) with ESMTPSA (ECDHE-RSA-AES256-GCM-SHA384 encrypted); Sun, 17 Nov 2019 23:47:33 +0000
+Received: (nullmailer pid 27161 invoked by uid 10000);
+        Sun, 17 Nov 2019 23:47:35 -0000
+From:   "Robin H. Johnson" <robbat2@gentoo.org>
+To:     mcgrof@kernel.org
+Cc:     linux-kernel@vger.kernel.org, sir@cmpwn.com,
+        ~sircmpwn/public-inbox@lists.sr.ht, gregkh@linuxfoundation.org,
+        rafael@kernel.org, "Robin H. Johnson" <robbat2@gentoo.org>
+Subject: [PATCH v3] firmware: log name & outcome of loaded firmware
+Date:   Sun, 17 Nov 2019 15:47:34 -0800
+Message-Id: <20191117234734.27101-1-robbat2@gentoo.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <robbat2-20191113T195158-869302266Z@orbis-terrarum.net>
+References: <robbat2-20191113T195158-869302266Z@orbis-terrarum.net>
 MIME-Version: 1.0
-References: <20190926112933.8922-1-kishon@ti.com>
-In-Reply-To: <20190926112933.8922-1-kishon@ti.com>
-From:   Jon Mason <jdmason@kudzu.us>
-Date:   Sun, 17 Nov 2019 18:43:08 -0500
-Message-ID: <CAPoiz9x1LsXEeK2n98+4Rm9oTCiowrMUO5d6PPtc4SQG3mP9uA@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/21] Implement NTB Controller using multiple PCI
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-ntb <linux-ntb@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Virus-Checked: Checked by ClamAV on orbis-terrarum.net
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 7:30 AM 'Kishon Vijay Abraham I' via linux-ntb
-<linux-ntb@googlegroups.com> wrote:
->
-> This series is sent as RFC since this series is dependent on
-> [1] (cannot be merged before that series) and to get early review
-> comments.
->
-> I'll also split this series into smaller chunk when I post the
-> next revision.
->
-> This series is about implementing SW defined NTB using
-> multiple endpoint instances. This series has been tested using
-> 2 endpoint instances in J7 connected to two DRA7 boards.
->
-> This was presented in Linux Plumbers Conference. The presentation
-> can be found @ [2]
->
-> This series:
->   *) Add support to define endpoint function using device tree
->   *) Add a specification for implementing NTB controller using
->      multiple endpoint instances.
->   *) Add a NTB endpoint function driver and a NTB host side PCI
->      driver that follows the specification.
->   *) Add support in PCIe endpoint core to support secondary
->      interface.
->   *) Add a device tree overlay file to configure J7 as NTB
->
-> The test setup is something like below
->    +-------------+                                   +-------------+
->    |             |                                   |             |
->    |    DRA72    |                                   |    DRA76    |
->    |             |                                   |             |
->    +------^------+                                   +------^------+
->           |                                                 |
->           |                                                 |
-> +---------|-------------------------------------------------|---------+
-> |  +------v------+                                   +------v------+  |
-> |  |             |                                   |             |  |
-> |  |     EP      |                                   |     EP      |  |
-> |  | CONTROLLER1 |                                   | CONTROLLER2 |  |
-> |  |             <----------------------------------->             |  |
-> |  |             |                                   |             |  |
-> |  |             |                                   |             |  |
-> |  |             |                 J7                |             |  |
-> |  |             |  (Configured using NTB Function)  |             |  |
-> |  +-------------+                                   +-------------+  |
-> +---------------------------------------------------------------------+
->
-> Here DRA72 and DRA76 could be replaced with *any* PCI host.
->
-> EP side (J7):
-> =============
->
-> In the kernel:
->         cd /sys/kernel/config/pci_ep/
->         echo 1 > controllers/d800000.pcie-ep/start
->         echo 1 > controllers/d000000.pcie-ep/start
->
-> RC side (DRA7):
-> ===============
->         echo 0000:01:00.0 > /sys/bus/pci/devices/0000\:01\:00.0/driver/unbind
->         echo 0000:01:00.0 > /sys/bus/pci/drivers/ntb_hw_epf/bind
->         modprobe ntb_transport
->         modprobe ntb_netdev
->
-> On each of the hosts Ethernet Interface will be created.
->
-> Provide an IP address to each of the hosts:
-> HOST1 (dra72):
-> ifconfig eth2 192.168.1.2 up
->
-> HOST2 (dra76):
-> ifconfig eth2 192.168.1.1 up
->
-> Once this is done standard network utilities like ping or iperf can be
-> used.
->
-> root@dra7xx-evm:~# iperf -c 192.168.1.2
-> ------------------------------------------------------------
-> Client connecting to 192.168.1.2, TCP port 5001
-> TCP window size: 2.50 MByte (default)
-> ------------------------------------------------------------
-> [  3] local 192.168.1.1 port 60814 connected with 192.168.1.2 port 5001
-> [ ID] Interval       Transfer     Bandwidth
-> [  3]  0.0-10.0 sec   705 MBytes   591 Mbits/sec
->
-> [1] -> http://lore.kernel.org/r/20190604131516.13596-1-kishon@ti.com
-> [2] -> https://www.linuxplumbersconf.org/event/4/contributions/395/attachments/284/481/Implementing_NTB_Controller_Using_PCIe_Endpoint_-_final.pdf
+It's non-trivial to figure out names of firmware that was actually
+loaded, add a debug statement at the end of _request_firmware that logs
+the name & result of each firmware.
 
+This is esp. valuable early in boot, before logging of UEVENT is
+available.
 
-I had a few nits, but I think this series looks good enough to be sent
-out for inclusion.
+v3:
+- Log at dev_dbg level per maintainer.
+- HOWTO: Enable at boot via kernel boot param
+  dyndbg="func _request_firmware +p"
+- Credit to Drew DeVault for parallel creation and help promoting the
+  idea.
 
-Thanks,
-Jon
+Alternate-Creation: Drew DeVault <sir@cmpwn.com>
+Signed-off-by: Robin H. Johnson <robbat2@gentoo.org>
+---
+ drivers/base/firmware_loader/main.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> Kishon Vijay Abraham I (21):
->   dt-bindings: PCI: Endpoint: Add DT bindings for PCI EPF Bus
->   dt-bindings: PCI: Endpoint: Add DT bindings for PCI EPF Device
->   dt-bindings: PCI: Endpoint: Add DT bindings for PCI EPF NTB Device
->   Documentation: PCI: Add specification for the *PCI NTB* function
->     device
->   PCI: endpoint: Add API to get reference to EPC from device-tree
->   PCI: endpoint: Add API to create EPF device from device tree
->   PCI: endpoint: Add "pci-epf-bus" driver
->   PCI: endpoint: Make *_get_first_free_bar() take into account 64 bit
->     BAR
->   PCI: endpoint: Add helper API to get the 'next' unreserved BAR
->   PCI: endpoint: Make pci_epf_driver ops optional
->   PCI: endpoint: Add helper API to populate header with values from DT
->   PCI: endpoint: Add support to associate secondary EPC with EPF
->   PCI: endpoint: Add pci_epc_ops to map MSI irq
->   PCI: cadence: Implement ->msi_map_irq() ops
->   PCI: endpoint: Remove unused pci_epf_match_device()
->   PCI: endpoint: Fix missing mutex_unlock in error case
->   PCI: endpoint: *_free_bar() to return error codes on failure
->   PCI: endpoint: Add EP function driver to provide NTB functionality
->   PCI: Add TI J721E device to pci ids
->   NTB: Add support for EPF PCI-Express Non-Transparent Bridge
->   NTB: tool: Enable the NTB/PCIe link on the local or remote side of
->     bridge
->
->  Documentation/PCI/endpoint/pci-test-ntb.txt   |  315 +++++
->  .../bindings/pci/endpoint/pci-epf-bus.txt     |   27 +
->  .../bindings/pci/endpoint/pci-epf-ntb.txt     |   31 +
->  .../bindings/pci/endpoint/pci-epf.txt         |   28 +
->  drivers/ntb/hw/Kconfig                        |    1 +
->  drivers/ntb/hw/Makefile                       |    1 +
->  drivers/ntb/hw/epf/Kconfig                    |    5 +
->  drivers/ntb/hw/epf/Makefile                   |    1 +
->  drivers/ntb/hw/epf/ntb_hw_epf.c               |  648 ++++++++++
->  drivers/ntb/test/ntb_tool.c                   |    1 +
->  drivers/pci/controller/pcie-cadence-ep.c      |   59 +
->  drivers/pci/endpoint/Makefile                 |    3 +-
->  drivers/pci/endpoint/functions/Kconfig        |   12 +
->  drivers/pci/endpoint/functions/Makefile       |    1 +
->  drivers/pci/endpoint/functions/pci-epf-ntb.c  | 1143 +++++++++++++++++
->  drivers/pci/endpoint/functions/pci-epf-test.c |   12 +-
->  drivers/pci/endpoint/pci-ep-cfs.c             |    6 +-
->  drivers/pci/endpoint/pci-epc-core.c           |  221 +++-
->  drivers/pci/endpoint/pci-epf-bus.c            |   54 +
->  drivers/pci/endpoint/pci-epf-core.c           |  133 +-
->  include/linux/pci-epc.h                       |   42 +-
->  include/linux/pci-epf.h                       |   35 +-
->  include/linux/pci_ids.h                       |    1 +
->  23 files changed, 2715 insertions(+), 65 deletions(-)
->  create mode 100644 Documentation/PCI/endpoint/pci-test-ntb.txt
->  create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf-bus.txt
->  create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf-ntb.txt
->  create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
->  create mode 100644 drivers/ntb/hw/epf/Kconfig
->  create mode 100644 drivers/ntb/hw/epf/Makefile
->  create mode 100644 drivers/ntb/hw/epf/ntb_hw_epf.c
->  create mode 100644 drivers/pci/endpoint/functions/pci-epf-ntb.c
->  create mode 100644 drivers/pci/endpoint/pci-epf-bus.c
->
-> --
-> 2.17.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-ntb" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-ntb+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/linux-ntb/20190926112933.8922-1-kishon%40ti.com.
+diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
+index bf44c79beae9..84a879608ca4 100644
+--- a/drivers/base/firmware_loader/main.c
++++ b/drivers/base/firmware_loader/main.c
+@@ -791,6 +791,13 @@ _request_firmware(const struct firmware **firmware_p, const char *name,
+ 		fw = NULL;
+ 	}
+ 
++	/* Provide a consistent way to capture the result of trying to load any
++	 * firmware. As a potential future improvement, this might include
++	 * persistent state that firmware is loaded (or failed to load for some
++	 * reason). See Message-ID: <20191113205010.GY11244@42.do-not-panic.com>
++	 * for background */
++	dev_dbg(device, "%s %s ret=%d\n", __func__, name, ret);
++
+ 	*firmware_p = fw;
+ 	return ret;
+ }
+-- 
+2.24.0
+
