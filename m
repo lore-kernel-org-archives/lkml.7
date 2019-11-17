@@ -2,69 +2,52 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A301BC432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4033C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 12:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C6AB206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF4B20740
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 12:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbfKQLvx convert rfc822-to-8bit (ORCPT
+        id S1726097AbfKQMMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 06:51:53 -0500
-Received: from mga09.intel.com ([134.134.136.24]:3898 "EHLO mga09.intel.com"
+        Sun, 17 Nov 2019 07:12:06 -0500
+Received: from mga05.intel.com ([192.55.52.43]:56468 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbfKQLvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 06:51:53 -0500
+        id S1726063AbfKQMMG (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 07:12:06 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Nov 2019 03:51:52 -0800
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Nov 2019 04:12:05 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,316,1569308400"; 
-   d="scan'208";a="236612782"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by fmsmga002.fm.intel.com with ESMTP; 17 Nov 2019 03:51:52 -0800
-Received: from fmsmsx162.amr.corp.intel.com (10.18.125.71) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 17 Nov 2019 03:51:52 -0800
-Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
- fmsmsx162.amr.corp.intel.com (10.18.125.71) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 17 Nov 2019 03:51:51 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.127]) by
- SHSMSX153.ccr.corp.intel.com ([169.254.12.215]) with mapi id 14.03.0439.000;
- Sun, 17 Nov 2019 19:51:50 +0800
-From:   "Kang, Luwei" <luwei.kang@intel.com>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        "kvm-pmu@eclists.intel.com" <kvm-pmu@eclists.intel.com>
-CC:     "ak@linux.intel.com" <ak@linux.intel.com>,
-        "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v1 0/4] Enable PEBS when only have PEBS via PT w/o DS
-Thread-Topic: [PATCH v1 0/4] Enable PEBS when only have PEBS via PT w/o DS
-Thread-Index: AQHVmeoIPfTHl4y/ukGghigk57hp6aeLZhIAgAPdu5A=
-Date:   Sun, 17 Nov 2019 11:51:49 +0000
-Message-ID: <82D7661F83C1A047AF7DC287873BF1E17383C77D@SHSMSX104.ccr.corp.intel.com>
-References: <1573672574-25247-1-git-send-email-luwei.kang@intel.com>
- <87h835edqn.fsf@ashishki-desk.ger.corp.intel.com>
-In-Reply-To: <87h835edqn.fsf@ashishki-desk.ger.corp.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMjA1ODg4MDgtZmI3NC00MmJkLTlhYjEtYjI1OGM0NTM1ZjRjIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiYmk2cTBtajE1a0FReG1scldablh5ZGsxQkM5XC9QMndzd21OekowZ1A1dGh0R21aZlBsbFFHMUZDY1BPVjhYUVMifQ==
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+   d="scan'208";a="215102915"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.212.51]) ([10.254.212.51])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Nov 2019 04:12:03 -0800
+Subject: Re: [PATCH v1 2/2] perf report: Jump to symbol source view from total
+ cycles view
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20191113004852.21265-1-yao.jin@linux.intel.com>
+ <20191113004852.21265-2-yao.jin@linux.intel.com>
+ <20191115133438.GA25491@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <cbf51f14-dc76-9030-2dce-6d83122a15c4@linux.intel.com>
+Date:   Sun, 17 Nov 2019 20:12:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
+In-Reply-To: <20191115133438.GA25491@krava>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -72,33 +55,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> -----Original Message-----
-> From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Sent: Friday, November 15, 2019 4:38 PM
-> To: Kang, Luwei <luwei.kang@intel.com>; kvm-pmu@eclists.intel.com
-> Cc: ak@linux.intel.com; kan.liang@linux.intel.com; Kang, Luwei <luwei.kang@intel.com>; peterz@infradead.org; linux-
-> kernel@vger.kernel.org; alexander.shishkin@linux.intel.com
-> Subject: Re: [PATCH v1 0/4] Enable PEBS when only have PEBS via PT w/o DS
+On 11/15/2019 9:34 PM, Jiri Olsa wrote:
+> On Wed, Nov 13, 2019 at 08:48:52AM +0800, Jin Yao wrote:
+>> This patch supports jumping from tui total cycles view to symbol
+>> source view.
+>>
+>> For example,
+>>
+>> perf record -b ./div
+>> perf report --total-cycles
+>>
+>> In total cycles view, we can select one entry and press 'a' or
+>> press ENTER key to jump to symbol source view.
+>>
+>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+>> ---
+>>   tools/perf/builtin-report.c    |  9 ++++++---
+>>   tools/perf/ui/browsers/hists.c | 25 +++++++++++++++++++++++--
+>>   tools/perf/util/block-info.c   |  6 ++++--
+>>   tools/perf/util/block-info.h   |  3 ++-
+>>   tools/perf/util/hist.h         |  7 +++++--
+>>   5 files changed, 40 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+>> index 1e81985b7d56..ceebea4013ca 100644
+>> --- a/tools/perf/builtin-report.c
+>> +++ b/tools/perf/builtin-report.c
+>> @@ -493,7 +493,9 @@ static int perf_evlist__tui_block_hists_browse(struct evlist *evlist,
+>>   
+>>   	evlist__for_each_entry(evlist, pos) {
+>>   		ret = report__browse_block_hists(&rep->block_reports[i++].hist,
+>> -						 rep->min_percent, pos);
+>> +						 rep->min_percent, pos,
+>> +						 &rep->session->header.env,
+>> +						 &rep->annotation_opts);
+>>   		if (ret != 0)
+>>   			return ret;
+>>   	}
+>> @@ -525,7 +527,8 @@ static int perf_evlist__tty_browse_hists(struct evlist *evlist,
+>>   
+>>   		if (rep->total_cycles_mode) {
+>>   			report__browse_block_hists(&rep->block_reports[i++].hist,
+>> -						   rep->min_percent, pos);
+>> +						   rep->min_percent, pos,
+>> +						   NULL, NULL);
+>>   			continue;
+>>   		}
+>>   
+>> @@ -1418,7 +1421,7 @@ int cmd_report(int argc, const char **argv)
+>>   		if (sort__mode != SORT_MODE__BRANCH)
+>>   			report.total_cycles_mode = false;
+>>   		else
+>> -			sort_order = "sym";
+>> +			sort_order = NULL;
 > 
-> You forgot to CC Peter and LKML.
+> hum, how is this related to this change?
 > 
-> Luwei Kang <luwei.kang@intel.com> writes:
+> jirka
 > 
-> > This patchset is purely perf event system changes that to enable the
-> > PEBS when the system only supports PEBS via Intel PT w/o DS.
-> > Currently, there don't have such hardware which only supports PEBS via
-> > PT w/o DS but it is possible in KVM guest. In Tremont Atom platforms,
-> > PEBS via PT is the only way to enabled PEBS in KVM guest.
-> 
-> I don't understand what this says. If PEBS-via-PT is available and DS is not available, what happens and why?
 
-This is an internal review before sending it to community.
-In current software implementation, PEBS depends on the HW support of DS feature even if we have PEBS via PT( e.g. in intel_ds_init() function). This patchset just removes the dependency of PEBS and DS because there have a new path PEBS via Intel PT. I think there don't have any problem in host, but PEBS may not work in KVM guest when only have PEBS via PT w/o DS.
+Hi Jiri,
 
-Thanks,
-Luwei Kang
+If we set the sort_order to NULL, it will use the default branch sort 
+order. The percent value in new annotate view will be consistent with 
+the percent in annotate view which is switched from perf report.
 
-> 
-> Regards,
-> --
-> Alex
+I observed the original percent gap with previous patches and then I 
+decide to use the default sort order. Now the test result looks good.
+
+Thanks
+Jin Yao
+
+
+
+
