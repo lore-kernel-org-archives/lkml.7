@@ -2,151 +2,115 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96570C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 09:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 694B8C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 09:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73C18206D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 09:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E858220727
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 09:52:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="CYTJS3OP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbfKQJuR (ORCPT
+        id S1726109AbfKQJwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 04:50:17 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:46257 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbfKQJuR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 04:50:17 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iWHBy-0007RY-3X; Sun, 17 Nov 2019 10:50:02 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 50ECF1C0085;
-        Sun, 17 Nov 2019 10:50:01 +0100 (CET)
-Date:   Sun, 17 Nov 2019 09:50:01 -0000
-From:   "tip-bot2 for Valentin Schneider" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/uclamp: Fix overzealous type replacement
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar.Eggemann@arm.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        patrick.bellasi@matbug.net, qperret@google.com, surenb@google.com,
-        tj@kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191115103908.27610-1-valentin.schneider@arm.com>
-References: <20191115103908.27610-1-valentin.schneider@arm.com>
+        Sun, 17 Nov 2019 04:52:40 -0500
+Received: from mail.dlink.ru ([178.170.168.18]:37258 "EHLO fd.dlink.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725953AbfKQJwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 04:52:40 -0500
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id 44A741B20C5D; Sun, 17 Nov 2019 12:52:35 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 44A741B20C5D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1573984355; bh=kb0YVBramWtjA/Ad8wxxFedgfyiwwLDzdL9qmwmkwJo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=CYTJS3OPFdbnqAqD6h9NnT5GP96M+sKXbB5l2quB1ODwLZ2oRj8lF8SMe3fQnKBrx
+         eGlDMkBsi6YPE0BtsF4dpyMVNNE4XzANSawajT2/yphkVDHVOtp5uoTfmfHy90cZhg
+         LXfVWQAU8GF+SLSwmSAA6dBrnKKYolIuygqq/w5c=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id 903E41B202CB;
+        Sun, 17 Nov 2019 12:52:24 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 903E41B202CB
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id 57C4B1B2022F;
+        Sun, 17 Nov 2019 12:52:24 +0300 (MSK)
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
+        Sun, 17 Nov 2019 12:52:24 +0300 (MSK)
 MIME-Version: 1.0
-Message-ID: <157398420124.12247.5677680230156384788.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Sun, 17 Nov 2019 12:52:24 +0300
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     David Miller <davem@davemloft.net>
+Cc:     ecree@solarflare.com, jiri@mellanox.com, edumazet@google.com,
+        idosch@mellanox.com, pabeni@redhat.com, petrm@mellanox.com,
+        sd@queasysnail.net, f.fainelli@gmail.com,
+        jaswinder.singh@linaro.org, manishc@marvell.com,
+        GR-Linux-NIC-Dev@marvell.com, johannes.berg@intel.com,
+        emmanuel.grumbach@intel.com, luciano.coelho@intel.com,
+        linuxwifi@intel.com, kvalo@codeaurora.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 net-next] net: core: allow fast GRO for skbs with
+ Ethernet header in head
+In-Reply-To: <20191116.130101.268806870571558138.davem@davemloft.net>
+References: <20191115091135.13487-1-alobakin@dlink.ru>
+ <20191116.130101.268806870571558138.davem@davemloft.net>
+User-Agent: Roundcube Webmail/1.4.0
+Message-ID: <5622418d39ce3ebc3d526d3e16c8546b@dlink.ru>
+X-Sender: alobakin@dlink.ru
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+David Miller wrote 17.11.2019 00:01:
 
-Commit-ID:     7763baace1b738d65efa46d68326c9406311c6bf
-Gitweb:        https://git.kernel.org/tip/7763baace1b738d65efa46d68326c9406311c6bf
-Author:        Valentin Schneider <valentin.schneider@arm.com>
-AuthorDate:    Fri, 15 Nov 2019 10:39:08 
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sun, 17 Nov 2019 10:46:05 +01:00
+> From: Alexander Lobakin <alobakin@dlink.ru>
+> Date: Fri, 15 Nov 2019 12:11:35 +0300
+> 
+>> Commit 78d3fd0b7de8 ("gro: Only use skb_gro_header for completely
+>> non-linear packets") back in May'09 (v2.6.31-rc1) has changed the
+>> original condition '!skb_headlen(skb)' to
+>> 'skb->mac_header == skb->tail' in gro_reset_offset() saying: "Since
+>> the drivers that need this optimisation all provide completely
+>> non-linear packets" (note that this condition has become the current
+>> 'skb_mac_header(skb) == skb_tail_pointer(skb)' later with commmit
+>> ced14f6804a9 ("net: Correct comparisons and calculations using
+>> skb->tail and skb-transport_header") without any functional changes).
+>> 
+>> For now, we have the following rough statistics for v5.4-rc7:
+>> 1) napi_gro_frags: 14
+>> 2) napi_gro_receive with skb->head containing (most of) payload: 83
+>> 3) napi_gro_receive with skb->head containing all the headers: 20
+>> 4) napi_gro_receive with skb->head containing only Ethernet header: 2
+>> 
+>> With the current condition, fast GRO with the usage of
+>> NAPI_GRO_CB(skb)->frag0 is available only in the [1] case.
+>> Packets pushed by [2] and [3] go through the 'slow' path, but
+>> it's not a problem for them as they already contain all the needed
+>> headers in skb->head, so pskb_may_pull() only moves skb->data.
+>> 
+>> The layout of skbs in the fourth [4] case at the moment of
+>> dev_gro_receive() is identical to skbs that have come through [1],
+>> as napi_frags_skb() pulls Ethernet header to skb->head. The only
+>> difference is that the mentioned condition is always false for them,
+>> because skb_put() and friends irreversibly alter the tail pointer.
+>> They also go through the 'slow' path, but now every single
+>> pskb_may_pull() in every single .gro_receive() will call the *really*
+>> slow __pskb_pull_tail() to pull headers to head. This significantly
+>> decreases the overall performance for no visible reasons.
+>  ...
+>> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+> 
+> Applied to net-next, thanks.
 
-sched/uclamp: Fix overzealous type replacement
+Thank you!
 
-Some uclamp helpers had their return type changed from 'unsigned int' to
-'enum uclamp_id' by commit
-
-  0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
-
-but it happens that some do return a value in the [0, SCHED_CAPACITY_SCALE]
-range, which should really be unsigned int. The affected helpers are
-uclamp_none(), uclamp_rq_max_value() and uclamp_eff_value(). Fix those up.
-
-Note that this doesn't lead to any obj diff using a relatively recent
-aarch64 compiler (8.3-2019.03). The current code of e.g. uclamp_eff_value()
-properly returns an 11 bit value (bits_per(1024)) and doesn't seem to do
-anything funny. I'm still marking this as fixing the above commit to be on
-the safe side.
-
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Reviewed-by: Qais Yousef <qais.yousef@arm.com>
-Acked-by: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Dietmar.Eggemann@arm.com
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: patrick.bellasi@matbug.net
-Cc: qperret@google.com
-Cc: surenb@google.com
-Cc: tj@kernel.org
-Fixes: 0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
-Link: https://lkml.kernel.org/r/20191115103908.27610-1-valentin.schneider@arm.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/sched/core.c  | 6 +++---
- kernel/sched/sched.h | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 513a479..3ceff1c 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -810,7 +810,7 @@ static inline unsigned int uclamp_bucket_base_value(unsigned int clamp_value)
- 	return UCLAMP_BUCKET_DELTA * uclamp_bucket_id(clamp_value);
- }
- 
--static inline enum uclamp_id uclamp_none(enum uclamp_id clamp_id)
-+static inline unsigned int uclamp_none(enum uclamp_id clamp_id)
- {
- 	if (clamp_id == UCLAMP_MIN)
- 		return 0;
-@@ -853,7 +853,7 @@ static inline void uclamp_idle_reset(struct rq *rq, enum uclamp_id clamp_id,
- }
- 
- static inline
--enum uclamp_id uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
-+unsigned int uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
- 				   unsigned int clamp_value)
- {
- 	struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
-@@ -918,7 +918,7 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
- 	return uc_req;
- }
- 
--enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
-+unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
- {
- 	struct uclamp_se uc_eff;
- 
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 05c2827..280a3c7 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2300,7 +2300,7 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
- #endif /* CONFIG_CPU_FREQ */
- 
- #ifdef CONFIG_UCLAMP_TASK
--enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
-+unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
- 
- static __always_inline
- unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
+Regards,
+ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
