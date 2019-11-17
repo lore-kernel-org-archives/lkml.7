@@ -8,67 +8,67 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2795FC33C9D
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 14:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CA5C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 14:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F121820850
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 14:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A52220718
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 14:07:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="dozuA7JK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eka7RtLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbfKQOAI (ORCPT
+        id S1726175AbfKQOHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 09:00:08 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43726 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbfKQOAD (ORCPT
+        Sun, 17 Nov 2019 09:07:37 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38417 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfKQOHh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 09:00:03 -0500
-Received: by mail-wr1-f67.google.com with SMTP id n1so16325627wra.10;
-        Sun, 17 Nov 2019 06:00:01 -0800 (PST)
+        Sun, 17 Nov 2019 09:07:37 -0500
+Received: by mail-pl1-f195.google.com with SMTP id q18so4425025pls.5;
+        Sun, 17 Nov 2019 06:07:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lfb97txnqBkpAAA0tczISRiqax5ID5KyvODmGSMgTQQ=;
-        b=dozuA7JKPzxsob1ruenYebX+2uaraYQlCzRTEAu7EPK6gph0AbZCFHA+S/5MyNqBIG
-         U3qymAOFS6vWauytLtQCtWkwbdVNdg483jY8NGjUbw9Vw6W2i0UE+ng5vK8J7uklbAfY
-         WpJ2q846EfjkIszhGkbvdR6W2GJlSL2qj2t0iTHugUeSESi+20LOwQxSDq0OL22IYVNI
-         RPhyRSmev++noqTcud3jT2qZPl2UfunG+/hqqpbUTh/ItsyFRKcqwqNU6cIiIbOBXNfU
-         uyCoBtXaQa+BdwjDF9xqHWL14uJnCE/KjTqxl6Cd0kPq5bz40GGkrwvwxjgMUATksylH
-         vVYw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ogk/eEmzUsDEdl7w08E984I9cFzzy44g9Efvz8aG1qM=;
+        b=eka7RtLZ3C0mryfGOdnbrQqku4FdYrS7Vm6nD0pAM0Sj+UMjIj+3/CujSB4F4/KhsP
+         VihO8HhcTglrOu6EQH0p/TXHD/ahFd15q4S5iruKQCe+sH7ywazKmQc2UqXnSnVDkZ7T
+         EsqzAoIHwQFcaskIfLqbQRH1RreWUXvfh6EulG3Z1G4qfi0pUjhoyTIHS+KyKLSO0BXE
+         PBh+UdJdxwiu3mGlWta2oQXcfRxlt9b1PQs38Ry04PyYJOfw5p3G+H65TjaCQ3VekzZ/
+         Sn26NijXk12QhcSb4ZrZLGcMBMZ8YgEUa7sc1h/G0j+sq+NWeT5kdI0ubKTwQ5AjPNFv
+         ZQEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lfb97txnqBkpAAA0tczISRiqax5ID5KyvODmGSMgTQQ=;
-        b=OIU+Bic3l3H8+sQnJnFdMjpaGiGT+ICqs6ycXuEVnaO+GaBXSTvTMhwnEY1lVQAACc
-         U2Tnlb1o0dlOC+CKWv3e0nzUXLXz0QNDhtrDEPd7uEHEV1K0Cau01K2ZABTyP6ytawMd
-         RIm+CqED8WaFiL7liPxqfBtmoiTgDMLmXT5ddEnmyZgpyC1f8HqTmyLdgR9y8+7sN2V7
-         0flFh6wXt+8GhsxRGcfYB8x3WABsQ7jxLC3LTXZIpgnmtm7EX1RAmDtflXyYXFbpmhQ7
-         1QhQdaZJ3GuOmDoxJS+WFYO2CluAhpNZz2uhW1RYLsvtvFwDFQMIo17TFaOSMQ5Z7q1W
-         2iaQ==
-X-Gm-Message-State: APjAAAVtyZxPJt04ilNmcW+jYqOUIQdnrFj4adJznvA05RhN+zgswCer
-        7+AoIxaJAZ9WsGa0G39Y5AQ6/bMW
-X-Google-Smtp-Source: APXvYqxH00nil5ICai5RDo5aD0yjFRhs/HB+0oOEKHsK3hLQUPvOZu3Ej+DTySsb5xf6DaKTR0H2Rg==
-X-Received: by 2002:a5d:5411:: with SMTP id g17mr24558469wrv.360.1573999201105;
-        Sun, 17 Nov 2019 06:00:01 -0800 (PST)
-Received: from localhost.localdomain (p200300F1371CB100428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:371c:b100:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id n65sm18004803wmf.28.2019.11.17.06.00.00
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ogk/eEmzUsDEdl7w08E984I9cFzzy44g9Efvz8aG1qM=;
+        b=tkOE/Shzk4Qm9NYrneNQ6bcvzBKDmPf1xpUqpvU5D5P1qUqw+nGjexvNKAriMdzAIR
+         jzs9KhO4DGdl76M5Urm60WzqlWAn/+51Sv8NxhkEnxEMxp0M9AXjYzXp2L5uIvgtYGXF
+         tiUxUkCB/5h3aVlZL854JEpVlBXQILCfOBJ4OXE/tSq4BgvT1Ef+3MqoFnAKXD5ypE0i
+         zvQquIqpgZF96HqspawoEk19RzZlZUQuCtOw+pjXRC9NbVa/tC2pi/nIZExq24oQnV98
+         /FUyDdNpN9WJyyusMDNW7qjgiCYza/kXd4hV44mpEUFxI1sNXj1EguEgSqJ8eY6jE1yU
+         rUog==
+X-Gm-Message-State: APjAAAXlGNdqUYlrzfj9RhXJtpw4pmAIZ9iWraYB+8do5iJUOGBNtdtS
+        Xn43l323WTNB4jxDrTSXQhA=
+X-Google-Smtp-Source: APXvYqyJN1xtglkHOj6ND7doXENJ2CNNHqYqpj3JsmiEA+gpCe9JSyNJo7gybj7eLRamQUOLJFYM4w==
+X-Received: by 2002:a17:90a:1a56:: with SMTP id 22mr33929410pjl.100.1573999656893;
+        Sun, 17 Nov 2019 06:07:36 -0800 (PST)
+Received: from localhost.localdomain ([103.51.74.169])
+        by smtp.gmail.com with ESMTPSA id i102sm16486708pje.17.2019.11.17.06.07.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Nov 2019 06:00:00 -0800 (PST)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     narmstrong@baylibre.com, jbrunet@baylibre.com,
-        linux-amlogic@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 5/5] clk: meson: meson8b: use of_clk_hw_register to register the clocks
-Date:   Sun, 17 Nov 2019 14:59:27 +0100
-Message-Id: <20191117135927.135428-6-martin.blumenstingl@googlemail.com>
+        Sun, 17 Nov 2019 06:07:36 -0800 (PST)
+From:   Anand Moon <linux.amoon@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: rockchip: Add regulators for pcie on rk3399-rock960
+Date:   Sun, 17 Nov 2019 14:07:28 +0000
+Message-Id: <20191117140728.917-1-linux.amoon@gmail.com>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191117135927.135428-1-martin.blumenstingl@googlemail.com>
-References: <20191117135927.135428-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,28 +76,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch from clk_hw_register to of_clk_hw_register so we can use
-clk_parent_data.fw_name. This will be used to get the "xtal", "ddr_pll"
-and possibly others from the .dtb.
+As per Rock960 schematics add 0V9 and 1V8 voltage supplies to the
+RK3399 PCIe block.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 ---
- drivers/clk/meson/meson8b.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Schematics [0] https://dl.vamrs.com/products/rock960/docs/hw/rock960_sch_v12_20180314.pdf
+---
+ arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
-index 44e97bacd628..3408297bff65 100644
---- a/drivers/clk/meson/meson8b.c
-+++ b/drivers/clk/meson/meson8b.c
-@@ -3701,7 +3701,7 @@ static void __init meson8b_clkc_init_common(struct device_node *np,
- 		if (!clk_hw_onecell_data->hws[i])
- 			continue;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+index c7d48d41e184..2f76cccebbee 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+@@ -53,6 +53,15 @@
+ 		vin-supply = <&vcc5v0_sys>;
+ 	};
  
--		ret = clk_hw_register(NULL, clk_hw_onecell_data->hws[i]);
-+		ret = of_clk_hw_register(np, clk_hw_onecell_data->hws[i]);
- 		if (ret)
- 			return;
- 	}
++	vcc_0v9: vcc-0v9 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_0v9";
++		regulator-always-on;
++		regulator-min-microvolt = <900000>;
++		regulator-max-microvolt = <900000>;
++		vin-supply = <&vcc3v3_sys>;
++	};
++
+ 	vcc3v3_pcie: vcc3v3-pcie-regulator {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+@@ -385,6 +394,8 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pcie_clkreqn_cpm>;
+ 	vpcie3v3-supply = <&vcc3v3_pcie>;
++	vpcie1v8-supply = <&vcca_1v8>;
++	vpcie0v9-supply = <&vcc_0v9>;
+ 	status = "okay";
+ };
+ 
 -- 
 2.24.0
 
