@@ -2,213 +2,142 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF600C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 20:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE15FC43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 20:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5A4C20730
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 20:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D62206F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 20:24:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VAhShT4Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbfKQUUg (ORCPT
+        id S1726237AbfKQUYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 15:20:36 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44365 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726128AbfKQUUg (ORCPT
+        Sun, 17 Nov 2019 15:24:41 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38951 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbfKQUYl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 15:20:36 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iWR26-0006nD-Sm; Sun, 17 Nov 2019 21:20:30 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iWR25-0004G9-0B; Sun, 17 Nov 2019 21:20:29 +0100
-Date:   Sun, 17 Nov 2019 21:20:28 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: Re: [PATCH v2 1/3] pwm: jz4740: Use clocks from TCU driver
-Message-ID: <20191117202028.4chgjv2kulyyq2eu@pengutronix.de>
-References: <20191116173613.72647-1-paul@crapouillou.net>
- <20191116173613.72647-2-paul@crapouillou.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191116173613.72647-2-paul@crapouillou.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Sun, 17 Nov 2019 15:24:41 -0500
+Received: by mail-wr1-f66.google.com with SMTP id l7so17026298wrp.6;
+        Sun, 17 Nov 2019 12:24:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=IUxQw7G9TADghldCcYoUqe3xol1SpZ9SeCsa+dH2lVI=;
+        b=VAhShT4YLFAAEeUX84eHEMF5xj5KMok6kStnxT93Jj+dscCQPsB1ggSGNp8t+Ogc4p
+         2cy/9dhfRPGgXqHTCh+fjbPG77D1g/tRPcD/1t5j85Jjuiuk8GwB9Neb1bRiZ+F3OIFc
+         nVKNtubcOzIr0lutZuWI+hHhb+Fs9SzYotXdejIKEWAEDkF8IkIoCV/FWTAq75nyGP+w
+         uImYzuVnYYbh92C375XOOm55V1a5OtfEwqx5MoEttpN22ISJC/rkm2dILPybLJLN7hsm
+         0NX+tBSkeHXPno3O5z8oek+jAw55Th2nDlfclMV4hGGU7WzYw8QCKDErNPu5kjEv55+P
+         bJ1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=IUxQw7G9TADghldCcYoUqe3xol1SpZ9SeCsa+dH2lVI=;
+        b=Xm2DAJ6EGmpEAKnvLUtrllsBPdY/t7FkoCN2KXVT2VYAzzz0+e8AeHy+jOZz+YfPLE
+         4Uqlmc5T52km92mSwXUlLf8Vui+f/a0nHiVtQ3PeNV5hX6ucQ9qtgq0mEIVCeGXk/ef6
+         5gD9jgskxKZxj1X5yYHmhvqIFE/5bpBRbkPby0yyHwpRpoefkCBFtf980OEmc3zsKuvV
+         i90sVuHm9X3+Rj3/nKJt3JPDitAs0vqugrqT/aVs33vjf/Q0cL79+6h9B+tgvIA1E4Ei
+         xcsq2gw0/eqe6H7+VSCgUYhsqhyImDxbG2E6kf1Wsxy1gTO5sTIxfGxlqG0LL/u9eRMw
+         Ta4Q==
+X-Gm-Message-State: APjAAAXt5X3n9186LRcuuJ5d0vFZgEe3NVQ4yefz51wFzdtgPDivsdhY
+        VIGq1sXbiR5W0LRaJHy0nA0=
+X-Google-Smtp-Source: APXvYqxRvsFNNbAdZe3wFWBqjruArbkV8Rv6VXA8w1ZrP6Xh5SGeIX8nfBaGOerT4YBs1Y0UJJFVhw==
+X-Received: by 2002:a5d:67c2:: with SMTP id n2mr26150338wrw.222.1574022278756;
+        Sun, 17 Nov 2019 12:24:38 -0800 (PST)
+Received: from debian.lan (host-78-144-219-162.as13285.net. [78.144.219.162])
+        by smtp.gmail.com with ESMTPSA id x5sm17045704wmj.7.2019.11.17.12.24.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 17 Nov 2019 12:24:38 -0800 (PST)
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+To:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-serial@vger.kernel.org,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH v2] {tty: serial, nand: onenand}: samsung: rename to fix build warning
+Date:   Sun, 17 Nov 2019 20:24:35 +0000
+Message-Id: <20191117202435.28127-1-sudipm.mukherjee@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 16, 2019 at 06:36:11PM +0100, Paul Cercueil wrote:
-> The ingenic-timer "TCU" driver provides us with clocks, that can be
-> (un)gated, reparented or reclocked from devicetree, instead of having
-> these settings hardcoded in this driver.
-> 
-> While this driver is devicetree-compatible, it is never (as of now)
-> probed from devicetree, so this change does not introduce a ABI problem
-> with current devicetree files.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Tested-by: Mathieu Malaterre <malat@debian.org>
-> Tested-by: Artur Rojek <contact@artur-rojek.eu>
-> ---
-> 
-> Notes:
->     v2: This patch is now before the patch introducing regmap, so the code
->         has changed a bit.
-> 
->  drivers/pwm/Kconfig      |  1 +
->  drivers/pwm/pwm-jz4740.c | 45 ++++++++++++++++++++++++++++------------
->  2 files changed, 33 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index e3a2518503ed..e998e5cb01b0 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -225,6 +225,7 @@ config PWM_IMX_TPM
->  config PWM_JZ4740
->  	tristate "Ingenic JZ47xx PWM support"
->  	depends on MACH_INGENIC
-> +	depends on COMMON_CLK
->  	help
->  	  Generic PWM framework driver for Ingenic JZ47xx based
->  	  machines.
-> diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
-> index 9d78cc21cb12..fd83644f9323 100644
-> --- a/drivers/pwm/pwm-jz4740.c
-> +++ b/drivers/pwm/pwm-jz4740.c
-> @@ -24,7 +24,6 @@
->  
->  struct jz4740_pwm_chip {
->  	struct pwm_chip chip;
-> -	struct clk *clk;
+Any arm config which has 'CONFIG_MTD_ONENAND_SAMSUNG=m' and
+'CONFIG_SERIAL_SAMSUNG=m' gives a build warning:
 
-What is the motivation to go away from this approach to store the clock?
+warning: same module names found:
+  drivers/tty/serial/samsung.ko
+  drivers/mtd/nand/onenand/samsung.ko
 
->  };
->  
->  static inline struct jz4740_pwm_chip *to_jz4740(struct pwm_chip *chip)
-> @@ -34,6 +33,11 @@ static inline struct jz4740_pwm_chip *to_jz4740(struct pwm_chip *chip)
->  
->  static int jz4740_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
->  {
-> +	struct jz4740_pwm_chip *jz = to_jz4740(chip);
-> +	struct clk *clk;
-> +	char clk_name[16];
-> +	int ret;
-> +
->  	/*
->  	 * Timers 0 and 1 are used for system tasks, so they are unavailable
->  	 * for use as PWMs.
-> @@ -41,16 +45,31 @@ static int jz4740_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
->  	if (pwm->hwpwm < 2)
->  		return -EBUSY;
->  
-> -	jz4740_timer_start(pwm->hwpwm);
-> +	snprintf(clk_name, sizeof(clk_name), "timer%u", pwm->hwpwm);
-> +
-> +	clk = clk_get(chip->dev, clk_name);
-> +	if (IS_ERR(clk)) 
+Rename both drivers/tty/serial/samsung.c to
+drivers/tty/serial/samsung_tty.c and drivers/mtd/nand/onenand/samsung.c
+drivers/mtd/nand/onenand/samsung_mtd.c to fix the warning.
 
-		if (PTR_ERR(clk) != -EPROBE_DEFER)
-			dev_err(chip->dev, "Failed to get clock: %pe\n", clk);
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+---
 
-> +		return PTR_ERR(clk);
-> +
-> +	ret = clk_prepare_enable(clk);
-> +	if (ret) {
-> +		clk_put(clk);
-> +		return ret;
-> +	}
-> +
-> +	pwm_set_chip_data(pwm, clk);
->  
->  	return 0;
->  }
->  
->  static void jz4740_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
->  {
-> +	struct clk *clk = pwm_get_chip_data(pwm);
-> +
->  	jz4740_timer_set_ctrl(pwm->hwpwm, 0);
+v1: only renamed drivers/tty/serial/samsung.c
+link: https://lore.kernel.org/lkml/20191018194707.27188-1-sudipm.mukherjee@gmail.com
 
-What is the purpose of this call? I would have expected that all these
-would go away when converting to the clk stuff?!
+v2: rename both files.
 
-> -	jz4740_timer_stop(pwm->hwpwm);
-> +	clk_disable_unprepare(clk);
-> +	clk_put(clk);
->  }
->  
->  static int jz4740_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-> @@ -91,17 +110,21 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  			    const struct pwm_state *state)
->  {
->  	struct jz4740_pwm_chip *jz4740 = to_jz4740(pwm->chip);
-> +	struct clk *clk = pwm_get_chip_data(pwm),
-> +		   *parent_clk = clk_get_parent(clk);
-> +	unsigned long rate, period, duty;
->  	unsigned long long tmp;
-> -	unsigned long period, duty;
->  	unsigned int prescaler = 0;
->  	uint16_t ctrl;
->  
-> -	tmp = (unsigned long long)clk_get_rate(jz4740->clk) * state->period;
-> +	rate = clk_get_rate(parent_clk);
+I was not sure if this should have been two different patch, but since
+this will be fixing the same problem so it seems its better to have them
+in a single patch.
 
-Why is it the parent's rate that is relevant here?
+ drivers/mtd/nand/onenand/Makefile                     | 2 +-
+ drivers/mtd/nand/onenand/{samsung.c => samsung_mtd.c} | 0
+ drivers/tty/serial/Makefile                           | 2 +-
+ drivers/tty/serial/{samsung.c => samsung_tty.c}       | 0
+ 4 files changed, 2 insertions(+), 2 deletions(-)
+ rename drivers/mtd/nand/onenand/{samsung.c => samsung_mtd.c} (100%)
+ rename drivers/tty/serial/{samsung.c => samsung_tty.c} (100%)
 
-> +	tmp = (unsigned long long)rate * state->period;
->  	do_div(tmp, 1000000000);
->  	period = tmp;
->  
->  	while (period > 0xffff && prescaler < 6) {
->  		period >>= 2;
-> +		rate >>= 2;
->  		++prescaler;
->  	}
->  
-> @@ -117,14 +140,14 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  
->  	jz4740_pwm_disable(chip, pwm);
->  
-> +	clk_set_rate(clk, rate);
-
-This function's return code must be checked.
-
->  	jz4740_timer_set_count(pwm->hwpwm, 0);
->  	jz4740_timer_set_duty(pwm->hwpwm, duty);
->  	jz4740_timer_set_period(pwm->hwpwm, period);
->  
-> -	ctrl = JZ_TIMER_CTRL_PRESCALER(prescaler) | JZ_TIMER_CTRL_SRC_EXT |
-> -		JZ_TIMER_CTRL_PWM_ABBRUPT_SHUTDOWN;
-> -
-> -	jz4740_timer_set_ctrl(pwm->hwpwm, ctrl);
-> +	ctrl = jz4740_timer_get_ctrl(pwm->hwpwm);
-> +	ctrl |= JZ_TIMER_CTRL_PWM_ABBRUPT_SHUTDOWN;
->  
->  	switch (state->polarity) {
->  	case PWM_POLARITY_NORMAL:
-
-Best regards
-Uwe
-
+diff --git a/drivers/mtd/nand/onenand/Makefile b/drivers/mtd/nand/onenand/Makefile
+index f8b624aca9cc..a27b635eb23a 100644
+--- a/drivers/mtd/nand/onenand/Makefile
++++ b/drivers/mtd/nand/onenand/Makefile
+@@ -9,6 +9,6 @@ obj-$(CONFIG_MTD_ONENAND)		+= onenand.o
+ # Board specific.
+ obj-$(CONFIG_MTD_ONENAND_GENERIC)	+= generic.o
+ obj-$(CONFIG_MTD_ONENAND_OMAP2)		+= omap2.o
+-obj-$(CONFIG_MTD_ONENAND_SAMSUNG)       += samsung.o
++obj-$(CONFIG_MTD_ONENAND_SAMSUNG)       += samsung_mtd.o
+ 
+ onenand-objs = onenand_base.o onenand_bbt.o
+diff --git a/drivers/mtd/nand/onenand/samsung.c b/drivers/mtd/nand/onenand/samsung_mtd.c
+similarity index 100%
+rename from drivers/mtd/nand/onenand/samsung.c
+rename to drivers/mtd/nand/onenand/samsung_mtd.c
+diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
+index 863f47056539..d056ee6cca33 100644
+--- a/drivers/tty/serial/Makefile
++++ b/drivers/tty/serial/Makefile
+@@ -30,7 +30,7 @@ obj-$(CONFIG_SERIAL_PXA_NON8250) += pxa.o
+ obj-$(CONFIG_SERIAL_PNX8XXX) += pnx8xxx_uart.o
+ obj-$(CONFIG_SERIAL_SA1100) += sa1100.o
+ obj-$(CONFIG_SERIAL_BCM63XX) += bcm63xx_uart.o
+-obj-$(CONFIG_SERIAL_SAMSUNG) += samsung.o
++obj-$(CONFIG_SERIAL_SAMSUNG) += samsung_tty.o
+ obj-$(CONFIG_SERIAL_MAX3100) += max3100.o
+ obj-$(CONFIG_SERIAL_MAX310X) += max310x.o
+ obj-$(CONFIG_SERIAL_IP22_ZILOG) += ip22zilog.o
+diff --git a/drivers/tty/serial/samsung.c b/drivers/tty/serial/samsung_tty.c
+similarity index 100%
+rename from drivers/tty/serial/samsung.c
+rename to drivers/tty/serial/samsung_tty.c
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.11.0
+
