@@ -2,76 +2,70 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB7EC432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 20:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E56C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 20:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 432E520729
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 20:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4ADC20729
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 20:44:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbfKQUng (ORCPT
+        id S1726336AbfKQUoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 15:43:36 -0500
-Received: from foss.arm.com ([217.140.110.172]:54056 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbfKQUnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 15:43:35 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EE8C31B;
-        Sun, 17 Nov 2019 12:43:35 -0800 (PST)
-Received: from [10.0.2.15] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 152803F6C4;
-        Sun, 17 Nov 2019 12:43:33 -0800 (PST)
-Subject: Re: [GIT PULL] scheduler fixes
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20191116213742.GA7450@gmail.com>
- <ab6f2b5a-57f0-6723-c62f-91a8ce6eddac@arm.com>
- <20191117094549.GB126325@gmail.com>
- <4e4b0828-abba-e27d-53f6-135df06eba1a@arm.com>
- <CAHk-=wiEz7kG8YSbmAAALdP3Vnna_f4+LY4TPM0NQczeh3mviQ@mail.gmail.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <dbcc8947-3164-1202-a21e-ebd2a609d997@arm.com>
-Date:   Sun, 17 Nov 2019 20:43:24 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sun, 17 Nov 2019 15:44:05 -0500
+Received: from ch3vs05.rockwellcollins.com ([205.175.226.130]:63152 "EHLO
+        ch3vs05.rockwellcollins.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726128AbfKQUoF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 15:44:05 -0500
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Sun, 17 Nov 2019 15:44:05 EST
+IronPort-SDR: yJ8pmNvtDVPJ9RfHdaTR6KZdYTsZrXL97+YIAVwaDZo1jnNuGEiGR14rJM/kbU98ptwXosF43S
+ /nNAVnYpZmQz74d3G+wf9tw74iaR8U0+XrobfVsG6gdWJwKSDbvg3rRkCi6+exYdTOtcHshktl
+ bOrXR4cx2eugSzy8yW05DbXQ7CMJfKkoYmckaof8zDMvUg9R6a4KyC49XkRO/Yc9+5tZCdSWhB
+ lmdq+j3KZogMzmnlRyFVkGXZE/W+SO2MoP/met7nvQ7SvmPtQ8qS11+mm+AbrNg1q2QHiMbH7X
+ kio=
+Received: from ofwch3n02.rockwellcollins.com (HELO dtulimr01.rockwellcollins.com) ([205.175.226.14])
+  by ch3vs05.rockwellcollins.com with ESMTP; 17 Nov 2019 14:36:58 -0600
+X-Received: from righttwix.rockwellcollins.com (righttwix.rockwellcollins.com [192.168.141.218])
+        by dtulimr01.rockwellcollins.com (Postfix) with ESMTP id 6816E6041C;
+        Sun, 17 Nov 2019 14:36:57 -0600 (CST)
+From:   Brandon Maier <brandon.maier@rockwellcollins.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     jassisinghbrar@gmail.com,
+        Brandon Maier <brandon.maier@rockwellcollins.com>
+Subject: [PATCH] mailbox/omap: Handle if CONFIG_PM is disabled
+Date:   Sun, 17 Nov 2019 14:36:49 -0600
+Message-Id: <20191117203649.15208-1-brandon.maier@rockwellcollins.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wiEz7kG8YSbmAAALdP3Vnna_f4+LY4TPM0NQczeh3mviQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/11/2019 16:29, Linus Torvalds wrote:
-> Gcc can - and does - narrow enums to smaller integer types with the
-> '-fshort-enums' flag.
-> 
-> However, in practice nobody uses that, and it can cause interop
-> problems. So I think for us, enums are always at least 'int' (they can
-> be bigger).
-> 
-> That said, mixing enums and values that are bigger than the enumerated
-> ones is just a bad idea
-> 
-> It will, for example, cause us to miss compiler warnings (eg switch
-> statements with an enum will warn if you don't handle all cases, but
-> the 'all cases' is based on the actual enum range, not on the
-> _possible_ invalid values).
-> 
+If CONFIG_PM is disabled, pm_runtime_put_sync() returns -ENOSYS.
 
-Oh, yet another gcc flag... 
+Signed-off-by: Brandon Maier <brandon.maier@rockwellcollins.com>
+---
+ drivers/mailbox/omap-mailbox.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for the detailed write-up.
+diff --git a/drivers/mailbox/omap-mailbox.c b/drivers/mailbox/omap-mailbox.c
+index a3cd63583cf7..5978a35aac6d 100644
+--- a/drivers/mailbox/omap-mailbox.c
++++ b/drivers/mailbox/omap-mailbox.c
+@@ -868,7 +868,7 @@ static int omap_mbox_probe(struct platform_device *pdev)
+ 	dev_info(mdev->dev, "omap mailbox rev 0x%x\n", l);
+ 
+ 	ret = pm_runtime_put_sync(mdev->dev);
+-	if (ret < 0)
++	if (ret < 0 && ret != -ENOSYS)
+ 		goto unregister;
+ 
+ 	devm_kfree(&pdev->dev, finfoblk);
+-- 
+2.23.0
 
->                      Linus
-> 
