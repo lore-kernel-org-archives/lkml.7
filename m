@@ -2,68 +2,87 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC29C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 19:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B85C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 20:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F09B2075C
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 19:35:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574019308;
-	bh=xbfMiemDLREQHG+yPmiDSAgZjvaaA6EWOeJhj9EsZVc=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=w4tBka0xvGsxv8c9VR+B+SqFOxl4JgiAx/MkWMRQ3nSO3ylKH4k2kPFDuQWV+nxen
-	 PaFtDccOB/4R44XwvXYEhYAxzRP5Mz8XxBKDY8/2l2EqTLTg5KHQRh6nfJ6ONBkzx5
-	 KY3HwVuqitYCp/VUrwDi+YN7zUWA58FiBBVrGiSg=
+	by mail.kernel.org (Postfix) with ESMTP id C9EEA20730
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 20:12:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gKO0cy4V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbfKQTfG (ORCPT
+        id S1726425AbfKQUMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 14:35:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42486 "EHLO mail.kernel.org"
+        Sun, 17 Nov 2019 15:12:05 -0500
+Received: from ozlabs.org ([203.11.71.1]:43577 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726096AbfKQTfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 14:35:05 -0500
-Subject: Re: [git pull] IOMMU Fixes for Linux v5.4-rc7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574019305;
-        bh=xbfMiemDLREQHG+yPmiDSAgZjvaaA6EWOeJhj9EsZVc=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=s7cTT/lTIOAcuGVqBngjwcZpAXa4+6rlNM9T/Rd+sjoXu9XTRZ51rEPjDUZ05VZR9
-         LkmWYnD070BCPNCHc8noMc5wroUau7BTLfj4qXoUkezvWbpR1jEZsnAdciFv58w1BF
-         vgENCHJK02U70o8XbILD9DMwuPo6oATYneMKHI0I=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191117185507.GA2578@8bytes.org>
-References: <20191117185507.GA2578@8bytes.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191117185507.GA2578@8bytes.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
- tags/iommu-fixes-v5.4-rc7
-X-PR-Tracked-Commit-Id: 4e7120d79edb31e4ee68e6f8421448e4603be1e9
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ec5385196779fb927e7d8d5bf31bef14d7ce98ed
-Message-Id: <157401930535.8182.1564061217555148491.pr-tracker-bot@kernel.org>
-Date:   Sun, 17 Nov 2019 19:35:05 +0000
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+        id S1726157AbfKQUMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 15:12:05 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47GNXf01wcz9sP4;
+        Mon, 18 Nov 2019 07:12:01 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1574021522;
+        bh=8VUBI5cOVihQ21oz7kmfmZxtcYLcrLCpWMhd2o7KqIw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=gKO0cy4VBymzTN64AuRuXp1B1cblFRZjk/YQvmO7ee4Xo3d9yLLh4BffFk7KTp947
+         hP6JSIemf8EBzjUigd730+pNyHokosA3vRUOEZL0Nt+OA3hxaY2b0lSg6jhu98pxPf
+         LElfjqZcjFVEFjoVsFRhTQmJNGlZyw9UTrjC6L4o9iOldwl4mChLYaDTBvR5x9MuLf
+         SG6qMLzwGd108JroaGQr90juTe8oUfQ09dK/uyLei/yZs4Z8/HxxFq4X+6zUP47/bo
+         jP1xD/eEACa1kuTbSsYT9PMk2XlSeMtPG6Lq+meI8A8cx3k4tkOlsErhvWo4R4AvjR
+         IWqn/KitQyrCQ==
+Date:   Mon, 18 Nov 2019 07:11:48 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the net tree
+Message-ID: <20191118071148.10ebf58c@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/bdPsSmE_wU06/eu._/Nr0zO";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 17 Nov 2019 19:55:15 +0100:
+--Sig_/bdPsSmE_wU06/eu._/Nr0zO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v5.4-rc7
+Hi all,
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ec5385196779fb927e7d8d5bf31bef14d7ce98ed
+Commit
 
-Thank you!
+  34e59836565e ("net/mlx4_en: fix mlx4 ethtool -N insertion")
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+is missing a Signed-off-by from its committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/bdPsSmE_wU06/eu._/Nr0zO
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3RqYQACgkQAVBC80lX
+0Gy6kAf8Dd+UOzY0vPjgNn18+xiD3nzk9WBSYBKyd++9Kq5nL4XodjrxHalpjxqB
+oPixcCGhgyaWRbgGThDq0FBz6Ux6meG2hbI9SYMp866N1iDNtweagvGcCM7Kz0BL
+cKovC7Ooyj5fgwlbWgw+TGMx04M8KNnsW4X8hdWo0sxQLI/njA8ry0RBO2K8LNEI
+jx5fDMDn8D2q12z7e3jUmhDWYEhLxlDliqMSELInEn6KAjHxRsbF9ATEYzfWRuZ6
+Dcn+vLx1W2KE+f86COxRQ9Tnp8I+3dg8Hn/My3XmjnwWIPW8G010CMi3B7e5axFQ
+eX/9M3UNUUukT+OgvMmGEaQhevsEiQ==
+=vl9C
+-----END PGP SIGNATURE-----
+
+--Sig_/bdPsSmE_wU06/eu._/Nr0zO--
