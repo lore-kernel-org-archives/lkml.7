@@ -2,94 +2,82 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CE3C43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 15:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C625EC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 15:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 467AD20718
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 15:28:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="szbkSJbV"
+	by mail.kernel.org (Postfix) with ESMTP id A6117206CC
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 15:41:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbfKQP25 (ORCPT
+        id S1726268AbfKQPj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 10:28:57 -0500
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:41198 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbfKQP25 (ORCPT
+        Sun, 17 Nov 2019 10:39:58 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:59925 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbfKQPj6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 10:28:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1574004536; x=1605540536;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=WHWsOINgMarlEDm0f02H983ywgwXKWtCbSQ4LBiTABs=;
-  b=szbkSJbV444DVlI4CNece5tDaByyBhcUD//pUPxbcukTJy65wo8e9oey
-   SXkK8FNCE9SAmnDe/hQRL/n2tmVmnuPcxGedGg2XLdR0TENDeYt/ydcEp
-   mxtPUR5LZImbUTxuA08HVi4rFDZlk6iSZJ2BYQKGiEussOobXA1IXdU+D
-   E=;
-IronPort-SDR: 8LTLXDbACEMr8sqBGd2qIiwPRkh98omGIUogT7MHD0HtMdlm6eKX+x9QSTOzUnU5592+AcQqXQ
- X0PKcKNhF11g==
-X-IronPort-AV: E=Sophos;i="5.68,316,1569283200"; 
-   d="scan'208";a="8514090"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 17 Nov 2019 15:28:52 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com (Postfix) with ESMTPS id A6AFCA2071;
-        Sun, 17 Nov 2019 15:28:51 +0000 (UTC)
-Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Sun, 17 Nov 2019 15:28:51 +0000
-Received: from 8c85908914bf.ant.amazon.com (10.43.161.189) by
- EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Sun, 17 Nov 2019 15:28:47 +0000
-Subject: Re: [PATCH] net/mlx4_en: fix mlx4 ethtool -N insertion
-To:     <lrizzo@google.com>
-CC:     David Miller <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <tariqt@mellanox.com>
-References: <20191115201225.92888-1-lrizzo@google.com>
- <20191116.131058.1856199123293908506.davem@davemloft.net>
-From:   Gal Pressman <galpress@amazon.com>
-Message-ID: <a26095dd-7fda-72c8-57e1-72da7b8d1b59@amazon.com>
-Date:   Sun, 17 Nov 2019 17:28:42 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20191116.131058.1856199123293908506.davem@davemloft.net>
+        Sun, 17 Nov 2019 10:39:58 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xAHFdS5D030891, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCAS12.realtek.com.tw [172.21.6.16])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTP id xAHFdS5D030891;
+        Sun, 17 Nov 2019 23:39:28 +0800
+Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
+ RTITCAS12.realtek.com.tw (172.21.6.16) with Microsoft SMTP Server (TLS) id
+ 14.3.468.0; Sun, 17 Nov 2019 23:39:28 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Sun, 17 Nov 2019 23:39:28 +0800
+Received: from RTEXMB03.realtek.com.tw ([fe80::5cc4:90a5:6821:926]) by
+ RTEXMB03.realtek.com.tw ([fe80::5cc4:90a5:6821:926%8]) with mapi id
+ 15.01.1779.005; Sun, 17 Nov 2019 23:39:28 +0800
+From:   James Tai <james.tai@realtek.com>
+To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+CC:     "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rob Herring" <robh+dt@kernel.org>
+Subject: RE: [PATCH] arm64: dts: realtek: Add Realtek rtd1619 and mjolnir
+Thread-Topic: [PATCH] arm64: dts: realtek: Add Realtek rtd1619 and mjolnir
+Thread-Index: AdWTrwRiu8TDC5guRneVMItRk6mPLwAihi8AAIJriSD//6UUgP/7v8ZQgA4x2AD//PfkIA==
+Date:   Sun, 17 Nov 2019 15:39:28 +0000
+Message-ID: <7c94c59649c04442886a98c057c07654@realtek.com>
+References: <43B123F21A8CFE44A9641C099E4196FFCF91BEFA@RTITMBSVM04.realtek.com.tw>
+ <25fdd8eb-f1a0-82ae-9c4b-22325b163b0e@suse.de>
+ <43B123F21A8CFE44A9641C099E4196FFCF920024@RTITMBSVM04.realtek.com.tw>
+ <7a05ac2c-00bc-b2ac-0a33-be0242d33188@suse.de>
+ <309cd67da48e4702ae3dcc4ca8ab4309@realtek.com>
+ <279fd3a3-17dc-5796-f0b0-e39eb919081f@suse.de>
+In-Reply-To: <279fd3a3-17dc-5796-f0b0-e39eb919081f@suse.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [114.37.161.94]
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.43.161.189]
-X-ClientProxiedBy: EX13D23UWA004.ant.amazon.com (10.43.160.72) To
- EX13D19EUB003.ant.amazon.com (10.43.166.69)
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/11/2019 23:10, David Miller wrote:
-> From: Luigi Rizzo <lrizzo@google.com>
-> Date: Fri, 15 Nov 2019 12:12:25 -0800
-> 
->> ethtool expects ETHTOOL_GRXCLSRLALL to set ethtool_rxnfc->data with the
->> total number of entries in the rx classifier table.  Surprisingly, mlx4
->> is missing this part (in principle ethtool could still move forward and
->> try the insert).
->>
->> Tested: compiled and run command:
->> 	phh13:~# ethtool -N eth1 flow-type udp4  queue 4
->> 	Added rule with ID 255
->>
->> Signed-off-by: Luigi Rizzo <lrizzo@google.com>
->> Change-Id: I18a72f08dfcfb6b9f6aa80fbc12d58553e1fda76
-> 
-> Luigi, _always_ CC: the appropriate maintainer when making changes to the
-> kernel, as per the top-level MAINTAINERS file.
-
-You should also remove the Change-Id tag before submission.
+SGkgQW5kcmVhcywNCg0KPiA+IFNvcnJ5IGZvciBteSBtaXN1bmRlcnN0YW5kaW5nLiBUaGUgUkFN
+IHJlZ2lvbiBkb24ndCByZXF1aXJlIHR3byBjZWxscw0KPiA+IGZvciBtZW1vcnkgbm9kZXMsIHNv
+IEknbGwgZml4IGl0IGluIHYzIHBhdGNoLg0KPiANCj4gU2hvdWxkIEkgdGhlbiBhbHNvIGNoYW5n
+ZSBSVEQxMzk1IHRvIHVzZSBvbmx5IG9uZSBjZWxsLCBvciBkb2VzIGl0IHN1cHBvcnQNCj4gbW9y
+ZSBSQU0gdGhhbiBSVEQxNjE5Pw0KDQpZZXMsIHlvdSBjYW4uIFRoZSBtZW1vcnkgY2FwYWNpdHkg
+b2YgUlREMTM5NSBhbmQgUlREMTYxOSBhcmUgdGhlIHNhbWUuDQoNCj4gQnkgbXkgY2FsY3VsYXRp
+b24gMHg5ODAwMDAwMCBpcyBsZXNzIHRoYW4gMi40IEdpQiEgU28sIGRvZXMgUkFNIGNvbnRpbnVl
+DQo+IGJldHdlZW4gci1idXMgYW5kIEdJQywgc2ltaWxhciB0byBob3cgaXQgZG9lcyBvbiBSVEQx
+MTk1PyBUaGVuIHdlIG5lZWQgdG8NCj4gZXhjbHVkZSB0aG9zZSBSQU0gcmFuZ2VzIGZyb20gdGhl
+IFNvQyBub2RlIChhZGp1c3RpbmcgMHg2ODAwMDAwMCkuDQoNCldlIG5lZWQgdG8gcmVzZXJ2ZSBt
+ZW1vcnkgYWRkcmVzcyBmb3Igci1idXMgYW5kIEdJQyBhbmQgZXhjbHVkZSB0aG9zZSBSQU0gcmFu
+Z2UgZnJvbSB0aGUgU29DIG5vZGUuDQoNCg==
