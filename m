@@ -1,86 +1,201 @@
-Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=PdPE=ZJ=vger.kernel.org=linux-m68k-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9026DC43141
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E12BC43215
+	for <linux-m68k@archiver.kernel.org>; Sun, 17 Nov 2019 01:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5982C222EF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:32:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574112726;
-	bh=fPu4bhDnyFoAvMWmJVVH2jzRZ3m97wRXNtL4e/I36no=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xCXPNpjW9a+eq8fCr7KXCEZASCxC6+EapWmvGcEIklr/wbuWDvM2kLBWO1K2j/P5a
-	 pKKDjQTDKv/rrZF1ELO7uVBnaw/UmP30kECEKP7uVli7A+GKJ7z0qm0d+DjmYkCB+9
-	 cOo2314IOrCVqH2VnEXxoZr1WDsvXgpONJM3leoo=
+	by mail.kernel.org (Postfix) with ESMTP id 81E0E2075C
+	for <linux-m68k@archiver.kernel.org>; Sun, 17 Nov 2019 01:19:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfKRVcF (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 16:32:05 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40801 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfKRVcF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 16:32:05 -0500
-Received: by mail-ot1-f66.google.com with SMTP id m15so15890868otq.7;
-        Mon, 18 Nov 2019 13:32:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qqYcsKRMT/Ofwu9p9gWIeiSVzyiJC1qQZAiQjgxWaa0=;
-        b=p8LECv3CiHHofjdz3aN4U7ivWyq3FKyFsvBrhfxDUjiMEa76c1DonaFk8SfugP5t5f
-         +Iguo5gzOW10ON8om+yZqyaLSbAljf/cCQMJsT2LJHTAxLBvmgY43VKw+eLO1yLv47nb
-         z/BB5h0eU4a0y+EJxVy7igR2zPrR1WqOJsSHMsNTP02AU7aG5oSo7sK2AsnMlGlyZo6P
-         DTMBzbLACNR8x9kVbGeROGVrBL8cec+VpSUv7z17UElYWfcm3LRoB8iLSa+1dGkNUTKE
-         P8+3tHQn/Axbf1FKSnCOIS8KP4FkMSYJx14gbvO97EPIICiXqptzvIwT7yT7WxM9odb5
-         kMwg==
-X-Gm-Message-State: APjAAAUMyLvNStdOdRod2EM+mgXRzYtfdDfwrgseHnevQajWQyYv/Bm+
-        Tp5+g6bppvZz7mJ/mELhug==
-X-Google-Smtp-Source: APXvYqy5qVSVt+xh2wIzi24hrKLRfXyk0CYioZ9gFcoETioNwzK7Xkbr7IosaBgrxrtdWzERUqCG4w==
-X-Received: by 2002:a05:6830:50:: with SMTP id d16mr1039391otp.132.1574112722863;
-        Mon, 18 Nov 2019 13:32:02 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p3sm6570097oti.22.2019.11.18.13.32.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 13:32:02 -0800 (PST)
-Date:   Mon, 18 Nov 2019 15:32:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ming-Fan Chen <ming-fan.chen@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Evan Green <evgreen@chromium.org>,
-        Joerg Roedel <jroedel@suse.de>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
-        Ming-Fan Chen <ming-fan.chen@mediatek.com>
-Subject: Re: [PATCH v1 1/2] dt-bindings: mediatek: Add binding for MT6779 SMI
-Message-ID: <20191118213201.GA27040@bogus>
-References: <1573616362-2557-1-git-send-email-ming-fan.chen@mediatek.com>
- <1573616362-2557-2-git-send-email-ming-fan.chen@mediatek.com>
+        id S1726067AbfKQBTa (ORCPT <rfc822;linux-m68k@archiver.kernel.org>);
+        Sat, 16 Nov 2019 20:19:30 -0500
+Received: from mout-p-201.mailbox.org ([80.241.56.171]:21106 "EHLO
+        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727002AbfKQBTa (ORCPT
+        <rfc822;linux-m68k@lists.linux-m68k.org>);
+        Sat, 16 Nov 2019 20:19:30 -0500
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 47FvPr2qBdzQl9X;
+        Sun, 17 Nov 2019 02:19:28 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id Rr32R2z-we7N; Sun, 17 Nov 2019 02:19:23 +0100 (CET)
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        dev@opencontainers.org, containers@lists.linux-foundation.org,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        linux-alpha@vger.kernel.org, linux-api@vger.kernel.org,
+        libc-alpha@sourceware.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: [PATCH v17 03/13] namei: allow nd_jump_link() to produce errors
+Date:   Sun, 17 Nov 2019 12:17:03 +1100
+Message-Id: <20191117011713.13032-4-cyphar@cyphar.com>
+In-Reply-To: <20191117011713.13032-1-cyphar@cyphar.com>
+References: <20191117011713.13032-1-cyphar@cyphar.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573616362-2557-2-git-send-email-ming-fan.chen@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Sender: linux-m68k-owner@vger.kernel.org
 Precedence: bulk
-List-ID: <linux-kernel.vger.kernel.org>
-X-Mailing-List: linux-kernel@vger.kernel.org
+List-ID: <linux-m68k.vger.kernel.org>
+X-Mailing-List: linux-m68k@vger.kernel.org
+Message-ID: <20191117011703.qX7zfDhAvbutUV4UYCuUjDnFuhkAJrcY8uFkogn-wxM@z>
 
-On Wed, 13 Nov 2019 11:39:21 +0800, Ming-Fan Chen wrote:
-> This patch add description for MT6779 SMI.
-> 
-> Signed-off-by: Ming-Fan Chen <ming-fan.chen@mediatek.com>
-> ---
->  .../memory-controllers/mediatek,smi-common.txt     |    3 ++-
->  .../memory-controllers/mediatek,smi-larb.txt       |    3 ++-
->  2 files changed, 4 insertions(+), 2 deletions(-)
-> 
+In preparation for LOOKUP_NO_MAGICLINKS, it's necessary to add the
+ability for nd_jump_link() to return an error which the corresponding
+get_link() caller must propogate back up to the VFS.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+---
+ fs/namei.c                     |  3 ++-
+ fs/proc/base.c                 |  3 +--
+ fs/proc/namespaces.c           | 14 +++++++++-----
+ include/linux/namei.h          |  2 +-
+ security/apparmor/apparmorfs.c |  6 ++++--
+ 5 files changed, 17 insertions(+), 11 deletions(-)
+
+diff --git a/fs/namei.c b/fs/namei.c
+index 5a47d9c09581..1024a641f075 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -859,7 +859,7 @@ static int nd_jump_root(struct nameidata *nd)
+  * Helper to directly jump to a known parsed path from ->get_link,
+  * caller must have taken a reference to path beforehand.
+  */
+-void nd_jump_link(struct path *path)
++int nd_jump_link(struct path *path)
+ {
+ 	struct nameidata *nd = current->nameidata;
+ 	path_put(&nd->path);
+@@ -867,6 +867,7 @@ void nd_jump_link(struct path *path)
+ 	nd->path = *path;
+ 	nd->inode = nd->path.dentry->d_inode;
+ 	nd->flags |= LOOKUP_JUMPED;
++	return 0;
+ }
+ 
+ static inline void put_link(struct nameidata *nd)
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index ebea9501afb8..ee97dd322f3e 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -1626,8 +1626,7 @@ static const char *proc_pid_get_link(struct dentry *dentry,
+ 	if (error)
+ 		goto out;
+ 
+-	nd_jump_link(&path);
+-	return NULL;
++	error = nd_jump_link(&path);
+ out:
+ 	return ERR_PTR(error);
+ }
+diff --git a/fs/proc/namespaces.c b/fs/proc/namespaces.c
+index 08dd94df1a66..a8cca516f1a9 100644
+--- a/fs/proc/namespaces.c
++++ b/fs/proc/namespaces.c
+@@ -51,11 +51,15 @@ static const char *proc_ns_get_link(struct dentry *dentry,
+ 	if (!task)
+ 		return ERR_PTR(-EACCES);
+ 
+-	if (ptrace_may_access(task, PTRACE_MODE_READ_FSCREDS)) {
+-		error = ns_get_path(&ns_path, task, ns_ops);
+-		if (!error)
+-			nd_jump_link(&ns_path);
+-	}
++	if (!ptrace_may_access(task, PTRACE_MODE_READ_FSCREDS))
++		goto out;
++
++	error = ns_get_path(&ns_path, task, ns_ops);
++	if (error)
++		goto out;
++
++	error = nd_jump_link(&ns_path);
++out:
+ 	put_task_struct(task);
+ 	return ERR_PTR(error);
+ }
+diff --git a/include/linux/namei.h b/include/linux/namei.h
+index 397a08ade6a2..758e9b47db6f 100644
+--- a/include/linux/namei.h
++++ b/include/linux/namei.h
+@@ -68,7 +68,7 @@ extern int follow_up(struct path *);
+ extern struct dentry *lock_rename(struct dentry *, struct dentry *);
+ extern void unlock_rename(struct dentry *, struct dentry *);
+ 
+-extern void nd_jump_link(struct path *path);
++extern int __must_check nd_jump_link(struct path *path);
+ 
+ static inline void nd_terminate_link(void *name, size_t len, size_t maxlen)
+ {
+diff --git a/security/apparmor/apparmorfs.c b/security/apparmor/apparmorfs.c
+index 45d13b6462aa..0b7d6dce6291 100644
+--- a/security/apparmor/apparmorfs.c
++++ b/security/apparmor/apparmorfs.c
+@@ -2455,16 +2455,18 @@ static const char *policy_get_link(struct dentry *dentry,
+ {
+ 	struct aa_ns *ns;
+ 	struct path path;
++	int error;
+ 
+ 	if (!dentry)
+ 		return ERR_PTR(-ECHILD);
++
+ 	ns = aa_get_current_ns();
+ 	path.mnt = mntget(aafs_mnt);
+ 	path.dentry = dget(ns_dir(ns));
+-	nd_jump_link(&path);
++	error = nd_jump_link(&path);
+ 	aa_put_ns(ns);
+ 
+-	return NULL;
++	return ERR_PTR(error);
+ }
+ 
+ static int policy_readlink(struct dentry *dentry, char __user *buffer,
+-- 
+2.24.0
+
