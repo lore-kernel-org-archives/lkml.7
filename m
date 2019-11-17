@@ -2,84 +2,72 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F4FC432C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 01:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E84EC432C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 02:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7BB20803
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 01:41:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="pBzPFo5K"
+	by mail.kernel.org (Postfix) with ESMTP id 261E120801
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 02:35:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573958111;
+	bh=LNFsYyHzWydQXy/hj8/dS4SZ/uOhWm03xbFzignN6Q4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=h4KDNaMtWLcPgYzqQfLtuJ3fLrWR140jPUy2JfIZpaKnxHMiRUiWs95kwV2jndwuF
+	 xawXNeo1z4O7/1KxNAdczrlDvA1BeC3/YYEnFWu2T8yjBn79UfqJBjKTycEwT2+Eem
+	 Vfa/ewikcJrzCo1Ux9xpLFSJyeTFZSd8XK8omn0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726089AbfKQBlH (ORCPT
+        id S1726089AbfKQCfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 20:41:07 -0500
-Received: from onstation.org ([52.200.56.107]:37386 "EHLO onstation.org"
+        Sat, 16 Nov 2019 21:35:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbfKQBlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 20:41:07 -0500
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 0C4BB3E994;
-        Sun, 17 Nov 2019 01:41:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1573954866;
-        bh=XmvS7+nA1dTzQrdTxpuAt0vIN4tPeUuLw5YOA55oyuA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pBzPFo5K801SvxfGM43XxkYE5zanhlelEKYj2o0HQQw6mE9blX3fAGG+Cl2mRL7LO
-         50M0vaQrG0NgD7zt7wBMj8a6nRbTCy89uPZ5oqJPArRcOxBHhZpbCiA25MuwwURSxt
-         d5JEFXyISymPcxhD7PRuCOgnIKPLjv7MbI9mfJE0=
-Date:   Sat, 16 Nov 2019 20:41:05 -0500
-From:   Brian Masney <masneyb@onstation.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     mturquette@baylibre.com, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
-        jonathan@marek.ca
-Subject: Re: [PATCH] clk: qcom: mmcc8974: move gfx3d_clk_src from the mmcc to
- rpm
-Message-ID: <20191117014105.GA13775@onstation.org>
-References: <20191115123931.18919-1-masneyb@onstation.org>
- <20191116185457.GA11601@onstation.org>
- <20191117012737.CED5B20730@mail.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191117012737.CED5B20730@mail.kernel.org>
+        id S1725839AbfKQCfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 21:35:07 -0500
+Subject: Re: [GIT PULL] Crypto Fixes for 5.4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573958107;
+        bh=LNFsYyHzWydQXy/hj8/dS4SZ/uOhWm03xbFzignN6Q4=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=usyXxb2mi+c+hSxpbTIDfXSqf6qsc9CNnOophWj4Yh8/7obRDuVGulwdOe+it6iXd
+         5XdM50voZLE5WiqJcKNSPcqN8ezhvlWXLx9NFRKJub8S3QQStlCnPS5VizAkufzopb
+         ZOQybPAlsRKxNyHr7c/c03eUlWUZKG/dGv1UsZts=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191117010036.7vww6vqrakv3avkw@gondor.apana.org.au>
+References: <20190916084901.GA20338@gondor.apana.org.au>
+ <20190923050515.GA6980@gondor.apana.org.au>
+ <20191010123849.GA30001@gondor.apana.org.au>
+ <20191117010036.7vww6vqrakv3avkw@gondor.apana.org.au>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191117010036.7vww6vqrakv3avkw@gondor.apana.org.au>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+X-PR-Tracked-Commit-Id: 08e97aec700aeff54c4847f170e566cbd7e14e81
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 1d4c79ed324ad780cfc3ad38364ba1fd585dd2a8
+Message-Id: <157395810692.19691.18012672586585444784.pr-tracker-bot@kernel.org>
+Date:   Sun, 17 Nov 2019 02:35:06 +0000
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 16, 2019 at 05:27:36PM -0800, Stephen Boyd wrote:
-> Quoting Brian Masney (2019-11-16 10:54:57)
-> > > diff --git a/drivers/clk/qcom/mmcc-msm8974.c b/drivers/clk/qcom/mmcc-msm8974.c
-> > > index bcb0a397ef91..015426262d08 100644
-> > > --- a/drivers/clk/qcom/mmcc-msm8974.c
-> > > +++ b/drivers/clk/qcom/mmcc-msm8974.c
-> > > @@ -2411,7 +2399,6 @@ static struct clk_regmap *mmcc_msm8974_clocks[] = {
-> > >       [VFE0_CLK_SRC] = &vfe0_clk_src.clkr,
-> > >       [VFE1_CLK_SRC] = &vfe1_clk_src.clkr,
-> > >       [MDP_CLK_SRC] = &mdp_clk_src.clkr,
-> > > -     [GFX3D_CLK_SRC] = &gfx3d_clk_src.clkr,
-> > >       [JPEG0_CLK_SRC] = &jpeg0_clk_src.clkr,
-> > >       [JPEG1_CLK_SRC] = &jpeg1_clk_src.clkr,
-> > >       [JPEG2_CLK_SRC] = &jpeg2_clk_src.clkr,
-> > 
-> > I just realized that I also need to remove the GFX3D_CLK_SRC #define
-> > from include/dt-bindings/clock/qcom,mmcc-msm8974.h. I'll send out a v2
-> > tomorrow evening.
-> > 
-> 
-> Please don't change the binding. In reality the define will never be
-> used but also in reality the clk exists, so it's fine to leave it in the
-> binding.
+The pull request you sent on Sun, 17 Nov 2019 09:00:36 +0800:
 
-OK, that makes sense. Thanks for your help on this.
+> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
 
-Brian
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/1d4c79ed324ad780cfc3ad38364ba1fd585dd2a8
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
