@@ -2,160 +2,188 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D17C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B555C43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59C6820674
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6382420674
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:49:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="J4AKBDzs"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="hZrXlDN0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbfKQLsu (ORCPT
+        id S1726494AbfKQLtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 06:48:50 -0500
-Received: from onstation.org ([52.200.56.107]:38716 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbfKQLsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 06:48:41 -0500
-Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 0D0183F252;
-        Sun, 17 Nov 2019 11:48:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1573991320;
-        bh=Ps11L1huhdufwEObnE5u3q2EQ5i1pa0Gu/TdDVAo1bA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J4AKBDzsvxJfYViOAevEfCHNoL4bHydUuZXIAsr05WFpzp4FYD6zDFuza3OW6aujR
-         2OsJNOe7897+TaSMJKOwxuClmAwG628bWK5gWeyshtwiZ1lb1rTa2qlfIN4WB6Kal/
-         FALjo8QTUnPajjzItfpnBu210dkfkGAgGvr21bHA=
-From:   Brian Masney <masneyb@onstation.org>
-To:     robdclark@gmail.com, sean@poorly.run, robh+dt@kernel.org
-Cc:     airlied@linux.ie, daniel@ffwll.ch, jcrouse@codeaurora.org,
-        dianders@chromium.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Subject: [PATCH 2/4] drm/msm/gpu: add support for ocmem interconnect path
-Date:   Sun, 17 Nov 2019 06:48:23 -0500
-Message-Id: <20191117114825.13541-3-masneyb@onstation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191117114825.13541-1-masneyb@onstation.org>
-References: <20191117114825.13541-1-masneyb@onstation.org>
+        Sun, 17 Nov 2019 06:49:42 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:38156 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbfKQLtm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 06:49:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1573991379; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bpOPdwdclOQJndI4A9z8Lf5rv9wEQQ9QPF87PUX4glg=;
+        b=hZrXlDN0aHp+mXHWmsSavxf9AB0qKQe0F7M/42X0+/j+mjOzZs9yqcu/mmzv9A08JTeba+
+        oGvU9gsJjo8Qr57rOLhgmEgOm/iEecfIjwUNRS10sIapRfUUiuuD6czSWG8r6nVwTz5SpH
+        VzqUS7EdiPFdG84AJLovFvOyFgPgsv8=
+Date:   Sun, 17 Nov 2019 12:49:30 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 2/2] MIPS: Ingenic: Disable abandoned HPTLB function.
+To:     Zhou Yanjie <zhouyanjie@zoho.com>
+Cc:     Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ralf@linux-mips.org,
+        jhogan@kernel.org, gregkh@linuxfoundation.org,
+        paul.burton@mips.com, chenhc@lemote.com, tglx@linutronix.de,
+        jiaxun.yang@flygoat.com
+Message-Id: <1573991370.3.0@crapouillou.net>
+In-Reply-To: <5DCFCB41.3090807@zoho.com>
+References: <1571909341-10108-1-git-send-email-zhouyanjie@zoho.com>
+        <1571909341-10108-3-git-send-email-zhouyanjie@zoho.com>
+        <20191115213716.wt4wn2moj3fup4dc@lantea.localdomain>
+        <5DCFCB41.3090807@zoho.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some A3xx and all A4xx Adreno GPUs do not have GMEM inside the GPU core
-and must use the On Chip MEMory (OCMEM) in order to be functional.
-There's a separate interconnect path that needs to be setup to OCMEM.
-Add support for this second path to the GPU core.
+Hi Zhou,
 
-In the downstream MSM 3.4 sources, the two interconnect paths for the
-GPU are between:
 
-  - MSM_BUS_MASTER_GRAPHICS_3D and MSM_BUS_SLAVE_EBI_CH0
-  - MSM_BUS_MASTER_V_OCMEM_GFX3D and MSM_BUS_SLAVE_OCMEM
+Le sam., nov. 16, 2019 at 18:11, Zhou Yanjie <zhouyanjie@zoho.com> a=20
+=C3=A9crit :
+> Hi Paul,
+>=20
+> On 2019=E5=B9=B411=E6=9C=8816=E6=97=A5 05:37, Paul Burton wrote:
+>> Hi Zhou,
+>>=20
+>> On Thu, Oct 24, 2019 at 05:29:01PM +0800, Zhou Yanjie wrote:
+>>> JZ4760/JZ4770/JZ4775/X1000/X1500 has an abandoned huge page
+>>> tlb, write 0xa9000000 to cp0 config5 sel4 to disable this
+>>> function to prevent getting stuck.
+>> Can you describe how we "get stuck"?
+>=20
+> When the kernel is started, it will be stuck in the "Run /init as=20
+> init process"
+> according to the log information. After using the debug probe, it is=20
+> found
+> that tlbmiss occurred when the run init was started, and entered the=20
+> infinite
+> loop in the "tlb-funcs.S".
+>=20
+>> What actually goes wrong on the
+>> affected CPUs? Do they misinterpret EntryLo values? Which bits do=20
+>> they
+>> misinterpret?
+>=20
+> According to Ingenic's explanation, this is because the=20
+> JZ4760/JZ4770/JZ4775/X1000
+> use the same core (both belong to PRID_COMP_INGENIC_D1). This core is=20
+> not fully
+> implemented in VTLB at design time, but only implements the 4K page=20
+> mode.
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
----
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c   |  6 +++---
- drivers/gpu/drm/msm/adreno/adreno_gpu.c | 20 ++++++++++++++++----
- drivers/gpu/drm/msm/msm_gpu.h           |  3 ++-
- 3 files changed, 21 insertions(+), 8 deletions(-)
+Actually hugepages work fine on all Ingenic SoCs I tested with, from=20
+JZ4740 upwards, with the VTLB, so this is incorrect.
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-index 85f14feafdec..7885e382fb8f 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-@@ -132,7 +132,7 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
- 	 * Eventually we will want to scale the path vote with the frequency but
- 	 * for now leave it at max so that the performance is nominal.
- 	 */
--	icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
-+	icc_set_bw(gpu->gfx_mem_icc_path, 0, MBps_to_icc(7216));
- }
- 
- void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
-@@ -714,7 +714,7 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
- 	}
- 
- 	/* Set the bus quota to a reasonable value for boot */
--	icc_set_bw(gpu->icc_path, 0, MBps_to_icc(3072));
-+	icc_set_bw(gpu->gfx_mem_icc_path, 0, MBps_to_icc(3072));
- 
- 	/* Enable the GMU interrupt */
- 	gmu_write(gmu, REG_A6XX_GMU_AO_HOST_INTERRUPT_CLR, ~0);
-@@ -858,7 +858,7 @@ int a6xx_gmu_stop(struct a6xx_gpu *a6xx_gpu)
- 		a6xx_gmu_shutdown(gmu);
- 
- 	/* Remove the bus vote */
--	icc_set_bw(gpu->icc_path, 0, 0);
-+	icc_set_bw(gpu->gfx_mem_icc_path, 0, 0);
- 
- 	/*
- 	 * Make sure the GX domain is off before turning off the GMU (CX)
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-index 0783e4b5486a..d1cc021c012c 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-@@ -887,9 +887,20 @@ static int adreno_get_pwrlevels(struct device *dev,
- 	DBG("fast_rate=%u, slow_rate=27000000", gpu->fast_rate);
- 
- 	/* Check for an interconnect path for the bus */
--	gpu->icc_path = of_icc_get(dev, NULL);
--	if (IS_ERR(gpu->icc_path))
--		gpu->icc_path = NULL;
-+	gpu->gfx_mem_icc_path = of_icc_get(dev, "gfx-mem");
-+	if (!gpu->gfx_mem_icc_path) {
-+		/*
-+		 * Keep compatbility with device trees that don't have an
-+		 * interconnect-names property.
-+		 */
-+		gpu->gfx_mem_icc_path = of_icc_get(dev, NULL);
-+	}
-+	if (IS_ERR(gpu->gfx_mem_icc_path))
-+		gpu->gfx_mem_icc_path = NULL;
-+
-+	gpu->ocmem_icc_path = of_icc_get(dev, "ocmem");
-+	if (IS_ERR(gpu->ocmem_icc_path))
-+		gpu->ocmem_icc_path = NULL;
- 
- 	return 0;
- }
-@@ -976,7 +987,8 @@ void adreno_gpu_cleanup(struct adreno_gpu *adreno_gpu)
- 	for (i = 0; i < ARRAY_SIZE(adreno_gpu->info->fw); i++)
- 		release_firmware(adreno_gpu->fw[i]);
- 
--	icc_put(gpu->icc_path);
-+	icc_put(gpu->gfx_mem_icc_path);
-+	icc_put(gpu->ocmem_icc_path);
- 
- 	msm_gpu_cleanup(&adreno_gpu->base);
- }
-diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
-index ab8f0f9c9dc8..e72e56f7b0ef 100644
---- a/drivers/gpu/drm/msm/msm_gpu.h
-+++ b/drivers/gpu/drm/msm/msm_gpu.h
-@@ -111,7 +111,8 @@ struct msm_gpu {
- 	struct clk *ebi1_clk, *core_clk, *rbbmtimer_clk;
- 	uint32_t fast_rate;
- 
--	struct icc_path *icc_path;
-+	struct icc_path *gfx_mem_icc_path;
-+	struct icc_path *ocmem_icc_path;
- 
- 	/* Hang and Inactivity Detection:
- 	 */
--- 
-2.21.0
+
+> Support for larger pages was implemented by a component called HPTLB=20
+> that
+> they designed themselves, but this component was later discarded, so=20
+> write
+> 0xa9000000 to cp0 register5 sel4 to turn off HPTLB mode and return to=20
+> VTLB
+> mode. The actual test also shows that the kernel will no longer be=20
+> stuck in
+> the "Run / init as init process" after shutting down the HPTLB mode,=20
+> and can
+> boot to the shell normally.
+
+That's good info, please consider adding that in the comment and in the=20
+commit message, and maybe also change the last sentence to reflect=20
+what's actually going on with the infinite loop after the tlbmiss.
+
+Cheers,
+-Paul
+
+
+>=20
+>>=20
+>>> Confirmed by Ingenic,
+>>> this operation will not adversely affect processors
+>>> without HPTLB function.
+>>>=20
+>>> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+>>> ---
+>>>   arch/mips/kernel/cpu-probe.c | 16 ++++++++++++++--
+>>>   1 file changed, 14 insertions(+), 2 deletions(-)
+>>>=20
+>>> diff --git a/arch/mips/kernel/cpu-probe.c=20
+>>> b/arch/mips/kernel/cpu-probe.c
+>>> index 16033a4..cfebf8c 100644
+>>> --- a/arch/mips/kernel/cpu-probe.c
+>>> +++ b/arch/mips/kernel/cpu-probe.c
+>>> @@ -1966,11 +1966,23 @@ static inline void cpu_probe_ingenic(struct=20
+>>> cpuinfo_mips *c, unsigned int cpu)
+>>>   	}
+>>>   =7F=7F  	/*
+>>> -	 * The config0 register in the Xburst CPUs with a processor ID of
+>>> +	 * The config0 register in the XBurst CPUs with a processor ID of
+>>> +	 * PRID_COMP_INGENIC_D1 has an abandoned huge page tlb, write
+>>> +	 * 0xa9000000 to cp0 config5 sel4 to disable this function to
+>> Saying "config5" suggests $16 sel 5 to me - Config5 is after all an
+>> architecturally defined register & it's not this one. It'd be better=20
+>> to
+>> say "cop0 register 5 sel 4".
+>=20
+> Sure, I'll change it in v2.
+>=20
+>>> +	 * prevent getting stuck.
+>>> +	 */
+>>> +	if ((c->processor_id & PRID_COMP_MASK) =3D=3D PRID_COMP_INGENIC_D1) {
+>>> +		__asm__ (
+>>> +			"li    $2, 0xa9000000 \n\t"
+>>> +			"mtc0  $2, $5, 4      \n\t"
+>>> +			"nop                  \n\t"
+>>> +			::"r"(2));
+>> I'd prefer that you add #defines to asm/mipsregs.h to provide a
+>> write_c0_X() function where X is replaced with whatever the name of=20
+>> this
+>> register is, and preferably also #define macros describing the fields
+>> present in the register. Writing a magic number isn't ideal.
+>=20
+> Sure, I'll change it in v2.
+>=20
+>>> +	/*
+>>> +	 * The config0 register in the XBurst CPUs with a processor ID of
+>>>   	 * PRID_COMP_INGENIC_D0 report themselves as MIPS32r2 compatible,
+>>>   	 * but they don't actually support this ISA.
+>>>   	 */
+>>> -	if ((c->processor_id & PRID_COMP_MASK) =3D=3D PRID_COMP_INGENIC_D0)
+>>> +	} else if ((c->processor_id & PRID_COMP_MASK) =3D=3D=20
+>>> PRID_COMP_INGENIC_D0)
+>> It might be cleaner to use a switch statement rather than writing out
+>> the & PRID_COMP_MASK condition twice?
+>=20
+> Sure, I'll change it in v2.
+>=20
+> Thanks and best regards!
+>=20
+>>=20
+>> Thanks,
+>>      Paul
+>=20
+>=20
+>=20
+
+=
 
