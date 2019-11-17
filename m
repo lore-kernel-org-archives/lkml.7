@@ -2,227 +2,110 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36253C432C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 16:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1E9C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 16:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05FD420715
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 16:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F003F206D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 16:44:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="OBBKzJAQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tSH1TGFc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfKQQhZ (ORCPT
+        id S1726481AbfKQQol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 11:37:25 -0500
-Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25807 "EHLO
-        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbfKQQhY (ORCPT
+        Sun, 17 Nov 2019 11:44:41 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:36878 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbfKQQol (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 11:37:24 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1574008614; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=iZvZaFt2TDN4F+bPGgxQLCYTfmtL12svU+BXnmGWAQkzPUidKWcixIK+jvPOudN5BfRdCF49nd5SbRzcFWdR0NTN9G5Hyc/bbyreSa//+eBNsNOrqBspfQnFSQ/rk1KepAMO0wwa0ntUyCpGKqClU5Pz6lfMDRXeZx5oyFcwBO8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1574008614; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=82IU1NUBXG2G+tAXsvrhPZDTikNtk3RE8tTPl9Uh1wY=; 
-        b=jzmCZ24wNbZU5Zq4ErheBliuqPgIb9hEpstkZ/YWKVB2dcYcNu5LDgZchphcoRQ1fH9gFvv3P2k4huj1Qn4s9noi5VZJm3ymu3gdp3MZffvZ60imkF1RczRNsvH4wbep+tJMoMDOV54EoMyXNaSvUMEm3ybzQSM7jDjvF1BwyvE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
-  b=CBMP1HfQWfMU89JNIaaATJeC427lNlhkq/Zag/M5bO3T7t8ztyLrXkYeYxxvR3h/hwXzku6J3Cra
-    ZhY9nS7jL+d7kgMLNJc2sBYf0/wbSYQXUnFHm0CuYlE02xZinDCe  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574008614;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        l=4964; bh=82IU1NUBXG2G+tAXsvrhPZDTikNtk3RE8tTPl9Uh1wY=;
-        b=OBBKzJAQbQOnpqe70EQAv78yL4AV/6Vsa1I6gaoes9dEl+60TqV5IVrHa+DNjaPv
-        2zCdN5QLEmr68R8MJVThDtEY5F9VgQSdIFpVaAyIaLYzGkyumCr7C32veArLKWQYUo6
-        /btTkrU/clLts0jCcLcbm8cXC5pSXjm/n2FKTQUI=
-Received: from [192.168.88.128] (171.221.112.196 [171.221.112.196]) by mx.zohomail.com
-        with SMTPS id 1574008614125857.3636712250745; Sun, 17 Nov 2019 08:36:54 -0800 (PST)
-Subject: Re: [PATCH 2/2] MIPS: Ingenic: Disable abandoned HPTLB function.
-To:     Paul Cercueil <paul@crapouillou.net>
-References: <1571909341-10108-1-git-send-email-zhouyanjie@zoho.com>
- <1571909341-10108-3-git-send-email-zhouyanjie@zoho.com>
- <20191115213716.wt4wn2moj3fup4dc@lantea.localdomain>
- <5DCFCB41.3090807@zoho.com> <1573991370.3.0@crapouillou.net>
-Cc:     Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ralf@linux-mips.org,
-        jhogan@kernel.org, gregkh@linuxfoundation.org,
-        paul.burton@mips.com, chenhc@lemote.com, tglx@linutronix.de,
-        jiaxun.yang@flygoat.com
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-Message-ID: <5DD1770F.7030300@zoho.com>
-Date:   Mon, 18 Nov 2019 00:36:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Sun, 17 Nov 2019 11:44:41 -0500
+Received: by mail-il1-f193.google.com with SMTP id s5so13744249iln.4;
+        Sun, 17 Nov 2019 08:44:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=36Tcd3xvowpaFHHOukEJNvL3vFXR/sOP5nOa5scXrnE=;
+        b=tSH1TGFcQ0ItQXfer5WLy/aRI//T79BHWXHbPKv25v/4rsKAk0U1tRBGQwu9n/Z2Zt
+         AN4XZiH05yjwl395s+vmky4dclcliC6XSOYiCUVJmHVHUftzrrnh3oN5qUK8YQPYnNP0
+         M6gX+GvMLkhJWEtAVnzP0PdHHyzYVIw7uJ2H8CAQSiwP6YWRExzjI6yVrFMwQqymw8hb
+         kf5TVPcQkZPiF4Yz2Dp+G6BhPNRRuP2g5jSpya2q8XBydaNNXStNCIz81PimF1kOqTuA
+         rHDZtHcRt9IJQ2k7wJiFD/cUItTkKiZoBLUhd0B8H+B7kF4wABhAhjK2tUhdX1R+svT8
+         T5zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=36Tcd3xvowpaFHHOukEJNvL3vFXR/sOP5nOa5scXrnE=;
+        b=bUbduAygozOOmUHjaEPOlvv405N7TWK7azSuwIm7UvgIUplvAb6ts0XHIVNYskVzWt
+         RYYOOLKHwJkkGD71IromqyE0IFP6rhthIF2jLQNwBpS3XhabEoWWx6FiDKex/KFkU5eA
+         6TRS6luxfXZr1m5AocznR3Rk05/IXNocxmZTyfj8Q0YI9GAb/08y2KDRSnPk3RrSeptZ
+         fLnVfeY4yUi78LrffiO0uDV56fqZkAXV1XbzVU2lzpfj9PKth1Rv7CEIpfS/D0ovb9/y
+         dnoJ6o8q1ecyUAzIGbGAJhjwM0OFD6V9ugXbJ7gvR16NviMZjk1iZe7vFgcVwR9hzeN3
+         t+vw==
+X-Gm-Message-State: APjAAAXjzoDuHhN3fPuBKfVDFnVQmR8TNsA6K1mnSByleFfBr16HkR2J
+        +Lcm4v/PiFdOg1jQMLi8cPATtifV
+X-Google-Smtp-Source: APXvYqxcM+fLeUZlpp/Zq9SJUIFyOcFUl7TSat14OvsDmsnA/Lz37Wi6VHL6nH6fjyPaWf7CRxIxCQ==
+X-Received: by 2002:a92:8498:: with SMTP id y24mr10984537ilk.89.1574009080179;
+        Sun, 17 Nov 2019 08:44:40 -0800 (PST)
+Received: from dahern-DO-MB.local ([2601:282:800:fd80:bd88:fb6d:6b19:f7d1])
+        by smtp.googlemail.com with ESMTPSA id p8sm3103393ilp.24.2019.11.17.08.44.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 17 Nov 2019 08:44:39 -0800 (PST)
+Subject: Re: [PATCH AUTOSEL 4.9 89/99] vrf: mark skb for multicast or
+ link-local as enslaved to VRF
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Mike Manning <mmanning@vyatta.att-mail.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+References: <20191116155103.10971-1-sashal@kernel.org>
+ <20191116155103.10971-89-sashal@kernel.org>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <a6c038cb-4b95-beb0-abf3-8938825d379e@gmail.com>
+Date:   Sun, 17 Nov 2019 09:44:38 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1573991370.3.0@crapouillou.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+In-Reply-To: <20191116155103.10971-89-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On 11/16/19 8:50 AM, Sasha Levin wrote:
+> From: Mike Manning <mmanning@vyatta.att-mail.com>
+> 
+> [ Upstream commit 6f12fa775530195a501fb090d092c637f32d0cc5 ]
+> 
+> The skb for packets that are multicast or to a link-local address are
+> not marked as being enslaved to a VRF, if they are received on a socket
+> bound to the VRF. This is needed for ND and it is preferable for the
+> kernel not to have to deal with the additional use-cases if ll or mcast
+> packets are handled as enslaved. However, this does not allow service
+> instances listening on unbound and bound to VRF sockets to distinguish
+> the VRF used, if packets are sent as multicast or to a link-local
+> address. The fix is for the VRF driver to also mark these skb as being
+> enslaved to the VRF.
+> 
+> Signed-off-by: Mike Manning <mmanning@vyatta.att-mail.com>
+> Reviewed-by: David Ahern <dsahern@gmail.com>
+> Tested-by: David Ahern <dsahern@gmail.com>
+> Signed-off-by: David S. Miller <davem@davemloft.net>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/net/vrf.c | 19 +++++++++----------
+>  1 file changed, 9 insertions(+), 10 deletions(-)
+> 
 
-On 2019=E5=B9=B411=E6=9C=8817=E6=97=A5 19:49, Paul Cercueil wrote:
-> Hi Zhou,
->
->
-> Le sam., nov. 16, 2019 at 18:11, Zhou Yanjie <zhouyanjie@zoho.com> a=20
-> =C3=A9crit :
->> Hi Paul,
->>
->> On 2019=E5=B9=B411=E6=9C=8816=E6=97=A5 05:37, Paul Burton wrote:
->>> Hi Zhou,
->>>
->>> On Thu, Oct 24, 2019 at 05:29:01PM +0800, Zhou Yanjie wrote:
->>>> JZ4760/JZ4770/JZ4775/X1000/X1500 has an abandoned huge page
->>>> tlb, write 0xa9000000 to cp0 config5 sel4 to disable this
->>>> function to prevent getting stuck.
->>> Can you describe how we "get stuck"?
->>
->> When the kernel is started, it will be stuck in the "Run /init as=20
->> init process"
->> according to the log information. After using the debug probe, it is=20
->> found
->> that tlbmiss occurred when the run init was started, and entered the=20
->> infinite
->> loop in the "tlb-funcs.S".
->>
->>> What actually goes wrong on the
->>> affected CPUs? Do they misinterpret EntryLo values? Which bits do they
->>> misinterpret?
->>
->> According to Ingenic's explanation, this is because the=20
->> JZ4760/JZ4770/JZ4775/X1000
->> use the same core (both belong to PRID_COMP_INGENIC_D1). This core is=20
->> not fully
->> implemented in VTLB at design time, but only implements the 4K page=20
->> mode.
->
-> Actually hugepages work fine on all Ingenic SoCs I tested with, from=20
-> JZ4740 upwards, with the VTLB, so this is incorrect.
-
-It may be that I have misunderstood their explanation. I will check this=20
-with Ingenic
-again tomorrow. However, one thing is certain: these chips default to=20
-HPTLB mode
-after power-on, which will cause the kernel to be stuck (tested on=20
-JZ4770/JZ4775/X1000).
-Then need to shutdown HPTLB mode and use VTLB to start normally.
-
->
->
->> Support for larger pages was implemented by a component called HPTLB=20
->> that
->> they designed themselves, but this component was later discarded, so=20
->> write
->> 0xa9000000 to cp0 register5 sel4 to turn off HPTLB mode and return to=20
->> VTLB
->> mode. The actual test also shows that the kernel will no longer be=20
->> stuck in
->> the "Run / init as init process" after shutting down the HPTLB mode,=20
->> and can
->> boot to the shell normally.
->
-> That's good info, please consider adding that in the comment and in=20
-> the commit message, and maybe also change the last sentence to reflect=20
-> what's actually going on with the infinite loop after the tlbmiss.
-
-OK, I will add them to the v3's comment and commit message.
-
-Thanks and best regards=EF=BC=81
-
->
-> Cheers,
-> -Paul
->
->
->>
->>>
->>>> Confirmed by Ingenic,
->>>> this operation will not adversely affect processors
->>>> without HPTLB function.
->>>>
->>>> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
->>>> ---
->>>>   arch/mips/kernel/cpu-probe.c | 16 ++++++++++++++--
->>>>   1 file changed, 14 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/arch/mips/kernel/cpu-probe.c=20
->>>> b/arch/mips/kernel/cpu-probe.c
->>>> index 16033a4..cfebf8c 100644
->>>> --- a/arch/mips/kernel/cpu-probe.c
->>>> +++ b/arch/mips/kernel/cpu-probe.c
->>>> @@ -1966,11 +1966,23 @@ static inline void cpu_probe_ingenic(struct=20
->>>> cpuinfo_mips *c, unsigned int cpu)
->>>>       }
->>>>   =7F=7F      /*
->>>> -     * The config0 register in the Xburst CPUs with a processor ID of
->>>> +     * The config0 register in the XBurst CPUs with a processor ID of
->>>> +     * PRID_COMP_INGENIC_D1 has an abandoned huge page tlb, write
->>>> +     * 0xa9000000 to cp0 config5 sel4 to disable this function to
->>> Saying "config5" suggests $16 sel 5 to me - Config5 is after all an
->>> architecturally defined register & it's not this one. It'd be better to
->>> say "cop0 register 5 sel 4".
->>
->> Sure, I'll change it in v2.
->>
->>>> +     * prevent getting stuck.
->>>> +     */
->>>> +    if ((c->processor_id & PRID_COMP_MASK) =3D=3D PRID_COMP_INGENIC_D=
-1) {
->>>> +        __asm__ (
->>>> +            "li    $2, 0xa9000000 \n\t"
->>>> +            "mtc0  $2, $5, 4      \n\t"
->>>> +            "nop                  \n\t"
->>>> +            ::"r"(2));
->>> I'd prefer that you add #defines to asm/mipsregs.h to provide a
->>> write_c0_X() function where X is replaced with whatever the name of=20
->>> this
->>> register is, and preferably also #define macros describing the fields
->>> present in the register. Writing a magic number isn't ideal.
->>
->> Sure, I'll change it in v2.
->>
->>>> +    /*
->>>> +     * The config0 register in the XBurst CPUs with a processor ID of
->>>>        * PRID_COMP_INGENIC_D0 report themselves as MIPS32r2=20
->>>> compatible,
->>>>        * but they don't actually support this ISA.
->>>>        */
->>>> -    if ((c->processor_id & PRID_COMP_MASK) =3D=3D PRID_COMP_INGENIC_D=
-0)
->>>> +    } else if ((c->processor_id & PRID_COMP_MASK) =3D=3D=20
->>>> PRID_COMP_INGENIC_D0)
->>> It might be cleaner to use a switch statement rather than writing out
->>> the & PRID_COMP_MASK condition twice?
->>
->> Sure, I'll change it in v2.
->>
->> Thanks and best regards!
->>
->>>
->>> Thanks,
->>>      Paul
->>
->>
->>
->
->
-
-
-
+backporting this patch and it's bug fix, "ipv6: Fix handling of LLA with
+VRF and sockets bound to VRF" to 4.14 is a bit questionable. They
+definitely do not need to come back to 4.9.
