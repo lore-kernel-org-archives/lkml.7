@@ -2,120 +2,141 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1ABC43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 14:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CBFC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 15:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCA042071E
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 14:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D112206CC
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 15:01:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="CRlv6pSe"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Clx0utPD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbfKQOq6 (ORCPT
+        id S1726314AbfKQPB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 09:46:58 -0500
-Received: from mail-eopbgr70057.outbound.protection.outlook.com ([40.107.7.57]:53056
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726076AbfKQOq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 09:46:58 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dDhXpoJjWl823hncD0Jd+4Jg/Lqwh0StzYFtdOGjSPXmJOqToXWynNb+PJjGigupbqwG9MX2AmW8HbSczVVRa+ujR4rm+04XKlnWPLbSxG1pwscH/Fe38eojFxF3Be5E9uO/MOYUI+XKlgBHBKFKPQKgijEiESs3eWBvzQ/kcHJIeZwziljraHTAfP5XyH2Gm/jKQbOPrP5vWmTkViBBsBJIpYqH4pWJMeO+puKxyIei0ZQiQjJar/oWWnPOCO+laOSZfddpjVQTsij0yoMtWXBW6vXn+VlFSPYrBNjMGCgzE2EXpgcmQyNAbtxx/4JG9zRQaKehVJn8Z4nLFF5F/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EE71lzoqzMyXH6VgBWRWPWryiSV+F3JaTieuM6tVfJE=;
- b=RVhd7tQI/3RLT6gzZcRcV2CcBKj0j1YTF/QVkXaWjn7IuEqMLkJ9oUxnpIVLquFv6i/n6S95gBihwZRmVfR/p7nGfYvlvYnicx0ZYqTaC47xTjOOKmMbQKZhjIWUJA7CSdGLHdfFRwxugtY8BK0tBCa8MDsQmFWTG84lG0CeZVBpKM+ngHykpcEyiA+gYOAr3JvSixWHZAUF8tFEmP3qT/hRaIQKpPAEsJEme44MWrKN7TcV7pH3qsWoimtuD32NOY2YokQE9N+EwS+TzptfKvE0pBF5I8IrD29BgeokVSNgNk2EPOzAYJQPqP0uW1YvEMp5Y3Bv0c1AJ1ezN/hxQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EE71lzoqzMyXH6VgBWRWPWryiSV+F3JaTieuM6tVfJE=;
- b=CRlv6pSe5BpokpNiCHDYLjEyoV8DFZUuDHs9FM/HexmUC8moXJGEHBZZfPb/Im5Mtp81fRMjh6FKFgJFV+xVSsrIyf6kzUvYLZtiyzB47+IrtfuIf/NXQWGyKtZZbiRjyYMMR0I77n4ozaR4YDeWRu1BBWdJ+06yN8obKSKJ4Bg=
-Received: from DBBPR05MB6283.eurprd05.prod.outlook.com (20.179.43.208) by
- DBBPR05MB6329.eurprd05.prod.outlook.com (20.179.41.81) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.28; Sun, 17 Nov 2019 14:46:51 +0000
-Received: from DBBPR05MB6283.eurprd05.prod.outlook.com
- ([fe80::8032:b650:9659:1c3a]) by DBBPR05MB6283.eurprd05.prod.outlook.com
- ([fe80::8032:b650:9659:1c3a%7]) with mapi id 15.20.2451.029; Sun, 17 Nov 2019
- 14:46:51 +0000
-From:   Tariq Toukan <tariqt@mellanox.com>
-To:     David Miller <davem@davemloft.net>,
-        "lrizzo@google.com" <lrizzo@google.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tariq Toukan <tariqt@mellanox.com>
-Subject: Re: [PATCH] net/mlx4_en: fix mlx4 ethtool -N insertion
-Thread-Topic: [PATCH] net/mlx4_en: fix mlx4 ethtool -N insertion
-Thread-Index: AQHVm/EMSXbZQwpspUCUKjixDQl+CaeOTMwAgAEm8oA=
-Date:   Sun, 17 Nov 2019 14:46:50 +0000
-Message-ID: <59ebfae8-ac93-75a1-7a60-2bb3820a9a79@mellanox.com>
-References: <20191115201225.92888-1-lrizzo@google.com>
- <20191116.131058.1856199123293908506.davem@davemloft.net>
-In-Reply-To: <20191116.131058.1856199123293908506.davem@davemloft.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR05CA0044.eurprd05.prod.outlook.com
- (2603:10a6:208:be::21) To DBBPR05MB6283.eurprd05.prod.outlook.com
- (2603:10a6:10:cf::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=tariqt@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [193.47.165.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 59a30144-7fc4-49d7-4f94-08d76b6cfaf6
-x-ms-traffictypediagnostic: DBBPR05MB6329:|DBBPR05MB6329:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DBBPR05MB63297890DFAF3823BB75B079AE720@DBBPR05MB6329.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 02243C58C6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(136003)(39860400002)(376002)(396003)(189003)(199004)(81166006)(64756008)(102836004)(31686004)(6246003)(6506007)(386003)(53546011)(25786009)(6116002)(81156014)(107886003)(4326008)(71190400001)(71200400001)(52116002)(3846002)(478600001)(8936002)(8676002)(4744005)(186003)(110136005)(99286004)(5660300002)(476003)(2616005)(66066001)(54906003)(486006)(2906002)(14454004)(36756003)(11346002)(86362001)(2501003)(6512007)(446003)(66476007)(66556008)(7736002)(305945005)(6436002)(26005)(229853002)(76176011)(66946007)(316002)(66446008)(6486002)(256004)(31696002);DIR:OUT;SFP:1101;SCL:1;SRVR:DBBPR05MB6329;H:DBBPR05MB6283.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3ZdbnTcxux7tOm/kDH+RVmPixafWDf4wQCbMxhpKpKx+lhDABCuU3Kq9zUXKHmmAgh1Bj0GeLUuql8cw40J54wg3jeARdkKl5M/WQDPpUx+/Au48LVok49QyARG7y6NNu7b7HxAYi0Vzs6IPq5aQebovCNvzk9n4wiCEdHzsrOFDHA8eTqkAZUqo651pfTNOD70XdZ8cuteDjm6uI9ZydLUo/Ud4KDDVI+WQXCJC68yjBdP3tDMqfhSg/m/EURKiOt/FWC+POIgVpfenzjZK7g7m8fHoihLh7KxgsdaoI+BeKIzVhhjtReUXHhy4wkBcWvOQA5brtq7O0gWG3p47yphjW7vKdiGhXRnFG2qgN/lZ7O+hLQgjkswZRu7VS4g7BGyMuOr3ja6vZYaQ9YSzuSgiEqFQ3GtofqvfFjpeRHyFbFefX2rGiubpiRQ6w8a9
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <282A150AF2EFA74EAF7BDCC7A301575A@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Sun, 17 Nov 2019 10:01:29 -0500
+Received: from mout.web.de ([212.227.17.12]:46353 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726262AbfKQPB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 10:01:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1574002873;
+        bh=4y0JcFtoJHnVUVsgn9gCbYaTiaGGxKXqzTKBrHi+a54=;
+        h=X-UI-Sender-Class:Cc:References:Subject:From:To:Date:In-Reply-To;
+        b=Clx0utPDw9li1KIIzn7ZiLIBYvt/8gSD4n3iObl3PF4KNqsLdUGPXoUlDi89U8wZW
+         4ePPzs6MegPGnsa475UfizwvVBlZYgTb6/NdkCbbkna0LYgeByJ0EuzzXPXGethODg
+         JIp/tvcxauYjlBLO/5UX9jLQ4QFvIEpI49BvtfHo=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([93.131.59.42]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MWj2N-1iLYY61gmx-00XsYS; Sun, 17
+ Nov 2019 16:01:13 +0100
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        linkinjeon@gmail.com
+References: <20191113081800.7672-8-namjae.jeon@samsung.com>
+Subject: Re: [PATCH 07/13] exfat: add bitmap operations
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+To:     Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org
+Message-ID: <bb89f610-3eac-6b28-1aff-265b358d22af@web.de>
+Date:   Sun, 17 Nov 2019 16:01:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 59a30144-7fc4-49d7-4f94-08d76b6cfaf6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Nov 2019 14:46:50.9999
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nd7oNg8/3e25tICBJ+FQP4TNHgyIX7YtVV6BHBXMheny9M9s6qEOi6qwgij3ZFEu6+P9zhChKHAvhazTc6KkdA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR05MB6329
+In-Reply-To: <20191113081800.7672-8-namjae.jeon@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:1BcEh6UV2GsvuNc3kQjQ07WYZY+wFuuOEKg4iP+VeefPd8n2yKp
+ b7t1Pksbc5cd9o+X7KdXRfISd5tVwpWMbs3NncXgawlv75EJRGzpD8ONiNM7NGrvfrT9tTd
+ 5ABSar5iwitpMxb//a8m+Ti/KKd0jWOD2ZepyiCxTeKIb3jpvQSjIeJjegrTnLTe7yQh3HB
+ cP8GPdc4PL6KZCbUQIYeg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2TMbCF1ntDs=:jYNXu0WuoM+9XypO892FN3
+ eyKA2y9pteDbhlp3Jhhpki5xoGQFWKWwOKQ3/m2snB0AmdQmBlEWxCP0Y8f12WyfImh3nfTbx
+ 1ep5ev+lwHQB24XEBuaYeGZqu8iLq/vwmz9ttUqZzr3Qm2xlRc+NM1gunFvf55rOjQMi20eAK
+ JTAbIpb1/jOK1cgm2ibTkPrMjbn5U4x/ymtO4xTzu33YJd77E9Uv3DVELA5yvcIxLbphyTrR5
+ Du3rpAp1LjLIXylCuarb2zfLy+86i7n7iHcxyeO4pgTAwpzG4s+6KgSFnsdKwTW71g1hnNWzU
+ x4hcVAxvZFIszouo1pt0wggrKC8nb60TBa9BHgz/nd8gFlbzVSfEaL+y/oQL7HExNaxdz9Dgs
+ tWAloXlBqha2uAZEZwXZxMI+5sVtDngxRzSLvDFD75czFXyF7ozpAl9WD6jImz8XnefwRp/kK
+ 6Fis0A3G24pHGkK0DudUTvBWo0cQpH3gBC5fEJBcTxg5b+gBO4y14JTs34rqktfrdsBjX+0nN
+ XDh4WOU6nicDMz5fbO2bJBYTH/K0n9v6BJBru3DujfyJf4iPiP+K4+Rls6HmWvDhAkuNAECA6
+ nA1qcyBJzN5LjCFRxwaezYvDJKKnyC6RSNvbWVqfpJtzXyAh1/srigMur/vXYbIeMNXJTPnqf
+ dTtEvP4tFagGJIUgtVHOn9YRoes7H2ehC4BYYRbPVE7gsFyaOPdoBFI6QFi0SajabrhqrdUSv
+ jWmxPMcxHs75iVfTgVebJKfHr+syMCYbXpQAxVzGUGZiQXSUxex5KhsawwmrQ3LOXcODCKDkI
+ FqRIi7Lpeb+/rDE1UMCMKBq0YPWfZw8V41tYhdBRZC/M0s7o7x4m02QLHmbrUCN3mID4PfC2t
+ n7b8U/bfDJcBgI96LqMXomjp3mfYpsFaz+aJKjr+8JaMRiVK/9HeJW+ydbDMf8NRIq9ThTBRW
+ see98NIkNdYDuKAlPH1kAJyeJReCGDhafZguMFIpEnSCk+4aT6TELtweDhFVxoaUkS68/QpCx
+ N0mx6gFD7B3aF4eYxJ+3KK48k26aVgJSTJZ8AO9p5ipnXLYAtDqeGcL4wQ2xEtpDECDwAyPIC
+ FsP5JPfWmxZhNix2tkatnyJvWEjxXGPikMau80mop21+tgXcE8VBNw5xkkCun2j0LiRgqwIwA
+ npLU0gStKtNTXcQMmSwlmOFZ288PpekrblbCOzGT2/ny9JeVVXRQn1lFTwWXiRaRBP5hgyR+H
+ bDtUCE9AErsWXoJZ9jpNhpSVQcucrAV4SPJICLZEOWiSWNifsVXBaxU+vZcg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDExLzE2LzIwMTkgMTE6MTAgUE0sIERhdmlkIE1pbGxlciB3cm90ZToNCj4gRnJvbTog
-THVpZ2kgUml6em8gPGxyaXp6b0Bnb29nbGUuY29tPg0KPiBEYXRlOiBGcmksIDE1IE5vdiAyMDE5
-IDEyOjEyOjI1IC0wODAwDQo+IA0KPj4gZXRodG9vbCBleHBlY3RzIEVUSFRPT0xfR1JYQ0xTUkxB
-TEwgdG8gc2V0IGV0aHRvb2xfcnhuZmMtPmRhdGEgd2l0aCB0aGUNCj4+IHRvdGFsIG51bWJlciBv
-ZiBlbnRyaWVzIGluIHRoZSByeCBjbGFzc2lmaWVyIHRhYmxlLiAgU3VycHJpc2luZ2x5LCBtbHg0
-DQo+PiBpcyBtaXNzaW5nIHRoaXMgcGFydCAoaW4gcHJpbmNpcGxlIGV0aHRvb2wgY291bGQgc3Rp
-bGwgbW92ZSBmb3J3YXJkIGFuZA0KPj4gdHJ5IHRoZSBpbnNlcnQpLg0KPj4NCj4+IFRlc3RlZDog
-Y29tcGlsZWQgYW5kIHJ1biBjb21tYW5kOg0KPj4gCXBoaDEzOn4jIGV0aHRvb2wgLU4gZXRoMSBm
-bG93LXR5cGUgdWRwNCAgcXVldWUgNA0KPj4gCUFkZGVkIHJ1bGUgd2l0aCBJRCAyNTUNCj4+DQo+
-PiBTaWduZWQtb2ZmLWJ5OiBMdWlnaSBSaXp6byA8bHJpenpvQGdvb2dsZS5jb20+DQo+PiBDaGFu
-Z2UtSWQ6IEkxOGE3MmYwOGRmY2ZiNmI5ZjZhYTgwZmJjMTJkNTg1NTNlMWZkYTc2DQo+IA0KPiBM
-dWlnaSwgX2Fsd2F5c18gQ0M6IHRoZSBhcHByb3ByaWF0ZSBtYWludGFpbmVyIHdoZW4gbWFraW5n
-IGNoYW5nZXMgdG8gdGhlDQo+IGtlcm5lbCwgYXMgcGVyIHRoZSB0b3AtbGV2ZWwgTUFJTlRBSU5F
-UlMgZmlsZS4NCj4gDQo+IFRhcmlxIGV0IGFsLiwgcGxlYXNlIHJldmlldy4NCj4gDQoNClJldmll
-d2VkLWJ5OiBUYXJpcSBUb3VrYW4gPHRhcmlxdEBtZWxsYW5veC5jb20+DQoNClRoYW5rcyBmb3Ig
-eW91ciBwYXRjaC4NCg0KVGFyaXENCg==
+=E2=80=A6
+> +++ b/fs/exfat/balloc.c
+=E2=80=A6
++int exfat_count_used_clusters(struct super_block *sb, unsigned int *ret_c=
+ount)
++{
+=E2=80=A6
++	/* FIXME : abnormal bitmap count should be handled as more smart */
++	if (total_clus < count)
++		count =3D total_clus;
+
+Would you like to improve any implementation details according to this com=
+ment?
+
+Regards,
+Markus
