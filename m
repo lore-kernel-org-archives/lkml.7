@@ -2,87 +2,213 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B85C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 20:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF600C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 20:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9EEA20730
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 20:12:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gKO0cy4V"
+	by mail.kernel.org (Postfix) with ESMTP id C5A4C20730
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 20:20:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfKQUMF (ORCPT
+        id S1726316AbfKQUUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 15:12:05 -0500
-Received: from ozlabs.org ([203.11.71.1]:43577 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbfKQUMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 15:12:05 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47GNXf01wcz9sP4;
-        Mon, 18 Nov 2019 07:12:01 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1574021522;
-        bh=8VUBI5cOVihQ21oz7kmfmZxtcYLcrLCpWMhd2o7KqIw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=gKO0cy4VBymzTN64AuRuXp1B1cblFRZjk/YQvmO7ee4Xo3d9yLLh4BffFk7KTp947
-         hP6JSIemf8EBzjUigd730+pNyHokosA3vRUOEZL0Nt+OA3hxaY2b0lSg6jhu98pxPf
-         LElfjqZcjFVEFjoVsFRhTQmJNGlZyw9UTrjC6L4o9iOldwl4mChLYaDTBvR5x9MuLf
-         SG6qMLzwGd108JroaGQr90juTe8oUfQ09dK/uyLei/yZs4Z8/HxxFq4X+6zUP47/bo
-         jP1xD/eEACa1kuTbSsYT9PMk2XlSeMtPG6Lq+meI8A8cx3k4tkOlsErhvWo4R4AvjR
-         IWqn/KitQyrCQ==
-Date:   Mon, 18 Nov 2019 07:11:48 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the net tree
-Message-ID: <20191118071148.10ebf58c@canb.auug.org.au>
+        Sun, 17 Nov 2019 15:20:36 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44365 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbfKQUUg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 15:20:36 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iWR26-0006nD-Sm; Sun, 17 Nov 2019 21:20:30 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iWR25-0004G9-0B; Sun, 17 Nov 2019 21:20:29 +0100
+Date:   Sun, 17 Nov 2019 21:20:28 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathieu Malaterre <malat@debian.org>,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH v2 1/3] pwm: jz4740: Use clocks from TCU driver
+Message-ID: <20191117202028.4chgjv2kulyyq2eu@pengutronix.de>
+References: <20191116173613.72647-1-paul@crapouillou.net>
+ <20191116173613.72647-2-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/bdPsSmE_wU06/eu._/Nr0zO";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191116173613.72647-2-paul@crapouillou.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/bdPsSmE_wU06/eu._/Nr0zO
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sat, Nov 16, 2019 at 06:36:11PM +0100, Paul Cercueil wrote:
+> The ingenic-timer "TCU" driver provides us with clocks, that can be
+> (un)gated, reparented or reclocked from devicetree, instead of having
+> these settings hardcoded in this driver.
+> 
+> While this driver is devicetree-compatible, it is never (as of now)
+> probed from devicetree, so this change does not introduce a ABI problem
+> with current devicetree files.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Tested-by: Mathieu Malaterre <malat@debian.org>
+> Tested-by: Artur Rojek <contact@artur-rojek.eu>
+> ---
+> 
+> Notes:
+>     v2: This patch is now before the patch introducing regmap, so the code
+>         has changed a bit.
+> 
+>  drivers/pwm/Kconfig      |  1 +
+>  drivers/pwm/pwm-jz4740.c | 45 ++++++++++++++++++++++++++++------------
+>  2 files changed, 33 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index e3a2518503ed..e998e5cb01b0 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -225,6 +225,7 @@ config PWM_IMX_TPM
+>  config PWM_JZ4740
+>  	tristate "Ingenic JZ47xx PWM support"
+>  	depends on MACH_INGENIC
+> +	depends on COMMON_CLK
+>  	help
+>  	  Generic PWM framework driver for Ingenic JZ47xx based
+>  	  machines.
+> diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+> index 9d78cc21cb12..fd83644f9323 100644
+> --- a/drivers/pwm/pwm-jz4740.c
+> +++ b/drivers/pwm/pwm-jz4740.c
+> @@ -24,7 +24,6 @@
+>  
+>  struct jz4740_pwm_chip {
+>  	struct pwm_chip chip;
+> -	struct clk *clk;
 
-Hi all,
+What is the motivation to go away from this approach to store the clock?
 
-Commit
+>  };
+>  
+>  static inline struct jz4740_pwm_chip *to_jz4740(struct pwm_chip *chip)
+> @@ -34,6 +33,11 @@ static inline struct jz4740_pwm_chip *to_jz4740(struct pwm_chip *chip)
+>  
+>  static int jz4740_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+>  {
+> +	struct jz4740_pwm_chip *jz = to_jz4740(chip);
+> +	struct clk *clk;
+> +	char clk_name[16];
+> +	int ret;
+> +
+>  	/*
+>  	 * Timers 0 and 1 are used for system tasks, so they are unavailable
+>  	 * for use as PWMs.
+> @@ -41,16 +45,31 @@ static int jz4740_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+>  	if (pwm->hwpwm < 2)
+>  		return -EBUSY;
+>  
+> -	jz4740_timer_start(pwm->hwpwm);
+> +	snprintf(clk_name, sizeof(clk_name), "timer%u", pwm->hwpwm);
+> +
+> +	clk = clk_get(chip->dev, clk_name);
+> +	if (IS_ERR(clk)) 
 
-  34e59836565e ("net/mlx4_en: fix mlx4 ethtool -N insertion")
+		if (PTR_ERR(clk) != -EPROBE_DEFER)
+			dev_err(chip->dev, "Failed to get clock: %pe\n", clk);
 
-is missing a Signed-off-by from its committer.
+> +		return PTR_ERR(clk);
+> +
+> +	ret = clk_prepare_enable(clk);
+> +	if (ret) {
+> +		clk_put(clk);
+> +		return ret;
+> +	}
+> +
+> +	pwm_set_chip_data(pwm, clk);
+>  
+>  	return 0;
+>  }
+>  
+>  static void jz4740_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+>  {
+> +	struct clk *clk = pwm_get_chip_data(pwm);
+> +
+>  	jz4740_timer_set_ctrl(pwm->hwpwm, 0);
 
---=20
-Cheers,
-Stephen Rothwell
+What is the purpose of this call? I would have expected that all these
+would go away when converting to the clk stuff?!
 
---Sig_/bdPsSmE_wU06/eu._/Nr0zO
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> -	jz4740_timer_stop(pwm->hwpwm);
+> +	clk_disable_unprepare(clk);
+> +	clk_put(clk);
+>  }
+>  
+>  static int jz4740_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+> @@ -91,17 +110,21 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  			    const struct pwm_state *state)
+>  {
+>  	struct jz4740_pwm_chip *jz4740 = to_jz4740(pwm->chip);
+> +	struct clk *clk = pwm_get_chip_data(pwm),
+> +		   *parent_clk = clk_get_parent(clk);
+> +	unsigned long rate, period, duty;
+>  	unsigned long long tmp;
+> -	unsigned long period, duty;
+>  	unsigned int prescaler = 0;
+>  	uint16_t ctrl;
+>  
+> -	tmp = (unsigned long long)clk_get_rate(jz4740->clk) * state->period;
+> +	rate = clk_get_rate(parent_clk);
 
------BEGIN PGP SIGNATURE-----
+Why is it the parent's rate that is relevant here?
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3RqYQACgkQAVBC80lX
-0Gy6kAf8Dd+UOzY0vPjgNn18+xiD3nzk9WBSYBKyd++9Kq5nL4XodjrxHalpjxqB
-oPixcCGhgyaWRbgGThDq0FBz6Ux6meG2hbI9SYMp866N1iDNtweagvGcCM7Kz0BL
-cKovC7Ooyj5fgwlbWgw+TGMx04M8KNnsW4X8hdWo0sxQLI/njA8ry0RBO2K8LNEI
-jx5fDMDn8D2q12z7e3jUmhDWYEhLxlDliqMSELInEn6KAjHxRsbF9ATEYzfWRuZ6
-Dcn+vLx1W2KE+f86COxRQ9Tnp8I+3dg8Hn/My3XmjnwWIPW8G010CMi3B7e5axFQ
-eX/9M3UNUUukT+OgvMmGEaQhevsEiQ==
-=vl9C
------END PGP SIGNATURE-----
+> +	tmp = (unsigned long long)rate * state->period;
+>  	do_div(tmp, 1000000000);
+>  	period = tmp;
+>  
+>  	while (period > 0xffff && prescaler < 6) {
+>  		period >>= 2;
+> +		rate >>= 2;
+>  		++prescaler;
+>  	}
+>  
+> @@ -117,14 +140,14 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  
+>  	jz4740_pwm_disable(chip, pwm);
+>  
+> +	clk_set_rate(clk, rate);
 
---Sig_/bdPsSmE_wU06/eu._/Nr0zO--
+This function's return code must be checked.
+
+>  	jz4740_timer_set_count(pwm->hwpwm, 0);
+>  	jz4740_timer_set_duty(pwm->hwpwm, duty);
+>  	jz4740_timer_set_period(pwm->hwpwm, period);
+>  
+> -	ctrl = JZ_TIMER_CTRL_PRESCALER(prescaler) | JZ_TIMER_CTRL_SRC_EXT |
+> -		JZ_TIMER_CTRL_PWM_ABBRUPT_SHUTDOWN;
+> -
+> -	jz4740_timer_set_ctrl(pwm->hwpwm, ctrl);
+> +	ctrl = jz4740_timer_get_ctrl(pwm->hwpwm);
+> +	ctrl |= JZ_TIMER_CTRL_PWM_ABBRUPT_SHUTDOWN;
+>  
+>  	switch (state->polarity) {
+>  	case PWM_POLARITY_NORMAL:
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
