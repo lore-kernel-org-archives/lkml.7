@@ -2,262 +2,162 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA1FC432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 22:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F71CC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 23:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4953206CC
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 22:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1705E206CC
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 23:00:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="qnCxcxZ7"
+	dkim=pass (2048-bit key) header.d=kudzu-us.20150623.gappssmtp.com header.i=@kudzu-us.20150623.gappssmtp.com header.b="0+akr7oq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbfKQW6y (ORCPT
+        id S1726442AbfKQXAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 17:58:54 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:53478 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbfKQW6y (ORCPT
+        Sun, 17 Nov 2019 18:00:33 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:43199 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726225AbfKQXAc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 17:58:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1574031530; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rehDJHT5XgqrmrR5yw6KriOCF7C12z5xBt80ruxYe4w=;
-        b=qnCxcxZ767OA9B9hbb4y8OOzz0LE/OBCZqaCT5zngqzggHNrM4/DEzUoESLfcPC0ZDXWPv
-        4vyhLQh+WFOgCyfu03wNvKy17g+Dxo5fnf7WZfYMU48FC1I8QvzUctHkEEGqQIAHRgBz+W
-        xj26vxDe4ziGzaW7t7yw15WtXhSROKA=
-Date:   Sun, 17 Nov 2019 23:58:43 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 1/3] pwm: jz4740: Use clocks from TCU driver
-To:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-Message-Id: <1574031523.3.0@crapouillou.net>
-In-Reply-To: <20191117202028.4chgjv2kulyyq2eu@pengutronix.de>
-References: <20191116173613.72647-1-paul@crapouillou.net>
-        <20191116173613.72647-2-paul@crapouillou.net>
-        <20191117202028.4chgjv2kulyyq2eu@pengutronix.de>
+        Sun, 17 Nov 2019 18:00:32 -0500
+Received: by mail-il1-f193.google.com with SMTP id r9so14230816ilq.10
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 15:00:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d/1Y1QsI93gAHAKWqh4KEcte8aqnaRPIZE1b5kmVqj0=;
+        b=0+akr7oqEpeSO2u3AMLVbtvvWyYay1wmJK9jgvoxAvQHfv6K0sf07DlcIcnsrq9TT4
+         yEYe3e9WgTta6rK2pHa1RQJzSonqANR2Pu62/k522iBij0i3EX1MsfVSJgHfIIk6iq9Q
+         2e3hlLPWuGiveuqjs+9Xi3E/ElfVs5vmilEMN7HgTo/VTH0cJp0Ktb9LCZ84B4LbSoKQ
+         lh8l0cKzQKJ2OYfcyJJq8TU6aC5/WXnK/oz2cn1W/5gLamgrSGUehMTdliEVx13cnD76
+         CTmxp1cHU6tL6gO0eHgBD+ziLaMOvLo0OOAzrCkFhdN5xe/rggFHr88x5FoZzRuBBiVj
+         qdaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d/1Y1QsI93gAHAKWqh4KEcte8aqnaRPIZE1b5kmVqj0=;
+        b=oLBKQash+F00twJNVmLgQ8CS/lG+F2MFBJjwFFX8cZ8U9nz2ryIKqdPt2s+HJFlUUR
+         jwUU4I/RgPdCdBYhYNGAGLY+WoVeOtVEu65n9UxFE0rbymAb3pjMuGeAXhlJ9NylxQ4y
+         B1RkGJ57Djy4OaWjuUKycZBpRUkBQjKeuHMUUF6I0LXk4Ub7wt/2R+YADJSgzazn41jz
+         BJerlbIjvf1ShnXA7VUyyRbdtl4I514hVuIryV8grrYF/B8O6EXNwK6ZGBcgpO/T6J3b
+         6L9joevVPsuYmnuO1h/pe6rvp/2MqRxONxBRPpNCQIiLHciP9XySS2E/zIiSTtlo+Lgo
+         bMsw==
+X-Gm-Message-State: APjAAAX2EUAzxpLbCH6EqA7/G8lCjsx/XKxrxNcH9DsclNz1HAB1StgG
+        oCxhJGINJWDNltoUYKRu3BJZy167AIc200RwLLhlFw==
+X-Google-Smtp-Source: APXvYqwWdy6zFjXkz0tCZCsaU/pcQL2aDpb3eh5HwQqdwpJhIQ195TtZ+VfqQFr+VhwLVGAEVyjVaDm+UpscebhFvXc=
+X-Received: by 2002:a92:46c9:: with SMTP id d70mr11936574ilk.159.1574031631207;
+ Sun, 17 Nov 2019 15:00:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <1573119336-107732-1-git-send-email-linjiasen@hygon.cn>
+In-Reply-To: <1573119336-107732-1-git-send-email-linjiasen@hygon.cn>
+From:   Jon Mason <jdmason@kudzu.us>
+Date:   Sun, 17 Nov 2019 18:00:17 -0500
+Message-ID: <CAPoiz9wAJz=Hqb6Os=9AHHv_NGpZ8uCaAuOC=aUTkASKdfs9WQ@mail.gmail.com>
+Subject: Re: [PATCH] NTB: Fix an error in get link status
+To:     Jiasen Lin <linjiasen@hygon.cn>
+Cc:     "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-ntb <linux-ntb@googlegroups.com>, linjiasen007@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe,
+On Thu, Nov 7, 2019 at 4:37 AM Jiasen Lin <linjiasen@hygon.cn> wrote:
+>
+> The offset of PCIe Capability Header for AMD and HYGON NTB is 0x64,
+> but the macro which named "AMD_LINK_STATUS_OFFSET" is defined as 0x68.
+> It is offset of Device Capabilities Reg rather than Link Control Reg.
+>
+> This code trigger an error in get link statsus:
+>
+>         cat /sys/kernel/debug/ntb_hw_amd/0000:43:00.1/info
+>                 LNK STA -               0x8fa1
+>                 Link Status -           Up
+>                 Link Speed -            PCI-E Gen 0
+>                 Link Width -            x0
+>
+> This patch use pcie_capability_read_dword to get link status.
+> After fix this issue, we can get link status accurately:
+>
+>         cat /sys/kernel/debug/ntb_hw_amd/0000:43:00.1/info
+>                 LNK STA -               0x11030042
+>                 Link Status -           Up
+>                 Link Speed -            PCI-E Gen 3
+>                 Link Width -            x16
+
+No response from AMD maintainers, but it looks like you are correct.
+
+This needs a "Fixes:" line here.  I took the liberty of adding one to
+this patch.
+
+> Signed-off-by: Jiasen Lin <linjiasen@hygon.cn>
+> ---
+>  drivers/ntb/hw/amd/ntb_hw_amd.c | 5 +++--
+>  drivers/ntb/hw/amd/ntb_hw_amd.h | 1 -
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.c b/drivers/ntb/hw/amd/ntb_hw_amd.c
+> index 156c2a1..ae91105 100644
+> --- a/drivers/ntb/hw/amd/ntb_hw_amd.c
+> +++ b/drivers/ntb/hw/amd/ntb_hw_amd.c
+> @@ -855,8 +855,8 @@ static int amd_poll_link(struct amd_ntb_dev *ndev)
+>
+>         ndev->cntl_sta = reg;
+>
+> -       rc = pci_read_config_dword(ndev->ntb.pdev,
+> -                                  AMD_LINK_STATUS_OFFSET, &stat);
+> +       rc = pcie_capability_read_dword(ndev->ntb.pdev,
+> +                                  PCI_EXP_LNKCTL, &stat);
+>         if (rc)
+>                 return 0;
+>         ndev->lnk_sta = stat;
+> @@ -1139,6 +1139,7 @@ static const struct ntb_dev_data dev_data[] = {
+>  static const struct pci_device_id amd_ntb_pci_tbl[] = {
+>         { PCI_VDEVICE(AMD, 0x145b), (kernel_ulong_t)&dev_data[0] },
+>         { PCI_VDEVICE(AMD, 0x148b), (kernel_ulong_t)&dev_data[1] },
+> +       { PCI_VDEVICE(HYGON, 0x145b), (kernel_ulong_t)&dev_data[0] },
+
+This should be a separate patch.  I took the liberty of splitting it
+off into a unique patch and attributing it to you.  I've pushed them
+to the ntb-next branch on
+https://github.com/jonmason/ntb
+
+Please verify everything looks acceptable to you (given the changes I
+did above that are attributed to you).  Also, testing of the latest
+code is always appreciated.
+
+Thanks,
+Jon
 
 
-Le dim., nov. 17, 2019 at 21:20, Uwe Kleine-K=F6nig=20
-<u.kleine-koenig@pengutronix.de> a =E9crit :
-> On Sat, Nov 16, 2019 at 06:36:11PM +0100, Paul Cercueil wrote:
->>  The ingenic-timer "TCU" driver provides us with clocks, that can be
->>  (un)gated, reparented or reclocked from devicetree, instead of=20
->> having
->>  these settings hardcoded in this driver.
->>=20
->>  While this driver is devicetree-compatible, it is never (as of now)
->>  probed from devicetree, so this change does not introduce a ABI=20
->> problem
->>  with current devicetree files.
->>=20
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  Tested-by: Mathieu Malaterre <malat@debian.org>
->>  Tested-by: Artur Rojek <contact@artur-rojek.eu>
->>  ---
->>=20
->>  Notes:
->>      v2: This patch is now before the patch introducing regmap, so=20
->> the code
->>          has changed a bit.
->>=20
->>   drivers/pwm/Kconfig      |  1 +
->>   drivers/pwm/pwm-jz4740.c | 45=20
->> ++++++++++++++++++++++++++++------------
->>   2 files changed, 33 insertions(+), 13 deletions(-)
->>=20
->>  diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
->>  index e3a2518503ed..e998e5cb01b0 100644
->>  --- a/drivers/pwm/Kconfig
->>  +++ b/drivers/pwm/Kconfig
->>  @@ -225,6 +225,7 @@ config PWM_IMX_TPM
->>   config PWM_JZ4740
->>   	tristate "Ingenic JZ47xx PWM support"
->>   	depends on MACH_INGENIC
->>  +	depends on COMMON_CLK
->>   	help
->>   	  Generic PWM framework driver for Ingenic JZ47xx based
->>   	  machines.
->>  diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
->>  index 9d78cc21cb12..fd83644f9323 100644
->>  --- a/drivers/pwm/pwm-jz4740.c
->>  +++ b/drivers/pwm/pwm-jz4740.c
->>  @@ -24,7 +24,6 @@
->>=20
->>   struct jz4740_pwm_chip {
->>   	struct pwm_chip chip;
->>  -	struct clk *clk;
->=20
-> What is the motivation to go away from this approach to store the=20
-> clock?
-
-It's actually not the same clock. Instead of obtaining "ext" clock from=20
-the probe, we obtain "timerX" clocks (X being the PWM channel) from the=20
-request callback.
-
-
->>   };
->>=20
->>   static inline struct jz4740_pwm_chip *to_jz4740(struct pwm_chip=20
->> *chip)
->>  @@ -34,6 +33,11 @@ static inline struct jz4740_pwm_chip=20
->> *to_jz4740(struct pwm_chip *chip)
->>=20
->>   static int jz4740_pwm_request(struct pwm_chip *chip, struct=20
->> pwm_device *pwm)
->>   {
->>  +	struct jz4740_pwm_chip *jz =3D to_jz4740(chip);
->>  +	struct clk *clk;
->>  +	char clk_name[16];
->>  +	int ret;
->>  +
->>   	/*
->>   	 * Timers 0 and 1 are used for system tasks, so they are=20
->> unavailable
->>   	 * for use as PWMs.
->>  @@ -41,16 +45,31 @@ static int jz4740_pwm_request(struct pwm_chip=20
->> *chip, struct pwm_device *pwm)
->>   	if (pwm->hwpwm < 2)
->>   		return -EBUSY;
->>=20
->>  -	jz4740_timer_start(pwm->hwpwm);
->>  +	snprintf(clk_name, sizeof(clk_name), "timer%u", pwm->hwpwm);
->>  +
->>  +	clk =3D clk_get(chip->dev, clk_name);
->>  +	if (IS_ERR(clk))
->=20
-> 		if (PTR_ERR(clk) !=3D -EPROBE_DEFER)
-> 			dev_err(chip->dev, "Failed to get clock: %pe\n", clk);
-
-Never heard about that %pe. Will do that.
-
-
->=20
->>  +		return PTR_ERR(clk);
->>  +
->>  +	ret =3D clk_prepare_enable(clk);
->>  +	if (ret) {
->>  +		clk_put(clk);
->>  +		return ret;
->>  +	}
->>  +
->>  +	pwm_set_chip_data(pwm, clk);
->>=20
->>   	return 0;
->>   }
->>=20
->>   static void jz4740_pwm_free(struct pwm_chip *chip, struct=20
->> pwm_device *pwm)
->>   {
->>  +	struct clk *clk =3D pwm_get_chip_data(pwm);
->>  +
->>   	jz4740_timer_set_ctrl(pwm->hwpwm, 0);
->=20
-> What is the purpose of this call? I would have expected that all these
-> would go away when converting to the clk stuff?!
-
-Some go away in patch [1/3] as they are clock-related, this one will go=20
-away in patch [2/3] when the driver is converted to use regmap.
-
->=20
->>  -	jz4740_timer_stop(pwm->hwpwm);
->>  +	clk_disable_unprepare(clk);
->>  +	clk_put(clk);
->>   }
->>=20
->>   static int jz4740_pwm_enable(struct pwm_chip *chip, struct=20
->> pwm_device *pwm)
->>  @@ -91,17 +110,21 @@ static int jz4740_pwm_apply(struct pwm_chip=20
->> *chip, struct pwm_device *pwm,
->>   			    const struct pwm_state *state)
->>   {
->>   	struct jz4740_pwm_chip *jz4740 =3D to_jz4740(pwm->chip);
->>  +	struct clk *clk =3D pwm_get_chip_data(pwm),
->>  +		   *parent_clk =3D clk_get_parent(clk);
->>  +	unsigned long rate, period, duty;
->>   	unsigned long long tmp;
->>  -	unsigned long period, duty;
->>   	unsigned int prescaler =3D 0;
->>   	uint16_t ctrl;
->>=20
->>  -	tmp =3D (unsigned long long)clk_get_rate(jz4740->clk) *=20
->> state->period;
->>  +	rate =3D clk_get_rate(parent_clk);
->=20
-> Why is it the parent's rate that is relevant here?
-
-We calculate the divider to be used for the "timerX" clock, so we need=20
-to know the parent clock.
-
-
->>  +	tmp =3D (unsigned long long)rate * state->period;
->>   	do_div(tmp, 1000000000);
->>   	period =3D tmp;
->>=20
->>   	while (period > 0xffff && prescaler < 6) {
->>   		period >>=3D 2;
->>  +		rate >>=3D 2;
->>   		++prescaler;
->>   	}
->>=20
->>  @@ -117,14 +140,14 @@ static int jz4740_pwm_apply(struct pwm_chip=20
->> *chip, struct pwm_device *pwm,
->>=20
->>   	jz4740_pwm_disable(chip, pwm);
->>=20
->>  +	clk_set_rate(clk, rate);
->=20
-> This function's return code must be checked.
-
-In practice this will never fail, but OK, will do.
-
-Cheers,
--Paul
-
->=20
->>   	jz4740_timer_set_count(pwm->hwpwm, 0);
->>   	jz4740_timer_set_duty(pwm->hwpwm, duty);
->>   	jz4740_timer_set_period(pwm->hwpwm, period);
->>=20
->>  -	ctrl =3D JZ_TIMER_CTRL_PRESCALER(prescaler) | JZ_TIMER_CTRL_SRC_EXT=20
->> |
->>  -		JZ_TIMER_CTRL_PWM_ABBRUPT_SHUTDOWN;
->>  -
->>  -	jz4740_timer_set_ctrl(pwm->hwpwm, ctrl);
->>  +	ctrl =3D jz4740_timer_get_ctrl(pwm->hwpwm);
->>  +	ctrl |=3D JZ_TIMER_CTRL_PWM_ABBRUPT_SHUTDOWN;
->>=20
->>   	switch (state->polarity) {
->>   	case PWM_POLARITY_NORMAL:
->=20
-> Best regards
-> Uwe
->=20
+>         { 0, }
+>  };
+>  MODULE_DEVICE_TABLE(pci, amd_ntb_pci_tbl);
+> diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.h b/drivers/ntb/hw/amd/ntb_hw_amd.h
+> index 139a307..39e5d18 100644
+> --- a/drivers/ntb/hw/amd/ntb_hw_amd.h
+> +++ b/drivers/ntb/hw/amd/ntb_hw_amd.h
+> @@ -53,7 +53,6 @@
+>  #include <linux/pci.h>
+>
+>  #define AMD_LINK_HB_TIMEOUT    msecs_to_jiffies(1000)
+> -#define AMD_LINK_STATUS_OFFSET 0x68
+>  #define NTB_LIN_STA_ACTIVE_BIT 0x00000002
+>  #define NTB_LNK_STA_SPEED_MASK 0x000F0000
+>  #define NTB_LNK_STA_WIDTH_MASK 0x03F00000
 > --
-> Pengutronix e.K.                           | Uwe Kleine-K=F6nig       =20
->     |
-> Industrial Linux Solutions                 |=20
-> https://www.pengutronix.de/ |
-
-=
-
+> 2.7.4
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-ntb" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-ntb+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/linux-ntb/1573119336-107732-1-git-send-email-linjiasen%40hygon.cn.
