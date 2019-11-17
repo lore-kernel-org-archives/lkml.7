@@ -2,97 +2,114 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A25C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 13:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC5CC43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 14:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2658F20718
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 13:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67EFE2084C
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 14:00:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mykernel.net header.i=cgxu519@mykernel.net header.b="a6ST8dJZ"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="DjU0C/ID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbfKQNgY (ORCPT
+        id S1726203AbfKQN77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 08:36:24 -0500
-Received: from sender3-of-o52.zoho.com.cn ([124.251.121.247]:21947 "EHLO
-        sender2.zoho.com.cn" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726037AbfKQNgY (ORCPT
+        Sun, 17 Nov 2019 08:59:59 -0500
+Received: from mail-wr1-f53.google.com ([209.85.221.53]:44952 "EHLO
+        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfKQN77 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 08:36:24 -0500
-X-Greylist: delayed 918 seconds by postgrey-1.27 at vger.kernel.org; Sun, 17 Nov 2019 08:36:06 EST
-ARC-Seal: i=1; a=rsa-sha256; t=1573996834; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=gA3utkj4m2vuOiQTTK0cNW72xnBOOzoUujRHi6BnJTkBehIP9Lm4IEBh/60ilaYy3Ni9jOvdLNeC3BEGurID9QaT0mojPUFZ+H0iPqBffBKF/2lzyXtJLoFTEdWlpbCx69MEWqBdeOgQpsOb13mpXd2BiVsfMD8qKz5SG8bjBpY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1573996834; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
-        bh=bbpR7jOn1tWkOik0+7zAOlYex1xS4WFEXsmnmFvAWdM=; 
-        b=fTujq2cDWnhR6N1o4/GnSQHy2AQBZEYkaOxjZyjMar8kuswJ4BcUpRAgBAD+Ghc+NchZG790iJx1NRSxWoZlVeIVyF27f91baJCgbU/g82BFWINR95mFImSIK01ssY1nwM9Eu0HuOy9u7XYkopKik4nDAlsARydEqJBjs/qSQmI=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=mykernel.net;
-        spf=pass  smtp.mailfrom=cgxu519@mykernel.net;
-        dmarc=pass header.from=<cgxu519@mykernel.net> header.from=<cgxu519@mykernel.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1573996834;
-        s=zohomail; d=mykernel.net; i=cgxu519@mykernel.net;
-        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        l=1041; bh=bbpR7jOn1tWkOik0+7zAOlYex1xS4WFEXsmnmFvAWdM=;
-        b=a6ST8dJZeoCSSHgVMx4KdtjwQZE9LiVeog9uG5y9vrQf8Cf9OvBagq5KB2WyyDOo
-        41qUey/EFhsUtVBmokHXXvG7xTX4pUdtpfzlq2/D3SDLyzmWTtdWH2ugwHm+3mNVXxz
-        Hkz85JIt9VRN745mztCJj8VlddReLmhsto+t6Oz8=
-Received: from localhost.localdomain (113.116.50.122 [113.116.50.122]) by mx.zoho.com.cn
-        with SMTPS id 1573996831319973.1883777334837; Sun, 17 Nov 2019 21:20:31 +0800 (CST)
-From:   Chengguang Xu <cgxu519@mykernel.net>
-To:     jack@suse.com
-Cc:     linux-kernel@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>
-Message-ID: <20191117132028.19564-1-cgxu519@mykernel.net>
-Subject: [PATCH] quota: remove unnecessary check in dquot_add_inodes() and dquot_add_space()
-Date:   Sun, 17 Nov 2019 21:20:28 +0800
-X-Mailer: git-send-email 2.21.0
+        Sun, 17 Nov 2019 08:59:59 -0500
+Received: by mail-wr1-f53.google.com with SMTP id f2so16350600wrs.11;
+        Sun, 17 Nov 2019 05:59:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=AI7oneBVr9Sh8KI/EU2QuzQzAJVjV4haI51WvzEvAjc=;
+        b=DjU0C/ID1NfUiIWc88ECCm8hYmVDymKmODomd9NlTEsQA8kBmsbs9Yaj+kV6+S3A5Y
+         cVEOSM45iyG8La96kCE9baDwHRe7utZmIwOLfBjEvaTeUIvE5zqLB02xRFbOfu2VCHU8
+         dSreasOblG5NC6BNBkl60rb8ag1Et8+4ALPBseCMh438x6pL4cnq9B/li7a9Ss5gfygZ
+         SgnQxzr7dY1oFI26nE4jTwDuvXdIyYdjNLcMhNr4pTdUXSMwE7IfUzkVgkjtKrLpscEL
+         xeru+GS5Jn/GLwnLZdcdvCOH4y70Yvft70eW4Y1ZXWfkp5kmSZrEWNiLBHGLU6CyZMrG
+         6OLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=AI7oneBVr9Sh8KI/EU2QuzQzAJVjV4haI51WvzEvAjc=;
+        b=bZMPBcxaHd2eAENk6IlqugwNl2okQXR7CU0kiIKZxantIJArxFyABQ5nloAX6hDtyi
+         scFS1BYZEWUY90lYZeecepgpMUCPj+dGWuzDDiqyxSZh2DFXEfQUhM00ABnDzNBSGC5l
+         1MeLnipzDnL46Xmq4XCwXGmZT7EfwwO9A2K/UmGAO2fBSmrCj3gUcCff7JVLVLQH68Xk
+         M6D4EQ918ezqGeAE4s0XWRe4i3SjBtwv6eu+tKlb3Ete78x3Rawz8sG/zg8GNNmBjhjK
+         QQO/5onyzGW0BGJ/YdKYpYA6SJIdPs4NzfGPpNOWWd6ab3IWQBZ00BdKvCLd1JARoYdl
+         afDQ==
+X-Gm-Message-State: APjAAAVMjwGNF3MXgozyNc2uLTxNNOdWFIA6taxBhejk8bZN2N22RYYV
+        dkZaa/dwKCHWh7yI3ZhXFaI=
+X-Google-Smtp-Source: APXvYqxuh9+V3F0zaSkPtijZBTMVQwPp1ojlde26tDjEtxtx16d/NlKmKiJeZpZDN+YTugtSvMi/+A==
+X-Received: by 2002:a5d:42c8:: with SMTP id t8mr20309817wrr.87.1573999196558;
+        Sun, 17 Nov 2019 05:59:56 -0800 (PST)
+Received: from localhost.localdomain (p200300F1371CB100428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:371c:b100:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id n65sm18004803wmf.28.2019.11.17.05.59.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Nov 2019 05:59:56 -0800 (PST)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     narmstrong@baylibre.com, jbrunet@baylibre.com,
+        linux-amlogic@lists.infradead.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 1/5] dt-bindings: clock: meson8b: add the clock inputs
+Date:   Sun, 17 Nov 2019 14:59:23 +0100
+Message-Id: <20191117135927.135428-2-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191117135927.135428-1-martin.blumenstingl@googlemail.com>
+References: <20191117135927.135428-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
-Content-Type: text/plain; charset=utf8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After passed grace time we treat softlimit as hardlimit,
-so we don't have to compare desire usage with softlimit
-in this place.
+The clock controller on Meson8/Meson8b/Meson8m2 has three (known)
+inputs:
+- "xtal": the main 24MHz crystal
+- "ddr_pll": some of the audio clocks use the output of the DDR PLL as
+  input
+- "clk_32k": an optional clock signal which can be connected to GPIOAO_6
+  (which then has to be switched to the CLK_32K_IN function)
 
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
+Add the inputs to the documentation so we can wire up these inputs in a
+follow-up patch.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- fs/quota/dquot.c | 2 --
- 1 file changed, 2 deletions(-)
+ .../devicetree/bindings/clock/amlogic,meson8b-clkc.txt       | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-index 6e826b454082..97740077afac 100644
---- a/fs/quota/dquot.c
-+++ b/fs/quota/dquot.c
-@@ -1283,7 +1283,6 @@ static int dquot_add_inodes(struct dquot *dquot, qsiz=
-e_t inodes,
- =09}
-=20
- =09if (dquot->dq_dqb.dqb_isoftlimit &&
--=09    newinodes > dquot->dq_dqb.dqb_isoftlimit &&
- =09    dquot->dq_dqb.dqb_itime &&
- =09    ktime_get_real_seconds() >=3D dquot->dq_dqb.dqb_itime &&
-             !ignore_hardlimit(dquot)) {
-@@ -1333,7 +1332,6 @@ static int dquot_add_space(struct dquot *dquot, qsize=
-_t space,
- =09}
-=20
- =09if (dquot->dq_dqb.dqb_bsoftlimit &&
--=09    tspace > dquot->dq_dqb.dqb_bsoftlimit &&
- =09    dquot->dq_dqb.dqb_btime &&
- =09    ktime_get_real_seconds() >=3D dquot->dq_dqb.dqb_btime &&
-             !ignore_hardlimit(dquot)) {
---=20
-2.21.0
-
-
+diff --git a/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
+index 4d94091c1d2d..cc51e4746b3b 100644
+--- a/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
++++ b/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
+@@ -11,6 +11,11 @@ Required Properties:
+ 	- "amlogic,meson8m2-clkc" for Meson8m2 (S812) SoCs
+ - #clock-cells: should be 1.
+ - #reset-cells: should be 1.
++- clocks: list of clock phandles, one for each entry in clock-names
++- clock-names: should contain the following:
++  * "xtal": the 24MHz system oscillator
++  * "ddr_pll": the DDR PLL clock
++  * "clk_32k": (if present) the 32kHz clock signal from GPIOAO_6 (CLK_32K_IN)
+ 
+ Parent node should have the following properties :
+ - compatible: "amlogic,meson-hhi-sysctrl", "simple-mfd", "syscon"
+-- 
+2.24.0
 
