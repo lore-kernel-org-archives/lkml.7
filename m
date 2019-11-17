@@ -2,85 +2,259 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A11FC43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 16:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DB7C432C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 16:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47C832075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 16:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A41F22075E
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 16:07:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kudzu-us.20150623.gappssmtp.com header.i=@kudzu-us.20150623.gappssmtp.com header.b="uSCyKxOR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DNSDbdPH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbfKQQHC (ORCPT
+        id S1726425AbfKQQHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 11:07:02 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:34940 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbfKQQHC (ORCPT
+        Sun, 17 Nov 2019 11:07:53 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37146 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbfKQQHx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 11:07:02 -0500
-Received: by mail-il1-f194.google.com with SMTP id z12so13702863ilp.2
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 08:07:01 -0800 (PST)
+        Sun, 17 Nov 2019 11:07:53 -0500
+Received: by mail-wr1-f66.google.com with SMTP id t1so16575595wrv.4;
+        Sun, 17 Nov 2019 08:07:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uS4LgT4jvENLa8rsriScWM6XKaZKeGJUdSUfbJgFR9Q=;
-        b=uSCyKxORg+/h0PESXpWpQcbCRC9CmxXmwQKN1IdqP93Ja2+hImSW4ecRRH36sBNOAz
-         Nc7W0Co5B9jzpeci/t3vCqhi5OS55RCqhYK0xOJTAvFr7P5Lk4XbBpnn6eFggUZ1Pjy+
-         4fChuXZAtgdhRPmKM0w7j3HGdlkIHiUKQxkvbH5gvL+UnmxBoVb6AvWHo9b/POwB9B8x
-         wJ/2ho8RPwYl+BQ6XVdN7qmyDDJnmos14k/f4VpzpEwmsSA7eG23cdK50NX9FNpTTbzA
-         NeDv3rrQ2p/tpFy3wjdfsWfuoZtlAai3zIBZUgoGwviRkJ9LnTPsFPe0NNlwZkRYQ7r2
-         O5Ag==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3ZfuFAz9i7eipM0Ww7pnmorkcOiDa7xzRC8FduXZgjg=;
+        b=DNSDbdPHmy5xZPJPbG6wCk5AKQstG/YcSuLATZewIeg/wyV3o2TvqAHibr3blWGTAg
+         yeFr+03gdbeArSnM2RFZrEbTZT7Qq1GYx6k0jme4TQzu75tY2tnxtRj7gwxXc26dPA7w
+         FIG2QpsiJZGmtZ72FGzK/ZWkPuZvs3yq6vIgrN08z3SdZGfsrBwxC1NljL54euWxikt/
+         G6KRGuGEZ4A7Ng4wa+Y2NVjv3ZLha3GIEU+hBlFjJ54S48jfzBC4mkZ46SP7sYXT62N3
+         smT9ztlH1U+Bit8r0WjSXaai10kVroMj7CWx8xNRPp/GBbUmcywM/rAIqlith64d5ezr
+         atew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uS4LgT4jvENLa8rsriScWM6XKaZKeGJUdSUfbJgFR9Q=;
-        b=oZK+COt5pPd6hXTUo5HBNwmPpXgDnPkHvgu3WUTfadgsC11YzeG0DzPX44FMeAJoaV
-         7MMfb30zlszhrrin2a87vMuW2rstkxcPXP395lcFp5DkbTRCgGxMlSFCDmpZbT0uvNoe
-         kU6U2vZ9YGNhEBSsHCH5mbkWuzBp6vowgDs7SYJWw9Vel1PMTz1aRB25r9Q8z8guqwe7
-         YsTHBJbbmKcl0UDp0ySyjxqsWHmaPbfZU/owEeSGiEhhgDywF3woFeHnxVq7TahiADkO
-         wFNRqcbJdDZTwzOVt5Hyna4KwElsRBB6N74KwSzqtZaz3xuvGOQjNPsKxxhyn5ybwZIH
-         WAXg==
-X-Gm-Message-State: APjAAAVUL1XgNvvQ/NvXNyWg6U9L0XGu9fUKLAQPU0/lo4WzpI5ITWxn
-        uh0uAd7174LwoaymCb0Puia1GTPl046YfmL7xqmy/P6P1Mo=
-X-Google-Smtp-Source: APXvYqyhX4WlL4Q71g4CdNek3Kk4dFtUbgCBo4DXfQ6Lty+XVSKNK+0TzcHKnyfC0JkYBpN2hCzgTBq9DcN/zremN9g=
-X-Received: by 2002:a92:46c9:: with SMTP id d70mr10672598ilk.159.1574006821132;
- Sun, 17 Nov 2019 08:07:01 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3ZfuFAz9i7eipM0Ww7pnmorkcOiDa7xzRC8FduXZgjg=;
+        b=OuHFav4JcwrwXd0V12SzB+7jTQvRAvIhpWBNH/gzsqS4DLwVywGP+vSF5ucTnrGiPJ
+         DdzVRYZqr/ccF+0A6zTmKlnH56dzs0X7xBxR0PtP8bcKVsWDHjfAHOXcpuKaWSPGHClI
+         bVMvTGZ0+jouyEdEVGw5aN68o+SILtsoEtlAgAv4URB5sxmSqW7KJ16DoHESx/xVz5f/
+         kaWxR5wVNeEPUqqq+IWaOkuT4Ez2A2Q5neFmjIsz2YKkSixRyDD26gIGkabEf0XGghUG
+         3r8J/VqyweaCrguKXJqVie264kQvnSpq3x8WDh4i7k7zi4ugQYnYnd0oSQcEEY/7/NYg
+         NXVg==
+X-Gm-Message-State: APjAAAX+v8IRlsU7vye22sMb0kU3PP2fDCtQyeOTQvWd/fwLKQbvubvL
+        Ejzz5eZaGI2+kwDO4YCaInc=
+X-Google-Smtp-Source: APXvYqxRoa5u/ttV4Rk72n7ofhq/PCWlE8ojnC2DDYLZCRCyx7oQ4nfIBiXuztaoLUJCHuNxPUt0ow==
+X-Received: by 2002:a05:6000:354:: with SMTP id e20mr28087903wre.17.1574006869853;
+        Sun, 17 Nov 2019 08:07:49 -0800 (PST)
+Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id a5sm19017916wrv.56.2019.11.17.08.07.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Nov 2019 08:07:49 -0800 (PST)
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mripard@kernel.org, wens@csie.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH] crypto: allwinner: sun8i-ce: enable working on big endian
+Date:   Sun, 17 Nov 2019 17:07:45 +0100
+Message-Id: <20191117160745.32197-1-clabbe.montjoie@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20191113071836.21041-1-hch@lst.de>
-In-Reply-To: <20191113071836.21041-1-hch@lst.de>
-From:   Jon Mason <jdmason@kudzu.us>
-Date:   Sun, 17 Nov 2019 11:06:50 -0500
-Message-ID: <CAPoiz9x9TrC5Pe=pGB=irgV9YreJCp4ZCCSZYoGV4t34neV-JA@mail.gmail.com>
-Subject: Re: Remove the calgary iommu driver
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Muli Ben-Yehuda <mulix@mulix.org>, x86@kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 2:18 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> Hi all,
->
-> per the discussion a few month ago with Jon we've agreed that the
-> calgary iommu driver is obsolete and in the way. Jon said back then
-> he'd send a patch to remove it, but as that didn't happen I prepared
-> one, plus two small cleanups touching the same area.
+On big endian kernel, the sun8i-ce crypto driver does not works.
+This patch do the necessary modification to permit it to work on BE
+kernel (setting descriptor entries as __le32 and adding some cpu_to_le32)
 
+Fixes: 06f751b61329 ("crypto: allwinner - Add sun8i-ce Crypto Engine")
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+---
+ .../allwinner/sun8i-ce/sun8i-ce-cipher.c      | 50 +++++++++++--------
+ drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h  | 24 ++++-----
+ 2 files changed, 40 insertions(+), 34 deletions(-)
 
-My apologies.  I have one queued but forgot to actually send.  Since
-you already did the work, no point and sending it now.  Sorry for the
-oversight.
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+index b6e7c346c3ae..37d0b6c386a0 100644
+--- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+@@ -90,7 +90,9 @@ static int sun8i_ce_cipher(struct skcipher_request *areq)
+ 	struct ce_task *cet;
+ 	struct scatterlist *sg;
+ 	unsigned int todo, len, offset, ivsize;
++	dma_addr_t addr_iv = 0, addr_key = 0;
+ 	void *backup_iv = NULL;
++	u32 common, sym;
+ 	int flow, i;
+ 	int nr_sgs = 0;
+ 	int nr_sgd = 0;
+@@ -115,28 +117,31 @@ static int sun8i_ce_cipher(struct skcipher_request *areq)
+ 	cet = chan->tl;
+ 	memset(cet, 0, sizeof(struct ce_task));
+ 
+-	cet->t_id = flow;
+-	cet->t_common_ctl = ce->variant->alg_cipher[algt->ce_algo_id];
+-	cet->t_common_ctl |= rctx->op_dir | CE_COMM_INT;
+-	cet->t_dlen = areq->cryptlen / 4;
++	cet->t_id = cpu_to_le32(flow);
++	common = ce->variant->alg_cipher[algt->ce_algo_id];
++	common |= rctx->op_dir | CE_COMM_INT;
++	cet->t_common_ctl = cpu_to_le32(common);
+ 	/* CTS and recent CE (H6) need length in bytes, in word otherwise */
+ 	if (ce->variant->has_t_dlen_in_bytes)
+-		cet->t_dlen = areq->cryptlen;
++		cet->t_dlen = cpu_to_le32(areq->cryptlen);
++	else
++		cet->t_dlen = cpu_to_le32(areq->cryptlen / 4);
+ 
+-	cet->t_sym_ctl = ce->variant->op_mode[algt->ce_blockmode];
++	sym = ce->variant->op_mode[algt->ce_blockmode];
+ 	len = op->keylen;
+ 	switch (len) {
+ 	case 128 / 8:
+-		cet->t_sym_ctl |= CE_AES_128BITS;
++		sym |= CE_AES_128BITS;
+ 		break;
+ 	case 192 / 8:
+-		cet->t_sym_ctl |= CE_AES_192BITS;
++		sym |= CE_AES_192BITS;
+ 		break;
+ 	case 256 / 8:
+-		cet->t_sym_ctl |= CE_AES_256BITS;
++		sym |= CE_AES_256BITS;
+ 		break;
+ 	}
+ 
++	cet->t_sym_ctl = cpu_to_le32(sym);
+ 	cet->t_asym_ctl = 0;
+ 
+ 	chan->op_mode = ce->variant->op_mode[algt->ce_blockmode];
+@@ -144,9 +149,9 @@ static int sun8i_ce_cipher(struct skcipher_request *areq)
+ 	chan->method = ce->variant->alg_cipher[algt->ce_algo_id];
+ 	chan->keylen = op->keylen;
+ 
+-	cet->t_key = dma_map_single(ce->dev, op->key, op->keylen,
+-				    DMA_TO_DEVICE);
+-	if (dma_mapping_error(ce->dev, cet->t_key)) {
++	addr_key = dma_map_single(ce->dev, op->key, op->keylen, DMA_TO_DEVICE);
++	cet->t_key = cpu_to_le32(addr_key);
++	if (dma_mapping_error(ce->dev, addr_key)) {
+ 		dev_err(ce->dev, "Cannot DMA MAP KEY\n");
+ 		err = -EFAULT;
+ 		goto theend;
+@@ -171,9 +176,10 @@ static int sun8i_ce_cipher(struct skcipher_request *areq)
+ 						 ivsize, 0);
+ 		}
+ 		memcpy(chan->bounce_iv, areq->iv, ivsize);
+-		cet->t_iv = dma_map_single(ce->dev, chan->bounce_iv,
+-					   chan->ivlen, DMA_TO_DEVICE);
+-		if (dma_mapping_error(ce->dev, cet->t_iv)) {
++		addr_iv = dma_map_single(ce->dev, chan->bounce_iv, chan->ivlen,
++					 DMA_TO_DEVICE);
++		cet->t_iv = cpu_to_le32(addr_iv);
++		if (dma_mapping_error(ce->dev, addr_iv)) {
+ 			dev_err(ce->dev, "Cannot DMA MAP IV\n");
+ 			err = -ENOMEM;
+ 			goto theend_iv;
+@@ -208,9 +214,9 @@ static int sun8i_ce_cipher(struct skcipher_request *areq)
+ 
+ 	len = areq->cryptlen;
+ 	for_each_sg(areq->src, sg, nr_sgs, i) {
+-		cet->t_src[i].addr = sg_dma_address(sg);
++		cet->t_src[i].addr = cpu_to_le32(sg_dma_address(sg));
+ 		todo = min(len, sg_dma_len(sg));
+-		cet->t_src[i].len = todo / 4;
++		cet->t_src[i].len = cpu_to_le32(todo / 4);
+ 		dev_dbg(ce->dev, "%s total=%u SG(%d %u off=%d) todo=%u\n", __func__,
+ 			areq->cryptlen, i, cet->t_src[i].len, sg->offset, todo);
+ 		len -= todo;
+@@ -223,9 +229,9 @@ static int sun8i_ce_cipher(struct skcipher_request *areq)
+ 
+ 	len = areq->cryptlen;
+ 	for_each_sg(areq->dst, sg, nr_sgd, i) {
+-		cet->t_dst[i].addr = sg_dma_address(sg);
++		cet->t_dst[i].addr = cpu_to_le32(sg_dma_address(sg));
+ 		todo = min(len, sg_dma_len(sg));
+-		cet->t_dst[i].len = todo / 4;
++		cet->t_dst[i].len = cpu_to_le32(todo / 4);
+ 		dev_dbg(ce->dev, "%s total=%u SG(%d %u off=%d) todo=%u\n", __func__,
+ 			areq->cryptlen, i, cet->t_dst[i].len, sg->offset, todo);
+ 		len -= todo;
+@@ -250,8 +256,8 @@ static int sun8i_ce_cipher(struct skcipher_request *areq)
+ 
+ theend_iv:
+ 	if (areq->iv && ivsize > 0) {
+-		if (cet->t_iv)
+-			dma_unmap_single(ce->dev, cet->t_iv, chan->ivlen,
++		if (addr_iv)
++			dma_unmap_single(ce->dev, addr_iv, chan->ivlen,
+ 					 DMA_TO_DEVICE);
+ 		offset = areq->cryptlen - ivsize;
+ 		if (rctx->op_dir & CE_DECRYPTION) {
+@@ -265,7 +271,7 @@ static int sun8i_ce_cipher(struct skcipher_request *areq)
+ 	}
+ 
+ theend_key:
+-	dma_unmap_single(ce->dev, cet->t_key, op->keylen, DMA_TO_DEVICE);
++	dma_unmap_single(ce->dev, addr_key, op->keylen, DMA_TO_DEVICE);
+ 
+ theend:
+ 	return err;
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
+index c6ddad3393ed..43db49ceafe4 100644
+--- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
+@@ -103,8 +103,8 @@ struct ce_variant {
+ };
+ 
+ struct sginfo {
+-	u32 addr;
+-	u32 len;
++	__le32 addr;
++	__le32 len;
+ } __packed;
+ 
+ /*
+@@ -112,18 +112,18 @@ struct sginfo {
+  * The structure of this descriptor could be found in the datasheet
+  */
+ struct ce_task {
+-	u32 t_id;
+-	u32 t_common_ctl;
+-	u32 t_sym_ctl;
+-	u32 t_asym_ctl;
+-	u32 t_key;
+-	u32 t_iv;
+-	u32 t_ctr;
+-	u32 t_dlen;
++	__le32 t_id;
++	__le32 t_common_ctl;
++	__le32 t_sym_ctl;
++	__le32 t_asym_ctl;
++	__le32 t_key;
++	__le32 t_iv;
++	__le32 t_ctr;
++	__le32 t_dlen;
+ 	struct sginfo t_src[MAX_SG];
+ 	struct sginfo t_dst[MAX_SG];
+-	u32 next;
+-	u32 reserved[3];
++	__le32 next;
++	__le32 reserved[3];
+ } __packed __aligned(8);
+ 
+ /*
+-- 
+2.23.0
 
-Thanks,
-Jon
