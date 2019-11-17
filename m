@@ -2,128 +2,151 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D98AC432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 09:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96570C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 09:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE71A206D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 09:46:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573983969;
-	bh=5aX+TgcPFlPOgDbNv8lKP1niB9lY6s3AE7rkVvvAOjc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zngdUUJGKmaLsKlz+HzSgMTjfsbINEdHgVCXXvNl3dBlTLtIrFLfDx2jPESkKylrp
-	 rPv+GydpBRy3lwMoO9lPVYImmSKCjqSS+py1iV99ZuBg8LRoRXGoBmjHauxrQTZa4Z
-	 0BInxNb5tnn7omZeQKXNkMfVXTPFf/NISH5OZvXw=
+	by mail.kernel.org (Postfix) with ESMTP id 73C18206D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 09:50:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726059AbfKQJp4 (ORCPT
+        id S1726067AbfKQJuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 04:45:56 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39197 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbfKQJp4 (ORCPT
+        Sun, 17 Nov 2019 04:50:17 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:46257 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725953AbfKQJuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 04:45:56 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t26so15481279wmi.4
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 01:45:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WTfyDj6WShqhYiwMEsLuSNRdbUAyTCprS60Eet6bDCI=;
-        b=OLhDViCivVMGBdCFGLSIcm8RPV8G5K/MDtZe30bIYsppgmyo1ItwPzVE1rUBsJ9Kr1
-         YtOWuKa6uPZRz675eQKJgDspIG5DhR806ss1OH4kElN4YtkSWl+vWwgIyKeOaROEabK9
-         3vHePVuwYJkUOYP40ivbjUtlGuzHj/OkhzwdjaicEGGpor/KvMG8daRpEvfTbdXzHTea
-         CJdsNBcrIuyWz3qL9ol9wqnnkDP4z/72fB8V4IQGggqHrn9bbKK2fUClZbl0fETDFwFH
-         hwWOfjSVkZYBHkmupbB4K0K73sysQOMIfO5M2KJ0pJ1tYPYZpmTDtoc67ZuT9nKuLvUs
-         yKsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WTfyDj6WShqhYiwMEsLuSNRdbUAyTCprS60Eet6bDCI=;
-        b=MoQfD/iJ9r6G4cMgRqvD60SAjh+qfO7DaxUpnu5YjS45HscMIbRolrUXDOIHarB2Nk
-         0yW+KHIb960V9YRLAq/LzUVFKisKui2rxFsbrM/s7ifcJYrkEpfnEYCVAGVM0Y9aaGVe
-         7gO07v3QHX/nQnXzrfVq0mJ+Yyl831xRU3vEsfm1bK8gjVwKWZ6eKiiRlUcGWbHrJOv3
-         X7cEqMqf1lt/M5QI80eKyPnIGx/DUDxci+GaI8SupLMoWXKXBbHn1Hz3r98jtWr/tv9H
-         nBqAec26OH3OWJV2lnlUfQtnZynukInL1KqanlO2tDQMEXy/BMLeY1S97mnfaXg9rZoO
-         jpnQ==
-X-Gm-Message-State: APjAAAWyIqiURRLqC3qWe50Hi55pmtNuiVq3S166TqZf+hXLKs6ICbdv
-        aw69DIsAM/i4A8qF08R87T5nZ9ql
-X-Google-Smtp-Source: APXvYqzu3p4Kn0WeT96dew95wU3M2Zfgskq0Ndc+0t8Sb7IyOMPF9c9pvEWZIjl2S1BUl0khYHHXtA==
-X-Received: by 2002:a1c:3b82:: with SMTP id i124mr21955202wma.122.1573983952395;
-        Sun, 17 Nov 2019 01:45:52 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id l4sm16132078wml.33.2019.11.17.01.45.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Nov 2019 01:45:51 -0800 (PST)
-Date:   Sun, 17 Nov 2019 10:45:49 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Sun, 17 Nov 2019 04:50:17 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iWHBy-0007RY-3X; Sun, 17 Nov 2019 10:50:02 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 50ECF1C0085;
+        Sun, 17 Nov 2019 10:50:01 +0100 (CET)
+Date:   Sun, 17 Nov 2019 09:50:01 -0000
+From:   "tip-bot2 for Valentin Schneider" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched/uclamp: Fix overzealous type replacement
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar.Eggemann@arm.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] scheduler fixes
-Message-ID: <20191117094549.GB126325@gmail.com>
-References: <20191116213742.GA7450@gmail.com>
- <ab6f2b5a-57f0-6723-c62f-91a8ce6eddac@arm.com>
+        patrick.bellasi@matbug.net, qperret@google.com, surenb@google.com,
+        tj@kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191115103908.27610-1-valentin.schneider@arm.com>
+References: <20191115103908.27610-1-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ab6f2b5a-57f0-6723-c62f-91a8ce6eddac@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <157398420124.12247.5677680230156384788.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the sched/core branch of tip:
 
-* Valentin Schneider <valentin.schneider@arm.com> wrote:
+Commit-ID:     7763baace1b738d65efa46d68326c9406311c6bf
+Gitweb:        https://git.kernel.org/tip/7763baace1b738d65efa46d68326c9406311c6bf
+Author:        Valentin Schneider <valentin.schneider@arm.com>
+AuthorDate:    Fri, 15 Nov 2019 10:39:08 
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sun, 17 Nov 2019 10:46:05 +01:00
 
-> Hi,
-> 
-> On 16/11/2019 21:37, Ingo Molnar wrote:
-> > Peter Zijlstra (1):
-> >       sched/core: Avoid spurious lock dependencies
-> > 
-> > Qais Yousef (1):
-> >       sched/uclamp: Fix incorrect condition
-> > 
-> > Valentin Schneider (2):
-> >       sched/uclamp: Fix overzealous type replacement
-> 
-> This one got a v2 (was missing one location), acked by Vincent:
-> 
->   20191115103908.27610-1-valentin.schneider@arm.com
+sched/uclamp: Fix overzealous type replacement
 
-I've picked v2 up instead. I suspect it's not really consequential as 
-enums don't really get truncated by compilers, right? Is there any other 
-negative runtime side effect possible from the imprecise enum/uint 
-typing?
+Some uclamp helpers had their return type changed from 'unsigned int' to
+'enum uclamp_id' by commit
 
-> >       sched/topology, cpuset: Account for housekeeping CPUs to avoid empty cpumasks
-> 
-> And this one is no longer needed, as Michal & I understood (IOW the fix in
-> rc6 is sufficient), see:
-> 
->   c425c5cb-ba8a-e5f6-d91c-5479779cfb7a@arm.com
+  0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
 
-Ok.
+but it happens that some do return a value in the [0, SCHED_CAPACITY_SCALE]
+range, which should really be unsigned int. The affected helpers are
+uclamp_none(), uclamp_rq_max_value() and uclamp_eff_value(). Fix those up.
 
-I'm inclined to just reduce sched/urgent back to these three fixes:
+Note that this doesn't lead to any obj diff using a relatively recent
+aarch64 compiler (8.3-2019.03). The current code of e.g. uclamp_eff_value()
+properly returns an 11 bit value (bits_per(1024)) and doesn't seem to do
+anything funny. I'm still marking this as fixing the above commit to be on
+the safe side.
 
-  6e1ff0773f49: sched/uclamp: Fix incorrect condition
-  b90f7c9d2198: sched/pelt: Fix update of blocked PELT ordering
-  ff51ff84d82a: sched/core: Avoid spurious lock dependencies
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Reviewed-by: Qais Yousef <qais.yousef@arm.com>
+Acked-by: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar.Eggemann@arm.com
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: patrick.bellasi@matbug.net
+Cc: qperret@google.com
+Cc: surenb@google.com
+Cc: tj@kernel.org
+Fixes: 0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
+Link: https://lkml.kernel.org/r/20191115103908.27610-1-valentin.schneider@arm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/sched/core.c  | 6 +++---
+ kernel/sched/sched.h | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-and apply v2 of the uclamp_id type fix to sched/core. This would reduce 
-the risks of a Sunday pull request ...
-
-Thanks,
-
-	Ingo
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 513a479..3ceff1c 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -810,7 +810,7 @@ static inline unsigned int uclamp_bucket_base_value(unsigned int clamp_value)
+ 	return UCLAMP_BUCKET_DELTA * uclamp_bucket_id(clamp_value);
+ }
+ 
+-static inline enum uclamp_id uclamp_none(enum uclamp_id clamp_id)
++static inline unsigned int uclamp_none(enum uclamp_id clamp_id)
+ {
+ 	if (clamp_id == UCLAMP_MIN)
+ 		return 0;
+@@ -853,7 +853,7 @@ static inline void uclamp_idle_reset(struct rq *rq, enum uclamp_id clamp_id,
+ }
+ 
+ static inline
+-enum uclamp_id uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
++unsigned int uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
+ 				   unsigned int clamp_value)
+ {
+ 	struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
+@@ -918,7 +918,7 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
+ 	return uc_req;
+ }
+ 
+-enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
++unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
+ {
+ 	struct uclamp_se uc_eff;
+ 
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 05c2827..280a3c7 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -2300,7 +2300,7 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
+ #endif /* CONFIG_CPU_FREQ */
+ 
+ #ifdef CONFIG_UCLAMP_TASK
+-enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
++unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
+ 
+ static __always_inline
+ unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
