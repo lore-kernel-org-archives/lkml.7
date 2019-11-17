@@ -6,32 +6,33 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 747DDC43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 07:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A32C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 07:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57CF22075C
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 07:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 943F720740
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 07:21:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbfKQHVX (ORCPT
+        id S1726203AbfKQHVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 02:21:23 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40768 "EHLO mx1.suse.de"
+        Sun, 17 Nov 2019 02:21:24 -0500
+Received: from mx2.suse.de ([195.135.220.15]:40790 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725959AbfKQHVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 02:21:22 -0500
+        id S1725901AbfKQHVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 02:21:23 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 71337B23E;
-        Sun, 17 Nov 2019 07:21:20 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 6C145B2FD;
+        Sun, 17 Nov 2019 07:21:21 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH v3 3/8] ARM: dts: Prepare Realtek RTD1195 and MeLE X1000
-Date:   Sun, 17 Nov 2019 08:21:04 +0100
-Message-Id: <20191117072109.20402-4-afaerber@suse.de>
+Subject: [PATCH v3 5/8] dt-bindings: reset: Add Realtek RTD1195
+Date:   Sun, 17 Nov 2019 08:21:06 +0100
+Message-Id: <20191117072109.20402-6-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20191117072109.20402-1-afaerber@suse.de>
 References: <20191117072109.20402-1-afaerber@suse.de>
@@ -43,215 +44,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Device Trees for Realtek RTD1195 SoC and MeLE X1000 TV box.
+Add a header with symbolic reset indices for Realtek RTD1195 SoC.
+Naming was derived from BSP register description headers.
 
-Reuse the existing RTD1295 watchdog compatible for now.
-
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 Reviewed-by: Rob Herring <robh@kernel.org>
-[AF: Fixed r-bus size, fixed GIC CPU mask, updated memreserve]
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- v2 -> v3:
- * Fixed r-bus size in /soc ranges from 0x1000000 to 0x70000 (James)
- * Adjusted /memreserve/ to close gap from 0xa800 to 0xc000 for full 0x100000
- * Changed arch timer from GIC_CPU_MASK_RAW(0xf) to GIC_CPU_MASK_SIMPLE(2)
-   squashed from RTD1395 v1 series
+ v3: Unchanged from RTD1295 reset v2
  
- v1 -> v2:
- * Dropped /memreserve/ and reserved-memory nodes for peripherals and NOR (Rob)
- * Carved them out from memory reg instead (Rob)
- * Converted some /memreserve/s to reserved-memory nodes
- 
- arch/arm/boot/dts/Makefile               |   2 +
- arch/arm/boot/dts/rtd1195-mele-x1000.dts |  31 ++++++++
- arch/arm/boot/dts/rtd1195.dtsi           | 127 +++++++++++++++++++++++++++++++
- 3 files changed, 160 insertions(+)
- create mode 100644 arch/arm/boot/dts/rtd1195-mele-x1000.dts
- create mode 100644 arch/arm/boot/dts/rtd1195.dtsi
+ include/dt-bindings/reset/realtek,rtd1195.h | 74 +++++++++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+ create mode 100644 include/dt-bindings/reset/realtek,rtd1195.h
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 08011dc8c7a6..4853a13c8cf2 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -865,6 +865,8 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- dtb-$(CONFIG_ARCH_RDA) += \
- 	rda8810pl-orangepi-2g-iot.dtb \
- 	rda8810pl-orangepi-i96.dtb
-+dtb-$(CONFIG_ARCH_REALTEK) += \
-+	rtd1195-mele-x1000.dtb
- dtb-$(CONFIG_ARCH_REALVIEW) += \
- 	arm-realview-pb1176.dtb \
- 	arm-realview-pb11mp.dtb \
-diff --git a/arch/arm/boot/dts/rtd1195-mele-x1000.dts b/arch/arm/boot/dts/rtd1195-mele-x1000.dts
+diff --git a/include/dt-bindings/reset/realtek,rtd1195.h b/include/dt-bindings/reset/realtek,rtd1195.h
 new file mode 100644
-index 000000000000..834b430e6250
+index 000000000000..27902abf935b
 --- /dev/null
-+++ b/arch/arm/boot/dts/rtd1195-mele-x1000.dts
-@@ -0,0 +1,31 @@
-+// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
++++ b/include/dt-bindings/reset/realtek,rtd1195.h
+@@ -0,0 +1,74 @@
++/* SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause) */
 +/*
-+ * Copyright (c) 2017-2019 Andreas Färber
++ * Realtek RTD1195 reset controllers
++ *
++ * Copyright (c) 2017 Andreas Färber
 + */
++#ifndef DT_BINDINGS_RESET_RTD1195_H
++#define DT_BINDINGS_RESET_RTD1195_H
 +
-+/dts-v1/;
++/* soft reset 1 */
++#define RTD1195_RSTN_MISC		0
++#define RTD1195_RSTN_RNG		1
++#define RTD1195_RSTN_USB3_POW		2
++#define RTD1195_RSTN_GSPI		3
++#define RTD1195_RSTN_USB3_P0_MDIO	4
++#define RTD1195_RSTN_VE_H265		5
++#define RTD1195_RSTN_USB		6
++#define RTD1195_RSTN_USB_PHY0		8
++#define RTD1195_RSTN_USB_PHY1		9
++#define RTD1195_RSTN_HDMIRX		11
++#define RTD1195_RSTN_HDMI		12
++#define RTD1195_RSTN_ETN		14
++#define RTD1195_RSTN_AIO		15
++#define RTD1195_RSTN_GPU		16
++#define RTD1195_RSTN_VE_H264		17
++#define RTD1195_RSTN_VE_JPEG		18
++#define RTD1195_RSTN_TVE		19
++#define RTD1195_RSTN_VO			20
++#define RTD1195_RSTN_LVDS		21
++#define RTD1195_RSTN_SE			22
++#define RTD1195_RSTN_DCU		23
++#define RTD1195_RSTN_DC_PHY		24
++#define RTD1195_RSTN_CP			25
++#define RTD1195_RSTN_MD			26
++#define RTD1195_RSTN_TP			27
++#define RTD1195_RSTN_AE			28
++#define RTD1195_RSTN_NF			29
++#define RTD1195_RSTN_MIPI		30
 +
-+#include "rtd1195.dtsi"
++/* soft reset 2 */
++#define RTD1195_RSTN_ACPU		0
++#define RTD1195_RSTN_VCPU		1
++#define RTD1195_RSTN_PCR		9
++#define RTD1195_RSTN_CR			10
++#define RTD1195_RSTN_EMMC		11
++#define RTD1195_RSTN_SDIO		12
++#define RTD1195_RSTN_I2C_5		18
++#define RTD1195_RSTN_RTC		20
++#define RTD1195_RSTN_I2C_4		23
++#define RTD1195_RSTN_I2C_3		24
++#define RTD1195_RSTN_I2C_2		25
++#define RTD1195_RSTN_I2C_1		26
++#define RTD1195_RSTN_UR1		28
 +
-+/ {
-+	compatible = "mele,x1000", "realtek,rtd1195";
-+	model = "MeLE X1000";
++/* soft reset 3 */
++#define RTD1195_RSTN_SB2		0
 +
-+	aliases {
-+		serial0 = &uart0;
-+	};
++/* iso soft reset */
++#define RTD1195_ISO_RSTN_VFD		0
++#define RTD1195_ISO_RSTN_IR		1
++#define RTD1195_ISO_RSTN_CEC0		2
++#define RTD1195_ISO_RSTN_CEC1		3
++#define RTD1195_ISO_RSTN_DP		4
++#define RTD1195_ISO_RSTN_CBUSTX		5
++#define RTD1195_ISO_RSTN_CBUSRX		6
++#define RTD1195_ISO_RSTN_EFUSE		7
++#define RTD1195_ISO_RSTN_UR0		8
++#define RTD1195_ISO_RSTN_GMAC		9
++#define RTD1195_ISO_RSTN_GPHY		10
++#define RTD1195_ISO_RSTN_I2C_0		11
++#define RTD1195_ISO_RSTN_I2C_6		12
++#define RTD1195_ISO_RSTN_CBUS		13
 +
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x18000000>,
-+		      <0x19100000 0x26f00000>;
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/rtd1195.dtsi b/arch/arm/boot/dts/rtd1195.dtsi
-new file mode 100644
-index 000000000000..4e3866fe8f6e
---- /dev/null
-+++ b/arch/arm/boot/dts/rtd1195.dtsi
-@@ -0,0 +1,127 @@
-+// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-+/*
-+ * Copyright (c) 2017-2019 Andreas Färber
-+ */
-+
-+/memreserve/ 0x00000000 0x0000a800; /* boot code */
-+/memreserve/ 0x0000a800 0x000f5800;
-+/memreserve/ 0x17fff000 0x00001000;
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "realtek,rtd1195";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x0>;
-+			clock-frequency = <1000000000>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x1>;
-+			clock-frequency = <1000000000>;
-+		};
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		rpc_comm: rpc@b000 {
-+			reg = <0x0000b000 0x1000>;
-+		};
-+
-+		audio@1b00000 {
-+			reg = <0x01b00000 0x400000>;
-+		};
-+
-+		rpc_ringbuf: rpc@1ffe000 {
-+			reg = <0x01ffe000 0x4000>;
-+		};
-+
-+		secure@10000000 {
-+			reg = <0x10000000 0x100000>;
-+			no-map;
-+		};
-+	};
-+
-+	arm-pmu {
-+		compatible = "arm,cortex-a7-pmu";
-+		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv7-timer";
-+		interrupts = <GIC_PPI 13
-+			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14
-+			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11
-+			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10
-+			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
-+		clock-frequency = <27000000>;
-+	};
-+
-+	osc27M: osc {
-+		compatible = "fixed-clock";
-+		clock-frequency = <27000000>;
-+		#clock-cells = <0>;
-+		clock-output-names = "osc27M";
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x18000000 0x18000000 0x00070000>,
-+		         <0x18100000 0x18100000 0x01000000>,
-+		         <0x40000000 0x40000000 0xc0000000>;
-+
-+		wdt: watchdog@18007680 {
-+			compatible = "realtek,rtd1295-watchdog";
-+			reg = <0x18007680 0x100>;
-+			clocks = <&osc27M>;
-+		};
-+
-+		uart0: serial@18007800 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x18007800 0x400>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clock-frequency = <27000000>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@1801b200 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x1801b200 0x100>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clock-frequency = <27000000>;
-+			status = "disabled";
-+		};
-+
-+		gic: interrupt-controller@ff011000 {
-+			compatible = "arm,cortex-a7-gic";
-+			reg = <0xff011000 0x1000>,
-+			      <0xff012000 0x2000>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+		};
-+	};
-+};
++#endif
 -- 
 2.16.4
 
