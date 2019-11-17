@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B230BC33C9C
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B952C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ACFA20850
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E964E20674
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:48:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="kzB7W0se"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="H43lHXS1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfKQLsl (ORCPT
+        id S1726366AbfKQLsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 06:48:41 -0500
-Received: from onstation.org ([52.200.56.107]:38694 "EHLO onstation.org"
+        Sun, 17 Nov 2019 06:48:42 -0500
+Received: from onstation.org ([52.200.56.107]:38736 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726037AbfKQLsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 06:48:40 -0500
+        id S1726027AbfKQLsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 06:48:41 -0500
 Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 976133F233;
-        Sun, 17 Nov 2019 11:48:39 +0000 (UTC)
+        by onstation.org (Postfix) with ESMTPSA id 732904FE48;
+        Sun, 17 Nov 2019 11:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1573991319;
-        bh=IF5jVC/IJ/HGFr94VZv3lqZ7QDpm1s7uu+GgLtg8z60=;
+        s=default; t=1573991320;
+        bh=AlmPAqPjvG4vGWI6p1bAhmNBHO+jGQx8VZpPX/vqxuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kzB7W0se4g1Mm/JwUOV5vsXp5jZJ6YzdyozpICfW6eLEyrPCGsmxAYPJk7X3jYPbi
-         P9uCZNhfO8srSC5SHG/o5FawaAWUAw6H2eQq5m5Lym+PVoEHE9wxtISRviVCRe+Gyz
-         N7+ZKvVn47o7i+rO4D61rg20TQvMqxR6W5KLVGmo=
+        b=H43lHXS1UFIbBeotSBxt/QR4nMSkM4lVufpArr13f0CEAkZ7d16ernWuEibFq90I5
+         D/VbGk6CHA6pC2nhQMOS5DZ9AahOPB4AV9QMZU/F9+LIeGH6pdyRAG2xHfyurK7fPL
+         F2ppR8Ok68YxcdEpJ75EhAifc7zONesLHRRJGTis=
 From:   Brian Masney <masneyb@onstation.org>
 To:     robdclark@gmail.com, sean@poorly.run, robh+dt@kernel.org
 Cc:     airlied@linux.ie, daniel@ffwll.ch, jcrouse@codeaurora.org,
@@ -42,9 +42,9 @@ Cc:     airlied@linux.ie, daniel@ffwll.ch, jcrouse@codeaurora.org,
         dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org
-Subject: [PATCH 1/4] dt-bindings: drm/msm/gpu: document second interconnect
-Date:   Sun, 17 Nov 2019 06:48:22 -0500
-Message-Id: <20191117114825.13541-2-masneyb@onstation.org>
+Subject: [PATCH 3/4] drm/msm/a3xx: set interconnect bandwidth vote
+Date:   Sun, 17 Nov 2019 06:48:24 -0500
+Message-Id: <20191117114825.13541-4-masneyb@onstation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191117114825.13541-1-masneyb@onstation.org>
 References: <20191117114825.13541-1-masneyb@onstation.org>
@@ -55,40 +55,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some A3xx and all A4xx Adreno GPUs do not have GMEM inside the GPU core
-and must use the On Chip MEMory (OCMEM) in order to be functional.
-There's a separate interconnect path that needs to be setup to OCMEM.
-Let's document this second interconnect path that's available.
+Set the two interconnect paths for the GPU to maximum speed for now to
+work towards getting the GPU working upstream. We can revisit a later
+time to optimize this for battery life.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
 ---
- Documentation/devicetree/bindings/display/msm/gpu.txt | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/msm/adreno/a3xx_gpu.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/msm/gpu.txt b/Documentation/devicetree/bindings/display/msm/gpu.txt
-index 2b8fd26c43b0..3e6cd3f64a78 100644
---- a/Documentation/devicetree/bindings/display/msm/gpu.txt
-+++ b/Documentation/devicetree/bindings/display/msm/gpu.txt
-@@ -23,7 +23,10 @@ Required properties:
- - iommus: optional phandle to an adreno iommu instance
- - operating-points-v2: optional phandle to the OPP operating points
- - interconnects: optional phandle to an interconnect provider.  See
--  ../interconnect/interconnect.txt for details.
-+  ../interconnect/interconnect.txt for details. Some A3xx and all A4xx platforms
-+  will have two paths; all others will have one path.
-+- interconnect-names: The names of the interconnect paths that correspond to the
-+  interconnects property. Values must be gfx-mem and ocmem.
- - qcom,gmu: For GMU attached devices a phandle to the GMU device that will
-   control the power for the GPU. Applicable targets:
-     - qcom,adreno-630.2
-@@ -76,6 +79,7 @@ Example a6xx (with GMU):
- 		operating-points-v2 = <&gpu_opp_table>;
+diff --git a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
+index 07ddcc529573..f05adf9bc752 100644
+--- a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
+@@ -504,6 +504,14 @@ struct msm_gpu *a3xx_gpu_init(struct drm_device *dev)
+ 		DRM_DEV_ERROR(dev->dev, "No memory protection without IOMMU\n");
+ 	}
  
- 		interconnects = <&rsc_hlos MASTER_GFX3D &rsc_hlos SLAVE_EBI1>;
-+		interconnect-names = "gfx-mem";
++	/*
++	 * Set the ICC path to maximum speed for now by multiplying the fastest
++	 * frequency by the bus width (8). We'll want to scale this later on to
++	 * improve battery life.
++	 */
++	icc_set_bw(gpu->gfx_mem_icc_path, 0, Bps_to_icc(gpu->fast_rate) * 8);
++	icc_set_bw(gpu->ocmem_icc_path, 0, Bps_to_icc(gpu->fast_rate) * 8);
++
+ 	return gpu;
  
- 		qcom,gmu = <&gmu>;
- 
+ fail:
 -- 
 2.21.0
 
