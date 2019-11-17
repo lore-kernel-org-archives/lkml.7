@@ -2,276 +2,220 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A46C43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 13:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2E5C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 13:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 435952068E
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 13:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CB3C2084C
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 13:30:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="GcONIYUH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbfKQNTR (ORCPT
+        id S1726137AbfKQNal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 08:19:17 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:35708 "EHLO honk.sigxcpu.org"
+        Sun, 17 Nov 2019 08:30:41 -0500
+Received: from mout.web.de ([212.227.17.11]:42953 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726037AbfKQNTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 08:19:16 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id C2D76FB03;
-        Sun, 17 Nov 2019 14:19:13 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id RVh6UuBQgdbp; Sun, 17 Nov 2019 14:19:11 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 1BCAA4994A; Sun, 17 Nov 2019 14:19:05 +0100 (CET)
-Date:   Sun, 17 Nov 2019 14:19:05 +0100
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v7 0/2] drm: bridge: Add NWL MIPI DSI host controller
- support
-Message-ID: <20191117131904.GA3708@bogon.m.sigxcpu.org>
-References: <cover.1571494140.git.agx@sigxcpu.org>
+        id S1726037AbfKQNal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 08:30:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1573997425;
+        bh=fs8EIzdE6o0M6xTF24WLLY76qhiXvAckElAXZNS6GcE=;
+        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
+        b=GcONIYUHlAHo1D9DvWcN19p8MMXYZ6pEl9KBfWu5ikLFRVdBTza/mko4ig3ViVrtu
+         MKRUzdUDeAPOINICOjtU8zaC1BzdVoHo0sfsgOVRlNRKGs3F1G49wPMO1O1zI4quJM
+         HL4129fn8bHY+K9h5WuGnZN+EszsJMxTcTNKCYzM=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([93.131.59.42]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MBkLb-1igXdG1NWJ-00Am9p; Sun, 17
+ Nov 2019 14:30:25 +0100
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        linkinjeon@gmail.com
+References: <20191113081800.7672-3-namjae.jeon@samsung.com>
+Subject: Re: [PATCH 02/13] exfat: add super block operations
+To:     Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <9e9bac40-109c-3349-24da-532c540638c2@web.de>
+Date:   Sun, 17 Nov 2019 14:30:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1571494140.git.agx@sigxcpu.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191113081800.7672-3-namjae.jeon@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:x6FPQUW77SXUsE0vAGDnH2vv/GMkx23DD2vq9A22ez2SrO6lGIP
+ Kfhf7UvkrXGY2LkLKwiPXyrwRELCjHuc3ppwRjw+qyIyqsKqw5Ye86uPHDX4hcT7SwHucbn
+ 0cMwaOw7OUjX9+6zx0oEplPX6+XnmHywpfF0m77sF5BvmJGDF0Hq028oucBAmGpHbsk3e3K
+ rF7y/OeetHj44jgKX63tg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lpOfVsHDkRc=:JWhm/kgUtsa+I84khD40nk
+ jxG6BN4TShPK56P/QYBPe3oOh6Z2DPbtGvKZwTuX1/byELef8NGl6E+3xR1Uw2htCwTDrLacU
+ 4Wcuqcaztn8GIPm293hAf1dpSoEaVHuPRtv8uouBoHd4zC0ZUpaTqujlHQoVmcTR2beBJHE2d
+ vU+A5NLFhFwk8ZYwUQnB+VlXdzVOXuMUSq3A5e/YSWK4uOjpcNcfzDTrcPYq976mnulmDbMa2
+ sSeWrXKC03ncgYm5oTD11RcIJpsgXhQKq38tErsOmvb+5jWJy72h9z8qrDa8kBjNX6NmaAnSa
+ JETLLXYTRmewUUMSVSuUKpAdJkkGjFxa1vZe07HRA8tMs1bn1oEkCGOZx+wP/KNL0IY+l/49d
+ rmv/MIP3zX9Rjhtl7L+OqRaLoAUzV9umsZN6qGSBORvfldrMhATXc36Yzb4wflirhS2JYnZSS
+ FGXwdpKp+VyRNVebO6NL0UMfKx2sWsLr7rxxk7ajYTrIu5x8K73J5pH+EI9fHzUCngwDlouYj
+ bPhWiNjw8O4BqEcVUXkhu3Wys1iMJZ2Xopv0oR7oCsu78/EhKfsfGcMeytIAQgnOV/mmty5db
+ ZsXb/TytRsNF5q61HtBAkQWbNKkd18ocruqYN6beu+doF9ZUCYpV+1V9ATdC29YxK6f3/nxUg
+ dt0xwQBygyPYPoMt/8sVON+qMd49pTFVvq+qL+V+tTJryKJeUeCqoN09mbqvgoJUS8CtTuIqO
+ mD2PDQFtCTbXB0FuBmgffarY9HqttE0eHahG6wZBTZKF68N+GL7xTmavw8ktcS6NDXwXNazeG
+ odPtCgiIvumWmdxzmEVmi7qm16LllyfeXPRaM02afoF39whwdZicXBJ6APhzspvQb82SN5Uad
+ Kg+N7iYXx4KSXlWpiGYE+rVOBPcbuj1rmIsq8K1umRRVTMnKToKyEaH/A8485iAMZxmsJD8P2
+ QM+XeCcDj4cj9gXR9ftInWeUt3o0mgIqDQQTCy7NXwLUrnCG8KEkQ74yW/q/KTzsjRq5h+3tL
+ GhjYj/kgf+SAzBMgPWQURD46O0gcyjJNm8K8nVkKPgh1QhZjWHA8KDMxe9WbJVaDRg+xyHJGO
+ g3/6OXm/3x0SEvwIMhxLoVlyVGu2fpOZyU3Psi4vEexiXBQqER+tSiUs2zNDaoh9p10RDqssh
+ scPAADp/eQl3p/UoTglNLJsQhWlepcFbLgJCzcs0qmz/B2/M+lFHtsJGE3YqwZ+2x+mJqjQAU
+ gpJsu8xNa+UcsSOKUQyf8FBUJN636LD5on48FhbAni5p2lzdCx1XfqPLA5Bo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Sat, Oct 19, 2019 at 04:12:23PM +0200, Guido Günther wrote:
-> This adds initial support for the NWL MIPI DSI Host controller found on i.MX8
-> SoCs.
+=E2=80=A6
+> +++ b/fs/exfat/super.c
+=E2=80=A6
+> +static int exfat_show_options(struct seq_file *m, struct dentry *root)
+> +{
+=E2=80=A6
+> +	seq_printf(m, ",fmask=3D%04o", opts->fs_fmask);
+> +	seq_printf(m, ",dmask=3D%04o", opts->fs_dmask);
 
-Is there anything i can do to move this forward? As far as i can tell
-all review comments should be addressed.
-Cheers,
- -- Guido
+How do you think about to combine these two function calls into a single o=
+ne?
 
-> 
-> It adds support for the i.MX8MQ but the same IP core can also be found on e.g.
-> i.MX8QXP. I added the necessary hooks to support other imx8 variants but since
-> I only have imx8mq boards to test I omitted the platform data for other SoCs.
-> 
-> The code is based on NXPs BSP so I added Robert Chiras as
-> Co-authored-by.
-> 
-> The most notable changes over the BSP driver are
->  - Calculate HS mode timing from phy_configure_opts_mipi_dphy
->  - Perform all clock setup via DT
->  - Merge nwl-imx and nwl drivers
->  - Add B0 silion revision quirk
->  - become a bridge driver to hook into mxsfb / dcss
->    imx-display-subsystem so it makes sense to make it drive a bridge for dsi as
->    well).
->  - Use panel_bridge to attach the panel
->  - Use multiplex framework instead of accessing syscon directly
-> 
-> This has been tested on a Librem 5 devkit using mxsfb with Robert's patches[1]
-> and the rocktech-jh057n00900 panel driver on next-20191018. The DCSS can later
-> on also act as input source too.
-> 
-> Changes from v7:
-> - Per review comments by Andrzej Hajda
->   https://lore.kernel.org/linux-arm-kernel/c86b7ca2-7799-eafd-c380-e4b551520837@samsung.com/
->   - Drop spare empty line
->   - handle nwl_dsi_write errors
->   - better handle read errors
->   - unwind in case of error in nwl_dsi_enable
->   - use bridge_to_dsi() instead of accessing driver_private
->   - don't log on -EPROBEDEFER when fething the reset controller
->   - use endpoint number to determine input
-> - Spotted by kbuild test robot <lkp@intel.com>
->   https://lore.kernel.org/linux-arm-kernel/201909230644.qfSKbNf9%25lkp@intel.com/
->   Use signed return type for nwl_dsi_get_dpi_pixel_format
-> - Drop connector type from drm_panel_bridge_add
-> - Don't forget to set an error value on dsi reads
-> 
-> Changes from v5:
-> - Per review comments by Andrzej Hajda
->   https://lists.freedesktop.org/archives/dri-devel/2019-September/235281.html
->   - Fix include file ordering
->   - Add a comment to nwl_dsi_platform_data that will allow to add support
->     at least for the i.MX8QM
->   - Merge driver into a single file plus the register defs in a separate header
-> - Make more functions and structs static
-> 
-> Changes from v4:
-> - Collect Reviewed-by: from Rob Herring, thanks!
->   https://lists.freedesktop.org/archives/dri-devel/2019-September/233979.html
-> - Spotted by kbuild test robot <lkp@intel.com>
->   https://lists.freedesktop.org/archives/dri-devel/2019-September/233860.html
->   https://lists.freedesktop.org/archives/dri-devel/2019-September/233863.html
->   - fix format string for size_t
->   - Use DIV64_U64_ROUND_UP to fix build on 32 bit architectures
->     We can't use simple shift sind d and n are similar in size and
->     we need full precision
-> - Fix debug cfg_t_post debug print out
-> - Avoid PSEC_PER_SEC
-> - Move timeout / overflow handling out of nwl_dsi_finish_transmission,
->   it would never end up being reported since the call to the function
->   was guarded by flags.
-> - Drop 'support for' from KConfig title to make it match the other
->   drivers in that submenu
-> 
-> Changes from v3:
-> - Per review comments by Robert Chiras
->   https://lists.freedesktop.org/archives/dri-devel/2019-August/232580.html
->   - Add Robert's {Signed-off,Tested}-by:
->   - Respect number of lanes when calculting bandwidth limits
->   - Drop duplicate NWL_DSI_ENABLE_MULT_PKTS setup
-> - Per testing by Rober Chiras
->   https://lists.freedesktop.org/archives/dri-devel/2019-August/233688.html
->   - Drop duplicate (and too early) drm_bridge_add() in nwl_dir_probe() that
->     made mxsfb fail to connect to the bridge since the panel_bridge was not up
->     yet. drm_bridge_add() happens in nwl_dsi_host_attach() where after the
->     panel_bridge was set up.
-> - Per review comments by Rob Herring on bindings
->   https://lists.freedesktop.org/archives/dri-devel/2019-August/233196.html
->   - drop description from power-domains and resets
->   - allow BSD 2 clause license as well
->   - make ports more specific
->   - add #address-cells, #size-cells as required
->   - use additionalProperties
->   - panel is of type object
-> 
-> Changes from v2:
-> - Per review comments by Rob Herring
->   https://lists.freedesktop.org/archives/dri-devel/2019-August/230448.html
->   - bindings:
->     - Simplify by restricting to fsl,imx8mq-nwl-dsi
->     - document reset lines
->     - add port@{0,1}
->     - use a real compatible string for the panel
->     - resets are required
-> - Per review comments by Arnd Bergmann
->   https://lists.freedesktop.org/archives/dri-devel/2019-August/230868.html
->   - Don't access iomuxc_gpr regs directly. This allows us to drop the
->     first patch in the series with the iomuxc_gpr field defines.
-> - Per review comments by Laurent Pinchart
->   Fix wording in bindings
-> - Add mux-controls to bindings
-> - Don't print error message on dphy probe deferral
-> 
-> Changes from v1:
-> - Per review comments by Sam Ravnborg
->   https://lists.freedesktop.org/archives/dri-devel/2019-July/228130.html
->   - Change binding docs to YAML
->   - build: Don't always visit imx-nwl/
->   - build: Add header-test-y
->   - Sort headers according to DRM convention
->   - Use drm_display_mode instead of videmode
-> - Per review comments by Fabio Estevam
->   https://lists.freedesktop.org/archives/dri-devel/2019-July/228299.html
->   - Don't restrict build to ARCH_MXC
->   - Drop unused includes
->   - Drop unreachable code in imx_nwl_dsi_bridge_mode_fixup()
->   - Drop remaining calls of dev_err() and use DRM_DEV_ERR()
->     consistently.
->   - Use devm_platform_ioremap_resource()
->   - Drop devm_free_irq() in probe() error path
->   - Use single line comments where sufficient
->   - Use <linux/time64.h> instead of defining USEC_PER_SEC
->   - Make input source select imx8 specific
->   - Drop <asm/unaligned.h> inclusion (after removal of get_unaligned_le32)
->   - Drop all EXPORT_SYMBOL_GPL() for functions used in the same module
->     but different source files.
->   - Drop nwl_dsi_enable_{rx,tx}_clock() by invoking clk_prepare_enable()
->     directly
->   - Remove pointless comment
-> - Laurent Pinchart
->   https://lists.freedesktop.org/archives/dri-devel/2019-July/228313.html
->   https://lists.freedesktop.org/archives/dri-devel/2019-July/228308.html
->   - Drop (on iMX8MQ) unused csr regmap
->   - Use NWL_MAX_PLATFORM_CLOCKS everywhere
->   - Drop get_unaligned_le32() usage
->   - remove duplicate 'for the' in binding docs
->   - Don't include unused <linux/clk-provider.h>
->   - Don't include unused <linux/component.h>
->   - Drop dpms_mode for tracking state, trust the drm layer on that
->   - Use pm_runtime_put() instead of pm_runtime_put_sync()
->   - Don't overwrite encoder type
->   - Make imx_nwl_platform_data const
->   - Use the reset controller API instead of open coding that platform specific
->     part
->   - Use <linux/bitfield.h> intead of making up our own defines
->   - name mipi_dsi_transfer less generic: nwl_dsi_transfer
->   - ensure clean in .remove by calling mipi_dsi_host_unregister.
->   - prefix constants by NWL_DSI_
->   - properly format transfer_direction enum
->   - simplify platform clock handling
->   - Don't modify state in mode_fixup() and use mode_set() instead
->   - Drop bridge detach(), already handle by nwl_dsi_host_detach()
->   - Drop USE_*_QUIRK() macros
-> - Drop (for now) unused clock defnitions. 'pixel' and 'bypass' clock will be
->   used for i.MX8 SoCs but since they're unused atm drop the definitions - but
->   keep the logic to enable/disable several clocks in place since we know we'll
->   need it in the future.
-> 
-> Changes from v0:
-> - Add quirk for IMQ8MQ silicon B0 revision to not mess with the
->   system reset controller on power down since enable() won't work
->   otherwise.
-> - Drop devm_free_irq() handled by the device driver core
-> - Disable tx esc clock after the phy power down to unbreak
->   disable/enable (unblank/blank)
-> - Add ports to dt binding docs
-> - Select GENERIC_PHY_MIPI_DPHY instead of GENERIC_PHY for
->   phy_mipi_dphy_get_default_config
-> - Select DRM_MIPI_DSI
-> - Include drm_print.h to fix build on next-20190408
-> - Drop some debugging messages
-> - Newline terminate all DRM_ printouts
-> - Turn component driver into a drm bridge
-> 
-> [0]: https://lists.freedesktop.org/archives/dri-devel/2019-May/219484.html
-> [1]: https://patchwork.freedesktop.org/series/62822/
-> 
-> Guido Günther (2):
->   dt-bindings: display/bridge: Add binding for NWL mipi dsi host
->     controller
->   drm/bridge: Add NWL MIPI DSI host controller support
-> 
->  .../bindings/display/bridge/nwl-dsi.yaml      |  203 +++
->  drivers/gpu/drm/bridge/Kconfig                |   16 +
->  drivers/gpu/drm/bridge/Makefile               |    3 +
->  drivers/gpu/drm/bridge/nwl-dsi.c              | 1235 +++++++++++++++++
->  drivers/gpu/drm/bridge/nwl-dsi.h              |  144 ++
->  5 files changed, 1601 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
->  create mode 100644 drivers/gpu/drm/bridge/nwl-dsi.c
->  create mode 100644 drivers/gpu/drm/bridge/nwl-dsi.h
-> 
-> -- 
-> 2.23.0.rc1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+> +static int __exfat_fill_super(struct super_block *sb)
+> +{
+=E2=80=A6
+> +		exfat_msg(sb, KERN_ERR, "unable to read boot sector");
+> +		ret =3D -EIO;
+> +		goto out;
+=E2=80=A6
+
+Would you like to simplify this place?
+
++		return -EIO;
+
+
+=E2=80=A6
+> +		exfat_msg(sb, KERN_ERR, "failed to load upcase table");
+> +		goto out;
+
+Would you like to omit this label?
+
++		return ret;
+
+
+> +static int exfat_fill_super(struct super_block *sb, struct fs_context *=
+fc)
+> +{
+=E2=80=A6
+> +		exfat_msg(sb, KERN_ERR, "failed to recognize exfat type");
+> +		goto failed_mount;
+
+The local variable =E2=80=9Croot_inode=E2=80=9D contains still a null poin=
+ter at this place.
+
+* Thus I would find a jump target like =E2=80=9Creset_s_root=E2=80=9D more=
+ appropriate.
+
+* Can the corresponding pointer initialisation be omitted then?
+
+
+=E2=80=A6
+> +failed_mount:
+> +	if (root_inode)
+> +		iput(root_inode);
+=E2=80=A6
+
+I am informed in the way that this function tolerates the passing
+of null pointers.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs=
+/inode.c?id=3D1d4c79ed324ad780cfc3ad38364ba1fd585dd2a8#n1567
+https://elixir.bootlin.com/linux/v5.4-rc7/source/fs/inode.c#L1567
+
+Thus I suggest to omit the extra pointer check also at this place.
+
+
+> +static int __init init_exfat_fs(void)
+> +{
+=E2=80=A6
++	err =3D exfat_cache_init();
++	if (err)
++		goto error;
+
+Can it be nicer to return directly?
+
+
+=E2=80=A6
+> +	if (!exfat_inode_cachep)
+> +		goto error;
+
+Can an other jump target like =E2=80=9Cshutdown_cache=E2=80=9D be more app=
+ropriate?
+
+
+> +	err =3D register_filesystem(&exfat_fs_type);
+> +	if (err)
+> +		goto error;
+=E2=80=A6
+
+Can the label =E2=80=9Cdestroy_cache=E2=80=9D be more appropriate?
+
+
+Regards,
+Markus
