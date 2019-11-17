@@ -2,258 +2,131 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD54C43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 18:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0B7C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 18:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAF9A2084D
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 18:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AA182075C
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 18:00:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e+9/o/ZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfKQSAZ (ORCPT
+        id S1727122AbfKQSA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 13:00:25 -0500
-Received: from mga17.intel.com ([192.55.52.151]:26337 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbfKQSAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 13:00:24 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Nov 2019 10:00:24 -0800
-X-IronPort-AV: E=Sophos;i="5.68,317,1569308400"; 
-   d="scan'208";a="195907454"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Nov 2019 10:00:23 -0800
-Subject: [PATCH v2 17/18] x86/numa: Provide a range-to-target_node lookup
- facility
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-nvdimm@lists.01.org
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        kbuild test robot <lkp@intel.com>, vishal.l.verma@intel.com,
-        hch@lst.de, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-acpi@vger.kernel.org
-Date:   Sun, 17 Nov 2019 09:46:07 -0800
-Message-ID: <157401276776.43284.12396353118982684546.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <157401267421.43284.2135775608523385279.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <157401267421.43284.2135775608523385279.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        Sun, 17 Nov 2019 13:00:28 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38390 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfKQSA1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 13:00:27 -0500
+Received: by mail-wm1-f65.google.com with SMTP id z19so16284388wmk.3;
+        Sun, 17 Nov 2019 10:00:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=F4NQooBVjrSqmCsMJWptKKpcPoY0ZrH3mGqS/PbNMyo=;
+        b=e+9/o/ZWKT0cU4m83XoyfZs75i6IFYMGA8WbEsk2yK8WOhCyUhqm5E0+LZ8JvuOLg/
+         G1IJAWAzudJW4i/rbJ5i/Vxpp3iTaCbfsnJLuji2a8kqJNs1zt+xqLTnzlxfErJsT57d
+         erwIUxx6HkQKIUiRqrM1hh7UJv3RkYpsaWstgVb+FsQicQPu7ViFDqySUSQ3gV+unrJe
+         DQUXj6YuP0ETMKed22McFFY2Hx/Ct/xv8IBHMYOQbvif1ENm5S1vCW4xMD4i64EfB6oB
+         sW0kVSlS2Le8ZH/d8mK/0flqlJ/ug0Etrgadasv7W5wq0g3Gd6wv4PKXvfTgZ/JpNnjf
+         LSlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=F4NQooBVjrSqmCsMJWptKKpcPoY0ZrH3mGqS/PbNMyo=;
+        b=JlQZ3BJy0tX5sBUPua6+2JoOYyFDr9mAqX3S/45tLqN8VJjlRVsQwSTdbhfC8P9DdM
+         5aUGc99xFAvfn+yHlOunxkV5kgTRV6EI9xaOwZHzwWtsilS4bcH2NjvOme88+uz9O+Bj
+         kBCqfU3vdZbEMmwFuwgYcJI8KjrjYfvVetdUo+7ritAfSN5sNoVad8kndJB5Qo2XP9p+
+         ICr3OrEThJWQxm8r479Ef5gmM77Vp1vMzbEEhFLRKMgYVL2OskADfypDO6B7fxjaMQLv
+         DUV6n2VuaAZsYL8clQKf/OO34kDnLv87qD3MVZbTlwW/9EOa1JS64r14PNxOptzrlGI9
+         fydA==
+X-Gm-Message-State: APjAAAWbGAkOEwe2SiK57BrcHPqMeQMFbBprCp7helY2YjtvMYgXFfHm
+        egfMAlb1Ko/9DGbPj/G2INQ=
+X-Google-Smtp-Source: APXvYqwIiM0ZFTq/2AyHVnk/4vTtfdVDSku8hzp50grw/lqRjOknUsLjUkAdU35z8Pooouy43oUkOA==
+X-Received: by 2002:a1c:28d4:: with SMTP id o203mr26025806wmo.147.1574013624416;
+        Sun, 17 Nov 2019 10:00:24 -0800 (PST)
+Received: from [192.168.178.53] (x5f752d31.dyn.telefonica.de. [95.117.45.49])
+        by smtp.gmail.com with ESMTPSA id z11sm23701517wrg.0.2019.11.17.10.00.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 17 Nov 2019 10:00:23 -0800 (PST)
+Cc:     mtk.manpages@gmail.com, adrian@lisas.de, akpm@linux-foundation.org,
+        arnd@arndb.de, avagin@gmail.com, christian.brauner@ubuntu.com,
+        dhowells@redhat.com, fweimer@redhat.com, jannh@google.com,
+        keescook@chromium.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-man@vger.kernel.org,
+        mingo@elte.hu, oleg@redhat.com, xemul@virtuozzo.com
+Subject: Re: [PATCH 1/3] clone.2: Fix typos
+To:     Christian Brauner <christian@brauner.io>
+References: <20191116114114.7066-1-christian@brauner.io>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <0ef00041-9952-3dea-1d6b-2d14536764d3@gmail.com>
+Date:   Sun, 17 Nov 2019 19:00:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191116114114.7066-1-christian@brauner.io>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DEV_DAX_KMEM facility is a generic mechanism to allow device-dax
-instances, fronting performance-differentiated-memory like pmem, to be
-added to the System RAM pool. The numa node for that hot-added memory is
-derived from the device-dax instance's 'target_node' attribute.
+On 11/16/19 12:41 PM, Christian Brauner wrote:
+> From: Christian Brauner <christian.brauner@ubuntu.com>
 
-Recall that the 'target_node' is the ACPI-PXM-to-node translation for
-memory when it comes online whereas the 'numa_node' attribute of the
-device represents the closest online cpu node.
+Thanks, Christian, 
 
-Presently useful target_node information from the ACPI SRAT is discarded
-with the expectation that "Reserved" memory will never be onlined. Now,
-DEV_DAX_KMEM violates that assumption, there is a need to retain the
-translation. Move, rather than discard, numa_memblk data to a secondary
-array that memory_add_physaddr_to_target_node() may consider at a later
-point in time.
+Patch applied.
 
-Note that memory_add_physaddr_to_nid() is currently only available on
-CONFIG_MEMORY_HOTPLUG=y platforms whereas the target node information
-may be useful on CONFIG_MEMORY_HOTPLUG=n builds, hence why it is calling
-phys_to_target_node() and optionally defined by asm/io.h rather than a
-memory_add_physaddr_to_target_nid() helper that lives in
-include/linux/memory_hotplug.h.
+Cheers,
 
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: <x86@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- arch/x86/mm/numa.c   |   76 +++++++++++++++++++++++++++++++++++++++++++++++---
- include/linux/numa.h |    8 +++++
- mm/mempolicy.c       |    5 +++
- 3 files changed, 83 insertions(+), 6 deletions(-)
+Michael
 
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index 4123100e0eaf..f4f02ac0c465 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -31,6 +31,24 @@ __initdata
- #endif
- ;
- 
-+/*
-+ * Presently, DEV_DAX_KMEM is the only kernel facility that might
-+ * convert Reserved or Soft Reserved memory to System RAM.
-+ */
-+#if IS_ENABLED(CONFIG_DEV_DAX_KMEM)
-+static struct numa_meminfo __numa_reserved_meminfo;
-+
-+static struct numa_meminfo *numa_reserved_meminfo(void)
-+{
-+	return &__numa_reserved_meminfo;
-+}
-+#else
-+static struct numa_meminfo *numa_reserved_meminfo(void)
-+{
-+	return NULL;
-+}
-+#endif
-+
- static int numa_distance_cnt;
- static u8 *numa_distance;
- 
-@@ -168,6 +186,26 @@ void __init numa_remove_memblk_from(int idx, struct numa_meminfo *mi)
- 		(mi->nr_blks - idx) * sizeof(mi->blk[0]));
- }
- 
-+/**
-+ * numa_move_memblk - Move one numa_memblk from one numa_meminfo to another
-+ * @dst: numa_meminfo to move block to
-+ * @idx: Index of memblk to remove
-+ * @src: numa_meminfo to remove memblk from
-+ *
-+ * If @dst is non-NULL add it at the @dst->nr_blks index and increment
-+ * @dst->nr_blks, then remove it from @src.
-+ */
-+static void __init numa_move_memblk(struct numa_meminfo *dst, int idx,
-+		struct numa_meminfo *src)
-+{
-+	if (dst) {
-+		memcpy(&dst->blk[dst->nr_blks], &src->blk[idx],
-+				sizeof(struct numa_memblk));
-+		dst->nr_blks++;
-+	}
-+	numa_remove_memblk_from(idx, src);
-+}
-+
- /**
-  * numa_add_memblk - Add one numa_memblk to numa_meminfo
-  * @nid: NUMA node ID of the new memblk
-@@ -245,7 +283,7 @@ int __init numa_cleanup_meminfo(struct numa_meminfo *mi)
- 		if (bi->start >= bi->end ||
- 		    !memblock_overlaps_region(&memblock.memory,
- 			bi->start, bi->end - bi->start))
--			numa_remove_memblk_from(i--, mi);
-+			numa_move_memblk(numa_reserved_meminfo(), i--, mi);
- 	}
- 
- 	/* merge neighboring / overlapping entries */
-@@ -881,16 +919,44 @@ EXPORT_SYMBOL(cpumask_of_node);
- 
- #endif	/* !CONFIG_DEBUG_PER_CPU_MAPS */
- 
-+static int meminfo_to_nid(struct numa_meminfo *mi, u64 start, int *nid)
-+{
-+	int i;
-+
-+	for (i = 0; mi && i < mi->nr_blks; i++)
-+		if (mi->blk[i].start <= start && mi->blk[i].end > start) {
-+			*nid = mi->blk[i].nid;
-+			break;
-+		}
-+	return i;
-+}
-+
-+int phys_to_target_node(phys_addr_t start)
-+{
-+	struct numa_meminfo *mi = &numa_meminfo;
-+	int nid = mi->blk[0].nid;
-+	int i = meminfo_to_nid(mi, start, &nid);
-+
-+	/*
-+	 * Prefer online nodes, but if reserved memory might be
-+	 * hot-added continue the search with reserved ranges.
-+	 */
-+	if (i < mi->nr_blks)
-+		return nid;
-+
-+	mi = numa_reserved_meminfo();
-+	meminfo_to_nid(mi, start, &nid);
-+	return nid;
-+}
-+EXPORT_SYMBOL_GPL(phys_to_target_node);
-+
- #ifdef CONFIG_MEMORY_HOTPLUG
- int memory_add_physaddr_to_nid(u64 start)
- {
- 	struct numa_meminfo *mi = &numa_meminfo;
- 	int nid = mi->blk[0].nid;
--	int i;
- 
--	for (i = 0; i < mi->nr_blks; i++)
--		if (mi->blk[i].start <= start && mi->blk[i].end > start)
--			nid = mi->blk[i].nid;
-+	meminfo_to_nid(mi, start, &nid);
- 	return nid;
- }
- EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
-diff --git a/include/linux/numa.h b/include/linux/numa.h
-index 20f4e44b186c..941790a0765b 100644
---- a/include/linux/numa.h
-+++ b/include/linux/numa.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #ifndef _LINUX_NUMA_H
- #define _LINUX_NUMA_H
--
-+#include <linux/types.h>
- 
- #ifdef CONFIG_NODES_SHIFT
- #define NODES_SHIFT     CONFIG_NODES_SHIFT
-@@ -15,11 +15,17 @@
- 
- #ifdef CONFIG_NUMA
- int numa_map_to_online_node(int node);
-+int phys_to_target_node(phys_addr_t addr);
- #else
- static inline int numa_map_to_online_node(int node)
- {
- 	return NUMA_NO_NODE;
- }
-+
-+static inline int phys_to_target_node(phys_addr_t addr)
-+{
-+	return NUMA_NO_NODE;
-+}
- #endif
- 
- #endif /* _LINUX_NUMA_H */
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index d618121bcc17..0db8b446e23e 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -2996,3 +2996,8 @@ void mpol_to_str(char *buffer, int maxlen, struct mempolicy *pol)
- 		p += scnprintf(p, buffer + maxlen - p, ":%*pbl",
- 			       nodemask_pr_args(&nodes));
- }
-+
-+__weak int phys_to_target_node(phys_addr_t addr)
-+{
-+	return NUMA_NO_NODE;
-+}
 
+> Fix two spelling mistakes in manpage describing the clone{2,3}()
+> syscalls/syscall wrappers.
+> 
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> ---
+>  man2/clone.2 | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/man2/clone.2 b/man2/clone.2
+> index f67a60067..57a9eaba7 100644
+> --- a/man2/clone.2
+> +++ b/man2/clone.2
+> @@ -70,12 +70,12 @@ create a new ("child") process, in a manner similar to
+>  .PP
+>  By contrast with
+>  .BR fork (2),
+> -these system cals provide more precise control over what pieces of execution
+> +these system calls provide more precise control over what pieces of execution
+>  context are shared between the calling process and the child process.
+>  For example, using these system calls, the caller can control whether
+>  or not the two processes share the virtual address space,
+>  the table of file descriptors, and the table of signal handlers.
+> -These system calls also allow the new child process to placed
+> +These system calls also allow the new child process to be placed
+>  in separate
+>  .BR namespaces (7).
+>  .PP
+> 
+> base-commit: 91243dad42a7a62df73e3b1dfbb810adc1b8b654
+> 
+
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
