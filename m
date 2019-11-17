@@ -2,240 +2,127 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8223FC432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 18:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 788F8C432C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 18:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F6AE20850
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 18:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E352075C
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 18:01:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rkhRGlPp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfKQSAb (ORCPT
+        id S1727171AbfKQSBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 13:00:31 -0500
-Received: from mga18.intel.com ([134.134.136.126]:18013 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbfKQSAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 13:00:30 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Nov 2019 10:00:29 -0800
-X-IronPort-AV: E=Sophos;i="5.68,317,1569308400"; 
-   d="scan'208";a="208876531"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Nov 2019 10:00:28 -0800
-Subject: [PATCH v2 18/18] libnvdimm/e820: Retrieve and populate correct
- 'target_node' info
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-nvdimm@lists.01.org
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-acpi@vger.kernel.org
-Date:   Sun, 17 Nov 2019 09:46:12 -0800
-Message-ID: <157401277293.43284.3805106435228534675.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <157401267421.43284.2135775608523385279.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <157401267421.43284.2135775608523385279.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        Sun, 17 Nov 2019 13:01:23 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43114 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfKQSBW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 13:01:22 -0500
+Received: by mail-wr1-f65.google.com with SMTP id n1so16752778wra.10;
+        Sun, 17 Nov 2019 10:01:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4E8vsN26IckcMh6YLAd5L8bc5MBFn3KXLunbu3nT/YU=;
+        b=rkhRGlPp6TwA0Hn1ctzUc7zD+7NNkWZR0NH8F0YP8arEENdzjxy+bfODzlhuPM8WVU
+         YOhKFFjjiCMOos7f3P4LHeKidTPNze7vXb+W1doKI7W1+ajrem4Ozf2gpn80a/VjJ+ln
+         mo4nMOgWXT/PfqQAuRg161YqWHIezKzwhWD6xI05CxXLVMoj9fVdYdzif2X0mZJuk02d
+         FoqbPhTvtmX94LNiNCHX5RNr1+/KYm0Xd0H7ig1C06VSOgvhIvmmwjuAq2uUzgpZg3+D
+         Ge3qYKQscYyGPWJoqJJMobAhjQDJaIPAdHrDcnC0IotrtylHkdeCUAohXjUeu3koCEOh
+         4kww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4E8vsN26IckcMh6YLAd5L8bc5MBFn3KXLunbu3nT/YU=;
+        b=LFNhX2zdiuBqGV9qI6CWfJnmwV6mqDOqYqw3kymRCcwq3fsz+aZ5dXUkfRZ+6xCi/l
+         CVPMduGI3uOdCD76Fj0OBDSpttFEHoEfG1honINyhUcxkmOfwqPSeso8BOKOBZkW4KmX
+         F+pbJnrOIs4MtIViuBWqTq604fuCPQhpGWSz4PutwOv1p0pe9tPMi+AGba31y3yaXpgr
+         p0denBhPUJo7kIiSSvpdSkOrhoJt0mfzjaLTwKOLERwZAHb6fI+z26fZ8+TtqcZcuoTV
+         3L/Ms6tnf9EGvDEziR63cpeyBqQJWQoCQZjSTvMVPnImA3/cMcIdG2AS+IpAVqVGgedy
+         /lGQ==
+X-Gm-Message-State: APjAAAUE5rVFdznzXEzsPGROD43agOdo0u/dltAZumzHPrpzk/vhFFRm
+        h8zNQLXMH1ka2DYm9VUx4pU=
+X-Google-Smtp-Source: APXvYqzqC+ofJW92NVIIwzF0GMAlaMsXhL5IgRD/u9ekuJiywWNkRstfaPdJLjS860EEEYKf8PO5lQ==
+X-Received: by 2002:adf:f20d:: with SMTP id p13mr24691953wro.325.1574013679908;
+        Sun, 17 Nov 2019 10:01:19 -0800 (PST)
+Received: from [192.168.178.53] (x5f752d31.dyn.telefonica.de. [95.117.45.49])
+        by smtp.gmail.com with ESMTPSA id t187sm13327318wma.16.2019.11.17.10.01.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 17 Nov 2019 10:01:18 -0800 (PST)
+Cc:     mtk.manpages@gmail.com, adrian@lisas.de, akpm@linux-foundation.org,
+        arnd@arndb.de, avagin@gmail.com, christian.brauner@ubuntu.com,
+        dhowells@redhat.com, fweimer@redhat.com, jannh@google.com,
+        keescook@chromium.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-man@vger.kernel.org,
+        mingo@elte.hu, oleg@redhat.com, xemul@virtuozzo.com
+Subject: Re: [PATCH 2/3] clone.2: Check for MAP_FAILED not NULL on mmap()
+To:     Christian Brauner <christian@brauner.io>
+References: <20191116114114.7066-1-christian@brauner.io>
+ <20191116114114.7066-2-christian@brauner.io>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <e94e46a1-d852-f5df-352c-592d5e0e9c6a@gmail.com>
+Date:   Sun, 17 Nov 2019 19:01:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191116114114.7066-2-christian@brauner.io>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new phys_to_target_node() and numa_map_to_online_node() helpers
-to retrieve the correct id for the 'numa_node' ("local" / online
-initiator node) and 'target_node' (offline target memory node) sysfs
-attributes.
+On 11/16/19 12:41 PM, Christian Brauner wrote:
+> From: Christian Brauner <christian.brauner@ubuntu.com>
+> 
+> If mmap() fails it will return MAP_FAILED which according to the manpage
+> is (void *)-1 not NULL.
 
-Below is an example from a 4 numa node system where all the memory on
-node2 is pmem / reserved. It should be noted that with the arrival of
-the ACPI HMAT table and EFI Specific Purpose Memory the kernel will
-start to see more platforms with reserved / performance differentiated
-memory in its own numa node. Hence all the stakeholders on the Cc for
-what is ostensibly a libnvdimm local patch.
+Sigh! Bad editing on my part.
 
-=== Before ===
+Thanks, Christian.
 
-/* Notice no online memory on node2 at start */
+Patch applied.
 
-# numactl --hardware
-available: 3 nodes (0-1,3)
-node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
-node 0 size: 3958 MB
-node 0 free: 3708 MB
-node 1 cpus: 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39
-node 1 size: 4027 MB
-node 1 free: 3871 MB
-node 3 cpus:
-node 3 size: 3994 MB
-node 3 free: 3971 MB
-node distances:
-node   0   1   3
-  0:  10  21  21
-  1:  21  10  21
-  3:  21  21  10
+Cheers,
 
-/*
- * Put the pmem namespace into devdax mode so it can be assigned to the
- * kmem driver
- */
-
-# ndctl create-namespace -e namespace0.0 -m devdax -f
-{
-  "dev":"namespace0.0",
-  "mode":"devdax",
-  "map":"dev",
-  "size":"3.94 GiB (4.23 GB)",
-  "uuid":"1650af9b-9ba3-4704-acd6-10178399d9a3",
-  [..]
-}
-
-/* Online Persistent Memory as System RAM */
-
-# daxctl reconfigure-device --mode=system-ram dax0.0
-libdaxctl: memblock_in_dev: dax0.0: memory0: Unable to determine phys_index: Success
-libdaxctl: memblock_in_dev: dax0.0: memory0: Unable to determine phys_index: Success
-libdaxctl: memblock_in_dev: dax0.0: memory0: Unable to determine phys_index: Success
-libdaxctl: memblock_in_dev: dax0.0: memory0: Unable to determine phys_index: Success
-[
-  {
-    "chardev":"dax0.0",
-    "size":4225761280,
-    "target_node":0,
-    "mode":"system-ram"
-  }
-]
-reconfigured 1 device
-
-/* Note that the memory is onlined by default to the wrong node, node0 */
-
-# numactl --hardware
-available: 3 nodes (0-1,3)
-node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
-node 0 size: 7926 MB
-node 0 free: 7655 MB
-node 1 cpus: 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39
-node 1 size: 4027 MB
-node 1 free: 3871 MB
-node 3 cpus:
-node 3 size: 3994 MB
-node 3 free: 3971 MB
-node distances:
-node   0   1   3
-  0:  10  21  21
-  1:  21  10  21
-  3:  21  21  10
+Michael
 
 
-=== After ===
 
-/* Notice that the "phys_index" error messages are gone */
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> ---
+>  man2/clone.2 | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/man2/clone.2 b/man2/clone.2
+> index 57a9eaba7..faff2ada6 100644
+> --- a/man2/clone.2
+> +++ b/man2/clone.2
+> @@ -1628,7 +1628,7 @@ main(int argc, char *argv[])
+>  
+>      stack = mmap(NULL, STACK_SIZE, PROT_READ | PROT_WRITE,
+>                   MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, \-1, 0);
+> -    if (stack == NULL)
+> +    if (stack == MAP_FAILED)
+>          errExit("mmap");
+>  
+>      stackTop = stack + STACK_SIZE;  /* Assume stack grows downward */
+> 
 
-# daxctl reconfigure-device --mode=system-ram dax0.0
-[
-  {
-    "chardev":"dax0.0",
-    "size":4225761280,
-    "target_node":2,
-    "mode":"system-ram"
-  }
-]
-reconfigured 1 device
 
-/* Notice that node2 is now correctly populated */
-
-# numactl --hardware
-available: 4 nodes (0-3)
-node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
-node 0 size: 3958 MB
-node 0 free: 3793 MB
-node 1 cpus: 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39
-node 1 size: 4027 MB
-node 1 free: 3851 MB
-node 2 cpus:
-node 2 size: 3968 MB
-node 2 free: 3968 MB
-node 3 cpus:
-node 3 size: 3994 MB
-node 3 free: 3908 MB
-node distances:
-node   0   1   2   3
-  0:  10  21  21  21
-  1:  21  10  21  21
-  2:  21  21  10  21
-  3:  21  21  21  10
-
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/nvdimm/e820.c |   18 ++++--------------
- 1 file changed, 4 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/nvdimm/e820.c b/drivers/nvdimm/e820.c
-index e02f60ad6c99..4cd18be9d0e9 100644
---- a/drivers/nvdimm/e820.c
-+++ b/drivers/nvdimm/e820.c
-@@ -7,6 +7,7 @@
- #include <linux/memory_hotplug.h>
- #include <linux/libnvdimm.h>
- #include <linux/module.h>
-+#include <linux/numa.h>
- 
- static int e820_pmem_remove(struct platform_device *pdev)
- {
-@@ -16,27 +17,16 @@ static int e820_pmem_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--#ifdef CONFIG_MEMORY_HOTPLUG
--static int e820_range_to_nid(resource_size_t addr)
--{
--	return memory_add_physaddr_to_nid(addr);
--}
--#else
--static int e820_range_to_nid(resource_size_t addr)
--{
--	return NUMA_NO_NODE;
--}
--#endif
--
- static int e820_register_one(struct resource *res, void *data)
- {
- 	struct nd_region_desc ndr_desc;
- 	struct nvdimm_bus *nvdimm_bus = data;
-+	int nid = phys_to_target_node(res->start);
- 
- 	memset(&ndr_desc, 0, sizeof(ndr_desc));
- 	ndr_desc.res = res;
--	ndr_desc.numa_node = e820_range_to_nid(res->start);
--	ndr_desc.target_node = ndr_desc.numa_node;
-+	ndr_desc.numa_node = numa_map_to_online_node(nid);
-+	ndr_desc.target_node = nid;
- 	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
- 	if (!nvdimm_pmem_region_create(nvdimm_bus, &ndr_desc))
- 		return -ENXIO;
-
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
