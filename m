@@ -2,134 +2,114 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA61C432C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 18:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA33EC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 18:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 010572075C
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 18:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82F5A20730
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 18:08:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DvWbNOi6"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="YSAzwdKl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726273AbfKQSCI (ORCPT
+        id S1726119AbfKQSH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 13:02:08 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43204 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfKQSCI (ORCPT
+        Sun, 17 Nov 2019 13:07:59 -0500
+Received: from mta-p0.oit.umn.edu ([134.84.196.200]:47148 "EHLO
+        mta-p0.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfKQSH7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 13:02:08 -0500
-Received: by mail-wr1-f66.google.com with SMTP id n1so16754491wra.10;
-        Sun, 17 Nov 2019 10:02:06 -0800 (PST)
+        Sun, 17 Nov 2019 13:07:59 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p0.oit.umn.edu (Postfix) with ESMTP id 47GKnV2xZyzcnW
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 18:07:58 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p0.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p0.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id MZrnhsVrFF4q for <linux-kernel@vger.kernel.org>;
+        Sun, 17 Nov 2019 12:07:58 -0600 (CST)
+Received: from mail-yw1-f69.google.com (mail-yw1-f69.google.com [209.85.161.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p0.oit.umn.edu (Postfix) with ESMTPS id 47GKnV1dDgzcnY
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 12:07:58 -0600 (CST)
+Received: by mail-yw1-f69.google.com with SMTP id b184so11067153ywa.15
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 10:07:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SOAiGCqxLeDKAkL4etz5e5bf2Xgdy9ztobordpDu2OI=;
-        b=DvWbNOi6s1QCbTHH3IG+N1UxXf/sR006yJr5f7m3tb3OQejwMUR5gCV/CVBGaYrVSB
-         ykMFyH5Mg0zHanGRtLW6Wmjk7Qb/5PqVIDVVTAL9igEbtHw1P7VFcO0nn/x3Rmk9wwED
-         aGCsN0Ye/WcoGaCn0WTozQoUELp3TRe21aKaeDcifLndSus3OzLVZSTgQ6qEy50KjlYt
-         iNK1AixlQK32ARdSRYnaUPuuotPBeZqKg6d/pVltRIaNCgXUSnE5E98r1x4wbvuUeLDx
-         5dbFS2O8M2hyvAa5cYm41CJjonew96c12Y2/1WUGaryW10XYGjXVir15A76X3WNiGoZg
-         7vFA==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=rMpew6zjYt8BPuA5TZf/KmQkS9FbG3A+IGOU7KV/r/s=;
+        b=YSAzwdKlPw8jVl+9ukfREsB6qTIq9HzlTnyIAkpxF5MZLdjE3vVJkhtRt1Ki6gfbgX
+         nlnuj1bmxllbk7oSuG6eHo7sMUAjbNjwwXZmIXy9oy3fSor9X4Sdc8+qtJoWFAm+AQAG
+         Fbib6TmCw+iyq6UnDx8HMQv1mIf0o5QIrRMyndcXkvykkfmeH+L8wk2kc/bSiud/YISm
+         LmnJyRyGuwdD0hZDF3XpW3K7KL/n8RE1vaanwkHV5/rt9jEedJQJNFGnggEDazJ5DVSN
+         XiZtcVVEvS/l03SsDpqpiD/o6yiiUkivEPeJHdYqN1CWc6MTsbilNvyQB99z+Db0/jku
+         HQHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SOAiGCqxLeDKAkL4etz5e5bf2Xgdy9ztobordpDu2OI=;
-        b=YW6GwsHTj3Bqdl/3p+ywjsgTbusywPdInjmvgu0YBAbwBRzHgww/GZK5jn7OcEItJt
-         Zcx5188BEehJrG2tVDoigP8q8XykitH20I/SLL5hr1dpJHuguZtfMQ/DhU4cc1mmfQij
-         10683ifUss5xzB9AGlv+I8Ql/olzBBK70JW28w9mkHtUosujxlZe01wF4DLcPAKT7JYE
-         GGgo0xFklxQe/I3WacuXt2px+yk7SODe6cTnSBYgYt4NPCu6PLbwFNQR5JlCnQDrJJks
-         bqWSTnb8xdq2Oh2I+Y0hAa6jknG+7e2CfAywXQad7AG2psNHd3ftwz5n4IjbQg+ZodAC
-         ChKQ==
-X-Gm-Message-State: APjAAAVwarqOkrKWwQCBmcAljxFyW7+h0xYI0bd2+O8GP2Jolbd/0Q9L
-        t1x8cTQaC3JErqzgR1dED6U=
-X-Google-Smtp-Source: APXvYqwWDHWTfRap0lX/smQFWjenIK1h8drtcSETj80gJG+UbrIl40rXwO1Pk7XHwaHi7wa5QhE0Rg==
-X-Received: by 2002:a5d:4410:: with SMTP id z16mr7232355wrq.85.1574013725847;
-        Sun, 17 Nov 2019 10:02:05 -0800 (PST)
-Received: from [192.168.178.53] (x5f752d31.dyn.telefonica.de. [95.117.45.49])
-        by smtp.gmail.com with ESMTPSA id g5sm18303675wmf.37.2019.11.17.10.02.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 17 Nov 2019 10:02:05 -0800 (PST)
-Cc:     mtk.manpages@gmail.com, adrian@lisas.de, akpm@linux-foundation.org,
-        arnd@arndb.de, avagin@gmail.com, christian.brauner@ubuntu.com,
-        dhowells@redhat.com, fweimer@redhat.com, jannh@google.com,
-        keescook@chromium.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-man@vger.kernel.org,
-        mingo@elte.hu, oleg@redhat.com, xemul@virtuozzo.com
-Subject: Re: [PATCH 3/3] clone.2: Use pid_t for clone3() {child,parent}_tid
-To:     Christian Brauner <christian@brauner.io>
-References: <20191116114114.7066-1-christian@brauner.io>
- <20191116114114.7066-3-christian@brauner.io>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <c70c0ddf-1cd2-9d33-c2f6-95c8faa546cf@gmail.com>
-Date:   Sun, 17 Nov 2019 19:02:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20191116114114.7066-3-christian@brauner.io>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rMpew6zjYt8BPuA5TZf/KmQkS9FbG3A+IGOU7KV/r/s=;
+        b=lZGMHXK4WeRTJF7wb3LAbWiB4AAe7G3VPoN0kY2UhD+imC+KlT1ZP5xjUhke+6IAL6
+         fK42ZTaDz5pg2/CUCjPbTXzYKWTdi+9ixsChbeMqxyuZ5bZjNLIQHKS/Zc9fskd4IopO
+         x58OJgtQEDzrPBY7xR+zNJzuToG8qamcCo1W02YGFsiBl6oqLkctueDEB2yXXP4IWHeZ
+         4Zd/Tah4aRZAY0dNF6JeA9g8CCufEEqZqk3O2jF+qxgzIBZkCKEysg+OQhN0yjDsDNYt
+         JRm8qVLAbAahwqXYb0rLSr7X9k/SBd+7PvBqK1HNoAsenwZn9PGwl/xcujKNQ5RhVslW
+         7NDg==
+X-Gm-Message-State: APjAAAVRX1a4uNvM2QPYbJXJz8yGgUyawbkXMNsNyDDIpF6Vx2eMjrel
+        gWmV3mdu9DpE+0VDMJzHvqQeNx/A2CD6QYr5ASkUBpBLsDnqQhqz8BmUvG7ir6Zdi2ICEcgOkZF
+        BwXstcAgVfOj8IzzbYwJ/duNAYE1H
+X-Received: by 2002:a0d:e1c5:: with SMTP id k188mr17317122ywe.470.1574014077667;
+        Sun, 17 Nov 2019 10:07:57 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz6mHLu72MhlrM+7cXvK++5H4c+YI4TXvAKytt9EKyUjBcaA4OHjW1IFsudo+oMSTzW8UfANA==
+X-Received: by 2002:a0d:e1c5:: with SMTP id k188mr17317105ywe.470.1574014077419;
+        Sun, 17 Nov 2019 10:07:57 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id l1sm8019506ywh.9.2019.11.17.10.07.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Nov 2019 10:07:57 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: megaraid_mbox: change the error level of crit to warning
+Date:   Sun, 17 Nov 2019 12:07:52 -0600
+Message-Id: <20191117180752.3974-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/16/19 12:41 PM, Christian Brauner wrote:
-> From: Christian Brauner <christian.brauner@ubuntu.com>
->
-> Advertise to userspace that they should use proper pid_t types for
-> arguments returning a pid.
-> The kernel-internal struct kernel_clone_args currently uses int as type
-> and since POSIX mandates that pid_t is a signed integer type and glibc
-> and friends use int this is not an issue. After the merge window for
-> v5.5 closes we can switch struct kernel_clone_args over to using pid_t
-> as well without any danger in regressing current userspace.
-> Also note, that the new set tid feature which will be merged for v5.5
-> uses pid_t types as well.
+In megaraid_alloc_cmd_packets(), incorrect mbox alignment and other
+out of memory failures are processed similarly. The patch makes the
+error logging consistent by replacing KERN_CRIT with KERN_WARNING.
 
-Thanks taking a further pass throuh this page, Christian, 
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ drivers/scsi/megaraid/megaraid_mbox.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Patch applied.
-
-Cheers,
-
-Michael
-
+diff --git a/drivers/scsi/megaraid/megaraid_mbox.c b/drivers/scsi/megaraid/megaraid_mbox.c
+index f6ac819e6e96..5595a7655c54 100644
+--- a/drivers/scsi/megaraid/megaraid_mbox.c
++++ b/drivers/scsi/megaraid/megaraid_mbox.c
+@@ -1046,7 +1046,7 @@ megaraid_alloc_cmd_packets(adapter_t *adapter)
  
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> ---
->  man2/clone.2 | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/man2/clone.2 b/man2/clone.2
-> index faff2ada6..bf2d7c731 100644
-> --- a/man2/clone.2
-> +++ b/man2/clone.2
-> @@ -183,9 +183,9 @@ is a structure of the following form:
->  struct clone_args {
->      u64 flags;        /* Flags bit mask */
->      u64 pidfd;        /* Where to store PID file descriptor
-> -                         (\fIint *\fP) */
-> +                         (\fIpid_t *\fP) */
->      u64 child_tid;    /* Where to store child TID,
-> -                         in child's memory (\fIint *\fP) */
-> +                         in child's memory (\fIpid_t *\fP) */
->      u64 parent_tid;   /* Where to store child TID,
->                           in parent's memory (\fIint *\fP) */
->      u64 exit_signal;  /* Signal to deliver to parent on
-> 
-
-
+ 		// make sure the mailbox is aligned properly
+ 		if (ccb->mbox_dma_h & 0x0F) {
+-			con_log(CL_ANN, (KERN_CRIT
++			con_log(CL_ANN, (KERN_WARNING
+ 				"megaraid mbox: not aligned on 16-bytes\n"));
+ 
+ 			goto out_teardown_dma_pools;
 -- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+2.17.1
+
