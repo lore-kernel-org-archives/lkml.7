@@ -2,163 +2,85 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E791C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 14:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B49C43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 14:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E383C20718
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 14:16:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="SjzxEjqW"
+	by mail.kernel.org (Postfix) with ESMTP id 7AFC720740
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 14:19:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574000397;
+	bh=pEX34XH2N4djAt2Brtgsng1QfYeQer2W/jIKcpN+Bkc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LpjcrtXHD6tAt2W/CTtBe37deOEPvtvrdoecOdXoHX39rmw3bE7Sr679gH8k9kMTa
+	 xgdb2mH1McdBoEYJEWObHLZFI9EQzF6aS2EOZLy9UjZndq8/KOTBKYT5ozhmMjAcpn
+	 y9HSJvguqiO2ga7P66beIwlKd5cWT+AUfFrsE/Cg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfKQOQD (ORCPT
+        id S1726184AbfKQOT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 09:16:03 -0500
-Received: from mout.web.de ([212.227.17.12]:46271 "EHLO mout.web.de"
+        Sun, 17 Nov 2019 09:19:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726177AbfKQOQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 09:16:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1574000146;
-        bh=khYjmsAlHeJ/yxNUCSYVsBtEtQ46bLQCesW0YQ4jjEE=;
-        h=X-UI-Sender-Class:Cc:References:Subject:From:To:Date:In-Reply-To;
-        b=SjzxEjqWiAP30V4pokfScQR5Do0oSG9E5vofcjFjAeQwrTgicM11dAe1X6R8ZujOG
-         Rh+Tko5K85j60wTO1VJ/Yj1z1n4gv4yRGdTPBzHusRgc54ahy3HFORvcYnTt6f+QsP
-         VAceP2npgzBNLahiBxKmuGEq2gpjevSPO4D6enE4=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([93.131.59.42]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MbyIM-1iGJrI0HGY-00JKlD; Sun, 17
- Nov 2019 15:15:46 +0100
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        linkinjeon@gmail.com
-References: <20191113081800.7672-4-namjae.jeon@samsung.com>
-Subject: Re: [PATCH 03/13] exfat: add inode operations
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org
-Message-ID: <82520012-9940-7f2b-3bac-bea5c2396ccd@web.de>
-Date:   Sun, 17 Nov 2019 15:15:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1726065AbfKQOTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 09:19:55 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AB8F20718;
+        Sun, 17 Nov 2019 14:19:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574000395;
+        bh=pEX34XH2N4djAt2Brtgsng1QfYeQer2W/jIKcpN+Bkc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GYhZpDa3kDgnoHyT7acegKOfE0xvbaMhohEPn/Zog+Bl4xkKZKiXKQXY5s7uqwh2p
+         +gvYzIGVJ7xcXDXNGcE1cQ5Xva6KFdS7Ugbmmn+cH7JTJb8ckYNQ/MIHDcKkvppn6Z
+         2lY7m9icUZIiu/BB66CYiPfYPF9YYoyCiAq7tdB4=
+Date:   Sun, 17 Nov 2019 09:19:50 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Dave Chinner <dchinner@redhat.com>,
+        Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.19 069/237] xfs: fix use-after-free race in
+ xfs_buf_rele
+Message-ID: <20191117141950.GF2261@sasha-vm>
+References: <20191116154113.7417-1-sashal@kernel.org>
+ <20191116154113.7417-69-sashal@kernel.org>
+ <20191116215423.GG25427@dread.disaster.area>
 MIME-Version: 1.0
-In-Reply-To: <20191113081800.7672-4-namjae.jeon@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:zf5nEkDn57Q5Ka1RPQHVODxHgldyqQQEzkQAVmuz2Kwcvj/OaQs
- hXv/X/M260bK754j/ijQ6SSORwPGgZo7ytpXZtRy3FxSRSzoSZZiInPTn0icG5Rhed5NJQL
- J0yqXGWBhtDIxU+pZXmT9A5KNbzAOtuoMN+yx/qTYOA4xpTVAZCauPjXMzY0hIxhjUwts0z
- M80h4631Q6ix+y/QvO/NA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Mlrv3wFmRxA=:HYZ1apU/qF5XMUnZoetoB4
- fiuuGP/QQ9nJhlSlOgVueG8H3MjiR0r2b/gbJTKyWolkevhU7p2LXcWgkcHBWrh+zbCLveede
- 2jqGCK+DSIuMrIbMOM1TTOZG8zFDtqlLBelleWhbLJQ7vC0HFMUBi6uTLUXVXxB7XidjL2IaB
- iMFkx/UbS0lwnSeG8P2KsLYQZWcczPc+b7t1/b4/0J0UF+RyFjiSHX0/4Q5YemI6IyfCF0PKH
- M49haKHYy9ESbkqcc6CKjdOJ7mZpDPPGgeF3KKxX46JY0hi4zH/MvQYCRBchP+MyABIiGoEzU
- 31za4GC5BEvCB/SKVEBawCOY9jnQCF09R7/MxDZk1qmXDrHYeCaGrIF1knaijCGeezeo87FGT
- sx8Oc/o94P8KUgzez06bK5zCEmdzM6K/kEjrATrUBc5mx2UEGvRZ/NCgiicd6q6cI4Mu5b500
- XJLrb5n5vu1hFKJk9C2XocBYLUv0J3aEU9iLDNgONo9IOWgC1IGlCjuICj0um93ejLfaaKOrF
- NX7tSVTPXpl+babhmycuxKfE7QeVAJsxOmY0l7JnVm0gAjILd/fSUsv4lKrF5wobKtYCtoWDm
- iPQHZFLesQEdyyN2Ep5haOS+IwuBXYAlGFqYeulyelK+9s4wZj4bPncFYsZTS/zhWFVcnHSAE
- wnBzEhyFlRMG+gazZtxfYrQnXbZU2W6BZk6lw1CRdge2Re3oVraGZHVSriWqoCYcnWEUadG/d
- VjaS/lXeaoWec8TdYwODxsi52w3y/MRpKptZRscdlBwrxJSuSm6qpcWi5BKhEpctLnqE8sQuF
- MDP0ZrvJglF+aU9ojE1gRstdxnqoWbLJN5hEV8IUXiDm2hUH0OeqcD7rCJ+OhCCSBGA9WuC0y
- 1pGTBSJA9XBDBne/5XGW6z4SZGKlBsqTfZ/GLMffTW9K0CAcbFNH3cypSPh5EU4EobQkcr8l3
- 5so5xKpXwqSV7bIrbkh4ucns7JSaeg5CR0hUVZ+yWz0nHkTu/4W33bAyRZGL6QoDDR9ddBrvg
- RqE2TuArzHbd6W4b/4gnlJzHsjDJGbmzGBQCrnwV62bQG6tLbJHSWJ42TeEvsA4mwGfm4qfIU
- GFCy8rWgPHaSrZxBDNjAmNa0FFNaEEQP9UyCdwNK7wBVzxm7UH+H+jnckzNr7eBOb0JTlCL09
- 3zRfcETGsPKWEAAGJr84Ab8WXeCjfckZEOOLZMU8boey3cmgpSpwMrPDraMMxfjszcIOHdPby
- Np+DzLdoOYtyAvm5XNnIXKDVf7FCAlLxtnwj0b6PjBhQkQ1HVHddD88RYNHI=
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191116215423.GG25427@dread.disaster.area>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> +++ b/fs/exfat/inode.c
-=E2=80=A6
-> +static int exfat_create(struct inode *dir, struct dentry *dentry, umode=
-_t mode,
-> +		bool excl)
-> +{
-=E2=80=A6
-+out:
-+	mutex_unlock(&EXFAT_SB(sb)->s_lock);
+On Sun, Nov 17, 2019 at 08:54:23AM +1100, Dave Chinner wrote:
+>[cc linux-xfs@vger.kernel.org]
+>
+>Hi Sasha,
+>
+>Any reason these these autosel patches are not being cc'd to the XFS
+>list for XFS maintainer visibility and review?
 
-Can the label =E2=80=9Cunlock=E2=80=9D be more appropriate?
+Interesting! It looks like the XFS entry in MAINTAINERS has duplicate
+entries for the mailing list, once with the M: tag and once with the L:
+tag, so when I run get_maintainer.pl I see:
 
+$ scripts/get_maintainer.pl -f fs/xfs/
+"Darrick J. Wong" <darrick.wong@oracle.com> (supporter:XFS FILESYSTEM)
+linux-xfs@vger.kernel.org (supporter:XFS FILESYSTEM)
+linux-kernel@vger.kernel.org (open list)
 
-> +static struct dentry *exfat_lookup(struct inode *dir, struct dentry *de=
-ntry,
-> +		unsigned int flags)
-> +{
-=E2=80=A6
-> +error:
-> +	mutex_unlock(&EXFAT_SB(sb)->s_lock);
+Which doesn't list an "open list" besides LKML.
 
-Would you like to use the label =E2=80=9Cunlock=E2=80=9D also at this plac=
-e (and similar ones)?
+I've fixed up my scripts to address that, sorry for missing it.
 
-
-> +static int exfat_search_empty_slot(struct super_block *sb,
-> +		struct exfat_hint_femp *hint_femp, struct exfat_chain *p_dir,
-> +		int num_entries)
-> +{
-=E2=80=A6
-> +out:
-> +	kfree(clu);
-
-How do you think about to rename the label to =E2=80=9Cfree_clu=E2=80=9D?
-
-Regards,
-Markus
+-- 
+Thanks,
+Sasha
