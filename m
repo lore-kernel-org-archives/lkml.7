@@ -2,89 +2,76 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEE5C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 20:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB7EC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 20:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22C4B20729
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 20:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 432E520729
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 20:43:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726237AbfKQUlC (ORCPT
+        id S1726314AbfKQUng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 15:41:02 -0500
-Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.220]:18599 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726128AbfKQUlC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 15:41:02 -0500
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQrEOHTIXsMvvtBRRPA=="
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id e07688vAHKexb1p
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sun, 17 Nov 2019 21:40:59 +0100 (CET)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH] Bluetooth: btbcm: Add entry for BCM4334B0 UART Bluetooth
-Date:   Sun, 17 Nov 2019 21:39:46 +0100
-Message-Id: <20191117203946.233900-1-stephan@gerhold.net>
-X-Mailer: git-send-email 2.23.0
+        Sun, 17 Nov 2019 15:43:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:54056 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726128AbfKQUnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 15:43:35 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EE8C31B;
+        Sun, 17 Nov 2019 12:43:35 -0800 (PST)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 152803F6C4;
+        Sun, 17 Nov 2019 12:43:33 -0800 (PST)
+Subject: Re: [GIT PULL] scheduler fixes
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20191116213742.GA7450@gmail.com>
+ <ab6f2b5a-57f0-6723-c62f-91a8ce6eddac@arm.com>
+ <20191117094549.GB126325@gmail.com>
+ <4e4b0828-abba-e27d-53f6-135df06eba1a@arm.com>
+ <CAHk-=wiEz7kG8YSbmAAALdP3Vnna_f4+LY4TPM0NQczeh3mviQ@mail.gmail.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <dbcc8947-3164-1202-a21e-ebd2a609d997@arm.com>
+Date:   Sun, 17 Nov 2019 20:43:24 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wiEz7kG8YSbmAAALdP3Vnna_f4+LY4TPM0NQczeh3mviQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the device ID for the WiFi/BT/FM combo chip BCM4334 (rev B0).
+On 17/11/2019 16:29, Linus Torvalds wrote:
+> Gcc can - and does - narrow enums to smaller integer types with the
+> '-fshort-enums' flag.
+> 
+> However, in practice nobody uses that, and it can cause interop
+> problems. So I think for us, enums are always at least 'int' (they can
+> be bigger).
+> 
+> That said, mixing enums and values that are bigger than the enumerated
+> ones is just a bad idea
+> 
+> It will, for example, cause us to miss compiler warnings (eg switch
+> statements with an enum will warn if you don't handle all cases, but
+> the 'all cases' is based on the actual enum range, not on the
+> _possible_ invalid values).
+> 
 
-The chip seems to use 43:34:b0:00:00:00 as default address,
-so add it to the list of default addresses and leave it up
-to the user to configure a valid one.
+Oh, yet another gcc flag... 
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
- drivers/bluetooth/btbcm.c | 3 +++
- 1 file changed, 3 insertions(+)
+Thanks for the detailed write-up.
 
-diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
-index 2d2e6d862068..0bb9023ec214 100644
---- a/drivers/bluetooth/btbcm.c
-+++ b/drivers/bluetooth/btbcm.c
-@@ -23,6 +23,7 @@
- #define BDADDR_BCM43430A0 (&(bdaddr_t) {{0xac, 0x1f, 0x12, 0xa0, 0x43, 0x43}})
- #define BDADDR_BCM4324B3 (&(bdaddr_t) {{0x00, 0x00, 0x00, 0xb3, 0x24, 0x43}})
- #define BDADDR_BCM4330B1 (&(bdaddr_t) {{0x00, 0x00, 0x00, 0xb1, 0x30, 0x43}})
-+#define BDADDR_BCM4334B0 (&(bdaddr_t) {{0x00, 0x00, 0x00, 0xb0, 0x34, 0x43}})
- #define BDADDR_BCM4345C5 (&(bdaddr_t) {{0xac, 0x1f, 0x00, 0xc5, 0x45, 0x43}})
- #define BDADDR_BCM43341B (&(bdaddr_t) {{0xac, 0x1f, 0x00, 0x1b, 0x34, 0x43}})
- 
-@@ -74,6 +75,7 @@ int btbcm_check_bdaddr(struct hci_dev *hdev)
- 	    !bacmp(&bda->bdaddr, BDADDR_BCM2076B1) ||
- 	    !bacmp(&bda->bdaddr, BDADDR_BCM4324B3) ||
- 	    !bacmp(&bda->bdaddr, BDADDR_BCM4330B1) ||
-+	    !bacmp(&bda->bdaddr, BDADDR_BCM4334B0) ||
- 	    !bacmp(&bda->bdaddr, BDADDR_BCM4345C5) ||
- 	    !bacmp(&bda->bdaddr, BDADDR_BCM43430A0) ||
- 	    !bacmp(&bda->bdaddr, BDADDR_BCM43341B)) {
-@@ -326,6 +328,7 @@ struct bcm_subver_table {
- 
- static const struct bcm_subver_table bcm_uart_subver_table[] = {
- 	{ 0x4103, "BCM4330B1"	},	/* 002.001.003 */
-+	{ 0x410d, "BCM4334B0"	},	/* 002.001.013 */
- 	{ 0x410e, "BCM43341B0"	},	/* 002.001.014 */
- 	{ 0x4204, "BCM2076B1"	},	/* 002.002.004 */
- 	{ 0x4406, "BCM4324B3"	},	/* 002.004.006 */
--- 
-2.23.0
-
+>                      Linus
+> 
