@@ -2,188 +2,103 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B555C43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A301BC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6382420674
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:49:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="hZrXlDN0"
+	by mail.kernel.org (Postfix) with ESMTP id 7C6AB206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:51:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbfKQLtm (ORCPT
+        id S1726207AbfKQLvx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 06:49:42 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:38156 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbfKQLtm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 06:49:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1573991379; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bpOPdwdclOQJndI4A9z8Lf5rv9wEQQ9QPF87PUX4glg=;
-        b=hZrXlDN0aHp+mXHWmsSavxf9AB0qKQe0F7M/42X0+/j+mjOzZs9yqcu/mmzv9A08JTeba+
-        oGvU9gsJjo8Qr57rOLhgmEgOm/iEecfIjwUNRS10sIapRfUUiuuD6czSWG8r6nVwTz5SpH
-        VzqUS7EdiPFdG84AJLovFvOyFgPgsv8=
-Date:   Sun, 17 Nov 2019 12:49:30 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 2/2] MIPS: Ingenic: Disable abandoned HPTLB function.
-To:     Zhou Yanjie <zhouyanjie@zoho.com>
-Cc:     Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ralf@linux-mips.org,
-        jhogan@kernel.org, gregkh@linuxfoundation.org,
-        paul.burton@mips.com, chenhc@lemote.com, tglx@linutronix.de,
-        jiaxun.yang@flygoat.com
-Message-Id: <1573991370.3.0@crapouillou.net>
-In-Reply-To: <5DCFCB41.3090807@zoho.com>
-References: <1571909341-10108-1-git-send-email-zhouyanjie@zoho.com>
-        <1571909341-10108-3-git-send-email-zhouyanjie@zoho.com>
-        <20191115213716.wt4wn2moj3fup4dc@lantea.localdomain>
-        <5DCFCB41.3090807@zoho.com>
+        Sun, 17 Nov 2019 06:51:53 -0500
+Received: from mga09.intel.com ([134.134.136.24]:3898 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726027AbfKQLvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 06:51:53 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Nov 2019 03:51:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,316,1569308400"; 
+   d="scan'208";a="236612782"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by fmsmga002.fm.intel.com with ESMTP; 17 Nov 2019 03:51:52 -0800
+Received: from fmsmsx162.amr.corp.intel.com (10.18.125.71) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 17 Nov 2019 03:51:52 -0800
+Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
+ fmsmsx162.amr.corp.intel.com (10.18.125.71) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 17 Nov 2019 03:51:51 -0800
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.127]) by
+ SHSMSX153.ccr.corp.intel.com ([169.254.12.215]) with mapi id 14.03.0439.000;
+ Sun, 17 Nov 2019 19:51:50 +0800
+From:   "Kang, Luwei" <luwei.kang@intel.com>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "kvm-pmu@eclists.intel.com" <kvm-pmu@eclists.intel.com>
+CC:     "ak@linux.intel.com" <ak@linux.intel.com>,
+        "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1 0/4] Enable PEBS when only have PEBS via PT w/o DS
+Thread-Topic: [PATCH v1 0/4] Enable PEBS when only have PEBS via PT w/o DS
+Thread-Index: AQHVmeoIPfTHl4y/ukGghigk57hp6aeLZhIAgAPdu5A=
+Date:   Sun, 17 Nov 2019 11:51:49 +0000
+Message-ID: <82D7661F83C1A047AF7DC287873BF1E17383C77D@SHSMSX104.ccr.corp.intel.com>
+References: <1573672574-25247-1-git-send-email-luwei.kang@intel.com>
+ <87h835edqn.fsf@ashishki-desk.ger.corp.intel.com>
+In-Reply-To: <87h835edqn.fsf@ashishki-desk.ger.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMjA1ODg4MDgtZmI3NC00MmJkLTlhYjEtYjI1OGM0NTM1ZjRjIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiYmk2cTBtajE1a0FReG1scldablh5ZGsxQkM5XC9QMndzd21OekowZ1A1dGh0R21aZlBsbFFHMUZDY1BPVjhYUVMifQ==
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zhou,
 
 
-Le sam., nov. 16, 2019 at 18:11, Zhou Yanjie <zhouyanjie@zoho.com> a=20
-=C3=A9crit :
-> Hi Paul,
->=20
-> On 2019=E5=B9=B411=E6=9C=8816=E6=97=A5 05:37, Paul Burton wrote:
->> Hi Zhou,
->>=20
->> On Thu, Oct 24, 2019 at 05:29:01PM +0800, Zhou Yanjie wrote:
->>> JZ4760/JZ4770/JZ4775/X1000/X1500 has an abandoned huge page
->>> tlb, write 0xa9000000 to cp0 config5 sel4 to disable this
->>> function to prevent getting stuck.
->> Can you describe how we "get stuck"?
->=20
-> When the kernel is started, it will be stuck in the "Run /init as=20
-> init process"
-> according to the log information. After using the debug probe, it is=20
-> found
-> that tlbmiss occurred when the run init was started, and entered the=20
-> infinite
-> loop in the "tlb-funcs.S".
->=20
->> What actually goes wrong on the
->> affected CPUs? Do they misinterpret EntryLo values? Which bits do=20
->> they
->> misinterpret?
->=20
-> According to Ingenic's explanation, this is because the=20
-> JZ4760/JZ4770/JZ4775/X1000
-> use the same core (both belong to PRID_COMP_INGENIC_D1). This core is=20
-> not fully
-> implemented in VTLB at design time, but only implements the 4K page=20
-> mode.
+> -----Original Message-----
+> From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Sent: Friday, November 15, 2019 4:38 PM
+> To: Kang, Luwei <luwei.kang@intel.com>; kvm-pmu@eclists.intel.com
+> Cc: ak@linux.intel.com; kan.liang@linux.intel.com; Kang, Luwei <luwei.kang@intel.com>; peterz@infradead.org; linux-
+> kernel@vger.kernel.org; alexander.shishkin@linux.intel.com
+> Subject: Re: [PATCH v1 0/4] Enable PEBS when only have PEBS via PT w/o DS
+> 
+> You forgot to CC Peter and LKML.
+> 
+> Luwei Kang <luwei.kang@intel.com> writes:
+> 
+> > This patchset is purely perf event system changes that to enable the
+> > PEBS when the system only supports PEBS via Intel PT w/o DS.
+> > Currently, there don't have such hardware which only supports PEBS via
+> > PT w/o DS but it is possible in KVM guest. In Tremont Atom platforms,
+> > PEBS via PT is the only way to enabled PEBS in KVM guest.
+> 
+> I don't understand what this says. If PEBS-via-PT is available and DS is not available, what happens and why?
 
-Actually hugepages work fine on all Ingenic SoCs I tested with, from=20
-JZ4740 upwards, with the VTLB, so this is incorrect.
+This is an internal review before sending it to community.
+In current software implementation, PEBS depends on the HW support of DS feature even if we have PEBS via PT( e.g. in intel_ds_init() function). This patchset just removes the dependency of PEBS and DS because there have a new path PEBS via Intel PT. I think there don't have any problem in host, but PEBS may not work in KVM guest when only have PEBS via PT w/o DS.
 
+Thanks,
+Luwei Kang
 
-> Support for larger pages was implemented by a component called HPTLB=20
-> that
-> they designed themselves, but this component was later discarded, so=20
-> write
-> 0xa9000000 to cp0 register5 sel4 to turn off HPTLB mode and return to=20
-> VTLB
-> mode. The actual test also shows that the kernel will no longer be=20
-> stuck in
-> the "Run / init as init process" after shutting down the HPTLB mode,=20
-> and can
-> boot to the shell normally.
-
-That's good info, please consider adding that in the comment and in the=20
-commit message, and maybe also change the last sentence to reflect=20
-what's actually going on with the infinite loop after the tlbmiss.
-
-Cheers,
--Paul
-
-
->=20
->>=20
->>> Confirmed by Ingenic,
->>> this operation will not adversely affect processors
->>> without HPTLB function.
->>>=20
->>> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
->>> ---
->>>   arch/mips/kernel/cpu-probe.c | 16 ++++++++++++++--
->>>   1 file changed, 14 insertions(+), 2 deletions(-)
->>>=20
->>> diff --git a/arch/mips/kernel/cpu-probe.c=20
->>> b/arch/mips/kernel/cpu-probe.c
->>> index 16033a4..cfebf8c 100644
->>> --- a/arch/mips/kernel/cpu-probe.c
->>> +++ b/arch/mips/kernel/cpu-probe.c
->>> @@ -1966,11 +1966,23 @@ static inline void cpu_probe_ingenic(struct=20
->>> cpuinfo_mips *c, unsigned int cpu)
->>>   	}
->>>   =7F=7F  	/*
->>> -	 * The config0 register in the Xburst CPUs with a processor ID of
->>> +	 * The config0 register in the XBurst CPUs with a processor ID of
->>> +	 * PRID_COMP_INGENIC_D1 has an abandoned huge page tlb, write
->>> +	 * 0xa9000000 to cp0 config5 sel4 to disable this function to
->> Saying "config5" suggests $16 sel 5 to me - Config5 is after all an
->> architecturally defined register & it's not this one. It'd be better=20
->> to
->> say "cop0 register 5 sel 4".
->=20
-> Sure, I'll change it in v2.
->=20
->>> +	 * prevent getting stuck.
->>> +	 */
->>> +	if ((c->processor_id & PRID_COMP_MASK) =3D=3D PRID_COMP_INGENIC_D1) {
->>> +		__asm__ (
->>> +			"li    $2, 0xa9000000 \n\t"
->>> +			"mtc0  $2, $5, 4      \n\t"
->>> +			"nop                  \n\t"
->>> +			::"r"(2));
->> I'd prefer that you add #defines to asm/mipsregs.h to provide a
->> write_c0_X() function where X is replaced with whatever the name of=20
->> this
->> register is, and preferably also #define macros describing the fields
->> present in the register. Writing a magic number isn't ideal.
->=20
-> Sure, I'll change it in v2.
->=20
->>> +	/*
->>> +	 * The config0 register in the XBurst CPUs with a processor ID of
->>>   	 * PRID_COMP_INGENIC_D0 report themselves as MIPS32r2 compatible,
->>>   	 * but they don't actually support this ISA.
->>>   	 */
->>> -	if ((c->processor_id & PRID_COMP_MASK) =3D=3D PRID_COMP_INGENIC_D0)
->>> +	} else if ((c->processor_id & PRID_COMP_MASK) =3D=3D=20
->>> PRID_COMP_INGENIC_D0)
->> It might be cleaner to use a switch statement rather than writing out
->> the & PRID_COMP_MASK condition twice?
->=20
-> Sure, I'll change it in v2.
->=20
-> Thanks and best regards!
->=20
->>=20
->> Thanks,
->>      Paul
->=20
->=20
->=20
-
-=
-
+> 
+> Regards,
+> --
+> Alex
