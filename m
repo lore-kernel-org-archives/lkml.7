@@ -2,104 +2,178 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC0CC432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 21:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDDDC43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 21:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35DC220855
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 21:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2B5B20748
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 21:27:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="M7iDKIUx"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lN/E0YLN";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="dbcljpPF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbfKQVQa (ORCPT
+        id S1726278AbfKQV1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 16:16:30 -0500
-Received: from ozlabs.org ([203.11.71.1]:58909 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726119AbfKQVQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 16:16:29 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47GPyx3WLxz9s3Z;
-        Mon, 18 Nov 2019 08:16:25 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1574025387;
-        bh=pPHlo48yEc1CtacGM4xou38J36W0+FgI5KZCO70rz64=;
-        h=Date:From:To:Cc:Subject:From;
-        b=M7iDKIUx7hvI9as+zZSM1HZgbbdxGDEha5YB/wwbnWfhJal5D/gOfwgc9BhFo0v0z
-         eUKPxSMvLYDJxPX3I5Tt0GU3ss5GnshR1ebvJwXE92HDxH1aHSW0pdv3EWcSmVXGha
-         46LgNcNmQYSOQFFoZ1hN2svefTmLNprFt/yDvdmvkqEDebvWhm6HPXtG8/RlDdeqT5
-         6wUoJCBL4V/+9U/hJeFLx+301ic4Ow0IZrl3EvDA0ip++eiet9CbkJlKpbj7TaCjs5
-         nNy36IIHw8OUqbE53cSxQROxmPoYXxHDMfAaMphBBFo5hc97t63gwulWNMtFlW7H+l
-         bI2liSOFzD4PA==
-Date:   Mon, 18 Nov 2019 08:16:17 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: linux-next: manual merge of the arm-soc tree with the kbuild tree
-Message-ID: <20191118081617.2b7c61eb@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Y5vKrcCIUoU3Eg+ILrp_ua1";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Sun, 17 Nov 2019 16:27:05 -0500
+Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:40164
+        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726128AbfKQV1F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 16:27:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574026023;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        bh=5PpfUPH5hT1SepK72OYVg5oTtoV8o9G5dTu2K6VQqLM=;
+        b=lN/E0YLNF/ps0RWcmycQRmoPVGQLzOlUidOBso2ZLkXUjsvZSnSdv9dWX8RA8gO2
+        8LRdkVMSoy7QAm0lMvjuqLqErlrjfMAVdqQBx3HOMtvmNPhnYjjghaBYTVsVxuXsQtV
+        y8PwC8JPt8xudZrtDONJdfL4QpoFbZw0mHxdFhrw=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574026023;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
+        bh=5PpfUPH5hT1SepK72OYVg5oTtoV8o9G5dTu2K6VQqLM=;
+        b=dbcljpPFyzICvXrDoqFBpZfKXL9DO15/CwiYbE/27PJw7GocTp83tHg4moYYx52+
+        wDo+6G5jBAp+MohDPTMDi9g9Ra6uWiHmqxsBqFB1BVEqUs+Wv1x+Hdt7LZyoEi2UOB9
+        d9U66JSNw2e0JifoGFhvu402qzFWMGBriFyW4BDg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BA585C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        marc.w.gonzalez@free.fr, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH v10 2/4] dt-bindings: clock: Convert qcom,mmcc to DT schema
+Date:   Sun, 17 Nov 2019 21:27:03 +0000
+Message-ID: <0101016e7b4311fe-8edd7849-df65-47dd-98fa-1e2063c83178-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1574025887-32667-1-git-send-email-jhugo@codeaurora.org>
+References: <1574025887-32667-1-git-send-email-jhugo@codeaurora.org>
+X-SES-Outgoing: 2019.11.17-54.240.27.10
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Y5vKrcCIUoU3Eg+ILrp_ua1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Convert the qcom,mmcc-X clock controller binding to DT schema.  Add the
+protected-clocks property to the schema to show that is it explicitly
+allowed, instead of relying on the generic, pre-schema binding.
 
-Hi all,
+Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+---
+ .../devicetree/bindings/clock/qcom,mmcc.txt        | 28 ----------
+ .../devicetree/bindings/clock/qcom,mmcc.yaml       | 60 ++++++++++++++++++++++
+ 2 files changed, 60 insertions(+), 28 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
 
-Today's linux-next merge of the arm-soc tree got a conflict in:
+diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt b/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+deleted file mode 100644
+index 8b0f784..0000000
+--- a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-Qualcomm Multimedia Clock & Reset Controller Binding
+-----------------------------------------------------
+-
+-Required properties :
+-- compatible : shall contain only one of the following:
+-
+-			"qcom,mmcc-apq8064"
+-			"qcom,mmcc-apq8084"
+-			"qcom,mmcc-msm8660"
+-			"qcom,mmcc-msm8960"
+-			"qcom,mmcc-msm8974"
+-			"qcom,mmcc-msm8996"
+-
+-- reg : shall contain base register location and length
+-- #clock-cells : shall contain 1
+-- #reset-cells : shall contain 1
+-
+-Optional properties :
+-- #power-domain-cells : shall contain 1
+-
+-Example:
+-	clock-controller@4000000 {
+-		compatible = "qcom,mmcc-msm8960";
+-		reg = <0x4000000 0x1000>;
+-		#clock-cells = <1>;
+-		#reset-cells = <1>;
+-		#power-domain-cells = <1>;
+-	};
+diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml b/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
+new file mode 100644
+index 0000000..78b1a22
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
+@@ -0,0 +1,60 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/qcom,mmcc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Multimedia Clock & Reset Controller Binding
++
++maintainers:
++  - Jeffrey Hugo <jhugo@codeaurora.org>
++  - Taniya Das <tdas@codeaurora.org>
++
++description: |
++  Qualcomm multimedia clock control module which supports the clocks, resets and
++  power domains.
++
++properties:
++  compatible :
++    enum:
++       - qcom,mmcc-apq8064
++       - qcom,mmcc-apq8084
++       - qcom,mmcc-msm8660
++       - qcom,mmcc-msm8960
++       - qcom,mmcc-msm8974
++       - qcom,mmcc-msm8996
++
++  '#clock-cells':
++    const: 1
++
++  '#reset-cells':
++    const: 1
++
++  '#power-domain-cells':
++    const: 1
++
++  reg:
++    maxItems: 1
++
++  protected-clocks:
++    description:
++       Protected clock specifier list as per common clock binding
++
++required:
++  - compatible
++  - reg
++  - '#clock-cells'
++  - '#reset-cells'
++  - '#power-domain-cells'
++
++examples:
++  # Example for MMCC for MSM8960:
++  - |
++    clock-controller@4000000 {
++      compatible = "qcom,mmcc-msm8960";
++      reg = <0x4000000 0x1000>;
++      #clock-cells = <1>;
++      #reset-cells = <1>;
++      #power-domain-cells = <1>;
++    };
++...
+-- 
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
 
-  include/Kbuild
-
-between commit:
-
-  fcbb8461fd23 ("kbuild: remove header compile test")
-
-from the kbuild tree and commit:
-
-  32adcaa010fa ("ARM: mmp: move cputype.h to include/linux/soc/")
-
-from the arm-soc tree.
-
-I fixed it up (I just deleted the file) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Y5vKrcCIUoU3Eg+ILrp_ua1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3RuKEACgkQAVBC80lX
-0GyG5wf+IQ+Q+2LXKtHpHFQjdvYsU3UOP8T4Rl/XI8B5ka8hii8IFEKmn/3gkNem
-YZEYcLyOblvKPwe7GD1NU2BSoowgn+hW86OhAmHg5E6WC0AXKuZIXNj2wm3DNnjg
-VvlA2WZJ+gXkSZb22fDkrFY9E34eRNTwptUco50cFaYFE6zaTlW6YM8O/cqphFwP
-vnDI5jlJ/JLbjWhXUalOTHKOejyL1pJQ0L1bD6w3xwMBtPB0y3dddTUb17/eLxxk
-UswLa0S4sSVkLr9Orljwyzrox5GKff6D6nBUDn38qYbk6XOpZJEfEEQYo6OqdZOt
-LQ5/uh1JjrEnqpMU6+F87E+cv9GgNg==
-=XRv2
------END PGP SIGNATURE-----
-
---Sig_/Y5vKrcCIUoU3Eg+ILrp_ua1--
