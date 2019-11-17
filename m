@@ -2,213 +2,276 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EB3C43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 13:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A46C43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 13:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5983C2084D
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 13:14:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="irFK3+Gu"
+	by mail.kernel.org (Postfix) with ESMTP id 435952068E
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 13:19:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbfKQNOb (ORCPT
+        id S1726109AbfKQNTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 08:14:31 -0500
-Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.218]:19072 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfKQNOb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 08:14:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573996463;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=z7TwVxZs2EnNaRI5O7Pgh8WK4q6ghIyxAhe6RiJYSDo=;
-        b=irFK3+Gu7YEHrOEywGRndlHrH+ua5WHFXS/QB/9gZ3pUiuqh9EaAKDm5NVWP/4Ja1c
-        XH/Om2I6qzy7USRA3KZidQe0a4gf5wEihNQ4hFN9pV2BNwvcqLyJr0i8KFe7N4d4GPqr
-        4LgtMKxNWH8ngp+WZoQjDNwEWcGZUxE2lDXnFXrQtF3NL0chb79y0aI9OLYwiQQpKQrL
-        rqDHtmAX4s+v7gqVKl5Wsgj8TgVo7YEbKTwnT+4AVW+ezNmEjU6OYcQnqyYYq1iRpkzJ
-        mJ8MKMcFK0aHFeHDL4woQSWiUThPL6GSf4U46gIGJUqwmaNLK70GMongfnN1pWUsYDop
-        ud7Q==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSaXA4JLWE="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
-        with ESMTPSA id L09db3vAHDEEOai
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sun, 17 Nov 2019 14:14:14 +0100 (CET)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: MIPS: bug: gettimeofday syscall broken on CI20 board
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <18788C50-F29B-4BD7-89F6-B056FF490214@goldelico.com>
-Date:   Sun, 17 Nov 2019 14:14:14 +0100
-Cc:     linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        MIPS Creator CI20 Development 
-        <mips-creator-ci20-dev@googlegroups.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <703DC004-96E8-463D-8870-3CC410FE1C5E@goldelico.com>
-References: <18788C50-F29B-4BD7-89F6-B056FF490214@goldelico.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>
-X-Mailer: Apple Mail (2.3124)
+        Sun, 17 Nov 2019 08:19:17 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:35708 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726037AbfKQNTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 08:19:16 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id C2D76FB03;
+        Sun, 17 Nov 2019 14:19:13 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id RVh6UuBQgdbp; Sun, 17 Nov 2019 14:19:11 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 1BCAA4994A; Sun, 17 Nov 2019 14:19:05 +0100 (CET)
+Date:   Sun, 17 Nov 2019 14:19:05 +0100
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v7 0/2] drm: bridge: Add NWL MIPI DSI host controller
+ support
+Message-ID: <20191117131904.GA3708@bogon.m.sigxcpu.org>
+References: <cover.1571494140.git.agx@sigxcpu.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1571494140.git.agx@sigxcpu.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vincenzo,
+Hi,
+On Sat, Oct 19, 2019 at 04:12:23PM +0200, Guido Günther wrote:
+> This adds initial support for the NWL MIPI DSI Host controller found on i.MX8
+> SoCs.
 
-> Am 07.11.2019 um 17:21 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->=20
-> Hi,
-> I am trying to run v5.4-rc6 on the CI20 board (jz4780) and it
-> is almost ok. Except one strange thing.
->=20
-> If I install a v4.19.81 kernel I can initialize the
-> ethernet interface and dhclient works.
->=20
-> If I install a v5.4-rc6 kernel on exactly the same
-> rootfs dhclient fails with
->=20
-> root@letux:~# dhclient
-> ../../../../lib/isc/unix/time.c:200: Operation not permitted
-> root@letux:~#
->=20
-> I have done some strace and the first significant difference
-> is that with v5.4-rc6 there is no gettimeofday syscall.
->=20
-> Another symptom pointing in the same direction is that
-> after manually assigning an IP address I can run ping
-> but get strange time values.
->=20
-> So it may be that
->=20
-> 24640f233b46 mips: Add support for generic vDSO
->=20
-> did break gettimeofday when used with latest Debian Stretch
-> libraries. I tried to git revert but there are conflicts.
->=20
-> Just a side-note: both kernels work with Debian Jessie,
-> which likely has an older gettimeofday wrapper that
-> is not influenced by some subtle change.
+Is there anything i can do to move this forward? As far as i can tell
+all review comments should be addressed.
+Cheers,
+ -- Guido
 
-I finally found time to do a bisect and it confirms:
-
-24640f233b466051ad3a5d2786d2951e43026c9d is the first bad commit
-commit 24640f233b466051ad3a5d2786d2951e43026c9d
-Author: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Date:   Fri Jun 21 10:52:46 2019 +0100
-
-    mips: Add support for generic vDSO
-   =20
-    The mips vDSO library requires some adaptations to take advantage of =
-the
-    newly introduced generic vDSO library.
-   =20
-    Introduce the following changes:
-     - Modification of vdso.c to be compliant with the common vdso =
-datapage
-     - Use of lib/vdso for gettimeofday
-   =20
-    Cc: Ralf Baechle <ralf@linux-mips.org>
-    Cc: Paul Burton <paul.burton@mips.com>
-    Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-    [paul.burton@mips.com: Prepend $(src) to config-n32-o32-env.c path.]
-    Signed-off-by: Paul Burton <paul.burton@mips.com>
-
- arch/mips/Kconfig                         |   2 +
- arch/mips/include/asm/vdso.h              |  78 +--------------
- arch/mips/include/asm/vdso/gettimeofday.h | 151 =
-++++++++++++++++++++++++++++++
- arch/mips/include/asm/vdso/vdso.h         |  85 +++++++++++++++++
- arch/mips/include/asm/vdso/vsyscall.h     |  43 +++++++++
- arch/mips/kernel/vdso.c                   |  37 ++------
- arch/mips/vdso/Makefile                   |  33 ++++++-
- arch/mips/vdso/config-n32-o32-env.c       |  17 ++++
- arch/mips/vdso/elf.S                      |   2 +-
- arch/mips/vdso/sigreturn.S                |   2 +-
- arch/mips/vdso/vdso.h                     |  85 -----------------
- arch/mips/vdso/vgettimeofday.c            |  40 ++++++++
- 12 files changed, 378 insertions(+), 197 deletions(-)
- create mode 100644 arch/mips/include/asm/vdso/gettimeofday.h
- create mode 100644 arch/mips/include/asm/vdso/vdso.h
- create mode 100644 arch/mips/include/asm/vdso/vsyscall.h
- create mode 100644 arch/mips/vdso/config-n32-o32-env.c
- delete mode 100644 arch/mips/vdso/vdso.h
- create mode 100644 arch/mips/vdso/vgettimeofday.c
-
-So this patch intoruced in v5.4-rc1 breaks compatibility with Debian 9.9
-user space assumptions.
-
-One thing seems strange to me:
-
--/**
-- * union mips_vdso_data - Data provided by the kernel for the VDSO.
-- * @xtime_sec:         Current real time (seconds part).
-- * @xtime_nsec:                Current real time (nanoseconds part, =
-shifted).
-- * @wall_to_mono_sec:  Wall-to-monotonic offset (seconds part).
-- * @wall_to_mono_nsec: Wall-to-monotonic offset (nanoseconds part).
-- * @seq_count:         Counter to synchronise updates (odd =3D =
-updating).
-- * @cs_shift:          Clocksource shift value.
-- * @clock_mode:                Clocksource to use for time functions.
-- * @cs_mult:           Clocksource multiplier value.
-- * @cs_cycle_last:     Clock cycle value at last update.
-- * @cs_mask:           Clocksource mask value.
-- * @tz_minuteswest:    Minutes west of Greenwich (from timezone).
-- * @tz_dsttime:                Type of DST correction (from timezone).
-- *
-- * This structure contains data needed by functions within the VDSO. It =
-is
-- * populated by the kernel and mapped read-only into user memory. The =
-time
-- * fields are mirrors of internal data from the timekeeping =
-infrastructure.
-- *
-- * Note: Care should be taken when modifying as the layout must remain =
-the same
-- * for both 64- and 32-bit (for 32-bit userland on 64-bit kernel).
-- */
- union mips_vdso_data {
--       struct {
--               u64 xtime_sec;
--               u64 xtime_nsec;
--               u64 wall_to_mono_sec;
--               u64 wall_to_mono_nsec;
--               u32 seq_count;
--               u32 cs_shift;
--               u8 clock_mode;
--               u32 cs_mult;
--               u64 cs_cycle_last;
--               u64 cs_mask;
--               s32 tz_minuteswest;
--               s32 tz_dsttime;
--       };
--
-+       struct vdso_data data[CS_BASES];
-        u8 page[PAGE_SIZE];
- };
-
-If I look at the definition of vdso_data it *is* significantly differen
-from mips_vdso_data.
-
-What I would assume is that the struct mips_vdso_data is embossed in =
-user
-space code and therefore using vdso_data instead is breaking API.
-
-Please advise what I should try or check to narrow down further.
-
-BR and thanks,
-Nikolaus Schaller
-
+> 
+> It adds support for the i.MX8MQ but the same IP core can also be found on e.g.
+> i.MX8QXP. I added the necessary hooks to support other imx8 variants but since
+> I only have imx8mq boards to test I omitted the platform data for other SoCs.
+> 
+> The code is based on NXPs BSP so I added Robert Chiras as
+> Co-authored-by.
+> 
+> The most notable changes over the BSP driver are
+>  - Calculate HS mode timing from phy_configure_opts_mipi_dphy
+>  - Perform all clock setup via DT
+>  - Merge nwl-imx and nwl drivers
+>  - Add B0 silion revision quirk
+>  - become a bridge driver to hook into mxsfb / dcss
+>    imx-display-subsystem so it makes sense to make it drive a bridge for dsi as
+>    well).
+>  - Use panel_bridge to attach the panel
+>  - Use multiplex framework instead of accessing syscon directly
+> 
+> This has been tested on a Librem 5 devkit using mxsfb with Robert's patches[1]
+> and the rocktech-jh057n00900 panel driver on next-20191018. The DCSS can later
+> on also act as input source too.
+> 
+> Changes from v7:
+> - Per review comments by Andrzej Hajda
+>   https://lore.kernel.org/linux-arm-kernel/c86b7ca2-7799-eafd-c380-e4b551520837@samsung.com/
+>   - Drop spare empty line
+>   - handle nwl_dsi_write errors
+>   - better handle read errors
+>   - unwind in case of error in nwl_dsi_enable
+>   - use bridge_to_dsi() instead of accessing driver_private
+>   - don't log on -EPROBEDEFER when fething the reset controller
+>   - use endpoint number to determine input
+> - Spotted by kbuild test robot <lkp@intel.com>
+>   https://lore.kernel.org/linux-arm-kernel/201909230644.qfSKbNf9%25lkp@intel.com/
+>   Use signed return type for nwl_dsi_get_dpi_pixel_format
+> - Drop connector type from drm_panel_bridge_add
+> - Don't forget to set an error value on dsi reads
+> 
+> Changes from v5:
+> - Per review comments by Andrzej Hajda
+>   https://lists.freedesktop.org/archives/dri-devel/2019-September/235281.html
+>   - Fix include file ordering
+>   - Add a comment to nwl_dsi_platform_data that will allow to add support
+>     at least for the i.MX8QM
+>   - Merge driver into a single file plus the register defs in a separate header
+> - Make more functions and structs static
+> 
+> Changes from v4:
+> - Collect Reviewed-by: from Rob Herring, thanks!
+>   https://lists.freedesktop.org/archives/dri-devel/2019-September/233979.html
+> - Spotted by kbuild test robot <lkp@intel.com>
+>   https://lists.freedesktop.org/archives/dri-devel/2019-September/233860.html
+>   https://lists.freedesktop.org/archives/dri-devel/2019-September/233863.html
+>   - fix format string for size_t
+>   - Use DIV64_U64_ROUND_UP to fix build on 32 bit architectures
+>     We can't use simple shift sind d and n are similar in size and
+>     we need full precision
+> - Fix debug cfg_t_post debug print out
+> - Avoid PSEC_PER_SEC
+> - Move timeout / overflow handling out of nwl_dsi_finish_transmission,
+>   it would never end up being reported since the call to the function
+>   was guarded by flags.
+> - Drop 'support for' from KConfig title to make it match the other
+>   drivers in that submenu
+> 
+> Changes from v3:
+> - Per review comments by Robert Chiras
+>   https://lists.freedesktop.org/archives/dri-devel/2019-August/232580.html
+>   - Add Robert's {Signed-off,Tested}-by:
+>   - Respect number of lanes when calculting bandwidth limits
+>   - Drop duplicate NWL_DSI_ENABLE_MULT_PKTS setup
+> - Per testing by Rober Chiras
+>   https://lists.freedesktop.org/archives/dri-devel/2019-August/233688.html
+>   - Drop duplicate (and too early) drm_bridge_add() in nwl_dir_probe() that
+>     made mxsfb fail to connect to the bridge since the panel_bridge was not up
+>     yet. drm_bridge_add() happens in nwl_dsi_host_attach() where after the
+>     panel_bridge was set up.
+> - Per review comments by Rob Herring on bindings
+>   https://lists.freedesktop.org/archives/dri-devel/2019-August/233196.html
+>   - drop description from power-domains and resets
+>   - allow BSD 2 clause license as well
+>   - make ports more specific
+>   - add #address-cells, #size-cells as required
+>   - use additionalProperties
+>   - panel is of type object
+> 
+> Changes from v2:
+> - Per review comments by Rob Herring
+>   https://lists.freedesktop.org/archives/dri-devel/2019-August/230448.html
+>   - bindings:
+>     - Simplify by restricting to fsl,imx8mq-nwl-dsi
+>     - document reset lines
+>     - add port@{0,1}
+>     - use a real compatible string for the panel
+>     - resets are required
+> - Per review comments by Arnd Bergmann
+>   https://lists.freedesktop.org/archives/dri-devel/2019-August/230868.html
+>   - Don't access iomuxc_gpr regs directly. This allows us to drop the
+>     first patch in the series with the iomuxc_gpr field defines.
+> - Per review comments by Laurent Pinchart
+>   Fix wording in bindings
+> - Add mux-controls to bindings
+> - Don't print error message on dphy probe deferral
+> 
+> Changes from v1:
+> - Per review comments by Sam Ravnborg
+>   https://lists.freedesktop.org/archives/dri-devel/2019-July/228130.html
+>   - Change binding docs to YAML
+>   - build: Don't always visit imx-nwl/
+>   - build: Add header-test-y
+>   - Sort headers according to DRM convention
+>   - Use drm_display_mode instead of videmode
+> - Per review comments by Fabio Estevam
+>   https://lists.freedesktop.org/archives/dri-devel/2019-July/228299.html
+>   - Don't restrict build to ARCH_MXC
+>   - Drop unused includes
+>   - Drop unreachable code in imx_nwl_dsi_bridge_mode_fixup()
+>   - Drop remaining calls of dev_err() and use DRM_DEV_ERR()
+>     consistently.
+>   - Use devm_platform_ioremap_resource()
+>   - Drop devm_free_irq() in probe() error path
+>   - Use single line comments where sufficient
+>   - Use <linux/time64.h> instead of defining USEC_PER_SEC
+>   - Make input source select imx8 specific
+>   - Drop <asm/unaligned.h> inclusion (after removal of get_unaligned_le32)
+>   - Drop all EXPORT_SYMBOL_GPL() for functions used in the same module
+>     but different source files.
+>   - Drop nwl_dsi_enable_{rx,tx}_clock() by invoking clk_prepare_enable()
+>     directly
+>   - Remove pointless comment
+> - Laurent Pinchart
+>   https://lists.freedesktop.org/archives/dri-devel/2019-July/228313.html
+>   https://lists.freedesktop.org/archives/dri-devel/2019-July/228308.html
+>   - Drop (on iMX8MQ) unused csr regmap
+>   - Use NWL_MAX_PLATFORM_CLOCKS everywhere
+>   - Drop get_unaligned_le32() usage
+>   - remove duplicate 'for the' in binding docs
+>   - Don't include unused <linux/clk-provider.h>
+>   - Don't include unused <linux/component.h>
+>   - Drop dpms_mode for tracking state, trust the drm layer on that
+>   - Use pm_runtime_put() instead of pm_runtime_put_sync()
+>   - Don't overwrite encoder type
+>   - Make imx_nwl_platform_data const
+>   - Use the reset controller API instead of open coding that platform specific
+>     part
+>   - Use <linux/bitfield.h> intead of making up our own defines
+>   - name mipi_dsi_transfer less generic: nwl_dsi_transfer
+>   - ensure clean in .remove by calling mipi_dsi_host_unregister.
+>   - prefix constants by NWL_DSI_
+>   - properly format transfer_direction enum
+>   - simplify platform clock handling
+>   - Don't modify state in mode_fixup() and use mode_set() instead
+>   - Drop bridge detach(), already handle by nwl_dsi_host_detach()
+>   - Drop USE_*_QUIRK() macros
+> - Drop (for now) unused clock defnitions. 'pixel' and 'bypass' clock will be
+>   used for i.MX8 SoCs but since they're unused atm drop the definitions - but
+>   keep the logic to enable/disable several clocks in place since we know we'll
+>   need it in the future.
+> 
+> Changes from v0:
+> - Add quirk for IMQ8MQ silicon B0 revision to not mess with the
+>   system reset controller on power down since enable() won't work
+>   otherwise.
+> - Drop devm_free_irq() handled by the device driver core
+> - Disable tx esc clock after the phy power down to unbreak
+>   disable/enable (unblank/blank)
+> - Add ports to dt binding docs
+> - Select GENERIC_PHY_MIPI_DPHY instead of GENERIC_PHY for
+>   phy_mipi_dphy_get_default_config
+> - Select DRM_MIPI_DSI
+> - Include drm_print.h to fix build on next-20190408
+> - Drop some debugging messages
+> - Newline terminate all DRM_ printouts
+> - Turn component driver into a drm bridge
+> 
+> [0]: https://lists.freedesktop.org/archives/dri-devel/2019-May/219484.html
+> [1]: https://patchwork.freedesktop.org/series/62822/
+> 
+> Guido Günther (2):
+>   dt-bindings: display/bridge: Add binding for NWL mipi dsi host
+>     controller
+>   drm/bridge: Add NWL MIPI DSI host controller support
+> 
+>  .../bindings/display/bridge/nwl-dsi.yaml      |  203 +++
+>  drivers/gpu/drm/bridge/Kconfig                |   16 +
+>  drivers/gpu/drm/bridge/Makefile               |    3 +
+>  drivers/gpu/drm/bridge/nwl-dsi.c              | 1235 +++++++++++++++++
+>  drivers/gpu/drm/bridge/nwl-dsi.h              |  144 ++
+>  5 files changed, 1601 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+>  create mode 100644 drivers/gpu/drm/bridge/nwl-dsi.c
+>  create mode 100644 drivers/gpu/drm/bridge/nwl-dsi.h
+> 
+> -- 
+> 2.23.0.rc1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
