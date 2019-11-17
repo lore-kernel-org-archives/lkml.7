@@ -2,201 +2,77 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF076C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C638C47409
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7193820715
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 526092086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:48:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="ZFWs9y7E"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="pVvBpIOe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbfKQLip (ORCPT
+        id S1726278AbfKQLsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 06:38:45 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.102]:19612 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbfKQLip (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 06:38:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573990721;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=YqzTRKct9z9gla3oe9zMeXrMmZD+9Bx/RGc/dTtEL+I=;
-        b=ZFWs9y7EWsDsBHNY0NStjHd33PTuGywm722Ez8mcyoSbuwRGvCz3m8pWhL+/T4nRQn
-        s5EUQ0TCYE+loG2+GPIYy4kQdW4Obr10C+1+7fxR7lQUa68GxbxLYp/cGwNLCskxoBhM
-        FeQueWU/nACy0U4vZ4sWKav7oUYmO1uy7rDErgcFys7Wbt+N6/nwiDQvhFLCNP+4mOmr
-        GQJfYwzAcx+t4NJmDuhlcqa3UsTgNOFO54aXUL/nlDe6Ksui/tC7vFemejVsmADH1aoa
-        GvIUQ/BmcKz0mhR+7nccvpM5UT1jRqpzixHKuUy1GD6YQsyavUF1y8OoUSfIC9do1AmP
-        z0UA==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzHHXDbIvSfb0y2"
-X-RZG-CLASS-ID: mo00
-Received: from positron.chronox.de
-        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
-        with ESMTPSA id N09a57vAHBbgVWe
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sun, 17 Nov 2019 12:37:42 +0100 (CET)
-From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>
-Subject: Re: [PATCH v25 03/12] LRNG - /proc interface
-Date:   Sun, 17 Nov 2019 12:37:42 +0100
-Message-ID: <2404102.WUYFDzPpWi@positron.chronox.de>
-In-Reply-To: <87k17z4cna.fsf@x220.int.ebiederm.org>
-References: <6157374.ptSnyUpaCn@positron.chronox.de> <2476454.l8LQlgn7Hv@positron.chronox.de> <87k17z4cna.fsf@x220.int.ebiederm.org>
+        Sun, 17 Nov 2019 06:48:40 -0500
+Received: from onstation.org ([52.200.56.107]:38672 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726027AbfKQLsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 06:48:40 -0500
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id B2A693E8F6;
+        Sun, 17 Nov 2019 11:48:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1573991319;
+        bh=GmSQbPGsqt7hQkZ5e0T4S/NK61H3Et1C5o5BqmHyzFg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=pVvBpIOewqOttuCPEHkzNsvb1fhuSPjKR91EyXeog8JkXFeNOG+uP+rsBUg/Phrbd
+         zxZaWJtngOdtEpTR6psBmMEoXWhVKtIRywYC3wGskhFcNeiwyavZuN3uaBRVCuSz2f
+         4co11X/FuDoqPWznKf0fLCAx8w6qUwepClRaiEC0=
+From:   Brian Masney <masneyb@onstation.org>
+To:     robdclark@gmail.com, sean@poorly.run, robh+dt@kernel.org
+Cc:     airlied@linux.ie, daniel@ffwll.ch, jcrouse@codeaurora.org,
+        dianders@chromium.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Subject: [PATCH 0/4] drm/msm/gpu: add support for ocmem interconnect
+Date:   Sun, 17 Nov 2019 06:48:21 -0500
+Message-Id: <20191117114825.13541-1-masneyb@onstation.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Sonntag, 17. November 2019, 00:36:25 CET schrieb Eric W. Biederman:
+Some A3xx and all A4xx Adreno GPUs do not have GMEM inside the GPU core
+and must use the On Chip MEMory (OCMEM) in order to be functional.
+There's a separate interconnect path that needs to be setup to OCMEM.
+This patch series adds support for that path, and sets the votes for the
+two interconnect paths to the highest speed for a3xx and a4xx-based
+platforms.
 
-Hi Eric,
+Brian Masney (4):
+  dt-bindings: drm/msm/gpu: document second interconnect
+  drm/msm/gpu: add support for ocmem interconnect path
+  drm/msm/a3xx: set interconnect bandwidth vote
+  drm/msm/a4xx: set interconnect bandwidth vote
 
-> Stephan M=FCller <smueller@chronox.de> writes:
-> > The LRNG /proc interface provides the same files as the legacy
-> > /dev/random. These files behave identically. Yet, all files are
-> > documented at [1].
->=20
-> For someone who works in this area a lot this description is confusing.
->=20
-> You are talking about sysctls not ordinary proc files.
+ .../devicetree/bindings/display/msm/gpu.txt   |  6 +++++-
+ drivers/gpu/drm/msm/adreno/a3xx_gpu.c         |  8 ++++++++
+ drivers/gpu/drm/msm/adreno/a4xx_gpu.c         |  8 ++++++++
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c         |  6 +++---
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c       | 20 +++++++++++++++----
+ drivers/gpu/drm/msm/msm_gpu.h                 |  3 ++-
+ 6 files changed, 42 insertions(+), 9 deletions(-)
 
-Agreed and I will change the description accordingly.
->=20
-> You don't have a call register_sysctl.  If you want your own
-> implementation of these sysctls that would seem to be the way to get
-> them.  Teach each implementation to register their own set of sysctls
-> if they are enabled.
-
-Agreed, I will do that.
->=20
-> The entire structure of the code you are adding I have quite confusing,
-> and a bit messing.
->=20
-> Why add a declaration of random_table in patch 1 and then delete that
-> declaration in patch 3?  Nothing uses that declaration until this point.
-
-This is only to ensure that patch 1 compiles. Without it, there would be a=
-=20
-dangling reference that is required by static struct ctl_table kern_table[].
-
-As I was always under the impression that each patch should compile by itse=
-lf=20
-to support bisect, I added that empty declaration. Yet, patch 1 is never=20
-intended to live without patch 3. I only split patch 3 up is to aid code=20
-review by having as many individual patches as possible while still allowin=
-g=20
-them to compile.
->=20
-> What is the point of adding an extern declaration just before you
-> declare the table itself?  As I understand the C language that achieves
-> nothing.  I understand that is what the existing code in
-> drivers/char/random.c does but that is equally buggy there.
-
-I totally agree and I was wondering here as well. But I simply was taking i=
-t=20
-as is.
-
-I am happy to clean this one up.
->=20
-> I also don't understand why you don't modify the existing random
-> generator code into the form you want?  What is the point of a
-> side-by-side replacement?  Especially since only one of them can
-> be compiled into the kernel at the same time?
-
-I was developing small patches for random.c since 2013, mostly cleanup=20
-patches. Unfortunately most of them were silently ignored. Some others were=
-=20
-silently taken but appeared two or three kernel releases later.
-
-Getting more architecture-invasive patches into the existing random.c code =
-is=20
-considered to be quite a problem considering this experience.
-
-Besides, the LRNG has quite a different architecture compared to the random=
-=2Ec.=20
-As the RNG is an important aspect of the kernel, I did not feel bold enough=
- to=20
-simply replace the existing code which implies that there is no fallback. B=
-y=20
-allowing a side-by-side code base which is even deactivated by default, it=
-=20
-allows other researchers to analyze the mathematical aspects beyond the pur=
-e=20
-code while still having an implementation that provides a known and analyze=
-d=20
-entropy source.
-
-Also, considering other kernel components like memory allocators, I/O=20
-schedulers or even file systems, providing different architectures covering=
-=20
-similar problems (memory allocation, accessing a disk) with an entirely=20
-different architecture and thus implementation seems to be an appropriate=20
-solution.
-
-=46inally, I tried to keep code that has a similar functionality to the exi=
-sting=20
-random.c similar to allow a merge at a later stage. For example, the sysctl=
-s=20
-are identical, but internally use different variables.
->=20
-> This build a replacement and then switch over seems like a recipe for
-> loosing the lessons of history because you are not making incremental
-> changes that can be clearly understood, reviewed and bisected.
->=20
-> As I read your patchset until this change your code will fail to compile
-> in an ordinary configuration with proc enabled.  Have you even tested
-> compiling your patchset one patch at a time?
-
-Yes, it does compile with proc enabled with the warning that random_table i=
-s=20
-considered to contain one element.
->=20
-> For me a great reorganization to impelment a better structure that fails
-> to have a good structure on the usual merits makes me dubious about the
-> entire thing.  As it can be a sign the author was pushing so hard to
-> make things work he stopped looking at problematic details.
->=20
-> Dubious-by: "Eric W. Biederman" <ebiederm@xmission.com>
->=20
-> Eric
->=20
-> > +
-> > +extern struct ctl_table random_table[];
-> > +struct ctl_table random_table[] =3D {
-> > +	{
-
-
-Ciao
-Stephan
-
+-- 
+2.21.0
 
