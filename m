@@ -2,221 +2,109 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA586C432C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C66C43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A30FB206D6
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2FA2206D6
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:03:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="EelJndJn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jJEJMNfR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbfKQLC3 (ORCPT
+        id S1726233AbfKQLDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 06:02:29 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.81]:16703 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfKQLC3 (ORCPT
+        Sun, 17 Nov 2019 06:03:23 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:40100 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbfKQLDW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 06:02:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573988546;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=CLtEbrqUYKD2wQNQMuHkpIC0PxqzpBsG0RbyF4DIpxI=;
-        b=EelJndJnzMGtFwrCoFBJHQi94kJFv3h6YGN+jWEXmhzovP02CGELJG64I46RAARcAm
-        wuWtUTvsCqu0acPaqGD7Qpy5FQExJEh16nzCxMRpgHBKRzgPflGq2cAy0GFiV5++Mbqy
-        w82Rm2PEokvjW8n3H8owuHV+rX38IUJkr59YiuEU47C1DRXoxw7iBP9vdVdOLFAvF4SP
-        4mxKzVTCAZ0bAHofYUAfsXf6TIxz/KdHZvxh+yyTLfJj/Z/r+4q3sikFc7Juc7VKe8Zt
-        kDcIaL0w+wADO9ZNt1anhGjrCVtNudQe015zCT/jlIUgV4eIB5ZcXhDowi0F4i2unu3m
-        rcSw==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzHHXDbIvSfb0y2"
-X-RZG-CLASS-ID: mo00
-Received: from positron.chronox.de
-        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
-        with ESMTPSA id N09a57vAHB1FVSv
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sun, 17 Nov 2019 12:01:15 +0100 (CET)
-From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-To:     Nicolai Stange <nstange@suse.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>
-Subject: Re: [PATCH v25 01/12] Linux Random Number Generator
-Date:   Sun, 17 Nov 2019 12:01:15 +0100
-Message-ID: <4567011.rgkcMjRUIa@positron.chronox.de>
-In-Reply-To: <87mucvadvg.fsf@suse.de>
-References: <6157374.ptSnyUpaCn@positron.chronox.de> <2645285.kI0haNqfm4@positron.chronox.de> <87mucvadvg.fsf@suse.de>
+        Sun, 17 Nov 2019 06:03:22 -0500
+Received: by mail-pj1-f66.google.com with SMTP id ep1so663293pjb.7;
+        Sun, 17 Nov 2019 03:03:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oidSitOSx3wz/zOT9+cz4soIOB6y/ZqJ5xkv2u37mMg=;
+        b=jJEJMNfRpHtXmJckbTZB9ZNHCq2xiXBw90gY9gIbEXxRovl7hLntxcbbaAJAf2ud+b
+         MXSNvcdZDb+0nshW/ucfoHsxQ8QRBHxgRSL5szZH88Wyc09iVGespARjnFZ+xtCUCsX4
+         QeAd9DLUmgCNls3d3COIAwF12Lgg3kyUymoZejLgB9wVH8w6evTKORKdk+n2d5Jftvcc
+         FPi2UbmDvlAMhMpG6uftA5lkaa/oMW3HLrOKZHXfX9i8BLGQF/9S3WakXBP3t1bJi7+u
+         HaMNelmGG9FA6kvTeLFdgDEtFNwk5rBux4rm6+hvJms+0BAmsI1d43UY0aYqS79CZYDL
+         tCeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oidSitOSx3wz/zOT9+cz4soIOB6y/ZqJ5xkv2u37mMg=;
+        b=MbiDtHiaPsQQIqzy439+cXoNePJfpmrpAB6XZbFEvkN2BLTCgLM5tt3TtRlPAZsEjU
+         leFTFk+7AqBtEcqVS0eJ/OKp/cdbRI4izOhDygfSfrvAqk0IanPXHVrgq0PZHI847hCh
+         f9g4dH5mi3Rq/rUNot2FPX+9oPeTRW+xb0E6ZjecvjjOMAqVOgHYWA4fzBvQoUGWmDCZ
+         MRx8K2a5OI3GLWkSNFXWwAnBTH7QqSiCPMnUkctG5yppFUMgB9KyK6vNYo4RsCLAV5JP
+         uddddY+L1cMsrXB8g5aB8fcfYrcFaO1fbyRUOS5UMTi5nYBsWm4dlt3Fyryv1ML/KNQF
+         b5YQ==
+X-Gm-Message-State: APjAAAWBn+fiQnhuPErPN+8cKsMBEunoqB9mQ76bC439FCDUTBIImuV/
+        R28Cy5Ovy39qR+vOyT7RNw==
+X-Google-Smtp-Source: APXvYqx+d4UcV0qPDI11BREyaM8WXS2PpgQ5hEDrsy14K2J9lpPJH9GED3bAD68F8Q4kG1EIrj8SUg==
+X-Received: by 2002:a17:90a:cc18:: with SMTP id b24mr30970268pju.141.1573988601826;
+        Sun, 17 Nov 2019 03:03:21 -0800 (PST)
+Received: from [172.24.28.130] ([203.100.54.194])
+        by smtp.gmail.com with ESMTPSA id w2sm18153667pfj.22.2019.11.17.03.03.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 17 Nov 2019 03:03:21 -0800 (PST)
+Subject: Re: [PATCH v8 5/9] hugetlb: disable region_add file_region coalescing
+To:     Mina Almasry <almasrymina@google.com>, mike.kravetz@oracle.com
+Cc:     shuah@kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
+        aneesh.kumar@linux.vnet.ibm.com
+References: <20191030013701.39647-1-almasrymina@google.com>
+ <20191030013701.39647-5-almasrymina@google.com>
+From:   Wenkuan Wang <wwk0817@gmail.com>
+Message-ID: <010d5a90-3ebf-30e5-8829-a61f01b6f620@gmail.com>
+Date:   Sun, 17 Nov 2019 19:03:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+In-Reply-To: <20191030013701.39647-5-almasrymina@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Samstag, 16. November 2019, 19:13:23 CET schrieb Nicolai Stange:
-
-Hi Nicolai,
-
-> Hi Stephan,
->=20
-> Stephan M=FCller <smueller@chronox.de> writes:
-> > +/* Initialize the default DRNG during boot */
->=20
-> I think that this can get called a bit too early through the
-> get_random_bytes() invoked from e.g. boot_init_stack_canary(): in
-> start_kernel(), there is
->=20
-> 	boot_init_stack_canary();
->=20
-> 	time_init();
->=20
-> On ARM (at least with arm_arch_timer.c), get_cycles() would return 0
-> until
->=20
->   time_init() =3D> timer_probe() =3D> arch_timer_of_init() =3D>
->   arch_timer_common_init() =3D> arch_timer_arch_init() =3D>
->   arch_timer_delay_timer_register() =3D> register_current_timer_delay()
->=20
-> has executed and thus, ...
->=20
-> > +void lrng_drngs_init_cc20(void)
-> > +{
-> > +	unsigned long flags =3D 0;
-> > +
-> > +	if (lrng_get_available())
-> > +		return;
-> > +
-> > +	lrng_sdrng_lock(&lrng_sdrng_init, &flags);
-> > +	if (lrng_get_available()) {
-> > +		lrng_sdrng_unlock(&lrng_sdrng_init, &flags);
-> > +		return;
-> > +	}
-> > +
-> > +	if (random_get_entropy() || random_get_entropy()) {
-> > +		/*
-> > +		 * As the highres timer is identified here, previous interrupts
-> > +		 * obtained during boot time are treated like a lowres-timer
-> > +		 * would have been present.
-> > +		 */
-> > +		lrng_pool_configure(true, LRNG_IRQ_ENTROPY_BITS);
-> > +	} else {
-> > +		lrng_health_disable();
-> > +		lrng_pool_configure(false, LRNG_IRQ_ENTROPY_BITS *
-> > +					   LRNG_IRQ_OVERSAMPLING_FACTOR);
-> > +		pr_warn("operating without high-resolution timer and applying "
-> > +			"IRQ oversampling factor %u\n",
-> > +			LRNG_IRQ_OVERSAMPLING_FACTOR);
->=20
-> ... LRNG thinks that no high-res timer is available even though there
-> is:
->=20
-> [    0.000000] lrng_sdrng: operating without high-resolution timer and
-> applying IRQ oversampling factor 10 [    0.000000] lrng_chacha20: ChaCha20
-> core initialized
-> [    0.000000] lrng_chacha20: ChaCha20 core initialized
-> [    0.000014] sched_clock: 32 bits at 1000kHz, resolution 1000ns, wraps
-> every 2147483647500ns [    0.000036] clocksource: timer: mask: 0xffffffff
-> max_cycles: 0xffffffff, max_idle_ns: 1911260446275 ns [    0.000114]
-> bcm2835: system timer (irq =3D 27)
-> [    0.000594] arch_timer: cp15 timer(s) running at 19.20MHz (phys).
-> [    0.000613] clocksource: arch_sys_counter: mask: 0xffffffffffffff
-> max_cycles: 0x46d987e47, max_idle_ns: 440795202767 ns [    0.000631]
-> sched_clock: 56 bits at 19MHz, resolution 52ns, wraps every 4398046511078=
-ns
-> [    0.000645] Switching to timer-based delay loop, resolution 52ns
->=20
-> Note that this last line comes from aforementioned
-> register_current_timer_delay().
->=20
-> Similarly, get_random_bytes() can get called quite early through
-> WARN() =3D> warn_slowpath_fmt() =3D> __warn() =3D> print_oops_end_marker(=
-) =3D>
-> init_oops_id().
->=20
-> Perhaps it would make sense not to do the (pool + health test)
-> initalization "on-demand", but rather make sure it happens at some
-> well-defined point after time_init()? Or at least that the pool +
-> the health tests get reconfigured eventually?
 
 
-Thank you very much for testing this and reporting it.
+On 10/30/19 9:36 AM, Mina Almasry wrote:
+> /* Must be called with resv->lock held. Calling this with count_only == true
+> * will count the number of pages to be added but will not modify the linked
+> - * list.
+> + * list. If regions_needed != NULL and count_only == true, then regions_needed
+> + * will indicate the number of file_regions needed in the cache to carry out to
+> + * add the regions for this range.
+> */
+> static long add_reservation_in_range(struct resv_map *resv, long f, long t,
 
-I have extracted the initialization of the time source into its own functio=
-n=20
-and execute it with core_initcall. With that, the DRNG is initialized at th=
-e=20
-time it needs initialization.
+Hi Mina,
 
-But the time source check is now done when time_init is completed as first=
-=20
-time_init is called and then arch_call_rest_init -> rest_init -> kernel_ini=
-t -
-> kernel_init_freeable -> do_basic_setup -> do_initcalls where the initcall=
-s=20
-registered with the core_initcall callback are now executed as the first=20
-batch.
+Would you please share which tree this patch set used? this patch 5/9 can't be
+applied with Linus's tree and add_reservation_in_range can't be found.
 
+Thanks
+Wenkuan
 
->=20
->=20
-> Thanks,
->=20
-> Nicolai
->=20
-> P.S: include/linux/lrng.h needs an #include <linux/errno.h> for
->      CONFIG_LRNG_DRNG_SWITCH=3Dn
-
-Thank you, added.
->=20
-> > +	}
-> > +
-> > +	lrng_sdrng_reset(&lrng_sdrng_init);
-> > +	lrng_cc20_init_state(&secondary_chacha20);
-> > +	lrng_state_init_seed_work();
-> > +	lrng_sdrng_unlock(&lrng_sdrng_init, &flags);
-> > +
-> > +	lrng_sdrng_lock(&lrng_sdrng_atomic, &flags);
-> > +	lrng_sdrng_reset(&lrng_sdrng_atomic);
-> > +	/*
-> > +	 * We do not initialize the state of the atomic DRNG as it is identic=
-al
-> > +	 * to the secondary DRNG at this point.
-> > +	 */
-> > +	lrng_sdrng_unlock(&lrng_sdrng_atomic, &flags);
-> > +
-> > +	lrng_trng_init();
-> > +
-> > +	lrng_set_available();
-> > +}
-> > +
-> > +/* Reset LRNG such that all existing entropy is gone */
-
-
-Ciao
-Stephan
-
-
+> - bool count_only)
+> + long *regions_needed, bool count_only)
+> {
+> - long chg = 0;
+> + long add = 0;
+> struct list_head *head = &resv->regions;
+> + long last_accounted_offset = f;
+> struct file_region *rg = NULL, *trg = NULL, *nrg = NULL;
+> - /* Locate the region we are before or
