@@ -2,99 +2,104 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A665AC432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 20:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC0CC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 21:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6AD20674
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 20:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35DC220855
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 21:16:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="M7iDKIUx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbfKQUzg (ORCPT
+        id S1726290AbfKQVQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 15:55:36 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:27289 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726128AbfKQUzg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 15:55:36 -0500
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQrEOHTIXsMvvtBRRPA=="
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id e07688vAHKtXb36
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sun, 17 Nov 2019 21:55:33 +0100 (CET)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH] pinctrl: nomadik: db8500: Add mc0_a_2 pin group without direction control
-Date:   Sun, 17 Nov 2019 21:54:39 +0100
-Message-Id: <20191117205439.239211-1-stephan@gerhold.net>
-X-Mailer: git-send-email 2.23.0
+        Sun, 17 Nov 2019 16:16:30 -0500
+Received: from ozlabs.org ([203.11.71.1]:58909 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726119AbfKQVQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 16:16:29 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47GPyx3WLxz9s3Z;
+        Mon, 18 Nov 2019 08:16:25 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1574025387;
+        bh=pPHlo48yEc1CtacGM4xou38J36W0+FgI5KZCO70rz64=;
+        h=Date:From:To:Cc:Subject:From;
+        b=M7iDKIUx7hvI9as+zZSM1HZgbbdxGDEha5YB/wwbnWfhJal5D/gOfwgc9BhFo0v0z
+         eUKPxSMvLYDJxPX3I5Tt0GU3ss5GnshR1ebvJwXE92HDxH1aHSW0pdv3EWcSmVXGha
+         46LgNcNmQYSOQFFoZ1hN2svefTmLNprFt/yDvdmvkqEDebvWhm6HPXtG8/RlDdeqT5
+         6wUoJCBL4V/+9U/hJeFLx+301ic4Ow0IZrl3EvDA0ip++eiet9CbkJlKpbj7TaCjs5
+         nNy36IIHw8OUqbE53cSxQROxmPoYXxHDMfAaMphBBFo5hc97t63gwulWNMtFlW7H+l
+         bI2liSOFzD4PA==
+Date:   Mon, 18 Nov 2019 08:16:17 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        ARM <linux-arm-kernel@lists.infradead.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>
+Subject: linux-next: manual merge of the arm-soc tree with the kbuild tree
+Message-ID: <20191118081617.2b7c61eb@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/Y5vKrcCIUoU3Eg+ILrp_ua1";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some devices do not make use of the CMD0/DAT0/DAT2 direction control
-pins of the MMC/SD card 0 interface. In this case we should leave
-those pins unconfigured.
+--Sig_/Y5vKrcCIUoU3Eg+ILrp_ua1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-A similar case already exists for "mc1_a_1" vs "mc1_a_2"
-when the MC1_FBCLK pin is not used.
+Hi all,
 
-Add a new "mc0_a_2" pin group which is equal to "mc0_a_1" except
-with the MC0_CMDDIR, MC0_DAT0DIR and MC0_DAT2DIR pins removed.
+Today's linux-next merge of the arm-soc tree got a conflict in:
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
- drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+  include/Kbuild
 
-diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c b/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
-index 726c0b5501fa..b9246e0b4fe2 100644
---- a/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
-+++ b/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
-@@ -391,6 +391,15 @@ static const unsigned mc0_a_1_pins[] = { DB8500_PIN_AC2, /* MC0_CMDDIR */
- 					 DB8500_PIN_AA2, /* MC0_DAT2 */
- 					 DB8500_PIN_AA1  /* MC0_DAT3 */
- };
-+/* MMC/SD card 0 interface without CMD/DAT0/DAT2 direction control */
-+static const unsigned mc0_a_2_pins[] = { DB8500_PIN_AA3, /* MC0_FBCLK */
-+					 DB8500_PIN_AA4, /* MC0_CLK */
-+					 DB8500_PIN_AB2, /* MC0_CMD */
-+					 DB8500_PIN_Y4,  /* MC0_DAT0 */
-+					 DB8500_PIN_Y2,  /* MC0_DAT1 */
-+					 DB8500_PIN_AA2, /* MC0_DAT2 */
-+					 DB8500_PIN_AA1  /* MC0_DAT3 */
-+};
- /* Often only 4 bits are used, then these are not needed (only used for MMC) */
- static const unsigned mc0_dat47_a_1_pins[] = { DB8500_PIN_W2, /* MC0_DAT4 */
- 					       DB8500_PIN_W3, /* MC0_DAT5 */
-@@ -670,6 +679,7 @@ static const struct nmk_pingroup nmk_db8500_groups[] = {
- 	DB8500_PIN_GROUP(msp0tfstck_a_1, NMK_GPIO_ALT_A),
- 	DB8500_PIN_GROUP(msp0rfsrck_a_1, NMK_GPIO_ALT_A),
- 	DB8500_PIN_GROUP(mc0_a_1, NMK_GPIO_ALT_A),
-+	DB8500_PIN_GROUP(mc0_a_2, NMK_GPIO_ALT_A),
- 	DB8500_PIN_GROUP(mc0_dat47_a_1, NMK_GPIO_ALT_A),
- 	DB8500_PIN_GROUP(mc0dat31dir_a_1, NMK_GPIO_ALT_A),
- 	DB8500_PIN_GROUP(msp1txrx_a_1, NMK_GPIO_ALT_A),
-@@ -828,7 +838,7 @@ DB8500_FUNC_GROUPS(ipi2c, "ipi2c_a_1", "ipi2c_a_2");
-  */
- DB8500_FUNC_GROUPS(msp0, "msp0txrx_a_1", "msp0tfstck_a_1", "msp0rfstck_a_1",
- 		   "msp0txrx_b_1", "msp0sck_b_1");
--DB8500_FUNC_GROUPS(mc0, "mc0_a_1", "mc0_dat47_a_1", "mc0dat31dir_a_1");
-+DB8500_FUNC_GROUPS(mc0, "mc0_a_1", "mc0_a_2", "mc0_dat47_a_1", "mc0dat31dir_a_1");
- /* MSP0 can swap RX/TX like MSP0 but has no SCK pin available */
- DB8500_FUNC_GROUPS(msp1, "msp1txrx_a_1", "msp1_a_1", "msp1txrx_b_1");
- DB8500_FUNC_GROUPS(lcdb, "lcdb_a_1");
--- 
-2.23.0
+between commit:
 
+  fcbb8461fd23 ("kbuild: remove header compile test")
+
+from the kbuild tree and commit:
+
+  32adcaa010fa ("ARM: mmp: move cputype.h to include/linux/soc/")
+
+from the arm-soc tree.
+
+I fixed it up (I just deleted the file) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Y5vKrcCIUoU3Eg+ILrp_ua1
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3RuKEACgkQAVBC80lX
+0GyG5wf+IQ+Q+2LXKtHpHFQjdvYsU3UOP8T4Rl/XI8B5ka8hii8IFEKmn/3gkNem
+YZEYcLyOblvKPwe7GD1NU2BSoowgn+hW86OhAmHg5E6WC0AXKuZIXNj2wm3DNnjg
+VvlA2WZJ+gXkSZb22fDkrFY9E34eRNTwptUco50cFaYFE6zaTlW6YM8O/cqphFwP
+vnDI5jlJ/JLbjWhXUalOTHKOejyL1pJQ0L1bD6w3xwMBtPB0y3dddTUb17/eLxxk
+UswLa0S4sSVkLr9Orljwyzrox5GKff6D6nBUDn38qYbk6XOpZJEfEEQYo6OqdZOt
+LQ5/uh1JjrEnqpMU6+F87E+cv9GgNg==
+=XRv2
+-----END PGP SIGNATURE-----
+
+--Sig_/Y5vKrcCIUoU3Eg+ILrp_ua1--
