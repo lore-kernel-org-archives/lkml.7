@@ -2,93 +2,113 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4CCC432C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 12:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 078C1C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 12:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B789B2084D
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 12:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A175B20859
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 12:17:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="N7qyLRPP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbfKQMMw (ORCPT
+        id S1726085AbfKQMRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 07:12:52 -0500
-Received: from mga07.intel.com ([134.134.136.100]:37520 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726063AbfKQMMw (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 07:12:52 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Nov 2019 04:12:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,316,1569308400"; 
-   d="scan'208";a="215103025"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.212.51]) ([10.254.212.51])
-  by fmsmga001.fm.intel.com with ESMTP; 17 Nov 2019 04:12:49 -0800
-Subject: Re: [PATCH v1 2/2] perf report: Jump to symbol source view from total
- cycles view
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20191113004852.21265-1-yao.jin@linux.intel.com>
- <20191113004852.21265-2-yao.jin@linux.intel.com>
- <20191115133445.GB25491@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <db38408d-1af4-3cf6-9d8f-91070cfa42d2@linux.intel.com>
-Date:   Sun, 17 Nov 2019 20:12:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Sun, 17 Nov 2019 07:17:33 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.169]:32966 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfKQMRd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 07:17:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573993051;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=bCbsv9teHF57DwmEXM3joJCcJL2jsW51I59cUFXI/lI=;
+        b=N7qyLRPPKqheFEdi1f25OoQrsvSBIZ3wfMA9xkyNvsjZfQ3/hY6/TRqoi3Ve70TgzI
+        ML4G9Dr/OFKYud7rfpUaMCOQp/2VSnkKZZpZGMjQbFMuS+EWDSJAiLfUJU9TSsyuvGEJ
+        fxRF0uZmFc13oiWKKKPLTR05+K2vZFzi979OEG2SY9kAiPh4OVhNqeP7E8e8y3yYPbQx
+        7yMl5N+rL8Nz4TSUrP+lppJ587fQqgI/A0TS/4XcZzxvYzWjJGCfRuokBE4TX/jdbiBU
+        LJAcZ6K0MaF5TUT2sv7/nK/bpTWJeblH5SbwQtfHoRCQuHrfAMXgM3FLdsQ9g50zvoaX
+        gIOQ==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzHHXDbIvSfb0y2"
+X-RZG-CLASS-ID: mo00
+Received: from positron.chronox.de
+        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
+        with ESMTPSA id N09a57vAHCGJVZk
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Sun, 17 Nov 2019 13:16:19 +0100 (CET)
+From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>
+Subject: Re: [PATCH v25 03/12] LRNG - /proc interface
+Date:   Sun, 17 Nov 2019 13:16:19 +0100
+Message-ID: <3043322.Kq9igzfA0K@positron.chronox.de>
+In-Reply-To: <4EB89769-7A2C-4A03-A832-9A0539DD3336@amacapital.net>
+References: <2476454.l8LQlgn7Hv@positron.chronox.de> <4EB89769-7A2C-4A03-A832-9A0539DD3336@amacapital.net>
 MIME-Version: 1.0
-In-Reply-To: <20191115133445.GB25491@krava>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Am Samstag, 16. November 2019, 17:39:40 CET schrieb Andy Lutomirski:
+
+Hi Andy,
+
+> > On Nov 16, 2019, at 1:40 AM, Stephan M=C3=BCller <smueller@chronox.de> =
+wrote:
+> >=20
+> > =EF=BB=BFThe LRNG /proc interface provides the same files as the legacy
+> > /dev/random. These files behave identically. Yet, all files are
+> > documented at [1].
+>=20
+> Why?
+
+I am not sure here: are you referring to the documentation? Or the one=20
+additional file?
+
+If it is the documentation, do you want me to add it to the patch descripti=
+on?=20
+I initially did not add it as these files were present and seemingly known=
+=20
+what they provide. But I would add that documentation to the patch descript=
+ion=20
+if this is desired.
+
+If it is the additional file, should I move it to another place like a sysf=
+s=20
+interface?
+
+Thank you.
+
+Ciao
+Stephan
 
 
-On 11/15/2019 9:34 PM, Jiri Olsa wrote:
-> On Wed, Nov 13, 2019 at 08:48:52AM +0800, Jin Yao wrote:
-> 
-> SNIP
-> 
->> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
->> index e8b3122a30a7..5bf122042c01 100644
->> --- a/tools/perf/util/hist.h
->> +++ b/tools/perf/util/hist.h
->> @@ -478,7 +478,8 @@ int res_sample_browse(struct res_sample *res_samples, int num_res,
->>   void res_sample_init(void);
->>   
->>   int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
->> -			   float min_percent);
->> +			   float min_percent, struct perf_env *env,
->> +			   struct annotation_options *annotation_opts);
->>   #else
->>   static inline
->>   int perf_evlist__tui_browse_hists(struct evlist *evlist __maybe_unused,
->> @@ -525,7 +526,9 @@ static inline void res_sample_init(void) {}
->>   
->>   int block_hists_tui_browse(struct block_hist *bh __maybe_unused,
->>   			   struct evsel *evsel __maybe_unused,
->> -			   float min_percent __maybe_unused)
->> +			   float min_percent __maybe_unused,
->> +			   struct perf_env *env __maybe_unused,
->> +			   struct annotation_options *annotation_opts)
-> 
-> missing __maybe_unused, this breaks no-tui build 'make NO_SLANG=1'
-> 
-> jirka
-> 
-
-Oh, yes, I should add __maybe_unused.
-
-Thanks
-Jin Yao
