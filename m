@@ -2,182 +2,80 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A22C432C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 21:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BFDC43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 22:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4153A20729
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 21:32:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EAkv/zYD";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="V3W+uu6o"
+	by mail.kernel.org (Postfix) with ESMTP id F15BB20850
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 22:13:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbfKQVcQ (ORCPT
+        id S1726463AbfKQWNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 16:32:16 -0500
-Received: from a27-186.smtp-out.us-west-2.amazonses.com ([54.240.27.186]:32876
-        "EHLO a27-186.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726119AbfKQVcQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 16:32:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574025992;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        bh=9AOx5Q+RJ0560RuXHckXHRjw7aV17Sj+XjiitrpNRJI=;
-        b=EAkv/zYDcWxTqutMctt7HWRVqikaGLEheL9Sq7w/bFMhW/NwwDVn/z7xUet0OX82
-        vMABfLCWRpfLKjhV0kWX5BX0ORQmEowfQ+txSE0dY2Bbf7Fvl/fONz+m8cxCz31FCvy
-        o63JIbLJg3DOL2tVfNhLjaiLw7lxeO+c0STrZCrU=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574025992;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
-        bh=9AOx5Q+RJ0560RuXHckXHRjw7aV17Sj+XjiitrpNRJI=;
-        b=V3W+uu6owxlVftGF7HGrUq5EaNLKWUZxeCWFcvh4jeJ8lgPSrpG6luDLfS1lsU19
-        vOBy+va6Fr9H0Nhth145n5LbxxqVWCraQbNlHgbVwUlLJ3wIL0HUNUuUPhScyzZK20D
-        jsnoUO65tSjzKbKDo9h8hphF1Wvg6KVmI11jSoCY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 03B61C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-To:     mturquette@baylibre.com, sboyd@kernel.org
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        marc.w.gonzalez@free.fr, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v10 1/4] dt-bindings: clock: Document external clocks for MSM8998 gcc
-Date:   Sun, 17 Nov 2019 21:26:31 +0000
-Message-ID: <0101016e7b42967c-5fa46814-6107-475f-9029-aa7ea052615b-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1574025887-32667-1-git-send-email-jhugo@codeaurora.org>
-References: <1574025887-32667-1-git-send-email-jhugo@codeaurora.org>
-X-SES-Outgoing: 2019.11.17-54.240.27.186
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+        Sun, 17 Nov 2019 17:13:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726268AbfKQWNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 17:13:12 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF0E82084C;
+        Sun, 17 Nov 2019 22:13:11 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.92.3)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1iWSn9-0002sK-14; Sun, 17 Nov 2019 17:13:11 -0500
+Message-Id: <20191117221310.917990004@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Sun, 17 Nov 2019 17:13:02 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-next][PATCH 6/7] ftrace: Add another check for match in register_ftrace_direct()
+References: <20191117221256.228674565@goodmis.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The global clock controller on MSM8998 can consume a number of external
-clocks.  Document them.
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-For 7180 and 8150, the hardware always exists, so no clocks are truly
-optional.  Therefore, simplify the binding by removing the min/max
-qualifiers to clocks.  Also, fixup an example so that dt_binding_check
-passes.
+As an instruction pointer passed into register_ftrace_direct() may just
+exist on the ftrace call site, but may not be the start of the call site
+itself, register_ftrace_direct() still needs to update test if a direct call
+exists on the normalized site, as only one direct call is allowed at any one
+time.
 
-Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Fixes: 763e34e74bb7d ("ftrace: Add register_ftrace_direct()")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- .../devicetree/bindings/clock/qcom,gcc.yaml        | 73 +++++++++++++++++-----
- 1 file changed, 59 insertions(+), 14 deletions(-)
+ kernel/trace/ftrace.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-index e73a56f..f2b5cd6 100644
---- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-+++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-@@ -40,20 +40,40 @@ properties:
-        - qcom,gcc-sm8150
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 32e4e5ffdd97..9fe33ebaf914 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5030,7 +5030,12 @@ int register_ftrace_direct(unsigned long ip, unsigned long addr)
+ 		goto out_unlock;
  
-   clocks:
--    minItems: 1
--    maxItems: 3
--    items:
--      - description: Board XO source
--      - description: Board active XO source
--      - description: Sleep clock source
-+    oneOf:
-+      #qcom,gcc-sm8150
-+      #qcom,gcc-sc7180
-+      - items:
-+        - description: Board XO source
-+        - description: Board active XO source
-+        - description: Sleep clock source
-+      #qcom,gcc-msm8998
-+      - items:
-+        - description: Board XO source
-+        - description: Sleep clock source
-+        - description: USB 3.0 phy pipe clock
-+        - description: UFS phy rx symbol clock for pipe 0
-+        - description: UFS phy rx symbol clock for pipe 1
-+        - description: UFS phy tx symbol clock
-+        - description: PCIE phy pipe clock
+ 	/* Make sure the ip points to the exact record */
+-	ip = rec->ip;
++	if (ip != rec->ip) {
++		ip = rec->ip;
++		/* Need to check this ip for a direct. */
++		if (find_rec_direct(ip))
++			goto out_unlock;
++	}
  
-   clock-names:
--    minItems: 1
--    maxItems: 3
--    items:
--      - const: bi_tcxo
--      - const: bi_tcxo_ao
--      - const: sleep_clk
-+    oneOf:
-+      #qcom,gcc-sm8150
-+      #qcom,gcc-sc7180
-+      - items:
-+        - const: bi_tcxo
-+        - const: bi_tcxo_ao
-+        - const: sleep_clk
-+      #qcom,gcc-msm8998
-+      - items:
-+        - const: xo
-+        - const: sleep_clk
-+        - const: usb3_pipe
-+        - const: ufs_rx_symbol0
-+        - const: ufs_rx_symbol1
-+        - const: ufs_tx_symbol0
-+        - const: pcie0_pipe
- 
-   '#clock-cells':
-     const: 1
-@@ -118,6 +138,7 @@ else:
-       compatible:
-         contains:
-           enum:
-+            - qcom,gcc-msm8998
-             - qcom,gcc-sm8150
-             - qcom,gcc-sc7180
-   then:
-@@ -179,10 +200,34 @@ examples:
-     clock-controller@100000 {
-       compatible = "qcom,gcc-sc7180";
-       reg = <0x100000 0x1f0000>;
--      clocks = <&rpmhcc 0>, <&rpmhcc 1>;
--      clock-names = "bi_tcxo", "bi_tcxo_ao";
-+      clocks = <&rpmhcc 0>, <&rpmhcc 1>, <0>;
-+      clock-names = "bi_tcxo", "bi_tcxo_ao", "sleep_clk";
-+      #clock-cells = <1>;
-+      #reset-cells = <1>;
-+      #power-domain-cells = <1>;
-+    };
-+
-+  # Example of MSM8998 GCC:
-+  - |
-+    clock-controller@100000 {
-+      compatible = "qcom,gcc-msm8998";
-       #clock-cells = <1>;
-       #reset-cells = <1>;
-       #power-domain-cells = <1>;
-+      reg = <0x00100000 0xb0000>;
-+      clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
-+               <&sleep>,
-+               <0>,
-+               <0>,
-+               <0>,
-+               <0>,
-+               <0>;
-+      clock-names = "xo",
-+                    "sleep",
-+                    "usb3_pipe",
-+                    "ufs_rx_symbol0",
-+                    "ufs_rx_symbol1",
-+                    "ufs_tx_symbol0",
-+                    "pcie0_pipe";
-     };
- ...
+ 	ret = -ENOMEM;
+ 	if (ftrace_hash_empty(direct_functions) ||
 -- 
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.24.0
+
 
