@@ -5,36 +5,36 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B952C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C17C43141
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E964E20674
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75B242084C
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:48:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="H43lHXS1"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="le+c7mms"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbfKQLsm (ORCPT
+        id S1726425AbfKQLsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 06:48:42 -0500
-Received: from onstation.org ([52.200.56.107]:38736 "EHLO onstation.org"
+        Sun, 17 Nov 2019 06:48:45 -0500
+Received: from onstation.org ([52.200.56.107]:38758 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbfKQLsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 06:48:41 -0500
+        id S1726325AbfKQLsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 06:48:42 -0500
 Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 732904FE48;
+        by onstation.org (Postfix) with ESMTPSA id DAA034FE4B;
         Sun, 17 Nov 2019 11:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1573991320;
-        bh=AlmPAqPjvG4vGWI6p1bAhmNBHO+jGQx8VZpPX/vqxuA=;
+        s=default; t=1573991321;
+        bh=rl6/6/Eu9skt4+IcmxvISu1bBxwQsQboq/5RVDZniic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H43lHXS1UFIbBeotSBxt/QR4nMSkM4lVufpArr13f0CEAkZ7d16ernWuEibFq90I5
-         D/VbGk6CHA6pC2nhQMOS5DZ9AahOPB4AV9QMZU/F9+LIeGH6pdyRAG2xHfyurK7fPL
-         F2ppR8Ok68YxcdEpJ75EhAifc7zONesLHRRJGTis=
+        b=le+c7mmslEwZqMNGy37bnORfMaWTTpxN3JKvaDGIwpg++SdQqlGzGx3oBKuw7DZz+
+         U9wXQ6h///rjUt9SzUsCQKrvmoPemstl+qpSVk3E+51jYjuzN75M4CqfAkfVpH/rSc
+         kk3vlXgixVujTB906XcAlQFL4QAVtsoCcOZzTJVU=
 From:   Brian Masney <masneyb@onstation.org>
 To:     robdclark@gmail.com, sean@poorly.run, robh+dt@kernel.org
 Cc:     airlied@linux.ie, daniel@ffwll.ch, jcrouse@codeaurora.org,
@@ -42,9 +42,9 @@ Cc:     airlied@linux.ie, daniel@ffwll.ch, jcrouse@codeaurora.org,
         dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org
-Subject: [PATCH 3/4] drm/msm/a3xx: set interconnect bandwidth vote
-Date:   Sun, 17 Nov 2019 06:48:24 -0500
-Message-Id: <20191117114825.13541-4-masneyb@onstation.org>
+Subject: [PATCH 4/4] drm/msm/a4xx: set interconnect bandwidth vote
+Date:   Sun, 17 Nov 2019 06:48:25 -0500
+Message-Id: <20191117114825.13541-5-masneyb@onstation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191117114825.13541-1-masneyb@onstation.org>
 References: <20191117114825.13541-1-masneyb@onstation.org>
@@ -61,15 +61,15 @@ time to optimize this for battery life.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
 ---
- drivers/gpu/drm/msm/adreno/a3xx_gpu.c | 8 ++++++++
+ drivers/gpu/drm/msm/adreno/a4xx_gpu.c | 8 ++++++++
  1 file changed, 8 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-index 07ddcc529573..f05adf9bc752 100644
---- a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-@@ -504,6 +504,14 @@ struct msm_gpu *a3xx_gpu_init(struct drm_device *dev)
- 		DRM_DEV_ERROR(dev->dev, "No memory protection without IOMMU\n");
+diff --git a/drivers/gpu/drm/msm/adreno/a4xx_gpu.c b/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
+index b01388a9e89e..c631d1df7751 100644
+--- a/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
+@@ -591,6 +591,14 @@ struct msm_gpu *a4xx_gpu_init(struct drm_device *dev)
+ 		goto fail;
  	}
  
 +	/*
