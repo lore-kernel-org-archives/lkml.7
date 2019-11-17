@@ -2,110 +2,84 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1E9C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 16:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0191C432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 17:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F003F206D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 16:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D8A1206CC
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 17:01:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tSH1TGFc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WmI8FOkY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfKQQol (ORCPT
+        id S1726427AbfKQQ7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 11:44:41 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:36878 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbfKQQol (ORCPT
+        Sun, 17 Nov 2019 11:59:04 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26270 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726069AbfKQQ7E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 11:44:41 -0500
-Received: by mail-il1-f193.google.com with SMTP id s5so13744249iln.4;
-        Sun, 17 Nov 2019 08:44:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=36Tcd3xvowpaFHHOukEJNvL3vFXR/sOP5nOa5scXrnE=;
-        b=tSH1TGFcQ0ItQXfer5WLy/aRI//T79BHWXHbPKv25v/4rsKAk0U1tRBGQwu9n/Z2Zt
-         AN4XZiH05yjwl395s+vmky4dclcliC6XSOYiCUVJmHVHUftzrrnh3oN5qUK8YQPYnNP0
-         M6gX+GvMLkhJWEtAVnzP0PdHHyzYVIw7uJ2H8CAQSiwP6YWRExzjI6yVrFMwQqymw8hb
-         kf5TVPcQkZPiF4Yz2Dp+G6BhPNRRuP2g5jSpya2q8XBydaNNXStNCIz81PimF1kOqTuA
-         rHDZtHcRt9IJQ2k7wJiFD/cUItTkKiZoBLUhd0B8H+B7kF4wABhAhjK2tUhdX1R+svT8
-         T5zA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=36Tcd3xvowpaFHHOukEJNvL3vFXR/sOP5nOa5scXrnE=;
-        b=bUbduAygozOOmUHjaEPOlvv405N7TWK7azSuwIm7UvgIUplvAb6ts0XHIVNYskVzWt
-         RYYOOLKHwJkkGD71IromqyE0IFP6rhthIF2jLQNwBpS3XhabEoWWx6FiDKex/KFkU5eA
-         6TRS6luxfXZr1m5AocznR3Rk05/IXNocxmZTyfj8Q0YI9GAb/08y2KDRSnPk3RrSeptZ
-         fLnVfeY4yUi78LrffiO0uDV56fqZkAXV1XbzVU2lzpfj9PKth1Rv7CEIpfS/D0ovb9/y
-         dnoJ6o8q1ecyUAzIGbGAJhjwM0OFD6V9ugXbJ7gvR16NviMZjk1iZe7vFgcVwR9hzeN3
-         t+vw==
-X-Gm-Message-State: APjAAAXjzoDuHhN3fPuBKfVDFnVQmR8TNsA6K1mnSByleFfBr16HkR2J
-        +Lcm4v/PiFdOg1jQMLi8cPATtifV
-X-Google-Smtp-Source: APXvYqxcM+fLeUZlpp/Zq9SJUIFyOcFUl7TSat14OvsDmsnA/Lz37Wi6VHL6nH6fjyPaWf7CRxIxCQ==
-X-Received: by 2002:a92:8498:: with SMTP id y24mr10984537ilk.89.1574009080179;
-        Sun, 17 Nov 2019 08:44:40 -0800 (PST)
-Received: from dahern-DO-MB.local ([2601:282:800:fd80:bd88:fb6d:6b19:f7d1])
-        by smtp.googlemail.com with ESMTPSA id p8sm3103393ilp.24.2019.11.17.08.44.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 17 Nov 2019 08:44:39 -0800 (PST)
-Subject: Re: [PATCH AUTOSEL 4.9 89/99] vrf: mark skb for multicast or
- link-local as enslaved to VRF
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     Mike Manning <mmanning@vyatta.att-mail.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-References: <20191116155103.10971-1-sashal@kernel.org>
- <20191116155103.10971-89-sashal@kernel.org>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <a6c038cb-4b95-beb0-abf3-8938825d379e@gmail.com>
-Date:   Sun, 17 Nov 2019 09:44:38 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.2.2
+        Sun, 17 Nov 2019 11:59:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574009943;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=E72ZrVSS3vygVMm8IAKL6pChQMj9BcYC7SJtaQNwxSg=;
+        b=WmI8FOkYSHb1tuXEJ9gW3jNpvMBbFbsKiAGEE31KNYbwoK6DaxHRq6emaNCCqra+Q3LgxY
+        Tn+BAsZc/82Nd5ONpuqlV5EyteNnxHDoMFo8PSKYWT3W4JmFbBdiLzX82aUg6YICg8Zm/c
+        x3P1I/flZlgPBcEwrrAPnz/dKnMSIiw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-234-gTR7JPoyN3G6kH5bUY96Yw-1; Sun, 17 Nov 2019 11:59:00 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 24BFD1005500;
+        Sun, 17 Nov 2019 16:58:58 +0000 (UTC)
+Received: from localhost (ovpn-116-66.ams2.redhat.com [10.36.116.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0E755100EBBB;
+        Sun, 17 Nov 2019 16:58:56 +0000 (UTC)
+Date:   Sun, 17 Nov 2019 16:58:55 +0000
+From:   "Richard W.M. Jones" <rjones@redhat.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@osdl.org>, Wouter Verhelst <w@uter.be>,
+        nbd@other.debian.org
+Subject: Re: nbd, nbdkit, loopback mounts and memory management
+Message-ID: <20191117165855.GD16477@redhat.com>
+References: <20190215191953.GB17897@amd>
+ <20190215224126.GX12500@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191116155103.10971-89-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190215224126.GX12500@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: gTR7JPoyN3G6kH5bUY96Yw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/16/19 8:50 AM, Sasha Levin wrote:
-> From: Mike Manning <mmanning@vyatta.att-mail.com>
-> 
-> [ Upstream commit 6f12fa775530195a501fb090d092c637f32d0cc5 ]
-> 
-> The skb for packets that are multicast or to a link-local address are
-> not marked as being enslaved to a VRF, if they are received on a socket
-> bound to the VRF. This is needed for ND and it is preferable for the
-> kernel not to have to deal with the additional use-cases if ll or mcast
-> packets are handled as enslaved. However, this does not allow service
-> instances listening on unbound and bound to VRF sockets to distinguish
-> the VRF used, if packets are sent as multicast or to a link-local
-> address. The fix is for the VRF driver to also mark these skb as being
-> enslaved to the VRF.
-> 
-> Signed-off-by: Mike Manning <mmanning@vyatta.att-mail.com>
-> Reviewed-by: David Ahern <dsahern@gmail.com>
-> Tested-by: David Ahern <dsahern@gmail.com>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/net/vrf.c | 19 +++++++++----------
->  1 file changed, 9 insertions(+), 10 deletions(-)
-> 
 
-backporting this patch and it's bug fix, "ipv6: Fix handling of LLA with
-VRF and sockets bound to VRF" to 4.14 is a bit questionable. They
-definitely do not need to come back to 4.9.
+FWIW to follow up to this old thread, I made the change in nbdkit:
+
+https://github.com/libguestfs/nbdkit/commit/acc37af9989aae708e8acad3535e149=
+1931e6bdb
+
+Rich.
+
+--=20
+Richard Jones, Virtualization Group, Red Hat http://people.redhat.com/~rjon=
+es
+Read my programming and virtualization blog: http://rwmj.wordpress.com
+virt-builder quickly builds VMs from scratch
+http://libguestfs.org/virt-builder.1.html
+
