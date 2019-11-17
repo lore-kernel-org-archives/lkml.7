@@ -2,228 +2,277 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4E6C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 10:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F35AC43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 10:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C60620727
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 10:41:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573987280;
-	bh=kHu6rSBVRdI91SpCdkh7Jk6LaxUxC4fOKIMpyHmfmg4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tH/6u5oD7iWxK9vw3tW20+sff0xO+La+ZoINgAFsy5fvjDJKQ9GURVaLa9Uek5MpM
-	 cWQra8LbRV5wkLRkEFQB1jaJno9ZkOsfZWXcpdP7TVhtYlXSeuxZ66M1FggwtnM/yX
-	 RsvZVjgHUmCi7sqdt5ua1Hp8QoRqnkL92zIJ3oZM=
+	by mail.kernel.org (Postfix) with ESMTP id 80A3D20740
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 10:47:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726084AbfKQKlT (ORCPT
+        id S1726104AbfKQKrb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 05:41:19 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38358 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfKQKlT (ORCPT
+        Sun, 17 Nov 2019 05:47:31 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:55570 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725974AbfKQKrb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 05:41:19 -0500
-Received: by mail-wm1-f65.google.com with SMTP id z19so15580897wmk.3
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 02:41:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9+/iN3PmpjU871QyEVs4CDFzsUtwfbS/C/IpIa/S70I=;
-        b=VjP6gJqCuDu5F4+moEfwKsSA+JgXV4nawA1xmXUmyPc63J52JfqKE/tl7uauPRIp0m
-         DBr3FqPyFftlLV0Q8AJ/cGq8CLJ4O/QKHY/lyI7kMyE6gV9n9wGX2Y4GzW2VgihZ7nDw
-         I6jEULlmpLj502AJhPemMTqUptkz7W/MxqfwXH8rcaTC1amAjS20yr99V8I7YPhsgoop
-         WFUg50hVDXqW+2Xl6G/NNozbrkURcTASu0Ez4LfMmwgXy/IJv3rIR1RBpXcJt/VMgYrU
-         dInWD+6NmXOSLub7P4ZEEsJS7IP512qwqpuHXmnFLmw1xDMtkZRwiXYSt348ktr9pv/9
-         weUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9+/iN3PmpjU871QyEVs4CDFzsUtwfbS/C/IpIa/S70I=;
-        b=Ew1zY1egqZ9yWNkAghnT7V0/qptSCUlHpF/0rXeqEX0i+fXrBtM/sY5g7n82MkKL9P
-         LCeEvlNQZB382tLF53zHgbdo7Tb8l8Wsei8eevMYGBD0nyHD6V8IYslCLFotVjw3zDyn
-         F3ATJypT+FOyFTy3QIGXzJJrGb+vLHPEyIDWsp6gVsCyJipYf/yRNORvtCYtfTlLCJ+/
-         cRCtqXJ2Lw/HNoJRMQaxQ9tKb1C1+YRuuVCsqGpopo5tJ6eqJS4DqajoI86gQe7Mym8W
-         dvgOzedbJOEMJ/u4ACKjjSJjb/jAZW/NWUsZTQoRQJjyWg/hiYdDPGuTmwqKvQy5rNUL
-         DdCw==
-X-Gm-Message-State: APjAAAX/SoXdug1BPchMyv/0GeCC0BdbR5viaGQm754147EAmY6AcV71
-        cvMn/CPzovMMnR0+HAMxg/o=
-X-Google-Smtp-Source: APXvYqy7GbrsDVSGegLLXO6fJeJyt+TREXuKnB962aH4OLropDC4fXYS6IZ8VpZhBsSsHpmNzrsOHQ==
-X-Received: by 2002:a05:600c:506:: with SMTP id i6mr24818743wmc.153.1573987276033;
-        Sun, 17 Nov 2019 02:41:16 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id 4sm17589474wmd.33.2019.11.17.02.41.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Nov 2019 02:41:14 -0800 (PST)
-Date:   Sun, 17 Nov 2019 11:41:12 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL v2] scheduler fixes
-Message-ID: <20191117104112.GB56088@gmail.com>
-References: <20191116213742.GA7450@gmail.com>
- <ab6f2b5a-57f0-6723-c62f-91a8ce6eddac@arm.com>
- <CAHk-=wiFvP0idYrvWVtEwt6FM9jZ9TRF5yQhT1-X3vx31GRHTg@mail.gmail.com>
+        Sun, 17 Nov 2019 05:47:31 -0500
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@misterjones.org>)
+        id 1iWI5Y-0002Ib-5M; Sun, 17 Nov 2019 11:47:28 +0100
+Date:   Sun, 17 Nov 2019 10:47:26 +0000
+From:   Marc Zyngier <maz@misterjones.org>
+To:     Andreas =?UTF-8?Q?F=C3=A4rber?= <afaerber@suse.de>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 3/8] ARM: dts: Prepare Realtek RTD1195 and MeLE X1000
+Message-ID: <20191117104726.2b1fccb8@why>
+In-Reply-To: <20191117072109.20402-4-afaerber@suse.de>
+References: <20191117072109.20402-1-afaerber@suse.de>
+        <20191117072109.20402-4-afaerber@suse.de>
+Organization: Metropolis
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiFvP0idYrvWVtEwt6FM9jZ9TRF5yQhT1-X3vx31GRHTg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: afaerber@suse.de, linux-realtek-soc@lists.infradead.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@misterjones.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 17 Nov 2019 08:21:04 +0100
+Andreas Färber <afaerber@suse.de> wrote:
 
-* Linus Torvalds <torvalds@linux-foundation.org> wrote:
+Hi Andreas,
 
-> On Sat, Nov 16, 2019 at 2:44 PM Valentin Schneider
-> <valentin.schneider@arm.com> wrote:
-> >
-> > > Valentin Schneider (2):
-> > >       sched/uclamp: Fix overzealous type replacement
-> >
-> > This one got a v2 (was missing one location), acked by Vincent:
-> >
-> >   20191115103908.27610-1-valentin.schneider@arm.com
-> >
-> > >       sched/topology, cpuset: Account for housekeeping CPUs to avoid empty cpumasks
-> >
-> > And this one is no longer needed, as Michal & I understood (IOW the fix in
-> > rc6 is sufficient), see:
-> >
-> >   c425c5cb-ba8a-e5f6-d91c-5479779cfb7a@arm.com
+> Add Device Trees for Realtek RTD1195 SoC and MeLE X1000 TV box.
 > 
-> Ingo, what do you want me to do? Pull it anyway and send updates
-> later? Or skip this pull request?
+> Reuse the existing RTD1295 watchdog compatible for now.
 > 
-> I'll leave it pending for now,
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> [AF: Fixed r-bus size, fixed GIC CPU mask, updated memreserve]
+> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> ---
+>  v2 -> v3:
+>  * Fixed r-bus size in /soc ranges from 0x1000000 to 0x70000 (James)
+>  * Adjusted /memreserve/ to close gap from 0xa800 to 0xc000 for full 0x100000
+>  * Changed arch timer from GIC_CPU_MASK_RAW(0xf) to GIC_CPU_MASK_SIMPLE(2)
+>    squashed from RTD1395 v1 series
+>  
+>  v1 -> v2:
+>  * Dropped /memreserve/ and reserved-memory nodes for peripherals and NOR (Rob)
+>  * Carved them out from memory reg instead (Rob)
+>  * Converted some /memreserve/s to reserved-memory nodes
+>  
+>  arch/arm/boot/dts/Makefile               |   2 +
+>  arch/arm/boot/dts/rtd1195-mele-x1000.dts |  31 ++++++++
+>  arch/arm/boot/dts/rtd1195.dtsi           | 127 +++++++++++++++++++++++++++++++
+>  3 files changed, 160 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/rtd1195-mele-x1000.dts
+>  create mode 100644 arch/arm/boot/dts/rtd1195.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 08011dc8c7a6..4853a13c8cf2 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -865,6 +865,8 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+>  dtb-$(CONFIG_ARCH_RDA) += \
+>  	rda8810pl-orangepi-2g-iot.dtb \
+>  	rda8810pl-orangepi-i96.dtb
+> +dtb-$(CONFIG_ARCH_REALTEK) += \
+> +	rtd1195-mele-x1000.dtb
+>  dtb-$(CONFIG_ARCH_REALVIEW) += \
+>  	arm-realview-pb1176.dtb \
+>  	arm-realview-pb11mp.dtb \
+> diff --git a/arch/arm/boot/dts/rtd1195-mele-x1000.dts b/arch/arm/boot/dts/rtd1195-mele-x1000.dts
+> new file mode 100644
+> index 000000000000..834b430e6250
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/rtd1195-mele-x1000.dts
+> @@ -0,0 +1,31 @@
+> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+> +/*
+> + * Copyright (c) 2017-2019 Andreas Färber
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "rtd1195.dtsi"
+> +
+> +/ {
+> +	compatible = "mele,x1000", "realtek,rtd1195";
+> +	model = "MeLE X1000";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory@0 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x18000000>,
+> +		      <0x19100000 0x26f00000>;
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/rtd1195.dtsi b/arch/arm/boot/dts/rtd1195.dtsi
+> new file mode 100644
+> index 000000000000..4e3866fe8f6e
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/rtd1195.dtsi
+> @@ -0,0 +1,127 @@
+> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+> +/*
+> + * Copyright (c) 2017-2019 Andreas Färber
+> + */
+> +
+> +/memreserve/ 0x00000000 0x0000a800; /* boot code */
+> +/memreserve/ 0x0000a800 0x000f5800;
+> +/memreserve/ 0x17fff000 0x00001000;
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +	compatible = "realtek,rtd1195";
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a7";
+> +			reg = <0x0>;
+> +			clock-frequency = <1000000000>;
+> +		};
+> +
+> +		cpu1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a7";
+> +			reg = <0x1>;
+> +			clock-frequency = <1000000000>;
+> +		};
+> +	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		rpc_comm: rpc@b000 {
+> +			reg = <0x0000b000 0x1000>;
+> +		};
+> +
+> +		audio@1b00000 {
+> +			reg = <0x01b00000 0x400000>;
+> +		};
+> +
+> +		rpc_ringbuf: rpc@1ffe000 {
+> +			reg = <0x01ffe000 0x4000>;
+> +		};
+> +
+> +		secure@10000000 {
+> +			reg = <0x10000000 0x100000>;
+> +			no-map;
+> +		};
+> +	};
+> +
+> +	arm-pmu {
+> +		compatible = "arm,cortex-a7-pmu";
+> +		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-affinity = <&cpu0>, <&cpu1>;
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv7-timer";
+> +		interrupts = <GIC_PPI 13
+> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 14
+> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 11
+> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 10
+> +			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
+> +		clock-frequency = <27000000>;
 
-We ended up zapping the final two commits from sched/urgent.
+This is 2019, and yet it feels like 2011. This should be setup in the
+bootloader, not in DT...
 
-Please pull the latest sched-urgent-for-linus git tree from:
+> +	};
+> +
+> +	osc27M: osc {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <27000000>;
+> +		#clock-cells = <0>;
+> +		clock-output-names = "osc27M";
+> +	};
+> +
+> +	soc {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0x18000000 0x18000000 0x00070000>,
+> +		         <0x18100000 0x18100000 0x01000000>,
+> +		         <0x40000000 0x40000000 0xc0000000>;
+> +
+> +		wdt: watchdog@18007680 {
+> +			compatible = "realtek,rtd1295-watchdog";
+> +			reg = <0x18007680 0x100>;
+> +			clocks = <&osc27M>;
+> +		};
+> +
+> +		uart0: serial@18007800 {
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0x18007800 0x400>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clock-frequency = <27000000>;
+> +			status = "disabled";
+> +		};
+> +
+> +		uart1: serial@1801b200 {
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0x1801b200 0x100>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clock-frequency = <27000000>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gic: interrupt-controller@ff011000 {
+> +			compatible = "arm,cortex-a7-gic";
+> +			reg = <0xff011000 0x1000>,
+> +			      <0xff012000 0x2000>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <3>;
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-urgent-for-linus
+You know what I'm going to say: GICH and GIV are missing, as well as
+the maintenance interrupt. This is all bog-standard HW (most probably a
+GIC400), so there is no reason for this information not to be present.
 
-   # HEAD: 6e1ff0773f49c7d38e8b4a9df598def6afb9f415 sched/uclamp: Fix incorrect condition
-
-Misc fixes:
-
- - Fix potential deadlock under CONFIG_DEBUG_OBJECTS=y
- - PELT metrics update ordering fix
- - uclamp logic fix
-
- Thanks,
-
-	Ingo
-
------------------->
-Peter Zijlstra (1):
-      sched/core: Avoid spurious lock dependencies
-
-Qais Yousef (1):
-      sched/uclamp: Fix incorrect condition
-
-Vincent Guittot (1):
-      sched/pelt: Fix update of blocked PELT ordering
-
-
- kernel/sched/core.c |  5 +++--
- kernel/sched/fair.c | 29 ++++++++++++++++++++---------
- 2 files changed, 23 insertions(+), 11 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 0f2eb3629070..44123b4d14e8 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1065,7 +1065,7 @@ uclamp_update_active(struct task_struct *p, enum uclamp_id clamp_id)
- 	 * affecting a valid clamp bucket, the next time it's enqueued,
- 	 * it will already see the updated clamp bucket value.
- 	 */
--	if (!p->uclamp[clamp_id].active) {
-+	if (p->uclamp[clamp_id].active) {
- 		uclamp_rq_dec_id(rq, p, clamp_id);
- 		uclamp_rq_inc_id(rq, p, clamp_id);
- 	}
-@@ -6019,10 +6019,11 @@ void init_idle(struct task_struct *idle, int cpu)
- 	struct rq *rq = cpu_rq(cpu);
- 	unsigned long flags;
- 
-+	__sched_fork(0, idle);
-+
- 	raw_spin_lock_irqsave(&idle->pi_lock, flags);
- 	raw_spin_lock(&rq->lock);
- 
--	__sched_fork(0, idle);
- 	idle->state = TASK_RUNNING;
- 	idle->se.exec_start = sched_clock();
- 	idle->flags |= PF_IDLE;
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 22a2fed29054..69a81a5709ff 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7547,6 +7547,19 @@ static void update_blocked_averages(int cpu)
- 	rq_lock_irqsave(rq, &rf);
- 	update_rq_clock(rq);
- 
-+	/*
-+	 * update_cfs_rq_load_avg() can call cpufreq_update_util(). Make sure
-+	 * that RT, DL and IRQ signals have been updated before updating CFS.
-+	 */
-+	curr_class = rq->curr->sched_class;
-+	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
-+	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
-+	update_irq_load_avg(rq, 0);
-+
-+	/* Don't need periodic decay once load/util_avg are null */
-+	if (others_have_blocked(rq))
-+		done = false;
-+
- 	/*
- 	 * Iterates the task_group tree in a bottom up fashion, see
- 	 * list_add_leaf_cfs_rq() for details.
-@@ -7574,14 +7587,6 @@ static void update_blocked_averages(int cpu)
- 			done = false;
- 	}
- 
--	curr_class = rq->curr->sched_class;
--	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
--	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
--	update_irq_load_avg(rq, 0);
--	/* Don't need periodic decay once load/util_avg are null */
--	if (others_have_blocked(rq))
--		done = false;
--
- 	update_blocked_load_status(rq, !done);
- 	rq_unlock_irqrestore(rq, &rf);
- }
-@@ -7642,12 +7647,18 @@ static inline void update_blocked_averages(int cpu)
- 
- 	rq_lock_irqsave(rq, &rf);
- 	update_rq_clock(rq);
--	update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
- 
-+	/*
-+	 * update_cfs_rq_load_avg() can call cpufreq_update_util(). Make sure
-+	 * that RT, DL and IRQ signals have been updated before updating CFS.
-+	 */
- 	curr_class = rq->curr->sched_class;
- 	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
- 	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
- 	update_irq_load_avg(rq, 0);
-+
-+	update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
-+
- 	update_blocked_load_status(rq, cfs_rq_has_blocked(cfs_rq) || others_have_blocked(rq));
- 	rq_unlock_irqrestore(rq, &rf);
- }
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
