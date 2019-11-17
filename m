@@ -2,114 +2,221 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D151FC432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA586C432C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C03E206D6
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:02:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573988540;
-	bh=LPcvXNw1mLuXrOg82i2tbZ63dHq4jTPmRO2gOYtV0Tc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1yL8LPPBJEIJQ62mFALT94tpBBgzDB2We3d2/CYp1UFZ37qAPyS8wMJ8l660H5k+o
-	 qo/lwLHl+c//Px7tc+uldn9+Lxthu53LK7kyN0ju646JZlEsU84deVhPyWLeg8qo4r
-	 AGHMYjpr+zMoa+P9YHAX1xsXRLOECxGcXaF9A4/I=
+	by mail.kernel.org (Postfix) with ESMTP id A30FB206D6
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 11:02:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="EelJndJn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbfKQLCT convert rfc822-to-8bit (ORCPT
+        id S1726184AbfKQLC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 06:02:19 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:54195 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725974AbfKQLCT (ORCPT
+        Sun, 17 Nov 2019 06:02:29 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.81]:16703 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbfKQLC3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 06:02:19 -0500
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iWIJs-0002Zx-8i; Sun, 17 Nov 2019 12:02:16 +0100
-Date:   Sun, 17 Nov 2019 11:02:14 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Andreas =?UTF-8?Q?F=C3=A4rber?= <afaerber@suse.de>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 8/8] ARM: realtek: Enable RTD1195 arch timer
-Message-ID: <20191117110214.6b160b2e@why>
-In-Reply-To: <20191117072109.20402-9-afaerber@suse.de>
-References: <20191117072109.20402-1-afaerber@suse.de>
-        <20191117072109.20402-9-afaerber@suse.de>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 17 Nov 2019 06:02:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573988546;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=CLtEbrqUYKD2wQNQMuHkpIC0PxqzpBsG0RbyF4DIpxI=;
+        b=EelJndJnzMGtFwrCoFBJHQi94kJFv3h6YGN+jWEXmhzovP02CGELJG64I46RAARcAm
+        wuWtUTvsCqu0acPaqGD7Qpy5FQExJEh16nzCxMRpgHBKRzgPflGq2cAy0GFiV5++Mbqy
+        w82Rm2PEokvjW8n3H8owuHV+rX38IUJkr59YiuEU47C1DRXoxw7iBP9vdVdOLFAvF4SP
+        4mxKzVTCAZ0bAHofYUAfsXf6TIxz/KdHZvxh+yyTLfJj/Z/r+4q3sikFc7Juc7VKe8Zt
+        kDcIaL0w+wADO9ZNt1anhGjrCVtNudQe015zCT/jlIUgV4eIB5ZcXhDowi0F4i2unu3m
+        rcSw==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzHHXDbIvSfb0y2"
+X-RZG-CLASS-ID: mo00
+Received: from positron.chronox.de
+        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
+        with ESMTPSA id N09a57vAHB1FVSv
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Sun, 17 Nov 2019 12:01:15 +0100 (CET)
+From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
+To:     Nicolai Stange <nstange@suse.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>
+Subject: Re: [PATCH v25 01/12] Linux Random Number Generator
+Date:   Sun, 17 Nov 2019 12:01:15 +0100
+Message-ID: <4567011.rgkcMjRUIa@positron.chronox.de>
+In-Reply-To: <87mucvadvg.fsf@suse.de>
+References: <6157374.ptSnyUpaCn@positron.chronox.de> <2645285.kI0haNqfm4@positron.chronox.de> <87mucvadvg.fsf@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: afaerber@suse.de, linux-realtek-soc@lists.infradead.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 17 Nov 2019 08:21:09 +0100
-Andreas Färber <afaerber@suse.de> wrote:
+Am Samstag, 16. November 2019, 19:13:23 CET schrieb Nicolai Stange:
 
-> Without this magic write the timer doesn't work and boot gets stuck.
-> 
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> ---
->  What is the name of the register 0xff018000?
->  Is 0x1 a BIT(0) write, or how are the register bits defined?
->  Is this a reset or a clock gate? How should we model it in DT?
->  
->  v2 -> v3: Unchanged
->  
->  v2: New
->  
->  arch/arm/mach-realtek/rtd1195.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/arch/arm/mach-realtek/rtd1195.c b/arch/arm/mach-realtek/rtd1195.c
-> index b31a4066be87..0532379c74f5 100644
-> --- a/arch/arm/mach-realtek/rtd1195.c
-> +++ b/arch/arm/mach-realtek/rtd1195.c
-> @@ -5,6 +5,9 @@
->   * Copyright (c) 2017-2019 Andreas Färber
->   */
->  
-> +#include <linux/clk-provider.h>
-> +#include <linux/clocksource.h>
-> +#include <linux/io.h>
->  #include <linux/memblock.h>
->  #include <asm/mach/arch.h>
->  
-> @@ -24,6 +27,18 @@ static void __init rtd1195_reserve(void)
->  	rtd1195_memblock_remove(0x18100000, 0x01000000);
->  }
->  
-> +static void __init rtd1195_init_time(void)
-> +{
-> +	void __iomem *base;
-> +
-> +	base = ioremap(0xff018000, 4);
-> +	writel(0x1, base);
-> +	iounmap(base);
-> +
-> +	of_clk_init(NULL);
-> +	timer_probe();
-> +}
+Hi Nicolai,
 
-Gawd... Why isn't this set from the bootloader? By the time the kernel
-starts, everything should be up and running. What is it going to do
-when you kexec? Shouldn't this be a read/modify/write sequence?
+> Hi Stephan,
+>=20
+> Stephan M=FCller <smueller@chronox.de> writes:
+> > +/* Initialize the default DRNG during boot */
+>=20
+> I think that this can get called a bit too early through the
+> get_random_bytes() invoked from e.g. boot_init_stack_canary(): in
+> start_kernel(), there is
+>=20
+> 	boot_init_stack_canary();
+>=20
+> 	time_init();
+>=20
+> On ARM (at least with arm_arch_timer.c), get_cycles() would return 0
+> until
+>=20
+>   time_init() =3D> timer_probe() =3D> arch_timer_of_init() =3D>
+>   arch_timer_common_init() =3D> arch_timer_arch_init() =3D>
+>   arch_timer_delay_timer_register() =3D> register_current_timer_delay()
+>=20
+> has executed and thus, ...
+>=20
+> > +void lrng_drngs_init_cc20(void)
+> > +{
+> > +	unsigned long flags =3D 0;
+> > +
+> > +	if (lrng_get_available())
+> > +		return;
+> > +
+> > +	lrng_sdrng_lock(&lrng_sdrng_init, &flags);
+> > +	if (lrng_get_available()) {
+> > +		lrng_sdrng_unlock(&lrng_sdrng_init, &flags);
+> > +		return;
+> > +	}
+> > +
+> > +	if (random_get_entropy() || random_get_entropy()) {
+> > +		/*
+> > +		 * As the highres timer is identified here, previous interrupts
+> > +		 * obtained during boot time are treated like a lowres-timer
+> > +		 * would have been present.
+> > +		 */
+> > +		lrng_pool_configure(true, LRNG_IRQ_ENTROPY_BITS);
+> > +	} else {
+> > +		lrng_health_disable();
+> > +		lrng_pool_configure(false, LRNG_IRQ_ENTROPY_BITS *
+> > +					   LRNG_IRQ_OVERSAMPLING_FACTOR);
+> > +		pr_warn("operating without high-resolution timer and applying "
+> > +			"IRQ oversampling factor %u\n",
+> > +			LRNG_IRQ_OVERSAMPLING_FACTOR);
+>=20
+> ... LRNG thinks that no high-res timer is available even though there
+> is:
+>=20
+> [    0.000000] lrng_sdrng: operating without high-resolution timer and
+> applying IRQ oversampling factor 10 [    0.000000] lrng_chacha20: ChaCha20
+> core initialized
+> [    0.000000] lrng_chacha20: ChaCha20 core initialized
+> [    0.000014] sched_clock: 32 bits at 1000kHz, resolution 1000ns, wraps
+> every 2147483647500ns [    0.000036] clocksource: timer: mask: 0xffffffff
+> max_cycles: 0xffffffff, max_idle_ns: 1911260446275 ns [    0.000114]
+> bcm2835: system timer (irq =3D 27)
+> [    0.000594] arch_timer: cp15 timer(s) running at 19.20MHz (phys).
+> [    0.000613] clocksource: arch_sys_counter: mask: 0xffffffffffffff
+> max_cycles: 0x46d987e47, max_idle_ns: 440795202767 ns [    0.000631]
+> sched_clock: 56 bits at 19MHz, resolution 52ns, wraps every 4398046511078=
+ns
+> [    0.000645] Switching to timer-based delay loop, resolution 52ns
+>=20
+> Note that this last line comes from aforementioned
+> register_current_timer_delay().
+>=20
+> Similarly, get_random_bytes() can get called quite early through
+> WARN() =3D> warn_slowpath_fmt() =3D> __warn() =3D> print_oops_end_marker(=
+) =3D>
+> init_oops_id().
+>=20
+> Perhaps it would make sense not to do the (pool + health test)
+> initalization "on-demand", but rather make sure it happens at some
+> well-defined point after time_init()? Or at least that the pool +
+> the health tests get reconfigured eventually?
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+
+Thank you very much for testing this and reporting it.
+
+I have extracted the initialization of the time source into its own functio=
+n=20
+and execute it with core_initcall. With that, the DRNG is initialized at th=
+e=20
+time it needs initialization.
+
+But the time source check is now done when time_init is completed as first=
+=20
+time_init is called and then arch_call_rest_init -> rest_init -> kernel_ini=
+t -
+> kernel_init_freeable -> do_basic_setup -> do_initcalls where the initcall=
+s=20
+registered with the core_initcall callback are now executed as the first=20
+batch.
+
+
+>=20
+>=20
+> Thanks,
+>=20
+> Nicolai
+>=20
+> P.S: include/linux/lrng.h needs an #include <linux/errno.h> for
+>      CONFIG_LRNG_DRNG_SWITCH=3Dn
+
+Thank you, added.
+>=20
+> > +	}
+> > +
+> > +	lrng_sdrng_reset(&lrng_sdrng_init);
+> > +	lrng_cc20_init_state(&secondary_chacha20);
+> > +	lrng_state_init_seed_work();
+> > +	lrng_sdrng_unlock(&lrng_sdrng_init, &flags);
+> > +
+> > +	lrng_sdrng_lock(&lrng_sdrng_atomic, &flags);
+> > +	lrng_sdrng_reset(&lrng_sdrng_atomic);
+> > +	/*
+> > +	 * We do not initialize the state of the atomic DRNG as it is identic=
+al
+> > +	 * to the secondary DRNG at this point.
+> > +	 */
+> > +	lrng_sdrng_unlock(&lrng_sdrng_atomic, &flags);
+> > +
+> > +	lrng_trng_init();
+> > +
+> > +	lrng_set_available();
+> > +}
+> > +
+> > +/* Reset LRNG such that all existing entropy is gone */
+
+
+Ciao
+Stephan
+
+
