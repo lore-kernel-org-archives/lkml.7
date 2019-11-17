@@ -2,90 +2,98 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A8EC43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 22:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DEFC43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 22:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7D932075C
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 22:28:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="FZGRNfQH"
+	by mail.kernel.org (Postfix) with ESMTP id 176EA20727
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 22:31:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbfKQW2f (ORCPT
+        id S1726357AbfKQWbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 17:28:35 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:22503 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbfKQW2f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 17:28:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574029713;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=urCVRDxjtlkSW6YxW0DTjykMpr66oVfNWnAF+7LY2IM=;
-        b=FZGRNfQH4aViZE0gVOXp4F2EjLg3MEz3FvkPrPzWzFpwSfnMpyJAT/8LSu2U+BXrL2
-        q6R0HKzHABI7m0rkbhwt27MPyhuAqUdEz6ripalMnZk5xyJYG7W9ZVIBe79cq6xrsa0I
-        O8amA9RuWFgJBfIZ3DIaKyF6yhbdBtro6I8Ju0AafKKD8olYxdvC+3d0CxkSEXEqrW99
-        G9cKs92zF2NLNVWzOlJf9hvAZtQTwG8pFqPRDN9V3/LCDZ6Sh7r/C74NjmFnGKE2vHFC
-        4x57FinYk1ZXHpcy/Hn24kQXHrOBVEl4UKooviFJgbwcgxwZ0rDY8JL5WHsel8V3RPpF
-        zjYg==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQrEOHTIXsMvvtBRRPA=="
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id e07688vAHMSWbCW
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sun, 17 Nov 2019 23:28:32 +0100 (CET)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH] ARM: dts: ux500: snowball: Remove unused PRCMU cpufreq node
-Date:   Sun, 17 Nov 2019 23:27:32 +0100
-Message-Id: <20191117222732.283673-1-stephan@gerhold.net>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 17 Nov 2019 17:31:04 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:56860 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726171AbfKQWbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 17:31:04 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CE2771A0D0D;
+        Sun, 17 Nov 2019 23:31:02 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C1D601A0D0A;
+        Sun, 17 Nov 2019 23:31:02 +0100 (CET)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 5C67B202AF;
+        Sun, 17 Nov 2019 23:31:02 +0100 (CET)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Gary Hook <gary.hook@amd.com>, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx <linux-imx@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>
+Subject: [PATCH 01/12] crypto: add helper function for akcipher_request
+Date:   Mon, 18 Nov 2019 00:30:34 +0200
+Message-Id: <1574029845-22796-2-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1574029845-22796-1-git-send-email-iuliana.prodan@nxp.com>
+References: <1574029845-22796-1-git-send-email-iuliana.prodan@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit a435adbec264 ("ARM: dts: augment Ux500 to use DT cpufreq")
-switched the Ux500 device tree to use the generic DT cpufreq driver
-and removed the PRCMU cpufreq node.
+Add akcipher_request_cast function to get an akcipher_request struct from
+a crypto_async_request struct.
 
-The snowball DTS still references it, without effect, since cpufreq
-is now enabled by default. Remove the unused node.
+Remove this function from ccp driver.
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
 ---
- arch/arm/boot/dts/ste-snowball.dts | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/crypto/ccp/ccp-crypto-rsa.c | 6 ------
+ include/crypto/akcipher.h           | 6 ++++++
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
-index efbc4467b8b7..566b35ac0d0c 100644
---- a/arch/arm/boot/dts/ste-snowball.dts
-+++ b/arch/arm/boot/dts/ste-snowball.dts
-@@ -377,10 +377,6 @@
- 		};
+diff --git a/drivers/crypto/ccp/ccp-crypto-rsa.c b/drivers/crypto/ccp/ccp-crypto-rsa.c
+index 649c91d..3ab659d 100644
+--- a/drivers/crypto/ccp/ccp-crypto-rsa.c
++++ b/drivers/crypto/ccp/ccp-crypto-rsa.c
+@@ -19,12 +19,6 @@
  
- 		prcmu@80157000 {
--			cpufreq {
--				status = "okay";
--			};
+ #include "ccp-crypto.h"
+ 
+-static inline struct akcipher_request *akcipher_request_cast(
+-	struct crypto_async_request *req)
+-{
+-	return container_of(req, struct akcipher_request, base);
+-}
 -
- 			ab8500 {
- 				ab8500-gpio {
- 					/*
+ static inline int ccp_copy_and_save_keypart(u8 **kpbuf, unsigned int *kplen,
+ 					    const u8 *buf, size_t sz)
+ {
+diff --git a/include/crypto/akcipher.h b/include/crypto/akcipher.h
+index 6924b09..4365edd 100644
+--- a/include/crypto/akcipher.h
++++ b/include/crypto/akcipher.h
+@@ -170,6 +170,12 @@ static inline struct crypto_akcipher *crypto_akcipher_reqtfm(
+ 	return __crypto_akcipher_tfm(req->base.tfm);
+ }
+ 
++static inline struct akcipher_request *akcipher_request_cast(
++	struct crypto_async_request *req)
++{
++	return container_of(req, struct akcipher_request, base);
++}
++
+ /**
+  * crypto_free_akcipher() - free AKCIPHER tfm handle
+  *
 -- 
-2.23.0
+2.1.0
 
