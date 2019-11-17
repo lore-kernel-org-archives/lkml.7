@@ -1,117 +1,231 @@
-Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=PdPE=ZJ=vger.kernel.org=linux-m68k-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D6DC43141
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B664C432C0
+	for <linux-m68k@archiver.kernel.org>; Sun, 17 Nov 2019 01:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6999722310
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:33:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574112780;
-	bh=kVdkdxoKMzi10HNu36GPhclP+ZjVCj3HYfGnlOR7PfA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=u/sUyctH5vMQYW7vaUoNhxqDWQpzjKMfO6VqTY7ncIo6hIfksaJj4JWvKYfLgyTJV
-	 qT0B2085lxJ6PeAbTz8m5PQigJCFaLCJLE3NCmuVsN7Zw481/E3LCGGXwvHy96mNAH
-	 sI77SHVwlX/TX1VzTFd3zE/3fVODHY/DrS11YhLM=
+	by mail.kernel.org (Postfix) with ESMTP id 52FD620730
+	for <linux-m68k@archiver.kernel.org>; Sun, 17 Nov 2019 01:22:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfKRVc7 (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 16:32:59 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39707 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfKRVc7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 16:32:59 -0500
-Received: by mail-oi1-f193.google.com with SMTP id v138so16801664oif.6;
-        Mon, 18 Nov 2019 13:32:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+gNao6bjSYC1WxI91s+ikl6/okUQ4D7/7Wn4Hq9wK5g=;
-        b=IAWdKLcSzzYuSez9v0EmP9i5q7OPwG/p9fK0/iggVlLfKmuQWUqttAOiTfq27VlZyc
-         WkE6tJ8/PI3+cV8uivg30e9L37vpg9BF22koQNliYKyFZPbaNCQfc9H/Yq/eNLR/5yIu
-         GRRDWTn3N7vgL7cyaS0MuJFF6cCfDVOtvSUWqQNjwmOtzRMueI7MokAea6l+56x3n3+c
-         BIS1ZLII1NmpfbGvsGFs89iJDu0bx84za3VjH63F3TtYXcpQuwccybjALGwE7X2S6uFi
-         93evyCG+ZjNNNDUKu7reGhlwIuwKRKX8LQjVN73KgT4HexmO+KW4ZGBiO0TKoXGYHYA6
-         21ow==
-X-Gm-Message-State: APjAAAVatHRPohbeknaNHpA8VzoGBs9HWWYHUKr7+0psn0LCv6ujGBqj
-        aAGWhwPrUAIDeKmy+E/A6g==
-X-Google-Smtp-Source: APXvYqx1RtTBrYQED9QhIjvirrPV/a4JBKzhJx9hGC6wh4UxphAZLwpmJqsB1gKcOe+gKsus8SwRxw==
-X-Received: by 2002:aca:d610:: with SMTP id n16mr955357oig.64.1574112778145;
-        Mon, 18 Nov 2019 13:32:58 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b12sm6586756otl.34.2019.11.18.13.32.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 13:32:57 -0800 (PST)
-Date:   Mon, 18 Nov 2019 15:32:56 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     broonie@kernel.org, lgirdwood@gmail.com,
-        alsa-devel@alsa-project.org, kuninori.morimoto.gx@renesas.com,
-        linus.walleij@linaro.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] bindings: sound: pcm3168a: Document optional RST gpio
-Message-ID: <20191118213256.GA27262@bogus>
-References: <20191113124734.27984-1-peter.ujfalusi@ti.com>
- <20191113124734.27984-2-peter.ujfalusi@ti.com>
+        id S1726025AbfKQBWc (ORCPT <rfc822;linux-m68k@archiver.kernel.org>);
+        Sat, 16 Nov 2019 20:22:32 -0500
+Received: from mout-p-102.mailbox.org ([80.241.56.152]:32660 "EHLO
+        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbfKQBWb (ORCPT
+        <rfc822;linux-m68k@lists.linux-m68k.org>);
+        Sat, 16 Nov 2019 20:22:31 -0500
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 47FvTL2bKczKm58;
+        Sun, 17 Nov 2019 02:22:30 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
+        with ESMTP id PW0ucYXyaRpU; Sun, 17 Nov 2019 02:22:26 +0100 (CET)
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>, dev@opencontainers.org,
+        containers@lists.linux-foundation.org, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        sparclinux@vger.kernel.org
+Subject: [PATCH v17 10/13] namei: LOOKUP_{IN_ROOT,BENEATH}: permit limited ".." resolution
+Date:   Sun, 17 Nov 2019 12:17:10 +1100
+Message-Id: <20191117011713.13032-11-cyphar@cyphar.com>
+In-Reply-To: <20191117011713.13032-1-cyphar@cyphar.com>
+References: <20191117011713.13032-1-cyphar@cyphar.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113124734.27984-2-peter.ujfalusi@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Sender: linux-m68k-owner@vger.kernel.org
 Precedence: bulk
-List-ID: <linux-kernel.vger.kernel.org>
-X-Mailing-List: linux-kernel@vger.kernel.org
+List-ID: <linux-m68k.vger.kernel.org>
+X-Mailing-List: linux-m68k@vger.kernel.org
+Message-ID: <20191117011710.4_vNeyGwIcwfvqaxdWXVdPqD-HyxKvEOKCIzkVgHy4s@z>
 
-On Wed, Nov 13, 2019 at 02:47:33PM +0200, Peter Ujfalusi wrote:
-> On boards where the RST line is not pulled up, but it is connected to a
-> GPIO line this property must present in order to be able to enable the
-> codec.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  Documentation/devicetree/bindings/sound/ti,pcm3168a.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt b/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
-> index 5d9cb84c661d..f30aebc7603a 100644
-> --- a/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
-> +++ b/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
-> @@ -25,6 +25,12 @@ Required properties:
->  
->  For required properties on SPI/I2C, consult SPI/I2C device tree documentation
->  
-> +Optional properties:
-> +
-> +  - rst-gpios : Optional RST gpio line for the codec
-> +		RST = low: device power-down
-> +		RST = high: device is enabled
+Allow LOOKUP_BENEATH and LOOKUP_IN_ROOT to safely permit ".." resolution
+(in the case of LOOKUP_BENEATH the resolution will still fail if ".."
+resolution would resolve a path outside of the root -- while
+LOOKUP_IN_ROOT will chroot(2)-style scope it). Magic-link jumps are
+still disallowed entirely[*].
 
-'reset-gpios' is the standard naming for reset lines.
+As Jann explains[1,2], the need for this patch (and the original no-".."
+restriction) is explained by observing there is a fairly easy-to-exploit
+race condition with chroot(2) (and thus by extension LOOKUP_IN_ROOT and
+LOOKUP_BENEATH if ".." is allowed) where a rename(2) of a path can be
+used to "skip over" nd->root and thus escape to the filesystem above
+nd->root.
 
-> +
->  Examples:
->  
->  i2c0: i2c0@0 {
-> @@ -34,6 +40,7 @@ i2c0: i2c0@0 {
->  	pcm3168a: audio-codec@44 {
->  		compatible = "ti,pcm3168a";
->  		reg = <0x44>;
-> +		rst-gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
->  		clocks = <&clk_core CLK_AUDIO>;
->  		clock-names = "scki";
->  		VDD1-supply = <&supply3v3>;
-> -- 
-> Peter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
+  thread1 [attacker]:
+    for (;;)
+      renameat2(AT_FDCWD, "/a/b/c", AT_FDCWD, "/a/d", RENAME_EXCHANGE);
+  thread2 [victim]:
+    for (;;)
+      openat2(dirb, "b/c/../../etc/shadow",
+              { .flags = O_PATH, .resolve = RESOLVE_IN_ROOT } );
+
+With fairly significant regularity, thread2 will resolve to
+"/etc/shadow" rather than "/a/b/etc/shadow". There is also a similar
+(though somewhat more privileged) attack using MS_MOVE.
+
+With this patch, such cases will be detected *during* ".." resolution
+and will return -EAGAIN for userspace to decide to either retry or abort
+the lookup. It should be noted that ".." is the weak point of chroot(2)
+-- walking *into* a subdirectory tautologically cannot result in you
+walking *outside* nd->root (except through a bind-mount or magic-link).
+There is also no other way for a directory's parent to change (which is
+the primary worry with ".." resolution here) other than a rename or
+MS_MOVE.
+
+The primary reason for deferring to userspace with -EAGAIN is that an
+in-kernel retry loop (or doing a path_is_under() check after re-taking
+the relevant seqlocks) can become unreasonably expensive on machines
+with lots of VFS activity (nfsd can cause lots of rename_lock updates).
+Thus it should be up to userspace how many times they wish to retry the
+lookup -- the selftests for this attack indicate that there is a ~35%
+chance of the lookup succeeding on the first try even with an attacker
+thrashing rename_lock.
+
+A variant of the above attack is included in the selftests for
+openat2(2) later in this patch series. I've run this test on several
+machines for several days and no instances of a breakout were detected.
+While this is not concrete proof that this is safe, when combined with
+the above argument it should lend some trustworthiness to this
+construction.
+
+[*] It may be acceptable in the future to do a path_is_under() check for
+    magic-links after they are resolved. However this seems unlikely to
+    be a feature that people *really* need -- it can be added later if
+    it turns out a lot of people want it.
+
+[1]: https://lore.kernel.org/lkml/CAG48ez1jzNvxB+bfOBnERFGp=oMM0vHWuLD6EULmne3R6xa53w@mail.gmail.com/
+[2]: https://lore.kernel.org/lkml/CAG48ez30WJhbsro2HOc_DR7V91M+hNFzBP5ogRMZaxbAORvqzg@mail.gmail.com/
+
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
+Suggested-by: Jann Horn <jannh@google.com>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+---
+ fs/namei.c | 37 ++++++++++++++++++++++++-------------
+ 1 file changed, 24 insertions(+), 13 deletions(-)
+
+diff --git a/fs/namei.c b/fs/namei.c
+index a6196786db13..88c706e459f6 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -491,7 +491,7 @@ struct nameidata {
+ 	struct path	root;
+ 	struct inode	*inode; /* path.dentry.d_inode */
+ 	unsigned int	flags;
+-	unsigned	seq, m_seq;
++	unsigned	seq, m_seq, r_seq;
+ 	int		last_type;
+ 	unsigned	depth;
+ 	int		total_link_count;
+@@ -1781,22 +1781,30 @@ static inline int handle_dots(struct nameidata *nd, int type)
+ 	if (type == LAST_DOTDOT) {
+ 		int error = 0;
+ 
+-		/*
+-		 * Scoped-lookup flags resolving ".." is not currently safe --
+-		 * races can cause our parent to have moved outside of the root
+-		 * and us to skip over it.
+-		 */
+-		if (unlikely(nd->flags & LOOKUP_IS_SCOPED))
+-			return -EXDEV;
+ 		if (!nd->root.mnt) {
+ 			error = set_root(nd);
+ 			if (error)
+ 				return error;
+ 		}
+-		if (nd->flags & LOOKUP_RCU) {
+-			return follow_dotdot_rcu(nd);
+-		} else
+-			return follow_dotdot(nd);
++		if (nd->flags & LOOKUP_RCU)
++			error = follow_dotdot_rcu(nd);
++		else
++			error = follow_dotdot(nd);
++		if (error)
++			return error;
++
++		if (unlikely(nd->flags & LOOKUP_IS_SCOPED)) {
++			/*
++			 * If there was a racing rename or mount along our
++			 * path, then we can't be sure that ".." hasn't jumped
++			 * above nd->root (and so userspace should retry or use
++			 * some fallback).
++			 */
++			if (unlikely(read_seqretry(&mount_lock, nd->m_seq)))
++				return -EAGAIN;
++			if (unlikely(read_seqretry(&rename_lock, nd->r_seq)))
++				return -EAGAIN;
++		}
+ 	}
+ 	return 0;
+ }
+@@ -2266,6 +2274,10 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
+ 	nd->last_type = LAST_ROOT; /* if there are only slashes... */
+ 	nd->flags = flags | LOOKUP_JUMPED | LOOKUP_PARENT;
+ 	nd->depth = 0;
++
++	nd->m_seq = read_seqbegin(&mount_lock);
++	nd->r_seq = read_seqbegin(&rename_lock);
++
+ 	if (flags & LOOKUP_ROOT) {
+ 		struct dentry *root = nd->root.dentry;
+ 		struct inode *inode = root->d_inode;
+@@ -2287,7 +2299,6 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
+ 	nd->path.mnt = NULL;
+ 	nd->path.dentry = NULL;
+ 
+-	nd->m_seq = read_seqbegin(&mount_lock);
+ 
+ 	/* Absolute pathname -- fetch the root (LOOKUP_IN_ROOT uses nd->dfd). */
+ 	if (*s == '/' && !(flags & LOOKUP_IN_ROOT)) {
+-- 
+2.24.0
+
