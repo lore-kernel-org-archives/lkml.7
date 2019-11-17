@@ -2,529 +2,262 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3BC2C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 22:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA1FC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 22:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A161120700
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 22:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4953206CC
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 22:58:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="rtiesrQ9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="qnCxcxZ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfKQW5A (ORCPT
+        id S1726397AbfKQW6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 17:57:00 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.168]:18320 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbfKQW5A (ORCPT
+        Sun, 17 Nov 2019 17:58:54 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:53478 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbfKQW6y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 17:57:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574031413;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=RJV7cd/Szuxs/oa+C4TAe/JvDzuzXmyEiAbfupJ04zA=;
-        b=rtiesrQ91Ba6J/RWX5GD1mTnXXNgZcgyT6hPQExKIaUVRFog5BwvUnGzkaftc3iN16
-        xQZl8j3YQa1TbXNuj+/dL49y8bu8A/LTHcu4pX3g0JFaS8n/8b5loDJkosstAJPmgeHd
-        LlKmsj3yV085JoUidmkHSoXunMs2sa+g4+YGyfEHJnqf11jCdVSBG6c8PPejQcg2Y5Wa
-        U8BT/0R43WYKEhcGQlWLOzg2pTuoipu8GSeo28L0qdzhGNpuEwo90QoRrbp46KCwuCrv
-        4RDFm/5IoqmHuUzf/JYTVBmsZpI8gaZgg42OqSVjzdr9Ldv2SzPw/BzfSsdi583tfJk8
-        QMAg==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzHHXDbIvSfb0y2"
-X-RZG-CLASS-ID: mo00
-Received: from positron.chronox.de
-        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
-        with ESMTPSA id N09a57vAHMtPWpN
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Sun, 17 Nov 2019 23:55:25 +0100 (CET)
-From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>
-Subject: Re: [PATCH v25 12/12] LRNG - add interface for gathering of raw entropy
-Date:   Sun, 17 Nov 2019 23:55:24 +0100
-Message-ID: <15745039.MlzBmBdvSy@positron.chronox.de>
-In-Reply-To: <6950B235-6231-4DFF-A375-54A70C548B2E@amacapital.net>
-References: <3610406.x8mDjznOIz@positron.chronox.de> <6950B235-6231-4DFF-A375-54A70C548B2E@amacapital.net>
+        Sun, 17 Nov 2019 17:58:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1574031530; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rehDJHT5XgqrmrR5yw6KriOCF7C12z5xBt80ruxYe4w=;
+        b=qnCxcxZ767OA9B9hbb4y8OOzz0LE/OBCZqaCT5zngqzggHNrM4/DEzUoESLfcPC0ZDXWPv
+        4vyhLQh+WFOgCyfu03wNvKy17g+Dxo5fnf7WZfYMU48FC1I8QvzUctHkEEGqQIAHRgBz+W
+        xj26vxDe4ziGzaW7t7yw15WtXhSROKA=
+Date:   Sun, 17 Nov 2019 23:58:43 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 1/3] pwm: jz4740: Use clocks from TCU driver
+To:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathieu Malaterre <malat@debian.org>,
+        Artur Rojek <contact@artur-rojek.eu>
+Message-Id: <1574031523.3.0@crapouillou.net>
+In-Reply-To: <20191117202028.4chgjv2kulyyq2eu@pengutronix.de>
+References: <20191116173613.72647-1-paul@crapouillou.net>
+        <20191116173613.72647-2-paul@crapouillou.net>
+        <20191117202028.4chgjv2kulyyq2eu@pengutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Samstag, 16. November 2019, 17:51:24 CET schrieb Andy Lutomirski:
-
-Hi Andy,
-
-> > On Nov 16, 2019, at 1:40 AM, Stephan M=C3=BCller <smueller@chronox.de> =
-wrote:
-> >=20
-> > =EF=BB=BFThe test interface allows a privileged process to capture the =
-raw
-> > unconditioned noise that is collected by the LRNG for statistical
-> > analysis. Extracted noise data is not used to seed the LRNG. This
-> > is a test interface and not appropriate for production systems.
-> > Yet, the interface is considered to be sufficiently secured for
-> > production systems.
-> >=20
-> > Access to the data is given through the lrng_raw debugfs file. The
-> > data buffer should be multiples of sizeof(u32) to fill the entire
-> > buffer. Using the option lrng_testing.boot_test=3D1 the raw noise of
-> > the first 1000 entropy events since boot can be sampled.
-> >=20
-> > This test interface allows generating the data required for
-> > analysis whether the LRNG is in compliance with SP800-90B
-> > sections 3.1.3 and 3.1.4.
-> >=20
-> > CC: "Eric W. Biederman" <ebiederm@xmission.com>
-> > CC: "Alexander E. Patrakov" <patrakov@gmail.com>
-> > CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
-> > CC: "Theodore Y. Ts'o" <tytso@mit.edu>
-> > CC: Willy Tarreau <w@1wt.eu>
-> > CC: Matthew Garrett <mjg59@srcf.ucam.org>
-> > CC: Vito Caputo <vcaputo@pengaru.com>
-> > CC: Andreas Dilger <adilger.kernel@dilger.ca>
-> > CC: Jan Kara <jack@suse.cz>
-> > CC: Ray Strode <rstrode@redhat.com>
-> > CC: William Jon McCann <mccann@jhu.edu>
-> > CC: zhangjs <zachary@baishancloud.com>
-> > CC: Andy Lutomirski <luto@kernel.org>
-> > CC: Florian Weimer <fweimer@redhat.com>
-> > CC: Lennart Poettering <mzxreary@0pointer.de>
-> > CC: Nicolai Stange <nstange@suse.de>
-> > Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
-> > Tested-by: Roman Drahtm=C3=BCller <draht@schaltsekun.de>
-> > Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
-> > Tested-by: Neil Horman <nhorman@redhat.com>
-> > Signed-off-by: Stephan Mueller <smueller@chronox.de>
-> > ---
-> > drivers/char/lrng/Kconfig        |  16 ++
-> > drivers/char/lrng/Makefile       |   1 +
-> > drivers/char/lrng/lrng_testing.c | 324 +++++++++++++++++++++++++++++++
-> > 3 files changed, 341 insertions(+)
-> > create mode 100644 drivers/char/lrng/lrng_testing.c
-> >=20
-> > diff --git a/drivers/char/lrng/Kconfig b/drivers/char/lrng/Kconfig
-> > index e6ca3acc1e48..4ccc710832ef 100644
-> > --- a/drivers/char/lrng/Kconfig
-> > +++ b/drivers/char/lrng/Kconfig
-> > @@ -169,4 +169,20 @@ config LRNG_APT_CUTOFF
-> >=20
-> >    default 325 if !LRNG_APT_BROKEN
-> >    default 32 if LRNG_APT_BROKEN
-> >=20
-> > +config LRNG_TESTING
-> > +    bool "Enable entropy test interface to LRNG noise source"
-> > +    select CONFIG_DEBUG_FS
-> > +    help
-> > +      The test interface allows a privileged process to capture
-> > +      the raw unconditioned noise that is collected by the LRNG
-> > +      for statistical analysis. Extracted noise data is not used
-> > +      to seed the LRNG.
-> > +
-> > +      The raw noise data can be obtained using the lrng_raw
-> > +      debugfs file. Using the option lrng_testing.boot_test=3D1
-> > +      the raw noise of the first 1000 entropy events since boot
-> > +      can be sampled.
-> > +
-> > +      If unsure, say N.
-> > +
-> > endif # LRNG
-> > diff --git a/drivers/char/lrng/Makefile b/drivers/char/lrng/Makefile
-> > index 0713e9c0aa6e..c0b6cc4301fe 100644
-> > --- a/drivers/char/lrng/Makefile
-> > +++ b/drivers/char/lrng/Makefile
-> > @@ -16,3 +16,4 @@ obj-$(CONFIG_LRNG_KCAPI)    +=3D lrng_kcapi.o
-> > obj-$(CONFIG_LRNG_JENT)        +=3D lrng_jent.o
-> > obj-$(CONFIG_LRNG_TRNG_SUPPORT)    +=3D lrng_trng.o
-> > obj-$(CONFIG_LRNG_HEALTH_TESTS)    +=3D lrng_health.o
-> > +obj-$(CONFIG_LRNG_TESTING)    +=3D lrng_testing.o
-> > diff --git a/drivers/char/lrng/lrng_testing.c
-> > b/drivers/char/lrng/lrng_testing.c new file mode 100644
-> > index 000000000000..5c33d3bd2172
-> > --- /dev/null
-> > +++ b/drivers/char/lrng/lrng_testing.c
-> > @@ -0,0 +1,324 @@
-> > +// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-> > +/*
-> > + * Linux Random Number Generator (LRNG) Raw entropy collection tool
-> > + *
-> > + * Copyright (C) 2019, Stephan Mueller <smueller@chronox.de>
-> > + */
-> > +
-> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > +
-> > +#include <linux/atomic.h>
-> > +#include <linux/bug.h>
-> > +#include <linux/debugfs.h>
-> > +#include <linux/module.h>
-> > +#include <linux/sched.h>
-> > +#include <linux/sched/signal.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/string.h>
-> > +#include <linux/types.h>
-> > +#include <linux/uaccess.h>
-> > +#include <linux/workqueue.h>
-> > +#include <asm/errno.h>
-> > +
-> > +#include "lrng_internal.h"
-> > +
-> > +#define LRNG_TESTING_RINGBUFFER_SIZE    1024
-> > +#define LRNG_TESTING_RINGBUFFER_MASK    (LRNG_TESTING_RINGBUFFER_SIZE -
-> > 1)
-> > +
-> > +static u32 lrng_testing_rb[LRNG_TESTING_RINGBUFFER_SIZE];
-> > +static atomic_t lrng_rb_reader =3D ATOMIC_INIT(0);
-> > +static atomic_t lrng_rb_writer =3D ATOMIC_INIT(0);
-> > +static atomic_t lrng_rb_first_in =3D ATOMIC_INIT(0);
-> > +static atomic_t lrng_testing_enabled =3D ATOMIC_INIT(0);
-> > +
-> > +static DECLARE_WAIT_QUEUE_HEAD(lrng_raw_read_wait);
-> > +
-> > +static u32 boot_test =3D 0;
-> > +module_param(boot_test, uint, 0644);
-> > +MODULE_PARM_DESC(boot_test, "Enable gathering boot time entropy of the
-> > first" +                " entropy events");
-> > +
-> > +static inline void lrng_raw_entropy_reset(void)
-> > +{
-> > +    atomic_set(&lrng_rb_reader, 0);
-> > +    atomic_set(&lrng_rb_writer, 0);
-> > +    atomic_set(&lrng_rb_first_in, 0);
-> > +}
-> > +
-> > +static void lrng_raw_entropy_init(void)
-> > +{
-> > +    /*
-> > +     * The boot time testing implies we have a running test. If the
-> > +     * caller wants to clear it, he has to unset the boot_test flag
-> > +     * at runtime via sysfs to enable regular runtime testing
-> > +     */
-> > +    if (boot_test)
-> > +        return;
-> > +
-> > +    lrng_raw_entropy_reset();
-> > +    atomic_set(&lrng_testing_enabled, 1);
-> > +    pr_warn("Enabling raw entropy collection\n");
-> > +}
-> > +
-> > +static void lrng_raw_entropy_fini(void)
-> > +{
-> > +    if (boot_test)
-> > +        return;
-> > +
-> > +    lrng_raw_entropy_reset();
-> > +    atomic_set(&lrng_testing_enabled, 0);
-> > +    pr_warn("Disabling raw entropy collection\n");
-> > +}
-> > +
-> > +bool lrng_raw_entropy_store(u32 value)
-> > +{
-> > +    unsigned int write_ptr;
-> > +    unsigned int read_ptr;
-> > +
-> > +    if (!atomic_read(&lrng_testing_enabled) && !boot_test)
-> > +        return false;
-> > +
-> > +    write_ptr =3D (unsigned int)atomic_add_return_relaxed(1,
-> > &lrng_rb_writer); +    read_ptr =3D (unsigned
-> > int)atomic_read(&lrng_rb_reader);
-
-Before answering your comments, please allow me to clarify the following:
-
-This entire code is intended to obtain take raw unconditioned noise data th=
-at=20
-needs to be extracted from the kernel to user space to allow it to be furth=
-er=20
-analyzed. This is also why it is mentioned in the Kconfig selection that in=
-=20
-doubt one should select N and that this code is not intended for production=
-=20
-kernels although this code should be secure enough to be present in product=
-ion=20
-kernels.
-
-=46or example, raw unconditioned noise data needs to be processed by the=20
-complicated math outlined in chapter 6 of [1]. For that, there is a tool=20
-available, see [2]. For that tool, data is needed that is obtained with the=
-=20
-getrawentropy tool available with [3] where this tool obtains the data from=
-=20
-the SysFS file that is implemented with this C file.
-
-In addition, [1] even needs the data from the very first 1000 interrupts af=
-ter=20
-boot. Hence, the LRNG needs to be able to store that data until user space =
-can=20
-pick it up (see the boot_test variable).
-
-The assessment resulting from this can be reviewed at [4] section 3.2 In=20
-particular, the numbers provided at the end of sections 3.2.3 and 3.2.4 are=
-=20
-obtained with this interface.=20
-
-Other examples where such raw unconditioned noise data is needed for furthe=
-r=20
-analysis is [5], especially chapter 6.
-
-This testing has nothing to do with the runtime testing provided with the=20
-patch set 11. All data that ends up here is not available to the LRNG and w=
-ill=20
-not contribute to any entropy collection.
-
-See the following:
-
-static inline void lrng_time_process(void)
-{
-=2E..
-	if (lrng_raw_entropy_store(now_time))
-		return;
+Hi Uwe,
 
 
-bool lrng_raw_entropy_store(u32 value)
-{
-=2E..
-	if (!atomic_read(&lrng_testing_enabled) && !boot_test)
-		return false;
-=2E..
-	return true;
+Le dim., nov. 17, 2019 at 21:20, Uwe Kleine-K=F6nig=20
+<u.kleine-koenig@pengutronix.de> a =E9crit :
+> On Sat, Nov 16, 2019 at 06:36:11PM +0100, Paul Cercueil wrote:
+>>  The ingenic-timer "TCU" driver provides us with clocks, that can be
+>>  (un)gated, reparented or reclocked from devicetree, instead of=20
+>> having
+>>  these settings hardcoded in this driver.
+>>=20
+>>  While this driver is devicetree-compatible, it is never (as of now)
+>>  probed from devicetree, so this change does not introduce a ABI=20
+>> problem
+>>  with current devicetree files.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  Tested-by: Mathieu Malaterre <malat@debian.org>
+>>  Tested-by: Artur Rojek <contact@artur-rojek.eu>
+>>  ---
+>>=20
+>>  Notes:
+>>      v2: This patch is now before the patch introducing regmap, so=20
+>> the code
+>>          has changed a bit.
+>>=20
+>>   drivers/pwm/Kconfig      |  1 +
+>>   drivers/pwm/pwm-jz4740.c | 45=20
+>> ++++++++++++++++++++++++++++------------
+>>   2 files changed, 33 insertions(+), 13 deletions(-)
+>>=20
+>>  diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+>>  index e3a2518503ed..e998e5cb01b0 100644
+>>  --- a/drivers/pwm/Kconfig
+>>  +++ b/drivers/pwm/Kconfig
+>>  @@ -225,6 +225,7 @@ config PWM_IMX_TPM
+>>   config PWM_JZ4740
+>>   	tristate "Ingenic JZ47xx PWM support"
+>>   	depends on MACH_INGENIC
+>>  +	depends on COMMON_CLK
+>>   	help
+>>   	  Generic PWM framework driver for Ingenic JZ47xx based
+>>   	  machines.
+>>  diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+>>  index 9d78cc21cb12..fd83644f9323 100644
+>>  --- a/drivers/pwm/pwm-jz4740.c
+>>  +++ b/drivers/pwm/pwm-jz4740.c
+>>  @@ -24,7 +24,6 @@
+>>=20
+>>   struct jz4740_pwm_chip {
+>>   	struct pwm_chip chip;
+>>  -	struct clk *clk;
+>=20
+> What is the motivation to go away from this approach to store the=20
+> clock?
+
+It's actually not the same clock. Instead of obtaining "ext" clock from=20
+the probe, we obtain "timerX" clocks (X being the PWM channel) from the=20
+request callback.
+
+
+>>   };
+>>=20
+>>   static inline struct jz4740_pwm_chip *to_jz4740(struct pwm_chip=20
+>> *chip)
+>>  @@ -34,6 +33,11 @@ static inline struct jz4740_pwm_chip=20
+>> *to_jz4740(struct pwm_chip *chip)
+>>=20
+>>   static int jz4740_pwm_request(struct pwm_chip *chip, struct=20
+>> pwm_device *pwm)
+>>   {
+>>  +	struct jz4740_pwm_chip *jz =3D to_jz4740(chip);
+>>  +	struct clk *clk;
+>>  +	char clk_name[16];
+>>  +	int ret;
+>>  +
+>>   	/*
+>>   	 * Timers 0 and 1 are used for system tasks, so they are=20
+>> unavailable
+>>   	 * for use as PWMs.
+>>  @@ -41,16 +45,31 @@ static int jz4740_pwm_request(struct pwm_chip=20
+>> *chip, struct pwm_device *pwm)
+>>   	if (pwm->hwpwm < 2)
+>>   		return -EBUSY;
+>>=20
+>>  -	jz4740_timer_start(pwm->hwpwm);
+>>  +	snprintf(clk_name, sizeof(clk_name), "timer%u", pwm->hwpwm);
+>>  +
+>>  +	clk =3D clk_get(chip->dev, clk_name);
+>>  +	if (IS_ERR(clk))
+>=20
+> 		if (PTR_ERR(clk) !=3D -EPROBE_DEFER)
+> 			dev_err(chip->dev, "Failed to get clock: %pe\n", clk);
+
+Never heard about that %pe. Will do that.
+
 
 >=20
-> Am I correct in assuming that this function can be called concurrently in
-> different threads or CPUs?
-
-Yes, because it is called indirectly by add_interrupt_randomness.
-> > +
-> > +    /*
-> > +     * Disable entropy testing for boot time testing after ring buffer
-> > +     * is filled.
-> > +     */
-> > +    if (boot_test && write_ptr > LRNG_TESTING_RINGBUFFER_SIZE) {
-> > +        pr_warn_once("Boot time entropy collection test disabled\n");
-> > +        return false;
-> > +    }
-> > +
-> > +    if (boot_test && !atomic_read(&lrng_rb_first_in))
-> > +        pr_warn("Boot time entropy collection test enabled\n");
-> > +
-> > +    lrng_testing_rb[write_ptr & LRNG_TESTING_RINGBUFFER_MASK] =3D valu=
-e;
+>>  +		return PTR_ERR(clk);
+>>  +
+>>  +	ret =3D clk_prepare_enable(clk);
+>>  +	if (ret) {
+>>  +		clk_put(clk);
+>>  +		return ret;
+>>  +	}
+>>  +
+>>  +	pwm_set_chip_data(pwm, clk);
+>>=20
+>>   	return 0;
+>>   }
+>>=20
+>>   static void jz4740_pwm_free(struct pwm_chip *chip, struct=20
+>> pwm_device *pwm)
+>>   {
+>>  +	struct clk *clk =3D pwm_get_chip_data(pwm);
+>>  +
+>>   	jz4740_timer_set_ctrl(pwm->hwpwm, 0);
 >=20
-> You=E2=80=99re writing *somewhere*, but not necessarily to the first open=
- slot.
+> What is the purpose of this call? I would have expected that all these
+> would go away when converting to the clk stuff?!
 
-The idea is that there is a reader pointer and a writer pointer where the=20
-reader always must be smaller or equal to the writer (modulo the size of th=
-e=20
-ring buffer). So, I do not care where the writer ptr is.
-
-All I need is that:
-
-1. reader and writer ptr must start with the same value at boot time (e.g. =
-0)
-
-2. reader ptr is always <=3D writer ptr in order for data to be read.
-
-With these two conditions, when pulling data from the buffer, I need to pul=
-l=20
-always the data from the reader ptr until the reader ptr reaches the writer=
-=20
-pointer.
-
-Note, the reader/writer pointers are always set to 0 at the beginning of a =
-new=20
-read request from user space.
+Some go away in patch [1/3] as they are clock-related, this one will go=20
+away in patch [2/3] when the driver is converted to use regmap.
 
 >=20
-> > +
-> > +    /* We got at least one event, enable the reader now. */
-> > +    atomic_set(&lrng_rb_first_in, 1);
+>>  -	jz4740_timer_stop(pwm->hwpwm);
+>>  +	clk_disable_unprepare(clk);
+>>  +	clk_put(clk);
+>>   }
+>>=20
+>>   static int jz4740_pwm_enable(struct pwm_chip *chip, struct=20
+>> pwm_device *pwm)
+>>  @@ -91,17 +110,21 @@ static int jz4740_pwm_apply(struct pwm_chip=20
+>> *chip, struct pwm_device *pwm,
+>>   			    const struct pwm_state *state)
+>>   {
+>>   	struct jz4740_pwm_chip *jz4740 =3D to_jz4740(pwm->chip);
+>>  +	struct clk *clk =3D pwm_get_chip_data(pwm),
+>>  +		   *parent_clk =3D clk_get_parent(clk);
+>>  +	unsigned long rate, period, duty;
+>>   	unsigned long long tmp;
+>>  -	unsigned long period, duty;
+>>   	unsigned int prescaler =3D 0;
+>>   	uint16_t ctrl;
+>>=20
+>>  -	tmp =3D (unsigned long long)clk_get_rate(jz4740->clk) *=20
+>> state->period;
+>>  +	rate =3D clk_get_rate(parent_clk);
 >=20
-> But not necessarily in position 0.
+> Why is it the parent's rate that is relevant here?
 
-Yes, this is perfectly ok.
+We calculate the divider to be used for the "timerX" clock, so we need=20
+to know the parent clock.
+
+
+>>  +	tmp =3D (unsigned long long)rate * state->period;
+>>   	do_div(tmp, 1000000000);
+>>   	period =3D tmp;
+>>=20
+>>   	while (period > 0xffff && prescaler < 6) {
+>>   		period >>=3D 2;
+>>  +		rate >>=3D 2;
+>>   		++prescaler;
+>>   	}
+>>=20
+>>  @@ -117,14 +140,14 @@ static int jz4740_pwm_apply(struct pwm_chip=20
+>> *chip, struct pwm_device *pwm,
+>>=20
+>>   	jz4740_pwm_disable(chip, pwm);
+>>=20
+>>  +	clk_set_rate(clk, rate);
 >=20
-> > +
-> > +    if (wq_has_sleeper(&lrng_raw_read_wait))
-> > +        wake_up_interruptible(&lrng_raw_read_wait);
-> > +
-> > +    /*
-> > +     * Our writer is taking over the reader - this means the reader
-> > +     * one full ring buffer available. Thus we "push" the reader ahead
-> > +     * to guarantee that he will be able to consume the full ring.
-> > +     */
-> > +    if (!boot_test &&
-> > +        ((write_ptr & LRNG_TESTING_RINGBUFFER_MASK) =3D=3D
-> > +        (read_ptr & LRNG_TESTING_RINGBUFFER_MASK)))
-> > +        atomic_inc_return_relaxed(&lrng_rb_reader);
+> This function's return code must be checked.
+
+In practice this will never fail, but OK, will do.
+
+Cheers,
+-Paul
+
 >=20
-> Because you did a relaxed increment above, you don=E2=80=99t actually kno=
-w this.
-> Maybe it=E2=80=99s okay, but this is way too subtle.
-
-You are absolutely correct, there should be no relaxed atomic operation. We=
-=20
-should take the atomic_inc above and here.
-
-I fixed this.
+>>   	jz4740_timer_set_count(pwm->hwpwm, 0);
+>>   	jz4740_timer_set_duty(pwm->hwpwm, duty);
+>>   	jz4740_timer_set_period(pwm->hwpwm, period);
+>>=20
+>>  -	ctrl =3D JZ_TIMER_CTRL_PRESCALER(prescaler) | JZ_TIMER_CTRL_SRC_EXT=20
+>> |
+>>  -		JZ_TIMER_CTRL_PWM_ABBRUPT_SHUTDOWN;
+>>  -
+>>  -	jz4740_timer_set_ctrl(pwm->hwpwm, ctrl);
+>>  +	ctrl =3D jz4740_timer_get_ctrl(pwm->hwpwm);
+>>  +	ctrl |=3D JZ_TIMER_CTRL_PWM_ABBRUPT_SHUTDOWN;
+>>=20
+>>   	switch (state->polarity) {
+>>   	case PWM_POLARITY_NORMAL:
 >=20
-> I think you should have a mutex for the read side and put all the
-> complicated accounting inside the mutex.  If the reader can=E2=80=99t fig=
-ure out
-> that the read pointer is too far behind the write pointer, then fix the
-> reader.
-
-Done - the writer now only writes the data and generates the boot log if th=
-e=20
-boot time raw entropy gathering is enabled.
+> Best regards
+> Uwe
 >=20
-> I also don=E2=80=99t see how the reader is supposed to know how much data=
- has
-> actually been written.  You don=E2=80=99t have any variable that says =E2=
-=80=9Call words up
-> to X have been written=E2=80=9D.
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=F6nig       =20
+>     |
+> Industrial Linux Solutions                 |=20
+> https://www.pengutronix.de/ |
 
-With the two rules above, I think the reader knows that: all data between t=
-he=20
-reader ptr and the writer ptr modulo the size of the ring buffer.
-
-But I simplified the code now, the code now only copies the data out if the=
-=20
-reader <=3D writer modulo the ring buffer size. In this case, if the writer=
- is=20
-much faster, then we loose some values.
-
-With the old code, we simply would have lost it too, but just a bit later.
->=20
-> I think you should stop trying to make the write side wait free.
-> Instead,
-> consider either using a lock or making it unreliable.  For the former, ju=
-st
-> skip taking the lock if testing is off. For the latter, read write_ptr,
-> write (using WRITE_ONCE) your data, then cmpxchg the write ptr from the
-> value you read to that value plus one.  And make sure that the reader nev=
-er
-> tries to read the first unwritten slot, i.e. never let the reader catch a=
-ll
-> the way up.
-
-I have followed the locking approach as we need to get correct data.
->=20
-> I=E2=80=99m also curious why you need entirely different infrastructure f=
-or testing
-> as for normal operation.
-
-I hope with the explanation above, the question is answered.
-
-
-> > +
-> > +    return true;
-> > +}
-> > +
-> > +static inline bool lrng_raw_have_data(void)
-> > +{
-> > +    unsigned int read_ptr =3D (unsigned int)atomic_read(&lrng_rb_reade=
-r);
-> > +    unsigned int write_ptr =3D (unsigned int)atomic_read(&lrng_rb_writ=
-er);
-> > +
-> > +    return (atomic_read(&lrng_rb_first_in) &&
-> > +        (write_ptr & LRNG_TESTING_RINGBUFFER_MASK) !=3D
-> > +         (read_ptr & LRNG_TESTING_RINGBUFFER_MASK));
-> > +}
-> > +
-> > +static int lrng_raw_entropy_reader(u8 *outbuf, u32 outbuflen)
-> > +{
-> > +    int collected_data =3D 0;
-> > +
-> > +    if (!atomic_read(&lrng_testing_enabled) && !boot_test)
-> > +        return -EAGAIN;
-> > +
-> > +    if (!atomic_read(&lrng_rb_first_in)) {
-> > +        wait_event_interruptible(lrng_raw_read_wait,
-> > +                     lrng_raw_have_data());
-> > +        if (signal_pending(current))
-> > +            return -ERESTARTSYS;
-> > +    }
-> > +
-> > +    while (outbuflen) {
-> > +        unsigned int read_ptr =3D
-> > +            (unsigned int)atomic_add_return_relaxed(
-> > +                            1, &lrng_rb_reader);
-> > +        unsigned int write_ptr =3D
-> > +            (unsigned int)atomic_read(&lrng_rb_writer);
-> > +
-> > +        /*
-> > +         * For boot time testing, only output one round of ring buffer.
-> > +         */
-> > +        if (boot_test && read_ptr > LRNG_TESTING_RINGBUFFER_SIZE) {
-> > +            collected_data =3D -ENOMSG;
-> > +            goto out;
-> > +        }
-> > +
-> > +        /* We reached the writer */
-> > +        if (!boot_test && ((write_ptr & LRNG_TESTING_RINGBUFFER_MASK) =
-=3D=3D
-> > +            (read_ptr & LRNG_TESTING_RINGBUFFER_MASK))) {
-> > +
->=20
-> This is wrong. The fact that you haven=E2=80=99t reached the writer does =
-not imply
-> that you=E2=80=99re about to read valid data.
-
-As I changed the code by using your locking suggestion. With that I think t=
-he=20
-code should now always read correct data. I will send an updated patch set=
-=20
-tomorrow.
-
-Thank you for your review.
-
-
-[1] https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90B.p=
-df
-
-[2] https://github.com/usnistgov/SP800-90B_EntropyAssessment
-
-[3] http://www.chronox.de/lrng/lrng-tests-20191116.tar.xz - see the sp80090=
-b=20
-directory for details
-
-[4] http://www.chronox.de/lrng/doc/lrng.pdf
-
-[5] https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/Studie=
-s/
-LinuxRNG/LinuxRNG_EN.pdf
-
-
-Ciao
-Stephan
-
+=
 
