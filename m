@@ -2,80 +2,97 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D57B4C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 01:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D22ACC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 01:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4504207DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 01:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A74C42075E
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 01:33:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573954184;
-	bh=VzNM7mKIbzruoB4g8aBQDy+zckMzp5W6fs0DAz7WWAk=;
+	s=default; t=1573954419;
+	bh=TuZEBS3BGkg1+h4fg3BpHM79M3TKTBqF1gE4HKOwcDQ=;
 	h=In-Reply-To:References:Cc:To:Subject:From:Date:List-ID:From;
-	b=UdIWF5cTmROSwh7bPWkPLJJhLFNzdV8303YXbOIRDzwSGNVSVqoNHyTrcUASObejE
-	 71ZE+zcOK+IUiGfwFMeuQ/yks01+jwLCJkWy0TwuwMoFVMPOUXXdKjSq4P/iY0spgm
-	 JMFAxvnBG69yoJOUzxY4HklQJebmdUOFl6FxwPgM=
+	b=AuFBFLH0qmvmbueLuWhbiMZIZuYTjXu5jwGeOSsnAh4MtB9svdWspvGzN0dgyjG3Z
+	 qyUpKV8uh9qadFoedPCYXbG5Utu1wWEybgf6mxuDns6BlhRCPDb2xUEhgKWWWmzzH8
+	 JFmgeNgyx9kATHHkWZSfrliASCMyBtsd7phpkG9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfKQB3n (ORCPT
+        id S1726201AbfKQBdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 20:29:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45222 "EHLO mail.kernel.org"
+        Sat, 16 Nov 2019 20:33:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726174AbfKQB3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 20:29:42 -0500
+        id S1725308AbfKQBdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 20:33:37 -0500
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0419F2075E;
-        Sun, 17 Nov 2019 01:29:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F23F820730;
+        Sun, 17 Nov 2019 01:33:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573954182;
-        bh=VzNM7mKIbzruoB4g8aBQDy+zckMzp5W6fs0DAz7WWAk=;
+        s=default; t=1573954417;
+        bh=TuZEBS3BGkg1+h4fg3BpHM79M3TKTBqF1gE4HKOwcDQ=;
         h=In-Reply-To:References:Cc:To:Subject:From:Date:From;
-        b=ggHD7FX4Mo4k8sYridHaOsXYP+LxdXkfCAKu8nGIz/CTXPsx/ybkQQIqBftd2zqo9
-         JOspo/oiuju7vknDgz7m7BlOH2HKzyTEXSVNo4i4E35iOS72ZT5cGWk7I4hoxFG612
-         vuQDZfWb/xZZX0h1XLZHVeHiVGd9UokrC9GMA0TI=
+        b=xFHFW1nj7Q6pEsL8oOoBi1KkpYh+XvbwxjZSKWEqInpUsAOvxJSGpWG4IN6lqV5Me
+         HBhjWHR2bHWeASsjr22YUskVlvOMUzRB1YpJHLM/HZ43b+G+Mgq2vpQOWsha6eH9Cy
+         KbauVRTDrhe6QYuyz50xjbNcBGFu7RunUH75Z/Tc=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191114185152.101059-1-robdclark@gmail.com>
-References: <20191114185152.101059-1-robdclark@gmail.com>
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-To:     Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] drm/msm/dpu: ignore NULL clocks
+In-Reply-To: <1573812972-10529-2-git-send-email-alan.maguire@oracle.com>
+References: <1573812972-10529-1-git-send-email-alan.maguire@oracle.com> <1573812972-10529-2-git-send-email-alan.maguire@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
+        keescook@chromium.org, yzaikin@google.com,
+        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
+        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
+        corbet@lwn.net, tytso@mit.edu, adilger.kernel@dilger.ca,
+        mcgrof@kernel.org, changbin.du@intel.com,
+        linux-ext4@vger.kernel.org, linux-doc@vger.kernel.org,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Knut Omang <knut.omang@oracle.com>
+To:     Alan Maguire <alan.maguire@oracle.com>, brendanhiggins@google.com,
+        linux-kselftest@vger.kernel.org, skhan@linuxfoundation.org
+Subject: Re: [PATCH v4 linux-kselftest-test 1/6] kunit: move string-stream.h to lib/kunit
 From:   Stephen Boyd <sboyd@kernel.org>
 User-Agent: alot/0.8.1
-Date:   Sat, 16 Nov 2019 17:29:41 -0800
-Message-Id: <20191117012942.0419F2075E@mail.kernel.org>
+Date:   Sat, 16 Nov 2019 17:33:36 -0800
+Message-Id: <20191117013336.F23F820730@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rob Clark (2019-11-14 10:51:50)
-> From: Rob Clark <robdclark@chromium.org>
+Quoting Alan Maguire (2019-11-15 02:16:07)
+> string-stream interfaces are not intended for external use;
+> move them from include/kunit to lib/kunit accordingly.
 >=20
-> This isn't an error.  Also the clk APIs handle the NULL case, so we can
-> just delete the check.
->=20
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> Tested-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
+> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> Signed-off-by: Knut Omang <knut.omang@oracle.com>
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+The sign off chain is incorrect here. Is Knut tag supposed to be
+Co-developed-by?=20
 
+> diff --git a/include/kunit/assert.h b/include/kunit/assert.h
+> index db6a0fc..ad889b5 100644
+> --- a/include/kunit/assert.h
+> +++ b/include/kunit/assert.h
+> @@ -9,10 +9,11 @@
+>  #ifndef _KUNIT_ASSERT_H
+>  #define _KUNIT_ASSERT_H
+> =20
+> -#include <kunit/string-stream.h>
+>  #include <linux/err.h>
+> +#include <linux/kernel.h>
+
+Why is this included now?
+
+> =20
+>  struct kunit;
+> +struct string_stream;
+> =20
+>  /**
+>   * enum kunit_assert_type - Type of expectation/assertion.
