@@ -2,164 +2,103 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3A5C43141
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 22:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E77C43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 22:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A32C20850
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 22:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 718CC20729
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 22:14:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="TkDUt0Rp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfKQWNc (ORCPT
+        id S1726748AbfKQWOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 17:13:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726134AbfKQWNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 17:13:12 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41C3420748;
-        Sun, 17 Nov 2019 22:13:11 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.92.3)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1iWSn8-0002qO-F8; Sun, 17 Nov 2019 17:13:10 -0500
-Message-Id: <20191117221310.353041756@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Sun, 17 Nov 2019 17:12:58 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-next][PATCH 2/7] ftrace/samples: Add a sample module that implements
- modify_ftrace_direct()
-References: <20191117221256.228674565@goodmis.org>
+        Sun, 17 Nov 2019 17:14:47 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:25841 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbfKQWOr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 17:14:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574028885;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=7hCz+5DTC5n2Pi08W82Wd1z0wbmsZs12qI1M9dEPLlQ=;
+        b=TkDUt0Rp14NLJr0km8Rpsd+k0pKkjts5JfiBDKTsjha8Dq+J4bnvMDuaoBO+90Wh2d
+        pJI6A/53VC1qK3YzjXTFm7ihypAPLgZUmn/leLTe73VB1okKfp3C0lQgUYy0NRZUY+O6
+        /5uc0qBMAHxxQf8L8t3XPXL4U0vG9YZ2vgyqgqiSFocEcTK+y2Tl9mDu70Eq46xMaLVA
+        oqQEOO/HfLqLSkp27BaFNMwv/DMRUGZvg168q7BTadg7hI3PZqjAwC5muupM080rXQqQ
+        4xnlI17kx+0DJSiKq693O74u7p65YgBgMQplS7Nscvbzx6G9lpkwUMq7wC1MNrNghRVi
+        BHMQ==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQrEOHTIXsMvvtBRRPA=="
+X-RZG-CLASS-ID: mo00
+Received: from localhost.localdomain
+        by smtp.strato.de (RZmta 44.29.0 AUTH)
+        with ESMTPSA id e07688vAHMEdbBN
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Sun, 17 Nov 2019 23:14:39 +0100 (CET)
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/2] dt-bindings: mfd: ab8500: Document AB8505 bindings
+Date:   Sun, 17 Nov 2019 23:10:52 +0100
+Message-Id: <20191117221053.278415-1-stephan@gerhold.net>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+AB8505 can now be configured from the device tree.
+The configuration is almost identical to AB8500, so just add a note
+for the nodes/compatibles that differ between the two revisions.
 
-Add a sample module that tests modify_ftrace_direct(), and this can be used
-by the selftests as well.
-
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 ---
- samples/ftrace/Makefile               |  1 +
- samples/ftrace/ftrace-direct-modify.c | 88 +++++++++++++++++++++++++++
- 2 files changed, 89 insertions(+)
- create mode 100644 samples/ftrace/ftrace-direct-modify.c
+ Documentation/devicetree/bindings/mfd/ab8500.txt | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/samples/ftrace/Makefile b/samples/ftrace/Makefile
-index d8217c4e072e..fb0c3ae18295 100644
---- a/samples/ftrace/Makefile
-+++ b/samples/ftrace/Makefile
-@@ -2,3 +2,4 @@
+diff --git a/Documentation/devicetree/bindings/mfd/ab8500.txt b/Documentation/devicetree/bindings/mfd/ab8500.txt
+index cd9e90c5d171..5c12a65ea8df 100644
+--- a/Documentation/devicetree/bindings/mfd/ab8500.txt
++++ b/Documentation/devicetree/bindings/mfd/ab8500.txt
+@@ -1,7 +1,7 @@
+ * AB8500 Multi-Functional Device (MFD)
  
- obj-$(CONFIG_SAMPLE_FTRACE_DIRECT) += ftrace-direct.o
- obj-$(CONFIG_SAMPLE_FTRACE_DIRECT) += ftrace-direct-too.o
-+obj-$(CONFIG_SAMPLE_FTRACE_DIRECT) += ftrace-direct-modify.o
-diff --git a/samples/ftrace/ftrace-direct-modify.c b/samples/ftrace/ftrace-direct-modify.c
-new file mode 100644
-index 000000000000..e04229d21475
---- /dev/null
-+++ b/samples/ftrace/ftrace-direct-modify.c
-@@ -0,0 +1,88 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/module.h>
-+#include <linux/kthread.h>
-+#include <linux/ftrace.h>
-+
-+void my_direct_func1(void)
-+{
-+	trace_printk("my direct func1\n");
-+}
-+
-+void my_direct_func2(void)
-+{
-+	trace_printk("my direct func2\n");
-+}
-+
-+extern void my_tramp1(void *);
-+extern void my_tramp2(void *);
-+
-+static unsigned long my_ip = (unsigned long)schedule;
-+
-+asm (
-+"	.pushsection    .text, \"ax\", @progbits\n"
-+"   my_tramp1:"
-+"	pushq %rbp\n"
-+"	movq %rsp, %rbp\n"
-+"	call my_direct_func1\n"
-+"	leave\n"
-+"	ret\n"
-+"   my_tramp2:"
-+"	pushq %rbp\n"
-+"	movq %rsp, %rbp\n"
-+"	call my_direct_func2\n"
-+"	leave\n"
-+"	ret\n"
-+"	.popsection\n"
-+);
-+
-+static unsigned long my_tramp = (unsigned long)my_tramp1;
-+static unsigned long tramps[2] = {
-+	(unsigned long)my_tramp1,
-+	(unsigned long)my_tramp2,
-+};
-+
-+static int simple_thread(void *arg)
-+{
-+	static int t;
-+	int ret = 0;
-+
-+	while (!kthread_should_stop()) {
-+		set_current_state(TASK_INTERRUPTIBLE);
-+		schedule_timeout(2 * HZ);
-+
-+		if (ret)
-+			continue;
-+		t ^= 1;
-+		ret = modify_ftrace_direct(my_ip, my_tramp, tramps[t]);
-+		if (!ret)
-+			my_tramp = tramps[t];
-+		WARN_ON_ONCE(ret);
-+	}
-+
-+	return 0;
-+}
-+
-+static struct task_struct *simple_tsk;
-+
-+static int __init ftrace_direct_init(void)
-+{
-+	int ret;
-+
-+	ret = register_ftrace_direct(my_ip, my_tramp);
-+	if (!ret)
-+		simple_tsk = kthread_run(simple_thread, NULL, "event-sample-fn");
-+	return ret;
-+}
-+
-+static void __exit ftrace_direct_exit(void)
-+{
-+	kthread_stop(simple_tsk);
-+	unregister_ftrace_direct(my_ip, my_tramp);
-+}
-+
-+module_init(ftrace_direct_init);
-+module_exit(ftrace_direct_exit);
-+
-+MODULE_AUTHOR("Steven Rostedt");
-+MODULE_DESCRIPTION("Example use case of using modify_ftrace_direct()");
-+MODULE_LICENSE("GPL");
+ Required parent device properties:
+-- compatible             : contains "stericsson,ab8500";
++- compatible             : contains "stericsson,ab8500" or "stericsson,ab8505";
+ - interrupts             : contains the IRQ line for the AB8500
+ - interrupt-controller   : describes the AB8500 as an Interrupt Controller (has its own domain)
+ - #interrupt-cells       : should be 2, for 2-cell format
+@@ -49,11 +49,13 @@ ab8500-charger		 :			: vddadc       : Charger interface
+ 			 : CH_WD_EXP		:	       : Charger watchdog detected
+ ab8500-gpadc             : HW_CONV_END          : vddadc       : Analogue to Digital Converter
+                            SW_CONV_END          :              :
+-ab8500-gpio              :                      :              : GPIO Controller
++ab8500-gpio              :                      :              : GPIO Controller (AB8500)
++ab8505-gpio              :                      :              : GPIO Controller (AB8505)
+ ab8500-ponkey            : ONKEY_DBF            :              : Power-on Key
+                            ONKEY_DBR            :              :
+ ab8500-pwm               :                      :              : Pulse Width Modulator
+-ab8500-regulator         :                      :              : Regulators
++ab8500-regulator         :                      :              : Regulators (AB8500)
++ab8505-regulator         :                      :              : Regulators (AB8505)
+ ab8500-rtc               : 60S                  :              : Real Time Clock
+                          : ALARM                :              :
+ ab8500-sysctrl           :                      :              : System Control
 -- 
-2.24.0
-
+2.23.0
 
