@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AEAC432C3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E845C432C0
 	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 22:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C39920855
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 22:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F17DD20850
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 22:13:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfKQWN2 (ORCPT
+        id S1726579AbfKQWNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 17:13:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40146 "EHLO mail.kernel.org"
+        Sun, 17 Nov 2019 17:13:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbfKQWNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726119AbfKQWNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 17 Nov 2019 17:13:12 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A77BF20730;
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FAED20729;
         Sun, 17 Nov 2019 22:13:11 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92.3)
         (envelope-from <rostedt@goodmis.org>)
-        id 1iWSn8-0002rq-Ss; Sun, 17 Nov 2019 17:13:10 -0500
-Message-Id: <20191117221310.775789832@goodmis.org>
+        id 1iWSn8-0002pu-Ac; Sun, 17 Nov 2019 17:13:10 -0500
+Message-Id: <20191117221310.213859430@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Sun, 17 Nov 2019 17:13:01 -0500
+Date:   Sun, 17 Nov 2019 17:12:57 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-next][PATCH 5/7] ftrace: Fix accounting bug with direct->count in
- register_ftrace_direct()
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Subject: [for-next][PATCH 1/7] ftrace: Add modify_ftrace_direct()
 References: <20191117221256.228674565@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -46,29 +46,132 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-The direct->count wasn't being updated properly, where it only was updated
-when the first entry was added, but should be updated every time.
+Add a new function modify_ftrace_direct() that will allow a user to update
+an existing direct caller to a new trampoline, without missing hits due to
+unregistering one and then adding another.
 
-Fixes: 013bf0da04748 ("ftrace: Add ftrace_find_direct_func()")
+Link: https://lore.kernel.org/r/20191109022907.6zzo6orhxpt5n2sv@ast-mbp.dhcp.thefacebook.com
+
+Suggested-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/ftrace.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ include/linux/ftrace.h |  6 ++++
+ kernel/trace/ftrace.c  | 78 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 84 insertions(+)
 
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 55647e185141..73eb2e93593f 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -250,6 +250,7 @@ static inline void ftrace_free_mem(struct module *mod, void *start, void *end) {
+ extern int ftrace_direct_func_count;
+ int register_ftrace_direct(unsigned long ip, unsigned long addr);
+ int unregister_ftrace_direct(unsigned long ip, unsigned long addr);
++int modify_ftrace_direct(unsigned long ip, unsigned long old_addr, unsigned long new_addr);
+ struct ftrace_direct_func *ftrace_find_direct_func(unsigned long addr);
+ #else
+ # define ftrace_direct_func_count 0
+@@ -261,6 +262,11 @@ static inline int unregister_ftrace_direct(unsigned long ip, unsigned long addr)
+ {
+ 	return -ENODEV;
+ }
++static inline int modify_ftrace_direct(unsigned long ip,
++				       unsigned long old_addr, unsigned long new_addr)
++{
++	return -ENODEV;
++}
+ static inline struct ftrace_direct_func *ftrace_find_direct_func(unsigned long addr)
+ {
+ 	return NULL;
 diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 834f3556ea1e..32e4e5ffdd97 100644
+index 82ef8d60a42b..834f3556ea1e 100644
 --- a/kernel/trace/ftrace.c
 +++ b/kernel/trace/ftrace.c
-@@ -5093,8 +5093,7 @@ int register_ftrace_direct(unsigned long ip, unsigned long addr)
- 			ftrace_direct_func_count--;
- 		}
- 	} else {
--		if (!direct->count)
--			direct->count++;
-+		direct->count++;
- 	}
-  out_unlock:
- 	mutex_unlock(&direct_mutex);
+@@ -5160,6 +5160,84 @@ int unregister_ftrace_direct(unsigned long ip, unsigned long addr)
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(unregister_ftrace_direct);
++
++static struct ftrace_ops stub_ops = {
++	.func		= ftrace_stub,
++};
++
++/**
++ * modify_ftrace_direct - Modify an existing direct call to call something else
++ * @ip: The instruction pointer to modify
++ * @old_addr: The address that the current @ip calls directly
++ * @new_addr: The address that the @ip should call
++ *
++ * This modifies a ftrace direct caller at an instruction pointer without
++ * having to disable it first. The direct call will switch over to the
++ * @new_addr without missing anything.
++ *
++ * Returns: zero on success. Non zero on error, which includes:
++ *  -ENODEV : the @ip given has no direct caller attached
++ *  -EINVAL : the @old_addr does not match the current direct caller
++ */
++int modify_ftrace_direct(unsigned long ip,
++			 unsigned long old_addr, unsigned long new_addr)
++{
++	struct ftrace_func_entry *entry;
++	struct dyn_ftrace *rec;
++	int ret = -ENODEV;
++
++	mutex_lock(&direct_mutex);
++	entry = __ftrace_lookup_ip(direct_functions, ip);
++	if (!entry) {
++		/* OK if it is off by a little */
++		rec = lookup_rec(ip, ip);
++		if (!rec || rec->ip == ip)
++			goto out_unlock;
++
++		entry = __ftrace_lookup_ip(direct_functions, rec->ip);
++		if (!entry)
++			goto out_unlock;
++
++		ip = rec->ip;
++		WARN_ON(!(rec->flags & FTRACE_FL_DIRECT));
++	}
++
++	ret = -EINVAL;
++	if (entry->direct != old_addr)
++		goto out_unlock;
++
++	/*
++	 * By setting a stub function at the same address, we force
++	 * the code to call the iterator and the direct_ops helper.
++	 * This means that @ip does not call the direct call, and
++	 * we can simply modify it.
++	 */
++	ret = ftrace_set_filter_ip(&stub_ops, ip, 0, 0);
++	if (ret)
++		goto out_unlock;
++
++	ret = register_ftrace_function(&stub_ops);
++	if (ret) {
++		ftrace_set_filter_ip(&stub_ops, ip, 1, 0);
++		goto out_unlock;
++	}
++
++	entry->direct = new_addr;
++
++	/*
++	 * By removing the stub, we put back the direct call, calling
++	 * the @new_addr.
++	 */
++	unregister_ftrace_function(&stub_ops);
++	ftrace_set_filter_ip(&stub_ops, ip, 1, 0);
++
++	ret = 0;
++
++ out_unlock:
++	mutex_unlock(&direct_mutex);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(modify_ftrace_direct);
+ #endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
+ 
+ /**
 -- 
 2.24.0
 
