@@ -2,72 +2,95 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E84EC432C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 02:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA57CC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 03:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 261E120801
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 02:35:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573958111;
-	bh=LNFsYyHzWydQXy/hj8/dS4SZ/uOhWm03xbFzignN6Q4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=h4KDNaMtWLcPgYzqQfLtuJ3fLrWR140jPUy2JfIZpaKnxHMiRUiWs95kwV2jndwuF
-	 xawXNeo1z4O7/1KxNAdczrlDvA1BeC3/YYEnFWu2T8yjBn79UfqJBjKTycEwT2+Eem
-	 Vfa/ewikcJrzCo1Ux9xpLFSJyeTFZSd8XK8omn0w=
+	by mail.kernel.org (Postfix) with ESMTP id B81902084C
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 03:32:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RKYJOWi8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726089AbfKQCfH (ORCPT
+        id S1726076AbfKQDcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 16 Nov 2019 21:35:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbfKQCfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 16 Nov 2019 21:35:07 -0500
-Subject: Re: [GIT PULL] Crypto Fixes for 5.4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573958107;
-        bh=LNFsYyHzWydQXy/hj8/dS4SZ/uOhWm03xbFzignN6Q4=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=usyXxb2mi+c+hSxpbTIDfXSqf6qsc9CNnOophWj4Yh8/7obRDuVGulwdOe+it6iXd
-         5XdM50voZLE5WiqJcKNSPcqN8ezhvlWXLx9NFRKJub8S3QQStlCnPS5VizAkufzopb
-         ZOQybPAlsRKxNyHr7c/c03eUlWUZKG/dGv1UsZts=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191117010036.7vww6vqrakv3avkw@gondor.apana.org.au>
-References: <20190916084901.GA20338@gondor.apana.org.au>
- <20190923050515.GA6980@gondor.apana.org.au>
- <20191010123849.GA30001@gondor.apana.org.au>
- <20191117010036.7vww6vqrakv3avkw@gondor.apana.org.au>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191117010036.7vww6vqrakv3avkw@gondor.apana.org.au>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
-X-PR-Tracked-Commit-Id: 08e97aec700aeff54c4847f170e566cbd7e14e81
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1d4c79ed324ad780cfc3ad38364ba1fd585dd2a8
-Message-Id: <157395810692.19691.18012672586585444784.pr-tracker-bot@kernel.org>
-Date:   Sun, 17 Nov 2019 02:35:06 +0000
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+        Sat, 16 Nov 2019 22:32:00 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:32774 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfKQDcA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 16 Nov 2019 22:32:00 -0500
+Received: by mail-pl1-f196.google.com with SMTP id ay6so7533802plb.0
+        for <linux-kernel@vger.kernel.org>; Sat, 16 Nov 2019 19:31:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wOVdn7VL7yyxBUHZntw/D8IwcAv73NBNkLlL+UAJFSs=;
+        b=RKYJOWi8iEdEMFM9J/pjDm+5FeNgh2U31vD65Ic8a2K1qx92kW0miLGD1lkL57W9nE
+         PzUaQUZNU1OH5AL2XOMEMA9t2AtOScIUN6MFha9yH+IfCyVzjluJJ6xy39s2EdpF23Ne
+         jepM3Hou6Krym2qBscM6BYZOhAVheIGfP2ftU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wOVdn7VL7yyxBUHZntw/D8IwcAv73NBNkLlL+UAJFSs=;
+        b=towryllvE6CcvlGyVmsfOcF5h5WFSRGy02GOlvfff2XeSJlh4KWJLEYg/Gs5r1kVeD
+         d4uhVLaXBMaARSMIcM54NZaiO27o+4rYSbattWp48zcdaTNMYYT71nOfsibhN5p4XW/6
+         spYT6gWxFQefSYjY4YWVnhta1LYaNx6QbiI08Rh67eJpUT0XqQrv++wS2bQ/kyC6v8Jd
+         ParEQ7d3jnSj4rL5FLDhQnyHqkgJGrXRZFFiJqzlBhSsgTPtcZWjbgZYZ7tzvHxICWT+
+         FSZ/ADqH368xlJE++WaOubMZziMgo2HMhg5b/eZwNyjj2b8RyFbbCVZdJjOhg9rywD5X
+         wa4A==
+X-Gm-Message-State: APjAAAWaJcYWQ3L2Ne2l6rciu8Z75T7d/Q4xXWxJ+GqO+NeFM8ANCrW8
+        m/n+NyowNY0iyIpKKyAr6eWYjQ==
+X-Google-Smtp-Source: APXvYqw8ibeSC9mMX54bu6dURPnqRLsC8s+GYw7BNmhc4RtLyWnWiS2SL+VhTBHiUkfuh8yW5oWrOg==
+X-Received: by 2002:a17:90a:610:: with SMTP id j16mr30938906pjj.85.1573961519371;
+        Sat, 16 Nov 2019 19:31:59 -0800 (PST)
+Received: from ikjn-glaptop.roam.corp.google.com (2001-b400-e27e-4718-13bf-d274-f5e0-91a5.emome-ip6.hinet.net. [2001:b400:e27e:4718:13bf:d274:f5e0:91a5])
+        by smtp.gmail.com with ESMTPSA id a145sm16539353pfa.7.2019.11.16.19.31.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 Nov 2019 19:31:58 -0800 (PST)
+From:   Ikjoon Jang <ikjn@chromium.org>
+To:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Suwan Kim <suwan.kim027@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Johan Hovold <johan@kernel.org>,
+        Nicolas Boitchat <drinkcat@chromium.org>,
+        Ikjoon Jang <ikjn@chromium.org>
+Subject: [PATCH 0/2] usb: override hub device bInterval with device node
+Date:   Sun, 17 Nov 2019 11:31:49 +0800
+Message-Id: <20191117033149.259303-1-ikjn@chromium.org>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 17 Nov 2019 09:00:36 +0800:
+This patchset enables hard wired hub device to use different bInterval
+from its descriptor when the hub has a combined device node.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+When we know the specific hard wired hub supports changing its polling
+interval, we can adjust hub's interval to reduce the time of waking up
+from autosuspend or connect detection of HIDs.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1d4c79ed324ad780cfc3ad38364ba1fd585dd2a8
+Ikjoon Jang (2):
+  dt-bindings: usb: add "hub,interval" property
+  usb: overridable hub bInterval by device node
 
-Thank you!
+ Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
+ drivers/usb/core/config.c                            | 6 ++++++
+ 2 files changed, 10 insertions(+)
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.24.0.432.g9d3f5f5b63-goog
+
