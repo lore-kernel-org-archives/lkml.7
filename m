@@ -2,116 +2,119 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4789C432C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 17:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E1DC432C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 17:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B735D2075C
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 17:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDDED2075C
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 17:44:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="nouW5bnh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726104AbfKQRld (ORCPT
+        id S1726171AbfKQRof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 12:41:33 -0500
-Received: from logand.com ([37.48.87.44]:34478 "EHLO logand.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726032AbfKQRld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 12:41:33 -0500
-X-Greylist: delayed 405 seconds by postgrey-1.27 at vger.kernel.org; Sun, 17 Nov 2019 12:41:30 EST
-Received: by logand.com (Postfix, from userid 1001)
-        id B50FA19F485; Sun, 17 Nov 2019 18:34:43 +0100 (CET)
-X-Mailer: emacs 26.1 (via feedmail 11-beta-1 I)
-From:   Tomas Hlavaty <tom@logand.com>
-To:     Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Cc:     linux-nilfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: BUG: unable to handle kernel NULL pointer dereference at 00000000000000a8 in nilfs_segctor_do_construct
-Date:   Sun, 17 Nov 2019 18:34:39 +0100
-Message-ID: <8736emquds.fsf@logand.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Sun, 17 Nov 2019 12:44:35 -0500
+Received: from mta-p8.oit.umn.edu ([134.84.196.208]:38400 "EHLO
+        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfKQRof (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 12:44:35 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 7DE70988
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 17:44:33 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p8.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id w-v5soyHgjiC for <linux-kernel@vger.kernel.org>;
+        Sun, 17 Nov 2019 11:44:33 -0600 (CST)
+Received: from mail-yw1-f70.google.com (mail-yw1-f70.google.com [209.85.161.70])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 56A0596C
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 11:44:33 -0600 (CST)
+Received: by mail-yw1-f70.google.com with SMTP id x206so10961435ywa.22
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 09:44:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=mw/Vlkzgb0El0NgG+DOgWe9VKjNKfsd7T66YcI7lk7A=;
+        b=nouW5bnh81fiK2GHy9gbyrglpuSBnRnypaqCYXUs73el/DrH1SM7Lqio9sMJ0rffZq
+         q4PB21vYm8aMgrD/Hv7++x780RkHvayKQQjmJGMCUF2Gj6YRPcFDUue2n2MeJ7zDDUQg
+         kXXMjj5Q4mvganZCikxTcMdxBRGwG9PqJvpP6hmL7TsrQA5b/uC50RYL61as66DCx5KZ
+         etPqQ3Mt9GM3fSvo3bDBixJzFDqQf/YXqs81+YPiGti7A2gbAJx8JjIGsIAfG5nwaqme
+         +sDB6VV4IB3JYhdVZdCbDpdoN9/4xX3vLmVvq0Och6ryCH6qZheFXevyqRYAWLIJi2Ug
+         p0dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=mw/Vlkzgb0El0NgG+DOgWe9VKjNKfsd7T66YcI7lk7A=;
+        b=je/fQosyDqJqMSCG9XmlXUAuGAqerqZpROADCou77kFLJcq3UeukR8KhLGHriW4OX1
+         tP685UhKmlht0GneCXUWuUzl04il6MAIcsfre2g1BbIlg1p4mPTs4B1isHOIhjI0pmzz
+         e6VjbkqmcSzmsKCGQPaImbQO/7YvTnGDqGUW8oCGo5lTf6Z5d1Rc7L/HQYY9qnq82CuE
+         /7E8nOjTUz4w7ts0BRvGEyCCzkr7ebewWU1KN2bvE9Ba/Ke1JFTfDp+v6xq52suoGzK5
+         WR/ZxWeyo8E4r5BTX0lQU6leXTl4czSl+naKxdEHA0haQpxGi7gfoMN3fLl4P9V8eu3A
+         qjYg==
+X-Gm-Message-State: APjAAAXFUDSKM1bxIY38R9ARRDsFb53yGB+xLSvGdYs2BTfe+tsWc6Kp
+        5NIpgq2FQQ0f5VSMsT04OLby0j7+2GeKKXDyhBoxBmogbFbBflcv4ADi9+8kLhkR1S1BX5hWYZZ
+        K6Tg6+CF6YOw9yiNruD+jcngElM91
+X-Received: by 2002:a25:2443:: with SMTP id k64mr21290817ybk.69.1574012672777;
+        Sun, 17 Nov 2019 09:44:32 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxpBTogweemKa79wfzPNbsHtrixwjsjnmo4IwYBoUO8ucS52TaPZMbffuxkMrolaHWZppACPg==
+X-Received: by 2002:a25:2443:: with SMTP id k64mr21290797ybk.69.1574012672478;
+        Sun, 17 Nov 2019 09:44:32 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id f10sm1914590ywh.86.2019.11.17.09.44.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Nov 2019 09:44:32 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, David Woodhouse <dwmw2@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] jffs2: Reduce the severity level of logging errors
+Date:   Sun, 17 Nov 2019 11:44:12 -0600
+Message-Id: <20191117174413.2876-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ryusuke,
+Unlike other instances of critical errors that call BUG(), kmalloc
+failure in jffs2_wbuf_recover does not require pr_crit. Replace this
+error logging with pr_warn().
 
-today I got this bug in kernel, which seems to be related to nilfs2.
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ fs/jffs2/wbuf.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-It was likely caused by improper shutdown and following nilfs2 partition
-corruption.  Now I can still read the data, but on the whole the
-computer is not useable, because starting a process which uses the
-corrupted file system simply crashes in kernel.  I am actually not sure
-if the filesystem is corrupted, as I don't know about any tool to check
-that.  The relevant parts of dmesg log are bellow.
+diff --git a/fs/jffs2/wbuf.c b/fs/jffs2/wbuf.c
+index c6821a509481..59e145220b51 100644
+--- a/fs/jffs2/wbuf.c
++++ b/fs/jffs2/wbuf.c
+@@ -339,7 +339,7 @@ static void jffs2_wbuf_recover(struct jffs2_sb_info *c)
+ 
+ 		buf = kmalloc(end - start, GFP_KERNEL);
+ 		if (!buf) {
+-			pr_crit("Malloc failure in wbuf recovery. Data loss ensues.\n");
++			pr_warn("Malloc failure in wbuf recovery. Data loss ensues.\n");
+ 
+ 			goto read_failed;
+ 		}
+@@ -354,7 +354,7 @@ static void jffs2_wbuf_recover(struct jffs2_sb_info *c)
+ 			ret = 0;
+ 
+ 		if (ret || retlen != c->wbuf_ofs - start) {
+-			pr_crit("Old data are already lost in wbuf recovery. Data loss ensues.\n");
++			pr_warn("Old data are already lost in wbuf recovery. Data loss ensues.\n");
+ 
+ 			kfree(buf);
+ 			buf = NULL;
+-- 
+2.17.1
 
-Please let me know if you are the right contact or if you need more info
-about the problem.
-
-Thank you,
-
-Tomas
-
-[    0.000000] Linux version 4.19.84 (nixbld@localhost) (gcc version 8.3.0 (GCC)) #1-NixOS SMP Tue Nov 12 18:21:46 UTC 2019
-[    0.000000] Command line: initrd=\efi\nixos\4s51zw36kd1qb0ymk0charxjg8x6k5k3-initrd-linux-4.19.84-initrd.efi systemConfig=/nix/store/gdbxhzysr929abrymjqala0b5bh2fqmv-nixos-system-ushi-19.09.1258.07e66484e67 init=/nix/store/gdbxhzysr929abrymjqala0b5bh2fqmv-nixos-system-ushi-19.09.1258.07e66484e67/init loglevel=4
-
-
-
-[   37.741106] systemd-journald[470]: Received client request to flush runtime journal.
-[   37.749084] systemd-journald[470]: File /var/log/journal/55a4ea9159c14c0bb8767a43819c6927/system.journal corrupted or uncleanly shut down, renaming and replacing.
-[   37.810819] audit: type=1130 audit(1573985039.617:3): pid=1 uid=0 auid=4294967295 ses=4294967295 subj==unconfined msg='unit=systemd-udevd comm="systemd" exe="/nix/store/v8flm2h07zcfg5k5npz56m0ayj0qm1q8-systemd-243/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
-
-[   38.321561] NILFS version 2 loaded
-[   38.323236] NILFS (dm-1): mounting unchecked fs
-
-
-[   38.349185] NILFS (dm-1): recovery complete
-[   38.353228] NILFS (dm-1): segctord starting. Construction interval = 5 seconds, CP frequency < 30 seconds
-
-[   63.543941] systemd-journald[470]: File
-/var/log/journal/55a4ea9159c14c0bb8767a43819c6927/user-1000.journal
-corrupted or uncleanly shut down, renaming and replacing.
-
-[12637.085548] BUG: unable to handle kernel NULL pointer dereference at 00000000000000a8
-[12637.085558] PGD 0 P4D 0
-[12637.085567] Oops: 0000 [#1] SMP PTI
-[12637.085574] CPU: 0 PID: 657 Comm: segctord Not tainted 4.19.84 #1-NixOS
-[12637.085577] Hardware name: ASUSTeK COMPUTER INC. VivoBook 15_ASUS Laptop X507MA_R507MA/X507MA, BIOS X507MA.301 09/14/2018
-[12637.085589] RIP: 0010:percpu_counter_add_batch+0x4/0x60
-[12637.085593] Code: 89 e6 89 c7 e8 dd 3b 28 00 3b 05 fb e0 b6 00 72 d8 4c 89 ee 48 89 ef e8 7a 63 2a 00 48 89 d8 5b 5d 41 5c 41 5d c3 41 54 55 53 <48> 8b 47 20 65 44 8b 20 49 63 ec 48 63 ca 48 01 f5 48 39 e9 7e 0a
-[12637.085597] RSP: 0018:ffff9d1b00a0bd20 EFLAGS: 00010006
-[12637.085601] RAX: 0000000000000002 RBX: 0000000000000000 RCX: 0000000000000018
-[12637.085604] RDX: 0000000000000018 RSI: 0000000000000001 RDI: 0000000000000088
-[12637.085608] RBP: ffff8df67a2988d0 R08: 0000000000000000 R09: ffff8df66fe0cfe0
-[12637.085611] R10: 0000000000000230 R11: 0000000000000000 R12: 0000000000000000
-[12637.085614] R13: ffff8df67a298758 R14: ffff8df67a2988c8 R15: ffffccd684229a80
-[12637.085618] FS:  0000000000000000(0000) GS:ffff8df67ba00000(0000) knlGS:0000000000000000
-[12637.085621] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[12637.085624] CR2: 00000000000000a8 CR3: 000000011ac0a000 CR4: 0000000000340ef0
-[12637.085628] Call Trace:
-[12637.085640]  __test_set_page_writeback+0x37c/0x3f0
-[12637.085663]  nilfs_segctor_do_construct+0x184e/0x2040 [nilfs2]
-[12637.085680]  nilfs_segctor_construct+0x1f5/0x2e0 [nilfs2]
-[12637.085693]  nilfs_segctor_thread+0x129/0x370 [nilfs2]
-[12637.085706]  ? nilfs_segctor_construct+0x2e0/0x2e0 [nilfs2]
-[12637.085713]  kthread+0x112/0x130
-[12637.085719]  ? kthread_bind+0x30/0x30
-[12637.085728]  ret_from_fork+0x1f/0x40
-[12637.085734] Modules linked in: ctr ccm af_packet msr 8021q snd_hda_codec_hdmi snd_hda_codec_realtek snd_hda_codec_generic hid_multitouch arc4 ath9k ath9k_common ath9k_hw ath mac80211 snd_soc_skl snd_soc_skl_ipc spi_pxa2xx_platform asus_nb_wmi snd_soc_sst_ipc snd_soc_sst_dsp asus_wmi 8250_dw i2c_designware_platform sparse_keymap i2c_designware_core wmi_bmof i915 snd_hda_ext_core nilfs2 snd_soc_acpi_intel_match snd_soc_acpi uvcvideo videobuf2_vmalloc nls_iso8859_1 videobuf2_memops videobuf2_v4l2 snd_soc_core nls_cp437 rtsx_usb_ms intel_telemetry_pltdrv vfat intel_punit_ipc intel_telemetry_core fat intel_pmc_ipc memstick videobuf2_common snd_compress kvmgt vfio_mdev mdev ath3k vfio_iommu_type1 vfio btusb ac97_bus snd_pcm_dmaengine btrtl x86_pkg_temp_thermal intel_powerclamp btbcm cec coretemp btintel
-[12637.085819]  crct10dif_pclmul crc32_pclmul videodev snd_hda_intel bluetooth drm_kms_helper ghash_clmulni_intel deflate media efi_pstore intel_cstate pstore intel_rapl_perf cfg80211 snd_hda_codec joydev mousedev evdev wdat_wdt serio_raw mac_hid efivars drm snd_hda_core snd_hwdep ecdh_generic snd_pcm snd_timer mei_me idma64 virt_dma snd intel_gtt agpgart i2c_i801 i2c_algo_bit mei fb_sys_fops syscopyarea soundcore rfkill processor_thermal_device sysfillrect sysimgblt intel_lpss_pci intel_soc_dts_iosf thermal wmi intel_lpss i2c_hid i2c_core battery tpm_crb button ac tpm_tis tpm_tis_core asus_wireless video pcc_cpufreq tpm rng_core pinctrl_geminilake int3400_thermal int3403_thermal pinctrl_intel int340x_thermal_zone acpi_thermal_rel iptable_nat nf_nat_ipv4 nf_nat xt_conntrack nf_conntrack nf_defrag_ipv6
-[12637.085912]  nf_defrag_ipv4 libcrc32c ip6t_rpfilter ipt_rpfilter ip6table_raw iptable_raw xt_pkttype nf_log_ipv6 nf_log_ipv4 nf_log_common xt_LOG xt_tcpudp ip6table_filter ip6_tables iptable_filter sch_fq_codel loop cpufreq_powersave tun tap macvlan bridge stp llc kvm_intel kvm irqbypass efivarfs ip_tables x_tables ipv6 crc_ccitt autofs4 ext4 crc32c_generic crc16 mbcache jbd2 fscrypto dm_crypt algif_skcipher af_alg rtsx_usb_sdmmc mmc_core rtsx_usb hid_generic usbhid hid sd_mod input_leds led_class atkbd libps2 ahci libahci xhci_pci libata xhci_hcd aesni_intel usbcore aes_x86_64 crypto_simd scsi_mod cryptd glue_helper crc32c_intel usb_common rtc_cmos i8042 serio dm_mod
-[12637.086000] CR2: 00000000000000a8
-[12637.086005] ---[ end trace ee0079180c990cd2 ]---
-[12637.120805] RIP: 0010:percpu_counter_add_batch+0x4/0x60
-[12637.120807] Code: 89 e6 89 c7 e8 dd 3b 28 00 3b 05 fb e0 b6 00 72 d8 4c 89 ee 48 89 ef e8 7a 63 2a 00 48 89 d8 5b 5d 41 5c 41 5d c3 41 54 55 53 <48> 8b 47 20 65 44 8b 20 49 63 ec 48 63 ca 48 01 f5 48 39 e9 7e 0a
-[12637.120809] RSP: 0018:ffff9d1b00a0bd20 EFLAGS: 00010006
-[12637.120811] RAX: 0000000000000002 RBX: 0000000000000000 RCX: 0000000000000018
-[12637.120812] RDX: 0000000000000018 RSI: 0000000000000001 RDI: 0000000000000088
-[12637.120814] RBP: ffff8df67a2988d0 R08: 0000000000000000 R09: ffff8df66fe0cfe0
-[12637.120815] R10: 0000000000000230 R11: 0000000000000000 R12: 0000000000000000
-[12637.120816] R13: ffff8df67a298758 R14: ffff8df67a2988c8 R15: ffffccd684229a80
-[12637.120818] FS:  0000000000000000(0000) GS:ffff8df67ba00000(0000) knlGS:0000000000000000
-[12637.120820] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[12637.120821] CR2: 00000000000000a8 CR3: 0000000138e0a000 CR4: 0000000000340ef0
