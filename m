@@ -2,287 +2,225 @@ Return-Path: <SRS0=PwuH=ZJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE4FC43215
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 14:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83181C43215
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 14:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2915220718
-	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 14:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB2220740
+	for <linux-kernel@archiver.kernel.org>; Sun, 17 Nov 2019 14:14:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Puy6cZj+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="Ri9wE98a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbfKQOHs (ORCPT
+        id S1726211AbfKQOOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 09:07:48 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34370 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfKQOHp (ORCPT
+        Sun, 17 Nov 2019 09:14:33 -0500
+Received: from gateway31.websitewelcome.com ([192.185.143.31]:31417 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726119AbfKQOOc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 09:07:45 -0500
-Received: by mail-wm1-f65.google.com with SMTP id j18so13849765wmk.1;
-        Sun, 17 Nov 2019 06:07:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rUS5IGpkaPi+dGpzM4Vf2xl/ff80v7YNdleQ2dpR1UA=;
-        b=Puy6cZj+QzezYj/UZ9GHaqRR7K0lgC91UdC59TjF/uHRPqpJq0DbZPWZ/SYDn+ccEU
-         YunqDqp4gTh7iTFhFX30iwA7IY5UcZ1hvRCdlFsv44r4vM0/35xctLsnFSppx2l0RuCZ
-         3qLG2cumXE97mA9ln052vHxW2zXL4TRlXeZImCIfA6TasApGLmvZ4XRAESdHFpAVOexX
-         4A5YGMHRR7e/+73kpU7xeveS87qtBrxXsAQ57Quai77Z3VqN9pwsBdtnjXfoG6BANyT2
-         c+68owKC573nV5j9nYjBGNHrQxFqwNC2oIA7dskMmP/VLFkVdbQSpXsf9WHfrbKVSnVo
-         hdlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rUS5IGpkaPi+dGpzM4Vf2xl/ff80v7YNdleQ2dpR1UA=;
-        b=Qn6i5KWYoLJWPBXujYlWFmKO9DpRobWrM3sZUXe92v1BC9ssLNVup17/P4DZHsxJEK
-         Ck7GQ2hP9VcdM6m9oMqQu+8JvLx7W7jb/irhBjkzKJz+cy4M37aHpeswyQ8PJfbbSFRw
-         8q2aqgYThM7fVyRaP8L8S0uhQCG0SZ1nMk5H8cW1AElH47DWX6Jp0p+3m+5epxt8eGYZ
-         kRoOl3RROINpQeufshdf4+9iI4td7NRnxMunYUCxTRqq2RITTep72zUGrcN45STrQXax
-         KOEjbyVOPlOgDLilpFMIuNnWe1GfDmE21oYU49i45FNUO+YgOoTGK16VxTFoi3Vb1TU0
-         a13A==
-X-Gm-Message-State: APjAAAWXqKsu0yaqXEIbugRClMtNwfkqRwwpUnmtMWxuzMCeMha59axN
-        NBSGE3PZmOsNUhnNZa1D5wNTj0lb
-X-Google-Smtp-Source: APXvYqyr0QEnccVZAjzuk6go6SoJxKQv25UhH0zdyvgJurN2iaqv8W3Qbh12jxLUu4HK4MJQOf6N6g==
-X-Received: by 2002:a1c:6144:: with SMTP id v65mr25353746wmb.53.1573999662210;
-        Sun, 17 Nov 2019 06:07:42 -0800 (PST)
-Received: from localhost.localdomain (p200300F1371CB100428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:371c:b100:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id n23sm16632977wmc.18.2019.11.17.06.07.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Nov 2019 06:07:41 -0800 (PST)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     narmstrong@baylibre.com, jbrunet@baylibre.com,
-        linux-amlogic@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        sboyd@kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 2/2] clk: meson: add a driver for the Meson8/8b/8m2 DDR clock controller
-Date:   Sun, 17 Nov 2019 15:07:31 +0100
-Message-Id: <20191117140731.137378-3-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191117140731.137378-1-martin.blumenstingl@googlemail.com>
-References: <20191117140731.137378-1-martin.blumenstingl@googlemail.com>
+        Sun, 17 Nov 2019 09:14:32 -0500
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id D4E81F232
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 08:14:31 -0600 (CST)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id WLJvivDTtHunhWLJviJMfH; Sun, 17 Nov 2019 08:14:31 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=hDIhrFBd0ww359PJX8lv7FR9yopVFZC5THcbdkAE3CQ=; b=Ri9wE98avi3ja4O2O1LIJKrXhu
+        +Ke5QGaiEahh5S990USln1p26XoacWAMCu2+po3ajjRJmQfloaIGohFlQ2H/MOVSc0T+5pAVfMRBI
+        RSONuRlLNomGF/TNr2Gv/2eck19IOeCTrKetUT+BO/nhj8aqs3RzBzMmfB9084yntvT65dslIPvak
+        JvKiAFag61Zr3yBAPjFSHRsoCtmtrSX7XfE8hXHGkIUng/4rJGwfXP98iSgidb6XpzpFr6qUlyroU
+        fdQEg3bRsxqGNaIJJU0nZSWuzCf5bn4hKzzvKWNN/8DIy4FXkhJQMClWCOJgdTT2TMnEsztUAEIJL
+        tyQFV+HQ==;
+Received: from [186.222.229.111] (port=47408 helo=localhost.localdomain)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1iWLJt-001Ad4-68; Sun, 17 Nov 2019 11:14:31 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v7 1/5] power: supply: max17040: Add IRQ handler for low SOC alert
+Date:   Sun, 17 Nov 2019 11:13:31 -0300
+Message-Id: <20191117141335.23404-2-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.24.0.rc2
+In-Reply-To: <20191117141335.23404-1-matheus@castello.eng.br>
+References: <20191117141335.23404-1-matheus@castello.eng.br>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 186.222.229.111
+X-Source-L: No
+X-Exim-ID: 1iWLJt-001Ad4-68
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (localhost.localdomain) [186.222.229.111]:47408
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 12
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Meson8/Meson8b/Meson8m2 SoCs embed a DDR clock controller in the
-MMCBUS registers. There is no public documentation, but the u-boot GPL
-sources from the Amlogic BSP show that the DDR clock controller is
-identical on all three SoCs:
-  #define CFG_DDR_CLK 792
-  #define CFG_PLL_M (((CFG_DDR_CLK/12)*12)/24)
-  #define CFG_PLL_N 1
-  #define CFG_PLL_OD 1
+According datasheet max17040 has a pin for alert host for low SOC.
+This pin can be used as external interrupt, so we need to check for
+interrupts assigned for device and handle it.
 
-  // from set_ddr_clock:
-  t_ddr_pll_cntl= (CFG_PLL_OD << 16)|(CFG_PLL_N<<9)|(CFG_PLL_M<<0)
-  writel(timing_reg->t_ddr_pll_cntl|(1<<29),AM_DDR_PLL_CNTL);
-  writel(readl(AM_DDR_PLL_CNTL) & (~(1<<29)),AM_DDR_PLL_CNTL);
+In handler we are checking and storing fuel gauge registers values
+and send an uevent to notificate user space, so user space can decide
+save work or turn off since the alert demonstrate that the battery may
+no have the power to keep the system turned on for much longer.
 
-  // from hx_ddr_power_down_enter: shut down DDR PLL
-  writel(readl(AM_DDR_PLL_CNTL)|(1<<30),AM_DDR_PLL_CNTL);
-
-  do { ... } while((readl(AM_DDR_PLL_CNTL)&(1<<31))==0)
-
-This translates to:
-- AM_DDR_PLL_CNTL[29] is the reset bit
-- AM_DDR_PLL_CNTL[30] is the enable bit
-- AM_DDR_PLL_CNTL[31] is the lock bit
-- AM_DDR_PLL_CNTL[8:0] is the m value (assuming the width is 9 bits
-  based on the start of the n value)
-- AM_DDR_PLL_CNTL[13:9] is the n value (assuming the width is 5 bits
-  based on the start of the od)
-- AM_DDR_PLL_CNTL[17:16] is the od (assuming the width is 2 bits based
-  on other PLLs on this SoC)
-
-Add a driver for this PLL setup because it's used as one of the inputs
-of the audio clocks. There may be more clocks inside that clock
-controller - those can be added in subsequent patches.
-
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/clk/meson/Makefile     |   2 +-
- drivers/clk/meson/meson8-ddr.c | 149 +++++++++++++++++++++++++++++++++
- 2 files changed, 150 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/meson/meson8-ddr.c
+ drivers/power/supply/max17040_battery.c | 73 +++++++++++++++++++++++--
+ 1 file changed, 68 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
-index 3939f218587a..6eca2a406ee3 100644
---- a/drivers/clk/meson/Makefile
-+++ b/drivers/clk/meson/Makefile
-@@ -18,4 +18,4 @@ obj-$(CONFIG_COMMON_CLK_AXG) += axg.o axg-aoclk.o
- obj-$(CONFIG_COMMON_CLK_AXG_AUDIO) += axg-audio.o
- obj-$(CONFIG_COMMON_CLK_GXBB) += gxbb.o gxbb-aoclk.o
- obj-$(CONFIG_COMMON_CLK_G12A) += g12a.o g12a-aoclk.o
--obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o
-+obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o meson8-ddr.o
-diff --git a/drivers/clk/meson/meson8-ddr.c b/drivers/clk/meson/meson8-ddr.c
-new file mode 100644
-index 000000000000..4b73ea244b63
---- /dev/null
-+++ b/drivers/clk/meson/meson8-ddr.c
-@@ -0,0 +1,149 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Amlogic Meson8 DDR clock controller
-+ *
-+ * Copyright (C) 2019 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-+ */
-+
-+#include <dt-bindings/clock/meson8-ddr-clkc.h>
-+
-+#include <linux/clk-provider.h>
-+#include <linux/platform_device.h>
-+
-+#include "clk-regmap.h"
-+#include "clk-pll.h"
-+
-+#define AM_DDR_PLL_CNTL			0x00
-+#define AM_DDR_PLL_CNTL1		0x04
-+#define AM_DDR_PLL_CNTL2		0x08
-+#define AM_DDR_PLL_CNTL3		0x0c
-+#define AM_DDR_PLL_CNTL4		0x10
-+#define AM_DDR_PLL_STS			0x14
-+#define DDR_CLK_CNTL			0x18
-+#define DDR_CLK_STS			0x1c
-+
-+static struct clk_regmap meson8_ddr_pll_dco = {
-+	.data = &(struct meson_clk_pll_data){
-+		.en = {
-+			.reg_off = AM_DDR_PLL_CNTL,
-+			.shift   = 30,
-+			.width   = 1,
-+		},
-+		.m = {
-+			.reg_off = AM_DDR_PLL_CNTL,
-+			.shift   = 0,
-+			.width   = 9,
-+		},
-+		.n = {
-+			.reg_off = AM_DDR_PLL_CNTL,
-+			.shift   = 9,
-+			.width   = 5,
-+		},
-+		.l = {
-+			.reg_off = AM_DDR_PLL_CNTL,
-+			.shift   = 31,
-+			.width   = 1,
-+		},
-+		.rst = {
-+			.reg_off = AM_DDR_PLL_CNTL,
-+			.shift   = 29,
-+			.width   = 1,
-+		},
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "ddr_pll_dco",
-+		.ops = &meson_clk_pll_ro_ops,
-+		.parent_data = &(const struct clk_parent_data) {
-+			.fw_name = "xtal",
-+		},
-+		.num_parents = 1,
-+	},
-+};
-+
-+static struct clk_regmap meson8_ddr_pll = {
-+	.data = &(struct clk_regmap_div_data){
-+		.offset = AM_DDR_PLL_CNTL,
-+		.shift = 16,
-+		.width = 2,
-+		.flags = CLK_DIVIDER_POWER_OF_TWO,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "ddr_pll",
-+		.ops = &clk_regmap_divider_ro_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&meson8_ddr_pll_dco.hw
-+		},
-+		.num_parents = 1,
-+	},
-+};
-+
-+static struct clk_hw_onecell_data meson8_ddr_clk_hw_onecell_data = {
-+	.hws = {
-+		[DDR_CLKID_DDR_PLL_DCO]		= &meson8_ddr_pll_dco.hw,
-+		[DDR_CLKID_DDR_PLL]		= &meson8_ddr_pll.hw,
-+	},
-+	.num = 2,
-+};
-+
-+static struct clk_regmap *const meson8_ddr_clk_regmaps[] = {
-+	&meson8_ddr_pll_dco,
-+	&meson8_ddr_pll,
-+};
-+
-+static const struct regmap_config meson8_ddr_clkc_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+	.max_register = DDR_CLK_STS,
-+};
-+
-+static int meson8_ddr_clkc_probe(struct platform_device *pdev)
+diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+index 62499018e68b..9909f8cd7b5d 100644
+--- a/drivers/power/supply/max17040_battery.c
++++ b/drivers/power/supply/max17040_battery.c
+@@ -13,6 +13,7 @@
+ #include <linux/err.h>
+ #include <linux/i2c.h>
+ #include <linux/delay.h>
++#include <linux/interrupt.h>
+ #include <linux/power_supply.h>
+ #include <linux/max17040_battery.h>
+ #include <linux/slab.h>
+@@ -160,21 +161,54 @@ static void max17040_get_status(struct i2c_client *client)
+ 		chip->status = POWER_SUPPLY_STATUS_FULL;
+ }
+
++static void max17040_check_changes(struct i2c_client *client)
 +{
-+	struct regmap *regmap;
-+	void __iomem *base;
-+	struct clk_hw *hw;
-+	int ret, i;
++	max17040_get_vcell(client);
++	max17040_get_soc(client);
++	max17040_get_online(client);
++	max17040_get_status(client);
++}
 +
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
+ static void max17040_work(struct work_struct *work)
+ {
+ 	struct max17040_chip *chip;
+
+ 	chip = container_of(work, struct max17040_chip, work.work);
+-
+-	max17040_get_vcell(chip->client);
+-	max17040_get_soc(chip->client);
+-	max17040_get_online(chip->client);
+-	max17040_get_status(chip->client);
++	max17040_check_changes(chip->client);
+
+ 	queue_delayed_work(system_power_efficient_wq, &chip->work,
+ 			   MAX17040_DELAY);
+ }
+
++static irqreturn_t max17040_thread_handler(int id, void *dev)
++{
++	struct max17040_chip *chip = dev;
++	struct i2c_client *client = chip->client;
 +
-+	regmap = devm_regmap_init_mmio(&pdev->dev, base,
-+				       &meson8_ddr_clkc_regmap_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
++	dev_warn(&client->dev, "IRQ: Alert battery low level");
++	/* read registers */
++	max17040_check_changes(chip->client);
 +
-+	/* Populate regmap */
-+	for (i = 0; i < ARRAY_SIZE(meson8_ddr_clk_regmaps); i++)
-+		meson8_ddr_clk_regmaps[i]->map = regmap;
++	/* send uevent */
++	power_supply_changed(chip->battery);
 +
-+	/* Register all clks */
-+	for (i = 0; i < meson8_ddr_clk_hw_onecell_data.num; i++) {
-+		hw = meson8_ddr_clk_hw_onecell_data.hws[i];
++	return IRQ_HANDLED;
++}
 +
-+		ret = devm_clk_hw_register(&pdev->dev, hw);
++static int max17040_enable_alert_irq(struct max17040_chip *chip)
++{
++	struct i2c_client *client = chip->client;
++	unsigned int flags;
++	int ret;
++
++	flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
++	ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
++					max17040_thread_handler, flags,
++					chip->battery->desc->name, chip);
++
++	return ret;
++}
++
+ static enum power_supply_property max17040_battery_props[] = {
+ 	POWER_SUPPLY_PROP_STATUS,
+ 	POWER_SUPPLY_PROP_ONLINE,
+@@ -220,6 +254,19 @@ static int max17040_probe(struct i2c_client *client,
+ 	max17040_reset(client);
+ 	max17040_get_version(client);
+
++	/* check interrupt */
++	if (client->irq) {
++		int ret;
++
++		ret = max17040_enable_alert_irq(chip);
++
 +		if (ret) {
-+			dev_err(&pdev->dev, "Clock registration failed\n");
-+			return ret;
++			client->irq = 0;
++			dev_warn(&client->dev,
++				 "Failed to get IRQ err %d\n", ret);
 +		}
 +	}
 +
-+	return devm_of_clk_add_hw_provider(&pdev->dev, of_clk_hw_onecell_get,
-+					   &meson8_ddr_clk_hw_onecell_data);
-+}
+ 	INIT_DEFERRABLE_WORK(&chip->work, max17040_work);
+ 	queue_delayed_work(system_power_efficient_wq, &chip->work,
+ 			   MAX17040_DELAY);
+@@ -244,6 +291,14 @@ static int max17040_suspend(struct device *dev)
+ 	struct max17040_chip *chip = i2c_get_clientdata(client);
+
+ 	cancel_delayed_work(&chip->work);
 +
-+static const struct of_device_id meson8_ddr_clkc_match_table[] = {
-+	{ .compatible = "amlogic,meson8-ddr-clkc" },
-+	{ .compatible = "amlogic,meson8b-ddr-clkc" },
-+	{ /* sentinel */ }
-+};
++	if (client->irq) {
++		if (device_may_wakeup(dev))
++			enable_irq_wake(client->irq);
++		else
++			disable_irq_wake(client->irq);
++	}
 +
-+static struct platform_driver meson8_ddr_clkc_driver = {
-+	.probe		= meson8_ddr_clkc_probe,
-+	.driver		= {
-+		.name	= "meson8-ddr-clkc",
-+		.of_match_table = meson8_ddr_clkc_match_table,
-+	},
-+};
+ 	return 0;
+ }
+
+@@ -254,6 +309,14 @@ static int max17040_resume(struct device *dev)
+
+ 	queue_delayed_work(system_power_efficient_wq, &chip->work,
+ 			   MAX17040_DELAY);
 +
-+builtin_platform_driver(meson8_ddr_clkc_driver);
--- 
-2.24.0
++	if (client->irq) {
++		if (device_may_wakeup(dev))
++			disable_irq_wake(client->irq);
++		else
++			enable_irq_wake(client->irq);
++	}
++
+ 	return 0;
+ }
+
+--
+2.24.0.rc2
 
