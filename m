@@ -2,82 +2,207 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE12C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0534C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F192820740
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:27:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574069247;
-	bh=Rps6VHNZkf0Vw651PAQcvS5aj/kdFjBNct/TEC/byN4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FO8s5sv7hFNwcEjsnuLb7rBKgSF1OoZqUGPNOCUYP+8gDPXN46XJ40yh2ZaS5RTq/
-	 PB/RLAnGfrOCFDXuJG1xyCZoXFi8xMFGpzDCBwZQGtIvVaPtITpa3WoyfS7G7r7D8k
-	 XhEIvXg7PMeMe/K4/uoxw09LCpi/FlSykivQJxpw=
+	by mail.kernel.org (Postfix) with ESMTP id A28B82073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:27:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbfKRJ10 (ORCPT
+        id S1726918AbfKRJ1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 04:27:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726460AbfKRJ1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 04:27:25 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8500520727;
-        Mon, 18 Nov 2019 09:27:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574069245;
-        bh=Rps6VHNZkf0Vw651PAQcvS5aj/kdFjBNct/TEC/byN4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JdlMt0eutnDFaTXmS4gGFIT/SNFiG3KL7VQ3A+tyzTo69xBX/HJBUYh789u8geWPS
-         8y11hoOFVLMo++Klgx3tuBbQONJVkQEzMMaGSqA3GUsnRgEazMdTW0oXpvTtU1WO8K
-         k1WAP2xMOCTNXKSFTr8YT5AfjjkGID/hg1v9Wzn8=
-Date:   Mon, 18 Nov 2019 10:27:21 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     David Binderman <dcb314@hotmail.com>
-Cc:     "peterhuewe@gmx.de" <peterhuewe@gmx.de>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-5.4-rc8/drivers/char/tpm/tpm1-cmd.c:735: possible missing
- return value check
-Message-ID: <20191118092721.GA154812@kroah.com>
-References: <DB7PR08MB3801D9F4D5822D36E57282F39C4D0@DB7PR08MB3801.eurprd08.prod.outlook.com>
+        Mon, 18 Nov 2019 04:27:45 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57576 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726460AbfKRJ1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 04:27:45 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EE08FAC4D;
+        Mon, 18 Nov 2019 09:27:42 +0000 (UTC)
+Date:   Mon, 18 Nov 2019 10:27:41 +0100
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Linux I2C <linux-i2c@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 3/4 v2] i2c: smbus: Add a way to instantiate SPD EEPROMs
+ automatically
+Message-ID: <20191118102741.794187d4@endymion>
+In-Reply-To: <20191118102410.78cd8e6e@endymion>
+References: <20191118102410.78cd8e6e@endymion>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB7PR08MB3801D9F4D5822D36E57282F39C4D0@DB7PR08MB3801.eurprd08.prod.outlook.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 09:24:32AM +0000, David Binderman wrote:
-> Hello there,
-> 
-> linux-5.4-rc8/drivers/char/tpm/tpm1-cmd.c:735:5: style: Variable 'rc' is reassigned a value before the old one has been used. [redundantAssignment]
-> 
-> Source code is
-> 
->     if (tpm_suspend_pcr)
->         rc = tpm1_pcr_extend(chip, tpm_suspend_pcr, dummy_hash,
->                      "extending dummy pcr before suspend");
-> 
->     rc = tpm_buf_init(&buf, TPM_TAG_RQU_COMMAND, TPM_ORD_SAVESTATE);
-> 
-> Suggest add test of rc after call to tpm1_pcr_extend.
+In simple cases we can instantiate SPD EEPROMs on the SMBus
+automatically. Start with just DDR2, DDR3 and DDR4 on x86 for now,
+and only for systems with no more than 4 memory slots. These
+limitations may be lifted later.
 
-Great, how about you submit a patch to resolve this?  That way you can
-get the full credit for finding and resolveing the issue?
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+---
+Changes since v1:
+ * Fixed build warning reported by kbuild test bot
 
-thanks,
+ drivers/i2c/i2c-smbus.c   |  104 +++++++++++++++++++++++++++++++++++++++++++++-
+ include/linux/i2c-smbus.h |    8 +++
+ 2 files changed, 110 insertions(+), 2 deletions(-)
 
-greg k-h
+--- linux-5.3.orig/drivers/i2c/i2c-smbus.c	2019-10-14 11:33:20.372781769 +0200
++++ linux-5.3/drivers/i2c/i2c-smbus.c	2019-10-14 16:42:12.815302881 +0200
+@@ -3,10 +3,11 @@
+  * i2c-smbus.c - SMBus extensions to the I2C protocol
+  *
+  * Copyright (C) 2008 David Brownell
+- * Copyright (C) 2010 Jean Delvare <jdelvare@suse.de>
++ * Copyright (C) 2010-2019 Jean Delvare <jdelvare@suse.de>
+  */
+ 
+ #include <linux/device.h>
++#include <linux/dmi.h>
+ #include <linux/i2c.h>
+ #include <linux/i2c-smbus.h>
+ #include <linux/interrupt.h>
+@@ -203,6 +204,107 @@ EXPORT_SYMBOL_GPL(i2c_handle_smbus_alert
+ 
+ module_i2c_driver(smbalert_driver);
+ 
++/*
++ * SPD is not part of SMBus but we include it here for convenience as the
++ * target systems are the same.
++ * Restrictions to automatic SPD instantiation:
++ *  - Only works if all filled slots have the same memory type
++ *  - Only works for DDR2, DDR3 and DDR4 for now
++ *  - Only works on systems with 1 to 4 memory slots
++ */
++#if IS_ENABLED(CONFIG_DMI)
++void i2c_register_spd(struct i2c_adapter *adap)
++{
++	int n, slot_count = 0, dimm_count = 0;
++	u16 handle;
++	u8 common_mem_type = 0x0, mem_type;
++	u64 mem_size;
++	const char *name;
++
++	while ((handle = dmi_memdev_handle(slot_count)) != 0xffff) {
++		slot_count++;
++
++		/* Skip empty slots */
++		mem_size = dmi_memdev_size(handle);
++		if (!mem_size)
++			continue;
++
++		/* Skip undefined memory type */
++		mem_type = dmi_memdev_type(handle);
++		if (mem_type <= 0x02)		/* Invalid, Other, Unknown */
++			continue;
++
++		if (!common_mem_type) {
++			/* First filled slot */
++			common_mem_type = mem_type;
++		} else {
++			/* Check that all filled slots have the same type */
++			if (mem_type != common_mem_type) {
++				dev_warn(&adap->dev,
++					 "Different memory types mixed, not instantiating SPD\n");
++				return;
++			}
++		}
++		dimm_count++;
++	}
++
++	/* No useful DMI data, bail out */
++	if (!dimm_count)
++		return;
++
++	dev_info(&adap->dev, "%d/%d memory slots populated (from DMI)\n",
++		 dimm_count, slot_count);
++
++	if (slot_count > 4) {
++		dev_warn(&adap->dev,
++			 "Systems with more than 4 memory slots not supported yet, not instantiating SPD\n");
++		return;
++	}
++
++	switch (common_mem_type) {
++	case 0x13:	/* DDR2 */
++	case 0x18:	/* DDR3 */
++	case 0x1C:	/* LPDDR2 */
++	case 0x1D:	/* LPDDR3 */
++		name = "spd";
++		break;
++	case 0x1A:	/* DDR4 */
++	case 0x1E:	/* LPDDR4 */
++		name = "ee1004";
++		break;
++	default:
++		dev_info(&adap->dev,
++			 "Memory type 0x%02x not supported yet, not instantiating SPD\n",
++			 common_mem_type);
++		return;
++	}
++
++	/*
++	 * We don't know in which slots the memory modules are. We could
++	 * try to guess from the slot names, but that would be rather complex
++	 * and unreliable, so better probe all possible addresses until we
++	 * have found all memory modules.
++	 */
++	for (n = 0; n < slot_count && dimm_count; n++) {
++		struct i2c_board_info info;
++		unsigned short addr_list[2];
++
++		memset(&info, 0, sizeof(struct i2c_board_info));
++		strlcpy(info.type, name, I2C_NAME_SIZE);
++		addr_list[0] = 0x50 + n;
++		addr_list[1] = I2C_CLIENT_END;
++
++		if (i2c_new_probed_device(adap, &info, addr_list, NULL)) {
++			dev_info(&adap->dev,
++				 "Successfully instantiated SPD at 0x%hx\n",
++				 addr_list[0]);
++			dimm_count--;
++		}
++	}
++}
++EXPORT_SYMBOL_GPL(i2c_register_spd);
++#endif
++
+ MODULE_AUTHOR("Jean Delvare <jdelvare@suse.de>");
+ MODULE_DESCRIPTION("SMBus protocol extensions support");
+ MODULE_LICENSE("GPL");
+--- linux-5.3.orig/include/linux/i2c-smbus.h	2019-10-14 11:33:20.372781769 +0200
++++ linux-5.3/include/linux/i2c-smbus.h	2019-10-14 16:44:22.636959738 +0200
+@@ -2,7 +2,7 @@
+ /*
+  * i2c-smbus.h - SMBus extensions to the I2C protocol
+  *
+- * Copyright (C) 2010 Jean Delvare <jdelvare@suse.de>
++ * Copyright (C) 2010-2019 Jean Delvare <jdelvare@suse.de>
+  */
+ 
+ #ifndef _LINUX_I2C_SMBUS_H
+@@ -44,4 +44,10 @@ static inline int of_i2c_setup_smbus_ale
+ }
+ #endif
+ 
++#if IS_ENABLED(CONFIG_I2C_SMBUS) && IS_ENABLED(CONFIG_DMI)
++void i2c_register_spd(struct i2c_adapter *adap);
++#else
++static inline void i2c_register_spd(struct i2c_adapter *adap) { }
++#endif
++
+ #endif /* _LINUX_I2C_SMBUS_H */
+
+-- 
+Jean Delvare
+SUSE L3 Support
