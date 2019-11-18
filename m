@@ -2,100 +2,105 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFAFC43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4619EC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACAD92073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C26D2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:16:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ZK+ZOgMN"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ldFG0MXI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfKRLNm (ORCPT
+        id S1726595AbfKRLQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:13:42 -0500
-Received: from forward501j.mail.yandex.net ([5.45.198.251]:60107 "EHLO
-        forward501j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726536AbfKRLNm (ORCPT
+        Mon, 18 Nov 2019 06:16:09 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:37396 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbfKRLQJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:13:42 -0500
-Received: from mxback1j.mail.yandex.net (mxback1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::10a])
-        by forward501j.mail.yandex.net (Yandex) with ESMTP id E4BFB3380888;
-        Mon, 18 Nov 2019 14:13:38 +0300 (MSK)
-Received: from localhost (localhost [::1])
-        by mxback1j.mail.yandex.net (mxback/Yandex) with ESMTP id oDBCcxg1Xb-DacCp4P5;
-        Mon, 18 Nov 2019 14:13:37 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1574075617;
-        bh=zisD8O+KVQzDq2UyHZ8x9z+bivW3SePE9FRhcF5pJQQ=;
-        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
-        b=ZK+ZOgMNt4rRLoRbwzam5ucYofaQIxnnI3J2bpsXilIXPFjAo80mhNlRwCEIKin3y
-         CNP0dSpxL8muilZBgo5AkwnMEWd7swcrg5Wf/s/fvd1nmXNwwZ0RgXAaU8/yWuYCtK
-         zc816vRfTUR3RuaBDfwdy5JlRt7V3Cf4uMKcHyQY=
-Authentication-Results: mxback1j.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by iva1-ef4837f8671e.qloud-c.yandex.net with HTTP;
-        Mon, 18 Nov 2019 14:13:36 +0300
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Envelope-From: yjx@flygoat.com
-To:     Jean Delvare <jdelvare@suse.com>
-Cc:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Yinglu Yang <yangyinglu@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>
-In-Reply-To: <1573478985-3535-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1573478985-3535-1-git-send-email-yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v2] MIPS: Scan the DMI system information
+        Mon, 18 Nov 2019 06:16:09 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAIBG2Qi087504;
+        Mon, 18 Nov 2019 05:16:02 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574075762;
+        bh=AJvnVF1CcG+/gURcJHJhczdZXGZag1iFxD+yTRdx1ZY=;
+        h=From:To:CC:Subject:Date;
+        b=ldFG0MXIw3w5DNnhOG7Qs4x1UgFodOZX9Pd6Xp+3DTSEc9LCWdXmO5LJKC/EPhUkq
+         LuqPJMHY703pBjeWQQFyP3HZ3sHj5BdD4XnqsBcDVNoqlXATK55Wv/gkyHaBsrP8Vn
+         s2X/v4m11oGHyNUd7Wl9wjyjGfrzYgdsgxBSGQSU=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAIBG1hu028365;
+        Mon, 18 Nov 2019 05:16:01 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 18
+ Nov 2019 05:16:01 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 18 Nov 2019 05:16:01 -0600
+Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAIBFw3a035927;
+        Mon, 18 Nov 2019 05:15:59 -0600
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>
+CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <tony@atomide.com>,
+        <bcousson@baylibre.com>, <faiz_abbas@ti.com>,
+        <robertcnelson@gmail.com>
+Subject: [PATCH] ARM: dts: am57xx-beagle-x15: Update pinmux name to ddr_3_3v
+Date:   Mon, 18 Nov 2019 16:46:54 +0530
+Message-ID: <20191118111654.9843-1-faiz_abbas@ti.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date:   Mon, 18 Nov 2019 19:13:36 +0800
-Message-Id: <123521801574075616@iva1-ef4837f8671e.qloud-c.yandex.net>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+am57xx-beagle-x15 revb1 and revc have 3.3V connected to the eMMC I/O
+lines. Update the pinmux name to reflect this.
 
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+---
+ arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts | 2 +-
+ arch/arm/boot/dts/am57xx-beagle-x15-revc.dts  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-11.11.2019, 21:30, "Tiezhu Yang" <yangtiezhu@loongson.cn>:
-> Enable DMI scanning on the MIPS architecture, this setups DMI identifiers
-> (dmi_system_id) for printing it out on task dumps and prepares DIMM entry
-> information (dmi_memdev_info) from the SMBIOS table. With this patch, the
-> driver can easily match various of mainboards.
->
-> In the SMBIOS reference specification, the table anchor string "_SM_" is
-> present in the address range 0xF0000 to 0xFFFFF on a 16-byte boundary,
-> but there exists a special case for Loongson platform, when call function
-> dmi_early_remap, it should specify the start address to 0xFFFE000 due to
-> it is reserved for SMBIOS and can be normally access in the BIOS.
->
-> This patch works fine on the Loongson 3A3000 platform which belongs to
-> MIPS architecture and has no influence on the other architectures such
-> as x86 and ARM.
->
-> Co-developed-by: Yinglu Yang <yangyinglu@loongson.cn>
-> Signed-off-by: Yinglu Yang <yangyinglu@loongson.cn>
-> [jiaxun.yang@flygoat.com: Refine definitions and Kconfig]
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->
-
-Hi Jane,
-
-Is it fine for you?
-If so please give a Ack.
-
-Thanks.
---
-Jiaxun Yang
-
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts b/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
+index 7b113b52c3fb..39d1c4ff5749 100644
+--- a/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
++++ b/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
+@@ -24,7 +24,7 @@
+ };
+ 
+ &mmc2 {
+-	pinctrl-names = "default", "hs", "ddr_1_8v";
++	pinctrl-names = "default", "hs", "ddr_3_3v";
+ 	pinctrl-0 = <&mmc2_pins_default>;
+ 	pinctrl-1 = <&mmc2_pins_hs>;
+ 	pinctrl-2 = <&mmc2_pins_ddr_3_3v_rev11 &mmc2_iodelay_ddr_3_3v_rev11_conf>;
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts b/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
+index 30c500b15b21..4187a9729f96 100644
+--- a/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
++++ b/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
+@@ -24,7 +24,7 @@
+ };
+ 
+ &mmc2 {
+-	pinctrl-names = "default", "hs", "ddr_1_8v";
++	pinctrl-names = "default", "hs", "ddr_3_3v";
+ 	pinctrl-0 = <&mmc2_pins_default>;
+ 	pinctrl-1 = <&mmc2_pins_hs>;
+ 	pinctrl-2 = <&mmc2_pins_ddr_rev20>;
+-- 
+2.19.2
 
