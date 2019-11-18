@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611DDC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF4FC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 372392084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C9D2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:24:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="iW0UQYAz"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="ZyUJ5WMn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfKRLY2 (ORCPT
+        id S1727441AbfKRLY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:24:28 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36672 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727402AbfKRLYX (ORCPT
+        Mon, 18 Nov 2019 06:24:29 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55855 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727405AbfKRLY0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:24:23 -0500
-Received: by mail-ed1-f68.google.com with SMTP id f7so13206447edq.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 03:24:21 -0800 (PST)
+        Mon, 18 Nov 2019 06:24:26 -0500
+Received: by mail-wm1-f66.google.com with SMTP id b11so16953359wmb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 03:24:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kmzEwbR7z9MB2kX6E+hxPBjMMxkrgbCI0SqbDjInDjs=;
-        b=iW0UQYAzkmH8Ll/M9PRrq939jlpUbSW0NRlVO9QY+D4clTNrJOZfMDBDFUbjyL4Cs7
-         AafHw+ZYUyVMiRkn9UVwi3pQGytY4uNU4TxcdyErLNYAINbJRSnVaWhXPyXoBkVDZ0AE
-         l3Fg7abGNnEPO4rdJFSDHZaKL7SSwwOkiiOlg=
+        bh=u67M6iMnQRPeWGbUjU6/8zjKJ8MPzlxCYb6wzRlTUzI=;
+        b=ZyUJ5WMnth3SU48aYvS4fzK8hUXIaPpYljpdKoErKfrhzAmKvOTIG8Lv0aPWgk2RxT
+         ZP67+R3KRm5OJwrOYPHHE3tk4Y//im0p1QB5M0gz5HuEGSCuTRoUZobX2Y3BeyIr8Osj
+         7vaYJIjKqRt2NVkR9YYnzVUZAb3xO9OfGiUJw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kmzEwbR7z9MB2kX6E+hxPBjMMxkrgbCI0SqbDjInDjs=;
-        b=WftQ6Uf+oQob4RNRJUIO/pO+1mnnI7uGKIrcqvTntXmoBZ817VJYBHZP5SwoZ1mr0D
-         rq6En8+//qjtGsggDlW/TIUbOTFVPBhd7o4kdT6TE9WRpEp/GQPccoRslj/HBo6gFCj7
-         qkTBDxFr4pbBl2H8dG+EkBjizopkKSIqjbovq5F6gd5kPt7iqEMGxNtcTlG2vI7/GRyN
-         eC3DDqwq5Y8+/fW6fd5UND/58prWwFrSIfuWrtdSAp7xwJnIGa7L+YJC2jAUfpVjUnQs
-         bnl4+q6AEdVnhR4LV9cJSJX8UPPgi4TH3wJud6HNMbqptD+ga3iSTQJ9tSWM6gX3LSrX
-         JWvA==
-X-Gm-Message-State: APjAAAWG3x/Q6kyKNoBpM7kjToPf0z2t6ES8W6enB2XmrTAIHhmOgJwZ
-        EMX4NEj1VFUYuBmA9Rh2DtI5p6QEp5vmnA==
-X-Google-Smtp-Source: APXvYqx95kajCqCxz/PSbS8ItEnY/XM8/CDgL5w+eRk/tL2D6xJCZl9iTwQDhJviE4PdC/OwznLwrA==
-X-Received: by 2002:a5d:54c4:: with SMTP id x4mr29937876wrv.247.1574076260319;
-        Mon, 18 Nov 2019 03:24:20 -0800 (PST)
+        bh=u67M6iMnQRPeWGbUjU6/8zjKJ8MPzlxCYb6wzRlTUzI=;
+        b=RiUndGlbOEkP3TlMPe7FiF20+KzHxnQA2xw6SiaPOz17pxfnkkexAG9rgrtGmHCxJV
+         wRCQALZbxzowioKMa/xDv+I33Yrj2CHWFOYs4vNaVrsUjWtNXHjQpnxJul3eiC1VBcX3
+         BRO7ZWaFOTX9mcWtxfEdBDKcTSrXZcCt+30ofh+W7tD/gYybJF0raEUXC+LypHkvRXgV
+         aBrshGB17fPEMoaBXRXXlzVkeC5gwjolAfAMC7HkQxXTCr6Vvg5q8DB/lM93JflgSKdC
+         82IkBqn2wYAfUoVfafpm73/EhleTNoHl4ywtoChtNH6KF/yduP32Mw8XOriQzOZVlL0O
+         qxZA==
+X-Gm-Message-State: APjAAAXNzZYL7dwA43Za3akcNw1GNdmHnx+zS1kM/ECoNrc8m8cIXT+N
+        EwG/SFJ+C+verYhyfhymJEXAEQ==
+X-Google-Smtp-Source: APXvYqyvwQK7ZNvJAAcJjBPFCHxzOq/iR38P0uIeZFJ2nKarTxjyW1A/whUUJQYA2dtQxAXwNIZrhQ==
+X-Received: by 2002:a1c:3cc4:: with SMTP id j187mr29379317wma.95.1574076261570;
+        Mon, 18 Nov 2019 03:24:21 -0800 (PST)
 Received: from prevas-ravi.prevas.se (ip-5-186-115-54.cgn.fibianet.dk. [5.186.115.54])
-        by smtp.gmail.com with ESMTPSA id y2sm21140815wmy.2.2019.11.18.03.24.19
+        by smtp.gmail.com with ESMTPSA id y2sm21140815wmy.2.2019.11.18.03.24.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 03:24:19 -0800 (PST)
+        Mon, 18 Nov 2019 03:24:21 -0800 (PST)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
@@ -60,9 +60,9 @@ Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Scott Wood <oss@buserror.net>, Timur Tabi <timur@kernel.org>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v5 37/48] soc: fsl: qe: make cpm_muram_free() ignore a negative offset
-Date:   Mon, 18 Nov 2019 12:23:13 +0100
-Message-Id: <20191118112324.22725-38-linux@rasmusvillemoes.dk>
+Subject: [PATCH v5 38/48] soc: fsl: qe: drop broken lazy call of cpm_muram_init()
+Date:   Mon, 18 Nov 2019 12:23:14 +0100
+Message-Id: <20191118112324.22725-39-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191118112324.22725-1-linux@rasmusvillemoes.dk>
 References: <20191118112324.22725-1-linux@rasmusvillemoes.dk>
@@ -73,30 +73,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows one to simplify callers since they can store a negative
-value as a sentinel to indicate "this was never allocated" (or store
-the -ENOMEM from an allocation failure) and then call cpm_muram_free()
-unconditionally.
+cpm_muram_alloc_common() tries to support a kind of lazy
+initialization - if the muram_pool has not been created yet, it calls
+cpm_muram_init(). Now, cpm_muram_alloc_common() is always called under
+
+	spin_lock_irqsave(&cpm_muram_lock, flags);
+
+and cpm_muram_init() does gen_pool_create() (which implies a
+GFP_KERNEL allocation) and ioremap(), not to mention the fun that
+ensues from cpm_muram_init() doing
+
+	spin_lock_init(&cpm_muram_lock);
+
+In other words, this has never worked, so nobody can have been relying
+on it.
+
+cpm_muram_init() is called from a subsys_initcall (either from
+cpm_init() in arch/powerpc/sysdev/cpm_common.c or, via qe_reset(),
+from qe_init() in drivers/soc/fsl/qe/qe.c).
 
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/soc/fsl/qe/qe_common.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/soc/fsl/qe/qe_common.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/drivers/soc/fsl/qe/qe_common.c b/drivers/soc/fsl/qe/qe_common.c
-index 962835488f66..48c77bb92846 100644
+index 48c77bb92846..dcb267567d76 100644
 --- a/drivers/soc/fsl/qe/qe_common.c
 +++ b/drivers/soc/fsl/qe/qe_common.c
-@@ -176,6 +176,9 @@ void cpm_muram_free(s32 offset)
- 	int size;
- 	struct muram_block *tmp;
+@@ -119,9 +119,6 @@ static s32 cpm_muram_alloc_common(unsigned long size,
+ 	struct muram_block *entry;
+ 	s32 start;
  
-+	if (offset < 0)
-+		return;
-+
- 	size = 0;
- 	spin_lock_irqsave(&cpm_muram_lock, flags);
- 	list_for_each_entry(tmp, &muram_block_list, head) {
+-	if (!muram_pool && cpm_muram_init())
+-		goto out2;
+-
+ 	start = gen_pool_alloc_algo(muram_pool, size, algo, data);
+ 	if (!start)
+ 		goto out2;
 -- 
 2.23.0
 
