@@ -2,125 +2,107 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11154C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9029FC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D897020740
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FF1A20727
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:38:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574059080;
+	bh=xgIaUo5Wf2fkFFbeeaxEj0+738UZbioePrKM1Q6oZrI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fqam2WAaPXYYz7eVyZZtA6zekKP1sV5ykqvfNfYGkWcOJdGa6Vmbg54nnovz8KSdB
+	 /+72L5aDJ1RjPjZxkT3wxmj/eWZHEi/8+YJzbqTlDI3GlzHVxAQxjInCT2AOoGaAK2
+	 HG3EpJHIEktey+M1Szq2Vn+kFGQvWQtHqCXbf0ig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbfKRGe1 (ORCPT
+        id S1726635AbfKRGh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 01:34:27 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:65250 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbfKRGe1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 01:34:27 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-8d-5dd23b705475
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 97.D4.08102.07B32DD5; Mon, 18 Nov 2019 07:34:24 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Mon, 18 Nov 2019 07:34:13 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "kbuild@lists.01.org" <kbuild@lists.01.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "hofrat@osadl.org" <hofrat@osadl.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v4 15/16] leds: Add common LED binding parsing support
- to LED class/core
-Thread-Topic: [PATCH v4 15/16] leds: Add common LED binding parsing support
- to LED class/core
-Thread-Index: AQHVnLBjG8tj857VMkKX2FyhKuPqpKeQYJeAgAAJtAA=
-Date:   Mon, 18 Nov 2019 06:34:12 +0000
-Message-ID: <ab534cb686f94f32d8fadc2534ebbb1772b57dee.camel@fi.rohmeurope.com>
-References: <20191118055941.GB1776@kadam>
-In-Reply-To: <20191118055941.GB1776@kadam>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <97BFEEB19E28A64A828D1BE3C4E7F6BD@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Mon, 18 Nov 2019 01:37:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46918 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726331AbfKRGh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 01:37:58 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E556A20726;
+        Mon, 18 Nov 2019 06:37:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574059076;
+        bh=xgIaUo5Wf2fkFFbeeaxEj0+738UZbioePrKM1Q6oZrI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=a3KDVVd+L4ft9oNa2N0w5ZAo+2PDgAImeol8j9fgnhOCq+RIPpY9Vs/FgEH9EtEfe
+         E3JYwYvvfrKJ9EZYBDjabY+IG5Pgw281cLm47/HKqYHoMXV+a+6w1aFfincW5aSlEx
+         ztqgQHlVp/keu5h9FTvakcP9QXZwpT8qazklwJpQ=
+Date:   Mon, 18 Nov 2019 07:37:53 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, yu kuai <yukuai3@huawei.com>,
+        rafael@kernel.org, oleg@redhat.com, mchehab+samsung@kernel.org,
+        corbet@lwn.net, tytso@mit.edu, jmorris@namei.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        zhengbin13@huawei.com, yi.zhang@huawei.com,
+        chenxiang66@hisilicon.com, xiexiuqi@huawei.com
+Subject: Re: [RFC] simple_recursive_removal()
+Message-ID: <20191118063753.GA63802@kroah.com>
+References: <20191115134823.GQ26530@ZenIV.linux.org.uk>
+ <20191115085805.008870cb@gandalf.local.home>
+ <20191115141754.GR26530@ZenIV.linux.org.uk>
+ <20191115175423.GS26530@ZenIV.linux.org.uk>
+ <20191115184209.GT26530@ZenIV.linux.org.uk>
+ <20191115194138.GU26530@ZenIV.linux.org.uk>
+ <20191115211820.GV26530@ZenIV.linux.org.uk>
+ <20191115162609.2d26d498@gandalf.local.home>
+ <20191115221037.GW26530@ZenIV.linux.org.uk>
+ <20191117222422.GA26872@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Tb0xTVxjGc+49t/fy526XUuWs20Losmwyh7I/2RFESZbF6z6YJTo/bOm6
-        q9xRIm1ZWxZxWdLpEFsMw7XTrZOCWpAAGwq4MQaDVFBgCitWxBVURmGCRoYDDBnrdi+dwpdz
-        3jzP+b3P++E9DKn8mVYzOUaraDYKuRpFNOyo/vvsi3npA9r1zjsc9vqv0rjoXhWNZ8t6If5y
-        NKTAoY4igO+Ej0Fc3tlH4eJfmih8cvorCtvthygcPHcG4u7GmwBfLh4EuNZ2hsA357oAng8c
-        IrBr8TSBZw7foPCJg16IG8sXAb7SclyBz939DuALtQEF/rZzhMaV1/wEPl7ZDfH0fTuB/b1v
-        4JHeLgU+4B8icWFbJ43Dg2chLunbkpnE13nqAD89VEjznrqP+R/dIzR/qnWS4Btq7Ap+eLBV
-        wRd/E4b8qRInxc+M/wb524fPQ37+0hHIlzTVAH7iRD3kLw79QPDHPAvEW8p3YjbuEqwfbc/J
-        Nq7b9H6Mfq7rtbxqdm+wfQ7awGKsA0QxiHsF3W8aAw4QzSi5qwB5m/eTsqHkugH6w7bDARhG
-        wW1Ejuu0LKs4PRoe89Lye5L7JxZdmi2FshHPvYfGA10w8kiH5gPllMyquDQ0VbJZliH3LKr1
-        XCfkmuW2of1DN+hI1BrUcuvukh7FJaOfQiNLOuCeRnbbvSWd5BJQw8QDKjIzh7yt/WSkXoUm
-        x8L/6xrUtjAK5VhS6lnfsi6CZqID/UEqUichV/EoHRkhDvV8HYKlYLV7RYJ7mXavoN0raPcK
-        ugJQNQAZhJzcbMEqpqaYxfwUs0lvkK7dJkMDiGzibDP417fVBwgG+MATDKFZxSZu9muVj+0y
-        ZRXoBYteZ87PFS0+gBhSo2K3/f6rVslmCQX7RLPpofUkAzUJ7HOjR7RKTs7aI4p5ovmh+xTD
-        aBCbtGFAq4wzi9ni3g9ycq3LNsFEyc2j1SqLaMwSzUK+Va+Tl0NnkbZDtmKl3LdlnLXkCQZJ
-        jaC9IJUpnSw7STKdZZXSed4jnUpoNBlFdQKbuUYCOBnQ5xsfxU2BBAZo4lmj3C5W+pSPuk1J
-        QYQU9EJznxxkFZYttQ2Qn6b7pmDz0eEGKrlnPObKtXdTviAz2pkLOperwBN3+6B2S2hn2stO
-        94aLe1663P9mdmJbxvrXB+aca3s+Tw8Wjn3/4JOKTcgTvlWx9Zmqqucbd1avVX3I1T0+mFG/
-        faJlh3N3msu+0P7Z6Zmg4VXDn1gdH+hY7fAnHv2rX4ES95UWaaBFL6Qmk2aL8B/XZ/3oUQQA
-        AA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191117222422.GA26872@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gQWxsLA0KDQpPbiBNb24sIDIwMTktMTEtMTggYXQgMDg6NTkgKzAzMDAsIERhbiBDYXJw
-ZW50ZXIgd3JvdGU6DQo+IEhpIE1hdHRpLA0KPiANCj4gW2F1dG8gYnVpbGQgdGVzdCBXQVJOSU5H
-IG9uIDMxZjRmNWI0OTVhNjJjOWE4YjE1YjFjMzU4MWFjZDVlZmViOWFmOGNdDQo+IA0KPiB1cmw6
-ICAgIA0KPiBodHRwczovL2dpdGh1Yi5jb20vMGRheS1jaS9saW51eC9jb21taXRzL01hdHRpLVZh
-aXR0aW5lbi9TdXBwb3J0LVJPSE0tQkQ3MTgyOC1QTUlDLzIwMTkxMTE3LTAzMDUxNQ0KPiBiYXNl
-OiAgICAzMWY0ZjViNDk1YTYyYzlhOGIxNWIxYzM1ODFhY2Q1ZWZlYjlhZjhjDQo+IA0KPiBJZiB5
-b3UgZml4IHRoZSBpc3N1ZSwga2luZGx5IGFkZCBmb2xsb3dpbmcgdGFnDQo+IFJlcG9ydGVkLWJ5
-OiBrYnVpbGQgdGVzdCByb2JvdCA8bGtwQGludGVsLmNvbT4NCj4gUmVwb3J0ZWQtYnk6IERhbiBD
-YXJwZW50ZXIgPGRhbi5jYXJwZW50ZXJAb3JhY2xlLmNvbT4NCj4gDQo+IHNtYXRjaCB3YXJuaW5n
-czoNCj4gZHJpdmVycy9sZWRzL2xlZC1jb3JlLmM6NDAwIGZ3X2lzX21hdGNoKCkgZXJyb3I6IHVu
-aW5pdGlhbGl6ZWQgc3ltYm9sDQo+ICdyZXQnLg0KPiBkcml2ZXJzL2xlZHMvbGVkLWNvcmUuYzo0
-NjUgbGVkX2ZpbmRfZndub2RlKCkgZXJyb3I6IGRvdWJsZSBmcmVlIG9mDQo+ICd2YWwnDQoNCk91
-Y2guIFRoZSBmcmVlIGlzIGNsZWFybHkgYSBsZWZ0b3ZlciBmcm9tIG9yaWdpbmFsIGNvZGUgd2hl
-cmUgdGhlDQoiaXNfbWF0Y2giIHdhcyBub3QgaXQncyBvd24gZnVuY3Rpb24uIFNvcnJ5IGZvbGtz
-LiBJJ2xsIGZpeCBib3RoIGlzc3Vlcw0KYW5kIHNlbmQgbmV3IHZlcnNpb24uDQoNCkJ5IHRoZSB3
-YXksIEknZCBhcHByZWNpYXRlIGlmIHNvbWVvbmUgZWxzZSB3b3VsZCBhbHNvIGNoZWNrIHRoZQ0K
-cmVmZXJlbmNlLWNvdW50aW5nIGZvciBmd25vZGVzIC0gaXMgcHVtcGluZyB1cCB0aGUgcmVmY291
-bnQgaW4NCmxlZF9maW5kX2Z3bm9kZSBPaz8gTXkgaWRlYSBpcyB0aGF0IHdoZW4tZXZlciB0aGUg
-bGVkX2ZpbmRfZndub2RlDQpyZXR1cm5zIGFuIGZ3bm9kZSwgdGhlIExFRCBjbGFzcyBuZWVkcyB0
-byBkZWNyZWFzZSByZWZjb3VudCB3aGVuIExFRCBpcw0KdW5yZWdpc3RlcmVkLiBObyBtYXR0ZXIg
-aWYgZndub2RlIHdhcyBmcm9tIGRldmljZSwgZ2l2ZW4gYnkgTEVEIGRyaXZlcg0Kb3IgZm91bmQg
-YnkgdGhlIExFRCBjbGFzcy4NCg0KQnIsDQoJTWF0dGkgVmFpdHRpbmVuDQoNCg0K
+On Sun, Nov 17, 2019 at 10:24:22PM +0000, Al Viro wrote:
+> On Fri, Nov 15, 2019 at 10:10:37PM +0000, Al Viro wrote:
+> 
+> > I'll probably throw that into #next.dcache - if nothing else,
+> > that cuts down on the size of patch converting d_subdirs/d_child
+> > from list to hlist...
+> > 
+> > Need to get some sleep first, though - only 5 hours today, so
+> > I want to take another look at that thing tomorrow morning -
+> > I don't trust my ability to spot obvious bugs right now... ;-/
+> > 
+> > Oh, well - that at least might finally push the old "kernel-side
+> > rm -rf done right" pile of half-baked patches into more useful
+> > state, probably superseding most of them.
+> 
+> 	Curious...  Is there any point keeping debugfs_remove() and
+> debugfs_remove_recursive() separate?   The thing is, the only case
+> when their behaviours differ is when the victim is non-empty.  In that
+> case the former quietly does nothing; the latter (also quietly) removes
+> the entire subtree.  And the caller has no way to tell if that case has
+> happened - they can't even look at the dentry they'd passed, since
+> in the normal case it's already pointing to freed (and possibly reused)
+> memory by that point.
+> 
+> 	The same goes for tracefs, except that there we have only
+> one caller of tracefs_remove(), and it's guaranteed to be a non-directory.
+> So there we definitely can fold them together.
+> 
+> 	Greg, could we declare debufs_remove() to be an alias for
+> debugfs_remove_recursive()?
+
+Yes, we can do that there's no reason to keep those separate at all.
+Especially if it makes things easier overall.
+
+thanks,
+
+greg k-h
