@@ -2,97 +2,120 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBE3C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBB3C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AECB20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B3620748
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:30:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Qz8ABwXu"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="l7i94oaM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfKRG02 (ORCPT
+        id S1726535AbfKRGaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 01:26:28 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:38496 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbfKRG02 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 01:26:28 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAI6QL19103464;
-        Mon, 18 Nov 2019 00:26:21 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574058381;
-        bh=RjpnW7IJoweCoHZjZTuJ8T6MhKMBuud1ijHfVeBaP98=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Qz8ABwXuGHPQlY4BsmWR08CBQs4xyuvQ9pWTVKE7JqCZmUGbK5gqK3c65qem3InX8
-         uG1uc/kBzT13FE9/eGNGmU9VPjpG65RaLUnx7QIncXAqgnj/Bqb5+v4ZpqNkgklSaQ
-         pffyqXwpauhTh4Ok5UB3iwsrXNzveCVW99hyJZZY=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAI6QL80125054
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 18 Nov 2019 00:26:21 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 18
- Nov 2019 00:26:20 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 18 Nov 2019 00:26:20 -0600
-Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAI6QILj020162;
-        Mon, 18 Nov 2019 00:26:19 -0600
-Subject: Re: [PATCH] mmc: sdhci_am654: Add Support for Command Queuing Engine
- to J721E
-To:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-CC:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>
-References: <20191115114009.20090-1-faiz_abbas@ti.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <28fa7d6a-1067-f898-a2e0-28468092a39c@ti.com>
-Date:   Mon, 18 Nov 2019 11:57:14 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 18 Nov 2019 01:30:25 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:33169 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726347AbfKRGaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 01:30:25 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47GfG52fzWz9sPj;
+        Mon, 18 Nov 2019 17:30:21 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1574058622;
+        bh=kEivEeHUVNAOspt6MauwNZJf/9eV38NcNNwk1p75th4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=l7i94oaMf9aHVAWx1RNmT2HeWDjailgMAtlzbaIcbi4GRKNyNFhmGwx89uq5075c7
+         dvawXvgmbdihvpX52xbbOyIgoGa9KKoMxkkI0VS/CdNSXVbKQO5+iF+pWFqg+btnY6
+         NxA2iuDmEp1htOhkl7k1/x72wHy6zT96QYu9nzwQj62A11+mZlilJBlalbrLaKdCZq
+         ptMLIV0gIbrpvcoLY4mdBvFPTn1q8ZbdMbmtTd9EF67YOx04APpgpU88rR/MeISASe
+         WxbJyN3kCC+1QApJOSUya1HJcXNBxfkmLhRlhVOjbKKNXbImT0p731HO2BUyhlHgkt
+         y5UTWc4WrmrFg==
+Date:   Mon, 18 Nov 2019 17:30:14 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christoph Hellwig <hch@lst.de>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul@pwsan.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the generic-ioremap tree with the
+ risc-v tree
+Message-ID: <20191118173014.654c20f6@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20191115114009.20090-1-faiz_abbas@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; boundary="Sig_/z2k1D4ea03dgzDHHTadOUvw";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+--Sig_/z2k1D4ea03dgzDHHTadOUvw
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 15/11/19 5:10 PM, Faiz Abbas wrote:
-> Add Support for CQHCI (Command Queuing Host Controller Interface)
-> for each of the host controllers present in TI's J721E devices.
-> Add cqhci_ops and a .irq() callback to handle cqhci specific interrupts.
-> 
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> ---
->  drivers/mmc/host/Kconfig       |  1 +
->  drivers/mmc/host/sdhci_am654.c | 71 +++++++++++++++++++++++++++++++++-
->  2 files changed, 71 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index 49ea02c467bf..25f12ef813ff 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -1011,6 +1011,7 @@ config MMC_SDHCI_AM654
->  	tristate "Support for the SDHCI Controller in TI's AM654 SOCs"
->  	depends on MMC_SDHCI_PLTFM && OF && REGMAP_MMIO
->  	select MMC_SDHCI_IO_ACCESSORS
-> +	select CONFIG_MMC_CQHCI
+Hi all,
 
-Oops, this should just be select MMC_CQHCI. Sending v2.
+Today's linux-next merge of the generic-ioremap tree got a conflict in:
 
-Thanks,
-Faiz
+  arch/riscv/mm/Makefile
+
+between commit:
+
+  e9987a5b2ad3 ("riscv: add nommu support")
+
+from the risc-v tree and commit:
+
+  38af57825313 ("riscv: use the generic ioremap code")
+
+from the generic-ioremap tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/riscv/mm/Makefile
+index 44ab8f28c3fa,b3a356c80c1f..000000000000
+--- a/arch/riscv/mm/Makefile
++++ b/arch/riscv/mm/Makefile
+@@@ -6,8 -6,8 +6,8 @@@ CFLAGS_REMOVE_init.o =3D -p
+  endif
+ =20
+  obj-y +=3D init.o
+ -obj-y +=3D fault.o
+  obj-y +=3D extable.o
+- obj-$(CONFIG_MMU) +=3D fault.o ioremap.o
+++obj-$(CONFIG_MMU) +=3D fault.o
+  obj-y +=3D cacheflush.o
+  obj-y +=3D context.o
+  obj-y +=3D sifive_l2_cache.o
+
+--Sig_/z2k1D4ea03dgzDHHTadOUvw
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3SOnYACgkQAVBC80lX
+0GzIGQgAowMz9v7woeEzGZSQLSfp5ooLnhwd+6ISl4dQswNAmUGvM5e2xlhRZy/r
+z16p9GkHEI2dq1ko2mYFKJW9P4B4eVNC6jupkqkNqF/4pZuQGz6hQfHvlQI91Gx3
+llMfoRdtboSyPoyVKFNLO4mHXTRV8rDlJlyGQ53nN0Io5OkGnnmhpbTpxLYA4HGi
+USHOSJgu/PF2gILFF/1tmwXFzKTtwcwkXrpFVvtYh9E38IT3Ofmjz6EeepZvEYJy
+skOVWWMzUvU1y1m0eVms6To3C85D1CkquGOZygMK0YWgCxwzx/XqyFnrLU1QB8dE
+oeSwsr8p5sroil+ZvnE0pNZODZoXCA==
+=YmRO
+-----END PGP SIGNATURE-----
+
+--Sig_/z2k1D4ea03dgzDHHTadOUvw--
