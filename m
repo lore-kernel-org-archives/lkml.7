@@ -2,168 +2,104 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 915C0C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4B1C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FFA02230C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4921C222D1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:07:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="aatd/yAr";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b="wC1vpr9T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfKRXEV (ORCPT
+        id S1726962AbfKRXHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 18:04:21 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:39664 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbfKRXEV (ORCPT
+        Mon, 18 Nov 2019 18:07:21 -0500
+Received: from pb-smtp2.pobox.com ([64.147.108.71]:53156 "EHLO
+        pb-smtp2.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726787AbfKRXHV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 18:04:21 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 331C5283B8;
-        Mon, 18 Nov 2019 18:04:17 -0500 (EST)
-Date:   Tue, 19 Nov 2019 10:04:17 +1100 (AEDT)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Kars de Jong <jongk@linux-m68k.org>
-cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] esp_scsi: Clear Transfer Count registers before PIO
- transfers
-In-Reply-To: <CACz-3rhr_R+_mJpg+Rvgoj=1GC5AO3YKxYxS_0ShAfQ-NiFDtg@mail.gmail.com>
-Message-ID: <alpine.LNX.2.21.1.1911190923120.8@nippy.intranet>
-References: <2bbb6359d542f5882be67c415ecc25ad2d9eeb5e.1573875417.git.fthain@telegraphics.com.au> <CACz-3rjHAyi6kMQ6j9YALLm1ApYrsqKiTnGNPUhxqqEuRJ9TjQ@mail.gmail.com> <alpine.LNX.2.21.1.1911180947020.8@nippy.intranet>
- <CACz-3rhr_R+_mJpg+Rvgoj=1GC5AO3YKxYxS_0ShAfQ-NiFDtg@mail.gmail.com>
+        Mon, 18 Nov 2019 18:07:21 -0500
+Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
+        by pb-smtp2.pobox.com (Postfix) with ESMTP id F161A35F41;
+        Mon, 18 Nov 2019 18:07:18 -0500 (EST)
+        (envelope-from tdavies@darkphysics.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:message-id:mime-version:content-type; s=sasl; bh=MDm
+        cpYj5GppYnk3UEbf62ejYYXY=; b=aatd/yAr2sv8eHA5BT4r9+aN2HoFoimASTW
+        yQvrXMzYWwdN2Bh+8EaJnLQFcAcGiIw99qvMZmcgQ2HJsmOz6CripSETHcJOjBPs
+        aOwPswo3YRG9XT/VgZqtQ2Gw0iTkcR6xdRw9KU5Q95mNkR6v3AnQDxtKwvoZn71z
+        f9fIzzR0=
+Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp2.pobox.com (Postfix) with ESMTP id E92A535F40;
+        Mon, 18 Nov 2019 18:07:18 -0500 (EST)
+        (envelope-from tdavies@darkphysics.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=darkphysics.net;
+ h=date:from:to:cc:subject:message-id:mime-version:content-type;
+ s=2019-09.pbsmtp; bh=xp3dJWmhhz8NtHy5owQ0Ttu27bNB/gejh64OWp+S7xA=;
+ b=wC1vpr9TC1vY2qS8oegY8ProRFLJJ3pDAoqVKt2+yBealPj+C3KAjI5c9VJNhC+OcUuHlZ32VXDPKFJ50moTS2/SYBhv73i/uRWFEWsXgEIBlXSif4m9cKL2QlS6Ct9ZNzh136LxwM0+F3rbqOkffU1CNZfxLWzDKXyLxrkeR+Y=
+Received: from Cheese (unknown [24.19.107.226])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp2.pobox.com (Postfix) with ESMTPSA id F22A135F3F;
+        Mon, 18 Nov 2019 18:07:17 -0500 (EST)
+        (envelope-from tdavies@darkphysics.net)
+Date:   Mon, 18 Nov 2019 15:07:11 -0800
+From:   Travis Davies <tdavies@darkphysics.net>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Julia Lawall <julia.lawall@lip6.fr>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/1] net: Fix comment block per style guide
+Message-ID: <20191118230711.GA5493@Cheese>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Pobox-Relay-ID: 2B085C0E-0A58-11EA-BF0C-D1361DBA3BAF-64344220!pb-smtp2.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 Nov 2019, Kars de Jong wrote:
+This patch places /* and */ on separate lines for a
+multiline block comment, in order to keep code style
+consistant with majority of blocks throughout the file.
 
-> Op ma 18 nov. 2019 om 00:13 schreef Finn Thain <fthain@telegraphics.com.au>:
-> >
-> > On Sun, 17 Nov 2019, Kars de Jong wrote:
-> > > Are you sure this is really needed?
-> > >
-> >
-> > No. I think it improves robustness and correctness.
-> >
-> > I would be interested to know whether there is any measurable performance
-> > impact on zorro_esp.
-> >
-> > > The only [time when] the driver reads these registers is after a data
-> > > transfer. These are done using DMA on all Zorro boards, so I don't think
-> > > there's a risk of stale values from a PIO transfer there.
-> > >
-> >
-> > I'm not entirely sure that the chip is unaffected by stale counter values.
-> >
-> > (Stale transfer counter values are distinct from stale transfer count
-> > register values. Both are addressed by the patch.)
-> 
-> I still don't see the need to address that in the PIO transfer code.
+This will prevent a checkpatch.pl warning:
+'Block comments use a trailing */ on a separate line'
 
-Well, send_dma_cmd() always initializes those registers. That's fine in 
-the DMA case and seems to be the least surprising and cleanest thing to do 
-for the PIO case, I think.
+Signed-off-by: Travis Davies <tdavies@darkphysics.net>
+---
+-v2: Fix commit description, and subject line as suggested by
+     Julia Lawall.
+-v3: Include my Sign-off.
 
-> The ESP (when in initiator mode) doesn't use the transfer counter 
-> (registers) in PIO mode.
-> 
-> > If there are DMA controllers out there that can't do very short 
-> > transfers then this objection would seem to be invalid, because the 
-> > "DMA length is zero!" issue could be tackled using PIO.
-> 
-> That's the issue you fixed by limiting the transfer size to 65535 bytes, 
-> correct?
+ include/linux/netdevice.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-I was alluding to an unpatched theoretical failure.
-
-The issue would arise when a board driver indicated to the core driver 
-that the requested transfer was too small. I'm assuming that it would do 
-this by returning zero from esp->ops->dma_length_limit(), which puts us in 
-the "DMA length is zero" code path.
-
-The actual failure (that you patched) shows that your board isn't able to 
-do short DMA transfers and would require PIO for that.
-
-But this is a theoretical problem so far. You may need to use sg_utils to 
-generate a SCSI command like that.
-
-(For a DMA controller subject to, say, 24-bit boundaries, there are 
-additional ways to end up with short transfers.)
-
-> The SYM53CF92-X in my Blizzard didn't show this error for the 1 byte
-> transfers.
-> It just hung up:
-> 
->  sdb: RDSK (512) sdb1 (DOS^C)(res 2 spb 1) sdb2 (SWP^@)(res 0 spb 8)
-> sdb3 (LNX^@)(res 2 spb 1) sdb4 (LNX^@)(res 2 spb 1)
-> sd 1:0:0:0: [sdb] Attached SCSI disk
-> EXT4-fs (sdb3): mounting ext3 file system using the ext4 subsystem
-> scsi host1: Aborting command [(ptrval):28]
-> scsi host1: Current command [(ptrval):28]
-> scsi host1:  Active command [(ptrval):28]
-> scsi host1: Dumping command log
-> scsi host1: ent[6] CMD val[12] sreg[97] seqreg[9c] sreg2[00] ireg[08] ss[00] event[0c]
-> scsi host1: ent[7] EVENT val[0d] sreg[91] seqreg[9c] sreg2[00] ireg[08] ss[00] event[0c]
-> scsi host1: ent[8] EVENT val[03] sreg[91] seqreg[c4] sreg2[00] ireg[10] ss[00] event[0d]
-> scsi host1: ent[9] CMD val[80] sreg[91] seqreg[c4] sreg2[00] ireg[10] ss[00] event[03]
-> scsi host1: ent[10] CMD val[90] sreg[91] seqreg[c4] sreg2[00] ireg[10] ss[00] event[03]
-> scsi host1: ent[11] EVENT val[05] sreg[91] seqreg[c4] sreg2[00] ireg[10] ss[00] event[03]
-> scsi host1: ent[12] EVENT val[0d] sreg[93] seqreg[cc] sreg2[00] ireg[10] ss[00] event[05]
-> scsi host1: ent[13] CMD val[01] sreg[93] seqreg[cc] sreg2[00] ireg[10] ss[00] event[0d]
-> scsi host1: ent[14] CMD val[11] sreg[93] seqreg[cc] sreg2[00] ireg[10] ss[00] event[0d]
-> scsi host1: ent[15] EVENT val[0b] sreg[93] seqreg[cc] sreg2[00] ireg[10] ss[00] event[0d]
-> scsi host1: ent[16] CMD val[12] sreg[97] seqreg[cc] sreg2[00] ireg[08] ss[00] event[0b]
-> scsi host1: ent[17] EVENT val[0c] sreg[97] seqreg[cc] sreg2[00] ireg[08] ss[00] event[0b]
-> scsi host1: ent[18] CMD val[44] sreg[90] seqreg[cc] sreg2[00] ireg[20] ss[00] event[0c]
-> scsi host1: ent[19] CMD val[01] sreg[90] seqreg[cc] sreg2[00] ireg[20] ss[01] event[0c]
-> scsi host1: ent[20] CMD val[46] sreg[90] seqreg[cc] sreg2[00] ireg[20] ss[01] event[0c]
-> scsi host1: ent[21] EVENT val[0d] sreg[97] seqreg[04] sreg2[00] ireg[18] ss[00] event[0c]
-> scsi host1: ent[22] EVENT val[06] sreg[97] seqreg[04] sreg2[00] ireg[18] ss[00] event[0d]
-> scsi host1: ent[23] CMD val[01] sreg[97] seqreg[04] sreg2[00] ireg[18] ss[00] event[06]
-> scsi host1: ent[24] CMD val[10] sreg[97] seqreg[04] sreg2[00] ireg[18] ss[00] event[06]
-> scsi host1: ent[25] EVENT val[0c] sreg[97] seqreg[8c] sreg2[00] ireg[08] ss[00] event[06]
-> scsi host1: ent[26] CMD val[12] sreg[97] seqreg[8c] sreg2[00] ireg[08] ss[00] event[0c]
-> scsi host1: ent[27] CMD val[44] sreg[90] seqreg[cc] sreg2[00] ireg[20] ss[00] event[0c]
-> scsi host1: ent[28] CMD val[01] sreg[97] seqreg[9c] sreg2[00] ireg[0c] ss[00] event[0c]
-> scsi host1: ent[29] CMD val[00] sreg[97] seqreg[9c] sreg2[00] ireg[0c] ss[00] event[0c]
-> scsi host1: ent[30] CMD val[12] sreg[97] seqreg[9c] sreg2[00] ireg[0c] ss[00] event[0c]
-> scsi host1: ent[31] CMD val[10] sreg[97] seqreg[9c] sreg2[00] ireg[10] ss[00] event[0c]
-> scsi host1: ent[0] CMD val[12] sreg[97] seqreg[9c] sreg2[00] ireg[08] ss[00] event[0c]
-> scsi host1: ent[1] EVENT val[0d] sreg[91] seqreg[9c] sreg2[00] ireg[08] ss[00] event[0c]
-> scsi host1: ent[2] EVENT val[03] sreg[91] seqreg[c4] sreg2[00] ireg[10] ss[00] event[0d]
-> scsi host1: ent[3] CMD val[80] sreg[91] seqreg[c4] sreg2[00] ireg[10] ss[00] event[03]
-> scsi host1: ent[4] CMD val[90] sreg[91] seqreg[c4] sreg2[00] ireg[10] ss[00] event[03]
-> scsi host1: ent[5] EVENT val[05] sreg[91] seqreg[c4] sreg2[00] ireg[10] ss[00] event[03]
-> 
-> > > The only place the controller reads these registers is when a DMA
-> > > command is issued. The only place where that is done is in the zorro_esp
-> > > send_dma_command() functions.
-> >
-> > Aren't you overlooking all of the ESP_CMD_DMA flags in the core driver?
-> 
-> No, all those occurences are only used when calling
-> send_dma_command(), except the NULL/NOP DMA commands
-> directly after a chip reset.
-> 
-
-Fair enough. That means a stale count could be used after a PIO transfer 
-in DATA IN and DATA OUT phase that happened to follow a DMA transfer (in 
-any phase).
-
-I still think there is a opportunity to improve robustness and correctness 
-(presuming that performance isn't impacted).
-
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index c20f190b4c18..a2605e043fa2 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -95,9 +95,11 @@ void netdev_set_default_ethtool_ops(struct net_device *dev,
+ #define NET_XMIT_CN		0x02	/* congestion notification	*/
+ #define NET_XMIT_MASK		0x0f	/* qdisc flags in net/sch_generic.h */
+ 
+-/* NET_XMIT_CN is special. It does not guarantee that this packet is lost. It
++/*
++ * NET_XMIT_CN is special. It does not guarantee that this packet is lost. It
+  * indicates that the device will soon be dropping packets, or already drops
+- * some packets of the same priority; prompting us to send less aggressively. */
++ * some packets of the same priority; prompting us to send less aggressively.
++ */
+ #define net_xmit_eval(e)	((e) == NET_XMIT_CN ? 0 : (e))
+ #define net_xmit_errno(e)	((e) != NET_XMIT_CN ? -ENOBUFS : 0)
+ 
 -- 
+2.21.0
 
-> Kind regards,
-> 
-> Kars.
-> 
