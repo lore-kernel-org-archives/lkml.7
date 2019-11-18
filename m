@@ -2,234 +2,248 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A48C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0952DC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A1BE21823
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4176218AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:07:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BBUuJAHx"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aoJuuGTd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfKRQDM (ORCPT
+        id S1727237AbfKRQHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 11:03:12 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34596 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbfKRQDL (ORCPT
+        Mon, 18 Nov 2019 11:07:18 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:54100 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbfKRQHS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 11:03:11 -0500
-Received: by mail-qk1-f193.google.com with SMTP id 205so14884089qkk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 08:03:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aWBQvoRHIiT9gfZg6X80o74ola6obCU5UQn5MoahYmQ=;
-        b=BBUuJAHxnTaCQtYhWDHKIopedJ2DSxm7Mt8/YTZMNemc6ukptakR3HzKcQd36ecTV2
-         cOy9ujm6taEr7B/sReTtX4PUqmCrwbX/qC90HOOlMGbA6o1UUDa4CZ17Fn2algZPmECL
-         jasCucVi+dKW7hL2qAwDHd9+jDkbDJyHk+zmo1lVDeF33uSj3ZcqbcWmgbEgagaUMb/q
-         A4yF4R6lyKCKdjYuTcP663Y8+qKXvYb0rnzZyIa6Wd+AglAH2U2sg00k93asYm7m3ZfR
-         4LkqRizlPQe1Lxib4Md1Y3dsGc02n8p5HDScCVVBzMnD2GmkZT9NE1xWcNarlBASCiHb
-         /nVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aWBQvoRHIiT9gfZg6X80o74ola6obCU5UQn5MoahYmQ=;
-        b=dOdzx3V5wCVJqNJ+0s9tFJfTRthabY88FAtzXLq9MKqNOXgNNsBlibUWgeklHffKLX
-         jv3s9g3YTftLf8+mT74olARVFcgnDXprYDdNypyjOyOE9daNqNr7qCusWGsaE9dUhYQ8
-         Kyda4HN5kzxaVC5uCg5DEFetpjNOZaWfYAtRBIJMpgvieuptDq9llw26+5Y8BaXftlfp
-         GisUTFUArethxCbLF9eV6KWmPNbF7YokaagtSsnyK6dmpdGtGSlmtwTCArKwC9HCPRqx
-         RIPBYNA/UOfF9Z6hfEMd9NZPXTOZ0iQkBt3n/85Vg1EHhuqpV9wEa/ws7zAoYKqjLxYd
-         H/pQ==
-X-Gm-Message-State: APjAAAXuSHfCvKVSwB5Dv8GDx3TTxhXybOQZafnmIExE2QLuKLhW5BZR
-        Fcnso8o/rp8PIBBSlfx8oYjq0Pd6vAuStsBmq8/Z3w==
-X-Google-Smtp-Source: APXvYqw0WHxKwY779v2uerCDtIPo4MGiXIk3gFLMXy0WYO/5KLlBDECq8iK7ryZvL5IAFn4n0xNgVCv4SYnmk3Gxqro=
-X-Received: by 2002:a05:620a:1127:: with SMTP id p7mr25770552qkk.250.1574092990186;
- Mon, 18 Nov 2019 08:03:10 -0800 (PST)
+        Mon, 18 Nov 2019 11:07:18 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAIFsVX9082261;
+        Mon, 18 Nov 2019 16:05:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=5LrZNngyoVfCx88Bvpw1mdp8Hhz6i8TqkHxPrhE64AI=;
+ b=aoJuuGTdSskvA9K3RIgRdfR2Sc/czN1+Q7j3Uv38/WBrrOYxN5n1X68XSoJwERLD+bif
+ wl8mLs0+ayAOXIjkGRyyggfydR9BoKJcr1doU/2ZQ2UXWWLdiEzwjPTljibs7GTNP77C
+ QMp04ldDnJJpde/xd0XbDH8RQ/QagSnsPu4jF5FZVW8EW+8K42ujVmV8GC2rUOhhfmng
+ FaV76r/6K1tERyNNhwX5PNea/0z3rGf//I0doUnPLj0jR9RCJaOikmHvFtHPMMXqEqS8
+ T9jlc2eO9smGShhZea7+uNoM343m5StKvrnX9Id9TlE9TxwAy2KINwdZ04YIXU+5g8tH Cg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2wa92ph4fv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Nov 2019 16:05:07 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAIFsKIh018028;
+        Mon, 18 Nov 2019 16:05:06 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2wau8ng3y1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Nov 2019 16:05:06 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAIG4QFv027222;
+        Mon, 18 Nov 2019 16:04:26 GMT
+Received: from kadam (/41.210.146.114)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 18 Nov 2019 08:04:25 -0800
+Date:   Mon, 18 Nov 2019 19:04:16 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+Cc:     Alexander.Deucher@amd.com, djkurtz@google.com,
+        Akshu.Agrawal@amd.com, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 1/6] ASoC: amd:Create multiple I2S platform device
+ endpoint
+Message-ID: <20191118160231.GA5626@kadam>
+References: <1574085861-22818-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+ <1574085861-22818-2-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
 MIME-Version: 1.0
-References: <20191115191728.87338-1-jannh@google.com> <20191115191728.87338-2-jannh@google.com>
- <20191118142144.GC6363@zn.tnic>
-In-Reply-To: <20191118142144.GC6363@zn.tnic>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 18 Nov 2019 17:02:58 +0100
-Message-ID: <CACT4Y+bCOr=du1QEg8TtiZ-X6U+8ZPR4N07rJOeSCsd5h+zO3w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] x86/traps: Print non-canonical address on #GP
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1574085861-22818-2-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=852
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911180146
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=921 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911180146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 3:21 PM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Fri, Nov 15, 2019 at 08:17:27PM +0100, Jann Horn wrote:
-> >  dotraplinkage void
-> >  do_general_protection(struct pt_regs *regs, long error_code)
-> >  {
-> > @@ -547,8 +581,15 @@ do_general_protection(struct pt_regs *regs, long error_code)
-> >                       return;
-> >
-> >               if (notify_die(DIE_GPF, desc, regs, error_code,
-> > -                            X86_TRAP_GP, SIGSEGV) != NOTIFY_STOP)
-> > -                     die(desc, regs, error_code);
-> > +                            X86_TRAP_GP, SIGSEGV) == NOTIFY_STOP)
-> > +                     return;
-> > +
-> > +             if (error_code)
-> > +                     pr_alert("GPF is segment-related (see error code)\n");
-> > +             else
-> > +                     print_kernel_gp_address(regs);
-> > +
-> > +             die(desc, regs, error_code);
->
-> Right, this way, those messages appear before the main "general
-> protection ..." message:
->
-> [    2.434372] traps: probably dereferencing non-canonical address 0xdfff000000000001
-> [    2.442492] general protection fault: 0000 [#1] PREEMPT SMP
->
-> Can we glue/merge them together? Or is this going to confuse tools too much:
->
-> [    2.542218] general protection fault while derefing a non-canonical address 0xdfff000000000001: 0000 [#1] PREEMPT SMP
->
-> (and that sentence could be shorter too:
->
->         "general protection fault for non-canonical address 0xdfff000000000001"
->
-> looks ok to me too.)
-
-This exact form will confuse syzkaller crash parsing for Linux kernel:
-https://github.com/google/syzkaller/blob/1daed50ac33511e1a107228a9c3b80e5c4aebb5c/pkg/report/linux.go#L1347
-It expects a "general protection fault:" line for these crashes.
-
-A graceful way to update kernel crash messages would be to add more
-tests with the new format here:
-https://github.com/google/syzkaller/tree/1daed50ac33511e1a107228a9c3b80e5c4aebb5c/pkg/report/testdata/linux/report
-Update parsing code. Roll out new version. Update all other testing
-systems that detect and parse kernel crashes. Then commit kernel
-changes.
-
-An unfortunate consequence of offloading testing to third-party systems...
-
-
-
-> Here's a dirty diff together with a reproducer ontop of yours:
->
-> ---
-> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> index bf796f8c9998..dab702ba28a6 100644
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -515,7 +515,7 @@ dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
->   * On 64-bit, if an uncaught #GP occurs while dereferencing a non-canonical
->   * address, print that address.
->   */
-> -static void print_kernel_gp_address(struct pt_regs *regs)
-> +static unsigned long get_kernel_gp_address(struct pt_regs *regs)
+On Mon, Nov 18, 2019 at 07:34:16PM +0530, Ravulapati Vishnu vardhan rao wrote:
+>  static int snd_acp3x_probe(struct pci_dev *pci,
+>  			   const struct pci_device_id *pci_id)
 >  {
->  #ifdef CONFIG_X86_64
->         u8 insn_bytes[MAX_INSN_SIZE];
-> @@ -523,7 +523,7 @@ static void print_kernel_gp_address(struct pt_regs *regs)
->         unsigned long addr_ref;
->
->         if (probe_kernel_read(insn_bytes, (void *)regs->ip, MAX_INSN_SIZE))
-> -               return;
-> +               return 0;
->
->         kernel_insn_init(&insn, insn_bytes, MAX_INSN_SIZE);
->         insn_get_modrm(&insn);
-> @@ -532,22 +532,22 @@ static void print_kernel_gp_address(struct pt_regs *regs)
->
->         /* Bail out if insn_get_addr_ref() failed or we got a kernel address. */
->         if (addr_ref >= ~__VIRTUAL_MASK)
-> -               return;
-> +               return 0;
->
->         /* Bail out if the entire operand is in the canonical user half. */
->         if (addr_ref + insn.opnd_bytes - 1 <= __VIRTUAL_MASK)
-> -               return;
-> +               return 0;
->
-> -       pr_alert("probably dereferencing non-canonical address 0x%016lx\n",
-> -                addr_ref);
-> +       return addr_ref;
->  #endif
->  }
->
-> +#define GPFSTR "general protection fault"
->  dotraplinkage void
->  do_general_protection(struct pt_regs *regs, long error_code)
->  {
-> -       const char *desc = "general protection fault";
->         struct task_struct *tsk;
-> +       char desc[90];
->
->         RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
->         cond_local_irq_enable(regs);
-> @@ -584,12 +584,18 @@ do_general_protection(struct pt_regs *regs, long error_code)
->                                X86_TRAP_GP, SIGSEGV) == NOTIFY_STOP)
->                         return;
->
-> -               if (error_code)
-> -                       pr_alert("GPF is segment-related (see error code)\n");
-> -               else
-> -                       print_kernel_gp_address(regs);
-> +               if (error_code) {
-> +                       snprintf(desc, 90, "segment-related " GPFSTR);
-> +               } else {
-> +                       unsigned long addr_ref = get_kernel_gp_address(regs);
+> -	int ret;
+> -	u32 addr, val;
+>  	struct acp3x_dev_data *adata;
+> -	struct platform_device_info pdevinfo;
+> +	struct platform_device_info pdevinfo[ACP3x_DEVS];
+>  	unsigned int irqflags;
+> +	int ret, val, i;
+> +	u32 addr;
+>  
+>  	if (pci_enable_device(pci)) {
+>  		dev_err(&pci->dev, "pci_enable_device failed\n");
+> @@ -40,10 +40,10 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+>  	}
+>  
+>  	adata = devm_kzalloc(&pci->dev, sizeof(struct acp3x_dev_data),
+> -			     GFP_KERNEL);
+> +							     GFP_KERNEL);
+>  	if (!adata) {
+>  		ret = -ENOMEM;
+> -		goto release_regions;
+> +		goto adata_free;
+>  	}
+>  
+>  	/* check for msi interrupt support */
+> @@ -56,7 +56,8 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+>  		irqflags = 0;
+>  
+>  	addr = pci_resource_start(pci, 0);
+> -	adata->acp3x_base = ioremap(addr, pci_resource_len(pci, 0));
+> +	adata->acp3x_base = devm_ioremap(&pci->dev, addr,
+> +					pci_resource_len(pci, 0));
+>  	if (!adata->acp3x_base) {
+>  		ret = -ENOMEM;
+>  		goto release_regions;
+> @@ -68,11 +69,11 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+>  	switch (val) {
+>  	case I2S_MODE:
+>  		adata->res = devm_kzalloc(&pci->dev,
+> -					  sizeof(struct resource) * 2,
+> +					  sizeof(struct resource) * 4,
+>  					  GFP_KERNEL);
+>  		if (!adata->res) {
+>  			ret = -ENOMEM;
+> -			goto unmap_mmio;
+> +			goto release_regions;
+>  		}
+>  
+>  		adata->res[0].name = "acp3x_i2s_iomem";
+> @@ -80,28 +81,52 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+>  		adata->res[0].start = addr;
+>  		adata->res[0].end = addr + (ACP3x_REG_END - ACP3x_REG_START);
+>  
+> -		adata->res[1].name = "acp3x_i2s_irq";
+> -		adata->res[1].flags = IORESOURCE_IRQ;
+> -		adata->res[1].start = pci->irq;
+> -		adata->res[1].end = pci->irq;
+> +		adata->res[1].name = "acp3x_i2s_sp";
+> +		adata->res[1].flags = IORESOURCE_MEM;
+> +		adata->res[1].start = addr + ACP3x_I2STDM_REG_START;
+> +		adata->res[1].end = addr + ACP3x_I2STDM_REG_END;
 > +
-> +                       if (addr_ref)
-> +                               snprintf(desc, 90, GPFSTR " while derefing a non-canonical address 0x%lx", addr_ref);
-> +                       else
-> +                               snprintf(desc, 90, GPFSTR);
-> +               }
->
-> -               die(desc, regs, error_code);
-> +               die((const char *)desc, regs, error_code);
->                 return;
->         }
->
-> diff --git a/init/main.c b/init/main.c
-> index 91f6ebb30ef0..7acc7e660be9 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -1124,6 +1124,9 @@ static int __ref kernel_init(void *unused)
->
->         rcu_end_inkernel_boot();
->
-> +       asm volatile("mov $0xdfff000000000001, %rax\n\t"
-> +                    "jmpq *%rax\n\t");
+> +		adata->res[2].name = "acp3x_i2s_bt";
+> +		adata->res[2].flags = IORESOURCE_MEM;
+> +		adata->res[2].start = addr + ACP3x_BT_TDM_REG_START;
+> +		adata->res[2].end = addr + ACP3x_BT_TDM_REG_END;
 > +
->         if (ramdisk_execute_command) {
->                 ret = run_init_process(ramdisk_execute_command);
->                 if (!ret)
->
-> --
-> Regards/Gruss,
->     Boris.
->
-> https://people.kernel.org/tglx/notes-about-netiquette
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20191118142144.GC6363%40zn.tnic.
+> +		adata->res[3].name = "acp3x_i2s_irq";
+> +		adata->res[3].flags = IORESOURCE_IRQ;
+> +		adata->res[3].start = pci->irq;
+> +		adata->res[3].end = adata->res[3].start;
+>  
+>  		adata->acp3x_audio_mode = ACP3x_I2S_MODE;
+>  
+>  		memset(&pdevinfo, 0, sizeof(pdevinfo));
+> -		pdevinfo.name = "acp3x_rv_i2s";
+> -		pdevinfo.id = 0;
+> -		pdevinfo.parent = &pci->dev;
+> -		pdevinfo.num_res = 2;
+> -		pdevinfo.res = adata->res;
+> -		pdevinfo.data = &irqflags;
+> -		pdevinfo.size_data = sizeof(irqflags);
+> -
+> -		adata->pdev = platform_device_register_full(&pdevinfo);
+> -		if (IS_ERR(adata->pdev)) {
+> -			dev_err(&pci->dev, "cannot register %s device\n",
+> -				pdevinfo.name);
+> -			ret = PTR_ERR(adata->pdev);
+> -			goto unmap_mmio;
+> +		pdevinfo[0].name = "acp3x_rv_i2s_dma";
+> +		pdevinfo[0].id = 0;
+> +		pdevinfo[0].parent = &pci->dev;
+> +		pdevinfo[0].num_res = 4;
+> +		pdevinfo[0].res = &adata->res[0];
+> +		pdevinfo[0].data = &irqflags;
+> +		pdevinfo[0].size_data = sizeof(irqflags);
+> +
+> +		pdevinfo[1].name = "acp3x_i2s_playcap";
+> +		pdevinfo[1].id = 0;
+> +		pdevinfo[1].parent = &pci->dev;
+> +		pdevinfo[1].num_res = 1;
+> +		pdevinfo[1].res = &adata->res[1];
+> +
+> +		pdevinfo[2].name = "acp3x_i2s_playcap";
+> +		pdevinfo[2].id = 1;
+> +		pdevinfo[2].parent = &pci->dev;
+> +		pdevinfo[2].num_res = 1;
+> +		pdevinfo[2].res = &adata->res[2];
+> +		for (i = 0; i < ACP3x_DEVS ; i++) {
+> +			adata->pdev[i] =
+> +				platform_device_register_full(&pdevinfo[i]);
+> +			if (IS_ERR(adata->pdev[i])) {
+> +				dev_err(&pci->dev, "cannot register %s device\n",
+> +					pdevinfo[i].name);
+> +				ret = PTR_ERR(adata->pdev[i]);
+> +				goto unmap_mmio;
+> +			}
+>  		}
+>  		break;
+>  	default:
+> @@ -112,10 +137,22 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+>  	return 0;
+>  
+>  unmap_mmio:
+> +	if (val == I2S_MODE)
+> +		for (i = 0 ; i < ACP3x_DEVS ; i++)
+> +			platform_device_unregister(adata->pdev[i]);
+
+I really wish you had done this the way, I said.  That's the easiest
+way to audit.  Otherwise you have to check that adata->pdev[] is
+initialized and that platform_device_unregister() accepts both error
+pointers and NULLs.  It does.  But it's easier to audit if you only
+free things which have been allocated and never free things which were
+not allocated.
+
+> +	devm_kfree(&pci->dev, adata->res);
+
+Don't free devm_ allocated data.  It gets freed for you automatically.
+
+> +	devm_kfree(&pci->dev, adata);
+>  	pci_disable_msi(pci);
+> -	iounmap(adata->acp3x_base);
+> +	pci_release_regions(pci);
+> +	pci_disable_device(pci);
+>  release_regions:
+> +	devm_kfree(&pci->dev, adata);
+> +	pci_disable_msi(pci);
+
+This disables the msi twice so it's a double free situation.  It would
+have been better to just cut and paste the code that I wrote for you.
+
+regards,
+dan carpenter
+
