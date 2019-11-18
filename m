@@ -2,155 +2,147 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37327C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC6BC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11AF120730
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D785520855
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:44:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="KqQXJdXK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfKRLnY (ORCPT
+        id S1726814AbfKRLoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:43:24 -0500
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:47833 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726460AbfKRLnY (ORCPT
+        Mon, 18 Nov 2019 06:44:39 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44697 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbfKRLoi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:43:24 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TiTc2xD_1574077394;
-Received: from ali-6c96cfdd1403.local(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0TiTc2xD_1574077394)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 18 Nov 2019 19:43:14 +0800
-Subject: Re: [RFC PATCH v3 6/7] scripts/sorttable: Add ORC unwind tables sort
- concurrently
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-References: <9594afbc-52bc-5ae7-4a19-8fc4b36a1abd@linux.alibaba.com>
- <A4F85A0C-C8A8-4226-A334-276F9D0C2679@amacapital.net>
-From:   Shile Zhang <shile.zhang@linux.alibaba.com>
-Message-ID: <4a3f2717-9e1c-a378-2cf6-84e90c18fddb@linux.alibaba.com>
-Date:   Mon, 18 Nov 2019 19:43:13 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Mon, 18 Nov 2019 06:44:38 -0500
+Received: by mail-io1-f65.google.com with SMTP id j20so7323573ioo.11
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 03:44:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=00YS9wU/qJok85ES8iPJQuzhcEYI33tD11SH51bcxeg=;
+        b=KqQXJdXKRFMYWqjFg5qcQO4ctc/d2TpRdOani/P/No4Od0b4bINQYzmCWYNvQcVf+d
+         PZCRLbvgh+K7M5+r7BLX6CDCfO53HqiTbr8GhHJPRWJevLW08f+fVQbv4oTqVQ76two9
+         IR4JUlMVuZ0VcPD+JdbLzg1bhYakmoVlf2iHE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=00YS9wU/qJok85ES8iPJQuzhcEYI33tD11SH51bcxeg=;
+        b=o4voQMhfTLBYzIc5f4JCb/Oa0ay/kCLpoCcA9pzdDoImA4pQ1eGkaeRn8o0NVamvHd
+         +EUJ33ehTAF81sceuXpT1KlrupjVtoUKgd//T1C2QyodYAoSwhy8nACVqBqiGEBp9rxI
+         QW99lToVlBFbYr8PVBXvUwrQlm4sXnodRr2d7QN5a5qk4UVnmsD+0b7aVwNJVv0fZyc6
+         rL1FSihmMOFZYXe+eOWYToLboSwkRBkkjpkXa1Js9E1uI4QnLKbMl0wwlxEmqAAzSwbe
+         4RlwvOy40gHjO6a16QdTQ+QVdjS1aQ2P/yXJiNW2YjGarI0XiWZfp4pxU+hSuvBrqzUX
+         cvdA==
+X-Gm-Message-State: APjAAAUuTmy/ZlwQ1IHJbijk66WaKfxsDjbus3i1OI3V7bm+9Hqgj8bx
+        HLZXx4Iug3Vysrgz//04cIo70VCVbo9F576aYZIHBg==
+X-Google-Smtp-Source: APXvYqwzw/vwFbWlrZpD891jS+rPQgb5mUumAL70Wti+rBqMpjUTt1Ef42AIFjAULrwLH2d8+nyqPYfVmyfJ9QEszhU=
+X-Received: by 2002:a02:634d:: with SMTP id j74mr13203246jac.79.1574077477457;
+ Mon, 18 Nov 2019 03:44:37 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <A4F85A0C-C8A8-4226-A334-276F9D0C2679@amacapital.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <075b3fa6-dab7-5fec-df68-b53f32bf061b@fivetechno.de> <2226540.xovL9aYQn6@diego>
+In-Reply-To: <2226540.xovL9aYQn6@diego>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Mon, 18 Nov 2019 17:14:26 +0530
+Message-ID: <CAMty3ZDwjv4ShpbAyQPWk9ewboFOK3nZO0s_QNty_m0hJKR76w@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Split rk3399-roc-pc for with and
+ without mezzanine board.
+To:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc:     Markus Reichl <m.reichl@fivetechno.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Nov 4, 2019 at 5:42 PM Heiko St=C3=BCbner <heiko@sntech.de> wrote:
+>
+> Hi Markus,
+>
+> Am Freitag, 1. November 2019, 17:54:23 CET schrieb Markus Reichl:
+> > For rk3399-roc-pc is a mezzanine board available that carries M.2 and
+> > POE interfaces. Use it with a separate dts.
+> >
+> > Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+> > ---
+> >  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+> >  .../boot/dts/rockchip/rk3399-roc-pc-mezz.dts  |  52 ++
+> >  .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 757 +----------------
+> >  .../boot/dts/rockchip/rk3399-roc-pc.dtsi      | 767 ++++++++++++++++++
+> >  4 files changed, 821 insertions(+), 756 deletions(-)
+> >  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts
+> >  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> >
+> > diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dt=
+s/rockchip/Makefile
+> > index a959434ad46e..80ee9f1fc5f5 100644
+> > --- a/arch/arm64/boot/dts/rockchip/Makefile
+> > +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> > @@ -28,6 +28,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3399-nanopi-neo4.d=
+tb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3399-orangepi.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3399-puma-haikou.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3399-roc-pc.dtb
+> > +dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3399-roc-pc-mezz.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3399-rock-pi-4.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3399-rock960.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3399-rockpro64.dtb
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts b/arch=
+/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts
+> > new file mode 100644
+> > index 000000000000..ee77677d2cf2
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts
+> > @@ -0,0 +1,52 @@
+> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > +/*
+> > + * Copyright (c) 2017 T-Chip Intelligent Technology Co., Ltd
+> > + * Copyright (c) 2019 Markus Reichl <m.reichl@fivetechno.de>
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "rk3399-roc-pc.dtsi"
+> > +
+> > +/ {
+> > +     model =3D "Firefly ROC-RK3399-PC Mezzanine Board";
+> > +     compatible =3D "firefly,roc-rk3399-pc", "rockchip,rk3399";
+>
+> different board with same compatible isn't possible, so
+> you'll need a new compatible for it and add a new line to
+> the roc-pc entry in
+>         Documentation/devicetree/bindings/arm/rockchip.yaml
+>
+> Either you see it as
+> - a board + hat, using dt overlay and same compatible
+> - a completely separate board, which needs a separate
+>   compatible as well
+>
+> And as discussed in the previous thread
+> http://lists.infradead.org/pipermail/linux-rockchip/2019-November/027592.=
+html
+> but also in Jagan's response that really is somehow a grey area
+> for something relatively static as the M.2 extension.
 
+Sorry for late response on this. I still think that the "overlay would
+be a better suite" than having separate dts, since it is HAT which is
+optional to insert and have possibility of having another HAT if it
+really fit into it.
 
-On 2019/11/16 01:24, Andy Lutomirski wrote:
->> On Nov 15, 2019, at 1:43 AM, Shile Zhang <shile.zhang@linux.alibaba.com> wrote:
->>
->> ﻿
->>
->>> On 2019/11/15 17:07, Peter Zijlstra wrote:
->>>> On Fri, Nov 15, 2019 at 02:47:49PM +0800, Shile Zhang wrote:
->>>>
->>>> +#if defined(SORTTABLE_64) && defined(UNWINDER_ORC_ENABLED)
->>>> +/* ORC unwinder only support X86_64 */
->>>> +#include <errno.h>
->>>> +#include <pthread.h>
->>>> +#include <linux/types.h>
->>>> +
->>>> +#define ORC_REG_UNDEFINED    0
->>>> +#define ERRSTRING_MAXSZ        256
->>>> +
->>>> +struct orc_entry {
->>>> +    s16        sp_offset;
->>>> +    s16        bp_offset;
->>>> +    unsigned    sp_reg:4;
->>>> +    unsigned    bp_reg:4;
->>>> +    unsigned    type:2;
->>>> +    unsigned    end:1;
->>>> +} __attribute__((packed));
->>>> +
->>>> +struct orctable_info {
->>>> +    size_t    orc_size;
->>>> +    size_t    orc_ip_size;
->>>> +} orctable;
->>> There's ./arch/x86/include/asm/orc_types.h for this. Please don't
->>> duplicate. objtool uses that same header.
->> Good catch! Thanks for your kindly reminder! I'll remove it.
->>>> +/**
->>>> + * sort - sort an array of elements
->>>> + * @base: pointer to data to sort
->>>> + * @num: number of elements
->>>> + * @size: size of each element
->>>> + * @cmp_func: pointer to comparison function
->>>> + * @swap_func: pointer to swap function
->>>> + *
->>>> + * This function does a heapsort on the given array. You may provide a
->>>> + * swap_func function optimized to your element type.
->>>> + *
->>>> + * Sorting time is O(n log n) both on average and worst-case. While
->>>> + * qsort is about 20% faster on average, it suffers from exploitable
->>>> + * O(n*n) worst-case behavior and extra memory requirements that make
->>>> + * it less suitable for kernel use.
->>>> + *
->>>> + * This code token out of /lib/sort.c.
->>>> + */
->>>> +static void sort(void *base, size_t num, size_t size,
->>>> +      int (*cmp_func)(const void *, const void *),
->>>> +      void (*swap_func)(void *, void *, int size))
->>>> +{
->>>> +    /* pre-scale counters for performance */
->>>> +    int i = (num/2 - 1) * size, n = num * size, c, r;
->>>> +
->>>> +    /* heapify */
->>>> +    for ( ; i >= 0; i -= size) {
->>>> +        for (r = i; r * 2 + size < n; r  = c) {
->>>> +            c = r * 2 + size;
->>>> +            if (c < n - size &&
->>>> +                    cmp_func(base + c, base + c + size) < 0)
->>>> +                c += size;
->>>> +            if (cmp_func(base + r, base + c) >= 0)
->>>> +                break;
->>>> +            swap_func(base + r, base + c, size);
->>>> +        }
->>>> +    }
->>>> +
->>>> +    /* sort */
->>>> +    for (i = n - size; i > 0; i -= size) {
->>>> +        swap_func(base, base + i, size);
->>>> +        for (r = 0; r * 2 + size < i; r = c) {
->>>> +            c = r * 2 + size;
->>>> +            if (c < i - size &&
->>>> +                    cmp_func(base + c, base + c + size) < 0)
->>>> +                c += size;
->>>> +            if (cmp_func(base + r, base + c) >= 0)
->>>> +                break;
->>>> +            swap_func(base + r, base + c, size);
->>>> +        }
->>>> +    }
->>>> +}
->>> Do we really need to copy the heapsort implementation? That is, why not
->>> use libc's qsort() ? This is userspace after all.
->> Yes, I think qsort is better choice than copy-paste here. But qsort does not support customized swap func, which is needed for ORC unwind swap two tables together.
->> I think it's hard to do with qsort, so I used sort same with original orc unwind table sort.
-> One solution is to make an array of indices 0, 1, 2, etc, and sort that using a comparison function that compares i,j by actually comparing source[i], source[j]. (Or use pointers, but indices are probably faster on a 64-bit machine if you can use 32-bit indices.) Then, after sorting, permute the original array using the now-sorted indices. In the case where swapping is expensive, this is actually faster, since it does exactly n moves instead of O(n log n).
-
-Hi, Andy,
-
-Thanks for your suggestion!
-It's works, qsort is faster than heap sort, sort time down from 70ms to 
-20ms.
-
-I'll update in next version.
-Thanks again!
-
+Comments?
