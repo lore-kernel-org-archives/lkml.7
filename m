@@ -1,204 +1,117 @@
-Return-Path: <SRS0=PdPE=ZJ=vger.kernel.org=linux-m68k-owner@kernel.org>
+Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A39C432C3
-	for <linux-m68k@archiver.kernel.org>; Sun, 17 Nov 2019 01:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D6DC43141
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE9D920730
-	for <linux-m68k@archiver.kernel.org>; Sun, 17 Nov 2019 01:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6999722310
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:33:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574112780;
+	bh=kVdkdxoKMzi10HNu36GPhclP+ZjVCj3HYfGnlOR7PfA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=u/sUyctH5vMQYW7vaUoNhxqDWQpzjKMfO6VqTY7ncIo6hIfksaJj4JWvKYfLgyTJV
+	 qT0B2085lxJ6PeAbTz8m5PQigJCFaLCJLE3NCmuVsN7Zw481/E3LCGGXwvHy96mNAH
+	 sI77SHVwlX/TX1VzTFd3zE/3fVODHY/DrS11YhLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725839AbfKQBWJ (ORCPT <rfc822;linux-m68k@archiver.kernel.org>);
-        Sat, 16 Nov 2019 20:22:09 -0500
-Received: from mout-p-102.mailbox.org ([80.241.56.152]:32596 "EHLO
-        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfKQBWJ (ORCPT
-        <rfc822;linux-m68k@lists.linux-m68k.org>);
-        Sat, 16 Nov 2019 20:22:09 -0500
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 47FvSs61DGzKmTQ;
-        Sun, 17 Nov 2019 02:22:05 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id qBaie4flEFz9; Sun, 17 Nov 2019 02:21:59 +0100 (CET)
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        dev@opencontainers.org, containers@lists.linux-foundation.org,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        linux-alpha@vger.kernel.org, linux-api@vger.kernel.org,
-        libc-alpha@sourceware.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: [PATCH v17 09/13] namei: LOOKUP_IN_ROOT: chroot-like scoped resolution
-Date:   Sun, 17 Nov 2019 12:17:09 +1100
-Message-Id: <20191117011713.13032-10-cyphar@cyphar.com>
-In-Reply-To: <20191117011713.13032-1-cyphar@cyphar.com>
-References: <20191117011713.13032-1-cyphar@cyphar.com>
+        id S1726976AbfKRVc7 (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 18 Nov 2019 16:32:59 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39707 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfKRVc7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 16:32:59 -0500
+Received: by mail-oi1-f193.google.com with SMTP id v138so16801664oif.6;
+        Mon, 18 Nov 2019 13:32:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+gNao6bjSYC1WxI91s+ikl6/okUQ4D7/7Wn4Hq9wK5g=;
+        b=IAWdKLcSzzYuSez9v0EmP9i5q7OPwG/p9fK0/iggVlLfKmuQWUqttAOiTfq27VlZyc
+         WkE6tJ8/PI3+cV8uivg30e9L37vpg9BF22koQNliYKyFZPbaNCQfc9H/Yq/eNLR/5yIu
+         GRRDWTn3N7vgL7cyaS0MuJFF6cCfDVOtvSUWqQNjwmOtzRMueI7MokAea6l+56x3n3+c
+         BIS1ZLII1NmpfbGvsGFs89iJDu0bx84za3VjH63F3TtYXcpQuwccybjALGwE7X2S6uFi
+         93evyCG+ZjNNNDUKu7reGhlwIuwKRKX8LQjVN73KgT4HexmO+KW4ZGBiO0TKoXGYHYA6
+         21ow==
+X-Gm-Message-State: APjAAAVatHRPohbeknaNHpA8VzoGBs9HWWYHUKr7+0psn0LCv6ujGBqj
+        aAGWhwPrUAIDeKmy+E/A6g==
+X-Google-Smtp-Source: APXvYqx1RtTBrYQED9QhIjvirrPV/a4JBKzhJx9hGC6wh4UxphAZLwpmJqsB1gKcOe+gKsus8SwRxw==
+X-Received: by 2002:aca:d610:: with SMTP id n16mr955357oig.64.1574112778145;
+        Mon, 18 Nov 2019 13:32:58 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id b12sm6586756otl.34.2019.11.18.13.32.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 13:32:57 -0800 (PST)
+Date:   Mon, 18 Nov 2019 15:32:56 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     broonie@kernel.org, lgirdwood@gmail.com,
+        alsa-devel@alsa-project.org, kuninori.morimoto.gx@renesas.com,
+        linus.walleij@linaro.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] bindings: sound: pcm3168a: Document optional RST gpio
+Message-ID: <20191118213256.GA27262@bogus>
+References: <20191113124734.27984-1-peter.ujfalusi@ti.com>
+ <20191113124734.27984-2-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: linux-m68k-owner@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191113124734.27984-2-peter.ujfalusi@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
-List-ID: <linux-m68k.vger.kernel.org>
-X-Mailing-List: linux-m68k@vger.kernel.org
-Message-ID: <20191117011709.Q3XcDixvNGARVp-mfyva7ETzRvCn8yeNHdWhHxcDTz0@z>
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
 
-/* Background. */
-Container runtimes or other administrative management processes will
-often interact with root filesystems while in the host mount namespace,
-because the cost of doing a chroot(2) on every operation is too
-prohibitive (especially in Go, which cannot safely use vfork). However,
-a malicious program can trick the management process into doing
-operations on files outside of the root filesystem through careful
-crafting of symlinks.
+On Wed, Nov 13, 2019 at 02:47:33PM +0200, Peter Ujfalusi wrote:
+> On boards where the RST line is not pulled up, but it is connected to a
+> GPIO line this property must present in order to be able to enable the
+> codec.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  Documentation/devicetree/bindings/sound/ti,pcm3168a.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt b/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
+> index 5d9cb84c661d..f30aebc7603a 100644
+> --- a/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
+> +++ b/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
+> @@ -25,6 +25,12 @@ Required properties:
+>  
+>  For required properties on SPI/I2C, consult SPI/I2C device tree documentation
+>  
+> +Optional properties:
+> +
+> +  - rst-gpios : Optional RST gpio line for the codec
+> +		RST = low: device power-down
+> +		RST = high: device is enabled
 
-Most programs that need this feature have attempted to make this process
-safe, by doing all of the path resolution in userspace (with symlinks
-being scoped to the root of the malicious root filesystem).
-Unfortunately, this method is prone to foot-guns and usually such
-implementations have subtle security bugs.
+'reset-gpios' is the standard naming for reset lines.
 
-Thus, what userspace needs is a way to resolve a path as though it were
-in a chroot(2) -- with all absolute symlinks being resolved relative to
-the dirfd root (and ".." components being stuck under the dirfd root).
-It is much simpler and more straight-forward to provide this
-functionality in-kernel (because it can be done far more cheaply and
-correctly).
-
-More classical applications that also have this problem (which have
-their own potentially buggy userspace path sanitisation code) include
-web servers, archive extraction tools, network file servers, and so on.
-
-/* Userspace API. */
-LOOKUP_IN_ROOT will be exposed to userspace through openat2(2).
-
-/* Semantics. */
-Unlike most other LOOKUP flags (most notably LOOKUP_FOLLOW),
-LOOKUP_IN_ROOT applies to all components of the path.
-
-With LOOKUP_IN_ROOT, any path component which attempts to cross the
-starting point of the pathname lookup (the dirfd passed to openat) will
-remain at the starting point. Thus, all absolute paths and symlinks will
-be scoped within the starting point.
-
-There is a slight change in behaviour regarding pathnames -- if the
-pathname is absolute then the dirfd is still used as the root of
-resolution of LOOKUP_IN_ROOT is specified (this is to avoid obvious
-foot-guns, at the cost of a minor API inconsistency).
-
-As with LOOKUP_BENEATH, Jann's security concern about ".."[1] applies to
-LOOKUP_IN_ROOT -- therefore ".." resolution is blocked. This restriction
-will be lifted in a future patch, but requires more work to ensure that
-permitting ".." is done safely.
-
-Magic-link jumps are also blocked, because they can beam the path lookup
-across the starting point. It would be possible to detect and block
-only the "bad" crossings with path_is_under() checks, but it's unclear
-whether it makes sense to permit magic-links at all. However, userspace
-is recommended to pass LOOKUP_NO_MAGICLINKS if they want to ensure that
-magic-link crossing is entirely disabled.
-
-/* Testing. */
-LOOKUP_IN_ROOT is tested as part of the openat2(2) selftests.
-
-[1]: https://lore.kernel.org/lkml/CAG48ez1jzNvxB+bfOBnERFGp=oMM0vHWuLD6EULmne3R6xa53w@mail.gmail.com/
-
-Cc: Christian Brauner <christian.brauner@ubuntu.com>
-Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
----
- fs/namei.c            | 10 +++++++---
- include/linux/namei.h |  3 ++-
- 2 files changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/fs/namei.c b/fs/namei.c
-index 3f7bb22c375d..a6196786db13 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -2289,13 +2289,16 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
- 
- 	nd->m_seq = read_seqbegin(&mount_lock);
- 
--	/* Figure out the starting path and root (if needed). */
--	if (*s == '/') {
-+	/* Absolute pathname -- fetch the root (LOOKUP_IN_ROOT uses nd->dfd). */
-+	if (*s == '/' && !(flags & LOOKUP_IN_ROOT)) {
- 		error = nd_jump_root(nd);
- 		if (unlikely(error))
- 			return ERR_PTR(error);
- 		return s;
--	} else if (nd->dfd == AT_FDCWD) {
-+	}
-+
-+	/* Relative pathname -- get the starting-point it is relative to. */
-+	if (nd->dfd == AT_FDCWD) {
- 		if (flags & LOOKUP_RCU) {
- 			struct fs_struct *fs = current->fs;
- 			unsigned seq;
-@@ -2335,6 +2338,7 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
- 		}
- 		fdput(f);
- 	}
-+
- 	/* For scoped-lookups we need to set the root to the dirfd as well. */
- 	if (flags & LOOKUP_IS_SCOPED) {
- 		nd->root = nd->path;
-diff --git a/include/linux/namei.h b/include/linux/namei.h
-index 93dad378f1e8..93151e47ec47 100644
---- a/include/linux/namei.h
-+++ b/include/linux/namei.h
-@@ -45,8 +45,9 @@ enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT, LAST_BIND};
- #define LOOKUP_NO_MAGICLINKS	0x020000 /* No nd_jump_link() crossing. */
- #define LOOKUP_NO_XDEV		0x040000 /* No mountpoint crossing. */
- #define LOOKUP_BENEATH		0x080000 /* No escaping from starting point. */
-+#define LOOKUP_IN_ROOT		0x100000 /* Treat dirfd as fs root. */
- /* LOOKUP_* flags which do scope-related checks based on the dirfd. */
--#define LOOKUP_IS_SCOPED LOOKUP_BENEATH
-+#define LOOKUP_IS_SCOPED (LOOKUP_BENEATH | LOOKUP_IN_ROOT)
- 
- extern int path_pts(struct path *path);
- 
--- 
-2.24.0
-
+> +
+>  Examples:
+>  
+>  i2c0: i2c0@0 {
+> @@ -34,6 +40,7 @@ i2c0: i2c0@0 {
+>  	pcm3168a: audio-codec@44 {
+>  		compatible = "ti,pcm3168a";
+>  		reg = <0x44>;
+> +		rst-gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
+>  		clocks = <&clk_core CLK_AUDIO>;
+>  		clock-names = "scki";
+>  		VDD1-supply = <&supply3v3>;
+> -- 
+> Peter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
