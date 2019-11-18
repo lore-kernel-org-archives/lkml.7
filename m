@@ -2,251 +2,152 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A073FC43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A307C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB7B22310
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:23:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574112196;
-	bh=TmiiCKUWlms/bxRkJ8Wft/BfnPyBb+LIOJaI1DUC+WY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mSe3EB5sPDLxP2sew8Bjad9gNF8wawcJC4/iYzy2aB29bOA2T0poP0oma3MxnoElz
-	 JbrjOlkB18MeHcjrjgQtzfqXYCqQi3kE7U2jlMtExfzVaSrdy3ss5Wbliv8WpAA9mm
-	 fEWCQxbtwHbUDI8X2USsjSd6TnllXYbbZ9wIUYp8=
+	by mail.kernel.org (Postfix) with ESMTP id DE5CD222DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:24:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RguKaIbV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfKRVXP (ORCPT
+        id S1726706AbfKRVY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 16:23:15 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:35479 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbfKRVXP (ORCPT
+        Mon, 18 Nov 2019 16:24:29 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38653 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726664AbfKRVY2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 16:23:15 -0500
-Received: by mail-oi1-f195.google.com with SMTP id n16so16777316oig.2;
-        Mon, 18 Nov 2019 13:23:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aslK2Zau5UQNVUGQIY5kjkRzSDnrxpv/018CjIjj4ig=;
-        b=mv6vCotSGmRkeGWMuK2I6wjfKMKULk0bYHhARRslO8QHhQGfkccy2w7KAmmWgGVNT1
-         Ll1v+5hos8J/d9Jh8zw4bbFylN3E5o3LDr/RzD6CXtx6kcoguPDU80NqSdpx4mpiVMTa
-         zNS48DtOprhsfjKDbzkj5oessGbkvpSUbIQhWttXuB8LBytvC3rLbJ8PZ2zFTdW7SQ83
-         QBlIH5Km6DOSWoFtgEGAJybmyBnpUgh+pf2a+0jj9EqpmRFOVol7qajdm20WsMflX5pF
-         gnhUc8uPnVOFI2ucnkXRwREu/1v5e+gcKZlwunbhU2BqSFGzpIZeK8bROUZlGiP352zJ
-         MYAA==
-X-Gm-Message-State: APjAAAXkFaUepHbQ2IJxzAcLLMb0bwJRPIzaeU6ymd6wIpPf70IcqqGB
-        cnAqppCTGdaQbdiUB11M5Q==
-X-Google-Smtp-Source: APXvYqy9vLHIfptxJOZyAdofVkBHARL4vvFxl6WV3GMXs+WxxP4W8AujWNmvKD8eIz7DkSM9Gg1LIA==
-X-Received: by 2002:aca:4e88:: with SMTP id c130mr895664oib.41.1574112193960;
-        Mon, 18 Nov 2019 13:23:13 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u18sm6575789otq.31.2019.11.18.13.23.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 13:23:12 -0800 (PST)
-Date:   Mon, 18 Nov 2019 15:23:12 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     andrew.murray@arm.com, maz@kernel.org,
-        linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        james.quinlan@broadcom.com, mbrugger@suse.com,
-        phil@raspberrypi.org, jeremy.linton@arm.com,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] dt-bindings: PCI: Add bindings for brcmstb's PCIe
- device
-Message-ID: <20191118212312.GA24969@bogus>
-References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
- <20191112155926.16476-3-nsaenzjulienne@suse.de>
+        Mon, 18 Nov 2019 16:24:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574112267;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ge9vGJjgG6kVVhSVZ4w0x20DCzDZjaq0NRO09Ry2qdo=;
+        b=RguKaIbVj8JMSxFOoBVEMpv7VwZC723YbYsgFiVmRYktg5tyKXuWR9Uua8wYvN/aAKhFeV
+        tWjmxwYcHVp1+JbZ75RBiMIto2EP00fZptU5YYCV5s5Ci17Xnv8gbMBwyVpoAxgxpwkTb9
+        E2UdNgsjKQIeakBXLObggLBYqf+efek=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-107-q1JaMczNNhmc929c7UuM9w-1; Mon, 18 Nov 2019 16:24:23 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7E6611005502;
+        Mon, 18 Nov 2019 21:24:20 +0000 (UTC)
+Received: from dhcp-25.97.bos.redhat.com (unknown [10.18.25.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6683560D7C;
+        Mon, 18 Nov 2019 21:24:19 +0000 (UTC)
+From:   Aaron Conole <aconole@redhat.com>
+To:     Paul Blakey <paulb@mellanox.com>
+Cc:     Roi Dayan <roid@mellanox.com>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
+        Pravin B Shelar <pshelar@ovn.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "dev\@openvswitch.org" <dev@openvswitch.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net 2/2] act_ct: support asymmetric conntrack
+References: <20191108210714.12426-1-aconole@redhat.com>
+        <20191108210714.12426-2-aconole@redhat.com>
+        <6917ebfa-6361-5294-d91b-b3c6dd1e8cf5@mellanox.com>
+        <80993518-9481-02ca-7705-7417717365c1@mellanox.com>
+Date:   Mon, 18 Nov 2019 16:24:18 -0500
+In-Reply-To: <80993518-9481-02ca-7705-7417717365c1@mellanox.com> (Paul
+        Blakey's message of "Thu, 14 Nov 2019 14:24:21 +0000")
+Message-ID: <f7tk17wyj25.fsf@dhcp-25.97.bos.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112155926.16476-3-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: q1JaMczNNhmc929c7UuM9w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 04:59:21PM +0100, Nicolas Saenz Julienne wrote:
-> From: Jim Quinlan <james.quinlan@broadcom.com>
-> 
-> The DT bindings description of the brcmstb PCIe device is described.
-> This node can only be used for now on the Raspberry Pi 4.
-> 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> 
-> ---
-> 
-> Changes since v1:
->   - Fix commit Subject
->   - Remove linux,pci-domain
-> 
-> This was based on Jim's original submission[1], converted to yaml and
-> adapted to the RPi4 case.
-> 
-> [1] https://patchwork.kernel.org/patch/10605937/
-> 
->  .../bindings/pci/brcm,stb-pcie.yaml           | 110 ++++++++++++++++++
->  1 file changed, 110 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> new file mode 100644
-> index 000000000000..4cbb18821300
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> @@ -0,0 +1,110 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Brcmstb PCIe Host Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> +
+Paul Blakey <paulb@mellanox.com> writes:
 
-I added a common PCI schema to dt-schema. You can reference it here:
+> On 11/14/2019 4:22 PM, Roi Dayan wrote:
+>>
+>> On 2019-11-08 11:07 PM, Aaron Conole wrote:
+>>> The act_ct TC module shares a common conntrack and NAT infrastructure
+>>> exposed via netfilter.  It's possible that a packet needs both SNAT and
+>>> DNAT manipulation, due to e.g. tuple collision.  Netfilter can support
+>>> this because it runs through the NAT table twice - once on ingress and
+>>> again after egress.  The act_ct action doesn't have such capability.
+>>>
+>>> Like netfilter hook infrastructure, we should run through NAT twice to
+>>> keep the symmetry.
+>>>
+>>> Fixes: b57dc7c13ea9 ("net/sched: Introduce action ct")
+>>>
+>>> Signed-off-by: Aaron Conole <aconole@redhat.com>
+>>> ---
+>>>   net/sched/act_ct.c | 13 ++++++++++++-
+>>>   1 file changed, 12 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/net/sched/act_ct.c b/net/sched/act_ct.c
+>>> index fcc46025e790..f3232a00970f 100644
+>>> --- a/net/sched/act_ct.c
+>>> +++ b/net/sched/act_ct.c
+>>> @@ -329,6 +329,7 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
+>>>   =09=09=09  bool commit)
+>>>   {
+>>>   #if IS_ENABLED(CONFIG_NF_NAT)
+>>> +=09int err;
+>>>   =09enum nf_nat_manip_type maniptype;
+>>>  =20
+>>>   =09if (!(ct_action & TCA_CT_ACT_NAT))
+>>> @@ -359,7 +360,17 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
+>>>   =09=09return NF_ACCEPT;
+>>>   =09}
+>>>  =20
+>>> -=09return ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+>>> +=09err =3D ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+>>> +=09if (err =3D=3D NF_ACCEPT &&
+>>> +=09    ct->status & IPS_SRC_NAT && ct->status & IPS_DST_NAT) {
+>>> +=09=09if (maniptype =3D=3D NF_NAT_MANIP_SRC)
+>>> +=09=09=09maniptype =3D NF_NAT_MANIP_DST;
+>>> +=09=09else
+>>> +=09=09=09maniptype =3D NF_NAT_MANIP_SRC;
+>>> +
+>>> +=09=09err =3D ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+>>> +=09}
+>>> +=09return err;
+>>>   #else
+>>>   =09return NF_ACCEPT;
+>>>   #endif
+>>>
+>> +paul
+>
+> Hi Aaron,
+>
+> I think I understand the issue and this looks good,
+>
+> Can you describe the scenario to reproduce this?
 
-allOf:
-  - $ref: /schemas/pci/pci-bus.yaml#
+It reproduces with OpenShift 3.10, which makes forward direction packets
+between namespaces pump through a tun device that applies NAT rules to
+rewrite the dest.  Limit the namespace number of ephemeral sockets using
+by editing net.ipv4.ip_local_port_range in the client namespace, and
+connect to the server namespace.  That's the mechanism for OvS.  But for
+TC I guess there wouldn't be anything convenient avaiable.
 
-> +properties:
-> +  compatible:
-> +    const: brcm,bcm2711-pcie # The Raspberry Pi 4
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description: PCIe host controller
-> +      - description: builtin MSI controller
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - const: pcie
-> +      - const: msi
-> +
+I'll try to script up something that doesn't use openshift.
 
+>
+> Thanks,
+>
+> Paul.
 
-> +  "#address-cells":
-> +    const: 3
-> +
-> +  "#size-cells":
-> +    const: 2
-> +
-> +  "#interrupt-cells":
-> +    const: 1
-> +
-> +  interrupt-map-mask: true
-> +
-> +  interrupt-map: true
-
-Drop all these as the pci-bus.yaml will cover them.
-
-> +
-> +  ranges: true
-
-Do you know many entries, if not, you can drop it too?
-
-> +
-> +  dma-ranges: true
-
-Do you know many entries, if not, you can drop it too?
-
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: sw_pcie
-> +
-> +  msi-controller:
-> +    description: Identifies the node as an MSI controller.
-> +    type: boolean
-> +
-> +  msi-parent:
-> +    description: MSI controller the device is capable of using.
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-
-Assume these 2 have a type defined.
-
-> +
-> +  brcm,enable-ssc:
-> +    description: Indicates usage of spread-spectrum clocking.
-> +    type: boolean
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - "#interrupt-cells"
-> +  - interrupt-map-mask
-> +  - interrupt-map
-> +  - ranges
-> +  - dma-ranges
-
-You can drop ranges, #address-cells and #size-cells as they are required 
-in pci-bus.yaml.
-
-Shouldn't interrupts, interrupt-names, and msi-controller all be 
-required?
-
-> +
-> +additionalProperties: false
-
-This won't work having the commmon binding, but 
-'unevaluatedProperties: false' will (eventually when json-schema draft8 
-is supported). 
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    scb {
-> +            #address-cells = <2>;
-> +            #size-cells = <1>;
-> +            pcie0: pcie@7d500000 {
-> +                    compatible = "brcm,bcm2711-pcie";
-> +                    reg = <0x0 0x7d500000 0x9310>;
-> +                    #address-cells = <3>;
-> +                    #size-cells = <2>;
-> +                    #interrupt-cells = <1>;
-> +                    interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-> +                                 <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-> +                    interrupt-names = "pcie", "msi";
-> +                    interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-> +                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH
-> +                                     0 0 0 2 &gicv2 GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH
-> +                                     0 0 0 3 &gicv2 GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH
-> +                                     0 0 0 4 &gicv2 GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
-
-Bracket each entry. The schema is making this stricter.
-
-Rob
