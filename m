@@ -2,334 +2,153 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 383DDC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16ACC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01DB82230F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9DD52230F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:12:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T8Rp/H+E"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="APsvoPZq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfKRVMF (ORCPT
+        id S1726814AbfKRVM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 16:12:05 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30911 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726272AbfKRVME (ORCPT
+        Mon, 18 Nov 2019 16:12:26 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:38614 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726712AbfKRVM0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 16:12:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574111522;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wuR8iAbLcZ8E+QIwRjyl/dUviuXJbioIM+3WsZH7a5k=;
-        b=T8Rp/H+EUL2xq7NvOwDiX70892nrinaoJLc5nXUqrbyduVm5O3D99s+Eujayxx4CfDIXWd
-        vYuq12KRlztlHa4K5YnufCkpvpQ9Ep6SLHOS0MDWbHY4TCouLeE+l5PcjhdGumwNusY6KR
-        GpcHUQvsrvz/54oDJoDtP3YKdlaTc54=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-176-IMBBP4fsONqDFmSX6RZW6w-1; Mon, 18 Nov 2019 16:11:59 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A07AB801E5B;
-        Mon, 18 Nov 2019 21:11:57 +0000 (UTC)
-Received: from [10.36.116.37] (ovpn-116-37.ams2.redhat.com [10.36.116.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CD8A55DD98;
-        Mon, 18 Nov 2019 21:11:54 +0000 (UTC)
-Subject: Re: [PATCH v2 07/10] iommu/vt-d: Replace Intel specific PASID
- allocator with IOASID
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>
-References: <1574106153-45867-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1574106153-45867-8-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <14e130e8-abcb-534f-655f-25488ad3500b@redhat.com>
-Date:   Mon, 18 Nov 2019 22:11:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 18 Nov 2019 16:12:26 -0500
+Received: by mail-yw1-f66.google.com with SMTP id m196so6443225ywd.5
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 13:12:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6upXDhNFo0nrsQ2L0RqECuxOTI7O5ERKPLneAxPvz7c=;
+        b=APsvoPZqd3/4J1mskST0MM0sGTrFWZWLOEAYmOBonP6JvkuEWs9/P/zm2cGhbbAdwR
+         RkAdbYictFRA3Lu3MV/9wWkWd1qXzUczVbmHVDRUz+00GgtdZE7BiOlTfhG84lRwIefh
+         Bh11q6gC0MXkEVYaXXLbnjc0VOj2d1M3CZ4CETazCX5Pkfx61+yLw9lBNVZbrKCkVoLo
+         3NeFEg3x0ez3aQDopQg9loBZHPmttmgYJwKZWeAEx7JGFnDxjUDo+BY2+ywBXULp5Eg7
+         FeLIm35E200T3dXB4+wltq1sUd9Fi7m8gcFM/H5GR9jFvoQFVPEyIMQIM8hXoJmDYF+9
+         BIHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6upXDhNFo0nrsQ2L0RqECuxOTI7O5ERKPLneAxPvz7c=;
+        b=QRtTYK6J94vc9+M2GjNLPq1v0U5v7a6PNTIyyjLKYAd9TGG28zcjUSH+ru2StVP1eF
+         gvxPYi+vvGbglOhWHDCjxDvcZyFONaBjapvGeWBR/djAU85RzyhNbDzrA6gqa9JHHt0L
+         5H/TciH5kpYesCh5uMt6OChKk9Cuv6+NCD+PkSL6uKs+UrsnkUDqpvW/l69LMgrbR4QN
+         mgRONoJvyfLyh7IbiUGMa4R3mdvgYJznQkksHpyM1yakBlZqg6NFHZefA53RPTpd1I96
+         XBVBrKmnw3kq8PLa5vKugIgZrAVEOFXPPXdf8Xe1lkSfTbBQs/L6o95bY35ahInM21oT
+         rYfQ==
+X-Gm-Message-State: APjAAAW1e2SF39S90V9EmV+YdPAe6JTj/D9kszTdBg+M81Syid4NX1y0
+        WcUAvxuqpiNibHyemYZsziaiGw==
+X-Google-Smtp-Source: APXvYqzAinz5ZQxnMdmq3uJvhm1X1FgntGJvMLmBXoROvfsqoAMA3ftORkYq9KGMR2pOobqbP/cByQ==
+X-Received: by 2002:a81:4e04:: with SMTP id c4mr9481605ywb.298.1574111544976;
+        Mon, 18 Nov 2019 13:12:24 -0800 (PST)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id n191sm8487846ywd.56.2019.11.18.13.12.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 13:12:24 -0800 (PST)
+Date:   Mon, 18 Nov 2019 16:12:23 -0500
+From:   Sean Paul <sean@poorly.run>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Sean Paul <sean@poorly.run>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Sandy Huang <hjc@rock-chips.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] add new DRM_DEV_WARN macro
+Message-ID: <20191118211223.GB135013@art_vandelay>
+References: <20191114132436.7232-1-wambui.karugax@gmail.com>
+ <8736ep1hm2.fsf@intel.com>
+ <20191118192450.GA135013@art_vandelay>
+ <CAKMK7uG7Tb6oocrRgRFvq5oB2Rxjy+JmyOSXQtjo6Gt_WH91+A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1574106153-45867-8-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: IMBBP4fsONqDFmSX6RZW6w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uG7Tb6oocrRgRFvq5oB2Rxjy+JmyOSXQtjo6Gt_WH91+A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
+On Mon, Nov 18, 2019 at 09:03:20PM +0100, Daniel Vetter wrote:
+> On Mon, Nov 18, 2019 at 8:24 PM Sean Paul <sean@poorly.run> wrote:
+> > On Fri, Nov 15, 2019 at 01:52:53PM +0200, Jani Nikula wrote:
+> > > On Thu, 14 Nov 2019, Wambui Karuga <wambui.karugax@gmail.com> wrote:
+> > > > This adds a new DRM_DEV_WARN helper macro for warnings log output that include
+> > > > device pointers. It also includes the use of the DRM_DEV_WARN macro in
+> > > > drm/rockchip to replace dev_warn.
+> > >
+> > > I'm trying to solicit new struct drm_device based logging macros, and
+> > > starting to convert to those. [1]
+> > >
+> >
+> > This sounds good to me, I'd much prefer the non-caps versions of these
+> > functions. So let's wait for those to bubble up and then convert rockchip to
+> > drm_dev_*
+> 
+> Care to ack Jani's patch directly, so this is all formal?
 
-On 11/18/19 8:42 PM, Jacob Pan wrote:
-> Make use of generic IOASID code to manage PASID allocation,
-> free, and lookup. Replace Intel specific code.
-> IOASID allocator is inclusive for both start and end of the allocation
-> range. The current code is based on IDR, which is exclusive for
-> the end of the allocation range. This patch fixes the off-by-one
-> error in intel_svm_bind_mm, where pasid_max - 1 is used for the end of
-> allocation range.
->=20
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-> Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->  drivers/iommu/Kconfig       |  1 +
->  drivers/iommu/intel-iommu.c | 13 +++++++------
->  drivers/iommu/intel-pasid.c | 36 ------------------------------------
->  drivers/iommu/intel-svm.c   | 41 +++++++++++++++++++++++++++------------=
---
->  4 files changed, 35 insertions(+), 56 deletions(-)
->=20
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index fd50ddffffbf..43ce450a40d3 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -212,6 +212,7 @@ config INTEL_IOMMU_SVM
->  =09depends on INTEL_IOMMU && X86
->  =09select PCI_PASID
->  =09select MMU_NOTIFIER
-> +=09select IOASID
->  =09help
->  =09  Shared Virtual Memory (SVM) provides a facility for devices
->  =09  to access DMA resources through process address space by
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index d598168e410d..a84f0caa33a0 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -5238,7 +5238,7 @@ static void auxiliary_unlink_device(struct dmar_dom=
-ain *domain,
->  =09domain->auxd_refcnt--;
-> =20
->  =09if (!domain->auxd_refcnt && domain->default_pasid > 0)
-> -=09=09intel_pasid_free_id(domain->default_pasid);
-> +=09=09ioasid_free(domain->default_pasid);
->  }
-> =20
->  static int aux_domain_add_dev(struct dmar_domain *domain,
-> @@ -5256,10 +5256,11 @@ static int aux_domain_add_dev(struct dmar_domain =
-*domain,
->  =09if (domain->default_pasid <=3D 0) {
->  =09=09int pasid;
-> =20
-> -=09=09pasid =3D intel_pasid_alloc_id(domain, PASID_MIN,
-> -=09=09=09=09=09     pci_max_pasids(to_pci_dev(dev)),
-> -=09=09=09=09=09     GFP_KERNEL);
-> -=09=09if (pasid <=3D 0) {
-> +=09=09/* No private data needed for the default pasid */
-> +=09=09pasid =3D ioasid_alloc(NULL, PASID_MIN,
-> +=09=09=09=09     pci_max_pasids(to_pci_dev(dev)) - 1,
-> +=09=09=09=09     NULL);
-> +=09=09if (pasid =3D=3D INVALID_IOASID) {
->  =09=09=09pr_err("Can't allocate default pasid\n");
->  =09=09=09return -ENODEV;
->  =09=09}
-> @@ -5295,7 +5296,7 @@ static int aux_domain_add_dev(struct dmar_domain *d=
-omain,
->  =09spin_unlock(&iommu->lock);
->  =09spin_unlock_irqrestore(&device_domain_lock, flags);
->  =09if (!domain->auxd_refcnt && domain->default_pasid > 0)
-> -=09=09intel_pasid_free_id(domain->default_pasid);
-> +=09=09ioasid_free(domain->default_pasid);
-> =20
->  =09return ret;
->  }
-> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
-> index 732bfee228df..3cb569e76642 100644
-> --- a/drivers/iommu/intel-pasid.c
-> +++ b/drivers/iommu/intel-pasid.c
-> @@ -26,42 +26,6 @@
->   */
->  static DEFINE_SPINLOCK(pasid_lock);
->  u32 intel_pasid_max_id =3D PASID_MAX;
-> -static DEFINE_IDR(pasid_idr);
-> -
-> -int intel_pasid_alloc_id(void *ptr, int start, int end, gfp_t gfp)
-> -{
-> -=09int ret, min, max;
-> -
-> -=09min =3D max_t(int, start, PASID_MIN);
-> -=09max =3D min_t(int, end, intel_pasid_max_id);
-> -
-> -=09WARN_ON(in_interrupt());
-> -=09idr_preload(gfp);
-> -=09spin_lock(&pasid_lock);
-> -=09ret =3D idr_alloc(&pasid_idr, ptr, min, max, GFP_ATOMIC);
-> -=09spin_unlock(&pasid_lock);
-> -=09idr_preload_end();
-> -
-> -=09return ret;
-> -}
-> -
-> -void intel_pasid_free_id(int pasid)
-> -{
-> -=09spin_lock(&pasid_lock);
-> -=09idr_remove(&pasid_idr, pasid);
-> -=09spin_unlock(&pasid_lock);
-> -}
-> -
-> -void *intel_pasid_lookup_id(int pasid)
-> -{
-> -=09void *p;
-> -
-> -=09spin_lock(&pasid_lock);
-> -=09p =3D idr_find(&pasid_idr, pasid);
-> -=09spin_unlock(&pasid_lock);
-> -
-> -=09return p;
-> -}
-> =20
->  /*
->   * Per device pasid table management:
-> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-> index e90d0b914afe..26a2f57763ec 100644
-> --- a/drivers/iommu/intel-svm.c
-> +++ b/drivers/iommu/intel-svm.c
-> @@ -17,6 +17,7 @@
->  #include <linux/dmar.h>
->  #include <linux/interrupt.h>
->  #include <linux/mm_types.h>
-> +#include <linux/ioasid.h>
->  #include <asm/page.h>
-> =20
->  #include "intel-pasid.h"
-> @@ -335,16 +336,15 @@ int intel_svm_bind_mm(struct device *dev, int *pasi=
-d, int flags, struct svm_dev_
->  =09=09if (pasid_max > intel_pasid_max_id)
->  =09=09=09pasid_max =3D intel_pasid_max_id;
-> =20
-> -=09=09/* Do not use PASID 0 in caching mode (virtualised IOMMU) */
-> -=09=09ret =3D intel_pasid_alloc_id(svm,
-> -=09=09=09=09=09   !!cap_caching_mode(iommu->cap),
-> -=09=09=09=09=09   pasid_max, GFP_KERNEL);
-> -=09=09if (ret < 0) {
-> +=09=09/* Do not use PASID 0, reserved for RID to PASID */
-> +=09=09svm->pasid =3D ioasid_alloc(NULL, PASID_MIN,
-> +=09=09=09=09=09  pasid_max - 1, svm);
-> +=09=09if (svm->pasid =3D=3D INVALID_IOASID) {
->  =09=09=09kfree(svm);
->  =09=09=09kfree(sdev);
-> +=09=09=09ret =3D -ENOSPC;
->  =09=09=09goto out;
->  =09=09}
-> -=09=09svm->pasid =3D ret;
->  =09=09svm->notifier.ops =3D &intel_mmuops;
->  =09=09svm->mm =3D mm;
->  =09=09svm->flags =3D flags;
-> @@ -354,7 +354,7 @@ int intel_svm_bind_mm(struct device *dev, int *pasid,=
- int flags, struct svm_dev_
->  =09=09if (mm) {
->  =09=09=09ret =3D mmu_notifier_register(&svm->notifier, mm);
->  =09=09=09if (ret) {
-> -=09=09=09=09intel_pasid_free_id(svm->pasid);
-> +=09=09=09=09ioasid_free(svm->pasid);
->  =09=09=09=09kfree(svm);
->  =09=09=09=09kfree(sdev);
->  =09=09=09=09goto out;
-> @@ -370,7 +370,7 @@ int intel_svm_bind_mm(struct device *dev, int *pasid,=
- int flags, struct svm_dev_
->  =09=09if (ret) {
->  =09=09=09if (mm)
->  =09=09=09=09mmu_notifier_unregister(&svm->notifier, mm);
-> -=09=09=09intel_pasid_free_id(svm->pasid);
-> +=09=09=09ioasid_free(svm->pasid);
->  =09=09=09kfree(svm);
->  =09=09=09kfree(sdev);
->  =09=09=09goto out;
-> @@ -418,7 +418,15 @@ int intel_svm_unbind_mm(struct device *dev, int pasi=
-d)
->  =09if (!iommu)
->  =09=09goto out;
-> =20
-> -=09svm =3D intel_pasid_lookup_id(pasid);
-> +=09svm =3D ioasid_find(NULL, pasid, NULL);
-> +=09if (!svm)
-> +=09=09goto out;
-> +
-> +=09if (IS_ERR(svm)) {
-> +=09=09ret =3D PTR_ERR(svm);
-> +=09=09goto out;
-> +=09}
-> +
->  =09if (!svm)
->  =09=09goto out;
-> =20
-> @@ -440,7 +448,9 @@ int intel_svm_unbind_mm(struct device *dev, int pasid=
-)
->  =09=09=09=09kfree_rcu(sdev, rcu);
-> =20
->  =09=09=09=09if (list_empty(&svm->devs)) {
-> -=09=09=09=09=09intel_pasid_free_id(svm->pasid);
-> +=09=09=09=09=09/* Clear private data so that free pass check */
-> +=09=09=09=09=09ioasid_set_data(svm->pasid, NULL);
-This still looks weird to me. clearing the private data before freeing
-is a requirement from the custom allocation, if I am not wrong, ie. not
-a requirement from the generic allocator. If confirmed, this should not
-be part of this patch but added later on?
+I just time traveled to last week and acked the whole series :)
 
+Sean
 
-> +=09=09=09=09=09ioasid_free(svm->pasid);
->  =09=09=09=09=09if (svm->mm)
->  =09=09=09=09=09=09mmu_notifier_unregister(&svm->notifier, svm->mm);
-> =20
-> @@ -475,10 +485,14 @@ int intel_svm_is_pasid_valid(struct device *dev, in=
-t pasid)
->  =09if (!iommu)
->  =09=09goto out;
-> =20
-> -=09svm =3D intel_pasid_lookup_id(pasid);
-> +=09svm =3D ioasid_find(NULL, pasid, NULL);
->  =09if (!svm)
->  =09=09goto out;
-> =20
-> +=09if (IS_ERR(svm)) {
-> +=09=09ret =3D PTR_ERR(svm);
-> +=09=09goto out;
-> +=09}
->  =09/* init_mm is used in this case */
->  =09if (!svm->mm)
->  =09=09ret =3D 1;
-not related to this patch but in prq_event_thread
-resp.qw0 and qw1 are not initialized in case (req->lpig ||
-req->priv_data_present) is not true
+> 
+> Jani, can you pls also add a todo.rst patch on top to adjust the
+> relevant item to the new color choice?
+> 
+> Wambui, I guess slight change of plans, it happens ...
+> 
+> Cheers, Daniel
+> 
+> >
+> > Sean
+> >
+> > > BR,
+> > > Jani.
+> > >
+> > >
+> > > [1] http://patchwork.freedesktop.org/patch/msgid/63d1e72b99e9c13ee5b1b362a653ff9c21e19124.1572258936.git.jani.nikula@intel.com
+> > >
+> > >
+> > >
+> > >
+> > > >
+> > > > Wambui Karuga (2):
+> > > >   drm/print: add DRM_DEV_WARN macro
+> > > >   drm/rockchip: use DRM_DEV_WARN macro in debug output
+> > > >
+> > > >  drivers/gpu/drm/rockchip/inno_hdmi.c | 3 ++-
+> > > >  include/drm/drm_print.h              | 9 +++++++++
+> > > >  2 files changed, 11 insertions(+), 1 deletion(-)
+> > >
+> > > --
+> > > Jani Nikula, Intel Open Source Graphics Center
+> >
+> > --
+> > Sean Paul, Software Engineer, Google / Chromium OS
+> 
+> 
+> 
+> -- 
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
 
-> @@ -585,13 +599,12 @@ static irqreturn_t prq_event_thread(int irq, void *=
-d)
-> =20
->  =09=09if (!svm || svm->pasid !=3D req->pasid) {
->  =09=09=09rcu_read_lock();
-> -=09=09=09svm =3D intel_pasid_lookup_id(req->pasid);
-> +=09=09=09svm =3D ioasid_find(NULL, req->pasid, NULL);
->  =09=09=09/* It *can't* go away, because the driver is not permitted
->  =09=09=09 * to unbind the mm while any page faults are outstanding.
->  =09=09=09 * So we only need RCU to protect the internal idr code. */
->  =09=09=09rcu_read_unlock();
-> -
-> -=09=09=09if (!svm) {
-> +=09=09=09if (IS_ERR_OR_NULL(svm)) {
->  =09=09=09=09pr_err("%s: Page request for invalid PASID %d: %08llx %08llx=
-\n",
->  =09=09=09=09       iommu->name, req->pasid, ((unsigned long long *)req)[=
-0],
->  =09=09=09=09       ((unsigned long long *)req)[1]);
->=20
-
-Thanks
-
-Eric
-
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
