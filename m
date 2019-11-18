@@ -2,221 +2,138 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE81C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 619D7C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 957882084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:26:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="ieP0Hhy7"
+	by mail.kernel.org (Postfix) with ESMTP id 32BC32068D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:27:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574076431;
+	bh=aMG01B2Vk1sbqZRwAKZ4N/fMBfGZbdKQAYaKMXYu0YM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Q9XvTplr/7dr64pFuPiVSf3rsEsg+7G5WpDvnLHJ9nRo+faoH/uVjitHMQ4VS7CtJ
+	 ihSe7bxFZ6VSWzigp9b19X8/auUKRaFFGNWh6PDQJ4RdIjcKMEivSBVzdrgip+eVTA
+	 3zkCZ0VyedO3VK+2/R2rUcIeYS4hfsWYE5jggoUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727761AbfKRL0z (ORCPT
+        id S1726787AbfKRL1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:26:55 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51757 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfKRLXd (ORCPT
+        Mon, 18 Nov 2019 06:27:10 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40500 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfKRL1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:23:33 -0500
-Received: by mail-wm1-f65.google.com with SMTP id q70so16932820wme.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 03:23:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TBWX3w17Hmja6UWfhFzaP+5JtBcf7FvgYQ6BEI9JfQ4=;
-        b=ieP0Hhy7vzq3rc0tMajMq1S39mOFDs4o5gWkgjAa/tx+haws8QRzKoR7BwIvPfFz0Z
-         XwP86WYCZvqYWqHXhxB+sVDlsRwlNxqfs9fb+4BbJ3joxfdaQcACC9z8i6S+PSmP/fwE
-         JO84LoRL8EtVLb/4HeJfPYBb9pwnusVLCg3/8=
+        Mon, 18 Nov 2019 06:27:10 -0500
+Received: by mail-ot1-f68.google.com with SMTP id m15so14170314otq.7;
+        Mon, 18 Nov 2019 03:27:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TBWX3w17Hmja6UWfhFzaP+5JtBcf7FvgYQ6BEI9JfQ4=;
-        b=gAzfZ/saSosnGirBdfpIsqL8VhZfJyjbB+atJQcybczB5D3YbRX+ES6O7kfDGQy8W8
-         IPpE581JEr2afkEeG8TY70yy3CQ+gqsqmnT2cQe4b2+BJMxPkMGhrAcNxzNwRtmPfXFM
-         aNViq8EfkN3hj0xJdHMNkSLcspDu1XRu6Cx2v8oA6l7zji3izSGzK8ACBcYXb76+U1n6
-         GxD2PyG3qUguXjgRk7V7P+pxo219uavV3Sw4Wl9pbcZ3Lf4JtqAmc0ZlUihOBRLR4xpr
-         FXHxC6Z2j9+WmKlKxvVRYDtHX8eYBhfVXbY9fANahUmXP7OUvGHYmXbcBjFTYhYcirC8
-         9yXg==
-X-Gm-Message-State: APjAAAW6KswaMQDg0AA2tP9CgAOnpXFkNQuraxivffXuMBLvAWCVPKCh
-        RF5fr1nVXhbWFm86CliYkw8X8g==
-X-Google-Smtp-Source: APXvYqzKE4Io66KMC69PfyvoTe8ZMR8eJVp24eLnGOg4DtZTaBwAtj/3PySxN0MPhCrUsTPirXnWNQ==
-X-Received: by 2002:a7b:ce08:: with SMTP id m8mr29287901wmc.68.1574076209937;
-        Mon, 18 Nov 2019 03:23:29 -0800 (PST)
-Received: from prevas-ravi.prevas.se (ip-5-186-115-54.cgn.fibianet.dk. [5.186.115.54])
-        by smtp.gmail.com with ESMTPSA id y2sm21140815wmy.2.2019.11.18.03.23.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 03:23:29 -0800 (PST)
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Scott Wood <oss@buserror.net>, Timur Tabi <timur@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v5 00/48] QUICC Engine support on ARM, ARM64, PPC64
-Date:   Mon, 18 Nov 2019 12:22:36 +0100
-Message-Id: <20191118112324.22725-1-linux@rasmusvillemoes.dk>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0VGp3OpF5GA2F7BU2LE4TwYF6X0125T01Rr+E1EqppI=;
+        b=jCMLZMfmYQkoKN3iFC/0AuUf28FH7MDLubE6jSmZTvABJSU6ZYjmQ32KzTMLwEL/BE
+         v0pJd7qp2EpS84gG91LfN2xUw7n83VVDK8v8gKacvB4uCupsDGv3xLa0iXh2atKSCn2D
+         ynj/bzN3qT3Y/+1cvsNSvogzpIowAY/Bmqv5PCNk1ZfHYs1h6KyL8eKM8lDsl7SAAAR9
+         S98uJrIdufRAh8CxeBEAlPkavt8T8v9nMghFZBCTRQ+RkQsbANyP8bo0C3keGkVv0agB
+         C2e5g8OXIuVFCk6wfa9rAGNBcGvUk0UUuLf5id0AVE/0OfMenq6WE1UhSSiir9MWfK7e
+         H4ng==
+X-Gm-Message-State: APjAAAXTEGxk0JBBEnl/mVbB/Kdu4nLAvMZCpjnSpaFkO7Td4ulNnpww
+        UbVtUHtSZ0Jf9RefQ6idRM450nBISiIbtgD/t/A=
+X-Google-Smtp-Source: APXvYqxy13t3uLGFNSvy3wvHL6OJCqB1p2rtgvpSnNHM+tvUbQdNmTfWxjSP1ZfXrk3AUSM30/lBEFwcSxpYvZPNb+4=
+X-Received: by 2002:a05:6830:232a:: with SMTP id q10mr22460237otg.262.1574076428641;
+ Mon, 18 Nov 2019 03:27:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <2717750.dCEzHT3DVQ@kreacher> <CAJvTdKn9wuoXkKecZxCJHPZAG7XK_BqAZT5=7k9Mi4zo4SBL0g@mail.gmail.com>
+ <CAJZ5v0ifOQaOm-8n5gUgud0sCn-Y1KQWWhzhtzdm+exvMLgL7Q@mail.gmail.com>
+In-Reply-To: <CAJZ5v0ifOQaOm-8n5gUgud0sCn-Y1KQWWhzhtzdm+exvMLgL7Q@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 18 Nov 2019 12:26:57 +0100
+Message-ID: <CAJZ5v0jsQG37VF3-tiSndE0pXX9jEfgucm0UyvpM0bsyoOcpuA@mail.gmail.com>
+Subject: Re: [PATCH] cpuidle: Consolidate disabled state checks
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Doug Smythies <dsmythies@telus.net>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There have been several attempts in the past few years to allow
-building the QUICC engine drivers for platforms other than PPC32. This
-is yet another attempt.
+On Mon, Nov 18, 2019 at 10:22 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Mon, Nov 18, 2019 at 5:46 AM Len Brown <lenb@kernel.org> wrote:
+> >
+> > On Mon, Nov 4, 2019 at 6:16 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > >
+> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > >
+> > > There are two reasons why CPU idle states may be disabled: either
+> > > because the driver has disabled them or because they have been
+> > > disabled by user space via sysfs.
+> > >
+> > > In the former case, the state's "disabled" flag is set once during
+> > > the initialization of the driver and it is never cleared later (it
+> > > is read-only effectively).
+> >
+> > for x86 (intel_idle and acpi_idle), no states with disabled=1 are  registered
+> > with cpuidle.  Instead, intel_idle (currently) skips them in the loop
+> > that registers states.
+> > (and acpi_idle never touches the disabled field)
+> >
+> > And so for x86, governors checking for drv->states[i].disabled is a NOP,
+> > and the condition described by CPUIDLE_STATE_DISABLED_BY_DRIVER
+> > does not (yet) exist.
+>
+> OK
+>
+> > Looking at the ARM code, it seems that cpuidle-imx6q.c and cpuidle-tegra20.c
+> > reach into the cpuidle states at run time and toggle the
+> > drv->states[i].disabled.
+>
+> I might have overlooked that, let me check.
+>
+> > It seems that this patch takes the initial value of
+> > drv->states->disabled, and sets the (per cpu)
+> > usage.disable=..BY_DRIVER,
+> > but that subsequent run-time toggles in drv->states[i]disabled by
+> > these drivers would be missed,
+> > because you're removed the run-time checking of drv->states->disabled?
+>
+> If it is updated at run time, then yes, the updates will be missed, so
+> thanks for pointing that out.
+>
+> > Finally, I'd like to change intel_idle so that it *can* register a
+> > state that is disabled, by default.
+> > If I change the driver to NOT skip registering disabled states, and
+> > the cpuidle copy has cpuidle_state.disabled=1,
+> > then the state is indeed, unused at run-time.  But as you said,
+> > it is effectively read-only, and is not indicated in sysfs, and can
+> > not be changed via sysfs.
+> >
+> > One way to do this is to do what you do here and initialize
+> > usage.disabled to drv->state.disabled. (not distinguishing between
+> > DRIVER and USER)
+> > That way the user could later over-ride what a driver set, by clearing
+> > the disabled attribute.
 
-v4 can be found here: https://lore.kernel.org/lkml/20191108130123.6839-1-linux@rasmusvillemoes.dk/
+I'd rather get rid of the "disabled" field from struct cpuidle_state
+entirely and introduce a new state flag to indicate the "disabled by
+default" status.
 
-Changes in v5:
+I also would expose that new flag in a new sysfs attribute of idle
+states, say "disable_default".
 
-- add patch (33/48) to not carry over the brg-frequency workaround in
-  ucc_uart to the new platforms the code can now be built for (Timur,
-  Scott)
+Then, the DISABLED_BY_DRIVER bit would be reserved for driver quirks
+(as per https://patchwork.kernel.org/patch/11249519/) and the
+DISABLED_BY_USER one could be used for all of the other purposes.
 
-- style fix in 32/48 (Timur)
-
-- expand commit log of 47/48 (Timur, Li Yang)
-
-- s/long/s32/ in 35/48 (Qiang)
-
-- also include PPC64 in the set of architectures where QE can be built
-  (Li Yang)
-
-1-5 are about replacing in_be32 etc. in the core QE code (drivers/soc/fsl/qe).
-
-6-8 handle miscellaneous other ppcisms.
-
-9-21 deal with qe_ic: Simplifying the driver significantly by removing
-unused code, and removing the platform-specific initialization from
-arch/powerpc/.
-
-22-25 deal with raw access to devicetree properties in native endianness.
-
-26-34 makes drivers/tty/serial/ucc_uart.c (CONFIG_SERIAL_QE) ready to build on non-ppc.
-
-35-46 deal with IS_ERR_VALUE() and some other things found while
-digging around that part of the code.
-
-47 adds a PPC32 dependency to UCC_GETH - it has some of the same
-issues that have been fixed in the ucc_uart and ucc_hdlc cases. Nobody
-has requested that I allow that driver to be built for arm{,64} and
-reportedly, the hardware has only ever shipped on PPC SOCs. So instead
-of growing this series even bigger, I kept that addition. It's trivial
-to remove if somebody cares enough to fix the build errors/warnings
-and actually has a platform to test the result on.
-
-Finally patch 48 lifts the PPC32 restriction from QUICC_ENGINE. At the
-request of Li Yang, it doesn't remove the PPC32 dependency but instead
-changes it to PPC|| ARM || ARM64 (or COMPILE_TEST), i.e. listing
-the platforms that may have a QE.
-
-The series has been built and booted on both an mpc8309-based platform
-(ppc) as well as an ls1021a-based platform (arm). The core QE code is
-exercised on both, while I could only test the ucc_uart on arm, since
-the uarts are not wired up on our mpc8309 board. Qiang Zhao reports
-that the ucc_hdlc driver does indeed work on a ls1043ardb (arm64)
-board.
-
-Rasmus Villemoes (48):
-  soc: fsl: qe: remove space-before-tab
-  soc: fsl: qe: drop volatile qualifier of struct qe_ic::regs
-  soc: fsl: qe: rename qe_(clr/set/clrset)bit* helpers
-  soc: fsl: qe: introduce qe_io{read,write}* wrappers
-  soc: fsl: qe: avoid ppc-specific io accessors
-  soc: fsl: qe: replace spin_event_timeout by readx_poll_timeout_atomic
-  soc: fsl: qe: qe.c: guard use of pvr_version_is() with CONFIG_PPC32
-  soc: fsl: qe: drop unneeded #includes
-  soc: fsl: qe: drop assign-only high_active in qe_ic_init
-  soc: fsl: qe: remove pointless sysfs registration in qe_ic.c
-  soc: fsl: qe: use qe_ic_cascade_{low,high}_mpic also on 83xx
-  soc: fsl: qe: move calls of qe_ic_init out of arch/powerpc/
-  powerpc/83xx: remove mpc83xx_ipic_and_qe_init_IRQ
-  powerpc/85xx: remove mostly pointless mpc85xx_qe_init()
-  soc: fsl: qe: move qe_ic_cascade_* functions to qe_ic.c
-  soc: fsl: qe: rename qe_ic_cascade_low_mpic -> qe_ic_cascade_low
-  soc: fsl: qe: remove unused qe_ic_set_* functions
-  soc: fsl: qe: don't use NO_IRQ in qe_ic.c
-  soc: fsl: qe: make qe_ic_get_{low,high}_irq static
-  soc: fsl: qe: simplify qe_ic_init()
-  soc: fsl: qe: merge qe_ic.h headers into qe_ic.c
-  soc: fsl: qe: qe.c: use of_property_read_* helpers
-  soc: fsl: qe: qe_io.c: don't open-code of_parse_phandle()
-  soc: fsl: qe: qe_io.c: access device tree property using be32_to_cpu
-  soc: fsl: qe: qe_io.c: use of_property_read_u32() in par_io_init()
-  soc: fsl: move cpm.h from powerpc/include/asm to include/soc/fsl
-  soc/fsl/qe/qe.h: update include path for cpm.h
-  serial: ucc_uart: explicitly include soc/fsl/cpm.h
-  serial: ucc_uart: replace ppc-specific IO accessors
-  serial: ucc_uart: factor out soft_uart initialization
-  serial: ucc_uart: stub out soft_uart_init for !CONFIG_PPC32
-  serial: ucc_uart: use of_property_read_u32() in ucc_uart_probe()
-  serial: ucc_uart: limit brg-frequency workaround to PPC32
-  serial: ucc_uart: access __be32 field using be32_to_cpu
-  soc: fsl: qe: change return type of cpm_muram_alloc() to s32
-  soc: fsl: qe: make cpm_muram_free() return void
-  soc: fsl: qe: make cpm_muram_free() ignore a negative offset
-  soc: fsl: qe: drop broken lazy call of cpm_muram_init()
-  soc: fsl: qe: refactor cpm_muram_alloc_common to prevent BUG on error
-    path
-  soc: fsl: qe: avoid IS_ERR_VALUE in ucc_slow.c
-  soc: fsl: qe: drop use of IS_ERR_VALUE in qe_sdma_init()
-  soc: fsl: qe: drop pointless check in qe_sdma_init()
-  soc: fsl: qe: avoid IS_ERR_VALUE in ucc_fast.c
-  net/wan/fsl_ucc_hdlc: avoid use of IS_ERR_VALUE()
-  net/wan/fsl_ucc_hdlc: fix reading of __be16 registers
-  net/wan/fsl_ucc_hdlc: reject muram offsets above 64K
-  net: ethernet: freescale: make UCC_GETH explicitly depend on PPC32
-  soc: fsl: qe: remove PPC32 dependency from CONFIG_QUICC_ENGINE
-
- arch/powerpc/include/asm/cpm.h                | 172 +-------
- arch/powerpc/platforms/83xx/km83xx.c          |   3 +-
- arch/powerpc/platforms/83xx/misc.c            |  23 --
- arch/powerpc/platforms/83xx/mpc832x_mds.c     |   3 +-
- arch/powerpc/platforms/83xx/mpc832x_rdb.c     |   3 +-
- arch/powerpc/platforms/83xx/mpc836x_mds.c     |   3 +-
- arch/powerpc/platforms/83xx/mpc836x_rdk.c     |   3 +-
- arch/powerpc/platforms/83xx/mpc83xx.h         |   7 -
- arch/powerpc/platforms/85xx/common.c          |  23 --
- arch/powerpc/platforms/85xx/corenet_generic.c |  12 -
- arch/powerpc/platforms/85xx/mpc85xx.h         |   2 -
- arch/powerpc/platforms/85xx/mpc85xx_mds.c     |  28 --
- arch/powerpc/platforms/85xx/mpc85xx_rdb.c     |  18 -
- arch/powerpc/platforms/85xx/twr_p102x.c       |  16 -
- drivers/net/ethernet/freescale/Kconfig        |   2 +-
- drivers/net/wan/fsl_ucc_hdlc.c                |  23 +-
- drivers/net/wan/fsl_ucc_hdlc.h                |   2 +-
- drivers/soc/fsl/qe/Kconfig                    |   3 +-
- drivers/soc/fsl/qe/gpio.c                     |  34 +-
- drivers/soc/fsl/qe/qe.c                       | 104 ++---
- drivers/soc/fsl/qe/qe_common.c                |  50 +--
- drivers/soc/fsl/qe/qe_ic.c                    | 285 ++++++-------
- drivers/soc/fsl/qe/qe_ic.h                    |  99 -----
- drivers/soc/fsl/qe/qe_io.c                    |  70 ++--
- drivers/soc/fsl/qe/qe_tdm.c                   |   8 +-
- drivers/soc/fsl/qe/ucc.c                      |  26 +-
- drivers/soc/fsl/qe/ucc_fast.c                 |  86 ++--
- drivers/soc/fsl/qe/ucc_slow.c                 |  60 ++-
- drivers/soc/fsl/qe/usb.c                      |   2 +-
- drivers/tty/serial/ucc_uart.c                 | 385 +++++++++---------
- include/soc/fsl/cpm.h                         | 171 ++++++++
- include/soc/fsl/qe/qe.h                       |  59 ++-
- include/soc/fsl/qe/qe_ic.h                    | 135 ------
- include/soc/fsl/qe/ucc_fast.h                 |   4 +-
- include/soc/fsl/qe/ucc_slow.h                 |   6 +-
- 35 files changed, 775 insertions(+), 1155 deletions(-)
- delete mode 100644 drivers/soc/fsl/qe/qe_ic.h
- create mode 100644 include/soc/fsl/cpm.h
- delete mode 100644 include/soc/fsl/qe/qe_ic.h
-
--- 
-2.23.0
-
+Cheers,
+Rafael
