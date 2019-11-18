@@ -2,209 +2,234 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC7FC43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 852D4C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 960A920722
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E4520722
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:18:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tUnWCa8x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cspi6aBg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfKROQe (ORCPT
+        id S1727160AbfKROSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 09:16:34 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40653 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbfKROQd (ORCPT
+        Mon, 18 Nov 2019 09:18:13 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33473 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbfKROSM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 09:16:33 -0500
-Received: by mail-ed1-f65.google.com with SMTP id p59so13644628edp.7;
-        Mon, 18 Nov 2019 06:16:32 -0800 (PST)
+        Mon, 18 Nov 2019 09:18:12 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w9so19721510wrr.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 06:18:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dCmxAbOnh1DEwR9gqcYuPuyebviFJypxHrWw58u6XUI=;
-        b=tUnWCa8xtKMg67o8vDVr3JBTyIdT1MYo0i+TdImZ3F4m4SAcyqlZhXpdRqANsodH+w
-         nNhZ0Yqlgol/6mI1EQvIussnwfghlilJVKLug4q5NzRRlOGVhEHH2fjGQMoO94UbnXDf
-         X4Y/eGO3g6ub3lRA2seNqdPSaBwaosPz10IWoOQLbe39ikRvS/YDyMhU1SfZ0lAaVLg7
-         EYbOoPMERUtAW/yy0CHVkPA+icNFkXFLWZ3up4LinBEp9WJKWHb1ZTD0pbea1qdpB78z
-         xNMTvZFtZmcaMuH+pk1F+sDdmGZv0pXUk/nbpZDCkl0O0ZbZBHnj9r/YEnE2tUWkOqT7
-         Br0w==
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=HeUNoECzus+G93MTOrN06Sencf6XibkCqoM0Nj92904=;
+        b=Cspi6aBgwJX5jgl6Nz5JXilwXAuRKBh2hfkis1de3YR0zoC71aIBEPo0+22yRJwgC5
+         kJWFf0tfLomW4u/RjFzYIREyVf81ce5urXj2mQiog4ClouZQWMm6zy2kcccX9+KkoMFA
+         u5QOwFZfNxGI3hL+OWCLK3DcMmBWK9kCEwMx8Pw6DRnggedDvbH+b8SxYpLDe+P7NcxQ
+         X86GjjNnnvo3PUiEt3e1s6/PA1vEuu44/q/uKUHasOoK11j4jka92NJYWeUkDLkouvph
+         hK/RriUlLjyFZbsK9imCNPdHTSpmxhqCGfEJsm9tf3gi1r9CI+IyzSOUe+Ph4XhQ0luL
+         5Iww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dCmxAbOnh1DEwR9gqcYuPuyebviFJypxHrWw58u6XUI=;
-        b=eLtyxknu0oh7AdAW5xJqaTLOgShJEjWuueox/201OLP59yjmyeoVB8Q6PDP7qePv+1
-         r92ncC+BFsCqNHOtaYgMbHk+A5VvDtsDmgbv35rUL1jEC3nQgB004VlS1u4nyDjJUOuz
-         0bmJEozUUReqx2CdiS6SLkNyHIRnMQlFbyPJGYNDHZnnSQ8AU7KSb6aAsFrSVq7VkKr9
-         kS3L8plgCFjKzXqC1l2vnO0Qhq1erhWK7Bekb3oRzDeXFXWyUaYxIxGH60EiagEFTEWu
-         s6Rp7Z4eVrcENuFYkFHdDazFJyD8Zf7Zdozsvws2LIPdTocq+8skhdtGNUbYjcaZdE+i
-         QUFQ==
-X-Gm-Message-State: APjAAAUANtynK2Q7Qfojb1ZSx8WMTssl+AEpE5b2gqmsHz88t/VsK3u9
-        Q6rt8gwxYI7XtsKi/x5YHmL9kl67BpsFnSoqr/U=
-X-Google-Smtp-Source: APXvYqzvN57cgmr0vzC+8Wg7xerpuW5clGmE/FuIbFlcie09sQ425t8bFW80Y6SiYxim2k0dkPlO9A7L3Eb5WSYQ124=
-X-Received: by 2002:a17:906:1fd5:: with SMTP id e21mr26117015ejt.320.1574086591558;
- Mon, 18 Nov 2019 06:16:31 -0800 (PST)
-MIME-Version: 1.0
-References: <20191114195609.30222-1-marco.franchi@nxp.com> <CAOMZO5Asp-m7zyY6dp72_VKZs0OisxX4B-PJtP4=GuE_-XDBsg@mail.gmail.com>
-In-Reply-To: <CAOMZO5Asp-m7zyY6dp72_VKZs0OisxX4B-PJtP4=GuE_-XDBsg@mail.gmail.com>
-From:   Marco Franchi <marcofrk@gmail.com>
-Date:   Mon, 18 Nov 2019 12:16:30 -0200
-Message-ID: <CAM4PwSX+tkCwt2vmBB4-WAdfaTbxUEutGjzKxCVQiAnWbtD3JA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: freescale: add initial support for Google
- i.MX 8MQ Phanbell
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Marco Antonio Franchi <marco.franchi@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=HeUNoECzus+G93MTOrN06Sencf6XibkCqoM0Nj92904=;
+        b=umHO6jxn/TCoO416rkGPL43ntTgl169vdPWU42T+a4lnYgOP1VAHiyhmUF8UICSh9F
+         MfH1ZcvLZKsPZkjSvdtCa02m9IlKqsltJWbUVmsGswjYO+HLg6/iwd6MWC80KU2N7nz/
+         TLvYvnqWvPwjht6RoaUyKqSkhOOeIVuycyH+4cUXggAYysRnPKKlUKl/d8Y0R66xU9XG
+         wjP1/v3cOu7xdBtUS1MafXDFvJyAMRChlac2n390uWTd8/tGZoipoUZU+VxjyUIwlhkI
+         O3xczYnh7xhjyLPoPomOVeZSlCFS0vOVPIyz9fcQqcLAnfgLW700j1lrEXekP/zs63Sv
+         BTvg==
+X-Gm-Message-State: APjAAAWhLExmL+qDYPz48/9RkgCFa2uKvMy3Cl5tUQ/MJkZSU0qquLrb
+        i9q/J45UQlJq5fWw7O0sksqHHg==
+X-Google-Smtp-Source: APXvYqzuOkLLd3o3uSNCKr5R03VUILaokCsi9sUPTC1yROWRtuVbe85/LkggIdB0E1BO00BLVIdO5g==
+X-Received: by 2002:adf:9dcb:: with SMTP id q11mr29112167wre.42.1574086688673;
+        Mon, 18 Nov 2019 06:18:08 -0800 (PST)
+Received: from [192.168.0.100] (88-147-66-190.dyn.eolo.it. [88.147.66.190])
+        by smtp.gmail.com with ESMTPSA id r2sm23501666wrp.64.2019.11.18.06.18.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Nov 2019 06:18:08 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH v1] block, bfq: set default slice_idle to zero for SSDs
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <1573656800-14815-1-git-send-email-ppvk@codeaurora.org>
+Date:   Mon, 18 Nov 2019 15:18:06 +0100
+Cc:     stummala@codeaurora.org, sayalil@codeaurora.org,
+        rampraka@codeaurora.org, vbadigan@codeaurora.org, axboe@kernel.dk,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <AAC257FC-8E86-4A1D-8F96-1CF1B9E513FA@linaro.org>
+References: <1573656800-14815-1-git-send-email-ppvk@codeaurora.org>
+To:     Pradeep P V K <ppvk@codeaurora.org>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabio,
 
-Thank you for your comments. I have some points to discuss inline:
 
-Em qui., 14 de nov. de 2019 =C3=A0s 18:13, Fabio Estevam
-<festevam@gmail.com> escreveu:
->
-> Hi Marco,
->
-> On Thu, Nov 14, 2019 at 4:56 PM Marco Antonio Franchi
-> <marco.franchi@nxp.com> wrote:
-> >
-> > This patch adds the device tree to support Google Coral Edge TPU,
-> > historicaly named as fsl-imx8mq-phanbell, a computer on module
-> > which can be used for AI/ML propose.
-> >
-> > It introduces a minimal enablement support for this module and
->
-> What are the features that have been tested?
-I can include one list at the v2.
->
-> Also, is the schematics available?
-Yes: https://storage.googleapis.com/site_and_emails_static_assets/Files/Cor=
-al-Dev-Board-baseboard-schematic.pdf
->
-> > was totally based on the NXP i.MX 8MQ EVK board and i.MX 8MQ Phanbell
-> > Google Source Code for Coral Edge TPU Mendel release:
-> > https://coral.googlesource.com/linux-imx/
-> >
-> > This patch was tested using the U-Boot 2017-03-1-release-chef,
-> > which is supported by the Coral Edge TPU Mendel release:
-> > https://coral.googlesource.com/uboot-imx/
->
-> I would suggest removing this paragraph from the commit log as it is
-> not relevant to the dts itself.
-This U-Boot is the unique available for the Coral Edge TPU, and it
-does not provides the fdt_file settup, so I cannot change the Device
-Tree name and I thought it was important to put this information
-somehow here.
->
-> > diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/d=
-ts/freescale/Makefile
-> > index 38e344a2f0ff..cc7e02a30ed1 100644
-> > --- a/arch/arm64/boot/dts/freescale/Makefile
-> > +++ b/arch/arm64/boot/dts/freescale/Makefile
-> > @@ -21,6 +21,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-ls2088a-rdb.dt=
-b
-> >  dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-lx2160a-qds.dtb
-> >  dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-lx2160a-rdb.dtb
-> >
-> > +dtb-$(CONFIG_ARCH_MXC) +=3D fsl-imx8mq-phanbell.dtb
->
-> Please remove the fsl prefix and call it mx8mq-phanbell.dtb instead to
-> align with the other imx8mq dtbs.
-If I applied this change, I won't be able to boot the board, due to
-the U-Boot dependence.
-Should I try to apply the U-Boot mainline support first?
->
-> > +&i2c1 {
-> > +       clock-frequency =3D <400000>;
-> > +       pinctrl-names =3D "default";
-> > +       pinctrl-0 =3D <&pinctrl_i2c1>;
-> > +       status =3D "okay";
-> > +
-> > +       pmic: pmic@4b {
-> > +               reg =3D <0x4b>;
-> > +               compatible =3D "rohm,bd71837";
-> > +               pinctrl-0 =3D <&pinctrl_pmic>;
-> > +               gpio_intr =3D <&gpio1 3 GPIO_ACTIVE_LOW>;
->
-> This property does not exist upstream.
->
-> You should describe the interrupt like this instead:
->
-> interrupt-parent =3D <&gpio1>;
-> interrupts =3D <3 GPIO_ACTIVE_LOW>;
->
-Sure, I will!
-> > +
-> > +               gpo {
-> > +                       rohm,drv =3D <0x0C>;
->
-> This property does not exist upstream.
->
-> > +&sai2 {
-> > +       pinctrl-names =3D "default";
-> > +       pinctrl-0 =3D <&pinctrl_sai2>;
-> > +       assigned-clocks =3D
-> > +               <&clk IMX8MQ_AUDIO_PLL1_BYPASS>, <&clk IMX8MQ_CLK_SAI2>=
-;
->
-> Please don't split the lines as it gets harder to read.
->
-> > +       assigned-clock-parents =3D
-> > +               <&clk IMX8MQ_AUDIO_PLL1>, <&clk IMX8MQ_AUDIO_PLL1_OUT>;
->
-> Same here.
->
-> > +       assigned-clock-rates =3D <0>, <24576000>;
-> > +       status =3D "okay";
-> > +};
-> > +
-> > +&wdog1 {
-> > +       pinctrl-names =3D "default";
-> > +       pinctrl-0 =3D <&pinctrl_wdog>;
-> > +       fsl,ext-reset-output;
-> > +       status =3D "okay";
-> > +};
-> > +
-> > +&iomuxc {
-> > +       pinctrl-names =3D "default";
-> > +
-> > +       imx8mq-evk {
->
-> No need for this imx8mq-evk container.
->
-> > +               pinctrl_pmic: pmicirq {
-> > +                       fsl,pins =3D <
-> > +                               MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3      =
- 0x41 /*0x17059*/
->
-> This comment looks confusing. I would suggest removing it.
->
-> Regards,
->
-> Fabio Estevam
+> Il giorno 13 nov 2019, alle ore 15:53, Pradeep P V K =
+<ppvk@codeaurora.org> ha scritto:
+>=20
+> With default 8ms as a slice idle time, we seen few time bounded
+> applications(sensors) on v4.19 kernel are getting timedout during
+> multimedia tests (audio, video playbacks etc) with Reboots and
+> leading to crash. The timeout configured for these applications
+> (sensors) are 20sec.
+>=20
+> In crash dumps, we seen few synchronous requests from sensors/other
+> applications were in their bfq_queues for more than 12-20sec.
+>=20
+> Idling due to anticipation of future near-by IO requests and wait on
+> completion of submitted requests, will effect in choosing the next
+> bfq-queue and its scheduling. There by it effecting some time bounded
+> applications.
+>=20
+> After making the slice idle to zero,
 
-Ok for all the other comments.
+As written in the comments that your patch modifies, idling is
+essential for controlling I/O.  So your change is
+unacceptable unfortunately.
 
-Thanks for your suggestion Fabio.
-Please, just check the comments regarding the Device Tree name and I
-will send the v2 with the required changes.
+I would recommend you to analyze carefully why this anomaly occurs
+with non-zero slice idle.  I'd be willing to help in that.
 
-BR,
-Marco
+Alternatively, if you don't want to waste your time finding out the
+cause of this problem, then just set slice_idle to 0 manually for your
+application.
+
+>  we didn't seen any crash during
+> our 72hrs of testing and also it increases the IO throughput.
+>=20
+> Following FIO benchmark results were taken on a local SSD run:
+>=20
+> RandomReads that were taken on v4.19 kernel:
+>=20
+> Idling   iops    avg-lat(us)    stddev       bw
+> ----------------------------------------------------
+> On       4136    1189.07        17221.65    16.9MB/s
+> Off      7246     670.11        1054.76     29.7MB/s
+>=20
+
+This is anomalous too.  Probably the kernel you are using lacks
+commits made after 4.19 (around one hundred commits IIRC).
+
+Thanks,
+Paolo
+
+>    fio --name=3Dtemp --size=3D5G --time_based --ioengine=3Dsync \
+> 	--randrepeat=3D0 --direct=3D1 --invalidate=3D1 --verify=3D0 \
+> 	--verify_fatal=3D0 --rw=3Drandread --blocksize=3D4k \
+> 	--group_reporting=3D1 --directory=3D/data --runtime=3D10 \
+> 	--iodepth=3D64 --numjobs=3D5
+>=20
+> Following code changes were made based on [1],[2] and [3].
+>=20
+> [1] https://lkml.org/lkml/2018/11/1/1285
+> [2] Commit 41c0126b3f22 ("block: Make CFQ default to IOPS mode on
+>    SSDs")
+> [3] Commit 0bb979472a74 ("cfq-iosched: fix the setting of IOPS mode on
+>    SSDs")
+>=20
+> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+> ---
+> Documentation/block/bfq-iosched.rst |  7 ++++---
+> block/bfq-iosched.c                 | 13 +++++++++++++
+> block/elevator.c                    |  2 ++
+> include/linux/elevator.h            |  1 +
+> 4 files changed, 20 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/Documentation/block/bfq-iosched.rst =
+b/Documentation/block/bfq-iosched.rst
+> index 0d237d4..244f4ca 100644
+> --- a/Documentation/block/bfq-iosched.rst
+> +++ b/Documentation/block/bfq-iosched.rst
+> @@ -329,9 +329,10 @@ slice_idle
+>=20
+> This parameter specifies how long BFQ should idle for next I/O
+> request, when certain sync BFQ queues become empty. By default
+> -slice_idle is a non-zero value. Idling has a double purpose: boosting
+> -throughput and making sure that the desired throughput distribution =
+is
+> -respected (see the description of how BFQ works, and, if needed, the
+> +slice_idle is a non-zero value for rotational devices.
+> +Idling has a double purpose: boosting throughput and making
+> +sure that the desired throughput distribution is respected
+> +(see the description of how BFQ works, and, if needed, the
+> papers referred there).
+>=20
+> As for throughput, idling can be very helpful on highly seeky media
+> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+> index 0319d63..9c994d1 100644
+> --- a/block/bfq-iosched.c
+> +++ b/block/bfq-iosched.c
+> @@ -6514,6 +6514,18 @@ static int bfq_init_queue(struct request_queue =
+*q, struct elevator_type *e)
+> 	return -ENOMEM;
+> }
+>=20
+> +static void bfq_registered_queue(struct request_queue *q)
+> +{
+> +	struct elevator_queue *e =3D q->elevator;
+> +	struct bfq_data *bfqd =3D e->elevator_data;
+> +
+> +	/*
+> +	 * Default to IOPS mode with no idling for SSDs
+> +	 */
+> +	if (blk_queue_nonrot(q))
+> +		bfqd->bfq_slice_idle =3D 0;
+> +}
+> +
+> static void bfq_slab_kill(void)
+> {
+> 	kmem_cache_destroy(bfq_pool);
+> @@ -6761,6 +6773,7 @@ static ssize_t bfq_low_latency_store(struct =
+elevator_queue *e,
+> 		.init_hctx		=3D bfq_init_hctx,
+> 		.init_sched		=3D bfq_init_queue,
+> 		.exit_sched		=3D bfq_exit_queue,
+> +		.elevator_registered_fn =3D bfq_registered_queue,
+> 	},
+>=20
+> 	.icq_size =3D		sizeof(struct bfq_io_cq),
+> diff --git a/block/elevator.c b/block/elevator.c
+> index 076ba73..b882d25 100644
+> --- a/block/elevator.c
+> +++ b/block/elevator.c
+> @@ -504,6 +504,8 @@ int elv_register_queue(struct request_queue *q, =
+bool uevent)
+> 			kobject_uevent(&e->kobj, KOBJ_ADD);
+>=20
+> 		e->registered =3D 1;
+> +		if (e->type->ops.elevator_registered_fn)
+> +			e->type->ops.elevator_registered_fn(q);
+> 	}
+> 	return error;
+> }
+> diff --git a/include/linux/elevator.h b/include/linux/elevator.h
+> index 901bda3..23dcc35 100644
+> --- a/include/linux/elevator.h
+> +++ b/include/linux/elevator.h
+> @@ -50,6 +50,7 @@ struct elevator_mq_ops {
+> 	struct request *(*next_request)(struct request_queue *, struct =
+request *);
+> 	void (*init_icq)(struct io_cq *);
+> 	void (*exit_icq)(struct io_cq *);
+> +	void (*elevator_registered_fn)(struct request_queue *q);
+> };
+>=20
+> #define ELV_NAME_MAX	(16)
+> --=20
+> 1.9.1
+>=20
+
