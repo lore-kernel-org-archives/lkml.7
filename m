@@ -2,220 +2,132 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A49BDC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B75ACC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B4272071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:35:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MweProfq"
+	by mail.kernel.org (Postfix) with ESMTP id 9373A20726
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:35:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfKRHfY (ORCPT
+        id S1726728AbfKRHfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 18 Nov 2019 02:35:25 -0500
+Received: from mga17.intel.com ([192.55.52.151]:8493 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726646AbfKRHfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 Nov 2019 02:35:24 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:39550 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbfKRHfY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 02:35:24 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAI7ZG6r099577;
-        Mon, 18 Nov 2019 01:35:16 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574062516;
-        bh=jAuRpekXF3jtoawWT7hGxk6T2pAz5AKTl9w23pKdMXY=;
-        h=From:To:CC:Subject:Date;
-        b=MweProfqMkKsL3KxQc0UkuH2LV3TiUL1OOFsctkFlJ8Yt2I2MYiFnj4UvNDQZv7b6
-         C/cUsvcAXOGnf1xYtncRgO6Vf56jA3QOsui/74mKGujG25wVXQ4hTtMUTCJ8LweIdj
-         7DPAeznZ2X//7+9c2yaJsJis4wbf5d66ECkxo9zA=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAI7ZFhH124319
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 18 Nov 2019 01:35:16 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 18
- Nov 2019 01:35:15 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 18 Nov 2019 01:35:15 -0600
-Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAI7ZDYI011349;
-        Mon, 18 Nov 2019 01:35:14 -0600
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-CC:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
-        <faiz_abbas@ti.com>
-Subject: [PATCH v2] mmc: sdhci_am654: Add Support for Command Queuing Engine to J721E
-Date:   Mon, 18 Nov 2019 13:06:09 +0530
-Message-ID: <20191118073609.22921-1-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.19.2
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Nov 2019 23:35:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,319,1569308400"; 
+   d="scan'208";a="258334186"
+Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
+  by FMSMGA003.fm.intel.com with ESMTP; 17 Nov 2019 23:35:23 -0800
+Message-ID: <5DD24B52.4090603@intel.com>
+Date:   Mon, 18 Nov 2019 15:42:10 +0800
+From:   Wei Wang <wei.w.wang@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+CC:     Khazhismel Kumykov <khazhy@google.com>, jasowang@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] virtio_balloon: fix shrinker pages_to_free calculation
+References: <20191115225557.61847-1-khazhy@google.com> <5DD21784.8020506@intel.com> <20191118002652-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20191118002652-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Support for CQHCI (Command Queuing Host Controller Interface)
-for each of the host controllers present in TI's J721E devices.
-Add cqhci_ops and a .irq() callback to handle cqhci specific interrupts.
+On 11/18/2019 01:30 PM, Michael S. Tsirkin wrote:
+> On Mon, Nov 18, 2019 at 12:01:08PM +0800, Wei Wang wrote:
+>> On 11/16/2019 06:55 AM, Khazhismel Kumykov wrote:
+>>> To my reading, we're accumulating total freed pages in pages_freed, but
+>>> subtracting it every iteration from pages_to_free, meaning we'll count
+>>> earlier iterations multiple times, freeing fewer pages than expected.
+>>> Just accumulate in pages_freed, and compare to pages_to_free.
+>> Not sure about the above. But the following unit mismatch is a good capture,
+>> thanks!
+>>
+>>> There's also a unit mismatch, where pages_to_free seems to be virtio
+>>> balloon pages, and pages_freed is system pages (We divide by
+>>> VIRTIO_BALLOON_PAGES_PER_PAGE), so sutracting pages_freed from
+>>> pages_to_free may result in freeing too much.
+>>>
+>>> There also seems to be a mismatch between shrink_free_pages() and
+>>> shrink_balloon_pages(), where in both pages_to_free is given as # of
+>>> virtio pages to free, but free_pages() returns virtio pages, and
+>>> balloon_pages returns system pages.
+>>>
+>>> (For 4K PAGE_SIZE, this mismatch wouldn't be noticed since
+>>> VIRTIO_BALLOON_PAGES_PER_PAGE would be 1)
+>>>
+>>> Have both return virtio pages, and divide into system pages when
+>>> returning from shrinker_scan()
+>> Sounds good.
+>>
+>>> Fixes: 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker")
+>>> Cc: Wei Wang <wei.w.wang@intel.com>
+>>> Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+>>> ---
+>>>
+>>> Tested this under memory pressure conditions and the shrinker seemed to
+>>> shrink.
+>>>
+>>>    drivers/virtio/virtio_balloon.c | 11 ++++-------
+>>>    1 file changed, 4 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+>>> index 226fbb995fb0..7951ece3fe24 100644
+>>> --- a/drivers/virtio/virtio_balloon.c
+>>> +++ b/drivers/virtio/virtio_balloon.c
+>>> @@ -782,11 +782,8 @@ static unsigned long shrink_balloon_pages(struct virtio_balloon *vb,
+>>>    	 * VIRTIO_BALLOON_ARRAY_PFNS_MAX balloon pages, so we call it
+>>>    	 * multiple times to deflate pages till reaching pages_to_free.
+>>>    	 */
+>>> -	while (vb->num_pages && pages_to_free) {
+>>> -		pages_freed += leak_balloon(vb, pages_to_free) /
+>>> -					VIRTIO_BALLOON_PAGES_PER_PAGE;
+>>> -		pages_to_free -= pages_freed;
+>>> -	}
+>>> +	while (vb->num_pages && pages_to_free > pages_freed)
+>>> +		pages_freed += leak_balloon(vb, pages_to_free - pages_freed);
+>>>    	update_balloon_size(vb);
+>>>    	return pages_freed;
+>>> @@ -805,11 +802,11 @@ static unsigned long virtio_balloon_shrinker_scan(struct shrinker *shrinker,
+>>>    		pages_freed = shrink_free_pages(vb, pages_to_free);
+>> We also need a fix here then:
+>>
+>> pages_freed = shrink_free_pages(vb, sc->nr_to_scan) *
+>> VIRTIO_BALLOON_PAGES_PER_PAGE;
+> No let's do accounting in pages please. virtio page is a legacy
+> thing we just did not fix it in time to get rid of it by now.
+>
+>> Btw, there is another mistake, in virtio_balloon_shrinker_count:
+>>
+>> -       count += vb->num_free_page_blocks >> VIRTIO_BALLOON_FREE_PAGE_ORDER;
+>> +      count += vb->num_free_page_blocks << VIRTIO_BALLOON_FREE_PAGE_ORDER;
+>>
+>> You may want to include it in this fix patch as well.
+> OMG. should be a separate patch.
+> But really this just shows why shifts are such a bad idea.
+>
+> Let's define
+> VIRTIO_BALLOON_PAGES_PER_FREE_PAGE
+>
+> and use it with * and / consistently instead of shifts.
+>
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-Reported-by: kbuild test robot <lkp@intel.com>
----
+OK, will do (maybe call it VIRTIO_BALLOON_FREE_PAGES_PER_BLOCK).
 
-v2: Dropped CONFIG_ prefix from select MMC_CQHCI which led to build
-failures. Successfully built with the .config provided by the kbuild test robot.
-
- drivers/mmc/host/Kconfig       |  1 +
- drivers/mmc/host/sdhci_am654.c | 71 +++++++++++++++++++++++++++++++++-
- 2 files changed, 71 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index 49ea02c467bf..7c1310ed26c6 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -1011,6 +1011,7 @@ config MMC_SDHCI_AM654
- 	tristate "Support for the SDHCI Controller in TI's AM654 SOCs"
- 	depends on MMC_SDHCI_PLTFM && OF && REGMAP_MMIO
- 	select MMC_SDHCI_IO_ACCESSORS
-+	select MMC_CQHCI
- 	help
- 	  This selects the Secure Digital Host Controller Interface (SDHCI)
- 	  support present in TI's AM654 SOCs. The controller supports
-diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-index bb90757ecace..b8e897e31e2e 100644
---- a/drivers/mmc/host/sdhci_am654.c
-+++ b/drivers/mmc/host/sdhci_am654.c
-@@ -12,6 +12,7 @@
- #include <linux/property.h>
- #include <linux/regmap.h>
- 
-+#include "cqhci.h"
- #include "sdhci-pltfm.h"
- 
- /* CTL_CFG Registers */
-@@ -68,6 +69,9 @@
- 
- #define CLOCK_TOO_SLOW_HZ	400000
- 
-+/* Command Queue Host Controller Interface Base address */
-+#define SDHCI_AM654_CQE_BASE_ADDR 0x200
-+
- static struct regmap_config sdhci_am654_regmap_config = {
- 	.reg_bits = 32,
- 	.val_bits = 32,
-@@ -259,6 +263,19 @@ static const struct sdhci_am654_driver_data sdhci_am654_drvdata = {
- 	.flags = IOMUX_PRESENT | FREQSEL_2_BIT | STRBSEL_4_BIT | DLL_PRESENT,
- };
- 
-+static u32 sdhci_am654_cqhci_irq(struct sdhci_host *host, u32 intmask)
-+{
-+	int cmd_error = 0;
-+	int data_error = 0;
-+
-+	if (!sdhci_cqe_irq(host, intmask, &cmd_error, &data_error))
-+		return intmask;
-+
-+	cqhci_irq(host->mmc, intmask, cmd_error, data_error);
-+
-+	return 0;
-+}
-+
- static struct sdhci_ops sdhci_j721e_8bit_ops = {
- 	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
- 	.get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
-@@ -267,6 +284,7 @@ static struct sdhci_ops sdhci_j721e_8bit_ops = {
- 	.set_power = sdhci_am654_set_power,
- 	.set_clock = sdhci_am654_set_clock,
- 	.write_b = sdhci_am654_write_b,
-+	.irq = sdhci_am654_cqhci_irq,
- 	.reset = sdhci_reset,
- };
- 
-@@ -290,6 +308,7 @@ static struct sdhci_ops sdhci_j721e_4bit_ops = {
- 	.set_power = sdhci_am654_set_power,
- 	.set_clock = sdhci_j721e_4bit_set_clock,
- 	.write_b = sdhci_am654_write_b,
-+	.irq = sdhci_am654_cqhci_irq,
- 	.reset = sdhci_reset,
- };
- 
-@@ -304,6 +323,40 @@ static const struct sdhci_am654_driver_data sdhci_j721e_4bit_drvdata = {
- 	.pdata = &sdhci_j721e_4bit_pdata,
- 	.flags = IOMUX_PRESENT,
- };
-+
-+static void sdhci_am654_dumpregs(struct mmc_host *mmc)
-+{
-+	sdhci_dumpregs(mmc_priv(mmc));
-+}
-+
-+static const struct cqhci_host_ops sdhci_am654_cqhci_ops = {
-+	.enable		= sdhci_cqe_enable,
-+	.disable	= sdhci_cqe_disable,
-+	.dumpregs	= sdhci_am654_dumpregs,
-+};
-+
-+static int sdhci_am654_cqe_add_host(struct sdhci_host *host)
-+{
-+	struct cqhci_host *cq_host;
-+	int ret;
-+
-+	cq_host = devm_kzalloc(host->mmc->parent, sizeof(struct cqhci_host),
-+			       GFP_KERNEL);
-+	if (!cq_host)
-+		return -ENOMEM;
-+
-+	cq_host->mmio = host->ioaddr + SDHCI_AM654_CQE_BASE_ADDR;
-+	cq_host->quirks |= CQHCI_QUIRK_SHORT_TXFR_DESC_SZ;
-+	cq_host->caps |= CQHCI_TASK_DESC_SZ_128;
-+	cq_host->ops = &sdhci_am654_cqhci_ops;
-+
-+	host->mmc->caps2 |= MMC_CAP2_CQE;
-+
-+	ret = cqhci_init(cq_host, host->mmc, 1);
-+
-+	return ret;
-+}
-+
- static int sdhci_am654_init(struct sdhci_host *host)
- {
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-@@ -344,7 +397,23 @@ static int sdhci_am654_init(struct sdhci_host *host)
- 	regmap_update_bits(sdhci_am654->base, CTL_CFG_2, SLOTTYPE_MASK,
- 			   ctl_cfg_2);
- 
--	return sdhci_add_host(host);
-+	ret = sdhci_setup_host(host);
-+	if (ret)
-+		return ret;
-+
-+	ret = sdhci_am654_cqe_add_host(host);
-+	if (ret)
-+		goto err_cleanup_host;
-+
-+	ret = __sdhci_add_host(host);
-+	if (ret)
-+		goto err_cleanup_host;
-+
-+	return 0;
-+
-+err_cleanup_host:
-+	sdhci_cleanup_host(host);
-+	return ret;
- }
- 
- static int sdhci_am654_get_of_property(struct platform_device *pdev,
--- 
-2.19.2
+Best,
+Wei
 
