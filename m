@@ -2,178 +2,156 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F14BC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47872C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D62620722
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D83220722
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:20:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="62hyIgPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbfKRLTk (ORCPT
+        id S1726767AbfKRLUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:19:40 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55793 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfKRLTj (ORCPT
+        Mon, 18 Nov 2019 06:20:14 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:34170 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726518AbfKRLUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:19:39 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iWf4B-000726-78; Mon, 18 Nov 2019 12:19:35 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iWf49-0000nC-ES; Mon, 18 Nov 2019 12:19:33 +0100
-Date:   Mon, 18 Nov 2019 12:19:33 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>, kernel@pengutronix.de
-Subject: Re: [PATCH v2 1/3] pwm: jz4740: Use clocks from TCU driver
-Message-ID: <20191118111933.vipfycc2j7j6esb7@pengutronix.de>
-References: <20191116173613.72647-1-paul@crapouillou.net>
- <20191116173613.72647-2-paul@crapouillou.net>
- <20191117202028.4chgjv2kulyyq2eu@pengutronix.de>
- <1574031523.3.0@crapouillou.net>
- <20191118071538.46egokrswvjxdvfp@pengutronix.de>
- <1574074556.3.0@crapouillou.net>
+        Mon, 18 Nov 2019 06:20:14 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAIBIHC4003081;
+        Mon, 18 Nov 2019 06:19:55 -0500
+Received: from nam05-dm3-obe.outbound.protection.outlook.com (mail-dm3nam05lp2058.outbound.protection.outlook.com [104.47.49.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2wabu77328-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 Nov 2019 06:19:55 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BZhxJ70C2zeeoQ6dez21YjWxrKPAkdR1umifp+mG1CEW9ebDFYMSXVjnHGt4UhRWKKt5Q1euGbzJcqOOkT6nqWkMT9aY4K66UByw4LXKdI9Dk7lPAyQminS5Ds4SVkw9cpLoJL/fj6XftoRmOuSySN/85AmSZGe3oNqLCqkfWMoHZgnAtanE8rmrR+D/ivAmWn9b5wEA7hXUxjA0iSNLWZPrSgdNd7fWH4GsFMSQGjmhR8kYex+idRzt9IOb92FmXgVn4RqYVKBqsV0kmZBI/Jiw6LjEaWUKlr79uWMtGietmmUD0wRYgpFfdhUIwCP4OSQL/a/XhZS+cgcGP1C4ug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NpAsQP42R4QbkrMtfEdrFUVfFXyoEQSJFIYpMYpVfrI=;
+ b=jfwxSD8jdkAm5xQFrgTt4BKMVzUy2zSW6zvZCHQfZ2kQbEiobE+ruUfVNR/ftVlvkEl3CFVpvyAa3TTM+aB0ARYxaB+1RC7grch01xvGlnva+bhb6yC6br3UJ8i6x5yMLl6oCgcGF6fqEpV7ggjkmi/4l31az5JQBCdalydA2MeLo1XT/r4djO2ENJWe/OaPKqXSyXdCw/IDLjGSw1KTu4vRBH7A1rPleFtTndf2XjeLc1ZcWLNxXWMTIKJsiXnQbCd9qdTnnsDlZISKZzT9peKq0yq9/0iR4CwAEz524bf7M4M5TtJxwpxPr9QNKeaHybXj2rsWSJcXFigizEiclA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=metafoo.de smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NpAsQP42R4QbkrMtfEdrFUVfFXyoEQSJFIYpMYpVfrI=;
+ b=62hyIgPEkOP8va2jPkFBkvmfr4i9NF3dV6jQotOXnYuavIc7rTdzwUs7Kh5BunvHS0MZfYWOsyWFqmdp/eWNYptiblPfa66uzTra+1Ks9KeLTlFpqBvWqI70LcMJSsc4420oM0XYxJHNsiZK+Lr+ClL0P04MZAsEPEsMpXKnVlE=
+Received: from DM3PR03CA0022.namprd03.prod.outlook.com (2603:10b6:0:50::32) by
+ DM6PR03MB5129.namprd03.prod.outlook.com (2603:10b6:5:1eb::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.23; Mon, 18 Nov 2019 11:19:53 +0000
+Received: from SN1NAM02FT031.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::202) by DM3PR03CA0022.outlook.office365.com
+ (2603:10b6:0:50::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.22 via Frontend
+ Transport; Mon, 18 Nov 2019 11:19:52 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ SN1NAM02FT031.mail.protection.outlook.com (10.152.72.116) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2451.23
+ via Frontend Transport; Mon, 18 Nov 2019 11:19:52 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id xAIBJpaR014315
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Mon, 18 Nov 2019 03:19:51 -0800
+Received: from mircea-Latitude-E6540.ad.analog.com (10.48.65.118) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Mon, 18 Nov 2019 06:19:51 -0500
+From:   Mircea Caprioru <mircea.caprioru@analog.com>
+To:     <jic23@kernel.org>
+CC:     <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
+        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: [PATCH V3] iio: adc: ad7124: Fix enabling of internal reference
+Date:   Mon, 18 Nov 2019 13:19:48 +0200
+Message-ID: <20191118111948.7414-1-mircea.caprioru@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1574074556.3.0@crapouillou.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(136003)(39860400002)(199004)(189003)(54534003)(336012)(426003)(2906002)(1076003)(44832011)(478600001)(14444005)(486006)(126002)(4326008)(316002)(16586007)(54906003)(6916009)(107886003)(476003)(106002)(86362001)(48376002)(36756003)(356004)(50466002)(8936002)(70586007)(2351001)(6666004)(26005)(246002)(2616005)(7696005)(186003)(47776003)(8676002)(7636002)(50226002)(70206006)(5660300002)(51416003)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB5129;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 34456e84-52fa-4848-a925-08d76c193b8f
+X-MS-TrafficTypeDiagnostic: DM6PR03MB5129:
+X-Microsoft-Antispam-PRVS: <DM6PR03MB51298AA1A6FA200E3F97E0BD814D0@DM6PR03MB5129.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-Forefront-PRVS: 0225B0D5BC
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Uvz/9P0IU8pGSmpd2ZFFU6w0RzogkEC4zaVKDDnAFcD/PW+EZIeQhnsNefbVI1YMDgf+VUJsXtdbNwRQgxucUR5yRGbXoRASNuVtoOy8q2GUsXWGcGxIdiNvaFYiJTIWI2AZnD9l2y61zvprtAZ8W7eGhuFQWaFM2BKrGT+fEE9WB8BjUTjXEHgF48KyDDZOq8StK3EqLgcSw1gGrMR8MO9mjB01YXmdd3q3RLJbjhbxq8DHRJxkL+nAaxDJDYAmJXsSf3tgI4SeayyhhMA74aGaMnc8Php7LbotP9F6ld/VkQtSPsFdreNaULBvt6tiu2Wgd+gLtYsJtI2CuVHSVAlwspKZCtVrSP7+r0cCwFFkW4b3YLIo5I827KLmdoGVo6a4lMEsJWsouiuAXoiyafV1ugDvzsaxe4ODFWkXn2jsAVHryD+7y9oKAzMKpPp3
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2019 11:19:52.4316
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34456e84-52fa-4848-a925-08d76c193b8f
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB5129
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-18_02:2019-11-15,2019-11-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 spamscore=0 adultscore=0 clxscore=1015 mlxlogscore=848
+ bulkscore=0 malwarescore=0 lowpriorityscore=0 suspectscore=1 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911180103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Paul,
+When the internal reference was selected by a channel it was not enabled.
+This patch fixes that and enables it.
 
-On Mon, Nov 18, 2019 at 11:55:56AM +0100, Paul Cercueil wrote:
-> Le lun., nov. 18, 2019 at 08:15, Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> a écrit :
-> > On Sun, Nov 17, 2019 at 11:58:43PM +0100, Paul Cercueil wrote:
-> > >  Le dim., nov. 17, 2019 at 21:20, Uwe Kleine-König
-> > >  <u.kleine-koenig@pengutronix.de> a écrit :
-> > >  > On Sat, Nov 16, 2019 at 06:36:11PM +0100, Paul Cercueil wrote:
-> > >  > >   struct jz4740_pwm_chip {
-> > >  > >   	struct pwm_chip chip;
-> > >  > >  -	struct clk *clk;
-> > >  >
-> > >  > What is the motivation to go away from this approach to store the
-> > > clock?
-> > > 
-> > >  It's actually not the same clock. Instead of obtaining "ext" clock
-> > > from the
-> > >  probe, we obtain "timerX" clocks (X being the PWM channel) from the
-> > > request
-> > >  callback.
-> > 
-> > Before you used driver data and container_of to get it, now you used
-> > pwm_set_chip_data. I wondered why you changed the approach to store
-> > data. That the actual data is different now is another thing (and
-> > obviously ok).
-> 
-> Thierry suggested it: https://lkml.org/lkml/2019/3/4/486
+Fixes: b3af341bbd96 ("iio: adc: Add ad7124 support")
+Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+---
 
-If you motivate that in the commit log (preferably with a better
-rationale than "Thierry suggested it") that's fine for. (Do I claim now
-without having read the rationale :-)
+Changelog v3:
+- mark this as a fix in the patch title
 
-> > >  > >   static void jz4740_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
-> > >  > >   {
-> > >  > >  +	struct clk *clk = pwm_get_chip_data(pwm);
-> > >  > >  +
-> > >  > >   	jz4740_timer_set_ctrl(pwm->hwpwm, 0);
-> > >  >
-> > >  > What is the purpose of this call? I would have expected that all these
-> > >  > would go away when converting to the clk stuff?!
-> > > 
-> > >  Some go away in patch [1/3] as they are clock-related, this one will go away
-> > >  in patch [2/3] when the driver is converted to use regmap.
-> > 
-> > I'd like to understand what it does. Judging from the name I expect this
-> > is somehow related to the clock stuff and so I wonder if the conversion
-> > to the clk API is as complete as it should be.
-> 
-> It clears the PWM channel's CTRL register. That's the register used for
-> instance to enable the PWM function of a TCU channel.
+ drivers/iio/adc/ad7124.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-OK, so this is a register in a different register range than the PWM
-related registers to set duty and period, right? Looking at the code,
-this register has a bit to enable PWM mode and other than that bit
-fields to tune the clock feeding the PWM counters, right?
-
-This probably explains my resistance because such a setup if really hard
-to map to nice code. At least the "PWM enable" bit doesn't fit the clk
-abstraction, no good idea here. Maybe it's easier and more straight
-forward to not wrap that register in a clock driver and only use a clk
-for the parent? What is the motivation to convert this piece of hardware
-to a clk driver? Or abstract it as a proper clk and provide a function
-to enable PWM mode for channel X?
-
-> > >  > >  -	jz4740_timer_stop(pwm->hwpwm);
-> > >  > >  +	clk_disable_unprepare(clk);
-> > >  > >  +	clk_put(clk);
-> > >  > >   }
-> > >  > >
-> > >  > >   static int jz4740_pwm_enable(struct pwm_chip *chip, struct
-> > > pwm_device *pwm)
-> > >  > >  @@ -91,17 +110,21 @@ static int jz4740_pwm_apply(struct
-> > > pwm_chip *chip, struct pwm_device *pwm,
-> > >  > >   			    const struct pwm_state *state)
-> > >  > >   {
-> > >  > >   	struct jz4740_pwm_chip *jz4740 = to_jz4740(pwm->chip);
-> > >  > >  +	struct clk *clk = pwm_get_chip_data(pwm),
-> > >  > >  +		   *parent_clk = clk_get_parent(clk);
-> > >  > >  +	unsigned long rate, period, duty;
-> > >  > >   	unsigned long long tmp;
-> > >  > >  -	unsigned long period, duty;
-> > >  > >   	unsigned int prescaler = 0;
-> > >  > >   	uint16_t ctrl;
-> > >  > >
-> > >  > >  -	tmp = (unsigned long long)clk_get_rate(jz4740->clk) *
-> > > state->period;
-> > >  > >  +	rate = clk_get_rate(parent_clk);
-> > >  >
-> > >  > Why is it the parent's rate that is relevant here?
-> > > 
-> > >  We calculate the divider to be used for the "timerX" clock, so we
-> > > need to
-> > >  know the parent clock.
-> > 
-> > Then the approach here is wrong. You should not assume anything about
-> > the internal details of the clock, that's the task of the clock driver.
-> > As a consumer of the clock just request a rate (or use clk_round_rate to
-> > find a good setting first) and use that.
-> 
-> Totally agreed. I wanted to do that, but you were fighting tooth and nails
-> against my patch "Improve algorithm of clock calculation", remember?
-
-No, I don't, but I looked that up :-) And I fighted because I thought
-the clk API isn't used properly (and I think your problem is that the
-clk API as is today doesn't give you what you want, so there is more
-work to do on the clk side of the problem).
-
-The conceptual problem I see is that currently the code uses some
-internal knowledge about how this timer clock works but as soon as you
-use the clk abstraction it's wrong to use such internal knowledge.
-
-Best regards
-Uwe
-
+diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+index edc6f1cc90b2..3f03abf100b5 100644
+--- a/drivers/iio/adc/ad7124.c
++++ b/drivers/iio/adc/ad7124.c
+@@ -39,6 +39,8 @@
+ #define AD7124_STATUS_POR_FLAG_MSK	BIT(4)
+ 
+ /* AD7124_ADC_CONTROL */
++#define AD7124_ADC_CTRL_REF_EN_MSK	BIT(8)
++#define AD7124_ADC_CTRL_REF_EN(x)	FIELD_PREP(AD7124_ADC_CTRL_REF_EN_MSK, x)
+ #define AD7124_ADC_CTRL_PWR_MSK	GENMASK(7, 6)
+ #define AD7124_ADC_CTRL_PWR(x)		FIELD_PREP(AD7124_ADC_CTRL_PWR_MSK, x)
+ #define AD7124_ADC_CTRL_MODE_MSK	GENMASK(5, 2)
+@@ -424,7 +426,10 @@ static int ad7124_init_channel_vref(struct ad7124_state *st,
+ 		break;
+ 	case AD7124_INT_REF:
+ 		st->channel_config[channel_number].vref_mv = 2500;
+-		break;
++		st->adc_control &= ~AD7124_ADC_CTRL_REF_EN_MSK;
++		st->adc_control |= AD7124_ADC_CTRL_REF_EN(1);
++		return ad_sd_write_reg(&st->sd, AD7124_ADC_CONTROL,
++				      2, st->adc_control);
+ 	default:
+ 		dev_err(&st->sd.spi->dev, "Invalid reference %d\n", refsel);
+ 		return -EINVAL;
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.17.1
+
