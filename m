@@ -2,184 +2,164 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAB9C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A7AC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D1C206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:14:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fR9iKXTX"
+	by mail.kernel.org (Postfix) with ESMTP id 6CBF320748
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:16:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfKRMOx (ORCPT
+        id S1726809AbfKRMQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 07:14:53 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:53934 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbfKRMOx (ORCPT
+        Mon, 18 Nov 2019 07:16:23 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:44575 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbfKRMQX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 07:14:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=GhE7qMvIwwf/aYu9her0sBn1vDdPh7s1IE5BSkrLez4=; b=fR9iKXTXT4+XD+NhJdh5EwWQ5l
-        ASFMW7HjICEpN4ugb9W379oArY6sdOuc5ijoipM0viY1tQs2o7BSudAaG2wbsNBla7gxYICZ1Jvdo
-        TS3mbVdewoayXAVYyQ4/1tO3QuaU1VoUy4NV1nKzvLAUkcvQo3jtp0lJg5JsjfJmlPBiA2hArgz9k
-        YKImF07gPYx+3ZOcONkLa1blhaXcisTK7+aRTTGkeUoZ4vPMrtvlKVgffH0SWuHKYlSm/S1SWtjli
-        FFy6w7B8A1tbTW97fCdNHvYxj7PQuqrnTrzV9gmrXhwrTOdbySmOG40qHxW6dd5vJ+/y/xqIiwlTD
-        /tVl7L9w==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iWfvf-0002Rb-5Z; Mon, 18 Nov 2019 12:14:51 +0000
-Date:   Mon, 18 Nov 2019 04:14:51 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH v3 3/7] mm/lru: replace pgdat lru_lock with lruvec lock
-Message-ID: <20191118121451.GG20752@bombadil.infradead.org>
-References: <1573874106-23802-1-git-send-email-alex.shi@linux.alibaba.com>
- <1573874106-23802-4-git-send-email-alex.shi@linux.alibaba.com>
- <20191116043806.GD20752@bombadil.infradead.org>
- <0bfa9a03-b095-df83-9cfd-146da9aab89a@linux.alibaba.com>
+        Mon, 18 Nov 2019 07:16:23 -0500
+Received: from [192.168.1.155] ([77.2.21.1]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N0G5n-1hcFmY0NEN-00xMaq; Mon, 18 Nov 2019 13:16:09 +0100
+Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, robh+dt@kernel.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        m.szyprowski@samsung.com, broonie@kernel.org, t-kristo@ti.com,
+        mripard@kernel.org, p.zabel@pengutronix.de,
+        devicetree@vger.kernel.org
+References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <3c384b40-f353-eaec-b1d6-ba74f5338ce1@metux.net>
+Date:   Mon, 18 Nov 2019 13:15:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191030120440.3699-1-peter.ujfalusi@ti.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: tl
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <0bfa9a03-b095-df83-9cfd-146da9aab89a@linux.alibaba.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Provags-ID: V03:K1:VQpp2LkkGOFS32U8chMPZcvqbjQhQ4rc0tkcJc2OEzDXeYPb7ST
+ ow42k80v1vJuyImw6DO3M/z0OBC3Rtgi4CV1ZmFn2ryR6JkELuOZjoa/YAFxNyIb5KkFShw
+ Lh17wToVV5OzhFFAeF3uTIZZfujHBFH87yJIJxRVvUOlJl0IHM0OpoomgDBHm7pQ6SHm8AL
+ ZvKAB7oOJ22vwXDNnCbJA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/ACmG4NFdI4=:I0pAr59f+vmixjhNzmC0rZ
+ hzINcwOJeCyyisQoH13jRRu1oh1HGt9LJIn4tfb77oMSomT5slJuexjZAcD/bHJXc0OjKS8PF
+ vTqXO5m5tye6l1CR42/92uFlxFFx0ppf8xOwKrBXvznRdoPwLeam3fztkE1MJN69V0GJcZUNs
+ 8v1cLG5hdiPNPCN9bL8r9fnRcPlqpO6dKEuvnm3iCzoPmiD1GDMPeJswaHqiHgPhxtL8kZpKd
+ sLecXLGCSTnY/vvdg6eW+01IMfV3EPThHJ3uHgS/T5xUnniu8qFGmVQa2c2gMk5wMcyTfz/oI
+ xak6YD7TxN5Eo1/pELE3Jao3uhij+j2n5sYDZ1dhyngDiBk/AvDwDDMsg8dNqWizwNpS40Uy7
+ Dhmubna2gXqlaRMZrRc9YcsDcLnk2HY5gwCYV1LQK6Jwn66xbJYCr/syfkwLYa4b41l5V7ecI
+ fBLpaH1hd+tskh3r4XWGuUSj8RPR555QTWTUiXXxCv22Zw5cjvNaTI1Hw0o6kD1vYd7+rXGg3
+ yuvSnpgTUDqst9vGd8yG1wbZRDOcg9rS76eyxIN937k6USvrpZAQt85C3XFv6CgFY56CzjEKX
+ MvItOY6vSIJJxPWUNrydgfTVwkp/Ts4yIKBF4Ui0XFIytB06/NEyNphqtTixGJlvyBK51Pkr9
+ R2CiYl1NM6653CmwieonpjSJrh31V0R9Q+Yl6HMkXWCu36hTNfYE3/4rkhSsHEn4t7F3AFoUV
+ NWjmpEJTPUoXD1vtWNLML6DfWhs927ye48HE62Ixm66jfVLnLt7o8B1TKjjjHWyHmAzc2V04u
+ pHuzDTM/7CdMAXxGK2uFtYMtV5Zr1+Neu7Wkw3xF2PSpLIVbpcDAx32qKZ/P403tDy3YCU48s
+ rUoOJZtBxZXtyH5iRp+Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 07:55:43PM +0800, Alex Shi wrote:
-> 在 2019/11/16 下午12:38, Matthew Wilcox 写道:
-> > On Sat, Nov 16, 2019 at 11:15:02AM +0800, Alex Shi wrote:
-> >> This is the main patch to replace per node lru_lock with per memcg
-> >> lruvec lock. It also fold the irqsave flags into lruvec.
-> > 
-> > I have to say, I don't love the part where we fold the irqsave flags
-> > into the lruvec.  I know it saves us an argument, but it opens up the
-> > possibility of mismatched expectations.  eg we currently have:
-> > 
-> > static void __split_huge_page(struct page *page, struct list_head *list,
-> > 			struct lruvec *lruvec, pgoff_t end)
-> > {
-> > ...
-> > 	spin_unlock_irqrestore(&lruvec->lru_lock, lruvec->irqflags);
-> > 
-> > so if we introduce a new caller, we have to be certain that this caller
-> > is also using lock_page_lruvec_irqsave() and not lock_page_lruvec_irq().
-> > I can't think of a way to make the compiler enforce that, and if we don't,
-> > then we can get some odd crashes with interrupts being unexpectedly
-> > enabled or disabled, depending on how ->irqflags was used last.
-> > 
-> > So it makes the code more subtle.  And that's not a good thing.
-> 
-> Hi Matthew,
-> 
-> Thanks for comments!
-> 
-> Here, the irqflags is bound, and belong to lruvec, merging them into together helps us to take them as whole, and thus reduce a unnecessary code clues.
+On 30.10.19 13:04, Peter Ujfalusi wrote:
 
-It's not bound to the lruvec, though.  Call chain A uses it and call chain
-B doesn't.  If it was always used by every call chain, I'd see your point,
-but we have call chains which don't use it, and so it adds complexity.
+Hi,
 
-> As your concern for a 'new' caller, since __split_huge_page is a static helper here, no distub for anyothers.
+> For example any device using the same GPIO as reset/enable line can
+> reset/enable other devices, which is not something the other device might like
+> or can handle.
 
-Even though it's static, there may be other callers within the same file.
-Or somebody may decide to make it non-static in the future.  I think it's
-actually clearer to keep the irqflags as a separate parameter.
+IMHO, for such cases, invidual drivers shouldn't fiddle w/ raw gpio's
+directly, but be connected to (gpio-based) reset controllers or
+regulators instead. I believe, GPIO isn't the correct abstraction layer
+for such cases: it's not even IO, just O.
 
-> >> +static inline struct lruvec *lock_page_lruvec_irq(struct page *page,
-> >> +						struct pglist_data *pgdat)
-> >> +{
-> >> +	struct lruvec *lruvec = mem_cgroup_page_lruvec(page, pgdat);
-> >> +
-> >> +	spin_lock_irq(&lruvec->lru_lock);
-> >> +
-> >> +	return lruvec;
-> >> +}
-> > 
-> > ...
-> > 
-> >> +static struct lruvec *lock_page_lru(struct page *page, int *isolated)
-> >>  {
-> >>  	pg_data_t *pgdat = page_pgdat(page);
-> >> +	struct lruvec *lruvec = lock_page_lruvec_irq(page, pgdat);
-> >>  
-> >> -	spin_lock_irq(&pgdat->lru_lock);
-> >>  	if (PageLRU(page)) {
-> >> -		struct lruvec *lruvec;
-> >>  
-> >> -		lruvec = mem_cgroup_page_lruvec(page, pgdat);
-> >>  		ClearPageLRU(page);
-> >>  		del_page_from_lru_list(page, lruvec, page_lru(page));
-> >>  		*isolated = 1;
-> >>  	} else
-> >>  		*isolated = 0;
-> >> +
-> >> +	return lruvec;
-> >>  }
-> > 
-> > But what if the page is !PageLRU?  What lruvec did we just lock?
-> 
-> like original pgdat->lru_lock, we need the lock from PageLRU racing. And it the lruvec which the page should be.
-> 
-> 
-> > According to the comments on mem_cgroup_page_lruvec(),
-> > 
-> >  * This function is only safe when following the LRU page isolation
-> >  * and putback protocol: the LRU lock must be held, and the page must
-> >  * either be PageLRU() or the caller must have isolated/allocated it.
-> > 
-> > and now it's being called in order to find out which LRU lock to take.
-> > So this comment needs to be updated, if it's wrong, or this patch has
-> > a race.
-> 
-> 
-> Yes, the function reminder is a bit misunderstanding with new patch, How about the following changes:
-> 
-> - * This function is only safe when following the LRU page isolation
-> - * and putback protocol: the LRU lock must be held, and the page must
-> - * either be PageLRU() or the caller must have isolated/allocated it.
-> + * The caller needs to grantee the page's mem_cgroup is undisturbed during
-> + * using. That could be done by lock_page_memcg or lock_page_lruvec.
+Let's sit back and rethink what the driver really wants to tell in those
+cases. For the enable lines we have:
 
-I don't understand how lock_page_lruvec makes this guarantee.  I'll look
-at the code again and see if I can understand that.
+a) make sure the device is enabled/powered
+b) device does not need to be enabled/powered anymore
+c) device must be powercycled
+
+You see, it's actually tristate, which gets relevant if multiple devices
+on one line.
+
+Now add reset lines:
+
+a) force device into reset state
+b) force device out of reset state
+c) allow device going into reset state (but no need to force)
+d) allow device coming out of reset state (but no need to force)
+
+It even gets more weird if a device can be reset or powercycled
+externally.
+
+
+hmm, not entirely trivial ...
+
+> For example a device needs to be configured after it is enabled, but some other
+> driver would reset it while handling the same GPIO -> the device is not
+> operational anymmore as it lost it's configuration.
+
+Yeah, at least we need some signalling to the driver, so it can do the
+necessary steps. From the driver's PoV, it's an "foreign reset".
+
+> With the gpio-shared gpiochip we can overcome this by giving the gpio-shared
+> the role of making sure that the GPIO line only changes state when it will not
+> disturb any of the clients sharing the same GPIO line.
+
+How exactly do we know when such disturbance can / cannot happen ?
+That would be depending on individual chips *and* how they're wired on
+the board. We'd end up with some logical multiplexer, that's board
+specific.
+
+<snip>
+
+> If any of the codec requests the GPIO to be high, the line will go up and will
+> only going to be low when both of them set's their shared line to low.
+
+So, if one driver request reset, all attached devices will be reset ?
+Or if all drivers request reset, all attached devices will be reset ?
+
+Doesn't look so quite non-disturbing to me :o
+
+> I have also looked at the reset framework, but again it can not be applied in a
+> generic way for GPIOs shared for other purposes 
+
+What are the exact scenarios you have in mind ?
+
+> and all existing drivers must
+> be converted to use the reset framework (and adding a linux only warpper on top
+> of reset GPIOs).
+
+Maybe a bit time consuming, but IMHO not difficult. We could add generic
+helpers for creating a reset driver on a gpio. So the drivers wouldn't
+even care about gpio itself anymore, but let the reset subsystem so it
+all (eg. look for DT node and request corresponding gpio, etc).
+
+IMHO, that's something we should do nevertheless, even if it's just for
+cleaner code.
+
+After that we could put any kind of funny logic behind the scenes (eg.
+one could connect the reset pin to a spare uart instead of gpio, etc),
+w/o ever touching the individual drivers.
+
+
+--mtx
+
+-- 
+Dringender Hinweis: aufgrund existenzieller Bedrohung durch "Emotet"
+sollten Sie *niemals* MS-Office-Dokumente via E-Mail annehmen/öffenen,
+selbst wenn diese von vermeintlich vertrauenswürdigen Absendern zu
+stammen scheinen. Andernfalls droht Totalschaden.
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
