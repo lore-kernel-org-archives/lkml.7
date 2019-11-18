@@ -2,224 +2,124 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB0BC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 04:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF106C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 04:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA69620720
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 04:17:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="eqbr+02V"
+	by mail.kernel.org (Postfix) with ESMTP id 88CCC2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 04:46:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574052367;
+	bh=5Fi8ISTGYC0I8pS4sCvDYqG1hSWfZevAihoTOHEYSWU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fSk8QhpyWYdZrkOdBwmICTMkbo/0+bpI+cViFiHjcVLQ5ePqTfR683osd2/zHUV2L
+	 7tjGpoapTCRVIHmrpszplr8wpTgMdKviXrihBMzGMG5bd/9lrvN8IzV0VXtnN5iy4B
+	 +LcsiDb2QdJaMRclbemiCOpibiJjJrE2PEkglcsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbfKRERx (ORCPT
+        id S1726510AbfKREqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 23:17:53 -0500
-Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25871 "EHLO
-        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfKRERw (ORCPT
+        Sun, 17 Nov 2019 23:46:06 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40833 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfKREqG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 23:17:52 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1574050633; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=LWIRgsgjSbpdYthFFRZ+BMAljnyU2PrWYNtoCwVx+1Q3WGKHqMA4Fth7OURLRZi2MD3EUMjVApJjW9JiKbjEZgD5VJuO21UOLAQ3fy8c+DvQQuwc6jDLOftBplOnltfOrmA5A7zijXSTh9HSsRCL/WxzBTqHdFMiBgU1PH25FY8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1574050633; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=aHnTiY4MATUs3VbgJH+xic5jl0bZNotDKT87u4DN7FE=; 
-        b=InL0I13cIdu1suH7bQ6R6IX79k6Osz/D0WJRlqdn4W0yMAAHI95HaCnfH+IL0vFtAUw0cc3vvVtdfPpzmXP41cldHqnGEDeYPvPcUb/2lzPtZf6/ZUgfY+6YXxDNjTpQDQDoOorAyn442VCMraj7sB5+lI5C/I+3D8hwRnmBJlI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
-  b=ROboRtyzhiwNlR2ifB7DlEcGHqi3bMaxEDHftpt3EaVa3IjhFH++xy8JXt1qUOWsqtgOD1bo1p3F
-    8MhnfJhy2qbu9T0pNkyz/p3Z12zXdERw7vkSWXusSVZT+3UzRSJ4  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574050633;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        l=4952; bh=aHnTiY4MATUs3VbgJH+xic5jl0bZNotDKT87u4DN7FE=;
-        b=eqbr+02VieLQI69iJ2MCiW85VZ5ifxhnU6aJ/L6OvKyku/IzKNCCJIhRvOk7SGd0
-        QZ3MdbGaFz8YOR98PvqrsceI3DIG6V+I1CfxPGh94aQnPkRwfawGXjukYOnLCBhImjo
-        U6glzWILEMjKwFN/z0PFSl1HuxpcRv2LmrIogC8I=
-Received: from [192.168.88.128] (171.221.112.196 [171.221.112.196]) by mx.zohomail.com
-        with SMTPS id 157405063211113.88116265251631; Sun, 17 Nov 2019 20:17:12 -0800 (PST)
-Subject: Re: [PATCH 2/2] MIPS: Ingenic: Disable abandoned HPTLB function.
-To:     Paul Cercueil <paul@crapouillou.net>
-References: <1571909341-10108-1-git-send-email-zhouyanjie@zoho.com>
- <1571909341-10108-3-git-send-email-zhouyanjie@zoho.com>
- <20191115213716.wt4wn2moj3fup4dc@lantea.localdomain>
- <5DCFCB41.3090807@zoho.com> <1573991370.3.0@crapouillou.net>
-Cc:     Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ralf@linux-mips.org,
-        jhogan@kernel.org, gregkh@linuxfoundation.org,
-        paul.burton@mips.com, chenhc@lemote.com, tglx@linutronix.de,
-        jiaxun.yang@flygoat.com
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-Message-ID: <5DD21B41.4010908@zoho.com>
-Date:   Mon, 18 Nov 2019 12:17:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Sun, 17 Nov 2019 23:46:06 -0500
+Received: by mail-ed1-f65.google.com with SMTP id p59so12404617edp.7;
+        Sun, 17 Nov 2019 20:46:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VUOQUGby+FTDEOd45d8wOcDXQ1N8J/aKk3wSgOD09hw=;
+        b=o0Jhwv8lA8GADwEVNXPAELicuQDbGgvA6LwgTgMI8RfEbCe6MqDpRADdWqX3/35Y+c
+         wZwjp8sk2H9xlq2oXmT5IoIbUkTYd9YSu1jCPkf5qEXPiPM1l5yw46Gd4wmExzWsT/Cq
+         CpQYlEZRJTSHBrv69I0u9TjzfwuuoeP2q8PU1x+q/bRDdE30W/r9EHGqboYtayYU2gtL
+         Kz/+dRFmxdui8DL93zfF3UTDx8rk9Nkfu6zPmtuap437Z5nrj2DLAhawgqgeo5RMOh9o
+         TDWqdhcxX0CgadFhGd8HB26dQG7DrtQd/IJn/z88Mbmoz3v6Xx3h4cpQ1hmJCncQb4hy
+         Gffw==
+X-Gm-Message-State: APjAAAUbliMSDP2fiqE8e+dkYvSYxB1uFFDtk6aATkx2D7s7eQc68WHV
+        SRpzturjuH/BoTQJ6BWcngA1rMC+fFIbkdkHxn0=
+X-Google-Smtp-Source: APXvYqw9NlN7CITunK84MNI2Vn7QAoDPrBVkCP57F7UOm7PUdWeBg1nXqiNvcs9Pp3iAV1wQVOpRBdZQFcJoIQdxFKU=
+X-Received: by 2002:a17:906:5251:: with SMTP id y17mr24339371ejm.108.1574052364573;
+ Sun, 17 Nov 2019 20:46:04 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1573991370.3.0@crapouillou.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+References: <2717750.dCEzHT3DVQ@kreacher>
+In-Reply-To: <2717750.dCEzHT3DVQ@kreacher>
+From:   Len Brown <lenb@kernel.org>
+Date:   Sun, 17 Nov 2019 23:45:53 -0500
+Message-ID: <CAJvTdKn9wuoXkKecZxCJHPZAG7XK_BqAZT5=7k9Mi4zo4SBL0g@mail.gmail.com>
+Subject: Re: [PATCH] cpuidle: Consolidate disabled state checks
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Doug Smythies <dsmythies@telus.net>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On Mon, Nov 4, 2019 at 6:16 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> There are two reasons why CPU idle states may be disabled: either
+> because the driver has disabled them or because they have been
+> disabled by user space via sysfs.
+>
+> In the former case, the state's "disabled" flag is set once during
+> the initialization of the driver and it is never cleared later (it
+> is read-only effectively).
 
-On 2019=E5=B9=B411=E6=9C=8817=E6=97=A5 19:49, Paul Cercueil wrote:
-> Hi Zhou,
->
->
-> Le sam., nov. 16, 2019 at 18:11, Zhou Yanjie <zhouyanjie@zoho.com> a=20
-> =C3=A9crit :
->> Hi Paul,
->>
->> On 2019=E5=B9=B411=E6=9C=8816=E6=97=A5 05:37, Paul Burton wrote:
->>> Hi Zhou,
->>>
->>> On Thu, Oct 24, 2019 at 05:29:01PM +0800, Zhou Yanjie wrote:
->>>> JZ4760/JZ4770/JZ4775/X1000/X1500 has an abandoned huge page
->>>> tlb, write 0xa9000000 to cp0 config5 sel4 to disable this
->>>> function to prevent getting stuck.
->>> Can you describe how we "get stuck"?
->>
->> When the kernel is started, it will be stuck in the "Run /init as=20
->> init process"
->> according to the log information. After using the debug probe, it is=20
->> found
->> that tlbmiss occurred when the run init was started, and entered the=20
->> infinite
->> loop in the "tlb-funcs.S".
->>
->>> What actually goes wrong on the
->>> affected CPUs? Do they misinterpret EntryLo values? Which bits do they
->>> misinterpret?
->>
->> According to Ingenic's explanation, this is because the=20
->> JZ4760/JZ4770/JZ4775/X1000
->> use the same core (both belong to PRID_COMP_INGENIC_D1). This core is=20
->> not fully
->> implemented in VTLB at design time, but only implements the 4K page=20
->> mode.
->
-> Actually hugepages work fine on all Ingenic SoCs I tested with, from=20
-> JZ4740 upwards, with the VTLB, so this is incorrect.
->
+for x86 (intel_idle and acpi_idle), no states with disabled=1 are  registered
+with cpuidle.  Instead, intel_idle (currently) skips them in the loop
+that registers states.
+(and acpi_idle never touches the disabled field)
 
-I once again checked with Ingenic. I was wrong before, and VTLB is fully
-implemented. HPTLB is a custom mode that is not compatible with the
-MIPS standard. The two are parallel relationship, not the complementary
-relationship I have previously understood. After the chip reset, the defaul=
-t
-is HPTLB mode, so we need to write 0xa9000000 to cp0 register 5 sel 4 to
-switch back to VTLB mode.
+And so for x86, governors checking for drv->states[i].disabled is a NOP,
+and the condition described by CPUIDLE_STATE_DISABLED_BY_DRIVER
+does not (yet) exist.
 
-Thanks and best regards!
+Looking at the ARM code, it seems that cpuidle-imx6q.c and cpuidle-tegra20.c
+reach into the cpuidle states at run time and toggle the
+drv->states[i].disabled.
 
->
->> Support for larger pages was implemented by a component called HPTLB=20
->> that
->> they designed themselves, but this component was later discarded, so=20
->> write
->> 0xa9000000 to cp0 register5 sel4 to turn off HPTLB mode and return to=20
->> VTLB
->> mode. The actual test also shows that the kernel will no longer be=20
->> stuck in
->> the "Run / init as init process" after shutting down the HPTLB mode,=20
->> and can
->> boot to the shell normally.
->
-> That's good info, please consider adding that in the comment and in=20
-> the commit message, and maybe also change the last sentence to reflect=20
-> what's actually going on with the infinite loop after the tlbmiss.
->
-> Cheers,
-> -Paul
->
->
->>
->>>
->>>> Confirmed by Ingenic,
->>>> this operation will not adversely affect processors
->>>> without HPTLB function.
->>>>
->>>> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
->>>> ---
->>>>   arch/mips/kernel/cpu-probe.c | 16 ++++++++++++++--
->>>>   1 file changed, 14 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/arch/mips/kernel/cpu-probe.c=20
->>>> b/arch/mips/kernel/cpu-probe.c
->>>> index 16033a4..cfebf8c 100644
->>>> --- a/arch/mips/kernel/cpu-probe.c
->>>> +++ b/arch/mips/kernel/cpu-probe.c
->>>> @@ -1966,11 +1966,23 @@ static inline void cpu_probe_ingenic(struct=20
->>>> cpuinfo_mips *c, unsigned int cpu)
->>>>       }
->>>>   =7F=7F      /*
->>>> -     * The config0 register in the Xburst CPUs with a processor ID of
->>>> +     * The config0 register in the XBurst CPUs with a processor ID of
->>>> +     * PRID_COMP_INGENIC_D1 has an abandoned huge page tlb, write
->>>> +     * 0xa9000000 to cp0 config5 sel4 to disable this function to
->>> Saying "config5" suggests $16 sel 5 to me - Config5 is after all an
->>> architecturally defined register & it's not this one. It'd be better to
->>> say "cop0 register 5 sel 4".
->>
->> Sure, I'll change it in v2.
->>
->>>> +     * prevent getting stuck.
->>>> +     */
->>>> +    if ((c->processor_id & PRID_COMP_MASK) =3D=3D PRID_COMP_INGENIC_D=
-1) {
->>>> +        __asm__ (
->>>> +            "li    $2, 0xa9000000 \n\t"
->>>> +            "mtc0  $2, $5, 4      \n\t"
->>>> +            "nop                  \n\t"
->>>> +            ::"r"(2));
->>> I'd prefer that you add #defines to asm/mipsregs.h to provide a
->>> write_c0_X() function where X is replaced with whatever the name of=20
->>> this
->>> register is, and preferably also #define macros describing the fields
->>> present in the register. Writing a magic number isn't ideal.
->>
->> Sure, I'll change it in v2.
->>
->>>> +    /*
->>>> +     * The config0 register in the XBurst CPUs with a processor ID of
->>>>        * PRID_COMP_INGENIC_D0 report themselves as MIPS32r2=20
->>>> compatible,
->>>>        * but they don't actually support this ISA.
->>>>        */
->>>> -    if ((c->processor_id & PRID_COMP_MASK) =3D=3D PRID_COMP_INGENIC_D=
-0)
->>>> +    } else if ((c->processor_id & PRID_COMP_MASK) =3D=3D=20
->>>> PRID_COMP_INGENIC_D0)
->>> It might be cleaner to use a switch statement rather than writing out
->>> the & PRID_COMP_MASK condition twice?
->>
->> Sure, I'll change it in v2.
->>
->> Thanks and best regards!
->>
->>>
->>> Thanks,
->>>      Paul
->>
->>
->>
->
->
+It seems that this patch takes the initial value of
+drv->states->disabled, and sets the (per cpu)
+usage.disable=..BY_DRIVER,
+but that subsequent run-time toggles in drv->states[i]disabled by
+these drivers would be missed,
+because you're removed the run-time checking of drv->states->disabled?
+
+Finally, I'd like to change intel_idle so that it *can* register a
+state that is disabled, by default.
+If I change the driver to NOT skip registering disabled states, and
+the cpuidle copy has cpuidle_state.disabled=1,
+then the state is indeed, unused at run-time.  But as you said,
+it is effectively read-only, and is not indicated in sysfs, and can
+not be changed via sysfs.
+
+One way to do this is to do what you do here and initialize
+usage.disabled to drv->state.disabled. (not distinguishing between
+DRIVER and USER)
+That way the user could later over-ride what a driver set, by clearing
+the disabled attribute.
+
+However, the ARM drivers, at least, seem to want to reserve the right
+to set and clear the drv->state.disabled,
+and to have them continue to have that right, we have to continue
+checking that field at run-time.
+And giving drivers the opportunity to do that disabling driver-wide,
+instead of per-cpu (usage) wide,
+seems to be something we may want to keep.
+
+-Len
 
 
-
+-- 
+Len Brown, Intel Open Source Technology Center
