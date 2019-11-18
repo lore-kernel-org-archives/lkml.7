@@ -2,184 +2,261 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 334CFC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CB5C33C99
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E454420726
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C2D2084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:01:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="qMSaI+2M"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Rp/s+NiZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbfKRF6l (ORCPT
+        id S1726511AbfKRGBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 00:58:41 -0500
-Received: from mail-eopbgr790081.outbound.protection.outlook.com ([40.107.79.81]:31584
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726140AbfKRF6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 00:58:41 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jXensFFs2GnwhPb5SQY5HYfeUqfUsfEAK8w8qDBuUJjtn3+WY7OGlDC5k3DG/smT0AOOaQvfHTyjKwYFap8BuBOXz0fmdxNCnwECy7gr5I3vQFSp4JchOGd97oDgDe1JycnGLUOkFaTj9lh16IKUOGROvkRH/YCarYmVAoYECFzqL5a9fj2Pj+0KT8e9CcOJFHYzmIQLXC9+APEhDVX554mgXP4V9dBP0sWnqrfgwQJh6Ws6JtQ0NDipFHl+dQZ/Ixk9tDvT6/cgvhkxgN4peGNEOfRuJjkk/rSsDXtgFRZq1WclS2F6dznKC5/SRW6vc15ZYCTrwZDLPevo1Ydrlw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=51zqmSFm+2+y50UokU2mS7wqdMURW8mFABYJHOVjryQ=;
- b=aT9gFkBFMPdf3LclzRuHWHlxAoMyyVtz2AfPPafN5FSFcw+DHw9spR8eo/F9j/JEKxCZEmMtAyp9brDkubnDkFA1wec2jh3x81zMzWCaicU7OnTMLMDC+cNsSdMHD83PA6jk30kWRHFoHvmwcQrRpaJCkE38YLn+gOuKLfDlNU0CpmYLp18wH15/mNts3WGNPl7Kw9Izpmp766INpCSX6QxdnDk75YA9WjCKXloyJPmYwfETsAB0ScZQzVrmeUiY56jo64UGeQ5mArK/5aq7gmCry6oB9pclOCVfhQr8ezwDfINOg/p+3hRQjmGOt7A/rndEJh1lQ4v0HMynyhkHVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
- dkim=pass header.d=sifive.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=51zqmSFm+2+y50UokU2mS7wqdMURW8mFABYJHOVjryQ=;
- b=qMSaI+2MtNQATuBS5yKKGZ73SWaQAnpeutQes23IFJJUPzVDAlJigejzO21VIgzWZylzf60fpDmghcaBtvJrqbLYdJQtshoiy9EMfN9X2ELpvGORUilbDQu+B1httYX6FLNu+9kA96A/3SnJ3F5ieZ2WYKghBkUzUUy+ZdhAFog=
-Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
- CH2PR13MB3656.namprd13.prod.outlook.com (20.180.4.204) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.11; Mon, 18 Nov 2019 05:58:34 +0000
-Received: from CH2PR13MB3368.namprd13.prod.outlook.com
- ([fe80::853e:1256:311e:d29]) by CH2PR13MB3368.namprd13.prod.outlook.com
- ([fe80::853e:1256:311e:d29%7]) with mapi id 15.20.2474.012; Mon, 18 Nov 2019
- 05:58:34 +0000
-From:   Yash Shah <yash.shah@sifive.com>
-To:     "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "Anup.Patel@wdc.com" <Anup.Patel@wdc.com>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "logang@deltatee.com" <logang@deltatee.com>,
-        "ren_guo@c-sky.com" <ren_guo@c-sky.com>,
-        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "wangkefeng.wang@huawei.com" <wangkefeng.wang@huawei.com>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>,
-        Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH v2] RISC-V: Add address map dumper
-Thread-Topic: [PATCH v2] RISC-V: Add address map dumper
-Thread-Index: AQHVndU2VgMppCRLNkW/sB+PFFFlEg==
-Date:   Mon, 18 Nov 2019 05:58:34 +0000
-Message-ID: <1574056694-28927-1-git-send-email-yash.shah@sifive.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MAXPR0101CA0032.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:d::18) To CH2PR13MB3368.namprd13.prod.outlook.com
- (2603:10b6:610:2c::26)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yash.shah@sifive.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [114.143.65.226]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9e9863ac-1009-4025-030f-08d76bec58d1
-x-ms-traffictypediagnostic: CH2PR13MB3656:
-x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR13MB3656880E3D54A846F9CEB6568C4D0@CH2PR13MB3656.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 0225B0D5BC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(39840400004)(366004)(376002)(346002)(199004)(189003)(81166006)(486006)(2616005)(81156014)(476003)(7416002)(2501003)(478600001)(8936002)(8676002)(52116002)(44832011)(50226002)(7736002)(36756003)(305945005)(2906002)(25786009)(64756008)(66946007)(66476007)(66556008)(66446008)(316002)(71190400001)(71200400001)(6486002)(5660300002)(107886003)(102836004)(4326008)(186003)(99286004)(6512007)(86362001)(14454004)(2201001)(6436002)(26005)(66066001)(14444005)(3846002)(256004)(6116002)(54906003)(110136005)(6506007)(386003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3656;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: sifive.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nNqWz/BxC7x57h+sr7l97rPW6rPNrAX7kLcoRkaW2lbP7O008JTGpqnWqk3p9P9d4Bhth1FCaZW7jdo/tbGp+u5/wmONm9/q1Iu50v0J65mpMj6F66XBO8fwXqI6XA65jV9aSQbWejTAYQlvZlC8pxTuxpPJ5mp8ePSV+zJhVXu50Cip1V2ov3kuG26PfD3XnRI1wZlNdvzrHgPZBKBdO7cHd9Do9ygbzdNJ6YiovEvnTf5zRYWIibMJIv/V3/Yhjeb8nFIfLaj1ch0XDDky7qNLTygC+MxaJ5bRexfXeX3eFh7+qJl3MHDhS2CZ+7Ac+e5kAWVY0OOtplyu0B0O7ojS1AUl1M4NgjH1a1WG9gg8U/8TDctAiiA+f4Yf+gljWxx6yNQA/rLGscwcYCXq9VA0WGmRmrIFEXoF8AeQaA8skTxSvHqyFVDRqZVFWIsS
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 18 Nov 2019 01:01:38 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:35700 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfKRGBh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 01:01:37 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAI5xW4j173462;
+        Mon, 18 Nov 2019 06:00:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2019-08-05; bh=lJNfpXyGElRb/i/ta3IUdcy9bQdPNL5BTVX/Bu3Iddw=;
+ b=Rp/s+NiZI4tG44vuNrd74O4I0c3NnHRvOgJljmJ3J0h/KRaoiF5qq/MwenYgNsyfQ6Th
+ AnxHRZ7M5ZzAS9a47C5IgZo/zcMxDMjt5gPsJDKWkbZkm0y6ADCU/4OwsVZIK2RRyJGN
+ 6DVH0f4wpDmwuQjxmnnXl+Lf+yZgqTkBrOPS/nrqWIwOgmbQMEJcn1CUhXGKVUxvgrCi
+ tqRyFBakr778N7egrQ7vbeuT0/KAjU+1PeviVYaS/dTHjG/SMsiVsttzPWID5CESl4/Z
+ d4LP0a56kimUBNR7lDwWdJ8Ca9SoPrnuBbaOkIcH2a2K1DBDH7wmLzpLRj2XDDPKMrpy pg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2wa8htdxn4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Nov 2019 06:00:39 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAI5xUJ0157272;
+        Mon, 18 Nov 2019 06:00:38 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2wau93yfw3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Nov 2019 06:00:38 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAI60N72032599;
+        Mon, 18 Nov 2019 06:00:23 GMT
+Received: from kadam (/41.210.154.44)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 17 Nov 2019 22:00:09 -0800
+Date:   Mon, 18 Nov 2019 08:59:41 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     kbuild@lists.01.org,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     kbuild-all@lists.01.org, matti.vaittinen@fi.rohmeurope.com,
+        mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v4 15/16] leds: Add common LED binding parsing support to
+ LED class/core
+Message-ID: <20191118055941.GB1776@kadam>
 MIME-Version: 1.0
-X-OriginatorOrg: sifive.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e9863ac-1009-4025-030f-08d76bec58d1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 05:58:34.5499
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LPZ8xeibrwhCeH1KAbT+4bCSq3KChdkR36kFu/R/oOeMS1rwXy60hadQY7BQPg1CsDzI1icnbCsndTac/S/VhA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3656
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <773ed63e512f9086483089d67c492d092444bc8a.1573928775.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9444 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911180052
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9444 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911180052
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for dumping the kernel address space layout to the console.
-User can enable CONFIG_DEBUG_VM to dump the virtual memory region into
-dmesg buffer during boot-up.
+Hi Matti,
 
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
+[auto build test WARNING on 31f4f5b495a62c9a8b15b1c3581acd5efeb9af8c]
+
+url:    https://github.com/0day-ci/linux/commits/Matti-Vaittinen/Support-ROHM-BD71828-PMIC/20191117-030515
+base:    31f4f5b495a62c9a8b15b1c3581acd5efeb9af8c
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+
+smatch warnings:
+drivers/leds/led-core.c:400 fw_is_match() error: uninitialized symbol 'ret'.
+drivers/leds/led-core.c:465 led_find_fwnode() error: double free of 'val'
+
+# https://github.com/0day-ci/linux/commit/7b8033cfca34525c9e45fe2e74783fef74f4a49c
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout 7b8033cfca34525c9e45fe2e74783fef74f4a49c
+vim +/ret +400 drivers/leds/led-core.c
+
+7b8033cfca3452 Matti Vaittinen  2019-11-16  368  static int fw_is_match(struct fwnode_handle *fw,
+7b8033cfca3452 Matti Vaittinen  2019-11-16  369  		       struct led_fw_match_property *mp, void *val)
+bb4e9af0348dfe Jacek Anaszewski 2019-06-09  370  {
+7b8033cfca3452 Matti Vaittinen  2019-11-16  371  	void *cmp = mp->raw_val;
+bb4e9af0348dfe Jacek Anaszewski 2019-06-09  372  	int ret;
+bb4e9af0348dfe Jacek Anaszewski 2019-06-09  373  
+7b8033cfca3452 Matti Vaittinen  2019-11-16  374  	if (mp->raw_val) {
+7b8033cfca3452 Matti Vaittinen  2019-11-16  375  		ret = fwnode_property_read_u8_array(fw, mp->name, val,
+7b8033cfca3452 Matti Vaittinen  2019-11-16  376  						    mp->size);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  377  	} else if (mp->intval) {
+                                                                   ^^^^^^^^^^
+Smatch is complaining about if this is false then ret isn't set.
+
+7b8033cfca3452 Matti Vaittinen  2019-11-16  378  		cmp = mp->intval;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  379  		switch (mp->size) {
+7b8033cfca3452 Matti Vaittinen  2019-11-16  380  		case 1:
+7b8033cfca3452 Matti Vaittinen  2019-11-16  381  			ret = fwnode_property_read_u8_array(fw, mp->name, val,
+7b8033cfca3452 Matti Vaittinen  2019-11-16  382  						    mp->size);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  383  			break;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  384  		case 2:
+7b8033cfca3452 Matti Vaittinen  2019-11-16  385  			ret = fwnode_property_read_u16_array(fw, mp->name, val,
+7b8033cfca3452 Matti Vaittinen  2019-11-16  386  						    mp->size);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  387  			break;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  388  		case 4:
+7b8033cfca3452 Matti Vaittinen  2019-11-16  389  			ret = fwnode_property_read_u32_array(fw, mp->name, val,
+7b8033cfca3452 Matti Vaittinen  2019-11-16  390  						    mp->size);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  391  			break;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  392  		case 8:
+7b8033cfca3452 Matti Vaittinen  2019-11-16  393  			ret = fwnode_property_read_u64_array(fw, mp->name, val,
+7b8033cfca3452 Matti Vaittinen  2019-11-16  394  						    mp->size);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  395  			break;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  396  		default:
+7b8033cfca3452 Matti Vaittinen  2019-11-16  397  			return -EINVAL;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  398  		}
+7b8033cfca3452 Matti Vaittinen  2019-11-16  399  	}
+7b8033cfca3452 Matti Vaittinen  2019-11-16 @400  	if (!ret && cmp) {
+7b8033cfca3452 Matti Vaittinen  2019-11-16  401  		if (!memcmp(val, cmp, mp->size)) {
+7b8033cfca3452 Matti Vaittinen  2019-11-16  402  			kfree(val);
+                                                                        ^^^^^^^^^^
+This kfree leads to a double free below.  Freeing it here is a
+layering violation, so delete this one and keep the kfree in the caller.
+
+7b8033cfca3452 Matti Vaittinen  2019-11-16  403  			return 1;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  404  		}
+7b8033cfca3452 Matti Vaittinen  2019-11-16  405  	}
+7b8033cfca3452 Matti Vaittinen  2019-11-16  406  	return 0;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  407  }
+7b8033cfca3452 Matti Vaittinen  2019-11-16  408  /**
+7b8033cfca3452 Matti Vaittinen  2019-11-16  409   * led_find_fwnode - find fwnode for led
+7b8033cfca3452 Matti Vaittinen  2019-11-16  410   * @parent	LED controller device
+7b8033cfca3452 Matti Vaittinen  2019-11-16  411   * @init_data	led init data with match information
+7b8033cfca3452 Matti Vaittinen  2019-11-16  412   *
+7b8033cfca3452 Matti Vaittinen  2019-11-16  413   * Scans the firmware nodes and returns node matching the given init_data.
+7b8033cfca3452 Matti Vaittinen  2019-11-16  414   * NOTE: Function increases refcount for found node. Caller must decrease
+7b8033cfca3452 Matti Vaittinen  2019-11-16  415   * refcount using fwnode_handle_put when finished with node.
+7b8033cfca3452 Matti Vaittinen  2019-11-16  416   */
+7b8033cfca3452 Matti Vaittinen  2019-11-16  417  struct fwnode_handle *led_find_fwnode(struct device *parent,
+7b8033cfca3452 Matti Vaittinen  2019-11-16  418  				      struct led_init_data *init_data)
+7b8033cfca3452 Matti Vaittinen  2019-11-16  419  {
+7b8033cfca3452 Matti Vaittinen  2019-11-16  420  	struct fwnode_handle *fw;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  421  
+7b8033cfca3452 Matti Vaittinen  2019-11-16  422  	/*
+7b8033cfca3452 Matti Vaittinen  2019-11-16  423  	 * This should never be called W/O init data. We could always return
+7b8033cfca3452 Matti Vaittinen  2019-11-16  424  	 * dev_fwnode() - but then we should pump-up the refcount
+7b8033cfca3452 Matti Vaittinen  2019-11-16  425  	 */
+7b8033cfca3452 Matti Vaittinen  2019-11-16  426  	if (!init_data)
+7b8033cfca3452 Matti Vaittinen  2019-11-16  427  		return NULL;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  428  
+7b8033cfca3452 Matti Vaittinen  2019-11-16  429  	if (!init_data->fwnode)
+7b8033cfca3452 Matti Vaittinen  2019-11-16  430  		fw = dev_fwnode(parent);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  431  	else
+7b8033cfca3452 Matti Vaittinen  2019-11-16  432  		fw = init_data->fwnode;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  433  
+7b8033cfca3452 Matti Vaittinen  2019-11-16  434  	if (!fw)
+7b8033cfca3452 Matti Vaittinen  2019-11-16  435  		return NULL;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  436  
+7b8033cfca3452 Matti Vaittinen  2019-11-16  437  	/*
+7b8033cfca3452 Matti Vaittinen  2019-11-16  438  	 * Simple things are pretty. I think simplest is to use DT node-name
+7b8033cfca3452 Matti Vaittinen  2019-11-16  439  	 * for matching the node with LED - same way regulators use the node
+7b8033cfca3452 Matti Vaittinen  2019-11-16  440  	 * name to match with desc.
+7b8033cfca3452 Matti Vaittinen  2019-11-16  441  	 *
+7b8033cfca3452 Matti Vaittinen  2019-11-16  442  	 * This may not work with existing LED DT entries if the node name has
+7b8033cfca3452 Matti Vaittinen  2019-11-16  443  	 * been freely selectible. In order to this to work the binding doc
+7b8033cfca3452 Matti Vaittinen  2019-11-16  444  	 * for LED driver should define usable node names.
+7b8033cfca3452 Matti Vaittinen  2019-11-16  445  	 *
+7b8033cfca3452 Matti Vaittinen  2019-11-16  446  	 * If this is not working we can define specific match property which
+7b8033cfca3452 Matti Vaittinen  2019-11-16  447  	 * value we scan and use for matching for LEDs connected to the
+7b8033cfca3452 Matti Vaittinen  2019-11-16  448  	 * controller.
+7b8033cfca3452 Matti Vaittinen  2019-11-16  449  	 */
+7b8033cfca3452 Matti Vaittinen  2019-11-16  450  	if (init_data->match_property.name && init_data->match_property.size) {
+7b8033cfca3452 Matti Vaittinen  2019-11-16  451  		u8 *val;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  452  		int ret;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  453  		struct fwnode_handle *child;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  454  		struct led_fw_match_property *mp;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  455  
+7b8033cfca3452 Matti Vaittinen  2019-11-16  456  		mp = &init_data->match_property;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  457  
+7b8033cfca3452 Matti Vaittinen  2019-11-16  458  		val = kzalloc(mp->size, GFP_KERNEL);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  459  		if (!val)
+7b8033cfca3452 Matti Vaittinen  2019-11-16  460  			return ERR_PTR(-ENOMEM);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  461  
+7b8033cfca3452 Matti Vaittinen  2019-11-16  462  		fwnode_for_each_child_node(fw, child) {
+7b8033cfca3452 Matti Vaittinen  2019-11-16  463  			ret = fw_is_match(child, mp, val);
+                                                                                                     ^^^
+
+7b8033cfca3452 Matti Vaittinen  2019-11-16  464  			if (ret > 0) {
+7b8033cfca3452 Matti Vaittinen  2019-11-16 @465  				kfree(val);
+                                                                                      ^^^
+
+Oops.
+
+7b8033cfca3452 Matti Vaittinen  2019-11-16  466  				return child;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  467  			}
+7b8033cfca3452 Matti Vaittinen  2019-11-16  468  			if (ret < 0) {
+7b8033cfca3452 Matti Vaittinen  2019-11-16  469  				dev_err(parent,
+7b8033cfca3452 Matti Vaittinen  2019-11-16  470  					"invalid fw match. Use raw_val?\n");
+7b8033cfca3452 Matti Vaittinen  2019-11-16  471  				fwnode_handle_put(child);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  472  				break;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  473  			}
+7b8033cfca3452 Matti Vaittinen  2019-11-16  474  		}
+7b8033cfca3452 Matti Vaittinen  2019-11-16  475  		kfree(val);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  476  	}
+7b8033cfca3452 Matti Vaittinen  2019-11-16  477  	if (init_data->of_match)
+7b8033cfca3452 Matti Vaittinen  2019-11-16  478  		fw = fwnode_get_named_child_node(fw, init_data->of_match);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  479  	else
+7b8033cfca3452 Matti Vaittinen  2019-11-16  480  		fw = fwnode_handle_get(fw);
+7b8033cfca3452 Matti Vaittinen  2019-11-16  481  
+7b8033cfca3452 Matti Vaittinen  2019-11-16  482  	return fw;
+7b8033cfca3452 Matti Vaittinen  2019-11-16  483  }
+
 ---
-This patch is based on Linux 5.4-rc6 and tested on SiFive HiFive
-Unleashed board.
-
-Changes in v2:
-- Avoid #ifdefs inside functions
-- Helper functions instead of macros
-- Drop newly added CONFIG_DEBUG_VM_LAYOUT, instead use CONFIG_DEBUG_VM
----
- arch/riscv/mm/init.c | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 573463d..7828136 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -45,6 +45,41 @@ void setup_zero_page(void)
- 	memset((void *)empty_zero_page, 0, PAGE_SIZE);
- }
-=20
-+#ifdef CONFIG_DEBUG_VM
-+static inline void print_mlk(char *name, unsigned long b, unsigned long t)
-+{
-+	pr_notice("%12s : 0x%08lx - 0x%08lx   (%4ld kB)\n", name, b, t,
-+		  (((t) - (b)) >> 10));
-+}
-+
-+static inline void print_mlm(char *name, unsigned long b, unsigned long t)
-+{
-+	pr_notice("%12s : 0x%08lx - 0x%08lx   (%4ld MB)\n", name, b, t,
-+		  (((t) - (b)) >> 20));
-+}
-+
-+static void print_vm_layout(void)
-+{
-+	pr_notice("Virtual kernel memory layout:\n");
-+	print_mlk("fixmap", (unsigned long)FIXADDR_START,
-+		  (unsigned long)FIXADDR_TOP);
-+	print_mlm("vmemmap", (unsigned long)VMEMMAP_START,
-+		  (unsigned long)VMEMMAP_END);
-+	print_mlm("vmalloc", (unsigned long)VMALLOC_START,
-+		  (unsigned long)VMALLOC_END);
-+	print_mlm("lowmem", (unsigned long)PAGE_OFFSET,
-+		  (unsigned long)high_memory);
-+	print_mlk(".init", (unsigned long)__init_begin,
-+		  (unsigned long)__init_end);
-+	print_mlk(".text", (unsigned long)_text, (unsigned long)_etext);
-+	print_mlk(".data", (unsigned long)_sdata, (unsigned long)_edata);
-+	print_mlk(".bss", (unsigned long)__bss_start,
-+		  (unsigned long)__bss_stop);
-+}
-+#else
-+static void print_vm_layout(void) { }
-+#endif /* CONFIG_DEBUG_VM */
-+
- void __init mem_init(void)
- {
- #ifdef CONFIG_FLATMEM
-@@ -55,6 +90,7 @@ void __init mem_init(void)
- 	memblock_free_all();
-=20
- 	mem_init_print_info(NULL);
-+	print_vm_layout();
- }
-=20
- #ifdef CONFIG_BLK_DEV_INITRD
---=20
-2.7.4
-
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
