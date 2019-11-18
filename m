@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B79E0C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC26C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A052230F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C34B2214DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:06:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AEpTKk0T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DwLNp0Yw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbfKRUF6 (ORCPT
+        id S1727415AbfKRUGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 15:05:58 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42266 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727315AbfKRUFx (ORCPT
+        Mon, 18 Nov 2019 15:06:00 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36253 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727148AbfKRUF5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 15:05:53 -0500
-Received: by mail-lf1-f65.google.com with SMTP id z12so14867837lfj.9;
-        Mon, 18 Nov 2019 12:05:50 -0800 (PST)
+        Mon, 18 Nov 2019 15:05:57 -0500
+Received: by mail-lj1-f194.google.com with SMTP id k15so20442681lja.3;
+        Mon, 18 Nov 2019 12:05:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=7i+JiP2AUVVtcNWDD/lNg9r2NMfGMrduOQTKI4kG/wc=;
-        b=AEpTKk0TnoUtlKqnK4B7kw3Kf8aqVJy55OQFKG2GJBsMS7xkSTddyVnpI51QsC/5yv
-         69MBUaCMoErrhOmhXslNhIXSBtp9lOVptYygy8GMYp19Rw2YpL9jQoR3go6I07TKaql0
-         EvgRs5uG09afr9O/3t2L1U7/vDi40sq9kw/XT9xo12lzmgxedKI+fi82QlNVfjTwfSew
-         SYfjIcGq8S8RGThHsEqXWaCPsMAKLnzKiFXqRrEnQXmGMHIhp/b0WA4mZGASKPwB9w2I
-         fy1AvlTtvGlHZBERoeyGGf2sGvzAVmA1L5vbNzE/3CSVEpsC/qYdwD8p044jItzlFblE
-         iYIQ==
+        bh=QyTaXEZ3tQr6gf1Qv+aBwt97ClEn/+4wm6FeUO95GEc=;
+        b=DwLNp0YwsQKuC9IcpcWDPUPMzmzkWJvboxFQdmvJYossT+E0yerpmntNXmzqiPEHlR
+         URDoWmUIV9a6WWkmQKy0yjo777OC4xfq5TVk6hZfUo8II/1Ox20SO/ANeevsBFtTou7V
+         zH4tV7JS7IkK/GpWnNdrOyslCZwwKtg75gW4MzkHhKyFoomAUu3Gt9CknsC4YuRAABSv
+         1UkrNU60BC+M23SBhiu1Hx5yQ5Pc9mKnZawkeRW+jBU4SEQEgwu2eDMC7TzDXgWdq4RW
+         7vrAF36bToZJin/g/l1lL/9OvnnrHePbJkT50OC53vk2HMvwY+B1JgTD18jAuIu2id/k
+         WUVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=7i+JiP2AUVVtcNWDD/lNg9r2NMfGMrduOQTKI4kG/wc=;
-        b=j7Kn/OjXWw08jGJkFhUumoWadtWnDcLUZg+TcalUpMwcRAZ4+JkrISk9Ca3JJNIeqH
-         B/i0tWVjEoHGi83dAikvSuQJ/xsxfc/CkQSvIbbuNMJnClzBukOAEGNUNP/XKpKaw3ht
-         FTIXw8w1H0XAdIfloejkNV9a9zTT6/9XdHgz2NH5JHcVeoNaaJ3m4PyU/DFSpZv1e9Gi
-         PGw7KzOd3GjkoVdTvyhqUMZKxpma1FLG/hduJ7AhzcWE1smUC8bqkxGfFBXP66q42d1T
-         ggibT9Lk235TctRx1oPWFzLsMS0w6mGVSnbRNxnvlg9pvqkUuGwcBAbsBGh6Pm+07dxK
-         IQ8g==
-X-Gm-Message-State: APjAAAVn2tNy6WS9IT857/vPksvnQ/l0DvetAALoR+BtQl74qyeOZBka
-        +1bAv5El6/RK4GuzdcHL5Ns=
-X-Google-Smtp-Source: APXvYqwEEpqxrD0qEapvfQlnj+xT3sW4TKX4Zbgpx8nwOF8+kZOlCgDEWudmC8WcMQHM7usssGtgHA==
-X-Received: by 2002:ac2:46f3:: with SMTP id q19mr839198lfo.65.1574107549694;
-        Mon, 18 Nov 2019 12:05:49 -0800 (PST)
+        bh=QyTaXEZ3tQr6gf1Qv+aBwt97ClEn/+4wm6FeUO95GEc=;
+        b=bIJzME815i/pmjIGzqCZO69uTd8l3zi1IrNdPAsUC4yegFXYzpW6s4jhVg/d0B3qgQ
+         rD+eMDCSzgqKqvcF9L1gIy8ZbpTesozYS5yk2zC5WWtnb5pMj4Af0JtOVvjXsmUKy4O8
+         1VdzyQiMm0/UqqLXoDreyf8PktRs0E0qeNn2+OzCnbk71xl7g9sIDsL4sk28KWOs3eKP
+         Yi50eJQ8+8wRyEKicXj8LZars2j0KYR2riS8QMQLjBewS3+ryYh4bK0LeT3To0BxUvqx
+         RUSIuKukmIjgGVtL0iCy+qExs+51aaoNEwvmHvo/6s4j2aBS2iqpUdHVq6tKY+pf2COs
+         ZWjQ==
+X-Gm-Message-State: APjAAAXNVGASGF2tlJXuE/+HHUHxv17F4oXxUdlh/Qi9Am4mBCMLLvI0
+        9D/9pp00oJeQbUxLR7PD8Wc=
+X-Google-Smtp-Source: APXvYqxzajfDxRsiMW98EBWaSsQPOP+h84fAddaOImVLVQhLDtN+yixqM2y+1kQbQvnGBDX3bmAHIA==
+X-Received: by 2002:a05:651c:331:: with SMTP id b17mr890995ljp.133.1574107555600;
+        Mon, 18 Nov 2019 12:05:55 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id j23sm9166942lji.41.2019.11.18.12.05.48
+        by smtp.gmail.com with ESMTPSA id j23sm9166942lji.41.2019.11.18.12.05.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 12:05:49 -0800 (PST)
+        Mon, 18 Nov 2019 12:05:55 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -67,9 +67,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v1 19/29] memory: tegra20-emc: Register as interconnect provider
-Date:   Mon, 18 Nov 2019 23:02:37 +0300
-Message-Id: <20191118200247.3567-20-digetx@gmail.com>
+Subject: [PATCH v1 25/29] drm/tegra: dc: Release PM and RGB output when client's registration fails
+Date:   Mon, 18 Nov 2019 23:02:43 +0300
+Message-Id: <20191118200247.3567-26-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191118200247.3567-1-digetx@gmail.com>
 References: <20191118200247.3567-1-digetx@gmail.com>
@@ -80,75 +80,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-EMC now provides MC with memory bandwidth using interconnect API.
+Runtime PM and RGB output need to be released when host1x client
+registration fails.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/memory/tegra/tegra20-emc.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/gpu/drm/tegra/dc.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
-index 28bd9fd4c3c9..61ce422e102a 100644
---- a/drivers/memory/tegra/tegra20-emc.c
-+++ b/drivers/memory/tegra/tegra20-emc.c
-@@ -19,6 +19,7 @@
- #include <linux/types.h>
- 
- #include <soc/tegra/fuse.h>
-+#include <soc/tegra/mc.h>
- 
- #define EMC_INTSTATUS				0x000
- #define EMC_INTMASK				0x004
-@@ -87,6 +88,8 @@
- #define EMC_DBG_READ_DQM_CTRL			BIT(9)
- #define EMC_DBG_CFG_PRIORITY			BIT(24)
- 
-+#define EMC_FBIO_CFG5_DRAM_WIDTH_X16		BIT(4)
-+
- static const u16 emc_timing_registers[] = {
- 	EMC_RC,
- 	EMC_RFC,
-@@ -486,10 +489,27 @@ static long emc_round_rate(unsigned long rate,
- 	return timing->rate;
- }
- 
-+static unsigned int emc_dram_data_bus_width_bytes(struct tegra_emc *emc)
-+{
-+	unsigned int bus_width;
-+	u32 emc_cfg;
-+
-+	emc_cfg = readl_relaxed(emc->regs + EMC_FBIO_CFG5);
-+	if (emc_cfg & EMC_FBIO_CFG5_DRAM_WIDTH_X16)
-+		bus_width = 16;
-+	else
-+		bus_width = 32;
-+
-+	dev_info(emc->dev, "DRAM data-bus width: %ubit\n", bus_width);
-+
-+	return bus_width / 8;
-+}
-+
- static int tegra_emc_probe(struct platform_device *pdev)
- {
- 	struct device_node *np;
- 	struct tegra_emc *emc;
-+	unsigned int bus_width;
- 	int irq, err;
- 
- 	emc = devm_kzalloc(&pdev->dev, sizeof(*emc), GFP_KERNEL);
-@@ -549,6 +569,12 @@ static int tegra_emc_probe(struct platform_device *pdev)
- 		goto unset_cb;
+diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
+index 14834cba5455..c2c61156cdcf 100644
+--- a/drivers/gpu/drm/tegra/dc.c
++++ b/drivers/gpu/drm/tegra/dc.c
+@@ -2504,10 +2504,16 @@ static int tegra_dc_probe(struct platform_device *pdev)
+ 	if (err < 0) {
+ 		dev_err(&pdev->dev, "failed to register host1x client: %d\n",
+ 			err);
+-		return err;
++		goto disable_pm;
  	}
  
-+	bus_width = emc_dram_data_bus_width_bytes(emc);
-+
-+	err = tegra_icc_emc_setup_interconnect(&pdev->dev, bus_width);
-+	if (err)
-+		dev_err(&pdev->dev, "failed to initialize ICC: %d\n", err);
-+
  	return 0;
++
++disable_pm:
++	pm_runtime_disable(&pdev->dev);
++	tegra_dc_rgb_remove(dc);
++
++	return err;
+ }
  
- unset_cb:
+ static int tegra_dc_remove(struct platform_device *pdev)
 -- 
 2.23.0
 
