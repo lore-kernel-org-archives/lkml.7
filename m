@@ -2,115 +2,103 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2813C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B73EDC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC26E214DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:07:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gzNXLwLz"
+	by mail.kernel.org (Postfix) with ESMTP id 8B714222A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:16:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574108180;
+	bh=1bGCPu7qvK5NWZIqCQx0gPIIjWajS9pBjSW2j6P92HQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MoWU2KYM2g1am+KWnbH5TZd2ZWVPrznUug1OdmzEsIZwVhtz+5m4/x8bKcGonGozY
+	 6x60eI8N2RfpJinJ467lMqZtFYcQ8Aw2XhLg3lGy7Kp2KZD26GUPG2HENqqux/wr+m
+	 AmoVmiq2mN3vGtHks20U7JYBitCN1WrF8nAIpNsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbfKRUHe (ORCPT
+        id S1726739AbfKRUQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 15:07:34 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38221 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbfKRUFf (ORCPT
+        Mon, 18 Nov 2019 15:16:19 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:38119 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbfKRUQT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 15:05:35 -0500
-Received: by mail-lf1-f66.google.com with SMTP id q28so14894325lfa.5;
-        Mon, 18 Nov 2019 12:05:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YfRQS8FRsreLwU82cR0lmVr72UzAKLB+Ti08zkiWA2g=;
-        b=gzNXLwLzE6umljasXje0Th90a21x+svtaa3a0cHtRBOrZwKf2Fh8ILCS2QMfM1A8je
-         quppks4fV35q39gw/tZySz51c4s6ZKUJ4o6IAq9YO4ENOQwUrIdrEE7o2M/5WQDmJ+fa
-         MARto3dREx4NeuJ1Cq2hnreh7ejZShlBtDAv+S/2aTjh3M8D8FcN+FRvaykTehq8K6I5
-         c11fAeSiRzbN1JKwfMUJIpk9PqispbeDAnbukjaKsjRIjNvAJZ/BLvF8ygm0cg0tUK+J
-         +u/rNQC3ymN/s+Vt24rsGP2S12B7PUpj+kq5NrJj8nXm/RnNl7i+zV3+0zKHsJu9Cfqy
-         jt3g==
+        Mon, 18 Nov 2019 15:16:19 -0500
+Received: by mail-qv1-f65.google.com with SMTP id q19so7115455qvs.5
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 12:16:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YfRQS8FRsreLwU82cR0lmVr72UzAKLB+Ti08zkiWA2g=;
-        b=ibH3QoyEcjSMPuY841F9KWUcFQhomS7LygAwv4ZK/9zD9/EMuvqtSYJMBTXGHta2FK
-         VIxfFAvaxW8iNgg8Ob6EiDQYCQt3t5kZjxi+vqX1R7oLBEmcexPiPRO7s2EcwNPe3oM9
-         X+ROysO3C5ggzhyf5svn63/SjMRRZWVy62Xz6YNacnC3frmScDu5xbmI5T/1Qio040ji
-         trFwuTKdZptdr9WS1W8RCuiGfCmLhOxqCrkTyl0SabHtpmHVOWKDDbsf8M47qJjMdBXu
-         Ho3vQZ6HNWL4WTXu6ooZEJaS/w2MWTDvzCV9emzX7lOZNtOSZt4O3UYVtHyNLOVipBFD
-         FjQw==
-X-Gm-Message-State: APjAAAWJYZSWIybafKz9FUdXTSE2UzeGtCfuTUQ522Jlwwn9ME8tBm6a
-        PdrcX2WZDDFsEvfxhJ3XnuBklV1T
-X-Google-Smtp-Source: APXvYqw/CNkRKTWQcvTgT1y2MDU/N7d5RKCQec2znR/p7a4NaamXmNcG0FHRmTUehsLlMo7c8uJOvQ==
-X-Received: by 2002:ac2:5dc1:: with SMTP id x1mr802357lfq.177.1574107531785;
-        Mon, 18 Nov 2019 12:05:31 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id j23sm9166942lji.41.2019.11.18.12.05.30
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Yq7QGynt8Nvw2z6nbZxw2FGwv0kFU2JGRirg9eYfqhM=;
+        b=sgx+OC4Cmv2Kv8P2WZy35hjvdZrjVGrc+K0J1w0yohKJe1OJtFNA57GPkOwXuoXQqR
+         ZmFTjhC8z5OQLmFa4eSfD9KFajbqQTxn94QpkzuvtWv+e25mcsUq50XNVMpUO8zQqEYO
+         zl3NdvPytKwB2p7hX8i+25J4iszK2sihgN0UX+BakHvPIcwVVw/pgxB+i/MWrDEg6R7C
+         bwBIyW/cBWZVGG8qQvPhUldbkudJAlCimK0SjvK96F2BtSG8hjS0MMCGQnaz+KxgVr01
+         cSOVO70pyJokisDOkQ88q7xlW55uBvLVqh2eCwwKch+3/Wx/KP2g3DuG7TCOhwbo7kDd
+         238w==
+X-Gm-Message-State: APjAAAXq6J4TM5SThLbF2Ih0T/mjNMYkYGTUI1Vht5tKhWxqNyJ1Hzz8
+        1TCZPt1IWV/RorwcI9RoXsU=
+X-Google-Smtp-Source: APXvYqyTshkDGVjDZZB0qRVoQR1tw9ajKDdIey3wO5i7tbkrnhBirpNqTAriJ8bqv8wfgEf6B+2A4Q==
+X-Received: by 2002:ad4:4c4d:: with SMTP id cs13mr28450777qvb.165.1574108178055;
+        Mon, 18 Nov 2019 12:16:18 -0800 (PST)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id n21sm11460409qtn.33.2019.11.18.12.16.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 12:05:31 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v1 02/29] dt-bindings: memory: tegra20: emc: Document new interconnect property
-Date:   Mon, 18 Nov 2019 23:02:20 +0300
-Message-Id: <20191118200247.3567-3-digetx@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191118200247.3567-1-digetx@gmail.com>
-References: <20191118200247.3567-1-digetx@gmail.com>
+        Mon, 18 Nov 2019 12:16:15 -0800 (PST)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id BC014401EA; Mon, 18 Nov 2019 20:16:11 +0000 (UTC)
+Date:   Mon, 18 Nov 2019 20:16:11 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
+Subject: Re: [PATCH] firmware_loader: Fix labels with comma for builtin
+ firmware
+Message-ID: <20191118201611.GG11244@42.do-not-panic.com>
+References: <20191115225911.3260-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115225911.3260-1-linus.walleij@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-External memory controller is interconnected with memory controller and
-with external memory. Document new interconnect property which designates
-external memory controller as interconnect provider.
+On Fri, Nov 15, 2019 at 11:59:11PM +0100, Linus Walleij wrote:
+> Some firmware images contain a comma, such as:
+> EXTRA_FIRMWARE "brcm/brcmfmac4334-sdio.samsung,gt-s7710.txt"
+> as Broadcom firmware simply tags the device tree compatible
+> string at the end of the firmware parameter file. And the
+> compatible string contains a comma.
+> 
+> This doesn't play well with gas:
+> 
+> drivers/base/firmware_loader/builtin/brcm/brcmfmac4334-sdio.samsung,gt-s7710.txt.gen.S: Assembler messages:
+> drivers/base/firmware_loader/builtin/brcm/brcmfmac4334-sdio.samsung,gt-s7710.txt.gen.S:4: Error: bad instruction `_fw_brcm_brcmfmac4334_sdio_samsung,gt_s7710_txt_bin:'
+> drivers/base/firmware_loader/builtin/brcm/brcmfmac4334-sdio.samsung,gt-s7710.txt.gen.S:9: Error: bad instruction `_fw_brcm_brcmfmac4334_sdio_samsung,gt_s7710_txt_name:'
+> drivers/base/firmware_loader/builtin/brcm/brcmfmac4334-sdio.samsung,gt-s7710.txt.gen.S:15: Error: can't resolve `.rodata' {.rodata section} - `_fw_brcm_brcmfmac4334_sdio_samsung' {*UND* section}
+> make[6]: *** [../scripts/Makefile.build:357: drivers/base/firmware_loader/builtin/brcm/brcmfmac4334-sdio.samsung,gt-s7710.txt.gen.o] Error 1
+> 
+> We need to get rid of the comma from the labels used by the
+> assembly stub generator.
+> 
+> Replacing a comma using GNU Make subst requires a helper
+> variable.
+> 
+> Cc: Stephan Gerhold <stephan@gerhold.net>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- .../bindings/memory-controllers/nvidia,tegra20-emc.txt        | 4 ++++
- 1 file changed, 4 insertions(+)
+Loading should still work after this patch given that the original
+firmware name is kept in a different variable FWNAME, and used as a
+variable for the object entry.
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra20-emc.txt b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra20-emc.txt
-index add95367640b..7566d883f921 100644
---- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra20-emc.txt
-+++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra20-emc.txt
-@@ -12,6 +12,9 @@ Properties:
-   irrespective of ram-code configuration.
- - interrupts : Should contain EMC General interrupt.
- - clocks : Should contain EMC clock.
-+- #interconnect-cells : Should be 1. This cell represents external memory
-+  interconnect. The assignments may be found in header file
-+  <dt-bindings/interconnect/tegra-icc.h>.
- 
- Child device nodes describe the memory settings for different configurations and clock rates.
- 
-@@ -20,6 +23,7 @@ Example:
- 	memory-controller@7000f400 {
- 		#address-cells = < 1 >;
- 		#size-cells = < 0 >;
-+		#interconnect-cells = < 1 >;
- 		compatible = "nvidia,tegra20-emc";
- 		reg = <0x7000f4000 0x200>;
- 		interrupts = <0 78 0x04>;
--- 
-2.23.0
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
 
+  Luis
