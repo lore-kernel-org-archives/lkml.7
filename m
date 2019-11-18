@@ -2,141 +2,333 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D7AC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A56C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC83222EF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:11:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jAGhZIxb"
+	by mail.kernel.org (Postfix) with ESMTP id 432B5222EF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:11:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfKRWLJ (ORCPT
+        id S1727053AbfKRWLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 17:11:09 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:42817 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfKRWLJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 17:11:09 -0500
-Received: by mail-qt1-f194.google.com with SMTP id t20so22114269qtn.9
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 14:11:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Za0RwvpiIvIixtB76KeG/0IaSTHPzUE2wScOJpLd3FE=;
-        b=jAGhZIxbMoCUeIXZSxOL9jcbhRlIStlyA6HUrUjG7RB9kF0BL0Xcb4zA0Eb7yII1Vn
-         QOA4JaOlI80+0dYOMM0USIqE9v8WLN3aGeuMsFZZwQRzyiOtzeUx+9zQmHJqTPdvP7z5
-         VT2ycasYUiHiNC8wAmR8weQ8xQgm8dDTKjgIUAkOqaELMHWmBmHMn5r6+sKexmSlNTyK
-         5oxi8VIpOEs3QavHODgZBpZoD097Q9r+3juy/AAbGAaDtLoJfYP8ffqMFIlRDPnvKrQ0
-         5VYfP3p6Q2aKiTUvcucsxeyjqKahgvuvkI6R2OzPNAxVHjocSonRekeIt5yjqaRze4AU
-         VzfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Za0RwvpiIvIixtB76KeG/0IaSTHPzUE2wScOJpLd3FE=;
-        b=focM0kLxIU6aK1DnpB2RjwH0UeoBuf9qK3Ly5wPAn8VIHFwpYjcRd5Z6EVOH2LAmns
-         dmfw3+2f7gZpvUjdVkIu7Js6PbaWfsi/8wiyzxLOT60WOmLY15f+5ncyyQbO/WnH9MCZ
-         /7Yo16IMpTtq8Os+xrFFSsqDaekb9l4YTiIL4Y+1owyh6SEmjjGMfbpCgX5Z7xPjnSUK
-         FehIMS3BgtKmITKW+r07aOouGdQhkOw6EyUPqiTqFV9Xwjja5gjCxmqEVytTkNAZnr5e
-         iEHBOWI+1Mtf4q53bAifR7zSwobg7VKDRnJ4EZjn5T38w1DNg7YKSaLzW4uFjtBkf939
-         WM3Q==
-X-Gm-Message-State: APjAAAUl7Dfcest2E1R98P4nsTzQmR/gpTe59lkAg4uSH81StQ8/r9a6
-        awGpCOCLiPH2ZKZUm0fwfAE=
-X-Google-Smtp-Source: APXvYqyCFiZhoZ96NtuwegCa67RfQAQCotAEt1wcmioNo5AlJ3EaEgkNbyn89/sA8MSMb3SbnsYwIQ==
-X-Received: by 2002:ac8:16a3:: with SMTP id r32mr29468832qtj.12.1574115067772;
-        Mon, 18 Nov 2019 14:11:07 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id x21sm3731830qkf.56.2019.11.18.14.11.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 14:11:07 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D8CA840D3E; Mon, 18 Nov 2019 19:11:04 -0300 (-03)
-Date:   Mon, 18 Nov 2019 19:11:04 -0300
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH v3 0/7] perf/probe: Support multiprobe and immediates
- with fixes
-Message-ID: <20191118221104.GF20465@kernel.org>
-References: <157406469983.24476.13195800716161845227.stgit@devnote2>
+        Mon, 18 Nov 2019 17:11:50 -0500
+Received: from mga03.intel.com ([134.134.136.65]:39280 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbfKRWLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 17:11:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 14:11:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,321,1569308400"; 
+   d="scan'208";a="200125139"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga008.jf.intel.com with ESMTP; 18 Nov 2019 14:11:48 -0800
+Date:   Mon, 18 Nov 2019 14:16:23 -0800
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2 07/10] iommu/vt-d: Replace Intel specific PASID
+ allocator with IOASID
+Message-ID: <20191118141623.2cdf403b@jacob-builder>
+In-Reply-To: <14e130e8-abcb-534f-655f-25488ad3500b@redhat.com>
+References: <1574106153-45867-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1574106153-45867-8-git-send-email-jacob.jun.pan@linux.intel.com>
+        <14e130e8-abcb-534f-655f-25488ad3500b@redhat.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <157406469983.24476.13195800716161845227.stgit@devnote2>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Nov 18, 2019 at 05:11:40PM +0900, Masami Hiramatsu escreveu:
-> Hi Arnaldo,
-> 
-> This is the 3rd version of the multiprobe support on perf probe
-> including some fixes about "representive lines"
-> 
-> The previous thread is here:
-> 
-> https://lkml.kernel.org/r/157314406866.4063.16995747442215702109.stgit@devnote2
-> 
-> On the previous thread, we discussed some issues about incorrect line
-> information shown by perf probe. I finally fixed those by introducing
-> an idea of "representive line" -- a line which has a unique address
-> (no other lines shares the same address) or a line which has the least
-> line number among lines sharing same address. Now perf probe only shows
-> such representive lines can be probed([1/7][3/7]), and if user tries to
-> probe other non representive lines, it shows which line user should
-> probe ([2/7]). The rest of patches in the series are same as v2 (except
-> for [4/7], example output is updated)
-> 
-> This can be applied on top of perf/core.
+On Mon, 18 Nov 2019 22:11:52 +0100
+Auger Eric <eric.auger@redhat.com> wrote:
 
-Thanks, applied everything, only the two last patches I didn't test, the
-kernel in this machine doesn't have the features it needs, we can fix
-things if some problem lurks there.
+> Hi Jacob,
+> 
+> On 11/18/19 8:42 PM, Jacob Pan wrote:
+> > Make use of generic IOASID code to manage PASID allocation,
+> > free, and lookup. Replace Intel specific code.
+> > IOASID allocator is inclusive for both start and end of the
+> > allocation range. The current code is based on IDR, which is
+> > exclusive for the end of the allocation range. This patch fixes the
+> > off-by-one error in intel_svm_bind_mm, where pasid_max - 1 is used
+> > for the end of allocation range.
+> > 
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+> > Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+> > ---
+> >  drivers/iommu/Kconfig       |  1 +
+> >  drivers/iommu/intel-iommu.c | 13 +++++++------
+> >  drivers/iommu/intel-pasid.c | 36
+> > ------------------------------------ drivers/iommu/intel-svm.c   |
+> > 41 +++++++++++++++++++++++++++-------------- 4 files changed, 35
+> > insertions(+), 56 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> > index fd50ddffffbf..43ce450a40d3 100644
+> > --- a/drivers/iommu/Kconfig
+> > +++ b/drivers/iommu/Kconfig
+> > @@ -212,6 +212,7 @@ config INTEL_IOMMU_SVM
+> >  	depends on INTEL_IOMMU && X86
+> >  	select PCI_PASID
+> >  	select MMU_NOTIFIER
+> > +	select IOASID
+> >  	help
+> >  	  Shared Virtual Memory (SVM) provides a facility for
+> > devices to access DMA resources through process address space by
+> > diff --git a/drivers/iommu/intel-iommu.c
+> > b/drivers/iommu/intel-iommu.c index d598168e410d..a84f0caa33a0
+> > 100644 --- a/drivers/iommu/intel-iommu.c
+> > +++ b/drivers/iommu/intel-iommu.c
+> > @@ -5238,7 +5238,7 @@ static void auxiliary_unlink_device(struct
+> > dmar_domain *domain, domain->auxd_refcnt--;
+> >  
+> >  	if (!domain->auxd_refcnt && domain->default_pasid > 0)
+> > -		intel_pasid_free_id(domain->default_pasid);
+> > +		ioasid_free(domain->default_pasid);
+> >  }
+> >  
+> >  static int aux_domain_add_dev(struct dmar_domain *domain,
+> > @@ -5256,10 +5256,11 @@ static int aux_domain_add_dev(struct
+> > dmar_domain *domain, if (domain->default_pasid <= 0) {
+> >  		int pasid;
+> >  
+> > -		pasid = intel_pasid_alloc_id(domain, PASID_MIN,
+> > -
+> > pci_max_pasids(to_pci_dev(dev)),
+> > -					     GFP_KERNEL);
+> > -		if (pasid <= 0) {
+> > +		/* No private data needed for the default pasid */
+> > +		pasid = ioasid_alloc(NULL, PASID_MIN,
+> > +
+> > pci_max_pasids(to_pci_dev(dev)) - 1,
+> > +				     NULL);
+> > +		if (pasid == INVALID_IOASID) {
+> >  			pr_err("Can't allocate default pasid\n");
+> >  			return -ENODEV;
+> >  		}
+> > @@ -5295,7 +5296,7 @@ static int aux_domain_add_dev(struct
+> > dmar_domain *domain, spin_unlock(&iommu->lock);
+> >  	spin_unlock_irqrestore(&device_domain_lock, flags);
+> >  	if (!domain->auxd_refcnt && domain->default_pasid > 0)
+> > -		intel_pasid_free_id(domain->default_pasid);
+> > +		ioasid_free(domain->default_pasid);
+> >  
+> >  	return ret;
+> >  }
+> > diff --git a/drivers/iommu/intel-pasid.c
+> > b/drivers/iommu/intel-pasid.c index 732bfee228df..3cb569e76642
+> > 100644 --- a/drivers/iommu/intel-pasid.c
+> > +++ b/drivers/iommu/intel-pasid.c
+> > @@ -26,42 +26,6 @@
+> >   */
+> >  static DEFINE_SPINLOCK(pasid_lock);
+> >  u32 intel_pasid_max_id = PASID_MAX;
+> > -static DEFINE_IDR(pasid_idr);
+> > -
+> > -int intel_pasid_alloc_id(void *ptr, int start, int end, gfp_t gfp)
+> > -{
+> > -	int ret, min, max;
+> > -
+> > -	min = max_t(int, start, PASID_MIN);
+> > -	max = min_t(int, end, intel_pasid_max_id);
+> > -
+> > -	WARN_ON(in_interrupt());
+> > -	idr_preload(gfp);
+> > -	spin_lock(&pasid_lock);
+> > -	ret = idr_alloc(&pasid_idr, ptr, min, max, GFP_ATOMIC);
+> > -	spin_unlock(&pasid_lock);
+> > -	idr_preload_end();
+> > -
+> > -	return ret;
+> > -}
+> > -
+> > -void intel_pasid_free_id(int pasid)
+> > -{
+> > -	spin_lock(&pasid_lock);
+> > -	idr_remove(&pasid_idr, pasid);
+> > -	spin_unlock(&pasid_lock);
+> > -}
+> > -
+> > -void *intel_pasid_lookup_id(int pasid)
+> > -{
+> > -	void *p;
+> > -
+> > -	spin_lock(&pasid_lock);
+> > -	p = idr_find(&pasid_idr, pasid);
+> > -	spin_unlock(&pasid_lock);
+> > -
+> > -	return p;
+> > -}
+> >  
+> >  /*
+> >   * Per device pasid table management:
+> > diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> > index e90d0b914afe..26a2f57763ec 100644
+> > --- a/drivers/iommu/intel-svm.c
+> > +++ b/drivers/iommu/intel-svm.c
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/dmar.h>
+> >  #include <linux/interrupt.h>
+> >  #include <linux/mm_types.h>
+> > +#include <linux/ioasid.h>
+> >  #include <asm/page.h>
+> >  
+> >  #include "intel-pasid.h"
+> > @@ -335,16 +336,15 @@ int intel_svm_bind_mm(struct device *dev, int
+> > *pasid, int flags, struct svm_dev_ if (pasid_max >
+> > intel_pasid_max_id) pasid_max = intel_pasid_max_id;
+> >  
+> > -		/* Do not use PASID 0 in caching mode (virtualised
+> > IOMMU) */
+> > -		ret = intel_pasid_alloc_id(svm,
+> > -					   !!cap_caching_mode(iommu->cap),
+> > -					   pasid_max, GFP_KERNEL);
+> > -		if (ret < 0) {
+> > +		/* Do not use PASID 0, reserved for RID to PASID */
+> > +		svm->pasid = ioasid_alloc(NULL, PASID_MIN,
+> > +					  pasid_max - 1, svm);
+> > +		if (svm->pasid == INVALID_IOASID) {
+> >  			kfree(svm);
+> >  			kfree(sdev);
+> > +			ret = -ENOSPC;
+> >  			goto out;
+> >  		}
+> > -		svm->pasid = ret;
+> >  		svm->notifier.ops = &intel_mmuops;
+> >  		svm->mm = mm;
+> >  		svm->flags = flags;
+> > @@ -354,7 +354,7 @@ int intel_svm_bind_mm(struct device *dev, int
+> > *pasid, int flags, struct svm_dev_ if (mm) {
+> >  			ret =
+> > mmu_notifier_register(&svm->notifier, mm); if (ret) {
+> > -				intel_pasid_free_id(svm->pasid);
+> > +				ioasid_free(svm->pasid);
+> >  				kfree(svm);
+> >  				kfree(sdev);
+> >  				goto out;
+> > @@ -370,7 +370,7 @@ int intel_svm_bind_mm(struct device *dev, int
+> > *pasid, int flags, struct svm_dev_ if (ret) {
+> >  			if (mm)
+> >  				mmu_notifier_unregister(&svm->notifier,
+> > mm);
+> > -			intel_pasid_free_id(svm->pasid);
+> > +			ioasid_free(svm->pasid);
+> >  			kfree(svm);
+> >  			kfree(sdev);
+> >  			goto out;
+> > @@ -418,7 +418,15 @@ int intel_svm_unbind_mm(struct device *dev,
+> > int pasid) if (!iommu)
+> >  		goto out;
+> >  
+> > -	svm = intel_pasid_lookup_id(pasid);
+> > +	svm = ioasid_find(NULL, pasid, NULL);
+> > +	if (!svm)
+> > +		goto out;
+> > +
+> > +	if (IS_ERR(svm)) {
+> > +		ret = PTR_ERR(svm);
+> > +		goto out;
+> > +	}
+> > +
+> >  	if (!svm)
+> >  		goto out;
+> >  
+> > @@ -440,7 +448,9 @@ int intel_svm_unbind_mm(struct device *dev, int
+> > pasid) kfree_rcu(sdev, rcu);
+> >  
+> >  				if (list_empty(&svm->devs)) {
+> > -
+> > intel_pasid_free_id(svm->pasid);
+> > +					/* Clear private data so
+> > that free pass check */
+> > +
+> > ioasid_set_data(svm->pasid, NULL);  
+> This still looks weird to me. clearing the private data before freeing
+> is a requirement from the custom allocation, if I am not wrong, ie.
+> not a requirement from the generic allocator. If confirmed, this
+> should not be part of this patch but added later on?
+> 
+You are right, we don't need to clear private data for native bind_mm. I
+got confused with the guest PASID bind.
+The presence of the private data is used to indicate whether there is
+an active guest bind.
 
-- Arnaldo
- 
-> Thank you,
-> 
-> ---
-> 
-> Masami Hiramatsu (7):
->       perf probe: Show correct statement line number by perf probe -l
->       perf probe: Verify given line is a representive line
->       perf probe: Do not show non representive lines by perf-probe -L
->       perf probe: Generate event name with line number
->       perf probe: Support multiprobe event
->       perf probe: Support DW_AT_const_value constant value
->       perf probe: Trace a magic number if variable is not found
-> 
-> 
->  tools/perf/util/dwarf-aux.c    |   62 ++++++++++++++++++++-
->  tools/perf/util/probe-event.c  |   19 ++++++-
->  tools/perf/util/probe-event.h  |    3 +
->  tools/perf/util/probe-file.c   |   14 +++++
->  tools/perf/util/probe-file.h   |    2 +
->  tools/perf/util/probe-finder.c |  116 +++++++++++++++++++++++++++++++++++++++-
->  tools/perf/util/probe-finder.h |    1 
->  7 files changed, 206 insertions(+), 11 deletions(-)
-> 
-> --
-> Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
+One fundamental difference between native and guest bind is that native
+bind includes IOASID allocation but guest bind has IOASID preallocated.
+So guest bind/unbind is a two step process which I thought would be
+done in order. But as Alex pointed out, we should not hold IOASID and
+fail the free() call if caller didn't do an unbind.
+https://lore.kernel.org/linux-iommu/20191113082940.1b415d00@x1.home/
 
--- 
+I will remove this line.
+> 
+> > +					ioasid_free(svm->pasid);
+> >  					if (svm->mm)
+> >  						mmu_notifier_unregister(&svm->notifier,
+> > svm->mm); 
+> > @@ -475,10 +485,14 @@ int intel_svm_is_pasid_valid(struct device
+> > *dev, int pasid) if (!iommu)
+> >  		goto out;
+> >  
+> > -	svm = intel_pasid_lookup_id(pasid);
+> > +	svm = ioasid_find(NULL, pasid, NULL);
+> >  	if (!svm)
+> >  		goto out;
+> >  
+> > +	if (IS_ERR(svm)) {
+> > +		ret = PTR_ERR(svm);
+> > +		goto out;
+> > +	}
+> >  	/* init_mm is used in this case */
+> >  	if (!svm->mm)
+> >  		ret = 1;  
+> not related to this patch but in prq_event_thread
+> resp.qw0 and qw1 are not initialized in case (req->lpig ||
+> req->priv_data_present) is not true
+> 
+resp is not used either in this case.
 
-- Arnaldo
+> > @@ -585,13 +599,12 @@ static irqreturn_t prq_event_thread(int irq,
+> > void *d) 
+> >  		if (!svm || svm->pasid != req->pasid) {
+> >  			rcu_read_lock();
+> > -			svm = intel_pasid_lookup_id(req->pasid);
+> > +			svm = ioasid_find(NULL, req->pasid, NULL);
+> >  			/* It *can't* go away, because the driver
+> > is not permitted
+> >  			 * to unbind the mm while any page faults
+> > are outstanding.
+> >  			 * So we only need RCU to protect the
+> > internal idr code. */ rcu_read_unlock();
+> > -
+> > -			if (!svm) {
+> > +			if (IS_ERR_OR_NULL(svm)) {
+> >  				pr_err("%s: Page request for
+> > invalid PASID %d: %08llx %08llx\n", iommu->name, req->pasid,
+> > ((unsigned long long *)req)[0], ((unsigned long long *)req)[1]);
+> >   
+> 
+> Thanks
+> 
+> Eric
+> 
+
+[Jacob Pan]
