@@ -2,133 +2,129 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06437C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C78C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B282192B
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 259262063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:35:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Q5GHLqOY"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="kfwiml/3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfKRRch (ORCPT
+        id S1726703AbfKRRfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 12:32:37 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:60890 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbfKRRcg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 12:32:36 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAIHOlrR167573;
-        Mon, 18 Nov 2019 17:31:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2019-08-05;
- bh=fWYXVHNMGwzk76eEZvx0wQOORGxMzV4ZZmWutwdTNzU=;
- b=Q5GHLqOYfoRD2LBmmxZ4kiwYWBh8AWPj0SB2Z3g4mFTDqRw9Flq35LRrJ2/t248iDQQ3
- vFuZ+0waQZOwR+Z3NE5LzA/MCdaVk/S6TF0cyXfeJa9Jyr5XyhE+vVf1zTAgzmfyI3jc
- FTLivj2WUYPiwMrv9u9TV8BrhJwDGUi5wVsEbuSTkvtx4Sl1x/EVZpddEDfaMpMS/6AF
- 8qDwYjC66Grn3t32XQvuajrTDL9P6HwBLdpaAomWolKjE3zu7Rf9xXM37PKezu1lLVPj
- r6MhS7VO/vt3nw79XH3sd+Iyk7HPu2/pAa2lGkteW6E6MhK5WuJxJXzHle7btIyWPv4X gw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2wa92phqga-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 Nov 2019 17:31:09 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAIHOe7T174690;
-        Mon, 18 Nov 2019 17:31:08 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2watjxwr9y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 Nov 2019 17:31:08 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAIHV3s9028994;
-        Mon, 18 Nov 2019 17:31:03 GMT
-Received: from dhcp-10-175-206-139.vpn.oracle.com (/10.175.206.139)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 18 Nov 2019 09:31:03 -0800
-Date:   Mon, 18 Nov 2019 17:30:48 +0000 (GMT)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@dhcp-10-175-206-139.vpn.oracle.com
-To:     Stephen Boyd <sboyd@kernel.org>
-cc:     Alan Maguire <alan.maguire@oracle.com>, brendanhiggins@google.com,
-        linux-kselftest@vger.kernel.org, skhan@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
-        keescook@chromium.org, yzaikin@google.com,
-        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
-        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
-        corbet@lwn.net, tytso@mit.edu, adilger.kernel@dilger.ca,
-        mcgrof@kernel.org, changbin.du@intel.com,
-        linux-ext4@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 linux-kselftest-test 2/6] kunit: hide unexported
- try-catch interface in try-catch-impl.h
-In-Reply-To: <20191117013606.4541D207DD@mail.kernel.org>
-Message-ID: <alpine.LRH.2.20.1911181728530.1562@dhcp-10-175-206-139.vpn.oracle.com>
-References: <1573812972-10529-1-git-send-email-alan.maguire@oracle.com> <1573812972-10529-3-git-send-email-alan.maguire@oracle.com> <20191117013606.4541D207DD@mail.kernel.org>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Mon, 18 Nov 2019 12:35:17 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:59194 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726322AbfKRRfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 12:35:16 -0500
+Received: from zn.tnic (p200300EC2F27B5003D22FC05E431AFF8.dip0.t-ipconnect.de [IPv6:2003:ec:2f27:b500:3d22:fc05:e431:aff8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 46CAF1EC072D;
+        Mon, 18 Nov 2019 18:35:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574098511;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=ndkDKtfR+XvFiIIHQaaiR63mI1Ov3k+RZNEVbDcRAoA=;
+        b=kfwiml/3cso9RddEMd/IeRS8ROF89RgW4TqWMEUjdx6ulAZVkpQGmrFl4pw23Bwr1TaCmb
+        RUuzX5HAo8sm+UKhmzA/gA1/ta9v+vSqCTbo/Ikdtk2fGtEbUQJeI9phyPcjeevQ1seI0K
+        OjWE1CDmhGwJDT8dPM1KHuFd0utIQ5Y=
+Date:   Mon, 18 Nov 2019 18:35:10 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-tip-commits@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/ftrace: Mark ftrace_modify_code_direct() __ref
+Message-ID: <20191118173510.GK6363@zn.tnic>
+References: <20191111132457.761255803@infradead.org>
+ <157381099055.29467.10982011694493970062.tip-bot2@tip-bot2>
+ <20191116204607.GC23231@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911180150
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911180150
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191116204607.GC23231@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 16 Nov 2019, Stephen Boyd wrote:
-> Quoting Alan Maguire (2019-11-15 02:16:08)
-> > diff --git a/lib/kunit/try-catch-impl.h b/lib/kunit/try-catch-impl.h
-> > new file mode 100644
-> > index 0000000..e308d5c
-> > --- /dev/null
-> > +++ b/lib/kunit/try-catch-impl.h
-> > @@ -0,0 +1,28 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * An API to allow a function, that may fail, to be executed, and recover in a
+On Sat, Nov 16, 2019 at 09:46:07PM +0100, Borislav Petkov wrote:
+> WARNING: vmlinux.o(.text+0x8c0b1): Section mismatch in reference from the function ftrace_modify_code_direct() to the function .init.text:text_poke_early()
+> The function ftrace_modify_code_direct() references
+> the function __init text_poke_early().
+> This is often because ftrace_modify_code_direct lacks a __init 
+> annotation or the annotation of text_poke_early is wrong.
 > 
-> This file is not an API. Maybe just say "Internal kunit try catch
-> implementation details to be shared with tests".
->
+> FATAL: modpost: Section mismatches detected.
+> Set CONFIG_SECTION_MISMATCH_WARN_ONLY=y to allow them.
+> make[1]: *** [scripts/Makefile.modpost:66: __modpost] Error 1
+> make: *** [Makefile:1077: vmlinux] Error 2
 
-Thanks for the review! Will fix this, along with adding the
-"Co-developed-by:" for Knut and will remove the unneeded
-#include of linux/kernel.h in v5 mentioned in the patch
-1 review. Thanks again!
+Here's a fix suggested by Peter:
 
-Alan
+---
+From: Borislav Petkov <bp@suse.de>
+Subject: [PATCH] x86/ftrace: Mark ftrace_modify_code_direct() __ref
 
-> > + * controlled manner.
-> > + *
-> > + * Copyright (C) 2019, Google LLC.
-> > + * Author: Brendan Higgins <brendanhiggins@google.com>
-> > + */
-> > +
-> > +#ifndef _KUNIT_TRY_CATCH_IMPL_H
-> > +#define _KUNIT_TRY_CATCH_IMPL_H
-> > +
-> > +#include <kunit/try-catch.h>
-> > +#include <linux/types.h>
-> > +
-> > +struct kunit;
-> > +
-> > +static inline void kunit_try_catch_init(struct kunit_try_catch *try_catch,
-> > +                                       struct kunit *test,
-> > +                                       kunit_try_catch_func_t try,
-> 
+... because it calls the .init.text function text_poke_early(). That is
+ok because it does call that function early, during boot.
+
+Fixes: 9706f7c3531f ("x86/ftrace: Use text_poke()")
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20191116204607.GC23231@zn.tnic
+---
+ arch/x86/kernel/ftrace.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 2a179fb35cd1..108ee96f8b66 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -99,7 +99,12 @@ static int ftrace_verify_code(unsigned long ip, const char *old_code)
+ 	return 0;
+ }
+ 
+-static int
++/*
++ * Marked __ref because it calls text_poke_early() which is .init.text. That is
++ * ok because that call will happen early, during boot, when .init sections are
++ * still present.
++ */
++static int __ref
+ ftrace_modify_code_direct(unsigned long ip, const char *old_code,
+ 			  const char *new_code)
+ {
+-- 
+2.21.0
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
