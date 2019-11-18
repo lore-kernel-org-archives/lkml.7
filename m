@@ -2,309 +2,241 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3ABC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7395C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A806F2071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8849B2071B
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:31:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="kGz1y8NQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCsTrb9J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbfKRHbm (ORCPT
+        id S1726691AbfKRHbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 02:31:42 -0500
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:50224 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbfKRHbm (ORCPT
+        Mon, 18 Nov 2019 02:31:53 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39605 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726397AbfKRHbx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 02:31:42 -0500
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id xAI7VQBK021482;
-        Mon, 18 Nov 2019 16:31:27 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com xAI7VQBK021482
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1574062287;
-        bh=emxptW2soOFW3R7+ZpydijJ0615//BEKeeTXQTbjo+A=;
-        h=References:In-Reply-To:From:Date:Subject:To:From;
-        b=kGz1y8NQK+2kg0hZ1K/Anw6af7KOMxf9L70CvdNNvRL1CK3LQUqxWyUBPw/mJXAe5
-         TAHK8bAq0pjDntY2MJe28zNtBsHsvjsEEY0abeSAxK4/EPhm0IyNOzHpvaBJkQdDzq
-         sYJj796mw5KxMLqEWZ0JDPb4kaNzRjq6fgV6UlnPU2UnyqgbBVIu0qyyUPHeg2mh/Q
-         1IBDgEc1Kg/Lw0HKw8F8QCLbBzzf4F7RDm8PBopETciK68zQQ4XAPquqXRcSNDx0eK
-         GfOFn5rgcvOFBvrW2thmQTojyrQzG8UH/4UYhqHXXVAVBOs0EXULdkcMDB2VAQMn7+
-         hidLmB+vt214A==
-X-Nifty-SrcIP: [209.85.222.42]
-Received: by mail-ua1-f42.google.com with SMTP id w10so2446275uar.12;
-        Sun, 17 Nov 2019 23:31:27 -0800 (PST)
-X-Gm-Message-State: APjAAAWNpa4xpWXw09R+1zEK6RZ1m6V4o1IL1U0uMzeLdTHihFfji8Wt
-        YgrXLSzUQiFAx1NTLcfkAm7LzuhCi2ZROlz1EhM=
-X-Google-Smtp-Source: APXvYqy4UcbDIObxmfCY0q8w22O5AZC1dbRPJMJhFK3iq/NB6chvtlo7aIKdtjY1+hqmNOwb8KB5/McoONye+v1x9Ws=
-X-Received: by 2002:ab0:279a:: with SMTP id t26mr16477375uap.40.1574062286127;
- Sun, 17 Nov 2019 23:31:26 -0800 (PST)
+        Mon, 18 Nov 2019 02:31:53 -0500
+Received: by mail-oi1-f193.google.com with SMTP id v138so14419561oif.6;
+        Sun, 17 Nov 2019 23:31:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4Jbto+s277uq5Iyl/VAB/rny899zd+4zTI6NCFD/xNI=;
+        b=QCsTrb9JgI9NV8yypNfQApuJL5gYIj21d03yb42rjGjGWC2H/7kyZj7arKSh8A4vBu
+         PgLAakVwOe34BodOPTdLsW3ZSFV8wSIR9z3jhurs6yTeBNTWmVD2VF3bSRViD7xE1clg
+         3y4VfzlPZBGkWks0TF5bISwQGJJ/sBtn2HA1Wf6mQWGH/5N8P3SYukhBnQldv79WXpNB
+         SixZS3BxPNwayjsJzqAxErDWn/Qb8o2KLd3s7p+1kRUXAobQPNTkgQsHOK2gyZBWP74d
+         i83/365zqwIlya/+Vm7Rkzdo7AzJ6EHLAiHZlnZf0bS2ABX8YRDimFFNkz8tYlW+7Tlt
+         IPaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4Jbto+s277uq5Iyl/VAB/rny899zd+4zTI6NCFD/xNI=;
+        b=KrlWa71eN3JyyvTO4WuZ5n4NHAgf4jFi5d0yfOXldLeZVaV8YZruloaoS+nQ7J2GOZ
+         2NNmUucIQ4g9htSiQX5Cz2/VpkVyq/dD29HDMwcdqNthUQP+iKxj32GkPtUhqduQgy6Z
+         ODd2SOQYJ5ZkX7me0PTs9zvG+NxoArh9rC3zsXHHb0viBUwLW5IvmcAmy0lIq0LCQSQf
+         uTbpt+LPG0WOubnmCTZWi9kgTYZV5r+nR4UCmQI17Hj17+slnStwZ08q1XbKbPW03bDq
+         e8SgmFbzVzZGDKtIW+d8awo9EwgTpv427YxaVB/go5z/AD4+YY1vExy0eZ5WJ0h8DFtT
+         7sew==
+X-Gm-Message-State: APjAAAU/Ca57CrDdLmjBGelvnuOa2rW3P11mqGQ32g/+9vyG+xJYQWht
+        493JeF2Zek+90E3OiTd43QhCCLEXqCx3ub5GnLc=
+X-Google-Smtp-Source: APXvYqyF6n+wzGprIt4o7gDrVED6fkxbf8xqs5vWFhzqMfqBMsaWYf6oZLeRPA4lpE9GfmJ1FwnzUNrVoOq5yBRkt/A=
+X-Received: by 2002:aca:5786:: with SMTP id l128mr19117035oib.53.1574062310353;
+ Sun, 17 Nov 2019 23:31:50 -0800 (PST)
 MIME-Version: 1.0
-References: <50680c37-9e85-0050-c1e1-700260a0471c@infradead.org>
- <20191105023243.GA16635@fieldses.org> <CAK7LNARAgOEnMRYAyzbvJ-xZzFfwOMckxb=bW0-E+P1HYu5nhA@mail.gmail.com>
- <20191106043120.GB6355@fieldses.org> <20191106044223.GA18076@Gentoo>
- <20191106193010.GG17669@fieldses.org> <20191106223918.GB1852@Slackware>
- <CAK7LNASvoh1k=vw6DOyTXa5xYDYNT5uH-5YWS=_95t9XwfAgTQ@mail.gmail.com>
- <20191109111335.GA1198@Gentoo> <CAK7LNAR9PrnXWhA6CCvgexpwVfeZxvHiXp_JtKH7Xb1OZDGusw@mail.gmail.com>
- <20191115152102.GA23525@Gentoo>
-In-Reply-To: <20191115152102.GA23525@Gentoo>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 18 Nov 2019 16:30:49 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARhV9Zy20WRQmZRkcVLtWYT_LKjrpT_Pyx75auCp_veLg@mail.gmail.com>
-Message-ID: <CAK7LNARhV9Zy20WRQmZRkcVLtWYT_LKjrpT_Pyx75auCp_veLg@mail.gmail.com>
-Subject: Re: [PATCH] scripts:prune-kernel:remove old kernels and modules dir
- from system
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="0000000000006b6e5d059799effa"
+References: <1572850664-9861-1-git-send-email-sundeep.lkml@gmail.com> <20191111233756.GA65477@google.com>
+In-Reply-To: <20191111233756.GA65477@google.com>
+From:   sundeep subbaraya <sundeep.lkml@gmail.com>
+Date:   Mon, 18 Nov 2019 13:01:39 +0530
+Message-ID: <CALHRZuqQG3md8j1dcpGtb-yp4ADG3Nnp0A3f_BJPDjr2FFuBMQ@mail.gmail.com>
+Subject: Re: [v2 PATCH] PCI: Do not use bus number zero from EA capability
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, sgoutham@marvell.com,
+        Subbaraya Sundeep <sbhatta@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000006b6e5d059799effa
-Content-Type: text/plain; charset="UTF-8"
+Hi Bjorn,
 
-On Sat, Nov 16, 2019 at 12:21 AM Bhaskar Chowdhury
-<unixbhaskar@gmail.com> wrote:
+On Tue, Nov 12, 2019 at 5:08 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> On 10:58 Fri 15 Nov 2019, Masahiro Yamada wrote:
-> >On Sat, Nov 9, 2019 at 8:14 PM Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
-> >>
-> >> On 16:25 Sat 09 Nov 2019, Masahiro Yamada wrote:
-> >> >On Thu, Nov 7, 2019 at 7:39 AM Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
-> >> >>
-> >> >> On 14:30 Wed 06 Nov 2019, J. Bruce Fields wrote:
-> >> >> >On Wed, Nov 06, 2019 at 10:12:26AM +0530, Bhaskar Chowdhury wrote:
-> >> >> >> On 23:31 Tue 05 Nov 2019, J. Bruce Fields wrote:
-> >> >> >> >On Wed, Nov 06, 2019 at 11:53:28AM +0900, Masahiro Yamada wrote:
-> >> >> >> >>BTW.
-> >> >> >> >>Bruce,
-> >> >> >> >>Does the current script expect RHEL or something?
-> >> >> >> >>I do not see 'new-kernel-pkg' on my Ubuntu machine.
-> >> >> >> >
-> >> >> >> >I test on Fedora.  Looks like on recent Fedora that's only provided by
-> >> >> >> >an rpm "grubby-deprecated", which is an inauspicious name....
-> >> >> >> >
-> >> >> >> >I think maybe you're supposed to use "grubby" itself now.  Do you have
-> >> >> >> >that?
-> >> >> >> >
-> >> >> >> >>It would still work with 'new-kernel-pkg: command not found'
-> >> >> >> >>warning.
-> >> >> >> >>
-> >> >> >> >>We could bypass it if we like.
-> >> >> >> >>
-> >> >> >> >>command -v new-kernel-pkg && new-kernel-pkg --remove $f
-> >> >> >> >
-> >> >> >> >Looks like it's what updates the grub configuration, which is probably a
-> >> >> >> >nice thing to do if you can.
-> >> >> >> >
-> >> >> >> >--b.
-> >> >> >>
-> >> >> >> Bruce,
-> >> >> >>
-> >> >> >> Two things,
-> >> >> >>
-> >> >> >> If the system doesn't run grub , how the fallback policy???
-> >> >> >>
-> >> >> >> This binary "new-kernel-pkg" also missing in other systems too...I can
-> >> >> >> confirm that... i.e gentoo,slackware,
-> >> >> >>
-> >> >> >> So , you are only targeting the rpm based system????
-> >> >> >
-> >> >> >It's just what I happen to use.  If someone wants to make it work
-> >> >> >elsewhere that'd be great, as long as we don't break what already works.
-> >> >> >
-> >> >> >I think Debian uses grub2-mkconfig?  Might be OK for Fedora too, I
-> >> >> >dunno.
-> >> >> >
-> >> >> >--b.
-> >> >>
-> >> >> Okay , thanks for the input. I was trying to write something in
-> >> >> generalize way , that is why my code spins off.And if you see the
-> >> >> subject line of my very first attempt to patch written was "removing
-> >> >> old kernels and modules dir in selective way"... that was it.
-> >> >>
-> >> >> Now, there are plenty of distros around, not only rpm based one(yes I do
-> >> >> agree that ,you wrote it while using and testing on it, but that is
-> >> >> limited in nature),the broader user base might be using something else.
-> >> >>
-> >> >> we simply can not restrict it to certain packaging version or several
-> >> >> packaging versions of selected distros. We are making and building this
-> >> >> (worth an effort) to make it as generalized as possible.
-> >> >>
-> >> >> Importantly I was only thinking of people who put the stuff in standard
-> >> >> places in the FSH and use it. I might be wrong.
-> >> >>
-> >> >> As I have said it before, I was no way trying to bypass your work ,but
-> >> >> it seems very limited in nature to adopted. So trying to widen the
-> >> >> spectrum.
-> >> >>
-> >> >> I am trying to incorporating both the pole, different kind user base in
-> >> >> mind, like you , who don't like to be prompted for this operation and
-> >> >> assuming things should go well, and you are right.
-> >> >>
-> >> >> On the other hand , I am kinda guy , sometime I need to know what is
-> >> >> going on, so the prompting.
-> >> >>
-> >> >> Well, I have never taken into account about modifying the bootloader
-> >> >> config by looking at your work. Had I been, I would have done it already
-> >> >> and it would be extremely trivial in nature.
-> >> >>
-> >> >> Now, Grub, no doubt it's fantastic piece of software, but complexity
-> >> >> is paramount with it. Don't you think so???  I HAVE NOTHING AGAINST
-> >> >> GRUB!
-> >> >>
-> >> >> I have personally stops using it for years and using something very
-> >> >> rudimentary and simple and useful. That is because I know what I am
-> >> >> doing and my system well.
-> >> >>
-> >> >> Caveat emptor: that was me, not every one else in the wild. Grub is used
-> >> >> by the most distro by default,everybody knows it,but certainly not the
-> >> >> norm.
-> >> >>
-> >> >> I would love to give it a stab again and if you better people feel it is
-> >> >> necessary, but I need some concrete understanding from you,Masahiro and
-> >> >> Randy(who is helping me actively).
-> >> >>
-> >> >> Say, You people might come up ,
-> >> >>
-> >> >> We need these :
-> >> >>
-> >> >> a)
-> >> >> b)
-> >> >> c)
-> >> >>
-> >> >> and we don't need these:
-> >> >>
-> >> >> a)
-> >> >> b)
-> >> >> c)
-> >> >>
-> >> >>
-> >> >> My two cents! kindly, flame me with your thoughts.
-> >> >
-> >> >
-> >> >Honestly, I did not even know this script
-> >> >before you submitted the patch.
-> >> >
-> >> :)
-> >>
-> >> >I prune stale kernel/modules with my own script,
-> >> >and I guess people do similar to meet their demand.
-> >> >
-> >> I do the same.
-> >>
-> >> >I am not sure how many people are using this.
-> >> Only people who look up in the kernel source scripts directory , nobody
-> >> else for sure.
-> >> >If somebody is passionate to improve this script
-> >> >in a simple way, that is fine, but
-> >> >I do not want to see messy code for covering various use-cases.
-> >> Agreed. That is why need guideline from you people(You, Randy and Bruce
-> >> needs to tell me clearly), like what I mentioned, we can do
-> >> these and we can not do these. I am asking because you people have had more
-> >> exposure ,so might come up with some valid points to build up.
-> >> >
+> On Mon, Nov 04, 2019 at 12:27:44PM +0530, sundeep.lkml@gmail.com wrote:
+> > From: Subbaraya Sundeep <sbhatta@marvell.com>
 > >
-> >We have two topics here.
+> > As per the spec, "Enhanced Allocation (EA) for Memory
+> > and I/O Resources" ECN, approved 23 October 2014,
+> > sec 6.9.1.2, fixed bus numbers of a bridge must be zero
+> > when no function that uses EA is located behind it.
+> > Hence assign bus numbers normally instead of assigning
+> > zeroes from EA capability. Failing to do this and using
+> > zeroes from EA would make the bridges non-functional.
 > >
-> >[1]  add the interactive option
-> For that, my last patch stand , I have covered it in a sane way, please try that
-> once more with options.Yes , you said, the modules directory should be
-> pruned at once with kernel. But , every system keeps the modules
-> directory in different names AFAIK. So, the explicitness of the calling.
-> >[2]  do nice things for non-rpm systems
-> Bruce's code cover the base for RPM based system , which can be applied
-> to other similar distribution using that format.Provided I figure out
-> the "unknown binary" in the code.
+> > Fixes: '2dbce5901179 ("PCI: Assign bus numbers present in
+> > EA capability for bridges")'
+> > Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+> > Cc: stable@vger.kernel.org    # v5.2+
 >
-> I might add other packaging format distribution to cover. Those will
-> append behind the existing code.
-> >
-> >
-> >They should be done by separate patches.
-> >
-> Agreed. Moduler and clear.
-> >I think [1] is easy to do in a few liners.
-> >
-> My last patch stand.AFAIK...let me know if you feel it should be done
-> differently.
-> >
-> >For [2], I am not sure how well it goes
-> >until I see an actual patch.
-
-
-As I said before, your patch is replacing everything,
-and breaking how it previously worked.
-
-If you want to support the interactive mode,
-what you need to do is quite simple -
-1) check the command line option -i
-2) if -i is given, show a prompt before the removal
-
-
-It would be possible to do these
-in smaller changes.
-I attached a sample patch.
-
-
-
-
-
-
-> That would be a undertaking to deal with the native packaging system for
-> different distributions.
+> Applied to pci/resource for v5.5, thanks!
 >
-> >--
-> >Best Regards
-> >Masahiro Yamada
+> I tweaked it as below so the logic about how to interpret the EA Fixed
+> Secondary Bus Number is more localized.  Let me know if that doesn't
+> make sense.
 >
-> Thanks,
-> Bhaskar
 
+Looks good. Thanks for applying the patch.
 
+Sundeep
 
--- 
-Best Regards
-Masahiro Yamada
-
---0000000000006b6e5d059799effa
-Content-Type: text/x-patch; charset="US-ASCII"; name="prune-kernel.diff"
-Content-Disposition: attachment; filename="prune-kernel.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k343ch1n0>
-X-Attachment-Id: f_k343ch1n0
-
-ZGlmZiAtLWdpdCBhL3NjcmlwdHMvcHJ1bmUta2VybmVsIGIvc2NyaXB0cy9wcnVuZS1rZXJuZWwK
-aW5kZXggZThhYTk0MGJjMGE5Li45MDkxZWUxMTI1ZjUgMTAwNzU1Ci0tLSBhL3NjcmlwdHMvcHJ1
-bmUta2VybmVsCisrKyBiL3NjcmlwdHMvcHJ1bmUta2VybmVsCkBAIC01LDYgKzUsMTEgQEAKICMg
-YWdhaW4sIC9ib290IGFuZCAvbGliL21vZHVsZXMvIGV2ZW50dWFsbHkgZmlsbCB1cC4KICMgRHVt
-YiBzY3JpcHQgdG8gcHVyZ2UgdGhhdCBzdHVmZjoKIAoraWYgWyAiJDEiID0gLWkgXTsgdGhlbgor
-CWludGVyYWN0aXZlPXkKKwlzaGlmdAorZmkKKwogZm9yIGYgaW4gIiRAIgogZG8KICAgICAgICAg
-aWYgcnBtIC1xZiAiL2xpYi9tb2R1bGVzLyRmIiA+L2Rldi9udWxsOyB0aGVuCkBAIC0xMiwxMCAr
-MTcsMjAgQEAgZG8KICAgICAgICAgZWxpZiBbICQodW5hbWUgLXIpID0gIiRmIiBdOyB0aGVuCiAg
-ICAgICAgICAgICAgICAgZWNobyAia2VlcGluZyAkZiAocnVubmluZyBrZXJuZWwpICIKICAgICAg
-ICAgZWxzZQotICAgICAgICAgICAgICAgIGVjaG8gInJlbW92aW5nICRmIgotICAgICAgICAgICAg
-ICAgIHJtIC1mICIvYm9vdC9pbml0cmFtZnMtJGYuaW1nIiAiL2Jvb3QvU3lzdGVtLm1hcC0kZiIK
-LSAgICAgICAgICAgICAgICBybSAtZiAiL2Jvb3Qvdm1saW51ei0kZiIgICAiL2Jvb3QvY29uZmln
-LSRmIgotICAgICAgICAgICAgICAgIHJtIC1yZiAiL2xpYi9tb2R1bGVzLyRmIgotICAgICAgICAg
-ICAgICAgIG5ldy1rZXJuZWwtcGtnIC0tcmVtb3ZlICRmCisJCWZvciBnIGluICQobHMgLWQgL2Jv
-b3QvaW5pdHJhbWZzLSRmLmltZyAvYm9vdC9TeXN0ZW0ubWFwLSRmIFwKKwkJCSAgIC9ib290L3Zt
-bGludXotJGYgL2Jvb3QvY29uZmlnLSRmIC9saWIvbW9kdWxlcy8kZiBcCisJCQkgICAyPi9kZXYv
-bnVsbCkKKwkJZG8KKwkJCWlmIFsgIiRpbnRlcmFjdGl2ZSIgPSB5IF07IHRoZW4KKwkJCQlwcmlu
-dGYgInJlbW92ZSAnJGcnPyAiCisJCQkJcmVhZCBhbnMKKwkJCQlpZiBbICRhbnMgIT0gWSAtYSAk
-YW5zICE9IHkgXTsgdGhlbgorCQkJCQljb250aW51ZQorCQkJCWZpCisJCQllbHNlCisJCQkJZWNo
-byAicmVtb3ZpbmcgJyRnJyIKKwkJCWZpCisJCQlybSAtcmYgJGcKKwkJZG9uZQogICAgICAgICBm
-aQogZG9uZQo=
---0000000000006b6e5d059799effa--
+> > ---
+> >  drivers/pci/probe.c | 25 +++++++++++++------------
+> >  1 file changed, 13 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > index 3d5271a..116b276 100644
+> > --- a/drivers/pci/probe.c
+> > +++ b/drivers/pci/probe.c
+> > @@ -1090,27 +1090,28 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+> >   * @sub: updated with subordinate bus number from EA
+> >   *
+> >   * If @dev is a bridge with EA capability, update @sec and @sub with
+> > - * fixed bus numbers from the capability and return true.  Otherwise,
+> > - * return false.
+> > + * fixed bus numbers from the capability. Otherwise @sec and @sub
+> > + * will be zeroed.
+> >   */
+> > -static bool pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
+> > +static void pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
+> >  {
+> >       int ea, offset;
+> >       u32 dw;
+> >
+> > +     *sec = *sub = 0;
+> > +
+> >       if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE)
+> > -             return false;
+> > +             return;
+> >
+> >       /* find PCI EA capability in list */
+> >       ea = pci_find_capability(dev, PCI_CAP_ID_EA);
+> >       if (!ea)
+> > -             return false;
+> > +             return;
+> >
+> >       offset = ea + PCI_EA_FIRST_ENT;
+> >       pci_read_config_dword(dev, offset, &dw);
+> >       *sec =  dw & PCI_EA_SEC_BUS_MASK;
+> >       *sub = (dw & PCI_EA_SUB_BUS_MASK) >> PCI_EA_SUB_BUS_SHIFT;
+> > -     return true;
+> >  }
+> >
+> >  /*
+> > @@ -1146,7 +1147,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+> >       u16 bctl;
+> >       u8 primary, secondary, subordinate;
+> >       int broken = 0;
+> > -     bool fixed_buses;
+> >       u8 fixed_sec, fixed_sub;
+> >       int next_busnr;
+> >
+> > @@ -1249,11 +1249,12 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+> >               pci_write_config_word(dev, PCI_STATUS, 0xffff);
+> >
+> >               /* Read bus numbers from EA Capability (if present) */
+> > -             fixed_buses = pci_ea_fixed_busnrs(dev, &fixed_sec, &fixed_sub);
+> > -             if (fixed_buses)
+> > +             pci_ea_fixed_busnrs(dev, &fixed_sec, &fixed_sub);
+> > +
+> > +             next_busnr = max + 1;
+> > +             /* Use secondary bus number in EA */
+> > +             if (fixed_sec)
+> >                       next_busnr = fixed_sec;
+> > -             else
+> > -                     next_busnr = max + 1;
+> >
+> >               /*
+> >                * Prevent assigning a bus number that already exists.
+> > @@ -1331,7 +1332,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+> >                * If fixed subordinate bus number exists from EA
+> >                * capability then use it.
+> >                */
+> > -             if (fixed_buses)
+> > +             if (fixed_sub)
+> >                       max = fixed_sub;
+> >               pci_bus_update_busn_res_end(child, max);
+> >               pci_write_config_byte(dev, PCI_SUBORDINATE_BUS, max);
+> > --
+> > 2.7.4
+> >
+>
+> commit 25328e0447de ("PCI: Do not use bus number zero from EA capability")
+> Author: Subbaraya Sundeep <sbhatta@marvell.com>
+> Date:   Mon Nov 4 12:27:44 2019 +0530
+>
+>     PCI: Do not use bus number zero from EA capability
+>
+>     As per PCIe r5.0, sec 7.8.5.2, fixed bus numbers of a bridge must be zero
+>     when no function that uses EA is located behind it.  Hence, if EA supplies
+>     bus numbers of zero, assign bus numbers normally.  A secondary bus can
+>     never have a bus number of zero, so setting a bridge's Secondary Bus Number
+>     to zero makes downstream devices unreachable.
+>
+>     [bhelgaas: retain bool return value so "zero is invalid" logic is local]
+>     Fixes: 2dbce5901179 ("PCI: Assign bus numbers present in EA capability for bridges")
+>     Link: https://lore.kernel.org/r/1572850664-9861-1-git-send-email-sundeep.lkml@gmail.com
+>     Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+>     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>     Cc: stable@vger.kernel.org  # v5.2+
+>
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index bdbc8490f962..d3033873395d 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1090,14 +1090,15 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+>   * @sec: updated with secondary bus number from EA
+>   * @sub: updated with subordinate bus number from EA
+>   *
+> - * If @dev is a bridge with EA capability, update @sec and @sub with
+> - * fixed bus numbers from the capability and return true.  Otherwise,
+> - * return false.
+> + * If @dev is a bridge with EA capability that specifies valid secondary
+> + * and subordinate bus numbers, return true with the bus numbers in @sec
+> + * and @sub.  Otherwise return false.
+>   */
+>  static bool pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
+>  {
+>         int ea, offset;
+>         u32 dw;
+> +       u8 ea_sec, ea_sub;
+>
+>         if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE)
+>                 return false;
+> @@ -1109,8 +1110,13 @@ static bool pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
+>
+>         offset = ea + PCI_EA_FIRST_ENT;
+>         pci_read_config_dword(dev, offset, &dw);
+> -       *sec =  dw & PCI_EA_SEC_BUS_MASK;
+> -       *sub = (dw & PCI_EA_SUB_BUS_MASK) >> PCI_EA_SUB_BUS_SHIFT;
+> +       ea_sec =  dw & PCI_EA_SEC_BUS_MASK;
+> +       ea_sub = (dw & PCI_EA_SUB_BUS_MASK) >> PCI_EA_SUB_BUS_SHIFT;
+> +       if (ea_sec  == 0 || ea_sub < ea_sec)
+> +               return false;
+> +
+> +       *sec = ea_sec;
+> +       *sub = ea_sub;
+>         return true;
+>  }
+>
