@@ -2,131 +2,125 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4F6C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CF0C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D5B820727
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A0D82071B
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:37:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W6V9SCS3"
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="S4zJ//FJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbfKRJen (ORCPT
+        id S1726578AbfKRJhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 04:34:43 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:35689 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfKRJen (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 04:34:43 -0500
-Received: by mail-il1-f195.google.com with SMTP id z12so15371747ilp.2
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 01:34:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lr/4E5ZW9jz9oShySXGCc5V6Txdcr0g9QJ5gIXifIGk=;
-        b=W6V9SCS3NzD7+ytXHksdvuTMYaJofAh3nWAX40damlaaJWjWjZHtQ+k6ikYy6z6QM1
-         VHwrlguvhMqY7NmZM9gTooG0Z9XHILEXYgbysYUT6DYzcl/XH1wIjioMeK/75YCyLtb/
-         aUi3Yq3X/P9iXf6Kg85iW+swL8ttWmJ0SlonE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lr/4E5ZW9jz9oShySXGCc5V6Txdcr0g9QJ5gIXifIGk=;
-        b=LR4PU5hQa8lXqb+xLi4SctAhfMOc5m7rGthpsASc1w5Y5F/JRRqCLanXn4NmD1ayZG
-         8UJOG9nTMr+U6TkQFfD80G+eNnTI7d2JvhaheHxeflnLape7MsVr3jNfXq1U6paYdvOJ
-         Sq3jV+2tp+u4InQShqLbCisDDOWOnJh+E6KH3YHP2+kwsBAIXz4rEnH0OH46RNgugjCI
-         IJbxpjXnlHDt2hDUG5ElXLCBot0VfI5EUlcDqB5gqw0fA4S3bNIa2qQUqCeXG9uYRkHh
-         bQf2jnwVLHEDB93kQE5Aj5OgxHEr+FJwGTDPrhANnN2HG6e2af8tSdS4Gf2ynkYQK0B8
-         dEOg==
-X-Gm-Message-State: APjAAAV+Yhrn6ldEmdo1EF3XmkpaLPXinPBrpnZ1lJsldItQ5Tow68wq
-        zSaiJDmqa8M4xbdfIwLUKcVkm6fDeWcNHrqHERHXWg==
-X-Google-Smtp-Source: APXvYqxLrh5aVv3p0xE1Cuv2M9Lu4EqPeULGldZRnOqi6Hjy+4RMLF1tR9vxtOQ6RJa0zB6OkWOb0ZxRDT43EqGIS1Q=
-X-Received: by 2002:a92:d608:: with SMTP id w8mr14471824ilm.308.1574069682145;
- Mon, 18 Nov 2019 01:34:42 -0800 (PST)
+        Mon, 18 Nov 2019 04:37:31 -0500
+Received: from mail-eopbgr740072.outbound.protection.outlook.com ([40.107.74.72]:53664
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726461AbfKRJha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 04:37:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PnOdRyOhtvxS/d6dyGp6YHmccTUxE+Pk1Dmy1c3lokq/Jyq+hYBKrgwm2PoUaJm8YM6PCIWSI4/dzq5Z8W+icVxVrjEyydca7bjzEC5LFjWYtnYEiwlRlwRSw7teEjv0IiADty5Y/FTzyByDHnmD3Mw4SWXWNVQBUy3B5gieIHfCE2IvLMd7FhBcrOeQgpvYssFcObf4xHbfa3YDy2OQ87Vy5pcxx7BqlF2QrjHfiWUIkYCDjBLECsY66zpi0yyuNFFbjtjkGGdNGJyAKtaaKN+Oqoukl1oI8MM+A1KJ13JnmlEHICEL2kXutUV18H8nHkYHXGqAwkycw6vXGopDOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ULOSXUSi+/EsERkJiV9n05O+86O8Cl5+5spjLv17qis=;
+ b=A++Es6+9zEOeScDAvF2Am/mBgAGn6yYBfo9NJzeQX7ZMU9OIwoKBmZfn/egQHeweRxevTOww4eC6bzUh6OxKL0v4VVjTSHBU1flzKJKB2g7b+PW8/XiE0xMpz82q3aKSUQRaZeaBuACpmjL69LTfF/+KFgfxn6iMekxz1N3ywUCPeG+e92HMPmaQLzD6V2Y13XobvI/5PTrIvVfEDGvrQmhBLYH/5Oh6KLuYFzWAzWNzq+zXTwRdLpsElQkQNfqBJR3qbQ6GFsA5NzWtZ/Smus2pDZat7L+AM+0elg48tWr6hM1CQxCB/CIFHImfWFzaG0cOCKW78QKLbPXFwmBG6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
+ dkim=pass header.d=micron.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ULOSXUSi+/EsERkJiV9n05O+86O8Cl5+5spjLv17qis=;
+ b=S4zJ//FJUli+odNj88jSPBf9gCm4ugiEtlNybx6meg2HjYNmWcEONfULrkJOVATIhH/4F2zJQ+TCBPsJOVwwi8YV5tBudGHUqXmyZDjOiuxs/o0tOWSRu7Z/gGwfei7z6j+0Pm6BAxvSeJvz5aFICzauaopnsBjKk/VoiYh2UXg=
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.179.87) by
+ BN7PR08MB4228.namprd08.prod.outlook.com (52.133.222.154) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.27; Mon, 18 Nov 2019 09:37:27 +0000
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::a91a:c2f5:c557:4285]) by BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::a91a:c2f5:c557:4285%6]) with mapi id 15.20.2451.029; Mon, 18 Nov 2019
+ 09:37:27 +0000
+From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
+To:     Can Guo <cang@qti.qualcomm.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
+        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        "saravanak@google.com" <saravanak@google.com>,
+        "salyzyn@google.com" <salyzyn@google.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>
+CC:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] [PATCH v2 3/4] scsi: ufs: Avoid messing up the
+ compl_time_stamp of lrbs
+Thread-Topic: [EXT] [PATCH v2 3/4] scsi: ufs: Avoid messing up the
+ compl_time_stamp of lrbs
+Thread-Index: AQHVncN0qi6outuzf0O6t+NF9bzRkKeQq7+Q
+Date:   Mon, 18 Nov 2019 09:37:27 +0000
+Message-ID: <BN7PR08MB5684C8920F081E3463B8BE90DB4D0@BN7PR08MB5684.namprd08.prod.outlook.com>
+References: <1574049061-11417-1-git-send-email-cang@qti.qualcomm.com>
+ <1574049061-11417-4-git-send-email-cang@qti.qualcomm.com>
+In-Reply-To: <1574049061-11417-4-git-send-email-cang@qti.qualcomm.com>
+Accept-Language: en-150, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLTA2MzA0MmJiLTA5ZTctMTFlYS04Yjg1LWRjNzE5NjFmOWRkM1xhbWUtdGVzdFwwNjMwNDJiZC0wOWU3LTExZWEtOGI4NS1kYzcxOTYxZjlkZDNib2R5LnR4dCIgc3o9IjQyMyIgdD0iMTMyMTg1NDM0NDQ0NDUyOTkzIiBoPSJQeXU5YU5iV0k2Q2krdmo5VFphQk1nWW9LWm89IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
+x-dg-rorf: true
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=beanhuo@micron.com; 
+x-originating-ip: [165.225.81.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e2525a6c-806a-4fb4-bd61-08d76c0aecc4
+x-ms-traffictypediagnostic: BN7PR08MB4228:|BN7PR08MB4228:|BN7PR08MB4228:
+x-microsoft-antispam-prvs: <BN7PR08MB4228BC8A1A3FF0E6A0BAFA3EDB4D0@BN7PR08MB4228.namprd08.prod.outlook.com>
+x-ms-exchange-transport-forked: True
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0225B0D5BC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(346002)(396003)(39860400002)(189003)(199004)(74316002)(558084003)(55016002)(4326008)(256004)(99286004)(76116006)(9686003)(229853002)(6436002)(8936002)(25786009)(81156014)(7696005)(76176011)(6246003)(81166006)(8676002)(86362001)(5660300002)(6116002)(3846002)(476003)(186003)(55236004)(66066001)(2201001)(71190400001)(71200400001)(7416002)(102836004)(6506007)(316002)(14454004)(110136005)(446003)(11346002)(54906003)(66946007)(66446008)(64756008)(66556008)(66476007)(478600001)(52536014)(33656002)(7736002)(486006)(305945005)(2906002)(26005)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB4228;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: sHV1mF+QPxkYaglTnhRSw3JFZ2ypUPwcaBviHFYOnTO6G/WYzqF57ovTiLFDTVsd7yZBiyoFI24a1joDiI/blp00skxxOhxUBO8tMnyoplWkj6l/cJFEVwdaA7DjXJQU/09G6/11ldBxcAE2r8HWNMiuca0Pz6ElA8WKEfCbN3Z2b/SJtyogRWAq06Q+7Uf79PdKKJuZqTXQSQo+qWFtuxZPvWq1XsHTyy/qn37qJFbrotrCBHu+yYptQwyDh8fZyiRIeG27IUURn0WkuYaHyW+9tBWmnED9Ozg5/TBs0j6AHm7fM8LavoDjVla2Hx4/Co7Ka+Zc8Pup2LuXAAjdDE10mlQI/+PLWA1DLMVIiv/udwDHaCLji4HZ/PfV0mIei0f4xSp98m8xzceUAZ+FRJasGur8yTqBfHq89l2bDqWSd9fmOGtzzbObRAXIzEJu
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190830074103.16671-1-bibby.hsieh@mediatek.com> <20190830074103.16671-3-bibby.hsieh@mediatek.com>
-In-Reply-To: <20190830074103.16671-3-bibby.hsieh@mediatek.com>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Mon, 18 Nov 2019 17:34:16 +0800
-Message-ID: <CAJMQK-ir=8ukNZw8XN=prLuh3znjbjNszVB=dcDxa_bVnFwVAQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drm/mediatek: Apply CMDQ control flow
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc:     David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Yongqiang Niu <yongqiang.niu@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>, tfiga@chromium.org,
-        CK Hu <ck.hu@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        YT Shen <yt.shen@mediatek.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e2525a6c-806a-4fb4-bd61-08d76c0aecc4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 09:37:27.2144
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: f8Eo6UAedSQqyO0ax38LY66eOYXNjCDQuViPLtAes8fbT56eCxSlqDQgSBudu9G6QpOSdahenBB1mt0vCjGdCA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB4228
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 7:41 AM Bibby Hsieh <bibby.hsieh@mediatek.com> wrote:
-
-> @@ -405,26 +458,69 @@ void mtk_drm_crtc_cursor_update(struct drm_crtc *crtc, struct drm_plane *plane,
->                 return;
->
->         mutex_lock(&priv->hw_lock);
-> -       plane_helper_funcs->atomic_update(plane, plane_state);
-> -       for (i = 0; i < mtk_crtc->layer_nr; i++) {
-> -               struct drm_plane *plane = &mtk_crtc->planes[i];
-> -               struct mtk_plane_state *plane_state;
-> +       if (IS_ENABLED(CONFIG_MTK_CMDQ) && mtk_crtc->cmdq_client) {
-> +               struct mtk_crtc_state *mtk_crtc_state =
-> +                               to_mtk_crtc_state(crtc->state);
-> +               struct mtk_cmdq_cb_data *cb_data;
-> +
-> +               mtk_crtc_state->cmdq_handle =
-> +                               cmdq_pkt_create(mtk_crtc->cmdq_client,
-> +                                               PAGE_SIZE);
-> +               cmdq_pkt_clear_event(mtk_crtc_state->cmdq_handle,
-> +                                    mtk_crtc->cmdq_event);
-> +               cmdq_pkt_wfe(mtk_crtc_state->cmdq_handle, mtk_crtc->cmdq_event);
-> +               plane_helper_funcs->atomic_update(plane, plane_state);
-> +               cb_data = kmalloc(sizeof(*cb_data), GFP_KERNEL);
-Check kmalloc failure?
-> +               cb_data->cmdq_handle = mtk_crtc_state->cmdq_handle;
-> +               cmdq_pkt_flush_async(mtk_crtc_state->cmdq_handle,
-> +                                    ddp_cmdq_cursor_cb, cb_data);
-
-> @@ -494,13 +599,29 @@ static void mtk_drm_crtc_atomic_flush(struct drm_crtc *crtc,
->                                       struct drm_crtc_state *old_crtc_state)
->  {
->         struct drm_atomic_state *old_atomic_state = old_crtc_state->state;
-> +       struct drm_crtc_state *crtc_state = crtc->state;
-> +       struct mtk_crtc_state *state = to_mtk_crtc_state(crtc_state);
-> +       struct cmdq_pkt *cmdq_handle = state->cmdq_handle;
->         struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
->         struct mtk_drm_private *priv = crtc->dev->dev_private;
-> +       struct mtk_cmdq_cb_data *cb_data;
->         unsigned int pending_planes = 0;
->         int i;
->
-> -       if (mtk_crtc->event)
-> -               mtk_crtc->pending_needs_vblank = true;
-> +       DRM_DEBUG_DRIVER("[CRTC:%u] [STATE:%p(%p)->%p(%p)]\n", crtc->base.id,
-> +                        old_crtc_state, old_crtc_state->state,
-> +                        crtc_state, crtc_state->state);
-> +
-> +       if (IS_ENABLED(CONFIG_MTK_CMDQ) && mtk_crtc->cmdq_client) {
-> +               drm_atomic_state_get(old_atomic_state);
-> +               cb_data = kmalloc(sizeof(*cb_data), GFP_KERNEL);
-Check kmalloc failure?
-> +               cb_data->state = old_crtc_state;
-> +               cb_data->cmdq_handle = cmdq_handle;
+>=20
+> From: Can Guo <cang@codeaurora.org>
+>=20
+> To be on the safe side, do not touch one lrb after clear its slot in the =
+lrb_in_use
+> bitmap to avoid messing up the next task which would possibly occupy this=
+ lrb.
+>=20
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
