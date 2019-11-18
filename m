@@ -2,100 +2,138 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C9BC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA44C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17AF9222BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:32:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B747222BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:32:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="o965utNs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfKRScH (ORCPT
+        id S1726747AbfKRScW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 13:32:07 -0500
-Received: from mga05.intel.com ([192.55.52.43]:13370 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbfKRScH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 13:32:07 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 10:32:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,321,1569308400"; 
-   d="scan'208";a="217973838"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga002.jf.intel.com with ESMTP; 18 Nov 2019 10:32:06 -0800
-Date:   Mon, 18 Nov 2019 10:36:41 -0800
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 10/10] iommu/vt-d: Misc macro clean up for SVM
-Message-ID: <20191118103641.24e73c7d@jacob-builder>
-In-Reply-To: <ac725526-0396-e9c6-196e-b0d1cf5431fe@linux.intel.com>
-References: <1573859377-75924-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1573859377-75924-11-git-send-email-jacob.jun.pan@linux.intel.com>
-        <ac725526-0396-e9c6-196e-b0d1cf5431fe@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Mon, 18 Nov 2019 13:32:22 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:10542 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfKRScV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 13:32:21 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd2e3b50002>; Mon, 18 Nov 2019 10:32:21 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 18 Nov 2019 10:32:21 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 18 Nov 2019 10:32:21 -0800
+Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 Nov
+ 2019 18:32:18 +0000
+Subject: Re: [PATCH v4 2/2] mm/hmm/test: add self tests for HMM
+To:     Jason Gunthorpe <jgg@mellanox.com>
+CC:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Shuah Khan <shuah@kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+References: <20191104222141.5173-1-rcampbell@nvidia.com>
+ <20191104222141.5173-3-rcampbell@nvidia.com> <20191112152521.GC12550@lst.de>
+ <07589a71-3984-b2a6-b24b-6b9a23e1b60d@nvidia.com>
+ <20191112234549.GX21728@mellanox.com> <20191113135115.GA10688@lst.de>
+ <21d6b69c-3167-e60d-eed2-65bb1f8515ae@nvidia.com>
+ <20191115140619.GC3873@mellanox.com>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <912f9f23-fa2a-1dd7-3f91-f7175094c2e2@nvidia.com>
+Date:   Mon, 18 Nov 2019 10:32:18 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191115140619.GC3873@mellanox.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574101941; bh=39u0XUhcHMVb+ZMv/dn3CtMgXSJFUOYDTSmuZ9uY/T0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=o965utNs7sb47SjzfNx79P1NDcBYHTTGYjQg5eKJdAz3jTgIhAnFr7N7geNbmi9ao
+         0aR+c+4bAWxpWTsY8M7EzLb02XVMovvgMAPCe6jdZBm6jwo5VnQrt9+rCKJqo5Mkon
+         LrArGzwWtC3qJKyXDLyDSzFu3Qfb38n35KX+O1XdeUetSQm5A71fFIm2qI6frO6BLZ
+         YWQKfutfxInIgfUt8Gqfws0OZXSfTM0mz83p6l/T1h40NtNdZnySgsZATpTc2AtoSH
+         N0DZphSt/6agDSMc8H6BBxkfDZwbXAJPZmi2srMIK0eBBEXuDroYwod1i4932/8BLH
+         QNbuhWw7JCpYg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 Nov 2019 10:23:34 +0800
-Lu Baolu <baolu.lu@linux.intel.com> wrote:
 
-> Hi,
+On 11/15/19 6:06 AM, Jason Gunthorpe wrote:
+> On Thu, Nov 14, 2019 at 03:06:05PM -0800, Ralph Campbell wrote:
+>>
+>> On 11/13/19 5:51 AM, Christoph Hellwig wrote:
+>>> On Tue, Nov 12, 2019 at 11:45:52PM +0000, Jason Gunthorpe wrote:
+>>>>> Well, it would mean registering for the whole process address space.
+>>>>> I'll give it a try.
+>>>>
+>>>> I'm not sure it makes much sense that this testing is essentially
+>>>> modeled after nouveau's usage which is very strange compared to the
+>>>> other drivers.
+>>>
+>>> Which means we really should make the test cases fit the proper usage.
+>>> Maybe defer the tests for 5.5 and just merge the first patch for now?
+>>>
+>>
+>> I think this a good point to discuss.
+>> Some devices will want to register for all changes to the process address
+>> space because there is no requirement to preregister regions that the
+>> device can access verses devices like InfiniBand where a range of addresses
+>> have to be registered before the device can access those addresses.
 > 
-> On 11/16/19 7:09 AM, Jacob Pan wrote:
-> > Use combined macros for_each_svm_dev() to simplify SVM device
-> > iteration and error checking.
-> > 
-> > Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Reviewed-by: Eric Auger <eric.auger@redhat.com>
-> > ---
-> >   drivers/iommu/intel-svm.c | 85
-> > ++++++++++++++++++++++------------------------- 1 file changed, 40
-> > insertions(+), 45 deletions(-)
-> > 
-> > diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-> > index 189865501411..a7f67a9da3fc 100644
-> > --- a/drivers/iommu/intel-svm.c
-> > +++ b/drivers/iommu/intel-svm.c
-> > @@ -226,6 +226,10 @@ static const struct mmu_notifier_ops
-> > intel_mmuops = { static DEFINE_MUTEX(pasid_mutex);
-> >   static LIST_HEAD(global_svm_list);
-> >   
-> > +#define for_each_svm_dev(sdev, svm, dev)		\
-> > +	list_for_each_entry(sdev, &svm->devs, list)	\
-> > +		if (dev != sdev->dev) {} else  
+> But this is a very bad idea to register and do HW actions for ranges
+> that can't possibly have any pages registered. It slows down the
+> entire application
 > 
-> "dev" has been reused in "sdev->dev", how about below?
+> I think the ODP approach might be saner, when it mirrors the entire
+> address space it chops it up into VA chunks, and once a page is
+> registered on the HW the VA chunk goes into the interval tree.
 > 
-> #define for_each_svm_dev(sdev, svm, d)                  \
->          list_for_each_entry((sdev), &(svm)->devs, list) \
->                  if ((d) != (sdev)->dev) {} else
+> Presumably the GPU also has some kind of page table tree and you could
+> set one of the levels as the VA interval when there are populated children
 > 
-sounds good. will do.
+> Jason
 
-> Best regards,
-> baolu
-> 
-> 
->  [...]  
+I wasn't suggesting that HW invalidates happen in two places.
+I'm suggesting the two styles of invalidates can work together.
+For example, what if a driver calls mmu_notifier_register(mn, mm)
+to register for address space wide invalidations, then some time
+later there is a device page table fault and the driver calls
+mmu_range_notifier_insert() but with a NULL ops.invalidate.
+The fault handler follows the nouveau/test_hmm pattern to call
+     mmu_range_read_begin()
+     hmm_range_fault()
+     device lock
+     mmu_range_read_retry()
+     update device page tables
+     device unlock
+     mmu_range_notifier_remove()
 
-[Jacob Pan]
+The global invalidate() callback would get the device lock and
+call into mm to update the sequence number of any affected ranges
+instead of having a range invalidate callback, and then do the HW
+invalidations.
+
