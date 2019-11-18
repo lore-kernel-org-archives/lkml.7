@@ -2,122 +2,147 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FDBC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D3FC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A02020891
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574082601;
-	bh=Q2eXGwHQq4s+yurJ+wKhOG5NXQbSVgnFrrs1gy2woBs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Tx3+VdUf8ScVtnohNXvJaDtjRWCmXyD/2k08Sps3+B1+u9sYFFM5Yls6yFyVWXiJg
-	 vd4CgVNPMpDutIf55lKXE4TCJuwQJAdrRR05pbFRrBOIYXfQk3zbZEsrFq6/DSQL77
-	 J8rb2hKZv0kCSzzLnEqS/DeFAKL+63yK30hbs7k0=
+	by mail.kernel.org (Postfix) with ESMTP id A58662089D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:10:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fqB5MnuD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfKRNKA (ORCPT
+        id S1727040AbfKRNKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 08:10:00 -0500
-Received: from foss.arm.com ([217.140.110.172]:34538 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726178AbfKRNJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 08:09:59 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D3681FB;
-        Mon, 18 Nov 2019 05:09:58 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E5563F6C4;
-        Mon, 18 Nov 2019 05:09:57 -0800 (PST)
-Date:   Mon, 18 Nov 2019 13:09:56 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        devicetree@vger.kernel.org, kuninori.morimoto.gx@renesas.com,
-        lgirdwood@gmail.com, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        robh+dt@kernel.org
-Subject: Applied "ASoC: pcm3168a: Document optional RST gpio" to the asoc tree
-In-Reply-To: <20191113124734.27984-2-peter.ujfalusi@ti.com>
-Message-Id: <applied-20191113124734.27984-2-peter.ujfalusi@ti.com>
-X-Patchwork-Hint: ignore
+        Mon, 18 Nov 2019 08:10:20 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40758 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbfKRNKU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 08:10:20 -0500
+Received: by mail-io1-f68.google.com with SMTP id p6so18645718iod.7;
+        Mon, 18 Nov 2019 05:10:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mr9WfdYenNY5j6q7FL+eHIEixX6YeeRurCUnT8vUnEs=;
+        b=fqB5MnuDAxJO3/DiqejJmL5scs9pBMIq5XTY1NeMgvv58+6kp89L0dKnOjrWNtfTJg
+         p70M1sYCh3VS4qTCizRbeoIS/4jvVPWvELlHstpA0nw9GEVek6BlAP5v1uvnHDK/ojbK
+         cevJLmUyCIQ5qg+J8NqpwEJ+dULhmAckc+7xBvVV/JFpUDaE7iBBKuiScgD3yD3jveTt
+         rjPvXohLFrIr0t1SnljYMG0wTN82t1yE46Ng9rqGEgz7jgyOoUMXls+ddmuQKb5pVTkX
+         iGRU6HQ5lz/4oH5eoKImGXsyPGr0M2qd8Ya4MwAvpQThhKZV3KSKgNLEck7KD9tMu+Q7
+         dAxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mr9WfdYenNY5j6q7FL+eHIEixX6YeeRurCUnT8vUnEs=;
+        b=jL2/m1tokODl8qXThbdH3Um/CDXaS58mC6IJd/qQCcobgbsHeR4ILxZ56AEqWhMfEZ
+         rQYpjsmxfdR/cJ8cghWFgC7Ee3+CUXEnzQaxl3Gj2mdyEGv3QT7XM1NmD7jof5LDMTh4
+         iDJcAyWIO19lLXZkkfmqH6yNO6TCe4NMfxxVngSFSRIpfl66O3UPryKLa/J8ovDUzz/2
+         lWJv4vtUBTjb9YhWNDAdFhJOT7jMNjN2E1NHAicHvusRd8uIkhzQD5No6p3yahIO3TRX
+         eolB7HJJEn8nVatTOoorrMW/M/jVJTcoMvlnnb1YZxyi7hm9UwbAg4786DiIMHuIZ0pI
+         hdKQ==
+X-Gm-Message-State: APjAAAWeJWFIvIWzuPUWSCe6yDdV491XZnlFkxSLwKDVB595MXxlI5JI
+        u7o8T8lJLlZ/t2P1BeqTpJ86AnvVJvJuoQ2NiJ8=
+X-Google-Smtp-Source: APXvYqzMWwRt3LsZ3Wc4TX0zDV2JaPQ1dgITFcbslb0uvtzmnIqb6OrDdYxptOIB1WM3szTirFd5cdKiPG7vFgQHLeE=
+X-Received: by 2002:a5d:9547:: with SMTP id a7mr13306711ios.198.1574082619341;
+ Mon, 18 Nov 2019 05:10:19 -0800 (PST)
+MIME-Version: 1.0
+References: <1574049061-11417-1-git-send-email-cang@qti.qualcomm.com> <1574049061-11417-2-git-send-email-cang@qti.qualcomm.com>
+In-Reply-To: <1574049061-11417-2-git-send-email-cang@qti.qualcomm.com>
+From:   Alim Akhtar <alim.akhtar@gmail.com>
+Date:   Mon, 18 Nov 2019 18:39:43 +0530
+Message-ID: <CAGOxZ51ddstawjBryo92+6Qhgy8g+ZU2PorUNguwv_d8n5Yj6Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] scsi: ufs: Recheck bkops level if bkops is disabled
+To:     Can Guo <cang@qti.qualcomm.com>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com,
+        Mark Salyzyn <salyzyn@google.com>,
+        Can Guo <cang@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Hi Can
 
-   ASoC: pcm3168a: Document optional RST gpio
+On Mon, Nov 18, 2019 at 9:21 AM Can Guo <cang@qti.qualcomm.com> wrote:
+>
+> From: Asutosh Das <asutoshd@codeaurora.org>
+>
+> Bkops level should be rechecked upon receiving an exception.
+> Currently the bkops level is being cached and never updated.
+>
+> Update the same each time the level is checked.
+> Also do not use the cached bkops level value if it is disabled
+> and then enabled.
+>
+> Fixes: afdfff59a0e0 (scsi: ufs: handle non spec compliant bkops behaviour by device)
+> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> Reviewed-by: Bean Huo <beanhuo@micron.com>
+> ---
+Feel free to add
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Ran these patches on exynos7 platfrom, and no regression observed,
+basic read/write works, so
+Tested-by: Alim Akhtar <alim.akhtar@samsung.com
+>
+>  drivers/scsi/ufs/ufshcd.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index 3910c58..8e7c362 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -5099,6 +5099,7 @@ static int ufshcd_disable_auto_bkops(struct ufs_hba *hba)
+>
+>         hba->auto_bkops_enabled = false;
+>         trace_ufshcd_auto_bkops_state(dev_name(hba->dev), "Disabled");
+> +       hba->is_urgent_bkops_lvl_checked = false;
+>  out:
+>         return err;
+>  }
+> @@ -5123,6 +5124,7 @@ static void ufshcd_force_reset_auto_bkops(struct ufs_hba *hba)
+>                 hba->ee_ctrl_mask &= ~MASK_EE_URGENT_BKOPS;
+>                 ufshcd_disable_auto_bkops(hba);
+>         }
+> +       hba->is_urgent_bkops_lvl_checked = false;
+>  }
+>
+>  static inline int ufshcd_get_bkops_status(struct ufs_hba *hba, u32 *status)
+> @@ -5169,6 +5171,7 @@ static int ufshcd_bkops_ctrl(struct ufs_hba *hba,
+>                 err = ufshcd_enable_auto_bkops(hba);
+>         else
+>                 err = ufshcd_disable_auto_bkops(hba);
+> +       hba->urgent_bkops_lvl = curr_status;
+>  out:
+>         return err;
+>  }
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
 
-has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From cdacc761dae1cbd6475ac79f0e732f2b1ca021e0 Mon Sep 17 00:00:00 2001
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Date: Wed, 13 Nov 2019 14:47:33 +0200
-Subject: [PATCH] ASoC: pcm3168a: Document optional RST gpio
-
-On boards where the RST line is not pulled up, but it is connected to a
-GPIO line this property must present in order to be able to enable the
-codec.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20191113124734.27984-2-peter.ujfalusi@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/sound/ti,pcm3168a.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt b/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
-index 5d9cb84c661d..f30aebc7603a 100644
---- a/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
-+++ b/Documentation/devicetree/bindings/sound/ti,pcm3168a.txt
-@@ -25,6 +25,12 @@ Required properties:
- 
- For required properties on SPI/I2C, consult SPI/I2C device tree documentation
- 
-+Optional properties:
-+
-+  - rst-gpios : Optional RST gpio line for the codec
-+		RST = low: device power-down
-+		RST = high: device is enabled
-+
- Examples:
- 
- i2c0: i2c0@0 {
-@@ -34,6 +40,7 @@ i2c0: i2c0@0 {
- 	pcm3168a: audio-codec@44 {
- 		compatible = "ti,pcm3168a";
- 		reg = <0x44>;
-+		rst-gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
- 		clocks = <&clk_core CLK_AUDIO>;
- 		clock-names = "scki";
- 		VDD1-supply = <&supply3v3>;
 -- 
-2.20.1
-
+Regards,
+Alim
