@@ -2,112 +2,133 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B20EC43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C64C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9BCF222A7
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA7A222BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:31:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="t5weXUGA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZEu6MqIW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfKRS24 (ORCPT
+        id S1726664AbfKRSb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 13:28:56 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:46090 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726322AbfKRS24 (ORCPT
+        Mon, 18 Nov 2019 13:31:56 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:35437 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfKRSb4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 13:28:56 -0500
-Received: by mail-qv1-f66.google.com with SMTP id w11so6955438qvu.13
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 10:28:55 -0800 (PST)
+        Mon, 18 Nov 2019 13:31:56 -0500
+Received: by mail-pj1-f66.google.com with SMTP id s8so1732594pji.2
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 10:31:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rury4ZZBdE8YLeSDPwSjljk3dVtJlEOvKyMr2vi3O/U=;
-        b=t5weXUGAVmsQStwPj4v4X/U1MmOY95N/K56kPstKmQF4arNhyRORYSXsWauzEacMXb
-         JqhTYeEb1S364qsmlrmH2Ac0I49RfS5VfaipBlRA4LTAeyLOUWPW1paOU7a4oRkJOiV7
-         k/YI7dV2R8eGFp9rKo+JiT+PlhARfTYuaQ2jSeqOp2uA0ik41qAUY+VIDzaRviKLjbWU
-         WyiILBRcfAyWWgqTWScDeJu4fRb6NUGl2+uAnpWSMR7MIeAn5zq5kuCSVzknRMJw/kNy
-         aPu4XUNv+4/FST7Sq5GX73fckuKvxVYDE9W+iMHnunV3Wc6J+OcNU7Hmppo4Ur3H2Qcl
-         HvRQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A4WMyPwwd33AeWG8Iqc5mgyWoDalMpSQTRsm3rGqwlk=;
+        b=ZEu6MqIWF1RGB6jwTdYhgHtxhAATdk1ygV/D13/7aMyuBRUAxpL9gDOKnW1YPM/nX7
+         23u6A7lrO4lGUJ27TFnoXF0lqTyFkMa05WMr53EPub91ytz47wsBRy2Cg8xJlmXJ8izw
+         BFPtLFmh8TGgmhhfVC4M62Z9fJihEG6wvlR3doCWpGCqfc4YFyMjeQW0+WI0OQOGVJFH
+         yol3VAr89WnKHDukq6EJzwO2GWv34IvLeTpiMiwew+8CRmTopaeVu8/tozDTVeiudldZ
+         gLk/LVTPoDXoQpARKeLAB7WZme2//ckYXuDhm6shpmQ+YoksNdJYGpL9y7ZAReWpLH9n
+         /m4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rury4ZZBdE8YLeSDPwSjljk3dVtJlEOvKyMr2vi3O/U=;
-        b=VokybTsLz27+zLGxVaQhtptkCg4cYhYVVLllZoATbtFfD2Ai3ca5/o6oSK5a+B7HWf
-         H2AHEhO84ot9uZE/xv5fUmHY1wlHhiorJpq3DDAT1dZZpUK3JC60LwgypJ/FtfBCP80J
-         ZqpyfeulNLAZ/gU9KLlx8djUq9Du5T5icB+hIT5TJOYgciIpFgRt+TjMUf88ucd9viHs
-         zqsnSJv7VcVFi5JeEIGGwx39xQdiu48uW9FzA48fFHpq4O6/4cT4XQYsL7M1aHjtaJ4y
-         r+fM7lAwzliGO12U6JgW/1OIS8mywncMjSxHK32feJMvZUfcumM35EmW8QR9+yHFSHpx
-         jURg==
-X-Gm-Message-State: APjAAAXioz2WdTLgxxuYDnfBlwQqYhTlC1urs/1mfsq67OE3NyAh0x2U
-        SZ+iPkEkEIXtIIFlubITK5BWpw==
-X-Google-Smtp-Source: APXvYqyl/aARQmjBKzHTmHzbVrT8MzUIpL5E7XmWwEt1kaN/urxHlwoDGk5fd7gzop2bqCj4f4lKcg==
-X-Received: by 2002:a0c:df89:: with SMTP id w9mr16219834qvl.158.1574101735081;
-        Mon, 18 Nov 2019 10:28:55 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::1:1113])
-        by smtp.gmail.com with ESMTPSA id d126sm8997866qkc.93.2019.11.18.10.28.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 10:28:54 -0800 (PST)
-Date:   Mon, 18 Nov 2019 13:28:53 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, surenb@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next v2] mm/vmscan: fix some -Wenum-conversion warnings
-Message-ID: <20191118182853.GC372119@cmpxchg.org>
-References: <1573848697-29262-1-git-send-email-cai@lca.pw>
- <20191118182547.GA372119@cmpxchg.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A4WMyPwwd33AeWG8Iqc5mgyWoDalMpSQTRsm3rGqwlk=;
+        b=pGcYb8rrpwNQWpibnkXD3eyZSPaEpmabSHpoiaT2ZMjWyNehNvecYhswW3bidNo0Rd
+         ZUoRSXbOWnEU4Fg09nl8SS/4sc74YSPi239Wb0VGhuRdPk7zwrGHUb21/UUQDMt3h2A5
+         SbsQdtgTQlmvgazpAox6lvDeL1ovgNm7Qhcx2wVBQjlbWx512bV9PQfGylN5AIXOiHTS
+         2AIP4+dUi7bdKdJo9fOgGP8D3bywgE50jxtLM0G88Am5dmsB61LaR1PjIyhmeWHjiyhk
+         zFDZS9h4awQLlQM14KIM1nrjBEkyHlsfuImvlcLK/B9UIgx4bCRITYO9fdLa4qrkL9d6
+         rkJg==
+X-Gm-Message-State: APjAAAWNfCfHrLpbGvtlE3TcuGI3MEm4ye/QhN5QFRVTgOO89mn5uaDw
+        rYaokt9pxTuI1RgHuczGPdkSV2JKhui+n9lNgqXMcg==
+X-Google-Smtp-Source: APXvYqx8XiO2tBbSITPF018kWtOJPDBA1kHDVcmrihBshjIKcmexjBxYou1Oyuo1WIXr2rOeMVvKtkImAr+5wZvRChk=
+X-Received: by 2002:a17:90a:1f4b:: with SMTP id y11mr418957pjy.123.1574101915060;
+ Mon, 18 Nov 2019 10:31:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191118182547.GA372119@cmpxchg.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191031194652.118427-1-samitolvanen@google.com> <20191114165544.GB5158@willie-the-truck>
+In-Reply-To: <20191114165544.GB5158@willie-the-truck>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 18 Nov 2019 10:31:44 -0800
+Message-ID: <CAKwvOdnwL8cXGDykq4YAQi4bXYc7Fccqm-ki61-nySP0h+8ZxQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH] arm64: fix alternatives with LLVM's integrated assembler
+To:     Will Deacon <will@kernel.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Jian Cai <jiancai@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 01:25:49PM -0500, Johannes Weiner wrote:
-> On Fri, Nov 15, 2019 at 03:11:37PM -0500, Qian Cai wrote:
-> > The -next commit "mm: vmscan: enforce inactive:active ratio at the
-> > reclaim root" [1] introduced some Clang -Wenum-conversion warnings,
-> > 
-> > mm/vmscan.c:2216:39: warning: implicit conversion from enumeration type
-> > 'enum lru_list' to different enumeration type 'enum node_stat_item'
-> > [-Wenum-conversion]
-> >         inactive = lruvec_page_state(lruvec, inactive_lru);
-> >                    ~~~~~~~~~~~~~~~~~         ^~~~~~~~~~~~
-> > mm/vmscan.c:2217:37: warning: implicit conversion from enumeration type
-> > 'enum lru_list' to different enumeration type 'enum node_stat_item'
-> > [-Wenum-conversion]
-> >         active = lruvec_page_state(lruvec, active_lru);
-> >                  ~~~~~~~~~~~~~~~~~         ^~~~~~~~~~
-> > mm/vmscan.c:2746:42: warning: implicit conversion from enumeration type
-> > 'enum lru_list' to different enumeration type 'enum node_stat_item'
-> > [-Wenum-conversion]
-> >         file = lruvec_page_state(target_lruvec, LRU_INACTIVE_FILE);
-> >                ~~~~~~~~~~~~~~~~~                ^~~~~~~~~~~~~~~~~
-> > 
-> > Since it guarantees the relative order between the LRU items, fix it by
-> > using NR_LRU_BASE for the translation.
-> > 
-> > [1] http://lkml.kernel.org/r/20191107205334.158354-4-hannes@cmpxchg.org
-> > 
-> > Signed-off-by: Qian Cai <cai@lca.pw>
-> 
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> 
-> Thanks Qian!
-> 
-> Andrew, this is a fix for "mm: vmscan: enforce inactive:active ratio
-> at the reclaim root". Could you please fold this into that?
+On Thu, Nov 14, 2019 at 8:55 AM Will Deacon <will@kernel.org> wrote:
+>
+> Hi Sami,
+>
+> Sorry -- I thought I'd already replied to this, but it had actually
+> slipped through the cracks.
+>
+> On Thu, Oct 31, 2019 at 12:46:52PM -0700, Sami Tolvanen wrote:
+> > LLVM's integrated assembler fails with the following error when
+> > building KVM:
+> >
+> >   <inline asm>:12:6: error: expected absolute expression
+> >    .if kvm_update_va_mask == 0
+> >        ^
+> >   <inline asm>:21:6: error: expected absolute expression
+> >    .if kvm_update_va_mask == 0
+> >        ^
+> >   <inline asm>:24:2: error: unrecognized instruction mnemonic
+> >           NOT_AN_INSTRUCTION
+> >           ^
+> >   LLVM ERROR: Error parsing inline asm
+> >
+> > These errors come from ALTERNATIVE_CB and __ALTERNATIVE_CFG,
+> > which test for the existence of the callback parameter in inline
+> > assembly using the following expression:
+> >
+> >   " .if " __stringify(cb) " == 0\n"
+> >
+> > This works with GNU as, but isn't supported by LLVM. This change
+> > splits __ALTERNATIVE_CFG and ALTINSTR_ENTRY into separate macros
+> > to fix the LLVM build.
+>
+> Please could you explain a bit more about the failure and why LLVM's
+> integrated assembler rejects this?
 
-nvm, I see you already picked it up. Thank you!
+There are currently more than one issue with `.if` assembler
+directives we're tracking against Clang's integrated assembler
+currently, particularly around the handling of special cases related
+to "fragments."
+Recommended reading:
+https://eli.thegreenplace.net/2013/01/03/assembler-relaxation
+This particular case looks like the error is related to referring to
+section before it has been seen.  My current understanding is that
+Clang's integrated assembler is one pass, unlike GAS, so it chokes on
+references to symbols it has not yet seen.
+
+> Could we use something like .ifb or
+> .ifeqs instead?
+>
+> Thanks,
+>
+> Will
+
+
+
+-- 
+Thanks,
+~Nick Desaulniers
