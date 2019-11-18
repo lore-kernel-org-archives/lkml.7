@@ -5,233 +5,207 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64934C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC78C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B43220748
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66FAC2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:23:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MXP6GE/s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lyB2ZoaE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfKRNXV (ORCPT
+        id S1727073AbfKRNXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 08:23:21 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39439 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfKRNXV (ORCPT
+        Mon, 18 Nov 2019 08:23:52 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:46828 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfKRNXv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 08:23:21 -0500
-Received: by mail-wr1-f68.google.com with SMTP id l7so19444536wrp.6;
-        Mon, 18 Nov 2019 05:23:17 -0800 (PST)
+        Mon, 18 Nov 2019 08:23:51 -0500
+Received: by mail-io1-f68.google.com with SMTP id i11so7728587iol.13;
+        Mon, 18 Nov 2019 05:23:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+Fi408zecYZ+JxozjOtIUW0lemV9jQmGDB7s5YARwS4=;
-        b=MXP6GE/s65zeyFbxCAQO8+XQ37PB8b9NTT+gYUaRizGiqk8dzMDnu1ZImZGS7+BU7+
-         W5wL+EpoBz6WZJ1S1Cb0UlMVRkIjXo2mMz6rQ6EEtS0dh9NsjaIye0ZEAc0/syEAHWK4
-         ctEGnHvvzoai9MhB9zz7JbZkVDKLsEgl3pKKiO8vwKbRNf+s7tDwZs5vq5iZgQvwcJCv
-         xyPDK20qmVH1RLImk5ToTNQ4cz1QoU5guGC647j7AeYqgO80pUn+lWpu4xZrfMWga1AF
-         +j7BuyAhA7/0jXrA4Kjt/WYlJ/VBgmt0/ehcsZqBHN0SmRAO9wcdm0qBloh4fzp+iPp2
-         FDqw==
+         :cc;
+        bh=op5rd6aO2/xdLRaY54P25hFvtDdUpULFrgXMiQFvOAg=;
+        b=lyB2ZoaEUVNsw5pIhq8A/M3Qf4XTcofq7KgDzHdZpm/rMYlbxqTqa1SW9AfwLBjDV0
+         +NAp7cdLLr4J/MzbeRmqpxV1kjHgDUI0GU7FrEQZj3aDsokRzU8saxKwK9gwzAhxqWWA
+         wTe8neVFFRviLugbthQcRmWZP+hgGJ/2qkBs8ANJGrQ5Q8R3XDCqu4evi/en8C1+wiMT
+         6BRtC5QqqHgdxWfT0ox00G4YpsuOXdqpkhnEyYDvEn7rZ0gNeic3M8UZvFXVN72sR87q
+         3hCO6xitjYcRNYdgBnT1M6eoEY/Ik98caOUXBYvOvXOYkZLNqxp2HI1etP97fdCGdtDQ
+         rmdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+Fi408zecYZ+JxozjOtIUW0lemV9jQmGDB7s5YARwS4=;
-        b=AKibUZSnOngaSp23/RLUuGI79KM2dNMZBQm+wBowT8zoHdoHDgxVVl9wYfLaViOwec
-         CJCQrun9Zs+7jDCRJfGcSHU3v1pgrgagaF1N7raIJJPsLMH/IkiNUD9EIjirn74FZBLY
-         cdBEJMIpAlHmhf1Wn617YgTgGP4ufZFiPNvS1A2y7hdD4gn/eyqop/qIq1MYPhPt8W2W
-         LL3vBzPl77mE2nDdGf/oQhugQzVEVU2AxqQrQxQZkgg0jZSpHvTCcTle3x9DtasVKZSG
-         wweKpBnivCtjPjVtQDxL78RFzdFuuQca1sBIerTfPqO58rVUcaRN9aRO/FJd2es3WuAH
-         pQ1Q==
-X-Gm-Message-State: APjAAAWX1OmOA3ExRxB9WODEgKaDxhe/OZ6RnDUgfo6McnjRPQf0n2Qv
-        wEU/Sr1Ya/E2lAUt65ccT8RTEkBkQPjubBWqHOw=
-X-Google-Smtp-Source: APXvYqyo4y/agQzVtH2ECZnIYIOGEv1/ZBv1PJs0+BopW0iO5N/GQIYDUcjrFOcZYJWpd5uRqmvXsp8uSQF/TUlfCiA=
-X-Received: by 2002:adf:da52:: with SMTP id r18mr30182195wrl.167.1574083397043;
- Mon, 18 Nov 2019 05:23:17 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=op5rd6aO2/xdLRaY54P25hFvtDdUpULFrgXMiQFvOAg=;
+        b=GRXF9rKNgcozHdSSNujPdbb1CuJijQ4Zz7RivIReg8fDIuoMj/ao3mHwiacjxadqUR
+         LSeH3DVKDP47aDB6c8GcbDBUfk9EZeV7PDQQzvUNLdYWVW/cJIH/kBJJH3La4bA+qCuw
+         lV/2GofAgKJGTU95kkvNBM3wvj7wqs1XS7g9Bi5l9VYFW5bKzEhDKDGTxuNMryZjRajh
+         7RyCDvjxOguoPEuEjpAD0nqXMpKNxa53rMNvSg7jlMWfIpwpMt318JcRUzcM6Sp7IDsK
+         bV5U+zhXXjN2njx94fVVQk+NtFp4x19OBNSLXRdLEj2k5TjLUvRcvSpeQOG7xFTjCWtr
+         vJYw==
+X-Gm-Message-State: APjAAAUXLFKcoWg8cMbZrBNnZ6T6wHw6u5x7ttlsTnXOtLQUCNGrgqd2
+        7yBw4Q/5M/OGmnOTDr4zs89dxNgf2Hep3oRwgBeFE+6JoUY=
+X-Google-Smtp-Source: APXvYqwwesXFTHMX8XUyxZkWh41hLitS8hyv0l7BRBm77qtkF2Vxd9k8PkikJb7y37ESM/fNSi6wklRzseDLD42tLo4=
+X-Received: by 2002:a5d:9547:: with SMTP id a7mr13366391ios.198.1574083430516;
+ Mon, 18 Nov 2019 05:23:50 -0800 (PST)
 MIME-Version: 1.0
-References: <20191118110034.19444-1-peron.clem@gmail.com> <20191118110034.19444-2-peron.clem@gmail.com>
- <20191118110640.GE4345@gilmour.lan> <CAJiuCceVyjSTGymOiXTZvyQXyXScGZuGS6gW+2=0gdxDFzg3dA@mail.gmail.com>
- <20191118125702.GK4345@gilmour.lan>
-In-Reply-To: <20191118125702.GK4345@gilmour.lan>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Mon, 18 Nov 2019 14:23:05 +0100
-Message-ID: <CAJiuCcfBurkmX-6j9T2JHsdUw+RGCnuBSYCpo5BG+V-H-mcLUw@mail.gmail.com>
-Subject: Re: [PATCH v6 1/8] dt-bindings: pwm: allwinner: Add H6 PWM description
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh@kernel.org>
+References: <1574049061-11417-1-git-send-email-cang@qti.qualcomm.com> <1574049061-11417-5-git-send-email-cang@qti.qualcomm.com>
+In-Reply-To: <1574049061-11417-5-git-send-email-cang@qti.qualcomm.com>
+From:   Alim Akhtar <alim.akhtar@gmail.com>
+Date:   Mon, 18 Nov 2019 18:53:13 +0530
+Message-ID: <CAGOxZ53Z6je9Omuh2k=wVJrGVKZDfsfx6=mUJ-8QiRk-2q3u0g@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] scsi: ufs: Complete pending requests in host reset
+ and restore path
+To:     Can Guo <cang@qti.qualcomm.com>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com,
+        Mark Salyzyn <salyzyn@google.com>,
+        Can Guo <cang@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Nov 18, 2019 at 9:22 AM Can Guo <cang@qti.qualcomm.com> wrote:
+>
+> From: Can Guo <cang@codeaurora.org>
+>
+> In UFS host reset and restore path, before probe, we stop and start the
+> host controller once. After host controller is stopped, the pending
+> requests, if any, are cleared from the doorbell, but no completion IRQ
+> would be raised due to the hba is stopped.
+> These pending requests shall be completed along with the first NOP_OUT
+> command(as it is the first command which can raise a transfer completion
+> IRQ) sent during probe.
+> Since the OCSs of these pending requests are not SUCCESS(because they are
+> not yet literally finished), their UPIUs shall be dumped. When there are
+> multiple pending requests, the UPIU dump can be overwhelming and may lead
+> to stability issues because it is in atomic context.
+> Therefore, before probe, complete these pending requests right after host
+> controller is stopped and silence the UPIU dump from them.
+>
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> ---
 
-On Mon, 18 Nov 2019 at 13:57, Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Mon, Nov 18, 2019 at 01:42:48PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Hi Maxime
-> >
-> > On Mon, 18 Nov 2019 at 12:06, Maxime Ripard <mripard@kernel.org> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Mon, Nov 18, 2019 at 12:00:27PM +0100, Cl=C3=A9ment P=C3=A9ron wro=
-te:
-> > > > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > >
-> > > > H6 PWM block is basically the same as A20 PWM, except that it also =
-has
-> > > > bus clock and reset line which needs to be handled accordingly.
-> > > >
-> > > > Expand Allwinner PWM binding with H6 PWM specifics.
-> > > >
-> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > > > ---
-> > > >  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 48 +++++++++++++++=
-++++
-> > > >  1 file changed, 48 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-=
-a10-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pw=
-m.yaml
-> > > > index 0ac52f83a58c..1bae446febbb 100644
-> > > > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm=
-.yaml
-> > > > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm=
-.yaml
-> > > > @@ -30,13 +30,51 @@ properties:
-> > > >        - items:
-> > > >            - const: allwinner,sun50i-h5-pwm
-> > > >            - const: allwinner,sun5i-a13-pwm
-> > > > +      - const: allwinner,sun50i-h6-pwm
-> > > >
-> > > >    reg:
-> > > >      maxItems: 1
-> > > >
-> > > >    clocks:
-> > > > +    minItems: 1
-> > > > +    maxItems: 2
-> > > > +    items:
-> > > > +      - description: Module Clock
-> > > > +      - description: Bus Clock
-> > > > +
-> > > > +  # Even though it only applies to subschemas under the conditiona=
-ls,
-> > > > +  # not listing them here will trigger a warning because of the
-> > > > +  # additionalsProperties set to false.
-> > > > +  clock-names: true
-> > > > +
-> > > > +  resets:
-> > > >      maxItems: 1
-> > > >
-> > > > +  if:
-> > > > +    properties:
-> > > > +      compatible:
-> > > > +        contains:
-> > > > +          const: allwinner,sun50i-h6-pwm
-> > > > +
-> > > > +  then:
-> > > > +    properties:
-> > > > +      clocks:
-> > > > +        maxItems: 2
-> > > > +
-> > > > +      clock-names:
-> > > > +        items:
-> > > > +          - const: mod
-> > > > +          - const: bus
-> > > > +
-> > > > +    required:
-> > > > +      - clock-names
-> > > > +      - resets
-> > > > +
-> > > > +  else:
-> > > > +    properties:
-> > > > +      clocks:
-> > > > +        maxItems: 1
-> > > > +
-> > >
-> > > Sorry for not noticing this earlier, but this should be at the topmos=
-t
-> > > level
-> >
-> > No problem, but I don't get what you want, (yaml format is new for me).
-> > Do you mean I should put the if condition before the "resets" ?
->
-> No, here if we condense a bit the file, we have something like:
->
-> title: PWM
->
-> properties:
->   compatible:
->     ...
->
->   ...
->
->   resets:
->     ...
->
->   if:
->     properties:
->       ...
->
->   then:
->     properties:
->       ...
->
-> which means that you expect that the node may contain a compatible
-> property, a resets one, and then two properties "if" and "then", which
-> in turn contain properties (ie, two nodes).
->
-> This is obviously not what you want, what you want instead is:
->
-> properties:
->   compatible:
->     ...
->
->   ...
->
->   resets:
->     ...
->
-> if:
->   properties:
->     ...
->
-> then:
->   properties:
->     ...
->
-> Which then describes that there's two properties, compatible and
-> resets, and if the schema under 'if' is valid against the node we try
-> to validate, the schema under 'then' is used to validate the node as
-> well.
->
-> I hope it's clearer,
+Tested-by: Alim Akhtar <alim.akhtar@samsung.com>
 
-Yes it's totally clear didn't see this bad indentation,
-Thanks for the catch and for the explanation.
+Please add all previous Ack/reviewed and tested-by tags so that we are
+aware what need to be done for this patch.
+Thanks
 
+>  drivers/scsi/ufs/ufshcd.c | 24 ++++++++++--------------
+>  drivers/scsi/ufs/ufshcd.h |  2 ++
+>  2 files changed, 12 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index 5950a7c..b92a3f4 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -4845,7 +4845,7 @@ static void ufshcd_slave_destroy(struct scsi_device *sdev)
+>                 break;
+>         } /* end of switch */
+>
+> -       if (host_byte(result) != DID_OK)
+> +       if ((host_byte(result) != DID_OK) && !hba->silence_err_logs)
+>                 ufshcd_print_trs(hba, 1 << lrbp->task_tag, true);
+>         return result;
+>  }
+> @@ -5404,8 +5404,8 @@ static void ufshcd_err_handler(struct work_struct *work)
+>
+>         /*
+>          * if host reset is required then skip clearing the pending
+> -        * transfers forcefully because they will automatically get
+> -        * cleared after link startup.
+> +        * transfers forcefully because they will get cleared during
+> +        * host reset and restore
+>          */
+>         if (needs_reset)
+>                 goto skip_pending_xfer_clear;
+> @@ -6333,9 +6333,15 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
+>         int err;
+>         unsigned long flags;
+>
+> -       /* Reset the host controller */
+> +       /*
+> +        * Stop the host controller and complete the requests
+> +        * cleared by h/w
+> +        */
+>         spin_lock_irqsave(hba->host->host_lock, flags);
+>         ufshcd_hba_stop(hba, false);
+> +       hba->silence_err_logs = true;
+> +       ufshcd_complete_requests(hba);
+> +       hba->silence_err_logs = false;
+>         spin_unlock_irqrestore(hba->host->host_lock, flags);
+>
+>         /* scale up clocks to max frequency before full reinitialization */
+> @@ -6369,7 +6375,6 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
+>  static int ufshcd_reset_and_restore(struct ufs_hba *hba)
+>  {
+>         int err = 0;
+> -       unsigned long flags;
+>         int retries = MAX_HOST_RESET_RETRIES;
+>
+>         do {
+> @@ -6379,15 +6384,6 @@ static int ufshcd_reset_and_restore(struct ufs_hba *hba)
+>                 err = ufshcd_host_reset_and_restore(hba);
+>         } while (err && --retries);
+>
+> -       /*
+> -        * After reset the door-bell might be cleared, complete
+> -        * outstanding requests in s/w here.
+> -        */
+> -       spin_lock_irqsave(hba->host->host_lock, flags);
+> -       ufshcd_transfer_req_compl(hba);
+> -       ufshcd_tmc_handler(hba);
+> -       spin_unlock_irqrestore(hba->host->host_lock, flags);
+> -
+>         return err;
+>  }
+>
+> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+> index e0fe247..1e51034 100644
+> --- a/drivers/scsi/ufs/ufshcd.h
+> +++ b/drivers/scsi/ufs/ufshcd.h
+> @@ -513,6 +513,7 @@ struct ufs_stats {
+>   * @uic_error: UFS interconnect layer error status
+>   * @saved_err: sticky error mask
+>   * @saved_uic_err: sticky UIC error mask
+> + * @silence_err_logs: flag to silence error logs
+>   * @dev_cmd: ufs device management command information
+>   * @last_dme_cmd_tstamp: time stamp of the last completed DME command
+>   * @auto_bkops_enabled: to track whether bkops is enabled in device
+> @@ -670,6 +671,7 @@ struct ufs_hba {
+>         u32 saved_err;
+>         u32 saved_uic_err;
+>         struct ufs_stats ufs_stats;
+> +       bool silence_err_logs;
+>
+>         /* Device management request data */
+>         struct ufs_dev_cmd dev_cmd;
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
+
+
+-- 
 Regards,
-Cl=C3=A9ment
-
-> Maxime
+Alim
