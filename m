@@ -8,58 +8,59 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B900BC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C32C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8691C222EF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 997692230C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:39:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mHQbdyUx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qN+9Nrnh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfKRVi4 (ORCPT
+        id S1726992AbfKRVi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 16:38:56 -0500
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:53460 "EHLO
+        Mon, 18 Nov 2019 16:38:59 -0500
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:43134 "EHLO
         mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfKRVi4 (ORCPT
+        with ESMTP id S1726272AbfKRVi6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 16:38:56 -0500
-Received: by mail-pf1-f201.google.com with SMTP id h2so15058028pfr.20
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 13:38:54 -0800 (PST)
+        Mon, 18 Nov 2019 16:38:58 -0500
+Received: by mail-pf1-f201.google.com with SMTP id w201so15075662pfc.10
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 13:38:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=R6Acg+jdFVk2p6ATpns4CDctE+Vl9KUjiRKuJA0ei70=;
-        b=mHQbdyUxygyJYLA0wlaa+9zB0wgMSfjizYY7Yt/bxOii/URTraMMYKMOi84x8Dc7Ax
-         jUWvHgud5iiCZ5eDTOZy3J5xy41uNE7QcX9NPBvr8bxtnrBN07DRP+Ec8bBLHn6TSfNr
-         0xLSAhr2CEd4V0w4ikqMLjmzslN3UMX7mPOf+QOjTX0s214bpeCRmkF6eM94rb2fqxPu
-         uVdOSYCCLZh09m8phPF5WuKhhq0m4J0HXEkOdakp9HyZ9x3h1tD4/gXi7s3SDoUGgQPe
-         bNQA/3Ln21k+ETpuaGRCro++utWdBc9hnJmXPsCO0HRzLGjz+ZIiFRtpZqRRTXTvN9wN
-         DkJQ==
+        bh=x6bZFaFYssXZ/d1+9Q6PPDYnTw9J/o5Qs2u5F4Xotx0=;
+        b=qN+9NrnhgIz/iifUS0sOOL4wusaCPVU2q81o2xyQZl6eNf9oELhehZ/ODVHR5vrdze
+         ZLIcWnP9yVbdBrVibdW8rKntRS9cC4psaerjNUR+EFVKk8/ImiZKQZQuZCeG7XT2m4d5
+         2oCps7tfnK4UuQNaHHKmH4qyEAxLdnt+LkUwDNjHUSfC+jHKmMGRxiAFQnjnKV/JNt2I
+         9yODaz9BwXrNWVXesioQULUa9TBeMmzxp31HbD3MJfBAXUAvPH+4g0TKGw3bDhvGhPVq
+         hRucm1weNL/8t89a2xa10l9QLbUAxZq4/PcrZRV/nGebfj/lUBu1hcEsb3tAdK5hF3S3
+         IFtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=R6Acg+jdFVk2p6ATpns4CDctE+Vl9KUjiRKuJA0ei70=;
-        b=hMbID6TwyZOMfI5zvJdYrYMi/XMPMknXhLiLG1kXTcBrP1lMEHX8L4WftC+li4Ppu2
-         dvB7UU7vFyV01lhms5gvylDhwpWfXcx05HS1Oe1goE7YPrqenHRbopUYcndu6RMTjqpt
-         fVn3rbmbW5VAUb1CNnoHTbOhSS0Ahm+lYA3H3j31owMiaANp1APYNFgipqmAb8JMogGG
-         dVChk8VAG/MDjGS66kRceoMAwmQVIeosF1flteKupvPIlcCTz4r9/mJ+Hs7y2hhwGXHi
-         KwFiDcTbV4Z4JhTxKFhg/2u4inSthbyiUjtlAH6WHJyY6owkhxz7X01DHKBtJkjsZGfm
-         Is/Q==
-X-Gm-Message-State: APjAAAUm4mZLkUYqR0AASt6yi1+vE83Xr+jpa7br5pHr9UXygCroJTwf
-        HfaV+OEswBw6Excy88g/wHASTsAo1LA=
-X-Google-Smtp-Source: APXvYqxUcGmgVhykPBenM2QJJr/rNw+e131RezTCgbiRPmAmeffneTHCVvKRuXJSfSlZFFwvGzyVXHYxDro=
-X-Received: by 2002:a65:5683:: with SMTP id v3mr1617900pgs.190.1574113133981;
- Mon, 18 Nov 2019 13:38:53 -0800 (PST)
-Date:   Mon, 18 Nov 2019 13:38:10 -0800
-In-Reply-To: <CACGdZYJoHSN3vkj_QBz6Txmec9mJMmkH66j2XtqzpUWpfpw4Tg@mail.gmail.com>
-Message-Id: <20191118213811.22017-1-khazhy@google.com>
+        bh=x6bZFaFYssXZ/d1+9Q6PPDYnTw9J/o5Qs2u5F4Xotx0=;
+        b=UDE+6/BO8ON4+Nna8wNwDeYuaGJzI0ZhTgiyZki2zw2JvgDm+x+YQcdyKDRs4MSwOV
+         qoGyyngqnXImySRAs69GsmY5Jq/8oiGT8nEIAj3HQASf3/R05X6B6Z77M5Au+Anjhni1
+         iuAJ/H/nSiCMheF+eV4NHaLcVUksbnvMOnpIs3f966z8ta5J83aDU2/FXREkUdXfkf8L
+         H0Sy+luozZQXMixQBAoeM6KdEhIM3jnL7JJI63kDOfHBiQ3sEsMMYv4ukQWVZuDGDdgo
+         4Bi16Omnb21SuWQkPdAYF4E1FEDoFsG1n9ro6SRlbVrfQUtThw0vtp7q2GnfBnFxJ8gT
+         BmBw==
+X-Gm-Message-State: APjAAAXQmQagxLE1jI7B6ApylqP9l7u6BLs8mnIqIHzDhDuQ9mfBUoJQ
+        3u2pRy/HtQAA6W8vI5qIiqRYuvydV0k=
+X-Google-Smtp-Source: APXvYqz/U2vL0jaD/Orv1XLZ80shtVXueN9KV80NRY8jHCpvFtGCHQZwNFHIo/nKOlpwze+bHKAoLTXHQZ0=
+X-Received: by 2002:a63:f30c:: with SMTP id l12mr1608293pgh.354.1574113136229;
+ Mon, 18 Nov 2019 13:38:56 -0800 (PST)
+Date:   Mon, 18 Nov 2019 13:38:11 -0800
+In-Reply-To: <20191118213811.22017-1-khazhy@google.com>
+Message-Id: <20191118213811.22017-2-khazhy@google.com>
 Mime-Version: 1.0
 References: <CACGdZYJoHSN3vkj_QBz6Txmec9mJMmkH66j2XtqzpUWpfpw4Tg@mail.gmail.com>
+ <20191118213811.22017-1-khazhy@google.com>
 X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-Subject: [PATCH 1/2] virtio_balloon: fix pages_to_free calculation
+Subject: [PATCH 2/2] virtio_balloon: fix shrinker_scan return units
 From:   Khazhismel Kumykov <khazhy@google.com>
 To:     mst@redhat.com, jasowang@redhat.com, wei.w.wang@intel.com
 Cc:     linux-kernel@vger.kernel.org,
@@ -71,37 +72,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-freed_pages was accumulating total freed pages, but was also subtracted
-on each iteration from pages_to_free, which could potentially result in
-attempting to free fewer pages than asked for. This change also makes
-both freed_pages and pages_to_free in terms of "balloon pages", where
-they were mismatched before.
+We were returning number of virtio balloon pages, which may not be the
+same as number of system pages
 
-Fixes: 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker")
+Fixes: 86a559787e6f ("virtio-balloon: VIRTIO_BALLOON_F_FREE_PAGE_HINT")
 Cc: Wei Wang <wei.w.wang@intel.com>
 Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
 ---
- drivers/virtio/virtio_balloon.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/virtio/virtio_balloon.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index 226fbb995fb0..7cf9540a40b8 100644
+index 7cf9540a40b8..7951ece3fe24 100644
 --- a/drivers/virtio/virtio_balloon.c
 +++ b/drivers/virtio/virtio_balloon.c
-@@ -782,11 +782,8 @@ static unsigned long shrink_balloon_pages(struct virtio_balloon *vb,
- 	 * VIRTIO_BALLOON_ARRAY_PFNS_MAX balloon pages, so we call it
- 	 * multiple times to deflate pages till reaching pages_to_free.
- 	 */
--	while (vb->num_pages && pages_to_free) {
--		pages_freed += leak_balloon(vb, pages_to_free) /
--					VIRTIO_BALLOON_PAGES_PER_PAGE;
--		pages_to_free -= pages_freed;
--	}
-+	while (vb->num_pages && pages_to_free > pages_freed)
-+		pages_freed += leak_balloon(vb, pages_to_free - pages_freed);
- 	update_balloon_size(vb);
+@@ -802,11 +802,11 @@ static unsigned long virtio_balloon_shrinker_scan(struct shrinker *shrinker,
+ 		pages_freed = shrink_free_pages(vb, pages_to_free);
  
- 	return pages_freed;
+ 	if (pages_freed >= pages_to_free)
+-		return pages_freed;
++		return pages_freed / VIRTIO_BALLOON_PAGES_PER_PAGE;
+ 
+ 	pages_freed += shrink_balloon_pages(vb, pages_to_free - pages_freed);
+ 
+-	return pages_freed;
++	return pages_freed / VIRTIO_BALLOON_PAGES_PER_PAGE;
+ }
+ 
+ static unsigned long virtio_balloon_shrinker_count(struct shrinker *shrinker,
 -- 
 2.24.0.432.g9d3f5f5b63-goog
 
