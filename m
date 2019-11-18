@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BD2C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27911C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A26216F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF471208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:54:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EVemdcIp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="crOFSaQr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbfKRQyV (ORCPT
+        id S1727113AbfKRQy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 11:54:21 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:36905 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbfKRQyN (ORCPT
+        Mon, 18 Nov 2019 11:54:26 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37910 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726600AbfKRQyQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 11:54:13 -0500
-Received: by mail-qv1-f67.google.com with SMTP id s18so6840520qvr.4;
-        Mon, 18 Nov 2019 08:54:12 -0800 (PST)
+        Mon, 18 Nov 2019 11:54:16 -0500
+Received: by mail-qt1-f196.google.com with SMTP id p20so20980902qtq.5;
+        Mon, 18 Nov 2019 08:54:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Bzl4ozQZbAWup0mtLmVDbc1Re1nPSSw6fmpMaMlXCPM=;
-        b=EVemdcIpvjKz4v5TylJy/sya0B7xZUgakOgd4rWJvyY7zTaS8z4uRAcMZzpS09K5Wn
-         KqFxHgs7IsvYu14WYkVKrGrz+JjsIWWEfikkUb9y9wnUfnaUifPS0WaJRSkKoyjwDe+D
-         CRHWQ/cOvkIE+xAJzSkJP1CgpO2Js4ODGn13s4D3CCSrsKLWpoNmdHieMtdd/dszJAIk
-         vIQnBVU0di0t5IGxAV3OKliQ9nqjnFV0beXeWUximdkh5NrEQFHTqTu2r8AN24+EoQ6b
-         FO6M3gDVinguoTXzOhuCBlPrxvQfCtyO5SloxGYZefOC1pcBtFz4LD83BPdeDz6lGNPa
-         eIzw==
+        bh=CMliZbMmgQlyE8GZhRLJHK4msHkdSN6JBW1TZzgnJmU=;
+        b=crOFSaQrhFuUlWzurOTc1UKlws+/tTmqNYZ1gBwFC62K429mRZJIU/esJZtyVORwo+
+         a8RnudZOOeItMHDIvp7R37i+TxqwQdM6M/ue7daeXo+/gMzmbP0kpD7cQGDzxOS0vOmw
+         S54bJZw2kKKQGs+Wurv2dLq0bYgeHyAw1jTw3/rrB0ztjtV6kgkycBEeZ/gR3aCooqvs
+         HlhAiEHS6rnDzoFSO1D1dI9hEnu68NzovYvOXL8CvVjoaG2oGVB+oEgRkIcR9w1K4axg
+         u+6cNb/ts1xjEabGMISfzCxCPz1AFsNI4slxO6MnXk9sB4llHjfn4A1Fex6ty/8vHb1c
+         Kimg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Bzl4ozQZbAWup0mtLmVDbc1Re1nPSSw6fmpMaMlXCPM=;
-        b=KMboSy7+Gm4NM8gnYU4b/ICaCTM8O1ItP+cgm5FTurfZ6lSx5mtBwb0i/UhLHB+PEZ
-         reiQCWzQ9d9JDB5tWvUrnpftHBm54av3phMGRBxE7OQ92OoLidrAvVmHYLvWyjMvm0Hr
-         KwVJkRCzk5gKLSuhxJasXRLVbj6s8n7RZymosmhNzTlqpH5CEzJQCrQL7NqBJmlNRFY7
-         /8hd7+Voo2fnCDh4zd5RsV8tVfNAX40H3tYOy8ZPF7cOsVTA3f90VY8NO6lIEpEIwFGT
-         WJvHy1TOzTys7ILzx5A8UaC3Gt5t7X0PwLHA0fXTUNB6J8BslBbS4lEeU/Tb9C2Gy9ha
-         O0wQ==
-X-Gm-Message-State: APjAAAXLHmXpRLgLxdJCnKqBmk2UiqkFpp3VprjaYOGc8vdH2haWWNCI
-        fTYrvo4fgDRDJv/RESVzqK8=
-X-Google-Smtp-Source: APXvYqxfs9VcDHAluyh5fR3VU1omMORR75Mvu/hsXIqLXJke8sagJKEPkdpgdTjhcfbjtGhzUeijZQ==
-X-Received: by 2002:ad4:55f3:: with SMTP id bu19mr25350053qvb.95.1574096052289;
-        Mon, 18 Nov 2019 08:54:12 -0800 (PST)
+        bh=CMliZbMmgQlyE8GZhRLJHK4msHkdSN6JBW1TZzgnJmU=;
+        b=boQcLXQqh82dr1rI/NX979I2/lOK+sapu2l0jOfjf5cEcJPQeLB8CH7vPbmEcJLrum
+         jxBkyd+t9dhV9b7Y6xv2+SjQmIIvW/xdB0czrJQQ7rdxj7ds1g+HfB0RtJN9KPWNqsL3
+         Dex0Xi2VYL0iIkshg+Un77znGPr7zCn/VuBbWaTTPXxaT5h/dX2mxmpGroz2GZUCMjF7
+         hBMS5xjLQrXWcYLs60vQZsc5oTEUeeReA7UgZjocoFQR3l6hvwdGFx4Ya/Fu6HcHP54P
+         NzN1WeV4Lc/dK0y4UYiv76LcVFtTBNhVbkeRZz7gbXfvxsDwJ2veqQJNz3oNEZHgSJet
+         fC5A==
+X-Gm-Message-State: APjAAAU522M6My+AdZ3cJxh/5lBvkOt4gM7n6AH2IOTWCvqJOh7fUpV/
+        28cnyXPtC6ADoejLkMCki0M=
+X-Google-Smtp-Source: APXvYqw/LjMWWQ4YFTX1uO13xtjiVEdOpj5myZUyTC7KbLDouKST1+jYWsaz2KjkBqr3dyFHJaWtOA==
+X-Received: by 2002:ac8:ecc:: with SMTP id w12mr28213814qti.134.1574096054850;
+        Mon, 18 Nov 2019 08:54:14 -0800 (PST)
 Received: from localhost.localdomain ([72.53.229.209])
-        by smtp.gmail.com with ESMTPSA id a3sm8634648qkf.76.2019.11.18.08.54.10
+        by smtp.gmail.com with ESMTPSA id a3sm8634648qkf.76.2019.11.18.08.54.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 08:54:11 -0800 (PST)
+        Mon, 18 Nov 2019 08:54:14 -0800 (PST)
 From:   Sven Van Asbroeck <thesven73@gmail.com>
 X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
 To:     Lee Jones <lee.jones@linaro.org>,
@@ -69,9 +69,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-leds@vger.kernel.org
-Subject: [PATCH v1 2/4] regulator: tps6105x: add optional devicetree support
-Date:   Mon, 18 Nov 2019 11:53:58 -0500
-Message-Id: <20191118165400.21985-3-TheSven73@gmail.com>
+Subject: [PATCH v1 4/4] dt-bindings: mfd: update TI tps6105x chip bindings
+Date:   Mon, 18 Nov 2019 11:54:00 -0500
+Message-Id: <20191118165400.21985-5-TheSven73@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191118165400.21985-1-TheSven73@gmail.com>
 References: <20191118165400.21985-1-TheSven73@gmail.com>
@@ -80,68 +80,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If regulator init data is not specified in the parent mfd
-device's platform data, attempt to retrieve it from the
-devicetree node.
-
-Example:
-
-i2c0 {
-	tps61052@33 {
-		compatible = "ti,tps61052";
-		reg = <0x33>;
-
-		regulator {
-			compatible = "ti,tps6105x-regulator";
-			regulator-min-microvolt = <5000000>;
-			regulator-max-microvolt = <5000000>;
-			regulator-always-on;
-		};
-	};
-};
+The driver has been extended to optionally get its operational
+mode and regulator init data from the devicetree.
 
 Tree: next-20191118
 Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 ---
- drivers/regulator/tps6105x-regulator.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/mfd/tps6105x.txt      | 32 ++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/tps6105x-regulator.c b/drivers/regulator/tps6105x-regulator.c
-index 06059a94f7c6..9bc4e869fc4c 100644
---- a/drivers/regulator/tps6105x-regulator.c
-+++ b/drivers/regulator/tps6105x-regulator.c
-@@ -18,6 +18,7 @@
- #include <linux/regulator/driver.h>
- #include <linux/mfd/core.h>
- #include <linux/mfd/tps6105x.h>
-+#include <linux/regulator/of_regulator.h>
+diff --git a/Documentation/devicetree/bindings/mfd/tps6105x.txt b/Documentation/devicetree/bindings/mfd/tps6105x.txt
+index 93602c7a19c8..7c690812336a 100644
+--- a/Documentation/devicetree/bindings/mfd/tps6105x.txt
++++ b/Documentation/devicetree/bindings/mfd/tps6105x.txt
+@@ -7,7 +7,21 @@ Required properties:
+ - compatible:		"ti,tps61050" or "ti,tps61052"
+ - reg:			Specifies the I2C slave address
  
- static const unsigned int tps6105x_voltages[] = {
- 	4500000,
-@@ -58,6 +59,7 @@ static int tps6105x_regulator_probe(struct platform_device *pdev)
- {
- 	struct tps6105x *tps6105x = dev_get_platdata(&pdev->dev);
- 	struct tps6105x_platform_data *pdata = tps6105x->pdata;
-+	struct regulator_init_data *init_data = pdata->regulator_data;
- 	struct regulator_config config = { };
- 	int ret;
+-Example:
++Optional subnode:
++
++The subnode selects the chip's operational mode.
++There can be at most one single subnode.
++
++- regulator
++	Required properties:
++		- compatible: "ti,tps6105x-regulator"
++	see Documentation/devicetree/bindings/regulator/regulator.txt
++
++- led
++	Required properties:
++		- compatible: "ti,tps6105x-leds"
++
++Example (GPIO operation only):
  
-@@ -68,8 +70,14 @@ static int tps6105x_regulator_probe(struct platform_device *pdev)
- 		return 0;
- 	}
- 
-+	if (!init_data)
-+		init_data = of_get_regulator_init_data(
-+					&pdev->dev, pdev->dev.of_node,
-+					&tps6105x_regulator_desc);
-+	if (!init_data)
-+		return -EINVAL;
- 	config.dev = &tps6105x->client->dev;
--	config.init_data = pdata->regulator_data;
-+	config.init_data = init_data;
- 	config.driver_data = tps6105x;
- 	config.regmap = tps6105x->regmap;
- 
+ i2c0 {
+ 	tps61052@33 {
+@@ -15,3 +29,19 @@ i2c0 {
+ 		reg = <0x33>;
+ 	};
+ };
++
++Example (GPIO + regulator operation):
++
++i2c0 {
++	tps61052@33 {
++		compatible = "ti,tps61052";
++		reg = <0x33>;
++
++		regulator {
++			compatible = "ti,tps6105x-regulator";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			regulator-always-on;
++		};
++	};
++};
 -- 
 2.17.1
 
