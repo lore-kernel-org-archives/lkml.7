@@ -2,309 +2,426 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF325C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA50C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A24052190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E452186D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:43:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574099020;
+	bh=Gs4XpVZ7QJjWFFs2nclvmjkR4l3yvqgE7MsMtSWOhps=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dZR2qEZnkCU/SH6CTlZEdr9W1EROiwJezRj/Hi3IDHkPuV1p9rIoD/xWXoJwYKHNU
+	 wI/RWZhW9IcgftLkwiu38td/zHPyYicQjd0fY1/DINetZ+U+eCrDegLZlTXbtsRihG
+	 4NZBaWO6SbuUrqIu/KcObGnoLTBo1XSuutWIMYPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbfKRRnQ (ORCPT
+        id S1727264AbfKRRni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 12:43:16 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:50580 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfKRRnQ (ORCPT
+        Mon, 18 Nov 2019 12:43:38 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37907 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbfKRRni (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 12:43:16 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iWl2v-000138-Ag; Mon, 18 Nov 2019 18:42:41 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F3EFE1C19B9;
-        Mon, 18 Nov 2019 18:42:40 +0100 (CET)
-Date:   Mon, 18 Nov 2019 17:42:40 -0000
-From:   "tip-bot2 for Vincent Guittot" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/cpufreq: Move the cfs_rq_util_change() call
- to cpufreq_update_util()
-Cc:     Doug Smythies <dsmythies@telus.net>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, juri.lelli@redhat.com,
-        linux-pm@vger.kernel.org, mgorman@suse.de, rostedt@goodmis.org,
-        sargun@sargun.me, srinivas.pandruvada@linux.intel.com,
-        tj@kernel.org, xiexiuqi@huawei.com, xiezhipeng1@huawei.com,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <1574083279-799-1-git-send-email-vincent.guittot@linaro.org>
-References: <1574083279-799-1-git-send-email-vincent.guittot@linaro.org>
+        Mon, 18 Nov 2019 12:43:38 -0500
+Received: by mail-wr1-f68.google.com with SMTP id i12so20568227wro.5;
+        Mon, 18 Nov 2019 09:43:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=L4ZGu9GaSykUrUtDjgjE86yoyZv/5jyvwD0NxGBLc3Y=;
+        b=c88D4KcjubRwUtppyUJBZfj+vGm3eupAsbwNxtWVrmnPu8st2LnMLKtqDT3QUG77IU
+         PZeUJAyZI+mEuScpIrASct9n8K2nDlXRR/1KrtqcCMxLhB1V8r4/LyL/lwkRj+zLsdO/
+         yElLK/Eam60UvLEKwoYBXZct/yGF4UmKk7CzsWkgzONOWWtNpmxSIjkf/m6ntRvZfFL8
+         8e7uZHi6AL6Wod0R8TvmskJpz3V4QtZbIV+vmnRwlej8amttGP/ASU9fH/1ax4aN5IXD
+         rWZt3VuqWbfO5b1dn0RvZQ4hsW9pxmozSt20Fdpo+9VMAzdOJRq1taXXjW7GosF6DH36
+         1aWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=L4ZGu9GaSykUrUtDjgjE86yoyZv/5jyvwD0NxGBLc3Y=;
+        b=ZYWsxLwYjK7/kvTUSl+enaUJe0B8NImui6QnE7DEu4/9ACOOl0k32NSaHNS8afxKiZ
+         /R6BPzpj955Gmik4MyXVi2C1LvJM4GBl2EE2zW/e2HSOiMEzsXTcOv4EV3iNN5vN4MGo
+         zBmol1nezq4gZYYvvKeezZuHQPho6owtgps3G93InVKk0Q+ybNnTqv9APhcbJBvGK56N
+         SAg2oXg071K5+74IS5ebeEKEBBZXMeWXEojonBZrTp3OO65reMbeawPcCXbVcb2RMsKc
+         vntBQLPD9zLbztABgAW70VurTDeYOPWy6dQFx1vrfhvtlhvz4lZp8DC8IlCloqy3Q5GD
+         V5kQ==
+X-Gm-Message-State: APjAAAWhSCUklsMnufyLrNeElOwxW/pV5EVzFT6swpHC2GGFeIjKKk9B
+        BhlHt8Br3RsvlRXYJylz8aI=
+X-Google-Smtp-Source: APXvYqw17JHWJU13OtpqGqKNwBzV/pfnyyHE3epirb5MIRXrZciDJrCpcBdBCysBxzAfIqP1kRig7Q==
+X-Received: by 2002:a5d:5411:: with SMTP id g17mr30993848wrv.360.1574099014934;
+        Mon, 18 Nov 2019 09:43:34 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id w132sm127816wma.6.2019.11.18.09.43.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 09:43:34 -0800 (PST)
+Date:   Mon, 18 Nov 2019 18:43:32 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+        Cao jin <caoj.fnst@cn.fujitsu.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Baoquan He <bhe@redhat.com>,
+        Dave Young <dyoung@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        x86-ml <x86@kernel.org>
+Subject: [PATCH] Re: [tip: x86/cleanups] x86: Fix typos in comments
+Message-ID: <20191118174332.GA41920@gmail.com>
+References: <20191118070012.27850-1-caoj.fnst@cn.fujitsu.com>
+ <157406828172.12247.4218858363680758865.tip-bot2@tip-bot2>
+ <20191118121027.GA74767@gmail.com>
+ <20191118124633.GA6363@zn.tnic>
 MIME-Version: 1.0
-Message-ID: <157409896089.12247.12725628902945080026.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191118124633.GA6363@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     bef69dd87828ef5d8ecdab8d857cd3a33cf98675
-Gitweb:        https://git.kernel.org/tip/bef69dd87828ef5d8ecdab8d857cd3a33cf98675
-Author:        Vincent Guittot <vincent.guittot@linaro.org>
-AuthorDate:    Mon, 18 Nov 2019 14:21:19 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 18 Nov 2019 14:42:26 +01:00
+* Borislav Petkov <bp@alien8.de> wrote:
 
-sched/cpufreq: Move the cfs_rq_util_change() call to cpufreq_update_util()
+> >  /*
+> >   * Keep the crash kernel below this limit.
+> >   *
+> > - * On 32 bits earlier kernels would limit the kernel to the low 512 MiB
+> > + * Earlier 32-bits kernels would limit the kernel to the low 512 MB range
+> >   * due to mapping restrictions.
+> >   *
+> > - * On 64bit, kdump kernel need be restricted to be under 64TB, which is
+> > + * 64-bit kdump kernels need to be restricted to be under 64 TB, which is
+> >   * the upper limit of system RAM in 4-level paging mode. Since the kdump
+> > - * jumping could be from 5-level to 4-level, the jumping will fail if
+> > - * kernel is put above 64TB, and there's no way to detect the paging mode
+> > - * of the kernel which will be loaded for dumping during the 1st kernel
+> > - * bootup.
+> > + * jump could be from 5-level paging to 4-level paging, the jump will fail if
+> > + * the kernel is put above 64 TB, and during the 1st kernel bootup there's
+> > + * no good way to detect the paging mode of the target kernel which will be
+> > + * loaded for dumping.
+> >   */
+> >  #ifdef CONFIG_X86_32
+> >  # define CRASH_ADDR_LOW_MAX	SZ_512M
+> 
+> Yap, sure.
+> 
+> Except that tglx committed another patch ontop of x86/cleanups in the 
+> meantime. I leave it up to you to decide what to do. I'd backmerge and 
+> rebase but this is just me.
 
-update_cfs_rq_load_avg() calls cfs_rq_util_change() every time PELT decays,
-which might be inefficient when the cpufreq driver has rate limitation.
+Well, I did the two patches on top: once shrinks the number of #include 
+lines from 90 to 30, the other improves most of the comments, with a 
+bunch of other typo/grammar fixes, but more importantly I tried to 
+clarify/extend/fix the comments where they were misleading or 
+meaningless:
 
-When a task is attached on a CPU, we have this call path:
+  9dcc69c4ea5c: x86/setup: Enhance the comments
+  c1877650f3c9: x86/setup: Clean up the header portion of setup.c
 
-update_load_avg()
-  update_cfs_rq_load_avg()
-    cfs_rq_util_change -- > trig frequency update
-  attach_entity_load_avg()
-    cfs_rq_util_change -- > trig frequency update
+Attached below as well.
 
-The 1st frequency update will not take into account the utilization of the
-newly attached task and the 2nd one might be discarded because of rate
-limitation of the cpufreq driver.
+Thanks,
 
-update_cfs_rq_load_avg() is only called by update_blocked_averages()
-and update_load_avg() so we can move the call to
-cfs_rq_util_change/cpufreq_update_util() into these two functions.
+	Ingo
 
-It's also interesting to note that update_load_avg() already calls
-cfs_rq_util_change() directly for the !SMP case.
 
-This change will also ensure that cpufreq_update_util() is called even
-when there is no more CFS rq in the leaf_cfs_rq_list to update, but only
-IRQ, RT or DL PELT signals.
+===============>
+commit 9dcc69c4ea5c0cd4031a4dde645c71b66bea04f8
+Author: Ingo Molnar <mingo@kernel.org>
+Date:   Mon Nov 18 16:03:39 2019 +0100
 
-[ mingo: Minor updates. ]
+    x86/setup: Enhance the comments
+    
+    Update various comments, fix outright mistakes and meaningless descriptions.
+    
+    Also harmonize the style across the file, both in form and in language.
+    
+    Cc: linux-kernel@vger.kernel.org
+    Cc: Borislav Petkov <bp@alien8.de>
+    Cc: Linus Torvalds <torvalds@linux-foundation.org>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Cc: Thomas Gleixner <tglx@linutronix.de>
+    Signed-off-by: Ingo Molnar <mingo@kernel.org>
 
-Reported-by: Doug Smythies <dsmythies@telus.net>
-Tested-by: Doug Smythies <dsmythies@telus.net>
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: juri.lelli@redhat.com
-Cc: linux-pm@vger.kernel.org
-Cc: mgorman@suse.de
-Cc: rostedt@goodmis.org
-Cc: sargun@sargun.me
-Cc: srinivas.pandruvada@linux.intel.com
-Cc: tj@kernel.org
-Cc: xiexiuqi@huawei.com
-Cc: xiezhipeng1@huawei.com
-Fixes: 039ae8bcf7a5 ("sched/fair: Fix O(nr_cgroups) in the load balancing path")
-Link: https://lkml.kernel.org/r/1574083279-799-1-git-send-email-vincent.guittot@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/sched/fair.c | 111 ++++++++++++++++++++++++-------------------
- 1 file changed, 62 insertions(+), 49 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 209cad6..08a233e 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3508,9 +3508,6 @@ update_cfs_rq_load_avg(u64 now, struct cfs_rq *cfs_rq)
- 	cfs_rq->load_last_update_time_copy = sa->last_update_time;
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 5f483eb14d44..c7774af9f8a1 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -41,11 +41,11 @@
+ #include <asm/vsyscall.h>
+ 
+ /*
+- * max_low_pfn_mapped: highest direct mapped pfn under 4GB
+- * max_pfn_mapped:     highest direct mapped pfn over 4GB
++ * max_low_pfn_mapped: highest directly mapped pfn < 4 GB
++ * max_pfn_mapped:     highest directly mapped pfn > 4 GB
+  *
+  * The direct mapping only covers E820_TYPE_RAM regions, so the ranges and gaps are
+- * represented by pfn_mapped
++ * represented by pfn_mapped[].
+  */
+ unsigned long max_low_pfn_mapped;
+ unsigned long max_pfn_mapped;
+@@ -55,14 +55,23 @@ RESERVE_BRK(dmi_alloc, 65536);
  #endif
  
--	if (decayed)
--		cfs_rq_util_change(cfs_rq, 0);
--
- 	return decayed;
- }
  
-@@ -3620,8 +3617,12 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
- 		attach_entity_load_avg(cfs_rq, se, SCHED_CPUFREQ_MIGRATION);
- 		update_tg_load_avg(cfs_rq, 0);
+-static __initdata unsigned long _brk_start = (unsigned long)__brk_base;
+-unsigned long _brk_end = (unsigned long)__brk_base;
++/*
++ * Range of the BSS area. The size of the BSS area is determined
++ * at link time, with RESERVE_BRK*() facility reserving additional
++ * chunks.
++ */
++static __initdata
++unsigned long _brk_start = (unsigned long)__brk_base;
++unsigned long _brk_end   = (unsigned long)__brk_base;
  
--	} else if (decayed && (flags & UPDATE_TG))
--		update_tg_load_avg(cfs_rq, 0);
-+	} else if (decayed) {
-+		cfs_rq_util_change(cfs_rq, 0);
+ struct boot_params boot_params;
+ 
+ /*
+- * Machine setup..
++ * These are the four main kernel memory regions, we put them into
++ * the resource tree so that kdump tools and other debugging tools
++ * recover it:
+  */
 +
-+		if (flags & UPDATE_TG)
-+			update_tg_load_avg(cfs_rq, 0);
-+	}
- }
+ static struct resource rodata_resource = {
+ 	.name	= "Kernel rodata",
+ 	.start	= 0,
+@@ -93,16 +102,16 @@ static struct resource bss_resource = {
  
- #ifndef CONFIG_64BIT
-@@ -7482,6 +7483,28 @@ static inline bool others_have_blocked(struct rq *rq) { return false; }
- static inline void update_blocked_load_status(struct rq *rq, bool has_blocked) {}
- #endif
  
-+static bool __update_blocked_others(struct rq *rq, bool *done)
-+{
-+	const struct sched_class *curr_class;
-+	u64 now = rq_clock_pelt(rq);
-+	bool decayed;
-+
-+	/*
-+	 * update_load_avg() can call cpufreq_update_util(). Make sure that RT,
-+	 * DL and IRQ signals have been updated before updating CFS.
-+	 */
-+	curr_class = rq->curr->sched_class;
-+
-+	decayed = update_rt_rq_load_avg(now, rq, curr_class == &rt_sched_class) |
-+		  update_dl_rq_load_avg(now, rq, curr_class == &dl_sched_class) |
-+		  update_irq_load_avg(rq, 0);
-+
-+	if (others_have_blocked(rq))
-+		*done = false;
-+
-+	return decayed;
-+}
-+
- #ifdef CONFIG_FAIR_GROUP_SCHED
+ #ifdef CONFIG_X86_32
+-/* cpu data as detected by the assembly code in head_32.S */
++/* CPU data as detected by the assembly code in head_32.S */
+ struct cpuinfo_x86 new_cpu_data;
  
- static inline bool cfs_rq_is_decayed(struct cfs_rq *cfs_rq)
-@@ -7501,29 +7524,11 @@ static inline bool cfs_rq_is_decayed(struct cfs_rq *cfs_rq)
- 	return true;
- }
+-/* common cpu data for all cpus */
++/* Common CPU data for all CPUs */
+ struct cpuinfo_x86 boot_cpu_data __read_mostly;
+ EXPORT_SYMBOL(boot_cpu_data);
  
--static void update_blocked_averages(int cpu)
-+static bool __update_blocked_fair(struct rq *rq, bool *done)
- {
--	struct rq *rq = cpu_rq(cpu);
- 	struct cfs_rq *cfs_rq, *pos;
--	const struct sched_class *curr_class;
--	struct rq_flags rf;
--	bool done = true;
--
--	rq_lock_irqsave(rq, &rf);
--	update_rq_clock(rq);
--
--	/*
--	 * update_cfs_rq_load_avg() can call cpufreq_update_util(). Make sure
--	 * that RT, DL and IRQ signals have been updated before updating CFS.
--	 */
--	curr_class = rq->curr->sched_class;
--	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
--	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
--	update_irq_load_avg(rq, 0);
--
--	/* Don't need periodic decay once load/util_avg are null */
--	if (others_have_blocked(rq))
--		done = false;
-+	bool decayed = false;
-+	int cpu = cpu_of(rq);
+ unsigned int def_to_bigsmp;
  
+-/* for MCA, but anyone else can use it if they want */
++/* For MCA, but anyone else can use it if they want */
+ unsigned int machine_id;
+ unsigned int machine_submodel_id;
+ unsigned int BIOS_revision;
+@@ -382,15 +391,15 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+ /*
+  * Keep the crash kernel below this limit.
+  *
+- * On 32 bits earlier kernels would limit the kernel to the low 512 MiB
++ * Earlier 32-bits kernels would limit the kernel to the low 512 MB range
+  * due to mapping restrictions.
+  *
+- * On 64bit, kdump kernel need be restricted to be under 64TB, which is
++ * 64-bit kdump kernels need to be restricted to be under 64 TB, which is
+  * the upper limit of system RAM in 4-level paging mode. Since the kdump
+- * jumping could be from 5-level to 4-level, the jumping will fail if
+- * kernel is put above 64TB, and there's no way to detect the paging mode
+- * of the kernel which will be loaded for dumping during the 1st kernel
+- * bootup.
++ * jump could be from 5-level paging to 4-level paging, the jump will fail if
++ * the kernel is put above 64 TB, and during the 1st kernel bootup there's
++ * no good way to detect the paging mode of the target kernel which will be
++ * loaded for dumping.
+  */
+ #ifdef CONFIG_X86_32
+ # define CRASH_ADDR_LOW_MAX	SZ_512M
+@@ -801,7 +810,7 @@ void __init setup_arch(char **cmdline_p)
  	/*
- 	 * Iterates the task_group tree in a bottom up fashion, see
-@@ -7532,9 +7537,13 @@ static void update_blocked_averages(int cpu)
- 	for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos) {
- 		struct sched_entity *se;
+ 	 * Note: Quark X1000 CPUs advertise PGE incorrectly and require
+ 	 * a cr3 based tlb flush, so the following __flush_tlb_all()
+-	 * will not flush anything because the cpu quirk which clears
++	 * will not flush anything because the CPU quirk which clears
+ 	 * X86_FEATURE_PGE has not been invoked yet. Though due to the
+ 	 * load_cr3() above the TLB has been flushed already. The
+ 	 * quirk is invoked before subsequent calls to __flush_tlb_all()
+
+commit c1877650f3c9fb8568f8dce3fc804ab45125cf78
+Author: Ingo Molnar <mingo@kernel.org>
+Date:   Mon Nov 18 15:49:22 2019 +0100
+
+    x86/setup: Clean up the header portion of setup.c
+    
+    In 20 years we accumulated 89 #include lines in setup.c,
+    but we only need 30 of them (!) ...
+    
+    Get rid of the excessive ones, and while at it, sort the
+    remaining ones alphabetically.
+    
+    Also get rid of the incomplete changelogs at the header of the file,
+    and explain better what this file does.
+    
+    Cc: linux-kernel@vger.kernel.org
+    Cc: Borislav Petkov <bp@alien8.de>
+    Cc: Linus Torvalds <torvalds@linux-foundation.org>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Cc: Thomas Gleixner <tglx@linutronix.de>
+    Signed-off-by: Ingo Molnar <mingo@kernel.org>
+
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index ea6496f2debb..5f483eb14d44 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -2,123 +2,43 @@
+ /*
+  *  Copyright (C) 1995  Linus Torvalds
+  *
+- *  Support of BIGMEM added by Gerhard Wichert, Siemens AG, July 1999
+- *
+- *  Memory region support
+- *	David Parsons <orc@pell.chi.il.us>, July-August 1999
+- *
+- *  Added E820 sanitization routine (removes overlapping memory regions);
+- *  Brian Moyle <bmoyle@mvista.com>, February 2001
+- *
+- * Moved CPU detection code to cpu/${cpu}.c
+- *    Patrick Mochel <mochel@osdl.org>, March 2002
+- *
+- *  Provisions for empty E820 memory regions (reported by certain BIOSes).
+- *  Alex Achenbach <xela@slit.de>, December 2002.
+- *
++ * This file contains the setup_arch() code, which handles the architecture-dependent
++ * parts of early kernel initialization.
+  */
+-
+-/*
+- * This file handles the architecture-dependent parts of initialization
+- */
+-
+-#include <linux/sched.h>
+-#include <linux/mm.h>
+-#include <linux/mmzone.h>
+-#include <linux/screen_info.h>
+-#include <linux/ioport.h>
+-#include <linux/acpi.h>
+-#include <linux/sfi.h>
+-#include <linux/apm_bios.h>
+-#include <linux/initrd.h>
+-#include <linux/memblock.h>
+-#include <linux/seq_file.h>
+ #include <linux/console.h>
+-#include <linux/root_dev.h>
+-#include <linux/highmem.h>
+-#include <linux/export.h>
++#include <linux/crash_dump.h>
++#include <linux/dmi.h>
+ #include <linux/efi.h>
+-#include <linux/init.h>
+-#include <linux/edd.h>
++#include <linux/init_ohci1394_dma.h>
++#include <linux/initrd.h>
+ #include <linux/iscsi_ibft.h>
+-#include <linux/nodemask.h>
+-#include <linux/kexec.h>
+-#include <linux/dmi.h>
+-#include <linux/pfn.h>
++#include <linux/memblock.h>
+ #include <linux/pci.h>
+-#include <asm/pci-direct.h>
+-#include <linux/init_ohci1394_dma.h>
+-#include <linux/kvm_para.h>
+-#include <linux/dma-contiguous.h>
+-#include <xen/xen.h>
+-#include <uapi/linux/mount.h>
+-
+-#include <linux/errno.h>
+-#include <linux/kernel.h>
+-#include <linux/stddef.h>
+-#include <linux/unistd.h>
+-#include <linux/ptrace.h>
+-#include <linux/user.h>
+-#include <linux/delay.h>
+-
+-#include <linux/kallsyms.h>
+-#include <linux/cpufreq.h>
+-#include <linux/dma-mapping.h>
+-#include <linux/ctype.h>
+-#include <linux/uaccess.h>
+-
+-#include <linux/percpu.h>
+-#include <linux/crash_dump.h>
++#include <linux/root_dev.h>
++#include <linux/sfi.h>
+ #include <linux/tboot.h>
+-#include <linux/jiffies.h>
+-#include <linux/mem_encrypt.h>
+-#include <linux/sizes.h>
+-
+ #include <linux/usb/xhci-dbgp.h>
+-#include <video/edid.h>
  
--		if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq))
-+		if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq)) {
- 			update_tg_load_avg(cfs_rq, 0);
- 
-+			if (cfs_rq == &rq->cfs)
-+				decayed = true;
-+		}
+-#include <asm/mtrr.h>
+-#include <asm/apic.h>
+-#include <asm/realmode.h>
+-#include <asm/e820/api.h>
+-#include <asm/mpspec.h>
+-#include <asm/setup.h>
+-#include <asm/efi.h>
+-#include <asm/timer.h>
+-#include <asm/i8259.h>
+-#include <asm/sections.h>
+-#include <asm/io_apic.h>
+-#include <asm/ist.h>
+-#include <asm/setup_arch.h>
++#include <uapi/linux/mount.h>
 +
- 		/* Propagate pending load changes to the parent, if any: */
- 		se = cfs_rq->tg->se[cpu];
- 		if (se && !skip_blocked_update(se))
-@@ -7549,11 +7558,10 @@ static void update_blocked_averages(int cpu)
- 
- 		/* Don't need periodic decay once load/util_avg are null */
- 		if (cfs_rq_has_blocked(cfs_rq))
--			done = false;
-+			*done = false;
- 	}
- 
--	update_blocked_load_status(rq, !done);
--	rq_unlock_irqrestore(rq, &rf);
-+	return decayed;
- }
++#include <xen/xen.h>
++
+ #include <asm/bios_ebda.h>
+-#include <asm/cacheflush.h>
+-#include <asm/processor.h>
+ #include <asm/bugs.h>
+-#include <asm/kasan.h>
+-
+-#include <asm/vsyscall.h>
+ #include <asm/cpu.h>
+-#include <asm/desc.h>
+-#include <asm/dma.h>
+-#include <asm/iommu.h>
++#include <asm/efi.h>
+ #include <asm/gart.h>
+-#include <asm/mmu_context.h>
+-#include <asm/proto.h>
+-
+-#include <asm/paravirt.h>
+ #include <asm/hypervisor.h>
+-#include <asm/olpc_ofw.h>
+-
+-#include <asm/percpu.h>
+-#include <asm/topology.h>
+-#include <asm/apicdef.h>
+-#include <asm/amd_nb.h>
++#include <asm/kasan.h>
++#include <asm/kaslr.h>
+ #include <asm/mce.h>
+-#include <asm/alternative.h>
++#include <asm/mtrr.h>
++#include <asm/olpc_ofw.h>
++#include <asm/pci-direct.h>
+ #include <asm/prom.h>
+-#include <asm/microcode.h>
+-#include <asm/kaslr.h>
++#include <asm/proto.h>
+ #include <asm/unwind.h>
++#include <asm/vsyscall.h>
  
  /*
-@@ -7603,29 +7611,16 @@ static unsigned long task_h_load(struct task_struct *p)
- 			cfs_rq_load_avg(cfs_rq) + 1);
- }
- #else
--static inline void update_blocked_averages(int cpu)
-+static bool __update_blocked_fair(struct rq *rq, bool *done)
- {
--	struct rq *rq = cpu_rq(cpu);
- 	struct cfs_rq *cfs_rq = &rq->cfs;
--	const struct sched_class *curr_class;
--	struct rq_flags rf;
--
--	rq_lock_irqsave(rq, &rf);
--	update_rq_clock(rq);
--
--	/*
--	 * update_cfs_rq_load_avg() can call cpufreq_update_util(). Make sure
--	 * that RT, DL and IRQ signals have been updated before updating CFS.
--	 */
--	curr_class = rq->curr->sched_class;
--	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
--	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
--	update_irq_load_avg(rq, 0);
-+	bool decayed;
- 
--	update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
-+	decayed = update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
-+	if (cfs_rq_has_blocked(cfs_rq))
-+		*done = false;
- 
--	update_blocked_load_status(rq, cfs_rq_has_blocked(cfs_rq) || others_have_blocked(rq));
--	rq_unlock_irqrestore(rq, &rf);
-+	return decayed;
- }
- 
- static unsigned long task_h_load(struct task_struct *p)
-@@ -7634,6 +7629,24 @@ static unsigned long task_h_load(struct task_struct *p)
- }
- #endif
- 
-+static void update_blocked_averages(int cpu)
-+{
-+	bool decayed = false, done = true;
-+	struct rq *rq = cpu_rq(cpu);
-+	struct rq_flags rf;
-+
-+	rq_lock_irqsave(rq, &rf);
-+	update_rq_clock(rq);
-+
-+	decayed |= __update_blocked_others(rq, &done);
-+	decayed |= __update_blocked_fair(rq, &done);
-+
-+	update_blocked_load_status(rq, !done);
-+	if (decayed)
-+		cpufreq_update_util(rq, 0);
-+	rq_unlock_irqrestore(rq, &rf);
-+}
-+
- /********** Helpers for find_busiest_group ************************/
- 
- /*
+  * max_low_pfn_mapped: highest direct mapped pfn under 4GB
