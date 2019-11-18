@@ -2,64 +2,154 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A36BC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1409C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76E5E2230E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA7D22319
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:48:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574106490;
+	bh=CRT5AsiklE8UBnzI46KWJI+GgkLzqT65uKMX5KjaECk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=u7zNTMjct+l3j4nMjzHAdDyYNsz+Ln5IZp/vbQe9pTTyYyOyZ4mze6YD3gyYpZKPw
+	 rD0z6jpLHa2kuIodOK80Qw2wpNHviF8yS2PmOIh50xfNqJfzGkUyRD293oDDAyJYvu
+	 2ErWRJgy4HlJleplLmtE+Q67bVWRjXG369r9zICg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfKRTsB (ORCPT
+        id S1726822AbfKRTsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 14:48:01 -0500
-Received: from ms.lwn.net ([45.79.88.28]:60632 "EHLO ms.lwn.net"
+        Mon, 18 Nov 2019 14:48:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbfKRTsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 14:48:01 -0500
-Received: from localhost.localdomain (localhost [127.0.0.1])
+        id S1726435AbfKRTsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 14:48:09 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id B259C9A8;
-        Mon, 18 Nov 2019 19:48:00 +0000 (UTC)
-Date:   Mon, 18 Nov 2019 12:47:59 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] docs: Add request_irq() documentation
-Message-ID: <20191118124759.5096a15f@lwn.net>
-In-Reply-To: <alpine.DEB.2.21.1911151922430.28787@nanos.tec.linutronix.de>
-References: <20191004163955.14419-1-corbet@lwn.net>
-        <20191004163955.14419-3-corbet@lwn.net>
-        <alpine.DEB.2.21.1911151922430.28787@nanos.tec.linutronix.de>
-Organization: LWN.net
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 181E72230F;
+        Mon, 18 Nov 2019 19:48:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574106487;
+        bh=CRT5AsiklE8UBnzI46KWJI+GgkLzqT65uKMX5KjaECk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GrNALO9sGiaUWgW5vaoFLgIbs+uGKTeIfDd0Wty3VJdsLU6RxuuZCcP/Hh8GYeCw3
+         0AcN1doOb017ByxLm4uoIygOCO9Cq8oKLyPjFv/a5SI/CiCV2pkv7N7tm/P3TO2ynZ
+         bQAUDx58pybgho4y+h4NxkT7Gqt899V3G/jjWX4I=
+Date:   Mon, 18 Nov 2019 20:48:04 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     git@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: Signal conflict on merging metadata-differing patches
+Message-ID: <20191118194804.GA662468@kroah.com>
+References: <20191118172917.GA6063@vmlxhi-102.adit-jv.com>
+ <20191118173517.GA599094@kroah.com>
+ <20191118184523.GA6894@vmlxhi-102.adit-jv.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191118184523.GA6894@vmlxhi-102.adit-jv.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 19:23:29 +0100 (CET)
-Thomas Gleixner <tglx@linutronix.de> wrote:
-
-> On Fri, 4 Oct 2019, Jonathan Corbet wrote:
-> 
-> > While checking the results of the :c:func: removal, I noticed that there
-> > was no documentation for request_irq(), and request_threaded_irq() was not
-> > mentioned at all.  Add a kerneldoc comment for request_irq() and add
-> > request_threaded_irq() to the list of functions.
+On Mon, Nov 18, 2019 at 07:45:23PM +0100, Eugeniu Rosca wrote:
+> On Mon, Nov 18, 2019 at 06:35:17PM +0100, Greg KH wrote:
+> > On Mon, Nov 18, 2019 at 06:29:17PM +0100, Eugeniu Rosca wrote:
+> > > Dear Git community,
+> > > 
+> > > Due to high inflow of patches which Linux maintainers carry on their
+> > > shoulders and due to occasionally intricate relationships between
+> > > consecutive revisions of the same series, it may [1] happen that two
+> > > distinct revisions of the same patch (differing only/mostly in
+> > > metadata, e.g. Author's time-stamp and commit description) may end up
+> > > being merged on the same branch, without git to complain about that.
 > > 
-> > Signed-off-by: Jonathan Corbet <corbet@lwn.net>  
+> > Why would git complain about that?
+> 
+> This would help those performing the merge identify and (if needed)
+> avoid having several slightly different patches on the same branch.
 
-Heh...I'd forgotten about this one...
+The patches were not on the same branch to start with, they ended up on
+two different branches that got merged together at some point in time
+later on.
 
-> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+This happens all the time in kernel development :)
 
-Thanks, I'll go ahead and apply it.
+> > > Is there any "git merge" flag available off-the-shelf which (if used)
+> > > would signal such situations?
+> > 
+> > I don't understand what you are looking for here.  Two different
+> > versions of the patch were merged to different branches and then merged
+> > together, and git did the right thing with the resolution of the code.
+> 
+> I personally care about commit metadata (i.e. Author's/Committer's names
+> and timestamps, as well as commit description) as much as (and sometimes
+> more than) the code contents of the patch.
+> 
+> If I am given multiple patches which perform the same code changes, but
+> provide different descriptions, this _already_ generates potential work
+> on my plate, since I have to make sense of those differences when I
+> stumble upon them. Which patch do I recommend to the customer (who,
+> let's say, still lives on the older v4.14 LTS), if I am asked to?
 
-jon
+Welcome to my life :)
+
+As I said above, this happens quite frequently, and honestly, I just
+live with it.  Look at the kernel's DRM branch for the main abusers of
+this, they cherry-pick patches from their local tree to a tree to send
+to Linus today, with the sha1 in the commit message.  That means that
+Linus ends up with a commit referencing a sha1 that will not show up in
+his tree until sometime in the _future_.
+
+It causes havoc with my scripts and I hate it.
+
+But, it makes things easier for the developers and maintainers of that
+subsystem and in the end, that's what really matters.  Stable and
+backports should almost never cause developers any problems or extra
+work as that is not their responsibility.
+
+> Why should I (or anybody else) spend time doing research at all, if this
+> can be avoided by just passing an additional option to "git merge"?
+> 
+> It is the most basic requirement I can think of that the maintainers
+> select the _latest_ version of a patch series, without intertwining it
+> with a superseded version.
+
+I really don't understand what you expect to have happen here.
+
+Look at the drm tree again, what should git do sometime in the future
+when the same "logical change" gets merged into Linus's tree.  I think
+it should do what it does today, handle the merge of the code changes
+just fine and allow for perfect representation at any point in time what
+the tree looked like if you check it out then.
+
+What should git do instead?
+
+> > What more can it do here?
+> 
+> Currently Git says nothing in below merge scenarios (all of them are
+> conflict-less successful merges):
+>  - Merge two commits which perform identical code changes but have
+>    different metadata
+>  - Merge commit "A" and commits ("B", "C", "D"), the latter being
+>    subsets of "A"
+> 
+> I don't advocate for "git merge" to fail in the above scenarios. No.
+> I just say that Git could likely detect such scenarios and help people
+> like you not pushing v2 and v5 of the same patch into the main tree.
+
+But what should it do in either of those above situations?  Fail the
+merge?  No, that's not ok as those different branches were just fine on
+their own and I will never expect them to be rebased/rewritten just for
+something like this.  That's crazy.
+
+thanks,
+
+greg k-h
