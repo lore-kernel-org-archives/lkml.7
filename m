@@ -2,171 +2,146 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FF0C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09290C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C479B206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:45:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mih6Qaa2"
+	by mail.kernel.org (Postfix) with ESMTP id DFC33206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfKRJpW (ORCPT
+        id S1726769AbfKRJpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 04:45:22 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29656 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726464AbfKRJpW (ORCPT
+        Mon, 18 Nov 2019 04:45:40 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22160 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726464AbfKRJpk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 04:45:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574070321;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nRCkhLeYkd/VfpebpKrWifzijPdiIM77KJWFLi2G8ao=;
-        b=Mih6Qaa2gFaJ6Ncd5pn52ipRiBD/5A43lqWq+83nRFrsBNQe7miIGPU7ta/TaCqwCVV334
-        8Z0lYfbUHKfvL12AHOvNdsurmXkhJ7KvF8ft66OjNR9R4qRidj+RuvfRaMSPutOTjKFRje
-        C/s6Oj2nE+qFF1/akxPVHsfAweDcPCQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-139-4pE2t8omPqm6BV13ZIpVIQ-1; Mon, 18 Nov 2019 04:45:18 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2B8BB802690;
-        Mon, 18 Nov 2019 09:45:15 +0000 (UTC)
-Received: from [10.36.118.85] (unknown [10.36.118.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 479F117D34;
-        Mon, 18 Nov 2019 09:45:11 +0000 (UTC)
-Subject: Re: [PATCH v3] mm: get rid of odd jump labels in
- find_mergeable_anon_vma()
-To:     linmiaohe <linmiaohe@huawei.com>, akpm@linux-foundation.org,
-        richardw.yang@linux.intel.com, sfr@canb.auug.org.au,
-        rppt@linux.ibm.com, jannh@google.com, steve.capper@arm.com,
-        catalin.marinas@arm.com, aarcange@redhat.com,
-        chenjianhong2@huawei.com, walken@google.com,
-        dave.hansen@linux.intel.com, tiny.windzz@gmail.com,
-        jhubbard@nvidia.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1574059147-13678-1-git-send-email-linmiaohe@huawei.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <8b5f515f-307b-1e73-249f-f69a4b8c4318@redhat.com>
-Date:   Mon, 18 Nov 2019 10:45:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 18 Nov 2019 04:45:40 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAI9g9xg007676;
+        Mon, 18 Nov 2019 04:45:18 -0500
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2waym9e0pg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 Nov 2019 04:45:18 -0500
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAI9jBEL001662;
+        Mon, 18 Nov 2019 09:45:17 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma02wdc.us.ibm.com with ESMTP id 2wa8r614wa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 Nov 2019 09:45:17 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAI9jGtq52756830
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Nov 2019 09:45:16 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 925AF6A047;
+        Mon, 18 Nov 2019 09:45:16 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 35AB36A04D;
+        Mon, 18 Nov 2019 09:45:13 +0000 (GMT)
+Received: from skywalker.linux.ibm.com (unknown [9.199.34.246])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 18 Nov 2019 09:45:12 +0000 (GMT)
+X-Mailer: emacs 26.2 (via feedmail 11-beta-1 I)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org
+Cc:     peterz@infradead.org, vishal.l.verma@intel.com,
+        dave.hansen@linux.intel.com, hch@lst.de,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 13/18] libnvdimm: Export the target_node attribute for regions and namespaces
+In-Reply-To: <157401274500.43284.2369509941678577768.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <157401267421.43284.2135775608523385279.stgit@dwillia2-desk3.amr.corp.intel.com> <157401274500.43284.2369509941678577768.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Mon, 18 Nov 2019 15:15:10 +0530
+Message-ID: <87zhgth61l.fsf@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <1574059147-13678-1-git-send-email-linmiaohe@huawei.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: 4pE2t8omPqm6BV13ZIpVIQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-18_01:2019-11-15,2019-11-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ mlxscore=0 suspectscore=0 spamscore=0 clxscore=1011 lowpriorityscore=0
+ phishscore=0 mlxlogscore=999 malwarescore=0 impostorscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911180087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.11.19 07:39, linmiaohe wrote:
-> From: Miaohe Lin <linmiaohe@huawei.com>
->=20
-> The jump labels try_prev and none are not really needed
-> in find_mergeable_anon_vma(), eliminate them to improve
-> readability.
->=20
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Dan Williams <dan.j.williams@intel.com> writes:
+
+> Aneesh points out that some platforms may have "local" attached
+> persistent memory and "remote" persistent memory that map to the same
+> "online" node, or persistent memory devices with different performance
+> properties. In this case 'numa_node' is identical for the two instances,
+> but 'target_node' is differentiated so platform firmware can communicate
+> distinct performance properties per range. Expose 'target_node' by
+> default to allow for disambiguation of devices that share the same
+> numa_map_to_online_node() result.
+>
+
+Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+
+> Reported-by: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > ---
-> -v2:
-> =09Fix commit descriptions and further simplify the code
-> =09as suggested by David Hildenbrand and John Hubbard.
-> -v3:
-> =09Rewrite patch version info. Don't show this in commit log.
-> ---
->   mm/mmap.c | 27 +++++++++++++--------------
->   1 file changed, 13 insertions(+), 14 deletions(-)
->=20
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index 4d4db76a07da..ff02c23fd375 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -1276,26 +1276,25 @@ static struct anon_vma *reusable_anon_vma(struct =
-vm_area_struct *old, struct vm_
->    */
->   struct anon_vma *find_mergeable_anon_vma(struct vm_area_struct *vma)
->   {
-> -=09struct anon_vma *anon_vma;
-> +=09struct anon_vma *anon_vma =3D NULL;
->   =09struct vm_area_struct *near;
->  =20
-> +=09/* Try next first. */
->   =09near =3D vma->vm_next;
-> -=09if (!near)
-> -=09=09goto try_prev;
-> +=09if (near) {
-> +=09=09anon_vma =3D reusable_anon_vma(near, vma, near);
-> +=09=09if (anon_vma)
-> +=09=09=09return anon_vma;
-> +=09}
-
-I think you can get rid of near completely as well
-
-=09if (vma->vm_next) {
-=09=09anon_vma =3D reusable_anon_vma(near, vma, vma->vm_next);
-=09=09if (anon_vma)
-=09=09=09return anon_vma;
-=09}
-
-...
-
-Apart from  that looks good to me.
-
->  =20
-> -=09anon_vma =3D reusable_anon_vma(near, vma, near);
-> -=09if (anon_vma)
-> -=09=09return anon_vma;
-> -try_prev:
-> +=09/* Try prev next. */
->   =09near =3D vma->vm_prev;
-> -=09if (!near)
-> -=09=09goto none;
-> +=09if (near)
-> +=09=09anon_vma =3D reusable_anon_vma(near, near, vma);
->  =20
-> -=09anon_vma =3D reusable_anon_vma(near, near, vma);
-> -=09if (anon_vma)
-> -=09=09return anon_vma;
-> -none:
->   =09/*
-> +=09 * We might reach here with anon_vma =3D=3D NULL if we can't find
-> +=09 * any reusable anon_vma.
->   =09 * There's no absolute need to look only at touching neighbours:
->   =09 * we could search further afield for "compatible" anon_vmas.
->   =09 * But it would probably just be a waste of time searching,
-> @@ -1303,7 +1302,7 @@ struct anon_vma *find_mergeable_anon_vma(struct vm_=
-area_struct *vma)
->   =09 * We're trying to allow mprotect remerging later on,
->   =09 * not trying to minimize memory used for anon_vmas.
->   =09 */
-> -=09return NULL;
-> +=09return anon_vma;
->   }
->  =20
->   /*
->=20
-
-
---=20
-
-Thanks,
-
-David / dhildenb
-
+>  drivers/nvdimm/bus.c |   29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>
+> diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
+> index 1d330d46d036..f76d709426f7 100644
+> --- a/drivers/nvdimm/bus.c
+> +++ b/drivers/nvdimm/bus.c
+> @@ -685,17 +685,46 @@ static ssize_t numa_node_show(struct device *dev,
+>  }
+>  static DEVICE_ATTR_RO(numa_node);
+>  
+> +static int nvdimm_dev_to_target_node(struct device *dev)
+> +{
+> +	struct device *parent = dev->parent;
+> +	struct nd_region *nd_region = NULL;
+> +
+> +	if (is_nd_region(dev))
+> +		nd_region = to_nd_region(dev);
+> +	else if (parent && is_nd_region(parent))
+> +		nd_region = to_nd_region(parent);
+> +
+> +	if (!nd_region)
+> +		return NUMA_NO_NODE;
+> +	return nd_region->target_node;
+> +}
+> +
+> +static ssize_t target_node_show(struct device *dev,
+> +		struct device_attribute *attr, char *buf)
+> +{
+> +	return sprintf(buf, "%d\n", nvdimm_dev_to_target_node(dev));
+> +}
+> +static DEVICE_ATTR_RO(target_node);
+> +
+>  static struct attribute *nd_numa_attributes[] = {
+>  	&dev_attr_numa_node.attr,
+> +	&dev_attr_target_node.attr,
+>  	NULL,
+>  };
+>  
+>  static umode_t nd_numa_attr_visible(struct kobject *kobj, struct attribute *a,
+>  		int n)
+>  {
+> +	struct device *dev = container_of(kobj, typeof(*dev), kobj);
+> +
+>  	if (!IS_ENABLED(CONFIG_NUMA))
+>  		return 0;
+>  
+> +	if (a == &dev_attr_target_node.attr &&
+> +			nvdimm_dev_to_target_node(dev) == NUMA_NO_NODE)
+> +		return 0;
+> +
+>  	return a->mode;
+>  }
+>  
