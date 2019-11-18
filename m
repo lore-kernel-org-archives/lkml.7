@@ -2,154 +2,178 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 661AAC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF50AC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34CE32068D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 836EE2068D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:15:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="erifsc6X"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="bEkFi27R";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="ltgRqdei"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfKRHOd (ORCPT
+        id S1727000AbfKRHPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 02:14:33 -0500
-Received: from mail-eopbgr820043.outbound.protection.outlook.com ([40.107.82.43]:60006
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726552AbfKRHOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 02:14:32 -0500
+        Mon, 18 Nov 2019 02:15:08 -0500
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:63140 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726552AbfKRHPH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 02:15:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1574061307; x=1605597307;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=7y7HPWG4VLX01Bfo1EuvKDJ7XpPAlXcBTgcDrInAWdQ=;
+  b=bEkFi27Rgm6QuixQ4wT3sklAMVyob6erGsEyXxnOtaGkP1IHumfYA5QV
+   6M1Q5QrI1TYd625Amf3GfOCXTZbOxaEaEuUHeI1nkwdx6CMjtJn+qrTkW
+   avLC3XyjFNlcloUk4hqytyyjonS6t5N4azAF2E3Ah6c267MQBUTkIOAs7
+   jdFNsl6Xoj+HLhZHqhLTm6yqZqN69XnLN7TlFgjUOsvd1R6xjv+YWvMb9
+   jRSu/VXI92LVN24MmkgkVJnQGp+bC1qFTsE5WwI9kh5Cz7LvvABQ5Iq1F
+   U1u/tR8WW5vmQOV3tBxm49/0Shw+PhnQKFy83Ih3KcUyL+4P9YtANDKnd
+   A==;
+IronPort-SDR: 7Ha4qYbeNxc9aD8aMg58pdT/XUJJf+KKPZ9UYq/YCIvzo3WjE+tflV13kIGKD6oH8xoCoLskxB
+ ZVvA9LBTJEgCuDtlkCzf6yz1BbRDstmYFFh8zZ9J9HnFxwG8pT4klUGfv+zuQGQti9b8eXYW+u
+ E9BHFyCBriVmWxuHdUDQc+sgsCobOtNQHGP81GZfhzsv54J+uugy1lihpC7WymOdRwmovRqaXZ
+ YcrLgco4Il7Um2EPFf4XnMDaSCe646e93vOFhlg66DnUpxXwb0o0d+B5uI6/jkIXhlcqTxfkYT
+ 348=
+X-IronPort-AV: E=Sophos;i="5.68,319,1569254400"; 
+   d="scan'208";a="230641629"
+Received: from mail-dm3nam03lp2051.outbound.protection.outlook.com (HELO NAM03-DM3-obe.outbound.protection.outlook.com) ([104.47.41.51])
+  by ob1.hgst.iphmx.com with ESMTP; 18 Nov 2019 15:15:05 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g9jdCG6FypEr7RBKq1IixN/tSmm/My2D3h1wUBj1Bc0bDaG/p7eoSnUctWUeGFBYtSTObqdb6+WyYRyymXypaVHCOxvorQmzUNO+qeocLc+mW7PYOexXFtDWnGb3aSdsE09v9XxUqTzU0WHgS4sPTK/No6pwC/2N+l+OrCqghE9v8kutXFh4GhbSBU5ldUsLnBtG/Ute14tx6kJqHUxpQd0dgn8vjU+ZslgPfnvjQZcwO1B9fkLHs1+SANsh0G98IjBIY920Z+NxTOm4qOH6IqQQmFuknlEfIb2lC7PC93/U2FJZU8UyhuAiqeJcfec8ciR8E8LD9RdO9yaO+Z5vew==
+ b=iJdij1UH667ndhbGR8SzV7acWh4ves2k2WKfV575ZQ6ZCN1DjNd0E2PSKDwvrJE8wLgj4fzLaH2+yiNl3qo1h6rm3GrsRv+5KetApwskXbOcqYuafgNwPczwc3KWZ7aARbBLIzRngXkfL6ou+xEmXg+83ANLCHpMVqtFnK27yloy+h8s1BYrSSYLzsihlK3lp9n/Olys2gQ2MkFK3a80n6SDXihW0BFgEjurClSR+yAdUtvsVTtxmvDYKfMApFRBgZtYn+RpAA4UmEEBrfh3uJfmnhY+hfg9T+X+kikwoa/PVp/4BhzgSRswmPlOk1jJWffhBpt7et+o/KIP4d3q3w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bz7BcH3KrKew71E5j6GlDHqVcrDDEIUcDM8g0aS0LKU=;
- b=OaUFT6Vo3R+bcxMr9DMf75CzrxJeQzHsHp7CdxAd1SLgtJbTfS3XSGfQNN7HRR8xfc2akB2tIKceOKezm9NWNy03C4g/ruYdyo8ZWb1IMApnwymIW+X3upLNq6drJG3YHvLir/YyW+RTsclSuFE/1aZt+4llxN9y5k0wyq2WMWZAIsNc82b3A5IdjM9bYzfaK5oK0VhoOz/gkXR1beVAjsSxmmKWHHylEwia07dyIsgRWlI96uNSBMEVcXkCJoVvNQ4PELLHiroXanzwZiTVTjEeJGzGjjSCZz5w1s+I6VW0ULoYfVoQTZrjU0G8KVb/ornTcDlDLcFbAa+JkPtWwg==
+ bh=Lvo9V+Fhjbf2/7CwaavDJAA7/b0QkRYYxHVJxKD2DNk=;
+ b=gZjmut0GsunYqG0cMV6GP2bFY7Z/TmbQJx7qQQ9apzdA/FFlprPN9ycR5Ulnbkmxhj40Xv4QXmFzhq9/C4H95xad+SJvAbbFkaV7YJc7ufGcHfmsRNZIw2scdvKGkbAYEi+rWR35rEXGFXsHRMBPoC03xffHrTLUW/Fad1/DzbSZ8TDdKIz4Lm7O9maM8QltjUdxl4JKQ3jzlHyq8Q9XnxCWWXFXDpHdhoD3JCOu+sfVHUHJ/F4dpcE3RCsS+IDAMCGghumWajyOYGFsIYzgejq3oIc63aXOLfn/y1HB2fXbEDxQnewX0Mik4FsLZWSaqY7/Svx3NJNoG/qX3OXitg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
- dkim=pass header.d=sifive.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
- s=selector1;
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bz7BcH3KrKew71E5j6GlDHqVcrDDEIUcDM8g0aS0LKU=;
- b=erifsc6XS7U6kAEZgPq93Qo/UkxKNt6w2U+KrPIZWkhVv/BGWhcKhznqrbwZB2p5D6WMDmFK93Ly/0rlGWfDSjMfnpp9QQlKJTIc4LLw7w+DbekLD1FjTePlwXjOx7yc2OewzC2OjFBJhXM9eCGif3qwK3LkPfl8hBK7MkjF7Bg=
-Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
- CH2PR13MB3304.namprd13.prod.outlook.com (10.255.155.218) with Microsoft SMTP
+ bh=Lvo9V+Fhjbf2/7CwaavDJAA7/b0QkRYYxHVJxKD2DNk=;
+ b=ltgRqdeijz9w0+qpOiV3AzaFJUug8NOBWRTu6fSVwzgHVmycLW6pgX9n7FWSlgB1koNeunZbBnjmh0JjK2lAkU+S6Zq2WjZ0ffp+VKv1za0VNnN08BfTatTTFWtfIVvlf9Er8bL6/DxgaJ9XAH10hzLSbAK4ZFT9Im6litWBmmw=
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) by
+ MN2PR04MB6976.namprd04.prod.outlook.com (10.186.146.80) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.15; Mon, 18 Nov 2019 07:14:27 +0000
-Received: from CH2PR13MB3368.namprd13.prod.outlook.com
- ([fe80::853e:1256:311e:d29]) by CH2PR13MB3368.namprd13.prod.outlook.com
- ([fe80::853e:1256:311e:d29%7]) with mapi id 15.20.2474.012; Mon, 18 Nov 2019
- 07:14:27 +0000
-From:   Yash Shah <yash.shah@sifive.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
-        "atish.patra@wdc.com" <atish.patra@wdc.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
-Subject: RE: [PATCH 1/4] irqchip: sifive: Support hierarchy irq domain
-Thread-Topic: [PATCH 1/4] irqchip: sifive: Support hierarchy irq domain
-Thread-Index: AQHVmVJiuq127ZCTBUqmuCH0wyl5F6eHetSAgAkRSfA=
-Date:   Mon, 18 Nov 2019 07:14:27 +0000
-Message-ID: <CH2PR13MB3368254D0684E46A2C47AE418C4D0@CH2PR13MB3368.namprd13.prod.outlook.com>
-References: <1573560684-48104-1-git-send-email-yash.shah@sifive.com>
- <1573560684-48104-2-git-send-email-yash.shah@sifive.com>
- <ad0a3b419a3f5c3475d5fafcc2a037fb@www.loen.fr>
-In-Reply-To: <ad0a3b419a3f5c3475d5fafcc2a037fb@www.loen.fr>
+ 15.20.2451.28; Mon, 18 Nov 2019 07:15:05 +0000
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::5852:6199:7952:c2ce]) by MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::5852:6199:7952:c2ce%7]) with mapi id 15.20.2451.029; Mon, 18 Nov 2019
+ 07:15:04 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Can Guo <cang@qti.qualcomm.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
+        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        "saravanak@google.com" <saravanak@google.com>,
+        "salyzyn@google.com" <salyzyn@google.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>
+CC:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 2/4] scsi: ufs: Update VCCQ2 and VCCQ min/max voltage
+ hard codes
+Thread-Topic: [PATCH v2 2/4] scsi: ufs: Update VCCQ2 and VCCQ min/max voltage
+ hard codes
+Thread-Index: AQHVncN0I4QlPQom7kOhpEw7WzhJI6eQgyQg
+Date:   Mon, 18 Nov 2019 07:15:04 +0000
+Message-ID: <MN2PR04MB6991121D72EA8E6DF7F6258AFC4D0@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <1574049061-11417-1-git-send-email-cang@qti.qualcomm.com>
+ <1574049061-11417-3-git-send-email-cang@qti.qualcomm.com>
+In-Reply-To: <1574049061-11417-3-git-send-email-cang@qti.qualcomm.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yash.shah@sifive.com; 
-x-originating-ip: [114.143.65.226]
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [212.25.79.133]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 14783145-2780-4b5d-2cf8-08d76bf6f2dc
-x-ms-traffictypediagnostic: CH2PR13MB3304:
-x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR13MB330474EB2317E3655E1C393C8C4D0@CH2PR13MB3304.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:580;
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 4c3addb9-27c1-4b93-5d55-08d76bf70919
+x-ms-traffictypediagnostic: MN2PR04MB6976:
+x-microsoft-antispam-prvs: <MN2PR04MB6976FFA3C06FFE0F3588B6FCFC4D0@MN2PR04MB6976.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
 x-forefront-prvs: 0225B0D5BC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(366004)(346002)(39830400003)(136003)(13464003)(189003)(199004)(6506007)(33656002)(8936002)(8676002)(81166006)(53546011)(81156014)(102836004)(7696005)(76176011)(486006)(26005)(4326008)(44832011)(186003)(446003)(11346002)(476003)(229853002)(66066001)(7416002)(6916009)(6436002)(55016002)(74316002)(66446008)(64756008)(66556008)(66476007)(6116002)(3846002)(5660300002)(52536014)(9686003)(6246003)(305945005)(7736002)(107886003)(76116006)(2906002)(66946007)(54906003)(478600001)(256004)(71190400001)(71200400001)(4001150100001)(316002)(99286004)(25786009)(14454004)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3304;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: sifive.com does not designate
- permitted sender hosts)
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(376002)(346002)(396003)(136003)(366004)(199004)(189003)(6506007)(7736002)(478600001)(99286004)(305945005)(7416002)(316002)(7696005)(74316002)(9686003)(6246003)(102836004)(76176011)(26005)(54906003)(110136005)(2501003)(2201001)(14454004)(66946007)(66446008)(64756008)(66556008)(66476007)(15650500001)(8676002)(81166006)(446003)(66066001)(11346002)(86362001)(81156014)(256004)(52536014)(33656002)(76116006)(5660300002)(8936002)(186003)(6436002)(486006)(229853002)(71200400001)(3846002)(71190400001)(6116002)(25786009)(2906002)(55016002)(14444005)(4326008)(476003);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6976;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XwusVMB7vjqGB6vof1yERGl8XvW5TFjKRtIuBF8dzcEKaLzpqnZUu2zDW/yPy1y5KbkIIoXjSGS1vg8nS4RQbzhceE7eaLpvAr7h7bn7mMF2pSB2NEISG2cuXNKoIe2iXGl+CkDHiEStXhnDvBuj6Kr/bOUqWovNbvtWK/FWnQOma+J/6EzDM/S1tZ+SVbg7HjRJUQ18MIaDs2FaYmOfTGTNZmk7Bw2MnTYaM2n+xhr6ciPox0I6VpVD8ODkBSmXj99OVQIVIABnBG/rSd/+ZTyiEtbv1mmLCYy8fJ6u8hSFVZL+k7HWKAb1oRBJ7O6Jo1kprulrDFIx3HWdKvDDhJtsoZcnHgONtWyyEUVOH9KMyerW5J62Z383w/So7C/U75Fj0aRcYj0nxzfhij3jSLEbngsYn/nKcnWn+AC8A9QO171do1bnMpQCGI47i5jV
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: 0huS90htbqChTTGyl2gzrGerVcN8ApJ847cWUXB8R1dH7f81oY3ZoIze3mAdCzG4yiRpIWtQeEcOdHmv3MPwbfRvcy3tlKlkhX4FjmLQooGl9Mig3Q2qIGIdsWQ5b64dvLhv2rrfNRQLx/H4HINc48u4JxGjy1CXaNNW6zFkS74LM+v2hXeeui7MUnTLT3TVObmkAnzhRzp4tNcSgHCo6vSL0Fuvo8axsNegnFxwMW4+lTCpfTv19y6NpziH7mksXnaPZLhuF0OY2xh45oXe1utqJREbLobi0TgO1PzW9t+szWAb9yIhgya9dynomvSilyFbZcqn74u7VG3aHFELqYMW6WWUY4usj/hZUYOWT7i5DvUHFFUC+ybQ/GpGFXklaFnj5CwiDaM8ZQXIIyPH+Nbp2wz3HOk/cnO2K2Q6f1y2O5ACnXSVTH4Yg+kPF+s7
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: sifive.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14783145-2780-4b5d-2cf8-08d76bf6f2dc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 07:14:27.5307
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c3addb9-27c1-4b93-5d55-08d76bf70919
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 07:15:04.9030
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tu8aHh2Y4u+6eQTDkGT+rB0XjGT7rOLTYN+eOQOMLRr6c6fgepcmrIFCs9WmH0r7zSD5DgX+nrNHzbcYqD3zGg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3304
+X-MS-Exchange-CrossTenant-userprincipalname: v5S6WGVV/3+sZC5ViWIdZlqowhYURlL+Bd40F0pTzCz92QdkeGSb2s2nx3fJmMJXvaI1zLECOhTb269xpFJ5PA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6976
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNYXJjIFp5bmdpZXIgPG1hekBr
-ZXJuZWwub3JnPg0KPiBTZW50OiAxMiBOb3ZlbWJlciAyMDE5IDE4OjEzDQo+IFRvOiBZYXNoIFNo
-YWggPHlhc2guc2hhaEBzaWZpdmUuY29tPg0KPiBDYzogbGludXMud2FsbGVpakBsaW5hcm8ub3Jn
-OyBiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tOw0KPiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsu
-cnV0bGFuZEBhcm0uY29tOyBwYWxtZXJAZGFiYmVsdC5jb207IFBhdWwNCj4gV2FsbXNsZXkgKCBT
-aWZpdmUpIDxwYXVsLndhbG1zbGV5QHNpZml2ZS5jb20+OyBhb3VAZWVjcy5iZXJrZWxleS5lZHU7
-DQo+IHRnbHhAbGludXRyb25peC5kZTsgamFzb25AbGFrZWRhZW1vbi5uZXQ7IGJtZW5nLmNuQGdt
-YWlsLmNvbTsNCj4gYXRpc2gucGF0cmFAd2RjLmNvbTsgU2FnYXIgS2FkYW0gPHNhZ2FyLmthZGFt
-QHNpZml2ZS5jb20+OyBsaW51eC0NCj4gZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4gcmlzY3ZAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGlu
-dXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgU2FjaGluIEdoYWRpDQo+IDxzYWNoaW4uZ2hhZGlA
-c2lmaXZlLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzRdIGlycWNoaXA6IHNpZml2ZTog
-U3VwcG9ydCBoaWVyYXJjaHkgaXJxIGRvbWFpbg0KPiANCj4gT24gMjAxOS0xMS0xMiAxMzoyMSwg
-WWFzaCBTaGFoIHdyb3RlOg0KPiA+IEFkZCBzdXBwb3J0IGZvciBoaWVyYXJjaHkgaXJxIGRvbWFp
-bnMuIFRoaXMgaXMgbmVlZGVkIGFzIHByZS1yZXF1aXNpdGUNCj4gPiBmb3IgZ3Bpby1zaWZpdmUg
-ZHJpdmVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogWWFzaCBTaGFoIDx5YXNoLnNoYWhAc2lm
-aXZlLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9pcnFjaGlwL0tjb25maWcgICAgICAgICAg
-IHwgIDEgKw0KPiA+ICBkcml2ZXJzL2lycWNoaXAvaXJxLXNpZml2ZS1wbGljLmMgfCA0MQ0KPiA+
-ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLQ0KPiA+ICAyIGZpbGVzIGNo
-YW5nZWQsIDM4IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9pcnFjaGlwL0tjb25maWcgYi9kcml2ZXJzL2lycWNoaXAvS2NvbmZpZyBp
-bmRleA0KPiA+IGNjYmI4OTcuLmEzOTg1NTIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9pcnFj
-aGlwL0tjb25maWcNCj4gPiArKysgYi9kcml2ZXJzL2lycWNoaXAvS2NvbmZpZw0KPiA+IEBAIC00
-ODgsNiArNDg4LDcgQEAgZW5kbWVudQ0KPiA+ICBjb25maWcgU0lGSVZFX1BMSUMNCj4gPiAgCWJv
-b2wgIlNpRml2ZSBQbGF0Zm9ybS1MZXZlbCBJbnRlcnJ1cHQgQ29udHJvbGxlciINCj4gPiAgCWRl
-cGVuZHMgb24gUklTQ1YNCj4gPiArCXNlbGVjdCBJUlFfRE9NQUlOX0hJRVJBUkNIWQ0KPiA+ICAJ
-aGVscA0KLi4uDQo+ID4NCj4gPiArc3RhdGljIGludCBwbGljX2lycV9kb21haW5fdHJhbnNsYXRl
-KHN0cnVjdCBpcnFfZG9tYWluICpkLA0KPiA+ICsJCQkJICAgICBzdHJ1Y3QgaXJxX2Z3c3BlYyAq
-ZndzcGVjLA0KPiA+ICsJCQkJICAgICB1bnNpZ25lZCBsb25nICpod2lycSwgdW5zaWduZWQgaW50
-ICp0eXBlKQ0KPiB7DQo+ID4gKwlpZiAoV0FSTl9PTihmd3NwZWMtPnBhcmFtX2NvdW50IDwgMSkp
-DQo+ID4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gKwkqaHdpcnEgPSBmd3NwZWMtPnBhcmFtWzBd
-Ow0KPiA+ICsJKnR5cGUgPSBJUlFfVFlQRV9OT05FOw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30N
-Cj4gDQo+IFRoaXMgaXMgYWN0dWFsbHkgd2hhdCBzaG91bGQgYmUgY2FsbGVkIGlycV9kb21haW5f
-dHJhbnNsYXRlX29uZWNlbGwoKS4NCj4gDQo+IENvbnNpZGVyIGltcGxlbWVudGluZyB0aGF0IGlu
-c3RlYWQsIGFuZCB1c2luZyBpdCBpbiB0aGlzIGRyaXZlci4gSSdtIHByZXR0eSBzdXJlDQo+IG90
-aGVyIGRyaXZlcnMgY291bGQgdXNlIGl0IChJIHNwb3R0ZWQgaXJxLW52aWMuYykuDQoNClN1cmUs
-IHdpbGwgaW1wbGVtZW50IGlycV9kb21haW5fdHJhbnNsYXRlX29uZWNlbGwoKSBhbmQgdXNlIHRo
-YXQgaW5zdGVhZC4NClRoYW5rcyBmb3IgeW91ciBjb21tZW50cyENCg0KLSBZYXNoDQoNCj4gDQo+
-ID4NCj4gPiAgc3RhdGljIHN0cnVjdCBpcnFfZG9tYWluICpwbGljX2lycWRvbWFpbjsNCj4gDQo+
-IE90aGVyd2lzZSwgbG9va3MgT0suDQo+IA0KPiBUaGFua3MsDQo+IA0KPiAgICAgICAgICBNLg0K
-PiAtLQ0KPiBKYXp6IGlzIG5vdCBkZWFkLiBJdCBqdXN0IHNtZWxscyBmdW5ueS4uLg0K
+>=20
+> From: Can Guo <cang@codeaurora.org>
+>=20
+> Per UFS 3.0 JEDEC standard, the VCCQ2 min voltage is 1.7v and the VCCQ
+> voltage range is 1.14v ~ 1.26v. Update their hard codes accordingly to ma=
+ke
+> sure they work in a safe range compliant for ver 1.0/2.0/2.1/3.0 UFS devi=
+ces.
+So to keep it safe, we need to use largest range:=20
+min_uV =3D min over all spec ranges, and max_uV =3D max over all spec range=
+s.
+Meaning leave it as it is if we want to be backward compatible with UFS1.0.
+
+Thanks,
+Avri
+
+>=20
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> ---
+>  drivers/scsi/ufs/ufs.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h index 385bac=
+8..9df4f4d
+> 100644
+> --- a/drivers/scsi/ufs/ufs.h
+> +++ b/drivers/scsi/ufs/ufs.h
+> @@ -500,9 +500,9 @@ struct ufs_query_res {
+>  #define UFS_VREG_VCC_MAX_UV       3600000 /* uV */
+>  #define UFS_VREG_VCC_1P8_MIN_UV    1700000 /* uV */
+>  #define UFS_VREG_VCC_1P8_MAX_UV    1950000 /* uV */
+> -#define UFS_VREG_VCCQ_MIN_UV      1100000 /* uV */
+> +#define UFS_VREG_VCCQ_MIN_UV      1140000 /* uV */
+>  #define UFS_VREG_VCCQ_MAX_UV      1300000 /* uV */
+> -#define UFS_VREG_VCCQ2_MIN_UV     1650000 /* uV */
+> +#define UFS_VREG_VCCQ2_MIN_UV     1700000 /* uV */
+>  #define UFS_VREG_VCCQ2_MAX_UV     1950000 /* uV */
+>=20
+>  /*
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum=
+,
+> a Linux Foundation Collaborative Project
+
