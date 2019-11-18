@@ -2,123 +2,98 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6BBC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 301F2C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B5BC20857
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F164820748
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:47:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574077623;
+	bh=kDnVWqM8rv4v0DFbARQKnL4pnCPNws5EF5tS19PJ2+o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m0LClATD3sid/Ib4rZRZ+UZ5JQiT5ukm5aBgBLMrtKgKWB/tXcL0KDFWzDn2/ah+h
+	 RkvHYwpCHtMfcG8HgO4KGpMdR5v3HZyYYdreErtpnO8Jsy8UYNnp7h4lxlowpOEVnl
+	 K7UU/KSKUawtCMRlKZ7GI2F3RXfAyhbmNSzQoUHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfKRLpF (ORCPT
+        id S1726725AbfKRLrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:45:05 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60952 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726704AbfKRLpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:45:05 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D2085AD88;
-        Mon, 18 Nov 2019 11:45:02 +0000 (UTC)
-Message-ID: <3209f601ad0537a7ef01e2a752f022ccf8816210.camel@suse.de>
-Subject: Re: [PATCH 3/3] ARM: dts: bcm2711: Enable HWRNG support
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stephen Brennan <stephen@brennan.io>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Scott Branden <sbranden@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>,
-        linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Matt Mackall <mpm@selenic.com>, Arnd Bergmann <arnd@arndb.de>,
-        linux-crypto@vger.kernel.org
-Date:   Mon, 18 Nov 2019 12:44:59 +0100
-In-Reply-To: <20191118075807.165126-4-stephen@brennan.io>
-References: <20191118075807.165126-1-stephen@brennan.io>
-         <20191118075807.165126-4-stephen@brennan.io>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-BrzURT1nntfCQobYCsCl"
-User-Agent: Evolution 3.34.1 
+        Mon, 18 Nov 2019 06:47:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54756 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726460AbfKRLrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 06:47:01 -0500
+Received: from localhost (unknown [89.205.134.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FB5820730;
+        Mon, 18 Nov 2019 11:47:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574077621;
+        bh=kDnVWqM8rv4v0DFbARQKnL4pnCPNws5EF5tS19PJ2+o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=feKrCvQ/m8Ef+oJobtODMFU/XcxXBRqauk0eAksInQzk60LFEAgNKobEQ/8djXNv5
+         SdqcRwonoa3KFQt2IANfPfJy1hUC6al1156N2ZzeXxFqzBcrATsNn3ry8d6fDDotjk
+         aJ+T9NNv1Sxv4LKP2WJOIGl1ohIEsJFHgpW31F1E=
+Date:   Mon, 18 Nov 2019 12:46:57 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v2] {tty: serial, nand: onenand}: samsung: rename to fix
+ build warning
+Message-ID: <20191118114657.GA228826@kroah.com>
+References: <20191117202435.28127-1-sudipm.mukherjee@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191117202435.28127-1-sudipm.mukherjee@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-BrzURT1nntfCQobYCsCl
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi Stephen,
-
-On Sun, 2019-11-17 at 23:58 -0800, Stephen Brennan wrote:
-> From: Stefan Wahren <wahrenst@gmx.net>
->=20
-> This enables hardware random number generator support for the BCM2711
-> on the Raspberry Pi 4 board.
->=20
-> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-> Signed-off-by: Stephen Brennan <stephen@brennan.io>
+On Sun, Nov 17, 2019 at 08:24:35PM +0000, Sudip Mukherjee wrote:
+> Any arm config which has 'CONFIG_MTD_ONENAND_SAMSUNG=m' and
+> 'CONFIG_SERIAL_SAMSUNG=m' gives a build warning:
+> 
+> warning: same module names found:
+>   drivers/tty/serial/samsung.ko
+>   drivers/mtd/nand/onenand/samsung.ko
+> 
+> Rename both drivers/tty/serial/samsung.c to
+> drivers/tty/serial/samsung_tty.c and drivers/mtd/nand/onenand/samsung.c
+> drivers/mtd/nand/onenand/samsung_mtd.c to fix the warning.
+> 
+> Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 > ---
->  arch/arm/boot/dts/bcm2711.dtsi | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.d=
-tsi
-> index ac83dac2e6ba..2c19e5de284a 100644
-> --- a/arch/arm/boot/dts/bcm2711.dtsi
-> +++ b/arch/arm/boot/dts/bcm2711.dtsi
-> @@ -92,10 +92,9 @@ pm: watchdog@7e100000 {
->  		};
-> =20
->  		rng@7e104000 {
-> +			compatible =3D "brcm,bcm2711-rng200";
->  			interrupts =3D <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
-> -
-> -			/* RNG is incompatible with brcm,bcm2835-rng */
-> -			status =3D "disabled";
-> +			status =3D "okay";
->  		};
-> =20
->  		uart2: serial@7e201400 {
+> 
+> v1: only renamed drivers/tty/serial/samsung.c
+> link: https://lore.kernel.org/lkml/20191018194707.27188-1-sudipm.mukherjee@gmail.com
+> 
+> v2: rename both files.
+> 
+> I was not sure if this should have been two different patch, but since
+> this will be fixing the same problem so it seems its better to have them
+> in a single patch.
+> 
+>  drivers/mtd/nand/onenand/Makefile                     | 2 +-
+>  drivers/mtd/nand/onenand/{samsung.c => samsung_mtd.c} | 0
+>  drivers/tty/serial/Makefile                           | 2 +-
+>  drivers/tty/serial/{samsung.c => samsung_tty.c}       | 0
+>  4 files changed, 2 insertions(+), 2 deletions(-)
+>  rename drivers/mtd/nand/onenand/{samsung.c => samsung_mtd.c} (100%)
+>  rename drivers/tty/serial/{samsung.c => samsung_tty.c} (100%)
 
-We inherit the reg property from bcm283x.dtsi, on which we only define a si=
-ze
-of 0x10 bytes. I gather from the driver that iproc-rng200's register space =
-is
-at least 0x28 bytes big. We should also update the 'reg' property to:
-
-	reg =3D <0x7e104000 0x28>;
-
-Regards,
-Nicolas
-
-
---=-BrzURT1nntfCQobYCsCl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3ShDsACgkQlfZmHno8
-x/42dQgAiWoADYCp4IVFQLfny8DRGulI2ckkAswc80iZXIZSayMSqYsAogWqMDq1
-IqOc4PUpzunlVDayHHLM4gxhvPZ+vVPbyQocAITnMo+kYw+CMdRKiwVSYw1ISuMx
-idBzkpcpDNHRh84KoSxR+hCwFjZEKqG72OdwwMEuDQQ14V6MSUFoj0OTCfYBAWJF
-KKYSn+GccciW0VwPzqXMNYDALxv6J3vhdDeOBskGwP4XCGdPu6VX5SBlFF2opS70
-x7wIyX5Trf2w36VOihV2klVNf8QovaqpNzGpL73+3TjdwJV/zfuDRzTPrbRQdpj9
-nQRFpEalCmqp7XUN1DxQFZ+yR9XAfw==
-=OhCk
------END PGP SIGNATURE-----
-
---=-BrzURT1nntfCQobYCsCl--
+I can take this in the tty tree if the mtd maintainer gives an ack for
+it...
 
