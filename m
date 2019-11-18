@@ -2,238 +2,201 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA8AC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8D1C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB0820727
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2919B20730
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:15:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="lF6z598X"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="YcPvVBOv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfKRKPL (ORCPT
+        id S1726691AbfKRKPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 05:15:11 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:58224 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726460AbfKRKPL (ORCPT
+        Mon, 18 Nov 2019 05:15:17 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33279 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbfKRKPP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 05:15:11 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAIACf3i029389;
-        Mon, 18 Nov 2019 11:14:59 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=JjcDf7Se1JV93hHJ3IUg1llt1Gmr33d0sDqj28vMS+A=;
- b=lF6z598XQNP7D8PkuPEODSravAKBbTY5z2krXCYaG1nAkzuD7XOHWiB6kGwhY8ugWEIB
- mUrvAVLD9wR6VS3Kt0TktGKPqZhXemfEr4NKZ+T3xHkzWBTyBFUlcDPtr3TUc+Iid95i
- EBJr+zyAB5Kj6pkUxpsdogLB05uyzg2fayipistl9Hj1frG7BHnbSVhvTUsLyD38fJbl
- N7cQjoESxU56rfllI81FFDiwy2LtiQu3UMyovLitgQM8PSAuWe4R5++CKVKiTSviPv69
- yFDeYk+mz36HS0JTXzBx1ksOQ7ws0hLa0kQT2Sgv9sIqQudfDCosL2W5tTSLfq/GfKai kQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wa9uv0sjw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 Nov 2019 11:14:59 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 846F3100051;
-        Mon, 18 Nov 2019 11:14:48 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7056B2BE245;
-        Mon, 18 Nov 2019 11:14:48 +0100 (CET)
-Received: from localhost (10.75.127.46) by SFHDAG3NODE1.st.com (10.75.127.7)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 Nov 2019 11:14:48
- +0100
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-To:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: [PATCH v2] dt-bindings: mailbox: convert stm32-ipcc to json-schema
-Date:   Mon, 18 Nov 2019 11:14:20 +0100
-Message-ID: <20191118101420.23610-1-arnaud.pouliquen@st.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 18 Nov 2019 05:15:15 -0500
+Received: by mail-oi1-f195.google.com with SMTP id m193so14813903oig.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 02:15:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=tONkO/6YMzJOt8aiznrydIU/ZcI9lGyQc6MwqJrMzxc=;
+        b=YcPvVBOvikiGOQURsy9tI3jr/nkJ869/omy6aXRoCfnhCoMhPn1o8P+291G+XehKQC
+         pDT7IIGNNdmSTEY6mWazFlfvPEEYSmz2PPi1MExhAnSc3STM5ZoDPMmBQVIF8uF5aeTI
+         ADwKSbTbdJtTompjsvItCN3/lt5ncz1C2+T6eoHHVpNdzMbAfdhBtIP2QAepmmnmCIir
+         aPtIKn7UfyMs/bvbobz4s3Lq9H+SHTaVm8xvcwCq/EeuNOIEzqvDjjRlp1ntppj2hKZc
+         JuSODOmPJXDJWpH0sgc6nbbbZom7LSHs4d+P27+53culoDX27541mNNoCkKhVNTcbVey
+         WlMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tONkO/6YMzJOt8aiznrydIU/ZcI9lGyQc6MwqJrMzxc=;
+        b=nW3Y0kspmw9YHRrXZmrRD7SOnU7rq5dGflmn3QDiDU6Chg9q9xHaK94X2GgUdYRZ4A
+         DKxvpCcGrGG9ejInMAVorZkmVte6C79ElyjT9g4UjBwKvKE42myk1CLV83by0/9QWjg5
+         51D5WAILhNARXly9iOr+fi/dgjqtIo/FGrZedAxs7ux79XUZA2tbhVghpWGiaHiIbm+e
+         b4JQi1rGMW/lpuUyG0GFCD3XPSkzLiz2A/FXrLD2AZICC802vysVLrdOija2e0U9Bc+m
+         Ij+ka4kxLaV6AH3Tk6MMYIGTOiWf+ecEVTBUlUnvkYBDP4KRYH/MYR98+iTPWRSIZIsP
+         S1hA==
+X-Gm-Message-State: APjAAAX7fJg4eOO2TcNFS38mmuwwb//jbVBWBmvrTJq3NtbCmfndV9Lz
+        bJE1PnxacdoW2054brRoTL2cC6vdx3/3NrfgFYcQ4Q==
+X-Google-Smtp-Source: APXvYqziykcLRuw/aYXL+prNr+7LzJN2LtOQs3Yll15tPMmVUWaMlygbY4DBkRQRMCACl8yhuYbwinIWhF2JPDRTjZQ=
+X-Received: by 2002:aca:d904:: with SMTP id q4mr19738694oig.21.1574072112940;
+ Mon, 18 Nov 2019 02:15:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-18_01:2019-11-15,2019-11-17 signatures=0
+References: <1573560684-48104-1-git-send-email-yash.shah@sifive.com>
+ <1573560684-48104-4-git-send-email-yash.shah@sifive.com> <CAMpxmJWcuV7goPWxOWv_Og9GwzGrioF62SfS1LCiHf9eDX=vdw@mail.gmail.com>
+ <CH2PR13MB33680443C101511E66ECADF08C4D0@CH2PR13MB3368.namprd13.prod.outlook.com>
+In-Reply-To: <CH2PR13MB33680443C101511E66ECADF08C4D0@CH2PR13MB3368.namprd13.prod.outlook.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 18 Nov 2019 11:15:01 +0100
+Message-ID: <CAMpxmJU+P=nWe9fpp45Jw=GwX3+V0sVVshRcE7AD1Kyz_F0qJQ@mail.gmail.com>
+Subject: Re: [PATCH 3/4] gpio: sifive: Add GPIO driver for SiFive SoCs
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the STM32 IPCC bindings to DT schema format using
-json-schema
+pon., 18 lis 2019 o 11:03 Yash Shah <yash.shah@sifive.com> napisa=C5=82(a):
+>
+> > -----Original Message-----
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > Sent: 13 November 2019 18:41
+> > To: Yash Shah <yash.shah@sifive.com>
+> > Cc: linus.walleij@linaro.org; robh+dt@kernel.org; mark.rutland@arm.com;
+> > palmer@dabbelt.com; Paul Walmsley ( Sifive) <paul.walmsley@sifive.com>;
+> > aou@eecs.berkeley.edu; tglx@linutronix.de; jason@lakedaemon.net;
+> > maz@kernel.org; bmeng.cn@gmail.com; atish.patra@wdc.com; Sagar Kadam
+> > <sagar.kadam@sifive.com>; linux-gpio@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-riscv@lists.infradead.org; linux-
+> > kernel@vger.kernel.org; Sachin Ghadi <sachin.ghadi@sifive.com>
+> > Subject: Re: [PATCH 3/4] gpio: sifive: Add GPIO driver for SiFive SoCs
+> >
+> > wt., 12 lis 2019 o 13:12 Yash Shah <yash.shah@sifive.com> napisa=C5=82(=
+a):
+> > >
+> > > Adds the GPIO driver for SiFive RISC-V SoCs.
+> > >
+> > > Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+> > > [Atish: Various fixes and code cleanup]
+> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+>
+> [...]
+>
+> > > +
+> > > +static int sifive_gpio_probe(struct platform_device *pdev) {
+> > > +       struct device *dev =3D &pdev->dev;
+> > > +       struct device_node *node =3D pdev->dev.of_node;
+> > > +       struct device_node *irq_parent;
+> > > +       struct irq_domain *parent;
+> > > +       struct gpio_irq_chip *girq;
+> > > +       struct sifive_gpio *chip;
+> > > +       struct resource *res;
+> > > +       int ret, ngpio;
+> > > +
+> > > +       chip =3D devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
+> > > +       if (!chip)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > > +       chip->base =3D devm_ioremap_resource(dev, res);
+> >
+> > Use devm_platform_ioremap_resource() and drop the res variable.
+> >
+>
+> Sure, will do that.
+>
+> > > +       if (IS_ERR(chip->base)) {
+> > > +               dev_err(dev, "failed to allocate device memory\n");
+> > > +               return PTR_ERR(chip->base);
+> > > +       }
+> > > +
+> > > +       chip->regs =3D devm_regmap_init_mmio(dev, chip->base,
+> > > +
+> > > + &sifive_gpio_regmap_config);
+> >
+> > Why do you need this regmap here? You initialize a new regmap, then use
+> > your own locking despite not having disabled the internal locking in re=
+gmap,
+> > and then you initialize the mmio generic GPIO code which will use yet
+> > another lock to operate on the same registers and in the end you write =
+to
+> > those registers without taking any lock anyway.
+> > Doesn't make much sense to me.
+> >
+>
+> As suggested in the comments received on the RFC version of this patch[0]=
+, I am trying to use regmap MMIO by looking at gpio-mvebu.c. I got your poi=
+nt regarding the usage of own locks is not making any sense.
+> Here is what I will do in v2:
+> 1. drop the usage of own locks
+> 2. consistently use regmap_* apis for register access (replace all iowrit=
+es).
+> Does this make sense now?
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
----
- .../bindings/mailbox/st,stm32-ipcc.yaml       | 91 +++++++++++++++++++
- .../bindings/mailbox/stm32-ipcc.txt           | 47 ----------
- 2 files changed, 91 insertions(+), 47 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mailbox/st,stm32-ipcc.yaml
- delete mode 100644 Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
+The thing is: the gpio-mmio code you're (correctly) reusing uses a
+different lock - namely: bgpio_lock in struct gpio_chip. If you want
+to use regmap for register operations, then you need to set
+disable_locking in regmap_config to true and then take this lock
+manually on every access.
 
-diff --git a/Documentation/devicetree/bindings/mailbox/st,stm32-ipcc.yaml b/Documentation/devicetree/bindings/mailbox/st,stm32-ipcc.yaml
-new file mode 100644
-index 000000000000..90157d4deac1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/st,stm32-ipcc.yaml
-@@ -0,0 +1,91 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/mailbox/st,stm32-ipcc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: STMicroelectronics STM32 IPC controller bindings
-+
-+description:
-+  The IPCC block provides a non blocking signaling mechanism to post and
-+  retrieve messages in an atomic way between two processors.
-+  It provides the signaling for N bidirectionnal channels. The number of
-+  channels (N) can be read from a dedicated register.
-+
-+maintainers:
-+  - Fabien Dessenne <fabien.dessenne@st.com>
-+  - Arnaud Pouliquen <arnaud.pouliquen@st.com>
-+
-+properties:
-+  compatible:
-+    const: st,stm32mp1-ipcc
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+     maxItems: 1
-+
-+  interrupts:
-+    items:
-+      - description: rx channel occupied
-+      - description: tx channel free
-+      - description: wakeup source
-+    minItems: 2
-+    maxItems: 3
-+
-+  interrupt-names:
-+    items:
-+      enums: [ rx, tx, wakeup ]
-+    minItems: 2
-+    maxItems: 3
-+
-+  wakeup-source:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      Enables wake up of host system on wakeup IRQ assertion.
-+
-+  "#mbox-cells":
-+    const: 1
-+
-+  st,proc-id:
-+    description: Processor id using the mailbox (0 or 1)
-+    allOf:
-+      - minimum: 0
-+      - maximum: 1
-+      - default: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - st,proc-id
-+  - clocks
-+  - interrupt-names
-+  - "#mbox-cells"
-+
-+oneOf:
-+  - required:
-+      - interrupts
-+  - required:
-+      - interrupts-extended
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    ipcc: mailbox@4c001000 {
-+      compatible = "st,stm32mp1-ipcc";
-+      #mbox-cells = <1>;
-+      reg = <0x4c001000 0x400>;
-+      st,proc-id = <0>;
-+      interrupts-extended = <&intc GIC_SPI 100 IRQ_TYPE_NONE>,
-+      		      <&intc GIC_SPI 101 IRQ_TYPE_NONE>,
-+      		      <&aiec 62 1>;
-+      interrupt-names = "rx", "tx", "wakeup";
-+      clocks = <&rcc_clk IPCC>;
-+      wakeup-source;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt b/Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
-deleted file mode 100644
-index 1d2b7fee7b85..000000000000
---- a/Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
-+++ /dev/null
-@@ -1,47 +0,0 @@
--* STMicroelectronics STM32 IPCC (Inter-Processor Communication Controller)
--
--The IPCC block provides a non blocking signaling mechanism to post and
--retrieve messages in an atomic way between two processors.
--It provides the signaling for N bidirectionnal channels. The number of channels
--(N) can be read from a dedicated register.
--
--Required properties:
--- compatible:   Must be "st,stm32mp1-ipcc"
--- reg:          Register address range (base address and length)
--- st,proc-id:   Processor id using the mailbox (0 or 1)
--- clocks:       Input clock
--- interrupt-names: List of names for the interrupts described by the interrupt
--                   property. Must contain the following entries:
--                   - "rx"
--                   - "tx"
--                   - "wakeup"
--- interrupts:   Interrupt specifiers for "rx channel occupied", "tx channel
--                free" and "system wakeup".
--- #mbox-cells:  Number of cells required for the mailbox specifier. Must be 1.
--                The data contained in the mbox specifier of the "mboxes"
--                property in the client node is the mailbox channel index.
--
--Optional properties:
--- wakeup-source: Flag to indicate whether this device can wake up the system
--
--
--
--Example:
--	ipcc: mailbox@4c001000 {
--		compatible = "st,stm32mp1-ipcc";
--		#mbox-cells = <1>;
--		reg = <0x4c001000 0x400>;
--		st,proc-id = <0>;
--		interrupts-extended = <&intc GIC_SPI 100 IRQ_TYPE_NONE>,
--				      <&intc GIC_SPI 101 IRQ_TYPE_NONE>,
--				      <&aiec 62 1>;
--		interrupt-names = "rx", "tx", "wakeup";
--		clocks = <&rcc_clk IPCC>;
--		wakeup-source;
--	}
--
--Client:
--	mbox_test {
--		...
--		mboxes = <&ipcc 0>, <&ipcc 1>;
--	};
--- 
-2.17.1
+Bart
 
+>
+> > > +       if (IS_ERR(chip->regs))
+> > > +               return PTR_ERR(chip->regs);
+> > > +
+>
+> [...]
+>
+> > > +
+> > > +       ret =3D gpiochip_add_data(&chip->gc, chip);
+> > > +       if (ret)
+> > > +               return ret;
+> > > +
+> > > +       platform_set_drvdata(pdev, chip);
+> > > +       dev_info(dev, "SiFive GPIO chip registered %d GPIOs\n",
+> > > + ngpio);
+> >
+> > Core gpio library emits a very similar debug message from
+> > gpiochip_setup_dev(), I think you can drop it and directly return
+> > gpiochip_add_data().
+> >
+> > Bartosz
+>
+> Ok. Will directly return gpiochip_add_data().
+> Thanks for your comments!
+>
+> - Yash
+>
+> [0] https://lore.kernel.org/linux-riscv/20181010123519.RVexDppaPFpIWl7QU_=
+hpP8tc5qqWPJgeuLYn0FaGbeQ@z/
