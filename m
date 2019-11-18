@@ -2,123 +2,145 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E91CAC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86792C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1A712084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59F312084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:26:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Hs2bBVyJ"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Yk7p/G71"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfKRLZx (ORCPT
+        id S1726951AbfKRLZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:25:53 -0500
-Received: from ozlabs.org ([203.11.71.1]:36073 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727173AbfKRLYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:24:01 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Gmmt4X8kz9sPW;
-        Mon, 18 Nov 2019 22:23:58 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1574076238;
-        bh=+m0WYc56ma1T5C9ucaT2dZi4UQCzolMchE10o+XuaYk=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=Hs2bBVyJgfMxyMAV2SGToHqrhgDVtlT7I4RfuZjOnYe9uUiPK/mLztGRh9ou2tej+
-         dtfbsXfdcq7bLlalr27d8RprN2aMfVMZ4mLGzOSCOQDN2iGSKIVOsHWge/g69SbWK5
-         b3/Zmlyn7FujzA4PETqB84UxRAjOAM2Q6lDkFynQmhNcI0cz0fSTGfdWVrGaJBEm/o
-         IL2YulcasqRQ9FpURjV0wwbbIhIJv+jIhWBbe7V3kFepAbUFdAU9NOXpN4hSuaFAVU
-         fqV8HeJcFr2q9rcyWMUUEfds5pDrWEKthzy5yVH/xu6XUKOs5rEtgzdjDFiAOGLXFK
-         V36mhOe18CK6A==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v4 2/2] powerpc/kexec: move kexec files into a dedicated subdir.
-In-Reply-To: <afbef97ec6a978574a5cf91a4441000e0a9da42a.1572351221.git.christophe.leroy@c-s.fr>
-References: <e235973a1198195763afd3b6baffa548a83f4611.1572351221.git.christophe.leroy@c-s.fr> <afbef97ec6a978574a5cf91a4441000e0a9da42a.1572351221.git.christophe.leroy@c-s.fr>
-Date:   Mon, 18 Nov 2019 22:23:56 +1100
-Message-ID: <87pnhpctrn.fsf@mpe.ellerman.id.au>
+        Mon, 18 Nov 2019 06:25:59 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42716 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727152AbfKRLX7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 06:23:59 -0500
+Received: by mail-wr1-f67.google.com with SMTP id a15so18981099wrf.9
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 03:23:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=vCPu9Gq+U2RPRhQiWL2MkNy7+uq9EAlYdyc3guVWBBY=;
+        b=Yk7p/G71NJ4xYDxkVfbpJ1+UrVSfYV+gyTCQfmi46U9LouNYDNp+cxJmMwhPBuXOUh
+         zx3WOhz2CX4UJ3rdW9cXaDfJ5a8dpQfRnvTiQIDU/v9xJjXIeGSa28iLidu8W1G/bdi0
+         J/Klx8ZYp7nbuJnGizHDFsLErPLTgtpoRRlfo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=vCPu9Gq+U2RPRhQiWL2MkNy7+uq9EAlYdyc3guVWBBY=;
+        b=hqpgVcIzaB/5maQdgEPqFG1OEfNhGqk8SgZ609ffT4Bby8NcAc/4u8f/Cn/iNdLxZy
+         ryGp9fd6C/9TAmZ4qyz4zpO9zGKNuTTz0CphnC61LHdCcBPZ1ScA79HuC3tblkOrz2QA
+         heKHVfbL3u0PNgujbVS8YsJjYtTMdnSqg+sY3xUcA4ubjZv71fnQkwYDlfEdmZCEML3N
+         Q5e4256jdYS74SWH3cpyZLu9eLEBLc8NilVtl0SkpWXjaWa/8EItl+lXUKudtclY50Th
+         ocV+ZISAfVVndifpNlbUCrLrUQsryvIFUck+gNlGW0upPbCaN0IXcFWtUhmRLgkOqM92
+         h6wA==
+X-Gm-Message-State: APjAAAVu6aWk3Iv1mE+SsUJDrcR9E654ZVA5q4PU2QGcEyfjXswXNQwi
+        yAdN1Fp/vKuSUWtg59svoL9rBg==
+X-Google-Smtp-Source: APXvYqyZQpRRB/MFghGLS7bJn/RObD/k7dDdrG7vxDwjNjB8Ot+1GZEzgAMa9xVYMp80+4l7TXQLQQ==
+X-Received: by 2002:adf:e5c5:: with SMTP id a5mr14806776wrn.103.1574076236602;
+        Mon, 18 Nov 2019 03:23:56 -0800 (PST)
+Received: from prevas-ravi.prevas.se (ip-5-186-115-54.cgn.fibianet.dk. [5.186.115.54])
+        by smtp.gmail.com with ESMTPSA id y2sm21140815wmy.2.2019.11.18.03.23.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 03:23:56 -0800 (PST)
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Scott Wood <oss@buserror.net>, Timur Tabi <timur@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: [PATCH v5 20/48] soc: fsl: qe: simplify qe_ic_init()
+Date:   Mon, 18 Nov 2019 12:22:56 +0100
+Message-Id: <20191118112324.22725-21-linux@rasmusvillemoes.dk>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191118112324.22725-1-linux@rasmusvillemoes.dk>
+References: <20191118112324.22725-1-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> arch/powerpc/kernel/ contains 8 files dedicated to kexec.
->
-> Move them into a dedicated subdirectory.
->
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->
-> ---
-> v2: moved crash.c as well as it's part of kexec suite.
-> v3: renamed files to remove 'kexec' keyword from names.
-> v4: removed a ifdef in kexec/Makefile
-> ---
->  arch/powerpc/kernel/Makefile                       | 19 +---------------
->  arch/powerpc/kernel/kexec/Makefile                 | 25 ++++++++++++++++++++++
->  arch/powerpc/kernel/{ => kexec}/crash.c            |  0
->  .../kernel/{kexec_elf_64.c => kexec/elf_64.c}      |  0
->  arch/powerpc/kernel/{ima_kexec.c => kexec/ima.c}   |  0
->  .../kernel/{machine_kexec.c => kexec/machine.c}    |  0
->  .../{machine_kexec_32.c => kexec/machine_32.c}     |  0
->  .../{machine_kexec_64.c => kexec/machine_64.c}     |  0
->  .../machine_file_64.c}                             |  0
->  .../{kexec_relocate_32.S => kexec/relocate_32.S}   |  2 +-
->  10 files changed, 27 insertions(+), 19 deletions(-)
->  create mode 100644 arch/powerpc/kernel/kexec/Makefile
->  rename arch/powerpc/kernel/{ => kexec}/crash.c (100%)
->  rename arch/powerpc/kernel/{kexec_elf_64.c => kexec/elf_64.c} (100%)
->  rename arch/powerpc/kernel/{ima_kexec.c => kexec/ima.c} (100%)
->  rename arch/powerpc/kernel/{machine_kexec.c => kexec/machine.c} (100%)
->  rename arch/powerpc/kernel/{machine_kexec_32.c => kexec/machine_32.c} (100%)
->  rename arch/powerpc/kernel/{machine_kexec_64.c => kexec/machine_64.c} (100%)
->  rename arch/powerpc/kernel/{machine_kexec_file_64.c => kexec/machine_file_64.c} (100%)
->  rename arch/powerpc/kernel/{kexec_relocate_32.S => kexec/relocate_32.S} (99%)
+qe_ic_init() takes a flags parameter, but all callers (including the
+sole remaining one) have always passed 0. So remove that parameter and
+simplify the body accordingly. We still explicitly initialize the
+Interrupt Configuration Register (CICR) to its reset value of
+all-zeroes, just in case the bootloader has played funny games.
 
-I'm inclined to move the directory out of kernel, ie. up a level with mm
-and so on.
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+---
+ drivers/soc/fsl/qe/qe_ic.c | 27 ++++-----------------------
+ 1 file changed, 4 insertions(+), 23 deletions(-)
 
-And I also don't think the "machine" naming is useful anymore. It comes
-from the naming of the arch functions, eg. machine_kexec(), which was
-named to be analogous to machine_restart().
+diff --git a/drivers/soc/fsl/qe/qe_ic.c b/drivers/soc/fsl/qe/qe_ic.c
+index 23b457e884d8..4832884da5bb 100644
+--- a/drivers/soc/fsl/qe/qe_ic.c
++++ b/drivers/soc/fsl/qe/qe_ic.c
+@@ -356,13 +356,13 @@ static void qe_ic_cascade_muxed_mpic(struct irq_desc *desc)
+ 	chip->irq_eoi(&desc->irq_data);
+ }
+ 
+-static void __init qe_ic_init(struct device_node *node, unsigned int flags)
++static void __init qe_ic_init(struct device_node *node)
+ {
+ 	void (*low_handler)(struct irq_desc *desc);
+ 	void (*high_handler)(struct irq_desc *desc);
+ 	struct qe_ic *qe_ic;
+ 	struct resource res;
+-	u32 temp = 0, ret;
++	u32 ret;
+ 
+ 	ret = of_address_to_resource(node, 0, &res);
+ 	if (ret)
+@@ -399,26 +399,7 @@ static void __init qe_ic_init(struct device_node *node, unsigned int flags)
+ 		high_handler = NULL;
+ 	}
+ 
+-	/* default priority scheme is grouped. If spread mode is    */
+-	/* required, configure cicr accordingly.                    */
+-	if (flags & QE_IC_SPREADMODE_GRP_W)
+-		temp |= CICR_GWCC;
+-	if (flags & QE_IC_SPREADMODE_GRP_X)
+-		temp |= CICR_GXCC;
+-	if (flags & QE_IC_SPREADMODE_GRP_Y)
+-		temp |= CICR_GYCC;
+-	if (flags & QE_IC_SPREADMODE_GRP_Z)
+-		temp |= CICR_GZCC;
+-	if (flags & QE_IC_SPREADMODE_GRP_RISCA)
+-		temp |= CICR_GRTA;
+-	if (flags & QE_IC_SPREADMODE_GRP_RISCB)
+-		temp |= CICR_GRTB;
+-
+-	/* choose destination signal for highest priority interrupt */
+-	if (flags & QE_IC_HIGH_SIGNAL)
+-		temp |= (SIGNAL_HIGH << CICR_HPIT_SHIFT);
+-
+-	qe_ic_write(qe_ic->regs, QEIC_CICR, temp);
++	qe_ic_write(qe_ic->regs, QEIC_CICR, 0);
+ 
+ 	irq_set_handler_data(qe_ic->virq_low, qe_ic);
+ 	irq_set_chained_handler(qe_ic->virq_low, low_handler);
+@@ -439,7 +420,7 @@ static int __init qe_ic_of_init(void)
+ 		if (!np)
+ 			return -ENODEV;
+ 	}
+-	qe_ic_init(np, 0);
++	qe_ic_init(np);
+ 	of_node_put(np);
+ 	return 0;
+ }
+-- 
+2.23.0
 
-So how about:
-
-  arch/powerpc/{kernel/machine_kexec.c => kexec/core.c}
-  arch/powerpc/{kernel/machine_kexec_32.c => kexec/core_32.c}
-  arch/powerpc/{kernel/machine_kexec_64.c => kexec/core_64.c}
-  arch/powerpc/{kernel => kexec}/crash.c
-  arch/powerpc/{kernel/kexec_elf_64.c => kexec/elf_64.c}
-  arch/powerpc/{kernel/machine_kexec_file_64.c => kexec/file_load.c}
-  arch/powerpc/{kernel/ima_kexec.c => kexec/ima.c}
-  arch/powerpc/{kernel/kexec_relocate_32.S => kexec/relocate_32.S}
-
-And we end up with:
-
-  $ find arch/powerpc/kexec
-  arch/powerpc/kexec/
-  arch/powerpc/kexec/file_load.c
-  arch/powerpc/kexec/relocate_32.S
-  arch/powerpc/kexec/core_64.c
-  arch/powerpc/kexec/ima.c
-  arch/powerpc/kexec/core.c
-  arch/powerpc/kexec/core_32.c
-  arch/powerpc/kexec/Makefile
-  arch/powerpc/kexec/crash.c
-  arch/powerpc/kexec/elf_64.c
-
-
-cheers
