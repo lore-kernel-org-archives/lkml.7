@@ -2,120 +2,146 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FDEC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA92C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28852206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:37:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HCSLdVCH"
+	by mail.kernel.org (Postfix) with ESMTP id 8EF65206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:38:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbfKRIhz (ORCPT
+        id S1726869AbfKRIiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 03:37:55 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:32864 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbfKRIhy (ORCPT
+        Mon, 18 Nov 2019 03:38:17 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:32899 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726511AbfKRIiR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 03:37:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=7gdu4QtSwTVYGFr0DEQzTVwl9le/XW1hhgMrsqBvhbI=; b=HCSLdVCHt8vRSSMe6c7sRBRxI
-        wZ2rRjE0dW9TiqXvPq+imrBnPnOdD1mGS1Hkh7LWnnwtRS1JU8sqqwTkHx4wRKNFDlk/gBGGfWAIj
-        OXGMBmNZlOigeaIRFDTRIhAwIxnIb4GbKu+phKRrL2dVfV8/7jaJbDWgZKCHCFz4D3UMlNI+1+AlY
-        rizC2nn24w6YNL+LJznkq5AJte+u63qjfFotokN13MWsARWeAz7vNH1JbbKJEQvv3BP8/fnmowZ5x
-        kGvgJIBlnwALxct1pHe6Bbc79Djj0vws0ulBJRiwujGJPPDXq2XDkDZVolVEo5+D0eXYLX9dKHx2D
-        G/j5iig4g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iWcXQ-0006F3-RK; Mon, 18 Nov 2019 08:37:37 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 81BD13011FE;
-        Mon, 18 Nov 2019 09:36:24 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A5B0F2B133323; Mon, 18 Nov 2019 09:37:33 +0100 (CET)
-Date:   Mon, 18 Nov 2019 09:37:33 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Qian Cai <cai@lca.pw>, Joe Lawrence <joe.lawrence@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Gary Hook <Gary.Hook@amd.com>, Arnd Bergmann <arnd@arndb.de>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v3 08/10] perf: cache perf_event_groups_first for cgroups
-Message-ID: <20191118083733.GT4131@hirez.programming.kicks-ass.net>
-References: <20191114003042.85252-1-irogers@google.com>
- <20191114003042.85252-9-irogers@google.com>
- <20191114102544.GS4131@hirez.programming.kicks-ass.net>
- <CAP-5=fUpwG833vooezqyYpKQdJ1k-RN=2E0fPHG3832h9qECLQ@mail.gmail.com>
+        Mon, 18 Nov 2019 03:38:17 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iWcY0-0003Ko-Ui; Mon, 18 Nov 2019 09:38:12 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iWcXz-0000uQ-3O; Mon, 18 Nov 2019 09:38:11 +0100
+Date:   Mon, 18 Nov 2019 09:38:10 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-iio@vger.kernel.org,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v3 1/3] i2c: use void pointers for supplying data for
+ reads and writes
+Message-ID: <20191118083810.467iry6w4kt3s7kd@pengutronix.de>
+References: <20191112203132.163306-1-dmitry.torokhov@gmail.com>
+ <20191112203132.163306-2-dmitry.torokhov@gmail.com>
+ <20191118074349.ags3c4tmvapguqcp@pengutronix.de>
+ <20191118080446.GB251795@dtor-ws>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fUpwG833vooezqyYpKQdJ1k-RN=2E0fPHG3832h9qECLQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191118080446.GB251795@dtor-ws>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 05:20:52PM -0800, Ian Rogers wrote:
-> On Thu, Nov 14, 2019 at 2:25 AM Peter Zijlstra <peterz@infradead.org> wrote:
+[Fixing the address of the linux-iio list]
 
-> > > @@ -1706,18 +1738,10 @@ perf_event_groups_first(struct perf_event_groups *groups, int cpu,
-> > >                       continue;
-> > >               }
-> > >  #ifdef CONFIG_CGROUP_PERF
-> > > -             node_cgrp_id = 0;
-> > > -             if (node_event->cgrp && node_event->cgrp->css.cgroup)
-> > > -                     node_cgrp_id = node_event->cgrp->css.cgroup->id;
-> > > -
-> > > -             if (cgrp_id < node_cgrp_id) {
-> > > +             if (node_event->cgrp) {
-> > >                       node = node->rb_left;
-> > >                       continue;
-> > >               }
-> > > -             if (cgrp_id > node_cgrp_id) {
-> > > -                     node = node->rb_right;
-> > > -                     continue;
-> > > -             }
-> > >  #endif
-> > >               match = node_event;
-> > >               node = node->rb_left;
-> >
-> > Also, just leave that in and let callers have: .cgrp = NULL. Then you
-> > can forgo that monstrous name.
+Hello Dmitry,
+
+On Mon, Nov 18, 2019 at 12:04:46AM -0800, Dmitry Torokhov wrote:
+> On Mon, Nov 18, 2019 at 08:43:49AM +0100, Uwe Kleine-König wrote:
+> > On Tue, Nov 12, 2019 at 12:31:30PM -0800, Dmitry Torokhov wrote:
+> > > There is no need to force users of i2c_master_send()/i2c_master_recv()
+> > > and other i2c read/write bulk data API to cast everything into u8 pointers.
+> > > While everything can be considered byte stream, the drivers are usually
+> > > work with more structured data.
+> > > 
+> > > Let's switch the APIs to accept [const] void pointers to cut amount of
+> > > casting needed.
+> > > 
+> > > Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > 
+> > Can you give an example where you save some casts? Given that i2c is a
+> > byte oriented protocol (as opposed to for example spi) I think it's a
+> > good idea to expose this in the API.
 > 
-> Done. It is a shame that there is some extra logic for the task/no-cgroup case.
+> I see this at least:
+> 
+> dtor@dtor-ws:~/kernel/work $ git grep "i2c_master.*(u8 \*)"
+> drivers/crypto/atmel-i2c.c:     ret = i2c_master_send(client, (u8 *)cmd, cmd->count + WORD_ADDR_SIZE);
+> drivers/iio/common/ms_sensors/ms_sensors_i2c.c:         ret = i2c_master_recv(client, (u8 *)&buf, 3);
+> drivers/iio/humidity/hdc100x.c: ret = i2c_master_recv(client, (u8 *)buf, 4);
 
-Yes, OTOH the primitive is consistent and more generic and possibly the
-compiler will notice and fix it for us, it is a static function after
-all, so it can be more agressive.
+I think this one has an endianness bug.
+
+> drivers/iio/pressure/abp060mg.c:        ret = i2c_master_send(client, (u8 *)&buf, state->mreq_len);
+
+From a quick look: mreq_len might be 1 in some cases and buf is declared
+as __be16[2]. Hmm.
+
+> drivers/iio/pressure/abp060mg.c:        ret = i2c_master_recv(client, (u8 *)&buf, sizeof(buf));
+> drivers/input/misc/ad714x-i2c.c:        error = i2c_master_send(client, (u8 *)chip->xfer_buf,
+> drivers/input/misc/ad714x-i2c.c:        error = i2c_master_send(client, (u8 *)chip->xfer_buf,
+> drivers/input/misc/ad714x-i2c.c:                error = i2c_master_recv(client, (u8 *)chip->xfer_buf,
+> drivers/input/touchscreen/sx8654.c:     len = i2c_master_recv(ts->client, (u8 *)data, readlen);
+> drivers/nfc/nfcmrvl/i2c.c:      ret = i2c_master_recv(drv_data->i2c, (u8 *)&nci_hdr, NCI_CTRL_HDR_SIZE);
+> drivers/nfc/nxp-nci/i2c.c:      r = i2c_master_recv(client, (u8 *) &header, NXP_NCI_FW_HDR_LEN);
+> drivers/nfc/nxp-nci/i2c.c:      r = i2c_master_recv(client, (u8 *) &header, NCI_CTRL_HDR_SIZE);
+> drivers/video/fbdev/ssd1307fb.c:        ret = i2c_master_send(client, (u8 *)array, len);
+> 
+> I am pretty sure there are more that my quick grep did not catch.
+> 
+> And I agree that I2C itself is a byte-oriented protocol, but the data from the
+> point of the driver (once transfer is done) is often more structured.
+
+I think it is fine to require from a caller that they are aware that a
+byte (or byte array) must be passed to i2c functions. Given the (maybe)
+two problems I pointed out above making it a bit harder to pass non-byte
+data to these functions doesn't sound like a bad idea to me.
+
+Obviously your mileage varies, but I personally like having an explicit
+type in the API. I guess we have to agree to not agree and let Wolfram
+decide if he likes your change or not.
+
+> > > diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
+> > > index 5c2cc61b666e7..48ed76a0e83d4 100644
+> > > --- a/drivers/iio/adc/max1363.c
+> > > +++ b/drivers/iio/adc/max1363.c
+> > 
+> > This change isn't motivated in the commit log. Is this here by mistake?
+> 
+> No, it is needed as signature of i2c_master_send/recv has changed.
+
+Ah, I see, there is
+
+	st->send = i2c_master_send;
+
+in the code. I think this is worth mentioning in the commit log that it
+changes to this file don't look like a mistake as I wondered.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
