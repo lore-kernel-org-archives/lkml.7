@@ -2,113 +2,114 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BAAC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96768C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3BA218AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B0E921934
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:08:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DMdl7W9u"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d2EJBd/U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbfKRREV (ORCPT
+        id S1726975AbfKRRI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 12:04:21 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:34490 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbfKRRET (ORCPT
+        Mon, 18 Nov 2019 12:08:27 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30441 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726887AbfKRRI0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 12:04:19 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAIGwxS9155920;
-        Mon, 18 Nov 2019 17:03:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=PTkoEEtcL3+nuIHWxsynGo3Qi7g5cwPRqx/QuAOHMmw=;
- b=DMdl7W9uC9bqWZ/epKz37dhIwooSf9lLNXdhJnsKb/u+bJ7zO6dXZIL52syfwpqlbGRK
- ImsbX6fBSuEV3IUFbeWi2UVJrS9wCncOBAGYJ/6QqiG5fJ2bHK7zxTCOyA98Io55YSc4
- dHDW1KVf9FtvbhqYNVhUOBkrl6Fd21SIlPP/N0AK1wXi2pDVQHRqJ8zH4NwpLKMP08qd
- ly6yLKUrtxVG/16AcSiVOQ3mrq5DzBH7OAI6I8A3sqR3t7AY9w3YRIKkAzXkhdicBtXb
- 1zRajWFLm/OIaO8zGwZ4lg9xcv1V3w3FwImA6X+SfjEV7OcKf6OaknOVSh1eh/GUphdE XA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2wa8hthmst-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 Nov 2019 17:03:48 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAIGwbwK159204;
-        Mon, 18 Nov 2019 17:03:47 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2wbxm2tjtd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 Nov 2019 17:03:47 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAIH3ksF022683;
-        Mon, 18 Nov 2019 17:03:47 GMT
-Received: from pp-ThinkCentre-M82.us.oracle.com (/10.132.95.199)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 18 Nov 2019 09:03:46 -0800
-From:   Prakash Sangappa <prakash.sangappa@oracle.com>
-To:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Cc:     ebiederm@xmission.com, tglx@linutronix.de, peterz@infradead.org,
-        serge@hallyn.com, prakash.sangappa@oracle.com
-Subject: [RESEND RFC PATCH 1/1] Selectively allow CAP_SYS_NICE capability inside user namespaces
-Date:   Mon, 18 Nov 2019 09:01:18 -0800
-Message-Id: <1574096478-11520-2-git-send-email-prakash.sangappa@oracle.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1574096478-11520-1-git-send-email-prakash.sangappa@oracle.com>
-References: <1574096478-11520-1-git-send-email-prakash.sangappa@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=12 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911180149
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=4
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911180149
+        Mon, 18 Nov 2019 12:08:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574096905;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=VPhkdVuE4r8k1SoS9flKCm6UkmJ4VwiHYivf993T13I=;
+        b=d2EJBd/UmZj6wOpEFWH3cb/t2/8BHzd7W44zjfJc7BRpHErZD63kZHgZ8QbnwyeQHiPYQ2
+        yuy6t1W8CABNaMkURPAxJZH0dEegBlsFnT+ceHygE3Nq4Sbuct7WHDPYtn3KVf+bY4XwxZ
+        9kYCqS3Mn30IZXD+rbIjRrxJUnsLTrs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-293-MmOcKuRKMUm7pxyva_uVWQ-1; Mon, 18 Nov 2019 12:08:22 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BC85D477;
+        Mon, 18 Nov 2019 17:08:20 +0000 (UTC)
+Received: from jtoppins.rdu.csb (ovpn-121-82.rdu2.redhat.com [10.10.121.82])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5EC5F60307;
+        Mon, 18 Nov 2019 17:08:18 +0000 (UTC)
+From:   Jonathan Toppins <jtoppins@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     Ariel Elior <aelior@marvell.com>,
+        Sudarsana Kalluru <skalluru@marvell.com>,
+        GR-everest-linux-l2@marvell.com,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] bnx2x: initialize ethtool info->fw_version before use
+Date:   Mon, 18 Nov 2019 12:07:53 -0500
+Message-Id: <f40bcf8cd93677c12bca1f06e74385c9a5f49819.1574096873.git.jtoppins@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: MmOcKuRKMUm7pxyva_uVWQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow CAP_SYS_NICE to take effect for processes having effective uid of a
-root user from init namespace.
+If the info->fw_version has garbage in the buffer this can lead to a BUG()
+being generated in strlcat() due to the use of strlen(). Initialize the
+buffer before use.
 
-Signed-off-by: Prakash Sangappa <prakash.sangappa@oracle.com>
+The use of a systemtap script can demonstrate the problem by injecting
+garbage into fw_version:
+
+    [root@localhost ~]# cat net-info.stp
+    //
+    // compile and run with command
+    //# stap -g   net-info.stp
+    //
+    probe begin { printf("net-info  version 01.01\n")}
+
+    function memset(msg:long) %{
+    =09memset((char*)STAP_ARG_msg,-1,196);
+    %}
+
+    probe module("bnx2x").function("bnx2x_get_drvinfo")
+    {
+      printf("In function\n");
+      memset(register("rsi"));
+    }
+
+    [root@localhost ~]# stap -g net-info.stp &
+    net-info  version 01.01
+    [root@localhost ~]# ethtool -i eth1
+
+Signed-off-by: Jonathan Toppins <jtoppins@redhat.com>
 ---
- kernel/sched/core.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 7880f4f..628bd46 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4548,6 +4548,8 @@ int can_nice(const struct task_struct *p, const int nice)
- 	int nice_rlim = nice_to_rlimit(nice);
- 
- 	return (nice_rlim <= task_rlimit(p, RLIMIT_NICE) ||
-+		(ns_capable(__task_cred(p)->user_ns, CAP_SYS_NICE) &&
-+		uid_eq(current_euid(), GLOBAL_ROOT_UID)) ||
- 		capable(CAP_SYS_NICE));
- }
- 
-@@ -4784,7 +4786,9 @@ static int __sched_setscheduler(struct task_struct *p,
- 	/*
- 	 * Allow unprivileged RT tasks to decrease priority:
- 	 */
--	if (user && !capable(CAP_SYS_NICE)) {
-+	if (user && !(ns_capable(__task_cred(p)->user_ns, CAP_SYS_NICE) &&
-+		uid_eq(current_euid(), GLOBAL_ROOT_UID)) &&
-+		!capable(CAP_SYS_NICE)) {
- 		if (fair_policy(policy)) {
- 			if (attr->sched_nice < task_nice(p) &&
- 			    !can_nice(p, attr->sched_nice))
--- 
-2.7.4
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c b/drivers/=
+net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
+index 4a0ba6801c9e..49b906396dcf 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
+@@ -1111,6 +1111,8 @@ static void bnx2x_get_drvinfo(struct net_device *dev,
+ =09int ext_dev_info_offset;
+ =09u32 mbi;
+=20
++=09info->fw_version[0] =3D 0;
++
+ =09strlcpy(info->driver, DRV_MODULE_NAME, sizeof(info->driver));
+ =09strlcpy(info->version, DRV_MODULE_VERSION, sizeof(info->version));
+=20
+--=20
+2.16.4
 
