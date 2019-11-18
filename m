@@ -2,100 +2,140 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF43AC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45162C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8948820740
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A4D020727
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:22:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574068939;
+	bh=+akPYf9spR/HMOJyO5yxNO/6G4HQDTZv+wy3HF4h0r0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NciCCrzNEkR3ZZfQIT/Q0xZmm/2/UIkKKk5NzEMwfnc9h5fWkifCT4rmPihVoEZ1S
+	 JOLxZCWoC9KzPmNr4kwgCPXcnn+U+3VPwnp1OAnR7oVW33L3fdEGwKM8ZvDubQQP5I
+	 uAccLDzouuCIecmiuTXNBxODW0l9Sq1qAFBFJ+48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbfKRJWJ (ORCPT
+        id S1726765AbfKRJWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 04:22:09 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:42143 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfKRJWJ (ORCPT
+        Mon, 18 Nov 2019 04:22:18 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39829 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbfKRJWR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 04:22:09 -0500
-Received: from [192.168.1.155] ([77.2.21.1]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MA7Ss-1ih3Le0u1C-00BaBS; Mon, 18 Nov 2019 10:22:00 +0100
-Subject: Re: [RFC PATCH 0/5] leds: Add DT node finding and parsing to core
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        mazziesaccount@gmail.com
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-Message-ID: <ed000cda-3138-3172-1b4c-586b5bfd8d72@metux.net>
-Date:   Mon, 18 Nov 2019 10:21:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 18 Nov 2019 04:22:17 -0500
+Received: by mail-oi1-f194.google.com with SMTP id v138so14666050oif.6;
+        Mon, 18 Nov 2019 01:22:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vN0gbv6vMevkHM5ujao5cMfwNZPe4ICulhsutFl+h+s=;
+        b=uK67ZnoQIB5oF4aBmoDBRoo4U93stEHOE929uZVKdDQ0avOC9cW7bFhGbtwAk4rwuE
+         pFIXLI2Ty57D3mZeYhxbzBi/4l2IZCudPPMvjvZzj/E4kBNjsIU7z6/REBuSMTHWbUdZ
+         VpqElpuhUjc8+ru+U8uLlEBWbnLUPCZB+thVOBV8s93eRZyXUFYFY6UBKlsnvhQU0gqv
+         uPkrXCdOcqDHRXYqtcW0rWlgsn78qKL5TeRXAecYZAPE+9EzgM0w+i9M6SO7ad8MR/Dr
+         2bveCLyBe0cPxKfvs5WYHrSX/DwpqTxtm2bOQSr6OkFeLcaO7QpD+HmpKvMm3B3DqCYU
+         DjSA==
+X-Gm-Message-State: APjAAAVBsLsU/0qrYW3Ps7JWxRntVWRVxMryJ+xqN/JP0jvQFpHwNWtr
+        0I28FP5a6lxT6Y9/HeFfEpQC/FIZnfDOSz8wT7g=
+X-Google-Smtp-Source: APXvYqzVGw6LcmsntT7RikJ3h0TXYgHRO6zqFsV9A+cQJGlF79UeisbnyqCJEVHwmExdzjAxV/3jKUcRo15Sdmf7bQI=
+X-Received: by 2002:aca:1101:: with SMTP id 1mr20107108oir.103.1574068936447;
+ Mon, 18 Nov 2019 01:22:16 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:4denmKhNZWlkhU/6wZxpJ6tT4GPJm7SFEqAwphUjKJ4JwzSIJlT
- HH7hR7I1oNqe3Kuh6tBPs5tV66m86jUTpZKFHLHrS4BXAo1mI3q9RQJvMbdUEjT7kzFPyOR
- iT4WSCiX2wJ/uIRGfilYVKYB8Jj+mSVe5GmBQNgcTMn22HoIJea5t48F3lzUy4DjoGv7BoR
- 8S61Ly8Kws3WmyoneRCAA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4z9+rY3Md2A=:++y1JdnfZxcMCQZQ08DSMW
- YVe+7GI3l8e0AhK1IDEnizdgPeiPTpfNDkcnkkQFxG+olfpFXeWCLgFsOOIQFZYClsp63M4g4
- FnVWdmU+KFiQS7eDcRb0cthHxYrH0LEQO/jTcDNwXXr3mWnJKsJxst2l49AgWNAaTXjHrfQ6V
- rPEaMBu99h2CKtK0R/Oi8DODWZZCIGWi1Q5UteMA4GD1Tsw1RPkbdzYatXNO8kH6vwOLV0mnq
- 9hPi7zWh1fOfium8PjU+Lbsg2W+4PEgDtl21XkCZsTw63sUx7qZXX9DJkxg55BqhXJHaOrosX
- Zvjl4O3syOngg3ujsskc8kj+tvMK3wDmYdtYlVmdL1V0YeoH/N5+J4eBit5W8SuRHms3Nacwy
- DAHBeM8aIodjjPETVXjgSdfxsM/VIwg5zgjnwOyDM3+5bLcCI3bSddKNCw4oIqsyJ9JasRGS8
- xCnmesGTjoAp5j5zTgO5rRmP3QUpUjtI3dfBFgW4FeJmw2LK2CxUQtBjOsBjwHd+LwDXsECPB
- /uKrwK0gwIFB7QqQJgCINIghhSbXwinwmUNMXbbdobW0o0dwMKMdpmr557e88crO3CkgHsIOd
- 75527jQGgoKbnS7zNzxIYAlkAQUPYPWy3PUIUA9di3lmmmnyfq0k659D8e2Arfsz7K/H2inC0
- T2dvaw03JWqUhPKy/7+5GvY6VLb90DPeQj3m2ayn7bkwkFsJR+kd2lLCSmY0B9+qRbshgZH+q
- Jvl5X4icBwLSH43gtgRCCWhrH/sgyM9vicOB+PZJCDALE1HcfZLqqhyjhzTkhuS0F6K+nalSJ
- pis9bQLO+J/yb8PFunl16TTzJcsR877j0sw16pZuvGoXaNu1f/1b5Ljk5rLB05KwbGvqf1fFu
- xvGDspK9BypSQpSMtWuA==
+References: <2717750.dCEzHT3DVQ@kreacher> <CAJvTdKn9wuoXkKecZxCJHPZAG7XK_BqAZT5=7k9Mi4zo4SBL0g@mail.gmail.com>
+In-Reply-To: <CAJvTdKn9wuoXkKecZxCJHPZAG7XK_BqAZT5=7k9Mi4zo4SBL0g@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 18 Nov 2019 10:22:05 +0100
+Message-ID: <CAJZ5v0ifOQaOm-8n5gUgud0sCn-Y1KQWWhzhtzdm+exvMLgL7Q@mail.gmail.com>
+Subject: Re: [PATCH] cpuidle: Consolidate disabled state checks
+To:     Len Brown <lenb@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Doug Smythies <dsmythies@telus.net>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Nov 18, 2019 at 5:46 AM Len Brown <lenb@kernel.org> wrote:
+>
+> On Mon, Nov 4, 2019 at 6:16 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > There are two reasons why CPU idle states may be disabled: either
+> > because the driver has disabled them or because they have been
+> > disabled by user space via sysfs.
+> >
+> > In the former case, the state's "disabled" flag is set once during
+> > the initialization of the driver and it is never cleared later (it
+> > is read-only effectively).
+>
+> for x86 (intel_idle and acpi_idle), no states with disabled=1 are  registered
+> with cpuidle.  Instead, intel_idle (currently) skips them in the loop
+> that registers states.
+> (and acpi_idle never touches the disabled field)
+>
+> And so for x86, governors checking for drv->states[i].disabled is a NOP,
+> and the condition described by CPUIDLE_STATE_DISABLED_BY_DRIVER
+> does not (yet) exist.
 
+OK
 
-> The thing is that
-> this approach requires the LED controller binding to dictate allowed
-> LED node names - which may or may not be doable. I need your help to
-> evaluate this and suggest better options :)
+> Looking at the ARM code, it seems that cpuidle-imx6q.c and cpuidle-tegra20.c
+> reach into the cpuidle states at run time and toggle the
+> drv->states[i].disabled.
 
-even though I like the idea of convention-over-code, but if that's
-changing allowed LED names that would risk breaking things, eg:
+I might have overlooked that, let me check.
 
-a) existing DT's (in the field) become incompatible with newer
-   kernel versions
-b) existing userlands that rely on speicific LED names become
-   incomatible with newer kernel versions.
+> It seems that this patch takes the initial value of
+> drv->states->disabled, and sets the (per cpu)
+> usage.disable=..BY_DRIVER,
+> but that subsequent run-time toggles in drv->states[i]disabled by
+> these drivers would be missed,
+> because you're removed the run-time checking of drv->states->disabled?
 
+If it is updated at run time, then yes, the updates will be missed, so
+thanks for pointing that out.
 
+> Finally, I'd like to change intel_idle so that it *can* register a
+> state that is disabled, by default.
+> If I change the driver to NOT skip registering disabled states, and
+> the cpuidle copy has cpuidle_state.disabled=1,
+> then the state is indeed, unused at run-time.  But as you said,
+> it is effectively read-only, and is not indicated in sysfs, and can
+> not be changed via sysfs.
+>
+> One way to do this is to do what you do here and initialize
+> usage.disabled to drv->state.disabled. (not distinguishing between
+> DRIVER and USER)
+> That way the user could later over-ride what a driver set, by clearing
+> the disabled attribute.
+>
+> However, the ARM drivers, at least, seem to want to reserve the right
+> to set and clear the drv->state.disabled,
+> and to have them continue to have that right, we have to continue
+> checking that field at run-time.
 
---mtx
+Alternatively, the drivers in question can be changed to update the
+disable field in state_usage instead (maybe under a lock to prevent
+them from racing with user space).
 
--- 
-Dringender Hinweis: aufgrund existenzieller Bedrohung durch "Emotet"
-sollten Sie *niemals* MS-Office-Dokumente via E-Mail annehmen/öffenen,
-selbst wenn diese von vermeintlich vertrauenswürdigen Absendern zu
-stammen scheinen. Andernfalls droht Totalschaden.
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+> And giving drivers the opportunity to do that disabling driver-wide,
+> instead of per-cpu (usage) wide,
+> seems to be something we may want to keep.
+
+So it looks like you want me to revert this patch which is something
+that I really don't want to do, because of the extra checks all over
+the place which are simply pointless in the majority of cases.
+
+Cheers,
+Rafael
