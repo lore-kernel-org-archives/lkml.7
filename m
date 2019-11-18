@@ -2,123 +2,104 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC62C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B94C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCD5B2071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:48:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="esgT1nnD"
+	by mail.kernel.org (Postfix) with ESMTP id 91C7F20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:51:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfKROsO (ORCPT
+        id S1727146AbfKROvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 09:48:14 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:36018 "EHLO mail.skyhub.de"
+        Mon, 18 Nov 2019 09:51:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726668AbfKROsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 09:48:14 -0500
-Received: from zn.tnic (p200300EC2F27B50084A11D83797EBEC7.dip0.t-ipconnect.de [IPv6:2003:ec:2f27:b500:84a1:1d83:797e:bec7])
+        id S1726830AbfKROvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 09:51:07 -0500
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BEC0E1EC05DE;
-        Mon, 18 Nov 2019 15:48:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1574088491;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=dKQCpCI9/H+bPIZWKf5d2LDECsFIi9hdS2TrAmqbdqc=;
-        b=esgT1nnDXt2e2LkqH0ymdvLL2007+CVgDTaMj6MoQeIArYq595o0AHLL9IIY5mZDqq3Zec
-        +puR4uV9zIWyjkPGgnr5Ky4EoC3DVKw+pMRV6HZQthBtjHOTGPx509yytz428Fd749mj4j
-        koCosOwYezY8XJz5MJqh+w/IvfLiJmU=
-Date:   Mon, 18 Nov 2019 15:48:07 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Ryan Chen <yu.chen.surf@gmail.com>
-Cc:     Chen Yu <yu.c.chen@intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
+        by mail.kernel.org (Postfix) with ESMTPSA id 1607A2071B;
+        Mon, 18 Nov 2019 14:51:06 +0000 (UTC)
+Date:   Mon, 18 Nov 2019 09:51:04 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        Christian Brauner <christian@brauner.io>,
-        Shakeel Butt <shakeelb@google.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 2/2][v2] x86/resctrl: Add task resctrl information display
-Message-ID: <20191118144807.GE6363@zn.tnic>
-References: <cover.1573788882.git.yu.c.chen@intel.com>
- <5dcd6580b51342c0803db6bc27866dd569914b0d.1573788882.git.yu.c.chen@intel.com>
- <20191115092420.GF18929@zn.tnic>
- <CADjb_WR_DNAR_4jVEJ1C4LO7Xfnc54J2u2AoqyCjZT39+AhrWA@mail.gmail.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: powerpc ftrace broken due to "manual merge of the ftrace tree
+ with the arm64 tree"
+Message-ID: <20191118095104.0daebbc3@oasis.local.home>
+In-Reply-To: <1573851994.5937.138.camel@lca.pw>
+References: <1573849732.5937.136.camel@lca.pw>
+        <20191115160230.78871d8f@gandalf.local.home>
+        <1573851994.5937.138.camel@lca.pw>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CADjb_WR_DNAR_4jVEJ1C4LO7Xfnc54J2u2AoqyCjZT39+AhrWA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 16, 2019 at 11:01:12PM +0800, Ryan Chen wrote:
-> Right, we can return 'blank' to user and let the user to parse the information.
+On Fri, 15 Nov 2019 16:06:34 -0500
+Qian Cai <cai@lca.pw> wrote:
 
-There is nothing to parse - the task doesn't belong to any groups. That's it.
+> > Test this commit please: b83b43ffc6e4b514ca034a0fbdee01322e2f7022  
+> 
+> # git reset --hard b83b43ffc6e4b514ca034a0fbdee01322e2f7022
+> 
+> Yes, that one is bad.
 
-> And there is a similar behavior in cgroup that, for kernel thread that
-> does not belong
-> to any cgroup, /proc/{pid}/cgroup just show 'blank' without returning an error.
+Can you see if this patch fixes the issue for you?
 
-By 'blank' I assume you mean the empty string '' ?
+Thanks!
 
-> Yes, only when PROC_FS is set, /proc/{pid}/resctrl
-> can be displayed. However, CPU_RESCTRL might not
-> depend on proc fs, it is possible that the CPU_RESCTRL
-> is enabled but without PROC_FS set. If I understand correctly,
->  CPU_RESCTRL is the 'root' config for X86_CPU_RESCTRL,
-> after reading this thread:
-> https://lists.gt.net/linux/kernel/3211659
+-- Steve
 
-I'm not sure I know what you mean here. There's no CPU_RESCTRL option - you've
-added it in the previous patch:
-
-[ ~/kernel/linux> git grep -E CONFIG_CPU_RESCTRL
-[ ~/kernel/linux> git grep -E "\WCPU_RESCTRL"
-[ ~/kernel/linux>
-
-And if you want to use that option in proc/, then it needs
-to depend on PROC_FS, like the the example I gave you with
-CONFIG_PROC_PID_ARCH_STATUS.
-
-Or do you mean something else?
-
->  If this is the case, shall we add the new file at kernel/resctrl/resctrl.c?
-> And the generic proc_resctrl_show() could be put into this file. In the future
-> the generic code for resctrl could be added/moved to kernel/resctrl/resctrl.c
-
-Not worth it for a single function. Leave it in
-arch/x86/kernel/cpu/resctrl/rdtgroup.c where you had it.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 0f358be551cd..fd8f4dc661dc 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -109,6 +109,13 @@
+ #define MEM_DISCARD(sec) *(.mem##sec)
+ #endif
+ 
++/* PowerPC defines ftrace_graph_stub in the code */
++#ifndef CONFIG_PPC
++# define DEFINE_FTRACE_GRAPH_STUB	ftrace_graph_stub = ftrace_stub;
++#else
++# define DEFINE_FTRACE_GRAPH_STUB
++#endif
++
+ #ifdef CONFIG_FTRACE_MCOUNT_RECORD
+ #ifdef CC_USING_PATCHABLE_FUNCTION_ENTRY
+ /*
+@@ -120,17 +127,17 @@
+ 			__start_mcount_loc = .;			\
+ 			KEEP(*(__patchable_function_entries))	\
+ 			__stop_mcount_loc = .;			\
+-			ftrace_graph_stub = ftrace_stub;
++			DEFINE_FTRACE_GRAPH_STUB
+ #else
+ #define MCOUNT_REC()	. = ALIGN(8);				\
+ 			__start_mcount_loc = .;			\
+ 			KEEP(*(__mcount_loc))			\
+ 			__stop_mcount_loc = .;			\
+-			ftrace_graph_stub = ftrace_stub;
++			DEFINE_FTRACE_GRAPH_STUB
+ #endif
+ #else
+ # ifdef CONFIG_FUNCTION_TRACER
+-#  define MCOUNT_REC()	ftrace_graph_stub = ftrace_stub;
++#  define MCOUNT_REC()	DEFINE_FTRACE_GRAPH_STUB
+ # else
+ #  define MCOUNT_REC()
+ # endif
