@@ -2,126 +2,119 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8775C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 03:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76085C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 03:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1E2920718
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 03:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ABB5206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 03:54:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="E46OXh4F";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="XjT7KIE4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfKRDyZ (ORCPT
+        id S1726706AbfKRDyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 22:54:25 -0500
-Received: from mga09.intel.com ([134.134.136.24]:27563 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726314AbfKRDyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 22:54:25 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Nov 2019 19:54:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,318,1569308400"; 
-   d="scan'208";a="258292816"
-Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
-  by FMSMGA003.fm.intel.com with ESMTP; 17 Nov 2019 19:54:21 -0800
-Message-ID: <5DD21784.8020506@intel.com>
-Date:   Mon, 18 Nov 2019 12:01:08 +0800
-From:   Wei Wang <wei.w.wang@intel.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
-MIME-Version: 1.0
-To:     Khazhismel Kumykov <khazhy@google.com>, mst@redhat.com,
-        jasowang@redhat.com
-CC:     virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] virtio_balloon: fix shrinker pages_to_free calculation
-References: <20191115225557.61847-1-khazhy@google.com>
-In-Reply-To: <20191115225557.61847-1-khazhy@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Sun, 17 Nov 2019 22:54:51 -0500
+Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:35346
+        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726266AbfKRDyu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 22:54:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574049289;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        bh=LZu8RInnO3guFGROW0ewhSbCJOgJfmUIOWNgeOU48Mk=;
+        b=E46OXh4FEwfhj5xRDN7dkjVZmNKL54s+t6Z3aLd9mijX2Xl1CbzPYzXjWzBdtX+R
+        yJ0HSHlIy7P/v3PVELCrYamhorZtZC5PnvPbFQc/b0IQnPAGwX+vVQQC6EJ2ivvt71Q
+        hVQK5ZpO1+4On/j0xfd/c5qUSGQIgfARU4szzqqQ=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574049289;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
+        bh=LZu8RInnO3guFGROW0ewhSbCJOgJfmUIOWNgeOU48Mk=;
+        b=XjT7KIE4rS3N8tBg+ZAps4kicTgMtEyGQ1V34wxN2ikWlD507PIP+XnDIz/ph53w
+        ks8xUxfINGJsvuHzMFhTRSbz/GZ7GzohEGwocdUk0Q3X5UL2jyS05HGmrSEZdo3XsZc
+        hrdRpwJd1NVe+0NwwCshzYS8ylxADfZL7tmYvCME=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 06F5DC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        cang@codeaurora.org
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/4] scsi: ufs: Recheck bkops level if bkops is disabled
+Date:   Mon, 18 Nov 2019 03:54:49 +0000
+Message-ID: <0101016e7ca61572-bf100c84-1209-46ae-a209-e30e68109a95-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1574049277-13477-1-git-send-email-cang@codeaurora.org>
+References: <1574049277-13477-1-git-send-email-cang@codeaurora.org>
+X-SES-Outgoing: 2019.11.18-54.240.27.18
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/16/2019 06:55 AM, Khazhismel Kumykov wrote:
-> To my reading, we're accumulating total freed pages in pages_freed, but
-> subtracting it every iteration from pages_to_free, meaning we'll count
-> earlier iterations multiple times, freeing fewer pages than expected.
-> Just accumulate in pages_freed, and compare to pages_to_free.
+From: Asutosh Das <asutoshd@codeaurora.org>
 
-Not sure about the above. But the following unit mismatch is a good 
-capture, thanks!
+Bkops level should be rechecked upon receiving an exception.
+Currently the bkops level is being cached and never updated.
 
->
-> There's also a unit mismatch, where pages_to_free seems to be virtio
-> balloon pages, and pages_freed is system pages (We divide by
-> VIRTIO_BALLOON_PAGES_PER_PAGE), so sutracting pages_freed from
-> pages_to_free may result in freeing too much.
->
-> There also seems to be a mismatch between shrink_free_pages() and
-> shrink_balloon_pages(), where in both pages_to_free is given as # of
-> virtio pages to free, but free_pages() returns virtio pages, and
-> balloon_pages returns system pages.
->
-> (For 4K PAGE_SIZE, this mismatch wouldn't be noticed since
-> VIRTIO_BALLOON_PAGES_PER_PAGE would be 1)
->
-> Have both return virtio pages, and divide into system pages when
-> returning from shrinker_scan()
+Update the same each time the level is checked.
+Also do not use the cached bkops level value if it is disabled
+and then enabled.
 
-Sounds good.
+Fixes: afdfff59a0e0 (scsi: ufs: handle non spec compliant bkops behaviour by device)
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+---
+ drivers/scsi/ufs/ufshcd.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
->
-> Fixes: 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker")
-> Cc: Wei Wang <wei.w.wang@intel.com>
-> Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
-> ---
->
-> Tested this under memory pressure conditions and the shrinker seemed to
-> shrink.
->
->   drivers/virtio/virtio_balloon.c | 11 ++++-------
->   1 file changed, 4 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-> index 226fbb995fb0..7951ece3fe24 100644
-> --- a/drivers/virtio/virtio_balloon.c
-> +++ b/drivers/virtio/virtio_balloon.c
-> @@ -782,11 +782,8 @@ static unsigned long shrink_balloon_pages(struct virtio_balloon *vb,
->   	 * VIRTIO_BALLOON_ARRAY_PFNS_MAX balloon pages, so we call it
->   	 * multiple times to deflate pages till reaching pages_to_free.
->   	 */
-> -	while (vb->num_pages && pages_to_free) {
-> -		pages_freed += leak_balloon(vb, pages_to_free) /
-> -					VIRTIO_BALLOON_PAGES_PER_PAGE;
-> -		pages_to_free -= pages_freed;
-> -	}
-> +	while (vb->num_pages && pages_to_free > pages_freed)
-> +		pages_freed += leak_balloon(vb, pages_to_free - pages_freed);
->   	update_balloon_size(vb);
->   
->   	return pages_freed;
-> @@ -805,11 +802,11 @@ static unsigned long virtio_balloon_shrinker_scan(struct shrinker *shrinker,
->   		pages_freed = shrink_free_pages(vb, pages_to_free);
-
-We also need a fix here then:
-
-pages_freed = shrink_free_pages(vb, sc->nr_to_scan) * 
-VIRTIO_BALLOON_PAGES_PER_PAGE;
-
-
-Btw, there is another mistake, in virtio_balloon_shrinker_count:
-
--       count += vb->num_free_page_blocks >> VIRTIO_BALLOON_FREE_PAGE_ORDER;
-+      count += vb->num_free_page_blocks << VIRTIO_BALLOON_FREE_PAGE_ORDER;
-
-You may want to include it in this fix patch as well.
-
-Best,
-Wei
-
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 3910c58..8e7c362 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -5099,6 +5099,7 @@ static int ufshcd_disable_auto_bkops(struct ufs_hba *hba)
+ 
+ 	hba->auto_bkops_enabled = false;
+ 	trace_ufshcd_auto_bkops_state(dev_name(hba->dev), "Disabled");
++	hba->is_urgent_bkops_lvl_checked = false;
+ out:
+ 	return err;
+ }
+@@ -5123,6 +5124,7 @@ static void ufshcd_force_reset_auto_bkops(struct ufs_hba *hba)
+ 		hba->ee_ctrl_mask &= ~MASK_EE_URGENT_BKOPS;
+ 		ufshcd_disable_auto_bkops(hba);
+ 	}
++	hba->is_urgent_bkops_lvl_checked = false;
+ }
+ 
+ static inline int ufshcd_get_bkops_status(struct ufs_hba *hba, u32 *status)
+@@ -5169,6 +5171,7 @@ static int ufshcd_bkops_ctrl(struct ufs_hba *hba,
+ 		err = ufshcd_enable_auto_bkops(hba);
+ 	else
+ 		err = ufshcd_disable_auto_bkops(hba);
++	hba->urgent_bkops_lvl = curr_status;
+ out:
+ 	return err;
+ }
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
