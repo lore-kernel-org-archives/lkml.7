@@ -2,122 +2,168 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FB6C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 915C0C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA632230C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:03:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="d8LUIjAn"
+	by mail.kernel.org (Postfix) with ESMTP id 5FFA02230C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:04:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfKRXD6 (ORCPT
+        id S1727110AbfKRXEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 18:03:58 -0500
-Received: from mail-eopbgr20100.outbound.protection.outlook.com ([40.107.2.100]:7517
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726717AbfKRXD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 18:03:58 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Davc0FzVsLvyPEOQs/OvDo9TcqkFCrm0dFuLG/U/L0A6WnzV6vSZgv6IexqdtEfzMNRJjkMfPq1NGxNvVNONPbmCKZv2zMAC65+zkzKIuqghXmen7g0FwB9D0hb5MZKZhNNVGQRiorHN2rZ1PcjKsWVPUvCYeVbeQcsxgmVbwEjDAI6620ah5WyehulwJFrROSy7JD6mppxbDzR9Dns0EvB1UnYcmdhlH/3Kassqrxbi9Ps9Ow9axp2A9SOECR3cIsW2ywYldAzShiHJdTybTfPL0K1GM2JzF2xZaC5HAmAq0oJIrGQj30wWjAPiEyXMAuh/5MZzvvVl6Xgexbap5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1dzjGWPdAZcAyE2N+egMQke7Vn7oCdy/0aOgzg7SNws=;
- b=Kt2CDmpEmsj3lxrj+ValvkITRZszdkl+CDZkhg79DhYj8aF5Fr7E1n0suLRsPVJ1MW1Qx9rm/x19YHYyYox02Ae/xMbSey1qAj8IvVVU1WUi22LPwVK/VzQ84bs4VvRTwoSO9Fhpqf/KsmUuP3oHKTwYYne83z0yzzaTAtQTWNy2XB3fljQg+D0KLb27s0nQpVcC3QiviD4noAAV0uxSFFlOdLcUcB3WIh68wrLeAYJvWEPDm85vIgiyIUp01clIbx+j0pCA/1ha9UbvyDytJPGKv487UBynOGaD4ZI4nJkvYXGcV5f+7aA8SN2BHsE/LIa6gXhA5DQKzRVqzxikEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1dzjGWPdAZcAyE2N+egMQke7Vn7oCdy/0aOgzg7SNws=;
- b=d8LUIjAnIqCEt3XsW1N8GEo2RAUFJEJLNQDSpqLjR52kaieXD+HPw3oRdYAvky1HNe/ntKy4dTHoc7j91dyjCigEmgOgTtty4D2U4emBxkyi+u48pvuAlIxEKYHsLuOHujPKGYTVSp8X3YR3QgHSh+CiZW0koedKkWpbkM+iSeY=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3289.eurprd02.prod.outlook.com (52.134.65.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Mon, 18 Nov 2019 23:03:53 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::477:9510:3e3:f8ca]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::477:9510:3e3:f8ca%7]) with mapi id 15.20.2451.029; Mon, 18 Nov 2019
- 23:03:53 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Biwen Li <biwen.li@nxp.com>, Leo Li <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [v5,2/3] i2c: mux: pca954x: support property idle-state
-Thread-Topic: [v5,2/3] i2c: mux: pca954x: support property idle-state
-Thread-Index: AQHViJBm+lcMepwMLU+ndX3u4pkJDaeMK7oAgAWMBYA=
-Date:   Mon, 18 Nov 2019 23:03:53 +0000
-Message-ID: <e04c77cc-6c41-8ce3-b584-944eb1595191@axentia.se>
-References: <20191022041152.3663-1-biwen.li@nxp.com>
- <20191022041152.3663-2-biwen.li@nxp.com>
- <DB7PR04MB4490B0121FEED3C74A682C248F700@DB7PR04MB4490.eurprd04.prod.outlook.com>
-In-Reply-To: <DB7PR04MB4490B0121FEED3C74A682C248F700@DB7PR04MB4490.eurprd04.prod.outlook.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR0802CA0007.eurprd08.prod.outlook.com
- (2603:10a6:3:bd::17) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0f4f791f-44f0-4517-96d8-08d76c7b94f0
-x-ms-traffictypediagnostic: DB3PR0202MB3289:
-x-microsoft-antispam-prvs: <DB3PR0202MB3289DFD2CB967780BC474BACBC4D0@DB3PR0202MB3289.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0225B0D5BC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(396003)(376002)(136003)(39830400003)(189003)(199004)(31686004)(6486002)(6436002)(31696002)(81156014)(229853002)(8676002)(6116002)(386003)(3846002)(66556008)(2906002)(186003)(25786009)(305945005)(71190400001)(71200400001)(66476007)(7736002)(4326008)(76176011)(66446008)(64756008)(52116002)(256004)(102836004)(53546011)(6506007)(6512007)(4744005)(26005)(86362001)(2501003)(8936002)(81166006)(99286004)(14454004)(486006)(66066001)(66946007)(65956001)(65806001)(4001150100001)(5660300002)(6246003)(110136005)(2616005)(446003)(508600001)(58126008)(11346002)(36756003)(476003)(316002)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3289;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: qTe1aBwXWcM6+efGo+pyW61XsRXmlK72T1+IZFF2klATUNfB7if8ouKuLU2/NrZH3HI9jua6S6QvBsrWCYzmCUXWySXqU0MgYMW9BPa2pVpKuyBjclWcRqg2NcfPXjjQ/y6nHQoOyaBqCMn26r0VlSUOXISudAay1HZedclR6KfUzN7eAG5fA89hNV0WlyMMkeqMP2ZpzVtPYfrIMBkgLI1qoLAIXiCAGzT29XhdJcI8vCqBJQpnZAVFPdzfSzd2f4iTkMDAnBL+qxgFaii4dhNRqaDggGFfWhhx+1P8x76QJNoSHh+ng2t0jaP3Vx38edhk22fWo4x9TSQ0mZYdoMJjy4kdi2/ezjwWq7AqCDsil0HJIsi04PLULP9Y4GmX2spLjvEZeqFt1Qz1/tk7etYW1pn3gOu5mFyvAeaSNesSdHrRv/UBaLk2NbarhYLi
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DCE7B144E7759445A7D8937EB99236AE@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 18 Nov 2019 18:04:21 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:39664 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbfKRXEV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 18:04:21 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 331C5283B8;
+        Mon, 18 Nov 2019 18:04:17 -0500 (EST)
+Date:   Tue, 19 Nov 2019 10:04:17 +1100 (AEDT)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     Kars de Jong <jongk@linux-m68k.org>
+cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] esp_scsi: Clear Transfer Count registers before PIO
+ transfers
+In-Reply-To: <CACz-3rhr_R+_mJpg+Rvgoj=1GC5AO3YKxYxS_0ShAfQ-NiFDtg@mail.gmail.com>
+Message-ID: <alpine.LNX.2.21.1.1911190923120.8@nippy.intranet>
+References: <2bbb6359d542f5882be67c415ecc25ad2d9eeb5e.1573875417.git.fthain@telegraphics.com.au> <CACz-3rjHAyi6kMQ6j9YALLm1ApYrsqKiTnGNPUhxqqEuRJ9TjQ@mail.gmail.com> <alpine.LNX.2.21.1.1911180947020.8@nippy.intranet>
+ <CACz-3rhr_R+_mJpg+Rvgoj=1GC5AO3YKxYxS_0ShAfQ-NiFDtg@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0f4f791f-44f0-4517-96d8-08d76c7b94f0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 23:03:53.3735
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IVxv6z5qC4Fx389vvfaFdEulG2FxmmWoBVogrtoAMdFoplr0+aopRLFArkdkv9mq
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3289
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0xMS0xNSAxMToyMSwgQml3ZW4gTGkgd3JvdGU6DQo+IEhpIFBldGVyLA0KPiANCj4g
-QW55IGNvbW1lbnRzPw0KPiBJZiBubyBjb21tZW50cywgY291bGQgeW91IGdpdmUgbWUgYSByZXZp
-ZXdlZC1ieT8NCg0KSSB3b3VsZCBoYXZlIGxpa2VkIGEgY29tbWVudCBmcm9tIHRoZSBkcml2ZXIg
-bWFpbnRhaW5lciBvciBhIHRlc3RlZC1ieSBmcm9tDQpzb21lb25lIHdpdGggYW5vdGhlciBjYXNl
-IHRoYW4geW91cnMuIEJ1dCBub3cgdGhhdCBJIGNoZWNrIEkgc2VlIHRoYXQgdGhlcmUgLQ0KY29u
-dHJhcnkgdG8gbXkgYXNzdW1wdGlvbiAtIGlzIG5vIG1haW50YWluZXIgbGlzdGVkLiBTbywgSSB0
-aGluayBpdCBsb29rcyBmaW5lLA0KYW5kIEknbSBzdXJlIGl0IGNvbXBpbGVzIGNsZWFubHkgZXRj
-IGlmIEkgdGVzdCB0aGF0LCBidXQgSSBjYW4ndCB0ZXN0IHJ1bnRpbWUNCmJlaGF2aW9yIG15c2Vs
-ZiBzaW5jZSBJIGRvbid0IGhhdmUgdGhlIEhXLiBJIHNob3VsZCBoYXZlIGJlZW4gY2xlYXJlciBh
-Ym91dA0KdGhpcywgYW5kIHNob3VsZCBoYXZlIGRvdWJsZSBjaGVja2VkIHRoZSBtYWludGFpbmVy
-IHN0YXR1cyBpbnN0ZWFkIG9mIHJlbHlpbmcNCm9uIHdoYXQgSSB0aG91Z2h0LiBJIGhhdmUgc2lt
-cGx5IGJlZW4gZXh0cmVtZWx5IGJ1c3kgYW5kIHRoYXQgc2xpcHBlZC4gU29ycnkuDQoNCkJ1dCBJ
-J2xsIHRyeSB0byBzcXVlZXplIHRoaXMgaW50byBsaW51eC1uZXh0IHRvbW9ycm93LCBiZWNhdXNl
-IGlmIGxvb2sgc2FmZSwNCmFuZCBob3BlZnVsbHkgYW55IHByb2JsZW0gd2lsbCBiZWNvbWUgYXBw
-YXJlbnQuDQoNCkdpdmluZyBhIHJldmlld2VkLWJ5IHNlZW1lZCBwb2ludGxlc3MsIHdoZW4gSSdt
-IHRoZSBvbmUgcGlja2luZyBpdCB1cCA6LSkNCg0KQ2hlZXJzLA0KUGV0ZXINCg==
+On Mon, 18 Nov 2019, Kars de Jong wrote:
+
+> Op ma 18 nov. 2019 om 00:13 schreef Finn Thain <fthain@telegraphics.com.au>:
+> >
+> > On Sun, 17 Nov 2019, Kars de Jong wrote:
+> > > Are you sure this is really needed?
+> > >
+> >
+> > No. I think it improves robustness and correctness.
+> >
+> > I would be interested to know whether there is any measurable performance
+> > impact on zorro_esp.
+> >
+> > > The only [time when] the driver reads these registers is after a data
+> > > transfer. These are done using DMA on all Zorro boards, so I don't think
+> > > there's a risk of stale values from a PIO transfer there.
+> > >
+> >
+> > I'm not entirely sure that the chip is unaffected by stale counter values.
+> >
+> > (Stale transfer counter values are distinct from stale transfer count
+> > register values. Both are addressed by the patch.)
+> 
+> I still don't see the need to address that in the PIO transfer code.
+
+Well, send_dma_cmd() always initializes those registers. That's fine in 
+the DMA case and seems to be the least surprising and cleanest thing to do 
+for the PIO case, I think.
+
+> The ESP (when in initiator mode) doesn't use the transfer counter 
+> (registers) in PIO mode.
+> 
+> > If there are DMA controllers out there that can't do very short 
+> > transfers then this objection would seem to be invalid, because the 
+> > "DMA length is zero!" issue could be tackled using PIO.
+> 
+> That's the issue you fixed by limiting the transfer size to 65535 bytes, 
+> correct?
+
+I was alluding to an unpatched theoretical failure.
+
+The issue would arise when a board driver indicated to the core driver 
+that the requested transfer was too small. I'm assuming that it would do 
+this by returning zero from esp->ops->dma_length_limit(), which puts us in 
+the "DMA length is zero" code path.
+
+The actual failure (that you patched) shows that your board isn't able to 
+do short DMA transfers and would require PIO for that.
+
+But this is a theoretical problem so far. You may need to use sg_utils to 
+generate a SCSI command like that.
+
+(For a DMA controller subject to, say, 24-bit boundaries, there are 
+additional ways to end up with short transfers.)
+
+> The SYM53CF92-X in my Blizzard didn't show this error for the 1 byte
+> transfers.
+> It just hung up:
+> 
+>  sdb: RDSK (512) sdb1 (DOS^C)(res 2 spb 1) sdb2 (SWP^@)(res 0 spb 8)
+> sdb3 (LNX^@)(res 2 spb 1) sdb4 (LNX^@)(res 2 spb 1)
+> sd 1:0:0:0: [sdb] Attached SCSI disk
+> EXT4-fs (sdb3): mounting ext3 file system using the ext4 subsystem
+> scsi host1: Aborting command [(ptrval):28]
+> scsi host1: Current command [(ptrval):28]
+> scsi host1:  Active command [(ptrval):28]
+> scsi host1: Dumping command log
+> scsi host1: ent[6] CMD val[12] sreg[97] seqreg[9c] sreg2[00] ireg[08] ss[00] event[0c]
+> scsi host1: ent[7] EVENT val[0d] sreg[91] seqreg[9c] sreg2[00] ireg[08] ss[00] event[0c]
+> scsi host1: ent[8] EVENT val[03] sreg[91] seqreg[c4] sreg2[00] ireg[10] ss[00] event[0d]
+> scsi host1: ent[9] CMD val[80] sreg[91] seqreg[c4] sreg2[00] ireg[10] ss[00] event[03]
+> scsi host1: ent[10] CMD val[90] sreg[91] seqreg[c4] sreg2[00] ireg[10] ss[00] event[03]
+> scsi host1: ent[11] EVENT val[05] sreg[91] seqreg[c4] sreg2[00] ireg[10] ss[00] event[03]
+> scsi host1: ent[12] EVENT val[0d] sreg[93] seqreg[cc] sreg2[00] ireg[10] ss[00] event[05]
+> scsi host1: ent[13] CMD val[01] sreg[93] seqreg[cc] sreg2[00] ireg[10] ss[00] event[0d]
+> scsi host1: ent[14] CMD val[11] sreg[93] seqreg[cc] sreg2[00] ireg[10] ss[00] event[0d]
+> scsi host1: ent[15] EVENT val[0b] sreg[93] seqreg[cc] sreg2[00] ireg[10] ss[00] event[0d]
+> scsi host1: ent[16] CMD val[12] sreg[97] seqreg[cc] sreg2[00] ireg[08] ss[00] event[0b]
+> scsi host1: ent[17] EVENT val[0c] sreg[97] seqreg[cc] sreg2[00] ireg[08] ss[00] event[0b]
+> scsi host1: ent[18] CMD val[44] sreg[90] seqreg[cc] sreg2[00] ireg[20] ss[00] event[0c]
+> scsi host1: ent[19] CMD val[01] sreg[90] seqreg[cc] sreg2[00] ireg[20] ss[01] event[0c]
+> scsi host1: ent[20] CMD val[46] sreg[90] seqreg[cc] sreg2[00] ireg[20] ss[01] event[0c]
+> scsi host1: ent[21] EVENT val[0d] sreg[97] seqreg[04] sreg2[00] ireg[18] ss[00] event[0c]
+> scsi host1: ent[22] EVENT val[06] sreg[97] seqreg[04] sreg2[00] ireg[18] ss[00] event[0d]
+> scsi host1: ent[23] CMD val[01] sreg[97] seqreg[04] sreg2[00] ireg[18] ss[00] event[06]
+> scsi host1: ent[24] CMD val[10] sreg[97] seqreg[04] sreg2[00] ireg[18] ss[00] event[06]
+> scsi host1: ent[25] EVENT val[0c] sreg[97] seqreg[8c] sreg2[00] ireg[08] ss[00] event[06]
+> scsi host1: ent[26] CMD val[12] sreg[97] seqreg[8c] sreg2[00] ireg[08] ss[00] event[0c]
+> scsi host1: ent[27] CMD val[44] sreg[90] seqreg[cc] sreg2[00] ireg[20] ss[00] event[0c]
+> scsi host1: ent[28] CMD val[01] sreg[97] seqreg[9c] sreg2[00] ireg[0c] ss[00] event[0c]
+> scsi host1: ent[29] CMD val[00] sreg[97] seqreg[9c] sreg2[00] ireg[0c] ss[00] event[0c]
+> scsi host1: ent[30] CMD val[12] sreg[97] seqreg[9c] sreg2[00] ireg[0c] ss[00] event[0c]
+> scsi host1: ent[31] CMD val[10] sreg[97] seqreg[9c] sreg2[00] ireg[10] ss[00] event[0c]
+> scsi host1: ent[0] CMD val[12] sreg[97] seqreg[9c] sreg2[00] ireg[08] ss[00] event[0c]
+> scsi host1: ent[1] EVENT val[0d] sreg[91] seqreg[9c] sreg2[00] ireg[08] ss[00] event[0c]
+> scsi host1: ent[2] EVENT val[03] sreg[91] seqreg[c4] sreg2[00] ireg[10] ss[00] event[0d]
+> scsi host1: ent[3] CMD val[80] sreg[91] seqreg[c4] sreg2[00] ireg[10] ss[00] event[03]
+> scsi host1: ent[4] CMD val[90] sreg[91] seqreg[c4] sreg2[00] ireg[10] ss[00] event[03]
+> scsi host1: ent[5] EVENT val[05] sreg[91] seqreg[c4] sreg2[00] ireg[10] ss[00] event[03]
+> 
+> > > The only place the controller reads these registers is when a DMA
+> > > command is issued. The only place where that is done is in the zorro_esp
+> > > send_dma_command() functions.
+> >
+> > Aren't you overlooking all of the ESP_CMD_DMA flags in the core driver?
+> 
+> No, all those occurences are only used when calling
+> send_dma_command(), except the NULL/NOP DMA commands
+> directly after a chip reset.
+> 
+
+Fair enough. That means a stale count could be used after a PIO transfer 
+in DATA IN and DATA OUT phase that happened to follow a DMA transfer (in 
+any phase).
+
+I still think there is a opportunity to improve robustness and correctness 
+(presuming that performance isn't impacted).
+
+-- 
+
+> Kind regards,
+> 
+> Kars.
+> 
