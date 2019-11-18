@@ -2,230 +2,122 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC34CC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8932AC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7F9D206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574081828;
-	bh=D42/XnP8BTkRdLMB0sfjNYCvjVmtv3XV0wVH/ObQtWU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HLgm8iYPHTs9ICIKnM3X4WWeAU/FXUcfskpIUtMOaFQS1ouL4LNjsAe9K/VM+RHM9
-	 ygCdc9UJEikzZV0vIZmU7dLJVkJfb9p8C2b+bJOZhB3KqQWaBK0sszncry9ibp0E+2
-	 QOEYWIeIwlEVsYC+q4GWoU+QufDq3i2Kun/ppooA=
+	by mail.kernel.org (Postfix) with ESMTP id 41AE7206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:58:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="eabxb1st"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfKRM5H (ORCPT
+        id S1726875AbfKRM6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 07:57:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726490AbfKRM5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 07:57:07 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16E8420692;
-        Mon, 18 Nov 2019 12:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574081825;
-        bh=D42/XnP8BTkRdLMB0sfjNYCvjVmtv3XV0wVH/ObQtWU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=REU+MnKH/jfxkLo0UnQ+ACUSgGSvJsHkc36Fgkosi60t+lPgSNnJ3EylqBANKsD18
-         JOtPOTsrOh7xq4pZGrh+7YHfUTFV5SsvF9JIXJ+neHGWm0yVbFzVKLeCMWPH7cKdKz
-         lqDfQPsr2yCymECD4z9NA08J7X595BC7WklnY5oU=
-Date:   Mon, 18 Nov 2019 13:57:02 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 1/8] dt-bindings: pwm: allwinner: Add H6 PWM
- description
-Message-ID: <20191118125702.GK4345@gilmour.lan>
-References: <20191118110034.19444-1-peron.clem@gmail.com>
- <20191118110034.19444-2-peron.clem@gmail.com>
- <20191118110640.GE4345@gilmour.lan>
- <CAJiuCceVyjSTGymOiXTZvyQXyXScGZuGS6gW+2=0gdxDFzg3dA@mail.gmail.com>
+        Mon, 18 Nov 2019 07:58:18 -0500
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:60278 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbfKRM6R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 07:58:17 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id E7CA83F731;
+        Mon, 18 Nov 2019 13:58:14 +0100 (CET)
+Authentication-Results: ste-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=eabxb1st;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
+        dkim=pass (1024-bit key) header.d=shipmail.org
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 1OKBn0n20cbF; Mon, 18 Nov 2019 13:58:10 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 8B8783F6AF;
+        Mon, 18 Nov 2019 13:58:05 +0100 (CET)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id C6DA0360070;
+        Mon, 18 Nov 2019 13:58:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1574081884; bh=AFDCrmlbjICMQZSk5hGF7cpQTlFoaR/bVow1qk93kfs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=eabxb1stIuKrkqGocBX6wlcN+Vsl3Ml+lvM15Z9rzFU/k6+3D1OOmGzr/0RdpYC4C
+         EyVHCjUubPlth+gEJoRjOTwLwmbWcIPDYJz/E/Ul1iAxbVUaHjihH2oxXW1Fm1yzxi
+         9Mflq8G4RASgUVWHN9eI0QWRr+zFMe3SmpidQ6Lk=
+Subject: Re: [PATCH 2/2] mm: Fix a huge pud insertion race during faulting
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>
+References: <20191115115808.21181-1-thomas_os@shipmail.org>
+ <20191115115808.21181-2-thomas_os@shipmail.org>
+ <20191115115800.45c053abcdb550d70b9baec9@linux-foundation.org>
+ <20191118102219.om5monxih7kfodyz@box>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <b8600932-517d-99d3-90b4-d9b9e8a6f641@shipmail.org>
+Date:   Mon, 18 Nov 2019 13:58:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="luUS5rQ1j20Qzq8E"
-Content-Disposition: inline
-In-Reply-To: <CAJiuCceVyjSTGymOiXTZvyQXyXScGZuGS6gW+2=0gdxDFzg3dA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191118102219.om5monxih7kfodyz@box>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---luUS5rQ1j20Qzq8E
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Nov 18, 2019 at 01:42:48PM +0100, Cl=E9ment P=E9ron wrote:
-> Hi Maxime
+On 11/18/19 11:22 AM, Kirill A. Shutemov wrote:
+> On Fri, Nov 15, 2019 at 11:58:00AM -0800, Andrew Morton wrote:
+>> On Fri, 15 Nov 2019 12:58:08 +0100 Thomas Hellström (VMware) <thomas_os@shipmail.org> wrote:
+>>
+>>> A huge pud page can theoretically be faulted in racing with pmd_alloc()
+>>> in __handle_mm_fault(). That will lead to pmd_alloc() returning an
+>>> invalid pmd pointer. Fix this by adding a pud_trans_unstable() function
+>>> similar to pmd_trans_unstable() and check whether the pud is really stable
+>>> before using the pmd pointer.
+>>>
+>>> Race:
+>>> Thread 1:             Thread 2:                 Comment
+>>> create_huge_pud()                               Fallback - not taken.
+>>> 		      create_huge_pud()         Taken.
+>>> pmd_alloc()                                     Returns an invalid pointer.
+>> What are the user-visible runtime effects of this change?
+> Data corruption: kernel writes to a huge page thing it's page table.
 >
-> On Mon, 18 Nov 2019 at 12:06, Maxime Ripard <mripard@kernel.org> wrote:
-> >
-> > Hi,
-> >
-> > On Mon, Nov 18, 2019 at 12:00:27PM +0100, Cl=E9ment P=E9ron wrote:
-> > > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> > >
-> > > H6 PWM block is basically the same as A20 PWM, except that it also has
-> > > bus clock and reset line which needs to be handled accordingly.
-> > >
-> > > Expand Allwinner PWM binding with H6 PWM specifics.
-> > >
-> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> > > ---
-> > >  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 48 +++++++++++++++++=
-++
-> > >  1 file changed, 48 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a1=
-0-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.=
-yaml
-> > > index 0ac52f83a58c..1bae446febbb 100644
-> > > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.y=
-aml
-> > > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.y=
-aml
-> > > @@ -30,13 +30,51 @@ properties:
-> > >        - items:
-> > >            - const: allwinner,sun50i-h5-pwm
-> > >            - const: allwinner,sun5i-a13-pwm
-> > > +      - const: allwinner,sun50i-h6-pwm
-> > >
-> > >    reg:
-> > >      maxItems: 1
-> > >
-> > >    clocks:
-> > > +    minItems: 1
-> > > +    maxItems: 2
-> > > +    items:
-> > > +      - description: Module Clock
-> > > +      - description: Bus Clock
-> > > +
-> > > +  # Even though it only applies to subschemas under the conditionals,
-> > > +  # not listing them here will trigger a warning because of the
-> > > +  # additionalsProperties set to false.
-> > > +  clock-names: true
-> > > +
-> > > +  resets:
-> > >      maxItems: 1
-> > >
-> > > +  if:
-> > > +    properties:
-> > > +      compatible:
-> > > +        contains:
-> > > +          const: allwinner,sun50i-h6-pwm
-> > > +
-> > > +  then:
-> > > +    properties:
-> > > +      clocks:
-> > > +        maxItems: 2
-> > > +
-> > > +      clock-names:
-> > > +        items:
-> > > +          - const: mod
-> > > +          - const: bus
-> > > +
-> > > +    required:
-> > > +      - clock-names
-> > > +      - resets
-> > > +
-> > > +  else:
-> > > +    properties:
-> > > +      clocks:
-> > > +        maxItems: 1
-> > > +
-> >
-> > Sorry for not noticing this earlier, but this should be at the topmost
-> > level
+>> Is a -stable backport warranted?
+> I believe it is.
+
+Note that this was caught during a code audit rather than a real 
+experienced problem. It looks to me like the only implementation that 
+currently creates huge pud pagetable entries is dev_dax_huge_fault() 
+which doesn't appear to care much about private (COW) mappings or 
+write-tracking which is, I believe, a prerequisite for create_huge_pud() 
+falling back on thread 1, but not in thread 2.
+
+This means (assuming that's intentional) that a stable backport 
+shouldn't be needed.
+
+For the WIP huge page support for graphics memory we'll be allowing both 
+COW mappings and write-tracking, though, but that's still some time away.
+
+In any case, I think this patch needs -rc testing to catch potential 
+pud_devmap issues before submitted to stable.
+
+Thanks,
+
+Thomas
+
 >
-> No problem, but I don't get what you want, (yaml format is new for me).
-> Do you mean I should put the if condition before the "resets" ?
+> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>
 
-No, here if we condense a bit the file, we have something like:
-
-title: PWM
-
-properties:
-  compatible:
-    ...
-
-  ...
-
-  resets:
-    ...
-
-  if:
-    properties:
-      ...
-
-  then:
-    properties:
-      ...
-
-which means that you expect that the node may contain a compatible
-property, a resets one, and then two properties "if" and "then", which
-in turn contain properties (ie, two nodes).
-
-This is obviously not what you want, what you want instead is:
-
-properties:
-  compatible:
-    ...
-
-  ...
-
-  resets:
-    ...
-
-if:
-  properties:
-    ...
-
-then:
-  properties:
-    ...
-
-Which then describes that there's two properties, compatible and
-resets, and if the schema under 'if' is valid against the node we try
-to validate, the schema under 'then' is used to validate the node as
-well.
-
-I hope it's clearer,
-Maxime
-
---luUS5rQ1j20Qzq8E
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXdKVHgAKCRDj7w1vZxhR
-xRf+AQDIKDWmitZKrfNWWYoRdbyxBBWj5ixRoYR6aGpqSbCu9wEA5XGA6Ew4woTI
-rOvVvGt0j8oafbBT1xQ/xkok13nHqAo=
-=Y2SH
------END PGP SIGNATURE-----
-
---luUS5rQ1j20Qzq8E--
