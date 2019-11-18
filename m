@@ -2,140 +2,236 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F28C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64934C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB46206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B43220748
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:23:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MXP6GE/s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfKRNWs (ORCPT
+        id S1727050AbfKRNXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 08:22:48 -0500
-Received: from mga12.intel.com ([192.55.52.136]:64926 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726284AbfKRNWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 08:22:48 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 05:22:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,320,1569308400"; 
-   d="scan'208";a="236915582"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga002.fm.intel.com with ESMTP; 18 Nov 2019 05:22:45 -0800
-Date:   Mon, 18 Nov 2019 21:22:35 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     akpm@linux-foundation.org, richardw.yang@linux.intel.com,
-        sfr@canb.auug.org.au, rppt@linux.ibm.com, jannh@google.com,
-        steve.capper@arm.com, catalin.marinas@arm.com, aarcange@redhat.com,
-        walken@google.com, dave.hansen@linux.intel.com,
-        tiny.windzz@gmail.com, jhubbard@nvidia.com, david@redhat.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] mm: get rid of odd jump labels in
- find_mergeable_anon_vma()
-Message-ID: <20191118132235.GA28027@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <1574079844-17493-1-git-send-email-linmiaohe@huawei.com>
+        Mon, 18 Nov 2019 08:23:21 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39439 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfKRNXV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 08:23:21 -0500
+Received: by mail-wr1-f68.google.com with SMTP id l7so19444536wrp.6;
+        Mon, 18 Nov 2019 05:23:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+Fi408zecYZ+JxozjOtIUW0lemV9jQmGDB7s5YARwS4=;
+        b=MXP6GE/s65zeyFbxCAQO8+XQ37PB8b9NTT+gYUaRizGiqk8dzMDnu1ZImZGS7+BU7+
+         W5wL+EpoBz6WZJ1S1Cb0UlMVRkIjXo2mMz6rQ6EEtS0dh9NsjaIye0ZEAc0/syEAHWK4
+         ctEGnHvvzoai9MhB9zz7JbZkVDKLsEgl3pKKiO8vwKbRNf+s7tDwZs5vq5iZgQvwcJCv
+         xyPDK20qmVH1RLImk5ToTNQ4cz1QoU5guGC647j7AeYqgO80pUn+lWpu4xZrfMWga1AF
+         +j7BuyAhA7/0jXrA4Kjt/WYlJ/VBgmt0/ehcsZqBHN0SmRAO9wcdm0qBloh4fzp+iPp2
+         FDqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+Fi408zecYZ+JxozjOtIUW0lemV9jQmGDB7s5YARwS4=;
+        b=AKibUZSnOngaSp23/RLUuGI79KM2dNMZBQm+wBowT8zoHdoHDgxVVl9wYfLaViOwec
+         CJCQrun9Zs+7jDCRJfGcSHU3v1pgrgagaF1N7raIJJPsLMH/IkiNUD9EIjirn74FZBLY
+         cdBEJMIpAlHmhf1Wn617YgTgGP4ufZFiPNvS1A2y7hdD4gn/eyqop/qIq1MYPhPt8W2W
+         LL3vBzPl77mE2nDdGf/oQhugQzVEVU2AxqQrQxQZkgg0jZSpHvTCcTle3x9DtasVKZSG
+         wweKpBnivCtjPjVtQDxL78RFzdFuuQca1sBIerTfPqO58rVUcaRN9aRO/FJd2es3WuAH
+         pQ1Q==
+X-Gm-Message-State: APjAAAWX1OmOA3ExRxB9WODEgKaDxhe/OZ6RnDUgfo6McnjRPQf0n2Qv
+        wEU/Sr1Ya/E2lAUt65ccT8RTEkBkQPjubBWqHOw=
+X-Google-Smtp-Source: APXvYqyo4y/agQzVtH2ECZnIYIOGEv1/ZBv1PJs0+BopW0iO5N/GQIYDUcjrFOcZYJWpd5uRqmvXsp8uSQF/TUlfCiA=
+X-Received: by 2002:adf:da52:: with SMTP id r18mr30182195wrl.167.1574083397043;
+ Mon, 18 Nov 2019 05:23:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1574079844-17493-1-git-send-email-linmiaohe@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191118110034.19444-1-peron.clem@gmail.com> <20191118110034.19444-2-peron.clem@gmail.com>
+ <20191118110640.GE4345@gilmour.lan> <CAJiuCceVyjSTGymOiXTZvyQXyXScGZuGS6gW+2=0gdxDFzg3dA@mail.gmail.com>
+ <20191118125702.GK4345@gilmour.lan>
+In-Reply-To: <20191118125702.GK4345@gilmour.lan>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Mon, 18 Nov 2019 14:23:05 +0100
+Message-ID: <CAJiuCcfBurkmX-6j9T2JHsdUw+RGCnuBSYCpo5BG+V-H-mcLUw@mail.gmail.com>
+Subject: Re: [PATCH v6 1/8] dt-bindings: pwm: allwinner: Add H6 PWM description
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 08:24:04PM +0800, linmiaohe wrote:
->From: Miaohe Lin <linmiaohe@huawei.com>
->
->The jump labels try_prev and none are not really needed
->in find_mergeable_anon_vma(), eliminate them to improve
->readability.
->
->Reviewed-by: David Hildenbrand <david@redhat.com>
->Reviewed-by: John Hubbard <jhubbard@nvidia.com>
->Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Hi,
 
-Reviewed-by: Wei Yang <richardw.yang@linux.intel.com>
-
->---
->-v2:
->	Fix commit descriptions and further simplify the code
->	as suggested by David Hildenbrand and John Hubbard.
->-v3:
->	Rewrite patch version info. Don't show this in commit log.
->-v4:
->	Get rid of var near completely as well.
->---
-> mm/mmap.c | 36 ++++++++++++++++--------------------
-> 1 file changed, 16 insertions(+), 20 deletions(-)
+On Mon, 18 Nov 2019 at 13:57, Maxime Ripard <mripard@kernel.org> wrote:
 >
->diff --git a/mm/mmap.c b/mm/mmap.c
->index 91d5e097a4ed..4d93bda30eac 100644
->--- a/mm/mmap.c
->+++ b/mm/mmap.c
->@@ -1273,26 +1273,22 @@ static struct anon_vma *reusable_anon_vma(struct vm_area_struct *old, struct vm_
->  */
-> struct anon_vma *find_mergeable_anon_vma(struct vm_area_struct *vma)
-> {
->-	struct anon_vma *anon_vma;
->-	struct vm_area_struct *near;
->-
->-	near = vma->vm_next;
->-	if (!near)
->-		goto try_prev;
->-
->-	anon_vma = reusable_anon_vma(near, vma, near);
->-	if (anon_vma)
->-		return anon_vma;
->-try_prev:
->-	near = vma->vm_prev;
->-	if (!near)
->-		goto none;
->-
->-	anon_vma = reusable_anon_vma(near, near, vma);
->-	if (anon_vma)
->-		return anon_vma;
->-none:
->+	struct anon_vma *anon_vma = NULL;
->+
->+	/* Try next first. */
->+	if (vma->vm_next) {
->+		anon_vma = reusable_anon_vma(vma->vm_next, vma, vma->vm_next);
->+		if (anon_vma)
->+			return anon_vma;
->+	}
->+
->+	/* Try prev next. */
->+	if (vma->vm_prev)
->+		anon_vma = reusable_anon_vma(vma->vm_prev, vma->vm_prev, vma);
->+
-> 	/*
->+	 * We might reach here with anon_vma == NULL if we can't find
->+	 * any reusable anon_vma.
-> 	 * There's no absolute need to look only at touching neighbours:
-> 	 * we could search further afield for "compatible" anon_vmas.
-> 	 * But it would probably just be a waste of time searching,
->@@ -1300,7 +1296,7 @@ struct anon_vma *find_mergeable_anon_vma(struct vm_area_struct *vma)
-> 	 * We're trying to allow mprotect remerging later on,
-> 	 * not trying to minimize memory used for anon_vmas.
-> 	 */
->-	return NULL;
->+	return anon_vma;
-> }
-> 
-> /*
->-- 
->2.21.GIT
+> On Mon, Nov 18, 2019 at 01:42:48PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Hi Maxime
+> >
+> > On Mon, 18 Nov 2019 at 12:06, Maxime Ripard <mripard@kernel.org> wrote:
+> > >
+> > > Hi,
+> > >
+> > > On Mon, Nov 18, 2019 at 12:00:27PM +0100, Cl=C3=A9ment P=C3=A9ron wro=
+te:
+> > > > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > >
+> > > > H6 PWM block is basically the same as A20 PWM, except that it also =
+has
+> > > > bus clock and reset line which needs to be handled accordingly.
+> > > >
+> > > > Expand Allwinner PWM binding with H6 PWM specifics.
+> > > >
+> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > > > ---
+> > > >  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 48 +++++++++++++++=
+++++
+> > > >  1 file changed, 48 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-=
+a10-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pw=
+m.yaml
+> > > > index 0ac52f83a58c..1bae446febbb 100644
+> > > > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm=
+.yaml
+> > > > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm=
+.yaml
+> > > > @@ -30,13 +30,51 @@ properties:
+> > > >        - items:
+> > > >            - const: allwinner,sun50i-h5-pwm
+> > > >            - const: allwinner,sun5i-a13-pwm
+> > > > +      - const: allwinner,sun50i-h6-pwm
+> > > >
+> > > >    reg:
+> > > >      maxItems: 1
+> > > >
+> > > >    clocks:
+> > > > +    minItems: 1
+> > > > +    maxItems: 2
+> > > > +    items:
+> > > > +      - description: Module Clock
+> > > > +      - description: Bus Clock
+> > > > +
+> > > > +  # Even though it only applies to subschemas under the conditiona=
+ls,
+> > > > +  # not listing them here will trigger a warning because of the
+> > > > +  # additionalsProperties set to false.
+> > > > +  clock-names: true
+> > > > +
+> > > > +  resets:
+> > > >      maxItems: 1
+> > > >
+> > > > +  if:
+> > > > +    properties:
+> > > > +      compatible:
+> > > > +        contains:
+> > > > +          const: allwinner,sun50i-h6-pwm
+> > > > +
+> > > > +  then:
+> > > > +    properties:
+> > > > +      clocks:
+> > > > +        maxItems: 2
+> > > > +
+> > > > +      clock-names:
+> > > > +        items:
+> > > > +          - const: mod
+> > > > +          - const: bus
+> > > > +
+> > > > +    required:
+> > > > +      - clock-names
+> > > > +      - resets
+> > > > +
+> > > > +  else:
+> > > > +    properties:
+> > > > +      clocks:
+> > > > +        maxItems: 1
+> > > > +
+> > >
+> > > Sorry for not noticing this earlier, but this should be at the topmos=
+t
+> > > level
+> >
+> > No problem, but I don't get what you want, (yaml format is new for me).
+> > Do you mean I should put the if condition before the "resets" ?
+>
+> No, here if we condense a bit the file, we have something like:
+>
+> title: PWM
+>
+> properties:
+>   compatible:
+>     ...
+>
+>   ...
+>
+>   resets:
+>     ...
+>
+>   if:
+>     properties:
+>       ...
+>
+>   then:
+>     properties:
+>       ...
+>
+> which means that you expect that the node may contain a compatible
+> property, a resets one, and then two properties "if" and "then", which
+> in turn contain properties (ie, two nodes).
+>
+> This is obviously not what you want, what you want instead is:
+>
+> properties:
+>   compatible:
+>     ...
+>
+>   ...
+>
+>   resets:
+>     ...
+>
+> if:
+>   properties:
+>     ...
+>
+> then:
+>   properties:
+>     ...
+>
+> Which then describes that there's two properties, compatible and
+> resets, and if the schema under 'if' is valid against the node we try
+> to validate, the schema under 'then' is used to validate the node as
+> well.
+>
+> I hope it's clearer,
 
--- 
-Wei Yang
-Help you, Help me
+Yes it's totally clear didn't see this bad indentation,
+Thanks for the catch and for the explanation.
+
+Regards,
+Cl=C3=A9ment
+
+> Maxime
