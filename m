@@ -2,92 +2,101 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8383C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0820CC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8947820659
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D06F420659
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:20:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbfKROT7 (ORCPT
+        id S1727247AbfKROUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 09:19:59 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40457 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbfKROT7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 09:19:59 -0500
-Received: by mail-oi1-f193.google.com with SMTP id d22so8479467oic.7;
-        Mon, 18 Nov 2019 06:19:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LlbnYe+LYNl3bzTxxtCJWfnFvfltP+wo9WgZRAXweTU=;
-        b=uXx/gcPpWxfGdjOTpd2TZvBPmVJKN3iKQX72vyb4Vpkss6UnYHPBfNPSQpCae2kF/1
-         d6jPwmlI0hdKMBxqDsoAO6bzUi/vwZD7W1+gcEPOodBb9keL1cRICkTRWkGDNid2BBhZ
-         ogVYrEcRHCqQ8OG5tpbhmwL2Mr/4mgTGtm2ZAR+ks354hFxTQtK7zmku7pXvw0frVt+c
-         NWB9bs0+Tix04h8WuQ0P8FUqN+/WxThfHHUxw3NCOFNoJfSg23/xqjdMCojQu3XxSKf8
-         S1G5hilFeB5FgLSpPnUlSrKheLf1JB5f97ID0bjcDxJvsiNEGjhKzbf3dUrFppjOmaEs
-         u+AQ==
-X-Gm-Message-State: APjAAAVVaEMgs09kVaYSwMJeNOX7SOGSb9oa5/lgU6ifg4OFRMbny37g
-        oS9oMpo06LyBzaKy0rv8qjkDkXfPlsztoNSUFEI=
-X-Google-Smtp-Source: APXvYqxWrKFZfkPOFssPIaeZK6fA30J1T3kw2M89/vEr8ng4ymwppDMf8+PVF9XCspw9ydA6TXMWFGnVqYySlYlLxf4=
-X-Received: by 2002:aca:fc92:: with SMTP id a140mr19658524oii.153.1574086797989;
- Mon, 18 Nov 2019 06:19:57 -0800 (PST)
+        Mon, 18 Nov 2019 09:20:36 -0500
+Received: from mga06.intel.com ([134.134.136.31]:37653 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727112AbfKROUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 09:20:35 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 06:20:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,320,1569308400"; 
+   d="scan'208";a="258420312"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 18 Nov 2019 06:20:34 -0800
+Received: from [10.252.10.190] (abudanko-mobl.ccr.corp.intel.com [10.252.10.190])
+        by linux.intel.com (Postfix) with ESMTP id 476A25800FE;
+        Mon, 18 Nov 2019 06:20:32 -0800 (PST)
+Subject: Re: [PATCH v2] perf session: fix decompression of
+ PERF_RECORD_COMPRESSED records
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <ed01646b-3b28-0ce7-04da-4665b8ed8a04@linux.intel.com>
+ <20191118122214.GB14046@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <924f076a-190f-330f-50e0-f06f35e2ee75@linux.intel.com>
+Date:   Mon, 18 Nov 2019 17:20:31 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <20191116114620.9193-1-jongk@linux-m68k.org>
-In-Reply-To: <20191116114620.9193-1-jongk@linux-m68k.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 18 Nov 2019 15:19:47 +0100
-Message-ID: <CAMuHMdUKJQSCe3mnGEnA+4Chrkk4SYM_VUpBtMFB0TqyadgOPA@mail.gmail.com>
-Subject: Re: [PATCH] rtc: msm6242: Remove unneeded msm6242_set()/msm6242_clear()
- functions
-To:     Kars de Jong <jongk@linux-m68k.org>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-rtc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191118122214.GB14046@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 16, 2019 at 12:46 PM Kars de Jong <jongk@linux-m68k.org> wrote:
-> The msm6242_set()/msm6242_clear() functions are used when writing to Control
-> Register D to set or clear the HOLD bit when reading the current time from
-> the RTC.
->
-> Doing this with a read-modify-write cycle will potentially clear an
-> interrupt condition which occurs between the read and the write.
->
-> The datasheet states the following about this:
->
->   When writing the HOLD or 30 second adjust bits of register D, it is
->   necessary to write the IRQ FLAG bit to a "1".
->
-> Since the only other bits in the register are the 30 second adjust bit
-> (which is not used) and the BUSY bit (which is read-only), the
-> read-modify-write cycle can be replaced by a simple write with the IRQ FLAG
-> bit set to 1 and the other bits (except HOLD) set to 0.
->
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Tested-by: Kars de Jong <jongk@linux-m68k.org>
-> Signed-off-by: Kars de Jong <jongk@linux-m68k.org>
+On 18.11.2019 15:22, Jiri Olsa wrote:
+> On Mon, Nov 18, 2019 at 02:30:04PM +0300, Alexey Budankov wrote:
+<SNIP>
+>>
+>> @@ -1971,20 +1971,32 @@ fetch_mmaped_event(struct perf_session *session,
+>>  		return NULL;
+>>  
+>>  	event = (union perf_event *)(buf + head);
+>> +	if (needs_swap)
+>> +		perf_event_header__bswap(&event->header);
+>>  
+>> -	if (session->header.needs_swap)
+>> +	if (head + event->header.size <= mmap_size)
+>> +		return event;
+>> +
+>> +	/* We're not fetching the event so swap back again */
+>> +	if (needs_swap)
+>>  		perf_event_header__bswap(&event->header);
+>>  
+>> -	if (head + event->header.size > mmap_size) {
+>> -		/* We're not fetching the event so swap back again */
+>> -		if (session->header.needs_swap)
+>> -			perf_event_header__bswap(&event->header);
+>> -		pr_debug("%s: head=%#" PRIx64 " event->header_size=%#x, mmap_size=%#zx: fuzzed perf.data?\n",
+>> -			 __func__, head, event->header.size, mmap_size);
+>> -		return ERR_PTR(-EINVAL);
+>> -	}
+>> +	pr_debug("%s: head=%#" PRIx64 " event->header_size=%#x, mmap_size=%#zx\n",
+>> +		__func__, head, event->header.size, mmap_size);
+> 
+> you're missign the 'fuzzed perf.data?' in here
+> 
+> I think we should keep it just change to: 'fuzzed or compressed perf.data?'
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Fixed in v3.
 
-Gr{oetje,eeting}s,
+> 
+> thanks,
+> jirka
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+~Alexey
