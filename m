@@ -2,142 +2,127 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3600C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAEFC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 783CE20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45C482192D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:39:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MBWGoonp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dSCD/0Uu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfKRPdr (ORCPT
+        id S1727173AbfKRPjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 10:33:47 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38839 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbfKRPdq (ORCPT
+        Mon, 18 Nov 2019 10:39:04 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38094 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbfKRPjE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 10:33:46 -0500
-Received: by mail-wr1-f65.google.com with SMTP id i12so20022379wro.5;
-        Mon, 18 Nov 2019 07:33:43 -0800 (PST)
+        Mon, 18 Nov 2019 10:39:04 -0500
+Received: by mail-pf1-f196.google.com with SMTP id c13so10568725pfp.5;
+        Mon, 18 Nov 2019 07:39:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MC6hbelJpY2ihrrZxRWmuxB6g8NUSOV+ALxeQ6r9VWQ=;
-        b=MBWGoonp2fPSzTPfLv5UodPdUBVdO9DNIjtTUdHD3x1++MPH69k+yr/Sj8x+Rswe1S
-         3nH7BWI4t7TRnYcqvFeN/KhOQx2ufrjKQN+trqtHG3gy5Tdisd+EMCHcvSjSYThPWZwa
-         GTTyaVnoxVqKu76XondIew0qvA/bQY3SeyOyth6Fa3dHA5T0ozIK6gVAugPdF0YkLDaT
-         Q1GP2ehRir+tny0fyRrD6lMsjonbKT9jfHcpMUqfb8qZrJ8OBBadRQhZHAT3wwxLt0xZ
-         rIZD/5oSRjubSmewpIN2UTf2VRfwE3ORB62jDn2tMRym/x0tviJvKoST2e3bQShGymkz
-         maWw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VM7WOH+2WiJWnDk5F5oKFEBVwx6qbmQaghETu0YE1Oo=;
+        b=dSCD/0UurD6XtLVdFTf12Qt2OJSpQf0r9AjAYdfFcRF9UieGPr6YceQA6uo7x2apxX
+         fLRpdauP7xUk1ZZVuoQ4eknhG8Avm+7UvzwJmoriM4jAAXlKmEWN6kxLtMmBYyUqLz7R
+         OXm+HPb2wiioPfWRH8HexVaue5jB2p8t1L0WySbwNNuczTsKLsF6XbpSpHcIKsZvTe63
+         Mra39Nnv5Frf5GBOwVPlKKDe0j+F3JtDUWlHVt7osLvF/ia1rxVY5AxlzexM1jcCiCa+
+         vaHcxaWrtLrEOYkKejmqYeV56WbJ9Mg3sYWcBs5LVP9uEoBjjRh5vShD6Hraz+Kyvnt4
+         3X3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MC6hbelJpY2ihrrZxRWmuxB6g8NUSOV+ALxeQ6r9VWQ=;
-        b=sp0BO9EXsyRlZ0hXY/Cwcz/SVblAC9BvjkDOieUxPxzv3cHDZBahPsAFc05ywdjokz
-         MLOdpiSdR06fglWhYHvd0U8gQEMCV7OP/Gkm17QNgItJJGCxCwv6ncmuxh1iIsNQu+mz
-         ISFIAKyh7WmE9oecL5MjRJWSp4LE1+0yXOslcpftpvWaDh/GWIJ7X3Wo8WsPuRdhCVjf
-         gvTNpFP9bvUFxPmBb/uz1upP0JtT80IXTuJskdNyQbuAl0Mgy0S3/TM54vjwRKR7UJYW
-         ZzwP5F4iWEfaDDifGz8DTtCR8Acu5URVwjmE0qGVENVROSYchMONEDOBlkdqT3gtCeZn
-         NpXA==
-X-Gm-Message-State: APjAAAWIJemLw9oGycBN1G+dUciktc+c1YcJZJIj2HPWhUeRPY7Yg0YK
-        /jN5hntj4pKz87ykgZ78mqnYOVx9s/4Bj+zqDEhEUG/s
-X-Google-Smtp-Source: APXvYqwMkQ61SZE/unmkSuy7n8X+6Fo7163ycOi1Eh3qM2kQnbY22m+fSOWQ7Y0wal0pClszXxLPGKpSxuONZWtrtfA=
-X-Received: by 2002:a5d:5224:: with SMTP id i4mr15741630wra.303.1574091223130;
- Mon, 18 Nov 2019 07:33:43 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VM7WOH+2WiJWnDk5F5oKFEBVwx6qbmQaghETu0YE1Oo=;
+        b=afLzL+n12XgI+vm4IFVCdVQV64OA1ZDKzqTza2s8NhSd3RGKSM7j43eB9n0z0HrkLe
+         uORA83FBWRVTBOeOuYC+URMSnk+uErA5IYMHhCq9P0grHY52lxvlWG3gtF8GMpHIsRxH
+         OFDwCKjigpcpHuBHNSsFYFFvKZ+2iyeUgGtSecQDP7vJPH8xGHULPSvJitGRU6F7QxmU
+         NfpWsANljTP3ztgrivU3D3V1moapiNiZnvD7ocH33nrxlAwq47STrNMSk5z0Tl9gWyrj
+         /jfoy9EDVsHwfb4BVY35WcLg7OPCvGroynkaHKNHi8EF5gAvGcMPIpEQ17vbkifl+xOM
+         X5BQ==
+X-Gm-Message-State: APjAAAW9BAo+XQHoErqhci/d053L56n8GV1Dbiy8CqYs9/b3I1c97Nai
+        J2E/lX4gtAikDgbahF/7fRAl+YVt
+X-Google-Smtp-Source: APXvYqz6ixm/Ial2SVgu2Wo1FWpe8VTuOm0E5fY1bulojOyWQbSn2VnuFhWnecGPhv/284FXj4PFtA==
+X-Received: by 2002:a63:4553:: with SMTP id u19mr33237513pgk.436.1574091543130;
+        Mon, 18 Nov 2019 07:39:03 -0800 (PST)
+Received: from localhost.hsd1.wa.comcast.net ([2601:602:847f:811f:babe:8e8d:b27e:e6d7])
+        by smtp.gmail.com with ESMTPSA id z7sm23573732pfr.165.2019.11.18.07.38.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 07:39:01 -0800 (PST)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-crypto@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com
+Subject: [PATCH v2 0/6] enable CAAM's HWRNG as default
+Date:   Mon, 18 Nov 2019 07:38:37 -0800
+Message-Id: <20191118153843.28136-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <0000000000005927bf0596c634a2@google.com>
-In-Reply-To: <0000000000005927bf0596c634a2@google.com>
-From:   Xin Long <lucien.xin@gmail.com>
-Date:   Mon, 18 Nov 2019 23:34:34 +0800
-Message-ID: <CADvbK_fAqKgt0JLT+Bcmsqoqc81ehZJ-g6StMB+G3+WKO68SUw@mail.gmail.com>
-Subject: Re: KCSAN: data-race in sctp_assoc_migrate / sctp_hash_obj
-To:     syzbot <syzbot+e3b35fe7918ff0ee474e@syzkaller.appspotmail.com>
-Cc:     davem <davem@davemloft.net>, elver@google.com,
-        LKML <linux-kernel@vger.kernel.org>, linux-sctp@vger.kernel.org,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        network dev <netdev@vger.kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vlad Yasevich <vyasevich@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 8, 2019 at 2:56 AM syzbot
-<syzbot+e3b35fe7918ff0ee474e@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    05f22368 x86, kcsan: Enable KCSAN for x86
-> git tree:       https://github.com/google/ktsan.git kcsan
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1046796ce00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=87d111955f40591f
-> dashboard link: https://syzkaller.appspot.com/bug?extid=e3b35fe7918ff0ee474e
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->
-> Unfortunately, I don't have any reproducer for this crash yet.
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+e3b35fe7918ff0ee474e@syzkaller.appspotmail.com
->
-> ==================================================================
-> BUG: KCSAN: data-race in sctp_assoc_migrate / sctp_hash_obj
-looks we need a better way to get netns in sctp_hash_obj(),
-I believe in sctp_hash_cmp(), too.
+Everyone:
 
->
-> write to 0xffff8880b67c0020 of 8 bytes by task 18908 on cpu 1:
->   sctp_assoc_migrate+0x1a6/0x290 net/sctp/associola.c:1091
->   sctp_sock_migrate+0x8aa/0x9b0 net/sctp/socket.c:9465
->   sctp_accept+0x3c8/0x470 net/sctp/socket.c:4916
->   inet_accept+0x7f/0x360 net/ipv4/af_inet.c:734
->   __sys_accept4+0x224/0x430 net/socket.c:1754
->   __do_sys_accept net/socket.c:1795 [inline]
->   __se_sys_accept net/socket.c:1792 [inline]
->   __x64_sys_accept+0x4e/0x60 net/socket.c:1792
->   do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
->   entry_SYSCALL_64_after_hwframe+0x44/0xa9
->
-> read to 0xffff8880b67c0020 of 8 bytes by task 12003 on cpu 0:
->   sctp_hash_obj+0x4f/0x2d0 net/sctp/input.c:894
->   rht_key_get_hash include/linux/rhashtable.h:133 [inline]
->   rht_key_hashfn include/linux/rhashtable.h:159 [inline]
->   rht_head_hashfn include/linux/rhashtable.h:174 [inline]
->   head_hashfn lib/rhashtable.c:41 [inline]
->   rhashtable_rehash_one lib/rhashtable.c:245 [inline]
->   rhashtable_rehash_chain lib/rhashtable.c:276 [inline]
->   rhashtable_rehash_table lib/rhashtable.c:316 [inline]
->   rht_deferred_worker+0x468/0xab0 lib/rhashtable.c:420
->   process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
->   worker_thread+0xa0/0x800 kernel/workqueue.c:2415
->   kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
->   ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
->
-> Reported by Kernel Concurrency Sanitizer on:
-> CPU: 0 PID: 12003 Comm: kworker/0:6 Not tainted 5.4.0-rc3+ #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Workqueue: events rht_deferred_worker
-> ==================================================================
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+This series is a continuation of original [discussion]. I don't know
+if what's in the series is enough to use CAAMs HWRNG system wide, but
+I am hoping that with enough iterations and feedback it will be.
+
+
+Changes since [v1]:
+
+    - Original hw_random replaced with the one using output of TRNG directly
+
+    - SEC4 DRNG IP block exposed via crypto API
+
+    - Small fix regarding use of GFP_DMA added to the series
+
+Feedback is welcome!
+
+Thanks,
+Andrey Smirnov
+
+[discussion] https://patchwork.kernel.org/patch/9850669/
+[v1] lore.kernel.org/lkml/20191029162916.26579-1-andrew.smirnov@gmail.com
+
+Andrey Smirnov (6):
+  crypto: caam - RNG4 TRNG errata
+  crypto: caam - enable prediction resistance in HRWNG
+  crypto: caam - allocate RNG instantiation descriptor with GFP_DMA
+  crypto: caam - move RNG presense check into a shared function
+  crypto: caam - replace DRNG with TRNG for use with hw_random
+  crypto: caam - expose SEC4 DRNG via crypto RNG API
+
+ drivers/crypto/caam/Kconfig   |  15 +-
+ drivers/crypto/caam/Makefile  |   3 +-
+ drivers/crypto/caam/caamrng.c | 358 ----------------------------------
+ drivers/crypto/caam/ctrl.c    |  29 ++-
+ drivers/crypto/caam/desc.h    |   2 +
+ drivers/crypto/caam/drng.c    | 175 +++++++++++++++++
+ drivers/crypto/caam/intern.h  |  32 ++-
+ drivers/crypto/caam/jr.c      |   3 +-
+ drivers/crypto/caam/regs.h    |  14 +-
+ drivers/crypto/caam/trng.c    |  85 ++++++++
+ 10 files changed, 334 insertions(+), 382 deletions(-)
+ delete mode 100644 drivers/crypto/caam/caamrng.c
+ create mode 100644 drivers/crypto/caam/drng.c
+ create mode 100644 drivers/crypto/caam/trng.c
+
+-- 
+2.21.0
+
