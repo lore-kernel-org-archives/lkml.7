@@ -2,206 +2,99 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC20FC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1C5C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C1E820740
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 040902068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:09:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmKrgC7B"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pmaHxIU+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbfKRIEw (ORCPT
+        id S1726510AbfKRIJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 03:04:52 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:47087 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726316AbfKRIEw (ORCPT
+        Mon, 18 Nov 2019 03:09:12 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45342 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbfKRIJM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 03:04:52 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 193so9974114pfc.13;
-        Mon, 18 Nov 2019 00:04:50 -0800 (PST)
+        Mon, 18 Nov 2019 03:09:12 -0500
+Received: by mail-pf1-f195.google.com with SMTP id z4so9980764pfn.12;
+        Mon, 18 Nov 2019 00:09:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=mBaFuvSmfuzg6OcAjV0kd4lsPu24dwjhOtff7pPt818=;
-        b=LmKrgC7BiQ+3tfCg3+wiQtBuG8EFPcGDsoT1d3CrOxbfNFTYzrd5sQkfN3oIxxjFTB
-         IHq40MVq6anqRFp2ShA28YwBlirTrOdb4e+jm/Xgu4yLQdbQOhVKbKBZwwFlj8UQorY2
-         S5hOOmzN5ivCIuz8HocDN4MAqKEM+5uqktwKVfwfkpo67HFz9VE9Tc/pvRmaQt2zVT8M
-         Mf5nnqWlHJuoY3KkEUxYe+Lsirqq2qv10EauXbn0jwe9QAqsu4/b8kg3RePoeC5eriAb
-         2oCs7Hhkw/o8rBXFsn/njrMxRIB68pCJ+ffk9awlx2e8k/hydEComnjVf5eAKfZmPWNU
-         ou8w==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vRkaKiZ0jcK6pZOODPSHPs05af1EHFvRH6r+NHDvbGM=;
+        b=pmaHxIU+GCD6VEupE1hCmo/hCdEJPDzkAJsMNygngaLbm8RyaEKPo+YTSBEyzbu1St
+         Lk2mlA6PYXWbfpGDclJv5JAXeYpd/R9xVBBm5QF1mLaapYKL+2VD0l06tEcqwG+hC+rv
+         iZB7f6tuFby6M0JjyMAYEgJSr2V4UYoBjlKRFbWOouMn3X5Fhbkjs25K8vHvJF8327pk
+         sejuBgyTiqOMzEflAc1CCskqRuGZexEIO+B86jmueVbjbAFhhWNjrhB8rWYbrBn7Hc1H
+         ci7s1jDzU9rvq0Cfz/PpS2VzpdX1YHTUAHyccMaKngTLMtKrI5W95E/+wX6RryrlXVPv
+         IfSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=mBaFuvSmfuzg6OcAjV0kd4lsPu24dwjhOtff7pPt818=;
-        b=A9lym6LOK4NUbs2GG3BpskAuY3ompgmggpggYasgEgHEIgAw63E2QCnwTPrARMjqjO
-         ansm1XVzl1J19ZqjZrL8aBSXtutqvhYPm05wnF/uCF+FnwIIZI5D8Zixnkc9mOF84uQS
-         UnqSKYpsCLERWp4jJxEJZTT122jSRS6I0c5zyWZL/OsOymY/CWKXY229YU7nBmEl/V0S
-         bZN0JD5lIdBBV9JAKkoTpjr80dC9vvhXnU9uKI2hUsiNF4y6WrY0P7RfLZnweVo5uMJ/
-         ukH/4Bxn6XG7lQMAuhtoTJ+h/+KUeupQzkroUECD/MPtUKOIDdD/Xe8+phcx38oWEgJr
-         zcIA==
-X-Gm-Message-State: APjAAAVx3I9pt1Uo42sr3O5ciBMyMlbjuNWYC7Y/5PVOUiCu4dgfDPTu
-        VfNX7UFCNhdchafT9rQ9iUw=
-X-Google-Smtp-Source: APXvYqwpuYPG15qYLuc6AEgyVFLYHGFLtK6Cj0tWJgWl3wtEuKNO8fZhogt+DpVZVM1yBsmPwdK1aQ==
-X-Received: by 2002:a62:5b83:: with SMTP id p125mr32896258pfb.237.1574064289130;
-        Mon, 18 Nov 2019 00:04:49 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id r24sm21542795pgu.36.2019.11.18.00.04.48
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vRkaKiZ0jcK6pZOODPSHPs05af1EHFvRH6r+NHDvbGM=;
+        b=Cal9+Q97DkBPwGTWSZo8wMmtwnVY7PGO5/1crooJwEQjtrFIEVFlG8rpxAfW+TWzEe
+         eo0bBExaquomOLejOtUDfYkOSfxrKH7TI+dqlQ3IAK6qhC830w/kzLzNYzdNebGt+mNR
+         BpnyGImQU+dMjtC/u+MP8Yxg4uL4FemcqpuRZ696lVD1/6sK4Rt78CAKdcUmZe5YDdYF
+         wRC6GcQlkFbvNojp8Q2i2c+MN6O34Fs/nKj02/D+NdetIysK5+n0rJUJIPcrhRiFxZ1C
+         UtMN92EDWBWBGPyPBq/QUgvXHhYju9cFvDNPcoVODfdX+NSp7jOweF1nsJmv4iv+Kx2N
+         lXRw==
+X-Gm-Message-State: APjAAAVLjASoJDZoX7KOKgNc/qYTKOE7fYekt/oWd54lmKJFYih00XHd
+        +4bqd5rrMlq6vbh2G6+QQhs=
+X-Google-Smtp-Source: APXvYqyqXM4dF/Bi8sS6a38D6GEbquJXQ6xwUz/LmqrrZeJ/7Sma+NSuyAYem4JwyHzl9f78o5JtYw==
+X-Received: by 2002:a62:e119:: with SMTP id q25mr33042968pfh.161.1574064551736;
+        Mon, 18 Nov 2019 00:09:11 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id y24sm21273800pfr.116.2019.11.18.00.09.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 00:04:48 -0800 (PST)
-Date:   Mon, 18 Nov 2019 00:04:46 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-iio@vger.kernel.orgi,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] i2c: use void pointers for supplying data for
- reads and writes
-Message-ID: <20191118080446.GB251795@dtor-ws>
-References: <20191112203132.163306-1-dmitry.torokhov@gmail.com>
- <20191112203132.163306-2-dmitry.torokhov@gmail.com>
- <20191118074349.ags3c4tmvapguqcp@pengutronix.de>
+        Mon, 18 Nov 2019 00:09:11 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Kristoffer Ericson <kristoffer.ericson@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] fbdev: s1d13xxxfb: add missed unregister_framebuffer in remove
+Date:   Mon, 18 Nov 2019 16:09:00 +0800
+Message-Id: <20191118080900.30634-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191118074349.ags3c4tmvapguqcp@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe,
+The driver calls register_framebuffer in probe but does not call
+unregister_framebuffer in remove.
+Add the missed call to fix it.
 
-On Mon, Nov 18, 2019 at 08:43:49AM +0100, Uwe Kleine-König wrote:
-> Hello Dmitry,
-> 
-> On Tue, Nov 12, 2019 at 12:31:30PM -0800, Dmitry Torokhov wrote:
-> > There is no need to force users of i2c_master_send()/i2c_master_recv()
-> > and other i2c read/write bulk data API to cast everything into u8 pointers.
-> > While everything can be considered byte stream, the drivers are usually
-> > work with more structured data.
-> > 
-> > Let's switch the APIs to accept [const] void pointers to cut amount of
-> > casting needed.
-> > 
-> > Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> 
-> Can you give an example where you save some casts? Given that i2c is a
-> byte oriented protocol (as opposed to for example spi) I think it's a
-> good idea to expose this in the API.
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/video/fbdev/s1d13xxxfb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I see this at least:
-
-dtor@dtor-ws:~/kernel/work $ git grep "i2c_master.*(u8 \*)"
-drivers/crypto/atmel-i2c.c:     ret = i2c_master_send(client, (u8 *)cmd, cmd->count + WORD_ADDR_SIZE);
-drivers/iio/common/ms_sensors/ms_sensors_i2c.c:         ret = i2c_master_recv(client, (u8 *)&buf, 3);
-drivers/iio/humidity/hdc100x.c: ret = i2c_master_recv(client, (u8 *)buf, 4);
-drivers/iio/pressure/abp060mg.c:        ret = i2c_master_send(client, (u8 *)&buf, state->mreq_len);
-drivers/iio/pressure/abp060mg.c:        ret = i2c_master_recv(client, (u8 *)&buf, sizeof(buf));
-drivers/input/misc/ad714x-i2c.c:        error = i2c_master_send(client, (u8 *)chip->xfer_buf,
-drivers/input/misc/ad714x-i2c.c:        error = i2c_master_send(client, (u8 *)chip->xfer_buf,
-drivers/input/misc/ad714x-i2c.c:                error = i2c_master_recv(client, (u8 *)chip->xfer_buf,
-drivers/input/touchscreen/sx8654.c:     len = i2c_master_recv(ts->client, (u8 *)data, readlen);
-drivers/nfc/nfcmrvl/i2c.c:      ret = i2c_master_recv(drv_data->i2c, (u8 *)&nci_hdr, NCI_CTRL_HDR_SIZE);
-drivers/nfc/nxp-nci/i2c.c:      r = i2c_master_recv(client, (u8 *) &header, NXP_NCI_FW_HDR_LEN);
-drivers/nfc/nxp-nci/i2c.c:      r = i2c_master_recv(client, (u8 *) &header, NCI_CTRL_HDR_SIZE);
-drivers/video/fbdev/ssd1307fb.c:        ret = i2c_master_send(client, (u8 *)array, len);
-
-I am pretty sure there are more that my quick grep did not catch.
-
-And I agree that I2C itself is a byte-oriented protocol, but the data from the
-point of the driver (once transfer is done) is often more structured.
-
-> 
-> > diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
-> > index 5c2cc61b666e7..48ed76a0e83d4 100644
-> > --- a/drivers/iio/adc/max1363.c
-> > +++ b/drivers/iio/adc/max1363.c
-> 
-> This change isn't motivated in the commit log. Is this here by mistake?
-
-No, it is needed as signature of i2c_master_send/recv has changed.
-
-> 
-> > @@ -182,9 +182,9 @@ struct max1363_state {
-> >  	struct regulator		*vref;
-> >  	u32				vref_uv;
-> >  	int				(*send)(const struct i2c_client *client,
-> > -						const char *buf, int count);
-> > +						const void *buf, int count);
-> >  	int				(*recv)(const struct i2c_client *client,
-> > -						char *buf, int count);
-> > +						void *buf, int count);
-> >  };
-> >  
-> >  #define MAX1363_MODE_SINGLE(_num, _mask) {				\
-> > @@ -310,27 +310,29 @@ static const struct max1363_mode
-> >  	return NULL;
-> >  }
-> >  
-> > -static int max1363_smbus_send(const struct i2c_client *client, const char *buf,
-> > +static int max1363_smbus_send(const struct i2c_client *client, const void *buf,
-> >  		int count)
-> >  {
-> > +	const u8 *data = buf;
-> >  	int i, err;
-> >  
-> >  	for (i = err = 0; err == 0 && i < count; ++i)
-> > -		err = i2c_smbus_write_byte(client, buf[i]);
-> > +		err = i2c_smbus_write_byte(client, data[i]);
-> 
-> Isn't this hunk an indicator that keeping char (or u8) as type of the
-> members of buf is a good idea?
-
-Not necessarily, if you check the driver sometimes it deals with stream of
-bytes, and sometimes it sends structured data, like little-endian words. I
-did not make additional changes because I wanted to minimize amount of changes
-to this driver in this patch.
-
-
->  
-> >  	return err ? err : count;
-> >  }
-> >  
-> > -static int max1363_smbus_recv(const struct i2c_client *client, char *buf,
-> > +static int max1363_smbus_recv(const struct i2c_client *client, void *buf,
-> >  		int count)
-> >  {
-> > +	u8 *data = buf;
-> >  	int i, ret;
-> >  
-> >  	for (i = 0; i < count; ++i) {
-> >  		ret = i2c_smbus_read_byte(client);
-> >  		if (ret < 0)
-> >  			return ret;
-> > -		buf[i] = ret;
-> > +		data[i] = ret;
-> >  	}
-> >  
-> >  	return count;
-> 
-
-Thanks.
-
+diff --git a/drivers/video/fbdev/s1d13xxxfb.c b/drivers/video/fbdev/s1d13xxxfb.c
+index e04efb567b5c..162003ea6b79 100644
+--- a/drivers/video/fbdev/s1d13xxxfb.c
++++ b/drivers/video/fbdev/s1d13xxxfb.c
+@@ -729,6 +729,7 @@ s1d13xxxfb_remove(struct platform_device *pdev)
+ 	struct s1d13xxxfb_par *par = NULL;
+ 
+ 	if (info) {
++		unregister_framebuffer(info);
+ 		par = info->par;
+ 		if (par && par->regs) {
+ 			/* disable output & enable powersave */
 -- 
-Dmitry
+2.24.0
+
