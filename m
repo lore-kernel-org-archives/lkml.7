@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B52C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9CCC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17E4522319
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95D62230E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:05:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J7gO1jvn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKpR3deF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfKRUFf (ORCPT
+        id S1726767AbfKRUFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 15:05:35 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43465 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbfKRUFd (ORCPT
+        Mon, 18 Nov 2019 15:05:37 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41389 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbfKRUFf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 15:05:33 -0500
-Received: by mail-lf1-f68.google.com with SMTP id l14so8211446lfh.10;
-        Mon, 18 Nov 2019 12:05:31 -0800 (PST)
+        Mon, 18 Nov 2019 15:05:35 -0500
+Received: by mail-lf1-f65.google.com with SMTP id j14so14866850lfb.8;
+        Mon, 18 Nov 2019 12:05:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Z+LP/oqYLNI/WjFbU+/NZQj8FBgrncVTG91u48nmPhw=;
-        b=J7gO1jvnzvd2hzgw2WlUrI12hvo+RAUFlxPNMOtMmAHWMN9YtS+lfkgjTAxy2CJ1xt
-         aLyGBb3tprQmNFCMQzoS3nUUUx7d6bDsx9sm537i1ybwKHRTJS8JcL5qtJj/piMtzx9I
-         gAci62RFvH76iewW0RPzUPL5OdJZqSlv9OSI6L1V5Yx28GNVRGGUGErxSYUXnKq3EJ9l
-         AzreYAuwgSnlEg9sydIm0X2Av44DA0zz0SFUQ7mRAVWIbxqLUt4Fu+ubXm46An4w4t25
-         /lMVvKOrnEbiP21FKe0F3f9CVtP5ZNc9bSZg0mk9XW//f9tgMNV1gxGjLi4T7uJXiH35
-         nYxQ==
+        bh=cN+cTWmw5IKMObEA3Y8HAg9N2AlhbhuoYmAREYZlw/4=;
+        b=gKpR3deFRHA9H6ebC9kq34DBn0/xxJSWvPVo3+J7x4cjq8pqJK5o6LsjRx7NySw4FD
+         BrOFnOqghNGiDsg2KrHCg+TI3DIIX6GiMeEIEQQ+snUi6B6O0ZOHhtNIrZPBskzLiDPu
+         7ZxX+VrcMINUEQ9jmxUPjJ/FZP2o3uEfcGIbJO+BqXZB2KsZwxKlXKtu5l7yvCksMCXR
+         jo7P3bhnHMSqE5eVuYsTyBJAC9xDWicmBbnnA31isZWe5MfiLeSdugeXgEf0gE04p62Z
+         au42a/HgriX8s4ini4zGtXm84ircbKlRZD13Ag12spQcku6Qqz5JZVqSWldGS8BuFdtp
+         wTaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Z+LP/oqYLNI/WjFbU+/NZQj8FBgrncVTG91u48nmPhw=;
-        b=NbC3rbUk9zbJ59ZsmBwB85u1KSKjhqTILZyLnL9fGCTsnLaKIIPAu0njSug0aX8mBK
-         ZJ34p4B2WmeLLCbVDSouqfawUeFM1kT0yKFFTzourUCo/DRBzJF4CeNxHl2bXjgRV3Lz
-         R87uc15K4sUTdGcyQYi/8pi91YiM/f2JX9QbCjrVjvN0/kQVnX68TBsW++HsCbrm9WAQ
-         vfe5wZ3+V4jqDwaGbACzUfd6fAQopjfCujfOjTh8k6LbPcjuJoJPfIFUxj0LMMuLN2X1
-         h8BqRDyMnwCEzI3Poj5jrJBFvF07xCqij3azQh1Rd/1l/K44tv+H9Kki2EOX7Z97ZY9Q
-         pCDA==
-X-Gm-Message-State: APjAAAWqOGM+DAJ0oByy0uBBfSJ6JNMB1z3nEX2dwhuLBTH0XMV9jfSo
-        Rqd1d8u6uEpNWNYDFFZiUnk=
-X-Google-Smtp-Source: APXvYqxOWxh/C2yG+0v+6CTM3jtniOCxIbWzkA4MxVnyi7RbbNMgB8/QIqmT44xuJVCgU5F6/zJgQA==
-X-Received: by 2002:a19:7510:: with SMTP id y16mr885929lfe.24.1574107530519;
-        Mon, 18 Nov 2019 12:05:30 -0800 (PST)
+        bh=cN+cTWmw5IKMObEA3Y8HAg9N2AlhbhuoYmAREYZlw/4=;
+        b=nrKDh34QLE1wfiOymHP6t9xY2U1Zz8YuBeS0AkspXq5XRXdhPfR81DMSLANefhYedo
+         /5S7yavvVjsHneNyNVKX5CZxAOiDA2RggVOTG8rRaA1PZaOUmbcQPiX196xVGSanC9iJ
+         QT6ISGCO1gERojMSA3MX7PPFgTK+jeB9+wydzW5M0mLjDi38nIFQMMVf01/NUPHIbK/7
+         r3GdgYDzlddih8uQmbab3QL9I/S9nkfOm0F59QQKg0MWpZT+T4nWn3jBaXumIYJ75pLa
+         bUnzAGKS5avjRz79se17A5NlagCY6JkH2AGUpGzmblIycxQJGSZjwDDVomPRTO7m4Ck2
+         EUVA==
+X-Gm-Message-State: APjAAAVxWrEB0VoskfrXeATFOpi5q80ADwiAbx5xLqtYu9190jgAH8Py
+        Xl5XdweYamKBn6YZsuJaCS4=
+X-Google-Smtp-Source: APXvYqzB8U5iYQKp+sDOt/38fnNxpmw9MZAc1mV8GBofStkZ8gBPo5XdpUpQbn0VIyJos6GrWdV34A==
+X-Received: by 2002:a19:8c1c:: with SMTP id o28mr840663lfd.105.1574107533034;
+        Mon, 18 Nov 2019 12:05:33 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id j23sm9166942lji.41.2019.11.18.12.05.29
+        by smtp.gmail.com with ESMTPSA id j23sm9166942lji.41.2019.11.18.12.05.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 12:05:29 -0800 (PST)
+        Mon, 18 Nov 2019 12:05:32 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -67,9 +67,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v1 01/29] dt-bindings: memory: tegra20: mc: Document new interconnect property
-Date:   Mon, 18 Nov 2019 23:02:19 +0300
-Message-Id: <20191118200247.3567-2-digetx@gmail.com>
+Subject: [PATCH v1 03/29] dt-bindings: memory: tegra30: mc: Document new interconnect property
+Date:   Mon, 18 Nov 2019 23:02:21 +0300
+Message-Id: <20191118200247.3567-4-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191118200247.3567-1-digetx@gmail.com>
 References: <20191118200247.3567-1-digetx@gmail.com>
@@ -86,31 +86,39 @@ designates memory controller as interconnect provider.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- .../bindings/memory-controllers/nvidia,tegra20-mc.txt         | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../bindings/memory-controllers/nvidia,tegra30-mc.yaml       | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra20-mc.txt b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra20-mc.txt
-index e55328237df4..b0765d5cb124 100644
---- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra20-mc.txt
-+++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra20-mc.txt
-@@ -16,6 +16,9 @@ Required properties:
-   IOMMU specifier needed to encode an address. GART supports only a single
-   address space that is shared by all devices, therefore no additional
-   information needed for the address encoding.
-+- #interconnect-cells : Should be 1. This cell represents memory client
-+  interconnect. The assignments may be found in header file
-+  <dt-bindings/interconnect/tegra-icc.h>.
+diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
+index 84fd57bcf0dc..5436e6d420bc 100644
+--- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
++++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
+@@ -57,6 +57,9 @@ properties:
+   "#iommu-cells":
+     const: 1
  
- Example:
- 	mc: memory-controller@7000f000 {
-@@ -27,6 +30,7 @@ Example:
- 		interrupts = <GIC_SPI 77 0x04>;
- 		#reset-cells = <1>;
- 		#iommu-cells = <0>;
-+		#interconnect-cells = <1>;
- 	};
++  "#interconnect-cells":
++    const: 1
++
+ patternProperties:
+   "^emc-timings-[0-9]+$":
+     type: object
+@@ -120,6 +123,7 @@ required:
+   - clock-names
+   - "#reset-cells"
+   - "#iommu-cells"
++  - "#interconnect-cells"
  
- 	video-codec@6001a000 {
+ additionalProperties: false
+ 
+@@ -135,6 +139,7 @@ examples:
+ 
+         #iommu-cells = <1>;
+         #reset-cells = <1>;
++        #interconnect-cells = <1>;
+ 
+         emc-timings-1 {
+             nvidia,ram-code = <1>;
 -- 
 2.23.0
 
