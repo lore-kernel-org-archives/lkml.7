@@ -2,110 +2,132 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B40DC43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E30CAC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4392D20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7DC32071B
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:41:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="gx9t8ngL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fNOJQoU8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfKROhE (ORCPT
+        id S1727189AbfKROlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 09:37:04 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46961 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbfKROhE (ORCPT
+        Mon, 18 Nov 2019 09:41:49 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31207 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726830AbfKROlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 09:37:04 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 193so10465922pfc.13
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 06:37:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=mvcfD7jITpqxjPheoMWCVxZTnjlcuW9ormSnkwSOmcw=;
-        b=gx9t8ngLd1CKC2pOlKZxYKX/nb5b9Fla8ZmjaRV/f8hRHqcWzKT0SkQjuOeLUjkKzn
-         bFiG1jbyJFszN6zUVehwdvnzDa7wZFbptFOlC8GAokKRZ3Q+zT4GLa1Dc5f2kvdflX5K
-         +M+f/XLEWA3bayoKRh2Nze4IHteHT7+NASZQ8d29w77i2HMTvYoB2mSW8SALJd3zeKJm
-         SBVQv3hzaaye8Qo/qR4EM4KkduTQLorIhb0ox4uMXRTsllk1x22dGuN2bKMV/fkDCMGp
-         h9eaKaNwdcjjSMo77ClhglL2Ih9Xy7ydV2KvQq7MbYshPYZ3HtTJZIAAQqepUV5ttn64
-         jhnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=mvcfD7jITpqxjPheoMWCVxZTnjlcuW9ormSnkwSOmcw=;
-        b=qS3dTt0Un6AJhjgL1ZHkmA0XxADetXhum1dBqqudaB0vHc10o60AP/eFlmGUow6u4/
-         drAz4GVqfsV1BwBlUQgoSjAeSehjPyFWw76Q9O+tH+m4BU+Ok1+ebbj6jc9Bm4iiBejb
-         D2ujaePIHpCDncZcMcqLld6BIxTNWw80wWznY5huSgBk5+H6PoXwxRIoFfQAk5KKibUg
-         EeViKNGC4XqiL96dIFiirL9uJK4Ve3lfXjkD2T/BW0yIi/di7JBHqnCJnev3dVsOusyH
-         ZVRHxKPt6UBGniul4MohsOvfwsDir4cFABSHrvvSn7oaTxWxpvQ68U9dn5qFjO3QxxR/
-         Zf5g==
-X-Gm-Message-State: APjAAAXcrj6SL4gpMZO+V10iEkGEU9NjsisdopxVzaHw0anDKTfjK9On
-        qmqMq497KvW48a8tHXQpQukoVg==
-X-Google-Smtp-Source: APXvYqynVHo9DCmHG04AdxQEaRenl+NyG/k0fpAYb6SsXQrD+cOLuHrcjkW15y7tKXTly3zWYi5gEw==
-X-Received: by 2002:a63:5b0c:: with SMTP id p12mr5854647pgb.196.1574087823195;
-        Mon, 18 Nov 2019 06:37:03 -0800 (PST)
-Received: from localhost.localdomain (1-169-21-101.dynamic-ip.hinet.net. [1.169.21.101])
-        by smtp.gmail.com with ESMTPSA id x10sm21910996pfn.36.2019.11.18.06.37.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 06:37:02 -0800 (PST)
-From:   Green Wan <green.wan@sifive.com>
-Cc:     Green Wan <green.wan@sifive.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] dmaengine: sf-pdma: move macro to header file
-Date:   Mon, 18 Nov 2019 22:35:53 +0800
-Message-Id: <20191118143554.16129-2-green.wan@sifive.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191118143554.16129-1-green.wan@sifive.com>
-References: <20191118143554.16129-1-green.wan@sifive.com>
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 18 Nov 2019 09:41:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574088108;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zWOuHjtcr+jgrXR9pO0XmYBgEY/ms4Num4NmyM+C6gs=;
+        b=fNOJQoU8sR1eHQyeDQW4RjwaRAQm66GPW9GEQu/tiIDR55hhAeRygaaB4fE33Hx8CXwQ7X
+        JcknnjRH5LVtFO2og3Y2x0fHF3ZYexFYb9ea0aLIZnYTwu3/30XS1lWxFzmZhPai9LRm4L
+        HWjd85zsqrqSzYXIcnPjWYCqRtG3mvs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-205-jeNprMmrNECxHQTR4Wq5wg-1; Mon, 18 Nov 2019 09:41:45 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4F67918C3940;
+        Mon, 18 Nov 2019 14:41:42 +0000 (UTC)
+Received: from treble (ovpn-121-122.rdu2.redhat.com [10.10.121.122])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B6BDE5DDAA;
+        Mon, 18 Nov 2019 14:41:39 +0000 (UTC)
+Date:   Mon, 18 Nov 2019 08:41:37 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Shile Zhang' <shile.zhang@linux.alibaba.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>
+Subject: Re: [RFC PATCH v3 7/7] x86/unwind/orc: remove run-time ORC unwind
+ tables sort
+Message-ID: <20191118144137.ibxel2hmp57jvspc@treble>
+References: <20191115064750.47888-1-shile.zhang@linux.alibaba.com>
+ <20191115064750.47888-8-shile.zhang@linux.alibaba.com>
+ <893d3caf85cd4ed0921fab84cfe28cad@AcuMS.aculab.com>
+ <20191115174649.ldif5o7xqo5ntxeo@treble>
+ <5fe9024bc69c4a4eb115b3c2f3f9bcd1@AcuMS.aculab.com>
+MIME-Version: 1.0
+In-Reply-To: <5fe9024bc69c4a4eb115b3c2f3f9bcd1@AcuMS.aculab.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: jeNprMmrNECxHQTR4Wq5wg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The place where the macro, SF_PDMA_REG_BASE(), is cause kernel-doc
-using wrong function declaration. Move it to header file.
+On Mon, Nov 18, 2019 at 10:05:02AM +0000, David Laight wrote:
+> From: Josh Poimboeuf <jpoimboe@redhat.com>
+> > Sent: 15 November 2019 17:47
+> > On Fri, Nov 15, 2019 at 04:51:24PM +0000, David Laight wrote:
+> > > From: Shile Zhang
+> > > > Sent: 15 November 2019 06:48
+> > > ...
+> > > >  arch/x86/kernel/unwind_orc.c | 8 +++++---
+> > > >  1 file changed, 5 insertions(+), 3 deletions(-)
+> > > >
+> > > > diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_=
+orc.c
+> > > > index 332ae6530fa8..280da6fa9922 100644
+> > > > --- a/arch/x86/kernel/unwind_orc.c
+> > > > +++ b/arch/x86/kernel/unwind_orc.c
+> > > > @@ -273,9 +273,11 @@ void __init unwind_init(void)
+> > > >  =09=09return;
+> > > >  =09}
+> > > >
+> > > > -=09/* Sort the .orc_unwind and .orc_unwind_ip tables: */
+> > > > -=09sort(__start_orc_unwind_ip, num_entries, sizeof(int), orc_sort_=
+cmp,
+> > > > -=09     orc_sort_swap);
+> > > > +=09/*
+> > > > +=09 * Note, orc_unwind and orc_unwind_ip tables has been sorted in
+> > > > +=09 * vmlinux link phase by sorttable tool at build time.
+> > > > +=09 * Its ready for binary search now.
+> > > > +=09 */
+> > >
+> > > How fast is sort() if the table is sorted?
+> > > Relying on the kernel sources and build scripts always being in sync =
+seems dangerous.
+> > > Probably better to leave the sort in for a release of two.
+> >=20
+> > This patch comes after the build script changes, so they'd be in sync.
+> > What would the concern be?
+>=20
+> Mostly that if, for any reason, the build script changes are missing noth=
+ing
+> will detect the error - but the results will be very confusing.
+> If the sort is fast for sorted inputs (some algorithms aren't) then leavi=
+ng
+> it in won't take that long.
 
-Signed-off-by: Green Wan <green.wan@sifive.com>
----
- drivers/dma/sf-pdma/sf-pdma.c | 1 -
- drivers/dma/sf-pdma/sf-pdma.h | 2 ++
- 2 files changed, 2 insertions(+), 1 deletion(-)
+But why would the build script changes be missing...
 
-diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
-index e8b9770dcfba..465256fe8b1f 100644
---- a/drivers/dma/sf-pdma/sf-pdma.c
-+++ b/drivers/dma/sf-pdma/sf-pdma.c
-@@ -435,7 +435,6 @@ static int sf_pdma_irq_init(struct platform_device *pdev, struct sf_pdma *pdma)
-  *
-  * Return: none
-  */
--#define SF_PDMA_REG_BASE(ch)	(pdma->membase + (PDMA_CHAN_OFFSET * (ch)))
- static void sf_pdma_setup_chans(struct sf_pdma *pdma)
- {
- 	int i;
-diff --git a/drivers/dma/sf-pdma/sf-pdma.h b/drivers/dma/sf-pdma/sf-pdma.h
-index aab65a0bdfcc..0c20167b097d 100644
---- a/drivers/dma/sf-pdma/sf-pdma.h
-+++ b/drivers/dma/sf-pdma/sf-pdma.h
-@@ -57,6 +57,8 @@
- /* Error Recovery */
- #define MAX_RETRY					1
- 
-+#define SF_PDMA_REG_BASE(ch)	(pdma->membase + (PDMA_CHAN_OFFSET * (ch)))
-+
- struct pdma_regs {
- 	/* read-write regs */
- 	void __iomem *ctrl;		/* 4 bytes */
--- 
-2.17.1
+And it should fail gracefully for oopses anyway: stack traces will just
+have a bunch of question marks.
+
+--=20
+Josh
 
