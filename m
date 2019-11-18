@@ -5,41 +5,41 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B193C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F7DC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2266A222EF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD7C2230F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:38:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BysBLpme"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bhxRpbub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfKRWiZ (ORCPT
+        id S1727191AbfKRWik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 17:38:25 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:50918 "EHLO
+        Mon, 18 Nov 2019 17:38:40 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:50938 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726705AbfKRWiZ (ORCPT
+        with ESMTP id S1726909AbfKRWiZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 Nov 2019 17:38:25 -0500
 Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 0F7622007681;
+        by linux.microsoft.com (Postfix) with ESMTPSA id 8CD9F20BBF29;
         Mon, 18 Nov 2019 14:38:24 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0F7622007681
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8CD9F20BBF29
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1574116704;
-        bh=ezcY0DaINd1FR3b0Y/IK94Q2dD9Cgf/AVRRWw/OCE8I=;
+        bh=6fT84HQtmgssUIHiqprsdXnwaoFEPuDfnilSFBVgCag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BysBLpmewwD9bLgjNuzH4H+UpbNRLSncZr6zOaqjlnmdkaMABiKm0JMI+/T1egmj4
-         HKW/f+wj+9d1/ud/8I48W6ORJH/JTHkksSCJdYc8yxQ1LK4Aj6hS4Kp6YZcau+7XgF
-         bVNs+rHrLAzhAZ34R7ftIlXzQN1q65ciU750Tzdg=
+        b=bhxRpbubDoxZZNMwD/nPiDdS7Nq93sFgCWNTNFa6ggQycD9EDgzzueR/0godo8+1p
+         U5PAOIlhW3+1ophunycD9SJXMDiloHw7Sn5u/V15bwQjM4WTdN1lSshnJEYrI01w4w
+         r+eUVBw1jMsnpGMvYQlGnNBnDhV3q1Hs2MIQDecM=
 From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 To:     zohar@linux.ibm.com, linux-integrity@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Subject: [PATCH v8 1/5] IMA: Add KEY_CHECK func to measure keys
-Date:   Mon, 18 Nov 2019 14:38:14 -0800
-Message-Id: <20191118223818.3353-2-nramas@linux.microsoft.com>
+Subject: [PATCH v8 5/5] IMA: Read keyrings= option from the IMA policy
+Date:   Mon, 18 Nov 2019 14:38:18 -0800
+Message-Id: <20191118223818.3353-6-nramas@linux.microsoft.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191118223818.3353-1-nramas@linux.microsoft.com>
 References: <20191118223818.3353-1-nramas@linux.microsoft.com>
@@ -48,77 +48,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Measure keys loaded onto any keyring.
+Read "keyrings=" option, if specified in the IMA policy, and store in
+the list of IMA rules when the configured IMA policy is read.
 
-This patch defines a new IMA policy func namely KEY_CHECK to
-measure keys. Updated ima_match_rules() to check for KEY_CHECK
-and ima_parse_rule() to handle KEY_CHECK.
+This patch defines a new policy token enum namely Opt_keyrings
+and an option flag IMA_KEYRINGS for reading "keyrings=" option
+from the IMA policy.
+
+Updated ima_parse_rule() to parse "keyrings=" option in the policy.
+Updated ima_policy_show() to display "keyrings=" option.
 
 Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 Cc: Sasha Levin <sashal@kernel.org>
 Cc: James Morris <jamorris@linux.microsoft.com>
 ---
- Documentation/ABI/testing/ima_policy | 7 ++++++-
- security/integrity/ima/ima.h         | 1 +
- security/integrity/ima/ima_policy.c  | 4 +++-
- 3 files changed, 10 insertions(+), 2 deletions(-)
+ security/integrity/ima/ima_policy.c | 29 ++++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
-index 29aaedf33246..3823c27894c5 100644
---- a/Documentation/ABI/testing/ima_policy
-+++ b/Documentation/ABI/testing/ima_policy
-@@ -29,7 +29,7 @@ Description:
- 		base: 	func:= [BPRM_CHECK][MMAP_CHECK][CREDS_CHECK][FILE_CHECK][MODULE_CHECK]
- 				[FIRMWARE_CHECK]
- 				[KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
--				[KEXEC_CMDLINE]
-+				[KEXEC_CMDLINE] [KEY_CHECK]
- 			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
- 			       [[^]MAY_EXEC]
- 			fsmagic:= hex value
-@@ -113,3 +113,8 @@ Description:
- 		Example of appraise rule allowing modsig appended signatures:
- 
- 			appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig
-+
-+		Example of measure rule using KEY_CHECK to measure all keys:
-+
-+			measure func=KEY_CHECK
-+
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index df4ca482fb53..fe6c698617bd 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -193,6 +193,7 @@ static inline unsigned long ima_hash_key(u8 *digest)
- 	hook(KEXEC_INITRAMFS_CHECK)	\
- 	hook(POLICY_CHECK)		\
- 	hook(KEXEC_CMDLINE)		\
-+	hook(KEY_CHECK)			\
- 	hook(MAX_CHECK)
- #define __ima_hook_enumify(ENUM)	ENUM,
- 
 diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index f19a895ad7cd..1525a28fd705 100644
+index d9400585fcda..78b25f083fe1 100644
 --- a/security/integrity/ima/ima_policy.c
 +++ b/security/integrity/ima/ima_policy.c
-@@ -373,7 +373,7 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
- {
- 	int i;
+@@ -34,6 +34,7 @@
+ #define IMA_EUID	0x0080
+ #define IMA_PCR		0x0100
+ #define IMA_FSNAME	0x0200
++#define IMA_KEYRINGS	0x0400
  
--	if (func == KEXEC_CMDLINE) {
-+	if ((func == KEXEC_CMDLINE) || (func == KEY_CHECK)) {
- 		if ((rule->flags & IMA_FUNC) && (rule->func == func))
- 			return true;
- 		return false;
-@@ -997,6 +997,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 				entry->func = POLICY_CHECK;
- 			else if (strcmp(args[0].from, "KEXEC_CMDLINE") == 0)
- 				entry->func = KEXEC_CMDLINE;
-+			else if (strcmp(args[0].from, "KEY_CHECK") == 0)
-+				entry->func = KEY_CHECK;
- 			else
- 				result = -EINVAL;
- 			if (!result)
+ #define UNKNOWN		0
+ #define MEASURE		0x0001	/* same as IMA_MEASURE */
+@@ -825,7 +826,8 @@ enum {
+ 	Opt_uid_gt, Opt_euid_gt, Opt_fowner_gt,
+ 	Opt_uid_lt, Opt_euid_lt, Opt_fowner_lt,
+ 	Opt_appraise_type, Opt_appraise_flag,
+-	Opt_permit_directio, Opt_pcr, Opt_template, Opt_err
++	Opt_permit_directio, Opt_pcr, Opt_template, Opt_keyrings,
++	Opt_err
+ };
+ 
+ static const match_table_t policy_tokens = {
+@@ -861,6 +863,7 @@ static const match_table_t policy_tokens = {
+ 	{Opt_permit_directio, "permit_directio"},
+ 	{Opt_pcr, "pcr=%s"},
+ 	{Opt_template, "template=%s"},
++	{Opt_keyrings, "keyrings=%s"},
+ 	{Opt_err, NULL}
+ };
+ 
+@@ -1110,6 +1113,23 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+ 			result = 0;
+ 			entry->flags |= IMA_FSNAME;
+ 			break;
++		case Opt_keyrings:
++			ima_log_string(ab, "keyrings", args[0].from);
++
++			if ((entry->keyrings) ||
++			    (entry->action != MEASURE) ||
++			    (entry->func != KEY_CHECK)) {
++				result = -EINVAL;
++				break;
++			}
++			entry->keyrings = kstrdup(args[0].from, GFP_KERNEL);
++			if (!entry->keyrings) {
++				result = -ENOMEM;
++				break;
++			}
++			result = 0;
++			entry->flags |= IMA_KEYRINGS;
++			break;
+ 		case Opt_fsuuid:
+ 			ima_log_string(ab, "fsuuid", args[0].from);
+ 
+@@ -1485,6 +1505,13 @@ int ima_policy_show(struct seq_file *m, void *v)
+ 		seq_puts(m, " ");
+ 	}
+ 
++	if (entry->flags & IMA_KEYRINGS) {
++		if (entry->keyrings != NULL)
++			snprintf(tbuf, sizeof(tbuf), "%s", entry->keyrings);
++		seq_printf(m, pt(Opt_keyrings), tbuf);
++		seq_puts(m, " ");
++	}
++
+ 	if (entry->flags & IMA_PCR) {
+ 		snprintf(tbuf, sizeof(tbuf), "%d", entry->pcr);
+ 		seq_printf(m, pt(Opt_pcr), tbuf);
 -- 
 2.17.1
 
