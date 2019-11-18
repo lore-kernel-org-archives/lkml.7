@@ -2,90 +2,81 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD330C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED214C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD532068D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C22C620692
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:56:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbfKRHxa (ORCPT
+        id S1726465AbfKRH4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 02:53:30 -0500
-Received: from mga07.intel.com ([134.134.136.100]:29559 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbfKRHxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 02:53:30 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Nov 2019 23:53:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,319,1569308400"; 
-   d="scan'208";a="196047576"
-Received: from rongch2-mobl.ccr.corp.intel.com (HELO [10.255.29.39]) ([10.255.29.39])
-  by orsmga007.jf.intel.com with ESMTP; 17 Nov 2019 23:53:24 -0800
-Subject: Re: [LKP] Re: [pipe] d60337eff1:
- BUG:kernel_NULL_pointer_dereference,address
-To:     David Howells <dhowells@redhat.com>,
-        kernel test robot <lkp@intel.com>
-Cc:     torvalds@linux-foundation.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lkp@lists.01.org
-References: <9279.1573824532@warthog.procyon.org.uk>
- <20191110031348.GE29418@shao2-debian>
- <6853.1573834946@warthog.procyon.org.uk>
-From:   kernel test robot <rong.a.chen@intel.com>
-Message-ID: <35daca93-ff2b-2c7d-b837-72396ca0677a@intel.com>
-Date:   Mon, 18 Nov 2019 15:53:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 18 Nov 2019 02:56:42 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6692 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726315AbfKRH4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 02:56:41 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 53A43BAD1F679704F9BA;
+        Mon, 18 Nov 2019 15:56:39 +0800 (CST)
+Received: from localhost.localdomain (10.90.53.225) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 18 Nov 2019 15:56:31 +0800
+From:   Chen Wandun <chenwandun@huawei.com>
+To:     <evan.quan@amd.com>, <alexander.deucher@amd.com>,
+        <amd-gfx@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>
+CC:     <chenwandun@huawei.com>
+Subject: [PATCH v2] drm/amd/powerplay: return errno code to caller when error occur
+Date:   Mon, 18 Nov 2019 16:03:34 +0800
+Message-ID: <1574064214-109525-1-git-send-email-chenwandun@huawei.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1573875799-83572-1-git-send-email-chenwandun@huawei.com>
+References: <1573875799-83572-1-git-send-email-chenwandun@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <6853.1573834946@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+return errno code to caller when error occur, and meanwhile
+remove gcc '-Wunused-but-set-variable' warning.
 
-Yes, it can fix the problem.
+drivers/gpu/drm/amd/amdgpu/../powerplay/smumgr/vegam_smumgr.c: In function vegam_populate_smc_boot_level:
+drivers/gpu/drm/amd/amdgpu/../powerplay/smumgr/vegam_smumgr.c:1364:6: warning: variable result set but not used [-Wunused-but-set-variable]
 
-Best Regards,
-Rong Chen
+Signed-off-by: Chen Wandun <chenwandun@huawei.com>
+---
+ drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-On 11/16/2019 12:22 AM, David Howells wrote:
-> Actually, no, this is the fix:
->
-> diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-> index 7006b5b2106d..be2fc5793ddd 100644
-> --- a/lib/iov_iter.c
-> +++ b/lib/iov_iter.c
-> @@ -537,7 +537,7 @@ static size_t push_pipe(struct iov_iter *i, size_t size,
->   		buf->ops = &default_pipe_buf_ops;
->   		buf->page = page;
->   		buf->offset = 0;
-> -		buf->len = max_t(ssize_t, left, PAGE_SIZE);
-> +		buf->len = min_t(ssize_t, left, PAGE_SIZE);
->   		left -= buf->len;
->   		iter_head++;
->   		pipe->head = iter_head;
->
-> David
-> _______________________________________________
-> LKP mailing list -- lkp@lists.01.org
-> To unsubscribe send an email to lkp-leave@lists.01.org
+diff --git a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c b/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
+index 2068eb0..50896e9 100644
+--- a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
++++ b/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
+@@ -1371,11 +1371,16 @@ static int vegam_populate_smc_boot_level(struct pp_hwmgr *hwmgr,
+ 	result = phm_find_boot_level(&(data->dpm_table.sclk_table),
+ 			data->vbios_boot_state.sclk_bootup_value,
+ 			(uint32_t *)&(table->GraphicsBootLevel));
++	if (result)
++		return result;
+ 
+ 	result = phm_find_boot_level(&(data->dpm_table.mclk_table),
+ 			data->vbios_boot_state.mclk_bootup_value,
+ 			(uint32_t *)&(table->MemoryBootLevel));
+ 
++	if (result)
++		return result;
++
+ 	table->BootVddc  = data->vbios_boot_state.vddc_bootup_value *
+ 			VOLTAGE_SCALE;
+ 	table->BootVddci = data->vbios_boot_state.vddci_bootup_value *
+-- 
+2.7.4
 
