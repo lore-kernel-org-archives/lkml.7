@@ -2,77 +2,124 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E92C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28693C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EAC9222AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0609D222AD
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:21:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfKRSTT (ORCPT
+        id S1726703AbfKRSV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 13:19:19 -0500
-Received: from mga02.intel.com ([134.134.136.20]:54651 "EHLO mga02.intel.com"
+        Mon, 18 Nov 2019 13:21:26 -0500
+Received: from smtp.uniroma2.it ([160.80.6.23]:41595 "EHLO smtp.uniroma2.it"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726317AbfKRSTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 13:19:18 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 10:19:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,321,1569308400"; 
-   d="scan'208";a="407480031"
-Received: from asimomai-mobl1.amr.corp.intel.com (HELO [10.251.156.191]) ([10.251.156.191])
-  by fmsmga006.fm.intel.com with ESMTP; 18 Nov 2019 10:19:17 -0800
-Subject: Re: linux-next: build failure after merge of the sound-asoc-fixes
- tree
-To:     Mark Brown <broonie@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191113081035.7e7f9bc2@canb.auug.org.au>
- <20191115093410.4a7938f5@canb.auug.org.au>
- <20191118155852.GG9761@sirena.org.uk>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <a0e6089b-b5a3-f9e3-fc2c-5b433553e154@linux.intel.com>
-Date:   Mon, 18 Nov 2019 10:47:01 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S1726216AbfKRSV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 13:21:26 -0500
+Received: from localhost.localdomain ([160.80.103.126])
+        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id xAIIKjUB028377
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 18 Nov 2019 19:20:46 +0100
+From:   Andrea Mayer <andrea.mayer@uniroma2.it>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        David Lebrun <dav.lebrun@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Andrea Mayer <andrea.mayer@uniroma2.it>
+Subject: [net-next] seg6: allow local packet processing for SRv6 End.DT6 behavior
+Date:   Mon, 18 Nov 2019 19:20:26 +0100
+Message-Id: <20191118182026.2634-1-andrea.mayer@uniroma2.it>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191118155852.GG9761@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+End.DT6 behavior makes use of seg6_lookup_nexthop() function which drops
+all packets that are destined to be locally processed. However, DT* should
+be able to delivery decapsulated packets that are destined to local
+addresses. Function seg6_lookup_nexthop() is also used by DX6, so in order
+to maintain compatibility I created another routing helper function which
+is called seg6_lookup_any_nexthop(). This function is able to take into
+account both packets that have to be processed locally and the ones that
+are destined to be forwarded directly to another machine. Hence,
+seg6_lookup_any_nexthop() is used in DT6 rather than seg6_lookup_nexthop()
+to allow local delivery.
 
+Signed-off-by: Andrea Mayer <andrea.mayer@uniroma2.it>
+---
+ net/ipv6/seg6_local.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
-On 11/18/19 9:58 AM, Mark Brown wrote:
-> On Fri, Nov 15, 2019 at 09:34:10AM +1100, Stephen Rothwell wrote:
->> On Wed, 13 Nov 2019 08:10:35 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> 
->>> Caused by commit
-> 
->>>    1d3e9077307f ("ASoC: SOF: Intel: Fix CFL and CML FW nocodec binary names.")
-> 
->>> I have reverted that commit for today.
-> 
->> I am still reverting that commit.
-> 
-> I've reverted the commit, I was a bit disappointed that none of the
-> Intel people responded but I see you didn't CC Pierre who sent the
-> commit so he won't have seen your report - I missed that due to the CC
-> to Liam who was also in the chain.
+diff --git a/net/ipv6/seg6_local.c b/net/ipv6/seg6_local.c
+index e70567446f28..43f3c9f1b4c1 100644
+--- a/net/ipv6/seg6_local.c
++++ b/net/ipv6/seg6_local.c
+@@ -149,8 +149,9 @@ static void advance_nextseg(struct ipv6_sr_hdr *srh, struct in6_addr *daddr)
+ 	*daddr = *addr;
+ }
+ 
+-int seg6_lookup_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
+-			u32 tbl_id)
++static int
++seg6_lookup_any_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
++			u32 tbl_id, int local_delivery)
+ {
+ 	struct net *net = dev_net(skb->dev);
+ 	struct ipv6hdr *hdr = ipv6_hdr(skb);
+@@ -158,6 +159,7 @@ int seg6_lookup_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
+ 	struct dst_entry *dst = NULL;
+ 	struct rt6_info *rt;
+ 	struct flowi6 fl6;
++	int dev_flags = 0;
+ 
+ 	fl6.flowi6_iif = skb->dev->ifindex;
+ 	fl6.daddr = nhaddr ? *nhaddr : hdr->daddr;
+@@ -182,7 +184,13 @@ int seg6_lookup_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
+ 		dst = &rt->dst;
+ 	}
+ 
+-	if (dst && dst->dev->flags & IFF_LOOPBACK && !dst->error) {
++	/* we want to discard traffic destined for local packet processing,
++	 * if @local_delivery is set to false.
++	 */
++	if (!local_delivery)
++		dev_flags |= IFF_LOOPBACK;
++
++	if (dst && (dst->dev->flags & dev_flags) && !dst->error) {
+ 		dst_release(dst);
+ 		dst = NULL;
+ 	}
+@@ -199,6 +207,12 @@ int seg6_lookup_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
+ 	return dst->error;
+ }
+ 
++inline int seg6_lookup_nexthop(struct sk_buff *skb,
++			       struct in6_addr *nhaddr, u32 tbl_id)
++{
++	return seg6_lookup_any_nexthop(skb, nhaddr, tbl_id, false);
++}
++
+ /* regular endpoint function */
+ static int input_action_end(struct sk_buff *skb, struct seg6_local_lwt *slwt)
+ {
+@@ -396,7 +410,7 @@ static int input_action_end_dt6(struct sk_buff *skb,
+ 
+ 	skb_set_transport_header(skb, sizeof(struct ipv6hdr));
+ 
+-	seg6_lookup_nexthop(skb, NULL, slwt->table);
++	seg6_lookup_any_nexthop(skb, NULL, slwt->table, true);
+ 
+ 	return dst_input(skb);
+ 
+-- 
+2.20.1
 
-Sorry about that, the use of 'Fix' in the commit message might have 
-misled Mark.
-If you CC: me and also CC: alsa-devel you should get an answer without 
-delay. I only noticed the issue this morning with kbuild reports.
