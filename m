@@ -2,122 +2,107 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A037C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C721BC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 732D82068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:09:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EcsNe4u9"
+	by mail.kernel.org (Postfix) with ESMTP id 8DC822073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:11:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574064707;
+	bh=4+uT/URtHmAzVIJt/qrw/F10B2ZhX5Gsk0xCOlfou9k=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=j4lnVRQ4r5ZuoAUyZvi+2eE4AHeLQSr9RzPoJZeJRj4+IyzpiT3FYyxwtJ9cChxhS
+	 AnPcNeLmTLO+JuoQABxbhbRgOjv2enp0Wm14LVe+Deg+gaE4pzuq5ucQGYvm9Sh1B4
+	 wH1oNrbI2ZI9XnDmhUuL29/bX9L8JVV9zq27Wlvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbfKRIJo (ORCPT
+        id S1726536AbfKRILq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 03:09:44 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:34941 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfKRIJn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 03:09:43 -0500
-Received: by mail-pj1-f65.google.com with SMTP id s8so1257606pji.2;
-        Mon, 18 Nov 2019 00:09:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=vBUlayihdGnEP5X+y2Clso2IXibwzRhsbW73z0BN6yA=;
-        b=EcsNe4u99CSCk6YPmn9SgvWlQvml6q7EjkZFBbLpn7lJv8FiRBxcc26u7rH3i8MQpn
-         6T98zSCp2shjBQysrTnNAWD3/TKk4IXBsnzlI0NrwyczPVdRRw0RdpbbWBgpeg901KOg
-         ks1czJkyPQ4E9zOOnAmZUFjwOUFDzoTz3iiVyWSad9yMbzNDNyC0XJsR+W4SHliri4s0
-         Y7n/rUZh0xIqE8BWjWejfL/UTIDBszsg5uN1dijdxTLRYktRRIb5SF11mhwNmoWegTJF
-         ZfzXZnmA0aLGipvGsj6SB59RwMGaMI+F/6W7+MZ9d/SCnPSn61eKTWAu6Z4tf9mh6pfo
-         fK9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=vBUlayihdGnEP5X+y2Clso2IXibwzRhsbW73z0BN6yA=;
-        b=aTUqWm8Les9t9IXYhjqW2TZXaid68y5ZQV2XakQ6I3G+DRsoW7VV9qZ+rd7c2/oa+R
-         rslecdqVg376jWKIreUNeoqz+vkVP+BsKUxld5yEsJq/F6tAgnKNb6R/jYuy0evZatfj
-         N+thsaPdCYkTWBEGlkd5RBih3oLx81YLpph0G2NrAOxTcpV3NVCQTpWgLhDMeD5ZvD0s
-         BiVQ36aPFI08L8mSK2ew3WAFzUB50iqExicODbkeFxGoYlQfoCOjbaXQZmiG9BLR4BM+
-         Q44A9Cc5bXiLkcr7Z6ETBicPvI/1PNjwxyj6lIQeAhotllhShosumaVkAxfICHikoRd8
-         ta5A==
-X-Gm-Message-State: APjAAAUa1zGp8Q2wUqpROTaHIwEvYNz6JLLsw0+dkGoqS5HRvOhhrdX5
-        lJUdf4zxXlXWCbwjhy1gI9GLENFv
-X-Google-Smtp-Source: APXvYqwSeUmbS2bLDo3twzIhvrt8iLYEqiH/T4EJPMGb/ptFmGnaJvpL+DEM8+rRL3TrMjGoKH+RPQ==
-X-Received: by 2002:a17:902:6946:: with SMTP id k6mr1143816plt.164.1574064582503;
-        Mon, 18 Nov 2019 00:09:42 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id h5sm18666428pjc.9.2019.11.18.00.09.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 00:09:41 -0800 (PST)
-Date:   Mon, 18 Nov 2019 00:09:39 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-iio@vger.kernel.org,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] i2c: smbus: switch from loops to memcpy
-Message-ID: <20191118080939.GC251795@dtor-ws>
-References: <20191112203132.163306-1-dmitry.torokhov@gmail.com>
- <20191112203132.163306-4-dmitry.torokhov@gmail.com>
- <20191118074757.edyfvz5s3pqnu67y@pengutronix.de>
+        Mon, 18 Nov 2019 03:11:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726316AbfKRILq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 03:11:46 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C6162068E;
+        Mon, 18 Nov 2019 08:11:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574064705;
+        bh=4+uT/URtHmAzVIJt/qrw/F10B2ZhX5Gsk0xCOlfou9k=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JICocKpn5CiaU+WA4h7d9HgNluj5JuEubsVnNBYWKP7t7+KURdA16I35w4zPzSyHe
+         ypOox0bJ2qpIfHZMenbBq3mkvt5jXBHT3QU/4jAQYm9kJjpBt+eNFJMxdUtHcJ9GQw
+         1SnX4Rg3ifqpu5cnWLeVhrRUYtovLrRs3ve/hyag=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH v3 0/7] perf/probe: Support multiprobe and immediates with fixes
+Date:   Mon, 18 Nov 2019 17:11:40 +0900
+Message-Id: <157406469983.24476.13195800716161845227.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191118074757.edyfvz5s3pqnu67y@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 08:47:57AM +0100, Uwe Kleine-König wrote:
-> Hello Dmitry,
-> 
-> On Tue, Nov 12, 2019 at 12:31:32PM -0800, Dmitry Torokhov wrote:
-> > When copying memory from one buffer to another, instead of open-coding
-> > loops with byte-by-byte copies let's use memcpy() which might be a bit
-> > faster and makes intent more clear.
-> > 
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > 
-> > ---
-> > 
-> > Changes in v3:
-> > - new patch using memcpy() for moving data around
-> > 
-> >  drivers/i2c/i2c-core-smbus.c | 15 +++++----------
-> >  1 file changed, 5 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
-> > index 7b4e2270eeda1..bbafdd3b1b114 100644
-> > --- a/drivers/i2c/i2c-core-smbus.c
-> > +++ b/drivers/i2c/i2c-core-smbus.c
-> > @@ -397,8 +397,7 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
-> >  			}
-> >  
-> >  			i2c_smbus_try_get_dmabuf(&msg[0], command);
-> > -			for (i = 1; i < msg[0].len; i++)
-> > -				msg[0].buf[i] = data->block[i - 1];
-> > +			memcpy(msg[0].buf + 1, data->block, msg[0].len - 1);
-> 
-> Can it happen that msg[0].len is zero?
+Hi Arnaldo,
 
-No, it can not, because of the "msg[0].len = data->block[0] + 2;" line
-above.
+This is the 3rd version of the multiprobe support on perf probe
+including some fixes about "representive lines"
 
-Thanks.
+The previous thread is here:
 
--- 
-Dmitry
+https://lkml.kernel.org/r/157314406866.4063.16995747442215702109.stgit@devnote2
+
+On the previous thread, we discussed some issues about incorrect line
+information shown by perf probe. I finally fixed those by introducing
+an idea of "representive line" -- a line which has a unique address
+(no other lines shares the same address) or a line which has the least
+line number among lines sharing same address. Now perf probe only shows
+such representive lines can be probed([1/7][3/7]), and if user tries to
+probe other non representive lines, it shows which line user should
+probe ([2/7]). The rest of patches in the series are same as v2 (except
+for [4/7], example output is updated)
+
+This can be applied on top of perf/core.
+
+Thank you,
+
+---
+
+Masami Hiramatsu (7):
+      perf probe: Show correct statement line number by perf probe -l
+      perf probe: Verify given line is a representive line
+      perf probe: Do not show non representive lines by perf-probe -L
+      perf probe: Generate event name with line number
+      perf probe: Support multiprobe event
+      perf probe: Support DW_AT_const_value constant value
+      perf probe: Trace a magic number if variable is not found
+
+
+ tools/perf/util/dwarf-aux.c    |   62 ++++++++++++++++++++-
+ tools/perf/util/probe-event.c  |   19 ++++++-
+ tools/perf/util/probe-event.h  |    3 +
+ tools/perf/util/probe-file.c   |   14 +++++
+ tools/perf/util/probe-file.h   |    2 +
+ tools/perf/util/probe-finder.c |  116 +++++++++++++++++++++++++++++++++++++++-
+ tools/perf/util/probe-finder.h |    1 
+ 7 files changed, 206 insertions(+), 11 deletions(-)
+
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
