@@ -2,223 +2,124 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7013C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FE0C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8102222AD
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 324D9222AB
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:18:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MmOnOlVQ"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="V2IuX7pL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfKRSSS (ORCPT
+        id S1727018AbfKRSS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 13:18:18 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36026 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfKRSR5 (ORCPT
+        Mon, 18 Nov 2019 13:18:56 -0500
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:34220 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726541AbfKRSSz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 13:17:57 -0500
-Received: by mail-wr1-f66.google.com with SMTP id r10so20696649wrx.3;
-        Mon, 18 Nov 2019 10:17:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=z7VePZDzHZowJGl/xdI66FEXu09OjvRm1SCaKoiUlYY=;
-        b=MmOnOlVQXb3YjJpoGh+JssyXMzCkneqaTzSSQD2LGy1yLTFm4Vk22ckhfdb1TQo3HK
-         cNJDJ3Zgc4+31Nskwok/dPx+U3wqf/AwHPXf6ps7rfg2uTt7Mmj3HYatI/lAykmzaxCw
-         kUAHWbZZDj2IQvVK7+839zlQSMbBUNOtE6CYCs5rLFvadNOQ05YNnCwfB7Pkxobq095Z
-         6Kd69+ZB07IO+0IZhX1BEu6MDiRd/j9WqqXjDp4vj+XGlIIoSpdXTEIfvwf4ct7wIkvL
-         DJyYjJBsOvlakNRq7MnwytVKab2SoR9oK5cb046X2k4xZ0gInv92+3Dk8NwE/wJjKrAK
-         9Ztg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=z7VePZDzHZowJGl/xdI66FEXu09OjvRm1SCaKoiUlYY=;
-        b=SL6wYYYNDVLidX0D4UJnYfakRMlaMtPaB3IWvuwCWVS3dzzMO2c3NthdWq+rSL3uWC
-         Z95wCJwbYFYCRb770stPeFbxHulHDHrZMq9ONKjApApaPFRoSrsNSTVqT0T5pdjt7Hxz
-         XQ1NTfWhpP+WJ8791pXF69LF5sIBYjAllvYFU4GrmcvZfSZn/o2LzXKRJwc8RB2iGgEG
-         2dA5ZZsJosNJLF1VuS7WUPpBulUG9VuwijO7/KW0cmocTPu6A1V4rWBmP3Tg2Js2aNjD
-         o6TCOCL+1qj5xiiDP/J0y5+Mzy/kBndaC8FCRjY12hFE3diTvlFR7jG3X5bS7R9bth4e
-         CrjA==
-X-Gm-Message-State: APjAAAW99669/8caKG07nNYgdTE74yxxHMPuaLlvk8ZlBmVRi4N3KHmJ
-        zMYkXL/zvM+qb10RUGjqxGCoG0t5
-X-Google-Smtp-Source: APXvYqw8+ENLIUm+Zb/NqcXDUObYJmBSpwkdCTObnDu8In3EEB/WhU6PvL+U9y6zpw8cx3KVAaM7xg==
-X-Received: by 2002:a5d:54cb:: with SMTP id x11mr32671074wrv.161.1574101075378;
-        Mon, 18 Nov 2019 10:17:55 -0800 (PST)
-Received: from 640k.localdomain.com ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id v81sm233794wmg.4.2019.11.18.10.17.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Nov 2019 10:17:54 -0800 (PST)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     jmattson@google.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 4/5] KVM: vmx: implement MSR_IA32_TSX_CTRL disable RTM functionality
-Date:   Mon, 18 Nov 2019 19:17:46 +0100
-Message-Id: <1574101067-5638-5-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1574101067-5638-1-git-send-email-pbonzini@redhat.com>
-References: <1574101067-5638-1-git-send-email-pbonzini@redhat.com>
+        Mon, 18 Nov 2019 13:18:55 -0500
+Received: from pps.filterd (m0170392.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAIIA4Pv006358;
+        Mon, 18 Nov 2019 13:18:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=fmtd2iqBbFAO+k5+TNL8jMvexpF7b7aXX6LntGCOHZs=;
+ b=V2IuX7pL+Dtqg5r/Gw4TqQJm7cYi7aGb5Im1xfZKevqQ87hSr8IyXfhfuE6X0KWiskUJ
+ OPACDAHlhJp1n9mSad7rsrBVlsdZrXkF8TXZZEVoU4BpOR2LrzmF+4PGxO6uj6ooG0Ej
+ sqriwTwGmBBINvE5TlPvgBoHPh8VTnwNG0qwqjQEP4kVNpYRKvyAuAseNs+WTvPwF7bC
+ kIk7nz8nPvNWHJEkImDoq5Oom2jNtdnba8OZKdD3IV6LCn3pJE+c2GM+8zXhsa81NENG
+ DkMMUC12pFw9y0whKkElR167UGqSc5MxaJRiEIISW+Wj9ddRRNojT0X992FTxjYPQsY4 dg== 
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0a-00154904.pphosted.com with ESMTP id 2wad5f05rq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 Nov 2019 13:18:54 -0500
+Received: from pps.filterd (m0134318.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAII88Sw052981;
+        Mon, 18 Nov 2019 13:18:53 -0500
+Received: from ausc60ps301.us.dell.com (ausc60ps301.us.dell.com [143.166.148.206])
+        by mx0a-00154901.pphosted.com with ESMTP id 2wacmg0rva-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Nov 2019 13:18:53 -0500
+X-LoopCount0: from 10.166.132.132
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="1378781001"
+From:   <Mario.Limonciello@dell.com>
+To:     <gayatri.kammela@intel.com>, <andy.shevchenko@gmail.com>
+CC:     <platform-driver-x86@vger.kernel.org>,
+        <vishwanath.somayaji@intel.com>, <dvhart@infradead.org>,
+        <linux-kernel@vger.kernel.org>, <charles.d.prestopine@intel.com>,
+        <peterz@infradead.org>, <srinivas.pandruvada@intel.com>,
+        <andriy.shevchenko@linux.intel.com>, <kan.liang@intel.com>,
+        <david.e.box@intel.com>, <rajneesh.bhardwaj@intel.com>,
+        <tony.luck@intel.com>
+Subject: RE: [PATCH v3 0/7] x86/intel_pmc_core: Add Tiger Lake, Elkhart Lake
+Thread-Topic: [PATCH v3 0/7] x86/intel_pmc_core: Add Tiger Lake, Elkhart Lake
+Thread-Index: AQHVnf4HfWi4zwIc4UmHAQEsNxXTkKeRn7wA//+dHYA=
+Date:   Mon, 18 Nov 2019 18:18:51 +0000
+Message-ID: <9b880cb6585d4608814598517fe5d675@AUSX13MPC105.AMER.DELL.COM>
+References: <cover.1573750525.git.gayatri.kammela@intel.com>
+ <CAHp75Vfrd-BAZ7H_LuQfz32yaap1X3gEnqZ2-9EPQ+j_b0f93g@mail.gmail.com>
+ <MN2PR11MB3711EDFC967C295689E109DEF24D0@MN2PR11MB3711.namprd11.prod.outlook.com>
+In-Reply-To: <MN2PR11MB3711EDFC967C295689E109DEF24D0@MN2PR11MB3711.namprd11.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.18.86]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-18_05:2019-11-15,2019-11-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ malwarescore=0 priorityscore=1501 clxscore=1015 mlxlogscore=999
+ suspectscore=0 lowpriorityscore=0 mlxscore=0 phishscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911180155
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
+ mlxscore=0 impostorscore=0 phishscore=0 clxscore=1015 spamscore=0
+ adultscore=0 priorityscore=1501 bulkscore=0 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1911180155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current guest mitigation of TAA is both too heavy and not really
-sufficient.  It is too heavy because it will cause some affected CPUs
-(those that have MDS_NO but lack TAA_NO) to fall back to VERW and
-get the corresponding slowdown.  It is not really sufficient because
-it will cause the MDS_NO bit to disappear upon microcode update, so
-that VMs started before the microcode update will not be runnable
-anymore afterwards, even with tsx=on.
-
-Instead, if tsx=on on the host, we can emulate MSR_IA32_TSX_CTRL for
-the guest and let it run without the VERW mitigation.  Even though
-MSR_IA32_TSX_CTRL is quite heavyweight, and we do not want to write
-it on every vmentry, we can use the shared MSR functionality because
-the host kernel need not protect itself from TSX-based side-channels.
-
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/vmx/vmx.c | 34 +++++++++++++++++++++++++++++++---
- arch/x86/kvm/x86.c     | 23 +++++------------------
- 2 files changed, 36 insertions(+), 21 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 04a8212704c1..ed25fe7d5234 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -450,6 +450,7 @@ noinline void invept_error(unsigned long ext, u64 eptp, gpa_t gpa)
- 	MSR_SYSCALL_MASK, MSR_LSTAR, MSR_CSTAR,
- #endif
- 	MSR_EFER, MSR_TSC_AUX, MSR_STAR,
-+	MSR_IA32_TSX_CTRL,
- };
- 
- #if IS_ENABLED(CONFIG_HYPERV)
-@@ -1683,6 +1684,9 @@ static void setup_msrs(struct vcpu_vmx *vmx)
- 	index = __find_msr_index(vmx, MSR_TSC_AUX);
- 	if (index >= 0 && guest_cpuid_has(&vmx->vcpu, X86_FEATURE_RDTSCP))
- 		move_msr_up(vmx, index, save_nmsrs++);
-+	index = __find_msr_index(vmx, MSR_IA32_TSX_CTRL);
-+	if (index >= 0)
-+		move_msr_up(vmx, index, save_nmsrs++);
- 
- 	vmx->save_nmsrs = save_nmsrs;
- 	vmx->guest_msrs_ready = false;
-@@ -1782,6 +1786,11 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- #endif
- 	case MSR_EFER:
- 		return kvm_get_msr_common(vcpu, msr_info);
-+	case MSR_IA32_TSX_CTRL:
-+		if (!msr_info->host_initiated &&
-+		    !(vcpu->arch.arch_capabilities & ARCH_CAP_TSX_CTRL_MSR))
-+			return 1;
-+		goto find_shared_msr;
- 	case MSR_IA32_UMWAIT_CONTROL:
- 		if (!msr_info->host_initiated && !vmx_has_waitpkg(vmx))
- 			return 1;
-@@ -1884,8 +1893,9 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		if (!msr_info->host_initiated &&
- 		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
- 			return 1;
--		/* Else, falls through */
-+		goto find_shared_msr;
- 	default:
-+	find_shared_msr:
- 		msr = find_msr_entry(vmx, msr_info->index);
- 		if (msr) {
- 			msr_info->data = msr->data;
-@@ -2001,6 +2011,13 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 					      MSR_IA32_SPEC_CTRL,
- 					      MSR_TYPE_RW);
- 		break;
-+	case MSR_IA32_TSX_CTRL:
-+		if (!msr_info->host_initiated &&
-+		    !(vcpu->arch.arch_capabilities & ARCH_CAP_TSX_CTRL_MSR))
-+			return 1;
-+		if (data & ~(TSX_CTRL_RTM_DISABLE | TSX_CTRL_CPUID_CLEAR))
-+			return 1;
-+		goto find_shared_msr;
- 	case MSR_IA32_PRED_CMD:
- 		if (!msr_info->host_initiated &&
- 		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
-@@ -2152,8 +2169,10 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		/* Check reserved bit, higher 32 bits should be zero */
- 		if ((data >> 32) != 0)
- 			return 1;
--		/* Else, falls through */
-+		goto find_shared_msr;
-+
- 	default:
-+	find_shared_msr:
- 		msr = find_msr_entry(vmx, msr_index);
- 		if (msr) {
- 			u64 old_msr_data = msr->data;
-@@ -4234,7 +4253,16 @@ static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
- 			continue;
- 		vmx->guest_msrs[j].index = i;
- 		vmx->guest_msrs[j].data = 0;
--		vmx->guest_msrs[j].mask = -1ull;
-+
-+		switch (index) {
-+		case MSR_IA32_TSX_CTRL:
-+			/* No need to pass TSX_CTRL_CPUID_CLEAR through.  */
-+			vmx->guest_msrs[j].mask = ~(u64)TSX_CTRL_CPUID_CLEAR;
-+			break;
-+		default:
-+			vmx->guest_msrs[j].mask = -1ull;
-+			break;
-+		}
- 		++vmx->nmsrs;
- 	}
- 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 648e84e728fc..fc54e3905fe3 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1314,29 +1314,16 @@ static u64 kvm_get_arch_capabilities(void)
- 		data |= ARCH_CAP_MDS_NO;
- 
- 	/*
--	 * On TAA affected systems, export MDS_NO=0 when:
--	 *	- TSX is enabled on the host, i.e. X86_FEATURE_RTM=1.
--	 *	- Updated microcode is present. This is detected by
--	 *	  the presence of ARCH_CAP_TSX_CTRL_MSR and ensures
--	 *	  that VERW clears CPU buffers.
--	 *
--	 * When MDS_NO=0 is exported, guests deploy clear CPU buffer
--	 * mitigation and don't complain:
--	 *
--	 *	"Vulnerable: Clear CPU buffers attempted, no microcode"
--	 *
--	 * If TSX is disabled on the system, guests are also mitigated against
--	 * TAA and clear CPU buffer mitigation is not required for guests.
-+	 * On TAA affected systems:
-+	 *      - nothing to do if TSX is disabled on the host.
-+	 *      - we emulate TSX_CTRL if present on the host.
-+	 *	  This lets the guest use VERW to clear CPU buffers.
- 	 */
- 	if (!boot_cpu_has(X86_FEATURE_RTM))
--		data &= ~ARCH_CAP_TAA_NO;
-+		data &= ~(ARCH_CAP_TAA_NO | ARCH_CAP_TSX_CTRL_MSR);
- 	else if (!boot_cpu_has_bug(X86_BUG_TAA))
- 		data |= ARCH_CAP_TAA_NO;
--	else if (data & ARCH_CAP_TSX_CTRL_MSR)
--		data &= ~ARCH_CAP_MDS_NO;
- 
--	/* KVM does not emulate MSR_IA32_TSX_CTRL.  */
--	data &= ~ARCH_CAP_TSX_CTRL_MSR;
- 	return data;
- }
- EXPORT_SYMBOL_GPL(kvm_get_arch_capabilities);
--- 
-1.8.3.1
-
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
+LW93bmVyQHZnZXIua2VybmVsLm9yZyA8cGxhdGZvcm0tZHJpdmVyLXg4Ni0NCj4gb3duZXJAdmdl
+ci5rZXJuZWwub3JnPiBPbiBCZWhhbGYgT2YgS2FtbWVsYSwgR2F5YXRyaQ0KPiBTZW50OiBNb25k
+YXksIE5vdmVtYmVyIDE4LCAyMDE5IDEyOjExIFBNDQo+IFRvOiBBbmR5IFNoZXZjaGVua28NCj4g
+Q2M6IFBsYXRmb3JtIERyaXZlcjsgU29tYXlhamksIFZpc2h3YW5hdGg7IERhcnJlbiBIYXJ0OyBM
+aW51eCBLZXJuZWwgTWFpbGluZw0KPiBMaXN0OyBQcmVzdG9waW5lLCBDaGFybGVzIEQ7IFBldGVy
+IFppamxzdHJhOyBQYW5kcnV2YWRhLCBTcmluaXZhczsgQW5keQ0KPiBTaGV2Y2hlbmtvOyBMaWFu
+ZywgS2FuOyBCb3gsIERhdmlkIEU7IEJoYXJkd2FqLCBSYWpuZWVzaDsgTHVjaywgVG9ueQ0KPiBT
+dWJqZWN0OiBSRTogW1BBVENIIHYzIDAvN10geDg2L2ludGVsX3BtY19jb3JlOiBBZGQgVGlnZXIg
+TGFrZSwgRWxraGFydCBMYWtlDQo+IA0KPiANCj4gW0VYVEVSTkFMIEVNQUlMXQ0KPiANCj4gPiA+
+IEFsbCB0aGUgaW5mb3JtYXRpb24gcmVnYXJkaW5nIHRoZSBQQ0ggSVBzIGFuZCBuYW1lcyBvZiBJ
+UHMgd2lsbCBiZQ0KPiA+ID4gYXZhaWxhYmxlIGluIEludGVsJ3MgUGxhdGZvcm0gQ29udHJvbGxl
+ciBIdWIgKFBDSCkgRXh0ZXJuYWwgRGVzaWduDQo+ID4gPiBTcGVjaWZpY2F0aW9uIChFRFMpIGRv
+Y3VtZW50IGV4cGVjdGVkIHRvIGJlIHJlbGVhc2VkIGluIDIwMjAgYmVmb3JlDQo+ID4gPiBwcm9k
+dWN0IGxhdW5jaC4NCj4gPg0KPiA+IFRoYW5rcywgdGhvdWdoIHlvdSBmb3Jnb3QgdG8gZml4IGFs
+bCBwcmVmaXhlcyBpbiB0aGUgbWFpbHMuIFdlIGhhdmUNCj4gPiBwbGF0Zm9ybS94ODY6ICREUklW
+RVJfTkFNRTogLi4uDQo+ID4NCj4gSGkgQW5keSEgU29ycnkgSSB0aGluayBJIG1pc3VuZGVyc3Rv
+b2QgeW91ciBjb21tZW50IGxhc3QgdGltZS4gSnVzdCB0byBtYWtlDQo+IHN1cmUsIHRoZSBwcmVm
+aXggc2hvdWxkIHRoZSBwYXR0ZXJuIGluIHRoaXMgY2FzZQ0KPiAicGxhdGZvcm0veDg2OiBpbnRl
+bF9wbWNfY29yZTogIiBhbmQgc2hvdWxkIGJlIHNhbWUgZm9yIGFsbCB0aGUgcGF0Y2hlcyBpbiB0
+aGUNCj4gc2VyaWVzIHJpZ2h0Pw0KPiANCj4gPiBBbHNvIGNvbnNpZGVyIE1hcmlvJ3MgY29tbWVu
+dCAoSSBkaWRuJ3QgaGVhciBiYWNrIGZyb20geW91IG9uIGl0KS4NCj4gU29ycnkgYWJvdXQgdGhh
+dC4gSSBhbSBwbGFubmluZyBvbiBzZW5kaW5nIGl0IGEgc2luZ2xlIHBhdGNoIGV4Y2x1ZGluZyBp
+dCBmcm9tIHRoZQ0KPiBzZXJpZXMgc2luY2Ugd2UgcmVjZWl2ZWQgYSByZXF1ZXN0IGZyb20gRGVs
+bC4gUGxlYXNlIGxldCBtZSBrbm93IGlmIHlvdSB0aGluayB0aGlzDQo+IHBhdGNoIHNob3VsZCBi
+ZSBpbmNsdWRlZCBpbiB0aGUgc2VyaWVzLg0KDQpKdXN0IHRvIG1ha2UgaXQgY2xlYXIgdG8gdGhv
+c2Ugb24gdGhlIGxpc3QgLSB0aGUgcmVxdWVzdCBmcm9tIERlbGwgd2FzIG9mZiBsaXN0IGFuZCBz
+ZXBhcmF0ZWx5DQpmcm9tIG15IGNvbW1lbnQgaW4gYWRqdXN0aW5nIHRoZSBvcmRlcmluZy4gIEEg
+Y29udmVuaWVudCBzaWRlIGVmZmVjdCBpcyB0aGF0IGl0IHdpbGwNCnRha2UgaW50byBjb25zaWRl
+cmF0aW9uIG15IGNvbW1lbnQgdG9vIDopDQo=
