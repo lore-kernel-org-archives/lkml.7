@@ -2,170 +2,140 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E52C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E808C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A452071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBAD02075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:57:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="CCfCHIfJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfKRG4f (ORCPT
+        id S1726910AbfKRG5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 01:56:35 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38024 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbfKRG4e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 01:56:34 -0500
-Received: by mail-lf1-f65.google.com with SMTP id q28so12858129lfa.5;
-        Sun, 17 Nov 2019 22:56:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZilPVsgy6B4aFkcKkLwJzf3PfDFkHFr/6jpNuKdup0M=;
-        b=sg9jg1DrYlnEeEKpEsFLcX+7FRt+Dbl1lZZOCw5GORoljULXLYctsOoxRPitqHUB/n
-         ugRE/oubEREoKWTyj0vPgugHgadCecnW6QTZA3CwdixmKb7WwtXzEk4z8cEuok+GeGo5
-         2sn/ewCmcYexnLJGC4amaNylARx6qGNJsDGqQLu/9USE/V2RAGyDM7a+bOuXE/PoShdo
-         R2L5TK/WN/BBzoiYcUGux+5FR/a4m3ls9YWAihknvP2WoTvw2f0zCoAjzz9rTI8lF1t2
-         g3JBfnSFP8AogxRPd7uOEoNXERMFKxnB3PyZpDJKdy+L5s7OH4XN2MlEjwg5l3lZL+A9
-         cp/w==
-X-Gm-Message-State: APjAAAWt25lqpLZgNNGPLCnhOFH3ApNnVsJNoHdjZmkb7P8DcU/Vngcx
-        GDgZSRUmEL5mCK23RVK3OOY=
-X-Google-Smtp-Source: APXvYqzG5UA7yi/BGe7SKN+uqMxibotlzOHP9si+071td4CqCjySVY0P2xVzCpXacMMiSHWme3BL1A==
-X-Received: by 2002:a19:f606:: with SMTP id x6mr2745329lfe.160.1574060191676;
-        Sun, 17 Nov 2019 22:56:31 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id p18sm8535547lfh.24.2019.11.17.22.56.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Nov 2019 22:56:31 -0800 (PST)
-Date:   Mon, 18 Nov 2019 08:56:24 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: [PATCH v5 06/16] mfd: input: bd71828: Add power-key support
-Message-ID: <3d9db6ef3de2e851c9e00e1e20aa5bdbf7e2b09c.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+        Mon, 18 Nov 2019 01:57:00 -0500
+Received: from mail-eopbgr740050.outbound.protection.outlook.com ([40.107.74.50]:18592
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726481AbfKRG5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 01:57:00 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RPLf3JsxFTb1CK4CfTzZDXNyG6s2lbZMwRyzSLQw5R/zlN22cWHLWwR7KvGQGAqWj4S15opoYpDIJFW/jwu2vRl99wbbZia/xYu/9m1wjcQI8vSEJorrrfSTwGr7SkinTwCf5Q0fbBjGKmSYFyPhuEI2GVeVY/+UoYnh2LOvZmVw4uk1WfeflbZISRfeel9C8jkY8bi47PdK86IF/oWTr2Cd5Vh1E51BXaHb2BINpGKfCiJYgn8Zn9MS80AuZDnQkyNamXSXcrFaC/p0HNItSfnDsmhIeh7IVuKtx//SjcTKscBVndw9qg1R2P93h7dJFoaXajUpXImJMesB/SDusg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+Zo3x93dycOYai4jq/z68+1Tm0SiwMlHV6u6ODxinCs=;
+ b=OYy43wMbGsbGyxAYRNpWxgY1NHQBHbU6byvEyOhb2GHPZb89wihTSC50iTSjYDkcvqOIJyVDAgQsoHMd7Bq98NfrBRV4dL6o2KfP7hnl9TMNYYuf74NjirskqAmdtSWHF5MSAvi3e6ZmSUVs4+BY1xIP+gXXk3jzxTicV1DTyHljtPLkKQxZe+ftzwqzEvbZkamxib7gnpT86g5L3bJH9Oc+hZrtaJyRG9bpKuaI63+Re9qt7/tzVQNwS4pvQr+Vc6bYEMw9IljrL5NxIARqAdBQJo0XisViRzjdCuksSKqrdF6lJNBiBx1kPAG8P1exKyCO9Ci+t3NKRNFeUcpraw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+Zo3x93dycOYai4jq/z68+1Tm0SiwMlHV6u6ODxinCs=;
+ b=CCfCHIfJu81wtMvDGSEzs4e0ffuckxHaHGSTxgybRUy/kGouOA0O22LzxtHRj1s6fp8o0L1FV/RGkXmVC3MqSbnYs78HDJDgRv9dc+62wzu0CWmD5kXGWCAg48rLpiRN4Z+ifq1iwLg55Qq+Fm3K77uPYrDAXmkykEwA2jyx2Hw=
+Received: from MN2PR12MB3344.namprd12.prod.outlook.com (20.178.241.74) by
+ MN2PR12MB2893.namprd12.prod.outlook.com (20.179.83.213) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.23; Mon, 18 Nov 2019 06:56:44 +0000
+Received: from MN2PR12MB3344.namprd12.prod.outlook.com
+ ([fe80::5895:bbd8:c1d6:1587]) by MN2PR12MB3344.namprd12.prod.outlook.com
+ ([fe80::5895:bbd8:c1d6:1587%7]) with mapi id 15.20.2451.029; Mon, 18 Nov 2019
+ 06:56:44 +0000
+From:   "Quan, Evan" <Evan.Quan@amd.com>
+To:     Colin King <colin.king@canonical.com>, Rex Zhu <rex.zhu@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH][next] drm/amdgpu/powerplay: fix dereference before null
+ check of pointer hwmgr
+Thread-Topic: [PATCH][next] drm/amdgpu/powerplay: fix dereference before null
+ check of pointer hwmgr
+Thread-Index: AQHVm5nDtS8eL8LCskyvgcx9Z3hY8KeQgtBg
+Date:   Mon, 18 Nov 2019 06:56:43 +0000
+Message-ID: <MN2PR12MB3344F8D7498FC9DA8302AD05E44D0@MN2PR12MB3344.namprd12.prod.outlook.com>
+References: <20191115094754.40920-1-colin.king@canonical.com>
+In-Reply-To: <20191115094754.40920-1-colin.king@canonical.com>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Evan.Quan@amd.com; 
+x-originating-ip: [180.167.199.185]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 17a4f8e2-ee22-441c-b14e-08d76bf478e9
+x-ms-traffictypediagnostic: MN2PR12MB2893:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR12MB2893F6DA039DF8734B10DC8DE44D0@MN2PR12MB2893.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1850;
+x-forefront-prvs: 0225B0D5BC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(396003)(39860400002)(366004)(13464003)(199004)(189003)(6116002)(81156014)(81166006)(54906003)(55016002)(9686003)(71190400001)(71200400001)(7696005)(256004)(14444005)(26005)(3846002)(33656002)(486006)(6246003)(476003)(5660300002)(99286004)(76116006)(76176011)(11346002)(25786009)(2501003)(102836004)(6436002)(2906002)(8936002)(8676002)(229853002)(305945005)(66476007)(66556008)(6506007)(7736002)(316002)(53546011)(4326008)(110136005)(66446008)(64756008)(446003)(14454004)(52536014)(478600001)(74316002)(86362001)(66066001)(2201001)(186003)(66946007)(17423001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB2893;H:MN2PR12MB3344.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MON2f3clSE/nUMktQmAgGepG2lrPEzEobuDF7OnCu6DptbajcRnosUXN5c5ED3IL2wpqYHYyHn/WR7G2NqI6NIcspQNgUo1ocKAusA1MqyV4d+oUXyMIe+nnLrvKQQUoSrGyx6OhoIuq9EW1EON+D7F2RRgWjexvG6D+jn6GWw/PT/XPhFve6gQXpMInmNoQtEYEnTssQo1A30Lq3gSpUNvArpVgucgFZEMc397MmX5x6JL9WtA0/Cqv84qw6wBB09fzhl+JNZdsqNYLzJW53CcWlsKBwCAXqhTOit0fmdKvHmUtwKX3lzi8OMQtahNAAQOYHPE11aaczixSGgDvmYHHKXWE5+GuDXBsOwUA40Rjnxjj7wPxHnUPh2+jiN+e5+ELaTo3IYBEiDgfVBpTEjtStmbBWwDdPQy61mjzcy64S2QEKGYtPditMCIBwEy8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17a4f8e2-ee22-441c-b14e-08d76bf478e9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 06:56:44.0058
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nTQ13I1eE0WUMFUOhZb/RxNgROZj4SSythP2fL0Vh8KUNxbn764S6TAfG0bRBU3i
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB2893
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use gpio_keys to send power input-event to user-space when power
-button (short) press is detected.
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
----
-
-No changes from v4
-
- drivers/mfd/rohm-bd71828.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
-
-diff --git a/drivers/mfd/rohm-bd71828.c b/drivers/mfd/rohm-bd71828.c
-index 7f445d699fd9..b892b50ec555 100644
---- a/drivers/mfd/rohm-bd71828.c
-+++ b/drivers/mfd/rohm-bd71828.c
-@@ -4,7 +4,9 @@
- //
- // ROHM BD71828 PMIC driver
- 
-+#include <linux/gpio_keys.h>
- #include <linux/i2c.h>
-+#include <linux/input.h>
- #include <linux/interrupt.h>
- #include <linux/ioport.h>
- #include <linux/irq.h>
-@@ -15,6 +17,18 @@
- #include <linux/regmap.h>
- #include <linux/types.h>
- 
-+static struct gpio_keys_button button = {
-+	.code = KEY_POWER,
-+	.gpio = -1,
-+	.type = EV_KEY,
-+};
-+
-+static struct gpio_keys_platform_data bd71828_powerkey_data = {
-+	.buttons = &button,
-+	.nbuttons = 1,
-+	.name = "bd71828-pwrkey",
-+};
-+
- static const struct resource rtc_irqs[] = {
- 	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC0, "bd71828-rtc-alm-0"),
- 	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC1, "bd71828-rtc-alm-1"),
-@@ -35,6 +49,10 @@ static struct mfd_cell bd71828_mfd_cells[] = {
- 		.name = "bd71828-rtc",
- 		.resources = rtc_irqs,
- 		.num_resources = ARRAY_SIZE(rtc_irqs),
-+	}, {
-+		.name = "gpio-keys",
-+		.platform_data = &bd71828_powerkey_data,
-+		.pdata_size = sizeof(bd71828_powerkey_data),
- 	},
- };
- 
-@@ -288,6 +306,14 @@ static int bd71828_i2c_probe(struct i2c_client *i2c)
- 	dev_dbg(&i2c->dev, "Registered %d IRQs for chip\n",
- 		bd71828_irq_chip.num_irqs);
- 
-+	ret = regmap_irq_get_virq(irq_data, BD71828_INT_SHORTPUSH);
-+	if (ret < 0) {
-+		dev_err(&i2c->dev, "Failed to get the power-key IRQ\n");
-+		return ret;
-+	}
-+
-+	button.irq = ret;
-+
- 	ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
- 				   bd71828_mfd_cells,
- 				   ARRAY_SIZE(bd71828_mfd_cells), NULL, 0,
--- 
-2.21.0
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+UmV2aWV3ZWQtYnk6IEV2YW4gUXVhbiA8ZXZhbi5xdWFuQGFtZC5jb20+DQoNCi0tLS0tT3JpZ2lu
+YWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBDb2xpbiBLaW5nIDxjb2xpbi5raW5nQGNhbm9uaWNhbC5j
+b20+IA0KU2VudDogRnJpZGF5LCBOb3ZlbWJlciAxNSwgMjAxOSA1OjQ4IFBNDQpUbzogUmV4IFpo
+dSA8cmV4LnpodUBhbWQuY29tPjsgUXVhbiwgRXZhbiA8RXZhbi5RdWFuQGFtZC5jb20+OyBEZXVj
+aGVyLCBBbGV4YW5kZXIgPEFsZXhhbmRlci5EZXVjaGVyQGFtZC5jb20+OyBLb2VuaWcsIENocmlz
+dGlhbiA8Q2hyaXN0aWFuLktvZW5pZ0BhbWQuY29tPjsgWmhvdSwgRGF2aWQoQ2h1bk1pbmcpIDxE
+YXZpZDEuWmhvdUBhbWQuY29tPjsgRGF2aWQgQWlybGllIDxhaXJsaWVkQGxpbnV4LmllPjsgRGFu
+aWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPjsgYW1kLWdmeEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmc7IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcNCkNjOiBrZXJuZWwtamFuaXRvcnNA
+dmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQpTdWJqZWN0OiBb
+UEFUQ0hdW25leHRdIGRybS9hbWRncHUvcG93ZXJwbGF5OiBmaXggZGVyZWZlcmVuY2UgYmVmb3Jl
+IG51bGwgY2hlY2sgb2YgcG9pbnRlciBod21ncg0KDQpGcm9tOiBDb2xpbiBJYW4gS2luZyA8Y29s
+aW4ua2luZ0BjYW5vbmljYWwuY29tPg0KDQpUaGUgYXNzaWdubWVudCBvZiBhZGV2IGRlcmVmZXJl
+bmNlcyBwb2ludGVyIGh3bWdyIGJlZm9yZSBod21nciBpcyBudWxsIGNoZWNrZWQsIGhlbmNlIHRo
+ZXJlIGlzIGEgcG90ZW50aWFsIG51bGwgcG9pbnRlciBkZWZlcmVuY2UgaXNzdWUuIEZpeCB0aGlz
+IGJ5IGFzc2lnbmluZyBhZGV2IGFmdGVyIHRoZSBudWxsIGNoZWNrLg0KDQpBZGRyZXNzZXMtQ292
+ZXJpdHk6ICgiRGVyZWZlcmVuY2UgYmVmb3JlIG51bGwgY2hlY2siKQ0KRml4ZXM6IDA4OTZkMmY3
+YmE0ZCAoImRybS9hbWRncHUvcG93ZXJwbGF5OiBwcm9wZXJseSBzZXQgUFBfR0ZYT0ZGX01BU0si
+KQ0KU2lnbmVkLW9mZi1ieTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNv
+bT4NCi0tLQ0KIGRyaXZlcnMvZ3B1L2RybS9hbWQvcG93ZXJwbGF5L2h3bWdyL2h3bWdyLmMgfCA0
+ICsrKy0NCiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQoN
+CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYW1kL3Bvd2VycGxheS9od21nci9od21nci5j
+IGIvZHJpdmVycy9ncHUvZHJtL2FtZC9wb3dlcnBsYXkvaHdtZ3IvaHdtZ3IuYw0KaW5kZXggNDQz
+NjI1YzgzZWM5Li5kMjkwOWM5MWQ2NWIgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYW1k
+L3Bvd2VycGxheS9od21nci9od21nci5jDQorKysgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL3Bvd2Vy
+cGxheS9od21nci9od21nci5jDQpAQCAtODEsNyArODEsNyBAQCBzdGF0aWMgdm9pZCBod21ncl9p
+bml0X3dvcmtsb2FkX3Byb3JpdHkoc3RydWN0IHBwX2h3bWdyICpod21ncikNCiANCiBpbnQgaHdt
+Z3JfZWFybHlfaW5pdChzdHJ1Y3QgcHBfaHdtZ3IgKmh3bWdyKSAgew0KLQlzdHJ1Y3QgYW1kZ3B1
+X2RldmljZSAqYWRldiA9IGh3bWdyLT5hZGV2Ow0KKwlzdHJ1Y3QgYW1kZ3B1X2RldmljZSAqYWRl
+djsNCiANCiAJaWYgKCFod21ncikNCiAJCXJldHVybiAtRUlOVkFMOw0KQEAgLTk2LDYgKzk2LDgg
+QEAgaW50IGh3bWdyX2Vhcmx5X2luaXQoc3RydWN0IHBwX2h3bWdyICpod21ncikNCiAJaHdtZ3Jf
+aW5pdF93b3JrbG9hZF9wcm9yaXR5KGh3bWdyKTsNCiAJaHdtZ3ItPmdmeG9mZl9zdGF0ZV9jaGFu
+Z2VkX2J5X3dvcmtsb2FkID0gZmFsc2U7DQogDQorCWFkZXYgPSBod21nci0+YWRldjsNCisNCiAJ
+c3dpdGNoIChod21nci0+Y2hpcF9mYW1pbHkpIHsNCiAJY2FzZSBBTURHUFVfRkFNSUxZX0NJOg0K
+IAkJYWRldi0+cG0ucHBfZmVhdHVyZSAmPSB+UFBfR0ZYT0ZGX01BU0s7DQotLQ0KMi4yMC4xDQoN
+Cg==
