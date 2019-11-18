@@ -2,487 +2,255 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82822C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAB1C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40E1320643
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:43:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S8hsXmjp"
+	by mail.kernel.org (Postfix) with ESMTP id 62FD020715
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:48:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfKRWng (ORCPT
+        id S1726887AbfKRWsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 17:43:36 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37812 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726705AbfKRWnf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 17:43:35 -0500
-Received: by mail-lf1-f66.google.com with SMTP id b20so15257929lfp.4
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 14:43:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NfeVkemyC8oyPuWZJoeCqGa9v7ojQFXCd2NHyi2TdYw=;
-        b=S8hsXmjpYuCsCskV7Y6l4Rpaulk2jrQL2fKqFec12o+n9Qvb/dPitq0+qUlugpSo6F
-         ZkJobCv9kiUVHi3wMyjgoxCtZX4oHPziEGuXIrlf9l3SJFu7VLlsukig7PSKmqjpgu4o
-         qt5e38JqN5+5VI57msYHUzvXFy5DgUiliewtE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NfeVkemyC8oyPuWZJoeCqGa9v7ojQFXCd2NHyi2TdYw=;
-        b=odbH4TxergB1fCtV0fFLcudzqSNF1PYJgzZ3UPNmZJvWJum6Xn5PA/to3oBXFdTLHs
-         pm0WvDufhXhcfOmVgsL9WF7iChJqPZlQVKE5ciGsvugdyJe2FCv+fmYNXOHLjGzzS9Js
-         ArFSOUCADOlHJ3BcdpNBcr3BeO6QcTwGbrctfi+1a9LlT/VWr5yL0QVfhN5iZl+DmZ0p
-         bZW+LDmhPXQRP2UU2YXHKgnEcTF2p/GjB8P7Iv6O74dzxvVX8kcQtQvXqUGs4dWvoklB
-         gWpFsKxXjDue/TuqINWrKhV659zB30mFeKmlZBDH2Utu5akJhIgAYcF2qqkotUJz9CKJ
-         9Xfw==
-X-Gm-Message-State: APjAAAX+8uf2d1dtZk/0MaoLtuO2OUsfk4+v9zdzGohmZBFEIc+Kfyfd
-        SN2cgj4hqcPYcYSCLLDg5y8MGzrzEiQ=
-X-Google-Smtp-Source: APXvYqwKLz5YlaUm+Ro2/yyxUCnCRGciF1oGamnjQjFv2T6rtM9+zRyUcoifbcQ5JJyucfU7d2eFAw==
-X-Received: by 2002:ac2:43c9:: with SMTP id u9mr1217304lfl.180.1574117010853;
-        Mon, 18 Nov 2019 14:43:30 -0800 (PST)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id u12sm9192910lje.1.2019.11.18.14.43.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Nov 2019 14:43:29 -0800 (PST)
-Received: by mail-lf1-f43.google.com with SMTP id l14so8561226lfh.10
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 14:43:29 -0800 (PST)
-X-Received: by 2002:ac2:46d7:: with SMTP id p23mr1241289lfo.104.1574117008414;
- Mon, 18 Nov 2019 14:43:28 -0800 (PST)
+        Mon, 18 Nov 2019 17:48:36 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46356 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726717AbfKRWsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 17:48:36 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2028EAE55;
+        Mon, 18 Nov 2019 22:48:33 +0000 (UTC)
+Subject: Re: [PATCH v3 8/8] ARM: realtek: Enable RTD1195 arch timer
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        James Tai <james.tai@realtek.com>,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
+References: <20191117072109.20402-1-afaerber@suse.de>
+ <20191117072109.20402-9-afaerber@suse.de> <20191117110214.6b160b2e@why>
+ <7015e4c4-f999-d2e8-fd1f-e15e74a0d092@suse.de>
+ <e99e40d8c95147861ab600c5d5287f8f@www.loen.fr>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <4dc05879-f6d9-f754-908e-ad2431d8ff5a@suse.de>
+Date:   Mon, 18 Nov 2019 23:48:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <20191118154435.20357-1-sibis@codeaurora.org> <0101016e7f30ad15-18908ef0-a2b9-4a2a-bf32-6cb3aa447b01-000000@us-west-2.amazonses.com>
-In-Reply-To: <0101016e7f30ad15-18908ef0-a2b9-4a2a-bf32-6cb3aa447b01-000000@us-west-2.amazonses.com>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Mon, 18 Nov 2019 14:42:51 -0800
-X-Gmail-Original-Message-ID: <CAE=gft5jGagsFS2yBeJCLt9R26RQjx9bfMxhQu8Jj4uc4ca40w@mail.gmail.com>
-Message-ID: <CAE=gft5jGagsFS2yBeJCLt9R26RQjx9bfMxhQu8Jj4uc4ca40w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] interconnect: qcom: Add OSM L3 interconnect
- provider support
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Dai <daidavid1@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e99e40d8c95147861ab600c5d5287f8f@www.loen.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sibi,
+Hi Marc,
 
-On Mon, Nov 18, 2019 at 7:45 AM Sibi Sankar <sibis@codeaurora.org> wrote:
->
-> On some Qualcomm SoCs, Operating State Manager (OSM) controls the
-> resources of scaling L3 caches. Add a driver to handle bandwidth
-> requests to OSM L3 from CPU/GPU.
->
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  drivers/interconnect/qcom/Kconfig  |   7 +
->  drivers/interconnect/qcom/Makefile |   2 +
->  drivers/interconnect/qcom/osm-l3.c | 284 +++++++++++++++++++++++++++++
->  3 files changed, 293 insertions(+)
->  create mode 100644 drivers/interconnect/qcom/osm-l3.c
->
-> diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
-> index ecf057d7e2409..17aee5b0f15b7 100644
-> --- a/drivers/interconnect/qcom/Kconfig
-> +++ b/drivers/interconnect/qcom/Kconfig
-> @@ -5,6 +5,13 @@ config INTERCONNECT_QCOM
->         help
->           Support for Qualcomm's Network-on-Chip interconnect hardware.
->
-> +config INTERCONNECT_QCOM_OSM_L3
-> +       tristate "Qualcomm OSM L3 interconnect driver"
-> +       depends on INTERCONNECT_QCOM || COMPILE_TEST
+Am 18.11.19 um 10:27 schrieb Marc Zyngier:
+> On 2019-11-17 17:08, Andreas Färber wrote:
+>> Am 17.11.19 um 12:02 schrieb Marc Zyngier:
+>>> On Sun, 17 Nov 2019 08:21:09 +0100
+>>> Andreas Färber <afaerber@suse.de> wrote:
+>>>
+>>>> Without this magic write the timer doesn't work and boot gets stuck.
+>>>>
+>>>> Signed-off-by: Andreas Färber <afaerber@suse.de>
+>>>> ---
+>>>>  What is the name of the register 0xff018000?
+>>>>  Is 0x1 a BIT(0) write, or how are the register bits defined?
+>>>>  Is this a reset or a clock gate? How should we model it in DT?
+>>
+>>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+> Sorry? Do you expect me to come up with answer to these questions?
 
-Should we depend on something sdm845 here?
+No, I was pointing out that I myself had already asked pretty much the
+same questions you just asked me. How did you expect me to have answers
+to your "Shouldn't this be a read/modify/write sequence?" then? It
+seemed like you missed my questions up there:
 
-> +       help
-> +         Say y here to support the Operating State Manager (OSM) interconnect
-> +         driver which controls the scaling of L3 caches on Qualcomm SoCs.
-> +
->  config INTERCONNECT_QCOM_QCS404
->         tristate "Qualcomm QCS404 interconnect driver"
->         depends on INTERCONNECT_QCOM
-> diff --git a/drivers/interconnect/qcom/Makefile b/drivers/interconnect/qcom/Makefile
-> index 9adf9e380545e..8d86d6515ffc9 100644
-> --- a/drivers/interconnect/qcom/Makefile
-> +++ b/drivers/interconnect/qcom/Makefile
-> @@ -1,10 +1,12 @@
->  # SPDX-License-Identifier: GPL-2.0
->
-> +icc-osm-l3-objs                                := osm-l3.o
->  qnoc-msm8974-objs                      := msm8974.o
->  qnoc-qcs404-objs                       := qcs404.o
->  qnoc-sdm845-objs                       := sdm845.o
->  icc-smd-rpm-objs                       := smd-rpm.o
->
-> +obj-$(CONFIG_INTERCONNECT_QCOM_OSM_L3) += icc-osm-l3.o
->  obj-$(CONFIG_INTERCONNECT_QCOM_MSM8974) += qnoc-msm8974.o
->  obj-$(CONFIG_INTERCONNECT_QCOM_QCS404) += qnoc-qcs404.o
->  obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
-> diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
-> new file mode 100644
-> index 0000000000000..5e9f9ce02863b
-> --- /dev/null
-> +++ b/drivers/interconnect/qcom/osm-l3.c
-> @@ -0,0 +1,284 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> + *
-> + */
-> +
-> +#include <dt-bindings/interconnect/qcom,osm-l3.h>
-> +#include <dt-bindings/interconnect/qcom,sdm845.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/interconnect-provider.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define LUT_MAX_ENTRIES                        40U
-> +#define LUT_SRC                                GENMASK(31, 30)
-> +#define LUT_L_VAL                      GENMASK(7, 0)
-> +#define LUT_ROW_SIZE                   32
-> +#define CLK_HW_DIV                     2
-> +
-> +/* Register offsets */
-> +#define REG_ENABLE                     0x0
-> +#define REG_FREQ_LUT                   0x110
-> +#define REG_PERF_STATE                 0x920
-> +
-> +#define OSM_L3_MAX_LINKS               1
-> +
-> +#define to_qcom_provider(_provider) \
-> +       container_of(_provider, struct qcom_osm_l3_icc_provider, provider)
-> +
-> +enum {
-> +       SDM845_MASTER_OSM_L3_APPS = SLAVE_TCU + 1,
-> +       SDM845_SLAVE_OSM_L3,
-> +};
+Without knowing how the register is structured, I can't implement a
+read/modify/write sequence - for that we'd need to know whether it's a
+single bit we can just set or a field that we would need to mask first
+before writing into it.
 
-Should these just go in qcom,sdm845.h? Seems nice to have them all in
-one place, and then they can be accessed in the DT if needed.
+And ideally we would be getting its address from DT, so we would need to
+know whether it's just this one register or some contiguous IP block
+such as "arm,armv7-timer-mem". Same issue whether we implement it in the
+kernel or in U-Boot btw. If it's no standard Arm register, we'll need to
+have a binding with a sensible compatible string, some REG_ constant to
+replace the magic offset number and some meaningful constant for 0x1.
 
-> +
-> +struct qcom_osm_l3_icc_provider {
-> +       void __iomem *base;
-> +       unsigned int max_state;
-> +       unsigned long lut_tables[LUT_MAX_ENTRIES];
-> +       struct icc_provider provider;
-> +};
-> +
-> +/**
-> + * struct qcom_icc_node - Qualcomm specific interconnect nodes
-> + * @name: the node name used in debugfs
-> + * @links: an array of nodes where we can go next while traversing
-> + * @id: a unique node identifier
-> + * @num_links: the total number of @links
-> + * @buswidth: width of the interconnect between a node and the bus
-> + */
-> +struct qcom_icc_node {
-> +       const char *name;
-> +       u16 links[OSM_L3_MAX_LINKS];
-> +       u16 id;
-> +       u16 num_links;
-> +       u16 buswidth;
-> +};
-> +
-> +struct qcom_icc_desc {
-> +       struct qcom_icc_node **nodes;
-> +       size_t num_nodes;
-> +};
-> +
-> +#define DEFINE_QNODE(_name, _id, _buswidth, ...)                       \
-> +               static struct qcom_icc_node _name = {                   \
-> +               .name = #_name,                                         \
-> +               .id = _id,                                              \
-> +               .buswidth = _buswidth,                                  \
-> +               .num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ })),      \
-> +               .links = { __VA_ARGS__ },                               \
-> +       }
-> +
-> +DEFINE_QNODE(osm_apps_l3, SDM845_MASTER_OSM_L3_APPS, 16, SDM845_SLAVE_OSM_L3);
-> +DEFINE_QNODE(osm_l3, SDM845_SLAVE_OSM_L3, 16);
-> +
-> +static struct qcom_icc_node *sdm845_osm_l3_nodes[] = {
+>>>> diff --git a/arch/arm/mach-realtek/rtd1195.c
+>>>> b/arch/arm/mach-realtek/rtd1195.c
+>>>> index b31a4066be87..0532379c74f5 100644
+>>>> --- a/arch/arm/mach-realtek/rtd1195.c
+>>>> +++ b/arch/arm/mach-realtek/rtd1195.c
+[...]
+>>>> @@ -24,6 +27,18 @@ static void __init rtd1195_reserve(void)
+>>>>      rtd1195_memblock_remove(0x18100000, 0x01000000);
+>>>>  }
+>>>>
+>>>> +static void __init rtd1195_init_time(void)
+>>>> +{
+>>>> +    void __iomem *base;
+>>>> +
+>>>> +    base = ioremap(0xff018000, 4);
+>>>> +    writel(0x1, base);
+>>>> +    iounmap(base);
+>>>> +
+>>>> +    of_clk_init(NULL);
+>>>> +    timer_probe();
+>>>> +}
+>>>
+>>> Gawd... Why isn't this set from the bootloader? By the time the kernel
+>>> starts, everything should be up and running. What is it going to do
+>>> when you kexec? Shouldn't this be a read/modify/write sequence?
+>>
+>> Again, I can't comment on why their BSP bootloaders don't do things the
+>> expected way. The list of issues is long, and the newest U-Boot I've
+>> seen for RTD1395 was v2015.07 based, still downstream and pre-EBBR.
+>> And before we get a .dts merged into the kernel with all needed nodes
+>> (network, eMMC, etc.), there is zero chance of a mainline U-Boot anyway.
+> 
+> [...]
+> 
+> I certainly dispute that. 
 
-const?
+Dispute that with U-Boot maintainers then, please, and let me know the
+outcome. I just had an argument with Neil that it's not okay to import
+from linux-next.git and that it must be an -rc1 or other stable tag. (My
+VIM3 patch submission before Plumbers was not accepted for that reason,
+and I haven't found time for U-Boot since.)
 
-> +       [MASTER_OSM_L3_APPS] = &osm_apps_l3,
-> +       [SLAVE_OSM_L3] = &osm_l3,
-> +};
-> +
-> +static struct qcom_icc_desc sdm845_osm_l3 = {
-> +       .nodes = sdm845_osm_l3_nodes,
-> +       .num_nodes = ARRAY_SIZE(sdm845_osm_l3_nodes),
-> +};
-> +
-> +static int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
-> +                             u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
-> +{
-> +       *agg_avg += avg_bw;
-> +       *agg_peak = max_t(u32, *agg_peak, peak_bw);
-> +
-> +       return 0;
-> +}
+> If you're able to support all of this in the
+> kernel,
 
-Georgi, I wonder if it's a good idea to make a small collection of
-"std" aggregate functions in the interconnect core that a driver can
-just point to if it's doing something super standard like this (ie
-driver->aggregate = icc_std_aggregate;). This is probably fine as-is
-for now, but if we see a lot more copy/pastes of this function we
-should think about it.
+No, I'm not, that was my point! :( We do _not_ have all those drivers
+needed for a useful U-Boot implemented for the mainline kernel yet. Like
+I said, I'm using a Busybox initrd for testing RTD1195 (also RTD1293,
+RTD1296 and RTD1395). And I've already amassed 140+ patches on top of
+-next without those core drivers - I really need to get that queue down
+for sensible collaboration with Realtek and others.
 
-> +
-> +static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
-> +{
-> +       struct qcom_osm_l3_icc_provider *qp;
-> +       struct icc_provider *provider;
-> +       struct qcom_icc_node *qn;
-> +       struct icc_node *n;
-> +       unsigned int index;
-> +       u32 agg_peak = 0;
-> +       u32 agg_avg = 0;
-> +       u64 rate;
-> +
-> +       qn = src->data;
-> +       provider = src->provider;
-> +       qp = to_qcom_provider(provider);
-> +
-> +       list_for_each_entry(n, &provider->nodes, node_list)
-> +               qcom_icc_aggregate(n, 0, n->avg_bw, n->peak_bw,
-> +                                  &agg_avg, &agg_peak);
-> +
-> +       rate = max(agg_avg, agg_peak);
-> +       rate = icc_units_to_bps(rate);
-> +       do_div(rate, qn->buswidth);
-> +
-> +       for (index = 0; index < qp->max_state; index++) {
+I need people to be able to help contribute those drivers to the kernel,
+therefore I need to get the basics merged, so that Realtek and community
+members can base patches on top, so that we get there over time.
+If you're asking that someone do a new U-Boot before we can even get a
+timer or GIC DT node merged, then we're doomed and I'm wasting my time
+here. Rob did give a Reviewed-by for the DT, so I would've thought it
+can't be that terrible!
 
-If the rate is too high, you'll end up setting max_state into the
-register. That's probably bad, right? (Or maybe it's not because the
-table ends with the same value twice, but it seems like relying on an
-implementation detail). We could guard against that by only iterating
-to index < qp->max_state - 1.
+As I pointed out above, we need to get the .dts[i] into some -rc1 kernel
+release for U-Boot to pull them. If you're blocking to merge RTD1195
+into v5.6-rc1 here, we're not gonna get even a driver-less mainline
+U-Boot for it in about 8 weeks. Chicken-and-egg problem.
 
-> +               if (qp->lut_tables[index] >= rate)
-> +                       break;
-> +       }
-> +
-> +       writel_relaxed(index, qp->base + REG_PERF_STATE);
-> +
-> +       return 0;
-> +}
-> +
-> +static int qcom_osm_l3_remove(struct platform_device *pdev)
-> +{
-> +       struct qcom_osm_l3_icc_provider *qp = platform_get_drvdata(pdev);
-> +       struct icc_provider *provider = &qp->provider;
-> +       struct icc_node *n;
-> +
-> +       list_for_each_entry(n, &provider->nodes, node_list) {
+And my experience with U-Boot has been that if U-Boot patches don't get
+merged immediately, other people will duplicate that work later without
+crediting me, so that my time spent on U-Boot would be wasted. And the
+same is happening with the kernel if we don't get my patches merged in
+some form - you already witnessed Aleix doing his own irqchip driver
+instead of collaborating on the one that went through three rounds of
+review already (and now he's disappeared again without input for me, so
+I'm preparing to send you a v4 tonight or tomorrow). STM32 was another
+bad experience (and I still have two further v7-M ports to clean up).
 
-There was a comment on one of the other threads that we've been
-copy/pasting this snippet around and it's wrong because it doesn't use
-the _safe variant of the macro. So we end up destroying the list we're
-iterating over.
+With the GeekBox, that I'm the official U-Boot maintainer of, I managed
+to shoot myself in the foot, unable to recover from a U-Boot I flashed.
+So I am very hesitant to repeat that, especially with RTD1195 hardware
+that's no longer sold (X1000).
 
-Georgi, did you have a plan to refactor this, or should we just change
-this to be the _safe version?
+> you're most probably able to do it in u-boot, and that's the right
+> place to do it (and that can be a pretty simple u-boot if you use the
+> original one as a first-stage loader).
+> 
+> I'm not trying to undermine your effort in supporting these platforms
+> in mainline. This is certainly commendable. But you're unfortunately
+> pushing in a direction that we've tried hard to move away from for
+> a good 8 years.
+> 
+> Look at what we did on the Allwinner front: we got a terrible piece of
+> crap, and turned it into one of the best supported platform, because
+> we've put the effort where it mattered. I personally wrote PSCI support
+> and HYP enablement in u-boot, addressing in one go most of the issues you
+> mention here. It didn't take that much time, and it is now there for you
+> to make use of.
 
-> +               icc_node_del(n);
-> +               icc_node_destroy(n->id);
-> +       }
-> +
-> +       return icc_provider_del(provider);
-> +}
-> +
-> +static int qcom_osm_l3_probe(struct platform_device *pdev)
-> +{
-> +       u32 info, src, lval, i, prev_freq = 0, freq;
-> +       static unsigned long hw_rate, xo_rate;
-> +       struct qcom_osm_l3_icc_provider *qp;
-> +       const struct qcom_icc_desc *desc;
-> +       struct icc_onecell_data *data;
-> +       struct icc_provider *provider;
-> +       struct qcom_icc_node **qnodes;
-> +       struct icc_node *node;
-> +       size_t num_nodes;
-> +       struct clk *clk;
-> +       int ret;
-> +
-> +       clk = clk_get(&pdev->dev, "xo");
-> +       if (IS_ERR(clk))
-> +               return PTR_ERR(clk);
-> +
-> +       xo_rate = clk_get_rate(clk);
-> +       clk_put(clk);
-> +
-> +       clk = clk_get(&pdev->dev, "alternate");
-> +       if (IS_ERR(clk))
-> +               return PTR_ERR(clk);
-> +
-> +       hw_rate = clk_get_rate(clk) / CLK_HW_DIV;
+And the work of the sunXi community - including Bootlin and Arm people -
+is commendable and inspiring (e.g., meson-tools).
 
-It's a little weird there's a constant divide in there, though I guess
-it's in the cpufreq driver as well. I guess this is fine if it's
-likely to stay there (and the same) when this driver is generalized
-for other SoCs.
+My time as single person is limited for this night-time project though,
+so it's unrealistic to ask me to reverse-engineer a new BL31 without
+sources, write a U-Boot implementation and port the kernel, all at once.
+Especially when I don't know how to even test those other components.
+Maybe that's clear to you - for me it isn't. The RTD1395, where I do
+have U-Boot sources for BPi-M4 [2] and get it loaded as file from SD by
+a previous bootloader, is not affected by this RTD1195 timer problem;
+yet I don't see how from any given U-Boot (or LK) I would be able to
+load a new BL31 on RTD1295/RTD1395, nor how to load a HYP capable U-Boot
+on RTD1195. I thought it's impossible to escape to higher ELs? And for
+ARMv7 I thought U-Boot was neither relocatable not reentrant?
 
-> +       clk_put(clk);
-> +
-> +       qp = devm_kzalloc(&pdev->dev, sizeof(*qp), GFP_KERNEL);
-> +       if (!qp)
-> +               return -ENOMEM;
-> +
-> +       qp->base = devm_platform_ioremap_resource(pdev, 0);
-> +       if (IS_ERR(qp->base))
-> +               return PTR_ERR(qp->base);
-> +
-> +       /* HW should be in enabled state to proceed */
-> +       if (!(readl_relaxed(qp->base + REG_ENABLE) & 0x1)) {
-> +               dev_err(&pdev->dev, "error hardware not enabled\n");
-> +               return -ENODEV;
-> +       }
-> +
-> +       for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-> +               info = readl_relaxed(qp->base + REG_FREQ_LUT +
-> +                                    i * LUT_ROW_SIZE);
-> +               src = FIELD_GET(LUT_SRC, info);
-> +               lval = FIELD_GET(LUT_L_VAL, info);
-> +               if (src)
-> +                       freq = xo_rate * lval;
-> +               else
-> +                       freq = hw_rate;
-> +
-> +               /*
-> +                * Two of the same frequencies with the same core counts means
+Now, I can continue carrying this commit in my GitHub tree for myself,
+like I do for spin-table, if Olof and Arnd agree with you that this 8/8
+should not be merged, even if we clarify this register. But I just don't
+see the time right now for doing alone what the sunxi community have
+achieved together over the course of many years, with Realtek in my neck
+for new kernel patches.
 
-"core counts" seems like a copied comment that doesn't apply.
+The context here is that most of the drivers seen on RTD1295 and later
+originated in RTD1195, so for sane compatible strings (cf. watchdog [3],
+rtc [4] discussions!) we need to be able to test RTD1195 and to base
+patches, such as upcoming irqchip mux v4, on all four+ SoC families.
+Realtek appears to be focused on the new RTD1619/RTD1319, and I would
+really like to avoid merging drivers for those new chips only and caring
+about bindings and compatibility with the three earlier SoC families as
+afterthought, repeating the mistakes I made with RTD1295 vs. RTD1195 for
+lack of hardware at the time.
 
-But you only look at freq and not core count, is that really
-equivalent to the table's boundary condition? Or do you need to be
-comparing info == info_prev?
+I don't think that I'm pushing into a wrong direction; we just disagree
+about the steps to get there. I would like people to be able to take a
+mainline kernel and boot on RTD1195 without getting stuck; if they have
+to use a GitHub tree to successfully boot, then it's not really mainline
+yet. Booting with only one CPU up is much less severe by comparison, as
+it allows to probe all drivers and to explore sysfs and debugfs.
 
-> +                * end of table
-> +                */
-> +               if (i > 0 && prev_freq == freq)
-> +                       break;
-> +
-> +               qp->lut_tables[i] = freq;
-> +               prev_freq = freq;
-> +       }
-> +       qp->max_state = i;
+Keep in mind that I started RTD1295 mainlining without having any BSP
+sources at all, which is less than the sunxi folks had to go on.
 
-Should we error out or complain if there are too few entries, or if
-the table is not in increasing order?
+The key on sunxi, I thought, was that you had the FEL tools to just load
+bootloader binaries dynamically over USB. For Amlogic we at least had
+binary blobs and binary tools integrated into U-Boot build process and
+an idea where to place them on SD to boot them - here I have only what
+is on eMMC/SPI, no docs. Also, I do recall a long time where sunxi had
+GitHub repos with downstream BSP forks - I'd rather not get into that
+business and immediately skip to making mainline more and more usable.
 
-> +
-> +       desc = of_device_get_match_data(&pdev->dev);
-> +       if (!desc)
-> +               return -EINVAL;
-> +
-> +       qnodes = desc->nodes;
-> +       num_nodes = desc->num_nodes;
-> +
-> +       data = devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       provider = &qp->provider;
-> +       provider->dev = &pdev->dev;
-> +       provider->set = qcom_icc_set;
-> +       provider->aggregate = qcom_icc_aggregate;
-> +       provider->xlate = of_icc_xlate_onecell;
-> +       INIT_LIST_HEAD(&provider->nodes);
-> +       provider->data = data;
-> +
-> +       ret = icc_provider_add(provider);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "error adding interconnect provider\n");
-> +               return ret;
-> +       }
-> +
-> +       for (i = 0; i < num_nodes; i++) {
-> +               size_t j;
-> +
-> +               node = icc_node_create(qnodes[i]->id);
-> +               if (IS_ERR(node)) {
-> +                       ret = PTR_ERR(node);
-> +                       goto err;
-> +               }
-> +
-> +               node->name = qnodes[i]->name;
-> +               node->data = qnodes[i];
-> +               icc_node_add(node, provider);
-> +
-> +               dev_dbg(&pdev->dev, "registered node %p %s %d\n", node,
-> +                       qnodes[i]->name, node->id);
-> +
-> +               /* populate links */
+If of course Realtek or one of their OEMs or some other community member
+wanted to work on providing a rebased U-Boot in a Git repo, that would
+be great. Once we have it working, we could drop workarounds like these.
 
-Not a super useful comment.
+A quick git-grep finds 277 occurrences of .init_time in arch/arm/mach-*,
+so hardly a callback about to get dropped.
 
+Regards,
+Andreas
 
-> +               for (j = 0; j < qnodes[i]->num_links; j++)
-> +                       icc_link_create(node, qnodes[i]->links[j]);
-> +
-> +               data->nodes[i] = node;
-> +       }
-> +       data->num_nodes = num_nodes;
-> +
-> +       platform_set_drvdata(pdev, qp);
-> +
-> +       return ret;
-> +err:
-> +       qcom_osm_l3_remove(pdev);
-> +       return ret;
-> +}
-> +
-> +static const struct of_device_id osm_l3_of_match[] = {
-> +       { .compatible = "qcom,sdm845-osm-l3", .data = &sdm845_osm_l3 },
-> +       { },
-> +};
-> +MODULE_DEVICE_TABLE(of, osm_l3_of_match);
-> +
-> +static struct platform_driver osm_l3_driver = {
-> +       .probe = qcom_osm_l3_probe,
-> +       .remove = qcom_osm_l3_remove,
-> +       .driver = {
-> +               .name = "osm-l3",
-> +               .of_match_table = osm_l3_of_match,
-> +       },
-> +};
-> +module_platform_driver(osm_l3_driver);
-> +
-> +MODULE_DESCRIPTION("Qualcomm OSM L3 interconnect driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
+[1] https://github.com/BPI-SINOVOIP/BPI-W2-bsp/tree/master/u-boot-rtk
+[2] https://github.com/BPI-SINOVOIP/BPI-M4-bsp/tree/master/u-boot-rtk
+[3] https://patchwork.kernel.org/patch/11200563/
+[4] https://patchwork.kernel.org/patch/11200561/
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
