@@ -2,43 +2,43 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0B9C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB00C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B8421934
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67AB22186D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:40:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="h35xw2it";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="P8LnezQZ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jtmKCwlL";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="FqDb5C43"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727432AbfKRRkU (ORCPT
+        id S1727455AbfKRRkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 12:40:20 -0500
-Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:45946
-        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726461AbfKRRkE (ORCPT
+        Mon, 18 Nov 2019 12:40:23 -0500
+Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:46920
+        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727427AbfKRRkU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 12:40:04 -0500
+        Mon, 18 Nov 2019 12:40:20 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574098803;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574098819;
         h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-        bh=D+qzsjQFvwEHeF6Jdqmzkusi1quRYgFgN764fiHoWOM=;
-        b=h35xw2itNPH+FrbO5+8Fp2h6bgHrJGrwot9CJ0OMqRVAXQp+EDuNCFewIrqS534a
-        mWo13w1cNVIVGQ6xP/8nnbK11Gm25CRyfHhp6Mb979kubXUzZraMHEakKgb+GuPTuYd
-        OcWpj5oI0Ji4YkCrq1vyW4PpaSmA6+0kCnHB154E=
+        bh=5MKxnhfZqQ0umCYyjmT0ODWbazmtAqacpiX0y4mJn1M=;
+        b=jtmKCwlLfehemVRbgO1j7/Pp0YFAnAXQ3tgZnZeVp4fwU2ajfLQLH6hXwcqfj7FS
+        KSPkbSMH6Gs7z2DQVkhLlCSHclb7O7Bpw3cMJ4GgBadY7k0eCBBDjEmqt0N/nErsO50
+        J+nygUyWcOCCYAgbfWQ3Jn+22nv6p2oNwXrhlES8=
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574098803;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574098819;
         h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-        bh=D+qzsjQFvwEHeF6Jdqmzkusi1quRYgFgN764fiHoWOM=;
-        b=P8LnezQZ6BzOTEO33ejxNTqnPK3UXTpKDvLJkIvd8tJsnDRntucDmk/20FCWWiQ6
-        h56w4Hkk4oSS7SyPGDUd/4U70/s1qTwSGmGzyor9G+dcAbf5bfU1IuPJtuyfhRmUDKW
-        vYTVMlv815ovjUp2GdBY2AVrJwFx5XTsNKDQ5bpI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B3662C447A4
+        bh=5MKxnhfZqQ0umCYyjmT0ODWbazmtAqacpiX0y4mJn1M=;
+        b=FqDb5C43QYPUgSwYBTTkGasx8153CSALjM73EPLmT2X5kJdLJ1FoPrlWj2yTNYEq
+        tNTgF6IeP36vqNOwM/eiMcBsE/TSw9PGdfoy0qeZ0cyHIUgQxRMpzDh4kIpEbom1jPR
+        hrF6dfsCNSR0IGhRV9UdBmu9/2uMJsOIBFMdr944=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 49D71C58C1E
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
 From:   Sibi Sankar <sibis@codeaurora.org>
@@ -46,59 +46,62 @@ To:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
         ulf.hansson@linaro.org, rnayak@codeaurora.org
 Cc:     agross@kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org
-Subject: [PATCH 1/6] soc: qcom: rpmhpd: Set 'active_only' for active only power domains
-Date:   Mon, 18 Nov 2019 17:40:02 +0000
-Message-ID: <0101016e7f9998d8-877e9166-8b6a-4530-ab66-3c88002e1db4-000000@us-west-2.amazonses.com>
+        mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH 5/6] soc: qcom: rpmhpd: Add SC7180 RPMH power-domains
+Date:   Mon, 18 Nov 2019 17:40:19 +0000
+Message-ID: <0101016e7f99d9ec-1a5d07da-0a61-4627-bf95-fa9ae06265ca-000000@us-west-2.amazonses.com>
 X-Mailer: git-send-email 2.22.1
 In-Reply-To: <20191118173944.27043-1-sibis@codeaurora.org>
 References: <20191118173944.27043-1-sibis@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SES-Outgoing: 2019.11.18-54.240.27.55
+X-SES-Outgoing: 2019.11.18-54.240.27.18
 Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+Add support for cx/mx/gfx/lcx/lmx/mss power-domains found
+on SC7180 SoCs.
 
-The 'active_only' attribute was accidentally never set to true for any
-power domains meaning that all the code handling this attribute was
-dead.
-
-NOTE that the RPM power domain code (as opposed to the RPMh one) gets
-this right.
-
-Fixes: 279b7e8a62cc ("soc: qcom: rpmhpd: Add RPMh power domain driver")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Acked-by: Rajendra Nayak <rnayak@codeaurora.org>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- drivers/soc/qcom/rpmhpd.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/soc/qcom/rpmhpd.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-index 5741ec3fa814c..51850cc68b701 100644
+index 3b109ee67a4d2..599208722650d 100644
 --- a/drivers/soc/qcom/rpmhpd.c
 +++ b/drivers/soc/qcom/rpmhpd.c
-@@ -93,6 +93,7 @@ static struct rpmhpd sdm845_mx = {
- 
- static struct rpmhpd sdm845_mx_ao = {
- 	.pd = { .name = "mx_ao", },
-+	.active_only = true,
- 	.peer = &sdm845_mx,
- 	.res_name = "mx.lvl",
+@@ -166,7 +166,26 @@ static const struct rpmhpd_desc sm8150_desc = {
+ 	.num_pds = ARRAY_SIZE(sm8150_rpmhpds),
  };
-@@ -107,6 +108,7 @@ static struct rpmhpd sdm845_cx = {
  
- static struct rpmhpd sdm845_cx_ao = {
- 	.pd = { .name = "cx_ao", },
-+	.active_only = true,
- 	.peer = &sdm845_cx,
- 	.parent = &sdm845_mx_ao.pd,
- 	.res_name = "cx.lvl",
++/* SC7180 RPMH powerdomains */
++
++static struct rpmhpd *sc7180_rpmhpds[] = {
++	[SC7180_CX] = &sdm845_cx,
++	[SC7180_CX_AO] = &sdm845_cx_ao,
++	[SC7180_GFX] = &sdm845_gfx,
++	[SC7180_MX] = &sdm845_mx,
++	[SC7180_MX_AO] = &sdm845_mx_ao,
++	[SC7180_LMX] = &sdm845_lmx,
++	[SC7180_LCX] = &sdm845_lcx,
++	[SC7180_MSS] = &sdm845_mss,
++};
++
++static const struct rpmhpd_desc sc7180_desc = {
++	.rpmhpds = sc7180_rpmhpds,
++	.num_pds = ARRAY_SIZE(sc7180_rpmhpds),
++};
++
+ static const struct of_device_id rpmhpd_match_table[] = {
++	{ .compatible = "qcom,sc7180-rpmhpd", .data = &sc7180_desc },
+ 	{ .compatible = "qcom,sdm845-rpmhpd", .data = &sdm845_desc },
+ 	{ .compatible = "qcom,sm8150-rpmhpd", .data = &sm8150_desc },
+ 	{ }
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
