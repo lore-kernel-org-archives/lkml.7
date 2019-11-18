@@ -2,138 +2,114 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA44C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA24C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B747222BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB5AD218AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:37:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="o965utNs"
+	dkim=pass (1024-bit key) header.d=cggservices.onmicrosoft.com header.i=@cggservices.onmicrosoft.com header.b="l1fd6Dyo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfKRScW (ORCPT
+        id S1726666AbfKRShS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 13:32:22 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:10542 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfKRScV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 13:32:21 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dd2e3b50002>; Mon, 18 Nov 2019 10:32:21 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 18 Nov 2019 10:32:21 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 18 Nov 2019 10:32:21 -0800
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 Nov
- 2019 18:32:18 +0000
-Subject: Re: [PATCH v4 2/2] mm/hmm/test: add self tests for HMM
-To:     Jason Gunthorpe <jgg@mellanox.com>
-CC:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Shuah Khan <shuah@kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-References: <20191104222141.5173-1-rcampbell@nvidia.com>
- <20191104222141.5173-3-rcampbell@nvidia.com> <20191112152521.GC12550@lst.de>
- <07589a71-3984-b2a6-b24b-6b9a23e1b60d@nvidia.com>
- <20191112234549.GX21728@mellanox.com> <20191113135115.GA10688@lst.de>
- <21d6b69c-3167-e60d-eed2-65bb1f8515ae@nvidia.com>
- <20191115140619.GC3873@mellanox.com>
-From:   Ralph Campbell <rcampbell@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <912f9f23-fa2a-1dd7-3f91-f7175094c2e2@nvidia.com>
-Date:   Mon, 18 Nov 2019 10:32:18 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Mon, 18 Nov 2019 13:37:18 -0500
+Received: from mail-eopbgr80047.outbound.protection.outlook.com ([40.107.8.47]:49894
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726370AbfKRShR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 13:37:17 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MnglyGpZR4uCjti8ILUImd803l3tiG6hkpD4xCHqbznqXRPRGcKJWYmIxruBv7bqxA+peqnps2CJFuHSk1ncmaiCUh1aqXwa4SQax2rwFV3HIRgK+XDrA3ZKwXSKnI3pN1pF3iRyigabXD4krR50ghnA1MUTTdqU+fSO2LM9AY9T2kc5khZWt1Zn4UVZ085gQGPp8Y+WFtxwxwt9uzjX9WyQWCLOdvUPO4cwjXPFIXoXJUOUQp+XlZE/Ild99ArpDZsqRNiczK5Gh5rH8qpTjyteRLCMSN8QK/7rsWIkCkB9xIKXE1JFFbbCiIqfFwWM1jnIoF3ZbVGhAidNiFvCLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0HqzYcaKwuRLEHtEca/v3wZaTNMK3gz5nIUUJXy14uQ=;
+ b=oJMU1r7kKgGuj/NHKzcysv+aRU6KYEZVWVLUZXaxDDIIadVIufjYz14w/NzJKmM8aqK/Bc6zY5HPJZbGsDYVJpFyXW2P2POLmkfFTmUqB12WV1MuglPQ5WWtnOaoHD8I+MeO4Wzen1HlTXGC9JmJiKyg5NvkPH2y99ur5GqySbYktqjBNDwcV44Ja8af4Te6LWQUX8Z9D7rhRswrB+rhYuvv6PzklSxx1M7XZ4OA6jjqn0u39ygHwBi1Jx6lHx0nFYutwtEgwo86kVxEbXOp35d6pN3Byo7LL2WKPMJMre5YxR/60xIleKBw+H8X6rQts5H8+UxyqRMw2TuQC+/e0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 192.159.106.202) smtp.rcpttodomain=acm.org smtp.mailfrom=int.cggveritas.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=cgg.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=cggservices.onmicrosoft.com; s=selector2-cggservices-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0HqzYcaKwuRLEHtEca/v3wZaTNMK3gz5nIUUJXy14uQ=;
+ b=l1fd6DyoRavtIbjqiHc6TfVIlk0maGcPm3rrveiLA8pRpdSWOlTYAbVwhSE+ErQd213J43lb1mBW9Af+ieulN11jZP7JmF5OG1jwQkX+fEmCgkYEWDO5uoysO6j5WCIFY+oH0IQAry//MU6/t8bg8Efz9A599HcI4yMQCl0MwR0=
+Received: from VI1P190CA0036.EURP190.PROD.OUTLOOK.COM (2603:10a6:802:2b::49)
+ by VI1P190MB0414.EURP190.PROD.OUTLOOK.COM (2603:10a6:802:39::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.27; Mon, 18 Nov
+ 2019 18:37:13 +0000
+Received: from DB5EUR01FT042.eop-EUR01.prod.protection.outlook.com
+ (2a01:111:f400:7e02::205) by VI1P190CA0036.outlook.office365.com
+ (2603:10a6:802:2b::49) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.23 via Frontend
+ Transport; Mon, 18 Nov 2019 18:37:13 +0000
+Authentication-Results: spf=none (sender IP is 192.159.106.202)
+ smtp.mailfrom=int.cggveritas.com; acm.org; dkim=none (message not signed)
+ header.d=none;acm.org; dmarc=fail action=none header.from=cgg.com;
+Received-SPF: None (protection.outlook.com: int.cggveritas.com does not
+ designate permitted sender hosts)
+Received: from Hou-ECH02.int.cggveritas.com (192.159.106.202) by
+ DB5EUR01FT042.mail.protection.outlook.com (10.152.5.100) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2451.23 via Frontend Transport; Mon, 18 Nov 2019 18:37:12 +0000
+From:   Andrew Norrie <andrew.norrie@cgg.com>
+To:     <jaegeuk@kernel.org>
+CC:     <axboe@kernel.dk>, <bvanassche@acm.org>,
+        <linux-block@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        Andrew Norrie <andrew.norrie@cgg.com>
+Subject: Re: loop: avoid EAGAIN, if offset or block_size are changed
+Date:   Mon, 18 Nov 2019 11:36:16 -0700
+Message-ID: <1574102176-23804-1-git-send-email-andrew.norrie@cgg.com>
+X-Mailer: git-send-email 1.7.10.4
+In-Reply-To: <20190617210848.GB57907@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190617210848.GB57907@jaegeuk-macbookpro.roam.corp.google.com>
 MIME-Version: 1.0
-In-Reply-To: <20191115140619.GC3873@mellanox.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574101941; bh=39u0XUhcHMVb+ZMv/dn3CtMgXSJFUOYDTSmuZ9uY/T0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=o965utNs7sb47SjzfNx79P1NDcBYHTTGYjQg5eKJdAz3jTgIhAnFr7N7geNbmi9ao
-         0aR+c+4bAWxpWTsY8M7EzLb02XVMovvgMAPCe6jdZBm6jwo5VnQrt9+rCKJqo5Mkon
-         LrArGzwWtC3qJKyXDLyDSzFu3Qfb38n35KX+O1XdeUetSQm5A71fFIm2qI6frO6BLZ
-         YWQKfutfxInIgfUt8Gqfws0OZXSfTM0mz83p6l/T1h40NtNdZnySgsZATpTc2AtoSH
-         N0DZphSt/6agDSMc8H6BBxkfDZwbXAJPZmi2srMIK0eBBEXuDroYwod1i4932/8BLH
-         QNbuhWw7JCpYg==
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:192.159.106.202;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(396003)(346002)(376002)(428003)(249900001)(199004)(189003)(4720700003)(8936002)(54906003)(229853002)(316002)(36736006)(81166006)(25786009)(5660300002)(2906002)(305945005)(498600001)(126002)(47776003)(14444005)(5024004)(486006)(50466002)(48376002)(476003)(446003)(11346002)(2616005)(956004)(8676002)(6506007)(356004)(8746002)(4326008)(6246003)(26005)(336012)(966005)(6486002)(2351001)(70586007)(70206006)(4744005)(44832011)(6916009)(50226002)(36756003)(81156014)(6306002)(76176011)(51416003)(42882007)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1P190MB0414;H:Hou-ECH02.int.cggveritas.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;A:0;MX:0;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4fccea7e-1158-4925-2ab4-08d76c56546f
+X-MS-TrafficTypeDiagnostic: VI1P190MB0414:
+X-MS-Exchange-PUrlCount: 1
+X-Microsoft-Antispam-PRVS: <VI1P190MB041463C41AE9AEB742653C03894D0@VI1P190MB0414.EURP190.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 0225B0D5BC
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HpKRPwVn3hXB7+KtmKuE9IwrzCQJly8TD/6FggyA0QZyFicL/k1uhI08KGRfFYZrG9scdYS3F6rVLDvbxRxCajgCh9/8KstF2EsJKDzyreOPxpFUCkicxdpx3Z5fVPCs5VblQYfFOdEoYko+Cmq2Qk3Qp2feqD5aXKMLfiVTSRfg3IWVp00f1lmMYRZPVmI0qhlddajJ/OAAJlp13lQbcgvj6V+MxqLqL0c3O1TZmiUcg5P3ajtuOmQMBaLSY3XrZHWvg9gx44f/87xs3pai7UVYPUwmdQxupYbRoA3uFOaIUtOvePzv8IngOC3xXZ57TtnMkDXA9wvb6tV28dRVlCiH87s8fR7igYBqDTooGQpnoevP1QEVkiDYmchrbm46OVh+wTyYDDQijVky70AR99kX/JJBCtxBp11Bgy6K2W+u0W7pgLLw/GcA3rTbCN3Fug2TC+n2IAXV8RlKa/PfExkSmYrq4czD27yHM+LrYmE=
+X-OriginatorOrg: cgg.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2019 18:37:12.9938
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4fccea7e-1158-4925-2ab4-08d76c56546f
+X-MS-Exchange-CrossTenant-Id: 307ea682-75e1-4701-a114-6c42f9ff0d24
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=307ea682-75e1-4701-a114-6c42f9ff0d24;Ip=[192.159.106.202];Helo=[Hou-ECH02.int.cggveritas.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P190MB0414
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Any chance to get a review on this patch?
 
-On 11/15/19 6:06 AM, Jason Gunthorpe wrote:
-> On Thu, Nov 14, 2019 at 03:06:05PM -0800, Ralph Campbell wrote:
->>
->> On 11/13/19 5:51 AM, Christoph Hellwig wrote:
->>> On Tue, Nov 12, 2019 at 11:45:52PM +0000, Jason Gunthorpe wrote:
->>>>> Well, it would mean registering for the whole process address space.
->>>>> I'll give it a try.
->>>>
->>>> I'm not sure it makes much sense that this testing is essentially
->>>> modeled after nouveau's usage which is very strange compared to the
->>>> other drivers.
->>>
->>> Which means we really should make the test cases fit the proper usage.
->>> Maybe defer the tests for 5.5 and just merge the first patch for now?
->>>
->>
->> I think this a good point to discuss.
->> Some devices will want to register for all changes to the process address
->> space because there is no requirement to preregister regions that the
->> device can access verses devices like InfiniBand where a range of addresses
->> have to be registered before the device can access those addresses.
-> 
-> But this is a very bad idea to register and do HW actions for ranges
-> that can't possibly have any pages registered. It slows down the
-> entire application
-> 
-> I think the ODP approach might be saner, when it mirrors the entire
-> address space it chops it up into VA chunks, and once a page is
-> registered on the HW the VA chunk goes into the interval tree.
-> 
-> Presumably the GPU also has some kind of page table tree and you could
-> set one of the levels as the VA interval when there are populated children
-> 
-> Jason
+We're running Singularity containers in an mpi environment where multiple
+concurrent container image loop mounts occur and we hit this issue as repor=
+ted
+to Sylabs by us here:
 
-I wasn't suggesting that HW invalidates happen in two places.
-I'm suggesting the two styles of invalidates can work together.
-For example, what if a driver calls mmu_notifier_register(mn, mm)
-to register for address space wide invalidations, then some time
-later there is a device page table fault and the driver calls
-mmu_range_notifier_insert() but with a NULL ops.invalidate.
-The fault handler follows the nouveau/test_hmm pattern to call
-     mmu_range_read_begin()
-     hmm_range_fault()
-     device lock
-     mmu_range_read_retry()
-     update device page tables
-     device unlock
-     mmu_range_notifier_remove()
+https://github.com/sylabs/singularity/issues/3860
 
-The global invalidate() callback would get the device lock and
-call into mm to update the sequence number of any affected ranges
-instead of having a range invalidate callback, and then do the HW
-invalidations.
-
+It is affecting our production.
+This email and any accompanying attachments are confidential. If you receiv=
+ed this email by mistake, please delete
+it from your system. Any review, disclosure, copying, distribution, or use =
+of the email by others is strictly prohibited.
