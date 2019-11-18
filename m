@@ -2,196 +2,125 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72721C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 676D6C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4627E22309
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34D7C22317
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:05:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HX45CgBl"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Gd08kSNG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfKRWEs (ORCPT
+        id S1727020AbfKRWF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 17:04:48 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:36856 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbfKRWEr (ORCPT
+        Mon, 18 Nov 2019 17:05:58 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40649 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfKRWF5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 17:04:47 -0500
-Received: by mail-il1-f193.google.com with SMTP id s75so17557484ilc.3;
-        Mon, 18 Nov 2019 14:04:47 -0800 (PST)
+        Mon, 18 Nov 2019 17:05:57 -0500
+Received: by mail-qk1-f193.google.com with SMTP id z16so15964582qkg.7
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 14:05:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KDsvR2sL7bSH7kZiX7UcdBRnHGb+awlt0qFDCAIcGxM=;
-        b=HX45CgBlnJdAkHhOzZUD6Z/to8eGGgvuyxGUx6A+xKdKlMyK0+C3KgxBPNriOe6HJV
-         OSeYPt3ij2N1sSGCJ0sQVrJxBSR5Fl8Ko6kR60HZJTm/aAS8bf79dLQJY+HbuCSClWAG
-         9FNMSW9h5MYtbhb5KfSGqXD7ikVVct3I1kuP5ecUix1GVrAwQdQdVJErThZLvwRCwED5
-         EAtykxqdp26QwHfIF/7W3Ed11FVNXi++x6JrXDK48eZf1/mSDL2Wit56H9k5t1sn/TpV
-         zPYTFcTn13w9Sp8yPwahAAuGWScKyrMXBm6RYgc7FgHicQ4yjfBB23jG+T3tlgclXWjp
-         dcHw==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=utEgIIdXyuvjiU+wCZAIV77AFxFDu+8dYTt1kGjwZok=;
+        b=Gd08kSNGTcxarbjtgrLof1smG+W5/gVLZm33699Y1iV7U4pC1M/I8+Gnrc2ue88x16
+         xD3dM+AA5uH8bNnV3TBbn8oPA3ldzxpzKOhwNfiaKxVlBpKHBMk97ttWZCF7+p/+Y2gB
+         mFhWB29X7oXaEXXEClUllQzfzXdSZaAUNWBeiw6Wb0+6uhDzFS/N84zh3H3GgK4UQs4E
+         zEIrddIjpwZSKtAr35V4i128Sy5YfSzs5FIb92RGpNyPuVNKKrwCW2HaC9fE6q18Ezsi
+         0sjPE2b1TI+Ja4nzHtnpmfU58O9GmEQn7yOl+dXvYNh+8SstT+QQuTmeleTpCxNAWYu1
+         lk9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KDsvR2sL7bSH7kZiX7UcdBRnHGb+awlt0qFDCAIcGxM=;
-        b=lrBh5iiCtn3rMkMpyx/slBJvMSmqEzH9LxwG8IinJQAPnT4MIygqonTPSPjwSnlbPQ
-         T51Z+ffu2nmxk9zg7V9LR0OKkJRc9H0+qt7tCJDNhpnzR0WVVsc41eTSKuzkhmsUGh/H
-         1/eB8BZgzV2EPGf8/ZRgy7lrd3WEDsOcat3RKHNiNKGuiMFcGVnQMNwXef9rD1NaUOzg
-         AKe1KQSPhM1q2c/hgx3nd8ucHPWYavfu479IULXxhEDb5Al4RlDUsXYMzPqVVJVFJR1J
-         HlsRjL5fs3ELKY+LFbCa8BD1/dq0n/vExutjL+x3PFabCAOO0taUoXnI1u2J9BkIcldN
-         kfMA==
-X-Gm-Message-State: APjAAAUm94hvxAh0BQWmoUVz58t62kTvNL0xeHfIZ9gA6LbYHhSKyfgf
-        bu0obm+RXUMrxUwc4maOAS2Ur+S3xUvdch7odNE=
-X-Google-Smtp-Source: APXvYqwghzyuYz+8hSjz6z09L1nyxU02x+KJAZe5bCF3MTaio6iWizMnhgXwT2UaPdV1jky+G4W1ErgVbCLhmQ/i+Zg=
-X-Received: by 2002:a05:6e02:c91:: with SMTP id b17mr17595173ile.33.1574114686674;
- Mon, 18 Nov 2019 14:04:46 -0800 (PST)
-MIME-Version: 1.0
-References: <20191118214250.14002-1-sibis@codeaurora.org> <0101016e807915dc-5f8701fd-5c4a-45a5-a9ee-9e4d8700a3fa-000000@us-west-2.amazonses.com>
-In-Reply-To: <0101016e807915dc-5f8701fd-5c4a-45a5-a9ee-9e4d8700a3fa-000000@us-west-2.amazonses.com>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 18 Nov 2019 15:04:35 -0700
-Message-ID: <CAOCk7NogQY3Vjo+cL5_0anVO=K1LfTqG69b8AGi9HQsTMEsCug@mail.gmail.com>
-Subject: Re: [PATCH 13/16] arm64: dts: qcom: msm8998: Update reserved memory map
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Mark Rutland <mark.rutland@arm.com>, p.zabel@pengutronix.de,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        linux-remoteproc@vger.kernel.org,
-        DTML <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=utEgIIdXyuvjiU+wCZAIV77AFxFDu+8dYTt1kGjwZok=;
+        b=alkoh0AQOHCWXwVaZW7pvoGD0gmNRVBFLhA/gmUe+g+9axTOzbWMk0WcFNvbJayrdn
+         iYwHOZDjzpWnFNc4alcSZ1USWSXfwtb3LXxeHCVtnf/DJFibUndInh8apIis2XJesyyd
+         XCUdz7yPPV8Ljb3LGcM5BtWUdeUgmuO9waOFexCw8cNWHiSwUzB4KU9YhGjM1ajYyKZk
+         qmQwetgdKpMnYG+LuVB2tgogmQ0H4tnWTOnYkVWyBCJBtTKsJtzLlpY9pHKwSquIcqEA
+         8QY+f/JCihSHHQjZb7OktbF6WvlB5Fuwa3sqxu1KWGr6fI8VzF6kE6o8xOsuONfz7Jyz
+         r2PQ==
+X-Gm-Message-State: APjAAAWNUF6nMmpprFz8liyGZ1jBe412FbQ//WFRX1csBkpR5qDJnXNb
+        JbqhiJmdkcLU8vFBJMbiD0y7ZA==
+X-Google-Smtp-Source: APXvYqzM+peUo1lSKOoXz6fiecEmuZPTfjshOjkVtJi6CoTBSW5F+j67GNIWkslvpWsyjf947G+iDg==
+X-Received: by 2002:a05:620a:113a:: with SMTP id p26mr26642626qkk.479.1574114756674;
+        Mon, 18 Nov 2019 14:05:56 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id j10sm11040243qtb.34.2019.11.18.14.05.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Nov 2019 14:05:56 -0800 (PST)
+Message-ID: <1574114754.5937.154.camel@lca.pw>
+Subject: Re: PSI: use-after-free in collect_percpu_times()
+From:   Qian Cai <cai@lca.pw>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Suren Baghdasaryan <surenb@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 18 Nov 2019 17:05:54 -0500
+In-Reply-To: <20191118220036.GA382712@cmpxchg.org>
+References: <1574113159.5937.148.camel@lca.pw>
+         <20191118220036.GA382712@cmpxchg.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 2:45 PM Sibi Sankar <sibis@codeaurora.org> wrote:
->
-> Update existing and add missing regions to the reserved memory map, as
-> described in version 7.1
->
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/msm8998.dtsi | 62 ++++++++++++++++++++++++---
->  1 file changed, 55 insertions(+), 7 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> index fc7838ea9a010..707673e3cf28a 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> @@ -28,8 +28,13 @@
->                 #size-cells = <2>;
->                 ranges;
->
-> -               memory@85800000 {
-> -                       reg = <0x0 0x85800000 0x0 0x800000>;
-> +               hyp_mem: memory@85800000 {
-> +                       reg = <0x0 0x85800000 0x0 0x600000>;
-> +                       no-map;
-> +               };
-> +
-> +               xbl_mem: memory@85e00000 {
+On Mon, 2019-11-18 at 17:00 -0500, Johannes Weiner wrote:
+> Hi Qian,
+> 
+> On Mon, Nov 18, 2019 at 04:39:19PM -0500, Qian Cai wrote:
+> > Since a few days ago, s390 starts to crash on linux-next while reading some
+> > sysfs. It is not always reproducible but seems pretty reproducible after running
+> > the whole MM test suite here,
+> > https://github.com/cailca/linux-mm/blob/master/test.sh
+> > 
+> > the config:
+> > https://raw.githubusercontent.com/cailca/linux-mm/master/s390.config
+> > 
+> > The stack trace on s390 is not particular helpful as both gdb and faddr2line are
+> > unable to point out which line causes the issue.
+> > 
+> > # ./scripts/faddr2line vmlinux collect_percpu_times+0x2d6/0x798
+> > bad symbol size: base: 0x00000000002076f8 end: 0x00000000002076f8
+> > 
+> > (gdb) list *(collect_percpu_times+0x2d6)
+> > 0x2079ce is in collect_percpu_times (./include/linux/compiler.h:199).
+> > 194	})
+> > 195	
+> > 196	static __always_inline
+> > 197	void __read_once_size(const volatile void *p, void *res, int size)
+> > 198	{
+> > 199		__READ_ONCE_SIZE;
+> > 200	}
+> > 201	
+> > 202	#ifdef CONFIG_KASAN
+> > 203	/*
+> > 
+> > Could it be some race conditions in PSI?
+> 
+> psi doesn't do much lifetime management in itself: the psi_group is
+> embedded in the cgroup and the per-cpu data is freed right before the
+> cgroup itself is freed. An open file descriptor on the pressure files
+> will pin the cgroup and prevent it from being deleted.
+> 
+> As it's reproducible, would you be able to bisect this problem?
 
-Are we ever going to use this label?
-
-> +                       reg = <0x0 0x85e00000 0x0 0x100000>;
->                         no-map;
->                 };
->
-> @@ -38,21 +43,64 @@
->                         no-map;
->                 };
->
-> -               memory@86200000 {
-> +               tz_mem: memory@86200000 {
-
-Again, are we ever going to use this?
-
->                         reg = <0x0 0x86200000 0x0 0x2d00000>;
->                         no-map;
->                 };
->
-> -               rmtfs {
-> +               rmtfs_mem: memory@88f00000 {
->                         compatible = "qcom,rmtfs-mem";
-> -
-> -                       size = <0x0 0x200000>;
-> -                       alloc-ranges = <0x0 0xa0000000 0x0 0x2000000>;
-> +                       reg = <0x0 0x88f00000 0x0 0x200000>;
-
-This seems to overlap with a defined region in the memory map.
-0x9fa00000 seems to be a better address.
-
->                         no-map;
->
->                         qcom,client-id = <1>;
->                         qcom,vmid = <15>;
->                 };
-> +
-> +               spss_mem: memory@8ab00000 {
-> +                       reg = <0x0 0x8ab00000 0x0 0x700000>;
-> +                       no-map;
-> +               };
-> +
-> +               adsp_mem: memory@8b200000 {
-> +                       reg = <0x0 0x8b200000 0x0 0x1a00000>;
-> +                       no-map;
-> +               };
-> +
-> +               mpss_mem: memory@8cc00000 {
-> +                       reg = <0x0 0x8cc00000 0x0 0x7000000>;
-> +                       no-map;
-> +               };
-> +
-> +               venus_mem: memory@93c00000 {
-> +                       reg = <0x0 0x93c00000 0x0 0x500000>;
-> +                       no-map;
-> +               };
-> +
-> +               mba_mem: memory@94100000 {
-> +                       reg = <0x0 0x94100000 0x0 0x200000>;
-> +                       no-map;
-> +               };
-> +
-> +               slpi_mem: memory@94300000 {
-> +                       reg = <0x0 0x94300000 0x0 0xf00000>;
-> +                       no-map;
-> +               };
-> +
-> +               ipa_fw_mem: memory@95200000 {
-> +                       reg = <0x0 0x95200000 0x0 0x10000>;
-> +                       no-map;
-> +               };
-> +
-> +               ipa_gsi_mem: memory@95210000 {
-> +                       reg = <0x0 0x95210000 0x0 0x5000>;
-> +                       no-map;
-> +               };
-> +
-> +               gpu_mem: memory@95215000 {
-> +                       reg = <0x0 0x95215000 0x0 0x1000>;
-
-This is the wrong size for the zap region.
-
-> +                       no-map;
-> +               };
->         };
->
->         clocks {
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
+Yes, it is going to time-consuming though as I have not found a quick reproducer
+yet.
