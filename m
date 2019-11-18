@@ -2,331 +2,133 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1FFC43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06437C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0BB521939
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1B282192B
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:32:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nWX+jjii"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Q5GHLqOY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfKRRcg (ORCPT
+        id S1726990AbfKRRch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 12:32:36 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55651 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfKRRcg (ORCPT
+        Mon, 18 Nov 2019 12:32:37 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:60890 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbfKRRcg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 Nov 2019 12:32:36 -0500
-Received: by mail-wm1-f68.google.com with SMTP id b11so126543wmb.5;
-        Mon, 18 Nov 2019 09:32:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9cUOn4dXQObR7q+VBOZahx/ugZjKHh2rWdB8yZdQGkI=;
-        b=nWX+jjiizY/XT+BAk1ctVJ1fdnxY5KQ50xN1jo+PQ4iae9XeYK6gM/spIaPzc8Nb07
-         bFNlxbj9VyzaEzfZDXWrzQ5D1a7BGV7PpqQFB73jOORcMYP0fCJL15e+iglW39/+nzcL
-         /5bjXHEzM85mreMl5DUfCf1Y23HhN9SSyWz+GC42DDKvERWzjSMk3q3P89ggVsVv4edx
-         eKYGwWmeno1SWhK5ZXdmoA9EiI3foSzDdy0Vp+sBW0yYOFNqcVtMc6WFWTxbocF6HY4l
-         qY5Yo4HuGPOdnwmCeuTYq16iYHk58zz6G+QY7pcDjtj32fotR8vMo1jgy026iNNOwVAF
-         cEIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9cUOn4dXQObR7q+VBOZahx/ugZjKHh2rWdB8yZdQGkI=;
-        b=umyAdOB/uWtoNn/voqCCz3SMlxVNRKpW0KQFzqr2C8kx7Sxw+TNcb5v8J74EZS28JN
-         8mrUWiXcxDEz8b5U7p9Wmm45VIpSIPdc05WqHNJTkOyvgmiqfXcE6abA9aYBwUxo651g
-         64cC96srTRsPPV4dYY9dW9IlDyXKIhpBQZLfLRQfGfgvGcJyYvewngpd/PT+DTv8P8JA
-         qciQkGtuzU1IZaDzizaJp6PGDpt+KwYF6CwVPsDkgaruRoUueGHEVDrsq6Bdm+9ZCFVr
-         6ZwfyVa3t58SkQqy1gLNF5KwsLHmmZh34KZKtFeRSFG97TPAhUetFRq2zX5sxuDyjK9N
-         l2kQ==
-X-Gm-Message-State: APjAAAWP9is6dYNlwhzoqb+bdpA38T38cqaTDnY5yFzpWkhBnkZWGqkz
-        ioy8SUCtr5ncerplUzxiIoA=
-X-Google-Smtp-Source: APXvYqxBASmSBziAl7PKRwEoLyPls2LH9/l314Fd8pkEnVKPTAzBofCwPdmeJNVo3SBbmPo3YIht9A==
-X-Received: by 2002:a1c:5fc4:: with SMTP id t187mr201252wmb.142.1574098351306;
-        Mon, 18 Nov 2019 09:32:31 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id n1sm24456636wrr.24.2019.11.18.09.32.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 18 Nov 2019 09:32:29 -0800 (PST)
-Date:   Mon, 18 Nov 2019 18:32:28 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Giovanni Mascellani <gio@debian.org>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] dell-smm-hwmon: Add support for disabling
- automatic BIOS fan control
-Message-ID: <20191118173228.gn2y5ssp7v3fcctn@pali>
-References: <20191118171148.76373-1-gio@debian.org>
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAIHOlrR167573;
+        Mon, 18 Nov 2019 17:31:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=fWYXVHNMGwzk76eEZvx0wQOORGxMzV4ZZmWutwdTNzU=;
+ b=Q5GHLqOYfoRD2LBmmxZ4kiwYWBh8AWPj0SB2Z3g4mFTDqRw9Flq35LRrJ2/t248iDQQ3
+ vFuZ+0waQZOwR+Z3NE5LzA/MCdaVk/S6TF0cyXfeJa9Jyr5XyhE+vVf1zTAgzmfyI3jc
+ FTLivj2WUYPiwMrv9u9TV8BrhJwDGUi5wVsEbuSTkvtx4Sl1x/EVZpddEDfaMpMS/6AF
+ 8qDwYjC66Grn3t32XQvuajrTDL9P6HwBLdpaAomWolKjE3zu7Rf9xXM37PKezu1lLVPj
+ r6MhS7VO/vt3nw79XH3sd+Iyk7HPu2/pAa2lGkteW6E6MhK5WuJxJXzHle7btIyWPv4X gw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2wa92phqga-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Nov 2019 17:31:09 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAIHOe7T174690;
+        Mon, 18 Nov 2019 17:31:08 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2watjxwr9y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Nov 2019 17:31:08 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAIHV3s9028994;
+        Mon, 18 Nov 2019 17:31:03 GMT
+Received: from dhcp-10-175-206-139.vpn.oracle.com (/10.175.206.139)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 18 Nov 2019 09:31:03 -0800
+Date:   Mon, 18 Nov 2019 17:30:48 +0000 (GMT)
+From:   Alan Maguire <alan.maguire@oracle.com>
+X-X-Sender: alan@dhcp-10-175-206-139.vpn.oracle.com
+To:     Stephen Boyd <sboyd@kernel.org>
+cc:     Alan Maguire <alan.maguire@oracle.com>, brendanhiggins@google.com,
+        linux-kselftest@vger.kernel.org, skhan@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
+        keescook@chromium.org, yzaikin@google.com,
+        akpm@linux-foundation.org, yamada.masahiro@socionext.com,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
+        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
+        corbet@lwn.net, tytso@mit.edu, adilger.kernel@dilger.ca,
+        mcgrof@kernel.org, changbin.du@intel.com,
+        linux-ext4@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v4 linux-kselftest-test 2/6] kunit: hide unexported
+ try-catch interface in try-catch-impl.h
+In-Reply-To: <20191117013606.4541D207DD@mail.kernel.org>
+Message-ID: <alpine.LRH.2.20.1911181728530.1562@dhcp-10-175-206-139.vpn.oracle.com>
+References: <1573812972-10529-1-git-send-email-alan.maguire@oracle.com> <1573812972-10529-3-git-send-email-alan.maguire@oracle.com> <20191117013606.4541D207DD@mail.kernel.org>
+User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="dntxtsgj3xed2gg4"
-Content-Disposition: inline
-In-Reply-To: <20191118171148.76373-1-gio@debian.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911180150
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911180150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 16 Nov 2019, Stephen Boyd wrote:
+> Quoting Alan Maguire (2019-11-15 02:16:08)
+> > diff --git a/lib/kunit/try-catch-impl.h b/lib/kunit/try-catch-impl.h
+> > new file mode 100644
+> > index 0000000..e308d5c
+> > --- /dev/null
+> > +++ b/lib/kunit/try-catch-impl.h
+> > @@ -0,0 +1,28 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * An API to allow a function, that may fail, to be executed, and recover in a
+> 
+> This file is not an API. Maybe just say "Internal kunit try catch
+> implementation details to be shared with tests".
+>
 
---dntxtsgj3xed2gg4
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for the review! Will fix this, along with adding the
+"Co-developed-by:" for Knut and will remove the unneeded
+#include of linux/kernel.h in v5 mentioned in the patch
+1 review. Thanks again!
 
-On Monday 18 November 2019 18:11:47 Giovanni Mascellani wrote:
-> This patch exports standard hwmon pwmX_enable sysfs attribute for
-> enabling or disabling automatic fan control by BIOS. Standard value
-> "1" is for disabling automatic BIOS fan control and value "2" for
-> enabling.
->=20
-> By default BIOS auto mode is enabled by laptop firmware.
->=20
-> When BIOS auto mode is enabled, custom fan speed value (set via hwmon
-> pwmX sysfs attribute) is overwritten by SMM in few seconds and
-> therefore any custom settings are without effect. So this is reason
-> why implementing option for disabling BIOS auto mode is needed.
->=20
-> So finally this patch allows kernel to set and control fan speed on
-> laptops, but it can be dangerous (like setting speed of other fans).
->=20
-> The SMM commands to enable or disable automatic fan control are not
-> documented and are not the same on all Dell laptops. Therefore a
-> whitelist is used to send the correct codes only on laptopts for which
-> they are known.
->=20
-> This patch was originally developed by Pali Roh=C3=A1r; later Giovanni
-> Mascellani implemented the whitelist.
->=20
-> Signed-off-by: Giovanni Mascellani <gio@debian.org>
-> Co-Developer-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+Alan
 
-This patch is fine for me now. I'm not sure if Co-Developer-by: tag is
-supported, but you can add:
-
-Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-
-> ---
->  drivers/hwmon/dell-smm-hwmon.c | 114 ++++++++++++++++++++++++++++++---
->  1 file changed, 104 insertions(+), 10 deletions(-)
->=20
-> diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmo=
-n.c
-> index 4212d022d253..25d160b36a57 100644
-> --- a/drivers/hwmon/dell-smm-hwmon.c
-> +++ b/drivers/hwmon/dell-smm-hwmon.c
-> @@ -68,6 +68,8 @@ static uint i8k_pwm_mult;
->  static uint i8k_fan_max =3D I8K_FAN_HIGH;
->  static bool disallow_fan_type_call;
->  static bool disallow_fan_support;
-> +static unsigned int manual_fan;
-> +static unsigned int auto_fan;
-> =20
->  #define I8K_HWMON_HAVE_TEMP1	(1 << 0)
->  #define I8K_HWMON_HAVE_TEMP2	(1 << 1)
-> @@ -300,6 +302,20 @@ static int i8k_get_fan_nominal_speed(int fan, int sp=
-eed)
->  	return i8k_smm(&regs) ? : (regs.eax & 0xffff) * i8k_fan_mult;
->  }
-> =20
-> +/*
-> + * Enable or disable automatic BIOS fan control support
-> + */
-> +static int i8k_enable_fan_auto_mode(bool enable)
-> +{
-> +	struct smm_regs regs =3D { };
-> +
-> +	if (disallow_fan_support)
-> +		return -EINVAL;
-> +
-> +	regs.eax =3D enable ? auto_fan : manual_fan;
-> +	return i8k_smm(&regs);
-> +}
-> +
->  /*
->   * Set the fan speed (off, low, high). Returns the new fan status.
->   */
-> @@ -726,6 +742,35 @@ static ssize_t i8k_hwmon_pwm_store(struct device *de=
-v,
->  	return err < 0 ? -EIO : count;
->  }
-> =20
-> +static ssize_t i8k_hwmon_pwm_enable_store(struct device *dev,
-> +					  struct device_attribute *attr,
-> +					  const char *buf, size_t count)
-> +{
-> +	int err;
-> +	bool enable;
-> +	unsigned long val;
-> +
-> +	if (!auto_fan)
-> +		return -ENODEV;
-> +
-> +	err =3D kstrtoul(buf, 10, &val);
-> +	if (err)
-> +		return err;
-> +
-> +	if (val =3D=3D 1)
-> +		enable =3D false;
-> +	else if (val =3D=3D 2)
-> +		enable =3D true;
-> +	else
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&i8k_mutex);
-> +	err =3D i8k_enable_fan_auto_mode(enable);
-> +	mutex_unlock(&i8k_mutex);
-> +
-> +	return err ? err : count;
-> +}
-> +
->  static SENSOR_DEVICE_ATTR_RO(temp1_input, i8k_hwmon_temp, 0);
->  static SENSOR_DEVICE_ATTR_RO(temp1_label, i8k_hwmon_temp_label, 0);
->  static SENSOR_DEVICE_ATTR_RO(temp2_input, i8k_hwmon_temp, 1);
-> @@ -749,6 +794,7 @@ static SENSOR_DEVICE_ATTR_RO(temp10_label, i8k_hwmon_=
-temp_label, 9);
->  static SENSOR_DEVICE_ATTR_RO(fan1_input, i8k_hwmon_fan, 0);
->  static SENSOR_DEVICE_ATTR_RO(fan1_label, i8k_hwmon_fan_label, 0);
->  static SENSOR_DEVICE_ATTR_RW(pwm1, i8k_hwmon_pwm, 0);
-> +static SENSOR_DEVICE_ATTR_WO(pwm1_enable, i8k_hwmon_pwm_enable, 0);
->  static SENSOR_DEVICE_ATTR_RO(fan2_input, i8k_hwmon_fan, 1);
->  static SENSOR_DEVICE_ATTR_RO(fan2_label, i8k_hwmon_fan_label, 1);
->  static SENSOR_DEVICE_ATTR_RW(pwm2, i8k_hwmon_pwm, 1);
-> @@ -780,12 +826,13 @@ static struct attribute *i8k_attrs[] =3D {
->  	&sensor_dev_attr_fan1_input.dev_attr.attr,	/* 20 */
->  	&sensor_dev_attr_fan1_label.dev_attr.attr,	/* 21 */
->  	&sensor_dev_attr_pwm1.dev_attr.attr,		/* 22 */
-> -	&sensor_dev_attr_fan2_input.dev_attr.attr,	/* 23 */
-> -	&sensor_dev_attr_fan2_label.dev_attr.attr,	/* 24 */
-> -	&sensor_dev_attr_pwm2.dev_attr.attr,		/* 25 */
-> -	&sensor_dev_attr_fan3_input.dev_attr.attr,	/* 26 */
-> -	&sensor_dev_attr_fan3_label.dev_attr.attr,	/* 27 */
-> -	&sensor_dev_attr_pwm3.dev_attr.attr,		/* 28 */
-> +	&sensor_dev_attr_pwm1_enable.dev_attr.attr,	/* 23 */
-> +	&sensor_dev_attr_fan2_input.dev_attr.attr,	/* 24 */
-> +	&sensor_dev_attr_fan2_label.dev_attr.attr,	/* 25 */
-> +	&sensor_dev_attr_pwm2.dev_attr.attr,		/* 26 */
-> +	&sensor_dev_attr_fan3_input.dev_attr.attr,	/* 27 */
-> +	&sensor_dev_attr_fan3_label.dev_attr.attr,	/* 28 */
-> +	&sensor_dev_attr_pwm3.dev_attr.attr,		/* 29 */
->  	NULL
->  };
-> =20
-> @@ -828,16 +875,19 @@ static umode_t i8k_is_visible(struct kobject *kobj,=
- struct attribute *attr,
->  	    !(i8k_hwmon_flags & I8K_HWMON_HAVE_TEMP10))
->  		return 0;
-> =20
-> -	if (index >=3D 20 && index <=3D 22 &&
-> +	if (index >=3D 20 && index <=3D 23 &&
->  	    !(i8k_hwmon_flags & I8K_HWMON_HAVE_FAN1))
->  		return 0;
-> -	if (index >=3D 23 && index <=3D 25 &&
-> +	if (index >=3D 24 && index <=3D 26 &&
->  	    !(i8k_hwmon_flags & I8K_HWMON_HAVE_FAN2))
->  		return 0;
-> -	if (index >=3D 26 && index <=3D 28 &&
-> +	if (index >=3D 27 && index <=3D 29 &&
->  	    !(i8k_hwmon_flags & I8K_HWMON_HAVE_FAN3))
->  		return 0;
-> =20
-> +	if (index =3D=3D 23 && !auto_fan)
-> +		return 0;
-> +
->  	return attr->mode;
->  }
-> =20
-> @@ -1135,12 +1185,48 @@ static struct dmi_system_id i8k_blacklist_fan_sup=
-port_dmi_table[] __initdata =3D {
->  	{ }
->  };
-> =20
-> +struct i8k_fan_control_data {
-> +	unsigned int manual_fan;
-> +	unsigned int auto_fan;
-> +};
-> +
-> +enum i8k_fan_controls {
-> +	I8K_FAN_34A3_35A3,
-> +};
-> +
-> +static const struct i8k_fan_control_data i8k_fan_control_data[] =3D {
-> +	[I8K_FAN_34A3_35A3] =3D {
-> +		.manual_fan =3D 0x34a3,
-> +		.auto_fan =3D 0x35a3,
-> +	},
-> +};
-> +
-> +static struct dmi_system_id i8k_whitelist_fan_control[] __initdata =3D {
-> +	{
-> +		.ident =3D "Dell Precision 5530",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Precision 5530"),
-> +		},
-> +		.driver_data =3D (void *)&i8k_fan_control_data[I8K_FAN_34A3_35A3],
-> +	},
-> +	{
-> +		.ident =3D "Dell Latitude E6440",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Latitude E6440"),
-> +		},
-> +		.driver_data =3D (void *)&i8k_fan_control_data[I8K_FAN_34A3_35A3],
-> +	},
-> +	{ }
-> +};
-> +
->  /*
->   * Probe for the presence of a supported laptop.
->   */
->  static int __init i8k_probe(void)
->  {
-> -	const struct dmi_system_id *id;
-> +	const struct dmi_system_id *id, *fan_control;
->  	int fan, ret;
-> =20
->  	/*
-> @@ -1200,6 +1286,14 @@ static int __init i8k_probe(void)
->  	i8k_fan_max =3D fan_max ? : I8K_FAN_HIGH;	/* Must not be 0 */
->  	i8k_pwm_mult =3D DIV_ROUND_UP(255, i8k_fan_max);
-> =20
-> +	fan_control =3D dmi_first_match(i8k_whitelist_fan_control);
-> +	if (fan_control && fan_control->driver_data) {
-> +		const struct i8k_fan_control_data *fan_control_data =3D fan_control->d=
-river_data;
-> +		manual_fan =3D fan_control_data->manual_fan;
-> +		auto_fan =3D fan_control_data->auto_fan;
-> +		pr_info("enabling support for setting automatic/manual fan control\n");
-> +	}
-> +
->  	if (!fan_mult) {
->  		/*
->  		 * Autodetect fan multiplier based on nominal rpm
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---dntxtsgj3xed2gg4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXdLVkwAKCRCL8Mk9A+RD
-UptqAKCDV9GLxi+nzSzmFuka+tuytD4U1gCcDHwaFLNCmeHqC17JGAhujp0PRBE=
-=B9yk
------END PGP SIGNATURE-----
-
---dntxtsgj3xed2gg4--
+> > + * controlled manner.
+> > + *
+> > + * Copyright (C) 2019, Google LLC.
+> > + * Author: Brendan Higgins <brendanhiggins@google.com>
+> > + */
+> > +
+> > +#ifndef _KUNIT_TRY_CATCH_IMPL_H
+> > +#define _KUNIT_TRY_CATCH_IMPL_H
+> > +
+> > +#include <kunit/try-catch.h>
+> > +#include <linux/types.h>
+> > +
+> > +struct kunit;
+> > +
+> > +static inline void kunit_try_catch_init(struct kunit_try_catch *try_catch,
+> > +                                       struct kunit *test,
+> > +                                       kunit_try_catch_func_t try,
+> 
