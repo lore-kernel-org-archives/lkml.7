@@ -2,243 +2,82 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5731EC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB37C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25FC420656
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB8D20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:59:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbfKRG6p (ORCPT
+        id S1726970AbfKRG7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 01:58:45 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:42303 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbfKRG6p (ORCPT
+        Mon, 18 Nov 2019 01:59:02 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:54456 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726455AbfKRG7B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 01:58:45 -0500
-Received: by mail-lf1-f67.google.com with SMTP id z12so12846668lfj.9;
-        Sun, 17 Nov 2019 22:58:42 -0800 (PST)
+        Mon, 18 Nov 2019 01:59:01 -0500
+Received: by mail-il1-f199.google.com with SMTP id t67so15502856ill.21
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 22:59:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=F2NMkL6VRhDIy6fa3hBmhQTcuD9uc4Boigi/4DtT+9A=;
-        b=sN3itWqGdr/qkof0h6p2AhSy4IFIrf9Jvbt3ytK5AMI5mUC0NXIr7KkNJeh4wIJuiF
-         ITjp7PRReVz3ojXLqolYyOVRnjtmZnR7k5OKpyZ57ccmd/4y1JB6jNI4jvKzMsIzJGtO
-         c/cbJhRa6J3GHAYtBUhE4z2Rk1BIpEljMK2j9LlGA1+coSFADTDXNKjRE0pJ1wZGBnwW
-         6pk49O3Dz+ZpthgLpZhjRDXycJVO0mlc5HZ+1/AVTQmU9kaEEafwYlicQ5fj1ceZPg+R
-         O6uYsR7ic2zmhOj6a4/bzyA9BQE4PKZ5Qaemm4Ty3KwMGIkvVUCEoDo48akgmHK9w0RT
-         daiA==
-X-Gm-Message-State: APjAAAV0S1qjLmBNUgbxY6YJIbPulzywtTI98TYLs3JEkAOVLsFu1dYG
-        cRc+YZ4WJXlG8TtYvtTLauk=
-X-Google-Smtp-Source: APXvYqwKTVNGftftI6YR4FKUXxfUVpF43xCQ2/7YfztKn2gJv1/b5pz5u3I8b5lj9RJl8YmDkWMBuA==
-X-Received: by 2002:a19:74a:: with SMTP id 71mr6420378lfh.124.1574060321969;
-        Sun, 17 Nov 2019 22:58:41 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id k19sm9166634ljg.18.2019.11.17.22.58.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Nov 2019 22:58:41 -0800 (PST)
-Date:   Mon, 18 Nov 2019 08:58:30 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: [PATCH v5 10/16] gpio: devres: Add devm_gpiod_get_parent_array
-Message-ID: <8dd9dad2765d47fd6c6fec20566326d00e48a696.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=aF2hkb+uDPuWocQ0k+VDFxZ3uHqIeoh49sdaxIzLqYY=;
+        b=T9chuOthCehPQZsWmIz8FLC+M5ykW7b3d5rCID9JnbdL66cv+P/IVwflbX2mBoYwln
+         AN8ZEvSinRqwFCKgg+0JRrM71GF7yYH6fbC+hp5iWssQkwfWTe2RZZGb+nSt6sTjEN7C
+         QrfRwDdCMvOvculiqZJKCsjPzOziq3cpE7zoY6lpQI+VGsL8Jyfnvb9edDNCf4wrZZeo
+         frFgWHe9WsjNe18LRc9skny7F4B8CBJo99vMY34GfzbzuLTcpMkZWxD8sE6PI5je8OS9
+         CEgXgOTOoqQjKHi4gfXjKWnyBQjoDDHKjHJgjKMvv3QspCw3OZ0xuqn6msgblHqi5k5O
+         dwyg==
+X-Gm-Message-State: APjAAAUo9BL7KQu0IYWuBRUEDfm7v6CCjcMyChegKI0KuILK44r10z41
+        yQJ8kH3dyQ3YttEZcRbl6z3zF0lCVWcbJrpOOTJFxDkN4AGH
+X-Google-Smtp-Source: APXvYqysoNyeEKRWypMnt+cdrFAOn38eJTXWLtV2lRmkpvPHZzOvepD6Or4PJwYns/Nexla5W6HU5q/UkUKWl9GBcKEhVFpMQAml
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Received: by 2002:a5d:8854:: with SMTP id t20mr12183485ios.301.1574060340893;
+ Sun, 17 Nov 2019 22:59:00 -0800 (PST)
+Date:   Sun, 17 Nov 2019 22:59:00 -0800
+In-Reply-To: <0000000000002e4a260576c1589d@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000795dd20597997b1c@google.com>
+Subject: Re: KASAN: use-after-free Read in relay_switch_subbuf
+From:   syzbot <syzbot+29093015c21333d1c46d@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, bunk@kernel.org, ebiggers@google.com,
+        gregkh@linuxfoundation.org, jannh@google.com, jrdr.linux@gmail.com,
+        keescook@chromium.org, linux-kernel@vger.kernel.org,
+        linux@dominikbrodowski.net, mawilcox@microsoft.com,
+        mojha@codeaurora.org, rientjes@google.com,
+        sudipm.mukherjee@gmail.com, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk, yuehaibing@huawei.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bunch of MFD sub-devices which are instantiated by MFD do not have
-own device-tree nodes but have (for example) the GPIO consumer
-information in parent device's DT node. Add resource managed
-devm_gpiod_get_array() for such devices so that they can get the
-consumer information from parent DT while still binding the GPIO
-reservation life-time to this sub-device life time.
+syzbot has bisected this bug to:
 
-If devm_gpiod_get_array is used as such - then unloading and then
-re-loading the child device fails as the GPIOs reserved during first
-load are not freed when driver for sub-device is unload (if parent
-stays there).
+commit 21c75ad65f8e5213ec542d99c259ffe3e3671e81
+Author: YueHaibing <yuehaibing@huawei.com>
+Date:   Thu Mar 21 08:26:28 2019 +0000
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
+     parport_cs: Fix memory leak in parport_config
 
-No changes from v4
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11480c6ae00000
+start commit:   26bc6721 Merge tag 'for-linus-2019-11-05' of git://git.ker..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=13480c6ae00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=15480c6ae00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8c5e2eca3f31f9bf
+dashboard link: https://syzkaller.appspot.com/bug?extid=29093015c21333d1c46d
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=132afbcce00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=179a1f8ae00000
 
- .../driver-api/driver-model/devres.rst        |  1 +
- drivers/gpio/gpiolib-devres.c                 | 65 ++++++++++++++-----
- include/linux/gpio/consumer.h                 |  5 ++
- 3 files changed, 56 insertions(+), 15 deletions(-)
+Reported-by: syzbot+29093015c21333d1c46d@syzkaller.appspotmail.com
+Fixes: 21c75ad65f8e ("parport_cs: Fix memory leak in parport_config")
 
-diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
-index a100bef54952..1b8302ba405b 100644
---- a/Documentation/driver-api/driver-model/devres.rst
-+++ b/Documentation/driver-api/driver-model/devres.rst
-@@ -270,6 +270,7 @@ GPIO
-   devm_gpiod_get_index()
-   devm_gpiod_get_index_optional()
-   devm_gpiod_get_optional()
-+  devm_gpiod_get_parent_array()
-   devm_gpiod_put()
-   devm_gpiod_unhinge()
-   devm_gpiochip_add_data()
-diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
-index 98e3c20d9730..584fa6edfd20 100644
---- a/drivers/gpio/gpiolib-devres.c
-+++ b/drivers/gpio/gpiolib-devres.c
-@@ -270,19 +270,11 @@ struct gpio_desc *__must_check devm_gpiod_get_index_optional(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(devm_gpiod_get_index_optional);
- 
--/**
-- * devm_gpiod_get_array - Resource-managed gpiod_get_array()
-- * @dev:	GPIO consumer
-- * @con_id:	function within the GPIO consumer
-- * @flags:	optional GPIO initialization flags
-- *
-- * Managed gpiod_get_array(). GPIO descriptors returned from this function are
-- * automatically disposed on driver detach. See gpiod_get_array() for detailed
-- * information about behavior and return values.
-- */
--struct gpio_descs *__must_check devm_gpiod_get_array(struct device *dev,
--						     const char *con_id,
--						     enum gpiod_flags flags)
-+static struct gpio_descs *__must_check
-+__devm_gpiod_get_array(struct device *gpiodev,
-+		       struct device *managed,
-+		       const char *con_id,
-+		       enum gpiod_flags flags)
- {
- 	struct gpio_descs **dr;
- 	struct gpio_descs *descs;
-@@ -292,19 +284,62 @@ struct gpio_descs *__must_check devm_gpiod_get_array(struct device *dev,
- 	if (!dr)
- 		return ERR_PTR(-ENOMEM);
- 
--	descs = gpiod_get_array(dev, con_id, flags);
-+	descs = gpiod_get_array(gpiodev, con_id, flags);
- 	if (IS_ERR(descs)) {
- 		devres_free(dr);
- 		return descs;
- 	}
- 
- 	*dr = descs;
--	devres_add(dev, dr);
-+	if (managed)
-+		devres_add(managed, dr);
-+	else
-+		devres_add(gpiodev, dr);
- 
- 	return descs;
- }
-+
-+/**
-+ * devm_gpiod_get_array - Resource-managed gpiod_get_array()
-+ * @dev:	GPIO consumer
-+ * @con_id:	function within the GPIO consumer
-+ * @flags:	optional GPIO initialization flags
-+ *
-+ * Managed gpiod_get_array(). GPIO descriptors returned from this function are
-+ * automatically disposed on driver detach. See gpiod_get_array() for detailed
-+ * information about behavior and return values.
-+ */
-+struct gpio_descs *__must_check devm_gpiod_get_array(struct device *dev,
-+						     const char *con_id,
-+						     enum gpiod_flags flags)
-+{
-+	return __devm_gpiod_get_array(dev, NULL, con_id, flags);
-+}
- EXPORT_SYMBOL_GPL(devm_gpiod_get_array);
- 
-+/**
-+ * devm_gpiod_get_parent_array - Resource-managed gpiod_get_array for subdevices
-+ * @dev:	Managed device whose parent is the GPIO consumer
-+ * @con_id:	function within the GPIO consumer
-+ * @flags:	optional GPIO initialization flags
-+ *
-+ * Managed gpiod_get_array() for subdevices. This function is intended to be
-+ * used by MFD sub-devices whose GPIO bindings are in parent (MFD) device but
-+ * whose GPIO reservation should last only for the dub-device life time.
-+ * Returns EINVAL if no parent device is found. Rest of the behaviour and
-+ * return values are as documented for gpiod_get_array()
-+ */
-+struct gpio_descs *__must_check
-+devm_gpiod_get_parent_array(struct device *dev,
-+			    const char *con_id,
-+			    enum gpiod_flags flags)
-+{
-+	if (!dev | !dev->parent)
-+		return ERR_PTR(-EINVAL);
-+	return __devm_gpiod_get_array(dev->parent, dev, con_id, flags);
-+}
-+EXPORT_SYMBOL_GPL(devm_gpiod_get_parent_array);
-+
- /**
-  * devm_gpiod_get_array_optional - Resource-managed gpiod_get_array_optional()
-  * @dev:	GPIO consumer
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index b70af921c614..01a82b1c6828 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -103,6 +103,11 @@ struct gpio_descs *__must_check devm_gpiod_get_array(struct device *dev,
- struct gpio_descs *__must_check
- devm_gpiod_get_array_optional(struct device *dev, const char *con_id,
- 			      enum gpiod_flags flags);
-+struct gpio_descs *__must_check
-+devm_gpiod_get_parent_array(struct device *dev,
-+			    const char *con_id,
-+			    enum gpiod_flags flags);
-+
- void devm_gpiod_put(struct device *dev, struct gpio_desc *desc);
- void devm_gpiod_unhinge(struct device *dev, struct gpio_desc *desc);
- void devm_gpiod_put_array(struct device *dev, struct gpio_descs *descs);
--- 
-2.21.0
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
