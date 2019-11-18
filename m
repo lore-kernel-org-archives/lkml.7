@@ -2,137 +2,144 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 883ACC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36B4C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CCB72071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46AF92071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:58:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r2iF6ONz"
+	dkim=pass (2048-bit key) header.d=oth-regensburg.de header.i=@oth-regensburg.de header.b="n73Lu6tf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbfKRN5V (ORCPT
+        id S1727104AbfKRN6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 08:57:21 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39780 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726627AbfKRN5U (ORCPT
+        Mon, 18 Nov 2019 08:58:18 -0500
+Received: from mta01.hs-regensburg.de ([194.95.104.11]:47026 "EHLO
+        mta01.hs-regensburg.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726627AbfKRN6R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 08:57:20 -0500
-Received: by mail-lf1-f66.google.com with SMTP id f18so1551306lfj.6
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 05:57:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8MT+fGXZDS22JKWSNFBQJuUc1lDOVJUPNg1CD91zNsE=;
-        b=r2iF6ONzWZUMA5fsf4vvaji1G06AUx6vdAeR1Wrvf7jngpPilm5yKIjrGPlVR1xhYJ
-         F3gcRT+3CsioJ4nPuvY2fiGfNq7p+gf1l03ydpVUy/CRaK4X3BF/DEzSKulsKU7XfD6h
-         B+LGcDsP0UyNjQgxDqxPW8YoiV+9wj87LlTD7VsuHgfCnOJBaC10VBoOFqfdvdiG3tOo
-         TMWr1rI3DdrTTo+aBS0Y6HUK6k3sed4GxtGoAH4b1ClA50HiCQgrLInl6jl0wPy0JSF5
-         BOlbQG2WT2M0Q8sfyut76dHCPXshwgXLuh3O6BizVZYW3SXtH5Ledl32Tw8/Fr2EDKKF
-         zjmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8MT+fGXZDS22JKWSNFBQJuUc1lDOVJUPNg1CD91zNsE=;
-        b=I7bwIl3wJdWzXxRGPZFmKRiqsjoa46XcVU+Cxoy9JA1GroVY0kkLoHrheaHk7MHLq+
-         3JUNFYjKrLogzHv9eJRIkcl6rqmeIMzb+GUOC8bMEzkVokYqL0U6ivRrvL86mYSMDSzV
-         PwYCOmiKIvl+RT5vJcX0UO8Q8olbbiJ6VUMoJlL04ERlGQwUOxROM/ne5g12XmhzAAVw
-         9cb4Rnd+kFtIcC6Y6Oht5QNu/03bBpxAJduwvo4DzstZ9RWRXy446n9/z8u8BzWRfZlp
-         B1/shTCXk7CGUP4MhJxkiqedyrUc/UktLTuAi5mNXex+4UaIuIVP1y27nOLcDvpBWTlE
-         7T0A==
-X-Gm-Message-State: APjAAAWs+typ1fTS1eAE3BBqhe2Fh2w2T1i5XNIgvzA+q+dfhuuh6MV+
-        PQjvxArHu/blXodcMobPVfshXlrQ1uRmUu2c5harcQ==
-X-Google-Smtp-Source: APXvYqz32WSaaBKP/r0Kr7UU0fzt4JTqsNqb325mUM0kz+ngmPcT6OE5A+BLER8NKPslbFxXe+Ue872Gsm6I6GWuwZg=
-X-Received: by 2002:a19:c144:: with SMTP id r65mr4185943lff.133.1574085437090;
- Mon, 18 Nov 2019 05:57:17 -0800 (PST)
+        Mon, 18 Nov 2019 08:58:17 -0500
+Received: from E16S02.hs-regensburg.de (e16s02.hs-regensburg.de [IPv6:2001:638:a01:8013::92])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client CN "E16S02", Issuer "E16S02" (not verified))
+        by mta01.hs-regensburg.de (Postfix) with ESMTPS id 47GrBv0K35zy7Q;
+        Mon, 18 Nov 2019 14:58:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oth-regensburg.de;
+        s=mta01-20160622; t=1574085495;
+        bh=BP0zP3OW9XzDUFIK80nnJmyfc1wDEkpFtTQ47Ux99Uw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To:From;
+        b=n73Lu6tfJbNvCSwc5NJYlUBDib51gI9FZpyWpeOXTWDx2Bltvhsu29mz52WNS+8z9
+         TAME7t92l8CVEqTBzKHvzSm+8h4ZXXZNyeR+OJm3KbV4/Oyna41pOvdQiP3mJ6TbLu
+         QKgZCcMqrXYPMFFF29hQGRBLllRfmkGa5KzvmAz7kUj6V878MWH3w/a1knTKEfxGfO
+         Kx3CAxd5CI3pzz9n2uHaycamAekqx67Y8vaYaJ4jttNbPW19J4J88otNIHwrgpavh7
+         e18hPdCuL9VXp1+XbaocdPCLHNvOeogUMjaTPgtlP8c0Bos/SHOoZZGYJ+n3f4CkF/
+         Sl4fkh5/+q0iQ==
+Received: from [192.168.178.10] (194.95.106.138) by E16S02.hs-regensburg.de
+ (2001:638:a01:8013::92) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Mon, 18 Nov
+ 2019 14:58:14 +0100
+Subject: Re: [FYI PATCH 0/7] Mitigation for CVE-2018-12207
+To:     Jan Kiszka <jan.kiszka@siemens.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>
+CC:     "Gupta, Pawan Kumar" <pawan.kumar.gupta@intel.com>
+References: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
+ <23353382-53ea-8b20-7e30-763ef6df374c@siemens.com>
+ <ea5a084b-e047-6677-b8fe-d7bb6f8c0ef8@redhat.com>
+ <dffb19ab-daa2-a513-531e-c43279d8a4bf@intel.com>
+ <e86c01a8-8265-5e42-2fae-2c42c7e3d961@siemens.com>
+From:   Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
+Autocrypt: addr=ralf.ramsauer@oth-regensburg.de; keydata=
+ mQINBFFbFOQBEACuc/5RqBxcHJiMjuQo4cUit/whIFgjcorx77z/srj/Cn5mKnWMLgmhszFC
+ nzrgLw+1KewrJ/+qcrJKmX3Dw58VaktfjV0QUEnPmQXND3PUIE4Bl01GZ4Z/NKtaavdTWPTH
+ wKzjbDucCzYKMBEYT3AMQRwQLNBF7VboV1T2fy+J505P9LP649c/Ept5vAsFH/3k2YpVVYcf
+ Xpxk7ZxxBa9Xj9jMkoEGK8YPj0bHtrjrtG+fDuQRdv4gVwdY+HdalLQXCzYVPEnA/w3kD69A
+ tPVuJOK61hJz6rS2n5ByzFLitLB8Fe940AI3wy4Df2pB2UFnD51k2Cg3HKi5HqH4Mpsieixq
+ m/pd37SoPwQoTeVX+ASeUNl2CibSi78IsbHnZBKMKfdlSCzqogRWGcZPivKIL0vQDpzSSn4C
+ hiRNiTXLH7lhfIhlH/MgmjXanhYDVLzQNhIEYF2Op2XN0HeYD/aFHQxhQQNxvX6aEDj7t0aS
+ fAmyULXq1DX+ttI9UY65hcdvQQHUVCNF+87Sggu4x1q8/cxDkdpRlCqdmEigXF7nHkbsOVq8
+ T8B1j+Y2cGIU/ivyMO+pqEQm3QOWKBC8ndm49lCgxltsEL5Bd4j4dF08QCcWFVbF9cWb2obT
+ KcHX3Vm+1zKz2HLR9gBZiEPjNoP9riVz+81ECNk42w9874pmLQARAQABtC9SYWxmIFJhbXNh
+ dWVyIDxyYWxmLnJhbXNhdWVyQG90aC1yZWdlbnNidXJnLmRlPokCVAQTAQgAPgIbAwULCQgH
+ AgYVCAkKCwIEFgIDAQIeAQIXgBYhBO+AJoipr99tPvqviPovtFKPEASbBQJbE/G6BQkJui5W
+ AAoJEPovtFKPEASb3iAP/jhdGSwc91Jf+kcOKaWe40dFQn2bjFhoYXuD16AYoBHBVNNOFYW6
+ ikYyAUFOMaWBvUBUu4eyFwPY8ewr7sXoH5RqheQc7bvtX+2lxI3dLbcDMlp2Apj1NVFUKNAy
+ VKjPpWNNdR+iz6JVar/QUye++5WOaJ2Jdgc/AIfBAWZyBcrg16um8hb7TMX5++7OtEUVOSz6
+ L9bZkp6S/E6WgnIturQDEcmvxGJjwZKsLMlFNhasex3fzRE8vVq2JONi/gGfso7EQx7jdYNH
+ z9BkdSlhL2agtMhmBygRs8L6TXU/V5sv4UD7+BiEINDEJTPF9OAX44MCXslGmGn0Kltvf2vC
+ NGfsmcSVcsiptRAvrafxCUW8CqgwGLeuJi/qLKF3oRYjvVYMxpBsqQLIksYrPxvMOXgh2uU/
+ JJgxnS+spAh+33uqWLP00CmOT06WNwSY6k3WSYfA5EvsLCsrrmO8NOIUjMC8pLqiEFgXgw6M
+ CANKNJN23Aapo+rPF+kHvnMR/YFrgapJn3VGrG5lELovqGyqc7afIgiiEMSUY1zcJ9VlS0Z4
+ OvbTjvPYy4tb8aGgMQ6cmsqiaIpHFZ2UJtk4R5asCmwIkbVWQLxvNlX9J5bXr/PHU0UlYJYB
+ mp34WgKNwgwyso67v0GZDKJyaBMvk7alZEOKGWcMKEE6Pr3ByURudR8w
+Message-ID: <60b2a488-74b8-897c-4b25-e228d3fe7d55@oth-regensburg.de>
+Date:   Mon, 18 Nov 2019 14:58:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
- <1571405198-27570-5-git-send-email-vincent.guittot@linaro.org>
- <20191030154534.GJ3016@techsingularity.net> <20191118135017.GA123637@gmail.com>
-In-Reply-To: <20191118135017.GA123637@gmail.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Mon, 18 Nov 2019 14:57:05 +0100
-Message-ID: <CAKfTPtC-782+HYt9L4CMKpuYJ04XQjBO-v_KEUNikofD8n_0Aw@mail.gmail.com>
-Subject: Re: [PATCH v4 04/11] sched/fair: rework load_balance
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Parth Shah <parth@linux.ibm.com>,
-        Rik van Riel <riel@surriel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e86c01a8-8265-5e42-2fae-2c42c7e3d961@siemens.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [194.95.106.138]
+X-ClientProxiedBy: E16S04.hs-regensburg.de (2001:638:a01:8013::94) To
+ E16S02.hs-regensburg.de (2001:638:a01:8013::92)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 Nov 2019 at 14:50, Ingo Molnar <mingo@kernel.org> wrote:
->
->
-> * Mel Gorman <mgorman@techsingularity.net> wrote:
->
-> > s/groupe_type/group_type/
-> >
-> > >  enum group_type {
-> > > -   group_other = 0,
-> > > +   group_has_spare = 0,
-> > > +   group_fully_busy,
-> > >     group_misfit_task,
-> > > +   group_asym_packing,
-> > >     group_imbalanced,
-> > > -   group_overloaded,
-> > > +   group_overloaded
-> > > +};
-> > > +
-> >
-> > While not your fault, it would be nice to comment on the meaning of each
-> > group type. From a glance, it's not obvious to me why a misfit task should
-> > be a high priority to move a task than a fully_busy (but not overloaded)
-> > group given that moving the misfit task might make a group overloaded.
->
-> This part of your feedback should now be addressed in the scheduler tree
-> via:
->
->   a9723389cc75: sched/fair: Add comments for group_type and balancing at SD_NUMA level
->
-> > > +enum migration_type {
-> > > +   migrate_load = 0,
-> > > +   migrate_util,
-> > > +   migrate_task,
-> > > +   migrate_misfit
-> > >  };
-> > >
-> >
-> > Could do with a comment explaining what migration_type is for because
-> > the name is unhelpful. I *think* at a glance it's related to what sort
-> > of imbalance is being addressed which is partially addressed by the
-> > group_type. That understanding may change as I continue reading the series
-> > but now I have to figure it out which means it'll be forgotten again in
-> > 6 months.
->
-> Agreed. Vincent, is any patch brewing here, or should I take a stab?
->
+Hi Dave,
 
-No I haven't patch under preparation for this
-So you can go ahead
+On 11/14/19 9:09 AM, Jan Kiszka wrote:
+> On 13.11.19 22:24, Dave Hansen wrote:
+>> On 11/13/19 12:23 AM, Paolo Bonzini wrote:
+>>> On 13/11/19 07:38, Jan Kiszka wrote:
+>>>> When reading MCE, error code 0150h, ie. SRAR, I was wondering if that
+>>>> couldn't simply be handled by the host. But I suppose the symptom of
+>>>> that erratum is not "just" regular recoverable MCE, rather
+>>>> sometimes/always an unrecoverable CPU state, despite the error code,
+>>>> right?
+>>> The erratum documentation talks explicitly about hanging the system, but
+>>> it's not clear if it's just a result of the OS mishandling the MCE, or
+>>> something worse.  So I don't know. :(  Pawan, do you?
+>>
+>> It's "something worse".
+>>
+>> I built a kernel module reproducer for this a long time ago.  The
+>> symptom I observed was the whole system hanging hard, requiring me to go
+>> hit the power button.  The MCE software machinery was not involved at
+>> all from what I could tell.
+> 
+> Thanks for clarifying this - too bad.
+> 
+>>
+>> About creating a unit test, I'd be personally happy to share my
+>> reproducer, but I built it before this issue was root-caused.  There are
+
+I'd appreciate if you could share your code.
+
+>> actually quite a few underlying variants and a good unit test would make
+>> sure to exercise all of them.  My reproducer probably only exercised a
+>> single case.
+
+Still, it triggers the issue, that's enough to compare it to my reproducer.
+
+>>
+> 
+> Would be interesting to see this. Ralf and tried something quickly, but
+> there seems to be a detail missing or wrong.
+
+Yep, we still can't reproduce the issue on an affected CPU, and don't
+know what we miss.
 
 Thanks,
-Vincent
+  Ralf
 
-> Thanks,
->
->         Ingo
+> 
+> Jan
+> 
