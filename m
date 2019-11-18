@@ -2,88 +2,126 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DATE_IN_PAST_24_48,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA95C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70295C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD56D2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4716B20726
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:36:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbfKTUft (ORCPT
+        id S1726840AbfKTUge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 15:35:49 -0500
-Received: from imap1.codethink.co.uk ([176.9.8.82]:35312 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbfKTUft (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 15:35:49 -0500
-Received: from [167.98.27.226] (helo=xylophone)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iXWhV-0003lv-28; Wed, 20 Nov 2019 20:35:45 +0000
-Message-ID: <1eb03d47afc38cd01d17988cf170b14066569bde.camel@codethink.co.uk>
-Subject: Re: [Y2038] [PATCH 12/16] hostfs: pass 64-bit timestamps to/from
- user space
-From:   Ben Hutchings <ben.hutchings@codethink.co.uk>
-To:     Arnd Bergmann <arnd@arndb.de>, y2038@lists.linaro.org,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>
-Date:   Wed, 20 Nov 2019 20:35:44 +0000
-In-Reply-To: <fff201b0d21a8ba775eb1d201e083ba96f8ff6f1.camel@codethink.co.uk>
-References: <20191108213257.3097633-1-arnd@arndb.de>
-         <20191108213257.3097633-13-arnd@arndb.de>
-         <fff201b0d21a8ba775eb1d201e083ba96f8ff6f1.camel@codethink.co.uk>
-Organization: Codethink Ltd.
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 20 Nov 2019 15:36:34 -0500
+Received: from smtp.uniroma2.it ([160.80.6.23]:48557 "EHLO smtp.uniroma2.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725819AbfKTUge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 15:36:34 -0500
+Received: from localhost.localdomain ([160.80.103.126])
+        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id xAKKZoCA014088
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 20 Nov 2019 21:35:51 +0100
+From:   Andrea Mayer <andrea.mayer@uniroma2.it>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        David Lebrun <dav.lebrun@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Andrea Mayer <andrea.mayer@uniroma2.it>
+Subject: [net-next, v2] seg6: allow local packet processing for SRv6 End.DT6 behavior
+Date:   Mon, 18 Nov 2019 23:25:58 +0100
+Message-Id: <20191118222558.2973-1-andrea.mayer@uniroma2.it>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-11-20 at 20:30 +0000, Ben Hutchings wrote:
-> On Fri, 2019-11-08 at 22:32 +0100, Arnd Bergmann wrote:
-> > The use of 'struct timespec' is deprecated in the kernel, so we
-> > want to avoid the conversions from/to the proper timespec64
-> > structure.
-> > 
-> > On the user space side, we have a 'struct timespec' that is defined
-> > by the C library and that will be incompatible with the kernel's
-> > view on 32-bit architectures once they move to a 64-bit time_t,
-> > breaking the shared binary layout of hostfs_iattr and hostfs_stat.
-> > 
-> > This changes the two structures to use a new hostfs_timespec structure
-> > with fixed 64-bit seconds/nanoseconds for passing the timestamps
-> > between hostfs_kern.c and hostfs_user.c. With a new enough user
-> > space side, this will allow timestamps beyond year 2038.
-> [...]
-> 
-> The "user-space" side has a structure assignment in set_attr():
-> 
-> 	if (attrs->ia_valid & (HOSTFS_ATTR_ATIME | HOSTFS_ATTR_MTIME)) {
-> 		err = stat_file(file, &st, fd);
-> 		attrs->ia_atime = st.atime;
-> 		attrs->ia_mtime = st.mtime;
-> 		if (err != 0)
-> 			return err;
-> 	}
-> 
-> which will also need to be updated for this type change.
+End.DT6 behavior makes use of seg6_lookup_nexthop() function which drops
+all packets that are destined to be locally processed. However, DT* should
+be able to deliver decapsulated packets that are destined to local
+addresses. Function seg6_lookup_nexthop() is also used by DX6, so in order
+to maintain compatibility I created another routing helper function which
+is called seg6_lookup_any_nexthop(). This function is able to take into
+account both packets that have to be processed locally and the ones that
+are destined to be forwarded directly to another machine. Hence,
+seg6_lookup_any_nexthop() is used in DT6 rather than seg6_lookup_nexthop()
+to allow local delivery.
 
-Sorry, I'm confused, this looks fine.
+Signed-off-by: Andrea Mayer <andrea.mayer@uniroma2.it>
+---
+ net/ipv6/seg6_local.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
-Ben.
-
+diff --git a/net/ipv6/seg6_local.c b/net/ipv6/seg6_local.c
+index e70567446f28..172a45462288 100644
+--- a/net/ipv6/seg6_local.c
++++ b/net/ipv6/seg6_local.c
+@@ -149,8 +149,9 @@ static void advance_nextseg(struct ipv6_sr_hdr *srh, struct in6_addr *daddr)
+ 	*daddr = *addr;
+ }
+ 
+-int seg6_lookup_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
+-			u32 tbl_id)
++static int
++seg6_lookup_any_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
++			u32 tbl_id, bool local_delivery)
+ {
+ 	struct net *net = dev_net(skb->dev);
+ 	struct ipv6hdr *hdr = ipv6_hdr(skb);
+@@ -158,6 +159,7 @@ int seg6_lookup_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
+ 	struct dst_entry *dst = NULL;
+ 	struct rt6_info *rt;
+ 	struct flowi6 fl6;
++	int dev_flags = 0;
+ 
+ 	fl6.flowi6_iif = skb->dev->ifindex;
+ 	fl6.daddr = nhaddr ? *nhaddr : hdr->daddr;
+@@ -182,7 +184,13 @@ int seg6_lookup_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
+ 		dst = &rt->dst;
+ 	}
+ 
+-	if (dst && dst->dev->flags & IFF_LOOPBACK && !dst->error) {
++	/* we want to discard traffic destined for local packet processing,
++	 * if @local_delivery is set to false.
++	 */
++	if (!local_delivery)
++		dev_flags |= IFF_LOOPBACK;
++
++	if (dst && (dst->dev->flags & dev_flags) && !dst->error) {
+ 		dst_release(dst);
+ 		dst = NULL;
+ 	}
+@@ -199,6 +207,12 @@ int seg6_lookup_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
+ 	return dst->error;
+ }
+ 
++inline int seg6_lookup_nexthop(struct sk_buff *skb,
++			       struct in6_addr *nhaddr, u32 tbl_id)
++{
++	return seg6_lookup_any_nexthop(skb, nhaddr, tbl_id, false);
++}
++
+ /* regular endpoint function */
+ static int input_action_end(struct sk_buff *skb, struct seg6_local_lwt *slwt)
+ {
+@@ -396,7 +410,7 @@ static int input_action_end_dt6(struct sk_buff *skb,
+ 
+ 	skb_set_transport_header(skb, sizeof(struct ipv6hdr));
+ 
+-	seg6_lookup_nexthop(skb, NULL, slwt->table);
++	seg6_lookup_any_nexthop(skb, NULL, slwt->table, true);
+ 
+ 	return dst_input(skb);
+ 
 -- 
-Ben Hutchings, Software Developer                         Codethink Ltd
-https://www.codethink.co.uk/                 Dale House, 35 Dale Street
-                                     Manchester, M1 2HF, United Kingdom
+2.20.1
 
