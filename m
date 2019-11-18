@@ -2,406 +2,132 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE3DC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F349DC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D549520862
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C307320857
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:45:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="D2Q6W68Z";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Iftaw2Sl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="emNWkQJI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbfKRPp3 (ORCPT
+        id S1727468AbfKRPpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 10:45:29 -0500
-Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:55436
-        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726216AbfKRPp1 (ORCPT
+        Mon, 18 Nov 2019 10:45:45 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33857 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727450AbfKRPpp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 10:45:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574091926;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-        bh=2cj4qHZmsJmHyQ6iWImmbXzGA/5lMEjyRQWbENWuLJg=;
-        b=D2Q6W68Z4IskCPnFAWRpdcKfBnD1axeSDk2oZFR+vmepKuRXSa7Vv5EOC8RG1/+9
-        pspnqjxYnm/ZgMXQ9VgfNGIFkXhPkHXofCWovlI19sOcEo9t1x13Mmqx5yrL13JCJdB
-        2PfyrYndDPL8IqYEKm1T6mKauxQizhbeGFF6T3U0=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574091926;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-        bh=2cj4qHZmsJmHyQ6iWImmbXzGA/5lMEjyRQWbENWuLJg=;
-        b=Iftaw2Sla6TQQkKZIFmhubYcKUbvjiDlmplPKdrAAwtBYiAGGe3Q3b5o2RmtbhIu
-        sljm4FZJVAnZ+y6aUF0aJIF5hYMns7YTq0Ymd0WsnrHTqjb1xtLkOHnxnjEQ/7UxJcN
-        TWUyinHOJibUrs66xHvsM5ylH8jeeCIKgHgkjrZA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 387C4C447A9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     robh+dt@kernel.org, georgi.djakov@linaro.org
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
-        evgreen@chromium.org, daidavid1@codeaurora.org,
-        saravanak@google.com, viresh.kumar@linaro.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v3 2/2] interconnect: qcom: Add OSM L3 interconnect provider support
-Date:   Mon, 18 Nov 2019 15:45:26 +0000
-Message-ID: <0101016e7f30acfc-4aa6ed5b-90ba-43c4-ace1-7a163eb521bc-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20191118154435.20357-1-sibis@codeaurora.org>
-References: <20191118154435.20357-1-sibis@codeaurora.org>
+        Mon, 18 Nov 2019 10:45:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574091944;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KQqXtzuR5gTdo1f2yUDL09SryFyi+NfHrzjVbuoXnyc=;
+        b=emNWkQJINdk83N0FDDDgSJ2YpIc0QUahtGzmbTUDUE35hy04hW8Fmu43Epj7ty6UbCe4EK
+        7SwevyZ13PCPt3m6etR7UCxe8oIMwD7Krood+CwF79ii6sWbUyiTIRD2j0ni8AwHwiHFqo
+        wCGb4Nq0hnjcQ9lGoGHx9dR6mrgvQ8Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-297-CUpLGAmmNbCKwd_ow3c15Q-1; Mon, 18 Nov 2019 10:45:40 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4F31A8FBB57;
+        Mon, 18 Nov 2019 15:45:34 +0000 (UTC)
+Received: from gondolin (ovpn-117-194.ams2.redhat.com [10.36.117.194])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 87D6B1CD;
+        Mon, 18 Nov 2019 15:45:13 +0000 (UTC)
+Date:   Mon, 18 Nov 2019 16:45:10 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        gregkh@linuxfoundation.org, jgg@mellanox.com,
+        netdev@vger.kernel.org, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, eperezma@redhat.com,
+        lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com, rdunlap@infradead.org, hch@infradead.org,
+        aadam@redhat.com, jakub.kicinski@netronome.com, jiri@mellanox.com,
+        jeffrey.t.kirsher@intel.com
+Subject: Re: [PATCH V13 6/6] docs: sample driver to demonstrate how to
+ implement virtio-mdev framework
+Message-ID: <20191118164510.549c097b.cohuck@redhat.com>
+In-Reply-To: <20191118105923.7991-7-jasowang@redhat.com>
+References: <20191118105923.7991-1-jasowang@redhat.com>
+        <20191118105923.7991-7-jasowang@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SES-Outgoing: 2019.11.18-54.240.27.11
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: CUpLGAmmNbCKwd_ow3c15Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On some Qualcomm SoCs, Operating State Manager (OSM) controls the
-resources of scaling L3 caches. Add a driver to handle bandwidth
-requests to OSM L3 from CPU/GPU.
+On Mon, 18 Nov 2019 18:59:23 +0800
+Jason Wang <jasowang@redhat.com> wrote:
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- drivers/interconnect/qcom/Kconfig  |   7 +
- drivers/interconnect/qcom/Makefile |   2 +
- drivers/interconnect/qcom/osm-l3.c | 284 +++++++++++++++++++++++++++++
- 3 files changed, 293 insertions(+)
- create mode 100644 drivers/interconnect/qcom/osm-l3.c
+[Note: I have not looked into the reworked architecture of this *at all*
+so far; just something that I noted...]
 
-diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
-index ecf057d7e2409..17aee5b0f15b7 100644
---- a/drivers/interconnect/qcom/Kconfig
-+++ b/drivers/interconnect/qcom/Kconfig
-@@ -5,6 +5,13 @@ config INTERCONNECT_QCOM
- 	help
- 	  Support for Qualcomm's Network-on-Chip interconnect hardware.
- 
-+config INTERCONNECT_QCOM_OSM_L3
-+	tristate "Qualcomm OSM L3 interconnect driver"
-+	depends on INTERCONNECT_QCOM || COMPILE_TEST
-+	help
-+	  Say y here to support the Operating State Manager (OSM) interconnect
-+	  driver which controls the scaling of L3 caches on Qualcomm SoCs.
-+
- config INTERCONNECT_QCOM_QCS404
- 	tristate "Qualcomm QCS404 interconnect driver"
- 	depends on INTERCONNECT_QCOM
-diff --git a/drivers/interconnect/qcom/Makefile b/drivers/interconnect/qcom/Makefile
-index 9adf9e380545e..8d86d6515ffc9 100644
---- a/drivers/interconnect/qcom/Makefile
-+++ b/drivers/interconnect/qcom/Makefile
-@@ -1,10 +1,12 @@
- # SPDX-License-Identifier: GPL-2.0
- 
-+icc-osm-l3-objs				:= osm-l3.o
- qnoc-msm8974-objs			:= msm8974.o
- qnoc-qcs404-objs			:= qcs404.o
- qnoc-sdm845-objs			:= sdm845.o
- icc-smd-rpm-objs			:= smd-rpm.o
- 
-+obj-$(CONFIG_INTERCONNECT_QCOM_OSM_L3) += icc-osm-l3.o
- obj-$(CONFIG_INTERCONNECT_QCOM_MSM8974) += qnoc-msm8974.o
- obj-$(CONFIG_INTERCONNECT_QCOM_QCS404) += qnoc-qcs404.o
- obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
-diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
-new file mode 100644
-index 0000000000000..5e9f9ce02863b
---- /dev/null
-+++ b/drivers/interconnect/qcom/osm-l3.c
-@@ -0,0 +1,284 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-+ *
-+ */
-+
-+#include <dt-bindings/interconnect/qcom,osm-l3.h>
-+#include <dt-bindings/interconnect/qcom,sdm845.h>
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/interconnect-provider.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+
-+#define LUT_MAX_ENTRIES			40U
-+#define LUT_SRC				GENMASK(31, 30)
-+#define LUT_L_VAL			GENMASK(7, 0)
-+#define LUT_ROW_SIZE			32
-+#define CLK_HW_DIV			2
-+
-+/* Register offsets */
-+#define REG_ENABLE			0x0
-+#define REG_FREQ_LUT			0x110
-+#define REG_PERF_STATE			0x920
-+
-+#define OSM_L3_MAX_LINKS		1
-+
-+#define to_qcom_provider(_provider) \
-+	container_of(_provider, struct qcom_osm_l3_icc_provider, provider)
-+
-+enum {
-+	SDM845_MASTER_OSM_L3_APPS = SLAVE_TCU + 1,
-+	SDM845_SLAVE_OSM_L3,
-+};
-+
-+struct qcom_osm_l3_icc_provider {
-+	void __iomem *base;
-+	unsigned int max_state;
-+	unsigned long lut_tables[LUT_MAX_ENTRIES];
-+	struct icc_provider provider;
-+};
-+
-+/**
-+ * struct qcom_icc_node - Qualcomm specific interconnect nodes
-+ * @name: the node name used in debugfs
-+ * @links: an array of nodes where we can go next while traversing
-+ * @id: a unique node identifier
-+ * @num_links: the total number of @links
-+ * @buswidth: width of the interconnect between a node and the bus
-+ */
-+struct qcom_icc_node {
-+	const char *name;
-+	u16 links[OSM_L3_MAX_LINKS];
-+	u16 id;
-+	u16 num_links;
-+	u16 buswidth;
-+};
-+
-+struct qcom_icc_desc {
-+	struct qcom_icc_node **nodes;
-+	size_t num_nodes;
-+};
-+
-+#define DEFINE_QNODE(_name, _id, _buswidth, ...)			\
-+		static struct qcom_icc_node _name = {			\
-+		.name = #_name,						\
-+		.id = _id,						\
-+		.buswidth = _buswidth,					\
-+		.num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ })),	\
-+		.links = { __VA_ARGS__ },				\
-+	}
-+
-+DEFINE_QNODE(osm_apps_l3, SDM845_MASTER_OSM_L3_APPS, 16, SDM845_SLAVE_OSM_L3);
-+DEFINE_QNODE(osm_l3, SDM845_SLAVE_OSM_L3, 16);
-+
-+static struct qcom_icc_node *sdm845_osm_l3_nodes[] = {
-+	[MASTER_OSM_L3_APPS] = &osm_apps_l3,
-+	[SLAVE_OSM_L3] = &osm_l3,
-+};
-+
-+static struct qcom_icc_desc sdm845_osm_l3 = {
-+	.nodes = sdm845_osm_l3_nodes,
-+	.num_nodes = ARRAY_SIZE(sdm845_osm_l3_nodes),
-+};
-+
-+static int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
-+			      u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
-+{
-+	*agg_avg += avg_bw;
-+	*agg_peak = max_t(u32, *agg_peak, peak_bw);
-+
-+	return 0;
-+}
-+
-+static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
-+{
-+	struct qcom_osm_l3_icc_provider *qp;
-+	struct icc_provider *provider;
-+	struct qcom_icc_node *qn;
-+	struct icc_node *n;
-+	unsigned int index;
-+	u32 agg_peak = 0;
-+	u32 agg_avg = 0;
-+	u64 rate;
-+
-+	qn = src->data;
-+	provider = src->provider;
-+	qp = to_qcom_provider(provider);
-+
-+	list_for_each_entry(n, &provider->nodes, node_list)
-+		qcom_icc_aggregate(n, 0, n->avg_bw, n->peak_bw,
-+				   &agg_avg, &agg_peak);
-+
-+	rate = max(agg_avg, agg_peak);
-+	rate = icc_units_to_bps(rate);
-+	do_div(rate, qn->buswidth);
-+
-+	for (index = 0; index < qp->max_state; index++) {
-+		if (qp->lut_tables[index] >= rate)
-+			break;
-+	}
-+
-+	writel_relaxed(index, qp->base + REG_PERF_STATE);
-+
-+	return 0;
-+}
-+
-+static int qcom_osm_l3_remove(struct platform_device *pdev)
-+{
-+	struct qcom_osm_l3_icc_provider *qp = platform_get_drvdata(pdev);
-+	struct icc_provider *provider = &qp->provider;
-+	struct icc_node *n;
-+
-+	list_for_each_entry(n, &provider->nodes, node_list) {
-+		icc_node_del(n);
-+		icc_node_destroy(n->id);
-+	}
-+
-+	return icc_provider_del(provider);
-+}
-+
-+static int qcom_osm_l3_probe(struct platform_device *pdev)
-+{
-+	u32 info, src, lval, i, prev_freq = 0, freq;
-+	static unsigned long hw_rate, xo_rate;
-+	struct qcom_osm_l3_icc_provider *qp;
-+	const struct qcom_icc_desc *desc;
-+	struct icc_onecell_data *data;
-+	struct icc_provider *provider;
-+	struct qcom_icc_node **qnodes;
-+	struct icc_node *node;
-+	size_t num_nodes;
-+	struct clk *clk;
-+	int ret;
-+
-+	clk = clk_get(&pdev->dev, "xo");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	xo_rate = clk_get_rate(clk);
-+	clk_put(clk);
-+
-+	clk = clk_get(&pdev->dev, "alternate");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	hw_rate = clk_get_rate(clk) / CLK_HW_DIV;
-+	clk_put(clk);
-+
-+	qp = devm_kzalloc(&pdev->dev, sizeof(*qp), GFP_KERNEL);
-+	if (!qp)
-+		return -ENOMEM;
-+
-+	qp->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(qp->base))
-+		return PTR_ERR(qp->base);
-+
-+	/* HW should be in enabled state to proceed */
-+	if (!(readl_relaxed(qp->base + REG_ENABLE) & 0x1)) {
-+		dev_err(&pdev->dev, "error hardware not enabled\n");
-+		return -ENODEV;
-+	}
-+
-+	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-+		info = readl_relaxed(qp->base + REG_FREQ_LUT +
-+				     i * LUT_ROW_SIZE);
-+		src = FIELD_GET(LUT_SRC, info);
-+		lval = FIELD_GET(LUT_L_VAL, info);
-+		if (src)
-+			freq = xo_rate * lval;
-+		else
-+			freq = hw_rate;
-+
-+		/*
-+		 * Two of the same frequencies with the same core counts means
-+		 * end of table
-+		 */
-+		if (i > 0 && prev_freq == freq)
-+			break;
-+
-+		qp->lut_tables[i] = freq;
-+		prev_freq = freq;
-+	}
-+	qp->max_state = i;
-+
-+	desc = of_device_get_match_data(&pdev->dev);
-+	if (!desc)
-+		return -EINVAL;
-+
-+	qnodes = desc->nodes;
-+	num_nodes = desc->num_nodes;
-+
-+	data = devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	provider = &qp->provider;
-+	provider->dev = &pdev->dev;
-+	provider->set = qcom_icc_set;
-+	provider->aggregate = qcom_icc_aggregate;
-+	provider->xlate = of_icc_xlate_onecell;
-+	INIT_LIST_HEAD(&provider->nodes);
-+	provider->data = data;
-+
-+	ret = icc_provider_add(provider);
-+	if (ret) {
-+		dev_err(&pdev->dev, "error adding interconnect provider\n");
-+		return ret;
-+	}
-+
-+	for (i = 0; i < num_nodes; i++) {
-+		size_t j;
-+
-+		node = icc_node_create(qnodes[i]->id);
-+		if (IS_ERR(node)) {
-+			ret = PTR_ERR(node);
-+			goto err;
-+		}
-+
-+		node->name = qnodes[i]->name;
-+		node->data = qnodes[i];
-+		icc_node_add(node, provider);
-+
-+		dev_dbg(&pdev->dev, "registered node %p %s %d\n", node,
-+			qnodes[i]->name, node->id);
-+
-+		/* populate links */
-+		for (j = 0; j < qnodes[i]->num_links; j++)
-+			icc_link_create(node, qnodes[i]->links[j]);
-+
-+		data->nodes[i] = node;
-+	}
-+	data->num_nodes = num_nodes;
-+
-+	platform_set_drvdata(pdev, qp);
-+
-+	return ret;
-+err:
-+	qcom_osm_l3_remove(pdev);
-+	return ret;
-+}
-+
-+static const struct of_device_id osm_l3_of_match[] = {
-+	{ .compatible = "qcom,sdm845-osm-l3", .data = &sdm845_osm_l3 },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, osm_l3_of_match);
-+
-+static struct platform_driver osm_l3_driver = {
-+	.probe = qcom_osm_l3_probe,
-+	.remove = qcom_osm_l3_remove,
-+	.driver = {
-+		.name = "osm-l3",
-+		.of_match_table = osm_l3_of_match,
-+	},
-+};
-+module_platform_driver(osm_l3_driver);
-+
-+MODULE_DESCRIPTION("Qualcomm OSM L3 interconnect driver");
-+MODULE_LICENSE("GPL v2");
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> This sample driver creates mdev device that simulate virtio net device
+> over virtio mdev transport. The device is implemented through vringh
+> and workqueue. A device specific dma ops is to make sure HVA is used
+> directly as the IOVA. This should be sufficient for kernel virtio
+> driver to work.
+>=20
+> Only 'virtio' type is supported right now. I plan to add 'vhost' type
+> on top which requires some virtual IOMMU implemented in this sample
+> driver.
+>=20
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  MAINTAINERS                        |   1 +
+>  samples/Kconfig                    |  10 +
+>  samples/vfio-mdev/Makefile         |   1 +
+>  samples/vfio-mdev/mvnet_loopback.c | 690 +++++++++++++++++++++++++++++
+>  4 files changed, 702 insertions(+)
+>  create mode 100644 samples/vfio-mdev/mvnet_loopback.c
+>=20
+
+> +static struct mvnet_dev {
+> +=09struct class=09*vd_class;
+> +=09struct idr=09vd_idr;
+> +=09struct device=09dev;
+> +} mvnet_dev;
+
+This structure embeds a struct device (a reference-counted structure),
+yet it is a static variable. This is giving a bad example to potential
+implementers; just allocate it dynamically.
+
+> +static void mvnet_device_release(struct device *dev)
+> +{
+> +=09dev_dbg(dev, "mvnet: released\n");
+
+And that also means you need a proper release function here, of
+course.
+
+> +}
 
