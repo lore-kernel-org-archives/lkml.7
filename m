@@ -2,119 +2,190 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD97C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 01:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BECC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 01:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0847220856
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 01:23:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RvWNCzx3"
+	by mail.kernel.org (Postfix) with ESMTP id 1E197206E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 01:23:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfKRBW7 (ORCPT
+        id S1726626AbfKRBXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 20:22:59 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35009 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726414AbfKRBW7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 20:22:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574040177;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NuKKozoX2IaGiwfBygC66aUq6NMWEqsDHdKXFpwLIXU=;
-        b=RvWNCzx3JTqwH0aW9c1xKKATQR0AISaGvzLcofhx3P4Bb6yeEwx9i3r+ifuh/D6tzsVDkW
-        FoTsfweJtAycxVVw0i47ovXcO9SdHrMLwelhod7uR/18Dc4rBGYPeYLcIAcgrhX8qpmE8a
-        jQfu9Bb+icRBleydAQilJNQOi50ze2A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-347-B32kBpQdNrKDSGFJPojxsQ-1; Sun, 17 Nov 2019 20:22:54 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01969801FCF;
-        Mon, 18 Nov 2019 01:22:52 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-120-229.rdu2.redhat.com [10.10.120.229])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E421A614F2;
-        Mon, 18 Nov 2019 01:22:49 +0000 (UTC)
-Subject: Re: [tip: x86/pti] x86/speculation: Fix redundant MDS mitigation
- message
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-tip-commits@vger.kernel.org,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Tyler Hicks <tyhicks@canonical.com>, x86-ml <x86@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-References: <20191115161445.30809-3-longman@redhat.com>
- <157390711921.12247.3084878540998345444.tip-bot2@tip-bot2>
- <20191116142411.GA23231@zn.tnic>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <da0e6414-6992-b275-6a16-9b3c76cfd979@redhat.com>
-Date:   Sun, 17 Nov 2019 20:22:49 -0500
+        Sun, 17 Nov 2019 20:23:17 -0500
+Received: from mga11.intel.com ([192.55.52.93]:41983 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726063AbfKRBXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 20:23:16 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Nov 2019 17:23:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,318,1569308400"; 
+   d="scan'208";a="203922488"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga008.fm.intel.com with ESMTP; 17 Nov 2019 17:23:14 -0800
+Cc:     baolu.lu@linux.intel.com, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH 02/10] iommu/vt-d: Fix CPU and IOMMU SVM feature matching
+ checks
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+References: <1573859377-75924-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1573859377-75924-3-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <c5cac5ff-fc4c-f31d-ebad-8defa95169fb@linux.intel.com>
+Date:   Mon, 18 Nov 2019 09:20:12 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191116142411.GA23231@zn.tnic>
+In-Reply-To: <1573859377-75924-3-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: B32kBpQdNrKDSGFJPojxsQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/16/19 9:24 AM, Borislav Petkov wrote:
-> On Sat, Nov 16, 2019 at 12:25:19PM -0000, tip-bot2 for Waiman Long wrote:
->> +static void __init mds_print_mitigation(void)
->> +{
->>  =09pr_info("%s\n", mds_strings[mds_mitigation]);
->>  }
-> Almost. This causes
->
-> MDS: Vulnerable
->
-> to be printed on an in-order 32-bit Atom here, which is wrong. I've
-> fixed it up to:
->
+Hi,
+
+On 11/16/19 7:09 AM, Jacob Pan wrote:
+> The current code checks CPU and IOMMU feature set for SVM support but
+> the result is never stored nor used. Therefore, SVM can still be used
+> even when these checks failed.
+> 
+> This patch consolidates code for checking PASID, CPU vs. IOMMU paging
+> mode compatibility, as well as provides specific error messages for
+> each failed checks.
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+
+
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+
+Best regards,
+baolu
+
 > ---
-> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-> index cb2fbd93ef4d..8bf64899f56a 100644
-> --- a/arch/x86/kernel/cpu/bugs.c
-> +++ b/arch/x86/kernel/cpu/bugs.c
-> @@ -256,6 +256,9 @@ static void __init mds_select_mitigation(void)
-> =20
->  static void __init mds_print_mitigation(void)
->  {
-> +=09if (!boot_cpu_has_bug(X86_BUG_MDS) || cpu_mitigations_off())
-> +=09=09return;
+>   drivers/iommu/intel-iommu.c | 10 ++--------
+>   drivers/iommu/intel-svm.c   | 40 +++++++++++++++++++++++++++-------------
+>   include/linux/intel-iommu.h |  4 +++-
+>   3 files changed, 32 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 3f974919d3bd..d598168e410d 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -3289,10 +3289,7 @@ static int __init init_dmars(void)
+>   
+>   		if (!ecap_pass_through(iommu->ecap))
+>   			hw_pass_through = 0;
+> -#ifdef CONFIG_INTEL_IOMMU_SVM
+> -		if (pasid_supported(iommu))
+> -			intel_svm_init(iommu);
+> -#endif
+> +		intel_svm_check(iommu);
+>   	}
+>   
+>   	/*
+> @@ -4471,10 +4468,7 @@ static int intel_iommu_add(struct dmar_drhd_unit *dmaru)
+>   	if (ret)
+>   		goto out;
+>   
+> -#ifdef CONFIG_INTEL_IOMMU_SVM
+> -	if (pasid_supported(iommu))
+> -		intel_svm_init(iommu);
+> -#endif
+> +	intel_svm_check(iommu);
+>   
+>   	if (dmaru->ignored) {
+>   		/*
+> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> index 9b159132405d..e9773d714862 100644
+> --- a/drivers/iommu/intel-svm.c
+> +++ b/drivers/iommu/intel-svm.c
+> @@ -23,19 +23,6 @@
+>   
+>   static irqreturn_t prq_event_thread(int irq, void *d);
+>   
+> -int intel_svm_init(struct intel_iommu *iommu)
+> -{
+> -	if (cpu_feature_enabled(X86_FEATURE_GBPAGES) &&
+> -			!cap_fl1gp_support(iommu->cap))
+> -		return -EINVAL;
+> -
+> -	if (cpu_feature_enabled(X86_FEATURE_LA57) &&
+> -			!cap_5lp_support(iommu->cap))
+> -		return -EINVAL;
+> -
+> -	return 0;
+> -}
+> -
+>   #define PRQ_ORDER 0
+>   
+>   int intel_svm_enable_prq(struct intel_iommu *iommu)
+> @@ -99,6 +86,33 @@ int intel_svm_finish_prq(struct intel_iommu *iommu)
+>   	return 0;
+>   }
+>   
+> +static inline bool intel_svm_capable(struct intel_iommu *iommu)
+> +{
+> +	return iommu->flags & VTD_FLAG_SVM_CAPABLE;
+> +}
 > +
->  =09pr_info("%s\n", mds_strings[mds_mitigation]);
->  }
-> =20
->
-You are right. I missed that.
-
-Thanks for fixing it.
-
-Cheers,
-Longman
-
+> +void intel_svm_check(struct intel_iommu *iommu)
+> +{
+> +	if (!pasid_supported(iommu))
+> +		return;
+> +
+> +	if (cpu_feature_enabled(X86_FEATURE_GBPAGES) &&
+> +	    !cap_fl1gp_support(iommu->cap)) {
+> +		pr_err("%s SVM disabled, incompatible 1GB page capability\n",
+> +			iommu->name);
+> +		return;
+> +	}
+> +
+> +	if (cpu_feature_enabled(X86_FEATURE_LA57) &&
+> +	    !cap_5lp_support(iommu->cap)) {
+> +		pr_err("%s SVM disabled, incompatible paging mode\n",
+> +			iommu->name);
+> +		return;
+> +	}
+> +
+> +	iommu->flags |= VTD_FLAG_SVM_CAPABLE;
+> +}
+> +
+>   static void intel_flush_svm_range_dev (struct intel_svm *svm, struct intel_svm_dev *sdev,
+>   				unsigned long address, unsigned long pages, int ih)
+>   {
+> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+> index 63118991824c..7dcfa1c4a844 100644
+> --- a/include/linux/intel-iommu.h
+> +++ b/include/linux/intel-iommu.h
+> @@ -657,7 +657,7 @@ void iommu_flush_write_buffer(struct intel_iommu *iommu);
+>   int intel_iommu_enable_pasid(struct intel_iommu *iommu, struct device *dev);
+>   
+>   #ifdef CONFIG_INTEL_IOMMU_SVM
+> -int intel_svm_init(struct intel_iommu *iommu);
+> +extern void intel_svm_check(struct intel_iommu *iommu);
+>   extern int intel_svm_enable_prq(struct intel_iommu *iommu);
+>   extern int intel_svm_finish_prq(struct intel_iommu *iommu);
+>   
+> @@ -685,6 +685,8 @@ struct intel_svm {
+>   };
+>   
+>   extern struct intel_iommu *intel_svm_device_to_iommu(struct device *dev);
+> +#else
+> +static inline void intel_svm_check(struct intel_iommu *iommu) {}
+>   #endif
+>   
+>   #ifdef CONFIG_INTEL_IOMMU_DEBUGFS
+> 
