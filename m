@@ -2,107 +2,122 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9029FC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9CBC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF1A20727
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:38:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574059080;
-	bh=xgIaUo5Wf2fkFFbeeaxEj0+738UZbioePrKM1Q6oZrI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fqam2WAaPXYYz7eVyZZtA6zekKP1sV5ykqvfNfYGkWcOJdGa6Vmbg54nnovz8KSdB
-	 /+72L5aDJ1RjPjZxkT3wxmj/eWZHEi/8+YJzbqTlDI3GlzHVxAQxjInCT2AOoGaAK2
-	 HG3EpJHIEktey+M1Szq2Vn+kFGQvWQtHqCXbf0ig=
+	by mail.kernel.org (Postfix) with ESMTP id 0F61420726
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:39:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfKRGh7 (ORCPT
+        id S1726668AbfKRGjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 01:37:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46918 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726331AbfKRGh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 01:37:58 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E556A20726;
-        Mon, 18 Nov 2019 06:37:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574059076;
-        bh=xgIaUo5Wf2fkFFbeeaxEj0+738UZbioePrKM1Q6oZrI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a3KDVVd+L4ft9oNa2N0w5ZAo+2PDgAImeol8j9fgnhOCq+RIPpY9Vs/FgEH9EtEfe
-         E3JYwYvvfrKJ9EZYBDjabY+IG5Pgw281cLm47/HKqYHoMXV+a+6w1aFfincW5aSlEx
-         ztqgQHlVp/keu5h9FTvakcP9QXZwpT8qazklwJpQ=
-Date:   Mon, 18 Nov 2019 07:37:53 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, yu kuai <yukuai3@huawei.com>,
-        rafael@kernel.org, oleg@redhat.com, mchehab+samsung@kernel.org,
-        corbet@lwn.net, tytso@mit.edu, jmorris@namei.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        zhengbin13@huawei.com, yi.zhang@huawei.com,
-        chenxiang66@hisilicon.com, xiexiuqi@huawei.com
-Subject: Re: [RFC] simple_recursive_removal()
-Message-ID: <20191118063753.GA63802@kroah.com>
-References: <20191115134823.GQ26530@ZenIV.linux.org.uk>
- <20191115085805.008870cb@gandalf.local.home>
- <20191115141754.GR26530@ZenIV.linux.org.uk>
- <20191115175423.GS26530@ZenIV.linux.org.uk>
- <20191115184209.GT26530@ZenIV.linux.org.uk>
- <20191115194138.GU26530@ZenIV.linux.org.uk>
- <20191115211820.GV26530@ZenIV.linux.org.uk>
- <20191115162609.2d26d498@gandalf.local.home>
- <20191115221037.GW26530@ZenIV.linux.org.uk>
- <20191117222422.GA26872@ZenIV.linux.org.uk>
+        Mon, 18 Nov 2019 01:39:15 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48032 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726331AbfKRGjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 01:39:14 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 61B1DEE64FB8E6ED1E0D;
+        Mon, 18 Nov 2019 14:39:12 +0800 (CST)
+Received: from huawei.com (10.175.105.18) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Mon, 18 Nov 2019
+ 14:38:56 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     <akpm@linux-foundation.org>, <richardw.yang@linux.intel.com>,
+        <sfr@canb.auug.org.au>, <rppt@linux.ibm.com>, <jannh@google.com>,
+        <steve.capper@arm.com>, <catalin.marinas@arm.com>,
+        <aarcange@redhat.com>, <chenjianhong2@huawei.com>,
+        <walken@google.com>, <dave.hansen@linux.intel.com>,
+        <tiny.windzz@gmail.com>, <jhubbard@nvidia.com>, <david@redhat.com>
+CC:     <linmiaohe@huawei.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3] mm: get rid of odd jump labels in find_mergeable_anon_vma()
+Date:   Mon, 18 Nov 2019 14:39:07 +0800
+Message-ID: <1574059147-13678-1-git-send-email-linmiaohe@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191117222422.GA26872@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-Originating-IP: [10.175.105.18]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 17, 2019 at 10:24:22PM +0000, Al Viro wrote:
-> On Fri, Nov 15, 2019 at 10:10:37PM +0000, Al Viro wrote:
-> 
-> > I'll probably throw that into #next.dcache - if nothing else,
-> > that cuts down on the size of patch converting d_subdirs/d_child
-> > from list to hlist...
-> > 
-> > Need to get some sleep first, though - only 5 hours today, so
-> > I want to take another look at that thing tomorrow morning -
-> > I don't trust my ability to spot obvious bugs right now... ;-/
-> > 
-> > Oh, well - that at least might finally push the old "kernel-side
-> > rm -rf done right" pile of half-baked patches into more useful
-> > state, probably superseding most of them.
-> 
-> 	Curious...  Is there any point keeping debugfs_remove() and
-> debugfs_remove_recursive() separate?   The thing is, the only case
-> when their behaviours differ is when the victim is non-empty.  In that
-> case the former quietly does nothing; the latter (also quietly) removes
-> the entire subtree.  And the caller has no way to tell if that case has
-> happened - they can't even look at the dentry they'd passed, since
-> in the normal case it's already pointing to freed (and possibly reused)
-> memory by that point.
-> 
-> 	The same goes for tracefs, except that there we have only
-> one caller of tracefs_remove(), and it's guaranteed to be a non-directory.
-> So there we definitely can fold them together.
-> 
-> 	Greg, could we declare debufs_remove() to be an alias for
-> debugfs_remove_recursive()?
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-Yes, we can do that there's no reason to keep those separate at all.
-Especially if it makes things easier overall.
+The jump labels try_prev and none are not really needed
+in find_mergeable_anon_vma(), eliminate them to improve
+readability.
 
-thanks,
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+-v2:
+	Fix commit descriptions and further simplify the code
+	as suggested by David Hildenbrand and John Hubbard.
+-v3:
+	Rewrite patch version info. Don't show this in commit log.
+---
+ mm/mmap.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-greg k-h
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 4d4db76a07da..ff02c23fd375 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -1276,26 +1276,25 @@ static struct anon_vma *reusable_anon_vma(struct vm_area_struct *old, struct vm_
+  */
+ struct anon_vma *find_mergeable_anon_vma(struct vm_area_struct *vma)
+ {
+-	struct anon_vma *anon_vma;
++	struct anon_vma *anon_vma = NULL;
+ 	struct vm_area_struct *near;
+ 
++	/* Try next first. */
+ 	near = vma->vm_next;
+-	if (!near)
+-		goto try_prev;
++	if (near) {
++		anon_vma = reusable_anon_vma(near, vma, near);
++		if (anon_vma)
++			return anon_vma;
++	}
+ 
+-	anon_vma = reusable_anon_vma(near, vma, near);
+-	if (anon_vma)
+-		return anon_vma;
+-try_prev:
++	/* Try prev next. */
+ 	near = vma->vm_prev;
+-	if (!near)
+-		goto none;
++	if (near)
++		anon_vma = reusable_anon_vma(near, near, vma);
+ 
+-	anon_vma = reusable_anon_vma(near, near, vma);
+-	if (anon_vma)
+-		return anon_vma;
+-none:
+ 	/*
++	 * We might reach here with anon_vma == NULL if we can't find
++	 * any reusable anon_vma.
+ 	 * There's no absolute need to look only at touching neighbours:
+ 	 * we could search further afield for "compatible" anon_vmas.
+ 	 * But it would probably just be a waste of time searching,
+@@ -1303,7 +1302,7 @@ struct anon_vma *find_mergeable_anon_vma(struct vm_area_struct *vma)
+ 	 * We're trying to allow mprotect remerging later on,
+ 	 * not trying to minimize memory used for anon_vmas.
+ 	 */
+-	return NULL;
++	return anon_vma;
+ }
+ 
+ /*
+-- 
+2.19.1
+
