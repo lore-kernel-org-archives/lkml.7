@@ -2,161 +2,190 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE8BC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E803C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA7BF2068D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 078D220748
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:26:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="FYQSeShC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbfKRL01 (ORCPT
+        id S1727746AbfKRL03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:26:27 -0500
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:45570 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726967AbfKRLXw (ORCPT
+        Mon, 18 Nov 2019 06:26:29 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55757 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727040AbfKRLXv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:23:52 -0500
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iWf8G-0008Oa-8i; Mon, 18 Nov 2019 12:23:48 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xAIBNleY023886
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Mon, 18 Nov 2019 12:23:47 +0100
-Subject: [PATCH v3 2/2] arm64: dts: rockchip: Add SDR104 mode to SD-card I/F
- on rk3399-roc-pc
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        "'Ulf Hansson'" <ulf.hansson@linaro.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
-References: <25466090-3b24-2695-10fb-88c59be3f149@fivetechno.de>
- <1918981.kTmXGv9Lqf@phil>
-From:   Markus Reichl <m.reichl@fivetechno.de>
-Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
- 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
- eD/Xv4SsK2JTO4nkQYw8
-Organization: five technologies GmbH
-Message-ID: <1b9b8314-8778-2d48-6f7a-3502c2146c42@fivetechno.de>
-Date:   Mon, 18 Nov 2019 12:23:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 18 Nov 2019 06:23:51 -0500
+Received: by mail-wm1-f65.google.com with SMTP id b11so16950969wmb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 03:23:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=jc+8R+PtxSGR+WKCXh82E6vFl/rmsOl6moV7TXDxFX4=;
+        b=FYQSeShCWT/8kbxczUE8H7YG/XQtMqnXxNVEjckd6xnEMHFWk5vtrXmQF68eICMnrn
+         1tvoUFgdokaMmtSx9ge1FPGkAUcySGE/0JkA5bV3MqEnoUsQA9nD8oYuzMwzMZabZIDE
+         Hxv18FM/wBb4YSN4sJdLEXodTBJI3sbMGWeh8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=jc+8R+PtxSGR+WKCXh82E6vFl/rmsOl6moV7TXDxFX4=;
+        b=WO4AmXnsZDfOlQWGyppeY//uIf7lFVE+rkTNI7yvE+mKS+SAOVJOljrG130FbmX4fH
+         DOfY40OLdufw7VSSTfLTiV4eSNXfgsParRZQcBLIPBx6G1spXAq4FzCrxm1ZD8/Sj5ic
+         vtQzsY4mG3dWc4Hq12GTaPDcX4PB8Va0FAXCNOVqxdYOxGWSVchuB5SI3WU5a2kfQc2u
+         7MmBrVSh1Cg587GSnb3uaKuJ2EgoQjpE1EdCWDKOVHxoivTig7CtInWMwLVT+sJkOFT/
+         2ZpIDCqQjAn179CqqCntVtSsGKmk3al4o0HBQxCSKg1ir9jWo7AM0BjimPNqA/rRblo/
+         2JwA==
+X-Gm-Message-State: APjAAAViN35qydekyeHKgl9IutvYKanLkfnejIMCo53TOQWePT37zXF/
+        /XMcU4bwMAnu/HSoUhvXMGaS1g==
+X-Google-Smtp-Source: APXvYqznv6JjVQ5qTzcvdcfne6tEWGUypLqwCOu7CzE5RZilsDdY1MDVJ1TvuugpKKC5nRYwvTTgIw==
+X-Received: by 2002:a7b:ce12:: with SMTP id m18mr30518794wmc.130.1574076227529;
+        Mon, 18 Nov 2019 03:23:47 -0800 (PST)
+Received: from prevas-ravi.prevas.se (ip-5-186-115-54.cgn.fibianet.dk. [5.186.115.54])
+        by smtp.gmail.com with ESMTPSA id y2sm21140815wmy.2.2019.11.18.03.23.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 03:23:47 -0800 (PST)
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Scott Wood <oss@buserror.net>, Timur Tabi <timur@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: [PATCH v5 13/48] powerpc/83xx: remove mpc83xx_ipic_and_qe_init_IRQ
+Date:   Mon, 18 Nov 2019 12:22:49 +0100
+Message-Id: <20191118112324.22725-14-linux@rasmusvillemoes.dk>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191118112324.22725-1-linux@rasmusvillemoes.dk>
+References: <20191118112324.22725-1-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
-In-Reply-To: <1918981.kTmXGv9Lqf@phil>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1574076232;55ebdb4b;
-X-HE-SMSGID: 1iWf8G-0008Oa-8i
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add SDR104 capability and regulators to SD card node.
+This is now exactly the same as mpc83xx_ipic_init_IRQ, so just use
+that directly.
 
-Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
-v3: Split patch in two, remove non related changes
-v2: Remove always-on from vcc3v0_sd
----
- .../boot/dts/rockchip/rk3399-roc-pc.dtsi      | 23 ++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ arch/powerpc/platforms/83xx/km83xx.c      | 2 +-
+ arch/powerpc/platforms/83xx/misc.c        | 7 -------
+ arch/powerpc/platforms/83xx/mpc832x_mds.c | 2 +-
+ arch/powerpc/platforms/83xx/mpc832x_rdb.c | 2 +-
+ arch/powerpc/platforms/83xx/mpc836x_mds.c | 2 +-
+ arch/powerpc/platforms/83xx/mpc836x_rdk.c | 2 +-
+ arch/powerpc/platforms/83xx/mpc83xx.h     | 5 -----
+ 7 files changed, 5 insertions(+), 17 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-index 6d485712f47c..014a9869d61a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-@@ -135,6 +135,19 @@
- 		vin-supply = <&vcc_1v8>;
- 	};
+diff --git a/arch/powerpc/platforms/83xx/km83xx.c b/arch/powerpc/platforms/83xx/km83xx.c
+index 5c6227f7bc37..3d89569e9e71 100644
+--- a/arch/powerpc/platforms/83xx/km83xx.c
++++ b/arch/powerpc/platforms/83xx/km83xx.c
+@@ -177,7 +177,7 @@ define_machine(mpc83xx_km) {
+ 	.name		= "mpc83xx-km-platform",
+ 	.probe		= mpc83xx_km_probe,
+ 	.setup_arch	= mpc83xx_km_setup_arch,
+-	.init_IRQ	= mpc83xx_ipic_and_qe_init_IRQ,
++	.init_IRQ	= mpc83xx_ipic_init_IRQ,
+ 	.get_irq	= ipic_get_irq,
+ 	.restart	= mpc83xx_restart,
+ 	.time_init	= mpc83xx_time_init,
+diff --git a/arch/powerpc/platforms/83xx/misc.c b/arch/powerpc/platforms/83xx/misc.c
+index 6935a5b9fbd1..1d8306eb2958 100644
+--- a/arch/powerpc/platforms/83xx/misc.c
++++ b/arch/powerpc/platforms/83xx/misc.c
+@@ -88,13 +88,6 @@ void __init mpc83xx_ipic_init_IRQ(void)
+ 	ipic_set_default_priority();
+ }
  
-+	vcc3v0_sd: vcc3v0-sd {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio4 RK_PD6 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vcc3v0_sd_en>;
-+		regulator-name = "vcc3v0_sd";
-+		regulator-boot-on;
-+		regulator-min-microvolt = <3000000>;
-+		regulator-max-microvolt = <3000000>;
-+		vin-supply = <&vcc3v3_sys>;
-+	};
-+
- 	vcc3v3_sys: vcc3v3-sys {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc3v3_sys";
-@@ -610,6 +623,12 @@
- 		};
- 	};
+-#ifdef CONFIG_QUICC_ENGINE
+-void __init mpc83xx_ipic_and_qe_init_IRQ(void)
+-{
+-	mpc83xx_ipic_init_IRQ();
+-}
+-#endif /* CONFIG_QUICC_ENGINE */
+-
+ static const struct of_device_id of_bus_ids[] __initconst = {
+ 	{ .type = "soc", },
+ 	{ .compatible = "soc", },
+diff --git a/arch/powerpc/platforms/83xx/mpc832x_mds.c b/arch/powerpc/platforms/83xx/mpc832x_mds.c
+index 1c73af104d19..6fa5402ebf20 100644
+--- a/arch/powerpc/platforms/83xx/mpc832x_mds.c
++++ b/arch/powerpc/platforms/83xx/mpc832x_mds.c
+@@ -101,7 +101,7 @@ define_machine(mpc832x_mds) {
+ 	.name 		= "MPC832x MDS",
+ 	.probe 		= mpc832x_sys_probe,
+ 	.setup_arch 	= mpc832x_sys_setup_arch,
+-	.init_IRQ	= mpc83xx_ipic_and_qe_init_IRQ,
++	.init_IRQ	= mpc83xx_ipic_init_IRQ,
+ 	.get_irq 	= ipic_get_irq,
+ 	.restart 	= mpc83xx_restart,
+ 	.time_init 	= mpc83xx_time_init,
+diff --git a/arch/powerpc/platforms/83xx/mpc832x_rdb.c b/arch/powerpc/platforms/83xx/mpc832x_rdb.c
+index 87f68ca06255..622c625d5ce4 100644
+--- a/arch/powerpc/platforms/83xx/mpc832x_rdb.c
++++ b/arch/powerpc/platforms/83xx/mpc832x_rdb.c
+@@ -219,7 +219,7 @@ define_machine(mpc832x_rdb) {
+ 	.name		= "MPC832x RDB",
+ 	.probe		= mpc832x_rdb_probe,
+ 	.setup_arch	= mpc832x_rdb_setup_arch,
+-	.init_IRQ	= mpc83xx_ipic_and_qe_init_IRQ,
++	.init_IRQ	= mpc83xx_ipic_init_IRQ,
+ 	.get_irq	= ipic_get_irq,
+ 	.restart	= mpc83xx_restart,
+ 	.time_init	= mpc83xx_time_init,
+diff --git a/arch/powerpc/platforms/83xx/mpc836x_mds.c b/arch/powerpc/platforms/83xx/mpc836x_mds.c
+index 5b484da9533e..219a83ab6c00 100644
+--- a/arch/powerpc/platforms/83xx/mpc836x_mds.c
++++ b/arch/powerpc/platforms/83xx/mpc836x_mds.c
+@@ -208,7 +208,7 @@ define_machine(mpc836x_mds) {
+ 	.name		= "MPC836x MDS",
+ 	.probe		= mpc836x_mds_probe,
+ 	.setup_arch	= mpc836x_mds_setup_arch,
+-	.init_IRQ	= mpc83xx_ipic_and_qe_init_IRQ,
++	.init_IRQ	= mpc83xx_ipic_init_IRQ,
+ 	.get_irq	= ipic_get_irq,
+ 	.restart	= mpc83xx_restart,
+ 	.time_init	= mpc83xx_time_init,
+diff --git a/arch/powerpc/platforms/83xx/mpc836x_rdk.c b/arch/powerpc/platforms/83xx/mpc836x_rdk.c
+index b7119e443920..b4aac2cde849 100644
+--- a/arch/powerpc/platforms/83xx/mpc836x_rdk.c
++++ b/arch/powerpc/platforms/83xx/mpc836x_rdk.c
+@@ -41,7 +41,7 @@ define_machine(mpc836x_rdk) {
+ 	.name		= "MPC836x RDK",
+ 	.probe		= mpc836x_rdk_probe,
+ 	.setup_arch	= mpc836x_rdk_setup_arch,
+-	.init_IRQ	= mpc83xx_ipic_and_qe_init_IRQ,
++	.init_IRQ	= mpc83xx_ipic_init_IRQ,
+ 	.get_irq	= ipic_get_irq,
+ 	.restart	= mpc83xx_restart,
+ 	.time_init	= mpc83xx_time_init,
+diff --git a/arch/powerpc/platforms/83xx/mpc83xx.h b/arch/powerpc/platforms/83xx/mpc83xx.h
+index d343f6ce2599..f37d04332fc7 100644
+--- a/arch/powerpc/platforms/83xx/mpc83xx.h
++++ b/arch/powerpc/platforms/83xx/mpc83xx.h
+@@ -72,11 +72,6 @@ extern int mpc837x_usb_cfg(void);
+ extern int mpc834x_usb_cfg(void);
+ extern int mpc831x_usb_cfg(void);
+ extern void mpc83xx_ipic_init_IRQ(void);
+-#ifdef CONFIG_QUICC_ENGINE
+-extern void mpc83xx_ipic_and_qe_init_IRQ(void);
+-#else
+-#define mpc83xx_ipic_and_qe_init_IRQ mpc83xx_ipic_init_IRQ
+-#endif /* CONFIG_QUICC_ENGINE */
  
-+	sdmmc {
-+		vcc3v0_sd_en: vcc3v0-sd-en {
-+			rockchip,pins = <4 RK_PD6 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	pmic {
- 		pmic_int_l: pmic-int-l {
- 			rockchip,pins = <1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
-@@ -662,13 +681,15 @@
- 
- &sdmmc {
- 	bus-width = <4>;
--	cap-mmc-highspeed;
- 	cap-sd-highspeed;
- 	cd-gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_LOW>;
- 	disable-wp;
- 	max-frequency = <150000000>;
-+	sd-uhs-sdr104;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>;
-+	vmmc-supply = <&vcc3v0_sd>;
-+	vqmmc-supply = <&vcc_sdio>;
- 	status = "okay";
- };
- 
+ #ifdef CONFIG_PCI
+ extern void mpc83xx_setup_pci(void);
 -- 
-2.20.1
+2.23.0
 
