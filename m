@@ -2,84 +2,119 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1511CC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AB8C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1BE620748
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AB1D2068D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:58:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfKRL6g (ORCPT
+        id S1726927AbfKRL6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:58:36 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36096 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726506AbfKRL6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:58:36 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8773EABBD;
-        Mon, 18 Nov 2019 11:58:34 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 1E31B1E422A; Mon, 18 Nov 2019 10:35:44 +0100 (CET)
-Date:   Mon, 18 Nov 2019 10:35:44 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Jan Kara <jack@suse.cz>, Sebastian Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julia Cartwright <julia@ni.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Joel Becker <jlbec@evilplan.org>
-Subject: Re: [PATCH] fs/buffer: Make BH_Uptodate_Lock bit_spin_lock a regular
- spinlock_t
-Message-ID: <20191118093544.GA17319@quack2.suse.cz>
-References: <20190820170818.oldsdoumzashhcgh@linutronix.de>
- <20190820171721.GA4949@bombadil.infradead.org>
- <alpine.DEB.2.21.1908201959240.2223@nanos.tec.linutronix.de>
- <20191011112525.7dksg6ixb5c3hxn5@linutronix.de>
- <20191115145638.GA5461@quack2.suse.cz>
- <20191115173634.GC23689@mit.edu>
+        Mon, 18 Nov 2019 06:58:42 -0500
+Received: from shell.v3.sk ([90.176.6.54]:34705 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726881AbfKRL6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 06:58:41 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 96B8441C73;
+        Mon, 18 Nov 2019 12:58:39 +0100 (CET)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id xIsleteVe34I; Mon, 18 Nov 2019 12:58:33 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 7585741C75;
+        Mon, 18 Nov 2019 12:58:32 +0100 (CET)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id hmzXCPXsTbgR; Mon, 18 Nov 2019 12:58:31 +0100 (CET)
+Received: from belphegor.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 41DB741C73;
+        Mon, 18 Nov 2019 12:58:31 +0100 (CET)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Konrad Rzeszutek Wilk <konrad@kernel.org>
+Cc:     Peter Jones <pjones@redhat.com>, linux-kernel@vger.kernel.org,
+        Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH] iscsi_ibft: Don't limits Targets and NICs to two
+Date:   Mon, 18 Nov 2019 12:58:26 +0100
+Message-Id: <20191118115826.63959-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115173634.GC23689@mit.edu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 15-11-19 12:36:34, Theodore Y. Ts'o wrote:
-> On Fri, Nov 15, 2019 at 03:56:38PM +0100, Jan Kara wrote:
-> > With some effort, we could even shrink struct buffer_head from 104 bytes
-> > (on x86_64) to 96 bytes but I don't think that effort is worth it (I'd find
-> > it better use of time to actually work on getting rid of buffer heads
-> > completely).
-> 
-> Is that really realistic?  All aside from the very large number of
-> file systems which use buffer_heads that would have to be reworked,
-> the concept of buffer heads is pretty fundamental to how jbd2 is
-> architected.
+According to iSCSI Boot Firmware Table Version 1.03 [1], the length of
+the control table is ">=3D 18", where the optional expansion structure
+pointer follow the mandatory ones. This allows for more than two NICs
+and Targets.
 
-I think it is reasonably possible to remove buffer_heads from data path
-(including direct IO path) of all filesystems. That way memory consumption
-of buffer_heads becomes mostly irrelevant and we can have a look how much
-from the current bh framework still makes sense...
+[1] ftp://ftp.software.ibm.com/systems/support/bladecenter/iscsi_boot_fir=
+mware_table_v1.03.pdf
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Let's enforce the minimum length of the control structure instead
+instead of limiting it to the smallest allowed size.
+
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ drivers/firmware/iscsi_ibft.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/firmware/iscsi_ibft.c b/drivers/firmware/iscsi_ibft.=
+c
+index 7e12cbdf957cc..96758b71a8db8 100644
+--- a/drivers/firmware/iscsi_ibft.c
++++ b/drivers/firmware/iscsi_ibft.c
+@@ -104,6 +104,7 @@ struct ibft_control {
+ 	u16 tgt0_off;
+ 	u16 nic1_off;
+ 	u16 tgt1_off;
++	u16 expansion[0];
+ } __attribute__((__packed__));
+=20
+ struct ibft_initiator {
+@@ -235,7 +236,7 @@ static int ibft_verify_hdr(char *t, struct ibft_hdr *=
+hdr, int id, int length)
+ 				"found %d instead!\n", t, id, hdr->id);
+ 		return -ENODEV;
+ 	}
+-	if (hdr->length !=3D length) {
++	if (length && hdr->length !=3D length) {
+ 		printk(KERN_ERR "iBFT error: We expected the %s " \
+ 				"field header.length to have %d but " \
+ 				"found %d instead!\n", t, length, hdr->length);
+@@ -749,16 +750,16 @@ static int __init ibft_register_kobjects(struct acp=
+i_table_ibft *header)
+ 	control =3D (void *)header + sizeof(*header);
+ 	end =3D (void *)control + control->hdr.length;
+ 	eot_offset =3D (void *)header + header->header.length - (void *)control=
+;
+-	rc =3D ibft_verify_hdr("control", (struct ibft_hdr *)control, id_contro=
+l,
+-			     sizeof(*control));
++	rc =3D ibft_verify_hdr("control", (struct ibft_hdr *)control, id_contro=
+l, 0);
+=20
+ 	/* iBFT table safety checking */
+ 	rc |=3D ((control->hdr.index) ? -ENODEV : 0);
++	rc |=3D ((control->hdr.length < sizeof(*control)) ? -ENODEV : 0);
+ 	if (rc) {
+ 		printk(KERN_ERR "iBFT error: Control header is invalid!\n");
+ 		return rc;
+ 	}
+-	for (ptr =3D &control->initiator_off; ptr < end; ptr +=3D sizeof(u16)) =
+{
++	for (ptr =3D &control->initiator_off; ptr + sizeof(u16) <=3D end; ptr +=
+=3D sizeof(u16)) {
+ 		offset =3D *(u16 *)ptr;
+ 		if (offset && offset < header->header.length &&
+ 						offset < eot_offset) {
+--=20
+2.23.0
+
