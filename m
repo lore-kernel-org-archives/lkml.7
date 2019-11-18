@@ -2,144 +2,150 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FE0C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C85C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10D242230E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A72CB2230E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:45:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VTpZ6pSl"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Kob6o5l5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfKRToe (ORCPT
+        id S1726759AbfKRTp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 14:44:34 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36854 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbfKRTod (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 14:44:33 -0500
-Received: by mail-pl1-f193.google.com with SMTP id d7so10356190pls.3;
-        Mon, 18 Nov 2019 11:44:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TC5IKXkEeLvUIaKix78ztNNc8pykt/x5bB2H11fvT/g=;
-        b=VTpZ6pSli/VDtzsKnZzYR/zf6tW/PLbkRZ9njXbP6NAzL/LV0QjNlb1CWoA66IbQ6T
-         Wlz88NkWn8/vyfhmIlkE/ogrUYLZSqVZjwlxHXsftWSCeFDRL6lL3GQZM9uTZ0WxQ0A8
-         c1oLE6NKGj8WEIHCHYYUVS2sfDo6n2+oLQDM35zaGfpzPOIcmy2lvLq4adnexszJT8HA
-         BlIGnGMxRyitb/dPEF1OgC0Rogv7HIeqpE5kY+jmDh4m5zks9K2fAD1P/UDnY3VNVd7O
-         f94lFwqpRYaB0vaIys2FqGO3We8Y6RpW+BNk9YZAOjpDbZuHso11aaarOntsmQ+O4wIK
-         nCkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TC5IKXkEeLvUIaKix78ztNNc8pykt/x5bB2H11fvT/g=;
-        b=q9wPYIX2t2HGmBPLCQw+aF5dLMbTdYwNdkJAitHCK7F6irvKQ37ua6fwXwmVdv6g+W
-         4fj/QNvVLozporYLuZZABxWE+HzL7PqW6M3/7uUnfWF9Lr8D8YbNgUDm2bMMxyTawSTq
-         MbTUXSdgPw73fU3DfiKUENdn9eFSjBAEy30zo58PN9maH7rnuhuj84MB/VrWyUT17odn
-         3Zg67O48R5tUXtevkIn7mNv0iIF98z5UCDjLAtxgUsUj+5MKYoVovAwcHk+bz5w5rnkx
-         miojwrRyY/e2X0KTHDr4BedGa1ZJPl8j6rMC+3zhYGwiTqiYViX87MwqLSJlJCjQ613X
-         HA4g==
-X-Gm-Message-State: APjAAAWIids6xsKXfmdDyEm9q3hvDc5ftrzWhcNoQFgcEuo4AS7OBVAx
-        GXaXvWocVa2790CYt9jK5aNX02wJ9nF3Qicy3+Y=
-X-Google-Smtp-Source: APXvYqzs5xYyJ8AQV6D1X6BIce0Bke3mK70h6gr2XlSDndWOLPYFvxNLcYKnFnJ0zr4FjyUHs11TJjkfoio672E/stE=
-X-Received: by 2002:a17:90a:bb82:: with SMTP id v2mr888586pjr.90.1574106272898;
- Mon, 18 Nov 2019 11:44:32 -0800 (PST)
+        Mon, 18 Nov 2019 14:45:26 -0500
+Received: from mout.gmx.net ([212.227.17.20]:46283 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726435AbfKRTpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 14:45:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1574106298;
+        bh=XSpYzjhcgiHHrYhcZHLykdCAj0e3wpqTkNXlUfzkU4o=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=Kob6o5l5jdcqPStOSOAJau0p9oouSqofToVYgzuAbv8dHGLXf3UOzpelxCJoeeZdQ
+         PlvPIgb+WEHwGwDKPU4e6rANIbrfeiWZFB+aLYApWxlwId/7mos3Jj5Vx6WztjEYP6
+         o4HL5jyK4tEnrL5LVdUpJu2W+3V8hai9kcJorfyc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.176] ([37.4.249.101]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MKbkC-1iIQQo2sto-00Kxvf; Mon, 18
+ Nov 2019 20:44:58 +0100
+Subject: Re: [PATCH 3/3] ARM: dts: bcm2711: Enable HWRNG support
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Stephen Brennan <stephen@brennan.io>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Scott Branden <sbranden@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matt Mackall <mpm@selenic.com>, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-crypto@vger.kernel.org,
+        Eric Anholt <eric@anholt.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20191118075807.165126-1-stephen@brennan.io>
+ <20191118075807.165126-4-stephen@brennan.io>
+ <3209f601ad0537a7ef01e2a752f022ccf8816210.camel@suse.de>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <5cc711fd-4d47-5369-c424-363677334b9f@gmx.net>
+Date:   Mon, 18 Nov 2019 20:44:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <cc03ba18-4949-9244-639c-94f461f03361@huawei.com>
- <CAA9_cmc7BuWkBHadHRAxfch43KWovb6rSr2AR9y3bVue0M9EhQ@mail.gmail.com> <CAJZ5v0g35zvSB88d7qK8n1uRGCuO5VNK11jHVQRNKwyQW4vZSQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0g35zvSB88d7qK8n1uRGCuO5VNK11jHVQRNKwyQW4vZSQ@mail.gmail.com>
-From:   Dexuan-Linux Cui <dexuan.linux@gmail.com>
-Date:   Mon, 18 Nov 2019 11:44:22 -0800
-Message-ID: <CAA42JLYCod=mymBiDDXxQ1sts7e-Ot_q9SKdJxjSkcsZRVGDTQ@mail.gmail.com>
-Subject: Re: [PATCH v2] ACPI: sysfs: Change ACPI_MASKABLE_GPE_MAX to 0x100
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Yunfeng Ye <yeyunfeng@huawei.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>,
-        Dexuan Cui <decui@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3209f601ad0537a7ef01e2a752f022ccf8816210.camel@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Provags-ID: V03:K1:hOwNU8cCHONZ9O486Jwq2iYZo79fAwXMhOiTJGOJ2PlKe+8gm6Q
+ UGZOE/CTkcMnh13XIW02vvGVxZLDBTfhtyX/V+eFjeKG0rSDSrVsYC2qS+YNqdTpolkbIr1
+ 67O8WyoHcMO0Pt+KOgbWoq45imjgCX1ZRtzKZ6z8dTO+YJtfGNVKw91mLvvOE+StvshZzFX
+ 9hmwXJS0vB8xxwCdtGr6A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:IR+/bxyYH8U=:KGTLKGtCmOSFtC86RHUyRn
+ 6tBB+OxxEMNzyMCEHd3PLrD51+ULa0dMFC6VFO6GSgSf8Qbc9YmGewKKfnFZSPJj1CQ63o0Eu
+ YIvVXMzkYxK1Ym4dJQXgJ6xYwO9xn2Vz5AV5eeo9A/Xudzp3vtsx0Uh7cGUm8xtHOzAVZiKFM
+ gP18EqKGWZLG9h5wuEm9R5TFO19ROMpvSP9kA8tQBedg8pwejpEjtPVgOpZaGHF2Vq4mo3f33
+ ixgrEi9tK7b/L1P0OyDXmWFnQSh4zxDPrsrEwdnzedQfzUAaImRjZjUOwxVv3e+KLgBYcA1Dn
+ lCHD2oeAh/MRII5QCGIm00VxQcG5dIquSyWB62p1R+GPvbsI5rlCNV7zvICgNdsUwQlWGmIjs
+ 5MVqLbWloeovB1G6M0NX8Uf5XwGLbe6aeDUPy7bX5WCwbTOHxhc11IpozjrONNJQji7PbGUFe
+ bGjK49FUrzNQFkeYReJVw0ioZS0HhDh3OzzcjBlF4YJ8UT8hoLqRFFcxFWDZM1cPKLu6nwJj/
+ 5ZUUasjCFowFJ0d8Pa5CS3PRtiRWkddic2hR/t3dok7S93xnqbpqx04uNbhjnKek9lQME8rWV
+ GzQn/Gx1tgACdbcIyaMWvTaf/n1Ugkk1UldXuWDICh6qBAquh1nWGU5lBNlKty9nqcf7eiuUL
+ 5OXXIKImipmMor65OEVHn38eGHqCCprKlwywlR1oqU4gzbw7yxZGh15okVFVZLdbyUgE+Oz5W
+ J7nFv6u2bRj4CCBAn/skhbeWQGoJA9PQFrhEpKEi3oL/nyRnelSyp0TXVOVyfNDXzix8EskVJ
+ V3EjiGpPqMs12Q4yiV3kKPbbLAnffb/OdtqMKXsMFuLs1SS/Ek+u+17CNr7NfqpYnMaLCFF8r
+ LnTzE5w4FDLEQ890vHGFah/jCdH0hEJCDUNvIyYes+whaFKen2q9wa69F+F8h06TBE7Pr/qjL
+ 3dX1Frn9NBqOb7E36gRbhFYQK1Kxg/I/8g+qkNDwR0MWP0l9nSFSiO8WjHZ2K8Y5xTMP05kat
+ DhlYiF7sJ79RkVOHApJaRlaPUfJwVjQww/0HuiOr1edGc6StO69beT+0R2WNTk83Buu1zcG2v
+ EzQuqvmvvXH8ufwxcYV8YsMAbpnZQrbsfS3rCH0tnYHyfHZ3a9vUPHLBI58Py0+aAPRwTozp0
+ eQ1npU3/B3X/xQTedc7ruIIhRdCvBZnj+VtLFiBzRoLIFO40y9i9q3EI2udLHptGcRmb6cHV1
+ u3VU1rHYZgDFYg229qicqHv6Bn+KBoUXrpPN5NKwgRWjL02CtdXcA6ihZWfU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 1:04 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+Hi,
+
+Am 18.11.19 um 12:44 schrieb Nicolas Saenz Julienne:
+> Hi Stephen,
 >
-> On Sat, Nov 16, 2019 at 9:06 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > On Wed, Nov 13, 2019 at 11:17 PM Yunfeng Ye <yeyunfeng@huawei.com> wrote:
-> > >
-> > > The commit 0f27cff8597d ("ACPI: sysfs: Make ACPI GPE mask kernel
-> > > parameter cover all GPEs") says:
-> > >   "Use a bitmap of size 0xFF instead of a u64 for the GPE mask so 256
-> > >    GPEs can be masked"
-> > >
-> > > But the masking of GPE 0xFF it not supported and the check condition
-> > > "gpe > ACPI_MASKABLE_GPE_MAX" is not valid because the type of gpe is
-> > > u8.
-> > >
-> > > So modify the macro ACPI_MASKABLE_GPE_MAX to 0x100, and drop the "gpe >
-> > > ACPI_MASKABLE_GPE_MAX" check. In addition, update the docs "Format" for
-> > > acpi_mask_gpe parameter.
-> > >
-> > > Fixes: 0f27cff8597d ("ACPI: sysfs: Make ACPI GPE mask kernel parameter cover all GPEs")
-> > > Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-> > > ---
-> > > v1 -> v2:
-> > >  - drop the "gpe > ACPI_MASKABLE_GPE_MAX" check
-> > >  - update the docs "Format" from <int> to <byte> for acpi_mask_gpe parameter
-> > >  - update the commit comment
-> > >
-> > >  Documentation/admin-guide/kernel-parameters.txt | 2 +-
-> > >  drivers/acpi/sysfs.c                            | 4 ++--
-> > >  2 files changed, 3 insertions(+), 3 deletions(-)
-> >
-> > Bisect flags commit eb09878e1301 "ACPI: sysfs: Change
-> > ACPI_MASKABLE_GPE_MAX to 0x100" in -next as the reason for a boot
-> > regression in my qemu-kvm test environment. It spews:
-> >
-> > [    1.456728] ACPI: Masking GPE 0x0.
-> > ...
-> > [  161.721420] ACPI: Masking GPE 0x0.
-> >
-> > ...and then hangs.
-> >
-> > A straight revert gets the configuration back on its feet.
-> >
-> > qemu-system-x86_64 --version
-> > QEMU emulator version 4.0.50 (v4.0.0-928-g49c6c6ac0cd8)
+> On Sun, 2019-11-17 at 23:58 -0800, Stephen Brennan wrote:
+>> From: Stefan Wahren <wahrenst@gmx.net>
+>>
+>> This enables hardware random number generator support for the BCM2711
+>> on the Raspberry Pi 4 board.
+>>
+>> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+>> Signed-off-by: Stephen Brennan <stephen@brennan.io>
+>> ---
+>>  arch/arm/boot/dts/bcm2711.dtsi | 5 ++---
+>>  1 file changed, 2 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711=
+.dtsi
+>> index ac83dac2e6ba..2c19e5de284a 100644
+>> --- a/arch/arm/boot/dts/bcm2711.dtsi
+>> +++ b/arch/arm/boot/dts/bcm2711.dtsi
+>> @@ -92,10 +92,9 @@ pm: watchdog@7e100000 {
+>>  		};
+>>
+>>  		rng@7e104000 {
+>> +			compatible =3D "brcm,bcm2711-rng200";
+>>  			interrupts =3D <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
+>> -
+>> -			/* RNG is incompatible with brcm,bcm2835-rng */
+>> -			status =3D "disabled";
+>> +			status =3D "okay";
+>>  		};
+>>
+>>  		uart2: serial@7e201400 {
+> We inherit the reg property from bcm283x.dtsi, on which we only define a=
+ size
+> of 0x10 bytes. I gather from the driver that iproc-rng200's register spa=
+ce is
+> at least 0x28 bytes big. We should also update the 'reg' property to:
 >
-> OK, I'll drop it then, thanks!
+> 	reg =3D <0x7e104000 0x28>;
 
-We're seeing the same issue wtih 5.4.0-rc7-next-20191118 on a Linux VM
-running on Hyper-V :
+Thanks for sending and noticing. A proper solution would be to move the
+whole rng node from bcm283x.dtsi to bcm283x-common.dtsi and define a
+completely new rng node in bcm2711.dtsi.
 
-[    0.133029] ACPI: 1 ACPI AML tables successfully acquired and loaded
-[    0.144023] ACPI: Interpreter enabled
-[    0.145023] ACPI: (supports S0 S5)
-[    0.146023] ACPI: Using IOAPIC for interrupt routing
-[    0.147024] PCI: Using host bridge windows from ACPI; if necessary,
-use "pci=nocrs" and report a bug
-[    0.148031] ACPI: Masking GPE 0x0.
-...
-[  774.839023] ACPI: Masking GPE 0x0.
-[  774.840023] ACPI: Masking GPE 0x0.
+Regards
+Stefan
 
-I guess the patch is only tested on a physical machine and not on a VM...
-
-Thanks,
-Dexuan
+>
+> Regards,
+> Nicolas
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
