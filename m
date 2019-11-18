@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A13C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBD1C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08AE220730
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 455FD20730
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:01:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wr086HtE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QFDuz+IW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfKRLBG (ORCPT
+        id S1726961AbfKRLAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:01:06 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40091 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbfKRLAr (ORCPT
+        Mon, 18 Nov 2019 06:00:46 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36355 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbfKRLAo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:00:47 -0500
-Received: by mail-wm1-f66.google.com with SMTP id f3so18227816wmc.5;
-        Mon, 18 Nov 2019 03:00:45 -0800 (PST)
+        Mon, 18 Nov 2019 06:00:44 -0500
+Received: by mail-wr1-f67.google.com with SMTP id r10so18902619wrx.3;
+        Mon, 18 Nov 2019 03:00:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Q0mPzKXAC37oXp0wVkV8/ys9/u7aTcSnLuWMUuY5ccw=;
-        b=Wr086HtETOZcOmc4iZyEckCSVl84N673n+TidoSKWx/tsWUykTFSEw0lVTE7A7/cHq
-         kA7CelwmTaEk9vXiH9I1UTDGMbeEpKPDtbkQoE6O6NZRUvxhWYWhqBOclnS3PO9m07eB
-         zx8MqwgyY4bVZQu56j63cjjRkWfFs5kT8tb7UDkSRRZvSVmKcF5l8cCzOEs6uSXoVg11
-         iqD6LL1eN8v2B8nwluCKWahNwl4Ub1aQ243SZJsjjw7ABqgyOELMD5fpBUcHNYD0UR8r
-         cXwfS9aqlqMINWywAgBUHeQAvgYHEgqt8YeMXd6eYuRiZFB7IjVtuzawScSxmdHCAtKw
-         xQgw==
+        bh=+uPwPfx0oQerpYTv3rMNbZ1we4qpdrwsuG2bGFowiTE=;
+        b=QFDuz+IW+HnUgegZRGK3iKMMqIgXz0PnyggLLboNAo23LCWY2Gj5hyXBR8JHU8sDEW
+         2nFd8+IW1Nzpj3BTX/Ttt6LotZtoOk7OE4hTSRRql/uwPopINBAR0Tprett8ddJKHgBh
+         3vHJuPOfA60KLKupuWrAF4vdz5IxsfObywmNmB/3ySzo/X0LP3uLOzkowkzFN32lsHlR
+         REVQ60uYcjw5vMMLLNNKA0ylvY5KVclB/BVwP7Cy1QT+kzWy6ZVtQ5JRHn0Ejlq0DYkw
+         ASV1ziUmM3K+C7WVSn+VR1BbebvHWGO6sPbiG+O1OHWtjqLpRtt6spd1TTCBAALQ3Ai9
+         qufQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Q0mPzKXAC37oXp0wVkV8/ys9/u7aTcSnLuWMUuY5ccw=;
-        b=CtPdsPTAeTdTKOKEMFr/UtRlsPKWgVT1ohIApWI4nZFCQrME89b58YEOTb49KqukQF
-         jNu5Sa0cPP4Z/Qh70rwNx0rAFQ7bnOxRji9pLRk+9N52/88HhRT+ppzwnXaD2/QtHdY4
-         jwr1DkQdR/lnLnO5TWmuhIq2VJHlJ3dzBfddWA0AI2GzTeiQJCvZk//erBJU/SxMvo/k
-         ZKrikg5bxbIZgtNxhNj4q4Ula5SWI9cFQNhIq5qMd0FN/NXQr4787OHSwLrFoH92ZSNu
-         TNOjL5jpfqACxC/IvhDtGHUtb0QQwTIGBhUhMh5bE6IOxd/xEz5AwS7I2dlDkyhrojIL
-         UmrA==
-X-Gm-Message-State: APjAAAUPnqJe7bOL79Krs+wIjfBQDcKBS+vf+hoP6yXrJd2LBk0T9+Tg
-        bJUVtjGQV0dQwqveleigS8s=
-X-Google-Smtp-Source: APXvYqwJPN1Zn8wdFBpSu4h4FnkR4VySti7UEN2KiwGGp1NrFrPsGy/qRfs1nyJMt6qg4QbJ2U7YXg==
-X-Received: by 2002:a1c:1fcc:: with SMTP id f195mr28211273wmf.137.1574074844581;
-        Mon, 18 Nov 2019 03:00:44 -0800 (PST)
+        bh=+uPwPfx0oQerpYTv3rMNbZ1we4qpdrwsuG2bGFowiTE=;
+        b=DSdCtbvaDQdpi3UXaK89QKkjoKU5jEgE+l5CiudaEeAbGka+6fEp1GNWtY9sM+JPm0
+         5TWJOCsQ/uCEjaPGAsWryucSZuDRXFprWx7e4DQuAYMkksPL/MFKmJSpsfY0EcYkTSsq
+         9kDVB6JNyh4pV8OFwWAtinNsiSa9UXHwaMxVgqkpoOgNzguzWZRudZWWFovnk8Y5nO+s
+         lq58VRX96blDbKRHMS1M3uWcaKmUiBNdEVnPYeahNg0zEs7Mgrv1sa6+JEH8CByUOcWX
+         9dR8ALSf97qKteUyfgUVt/0JJ/5MaWZPbJAa1tHBDl+ufhXDrIdPOX6XF+8/RizKW2Ur
+         CdMw==
+X-Gm-Message-State: APjAAAXRsn6Y8w21lJSHZZ36oXfmUVW/Zc+Rx5lvepN7tMzdUwZQcn50
+        sZCJOrNjR3JVePp62nIx2n4=
+X-Google-Smtp-Source: APXvYqyaEaWN5edD71vuH2Nr7q1utFJujX5hmEgB41Q5ofpd4MyhhKPr56RU/npbmympYwagPqL5hA==
+X-Received: by 2002:adf:f20d:: with SMTP id p13mr27767215wro.325.1574074841802;
+        Mon, 18 Nov 2019 03:00:41 -0800 (PST)
 Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
-        by smtp.gmail.com with ESMTPSA id f67sm19873313wme.16.2019.11.18.03.00.43
+        by smtp.gmail.com with ESMTPSA id f67sm19873313wme.16.2019.11.18.03.00.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 03:00:44 -0800 (PST)
+        Mon, 18 Nov 2019 03:00:41 -0800 (PST)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -68,11 +68,10 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v6 7/8] arm64: dts: allwinner: h6: Add PWM node
-Date:   Mon, 18 Nov 2019 12:00:33 +0100
-Message-Id: <20191118110034.19444-8-peron.clem@gmail.com>
+Subject: [PATCH v6 3/8] pwm: sun4i: Prefer "mod" clock to unnamed
+Date:   Mon, 18 Nov 2019 12:00:29 +0100
+Message-Id: <20191118110034.19444-4-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191118110034.19444-1-peron.clem@gmail.com>
 References: <20191118110034.19444-1-peron.clem@gmail.com>
@@ -84,43 +83,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+New device tree bindings called the source clock of the module
+"mod" when several clocks are defined.
 
-Allwinner H6 PWM is similar to that in A20 except that it has additional
-bus clock and reset line.
+Try to get a clock called "mod" if nothing is found try to get
+an unnamed clock.
 
-Note that first PWM channel is connected to output pin and second
-channel is used internally, as a clock source to AC200 co-packaged chip.
-This means that any combination of these two channels can be used and
-thus it doesn't make sense to add pinctrl nodes at this point.
-
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/pwm/pwm-sun4i.c | 29 +++++++++++++++++++++++++++--
+ 1 file changed, 27 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 29824081b43b..6d4bde488f15 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -245,6 +245,16 @@
- 			status = "disabled";
- 		};
+diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+index c17935805690..6d97fef4ed43 100644
+--- a/drivers/pwm/pwm-sun4i.c
++++ b/drivers/pwm/pwm-sun4i.c
+@@ -362,9 +362,34 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
+ 	if (IS_ERR(pwm->base))
+ 		return PTR_ERR(pwm->base);
  
-+		pwm: pwm@300a000 {
-+			compatible = "allwinner,sun50i-h6-pwm";
-+			reg = <0x0300a000 0x400>;
-+			clocks = <&osc24M>, <&ccu CLK_BUS_PWM>;
-+			clock-names = "mod", "bus";
-+			resets = <&ccu RST_BUS_PWM>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
+-	pwm->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(pwm->clk))
++	/*
++	 * All hardware variants need a source clock that is divided and
++	 * then feeds the counter that defines the output wave form. In the
++	 * device tree this clock is either unnamed or called "mod".
++	 * Some variants (e.g. H6) need another clock to access the
++	 * hardware registers; this is called "bus".
++	 * So we request "mod" first (and ignore the corner case that a
++	 * parent provides a "mod" clock while the right one would be the
++	 * unnamed one of the PWM device) and if this is not found we fall
++	 * back to the first clock of the PWM.
++	 */
++	pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
++	if (IS_ERR(pwm->clk)) {
++		if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "get mod clock failed %pe\n",
++				pwm->clk);
+ 		return PTR_ERR(pwm->clk);
++	}
 +
- 		pio: pinctrl@300b000 {
- 			compatible = "allwinner,sun50i-h6-pinctrl";
- 			reg = <0x0300b000 0x400>;
++	if (!pwm->clk) {
++		pwm->clk = devm_clk_get(&pdev->dev, NULL);
++		if (IS_ERR(pwm->clk)) {
++			if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
++				dev_err(&pdev->dev, "get unnamed clock failed %pe\n",
++					pwm->clk);
++			return PTR_ERR(pwm->clk);
++		}
++	}
+ 
+ 	pwm->rst = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
+ 	if (IS_ERR(pwm->rst)) {
 -- 
 2.20.1
 
