@@ -2,146 +2,111 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB4BC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8A0C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE632186D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30D722186D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbfKRRlI (ORCPT
+        id S1726984AbfKRRmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 12:41:08 -0500
-Received: from ms.lwn.net ([45.79.88.28]:60096 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726475AbfKRRlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 12:41:07 -0500
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 42294378;
-        Mon, 18 Nov 2019 17:41:06 +0000 (UTC)
-Date:   Mon, 18 Nov 2019 10:41:05 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     andriy.shevchenko@intel.com, prarit@redhat.com,
-        rafael.j.wysocki@intel.co, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] admin guide/pm: Admin guide for intel-speed-select
-Message-ID: <20191118104105.11776f58@lwn.net>
-In-Reply-To: <20191115204925.55181-1-srinivas.pandruvada@linux.intel.com>
-References: <20191115204925.55181-1-srinivas.pandruvada@linux.intel.com>
-Organization: LWN.net
+        Mon, 18 Nov 2019 12:42:42 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:50521 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726322AbfKRRml (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 12:42:41 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iWl2q-00012T-Cb; Mon, 18 Nov 2019 18:42:36 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 909F41C19B8;
+        Mon, 18 Nov 2019 18:42:35 +0100 (CET)
+Date:   Mon, 18 Nov 2019 17:42:35 -0000
+From:   "tip-bot2 for Joel Fernandes (Google)" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/urgent] workqueue: Convert for_each_wq to use built-in list check
+Cc:     Tejun Heo <tj@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <157409895539.12247.11066584934267317219.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 12:49:25 -0800
-Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com> wrote:
+The following commit has been merged into the core/urgent branch of tip:
 
-> Added documentation to configure servers to use Intel(R) Speed
-> Select Technology using intel-speed-select tool.
-> 
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Commit-ID:     ac91dcca87e4300ea30e9514c31064d32469dd6d
+Gitweb:        https://git.kernel.org/tip/ac91dcca87e4300ea30e9514c31064d32469dd6d
+Author:        Joel Fernandes (Google) <joel@joelfernandes.org>
+AuthorDate:    Thu, 15 Aug 2019 10:18:42 -04:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 18 Nov 2019 16:20:00 +01:00
 
-Thanks for improving the docs!  I do have a few overall comments,
-though...  
+workqueue: Convert for_each_wq to use built-in list check
 
->  .../admin-guide/pm/intel-speed-select.rst     | 934 ++++++++++++++++++
->  .../admin-guide/pm/working-state.rst          |   1 +
->  2 files changed, 935 insertions(+)
->  create mode 100644 Documentation/admin-guide/pm/intel-speed-select.rst
-> 
-> diff --git a/Documentation/admin-guide/pm/intel-speed-select.rst b/Documentation/admin-guide/pm/intel-speed-select.rst
-> new file mode 100644
-> index 000000000000..c2ce57ebc268
-> --- /dev/null
-> +++ b/Documentation/admin-guide/pm/intel-speed-select.rst
-> @@ -0,0 +1,934 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=========================================================
-> +Intel® Speed Select Technology (Intel® SST) : User Guide
-> +=========================================================
+Because list_for_each_entry_rcu() can now check for holding a
+lock as well as for being in an RCU read-side critical section,
+this commit replaces the workqueue_sysfs_unregister() function's
+use of assert_rcu_or_wq_mutex() and list_for_each_entry_rcu() with
+list_for_each_entry_rcu() augmented with a lockdep_is_held() optional
+argument.
 
-People give me grief when I take docs patches adding non-ascii characters.
-Adding nearly 100 useless ® symbols seems likely to trigger that sort of
-unicode aversion.  Can I ask you, please, to take those out?  There are
-many occurrences of unadorned "Intel" in the kernel, and the world hasn't
-ended yet.
+[ Cherry-picked from: 5a6446626d7e: ("workqueue: Convert for_each_wq to use built-in list check") ]
 
-> +The Intel® Speed Select Technology (Intel® SST) provides a powerful new
-> +collection of features that give more granular control over CPU performance.
-> +With Intel® SST, one server can be configured for power and performance for a
-> +variety of diverse workload requirements.
-> +
-> +Refer to the links below for an overview of the technology:
-> +
-> +- https://www.intel.com/content/www/us/en/architecture-and-technology/speed-select-technology-article.html
-> +- https://builders.intel.com/docs/networkbuilders/intel-speed-select-technology-base-frequency-enhancing-performance.pdf
-> +
-> +These capabilities are further enhanced in some of the newer generations of
-> +server platforms where these features can be enumerated and controlled
-> +dynamically without pre-configuring via BIOS setup options. This dynamic
-> +configuration is done via mailbox commands to the hardware. One way to enumerate
-> +and configure these features is by using the Intel® Speed Select utility.
-> +
-> +This document explains how to use the Intel® Speed Select tool to enumerate and
-> +control Intel® SST features. This document gives example commands and explains
-> +how these commands change the power and performance profile of the system under
-> +test. Using this tool as an example, customers can replicate the messaging
-> +implemented in the tool in their production software.
-> +
-> +
-> +intel-speed-select configuration tool
-> +-------------------------------------
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/workqueue.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-The conventions for subsection markers are documented in
-Documentation/doc-guide/sphinx.rst; this should be "========" rather than
-hyphens. 
-
-> +Most Linux distribution packages include the "intel-speed-select" tool. If not,
-> +it can be built by downloading the Linux kernel tree from kernel.org. Once
-> +downloaded, the tool can be built without building the full kernel.
-> +
-> +From the kernel tree, run the following commands:
-> +
-> +# cd tools/power/x86/intel-speed-select/
-> +
-> +# make
-> +
-> +# make install
-
-This kind of stuff isn't going to render well in the built docs.  Can you
-please change the literal text to literal blocks?  Something like:
-
-	From the kernel tree, run the following commands::
-
-		# cd tools/power/x86/intel-speed-select/
-		# make
-		# make install
-
-Note the "::" on the first line; that introduces a literal block.  It would
-be good to build the docs once you're done and be sure that you're happy
-with the results.
-
-There's a lot of these in this document.
-
-> +
-> +**Getting Help**
-
-Since this is meant to be a section header, please mark it as such;
-"------" would be the appropriate marker for a header at this level.
-
-That's enough for a first pass.
-
-Thanks,
-
-jon
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index bc2e09a..e501c79 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -364,11 +364,6 @@ static void workqueue_sysfs_unregister(struct workqueue_struct *wq);
+ 			 !lockdep_is_held(&wq_pool_mutex),		\
+ 			 "RCU or wq_pool_mutex should be held")
+ 
+-#define assert_rcu_or_wq_mutex(wq)					\
+-	RCU_LOCKDEP_WARN(!rcu_read_lock_held() &&			\
+-			 !lockdep_is_held(&wq->mutex),			\
+-			 "RCU or wq->mutex should be held")
+-
+ #define assert_rcu_or_wq_mutex_or_pool_mutex(wq)			\
+ 	RCU_LOCKDEP_WARN(!rcu_read_lock_held() &&			\
+ 			 !lockdep_is_held(&wq->mutex) &&		\
+@@ -425,9 +420,8 @@ static void workqueue_sysfs_unregister(struct workqueue_struct *wq);
+  * ignored.
+  */
+ #define for_each_pwq(pwq, wq)						\
+-	list_for_each_entry_rcu((pwq), &(wq)->pwqs, pwqs_node)		\
+-		if (({ assert_rcu_or_wq_mutex(wq); false; })) { }	\
+-		else
++	list_for_each_entry_rcu((pwq), &(wq)->pwqs, pwqs_node,		\
++				 lockdep_is_held(&(wq->mutex)))
+ 
+ #ifdef CONFIG_DEBUG_OBJECTS_WORK
+ 
