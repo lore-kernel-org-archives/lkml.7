@@ -2,94 +2,95 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AEFC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0017BC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90BEA21D7B
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEBBF206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:00:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574092736;
-	bh=WGUyht43nf3Ysupp83CRX60A+0vqDIHoxyJ66cyu/X4=;
+	s=default; t=1574092845;
+	bh=fBILUxAPi9q24JXpZR8lTMKgnIfu5HciMNzqI6LXVC4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MTvImOiy0QpP6839+pRS/KNuNkmCWBdNmF+i5CYH0LuKMJ+LTtRMn3vSmARFf4tEB
-	 pIv80RwsPUIacklkArzPUvlzaQQV978bvpbkuGXIe4l1AKlBIdho2NMp0fWRzKotTw
-	 /g+zUZm9CRXd6mtm1gghotwc/r1UR//SHUO/WSkI=
+	b=AgSiXvpY7lWamiQnWLav7jqDr01nP5T9tqvXWZQiMR06Uk2Q6F3uOV+Gxn5k+Rr6d
+	 udlAwbJg3qI9XcbyQAD3X2cVENmo/lxL3AbcoBuclyZNOf2qmB1VUqeb8u3OQK2uWR
+	 YiZi6au2x64MGEL4hl18CTqj9ohwXoNfoO2nym0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfKRP6z (ORCPT
+        id S1727329AbfKRQAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 10:58:55 -0500
-Received: from foss.arm.com ([217.140.110.172]:36374 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbfKRP6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 10:58:55 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA4A0DA7;
-        Mon, 18 Nov 2019 07:58:54 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 383F93F703;
-        Mon, 18 Nov 2019 07:58:54 -0800 (PST)
-Date:   Mon, 18 Nov 2019 15:58:52 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: linux-next: build failure after merge of the sound-asoc-fixes
- tree
-Message-ID: <20191118155852.GG9761@sirena.org.uk>
-References: <20191113081035.7e7f9bc2@canb.auug.org.au>
- <20191115093410.4a7938f5@canb.auug.org.au>
+        Mon, 18 Nov 2019 11:00:44 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:36422 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbfKRQAo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 11:00:44 -0500
+Received: by mail-qv1-f68.google.com with SMTP id cv8so6591961qvb.3;
+        Mon, 18 Nov 2019 08:00:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dGjbHgjF0W1b+dELdkoZ7B3L1JrYsAni92y6q3z5/FE=;
+        b=di4C7Z2zvQUq2pHY6TUUzLqSiEt9/bLv1Ph0DwW5GqtMpLNFg1Pktx/z/GnrNHEthd
+         Ui8CGj0PhcU8u4+374VwlDbMAlVEvnUbsD5hNRM2/hQsUVWR0BeAf4XYFxKKedLzwW3B
+         Xi4bVNSTvow7scHY0aC9DxHafzneE2vwVmMn9HGHgOVY2UoxLWJkbsbMLDVLTUPWn+iN
+         d1AT+u/KGWCC9hI/cDDqjKgCQFctMZ1JSgs64xm3v5ZWuMFRYl6Be70fdZ+TQ6WCIRQI
+         eU794I2pWW8u7KVfnFIznShljSZTY1ypXMJgeWz2gxRWbreI69oZOTOEGqtpLJUdxuap
+         7FyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dGjbHgjF0W1b+dELdkoZ7B3L1JrYsAni92y6q3z5/FE=;
+        b=FyZDMt8uvN6HyesaBdGttTxEz1/P5QiNI3bP+0bypH0agoQGSFxZjC2P/Dg3SUwNFd
+         MJrMpp5DT0HGF20VAUJUcUch5XQApvyYRwvd87tViNNLd20o5tow/k1GYG8s7HsR0Fi+
+         yf6cDWnPtO9X3CC1X+KL0doOTvokkPSMq23RLnxec1NM3uhLmfuQuUvYWs2Xq0zllJ0w
+         SB8Engt6OFmf+bWG0x+tDuaO83JGnTYw6/BL8LPttQBFvSTOo14HeR+Ffy3/MnGA9xZz
+         TYINod658f0g9vt9zRqNxalW+Cy8tUmGN/R2gQrfYzRP/ruQWY/0RHL2WuJkyFTtxomQ
+         AqEg==
+X-Gm-Message-State: APjAAAVImFXMm304x80dgKRUUzScD4y81SdupKk5mQFIvtniZCWYjiW5
+        bIm9jL9ixSLHh3uyTnVfC3Y=
+X-Google-Smtp-Source: APXvYqzAvIz0mWDXvlrm4wiWFX1y56FXmHKVJfOVX86U6TWJDAM7fzgvyiQr9bPvB0WZo9KVXYk2lw==
+X-Received: by 2002:a0c:cd8b:: with SMTP id v11mr26925478qvm.66.1574092843284;
+        Mon, 18 Nov 2019 08:00:43 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::3:ed5d])
+        by smtp.gmail.com with ESMTPSA id r29sm10969991qtb.63.2019.11.18.08.00.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Nov 2019 08:00:42 -0800 (PST)
+Date:   Mon, 18 Nov 2019 08:00:41 -0800
+From:   Tejun Heo <tj@kernel.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, kernel-team@fb.com
+Subject: Re: [PATCH] docs: cgroup: mm: Fix spelling of "list"
+Message-ID: <20191118160041.GU4163745@devbig004.ftw2.facebook.com>
+References: <20191111144438.GA11327@chrisdown.name>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="VACxsDaSTfeluoxK"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191115093410.4a7938f5@canb.auug.org.au>
-X-Cookie: no maintenance:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191111144438.GA11327@chrisdown.name>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Nov 11, 2019 at 02:44:38PM +0000, Chris Down wrote:
+> Signed-off-by: Chris Down <chris@chrisdown.name>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: cgroups@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> Cc: kernel-team@fb.com
 
---VACxsDaSTfeluoxK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied to cgroup/for-5.5.
 
-On Fri, Nov 15, 2019 at 09:34:10AM +1100, Stephen Rothwell wrote:
-> On Wed, 13 Nov 2019 08:10:35 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+Thanks.
 
-> > Caused by commit
-
-> >   1d3e9077307f ("ASoC: SOF: Intel: Fix CFL and CML FW nocodec binary names.")
-
-> > I have reverted that commit for today.
-
-> I am still reverting that commit.
-
-I've reverted the commit, I was a bit disappointed that none of the
-Intel people responded but I see you didn't CC Pierre who sent the
-commit so he won't have seen your report - I missed that due to the CC
-to Liam who was also in the chain.
-
---VACxsDaSTfeluoxK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3Sv7sACgkQJNaLcl1U
-h9DHngf+Lk/nMXn9Ke2ii81Adts6Wz5RxLcXRnq8Sne4aNyn6ThYRKQFasDP2foa
-GnaBqv8VpdvJnG41LpmYylfzq2I1cM2p3zNNsxwjJbCPOUbJNFIOVFYTQTUnl5jU
-h10fighSuVVSqRP8TlyWvqOjivOvO9diMtMvQiaurLUz1uRsExBAWravvwvrd+Jq
-KmNrB1kX/D7iOWN4WSwzXkX29cG8q9NdLlUC16Dk5Ube9RBKmBIC0b7FG3ueXFTm
-tz1ppAjO1O1VqnBk8731nlZhT4f9U+xkDTL0yP5FhZdGTDQzcrER1vallW0lYcTU
-Pve+ggG6HE7YykLeSrlwSX7FZ6OJaQ==
-=812C
------END PGP SIGNATURE-----
-
---VACxsDaSTfeluoxK--
+-- 
+tejun
