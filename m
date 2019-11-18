@@ -2,394 +2,196 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C67C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72721C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA0222309
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4627E22309
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:04:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dak+2mg4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HX45CgBl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfKRWEn (ORCPT
+        id S1727016AbfKRWEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 17:04:43 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:50867 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726272AbfKRWEn (ORCPT
+        Mon, 18 Nov 2019 17:04:48 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:36856 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbfKRWEr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 17:04:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574114681;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=8VeWVkmCSulVhV1qmByhbdssiRm0kRpI2tILvMyefww=;
-        b=Dak+2mg4MizghJ4weYwL8z8fQx+MFi8yyYHd+Nvyt2F2ayhfStL7WM9eYy0dGBglxyoaEw
-        Bmb/B7ytbhEMa920wchWkjWnzeSlb5DeYr9Jcw91vOkZKkBMOeKZmQbMpwtjWc/+PolZx5
-        k1jh9H3ZiD2sgp+PUL33BV+sxBRHSuY=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-230-9fpLUfC2OVuYp1D_6zroGA-1; Mon, 18 Nov 2019 17:04:38 -0500
-Received: by mail-qt1-f198.google.com with SMTP id l8so13289200qtq.9
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 14:04:38 -0800 (PST)
+        Mon, 18 Nov 2019 17:04:47 -0500
+Received: by mail-il1-f193.google.com with SMTP id s75so17557484ilc.3;
+        Mon, 18 Nov 2019 14:04:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KDsvR2sL7bSH7kZiX7UcdBRnHGb+awlt0qFDCAIcGxM=;
+        b=HX45CgBlnJdAkHhOzZUD6Z/to8eGGgvuyxGUx6A+xKdKlMyK0+C3KgxBPNriOe6HJV
+         OSeYPt3ij2N1sSGCJ0sQVrJxBSR5Fl8Ko6kR60HZJTm/aAS8bf79dLQJY+HbuCSClWAG
+         9FNMSW9h5MYtbhb5KfSGqXD7ikVVct3I1kuP5ecUix1GVrAwQdQdVJErThZLvwRCwED5
+         EAtykxqdp26QwHfIF/7W3Ed11FVNXi++x6JrXDK48eZf1/mSDL2Wit56H9k5t1sn/TpV
+         zPYTFcTn13w9Sp8yPwahAAuGWScKyrMXBm6RYgc7FgHicQ4yjfBB23jG+T3tlgclXWjp
+         dcHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=z42ZjyEIpk4q751ixdMJNzXEB6jCwh7siqWC0h0FGgA=;
-        b=BfCOuamtl+W/T0IW2A0oez6GBSr+KGw1TSIkaz8oTxesMeUOU5RGVoorLNb+/WMwZW
-         JmiDWlk7u+P7QlihjM9iOp/ms/3ClYMkaNCpTL4alERAIAfA/ggrzfsdUB0jdbpZH0Dq
-         VrF205cfi7sdXcwAWsXxsZGB6XiaVVpwW4WnhAZWg60/z1UQJqxE87J3i9AeYF4Tj+x1
-         ARQJJBwG2/leUBuh4im3T41ib8NynsoGycpUcrRCgFJL5dZyyrchiv9jXy9LiblBllLC
-         YHpZAjnkCKZ6+BKIV/MJInRWVXdGruVj3kRm0Bk8KJphgMoxDpICoOyVxZ3fIoUj+77a
-         3AIA==
-X-Gm-Message-State: APjAAAXo8SC/KYoQGYu8z45KmMTUyUTIbIkQGm3Y3Po1Y1izVnINSkW6
-        /0RQhqnhiRbglatt3xj1seTC1P9+H8xlnO3HN/3iB2p5JjYs4jCLF3u7tD+4BAG0c1Rxka6OMaT
-        AN25rhflEl7z1RkdLK0asplLG
-X-Received: by 2002:a05:620a:101a:: with SMTP id z26mr25703939qkj.344.1574114677893;
-        Mon, 18 Nov 2019 14:04:37 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz+o/aY3cmRojkGspWCmuDTGdToedB9QFwTcSMURFKAt5Eo4wRhzmz1vyo1v5goX8rthwAO3g==
-X-Received: by 2002:a05:620a:101a:: with SMTP id z26mr25703916qkj.344.1574114677452;
-        Mon, 18 Nov 2019 14:04:37 -0800 (PST)
-Received: from labbott-redhat.redhat.com (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
-        by smtp.gmail.com with ESMTPSA id g11sm9089482qkm.82.2019.11.18.14.04.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 14:04:36 -0800 (PST)
-From:   Laura Abbott <labbott@redhat.com>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     Laura Abbott <labbott@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] watchdog: Remove iop_wdt
-Date:   Mon, 18 Nov 2019 17:04:32 -0500
-Message-Id: <20191118220432.1611-1-labbott@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KDsvR2sL7bSH7kZiX7UcdBRnHGb+awlt0qFDCAIcGxM=;
+        b=lrBh5iiCtn3rMkMpyx/slBJvMSmqEzH9LxwG8IinJQAPnT4MIygqonTPSPjwSnlbPQ
+         T51Z+ffu2nmxk9zg7V9LR0OKkJRc9H0+qt7tCJDNhpnzR0WVVsc41eTSKuzkhmsUGh/H
+         1/eB8BZgzV2EPGf8/ZRgy7lrd3WEDsOcat3RKHNiNKGuiMFcGVnQMNwXef9rD1NaUOzg
+         AKe1KQSPhM1q2c/hgx3nd8ucHPWYavfu479IULXxhEDb5Al4RlDUsXYMzPqVVJVFJR1J
+         HlsRjL5fs3ELKY+LFbCa8BD1/dq0n/vExutjL+x3PFabCAOO0taUoXnI1u2J9BkIcldN
+         kfMA==
+X-Gm-Message-State: APjAAAUm94hvxAh0BQWmoUVz58t62kTvNL0xeHfIZ9gA6LbYHhSKyfgf
+        bu0obm+RXUMrxUwc4maOAS2Ur+S3xUvdch7odNE=
+X-Google-Smtp-Source: APXvYqwghzyuYz+8hSjz6z09L1nyxU02x+KJAZe5bCF3MTaio6iWizMnhgXwT2UaPdV1jky+G4W1ErgVbCLhmQ/i+Zg=
+X-Received: by 2002:a05:6e02:c91:: with SMTP id b17mr17595173ile.33.1574114686674;
+ Mon, 18 Nov 2019 14:04:46 -0800 (PST)
 MIME-Version: 1.0
-X-MC-Unique: 9fpLUfC2OVuYp1D_6zroGA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+References: <20191118214250.14002-1-sibis@codeaurora.org> <0101016e807915dc-5f8701fd-5c4a-45a5-a9ee-9e4d8700a3fa-000000@us-west-2.amazonses.com>
+In-Reply-To: <0101016e807915dc-5f8701fd-5c4a-45a5-a9ee-9e4d8700a3fa-000000@us-west-2.amazonses.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Mon, 18 Nov 2019 15:04:35 -0700
+Message-ID: <CAOCk7NogQY3Vjo+cL5_0anVO=K1LfTqG69b8AGi9HQsTMEsCug@mail.gmail.com>
+Subject: Re: [PATCH 13/16] arm64: dts: qcom: msm8998: Update reserved memory map
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mark Rutland <mark.rutland@arm.com>, p.zabel@pengutronix.de,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org,
+        DTML <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Nov 18, 2019 at 2:45 PM Sibi Sankar <sibis@codeaurora.org> wrote:
+>
+> Update existing and add missing regions to the reserved memory map, as
+> described in version 7.1
+>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8998.dtsi | 62 ++++++++++++++++++++++++---
+>  1 file changed, 55 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> index fc7838ea9a010..707673e3cf28a 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> @@ -28,8 +28,13 @@
+>                 #size-cells = <2>;
+>                 ranges;
+>
+> -               memory@85800000 {
+> -                       reg = <0x0 0x85800000 0x0 0x800000>;
+> +               hyp_mem: memory@85800000 {
+> +                       reg = <0x0 0x85800000 0x0 0x600000>;
+> +                       no-map;
+> +               };
+> +
+> +               xbl_mem: memory@85e00000 {
 
-Commit 59d3ae9a5bf6 ("ARM: remove Intel iop33x and iop13xx support")
-removed support for some old platforms. Given this driver depends on
-a now removed platform, just remove the driver.
+Are we ever going to use this label?
 
-Signed-off-by: Laura Abbott <labbott@redhat.com>
----
-Found this while reviewing config options. Not sure if this was kept
-around for other reasons or just missed.
----
- drivers/watchdog/Kconfig   |  16 ---
- drivers/watchdog/Makefile  |   1 -
- drivers/watchdog/iop_wdt.c | 249 -------------------------------------
- 3 files changed, 266 deletions(-)
- delete mode 100644 drivers/watchdog/iop_wdt.c
+> +                       reg = <0x0 0x85e00000 0x0 0x100000>;
+>                         no-map;
+>                 };
+>
+> @@ -38,21 +43,64 @@
+>                         no-map;
+>                 };
+>
+> -               memory@86200000 {
+> +               tz_mem: memory@86200000 {
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 58e7c100b6ad..fef9078a44b6 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -554,22 +554,6 @@ config PNX4008_WATCHDOG
-=20
- =09  Say N if you are unsure.
-=20
--config IOP_WATCHDOG
--=09tristate "IOP Watchdog"
--=09depends on ARCH_IOP13XX
--=09select WATCHDOG_NOWAYOUT if (ARCH_IOP32X || ARCH_IOP33X)
--=09help
--=09  Say Y here if to include support for the watchdog timer
--=09  in the Intel IOP3XX & IOP13XX I/O Processors.  This driver can
--=09  be built as a module by choosing M. The module will
--=09  be called iop_wdt.
--
--=09  Note: The IOP13XX watchdog does an Internal Bus Reset which will
--=09  affect both cores and the peripherals of the IOP.  The ATU-X
--=09  and/or ATUe configuration registers will remain intact, but if
--=09  operating as an Root Complex and/or Central Resource, the PCI-X
--=09  and/or PCIe busses will also be reset.  THIS IS A VERY BIG HAMMER.
--
- config DAVINCI_WATCHDOG
- =09tristate "DaVinci watchdog"
- =09depends on ARCH_DAVINCI || ARCH_KEYSTONE || COMPILE_TEST
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 2ee352bf3372..9de21f5ce909 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -55,7 +55,6 @@ obj-$(CONFIG_SAMA5D4_WATCHDOG) +=3D sama5d4_wdt.o
- obj-$(CONFIG_DW_WATCHDOG) +=3D dw_wdt.o
- obj-$(CONFIG_EP93XX_WATCHDOG) +=3D ep93xx_wdt.o
- obj-$(CONFIG_PNX4008_WATCHDOG) +=3D pnx4008_wdt.o
--obj-$(CONFIG_IOP_WATCHDOG) +=3D iop_wdt.o
- obj-$(CONFIG_DAVINCI_WATCHDOG) +=3D davinci_wdt.o
- obj-$(CONFIG_ORION_WATCHDOG) +=3D orion_wdt.o
- obj-$(CONFIG_SUNXI_WATCHDOG) +=3D sunxi_wdt.o
-diff --git a/drivers/watchdog/iop_wdt.c b/drivers/watchdog/iop_wdt.c
-deleted file mode 100644
-index a9ccdb9a9159..000000000000
---- a/drivers/watchdog/iop_wdt.c
-+++ /dev/null
-@@ -1,249 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * drivers/char/watchdog/iop_wdt.c
-- *
-- * WDT driver for Intel I/O Processors
-- * Copyright (C) 2005, Intel Corporation.
-- *
-- * Based on ixp4xx driver, Copyright 2004 (c) MontaVista, Software, Inc.
-- *
-- *=09Curt E Bruns <curt.e.bruns@intel.com>
-- *=09Peter Milne <peter.milne@d-tacq.com>
-- *=09Dan Williams <dan.j.williams@intel.com>
-- */
--
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
--#include <linux/module.h>
--#include <linux/kernel.h>
--#include <linux/fs.h>
--#include <linux/init.h>
--#include <linux/device.h>
--#include <linux/miscdevice.h>
--#include <linux/watchdog.h>
--#include <linux/uaccess.h>
--#include <mach/hardware.h>
--
--static bool nowayout =3D WATCHDOG_NOWAYOUT;
--static unsigned long wdt_status;
--static unsigned long boot_status;
--static DEFINE_SPINLOCK(wdt_lock);
--
--#define WDT_IN_USE=09=090
--#define WDT_OK_TO_CLOSE=09=091
--#define WDT_ENABLED=09=092
--
--static unsigned long iop_watchdog_timeout(void)
--{
--=09return (0xffffffffUL / get_iop_tick_rate());
--}
--
--/**
-- * wdt_supports_disable - determine if we are accessing a iop13xx watchdog
-- * or iop3xx by whether it has a disable command
-- */
--static int wdt_supports_disable(void)
--{
--=09int can_disable;
--
--=09if (IOP_WDTCR_EN_ARM !=3D IOP_WDTCR_DIS_ARM)
--=09=09can_disable =3D 1;
--=09else
--=09=09can_disable =3D 0;
--
--=09return can_disable;
--}
--
--static void wdt_enable(void)
--{
--=09/* Arm and enable the Timer to starting counting down from 0xFFFF.FFFF
--=09 * Takes approx. 10.7s to timeout
--=09 */
--=09spin_lock(&wdt_lock);
--=09write_wdtcr(IOP_WDTCR_EN_ARM);
--=09write_wdtcr(IOP_WDTCR_EN);
--=09spin_unlock(&wdt_lock);
--}
--
--/* returns 0 if the timer was successfully disabled */
--static int wdt_disable(void)
--{
--=09/* Stop Counting */
--=09if (wdt_supports_disable()) {
--=09=09spin_lock(&wdt_lock);
--=09=09write_wdtcr(IOP_WDTCR_DIS_ARM);
--=09=09write_wdtcr(IOP_WDTCR_DIS);
--=09=09clear_bit(WDT_ENABLED, &wdt_status);
--=09=09spin_unlock(&wdt_lock);
--=09=09pr_info("Disabled\n");
--=09=09return 0;
--=09} else
--=09=09return 1;
--}
--
--static int iop_wdt_open(struct inode *inode, struct file *file)
--{
--=09if (test_and_set_bit(WDT_IN_USE, &wdt_status))
--=09=09return -EBUSY;
--
--=09clear_bit(WDT_OK_TO_CLOSE, &wdt_status);
--=09wdt_enable();
--=09set_bit(WDT_ENABLED, &wdt_status);
--=09return stream_open(inode, file);
--}
--
--static ssize_t iop_wdt_write(struct file *file, const char *data, size_t l=
-en,
--=09=09  loff_t *ppos)
--{
--=09if (len) {
--=09=09if (!nowayout) {
--=09=09=09size_t i;
--
--=09=09=09clear_bit(WDT_OK_TO_CLOSE, &wdt_status);
--
--=09=09=09for (i =3D 0; i !=3D len; i++) {
--=09=09=09=09char c;
--
--=09=09=09=09if (get_user(c, data + i))
--=09=09=09=09=09return -EFAULT;
--=09=09=09=09if (c =3D=3D 'V')
--=09=09=09=09=09set_bit(WDT_OK_TO_CLOSE, &wdt_status);
--=09=09=09}
--=09=09}
--=09=09wdt_enable();
--=09}
--=09return len;
--}
--
--static const struct watchdog_info ident =3D {
--=09.options =3D WDIOF_CARDRESET | WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING,
--=09.identity =3D "iop watchdog",
--};
--
--static long iop_wdt_ioctl(struct file *file,
--=09=09=09=09unsigned int cmd, unsigned long arg)
--{
--=09int options;
--=09int ret =3D -ENOTTY;
--=09int __user *argp =3D (int __user *)arg;
--
--=09switch (cmd) {
--=09case WDIOC_GETSUPPORT:
--=09=09if (copy_to_user(argp, &ident, sizeof(ident)))
--=09=09=09ret =3D -EFAULT;
--=09=09else
--=09=09=09ret =3D 0;
--=09=09break;
--
--=09case WDIOC_GETSTATUS:
--=09=09ret =3D put_user(0, argp);
--=09=09break;
--
--=09case WDIOC_GETBOOTSTATUS:
--=09=09ret =3D put_user(boot_status, argp);
--=09=09break;
--
--=09case WDIOC_SETOPTIONS:
--=09=09if (get_user(options, (int *)arg))
--=09=09=09return -EFAULT;
--
--=09=09if (options & WDIOS_DISABLECARD) {
--=09=09=09if (!nowayout) {
--=09=09=09=09if (wdt_disable() =3D=3D 0) {
--=09=09=09=09=09set_bit(WDT_OK_TO_CLOSE, &wdt_status);
--=09=09=09=09=09ret =3D 0;
--=09=09=09=09} else
--=09=09=09=09=09ret =3D -ENXIO;
--=09=09=09} else
--=09=09=09=09ret =3D 0;
--=09=09}
--=09=09if (options & WDIOS_ENABLECARD) {
--=09=09=09wdt_enable();
--=09=09=09ret =3D 0;
--=09=09}
--=09=09break;
--
--=09case WDIOC_KEEPALIVE:
--=09=09wdt_enable();
--=09=09ret =3D 0;
--=09=09break;
--
--=09case WDIOC_GETTIMEOUT:
--=09=09ret =3D put_user(iop_watchdog_timeout(), argp);
--=09=09break;
--=09}
--=09return ret;
--}
--
--static int iop_wdt_release(struct inode *inode, struct file *file)
--{
--=09int state =3D 1;
--=09if (test_bit(WDT_OK_TO_CLOSE, &wdt_status))
--=09=09if (test_bit(WDT_ENABLED, &wdt_status))
--=09=09=09state =3D wdt_disable();
--
--=09/* if the timer is not disabled reload and notify that we are still
--=09 * going down
--=09 */
--=09if (state !=3D 0) {
--=09=09wdt_enable();
--=09=09pr_crit("Device closed unexpectedly - reset in %lu seconds\n",
--=09=09=09iop_watchdog_timeout());
--=09}
--
--=09clear_bit(WDT_IN_USE, &wdt_status);
--=09clear_bit(WDT_OK_TO_CLOSE, &wdt_status);
--
--=09return 0;
--}
--
--static const struct file_operations iop_wdt_fops =3D {
--=09.owner =3D THIS_MODULE,
--=09.llseek =3D no_llseek,
--=09.write =3D iop_wdt_write,
--=09.unlocked_ioctl =3D iop_wdt_ioctl,
--=09.open =3D iop_wdt_open,
--=09.release =3D iop_wdt_release,
--};
--
--static struct miscdevice iop_wdt_miscdev =3D {
--=09.minor =3D WATCHDOG_MINOR,
--=09.name =3D "watchdog",
--=09.fops =3D &iop_wdt_fops,
--};
--
--static int __init iop_wdt_init(void)
--{
--=09int ret;
--
--=09/* check if the reset was caused by the watchdog timer */
--=09boot_status =3D (read_rcsr() & IOP_RCSR_WDT) ? WDIOF_CARDRESET : 0;
--
--=09/* Configure Watchdog Timeout to cause an Internal Bus (IB) Reset
--=09 * NOTE: An IB Reset will Reset both cores in the IOP342
--=09 */
--=09write_wdtsr(IOP13XX_WDTCR_IB_RESET);
--
--=09/* Register after we have the device set up so we cannot race
--=09   with an open */
--=09ret =3D misc_register(&iop_wdt_miscdev);
--=09if (ret =3D=3D 0)
--=09=09pr_info("timeout %lu sec\n", iop_watchdog_timeout());
--
--=09return ret;
--}
--
--static void __exit iop_wdt_exit(void)
--{
--=09misc_deregister(&iop_wdt_miscdev);
--}
--
--module_init(iop_wdt_init);
--module_exit(iop_wdt_exit);
--
--module_param(nowayout, bool, 0);
--MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started");
--
--MODULE_AUTHOR("Curt E Bruns <curt.e.bruns@intel.com>");
--MODULE_DESCRIPTION("iop watchdog timer driver");
--MODULE_LICENSE("GPL");
---=20
-2.21.0
+Again, are we ever going to use this?
 
+>                         reg = <0x0 0x86200000 0x0 0x2d00000>;
+>                         no-map;
+>                 };
+>
+> -               rmtfs {
+> +               rmtfs_mem: memory@88f00000 {
+>                         compatible = "qcom,rmtfs-mem";
+> -
+> -                       size = <0x0 0x200000>;
+> -                       alloc-ranges = <0x0 0xa0000000 0x0 0x2000000>;
+> +                       reg = <0x0 0x88f00000 0x0 0x200000>;
+
+This seems to overlap with a defined region in the memory map.
+0x9fa00000 seems to be a better address.
+
+>                         no-map;
+>
+>                         qcom,client-id = <1>;
+>                         qcom,vmid = <15>;
+>                 };
+> +
+> +               spss_mem: memory@8ab00000 {
+> +                       reg = <0x0 0x8ab00000 0x0 0x700000>;
+> +                       no-map;
+> +               };
+> +
+> +               adsp_mem: memory@8b200000 {
+> +                       reg = <0x0 0x8b200000 0x0 0x1a00000>;
+> +                       no-map;
+> +               };
+> +
+> +               mpss_mem: memory@8cc00000 {
+> +                       reg = <0x0 0x8cc00000 0x0 0x7000000>;
+> +                       no-map;
+> +               };
+> +
+> +               venus_mem: memory@93c00000 {
+> +                       reg = <0x0 0x93c00000 0x0 0x500000>;
+> +                       no-map;
+> +               };
+> +
+> +               mba_mem: memory@94100000 {
+> +                       reg = <0x0 0x94100000 0x0 0x200000>;
+> +                       no-map;
+> +               };
+> +
+> +               slpi_mem: memory@94300000 {
+> +                       reg = <0x0 0x94300000 0x0 0xf00000>;
+> +                       no-map;
+> +               };
+> +
+> +               ipa_fw_mem: memory@95200000 {
+> +                       reg = <0x0 0x95200000 0x0 0x10000>;
+> +                       no-map;
+> +               };
+> +
+> +               ipa_gsi_mem: memory@95210000 {
+> +                       reg = <0x0 0x95210000 0x0 0x5000>;
+> +                       no-map;
+> +               };
+> +
+> +               gpu_mem: memory@95215000 {
+> +                       reg = <0x0 0x95215000 0x0 0x1000>;
+
+This is the wrong size for the zap region.
+
+> +                       no-map;
+> +               };
+>         };
+>
+>         clocks {
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
