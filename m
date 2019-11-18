@@ -2,92 +2,206 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C0DC43141
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFC6C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F12D520726
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43E8E206F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:37:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBJ+QV/f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbfKRHh0 (ORCPT
+        id S1727112AbfKRHhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 02:37:26 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:38567 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfKRHhZ (ORCPT
+        Mon, 18 Nov 2019 02:37:41 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37480 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbfKRHhl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 02:37:25 -0500
-Received: from localhost ([185.35.208.129]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N9dg5-1hli4Z3cEH-015WVh; Mon, 18 Nov 2019 08:36:54 +0100
-Date:   Mon, 18 Nov 2019 08:36:50 +0100
-From:   Andreas Klinger <ak@it-klinger.de>
-To:     robh+dt@kernel.org, jic23@kernel.org, mark.rutland@arm.com
-Cc:     mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        gregkh@linuxfoundation.org, christophe.jaillet@wanadoo.fr,
-        tglx@linutronix.de, mchehab+samsung@kernel.org,
-        davem@davemloft.net, paulmck@linux.ibm.com,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/4] MAINTAINERS: add maintainer for ping iio sensors
-Message-ID: <20191118073648.tk4otab6alsiuzt7@arbad>
+        Mon, 18 Nov 2019 02:37:41 -0500
+Received: by mail-pl1-f193.google.com with SMTP id bb5so9292093plb.4;
+        Sun, 17 Nov 2019 23:37:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ky5bDnxx6AUjjKxYULMJAA7cOyrMt7zuSBXFyQDWhek=;
+        b=OBJ+QV/ft4Ji3XO8qf+lJk1uMFtal6W/+gGtRe9y5aHNrpkEG0PefkFamWnCj0uiaP
+         +f8+qkEupzSRNO2by6UKCN7+YE4GkiheK4lbmGsxvI+Q4g1Sx3jr2cfzwW5hd57s8wvp
+         bEt9AHBrULurCYCr5hY3h/Z1RR87aFnwiP+dmqZhv2Wh+MbKrChBxccge/NwuerAw2Jp
+         NtQPBbTuLuwNWHco31ij6Qn48/nbgdn0rkzrxZZbXvjGXJDf2Yh/gyYAFlxxux/169yl
+         /l8wpE4Dgf7+l8so8Fbvhnb/DPIYTL7nJ8Jgx+matKq061NCoX4cai0mEZbsMv8qwNd9
+         fXUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ky5bDnxx6AUjjKxYULMJAA7cOyrMt7zuSBXFyQDWhek=;
+        b=Ty3zjZymLn2gkp5IREYveSiIPIa1KU+M6E1jP4jcmwaTecNYe41wwjqdbji07Kcaee
+         f24G/at5uuR0FncxmnzypO2tLIWfbi8cd3DD9l4rX52VjhUo/VSTjU7URygCZuvM6I8b
+         ST45on5K9GJy7oechWO/0gL4K6ciWhmUXAGc7xbbtooVMUmaqpHrqHyxZEV56QUKqVx8
+         e2VUp8jwy58G1TW+fZDvrNdmDjiD92pvWX1RCnZUo6N9te9KUpQaj614y6ZGGNnkNsxU
+         HsQ/VJAVpyWJNjNF7KSceYRxPmNBszrnIY8hZG2zeBDFAAMLU846jnlonVfUYW8BSgKo
+         7BzA==
+X-Gm-Message-State: APjAAAWd2cGCRU3rCwgaxLWtBSGEl2mvqdVrjQQlR+9R65gYc4ZusxUU
+        mE4KQ6oWlPBNO/Qoc2VFH7o=
+X-Google-Smtp-Source: APXvYqxDuyMB0QPSuhD3+vOpCXqc+kMBLHlUh5x28nOiEhBw21YBgd88SFXmmScokH02rF0vER36WQ==
+X-Received: by 2002:a17:902:ba97:: with SMTP id k23mr27372249pls.137.1574062660255;
+        Sun, 17 Nov 2019 23:37:40 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id y4sm18657504pgy.27.2019.11.17.23.37.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Nov 2019 23:37:39 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH 1/2] dmaengine: ti: edma: add missed pm_runtime_disable
+Date:   Mon, 18 Nov 2019 15:37:28 +0800
+Message-Id: <20191118073728.28366-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Provags-ID: V03:K1:ZISP8DP7LxxcjVaKcb0HRurcDIs/0YQTEspXlzOeNUD09UpU21I
- A8MfWMOlgmmvZwYxEVYwbPSQsxW7yxgfzqZdQCxtLfO/MgWG2IqPZMRQR+ZzfvL9TV8tknA
- gJpZuVuMirJ5Dk2t49/AmA/SKYp5VCeCRO1xCWcWn+i79CdlQOeLjKt/bQLFSW8nwsS4xKP
- EHfM7FqfJrwlgsCGPfjzQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:pzWtpX5zhZA=:uAPKewFawR4cgNWUdCnfrh
- TKb2ODE7kL5lG4bjmgtm/SMhHhx/6z7AWNU0kO0TTrbrtWe/mGBhHzw6v4VeztTj1wdC7+IJd
- zPXNvZ4S/5LK+u4dAflENtx6btQ41SHOEGxfOZKdkhbCtpOh5Pk4pwiYmuW/IuHHMK7MRynEB
- mCbyrd1q1B1pLmlTkhO0jMvFoWvjBCSJDejDP9B/rRGO9d4/UxOWDhyJAXzUQ1zKdeAoFmTUd
- 6oQMPQXVMR/YG9ed9q9gGHN4uuYvCK5hRULjaSlMF6p0nSTUYXMOeFb3mc11wC54M84KSLJ7N
- 03OVQygOfpdHXEwYLJmcPdjteyFBIvFbwGqyn7U3o3sEMCBeeQoXTaNWXK+Yzkx55P0hX7eMF
- pl/g+auPT/EPhh6WAbyl3CGPlkJ8UOhm8csfemYYdcKGQWci7KzvtIhMhS81f5adabVCIVrNQ
- yQGI9HvlQ0xlagOiRgCJwJoOlZJJiQV6kxDRbXccBFdf5eXG85Up9GAdabbjhCrCEe8mRUKdG
- iINAa9dIkQS36Ugm4xXsQFH0riCfkvLQhjMTms1HW3+0w+N9zZXqT2hWZJw3McmJr+g4PFGm3
- CrPB2jE4wd1kbIfyI1y3FiL1gp1a7qBtYNMHwhFwu9w+ocos8pn254b9Vr5Vg0aaGnbEgJFz5
- e7T1xwEAYbGk0albCkSO/QWAIMNX/8YUqka0KfylCv//nf5+DY7mlWgiPzA2ZbP3kAPXpE4ry
- MHbYBLBWCCJvBdIvdpxvOwDCta/quArlCp9CtIrivJXfZiWVKRtn6SHAm1/OR6S2/DRYU9gDM
- nmP4gUGy0BSXxWSHClGa+VJ5WfsFBdGiYizWTk5YBvT/cr+KtSXKuT/6qvdBkZNk+0QLJOmbE
- 0N0MLkHejM1mychbQr5z9VBDKKf/oY5Ld4CKzAJ1Y=
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a maintainer for the new parallax PING))) and LaserPING IIO sensors
+The driver forgets to call pm_runtime_disable in probe failure and
+remove.
+Add the calls and modify probe failure handling to fix it.
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Fixes: 2b6b3b742019 ("ARM/dmaengine: edma: Merge the two drivers under drivers/dma/")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/dma/ti/edma.c | 43 ++++++++++++++++++++++++++++---------------
+ 1 file changed, 28 insertions(+), 15 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c6c34d04ce95..ad469adffb99 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12264,6 +12264,13 @@ L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/panasonic-laptop.c
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index ba7c4f07fcd6..8be32fd9f762 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -2282,16 +2282,18 @@ static int edma_probe(struct platform_device *pdev)
+ 	ret = pm_runtime_get_sync(dev);
+ 	if (ret < 0) {
+ 		dev_err(dev, "pm_runtime_get_sync() failed\n");
+-		return ret;
++		goto err_disable_pm;
+ 	}
  
-+PARALLAX PING IIO SENSOR DRIVER
-+M:	Andreas Klinger <ak@it-klinger.de>
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
-+F:	drivers/iio/proximity/ping.c
-+
- PARALLEL LCD/KEYPAD PANEL DRIVER
- M:	Willy Tarreau <willy@haproxy.com>
- M:	Ksenija Stanojevic <ksenija.stanojevic@gmail.com>
+ 	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+ 	if (ret)
+-		return ret;
++		goto err_disable_pm;
+ 
+ 	ecc = devm_kzalloc(dev, sizeof(*ecc), GFP_KERNEL);
+-	if (!ecc)
+-		return -ENOMEM;
++	if (!ecc) {
++		ret = -ENOMEM;
++		goto err_disable_pm;
++	}
+ 
+ 	ecc->dev = dev;
+ 	ecc->id = pdev->id;
+@@ -2306,30 +2308,37 @@ static int edma_probe(struct platform_device *pdev)
+ 		mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 		if (!mem) {
+ 			dev_err(dev, "no mem resource?\n");
+-			return -ENODEV;
++			ret = -ENODEV;
++			goto err_disable_pm;
+ 		}
+ 	}
+ 	ecc->base = devm_ioremap_resource(dev, mem);
+-	if (IS_ERR(ecc->base))
+-		return PTR_ERR(ecc->base);
++	if (IS_ERR(ecc->base)) {
++		ret = PTR_ERR(ecc->base);
++		goto err_disable_pm;
++	}
+ 
+ 	platform_set_drvdata(pdev, ecc);
+ 
+ 	/* Get eDMA3 configuration from IP */
+ 	ret = edma_setup_from_hw(dev, info, ecc);
+ 	if (ret)
+-		return ret;
++		goto err_disable_pm;
+ 
+ 	/* Allocate memory based on the information we got from the IP */
+ 	ecc->slave_chans = devm_kcalloc(dev, ecc->num_channels,
+ 					sizeof(*ecc->slave_chans), GFP_KERNEL);
+-	if (!ecc->slave_chans)
+-		return -ENOMEM;
++	if (!ecc->slave_chans) {
++		ret = -ENOMEM;
++		goto err_disable_pm;
++	}
+ 
+ 	ecc->slot_inuse = devm_kcalloc(dev, BITS_TO_LONGS(ecc->num_slots),
+ 				       sizeof(unsigned long), GFP_KERNEL);
+-	if (!ecc->slot_inuse)
+-		return -ENOMEM;
++	if (!ecc->slot_inuse) {
++		ret = -ENOMEM;
++		goto err_disable_pm;
++	}
+ 
+ 	ecc->default_queue = info->default_queue;
+ 
+@@ -2368,7 +2377,7 @@ static int edma_probe(struct platform_device *pdev)
+ 				       ecc);
+ 		if (ret) {
+ 			dev_err(dev, "CCINT (%d) failed --> %d\n", irq, ret);
+-			return ret;
++			goto err_disable_pm;
+ 		}
+ 		ecc->ccint = irq;
+ 	}
+@@ -2384,7 +2393,7 @@ static int edma_probe(struct platform_device *pdev)
+ 				       ecc);
+ 		if (ret) {
+ 			dev_err(dev, "CCERRINT (%d) failed --> %d\n", irq, ret);
+-			return ret;
++			goto err_disable_pm;
+ 		}
+ 		ecc->ccerrint = irq;
+ 	}
+@@ -2392,7 +2401,8 @@ static int edma_probe(struct platform_device *pdev)
+ 	ecc->dummy_slot = edma_alloc_slot(ecc, EDMA_SLOT_ANY);
+ 	if (ecc->dummy_slot < 0) {
+ 		dev_err(dev, "Can't allocate PaRAM dummy slot\n");
+-		return ecc->dummy_slot;
++		ret = ecc->dummy_slot;
++		goto err_disable_pm;
+ 	}
+ 
+ 	queue_priority_mapping = info->queue_priority_mapping;
+@@ -2473,6 +2483,8 @@ static int edma_probe(struct platform_device *pdev)
+ 
+ err_reg1:
+ 	edma_free_slot(ecc, ecc->dummy_slot);
++err_disable_pm:
++	pm_runtime_disable(dev);
+ 	return ret;
+ }
+ 
+@@ -2503,6 +2515,7 @@ static int edma_remove(struct platform_device *pdev)
+ 	if (ecc->dma_memcpy)
+ 		dma_async_device_unregister(ecc->dma_memcpy);
+ 	edma_free_slot(ecc, ecc->dummy_slot);
++	pm_runtime_disable(dev);
+ 
+ 	return 0;
+ }
 -- 
-2.11.0
+2.24.0
+
