@@ -2,83 +2,119 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B879C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F0CC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BFE42186D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:40:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574098805;
-	bh=zkp3Ah4B9aCqaerhtyUYEw2qDjm7Ve7wLRfxJGgWbV0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F3B/7YL3Wn+rO21n7CltJNkWurM4HE3pYjnNq0+53xqgIyHUizyOMXQJEzlUmZjcc
-	 iRKFDux9OAhOX0rihNdf4YmctrUyf/95XJ3TDxhXEB+6x233BS0WFHZNzH6dphj4xs
-	 Qaev8PS9qdePQ4I3KukoysSAs4j0Nqm0p5Oi+GP4=
+	by mail.kernel.org (Postfix) with ESMTP id 654B42186D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:40:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AJuFjxk8";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="FbyCmMAe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbfKRRkE (ORCPT
+        id S1727295AbfKRRkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 12:40:04 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39400 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbfKRRkD (ORCPT
+        Mon, 18 Nov 2019 12:40:09 -0500
+Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:46920
+        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726647AbfKRRkI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 12:40:03 -0500
-Received: by mail-oi1-f195.google.com with SMTP id v138so16095250oif.6;
-        Mon, 18 Nov 2019 09:40:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HR5G7YllB3yBoP1VaKbqalm04pOE91aZ4flxfcWit7o=;
-        b=LILAQxoWslf1mIkeLomeuOclHD4ATtNjY1Dbg58bzXaRyGy34l57P8clyVwnKjPm7a
-         3crnZoiCL+dutQKz7nWmGUw2EjQDIhPfnlbmk/vY4R9xpdnBNaE+XdaXH5LB0pzkIS3h
-         5ExZLYp/mQvPYkks0Az2h/hlYvZe1FJo6QmXfZAODxBGtLJMxlTncaadsSkV4DPij/Jg
-         C0nAcfyVR1Vmdx7dABoK9euwNPD9g2F//238rALS72M5bXzj2Av8vFqwwJY+EbmiFnJs
-         jcDjBbegA0Ew53ySGGt1KyqrCw5DfqKZQ+NpCoTQ0RdTzbihUNllK47WvVAW4QXhHoej
-         Fq+Q==
-X-Gm-Message-State: APjAAAXnF1ixKd8oz3/sr6e6yEL5S1fkl1qY7VIlFk2FINASX01xGrv1
-        3nGm96RrTC5WdN6/QeuZUZTJJBw=
-X-Google-Smtp-Source: APXvYqyNEcbuRyYTbqpR2eYVi1OEjRcS06GdZdvr3yrHT2MH88vBkjpS3CCYVVthd5u6EBAx8RzOCw==
-X-Received: by 2002:aca:cdc2:: with SMTP id d185mr96054oig.35.1574098802794;
-        Mon, 18 Nov 2019 09:40:02 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i11sm6444275otj.17.2019.11.18.09.40.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 09:40:02 -0800 (PST)
-Date:   Mon, 18 Nov 2019 11:40:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
-Subject: Re: [RESEND Patch v3 02/20] dt-bindings: media: cal: update binding
- example
-Message-ID: <20191118174001.GA7672@bogus>
-References: <20191112145347.23519-1-bparrot@ti.com>
- <20191112145347.23519-3-bparrot@ti.com>
+        Mon, 18 Nov 2019 12:40:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574098807;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+        bh=B/RmD7VcJmrMjOcsEv3+dqCX8OYxRrJfYKFZESL0rLc=;
+        b=AJuFjxk8XNQZZrQo3ITf7j50C6u7pTjuzxhiXwfUQ3SvNRI2VCY+4DZEkaHgFojQ
+        +lsttShY8ihTCBAg8v9RvkbzdiTtUwwo2QneT9ZuQDaJOY2HSPETP1wp4qlXjNEz/vv
+        rQ8Mi31OK3MBRBFhN/EaUFUHewgy14XLycPa8rYQ=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574098807;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
+        bh=B/RmD7VcJmrMjOcsEv3+dqCX8OYxRrJfYKFZESL0rLc=;
+        b=FbyCmMAeVBH7HG0PtpMHeGAQhm4UlA6dFvq3uPxrDiVu/8Uld/hy8JBcuBtBZijO
+        2qVMWzy25DSOhc2PxL5V6rMRSYuREWq4p6OejccrzTRcQ+7E8G4ru0Er3bkbTUrHP1r
+        ULPeZeN91rspOgbKMccc1K/uGja4Usk0aY7ODQRk=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B9192C447B7
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        ulf.hansson@linaro.org, rnayak@codeaurora.org
+Cc:     agross@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH 2/6] dt-bindings: power: Add rpmh power-domain bindings for SM8150
+Date:   Mon, 18 Nov 2019 17:40:07 +0000
+Message-ID: <0101016e7f99a91d-6632f420-b2f2-4b71-9c97-a3974fcb8fa9-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 2.22.1
+In-Reply-To: <20191118173944.27043-1-sibis@codeaurora.org>
+References: <20191118173944.27043-1-sibis@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112145347.23519-3-bparrot@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-SES-Outgoing: 2019.11.18-54.240.27.18
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Nov 2019 08:53:29 -0600, Benoit Parrot wrote:
-> Update binding example to show proper endpoint properties and linkage.
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  .../devicetree/bindings/media/ti-cal.txt      | 31 ++++++++++---------
->  1 file changed, 16 insertions(+), 15 deletions(-)
-> 
+Add RPMH power-domain bindings for the SM8150 family of SoCs.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
+ .../devicetree/bindings/power/qcom,rpmpd.txt       |  1 +
+ include/dt-bindings/power/qcom-rpmpd.h             | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+index bc75bf49cdaea..f3bbaa4aef297 100644
+--- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
++++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+@@ -10,6 +10,7 @@ Required Properties:
+ 	* qcom,msm8998-rpmpd: RPM Power domain for the msm8998 family of SoC
+ 	* qcom,qcs404-rpmpd: RPM Power domain for the qcs404 family of SoC
+ 	* qcom,sdm845-rpmhpd: RPMh Power domain for the sdm845 family of SoC
++	* qcom,sm8150-rpmhpd: RPMh Power domain for the sm8150 family of SoC
+  - #power-domain-cells: number of cells in Power domain specifier
+ 	must be 1.
+  - operating-points-v2: Phandle to the OPP table for the Power domain.
+diff --git a/include/dt-bindings/power/qcom-rpmpd.h b/include/dt-bindings/power/qcom-rpmpd.h
+index f05f8b1808ec9..7d43bafc0026b 100644
+--- a/include/dt-bindings/power/qcom-rpmpd.h
++++ b/include/dt-bindings/power/qcom-rpmpd.h
+@@ -15,12 +15,26 @@
+ #define SDM845_GFX	7
+ #define SDM845_MSS	8
+ 
++/* SM8150 Power Domain Indexes */
++#define SM8150_MSS	0
++#define SM8150_EBI	1
++#define SM8150_LMX	2
++#define SM8150_LCX	3
++#define SM8150_GFX	4
++#define SM8150_MX	5
++#define SM8150_MX_AO	6
++#define SM8150_CX	7
++#define SM8150_CX_AO	8
++#define SM8150_MMCX	9
++#define SM8150_MMCX_AO	10
++
+ /* SDM845 Power Domain performance levels */
+ #define RPMH_REGULATOR_LEVEL_RETENTION	16
+ #define RPMH_REGULATOR_LEVEL_MIN_SVS	48
+ #define RPMH_REGULATOR_LEVEL_LOW_SVS	64
+ #define RPMH_REGULATOR_LEVEL_SVS	128
+ #define RPMH_REGULATOR_LEVEL_SVS_L1	192
++#define RPMH_REGULATOR_LEVEL_SVS_L2	224
+ #define RPMH_REGULATOR_LEVEL_NOM	256
+ #define RPMH_REGULATOR_LEVEL_NOM_L1	320
+ #define RPMH_REGULATOR_LEVEL_NOM_L2	336
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
