@@ -2,81 +2,160 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD288C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FB6C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADFFF2192B
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:48:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C22B2192B
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:49:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574099345;
+	bh=xzebI7/orVj6wFtAAOMe0l0Zjs8mW4vxcT38um0hjAc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=h8qTAdVt4SUJoO7zjhgP/R/BfbAMUYPkJ24RAYKw02tDnIRknZQFiRblPwwyxWBuT
+	 S2gLACcCL9tobpVkzW+ME6INoEGf3xZy1NOPuRN08KheXxWivzCpvOZSwftftANI1B
+	 fdTXjpMkRL0ak7vdxDkV6ifn0prClLGm99agXEkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbfKRRsb (ORCPT
+        id S1727123AbfKRRtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 12:48:31 -0500
-Received: from mga14.intel.com ([192.55.52.115]:13523 "EHLO mga14.intel.com"
+        Mon, 18 Nov 2019 12:49:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:37906 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726314AbfKRRsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 12:48:31 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 09:48:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,321,1569308400"; 
-   d="scan'208";a="258471455"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 18 Nov 2019 09:48:29 -0800
-Received: from andy by smile with local (Exim 4.93-RC1)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1iWl8W-0005wT-OC; Mon, 18 Nov 2019 19:48:28 +0200
-Date:   Mon, 18 Nov 2019 19:48:28 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        prarit@redhat.com, rafael.j.wysocki@intel.co,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] admin guide/pm: Admin guide for intel-speed-select
-Message-ID: <20191118174828.GY32742@smile.fi.intel.com>
-References: <20191115204925.55181-1-srinivas.pandruvada@linux.intel.com>
- <20191118104105.11776f58@lwn.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191118104105.11776f58@lwn.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726314AbfKRRtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 12:49:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EE9EDA7;
+        Mon, 18 Nov 2019 09:49:03 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 72FE23F703;
+        Mon, 18 Nov 2019 09:49:02 -0800 (PST)
+Date:   Mon, 18 Nov 2019 17:49:00 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Luhua Xu <luhua.xu@mediatek.com>
+Cc:     Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Leilk Liu <leilk.liu@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Applied "spi: mediatek: add SPI_CS_HIGH support" to the spi tree
+In-Reply-To: <1574053037-26721-2-git-send-email-luhua.xu@mediatek.com>
+Message-Id: <applied-1574053037-26721-2-git-send-email-luhua.xu@mediatek.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 10:41:05AM -0700, Jonathan Corbet wrote:
-> On Fri, 15 Nov 2019 12:49:25 -0800
-> Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com> wrote:
+The patch
 
-> > Added documentation to configure servers to use Intel(R) Speed
-> > Select Technology using intel-speed-select tool.
+   spi: mediatek: add SPI_CS_HIGH support
 
-> > +=========================================================
-> > +Intel® Speed Select Technology (Intel® SST) : User Guide
-> > +=========================================================
-> 
-> People give me grief when I take docs patches adding non-ascii characters.
-> Adding nearly 100 useless ® symbols seems likely to trigger that sort of
-> unicode aversion.  Can I ask you, please, to take those out?  There are
-> many occurrences of unadorned "Intel" in the kernel, and the world hasn't
-> ended yet.
+has been applied to the spi tree at
 
-Side comment. It's really strange to hear above in 21st centure. We are living
-in Unicode times. How harm unicode characters nowadays?
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From ae7c2d342a10dbef1e054482f46498b6282a1df0 Mon Sep 17 00:00:00 2001
+From: Luhua Xu <luhua.xu@mediatek.com>
+Date: Mon, 18 Nov 2019 12:57:16 +0800
+Subject: [PATCH] spi: mediatek: add SPI_CS_HIGH support
+
+Change to use SPI_CS_HIGH to support spi CS polarity setting
+for chips support enhance_timing.
+
+Signed-off-by: Luhua Xu <luhua.xu@mediatek.com>
+Link: https://lore.kernel.org/r/1574053037-26721-2-git-send-email-luhua.xu@mediatek.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/spi-mt65xx.c                 | 12 ++++++++++--
+ include/linux/platform_data/spi-mt65xx.h |  1 -
+ 2 files changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+index 25fe149a8d9a..6783e12c40c2 100644
+--- a/drivers/spi/spi-mt65xx.c
++++ b/drivers/spi/spi-mt65xx.c
+@@ -139,7 +139,6 @@ static const struct mtk_spi_compatible mt8183_compat = {
+  * supplies it.
+  */
+ static const struct mtk_chip_config mtk_default_chip_info = {
+-	.cs_pol = 0,
+ 	.sample_sel = 0,
+ };
+ 
+@@ -230,10 +229,12 @@ static int mtk_spi_prepare_message(struct spi_master *master,
+ #endif
+ 
+ 	if (mdata->dev_comp->enhance_timing) {
+-		if (chip_config->cs_pol)
++		/* set CS polarity */
++		if (spi->mode & SPI_CS_HIGH)
+ 			reg_val |= SPI_CMD_CS_POL;
+ 		else
+ 			reg_val &= ~SPI_CMD_CS_POL;
++
+ 		if (chip_config->sample_sel)
+ 			reg_val |= SPI_CMD_SAMPLE_SEL;
+ 		else
+@@ -264,6 +265,9 @@ static void mtk_spi_set_cs(struct spi_device *spi, bool enable)
+ 	u32 reg_val;
+ 	struct mtk_spi *mdata = spi_master_get_devdata(spi->master);
+ 
++	if (spi->mode & SPI_CS_HIGH)
++		enable = !enable;
++
+ 	reg_val = readl(mdata->base + SPI_CMD_REG);
+ 	if (!enable) {
+ 		reg_val |= SPI_CMD_PAUSE_EN;
+@@ -646,6 +650,10 @@ static int mtk_spi_probe(struct platform_device *pdev)
+ 
+ 	mdata = spi_master_get_devdata(master);
+ 	mdata->dev_comp = of_id->data;
++
++	if (mdata->dev_comp->enhance_timing)
++		master->mode_bits |= SPI_CS_HIGH;
++
+ 	if (mdata->dev_comp->must_tx)
+ 		master->flags = SPI_MASTER_MUST_TX;
+ 
+diff --git a/include/linux/platform_data/spi-mt65xx.h b/include/linux/platform_data/spi-mt65xx.h
+index f0e6d6483e62..65fd5ffd257c 100644
+--- a/include/linux/platform_data/spi-mt65xx.h
++++ b/include/linux/platform_data/spi-mt65xx.h
+@@ -11,7 +11,6 @@
+ 
+ /* Board specific platform_data */
+ struct mtk_chip_config {
+-	u32 cs_pol;
+ 	u32 sample_sel;
+ };
+ #endif
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.20.1
 
