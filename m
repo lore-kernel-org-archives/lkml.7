@@ -2,105 +2,116 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07240C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5611C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF10C222AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82B9D222AD
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:17:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cPW6MV8K"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GicilK5U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfKRSRx (ORCPT
+        id S1726769AbfKRSR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 13:17:53 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37675 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbfKRSRx (ORCPT
+        Mon, 18 Nov 2019 13:17:58 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42040 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbfKRSRz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 13:17:53 -0500
-Received: by mail-wm1-f67.google.com with SMTP id b17so346984wmj.2;
-        Mon, 18 Nov 2019 10:17:52 -0800 (PST)
+        Mon, 18 Nov 2019 13:17:55 -0500
+Received: by mail-wr1-f67.google.com with SMTP id a15so20684436wrf.9;
+        Mon, 18 Nov 2019 10:17:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=UHVmj17X5I97BtGdOpQHVSrZpwkyodA+Uw+toEe9ceM=;
-        b=cPW6MV8KJLW7M2YTVyqiYmE2Nl606qjFWgljH4qSErWNWVHim8rZby2mSQpjvc3ST9
-         mYGXQ4AKQat8J0GqsiVdm3CJ4SxKB3fBsYMZ1lyX9T9CdckDFD2NV9sDFuHYUjVXilW6
-         o08r5tHgtDMdyhQPGJDC5+HJEJWxitIBD4G8RfpS8Cph4v+zScQDfnmJMJJB6uroOwdW
-         1Cxc29en4+/8DeLkIMFgFosVz5Ku4E++4Ddr2KE4z7yZrZtV4fCmuqask3S6N1LYVZuY
-         d76TWYsDBN5gOsbma+2EZjItqK2aoqdGL4qv7dkmbV8J1RyK0qfK7ezfg+MTMchHYDLU
-         OGig==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=kG2FZYKkJlrx1H8gAFUJ6ynBgNplxVBjCy1R1O8SXuw=;
+        b=GicilK5U6a0LrOwLTLOadikMR5QhCvFRQvprLaWfbGWxKMJFNHdUc8uGyNmWLx5j39
+         41+LlKhNOFytOyl/9IB6AsaVupOqwHwa3zUebZG/yTb1UKbGHNIciRlRNI9oPeLmM6u7
+         tzVLFcY8a9tz5X52sUOpPFZXQudiR6zs3gnuqRzZyxuCojhxKI4ctjpDjbs0N5sPtUoY
+         zbtZYuT7KiXEH/oCgZRTcIym6NQ1B6FEUs/a7mJXWqqg/KB5hIJbqKdOQ9XKRMwDbc1X
+         IgDECDnxvgBOENh1FOY3lsrEk0pcM061B5rb7h2NPUA2RhVhVF7ufPFiGz0AL9VoIMBF
+         qsuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=UHVmj17X5I97BtGdOpQHVSrZpwkyodA+Uw+toEe9ceM=;
-        b=YmMhJPEcxIL/L8ArBOmiIDrKPfh5UKU81t4cYxELLeHtqeHXW6WEnxWTwWAl9h2MoX
-         Bs8kesOyP/dV9e+hnL6jqvdWdlEROemXluNLa7fTxT6Ufdb1S4fyKRSObMbFhL9IewdT
-         wS7h21N28KPeoU8tvToEXKeXD0C5L3K/LVQgtLjGQmHI2JRbGnbAL6Rxobwx2ZxTxLFJ
-         W4yT1YCPBmE+ms/8Xfux8RttZ+ymhnao7+e6ZYuaQ+KJjrrG6hvNwPXfgxI00fW+WJ1e
-         2/cfc/JUHpKmD5yLjAUacHNygEMYO1Z7JTEh5ntvXxyPz4+Q9Sw4GN5bgCCr0Rwx9Dwh
-         q6cw==
-X-Gm-Message-State: APjAAAUfXNuHjJ6fwJBKhG3dfo1yzI9rVSZj5hcfTobRwUJNrp5NUlcR
-        esBlZd7cHP/iz8M1hwtWK8FpDfuu
-X-Google-Smtp-Source: APXvYqzqAAHTKIDQfKYRhTR26Z/txO0yzIIJfqBYR3tKEzIR+8n7zqljh0TP349Ri4tzP/Cy80vtlQ==
-X-Received: by 2002:a1c:f317:: with SMTP id q23mr426754wmq.97.1574101071329;
-        Mon, 18 Nov 2019 10:17:51 -0800 (PST)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references;
+        bh=kG2FZYKkJlrx1H8gAFUJ6ynBgNplxVBjCy1R1O8SXuw=;
+        b=Q9XK7V2op2rtss59eT/SMfFTHq+Ie0mapjce2tAM/N1TgZQYp987ua1d+2QIVBoV/k
+         /9Vdf/tieQVXvpBtE5ksGSOtcZSmskWVDESELVn3vNFEYQq7vZsEv8eR1wtfVFg+U3yt
+         B2PLNyoznGq/AL1UbTcpjlZ2X5Ge3G2u7jSDpRmRwvw53bPscq1DzDOVBFFdjCQTUIVF
+         eL6bXCfA9tAlOUZlx8Vp/DCIq55LbEZmj1kREyIlJMiPV274Ej1iQpnrhMjrZlLZigG2
+         luTZEBKnrotRa/ha3rTL84mA6BdB/hewSPZFCBzeunZiA/pt8wBtGoclb8uVkFKjhpc+
+         8ZNg==
+X-Gm-Message-State: APjAAAWaSHNSWWGZTNyoK+SG6xDbMo+go6TmwmbEKGD1lmsP9T6IzCJf
+        diRRSgrFtc0dPvdP2A7YzjITg8Wp
+X-Google-Smtp-Source: APXvYqwT+qWZ9yO+HV/xrSWPLR4nO90jFgOKP70liBqNu2KbAaCxLK4sQN1rmnoUXcBXjySAnQha3w==
+X-Received: by 2002:adf:de0a:: with SMTP id b10mr32559584wrm.268.1574101073394;
+        Mon, 18 Nov 2019 10:17:53 -0800 (PST)
 Received: from 640k.localdomain.com ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id v81sm233794wmg.4.2019.11.18.10.17.50
+        by smtp.gmail.com with ESMTPSA id v81sm233794wmg.4.2019.11.18.10.17.52
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Nov 2019 10:17:50 -0800 (PST)
+        Mon, 18 Nov 2019 10:17:52 -0800 (PST)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     jmattson@google.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 0/5] KVM: vmx: implement MSR_IA32_TSX_CTRL for guests
-Date:   Mon, 18 Nov 2019 19:17:42 +0100
-Message-Id: <1574101067-5638-1-git-send-email-pbonzini@redhat.com>
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        stable@vger.kernel.org
+Subject: [PATCH 2/5] KVM: x86: do not modify masked bits of shared MSRs
+Date:   Mon, 18 Nov 2019 19:17:44 +0100
+Message-Id: <1574101067-5638-3-git-send-email-pbonzini@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1574101067-5638-1-git-send-email-pbonzini@redhat.com>
+References: <1574101067-5638-1-git-send-email-pbonzini@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current guest mitigation of TAA is both too heavy and not really
-sufficient.  It is too heavy because it will cause some affected CPUs
-(those that have MDS_NO but lack TAA_NO) to fall back to VERW and
-get the corresponding slowdown.  It is not really sufficient because
-it will cause the MDS_NO bit to disappear upon microcode update, so
-that VMs started before the microcode update will not be runnable
-anymore afterwards, even with tsx=on.
+"Shared MSRs" are guest MSRs that are written to the host MSRs but
+keep their value until the next return to userspace.  They support
+a mask, so that some bits keep the host value, but this mask is
+only used to skip an unnecessary MSR write and the value written
+to the MSR is always the guest MSR.
 
-Instead, if tsx=on on the host, we can emulate MSR_IA32_TSX_CTRL for
-the guest and let it run without the VERW mitigation.  Even though
-MSR_IA32_TSX_CTRL is quite heavyweight, and we do not want to write
-it on every vmentry, we can use the shared MSR functionality because
-the host kernel need not protect itself from TSX-based side-channels.
+Fix this and, while at it, do not update smsr->values[slot].curr if
+for whatever reason the wrmsr fails.  This should only happen due to
+reserved bits, so the value written to smsr->values[slot].curr
+will not match when the user-return notifier and the host value will
+always be restored.  However, it is untidy and in rare cases this
+can actually avoid spurious WRMSRs on return to userspace.
 
-Patch 1 is a minimal fix for MSR_IA32_ARCH_CAPABILITIES for stable
-kernels.  The other four patches implement the feature.
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/x86.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Getting some help testing this series with the kvm-unit-tests patch I
-have just sent would be great; I could only test this on a machine that
-I couldn't reboot, and therefore I could only work on an older kernel.
-
-Paolo Bonzini (5):
-  KVM: x86: fix presentation of TSX feature in ARCH_CAPABILITIES
-  KVM: x86: do not modify masked bits of shared MSRs
-  KVM: x86: implement MSR_IA32_TSX_CTRL effect on CPUID
-  KVM: vmx: implement MSR_IA32_TSX_CTRL disable RTM functionality
-  KVM: vmx: use MSR_IA32_TSX_CTRL to hard-disable TSX on guest that lack
-    it
-
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/cpuid.c            |  8 +++--
- arch/x86/kvm/vmx/vmx.c          | 78 ++++++++++++++++++++++++++++++++---------
- arch/x86/kvm/x86.c              | 34 ++++++++----------
- 4 files changed, 82 insertions(+), 39 deletions(-)
-
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 6ea735d632e9..02863998af91 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -300,13 +300,14 @@ int kvm_set_shared_msr(unsigned slot, u64 value, u64 mask)
+ 	struct kvm_shared_msrs *smsr = per_cpu_ptr(shared_msrs, cpu);
+ 	int err;
+ 
+-	if (((value ^ smsr->values[slot].curr) & mask) == 0)
++	value = (value & mask) | (smsr->values[slot].host & ~mask);
++	if (value == smsr->values[slot].curr)
+ 		return 0;
+-	smsr->values[slot].curr = value;
+ 	err = wrmsrl_safe(shared_msrs_global.msrs[slot], value);
+ 	if (err)
+ 		return 1;
+ 
++	smsr->values[slot].curr = value;
+ 	if (!smsr->registered) {
+ 		smsr->urn.on_user_return = kvm_on_user_return;
+ 		user_return_notifier_register(&smsr->urn);
 -- 
 1.8.3.1
+
 
