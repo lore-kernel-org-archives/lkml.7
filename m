@@ -2,90 +2,109 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEABC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E518C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA9C2230C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 132722230C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:55:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HKNy6Etl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfKRUzW (ORCPT
+        id S1727036AbfKRUzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 15:55:22 -0500
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:39242
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726475AbfKRUzV (ORCPT
+        Mon, 18 Nov 2019 15:55:41 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39385 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726475AbfKRUzk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 15:55:21 -0500
-X-IronPort-AV: E=Sophos;i="5.68,321,1569276000"; 
-   d="scan'208";a="327162018"
-Received: from abo-228-123-68.mrs.modulonet.fr (HELO hadrien) ([85.68.123.228])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 21:55:03 +0100
-Date:   Mon, 18 Nov 2019 21:55:02 +0100 (CET)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Travis Davies <tdavies@darkphysics.net>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] net: Fix comment block per style guide
-In-Reply-To: <20191118185724.GA32637@Cheese>
-Message-ID: <alpine.DEB.2.21.1911182154160.3116@hadrien>
-References: <20191118185724.GA32637@Cheese>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 18 Nov 2019 15:55:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574110539;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=I0VTPYLDkVIgquZihOZDiuVZWPSC4PnJRIoop9yQxqM=;
+        b=HKNy6Etl9LhFMCFCLo2Zzj34OiRaai5JhowjNppDTepW2r/PdGTkxw67DM+GP/8i7W+jxP
+        +Tsih2zo+jqT0E84FBtnhgsNxf9biwQF2Vjomp9/0v1HBebVOdo7btRDSH7Txx4spJoo8b
+        NLt+wsZJUp70DSeLxnpZsnBb5d85sDI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-198-p4DIraRiNg6RfOQTH1u2MQ-1; Mon, 18 Nov 2019 15:55:36 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E4FBA801E5B;
+        Mon, 18 Nov 2019 20:55:34 +0000 (UTC)
+Received: from [10.36.116.37] (ovpn-116-37.ams2.redhat.com [10.36.116.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6BD4260E3E;
+        Mon, 18 Nov 2019 20:55:32 +0000 (UTC)
+Subject: Re: [PATCH v2 03/10] iommu/vt-d: Reject SVM bind for failed
+ capability check
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>
+References: <1574106153-45867-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1574106153-45867-4-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <5ecbea4b-4418-32e4-9b3d-49447e4bf420@redhat.com>
+Date:   Mon, 18 Nov 2019 21:55:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1574106153-45867-4-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: p4DIraRiNg6RfOQTH1u2MQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jacob,
 
-
-On Mon, 18 Nov 2019, Travis Davies wrote:
-
-> Signed-off-by: Travis Davies <tdavies@darkphysics.net>
->
+On 11/18/19 8:42 PM, Jacob Pan wrote:
+> Add a check during SVM bind to ensure CPU and IOMMU hardware capabilities
+> are met.
+>=20
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
 > ---
->
-> This patch places /* and */ on separate lines for a
-> multiline block comment, in order to keep code style
-> consistant with majority of blocks throughout the file.
->
-> This will prevent a checkpatch.pl warning:
-> 'Block comments use a trailing */ on a separate line'
+>  drivers/iommu/intel-svm.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>=20
+> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> index 716c543488f6..74df10a39dfc 100644
+> --- a/drivers/iommu/intel-svm.c
+> +++ b/drivers/iommu/intel-svm.c
+> @@ -238,6 +238,9 @@ int intel_svm_bind_mm(struct device *dev, int *pasid,=
+ int flags, struct svm_dev_
+>  =09if (!iommu || dmar_disabled)
+>  =09=09return -EINVAL;
+> =20
+> +=09if (!intel_svm_capable(iommu))
+> +=09=09return -ENOTSUPP;
+> +
+>  =09if (dev_is_pci(dev)) {
+>  =09=09pasid_max =3D pci_max_pasids(to_pci_dev(dev));
+>  =09=09if (pasid_max < 0)
+>=20
 
-The comments and the signed off by both go above the ---.  Comments first.
-Look at lkml to see what others do.
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Thanks
 
-julia
+Eric
 
->
->  include/linux/netdevice.h | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-> index c20f190b4c18..a2605e043fa2 100644
-> --- a/include/linux/netdevice.h
-> +++ b/include/linux/netdevice.h
-> @@ -95,9 +95,11 @@ void netdev_set_default_ethtool_ops(struct net_device *dev,
->  #define NET_XMIT_CN		0x02	/* congestion notification	*/
->  #define NET_XMIT_MASK		0x0f	/* qdisc flags in net/sch_generic.h */
->
-> -/* NET_XMIT_CN is special. It does not guarantee that this packet is lost. It
-> +/*
-> + * NET_XMIT_CN is special. It does not guarantee that this packet is lost. It
->   * indicates that the device will soon be dropping packets, or already drops
-> - * some packets of the same priority; prompting us to send less aggressively. */
-> + * some packets of the same priority; prompting us to send less aggressively.
-> + */
->  #define net_xmit_eval(e)	((e) == NET_XMIT_CN ? 0 : (e))
->  #define net_xmit_errno(e)	((e) != NET_XMIT_CN ? -ENOBUFS : 0)
->
-> --
-> 2.21.0
->
->
