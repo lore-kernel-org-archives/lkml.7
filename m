@@ -2,222 +2,210 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBC7C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15470C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFB1D2230C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:39:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Kdan9hot"
+	by mail.kernel.org (Postfix) with ESMTP id CB8DE222EF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:42:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbfKRVjY (ORCPT
+        id S1726869AbfKRVmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 16:39:24 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:46512 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbfKRVjY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 16:39:24 -0500
-Received: by mail-qt1-f196.google.com with SMTP id r20so21964123qtp.13
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 13:39:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:mime-version
-         :content-transfer-encoding;
-        bh=4kmBYaz/ju6DruZUZrnEYIDrLNIt6VzC8tUrQTHzAjo=;
-        b=Kdan9hotAFYqoMQJJ7rM3GhnAWEGWBeiau7qDD9KmOeeTEcxRk7wXv0IBIIKfURhdv
-         X0PEy+f6no8tg6J3Krh1QfRmWCXlqxHkJVsAHYLCoUVb0D9zAa8WSnI4/CgYFETEZeAZ
-         riiyckjOqBAx1YwSMG4wCOK/JROOTMMXJApKmnHGedPBrROw0pMoZhtlhouUvs52wtJ6
-         bRdZbnwzRbquo5EmRawalb1T7ibONCKAcz76c2ah/iiks8/zTCicsffk5+3K/B2CV+BR
-         TABtlDbpQP+iQAutFfMGEN0rYiw8tlxuMveOMtp2oLAkObyGl7KaeeEbMgrZjVtY9Kzh
-         VaNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:mime-version
-         :content-transfer-encoding;
-        bh=4kmBYaz/ju6DruZUZrnEYIDrLNIt6VzC8tUrQTHzAjo=;
-        b=fb7RQwUVIUm3SlvcNwl4lUfWjLNGa12Emk6sKT/nlMDdF+1yr1IRI6ouZBv37+XRKi
-         zKGHkiiVW3m31nC/LhOgtfN1IWn9CwBbr++NVv/Ddgkv32fVLRFZ2reMJuEm40Bj8w1O
-         kobWNw9cgVFh4suLBWJKtsmYTMwYEiUvJ5n7Cz+Z7eNktMXT6w0KoL6wF1OI9O6x7oDB
-         Xywe7H8tWjZwUkbBVY19mqGr7HxclJ6NeTg630yY5yVErU2dXr0Dsj4OuTys/OQsTKIi
-         7AeX/ONQBKK2t12Keo8ASF1gC7xF00klp1XPkKwQjFH5RNMUPhiKQ01zCw5GymBlZvUZ
-         I6zw==
-X-Gm-Message-State: APjAAAUZKF2Guh3tIzdjoHsInfJviKE+i/hxbtumhghFRB6ao9exkv6O
-        n3zLgY9kA8byYNuOrjG4sxDQeg==
-X-Google-Smtp-Source: APXvYqzGjnoYQmB4s504yq+O+7SHAoijAPfxOFJod7JNFLKRxkRm5kv9Qgcq2MCjNy3k7CiP0KI/3A==
-X-Received: by 2002:ac8:74c3:: with SMTP id j3mr29111254qtr.113.1574113162677;
-        Mon, 18 Nov 2019 13:39:22 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id h3sm11729918qte.62.2019.11.18.13.39.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Nov 2019 13:39:22 -0800 (PST)
-Message-ID: <1574113159.5937.148.camel@lca.pw>
-Subject: PSI: use-after-free in collect_percpu_times()
-From:   Qian Cai <cai@lca.pw>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 18 Nov 2019 16:39:19 -0500
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 18 Nov 2019 16:42:45 -0500
+Received: from mga07.intel.com ([134.134.136.100]:14214 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726647AbfKRVmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 16:42:45 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 13:42:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,321,1569308400"; 
+   d="scan'208";a="209211756"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga006.jf.intel.com with ESMTP; 18 Nov 2019 13:42:44 -0800
+Date:   Mon, 18 Nov 2019 13:47:19 -0800
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2 02/10] iommu/vt-d: Fix CPU and IOMMU SVM feature
+ matching checks
+Message-ID: <20191118134719.6835981b@jacob-builder>
+In-Reply-To: <26d1e79b-3a16-0a8f-895e-e2c41c8d3b28@redhat.com>
+References: <1574106153-45867-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1574106153-45867-3-git-send-email-jacob.jun.pan@linux.intel.com>
+        <26d1e79b-3a16-0a8f-895e-e2c41c8d3b28@redhat.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since a few days ago, s390 starts to crash on linux-next while reading some
-sysfs. It is not always reproducible but seems pretty reproducible after running
-the whole MM test suite here,
-https://github.com/cailca/linux-mm/blob/master/test.sh
+On Mon, 18 Nov 2019 21:33:34 +0100
+Auger Eric <eric.auger@redhat.com> wrote:
 
-the config:
-https://raw.githubusercontent.com/cailca/linux-mm/master/s390.config
+> Hi Jacob,
+> 
+> On 11/18/19 8:42 PM, Jacob Pan wrote:
+> > The current code checks CPU and IOMMU feature set for SVM support
+> > but the result is never stored nor used. Therefore, SVM can still
+> > be used even when these checks failed.  
+> "SVM can still be used even when these checks failed". What were the
+> consequences if it happened? Does it fix this cleanly now.
+> > 
+The consequence is DMA cannot reach above 48-bit virtual address range
+when CPU does 5-level and IOMMU can only do 4-level. With is fix,
+svm_bind_mm will fail in the first place to prevent SVM use by DMA.
 
-The stack trace on s390 is not particular helpful as both gdb and faddr2line are
-unable to point out which line causes the issue.
+> > This patch consolidates code for checking PASID, CPU vs. IOMMU
+> > paging mode compatibility, as well as provides specific error
+> > messages for each failed checks.>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+> > ---
+> >  drivers/iommu/intel-iommu.c | 10 ++--------
+> >  drivers/iommu/intel-svm.c   | 40
+> > +++++++++++++++++++++++++++-------------
+> > include/linux/intel-iommu.h |  4 +++- 3 files changed, 32
+> > insertions(+), 22 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/intel-iommu.c
+> > b/drivers/iommu/intel-iommu.c index 3f974919d3bd..d598168e410d
+> > 100644 --- a/drivers/iommu/intel-iommu.c
+> > +++ b/drivers/iommu/intel-iommu.c
+> > @@ -3289,10 +3289,7 @@ static int __init init_dmars(void)
+> >  
+> >  		if (!ecap_pass_through(iommu->ecap))
+> >  			hw_pass_through = 0;
+> > -#ifdef CONFIG_INTEL_IOMMU_SVM
+> > -		if (pasid_supported(iommu))
+> > -			intel_svm_init(iommu);
+> > -#endif
+> > +		intel_svm_check(iommu);
+> >  	}
+> >  
+> >  	/*
+> > @@ -4471,10 +4468,7 @@ static int intel_iommu_add(struct
+> > dmar_drhd_unit *dmaru) if (ret)
+> >  		goto out;
+> >  
+> > -#ifdef CONFIG_INTEL_IOMMU_SVM
+> > -	if (pasid_supported(iommu))
+> > -		intel_svm_init(iommu);
+> > -#endif
+> > +	intel_svm_check(iommu);
+> >  
+> >  	if (dmaru->ignored) {
+> >  		/*
+> > diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> > index 9b159132405d..716c543488f6 100644
+> > --- a/drivers/iommu/intel-svm.c
+> > +++ b/drivers/iommu/intel-svm.c
+> > @@ -23,19 +23,6 @@
+> >  
+> >  static irqreturn_t prq_event_thread(int irq, void *d);
+> >  
+> > -int intel_svm_init(struct intel_iommu *iommu)
+> > -{
+> > -	if (cpu_feature_enabled(X86_FEATURE_GBPAGES) &&
+> > -			!cap_fl1gp_support(iommu->cap))
+> > -		return -EINVAL;
+> > -
+> > -	if (cpu_feature_enabled(X86_FEATURE_LA57) &&
+> > -			!cap_5lp_support(iommu->cap))
+> > -		return -EINVAL;
+> > -
+> > -	return 0;
+> > -}
+> > -
+> >  #define PRQ_ORDER 0
+> >  
+> >  int intel_svm_enable_prq(struct intel_iommu *iommu)
+> > @@ -99,6 +86,33 @@ int intel_svm_finish_prq(struct intel_iommu
+> > *iommu) return 0;
+> >  }
+> >  
+> > +static inline bool intel_svm_capable(struct intel_iommu *iommu)
+> > +{
+> > +	return iommu->flags & VTD_FLAG_SVM_CAPABLE;
+> > +}
+> > +
+> > +void intel_svm_check(struct intel_iommu *iommu)
+> > +{
+> > +	if (!pasid_supported(iommu))
+> > +		return;
+> > +
+> > +	if (cpu_feature_enabled(X86_FEATURE_GBPAGES) &&
+> > +	    !cap_fl1gp_support(iommu->cap)) {
+> > +		pr_err("%s SVM disabled, incompatible 1GB page
+> > capability\n",
+> > +		       iommu->name);  
+> nit: is it really an error or just a warning?
+I think it is an error in that there is an illegal configuration. It is
+mostly for vIOMMU, we expect native HW should have these features
+matched.
 
-# ./scripts/faddr2line vmlinux collect_percpu_times+0x2d6/0x798
-bad symbol size: base: 0x00000000002076f8 end: 0x00000000002076f8
+> > +		return;
+> > +	}
+> > +
+> > +	if (cpu_feature_enabled(X86_FEATURE_LA57) &&
+> > +	    !cap_5lp_support(iommu->cap)) {
+> > +		pr_err("%s SVM disabled, incompatible paging
+> > mode\n",
+> > +		       iommu->name);
+> > +		return;
+> > +	}
+> > +
+> > +	iommu->flags |= VTD_FLAG_SVM_CAPABLE;
+> > +}
+> > +
+> >  static void intel_flush_svm_range_dev (struct intel_svm *svm,
+> > struct intel_svm_dev *sdev, unsigned long address, unsigned long
+> > pages, int ih) {
+> > diff --git a/include/linux/intel-iommu.h
+> > b/include/linux/intel-iommu.h index 63118991824c..7dcfa1c4a844
+> > 100644 --- a/include/linux/intel-iommu.h
+> > +++ b/include/linux/intel-iommu.h
+> > @@ -657,7 +657,7 @@ void iommu_flush_write_buffer(struct
+> > intel_iommu *iommu); int intel_iommu_enable_pasid(struct
+> > intel_iommu *iommu, struct device *dev); 
+> >  #ifdef CONFIG_INTEL_IOMMU_SVM
+> > -int intel_svm_init(struct intel_iommu *iommu);
+> > +extern void intel_svm_check(struct intel_iommu *iommu);
+> >  extern int intel_svm_enable_prq(struct intel_iommu *iommu);
+> >  extern int intel_svm_finish_prq(struct intel_iommu *iommu);
+> >  
+> > @@ -685,6 +685,8 @@ struct intel_svm {
+> >  };
+> >  
+> >  extern struct intel_iommu *intel_svm_device_to_iommu(struct device
+> > *dev); +#else
+> > +static inline void intel_svm_check(struct intel_iommu *iommu) {}
+> >  #endif
+> >  
+> >  #ifdef CONFIG_INTEL_IOMMU_DEBUGFS
+> >   
+> Besides,
+> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> 
+> Thanks
+> 
+> Eric
+> 
 
-(gdb) list *(collect_percpu_times+0x2d6)
-0x2079ce is in collect_percpu_times (./include/linux/compiler.h:199).
-194	})
-195	
-196	static __always_inline
-197	void __read_once_size(const volatile void *p, void *res, int size)
-198	{
-199		__READ_ONCE_SIZE;
-200	}
-201	
-202	#ifdef CONFIG_KASAN
-203	/*
-
-Could it be some race conditions in PSI?
-
-01: [ 9499.451788] LTP: starting read_all_sys (read_all -d /sys -q -r 10)       
-(zcon 17:55:45) [-- MARK --]
-00: [ 9777.709470] =============================================================
-00: =====                                                                       
-00: [ 9777.709515] BUG: KASAN: use-after-free in collect_percpu_times+0x2d6/0x79
-00: 8                                                                           
-00: [ 9777.709530] Read of size 4 at addr 0000000066229000 by task read_all/5024
-00: 0                                                                           
-00: [ 9777.709543]                                                              
-00: [ 9777.709559] CPU: 0 PID: 50240 Comm: read_all Not tainted 5.4.0-rc7-next-2
-00: 0191118 #4                                                                  
-00: [ 9777.709573] Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)                 
-00: [ 9777.709586] Call Trace:                                                  
-00: [ 9777.709604] ([<000000000568e202>] show_stack+0x11a/0x1b8)                
-00: [ 9777.709624]  [<0000000005f7568e>] dump_stack+0x136/0x188                 
-00: [ 9777.709641]  [<0000000005a16594>] print_address_description.isra.8+0x64/0
-00: x3f0                                                                        
-00: [ 9777.709657]  [<0000000005a16b6a>] __kasan_report+0x162/0x188             
-00: [ 9777.709672]  [<00000000057779ce>] collect_percpu_times+0x2d6/0x798       
-00: [ 9777.709687]  [<000000000577a10c>] psi_show+0x84/0x2b0                    
-00: [ 9777.709703]  [<0000000005abf18c>] seq_read+0x2b4/0x838                   
-00: [ 9777.709718]  [<0000000005a75502>] vfs_read+0x9a/0x158                    
-00: [ 9777.709732]  [<0000000005a759ea>] ksys_read+0xea/0x190                   
-00: [ 9777.709748]  [<0000000005fb3100>] system_call+0xd8/0x2b4                 
-00: [ 9777.709759] INFO: lockdep is turned off.                                 
-00: [ 9777.709769]                                                              
-00: [ 9777.709778] The buggy address belongs to the page:                       
-00: [ 9777.709793] page:000003d081988a40 refcount:0 mapcount:-2048 mapping:00000
-00: 00000000000 index:0x0                                                       
-00: [ 9777.709813] raw: 003fffc000000000 000003d081988a48 000003d081988a48 00000
-00: 00000000000                                                                 
-00: [ 9777.709831] raw: 0000000000000000 0000000000000000 fffff7ff00000000 00000
-00: 00000000000                                                                 
-00: [ 9777.710042] page dumped because: kasan: bad access detected              
-00: [ 9777.710057] page_owner tracks the page as freed                          
-00: [ 9777.710075] page last allocated via order 2, migratetype Unmovable, gfp_m
-00: ask 0x52cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP)               
-00: [ 9777.710145]  stack_trace_save+0xc2/0xd8                                  
-00: [ 9777.710158]  register_dummy_stack+0x94/0xc0                              
-00: [ 9777.710170]  init_page_owner+0x5c/0x518                                  
-00: [ 9777.710188]  kernel_init_freeable+0x2a4/0x5a8                            
-00: [ 9777.710199] page last free stack trace:                                  
-00: [ 9777.710212]  stack_trace_save+0xc2/0xd8                                  
-00: [ 9777.710224]  register_dummy_stack+0x94/0xc0                              
-00: [ 9777.710236]  init_page_owner+0x5c/0x518                                  
-00: [ 9777.710249]  kernel_init_freeable+0x2a4/0x5a8                            
-00: [ 9777.710259]                                                              
-00: [ 9777.710267] Memory state around the buggy address:                       
-00: [ 9777.710282]  0000000066228f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc 
-00: fc fc                                                                       
-00: [ 9777.710297]  0000000066228f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc 
-00: fc fc                                                                       
-00: [ 9777.710312] >0000000066229000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
-00: ff ff                                                                       
-00: [ 9777.710325]                    ^                                         
-00: [ 9777.710337]  0000000066229080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
-00: ff ff                                                                       
-00: [ 9777.710352]  0000000066229100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
-00: ff ff                                                                       
-00: [ 9777.710366] =============================================================
-00: =====                                                                       
-00: [ 9777.710389] Unable to handle kernel pointer dereference in virtual kernel
-00:  address space                                                              
-00: [ 9777.710580] Failing address: 0000000066229000 TEID: 0000000066229803     
-00: [ 9777.710595] Fault in home space mode while using kernel ASCE.            
-00: [ 9777.710613] AS:0000000007084007 R3:000000006dc28007 S:000000006d8fa800 P:
-00: 000000006622943d                                                            
-00: [ 9777.710700] Oops: 0011 ilc:2 [#1] SMP DEBUG_PAGEALLOC                    
-00: [ 9777.710719] Modules linked in: brd ext4 crc16 mbcache jbd2 loop ip_tables
-00:  x_tables xfs dasd_fba_mod dasd_eckd_mod dm_mirror dm_region_hash dm_log dm_
-00: mod                                                                         
-00: [ 9777.710778] CPU: 0 PID: 50240 Comm: read_all Tainted: G    B             
-00: 5.4.0-rc7-next-20191118 #4                                                  
-00: [ 9777.710794] Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)                 
-00: [ 9777.710806] Krnl PSW : 0704c00180000000 00000000057779ce (collect_percpu_
-00: times+0x2d6/0x798)                                                          
-00: [ 9777.710832]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0
-00:  RI:0 EA:3                                                                  
-00: [ 9777.710849] Krnl GPRS: 0000000000000001 000000004a8b2100 00000000063315ac
-00:  0000000000000007                                                           
-00: [ 9777.710865]            0000030000000000 000000000578e0be 0000000000000001
-00:  000000003409fc70                                                           
-00: [ 9777.710881]            000000000577a10c 070000003409fb00 0000000066229008
-00:  0000000066229000                                                           
-00: [ 9777.710896]            000000000639f6b0 0000000005ff5d30 00000000057779ce
-00:  000000003409fa20                                                           
-00: [ 9777.710939] Krnl Code: 00000000057779c0: ad031000            stosm   0(%r
-00: 1),3                                                                        
-00: [ 9777.710939]            00000000057779c4: b904002b            lgr     %r2,
-00: %r11                                                                        
-00: [ 9777.710939]           #00000000057779c8: c0e50014fc9c        brasl   %r14
-00: ,0000000005a17300                                                           
-00: [ 9777.710939]           >00000000057779ce: 5880b000            l       %r8,
-00: 0(%r11)                                                                     
-00: [ 9777.710939]            00000000057779d2: a7810001            tmll    %r8,
-00: 1                                                                           
-00: [ 9777.710939]            00000000057779d6: a784ff97            brc     8,00
-00: 00000005777904                                                              
-00: [ 9777.710939]            00000000057779da: a7f4ff8a            brc     15,0
-00: 0000000057778ee                                                             
-00: [ 9777.710939]            00000000057779de: e310f1300004        lg      %r1,
-00: 304(%r15)                                                                   
-00: [ 9777.711135] Call Trace:                                                  
-00: [ 9777.711149] ([<00000000057779ce>] collect_percpu_times+0x2d6/0x798)      
-00: [ 9777.711164]  [<000000000577a10c>] psi_show+0x84/0x2b0                    
-00: [ 9777.711180]  [<0000000005abf18c>] seq_read+0x2b4/0x838                   
-00: [ 9777.711194]  [<0000000005a75502>] vfs_read+0x9a/0x158                    
-00: [ 9777.711207]  [<0000000005a759ea>] ksys_read+0xea/0x190                   
-00: [ 9777.711222]  [<0000000005fb3100>] system_call+0xd8/0x2b4                 
-00: [ 9777.711234] INFO: lockdep is turned off.                                 
-00: [ 9777.711244] Last Breaking-Event-Address:                                 
-00: [ 9777.711257]  [<0000000005a16a70>] __kasan_report+0x68/0x188              
-00: [ 9777.711273] Kernel panic - not syncing: Fatal exception: panic_on_oops
+[Jacob Pan]
