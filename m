@@ -5,68 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DAAEC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99314C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF8220730
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C34420748
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:42:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pylT9lIw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OyaN94NX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfKRLlq (ORCPT
+        id S1727110AbfKRLmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:41:46 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38209 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfKRLlp (ORCPT
+        Mon, 18 Nov 2019 06:42:00 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39740 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbfKRLl7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:41:45 -0500
-Received: by mail-pf1-f194.google.com with SMTP id c13so10276673pfp.5;
-        Mon, 18 Nov 2019 03:41:45 -0800 (PST)
+        Mon, 18 Nov 2019 06:41:59 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 29so9522662pgm.6;
+        Mon, 18 Nov 2019 03:41:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ea8AtOwQ/gMHrbAh9hOSuI0GnsfUP2/RqRm+KGMP9/0=;
-        b=pylT9lIw0bTFkxmKB5JcHLpUUBy7rUAvdmqogLQeU0GQR9WSMJLNIadVaFfawWiNW2
-         YGfcI+owG6oEM8AkrjFbhMhTWs4d5o2Eyw6dyEHKNJC6Hr8VaCKuS5P/yOq2zWsp2vGN
-         PXQusdHZX7lOrdBNgB0AIVrC6aNoYohd0+d06uL+dhEEOAVCyazWXXjnDjZ60kn8DcF4
-         osHCp7HsWKWl0tVp5JnkEqjkpScZBdnXolFGMsqYuAY0bwp93sJ/DI5iW3w2x8QRA8Yz
-         CjS9bgFfJ/yt7gqnF45KWQPeI2nBEv66t6qn9bTLjAps01WHB4uu6Zr7IY71Y9VWk1Nz
-         hYlg==
+        bh=GUSVLZmMqCMWMeD0FT4xlPzHbtQaXySLAxO0s7N20fw=;
+        b=OyaN94NXMpCVElZ8Jw1WSv1yyO+jM2NeUo+yFOKhRx4WUNFccidxt6IWuwEiFy84z+
+         tNQg5QGqeNbQPOTBhrRHcHxbWgMkT157Ebb4Dz1jWP/askkCcH8pofzUjkl8IDLGkhC0
+         Wr9nznlGpUgn+s3PUWzUS0mwNmyJPLvXaYhWsRrOuZixx63Bn7APNEKGoqcr7pV9LImk
+         QU++7ig0TwtFloemfAXCPH9Pu8q1dVP8nAillJt4c6ATNHv54emIlGz6FX0EuTXP2xWJ
+         ZXUK9J8VmhbowEhKNbgtceawRPuCkvQXlDFiRTo6I7mm+WemE1CBJ8P4uboM+bPfoO1f
+         Ln8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ea8AtOwQ/gMHrbAh9hOSuI0GnsfUP2/RqRm+KGMP9/0=;
-        b=VyMit+ll/WJjqUJPG+ewniaFg8Viw4ifzSCQNX+wSM+ITn2mgM7lOoTXw9yz1Pvzr7
-         s4UAU7hdyUnYIVJ3wak8h879iNoPzP6ByneIsWsx47gKjNP7SG7OefJBNyLh7Tw/ReAy
-         o7/PFfeb5BlYj/ruEy1RoAnSeWvmXhkseCkAWHMVth+EHQrbmeM/GsXfwyPjCPFCj72X
-         FA3CaU+1qzEOisxoWkOzMFNcNjA1yBry0MYl1Ge9btwIXyw2se5dHbj08iDQIynCqYmq
-         wMeqLqKUSdr/iS/7TrBW3b6HCWdoE9nY/4sZ6ZWBsJs9kc+saN02m4lSI0kHX686vz/T
-         Q4Aw==
-X-Gm-Message-State: APjAAAUjhzJXgRndEDLoyMSuliQGE8VnX4OQSlsw1c1L7bHIWFY4ZUX9
-        VV5g5LEH57ls6/CXm5TtMKo=
-X-Google-Smtp-Source: APXvYqxPXdfD1riKGP6ycbMcTm7jgmPDhZ6Z9zNCVB7POjIw7Y/66PW6oHD/HEsn3QEHkJNGiDpIUA==
-X-Received: by 2002:a62:2ccf:: with SMTP id s198mr23517241pfs.42.1574077305359;
-        Mon, 18 Nov 2019 03:41:45 -0800 (PST)
+        bh=GUSVLZmMqCMWMeD0FT4xlPzHbtQaXySLAxO0s7N20fw=;
+        b=M76rl0tuEw8cH0ub+2KLN2oIq1h7sL0CIhgm6pF8R+wwQ7jVO58krhDUmtAOgr3PC/
+         FEOsi0rcLUvsVhy5LviiIGzjotrBRg7nLRYhGrgElgZgVk4cHGe0dEVKdxClk8HqJDgK
+         bPomTiteX93QQOEMp08arU7K6WkB95Qvpd0q0dQ4zXL/Xx8bUsZeKiYR6vtGVZM3Rvvq
+         eQgOKMmEvV4beyC01q1qkQVgGqXWKVFX8v8XehOg7jAXzHtQ2mBhKnBeCRVbWK19SFva
+         EGU4TYQPdLtFFHkW7/sVlsmaa7g7BsCV2wJ2f893/pM94yW4Xf6IkiM7RRyx3Ws8YLtr
+         X1vw==
+X-Gm-Message-State: APjAAAVpwHQXVV9zGdMvhm82i2YHUaxUBWYIMyKsdJGiAdLaQPwsd2TI
+        tF9PDrVBTh+29cqGPD2S56LORvP37NM=
+X-Google-Smtp-Source: APXvYqwlZhctfGUcf61eKwA95+64A55BOSGDXtVe6j8GQMt1TABUbYCgPWwT7eZpn3YAxZAoBaB9dw==
+X-Received: by 2002:aa7:80d2:: with SMTP id a18mr15473101pfn.29.1574077319270;
+        Mon, 18 Nov 2019 03:41:59 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id w62sm22656779pfb.15.2019.11.18.03.41.40
+        by smtp.gmail.com with ESMTPSA id m19sm19455324pgh.31.2019.11.18.03.41.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 03:41:44 -0800 (PST)
+        Mon, 18 Nov 2019 03:41:58 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kevin Hilman <khilman@baylibre.com>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] usb: dwc3: meson-g12a: add missed regulator_disable
-Date:   Mon, 18 Nov 2019 19:41:35 +0800
-Message-Id: <20191118114135.25666-1-hslester96@gmail.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] video: ssd1307fb: add the missed regulator_disable
+Date:   Mon, 18 Nov 2019 19:41:50 +0800
+Message-Id: <20191118114150.25724-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -76,57 +73,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver forgets to disable the regulator in probe failure and remove.
-Add the missed calls to fix it.
+The driver forgets to disable the regulator in remove like what is done
+in probe failure.
+Add the missed call to fix it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/usb/dwc3/dwc3-meson-g12a.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/video/fbdev/ssd1307fb.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
-index 8a3ec1a951fe..d9723d1ad8eb 100644
---- a/drivers/usb/dwc3/dwc3-meson-g12a.c
-+++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
-@@ -458,7 +458,7 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
- 						dwc3_meson_g12a_irq_thread,
- 						IRQF_ONESHOT, pdev->name, priv);
- 		if (ret)
--			return ret;
-+			goto err_regulator_disable;
+diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
+index 78ca7ffc40c2..819fbee18dda 100644
+--- a/drivers/video/fbdev/ssd1307fb.c
++++ b/drivers/video/fbdev/ssd1307fb.c
+@@ -791,6 +791,8 @@ static int ssd1307fb_remove(struct i2c_client *client)
+ 		pwm_disable(par->pwm);
+ 		pwm_put(par->pwm);
  	}
- 
- 	dwc3_meson_g12a_usb_init(priv);
-@@ -467,7 +467,7 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
- 	for (i = 0 ; i < PHY_COUNT ; ++i) {
- 		ret = phy_init(priv->phys[i]);
- 		if (ret)
--			return ret;
-+			goto err_regulator_disable;
- 	}
- 
- 	/* Set PHY Power */
-@@ -517,7 +517,9 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
- err_phys_exit:
- 	for (i = 0 ; i < PHY_COUNT ; ++i)
- 		phy_exit(priv->phys[i]);
--
-+err_regulator_disable:
-+	if (priv->vbus)
-+		regulator_disable(priv->vbus);
- 	return ret;
- }
- 
-@@ -536,6 +538,9 @@ static int dwc3_meson_g12a_remove(struct platform_device *pdev)
- 		phy_exit(priv->phys[i]);
- 	}
- 
-+	if (priv->vbus)
-+		regulator_disable(priv->vbus);
-+
- 	pm_runtime_disable(dev);
- 	pm_runtime_put_noidle(dev);
- 	pm_runtime_set_suspended(dev);
++	if (par->vbat_reg)
++		regulator_disable(par->vbat_reg);
+ 	fb_deferred_io_cleanup(info);
+ 	__free_pages(__va(info->fix.smem_start), get_order(info->fix.smem_len));
+ 	framebuffer_release(info);
 -- 
 2.24.0
 
