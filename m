@@ -2,167 +2,141 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D1BC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6109AC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 089602073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 356722073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:47:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="njQBIcfx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RwQG4Y4L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfKRGrb (ORCPT
+        id S1726721AbfKRGr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 01:47:31 -0500
-Received: from mail-eopbgr150048.outbound.protection.outlook.com ([40.107.15.48]:6881
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726455AbfKRGra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 01:47:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ClbUJzAJfO56LJ6z5ejaeP3xmnLq0QPFuJudzMgXmwuGFJNCZwBWhkf64nhrigne5COhXxSRVJu6svorh9xhphApkN6K47JsuZiUA+nxL/0dIeg5j1bsi//fc6wygmRqMq3ZU5T3Ki6CYbod6ReFqqBBvuX+J+QtGwMWzh0Svl6LFDjIljIckbV3gHqO2EGsQrK1O0Bm499B6rTLPdIsICBCg+FDjxCjxfbY9brD7ZyTVxVklYjCfJsznvsMXrCuoz1+gQS3/UaUFKMnEo1PAkB1MFn5+weqK68log2SebJKftyhBnaP8HFUQeCir4aaA0WCrzssIb1uI7MKmyasDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f40IAwoCouPB0E02C/mSpk7GIS4mxEFebZTaMpQHrOo=;
- b=fxt9W08+VScyBwvMJtRHFc1DvZzskSz5ONYXPmks3oqGnUVf0tI8gLATEMTxc4FkX/V9cmaQtpQfl8dIhVEXF7b4GOI7TvbRRNsTMFZZfGEDddOPMG+8m6vkWU5xjcfbJsPcPvv2XHyAGv4e22yP0YoLy7dVPBvPI+DbpXDLXOe/2OiqcdQ25V1+Ff+Z+nf226TV/dcM+amjVS5v2c5WY+FAnh9icNmCvWfZXnEyCibN+xkVcIPLO3ek2WQadYjydXSijiAwul+L/bu4bY7C0+8o37K8HYeZmR68lckZZ16LtVzxzQ1R7+YEs3cEY5rBTuUkA+fNqapxq7Rj8A9DFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f40IAwoCouPB0E02C/mSpk7GIS4mxEFebZTaMpQHrOo=;
- b=njQBIcfxEHLwzmxpUn+d0xQmv4FhY1YUz6bTuW/jG7EcK0LWBLr/BGhqld20mNsYFMPDWg1ZHjHfAhSg5dIiokystOiyNbrlgCCL6sJDdCvQpKYnU7SUrh9jCLxeDjK6DtdWQ5Qxzu3yKPOr+JfzsVuSWrmymnoaJCxkil+QwL8=
-Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com (52.134.3.146) by
- VI1PR0402MB3903.eurprd04.prod.outlook.com (52.134.16.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.26; Mon, 18 Nov 2019 06:47:26 +0000
-Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com
- ([fe80::30e0:6638:e97c:e625]) by VI1PR0402MB3600.eurprd04.prod.outlook.com
- ([fe80::30e0:6638:e97c:e625%7]) with mapi id 15.20.2451.029; Mon, 18 Nov 2019
- 06:47:26 +0000
-From:   Andy Duan <fugang.duan@nxp.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-CC:     David Miller <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH net v2] net: fec: add a check for CONFIG_PM to
- avoid clock count mis-match
-Thread-Topic: [EXT] Re: [PATCH net v2] net: fec: add a check for CONFIG_PM to
- avoid clock count mis-match
-Thread-Index: AQHVm/DMOznlKnTJFkKJdT1jxlx3n6eNXN9wgAB3nYCAAqiLsA==
-Date:   Mon, 18 Nov 2019 06:47:26 +0000
-Message-ID: <VI1PR0402MB36002B858030B02BCBCA8500FF4D0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-References: <20191112112830.27561-1-hslester96@gmail.com>
- <20191115.121050.591805779332799354.davem@davemloft.net>
- <VI1PR0402MB3600CE74E0EC86AC97F25026FF730@VI1PR0402MB3600.eurprd04.prod.outlook.com>
- <CANhBUQ1VZMV4MKqs95mJnZPLeDnhAgjgLTSaqL_pY08GGzM-mQ@mail.gmail.com>
-In-Reply-To: <CANhBUQ1VZMV4MKqs95mJnZPLeDnhAgjgLTSaqL_pY08GGzM-mQ@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fugang.duan@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e6ec7cf7-2784-4c5d-0b6a-08d76bf32c7e
-x-ms-traffictypediagnostic: VI1PR0402MB3903:
-x-microsoft-antispam-prvs: <VI1PR0402MB3903E8EA404B536131863955FF4D0@VI1PR0402MB3903.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:530;
-x-forefront-prvs: 0225B0D5BC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(376002)(396003)(366004)(189003)(199004)(33656002)(25786009)(102836004)(76176011)(4326008)(7696005)(6246003)(86362001)(64756008)(66446008)(8676002)(26005)(81166006)(81156014)(8936002)(52536014)(6916009)(66946007)(14444005)(256004)(76116006)(14454004)(1411001)(99286004)(229853002)(11346002)(476003)(486006)(71190400001)(71200400001)(186003)(3846002)(446003)(66476007)(66556008)(6116002)(5660300002)(2906002)(316002)(66066001)(54906003)(55016002)(6436002)(9686003)(74316002)(478600001)(305945005)(53546011)(6506007)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3903;H:VI1PR0402MB3600.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NkBH+UWOE7JWMkb7kWjWSg4Akxl/vdkDp/6zuiVXtbAUm4YnMYDu0C+VE1a8phERMioc3aaAfdEUSKxEbuFcO04D8EOn4wsOYIXZB+4oh52hli6Koi09cF7YY8Lre4C7iiHu3VHw6dudGPh95X5DuNKtT6hcjOZft2IZ789IunJdjFGehZBAGrLxsupYM2/INT881zPloIoeCV5fJW0uA+/Ib7FuZslVPoD9lhr44f4N+z+0StIGVz4PxlCSCJsbf1xCqR5vxJGEDXgAhedeklbS2iVyxSQ2zyBJwYqaM7vhgn9In3M16YIByLNnPtAH9E60ZDynjKkF4GnfnX3DRzp1LwLp9JtFQ3Z/qReUwjDIxXRr69D7E7zjx2iITy/EZOzSQC0f7rKZOmnqw4AiCsarbtecbyVJZWpWzqbvQ8OfKHjYEd1InCH3wO9MoHAT
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6ec7cf7-2784-4c5d-0b6a-08d76bf32c7e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 06:47:26.2888
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WjbNk1UqqXS81HNnRxdgYS27RA6F2h+gAULJk47NahHefIySIl0Zo5VRldXyc/LsGQrYGaHS5VkIXUaQcpj4ow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3903
+        Mon, 18 Nov 2019 01:47:58 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42714 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726455AbfKRGr5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 01:47:57 -0500
+Received: by mail-pf1-f194.google.com with SMTP id s5so9881682pfh.9
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 22:47:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=2q1X71G2F9ogvEiNMzRBPTVvugNQ98J/RkFcfMnV5l8=;
+        b=RwQG4Y4LfJbbqnf+V2FUH58y984DNZKbHPGhNQWEhjLgfbxhDKG5/9smqzS/EYNKpn
+         gmeMXYAtrkD1Lg6hzZjWQl2lx/nluvJLY4MDWJPaX4YUNNAdrPKYom/A3oN4WypZ5sRg
+         sSgU/QT38wEQahGYgToWCWnLFUMIrW2vDL7jRSjO5r6RPQvAJV3wmkgVr6xR5PdcfLoY
+         tubrh0341XmOHbMRzFp7FCDFge+9RXP/Wf2yLWLEm6j6Dhl4zC37N1FVYozC02LfFSjJ
+         zSY4giNcaML1l/+hSdgId2tTh8ikbVIzGQv25PRhBvQ/9ioZpInYuh10aJgExezI2B7G
+         j6Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2q1X71G2F9ogvEiNMzRBPTVvugNQ98J/RkFcfMnV5l8=;
+        b=h/KZGKF2Gq/Ib5fQ4adttYrGj8yKVyD+QBvEWNXqJRbYzE1pFc9kRCBt3xRaUvZvEM
+         rgEGiUA/LcwM/tFMrwwzr5mMUK0Vpt3O2flZ0cPlWMignBBju5aq7B5i572I9Ku9yYL6
+         wGdHklamnMYtQE7xeHcv4WeEyE25HPeCInWuPP67/9fVZogowuG71cu7t1fkh163dWNy
+         2s82+DYcAx0CTzBqlwvDkXjV9SsxG4dhVpzhTm1Fj6r/fX45iGS3ZWoxfHVs7VQmHzbF
+         7LW9QR3FvvwfNRs7kM6bmcSXMdFLCiLXeK7kvN1UX3yHFXr3DpoFOi6QJ4ih86AZAry4
+         y4cg==
+X-Gm-Message-State: APjAAAXm/1bnVXj42iZBHHNtNy1Y9WtckdQswxKBwmlTFeWyJBfRsPQE
+        jOsENsGht2YeWwwquJBO7lCgjdGYTpA=
+X-Google-Smtp-Source: APXvYqxhcwaWeMHp99PwjDhXGdR9jyB6uOBJYNUFEUjLYBZXlxJZQ/wUynaZ3twLfocyX3WY/Umbzw==
+X-Received: by 2002:a65:628f:: with SMTP id f15mr30205410pgv.91.1574059676543;
+        Sun, 17 Nov 2019 22:47:56 -0800 (PST)
+Received: from laptop.hsd1.wa.comcast.net ([2601:600:817f:a132:df3e:521d:99d5:710d])
+        by smtp.gmail.com with ESMTPSA id v3sm21728403pfi.26.2019.11.17.22.47.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Nov 2019 22:47:56 -0800 (PST)
+From:   Andrei Vagin <avagin@gmail.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Adrian Reber <areber@redhat.com>, linux-kernel@vger.kernel.org,
+        Andrei Vagin <avagin@gmail.com>
+Subject: [PATCH 1/3] selftests/clone3: flush stdout and stderr before clone3() and _exit()
+Date:   Sun, 17 Nov 2019 22:47:48 -0800
+Message-Id: <20191118064750.408003-1-avagin@gmail.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQ2h1aG9uZyBZdWFuIDxoc2xlc3Rlcjk2QGdtYWlsLmNvbT4gU2VudDogU2F0dXJkYXks
-IE5vdmVtYmVyIDE2LCAyMDE5IDEwOjAwIFBNDQo+IE9uIFNhdCwgTm92IDE2LCAyMDE5IGF0IDI6
-NTcgUE0gQW5keSBEdWFuIDxmdWdhbmcuZHVhbkBueHAuY29tPiB3cm90ZToNCj4gPg0KPiA+IEZy
-b206IERhdmlkIE1pbGxlciA8ZGF2ZW1AZGF2ZW1sb2Z0Lm5ldD4gU2VudDogU2F0dXJkYXksIE5v
-dmVtYmVyIDE2LA0KPiA+IDIwMTkgNDoxMSBBTQ0KPiA+ID4gRnJvbTogQ2h1aG9uZyBZdWFuIDxo
-c2xlc3Rlcjk2QGdtYWlsLmNvbT4NCj4gPiA+IERhdGU6IFR1ZSwgMTIgTm92IDIwMTkgMTk6Mjg6
-MzAgKzA4MDANCj4gPiA+DQo+ID4gPiA+IElmIENPTkZJR19QTSBpcyBlbmFibGVkLCBydW50aW1l
-IHBtIHdpbGwgd29yayBhbmQgY2FsbA0KPiA+ID4gPiBydW50aW1lX3N1c3BlbmQgYXV0b21hdGlj
-YWxseSB0byBkaXNhYmxlIGNsa3MuDQo+ID4gPiA+IFRoZXJlZm9yZSwgcmVtb3ZlIG9ubHkgbmVl
-ZHMgdG8gZGlzYWJsZSBjbGtzIHdoZW4gQ09ORklHX1BNIGlzDQo+IGRpc2FibGVkLg0KPiA+ID4g
-PiBBZGQgdGhpcyBjaGVjayB0byBhdm9pZCBjbG9jayBjb3VudCBtaXMtbWF0Y2ggY2F1c2VkIGJ5
-IGRvdWJsZS1kaXNhYmxlLg0KPiA+ID4gPg0KPiA+ID4gPiBGaXhlczogYzQzZWFiM2VkZGI0ICgi
-bmV0OiBmZWM6IGFkZCBtaXNzZWQgY2xrX2Rpc2FibGVfdW5wcmVwYXJlDQo+ID4gPiA+IGluDQo+
-ID4gPiA+IHJlbW92ZSIpDQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IENodWhvbmcgWXVhbiA8aHNs
-ZXN0ZXI5NkBnbWFpbC5jb20+DQo+ID4gPg0KPiA+ID4gWW91ciBleHBsYW5hdGlvbiBpbiB5b3Vy
-IHJlcGx5IHRvIG15IGZlZWRiYWNrIHN0aWxsIGRvZXNuJ3QgZXhwbGFpbg0KPiA+ID4gdGhlIHNp
-dHVhdGlvbiB0byBtZS4NCj4gPiA+DQo+ID4gPiBGb3IgZXZlcnkgY2xvY2sgZW5hYmxlIGRvbmUg
-ZHVyaW5nIHByb2JlLCB0aGVyZSBtdXN0IGJlIGEgbWF0Y2hpbmcNCj4gPiA+IGNsb2NrIGRpc2Fi
-bGUgZHVyaW5nIHJlbW92ZS4NCj4gPiA+DQo+ID4gPiBQZXJpb2QuDQo+ID4gPg0KPiA+ID4gVGhl
-cmUgaXMgbm8gQ09ORklHX1BNIGd1YXJkaW5nIHRoZSBjbG9jayBlbmFibGVzIGR1cmluZyBwcm9i
-ZSBpbg0KPiA+ID4gdGhpcyBkcml2ZXIsIHRoZXJlZm9yZSB0aGVyZSBzaG91bGQgYmUgbm8gcmVh
-c29uIHRvIHJlcXVpcmUNCj4gPiA+IENPTkZJR19QTSBndWFyZHMgdG8gdGhlIGNsb2NrIGRpc2Fi
-bGVzIGR1cmluZyB0aGUgcmVtb3ZlIG1ldGhvZCwNCj4gPiA+DQo+ID4gPiBZb3UgaGF2ZSB0byBl
-eHBsYWluIGNsZWFybHksIGFuZCBpbiBkZXRhaWwsIHdoeSBteSBsb2dpYyBhbmQNCj4gPiA+IGFu
-YWx5c2lzIG9mIHRoaXMgc2l0dWF0aW9uIGlzIG5vdCBjb3JyZWN0Lg0KPiA+ID4NCj4gPiA+IEFu
-ZCB3aGVuIHlvdSBkbyBzbywgeW91IHdpbGwgbmVlZCB0byBhZGQgdGhvc2UgaW1wb3J0YW50IGRl
-dGFpbHMgdG8NCj4gPiA+IHRoZSBjb21taXQgbWVzc2FnZSBvZiB0aGlzIGNoYW5nZSBhbmQgc3Vi
-bWl0IGEgdjMuDQo+ID4gPg0KPiA+ID4gVGhhbmsgeW91Lg0KPiA+DQo+ID4gSSBhZ3JlZSB3aXRo
-IERhdmlkLiBCZWxvdyBmaXhlcyBpcyBtb3JlIHJlYXNvbmFibGUuDQo+ID4gQ2h1aG9uZywgaWYg
-dGhlcmUgaGFzIG5vIHZvaWNlIGFib3V0IGJlbG93IGZpeGVzLCB5b3UgY2FuIHN1Ym1pdCB2MyBs
-YXRlci4NCj4gPg0KPiANCj4gSSBnZXQgY29uZnVzZWQgdGhhdCBob3cgZG9lcyB0aGlzIHdvcmsg
-dG8gc29sdmUgdGhlIENPTkZJR19QTSBwcm9ibGVtLg0KPiBBbmQgd2h5IGRvIHdlIG5lZWQgdG8g
-YWRqdXN0IHRoZSBwb3NpdGlvbiBvZiB0aGUgbGF0dGVyIGZvdXIgZnVuY3Rpb25zPw0KSnVzdCBs
-b29rcyBiZXR0ZXIsIG5vIGZ1bmN0aW9uIGNoYW5nZS4NCj4gSSBuZWVkIHRvIGV4cGxhaW4gdGhl
-bSBpbiB0aGUgY29tbWl0IG1lc3NhZ2UuDQoNClBsZWFzZSBzZWUgYmVsb3cgbG9naWMgaW4gcmVt
-b3ZlKCk6DQpJZiBDT05GSUdfUE0gaXMgZW5hYmxlZDoNCi5wcm9iZSgpDQplbmFibGUgY2xrcw0K
-cG1fcnVudGltZV9tYXJrX2xhc3RfYnVzeSgpDQpwbV9ydW50aW1lX3B1dF9hdXRvc3VzcGVuZCgp
-DQogICAgZGlzYWJsZSBjbGtzDQoNCi5yZW1vdmUoKToNCnBtX3J1bnRpbWVfZ2V0X3N5bmMoKQ0K
-ICAgIHJ1bnRpbWUgcmVzdW1lIGNhbGxiYWNrIGlzIGNhbGxlZCwgZW5hYmxlIGNsa3MNCmRpc2Fi
-bGUgY2xrcw0KcG1fcnVudGltZV9wdXRfbm9pZGxlKCkNCiAgICBydW50aW1lIHN1c3BlbmQgY2Fs
-bGJhY2sgaXMgbm90IGNhbGxlZA0KDQoNCklmIENPTkZJR19QTSBpcyBkaXNhYmxlZCwgcnVudGlt
-ZSBwbSBpcyBOVUxMIG9wZXJhdGlvbjoNCi5wcm9iZSgpDQogICAgZW5hYmxlIGNsa3MNCi5yZW1v
-dmUoKToNCiAgICBkaXNhYmxlIGNsa3MNCg0KDQoNCj4gDQo+ID4gQEAgLTM2MzYsNiArMzYzNiwx
-MSBAQCBmZWNfZHJ2X3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ICAg
-ICAgICAgc3RydWN0IG5ldF9kZXZpY2UgKm5kZXYgPSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YShwZGV2
-KTsNCj4gPiAgICAgICAgIHN0cnVjdCBmZWNfZW5ldF9wcml2YXRlICpmZXAgPSBuZXRkZXZfcHJp
-dihuZGV2KTsNCj4gPiAgICAgICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBwZGV2LT5kZXYu
-b2Zfbm9kZTsNCj4gPiArICAgICAgIGludCByZXQ7DQo+ID4gKw0KPiA+ICsgICAgICAgcmV0ID0g
-cG1fcnVudGltZV9nZXRfc3luYygmcGRldi0+ZGV2KTsNCj4gPiArICAgICAgIGlmIChyZXQgPCAw
-KQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+DQo+ID4gICAgICAgICBjYW5j
-ZWxfd29ya19zeW5jKCZmZXAtPnR4X3RpbWVvdXRfd29yayk7DQo+ID4gICAgICAgICBmZWNfcHRw
-X3N0b3AocGRldik7DQo+ID4gQEAgLTM2NDMsMTUgKzM2NDgsMTcgQEAgZmVjX2Rydl9yZW1vdmUo
-c3RydWN0IHBsYXRmb3JtX2RldmljZQ0KPiAqcGRldikNCj4gPiAgICAgICAgIGZlY19lbmV0X21p
-aV9yZW1vdmUoZmVwKTsNCj4gPiAgICAgICAgIGlmIChmZXAtPnJlZ19waHkpDQo+ID4gICAgICAg
-ICAgICAgICAgIHJlZ3VsYXRvcl9kaXNhYmxlKGZlcC0+cmVnX3BoeSk7DQo+ID4gLSAgICAgICBw
-bV9ydW50aW1lX3B1dCgmcGRldi0+ZGV2KTsNCj4gPiAtICAgICAgIHBtX3J1bnRpbWVfZGlzYWJs
-ZSgmcGRldi0+ZGV2KTsNCj4gPiAtICAgICAgIGNsa19kaXNhYmxlX3VucHJlcGFyZShmZXAtPmNs
-a19haGIpOw0KPiA+IC0gICAgICAgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGZlcC0+Y2xrX2lwZyk7
-DQo+ID4gKw0KPiA+ICAgICAgICAgaWYgKG9mX3BoeV9pc19maXhlZF9saW5rKG5wKSkNCj4gPiAg
-ICAgICAgICAgICAgICAgb2ZfcGh5X2RlcmVnaXN0ZXJfZml4ZWRfbGluayhucCk7DQo+ID4gICAg
-ICAgICBvZl9ub2RlX3B1dChmZXAtPnBoeV9ub2RlKTsNCj4gPiAgICAgICAgIGZyZWVfbmV0ZGV2
-KG5kZXYpOw0KPiA+DQo+ID4gKyAgICAgICBjbGtfZGlzYWJsZV91bnByZXBhcmUoZmVwLT5jbGtf
-YWhiKTsNCj4gPiArICAgICAgIGNsa19kaXNhYmxlX3VucHJlcGFyZShmZXAtPmNsa19pcGcpOw0K
-PiA+ICsgICAgICAgcG1fcnVudGltZV9wdXRfbm9pZGxlKCZwZGV2LT5kZXYpOw0KPiA+ICsgICAg
-ICAgcG1fcnVudGltZV9kaXNhYmxlKCZwZGV2LT5kZXYpOw0KPiA+ICsNCj4gPiAgICAgICAgIHJl
-dHVybiAwOw0KPiA+ICB9DQo+ID4NCj4gPiBSZWdhcmRzLA0KPiA+IEZ1Z2FuZyBEdWFuDQo=
+Buffers have to be flushed before clone3() to avoid double messages in
+the log.
+
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
+---
+ tools/testing/selftests/clone3/clone3_selftests.h |  2 ++
+ tools/testing/selftests/clone3/clone3_set_tid.c   | 15 +++++++++++----
+ 2 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/tools/testing/selftests/clone3/clone3_selftests.h b/tools/testing/selftests/clone3/clone3_selftests.h
+index e5a62dfef67a..c8899e773c8e 100644
+--- a/tools/testing/selftests/clone3/clone3_selftests.h
++++ b/tools/testing/selftests/clone3/clone3_selftests.h
+@@ -29,6 +29,8 @@ struct clone_args {
+ 
+ static pid_t sys_clone3(struct clone_args *args, size_t size)
+ {
++	fflush(stdout);
++	fflush(stderr);
+ 	return syscall(__NR_clone3, args, size);
+ }
+ 
+diff --git a/tools/testing/selftests/clone3/clone3_set_tid.c b/tools/testing/selftests/clone3/clone3_set_tid.c
+index 3480e1c46983..e93369dcfe3b 100644
+--- a/tools/testing/selftests/clone3/clone3_set_tid.c
++++ b/tools/testing/selftests/clone3/clone3_set_tid.c
+@@ -30,6 +30,13 @@
+ static int pipe_1[2];
+ static int pipe_2[2];
+ 
++static void child_exit(int ret)
++{
++	fflush(stdout);
++	fflush(stderr);
++	_exit(ret);
++}
++
+ static int call_clone3_set_tid(pid_t *set_tid,
+ 			       size_t set_tid_size,
+ 			       int flags,
+@@ -84,8 +91,8 @@ static int call_clone3_set_tid(pid_t *set_tid,
+ 		}
+ 
+ 		if (set_tid[0] != getpid())
+-			_exit(EXIT_FAILURE);
+-		_exit(exit_code);
++			child_exit(EXIT_FAILURE);
++		child_exit(exit_code);
+ 	}
+ 
+ 	if (expected_pid == 0 || expected_pid == pid) {
+@@ -249,7 +256,7 @@ int main(int argc, char *argv[])
+ 	pid = fork();
+ 	if (pid == 0) {
+ 		ksft_print_msg("Child has PID %d\n", getpid());
+-		_exit(EXIT_SUCCESS);
++		child_exit(EXIT_SUCCESS);
+ 	}
+ 	if (waitpid(pid, &status, 0) < 0)
+ 		ksft_exit_fail_msg("Waiting for child %d failed", pid);
+@@ -309,7 +316,7 @@ int main(int argc, char *argv[])
+ 		 */
+ 		test_clone3_set_tid(set_tid, 3, CLONE_NEWPID, 0, 42, true);
+ 
+-		_exit(ksft_cnt.ksft_pass);
++		child_exit(ksft_cnt.ksft_pass);
+ 	}
+ 
+ 	close(pipe_1[1]);
+-- 
+2.23.0
+
