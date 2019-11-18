@@ -2,122 +2,173 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E24C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 046E1C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 204F620898
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D0020748
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:06:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Vka+aqpL"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="FTIG7pGk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfKRNFj (ORCPT
+        id S1727001AbfKRNGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 08:05:39 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:52130 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfKRNFi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 08:05:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=eJ0u4T29emfj+di+mk49zhT0Lz5axTZ5bCyR1fEklx4=; b=Vka+aqpLHvXJFRIoGJm/23hWI
-        j3YYSwqcYkYNx2/mLN2RzZaoyjtQgPj5JfPXkJjEfXAsXwXtykO7slz3aQUP1bXw/J2HUfj6yzFdE
-        /qNLHoMnABRLHSx2lsksd6RuJdqzrciWhWrZvO3w18YESjg/CVP2CpDkUT+l5doqNmG/hcXpPtaaj
-        1jZEvJj2iXrpTErMGpnqXdizfRl2RrmLpe3nJwQ9mOr+OM3kO/4c+cgDuXlt3B0oIkKHOGR4yk4ZZ
-        4drMEwO9xCPlpsI26rfAo6sE0VXsmGDa5x0CC+eTDg92NH5J/hPxVnermazQMb6dHAuuMqqKxNC05
-        KG/tNXItg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iWgi7-0001k7-Ml; Mon, 18 Nov 2019 13:04:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6828E3011EC;
-        Mon, 18 Nov 2019 14:03:42 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DD7B62B128B83; Mon, 18 Nov 2019 14:04:51 +0100 (CET)
-Date:   Mon, 18 Nov 2019 14:04:51 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Rik van Riel <riel@surriel.com>
-Subject: Re: [PATCH 3/9] sched/vtime: Handle nice updates under vtime
-Message-ID: <20191118130451.GB4097@hirez.programming.kicks-ass.net>
-References: <20191106030807.31091-1-frederic@kernel.org>
- <20191106030807.31091-4-frederic@kernel.org>
- <20191115101648.GC4131@hirez.programming.kicks-ass.net>
- <20191115101831.GW5671@hirez.programming.kicks-ass.net>
- <20191115152703.GA21265@lenoir>
+        Mon, 18 Nov 2019 08:06:31 -0500
+Received: from mail-eopbgr130089.outbound.protection.outlook.com ([40.107.13.89]:49476
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726506AbfKRNGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 08:06:31 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Jiet+1mJ72DgSf6ca0A9NlYQUTs+U9QL+J2MrO+7h9ogT80DIAlgvPbMiX28DX8IlRo0Ip3J2Ed4Sy55NPslSshNftVI9sVRqlLeYae+L2gBBG8GF5K+2I2E8vcZ8cfehV1v9pr3b52+c15aghUlumCcUmVOT6cj/LbcVPnzEtizDMeEYUCRg8k8DwrdSdrpcYA72zLzp4++bREz2yDyWQndZoM7GUqKOYHJA/PDtcttkFeXL3iXYbZk5cAB1aodYwJpX4r3lP6hLkCvJLkvXh1TKs2sR5zyQfQe883s3BBSHa8qFFQzTwGjjLqnEJvFq8/FTS3JemvbG4RVEeHecw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UNeyeaM9yksRv7AN9YynCmrXyC4SHLHoY5MlTjMtTro=;
+ b=IL3EXiJXdxV0UIXddJ7aQ3MpEHQzNHGDTzwX+Xd0gTyGNTB4VFiYn9Js2XimZM12nsV6jicdcvFa3jc87SfHMTRVyav7DUA27evv7erGj2OwiNNvFk1/0oG0Pxr8A8olhIY6qIhtvSVMLr8uXleMUiZvMkxugVv62m+GTH7c/caiNjRnks0WxY6TGFm2+qUbtXSZQA0qkz7IpVrEfOrywETIqpsxlAUblXTwJ+Dyjj5emyM1mpHCNF/yMfB2rcpbIuM6im9fkDymmv0reuBcuKtoBw63HnPCrSx/+R6BmZlsY8KISUhDjZOpzbCJ+I0/AT7D7HE84ydheTVb3V/UCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UNeyeaM9yksRv7AN9YynCmrXyC4SHLHoY5MlTjMtTro=;
+ b=FTIG7pGkBfVzevw8UjlscSOXNztJ7JH+BSdUrTjbuk84iCf9CR/TFC954Q90cXtoJ5Yqdeo5dWnTnWKBWN1UuX1QnuVqPJ3vMx5ZHzpcl748LEE1RupP9JBTdGVP5/aQsfYx8Q7zOQyhyQ7C18Of4BnI8fJCIKJuF8M6DJcN5xM=
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
+ VI1PR04MB4846.eurprd04.prod.outlook.com (20.177.50.202) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.26; Mon, 18 Nov 2019 13:06:26 +0000
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::dd0c:72dc:e462:16b3]) by VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::dd0c:72dc:e462:16b3%5]) with mapi id 15.20.2451.029; Mon, 18 Nov 2019
+ 13:06:26 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Peng Fan <peng.fan@nxp.com>, "sboyd@kernel.org" <sboyd@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>
+CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2 2/4] clk: imx: imx8mn: Switch to clk_hw based API
+Thread-Topic: [PATCH V2 2/4] clk: imx: imx8mn: Switch to clk_hw based API
+Thread-Index: AQHVktMr9vdJ3yj43k2cixXCwuTSvQ==
+Date:   Mon, 18 Nov 2019 13:06:26 +0000
+Message-ID: <VI1PR04MB7023CC47DC123A66627940E9EE4D0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+References: <1572846270-24375-1-git-send-email-peng.fan@nxp.com>
+ <1572846270-24375-3-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 627280d4-78d6-4979-99c9-08d76c281e98
+x-ms-traffictypediagnostic: VI1PR04MB4846:|VI1PR04MB4846:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB4846A4D4C5B9E460CB80FBF4EE4D0@VI1PR04MB4846.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3044;
+x-forefront-prvs: 0225B0D5BC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(366004)(346002)(376002)(189003)(199004)(86362001)(7696005)(446003)(9686003)(55016002)(71200400001)(2906002)(305945005)(74316002)(6436002)(8936002)(66066001)(4326008)(7736002)(6116002)(3846002)(186003)(26005)(52536014)(81166006)(81156014)(76176011)(54906003)(476003)(102836004)(478600001)(6506007)(53546011)(110136005)(5660300002)(2501003)(8676002)(316002)(256004)(71190400001)(6246003)(229853002)(99286004)(486006)(44832011)(14454004)(33656002)(25786009)(91956017)(76116006)(66946007)(66476007)(66556008)(64756008)(66446008)(2201001)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4846;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: JUHuOxCmYGgZ2AKlvKaT17n/7iAX8MgVdEfqvB10/nBk5eHAAdKxx+bTjQ8oJafK0Co5JsdqG66Pw+A16srLdJ52qmlsEiKc6Xrsud7wHGiwPoH9IWkxHtj5E9AXvlJPSxAlAm6OgzUKFKtE9N0E1Uo9/IFfLJxccD/bLMIojuI/5xeOUBBJzUKdCQzUPrJDTcGta6T2E6+xfbxy4Rsk7wxsbNL4+RwWnJatoBnK0LM8l7JiWejcYTXDJVXR4h/2uGkGqvNSgbyok9bRFQCsNmxl+YRWDtAMnl9nuLy1rS4cG+REHHaIbV5vNHi3M0Rja9nkWmjBO1xCELr8b4K+g1SCjWjB7vaoOQ+wQXWDJ06AmCbQC3W30uoRG4hxhEqNt7SGv6OKANPuuJokGTnBfOg/2qKGfijzylwSVhs/X4X7NgI3nc+5V/vpcRMEp6sT
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115152703.GA21265@lenoir>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 627280d4-78d6-4979-99c9-08d76c281e98
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 13:06:26.2271
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YIcpygG943t6Lbkw3x4HE92SPTJToxdzQDq5xJl7Q9T3DGvv5G3Xdqa/rqJgNqS/wQ8EIcVEjQ9IIB68zkMrpg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4846
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 04:27:04PM +0100, Frederic Weisbecker wrote:
-> On Fri, Nov 15, 2019 at 11:18:31AM +0100, Peter Zijlstra wrote:
-> > On Fri, Nov 15, 2019 at 11:16:48AM +0100, Peter Zijlstra wrote:
-> > > On Wed, Nov 06, 2019 at 04:08:01AM +0100, Frederic Weisbecker wrote:
-> > > > The cputime niceness is determined while checking the target's nice value
-> > > > at cputime accounting time. Under vtime this happens on context switches,
-> > > > user exit and guest exit. But nice value updates while the target is
-> > > > running are not taken into account.
-> > > > 
-> > > > So if a task runs tickless for 10 seconds in userspace but it has been
-> > > > reniced after 5 seconds from -1 (not nice) to 1 (nice), on user exit
-> > > > vtime will account the whole 10 seconds as CPUTIME_NICE because it only
-> > > > sees the latest nice value at accounting time which is 1 here. Yet it's
-> > > > wrong, 5 seconds should be accounted as CPUTIME_USER and 5 seconds as
-> > > > CPUTIME_NICE.
-> > > > 
-> > > > In order to solve this, we now cover nice updates withing three cases:
-> > > > 
-> > > > * If the nice updater is the current task, although we are in kernel
-> > > >   mode there can be pending user or guest time in the cache to flush
-> > > >   under the prior nice state. Account these if any. Also toggle the
-> > > >   vtime nice flag for further user/guest cputime accounting.
-> > > > 
-> > > > * If the target runs on a different CPU, we interrupt it with an IPI to
-> > > >   update the vtime state in place. If the task is running in user or
-> > > >   guest, the pending cputime is accounted under the prior nice state.
-> > > >   Then the vtime nice flag is toggled for further user/guest cputime
-> > > >   accounting.
-> > > 
-> > > But but but, I thought the idea was to _never_ send interrupts to
-> > > NOHZ_FULL cpus ?!?
-> > 
-> > That is, isn't the cure worse than the problem? I mean, who bloody cares
-> > about silly accounting crud more than not getting interrupts on their
-> > NOHZ_FULL cpus.
-> 
-> Yeah indeed. I tend to sacrifice everything for correctness but perhaps we can live with
-> small issues like nice accounting not being accounted to the right place if that
-> can avoid disturbing nohz_full CPUs. Also who cares about renicing a task that is
-> supposed to run alone.
-> 
-> So here is what I can do: I'll make a simplified version of that set which accounts
-> on top of the task_nice() value found on accounting time (context switch, user exit,
-> guest exit) and if some user ever complains, I can still bring back that IPI solution.
-
-Makes sense, thanks!
+On 2019-11-04 7:46 AM, Peng Fan wrote:=0A=
+> From: Peng Fan <peng.fan@nxp.com>=0A=
+> =0A=
+> Switch the entire clk-imx8mn driver to clk_hw based API.=0A=
+> This allows us to move closer to a clear split between=0A=
+> consumer and provider clk APIs.=0A=
+=0A=
+> -	clks[IMX8MN_AUDIO_PLL1] =3D imx_clk_pll14xx("audio_pll1", "audio_pll1_r=
+ef_sel", base, &imx_1443x_pll);=0A=
+> -	clks[IMX8MN_AUDIO_PLL2] =3D imx_clk_pll14xx("audio_pll2", "audio_pll2_r=
+ef_sel", base + 0x14, &imx_1443x_pll);=0A=
+> -	clks[IMX8MN_VIDEO_PLL1] =3D imx_clk_pll14xx("video_pll1", "video_pll1_r=
+ef_sel", base + 0x28, &imx_1443x_pll);=0A=
+> -	clks[IMX8MN_DRAM_PLL] =3D imx_clk_pll14xx("dram_pll", "dram_pll_ref_sel=
+", base + 0x50, &imx_1443x_pll);=0A=
+> -	clks[IMX8MN_GPU_PLL] =3D imx_clk_pll14xx("gpu_pll", "gpu_pll_ref_sel", =
+base + 0x64, &imx_1416x_pll);=0A=
+> -	clks[IMX8MN_VPU_PLL] =3D imx_clk_pll14xx("vpu_pll", "vpu_pll_ref_sel", =
+base + 0x74, &imx_1416x_pll);=0A=
+> -	clks[IMX8MN_ARM_PLL] =3D imx_clk_pll14xx("arm_pll", "arm_pll_ref_sel", =
+base + 0x84, &imx_1416x_pll);=0A=
+> -	clks[IMX8MN_SYS_PLL1] =3D imx_clk_fixed("sys_pll1", 800000000);=0A=
+> -	clks[IMX8MN_SYS_PLL2] =3D imx_clk_fixed("sys_pll2", 1000000000);=0A=
+> -	clks[IMX8MN_SYS_PLL3] =3D imx_clk_pll14xx("sys_pll3", "sys_pll3_ref_sel=
+", base + 0x114, &imx_1416x_pll);=0A=
+> +	clks[IMX8MN_AUDIO_PLL1] =3D imx_clk_hw_pll14xx("audio_pll1", "audio_pll=
+1_ref_sel", base, &imx_1416x_pll);=0A=
+> +	clks[IMX8MN_AUDIO_PLL2] =3D imx_clk_hw_pll14xx("audio_pll2", "audio_pll=
+2_ref_sel", base + 0x14, &imx_1416x_pll);=0A=
+> +	clks[IMX8MN_VIDEO_PLL1] =3D imx_clk_hw_pll14xx("video_pll1", "video_pll=
+1_ref_sel", base + 0x28, &imx_1416x_pll);=0A=
+> +	clks[IMX8MN_DRAM_PLL] =3D imx_clk_hw_pll14xx("dram_pll", "dram_pll_ref_=
+sel", base + 0x50, &imx_1416x_pll);=0A=
+> +	clks[IMX8MN_GPU_PLL] =3D imx_clk_hw_pll14xx("gpu_pll", "gpu_pll_ref_sel=
+", base + 0x64, &imx_1416x_pll);=0A=
+> +	clks[IMX8MN_VPU_PLL] =3D imx_clk_hw_pll14xx("vpu_pll", "vpu_pll_ref_sel=
+", base + 0x74, &imx_1416x_pll);=0A=
+> +	clks[IMX8MN_ARM_PLL] =3D imx_clk_hw_pll14xx("arm_pll", "arm_pll_ref_sel=
+", base + 0x84, &imx_1416x_pll);=0A=
+> +	clks[IMX8MN_SYS_PLL1] =3D imx_clk_hw_fixed("sys_pll1", 800000000);=0A=
+> +	clks[IMX8MN_SYS_PLL2] =3D imx_clk_hw_fixed("sys_pll2", 1000000000);=0A=
+> +	clks[IMX8MN_SYS_PLL3] =3D imx_clk_hw_pll14xx("sys_pll3", "sys_pll3_ref_=
+sel", base + 0x114, &imx_1416x_pll);=0A=
+=0A=
+You are switching audio/video/dram PLL from imx_1443x_pll to =0A=
+imx_1416x_pll, are you sure this is correct?=0A=
+=0A=
+If this is intentional it should be an separate patch.=0A=
+=0A=
+> -	clks[IMX8MN_CLK_ARM] =3D imx_clk_cpu("arm", "arm_a53_div",=0A=
+> -					   clks[IMX8MN_CLK_A53_DIV],=0A=
+> -					   clks[IMX8MN_CLK_A53_SRC],=0A=
+> -					   clks[IMX8MN_ARM_PLL_OUT],=0A=
+> -					   clks[IMX8MN_CLK_24M]);=0A=
+=0A=
+> +	clks[IMX8MN_CLK_ARM] =3D imx_clk_hw_cpu("arm", "arm_a53_div",=0A=
+> +					      clks[IMX8MN_CLK_A53_DIV]->clk,=0A=
+> +					      clks[IMX8MN_CLK_A53_SRC]->clk,=0A=
+> +					      clks[IMX8MN_ARM_PLL_OUT]->clk,=0A=
+> +					      clks[IMX8MN_CLK_24M]->clk);=0A=
+=0A=
+This series seems to be against Shawn's clk/imx but there is an =0A=
+additional patch in Stephen's tree which changes this 24M to PLL1_800M. =0A=
+Maybe that should be pulled into clk/imx? Otherwise it might spawn an =0A=
+unreadable merge conflicts since almost the entire file is rewritten.=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
