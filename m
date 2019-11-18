@@ -2,155 +2,148 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1948AC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C893AC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE8A620885
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF0562063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:05:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbfKRTFK (ORCPT
+        id S1726813AbfKRTFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 14:05:10 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:34708 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbfKRTFK (ORCPT
+        Mon, 18 Nov 2019 14:05:21 -0500
+Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:42632 "EHLO
+        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726423AbfKRTFV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 14:05:10 -0500
-Received: by mail-il1-f198.google.com with SMTP id m12so17192243ilq.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 11:05:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=JN/WIzRL3xgiIAMfN7W4EDclVvEnXiBKfc2rvVhShA0=;
-        b=VMqqDIdEzRrAsIGckEF31HJ0JP+LuVrViFu2BGUbB8Cu50/MLP4s4iFit/pxSk1XSI
-         58uKjfw+0UuD20igVH1EynqvcODpB7vSJ4lao7PFBY7IKA2LtGTcHSZo9F33UoZG/QGu
-         /l9FRrL8yTiq84ykBMOpDnIEkFRyLKAeIauH8xwnXAtPCgl2OPlOHbYVyjRyKeQnORra
-         4ImGR7WGLEQnFLo4Qd+Z6ujPMTj2bzd7IkrhrK/enXhq5HgMc+SCMLluC+1g4KLBBFlI
-         x83rrX2EQEL8U+XA/MiuJHqXveTqvxuzmgAHqb9zNX1Haxg6d7C973yQVoA9fru9l3cY
-         CIlQ==
-X-Gm-Message-State: APjAAAUNjV/yVPNnnwnzerrOCvpZDwouaCjEGj1AnxSVJARRoVksXX+u
-        HMgKCBkjvvyYMDcs7qj7ddJ1LFoVSDhcae6LSMu/4e9pWgaY
-X-Google-Smtp-Source: APXvYqzQv3IIi/EFnLlvpMQdjMEXk2J9nVzgCVUHWEnLUbkGSRF3p8znLbD8SbilYWbLCnXsHJtBk7RT8Zz8xLBUcMmQ/qQ2wWkW
+        Mon, 18 Nov 2019 14:05:21 -0500
+Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
+        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1iWmKl-000530-T0; Mon, 18 Nov 2019 20:05:12 +0100
+X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
+        linuxbbg.five-lan.de
+Received: from dell2.five-lan.de (p508F31A5.dip0.t-ipconnect.de [80.143.49.165])
+        (authenticated bits=0)
+        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xAIJ59Ku008128
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Mon, 18 Nov 2019 20:05:10 +0100
+Subject: Re: arm64: dts: rockchip: Disable HS400 for mmc on rk3399-roc-pc
+To:     Doug Anderson <dianders@chromium.org>,
+        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Tony Xie <tony.xie@rock-chips.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Jeffy Chen <jeffy.chen@rock-chips.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vicente Bergas <vicencb@gmail.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Randy Li <ayaka@soulik.info>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>
+References: <20190301153348.29870-1-christoph.muellner@theobroma-systems.com>
+ <2766673.iMURPl8gB5@phil>
+ <69472c06-8b21-c3d8-acad-1a0a292c0fa2@fivetechno.de>
+ <3460135.SDF8zhHPq4@diego>
+ <CAD=FV=VnjyQJpRcW6P1f4+ZrSOzAe2Cnoej=it4aCz+F_ozukw@mail.gmail.com>
+From:   Markus Reichl <m.reichl@fivetechno.de>
+Message-ID: <2db7a63f-a091-db8d-3414-cac289011878@fivetechno.de>
+Date:   Mon, 18 Nov 2019 20:05:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-X-Received: by 2002:a92:6611:: with SMTP id a17mr18116394ilc.208.1574103909400;
- Mon, 18 Nov 2019 11:05:09 -0800 (PST)
-Date:   Mon, 18 Nov 2019 11:05:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005c08d10597a3a05d@google.com>
-Subject: KMSAN: uninit-value in can_receive
-From:   syzbot <syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, glider@google.com, linux-can@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mkl@pengutronix.de,
-        netdev@vger.kernel.org, socketcan@hartkopp.net,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <CAD=FV=VnjyQJpRcW6P1f4+ZrSOzAe2Cnoej=it4aCz+F_ozukw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1574103921;6de465a7;
+X-HE-SMSGID: 1iWmKl-000530-T0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Doug,
 
-syzbot found the following crash on:
+Am 18.11.19 um 17:08 schrieb Doug Anderson:
+> Hi,
+> 
+> 
+> On Fri, Nov 15, 2019 at 3:19 AM Heiko Stübner <heiko@sntech.de> wrote:
+>>
+>> Hi Markus,
+>>
+>> Am Freitag, 15. November 2019, 11:37:58 CET schrieb Markus Reichl:
+>> > Am 14.11.19 um 14:10 schrieb Heiko Stuebner:
+>> > > $subject is missing the [PATCH] prefix
+>> > will fix.
+>>
+>> no need to resend just for this ... just to keep in mind for future patches ;-)
+>>
+>>
+>> > > Am Montag, 11. November 2019, 10:51:04 CET schrieb Markus Reichl:
+>> > >> Working with rootfs on two 128GB mmcs on rk3399-roc-pc.
+>> > >>
+>> > >> One (mmc name 128G72, one screw hole) works fine in HS400 mode.
+>> > >> Other (mmc name DJNB4R, firefly on pcb, two screw holes) gets lots of
+>> > >> mmc1: "running CQE recovery", even hangs with damaged fs,
+>> > >> when running under heavy load, e.g. compiling kernel.
+>> > >> Both run fine with HS200.
+>> > >>
+>> > >> Disabling CQ with patch mmc: core: Add MMC Command Queue Support kernel parameter [0] did not help.
+>> > >> [0] https://gitlab.com/ayufan-repos/rock64/linux-mainline-kernel/commit/54e264154b87dfe32a8359b2726e2d5611adbaf3
+>> > >
+>> > > I'm hoping for some input from other people in Cc but your mail headers
+>> > > also referenced the drive-impendance series from Christoph [0], which
+>> > > it seems we need to poke the phy maintainer again.
+>> > >
+>> > > Did you check if changing the impedance helped (like the signal dampening
+>> > > Philipp described in one of the replies there).
+>> >
+>> > checked with
+>> >
+>> > &emmc_phy {
+>> > +       drive-impedance-ohm = <33>;
+>> >
+>> > gives no improvement:
+>>
+>> That is sad ... I guess we really should disable hs400 then ...
+>> that may give others more incentive to dive deeper ;-)
+> 
+> Just out of curiosity, is the problem with the strobe line, or with
+> hs400?  Have you tried using the solution from "rk3399-gru.dtsi"?
+> Namely:
+> 
+>         /*
+>          * Signal integrity isn't great at 200 MHz and 150 MHz (DDR) gives the
+>          * same (or nearly the same) performance for all eMMC that are intended
+>          * to be used.
+>          */
+>         assigned-clock-rates = <150000000>;
+> 
+> IIRC hs400 on rk3399 was a bit iffy but running at 150 MHz made it
+> much more reliable and still gave you 300 MB/s transfer rate (so much
+> better than hs200).  In reality many eMMC chips can't do > 300 MB/s
+> anyway.
+> 
+I tried 150000000 and 100000000, but it did not help.
 
-HEAD commit:    9c6a7162 kmsan: remove unneeded annotations in bio
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=14563416e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9e324dfe9c7b0360
-dashboard link: https://syzkaller.appspot.com/bug?extid=b02ff0707a97e4e79ebb
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
+Gruß,
+--
+Markus
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in can_receive+0x23c/0x5e0 net/can/af_can.c:649
-CPU: 1 PID: 3490 Comm: syz-executor.2 Not tainted 5.4.0-rc5+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  <IRQ>
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x128/0x220 mm/kmsan/kmsan_report.c:108
-  __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:245
-  can_receive+0x23c/0x5e0 net/can/af_can.c:649
-  can_rcv+0x188/0x3a0 net/can/af_can.c:685
-  __netif_receive_skb_one_core net/core/dev.c:5010 [inline]
-  __netif_receive_skb net/core/dev.c:5124 [inline]
-  process_backlog+0x12e8/0x1410 net/core/dev.c:5955
-  napi_poll net/core/dev.c:6392 [inline]
-  net_rx_action+0x7a6/0x1aa0 net/core/dev.c:6460
-  __do_softirq+0x4a1/0x83a kernel/softirq.c:293
-  do_softirq_own_stack+0x49/0x80 arch/x86/entry/entry_64.S:1093
-  </IRQ>
-  do_softirq kernel/softirq.c:338 [inline]
-  __local_bh_enable_ip+0x184/0x1d0 kernel/softirq.c:190
-  local_bh_enable+0x36/0x40 include/linux/bottom_half.h:32
-  rcu_read_unlock_bh include/linux/rcupdate.h:688 [inline]
-  __dev_queue_xmit+0x38e8/0x4200 net/core/dev.c:3900
-  dev_queue_xmit+0x4b/0x60 net/core/dev.c:3906
-  packet_snd net/packet/af_packet.c:2959 [inline]
-  packet_sendmsg+0x82d7/0x92e0 net/packet/af_packet.c:2984
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg net/socket.c:657 [inline]
-  ___sys_sendmsg+0x14ff/0x1590 net/socket.c:2311
-  __sys_sendmsg net/socket.c:2356 [inline]
-  __do_sys_sendmsg net/socket.c:2365 [inline]
-  __se_sys_sendmsg+0x305/0x460 net/socket.c:2363
-  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2363
-  do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-RIP: 0033:0x45a639
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ff1b9c14c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a639
-RDX: 0000000000000050 RSI: 0000000020000100 RDI: 0000000000000003
-RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007ff1b9c156d4
-R13: 00000000004c8acf R14: 00000000004df078 R15: 00000000ffffffff
-
-Uninit was created at:
-  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:151 [inline]
-  kmsan_internal_poison_shadow+0x60/0x120 mm/kmsan/kmsan.c:134
-  kmsan_slab_alloc+0xaa/0x120 mm/kmsan/kmsan_hooks.c:88
-  slab_alloc_node mm/slub.c:2799 [inline]
-  __kmalloc_node_track_caller+0xd7b/0x1390 mm/slub.c:4407
-  __kmalloc_reserve net/core/skbuff.c:141 [inline]
-  __alloc_skb+0x306/0xa10 net/core/skbuff.c:209
-  alloc_skb include/linux/skbuff.h:1050 [inline]
-  alloc_skb_with_frags+0x18c/0xa80 net/core/skbuff.c:5662
-  sock_alloc_send_pskb+0xafd/0x10a0 net/core/sock.c:2244
-  packet_alloc_skb net/packet/af_packet.c:2807 [inline]
-  packet_snd net/packet/af_packet.c:2902 [inline]
-  packet_sendmsg+0x6785/0x92e0 net/packet/af_packet.c:2984
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg net/socket.c:657 [inline]
-  ___sys_sendmsg+0x14ff/0x1590 net/socket.c:2311
-  __sys_sendmsg net/socket.c:2356 [inline]
-  __do_sys_sendmsg net/socket.c:2365 [inline]
-  __se_sys_sendmsg+0x305/0x460 net/socket.c:2363
-  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2363
-  do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-=====================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> -Doug
+> 
