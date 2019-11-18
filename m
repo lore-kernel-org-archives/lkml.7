@@ -2,129 +2,250 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB89C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 405F6C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B752C2084C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 088712071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:26:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ZaA+xVOo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hwvufP+E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfKRFZV (ORCPT
+        id S1726435AbfKRF0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 00:25:21 -0500
-Received: from mout.gmx.net ([212.227.15.18]:57491 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725208AbfKRFZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 00:25:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1574054705;
-        bh=NeILx/T8Pik6D58S7boVuKRO6cRhdtSWxt4CpQ4nwtI=;
-        h=X-UI-Sender-Class:From:To:Subject:Reply-to:Date;
-        b=ZaA+xVOoVptG3MF6ItV3dME5y1McB3ltyNA4iksR5E64OkpudyLhn0Dy5KmQ6Bzll
-         f/AFtRygnpvjegM0RlHMgvQeu9RgxXOfs7+R+U+Amg1YCKm1caP2Fn7Y8EYbMmXGtn
-         sQQ1ieV1yUhQHRvTnHQ3U0yTyS3aU/TB8sc783j4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from corona.crabdance.com ([173.228.106.103]) by mail.gmx.com
- (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MBlxW-1iidHZ1KG4-00CCje; Mon, 18 Nov 2019 06:25:05 +0100
-Received: by corona.crabdance.com (Postfix, from userid 1001)
-        id D729B6E85603; Sun, 17 Nov 2019 21:24:13 -0800 (PST)
-From:   schaecsn <schaecsn@gmx.net>
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] thermal: rockchip: enable hwmon
-Reply-to: schaecsn@gmx.net
-Message-Id: <20191118052413.D729B6E85603@corona.crabdance.com>
-Date:   Sun, 17 Nov 2019 21:24:13 -0800 (PST)
-X-Provags-ID: V03:K1:rf6ZT//QgeDRxJTewZdp6iIroYeR77NdAr53keY7G26v9Tauz/b
- 4ynhW4A/BDenlnipormdiNH3mwQWqduogyanwbLTn/nX8wj0Cfl0nq0/zwcCekhKaCodCvr
- d6JCiH+ExU8Ev+0HF1SDJfFuuLtlI0HAJ7+jSO/TQsbr5lm/PI0PWaiUEbAbSSef9F7BM2T
- 64Dl7e8frlYvklivVS9IA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PNxcuapc1o4=:vsP2qi5hr37JrUDFqLq0dg
- mQrLo6kMZbPX45t0Bo3AMXcSIcRzlDDG3FpxPiukKNDZ076ErTQ6pryG/pQowOjZZzjsQbwcy
- KU4+ErxHpeenNTZIC/dDcO25xR0jygCdOPqmFGZCFcKmy70oPCH7nOJ+X1V0c8BH/W/SNwmNx
- B1LVlo6jYabIWbk3X7cfzcfKMkb3Je3lTyzRsISFziqs4AREnoAbqnvGB+y3affkdJpmnJD+Z
- pxSUAs1ZwGFjR1eVPboGa8CDwIuycVtIBwNRssa+ydEbEdNy3/sIsbZT4oQ0hLi+t1FCoDLoR
- mtDtvAfiqpVHYreMh+8yhM1tuglE1dJMX3/FjdJlXsiD0UZJFTXSlrzAJfeiHGi8feQ/GVJKp
- lzE4DIoMfDsa5IZnX49Rw4JuRDzxGZiFJuygfpiCJyBcCFywo4BKMZWCT8WlwA2ON4Bnx2j0o
- QIaAucvFJw2f+rXO4asnrbJKJScMsu4rzHTZdUBdUhBb5gEhKyeMkohZOJLb2uS4lAM6+m8js
- i0xTOo4yDnMiqonaYpsMg40WCwYOK2MmprlaStxwVwwY0cVs0z4syQyCCIrI91eM2Vc1uCb/9
- 0P1/Utb9Lot6iIqqyHnDm9JRfatnMtNk0ZFiO9ky8heNr0afSXkRn7Fom6TYFjmyylgwAE3Uh
- w4SLaI7M06Uy5sqfZHhWQZwCr7iM42WHx2QI2CYcjJON6NJ7NJOoYNLTmEjRP18YyHemsIoSQ
- QFrncFWlFgtV9LwsTGSTSbfUo/KEdf13DlrhHZ+zcq3aNLjWCD7gHPj7U09dHT/xMBqjNJyF/
- 18FfPWGjqbZIGFvfLXLIZHHxUkugaUprv4OTKwRTEcLnykP4WFibkEJCaU8muDaJlFkDyuFOi
- QQeuM4xpXdRtv3BiZwdLMsNHNh+QDCSk5Wdw0u8aKKSsSb5Odd2Vg3mXgNQcK0saoU1Fw2oUy
- MkBuu2uHkxV9ANp399vApd7iaUGZnONlrWn9R/eiDR989o9LG1+qKdGzz43glM4dl4LBn5RsW
- oSJzo5vEBjHNC8Ge46ccDKc6zrWBlFhNi8e6ONZKaNv4Ys6KVr22LqFUD0drWRW02JWbCqAj1
- a6zJKZrSchEoJD4WPs/EhcUO542u21RTgQMHDzOwaHsLxuPAtVCsKd31AA2w9xDQ73BhnziEe
- TQgLbsGFz7T5RNd2+RekltKn2WS7ngHX56rnzjMdlvjpGKX4TDTiejG+DJM7aDzRUywBRgi8a
- Y/D/nUpjfVoqMFeR0f8yE6SrkU2fBLXOSKer5IQ==
+        Mon, 18 Nov 2019 00:26:54 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48602 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725208AbfKRF0x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 00:26:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574054812;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wT/tFiQiiY7X2t6DQv6QoaQE5V4zk2RaDzStSiYHaOI=;
+        b=hwvufP+E/M/Y+++fUomg/O7Ymfk0a0RKDtpq80cSGZthT6Rswa8wImNoXQbqqkJhO/LnKq
+        zGro3PMJbwt+SJZN2QjJFQUPccyTZWYbvliuufbuviQWyND5Ku80BEMCw4XBpgR21H5DwD
+        agpx5WkLLnKq8mxVpmUmTdmDBS9oRWg=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-373-7Q8ndgnxOJixF57aS8lNBw-1; Mon, 18 Nov 2019 00:26:49 -0500
+Received: by mail-qv1-f69.google.com with SMTP id w5so11779888qvp.13
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 21:26:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=o6UWmVuZQlRLatPss5FOBMMHREFIt3Z5O2uO/CkXcGw=;
+        b=gKAMNhPcuqtUchsiF9jKF1SFYfMHZJhYAbRNz+Tv03JUyeNB7BGCDG502yHaTCr7fP
+         l0Egq71+WfrMLx5WRcmERZEiP1nwCzHSl4a1hgZEh4wMBzVFFI43fjceQ/TDzWINl45b
+         iKYZPtkqvgdiU2nKMnme9uZoP0SaS/5KF4WxMy+b6Oe3LEdO+h+Fmh24elMieT8G90fS
+         ElPRNT8XrvuqVR4XXtjzt29d2ctmvxz1jq1n4Z+sxYPGc16CDX4Ix4irvbcxhyQpL661
+         jUXVKZm0P4PiiCy971H8TLwr+wLoSF4asjoctZbRL8lZKnLQJg/TEyMwqiaZb3wmltIM
+         vTvw==
+X-Gm-Message-State: APjAAAWTVlKYuaLtM6vp95hH9zpX8C30ff9uPn4MSiuXRK0Ci9wR4IXB
+        HkZpQggyb6EoR8xgceV/aLpnfqC1Za+RHBFj3yXixeebFJ4a+W4p1cv4BKVQh/wzFad6j6xYVp5
+        rtvJw187tUN0HYd/hYszTp8cW
+X-Received: by 2002:a37:4906:: with SMTP id w6mr11390550qka.82.1574054807984;
+        Sun, 17 Nov 2019 21:26:47 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwHoBOUrkX/VFwIW8J+asV75LO9ssSNgTY5AObB4uMJhPJIdrtAgjqVdJcewnSoXhBQ1jg5pg==
+X-Received: by 2002:a37:4906:: with SMTP id w6mr11390543qka.82.1574054807565;
+        Sun, 17 Nov 2019 21:26:47 -0800 (PST)
+Received: from redhat.com (bzq-79-176-6-42.red.bezeqint.net. [79.176.6.42])
+        by smtp.gmail.com with ESMTPSA id n185sm7941982qkd.32.2019.11.17.21.26.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Nov 2019 21:26:46 -0800 (PST)
+Date:   Mon, 18 Nov 2019 00:26:41 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Khazhismel Kumykov <khazhy@google.com>
+Cc:     jasowang@redhat.com, wei.w.wang@intel.com,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] virtio_balloon: fix shrinker pages_to_free calculation
+Message-ID: <20191118000214-mutt-send-email-mst@kernel.org>
+References: <20191115225557.61847-1-khazhy@google.com>
+MIME-Version: 1.0
+In-Reply-To: <20191115225557.61847-1-khazhy@google.com>
+X-MC-Unique: 7Q8ndgnxOJixF57aS8lNBw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable hwmon for the soc and gpu temperature sensors.
+Question is, does all this cause any bugs?
 
-Signed-off-by: Stefan Schaeckeler <schaecsn@gmx.net>
+I'm not against cleaning this up, not at all, but we need to know the
+impact.
 
-=2D--
- drivers/thermal/rockchip_thermal.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+On Fri, Nov 15, 2019 at 02:55:57PM -0800, Khazhismel Kumykov wrote:
+> To my reading, we're accumulating total freed pages in pages_freed, but
+> subtracting it every iteration from pages_to_free, meaning we'll count
+> earlier iterations multiple times, freeing fewer pages than expected.
+> Just accumulate in pages_freed, and compare to pages_to_free.
 
-diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip=
-_thermal.c
-index 343c2f5c5a25..e47c60010259 100644
-=2D-- a/drivers/thermal/rockchip_thermal.c
-+++ b/drivers/thermal/rockchip_thermal.c
-@@ -19,6 +19,8 @@
- #include <linux/mfd/syscon.h>
- #include <linux/pinctrl/consumer.h>
+For nr to scan: yes we scan less objects but that can only happen
+if the first pass does not free enough. And 1st pass can pass
+256 entries, and my reading of code in do_shrink_slab
+is that it passes only as much as
+#define SHRINK_BATCH 128
 
-+#include "thermal_hwmon.h"
-+
- /**
-  * If the temperature over a period of time High,
-  * the resulting TSHUT gave CRU module,let it reset the entire chip,
-@@ -1321,8 +1323,15 @@ static int rockchip_thermal_probe(struct platform_d=
-evice *pdev)
+so it looks like this never triggers in practice - right?
 
- 	thermal->chip->control(thermal->regs, true);
 
--	for (i =3D 0; i < thermal->chip->chn_num; i++)
-+	for (i =3D 0; i < thermal->chip->chn_num; i++) {
- 		rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
-+		thermal->sensors[i].tzd->tzp->no_hwmon =3D false;
-+		error =3D thermal_add_hwmon_sysfs(thermal->sensors[i].tzd);
-+		if (error)
-+			dev_warn(&pdev->dev,
-+				 "failed to register sensor %d with hwmon: %d\n",
-+				 i, error);
-+	}
+>=20
+> There's also a unit mismatch,
 
- 	platform_set_drvdata(pdev, thermal);
+So two unrelated issues, I think we want two patches.
 
-@@ -1344,6 +1353,7 @@ static int rockchip_thermal_remove(struct platform_d=
-evice *pdev)
- 	for (i =3D 0; i < thermal->chip->chn_num; i++) {
- 		struct rockchip_thermal_sensor *sensor =3D &thermal->sensors[i];
 
-+		thermal_remove_hwmon_sysfs(sensor->tzd);
- 		rockchip_thermal_toggle_sensor(sensor, false);
- 	}
+> where pages_to_free seems to be virtio
+> balloon pages, and pages_freed is system pages (We divide by
+> VIRTIO_BALLOON_PAGES_PER_PAGE), so sutracting pages_freed from
+> pages_to_free may result in freeing too much.
 
-=2D-
-2.24.0
+I am inclining to say we should pass in page units.
+Free page reporting is all done in units of MAX_ORDER - 1.
+Let's not ptopagate the crazy virtio page thing - we hopefully
+will add a saner interface to regular balloon too.
+
+something like the below?
+
+diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloo=
+n.c
+index 226fbb995fb0..128440826b55 100644
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -783,8 +783,8 @@ static unsigned long shrink_balloon_pages(struct virtio=
+_balloon *vb,
+ =09 * multiple times to deflate pages till reaching pages_to_free.
+ =09 */
+ =09while (vb->num_pages && pages_to_free) {
+-=09=09pages_freed +=3D leak_balloon(vb, pages_to_free) /
+-=09=09=09=09=09VIRTIO_BALLOON_PAGES_PER_PAGE;
++=09=09pages_freed +=3D leak_balloon(vb, pages_to_free *
++=09=09=09=09=09    VIRTIO_BALLOON_PAGES_PER_PAGE);
+ =09=09pages_to_free -=3D pages_freed;
+ =09}
+ =09update_balloon_size(vb);
+@@ -799,7 +799,7 @@ static unsigned long virtio_balloon_shrinker_scan(struc=
+t shrinker *shrinker,
+ =09struct virtio_balloon *vb =3D container_of(shrinker,
+ =09=09=09=09=09struct virtio_balloon, shrinker);
+=20
+-=09pages_to_free =3D sc->nr_to_scan * VIRTIO_BALLOON_PAGES_PER_PAGE;
++=09pages_to_free =3D sc->nr_to_scan;
+=20
+ =09if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+ =09=09pages_freed =3D shrink_free_pages(vb, pages_to_free);
+
+
+> There also seems to be a mismatch between shrink_free_pages() and
+> shrink_balloon_pages(), where in both pages_to_free is given as # of
+> virtio pages to free, but free_pages() returns virtio pages, and
+> balloon_pages returns system pages.
+>=20
+> (For 4K PAGE_SIZE, this mismatch wouldn't be noticed since
+> VIRTIO_BALLOON_PAGES_PER_PAGE would be 1)
+
+About return value:
+The only
+use for count_objects I see is:
+      freeable =3D shrinker->count_objects(shrinker, shrinkctl);
+      if (freeable =3D=3D 0 || freeable =3D=3D SHRINK_EMPTY)
+                return freeable;
+
+so units do not matter here.
+
+
+For scan objects, IIUC they are eventually propagated to
+shrink_slab. That in turn is called at two sites.
+One ignores the returned value. The other does:
+
+
+        do {
+                struct mem_cgroup *memcg =3D NULL;
+
+                freed =3D 0;
+                memcg =3D mem_cgroup_iter(NULL, NULL, NULL);
+                do {
+                        freed +=3D shrink_slab(GFP_KERNEL, nid, memcg, 0);
+                } while ((memcg =3D mem_cgroup_iter(NULL, memcg, NULL)) !=
+=3D NULL);
+        } while (freed > 10);
+
+so returning a larger than real value because of
+double accounting will just make more calls to the scan
+function.
+
+
+
+
+> Have both return virtio pages, and divide into system pages when
+> returning from shrinker_scan()
+>=20
+> Fixes: 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker"=
+)
+> Cc: Wei Wang <wei.w.wang@intel.com>
+> Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+> ---
+>=20
+> Tested this under memory pressure conditions and the shrinker seemed to
+> shrink.
+
+And to clarify, did you manage to detect it malfunctioning without the
+patch?
+
+
+>  drivers/virtio/virtio_balloon.c | 11 ++++-------
+>  1 file changed, 4 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_ball=
+oon.c
+> index 226fbb995fb0..7951ece3fe24 100644
+> --- a/drivers/virtio/virtio_balloon.c
+> +++ b/drivers/virtio/virtio_balloon.c
+> @@ -782,11 +782,8 @@ static unsigned long shrink_balloon_pages(struct vir=
+tio_balloon *vb,
+>  =09 * VIRTIO_BALLOON_ARRAY_PFNS_MAX balloon pages, so we call it
+>  =09 * multiple times to deflate pages till reaching pages_to_free.
+>  =09 */
+> -=09while (vb->num_pages && pages_to_free) {
+> -=09=09pages_freed +=3D leak_balloon(vb, pages_to_free) /
+> -=09=09=09=09=09VIRTIO_BALLOON_PAGES_PER_PAGE;
+> -=09=09pages_to_free -=3D pages_freed;
+> -=09}
+> +=09while (vb->num_pages && pages_to_free > pages_freed)
+> +=09=09pages_freed +=3D leak_balloon(vb, pages_to_free - pages_freed);
+>  =09update_balloon_size(vb);
+> =20
+>  =09return pages_freed;
+> @@ -805,11 +802,11 @@ static unsigned long virtio_balloon_shrinker_scan(s=
+truct shrinker *shrinker,
+>  =09=09pages_freed =3D shrink_free_pages(vb, pages_to_free);
+> =20
+>  =09if (pages_freed >=3D pages_to_free)
+> -=09=09return pages_freed;
+> +=09=09return pages_freed / VIRTIO_BALLOON_PAGES_PER_PAGE;
+> =20
+>  =09pages_freed +=3D shrink_balloon_pages(vb, pages_to_free - pages_freed=
+);
+> =20
+> -=09return pages_freed;
+> +=09return pages_freed / VIRTIO_BALLOON_PAGES_PER_PAGE;
+>  }
+> =20
+>  static unsigned long virtio_balloon_shrinker_count(struct shrinker *shri=
+nker,
+> --=20
+> 2.24.0.432.g9d3f5f5b63-goog
 
