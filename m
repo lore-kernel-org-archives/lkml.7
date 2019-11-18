@@ -2,153 +2,232 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D16ACC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3294BC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9DD52230F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:12:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="APsvoPZq"
+	by mail.kernel.org (Postfix) with ESMTP id F203822310
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:15:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbfKRVM0 (ORCPT
+        id S1726721AbfKRVPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 16:12:26 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:38614 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbfKRVM0 (ORCPT
+        Mon, 18 Nov 2019 16:15:42 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45661 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfKRVPm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 16:12:26 -0500
-Received: by mail-yw1-f66.google.com with SMTP id m196so6443225ywd.5
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 13:12:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6upXDhNFo0nrsQ2L0RqECuxOTI7O5ERKPLneAxPvz7c=;
-        b=APsvoPZqd3/4J1mskST0MM0sGTrFWZWLOEAYmOBonP6JvkuEWs9/P/zm2cGhbbAdwR
-         RkAdbYictFRA3Lu3MV/9wWkWd1qXzUczVbmHVDRUz+00GgtdZE7BiOlTfhG84lRwIefh
-         Bh11q6gC0MXkEVYaXXLbnjc0VOj2d1M3CZ4CETazCX5Pkfx61+yLw9lBNVZbrKCkVoLo
-         3NeFEg3x0ez3aQDopQg9loBZHPmttmgYJwKZWeAEx7JGFnDxjUDo+BY2+ywBXULp5Eg7
-         FeLIm35E200T3dXB4+wltq1sUd9Fi7m8gcFM/H5GR9jFvoQFVPEyIMQIM8hXoJmDYF+9
-         BIHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6upXDhNFo0nrsQ2L0RqECuxOTI7O5ERKPLneAxPvz7c=;
-        b=QRtTYK6J94vc9+M2GjNLPq1v0U5v7a6PNTIyyjLKYAd9TGG28zcjUSH+ru2StVP1eF
-         gvxPYi+vvGbglOhWHDCjxDvcZyFONaBjapvGeWBR/djAU85RzyhNbDzrA6gqa9JHHt0L
-         5H/TciH5kpYesCh5uMt6OChKk9Cuv6+NCD+PkSL6uKs+UrsnkUDqpvW/l69LMgrbR4QN
-         mgRONoJvyfLyh7IbiUGMa4R3mdvgYJznQkksHpyM1yakBlZqg6NFHZefA53RPTpd1I96
-         XBVBrKmnw3kq8PLa5vKugIgZrAVEOFXPPXdf8Xe1lkSfTbBQs/L6o95bY35ahInM21oT
-         rYfQ==
-X-Gm-Message-State: APjAAAW1e2SF39S90V9EmV+YdPAe6JTj/D9kszTdBg+M81Syid4NX1y0
-        WcUAvxuqpiNibHyemYZsziaiGw==
-X-Google-Smtp-Source: APXvYqzAinz5ZQxnMdmq3uJvhm1X1FgntGJvMLmBXoROvfsqoAMA3ftORkYq9KGMR2pOobqbP/cByQ==
-X-Received: by 2002:a81:4e04:: with SMTP id c4mr9481605ywb.298.1574111544976;
-        Mon, 18 Nov 2019 13:12:24 -0800 (PST)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id n191sm8487846ywd.56.2019.11.18.13.12.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 13:12:24 -0800 (PST)
-Date:   Mon, 18 Nov 2019 16:12:23 -0500
-From:   Sean Paul <sean@poorly.run>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Sean Paul <sean@poorly.run>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Dave Airlie <airlied@linux.ie>,
-        Sandy Huang <hjc@rock-chips.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/2] add new DRM_DEV_WARN macro
-Message-ID: <20191118211223.GB135013@art_vandelay>
-References: <20191114132436.7232-1-wambui.karugax@gmail.com>
- <8736ep1hm2.fsf@intel.com>
- <20191118192450.GA135013@art_vandelay>
- <CAKMK7uG7Tb6oocrRgRFvq5oB2Rxjy+JmyOSXQtjo6Gt_WH91+A@mail.gmail.com>
+        Mon, 18 Nov 2019 16:15:42 -0500
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1iWoMz-0007ZE-Fc; Mon, 18 Nov 2019 22:15:37 +0100
+Received: from [IPv6:2a03:f580:87bc:d400:5c97:9951:c8b:93e3] (unknown [IPv6:2a03:f580:87bc:d400:5c97:9951:c8b:93e3])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 8D2CF47EF31;
+        Mon, 18 Nov 2019 21:15:34 +0000 (UTC)
+Subject: Re: KMSAN: uninit-value in can_receive
+To:     Oliver Hartkopp <socketcan@hartkopp.net>,
+        syzbot <syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com>,
+        davem@davemloft.net, glider@google.com, linux-can@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+References: <0000000000005c08d10597a3a05d@google.com>
+ <a5f73d92-fdf2-2590-c863-39a181dca8e1@hartkopp.net>
+ <deedd609-6f3b-8035-47e1-252ab221faa1@pengutronix.de>
+ <7934bc2b-597f-0bb3-be2d-32f3b07b4de9@hartkopp.net>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <7f5c4546-0c1a-86ae-581e-0203b5fca446@pengutronix.de>
+Date:   Mon, 18 Nov 2019 22:15:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uG7Tb6oocrRgRFvq5oB2Rxjy+JmyOSXQtjo6Gt_WH91+A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <7934bc2b-597f-0bb3-be2d-32f3b07b4de9@hartkopp.net>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="GSRNMkB6q7mORL9530vsr7mWeDe0KhvpW"
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 09:03:20PM +0100, Daniel Vetter wrote:
-> On Mon, Nov 18, 2019 at 8:24 PM Sean Paul <sean@poorly.run> wrote:
-> > On Fri, Nov 15, 2019 at 01:52:53PM +0200, Jani Nikula wrote:
-> > > On Thu, 14 Nov 2019, Wambui Karuga <wambui.karugax@gmail.com> wrote:
-> > > > This adds a new DRM_DEV_WARN helper macro for warnings log output that include
-> > > > device pointers. It also includes the use of the DRM_DEV_WARN macro in
-> > > > drm/rockchip to replace dev_warn.
-> > >
-> > > I'm trying to solicit new struct drm_device based logging macros, and
-> > > starting to convert to those. [1]
-> > >
-> >
-> > This sounds good to me, I'd much prefer the non-caps versions of these
-> > functions. So let's wait for those to bubble up and then convert rockchip to
-> > drm_dev_*
-> 
-> Care to ack Jani's patch directly, so this is all formal?
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--GSRNMkB6q7mORL9530vsr7mWeDe0KhvpW
+Content-Type: multipart/mixed; boundary="nvdRAzj7gUVqtuJtc70X8UCmXxkH6ioAB";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Oliver Hartkopp <socketcan@hartkopp.net>,
+ syzbot <syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com>,
+ davem@davemloft.net, glider@google.com, linux-can@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ syzkaller-bugs@googlegroups.com
+Message-ID: <7f5c4546-0c1a-86ae-581e-0203b5fca446@pengutronix.de>
+Subject: Re: KMSAN: uninit-value in can_receive
+References: <0000000000005c08d10597a3a05d@google.com>
+ <a5f73d92-fdf2-2590-c863-39a181dca8e1@hartkopp.net>
+ <deedd609-6f3b-8035-47e1-252ab221faa1@pengutronix.de>
+ <7934bc2b-597f-0bb3-be2d-32f3b07b4de9@hartkopp.net>
+In-Reply-To: <7934bc2b-597f-0bb3-be2d-32f3b07b4de9@hartkopp.net>
 
-I just time traveled to last week and acked the whole series :)
+--nvdRAzj7gUVqtuJtc70X8UCmXxkH6ioAB
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
 
-Sean
+On 11/18/19 9:49 PM, Oliver Hartkopp wrote:
+>=20
+>=20
+> On 18/11/2019 21.29, Marc Kleine-Budde wrote:
+>> On 11/18/19 9:25 PM, Oliver Hartkopp wrote:
+>=20
+>>>> IMPORTANT: if you fix the bug, please add the following tag to the c=
+ommit:
+>>>> Reported-by: syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com
+>>>>
+>>>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+>>>> BUG: KMSAN: uninit-value in can_receive+0x23c/0x5e0 net/can/af_can.c=
+:649
+>>>> CPU: 1 PID: 3490 Comm: syz-executor.2 Not tainted 5.4.0-rc5+ #0
+>=20
+>>>
+>>> In line 649 of 5.4.0-rc5+ we can find a while() statement:
+>>>
+>>> while (!(can_skb_prv(skb)->skbcnt))
+>>> 	can_skb_prv(skb)->skbcnt =3D atomic_inc_return(&skbcounter);
+>>>
+>>> In linux/include/linux/can/skb.h we see:
+>>>
+>>> static inline struct can_skb_priv *can_skb_prv(struct sk_buff *skb)
+>>> {
+>>> 	return (struct can_skb_priv *)(skb->head);
+>>> }
+>>>
+>>> IMO accessing can_skb_prv(skb)->skbcnt at this point is a valid
+>>> operation which has no uninitialized value.
+>>>
+>>> Can this probably be a false positive of KMSAN?
+>>
+>> The packet is injected via the packet socket into the kernel. Where do=
+es
+>> skb->head point to in this case? When the skb is a proper
+>> kernel-generated skb containing a CAN-2.0 or CAN-FD frame skb->head is=
 
-> 
-> Jani, can you pls also add a todo.rst patch on top to adjust the
-> relevant item to the new color choice?
-> 
-> Wambui, I guess slight change of plans, it happens ...
-> 
-> Cheers, Daniel
-> 
-> >
-> > Sean
-> >
-> > > BR,
-> > > Jani.
-> > >
-> > >
-> > > [1] http://patchwork.freedesktop.org/patch/msgid/63d1e72b99e9c13ee5b1b362a653ff9c21e19124.1572258936.git.jani.nikula@intel.com
-> > >
-> > >
-> > >
-> > >
-> > > >
-> > > > Wambui Karuga (2):
-> > > >   drm/print: add DRM_DEV_WARN macro
-> > > >   drm/rockchip: use DRM_DEV_WARN macro in debug output
-> > > >
-> > > >  drivers/gpu/drm/rockchip/inno_hdmi.c | 3 ++-
-> > > >  include/drm/drm_print.h              | 9 +++++++++
-> > > >  2 files changed, 11 insertions(+), 1 deletion(-)
-> > >
-> > > --
-> > > Jani Nikula, Intel Open Source Graphics Center
-> >
-> > --
-> > Sean Paul, Software Engineer, Google / Chromium OS
-> 
-> 
-> 
-> -- 
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+>> maybe properly initialized?
+>=20
+> The packet is either received via vcan or vxcan which checks via=20
+> can_dropped_invalid_skb() if we have a valid ETH_P_CAN type skb.
 
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
+According to the call stack it's injected into the kernel via a packet
+socket and not via v(x)can.
+
+> We additionally might think about introducing a check whether we have a=
+=20
+> can_skb_reserve() created skbuff.
+>=20
+> But even if someone forged a skbuff without this reserved space the=20
+> access to can_skb_prv(skb)->skbcnt would point into some CAN frame=20
+> content - which is still no access to uninitialized content, right?
+
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+
+
+--nvdRAzj7gUVqtuJtc70X8UCmXxkH6ioAB--
+
+--GSRNMkB6q7mORL9530vsr7mWeDe0KhvpW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl3TCfIACgkQWsYho5Hk
+nSB19wf+M0JzIsfzRW9GZjE4vTRXrTQPRkpjokJi+ZcdGheUz9E4Euvj5MrWG8RD
+XXh9msEXTGNNVe8hBB80KLS5TvtkEiCcmMwRI4DXWEnKqjmbUv/W3gSNNzFnIgI4
+JEHIzXN+tE37LkS4kGIozh/XLozBELIIWb9x3sr2rdq3SI/6QkV+9qrGi8nLyfDC
+l18cciXo/0OAKTb7pFBTz0YJkqc4EvLbGvaUhjH7EHFnNKVGqDgjHxLft43vJZLE
+UB2ylD+ikiFc5vzr3YV62EA/zi6Aa37y6M3kFDuowu8X1jX8djNQ+BLv4+VxZEmh
++RCtWrjQBcQlnVitWhCJfxaRVmE05w==
+=Ui1f
+-----END PGP SIGNATURE-----
+
+--GSRNMkB6q7mORL9530vsr7mWeDe0KhvpW--
