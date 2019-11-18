@@ -2,125 +2,89 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EBC3C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DAAC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18CC22075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E04C120748
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:31:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=balena-io.20150623.gappssmtp.com header.i=@balena-io.20150623.gappssmtp.com header.b="BdbpqF1T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gj/RASmO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfKRNai (ORCPT
+        id S1726922AbfKRNbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 08:30:38 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43763 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfKRNah (ORCPT
+        Mon, 18 Nov 2019 08:31:47 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39708 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfKRNbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 08:30:37 -0500
-Received: by mail-lj1-f196.google.com with SMTP id y23so18913302ljh.10
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 05:30:36 -0800 (PST)
+        Mon, 18 Nov 2019 08:31:47 -0500
+Received: by mail-io1-f67.google.com with SMTP id k1so18741307ioj.6
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 05:31:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=balena-io.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YWOzP2XTenM698y14EYphcgxccBzKsjNSQkaqSk5HjQ=;
-        b=BdbpqF1TbFIME6ic2c1pI6EjUkhk4ppM5wnWnOHASrhu6QWN0yAiKAQqfVdV3weoYh
-         E+aG/V9h8RMwNjWvpSMnTK6PxDijeP2bVNPw7ux32TyPwh+I9m4sjB5yb382aY6WgKzN
-         26dx0NQH7wNO+FqL+uAwkY4QrDtkJ2bSLGR5dakOnu4r0R3rAsFrYSkAeofZwyuNPZWl
-         RCZ5lVeFQ3xCWHB1fAF7FHrf1HP/BcfQpQkQlhT7ft1oB2mKCynstvvgTMItB0f7i7Tw
-         TsdjBIf/h82XprQdKawNYWAP8VNi8VQac5DlmkryiDbtFqdofGHHl1strZBZ2dyjM+pL
-         x21Q==
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=63iy4bM1DyfcTYSYJP2g8q0wwRewQXs5L/sp5PcQ2ss=;
+        b=gj/RASmOyEqxCI41ANRk/aEJBdmHqtNojat9rU0G+A4F4TfVM++nYuROKVg4Sub9vg
+         0Rv9eUkWq2miLtzLKpj+sMDBgQgPl1hwgzN0Qw3FCY4uUFr16wg1UJNTNzS9o4XtRDeK
+         HHx/xk6MClm6XKUADv/eiFBceHAvJKy9AH1FqB1NqdXi178rMc2WQc8j65QXQdYvzGRQ
+         2xc8F5/A1iuvBNLEbdDtce/HyuyxnAzy4jLP0EQur/fXjePFivdql8XyKmj4ccoY0dBP
+         Z11xO00CgcqRNx3ruwp+ah3DDEvCtA3HwJUCj34039/TlYyC6N+msl1w0es5no0Ocruk
+         84jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YWOzP2XTenM698y14EYphcgxccBzKsjNSQkaqSk5HjQ=;
-        b=e0tednvMONDdCIv6clDGkK9xMjqy88Dh4WPitu4dtIJJpdaiK+0pivjmTv5dqNkxQV
-         tnwU53ZFB2yWCwpawU+qMaQLGnoa/dZadfFGafErdOiMabxeQt4xAkBejWWJxs8CIvXR
-         KWIPwM0Bvnt/GWitZT2OdLg+qlZ6jzlmQGM/RiF9R2Eb0iyrpSTSL0QFHxOwNmoeLiKV
-         Goce9SmxElR8MAnMAE5/AclHC43nO6RCAYJ2XEbD+xZCNRxmcs30zA5XgudXowT+7P4R
-         ZUYyq93zPGgXrklhcnVtnqkK/3GUA0tyaGb5ifJgoP58nLBamogw/GbNWiLb7IhZek7i
-         5yhQ==
-X-Gm-Message-State: APjAAAVABIKXBU+GgiBPIBCJQ/H8YmfrOHogA31pVIeoLc18tU7dzUmA
-        /HR03dkkov0FeQUYFg79UD5GIA==
-X-Google-Smtp-Source: APXvYqx36+Ke1sYW/+DT6yKCb3mUj+gLbyKBBNpr/SipSyf6mcjc99F7a5wEo45HZms0zbj/oF6VcQ==
-X-Received: by 2002:a2e:9ecf:: with SMTP id h15mr21341938ljk.173.1574083835375;
-        Mon, 18 Nov 2019 05:30:35 -0800 (PST)
-Received: from majorz.localdomain ([85.130.115.21])
-        by smtp.gmail.com with ESMTPSA id s4sm3077313lfd.34.2019.11.18.05.30.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 05:30:34 -0800 (PST)
-Date:   Mon, 18 Nov 2019 15:30:31 +0200
-From:   Zahari Petkov <zahari@balena.io>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, Zahari Petkov <zahari@balena.io>,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] leds: pca963x: Fix open-drain initialization
-Message-ID: <20191118133031.GA90092@majorz.localdomain>
-References: <20191014123604.GA743117@majorz.localdomain>
- <20191103170327.GA32107@duo.ucw.cz>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=63iy4bM1DyfcTYSYJP2g8q0wwRewQXs5L/sp5PcQ2ss=;
+        b=ECJe6apkY721gCrQiDx7OVHr3WDUtNNhDpgqX53CTUDXi1KQySG4Olj/x9AhYRxOEC
+         irnEW5eHcIQe1rRxhpaEXif6DIrKC/VPm9m1tHa+4EGDtjj65CFx0KO/E1a8EVgtV/Xh
+         7J80O2kfW24f8WHCgBlKDFYLk/ydW8DBGjK7PdDwxWc+ykheTNAcsosRG0ei7BGH3/z1
+         FjhL5hnoo/wCx4I6ZsTfUf/8eyozbec8VJmyGzvsAZr/1Bb560+9gKLTcByGJVxQ6gOe
+         f99BudqJfBZfABsi1W2dBtKfgro1TVNoBhG5c1p3XMXv7rs1TITMY383xGWSbJ7vVBAa
+         V27w==
+X-Gm-Message-State: APjAAAX49903D9HFTv8YALSgEN9A6UCOAQHDhcX2ygNTp+1VbRvfm2aj
+        VtIU2lpR6Q+udCZ1fmeGLMCiDry6jG24rN9r06MZ3b9H
+X-Google-Smtp-Source: APXvYqw+SP9qGLQPAFPXUCCopyMT5M7wKYEkGPg3ytjJaeOQCLbbxVu3xKYNBjphdETxI4Zvb1+q0M2Zt8ap4EQq1hA=
+X-Received: by 2002:a6b:c98e:: with SMTP id z136mr1018199iof.15.1574083903945;
+ Mon, 18 Nov 2019 05:31:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191103170327.GA32107@duo.ucw.cz>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+From:   Siavash Arya <siavash.arya89@gmail.com>
+Date:   Mon, 18 Nov 2019 14:31:08 +0100
+Message-ID: <CADuSoB88Tk0sKVDUdnXowL0b9B=GC0UAsi-NN=x1-2jN3+pbPg@mail.gmail.com>
+Subject: Hard crash bug with v5 kernel
+To:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 10:09:53AM +0100, Pavel Machek wrote:
-> On Mon 2019-10-14 15:36:04, Zahari Petkov wrote:
-> > OUTDRV setting (bit 2) of Mode register 2 has a default value of 1.
-> > During initialization when open-drain is used, instead of setting
-> > OUTDRV to 0, the driver keeps it as 1. OUTDRV setting is now correctly
-> > initialized to 0 when open-drain is used.
-> > 
-> > Additionally the BIT macro is used for improved readibility.
-> 
-> You change more than you describe in the changelog.
+I'm rewriting this message since I forgot to put a subject on my last attempt.
 
-You are indeed correct. I will provide a more detailed and precise description.
+"Hi,
 
-> 
-> > +++ b/drivers/leds/leds-pca963x.c
-> > @@ -438,12 +438,12 @@ static int pca963x_probe(struct i2c_client *client,
-> >  						    PCA963X_MODE2);
-> >  		/* Configure output: open-drain or totem pole (push-pull) */
-> >  		if (pdata->outdrv == PCA963X_OPEN_DRAIN)
-> > -			mode2 |= 0x01;
-> > +			mode2 &= ~BIT(2);
-> 
-> | 0 -> & ~0x04;
-> 
-> >  		else
-> > -			mode2 |= 0x05;
-> > +			mode2 |= BIT(2);
-> 
-> | 5 -> | 0x04;
-> 
-> Are you sure?
+When I use any ubuntu (probably any Linux) version that is running on
+a kernel that is of version 5 or higher, I have an issue where my
+computer hangs completely when reading from any of my hard drives.
+When this happens not even the caps lock button on my keyboard is
+working anymore. I know that it happens on reading because I got help
+at the freenode channels and tried a dd command that would read from
+any of my 3 hard drives. I first detected the problem when I tried to
+copy files. Anytime I got to copying between 2,5 GB -> 3 GB this
+happened and I had to long press my hardware button to shutdown the
+computer.
+Today I'm not even able to run the ubuntu 18.04 installer because this
+happens at "copying files" during installation. If I run the installer
+live, this problem exists.
+When I had ubuntu installed some days ago, I had to use grub to boot
+with an older kernel version in order to copy my files to my backup
+drive so that I could try to reinstall ubuntu. But I'm not able to
+install ubuntu anymore so I'm using Linux Mint and I don't like it at
+all compared to ubuntu so please please solve this fatal bug soon ! :)
+Please let me know what you need ot know and how I can help you solve this.
 
-Yes, I need to explain this better in the updated description.
-
-> 
-> Additionaly, we already have defines for bits in mode2 register:
-> 
-> #define PCA963X_MODE2_DMBLNK    0x20    /* Enable blinking */
-> 
-> So if you care about readability, perhaps you should add defines for
-> invert/ open drain there, and then use them?
-> 
-> Please keep using 0xab instead of BIT() for consistency with the rest
-> of the driver.
-
-I will update the code to use new defines instead of BIT().
-
-Thanks a lot!
-Zahari
+Best,
+Siavash"
