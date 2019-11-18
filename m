@@ -2,173 +2,99 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 017A9C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F15E2C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CECCA20700
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7B820700
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:21:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Ofs0oW5R"
+	dkim=pass (2048-bit key) header.d=fredlawl-com.20150623.gappssmtp.com header.i=@fredlawl-com.20150623.gappssmtp.com header.b="ecbZ4/TR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfKRARy (ORCPT
+        id S1726414AbfKRAVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 19:17:54 -0500
-Received: from ozlabs.org ([203.11.71.1]:57057 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726284AbfKRARx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 19:17:53 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47GV0D4LwYz9s4Y;
-        Mon, 18 Nov 2019 11:17:47 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1574036270;
-        bh=er8aQvti1hb8NEWJoT8OPqKSmOaCUydcAzCHa+4TfB0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Ofs0oW5RVGKlEy4kP4u7bfwchbS8T3x7a2ZK8nBhZUyR+W2u9RbOGNrLk8/VIGwH4
-         uiLxZZk2EwZ6Qz6SZpaZx/3UT6ckvmfhmOX0W5c3gUbZIrbygUqj5MU4iUQts6XS7I
-         4kDFMRfMHrA1leluadOoTnOy+KG3t7RxOlqM42CHUBPR3uDJELa4u6diEgKQ6j23Zi
-         XKj9G9nOcdsvOBsrH1jjXjeHAgTNUvzZXe9Znw4ZO+pP5HhgG6OPJHYrLPbaYzyAfd
-         /KCeAvxoakn+y80gk13iD8kvbDOHJ/HF/rvx9yzqBGH1AJU/2VyfO+JaeTVSzzEnfM
-         jFQyYsyZu9j+g==
-Date:   Mon, 18 Nov 2019 11:17:44 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: linux-next: manual merge of the drm tree with the kbuild tree
-Message-ID: <20191118111744.2beeb816@canb.auug.org.au>
+        Sun, 17 Nov 2019 19:21:05 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39568 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfKRAVF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 19:21:05 -0500
+Received: by mail-ot1-f68.google.com with SMTP id w24so12513222otk.6
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 16:21:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fredlawl-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LKZrDtVIpLnMit2BarIDGe/EvWMjXIglUl2svaa0fMg=;
+        b=ecbZ4/TRy2hUTyMYqzoL9hGVU3gt3kFQyf7Vu8toJq6PuKdr6h/s2Xy59VlLT/pXjz
+         /6gZhPcxCcprj7d0piA2C7X870j5+hREdVzyhNoaBWbhx3dIMQnCbP2XEo0E+9hTJbki
+         j4ZeRwanzBqAAI1yteXPWJody9n5Un4DmNqXatr1WKe9cPrWcIJvqozt4QJabGHXKY6q
+         3bbXsCnLMFUQCfZVWtM10iedHLiknSHPKgZziGPbSChn1FG3Nukq5V9Px1p8eNxHA6F0
+         bJ3j364MWNJqHnHvhOjMJYMsBhKVDv5MHDzpEeyKn2BTPch7cj+jqauOGGY6J99Fkb0V
+         dLUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LKZrDtVIpLnMit2BarIDGe/EvWMjXIglUl2svaa0fMg=;
+        b=iTe22JYKPX20lMWZBnhlRQ59A14lks2OnRyGoJAm7saLLtinITqc924XzGNrjxhh6Y
+         zb5BWB8Yx647370XpWhv0ugcBr3B29kI4+yAw30LuN7sTtpzpbVfTyknc8j1wuH7QLRb
+         8QH0egBCUSfGcuf6JajW64xFWcdKUPWmxq6aQTb494RJr1LLJiJxU4qrB4iodQ/Sxq9M
+         q8nPJqtwyhd6owyq/TLVvoXgMGpMYHxehxnINwtWo0ll7/D3AQZLBpbQtINwSWyjU1QK
+         SHkt0ncj4ypL/92uhAKiDnS1TqNUb9wbAzU6H4HCtdBYlgqJxc4jIYb8pQso52JpUuB8
+         NyVA==
+X-Gm-Message-State: APjAAAXxUSppkuixsCcOS5fMoL4swOT1maAmdgJmKgV5RVqAsw+vLBvS
+        myuiakO5Vw1xEz61v4tOIOGvZg==
+X-Google-Smtp-Source: APXvYqxbMvNwtxYCgpWn0NDF+Vux6CK9suZWIN8wxrT7oMCsq2kSUhzh+QrnrPIC2ga6ATO37xh6sA==
+X-Received: by 2002:a05:6830:2257:: with SMTP id t23mr21240719otd.129.1574036464138;
+        Sun, 17 Nov 2019 16:21:04 -0800 (PST)
+Received: from com.attlocal.net ([2600:1700:4870:71e0::10])
+        by smtp.gmail.com with ESMTPSA id 65sm5532194oie.50.2019.11.17.16.21.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Nov 2019 16:21:03 -0800 (PST)
+From:   Frederick Lawler <fred@fredlawl.com>
+To:     axboe@kernel.dk
+Cc:     Frederick Lawler <fred@fredlawl.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bhelgaas@google.com,
+        bvanassche@acm.org
+Subject: [PATCH v2 0/4] skd/mtip32xx: Prefer pcie_capability_read_word()
+Date:   Sun, 17 Nov 2019 18:20:53 -0600
+Message-Id: <20191118002057.9596-1-fred@fredlawl.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/USf9csr6sW8/Z5gDG3oHV/U";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/USf9csr6sW8/Z5gDG3oHV/U
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi all,
+These changes are in reference to Bjorn's suggestions here:
+https://lore.kernel.org/lkml/CAErSpo6BmWDxi3Vckm03=fZHEUosTgkMUjqCvYRA186jv8XbFw@mail.gmail.com/
+https://lore.kernel.org/lkml/CAErSpo5TZC3iM09SB1td+F7b-+aiu9EHwPYa1ayiU-i1tseV5w@mail.gmail.com/
 
-Today's linux-next merge of the drm tree got a conflict in:
+And the patches are rebased ontop of 54ecb8f7028c ("Linux 5.4-rc1")
 
-  drivers/gpu/drm/i915/Kconfig.debug
+Changes since v1:
+    * Replace magic numbers constants
 
-between commit:
+This is a long time coming, apologies for dragging my feet on getting
+these trivial patches out.
 
-  fcbb8461fd23 ("kbuild: remove header compile test")
+Frederick Lawler (4):
+  skd: Prefer pcie_capability_read_word()
+  skd: Replace magic numbers with PCI constants
+  mtip32xx: Prefer pcie_capability_read_word()
+  mtip32xx: Replace magic numbers with PCI constants
 
-from the kbuild tree and commit:
+ drivers/block/mtip32xx/mtip32xx.c | 28 ++++++++++++----------------
+ drivers/block/skd_main.c          | 14 ++++++--------
+ 2 files changed, 18 insertions(+), 24 deletions(-)
 
-  d30213e533fa ("drm/i915: Fix Kconfig indentation")
+--
+2.20.1
 
-from the drm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/gpu/drm/i915/Kconfig.debug
-index 41c8e39a73ba,eea79125b3ea..000000000000
---- a/drivers/gpu/drm/i915/Kconfig.debug
-+++ b/drivers/gpu/drm/i915/Kconfig.debug
-@@@ -1,33 -1,34 +1,33 @@@
-  # SPDX-License-Identifier: GPL-2.0-only
-  config DRM_I915_WERROR
--         bool "Force GCC to throw an error instead of a warning when compi=
-ling"
--         # As this may inadvertently break the build, only allow the user
--         # to shoot oneself in the foot iff they aim really hard
--         depends on EXPERT
--         # We use the dependency on !COMPILE_TEST to not be enabled in
--         # allmodconfig or allyesconfig configurations
--         depends on !COMPILE_TEST
--         default n
--         help
--           Add -Werror to the build flags for (and only for) i915.ko.
--           Do not enable this unless you are writing code for the i915.ko =
-module.
--=20
--           Recommended for driver developers only.
--=20
--           If in doubt, say "N".
-+ 	bool "Force GCC to throw an error instead of a warning when compiling"
-+ 	# As this may inadvertently break the build, only allow the user
-+ 	# to shoot oneself in the foot iff they aim really hard
-+ 	depends on EXPERT
-+ 	# We use the dependency on !COMPILE_TEST to not be enabled in
-+ 	# allmodconfig or allyesconfig configurations
-+ 	depends on !COMPILE_TEST
- -	select HEADER_TEST
-+ 	default n
-+ 	help
-+ 	  Add -Werror to the build flags for (and only for) i915.ko.
-+ 	  Do not enable this unless you are writing code for the i915.ko module.
-+=20
-+ 	  Recommended for driver developers only.
-+=20
-+ 	  If in doubt, say "N".
- =20
-  config DRM_I915_DEBUG
--         bool "Enable additional driver debugging"
--         depends on DRM_I915
--         select DEBUG_FS
--         select PREEMPT_COUNT
--         select REFCOUNT_FULL
--         select I2C_CHARDEV
--         select STACKDEPOT
--         select DRM_DP_AUX_CHARDEV
--         select X86_MSR # used by igt/pm_rpm
--         select DRM_VGEM # used by igt/prime_vgem (dmabuf interop checks)
--         select DRM_DEBUG_MM if DRM=3Dy
-+ 	bool "Enable additional driver debugging"
-+ 	depends on DRM_I915
-+ 	select DEBUG_FS
-+ 	select PREEMPT_COUNT
-+ 	select REFCOUNT_FULL
-+ 	select I2C_CHARDEV
-+ 	select STACKDEPOT
-+ 	select DRM_DP_AUX_CHARDEV
-+ 	select X86_MSR # used by igt/pm_rpm
-+ 	select DRM_VGEM # used by igt/prime_vgem (dmabuf interop checks)
-+ 	select DRM_DEBUG_MM if DRM=3Dy
-  	select DRM_DEBUG_SELFTEST
-  	select DMABUF_SELFTESTS
-  	select SW_SYNC # signaling validation framework (igt/syncobj*)
-
---Sig_/USf9csr6sW8/Z5gDG3oHV/U
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3R4ygACgkQAVBC80lX
-0GxOxAf9H6jZ6ZSXV0i9podvVHiAjJFeotvG2AUiBoYF6mS0hNJY6OcEYVbUrDeY
-Y0tw1VaB/pYzZW82K4lHA2NHoM8K6M75YvTI2Pxcn63mTZVQNTQUgy3mkxdx8qvP
-dJykv2KBy7UbtHc6hatqrExixGNQR5/t2TPN9qfp86pbS/qccbmhFQWVkMp7lQjL
-vVhnrBQ9msIq8NqDmxm5vpa+aO8fFad3fB7F/tcECRcRdW0x0wVq1CogiXzJdZwi
-z291AQxk/YwHdkbq7ZU1DsVTJ5zJv8ezXBYFvvSnJgzhGmkjc3A37ha52HGr96Y3
-u/rkrtO4NVWbSrh9+0mPhIYv8n1+9Q==
-=gNCg
------END PGP SIGNATURE-----
-
---Sig_/USf9csr6sW8/Z5gDG3oHV/U--
