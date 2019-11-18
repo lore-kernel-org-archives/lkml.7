@@ -2,140 +2,130 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF17C43141
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D97C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0DAF22312
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:13:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574115229;
-	bh=23CYkqb1sCbHRS367f6Ef2QNQGacCJPjPowbX7/jTW0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JeCraRv4T6nT6YKynA6O3OCqVVIZtdHISYlTIEagnB6x97SNgw4n3Ya7P9u3PwibR
-	 MMIsU65bV7L4g48rhnokInkl8GtISH6XVcMjG5ntbCiuc784PUCVNsquVX5uysl3c7
-	 AmrXTtz0PXh5RObzqA0z0XE4i9+u7Q9f9tdFVQ0k=
+	by mail.kernel.org (Postfix) with ESMTP id B9E3822312
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:13:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eQ0ftPXL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbfKRWNr (ORCPT
+        id S1727110AbfKRWNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 17:13:47 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36064 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfKRWNn (ORCPT
+        Mon, 18 Nov 2019 17:13:51 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:44824 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfKRWNu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 17:13:43 -0500
-Received: by mail-ot1-f67.google.com with SMTP id f10so16017133oto.3;
-        Mon, 18 Nov 2019 14:13:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Uz71LFY9ZiC02xsaXtidPtTM6eY67MbXjszr1DEYBdw=;
-        b=pFgn+8AsKjAWtF37c920aeglAtloUtSU2vrVHeVHExMAID3eNXKrOb/kRriW8BaDn2
-         JrL4Mv3A7f06YMK16G7EuTJi+xZokHwjCWLjBTi98zQLQilpwzk8YXeehuBqOLG94P//
-         hqM/rRC0EtIRkgQCJymQN+NEdkSZTnorcj+AdW/4yq1gjp23Y8pd/aRhG1Sh/S/0+kFI
-         4/WekN4Q0ByTY1Nzz0UFk0VMbgZa1Sk+8bzHwEF6tDEsQizjrvUqEA0c4a0Q+0taXXsD
-         1QEERtYmoZ+RvHBzRGUASkklWkHS51joWCRaXMVrIzXODhHhcx0wUjGeSilLQPD58yq+
-         Q93Q==
-X-Gm-Message-State: APjAAAVeU6VkW1xOYTtIHrn/SmXF1aIawi4+k7xQZxoRemrzL+RWEqmE
-        qtTbwrphqzQnG4x3c52v9g==
-X-Google-Smtp-Source: APXvYqw6QpdZzQirquW55aln+tRJNgakjQaUccKPAVTwfpO/53lbAe+zERpVYHbBdX6++qUYf6kIKg==
-X-Received: by 2002:a9d:3b26:: with SMTP id z35mr1175001otb.355.1574115222697;
-        Mon, 18 Nov 2019 14:13:42 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 65sm6519025oie.50.2019.11.18.14.13.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 14:13:41 -0800 (PST)
-Date:   Mon, 18 Nov 2019 16:13:41 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        linux-mtd@lists.infradead.org, Mark Brown <broonie@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bernhard Frauendienst <kernel@nospam.obeliks.de>
-Subject: Re: [PATCH v4 3/4] dt-bindings: mtd: Describe mtd-concat devices
-Message-ID: <20191118221341.GA30937@bogus>
-References: <20191113171505.26128-1-miquel.raynal@bootlin.com>
- <20191113171505.26128-4-miquel.raynal@bootlin.com>
+        Mon, 18 Nov 2019 17:13:50 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAIMDj7L074657;
+        Mon, 18 Nov 2019 16:13:45 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574115225;
+        bh=ciTDuWGfvpo0hpX5zn9uvvZx/oLJkM/2ttfzjme3X0E=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=eQ0ftPXL7JFkAQqXrkP0XewTQXg66xO/2PZm03/OdMti+jjQxIO/AfkBRS2I6yovl
+         5hGXWF2yA0s9QF88QDMa5hhhVquAS2MZtsF7pFk/WexFQT6A7ZoDqKtQ/5i/YOrvgO
+         QRYispLswbLTS61cQGa83kbjNS9koOjbLRPHjNOA=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAIMDj79076237
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 18 Nov 2019 16:13:45 -0600
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 18
+ Nov 2019 16:13:44 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 18 Nov 2019 16:13:44 -0600
+Received: from [10.250.45.147] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAIMDine017119;
+        Mon, 18 Nov 2019 16:13:44 -0600
+Subject: Re: [PATCH] ARM: OMAP: Use ARM SMC Calling Convention when OP-TEE is
+ available
+To:     Tony Lindgren <tony@atomide.com>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191118165236.22136-1-afd@ti.com>
+ <20191118215759.GD35479@atomide.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <b86e1d66-1566-521c-a445-4f0ae2fd95d6@ti.com>
+Date:   Mon, 18 Nov 2019 17:13:44 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113171505.26128-4-miquel.raynal@bootlin.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191118215759.GD35479@atomide.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 06:15:04PM +0100, Miquel Raynal wrote:
-> From: Bernhard Frauendienst <kernel@nospam.obeliks.de>
+On 11/18/19 4:57 PM, Tony Lindgren wrote:
+> Hi,
 > 
-> The main use case to concatenate MTD devices is probably SPI-NOR
-> flashes where the number of address bits is limited to 24, which can
-> access a range of 16MiB. Board manufacturers might want to double the
-> SPI storage size by adding a second flash asserted thanks to a second
-> chip selects which enhances the addressing capabilities to 25 bits,
-> 32MiB. Having two devices for twice the size is great but without more
-> glue, we cannot define partition boundaries spread across the two
-> devices. This is the gap mtd-concat intends to address.
+> * Andrew F. Davis <afd@ti.com> [191118 08:53]:
+>> +#define OMAP_SIP_SMC_STD_CALL_VAL(func_num) \
+>> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_STD_CALL, ARM_SMCCC_SMC_32, \
+>> +	ARM_SMCCC_OWNER_SIP, (func_num))
+>> +
+>> +void omap_smc1(u32 fn, u32 arg)
+>> +{
+>> +	struct device_node *optee;
+>> +	struct arm_smccc_res res;
+>> +
+>> +	/*
+>> +	 * If this platform has OP-TEE installed we use ARM SMC calls
+>> +	 * otherwise fall back to the OMAP ROM style calls.
+>> +	 */
+>> +	optee = of_find_node_by_path("/firmware/optee");
+>> +	if (optee) {
+>> +		arm_smccc_smc(OMAP_SIP_SMC_STD_CALL_VAL(fn), arg,
+>> +			      0, 0, 0, 0, 0, 0, &res);
+>> +		WARN(res.a0, "Secure function call 0x%08x failed\n", fn);
+>> +	} else {
+>> +		_omap_smc1(fn, arg);
+>> +	}
+>> +}
 > 
-> There are two options to describe concatenated devices:
-> 1/ One flash chip is described in the DT with two CS;
-> 2/ Two flash chips are described in the DT with one CS each, a virtual
-> device is also created to describe the concatenation.
+> I think we're better off just making arm_smccc_smc() work properly.
+> See cat arch/arm*/kernel/smccc-call.S.
 > 
-> Solution 1/ presents at least 3 issues:
-> * The hardware description is abused;
-> * The concatenation only works for SPI devices (while it could be
->   helpful for any MTD);
-> * It would require a lot of rework in the SPI core as most of the
->   logic assumes there is and there always will be only one CS per
->   chip.
-
-This seems ok if all the devices are identical.
-
-> Solution 2/ also has caveats:
-> * The virtual device has no hardware reality;
-> * Possible optimizations at the hardware level will be hard to enable
->   efficiently (ie. a common direct mapping abstracted by a SPI
->   memories oriented controller).
-
-Something like this may be necessary if data is interleaved rather than 
-concatinated.
 
 
-Solution 3
-Describe each device and partition separately and add link(s) from one 
-partition to the next 
+arm_smccc_smc() does work properly already, I'm using it here.
 
-flash0 {
-  partitions {
-    compatible = "fixed-partitions";
-    concat-partition = <&flash1_partitions>;
-    ...
-  };
-};
 
-flash1 {
-  flash1_partition: partitions {
-    compatible = "fixed-partitions";
-    ...
-  };
-};
+> If quirk handling is needed, looks like ARM_SMCCC_QUIRK_STATE_OFFS
+> can be used.
+> 
 
-Maybe a link back to the previous paritions too or a boolean to mark as 
-a continuation.
 
-No idea how well this works or not for the kernel, but that really 
-shouldn't matter for the binding design.
+Tried that [0], was NAKd. Making quirk-free SMCCC calls if OP-TEE is
+detected seems to be the suggested path forward, QCOM got a pass,
+doesn't look like we will get the same.
 
-Rob
++Mark, in case you want to comment if this patch matches what you had in
+mind.
+
+[0] https://www.spinics.net/lists/arm-kernel/msg607263.html
+
+Andrew
+
+
+> AFAIK this should work both for optee and the current use cases.
+> 
+> Regards,
+> 
+> Tony
+> 
