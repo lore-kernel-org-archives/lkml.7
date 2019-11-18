@@ -6,84 +6,102 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7366FC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 03:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44145C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 03:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 525EB20718
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 03:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2537B2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 03:51:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbfKRDmv (ORCPT
+        id S1726518AbfKRDvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 22:42:51 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52346 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726322AbfKRDmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 22:42:50 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2A31BA40426FC01916C5;
-        Mon, 18 Nov 2019 11:42:48 +0800 (CST)
-Received: from huawei.com (10.175.104.225) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Mon, 18 Nov 2019
- 11:42:37 +0800
-From:   Hewenliang <hewenliang4@huawei.com>
-To:     <rostedt@goodmis.org>, <acme@redhat.com>, <tstoyanov@vmware.com>,
-        <namhyung@kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <linfeilong@huawei.com>, <hushiyuan@huawei.com>
-Subject: [PATCH] tools lib traceevent: Fix memory leakage in copy_filter_type
-Date:   Sun, 17 Nov 2019 22:42:29 -0500
-Message-ID: <20191118034229.63591-1-hewenliang4@huawei.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20191113154044.5b591bf8@gandalf.local.home>
-References: <20191113154044.5b591bf8@gandalf.local.home>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.225]
-X-CFilter-Loop: Reflected
+        Sun, 17 Nov 2019 22:51:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52954 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726266AbfKRDvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 22:51:15 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 25C72C447A5; Mon, 18 Nov 2019 03:51:14 +0000 (UTC)
+Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9BA95C43383;
+        Mon, 18 Nov 2019 03:51:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9BA95C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=pass (p=none dis=none) header.from=qti.qualcomm.com
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=pass smtp.mailfrom=cang@qti.qualcomm.com
+From:   Can Guo <cang@qti.qualcomm.com>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        cang@codeaurora.org
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/4] scsi: ufs: Recheck bkops level if bkops is disabled
+Date:   Sun, 17 Nov 2019 19:50:57 -0800
+Message-Id: <1574049061-11417-2-git-send-email-cang@qti.qualcomm.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1574049061-11417-1-git-send-email-cang@qti.qualcomm.com>
+References: <1574049061-11417-1-git-send-email-cang@qti.qualcomm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is necessary to free the memory that we have allocated when error occurs.
+From: Asutosh Das <asutoshd@codeaurora.org>
 
-Fixes: ef3072cd1d5c ("tools lib traceevent: Get rid of die in add_filter_type()")
-Signed-off-by: Hewenliang <hewenliang4@huawei.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Bkops level should be rechecked upon receiving an exception.
+Currently the bkops level is being cached and never updated.
+
+Update the same each time the level is checked.
+Also do not use the cached bkops level value if it is disabled
+and then enabled.
+
+Fixes: afdfff59a0e0 (scsi: ufs: handle non spec compliant bkops behaviour by device)
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
 ---
- tools/lib/traceevent/parse-filter.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
-index 552592d153fb..f3cbf86e51ac 100644
---- a/tools/lib/traceevent/parse-filter.c
-+++ b/tools/lib/traceevent/parse-filter.c
-@@ -1473,8 +1473,10 @@ static int copy_filter_type(struct tep_event_filter *filter,
- 	if (strcmp(str, "TRUE") == 0 || strcmp(str, "FALSE") == 0) {
- 		/* Add trivial event */
- 		arg = allocate_arg();
--		if (arg == NULL)
-+		if (arg == NULL) {
-+			free(str);
- 			return -1;
-+		}
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 3910c58..8e7c362 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -5099,6 +5099,7 @@ static int ufshcd_disable_auto_bkops(struct ufs_hba *hba)
  
- 		arg->type = TEP_FILTER_ARG_BOOLEAN;
- 		if (strcmp(str, "TRUE") == 0)
-@@ -1483,8 +1485,11 @@ static int copy_filter_type(struct tep_event_filter *filter,
- 			arg->boolean.value = 0;
+ 	hba->auto_bkops_enabled = false;
+ 	trace_ufshcd_auto_bkops_state(dev_name(hba->dev), "Disabled");
++	hba->is_urgent_bkops_lvl_checked = false;
+ out:
+ 	return err;
+ }
+@@ -5123,6 +5124,7 @@ static void ufshcd_force_reset_auto_bkops(struct ufs_hba *hba)
+ 		hba->ee_ctrl_mask &= ~MASK_EE_URGENT_BKOPS;
+ 		ufshcd_disable_auto_bkops(hba);
+ 	}
++	hba->is_urgent_bkops_lvl_checked = false;
+ }
  
- 		filter_type = add_filter_type(filter, event->id);
--		if (filter_type == NULL)
-+		if (filter_type == NULL) {
-+			free(str);
-+			free_arg(arg);
- 			return -1;
-+		}
- 
- 		filter_type->filter = arg;
- 
+ static inline int ufshcd_get_bkops_status(struct ufs_hba *hba, u32 *status)
+@@ -5169,6 +5171,7 @@ static int ufshcd_bkops_ctrl(struct ufs_hba *hba,
+ 		err = ufshcd_enable_auto_bkops(hba);
+ 	else
+ 		err = ufshcd_disable_auto_bkops(hba);
++	hba->urgent_bkops_lvl = curr_status;
+ out:
+ 	return err;
+ }
 -- 
-2.19.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
