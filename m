@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9CCC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B75AAC43141
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D95D62230E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 930DE214DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:05:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKpR3deF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rrVfi5v2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfKRUFh (ORCPT
+        id S1727053AbfKRUFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 15:05:37 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41389 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbfKRUFf (ORCPT
+        Mon, 18 Nov 2019 15:05:39 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37289 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbfKRUFh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 15:05:35 -0500
-Received: by mail-lf1-f65.google.com with SMTP id j14so14866850lfb.8;
-        Mon, 18 Nov 2019 12:05:33 -0800 (PST)
+        Mon, 18 Nov 2019 15:05:37 -0500
+Received: by mail-lf1-f68.google.com with SMTP id b20so14913406lfp.4;
+        Mon, 18 Nov 2019 12:05:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cN+cTWmw5IKMObEA3Y8HAg9N2AlhbhuoYmAREYZlw/4=;
-        b=gKpR3deFRHA9H6ebC9kq34DBn0/xxJSWvPVo3+J7x4cjq8pqJK5o6LsjRx7NySw4FD
-         BrOFnOqghNGiDsg2KrHCg+TI3DIIX6GiMeEIEQQ+snUi6B6O0ZOHhtNIrZPBskzLiDPu
-         7ZxX+VrcMINUEQ9jmxUPjJ/FZP2o3uEfcGIbJO+BqXZB2KsZwxKlXKtu5l7yvCksMCXR
-         jo7P3bhnHMSqE5eVuYsTyBJAC9xDWicmBbnnA31isZWe5MfiLeSdugeXgEf0gE04p62Z
-         au42a/HgriX8s4ini4zGtXm84ircbKlRZD13Ag12spQcku6Qqz5JZVqSWldGS8BuFdtp
-         wTaw==
+        bh=micXsJQgXBCNNJcKoZJTQ5HIZ0M5FUK3UrWoG3KSyWo=;
+        b=rrVfi5v2JRE5SJXHPGiSfi6I6jin/l9B/rf4X0kWlViljiZGz+LWP/0ECjy2YGt2Ly
+         H/qRg2521GJkwgtpvApOD5aA7+DBwPWsifAzGVha+jXC143rC5gQLR6jUJ54cWKsePel
+         uv1TjMi/1ZiuGlvwBXSwxK89SV9WxRJoC2qLxlJpL1hpk3wd9mEQKoWOUsxGpeTF8y9p
+         9bSc8VsKBip5qLTPIkaLaW/w7hnUZEXyxCP+yfEc9oFSgqF1y8cbOxJENorysq10GLcz
+         ck9Y8swJz86xZjgEW5OGTmiSuS4KYRXAYxWg5bcRHsIojz5ciUvmrY1ZlkrrAMMWG+Rz
+         Yu0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cN+cTWmw5IKMObEA3Y8HAg9N2AlhbhuoYmAREYZlw/4=;
-        b=nrKDh34QLE1wfiOymHP6t9xY2U1Zz8YuBeS0AkspXq5XRXdhPfR81DMSLANefhYedo
-         /5S7yavvVjsHneNyNVKX5CZxAOiDA2RggVOTG8rRaA1PZaOUmbcQPiX196xVGSanC9iJ
-         QT6ISGCO1gERojMSA3MX7PPFgTK+jeB9+wydzW5M0mLjDi38nIFQMMVf01/NUPHIbK/7
-         r3GdgYDzlddih8uQmbab3QL9I/S9nkfOm0F59QQKg0MWpZT+T4nWn3jBaXumIYJ75pLa
-         bUnzAGKS5avjRz79se17A5NlagCY6JkH2AGUpGzmblIycxQJGSZjwDDVomPRTO7m4Ck2
-         EUVA==
-X-Gm-Message-State: APjAAAVxWrEB0VoskfrXeATFOpi5q80ADwiAbx5xLqtYu9190jgAH8Py
-        Xl5XdweYamKBn6YZsuJaCS4=
-X-Google-Smtp-Source: APXvYqzB8U5iYQKp+sDOt/38fnNxpmw9MZAc1mV8GBofStkZ8gBPo5XdpUpQbn0VIyJos6GrWdV34A==
-X-Received: by 2002:a19:8c1c:: with SMTP id o28mr840663lfd.105.1574107533034;
-        Mon, 18 Nov 2019 12:05:33 -0800 (PST)
+        bh=micXsJQgXBCNNJcKoZJTQ5HIZ0M5FUK3UrWoG3KSyWo=;
+        b=Zd9xVqdn1UcKq4kbWUlhyLHFwX+W7fw4g6kJqjD+tTdSegxb+ZkGpPJq2JCAu0F8RF
+         7ij1v4yQ2Ol9TC7q36JvNqegFfn3iTePmOFgwr0ZY+cRPUqKLxDF2dCkS0tBq6YH6uQx
+         ZiFV0T91kc2jLyBBKr0RFsFAjvSHfnLxDutiioGNg/hcYQMhDJ/0cfKoq5ajQ+/rvLiP
+         WqIc5OHwikhsswE8l9iGI4wOA+FpnmmGE/t2RP8dpPxrsOFPxdGBBelV3XeY5Z26/dyl
+         x2jZdzcun0NMJHh5DOvxj5Bdlf9vahVLSqHso+hJoTLqCaFWC8DrXdTI9feyFOlYvU8e
+         VMew==
+X-Gm-Message-State: APjAAAXsFYP2ZTKImiXxQU9VxMOoYnODzIqmmUoP7bQWUFcaBSOvc+9+
+        NpyYF6axNd/QucKMEHqhxMmE/wZr
+X-Google-Smtp-Source: APXvYqwTb+6t99vmQH3iQttgGiopbKJ92e1WabIoG/JiwFJ61DaC2tawmiw81YDXtJmNSG9zjh6Nnw==
+X-Received: by 2002:a05:6512:4db:: with SMTP id w27mr895831lfq.4.1574107534975;
+        Mon, 18 Nov 2019 12:05:34 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id j23sm9166942lji.41.2019.11.18.12.05.31
+        by smtp.gmail.com with ESMTPSA id j23sm9166942lji.41.2019.11.18.12.05.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 12:05:32 -0800 (PST)
+        Mon, 18 Nov 2019 12:05:34 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -67,9 +67,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v1 03/29] dt-bindings: memory: tegra30: mc: Document new interconnect property
-Date:   Mon, 18 Nov 2019 23:02:21 +0300
-Message-Id: <20191118200247.3567-4-digetx@gmail.com>
+Subject: [PATCH v1 05/29] dt-bindings: memory: tegra124: mc: Document new interconnect property
+Date:   Mon, 18 Nov 2019 23:02:23 +0300
+Message-Id: <20191118200247.3567-6-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191118200247.3567-1-digetx@gmail.com>
 References: <20191118200247.3567-1-digetx@gmail.com>
@@ -86,14 +86,14 @@ designates memory controller as interconnect provider.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- .../bindings/memory-controllers/nvidia,tegra30-mc.yaml       | 5 +++++
+ .../bindings/memory-controllers/nvidia,tegra124-mc.yaml      | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
-index 84fd57bcf0dc..5436e6d420bc 100644
---- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
-+++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
-@@ -57,6 +57,9 @@ properties:
+diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
+index 30d9fb193d7f..b3aa3e6b7006 100644
+--- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
++++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-mc.yaml
+@@ -40,6 +40,9 @@ properties:
    "#iommu-cells":
      const: 1
  
@@ -103,7 +103,7 @@ index 84fd57bcf0dc..5436e6d420bc 100644
  patternProperties:
    "^emc-timings-[0-9]+$":
      type: object
-@@ -120,6 +123,7 @@ required:
+@@ -104,6 +107,7 @@ required:
    - clock-names
    - "#reset-cells"
    - "#iommu-cells"
@@ -111,14 +111,14 @@ index 84fd57bcf0dc..5436e6d420bc 100644
  
  additionalProperties: false
  
-@@ -135,6 +139,7 @@ examples:
+@@ -119,6 +123,7 @@ examples:
  
          #iommu-cells = <1>;
          #reset-cells = <1>;
 +        #interconnect-cells = <1>;
  
-         emc-timings-1 {
-             nvidia,ram-code = <1>;
+         emc-timings-3 {
+             nvidia,ram-code = <3>;
 -- 
 2.23.0
 
