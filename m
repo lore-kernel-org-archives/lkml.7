@@ -2,98 +2,108 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB98BC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7ABCC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 988602186D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E9E2186D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:39:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JVrUTk3g"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iPNrBghv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfKRRi4 (ORCPT
+        id S1727059AbfKRRjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 12:38:56 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:59752 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726427AbfKRRi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 12:38:56 -0500
-Received: from zn.tnic (p200300EC2F27B5003D22FC05E431AFF8.dip0.t-ipconnect.de [IPv6:2003:ec:2f27:b500:3d22:fc05:e431:aff8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1D1D11EC072D;
-        Mon, 18 Nov 2019 18:38:50 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1574098731;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=/zpixmJKEK2DyhKs6AeIjcFfA5HziA0TuK8uE0/KAJY=;
-        b=JVrUTk3gJRZJwoaj7Pm0kBocQxkdT0b8912XwpNNwXrLoXn/pwdBL+U4q3U2HJLdapv6NO
-        ctqtMIEzJXoHO1+ObaQneXG7EjtdJTlcHgUDezw+JP11/Lfgofnl/qTGAFfnDLvI5JQ1/N
-        08IbCVumGcM5imH5h8KzvEEi1ceg1+Y=
-Date:   Mon, 18 Nov 2019 18:38:50 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Dmitry Vyukov <dvyukov@google.com>, Jann Horn <jannh@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH v2 2/3] x86/traps: Print non-canonical address on #GP
-Message-ID: <20191118173850.GL6363@zn.tnic>
-References: <20191115191728.87338-1-jannh@google.com>
- <20191115191728.87338-2-jannh@google.com>
- <20191118142144.GC6363@zn.tnic>
- <CACT4Y+bCOr=du1QEg8TtiZ-X6U+8ZPR4N07rJOeSCsd5h+zO3w@mail.gmail.com>
- <CAG48ez1AWW7FkvU31ahy=0ZiaAreSMz=FFA0u8-XkXT9hNdWKA@mail.gmail.com>
- <CACT4Y+bfF86YY_zEGWO1sK0NwuYgr8Cx0wFewRDq0WL_GBgO0Q@mail.gmail.com>
- <20191118164407.GH6363@zn.tnic>
+        Mon, 18 Nov 2019 12:39:05 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38695 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbfKRRjF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 12:39:05 -0500
+Received: by mail-ed1-f65.google.com with SMTP id s10so14343664edi.5
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 09:39:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Wwy7y1a6q/DuAvJKNf/i3hevC3KWqafGydm34BlW9lE=;
+        b=iPNrBghv59Zs8dDX8Xz9bhEBRWgibTBZWXihskroBECqP/sEwdJ6WgRmPmFVDKT0S8
+         y2jkd991PONOD9wU8fUMCdZMwJhIHvI/cmQQJT37eN2UgMCfSVjbL5EVkcz1rbcAfxz8
+         qfkZGYgdcJ7wv673TYNQfofZYRDGP4zoZadY6Eg5XwxOTMvhvPVqGzYe716AwaNYwWtR
+         3j1Q03SmWJ+MhxHwi7MYaosE2D1v6GLGODfgD9GAPI4LmJJyJT5lqU6rFY7sVjvDIq1+
+         4OR4wAWEaWw7Tfmx2FblvHroNIxCEHmxj0HtlgmdouzWKMbv1EpWrhwNXoVHe5vs+xQ1
+         3DHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Wwy7y1a6q/DuAvJKNf/i3hevC3KWqafGydm34BlW9lE=;
+        b=ITYVBKFZaMAFrmKM9yZ9IPYGpBV5Qlj1de0n+/Oxtm9rJL4KXjZNFL+T3vF1NkRtFR
+         S3AwJvg/Qg977PVnTz9lAjRayQ/lGUzRuGiGc/N4fLbeZA9eZd3JOs5+hXYsbIC/EedA
+         504yNNI+PqnDHxJhpUzZ0rSYDlL9qJpH31hv1TtvubN9L5D1KL5iy4CF1K1MNXzzhl+g
+         7g7lM5YopCHp432ezziRY/6rH9PNQ/NZ8+jSACXLLUb5ZhjMTvg3FFli/eJGC5hZprhE
+         QDmZuqmKLUHFEmoMxr5dkNs1ewzfvZdGmuydcm1P0FdFTaq3Viau15FAPe6w2Xd/Mgqq
+         8j3A==
+X-Gm-Message-State: APjAAAVc0KzpuIGI5n6HPWd9+oi7COF+SohTBCp8y1Q5QbUR8hc2tS2r
+        epYkwMV4FxHnDxYCuZf7eH+H15+ldMOTE1kxAoyOFA==
+X-Google-Smtp-Source: APXvYqxhqeJRdUmC8N6VoZ8p/rHkoYIm1VNdzTaP9BU/3q7mXDVI7F4KpAAS8GbGgAVSgvqFOqMqz+pAp1Tx2gzpvwI=
+X-Received: by 2002:a17:906:7c4e:: with SMTP id g14mr27917513ejp.150.1574098743309;
+ Mon, 18 Nov 2019 09:39:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191118164407.GH6363@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191115201225.92888-1-lrizzo@google.com> <20191116.131058.1856199123293908506.davem@davemloft.net>
+ <59ebfae8-ac93-75a1-7a60-2bb3820a9a79@mellanox.com> <20191117.102949.1712366954266607838.davem@davemloft.net>
+In-Reply-To: <20191117.102949.1712366954266607838.davem@davemloft.net>
+From:   Luigi Rizzo <lrizzo@google.com>
+Date:   Mon, 18 Nov 2019 09:38:52 -0800
+Message-ID: <CAMOZA0LWNaK+bwDvUchRdB3enz=Dw4jUDCAY-6e0ty=iT6pytw@mail.gmail.com>
+Subject: Re: [PATCH] net/mlx4_en: fix mlx4 ethtool -N insertion
+To:     David Miller <davem@davemloft.net>
+Cc:     tariqt@mellanox.com, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 05:44:07PM +0100, Borislav Petkov wrote:
-> [    2.523708] Write protecting the kernel read-only data: 16384k
-> [    2.524729] Freeing unused kernel image (text/rodata gap) memory: 2040K
-> [    2.525594] Freeing unused kernel image (rodata/data gap) memory: 368K
-> [    2.541414] x86/mm: Checked W+X mappings: passed, no W+X pages found.
-> 
-> <--- important first splat starts here:
-> 
-> [    2.542218] [*] general protection fault while derefing a non-canonical address 0xdfff000000000001: 0000 [#1] PREEMPT SMP
-		  ^
+On Sun, Nov 17, 2019 at 10:29 AM David Miller <davem@davemloft.net> wrote:
+>
+> From: Tariq Toukan <tariqt@mellanox.com>
+> Date: Sun, 17 Nov 2019 14:46:50 +0000
+>
+> >
+> >
+> > On 11/16/2019 11:10 PM, David Miller wrote:
+> >> From: Luigi Rizzo <lrizzo@google.com>
+> >> Date: Fri, 15 Nov 2019 12:12:25 -0800
+> >>
+> >>> ethtool expects ETHTOOL_GRXCLSRLALL to set ethtool_rxnfc->data with the
+> >>> total number of entries in the rx classifier table.  Surprisingly, mlx4
+> >>> is missing this part (in principle ethtool could still move forward and
+> >>> try the insert).
+> >>>
+> >>> Tested: compiled and run command:
+> >>>     phh13:~# ethtool -N eth1 flow-type udp4  queue 4
+> >>>     Added rule with ID 255
+> >>>
+> >>> Signed-off-by: Luigi Rizzo <lrizzo@google.com>
+> >>> Change-Id: I18a72f08dfcfb6b9f6aa80fbc12d58553e1fda76
+> >>
+> >> Luigi, _always_ CC: the appropriate maintainer when making changes to the
+> >> kernel, as per the top-level MAINTAINERS file.
+> >>
+> >> Tariq et al., please review.
+> >>
+> >
+> > Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+>
+> Applied and queued up for -stable, with Change-Id: removed.
 
-Btw, tglx just suggested on IRC to simply slap the die_counter number here so
-that you have
 
-[    2.543343] [1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc8+ #8
-[    2.544138] [1] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.1-1 04/01/2014
-...
+Thank you all, apologies for mistakes.
 
-which also tells you to which splat the line belongs to.
-
-Also useful.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+cheers
+luigi
