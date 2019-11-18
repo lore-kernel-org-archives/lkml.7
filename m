@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7519DC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7CAC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A56F20700
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C9F20700
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:21:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fredlawl-com.20150623.gappssmtp.com header.i=@fredlawl-com.20150623.gappssmtp.com header.b="aEv5g5+5"
+	dkim=pass (2048-bit key) header.d=fredlawl-com.20150623.gappssmtp.com header.i=@fredlawl-com.20150623.gappssmtp.com header.b="DuZR75PE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfKRAVN (ORCPT
+        id S1726688AbfKRAVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 19:21:13 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36363 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfKRAVK (ORCPT
+        Sun, 17 Nov 2019 19:21:20 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33953 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfKRAVQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 19:21:10 -0500
-Received: by mail-ot1-f65.google.com with SMTP id f10so12995196oto.3
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 16:21:09 -0800 (PST)
+        Sun, 17 Nov 2019 19:21:16 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 19so3078359otz.1
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 16:21:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fredlawl-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SDNwfNn5T935taTtptdT62qB38KmzsVcQ6J6XQJ53cI=;
-        b=aEv5g5+5C6ppRO0EAPEGURQUArJ63u81uTTgvLm4P+Guga1fGGKMS1Nuo8T37b4zV4
-         zEuuBGKHk131JOaVbjUp/EQHLOIQnVu3zbEgCeAhw5dbdt1tAjHx4aKJbZhJuG+7QFCu
-         zkGZX2Exv2ZNkGsnurlGEWsp7DHnheWdZnl+1nhKFL/wSbaGx1Ec5wcyxebhJ8s+5n/8
-         hJ0CWQbXD7vb3ZKuDIKO9wJWpMZ4EOMUkjkwndgxNuR5F7g3kPUUdIIx6LnNlSj0J+I7
-         Mrir+yrv7R+gw8Dqe7MUm+kKc3hRE6f1dRRFXrO70FjfDlF7dentqtYRz6dnx04pOgM0
-         Ihjw==
+        bh=1Ovt6jbDPjyCR0/arOz9a+rgIf56RvTTsMB0ccBa1ek=;
+        b=DuZR75PETpq9SHSgVGX4A7aW1VbYfbZpBNrGJMQG94ixdnUnssFw8RwbbiqCZWa/ad
+         Ib1io05cexSPa9pmwdrRDzgcgZ7FNsfNhleHAGvS7g/SNVm3GEQbn9XIt7fJ2WUDrVnJ
+         vF71JXj/NIpCafPIliMJxG0OjI3A+r//g0kJ1s4eIn0bHDy/Ci0Z4Q1M3TrxGD/1CccX
+         T1TcO83huhJL5HXu/UTUdSTCduX4v83PJKYlEktUQgpXvRMqcB+xsHT6QeIEwdHcQVrc
+         h6YVSw4gQ3rPaPuT4mzbVcReI8r5mdt90esAKNQ+uXv4Bw6Mxkb+mFPAmxGtbP57LSnB
+         wnyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SDNwfNn5T935taTtptdT62qB38KmzsVcQ6J6XQJ53cI=;
-        b=X2EQjcCnq3lgOlPXLgzgdYVVZV2GJ612E8M7kC/Pz8GHq/VlXUSjgINOMlk3wkMW/S
-         18nVvR2+qTNWy5qhvu2+XKqpocNzbf28fAHW9MeBwP6J9pCU3AVbWQ7Pz67KNC1oxUCe
-         o3U8O0cU2WL1sj+sLfFLDojbkEUnVeindacnxgJOUViUlaWToMNjLNH3uI+DguRRD//G
-         0h/lRrtGvdff0r/cs6ABEFxwA9JZ6GBNdGfJYeIr3wesWgz25lb1wRBuqwO54meZmMG7
-         FI5UwIs6mUo+QZvqAmKRqLeUHw35cQ0UTgQPBZORUzceQWq8agR2+TsEOlhttALgJLZi
-         DHaw==
-X-Gm-Message-State: APjAAAWVNhw2kWv2sXkCroHqLaEsYumZaAqBXVzxrXRfp32zWzY+INve
-        VSNeiWTDfG62SuA7+kc+4TEZCw==
-X-Google-Smtp-Source: APXvYqwUvhZb0tmkUQIH6eMJOADzdbdXiPEfFkpMFra3bB5mOsE5PZZOsHOxZWI4QlXk8Y3GXm3jCA==
-X-Received: by 2002:a9d:7ac2:: with SMTP id m2mr20448773otn.135.1574036469452;
-        Sun, 17 Nov 2019 16:21:09 -0800 (PST)
+        bh=1Ovt6jbDPjyCR0/arOz9a+rgIf56RvTTsMB0ccBa1ek=;
+        b=UoHSgpVHBARax058j7YffdMERbn8doQrFAq1IBnnastldiILGcoOtMOn1d4Za2gt9t
+         4KrWGobC2RizwkY9GUuUfNeV8cKMUGsZf/N1zKyV0me9/WIlVb8qdGCGd2bw7U4bDjM0
+         8Goj5K7oealFbapxs09KTEFL5/f6nd/QLsNvt6pAKBXKrI5neGY2fesLeihzsadI1HiD
+         QTb/3AsbYcTlIvYsR9UGHZtglwuqw6j7E8pTmNmVsKxzzRpLy0k2jVGOzaweOy2OijTs
+         tLbeFLBmEqa0TE8HOJbrmV3MMd3vFBI2v0Aedrs57BLit07MPyBhC37NVKHrGXxpqmtd
+         oaZQ==
+X-Gm-Message-State: APjAAAXwboOlVoUNrpBetK1dTGeB0H3TRmAZFiotKZ+ea1Z8U37mMqQX
+        hD1eSOvfw3LL6jscomn/fUIoTQ==
+X-Google-Smtp-Source: APXvYqwrOBmroGm4Xd11i377lyNFKSWESfgTnNADfHHvp4d6oK0HIA88i6ywpvr+uizhKDds258Opw==
+X-Received: by 2002:a9d:6288:: with SMTP id x8mr21052106otk.170.1574036476012;
+        Sun, 17 Nov 2019 16:21:16 -0800 (PST)
 Received: from com.attlocal.net ([2600:1700:4870:71e0::10])
-        by smtp.gmail.com with ESMTPSA id 65sm5532194oie.50.2019.11.17.16.21.05
+        by smtp.gmail.com with ESMTPSA id 65sm5532194oie.50.2019.11.17.16.21.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Nov 2019 16:21:08 -0800 (PST)
+        Sun, 17 Nov 2019 16:21:15 -0800 (PST)
 From:   Frederick Lawler <fred@fredlawl.com>
 To:     axboe@kernel.dk
 Cc:     Frederick Lawler <fred@fredlawl.com>, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org, bhelgaas@google.com,
         bvanassche@acm.org
-Subject: [PATCH v2 2/4] skd: Replace magic numbers with PCI constants
-Date:   Sun, 17 Nov 2019 18:20:55 -0600
-Message-Id: <20191118002057.9596-3-fred@fredlawl.com>
+Subject: [PATCH v2 4/4] mtip32xx: Replace magic numbers with PCI constants
+Date:   Sun, 17 Nov 2019 18:20:57 -0600
+Message-Id: <20191118002057.9596-5-fred@fredlawl.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191118002057.9596-1-fred@fredlawl.com>
 References: <20191118002057.9596-1-fred@fredlawl.com>
@@ -82,31 +82,27 @@ No functional change intended.
 
 Signed-off-by: Frederick Lawler <fred@fredlawl.com>
 ---
-v2
+v2:
 - Added this patch
 ---
- drivers/block/skd_main.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/block/mtip32xx/mtip32xx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/skd_main.c b/drivers/block/skd_main.c
-index f25f6ef6b4c7..7f8243573ad9 100644
---- a/drivers/block/skd_main.c
-+++ b/drivers/block/skd_main.c
-@@ -3141,9 +3141,11 @@ static char *skd_pci_info(struct skd_device *skdev, char *str)
- 		char lwstr[6];
- 		uint16_t pcie_lstat, lspeed, lwidth;
+diff --git a/drivers/block/mtip32xx/mtip32xx.c b/drivers/block/mtip32xx/mtip32xx.c
+index 35703dc98e25..225c6ae62385 100644
+--- a/drivers/block/mtip32xx/mtip32xx.c
++++ b/drivers/block/mtip32xx/mtip32xx.c
+@@ -3942,8 +3942,8 @@ static void mtip_disable_link_opts(struct driver_data *dd, struct pci_dev *pdev)
+ 		return;
  
--		pcie_capability_read_word(skdev->pdev, 0x12, &pcie_lstat);
--		lspeed = pcie_lstat & (0xF);
--		lwidth = (pcie_lstat & 0x3F0) >> 4;
-+		pcie_capability_read_word(skdev->pdev, PCI_EXP_LNKSTA,
-+					  &pcie_lstat);
-+		lspeed = pcie_lstat & PCI_EXP_LNKSTA_CLS;
-+		lwidth = (pcie_lstat & PCI_EXP_LNKSTA_NLW) >>
-+			 PCI_EXP_LNKSTA_NLW_SHIFT;
- 
- 		if (lspeed == 1)
- 			strcat(str, "2.5GT/s ");
+ 	pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &pcie_dev_ctrl);
+-	if (pcie_dev_ctrl & (1 << 11) ||
+-	    pcie_dev_ctrl & (1 << 4)) {
++	if (pcie_dev_ctrl & PCI_EXP_DEVCTL_NOSNOOP_EN ||
++	    pcie_dev_ctrl & PCI_EXP_DEVCTL_RELAX_EN) {
+ 		dev_info(&dd->pdev->dev,
+ 			 "Disabling ERO/No-Snoop on bridge device %04x:%04x\n",
+ 			 pdev->vendor, pdev->device);
 -- 
 2.20.1
 
