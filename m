@@ -2,109 +2,136 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AFEC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A07AC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA54422309
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10B3D222EF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:38:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="pB/eyVpR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfKRWbe (ORCPT
+        id S1727102AbfKRWi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 17:31:34 -0500
-Received: from muru.com ([72.249.23.125]:42790 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726272AbfKRWbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 17:31:34 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 2A9FF80BF;
-        Mon, 18 Nov 2019 22:32:08 +0000 (UTC)
-Date:   Mon, 18 Nov 2019 14:31:28 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: OMAP: Use ARM SMC Calling Convention when OP-TEE is
- available
-Message-ID: <20191118223128.GE35479@atomide.com>
-References: <20191118165236.22136-1-afd@ti.com>
- <20191118215759.GD35479@atomide.com>
- <b86e1d66-1566-521c-a445-4f0ae2fd95d6@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b86e1d66-1566-521c-a445-4f0ae2fd95d6@ti.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Mon, 18 Nov 2019 17:38:26 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:50926 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbfKRWiZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 17:38:25 -0500
+Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 2E89820B4900;
+        Mon, 18 Nov 2019 14:38:24 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2E89820B4900
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1574116704;
+        bh=YnHXeMIG+rc/6WOmnZmZDOjEu4oUvswgA6nTTJ0rdBQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pB/eyVpRY7b6kIjL0Fp3WHWTb59YwyKTw/gdTBBp1og5+6Br3nzFeJEiebHDwB4jE
+         qqmIVMTDRxR4Jne51sPvCJZJUitlHF6dsJIneheX8oIM276ZrIZzPJoXK3U7ob5XsE
+         CfXaGc/0Epw12ngfiq2qamz2ywF9RhETWZzEt4zw=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Subject: [PATCH v8 2/5] IMA: Define an IMA hook to measure keys
+Date:   Mon, 18 Nov 2019 14:38:15 -0800
+Message-Id: <20191118223818.3353-3-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191118223818.3353-1-nramas@linux.microsoft.com>
+References: <20191118223818.3353-1-nramas@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Andrew F. Davis <afd@ti.com> [191118 22:14]:
-> On 11/18/19 4:57 PM, Tony Lindgren wrote:
-> > Hi,
-> > 
-> > * Andrew F. Davis <afd@ti.com> [191118 08:53]:
-> >> +#define OMAP_SIP_SMC_STD_CALL_VAL(func_num) \
-> >> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_STD_CALL, ARM_SMCCC_SMC_32, \
-> >> +	ARM_SMCCC_OWNER_SIP, (func_num))
-> >> +
-> >> +void omap_smc1(u32 fn, u32 arg)
-> >> +{
-> >> +	struct device_node *optee;
-> >> +	struct arm_smccc_res res;
-> >> +
-> >> +	/*
-> >> +	 * If this platform has OP-TEE installed we use ARM SMC calls
-> >> +	 * otherwise fall back to the OMAP ROM style calls.
-> >> +	 */
-> >> +	optee = of_find_node_by_path("/firmware/optee");
-> >> +	if (optee) {
-> >> +		arm_smccc_smc(OMAP_SIP_SMC_STD_CALL_VAL(fn), arg,
-> >> +			      0, 0, 0, 0, 0, 0, &res);
-> >> +		WARN(res.a0, "Secure function call 0x%08x failed\n", fn);
-> >> +	} else {
-> >> +		_omap_smc1(fn, arg);
-> >> +	}
-> >> +}
-> > 
-> > I think we're better off just making arm_smccc_smc() work properly.
-> > See cat arch/arm*/kernel/smccc-call.S.
-> > 
-> 
-> 
-> arm_smccc_smc() does work properly already, I'm using it here.
+Measure asymmetric keys used for verifying file signatures,
+certificates, etc.
 
-OK. I guess I don't follow then why we can't use arm_smccc_smc()
-for old code.
+This patch defines a new IMA hook namely ima_post_key_create_or_update()
+to measure asymmetric keys.
 
-> > If quirk handling is needed, looks like ARM_SMCCC_QUIRK_STATE_OFFS
-> > can be used.
-> > 
-> 
-> 
-> Tried that [0], was NAKd. Making quirk-free SMCCC calls if OP-TEE is
-> detected seems to be the suggested path forward, QCOM got a pass,
-> doesn't look like we will get the same.
-> 
-> +Mark, in case you want to comment if this patch matches what you had in
-> mind.
-> 
-> [0] https://www.spinics.net/lists/arm-kernel/msg607263.html
+The IMA hook is defined in a new file namely ima_asymmetric_keys.c
+which is built only if CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE is enabled.
 
-Yeah I might be missing some parts here..
+Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: James Morris <jamorris@linux.microsoft.com>
+---
+ security/integrity/ima/Makefile              |  1 +
+ security/integrity/ima/ima_asymmetric_keys.c | 51 ++++++++++++++++++++
+ 2 files changed, 52 insertions(+)
+ create mode 100644 security/integrity/ima/ima_asymmetric_keys.c
 
-> > AFAIK this should work both for optee and the current use cases.
+diff --git a/security/integrity/ima/Makefile b/security/integrity/ima/Makefile
+index 31d57cdf2421..207a0a9eb72c 100644
+--- a/security/integrity/ima/Makefile
++++ b/security/integrity/ima/Makefile
+@@ -12,3 +12,4 @@ ima-$(CONFIG_IMA_APPRAISE) += ima_appraise.o
+ ima-$(CONFIG_IMA_APPRAISE_MODSIG) += ima_modsig.o
+ ima-$(CONFIG_HAVE_IMA_KEXEC) += ima_kexec.o
+ obj-$(CONFIG_IMA_BLACKLIST_KEYRING) += ima_mok.o
++obj-$(CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE) += ima_asymmetric_keys.o
+diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
+new file mode 100644
+index 000000000000..f6884641a622
+--- /dev/null
++++ b/security/integrity/ima/ima_asymmetric_keys.c
+@@ -0,0 +1,51 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright (C) 2019 Microsoft Corporation
++ *
++ * Author: Lakshmi Ramasubramanian (nramas@linux.microsoft.com)
++ *
++ * File: ima_asymmetric_keys.c
++ *       Defines an IMA hook to measure asymmetric keys on key
++ *       create or update.
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <crypto/public_key.h>
++#include <keys/asymmetric-type.h>
++#include "ima.h"
++
++/**
++ * ima_post_key_create_or_update - measure asymmetric keys
++ * @keyring: keyring to which the key is linked to
++ * @key: created or updated key
++ * @flags: key flags
++ * @create: flag indicating whether the key was created or updated
++ *
++ * Keys can only be measured, not appraised.
++ */
++void ima_post_key_create_or_update(struct key *keyring, struct key *key,
++				   unsigned long flags, bool create)
++{
++	const struct public_key *pk;
++
++	/* Only asymmetric keys are handled by this hook. */
++	if (key->type != &key_type_asymmetric)
++		return;
++
++	/* Get the public_key of the given asymmetric key to measure. */
++	pk = key->payload.data[asym_crypto];
++
++	/*
++	 * keyring->description points to the name of the keyring
++	 * (such as ".builtin_trusted_keys", ".ima", etc.) to
++	 * which the given key is linked to.
++	 *
++	 * The name of the keyring is passed in the "eventname"
++	 * parameter to process_buffer_measurement() and is set
++	 * in the "eventname" field in ima_event_data for
++	 * the key measurement IMA event.
++	 */
++	process_buffer_measurement(pk->key, pk->keylen,
++				   keyring->description, KEY_CHECK, 0);
++}
+-- 
+2.17.1
 
-.. as I'd like to have a solution that works for both cases using
-arm_smccc_smc().
-
-If r12 is the only issue, souds like we can just use a wrapper
-for the legacy calls to call arm_smccc_smc()?
-
-Regards,
-
-Tony
