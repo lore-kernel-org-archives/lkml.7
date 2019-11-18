@@ -2,266 +2,171 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F419CC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FF0C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA9BD206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C479B206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:45:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mih6Qaa2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfKRJno convert rfc822-to-8bit (ORCPT
+        id S1726725AbfKRJpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 04:43:44 -0500
-Received: from mail-oln040092255101.outbound.protection.outlook.com ([40.92.255.101]:45728
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726461AbfKRJnm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 04:43:42 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W5omv5Q9uPnc6K4zWFW/+UsWylKsx0JobOF6uxDJvukV34HNatO1x/S6eUhAnUcslmQVITkHHfjcpNAxShSP/uoKipy6O5gy7PfLqhe4TkGZjcUK6Cv4f8I3SxXQa6b3lzHoNFqKf/+UQE6YTMeYp/1bwAn19Yn8VEsgpe0H0mF8GWg3Vzc79ppK0LECsgsc2T8PPg6Mz6JE8Kb/8S3yT7PXPOVK2NprJmNVzpZLswclmHJPPvd+hNuzvF87r60vlThlrDm00KEyktI6lQEWHRWZRW9nsiPQs7XYH3Xq5C/c4ysbFBtYP/6AL60IR8AjYjxAaoZm+vBi/5spAvUuqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SleVUWww7QXXw2oSxlUcLFqhfq7D4cO941aPp65lx7k=;
- b=B06HQeAmouiXYL3moBgTMqvZgN75XpN4uNZguRFm5zUjWotg/nLqpIF2zLkeMh3a7KRnv9v+el6pJwL5OhMszNkt05Iewoloh+MU9rAw6yJMn4VaeTM7Ka8b6SHUuCGtcRM+Ir9JJcVmJAhFE0IB7w9HUQoXmG4Pww9BpJAIVC3Aj2QToHCseyL7eyJDPiplTP4oPkRRdELyWamMdgqvAILM4CvdjwWACY/BQewIeqSfX7WHoR1EHmT+9DV84/gmwgJHoKngBrfyAH8XoakCIFeKAmqXqWdovE58BJSTJ1W1VJ24DxO9m9hLH/DO2TJpb9oM9lJYhLG7SdJw2EkT/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from SG2APC01FT052.eop-APC01.prod.protection.outlook.com
- (10.152.250.58) by SG2APC01HT059.eop-APC01.prod.protection.outlook.com
- (10.152.251.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.23; Mon, 18 Nov
- 2019 09:43:34 +0000
-Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM (10.152.250.57) by
- SG2APC01FT052.mail.protection.outlook.com (10.152.251.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23 via Frontend Transport; Mon, 18 Nov 2019 09:43:34 +0000
-Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
- ([fe80::44f5:f4bb:1601:2602]) by PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
- ([fe80::44f5:f4bb:1601:2602%9]) with mapi id 15.20.2451.029; Mon, 18 Nov 2019
- 09:43:34 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH v3 1/1] PCI: Fix bug resulting in double hpmemsize being
- assigned to MMIO window
-Thread-Topic: [PATCH v3 1/1] PCI: Fix bug resulting in double hpmemsize being
- assigned to MMIO window
-Thread-Index: AQHVmjaUpBZrOiNs+EaePGmphxD+QaeK5IeAgAXQSwA=
-Date:   Mon, 18 Nov 2019 09:43:34 +0000
-Message-ID: <PS2P216MB0755848993A4445324AC516E804D0@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
-References: <PS2P216MB075563AA6AD242AA666EDC6A80760@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
- <20191114165637.GA210407@google.com>
-In-Reply-To: <20191114165637.GA210407@google.com>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SYBPR01CA0112.ausprd01.prod.outlook.com
- (2603:10c6:10:1::28) To PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:1c::13)
-x-incomingtopheadermarker: OriginalChecksum:7FB88D3606022236447AE83E1521C51EF602EF044E51F6FAF466BA32A82E88DC;UpperCasedChecksum:36BEE5EE6BB7962D344A753D4E325969A517CCCD25ACE6E585A17E54174484D7;SizeAsReceived:7829;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [OqRBEytzFILu8M81jd58mPHbpfhyw1gHdSMytM3FbuJ7uBVwgqpXggf4zjRqnF+Hwl7G+Vp+Hb8=]
-x-microsoft-original-message-id: <20191118094326.GA2194@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 45a23db3-a5e8-4fa6-fde4-08d76c0bc70b
-x-ms-traffictypediagnostic: SG2APC01HT059:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WDXEcv6bzn6imJE46d8zC31ck+Ev2hNPp5YhYGxu4QlmbhgzkOd3gbf76l0SR6YcTDLzqF6Zw5ie+/fXEXz5VNiHxNJrw4FoQZCtesRhu/644K7Bkp9EZKvzayvaLI+XdMfydAUFjVy6o4oIHNc0C/1Jt1lspgTFvvpgIHQS3N5wjrZRU1Nn4rg1Jy2FRYPy
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <F9CD7DE8AB46E5438EE71FC979C4F82A@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Mon, 18 Nov 2019 04:45:22 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29656 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726464AbfKRJpW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 04:45:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574070321;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nRCkhLeYkd/VfpebpKrWifzijPdiIM77KJWFLi2G8ao=;
+        b=Mih6Qaa2gFaJ6Ncd5pn52ipRiBD/5A43lqWq+83nRFrsBNQe7miIGPU7ta/TaCqwCVV334
+        8Z0lYfbUHKfvL12AHOvNdsurmXkhJ7KvF8ft66OjNR9R4qRidj+RuvfRaMSPutOTjKFRje
+        C/s6Oj2nE+qFF1/akxPVHsfAweDcPCQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-139-4pE2t8omPqm6BV13ZIpVIQ-1; Mon, 18 Nov 2019 04:45:18 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2B8BB802690;
+        Mon, 18 Nov 2019 09:45:15 +0000 (UTC)
+Received: from [10.36.118.85] (unknown [10.36.118.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 479F117D34;
+        Mon, 18 Nov 2019 09:45:11 +0000 (UTC)
+Subject: Re: [PATCH v3] mm: get rid of odd jump labels in
+ find_mergeable_anon_vma()
+To:     linmiaohe <linmiaohe@huawei.com>, akpm@linux-foundation.org,
+        richardw.yang@linux.intel.com, sfr@canb.auug.org.au,
+        rppt@linux.ibm.com, jannh@google.com, steve.capper@arm.com,
+        catalin.marinas@arm.com, aarcange@redhat.com,
+        chenjianhong2@huawei.com, walken@google.com,
+        dave.hansen@linux.intel.com, tiny.windzz@gmail.com,
+        jhubbard@nvidia.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1574059147-13678-1-git-send-email-linmiaohe@huawei.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <8b5f515f-307b-1e73-249f-f69a4b8c4318@redhat.com>
+Date:   Mon, 18 Nov 2019 10:45:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45a23db3-a5e8-4fa6-fde4-08d76c0bc70b
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 09:43:34.5932
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT059
+In-Reply-To: <1574059147-13678-1-git-send-email-linmiaohe@huawei.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: 4pE2t8omPqm6BV13ZIpVIQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 10:56:37AM -0600, Bjorn Helgaas wrote:
-> On Wed, Nov 13, 2019 at 03:25:28PM +0000, Nicholas Johnson wrote:
-> > Currently, the kernel can sometimes assign the MMIO_PREF window
-> > additional size into the MMIO window, resulting in extra MMIO additional
-> > size, despite the MMIO_PREF additional size being assigned successfully
-> > into the MMIO_PREF window.
-> > 
-> > This happens if in the first pass, the MMIO_PREF succeeds but the MMIO
-> > fails. In the next pass, because MMIO_PREF is already assigned, the
-> > attempt to assign MMIO_PREF returns an error code instead of success
-> > (nothing more to do, already allocated). Hence, the size which is
-> > actually allocated, but thought to have failed, is placed in the MMIO
-> > window.
-> > 
-> > Example of problem (more context can be found in the bug report URL):
-> > 
-> > Mainline kernel:
-> > pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0xa00fffff] = 256M
-> > pci 0000:06:04.0: BAR 14: assigned [mem 0xa0200000-0xb01fffff] = 256M
-> > 
-> > Patched kernel:
-> > pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0x980fffff] = 128M
-> > pci 0000:06:04.0: BAR 14: assigned [mem 0x98200000-0xa01fffff] = 128M
-> > 
-> > This was using pci=realloc,hpmemsize=128M,nocrs - on the same machine
-> > with the same configuration, with a Ubuntu mainline kernel and a kernel
-> > patched with this patch.
-> > 
-> > The bug results in the MMIO_PREF being added to the MMIO window, which
-> > means doubling if MMIO_PREF size = MMIO size. With a large MMIO_PREF,
-> > the MMIO window will likely fail to be assigned altogether due to lack
-> > of 32-bit address space.
-> > 
-> > Change find_free_bus_resource() to do the following:
-> > - Return first unassigned resource of the correct type.
-> > - If none of the above, return first assigned resource of the correct type.
-> > - If none of the above, return NULL.
-> > 
-> > Returning an assigned resource of the correct type allows the caller to
-> > distinguish between already assigned and no resource of the correct type.
-> > 
-> > Rename find_free_bus_resource to find_bus_resource_of_type().
-> > 
-> > Add checks in pbus_size_io() and pbus_size_mem() to return success if
-> > resource returned from find_free_bus_resource() is already allocated.
-> > 
-> > This avoids pbus_size_io() and pbus_size_mem() returning error code to
-> > __pci_bus_size_bridges() when a resource has been successfully assigned
-> > in a previous pass. This fixes the existing behaviour where space for a
-> > resource could be reserved multiple times in different parent bridge
-> > windows.
-> > 
-> > Link: https://lore.kernel.org/lkml/20190531171216.20532-2-logang@deltatee.com/T/#u
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=203243
-> > 
-> > Reported-by: Kit Chow <kchow@gigaio.com>
-> > Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> > Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> 
-> Applied with reviewed-by from Mika and Logan to pci/resource for v5.5,
-> thanks!
+On 18.11.19 07:39, linmiaohe wrote:
+> From: Miaohe Lin <linmiaohe@huawei.com>
+>=20
+> The jump labels try_prev and none are not really needed
+> in find_mergeable_anon_vma(), eliminate them to improve
+> readability.
+>=20
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+> -v2:
+> =09Fix commit descriptions and further simplify the code
+> =09as suggested by David Hildenbrand and John Hubbard.
+> -v3:
+> =09Rewrite patch version info. Don't show this in commit log.
+> ---
+>   mm/mmap.c | 27 +++++++++++++--------------
+>   1 file changed, 13 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index 4d4db76a07da..ff02c23fd375 100644
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -1276,26 +1276,25 @@ static struct anon_vma *reusable_anon_vma(struct =
+vm_area_struct *old, struct vm_
+>    */
+>   struct anon_vma *find_mergeable_anon_vma(struct vm_area_struct *vma)
+>   {
+> -=09struct anon_vma *anon_vma;
+> +=09struct anon_vma *anon_vma =3D NULL;
+>   =09struct vm_area_struct *near;
+>  =20
+> +=09/* Try next first. */
+>   =09near =3D vma->vm_next;
+> -=09if (!near)
+> -=09=09goto try_prev;
+> +=09if (near) {
+> +=09=09anon_vma =3D reusable_anon_vma(near, vma, near);
+> +=09=09if (anon_vma)
+> +=09=09=09return anon_vma;
+> +=09}
 
-We have v5.4-rc8, so there is one more week. Please let me know if you 
-have any concerns about the other four patches so that I may address 
-them ASAP. If you are worried about the first one, I can re-post the 
-series with it at the end, so that the others can be taken first.
+I think you can get rid of near completely as well
 
-Thanks!
+=09if (vma->vm_next) {
+=09=09anon_vma =3D reusable_anon_vma(near, vma, vma->vm_next);
+=09=09if (anon_vma)
+=09=09=09return anon_vma;
+=09}
 
-Regards,
-Nicholas
+...
 
-> 
-> > ---
-> >  drivers/pci/setup-bus.c | 38 +++++++++++++++++++++++++++-----------
-> >  1 file changed, 27 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> > index 6b64bf909..f382f449b 100644
-> > --- a/drivers/pci/setup-bus.c
-> > +++ b/drivers/pci/setup-bus.c
-> > @@ -752,24 +752,32 @@ static void pci_bridge_check_ranges(struct pci_bus *bus)
-> >  }
-> >  
-> >  /*
-> > - * Helper function for sizing routines: find first available bus resource
-> > - * of a given type.  Note: we intentionally skip the bus resources which
-> > - * have already been assigned (that is, have non-NULL parent resource).
-> > + * Helper function for sizing routines.
-> > + * Assigned resources have non-NULL parent resource.
-> > + *
-> > + * Return first unassigned resource of the correct type.
-> > + * If none of the above, return first assigned resource of the correct type.
-> > + * If none of the above, return NULL.
-> > + *
-> > + * Returning an assigned resource of the correct type allows the caller to
-> > + * distinguish between already assigned and no resource of the correct type.
-> >   */
-> > -static struct resource *find_free_bus_resource(struct pci_bus *bus,
-> > -					       unsigned long type_mask,
-> > -					       unsigned long type)
-> > +static struct resource *find_bus_resource_of_type(struct pci_bus *bus,
-> > +						  unsigned long type_mask,
-> > +						  unsigned long type)
-> >  {
-> > +	struct resource *r, *r_assigned = NULL;
-> >  	int i;
-> > -	struct resource *r;
-> >  
-> >  	pci_bus_for_each_resource(bus, r, i) {
-> >  		if (r == &ioport_resource || r == &iomem_resource)
-> >  			continue;
-> >  		if (r && (r->flags & type_mask) == type && !r->parent)
-> >  			return r;
-> > +		if (r && (r->flags & type_mask) == type && !r_assigned)
-> > +			r_assigned = r;
-> >  	}
-> > -	return NULL;
-> > +	return r_assigned;
-> >  }
-> >  
-> >  static resource_size_t calculate_iosize(resource_size_t size,
-> > @@ -866,8 +874,8 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
-> >  			 struct list_head *realloc_head)
-> >  {
-> >  	struct pci_dev *dev;
-> > -	struct resource *b_res = find_free_bus_resource(bus, IORESOURCE_IO,
-> > -							IORESOURCE_IO);
-> > +	struct resource *b_res = find_bus_resource_of_type(bus, IORESOURCE_IO,
-> > +								IORESOURCE_IO);
-> >  	resource_size_t size = 0, size0 = 0, size1 = 0;
-> >  	resource_size_t children_add_size = 0;
-> >  	resource_size_t min_align, align;
-> > @@ -875,6 +883,10 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
-> >  	if (!b_res)
-> >  		return;
-> >  
-> > +	/* If resource is already assigned, nothing more to do. */
-> > +	if (b_res->parent)
-> > +		return;
-> > +
-> >  	min_align = window_alignment(bus, IORESOURCE_IO);
-> >  	list_for_each_entry(dev, &bus->devices, bus_list) {
-> >  		int i;
-> > @@ -978,7 +990,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
-> >  	resource_size_t min_align, align, size, size0, size1;
-> >  	resource_size_t aligns[18]; /* Alignments from 1MB to 128GB */
-> >  	int order, max_order;
-> > -	struct resource *b_res = find_free_bus_resource(bus,
-> > +	struct resource *b_res = find_bus_resource_of_type(bus,
-> >  					mask | IORESOURCE_PREFETCH, type);
-> >  	resource_size_t children_add_size = 0;
-> >  	resource_size_t children_add_align = 0;
-> > @@ -987,6 +999,10 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
-> >  	if (!b_res)
-> >  		return -ENOSPC;
-> >  
-> > +	/* If resource is already assigned, nothing more to do. */
-> > +	if (b_res->parent)
-> > +		return 0;
-> > +
-> >  	memset(aligns, 0, sizeof(aligns));
-> >  	max_order = 0;
-> >  	size = 0;
-> > -- 
-> > 2.24.0
-> > 
+Apart from  that looks good to me.
+
+>  =20
+> -=09anon_vma =3D reusable_anon_vma(near, vma, near);
+> -=09if (anon_vma)
+> -=09=09return anon_vma;
+> -try_prev:
+> +=09/* Try prev next. */
+>   =09near =3D vma->vm_prev;
+> -=09if (!near)
+> -=09=09goto none;
+> +=09if (near)
+> +=09=09anon_vma =3D reusable_anon_vma(near, near, vma);
+>  =20
+> -=09anon_vma =3D reusable_anon_vma(near, near, vma);
+> -=09if (anon_vma)
+> -=09=09return anon_vma;
+> -none:
+>   =09/*
+> +=09 * We might reach here with anon_vma =3D=3D NULL if we can't find
+> +=09 * any reusable anon_vma.
+>   =09 * There's no absolute need to look only at touching neighbours:
+>   =09 * we could search further afield for "compatible" anon_vmas.
+>   =09 * But it would probably just be a waste of time searching,
+> @@ -1303,7 +1302,7 @@ struct anon_vma *find_mergeable_anon_vma(struct vm_=
+area_struct *vma)
+>   =09 * We're trying to allow mprotect remerging later on,
+>   =09 * not trying to minimize memory used for anon_vmas.
+>   =09 */
+> -=09return NULL;
+> +=09return anon_vma;
+>   }
+>  =20
+>   /*
+>=20
+
+
+--=20
+
+Thanks,
+
+David / dhildenb
+
