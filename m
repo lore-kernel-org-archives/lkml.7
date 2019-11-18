@@ -2,102 +2,379 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E042C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2304CC43141
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA1A52071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E96352084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:49:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="bMJKhOFb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfKRJs2 (ORCPT
+        id S1726714AbfKRJtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 04:48:28 -0500
-Received: from mx2.cyber.ee ([193.40.6.72]:33679 "EHLO mx2.cyber.ee"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbfKRJs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 04:48:28 -0500
-To:     LKML <linux-kernel@vger.kernel.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>
-From:   Meelis Roos <mroos@linux.ee>
-Subject: 5.4-rc8 OOPS from path_openat->link_path_walk->inode_permission, on
- sparc64
-Message-ID: <cf84521e-7b7e-570e-9850-1a5573e62786@linux.ee>
-Date:   Mon, 18 Nov 2019 11:48:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 18 Nov 2019 04:49:18 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:17614 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726464AbfKRJtR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 04:49:17 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAI9gpsV030847;
+        Mon, 18 Nov 2019 10:48:45 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=zQW5SxfGKJ8t6I2JdL4XBTUzCtw9M6ZarVVFFakyxKk=;
+ b=bMJKhOFbqI9bZ7qO1E+sc/PRvNXMDsp2+CtZvU75ezbyi0FVaZHENUA1XpbZscEtv45q
+ QhPDu8VMH/v/krP8ONTFxxxsSp/47jQIEfOwdGnVguVDEcqT44qi1Cll5lD4I4Ss/w4F
+ qmCFHiEEk9OeXdeOmfNJ990ngdRDaAMZDrM1VFLl21DQ4YNzjNn5Q7UwOxdk+woW5JVu
+ fCz/h2x8wjxhoXF4l6TLxikT7nDv21hUbe/lu2YgrxC12YayoaShLalCvmAC+6RoEfBh
+ TSUgJmLgwRoEjaFhVNEA4oCvbNIFl+UgV3TLg8P9PuDUYKoVitUJSIFLk++h3zza2nnp rQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wa9unrn34-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 Nov 2019 10:48:45 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0D50D10003B;
+        Mon, 18 Nov 2019 10:48:45 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E60FA2BC7D6;
+        Mon, 18 Nov 2019 10:48:44 +0100 (CET)
+Received: from localhost (10.75.127.47) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 18 Nov 2019 10:48:44
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <fabrice.gasnier@st.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <alexandre.torgue@st.com>,
+        <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
+        <pmeerw@pmeerw.net>, <lee.jones@linaro.org>,
+        <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v2] dt-bindings: mfd: Convert stm32 low power timers bindings to json-schema
+Date:   Mon, 18 Nov 2019 10:48:42 +0100
+Message-ID: <20191118094842.20171-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-18_01:2019-11-15,2019-11-17 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just tried 5.3 and 5.4-rc8 on my revived Sun Netra 240 (Ultrasparc III).
-gcc-8 was used to compile 5.3, then as a test, packages were upgraded so
-gcc-9 was used to compile the 5.4-rc8 kernel in question. Did not see any problems with 5.3.
+Convert the STM32 low power timers binding to DT schema format using json-schema
 
-Started some more package upgrades with 5.4-rc8 with apt and got a crash:
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+changes in version 2:
+- improve counter function description
+- set reg maximum to 2 instead of 3
 
-[  294.269620] Kernel unaligned access at TPC[5a9e84] generic_permission+0x164/0x200
-[  294.368107] Unable to handle kernel paging request in mna handler
-[  294.368110]  at virtual address 91d0200591d02055
-[  294.508933] current->{active_,}mm->context = 0000000000000001
-[  294.584438] current->{active_,}mm->pgd = fff000133c930000
-[  294.655439]               \|/ ____ \|/
-[  294.655439]               "@'/ .. \`@"
-[  294.655439]               /_| \__/ |_\
-[  294.655439]                  \__U_/
-[  294.848739] systemd(1): Oops [#1]
-[  294.892191] CPU: 0 PID: 1 Comm: systemd Not tainted 5.4.0-rc8 #12
-[  294.972257] TSTATE: 0000009111001600 TPC: 00000000005a9e84 TNPC: 00000000005a9e88 Y: 00000000    Not tainted
-[  295.101497] TPC: <generic_permission+0x164/0x200>
-[  295.163253] g0: 0000000000000000 g1: 91d0200591d02005 g2: 00000000000091d0 g3: 0000000000010000
-[  295.277641] g4: fff000133c0ab760 g5: fff000133ec8a000 g6: fff000133c100000 g7: 0000000000000000
-[  295.392015] o0: 0000000000000001 o1: fff000133c103d38 o2: fff000133c103a40 o3: fff000133c103a38
-[  295.506381] o4: fff000133c103a34 o5: 0000000000040000 sp: fff000133c1030f1 ret_pc: 00000000005abc3c
-[  295.625335] RPC: <lookup_fast+0x9c/0x2c0>
-[  295.677938] l0: fff000133c9bde60 l1: 0000000000200008 l2: 0000010000284df0 l3: 000007feffd41088
-[  295.792320] l4: 00000100000fb0a0 l5: 000001000026ac10 l6: 0000000000000000 l7: fff0000100a65d20
-[  295.906690] i0: fff000132e001d08 i1: 0000000000000081 i2: fff000133c103a38 i3: fff000133c103a34
-[  296.021068] i4: 0000000000000001 i5: 00000000000091d0 i6: fff000133c1031a1 i7: 00000000005a9f40
-[  296.135438] I7: <inode_permission+0x20/0x1e0>
-[  296.192623] Call Trace:
-[  296.224647]  [00000000005a9f40] inode_permission+0x20/0x1e0
-[  296.297851]  [00000000005ad8f4] link_path_walk.part.0+0x74/0x540
-[  296.376770]  [00000000005ae498] path_openat+0x78/0x12e0
-[  296.445420]  [00000000005b0608] do_filp_open+0x48/0xc0
-[  296.512994]  [000000000059c168] do_sys_open+0x168/0x240
-[  296.581716]  [0000000000406254] linux_sparc_syscall+0x34/0x44
-[  296.657291] Disabling lock debugging due to kernel taint
-[  296.727063] Caller[00000000005a9f40]: inode_permission+0x20/0x1e0
-[  296.807121] Caller[00000000005ad8f4]: link_path_walk.part.0+0x74/0x540
-[  296.892905] Caller[00000000005ae498]: path_openat+0x78/0x12e0
-[  296.968388] Caller[00000000005b0608]: do_filp_open+0x48/0xc0
-[  297.042734] Caller[000000000059c168]: do_sys_open+0x168/0x240
-[  297.118218] Caller[0000000000406254]: linux_sparc_syscall+0x34/0x44
-[  297.200570] Caller[fff0000100207200]: 0xfff0000100207200
-[  297.270332] Instruction DUMP:
-[  297.270334]  b8102000
-[  297.309217]  c25e2028
-[  297.340098]  07000040
-[  297.370982] <c2586050>
-[  297.401860]  82084003
-[  297.432743]  22c04007
-[  297.463623]  d0062008
-[  297.494506]  8408a038
-[  297.525384]  80a0a000
-[  297.556264]
-[  297.643992] printk: systemd: 15 output lines suppressed due to ratelimiting
-[  297.735610] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
-[  297.836282] Press Stop-A (L1-A) from sun keyboard or send break
-[  297.836282] twice on console to return to the boot prom
-[  297.982667] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009 ]---
+ .../bindings/counter/stm32-lptimer-cnt.txt         |  29 -----
+ .../bindings/iio/timer/stm32-lptimer-trigger.txt   |  23 ----
+ .../devicetree/bindings/mfd/st,stm32-lptimer.yaml  | 120 +++++++++++++++++++++
+ .../devicetree/bindings/mfd/stm32-lptimer.txt      |  48 ---------
+ .../devicetree/bindings/pwm/pwm-stm32-lp.txt       |  30 ------
+ 5 files changed, 120 insertions(+), 130 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt
+ delete mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
+ delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
 
+diff --git a/Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt b/Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt
+deleted file mode 100644
+index e90bc47f752a..000000000000
+--- a/Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt
++++ /dev/null
+@@ -1,29 +0,0 @@
+-STMicroelectronics STM32 Low-Power Timer quadrature encoder and counter
+-
+-STM32 Low-Power Timer provides several counter modes. It can be used as:
+-- quadrature encoder to detect angular position and direction of rotary
+-  elements, from IN1 and IN2 input signals.
+-- simple counter from IN1 input signal.
+-
+-Must be a sub-node of an STM32 Low-Power Timer device tree node.
+-See ../mfd/stm32-lptimer.txt for details about the parent node.
+-
+-Required properties:
+-- compatible:		Must be "st,stm32-lptimer-counter".
+-- pinctrl-names: 	Set to "default". An additional "sleep" state can be
+-			defined to set pins in sleep state.
+-- pinctrl-n: 		List of phandles pointing to pin configuration nodes,
+-			to set IN1/IN2 pins in mode of operation for Low-Power
+-			Timer input on external pin.
+-
+-Example:
+-	timer@40002400 {
+-		compatible = "st,stm32-lptimer";
+-		...
+-		counter {
+-			compatible = "st,stm32-lptimer-counter";
+-			pinctrl-names = "default", "sleep";
+-			pinctrl-0 = <&lptim1_in_pins>;
+-			pinctrl-1 = <&lptim1_sleep_in_pins>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt b/Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
+deleted file mode 100644
+index 85e6806b17d7..000000000000
+--- a/Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
++++ /dev/null
+@@ -1,23 +0,0 @@
+-STMicroelectronics STM32 Low-Power Timer Trigger
+-
+-STM32 Low-Power Timer provides trigger source (LPTIM output) that can be used
+-by STM32 internal ADC and/or DAC.
+-
+-Must be a sub-node of an STM32 Low-Power Timer device tree node.
+-See ../mfd/stm32-lptimer.txt for details about the parent node.
+-
+-Required properties:
+-- compatible:		Must be "st,stm32-lptimer-trigger".
+-- reg:			Identify trigger hardware block. Must be 0, 1 or 2
+-			respectively for lptimer1, lptimer2 or lptimer3
+-			trigger output.
+-
+-Example:
+-	timer@40002400 {
+-		compatible = "st,stm32-lptimer";
+-		...
+-		trigger@0 {
+-			compatible = "st,stm32-lptimer-trigger";
+-			reg = <0>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml b/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
+new file mode 100644
+index 000000000000..1a4cc5f3fb33
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
+@@ -0,0 +1,120 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/st,stm32-lptimer.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 Low-Power Timers bindings
++
++description: |
++  The STM32 Low-Power Timer (LPTIM) is a 16-bit timer that provides several
++  functions
++   - PWM output (with programmable prescaler, configurable polarity)
++   - Trigger source for STM32 ADC/DAC (LPTIM_OUT)
++   - Several counter modes:
++     - quadrature encoder to detect angular position and direction of rotary
++       elements, from IN1 and IN2 input signals.
++     - simple counter from IN1 input signal.
++
++maintainers:
++  - Fabrice Gasnier <fabrice.gasnier@st.com>
++
++properties:
++  compatible:
++    const: st,stm32-lptimer
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: mux
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++  pwm:
++    type: object
++
++    properties:
++      compatible:
++        const: st,stm32-pwm-lp
++
++      "#pwm-cells":
++        const: 3
++
++    required:
++      - "#pwm-cells"
++      - compatible
++
++patternProperties:
++  "^trigger@[0-9]+$":
++    type: object
++
++    properties:
++      compatible:
++        const: st,stm32-lptimer-trigger
++
++      reg:
++        description: Identify trigger hardware block.
++        items:
++         minimum: 0
++         maximum: 2
++
++    required:
++      - compatible
++      - reg
++
++  counter:
++    type: object
++
++    properties:
++      compatible:
++        const: st,stm32-lptimer-counter
++
++    required:
++      - compatible
++
++required:
++  - "#address-cells"
++  - "#size-cells"
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    timer@40002400 {
++      compatible = "st,stm32-lptimer";
++      reg = <0x40002400 0x400>;
++      clocks = <&timer_clk>;
++      clock-names = "mux";
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      pwm {
++        compatible = "st,stm32-pwm-lp";
++        #pwm-cells = <3>;
++      };
++
++      trigger@0 {
++        compatible = "st,stm32-lptimer-trigger";
++        reg = <0>;
++      };
++
++      counter {
++        compatible = "st,stm32-lptimer-counter";
++      };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt b/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
+deleted file mode 100644
+index fb54e4dad5b3..000000000000
+--- a/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
++++ /dev/null
+@@ -1,48 +0,0 @@
+-STMicroelectronics STM32 Low-Power Timer
+-
+-The STM32 Low-Power Timer (LPTIM) is a 16-bit timer that provides several
+-functions:
+-- PWM output (with programmable prescaler, configurable polarity)
+-- Quadrature encoder, counter
+-- Trigger source for STM32 ADC/DAC (LPTIM_OUT)
+-
+-Required properties:
+-- compatible:		Must be "st,stm32-lptimer".
+-- reg:			Offset and length of the device's register set.
+-- clocks:		Phandle to the clock used by the LP Timer module.
+-- clock-names:		Must be "mux".
+-- #address-cells:	Should be '<1>'.
+-- #size-cells:		Should be '<0>'.
+-
+-Optional subnodes:
+-- pwm:			See ../pwm/pwm-stm32-lp.txt
+-- counter:		See ../counter/stm32-lptimer-cnt.txt
+-- trigger:		See ../iio/timer/stm32-lptimer-trigger.txt
+-
+-Example:
+-
+-	timer@40002400 {
+-		compatible = "st,stm32-lptimer";
+-		reg = <0x40002400 0x400>;
+-		clocks = <&timer_clk>;
+-		clock-names = "mux";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		pwm {
+-			compatible = "st,stm32-pwm-lp";
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&lppwm1_pins>;
+-		};
+-
+-		trigger@0 {
+-			compatible = "st,stm32-lptimer-trigger";
+-			reg = <0>;
+-		};
+-
+-		counter {
+-			compatible = "st,stm32-lptimer-counter";
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&lptim1_in_pins>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
+deleted file mode 100644
+index 6521bc44a74e..000000000000
+--- a/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
++++ /dev/null
+@@ -1,30 +0,0 @@
+-STMicroelectronics STM32 Low-Power Timer PWM
+-
+-STM32 Low-Power Timer provides single channel PWM.
+-
+-Must be a sub-node of an STM32 Low-Power Timer device tree node.
+-See ../mfd/stm32-lptimer.txt for details about the parent node.
+-
+-Required parameters:
+-- compatible:		Must be "st,stm32-pwm-lp".
+-- #pwm-cells:		Should be set to 3. This PWM chip uses the default 3 cells
+-			bindings defined in pwm.txt.
+-
+-Optional properties:
+-- pinctrl-names: 	Set to "default". An additional "sleep" state can be
+-			defined to set pins in sleep state when in low power.
+-- pinctrl-n: 		Phandle(s) pointing to pin configuration node for PWM,
+-			respectively for "default" and "sleep" states.
+-
+-Example:
+-	timer@40002400 {
+-		compatible = "st,stm32-lptimer";
+-		...
+-		pwm {
+-			compatible = "st,stm32-pwm-lp";
+-			#pwm-cells = <3>;
+-			pinctrl-names = "default", "sleep";
+-			pinctrl-0 = <&lppwm1_pins>;
+-			pinctrl-1 = <&lppwm1_sleep_pins>;
+-		};
+-	};
 -- 
-Meelis Roos <mroos@linux.ee>
+2.15.0
 
