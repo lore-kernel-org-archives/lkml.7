@@ -2,88 +2,103 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF738C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 01:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 914DBC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 01:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC3C1206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 01:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69798206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 01:39:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nVFPQ12r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfKRBhW (ORCPT
+        id S1726425AbfKRBj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 20:37:22 -0500
-Received: from mga07.intel.com ([134.134.136.100]:21448 "EHLO mga07.intel.com"
+        Sun, 17 Nov 2019 20:39:56 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47053 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbfKRBhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 20:37:22 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Nov 2019 17:37:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,318,1569308400"; 
-   d="scan'208";a="203924537"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by fmsmga008.fm.intel.com with ESMTP; 17 Nov 2019 17:37:18 -0800
-Cc:     baolu.lu@linux.intel.com, "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH 06/10] iommu/vt-d: Fix off-by-one in PASID allocation
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-References: <1573859377-75924-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1573859377-75924-7-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <332ede86-4d39-74b4-b36c-f2de4a964672@linux.intel.com>
-Date:   Mon, 18 Nov 2019 09:34:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1725905AbfKRBj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 20:39:56 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47GWpx27mQz9sPT;
+        Mon, 18 Nov 2019 12:39:53 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1574041193;
+        bh=McuSmKWMCSmG2luaUhgvdQQPJyZpZyN5PX1y1kXU/3I=;
+        h=Date:From:To:Cc:Subject:From;
+        b=nVFPQ12rbENnRPYhwo0X+HKChEztiCjvHyqU/4MNTdJqCZvG0HlPu366MtxJAtGRi
+         qFhtHdVrmOv7xixFCjXInQbVxzJwGK/ssMlfMaGbc3T6OJU+Pk+83/vKbED096u8u2
+         /NN7vumZn9R4gDBvUg/tauOL8h6IILakOeA7cUqZp53IxBBBAbhjT0TsNW1aNVbSkd
+         d4i6DebgYypqmvPZfzDIKDKbIB9ruLYZYmWJfR1lB+gtBoVQbyZDTvKCVfnH1g+5Mz
+         5aNamC+Znxig3KYOS8q47e9UXjcczOvqgcBbri2s8WXD/K4MhVsTIjqcZwdklMP4K9
+         v9iaAtc2m96SQ==
+Date:   Mon, 18 Nov 2019 12:39:44 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sumit Garg <sumit.garg@linaro.org>
+Subject: linux-next: manual merge of the tpmdd tree with the kbuild tree
+Message-ID: <20191118123944.5fbeec1e@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <1573859377-75924-7-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/vxReaO5_VyzMQGEoXUwfz+7";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+--Sig_/vxReaO5_VyzMQGEoXUwfz+7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 11/16/19 7:09 AM, Jacob Pan wrote:
-> PASID allocator uses IDR which is exclusive for the end of the
-> allocation range. There is no need to decrement pasid_max.
-> 
-> Fixes: af39507305fb ("iommu/vt-d: Apply global PASID in SVA")
-> Reported-by: Eric Auger <eric.auger@redhat.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Hi all,
 
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Today's linux-next merge of the tpmdd tree got a conflict in:
 
-Best regards,
-baolu
+  include/Kbuild
 
-> ---
->   drivers/iommu/intel-svm.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-> index 924a4de84be1..b5537f27592f 100644
-> --- a/drivers/iommu/intel-svm.c
-> +++ b/drivers/iommu/intel-svm.c
-> @@ -338,7 +338,7 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
->   		/* Do not use PASID 0 in caching mode (virtualised IOMMU) */
->   		ret = intel_pasid_alloc_id(svm,
->   					   !!cap_caching_mode(iommu->cap),
-> -					   pasid_max - 1, GFP_KERNEL);
-> +					   pasid_max, GFP_KERNEL);
->   		if (ret < 0) {
->   			kfree(svm);
->   			kfree(sdev);
-> 
+between commit:
+
+  fcbb8461fd23 ("kbuild: remove header compile test")
+
+from the kbuild tree and commit:
+
+  47f9c2796891 ("KEYS: trusted: Create trusted keys subsystem")
+
+from the tpmdd tree.
+
+I fixed it up (I just removed the file) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/vxReaO5_VyzMQGEoXUwfz+7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3R9mAACgkQAVBC80lX
+0GyppAgAlSXV2mGZ46e/oUYQ/gJ7GmOjX9KXfqT2sXKXd8rUyIEhpLWogKlb8sHS
+1Q5M6rso/rdixSawwSyDADPZIdSDwtUj7crUcwZ0ibPKViAAsVW0LDZ/bPphYgcJ
+TKfEBBHcgtbv+24UWa8VcOLrNrJHGgILhaw5v4CIJwnU5yct72IUQty8cOL1iJac
+9EEJlWl21mCIF3dTmAPp5p+S4Fi8XVzF2KxDltuVuRBG/qP4fKwJ5KaJVt4YPuwu
+E88903xO13eyYCvEG00MND2XfzZHi1BUMhKg3YteoAvG5nVogjp1Po0XV65cDiDU
+oZi2LZ/MOjkIGOsJHpWpUrmahebWFQ==
+=oTFL
+-----END PGP SIGNATURE-----
+
+--Sig_/vxReaO5_VyzMQGEoXUwfz+7--
