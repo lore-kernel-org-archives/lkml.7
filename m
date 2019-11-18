@@ -2,101 +2,128 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2735FC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E50C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB0122071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B668C222DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:53:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="mYThrQVl";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b="ZGtl7/F3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dRJCKVEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfKRWss (ORCPT
+        id S1726977AbfKRWxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 17:48:48 -0500
-Received: from pb-smtp1.pobox.com ([64.147.108.70]:55085 "EHLO
-        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbfKRWss (ORCPT
+        Mon, 18 Nov 2019 17:53:04 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21950 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726705AbfKRWxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 17:48:48 -0500
-Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 4E2841D378;
-        Mon, 18 Nov 2019 17:48:46 -0500 (EST)
-        (envelope-from tdavies@darkphysics.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:message-id:mime-version:content-type; s=sasl; bh=aOY
-        z91GxiTw6gq3rm8N3MnoALFE=; b=mYThrQVlCiRRabVUbnjA2bf71YwlzLJO5aS
-        kBVIpdPMOIjRdCFZice/L6mMZ8vdYf69yozzx0h9PltR62oYY9vMQ/DyPc6iYk3z
-        XlO2H9z2XeLh7/s+a1/EgBWq9IsSMBv62WrLaCv3n5brUCqoZ11fOvej2LKhwxD3
-        HdKk+3Ac=
-Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 46D761D377;
-        Mon, 18 Nov 2019 17:48:46 -0500 (EST)
-        (envelope-from tdavies@darkphysics.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=darkphysics.net;
- h=date:from:to:cc:subject:message-id:mime-version:content-type;
- s=2019-09.pbsmtp; bh=TXrgYPE6DKfCO+LTmxwgcatpSBiHwJ+V747VzWXM2Zw=;
- b=ZGtl7/F3HT4wcJ9gjy5qSOu8Vg8KJGzn37joqE3VKd3U1i+dfMibZVuB2USqnSavreHpXyeZUAoXQ6ibZlz9OHhD2d2ebB5d/R/UWoqNEaBfgFDXBO7/xXvMCrvkFjN+IsHea/0IlKzMLz519ZDtUsqWt+k379GdJIDxQxssu8g=
-Received: from Cheese (unknown [24.19.107.226])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 3C6821D376;
-        Mon, 18 Nov 2019 17:48:45 -0500 (EST)
-        (envelope-from tdavies@darkphysics.net)
-Date:   Mon, 18 Nov 2019 14:48:37 -0800
-From:   Travis Davies <tdavies@darkphysics.net>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Julia Lawall <julia.lawall@lip6.fr>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] net: Fix comment block per style guide
-Message-ID: <20191118224837.GA5138@Cheese>
+        Mon, 18 Nov 2019 17:53:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574117583;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vHC8PHwBSVJlfl9mKDf+6eaQiS+n7bl9SU0M3ddw71E=;
+        b=dRJCKVEoQoGgWtfMqnejcTnuPK7GtMbn5lm+XNbQgrLif4Fv+QRQQoMJXqPa2lgAln7LUM
+        VQ4uil+tWP8/BW01Lws/gWevYApXRsAL7o5uniAIy4ObntXMXwrSq5e5wohrmCX6NplSwk
+        nzFRfZjSG5cCuCGX4KYoxD7mKWf0nBs=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-255--9ChDMr9PF27kXAqmClMKA-1; Mon, 18 Nov 2019 17:53:01 -0500
+Received: by mail-wr1-f72.google.com with SMTP id p4so16901764wrw.15
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 14:53:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kV4v0rcx7ROVmVBnnH/7D38MAqllaJgL/+IcSiWha4Y=;
+        b=GF+kTkwwssHa8ZMmzh4B66fYA9UVhxT1Rqt9P1dwxjDF6Jlo0Xu/JobwlspRdQ9KkL
+         NApFNtPtokx0vfzLg9b6Sb+QYpj4cueRmosMLoYALkW7WgLYkrRAK1lHYayOmp5fYgKA
+         OCahasi/ohfmyGnhCf2XE5oZubVVOcUOEbZkz5H9PGzOkuLGcaIEoUAgRvk0F3G9R0XA
+         SuaSvzcJRCocqQjQ/N2cbEXfrbi7/rWgApD7/Jdz3LtsMwgWfljmp+hOgv86AehVEFzS
+         L2ZH5a0R7Od0e356N4QW0SaVJ/l5gbVrxzz/8gYLantgcybKLqZ04LL0odpj6/J6rbti
+         5WBQ==
+X-Gm-Message-State: APjAAAVtMhmWuC+UjJnhtaXUDQ92IVoBCuZF5qBkIE5VlOmAVidDNxgs
+        sRcGV0UfbYsau9GOz1q4kC9fJjy0Q9dPd5IB/V2c0ruO/IbaJgtRzKfebMhW1Z0TmHVm9pYPmg7
+        BfWwck0k9GyHudDXParbAxDlU
+X-Received: by 2002:adf:e58c:: with SMTP id l12mr12079029wrm.156.1574117580796;
+        Mon, 18 Nov 2019 14:53:00 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwoa4RK68vgg9+wWmozzqJMUPDZGG+Rrs6vlWToxYLzFwmweqCNkNlr8Ji1jUXVeJjARQlyRQ==
+X-Received: by 2002:adf:e58c:: with SMTP id l12mr12079013wrm.156.1574117580573;
+        Mon, 18 Nov 2019 14:53:00 -0800 (PST)
+Received: from redhat.com (bzq-79-176-6-42.red.bezeqint.net. [79.176.6.42])
+        by smtp.gmail.com with ESMTPSA id 200sm1025334wme.32.2019.11.18.14.52.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 14:52:59 -0800 (PST)
+Date:   Mon, 18 Nov 2019 17:52:56 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Khazhismel Kumykov <khazhy@google.com>
+Cc:     jasowang@redhat.com, wei.w.wang@intel.com,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH 1/2] virtio_balloon: fix pages_to_free calculation
+Message-ID: <20191118175114-mutt-send-email-mst@kernel.org>
+References: <CACGdZYJoHSN3vkj_QBz6Txmec9mJMmkH66j2XtqzpUWpfpw4Tg@mail.gmail.com>
+ <20191118213811.22017-1-khazhy@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20191118213811.22017-1-khazhy@google.com>
+X-MC-Unique: -9ChDMr9PF27kXAqmClMKA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Pobox-Relay-ID: 93D587D2-0A55-11EA-AC3A-C28CBED8090B-64344220!pb-smtp1.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch places /* and */ on separate lines for a
-multiline block comment, in order to keep code style
-consistant with majority of blocks throughout the file.
+On Mon, Nov 18, 2019 at 01:38:10PM -0800, Khazhismel Kumykov wrote:
+> freed_pages was accumulating total freed pages, but was also subtracted
+> on each iteration from pages_to_free, which could potentially result in
+> attempting to free fewer pages than asked for. This change also makes
+> both freed_pages and pages_to_free in terms of "balloon pages", where
+> they were mismatched before.
 
-This will prevent a checkpatch.pl warning:
-'Block comments use a trailing */ on a separate line'
+And then patch 2/2 changes it back to both be regular pages.
+Which is good, but why do we have to go back and forth
+breaking then fixing it back?
 
----
--v2: Fix commit description, and subject line as suggested by 
-     Julia Lawall.
 
- include/linux/netdevice.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index c20f190b4c18..a2605e043fa2 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -95,9 +95,11 @@ void netdev_set_default_ethtool_ops(struct net_device *dev,
- #define NET_XMIT_CN		0x02	/* congestion notification	*/
- #define NET_XMIT_MASK		0x0f	/* qdisc flags in net/sch_generic.h */
- 
--/* NET_XMIT_CN is special. It does not guarantee that this packet is lost. It
-+/*
-+ * NET_XMIT_CN is special. It does not guarantee that this packet is lost. It
-  * indicates that the device will soon be dropping packets, or already drops
-- * some packets of the same priority; prompting us to send less aggressively. */
-+ * some packets of the same priority; prompting us to send less aggressively.
-+ */
- #define net_xmit_eval(e)	((e) == NET_XMIT_CN ? 0 : (e))
- #define net_xmit_errno(e)	((e) != NET_XMIT_CN ? -ENOBUFS : 0)
- 
--- 
-2.21.0
+>=20
+> Fixes: 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker"=
+)
+> Cc: Wei Wang <wei.w.wang@intel.com>
+> Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+> ---
+>  drivers/virtio/virtio_balloon.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_ball=
+oon.c
+> index 226fbb995fb0..7cf9540a40b8 100644
+> --- a/drivers/virtio/virtio_balloon.c
+> +++ b/drivers/virtio/virtio_balloon.c
+> @@ -782,11 +782,8 @@ static unsigned long shrink_balloon_pages(struct vir=
+tio_balloon *vb,
+>  =09 * VIRTIO_BALLOON_ARRAY_PFNS_MAX balloon pages, so we call it
+>  =09 * multiple times to deflate pages till reaching pages_to_free.
+>  =09 */
+> -=09while (vb->num_pages && pages_to_free) {
+> -=09=09pages_freed +=3D leak_balloon(vb, pages_to_free) /
+> -=09=09=09=09=09VIRTIO_BALLOON_PAGES_PER_PAGE;
+> -=09=09pages_to_free -=3D pages_freed;
+> -=09}
+> +=09while (vb->num_pages && pages_to_free > pages_freed)
+> +=09=09pages_freed +=3D leak_balloon(vb, pages_to_free - pages_freed);
+>  =09update_balloon_size(vb);
+> =20
+>  =09return pages_freed;
+> --=20
+> 2.24.0.432.g9d3f5f5b63-goog
 
