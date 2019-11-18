@@ -2,185 +2,596 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA5CC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 801ABC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F9542075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3552E2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:44:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="up7FKGds"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SK6D/lk7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbfKRKn6 (ORCPT
+        id S1726956AbfKRKoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 05:43:58 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:39521 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfKRKnz (ORCPT
+        Mon, 18 Nov 2019 05:44:44 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56310 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726461AbfKRKon (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 05:43:55 -0500
-Received: by mail-pj1-f66.google.com with SMTP id t103so1374706pjb.6;
-        Mon, 18 Nov 2019 02:43:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=nn1ZIH5FykXJcqKbMnJbBFiTcSLprwBTAdbttbSmu1c=;
-        b=up7FKGdsAUKzK/7smdx4XvpBr5BlN8uUQObNojVhC65e8PHjGCY7ER/w+Xo5HAfkC4
-         7R4M497BiCKs8dnFRPEJW9I7ZFSeiBMRdMRhCUPsDLQ4Gj8gVscm4z97cBY9hpGH9eOO
-         ex01QvevtzHm+t3JR+z3Y3RjAuKWxiSeBSWTBWP1R5JKJSggGr/rbs5fWwVeHLdH1Qsu
-         SH/Nc2cmOrll7klQR0KJgek5v9hPXMrd/CWQAjteEoAxNhvkuPAaVguA2hAeDN98GGky
-         TpJbFdbp12WwqorAph/ts8KZp4kdHZOqW3oclxx8ry8ed4+meHXwpubhui+E8X+Yvz+7
-         HVww==
+        Mon, 18 Nov 2019 05:44:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574073881;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JnVZIEJ4yoxZxjAnvF8WPtLqyuvkPdbvQZxdbW+Uljo=;
+        b=SK6D/lk7QTg5NWi9j7dd5XKaRW+Q8JXim+2Y+59LXYHy8V5TK6j7XciV/+NWoT8NVRhG/y
+        s5ju3skj3a7eBf/Ms7PvbTtwenzaxADdN+4jY20pyv4nlMb+S3j8jtQEIL+PdnIb+VPu23
+        E+iXAeb8fSg8AEAzZCRUD6VUxrZ7fr0=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-304-a52lUqKEPI6EgVCaQgfDSw-1; Mon, 18 Nov 2019 05:44:40 -0500
+Received: by mail-qk1-f200.google.com with SMTP id 125so11211469qkj.12
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 02:44:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=nn1ZIH5FykXJcqKbMnJbBFiTcSLprwBTAdbttbSmu1c=;
-        b=E+S/xmH4/81pv/2SdTVK4uncGwf9sTL418A/9FuJDIL/8G5xE8ODZrxKedpkD5U8F7
-         XaGfDe3ByIGaxd7v9VzVLlvq44Hs6sNuTJHxOK7iJeoE/ope2AZIcdHdBIX9duc0Z2r0
-         H5iwJ3tno/TBocaOB/13+n7KB1gQpAIoBsZq9rcK0Fb8fSFNFTWQsW0ffjx6YF9jz+fY
-         TkrCrxeclRfX6qbNOzyCPRYS7BjNiyt3im1dJJuCg6fGpmRvTsNOeJdf9eSGWNYMgNmf
-         xU873K9T64FpoI6U6LmaF60VMHyxdWtBJbzN/9YugzuNaJFwkaccVkCmRWTAXJhzzh4L
-         cudQ==
-X-Gm-Message-State: APjAAAVkhwnhWdlVddduEvhiFN2x3JOYOv3+JHPxKpD17thxbFh0M73R
-        Lfy69bkXsdzEDGChhRa0ni0=
-X-Google-Smtp-Source: APXvYqz9SHImOx5T8xyhYkcrzWqBuwr+UANHqCAAyP/PnFd83tvydxnCy8h3H9OR0XbltuXGkx00BA==
-X-Received: by 2002:a17:902:b582:: with SMTP id a2mr29037410pls.103.1574073834664;
-        Mon, 18 Nov 2019 02:43:54 -0800 (PST)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id c13sm19343905pfo.5.2019.11.18.02.43.51
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 18 Nov 2019 02:43:54 -0800 (PST)
-From:   Baolin Wang <baolin.wang7@gmail.com>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        asutoshd@codeaurora.org
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, arnd@arndb.de,
-        linus.walleij@linaro.org, vincent.guittot@linaro.org,
-        baolin.wang@linaro.org, baolin.wang7@gmail.com,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 4/4] mmc: host: sdhci-sprd: Add software queue support
-Date:   Mon, 18 Nov 2019 18:43:22 +0800
-Message-Id: <2f194a08e69e922bb706528cde409b739cda0151.1574073572.git.baolin.wang7@gmail.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1574073572.git.baolin.wang7@gmail.com>
-References: <cover.1574073572.git.baolin.wang7@gmail.com>
-In-Reply-To: <cover.1574073572.git.baolin.wang7@gmail.com>
-References: <cover.1574073572.git.baolin.wang7@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CxprIgJpUU3jeQV00/9UkqkMAmaR0THasL1suxqMVK8=;
+        b=Zrgcb3pUCAUD8SHkr2ni6aNykjxtCYXgAHHtme1NoTjzk1uuTg7fpR3La7ECseg+cW
+         D20NACcyf6qKANSrd3Crw0m9ipURMcNc4O325jPoJHQOcdBX/s2ZynwKkPaJp4DdP8zv
+         4VfRI/gX+Fw0blepDgiG6SdhEJjmoRvQ1wdqnVcyxlN7A9yz0F3jLHrPPE3M+VZy10zE
+         wLpPyfq27ayVUEPnoV8m0adv82ZyYT16fH99BJKEl0eH84YDFtjfcqOZyCmSvdNH0dTw
+         652W+X49SPQjVPBad+nGi3oaAeM7uD/AF1EiXlh4oF4g81+knxbkIEc4dDOAqNlSnGMP
+         AgNg==
+X-Gm-Message-State: APjAAAVK52/PbV54SK5tj73GzrngaX7uksbg2oKkTlVIs8aUuJ7tauJl
+        NFn2nBEScaJpiJ/n7l9zlOGdrrMLKJvzpGinf2pozpBj/9nelMb9lkHYlOljhpl2gYD57VRa6RC
+        V91np6VIcBBa4Y19F+tYskImq
+X-Received: by 2002:a0c:802f:: with SMTP id 44mr3314584qva.116.1574073879717;
+        Mon, 18 Nov 2019 02:44:39 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzR171/RwNU/G+Jin4zQP77S8Rxmutj1BRTygyk3DLP3YBhHrtlrH0hO8EFJL/8dj4mQFGbiA==
+X-Received: by 2002:a0c:802f:: with SMTP id 44mr3314522qva.116.1574073879233;
+        Mon, 18 Nov 2019 02:44:39 -0800 (PST)
+Received: from redhat.com (bzq-79-176-6-42.red.bezeqint.net. [79.176.6.42])
+        by smtp.gmail.com with ESMTPSA id x39sm10429813qth.92.2019.11.18.02.44.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 02:44:38 -0800 (PST)
+Date:   Mon, 18 Nov 2019 05:44:25 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, eperezma@redhat.com,
+        lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com, rdunlap@infradead.org, hch@infradead.org,
+        gregkh@linuxfoundation.org, jgg@mellanox.com
+Subject: Re: [PATCH V12 5/6] virtio: introduce a mdev based transport
+Message-ID: <20191118054339-mutt-send-email-mst@kernel.org>
+References: <20191118061703.8669-1-jasowang@redhat.com>
+ <20191118061703.8669-6-jasowang@redhat.com>
+MIME-Version: 1.0
+In-Reply-To: <20191118061703.8669-6-jasowang@redhat.com>
+X-MC-Unique: a52lUqKEPI6EgVCaQgfDSw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Baolin Wang <baolin.wang@linaro.org>
+On Mon, Nov 18, 2019 at 02:17:02PM +0800, Jason Wang wrote:
+> This patch introduces a new mdev transport for virtio. This is used to
+> use kernel virtio driver to drive the mediated device that is capable
+> of populating virtqueue directly.
+>=20
+> A new virtio-mdev driver will be registered to the mdev bus, when a
+> new virtio-mdev device is probed, it will register the device with
+> mdev based config ops. This means it is a software transport between
+> mdev driver and mdev device. The transport was implemented through
+> bus_ops of mdev parent.
+>=20
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  drivers/virtio/Kconfig       |  13 ++
+>  drivers/virtio/Makefile      |   1 +
+>  drivers/virtio/virtio_mdev.c | 409 +++++++++++++++++++++++++++++++++++
+>  include/linux/mdev_virtio.h  |   5 +
+>  4 files changed, 428 insertions(+)
+>  create mode 100644 drivers/virtio/virtio_mdev.c
+>=20
+> diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+> index 078615cf2afc..6a89b3de97d3 100644
+> --- a/drivers/virtio/Kconfig
+> +++ b/drivers/virtio/Kconfig
+> @@ -43,6 +43,19 @@ config VIRTIO_PCI_LEGACY
+> =20
+>  =09  If unsure, say Y.
+> =20
+> +config VIRTIO_MDEV
+> +=09tristate "MDEV driver for virtio devices"
+> +=09depends on MDEV_VIRTIO
+> +=09default n
+> +=09help
+> +=09  This driver provides support for virtio based paravirtual
+> +=09  device driver over MDEV bus. For this to be useful, you need
+> +=09  an appropriate virtio mdev device implementation that
+> +=09  operates on a physical device to allow the datapath of virtio
+> +=09  to be offloaded to hardware.
+> +
+> +=09  If unsure, say M.
+> +
+>  config VIRTIO_PMEM
+>  =09tristate "Support for virtio pmem driver"
+>  =09depends on VIRTIO
+> diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
+> index 3a2b5c5dcf46..f2997b6c812f 100644
+> --- a/drivers/virtio/Makefile
+> +++ b/drivers/virtio/Makefile
+> @@ -6,3 +6,4 @@ virtio_pci-y :=3D virtio_pci_modern.o virtio_pci_common.o
+>  virtio_pci-$(CONFIG_VIRTIO_PCI_LEGACY) +=3D virtio_pci_legacy.o
+>  obj-$(CONFIG_VIRTIO_BALLOON) +=3D virtio_balloon.o
+>  obj-$(CONFIG_VIRTIO_INPUT) +=3D virtio_input.o
+> +obj-$(CONFIG_VIRTIO_MDEV) +=3D virtio_mdev.o
+> diff --git a/drivers/virtio/virtio_mdev.c b/drivers/virtio/virtio_mdev.c
+> new file mode 100644
+> index 000000000000..7fdb42f055df
+> --- /dev/null
+> +++ b/drivers/virtio/virtio_mdev.c
+> @@ -0,0 +1,409 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * VIRTIO based driver for Mediated device
+> + *
+> + * Copyright (c) 2019, Red Hat. All rights reserved.
+> + *     Author: Jason Wang <jasowang@redhat.com>
+> + *
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/device.h>
+> +#include <linux/kernel.h>
+> +#include <linux/slab.h>
+> +#include <linux/uuid.h>
+> +#include <linux/virtio.h>
+> +#include <linux/mdev_virtio.h>
+> +#include <linux/virtio_config.h>
+> +#include <linux/virtio_ring.h>
+> +
+> +#define DRIVER_VERSION  "0.1"
+> +#define DRIVER_AUTHOR   "Red Hat Corporation"
+> +#define DRIVER_DESC     "VIRTIO based driver for Mediated device"
+> +
+> +#define to_virtio_mdev_device(dev) \
+> +=09container_of(dev, struct virtio_mdev_device, vdev)
+> +
+> +struct virtio_mdev_device {
+> +=09struct virtio_device vdev;
+> +=09struct mdev_device *mdev;
+> +=09u64 features;
+> +
+> +=09/* The lock to protect virtqueue list */
+> +=09spinlock_t lock;
+> +=09/* List of virtio_mdev_vq_info */
+> +=09struct list_head virtqueues;
+> +};
+> +
+> +struct virtio_mdev_vq_info {
+> +=09/* the actual virtqueue */
+> +=09struct virtqueue *vq;
+> +
+> +=09/* the list node for the virtqueues list */
+> +=09struct list_head node;
+> +};
+> +
+> +static struct mdev_device *vm_get_mdev(struct virtio_device *vdev)
+> +{
+> +=09struct virtio_mdev_device *vm_dev =3D to_virtio_mdev_device(vdev);
+> +=09struct mdev_device *mdev =3D vm_dev->mdev;
+> +
+> +=09return mdev;
+> +}
+> +
+> +static void virtio_mdev_get(struct virtio_device *vdev, unsigned offset,
+> +=09=09=09    void *buf, unsigned len)
+> +{
+> +=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
+> +=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
+> +
+> +=09ops->get_config(mdev, offset, buf, len);
+> +}
+> +
+> +static void virtio_mdev_set(struct virtio_device *vdev, unsigned offset,
+> +=09=09=09    const void *buf, unsigned len)
+> +{
+> +=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
+> +=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
+> +
+> +=09ops->set_config(mdev, offset, buf, len);
+> +}
+> +
+> +static u32 virtio_mdev_generation(struct virtio_device *vdev)
+> +{
+> +=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
+> +=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
+> +
+> +
+> +=09if (ops->get_generation)
+> +=09=09return ops->get_generation(mdev);
+> +
+> +=09return 0;
+> +}
+> +
+> +static u8 virtio_mdev_get_status(struct virtio_device *vdev)
+> +{
+> +=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
+> +=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
+> +
+> +=09return ops->get_status(mdev);
+> +}
+> +
+> +static void virtio_mdev_set_status(struct virtio_device *vdev, u8 status=
+)
+> +{
+> +=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
+> +=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
+> +
+> +=09return ops->set_status(mdev, status);
+> +}
+> +
+> +static void virtio_mdev_reset(struct virtio_device *vdev)
+> +{
+> +=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
+> +=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
+> +
+> +=09return ops->set_status(mdev, 0);
+> +}
+> +
+> +static bool virtio_mdev_notify(struct virtqueue *vq)
+> +{
+> +=09struct mdev_device *mdev =3D vm_get_mdev(vq->vdev);
+> +=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
+> +
+> +=09ops->kick_vq(mdev, vq->index);
+> +
+> +=09return true;
+> +}
+> +
+> +static irqreturn_t virtio_mdev_config_cb(void *private)
+> +{
+> +=09struct virtio_mdev_device *vm_dev =3D private;
+> +
+> +=09virtio_config_changed(&vm_dev->vdev);
+> +
+> +=09return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t virtio_mdev_virtqueue_cb(void *private)
+> +{
+> +=09struct virtio_mdev_vq_info *info =3D private;
+> +
+> +=09return vring_interrupt(0, info->vq);
+> +}
+> +
+> +static struct virtqueue *
+> +virtio_mdev_setup_vq(struct virtio_device *vdev, unsigned int index,
+> +=09=09     void (*callback)(struct virtqueue *vq),
+> +=09=09     const char *name, bool ctx)
+> +{
+> +=09struct virtio_mdev_device *vm_dev =3D to_virtio_mdev_device(vdev);
+> +=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
+> +=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
+> +=09struct virtio_mdev_vq_info *info;
+> +=09struct virtio_mdev_callback cb;
+> +=09struct virtqueue *vq;
+> +=09u64 desc_addr, driver_addr, device_addr;
+> +=09unsigned long flags;
+> +=09u32 align, num;
+> +=09int err;
+> +
+> +=09if (!name)
+> +=09=09return NULL;
+> +
+> +=09/* Queue shouldn't already be set up. */
+> +=09if (ops->get_vq_ready(mdev, index))
+> +=09=09return ERR_PTR(-ENOENT);
+> +
+> +=09/* Allocate and fill out our active queue description */
+> +=09info =3D kmalloc(sizeof(*info), GFP_KERNEL);
+> +=09if (!info)
+> +=09=09return ERR_PTR(-ENOMEM);
+> +
+> +=09num =3D ops->get_vq_num_max(mdev);
+> +=09if (num =3D=3D 0) {
+> +=09=09err =3D -ENOENT;
+> +=09=09goto error_new_virtqueue;
+> +=09}
+> +
+> +=09/* Create the vring */
+> +=09align =3D ops->get_vq_align(mdev);
+> +=09vq =3D vring_create_virtqueue(index, num, align, vdev,
+> +=09=09=09=09    true, true, ctx,
+> +=09=09=09=09    virtio_mdev_notify, callback, name);
+> +=09if (!vq) {
+> +=09=09err =3D -ENOMEM;
+> +=09=09goto error_new_virtqueue;
+> +=09}
+> +
+> +=09/* Setup virtqueue callback */
+> +=09cb.callback =3D virtio_mdev_virtqueue_cb;
+> +=09cb.private =3D info;
+> +=09ops->set_vq_cb(mdev, index, &cb);
+> +=09ops->set_vq_num(mdev, index, virtqueue_get_vring_size(vq));
+> +
+> +=09desc_addr =3D virtqueue_get_desc_addr(vq);
+> +=09driver_addr =3D virtqueue_get_avail_addr(vq);
+> +=09device_addr =3D virtqueue_get_used_addr(vq);
+> +
+> +=09if (ops->set_vq_address(mdev, index,
+> +=09=09=09=09desc_addr, driver_addr,
+> +=09=09=09=09device_addr)) {
+> +=09=09err =3D -EINVAL;
+> +=09=09goto err_vq;
+> +=09}
+> +
+> +=09ops->set_vq_ready(mdev, index, 1);
+> +
+> +=09vq->priv =3D info;
+> +=09info->vq =3D vq;
+> +
+> +=09spin_lock_irqsave(&vm_dev->lock, flags);
+> +=09list_add(&info->node, &vm_dev->virtqueues);
+> +=09spin_unlock_irqrestore(&vm_dev->lock, flags);
+> +
+> +=09return vq;
+> +
+> +err_vq:
+> +=09vring_del_virtqueue(vq);
+> +error_new_virtqueue:
+> +=09ops->set_vq_ready(mdev, index, 0);
+> +=09WARN_ON(ops->get_vq_ready(mdev, index));
+> +=09kfree(info);
+> +=09return ERR_PTR(err);
+> +}
+> +
+> +static void virtio_mdev_del_vq(struct virtqueue *vq)
+> +{
+> +=09struct virtio_mdev_device *vm_dev =3D to_virtio_mdev_device(vq->vdev)=
+;
+> +=09struct mdev_device *mdev =3D vm_dev->mdev;
+> +=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
+> +=09struct virtio_mdev_vq_info *info =3D vq->priv;
+> +=09unsigned int index =3D vq->index;
+> +=09unsigned long flags;
+> +
+> +=09spin_lock_irqsave(&vm_dev->lock, flags);
+> +=09list_del(&info->node);
+> +=09spin_unlock_irqrestore(&vm_dev->lock, flags);
+> +
+> +=09/* Select and deactivate the queue */
+> +=09ops->set_vq_ready(mdev, index, 0);
+> +=09WARN_ON(ops->get_vq_ready(mdev, index));
+> +
+> +=09vring_del_virtqueue(vq);
+> +
+> +=09kfree(info);
+> +}
+> +
+> +static void virtio_mdev_del_vqs(struct virtio_device *vdev)
+> +{
+> +=09struct virtqueue *vq, *n;
+> +
+> +=09list_for_each_entry_safe(vq, n, &vdev->vqs, list)
+> +=09=09virtio_mdev_del_vq(vq);
+> +}
+> +
+> +static int virtio_mdev_find_vqs(struct virtio_device *vdev, unsigned nvq=
+s,
+> +=09=09=09=09struct virtqueue *vqs[],
+> +=09=09=09=09vq_callback_t *callbacks[],
+> +=09=09=09=09const char * const names[],
+> +=09=09=09=09const bool *ctx,
+> +=09=09=09=09struct irq_affinity *desc)
+> +{
+> +=09struct virtio_mdev_device *vm_dev =3D to_virtio_mdev_device(vdev);
+> +=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
+> +=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
+> +=09struct virtio_mdev_callback cb;
+> +=09int i, err, queue_idx =3D 0;
+> +
+> +=09for (i =3D 0; i < nvqs; ++i) {
+> +=09=09if (!names[i]) {
+> +=09=09=09vqs[i] =3D NULL;
+> +=09=09=09continue;
+> +=09=09}
+> +
+> +=09=09vqs[i] =3D virtio_mdev_setup_vq(vdev, queue_idx++,
+> +=09=09=09=09=09      callbacks[i], names[i], ctx ?
+> +=09=09=09=09=09      ctx[i] : false);
+> +=09=09if (IS_ERR(vqs[i])) {
+> +=09=09=09err =3D PTR_ERR(vqs[i]);
+> +=09=09=09goto err_setup_vq;
+> +=09=09}
+> +=09}
+> +
+> +=09cb.callback =3D virtio_mdev_config_cb;
+> +=09cb.private =3D vm_dev;
+> +=09ops->set_config_cb(mdev, &cb);
+> +
+> +=09return 0;
+> +
+> +err_setup_vq:
+> +=09virtio_mdev_del_vqs(vdev);
+> +=09return err;
+> +}
+> +
+> +static u64 virtio_mdev_get_features(struct virtio_device *vdev)
+> +{
+> +=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
+> +=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
+> +
+> +=09return ops->get_features(mdev);
+> +}
+> +
+> +static int virtio_mdev_finalize_features(struct virtio_device *vdev)
+> +{
+> +=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
+> +=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
+> +
+> +=09/* Give virtio_ring a chance to accept features. */
+> +=09vring_transport_features(vdev);
+> +
+> +=09return ops->set_features(mdev, vdev->features);
+> +}
+> +
+> +static const char *virtio_mdev_bus_name(struct virtio_device *vdev)
+> +{
+> +=09struct virtio_mdev_device *vm_dev =3D to_virtio_mdev_device(vdev);
+> +=09struct mdev_device *mdev =3D vm_dev->mdev;
+> +
+> +=09return dev_name(mdev_dev(mdev));
+> +}
+> +
+> +static const struct virtio_config_ops virtio_mdev_config_ops =3D {
+> +=09.get=09=09=3D virtio_mdev_get,
+> +=09.set=09=09=3D virtio_mdev_set,
+> +=09.generation=09=3D virtio_mdev_generation,
+> +=09.get_status=09=3D virtio_mdev_get_status,
+> +=09.set_status=09=3D virtio_mdev_set_status,
+> +=09.reset=09=09=3D virtio_mdev_reset,
+> +=09.find_vqs=09=3D virtio_mdev_find_vqs,
+> +=09.del_vqs=09=3D virtio_mdev_del_vqs,
+> +=09.get_features=09=3D virtio_mdev_get_features,
+> +=09.finalize_features =3D virtio_mdev_finalize_features,
+> +=09.bus_name=09=3D virtio_mdev_bus_name,
+> +};
+> +
+> +static void virtio_mdev_release_dev(struct device *_d)
+> +{
+> +=09struct virtio_device *vdev =3D
+> +=09       container_of(_d, struct virtio_device, dev);
+> +=09struct virtio_mdev_device *vm_dev =3D
+> +=09       container_of(vdev, struct virtio_mdev_device, vdev);
+> +=09struct mdev_device *mdev =3D vm_dev->mdev;
+> +
+> +=09devm_kfree(mdev_dev(mdev), vm_dev);
+> +}
+> +
+> +static int virtio_mdev_probe(struct device *dev)
+> +{
+> +=09struct mdev_device *mdev =3D mdev_virtio_from_dev(dev);
+> +=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
+> +=09struct virtio_mdev_device *vm_dev;
+> +=09int rc;
+> +
+> +=09vm_dev =3D devm_kzalloc(dev, sizeof(*vm_dev), GFP_KERNEL);
+> +=09if (!vm_dev)
+> +=09=09return -ENOMEM;
+> +
+> +=09vm_dev->vdev.dev.parent =3D dev;
+> +=09vm_dev->vdev.dev.release =3D virtio_mdev_release_dev;
+> +=09vm_dev->vdev.config =3D &virtio_mdev_config_ops;
+> +=09vm_dev->mdev =3D mdev;
+> +=09INIT_LIST_HEAD(&vm_dev->virtqueues);
+> +=09spin_lock_init(&vm_dev->lock);
+> +
+> +=09vm_dev->vdev.id.device =3D ops->get_device_id(mdev);
+> +=09if (vm_dev->vdev.id.device =3D=3D 0)
+> +=09=09return -ENODEV;
+> +
+> +=09vm_dev->vdev.id.vendor =3D ops->get_vendor_id(mdev);
+> +=09rc =3D register_virtio_device(&vm_dev->vdev);
+> +=09if (rc)
+> +=09=09put_device(dev);
+> +=09else
+> +=09=09dev_set_drvdata(dev, vm_dev);
+> +
+> +=09return rc;
+> +}
+> +
+> +static void virtio_mdev_remove(struct device *dev)
+> +{
+> +=09struct virtio_mdev_device *vm_dev =3D dev_get_drvdata(dev);
+> +
+> +=09unregister_virtio_device(&vm_dev->vdev);
+> +}
+> +
+> +static const struct mdev_virtio_class_id virtio_id_table[] =3D {
+> +=09{ MDEV_VIRTIO_CLASS_ID_VIRTIO },
+> +=09{ 0 },
+> +};
+> +
 
-Add software queue support to improve the performance.
+Do we still need the class ID? It's a virtio mdev bus,
+do we need a virtio class as well?
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
----
- drivers/mmc/host/Kconfig      |    1 +
- drivers/mmc/host/sdhci-sprd.c |   28 ++++++++++++++++++++++++++++
- 2 files changed, 29 insertions(+)
-
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index efa4019..54b86f6 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -632,6 +632,7 @@ config MMC_SDHCI_SPRD
- 	depends on ARCH_SPRD
- 	depends on MMC_SDHCI_PLTFM
- 	select MMC_SDHCI_IO_ACCESSORS
-+	select MMC_HSQ
- 	help
- 	  This selects the SDIO Host Controller in Spreadtrum
- 	  SoCs, this driver supports R11(IP version: R11P0).
-diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-index d07b979..d346223 100644
---- a/drivers/mmc/host/sdhci-sprd.c
-+++ b/drivers/mmc/host/sdhci-sprd.c
-@@ -19,6 +19,7 @@
- #include <linux/slab.h>
- 
- #include "sdhci-pltfm.h"
-+#include "mmc_hsq.h"
- 
- /* SDHCI_ARGUMENT2 register high 16bit */
- #define SDHCI_SPRD_ARG2_STUFF		GENMASK(31, 16)
-@@ -379,6 +380,16 @@ static unsigned int sdhci_sprd_get_ro(struct sdhci_host *host)
- 	return 0;
- }
- 
-+static void sdhci_sprd_request_done(struct sdhci_host *host,
-+				    struct mmc_request *mrq)
-+{
-+	/* Validate if the request was from software queue firstly. */
-+	if (mmc_hsq_finalize_request(host->mmc, mrq))
-+		return;
-+
-+	 mmc_request_done(host->mmc, mrq);
-+}
-+
- static struct sdhci_ops sdhci_sprd_ops = {
- 	.read_l = sdhci_sprd_readl,
- 	.write_l = sdhci_sprd_writel,
-@@ -392,6 +403,7 @@ static unsigned int sdhci_sprd_get_ro(struct sdhci_host *host)
- 	.hw_reset = sdhci_sprd_hw_reset,
- 	.get_max_timeout_count = sdhci_sprd_get_max_timeout_count,
- 	.get_ro = sdhci_sprd_get_ro,
-+	.request_done = sdhci_sprd_request_done,
- };
- 
- static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
-@@ -521,6 +533,7 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
- {
- 	struct sdhci_host *host;
- 	struct sdhci_sprd_host *sprd_host;
-+	struct mmc_hsq *hsq;
- 	struct clk *clk;
- 	int ret = 0;
- 
-@@ -631,6 +644,18 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
- 
- 	sprd_host->flags = host->flags;
- 
-+	hsq = devm_kzalloc(&pdev->dev, sizeof(*hsq), GFP_KERNEL);
-+	if (!hsq) {
-+		ret = -ENOMEM;
-+		goto err_cleanup_host;
-+	}
-+
-+	ret = mmc_hsq_init(hsq, host->mmc);
-+	if (ret)
-+		goto err_cleanup_host;
-+
-+	host->always_defer_done = true;
-+
- 	ret = __sdhci_add_host(host);
- 	if (ret)
- 		goto err_cleanup_host;
-@@ -689,6 +714,7 @@ static int sdhci_sprd_runtime_suspend(struct device *dev)
- 	struct sdhci_host *host = dev_get_drvdata(dev);
- 	struct sdhci_sprd_host *sprd_host = TO_SPRD_HOST(host);
- 
-+	mmc_hsq_suspend(host->mmc);
- 	sdhci_runtime_suspend_host(host);
- 
- 	clk_disable_unprepare(sprd_host->clk_sdio);
-@@ -717,6 +743,8 @@ static int sdhci_sprd_runtime_resume(struct device *dev)
- 		goto clk_disable;
- 
- 	sdhci_runtime_resume_host(host, 1);
-+	mmc_hsq_resume(host->mmc);
-+
- 	return 0;
- 
- clk_disable:
--- 
-1.7.9.5
+> +MODULE_DEVICE_TABLE(mdev_virtio, virtio_id_table);
+> +
+> +static struct mdev_virtio_driver virtio_mdev_driver =3D {
+> +=09.drv =3D {
+> +=09=09.name=09=3D "virtio_mdev",
+> +=09=09.probe=09=3D virtio_mdev_probe,
+> +=09=09.remove =3D virtio_mdev_remove,
+> +=09},
+> +=09.id_table =3D virtio_id_table,
+> +};
+> +
+> +static int __init virtio_mdev_init(void)
+> +{
+> +=09return mdev_register_driver(&virtio_mdev_driver.drv, THIS_MODULE,
+> +=09=09=09=09    &mdev_virtio_bus_type);
+> +}
+> +
+> +static void __exit virtio_mdev_exit(void)
+> +{
+> +=09mdev_unregister_driver(&virtio_mdev_driver.drv);
+> +}
+> +
+> +module_init(virtio_mdev_init)
+> +module_exit(virtio_mdev_exit)
+> +
+> +MODULE_VERSION(DRIVER_VERSION);
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR(DRIVER_AUTHOR);
+> +MODULE_DESCRIPTION(DRIVER_DESC);
+> diff --git a/include/linux/mdev_virtio.h b/include/linux/mdev_virtio.h
+> index ef2dbb6c383a..5f75f3cf59e1 100644
+> --- a/include/linux/mdev_virtio.h
+> +++ b/include/linux/mdev_virtio.h
+> @@ -25,6 +25,11 @@ struct virtio_mdev_callback {
+>  =09void *private;
+>  };
+> =20
+> +enum {
+> +=09MDEV_VIRTIO_CLASS_ID_VIRTIO =3D 1,
+> +=09/* New entries must be added here */
+> +};
+> +
+>  /**
+>   * struct mdev_virtio_device_ops - Structure to be registered for each
+>   * mdev device to register the device for virtio/vhost drivers.
+> --=20
+> 2.19.1
 
