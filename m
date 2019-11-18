@@ -4,97 +4,182 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D539EC43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 334CFC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC9BD20727
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E454420726
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:58:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HUV8LWcE"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="qMSaI+2M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbfKRFre (ORCPT
+        id S1726475AbfKRF6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 00:47:34 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:61530 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725816AbfKRFre (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 00:47:34 -0500
-X-UUID: ee90d34a165a443a8d730f19011d0a9d-20191118
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=NlWDv9SeYsgi2iRUgyMRzJCtwYNFcrKvnRskCn7RxFw=;
-        b=HUV8LWcEufP3lgh09H4dCiX+4K0hRxp3bJ/Dw+nSRccYU0KBjKIfvG+vtmWYU+rR+gCIuiz4wIugjDYN/USwG55arzRspi98G27k3+dGN/JS647FsfQ0TpQomdBMSgbHx6JYapYWPcr1PTwRztB++WgARTUhlr9bMzijZ5sIeAM=;
-X-UUID: ee90d34a165a443a8d730f19011d0a9d-20191118
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 667588555; Mon, 18 Nov 2019 13:47:30 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 18 Nov 2019 13:47:24 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 18 Nov 2019 13:47:37 +0800
-From:   Miles Chen <miles.chen@mediatek.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Miles Chen <miles.chen@mediatek.com>
-Subject: [PATCH] Input: evdev - convert kzalloc()/vzalloc() to kvzalloc()
-Date:   Mon, 18 Nov 2019 13:47:27 +0800
-Message-ID: <20191118054727.31045-1-miles.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Mon, 18 Nov 2019 00:58:41 -0500
+Received: from mail-eopbgr790081.outbound.protection.outlook.com ([40.107.79.81]:31584
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726140AbfKRF6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 00:58:41 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jXensFFs2GnwhPb5SQY5HYfeUqfUsfEAK8w8qDBuUJjtn3+WY7OGlDC5k3DG/smT0AOOaQvfHTyjKwYFap8BuBOXz0fmdxNCnwECy7gr5I3vQFSp4JchOGd97oDgDe1JycnGLUOkFaTj9lh16IKUOGROvkRH/YCarYmVAoYECFzqL5a9fj2Pj+0KT8e9CcOJFHYzmIQLXC9+APEhDVX554mgXP4V9dBP0sWnqrfgwQJh6Ws6JtQ0NDipFHl+dQZ/Ixk9tDvT6/cgvhkxgN4peGNEOfRuJjkk/rSsDXtgFRZq1WclS2F6dznKC5/SRW6vc15ZYCTrwZDLPevo1Ydrlw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=51zqmSFm+2+y50UokU2mS7wqdMURW8mFABYJHOVjryQ=;
+ b=aT9gFkBFMPdf3LclzRuHWHlxAoMyyVtz2AfPPafN5FSFcw+DHw9spR8eo/F9j/JEKxCZEmMtAyp9brDkubnDkFA1wec2jh3x81zMzWCaicU7OnTMLMDC+cNsSdMHD83PA6jk30kWRHFoHvmwcQrRpaJCkE38YLn+gOuKLfDlNU0CpmYLp18wH15/mNts3WGNPl7Kw9Izpmp766INpCSX6QxdnDk75YA9WjCKXloyJPmYwfETsAB0ScZQzVrmeUiY56jo64UGeQ5mArK/5aq7gmCry6oB9pclOCVfhQr8ezwDfINOg/p+3hRQjmGOt7A/rndEJh1lQ4v0HMynyhkHVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=51zqmSFm+2+y50UokU2mS7wqdMURW8mFABYJHOVjryQ=;
+ b=qMSaI+2MtNQATuBS5yKKGZ73SWaQAnpeutQes23IFJJUPzVDAlJigejzO21VIgzWZylzf60fpDmghcaBtvJrqbLYdJQtshoiy9EMfN9X2ELpvGORUilbDQu+B1httYX6FLNu+9kA96A/3SnJ3F5ieZ2WYKghBkUzUUy+ZdhAFog=
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
+ CH2PR13MB3656.namprd13.prod.outlook.com (20.180.4.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.11; Mon, 18 Nov 2019 05:58:34 +0000
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::853e:1256:311e:d29]) by CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::853e:1256:311e:d29%7]) with mapi id 15.20.2474.012; Mon, 18 Nov 2019
+ 05:58:34 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "Anup.Patel@wdc.com" <Anup.Patel@wdc.com>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "logang@deltatee.com" <logang@deltatee.com>,
+        "ren_guo@c-sky.com" <ren_guo@c-sky.com>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "wangkefeng.wang@huawei.com" <wangkefeng.wang@huawei.com>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>,
+        Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH v2] RISC-V: Add address map dumper
+Thread-Topic: [PATCH v2] RISC-V: Add address map dumper
+Thread-Index: AQHVndU2VgMppCRLNkW/sB+PFFFlEg==
+Date:   Mon, 18 Nov 2019 05:58:34 +0000
+Message-ID: <1574056694-28927-1-git-send-email-yash.shah@sifive.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MAXPR0101CA0032.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:d::18) To CH2PR13MB3368.namprd13.prod.outlook.com
+ (2603:10b6:610:2c::26)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yash.shah@sifive.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-originating-ip: [114.143.65.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9e9863ac-1009-4025-030f-08d76bec58d1
+x-ms-traffictypediagnostic: CH2PR13MB3656:
+x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR13MB3656880E3D54A846F9CEB6568C4D0@CH2PR13MB3656.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 0225B0D5BC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(39840400004)(366004)(376002)(346002)(199004)(189003)(81166006)(486006)(2616005)(81156014)(476003)(7416002)(2501003)(478600001)(8936002)(8676002)(52116002)(44832011)(50226002)(7736002)(36756003)(305945005)(2906002)(25786009)(64756008)(66946007)(66476007)(66556008)(66446008)(316002)(71190400001)(71200400001)(6486002)(5660300002)(107886003)(102836004)(4326008)(186003)(99286004)(6512007)(86362001)(14454004)(2201001)(6436002)(26005)(66066001)(14444005)(3846002)(256004)(6116002)(54906003)(110136005)(6506007)(386003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3656;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: sifive.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nNqWz/BxC7x57h+sr7l97rPW6rPNrAX7kLcoRkaW2lbP7O008JTGpqnWqk3p9P9d4Bhth1FCaZW7jdo/tbGp+u5/wmONm9/q1Iu50v0J65mpMj6F66XBO8fwXqI6XA65jV9aSQbWejTAYQlvZlC8pxTuxpPJ5mp8ePSV+zJhVXu50Cip1V2ov3kuG26PfD3XnRI1wZlNdvzrHgPZBKBdO7cHd9Do9ygbzdNJ6YiovEvnTf5zRYWIibMJIv/V3/Yhjeb8nFIfLaj1ch0XDDky7qNLTygC+MxaJ5bRexfXeX3eFh7+qJl3MHDhS2CZ+7Ac+e5kAWVY0OOtplyu0B0O7ojS1AUl1M4NgjH1a1WG9gg8U/8TDctAiiA+f4Yf+gljWxx6yNQA/rLGscwcYCXq9VA0WGmRmrIFEXoF8AeQaA8skTxSvHqyFVDRqZVFWIsS
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e9863ac-1009-4025-030f-08d76bec58d1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 05:58:34.5499
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LPZ8xeibrwhCeH1KAbT+4bCSq3KChdkR36kFu/R/oOeMS1rwXy60hadQY7BQPg1CsDzI1icnbCsndTac/S/VhA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3656
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V2Ugb2JzZXJ2ZWQgYSBsYXJnZShvcmRlci0zKSBhbGxvY2F0aW9uIGluIGV2ZGV2X29wZW4oKSBh
-bmQgaXQgbWF5DQpjYXVzZSBhbiBPT00ga2VucmVsIHBhbmljIGluIGt6YWxsb2MoKSwgYmVmb3Jl
-IHdlIGdldHRpbmcgdG8gdGhlDQp2emFsbG9jKCkgZmFsbGJhY2suDQoNCkZpeCBpdCBieSBjb252
-ZXJ0aW5nIGt6YWxsb2MoKS92emFsbG9jKCkgdG8ga3Z6YWxsb2MoKSB0byBhdm9pZCB0aGUNCk9P
-TSBraWxsZXIgbG9naWMgYXMgd2UgaGF2ZSBhIHZtYWxsb2MgZmFsbGJhY2suDQoNCklucHV0UmVh
-ZGVyIGludm9rZWQgb29tLWtpbGxlcjogZ2ZwX21hc2s9MHgyNDBjMmMwDQooR0ZQX0tFUk5FTHxf
-X0dGUF9OT1dBUk58X19HRlBfQ09NUHxfX0dGUF9aRVJPKSwgbm9kZW1hc2s9MCwgb3JkZXI9MywN
-Cm9vbV9zY29yZV9hZGo9LTkwMA0KLi4uDQooZHVtcF9iYWNrdHJhY2UpIGZyb20gKHNob3dfc3Rh
-Y2srMHgxOC8weDFjKQ0KKHNob3dfc3RhY2spIGZyb20gKGR1bXBfc3RhY2srMHg5NC8weGE4KQ0K
-KGR1bXBfc3RhY2spIGZyb20gKGR1bXBfaGVhZGVyKzB4N2MvMHhlNCkNCihkdW1wX2hlYWRlcikg
-ZnJvbSAob3V0X29mX21lbW9yeSsweDMzNC8weDM0OCkNCihvdXRfb2ZfbWVtb3J5KSBmcm9tIChf
-X2FsbG9jX3BhZ2VzX25vZGVtYXNrKzB4ZTljLzB4ZWI4KQ0KKF9fYWxsb2NfcGFnZXNfbm9kZW1h
-c2spIGZyb20gKGttYWxsb2Nfb3JkZXJfdHJhY2UrMHgzNC8weDEyOCkNCihrbWFsbG9jX29yZGVy
-X3RyYWNlKSBmcm9tIChfX2ttYWxsb2MrMHgyNTgvMHgzNmMpDQooX19rbWFsbG9jKSBmcm9tIChl
-dmRldl9vcGVuKzB4NWMvMHgxN2MpDQooZXZkZXZfb3BlbikgZnJvbSAoY2hyZGV2X29wZW4rMHgx
-MDAvMHgyMDQpDQooY2hyZGV2X29wZW4pIGZyb20gKGRvX2RlbnRyeV9vcGVuKzB4MjFjLzB4MzU0
-KQ0KKGRvX2RlbnRyeV9vcGVuKSBmcm9tICh2ZnNfb3BlbisweDU4LzB4ODQpDQoodmZzX29wZW4p
-IGZyb20gKHBhdGhfb3BlbmF0KzB4NjQwLzB4Yzk4KQ0KKHBhdGhfb3BlbmF0KSBmcm9tIChkb19m
-aWxwX29wZW4rMHg3OC8weDExYykNCihkb19maWxwX29wZW4pIGZyb20gKGRvX3N5c19vcGVuKzB4
-MTMwLzB4MjQ0KQ0KKGRvX3N5c19vcGVuKSBmcm9tIChTeVNfb3BlbmF0KzB4MTQvMHgxOCkNCihT
-eVNfb3BlbmF0KSBmcm9tIChfX3N5c190cmFjZV9yZXR1cm4rMHgwLzB4MTApDQouLi4NCk5vcm1h
-bDogMTI0ODgqNGtCIChVTUVIKSA2OTg0KjhrQiAoVU1FSCkgMjEwMSoxNmtCIChVTUVIKSAwKjMy
-a0INCjAqNjRrQiAwKjEyOGtCIDAqMjU2a0IgMCo1MTJrQiAwKjEwMjRrQiAwKjIwNDhrQiAwKjQw
-OTZrQiA9IDEzOTQ0MGtCDQpIaWdoTWVtOiAyMDYqNGtCIChIKSAxMzEqOGtCIChIKSA0MioxNmtC
-IChIKSAyKjMya0IgKEgpIDAqNjRrQg0KMCoxMjhrQiAwKjI1NmtCIDAqNTEya0IgMCoxMDI0a0Ig
-MCoyMDQ4a0IgMCo0MDk2a0IgPSAyNjA4a0INCi4uLg0KS2VybmVsIHBhbmljIC0gbm90IHN5bmNp
-bmc6IE91dCBvZiBtZW1vcnkgYW5kIG5vIGtpbGxhYmxlIHByb2Nlc3Nlcy4uLg0KDQpTaWduZWQt
-b2ZmLWJ5OiBNaWxlcyBDaGVuIDxtaWxlcy5jaGVuQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZl
-cnMvaW5wdXQvZXZkZXYuYyB8IDUgKy0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24o
-KyksIDQgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2lucHV0L2V2ZGV2LmMg
-Yi9kcml2ZXJzL2lucHV0L2V2ZGV2LmMNCmluZGV4IGQ3ZGQ2ZmNmMmRiMC4uY2Y1ZDdkNjNmZDQ4
-IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9pbnB1dC9ldmRldi5jDQorKysgYi9kcml2ZXJzL2lucHV0
-L2V2ZGV2LmMNCkBAIC00ODQsMTAgKzQ4NCw3IEBAIHN0YXRpYyBpbnQgZXZkZXZfb3BlbihzdHJ1
-Y3QgaW5vZGUgKmlub2RlLCBzdHJ1Y3QgZmlsZSAqZmlsZSkNCiAJc3RydWN0IGV2ZGV2X2NsaWVu
-dCAqY2xpZW50Ow0KIAlpbnQgZXJyb3I7DQogDQotCWNsaWVudCA9IGt6YWxsb2Moc3RydWN0X3Np
-emUoY2xpZW50LCBidWZmZXIsIGJ1ZnNpemUpLA0KLQkJCSBHRlBfS0VSTkVMIHwgX19HRlBfTk9X
-QVJOKTsNCi0JaWYgKCFjbGllbnQpDQotCQljbGllbnQgPSB2emFsbG9jKHN0cnVjdF9zaXplKGNs
-aWVudCwgYnVmZmVyLCBidWZzaXplKSk7DQorCWNsaWVudCA9IGt2emFsbG9jKHN0cnVjdF9zaXpl
-KGNsaWVudCwgYnVmZmVyLCBidWZzaXplKSwgR0ZQX0tFUk5FTCk7DQogCWlmICghY2xpZW50KQ0K
-IAkJcmV0dXJuIC1FTk9NRU07DQogDQotLSANCjIuMTguMA0K
+Add support for dumping the kernel address space layout to the console.
+User can enable CONFIG_DEBUG_VM to dump the virtual memory region into
+dmesg buffer during boot-up.
+
+Signed-off-by: Yash Shah <yash.shah@sifive.com>
+---
+This patch is based on Linux 5.4-rc6 and tested on SiFive HiFive
+Unleashed board.
+
+Changes in v2:
+- Avoid #ifdefs inside functions
+- Helper functions instead of macros
+- Drop newly added CONFIG_DEBUG_VM_LAYOUT, instead use CONFIG_DEBUG_VM
+---
+ arch/riscv/mm/init.c | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 573463d..7828136 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -45,6 +45,41 @@ void setup_zero_page(void)
+ 	memset((void *)empty_zero_page, 0, PAGE_SIZE);
+ }
+=20
++#ifdef CONFIG_DEBUG_VM
++static inline void print_mlk(char *name, unsigned long b, unsigned long t)
++{
++	pr_notice("%12s : 0x%08lx - 0x%08lx   (%4ld kB)\n", name, b, t,
++		  (((t) - (b)) >> 10));
++}
++
++static inline void print_mlm(char *name, unsigned long b, unsigned long t)
++{
++	pr_notice("%12s : 0x%08lx - 0x%08lx   (%4ld MB)\n", name, b, t,
++		  (((t) - (b)) >> 20));
++}
++
++static void print_vm_layout(void)
++{
++	pr_notice("Virtual kernel memory layout:\n");
++	print_mlk("fixmap", (unsigned long)FIXADDR_START,
++		  (unsigned long)FIXADDR_TOP);
++	print_mlm("vmemmap", (unsigned long)VMEMMAP_START,
++		  (unsigned long)VMEMMAP_END);
++	print_mlm("vmalloc", (unsigned long)VMALLOC_START,
++		  (unsigned long)VMALLOC_END);
++	print_mlm("lowmem", (unsigned long)PAGE_OFFSET,
++		  (unsigned long)high_memory);
++	print_mlk(".init", (unsigned long)__init_begin,
++		  (unsigned long)__init_end);
++	print_mlk(".text", (unsigned long)_text, (unsigned long)_etext);
++	print_mlk(".data", (unsigned long)_sdata, (unsigned long)_edata);
++	print_mlk(".bss", (unsigned long)__bss_start,
++		  (unsigned long)__bss_stop);
++}
++#else
++static void print_vm_layout(void) { }
++#endif /* CONFIG_DEBUG_VM */
++
+ void __init mem_init(void)
+ {
+ #ifdef CONFIG_FLATMEM
+@@ -55,6 +90,7 @@ void __init mem_init(void)
+ 	memblock_free_all();
+=20
+ 	mem_init_print_info(NULL);
++	print_vm_layout();
+ }
+=20
+ #ifdef CONFIG_BLK_DEV_INITRD
+--=20
+2.7.4
 
