@@ -2,84 +2,144 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7742CC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 787A3C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5761320748
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C902084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:49:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfKRMrz convert rfc822-to-8bit (ORCPT
+        id S1726765AbfKRMty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 07:47:55 -0500
-Received: from lithops.sigma-star.at ([195.201.40.130]:49390 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfKRMry (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 07:47:54 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 1B738608325B;
-        Mon, 18 Nov 2019 13:47:51 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 9twFQkO4XXdp; Mon, 18 Nov 2019 13:47:50 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id A6CE260632CE;
-        Mon, 18 Nov 2019 13:47:50 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id UsjnQgIzNO_j; Mon, 18 Nov 2019 13:47:50 +0100 (CET)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 72DCD605AD4C;
-        Mon, 18 Nov 2019 13:47:50 +0100 (CET)
-Date:   Mon, 18 Nov 2019 13:47:50 +0100 (CET)
-From:   Richard Weinberger <richard@nod.at>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-serial@vger.kernel.org
-Message-ID: <1505628642.90849.1574081270290.JavaMail.zimbra@nod.at>
-In-Reply-To: <20191118114657.GA228826@kroah.com>
-References: <20191117202435.28127-1-sudipm.mukherjee@gmail.com> <20191118114657.GA228826@kroah.com>
-Subject: Re: [PATCH v2] {tty: serial, nand: onenand}: samsung: rename to fix
- build warning
+        Mon, 18 Nov 2019 07:49:54 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42388 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726506AbfKRMtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 07:49:53 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A049DAC6F;
+        Mon, 18 Nov 2019 12:49:51 +0000 (UTC)
+Date:   Mon, 18 Nov 2019 13:49:49 +0100
+From:   Borislav Petkov <bp@suse.de>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux Crypto List <linux-crypto@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Samuel Neves <sneves@dei.uc.pt>,
+        Ard Biesheuvel <ardb@kernel.org>, Jiri Slaby <jslaby@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: linux-next: build failure after merge of the tip tree
+Message-ID: <20191118124949.GA8028@zn.tnic>
+References: <20191118141110.7f971194@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF68 (Linux)/8.8.12_GA_3809)
-Thread-Topic: {tty: serial, nand: onenand}: samsung: rename to fix build warning
-Thread-Index: e5heYAEPAAm1QXkAbCz7WpzWPdhATg==
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191118141110.7f971194@canb.auug.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ Ursprüngliche Mail -----
->> I was not sure if this should have been two different patch, but since
->> this will be fixing the same problem so it seems its better to have them
->> in a single patch.
->> 
->>  drivers/mtd/nand/onenand/Makefile                     | 2 +-
->>  drivers/mtd/nand/onenand/{samsung.c => samsung_mtd.c} | 0
->>  drivers/tty/serial/Makefile                           | 2 +-
->>  drivers/tty/serial/{samsung.c => samsung_tty.c}       | 0
->>  4 files changed, 2 insertions(+), 2 deletions(-)
->>  rename drivers/mtd/nand/onenand/{samsung.c => samsung_mtd.c} (100%)
->>  rename drivers/tty/serial/{samsung.c => samsung_tty.c} (100%)
+On Mon, Nov 18, 2019 at 02:11:10PM +1100, Stephen Rothwell wrote:
+> Hi all,
 > 
-> I can take this in the tty tree if the mtd maintainer gives an ack for
-> it...
+> After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
+> failed like this:
+> 
+> arch/x86/crypto/blake2s-core.S: Assembler messages:
+> arch/x86/crypto/blake2s-core.S:50: Error: invalid character '(' in mnemonic
+> arch/x86/crypto/blake2s-core.S:176: Error: invalid character '(' in mnemonic
+> arch/x86/crypto/blake2s-core.S:180: Error: invalid character '(' in mnemonic
+> arch/x86/crypto/blake2s-core.S:257: Error: invalid character '(' in mnemonic
+> 
+> Caused by commit
+> 
+>   ed0356eda153 ("crypto: blake2s - x86_64 SIMD implementation")
+> 
+> from the crypto tree interacting with commit
+> 
+>   6dcc5627f6ae ("x86/asm: Change all ENTRY+ENDPROC to SYM_FUNC_*")
+> 
+> from the tip tree.
+> 
+> I have applied the following merge fix patch.
 
-Acked-by: Richard Weinberger <richard@nod.at>
+Thanks.
 
-Thanks,
-//richard
+I need to remember to point Linus to it when I send the pull request
+next week so that he's aware and can apply your patch when merging the
+crypto tree.
+
+Lemme CC him now too, as an FYI.
+
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Mon, 18 Nov 2019 14:00:40 +1100
+> Subject: [PATCH] fix up for "x86/asm: Change all ENTRY+ENDPROC to SYM_FUNC_*"
+
+<--- add a commit message blurb here pls.
+
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  arch/x86/crypto/blake2s-core.S | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/crypto/blake2s-core.S b/arch/x86/crypto/blake2s-core.S
+> index 8591938eee26..24910b766bdd 100644
+> --- a/arch/x86/crypto/blake2s-core.S
+> +++ b/arch/x86/crypto/blake2s-core.S
+> @@ -47,7 +47,7 @@ SIGMA2:
+>  
+>  .text
+>  #ifdef CONFIG_AS_SSSE3
+> -ENTRY(blake2s_compress_ssse3)
+> +SYM_FUNC_START(blake2s_compress_ssse3)
+>  	testq		%rdx,%rdx
+>  	je		.Lendofloop
+>  	movdqu		(%rdi),%xmm0
+> @@ -173,11 +173,11 @@ ENTRY(blake2s_compress_ssse3)
+>  	movdqu		%xmm14,0x20(%rdi)
+>  .Lendofloop:
+>  	ret
+> -ENDPROC(blake2s_compress_ssse3)
+> +SYM_FUNC_END(blake2s_compress_ssse3)
+>  #endif /* CONFIG_AS_SSSE3 */
+>  
+>  #ifdef CONFIG_AS_AVX512
+> -ENTRY(blake2s_compress_avx512)
+> +SYM_FUNC_START(blake2s_compress_avx512)
+>  	vmovdqu		(%rdi),%xmm0
+>  	vmovdqu		0x10(%rdi),%xmm1
+>  	vmovdqu		0x20(%rdi),%xmm4
+> @@ -254,5 +254,5 @@ ENTRY(blake2s_compress_avx512)
+>  	vmovdqu		%xmm4,0x20(%rdi)
+>  	vzeroupper
+>  	retq
+> -ENDPROC(blake2s_compress_avx512)
+> +SYM_FUNC_END(blake2s_compress_avx512)
+>  #endif /* CONFIG_AS_AVX512 */
+> -- 
+> 2.23.0
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
+
+
+
+-- 
+Regards/Gruss,
+    Boris.
+
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
