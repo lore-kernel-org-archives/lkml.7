@@ -2,114 +2,144 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26ADBC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FE0C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03BF122304
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10D242230E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:44:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IP57T3Ba"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VTpZ6pSl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfKRTlc (ORCPT
+        id S1726698AbfKRToe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 14:41:32 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37983 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfKRTlb (ORCPT
+        Mon, 18 Nov 2019 14:44:34 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36854 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbfKRTod (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 14:41:31 -0500
-Received: by mail-ot1-f67.google.com with SMTP id z25so15624630oti.5
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 11:41:31 -0800 (PST)
+        Mon, 18 Nov 2019 14:44:33 -0500
+Received: by mail-pl1-f193.google.com with SMTP id d7so10356190pls.3;
+        Mon, 18 Nov 2019 11:44:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=X3o0IsIZAZ7wZG7kNKtDTIC/+CrHgjEOKYqn/GJZgow=;
-        b=IP57T3BawVyl+urI2HsWXb3a52KJBX1CVpOTmaws+YDj5nD8X94w/onrfLkCgdDNod
-         wN66e0baMmlaayqO4Q3w/oj9JHMWfC3vyWSS1dnr+ktELyPIKg2CPpNZiEgrMSyTARJu
-         MfEDJNd3GECOcxNV2Pt9Tm1NrDZr2sdTONBOAecH5v7zpR37Y5ZQyPSy9rL9hesTYa8F
-         VW9wgwHLCxTr2sng/rdtXaBI/SkDjMD/wHYF3gAaCdx5bPmqjM/knxvxIJbignzjLPiF
-         vrWTBmmunBhanAtLrzaAHfQoJFRV4XID3x2sLXwQ9ZkWVk8rMiynFeppf12qstMIXUF1
-         0AxA==
+        bh=TC5IKXkEeLvUIaKix78ztNNc8pykt/x5bB2H11fvT/g=;
+        b=VTpZ6pSli/VDtzsKnZzYR/zf6tW/PLbkRZ9njXbP6NAzL/LV0QjNlb1CWoA66IbQ6T
+         Wlz88NkWn8/vyfhmIlkE/ogrUYLZSqVZjwlxHXsftWSCeFDRL6lL3GQZM9uTZ0WxQ0A8
+         c1oLE6NKGj8WEIHCHYYUVS2sfDo6n2+oLQDM35zaGfpzPOIcmy2lvLq4adnexszJT8HA
+         BlIGnGMxRyitb/dPEF1OgC0Rogv7HIeqpE5kY+jmDh4m5zks9K2fAD1P/UDnY3VNVd7O
+         f94lFwqpRYaB0vaIys2FqGO3We8Y6RpW+BNk9YZAOjpDbZuHso11aaarOntsmQ+O4wIK
+         nCkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=X3o0IsIZAZ7wZG7kNKtDTIC/+CrHgjEOKYqn/GJZgow=;
-        b=ez3ff33yiuea2KNnnLvWSsQN5G6ZShDOy6IsLCCf/6BQprH5AiTJUv5gFo/TTBupFn
-         IVRayil1MODvjvEnaobGaklXfdbEf5cWZlMXG9q+7fWrxF1yis5j8Pk6D2VOakf4lhO2
-         JvzR23N6IztFHGdtZhB1QOMP7QNnaQxVCT5gU8AssIb7mPibtsyjLepO7zvwo5tXh1Gy
-         FeQcA62JGDefT9wmqXpsnDd2UYYXKoGzMbL5LsDd5dNwugL5kBXG0hMhgS8rPAFmoYr7
-         3IbA9fLv5sQesk9Lh5UkPDi2FlWr0UpysN8hwVyISlqIg+rI7uf8+/Wi8h2Gw1X8jMGb
-         hdTw==
-X-Gm-Message-State: APjAAAXC9/B5BUZT4lTAyi6RepvtDFncfec2GxGLc1H8RQ8w2ooPH+Ug
-        0H91ibNYcDfLCUhXn8A17KPSWwHzOussPyyjJlhrsA==
-X-Google-Smtp-Source: APXvYqzUsgAQBjPOYLPLOEbi+X4F4sQfjR2aYPz7uHf2rwXILQINWQCn1hgtNd0dkCm49mZdpcu3Q2oMsIQ6w0Mchn4=
-X-Received: by 2002:a9d:5543:: with SMTP id h3mr715368oti.33.1574106090265;
- Mon, 18 Nov 2019 11:41:30 -0800 (PST)
+        bh=TC5IKXkEeLvUIaKix78ztNNc8pykt/x5bB2H11fvT/g=;
+        b=q9wPYIX2t2HGmBPLCQw+aF5dLMbTdYwNdkJAitHCK7F6irvKQ37ua6fwXwmVdv6g+W
+         4fj/QNvVLozporYLuZZABxWE+HzL7PqW6M3/7uUnfWF9Lr8D8YbNgUDm2bMMxyTawSTq
+         MbTUXSdgPw73fU3DfiKUENdn9eFSjBAEy30zo58PN9maH7rnuhuj84MB/VrWyUT17odn
+         3Zg67O48R5tUXtevkIn7mNv0iIF98z5UCDjLAtxgUsUj+5MKYoVovAwcHk+bz5w5rnkx
+         miojwrRyY/e2X0KTHDr4BedGa1ZJPl8j6rMC+3zhYGwiTqiYViX87MwqLSJlJCjQ613X
+         HA4g==
+X-Gm-Message-State: APjAAAWIids6xsKXfmdDyEm9q3hvDc5ftrzWhcNoQFgcEuo4AS7OBVAx
+        GXaXvWocVa2790CYt9jK5aNX02wJ9nF3Qicy3+Y=
+X-Google-Smtp-Source: APXvYqzs5xYyJ8AQV6D1X6BIce0Bke3mK70h6gr2XlSDndWOLPYFvxNLcYKnFnJ0zr4FjyUHs11TJjkfoio672E/stE=
+X-Received: by 2002:a17:90a:bb82:: with SMTP id v2mr888586pjr.90.1574106272898;
+ Mon, 18 Nov 2019 11:44:32 -0800 (PST)
 MIME-Version: 1.0
-References: <20191030013701.39647-1-almasrymina@google.com>
- <20191030013701.39647-5-almasrymina@google.com> <010d5a90-3ebf-30e5-8829-a61f01b6f620@gmail.com>
-In-Reply-To: <010d5a90-3ebf-30e5-8829-a61f01b6f620@gmail.com>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Mon, 18 Nov 2019 11:41:19 -0800
-Message-ID: <CAHS8izMWi0BXyiv+Nx4PSV+QkN8beHn0WH9HwwjsMJacwRntvw@mail.gmail.com>
-Subject: Re: [PATCH v8 5/9] hugetlb: disable region_add file_region coalescing
-To:     Wenkuan Wang <wwk0817@gmail.com>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>, shuah <shuah@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
-        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>
+References: <cc03ba18-4949-9244-639c-94f461f03361@huawei.com>
+ <CAA9_cmc7BuWkBHadHRAxfch43KWovb6rSr2AR9y3bVue0M9EhQ@mail.gmail.com> <CAJZ5v0g35zvSB88d7qK8n1uRGCuO5VNK11jHVQRNKwyQW4vZSQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0g35zvSB88d7qK8n1uRGCuO5VNK11jHVQRNKwyQW4vZSQ@mail.gmail.com>
+From:   Dexuan-Linux Cui <dexuan.linux@gmail.com>
+Date:   Mon, 18 Nov 2019 11:44:22 -0800
+Message-ID: <CAA42JLYCod=mymBiDDXxQ1sts7e-Ot_q9SKdJxjSkcsZRVGDTQ@mail.gmail.com>
+Subject: Re: [PATCH v2] ACPI: sysfs: Change ACPI_MASKABLE_GPE_MAX to 0x100
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Yunfeng Ye <yeyunfeng@huawei.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>,
+        Dexuan Cui <decui@microsoft.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On 10/30/19 9:36 AM, Mina Almasry wrote:
-> > /* Must be called with resv->lock held. Calling this with count_only == true
-> > * will count the number of pages to be added but will not modify the linked
-> > - * list.
-> > + * list. If regions_needed != NULL and count_only == true, then regions_needed
-> > + * will indicate the number of file_regions needed in the cache to carry out to
-> > + * add the regions for this range.
-> > */
-> > static long add_reservation_in_range(struct resv_map *resv, long f, long t,
+On Mon, Nov 18, 2019 at 1:04 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
 >
-> Hi Mina,
+> On Sat, Nov 16, 2019 at 9:06 PM Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > On Wed, Nov 13, 2019 at 11:17 PM Yunfeng Ye <yeyunfeng@huawei.com> wrote:
+> > >
+> > > The commit 0f27cff8597d ("ACPI: sysfs: Make ACPI GPE mask kernel
+> > > parameter cover all GPEs") says:
+> > >   "Use a bitmap of size 0xFF instead of a u64 for the GPE mask so 256
+> > >    GPEs can be masked"
+> > >
+> > > But the masking of GPE 0xFF it not supported and the check condition
+> > > "gpe > ACPI_MASKABLE_GPE_MAX" is not valid because the type of gpe is
+> > > u8.
+> > >
+> > > So modify the macro ACPI_MASKABLE_GPE_MAX to 0x100, and drop the "gpe >
+> > > ACPI_MASKABLE_GPE_MAX" check. In addition, update the docs "Format" for
+> > > acpi_mask_gpe parameter.
+> > >
+> > > Fixes: 0f27cff8597d ("ACPI: sysfs: Make ACPI GPE mask kernel parameter cover all GPEs")
+> > > Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+> > > ---
+> > > v1 -> v2:
+> > >  - drop the "gpe > ACPI_MASKABLE_GPE_MAX" check
+> > >  - update the docs "Format" from <int> to <byte> for acpi_mask_gpe parameter
+> > >  - update the commit comment
+> > >
+> > >  Documentation/admin-guide/kernel-parameters.txt | 2 +-
+> > >  drivers/acpi/sysfs.c                            | 4 ++--
+> > >  2 files changed, 3 insertions(+), 3 deletions(-)
+> >
+> > Bisect flags commit eb09878e1301 "ACPI: sysfs: Change
+> > ACPI_MASKABLE_GPE_MAX to 0x100" in -next as the reason for a boot
+> > regression in my qemu-kvm test environment. It spews:
+> >
+> > [    1.456728] ACPI: Masking GPE 0x0.
+> > ...
+> > [  161.721420] ACPI: Masking GPE 0x0.
+> >
+> > ...and then hangs.
+> >
+> > A straight revert gets the configuration back on its feet.
+> >
+> > qemu-system-x86_64 --version
+> > QEMU emulator version 4.0.50 (v4.0.0-928-g49c6c6ac0cd8)
 >
-> Would you please share which tree this patch set used? this patch 5/9 can't be
-> applied with Linus's tree and add_reservation_in_range can't be found.
->
-> Thanks
-> Wenkuan
+> OK, I'll drop it then, thanks!
 
-Sorry for the late reply. Locally I have this patchset on top of
-linus/master and a patchset that added add_reservation_in_range.
+We're seeing the same issue wtih 5.4.0-rc7-next-20191118 on a Linux VM
+running on Hyper-V :
 
-But, this patchset can be rebased on top of this commit with 'minimal'
-merge conflicts:
+[    0.133029] ACPI: 1 ACPI AML tables successfully acquired and loaded
+[    0.144023] ACPI: Interpreter enabled
+[    0.145023] ACPI: (supports S0 S5)
+[    0.146023] ACPI: Using IOAPIC for interrupt routing
+[    0.147024] PCI: Using host bridge windows from ACPI; if necessary,
+use "pci=nocrs" and report a bug
+[    0.148031] ACPI: Masking GPE 0x0.
+...
+[  774.839023] ACPI: Masking GPE 0x0.
+[  774.840023] ACPI: Masking GPE 0x0.
 
-commit c1ca56bab12f3 (tag: v5.4-rc7-mmots-2019-11-15-18-40, github-akpm/master)
-Author: Linus Torvalds <torvalds@linux-foundation.org>
+I guess the patch is only tested on a physical machine and not on a VM...
 
-    pci: test for unexpectedly disabled bridges
-
-It's the latest mmotm I find on https://github.com/hnaz/linux-mm.git.
-My next patchset will be rebased on top mmotm.
-
->
-> > - bool count_only)
-> > + long *regions_needed, bool count_only)
-> > {
-> > - long chg = 0;
-> > + long add = 0;
-> > struct list_head *head = &resv->regions;
-> > + long last_accounted_offset = f;
-> > struct file_region *rg = NULL, *trg = NULL, *nrg = NULL;
-> > - /* Locate the region we are before or
+Thanks,
+Dexuan
