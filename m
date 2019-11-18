@@ -8,70 +8,65 @@ X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB704C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DC9C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B308820727
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C1AD20727
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:40:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ROuGzm4j"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dj3CWbDe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfKRLkN (ORCPT
+        id S1726795AbfKRLkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:40:13 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:46412 "EHLO
+        Mon, 18 Nov 2019 06:40:35 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:45053 "EHLO
         mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfKRLkN (ORCPT
+        with ESMTP id S1726562AbfKRLke (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:40:13 -0500
-Received: by mail-pj1-f68.google.com with SMTP id a16so1415932pjs.13;
-        Mon, 18 Nov 2019 03:40:11 -0800 (PST)
+        Mon, 18 Nov 2019 06:40:34 -0500
+Received: by mail-pj1-f68.google.com with SMTP id w8so1414574pjh.11;
+        Mon, 18 Nov 2019 03:40:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=UKlXFmsyCCcDDwPIPUpIzSPGgE4nu5epjuY/dy6jNM4=;
-        b=ROuGzm4jkxrXQOcqLXKOOHwYgxDKwtdPl3VFO5rmmHsV1yBi4P8YFqizjyeHwzceSm
-         NTwkx2EPcWAlt2MSDtu17OAdb9h1kHTZ2fFPvUFN3W+rvpe1WKWpC/YvImORx4Lx3UfP
-         +zvyMSMsSqHOJhHMxRmHZT+A5r9rvh+R36tPkhcC86rtI9t7T00B2X5ftPl0q/uk9dTG
-         9tGWjvKyI0dNVhq8TBFPW3wSqvoU9FiyDXk81jWxks+VNiz8/bvtINGEwtZMFGUliW6E
-         MmRoh/81FIXROovu5KFBZF1PaD7Y0i4NZTpMOQ6AfJo8pAwK5xYlYPfXylyBF3coPa5q
-         JEiw==
+        bh=SIpBjUI/18c4759KVfvkhxpy/Q1dsRRq2xntCSfnsBk=;
+        b=Dj3CWbDeUCRt1jHqDYcWbMFWjDqd4MyQmzl+Y28Z0yF4vyLdnFbat8UA4JwQYpPrW+
+         iLrKmPqb1z5O9b4CIym2eNMRVZjf//dju0/O5BP6M99PAQAEw664ccC4xwXkaAWh3XLa
+         Tj6o8VTybCYVHNQ96hHK39BgwmsLVjbV9PfEsvaAw/B5yIYNXh+Amgize6xqieiKRGNN
+         759u3CBwWqudYFacxr6wmlBIONb+0iEfO6ckmufeZP2vK8xWlhbmXruY068JxTMCJqAW
+         /QtK/lJsTBlRjuKMk0LN7coPnkSrBPppFNOROTZ2kzCiWUYhFN+UHBQmzgGKQx2OQZ6c
+         7OuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=UKlXFmsyCCcDDwPIPUpIzSPGgE4nu5epjuY/dy6jNM4=;
-        b=NC/sjbw8MmZ1FwH1yJSUu8ycgsQlgjPIPNxbW4uUqekoA3XTpiOgxKbxBy3csBzr/c
-         9EX3kt+ol2/u86cm90U1Y9Umtuk7zHafwBbuyTlwhueryqIZlDA1mwHE8WS8q/LKs/Nj
-         NWLj7DAsuKGgcIm5n8c6Q4d7UyGoJQKU+dMt8f46/knpT0jpGCZQHC6vUmwiqUpA7kII
-         D22kg992Hft6XnZvCddCBCSGej5n8HNy5P/RZP0PJRArkrNdEOt8FHJNqt60GyCtEg92
-         SwutBo3KkT79sUQ0oi58UOT9HAV2FSqnk6FpHxwBYLPetUX/DdQPrXhnxg58NMk2tWkb
-         lFyA==
-X-Gm-Message-State: APjAAAVRQoxwnT4SAF8fX+lLGcn8fkTGAD2PDNxvjnExkfDd7RVpT2TZ
-        jFx5EnXRi2dG2DcK1UPLT44=
-X-Google-Smtp-Source: APXvYqyn0Lsr2kVbd6T3MWbNxpcGTpsIQ/Ohr+Rq2gUm+qBRKnowv1C9yHHyvWVJjkkaPpH71dqLLw==
-X-Received: by 2002:a17:90a:9741:: with SMTP id i1mr39483570pjw.41.1574077211147;
-        Mon, 18 Nov 2019 03:40:11 -0800 (PST)
+        bh=SIpBjUI/18c4759KVfvkhxpy/Q1dsRRq2xntCSfnsBk=;
+        b=kxoO1UFd7WgXC5ra0Xhrtgt87IkznjfnVR1wKCqXzD4S22cblGEsng8Sw7T8y1Ynsa
+         ZqL+mZKIUN3Jv1qVNzIfae3fxc0gKdi8s/ItCQkmb2iH9AFf+j841Qm63uEWPgJ/ensv
+         Jmaf+ajjxPqecyLpXVSfV2gRInhtI+dp5ZPe6KZ8pYM/9G9l+RxnmU7gd6pvjij6sIC/
+         xWz67YhmBumRYpp/MYVLXJaz3nMEZE+HM0NAiXHwzl/1+NpjC8d52YQ0Zh4RApAiLko7
+         mIJYEYTHAPI2GRwHVFEoGyH5fNe928Uor300OpuXVp2mxcRt7m8mfQxY9uZhGE5JliZR
+         YhEQ==
+X-Gm-Message-State: APjAAAUVv5lqwG9aU+M7YCV5rDaUW2cAJlrSEyOe8y+v4XQTQ0t3j3Eb
+        o6UwZ9iO2BTRUdJny3Iv4yc=
+X-Google-Smtp-Source: APXvYqzLcRKwvXVsJ55yLiaDFZPfmM/lasS/G8K2CN0NMRu5/c8SlfIzI1/6wu7ddAwsVPc2GDgSvw==
+X-Received: by 2002:a17:90b:94f:: with SMTP id dw15mr38058971pjb.13.1574077230683;
+        Mon, 18 Nov 2019 03:40:30 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id l21sm17515128pjt.28.2019.11.18.03.40.03
+        by smtp.gmail.com with ESMTPSA id i13sm19839717pfo.39.2019.11.18.03.40.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 03:40:10 -0800 (PST)
+        Mon, 18 Nov 2019 03:40:30 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Inki Dae <inki.dae@samsung.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] drm/exynos: gsc: add missed component_del
-Date:   Mon, 18 Nov 2019 19:39:55 +0800
-Message-Id: <20191118113955.25373-1-hslester96@gmail.com>
+Subject: [PATCH] iio: adc: max1027: fix not unregistered iio trigger
+Date:   Mon, 18 Nov 2019 19:40:18 +0800
+Message-Id: <20191118114018.25431-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -81,27 +76,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver forgets to call component_del in remove to match component_add
-in probe.
-Add the missed call to fix it.
+The driver forgets to unregister the iio trigger in probe failure and
+remove.
+Use devm API to fix it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/gpu/drm/exynos/exynos_drm_gsc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iio/adc/max1027.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_gsc.c b/drivers/gpu/drm/exynos/exynos_drm_gsc.c
-index 7ae087b0504d..88b6fcaa20be 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_gsc.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_gsc.c
-@@ -1313,6 +1313,7 @@ static int gsc_remove(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
+diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
+index 214883458582..8caead7dffa5 100644
+--- a/drivers/iio/adc/max1027.c
++++ b/drivers/iio/adc/max1027.c
+@@ -446,7 +446,12 @@ static int max1027_probe(struct spi_device *spi)
+ 	st->trig->ops = &max1027_trigger_ops;
+ 	st->trig->dev.parent = &spi->dev;
+ 	iio_trigger_set_drvdata(st->trig, indio_dev);
+-	iio_trigger_register(st->trig);
++
++	ret = devm_iio_trigger_register(&spi->dev, st->trig);
++	if (ret < 0) {
++		dev_err(&indio_dev->dev, "Failed to register iio trigger\n");
++		return ret;
++	}
  
-+	component_del(dev, &gsc_component_ops);
- 	pm_runtime_dont_use_autosuspend(dev);
- 	pm_runtime_disable(dev);
- 
+ 	ret = devm_request_threaded_irq(&spi->dev, spi->irq,
+ 					iio_trigger_generic_data_rdy_poll,
 -- 
 2.24.0
 
