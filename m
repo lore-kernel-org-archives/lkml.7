@@ -2,88 +2,185 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF869C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2F5C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A72D020748
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A8920748
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574082539;
-	bh=QWwGQ8Jle04VHUoAqH05/Lg+HHObUs0mhD24cnNIWGg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tMoP3YOGLmjvQasbNN2BIg/9huqmUjIcM93r3svkVxhrnU9m+u4yGPrFvbxP16mNF
-	 CjLJjMh0o+uSCFmWB3X2z3ybR1jfrLguiAaXXsocmdqk2DPHV1JAAuHHqbedtyVstF
-	 c+DwT4JXfBGZyimBlPZOs3HdDTO/E//SilgmTR3w=
+	s=default; t=1574082597;
+	bh=OExZi6PSOXqbgevbGnpcMX/+cgn2r9Z0j7QRKLC6iV0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=Ep4KykW86v4FqoBbiEI8CrHgu3aIAfX61LUYhGC1QKkyZrf5TqDUoUyrZGr/pHWSO
+	 GbKDAsVIUNETg7jMiUhRbYT2a2G34V6+BehZRuVv03xsJjtD9v7jrenqEfRd+cb9Xw
+	 pPu4GV9s6TbP+buaBkl6m2E3gXBAfU1ZAPZQnaUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfKRNI6 (ORCPT
+        id S1726855AbfKRNJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 08:08:58 -0500
-Received: from foss.arm.com ([217.140.110.172]:34484 "EHLO foss.arm.com"
+        Mon, 18 Nov 2019 08:09:57 -0500
+Received: from foss.arm.com ([217.140.110.172]:34522 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726178AbfKRNI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 08:08:58 -0500
+        id S1726178AbfKRNJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 08:09:56 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D7DA1FB;
-        Mon, 18 Nov 2019 05:08:57 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CCEB21FB;
+        Mon, 18 Nov 2019 05:09:55 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0A143F6C4;
-        Mon, 18 Nov 2019 05:08:56 -0800 (PST)
-Date:   Mon, 18 Nov 2019 13:08:55 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3CD443F6C4;
+        Mon, 18 Nov 2019 05:09:55 -0800 (PST)
+Date:   Mon, 18 Nov 2019 13:09:53 +0000
 From:   Mark Brown <broonie@kernel.org>
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     lgirdwood@gmail.com, alsa-devel@alsa-project.org,
-        kuninori.morimoto.gx@renesas.com, linus.walleij@linaro.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] bindings: sound: pcm3168a: Document optional RST gpio
-Message-ID: <20191118130855.GE9761@sirena.org.uk>
-References: <20191113124734.27984-1-peter.ujfalusi@ti.com>
- <20191113124734.27984-2-peter.ujfalusi@ti.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Rgf3q3z9SdmXC6oT"
-Content-Disposition: inline
-In-Reply-To: <20191113124734.27984-2-peter.ujfalusi@ti.com>
-X-Cookie: no maintenance:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        devicetree@vger.kernel.org, kuninori.morimoto.gx@renesas.com,
+        lgirdwood@gmail.com, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        robh+dt@kernel.org
+Subject: Applied "ASoC: pcm3168a: Add support for optional RST gpio handling" to the asoc tree
+In-Reply-To: <20191113124734.27984-3-peter.ujfalusi@ti.com>
+Message-Id: <applied-20191113124734.27984-3-peter.ujfalusi@ti.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The patch
 
---Rgf3q3z9SdmXC6oT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+   ASoC: pcm3168a: Add support for optional RST gpio handling
 
-On Wed, Nov 13, 2019 at 02:47:33PM +0200, Peter Ujfalusi wrote:
-> On boards where the RST line is not pulled up, but it is connected to a
-> GPIO line this property must present in order to be able to enable the
-> codec.
+has been applied to the asoc tree at
 
-Please submit patches using subject lines reflecting the style for the
-subsystem, this makes it easier for people to identify relevant patches.
-Look at what existing commits in the area you're changing are doing and
-make sure your subject lines visually resemble what they're doing.
-There's no need to resubmit to fix this alone.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
 
---Rgf3q3z9SdmXC6oT
-Content-Type: application/pgp-signature; name="signature.asc"
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
------BEGIN PGP SIGNATURE-----
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3Sl+YACgkQJNaLcl1U
-h9CQRAf+IOHuqykiR2XV9orGZa0JGfA9jN/HKH9JdghHPcxQ0jzR/dfC3kNnBy/l
-QAeSXU6vF5LuJx75MIHsf6Dx15bZ0kZ0WKpJnI9Fqn+k/PKeXWPhBB+6sPet4msQ
-A5opWLa03tkaXlmNZd14uQrEV6Zbir9q9WT5UqAvM7Ceb3k1jDKRBb7tWvPUggTi
-Rk2DeiXEHNOWWa0eekadtR453n2MTfUtmEncqiKzZu2+PGOI5sz+banoXhgaXlim
-Jwbk83xfZ/HrgB6Wqvw2pneJ+1fEsu8aix6z8ty3UWhPwcIuNqNZGyOlVPjGYUTm
-5g86BZwQ18875HSZ3tAi1meDwJt1cA==
-=7OaS
------END PGP SIGNATURE-----
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
---Rgf3q3z9SdmXC6oT--
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 79f6c108c87b470aacf25fc25a86f48694d03ae8 Mon Sep 17 00:00:00 2001
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Date: Wed, 13 Nov 2019 14:47:34 +0200
+Subject: [PATCH] ASoC: pcm3168a: Add support for optional RST gpio handling
+
+In case the RST line is connected to a GPIO line it needs to be pulled high
+when the driver probes to be able to use the codec.
+
+Add support also for cases when more than one codec is is controlled by the
+same GPIO line by requesting the gpio with GPIOD_FLAGS_BIT_NONEXCLUSIVE.
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+
+Link: https://lore.kernel.org/r/20191113124734.27984-3-peter.ujfalusi@ti.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/codecs/pcm3168a.c | 38 +++++++++++++++++++++++++++++++++----
+ 1 file changed, 34 insertions(+), 4 deletions(-)
+
+diff --git a/sound/soc/codecs/pcm3168a.c b/sound/soc/codecs/pcm3168a.c
+index 313500ab36df..f3475134b519 100644
+--- a/sound/soc/codecs/pcm3168a.c
++++ b/sound/soc/codecs/pcm3168a.c
+@@ -9,7 +9,9 @@
+ 
+ #include <linux/clk.h>
+ #include <linux/delay.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/module.h>
++#include <linux/of_gpio.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/regulator/consumer.h>
+ 
+@@ -59,6 +61,7 @@ struct pcm3168a_priv {
+ 	struct regulator_bulk_data supplies[PCM3168A_NUM_SUPPLIES];
+ 	struct regmap *regmap;
+ 	struct clk *scki;
++	struct gpio_desc *gpio_rst;
+ 	unsigned long sysclk;
+ 
+ 	struct pcm3168a_io_params io_params[2];
+@@ -643,6 +646,7 @@ static bool pcm3168a_readable_register(struct device *dev, unsigned int reg)
+ static bool pcm3168a_volatile_register(struct device *dev, unsigned int reg)
+ {
+ 	switch (reg) {
++	case PCM3168A_RST_SMODE:
+ 	case PCM3168A_DAC_ZERO:
+ 	case PCM3168A_ADC_OV:
+ 		return true;
+@@ -702,6 +706,21 @@ int pcm3168a_probe(struct device *dev, struct regmap *regmap)
+ 
+ 	dev_set_drvdata(dev, pcm3168a);
+ 
++	/*
++	 * Request the RST gpio line as non exclusive as the same reset line
++	 * might be connected to multiple pcm3168a codec
++	 */
++	pcm3168a->gpio_rst = devm_gpiod_get_optional(dev, "rst",
++						GPIOD_OUT_HIGH |
++						GPIOD_FLAGS_BIT_NONEXCLUSIVE);
++	if (IS_ERR(pcm3168a->gpio_rst)) {
++		ret = PTR_ERR(pcm3168a->gpio_rst);
++		if (ret != -EPROBE_DEFER )
++			dev_err(dev, "failed to acquire RST gpio: %d\n", ret);
++
++		return ret;
++	}
++
+ 	pcm3168a->scki = devm_clk_get(dev, "scki");
+ 	if (IS_ERR(pcm3168a->scki)) {
+ 		ret = PTR_ERR(pcm3168a->scki);
+@@ -743,10 +762,18 @@ int pcm3168a_probe(struct device *dev, struct regmap *regmap)
+ 		goto err_regulator;
+ 	}
+ 
+-	ret = pcm3168a_reset(pcm3168a);
+-	if (ret) {
+-		dev_err(dev, "Failed to reset device: %d\n", ret);
+-		goto err_regulator;
++	if (pcm3168a->gpio_rst) {
++		/*
++		 * The device is taken out from reset via GPIO line, wait for
++		 * 3846 SCKI clock cycles for the internal reset de-assertion
++		 */
++		msleep(DIV_ROUND_UP(3846 * 1000, pcm3168a->sysclk));
++	} else {
++		ret = pcm3168a_reset(pcm3168a);
++		if (ret) {
++			dev_err(dev, "Failed to reset device: %d\n", ret);
++			goto err_regulator;
++		}
+ 	}
+ 
+ 	pm_runtime_set_active(dev);
+@@ -785,6 +812,9 @@ static void pcm3168a_disable(struct device *dev)
+ 
+ void pcm3168a_remove(struct device *dev)
+ {
++	struct pcm3168a_priv *pcm3168a = dev_get_drvdata(dev);
++
++	gpiod_set_value_cansleep(pcm3168a->gpio_rst, 0);
+ 	pm_runtime_disable(dev);
+ #ifndef CONFIG_PM
+ 	pcm3168a_disable(dev);
+-- 
+2.20.1
+
