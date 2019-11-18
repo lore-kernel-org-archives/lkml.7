@@ -2,101 +2,121 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3D4C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41126C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D73120748
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1888820727
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:08:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yCYdfDsT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbfKRKFH (ORCPT
+        id S1726760AbfKRKIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 05:05:07 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:34649 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726759AbfKRKFG (ORCPT
+        Mon, 18 Nov 2019 05:08:14 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42059 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726668AbfKRKIN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 05:05:06 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-124-75K_-0LxPeummalnrpAD_w-1; Mon, 18 Nov 2019 10:05:02 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 18 Nov 2019 10:05:02 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 18 Nov 2019 10:05:02 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Josh Poimboeuf' <jpoimboe@redhat.com>
-CC:     'Shile Zhang' <shile.zhang@linux.alibaba.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>
-Subject: RE: [RFC PATCH v3 7/7] x86/unwind/orc: remove run-time ORC unwind
- tables sort
-Thread-Topic: [RFC PATCH v3 7/7] x86/unwind/orc: remove run-time ORC unwind
- tables sort
-Thread-Index: AQHVm4CqL2sS2uy4n0+BG1AUQK0Os6eMck/ggAAP/4CABDTuEA==
-Date:   Mon, 18 Nov 2019 10:05:02 +0000
-Message-ID: <5fe9024bc69c4a4eb115b3c2f3f9bcd1@AcuMS.aculab.com>
-References: <20191115064750.47888-1-shile.zhang@linux.alibaba.com>
- <20191115064750.47888-8-shile.zhang@linux.alibaba.com>
- <893d3caf85cd4ed0921fab84cfe28cad@AcuMS.aculab.com>
- <20191115174649.ldif5o7xqo5ntxeo@treble>
-In-Reply-To: <20191115174649.ldif5o7xqo5ntxeo@treble>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 18 Nov 2019 05:08:13 -0500
+Received: by mail-wr1-f66.google.com with SMTP id a15so18672430wrf.9
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 02:08:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=6FpHepaowUcTwi1m1otI5UX1Bte5ijrSggQqs1TMYnI=;
+        b=yCYdfDsTG7kz2Py4AsxM03TsOto8rVrTnapxd1uM7UzvtALIiyKQn9FPNijF9T6wcI
+         Li/l77ZTfj0rD20BLnqx9iYgVP2iS8yCVrcdra/janvjUTTOhRQ4LR/6hJWfio7x83Ko
+         xSzztJl/+vlV10mIUjKdJ+lZScErMX3+J2xEVYA9Ockr/UPTW1Meqq8FiB8wWuBJvz08
+         OnIw/PR+cc7COBl8z+uNsZiic0BxlENc0k6ldNnmOpMqie/ybEfE+IpYTOJQFh3nu0Co
+         QT/NODRYize+4h4BsUGNvrEsLUMF45RFYhGWeB4YLrIEICQa903Np1PXXIMGVVfT/BAs
+         6r3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=6FpHepaowUcTwi1m1otI5UX1Bte5ijrSggQqs1TMYnI=;
+        b=kN2xSkGJzvP00od1R3+oNFJ0u4RuxzfoacchDxbAmKYevXdzluBRo63tFi1Y21Yoqx
+         gkwPGHiGX+yoIRzL6o/LWPNCI1WzcMRsuHtW82Jbee8gZK1UV+wvMdBKeTsGxaw+6qrn
+         LRjzqDi6afZTxZfGIMcYGHAV75UjXGmjac+lEN64JBidO30EYbFxZ/HZ7BeAT3UYMoly
+         13MCltjvMMqQN/DJwAhjtWbAJJamE/ZdFFC8d6EpQr1GrPwkaSt8uLPtiGx8kCC99kMm
+         Yco5lyK7heE7oH2eaG/yzNRLTbBqxGz4vXu3iH0FZCT0En1l0u9CLZm0iMD+jrmyUhFK
+         M9Bw==
+X-Gm-Message-State: APjAAAXtq4Iwd10W6Hk88Y2dmZK4nsHwriGHMGqRvezAiUQhVQsThk4Z
+        hMkP/ih2akpXGKdgsNsYT4ywJA==
+X-Google-Smtp-Source: APXvYqxeNQBPkh8HxkOqiVOXmcrv+bpCB6eEbJxM2eki/xYGalEX8LAGcqSAmVhoJmcigiOOMlvhTg==
+X-Received: by 2002:adf:e444:: with SMTP id t4mr5851326wrm.50.1574071690635;
+        Mon, 18 Nov 2019 02:08:10 -0800 (PST)
+Received: from localhost ([2a01:e34:eeb6:4690:ecfa:1144:aa53:4a82])
+        by smtp.gmail.com with ESMTPSA id w17sm23523133wrt.45.2019.11.18.02.08.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 02:08:09 -0800 (PST)
+References: <20190924123954.31561-1-jbrunet@baylibre.com>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] clk: let clock perform allocation in init
+In-reply-to: <20190924123954.31561-1-jbrunet@baylibre.com>
+Date:   Mon, 18 Nov 2019 11:08:08 +0100
+Message-ID: <1j4kz1pkdz.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-X-MC-Unique: 75K_-0LxPeummalnrpAD_w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSm9zaCBQb2ltYm9ldWYgPGpwb2ltYm9lQHJlZGhhdC5jb20+DQo+IFNlbnQ6IDE1IE5v
-dmVtYmVyIDIwMTkgMTc6NDcNCj4gT24gRnJpLCBOb3YgMTUsIDIwMTkgYXQgMDQ6NTE6MjRQTSAr
-MDAwMCwgRGF2aWQgTGFpZ2h0IHdyb3RlOg0KPiA+IEZyb206IFNoaWxlIFpoYW5nDQo+ID4gPiBT
-ZW50OiAxNSBOb3ZlbWJlciAyMDE5IDA2OjQ4DQo+ID4gLi4uDQo+ID4gPiAgYXJjaC94ODYva2Vy
-bmVsL3Vud2luZF9vcmMuYyB8IDggKysrKystLS0NCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgNSBp
-bnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+ID4NCj4gPiA+IGRpZmYgLS1naXQgYS9h
-cmNoL3g4Ni9rZXJuZWwvdW53aW5kX29yYy5jIGIvYXJjaC94ODYva2VybmVsL3Vud2luZF9vcmMu
-Yw0KPiA+ID4gaW5kZXggMzMyYWU2NTMwZmE4Li4yODBkYTZmYTk5MjIgMTAwNjQ0DQo+ID4gPiAt
-LS0gYS9hcmNoL3g4Ni9rZXJuZWwvdW53aW5kX29yYy5jDQo+ID4gPiArKysgYi9hcmNoL3g4Ni9r
-ZXJuZWwvdW53aW5kX29yYy5jDQo+ID4gPiBAQCAtMjczLDkgKzI3MywxMSBAQCB2b2lkIF9faW5p
-dCB1bndpbmRfaW5pdCh2b2lkKQ0KPiA+ID4gIAkJcmV0dXJuOw0KPiA+ID4gIAl9DQo+ID4gPg0K
-PiA+ID4gLQkvKiBTb3J0IHRoZSAub3JjX3Vud2luZCBhbmQgLm9yY191bndpbmRfaXAgdGFibGVz
-OiAqLw0KPiA+ID4gLQlzb3J0KF9fc3RhcnRfb3JjX3Vud2luZF9pcCwgbnVtX2VudHJpZXMsIHNp
-emVvZihpbnQpLCBvcmNfc29ydF9jbXAsDQo+ID4gPiAtCSAgICAgb3JjX3NvcnRfc3dhcCk7DQo+
-ID4gPiArCS8qDQo+ID4gPiArCSAqIE5vdGUsIG9yY191bndpbmQgYW5kIG9yY191bndpbmRfaXAg
-dGFibGVzIGhhcyBiZWVuIHNvcnRlZCBpbg0KPiA+ID4gKwkgKiB2bWxpbnV4IGxpbmsgcGhhc2Ug
-Ynkgc29ydHRhYmxlIHRvb2wgYXQgYnVpbGQgdGltZS4NCj4gPiA+ICsJICogSXRzIHJlYWR5IGZv
-ciBiaW5hcnkgc2VhcmNoIG5vdy4NCj4gPiA+ICsJICovDQo+ID4NCj4gPiBIb3cgZmFzdCBpcyBz
-b3J0KCkgaWYgdGhlIHRhYmxlIGlzIHNvcnRlZD8NCj4gPiBSZWx5aW5nIG9uIHRoZSBrZXJuZWwg
-c291cmNlcyBhbmQgYnVpbGQgc2NyaXB0cyBhbHdheXMgYmVpbmcgaW4gc3luYyBzZWVtcyBkYW5n
-ZXJvdXMuDQo+ID4gUHJvYmFibHkgYmV0dGVyIHRvIGxlYXZlIHRoZSBzb3J0IGluIGZvciBhIHJl
-bGVhc2Ugb2YgdHdvLg0KPiANCj4gVGhpcyBwYXRjaCBjb21lcyBhZnRlciB0aGUgYnVpbGQgc2Ny
-aXB0IGNoYW5nZXMsIHNvIHRoZXknZCBiZSBpbiBzeW5jLg0KPiBXaGF0IHdvdWxkIHRoZSBjb25j
-ZXJuIGJlPw0KDQpNb3N0bHkgdGhhdCBpZiwgZm9yIGFueSByZWFzb24sIHRoZSBidWlsZCBzY3Jp
-cHQgY2hhbmdlcyBhcmUgbWlzc2luZyBub3RoaW5nDQp3aWxsIGRldGVjdCB0aGUgZXJyb3IgLSBi
-dXQgdGhlIHJlc3VsdHMgd2lsbCBiZSB2ZXJ5IGNvbmZ1c2luZy4NCklmIHRoZSBzb3J0IGlzIGZh
-c3QgZm9yIHNvcnRlZCBpbnB1dHMgKHNvbWUgYWxnb3JpdGhtcyBhcmVuJ3QpIHRoZW4gbGVhdmlu
-Zw0KaXQgaW4gd29uJ3QgdGFrZSB0aGF0IGxvbmcuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVk
-IEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5l
-cywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+
+On Tue 24 Sep 2019 at 14:39, Jerome Brunet <jbrunet@baylibre.com> wrote:
+
+> This patchset is a follow up on this pinky swear [0].
+> Its purpose is:
+>  * Clarify the acceptable use of clk_ops init() callback
+>  * Let the init() callback return an error code in case anything
+>    fail.
+>  * Add the terminate() counter part of of init() to release the
+>    resources which may have been claimed in init()
+>
+> After discussing with Stephen at LPC, I decided to drop the 2 last patches
+> of the RFC [1]. I can live without it for now and nobody expressed a
+> critical need to get the proposed placeholder.
+>
+> [0]: https://lkml.kernel.org/r/CAEG3pNB-143Pr_xCTPj=tURhpiTiJqi61xfDGDVdU7zG5H-2tA@mail.gmail.com
+> [1]: https://lkml.kernel.org/r/20190828102012.4493-1-jbrunet@baylibre.com
+>
+> Jerome Brunet (3):
+>   clk: actually call the clock init before any other callback of the
+>     clock
+>   clk: let init callback return an error code
+>   clk: add terminate callback to clk_ops
+>
+>  drivers/clk/clk.c                     | 38 ++++++++++++++++++---------
+>  drivers/clk/meson/clk-mpll.c          |  4 ++-
+>  drivers/clk/meson/clk-phase.c         |  4 ++-
+>  drivers/clk/meson/clk-pll.c           |  4 ++-
+>  drivers/clk/meson/sclk-div.c          |  4 ++-
+>  drivers/clk/microchip/clk-core.c      |  8 ++++--
+>  drivers/clk/mmp/clk-frac.c            |  4 ++-
+>  drivers/clk/mmp/clk-mix.c             |  4 ++-
+>  drivers/clk/qcom/clk-hfpll.c          |  6 +++--
+>  drivers/clk/rockchip/clk-pll.c        | 28 ++++++++++++--------
+>  drivers/clk/ti/clock.h                |  2 +-
+>  drivers/clk/ti/clockdomain.c          |  8 +++---
+>  drivers/net/phy/mdio-mux-meson-g12a.c |  4 ++-
+>  include/linux/clk-provider.h          | 13 ++++++---
+>  14 files changed, 90 insertions(+), 41 deletions(-)
+
+Hi Stephen,
+
+Is this series Ok with you ?
+Do you think you can take it at the beginning of the next cycle ?
+
+Thx
+Jerome
 
