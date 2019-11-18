@@ -2,116 +2,111 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EC2C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBBDC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C498420878
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 693472071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:27:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="A/QjOpbk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v4mLBoSy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfKRUZg (ORCPT
+        id S1726759AbfKRU1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 15:25:36 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:27857 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbfKRUZg (ORCPT
+        Mon, 18 Nov 2019 15:27:17 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44752 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbfKRU1R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 15:25:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574108731;
-        s=strato-dkim-0002; d=hartkopp.net;
-        h=In-Reply-To:Date:Message-ID:From:References:To:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=F0kDM7lnQGgAN875FMuKPjY93rcF9qMeT5dy/Yhy1tY=;
-        b=A/QjOpbkgSAg54YA2VcfvY9OJSi1VK8UKTJ3CLtDbf6Rynq99ENfCl5o9Rmok8ChFx
-        2DRYP3jHgQUiV04eSbF+bNxsQA0cuWnPRs9JlCrsVbvyYizBUsKQ+ba/+ieaJGdfyTHs
-        hQwEhpnhlTriebQmBloYCy3RqJR0mzTDx8vHyjhcrWzflqk7V/XWrNzJg+h5CBaPjqRy
-        X1bRxqPolN52t8WdHPA/+pIj7P4ZAuGDAvQuQVsThZtxAK9eQQ3gci9/jXdjf3XkyzOC
-        ombjwNBG9YpR76GayQS/F2lWzTtmUmadKg5oyUCxIeZ1oKJiUiMsT4FyNppt+jXPAyBI
-        fiKA==
-X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3PMaViOoLMJV8h+lCA="
-X-RZG-CLASS-ID: mo00
-Received: from [192.168.1.177]
-        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
-        with ESMTPSA id C03a03vAIKPN15S
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Mon, 18 Nov 2019 21:25:23 +0100 (CET)
-Subject: Re: KMSAN: uninit-value in can_receive
-To:     syzbot <syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com>,
-        davem@davemloft.net, glider@google.com, linux-can@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mkl@pengutronix.de,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <0000000000005c08d10597a3a05d@google.com>
-From:   Oliver Hartkopp <socketcan@hartkopp.net>
-Message-ID: <a5f73d92-fdf2-2590-c863-39a181dca8e1@hartkopp.net>
-Date:   Mon, 18 Nov 2019 21:25:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 18 Nov 2019 15:27:17 -0500
+Received: by mail-qk1-f195.google.com with SMTP id m16so15661015qki.11
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 12:27:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rn9PmXG9zN7JtIt5zr+2mmeEEUnpYr+Jpitib9nTCsw=;
+        b=v4mLBoSymbGVEY1PIxQQ/QnlTxxm05B1sFyx2xM4xpn3XGoXHrCEf/wR4JBQJO0kCe
+         TVyzSxhfdrNQPDeZ8D8ZhZZXvu0TZSaDHcLaINTDIWekINXmEnmavogvIc3PTAl84L+b
+         2buhVoL2TmTs7XoEC08/z8dh7xXa8ms0xrcdpOxnzSC4NdxaZomM4u8aGZ92Gy8d4un+
+         /X5osXDb2GXDiQewBy+OYiLHANMzip5COZ8B2Tf87Vb2mVx66J6Vovi75TXAVWRCxeYo
+         zldpVYYAYa9YkQ2/AsmgAklR1hcebRFlENzey/vREbW4SNCUFJ85c6IfcuSdQi4fy3D5
+         WmsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rn9PmXG9zN7JtIt5zr+2mmeEEUnpYr+Jpitib9nTCsw=;
+        b=jXUCT7bTnAF+s096KsAEP1hfScdNeMxMrNVsp5Qtmk1ZA1bVZbXae8HghZAajl1Kew
+         StvoqrIsK6I+zor94QUpVfkNj0U9Q4TaJofsdoyEmAbU4XC67kU2t+/pQMXRJBW2GrUS
+         9RXQimglQZIfCQxNWl1SJ9QL542+1nv9vn2ooaXzHWa+0eQ7+DUXK3+QpHE4rUPelJ0x
+         +4x+ndGmagAHNyQeiDauVC+oYcXMgSCps6y5ZAxqHrswBd/J9D1MaKxwJnna1Cu0EsRQ
+         OMMA/lWui4kcbnv3J7mcXRfluUKzKr1CQEwnIOKpggshG56VitoVmsqwQqhdmeeEMufo
+         8T8w==
+X-Gm-Message-State: APjAAAWgkv4RgHwxTMOAksW4AGgOdAaxbRsYBzIZqXKc7UK29Ka/8x2g
+        zcJaNa6yhKLnB91WQWZGwusZzw==
+X-Google-Smtp-Source: APXvYqx3HsIfki1VMmbtrCmd4+45VkEtLaz5aeosbRXeE3EB02qW4CX31/BYAhEdNtRzinswvuYd6A==
+X-Received: by 2002:a37:4906:: with SMTP id w6mr14513952qka.82.1574108834507;
+        Mon, 18 Nov 2019 12:27:14 -0800 (PST)
+Received: from localhost (rfs.netwinder.org. [206.248.184.2])
+        by smtp.gmail.com with ESMTPSA id t27sm9004534qkm.19.2019.11.18.12.27.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 18 Nov 2019 12:27:13 -0800 (PST)
+Date:   Mon, 18 Nov 2019 15:27:12 -0500
+From:   Ralph Siemsen <ralph.siemsen@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        syzbot+899a33dc0fa0dbaf06a6@syzkaller.appspotmail.com,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Jeremy Cline <jcline@redhat.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [PATCH 4.9 02/31] Bluetooth: hci_ldisc: Postpone
+ HCI_UART_PROTO_READY bit set in hci_uart_set_proto()
+Message-ID: <20191118202712.GA14832@maple.netwinder.org>
+References: <20191115062009.813108457@linuxfoundation.org>
+ <20191115062010.682028342@linuxfoundation.org>
+ <20191115161029.GA32365@maple.netwinder.org>
+ <20191116075614.GB381281@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <0000000000005c08d10597a3a05d@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191116075614.GB381281@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/11/2019 20.05, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    9c6a7162 kmsan: remove unneeded annotations in bio
-> git tree:       https://github.com/google/kmsan.git master
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14563416e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=9e324dfe9c7b0360
-> dashboard link: 
-> https://syzkaller.appspot.com/bug?extid=b02ff0707a97e4e79ebb
-> compiler:       clang version 9.0.0 (/home/glider/llvm/clang 
-> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com
-> 
-> =====================================================
-> BUG: KMSAN: uninit-value in can_receive+0x23c/0x5e0 net/can/af_can.c:649
-> CPU: 1 PID: 3490 Comm: syz-executor.2 Not tainted 5.4.0-rc5+ #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS 
-> Google 01/01/2011
-> Call Trace:
->   <IRQ>
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0x191/0x1f0 lib/dump_stack.c:113
->   kmsan_report+0x128/0x220 mm/kmsan/kmsan_report.c:108
->   __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:245
->   can_receive+0x23c/0x5e0 net/can/af_can.c:649
->   can_rcv+0x188/0x3a0 net/can/af_can.c:685
+On Sat, Nov 16, 2019 at 03:56:14PM +0800, Greg Kroah-Hartman wrote:
+>>
+>> BTW, this also seems to be missing from 4.4 branch, although it was merged
+>> for 3.16 (per https://lore.kernel.org/stable/?q=Postpone+HCI).
+>
+>Odd that it was merged into 3.16, perhaps it was done there because some
+>earlier patch added the problem?
 
-In line 649 of 5.4.0-rc5+ we can find a while() statement:
+This patch should really be viewed as a correction to an earlier commit:
+84cb3df02aea ("Bluetooth: hci_ldisc: Fix null pointer derefence in case 
+of early data"). This was merged 2016-Apr-08 into v4.7, and therefore is 
+included in 4.9 and higher.
 
-while (!(can_skb_prv(skb)->skbcnt))
-	can_skb_prv(skb)->skbcnt = atomic_inc_return(&skbcounter);
+Only very recently, on 2019-Sep-23, this was backported to 3.16, along 
+with the correction. Both appeared in v3.16.74.
 
-In linux/include/linux/can/skb.h we see:
+> I say this as I do not think this is
+>relevant for the 4.4.y kernel, do you?  Have you tried to apply this
+>patch there?
 
-static inline struct can_skb_priv *can_skb_prv(struct sk_buff *skb)
-{
-	return (struct can_skb_priv *)(skb->head);
-}
+The patch does not apply, but this is mainly due to the earlier commit 
+missing. It seems to me like that earlier fix is desirable (and it was 
+put into 3.16), along with the followup. So I would think we want it in 
+4.4 as well.
 
-IMO accessing can_skb_prv(skb)->skbcnt at this point is a valid 
-operation which has no uninitialized value.
-
-Can this probably be a false positive of KMSAN?
+[Aside: I'm really only interested in 4.9 and 4.19, so the 4.4 stuff is 
+just a diversion. But figured I might as well mention what I found...]
 
 Regards,
-Oliver
+-Ralph
