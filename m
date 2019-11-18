@@ -2,104 +2,98 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B94C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F257C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91C7F20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E3C920862
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:51:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kY243T6A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfKROvH (ORCPT
+        id S1727196AbfKROvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 09:51:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726830AbfKROvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 09:51:07 -0500
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1607A2071B;
-        Mon, 18 Nov 2019 14:51:06 +0000 (UTC)
-Date:   Mon, 18 Nov 2019 09:51:04 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: powerpc ftrace broken due to "manual merge of the ftrace tree
- with the arm64 tree"
-Message-ID: <20191118095104.0daebbc3@oasis.local.home>
-In-Reply-To: <1573851994.5937.138.camel@lca.pw>
-References: <1573849732.5937.136.camel@lca.pw>
-        <20191115160230.78871d8f@gandalf.local.home>
-        <1573851994.5937.138.camel@lca.pw>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 18 Nov 2019 09:51:20 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33885 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726668AbfKROvU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 09:51:20 -0500
+Received: by mail-wr1-f67.google.com with SMTP id e6so19864393wrw.1;
+        Mon, 18 Nov 2019 06:51:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=qJmyyg10F+Q9Yx2crAs7oi6VE5FR9DEMY/ulUWTGJq4=;
+        b=kY243T6AG6i4Efp5kRlkWuRtX6TzF+5/toOFakhl5hQZ2KFKCQQYK6dhqfc/Fdh2zE
+         sqo7UTjfGcSKXmpJSPHRJgl3NNM00iBG6b3ORQp4kxvuGM28sshflmghNFMecQf2xb3E
+         t14jsGulPdOVzD/Qlpc+apoFBs6jiW3KYJKw6U9MyyO2Llwzbbo3HAnYaOna3e3pq2lP
+         alo1QDDNE2ZwZvaNEg8N6jhXVD45Cy5N7F4Ddy5zVY8LETuCRiSm5mOL+M8jh3CDgKNq
+         dBHfEQ2gm2uQzV8qrC28qsMvjt5hpQ9kVKUvwgR58NbKmr5GNrBOKjGDZOH6lH7PTFUC
+         n58A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=qJmyyg10F+Q9Yx2crAs7oi6VE5FR9DEMY/ulUWTGJq4=;
+        b=Q1MKBOJI2a5poir5Miu7+xPZyqdeco/4mkzhQW5esGE4xXIWhb676qqpO06Ngwl6n2
+         ISwgu0wVxVcZGe+Kzszggh/zPsUwS9Q4ykTNn/W76ytRwV2RGeVWaKquzIPWL5ywrEYl
+         iqwMGSOiomMX6FZB4Wfhd/aPfIj7TCTSQIfpBaQoMQNNJmv47QumyKs7HzqWzGIA+h6+
+         kZdp7jNi1O7/hYFs+CaxrVp489TSUDycCAnG4ZD6N0eR7IWY2wOVCwgIdH4kzt9yPLEk
+         2myoP0W6SDRuFSR7L9AibsYX2C0yFeTH+EDTHcggnqeBnoBPSzdMkr/dZe/STfuO8dJh
+         a/0g==
+X-Gm-Message-State: APjAAAW9EyJLv0rXSk0HxR8OhPhL41BJCMSMTihMdahJlX5ivSwcjgir
+        TP+1PC3Nv0WgsW8hu4Scz87wrQA=
+X-Google-Smtp-Source: APXvYqwbRz54q4B8bt535RGs5FfHUfsV/tQm+JcHl0NsmrudKXw0v3jJ7uzxrx0UMl6EknlFIsApVg==
+X-Received: by 2002:adf:fa0b:: with SMTP id m11mr32943767wrr.279.1574088677774;
+        Mon, 18 Nov 2019 06:51:17 -0800 (PST)
+Received: from avx2 ([46.53.249.232])
+        by smtp.gmail.com with ESMTPSA id y15sm22797730wrh.94.2019.11.18.06.51.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Nov 2019 06:51:17 -0800 (PST)
+Date:   Mon, 18 Nov 2019 17:51:15 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        security@kernel.org
+Subject: [PATCH] ELF: warn if process starts with executable stack
+Message-ID: <20191118145114.GA9228@avx2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019 16:06:34 -0500
-Qian Cai <cai@lca.pw> wrote:
+PT_GNU_STACK is fail open design, at least warn people that something
+isn't right.
 
-> > Test this commit please: b83b43ffc6e4b514ca034a0fbdee01322e2f7022  
-> 
-> # git reset --hard b83b43ffc6e4b514ca034a0fbdee01322e2f7022
-> 
-> Yes, that one is bad.
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+---
 
-Can you see if this patch fixes the issue for you?
+ fs/exec.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Thanks!
-
--- Steve
-
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 0f358be551cd..fd8f4dc661dc 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -109,6 +109,13 @@
- #define MEM_DISCARD(sec) *(.mem##sec)
- #endif
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -762,6 +762,13 @@ int setup_arg_pages(struct linux_binprm *bprm,
+ 		goto out_unlock;
+ 	BUG_ON(prev != vma);
  
-+/* PowerPC defines ftrace_graph_stub in the code */
-+#ifndef CONFIG_PPC
-+# define DEFINE_FTRACE_GRAPH_STUB	ftrace_graph_stub = ftrace_stub;
-+#else
-+# define DEFINE_FTRACE_GRAPH_STUB
++#ifdef CONFIG_MMU
++	if (vm_flags & VM_EXEC) {
++		pr_warn_once("process '%s'/%u started with executable stack\n",
++			     current->comm, current->pid);
++	}
 +#endif
 +
- #ifdef CONFIG_FTRACE_MCOUNT_RECORD
- #ifdef CC_USING_PATCHABLE_FUNCTION_ENTRY
- /*
-@@ -120,17 +127,17 @@
- 			__start_mcount_loc = .;			\
- 			KEEP(*(__patchable_function_entries))	\
- 			__stop_mcount_loc = .;			\
--			ftrace_graph_stub = ftrace_stub;
-+			DEFINE_FTRACE_GRAPH_STUB
- #else
- #define MCOUNT_REC()	. = ALIGN(8);				\
- 			__start_mcount_loc = .;			\
- 			KEEP(*(__mcount_loc))			\
- 			__stop_mcount_loc = .;			\
--			ftrace_graph_stub = ftrace_stub;
-+			DEFINE_FTRACE_GRAPH_STUB
- #endif
- #else
- # ifdef CONFIG_FUNCTION_TRACER
--#  define MCOUNT_REC()	ftrace_graph_stub = ftrace_stub;
-+#  define MCOUNT_REC()	DEFINE_FTRACE_GRAPH_STUB
- # else
- #  define MCOUNT_REC()
- # endif
+ 	/* Move stack pages down in memory. */
+ 	if (stack_shift) {
+ 		ret = shift_arg_pages(vma, stack_shift);
