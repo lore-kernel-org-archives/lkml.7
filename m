@@ -2,128 +2,106 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C38A1C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 155F8C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B824206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5693206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:34:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="RPLX7TeW"
+	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="MAggSs6l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfKRIcx (ORCPT
+        id S1726596AbfKRIe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 03:32:53 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:38619 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbfKRIcx (ORCPT
+        Mon, 18 Nov 2019 03:34:57 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39526 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbfKRIe5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 03:32:53 -0500
-Received: by mail-qt1-f193.google.com with SMTP id p20so19321927qtq.5;
-        Mon, 18 Nov 2019 00:32:52 -0800 (PST)
+        Mon, 18 Nov 2019 03:34:57 -0500
+Received: by mail-wr1-f65.google.com with SMTP id l7so18303595wrp.6
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 00:34:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G197wSf8TaiI9/lGYE0rDPhziYwFTRIxBhPoTUbgeBA=;
-        b=RPLX7TeW/GbXiMC3Vh2XCtKZQyv5itThHJSwjyZdRW0TQZ35tz7SDfT53bl+VlpgXb
-         8FYLFF9p1Yl+aDRafxc+GYOOEoq3/Y+aq+39yIVgo5SopNKmVgMhNkOjz+fV1970xUgU
-         uKWvuBZbbWo5q9t+2UL7a5AEMBvZ60bpK7RU0=
+        d=9elements.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BAi3R24nZM1QLKzpsKxjwCLlCCJTW9E3eZPofZiXsD4=;
+        b=MAggSs6lIF1JEMJN/ikjKq6YjU/z+RqN4nWfn70JoeVXuPgOJnnf5XZSWWJ+uBuVde
+         SxhHnSz8w9hYL+4RsE3ebUBvqAkSnx8oHfi16f4BHDc4PBSQpzO2WdPyw5Sv4lTebrZU
+         JYpnypnKW2QZCFjmZ3FFnDZjnaQ66fsSTyYvZEaF+P0qe9j3VHi+Gi0LiqPAMFLjt3+7
+         aAVFuRiZAVlXhIPlfVvB6EubKqq2EmAvinC32wmptECM6SspQ9aCRGzQ4OEKcAmA75x7
+         UYfN51Axn+tiTwKct3Mu1snwmsl9WvNfpyVuEXMonecuAdHeN4KJLGRfbUGsHe+J1CPL
+         XrfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G197wSf8TaiI9/lGYE0rDPhziYwFTRIxBhPoTUbgeBA=;
-        b=Q/u4v3P4Ba/xmvZ9arhi51Zsx09rPDMsDBfVbwFfX51OAUSt6cUoPB5U0whF2FPmVm
-         /djPURk/8sJxxQIr5qh6TKVLn/Tz0fRt4MwvdeGMTZ5OH3/Kgz+q9RrsDHhV84Mx0gFt
-         BQSJ1nWW45VCpHMK1wape7g2kQuCuTI+IQsI5Zh5VZXdv4qHjfMHzRnDGKEX1y3l/iaa
-         bTY8jKTe3rn4vxkMRbHzGnwaJ/xy0WlIdipdY+YwOfvj31VTxiElin8//ygdSad1KtGF
-         0EE1hym7qLU8lN/ljoSVRfcFGC0A2c7OwTXuVeIh7oanRlSKIHu6FGM0RHP22SoOpeaQ
-         ClBw==
-X-Gm-Message-State: APjAAAWteounm+6yTaMvLKzks/YVyi393L6StF7K/AaJlIaQmj+3P9ZP
-        3U7l7OR8tSTUkKkcGKcTMqRmyaF61xZYWEX84VQ=
-X-Google-Smtp-Source: APXvYqytLEVzZAuHtu5CpbX/qKPC3Y0ucWn6Og0BcdDsGA1J4wtPHXG9cobEVbysXJFiSglvMc/tM3gWN1oOZIZ7E2Y=
-X-Received: by 2002:aed:3baf:: with SMTP id r44mr25945827qte.255.1574065971965;
- Mon, 18 Nov 2019 00:32:51 -0800 (PST)
-MIME-Version: 1.0
-References: <alpine.DEB.2.21.1911171212140.2641@hadrien>
-In-Reply-To: <alpine.DEB.2.21.1911171212140.2641@hadrien>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Mon, 18 Nov 2019 08:32:40 +0000
-Message-ID: <CACPK8XdB7vFThUUCv-eAZM=Qxka_GR2OfcdZza5+9Xs80TCf5A@mail.gmail.com>
-Subject: Re: [PATCH] drivers/soc: fix semicolon.cocci warnings
-To:     Julia Lawall <julia.lawall@lip6.fr>
-Cc:     Eddie James <eajames@linux.ibm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Andrew Jeffery <andrew@aj.id.au>, maz@kernel.org,
-        Jason Cooper <jason@lakedaemon.net>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BAi3R24nZM1QLKzpsKxjwCLlCCJTW9E3eZPofZiXsD4=;
+        b=S8Zee8nvbQIud35udjhGFCp15eNDGIvkYvC0QoolKK4WgYHJq0z0Yap/B77z6t5GDC
+         f2yFPrnZ5GEiPafcCIT10+X9cLI+jUiEC+c9hsPRx6/XU+Xz3n1zndpKrMOuDUqv1xy4
+         +ZFvXokxJMs1/xwlHWVw+o8qO4scr8vZmgK5wMxJHRfxere8c3EiW7sLmPH1Xn3jqFVS
+         nqPYP2uo4JujG5Q0KX77vgOaObeHRhPqSpo6yoH1dTluTMqvRLWFbcU4D0WLi+VpZItF
+         rdSDKSPW3EXc/XPwm6+LrznK32Z1R/OpPxaZCyqg3QgBJjon+Pd3dqmRdbfjGWW4fCDE
+         BtKw==
+X-Gm-Message-State: APjAAAUCHt6BMEZmeS4drpVz4L+7ezL7hHOSLj/dqEbzkPtel7/JTds7
+        VBCKpVcsFMoisDAFMjNGcePfk+G+EiElqMXj
+X-Google-Smtp-Source: APXvYqy7o1uIgUaV4SlbY7VC3+F5BL2ylJ9pv91rt5qJ9p4WpXPyPFj/5p+WGpTecicY/ELxGyQx2Q==
+X-Received: by 2002:adf:e58f:: with SMTP id l15mr5500849wrm.1.1574066094671;
+        Mon, 18 Nov 2019 00:34:54 -0800 (PST)
+Received: from rudolphp.9e.network (b2b-78-94-0-50.unitymedia.biz. [78.94.0.50])
+        by smtp.gmail.com with ESMTPSA id v184sm20219711wme.31.2019.11.18.00.34.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 00:34:54 -0800 (PST)
+From:   patrick.rudolph@9elements.com
+To:     linux-kernel@vger.kernel.org
+Cc:     coreboot@coreboot.org,
+        Patrick Rudolph <patrick.rudolph@9elements.com>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>, kbuild-all@lists.01.org
-Content-Type: text/plain; charset="UTF-8"
+        Arthur Heymans <arthur@aheymans.xyz>
+Subject: [PATCH v2 0/3] firmware: google: Fix minor bugs
+Date:   Mon, 18 Nov 2019 09:32:35 +0100
+Message-Id: <20191118083241.18894-1-patrick.rudolph@9elements.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Patrick Rudolph <patrick.rudolph@9elements.com>
 
-On Sun, 17 Nov 2019 at 11:13, Julia Lawall <julia.lawall@lip6.fr> wrote:
->
-> From: kbuild test robot <lkp@intel.com>
->
->  Remove unneeded semicolons.
->
-> Generated by: scripts/coccinelle/misc/semicolon.cocci
->
-> Fixes: eeb5d52f36e5 ("drivers/soc: Add Aspeed XDMA Engine Driver")
-> CC: Eddie James <eajames@linux.ibm.com>
-> Signed-off-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
->
-> ---
->
-> url:    https://github.com/0day-ci/linux/commits/Eddie-James/Aspeed-Add-SCU-interrupt-controller-and-XDMA-engine-drivers/20191110-064846
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/joel/aspeed.git for-next
+This patch series fixes 3 independent bugs in the google firmware
+drivers.
 
-I found this confusing, as the branch doesn't contain the patch you're
-referring to.
+Patch 1-2 do proper cleanup at kernel module unloading.
 
-Cheers,
+Patch 3 adds a check if the optional GSMI SMM handler is actually
+present in the firmware and responses to the driver.
 
-Joel
+Changes in v2:
+ - Add missing return statement
+ - Add s-o-b on GSMI patches
+ - Add define for reserved GSMI command
 
+Arthur Heymans (2):
+  firmware: google: Unregister driver_info on failure and exit in gsmi
+  firmware: google: Probe for a GSMI handler in firmware
 
+Patrick Rudolph (1):
+  firmware: google: Release devices before unregistering the bus
 
-> :::::: branch date: 7 days ago
-> :::::: commit date: 7 days ago
->
->  aspeed-xdma.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> --- a/drivers/soc/aspeed/aspeed-xdma.c
-> +++ b/drivers/soc/aspeed/aspeed-xdma.c
-> @@ -607,7 +607,7 @@ static int aspeed_xdma_init(struct aspee
->
->                 scu = syscon_regmap_lookup_by_compatible("aspeed,ast2600-scu");
->                 break;
-> -       };
-> +       }
->
->         if (!scu) {
->                 dev_err(ctx->dev, "Failed to grab SCU regs.\n");
-> @@ -735,7 +735,7 @@ static int aspeed_xdma_probe(struct plat
->                 ctx->status_bits.ds_comp = XDMA_AST2600_STATUS_DS_COMP;
->                 ctx->status_bits.ds_dirty = XDMA_AST2600_STATUS_DS_DIRTY;
->                 break;
-> -       };
-> +       }
->
->         ctx->dev = dev;
->         platform_set_drvdata(pdev, ctx);
+ drivers/firmware/google/coreboot_table.c |  7 +++++++
+ drivers/firmware/google/gsmi.c           | 24 ++++++++++++++++++++++++
+ 2 files changed, 31 insertions(+)
+
+-- 
+2.21.0
+
