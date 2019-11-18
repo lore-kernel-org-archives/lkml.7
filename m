@@ -2,110 +2,114 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C2BC43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26ADBC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 289D622304
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03BF122304
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:41:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IP57T3Ba"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfKRTkV (ORCPT
+        id S1726905AbfKRTlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 14:40:21 -0500
-Received: from verein.lst.de ([213.95.11.211]:58218 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726937AbfKRTkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 14:40:20 -0500
-Received: by verein.lst.de (Postfix, from userid 107)
-        id 5E75C68BFE; Mon, 18 Nov 2019 20:40:18 +0100 (CET)
-Received: from lst.de (p5B0D82C7.dip0.t-ipconnect.de [91.13.130.199])
-        by verein.lst.de (Postfix) with ESMTPSA id BCEA168AFE;
-        Mon, 18 Nov 2019 20:40:13 +0100 (CET)
-Date:   Mon, 18 Nov 2019 20:40:12 +0100
-From:   Torsten Duwe <duwe@lst.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] regulator: Defer init completion for a while after
- late_initcall
-Message-ID: <20191118194012.GB7894@lst.de>
-References: <20190904124250.25844-1-broonie@kernel.org>
- <20191116125233.GA5570@lst.de>
- <20191118124654.GD9761@sirena.org.uk>
- <20191118164101.GA7894@lst.de>
- <20191118165651.GK9761@sirena.org.uk>
+        Mon, 18 Nov 2019 14:41:32 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37983 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfKRTlb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 14:41:31 -0500
+Received: by mail-ot1-f67.google.com with SMTP id z25so15624630oti.5
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 11:41:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X3o0IsIZAZ7wZG7kNKtDTIC/+CrHgjEOKYqn/GJZgow=;
+        b=IP57T3BawVyl+urI2HsWXb3a52KJBX1CVpOTmaws+YDj5nD8X94w/onrfLkCgdDNod
+         wN66e0baMmlaayqO4Q3w/oj9JHMWfC3vyWSS1dnr+ktELyPIKg2CPpNZiEgrMSyTARJu
+         MfEDJNd3GECOcxNV2Pt9Tm1NrDZr2sdTONBOAecH5v7zpR37Y5ZQyPSy9rL9hesTYa8F
+         VW9wgwHLCxTr2sng/rdtXaBI/SkDjMD/wHYF3gAaCdx5bPmqjM/knxvxIJbignzjLPiF
+         vrWTBmmunBhanAtLrzaAHfQoJFRV4XID3x2sLXwQ9ZkWVk8rMiynFeppf12qstMIXUF1
+         0AxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X3o0IsIZAZ7wZG7kNKtDTIC/+CrHgjEOKYqn/GJZgow=;
+        b=ez3ff33yiuea2KNnnLvWSsQN5G6ZShDOy6IsLCCf/6BQprH5AiTJUv5gFo/TTBupFn
+         IVRayil1MODvjvEnaobGaklXfdbEf5cWZlMXG9q+7fWrxF1yis5j8Pk6D2VOakf4lhO2
+         JvzR23N6IztFHGdtZhB1QOMP7QNnaQxVCT5gU8AssIb7mPibtsyjLepO7zvwo5tXh1Gy
+         FeQcA62JGDefT9wmqXpsnDd2UYYXKoGzMbL5LsDd5dNwugL5kBXG0hMhgS8rPAFmoYr7
+         3IbA9fLv5sQesk9Lh5UkPDi2FlWr0UpysN8hwVyISlqIg+rI7uf8+/Wi8h2Gw1X8jMGb
+         hdTw==
+X-Gm-Message-State: APjAAAXC9/B5BUZT4lTAyi6RepvtDFncfec2GxGLc1H8RQ8w2ooPH+Ug
+        0H91ibNYcDfLCUhXn8A17KPSWwHzOussPyyjJlhrsA==
+X-Google-Smtp-Source: APXvYqzUsgAQBjPOYLPLOEbi+X4F4sQfjR2aYPz7uHf2rwXILQINWQCn1hgtNd0dkCm49mZdpcu3Q2oMsIQ6w0Mchn4=
+X-Received: by 2002:a9d:5543:: with SMTP id h3mr715368oti.33.1574106090265;
+ Mon, 18 Nov 2019 11:41:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191118165651.GK9761@sirena.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191030013701.39647-1-almasrymina@google.com>
+ <20191030013701.39647-5-almasrymina@google.com> <010d5a90-3ebf-30e5-8829-a61f01b6f620@gmail.com>
+In-Reply-To: <010d5a90-3ebf-30e5-8829-a61f01b6f620@gmail.com>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Mon, 18 Nov 2019 11:41:19 -0800
+Message-ID: <CAHS8izMWi0BXyiv+Nx4PSV+QkN8beHn0WH9HwwjsMJacwRntvw@mail.gmail.com>
+Subject: Re: [PATCH v8 5/9] hugetlb: disable region_add file_region coalescing
+To:     Wenkuan Wang <wwk0817@gmail.com>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>, shuah <shuah@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
+        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 04:56:51PM +0000, Mark Brown wrote:
-> On Mon, Nov 18, 2019 at 05:41:01PM +0100, Torsten Duwe wrote:
-> > On Mon, Nov 18, 2019 at 12:46:54PM +0000, Mark Brown wrote:
-> 
-> > > This is not new behaviour, all this change did was delay this.  We've
-> > > been powering off unused regulators for a bit over a decade.
-> 
-> > For me, this appeared first after upgrading from from 5.3.0-rc1 to 5.4.0-rc6.
-> > I guess the late initcall was executed before the regulator driver module got
-> > loaded? And now, with the 30s delay, the regulator driver is finally there?
-> > Would that explain it?
-> 
-> If the regulator driver wasn't loaded you'd not see the power off on
-> late init, yes.
+> On 10/30/19 9:36 AM, Mina Almasry wrote:
+> > /* Must be called with resv->lock held. Calling this with count_only == true
+> > * will count the number of pages to be added but will not modify the linked
+> > - * list.
+> > + * list. If regions_needed != NULL and count_only == true, then regions_needed
+> > + * will indicate the number of file_regions needed in the cache to carry out to
+> > + * add the regions for this range.
+> > */
+> > static long add_reservation_in_range(struct resv_map *resv, long f, long t,
+>
+> Hi Mina,
+>
+> Would you please share which tree this patch set used? this patch 5/9 can't be
+> applied with Linus's tree and add_reservation_in_range can't be found.
+>
+> Thanks
+> Wenkuan
 
-Then this is the change I see, thanks for the confirmation.
+Sorry for the late reply. Locally I have this patchset on top of
+linus/master and a patchset that added add_reservation_in_range.
 
-> 
-> Regulators are enabled using the regulator_enable() call,
+But, this patchset can be rebased on top of this commit with 'minimal'
+merge conflicts:
 
-Fine, the driver does that, but...
+commit c1ca56bab12f3 (tag: v5.4-rc7-mmots-2019-11-15-18-40, github-akpm/master)
+Author: Linus Torvalds <torvalds@linux-foundation.org>
 
-> I don't follow at all, if a driver is calling regulator_get() and
-> regulator_put() repeatedly at runtime around voltage changes then it
-> sounds like the driver is extremely broken.  Further, if a supply has a
-> regulator provided in device tree then a dummy regulator will never be
-> provided for it.  
+    pci: test for unexpectedly disabled bridges
 
-I'm afraid I must object here:
+It's the latest mmotm I find on https://github.com/hnaz/linux-mm.git.
+My next patchset will be rebased on top mmotm.
 
-kernel: anx6345 0-0038: 0-0038 supply dvdd12-supply not found, using dummy regulator
-kernel: anx6345 0-0038: 0-0038 supply dvdd25-supply not found, using dummy regulator
-
-DT has:
-  dvdd25-supply = <&reg_dldo2>;
-  dvdd12-supply = <&reg_dldo3>;
-
-It's only that the regulator driver module has not fully loaded at that point.
-
-> > AFAICS the caller is then stuck with a reference to the dummy, correct?
-> 
-> If a dummy regulator has been provided then there is no possibility that
-> a real supply could be provided, there's not a firmware description of
-> one.  We use a dummy regulator to keep software working on the basis
-> that it's unlikely that the device can operate without power but lacking
-> any information on the regulator we can't actually control it.
-
-That's what I figured. I was fancying some hash table for yet unkown
-regulators with callbacks to those who had asked. Or the EPROBE_DEFER
-to have them come back later. Maybe initrd barriers would help.
-
-So is my understanding correct that with the above messages, the anx6345
-driver will never be able to control those voltages for real?
-And additionally, the real regulator's use count will remain 0 unless there
-are other users (which there aren't)?
-
-Again: this all didn't matter before this init completion code was moved
-to the right location. Power management wouldn't work, but at least the
-established voltages stayed on.
-
-	Torsten
-
+>
+> > - bool count_only)
+> > + long *regions_needed, bool count_only)
+> > {
+> > - long chg = 0;
+> > + long add = 0;
+> > struct list_head *head = &resv->regions;
+> > + long last_accounted_offset = f;
+> > struct file_region *rg = NULL, *trg = NULL, *nrg = NULL;
+> > - /* Locate the region we are before or
