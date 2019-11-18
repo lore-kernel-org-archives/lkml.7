@@ -2,132 +2,144 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4AAC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16652C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B269A20692
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:55:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yHeksfB0"
+	by mail.kernel.org (Postfix) with ESMTP id E15282071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:56:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfKRJzw (ORCPT
+        id S1726952AbfKRJ4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 04:55:52 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54891 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbfKRJzw (ORCPT
+        Mon, 18 Nov 2019 04:56:08 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:49536 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbfKRJ4I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 04:55:52 -0500
-Received: by mail-wm1-f65.google.com with SMTP id z26so16601281wmi.4
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 01:55:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=1GoIOtsIzWbvDocOsz/C2x/FxA2jWzeW8mPBcgPBynw=;
-        b=yHeksfB0yCZEYO2eOK8ptMeVrZeueoVGg2UOO3ATiBA0aaaPP1hEmqdWzLWIKpumnx
-         AzIer1O0dyWnixlqwzzL+pQ1hkGYLzp8LV2SQ4ot9cTiavfn9FAk9fW06DTqOLfO8sDN
-         8T4MMA8HY9MJ48TR9vQzPmD74VqGahXlpKc9doJLxRZEy6IGj+DkATdKYkTDjx3CtuaB
-         U6nH9b2l3Kf/bV+R0zAp+0fwePmiZc3FFkqyRZJ/94dtnOWzn8yjC/PN48OhZh7APRK4
-         vuSeOZI9+/hG3r9PD/W4x7Kc23+DAM6byQLhoSFoaPBs1C7ucdIVFqtKIP8sFjUr96rS
-         o5/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=1GoIOtsIzWbvDocOsz/C2x/FxA2jWzeW8mPBcgPBynw=;
-        b=RelYKUd7KotSw3nXSSNQxYz4c7dez0SATEKjvg7PKgsYP5UEu5C7WmQbwwOJ+6VaiB
-         7KEAXnxmpEMNdOPaGa9JgLuxrBQXgApemTJkfkl2P4J219a66TzvsdBVHZOk5lpPuM4m
-         RUcAPq1ErFV5jX+V8jUd88e6aiqM1Bha1X9oM0sd2rEiSecHKfjMtbHg5Bg9A6t2nQBR
-         2xwvLMUDAvlGuZrfRLjUZbwACPtF1jmKq5byTq7jjcQS74ObQEhZSJ9pD4C/SFyJcMpE
-         m57YePQDEZnvvz4S6/OHCTd1zQsgiyPjAfAXlWsJsrL+BIhmZ4IJMkad5TT9Gu81/+j6
-         4p/Q==
-X-Gm-Message-State: APjAAAVUIa3Khp5HTC6dd5P1+E6FHiqyWQlhw4YP2pr6xZBv6kMB/HSB
-        ih+3I2H4rWyPZaQsvkFPfFVa5A==
-X-Google-Smtp-Source: APXvYqxLgDYsf/Ba6F+JNYjp/kbm2QlRkLDQTC8CZz5yMHMikquk5MbQttgoLDz2TMet+HxQblEKzg==
-X-Received: by 2002:a05:600c:3cf:: with SMTP id z15mr28202920wmd.76.1574070949878;
-        Mon, 18 Nov 2019 01:55:49 -0800 (PST)
-Received: from localhost ([2a01:e34:eeb6:4690:ecfa:1144:aa53:4a82])
-        by smtp.gmail.com with ESMTPSA id o189sm21154823wmo.23.2019.11.18.01.55.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 01:55:49 -0800 (PST)
-References: <20191117135927.135428-1-martin.blumenstingl@googlemail.com>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        narmstrong@baylibre.com, linux-amlogic@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 0/5] provide the XTAL clock via OF on Meson8/8b/8m2
-In-reply-to: <20191117135927.135428-1-martin.blumenstingl@googlemail.com>
-Date:   Mon, 18 Nov 2019 10:55:47 +0100
-Message-ID: <1j5zjhpkyk.fsf@starbuckisacylon.baylibre.com>
+        Mon, 18 Nov 2019 04:56:08 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iWdlL-0006Lz-5E; Mon, 18 Nov 2019 10:56:03 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C424F1C19B5;
+        Mon, 18 Nov 2019 10:56:02 +0100 (CET)
+Date:   Mon, 18 Nov 2019 09:56:02 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86: Remove unused asm/rio.h
+Cc:     Jon Mason <jdmason@kudzu.us>, Thomas Gleixner <tglx@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Content-Type: text/plain
+Message-ID: <157407096266.12247.7738797017268106453.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the x86/cleanups branch of tip:
 
-On Sun 17 Nov 2019 at 14:59, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+Commit-ID:     b41d62201b9772c7c750360ab668d2caa502e642
+Gitweb:        https://git.kernel.org/tip/b41d62201b9772c7c750360ab668d2caa502e642
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Mon, 18 Nov 2019 10:47:29 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 18 Nov 2019 10:52:11 +01:00
 
-> So far the HHI clock controller has been providing the XTAL clock on
-> Amlogic Meson8/Meson8b/Meson8m2 SoCs.
-> This is not correct because the XTAL is actually a crystal on the
-> boards and the SoC has a dedicated input for it.
->
-> This updates the dt-bindings of the HHI clock controller and defines
-> a fixed-clock in meson.dtsi (along with switching everything over to
-> use this clock).
-> The clock driver needs three updates to use this:
-> - patch #2 uses clk_hw_set_parent in the CPU clock notifier. This drops
->   the explicit reference to CLKID_XTAL while at the same time making
->   the code much easier (thanks to Neil for providing this new method
->   as part of the G12A CPU clock bringup!)
-> - patch #3 ensures that the clock driver doesn't rely on it's internal
->   XTAL clock while not losing support for older .dtbs that don't have
->   the XTAL clock input yet
-> - with patch #4 the clock controller's own XTAL clock is not registered
->   anymore when a clock input is provided via OF
->
-> This series is a functional no-op. It's main goal is to better represent
-> how the actual hardware looks like.
->
->
-> Changes since v2 at [1]:
-> - add .fw_name in addition to .name in patch #3 as suggested by Jerome
-> - dropped the dts patch so this whole series targets clk-meson
-> - moved patch #5 from another series to this one because once we drop
->   .name = "xtal" the clocks need to be aware of the OF node
->
-> Changes since v1 at [0]:
-> - add Rob's Reviewed-by to the dt-bindings patch
-> - check that "xtal" clock is actually passed via OF instead of checking
->   that there's any parent at all (which in the worst case may not be the
->   xtal clock) as suggested by Jerome
->   
->
-> [0] https://patchwork.kernel.org/cover/11155515/
-> [1] https://patchwork.kernel.org/cover/11214189/
->
->
-> Martin Blumenstingl (5):
->   dt-bindings: clock: meson8b: add the clock inputs
->   clk: meson: meson8b: use clk_hw_set_parent in the CPU clock notifier
->   clk: meson: meson8b: change references to the XTAL clock to use
->     [fw_]name
->   clk: meson: meson8b: don't register the XTAL clock when provided via
->     OF
->   clk: meson: meson8b: use of_clk_hw_register to register the clocks
->
->  .../bindings/clock/amlogic,meson8b-clkc.txt   |   5 +
->  drivers/clk/meson/meson8b.c                   | 113 ++++++++++--------
->  2 files changed, 67 insertions(+), 51 deletions(-)
+x86: Remove unused asm/rio.h
 
-Applied for v5.6
-Please note this will get rebased once v5.5-rc1 is out
+The removed calgary IOMMU driver was the only user of this header file.
+
+Reported-by: Jon Mason <jdmason@kudzu.us>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Christoph Hellwig <hch@lst.de>
+---
+ arch/x86/include/asm/rio.h | 64 +-------------------------------------
+ 1 file changed, 64 deletions(-)
+ delete mode 100644 arch/x86/include/asm/rio.h
+
+diff --git a/arch/x86/include/asm/rio.h b/arch/x86/include/asm/rio.h
+deleted file mode 100644
+index 0a21986..0000000
+--- a/arch/x86/include/asm/rio.h
++++ /dev/null
+@@ -1,64 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * Derived from include/asm-x86/mach-summit/mach_mpparse.h
+- *          and include/asm-x86/mach-default/bios_ebda.h
+- *
+- * Author: Laurent Vivier <Laurent.Vivier@bull.net>
+- */
+-
+-#ifndef _ASM_X86_RIO_H
+-#define _ASM_X86_RIO_H
+-
+-#define RIO_TABLE_VERSION	3
+-
+-struct rio_table_hdr {
+-	u8 version;		/* Version number of this data structure  */
+-	u8 num_scal_dev;	/* # of Scalability devices               */
+-	u8 num_rio_dev;		/* # of RIO I/O devices                   */
+-} __attribute__((packed));
+-
+-struct scal_detail {
+-	u8 node_id;		/* Scalability Node ID                    */
+-	u32 CBAR;		/* Address of 1MB register space          */
+-	u8 port0node;		/* Node ID port connected to: 0xFF=None   */
+-	u8 port0port;		/* Port num port connected to: 0,1,2, or  */
+-				/* 0xFF=None                              */
+-	u8 port1node;		/* Node ID port connected to: 0xFF = None */
+-	u8 port1port;		/* Port num port connected to: 0,1,2, or  */
+-				/* 0xFF=None                              */
+-	u8 port2node;		/* Node ID port connected to: 0xFF = None */
+-	u8 port2port;		/* Port num port connected to: 0,1,2, or  */
+-				/* 0xFF=None                              */
+-	u8 chassis_num;		/* 1 based Chassis number (1 = boot node) */
+-} __attribute__((packed));
+-
+-struct rio_detail {
+-	u8 node_id;		/* RIO Node ID                            */
+-	u32 BBAR;		/* Address of 1MB register space          */
+-	u8 type;		/* Type of device                         */
+-	u8 owner_id;		/* Node ID of Hurricane that owns this    */
+-				/* node                                   */
+-	u8 port0node;		/* Node ID port connected to: 0xFF=None   */
+-	u8 port0port;		/* Port num port connected to: 0,1,2, or  */
+-				/* 0xFF=None                              */
+-	u8 port1node;		/* Node ID port connected to: 0xFF=None   */
+-	u8 port1port;		/* Port num port connected to: 0,1,2, or  */
+-				/* 0xFF=None                              */
+-	u8 first_slot;		/* Lowest slot number below this Calgary  */
+-	u8 status;		/* Bit 0 = 1 : the XAPIC is used          */
+-				/*       = 0 : the XAPIC is not used, ie: */
+-				/*            ints fwded to another XAPIC */
+-				/*           Bits1:7 Reserved             */
+-	u8 WP_index;		/* instance index - lower ones have       */
+-				/*     lower slot numbers/PCI bus numbers */
+-	u8 chassis_num;		/* 1 based Chassis number                 */
+-} __attribute__((packed));
+-
+-enum {
+-	HURR_SCALABILTY	= 0,	/* Hurricane Scalability info */
+-	HURR_RIOIB	= 2,	/* Hurricane RIOIB info       */
+-	COMPAT_CALGARY	= 4,	/* Compatibility Calgary      */
+-	ALT_CALGARY	= 5,	/* Second Planar Calgary      */
+-};
+-
+-#endif /* _ASM_X86_RIO_H */
