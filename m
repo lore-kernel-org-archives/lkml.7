@@ -2,48 +2,48 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1F2C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A97FCC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D6B72071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EA2B20730
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:20:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KWhJLR/M"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R+tCb+LS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfKRGTo (ORCPT
+        id S1726420AbfKRGUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 01:19:44 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34986 "EHLO
+        Mon, 18 Nov 2019 01:20:41 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27771 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726487AbfKRGTn (ORCPT
+        with ESMTP id S1726331AbfKRGUk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 01:19:43 -0500
+        Mon, 18 Nov 2019 01:20:40 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574057981;
+        s=mimecast20190719; t=1574058038;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2AW/iLbcogwLyTTIbQmc5eL4wtCuBt/lwz33kIgX8ws=;
-        b=KWhJLR/MhMGZmq2TQFzmE2EdCUiQXfMBucbPPDA1alQl6AFx7jm/E3VrH4f25U+iHSSBGC
-        Wwjg4OQ1sNePYwrtCpgrrq38yaXkr+uiNnePma46qe+4+uT/9MiIFkYsU/iNUEKhgF+DaQ
-        9eojKCSb/auR2XDxCTfPt4jKXo0j0DY=
+        bh=O9mTZX0fRz4Az5tS6O2SMzhtrRGL3+OTtnNT3CjGECg=;
+        b=R+tCb+LS8FrZJzdR9IyjFBxu4cjVEC6PTz8qcb6Rjxh5B3rVFJRQ0jSJ0+6l83Z4XAzukO
+        nvXtzH+IN+KutT4kRYlUQwA6s4kuE922LAIexUvkZSSYtv92ADUs32Y8GnmctxS0XDA+re
+        mnjn7TRrzoA8iIJrkoddZ2DpA0PRYS4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-272-waHKW_xQM_eRXxIVjTJADg-1; Mon, 18 Nov 2019 01:19:37 -0500
+ us-mta-418-sdJQkU4UMbeV3b5H-CdIfQ-1; Mon, 18 Nov 2019 01:20:33 -0500
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81F401005514;
-        Mon, 18 Nov 2019 06:19:32 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8A3C6DB34;
+        Mon, 18 Nov 2019 06:20:29 +0000 (UTC)
 Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-215.pek2.redhat.com [10.72.12.215])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D37D360BF4;
-        Mon, 18 Nov 2019 06:19:05 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3981260BF4;
+        Mon, 18 Nov 2019 06:19:59 +0000 (UTC)
 From:   Jason Wang <jasowang@redhat.com>
 To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
@@ -67,14 +67,14 @@ Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
         stefanha@redhat.com, rdunlap@infradead.org, hch@infradead.org,
         gregkh@linuxfoundation.org, jgg@mellanox.com,
         Jason Wang <jasowang@redhat.com>
-Subject: [PATCH V12 3/6] mdev: move to drivers/
-Date:   Mon, 18 Nov 2019 14:17:00 +0800
-Message-Id: <20191118061703.8669-4-jasowang@redhat.com>
+Subject: [PATCH V12 5/6] virtio: introduce a mdev based transport
+Date:   Mon, 18 Nov 2019 14:17:02 +0800
+Message-Id: <20191118061703.8669-6-jasowang@redhat.com>
 In-Reply-To: <20191118061703.8669-1-jasowang@redhat.com>
 References: <20191118061703.8669-1-jasowang@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: waHKW_xQM_eRXxIVjTJADg-1
+X-MC-Unique: sdJQkU4UMbeV3b5H-CdIfQ-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -83,187 +83,489 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mdev now is nothing VFIO specific, let's move it to upper
-directory.
+This patch introduces a new mdev transport for virtio. This is used to
+use kernel virtio driver to drive the mediated device that is capable
+of populating virtqueue directly.
+
+A new virtio-mdev driver will be registered to the mdev bus, when a
+new virtio-mdev device is probed, it will register the device with
+mdev based config ops. This means it is a software transport between
+mdev driver and mdev device. The transport was implemented through
+bus_ops of mdev parent.
 
 Signed-off-by: Jason Wang <jasowang@redhat.com>
 ---
- MAINTAINERS                                   |  7 +++++--
- drivers/Kconfig                               |  2 ++
- drivers/Makefile                              |  1 +
- drivers/mdev/Kconfig                          | 19 ++++++++++++++++++
- drivers/mdev/Makefile                         |  5 +++++
- drivers/{vfio =3D> }/mdev/mdev_core.c           |  0
- drivers/{vfio =3D> }/mdev/mdev_driver.c         |  0
- drivers/{vfio =3D> }/mdev/mdev_private.h        |  0
- drivers/{vfio =3D> }/mdev/mdev_sysfs.c          |  0
- .../{vfio/mdev/mdev_vfio.c =3D> mdev/vfio.c}    |  0
- drivers/vfio/mdev/Kconfig                     | 20 -------------------
- drivers/vfio/mdev/Makefile                    |  4 ----
- drivers/vfio/mdev/vfio_mdev.c                 |  2 --
- 13 files changed, 32 insertions(+), 28 deletions(-)
- create mode 100644 drivers/mdev/Kconfig
- create mode 100644 drivers/mdev/Makefile
- rename drivers/{vfio =3D> }/mdev/mdev_core.c (100%)
- rename drivers/{vfio =3D> }/mdev/mdev_driver.c (100%)
- rename drivers/{vfio =3D> }/mdev/mdev_private.h (100%)
- rename drivers/{vfio =3D> }/mdev/mdev_sysfs.c (100%)
- rename drivers/{vfio/mdev/mdev_vfio.c =3D> mdev/vfio.c} (100%)
+ drivers/virtio/Kconfig       |  13 ++
+ drivers/virtio/Makefile      |   1 +
+ drivers/virtio/virtio_mdev.c | 409 +++++++++++++++++++++++++++++++++++
+ include/linux/mdev_virtio.h  |   5 +
+ 4 files changed, 428 insertions(+)
+ create mode 100644 drivers/virtio/virtio_mdev.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d335949240dc..829428d8a9f5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17111,15 +17111,18 @@ T:=09git git://github.com/awilliam/linux-vfio.git
- S:=09Maintained
- F:=09Documentation/driver-api/vfio.rst
- F:=09drivers/vfio/
-+F:=09drivers/mdev/vfio.c
- F:=09include/linux/vfio.h
- F:=09include/uapi/linux/vfio.h
+diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+index 078615cf2afc..6a89b3de97d3 100644
+--- a/drivers/virtio/Kconfig
++++ b/drivers/virtio/Kconfig
+@@ -43,6 +43,19 @@ config VIRTIO_PCI_LEGACY
 =20
--VFIO MEDIATED DEVICE DRIVERS
-+MEDIATED DEVICE DRIVERS
-+M:=09Alex Williamson <alex.williamson@redhat.com>
- M:=09Kirti Wankhede <kwankhede@nvidia.com>
-+R:=09Cornelia Huck <cohuck@redhat.com>
- L:=09kvm@vger.kernel.org
- S:=09Maintained
- F:=09Documentation/driver-api/vfio-mediated-device.rst
--F:=09drivers/vfio/mdev/
-+F:=09drivers/mdev
- F:=09include/linux/mdev.h
- F:=09include/linux/mdev_vfio.h
- F:=09samples/vfio-mdev/
-diff --git a/drivers/Kconfig b/drivers/Kconfig
-index 8befa53f43be..3e2839048fe6 100644
---- a/drivers/Kconfig
-+++ b/drivers/Kconfig
-@@ -228,4 +228,6 @@ source "drivers/interconnect/Kconfig"
+ =09  If unsure, say Y.
 =20
- source "drivers/counter/Kconfig"
-=20
-+source "drivers/mdev/Kconfig"
-+
- endmenu
-diff --git a/drivers/Makefile b/drivers/Makefile
-index aaef17cc6512..592e23f2e629 100644
---- a/drivers/Makefile
-+++ b/drivers/Makefile
-@@ -186,3 +186,4 @@ obj-$(CONFIG_SIOX)=09=09+=3D siox/
- obj-$(CONFIG_GNSS)=09=09+=3D gnss/
- obj-$(CONFIG_INTERCONNECT)=09+=3D interconnect/
- obj-$(CONFIG_COUNTER)=09=09+=3D counter/
-+obj-$(CONFIG_MDEV)=09=09+=3D mdev/
-diff --git a/drivers/mdev/Kconfig b/drivers/mdev/Kconfig
-new file mode 100644
-index 000000000000..4561f2d4178f
---- /dev/null
-+++ b/drivers/mdev/Kconfig
-@@ -0,0 +1,19 @@
-+
-+config MDEV
-+=09tristate "Mediated device driver framework"
++config VIRTIO_MDEV
++=09tristate "MDEV driver for virtio devices"
++=09depends on MDEV_VIRTIO
 +=09default n
 +=09help
-+=09  Provides a framework to virtualize devices.
++=09  This driver provides support for virtio based paravirtual
++=09  device driver over MDEV bus. For this to be useful, you need
++=09  an appropriate virtio mdev device implementation that
++=09  operates on a physical device to allow the datapath of virtio
++=09  to be offloaded to hardware.
 +
-+=09  If you don't know what do here, say N.
++=09  If unsure, say M.
 +
-+config VFIO_MDEV
-+=09tristate "VFIO Mediated device driver"
-+        depends on VFIO && MDEV
-+        default n
-+=09help
-+=09  Proivdes a mediated BUS for userspace driver through VFIO
-+=09  framework. See Documentation/vfio-mediated-device.txt for
-+=09  more details.
-+
-+=09  If you don't know what do here, say N.
-diff --git a/drivers/mdev/Makefile b/drivers/mdev/Makefile
+ config VIRTIO_PMEM
+ =09tristate "Support for virtio pmem driver"
+ =09depends on VIRTIO
+diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
+index 3a2b5c5dcf46..f2997b6c812f 100644
+--- a/drivers/virtio/Makefile
++++ b/drivers/virtio/Makefile
+@@ -6,3 +6,4 @@ virtio_pci-y :=3D virtio_pci_modern.o virtio_pci_common.o
+ virtio_pci-$(CONFIG_VIRTIO_PCI_LEGACY) +=3D virtio_pci_legacy.o
+ obj-$(CONFIG_VIRTIO_BALLOON) +=3D virtio_balloon.o
+ obj-$(CONFIG_VIRTIO_INPUT) +=3D virtio_input.o
++obj-$(CONFIG_VIRTIO_MDEV) +=3D virtio_mdev.o
+diff --git a/drivers/virtio/virtio_mdev.c b/drivers/virtio/virtio_mdev.c
 new file mode 100644
-index 000000000000..0b749e7f8ff4
+index 000000000000..7fdb42f055df
 --- /dev/null
-+++ b/drivers/mdev/Makefile
-@@ -0,0 +1,5 @@
++++ b/drivers/virtio/virtio_mdev.c
+@@ -0,0 +1,409 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * VIRTIO based driver for Mediated device
++ *
++ * Copyright (c) 2019, Red Hat. All rights reserved.
++ *     Author: Jason Wang <jasowang@redhat.com>
++ *
++ */
 +
-+mdev-y :=3D mdev_core.o mdev_sysfs.o mdev_driver.o
-+mdev_vfio-y :=3D vfio.o
-+obj-$(CONFIG_MDEV) +=3D mdev.o
-+obj-$(CONFIG_VFIO_MDEV) +=3D mdev_vfio.o
-diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/mdev/mdev_core.c
-similarity index 100%
-rename from drivers/vfio/mdev/mdev_core.c
-rename to drivers/mdev/mdev_core.c
-diff --git a/drivers/vfio/mdev/mdev_driver.c b/drivers/mdev/mdev_driver.c
-similarity index 100%
-rename from drivers/vfio/mdev/mdev_driver.c
-rename to drivers/mdev/mdev_driver.c
-diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/mdev/mdev_private.h
-similarity index 100%
-rename from drivers/vfio/mdev/mdev_private.h
-rename to drivers/mdev/mdev_private.h
-diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/mdev/mdev_sysfs.c
-similarity index 100%
-rename from drivers/vfio/mdev/mdev_sysfs.c
-rename to drivers/mdev/mdev_sysfs.c
-diff --git a/drivers/vfio/mdev/mdev_vfio.c b/drivers/mdev/vfio.c
-similarity index 100%
-rename from drivers/vfio/mdev/mdev_vfio.c
-rename to drivers/mdev/vfio.c
-diff --git a/drivers/vfio/mdev/Kconfig b/drivers/vfio/mdev/Kconfig
-index 2e07ca915a96..9a9234c3e00e 100644
---- a/drivers/vfio/mdev/Kconfig
-+++ b/drivers/vfio/mdev/Kconfig
-@@ -1,24 +1,4 @@
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/device.h>
++#include <linux/kernel.h>
++#include <linux/slab.h>
++#include <linux/uuid.h>
++#include <linux/virtio.h>
++#include <linux/mdev_virtio.h>
++#include <linux/virtio_config.h>
++#include <linux/virtio_ring.h>
++
++#define DRIVER_VERSION  "0.1"
++#define DRIVER_AUTHOR   "Red Hat Corporation"
++#define DRIVER_DESC     "VIRTIO based driver for Mediated device"
++
++#define to_virtio_mdev_device(dev) \
++=09container_of(dev, struct virtio_mdev_device, vdev)
++
++struct virtio_mdev_device {
++=09struct virtio_device vdev;
++=09struct mdev_device *mdev;
++=09u64 features;
++
++=09/* The lock to protect virtqueue list */
++=09spinlock_t lock;
++=09/* List of virtio_mdev_vq_info */
++=09struct list_head virtqueues;
++};
++
++struct virtio_mdev_vq_info {
++=09/* the actual virtqueue */
++=09struct virtqueue *vq;
++
++=09/* the list node for the virtqueues list */
++=09struct list_head node;
++};
++
++static struct mdev_device *vm_get_mdev(struct virtio_device *vdev)
++{
++=09struct virtio_mdev_device *vm_dev =3D to_virtio_mdev_device(vdev);
++=09struct mdev_device *mdev =3D vm_dev->mdev;
++
++=09return mdev;
++}
++
++static void virtio_mdev_get(struct virtio_device *vdev, unsigned offset,
++=09=09=09    void *buf, unsigned len)
++{
++=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
++=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
++
++=09ops->get_config(mdev, offset, buf, len);
++}
++
++static void virtio_mdev_set(struct virtio_device *vdev, unsigned offset,
++=09=09=09    const void *buf, unsigned len)
++{
++=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
++=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
++
++=09ops->set_config(mdev, offset, buf, len);
++}
++
++static u32 virtio_mdev_generation(struct virtio_device *vdev)
++{
++=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
++=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
++
++
++=09if (ops->get_generation)
++=09=09return ops->get_generation(mdev);
++
++=09return 0;
++}
++
++static u8 virtio_mdev_get_status(struct virtio_device *vdev)
++{
++=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
++=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
++
++=09return ops->get_status(mdev);
++}
++
++static void virtio_mdev_set_status(struct virtio_device *vdev, u8 status)
++{
++=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
++=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
++
++=09return ops->set_status(mdev, status);
++}
++
++static void virtio_mdev_reset(struct virtio_device *vdev)
++{
++=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
++=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
++
++=09return ops->set_status(mdev, 0);
++}
++
++static bool virtio_mdev_notify(struct virtqueue *vq)
++{
++=09struct mdev_device *mdev =3D vm_get_mdev(vq->vdev);
++=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
++
++=09ops->kick_vq(mdev, vq->index);
++
++=09return true;
++}
++
++static irqreturn_t virtio_mdev_config_cb(void *private)
++{
++=09struct virtio_mdev_device *vm_dev =3D private;
++
++=09virtio_config_changed(&vm_dev->vdev);
++
++=09return IRQ_HANDLED;
++}
++
++static irqreturn_t virtio_mdev_virtqueue_cb(void *private)
++{
++=09struct virtio_mdev_vq_info *info =3D private;
++
++=09return vring_interrupt(0, info->vq);
++}
++
++static struct virtqueue *
++virtio_mdev_setup_vq(struct virtio_device *vdev, unsigned int index,
++=09=09     void (*callback)(struct virtqueue *vq),
++=09=09     const char *name, bool ctx)
++{
++=09struct virtio_mdev_device *vm_dev =3D to_virtio_mdev_device(vdev);
++=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
++=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
++=09struct virtio_mdev_vq_info *info;
++=09struct virtio_mdev_callback cb;
++=09struct virtqueue *vq;
++=09u64 desc_addr, driver_addr, device_addr;
++=09unsigned long flags;
++=09u32 align, num;
++=09int err;
++
++=09if (!name)
++=09=09return NULL;
++
++=09/* Queue shouldn't already be set up. */
++=09if (ops->get_vq_ready(mdev, index))
++=09=09return ERR_PTR(-ENOENT);
++
++=09/* Allocate and fill out our active queue description */
++=09info =3D kmalloc(sizeof(*info), GFP_KERNEL);
++=09if (!info)
++=09=09return ERR_PTR(-ENOMEM);
++
++=09num =3D ops->get_vq_num_max(mdev);
++=09if (num =3D=3D 0) {
++=09=09err =3D -ENOENT;
++=09=09goto error_new_virtqueue;
++=09}
++
++=09/* Create the vring */
++=09align =3D ops->get_vq_align(mdev);
++=09vq =3D vring_create_virtqueue(index, num, align, vdev,
++=09=09=09=09    true, true, ctx,
++=09=09=09=09    virtio_mdev_notify, callback, name);
++=09if (!vq) {
++=09=09err =3D -ENOMEM;
++=09=09goto error_new_virtqueue;
++=09}
++
++=09/* Setup virtqueue callback */
++=09cb.callback =3D virtio_mdev_virtqueue_cb;
++=09cb.private =3D info;
++=09ops->set_vq_cb(mdev, index, &cb);
++=09ops->set_vq_num(mdev, index, virtqueue_get_vring_size(vq));
++
++=09desc_addr =3D virtqueue_get_desc_addr(vq);
++=09driver_addr =3D virtqueue_get_avail_addr(vq);
++=09device_addr =3D virtqueue_get_used_addr(vq);
++
++=09if (ops->set_vq_address(mdev, index,
++=09=09=09=09desc_addr, driver_addr,
++=09=09=09=09device_addr)) {
++=09=09err =3D -EINVAL;
++=09=09goto err_vq;
++=09}
++
++=09ops->set_vq_ready(mdev, index, 1);
++
++=09vq->priv =3D info;
++=09info->vq =3D vq;
++
++=09spin_lock_irqsave(&vm_dev->lock, flags);
++=09list_add(&info->node, &vm_dev->virtqueues);
++=09spin_unlock_irqrestore(&vm_dev->lock, flags);
++
++=09return vq;
++
++err_vq:
++=09vring_del_virtqueue(vq);
++error_new_virtqueue:
++=09ops->set_vq_ready(mdev, index, 0);
++=09WARN_ON(ops->get_vq_ready(mdev, index));
++=09kfree(info);
++=09return ERR_PTR(err);
++}
++
++static void virtio_mdev_del_vq(struct virtqueue *vq)
++{
++=09struct virtio_mdev_device *vm_dev =3D to_virtio_mdev_device(vq->vdev);
++=09struct mdev_device *mdev =3D vm_dev->mdev;
++=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
++=09struct virtio_mdev_vq_info *info =3D vq->priv;
++=09unsigned int index =3D vq->index;
++=09unsigned long flags;
++
++=09spin_lock_irqsave(&vm_dev->lock, flags);
++=09list_del(&info->node);
++=09spin_unlock_irqrestore(&vm_dev->lock, flags);
++
++=09/* Select and deactivate the queue */
++=09ops->set_vq_ready(mdev, index, 0);
++=09WARN_ON(ops->get_vq_ready(mdev, index));
++
++=09vring_del_virtqueue(vq);
++
++=09kfree(info);
++}
++
++static void virtio_mdev_del_vqs(struct virtio_device *vdev)
++{
++=09struct virtqueue *vq, *n;
++
++=09list_for_each_entry_safe(vq, n, &vdev->vqs, list)
++=09=09virtio_mdev_del_vq(vq);
++}
++
++static int virtio_mdev_find_vqs(struct virtio_device *vdev, unsigned nvqs,
++=09=09=09=09struct virtqueue *vqs[],
++=09=09=09=09vq_callback_t *callbacks[],
++=09=09=09=09const char * const names[],
++=09=09=09=09const bool *ctx,
++=09=09=09=09struct irq_affinity *desc)
++{
++=09struct virtio_mdev_device *vm_dev =3D to_virtio_mdev_device(vdev);
++=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
++=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
++=09struct virtio_mdev_callback cb;
++=09int i, err, queue_idx =3D 0;
++
++=09for (i =3D 0; i < nvqs; ++i) {
++=09=09if (!names[i]) {
++=09=09=09vqs[i] =3D NULL;
++=09=09=09continue;
++=09=09}
++
++=09=09vqs[i] =3D virtio_mdev_setup_vq(vdev, queue_idx++,
++=09=09=09=09=09      callbacks[i], names[i], ctx ?
++=09=09=09=09=09      ctx[i] : false);
++=09=09if (IS_ERR(vqs[i])) {
++=09=09=09err =3D PTR_ERR(vqs[i]);
++=09=09=09goto err_setup_vq;
++=09=09}
++=09}
++
++=09cb.callback =3D virtio_mdev_config_cb;
++=09cb.private =3D vm_dev;
++=09ops->set_config_cb(mdev, &cb);
++
++=09return 0;
++
++err_setup_vq:
++=09virtio_mdev_del_vqs(vdev);
++=09return err;
++}
++
++static u64 virtio_mdev_get_features(struct virtio_device *vdev)
++{
++=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
++=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
++
++=09return ops->get_features(mdev);
++}
++
++static int virtio_mdev_finalize_features(struct virtio_device *vdev)
++{
++=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
++=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
++
++=09/* Give virtio_ring a chance to accept features. */
++=09vring_transport_features(vdev);
++
++=09return ops->set_features(mdev, vdev->features);
++}
++
++static const char *virtio_mdev_bus_name(struct virtio_device *vdev)
++{
++=09struct virtio_mdev_device *vm_dev =3D to_virtio_mdev_device(vdev);
++=09struct mdev_device *mdev =3D vm_dev->mdev;
++
++=09return dev_name(mdev_dev(mdev));
++}
++
++static const struct virtio_config_ops virtio_mdev_config_ops =3D {
++=09.get=09=09=3D virtio_mdev_get,
++=09.set=09=09=3D virtio_mdev_set,
++=09.generation=09=3D virtio_mdev_generation,
++=09.get_status=09=3D virtio_mdev_get_status,
++=09.set_status=09=3D virtio_mdev_set_status,
++=09.reset=09=09=3D virtio_mdev_reset,
++=09.find_vqs=09=3D virtio_mdev_find_vqs,
++=09.del_vqs=09=3D virtio_mdev_del_vqs,
++=09.get_features=09=3D virtio_mdev_get_features,
++=09.finalize_features =3D virtio_mdev_finalize_features,
++=09.bus_name=09=3D virtio_mdev_bus_name,
++};
++
++static void virtio_mdev_release_dev(struct device *_d)
++{
++=09struct virtio_device *vdev =3D
++=09       container_of(_d, struct virtio_device, dev);
++=09struct virtio_mdev_device *vm_dev =3D
++=09       container_of(vdev, struct virtio_mdev_device, vdev);
++=09struct mdev_device *mdev =3D vm_dev->mdev;
++
++=09devm_kfree(mdev_dev(mdev), vm_dev);
++}
++
++static int virtio_mdev_probe(struct device *dev)
++{
++=09struct mdev_device *mdev =3D mdev_virtio_from_dev(dev);
++=09const struct mdev_virtio_ops *ops =3D mdev_virtio_get_ops(mdev);
++=09struct virtio_mdev_device *vm_dev;
++=09int rc;
++
++=09vm_dev =3D devm_kzalloc(dev, sizeof(*vm_dev), GFP_KERNEL);
++=09if (!vm_dev)
++=09=09return -ENOMEM;
++
++=09vm_dev->vdev.dev.parent =3D dev;
++=09vm_dev->vdev.dev.release =3D virtio_mdev_release_dev;
++=09vm_dev->vdev.config =3D &virtio_mdev_config_ops;
++=09vm_dev->mdev =3D mdev;
++=09INIT_LIST_HEAD(&vm_dev->virtqueues);
++=09spin_lock_init(&vm_dev->lock);
++
++=09vm_dev->vdev.id.device =3D ops->get_device_id(mdev);
++=09if (vm_dev->vdev.id.device =3D=3D 0)
++=09=09return -ENODEV;
++
++=09vm_dev->vdev.id.vendor =3D ops->get_vendor_id(mdev);
++=09rc =3D register_virtio_device(&vm_dev->vdev);
++=09if (rc)
++=09=09put_device(dev);
++=09else
++=09=09dev_set_drvdata(dev, vm_dev);
++
++=09return rc;
++}
++
++static void virtio_mdev_remove(struct device *dev)
++{
++=09struct virtio_mdev_device *vm_dev =3D dev_get_drvdata(dev);
++
++=09unregister_virtio_device(&vm_dev->vdev);
++}
++
++static const struct mdev_virtio_class_id virtio_id_table[] =3D {
++=09{ MDEV_VIRTIO_CLASS_ID_VIRTIO },
++=09{ 0 },
++};
++
++MODULE_DEVICE_TABLE(mdev_virtio, virtio_id_table);
++
++static struct mdev_virtio_driver virtio_mdev_driver =3D {
++=09.drv =3D {
++=09=09.name=09=3D "virtio_mdev",
++=09=09.probe=09=3D virtio_mdev_probe,
++=09=09.remove =3D virtio_mdev_remove,
++=09},
++=09.id_table =3D virtio_id_table,
++};
++
++static int __init virtio_mdev_init(void)
++{
++=09return mdev_register_driver(&virtio_mdev_driver.drv, THIS_MODULE,
++=09=09=09=09    &mdev_virtio_bus_type);
++}
++
++static void __exit virtio_mdev_exit(void)
++{
++=09mdev_unregister_driver(&virtio_mdev_driver.drv);
++}
++
++module_init(virtio_mdev_init)
++module_exit(virtio_mdev_exit)
++
++MODULE_VERSION(DRIVER_VERSION);
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR(DRIVER_AUTHOR);
++MODULE_DESCRIPTION(DRIVER_DESC);
+diff --git a/include/linux/mdev_virtio.h b/include/linux/mdev_virtio.h
+index ef2dbb6c383a..5f75f3cf59e1 100644
+--- a/include/linux/mdev_virtio.h
++++ b/include/linux/mdev_virtio.h
+@@ -25,6 +25,11 @@ struct virtio_mdev_callback {
+ =09void *private;
+ };
 =20
--config MDEV
--=09tristate "Mediated device driver framework"
--=09default n
--=09help
--=09  Provides a framework to virtualize devices.
--
--=09  If you don't know what do here, say N.
--
--config VFIO_MDEV
--=09tristate "VFIO Mediated device driver"
--        depends on VFIO && MDEV
--        default n
--=09help
--=09  Proivdes a mediated BUS for userspace driver through VFIO
--=09  framework. See Documentation/vfio-mediated-device.txt for
--=09  more details.
--
--=09  If you don't know what do here, say N.
--
--
- config VFIO_MDEV_DEVICE
- =09tristate "VFIO driver for Mediated devices"
- =09depends on VFIO && VFIO_MDEV
-diff --git a/drivers/vfio/mdev/Makefile b/drivers/vfio/mdev/Makefile
-index e9675501271a..e2a92df3089e 100644
---- a/drivers/vfio/mdev/Makefile
-+++ b/drivers/vfio/mdev/Makefile
-@@ -1,6 +1,2 @@
-=20
--mdev-y :=3D mdev_core.o mdev_sysfs.o mdev_driver.o
--
--obj-$(CONFIG_MDEV) +=3D mdev.o
--obj-$(CONFIG_VFIO_MDEV) +=3D mdev_vfio.o
- obj-$(CONFIG_VFIO_MDEV_DEVICE) +=3D vfio_mdev.o
-diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
-index 8b42a4b3f161..4eada31e9287 100644
---- a/drivers/vfio/mdev/vfio_mdev.c
-+++ b/drivers/vfio/mdev/vfio_mdev.c
-@@ -15,8 +15,6 @@
- #include <linux/vfio.h>
- #include <linux/mdev_vfio.h>
-=20
--#include "mdev_private.h"
--
- #define DRIVER_VERSION  "0.1"
- #define DRIVER_AUTHOR   "NVIDIA Corporation"
- #define DRIVER_DESC     "VFIO based driver for Mediated device"
++enum {
++=09MDEV_VIRTIO_CLASS_ID_VIRTIO =3D 1,
++=09/* New entries must be added here */
++};
++
+ /**
+  * struct mdev_virtio_device_ops - Structure to be registered for each
+  * mdev device to register the device for virtio/vhost drivers.
 --=20
 2.19.1
 
