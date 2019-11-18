@@ -2,103 +2,83 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2489C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 005C0C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B57B20727
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:53:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KbMy+E5m"
+	by mail.kernel.org (Postfix) with ESMTP id D0C9220727
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:53:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbfKRAxT (ORCPT
+        id S1726483AbfKRAxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 19:53:19 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34765 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726085AbfKRAxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 19:53:18 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47GVn73QnDz9sP3;
-        Mon, 18 Nov 2019 11:53:14 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1574038395;
-        bh=D2NmXcop4WalS9+nYTXJNC09L7hGx3Xm79BoPtWklA4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=KbMy+E5msgqiCqePUJpOJVRq5aPX/RbR/8HAtFqaOa9JqP6V4wZSm29qm0Jki3+nQ
-         yxCvN8rhV4dEvpIT+yEhhI3AvgCI8tvdQbJ9KcCfFL87H3DseFxvUS8k9eeQoc0Sml
-         R5VlfF4cuFGZPRW/KGfrFTQdBhCcvZ36JiXMiEcMeD2vIo012iOh+jZDcTW/9GHefE
-         BO0b6g0CIVUfQ6Mx3v6mAWOXnO9uqrO7Rs/NVf7dWtYOcN0EMzjwjLjS7x5Pc4BEkY
-         9sIggDFNkqAALGCVNk8zSzr8S3eJwTdL7xvVvuLvxj1Qze2kye3sC/x37QtoN6tM9t
-         6lKcz+KLiwpgg==
-Date:   Mon, 18 Nov 2019 11:53:09 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>
-Subject: linux-next: manual merge of the block tree with the kbuild tree
-Message-ID: <20191118115309.10b3b8de@canb.auug.org.au>
+        Sun, 17 Nov 2019 19:53:34 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:42221 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbfKRAxe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 19:53:34 -0500
+Received: from obelix.fritz.box ([46.142.26.89]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1Mzi3l-1haqGz1w81-00veRL for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019
+ 01:53:32 +0100
+To:     linux-kernel@vger.kernel.org
+From:   "fedorauser@online.de" <fedorauser@online.de>
+Subject: Re: Linux 5.4-rc8
+Message-ID: <c4bbe72d-6363-08c6-69c3-c70764354b7c@online.de>
+Date:   Mon, 18 Nov 2019 01:53:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/yMFWdo+E6/mUUCMIttLRrEe";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:cA/2UMSOl7TEpDwugT05/IRIGw8fXpysUagvi7uSmg4VvwBv90q
+ l7YFujfOB2ENAPwTRkHAz7QP45y+9DgDeTaLZE1miZtxLdxv1qOiBH7LcZme+0+p2zRylA/
+ DxbdEDQglmf4zxwnc6Zb38xCjMKor3xp0t7mMBNU4DG3TE0r4dSOHk2n9Rpy8wJelflZrDT
+ vOntpVS4m6nJBMRBakcUQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:UFyhRDCsupQ=:JjzUaABGHuhf+/OMjeSiBM
+ l2bLKOOrQU2baFXpiqnhX2E55mfEEIeBO2IKYUSH1oka1FlcwB2tykpu9Y+68RQAwuvYDpm/p
+ aLq78FEMyyiH2hIcAMh08rnGiAOkV+hYBiL5rMrc7Jq0gHxdM0JvQKGjPN9L558/ol7dcoiEL
+ 4oSEcZSuwEolNE2c4vakmbDuGMtV0UgPdd+2eDYiUu7JAQ4BDYSDVUPWv9k78PcFUk2jhHzzz
+ Nzxx7RT9pzZti7xmSXp9fcrwOJorJpdAnhmDCEr1WZ2mtTD4bUVNIAcN1yOnK553wk0Tk6zM4
+ 7lnnImLCeCuLQ7hBif057/o3p+Fgwoz6Xz4fDhseTjZiOpT1vGW1hpFSKT17+mM7VXqjZwP/K
+ JfmM/ZihEZH/d9wB/ZzzZz4FBD6gGJjhWBqNhkM9ny6Cs0sEBKwT+EoVYHGs+bNdymVG5qPaC
+ 4mTSHx/qaATw7+KGoaMbAMMzILpjj56Z/t5jJ4+STtd/G4DVY0qpelaLWW2YbFHgUnXAtmuWV
+ fCvBGOqMsSmZlFVe1RVBjdEGj3Qe1FwmGB4LE1lZKH4rN4oAW1zoyZtu+/O+QXYn/yxStvYOz
+ P7FuJ+bGgAhdj7UmtsvoTdkKEj8iPaxdlmbYzQmurPSMuo2JMF29o1poZ1E98kDraj7fmYkO8
+ 8cYRvAUniFKlsf1PWMtQlpFcnoPaptBi9tx9cLuhoZu+v4g1SgaOVeESeFicts2QwmgbMiktM
+ ZnZ4YyZzcO4+itR6sfZn+2cvYtUgc8ipT1IG7GL5qAkG+NpdIxD2I8HzZtR/cViphAu7tsrNY
+ raPrMfkX1pg4WsMAY+GbgYwXhRdtNdtf7RlDxqmixXm6G3MXkV+vQEG1ayeyYdr1VMq+RH3si
+ g1qvGPov+QRkcf9/efAsQhFOtDNwVJWXpc3NkJfm4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/yMFWdo+E6/mUUCMIttLRrEe
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+hallo
 
-Today's linux-next merge of the block tree got a conflict in:
+with Kernel 5.4-rc7 and 5.4-rc8
 
-  include/Kbuild
 
-between commit:
+I see this:
 
-  fcbb8461fd23 ("kbuild: remove header compile test")
+awk: ../arch/x86/tools/gen-insn-attr-x86.awk:260: warning: regexp escape 
+sequence `\:' is not a known regexp operator
+awk: ../arch/x86/tools/gen-insn-attr-x86.awk:350: 
+(FILENAME=../arch/x86/lib/x86-opcode-map.txt FNR=41) warning: regexp 
+escape sequence `\&' is not a known regexp operator
 
-from the kbuild tree and commit:
 
-  c826bd7a743f ("io_uring: add set of tracing events")
+It seems it was fix already:
 
-from the block tree.
+https://www.lkml.org/lkml/2019/10/1/232
 
-I fixed it up (I just removed the file) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
 
---=20
-Cheers,
-Stephen Rothwell
+regards
 
---Sig_/yMFWdo+E6/mUUCMIttLRrEe
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3R63UACgkQAVBC80lX
-0GxOsgf/S/hCsamImU5eCaRECocmmYYwPF7i1a0HA8rjJ5Fn5dZq7qj7qufmmmVc
-TV7/M2v5ap8Ha7RyhP7eSlg5pFK6K3Of6hskTYMqCb36Yn6XnKAvCZs3DZScgoXd
-jc8sLwOeCY529Uw3iLncq4W+3E5LI8J6hDd62nAj/6laPB06HoWTJ1o88tgV/4zV
-VxEMK7W/xaEtyUteBCEfjdRPltDd1DPiCdM6pMzBY75PltW3zPo7hEUDw7H8gYK3
-SgYcv9wsul9+ajB+aVNUfHCv0aDck3z/in4bAIcj594mkAvYYd9yj41ATdTvP4XM
-Sw/00rOWzq0HDzFpytbnG85QuI2meg==
-=gAgV
------END PGP SIGNATURE-----
-
---Sig_/yMFWdo+E6/mUUCMIttLRrEe--
+-- 
+sixpack13
