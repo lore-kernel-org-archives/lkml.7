@@ -2,131 +2,92 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B90C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 184B2C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F2F12084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:50:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574081452;
-	bh=czJtMqAzccZx8Eq5KD3ET7xFyGLHXuvWyDKAO7zbMCM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wpNi6K3y7P5rpIYF4HBmAubZ27eT04hTsR2utMt5m09mNh3Uoyq5cI/JgbDuIJ56t
-	 OLOh1qUUh0P3FVCxsnM2WfAf+qmoSyTPzZHFxwo61D5fE+1H9YrTMKYDnuqXdodlWm
-	 m8/9CkNJqOp0Qfs3UwRPMsdvH9+5wt4P5cDo8j6M=
+	by mail.kernel.org (Postfix) with ESMTP id B33D420692
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:55:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="kTqeBHTF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfKRMuv (ORCPT
+        id S1726695AbfKRMzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 07:50:51 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33933 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726575AbfKRMuv (ORCPT
+        Mon, 18 Nov 2019 07:55:48 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:35274 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbfKRMzs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 07:50:51 -0500
-Received: by mail-wr1-f66.google.com with SMTP id e6so19351554wrw.1;
-        Mon, 18 Nov 2019 04:50:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=hmA7HI+U8iTRtTsVLZIxvRAMHhpRdj8xZH+6A8vTZiA=;
-        b=VASIzC6iuSEmOUKog4jfbuqJPxmqH8l+6zqaS6cOUZr36m1Htbz7tELJ/pqQBM9aqY
-         PW270XSzbmP5ZYCV/PzVhcBzYOWBamcMvaZOy+gMqJrtu4jebp9Xioibg6jOZpcHUjVi
-         bhyp5Ig31mAr4/K96NOD2XuYOstdTDj0P7/iVrvKHR4rfzk8wD8JhG4/cvLKLVXoxe4/
-         /Ns6DRRxt3fbkrcVxJybPu/miris8X6YyA7qkf8zzUQbPjSNFvOmXJXk+MH5LikLQU+F
-         gByD9rmR8dD45lFqz/VcZY38LpTczUWRFU03190Fxcjr3L4esSj7GMU7Cm1nU84/GDXl
-         w+lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=hmA7HI+U8iTRtTsVLZIxvRAMHhpRdj8xZH+6A8vTZiA=;
-        b=dWLHr6u+XLTM/tshlV+SC0qf3SIn748zcgeC/HqbnT9yFjBKh/xfvasVKoDRqpEFKF
-         t+mSjpoA73Y9jrTMG809iKeIfwzx3LaXKW5PhVETfRQXH7ltOOuk0tMl9oLWAiggK3mm
-         ykscoohorU2M0hqBrbZ9JVrLNqBKRHuGGXR5nInJpZ4FcAxER0309NPt4PC7LRYHJr1F
-         rolkTv+mwGprcohpjssF1WlJR5gxAvDXbjtq/KnXEsVEz+tVahIETd07csg3hISUgeXY
-         883/h5Dng5qRf5jpDycjqwzA8U0yi4v/9DhnVZsLm4hVT0ssTk8eLDz+3pN8xMla8TVS
-         rUbA==
-X-Gm-Message-State: APjAAAWlVPLxeIu3aHxI7H0YyJQijUb11kCLaB6j4q5Vsa5sezLrqS4K
-        4kd/VqubX+uJ/v8YBgUJbhM=
-X-Google-Smtp-Source: APXvYqxrbf3RSMiN/ezXYlBHDSkKnOuodf2k8SxFdLRW76B6lPXgZNWEYJez2zSXmWaVdmYGb2udEA==
-X-Received: by 2002:a5d:5224:: with SMTP id i4mr14768219wra.303.1574081448767;
-        Mon, 18 Nov 2019 04:50:48 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id b15sm22488800wrx.77.2019.11.18.04.50.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 04:50:48 -0800 (PST)
-Date:   Mon, 18 Nov 2019 13:50:46 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>, Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: linux-next: manual merge of the workqueues tree with the tip tree
-Message-ID: <20191118125046.GB74767@gmail.com>
-References: <20191118150858.1a436a12@canb.auug.org.au>
- <20191118090000.hpnibmk6xculuwii@linutronix.de>
+        Mon, 18 Nov 2019 07:55:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=960wzGvE+KcG1OqGD4Pmky51z5BTfCbb59hEtVos6UY=; b=kTqeBHTFI5VbTcrHrCYatitkc
+        XFreysQNzWmafsaSmK4O84GWThZEpLvCZh7I6o0NcFGAwpWldEtZphBY1r9VZRwPQ7co2i+2j3DCk
+        00JU5In5vbigEbEjNinbCx+LhgvuFjC8NhvpwWo+7tkVFOEaenej57vcN66EFaqSNAIY0jSs6XzAl
+        rkaAESx2o9DXOTla9Ee75yHFUIz9S4iMC6BYM2J1mXBeYtBS304+r+6oUAZubou/A4jYdAK7j7FSN
+        ImCJLzHmh2bCudQAe55CPAcNxgar2eG0dctNGYM2KssgMmjyMec5qL95FI3JMbaDZncfiKvVS/RUg
+        xvqjY2sIg==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:37134)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iWgZD-0003Mi-39; Mon, 18 Nov 2019 12:55:43 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iWgZA-0008DI-Ny; Mon, 18 Nov 2019 12:55:40 +0000
+Date:   Mon, 18 Nov 2019 12:55:40 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     linux-kernel@vger.kernel.org, f.fainelli@gmail.com,
+        "kernelci.org bot" <bot@kernelci.org>, wahrenst@gmx.net,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] ARM: dt: check MPIDR on MP devices built without SMP
+Message-ID: <20191118125540.GW25745@shell.armlinux.org.uk>
+References: <20191004155232.17209-1-nsaenzjulienne@suse.de>
+ <5abdcb0e0e1043a101f579ea65d07a1f6b91f896.camel@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191118090000.hpnibmk6xculuwii@linutronix.de>
+In-Reply-To: <5abdcb0e0e1043a101f579ea65d07a1f6b91f896.camel@suse.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Nov 18, 2019 at 12:49:04PM +0100, Nicolas Saenz Julienne wrote:
+> On Fri, 2019-10-04 at 17:52 +0200, Nicolas Saenz Julienne wrote:
+> > On SMP builds, in order to properly link CPU devices with their
+> > respective DT nodes we start by matching the boot CPU. This is achieved
+> > by comparing the 'reg' property on each of the CPU DT nodes with the
+> > MPIDR. The association is necessary as to validate the whole CPU logical
+> > map, which ultimately links CPU devices and their DT nodes.
 
-* Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+No, that is not the primary purpose of the CPU logical map.  The CPU 
+logical map is there to map the CPU logical number to a hardware number,
+necessary for programming hardware.
 
-> On 2019-11-18 15:08:58 [+1100], Stephen Rothwell wrote:
-> > Hi all,
-> Hi,
-> 
-> > Today's linux-next merge of the workqueues tree got a conflict in:
+> > On setups built without SMP, no MPIDR read is performed. The only thing
+> > expected is for the 'reg' property in the CPU DT node to contain the
+> > value 0x0.
 > > 
-> >   kernel/workqueue.c
-> > 
-> > between commit:
-> > 
-> >   5a6446626d7e ("workqueue: Convert for_each_wq to use built-in list check")
-> > 
-> > from the tip tree and commit:
-> > 
-> >   49e9d1a9faf2 ("workqueue: Add RCU annotation for pwq list walk")
-> > 
-> > from the workqueues tree.
-> 
-> urgh. So the RCU warning is introduced in commit
->    28875945ba98d ("rcu: Add support for consolidated-RCU reader checking")
-> 
-> which was merged in v5.4-rc1. I enabled it around -rc7 and saw a few
-> warnings including in the workqueue code. I asked about this and posted
-> later a patch which was applied by Tejun. Now I see that the tip tree
-> has a patch for this warning…
-> I would vote for the patch in -tip since it also removes the
-> assert_rcu_or_wq_mutex() macro.
-> It would be nice if this could be part of v5.4 since once the RCU
-> warning is enabled it will yell.
+> > This causes problems on MP setups built without SMP. As their boot CPU
+> > DT node contains the relevant MPIDR as opposed to 0x0. No match is then
+> > possible. This causes troubles further down the line as drivers are
+> > unable to get the CPU's DT node.
 
-So 5a6446626d7e is currently queued up for v5.5 as part of the RCU tree. 
+So the DT is incorrect for the platform - it is not describing the
+hardware.  Why can't the DT be fixed?  Clearly, it would have never
+worked with the mainline kernel today.
 
-I can cherry pick 5a6446626d7e into tip:core/urgent if Paul and Tejun 
-agree.
-
-Thanks,
-
-	Ingo
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
