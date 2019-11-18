@@ -2,178 +2,103 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D95C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2489C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F70206E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B57B20727
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:53:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KbMy+E5m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbfKRAuJ (ORCPT
+        id S1726414AbfKRAxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 19:50:09 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:53788 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726284AbfKRAuJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 19:50:09 -0500
-Received: from dread.disaster.area (pa49-181-255-80.pa.nsw.optusnet.com.au [49.181.255.80])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id B94683A1E80;
-        Mon, 18 Nov 2019 11:49:57 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iWVEq-0004JH-F4; Mon, 18 Nov 2019 11:49:56 +1100
-Date:   Mon, 18 Nov 2019 11:49:56 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/28] mm: directed shrinker work deferral
-Message-ID: <20191118004956.GR4614@dread.disaster.area>
-References: <20191031234618.15403-1-david@fromorbit.com>
- <20191031234618.15403-10-david@fromorbit.com>
- <20191104152525.GA10665@bfoster>
- <20191114204926.GC4614@dread.disaster.area>
- <20191115172140.GA55854@bfoster>
+        Sun, 17 Nov 2019 19:53:19 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:34765 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726085AbfKRAxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 19:53:18 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47GVn73QnDz9sP3;
+        Mon, 18 Nov 2019 11:53:14 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1574038395;
+        bh=D2NmXcop4WalS9+nYTXJNC09L7hGx3Xm79BoPtWklA4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=KbMy+E5msgqiCqePUJpOJVRq5aPX/RbR/8HAtFqaOa9JqP6V4wZSm29qm0Jki3+nQ
+         yxCvN8rhV4dEvpIT+yEhhI3AvgCI8tvdQbJ9KcCfFL87H3DseFxvUS8k9eeQoc0Sml
+         R5VlfF4cuFGZPRW/KGfrFTQdBhCcvZ36JiXMiEcMeD2vIo012iOh+jZDcTW/9GHefE
+         BO0b6g0CIVUfQ6Mx3v6mAWOXnO9uqrO7Rs/NVf7dWtYOcN0EMzjwjLjS7x5Pc4BEkY
+         9sIggDFNkqAALGCVNk8zSzr8S3eJwTdL7xvVvuLvxj1Qze2kye3sC/x37QtoN6tM9t
+         6lKcz+KLiwpgg==
+Date:   Mon, 18 Nov 2019 11:53:09 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>
+Subject: linux-next: manual merge of the block tree with the kbuild tree
+Message-ID: <20191118115309.10b3b8de@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115172140.GA55854@bfoster>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=G6BsK5s5 c=1 sm=1 tr=0
-        a=XqaD5fcB6dAc7xyKljs8OA==:117 a=XqaD5fcB6dAc7xyKljs8OA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=MeAgGD-zjQ4A:10
-        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=2Pa82YUKK1kpi_zZjHcA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: multipart/signed; boundary="Sig_/yMFWdo+E6/mUUCMIttLRrEe";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 12:21:40PM -0500, Brian Foster wrote:
-> On Fri, Nov 15, 2019 at 07:49:26AM +1100, Dave Chinner wrote:
-> > On Mon, Nov 04, 2019 at 10:25:25AM -0500, Brian Foster wrote:
-> > > On Fri, Nov 01, 2019 at 10:45:59AM +1100, Dave Chinner wrote:
-> > > > From: Dave Chinner <dchinner@redhat.com>
-> > > > 
-> > > > Introduce a mechanism for ->count_objects() to indicate to the
-> > > > shrinker infrastructure that the reclaim context will not allow
-> > > > scanning work to be done and so the work it decides is necessary
-> > > > needs to be deferred.
-> > > > 
-> > > > This simplifies the code by separating out the accounting of
-> > > > deferred work from the actual doing of the work, and allows better
-> > > > decisions to be made by the shrinekr control logic on what action it
-> > > > can take.
-> > > > 
-> > > > Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> > > > ---
-> > > 
-> > > My understanding from the previous discussion(s) is that this is not
-> > > tied directly to the gfp mask because that is not the only intended use.
-> > > While it is currently a boolean tied to the the entire shrinker call,
-> > > the longer term objective is per-object granularity.
-> > 
-> > Longer term, yes, but right now such things are not possible as the
-> > shrinker needs more context to be able to make sane per-object
-> > decisions. shrinker policy decisions that affect the entire run
-> > scope should be handled by the ->count operation - it's the one that
-> > says whether the scan loop should run or not, and right now GFP_NOFS
-> > for all filesystem shrinkers is a pure boolean policy
-> > implementation.
-> > 
-> > The next future step is to provide a superblock context with
-> > GFP_NOFS to indicate which filesystem we cannot recurse into. That
-> > is also a shrinker instance wide check, so again it's something that
-> > ->count should be deciding.
-> > 
-> > i.e. ->count determines what is to be done, ->scan iterates the work
-> > that has to be done until we are done.
-> > 
-> 
-> Sure, makes sense in general.
-> 
-> > > I find the argument reasonable enough, but if the above is true, why do
-> > > we move these checks from ->scan_objects() to ->count_objects() (in the
-> > > next patch) when per-object decisions will ultimately need to be made by
-> > > the former?
-> > 
-> > Because run/no-run policy belongs in one place, and things like
-> > GFP_NOFS do no change across calls to the ->scan loop. i.e. after
-> > the first ->scan call in a loop that calls it hundreds to thousands
-> > of times, the GFP_NOFS run/no-run check is completely redundant.
-> > 
-> 
-> What loop is currently called hundreds to thousands of times that this
-> change prevents? AFAICT the current nofs checks in the ->scan calls
-> explicitly terminate the scan loop.
+--Sig_/yMFWdo+E6/mUUCMIttLRrEe
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Right, but when we are in GFP_KERNEL context, every call to ->scan()
-checks it and says "ok". If we are scanning tens of thousands of
-objects in a scan, and we are using a befault batch size of 128
-objects per scan, then we have hundreds of calls in a single scan
-loop that check the GFP context and say "ok"....
+Hi all,
 
-> So we're effectively saving a
-> function call by doing this earlier in the count ->call. (Nothing wrong
-> with that, I'm just not following the numbers used in this reasoning..).
+Today's linux-next merge of the block tree got a conflict in:
 
-It's the don't terminate case. :)
+  include/Kbuild
 
-> > Once we introduce a new policy that allows the fs shrinker to do
-> > careful reclaim in GFP_NOFS conditions, we need to do substantial
-> > rework the shrinker scan loop and how it accounts the work that is
-> > done - we now have at least 3 or 4 different return counters
-> > (skipped because locked, skipped because referenced,
-> > reclaimed, deferred reclaim because couldn't lock/recursion) and
-> > the accounting and decisions to be made are a lot more complex.
-> > 
-> 
-> Yeah, that's generally what I expected from your previous description.
-> 
-> > In that case, the ->count function will drop the GFP_NOFS check, but
-> > still do all the other things is needs to do. The GFP_NOFS check
-> > will go deep in the guts of the shrinker scan implementation where
-> > the per-object recursion problem exists. But for most shrinkers,
-> > it's still going to be a global boolean check...
-> > 
-> 
-> So once the nofs checks are lifted out of the ->count callback and into
-> the core shrinker, is there still a use case to defer an entire ->count
-> instance from the callback?
+between commit:
 
-Not right now. There may be in future, but I don't want to make
-things more complex than they need to be by trying to support
-functionality that isn't used.
+  fcbb8461fd23 ("kbuild: remove header compile test")
 
-> > If people want to call avoiding repeated, unnecessary evaluation of
-> > the same condition hundreds of times instead of once "unnecessary
-> > churn", then I'll drop it.
-> > 
-> 
-> I'm not referring to the functional change as churn. What I was
-> referring to is that we're shuffling around the boilerplate gfp checking
-> code between the different shrinker callbacks, knowing that it's
-> eventually going to be lifted out, when we could potentially just lift
-> that code up a level now.
+from the kbuild tree and commit:
 
-I don't think that lifting it up will save much code at all, once we
-add all the gfp mask intialisation to all the shrinkers, etc. It's
-just means we can't look at the shrinker implementation and know
-that it can't run in GFP_NOFS context - we have to go look up
-where it is instantiated instead to see if there are gfp context
-constraints.
+  c826bd7a743f ("io_uring: add set of tracing events")
 
-I think it's better where it is, documenting the constraints the
-shrinker implementation runs under in the implementation itself...
+from the block tree.
 
+I fixed it up (I just removed the file) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
 Cheers,
+Stephen Rothwell
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+--Sig_/yMFWdo+E6/mUUCMIttLRrEe
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3R63UACgkQAVBC80lX
+0GxOsgf/S/hCsamImU5eCaRECocmmYYwPF7i1a0HA8rjJ5Fn5dZq7qj7qufmmmVc
+TV7/M2v5ap8Ha7RyhP7eSlg5pFK6K3Of6hskTYMqCb36Yn6XnKAvCZs3DZScgoXd
+jc8sLwOeCY529Uw3iLncq4W+3E5LI8J6hDd62nAj/6laPB06HoWTJ1o88tgV/4zV
+VxEMK7W/xaEtyUteBCEfjdRPltDd1DPiCdM6pMzBY75PltW3zPo7hEUDw7H8gYK3
+SgYcv9wsul9+ajB+aVNUfHCv0aDck3z/in4bAIcj594mkAvYYd9yj41ATdTvP4XM
+Sw/00rOWzq0HDzFpytbnG85QuI2meg==
+=gAgV
+-----END PGP SIGNATURE-----
+
+--Sig_/yMFWdo+E6/mUUCMIttLRrEe--
