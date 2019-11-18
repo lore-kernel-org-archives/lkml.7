@@ -2,124 +2,135 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B87F1C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE29BC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7702071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:43:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574070218;
-	bh=K9PV+3+tr9TlSg2I+Hkztnm7nP9zOdx58/6E8xwXJwM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tmSsdYwTKxnDpToXo6sFNzARl7VlrgLHlsv/Q65ZfFu1cWdkoF1hqoIN6e/MHFQmZ
-	 2+xaOO4Mcy06Smp9LsTMKd/r5FBeqg8jYBdQawmT/in+8d1lhk++bAGM90rQb5CcL+
-	 mA7vebVorVD/y4Dc6ofcOHiqKc67cn25ieHlPnhc=
+	by mail.kernel.org (Postfix) with ESMTP id A753E2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:43:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D7j6LC5h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfKRJnh (ORCPT
+        id S1726635AbfKRJnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 18 Nov 2019 04:43:37 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41852 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726461AbfKRJnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40060 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726490AbfKRJnh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 Nov 2019 04:43:37 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5B832AD55;
-        Mon, 18 Nov 2019 09:43:35 +0000 (UTC)
-Date:   Mon, 18 Nov 2019 10:43:34 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Tejun Heo <tj@kernel.org>,
-        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 1/2] mm: memcg: switch to css_tryget() in
- get_mem_cgroup_from_mm()
-Message-ID: <20191118094334.GA14255@dhcp22.suse.cz>
-References: <20191106225131.3543616-1-guro@fb.com>
- <20191113162934.GF19372@blackbody.suse.cz>
- <20191113170823.GA12464@castle.DHCP.thefacebook.com>
- <20191114191657.GN20866@dhcp22.suse.cz>
- <20191114192018.GJ4163745@devbig004.ftw2.facebook.com>
- <20191114193340.GA24848@dhcp22.suse.cz>
- <20191114193736.GL4163745@devbig004.ftw2.facebook.com>
- <20191115174031.GA15216@dhcp22.suse.cz>
- <20191115174721.GB15216@dhcp22.suse.cz>
- <20191115180728.GA27385@localhost.localdomain>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574070215;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2K0wvDeLJaW8sYE1jy+QQGz6cSrIUDN55exId+Sge8Y=;
+        b=D7j6LC5htBBByzR4SJIWinAiI4mIkL7/q8XHLdaW4xHTWoKdMqrWR0p2mL7HwfC7CFwejF
+        MrCtEHeS9s+wtRtbKq9X0syx/Hck+HWj5HfRRp9eYRdzjeI8vgKnetE9g4ZISr1e7vs+qH
+        /Gq9wDMQCf4bR/3A2pxwa32LSdh1cnY=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-232-IJRyYxmFMJm8ziglMNy3bA-1; Mon, 18 Nov 2019 04:43:34 -0500
+Received: by mail-qv1-f70.google.com with SMTP id g33so12112881qvd.7
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 01:43:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v6BPHFPKvorTEt7xRKiDYcS9E+a1exQkd1rgkDj9f8k=;
+        b=Ps6aB6gwKJvz13ZRzj4275PCtWop0Twa29btcTpfla0ZHbI3Csdpnq2et6Qcl7/Kcj
+         H1C3hH7PqrfAS8CJVh/fpyPv0cb5I8mSwrQqTGuZ/uyB5Vi4EeE4nAEpc7gVYJvqu5jn
+         emhhbAru7iaQmdnBK2wXG2drbDGknZvP7hy98hlkfrOIGFshuubzdpZuyWznC2bm9mWK
+         e/cGtgnfYN6X1ribPhkBVNAcL3QybmFPlajeQYuE88U0IrCKYXJq9M2pg3KYQBPr9Tb7
+         kb1hm9JCPuQ+zJ95YAwbNjA1dIUq7vy/fUlUVWmnUpdslFYqwwD2Sr3io46jA2EPkhgS
+         PChw==
+X-Gm-Message-State: APjAAAWM0jjuFsDh5QE0sFrnzLnr3RfwzZ50rY2xvk+jDonmpktcjrLn
+        2iys7JbJtHyewMz+BB8FUJzJhPsU0RGQvmVhBnmgVxWEAlL/r4t19+Z2irdd4hpb05W5Fx7O3m0
+        2KXDNOn1j8HUe4DOC4lwgDCvklwqmC9ktp8ac4inp
+X-Received: by 2002:ad4:4042:: with SMTP id r2mr14849480qvp.196.1574070214015;
+        Mon, 18 Nov 2019 01:43:34 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx71kYpokpYolgnoIGCviUOb0R7a7qr8hq+AWngDyS809ErQ8pbjgNF0TGZ3+0bjitznHrrNaWkVj/d0HliWew=
+X-Received: by 2002:ad4:4042:: with SMTP id r2mr14849462qvp.196.1574070213673;
+ Mon, 18 Nov 2019 01:43:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115180728.GA27385@localhost.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191105141807.27054-1-tranmanphong@gmail.com>
+In-Reply-To: <20191105141807.27054-1-tranmanphong@gmail.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Mon, 18 Nov 2019 10:43:21 +0100
+Message-ID: <CAO-hwJ+cydMPQE_otc8-67=SDKmjac5RXsLs-9x6dH4YqA+DVQ@mail.gmail.com>
+Subject: Re: [PATCH] HID: hid-lg4ff: Fix uninit-value set_autocenter_default
+To:     Phong Tran <tranmanphong@gmail.com>
+Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        syzbot+1234691fec1b8ceba8b1@syzkaller.appspotmail.com
+X-MC-Unique: IJRyYxmFMJm8ziglMNy3bA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 15-11-19 18:07:34, Roman Gushchin wrote:
-> On Fri, Nov 15, 2019 at 06:47:21PM +0100, Michal Hocko wrote:
-> > On Fri 15-11-19 18:40:31, Michal Hocko wrote:
-> > > On Thu 14-11-19 11:37:36, Tejun Heo wrote:
-> > > > Hello,
-> > > > 
-> > > > On Thu, Nov 14, 2019 at 08:33:40PM +0100, Michal Hocko wrote:
-> > > > > > It is useful for controlling admissions of new userspace visible uses
-> > > > > > - e.g. a tracepoint shouldn't be allowed to be attached to a cgroup
-> > > > > > which has already been deleted.
-> > > > > 
-> > > > > I am not sure I understand. Roman says that the cgroup can get offline
-> > > > > right after the function returns. How is "already deleted" different
-> > > > > from "just deleted"? I thought that the state is preserved at least
-> > > > > while the rcu lock is held but my memory is dim here.
-> > > > 
-> > > > It's the same difference as between "opening a file and deleting it"
-> > > > and "deleting a file and opening it".
-> > > 
-> > > I am sorry but I do not follow. How can css_tryget_online provide the
-> > > same semantic when the css can go offline right after the tryget call
-> > > returns so it is effectivelly undistinguishable from the case when the
-> > > css was already online before the call was made.
-> > 
-> > s@online@offline@
-> > 
-> > And reading after myself it turned out to sound differently than I
-> > meant. What I wanted to say really is, what is the difference that
-> > css_tryget_online really guarantee when the css might go offline right
-> > after the call suceeds so more specifically what is the difference
-> > between
-> > 	if (css_tryget()) {
-> > 		if (online)
-> > 			DO_SOMETHING
-> > 	}
-> > and
-> > 	if (css_tryget_online()) {
-> > 		DO_SOMETHING
-> > 	}
-> > 
-> > both of them are racy and do not provide any guarantee wrt. online
-> > state.
-> 
-> Let me step back a little bit.
-> 
-> I think, we all agree that css_tryget_online() has a weird semantics,
-> in most cases is used only due to historical reasons and clearly asks
-> for a cleanup. So I suggest to stop arguing about it and wait for the
-> cleanup patchset. Then we can discuss each remaining use case in details,
-> if there will be any.
+On Tue, Nov 5, 2019 at 3:18 PM Phong Tran <tranmanphong@gmail.com> wrote:
+>
+> syzbot found a problem using of uinit pointer in
+> lg4ff_set_autocenter_default().
+>
+> Reported-by: syzbot+1234691fec1b8ceba8b1@syzkaller.appspotmail.com
+>
+> Tested by syzbot:
+>
+> https://groups.google.com/d/msg/syzkaller-bugs/ApnMLW6sfKE/Qq0bIHGEAQAJ
 
-Yes I am all in favor of the clean up patches as well as getting down
-to the bottom of the underlying issue (race). Andrew has already sent
-these two patches to Linus, unfortunatelly, even though the changelog
-is slightly misleading (btw 18fa84a2db0e has the similar incorrect
-reasoning).
--- 
-Michal Hocko
-SUSE Labs
+This seems weird to me:
+
+the syzbot link above is about `hid_get_drvdata(hid)`, and, as I read
+it, the possibility that hid might not have an initialized value.
+
+Here you are changing the initialized values of value, entry and
+drv_data, all 3 are never used before their first assignment.
+
+I have a feeling this particular syzbot check has already been fixed
+upstream by d9d4b1e46d95 "HID: Fix assumption that devices have
+inputs".
+
+Cheers,
+Benjamin
+
+>
+> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+> ---
+>  drivers/hid/hid-lg4ff.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/hid/hid-lg4ff.c b/drivers/hid/hid-lg4ff.c
+> index 5e6a0cef2a06..44dfd08b0c32 100644
+> --- a/drivers/hid/hid-lg4ff.c
+> +++ b/drivers/hid/hid-lg4ff.c
+> @@ -468,10 +468,10 @@ static int lg4ff_play(struct input_dev *dev, void *=
+data, struct ff_effect *effec
+>  static void lg4ff_set_autocenter_default(struct input_dev *dev, u16 magn=
+itude)
+>  {
+>         struct hid_device *hid =3D input_get_drvdata(dev);
+> -       s32 *value;
+> +       s32 *value =3D NULL;
+>         u32 expand_a, expand_b;
+> -       struct lg4ff_device_entry *entry;
+> -       struct lg_drv_data *drv_data;
+> +       struct lg4ff_device_entry *entry =3D NULL;
+> +       struct lg_drv_data *drv_data =3D NULL;
+>         unsigned long flags;
+>
+>         drv_data =3D hid_get_drvdata(hid);
+> --
+> 2.20.1
+>
+
