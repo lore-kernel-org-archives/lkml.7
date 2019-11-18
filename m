@@ -2,102 +2,195 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DECC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC322C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E211B21939
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C485521D80
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:57:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nzhklT8F";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="dMEH59Fe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbfKRPzr (ORCPT
+        id S1727404AbfKRP5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 10:55:47 -0500
-Received: from muru.com ([72.249.23.125]:42722 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727109AbfKRPzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 10:55:46 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id AC87E80BF;
-        Mon, 18 Nov 2019 15:56:19 +0000 (UTC)
-Date:   Mon, 18 Nov 2019 07:55:39 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-realtek-soc@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        boot-architecture@lists.linaro.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "open list:TI ETHERNET SWITCH DRIVER (CPSW)" 
-        <linux-omap@vger.kernel.org>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: Re: Sense of soc bus? (was: [PATCH] base: soc: Export
- soc_device_to_device() helper)
-Message-ID: <20191118155539.GB35479@atomide.com>
-References: <586fa37c-6292-aca4-fa7c-73064858afaf@suse.de>
- <20191111064040.GA3502217@kroah.com>
- <a88442df-dc6b-07e5-8dee-9e308bdda450@suse.de>
- <20191112052347.GA1197504@kroah.com>
- <20191112072926.isjxfa4ci6akhx56@pengutronix.de>
- <aff81b8e-f041-73a5-6a95-d308fa07842c@suse.de>
- <c8572f70-5550-8cee-4381-fd7de7ae5af0@baylibre.com>
- <CAMuHMdWOWWQoJh5=07VMRhtrFR_Gc_qNhjTV4tCsvwvMn0kYfA@mail.gmail.com>
- <a0a6d71f-4fb7-51ce-fe33-74f9e588b791@suse.de>
- <CAMuHMdU7EYHWRAR+s3ee4Wy6+6_MZON5xARszO7TDXZGyw8d5w@mail.gmail.com>
+        Mon, 18 Nov 2019 10:57:36 -0500
+Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:49764
+        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727334AbfKRP5f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 10:57:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574092654;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
+        bh=0uOLVzLMI7MHc8k6E5GevpIZG9gm0SmkADc/SJd5Z0U=;
+        b=nzhklT8FJBBpz9mH5tKwRtUpH1XOKlOCBtyRMBv00av7yQeRn+rOJ/TZSd4JjXlT
+        O7PDyrw20tAB+EsdXNP45lJPJHKPmvjdAiAucANqsvx0iKoV2Dgx7jXx0YnwqBc4ruE
+        3E4w6ZCQW9sQZiDxkn6Ku9rmj9pRtW5nqVIRCJLA=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574092654;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Feedback-ID;
+        bh=0uOLVzLMI7MHc8k6E5GevpIZG9gm0SmkADc/SJd5Z0U=;
+        b=dMEH59FehjHpOlh1Lqk7BxDNcQD0y4BBHDv2fxpTiTYed2NYqjFk9CblgN4fr8md
+        UGn+UsgW0BnVQ78tpnngSMYSbh1GyU3+4hz3YL/zBn77YV+I52jVg7MHvguUY1E6OYT
+        1Kexlqa5TKb8cIQv7RiY/PUh7Hc8igJ9g3HxG0uY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 79463C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Mon, 18 Nov 2019 15:57:34 +0000
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     robdclark@gmail.com, sean@poorly.run, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie,
+        linux-arm-msm@vger.kernel.org, dianders@chromium.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        daniel@ffwll.ch, freedreno@lists.freedesktop.org
+Subject: Re: [Freedreno] [PATCH 2/4] drm/msm/gpu: add support for ocmem
+ interconnect path
+Message-ID: <0101016e7f3bc614-0b50ca10-6ca3-459e-831c-af9e18acbacf-000000@us-west-2.amazonses.com>
+Mail-Followup-To: Brian Masney <masneyb@onstation.org>, robdclark@gmail.com,
+        sean@poorly.run, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, airlied@linux.ie,
+        linux-arm-msm@vger.kernel.org, dianders@chromium.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        daniel@ffwll.ch, freedreno@lists.freedesktop.org
+References: <20191117114825.13541-1-masneyb@onstation.org>
+ <20191117114825.13541-3-masneyb@onstation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdU7EYHWRAR+s3ee4Wy6+6_MZON5xARszO7TDXZGyw8d5w@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191117114825.13541-3-masneyb@onstation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-SES-Outgoing: 2019.11.18-54.240.27.188
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Geert Uytterhoeven <geert@linux-m68k.org> [191115 15:51]:
-> On Fri, Nov 15, 2019 at 1:01 PM Andreas Färber <afaerber@suse.de> wrote:
-> > Am 15.11.19 um 09:58 schrieb Geert Uytterhoeven:
-> > > We do our best to use it solely for detecting quirks in early SoC revisions.
-> >
-> > Got a pointer? I fail to immediately understand how sysfs would help
-> > drivers (as opposed to userspace) detect quirks: Parsing strings back
-> > doesn't sound efficient, and I don't see you exporting any custom APIs
-> > in drivers/soc/renesas/renesas-soc.c?
+On Sun, Nov 17, 2019 at 06:48:23AM -0500, Brian Masney wrote:
+> Some A3xx and all A4xx Adreno GPUs do not have GMEM inside the GPU core
+> and must use the On Chip MEMory (OCMEM) in order to be functional.
+> There's a separate interconnect path that needs to be setup to OCMEM.
+> Add support for this second path to the GPU core.
 > 
-> We use soc_device_match(), inside kernel drivers.
-> Exposure through sysfs is a side-effect of using soc_device_register(),
-> and welcomed, as it allows the user to find out quickly which SoC and
-> revision is being used.
+> In the downstream MSM 3.4 sources, the two interconnect paths for the
+> GPU are between:
+> 
+>   - MSM_BUS_MASTER_GRAPHICS_3D and MSM_BUS_SLAVE_EBI_CH0
+>   - MSM_BUS_MASTER_V_OCMEM_GFX3D and MSM_BUS_SLAVE_OCMEM
+> 
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.c   |  6 +++---
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 20 ++++++++++++++++----
+>  drivers/gpu/drm/msm/msm_gpu.h           |  3 ++-
+>  3 files changed, 21 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> index 85f14feafdec..7885e382fb8f 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> @@ -132,7 +132,7 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
+>  	 * Eventually we will want to scale the path vote with the frequency but
+>  	 * for now leave it at max so that the performance is nominal.
+>  	 */
+> -	icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
+> +	icc_set_bw(gpu->gfx_mem_icc_path, 0, MBps_to_icc(7216));
+>  }
+>  
+>  void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
+> @@ -714,7 +714,7 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
+>  	}
+>  
+>  	/* Set the bus quota to a reasonable value for boot */
+> -	icc_set_bw(gpu->icc_path, 0, MBps_to_icc(3072));
+> +	icc_set_bw(gpu->gfx_mem_icc_path, 0, MBps_to_icc(3072));
+>  
+>  	/* Enable the GMU interrupt */
+>  	gmu_write(gmu, REG_A6XX_GMU_AO_HOST_INTERRUPT_CLR, ~0);
+> @@ -858,7 +858,7 @@ int a6xx_gmu_stop(struct a6xx_gpu *a6xx_gpu)
+>  		a6xx_gmu_shutdown(gmu);
+>  
+>  	/* Remove the bus vote */
+> -	icc_set_bw(gpu->icc_path, 0, 0);
+> +	icc_set_bw(gpu->gfx_mem_icc_path, 0, 0);
+>  
+>  	/*
+>  	 * Make sure the GX domain is off before turning off the GMU (CX)
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> index 0783e4b5486a..d1cc021c012c 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> @@ -887,9 +887,20 @@ static int adreno_get_pwrlevels(struct device *dev,
+>  	DBG("fast_rate=%u, slow_rate=27000000", gpu->fast_rate);
+>  
+>  	/* Check for an interconnect path for the bus */
+> -	gpu->icc_path = of_icc_get(dev, NULL);
+> -	if (IS_ERR(gpu->icc_path))
+> -		gpu->icc_path = NULL;
+> +	gpu->gfx_mem_icc_path = of_icc_get(dev, "gfx-mem");
+> +	if (!gpu->gfx_mem_icc_path) {
+> +		/*
+> +		 * Keep compatbility with device trees that don't have an
+> +		 * interconnect-names property.
+> +		 */
+> +		gpu->gfx_mem_icc_path = of_icc_get(dev, NULL);
+> +	}
+> +	if (IS_ERR(gpu->gfx_mem_icc_path))
+> +		gpu->gfx_mem_icc_path = NULL;
+> +
+> +	gpu->ocmem_icc_path = of_icc_get(dev, "ocmem");
+> +	if (IS_ERR(gpu->ocmem_icc_path))
+> +		gpu->ocmem_icc_path = NULL;
 
-For the omap variants too, we've so far gotten away with early SoC
-detection for platform code, and then use soc_device_match() in few
-cases for drivers at probe time if needed.
+This is the part where I am reminded that icc_set_bw doesn't check
+IS_ERR_OR_NULL and even worse, icc_put warns on IS_ERR and it makes 
+me grumble.
 
-Regards,
+>  	return 0;
+>  }
+> @@ -976,7 +987,8 @@ void adreno_gpu_cleanup(struct adreno_gpu *adreno_gpu)
+>  	for (i = 0; i < ARRAY_SIZE(adreno_gpu->info->fw); i++)
+>  		release_firmware(adreno_gpu->fw[i]);
+>  
+> -	icc_put(gpu->icc_path);
+> +	icc_put(gpu->gfx_mem_icc_path);
+> +	icc_put(gpu->ocmem_icc_path);
+>  
+>  	msm_gpu_cleanup(&adreno_gpu->base);
+>  }
+> diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+> index ab8f0f9c9dc8..e72e56f7b0ef 100644
+> --- a/drivers/gpu/drm/msm/msm_gpu.h
+> +++ b/drivers/gpu/drm/msm/msm_gpu.h
+> @@ -111,7 +111,8 @@ struct msm_gpu {
+>  	struct clk *ebi1_clk, *core_clk, *rbbmtimer_clk;
+>  	uint32_t fast_rate;
+>  
+> -	struct icc_path *icc_path;
+> +	struct icc_path *gfx_mem_icc_path;
+> +	struct icc_path *ocmem_icc_path;
 
-Tony
+I'm not sure if we want a bulk rename of the main path.  icc_path and
+ocmem_icc_path seem to be reasonable names and not overly confusing especially
+if we added some documentation to the header).
+
+
+>  	/* Hang and Inactivity Detection:
+>  	 */
+> -- 
+> 2.21.0
+> 
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
