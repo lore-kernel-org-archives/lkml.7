@@ -2,164 +2,161 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F0BC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD233C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBE592073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:06:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574075206;
-	bh=YoYaR1M+lDGoxsiTxlkwf8DP5q8rsGTY5JiNj2sqbTE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JLO1XJEGcC2w1Kfen3IvL/lCAwV0qU2W6+xuthhM9uru3rhVxRuTh2+RxslCX7Bbx
-	 jKTuKla3U4Ui2CBZFBPwWeBE55lG4bOO0aupnC9wlufOfhLREnsteesDPhCm1npwxW
-	 UWy3QCxx7DzZ+9bdD9y1Wn8HeCzi1ELw94JJSnzE=
+	by mail.kernel.org (Postfix) with ESMTP id 8FB9E2071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfKRLGp (ORCPT
+        id S1726575AbfKRLL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:06:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49026 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726461AbfKRLGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:06:44 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E708C2071B;
-        Mon, 18 Nov 2019 11:06:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574075203;
-        bh=YoYaR1M+lDGoxsiTxlkwf8DP5q8rsGTY5JiNj2sqbTE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WvOTFqZH2Tm1IT+xFFdw4YD99+QWWIdABD05lu0lHbZBaBKCA/Ywwd570/CiD6Gst
-         t/0k/2k9OU1IVNON0R9u22AYCXnxTTTY4vvIVhOBU/Rah0/yagTbbfE2PvBE3aUb3V
-         QYibqUrEB0TinljLpUp9D0s8kmzVi/hnd/c/Whw4=
-Date:   Mon, 18 Nov 2019 12:06:40 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 1/8] dt-bindings: pwm: allwinner: Add H6 PWM
- description
-Message-ID: <20191118110640.GE4345@gilmour.lan>
-References: <20191118110034.19444-1-peron.clem@gmail.com>
- <20191118110034.19444-2-peron.clem@gmail.com>
+        Mon, 18 Nov 2019 06:11:28 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:48118 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbfKRLL2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 06:11:28 -0500
+Received: from 79.184.253.244.ipv4.supernova.orange.pl (79.184.253.244) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id b3af18d642a7f005; Mon, 18 Nov 2019 12:11:24 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Len Brown <lenb@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Subject: [PATCH] cpuidle: Introduce cpuidle_driver_state_disabled() for driver quirks
+Date:   Mon, 18 Nov 2019 12:11:24 +0100
+Message-ID: <5502311.VOJAVHccSv@kreacher>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="YE4mVuFar47/lB0E"
-Content-Disposition: inline
-In-Reply-To: <20191118110034.19444-2-peron.clem@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
---YE4mVuFar47/lB0E
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Commit 99e98d3fb100 ("cpuidle: Consolidate disabled state checks")
+overlooked the fact that the imx6q and tegra20 cpuidle drivers use
+the "disabled" field in struct cpuidle_state for quirks which trigger
+after the initialization of cpuidle, so reading the initial value of
+that field is not sufficient for those drivers.
 
-Hi,
+In order to allow them to implement the quirks without using the
+"disabled" field in struct cpuidle_state, introduce a new helper
+function and modify them to use it.
 
-On Mon, Nov 18, 2019 at 12:00:27PM +0100, Cl=E9ment P=E9ron wrote:
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
->
-> H6 PWM block is basically the same as A20 PWM, except that it also has
-> bus clock and reset line which needs to be handled accordingly.
->
-> Expand Allwinner PWM binding with H6 PWM specifics.
->
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> ---
->  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 48 +++++++++++++++++++
->  1 file changed, 48 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pw=
-m.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-> index 0ac52f83a58c..1bae446febbb 100644
-> --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-> @@ -30,13 +30,51 @@ properties:
->        - items:
->            - const: allwinner,sun50i-h5-pwm
->            - const: allwinner,sun5i-a13-pwm
-> +      - const: allwinner,sun50i-h6-pwm
->
->    reg:
->      maxItems: 1
->
->    clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description: Module Clock
-> +      - description: Bus Clock
-> +
-> +  # Even though it only applies to subschemas under the conditionals,
-> +  # not listing them here will trigger a warning because of the
-> +  # additionalsProperties set to false.
-> +  clock-names: true
-> +
-> +  resets:
->      maxItems: 1
->
-> +  if:
-> +    properties:
-> +      compatible:
-> +        contains:
-> +          const: allwinner,sun50i-h6-pwm
-> +
-> +  then:
-> +    properties:
-> +      clocks:
-> +        maxItems: 2
-> +
-> +      clock-names:
-> +        items:
-> +          - const: mod
-> +          - const: bus
-> +
-> +    required:
-> +      - clock-names
-> +      - resets
-> +
-> +  else:
-> +    properties:
-> +      clocks:
-> +        maxItems: 1
-> +
+Fixes: 99e98d3fb100 ("cpuidle: Consolidate disabled state checks")
+Reported-by: Len Brown <lenb@kernel.org> 
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ arch/arm/mach-imx/cpuidle-imx6q.c     |    4 ++--
+ arch/arm/mach-tegra/cpuidle-tegra20.c |    2 +-
+ drivers/cpuidle/driver.c              |   28 ++++++++++++++++++++++++++++
+ include/linux/cpuidle.h               |    4 ++++
+ 4 files changed, 35 insertions(+), 3 deletions(-)
 
-Sorry for not noticing this earlier, but this should be at the topmost
-level
+Index: linux-pm/drivers/cpuidle/driver.c
+===================================================================
+--- linux-pm.orig/drivers/cpuidle/driver.c
++++ linux-pm/drivers/cpuidle/driver.c
+@@ -389,3 +389,31 @@ void cpuidle_driver_unref(void)
+ 
+ 	spin_unlock(&cpuidle_driver_lock);
+ }
++
++/**
++ * cpuidle_driver_state_disabled - Disable or enable an idle state
++ * @drv: cpuidle driver owning the state
++ * @idx: State index
++ * @disable: Whether or not to disable the state
++ */
++void cpuidle_driver_state_disabled(struct cpuidle_driver *drv, int idx,
++				 bool disable)
++{
++	unsigned int cpu;
++
++	mutex_lock(&cpuidle_lock);
++
++	for_each_cpu(cpu, drv->cpumask) {
++		struct cpuidle_device *dev = per_cpu(cpuidle_devices, cpu);
++
++		if (!dev)
++			continue;
++
++		if (disable)
++			dev->states_usage[idx].disable |= CPUIDLE_STATE_DISABLED_BY_DRIVER;
++		else
++			dev->states_usage[idx].disable &= ~CPUIDLE_STATE_DISABLED_BY_DRIVER;
++	}
++
++	mutex_unlock(&cpuidle_lock);
++}
+Index: linux-pm/include/linux/cpuidle.h
+===================================================================
+--- linux-pm.orig/include/linux/cpuidle.h
++++ linux-pm/include/linux/cpuidle.h
+@@ -149,6 +149,8 @@ extern int cpuidle_register_driver(struc
+ extern struct cpuidle_driver *cpuidle_get_driver(void);
+ extern struct cpuidle_driver *cpuidle_driver_ref(void);
+ extern void cpuidle_driver_unref(void);
++extern void cpuidle_driver_state_disabled(struct cpuidle_driver *drv, int idx,
++					bool disable);
+ extern void cpuidle_unregister_driver(struct cpuidle_driver *drv);
+ extern int cpuidle_register_device(struct cpuidle_device *dev);
+ extern void cpuidle_unregister_device(struct cpuidle_device *dev);
+@@ -186,6 +188,8 @@ static inline int cpuidle_register_drive
+ static inline struct cpuidle_driver *cpuidle_get_driver(void) {return NULL; }
+ static inline struct cpuidle_driver *cpuidle_driver_ref(void) {return NULL; }
+ static inline void cpuidle_driver_unref(void) {}
++static inline void cpuidle_driver_state_disabled(struct cpuidle_driver *drv,
++					       int idx, bool disable) { }
+ static inline void cpuidle_unregister_driver(struct cpuidle_driver *drv) { }
+ static inline int cpuidle_register_device(struct cpuidle_device *dev)
+ {return -ENODEV; }
+Index: linux-pm/arch/arm/mach-imx/cpuidle-imx6q.c
+===================================================================
+--- linux-pm.orig/arch/arm/mach-imx/cpuidle-imx6q.c
++++ linux-pm/arch/arm/mach-imx/cpuidle-imx6q.c
+@@ -62,13 +62,13 @@ static struct cpuidle_driver imx6q_cpuid
+  */
+ void imx6q_cpuidle_fec_irqs_used(void)
+ {
+-	imx6q_cpuidle_driver.states[1].disabled = true;
++	cpuidle_driver_state_disabled(&imx6q_cpuidle_driver, 1, true);
+ }
+ EXPORT_SYMBOL_GPL(imx6q_cpuidle_fec_irqs_used);
+ 
+ void imx6q_cpuidle_fec_irqs_unused(void)
+ {
+-	imx6q_cpuidle_driver.states[1].disabled = false;
++	cpuidle_driver_state_disabled(&imx6q_cpuidle_driver, 1, false);
+ }
+ EXPORT_SYMBOL_GPL(imx6q_cpuidle_fec_irqs_unused);
+ 
+Index: linux-pm/arch/arm/mach-tegra/cpuidle-tegra20.c
+===================================================================
+--- linux-pm.orig/arch/arm/mach-tegra/cpuidle-tegra20.c
++++ linux-pm/arch/arm/mach-tegra/cpuidle-tegra20.c
+@@ -203,7 +203,7 @@ void tegra20_cpuidle_pcie_irqs_in_use(vo
+ {
+ 	pr_info_once(
+ 		"Disabling cpuidle LP2 state, since PCIe IRQs are in use\n");
+-	tegra_idle_driver.states[1].disabled = true;
++	cpuidle_driver_state_disabled(&tegra_idle_driver, 1, true);
+ }
+ 
+ int __init tegra20_cpuidle_init(void)
 
-Maxime
 
---YE4mVuFar47/lB0E
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXdJ7QAAKCRDj7w1vZxhR
-xUZpAQDf57xL+KiMJD5aQ0XQT0XHFOYAwW8cCUu/FgXYpgJmjwEAqJZh4AHN3JSQ
-09PXO0+LTVk76RQKjiW46/vLtI+iIgo=
-=u4lN
------END PGP SIGNATURE-----
-
---YE4mVuFar47/lB0E--
