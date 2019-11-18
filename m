@@ -2,127 +2,122 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E105FC33CA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FB6C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B467322310
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBA632230C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:03:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="d8LUIjAn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfKRXDY (ORCPT
+        id S1727099AbfKRXD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 18:03:24 -0500
-Received: from vps-vb.mhejs.net ([37.28.154.113]:37652 "EHLO vps-vb.mhejs.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726717AbfKRXDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 18:03:24 -0500
-Received: from MUA
-        by vps-vb.mhejs.net with esmtps (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92.3)
-        (envelope-from <mail@maciej.szmigiero.name>)
-        id 1iWq3D-0004B5-NB; Tue, 19 Nov 2019 00:03:19 +0100
-Subject: Re: [PATCH v4] zswap: allow setting default status, compressor and
- allocator in Kconfig
-To:     Vitaly Wool <vitalywool@gmail.com>
-Cc:     Seth Jennings <sjenning@redhat.com>,
-        Dan Streetman <ddstreet@ieee.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191117000544.1019556-1-mail@maciej.szmigiero.name>
- <CAMJBoFNja-7sY=mU4hWDOqvOhZjvSNqyL1hYqJB+Hm1dygxpCA@mail.gmail.com>
-From:   "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-Autocrypt: addr=mail@maciej.szmigiero.name; prefer-encrypt=mutual; keydata=
- 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 PA==
-Message-ID: <8640cc1c-e0a7-887c-02f1-3065ceca2612@maciej.szmigiero.name>
-Date:   Tue, 19 Nov 2019 00:03:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <CAMJBoFNja-7sY=mU4hWDOqvOhZjvSNqyL1hYqJB+Hm1dygxpCA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 18 Nov 2019 18:03:58 -0500
+Received: from mail-eopbgr20100.outbound.protection.outlook.com ([40.107.2.100]:7517
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726717AbfKRXD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 18:03:58 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Davc0FzVsLvyPEOQs/OvDo9TcqkFCrm0dFuLG/U/L0A6WnzV6vSZgv6IexqdtEfzMNRJjkMfPq1NGxNvVNONPbmCKZv2zMAC65+zkzKIuqghXmen7g0FwB9D0hb5MZKZhNNVGQRiorHN2rZ1PcjKsWVPUvCYeVbeQcsxgmVbwEjDAI6620ah5WyehulwJFrROSy7JD6mppxbDzR9Dns0EvB1UnYcmdhlH/3Kassqrxbi9Ps9Ow9axp2A9SOECR3cIsW2ywYldAzShiHJdTybTfPL0K1GM2JzF2xZaC5HAmAq0oJIrGQj30wWjAPiEyXMAuh/5MZzvvVl6Xgexbap5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1dzjGWPdAZcAyE2N+egMQke7Vn7oCdy/0aOgzg7SNws=;
+ b=Kt2CDmpEmsj3lxrj+ValvkITRZszdkl+CDZkhg79DhYj8aF5Fr7E1n0suLRsPVJ1MW1Qx9rm/x19YHYyYox02Ae/xMbSey1qAj8IvVVU1WUi22LPwVK/VzQ84bs4VvRTwoSO9Fhpqf/KsmUuP3oHKTwYYne83z0yzzaTAtQTWNy2XB3fljQg+D0KLb27s0nQpVcC3QiviD4noAAV0uxSFFlOdLcUcB3WIh68wrLeAYJvWEPDm85vIgiyIUp01clIbx+j0pCA/1ha9UbvyDytJPGKv487UBynOGaD4ZI4nJkvYXGcV5f+7aA8SN2BHsE/LIa6gXhA5DQKzRVqzxikEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1dzjGWPdAZcAyE2N+egMQke7Vn7oCdy/0aOgzg7SNws=;
+ b=d8LUIjAnIqCEt3XsW1N8GEo2RAUFJEJLNQDSpqLjR52kaieXD+HPw3oRdYAvky1HNe/ntKy4dTHoc7j91dyjCigEmgOgTtty4D2U4emBxkyi+u48pvuAlIxEKYHsLuOHujPKGYTVSp8X3YR3QgHSh+CiZW0koedKkWpbkM+iSeY=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3289.eurprd02.prod.outlook.com (52.134.65.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.23; Mon, 18 Nov 2019 23:03:53 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::477:9510:3e3:f8ca]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::477:9510:3e3:f8ca%7]) with mapi id 15.20.2451.029; Mon, 18 Nov 2019
+ 23:03:53 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     Biwen Li <biwen.li@nxp.com>, Leo Li <leoyang.li@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [v5,2/3] i2c: mux: pca954x: support property idle-state
+Thread-Topic: [v5,2/3] i2c: mux: pca954x: support property idle-state
+Thread-Index: AQHViJBm+lcMepwMLU+ndX3u4pkJDaeMK7oAgAWMBYA=
+Date:   Mon, 18 Nov 2019 23:03:53 +0000
+Message-ID: <e04c77cc-6c41-8ce3-b584-944eb1595191@axentia.se>
+References: <20191022041152.3663-1-biwen.li@nxp.com>
+ <20191022041152.3663-2-biwen.li@nxp.com>
+ <DB7PR04MB4490B0121FEED3C74A682C248F700@DB7PR04MB4490.eurprd04.prod.outlook.com>
+In-Reply-To: <DB7PR04MB4490B0121FEED3C74A682C248F700@DB7PR04MB4490.eurprd04.prod.outlook.com>
+Accept-Language: en-US, sv-SE
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1PR0802CA0007.eurprd08.prod.outlook.com
+ (2603:10a6:3:bd::17) To DB3PR0202MB3434.eurprd02.prod.outlook.com
+ (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0f4f791f-44f0-4517-96d8-08d76c7b94f0
+x-ms-traffictypediagnostic: DB3PR0202MB3289:
+x-microsoft-antispam-prvs: <DB3PR0202MB3289DFD2CB967780BC474BACBC4D0@DB3PR0202MB3289.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0225B0D5BC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(396003)(376002)(136003)(39830400003)(189003)(199004)(31686004)(6486002)(6436002)(31696002)(81156014)(229853002)(8676002)(6116002)(386003)(3846002)(66556008)(2906002)(186003)(25786009)(305945005)(71190400001)(71200400001)(66476007)(7736002)(4326008)(76176011)(66446008)(64756008)(52116002)(256004)(102836004)(53546011)(6506007)(6512007)(4744005)(26005)(86362001)(2501003)(8936002)(81166006)(99286004)(14454004)(486006)(66066001)(66946007)(65956001)(65806001)(4001150100001)(5660300002)(6246003)(110136005)(2616005)(446003)(508600001)(58126008)(11346002)(36756003)(476003)(316002)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3289;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: qTe1aBwXWcM6+efGo+pyW61XsRXmlK72T1+IZFF2klATUNfB7if8ouKuLU2/NrZH3HI9jua6S6QvBsrWCYzmCUXWySXqU0MgYMW9BPa2pVpKuyBjclWcRqg2NcfPXjjQ/y6nHQoOyaBqCMn26r0VlSUOXISudAay1HZedclR6KfUzN7eAG5fA89hNV0WlyMMkeqMP2ZpzVtPYfrIMBkgLI1qoLAIXiCAGzT29XhdJcI8vCqBJQpnZAVFPdzfSzd2f4iTkMDAnBL+qxgFaii4dhNRqaDggGFfWhhx+1P8x76QJNoSHh+ng2t0jaP3Vx38edhk22fWo4x9TSQ0mZYdoMJjy4kdi2/ezjwWq7AqCDsil0HJIsi04PLULP9Y4GmX2spLjvEZeqFt1Qz1/tk7etYW1pn3gOu5mFyvAeaSNesSdHrRv/UBaLk2NbarhYLi
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DCE7B144E7759445A7D8937EB99236AE@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f4f791f-44f0-4517-96d8-08d76c7b94f0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 23:03:53.3735
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IVxv6z5qC4Fx389vvfaFdEulG2FxmmWoBVogrtoAMdFoplr0+aopRLFArkdkv9mq
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3289
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vitaly,
-
-On 18.11.2019 13:43, Vitaly Wool wrote:
-> Hi Maciej,
-> 
-> sorry for jumping in late into this discussion.
-
-Thanks for your comments, implemented them all now in v5.
-
-Maciej
+T24gMjAxOS0xMS0xNSAxMToyMSwgQml3ZW4gTGkgd3JvdGU6DQo+IEhpIFBldGVyLA0KPiANCj4g
+QW55IGNvbW1lbnRzPw0KPiBJZiBubyBjb21tZW50cywgY291bGQgeW91IGdpdmUgbWUgYSByZXZp
+ZXdlZC1ieT8NCg0KSSB3b3VsZCBoYXZlIGxpa2VkIGEgY29tbWVudCBmcm9tIHRoZSBkcml2ZXIg
+bWFpbnRhaW5lciBvciBhIHRlc3RlZC1ieSBmcm9tDQpzb21lb25lIHdpdGggYW5vdGhlciBjYXNl
+IHRoYW4geW91cnMuIEJ1dCBub3cgdGhhdCBJIGNoZWNrIEkgc2VlIHRoYXQgdGhlcmUgLQ0KY29u
+dHJhcnkgdG8gbXkgYXNzdW1wdGlvbiAtIGlzIG5vIG1haW50YWluZXIgbGlzdGVkLiBTbywgSSB0
+aGluayBpdCBsb29rcyBmaW5lLA0KYW5kIEknbSBzdXJlIGl0IGNvbXBpbGVzIGNsZWFubHkgZXRj
+IGlmIEkgdGVzdCB0aGF0LCBidXQgSSBjYW4ndCB0ZXN0IHJ1bnRpbWUNCmJlaGF2aW9yIG15c2Vs
+ZiBzaW5jZSBJIGRvbid0IGhhdmUgdGhlIEhXLiBJIHNob3VsZCBoYXZlIGJlZW4gY2xlYXJlciBh
+Ym91dA0KdGhpcywgYW5kIHNob3VsZCBoYXZlIGRvdWJsZSBjaGVja2VkIHRoZSBtYWludGFpbmVy
+IHN0YXR1cyBpbnN0ZWFkIG9mIHJlbHlpbmcNCm9uIHdoYXQgSSB0aG91Z2h0LiBJIGhhdmUgc2lt
+cGx5IGJlZW4gZXh0cmVtZWx5IGJ1c3kgYW5kIHRoYXQgc2xpcHBlZC4gU29ycnkuDQoNCkJ1dCBJ
+J2xsIHRyeSB0byBzcXVlZXplIHRoaXMgaW50byBsaW51eC1uZXh0IHRvbW9ycm93LCBiZWNhdXNl
+IGlmIGxvb2sgc2FmZSwNCmFuZCBob3BlZnVsbHkgYW55IHByb2JsZW0gd2lsbCBiZWNvbWUgYXBw
+YXJlbnQuDQoNCkdpdmluZyBhIHJldmlld2VkLWJ5IHNlZW1lZCBwb2ludGxlc3MsIHdoZW4gSSdt
+IHRoZSBvbmUgcGlja2luZyBpdCB1cCA6LSkNCg0KQ2hlZXJzLA0KUGV0ZXINCg==
