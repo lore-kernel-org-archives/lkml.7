@@ -2,121 +2,394 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDCAC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C67C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC6F222A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CA0222309
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:04:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QuAiRWty"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dak+2mg4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbfKRWDJ (ORCPT
+        id S1726922AbfKRWEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 17:03:09 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33196 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfKRWDJ (ORCPT
+        Mon, 18 Nov 2019 17:04:43 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:50867 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726272AbfKRWEn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 17:03:09 -0500
-Received: by mail-qk1-f195.google.com with SMTP id 71so15974418qkl.0
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 14:03:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qX5DH9AG2LN1bN8jEt/hCStpS53kFph8AgR49AHtTDk=;
-        b=QuAiRWty2/dKXCHJe+/MvPCgjosZ+7oTjeYbpDI+6hZm/rRt3bgwphWgk7F8s65kgi
-         RA+8EBBcN7AIK1cJrc8xyF6ConUVr+wBZtaJEFEERjgjDvgfSDMIRs7mAGueRpXHt+eM
-         O2ejatO0sboGxlUIHwOknYFySmDnC+dBPZ0E5c3Fi++xMohjx6N4ypOd7CpZv+mKFUj6
-         F9VZJIIQAa3TmBWCu8IS3QlE/Oe/TV7ttGUIhL38v9Jrv5mKitzm+zsDbgcGQGO0AMQQ
-         XuYn9xVa2xPG3ivfR2PazuFTgnUzYec6VgfTE9maC621Ev7sIKBJE6/f8bLhRSDO2u34
-         sTbA==
+        Mon, 18 Nov 2019 17:04:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574114681;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=8VeWVkmCSulVhV1qmByhbdssiRm0kRpI2tILvMyefww=;
+        b=Dak+2mg4MizghJ4weYwL8z8fQx+MFi8yyYHd+Nvyt2F2ayhfStL7WM9eYy0dGBglxyoaEw
+        Bmb/B7ytbhEMa920wchWkjWnzeSlb5DeYr9Jcw91vOkZKkBMOeKZmQbMpwtjWc/+PolZx5
+        k1jh9H3ZiD2sgp+PUL33BV+sxBRHSuY=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-230-9fpLUfC2OVuYp1D_6zroGA-1; Mon, 18 Nov 2019 17:04:38 -0500
+Received: by mail-qt1-f198.google.com with SMTP id l8so13289200qtq.9
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 14:04:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qX5DH9AG2LN1bN8jEt/hCStpS53kFph8AgR49AHtTDk=;
-        b=SQRdKx3Atwn/2qyHfnXM9iG4KujJ8infqV4Sxc0/iGOQ/baKyVvGQC+iL3kYCGTaJP
-         97vSGgPEDvZRi5Zb4tQ7E4MON71QVuKWdjpcL+6XGGmIyLXzF9l8SjS8ksws0vME5U69
-         ZsXTWPzjNutyVCTh6y5jFrBhlQz1htBpVKyD3C/z12DlVq+9ea8voK49dlngkNUtPv/5
-         jEOQ3fVcR7T3Q3xv2dD6fZDW8nOIha2bA35IUN0XtG98y52BK7lPQMiGlXc6+IVTR4PF
-         JLy8m+CcC1Q9H5fb2QQ4gMJoCijwuA7wnviJhy2SlAoX9lxOOyXmPsKFtHjbhotp/ndd
-         kuWQ==
-X-Gm-Message-State: APjAAAVclBJ60hlybt5iuQ9i+oh3TBWoRg7zgXss5x7K0BbQLPWfRX27
-        OwQZLkTJbVyplsJnEFvWhj0VddSg9V0=
-X-Google-Smtp-Source: APXvYqxAf6mAEjqtl3meItTFoMIUhc+//pKRtngoDbZBTFACBYCNLEdye/mbfBlIMRIDgR4fxUx7Fw==
-X-Received: by 2002:a37:624f:: with SMTP id w76mr16173898qkb.50.1574114586903;
-        Mon, 18 Nov 2019 14:03:06 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id y24sm9089711qki.104.2019.11.18.14.03.06
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=z42ZjyEIpk4q751ixdMJNzXEB6jCwh7siqWC0h0FGgA=;
+        b=BfCOuamtl+W/T0IW2A0oez6GBSr+KGw1TSIkaz8oTxesMeUOU5RGVoorLNb+/WMwZW
+         JmiDWlk7u+P7QlihjM9iOp/ms/3ClYMkaNCpTL4alERAIAfA/ggrzfsdUB0jdbpZH0Dq
+         VrF205cfi7sdXcwAWsXxsZGB6XiaVVpwW4WnhAZWg60/z1UQJqxE87J3i9AeYF4Tj+x1
+         ARQJJBwG2/leUBuh4im3T41ib8NynsoGycpUcrRCgFJL5dZyyrchiv9jXy9LiblBllLC
+         YHpZAjnkCKZ6+BKIV/MJInRWVXdGruVj3kRm0Bk8KJphgMoxDpICoOyVxZ3fIoUj+77a
+         3AIA==
+X-Gm-Message-State: APjAAAXo8SC/KYoQGYu8z45KmMTUyUTIbIkQGm3Y3Po1Y1izVnINSkW6
+        /0RQhqnhiRbglatt3xj1seTC1P9+H8xlnO3HN/3iB2p5JjYs4jCLF3u7tD+4BAG0c1Rxka6OMaT
+        AN25rhflEl7z1RkdLK0asplLG
+X-Received: by 2002:a05:620a:101a:: with SMTP id z26mr25703939qkj.344.1574114677893;
+        Mon, 18 Nov 2019 14:04:37 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz+o/aY3cmRojkGspWCmuDTGdToedB9QFwTcSMURFKAt5Eo4wRhzmz1vyo1v5goX8rthwAO3g==
+X-Received: by 2002:a05:620a:101a:: with SMTP id z26mr25703916qkj.344.1574114677452;
+        Mon, 18 Nov 2019 14:04:37 -0800 (PST)
+Received: from labbott-redhat.redhat.com (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
+        by smtp.gmail.com with ESMTPSA id g11sm9089482qkm.82.2019.11.18.14.04.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 14:03:06 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 85C8940D3E; Mon, 18 Nov 2019 19:03:04 -0300 (-03)
-Date:   Mon, 18 Nov 2019 19:03:04 -0300
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH v3 4/7] perf probe: Generate event name with line number
-Message-ID: <20191118220304.GE20465@kernel.org>
-References: <157406469983.24476.13195800716161845227.stgit@devnote2>
- <157406474026.24476.2828897745502059569.stgit@devnote2>
+        Mon, 18 Nov 2019 14:04:36 -0800 (PST)
+From:   Laura Abbott <labbott@redhat.com>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     Laura Abbott <labbott@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] watchdog: Remove iop_wdt
+Date:   Mon, 18 Nov 2019 17:04:32 -0500
+Message-Id: <20191118220432.1611-1-labbott@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <157406474026.24476.2828897745502059569.stgit@devnote2>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-MC-Unique: 9fpLUfC2OVuYp1D_6zroGA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Nov 18, 2019 at 05:12:20PM +0900, Masami Hiramatsu escreveu:
-> Generate event name from function name with line number
-> as <function>_L<line_number>. Note that this is only for
-> the new event which is defined by the line number of
-> function (except for line 0).
-> 
-> If there is another event on same line, you have to use
-> "-f" option. In that case, the new event has "_1" suffix.
-> 
->  e.g.
->   # perf probe -a kernel_read:2
->   Added new event:
->     probe:kernel_read_L2 (on kernel_read:2)
-> 
->   You can now use it in all perf tools, such as:
-> 
->   	perf record -e probe:kernel_read_L2 -aR sleep 1
-> 
-> 
-> But if we omit the line number or 0th line, it will
-> have no suffix.
-> 
->   # perf probe -a kernel_read:0
->   Added new event:
->     probe:kernel_read (on kernel_read)
-> 
->   You can now use it in all perf tools, such as:
-> 
->   	perf record -e probe:kernel_read -aR sleep 1
-> 
-> # perf probe -l
->   probe:kernel_read    (on kernel_read@linux-5.0.0/fs/read_write.c)
->   probe:kernel_read_L2 (on kernel_read:2@linux-5.0.0/fs/read_write.c)
 
-Thanks, tested and applied.
+Commit 59d3ae9a5bf6 ("ARM: remove Intel iop33x and iop13xx support")
+removed support for some old platforms. Given this driver depends on
+a now removed platform, just remove the driver.
 
-- Arnaldo
+Signed-off-by: Laura Abbott <labbott@redhat.com>
+---
+Found this while reviewing config options. Not sure if this was kept
+around for other reasons or just missed.
+---
+ drivers/watchdog/Kconfig   |  16 ---
+ drivers/watchdog/Makefile  |   1 -
+ drivers/watchdog/iop_wdt.c | 249 -------------------------------------
+ 3 files changed, 266 deletions(-)
+ delete mode 100644 drivers/watchdog/iop_wdt.c
+
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 58e7c100b6ad..fef9078a44b6 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -554,22 +554,6 @@ config PNX4008_WATCHDOG
+=20
+ =09  Say N if you are unsure.
+=20
+-config IOP_WATCHDOG
+-=09tristate "IOP Watchdog"
+-=09depends on ARCH_IOP13XX
+-=09select WATCHDOG_NOWAYOUT if (ARCH_IOP32X || ARCH_IOP33X)
+-=09help
+-=09  Say Y here if to include support for the watchdog timer
+-=09  in the Intel IOP3XX & IOP13XX I/O Processors.  This driver can
+-=09  be built as a module by choosing M. The module will
+-=09  be called iop_wdt.
+-
+-=09  Note: The IOP13XX watchdog does an Internal Bus Reset which will
+-=09  affect both cores and the peripherals of the IOP.  The ATU-X
+-=09  and/or ATUe configuration registers will remain intact, but if
+-=09  operating as an Root Complex and/or Central Resource, the PCI-X
+-=09  and/or PCIe busses will also be reset.  THIS IS A VERY BIG HAMMER.
+-
+ config DAVINCI_WATCHDOG
+ =09tristate "DaVinci watchdog"
+ =09depends on ARCH_DAVINCI || ARCH_KEYSTONE || COMPILE_TEST
+diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+index 2ee352bf3372..9de21f5ce909 100644
+--- a/drivers/watchdog/Makefile
++++ b/drivers/watchdog/Makefile
+@@ -55,7 +55,6 @@ obj-$(CONFIG_SAMA5D4_WATCHDOG) +=3D sama5d4_wdt.o
+ obj-$(CONFIG_DW_WATCHDOG) +=3D dw_wdt.o
+ obj-$(CONFIG_EP93XX_WATCHDOG) +=3D ep93xx_wdt.o
+ obj-$(CONFIG_PNX4008_WATCHDOG) +=3D pnx4008_wdt.o
+-obj-$(CONFIG_IOP_WATCHDOG) +=3D iop_wdt.o
+ obj-$(CONFIG_DAVINCI_WATCHDOG) +=3D davinci_wdt.o
+ obj-$(CONFIG_ORION_WATCHDOG) +=3D orion_wdt.o
+ obj-$(CONFIG_SUNXI_WATCHDOG) +=3D sunxi_wdt.o
+diff --git a/drivers/watchdog/iop_wdt.c b/drivers/watchdog/iop_wdt.c
+deleted file mode 100644
+index a9ccdb9a9159..000000000000
+--- a/drivers/watchdog/iop_wdt.c
++++ /dev/null
+@@ -1,249 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * drivers/char/watchdog/iop_wdt.c
+- *
+- * WDT driver for Intel I/O Processors
+- * Copyright (C) 2005, Intel Corporation.
+- *
+- * Based on ixp4xx driver, Copyright 2004 (c) MontaVista, Software, Inc.
+- *
+- *=09Curt E Bruns <curt.e.bruns@intel.com>
+- *=09Peter Milne <peter.milne@d-tacq.com>
+- *=09Dan Williams <dan.j.williams@intel.com>
+- */
+-
+-#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+-
+-#include <linux/module.h>
+-#include <linux/kernel.h>
+-#include <linux/fs.h>
+-#include <linux/init.h>
+-#include <linux/device.h>
+-#include <linux/miscdevice.h>
+-#include <linux/watchdog.h>
+-#include <linux/uaccess.h>
+-#include <mach/hardware.h>
+-
+-static bool nowayout =3D WATCHDOG_NOWAYOUT;
+-static unsigned long wdt_status;
+-static unsigned long boot_status;
+-static DEFINE_SPINLOCK(wdt_lock);
+-
+-#define WDT_IN_USE=09=090
+-#define WDT_OK_TO_CLOSE=09=091
+-#define WDT_ENABLED=09=092
+-
+-static unsigned long iop_watchdog_timeout(void)
+-{
+-=09return (0xffffffffUL / get_iop_tick_rate());
+-}
+-
+-/**
+- * wdt_supports_disable - determine if we are accessing a iop13xx watchdog
+- * or iop3xx by whether it has a disable command
+- */
+-static int wdt_supports_disable(void)
+-{
+-=09int can_disable;
+-
+-=09if (IOP_WDTCR_EN_ARM !=3D IOP_WDTCR_DIS_ARM)
+-=09=09can_disable =3D 1;
+-=09else
+-=09=09can_disable =3D 0;
+-
+-=09return can_disable;
+-}
+-
+-static void wdt_enable(void)
+-{
+-=09/* Arm and enable the Timer to starting counting down from 0xFFFF.FFFF
+-=09 * Takes approx. 10.7s to timeout
+-=09 */
+-=09spin_lock(&wdt_lock);
+-=09write_wdtcr(IOP_WDTCR_EN_ARM);
+-=09write_wdtcr(IOP_WDTCR_EN);
+-=09spin_unlock(&wdt_lock);
+-}
+-
+-/* returns 0 if the timer was successfully disabled */
+-static int wdt_disable(void)
+-{
+-=09/* Stop Counting */
+-=09if (wdt_supports_disable()) {
+-=09=09spin_lock(&wdt_lock);
+-=09=09write_wdtcr(IOP_WDTCR_DIS_ARM);
+-=09=09write_wdtcr(IOP_WDTCR_DIS);
+-=09=09clear_bit(WDT_ENABLED, &wdt_status);
+-=09=09spin_unlock(&wdt_lock);
+-=09=09pr_info("Disabled\n");
+-=09=09return 0;
+-=09} else
+-=09=09return 1;
+-}
+-
+-static int iop_wdt_open(struct inode *inode, struct file *file)
+-{
+-=09if (test_and_set_bit(WDT_IN_USE, &wdt_status))
+-=09=09return -EBUSY;
+-
+-=09clear_bit(WDT_OK_TO_CLOSE, &wdt_status);
+-=09wdt_enable();
+-=09set_bit(WDT_ENABLED, &wdt_status);
+-=09return stream_open(inode, file);
+-}
+-
+-static ssize_t iop_wdt_write(struct file *file, const char *data, size_t l=
+en,
+-=09=09  loff_t *ppos)
+-{
+-=09if (len) {
+-=09=09if (!nowayout) {
+-=09=09=09size_t i;
+-
+-=09=09=09clear_bit(WDT_OK_TO_CLOSE, &wdt_status);
+-
+-=09=09=09for (i =3D 0; i !=3D len; i++) {
+-=09=09=09=09char c;
+-
+-=09=09=09=09if (get_user(c, data + i))
+-=09=09=09=09=09return -EFAULT;
+-=09=09=09=09if (c =3D=3D 'V')
+-=09=09=09=09=09set_bit(WDT_OK_TO_CLOSE, &wdt_status);
+-=09=09=09}
+-=09=09}
+-=09=09wdt_enable();
+-=09}
+-=09return len;
+-}
+-
+-static const struct watchdog_info ident =3D {
+-=09.options =3D WDIOF_CARDRESET | WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING,
+-=09.identity =3D "iop watchdog",
+-};
+-
+-static long iop_wdt_ioctl(struct file *file,
+-=09=09=09=09unsigned int cmd, unsigned long arg)
+-{
+-=09int options;
+-=09int ret =3D -ENOTTY;
+-=09int __user *argp =3D (int __user *)arg;
+-
+-=09switch (cmd) {
+-=09case WDIOC_GETSUPPORT:
+-=09=09if (copy_to_user(argp, &ident, sizeof(ident)))
+-=09=09=09ret =3D -EFAULT;
+-=09=09else
+-=09=09=09ret =3D 0;
+-=09=09break;
+-
+-=09case WDIOC_GETSTATUS:
+-=09=09ret =3D put_user(0, argp);
+-=09=09break;
+-
+-=09case WDIOC_GETBOOTSTATUS:
+-=09=09ret =3D put_user(boot_status, argp);
+-=09=09break;
+-
+-=09case WDIOC_SETOPTIONS:
+-=09=09if (get_user(options, (int *)arg))
+-=09=09=09return -EFAULT;
+-
+-=09=09if (options & WDIOS_DISABLECARD) {
+-=09=09=09if (!nowayout) {
+-=09=09=09=09if (wdt_disable() =3D=3D 0) {
+-=09=09=09=09=09set_bit(WDT_OK_TO_CLOSE, &wdt_status);
+-=09=09=09=09=09ret =3D 0;
+-=09=09=09=09} else
+-=09=09=09=09=09ret =3D -ENXIO;
+-=09=09=09} else
+-=09=09=09=09ret =3D 0;
+-=09=09}
+-=09=09if (options & WDIOS_ENABLECARD) {
+-=09=09=09wdt_enable();
+-=09=09=09ret =3D 0;
+-=09=09}
+-=09=09break;
+-
+-=09case WDIOC_KEEPALIVE:
+-=09=09wdt_enable();
+-=09=09ret =3D 0;
+-=09=09break;
+-
+-=09case WDIOC_GETTIMEOUT:
+-=09=09ret =3D put_user(iop_watchdog_timeout(), argp);
+-=09=09break;
+-=09}
+-=09return ret;
+-}
+-
+-static int iop_wdt_release(struct inode *inode, struct file *file)
+-{
+-=09int state =3D 1;
+-=09if (test_bit(WDT_OK_TO_CLOSE, &wdt_status))
+-=09=09if (test_bit(WDT_ENABLED, &wdt_status))
+-=09=09=09state =3D wdt_disable();
+-
+-=09/* if the timer is not disabled reload and notify that we are still
+-=09 * going down
+-=09 */
+-=09if (state !=3D 0) {
+-=09=09wdt_enable();
+-=09=09pr_crit("Device closed unexpectedly - reset in %lu seconds\n",
+-=09=09=09iop_watchdog_timeout());
+-=09}
+-
+-=09clear_bit(WDT_IN_USE, &wdt_status);
+-=09clear_bit(WDT_OK_TO_CLOSE, &wdt_status);
+-
+-=09return 0;
+-}
+-
+-static const struct file_operations iop_wdt_fops =3D {
+-=09.owner =3D THIS_MODULE,
+-=09.llseek =3D no_llseek,
+-=09.write =3D iop_wdt_write,
+-=09.unlocked_ioctl =3D iop_wdt_ioctl,
+-=09.open =3D iop_wdt_open,
+-=09.release =3D iop_wdt_release,
+-};
+-
+-static struct miscdevice iop_wdt_miscdev =3D {
+-=09.minor =3D WATCHDOG_MINOR,
+-=09.name =3D "watchdog",
+-=09.fops =3D &iop_wdt_fops,
+-};
+-
+-static int __init iop_wdt_init(void)
+-{
+-=09int ret;
+-
+-=09/* check if the reset was caused by the watchdog timer */
+-=09boot_status =3D (read_rcsr() & IOP_RCSR_WDT) ? WDIOF_CARDRESET : 0;
+-
+-=09/* Configure Watchdog Timeout to cause an Internal Bus (IB) Reset
+-=09 * NOTE: An IB Reset will Reset both cores in the IOP342
+-=09 */
+-=09write_wdtsr(IOP13XX_WDTCR_IB_RESET);
+-
+-=09/* Register after we have the device set up so we cannot race
+-=09   with an open */
+-=09ret =3D misc_register(&iop_wdt_miscdev);
+-=09if (ret =3D=3D 0)
+-=09=09pr_info("timeout %lu sec\n", iop_watchdog_timeout());
+-
+-=09return ret;
+-}
+-
+-static void __exit iop_wdt_exit(void)
+-{
+-=09misc_deregister(&iop_wdt_miscdev);
+-}
+-
+-module_init(iop_wdt_init);
+-module_exit(iop_wdt_exit);
+-
+-module_param(nowayout, bool, 0);
+-MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started");
+-
+-MODULE_AUTHOR("Curt E Bruns <curt.e.bruns@intel.com>");
+-MODULE_DESCRIPTION("iop watchdog timer driver");
+-MODULE_LICENSE("GPL");
+--=20
+2.21.0
+
