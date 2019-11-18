@@ -7,57 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE8DC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A849C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2163B222F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C76C208A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:23:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hpzkmTcn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ch5NaihK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfKRUXp (ORCPT
+        id S1726855AbfKRUXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 15:23:45 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35564 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbfKRUXn (ORCPT
+        Mon, 18 Nov 2019 15:23:44 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:33103 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbfKRUXk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 15:23:43 -0500
-Received: by mail-pl1-f196.google.com with SMTP id s10so10419800plp.2
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 12:23:42 -0800 (PST)
+        Mon, 18 Nov 2019 15:23:40 -0500
+Received: by mail-pj1-f66.google.com with SMTP id o14so1815481pjr.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 12:23:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=DaFZ5uYZhl4fxFpyOFfrIQeYGNfjAMWIYqeXJnCftOA=;
-        b=hpzkmTcnlm6eOQQZgvOTrz8xGnBtVQ6nIpfyf2d/yEXKyQxFaxO5w/uoNmeWETf5Hh
-         pbjx4v2RCWB6Pxz32lczX5MFfPZum+rWmByZ6Ap7zs8DnCWLXsj5bpprNPlOquqDPLqb
-         hoSu/sSeAaUDe2W8nYh7emTtWLElMHro/BUpMtDCEirPohgZe26gIoRX45XdpUv34za9
-         HmrgSXAkKaR0s2XIRML1zjK0ZG9+/GCUK1R3Bh4VALjCyDR/G+AlqsaRMvWIX1Ww6ir/
-         QV8PcjgJssjANG5jM2N9x93iZEsGEu58WRHXzqzwVGCF5L/licy07P7bzIeau8K3ABu0
-         ycXw==
+        bh=62c/6FPwz+q6rvXrG8i3YVfn6MxAXoMreZTxPxOlj5A=;
+        b=ch5NaihKV/QyVydlbPH7HihH2fQ5HQ3c59g1Hep+tufaTPejbI8jrd7lb5L8P2Evxw
+         pgh3an1c4f+0Tw0N4DhrtXJtQz6oJ8MoMtEKSTeEwYgMazMoiPpQO5IfAOgYR4fyI9ky
+         f+72CIIs9Y+bOF80GWTaNlUzuKAI29ccFTf1M/2L9aB4arYsy+tH23llZSheGJtExQw/
+         1xlL8zIYhqmCIGTCY8MzoukyLr4gGm9GVZNZTSRpLdA//Jjoln/LFlgKy7DSGwFvlnTX
+         x1NnUQ7PPjdnMayhB4N1Hmlo9YEWL0Zp5QlkVA86dHMngz/UuCP/NXIDowJNRU/O9Uxf
+         H31w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=DaFZ5uYZhl4fxFpyOFfrIQeYGNfjAMWIYqeXJnCftOA=;
-        b=fv/kE/Uzsi4WFgZ1WwdMop8qFmhkrPrAwyczs80RetKEGfEsw0b72aitkxatOBvV9W
-         jmZudqSYo7kzxqLmnZkipfV1bWxWuUQKrE5kqHnExLlvMygGPuvvPh5BY4kxWAmd2EYG
-         xG7wVt/bCSDsOCPbflg3/ZcX3LoQLcGEnnNZoAtPHIeg1tSFbrIvhjt2I3V1KCQi9C31
-         9g+hQv5dR2T9fj7dhOF2VPqOYxpaquU+9rwSpWwwVw62iVsvmMhRcHXh4o1l2RGs0DFf
-         Yfx7QFNlJ1cjgFXnMruDBb2De8jbG+zZFP5ce9leu6NXwYvLh0EiWiXuCED88cy2CLVG
-         h1nQ==
-X-Gm-Message-State: APjAAAVaQi3PptKeIjFA/K1MDx3UmmXIr7Y3rNgXbiYrjjA6ZKxCTsIt
-        Xc3qT2kqJaV8NK58XDx/KiAqQ6lCjco=
-X-Google-Smtp-Source: APXvYqz2EmvkDFcsB1zP2PejH7cLl0ZQ+CxuZIPBRhMfDlvzXX4j6IF6Oc0qOaFAXSB+PuYKLEY1XA==
-X-Received: by 2002:a17:90a:b28c:: with SMTP id c12mr1145456pjr.22.1574108622050;
-        Mon, 18 Nov 2019 12:23:42 -0800 (PST)
+        bh=62c/6FPwz+q6rvXrG8i3YVfn6MxAXoMreZTxPxOlj5A=;
+        b=E52F/v2KmC6OiCAExH1vswNi+18L7Oc1OoTcaBHdR72TJCqzQd/AI+Yb6LurnmpaPZ
+         4DuIp4X+kqcsIHQ2ncMykmHxeCUVbh7Xbs6fuVexpbnl1RQ2+hWTGldt52IyYiNeAdS1
+         VQH5JKyaDeN+cyLTeMUh+wR1fgQM/mvsHPaHKFwNxoOZ3mqzp7EOvlDLf+eFhTSotw9o
+         aLRMtadA3b4id6nouC7F/CZSb2Xac7YC/rZmclpJ2v6tNOpQDXZfoaN3eDl+5XpHfglZ
+         /xG/T6ZBmhxgNfw42flJ8Ok2fRobn06BY96F4pwtZV0ekeh4wmMnP9f0FfSQ8HTybzzD
+         jMOw==
+X-Gm-Message-State: APjAAAU38QV5nTjh6KrIYFGkaxHMq21VtDGNZGjT8NdpQiuv+6XvQsLF
+        wlCtG6eVeU4aI7S+iWEcTOqLu7Gm55A=
+X-Google-Smtp-Source: APXvYqyJhcXgx0ajlguJa2TigxhWo7esltd1yW4mf6KPoDh9FGobxzdvDxd9NiNVFa2cCxtYQed64Q==
+X-Received: by 2002:a17:902:4a:: with SMTP id 68mr2183630pla.8.1574108619396;
+        Mon, 18 Nov 2019 12:23:39 -0800 (PST)
 Received: from localhost.localdomain (c-67-170-172-113.hsd1.or.comcast.net. [67.170.172.113])
-        by smtp.gmail.com with ESMTPSA id 7sm11021871pgk.25.2019.11.18.12.23.40
+        by smtp.gmail.com with ESMTPSA id 7sm11021871pgk.25.2019.11.18.12.23.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 12:23:41 -0800 (PST)
+        Mon, 18 Nov 2019 12:23:38 -0800 (PST)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
 Cc:     John Stultz <john.stultz@linaro.org>,
+        Laura Abbott <labbott@redhat.com>,
         Benjamin Gaignard <benjamin.gaignard@linaro.org>,
         Sumit Semwal <sumit.semwal@linaro.org>,
         Liam Mark <lmark@codeaurora.org>,
@@ -74,9 +75,9 @@ Cc:     John Stultz <john.stultz@linaro.org>,
         Hillf Danton <hdanton@sina.com>,
         Dave Airlie <airlied@gmail.com>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH v16 5/5] kselftests: Add dma-heap test
-Date:   Mon, 18 Nov 2019 20:23:32 +0000
-Message-Id: <20191118202332.109172-6-john.stultz@linaro.org>
+Subject: [PATCH v16 3/5] dma-buf: heaps: Add system heap to dmabuf heaps
+Date:   Mon, 18 Nov 2019 20:23:30 +0000
+Message-Id: <20191118202332.109172-4-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191118202332.109172-1-john.stultz@linaro.org>
 References: <20191118202332.109172-1-john.stultz@linaro.org>
@@ -85,13 +86,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add very trivial allocation and import test for dma-heaps,
-utilizing the vgem driver as a test importer.
+This patch adds system heap to the dma-buf heaps framework.
 
-A good chunk of this code taken from:
-  tools/testing/selftests/android/ion/ionmap_test.c
-  Originally by Laura Abbott <labbott@redhat.com>
+This allows applications to get a page-allocator backed dma-buf
+for non-contiguous memory.
 
+This code is an evolution of the Android ION implementation, so
+thanks to its original authors and maintainters:
+  Rebecca Schultz Zavin, Colin Cross, Laura Abbott, and others!
+
+Cc: Laura Abbott <labbott@redhat.com>
 Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
 Cc: Sumit Semwal <sumit.semwal@linaro.org>
 Cc: Liam Mark <lmark@codeaurora.org>
@@ -116,456 +120,217 @@ Tested-by: Ayan Kumar Halder <ayan.halder@arm.com>
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
 v2:
-* Switched to use reworked dma-heap apis
+* Switch allocate to return dmabuf fd
+* Simplify init code
+* Checkpatch fixups
+* Droped dead system-contig code
 v3:
-* Add simple mmap
-* Utilize dma-buf testdev to test importing
+* Whitespace fixups from Benjamin
+* Make sure we're zeroing the allocated pages (from Liam)
+* Use PAGE_ALIGN() consistently (suggested by Brian)
+* Fold in new registration style from Andrew
+* Avoid needless dynamic allocation of sys_heap (suggested by
+  Christoph)
+* Minor cleanups
+* Folded in changes from Andrew to use simplified page list
+  from the heap helpers
 v4:
-* Rework to use vgem
-* Pass in fd_flags to match interface changes
-* Skip . and .. dirs
+* Optimization to allocate pages in chunks, similar to old
+  pagepool code
+* Use fd_flags when creating dmabuf fd (Suggested by Benjamin)
+v5:
+* Back out large order page allocations (was leaking memory,
+  as the page array didn't properly track order size)
 v6:
-* Number of style/cleanups suggested by Brian
+* Minor whitespace change suggested by Brian
+* Remove unused variable
 v7:
-* Whitespace fixup for checkpatch
+* Use newly lower-cased init_heap_helper_buffer helper
+* Add system heap DOS avoidance suggested by Laura from ION code
+* Use new dmabuf export helper
 v8:
-* More checkpatch whitespace fixups
-v9:
-* Better handling error returns out to main, suggested
-  by Brian Starkey
-* Switch to using snprintf, suggested by Brian
+* Make struct dma_heap_ops consts (suggested by Christoph)
+* Get rid of needless struct system_heap (suggested by Christoph)
+* Condense dma_heap_buffer and heap_helper_buffer (suggested by
+  Christoph)
+* Add forgotten include file to fix build issue on x86
+v12:
+* Minor tweaks to prep loading heap from module
 v14:
-* Fix a missing return value
-* Add calls to test the GET_FEATURES ioctl
-* Build fix reported by kernel test robot <lkp@intel.com>
-  and fixed by Xiao Yang <ice_yangxiao@163.com>
-* Minor Makefile cleanups
+* Fix "redundant assignment to variable ret" issue reported
+  by Colin King and fixed by Andrew Davis
 v15:
-* Remove usage of dropped get_features ioctl
-v16:
-* Add extra ioctl compatibility testing suggested by
-  Daniel Vetter
+* Drop unused heap flag from heap_helper_buffer as suggested
+  by Sandeep Patil
 ---
- tools/testing/selftests/dmabuf-heaps/Makefile |   6 +
- .../selftests/dmabuf-heaps/dmabuf-heap.c      | 396 ++++++++++++++++++
- 2 files changed, 402 insertions(+)
- create mode 100644 tools/testing/selftests/dmabuf-heaps/Makefile
- create mode 100644 tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+ drivers/dma-buf/Kconfig             |   2 +
+ drivers/dma-buf/heaps/Kconfig       |   6 ++
+ drivers/dma-buf/heaps/Makefile      |   1 +
+ drivers/dma-buf/heaps/system_heap.c | 123 ++++++++++++++++++++++++++++
+ 4 files changed, 132 insertions(+)
+ create mode 100644 drivers/dma-buf/heaps/Kconfig
+ create mode 100644 drivers/dma-buf/heaps/system_heap.c
 
-diff --git a/tools/testing/selftests/dmabuf-heaps/Makefile b/tools/testing/selftests/dmabuf-heaps/Makefile
+diff --git a/drivers/dma-buf/Kconfig b/drivers/dma-buf/Kconfig
+index bffa58fc3e6e..0613bb7770f5 100644
+--- a/drivers/dma-buf/Kconfig
++++ b/drivers/dma-buf/Kconfig
+@@ -53,4 +53,6 @@ menuconfig DMABUF_HEAPS
+ 	  allows userspace to allocate dma-bufs that can be shared
+ 	  between drivers.
+ 
++source "drivers/dma-buf/heaps/Kconfig"
++
+ endmenu
+diff --git a/drivers/dma-buf/heaps/Kconfig b/drivers/dma-buf/heaps/Kconfig
 new file mode 100644
-index 000000000000..607c2acd2082
+index 000000000000..205052744169
 --- /dev/null
-+++ b/tools/testing/selftests/dmabuf-heaps/Makefile
++++ b/drivers/dma-buf/heaps/Kconfig
 @@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0
-+CFLAGS += -static -O3 -Wl,-no-as-needed -Wall -I../../../../usr/include
-+
-+TEST_GEN_PROGS = dmabuf-heap
-+
-+include ../lib.mk
-diff --git a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
++config DMABUF_HEAPS_SYSTEM
++	bool "DMA-BUF System Heap"
++	depends on DMABUF_HEAPS
++	help
++	  Choose this option to enable the system dmabuf heap. The system heap
++	  is backed by pages from the buddy allocator. If in doubt, say Y.
+diff --git a/drivers/dma-buf/heaps/Makefile b/drivers/dma-buf/heaps/Makefile
+index de49898112db..d1808eca2581 100644
+--- a/drivers/dma-buf/heaps/Makefile
++++ b/drivers/dma-buf/heaps/Makefile
+@@ -1,2 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-y					+= heap-helpers.o
++obj-$(CONFIG_DMABUF_HEAPS_SYSTEM)	+= system_heap.o
+diff --git a/drivers/dma-buf/heaps/system_heap.c b/drivers/dma-buf/heaps/system_heap.c
 new file mode 100644
-index 000000000000..3e53ad331bdc
+index 000000000000..1aa01e98c595
 --- /dev/null
-+++ b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-@@ -0,0 +1,396 @@
++++ b/drivers/dma-buf/heaps/system_heap.c
+@@ -0,0 +1,123 @@
 +// SPDX-License-Identifier: GPL-2.0
-+
-+#include <dirent.h>
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <stdint.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <sys/ioctl.h>
-+#include <sys/mman.h>
-+#include <sys/types.h>
++/*
++ * DMABUF System heap exporter
++ *
++ * Copyright (C) 2011 Google, Inc.
++ * Copyright (C) 2019 Linaro Ltd.
++ */
 +
 +#include <linux/dma-buf.h>
-+#include <drm/drm.h>
++#include <linux/dma-mapping.h>
++#include <linux/dma-heap.h>
++#include <linux/err.h>
++#include <linux/highmem.h>
++#include <linux/mm.h>
++#include <linux/module.h>
++#include <linux/scatterlist.h>
++#include <linux/slab.h>
++#include <linux/sched/signal.h>
++#include <asm/page.h>
 +
-+#include "../../../../include/uapi/linux/dma-heap.h"
++#include "heap-helpers.h"
 +
-+#define DEVPATH "/dev/dma_heap"
++struct dma_heap *sys_heap;
 +
-+static int check_vgem(int fd)
++static void system_heap_free(struct heap_helper_buffer *buffer)
 +{
-+	drm_version_t version = { 0 };
-+	char name[5];
-+	int ret;
++	pgoff_t pg;
 +
-+	version.name_len = 4;
-+	version.name = name;
-+
-+	ret = ioctl(fd, DRM_IOCTL_VERSION, &version);
-+	if (ret)
-+		return 0;
-+
-+	return !strcmp(name, "vgem");
++	for (pg = 0; pg < buffer->pagecount; pg++)
++		__free_page(buffer->pages[pg]);
++	kfree(buffer->pages);
++	kfree(buffer);
 +}
 +
-+static int open_vgem(void)
++static int system_heap_allocate(struct dma_heap *heap,
++				unsigned long len,
++				unsigned long fd_flags,
++				unsigned long heap_flags)
 +{
-+	int i, fd;
-+	const char *drmstr = "/dev/dri/card";
++	struct heap_helper_buffer *helper_buffer;
++	struct dma_buf *dmabuf;
++	int ret = -ENOMEM;
++	pgoff_t pg;
 +
-+	fd = -1;
-+	for (i = 0; i < 16; i++) {
-+		char name[80];
++	helper_buffer = kzalloc(sizeof(*helper_buffer), GFP_KERNEL);
++	if (!helper_buffer)
++		return -ENOMEM;
 +
-+		snprintf(name, 80, "%s%u", drmstr, i);
++	init_heap_helper_buffer(helper_buffer, system_heap_free);
++	helper_buffer->heap = heap;
++	helper_buffer->size = len;
 +
-+		fd = open(name, O_RDWR);
-+		if (fd < 0)
-+			continue;
-+
-+		if (!check_vgem(fd)) {
-+			close(fd);
-+			fd = -1;
-+			continue;
-+		} else {
-+			break;
-+		}
++	helper_buffer->pagecount = len / PAGE_SIZE;
++	helper_buffer->pages = kmalloc_array(helper_buffer->pagecount,
++					     sizeof(*helper_buffer->pages),
++					     GFP_KERNEL);
++	if (!helper_buffer->pages) {
++		ret = -ENOMEM;
++		goto err0;
 +	}
-+	return fd;
-+}
 +
-+static int import_vgem_fd(int vgem_fd, int dma_buf_fd, uint32_t *handle)
-+{
-+	struct drm_prime_handle import_handle = {
-+		.fd = dma_buf_fd,
-+		.flags = 0,
-+		.handle = 0,
-+	 };
-+	int ret;
++	for (pg = 0; pg < helper_buffer->pagecount; pg++) {
++		/*
++		 * Avoid trying to allocate memory if the process
++		 * has been killed by by SIGKILL
++		 */
++		if (fatal_signal_pending(current))
++			goto err1;
 +
-+	ret = ioctl(vgem_fd, DRM_IOCTL_PRIME_FD_TO_HANDLE, &import_handle);
-+	if (ret == 0)
-+		*handle = import_handle.handle;
-+	return ret;
-+}
++		helper_buffer->pages[pg] = alloc_page(GFP_KERNEL | __GFP_ZERO);
++		if (!helper_buffer->pages[pg])
++			goto err1;
++	}
 +
-+static void close_handle(int vgem_fd, uint32_t handle)
-+{
-+	struct drm_gem_close close = {
-+		.handle = handle,
-+	};
++	/* create the dmabuf */
++	dmabuf = heap_helper_export_dmabuf(helper_buffer, fd_flags);
++	if (IS_ERR(dmabuf)) {
++		ret = PTR_ERR(dmabuf);
++		goto err1;
++	}
 +
-+	ioctl(vgem_fd, DRM_IOCTL_GEM_CLOSE, &close);
-+}
++	helper_buffer->dmabuf = dmabuf;
 +
-+static int dmabuf_heap_open(char *name)
-+{
-+	int ret, fd;
-+	char buf[256];
-+
-+	ret = snprintf(buf, 256, "%s/%s", DEVPATH, name);
++	ret = dma_buf_fd(dmabuf, fd_flags);
 +	if (ret < 0) {
-+		printf("snprintf failed!\n");
++		dma_buf_put(dmabuf);
++		/* just return, as put will call release and that will free */
 +		return ret;
 +	}
 +
-+	fd = open(buf, O_RDWR);
-+	if (fd < 0)
-+		printf("open %s failed!\n", buf);
-+	return fd;
-+}
-+
-+static int dmabuf_heap_alloc_fdflags(int fd, size_t len, unsigned int fd_flags,
-+				     unsigned int heap_flags, int *dmabuf_fd)
-+{
-+	struct dma_heap_allocation_data data = {
-+		.len = len,
-+		.fd = 0,
-+		.fd_flags = fd_flags,
-+		.heap_flags = heap_flags,
-+	};
-+	int ret;
-+
-+	if (!dmabuf_fd)
-+		return -EINVAL;
-+
-+	ret = ioctl(fd, DMA_HEAP_IOC_ALLOC, &data);
-+	if (ret < 0)
-+		return ret;
-+	*dmabuf_fd = (int)data.fd;
 +	return ret;
-+}
 +
-+static int dmabuf_heap_alloc(int fd, size_t len, unsigned int flags,
-+			     int *dmabuf_fd)
-+{
-+	return dmabuf_heap_alloc_fdflags(fd, len, O_RDWR | O_CLOEXEC, flags,
-+					 dmabuf_fd);
-+}
-+
-+static void dmabuf_sync(int fd, int start_stop)
-+{
-+	struct dma_buf_sync sync = {
-+		.flags = start_stop | DMA_BUF_SYNC_RW,
-+	};
-+	int ret;
-+
-+	ret = ioctl(fd, DMA_BUF_IOCTL_SYNC, &sync);
-+	if (ret)
-+		printf("sync failed %d\n", errno);
-+}
-+
-+#define ONE_MEG (1024 * 1024)
-+
-+static int test_alloc_and_import(char *heap_name)
-+{
-+	int heap_fd = -1, dmabuf_fd = -1, importer_fd = -1;
-+	uint32_t handle = 0;
-+	void *p = NULL;
-+	int ret;
-+
-+	printf("Testing heap: %s\n", heap_name);
-+
-+	heap_fd = dmabuf_heap_open(heap_name);
-+	if (heap_fd < 0)
-+		return -1;
-+
-+	printf("Allocating 1 MEG\n");
-+	ret = dmabuf_heap_alloc(heap_fd, ONE_MEG, 0, &dmabuf_fd);
-+	if (ret) {
-+		printf("Allocation Failed!\n");
-+		ret = -1;
-+		goto out;
-+	}
-+	/* mmap and write a simple pattern */
-+	p = mmap(NULL,
-+		 ONE_MEG,
-+		 PROT_READ | PROT_WRITE,
-+		 MAP_SHARED,
-+		 dmabuf_fd,
-+		 0);
-+	if (p == MAP_FAILED) {
-+		printf("mmap() failed: %m\n");
-+		ret = -1;
-+		goto out;
-+	}
-+	printf("mmap passed\n");
-+
-+	dmabuf_sync(dmabuf_fd, DMA_BUF_SYNC_START);
-+	memset(p, 1, ONE_MEG / 2);
-+	memset((char *)p + ONE_MEG / 2, 0, ONE_MEG / 2);
-+	dmabuf_sync(dmabuf_fd, DMA_BUF_SYNC_END);
-+
-+	importer_fd = open_vgem();
-+	if (importer_fd < 0) {
-+		ret = importer_fd;
-+		printf("Failed to open vgem\n");
-+		goto out;
-+	}
-+
-+	ret = import_vgem_fd(importer_fd, dmabuf_fd, &handle);
-+	if (ret < 0) {
-+		printf("Failed to import buffer\n");
-+		goto out;
-+	}
-+	printf("import passed\n");
-+
-+	dmabuf_sync(dmabuf_fd, DMA_BUF_SYNC_START);
-+	memset(p, 0xff, ONE_MEG);
-+	dmabuf_sync(dmabuf_fd, DMA_BUF_SYNC_END);
-+	printf("syncs passed\n");
-+
-+	close_handle(importer_fd, handle);
-+	ret = 0;
-+
-+out:
-+	if (p)
-+		munmap(p, ONE_MEG);
-+	if (importer_fd >= 0)
-+		close(importer_fd);
-+	if (dmabuf_fd >= 0)
-+		close(dmabuf_fd);
-+	if (heap_fd >= 0)
-+		close(heap_fd);
++err1:
++	while (pg > 0)
++		__free_page(helper_buffer->pages[--pg]);
++	kfree(helper_buffer->pages);
++err0:
++	kfree(helper_buffer);
 +
 +	return ret;
 +}
 +
-+/* Test the ioctl version compatibility w/ a smaller structure then expected */
-+static int dmabuf_heap_alloc_older(int fd, size_t len, unsigned int flags,
-+				   int *dmabuf_fd)
++static const struct dma_heap_ops system_heap_ops = {
++	.allocate = system_heap_allocate,
++};
++
++static int system_heap_create(void)
 +{
-+	int ret;
-+	unsigned int older_alloc_ioctl;
-+	struct dma_heap_allocation_data_smaller {
-+		__u64 len;
-+		__u32 fd;
-+		__u32 fd_flags;
-+	} data = {
-+		.len = len,
-+		.fd = 0,
-+		.fd_flags = O_RDWR | O_CLOEXEC,
-+	};
++	struct dma_heap_export_info exp_info;
++	int ret = 0;
 +
-+	older_alloc_ioctl = _IOWR(DMA_HEAP_IOC_MAGIC, 0x0,
-+				  struct dma_heap_allocation_data_smaller);
-+	if (!dmabuf_fd)
-+		return -EINVAL;
++	exp_info.name = "system_heap";
++	exp_info.ops = &system_heap_ops;
++	exp_info.priv = NULL;
 +
-+	ret = ioctl(fd, older_alloc_ioctl, &data);
-+	if (ret < 0)
-+		return ret;
-+	*dmabuf_fd = (int)data.fd;
-+	return ret;
-+}
-+
-+/* Test the ioctl version compatibility w/ a larger structure then expected */
-+static int dmabuf_heap_alloc_newer(int fd, size_t len, unsigned int flags,
-+				   int *dmabuf_fd)
-+{
-+	int ret;
-+	unsigned int newer_alloc_ioctl;
-+	struct dma_heap_allocation_data_bigger {
-+		__u64 len;
-+		__u32 fd;
-+		__u32 fd_flags;
-+		__u64 heap_flags;
-+		__u64 garbage1;
-+		__u64 garbage2;
-+		__u64 garbage3;
-+	} data = {
-+		.len = len,
-+		.fd = 0,
-+		.fd_flags = O_RDWR | O_CLOEXEC,
-+		.heap_flags = flags,
-+		.garbage1 = 0xffffffff,
-+		.garbage2 = 0x88888888,
-+		.garbage3 = 0x11111111,
-+	};
-+
-+	newer_alloc_ioctl = _IOWR(DMA_HEAP_IOC_MAGIC, 0x0,
-+				  struct dma_heap_allocation_data_bigger);
-+	if (!dmabuf_fd)
-+		return -EINVAL;
-+
-+	ret = ioctl(fd, newer_alloc_ioctl, &data);
-+	if (ret < 0)
-+		return ret;
-+
-+	*dmabuf_fd = (int)data.fd;
-+	return ret;
-+}
-+
-+static int test_alloc_compat(char *heap_name)
-+{
-+	int heap_fd = -1, dmabuf_fd = -1;
-+	int ret;
-+
-+	heap_fd = dmabuf_heap_open(heap_name);
-+	if (heap_fd < 0)
-+		return -1;
-+
-+	printf("Testing (theoretical)older alloc compat\n");
-+	ret = dmabuf_heap_alloc_older(heap_fd, ONE_MEG, 0, &dmabuf_fd);
-+	if (ret) {
-+		printf("Older compat allocation failed!\n");
-+		ret = -1;
-+		goto out;
-+	}
-+	close(dmabuf_fd);
-+
-+	printf("Testing (theoretical)newer alloc compat\n");
-+	ret = dmabuf_heap_alloc_newer(heap_fd, ONE_MEG, 0, &dmabuf_fd);
-+	if (ret) {
-+		printf("Newer compat allocation failed!\n");
-+		ret = -1;
-+		goto out;
-+	}
-+	printf("Ioctl compatibility tests passed\n");
-+out:
-+	if (dmabuf_fd >= 0)
-+		close(dmabuf_fd);
-+	if (heap_fd >= 0)
-+		close(heap_fd);
++	sys_heap = dma_heap_add(&exp_info);
++	if (IS_ERR(sys_heap))
++		ret = PTR_ERR(sys_heap);
 +
 +	return ret;
 +}
-+
-+static int test_alloc_errors(char *heap_name)
-+{
-+	int heap_fd = -1, dmabuf_fd = -1;
-+	int ret;
-+
-+	heap_fd = dmabuf_heap_open(heap_name);
-+	if (heap_fd < 0)
-+		return -1;
-+
-+	printf("Testing expected error cases\n");
-+	ret = dmabuf_heap_alloc(0, ONE_MEG, 0x111111, &dmabuf_fd);
-+	if (!ret) {
-+		printf("Did not see expected error (invalid fd)!\n");
-+		ret = -1;
-+		goto out;
-+	}
-+
-+	ret = dmabuf_heap_alloc(heap_fd, ONE_MEG, 0x111111, &dmabuf_fd);
-+	if (!ret) {
-+		printf("Did not see expected error (invalid heap flags)!\n");
-+		ret = -1;
-+		goto out;
-+	}
-+
-+	ret = dmabuf_heap_alloc_fdflags(heap_fd, ONE_MEG,
-+					~(O_RDWR | O_CLOEXEC), 0, &dmabuf_fd);
-+	if (!ret) {
-+		printf("Did not see expected error (invalid fd flags)!\n");
-+		ret = -1;
-+		goto out;
-+	}
-+
-+	printf("Expected error checking passed\n");
-+out:
-+	if (dmabuf_fd >= 0)
-+		close(dmabuf_fd);
-+	if (heap_fd >= 0)
-+		close(heap_fd);
-+
-+	return ret;
-+}
-+
-+int main(void)
-+{
-+	DIR *d;
-+	struct dirent *dir;
-+	int ret = -1;
-+
-+	d = opendir(DEVPATH);
-+	if (!d) {
-+		printf("No %s directory?\n", DEVPATH);
-+		return -1;
-+	}
-+
-+	while ((dir = readdir(d)) != NULL) {
-+		if (!strncmp(dir->d_name, ".", 2))
-+			continue;
-+		if (!strncmp(dir->d_name, "..", 3))
-+			continue;
-+
-+		ret = test_alloc_and_import(dir->d_name);
-+		if (ret)
-+			break;
-+
-+		ret = test_alloc_compat(dir->d_name);
-+		if (ret)
-+			break;
-+
-+		ret = test_alloc_errors(dir->d_name);
-+		if (ret)
-+			break;
-+	}
-+	closedir(d);
-+
-+	return ret;
-+}
++module_init(system_heap_create);
++MODULE_LICENSE("GPL v2");
 -- 
 2.17.1
 
