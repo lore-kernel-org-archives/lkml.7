@@ -2,132 +2,152 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2043C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF35EC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92360218AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8998C2186D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:44:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cByUOsmP"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="nX8hO1n9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbfKRQoF (ORCPT
+        id S1726725AbfKRQoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 11:44:05 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33118 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbfKRQoF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 11:44:05 -0500
-Received: by mail-pg1-f193.google.com with SMTP id h27so9912475pgn.0;
-        Mon, 18 Nov 2019 08:44:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
-         :references:in-reply-to:accept-language:content-language
-         :content-transfer-encoding:mime-version;
-        bh=sPTnvw1WbYRhIrGpavVrRzdbbEWRjFd3Ff2Gm/eZo5k=;
-        b=cByUOsmP1SEnE1mLONIddYTUSV9TXSCY5W8BnLVx1RRSMMXThPuMpaZ+cDoWUSM4MC
-         ldnZBJMQNH+jDAdF69rqMCGcnOZLSfjbZ1X02nzJ0HWDa1ZGzsDjoB//V07+zVLfjh14
-         XblrV8MCwcrkd3Oeq9gpG/rhiycO2Mk8OJH+hU5Ph5g+RZDoK+af6NVG9EbOEZI073r6
-         IZKsYyRH3RgKgsfo+RmCWxiwsVi/5+WBnzdiOPERTvzjra9myRK3y1t9puV5Ews4vGsx
-         Y+so2+7IIehQEUKVDLYM4PuPJ3g/W3REIROu5TsFm+yx5xBdP3E0NzCDsUaQOF8BeTbU
-         irdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
-         :date:message-id:references:in-reply-to:accept-language
-         :content-language:content-transfer-encoding:mime-version;
-        bh=sPTnvw1WbYRhIrGpavVrRzdbbEWRjFd3Ff2Gm/eZo5k=;
-        b=jUaXuulbK8iGuwOlNpPtxJI7w8yFsvsXc4FijEZOhfUMqh5UaetE1OP2rsPi8WiYup
-         3rYHT3ZqLKPXAOPLv+8+EDzjGaX32/AzZt2ZBaULMunj0Ze6Bq1wNObkQlEdrO4TaMUk
-         cOu8u2HeTiHQiGz24ynbYINlT17S9pleW0/LB46qtIPJdgMdkgYaq6QR8w92K8iGsr7m
-         bzeB/aa495StDzztNXFRFfgOF8EJv0u3qGiAt36Fzd8olhL5K5tWubv655Gc8RX8LiOR
-         I7JzoyGBczoy4EyeBuwsheGrUnDv/r3hJR+jXMJQ2uBl0pCdSpK/98/XVJZL139uP+N3
-         oP6Q==
-X-Gm-Message-State: APjAAAX3L/se+gkda3U0IIJjVeta8YNs67r/78JbH5rxSja3s8r/hozM
-        vqNepguigFMa1RQgYRNVhgsX2hlw
-X-Google-Smtp-Source: APXvYqwPKNXjpmt3ah6ZXo6KaiIuLQRgHioiTTibjNm2Y8kmvyAJ+Zu1JQJfvH7mVMhI5xw4n7ta9g==
-X-Received: by 2002:aa7:9639:: with SMTP id r25mr205028pfg.17.1574095444542;
-        Mon, 18 Nov 2019 08:44:04 -0800 (PST)
-Received: from SL2P216MB0105.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:22::5])
-        by smtp.gmail.com with ESMTPSA id s66sm24927564pfb.38.2019.11.18.08.44.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Nov 2019 08:44:03 -0800 (PST)
-From:   Jingoo Han <jingoohan1@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-CC:     "Jisheng.Zhang@synaptics.com" <Jisheng.Zhang@synaptics.com>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>,
-        Han Jingoo <jingoohan1@gmail.com>
-Subject: Re: [PATCH 0/4] Add support to defer core initialization
-Thread-Topic: [PATCH 0/4] Add support to defer core initialization
-Thread-Index: AXN2NDEwt0jI2UK4iL+vyiA0RDB5BTBhZDUywszrN0c=
-X-MS-Exchange-MessageSentRepresentingType: 1
-Date:   Mon, 18 Nov 2019 16:43:58 +0000
-Message-ID: <SL2P216MB0105D49E39194C827D60B032AA4D0@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
-References: <20191113090851.26345-1-vidyas@nvidia.com>
- <108c9f42-a595-515e-5ed6-e745a55efe70@nvidia.com>
-In-Reply-To: <108c9f42-a595-515e-5ed6-e745a55efe70@nvidia.com>
-Accept-Language: ko-KR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-Exchange-Organization-SCL: -1
-X-MS-TNEF-Correlator: 
-X-MS-Exchange-Organization-RecordReviewCfmType: 0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 18 Nov 2019 11:44:14 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:52024 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726068AbfKRQoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 11:44:14 -0500
+Received: from zn.tnic (p200300EC2F27B5003D22FC05E431AFF8.dip0.t-ipconnect.de [IPv6:2003:ec:2f27:b500:3d22:fc05:e431:aff8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 30B521EC0BF8;
+        Mon, 18 Nov 2019 17:44:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574095452;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=/12TPIe9NGWwR5n7WZI8L7PfOwYBBYIH7pXbgDhu9SQ=;
+        b=nX8hO1n9TiQJmQk3YN4pu+9Q7ROF6hMYzRiK5UfaGZVbwxX5Kh/dW2z6ysTEvKlH/ty38Y
+        RH1EJoXTbxdcZ/b/ms8o+UWiRIg89ZlwW+ZNI8jl5tT0wg6QHPog7knBtufZi2dyMy9gBu
+        J80PVYYnZ6bujloAMn/I7SLI7xrpfJM=
+Date:   Mon, 18 Nov 2019 17:44:07 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Dmitry Vyukov <dvyukov@google.com>, Jann Horn <jannh@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v2 2/3] x86/traps: Print non-canonical address on #GP
+Message-ID: <20191118164407.GH6363@zn.tnic>
+References: <20191115191728.87338-1-jannh@google.com>
+ <20191115191728.87338-2-jannh@google.com>
+ <20191118142144.GC6363@zn.tnic>
+ <CACT4Y+bCOr=du1QEg8TtiZ-X6U+8ZPR4N07rJOeSCsd5h+zO3w@mail.gmail.com>
+ <CAG48ez1AWW7FkvU31ahy=0ZiaAreSMz=FFA0u8-XkXT9hNdWKA@mail.gmail.com>
+ <CACT4Y+bfF86YY_zEGWO1sK0NwuYgr8Cx0wFewRDq0WL_GBgO0Q@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+bfF86YY_zEGWO1sK0NwuYgr8Cx0wFewRDq0WL_GBgO0Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCu+7v09uIDExLzE4LzE5LCAxOjU1IEFNLCBWaWR5YSBTYWdhciB3cm90ZToNCj4gDQo+IE9u
-IDExLzEzLzIwMTkgMjozOCBQTSwgVmlkeWEgU2FnYXIgd3JvdGU6DQo+ID4gRVBDL0Rlc2lnbldh
-cmUgY29yZSBlbmRwb2ludCBzdWJzeXN0ZW1zIGFzc3VtZSB0aGF0IHRoZSBjb3JlIHJlZ2lzdGVy
-cyBhcmUNCj4gPiBhdmFpbGFibGUgYWx3YXlzIGZvciBTVyB0byBpbml0aWFsaXplLiBCdXQsIHRo
-YXQgbWF5IG5vdCBiZSB0aGUgY2FzZSBhbHdheXMuDQo+ID4gRm9yIGV4YW1wbGUsIFRlZ3JhMTk0
-IGhhcmR3YXJlIGhhcyB0aGUgY29yZSBydW5uaW5nIG9uIGEgY2xvY2sgdGhhdCBpcyBkZXJpdmVk
-DQo+ID4gZnJvbSByZWZlcmVuY2UgY2xvY2sgdGhhdCBpcyBjb21pbmcgaW50byB0aGUgZW5kcG9p
-bnQgc3lzdGVtIGZyb20gaG9zdC4NCj4gPiBIZW5jZSBjb3JlIGlzIG1hZGUgYXZhaWxhYmxlIGFz
-eW5jaHJvbm91c2x5IGJhc2VkIG9uIHdoZW4gaG9zdCBzeXN0ZW0gaXMgZ29pbmcNCj4gPiBmb3Ig
-ZW51bWVyYXRpb24gb2YgZGV2aWNlcy4gVG8gYWNjb21tb2RhdGUgdGhpcyBraW5kIG9mIGhhcmR3
-YXJlcywgc3VwcG9ydCBpcw0KPiA+IHJlcXVpcmVkIHRvIGRlZmVyIHRoZSBjb3JlIGluaXRpYWxp
-emF0aW9uIHVudGlsIHRoZSByZXNwZWN0aXZlIHBsYXRmb3JtIGRyaXZlcg0KPiA+IGluZm9ybXMg
-dGhlIEVQQy9EV0MgZW5kcG9pbnQgc3ViLXN5c3RlbXMgdGhhdCB0aGUgY29yZSBpcyBpbmRlZWQg
-YXZhaWxhYmxlIGZvcg0KPiA+IGluaXRpYWl6YXRpb24uIFRoaXMgcGF0Y2ggc2VyaWVzIGlzIGF0
-dGVtcHRpbmcgdG8gYWRkIHByZWNpc2VseSB0aGF0Lg0KPiA+IFRoaXMgc2VyaWVzIGlzIGJhc2Vk
-IG9uIEtpc2hvbidzIHBhdGNoIHRoYXQgYWRkcyBub3RpZmljYXRpb24gbWVjaGFuaXNtDQo+ID4g
-c3VwcG9ydCBmcm9tIEVQQyB0byBFUEYgQCBodHRwOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0
-Y2gvMTEwOTg4NC8NCj4gPiANCj4gPiBWaWR5YSBTYWdhciAoNCk6DQo+ID4gICAgUENJOiBkd2M6
-IEFkZCBuZXcgZmVhdHVyZSB0byBza2lwIGNvcmUgaW5pdGlhbGl6YXRpb24NCj4gPiAgICBQQ0k6
-IGVuZHBvaW50OiBBZGQgbm90aWZpY2F0aW9uIGZvciBjb3JlIGluaXQgY29tcGxldGlvbg0KPiA+
-ICAgIFBDSTogZHdjOiBBZGQgQVBJIHRvIG5vdGlmeSBjb3JlIGluaXRpYWxpemF0aW9uIGNvbXBs
-ZXRpb24NCj4gPiAgICBQQ0k6IHBjaS1lcGYtdGVzdDogQWRkIHN1cHBvcnQgdG8gZGVmZXIgY29y
-ZSBpbml0aWFsaXphdGlvbg0KPiA+IA0KPiA+ICAgLi4uL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ll
-LWRlc2lnbndhcmUtZXAuYyAgIHwgIDc5ICsrKysrKystLS0tLQ0KPiA+ICAgZHJpdmVycy9wY2kv
-Y29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLmggIHwgIDExICsrDQo+ID4gICBkcml2ZXJz
-L3BjaS9lbmRwb2ludC9mdW5jdGlvbnMvcGNpLWVwZi10ZXN0LmMgfCAxMTQgKysrKysrKysrKysr
-LS0tLS0tDQo+ID4gICBkcml2ZXJzL3BjaS9lbmRwb2ludC9wY2ktZXBjLWNvcmUuYyAgICAgICAg
-ICAgfCAgMTkgKystDQo+ID4gICBpbmNsdWRlL2xpbnV4L3BjaS1lcGMuaCAgICAgICAgICAgICAg
-ICAgICAgICAgfCAgIDIgKw0KPiA+ICAgaW5jbHVkZS9saW51eC9wY2ktZXBmLmggICAgICAgICAg
-ICAgICAgICAgICAgIHwgICA1ICsNCj4gPiAgIDYgZmlsZXMgY2hhbmdlZCwgMTY0IGluc2VydGlv
-bnMoKyksIDY2IGRlbGV0aW9ucygtKQ0KPiA+IA0KPg0KPiBIaSBLaXNob24gLyBHdXN0YXZvIC8g
-SmluZ29vLA0KPiBDb3VsZCB5b3UgcGxlYXNlIHRha2UgYSBsb29rIGF0IHRoaXMgcGF0Y2ggc2Vy
-aWVzPw0KDQpZb3UgbmVlZCBhIEFjayBmcm9tIEtpc2hvbiwgYmVjYXVzZSBoZSBtYWRlIEVQIGNv
-ZGUuDQoNCg0KPiAtIFZpZHlhIFNhZ2FyDQo=
+On Mon, Nov 18, 2019 at 05:29:42PM +0100, Dmitry Vyukov wrote:
+> > And of not having a standard way to signal "this line starts something
+> > that should be reported as a bug"? Maybe as a longer-term idea, it'd
+> > help to have some sort of extra prefix byte that the kernel can print
+> > to say "here comes a bug report, first line should be the subject", or
+> > something like that, similar to how we have loglevels...
+> 
+> This would be great.
+> Also a way to denote crash end.
+> However we have lots of special logic for subjects, not sure if kernel
+> could provide good subject:
+> https://github.com/google/syzkaller/blob/1daed50ac33511e1a107228a9c3b80e5c4aebb5c/pkg/report/linux.go#L537-L1588
+> Probably it could, but it won't be completely trivial. E.g. if there
+> is a stall inside of a timer function, it should give the name of the
+> actual timer callback as identity ("stall in timer_subsystem_foo"). Or
+> for syscalls we use more disambiguation b/c "in sys_ioclt" is not much
+> different than saying "there is a bug in kernel" :)
+
+While external tools are fine and cool, they can't really block kernel
+development and printk strings format is not an ABI. And yeah, we have
+this discussion each time someone proposes changes to those "magic"
+strings but I guess it is about time to fix this in a way that any
+future changes don't break tools.
+
+And so I like the idea of marking *only* the first splat with some small
+prefix char as that first splat is the special and very important one.
+I.e., the one where die_counter is 0.
+
+So I could very well imagine something like:
+
+...
+[    2.523708] Write protecting the kernel read-only data: 16384k
+[    2.524729] Freeing unused kernel image (text/rodata gap) memory: 2040K
+[    2.525594] Freeing unused kernel image (rodata/data gap) memory: 368K
+[    2.541414] x86/mm: Checked W+X mappings: passed, no W+X pages found.
+
+<--- important first splat starts here:
+
+[    2.542218] [*] general protection fault while derefing a non-canonical address 0xdfff000000000001: 0000 [#1] PREEMPT SMP
+[    2.543343] [*] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc8+ #8
+[    2.544138] [*] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.1-1 04/01/2014
+[    2.545120] [*] RIP: 0010:kernel_init+0x58/0x107
+[    2.546055] [*] Code: 48 c7 c7 e0 5c e7 81 e8 eb d2 90 ff c7 05 77 d6 95 00 02 00 00 00 e8 4e 1d a2 ff e8 69 b7 91 ff 48 b8 01 00 00 00 00 00 ff df <ff> e0 48 8b 3d fe 54 d7 00 48 85 ff 74 22 e8 76 93 84 ff 85 c0 89
+[    2.550242] [*] RSP: 0018:ffffc90000013f50 EFLAGS: 00010246
+[    2.551691] [*] RAX: dfff000000000001 RBX: ffffffff817b7ac9 RCX: 0000000000000040
+[    2.553435] [*] RDX: 0000000000000030 RSI: ffff88807da2f170 RDI: 000000000002f170
+[    2.555169] [*] RBP: 0000000000000000 R08: 00000000000001a6 R09: 00000000ad55ad55
+[    2.556393] [*] R10: 0000000000000000 R11: 0000000000000002 R12: 0000000000000000
+[    2.557268] [*] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+[    2.558417] [*] FS:  0000000000000000(0000) GS:ffff88807da00000(0000) knlGS:0000000000000000
+[    2.559370] [*] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    2.560138] [*] CR2: 0000000000000000 CR3: 0000000002009000 CR4: 00000000003406f0
+[    2.561013] [*] Call Trace:
+[    2.561506] [*]  ret_from_fork+0x22/0x40
+[    2.562080] [*] Modules linked in:
+[    2.583706] [*] ---[ end trace 8ceb5a62d3ebbfa6 ]---
+[    2.584384] [*] RIP: 0010:kernel_init+0x58/0x107
+[    2.584999] [*] Code: 48 c7 c7 e0 5c e7 81 e8 eb d2 90 ff c7 05 77 d6 95 00 02 00 00 00 e8 4e 1d a2 ff e8 69 b7 91 ff 48 b8 01 00 00 00 00 00 ff df <ff> e0 48 8b 3d fe 54 d7 00 48 85 ff 74 22 e8 76 93 84 ff 85 c0 89
+[    2.591746] [*] RSP: 0018:ffffc90000013f50 EFLAGS: 00010246
+[    2.593175] [*] RAX: dfff000000000001 RBX: ffffffff817b7ac9 RCX: 0000000000000040
+[    2.594892] [*] RDX: 0000000000000030 RSI: ffff88807da2f170 RDI: 000000000002f170
+[    2.599706] [*] RBP: 0000000000000000 R08: 00000000000001a6 R09: 00000000ad55ad55
+[    2.600585] [*] R10: 0000000000000000 R11: 0000000000000002 R12: 0000000000000000
+[    2.601433] [*] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+[    2.602283] [*] FS:  0000000000000000(0000) GS:ffff88807da00000(0000) knlGS:0000000000000000
+[    2.603207] [*] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    2.607706] [*] CR2: 0000000000000000 CR3: 0000000002009000 CR4: 00000000003406f0
+[    2.608565] [*] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+[    2.609600] [*] Kernel Offset: disabled
+[    2.610168] [*] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
+
+<--- and ends here.
+
+to denote that first splat. And the '*' thing is just an example - it
+can be any char - whatever's easier to grep for.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
