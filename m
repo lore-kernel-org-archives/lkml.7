@@ -2,68 +2,71 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F15E2C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B98C9C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA7B820700
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 927E620740
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:21:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fredlawl-com.20150623.gappssmtp.com header.i=@fredlawl-com.20150623.gappssmtp.com header.b="ecbZ4/TR"
+	dkim=pass (2048-bit key) header.d=fredlawl-com.20150623.gappssmtp.com header.i=@fredlawl-com.20150623.gappssmtp.com header.b="ChA355kC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbfKRAVF (ORCPT
+        id S1726525AbfKRAVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 19:21:05 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39568 "EHLO
+        Sun, 17 Nov 2019 19:21:08 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44656 "EHLO
         mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfKRAVF (ORCPT
+        with ESMTP id S1726284AbfKRAVG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 19:21:05 -0500
-Received: by mail-ot1-f68.google.com with SMTP id w24so12513222otk.6
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 16:21:04 -0800 (PST)
+        Sun, 17 Nov 2019 19:21:06 -0500
+Received: by mail-ot1-f68.google.com with SMTP id c19so12968002otr.11
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 16:21:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fredlawl-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LKZrDtVIpLnMit2BarIDGe/EvWMjXIglUl2svaa0fMg=;
-        b=ecbZ4/TRy2hUTyMYqzoL9hGVU3gt3kFQyf7Vu8toJq6PuKdr6h/s2Xy59VlLT/pXjz
-         /6gZhPcxCcprj7d0piA2C7X870j5+hREdVzyhNoaBWbhx3dIMQnCbP2XEo0E+9hTJbki
-         j4ZeRwanzBqAAI1yteXPWJody9n5Un4DmNqXatr1WKe9cPrWcIJvqozt4QJabGHXKY6q
-         3bbXsCnLMFUQCfZVWtM10iedHLiknSHPKgZziGPbSChn1FG3Nukq5V9Px1p8eNxHA6F0
-         bJ3j364MWNJqHnHvhOjMJYMsBhKVDv5MHDzpEeyKn2BTPch7cj+jqauOGGY6J99Fkb0V
-         dLUw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=GbZqwoJJVr0J94wPHgvVootKI8CLiTOgXk788wPqdIo=;
+        b=ChA355kCEvy9kl1kcHhtWO1zZ9ZX+fpBIL2yVyOretNk1sfdTC2t9K/H6DdOaGB+s6
+         iMJg1z4bePap3GqZpujJqXwkr1ll/ExGZUnr9o1XSg6ieQ1FdlwyVUGJms8tUWlcY35e
+         kBsdPPQRiUlUpE3qlIkapnMeTqwhDNrsQgmlR386wJVQb7L5inZ7RFtIaTs4UQJdv2Oa
+         dB7uhHVHnhKXNNkuXkTJ5fWuCsI9WqijOKhrml9/v/9ntHU23u/vLQ8zBzQ56lRu+tgQ
+         wto2gvlsChHdMcHeIHWErLYwGs1K9PZg9JFBklzB9BwDTMB2njgeSRe4C/SByL+j4D9a
+         MLmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LKZrDtVIpLnMit2BarIDGe/EvWMjXIglUl2svaa0fMg=;
-        b=iTe22JYKPX20lMWZBnhlRQ59A14lks2OnRyGoJAm7saLLtinITqc924XzGNrjxhh6Y
-         zb5BWB8Yx647370XpWhv0ugcBr3B29kI4+yAw30LuN7sTtpzpbVfTyknc8j1wuH7QLRb
-         8QH0egBCUSfGcuf6JajW64xFWcdKUPWmxq6aQTb494RJr1LLJiJxU4qrB4iodQ/Sxq9M
-         q8nPJqtwyhd6owyq/TLVvoXgMGpMYHxehxnINwtWo0ll7/D3AQZLBpbQtINwSWyjU1QK
-         SHkt0ncj4ypL/92uhAKiDnS1TqNUb9wbAzU6H4HCtdBYlgqJxc4jIYb8pQso52JpUuB8
-         NyVA==
-X-Gm-Message-State: APjAAAXxUSppkuixsCcOS5fMoL4swOT1maAmdgJmKgV5RVqAsw+vLBvS
-        myuiakO5Vw1xEz61v4tOIOGvZg==
-X-Google-Smtp-Source: APXvYqxbMvNwtxYCgpWn0NDF+Vux6CK9suZWIN8wxrT7oMCsq2kSUhzh+QrnrPIC2ga6ATO37xh6sA==
-X-Received: by 2002:a05:6830:2257:: with SMTP id t23mr21240719otd.129.1574036464138;
-        Sun, 17 Nov 2019 16:21:04 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=GbZqwoJJVr0J94wPHgvVootKI8CLiTOgXk788wPqdIo=;
+        b=UkbiwufQP+aKHB/YmrCWqoqIYT7YRKtCnugFsCExLk7wzbU1fR0WHiHnrdFmrVT8zy
+         oMtEGGod+z98ZH8PjK1H8Z2+wC6Z4OEpjSKz9Ob238Y2meNUxmDoBvpUCyI8X2x/OFfS
+         f0Xo1ix1N5qkom/D/VzIArMGlNVrWh3z1EwngUWJBmwdpuNL9ja58CvPhskZugHpxYMg
+         mqskxj9WtcVjr6cez8Cw+ibz1DYNeCutxZCM/wXc+Zh5V/0ZnT/V1/LVyeGptJI6osWc
+         nCG76CuWml1ZTxms85WQdov/XwwgorBN6v7TNPBGBfTV1kyAV3mR8gSnPhmYjeE9ZbDq
+         Ub6Q==
+X-Gm-Message-State: APjAAAUpxluxIk93pmet/Zovl7s+yOy0Xfb6Hdar2AbNufIfUGwXYcUV
+        1SYMZhI9VkPngxWQq4emxcMHtQ==
+X-Google-Smtp-Source: APXvYqxZuMW9sovrGVzyCi2WLjA0B35LlvQyFg5z3vXpEGiLeRhQajZklEwi52XVu7bu/bQ0UnPMSw==
+X-Received: by 2002:a05:6830:4c5:: with SMTP id s5mr20648889otd.140.1574036465676;
+        Sun, 17 Nov 2019 16:21:05 -0800 (PST)
 Received: from com.attlocal.net ([2600:1700:4870:71e0::10])
-        by smtp.gmail.com with ESMTPSA id 65sm5532194oie.50.2019.11.17.16.21.02
+        by smtp.gmail.com with ESMTPSA id 65sm5532194oie.50.2019.11.17.16.21.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Nov 2019 16:21:03 -0800 (PST)
+        Sun, 17 Nov 2019 16:21:04 -0800 (PST)
 From:   Frederick Lawler <fred@fredlawl.com>
 To:     axboe@kernel.dk
 Cc:     Frederick Lawler <fred@fredlawl.com>, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org, bhelgaas@google.com,
         bvanassche@acm.org
-Subject: [PATCH v2 0/4] skd/mtip32xx: Prefer pcie_capability_read_word()
-Date:   Sun, 17 Nov 2019 18:20:53 -0600
-Message-Id: <20191118002057.9596-1-fred@fredlawl.com>
+Subject: [PATCH v2 1/4] skd: Prefer pcie_capability_read_word()
+Date:   Sun, 17 Nov 2019 18:20:54 -0600
+Message-Id: <20191118002057.9596-2-fred@fredlawl.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191118002057.9596-1-fred@fredlawl.com>
+References: <20191118002057.9596-1-fred@fredlawl.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,30 +74,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Commit 8c0d3a02c130 ("PCI: Add accessors for PCI Express Capability")
+added accessors for the PCI Express Capability so that drivers didn't
+need to be aware of differences between v1 and v2 of the PCI
+Express Capability.
 
-These changes are in reference to Bjorn's suggestions here:
-https://lore.kernel.org/lkml/CAErSpo6BmWDxi3Vckm03=fZHEUosTgkMUjqCvYRA186jv8XbFw@mail.gmail.com/
-https://lore.kernel.org/lkml/CAErSpo5TZC3iM09SB1td+F7b-+aiu9EHwPYa1ayiU-i1tseV5w@mail.gmail.com/
+Replace pci_read_config_word() and pci_write_config_word() calls with
+pcie_capability_read_word() and pcie_capability_write_word().
 
-And the patches are rebased ontop of 54ecb8f7028c ("Linux 5.4-rc1")
+Signed-off-by: Frederick Lawler <fred@fredlawl.com>
+---
+ drivers/block/skd_main.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-Changes since v1:
-    * Replace magic numbers constants
-
-This is a long time coming, apologies for dragging my feet on getting
-these trivial patches out.
-
-Frederick Lawler (4):
-  skd: Prefer pcie_capability_read_word()
-  skd: Replace magic numbers with PCI constants
-  mtip32xx: Prefer pcie_capability_read_word()
-  mtip32xx: Replace magic numbers with PCI constants
-
- drivers/block/mtip32xx/mtip32xx.c | 28 ++++++++++++----------------
- drivers/block/skd_main.c          | 14 ++++++--------
- 2 files changed, 18 insertions(+), 24 deletions(-)
-
---
+diff --git a/drivers/block/skd_main.c b/drivers/block/skd_main.c
+index 51569c199a6c..f25f6ef6b4c7 100644
+--- a/drivers/block/skd_main.c
++++ b/drivers/block/skd_main.c
+@@ -3134,18 +3134,14 @@ MODULE_DEVICE_TABLE(pci, skd_pci_tbl);
+ 
+ static char *skd_pci_info(struct skd_device *skdev, char *str)
+ {
+-	int pcie_reg;
+-
+ 	strcpy(str, "PCIe (");
+-	pcie_reg = pci_find_capability(skdev->pdev, PCI_CAP_ID_EXP);
+ 
+-	if (pcie_reg) {
++	if (pci_is_pcie(skdev->pdev)) {
+ 
+ 		char lwstr[6];
+ 		uint16_t pcie_lstat, lspeed, lwidth;
+ 
+-		pcie_reg += 0x12;
+-		pci_read_config_word(skdev->pdev, pcie_reg, &pcie_lstat);
++		pcie_capability_read_word(skdev->pdev, 0x12, &pcie_lstat);
+ 		lspeed = pcie_lstat & (0xF);
+ 		lwidth = (pcie_lstat & 0x3F0) >> 4;
+ 
+-- 
 2.20.1
 
