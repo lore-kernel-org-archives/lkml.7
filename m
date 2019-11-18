@@ -2,144 +2,248 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A36B4C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BFBC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46AF92071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 885022071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:59:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oth-regensburg.de header.i=@oth-regensburg.de header.b="n73Lu6tf"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LXkytG49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfKRN6S (ORCPT
+        id S1727123AbfKRN7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 08:58:18 -0500
-Received: from mta01.hs-regensburg.de ([194.95.104.11]:47026 "EHLO
-        mta01.hs-regensburg.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726627AbfKRN6R (ORCPT
+        Mon, 18 Nov 2019 08:59:03 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:47292 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726895AbfKRN7D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 08:58:17 -0500
-Received: from E16S02.hs-regensburg.de (e16s02.hs-regensburg.de [IPv6:2001:638:a01:8013::92])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client CN "E16S02", Issuer "E16S02" (not verified))
-        by mta01.hs-regensburg.de (Postfix) with ESMTPS id 47GrBv0K35zy7Q;
-        Mon, 18 Nov 2019 14:58:15 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oth-regensburg.de;
-        s=mta01-20160622; t=1574085495;
-        bh=BP0zP3OW9XzDUFIK80nnJmyfc1wDEkpFtTQ47Ux99Uw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To:From;
-        b=n73Lu6tfJbNvCSwc5NJYlUBDib51gI9FZpyWpeOXTWDx2Bltvhsu29mz52WNS+8z9
-         TAME7t92l8CVEqTBzKHvzSm+8h4ZXXZNyeR+OJm3KbV4/Oyna41pOvdQiP3mJ6TbLu
-         QKgZCcMqrXYPMFFF29hQGRBLllRfmkGa5KzvmAz7kUj6V878MWH3w/a1knTKEfxGfO
-         Kx3CAxd5CI3pzz9n2uHaycamAekqx67Y8vaYaJ4jttNbPW19J4J88otNIHwrgpavh7
-         e18hPdCuL9VXp1+XbaocdPCLHNvOeogUMjaTPgtlP8c0Bos/SHOoZZGYJ+n3f4CkF/
-         Sl4fkh5/+q0iQ==
-Received: from [192.168.178.10] (194.95.106.138) by E16S02.hs-regensburg.de
- (2001:638:a01:8013::92) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Mon, 18 Nov
- 2019 14:58:14 +0100
-Subject: Re: [FYI PATCH 0/7] Mitigation for CVE-2018-12207
-To:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>
-CC:     "Gupta, Pawan Kumar" <pawan.kumar.gupta@intel.com>
-References: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
- <23353382-53ea-8b20-7e30-763ef6df374c@siemens.com>
- <ea5a084b-e047-6677-b8fe-d7bb6f8c0ef8@redhat.com>
- <dffb19ab-daa2-a513-531e-c43279d8a4bf@intel.com>
- <e86c01a8-8265-5e42-2fae-2c42c7e3d961@siemens.com>
-From:   Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
-Autocrypt: addr=ralf.ramsauer@oth-regensburg.de; keydata=
- mQINBFFbFOQBEACuc/5RqBxcHJiMjuQo4cUit/whIFgjcorx77z/srj/Cn5mKnWMLgmhszFC
- nzrgLw+1KewrJ/+qcrJKmX3Dw58VaktfjV0QUEnPmQXND3PUIE4Bl01GZ4Z/NKtaavdTWPTH
- wKzjbDucCzYKMBEYT3AMQRwQLNBF7VboV1T2fy+J505P9LP649c/Ept5vAsFH/3k2YpVVYcf
- Xpxk7ZxxBa9Xj9jMkoEGK8YPj0bHtrjrtG+fDuQRdv4gVwdY+HdalLQXCzYVPEnA/w3kD69A
- tPVuJOK61hJz6rS2n5ByzFLitLB8Fe940AI3wy4Df2pB2UFnD51k2Cg3HKi5HqH4Mpsieixq
- m/pd37SoPwQoTeVX+ASeUNl2CibSi78IsbHnZBKMKfdlSCzqogRWGcZPivKIL0vQDpzSSn4C
- hiRNiTXLH7lhfIhlH/MgmjXanhYDVLzQNhIEYF2Op2XN0HeYD/aFHQxhQQNxvX6aEDj7t0aS
- fAmyULXq1DX+ttI9UY65hcdvQQHUVCNF+87Sggu4x1q8/cxDkdpRlCqdmEigXF7nHkbsOVq8
- T8B1j+Y2cGIU/ivyMO+pqEQm3QOWKBC8ndm49lCgxltsEL5Bd4j4dF08QCcWFVbF9cWb2obT
- KcHX3Vm+1zKz2HLR9gBZiEPjNoP9riVz+81ECNk42w9874pmLQARAQABtC9SYWxmIFJhbXNh
- dWVyIDxyYWxmLnJhbXNhdWVyQG90aC1yZWdlbnNidXJnLmRlPokCVAQTAQgAPgIbAwULCQgH
- AgYVCAkKCwIEFgIDAQIeAQIXgBYhBO+AJoipr99tPvqviPovtFKPEASbBQJbE/G6BQkJui5W
- AAoJEPovtFKPEASb3iAP/jhdGSwc91Jf+kcOKaWe40dFQn2bjFhoYXuD16AYoBHBVNNOFYW6
- ikYyAUFOMaWBvUBUu4eyFwPY8ewr7sXoH5RqheQc7bvtX+2lxI3dLbcDMlp2Apj1NVFUKNAy
- VKjPpWNNdR+iz6JVar/QUye++5WOaJ2Jdgc/AIfBAWZyBcrg16um8hb7TMX5++7OtEUVOSz6
- L9bZkp6S/E6WgnIturQDEcmvxGJjwZKsLMlFNhasex3fzRE8vVq2JONi/gGfso7EQx7jdYNH
- z9BkdSlhL2agtMhmBygRs8L6TXU/V5sv4UD7+BiEINDEJTPF9OAX44MCXslGmGn0Kltvf2vC
- NGfsmcSVcsiptRAvrafxCUW8CqgwGLeuJi/qLKF3oRYjvVYMxpBsqQLIksYrPxvMOXgh2uU/
- JJgxnS+spAh+33uqWLP00CmOT06WNwSY6k3WSYfA5EvsLCsrrmO8NOIUjMC8pLqiEFgXgw6M
- CANKNJN23Aapo+rPF+kHvnMR/YFrgapJn3VGrG5lELovqGyqc7afIgiiEMSUY1zcJ9VlS0Z4
- OvbTjvPYy4tb8aGgMQ6cmsqiaIpHFZ2UJtk4R5asCmwIkbVWQLxvNlX9J5bXr/PHU0UlYJYB
- mp34WgKNwgwyso67v0GZDKJyaBMvk7alZEOKGWcMKEE6Pr3ByURudR8w
-Message-ID: <60b2a488-74b8-897c-4b25-e228d3fe7d55@oth-regensburg.de>
-Date:   Mon, 18 Nov 2019 14:58:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 18 Nov 2019 08:59:03 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAIDwo8A028342;
+        Mon, 18 Nov 2019 07:58:50 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574085530;
+        bh=M4zywV29ZtLq77cA4R+/+b3aPpMR1A6bjWsDO7FMqeI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=LXkytG49vXFxHq1gUofmKC33lZbsMS8OqAdHTl1bDI30GCDQgWRbyNFun/ETpDnUb
+         xyVFXZGPQrIKnaRm7Lfpn6zfqA0eX63fM50OHPHS3k9+gT1uBbf3e+rdhniwGkaOh/
+         T0OMsQP0NNyWj6lXUmhNTiKMFnhWmZ3snkv3dnR4=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAIDwoVf027645
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 18 Nov 2019 07:58:50 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 18
+ Nov 2019 07:58:50 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 18 Nov 2019 07:58:50 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAIDwlg7019882;
+        Mon, 18 Nov 2019 07:58:47 -0600
+Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <robh+dt@kernel.org>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <m.szyprowski@samsung.com>, <broonie@kernel.org>,
+        <t-kristo@ti.com>, <mripard@kernel.org>, <p.zabel@pengutronix.de>,
+        <devicetree@vger.kernel.org>
+References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
+ <3c384b40-f353-eaec-b1d6-ba74f5338ce1@metux.net>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <faf6f7e3-b64d-1e03-9e17-90b5c352cb32@ti.com>
+Date:   Mon, 18 Nov 2019 16:00:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <e86c01a8-8265-5e42-2fae-2c42c7e3d961@siemens.com>
+In-Reply-To: <3c384b40-f353-eaec-b1d6-ba74f5338ce1@metux.net>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [194.95.106.138]
-X-ClientProxiedBy: E16S04.hs-regensburg.de (2001:638:a01:8013::94) To
- E16S02.hs-regensburg.de (2001:638:a01:8013::92)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+Hi,
 
-On 11/14/19 9:09 AM, Jan Kiszka wrote:
-> On 13.11.19 22:24, Dave Hansen wrote:
->> On 11/13/19 12:23 AM, Paolo Bonzini wrote:
->>> On 13/11/19 07:38, Jan Kiszka wrote:
->>>> When reading MCE, error code 0150h, ie. SRAR, I was wondering if that
->>>> couldn't simply be handled by the host. But I suppose the symptom of
->>>> that erratum is not "just" regular recoverable MCE, rather
->>>> sometimes/always an unrecoverable CPU state, despite the error code,
->>>> right?
->>> The erratum documentation talks explicitly about hanging the system, but
->>> it's not clear if it's just a result of the OS mishandling the MCE, or
->>> something worse.  So I don't know. :(  Pawan, do you?
->>
->> It's "something worse".
->>
->> I built a kernel module reproducer for this a long time ago.  The
->> symptom I observed was the whole system hanging hard, requiring me to go
->> hit the power button.  The MCE software machinery was not involved at
->> all from what I could tell.
+On 18/11/2019 14.15, Enrico Weigelt, metux IT consult wrote:
+> On 30.10.19 13:04, Peter Ujfalusi wrote:
 > 
-> Thanks for clarifying this - too bad.
+> Hi,
 > 
->>
->> About creating a unit test, I'd be personally happy to share my
->> reproducer, but I built it before this issue was root-caused.  There are
-
-I'd appreciate if you could share your code.
-
->> actually quite a few underlying variants and a good unit test would make
->> sure to exercise all of them.  My reproducer probably only exercised a
->> single case.
-
-Still, it triggers the issue, that's enough to compare it to my reproducer.
-
->>
+>> For example any device using the same GPIO as reset/enable line can
+>> reset/enable other devices, which is not something the other device might like
+>> or can handle.
 > 
-> Would be interesting to see this. Ralf and tried something quickly, but
-> there seems to be a detail missing or wrong.
+> IMHO, for such cases, invidual drivers shouldn't fiddle w/ raw gpio's
+> directly, but be connected to (gpio-based) reset controllers or
+> regulators instead.
 
-Yep, we still can't reproduce the issue on an affected CPU, and don't
-know what we miss.
+Which is a (linux) software abstraction of an electric wire coming out
+from the gpio (or gpo) controller then split into two (or more branch)
+and connect to external components...
 
-Thanks,
-  Ralf
+> I believe, GPIO isn't the correct abstraction layer
+> for such cases: it's not even IO, just O.
 
+A GPIO pin configured as output is O ;)
+
+> Let's sit back and rethink what the driver really wants to tell in those
+> cases. For the enable lines we have:
 > 
-> Jan
+> a) make sure the device is enabled/powered
+> b) device does not need to be enabled/powered anymore
+> c) device must be powercycled
 > 
+> You see, it's actually tristate, which gets relevant if multiple devices
+> on one line.
+
+Yes. Things gets a bit blurry when a GPIO line is used to enable/gate
+signals from/to a chip on top of enable/disable, like muting an
+amplifier's analog output.
+
+> Now add reset lines:
+> 
+> a) force device into reset state
+> b) force device out of reset state
+> c) allow device going into reset state (but no need to force)
+> d) allow device coming out of reset state (but no need to force)
+
+I would say that coming out of reset is always forced as there is a
+reason why you want to take it out - it is going to be used.
+
+> It even gets more weird if a device can be reset or powercycled
+> externally.
+> 
+> hmm, not entirely trivial ...
+
+When we have only one user of the GPIO reset/enable line we will have a)
+and b) happening. If the GPIO is shared most likely the intention of the
+hw design dictates c) and d)
+
+>> For example a device needs to be configured after it is enabled, but some other
+>> driver would reset it while handling the same GPIO -> the device is not
+>> operational anymmore as it lost it's configuration.
+> 
+> Yeah, at least we need some signalling to the driver, so it can do the
+> necessary steps. From the driver's PoV, it's an "foreign reset".
+
+Notification callback for state change?
+
+>> With the gpio-shared gpiochip we can overcome this by giving the gpio-shared
+>> the role of making sure that the GPIO line only changes state when it will not
+>> disturb any of the clients sharing the same GPIO line.
+> 
+> How exactly do we know when such disturbance can / cannot happen ?
+> That would be depending on individual chips *and* how they're wired on
+> the board. We'd end up with some logical multiplexer, that's board
+> specific.
+> 
+> <snip>
+> 
+>> If any of the codec requests the GPIO to be high, the line will go up and will
+>> only going to be low when both of them set's their shared line to low.
+> 
+> So, if one driver request reset, all attached devices will be reset ?
+> Or if all drivers request reset, all attached devices will be reset ?
+
+The later.
+
+> Doesn't look so quite non-disturbing to me :o
+
+This is what regulators and the reset framework is doing, no?
+
+>> I have also looked at the reset framework, but again it can not be applied in a
+>> generic way for GPIOs shared for other purposes 
+> 
+> What are the exact scenarios you have in mind ?
+
+grep -R enable-gpios Documentation/devicetree/bindings/*
+
+pick two random device from the output, place it on a board with shared
+enable GPIO line.
+I know I over simplify (or complicate) the real world use.
+
+>> and all existing drivers must
+>> be converted to use the reset framework (and adding a linux only warpper on top
+>> of reset GPIOs).
+> 
+> Maybe a bit time consuming, but IMHO not difficult. We could add generic
+> helpers for creating a reset driver on a gpio. So the drivers wouldn't
+> even care about gpio itself anymore, but let the reset subsystem so it
+> all (eg. look for DT node and request corresponding gpio, etc).
+
+You mean that users would use reset_control_get_optional_shared() only
+and if there is no valid reset binding that the reset core would look
+for a gpio binding and instantiate a gpio-reset controller?
+But before instantiating it, it would look around in some list to see if
+the gpio-reset controller for the same gpio line is already exist?
+
+> IMHO, that's something we should do nevertheless, even if it's just for
+> cleaner code.
+
+I'm not sure about that.
+D1 have ENABLE pin (enable-gpios as per dt documentation),
+ if the line is high, the device is enabled, if low it is disabled.
+
+D2 have RESET pin (reset-gpios as per dt documentation),
+ if the line is high, the device is enabled, if low it is disabled.
+
+D1's driver would:
+enable-gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;
+
+priv->reset = reset_control_get_optional_shared(dev, "enable");
+
+/* Place it to reset: ENABLE pin should be pulled low */
+reset_control_assert(priv->reset);
+/* Remove from reset: ENABLE pin should be high */
+reset_control_deassert(priv->reset);
+
+D2's driver would:
+reset-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
+
+priv->reset = reset_control_get_optional_shared(dev, "reset");
+
+/* Place it to reset: RESET pin should be pulled low */
+reset_control_assert(priv->reset);
+/* Remove from reset: RESET pin should be high */
+reset_control_deassert(priv->reset);
+
+The reset framework must know somehow that the reset control for D1 is
+an enable type of gpio, so it must treat it as inverted polarity while
+the reset type of binding should be follow the selected active level.
+
+Then it must protect (most likely) the deasserted state: it does not
+mater if there is any assert request for the reset_control if we have
+one deassert active as at least one device must be enabled.
+
+For new dts files the virtual reset-gpio controller node can be present
+and the level of assert and deassert is told to it via the gpio binding.
+
+Something like this?
+
+> After that we could put any kind of funny logic behind the scenes (eg.
+> one could connect the reset pin to a spare uart instead of gpio, etc),
+> w/o ever touching the individual drivers.
+
+Not sure if I follow you here.
+
+On the other hand the gpio line itself can be seen as a regultator
+itself (3.3V most of the time) so in theory all GPIOs can be regulators
+as well, but regulator framework protects the >0 volt state while there
+are devices which can be enabled when the ENABLE/RST pin is pulled low.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
