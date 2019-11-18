@@ -5,68 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DC9C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A40C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C1AD20727
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E00820855
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:40:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dj3CWbDe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MUon7z8m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfKRLkf (ORCPT
+        id S1726890AbfKRLkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:40:35 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:45053 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfKRLke (ORCPT
+        Mon, 18 Nov 2019 06:40:52 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43357 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726813AbfKRLkv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:40:34 -0500
-Received: by mail-pj1-f68.google.com with SMTP id w8so1414574pjh.11;
-        Mon, 18 Nov 2019 03:40:30 -0800 (PST)
+        Mon, 18 Nov 2019 06:40:51 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 3so10260942pfb.10;
+        Mon, 18 Nov 2019 03:40:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=SIpBjUI/18c4759KVfvkhxpy/Q1dsRRq2xntCSfnsBk=;
-        b=Dj3CWbDeUCRt1jHqDYcWbMFWjDqd4MyQmzl+Y28Z0yF4vyLdnFbat8UA4JwQYpPrW+
-         iLrKmPqb1z5O9b4CIym2eNMRVZjf//dju0/O5BP6M99PAQAEw664ccC4xwXkaAWh3XLa
-         Tj6o8VTybCYVHNQ96hHK39BgwmsLVjbV9PfEsvaAw/B5yIYNXh+Amgize6xqieiKRGNN
-         759u3CBwWqudYFacxr6wmlBIONb+0iEfO6ckmufeZP2vK8xWlhbmXruY068JxTMCJqAW
-         /QtK/lJsTBlRjuKMk0LN7coPnkSrBPppFNOROTZ2kzCiWUYhFN+UHBQmzgGKQx2OQZ6c
-         7OuA==
+        bh=XOFXnfI9UttC1Z7LgzJhWVz0WN42wZ1bKElBDU+oA30=;
+        b=MUon7z8m+rrEHd6ZJe6iq2qqsNMgde+Pj1KVj2bsrn1AW9FhfzkGMDlcWrOegiJErG
+         p0dNnt9plNpwsa/INN+GjrLDEcE4lCp4wgOnNmt6rOF0PobFgypLNg1j6itnAtgpieLq
+         N24FGb0LVg8jFWgv4AwQkVq838T4n1yc3BwUe+tuaZQ0agFcET5yMH59B2ehJCmN1AGN
+         J8QZuVNNaUqVhi8R5X+aPvp9CMDVKQ1AI0YN75YpbQ4TseIG8IHsSWC8A/PuZohx2Bny
+         yOpylfc7X7Owr5ihGU+IsydlT7zB23mSq6Gn/koHESz8dADFGMbOXVsj+ivI/eKtV62W
+         EfMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=SIpBjUI/18c4759KVfvkhxpy/Q1dsRRq2xntCSfnsBk=;
-        b=kxoO1UFd7WgXC5ra0Xhrtgt87IkznjfnVR1wKCqXzD4S22cblGEsng8Sw7T8y1Ynsa
-         ZqL+mZKIUN3Jv1qVNzIfae3fxc0gKdi8s/ItCQkmb2iH9AFf+j841Qm63uEWPgJ/ensv
-         Jmaf+ajjxPqecyLpXVSfV2gRInhtI+dp5ZPe6KZ8pYM/9G9l+RxnmU7gd6pvjij6sIC/
-         xWz67YhmBumRYpp/MYVLXJaz3nMEZE+HM0NAiXHwzl/1+NpjC8d52YQ0Zh4RApAiLko7
-         mIJYEYTHAPI2GRwHVFEoGyH5fNe928Uor300OpuXVp2mxcRt7m8mfQxY9uZhGE5JliZR
-         YhEQ==
-X-Gm-Message-State: APjAAAUVv5lqwG9aU+M7YCV5rDaUW2cAJlrSEyOe8y+v4XQTQ0t3j3Eb
-        o6UwZ9iO2BTRUdJny3Iv4yc=
-X-Google-Smtp-Source: APXvYqzLcRKwvXVsJ55yLiaDFZPfmM/lasS/G8K2CN0NMRu5/c8SlfIzI1/6wu7ddAwsVPc2GDgSvw==
-X-Received: by 2002:a17:90b:94f:: with SMTP id dw15mr38058971pjb.13.1574077230683;
-        Mon, 18 Nov 2019 03:40:30 -0800 (PST)
+        bh=XOFXnfI9UttC1Z7LgzJhWVz0WN42wZ1bKElBDU+oA30=;
+        b=tbjA3pw5IUlRAGOvUHN5JIEUxfG56+sME0eY9hAXUYdHGZkME8aaRHwwqJ2eDtdPWt
+         WU/E18dmLb+pPpXlcno2Ve9EwCo7Lr9bcuOD6lLS7lzNlLkjCmUf2og3cIKZ9i2DaNIh
+         YKzeIVenM3hrley3Jz5W+OPzK2xZtl4l+i2eiaNlG3blKbP6CUGJwc68JpyRhTuno73b
+         oD/AppFD6WJDHrYifdqbzDFGKjT4IzvYPb2COO/ugVeXdVSSKUOAT83caViycAEkaCKF
+         IOXmHhTngLo2r3rbdQ5mY/IwK752PTDC0sEhOUpqIDaOx6X3p4GoYOw7o7Nr5TkDba/m
+         tjng==
+X-Gm-Message-State: APjAAAVgi2GRytnpEgzi5OrWZ/KNCsTwDJnv1mFb0vtZEY5exxTab0Xq
+        8Bv5E7BVIjUtMUN/7Au9g54=
+X-Google-Smtp-Source: APXvYqw6UUuagUZ9iHverzII0rXzZ6M9070k6d0OSiDaPA4hCGV3KPPkYzx1HquTeHrKjlwZ7otGKQ==
+X-Received: by 2002:a62:7dd2:: with SMTP id y201mr34379756pfc.90.1574077251007;
+        Mon, 18 Nov 2019 03:40:51 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id i13sm19839717pfo.39.2019.11.18.03.40.25
+        by smtp.gmail.com with ESMTPSA id x203sm19975752pgx.61.2019.11.18.03.40.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 03:40:30 -0800 (PST)
+        Mon, 18 Nov 2019 03:40:50 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] iio: adc: max1027: fix not unregistered iio trigger
-Date:   Mon, 18 Nov 2019 19:40:18 +0800
-Message-Id: <20191118114018.25431-1-hslester96@gmail.com>
+Subject: [PATCH] media: usb: go7007: s2250-board: add missed i2c_unregister_device
+Date:   Mon, 18 Nov 2019 19:40:41 +0800
+Message-Id: <20191118114041.25491-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -76,33 +74,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver forgets to unregister the iio trigger in probe failure and
-remove.
-Use devm API to fix it.
+The driver forgets to call i2c_unregister_device in remove like what is
+done in probe failure.
+Add the missed call to fix it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/iio/adc/max1027.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/media/usb/go7007/s2250-board.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-index 214883458582..8caead7dffa5 100644
---- a/drivers/iio/adc/max1027.c
-+++ b/drivers/iio/adc/max1027.c
-@@ -446,7 +446,12 @@ static int max1027_probe(struct spi_device *spi)
- 	st->trig->ops = &max1027_trigger_ops;
- 	st->trig->dev.parent = &spi->dev;
- 	iio_trigger_set_drvdata(st->trig, indio_dev);
--	iio_trigger_register(st->trig);
-+
-+	ret = devm_iio_trigger_register(&spi->dev, st->trig);
-+	if (ret < 0) {
-+		dev_err(&indio_dev->dev, "Failed to register iio trigger\n");
-+		return ret;
-+	}
+diff --git a/drivers/media/usb/go7007/s2250-board.c b/drivers/media/usb/go7007/s2250-board.c
+index 49e75a1a1f3f..b9e45124673b 100644
+--- a/drivers/media/usb/go7007/s2250-board.c
++++ b/drivers/media/usb/go7007/s2250-board.c
+@@ -607,6 +607,7 @@ static int s2250_remove(struct i2c_client *client)
+ {
+ 	struct s2250 *state = to_state(i2c_get_clientdata(client));
  
- 	ret = devm_request_threaded_irq(&spi->dev, spi->irq,
- 					iio_trigger_generic_data_rdy_poll,
++	i2c_unregister_device(state->audio);
+ 	v4l2_device_unregister_subdev(&state->sd);
+ 	v4l2_ctrl_handler_free(&state->hdl);
+ 	kfree(state);
 -- 
 2.24.0
 
