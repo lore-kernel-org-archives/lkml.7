@@ -2,102 +2,188 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE331C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E186C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3EF72071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:03:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ztp0xfS1"
+	by mail.kernel.org (Postfix) with ESMTP id DDB0B2071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:03:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574064227;
+	bh=ljFTozo0gwpQjJFCChDl+Z9GI1FvNaVpNkYRC3JPChE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IoVYAkfWO5wq6BuxWarKsl9R4mygg4UaBN7ulIlHpfFql+o631waEvC3jbX/6HYLR
+	 jy6UW4M3L0zdsA5JAVmtdPxvjxK4iEDHay+H4nTEWTLUeednOmXxERjHAXN/1KVHmD
+	 a5HMWMmiIR/kbsCQFryfMMSaKdgCkKVeTGOdgLbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbfKRIDD (ORCPT
+        id S1726539AbfKRIDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 03:03:03 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:42336 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726316AbfKRIDD (ORCPT
+        Mon, 18 Nov 2019 03:03:45 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33634 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbfKRIDp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 03:03:03 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAI82uwY020694;
-        Mon, 18 Nov 2019 02:02:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574064176;
-        bh=PI8nD4jFp/0XnhGQ6/XR612OzagpQkaNZfAIXVgyfrY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Ztp0xfS1khPfQ4X+EmSwA7YGiQmNzcDlMgINCoWyMQOp6+MzX2cBLCr6w4bvxoZ+J
-         VYpIZmiIw77PzJXGH+vlMF90I5GNWYMLvtc0haB4jPEeuCQhLgAuJblVdc45OmtwOZ
-         cBEnSgR87jkq3uKkkqMy8uIm7siY6Gegg5aizopQ=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAI82uLv004259
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 18 Nov 2019 02:02:56 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 18
- Nov 2019 02:02:56 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 18 Nov 2019 02:02:56 -0600
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAI82reL087431;
-        Mon, 18 Nov 2019 02:02:54 -0600
-Subject: Re: [PATCH] bindings:phy Mark phy_clk binding as deprecated in
- Cadence Sierra Phy.
-To:     Anil Joy Varughese <aniljoy@cadence.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <mparab@cadence.com>, <rafalc@cadence.com>
-References: <1574062988-4751-1-git-send-email-aniljoy@cadence.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <dce65150-cbd8-eb4d-5778-47658a719eb5@ti.com>
-Date:   Mon, 18 Nov 2019 13:32:13 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 18 Nov 2019 03:03:45 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w9so18246537wrr.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 00:03:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=D8ZHyfdnNZoxlHq4H5CPfT+mJBnr0mBGZIvRSoVcmck=;
+        b=Jz243xXn8J6lOJvHL2ya9NEbeiYV3qjHIEPanTHw7g9eLN03dXgytb6PymXYfxBkvv
+         y3okdCKUR6RnrrKbBINkmJDVFj/OhzCsteu8a2g5Ik2ARr481SCsV5DEH47U+wzq3mR6
+         ulwy4SK4R+AlP4JZ7aXZwh+/4wyClLjhvUumrgVhMiRx5oLr8NQyk1pEaGncxpPcCK4a
+         v952nF9/SWkTO8rAywQpl45BYF7fQ/hQkt/uGo9NouDnHs8qdNXK5+m/IcgmR9aYikKe
+         VBk+hprh7Ni6aa8pLxbNyswIHx0gcogn8qsW4xpSeD7pI2n7m6y6OOSVuymk5833+dWO
+         jNXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=D8ZHyfdnNZoxlHq4H5CPfT+mJBnr0mBGZIvRSoVcmck=;
+        b=gICH2jcl2ogF8poU3PAJWWHiEfr41r7Y7cjWOzomcmFsfKRsZFTaCkHRsdjmVR2oUj
+         /xVOe2C27p0F28R1DCj8mzOuG2+DRner16HJpO+YaooSilVu4IL57MZJgkirTew3yVwm
+         phI48/isx7BDEnPUgP3P1WA8ezaDFluBlkdmTV40G1RwpTrqXAbXotSUuDhg7w4BH/Rl
+         W27ZR5d5gamyBarSit15e5GUTbEeMK+909fD8pDYDYid8rqrvoWH7LCivF6uybjtIHHQ
+         4t6J55Tcm51lZISEfXkoatbM2kSCrTK8zT6oGjahkOt0zW/7brCWCW5XH/P10oGXDM94
+         yCdA==
+X-Gm-Message-State: APjAAAUqml41N1zvU0S6uGIyqn+ukh52j/l1aHCfEwrJPu0IM0M/EEOq
+        TB4cA/Je/kfdOgKiVYGN+WA=
+X-Google-Smtp-Source: APXvYqxOBfj1xQppNrVBXOHyI1/gaqhPZ155qCiihoCgpMSk4p8A2tgqQkvFmLztDE4nK2uQK5ty6A==
+X-Received: by 2002:a5d:5444:: with SMTP id w4mr27480496wrv.164.1574064221989;
+        Mon, 18 Nov 2019 00:03:41 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id d11sm22159273wrn.28.2019.11.18.00.03.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 00:03:41 -0800 (PST)
+Date:   Mon, 18 Nov 2019 09:03:39 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [GIT PULL] scheduler fixes
+Message-ID: <20191118080339.GA48190@gmail.com>
+References: <20191116213742.GA7450@gmail.com>
+ <ab6f2b5a-57f0-6723-c62f-91a8ce6eddac@arm.com>
+ <20191117094549.GB126325@gmail.com>
+ <4e4b0828-abba-e27d-53f6-135df06eba1a@arm.com>
+ <CAHk-=wiEz7kG8YSbmAAALdP3Vnna_f4+LY4TPM0NQczeh3mviQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1574062988-4751-1-git-send-email-aniljoy@cadence.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiEz7kG8YSbmAAALdP3Vnna_f4+LY4TPM0NQczeh3mviQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Anil,
 
-On 18/11/19 1:13 PM, Anil Joy Varughese wrote:
-> Updated the Sierra Phy binding doc to mark phy_clk as deprecated.
+* Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-This should also indicate why your are deprecating it.
-
-Thanks
-Kishon
-
+> On Sun, Nov 17, 2019 at 2:20 AM Valentin Schneider
+> <valentin.schneider@arm.com> wrote:
+> >
+> > AFAIUI the requirement for the enum type is that it has to be an int 
+> > type that covers all its values, so I could see some funky 
+> > optimization (e.g. check the returned value is < 512 but it's assumed 
+> > the type for the enum is 8 bits so this becomes always true). Then 
+> > again we don't have any explicit check on those returned values, plus 
+> > they fit in 11 bits, so as you say it's mostly likely inconsequential 
+> > (and I didn't see any compile diff).
 > 
-> Signed-off-by: Anil Joy Varughese <aniljoy@cadence.com>
-> ---
->  .../devicetree/bindings/phy/phy-cadence-sierra.txt |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
+> Gcc can - and does - narrow enums to smaller integer types with the 
+> '-fshort-enums' flag.
+
+Good point - but at least according to the GCC 9.2.1 documentation, 
+-fshort-enums is a non-default code generation option:
+
+   Options for Code Generation Conventions
+
+       These machine-independent options control the interface 
+       conventions used in code generation.
+
+       Most of them have both positive and negative forms; the negative 
+       form of -ffoo is -fno-foo.  In the table below, only one of the 
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+       forms is listed---the one that is not the default.  You can figure 
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+       out the other form by either removing no- or adding it.
+
+   [...]
+
+       -fshort-enums
+
+           Allocate to an "enum" type only as many bytes as it needs for 
+           the declared range of possible values.  Specifically, the 
+           "enum" type is equivalent to the smallest integer type that 
+           has enough room.
+
+           Warning: the -fshort-enums switch causes GCC to generate code 
+           that is not binary compatible with code generated without that 
+           switch.  Use it to conform to a non-default application binary 
+           interface.
+
+Unless this option is used AFAIK GCC will treat enums as "int" if at 
+least one enumeration constant is negative, it's "unsigned int" 
+otherwise.
+
+The only current use reference to the non-standard -fshort-enums option 
+within the kernel source is the Hexagon arch, which (seemingly 
+unnecessarily) disables the option:
+
+  arch/hexagon/Makefile:KBUILD_CFLAGS += -fno-short-enums
+
+That flag came with the original Hexagon commits, 8 years ago:
+
+  e95bf452a9e22   (Richard Kuo    2011-10-31 18:55:58 -0500       10)# Do not use single-byte enums; these will overflow.
+  e95bf452a9e22   (Richard Kuo    2011-10-31 18:55:58 -0500       11)KBUILD_CFLAGS += -fno-short-enums
+
+Maybe they had a GCC build where it was on by default? Or GCC changed 
+this option sometime in the past? Or it's simply an unnecessary but 
+harmless code generation flag out of paranoia?
+
+Out of curiosity I searched all the historic trees, none ever made use of 
+the -f*short-enums option, so I don't think this is a GCC option we ever 
+actively utilized or ran into.
+
+> However, in practice nobody uses that, and it can cause interop 
+> problems. So I think for us, enums are always at least 'int' (they can 
+> be bigger).
+
+Yeah, the GCC documentation specifically warns that it breaks the ABI: 
+the size of structs using enums will generally change from 4 bytes to 1 
+or 2 bytes, and function call signatures will change incompatibly as 
+well.
+
+BTW., -fshort-enum looks like a bad code generation option to me, on x86 
+at least, because it will also use 16-bit width, which is generally a bad 
+idea on x86. If it limited itself to u8 and 32-bit types it could even be 
+useful.
+
+Also, I wouldn't be surprised if the kernel ABI broke if we attempted to 
+use -short-enum, I bet there's a lot of accidental reliance on 
+enum=int/uint.
+
+> That said, mixing enums and values that are bigger than the enumerated 
+> ones is just a bad idea
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt b/Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
-> index 6e1b47b..9a42b46 100644
-> --- a/Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
-> +++ b/Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
-> @@ -5,7 +5,7 @@ Required properties:
->  - compatible:	cdns,sierra-phy-t0
->  - clocks:	Must contain an entry in clock-names.
->  		See ../clocks/clock-bindings.txt for details.
-> -- clock-names:	Must be "phy_clk"
-> +- clock-names:	Must be "phy_clk". This is deprecated and should not be used with newer bindings.
->  - resets:	Must contain an entry for each in reset-names.
->  		See ../reset/reset.txt for details.
->  - reset-names:	Must include "sierra_reset" and "sierra_apb".
-> 
+> It will, for example, cause us to miss compiler warnings (eg switch 
+> statements with an enum will warn if you don't handle all cases, but 
+> the 'all cases' is based on the actual enum range, not on the 
+> _possible_ invalid values).
+
+That's true. Will check whether we can do something about improving the 
+affected uclamp data structures.
+
+Thanks,
+
+	Ingo
