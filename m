@@ -2,110 +2,109 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D740C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A59ACC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 582D4206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77D5820726
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:37:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uEywBp9R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfKRHhD (ORCPT
+        id S1727066AbfKRHhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 02:37:03 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:52091 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726607AbfKRHhC (ORCPT
+        Mon, 18 Nov 2019 02:37:20 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:46810 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbfKRHhU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 02:37:02 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iWbal-0005qx-Ti; Mon, 18 Nov 2019 08:36:59 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iWbal-0006MR-7C; Mon, 18 Nov 2019 08:36:59 +0100
-Date:   Mon, 18 Nov 2019 08:36:59 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-iio@vger.kernel.orgi,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] i2c: smbus: use get/put_unaligned_le16 when
- working with word data
-Message-ID: <20191118073659.7yomkvqthuenqjpu@pengutronix.de>
-References: <20191112203132.163306-1-dmitry.torokhov@gmail.com>
- <20191112203132.163306-3-dmitry.torokhov@gmail.com>
+        Mon, 18 Nov 2019 02:37:20 -0500
+Received: by mail-pj1-f67.google.com with SMTP id a16so1233995pjs.13
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 23:37:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xe+Hh36CXezhILfUXHbWAftsPx9okk6we2CTbfEFf9s=;
+        b=uEywBp9R7GGZbAzKwdAp8tFWJqgwu/JH5HVj9tW+e7xMxu2mtryi1sS83Qn0KWgBC+
+         lQDxYX+Cnfc+47KD5MeyLaWjQgPPcxnck+6F46FzQ66bkSe5D5F0x/ho0I8lGxhGPKHP
+         pyr9nhutvn48T1wCAqqwcGzEfpfaS+AF30BYjLvzn3CVSOfYk4UKpBRtA668JhpHltoM
+         F7vIpSDC/GN6dWG/X3pLxhZ5HjV9hxCHb7xyssC8cGsKmApjJrtLs4eFWbQlGnc1GtTb
+         NTq1LuL7BUNhRrsGbnja7MPBHr9MDRp8WzrX/eLwT1p/3sh1IFSMEK2rMUE2MkoY+csp
+         kN9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xe+Hh36CXezhILfUXHbWAftsPx9okk6we2CTbfEFf9s=;
+        b=s9lxdGo5GOl00+OOpr61RMUjlaAm4ub4ABbZcImKAkldL475B3WaOFt517Yveoqtor
+         siXrEBtJGht4uXuftGIkWikco3KQknJJvdmhfJTWMqPTI9OSYK5hhQJOML0tXjsfy8Qq
+         j5OKq8CYEX5jsTtH4jlOQeyg3nwF+5AxJFstBkEJvg4euqde7C5uo+TN6PgSnBmjzZHc
+         DlVE3RwcQOnLQM3UDTyP/E28RZ6nycKmFHgimV/i+geQfm6KMZp+BkskSeq12Lz4s9pG
+         h42/HRyORdm7aN6sBnaO2q8WIP6moec2KH9UaoLxfClKYvM1a1slQr0rurpPusPgPmTr
+         CCAA==
+X-Gm-Message-State: APjAAAVEo1xZdogDtZBIODVqKv8YV6TKFCMXgKbBXSas+vA4JhSkslxy
+        1Un6d+glzS4HMePjfdVzcHI=
+X-Google-Smtp-Source: APXvYqxThCkDRP6EGlQmF9R4DC4kVnMAodv4rvCLvKrIbCeIrNU4+BLtKDrzVZu6CedepBM3wRJUKA==
+X-Received: by 2002:a17:90a:ca04:: with SMTP id x4mr38341944pjt.103.1574062639600;
+        Sun, 17 Nov 2019 23:37:19 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id ay16sm23001911pjb.2.2019.11.17.23.37.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Nov 2019 23:37:18 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, patches@opensource.cirrus.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] ASoC: wm5100: add missed pm_runtime_disable
+Date:   Mon, 18 Nov 2019 15:37:07 +0800
+Message-Id: <20191118073707.28298-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191112203132.163306-3-dmitry.torokhov@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Dmitry,
+The driver forgets to call pm_runtime_disable in remove and
+probe failure.
+Add the calls to fix it.
 
-On Tue, Nov 12, 2019 at 12:31:31PM -0800, Dmitry Torokhov wrote:
-> It is potentially more performant, and also shows intent more clearly,
-> to use get_unaligned_le16() and put_unaligned_le16() when working with
-> word data.
-> 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> 
-> ---
-> 
-> Changes in v3:
-> - split put_unaligned_le16 into a separate patch
-> - more call sites converted to get/put_unaligned_le16
-> 
->  drivers/i2c/i2c-core-smbus.c | 12 +++++-------
->  1 file changed, 5 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
-> index f8708409b4dbc..7b4e2270eeda1 100644
-> --- a/drivers/i2c/i2c-core-smbus.c
-> +++ b/drivers/i2c/i2c-core-smbus.c
-> @@ -15,6 +15,7 @@
->  #include <linux/i2c.h>
->  #include <linux/i2c-smbus.h>
->  #include <linux/slab.h>
-> +#include <asm/unaligned.h>
->  
->  #include "i2c-core.h"
->  
-> @@ -370,8 +371,7 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
->  			msg[1].len = 2;
->  		else {
->  			msg[0].len = 3;
-> -			msgbuf0[1] = data->word & 0xff;
-> -			msgbuf0[2] = data->word >> 8;
-> +			put_unaligned_le16(data->word, msgbuf0 + 1);
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ sound/soc/codecs/wm5100.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-You claim this was clearer. For me it is not. With the explicit
-assignment to msgbuf0[1] and msbbuf0[2] it is immediatly obvious to me
-what happens.  Even though the endianness is explicitly mentioned in
-put_unaligned_le16, it takes a bit longer for me to understand what it
-does and which part of data->word ends up in which byte.
-
-Concerning the "potentially more performant" part: I wonder if this is
-backed by numbers and if it is indeed benificial on some platforms if
-this is a compiler problem.
-
-Best regards
-Uwe
-
+diff --git a/sound/soc/codecs/wm5100.c b/sound/soc/codecs/wm5100.c
+index 4af0e519e623..91cc63c5a51f 100644
+--- a/sound/soc/codecs/wm5100.c
++++ b/sound/soc/codecs/wm5100.c
+@@ -2617,6 +2617,7 @@ static int wm5100_i2c_probe(struct i2c_client *i2c,
+ 	return ret;
+ 
+ err_reset:
++	pm_runtime_disable(&i2c->dev);
+ 	if (i2c->irq)
+ 		free_irq(i2c->irq, wm5100);
+ 	wm5100_free_gpio(i2c);
+@@ -2640,6 +2641,7 @@ static int wm5100_i2c_remove(struct i2c_client *i2c)
+ {
+ 	struct wm5100_priv *wm5100 = i2c_get_clientdata(i2c);
+ 
++	pm_runtime_disable(&i2c->dev);
+ 	if (i2c->irq)
+ 		free_irq(i2c->irq, wm5100);
+ 	wm5100_free_gpio(i2c);
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.24.0
+
