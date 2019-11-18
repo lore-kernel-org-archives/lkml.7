@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D05C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA46BC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A29472230F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4A3C22319
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:06:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pmcz5aQv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bIVfal5T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727489AbfKRUGR (ORCPT
+        id S1727508AbfKRUGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 15:06:17 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40476 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727407AbfKRUGC (ORCPT
+        Mon, 18 Nov 2019 15:06:22 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35333 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727364AbfKRUF6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 15:06:02 -0500
-Received: by mail-lj1-f196.google.com with SMTP id q2so20471342ljg.7;
-        Mon, 18 Nov 2019 12:06:00 -0800 (PST)
+        Mon, 18 Nov 2019 15:05:58 -0500
+Received: by mail-lf1-f65.google.com with SMTP id q28so954488lfp.2;
+        Mon, 18 Nov 2019 12:05:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pTMYCgIgvCNm1q2JaoM7zr2eJ5iQIuvTMHSD1CcRgH4=;
-        b=Pmcz5aQvG4kdoLoEesuweo15xnoulLsuqWT1ryquWf4xC5WKJlk7sQdtOvmwi/NpWC
-         gTAyERPFtJNkUzqd4x4Y9rBPZWSbynQmALOKWutfXwNS4xK3fO7jjK2GDLacc/aQ4LcP
-         +q4GSBo7nTObUfUYvEZA+5mjAci1NekYCRzqfnTxFjX2jCG1NoMyuG0ndkiuNDkNIZw6
-         YUmu0ciM2Q5HNUftUJWbOm6oRtbezUhpkApFq69Za9Q7EyPkCVilwY6lLCRBUpkcV6Ls
-         ScgNRa7PKIQ7q4LUjwPPhiQtna7RDkugFnxfY8NTockXYQp6rNkhVgPmUdt6uv+EVWEa
-         hi+Q==
+        bh=rtrkjrjFdrCSY4w3UkoaopBMgCTAU9tc9NbxXmX2YTg=;
+        b=bIVfal5TVp5xBuBX6ib+z1CzBJxpz6RaF2qAdEWAm9btjqcLZW4/Ah6i/EXi+X77vV
+         PhqjrJDdznHgGQYBexXUTGuVqpa5110USfShOzHSTcvJDJH8dB/ZXVKtiL+yOUZ1fKzL
+         cgL2KKrxnCNn7k6kCsm3t0aiOzj9nywSK2bmjLqTjRUSKMsGXXfU08ZW78R/DXS+gmPx
+         DvmecJFJwWV+APIfPg+wsr+JjtYzcAw12XhS6aODRo9XLGDwpf6oVZhCCTNumEiByX+7
+         lhY03Hdk5q/mcJhFuZCuW95zlgzwzmyYfIybzyKQFm8TNVLzCOe69QultsXAnnzUIGFS
+         qBcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pTMYCgIgvCNm1q2JaoM7zr2eJ5iQIuvTMHSD1CcRgH4=;
-        b=ZY6eSaY8e7uW164498hB66KPXWcD61EwSJe/YCZ8sD7i9YXOlj0UPSWVQmTkum22Ts
-         LgSrFVu0WY6b4uvNg+zwTfG7OCT1eRfbGLYYwi36zL3/Y7HXKAt3PQiNkaJl/o0jl9HW
-         KEHFHrdl4JJVNzqlPGJqM/nAHyD6dTC+kE6Sgc05gSMhX75myrymE63zoR+KHcFqibZi
-         A3NUCHwGBKAskUiOFEXalk8CfG/6pN79sJ7ng+dM9oF41K5j8P/jkoL6fsRgZnl2SU2w
-         Vpk/Zlrqfwf099PiULzd386t4j7kZba3JgcsqcrN6M/iKcKdX8865QxtoUcOEuY79X06
-         E4WA==
-X-Gm-Message-State: APjAAAWncHhgvV4y31e4aMSMHJ34I0L9SOSoUpYOi1d+XNs31zGkM7xr
-        Aw6OcM0++OcCCglDm5QaeEE=
-X-Google-Smtp-Source: APXvYqyHgybcG5MMZcJRPRCQEbkIktBAw9M79vtA0GyQaow6feMEG7kPjNrNfppBRmcsYR1tJhTMlA==
-X-Received: by 2002:a2e:9841:: with SMTP id e1mr922343ljj.19.1574107559605;
-        Mon, 18 Nov 2019 12:05:59 -0800 (PST)
+        bh=rtrkjrjFdrCSY4w3UkoaopBMgCTAU9tc9NbxXmX2YTg=;
+        b=g/Lz1XmIsCjeEYJkTXlNUTT6GLA4YMyXyr6wFyJjQi3Higl+l9kZQnfcaFKNt2GjJN
+         6BzBjktSi5ASXqnjkCxjXDgZEeDkHnenypR1/I+uha76aj/4yuCIvNqYTTAhLLiXfUhC
+         06uDE7ij+yjKBZCPaIDNhDlkKrz42AtCCJtHYo2AioWt+LCLOPJYRzWIkIgql4qnqCkh
+         LfKPMWef+fojvr8PY8dHNZnOhUpUiENSjF9COmX1SIh+cYQUOIzqTk4X6K7egQooaCsR
+         yTWTnAQlaZg2OVmnxyTjRXmficNkikwukbjFnHY8RGZQSh60gd7AT0ayceJVqzmdueww
+         Oo/Q==
+X-Gm-Message-State: APjAAAViDhFq9vUf50BHnUcb3nymWjirl5NvHFhKyf3b2KV5PjX45pvU
+        i6RoivndbR+L5ROhQERR/4I=
+X-Google-Smtp-Source: APXvYqwvDSE0CmdElgXhtuj+X3izqvNU9SOYdSyw5i/wFKniJwWhRhcNQLraK3ba4bGSLwu1vA1bjw==
+X-Received: by 2002:a19:ac08:: with SMTP id g8mr934655lfc.112.1574107554632;
+        Mon, 18 Nov 2019 12:05:54 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id j23sm9166942lji.41.2019.11.18.12.05.58
+        by smtp.gmail.com with ESMTPSA id j23sm9166942lji.41.2019.11.18.12.05.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 12:05:59 -0800 (PST)
+        Mon, 18 Nov 2019 12:05:54 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -67,9 +67,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v1 29/29] MAINTAINERS: Add maintainers for NVIDIA Tegra interconnect drivers
-Date:   Mon, 18 Nov 2019 23:02:47 +0300
-Message-Id: <20191118200247.3567-30-digetx@gmail.com>
+Subject: [PATCH v1 24/29] drm/tegra: dc: Use devm_platform_ioremap_resource
+Date:   Mon, 18 Nov 2019 23:02:42 +0300
+Message-Id: <20191118200247.3567-25-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191118200247.3567-1-digetx@gmail.com>
 References: <20191118200247.3567-1-digetx@gmail.com>
@@ -80,33 +80,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dmitry and Thierry will maintain NVIDIA Tegra interconnect drivers.
+Utilize that relatively new helper which makes code a bit cleaner.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/gpu/drm/tegra/dc.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 51bf69f520e8..fd82089edad6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8614,6 +8614,15 @@ F:	include/dt-bindings/interconnect/
- F:	include/linux/interconnect-provider.h
- F:	include/linux/interconnect.h
+diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
+index 5b1f9ff97576..14834cba5455 100644
+--- a/drivers/gpu/drm/tegra/dc.c
++++ b/drivers/gpu/drm/tegra/dc.c
+@@ -2421,7 +2421,6 @@ static int tegra_dc_couple(struct tegra_dc *dc)
  
-+INTERCONNECT DRIVERS FOR NVIDIA TEGRA
-+R:	Dmitry Osipenko <digetx@gmail.com>
-+S:	Thierry Reding <thierry.reding@gmail.com>
-+L:	linux-pm@vger.kernel.org
-+L:	linux-tegra@vger.kernel.org
-+S:	Supported
-+F:	drivers/interconnect/tegra/
-+F:	include/dt-bindings/interconnect/tegra-icc.h
-+
- INVENSENSE MPU-3050 GYROSCOPE DRIVER
- M:	Linus Walleij <linus.walleij@linaro.org>
- L:	linux-iio@vger.kernel.org
+ static int tegra_dc_probe(struct platform_device *pdev)
+ {
+-	struct resource *regs;
+ 	struct tegra_dc *dc;
+ 	int err;
+ 
+@@ -2478,8 +2477,7 @@ static int tegra_dc_probe(struct platform_device *pdev)
+ 		tegra_powergate_power_off(dc->powergate);
+ 	}
+ 
+-	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	dc->regs = devm_ioremap_resource(&pdev->dev, regs);
++	dc->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(dc->regs))
+ 		return PTR_ERR(dc->regs);
+ 
 -- 
 2.23.0
 
