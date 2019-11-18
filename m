@@ -2,197 +2,149 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8330AC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57924C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE7020727
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E6D920658
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:23:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="PbmjpkhP"
+	dkim=pass (2048-bit key) header.d=ts.fujitsu.com header.i=@ts.fujitsu.com header.b="KqJM0YdQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfKROVu (ORCPT
+        id S1727164AbfKROXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 09:21:50 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:60300 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726627AbfKROVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 09:21:49 -0500
-Received: from zn.tnic (p200300EC2F27B50084A11D83797EBEC7.dip0.t-ipconnect.de [IPv6:2003:ec:2f27:b500:84a1:1d83:797e:bec7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 637F91EC027B;
-        Mon, 18 Nov 2019 15:21:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1574086908;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Drk11FQiiBMEtrfW9/M48Q99qTus2Kx6p9Nmb9b9aEw=;
-        b=PbmjpkhPOEFMbZr6Pzx3R4wyDJywmlAym8reaS86Kpx0UpuRIsg5vNjn7xYTJHbCJSpfnU
-        h6En5/fAPDy4Rm9w+iPEInNkri8a1G11Fz+Abnyu8acE4JyTb+NRgScZqngxbyuxTb2CuT
-        3a/pX8XCszp1p12Et0oH3jM7PHDji40=
-Date:   Mon, 18 Nov 2019 15:21:44 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jann Horn <jannh@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH v2 2/3] x86/traps: Print non-canonical address on #GP
-Message-ID: <20191118142144.GC6363@zn.tnic>
-References: <20191115191728.87338-1-jannh@google.com>
- <20191115191728.87338-2-jannh@google.com>
+        Mon, 18 Nov 2019 09:23:43 -0500
+Received: from mail3.bemta25.messagelabs.com ([195.245.230.84]:58924 "EHLO
+        mail3.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726627AbfKROXm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 09:23:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ts.fujitsu.com;
+        s=200619tsfj; t=1574087020; i=@ts.fujitsu.com;
+        bh=v4ugclb7Ac9tF4IOrOt6IMKMq2976QiWVp1FMkr4oPI=;
+        h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+         MIME-Version:Content-Transfer-Encoding:Content-Type;
+        b=KqJM0YdQy+mI0UAmdkgt4Cw2trosriqAuKEZOGbSaMu44rlE+BC5Yz/gjHYpF8vch
+         7CEhTtic98gkoUa1ro0adIJ5BQ4QmlJ953OOzaHsq1fSFbd0kS8NOUHTu86pU3gbAC
+         OHYp4zCZTg9N295BPktdkEnpC/ITWdaKA5vSGjOJW47V+ekj8NcQDXSlrTptc5Fm9W
+         UY8BsDNdy8XGywBj2hSampgVA16kW8+UccawKXdR7w9UyFGO+feT/ijO+Rvz5xi5tl
+         4MfgH965CharW3UUDSbXX9v95Y3DqlJalBTgnEzz58vsuFVIW8cIcaJlwLrC33IOFn
+         ABmD6OHX/edyg==
+Received: from [46.226.52.197] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-4.bemta.az-b.eu-west-1.aws.symcld.net id 7C/A5-03226-B69A2DD5; Mon, 18 Nov 2019 14:23:39 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrOIsWRWlGSWpSXmKPExsViZ8MxVTd75aV
+  Yg2uzNC2+/Wlls9iz9ySLxeVdc9gszv89zurA4rFz1l12j8+b5Dw2PXnLFMAcxZqZl5RfkcCa
+  8XPvGsaCJ4IVR4/9ZWlgPMrTxcjFISQwh1Fi/6ZpTBDOAkaJ7r+djF2MnBxsAgYSu14dYgaxR
+  QRUJXbcncgKYjMLxEpcmrQBrEZYwFni4ouNYDYLUM3O50dYQGxeAUOJvR19QEM5ODgFLCTezA
+  drFQJqffd7MiNEiaDEyZlPWCBGykt0XG6EGq8jsWD3J7YJjLyzkJTNQlI2C0nZAkbmVYwWSUW
+  Z6RkluYmZObqGBga6hoZGuoaW5kBsppdYpZukl1qqW55aXKJrqJdYXqxXXJmbnJOil5dasokR
+  GKYpBUeP7GB89/Wt3iFGSQ4mJVFeefuLsUJ8SfkplRmJxRnxRaU5qcWHGGU4OJQkeMNWXIoVE
+  ixKTU+tSMvMAcYMTFqCg0dJhFdgOVCat7ggMbc4Mx0idYpRl+P6+71LmYVY8vLzUqXEeaeBFA
+  mAFGWU5sGNgMXvJUZZKWFeRgYGBiGegtSi3MwSVPlXjOIcjErCvFYgU3gy80rgNr0COoIJ6Aj
+  tHedAjihJREhJNTDJrUrdsFTegP/ZXO7wv703N39vb4ietDRPJU47u1Yzw6JWdfPZqBvz8rkv
+  L59zcvf9lENP5fg0HnzhdKict/6Iq+DMwLa0DdOat4eF2Roaund/Dj9wb9ok2z7dr/OvSv3kP
+  DTn1tJ7n6Letufseda6tu+Nq9QT1jvbUpMXb1LRnp4RxrVTcIHrG6/sewLGB6JZnmyeHvNvKQ
+  ufyOQym4KZW++Xz3b7m/e/LcZw2+b4bz0yDGK7W47F8r98Wuw6qWpmS2I617mPIjei0s5+UFn
+  35OeE7P/PA/7kWIhFzJkdw+lr8Lw7Ircp/YzGqvy/17ZncZ2fdun3IQ7+UqXjc92enl34QO+b
+  yvacvD2vT7IxKbEUZyQaajEXFScCAKGqYH9aAwAA
+X-Env-Sender: dietmar.hahn@ts.fujitsu.com
+X-Msg-Ref: server-7.tower-285.messagelabs.com!1574087019!272990!1
+X-Originating-IP: [62.60.8.149]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.22; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 5619 invoked from network); 18 Nov 2019 14:23:39 -0000
+Received: from unknown (HELO mailhost2.uk.fujitsu.com) (62.60.8.149)
+  by server-7.tower-285.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 18 Nov 2019 14:23:39 -0000
+Received: from sanpedro.mch.fsc.net ([172.17.20.6])
+        by mailhost2.uk.fujitsu.com (8.14.5/8.14.5) with SMTP id xAIENVO9001237;
+        Mon, 18 Nov 2019 14:23:31 GMT
+Received: from amur.mch.fsc.net (unknown [10.172.102.131])
+        by sanpedro.mch.fsc.net (Postfix) with ESMTP id 460259D00892;
+        Mon, 18 Nov 2019 15:23:26 +0100 (CET)
+From:   Dietmar Hahn <dietmar.hahn@ts.fujitsu.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        dieti.hahn@gmail.com
+Subject: Re: Kernel panic because of wrong contents in core_pattern
+Date:   Mon, 18 Nov 2019 15:23:26 +0100
+Message-ID: <2513527.0IqIISzq9R@amur.mch.fsc.net>
+In-Reply-To: <20191115132740.GP26530@ZenIV.linux.org.uk>
+References: <1856804.EHpamdVGlA@amur.mch.fsc.net> <20191115132740.GP26530@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191115191728.87338-2-jannh@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 08:17:27PM +0100, Jann Horn wrote:
->  dotraplinkage void
->  do_general_protection(struct pt_regs *regs, long error_code)
->  {
-> @@ -547,8 +581,15 @@ do_general_protection(struct pt_regs *regs, long error_code)
->  			return;
->  
->  		if (notify_die(DIE_GPF, desc, regs, error_code,
-> -			       X86_TRAP_GP, SIGSEGV) != NOTIFY_STOP)
-> -			die(desc, regs, error_code);
-> +			       X86_TRAP_GP, SIGSEGV) == NOTIFY_STOP)
-> +			return;
-> +
-> +		if (error_code)
-> +			pr_alert("GPF is segment-related (see error code)\n");
-> +		else
-> +			print_kernel_gp_address(regs);
-> +
-> +		die(desc, regs, error_code);
+Am Freitag, 15. November 2019, 14:27:40 CET schrieb Al Viro:
+> On Fri, Nov 15, 2019 at 02:01:55PM +0100, Dietmar Hahn wrote:
+> 
+> > Later a user tool dumped with SIGSEGV and the linux system crashed.
+> > I investigated the crash dump and found the cause.
+> > 
+> > Via format_corename() in fs/coredump.c the helper_argv[] with 3 entries is
+> > created and helper_argv[0] == "" (because of the ' ' after the '|')
+> > ispipe is set to 1.
+> > Later in call_usermodehelper_setup():
+> >   sub_info->path = path;  == helper_argv[0] == ""
+> > This leads in call_usermodehelper_exec() to:
+> >   if (strlen(sub_info->path) == 0)
+> >                 goto out;
+> > with a return value of 0.
+> > But no pipe is created and thus cprm.file == NULL.
+> > This leads in file_start_write() to the panic because of dereferencing
+> >  file_inode(file)->i_mode)
+> > 
+> > I'am not sure what's the best way to fix this so I've no patch.
+> > Thanks.
+> 
+> Check in the caller of format_corename() for **argv being '\0' and fail
+> if it is?  I mean, turn that
+>                 if (ispipe < 0) {
+>                         printk(KERN_WARNING "format_corename failed\n");
+>                         printk(KERN_WARNING "Aborting core\n");
+>                         goto fail_unlock;
+>                 }   
+> in there into
+> 		if (ispipe < 0 || !**argv) {
+>                         printk(KERN_WARNING "format_corename failed\n");
+>                         printk(KERN_WARNING "Aborting core\n");
+>                         goto fail_unlock;
+>                 }
 
-Right, this way, those messages appear before the main "general
-protection ..." message:
+Unfortunately this doesn't work because argv[0] is always 0 in case of ispipe
+in format_corename():
+	if (ispipe) {
+		int argvs = sizeof(core_pattern) / 2;
+		(*argv) = kmalloc_array(argvs, sizeof(**argv), GFP_KERNEL);
+		if (!(*argv))
+			return -ENOMEM;
+		(*argv)[(*argc)++] = 0;
+		++pat_ptr;
+	}
 
-[    2.434372] traps: probably dereferencing non-canonical address 0xdfff000000000001
-[    2.442492] general protection fault: 0000 [#1] PREEMPT SMP
+The manpage says: The program must be ..., and must immediately
+follow the '|' character.
+Why not check this in format_corename(), maybe:
 
-Can we glue/merge them together? Or is this going to confuse tools too much:
+@@ -211,6 +211,8 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
+                        return -ENOMEM;
+                (*argv)[(*argc)++] = 0;
+                ++pat_ptr;
++               if (isspace(*pat_ptr))
++                       return -EINVAL;
+        }
 
-[    2.542218] general protection fault while derefing a non-canonical address 0xdfff000000000001: 0000 [#1] PREEMPT SMP
+Dietmar.
 
-(and that sentence could be shorter too:
 
- 	"general protection fault for non-canonical address 0xdfff000000000001"
 
-looks ok to me too.)
 
-Here's a dirty diff together with a reproducer ontop of yours:
 
----
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index bf796f8c9998..dab702ba28a6 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -515,7 +515,7 @@ dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
-  * On 64-bit, if an uncaught #GP occurs while dereferencing a non-canonical
-  * address, print that address.
-  */
--static void print_kernel_gp_address(struct pt_regs *regs)
-+static unsigned long get_kernel_gp_address(struct pt_regs *regs)
- {
- #ifdef CONFIG_X86_64
- 	u8 insn_bytes[MAX_INSN_SIZE];
-@@ -523,7 +523,7 @@ static void print_kernel_gp_address(struct pt_regs *regs)
- 	unsigned long addr_ref;
- 
- 	if (probe_kernel_read(insn_bytes, (void *)regs->ip, MAX_INSN_SIZE))
--		return;
-+		return 0;
- 
- 	kernel_insn_init(&insn, insn_bytes, MAX_INSN_SIZE);
- 	insn_get_modrm(&insn);
-@@ -532,22 +532,22 @@ static void print_kernel_gp_address(struct pt_regs *regs)
- 
- 	/* Bail out if insn_get_addr_ref() failed or we got a kernel address. */
- 	if (addr_ref >= ~__VIRTUAL_MASK)
--		return;
-+		return 0;
- 
- 	/* Bail out if the entire operand is in the canonical user half. */
- 	if (addr_ref + insn.opnd_bytes - 1 <= __VIRTUAL_MASK)
--		return;
-+		return 0;
- 
--	pr_alert("probably dereferencing non-canonical address 0x%016lx\n",
--		 addr_ref);
-+	return addr_ref;
- #endif
- }
- 
-+#define GPFSTR "general protection fault"
- dotraplinkage void
- do_general_protection(struct pt_regs *regs, long error_code)
- {
--	const char *desc = "general protection fault";
- 	struct task_struct *tsk;
-+	char desc[90];
- 
- 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
- 	cond_local_irq_enable(regs);
-@@ -584,12 +584,18 @@ do_general_protection(struct pt_regs *regs, long error_code)
- 			       X86_TRAP_GP, SIGSEGV) == NOTIFY_STOP)
- 			return;
- 
--		if (error_code)
--			pr_alert("GPF is segment-related (see error code)\n");
--		else
--			print_kernel_gp_address(regs);
-+		if (error_code) {
-+			snprintf(desc, 90, "segment-related " GPFSTR);
-+		} else {
-+			unsigned long addr_ref = get_kernel_gp_address(regs);
-+
-+			if (addr_ref)
-+				snprintf(desc, 90, GPFSTR " while derefing a non-canonical address 0x%lx", addr_ref);
-+			else
-+				snprintf(desc, 90, GPFSTR);
-+		}
- 
--		die(desc, regs, error_code);
-+		die((const char *)desc, regs, error_code);
- 		return;
- 	}
- 
-diff --git a/init/main.c b/init/main.c
-index 91f6ebb30ef0..7acc7e660be9 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -1124,6 +1124,9 @@ static int __ref kernel_init(void *unused)
- 
- 	rcu_end_inkernel_boot();
- 
-+	asm volatile("mov $0xdfff000000000001, %rax\n\t"
-+		     "jmpq *%rax\n\t");
-+
- 	if (ramdisk_execute_command) {
- 		ret = run_init_process(ramdisk_execute_command);
- 		if (!ret)
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
