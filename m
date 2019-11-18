@@ -2,182 +2,77 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 322A4C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D889C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F22CF2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:34:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="XtmBOSrq"
+	by mail.kernel.org (Postfix) with ESMTP id 2FAA32186D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:35:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfKRQeS (ORCPT
+        id S1726994AbfKRQfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 11:34:18 -0500
-Received: from mail-eopbgr790110.outbound.protection.outlook.com ([40.107.79.110]:29024
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726322AbfKRQeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 11:34:16 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DoupD3a3gRTMyK0444BHaUvgE+fbrgolqWMDyxt9aOXdrVBCu5thXGuHx/mOeLAx7qBqFngIWMiejEJR1dIdM0EwbO7B20pqRcFynS9qf8tKck/ri/87hWKTjgGbxhw8KA3PuMvhoXq2tvaRjGZU0PiWcEfTTx9VUiHpZ4qApCOjZ1cu81GT6YSyJUOxnU+AfWGshHrgzXsyxb9Rc5TGlUfwAylXWQA5sCCmCsg5GnlRt/SPnZHY348cZScdAn/79MWACGrk6Gwpt6HejKDqXo4yoUb/xodjJxGIwqxfsDwI7OPu/0Z4PZgG95jhgzrdnOVP90CTs2es4jTblBUaRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lobSHtg/0E2VJByIX2yN9I1+j1YoYY5Ketxk+6AtTW8=;
- b=KPOId82elWXvK1taQrHQArXVFJYHLzw6ptbJIGuamn/IpZDSU+yf9skjRLm0gJ1tiP4rEgRrGSfiNgvTR/K5/io0ojGXlZ2cY1HtodwYmhWrGsvcx0LFyBHvj/mHl5f/8ZAxlzBIghXHFvw+yLu9Z1E+FVVnqJtCKIKIJ+3pBoyIAn1UV/LRnQj0I1FvZqYpusBiI6IBNm5XmOyrdWHZky3RjVBZtInHYX2ZfddkijuzGQabdET2ErpLLTM8koXLx2sUY670Rx8KYlHNIakqhUqQ61kZE0MUat+qheLCV/NbogKIxBHEEpu22it3W9gcsSk+Zet18V8SKOpy59oGmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lobSHtg/0E2VJByIX2yN9I1+j1YoYY5Ketxk+6AtTW8=;
- b=XtmBOSrqszKepv1tsu4i7z3fACmLWvLvwAk8m7tB/zdB/IOgpLGj+JuukLX6pY0ImedZl2aTzxiMY2yIWqp8zOfRI1hdEIG5A2bYD5RwWW5PcR564OFmEZ8uQ4xAMnO4PxlXv+3U6gVlN8LS6GLZisnKkg/f6u1Y5O/e0v0SdG4=
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
- DM6PR21MB1147.namprd21.prod.outlook.com (20.179.50.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.0; Mon, 18 Nov 2019 16:34:14 +0000
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::2c55:a47d:cd39:94d6]) by DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::2c55:a47d:cd39:94d6%9]) with mapi id 15.20.2474.015; Mon, 18 Nov 2019
- 16:34:14 +0000
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by CY4PR01CA0019.prod.exchangelabs.com (2603:10b6:903:1f::29) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Mon, 18 Nov 2019 16:34:13 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH net, 2/2] hv_netvsc: Fix send_table offset in case of a host
- bug
-Thread-Topic: [PATCH net, 2/2] hv_netvsc: Fix send_table offset in case of a
- host bug
-Thread-Index: AQHVni4DVVlGMTbd+EO5+K+J9FRNjA==
-Date:   Mon, 18 Nov 2019 16:34:14 +0000
-Message-ID: <1574094751-98966-3-git-send-email-haiyangz@microsoft.com>
-References: <1574094751-98966-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1574094751-98966-1-git-send-email-haiyangz@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: CY4PR01CA0019.prod.exchangelabs.com (2603:10b6:903:1f::29)
- To DM6PR21MB1242.namprd21.prod.outlook.com (2603:10b6:5:169::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 2
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c5db569c-0e02-4c2b-cf8c-08d76c4525d0
-x-ms-traffictypediagnostic: DM6PR21MB1147:|DM6PR21MB1147:|DM6PR21MB1147:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB114706108D2D3E8D343F668FAC4D0@DM6PR21MB1147.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 0225B0D5BC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39860400002)(396003)(136003)(346002)(366004)(199004)(189003)(22452003)(2906002)(2201001)(6506007)(7736002)(6116002)(52116002)(3846002)(71200400001)(71190400001)(256004)(305945005)(66946007)(66446008)(22746008)(66476007)(10090500001)(5660300002)(478600001)(10290500003)(4720700003)(25786009)(36756003)(66066001)(486006)(316002)(102836004)(64756008)(66556008)(7846003)(6436002)(6392003)(6486002)(110136005)(54906003)(2616005)(956004)(11346002)(476003)(2501003)(446003)(16526019)(186003)(6512007)(81166006)(81156014)(8676002)(26005)(76176011)(386003)(4326008)(50226002)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1147;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 35aNpX704zNDjMoiini8MuXzg1glzH0lCXevtp7omS/4qnaR9UDN0jwU+UQ82zFfWxhGxGi3grvx3/e2CIGKr0w8KD6QzDbCuA81xPDvS94V2BbYmsGRiASzB+rvq6YWaOT67+Yryg5fquoT9Ewmz73gApByxOjXUY7pT4W67bnAp4lyCcaVqrOKT//1rQYwnPBZoYOck+Nx0LZSzN2C4Sqrt+IYstJsjgKan5VYOgkWgDZovVGbSLYIRcDGU9whyL5+rrd1uxypggGT9MYEZQEg3dB7SeZ4GhMW9spa2Rh6LcLGWCxiQlDlDnEZBjj3INjVhe+uP5yTNZQsrpbgQeKwrVEisiXNnRMoS7yjO9vgCGg+u7O54JjJL4QcLImG808VQLjha6VCcozhX2Ccg/ryOB5jpnznoLhQbRpqm+eGD/rygpUO1HUT13Na1hSW
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 18 Nov 2019 11:35:12 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:32803 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726322AbfKRQfL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 11:35:11 -0500
+Received: by mail-io1-f71.google.com with SMTP id p19so13788559iog.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 08:35:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=T1v+90UGKLY9RVzF9YlXDA/Fxk580ZwZRtQxdMyWbkY=;
+        b=F51hehxiyCUc8B8TCpanGzzru+EcjUBdeuVYXhYFz/1EgPR3Qm6IELUuqmQeZSyxaL
+         0oJKsIVBOckjBtn5p9KRP/vwZ0yhqi1/bla5D8PBMaO2pRz/CHVlTI1ocKLCGMhVFzOE
+         QpdnQqvGtZmHh/TuBwyquKRoAkQqpu1Nk8eXUCpLHwlUdQJvtAyldJ7qPKNzPUrPl5ug
+         7ALYzX9RLCaiLaXiTx7JOK7xIEnXjf6UuexavRrENosWZFZGG8dkGMLlRqCo/Rst4p7S
+         WmloBpWsaIGjHTCWoG5F+1iAGegZC/WCjJTidvI2dmXTKZaoV4gRRNIssfnwPLoLj+Kv
+         pOKw==
+X-Gm-Message-State: APjAAAXs+KICFHhfnLnecK0PiVcYguuJJAhJHA4r+fwkSrbgzwF3u+mp
+        pX+gAzYS1w+TfPT56KPyyo31wPF+3aC6RHi0B8GN9LeenmMx
+X-Google-Smtp-Source: APXvYqzhzyqpZnHIJZzv557skiREBY4tc7nN0e0FK4VWRbj50nE1vG4RDb/uQTgjy6rZn+IdC0mJv/bpQNMTY/i/TxDfCA2btj3o
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c5db569c-0e02-4c2b-cf8c-08d76c4525d0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 16:34:14.0138
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0Ud4Om2qAgxQhHr8mQ/alqQtyHb9zHx4JNNG/+DLOraWd5xaIZhfbYz44NegZSp4/3AvPjMyPiK371YmwS7ZoQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1147
+X-Received: by 2002:a5d:8245:: with SMTP id n5mr14365795ioo.242.1574094909628;
+ Mon, 18 Nov 2019 08:35:09 -0800 (PST)
+Date:   Mon, 18 Nov 2019 08:35:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ee674f0597a18709@google.com>
+Subject: linux-next boot error: can't ssh into the instance (3)
+From:   syzbot <syzbot+ce541a23cf58c1f6b1b1@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If negotiated NVSP version <=3D NVSP_PROTOCOL_VERSION_6, the offset may
-be wrong (too small) due to a host bug. This can cause missing the
-end of the send indirection table, and add multiple zero entries from
-leading zeros before the data region. This bug adds extra burden on
-channel 0.
+Hello,
 
-So fix the offset by computing it from the end of the table. This
-will ensure netvsc driver runs normally on unfixed hosts, and future
-fixed hosts.
+syzbot found the following crash on:
 
-Fixes: 5b54dac856cb ("hyperv: Add support for virtual Receive Side Scaling =
-(vRSS)")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+HEAD commit:    519ead8f Add linux-next specific files for 20191118
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=14653416e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=652dd3906d691711
+dashboard link: https://syzkaller.appspot.com/bug?extid=ce541a23cf58c1f6b1b1
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+ce541a23cf58c1f6b1b1@syzkaller.appspotmail.com
+
+
+
 ---
- drivers/net/hyperv/netvsc.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index efd30e2..7c5481a 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -1178,6 +1178,7 @@ static int netvsc_receive(struct net_device *ndev,
- }
-=20
- static void netvsc_send_table(struct net_device *ndev,
-+			      struct netvsc_device *nvscdev,
- 			      const struct nvsp_message *nvmsg,
- 			      u32 msglen)
- {
-@@ -1193,6 +1194,13 @@ static void netvsc_send_table(struct net_device *nde=
-v,
- 		return;
- 	}
-=20
-+	/* If negotiated version <=3D NVSP_PROTOCOL_VERSION_6, the offset may be
-+	 * wrong due to a host bug. So fix the offset here.
-+	 */
-+	if (nvscdev->nvsp_version <=3D NVSP_PROTOCOL_VERSION_6)
-+		offset =3D msglen - count * sizeof(u32);
-+
-+	/* Boundary check for all versions */
- 	if (offset + count * sizeof(u32) > msglen) {
- 		netdev_err(ndev, "Received send-table offset too big:%u\n",
- 			   offset);
-@@ -1218,12 +1226,13 @@ static void netvsc_send_vf(struct net_device *ndev,
- }
-=20
- static void netvsc_receive_inband(struct net_device *ndev,
-+				  struct netvsc_device *nvscdev,
- 				  const struct nvsp_message *nvmsg,
- 				  u32 msglen)
- {
- 	switch (nvmsg->hdr.msg_type) {
- 	case NVSP_MSG5_TYPE_SEND_INDIRECTION_TABLE:
--		netvsc_send_table(ndev, nvmsg, msglen);
-+		netvsc_send_table(ndev, nvscdev, nvmsg, msglen);
- 		break;
-=20
- 	case NVSP_MSG4_TYPE_SEND_VF_ASSOCIATION:
-@@ -1257,7 +1266,7 @@ static int netvsc_process_raw_pkt(struct hv_device *d=
-evice,
- 		break;
-=20
- 	case VM_PKT_DATA_INBAND:
--		netvsc_receive_inband(ndev, nvmsg, msglen);
-+		netvsc_receive_inband(ndev, net_device, nvmsg, msglen);
- 		break;
-=20
- 	default:
---=20
-1.8.3.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
