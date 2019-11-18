@@ -3,71 +3,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D892C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DECC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 430B821783
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E211B21939
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:55:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbfKRPx6 (ORCPT
+        id S1727433AbfKRPzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 10:53:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59006 "EHLO mail.kernel.org"
+        Mon, 18 Nov 2019 10:55:47 -0500
+Received: from muru.com ([72.249.23.125]:42722 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726216AbfKRPx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 10:53:57 -0500
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6925214DE;
-        Mon, 18 Nov 2019 15:53:56 +0000 (UTC)
-Date:   Mon, 18 Nov 2019 10:53:55 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] sched: rt: Make RT capacity aware
-Message-ID: <20191118105355.2f822886@oasis.local.home>
-In-Reply-To: <20191118154334.tolws225robfncp6@e107158-lin.cambridge.arm.com>
-References: <20191009104611.15363-1-qais.yousef@arm.com>
-        <20191028143749.GE4114@hirez.programming.kicks-ass.net>
-        <20191028140147.036a0001@grimm.local.home>
-        <20191118154334.tolws225robfncp6@e107158-lin.cambridge.arm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1727109AbfKRPzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 10:55:46 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id AC87E80BF;
+        Mon, 18 Nov 2019 15:56:19 +0000 (UTC)
+Date:   Mon, 18 Nov 2019 07:55:39 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-realtek-soc@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        boot-architecture@lists.linaro.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "open list:TI ETHERNET SWITCH DRIVER (CPSW)" 
+        <linux-omap@vger.kernel.org>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: Re: Sense of soc bus? (was: [PATCH] base: soc: Export
+ soc_device_to_device() helper)
+Message-ID: <20191118155539.GB35479@atomide.com>
+References: <586fa37c-6292-aca4-fa7c-73064858afaf@suse.de>
+ <20191111064040.GA3502217@kroah.com>
+ <a88442df-dc6b-07e5-8dee-9e308bdda450@suse.de>
+ <20191112052347.GA1197504@kroah.com>
+ <20191112072926.isjxfa4ci6akhx56@pengutronix.de>
+ <aff81b8e-f041-73a5-6a95-d308fa07842c@suse.de>
+ <c8572f70-5550-8cee-4381-fd7de7ae5af0@baylibre.com>
+ <CAMuHMdWOWWQoJh5=07VMRhtrFR_Gc_qNhjTV4tCsvwvMn0kYfA@mail.gmail.com>
+ <a0a6d71f-4fb7-51ce-fe33-74f9e588b791@suse.de>
+ <CAMuHMdU7EYHWRAR+s3ee4Wy6+6_MZON5xARszO7TDXZGyw8d5w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdU7EYHWRAR+s3ee4Wy6+6_MZON5xARszO7TDXZGyw8d5w@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 Nov 2019 15:43:35 +0000
-Qais Yousef <qais.yousef@arm.com> wrote:
-
->   
-> > 
-> > Nothing against it, but I want to take a deeper look before we accept
-> > it. Are you OK in waiting a week? I'm currently at Open Source Summit
-> > and still have two more talks to write (giving them Thursday). I wont
-> > have time to look till next week.  
+* Geert Uytterhoeven <geert@linux-m68k.org> [191115 15:51]:
+> On Fri, Nov 15, 2019 at 1:01 PM Andreas Färber <afaerber@suse.de> wrote:
+> > Am 15.11.19 um 09:58 schrieb Geert Uytterhoeven:
+> > > We do our best to use it solely for detecting quirks in early SoC revisions.
+> >
+> > Got a pointer? I fail to immediately understand how sysfs would help
+> > drivers (as opposed to userspace) detect quirks: Parsing strings back
+> > doesn't sound efficient, and I don't see you exporting any custom APIs
+> > in drivers/soc/renesas/renesas-soc.c?
 > 
-> Apologies if I am being too pushy. But not sure whether this is waiting for its
-> turn in the queue or slipped through the cracks, hence another gentle reminder
-> in case it's the latter :-)
+> We use soc_device_match(), inside kernel drivers.
+> Exposure through sysfs is a side-effect of using soc_device_register(),
+> and welcomed, as it allows the user to find out quickly which SoC and
+> revision is being used.
 
-No you are not being too pushy, my apologies to you, it's been quite
-hectic lately (both from a business and personal stand point). I'll
-look at it now.
+For the omap variants too, we've so far gotten away with early SoC
+detection for platform code, and then use soc_device_match() in few
+cases for drivers at probe time if needed.
 
-Thanks, and sorry for the delay :-(
+Regards,
 
--- Steve
+Tony
