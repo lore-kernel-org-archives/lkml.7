@@ -2,122 +2,153 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8932AC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB594C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41AE7206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:58:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="eabxb1st"
+	by mail.kernel.org (Postfix) with ESMTP id B9CB220692
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfKRM6S (ORCPT
+        id S1726910AbfKRM6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 07:58:18 -0500
-Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:60278 "EHLO
-        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbfKRM6R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 07:58:17 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id E7CA83F731;
-        Mon, 18 Nov 2019 13:58:14 +0100 (CET)
-Authentication-Results: ste-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=eabxb1st;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
-        dkim=pass (1024-bit key) header.d=shipmail.org
-Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 1OKBn0n20cbF; Mon, 18 Nov 2019 13:58:10 +0100 (CET)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 8B8783F6AF;
-        Mon, 18 Nov 2019 13:58:05 +0100 (CET)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id C6DA0360070;
-        Mon, 18 Nov 2019 13:58:04 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1574081884; bh=AFDCrmlbjICMQZSk5hGF7cpQTlFoaR/bVow1qk93kfs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=eabxb1stIuKrkqGocBX6wlcN+Vsl3Ml+lvM15Z9rzFU/k6+3D1OOmGzr/0RdpYC4C
-         EyVHCjUubPlth+gEJoRjOTwLwmbWcIPDYJz/E/Ul1iAxbVUaHjihH2oxXW1Fm1yzxi
-         9Mflq8G4RASgUVWHN9eI0QWRr+zFMe3SmpidQ6Lk=
-Subject: Re: [PATCH 2/2] mm: Fix a huge pud insertion race during faulting
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>
-References: <20191115115808.21181-1-thomas_os@shipmail.org>
- <20191115115808.21181-2-thomas_os@shipmail.org>
- <20191115115800.45c053abcdb550d70b9baec9@linux-foundation.org>
- <20191118102219.om5monxih7kfodyz@box>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <b8600932-517d-99d3-90b4-d9b9e8a6f641@shipmail.org>
-Date:   Mon, 18 Nov 2019 13:58:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20191118102219.om5monxih7kfodyz@box>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Mon, 18 Nov 2019 07:58:48 -0500
+Received: from mga12.intel.com ([192.55.52.136]:63296 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726490AbfKRM6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 07:58:48 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 04:58:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,320,1569308400"; 
+   d="scan'208";a="236909234"
+Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.25])
+  by fmsmga002.fm.intel.com with ESMTP; 18 Nov 2019 04:58:47 -0800
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, acme@redhat.com, mingo@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     ak@linux.intel.com, eranian@google.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V2] perf/x86/intel: Avoid unnecessary PEBS_ENABLE MSR access in PMI
+Date:   Mon, 18 Nov 2019 04:58:05 -0800
+Message-Id: <20191118125805.18918-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/18/19 11:22 AM, Kirill A. Shutemov wrote:
-> On Fri, Nov 15, 2019 at 11:58:00AM -0800, Andrew Morton wrote:
->> On Fri, 15 Nov 2019 12:58:08 +0100 Thomas Hellström (VMware) <thomas_os@shipmail.org> wrote:
->>
->>> A huge pud page can theoretically be faulted in racing with pmd_alloc()
->>> in __handle_mm_fault(). That will lead to pmd_alloc() returning an
->>> invalid pmd pointer. Fix this by adding a pud_trans_unstable() function
->>> similar to pmd_trans_unstable() and check whether the pud is really stable
->>> before using the pmd pointer.
->>>
->>> Race:
->>> Thread 1:             Thread 2:                 Comment
->>> create_huge_pud()                               Fallback - not taken.
->>> 		      create_huge_pud()         Taken.
->>> pmd_alloc()                                     Returns an invalid pointer.
->> What are the user-visible runtime effects of this change?
-> Data corruption: kernel writes to a huge page thing it's page table.
->
->> Is a -stable backport warranted?
-> I believe it is.
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Note that this was caught during a code audit rather than a real 
-experienced problem. It looks to me like the only implementation that 
-currently creates huge pud pagetable entries is dev_dax_huge_fault() 
-which doesn't appear to care much about private (COW) mappings or 
-write-tracking which is, I believe, a prerequisite for create_huge_pud() 
-falling back on thread 1, but not in thread 2.
+The perf PMI handler, intel_pmu_handle_irq(), currently does
+unnecessary MSR accesses for PEBS_ENABLE MSR in
+__intel_pmu_enable/disable_all() when PEBS is enabled.
 
-This means (assuming that's intentional) that a stable backport 
-shouldn't be needed.
+When entering the handler, global ctrl is explicitly disabled. All
+counters do not count anymore. It doesn't matter if PEBS is enabled
+or not in a PMI handler.
+Furthermore, for most cases, the cpuc->pebs_enabled is not changed in
+PMI. The PEBS status doesn't change. The PEBS_ENABLE MSR doesn't need to
+be changed either when exiting the handler.
 
-For the WIP huge page support for graphics memory we'll be allowing both 
-COW mappings and write-tracking, though, but that's still some time away.
+PMI throttle may change the PEBS status during PMI handler. The
+x86_pmu_stop() ends up in intel_pmu_pebs_disable() which can update
+cpuc->pebs_enabled. But the PEBS_ENABLE MSR will be updated as well when
+cpuc->enabled == 1. No need to access PEBS_ENABLE MSR again for this
+case when exiting the handler.
+However, the PMI may land after cpuc->enabled=0 in x86_pmu_disable() and
+PMI throttle may be triggered for the PMI. For this rare case,
+intel_pmu_pebs_disable() will not touch PEBS_ENABLE MSR. The patch
+explicitly disable the PEBS for this case.
 
-In any case, I think this patch needs -rc testing to catch potential 
-pud_devmap issues before submitted to stable.
+Use ftrace to measure the duration of intel_pmu_handle_irq() on BDX.
+   #perf record -e cycles:P -- ./tchain_edit
 
-Thanks,
+The average duration of intel_pmu_handle_irq()
+Without the patch       1.144 us
+With the patch          1.025 us
 
-Thomas
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
 
->
-> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->
+Changes since V1:
+- Update description and comments
+- Handle a rare case. The PMI may land after cpuc->enabled=0 in
+  x86_pmu_disable() and PMI throttle may be triggered for the PMI.
+
+ arch/x86/events/intel/core.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index bc6468329c52..18e1132c0fd7 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -1963,6 +1963,14 @@ static __initconst const u64 knl_hw_cache_extra_regs
+  * intel_bts events don't coexist with intel PMU's BTS events because of
+  * x86_add_exclusive(x86_lbr_exclusive_lbr); there's no need to keep them
+  * disabled around intel PMU's event batching etc, only inside the PMI handler.
++ *
++ * Avoid PEBS_ENABLE MSR access in PMIs.
++ * The GLOBAL_CTRL has been disabled. All the counters do not count anymore.
++ * It doesn't matter if the PEBS is enabled or not.
++ * Usually, the PEBS status are not changed in PMIs. It's unnecessary to
++ * access PEBS_ENABLE MSR in disable_all()/enable_all().
++ * However, there are some cases which may change PEBS status, e.g. PMI
++ * throttle. The PEBS_ENABLE should be updated where the status changes.
+  */
+ static void __intel_pmu_disable_all(void)
+ {
+@@ -1972,13 +1980,12 @@ static void __intel_pmu_disable_all(void)
+ 
+ 	if (test_bit(INTEL_PMC_IDX_FIXED_BTS, cpuc->active_mask))
+ 		intel_pmu_disable_bts();
+-
+-	intel_pmu_pebs_disable_all();
+ }
+ 
+ static void intel_pmu_disable_all(void)
+ {
+ 	__intel_pmu_disable_all();
++	intel_pmu_pebs_disable_all();
+ 	intel_pmu_lbr_disable_all();
+ }
+ 
+@@ -1986,7 +1993,6 @@ static void __intel_pmu_enable_all(int added, bool pmi)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 
+-	intel_pmu_pebs_enable_all();
+ 	intel_pmu_lbr_enable_all(pmi);
+ 	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL,
+ 			x86_pmu.intel_ctrl & ~cpuc->intel_ctrl_guest_mask);
+@@ -2004,6 +2010,7 @@ static void __intel_pmu_enable_all(int added, bool pmi)
+ 
+ static void intel_pmu_enable_all(int added)
+ {
++	intel_pmu_pebs_enable_all();
+ 	__intel_pmu_enable_all(added, false);
+ }
+ 
+@@ -2620,6 +2627,15 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
+ 		handled++;
+ 		x86_pmu.drain_pebs(regs);
+ 		status &= x86_pmu.intel_ctrl | GLOBAL_STATUS_TRACE_TOPAPMI;
++
++		/*
++		 * PMI may land after cpuc->enabled=0 in x86_pmu_disable() and
++		 * PMI throttle may be triggered for the PMI.
++		 * For this rare case, intel_pmu_pebs_disable() will not touch
++		 * MSR_IA32_PEBS_ENABLE. Explicitly disable the PEBS here.
++		 */
++		if (unlikely(!cpuc->enabled && !cpuc->pebs_enabled))
++			wrmsrl(MSR_IA32_PEBS_ENABLE, 0);
+ 	}
+ 
+ 	/*
+-- 
+2.17.1
 
