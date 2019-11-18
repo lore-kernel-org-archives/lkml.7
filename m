@@ -2,105 +2,80 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66806C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 01:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EFAC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 01:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A48A20740
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 01:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5234A20730
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 01:01:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbfKRBAw (ORCPT
+        id S1726453AbfKRBBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 20:00:52 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:60376 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725905AbfKRBAw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 20:00:52 -0500
-Received: from dread.disaster.area (pa49-181-255-80.pa.nsw.optusnet.com.au [49.181.255.80])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 333503A1F83;
-        Mon, 18 Nov 2019 12:00:49 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iWVPL-0004U1-Vm; Mon, 18 Nov 2019 12:00:47 +1100
-Date:   Mon, 18 Nov 2019 12:00:47 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 28/28] xfs: rework unreferenced inode lookups
-Message-ID: <20191118010047.GS4614@dread.disaster.area>
-References: <20191031234618.15403-1-david@fromorbit.com>
- <20191031234618.15403-29-david@fromorbit.com>
- <20191106221846.GE37080@bfoster>
- <20191114221602.GJ4614@dread.disaster.area>
- <20191115172600.GC55854@bfoster>
+        Sun, 17 Nov 2019 20:01:33 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:40318 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725905AbfKRBBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 20:01:33 -0500
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iWVPq-0003i0-4Y; Mon, 18 Nov 2019 02:01:18 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Markus Reichl <m.reichl@fivetechno.de>
+Cc:     Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        robh+dt@kernel.org, mark.rutland@arm.com, shawn.lin@rock-chips.com,
+        devicetree@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>,
+        linux-kernel@vger.kernel.org,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-rockchip@lists.infradead.org,
+        Tony Xie <tony.xie@rock-chips.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Randy Li <ayaka@soulik.info>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Subject: Re: arm64: dts: rockchip: Disable HS400 for mmc on rk3399-roc-pc
+Date:   Mon, 18 Nov 2019 02:01:16 +0100
+Message-ID: <14740383.9LiiEhnQET@phil>
+In-Reply-To: <367bf78a-f079-f0b4-68fe-52c86823c174@fivetechno.de>
+References: <20190301153348.29870-1-christoph.muellner@theobroma-systems.com> <20190301153348.29870-2-christoph.muellner@theobroma-systems.com> <367bf78a-f079-f0b4-68fe-52c86823c174@fivetechno.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115172600.GC55854@bfoster>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=G6BsK5s5 c=1 sm=1 tr=0
-        a=XqaD5fcB6dAc7xyKljs8OA==:117 a=XqaD5fcB6dAc7xyKljs8OA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=MeAgGD-zjQ4A:10
-        a=7-415B0cAAAA:8 a=ETrtCZpq2FqVuZsvotgA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 12:26:00PM -0500, Brian Foster wrote:
-> On Fri, Nov 15, 2019 at 09:16:02AM +1100, Dave Chinner wrote:
-> > On Wed, Nov 06, 2019 at 05:18:46PM -0500, Brian Foster wrote:
-> > If so, most of this patch will go away....
-> > 
-> > > > +	 * attached to the buffer so we don't need to do anything more here.
-> > > >  	 */
-> > > > -	if (ip != free_ip) {
-> > > > -		if (!xfs_ilock_nowait(ip, XFS_ILOCK_EXCL)) {
-> > > > -			rcu_read_unlock();
-> > > > -			delay(1);
-> > > > -			goto retry;
-> > > > -		}
-> > > > -
-> > > > -		/*
-> > > > -		 * Check the inode number again in case we're racing with
-> > > > -		 * freeing in xfs_reclaim_inode().  See the comments in that
-> > > > -		 * function for more information as to why the initial check is
-> > > > -		 * not sufficient.
-> > > > -		 */
-> > > > -		if (ip->i_ino != inum) {
-> > > > +	if (__xfs_iflags_test(ip, XFS_ISTALE)) {
-> > > 
-> > > Is there a correctness reason for why we move the stale check to under
-> > > ilock (in both iflush/ifree)?
-> > 
-> > It's under the i_flags_lock, and so I moved it up under the lookup
-> > hold of the i_flags_lock so we don't need to cycle it again.
-> > 
+Am Montag, 11. November 2019, 10:51:04 CET schrieb Markus Reichl:
+> Working with rootfs on two 128GB mmcs on rk3399-roc-pc.
 > 
-> Yeah, but in both cases it looks like it moved to under the ilock as
-> well, which comes after i_flags_lock. IOW, why grab ilock for stale
-> inodes when we're just going to skip them?
+> One (mmc name 128G72, one screw hole) works fine in HS400 mode.
+> Other (mmc name DJNB4R, firefly on pcb, two screw holes) gets lots of
+> mmc1: "running CQE recovery", even hangs with damaged fs,
+> when running under heavy load, e.g. compiling kernel.
+> Both run fine with HS200.
+> 
+> Disabling CQ with patch mmc: core: Add MMC Command Queue Support kernel parameter [0] did not help.
+> [0] https://gitlab.com/ayufan-repos/rock64/linux-mainline-kernel/commit/54e264154b87dfe32a8359b2726e2d5611adbaf3
+> 
+> Therefore I propose to disable HS400 mode on roc-pc for now.
+> 
+> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
 
-Because I was worrying about serialising against reclaim before
-changing the state of the inode. i.e. if the inode has already been
-isolated by not yet disposed of, we shouldn't touch the inode state
-at all. Serialisation against reclaim in this patch is via the
-ILOCK, hence we need to do that before setting ISTALE....
+applied for 5.6 (or maybe still 5.5)
 
-IOWs, ISTALE is not protected by ILOCK, we just can't modify the
-inode state until after we've gained the ILOCK to protect against
-reclaim....
+Thanks
+Heiko
 
-Cheers,
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
