@@ -2,98 +2,87 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F257C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3331AC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3C920862
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:51:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kY243T6A"
+	by mail.kernel.org (Postfix) with ESMTP id 0E38020659
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:51:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfKROvU (ORCPT
+        id S1727217AbfKROvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 09:51:20 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33885 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfKROvU (ORCPT
+        Mon, 18 Nov 2019 09:51:39 -0500
+Received: from outbound-smtp24.blacknight.com ([81.17.249.192]:53900 "EHLO
+        outbound-smtp24.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726703AbfKROvi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 09:51:20 -0500
-Received: by mail-wr1-f67.google.com with SMTP id e6so19864393wrw.1;
-        Mon, 18 Nov 2019 06:51:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=qJmyyg10F+Q9Yx2crAs7oi6VE5FR9DEMY/ulUWTGJq4=;
-        b=kY243T6AG6i4Efp5kRlkWuRtX6TzF+5/toOFakhl5hQZ2KFKCQQYK6dhqfc/Fdh2zE
-         sqo7UTjfGcSKXmpJSPHRJgl3NNM00iBG6b3ORQp4kxvuGM28sshflmghNFMecQf2xb3E
-         t14jsGulPdOVzD/Qlpc+apoFBs6jiW3KYJKw6U9MyyO2Llwzbbo3HAnYaOna3e3pq2lP
-         alo1QDDNE2ZwZvaNEg8N6jhXVD45Cy5N7F4Ddy5zVY8LETuCRiSm5mOL+M8jh3CDgKNq
-         dBHfEQ2gm2uQzV8qrC28qsMvjt5hpQ9kVKUvwgR58NbKmr5GNrBOKjGDZOH6lH7PTFUC
-         n58A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=qJmyyg10F+Q9Yx2crAs7oi6VE5FR9DEMY/ulUWTGJq4=;
-        b=Q1MKBOJI2a5poir5Miu7+xPZyqdeco/4mkzhQW5esGE4xXIWhb676qqpO06Ngwl6n2
-         ISwgu0wVxVcZGe+Kzszggh/zPsUwS9Q4ykTNn/W76ytRwV2RGeVWaKquzIPWL5ywrEYl
-         iqwMGSOiomMX6FZB4Wfhd/aPfIj7TCTSQIfpBaQoMQNNJmv47QumyKs7HzqWzGIA+h6+
-         kZdp7jNi1O7/hYFs+CaxrVp489TSUDycCAnG4ZD6N0eR7IWY2wOVCwgIdH4kzt9yPLEk
-         2myoP0W6SDRuFSR7L9AibsYX2C0yFeTH+EDTHcggnqeBnoBPSzdMkr/dZe/STfuO8dJh
-         a/0g==
-X-Gm-Message-State: APjAAAW9EyJLv0rXSk0HxR8OhPhL41BJCMSMTihMdahJlX5ivSwcjgir
-        TP+1PC3Nv0WgsW8hu4Scz87wrQA=
-X-Google-Smtp-Source: APXvYqwbRz54q4B8bt535RGs5FfHUfsV/tQm+JcHl0NsmrudKXw0v3jJ7uzxrx0UMl6EknlFIsApVg==
-X-Received: by 2002:adf:fa0b:: with SMTP id m11mr32943767wrr.279.1574088677774;
-        Mon, 18 Nov 2019 06:51:17 -0800 (PST)
-Received: from avx2 ([46.53.249.232])
-        by smtp.gmail.com with ESMTPSA id y15sm22797730wrh.94.2019.11.18.06.51.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Nov 2019 06:51:17 -0800 (PST)
-Date:   Mon, 18 Nov 2019 17:51:15 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        security@kernel.org
-Subject: [PATCH] ELF: warn if process starts with executable stack
-Message-ID: <20191118145114.GA9228@avx2>
+        Mon, 18 Nov 2019 09:51:38 -0500
+Received: from mail.blacknight.com (pemlinmail02.blacknight.ie [81.17.254.11])
+        by outbound-smtp24.blacknight.com (Postfix) with ESMTPS id D383AB880B
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 14:51:36 +0000 (GMT)
+Received: (qmail 3377 invoked from network); 18 Nov 2019 14:51:36 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 18 Nov 2019 14:51:36 -0000
+Date:   Mon, 18 Nov 2019 14:51:34 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org, pauld@redhat.com, valentin.schneider@arm.com,
+        srikar@linux.vnet.ibm.com, quentin.perret@arm.com,
+        dietmar.eggemann@arm.com, Morten.Rasmussen@arm.com,
+        hdanton@sina.com, parth@linux.ibm.com, riel@surriel.com
+Subject: Re: [PATCH v4 04/11] sched/fair: rework load_balance
+Message-ID: <20191118145134.GA3016@techsingularity.net>
+References: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
+ <1571405198-27570-5-git-send-email-vincent.guittot@linaro.org>
+ <20191030154534.GJ3016@techsingularity.net>
+ <20191118135017.GA123637@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
+In-Reply-To: <20191118135017.GA123637@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PT_GNU_STACK is fail open design, at least warn people that something
-isn't right.
+On Mon, Nov 18, 2019 at 02:50:17PM +0100, Ingo Molnar wrote:
+> 
+> * Mel Gorman <mgorman@techsingularity.net> wrote:
+> 
+> > s/groupe_type/group_type/
+> > 
+> > >  enum group_type {
+> > > -	group_other = 0,
+> > > +	group_has_spare = 0,
+> > > +	group_fully_busy,
+> > >  	group_misfit_task,
+> > > +	group_asym_packing,
+> > >  	group_imbalanced,
+> > > -	group_overloaded,
+> > > +	group_overloaded
+> > > +};
+> > > +
+> > 
+> > While not your fault, it would be nice to comment on the meaning of each
+> > group type. From a glance, it's not obvious to me why a misfit task should
+> > be a high priority to move a task than a fully_busy (but not overloaded)
+> > group given that moving the misfit task might make a group overloaded.
+> 
+> This part of your feedback should now be addressed in the scheduler tree 
+> via:
+> 
+>   a9723389cc75: sched/fair: Add comments for group_type and balancing at SD_NUMA level
+> 
 
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
----
+While I can't see that commit ID yet, the discussed version of the patch
+was fine by me.
 
- fs/exec.c |    7 +++++++
- 1 file changed, 7 insertions(+)
-
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -762,6 +762,13 @@ int setup_arg_pages(struct linux_binprm *bprm,
- 		goto out_unlock;
- 	BUG_ON(prev != vma);
- 
-+#ifdef CONFIG_MMU
-+	if (vm_flags & VM_EXEC) {
-+		pr_warn_once("process '%s'/%u started with executable stack\n",
-+			     current->comm, current->pid);
-+	}
-+#endif
-+
- 	/* Move stack pages down in memory. */
- 	if (stack_shift) {
- 		ret = shift_arg_pages(vma, stack_shift);
+-- 
+Mel Gorman
+SUSE Labs
