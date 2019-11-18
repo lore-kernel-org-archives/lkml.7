@@ -2,97 +2,122 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA451C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A037C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B558B2068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 732D82068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:09:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iacygdwH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EcsNe4u9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfKRIJn (ORCPT
+        id S1726712AbfKRIJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 03:09:43 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42765 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbfKRIJn (ORCPT
+        Mon, 18 Nov 2019 03:09:44 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:34941 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726464AbfKRIJn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 Nov 2019 03:09:43 -0500
-Received: by mail-pl1-f194.google.com with SMTP id j12so9334988plt.9
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 00:09:41 -0800 (PST)
+Received: by mail-pj1-f65.google.com with SMTP id s8so1257606pji.2;
+        Mon, 18 Nov 2019 00:09:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1MYW+ZNL3WPWeIoavfRSuSGQY9pH147ma5F+7b7hehc=;
-        b=iacygdwHg/uKz5/Vh/3RDG0SQV3EHLpvpt/FfIJFNDlw6b3emc2tvkpQ5WfDNq9J+I
-         Ylxx72u4YEABMLWff6n9JoqpehU3kFF82Q9p0YNk/LSAAIxOxQWGKhzpA1oN5jpRI5l6
-         yT6lIWYG0lC+1XPoAHl8AdQdhhYfnFccvt51qFPB0eaIvaiRy1W8z7C02NZ51KG8sFWg
-         zNe/wr8VVD+SqYGSO/PFqoNt7V8K2Xl5MAAsgpp7EfDyePDBZBytipxQ9DBNNjT5gIKg
-         91De1GJLkNqdBc4QagR3CvDk9OpUWfsdrLLX1QtMZC5HF/0haZmMYkgQ0rWLQ0Lhx7Po
-         pncg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=vBUlayihdGnEP5X+y2Clso2IXibwzRhsbW73z0BN6yA=;
+        b=EcsNe4u99CSCk6YPmn9SgvWlQvml6q7EjkZFBbLpn7lJv8FiRBxcc26u7rH3i8MQpn
+         6T98zSCp2shjBQysrTnNAWD3/TKk4IXBsnzlI0NrwyczPVdRRw0RdpbbWBgpeg901KOg
+         ks1czJkyPQ4E9zOOnAmZUFjwOUFDzoTz3iiVyWSad9yMbzNDNyC0XJsR+W4SHliri4s0
+         Y7n/rUZh0xIqE8BWjWejfL/UTIDBszsg5uN1dijdxTLRYktRRIb5SF11mhwNmoWegTJF
+         ZfzXZnmA0aLGipvGsj6SB59RwMGaMI+F/6W7+MZ9d/SCnPSn61eKTWAu6Z4tf9mh6pfo
+         fK9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1MYW+ZNL3WPWeIoavfRSuSGQY9pH147ma5F+7b7hehc=;
-        b=XMiDyDRZxudZuIYhp9QsgaxAWPfKdT0plq0lG2t4zmGUkQbDmatzHihvV49E3V3AFD
-         pLgXapX/AqVhs22M/IAycFLtgcGqt3L7pVe8rtgb6hdSLmKhrqSZQqMg/0EFAvfQHeuc
-         u35f5sEek7ouzhiaIhtBMuF8o/6dFavRqM+Ic9sBRNTHafgGPBP9Av5piHLr+LPbH3Bv
-         g5C1kIR6AJMAjDgQ+Jz0U76rFGEuFJOCMnuSLLg/2o7+Jh5KeGY+JOxFVEelSVyZRETl
-         jt6OSj0dVJw0nOOCajXVXyflBaYhxO85xrLGFdO/uxDgZT/qGuxHj40+00ShFbbKBIsI
-         LaaA==
-X-Gm-Message-State: APjAAAVcbZIdfwQUQCNPgTLLDJPUflP6dFXyEGxdIW7/iygJufRyDSpY
-        Hj/lz/fi3lEnUUIFUusiwLk=
-X-Google-Smtp-Source: APXvYqyrRDcG/+i3KwxIJ+ALUDsjUrLAwkr0XvH7Tr8reqO8ijRG9vPbHuemyg21mOoK3L99lemwAw==
-X-Received: by 2002:a17:902:8bc8:: with SMTP id r8mr28792728plo.189.1574064581033;
-        Mon, 18 Nov 2019 00:09:41 -0800 (PST)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id i22sm16875330pjx.1.2019.11.18.00.09.37
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=vBUlayihdGnEP5X+y2Clso2IXibwzRhsbW73z0BN6yA=;
+        b=aTUqWm8Les9t9IXYhjqW2TZXaid68y5ZQV2XakQ6I3G+DRsoW7VV9qZ+rd7c2/oa+R
+         rslecdqVg376jWKIreUNeoqz+vkVP+BsKUxld5yEsJq/F6tAgnKNb6R/jYuy0evZatfj
+         N+thsaPdCYkTWBEGlkd5RBih3oLx81YLpph0G2NrAOxTcpV3NVCQTpWgLhDMeD5ZvD0s
+         BiVQ36aPFI08L8mSK2ew3WAFzUB50iqExicODbkeFxGoYlQfoCOjbaXQZmiG9BLR4BM+
+         Q44A9Cc5bXiLkcr7Z6ETBicPvI/1PNjwxyj6lIQeAhotllhShosumaVkAxfICHikoRd8
+         ta5A==
+X-Gm-Message-State: APjAAAUa1zGp8Q2wUqpROTaHIwEvYNz6JLLsw0+dkGoqS5HRvOhhrdX5
+        lJUdf4zxXlXWCbwjhy1gI9GLENFv
+X-Google-Smtp-Source: APXvYqwSeUmbS2bLDo3twzIhvrt8iLYEqiH/T4EJPMGb/ptFmGnaJvpL+DEM8+rRL3TrMjGoKH+RPQ==
+X-Received: by 2002:a17:902:6946:: with SMTP id k6mr1143816plt.164.1574064582503;
+        Mon, 18 Nov 2019 00:09:42 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id h5sm18666428pjc.9.2019.11.18.00.09.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 00:09:40 -0800 (PST)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] misc: isl29020: add missed pm_runtime_disable
-Date:   Mon, 18 Nov 2019 16:09:31 +0800
-Message-Id: <20191118080931.30749-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 18 Nov 2019 00:09:41 -0800 (PST)
+Date:   Mon, 18 Nov 2019 00:09:39 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-iio@vger.kernel.org,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] i2c: smbus: switch from loops to memcpy
+Message-ID: <20191118080939.GC251795@dtor-ws>
+References: <20191112203132.163306-1-dmitry.torokhov@gmail.com>
+ <20191112203132.163306-4-dmitry.torokhov@gmail.com>
+ <20191118074757.edyfvz5s3pqnu67y@pengutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20191118074757.edyfvz5s3pqnu67y@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver forgets to call pm_runtime_disable in remove.
-Add the missed call to fix it.
+On Mon, Nov 18, 2019 at 08:47:57AM +0100, Uwe Kleine-König wrote:
+> Hello Dmitry,
+> 
+> On Tue, Nov 12, 2019 at 12:31:32PM -0800, Dmitry Torokhov wrote:
+> > When copying memory from one buffer to another, instead of open-coding
+> > loops with byte-by-byte copies let's use memcpy() which might be a bit
+> > faster and makes intent more clear.
+> > 
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > 
+> > ---
+> > 
+> > Changes in v3:
+> > - new patch using memcpy() for moving data around
+> > 
+> >  drivers/i2c/i2c-core-smbus.c | 15 +++++----------
+> >  1 file changed, 5 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
+> > index 7b4e2270eeda1..bbafdd3b1b114 100644
+> > --- a/drivers/i2c/i2c-core-smbus.c
+> > +++ b/drivers/i2c/i2c-core-smbus.c
+> > @@ -397,8 +397,7 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
+> >  			}
+> >  
+> >  			i2c_smbus_try_get_dmabuf(&msg[0], command);
+> > -			for (i = 1; i < msg[0].len; i++)
+> > -				msg[0].buf[i] = data->block[i - 1];
+> > +			memcpy(msg[0].buf + 1, data->block, msg[0].len - 1);
+> 
+> Can it happen that msg[0].len is zero?
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/misc/isl29020.c | 1 +
- 1 file changed, 1 insertion(+)
+No, it can not, because of the "msg[0].len = data->block[0] + 2;" line
+above.
 
-diff --git a/drivers/misc/isl29020.c b/drivers/misc/isl29020.c
-index b6125620eb8f..fc5ff2805b94 100644
---- a/drivers/misc/isl29020.c
-+++ b/drivers/misc/isl29020.c
-@@ -173,6 +173,7 @@ static int  isl29020_probe(struct i2c_client *client,
- 
- static int isl29020_remove(struct i2c_client *client)
- {
-+	pm_runtime_disable(&client->dev);
- 	sysfs_remove_group(&client->dev.kobj, &m_als_gr);
- 	return 0;
- }
+Thanks.
+
 -- 
-2.24.0
-
+Dmitry
