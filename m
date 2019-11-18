@@ -2,276 +2,129 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8881CC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB89C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5653E2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B752C2084C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:25:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ZaA+xVOo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbfKRFW1 (ORCPT
+        id S1726404AbfKRFZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 00:22:27 -0500
-Received: from mga17.intel.com ([192.55.52.151]:64966 "EHLO mga17.intel.com"
+        Mon, 18 Nov 2019 00:25:21 -0500
+Received: from mout.gmx.net ([212.227.15.18]:57491 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725208AbfKRFW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 00:22:27 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Nov 2019 21:22:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,319,1569308400"; 
-   d="scan'208";a="405964318"
-Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Nov 2019 21:22:25 -0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Xu Yilun <yilun.xu@intel.com>, Wu Hao <hao.wu@intel.com>
-Subject: [PATCH] fpga: dfl: support multiple opens on feature device node.
-Date:   Mon, 18 Nov 2019 13:20:41 +0800
-Message-Id: <1574054441-1568-1-git-send-email-yilun.xu@intel.com>
-X-Mailer: git-send-email 2.7.4
+        id S1725208AbfKRFZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 00:25:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1574054705;
+        bh=NeILx/T8Pik6D58S7boVuKRO6cRhdtSWxt4CpQ4nwtI=;
+        h=X-UI-Sender-Class:From:To:Subject:Reply-to:Date;
+        b=ZaA+xVOoVptG3MF6ItV3dME5y1McB3ltyNA4iksR5E64OkpudyLhn0Dy5KmQ6Bzll
+         f/AFtRygnpvjegM0RlHMgvQeu9RgxXOfs7+R+U+Amg1YCKm1caP2Fn7Y8EYbMmXGtn
+         sQQ1ieV1yUhQHRvTnHQ3U0yTyS3aU/TB8sc783j4=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from corona.crabdance.com ([173.228.106.103]) by mail.gmx.com
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MBlxW-1iidHZ1KG4-00CCje; Mon, 18 Nov 2019 06:25:05 +0100
+Received: by corona.crabdance.com (Postfix, from userid 1001)
+        id D729B6E85603; Sun, 17 Nov 2019 21:24:13 -0800 (PST)
+From:   schaecsn <schaecsn@gmx.net>
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] thermal: rockchip: enable hwmon
+Reply-to: schaecsn@gmx.net
+Message-Id: <20191118052413.D729B6E85603@corona.crabdance.com>
+Date:   Sun, 17 Nov 2019 21:24:13 -0800 (PST)
+X-Provags-ID: V03:K1:rf6ZT//QgeDRxJTewZdp6iIroYeR77NdAr53keY7G26v9Tauz/b
+ 4ynhW4A/BDenlnipormdiNH3mwQWqduogyanwbLTn/nX8wj0Cfl0nq0/zwcCekhKaCodCvr
+ d6JCiH+ExU8Ev+0HF1SDJfFuuLtlI0HAJ7+jSO/TQsbr5lm/PI0PWaiUEbAbSSef9F7BM2T
+ 64Dl7e8frlYvklivVS9IA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:PNxcuapc1o4=:vsP2qi5hr37JrUDFqLq0dg
+ mQrLo6kMZbPX45t0Bo3AMXcSIcRzlDDG3FpxPiukKNDZ076ErTQ6pryG/pQowOjZZzjsQbwcy
+ KU4+ErxHpeenNTZIC/dDcO25xR0jygCdOPqmFGZCFcKmy70oPCH7nOJ+X1V0c8BH/W/SNwmNx
+ B1LVlo6jYabIWbk3X7cfzcfKMkb3Je3lTyzRsISFziqs4AREnoAbqnvGB+y3affkdJpmnJD+Z
+ pxSUAs1ZwGFjR1eVPboGa8CDwIuycVtIBwNRssa+ydEbEdNy3/sIsbZT4oQ0hLi+t1FCoDLoR
+ mtDtvAfiqpVHYreMh+8yhM1tuglE1dJMX3/FjdJlXsiD0UZJFTXSlrzAJfeiHGi8feQ/GVJKp
+ lzE4DIoMfDsa5IZnX49Rw4JuRDzxGZiFJuygfpiCJyBcCFywo4BKMZWCT8WlwA2ON4Bnx2j0o
+ QIaAucvFJw2f+rXO4asnrbJKJScMsu4rzHTZdUBdUhBb5gEhKyeMkohZOJLb2uS4lAM6+m8js
+ i0xTOo4yDnMiqonaYpsMg40WCwYOK2MmprlaStxwVwwY0cVs0z4syQyCCIrI91eM2Vc1uCb/9
+ 0P1/Utb9Lot6iIqqyHnDm9JRfatnMtNk0ZFiO9ky8heNr0afSXkRn7Fom6TYFjmyylgwAE3Uh
+ w4SLaI7M06Uy5sqfZHhWQZwCr7iM42WHx2QI2CYcjJON6NJ7NJOoYNLTmEjRP18YyHemsIoSQ
+ QFrncFWlFgtV9LwsTGSTSbfUo/KEdf13DlrhHZ+zcq3aNLjWCD7gHPj7U09dHT/xMBqjNJyF/
+ 18FfPWGjqbZIGFvfLXLIZHHxUkugaUprv4OTKwRTEcLnykP4WFibkEJCaU8muDaJlFkDyuFOi
+ QQeuM4xpXdRtv3BiZwdLMsNHNh+QDCSk5Wdw0u8aKKSsSb5Odd2Vg3mXgNQcK0saoU1Fw2oUy
+ MkBuu2uHkxV9ANp399vApd7iaUGZnONlrWn9R/eiDR989o9LG1+qKdGzz43glM4dl4LBn5RsW
+ oSJzo5vEBjHNC8Ge46ccDKc6zrWBlFhNi8e6ONZKaNv4Ys6KVr22LqFUD0drWRW02JWbCqAj1
+ a6zJKZrSchEoJD4WPs/EhcUO542u21RTgQMHDzOwaHsLxuPAtVCsKd31AA2w9xDQ73BhnziEe
+ TQgLbsGFz7T5RNd2+RekltKn2WS7ngHX56rnzjMdlvjpGKX4TDTiejG+DJM7aDzRUywBRgi8a
+ Y/D/nUpjfVoqMFeR0f8yE6SrkU2fBLXOSKer5IQ==
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each DFL functional block, e.g. AFU (Accelerated Function Unit) and FME
-(FPGA Management Engine), could implement more than one function within
-its region, but current driver only allows one user application to access
-it by exclusive open on device node. So this is not convenient and
-flexible for userspace applications, as they have to combine lots of
-different functions into one single application.
+Enable hwmon for the soc and gpu temperature sensors.
 
-This patch removes the limitation here to allow multiple opens to each
-feature device node for AFU and FME from userspace applications. If user
-still needs exclusive access to these device node, O_EXCL flag must be
-issued together with open.
+Signed-off-by: Stefan Schaeckeler <schaecsn@gmx.net>
 
-Signed-off-by: Wu Hao <hao.wu@intel.com>
-Signed-off-by: Xu Yilun <yilun.xu@intel.com>
----
- drivers/fpga/dfl-afu-main.c | 26 +++++++++++++++-----------
- drivers/fpga/dfl-fme-main.c | 19 ++++++++++++-------
- drivers/fpga/dfl.c          | 15 +++++++++++++--
- drivers/fpga/dfl.h          | 35 +++++++++++++++++++++++++++--------
- 4 files changed, 67 insertions(+), 28 deletions(-)
+=2D--
+ drivers/thermal/rockchip_thermal.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
-index e4a34dc..c6e0e07 100644
---- a/drivers/fpga/dfl-afu-main.c
-+++ b/drivers/fpga/dfl-afu-main.c
-@@ -561,14 +561,16 @@ static int afu_open(struct inode *inode, struct file *filp)
- 	if (WARN_ON(!pdata))
- 		return -ENODEV;
- 
--	ret = dfl_feature_dev_use_begin(pdata);
--	if (ret)
--		return ret;
--
--	dev_dbg(&fdev->dev, "Device File Open\n");
--	filp->private_data = fdev;
-+	mutex_lock(&pdata->lock);
-+	ret = dfl_feature_dev_use_begin(pdata, filp->f_flags & O_EXCL);
-+	if (!ret) {
-+		dev_dbg(&fdev->dev, "Device File Opened %d Times\n",
-+			dfl_feature_dev_use_count(pdata));
-+		filp->private_data = fdev;
-+	}
-+	mutex_unlock(&pdata->lock);
- 
--	return 0;
-+	return ret;
- }
- 
- static int afu_release(struct inode *inode, struct file *filp)
-@@ -581,12 +583,14 @@ static int afu_release(struct inode *inode, struct file *filp)
- 	pdata = dev_get_platdata(&pdev->dev);
- 
- 	mutex_lock(&pdata->lock);
--	__port_reset(pdev);
--	afu_dma_region_destroy(pdata);
--	mutex_unlock(&pdata->lock);
--
- 	dfl_feature_dev_use_end(pdata);
- 
-+	if (!dfl_feature_dev_use_count(pdata)) {
-+		__port_reset(pdev);
-+		afu_dma_region_destroy(pdata);
-+	}
-+	mutex_unlock(&pdata->lock);
+diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip=
+_thermal.c
+index 343c2f5c5a25..e47c60010259 100644
+=2D-- a/drivers/thermal/rockchip_thermal.c
++++ b/drivers/thermal/rockchip_thermal.c
+@@ -19,6 +19,8 @@
+ #include <linux/mfd/syscon.h>
+ #include <linux/pinctrl/consumer.h>
+
++#include "thermal_hwmon.h"
 +
- 	return 0;
- }
- 
-diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-index 7c930e6..fda8623 100644
---- a/drivers/fpga/dfl-fme-main.c
-+++ b/drivers/fpga/dfl-fme-main.c
-@@ -600,14 +600,16 @@ static int fme_open(struct inode *inode, struct file *filp)
- 	if (WARN_ON(!pdata))
- 		return -ENODEV;
- 
--	ret = dfl_feature_dev_use_begin(pdata);
--	if (ret)
--		return ret;
--
--	dev_dbg(&fdev->dev, "Device File Open\n");
--	filp->private_data = pdata;
-+	mutex_lock(&pdata->lock);
-+	ret = dfl_feature_dev_use_begin(pdata, filp->f_flags & O_EXCL);
-+	if (!ret) {
-+		dev_dbg(&fdev->dev, "Device File Opened %d Times\n",
-+			dfl_feature_dev_use_count(pdata));
-+		filp->private_data = pdata;
-+	}
-+	mutex_unlock(&pdata->lock);
- 
--	return 0;
-+	return ret;
- }
- 
- static int fme_release(struct inode *inode, struct file *filp)
-@@ -616,7 +618,10 @@ static int fme_release(struct inode *inode, struct file *filp)
- 	struct platform_device *pdev = pdata->dev;
- 
- 	dev_dbg(&pdev->dev, "Device File Release\n");
-+
-+	mutex_lock(&pdata->lock);
- 	dfl_feature_dev_use_end(pdata);
-+	mutex_unlock(&pdata->lock);
- 
- 	return 0;
- }
-diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
-index 96a2b82..9909948 100644
---- a/drivers/fpga/dfl.c
-+++ b/drivers/fpga/dfl.c
-@@ -1079,6 +1079,7 @@ static int __init dfl_fpga_init(void)
-  */
- int dfl_fpga_cdev_release_port(struct dfl_fpga_cdev *cdev, int port_id)
- {
-+	struct dfl_feature_platform_data *pdata;
- 	struct platform_device *port_pdev;
- 	int ret = -ENODEV;
- 
-@@ -1093,7 +1094,11 @@ int dfl_fpga_cdev_release_port(struct dfl_fpga_cdev *cdev, int port_id)
- 		goto put_dev_exit;
- 	}
- 
--	ret = dfl_feature_dev_use_begin(dev_get_platdata(&port_pdev->dev));
-+	pdata = dev_get_platdata(&port_pdev->dev);
-+
-+	mutex_lock(&pdata->lock);
-+	ret = dfl_feature_dev_use_begin(pdata, true);
-+	mutex_unlock(&pdata->lock);
- 	if (ret)
- 		goto put_dev_exit;
- 
-@@ -1120,6 +1125,7 @@ EXPORT_SYMBOL_GPL(dfl_fpga_cdev_release_port);
-  */
- int dfl_fpga_cdev_assign_port(struct dfl_fpga_cdev *cdev, int port_id)
- {
-+	struct dfl_feature_platform_data *pdata;
- 	struct platform_device *port_pdev;
- 	int ret = -ENODEV;
- 
-@@ -1138,7 +1144,12 @@ int dfl_fpga_cdev_assign_port(struct dfl_fpga_cdev *cdev, int port_id)
- 	if (ret)
- 		goto put_dev_exit;
- 
--	dfl_feature_dev_use_end(dev_get_platdata(&port_pdev->dev));
-+	pdata = dev_get_platdata(&port_pdev->dev);
-+
-+	mutex_lock(&pdata->lock);
-+	dfl_feature_dev_use_end(pdata);
-+	mutex_unlock(&pdata->lock);
-+
- 	cdev->released_port_num--;
- put_dev_exit:
- 	put_device(&port_pdev->dev);
-diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
-index 9f0e656..4a9a33c 100644
---- a/drivers/fpga/dfl.h
-+++ b/drivers/fpga/dfl.h
-@@ -205,8 +205,6 @@ struct dfl_feature {
- 	const struct dfl_feature_ops *ops;
- };
- 
--#define DEV_STATUS_IN_USE	0
--
- #define FEATURE_DEV_ID_UNUSED	(-1)
- 
  /**
-@@ -219,8 +217,9 @@ struct dfl_feature {
-  * @dfl_cdev: ptr to container device.
-  * @id: id used for this feature device.
-  * @disable_count: count for port disable.
-+ * @excl_open: set on feature device exclusive open.
-+ * @open_count: count for feature device open.
-  * @num: number for sub features.
-- * @dev_status: dev status (e.g. DEV_STATUS_IN_USE).
-  * @private: ptr to feature dev private data.
-  * @features: sub features of this feature dev.
-  */
-@@ -232,26 +231,46 @@ struct dfl_feature_platform_data {
- 	struct dfl_fpga_cdev *dfl_cdev;
- 	int id;
- 	unsigned int disable_count;
--	unsigned long dev_status;
-+	bool excl_open;
-+	int open_count;
- 	void *private;
- 	int num;
- 	struct dfl_feature features[0];
- };
- 
- static inline
--int dfl_feature_dev_use_begin(struct dfl_feature_platform_data *pdata)
-+int dfl_feature_dev_use_begin(struct dfl_feature_platform_data *pdata,
-+			      bool excl)
- {
--	/* Test and set IN_USE flags to ensure file is exclusively used */
--	if (test_and_set_bit_lock(DEV_STATUS_IN_USE, &pdata->dev_status))
-+	if (pdata->excl_open)
- 		return -EBUSY;
- 
-+	if (excl) {
-+		if (pdata->open_count)
-+			return -EBUSY;
-+
-+		pdata->excl_open = true;
+  * If the temperature over a period of time High,
+  * the resulting TSHUT gave CRU module,let it reset the entire chip,
+@@ -1321,8 +1323,15 @@ static int rockchip_thermal_probe(struct platform_d=
+evice *pdev)
+
+ 	thermal->chip->control(thermal->regs, true);
+
+-	for (i =3D 0; i < thermal->chip->chn_num; i++)
++	for (i =3D 0; i < thermal->chip->chn_num; i++) {
+ 		rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
++		thermal->sensors[i].tzd->tzp->no_hwmon =3D false;
++		error =3D thermal_add_hwmon_sysfs(thermal->sensors[i].tzd);
++		if (error)
++			dev_warn(&pdev->dev,
++				 "failed to register sensor %d with hwmon: %d\n",
++				 i, error);
 +	}
-+	pdata->open_count++;
-+
- 	return 0;
- }
- 
- static inline
- void dfl_feature_dev_use_end(struct dfl_feature_platform_data *pdata)
- {
--	clear_bit_unlock(DEV_STATUS_IN_USE, &pdata->dev_status);
-+	pdata->excl_open = false;
-+
-+	if (WARN_ON(pdata->open_count <= 0))
-+		return;
-+
-+	pdata->open_count--;
-+}
-+
-+static inline
-+int dfl_feature_dev_use_count(struct dfl_feature_platform_data *pdata)
-+{
-+	return pdata->open_count;
- }
- 
- static inline
--- 
-2.7.4
+
+ 	platform_set_drvdata(pdev, thermal);
+
+@@ -1344,6 +1353,7 @@ static int rockchip_thermal_remove(struct platform_d=
+evice *pdev)
+ 	for (i =3D 0; i < thermal->chip->chn_num; i++) {
+ 		struct rockchip_thermal_sensor *sensor =3D &thermal->sensors[i];
+
++		thermal_remove_hwmon_sysfs(sensor->tzd);
+ 		rockchip_thermal_toggle_sensor(sensor, false);
+ 	}
+
+=2D-
+2.24.0
 
