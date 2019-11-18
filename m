@@ -2,116 +2,276 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B41C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8881CC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 750A42075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:11:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mykernel.net header.i=cgxu519@mykernel.net header.b="Hd4TEPjE"
+	by mail.kernel.org (Postfix) with ESMTP id 5653E2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:22:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbfKRFLR (ORCPT
+        id S1726314AbfKRFW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 00:11:17 -0500
-Received: from sender3-of-o52.zoho.com.cn ([124.251.121.247]:21961 "EHLO
-        sender2.zoho.com.cn" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725816AbfKRFLP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 00:11:15 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1574053816; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=nOqkrGkbDhtS3JDMvQRPuCCRI17CD3aKZSTRZtWSBRtIjONCrKc6v+eLP7IuCi+Tkb0VZoRzf+u9HRwRyoZxjpE3o/LBCY/xtjVY9lmLKSyHDBAtPBSmHY/MkEagt4xEyqco26PSMXg93wv5ol1WfKIHQt+zoEOWThlUcRAGN+8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1574053816; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
-        bh=BsgB+uLSbI/A7RpGrDvhjCegyC49pCxyhfWI2lOuUfk=; 
-        b=PTPwfFgv2WlRWueS8Em/r/X8tv6FghRBaJJqvDQHrdYADltuXdTTk+PPpD9x7DXGGxiajBFuHx+ywgo4prEMy5XC3vRT4LdJwBbfwIffx2ETasq8EpSMJaSyDqKAEK4aliVEMaWCccd8f334fuTtopvX2yodxA6oYCsKxH3LQIs=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=mykernel.net;
-        spf=pass  smtp.mailfrom=cgxu519@mykernel.net;
-        dmarc=pass header.from=<cgxu519@mykernel.net> header.from=<cgxu519@mykernel.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574053816;
-        s=zohomail; d=mykernel.net; i=cgxu519@mykernel.net;
-        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        l=1765; bh=BsgB+uLSbI/A7RpGrDvhjCegyC49pCxyhfWI2lOuUfk=;
-        b=Hd4TEPjE8y+eT9uAecADUdrpdpM8idvHMa1WowClTYYDjvX+VFqMB/ZTpEKHKjQi
-        efzGVbutkWe2JrkyEhT91eL6JxU5nE58/YJUeOzq8cRZoz3qf/lUNAW3IQPj19sZVxj
-        2ViUFwDHjLT3p5JQPt2yg7VxII6IbzbJfqaDVpmA=
-Received: from localhost.localdomain (218.18.229.179 [218.18.229.179]) by mx.zoho.com.cn
-        with SMTPS id 1574053813058511.6204774440098; Mon, 18 Nov 2019 13:10:13 +0800 (CST)
-From:   Chengguang Xu <cgxu519@mykernel.net>
-To:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org
-Cc:     darrick.wong@oracle.com, jaegeuk@kernel.org, chao@kernel.org,
-        tytso@mit.edu, adilger.kernel@dilger.ca,
-        Chengguang Xu <cgxu519@mykernel.net>
-Message-ID: <20191118050949.15629-1-cgxu519@mykernel.net>
-Subject: [RFC PATCH 1/3] ext4: show prjquota info on statfs for a file
-Date:   Mon, 18 Nov 2019 13:09:47 +0800
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
+        Mon, 18 Nov 2019 00:22:27 -0500
+Received: from mga17.intel.com ([192.55.52.151]:64966 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725208AbfKRFW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 00:22:27 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Nov 2019 21:22:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,319,1569308400"; 
+   d="scan'208";a="405964318"
+Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
+  by fmsmga005.fm.intel.com with ESMTP; 17 Nov 2019 21:22:25 -0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Xu Yilun <yilun.xu@intel.com>, Wu Hao <hao.wu@intel.com>
+Subject: [PATCH] fpga: dfl: support multiple opens on feature device node.
+Date:   Mon, 18 Nov 2019 13:20:41 +0800
+Message-Id: <1574054441-1568-1-git-send-email-yilun.xu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently we replace filesystem statistics using prjquota info
-on statfs when specified directory has project id inherit flag.
-However, statfs on a file(accurately non-dir) which is under the
-project quota dir(with inherit flag) still shows whole filesystem
-statistics. In container use case, it will give container user
-inconsistent experience and cause confusion about available free
-space.
+Each DFL functional block, e.g. AFU (Accelerated Function Unit) and FME
+(FPGA Management Engine), could implement more than one function within
+its region, but current driver only allows one user application to access
+it by exclusive open on device node. So this is not convenient and
+flexible for userspace applications, as they have to combine lots of
+different functions into one single application.
 
-Detail info like below:
-We use project quota to limit disk space usage for a container
-and run df command inside container.
+This patch removes the limitation here to allow multiple opens to each
+feature device node for AFU and FME from userspace applications. If user
+still needs exclusive access to these device node, O_EXCL flag must be
+issued together with open.
 
-Run df on a directory:
-
-[root /]# df -h /etc/
-Filesystem=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Size=C2=A0 Used Avail Use% Mounted=
- on
-kataShared=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1.0G=C2=A0=C2=A0 13M 1012M=C2=A0=
-=C2=A0 2% /
-
-Run df on a file:
-
-[root /]# df -h /etc/exports
-Filesystem=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Size=C2=A0 Used Avail Use% Mounted=
- on
-kataShared=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1.5T=C2=A0 778M=C2=A0 1.5T=C2=A0=
-=C2=A0 1% /
-
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
+Signed-off-by: Wu Hao <hao.wu@intel.com>
+Signed-off-by: Xu Yilun <yilun.xu@intel.com>
 ---
- fs/ext4/super.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/fpga/dfl-afu-main.c | 26 +++++++++++++++-----------
+ drivers/fpga/dfl-fme-main.c | 19 ++++++++++++-------
+ drivers/fpga/dfl.c          | 15 +++++++++++++--
+ drivers/fpga/dfl.h          | 35 +++++++++++++++++++++++++++--------
+ 4 files changed, 67 insertions(+), 28 deletions(-)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index dd654e53ba3d..3fba22b54f5c 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -5607,7 +5607,8 @@ static int ext4_statfs(struct dentry *dentry, struct =
-kstatfs *buf)
- =09buf->f_fsid.val[1] =3D (fsid >> 32) & 0xFFFFFFFFUL;
-=20
- #ifdef CONFIG_QUOTA
--=09if (ext4_test_inode_flag(dentry->d_inode, EXT4_INODE_PROJINHERIT) &&
-+=09if ((ext4_test_inode_flag(dentry->d_inode, EXT4_INODE_PROJINHERIT) ||
-+=09     !S_ISDIR(dentry->d_inode->i_mode)) &&
- =09    sb_has_quota_limits_enabled(sb, PRJQUOTA))
- =09=09ext4_statfs_project(sb, EXT4_I(dentry->d_inode)->i_projid, buf);
- #endif
---=20
-2.20.1
-
-
+diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
+index e4a34dc..c6e0e07 100644
+--- a/drivers/fpga/dfl-afu-main.c
++++ b/drivers/fpga/dfl-afu-main.c
+@@ -561,14 +561,16 @@ static int afu_open(struct inode *inode, struct file *filp)
+ 	if (WARN_ON(!pdata))
+ 		return -ENODEV;
+ 
+-	ret = dfl_feature_dev_use_begin(pdata);
+-	if (ret)
+-		return ret;
+-
+-	dev_dbg(&fdev->dev, "Device File Open\n");
+-	filp->private_data = fdev;
++	mutex_lock(&pdata->lock);
++	ret = dfl_feature_dev_use_begin(pdata, filp->f_flags & O_EXCL);
++	if (!ret) {
++		dev_dbg(&fdev->dev, "Device File Opened %d Times\n",
++			dfl_feature_dev_use_count(pdata));
++		filp->private_data = fdev;
++	}
++	mutex_unlock(&pdata->lock);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int afu_release(struct inode *inode, struct file *filp)
+@@ -581,12 +583,14 @@ static int afu_release(struct inode *inode, struct file *filp)
+ 	pdata = dev_get_platdata(&pdev->dev);
+ 
+ 	mutex_lock(&pdata->lock);
+-	__port_reset(pdev);
+-	afu_dma_region_destroy(pdata);
+-	mutex_unlock(&pdata->lock);
+-
+ 	dfl_feature_dev_use_end(pdata);
+ 
++	if (!dfl_feature_dev_use_count(pdata)) {
++		__port_reset(pdev);
++		afu_dma_region_destroy(pdata);
++	}
++	mutex_unlock(&pdata->lock);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
+index 7c930e6..fda8623 100644
+--- a/drivers/fpga/dfl-fme-main.c
++++ b/drivers/fpga/dfl-fme-main.c
+@@ -600,14 +600,16 @@ static int fme_open(struct inode *inode, struct file *filp)
+ 	if (WARN_ON(!pdata))
+ 		return -ENODEV;
+ 
+-	ret = dfl_feature_dev_use_begin(pdata);
+-	if (ret)
+-		return ret;
+-
+-	dev_dbg(&fdev->dev, "Device File Open\n");
+-	filp->private_data = pdata;
++	mutex_lock(&pdata->lock);
++	ret = dfl_feature_dev_use_begin(pdata, filp->f_flags & O_EXCL);
++	if (!ret) {
++		dev_dbg(&fdev->dev, "Device File Opened %d Times\n",
++			dfl_feature_dev_use_count(pdata));
++		filp->private_data = pdata;
++	}
++	mutex_unlock(&pdata->lock);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int fme_release(struct inode *inode, struct file *filp)
+@@ -616,7 +618,10 @@ static int fme_release(struct inode *inode, struct file *filp)
+ 	struct platform_device *pdev = pdata->dev;
+ 
+ 	dev_dbg(&pdev->dev, "Device File Release\n");
++
++	mutex_lock(&pdata->lock);
+ 	dfl_feature_dev_use_end(pdata);
++	mutex_unlock(&pdata->lock);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
+index 96a2b82..9909948 100644
+--- a/drivers/fpga/dfl.c
++++ b/drivers/fpga/dfl.c
+@@ -1079,6 +1079,7 @@ static int __init dfl_fpga_init(void)
+  */
+ int dfl_fpga_cdev_release_port(struct dfl_fpga_cdev *cdev, int port_id)
+ {
++	struct dfl_feature_platform_data *pdata;
+ 	struct platform_device *port_pdev;
+ 	int ret = -ENODEV;
+ 
+@@ -1093,7 +1094,11 @@ int dfl_fpga_cdev_release_port(struct dfl_fpga_cdev *cdev, int port_id)
+ 		goto put_dev_exit;
+ 	}
+ 
+-	ret = dfl_feature_dev_use_begin(dev_get_platdata(&port_pdev->dev));
++	pdata = dev_get_platdata(&port_pdev->dev);
++
++	mutex_lock(&pdata->lock);
++	ret = dfl_feature_dev_use_begin(pdata, true);
++	mutex_unlock(&pdata->lock);
+ 	if (ret)
+ 		goto put_dev_exit;
+ 
+@@ -1120,6 +1125,7 @@ EXPORT_SYMBOL_GPL(dfl_fpga_cdev_release_port);
+  */
+ int dfl_fpga_cdev_assign_port(struct dfl_fpga_cdev *cdev, int port_id)
+ {
++	struct dfl_feature_platform_data *pdata;
+ 	struct platform_device *port_pdev;
+ 	int ret = -ENODEV;
+ 
+@@ -1138,7 +1144,12 @@ int dfl_fpga_cdev_assign_port(struct dfl_fpga_cdev *cdev, int port_id)
+ 	if (ret)
+ 		goto put_dev_exit;
+ 
+-	dfl_feature_dev_use_end(dev_get_platdata(&port_pdev->dev));
++	pdata = dev_get_platdata(&port_pdev->dev);
++
++	mutex_lock(&pdata->lock);
++	dfl_feature_dev_use_end(pdata);
++	mutex_unlock(&pdata->lock);
++
+ 	cdev->released_port_num--;
+ put_dev_exit:
+ 	put_device(&port_pdev->dev);
+diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
+index 9f0e656..4a9a33c 100644
+--- a/drivers/fpga/dfl.h
++++ b/drivers/fpga/dfl.h
+@@ -205,8 +205,6 @@ struct dfl_feature {
+ 	const struct dfl_feature_ops *ops;
+ };
+ 
+-#define DEV_STATUS_IN_USE	0
+-
+ #define FEATURE_DEV_ID_UNUSED	(-1)
+ 
+ /**
+@@ -219,8 +217,9 @@ struct dfl_feature {
+  * @dfl_cdev: ptr to container device.
+  * @id: id used for this feature device.
+  * @disable_count: count for port disable.
++ * @excl_open: set on feature device exclusive open.
++ * @open_count: count for feature device open.
+  * @num: number for sub features.
+- * @dev_status: dev status (e.g. DEV_STATUS_IN_USE).
+  * @private: ptr to feature dev private data.
+  * @features: sub features of this feature dev.
+  */
+@@ -232,26 +231,46 @@ struct dfl_feature_platform_data {
+ 	struct dfl_fpga_cdev *dfl_cdev;
+ 	int id;
+ 	unsigned int disable_count;
+-	unsigned long dev_status;
++	bool excl_open;
++	int open_count;
+ 	void *private;
+ 	int num;
+ 	struct dfl_feature features[0];
+ };
+ 
+ static inline
+-int dfl_feature_dev_use_begin(struct dfl_feature_platform_data *pdata)
++int dfl_feature_dev_use_begin(struct dfl_feature_platform_data *pdata,
++			      bool excl)
+ {
+-	/* Test and set IN_USE flags to ensure file is exclusively used */
+-	if (test_and_set_bit_lock(DEV_STATUS_IN_USE, &pdata->dev_status))
++	if (pdata->excl_open)
+ 		return -EBUSY;
+ 
++	if (excl) {
++		if (pdata->open_count)
++			return -EBUSY;
++
++		pdata->excl_open = true;
++	}
++	pdata->open_count++;
++
+ 	return 0;
+ }
+ 
+ static inline
+ void dfl_feature_dev_use_end(struct dfl_feature_platform_data *pdata)
+ {
+-	clear_bit_unlock(DEV_STATUS_IN_USE, &pdata->dev_status);
++	pdata->excl_open = false;
++
++	if (WARN_ON(pdata->open_count <= 0))
++		return;
++
++	pdata->open_count--;
++}
++
++static inline
++int dfl_feature_dev_use_count(struct dfl_feature_platform_data *pdata)
++{
++	return pdata->open_count;
+ }
+ 
+ static inline
+-- 
+2.7.4
 
