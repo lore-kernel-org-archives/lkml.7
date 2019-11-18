@@ -2,139 +2,124 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1D2C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B87F1C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 340D120740
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:38:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AAwSAzRJ"
+	by mail.kernel.org (Postfix) with ESMTP id 8C7702071B
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:43:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574070218;
+	bh=K9PV+3+tr9TlSg2I+Hkztnm7nP9zOdx58/6E8xwXJwM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tmSsdYwTKxnDpToXo6sFNzARl7VlrgLHlsv/Q65ZfFu1cWdkoF1hqoIN6e/MHFQmZ
+	 2+xaOO4Mcy06Smp9LsTMKd/r5FBeqg8jYBdQawmT/in+8d1lhk++bAGM90rQb5CcL+
+	 mA7vebVorVD/y4Dc6ofcOHiqKc67cn25ieHlPnhc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfKRJiQ (ORCPT
+        id S1726691AbfKRJnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 04:38:16 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34496 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbfKRJhr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 04:37:47 -0500
-Received: by mail-wr1-f68.google.com with SMTP id e6so18584423wrw.1;
-        Mon, 18 Nov 2019 01:37:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3oSzYYj438eAKcP5hk6lqHYItTlWnnUzKNHsPAjkdJc=;
-        b=AAwSAzRJnxMXxjJhclwhlpl/mYNzB5ilqx+RifNxbzYksBz8LgaY8HM1HjolEFjUlL
-         htMUYi1b7/J9koh5JDoM5lang7KZDLwjE6LCARKrKo2iUv6DaNBf4lTaUQGBHu4hWz7X
-         5OHJlfP7Un+y6PgbkQ2SXfWbqW3hi7zz7xofwBFSxwRm6iYI23xFe3yjWbG3F6TLwiuR
-         gdE7MYjSUXMpmX0782a7Kv8EzXZ/nArwW7O8qPZBz1ge4yY27txHV/SCApwR89XgItGo
-         KdfQTO0P4EOkM8udo8IuJ90uquKhx1zz25e4/iCrXyT7XdDJoUkD8E5S10WNQHl0FOAt
-         NbdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3oSzYYj438eAKcP5hk6lqHYItTlWnnUzKNHsPAjkdJc=;
-        b=nJ3hGiLxrsmnklzROxvIkRTpLuHKJqlfd2wX5n+RjiAwuDJnuYGg1ywRKP9ch3AYZd
-         BqJnxSAxJVnK0G+bjiCXBy2mg1YyicCoJS0kXoJ6dktzzEIozrnon+dvfTFU0apczGaO
-         A2p00V5Cw4weHpRI0qleQ1DvFvo4461e8nrw4GXPFJtePPrlRtDswoxEbsV/Cb0Z/LyU
-         97VjZGbi3qs8EOKrTyGGZDLapG2MxpYq9wcaG0UEKosz8qA8lkNZfZNKOJj8DxkoD8QZ
-         ffyIS2+RljDVdrhccvJ1K7WnSbO+ozYECSpBkfBAcqbVRwBwxaplRqUFVR2I4iq7nVZR
-         +nug==
-X-Gm-Message-State: APjAAAXRrLPSXFQcCkKc9VtMeoRjFAphO47Q7NF9BsGj25GYpPsZvnbn
-        5wRrLQH689Y1ouewcO7x+h4=
-X-Google-Smtp-Source: APXvYqzDOwuq0A8F4oYn60+HJq1SW+kqllssigTTUg8uT9nBRUvhHeMoTlhVG7xt0+yV2c7Jg6TXXw==
-X-Received: by 2002:adf:fd91:: with SMTP id d17mr28262822wrr.214.1574069864966;
-        Mon, 18 Nov 2019 01:37:44 -0800 (PST)
-Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
-        by smtp.gmail.com with ESMTPSA id w10sm19006687wmd.26.2019.11.18.01.37.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 01:37:44 -0800 (PST)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v5 3/8] pwm: sun4i: Prefer "mod" clock to unnamed
-Date:   Mon, 18 Nov 2019 10:37:22 +0100
-Message-Id: <20191118093727.21899-4-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191118093727.21899-1-peron.clem@gmail.com>
-References: <20191118093727.21899-1-peron.clem@gmail.com>
+        Mon, 18 Nov 2019 04:43:37 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41852 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726461AbfKRJnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 04:43:37 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5B832AD55;
+        Mon, 18 Nov 2019 09:43:35 +0000 (UTC)
+Date:   Mon, 18 Nov 2019 10:43:34 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Tejun Heo <tj@kernel.org>,
+        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 1/2] mm: memcg: switch to css_tryget() in
+ get_mem_cgroup_from_mm()
+Message-ID: <20191118094334.GA14255@dhcp22.suse.cz>
+References: <20191106225131.3543616-1-guro@fb.com>
+ <20191113162934.GF19372@blackbody.suse.cz>
+ <20191113170823.GA12464@castle.DHCP.thefacebook.com>
+ <20191114191657.GN20866@dhcp22.suse.cz>
+ <20191114192018.GJ4163745@devbig004.ftw2.facebook.com>
+ <20191114193340.GA24848@dhcp22.suse.cz>
+ <20191114193736.GL4163745@devbig004.ftw2.facebook.com>
+ <20191115174031.GA15216@dhcp22.suse.cz>
+ <20191115174721.GB15216@dhcp22.suse.cz>
+ <20191115180728.GA27385@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115180728.GA27385@localhost.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New device tree bindings called the source clock of the module
-"mod" when several clocks are defined.
+On Fri 15-11-19 18:07:34, Roman Gushchin wrote:
+> On Fri, Nov 15, 2019 at 06:47:21PM +0100, Michal Hocko wrote:
+> > On Fri 15-11-19 18:40:31, Michal Hocko wrote:
+> > > On Thu 14-11-19 11:37:36, Tejun Heo wrote:
+> > > > Hello,
+> > > > 
+> > > > On Thu, Nov 14, 2019 at 08:33:40PM +0100, Michal Hocko wrote:
+> > > > > > It is useful for controlling admissions of new userspace visible uses
+> > > > > > - e.g. a tracepoint shouldn't be allowed to be attached to a cgroup
+> > > > > > which has already been deleted.
+> > > > > 
+> > > > > I am not sure I understand. Roman says that the cgroup can get offline
+> > > > > right after the function returns. How is "already deleted" different
+> > > > > from "just deleted"? I thought that the state is preserved at least
+> > > > > while the rcu lock is held but my memory is dim here.
+> > > > 
+> > > > It's the same difference as between "opening a file and deleting it"
+> > > > and "deleting a file and opening it".
+> > > 
+> > > I am sorry but I do not follow. How can css_tryget_online provide the
+> > > same semantic when the css can go offline right after the tryget call
+> > > returns so it is effectivelly undistinguishable from the case when the
+> > > css was already online before the call was made.
+> > 
+> > s@online@offline@
+> > 
+> > And reading after myself it turned out to sound differently than I
+> > meant. What I wanted to say really is, what is the difference that
+> > css_tryget_online really guarantee when the css might go offline right
+> > after the call suceeds so more specifically what is the difference
+> > between
+> > 	if (css_tryget()) {
+> > 		if (online)
+> > 			DO_SOMETHING
+> > 	}
+> > and
+> > 	if (css_tryget_online()) {
+> > 		DO_SOMETHING
+> > 	}
+> > 
+> > both of them are racy and do not provide any guarantee wrt. online
+> > state.
+> 
+> Let me step back a little bit.
+> 
+> I think, we all agree that css_tryget_online() has a weird semantics,
+> in most cases is used only due to historical reasons and clearly asks
+> for a cleanup. So I suggest to stop arguing about it and wait for the
+> cleanup patchset. Then we can discuss each remaining use case in details,
+> if there will be any.
 
-Try to get a clock called "mod" if nothing is found try to get
-an unnamed clock.
-
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- drivers/pwm/pwm-sun4i.c | 29 +++++++++++++++++++++++++++--
- 1 file changed, 27 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index c17935805690..bbb1ed194c0e 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -362,9 +362,34 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
- 	if (IS_ERR(pwm->base))
- 		return PTR_ERR(pwm->base);
- 
--	pwm->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(pwm->clk))
-+	/*
-+	 * All hardware variants need a source clock that is divided and
-+	 * then feeds the counter that defines the output wave form. In the
-+	 * device tree this clock is either unnamed or called "mod".
-+	 * Some variants (e.g. H6) need another clock to access the
-+	 * hardware registers; this is called "bus".
-+	 * So we request "mod" first (and ignore the corner case that a
-+	 * parent provides a "mod" clock while the right one would be the
-+	 * unnamed one of the PWM device) and if this is not found we fall
-+	 * back to the first clock of the PWM.
-+	 */
-+	pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
-+	if (IS_ERR(pwm->clk)) {
-+		if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "get clock failed %pe\n",
-+				pwm->clk);
- 		return PTR_ERR(pwm->clk);
-+	}
-+
-+	if (!pwm->clk) {
-+		pwm->clk = devm_clk_get(&pdev->dev, NULL);
-+		if (IS_ERR(pwm->clk)) {
-+			if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
-+				dev_err(&pdev->dev, "get clock failed %pe\n",
-+					pwm->clk);
-+			return PTR_ERR(pwm->clk);
-+		}
-+	}
- 
- 	pwm->rst = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
- 	if (IS_ERR(pwm->rst)) {
+Yes I am all in favor of the clean up patches as well as getting down
+to the bottom of the underlying issue (race). Andrew has already sent
+these two patches to Linus, unfortunatelly, even though the changelog
+is slightly misleading (btw 18fa84a2db0e has the similar incorrect
+reasoning).
 -- 
-2.20.1
-
+Michal Hocko
+SUSE Labs
