@@ -2,136 +2,83 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C496BC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 02:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 657DCC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 02:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E54206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 02:41:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EE0onkOY"
+	by mail.kernel.org (Postfix) with ESMTP id 40237206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 02:45:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbfKRClt (ORCPT
+        id S1726423AbfKRCpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 21:41:49 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37572 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfKRClt (ORCPT
+        Sun, 17 Nov 2019 21:45:13 -0500
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:7130 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725905AbfKRCpM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 21:41:49 -0500
-Received: by mail-pf1-f194.google.com with SMTP id p24so9615060pfn.4
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 18:41:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fJYb6L5a/iapIcfwsY2PvjI2V490sWHh3NSh3Twoa4Y=;
-        b=EE0onkOYhoERx7brBXEdiRX+DN2MPuKcFBxWvEf87vIBM4uJXkTis6SKeET/uw31pX
-         +w9ATldpV/J95BZ5Km7rkWdMLPeOHWyxx664EFOFjXYqSYjbHLO+M7CAihPdZaNwFB1D
-         cUc36wTD8Z8TztXNEYYABOr9PgY2r7Mkqg7AuqAa1nXHGsfg8f5jGPjImNFroBvnBivh
-         VhFhHS/kgRKBLN1wDK421Dmc87tqBBFTbBKxMiYxQK+6BBG//jZvzFEu7DcmQirWbsU3
-         0fxDtDUiQB1iglSrs6Tmm1aZ0DhNGU/dTQaU+I90GT4BohQwRgtsQbaqdQW4Qq81nsUA
-         sJ4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fJYb6L5a/iapIcfwsY2PvjI2V490sWHh3NSh3Twoa4Y=;
-        b=iijhGzVPGfXv+75NnMArtJ42VWIizPr+0vCJHVQCpEvurAjBKJsKP8gplfbTKJePhH
-         eQggPj8nWjiWAN1FH461W3OjSBbzTTqnvIy50FOmvbjizFUQqCgdHFoPeFAtPkPGO/8r
-         oTtUVpVB/SjhgYeaOQGvxWwCZgR6naICHqFsplHU97FBRN6RZEb32M6mjXc+vTm3TxGj
-         oEOOsDv8HjWcbMYxYj8OcScVVaIQ2gNwXPyl2S7k4BtFYPPqS2ALtrjIqLQgxiPfj04d
-         giJMYvbwVtb6rIHyL8jBc3W8Ck7+qhARdReRvKYHxLcT1sjvwObn0dOvOUYGPBbgtOIl
-         Ayxw==
-X-Gm-Message-State: APjAAAU2TQLBdzwu4Ph499Oxl0DNHL6TqCGS3SN71stXIw+kROsKuywx
-        JYM9hGWS9JBIGYmB/VAUNS10rg==
-X-Google-Smtp-Source: APXvYqx9PzHEY2s7nymmHBLR7qypFLfgeJJM/LJIfMC5Mu4iS1J3yTMR/wcdeDGp6z1pLnJy4y8fjw==
-X-Received: by 2002:a63:4d8:: with SMTP id 207mr7410369pge.441.1574044908379;
-        Sun, 17 Nov 2019 18:41:48 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 12sm18133068pjm.11.2019.11.17.18.41.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Nov 2019 18:41:47 -0800 (PST)
-Date:   Sun, 17 Nov 2019 18:41:45 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: msm8998-mtp: Add alias for blsp1_uart3
-Message-ID: <20191118024145.GC25371@yoga>
-References: <20191116064415.159899-1-bjorn.andersson@linaro.org>
- <CAOCk7Nov_HvZe1Z6COd2z=VUf=mVbvqS4wjqU4Ee=F1qR_KKww@mail.gmail.com>
+        Sun, 17 Nov 2019 21:45:12 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0TiMbn5R_1574045097;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TiMbn5R_1574045097)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 18 Nov 2019 10:44:58 +0800
+Subject: Re: [PATCH v3 1/7] mm/lru: add per lruvec lock for memcg
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Arun KS <arunks@codeaurora.org>
+References: <1573874106-23802-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1573874106-23802-2-git-send-email-alex.shi@linux.alibaba.com>
+ <CALvZod77568+TozRXpERDDap__jbj+oJBY8zD=UBd40XNJC2zg@mail.gmail.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <e707fd66-16c2-8523-dd8b-860b5b6bb11d@linux.alibaba.com>
+Date:   Mon, 18 Nov 2019 10:44:57 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOCk7Nov_HvZe1Z6COd2z=VUf=mVbvqS4wjqU4Ee=F1qR_KKww@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <CALvZod77568+TozRXpERDDap__jbj+oJBY8zD=UBd40XNJC2zg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 16 Nov 14:24 PST 2019, Jeffrey Hugo wrote:
 
-> On Fri, Nov 15, 2019 at 11:44 PM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> >
-> > The msm_serial driver uses a simple counter to determine which port to
-> > use when no alias is defined, but there's no logic to prevent this from
+
+在 2019/11/16 下午2:28, Shakeel Butt 写道:
+> On Fri, Nov 15, 2019 at 7:15 PM Alex Shi <alex.shi@linux.alibaba.com> wrote:
+>>
+>> Currently memcg still use per node pgdat->lru_lock to guard its lruvec.
+>> That causes some lru_lock contention in a high container density system.
+>>
+>> If we can use per lruvec lock, that could relief much of the lru_lock
+>> contention.
+>>
+>> The later patches will replace the pgdat->lru_lock with lruvec->lru_lock
+>> and show the performance benefit by benchmarks.
 > 
-> Which port to use for what, the default console?
-> 
+> Merge this patch with actual usage. No need to have a separate patch.
 
-The driver defines three (3) struct uart_ports (wrapped in struct
-msm_ports), see msm_uart_port[] around line 1538 in msm_serial.c
+Thanks for comment, Shakeel!
 
-This means that you can have a whooping 3 instances of msm_serial in the
-system and per the logic found in msm_serial_probe() the allocation
-follows the serial%d aliases defined and for entries without an alias a
-simple counter, starting at 0 is used.
+Yes, but considering the 3rd, huge and un-splitable patch of actully replacing, I'd rather to pull sth out from 
+it. Ty to make patches a bit more readable, Do you think so?
 
-> > not colliding with what's defined by the aliases. As a result either
-> > none or all of the active msm_serial instances must be listed as
-> > aliases.
-> >
-> > Define blsp1_uart3 as "serial1" to mitigate this problem.
-> >
-> > Fixes: 4cffb9f2c700 ("arm64: dts: qcom: msm8998-mtp: Enable bluetooth")
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> 
-> That driver behavior seems like a strange thing to be doing.
-> 
-> If you clarify the question above, -
-> Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> 
-
-Thanks, I'll respin the message to properly document this behavior.
-
-Regards,
-Bjorn
-
-> > ---
-> >  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> > index 5f101a20a20a..e08fcb426bbf 100644
-> > --- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> > @@ -9,6 +9,7 @@
-> >  / {
-> >         aliases {
-> >                 serial0 = &blsp2_uart1;
-> > +               serial1 = &blsp1_uart3;
-> >         };
-> >
-> >         chosen {
-> > --
-> > 2.23.0
-> >
+Thanks
+Alex
