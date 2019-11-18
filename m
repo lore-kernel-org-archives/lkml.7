@@ -2,168 +2,181 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1192EC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DD4C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0B722068D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B2FA2068D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:57:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbfKRLzz (ORCPT
+        id S1726833AbfKRL5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:55:55 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:57089 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726506AbfKRLzy (ORCPT
+        Mon, 18 Nov 2019 06:57:20 -0500
+Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:41076 "EHLO
+        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726506AbfKRL5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:55:54 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R661e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=38;SR=0;TI=SMTPD_---0TiTpj16_1574078144;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TiTpj16_1574078144)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 18 Nov 2019 19:55:45 +0800
-Subject: Re: [PATCH v3 3/7] mm/lru: replace pgdat lru_lock with lruvec lock
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-References: <1573874106-23802-1-git-send-email-alex.shi@linux.alibaba.com>
- <1573874106-23802-4-git-send-email-alex.shi@linux.alibaba.com>
- <20191116043806.GD20752@bombadil.infradead.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <0bfa9a03-b095-df83-9cfd-146da9aab89a@linux.alibaba.com>
-Date:   Mon, 18 Nov 2019 19:55:43 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.1
+        Mon, 18 Nov 2019 06:57:20 -0500
+Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
+        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1iWfef-0005JO-HE; Mon, 18 Nov 2019 12:57:17 +0100
+X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
+        linuxbbg.five-lan.de
+Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
+        (authenticated bits=0)
+        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xAIBvGMN025495
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Mon, 18 Nov 2019 12:57:16 +0100
+Subject: Re: [PATCH] arm64: dts: rockchip: Split rk3399-roc-pc for with and
+ without mezzanine board.
+To:     Jagan Teki <jagan@amarulasolutions.com>,
+        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <075b3fa6-dab7-5fec-df68-b53f32bf061b@fivetechno.de>
+ <2226540.xovL9aYQn6@diego>
+ <CAMty3ZDwjv4ShpbAyQPWk9ewboFOK3nZO0s_QNty_m0hJKR76w@mail.gmail.com>
+From:   Markus Reichl <m.reichl@fivetechno.de>
+Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
+ 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
+ eD/Xv4SsK2JTO4nkQYw8
+Organization: five technologies GmbH
+Message-ID: <62bfaad5-cbd6-efbd-426b-3da681fcd160@fivetechno.de>
+Date:   Mon, 18 Nov 2019 12:57:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191116043806.GD20752@bombadil.infradead.org>
-Content-Type: text/plain; charset=gbk
+In-Reply-To: <CAMty3ZDwjv4ShpbAyQPWk9ewboFOK3nZO0s_QNty_m0hJKR76w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
 Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1574078239;98fa53a2;
+X-HE-SMSGID: 1iWfef-0005JO-HE
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jagan,
 
-
-‘⁄ 2019/11/16 œ¬ŒÁ12:38, Matthew Wilcox –¥µ¿:
-> On Sat, Nov 16, 2019 at 11:15:02AM +0800, Alex Shi wrote:
->> This is the main patch to replace per node lru_lock with per memcg
->> lruvec lock. It also fold the irqsave flags into lruvec.
+Am 18.11.19 um 12:44 schrieb Jagan Teki:
+> On Mon, Nov 4, 2019 at 5:42 PM Heiko St√ºbner <heiko@sntech.de> wrote:
+>>
+>> Hi Markus,
+>>
+>> Am Freitag, 1. November 2019, 17:54:23 CET schrieb Markus Reichl:
+>> > For rk3399-roc-pc is a mezzanine board available that carries M.2 and
+>> > POE interfaces. Use it with a separate dts.
+>> >
+>> > Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+>> > ---
+>> >  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>> >  .../boot/dts/rockchip/rk3399-roc-pc-mezz.dts  |  52 ++
+>> >  .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 757 +----------------
+>> >  .../boot/dts/rockchip/rk3399-roc-pc.dtsi      | 767 ++++++++++++++++++
+>> >  4 files changed, 821 insertions(+), 756 deletions(-)
+>> >  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts
+>> >  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+>> >
+>> > diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+>> > index a959434ad46e..80ee9f1fc5f5 100644
+>> > --- a/arch/arm64/boot/dts/rockchip/Makefile
+>> > +++ b/arch/arm64/boot/dts/rockchip/Makefile
+>> > @@ -28,6 +28,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-neo4.dtb
+>> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-orangepi.dtb
+>> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-puma-haikou.dtb
+>> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc.dtb
+>> > +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc-mezz.dtb
+>> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4.dtb
+>> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock960.dtb
+>> >  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64.dtb
+>> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts
+>> > new file mode 100644
+>> > index 000000000000..ee77677d2cf2
+>> > --- /dev/null
+>> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts
+>> > @@ -0,0 +1,52 @@
+>> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> > +/*
+>> > + * Copyright (c) 2017 T-Chip Intelligent Technology Co., Ltd
+>> > + * Copyright (c) 2019 Markus Reichl <m.reichl@fivetechno.de>
+>> > + */
+>> > +
+>> > +/dts-v1/;
+>> > +#include "rk3399-roc-pc.dtsi"
+>> > +
+>> > +/ {
+>> > +     model = "Firefly ROC-RK3399-PC Mezzanine Board";
+>> > +     compatible = "firefly,roc-rk3399-pc", "rockchip,rk3399";
+>>
+>> different board with same compatible isn't possible, so
+>> you'll need a new compatible for it and add a new line to
+>> the roc-pc entry in
+>>         Documentation/devicetree/bindings/arm/rockchip.yaml
+>>
+>> Either you see it as
+>> - a board + hat, using dt overlay and same compatible
+>> - a completely separate board, which needs a separate
+>>   compatible as well
+>>
+>> And as discussed in the previous thread
+>> http://lists.infradead.org/pipermail/linux-rockchip/2019-November/027592.html
+>> but also in Jagan's response that really is somehow a grey area
+>> for something relatively static as the M.2 extension.
 > 
-> I have to say, I don't love the part where we fold the irqsave flags
-> into the lruvec.  I know it saves us an argument, but it opens up the
-> possibility of mismatched expectations.  eg we currently have:
+> Sorry for late response on this. I still think that the "overlay would
+> be a better suite" than having separate dts, since it is HAT which is
+> optional to insert and have possibility of having another HAT if it
+> really fit into it.
 > 
-> static void __split_huge_page(struct page *page, struct list_head *list,
-> 			struct lruvec *lruvec, pgoff_t end)
-> {
-> ...
-> 	spin_unlock_irqrestore(&lruvec->lru_lock, lruvec->irqflags);
-> 
-> so if we introduce a new caller, we have to be certain that this caller
-> is also using lock_page_lruvec_irqsave() and not lock_page_lruvec_irq().
-> I can't think of a way to make the compiler enforce that, and if we don't,
-> then we can get some odd crashes with interrupts being unexpectedly
-> enabled or disabled, depending on how ->irqflags was used last.
-> 
-> So it makes the code more subtle.  And that's not a good thing.
+> Comments?
+Presently no other extension board does exist, I don't expect one.
 
-Hi Matthew,
+I use it with rootfs on NVME on the mezzanine board.
+It is convenient to have the NVME up before going to user space.
 
-Thanks for comments!
+The board has SPI-NOR MTD storage to host U-Boot. 
+In future U-Boot could boot from NVME directly without needing
+an SD or MMC to host the boot kernel.
 
-Here, the irqflags is bound, and belong to lruvec, merging them into together helps us to take them as whole, and thus reduce a unnecessary code clues.
-The only thing maybe bad that it may take move place in pg_data_t.lruvec, but there are PADDINGs to remove this concern.
-
-As your concern for a 'new' caller, since __split_huge_page is a static helper here, no distub for anyothers.
-
-Do you agree on that?
-
-> 
->> +static inline struct lruvec *lock_page_lruvec_irq(struct page *page,
->> +						struct pglist_data *pgdat)
->> +{
->> +	struct lruvec *lruvec = mem_cgroup_page_lruvec(page, pgdat);
->> +
->> +	spin_lock_irq(&lruvec->lru_lock);
->> +
->> +	return lruvec;
->> +}
-> 
-> ...
-> 
->> +static struct lruvec *lock_page_lru(struct page *page, int *isolated)
->>  {
->>  	pg_data_t *pgdat = page_pgdat(page);
->> +	struct lruvec *lruvec = lock_page_lruvec_irq(page, pgdat);
->>  
->> -	spin_lock_irq(&pgdat->lru_lock);
->>  	if (PageLRU(page)) {
->> -		struct lruvec *lruvec;
->>  
->> -		lruvec = mem_cgroup_page_lruvec(page, pgdat);
->>  		ClearPageLRU(page);
->>  		del_page_from_lru_list(page, lruvec, page_lru(page));
->>  		*isolated = 1;
->>  	} else
->>  		*isolated = 0;
->> +
->> +	return lruvec;
->>  }
-> 
-> But what if the page is !PageLRU?  What lruvec did we just lock?
-
-like original pgdat->lru_lock, we need the lock from PageLRU racing. And it the lruvec which the page should be.
-
-
-> According to the comments on mem_cgroup_page_lruvec(),
-> 
->  * This function is only safe when following the LRU page isolation
->  * and putback protocol: the LRU lock must be held, and the page must
->  * either be PageLRU() or the caller must have isolated/allocated it.
-> 
-> and now it's being called in order to find out which LRU lock to take.
-> So this comment needs to be updated, if it's wrong, or this patch has
-> a race.
-
-
-Yes, the function reminder is a bit misunderstanding with new patch, How about the following changes:
-
-- * This function is only safe when following the LRU page isolation
-- * and putback protocol: the LRU lock must be held, and the page must
-- * either be PageLRU() or the caller must have isolated/allocated it.
-+ * The caller needs to grantee the page's mem_cgroup is undisturbed during
-+ * using. That could be done by lock_page_memcg or lock_page_lruvec.
-
-Thanks
-Alex
+Gru√ü,
+-- 
+Markus Reichl
