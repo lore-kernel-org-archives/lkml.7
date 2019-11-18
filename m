@@ -2,170 +2,126 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C0EC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 03:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8775C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 03:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC98520718
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 03:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1E2920718
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 03:54:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbfKRDvc (ORCPT
+        id S1726481AbfKRDyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 22:51:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53562 "EHLO mail.kernel.org"
+        Sun, 17 Nov 2019 22:54:25 -0500
+Received: from mga09.intel.com ([134.134.136.24]:27563 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726266AbfKRDvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 22:51:31 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A4E78C00A26; Mon, 18 Nov 2019 03:51:30 +0000 (UTC)
-Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 362B2C48B02;
-        Mon, 18 Nov 2019 03:51:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 362B2C48B02
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=pass (p=none dis=none) header.from=qti.qualcomm.com
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=pass smtp.mailfrom=cang@qti.qualcomm.com
-From:   Can Guo <cang@qti.qualcomm.com>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 4/4] scsi: ufs: Complete pending requests in host reset and restore path
-Date:   Sun, 17 Nov 2019 19:51:00 -0800
-Message-Id: <1574049061-11417-5-git-send-email-cang@qti.qualcomm.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1574049061-11417-1-git-send-email-cang@qti.qualcomm.com>
-References: <1574049061-11417-1-git-send-email-cang@qti.qualcomm.com>
+        id S1726314AbfKRDyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 22:54:25 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Nov 2019 19:54:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,318,1569308400"; 
+   d="scan'208";a="258292816"
+Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
+  by FMSMGA003.fm.intel.com with ESMTP; 17 Nov 2019 19:54:21 -0800
+Message-ID: <5DD21784.8020506@intel.com>
+Date:   Mon, 18 Nov 2019 12:01:08 +0800
+From:   Wei Wang <wei.w.wang@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+MIME-Version: 1.0
+To:     Khazhismel Kumykov <khazhy@google.com>, mst@redhat.com,
+        jasowang@redhat.com
+CC:     virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] virtio_balloon: fix shrinker pages_to_free calculation
+References: <20191115225557.61847-1-khazhy@google.com>
+In-Reply-To: <20191115225557.61847-1-khazhy@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Can Guo <cang@codeaurora.org>
+On 11/16/2019 06:55 AM, Khazhismel Kumykov wrote:
+> To my reading, we're accumulating total freed pages in pages_freed, but
+> subtracting it every iteration from pages_to_free, meaning we'll count
+> earlier iterations multiple times, freeing fewer pages than expected.
+> Just accumulate in pages_freed, and compare to pages_to_free.
 
-In UFS host reset and restore path, before probe, we stop and start the
-host controller once. After host controller is stopped, the pending
-requests, if any, are cleared from the doorbell, but no completion IRQ
-would be raised due to the hba is stopped.
-These pending requests shall be completed along with the first NOP_OUT
-command(as it is the first command which can raise a transfer completion
-IRQ) sent during probe.
-Since the OCSs of these pending requests are not SUCCESS(because they are
-not yet literally finished), their UPIUs shall be dumped. When there are
-multiple pending requests, the UPIU dump can be overwhelming and may lead
-to stability issues because it is in atomic context.
-Therefore, before probe, complete these pending requests right after host
-controller is stopped and silence the UPIU dump from them.
+Not sure about the above. But the following unit mismatch is a good 
+capture, thanks!
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
----
- drivers/scsi/ufs/ufshcd.c | 24 ++++++++++--------------
- drivers/scsi/ufs/ufshcd.h |  2 ++
- 2 files changed, 12 insertions(+), 14 deletions(-)
+>
+> There's also a unit mismatch, where pages_to_free seems to be virtio
+> balloon pages, and pages_freed is system pages (We divide by
+> VIRTIO_BALLOON_PAGES_PER_PAGE), so sutracting pages_freed from
+> pages_to_free may result in freeing too much.
+>
+> There also seems to be a mismatch between shrink_free_pages() and
+> shrink_balloon_pages(), where in both pages_to_free is given as # of
+> virtio pages to free, but free_pages() returns virtio pages, and
+> balloon_pages returns system pages.
+>
+> (For 4K PAGE_SIZE, this mismatch wouldn't be noticed since
+> VIRTIO_BALLOON_PAGES_PER_PAGE would be 1)
+>
+> Have both return virtio pages, and divide into system pages when
+> returning from shrinker_scan()
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 5950a7c..b92a3f4 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -4845,7 +4845,7 @@ static void ufshcd_slave_destroy(struct scsi_device *sdev)
- 		break;
- 	} /* end of switch */
- 
--	if (host_byte(result) != DID_OK)
-+	if ((host_byte(result) != DID_OK) && !hba->silence_err_logs)
- 		ufshcd_print_trs(hba, 1 << lrbp->task_tag, true);
- 	return result;
- }
-@@ -5404,8 +5404,8 @@ static void ufshcd_err_handler(struct work_struct *work)
- 
- 	/*
- 	 * if host reset is required then skip clearing the pending
--	 * transfers forcefully because they will automatically get
--	 * cleared after link startup.
-+	 * transfers forcefully because they will get cleared during
-+	 * host reset and restore
- 	 */
- 	if (needs_reset)
- 		goto skip_pending_xfer_clear;
-@@ -6333,9 +6333,15 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
- 	int err;
- 	unsigned long flags;
- 
--	/* Reset the host controller */
-+	/*
-+	 * Stop the host controller and complete the requests
-+	 * cleared by h/w
-+	 */
- 	spin_lock_irqsave(hba->host->host_lock, flags);
- 	ufshcd_hba_stop(hba, false);
-+	hba->silence_err_logs = true;
-+	ufshcd_complete_requests(hba);
-+	hba->silence_err_logs = false;
- 	spin_unlock_irqrestore(hba->host->host_lock, flags);
- 
- 	/* scale up clocks to max frequency before full reinitialization */
-@@ -6369,7 +6375,6 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
- static int ufshcd_reset_and_restore(struct ufs_hba *hba)
- {
- 	int err = 0;
--	unsigned long flags;
- 	int retries = MAX_HOST_RESET_RETRIES;
- 
- 	do {
-@@ -6379,15 +6384,6 @@ static int ufshcd_reset_and_restore(struct ufs_hba *hba)
- 		err = ufshcd_host_reset_and_restore(hba);
- 	} while (err && --retries);
- 
--	/*
--	 * After reset the door-bell might be cleared, complete
--	 * outstanding requests in s/w here.
--	 */
--	spin_lock_irqsave(hba->host->host_lock, flags);
--	ufshcd_transfer_req_compl(hba);
--	ufshcd_tmc_handler(hba);
--	spin_unlock_irqrestore(hba->host->host_lock, flags);
--
- 	return err;
- }
- 
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index e0fe247..1e51034 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -513,6 +513,7 @@ struct ufs_stats {
-  * @uic_error: UFS interconnect layer error status
-  * @saved_err: sticky error mask
-  * @saved_uic_err: sticky UIC error mask
-+ * @silence_err_logs: flag to silence error logs
-  * @dev_cmd: ufs device management command information
-  * @last_dme_cmd_tstamp: time stamp of the last completed DME command
-  * @auto_bkops_enabled: to track whether bkops is enabled in device
-@@ -670,6 +671,7 @@ struct ufs_hba {
- 	u32 saved_err;
- 	u32 saved_uic_err;
- 	struct ufs_stats ufs_stats;
-+	bool silence_err_logs;
- 
- 	/* Device management request data */
- 	struct ufs_dev_cmd dev_cmd;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Sounds good.
+
+>
+> Fixes: 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker")
+> Cc: Wei Wang <wei.w.wang@intel.com>
+> Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+> ---
+>
+> Tested this under memory pressure conditions and the shrinker seemed to
+> shrink.
+>
+>   drivers/virtio/virtio_balloon.c | 11 ++++-------
+>   1 file changed, 4 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> index 226fbb995fb0..7951ece3fe24 100644
+> --- a/drivers/virtio/virtio_balloon.c
+> +++ b/drivers/virtio/virtio_balloon.c
+> @@ -782,11 +782,8 @@ static unsigned long shrink_balloon_pages(struct virtio_balloon *vb,
+>   	 * VIRTIO_BALLOON_ARRAY_PFNS_MAX balloon pages, so we call it
+>   	 * multiple times to deflate pages till reaching pages_to_free.
+>   	 */
+> -	while (vb->num_pages && pages_to_free) {
+> -		pages_freed += leak_balloon(vb, pages_to_free) /
+> -					VIRTIO_BALLOON_PAGES_PER_PAGE;
+> -		pages_to_free -= pages_freed;
+> -	}
+> +	while (vb->num_pages && pages_to_free > pages_freed)
+> +		pages_freed += leak_balloon(vb, pages_to_free - pages_freed);
+>   	update_balloon_size(vb);
+>   
+>   	return pages_freed;
+> @@ -805,11 +802,11 @@ static unsigned long virtio_balloon_shrinker_scan(struct shrinker *shrinker,
+>   		pages_freed = shrink_free_pages(vb, pages_to_free);
+
+We also need a fix here then:
+
+pages_freed = shrink_free_pages(vb, sc->nr_to_scan) * 
+VIRTIO_BALLOON_PAGES_PER_PAGE;
+
+
+Btw, there is another mistake, in virtio_balloon_shrinker_count:
+
+-       count += vb->num_free_page_blocks >> VIRTIO_BALLOON_FREE_PAGE_ORDER;
++      count += vb->num_free_page_blocks << VIRTIO_BALLOON_FREE_PAGE_ORDER;
+
+You may want to include it in this fix patch as well.
+
+Best,
+Wei
+
 
