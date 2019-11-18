@@ -2,110 +2,166 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB55CC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B84C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E7CB218AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC355218AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:29:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h5JJ+Ws9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pt744SvN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfKRQ2x (ORCPT
+        id S1726787AbfKRQ3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 11:28:53 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35358 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726314AbfKRQ2x (ORCPT
+        Mon, 18 Nov 2019 11:29:55 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:37958 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfKRQ3z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 11:28:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574094532;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rbgAKR+UZDyd5dRmL+L1xv5GWoM1EVRNJf8t4zbNXts=;
-        b=h5JJ+Ws9JZXTIGEpeQefJIAKqY0nN781gtUoeSa3tf0YUqsYndyQ1way0yfQFKXvKkHjRi
-        0FOf71NbMEXs34qPzb6LkeJ7Y2HeSrf/UOVPYfnNIT8K+Byl8TImNXZm8Vwso9lCSzRUxR
-        9jXyBqO7NSdtauLb4SJqsARz6sBFJNo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-41-YZuYxyFoNkWDRwJZsfaCKQ-1; Mon, 18 Nov 2019 11:28:51 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9196C8C451C;
-        Mon, 18 Nov 2019 16:28:49 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id F3AC4100EBB8;
-        Mon, 18 Nov 2019 16:28:38 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 18 Nov 2019 17:28:49 +0100 (CET)
-Date:   Mon, 18 Nov 2019 17:28:38 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, will@kernel.org, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, bigeasy@linutronix.de,
-        juri.lelli@redhat.com, williams@redhat.com, bristot@redhat.com,
-        longman@redhat.com, dave@stgolabs.net, jack@suse.com
-Subject: Re: [PATCH 4/5] locking/percpu-rwsem: Extract
- __percpu_down_read_trylock()
-Message-ID: <20191118162837.GA3025@redhat.com>
-References: <20191113102115.116470462@infradead.org>
- <20191113102855.868390100@infradead.org>
+        Mon, 18 Nov 2019 11:29:55 -0500
+Received: by mail-qv1-f68.google.com with SMTP id q19so6782548qvs.5
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 08:29:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EWpMW0feycxyW1VyPAp6s2ygtKt8fZ0jnVixWgUidTo=;
+        b=Pt744SvNC62j6opLgPWAFSwqWlUntb6xcrd1f5fnDvNbHG1WGPOuFs7TkWF8poPM9u
+         wQEr626LBed+U9NMcY06zOUyfJHkaxDQLnC6Sp2QwCsEPj6CSDf70MfcTo9GVQ/y1fG7
+         vXUkpZrGDuMjyH8j8LLYHeETAKAOzeK6ik62SAfPNuQB8Beg+t7MwBTtqKTklNrBmIlk
+         9+OXNWb+918b1LePPSrscR+Y66OxczYn/6Plb20ABke2OSFkPxM67jDrbRsVAHFJeQyN
+         yYjxZvXvkEGsxRAO9HwnmXXgSuD4qua+Q2qFlJGpUvODVvbq96P2u/1Xp3Kr9NsqUWwO
+         832g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EWpMW0feycxyW1VyPAp6s2ygtKt8fZ0jnVixWgUidTo=;
+        b=l7nj0rfqx1CD2qN5PWFozQoCxtSkXHB5KC+q6+3lu7Cio07FtWlrKKAifUoetS4X2A
+         sYiXzo/EsN4koKdR6zM5EZFhpnmUBq8ThXlZptkNdw5QSAhe7Mze6BmfFn2ayOehFyhB
+         Caf2809pgXzdRbmlqjGUqYkyzMD/Zy4DXEgh15TWTXergfq1jcu+iQ6NM7WRmaE74huZ
+         EEYOEaWc+yDzrSLOV1PxRoa2jV/uRloc78h6mG2WJu08Zm3hnYVRu9vmDOioRUGA1XBv
+         LtjuzwM5xLI7xMYrw55WWgEBao7Um5VkIFysDW4HX+aRXvniabYpYzqyW+uVYW77EgKK
+         Gw6w==
+X-Gm-Message-State: APjAAAVyRBdzT39uruXqepwaVpf8EOomUMV3YVEZZHN/jbcbtGMnY7Hk
+        74nUAE4v0L88JXfsiABc0SCS0tYdgFP7VGpOqZB4Rg==
+X-Google-Smtp-Source: APXvYqxiIw2nVCv0TUcs+kH0pDPIvJdcswUEX4H/6BU4rjqYn+mFj/JCmJHrtf0y+TwS+qcDuFaBevajGJ60AU1Kwcw=
+X-Received: by 2002:a05:6214:8ee:: with SMTP id dr14mr27167149qvb.122.1574094593379;
+ Mon, 18 Nov 2019 08:29:53 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191113102855.868390100@infradead.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: YZuYxyFoNkWDRwJZsfaCKQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+References: <20191115191728.87338-1-jannh@google.com> <20191115191728.87338-2-jannh@google.com>
+ <20191118142144.GC6363@zn.tnic> <CACT4Y+bCOr=du1QEg8TtiZ-X6U+8ZPR4N07rJOeSCsd5h+zO3w@mail.gmail.com>
+ <CAG48ez1AWW7FkvU31ahy=0ZiaAreSMz=FFA0u8-XkXT9hNdWKA@mail.gmail.com>
+In-Reply-To: <CAG48ez1AWW7FkvU31ahy=0ZiaAreSMz=FFA0u8-XkXT9hNdWKA@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 18 Nov 2019 17:29:42 +0100
+Message-ID: <CACT4Y+bfF86YY_zEGWO1sK0NwuYgr8Cx0wFewRDq0WL_GBgO0Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] x86/traps: Print non-canonical address on #GP
+To:     Jann Horn <jannh@google.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter, sorry for delay.
-
-I'll re-read this series tomorrow, but everything looks correct at first
-glance...
-
-Except one very minor problem in this patch, see below.
-
-On 11/13, Peter Zijlstra wrote:
+On Mon, Nov 18, 2019 at 5:20 PM 'Jann Horn' via kasan-dev
+<kasan-dev@googlegroups.com> wrote:
 >
-> -bool __percpu_down_read(struct percpu_rw_semaphore *sem, bool try)
-> +static bool __percpu_down_read_trylock(struct percpu_rw_semaphore *sem)
->  {
->  =09__this_cpu_inc(*sem->read_count);
-> =20
-> @@ -70,14 +70,21 @@ bool __percpu_down_read(struct percpu_rw
->  =09 * If !readers_block the critical section starts here, matched by the
->  =09 * release in percpu_up_write().
->  =09 */
-> -=09if (likely(!smp_load_acquire(&sem->readers_block)))
-> +=09if (likely(!atomic_read_acquire(&sem->readers_block)))
+> On Mon, Nov 18, 2019 at 5:03 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > On Mon, Nov 18, 2019 at 3:21 PM Borislav Petkov <bp@alien8.de> wrote:
+> > >
+> > > On Fri, Nov 15, 2019 at 08:17:27PM +0100, Jann Horn wrote:
+> > > >  dotraplinkage void
+> > > >  do_general_protection(struct pt_regs *regs, long error_code)
+> > > >  {
+> > > > @@ -547,8 +581,15 @@ do_general_protection(struct pt_regs *regs, long error_code)
+> > > >                       return;
+> > > >
+> > > >               if (notify_die(DIE_GPF, desc, regs, error_code,
+> > > > -                            X86_TRAP_GP, SIGSEGV) != NOTIFY_STOP)
+> > > > -                     die(desc, regs, error_code);
+> > > > +                            X86_TRAP_GP, SIGSEGV) == NOTIFY_STOP)
+> > > > +                     return;
+> > > > +
+> > > > +             if (error_code)
+> > > > +                     pr_alert("GPF is segment-related (see error code)\n");
+> > > > +             else
+> > > > +                     print_kernel_gp_address(regs);
+> > > > +
+> > > > +             die(desc, regs, error_code);
+> > >
+> > > Right, this way, those messages appear before the main "general
+> > > protection ..." message:
+> > >
+> > > [    2.434372] traps: probably dereferencing non-canonical address 0xdfff000000000001
+> > > [    2.442492] general protection fault: 0000 [#1] PREEMPT SMP
+> > >
+> > > Can we glue/merge them together? Or is this going to confuse tools too much:
+> > >
+> > > [    2.542218] general protection fault while derefing a non-canonical address 0xdfff000000000001: 0000 [#1] PREEMPT SMP
+> > >
+> > > (and that sentence could be shorter too:
+> > >
+> > >         "general protection fault for non-canonical address 0xdfff000000000001"
+> > >
+> > > looks ok to me too.)
+> >
+> > This exact form will confuse syzkaller crash parsing for Linux kernel:
+> > https://github.com/google/syzkaller/blob/1daed50ac33511e1a107228a9c3b80e5c4aebb5c/pkg/report/linux.go#L1347
+> > It expects a "general protection fault:" line for these crashes.
+> >
+> > A graceful way to update kernel crash messages would be to add more
+> > tests with the new format here:
+> > https://github.com/google/syzkaller/tree/1daed50ac33511e1a107228a9c3b80e5c4aebb5c/pkg/report/testdata/linux/report
+> > Update parsing code. Roll out new version. Update all other testing
+> > systems that detect and parse kernel crashes. Then commit kernel
+> > changes.
+>
+> So for syzkaller, it'd be fine as long as we keep the colon there?
+> Something like:
+>
+> general protection fault: derefing non-canonical address
+> 0xdfff000000000001: 0000 [#1] PREEMPT SMP
 
-I don't think this can be compiled ;) ->readers_block is "int" until the ne=
-xt
-patch makes it atomic_t and renames to ->block.
+Probably. Tests help a lot to answer such questions ;) But presumably
+it should break parsing.
 
-And. I think __percpu_down_read_trylock() should do
+> And it looks like the 0day test bot doesn't have any specific pattern
+> for #GP, it seems to just look for the panic triggered by
+> panic-on-oops as far as I can tell (oops=panic in lkp-exec/qemu, no
+> "general protection fault" in etc/dmesg-kill-pattern).
+>
+> > An unfortunate consequence of offloading testing to third-party systems...
+>
+> And of not having a standard way to signal "this line starts something
+> that should be reported as a bug"? Maybe as a longer-term idea, it'd
+> help to have some sort of extra prefix byte that the kernel can print
+> to say "here comes a bug report, first line should be the subject", or
+> something like that, similar to how we have loglevels...
 
-=09if (atomic_read(&sem->block))
-=09=09return false;
-
-at the start, before __this_cpu_inc(read_count).
-
-Suppose that the pending writer sleeps in rcuwait_wait_event(readers_active=
-_check).
-If the new reader comes, it is better to not wake up that writer.
-
-Oleg.
-
+This would be great.
+Also a way to denote crash end.
+However we have lots of special logic for subjects, not sure if kernel
+could provide good subject:
+https://github.com/google/syzkaller/blob/1daed50ac33511e1a107228a9c3b80e5c4aebb5c/pkg/report/linux.go#L537-L1588
+Probably it could, but it won't be completely trivial. E.g. if there
+is a stall inside of a timer function, it should give the name of the
+actual timer callback as identity ("stall in timer_subsystem_foo"). Or
+for syscalls we use more disambiguation b/c "in sys_ioclt" is not much
+different than saying "there is a bug in kernel" :)
