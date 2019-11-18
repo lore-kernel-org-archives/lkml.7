@@ -2,119 +2,107 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98654C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 03:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2011EC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 03:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76416206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 03:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9971206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 03:22:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uBIfyzTa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfKRDWo (ORCPT
+        id S1726638AbfKRDWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 22:22:44 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:57182 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726266AbfKRDWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 22:22:43 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E63157ABE03D72F3AD1B;
-        Mon, 18 Nov 2019 11:22:40 +0800 (CST)
-Received: from huawei.com (10.175.105.18) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Mon, 18 Nov 2019
- 11:22:31 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <akpm@linux-foundation.org>, <richardw.yang@linux.intel.com>,
-        <sfr@canb.auug.org.au>, <rppt@linux.ibm.com>, <jannh@google.com>,
-        <steve.capper@arm.com>, <catalin.marinas@arm.com>,
-        <aarcange@redhat.com>, <chenjianhong2@huawei.com>,
-        <walken@google.com>, <dave.hansen@linux.intel.com>,
-        <tiny.windzz@gmail.com>, <jhubbard@nvidia.com>, <david@redhat.com>
-CC:     <linmiaohe@huawei.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] mm: get rid of odd jump labels in find_mergeable_anon_vma()
-Date:   Mon, 18 Nov 2019 11:22:41 +0800
-Message-ID: <1574047361-30862-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Sun, 17 Nov 2019 22:22:50 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33595 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbfKRDWu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 22:22:50 -0500
+Received: by mail-pg1-f193.google.com with SMTP id h27so8937364pgn.0;
+        Sun, 17 Nov 2019 19:22:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=leAkEv51t4eJyYoGlCrW4N4M5OthipZ9Iq1DcQhvnMw=;
+        b=uBIfyzTaFkGmG4mIRWMg2aZwioi7reUgRiN5jVjUcRQFtcJ5wX3K9HaVtV+IeEEp5U
+         tzQ8i7gIxVhEHfEpkHgObDBbiwnbyI7cqstrJm0aL0VskoUAbm9i4+j/Bt0mcDR4Q4cv
+         dku1ctA0GB7TZbUCp+38p/icpr4okGjqaT2iXtpQyT4RbEH56draUYgQS3UNXbBOvwgI
+         kSEjC3Y2omRP3e+htBNy+2/hoTi1qtp8CvQL0B3aEgSHjoJEQBS8+owiG4UiAPWFt8TA
+         MWpvSpyif4mEA+2wpxX0jMDpwAm7JNgYXmkyXp91Ml45nZwFU1D2KP8eUz5hUUGSjPrc
+         +pvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=leAkEv51t4eJyYoGlCrW4N4M5OthipZ9Iq1DcQhvnMw=;
+        b=i9MOolqg8XO7LGvHTrk1syB/9DFU66MmebqXqVs4kK6+uMfYhqLtcVCq4YKDkPwIgI
+         KE6G2hBfcrIEelRYqvCgLHhcLSWiuXF7t2qkMk+RAy3Yoll04n4Z98kfrhilb/MugCI2
+         jcUqhkAwp+cMkXKqiNi/Hof8tL/1Hcm2aMnts0SKSyZFs6acehRJewshRJFOc0zKclO/
+         kGL6K/q5WE2jd+7EYAkQRmqAkoTaXoY6+ijY1xVkVSI8C6YG40IFG8oaAXbr5Myx2I0F
+         6iG35E7jTSyo8gsi073MYDWDUyshWZFo9wcSAzfjNLF0Oblec78gSu9fm7jvnyTajrSi
+         E7Jw==
+X-Gm-Message-State: APjAAAXTXd8W1EPxmh0BzFy20YtxPckKL4Sbyjm/9oYLfRyGpPFaN/td
+        Iocz0nqFpUVEQRzP2cvzs9A=
+X-Google-Smtp-Source: APXvYqzl3S+PYebJzZmwvmcdv3/1hICFN6KZRUbNJ2CdmhG8qiXc6TFrsLSo9nYv8Trr2KMSZ1fzCA==
+X-Received: by 2002:a62:31c1:: with SMTP id x184mr31929066pfx.255.1574047369805;
+        Sun, 17 Nov 2019 19:22:49 -0800 (PST)
+Received: from dahern-DO-MB.local ([2601:282:800:fd80:bd88:fb6d:6b19:f7d1])
+        by smtp.googlemail.com with ESMTPSA id w4sm9830pjt.21.2019.11.17.19.22.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 17 Nov 2019 19:22:49 -0800 (PST)
+Subject: Re: [PATCH] vrf: Fix possible NULL pointer oops when delete nic
+To:     "wangxiaogang (F)" <wangxiaogang3@huawei.com>, dsahern@kernel.org,
+        shrijeet@gmail.com, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hujunwei4@huawei.com, xuhanbing@huawei.com,
+        Taehee Yoo <ap420073@gmail.com>
+References: <60e827cb-2bba-2b7e-55dc-651103e9905f@huawei.com>
+ <fde95f03-72ee-b4e9-7f14-b98e3227f0f4@gmail.com>
+ <517baa2a-2c42-7790-e225-02d22c5ed90b@huawei.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <e908c58d-4bab-4b96-be3f-7e5d589b2050@gmail.com>
+Date:   Sun, 17 Nov 2019 20:22:47 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.18]
-X-CFilter-Loop: Reflected
+In-Reply-To: <517baa2a-2c42-7790-e225-02d22c5ed90b@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+On 11/17/19 8:15 PM, wangxiaogang (F) wrote:
+> 
+> 
+> On 2019/11/15 21:14, David Ahern wrote:
+>> On 11/14/19 11:22 PM, wangxiaogang (F) wrote:
+>>> From: XiaoGang Wang <wangxiaogang3@huawei.com>
+>>>
+>>> Recently we get a crash when access illegal address (0xc0),
+>>> which will occasionally appear when deleting a physical NIC with vrf.
+>>>
+>>
+>> How long have you been running this test?
+>>
+>> I am wondering if this is fallout from the recent adjacency changes in
+>> commits 5343da4c1742 through f3b0a18bb6cb.
+>>
+>>
+>>
+>>
+>>
+> Thank you so much for the reply, our kernel version is linux 4.19.
+> this problem happened once in our production environment.
+> 
 
-The jump labels try_prev and none are not really needed
-in find_mergeable_anon_vma(), eliminate them to improve
-readability.
--v2:
-	Fix commit descriptions and further simplify the code
-	as suggested by David Hildenbrand and John Hubbard.
-
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- mm/mmap.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
-
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 4d4db76a07da..ff02c23fd375 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1276,26 +1276,25 @@ static struct anon_vma *reusable_anon_vma(struct vm_area_struct *old, struct vm_
-  */
- struct anon_vma *find_mergeable_anon_vma(struct vm_area_struct *vma)
- {
--	struct anon_vma *anon_vma;
-+	struct anon_vma *anon_vma = NULL;
- 	struct vm_area_struct *near;
- 
-+	/* Try next first. */
- 	near = vma->vm_next;
--	if (!near)
--		goto try_prev;
-+	if (near) {
-+		anon_vma = reusable_anon_vma(near, vma, near);
-+		if (anon_vma)
-+			return anon_vma;
-+	}
- 
--	anon_vma = reusable_anon_vma(near, vma, near);
--	if (anon_vma)
--		return anon_vma;
--try_prev:
-+	/* Try prev next. */
- 	near = vma->vm_prev;
--	if (!near)
--		goto none;
-+	if (near)
-+		anon_vma = reusable_anon_vma(near, near, vma);
- 
--	anon_vma = reusable_anon_vma(near, near, vma);
--	if (anon_vma)
--		return anon_vma;
--none:
- 	/*
-+	 * We might reach here with anon_vma == NULL if we can't find
-+	 * any reusable anon_vma.
- 	 * There's no absolute need to look only at touching neighbours:
- 	 * we could search further afield for "compatible" anon_vmas.
- 	 * But it would probably just be a waste of time searching,
-@@ -1303,7 +1302,7 @@ struct anon_vma *find_mergeable_anon_vma(struct vm_area_struct *vma)
- 	 * We're trying to allow mprotect remerging later on,
- 	 * not trying to minimize memory used for anon_vmas.
- 	 */
--	return NULL;
-+	return anon_vma;
- }
- 
- /*
--- 
-2.19.1
-
+ok, so the recent adjacency changes would not be at fault here.
