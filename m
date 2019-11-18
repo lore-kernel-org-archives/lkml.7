@@ -2,105 +2,114 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4786C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0C9C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00CA2192B
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:45:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574099155;
-	bh=6nGZwtWAlbAkR03LsyKRIzmdzSFqC4ZcoruSPOH4V4g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yPAWE0tVRU9nMdhQKilu1qGbghdaJbNkTGxYvaw6e9q/tRsRaRo+4qlae52Sav3Yr
-	 PCNUd07tRJl/D8ugkO4KmpjF6MB5zXFGq/lzJgga+BoKCFEeUGcESarHglUbx0VtEP
-	 yVq5cNT5H8FPbIftqZGcSlTQfjJEr0S43lsrct2U=
+	by mail.kernel.org (Postfix) with ESMTP id 284D52192B
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfKRRpz (ORCPT
+        id S1726983AbfKRRqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 12:45:55 -0500
-Received: from foss.arm.com ([217.140.110.172]:37786 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbfKRRpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 12:45:54 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0DD61FB;
-        Mon, 18 Nov 2019 09:45:53 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 41CE73F703;
-        Mon, 18 Nov 2019 09:45:53 -0800 (PST)
-Date:   Mon, 18 Nov 2019 17:45:50 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Grigoryev Denis <grigoryev@fastwel.ru>,
-        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org
-Subject: Re: [PATCH v1 1/4] tps6105x: add optional devicetree support
-Message-ID: <20191118174550.GA43585@sirena.org.uk>
-References: <20191118165400.21985-1-TheSven73@gmail.com>
- <20191118165400.21985-2-TheSven73@gmail.com>
- <20191118170111.GL9761@sirena.org.uk>
- <CAGngYiW+8m4fBAY5Ya_4YmEmCTQeiiNP6=aH2mUX6d2wY1442w@mail.gmail.com>
+        Mon, 18 Nov 2019 12:46:00 -0500
+Received: from mx2.suse.de ([195.135.220.15]:50804 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726336AbfKRRp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 12:45:58 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B9B64AF22;
+        Mon, 18 Nov 2019 17:45:56 +0000 (UTC)
+Message-ID: <061822b6ad80094a52d27f27f3e37594adb313c2.camel@suse.de>
+Subject: Re: [PATCH v2] ARM: dt: check MPIDR on MP devices built without SMP
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     linux-kernel@vger.kernel.org, f.fainelli@gmail.com,
+        "kernelci.org bot" <bot@kernelci.org>, wahrenst@gmx.net,
+        linux-arm-kernel@lists.infradead.org
+Date:   Mon, 18 Nov 2019 18:45:55 +0100
+In-Reply-To: <20191118125540.GW25745@shell.armlinux.org.uk>
+References: <20191004155232.17209-1-nsaenzjulienne@suse.de>
+         <5abdcb0e0e1043a101f579ea65d07a1f6b91f896.camel@suse.de>
+         <20191118125540.GW25745@shell.armlinux.org.uk>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-+YvWotUDyLir6gMkee5u"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
-Content-Disposition: inline
-In-Reply-To: <CAGngYiW+8m4fBAY5Ya_4YmEmCTQeiiNP6=aH2mUX6d2wY1442w@mail.gmail.com>
-X-Cookie: Are we live or on tape?
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---UlVJffcvxoiEqYs2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--=-+YvWotUDyLir6gMkee5u
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 18, 2019 at 12:17:50PM -0500, Sven Van Asbroeck wrote:
-> On Mon, Nov 18, 2019 at 12:01 PM Mark Brown <broonie@kernel.org> wrote:
+Hi Russell, thanks for the review.
 
-> > We shouldn't need a compatible here, the MFD should just instantiate any
-> > children it has.
+On Mon, 2019-11-18 at 12:55 +0000, Russell King - ARM Linux admin wrote:
+> On Mon, Nov 18, 2019 at 12:49:04PM +0100, Nicolas Saenz Julienne wrote:
+> > On Fri, 2019-10-04 at 17:52 +0200, Nicolas Saenz Julienne wrote:
+> > > On SMP builds, in order to properly link CPU devices with their
+> > > respective DT nodes we start by matching the boot CPU. This is achiev=
+ed
+> > > by comparing the 'reg' property on each of the CPU DT nodes with the
+> > > MPIDR. The association is necessary as to validate the whole CPU logi=
+cal
+> > > map, which ultimately links CPU devices and their DT nodes.
+>=20
+> No, that is not the primary purpose of the CPU logical map.  The CPU=20
+> logical map is there to map the CPU logical number to a hardware number,
+> necessary for programming hardware.
 
-> If the child node doesn't have a compatible, how would the driver be
-> able to work
-> out the operational mode? The chip can only be in a single operational mode
-> at a time. So the child node has 'led' or 'regulator' compatible.
+Noted.
 
-> Or is there a more elegant method I've overlooked?
+> > > On setups built without SMP, no MPIDR read is performed. The only thi=
+ng
+> > > expected is for the 'reg' property in the CPU DT node to contain the
+> > > value 0x0.
+> > >=20
+> > > This causes problems on MP setups built without SMP. As their boot CP=
+U
+> > > DT node contains the relevant MPIDR as opposed to 0x0. No match is th=
+en
+> > > possible. This causes troubles further down the line as drivers are
+> > > unable to get the CPU's DT node.
+>=20
+> So the DT is incorrect for the platform - it is not describing the
+> hardware.  Why can't the DT be fixed?  Clearly, it would have never
+> worked with the mainline kernel today.
 
-So this is one device that has two separate modes?  This sounds like you
-need a property specifying how the device is wired up, or possibly just
-different compatibles at the root of the device though that's not quite
-idiomatic.  Splitting this up with different devices is a bit of a Linux
-specific implementation detail.
+Sorry but I don't see any incorrect DT here. From the ARM CPU bindings I ga=
+ther
+that (at least since ARMv7) every CPU node should contain its corresponding
+MPIDR. It transpires that ARM's DT cpu map init code should take that into
+account regardles of whether the kernel supports SMP, isn't it?
 
---UlVJffcvxoiEqYs2
+Regards,
+Nicolas
+
+
+--=-+YvWotUDyLir6gMkee5u
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3S2M4ACgkQJNaLcl1U
-h9ByRwf/VC4ZC3Kltc9gqSB2/giau7AxR0MHzi1gENgbr3VxEfOvL5DhGt/j6koE
-igDgKqsCtFSpZCCjYHinsCW9s8ue4r3ZIN9Kk6jpZUR1h+ddomrpkywGnGhKpUlB
-ZLJM23qgScm72XM5i17kzut4vBhSHKPlcOAQr00ZLPuQVj1keflO3hNIq7Suk3fP
-yAn+romZT4vbfHgPbylFOjm6syNioCOIUjVhl7YCjFfYVO8GOE6aQoGPUsLHGxbZ
-UYu0F+XjqG1ZArQhaGdMz8/6t4S/MVCCwayEcQ23SHIdWn2LYghmGpMuXOauKAtK
-J+sV/ijwbpJxaKN3MyZwVaRUEYIUnQ==
-=dQrA
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3S2NMACgkQlfZmHno8
+x/4D7gf/XdwPq75qRoHvHJjo1VIzJp33WcYC4bhmll+p0iM/2O4t/b7f8jOyNWVG
+YlxA+fal6q1N6nyrjbXydq76hDgZK8bxHy0nQWZhJKuQaTfB0YcoMniZV+sDjF/N
+NC/MvPupcRLkTbRbnW8Af0f345b62bu3r6zL7DL/AbAyVptOD3+yCGnbI4d8hVcU
+dolO9kU7i4aKrZ9aF/u/mQQbqt/rZpPL5cFNOA5F920ryW6sWLlEfqrigBxq8Oy3
+JB5+ZZXHTqJ593gIecn4dy+iRpU8ttTN0gdHEdy0TnFbmlh5xF4GbXzjwhKHpm7x
+7D+Qbqp96Qpf6ZsVySaavz/svIiLJg==
+=fulJ
 -----END PGP SIGNATURE-----
 
---UlVJffcvxoiEqYs2--
+--=-+YvWotUDyLir6gMkee5u--
+
