@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A849C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD0DC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C76C208A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F04C208A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:23:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ch5NaihK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZkCVf+fA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbfKRUXo (ORCPT
+        id S1726961AbfKRUXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 15:23:44 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:33103 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbfKRUXk (ORCPT
+        Mon, 18 Nov 2019 15:23:52 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:40365 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726712AbfKRUXm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 15:23:40 -0500
-Received: by mail-pj1-f66.google.com with SMTP id o14so1815481pjr.0
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 12:23:40 -0800 (PST)
+        Mon, 18 Nov 2019 15:23:42 -0500
+Received: by mail-pj1-f65.google.com with SMTP id ep1so1815932pjb.7
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 12:23:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=62c/6FPwz+q6rvXrG8i3YVfn6MxAXoMreZTxPxOlj5A=;
-        b=ch5NaihKV/QyVydlbPH7HihH2fQ5HQ3c59g1Hep+tufaTPejbI8jrd7lb5L8P2Evxw
-         pgh3an1c4f+0Tw0N4DhrtXJtQz6oJ8MoMtEKSTeEwYgMazMoiPpQO5IfAOgYR4fyI9ky
-         f+72CIIs9Y+bOF80GWTaNlUzuKAI29ccFTf1M/2L9aB4arYsy+tH23llZSheGJtExQw/
-         1xlL8zIYhqmCIGTCY8MzoukyLr4gGm9GVZNZTSRpLdA//Jjoln/LFlgKy7DSGwFvlnTX
-         x1NnUQ7PPjdnMayhB4N1Hmlo9YEWL0Zp5QlkVA86dHMngz/UuCP/NXIDowJNRU/O9Uxf
-         H31w==
+        bh=g2tf2P5EW6ccOOB6IuRLEpkXKMEElN2z8PaZC3yQjBk=;
+        b=ZkCVf+fADJoZX5idyKZ0132HFdbDelFW0aDwPblq6ATdTcBIoCRu6J1TiYmyIVhDR8
+         rSX0NLzprcZd54cELdqDyZo+p0fv/5MLjPlR7hrw5SEgEkUs9RnstrDNx0Q3HvdIv0wr
+         Zohdv76dscgz7XtdNtkrTVwaVTzuXU80tFhlISAMEh6yCdUee9Q/W1rfYhGtx2uk1Elg
+         JqaebfGVtYtNAuGqbYVH1ePgdq3YvjtqON/v+ubKsCfLKdWBsqPAXbWhTcdzpa8qAsNv
+         OR3qZbBGixzJHRLZnecsv5VtBDFt0LOLrJXStbD3lJuycuOKXXZQh4PbZV/oKyfCjl2I
+         PecQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=62c/6FPwz+q6rvXrG8i3YVfn6MxAXoMreZTxPxOlj5A=;
-        b=E52F/v2KmC6OiCAExH1vswNi+18L7Oc1OoTcaBHdR72TJCqzQd/AI+Yb6LurnmpaPZ
-         4DuIp4X+kqcsIHQ2ncMykmHxeCUVbh7Xbs6fuVexpbnl1RQ2+hWTGldt52IyYiNeAdS1
-         VQH5JKyaDeN+cyLTeMUh+wR1fgQM/mvsHPaHKFwNxoOZ3mqzp7EOvlDLf+eFhTSotw9o
-         aLRMtadA3b4id6nouC7F/CZSb2Xac7YC/rZmclpJ2v6tNOpQDXZfoaN3eDl+5XpHfglZ
-         /xG/T6ZBmhxgNfw42flJ8Ok2fRobn06BY96F4pwtZV0ekeh4wmMnP9f0FfSQ8HTybzzD
-         jMOw==
-X-Gm-Message-State: APjAAAU38QV5nTjh6KrIYFGkaxHMq21VtDGNZGjT8NdpQiuv+6XvQsLF
-        wlCtG6eVeU4aI7S+iWEcTOqLu7Gm55A=
-X-Google-Smtp-Source: APXvYqyJhcXgx0ajlguJa2TigxhWo7esltd1yW4mf6KPoDh9FGobxzdvDxd9NiNVFa2cCxtYQed64Q==
-X-Received: by 2002:a17:902:4a:: with SMTP id 68mr2183630pla.8.1574108619396;
-        Mon, 18 Nov 2019 12:23:39 -0800 (PST)
+        bh=g2tf2P5EW6ccOOB6IuRLEpkXKMEElN2z8PaZC3yQjBk=;
+        b=jWMxjgzTH5zWmmzXxcsOGRiHKwp8Mrs4up80u6MGzcA6/oMMhuP4K7bUd0/yj5F9KJ
+         Xs3rwodCy6oItSrihKe3x32ky9zENHknSoH1mtMKeLlSEGj/2FqnRf3ibRSX8L29sdZc
+         +k2voV6cE7qmqKPSOxo6kTeJwX1JJALmn+NKrWuXUpghOWj12C93cdJB04forXiE3BrK
+         Lu2qbnmuzIuCT5u6MKN4AdapADXCVpyzGpis1uzbvtwIcQbBbQvDtWHpJPU1HzEZXrqD
+         TcB0M1dPmJGzxje5HjUVD7Q3BXqD9HZOCfCeBF+FchOX1oAIzUh2vknizw2CX1+6gi71
+         e4/g==
+X-Gm-Message-State: APjAAAXzH1oz+n9KzFqRRTGUc6vldphmfoBhBjhJYJ4QKYJOmHUPLkWS
+        lZJ0hQ4nhme5KInzB0jMY80YuUHxa+U=
+X-Google-Smtp-Source: APXvYqys05qCCQbqsH9kZqplNfyr2xIMFZJfzYlg6Slq+GtTIjdqi22ey1wmSdX4KPWCn/5GQseBEA==
+X-Received: by 2002:a17:902:b582:: with SMTP id a2mr31514887pls.103.1574108620775;
+        Mon, 18 Nov 2019 12:23:40 -0800 (PST)
 Received: from localhost.localdomain (c-67-170-172-113.hsd1.or.comcast.net. [67.170.172.113])
-        by smtp.gmail.com with ESMTPSA id 7sm11021871pgk.25.2019.11.18.12.23.38
+        by smtp.gmail.com with ESMTPSA id 7sm11021871pgk.25.2019.11.18.12.23.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 12:23:38 -0800 (PST)
+        Mon, 18 Nov 2019 12:23:40 -0800 (PST)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
 Cc:     John Stultz <john.stultz@linaro.org>,
@@ -75,9 +75,9 @@ Cc:     John Stultz <john.stultz@linaro.org>,
         Hillf Danton <hdanton@sina.com>,
         Dave Airlie <airlied@gmail.com>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH v16 3/5] dma-buf: heaps: Add system heap to dmabuf heaps
-Date:   Mon, 18 Nov 2019 20:23:30 +0000
-Message-Id: <20191118202332.109172-4-john.stultz@linaro.org>
+Subject: [PATCH v16 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
+Date:   Mon, 18 Nov 2019 20:23:31 +0000
+Message-Id: <20191118202332.109172-5-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191118202332.109172-1-john.stultz@linaro.org>
 References: <20191118202332.109172-1-john.stultz@linaro.org>
@@ -86,14 +86,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds system heap to the dma-buf heaps framework.
-
-This allows applications to get a page-allocator backed dma-buf
-for non-contiguous memory.
+This adds a CMA heap, which allows userspace to allocate
+a dma-buf of contiguous memory out of a CMA region.
 
 This code is an evolution of the Android ION implementation, so
-thanks to its original authors and maintainters:
-  Rebecca Schultz Zavin, Colin Cross, Laura Abbott, and others!
+thanks to its original author and maintainters:
+  Benjamin Gaignard, Laura Abbott, and others!
+
+NOTE: This patch only adds the default CMA heap. We will enable
+selectively adding other CMA memory regions to the dmabuf heaps
+interface with a later patch (which requires a dt binding)
 
 Cc: Laura Abbott <labbott@redhat.com>
 Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
@@ -123,173 +125,192 @@ v2:
 * Switch allocate to return dmabuf fd
 * Simplify init code
 * Checkpatch fixups
-* Droped dead system-contig code
 v3:
-* Whitespace fixups from Benjamin
-* Make sure we're zeroing the allocated pages (from Liam)
-* Use PAGE_ALIGN() consistently (suggested by Brian)
+* Switch to inline function for to_cma_heap()
+* Minor cleanups suggested by Brian
 * Fold in new registration style from Andrew
-* Avoid needless dynamic allocation of sys_heap (suggested by
-  Christoph)
-* Minor cleanups
 * Folded in changes from Andrew to use simplified page list
   from the heap helpers
 v4:
-* Optimization to allocate pages in chunks, similar to old
-  pagepool code
-* Use fd_flags when creating dmabuf fd (Suggested by Benjamin)
-v5:
-* Back out large order page allocations (was leaking memory,
-  as the page array didn't properly track order size)
+* Use the fd_flags when creating dmabuf fd (Suggested by
+  Benjamin)
+* Use precalculated pagecount (Suggested by Andrew)
 v6:
-* Minor whitespace change suggested by Brian
-* Remove unused variable
+* Changed variable names to improve clarity, as suggested
+  by Brian
 v7:
 * Use newly lower-cased init_heap_helper_buffer helper
-* Add system heap DOS avoidance suggested by Laura from ION code
 * Use new dmabuf export helper
 v8:
-* Make struct dma_heap_ops consts (suggested by Christoph)
-* Get rid of needless struct system_heap (suggested by Christoph)
+* Make struct dma_heap_ops const (Suggested by Christoph)
 * Condense dma_heap_buffer and heap_helper_buffer (suggested by
   Christoph)
-* Add forgotten include file to fix build issue on x86
+* Checkpatch whitespace fixups
+v9:
+* Removing needless check noted by Brian Starkey
+* Rename dma_heap_get_data->dma_heap_get_drvdata suggested
+  by Hilf Danton
+* Check signals after clearing memory pages to avoid doing
+  needless work if the task is killed as suggested by Hilf
 v12:
-* Minor tweaks to prep loading heap from module
-v14:
-* Fix "redundant assignment to variable ret" issue reported
-  by Colin King and fixed by Andrew Davis
+* Rework to only add the default CMA heap
 v15:
-* Drop unused heap flag from heap_helper_buffer as suggested
+* Drop unused flags field from heap_helper_buffer as suggested
   by Sandeep Patil
 ---
- drivers/dma-buf/Kconfig             |   2 +
- drivers/dma-buf/heaps/Kconfig       |   6 ++
- drivers/dma-buf/heaps/Makefile      |   1 +
- drivers/dma-buf/heaps/system_heap.c | 123 ++++++++++++++++++++++++++++
- 4 files changed, 132 insertions(+)
- create mode 100644 drivers/dma-buf/heaps/Kconfig
- create mode 100644 drivers/dma-buf/heaps/system_heap.c
+ drivers/dma-buf/heaps/Kconfig    |   8 ++
+ drivers/dma-buf/heaps/Makefile   |   1 +
+ drivers/dma-buf/heaps/cma_heap.c | 177 +++++++++++++++++++++++++++++++
+ 3 files changed, 186 insertions(+)
+ create mode 100644 drivers/dma-buf/heaps/cma_heap.c
 
-diff --git a/drivers/dma-buf/Kconfig b/drivers/dma-buf/Kconfig
-index bffa58fc3e6e..0613bb7770f5 100644
---- a/drivers/dma-buf/Kconfig
-+++ b/drivers/dma-buf/Kconfig
-@@ -53,4 +53,6 @@ menuconfig DMABUF_HEAPS
- 	  allows userspace to allocate dma-bufs that can be shared
- 	  between drivers.
- 
-+source "drivers/dma-buf/heaps/Kconfig"
-+
- endmenu
 diff --git a/drivers/dma-buf/heaps/Kconfig b/drivers/dma-buf/heaps/Kconfig
-new file mode 100644
-index 000000000000..205052744169
---- /dev/null
+index 205052744169..a5eef06c4226 100644
+--- a/drivers/dma-buf/heaps/Kconfig
 +++ b/drivers/dma-buf/heaps/Kconfig
-@@ -0,0 +1,6 @@
-+config DMABUF_HEAPS_SYSTEM
-+	bool "DMA-BUF System Heap"
-+	depends on DMABUF_HEAPS
+@@ -4,3 +4,11 @@ config DMABUF_HEAPS_SYSTEM
+ 	help
+ 	  Choose this option to enable the system dmabuf heap. The system heap
+ 	  is backed by pages from the buddy allocator. If in doubt, say Y.
++
++config DMABUF_HEAPS_CMA
++	bool "DMA-BUF CMA Heap"
++	depends on DMABUF_HEAPS && DMA_CMA
 +	help
-+	  Choose this option to enable the system dmabuf heap. The system heap
-+	  is backed by pages from the buddy allocator. If in doubt, say Y.
++	  Choose this option to enable dma-buf CMA heap. This heap is backed
++	  by the Contiguous Memory Allocator (CMA). If your system has these
++	  regions, you should say Y here.
 diff --git a/drivers/dma-buf/heaps/Makefile b/drivers/dma-buf/heaps/Makefile
-index de49898112db..d1808eca2581 100644
+index d1808eca2581..6e54cdec3da0 100644
 --- a/drivers/dma-buf/heaps/Makefile
 +++ b/drivers/dma-buf/heaps/Makefile
-@@ -1,2 +1,3 @@
+@@ -1,3 +1,4 @@
  # SPDX-License-Identifier: GPL-2.0
  obj-y					+= heap-helpers.o
-+obj-$(CONFIG_DMABUF_HEAPS_SYSTEM)	+= system_heap.o
-diff --git a/drivers/dma-buf/heaps/system_heap.c b/drivers/dma-buf/heaps/system_heap.c
+ obj-$(CONFIG_DMABUF_HEAPS_SYSTEM)	+= system_heap.o
++obj-$(CONFIG_DMABUF_HEAPS_CMA)		+= cma_heap.o
+diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
 new file mode 100644
-index 000000000000..1aa01e98c595
+index 000000000000..626cf7fd033a
 --- /dev/null
-+++ b/drivers/dma-buf/heaps/system_heap.c
-@@ -0,0 +1,123 @@
++++ b/drivers/dma-buf/heaps/cma_heap.c
+@@ -0,0 +1,177 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * DMABUF System heap exporter
++ * DMABUF CMA heap exporter
 + *
-+ * Copyright (C) 2011 Google, Inc.
-+ * Copyright (C) 2019 Linaro Ltd.
++ * Copyright (C) 2012, 2019 Linaro Ltd.
++ * Author: <benjamin.gaignard@linaro.org> for ST-Ericsson.
 + */
 +
++#include <linux/cma.h>
++#include <linux/device.h>
 +#include <linux/dma-buf.h>
-+#include <linux/dma-mapping.h>
 +#include <linux/dma-heap.h>
++#include <linux/dma-contiguous.h>
 +#include <linux/err.h>
++#include <linux/errno.h>
 +#include <linux/highmem.h>
-+#include <linux/mm.h>
 +#include <linux/module.h>
-+#include <linux/scatterlist.h>
 +#include <linux/slab.h>
++#include <linux/scatterlist.h>
 +#include <linux/sched/signal.h>
-+#include <asm/page.h>
 +
 +#include "heap-helpers.h"
 +
-+struct dma_heap *sys_heap;
++struct cma_heap {
++	struct dma_heap *heap;
++	struct cma *cma;
++};
 +
-+static void system_heap_free(struct heap_helper_buffer *buffer)
++static void cma_heap_free(struct heap_helper_buffer *buffer)
 +{
-+	pgoff_t pg;
++	struct cma_heap *cma_heap = dma_heap_get_drvdata(buffer->heap);
++	unsigned long nr_pages = buffer->pagecount;
++	struct page *cma_pages = buffer->priv_virt;
 +
-+	for (pg = 0; pg < buffer->pagecount; pg++)
-+		__free_page(buffer->pages[pg]);
++	/* free page list */
 +	kfree(buffer->pages);
++	/* release memory */
++	cma_release(cma_heap->cma, cma_pages, nr_pages);
 +	kfree(buffer);
 +}
 +
-+static int system_heap_allocate(struct dma_heap *heap,
-+				unsigned long len,
-+				unsigned long fd_flags,
-+				unsigned long heap_flags)
++/* dmabuf heap CMA operations functions */
++static int cma_heap_allocate(struct dma_heap *heap,
++			     unsigned long len,
++			     unsigned long fd_flags,
++			     unsigned long heap_flags)
 +{
++	struct cma_heap *cma_heap = dma_heap_get_drvdata(heap);
 +	struct heap_helper_buffer *helper_buffer;
++	struct page *cma_pages;
++	size_t size = PAGE_ALIGN(len);
++	unsigned long nr_pages = size >> PAGE_SHIFT;
++	unsigned long align = get_order(size);
 +	struct dma_buf *dmabuf;
 +	int ret = -ENOMEM;
 +	pgoff_t pg;
++
++	if (align > CONFIG_CMA_ALIGNMENT)
++		align = CONFIG_CMA_ALIGNMENT;
 +
 +	helper_buffer = kzalloc(sizeof(*helper_buffer), GFP_KERNEL);
 +	if (!helper_buffer)
 +		return -ENOMEM;
 +
-+	init_heap_helper_buffer(helper_buffer, system_heap_free);
++	init_heap_helper_buffer(helper_buffer, cma_heap_free);
 +	helper_buffer->heap = heap;
 +	helper_buffer->size = len;
 +
-+	helper_buffer->pagecount = len / PAGE_SIZE;
++	cma_pages = cma_alloc(cma_heap->cma, nr_pages, align, false);
++	if (!cma_pages)
++		goto free_buf;
++
++	if (PageHighMem(cma_pages)) {
++		unsigned long nr_clear_pages = nr_pages;
++		struct page *page = cma_pages;
++
++		while (nr_clear_pages > 0) {
++			void *vaddr = kmap_atomic(page);
++
++			memset(vaddr, 0, PAGE_SIZE);
++			kunmap_atomic(vaddr);
++			/*
++			 * Avoid wasting time zeroing memory if the process
++			 * has been killed by by SIGKILL
++			 */
++			if (fatal_signal_pending(current))
++				goto free_cma;
++
++			page++;
++			nr_clear_pages--;
++		}
++	} else {
++		memset(page_address(cma_pages), 0, size);
++	}
++
++	helper_buffer->pagecount = nr_pages;
 +	helper_buffer->pages = kmalloc_array(helper_buffer->pagecount,
 +					     sizeof(*helper_buffer->pages),
 +					     GFP_KERNEL);
 +	if (!helper_buffer->pages) {
 +		ret = -ENOMEM;
-+		goto err0;
++		goto free_cma;
 +	}
 +
-+	for (pg = 0; pg < helper_buffer->pagecount; pg++) {
-+		/*
-+		 * Avoid trying to allocate memory if the process
-+		 * has been killed by by SIGKILL
-+		 */
-+		if (fatal_signal_pending(current))
-+			goto err1;
-+
-+		helper_buffer->pages[pg] = alloc_page(GFP_KERNEL | __GFP_ZERO);
-+		if (!helper_buffer->pages[pg])
-+			goto err1;
-+	}
++	for (pg = 0; pg < helper_buffer->pagecount; pg++)
++		helper_buffer->pages[pg] = &cma_pages[pg];
 +
 +	/* create the dmabuf */
 +	dmabuf = heap_helper_export_dmabuf(helper_buffer, fd_flags);
 +	if (IS_ERR(dmabuf)) {
 +		ret = PTR_ERR(dmabuf);
-+		goto err1;
++		goto free_pages;
 +	}
 +
 +	helper_buffer->dmabuf = dmabuf;
++	helper_buffer->priv_virt = cma_pages;
 +
 +	ret = dma_buf_fd(dmabuf, fd_flags);
 +	if (ret < 0) {
@@ -300,36 +321,56 @@ index 000000000000..1aa01e98c595
 +
 +	return ret;
 +
-+err1:
-+	while (pg > 0)
-+		__free_page(helper_buffer->pages[--pg]);
++free_pages:
 +	kfree(helper_buffer->pages);
-+err0:
++free_cma:
++	cma_release(cma_heap->cma, cma_pages, nr_pages);
++free_buf:
 +	kfree(helper_buffer);
-+
 +	return ret;
 +}
 +
-+static const struct dma_heap_ops system_heap_ops = {
-+	.allocate = system_heap_allocate,
++static const struct dma_heap_ops cma_heap_ops = {
++	.allocate = cma_heap_allocate,
 +};
 +
-+static int system_heap_create(void)
++static int __add_cma_heap(struct cma *cma, void *data)
 +{
++	struct cma_heap *cma_heap;
 +	struct dma_heap_export_info exp_info;
++
++	cma_heap = kzalloc(sizeof(*cma_heap), GFP_KERNEL);
++	if (!cma_heap)
++		return -ENOMEM;
++	cma_heap->cma = cma;
++
++	exp_info.name = cma_get_name(cma);
++	exp_info.ops = &cma_heap_ops;
++	exp_info.priv = cma_heap;
++
++	cma_heap->heap = dma_heap_add(&exp_info);
++	if (IS_ERR(cma_heap->heap)) {
++		int ret = PTR_ERR(cma_heap->heap);
++
++		kfree(cma_heap);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int add_default_cma_heap(void)
++{
++	struct cma *default_cma = dev_get_cma_area(NULL);
 +	int ret = 0;
 +
-+	exp_info.name = "system_heap";
-+	exp_info.ops = &system_heap_ops;
-+	exp_info.priv = NULL;
-+
-+	sys_heap = dma_heap_add(&exp_info);
-+	if (IS_ERR(sys_heap))
-+		ret = PTR_ERR(sys_heap);
++	if (default_cma)
++		ret = __add_cma_heap(default_cma, NULL);
 +
 +	return ret;
 +}
-+module_init(system_heap_create);
++module_init(add_default_cma_heap);
++MODULE_DESCRIPTION("DMA-BUF CMA Heap");
 +MODULE_LICENSE("GPL v2");
 -- 
 2.17.1
