@@ -2,98 +2,120 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DC6C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD566C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6568C21479
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:01:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574096475;
-	bh=ma3hU9rG4HI8z8lWpvKDqtt2mW3ZBOM5oyvya7/4vis=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ocTdpgT2qMHjSRwr4ofT5gOEreDKJiT1Sbq9+ZqGqrri1UhJq/Db3Y3UmY+R3jNC7
-	 8xcVQVLYQPFCRLZYlnP9Frw9ZT9lV27ri0jidAWByX5/1zv1wiSII8++yuQArCOjGW
-	 pMZD396Aqtl9FAScbA1SoZXCuLoVgdy61V6apuD0=
+	by mail.kernel.org (Postfix) with ESMTP id AEE7A2190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:04:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iqibYGOO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfKRRBO (ORCPT
+        id S1726865AbfKRRET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 12:01:14 -0500
-Received: from foss.arm.com ([217.140.110.172]:37214 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726427AbfKRRBO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 12:01:14 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 947BD1FB;
-        Mon, 18 Nov 2019 09:01:13 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 026763F703;
-        Mon, 18 Nov 2019 09:01:12 -0800 (PST)
-Date:   Mon, 18 Nov 2019 17:01:11 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Grigoryev Denis <grigoryev@fastwel.ru>,
-        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-Subject: Re: [PATCH v1 1/4] tps6105x: add optional devicetree support
-Message-ID: <20191118170111.GL9761@sirena.org.uk>
-References: <20191118165400.21985-1-TheSven73@gmail.com>
- <20191118165400.21985-2-TheSven73@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4oF+6Ged69J0+4/e"
-Content-Disposition: inline
-In-Reply-To: <20191118165400.21985-2-TheSven73@gmail.com>
-X-Cookie: no maintenance:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 18 Nov 2019 12:04:19 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:34484 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbfKRRET (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 12:04:19 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAIGwqKt155782;
+        Mon, 18 Nov 2019 17:03:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=KkJBV1OKZEQpd6p0Z4UlW9v/6UWLZWUIedN3euPfzqM=;
+ b=iqibYGOOoB0o7db5SbaPW4ndmY3yFGe13+1HRgRhTAVfz4O2tV6i8h3h4w6qcMTVrBw6
+ osAzjI5aGVM8zlkS80bq8OmZnppVlznX61Qnkg7RuibiORt4cVoKZq6s204TRbteZn62
+ 0U58zEHX6UcvLe6ElQfKc7rhtg7CXdmy2Uoq4Drh7WjBInV0DykEPRITnmMf5NT4W9ub
+ EMSHZSSMDkNqxpW+eKfh5Lkv9nBLTswlJSbbetQBkK++jCdnoC5nDGZtqDJE1Jh/TEXd
+ GnfgXBmUQwgBa1TAYK6/zquTJUNGMRdYozaE3AsSr8ADUI5uyXv36kCLC00Y1bW99gOI oQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2wa8hthmsx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Nov 2019 17:03:49 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAIGx0ic137512;
+        Mon, 18 Nov 2019 17:03:48 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2wbxgaqu4t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Nov 2019 17:03:48 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAIH3kbs004795;
+        Mon, 18 Nov 2019 17:03:46 GMT
+Received: from pp-ThinkCentre-M82.us.oracle.com (/10.132.95.199)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 18 Nov 2019 09:03:46 -0800
+From:   Prakash Sangappa <prakash.sangappa@oracle.com>
+To:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+Cc:     ebiederm@xmission.com, tglx@linutronix.de, peterz@infradead.org,
+        serge@hallyn.com, prakash.sangappa@oracle.com
+Subject: [RESEND RFC PATCH 0/1] CAP_SYS_NICE inside user namespace
+Date:   Mon, 18 Nov 2019 09:01:17 -0800
+Message-Id: <1574096478-11520-1-git-send-email-prakash.sangappa@oracle.com>
+X-Mailer: git-send-email 2.7.4
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911180149
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911180149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Some of the capabilities(7) which affect system wide resources, are ineffective
+inside user namespaces. This restriction applies even to root user( uid 0)
+from init namespace mapped into the user namespace. One such capability
+is CAP_SYS_NICE which is required to change process priority. As a result of
+which the root user cannot perform operations like increase a process priority
+using -ve nice value or set RT priority on processes inside the user namespace.
+A workaround to deal with this restriction is to use the help of a process /
+daemon running outside the user namespace to change process priority, which is
+a an inconvenience.
 
---4oF+6Ged69J0+4/e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We could allow these restricted capabilities to take effect only for the root
+user from init namespace mapped inside a user namespace and limit the effect
+with use of cgroups. It would seem reasonable to deal with each of these
+restricted capabilities on a case by case basis and address them. This patch
+is concerning CAP_SYS_NICE capability. The proposal here is to selectively
+allow CAP_SYS_NICE to take effect inside user namespace only for a root user
+mapped from init name space. 
 
-On Mon, Nov 18, 2019 at 11:53:57AM -0500, Sven Van Asbroeck wrote:
+Which user id gets to map the root user(uid 0) from init namespace inside its
+user namespaces is authorized thru /etc/subuid & /etc/subgid entries. Only
+system admin / root user on the system can add these entries.
+Therefore any ordinary user cannot simply map the root user(uid 0) into
+user namespaces created. Necessary cgroup bandwidth control can be used
+to limit cpu usage for such user namespaces.
 
-> 	tps61052@33 {
-> 		compatible =3D "ti,tps61052";
-> 		reg =3D <0x33>;
->=20
-> 		regulator {
-> 			compatible =3D "ti,tps6105x-regulator";
-> 		};
+The capabilities(7) manpage lists all the operations / system calls that are
+subject to CAP_SYS_NICE capability check. This patch currently allows
+CAP_SYS_NICE to take effect inside a user namespace only for system calls
+affecting process priority. For completeness sake should memory
+operations(migrate_pages(2), move_pages(2), mbind(2)) mentioned in the
+manpage, also be permitted? There are no cgroup controls to limit the effect
+of these memory operations.
 
-We shouldn't need a compatible here, the MFD should just instantiate any
-children it has.  This also doesn't document any actual regulators on
-the device.
+Looking for feedback on this approach.
 
---4oF+6Ged69J0+4/e
-Content-Type: application/pgp-signature; name="signature.asc"
+Prakash Sangappa (1):
+  Selectively allow CAP_SYS_NICE capability inside user namespaces
 
------BEGIN PGP SIGNATURE-----
+ kernel/sched/core.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3SzlYACgkQJNaLcl1U
-h9C0AQf+PilXEdM8POFA/pohdo6vlL+sDny5SKG71tCYQ69MJZnHrrxX3mFryP06
-D3AbTr4JQzd2PY6nBev/3LXrAzQOGg9KlFrp6Y6n7NIFpGwSOYceewD6abtPC6fL
-7ss/L9ksyULzAI3Fo3aawOnTO/9E7nA5omSnJjz2/myTcvT6LRK/gajlmZEoBB4a
-SDDUyphWfe7B1DNuZmaCWpcW8N0WYazByoV4NCH0haqueYtcgcYap1vO6JyVh9e9
-/TAFSENMFes5NeAOYwagvCvJNs5sTdS6rF1cGCwwj8FeDe+VAydYL9QCPLd/F+j2
-ZHrVgIc2XeJAn/8FO3Vk4mmgGioyqA==
-=SUqe
------END PGP SIGNATURE-----
+-- 
+2.7.4
 
---4oF+6Ged69J0+4/e--
