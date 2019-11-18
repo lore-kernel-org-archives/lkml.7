@@ -2,339 +2,105 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680C4C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30379C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41C0A2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08F152071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:55:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="TCf95B17"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbfKRGzf (ORCPT
+        id S1726976AbfKRGzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 01:55:35 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41747 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbfKRGzf (ORCPT
+        Mon, 18 Nov 2019 01:55:50 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:9841 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726455AbfKRGzt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 01:55:35 -0500
-Received: by mail-lj1-f196.google.com with SMTP id m4so12600751ljj.8;
-        Sun, 17 Nov 2019 22:55:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t+DBP5SzoblgBGW1vMN6Q3CYTNN/g1qWCXXWsRg0bgE=;
-        b=n++rs2ejUOpRkqd+3W8dDL9Dps3XX1CEKSsn92bgNar/lsZdXRaymNw0FVYBk7nsD4
-         K04i8Z9IOL+lGf/oh9uGu2jv40mrk2kRRRk+kNVjNJIyWREWDzszgO2RYLpFIKlPI2By
-         tsQA8CvSajgUkJI/6gd24OmkXpYDeDYSFOUABFONtIVEzatWEtUpL99eo+PH7QzhHXqw
-         hdjdsFj8Oe/HKyHNo32+DEbQxzPXWJjvg43Ei+j9Nv8AzY84qSy14/jFK24R9uOiViz1
-         CK8IPGUB8TeWZL48IomquXGBuWyXVIyBX1j09CUFvMXFJqg2TJlRhS4IIVkknB9MrZv+
-         /iwQ==
-X-Gm-Message-State: APjAAAU93xPOpL/ElbbphucQVGPam+naZdiFbXHEJC8fTZ/eQ3W7L+0n
-        24J1UWh7t2ZMzMyu5MguE7k=
-X-Google-Smtp-Source: APXvYqz7WSwlTSOkpH2dmQmCmMaCLL3ngAdBHDfaugcpYdXZC7h1iuL9E4aodvuqCFSGcMHy4CN0Tw==
-X-Received: by 2002:a2e:2419:: with SMTP id k25mr19788932ljk.59.1574060131208;
-        Sun, 17 Nov 2019 22:55:31 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id c12sm7423799ljk.77.2019.11.17.22.55.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Nov 2019 22:55:30 -0800 (PST)
-Date:   Mon, 18 Nov 2019 08:55:25 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: [PATCH v5 04/16] mfd: rohm PMICs - use platform_device_id to match
- MFD sub-devices
-Message-ID: <0b43ec8af4f4e449637ec6535a008565472f1ced.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+        Mon, 18 Nov 2019 01:55:49 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd240750000>; Sun, 17 Nov 2019 22:55:49 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 17 Nov 2019 22:55:48 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 17 Nov 2019 22:55:48 -0800
+Received: from [10.25.74.243] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 Nov
+ 2019 06:55:45 +0000
+Subject: Re: [PATCH 0/4] Add support to defer core initialization
+To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
+        <bhelgaas@google.com>, <kishon@ti.com>, <thierry.reding@gmail.com>
+CC:     <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20191113090851.26345-1-vidyas@nvidia.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <108c9f42-a595-515e-5ed6-e745a55efe70@nvidia.com>
+Date:   Mon, 18 Nov 2019 12:25:42 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191113090851.26345-1-vidyas@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574060149; bh=IJes9iG/B6AHc+jIWOW04FFs9oNl+rLxj6+oJvMhU3A=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=TCf95B17/9wedEdemqTyTcvqMieaA6nyAgQ0eIQLr+blsEQ+VREEF8mH836Fo2Wdb
+         43KTqeR4t2XH4v5b7u9LM2d0tc89ULNbOpYOIOwHUKchdUexKU600jOrG9CO1T4HTY
+         QMnNpH0z82TN2wkFk9SOsPiceFrtdMcgiTZ6KcLo22eYXlj2bGT8kNh9Vy07tj4ogH
+         8r8OYmiDHN/owMopJOtXmDAdUpYlEa8L5KJidyw6Nmhlrb1eFpCAOzOUT1f/SqOMaN
+         btQRZ3h9sHo1bTCxx9tfnLNba8Yrm6D3kuNH8Hh7fxi0KtgCGJmBOa5qTmWT9HUpZH
+         NkcXa90BsZoww==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks to Stephen Boyd I today learned we can use platform_device_id
-to do device and module matching for MFD sub-devices!
+On 11/13/2019 2:38 PM, Vidya Sagar wrote:
+> EPC/DesignWare core endpoint subsystems assume that the core registers are
+> available always for SW to initialize. But, that may not be the case always.
+> For example, Tegra194 hardware has the core running on a clock that is derived
+> from reference clock that is coming into the endpoint system from host.
+> Hence core is made available asynchronously based on when host system is going
+> for enumeration of devices. To accommodate this kind of hardwares, support is
+> required to defer the core initialization until the respective platform driver
+> informs the EPC/DWC endpoint sub-systems that the core is indeed available for
+> initiaization. This patch series is attempting to add precisely that.
+> This series is based on Kishon's patch that adds notification mechanism
+> support from EPC to EPF @ http://patchwork.ozlabs.org/patch/1109884/
+> 
+> Vidya Sagar (4):
+>    PCI: dwc: Add new feature to skip core initialization
+>    PCI: endpoint: Add notification for core init completion
+>    PCI: dwc: Add API to notify core initialization completion
+>    PCI: pci-epf-test: Add support to defer core initialization
+> 
+>   .../pci/controller/dwc/pcie-designware-ep.c   |  79 +++++++-----
+>   drivers/pci/controller/dwc/pcie-designware.h  |  11 ++
+>   drivers/pci/endpoint/functions/pci-epf-test.c | 114 ++++++++++++------
+>   drivers/pci/endpoint/pci-epc-core.c           |  19 ++-
+>   include/linux/pci-epc.h                       |   2 +
+>   include/linux/pci-epf.h                       |   5 +
+>   6 files changed, 164 insertions(+), 66 deletions(-)
+> 
 
-Do device matching using the platform_device_id instead of using
-explicit module_aliases to load modules and custom parent-data field
-to do module loading and sub-device matching.
+Hi Kishon / Gustavo / Jingoo,
+Could you please take a look at this patch series?
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
-
-No changes from v4
-
- drivers/clk/clk-bd718x7.c             | 12 ++++++++-
- drivers/mfd/rohm-bd70528.c            |  3 +--
- drivers/mfd/rohm-bd718x7.c            | 39 ++++++++++++++++++++++-----
- drivers/regulator/bd718x7-regulator.c | 17 +++++++++---
- include/linux/mfd/rohm-generic.h      |  3 +--
- 5 files changed, 58 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/clk/clk-bd718x7.c b/drivers/clk/clk-bd718x7.c
-index ae6e5baee330..1c1764f74d0a 100644
---- a/drivers/clk/clk-bd718x7.c
-+++ b/drivers/clk/clk-bd718x7.c
-@@ -74,6 +74,7 @@ static int bd71837_clk_probe(struct platform_device *pdev)
- 		.name = "bd718xx-32k-out",
- 		.ops = &bd71837_clk_ops,
- 	};
-+	enum rohm_chip_type chip = platform_get_device_id(pdev)->driver_data;
- 
- 	c = devm_kzalloc(&pdev->dev, sizeof(*c), GFP_KERNEL);
- 	if (!c)
-@@ -87,7 +88,7 @@ static int bd71837_clk_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "No parent clk found\n");
- 		return -EINVAL;
- 	}
--	switch (mfd->chip_type) {
-+	switch (chip) {
- 	case ROHM_CHIP_TYPE_BD71837:
- 	case ROHM_CHIP_TYPE_BD71847:
- 		c->reg = BD718XX_REG_OUT32K;
-@@ -121,11 +122,20 @@ static int bd71837_clk_probe(struct platform_device *pdev)
- 	return rval;
- }
- 
-+static const struct platform_device_id bd718x7_clk_id[] = {
-+	{ "bd71837-clk", ROHM_CHIP_TYPE_BD71837 },
-+	{ "bd71847-clk", ROHM_CHIP_TYPE_BD71847 },
-+	{ "bd70528-clk", ROHM_CHIP_TYPE_BD70528 },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(platform, bd718x7_clk_id);
-+
- static struct platform_driver bd71837_clk = {
- 	.driver = {
- 		.name = "bd718xx-clk",
- 	},
- 	.probe = bd71837_clk_probe,
-+	.id_table = bd718x7_clk_id,
- };
- 
- module_platform_driver(bd71837_clk);
-diff --git a/drivers/mfd/rohm-bd70528.c b/drivers/mfd/rohm-bd70528.c
-index 55599d5c5c86..e66a4a1c3731 100644
---- a/drivers/mfd/rohm-bd70528.c
-+++ b/drivers/mfd/rohm-bd70528.c
-@@ -48,7 +48,7 @@ static struct mfd_cell bd70528_mfd_cells[] = {
- 	 * We use BD71837 driver to drive the clock block. Only differences to
- 	 * BD70528 clock gate are the register address and mask.
- 	 */
--	{ .name = "bd718xx-clk", },
-+	{ .name = "bd70528-clk", },
- 	{ .name = "bd70528-wdt", },
- 	{
- 		.name = "bd70528-power",
-@@ -237,7 +237,6 @@ static int bd70528_i2c_probe(struct i2c_client *i2c,
- 
- 	dev_set_drvdata(&i2c->dev, &bd70528->chip);
- 
--	bd70528->chip.chip_type = ROHM_CHIP_TYPE_BD70528;
- 	bd70528->chip.regmap = devm_regmap_init_i2c(i2c, &bd70528_regmap);
- 	if (IS_ERR(bd70528->chip.regmap)) {
- 		dev_err(&i2c->dev, "Failed to initialize Regmap\n");
-diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
-index 85e7f5133365..bb86ec829079 100644
---- a/drivers/mfd/rohm-bd718x7.c
-+++ b/drivers/mfd/rohm-bd718x7.c
-@@ -30,14 +30,24 @@ static struct gpio_keys_platform_data bd718xx_powerkey_data = {
- 	.name = "bd718xx-pwrkey",
- };
- 
--static struct mfd_cell bd718xx_mfd_cells[] = {
-+static struct mfd_cell bd71837_mfd_cells[] = {
- 	{
- 		.name = "gpio-keys",
- 		.platform_data = &bd718xx_powerkey_data,
- 		.pdata_size = sizeof(bd718xx_powerkey_data),
- 	},
--	{ .name = "bd718xx-clk", },
--	{ .name = "bd718xx-pmic", },
-+	{ .name = "bd71837-clk", },
-+	{ .name = "bd71837-pmic", },
-+};
-+
-+static struct mfd_cell bd71847_mfd_cells[] = {
-+	{
-+		.name = "gpio-keys",
-+		.platform_data = &bd718xx_powerkey_data,
-+		.pdata_size = sizeof(bd718xx_powerkey_data),
-+	},
-+	{ .name = "bd71847-clk", },
-+	{ .name = "bd71847-pmic", },
- };
- 
- static const struct regmap_irq bd718xx_irqs[] = {
-@@ -124,6 +134,9 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- {
- 	struct bd718xx *bd718xx;
- 	int ret;
-+	unsigned int chip_type;
-+	struct mfd_cell *mfd;
-+	int cells;
- 
- 	if (!i2c->irq) {
- 		dev_err(&i2c->dev, "No IRQ configured\n");
-@@ -136,8 +149,21 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- 		return -ENOMEM;
- 
- 	bd718xx->chip_irq = i2c->irq;
--	bd718xx->chip.chip_type = (unsigned int)(uintptr_t)
--				of_device_get_match_data(&i2c->dev);
-+	chip_type = (unsigned int)(uintptr_t)
-+		    of_device_get_match_data(&i2c->dev);
-+	switch (chip_type) {
-+	case ROHM_CHIP_TYPE_BD71837:
-+		mfd = bd71837_mfd_cells;
-+		cells = ARRAY_SIZE(bd71837_mfd_cells);
-+		break;
-+	case ROHM_CHIP_TYPE_BD71847:
-+		mfd = bd71847_mfd_cells;
-+		cells = ARRAY_SIZE(bd71847_mfd_cells);
-+		break;
-+	default:
-+		dev_err(&i2c->dev, "Unknown device type");
-+		return -EINVAL;
-+	}
- 	bd718xx->chip.dev = &i2c->dev;
- 	dev_set_drvdata(&i2c->dev, bd718xx);
- 
-@@ -170,8 +196,7 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- 	button.irq = ret;
- 
- 	ret = devm_mfd_add_devices(bd718xx->chip.dev, PLATFORM_DEVID_AUTO,
--				   bd718xx_mfd_cells,
--				   ARRAY_SIZE(bd718xx_mfd_cells), NULL, 0,
-+				   mfd, cells, NULL, 0,
- 				   regmap_irq_get_domain(bd718xx->irq_data));
- 	if (ret)
- 		dev_err(&i2c->dev, "Failed to create subdevices\n");
-diff --git a/drivers/regulator/bd718x7-regulator.c b/drivers/regulator/bd718x7-regulator.c
-index bdab46a5c461..2058d972c7b7 100644
---- a/drivers/regulator/bd718x7-regulator.c
-+++ b/drivers/regulator/bd718x7-regulator.c
-@@ -1164,6 +1164,7 @@ static int bd718xx_probe(struct platform_device *pdev)
- 
- 	int i, j, err;
- 	bool use_snvs;
-+	enum rohm_chip_type chip = platform_get_device_id(pdev)->driver_data;
- 
- 	mfd = dev_get_drvdata(pdev->dev.parent);
- 	if (!mfd) {
-@@ -1172,8 +1173,8 @@ static int bd718xx_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
--	if (mfd->chip.chip_type >= ROHM_CHIP_TYPE_AMOUNT ||
--	    !pmic_regulators[mfd->chip.chip_type].r_datas) {
-+	if (chip >= ROHM_CHIP_TYPE_AMOUNT || chip < 0 ||
-+	    !pmic_regulators[chip].r_datas) {
- 		dev_err(&pdev->dev, "Unsupported chip type\n");
- 		err = -EINVAL;
- 		goto err;
-@@ -1215,13 +1216,13 @@ static int bd718xx_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	for (i = 0; i < pmic_regulators[mfd->chip.chip_type].r_amount; i++) {
-+	for (i = 0; i < pmic_regulators[chip].r_amount; i++) {
- 
- 		const struct regulator_desc *desc;
- 		struct regulator_dev *rdev;
- 		const struct bd718xx_regulator_data *r;
- 
--		r = &pmic_regulators[mfd->chip.chip_type].r_datas[i];
-+		r = &pmic_regulators[chip].r_datas[i];
- 		desc = &r->desc;
- 
- 		config.dev = pdev->dev.parent;
-@@ -1281,11 +1282,19 @@ static int bd718xx_probe(struct platform_device *pdev)
- 	return err;
- }
- 
-+static const struct platform_device_id bd718x7_pmic_id[] = {
-+	{ "bd71837-pmic", ROHM_CHIP_TYPE_BD71837 },
-+	{ "bd71847-pmic", ROHM_CHIP_TYPE_BD71847 },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(platform, bd718x7_pmic_id);
-+
- static struct platform_driver bd718xx_regulator = {
- 	.driver = {
- 		.name = "bd718xx-pmic",
- 	},
- 	.probe = bd718xx_probe,
-+	.id_table = bd718x7_pmic_id,
- };
- 
- module_platform_driver(bd718xx_regulator);
-diff --git a/include/linux/mfd/rohm-generic.h b/include/linux/mfd/rohm-generic.h
-index bff15ac26f2c..922f88008232 100644
---- a/include/linux/mfd/rohm-generic.h
-+++ b/include/linux/mfd/rohm-generic.h
-@@ -4,7 +4,7 @@
- #ifndef __LINUX_MFD_ROHM_H__
- #define __LINUX_MFD_ROHM_H__
- 
--enum {
-+enum rohm_chip_type {
- 	ROHM_CHIP_TYPE_BD71837 = 0,
- 	ROHM_CHIP_TYPE_BD71847,
- 	ROHM_CHIP_TYPE_BD70528,
-@@ -12,7 +12,6 @@ enum {
- };
- 
- struct rohm_regmap_dev {
--	unsigned int chip_type;
- 	struct device *dev;
- 	struct regmap *regmap;
- };
--- 
-2.21.0
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+- Vidya Sagar
