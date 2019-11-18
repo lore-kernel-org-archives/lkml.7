@@ -2,252 +2,112 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2041FC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B31B7C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA86D222EF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:44:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WqhCn4Yc";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="cvi6wA79"
+	by mail.kernel.org (Postfix) with ESMTP id 8FA47206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:48:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfKRVo0 (ORCPT
+        id S1726909AbfKRVsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 16:44:26 -0500
-Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:43772
-        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727483AbfKRVoZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 16:44:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574113464;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-        bh=EApMqFSlr2CgiFKu9e792fHKZ6ZnZDQ4cc6QWrbMwFA=;
-        b=WqhCn4Yc1sIOR289nh3bzzbTiFaQkeIPcG4x5YH9Rg5MQBcjoXFrJLeCCv7uuv+V
-        AB+/gz13ip3Es1cLxWCBOgMbx+pTtlDiLAYVk4AUL5dobQdUyXza54+J+E3rsCVGlqV
-        Oelb9V7YJkCXmvgEL01KZ68c4NDboRCeryGjdc0c=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574113464;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-        bh=EApMqFSlr2CgiFKu9e792fHKZ6ZnZDQ4cc6QWrbMwFA=;
-        b=cvi6wA795CW579DjCbSzDeCXtFUt6T/p6T5QVCNLC9HjY1wSOZYV2VVXLDQ9ocOV
-        92/QntfZqDuGR29HDO0aJVMtqJbbg+4K2dnQQIEX7JsydjQZylPC0V0vOlH4hSTM+1g
-        ANy7lXA6Ab0WnCtFh+E92FNNKwB+ujmHvnt1FenM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9B197C38675
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, jhugo@codeaurora.org,
-        robh+dt@kernel.org, jonathan@marek.ca
-Cc:     ohad@wizery.com, mark.rutland@arm.com, p.zabel@pengutronix.de,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        agross@kernel.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 16/16] arm64: dts: qcom: sm8150: Add ADSP, CDSP, MPSS and SLPI remoteprocs
-Date:   Mon, 18 Nov 2019 21:44:23 +0000
-Message-ID: <0101016e80794e1d-7c9ce825-6ba5-479e-bc98-f5d56ce6933f-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20191118214250.14002-1-sibis@codeaurora.org>
-References: <20191118214250.14002-1-sibis@codeaurora.org>
+        Mon, 18 Nov 2019 16:48:04 -0500
+Received: from mga02.intel.com ([134.134.136.20]:3811 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726647AbfKRVsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 16:48:04 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 13:48:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,321,1569308400"; 
+   d="scan'208";a="209213554"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga006.jf.intel.com with ESMTP; 18 Nov 2019 13:48:03 -0800
+Date:   Mon, 18 Nov 2019 13:52:38 -0800
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2 04/10] iommu/vt-d: Match CPU and IOMMU paging mode
+Message-ID: <20191118135238.49f5d957@jacob-builder>
+In-Reply-To: <601ca9c3-9f83-3d95-8d26-d4f46eee82ba@redhat.com>
+References: <1574106153-45867-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1574106153-45867-5-git-send-email-jacob.jun.pan@linux.intel.com>
+        <601ca9c3-9f83-3d95-8d26-d4f46eee82ba@redhat.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SES-Outgoing: 2019.11.18-54.240.27.11
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add ADSP, CDSP, MPSS and SLPI device tree nodes for SM8150 SoC.
+On Mon, 18 Nov 2019 21:55:03 +0100
+Auger Eric <eric.auger@redhat.com> wrote:
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sm8150-mtp.dts |  12 +++
- arch/arm64/boot/dts/qcom/sm8150.dtsi    | 135 ++++++++++++++++++++++++
- 2 files changed, 147 insertions(+)
+> Hi Jacob,
+> 
+> On 11/18/19 8:42 PM, Jacob Pan wrote:
+> > When setting up first level page tables for sharing with CPU, we
+> > need to ensure IOMMU can support no less than the levels supported
+> > by the CPU.
+> > It is not adequate, as in the current code, to set up 5-level paging
+> > in PASID entry First Level Paging Mode(FLPM) solely based on CPU.
+> > 
+> > Fixes: 437f35e1cd4c8 ("iommu/vt-d: Add first level page table
+> > interface")
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+> > ---
+> >  drivers/iommu/intel-pasid.c | 12 ++++++++++--
+> >  1 file changed, 10 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/intel-pasid.c
+> > b/drivers/iommu/intel-pasid.c index 040a445be300..e7cb0b8a7332
+> > 100644 --- a/drivers/iommu/intel-pasid.c
+> > +++ b/drivers/iommu/intel-pasid.c
+> > @@ -499,8 +499,16 @@ int intel_pasid_setup_first_level(struct
+> > intel_iommu *iommu, }
+> >  
+> >  #ifdef CONFIG_X86
+> > -	if (cpu_feature_enabled(X86_FEATURE_LA57))
+> > -		pasid_set_flpm(pte, 1);
+> > +	/* Both CPU and IOMMU paging mode need to match */
+> > +	if (cpu_feature_enabled(X86_FEATURE_LA57)) {
+> > +		if (cap_5lp_support(iommu->cap)) {
+> > +			pasid_set_flpm(pte, 1);
+> > +		} else {
+> > +			pr_err("VT-d has no 5-level paging support
+> > for CPU\n");
+> > +			pasid_clear_entry(pte);
+> > +			return -EINVAL;  
+> Can it happen? If I am not wrong intel_pasid_setup_first_level() only
+> seems to be called from intel_svm_bind_mm which now checks the
+> SVM_CAPABLE flag.
+> 
+You are right, this check is not needed any more. I will drop the patch.
+> Thanks
+> 
+> Eric
+> > +		}
+> > +	}
+> >  #endif /* CONFIG_X86 */
+> >  
+> >  	pasid_set_domain_id(pte, did);
+> >   
+> 
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-index aa5de42fcae45..4d9bb8145dbba 100644
---- a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-@@ -348,6 +348,18 @@
- 	};
- };
- 
-+&adsp_pas {
-+	status = "okay";
-+};
-+
-+&cdsp_pas {
-+	status = "okay";
-+};
-+
-+&slpi_pas {
-+	status = "okay";
-+};
-+
- &qupv3_id_1 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index 98a96fd1d6117..58f4ce95bd966 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -5,6 +5,8 @@
-  */
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/qcom,gcc-sm8150.h>
-+#include <dt-bindings/power/qcom-aoss-qmp.h>
- #include <dt-bindings/power/qcom-rpmpd.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
- #include <dt-bindings/clock/qcom,rpmh.h>
-@@ -278,6 +280,139 @@
- 		};
- 	};
- 
-+	adsp_pas: remoteproc-adsp {
-+		compatible = "qcom,sm8150-adsp-pas";
-+
-+		interrupts-extended = <&intc GIC_SPI 162 IRQ_TYPE_EDGE_RISING>,
-+				      <&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+				      <&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+				      <&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+				      <&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-+		interrupt-names = "wdog", "fatal", "ready",
-+				  "handover", "stop-ack";
-+
-+		clocks = <&rpmhcc RPMH_CXO_CLK>;
-+		clock-names = "xo";
-+
-+		power-domains = <&aoss_qmp AOSS_QMP_LS_LPASS>,
-+				<&rpmhpd SM8150_CX>;
-+		power-domain-names = "load_state", "cx";
-+
-+		memory-region = <&adsp_mem>;
-+
-+		qcom,smem-states = <&adsp_smp2p_out 0>;
-+		qcom,smem-state-names = "stop";
-+
-+		status = "disabled";
-+
-+		glink-edge {
-+			interrupts = <GIC_SPI 156 IRQ_TYPE_EDGE_RISING>;
-+			label = "lpass";
-+			qcom,remote-pid = <2>;
-+			mboxes = <&apss_shared 8>;
-+		};
-+	};
-+
-+	cdsp_pas: remoteproc-cdsp {
-+		compatible = "qcom,sm8150-cdsp-pas";
-+
-+		interrupts-extended = <&intc GIC_SPI 578 IRQ_TYPE_EDGE_RISING>,
-+				      <&cdsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+				      <&cdsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+				      <&cdsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+				      <&cdsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-+		interrupt-names = "wdog", "fatal", "ready",
-+				  "handover", "stop-ack";
-+
-+		clocks = <&rpmhcc RPMH_CXO_CLK>;
-+		clock-names = "xo";
-+
-+		power-domains = <&aoss_qmp AOSS_QMP_LS_CDSP>,
-+				<&rpmhpd SM8150_CX>;
-+		power-domain-names = "load_state", "cx";
-+
-+		memory-region = <&cdsp_mem>;
-+
-+		qcom,smem-states = <&cdsp_smp2p_out 0>;
-+		qcom,smem-state-names = "stop";
-+
-+		status = "disabled";
-+
-+		glink-edge {
-+			interrupts = <GIC_SPI 574 IRQ_TYPE_EDGE_RISING>;
-+			label = "cdsp";
-+			qcom,remote-pid = <5>;
-+			mboxes = <&apss_shared 4>;
-+		};
-+	};
-+
-+	mpss_pas: remoteproc-mpss {
-+		compatible = "qcom,sm8150-mpss-pas";
-+
-+		interrupts-extended = <&intc GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
-+				      <&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+				      <&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+				      <&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+				      <&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
-+				      <&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
-+		interrupt-names = "wdog", "fatal", "ready", "handover",
-+				  "stop-ack", "shutdown-ack";
-+
-+		clocks = <&rpmhcc RPMH_CXO_CLK>;
-+		clock-names = "xo";
-+
-+		power-domains = <&aoss_qmp AOSS_QMP_LS_MODEM>,
-+				<&rpmhpd SM8150_CX>,
-+				<&rpmhpd SM8150_MSS>;
-+		power-domain-names = "load_state", "cx", "mss";
-+
-+		memory-region = <&mpss_mem>;
-+
-+		qcom,smem-states = <&modem_smp2p_out 0>;
-+		qcom,smem-state-names = "stop";
-+
-+		glink-edge {
-+			interrupts = <GIC_SPI 449 IRQ_TYPE_EDGE_RISING>;
-+			label = "modem";
-+			qcom,remote-pid = <1>;
-+			mboxes = <&apss_shared 12>;
-+		};
-+	};
-+
-+	slpi_pas: remoteproc-slpi {
-+		compatible = "qcom,sm8150-slpi-pas";
-+
-+		interrupts-extended = <&intc GIC_SPI 494 IRQ_TYPE_EDGE_RISING>,
-+				      <&slpi_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+				      <&slpi_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+				      <&slpi_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+				      <&slpi_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-+		interrupt-names = "wdog", "fatal", "ready",
-+				  "handover", "stop-ack";
-+
-+		clocks = <&rpmhcc RPMH_CXO_CLK>;
-+		clock-names = "xo";
-+
-+		power-domains = <&aoss_qmp AOSS_QMP_LS_SLPI>,
-+				<&rpmhpd SM8150_LCX>,
-+				<&rpmhpd SM8150_LMX>;
-+		power-domain-names = "load_state", "lcx", "lmx";
-+
-+		memory-region = <&slpi_mem>;
-+
-+		qcom,smem-states = <&slpi_smp2p_out 0>;
-+		qcom,smem-state-names = "stop";
-+
-+		status = "disabled";
-+
-+		glink-edge {
-+			interrupts = <GIC_SPI 170 IRQ_TYPE_EDGE_RISING>;
-+			label = "dsps";
-+			qcom,remote-pid = <3>;
-+			mboxes = <&apss_shared 24>;
-+		};
-+	};
-+
- 	smem {
- 		compatible = "qcom,smem";
- 		memory-region = <&smem_mem>;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+[Jacob Pan]
