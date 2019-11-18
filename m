@@ -2,79 +2,166 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5104C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC653C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B92D12071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:22:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XLJw4b1U"
+	by mail.kernel.org (Postfix) with ESMTP id B6F602071B
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:24:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbfKRKWz (ORCPT
+        id S1726735AbfKRKYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 05:22:55 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35305 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfKRKWz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 05:22:55 -0500
-Received: by mail-lj1-f193.google.com with SMTP id r7so18272077ljg.2
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 02:22:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DAtGwM1Dd9Ta5yF4mgqEr8Nmjpd1oOCvyYj5VoGyqhM=;
-        b=XLJw4b1UGCc1u0a+oqZOHKdSa5Rl/rcFNdW4twDB5kJwcDr4/JTUWt1q1bnnjdQfZd
-         ln1/UBQZ0txrIj0fh0gGZHk0ubOqNuARolhLcuTs4TUeovxWbuDdT1KxnFFzdzTS6R97
-         AG58cxdnbz+fvnN623n/WOwT/3uuifxL/pnJvuEeVPwAoH2e7EkqXWcVH3TTYsNI7okP
-         cc/NlM6wuRpSvxysOeQSHOhekRn/LjVecyh7WyW1YausThb/0cZmfb+Za52jH62fL6++
-         mahOKMiy2ZA+e/3w2n9TkCF9xv92q1w5vzRAbvDa9cB4yCFgylfiG9oc2N9pxgTSvg9z
-         ML2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DAtGwM1Dd9Ta5yF4mgqEr8Nmjpd1oOCvyYj5VoGyqhM=;
-        b=jEMDi3J+kdXqJdR42kksrtv17CxuBcVwB+XXjU2yP2awqRT/IDOwPUwjCmv5m1skrY
-         dl8B6hoUUwaW+FVkcjgkXppQDEfPeYemY4sBVGIXwV99e8ZAp++W55UH96vtIIc13r/r
-         lquFtnXzgAScEA0GcsXBSy6tcckkXwsRP1R7fQht0xE03PcSfRGWY1JQ7M3jPBKEx+G5
-         u5ZB+0knUw/grkk3ya2ouCnmM1FK/M2fdnfPDQvGLELLD4nmfixJSNFuzI5q1VWY/lAj
-         5gVeli6pPTlfK8uldue4OwtGcEuTIz1fWPoT3AtOJ1CpZSrJvyD+zcj8OF8ZkB6KeO/c
-         VDzg==
-X-Gm-Message-State: APjAAAXVz/YPLaVjh45WnD6sBrB+B/Uj6Z5Zhdcv/NzVQTp68ek0228V
-        4IbMZcedUi+hhaD0xcoRXXOnvTsuEeMyZlSD7zU=
-X-Google-Smtp-Source: APXvYqwT/6TNNP9ekklQsDdau2lMNHX0wwj1VItmxln78iAAWLSxMmPhVf8A4tsABOj7Pzfo5jlsVMd5DVTM7buSllg=
-X-Received: by 2002:a05:651c:1127:: with SMTP id e7mr20039891ljo.70.1574072571914;
- Mon, 18 Nov 2019 02:22:51 -0800 (PST)
+        Mon, 18 Nov 2019 05:24:04 -0500
+Received: from spam01.hygon.cn ([110.188.70.11]:50976 "EHLO spam1.hygon.cn"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726461AbfKRKYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 05:24:04 -0500
+Received: from MK-FE.hygon.cn ([172.23.18.61])
+        by spam1.hygon.cn with ESMTP id xAIAKXCl085098;
+        Mon, 18 Nov 2019 18:20:33 +0800 (GMT-8)
+        (envelope-from linjiasen@hygon.cn)
+Received: from cncheex01.Hygon.cn ([172.23.18.10])
+        by MK-FE.hygon.cn with ESMTP id xAIAKNwP014116;
+        Mon, 18 Nov 2019 18:20:23 +0800 (GMT-8)
+        (envelope-from linjiasen@hygon.cn)
+Received: from [172.20.21.12] (172.23.18.44) by cncheex01.Hygon.cn
+ (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Mon, 18 Nov
+ 2019 18:20:28 +0800
+Subject: Re: [PATCH] NTB: Fix an error in get link status
+To:     Jon Mason <jdmason@kudzu.us>
+CC:     "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-ntb <linux-ntb@googlegroups.com>, <linjiasen007@gmail.com>
+References: <1573119336-107732-1-git-send-email-linjiasen@hygon.cn>
+ <CAPoiz9wAJz=Hqb6Os=9AHHv_NGpZ8uCaAuOC=aUTkASKdfs9WQ@mail.gmail.com>
+From:   Jiasen Lin <linjiasen@hygon.cn>
+Message-ID: <933f74c7-7249-618c-13dc-9e4e47ad75d7@hygon.cn>
+Date:   Mon, 18 Nov 2019 18:17:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <CAKwvOdmSo=BWGnaVeejez6K0Tukny2niWXrr52YvOPDYnXbOsg@mail.gmail.com>
- <20191106120629.28423-1-ilie.halip@gmail.com> <CAKwvOdnJR3vbHd6Z0eLK9CppABWFL4E0Rjh6SzDN6U6mShS2qQ@mail.gmail.com>
-In-Reply-To: <CAKwvOdnJR3vbHd6Z0eLK9CppABWFL4E0Rjh6SzDN6U6mShS2qQ@mail.gmail.com>
-From:   Ilie Halip <ilie.halip@gmail.com>
-Date:   Mon, 18 Nov 2019 12:22:40 +0200
-Message-ID: <CAHFW8PSdd=-v3i6wzkG3vQB3LcUznxaZUfWEw_f3QGiRre8TLA@mail.gmail.com>
-Subject: Re: [PATCH V2] x86/boot: explicitly place .eh_frame after .rodata
-To:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAPoiz9wAJz=Hqb6Os=9AHHv_NGpZ8uCaAuOC=aUTkASKdfs9WQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.23.18.44]
+X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
+ (172.23.18.10)
+X-MAIL: spam1.hygon.cn xAIAKXCl085098
+X-DNSRBL: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Has anyone had a chance to look over this patch?
+
+
+On 2019/11/18 7:00, Jon Mason wrote:
+> On Thu, Nov 7, 2019 at 4:37 AM Jiasen Lin <linjiasen@hygon.cn> wrote:
+>>
+>> The offset of PCIe Capability Header for AMD and HYGON NTB is 0x64,
+>> but the macro which named "AMD_LINK_STATUS_OFFSET" is defined as 0x68.
+>> It is offset of Device Capabilities Reg rather than Link Control Reg.
+>>
+>> This code trigger an error in get link statsus:
+>>
+>>          cat /sys/kernel/debug/ntb_hw_amd/0000:43:00.1/info
+>>                  LNK STA -               0x8fa1
+>>                  Link Status -           Up
+>>                  Link Speed -            PCI-E Gen 0
+>>                  Link Width -            x0
+>>
+>> This patch use pcie_capability_read_dword to get link status.
+>> After fix this issue, we can get link status accurately:
+>>
+>>          cat /sys/kernel/debug/ntb_hw_amd/0000:43:00.1/info
+>>                  LNK STA -               0x11030042
+>>                  Link Status -           Up
+>>                  Link Speed -            PCI-E Gen 3
+>>                  Link Width -            x16
+> 
+> No response from AMD maintainers, but it looks like you are correct.
+> 
+> This needs a "Fixes:" line here.  I took the liberty of adding one to
+> this patch.
+> 
+
+Thank you for your suggestions. Yes, this patch fix the commit id: 
+a1b3695 ("NTB: Add support for AMD PCI-Express Non-Transparent Bridge").
+
+>> Signed-off-by: Jiasen Lin <linjiasen@hygon.cn>
+>> ---
+>>   drivers/ntb/hw/amd/ntb_hw_amd.c | 5 +++--
+>>   drivers/ntb/hw/amd/ntb_hw_amd.h | 1 -
+>>   2 files changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.c b/drivers/ntb/hw/amd/ntb_hw_amd.c
+>> index 156c2a1..ae91105 100644
+>> --- a/drivers/ntb/hw/amd/ntb_hw_amd.c
+>> +++ b/drivers/ntb/hw/amd/ntb_hw_amd.c
+>> @@ -855,8 +855,8 @@ static int amd_poll_link(struct amd_ntb_dev *ndev)
+>>
+>>          ndev->cntl_sta = reg;
+>>
+>> -       rc = pci_read_config_dword(ndev->ntb.pdev,
+>> -                                  AMD_LINK_STATUS_OFFSET, &stat);
+>> +       rc = pcie_capability_read_dword(ndev->ntb.pdev,
+>> +                                  PCI_EXP_LNKCTL, &stat);
+>>          if (rc)
+>>                  return 0;
+>>          ndev->lnk_sta = stat;
+>> @@ -1139,6 +1139,7 @@ static const struct ntb_dev_data dev_data[] = {
+>>   static const struct pci_device_id amd_ntb_pci_tbl[] = {
+>>          { PCI_VDEVICE(AMD, 0x145b), (kernel_ulong_t)&dev_data[0] },
+>>          { PCI_VDEVICE(AMD, 0x148b), (kernel_ulong_t)&dev_data[1] },
+>> +       { PCI_VDEVICE(HYGON, 0x145b), (kernel_ulong_t)&dev_data[0] },
+> 
+> This should be a separate patch.  I took the liberty of splitting it
+> off into a unique patch and attributing it to you.  I've pushed them
+> to the ntb-next branch on
+> https://github.com/jonmason/ntb
+>
+Thank you for your comment. We appreciate the time and effort you have 
+spent to split it off, I will test it ASAP.
+
+> Please verify everything looks acceptable to you (given the changes I
+> did above that are attributed to you).  Also, testing of the latest
+> code is always appreciated.
+> 
+> Thanks,
+> Jon
+> 
+> 
+>>          { 0, }
+>>   };
+>>   MODULE_DEVICE_TABLE(pci, amd_ntb_pci_tbl);
+>> diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.h b/drivers/ntb/hw/amd/ntb_hw_amd.h
+>> index 139a307..39e5d18 100644
+>> --- a/drivers/ntb/hw/amd/ntb_hw_amd.h
+>> +++ b/drivers/ntb/hw/amd/ntb_hw_amd.h
+>> @@ -53,7 +53,6 @@
+>>   #include <linux/pci.h>
+>>
+>>   #define AMD_LINK_HB_TIMEOUT    msecs_to_jiffies(1000)
+>> -#define AMD_LINK_STATUS_OFFSET 0x68
+>>   #define NTB_LIN_STA_ACTIVE_BIT 0x00000002
+>>   #define NTB_LNK_STA_SPEED_MASK 0x000F0000
+>>   #define NTB_LNK_STA_WIDTH_MASK 0x03F00000
+>> --
+>> 2.7.4
+>>
+>> --
+>> You received this message because you are subscribed to the Google Groups "linux-ntb" group.
+>> To unsubscribe from this group and stop receiving emails from it, send an email to linux-ntb+unsubscribe@googlegroups.com.
+>> To view this discussion on the web visit https://groups.google.com/d/msgid/linux-ntb/1573119336-107732-1-git-send-email-linjiasen%40hygon.cn.
 
 Thanks,
-I.H.
+
+Jiasen Lin
