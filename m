@@ -2,187 +2,149 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C072EC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFA9C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95B422186D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:52:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CTxmilHg"
+	by mail.kernel.org (Postfix) with ESMTP id 3917C208D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:53:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574096029;
+	bh=Phi0cFYa9lgVxdPFY62NuljjRKPcBdAqR5xKt6I4tWo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P+dEVZO63K+HabWtIPeTe4TblqCJpndY1qPvNdrfNX2MWs4lzMLzmLvJJ6p/5z6ik
+	 SfOrz4B9wUDWo7pSguLd6hNFob+m1V4ot9C239IRKh6+1NHnC8paoJUI69+3dsy90J
+	 UiyTXL9ZQPYFh4j3SMpXO4LCwUHtD/ATOFhLntlk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfKRQwp (ORCPT
+        id S1726822AbfKRQxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 11:52:45 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:47976 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbfKRQwo (ORCPT
+        Mon, 18 Nov 2019 11:53:48 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42683 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbfKRQxr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 11:52:44 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAIGqfrj027838;
-        Mon, 18 Nov 2019 10:52:41 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574095961;
-        bh=T0jwubZARFh2P0HEYYSKFxEnV3oeuSI/NoPWSUEdeEw=;
-        h=From:To:CC:Subject:Date;
-        b=CTxmilHg2Y/SUfRPI+iiv2HCRd/685wEn4QkP2eQqBNvpbXIl9jR9NiHKADN7F3Wx
-         DwYLbmy0q0ESN6Q7HmIfGQBK+F0NEu9OJss7V4U8MuoCVVPSndIXX0VfWrOQ+1gbBg
-         EFRHF6VMFbxiRt5ueYKi4/J1QlvY3/1cYsjXTDj0=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAIGqfEe063485
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 18 Nov 2019 10:52:41 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 18
- Nov 2019 10:52:41 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 18 Nov 2019 10:52:41 -0600
-Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAIGqfdt102820;
-        Mon, 18 Nov 2019 10:52:41 -0600
-Received: from localhost ([10.250.45.147])
-        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id xAIGqeu07617;
-        Mon, 18 Nov 2019 10:52:40 -0600 (CST)
-From:   "Andrew F. Davis" <afd@ti.com>
-To:     Tony Lindgren <tony@atomide.com>
-CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Andrew F . Davis" <afd@ti.com>
-Subject: [PATCH] ARM: OMAP: Use ARM SMC Calling Convention when OP-TEE is available
-Date:   Mon, 18 Nov 2019 11:52:36 -0500
-Message-ID: <20191118165236.22136-1-afd@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 18 Nov 2019 11:53:47 -0500
+Received: by mail-oi1-f196.google.com with SMTP id o12so5815511oic.9;
+        Mon, 18 Nov 2019 08:53:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hqTOasQxtcpYkZR/qyY0Ns887QHHgqrNr6obLQsmNsI=;
+        b=OWcHeOLBFcvsJGM4bLKrsbHY1ywlzAMVlzijeOfEGBK/N0Jh1Sol1ekSSLR02gfBIY
+         FlkgaQ8h39q6D0Fgso6CK23rttxDepbChSmpC+P34nzqkblv0ZgZLLiG1kiLocci25Wu
+         gKiqoU4s9ynUYwdAc9vaBYnCYoAjdAokWu9Fwgr+QW9Hg+Vd89X4ad3PDOhlvm504Ip8
+         iSpdo6mGx6NBP4SobWaSYYnP8ketB8xNkBfvDWUR7nDcuX4d4a2BeKooQ9JmEYGgt4L1
+         Wxkksa8GDAYnPLUhl2UKzOWYYyBARx10vypQ8WkUsonuXflGMrKKAArVOjxC+Hr56jjI
+         VY1Q==
+X-Gm-Message-State: APjAAAVrB1r4NDT2YvrDZc8Z7mfjGQpqMFH1q/Smw4TWoB+dgnrI1ouk
+        PGmlIjgFobWY77uGmg4oRA==
+X-Google-Smtp-Source: APXvYqxhK6+LinJAXcIhwyYoIbpoJYerjNgZrjGX55HdjJe+rrjIeNxntyurC83Ly9lLYUCNhH+m7w==
+X-Received: by 2002:aca:451:: with SMTP id 78mr21727660oie.170.1574096026456;
+        Mon, 18 Nov 2019 08:53:46 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id o18sm6447650otj.38.2019.11.18.08.53.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 08:53:45 -0800 (PST)
+Date:   Mon, 18 Nov 2019 10:53:45 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Subject: Re: [PATCH 2/4] gpio: sifive: Add DT documentation for SiFive GPIO
+Message-ID: <20191118165345.GA3935@bogus>
+References: <1573560684-48104-1-git-send-email-yash.shah@sifive.com>
+ <1573560684-48104-3-git-send-email-yash.shah@sifive.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573560684-48104-3-git-send-email-yash.shah@sifive.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On High-Security(HS) OMAP2+ class devices a couple actions must be performed
-from the ARM TrustZone during boot. These traditionally can be performed by
-calling into the secure ROM code resident in this secure world using legacy
-SMC calls. Optionally OP-TEE can replace this secure world functionality by
-replacing the ROM after boot. ARM recommends a standard calling convention
-is used for this interaction (SMC Calling Convention). We check DT for the
-presence of OP-TEE and use this type of call to perform the needed actions,
-falling back to the legacy OMAP ROM call if OP-TEE is not available.
+On Tue, Nov 12, 2019 at 12:12:06PM +0000, Yash Shah wrote:
+> DT documentation for GPIO controller added.
+> 
+> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+> [Atish: Compatible string update]
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> ---
+>  .../devicetree/bindings/gpio/gpio-sifive.txt       | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-sifive.txt
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
----
- arch/arm/mach-omap2/common.h      |  2 +-
- arch/arm/mach-omap2/omap-secure.c | 27 ++++++++++++++++++++++++++-
- arch/arm/mach-omap2/omap-secure.h |  1 +
- arch/arm/mach-omap2/omap-smc.S    |  6 +++---
- 4 files changed, 31 insertions(+), 5 deletions(-)
+Please make this a schema. See 
+Documentation/devicetree/writing-schema.rst.
 
-diff --git a/arch/arm/mach-omap2/common.h b/arch/arm/mach-omap2/common.h
-index 6316da3623b3..ffcc580aef01 100644
---- a/arch/arm/mach-omap2/common.h
-+++ b/arch/arm/mach-omap2/common.h
-@@ -255,7 +255,7 @@ extern void gic_dist_disable(void);
- extern void gic_dist_enable(void);
- extern bool gic_dist_disabled(void);
- extern void gic_timer_retrigger(void);
--extern void omap_smc1(u32 fn, u32 arg);
-+extern void _omap_smc1(u32 fn, u32 arg);
- extern void omap4_sar_ram_init(void);
- extern void __iomem *omap4_get_sar_ram_base(void);
- extern void omap4_mpuss_early_init(void);
-diff --git a/arch/arm/mach-omap2/omap-secure.c b/arch/arm/mach-omap2/omap-secure.c
-index 24298e47b9f1..a2df3cb74bc3 100644
---- a/arch/arm/mach-omap2/omap-secure.c
-+++ b/arch/arm/mach-omap2/omap-secure.c
-@@ -12,10 +12,12 @@
- #include <linux/init.h>
- #include <linux/io.h>
- #include <linux/memblock.h>
--
-+#include <linux/of.h>
-+#include <linux/arm-smccc.h>
- #include <asm/cacheflush.h>
- #include <asm/memblock.h>
- 
-+#include "common.h"
- #include "omap-secure.h"
- 
- static phys_addr_t omap_secure_memblock_base;
-@@ -53,6 +55,29 @@ u32 omap_secure_dispatcher(u32 idx, u32 flag, u32 nargs, u32 arg1, u32 arg2,
- 	return ret;
- }
- 
-+#define OMAP_SIP_SMC_STD_CALL_VAL(func_num) \
-+	ARM_SMCCC_CALL_VAL(ARM_SMCCC_STD_CALL, ARM_SMCCC_SMC_32, \
-+	ARM_SMCCC_OWNER_SIP, (func_num))
-+
-+void omap_smc1(u32 fn, u32 arg)
-+{
-+	struct device_node *optee;
-+	struct arm_smccc_res res;
-+
-+	/*
-+	 * If this platform has OP-TEE installed we use ARM SMC calls
-+	 * otherwise fall back to the OMAP ROM style calls.
-+	 */
-+	optee = of_find_node_by_path("/firmware/optee");
-+	if (optee) {
-+		arm_smccc_smc(OMAP_SIP_SMC_STD_CALL_VAL(fn), arg,
-+			      0, 0, 0, 0, 0, 0, &res);
-+		WARN(res.a0, "Secure function call 0x%08x failed\n", fn);
-+	} else {
-+		_omap_smc1(fn, arg);
-+	}
-+}
-+
- /* Allocate the memory to save secure ram */
- int __init omap_secure_ram_reserve_memblock(void)
- {
-diff --git a/arch/arm/mach-omap2/omap-secure.h b/arch/arm/mach-omap2/omap-secure.h
-index 20046e8f8ecb..601d64b2c744 100644
---- a/arch/arm/mach-omap2/omap-secure.h
-+++ b/arch/arm/mach-omap2/omap-secure.h
-@@ -60,6 +60,7 @@
- 
- extern u32 omap_secure_dispatcher(u32 idx, u32 flag, u32 nargs,
- 				u32 arg1, u32 arg2, u32 arg3, u32 arg4);
-+extern void omap_smc1(u32 fn, u32 arg);
- extern u32 omap_smc2(u32 id, u32 falg, u32 pargs);
- extern u32 omap_smc3(u32 id, u32 process, u32 flag, u32 pargs);
- extern phys_addr_t omap_secure_ram_mempool_base(void);
-diff --git a/arch/arm/mach-omap2/omap-smc.S b/arch/arm/mach-omap2/omap-smc.S
-index fd2bcd91f4a1..d4832845a4e8 100644
---- a/arch/arm/mach-omap2/omap-smc.S
-+++ b/arch/arm/mach-omap2/omap-smc.S
-@@ -18,18 +18,18 @@
-  * the monitor API number. It uses few CPU registers
-  * internally and hence they need be backed up including
-  * link register "lr".
-- * Function signature : void omap_smc1(u32 fn, u32 arg)
-+ * Function signature : void _omap_smc1(u32 fn, u32 arg)
-  */
- 	.arch armv7-a
- 	.arch_extension sec
--ENTRY(omap_smc1)
-+ENTRY(_omap_smc1)
- 	stmfd   sp!, {r2-r12, lr}
- 	mov	r12, r0
- 	mov 	r0, r1
- 	dsb
- 	smc	#0
- 	ldmfd   sp!, {r2-r12, pc}
--ENDPROC(omap_smc1)
-+ENDPROC(_omap_smc1)
- 
- /**
-  * u32 omap_smc2(u32 id, u32 falg, u32 pargs)
--- 
-2.17.1
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-sifive.txt b/Documentation/devicetree/bindings/gpio/gpio-sifive.txt
+> new file mode 100644
+> index 0000000..d3416d5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-sifive.txt
+> @@ -0,0 +1,33 @@
+> +SiFive GPIO controller bindings
+> +
+> +Required properties:
+> +- compatible: Should be "sifive,<chip>-gpio" and "sifive,gpio<version>".
+> +  Supported compatible strings are: "sifive,fu540-c000-gpio" for the SiFive
+> +  GPIO v0 as integrated onto the SiFive FU540 chip, and "sifive,gpio0" for the
+> +  SiFive GPIO v0 IP block with no chip integration tweaks.
+> +  Please refer to sifive-blocks-ip-versioning.txt for details.
+> +- reg: Physical base address and length of the controller's registers.
+> +- clocks: Should contain a clock identifier for the GPIO's parent clock.
+> +- #gpio-cells : Should be 2
+> +  - The first cell is the GPIO offset number.
+> +  - The second cell indicates the polarity of the GPIO
+> +- gpio-controller : Marks the device node as a GPIO controller.
+> +- interrupt-controller: Marks the device node as an interrupt controller.
+> +- #interrupt-cells : Should be 2.
+> +  - The first cell is the GPIO offset number within the GPIO controller.
+> +  - The second cell is the edge/level to use for interrupt generation.
+> +- interrupts: Specify the interrupts, one per GPIO
 
+How many GPIOs?
+
+> +
+> +Example:
+> +
+> +gpio: gpio@10060000 {
+> +	compatible = "sifive,fu540-c000-gpio","sifive,gpio0";
+
+space                                         ^
+
+> +	interrupt-parent = <&plic>;
+> +	interrupts = <7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22>;
+> +	reg = <0x0 0x10060000 0x0 0x1000>;
+> +	clocks = <&tlclk>;
+> +	gpio-controller;
+> +	#gpio-cells = <2>;
+> +	interrupt-controller;
+> +	#interrupt-cells = <2>;
+> +};
+> -- 
+> 2.7.4
+> 
