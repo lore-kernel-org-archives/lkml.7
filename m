@@ -2,112 +2,143 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360C3C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8581DC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 094172067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:50:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A37C2071B
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:50:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ayd31pqB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfKRKu3 (ORCPT
+        id S1726705AbfKRKuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 05:50:29 -0500
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:38202 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726506AbfKRKu2 (ORCPT
+        Mon, 18 Nov 2019 05:50:37 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:32821 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbfKRKuh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 05:50:28 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TiSbQOg_1574074219;
-Received: from ali-6c96cfdd1403.local(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0TiSbQOg_1574074219)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 18 Nov 2019 18:50:20 +0800
-Subject: Re: [RFC PATCH v3 7/7] x86/unwind/orc: remove run-time ORC unwind
- tables sort
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Josh Poimboeuf' <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>
-References: <20191115064750.47888-1-shile.zhang@linux.alibaba.com>
- <20191115064750.47888-8-shile.zhang@linux.alibaba.com>
- <893d3caf85cd4ed0921fab84cfe28cad@AcuMS.aculab.com>
- <20191115174649.ldif5o7xqo5ntxeo@treble>
- <5fe9024bc69c4a4eb115b3c2f3f9bcd1@AcuMS.aculab.com>
-From:   Shile Zhang <shile.zhang@linux.alibaba.com>
-Message-ID: <c15ef0d0-b4a2-0c8c-8868-2441d09f7891@linux.alibaba.com>
-Date:   Mon, 18 Nov 2019 18:50:19 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Mon, 18 Nov 2019 05:50:37 -0500
+Received: by mail-pg1-f195.google.com with SMTP id h27so9483548pgn.0;
+        Mon, 18 Nov 2019 02:50:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BqVjvVnUcZVnJi0dFDzKzL0XCvYGeHQtLWoFBVaIgfo=;
+        b=Ayd31pqBaEduLCLyuo+QyEWMnJQ72tXZwKpOgnwKvmrmi695Dg4D5uuzLw1axs5LWx
+         IQvvoJeKa1+z13ptdS53J6AUQ6vmi1/mMSstg7H4P1Z+LApMSl63sgxlekurJiZudrf1
+         0mBBUwBfwlwu0n5NZEGdqRnYfE8MDs5NPPmYipfKHyUoo+239+nDoxgOb5YeDEKMhPT1
+         9YnuJFXnL1wPgacF6+ShP5kJBsLEx88mGG0o+Bl9o89rkvz0pFcZqUYijrlpHbxKshep
+         25C+3Y3ms3aKXVKZ29ZqFsp9Yrnc4KpoqtkEAOv7cecfW9g9SSpxqrZGcCbPYbPdi1MA
+         Xvqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BqVjvVnUcZVnJi0dFDzKzL0XCvYGeHQtLWoFBVaIgfo=;
+        b=UjYc9pG1/jy6l3yqCYKkObiSmi3h8TferuzAiULDpbggYe1EDz3UfrCBQOYWJ1TRcv
+         5I6137aAb4dXETwpe+BXGIpkyajf7EB6hMqpPKQ6bkOjEHZ/MMpfKf2LvclKb9usk/pm
+         NuXKcJ8Fs96QtRDd/WnKxcrxKRHyPcHDdbCvzhKGxfCJ6hN7x/eKbCEcnIjYK9NRpMIJ
+         +ewD7LCUxUeTE9+BZvr7jrmGIEso8R4yVCPcB8eYiCxjbWp6RbNEyR66TWPmuv/pCE/J
+         m5mmK4YrIzwnw+Pz3caiFxtSgL4PTcxc2jptQsFpmhUIeXT98vqIoBl4RMkjFcAt2miH
+         o3Ug==
+X-Gm-Message-State: APjAAAWGTfZicta4vZBL/Sy0TK/Z8g/8vb3yqipAmznzV7eal3e5Bv8R
+        ElTIS3ccdGXHIo6Z4v6Uq5HX9UWImOFFHXpW8GS2CXVd
+X-Google-Smtp-Source: APXvYqx++lSD0HGf3aeWI/TZZso98LiZGfaZQBYI7l2ELIoaZlK9QvdQ8UzpW+1TSyFj8i3ZyS+GjVEf044dpDgAgz8=
+X-Received: by 2002:a65:5542:: with SMTP id t2mr14406631pgr.74.1574074235201;
+ Mon, 18 Nov 2019 02:50:35 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <5fe9024bc69c4a4eb115b3c2f3f9bcd1@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <cover.1573750525.git.gayatri.kammela@intel.com>
+In-Reply-To: <cover.1573750525.git.gayatri.kammela@intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 18 Nov 2019 12:50:25 +0200
+Message-ID: <CAHp75Vfrd-BAZ7H_LuQfz32yaap1X3gEnqZ2-9EPQ+j_b0f93g@mail.gmail.com>
+Subject: Re: [PATCH v3 0/7] x86/intel_pmc_core: Add Tiger Lake, Elkhart Lake
+To:     Gayatri Kammela <gayatri.kammela@intel.com>
+Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Prestopine, Charles D" <charles.d.prestopine@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kan Liang <kan.liang@intel.com>,
+        "David E . Box" <david.e.box@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
+        Tony Luck <tony.luck@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/11/18 18:05, David Laight wrote:
-> From: Josh Poimboeuf <jpoimboe@redhat.com>
->> Sent: 15 November 2019 17:47
->> On Fri, Nov 15, 2019 at 04:51:24PM +0000, David Laight wrote:
->>> From: Shile Zhang
->>>> Sent: 15 November 2019 06:48
->>> ...
->>>>   arch/x86/kernel/unwind_orc.c | 8 +++++---
->>>>   1 file changed, 5 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
->>>> index 332ae6530fa8..280da6fa9922 100644
->>>> --- a/arch/x86/kernel/unwind_orc.c
->>>> +++ b/arch/x86/kernel/unwind_orc.c
->>>> @@ -273,9 +273,11 @@ void __init unwind_init(void)
->>>>   		return;
->>>>   	}
->>>>
->>>> -	/* Sort the .orc_unwind and .orc_unwind_ip tables: */
->>>> -	sort(__start_orc_unwind_ip, num_entries, sizeof(int), orc_sort_cmp,
->>>> -	     orc_sort_swap);
->>>> +	/*
->>>> +	 * Note, orc_unwind and orc_unwind_ip tables has been sorted in
->>>> +	 * vmlinux link phase by sorttable tool at build time.
->>>> +	 * Its ready for binary search now.
->>>> +	 */
->>> How fast is sort() if the table is sorted?
->>> Relying on the kernel sources and build scripts always being in sync seems dangerous.
->>> Probably better to leave the sort in for a release of two.
->> This patch comes after the build script changes, so they'd be in sync.
->> What would the concern be?
-> Mostly that if, for any reason, the build script changes are missing nothing
-> will detect the error - but the results will be very confusing.
-> If the sort is fast for sorted inputs (some algorithms aren't) then leaving
-> it in won't take that long.
+On Thu, Nov 14, 2019 at 7:02 PM Gayatri Kammela
+<gayatri.kammela@intel.com> wrote:
 >
-> 	David
+> Hi,
+>
+> Patch 1: Fix SoC naming inconsistency
+> Patch 2: Cleans up termination lines
+> Patch 3: Refactor driver for ease of adding new SoCs
+> Patch 4: Add debugfs entry for PCH IPs only if platform supports
+> Patch 5: Add Tiger Lake legacy support to pmc_core
+> Patch 6: Add Elkhart Lake legacy support to pmc_core
+> patch 7: Add Comet Lake legacy support to pmc_core
+>
+> All the information regarding the PCH IPs and names of IPs will be
+> available in Intel's Platform Controller Hub (PCH) External Design
+> Specification (EDS) document expected to be released in 2020 before
+> product launch.
 
-Hi, David,
+Thanks, though you forgot to fix all prefixes in the mails. We have
+platform/x86: $DRIVER_NAME: ...
 
-Thanks for your review!
-Due to the sort inside kernel is heap-sort, so it cost almost the same 
-time for sorted inputs.
-I wondered if we can add error handling in the link script, exit with 
-error if sort encountered any errors.
+Also consider Mario's comment (I didn't hear back from you on it).
 
-Thanks!
+>
+> Changes since v1:
+> 1) Added a patch that fixes the naming inconsistency.
+> 2) Fixed the prefix of all the patches.
+>
+> Changes since v2:
+> 1) Add Comet Lake legacy support to pmc_core up on Dell's request
+>
+> Gayatri Kammela (7):
+>   x86/intel_pmc_core: Fix the SoC naming inconsistency
+>   x86/intel_pmc_core: Clean up: Remove comma after the termination line
+>   x86/intel_pmc_core: Create platform dependent pmc bitmap structs
+>   x86/intel_pmc_core: Make debugfs entry for pch_ip_power_gating_status
+>     conditional
+>   platform/x86: Add Tiger Lake (TGL) platform support to intel_pmc_core
+>     driver
+>   platform/x86: Add Atom based Elkhart Lake (EHL) platform support to
+>     intel_pmc_core driver
+>   platform/x86: Add Comet Lake (CML) platform support to intel_pmc_core
+>     driver
+>
+>  drivers/platform/x86/intel_pmc_core.c | 121 ++++++++++++++++++++------
+>  drivers/platform/x86/intel_pmc_core.h |   2 +-
+>  2 files changed, 96 insertions(+), 27 deletions(-)
+>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Kan Liang <kan.liang@intel.com>
+> Cc: David E. Box <david.e.box@intel.com>
+> Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+> Cc: Tony Luck <tony.luck@intel.com>
+>
+> --
+> 2.17.1
+>
 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
 
+-- 
+With Best Regards,
+Andy Shevchenko
