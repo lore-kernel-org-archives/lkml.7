@@ -2,146 +2,115 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA92C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49166C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF65206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F2F720718
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:39:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JQk58HK+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfKRIiR (ORCPT
+        id S1726761AbfKRIjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 03:38:17 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:32899 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726511AbfKRIiR (ORCPT
+        Mon, 18 Nov 2019 03:39:06 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:47080 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbfKRIjF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 03:38:17 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iWcY0-0003Ko-Ui; Mon, 18 Nov 2019 09:38:12 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iWcXz-0000uQ-3O; Mon, 18 Nov 2019 09:38:11 +0100
-Date:   Mon, 18 Nov 2019 09:38:10 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-iio@vger.kernel.org,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v3 1/3] i2c: use void pointers for supplying data for
- reads and writes
-Message-ID: <20191118083810.467iry6w4kt3s7kd@pengutronix.de>
-References: <20191112203132.163306-1-dmitry.torokhov@gmail.com>
- <20191112203132.163306-2-dmitry.torokhov@gmail.com>
- <20191118074349.ags3c4tmvapguqcp@pengutronix.de>
- <20191118080446.GB251795@dtor-ws>
+        Mon, 18 Nov 2019 03:39:05 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAI8cmmB033613;
+        Mon, 18 Nov 2019 02:38:48 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574066328;
+        bh=2FmC6WnguELH0WljaqAvUXHz4oovTIg5XA3M9m7laOM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=JQk58HK+KG2z9Y7+qVN3JLPmEHQ+wsw40VdDVyonlPjWTyUovUDwXsKg1NKgobvMG
+         bMeoY97hekPv8YSMIffnOMGmbk6NqrB+OONU9gvN1GMg5ZC4CsTUDHdz3DUrVk3pZ7
+         D8vjzUdjnTP5OwUMqW61010vvke/PcVkUYYejwB8=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAI8cmZ5055342
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 18 Nov 2019 02:38:48 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 18
+ Nov 2019 02:38:47 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 18 Nov 2019 02:38:47 -0600
+Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAI8ciXl127055;
+        Mon, 18 Nov 2019 02:38:45 -0600
+Subject: Re: [PATCH block/for-next] blk-cgroup: cgroup_rstat_updated()
+ shouldn't be called on cgroup1
+To:     Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>
+CC:     <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lizefan@huawei.com>,
+        <hannes@cmpxchg.org>, <kernel-team@fb.com>,
+        Dan Schatzberg <dschatzberg@fb.com>, Daniel Xu <dlxu@fb.com>
+References: <20191107191804.3735303-1-tj@kernel.org>
+ <20191107191804.3735303-6-tj@kernel.org>
+ <cd3ebcee-6819-a09b-aeba-de6817f32cde@ti.com>
+ <20191113163501.GI4163745@devbig004.ftw2.facebook.com>
+ <20191114223128.GM4163745@devbig004.ftw2.facebook.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <6f791736-2728-be53-9544-e0a0f0d09dd0@ti.com>
+Date:   Mon, 18 Nov 2019 14:09:40 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191118080446.GB251795@dtor-ws>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20191114223128.GM4163745@devbig004.ftw2.facebook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Fixing the address of the linux-iio list]
+Hi,
 
-Hello Dmitry,
-
-On Mon, Nov 18, 2019 at 12:04:46AM -0800, Dmitry Torokhov wrote:
-> On Mon, Nov 18, 2019 at 08:43:49AM +0100, Uwe Kleine-König wrote:
-> > On Tue, Nov 12, 2019 at 12:31:30PM -0800, Dmitry Torokhov wrote:
-> > > There is no need to force users of i2c_master_send()/i2c_master_recv()
-> > > and other i2c read/write bulk data API to cast everything into u8 pointers.
-> > > While everything can be considered byte stream, the drivers are usually
-> > > work with more structured data.
-> > > 
-> > > Let's switch the APIs to accept [const] void pointers to cut amount of
-> > > casting needed.
-> > > 
-> > > Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > 
-> > Can you give an example where you save some casts? Given that i2c is a
-> > byte oriented protocol (as opposed to for example spi) I think it's a
-> > good idea to expose this in the API.
+On 15/11/19 4:01 AM, Tejun Heo wrote:
+> Currently, cgroup rstat is supported only on cgroup2 hierarchy and
+> rstat functions shouldn't be called on cgroup1 cgroups.  While
+> converting blk-cgroup core statistics to rstat, f73316482977
+> ("blk-cgroup: reimplement basic IO stats using cgroup rstat")
+> accidentally ended up calling cgroup_rstat_updated() on cgroup1
+> cgroups causing crashes.
 > 
-> I see this at least:
+> Longer term, we probably should add cgroup1 support to rstat but for
+> now let's mask the call directly.
 > 
-> dtor@dtor-ws:~/kernel/work $ git grep "i2c_master.*(u8 \*)"
-> drivers/crypto/atmel-i2c.c:     ret = i2c_master_send(client, (u8 *)cmd, cmd->count + WORD_ADDR_SIZE);
-> drivers/iio/common/ms_sensors/ms_sensors_i2c.c:         ret = i2c_master_recv(client, (u8 *)&buf, 3);
-> drivers/iio/humidity/hdc100x.c: ret = i2c_master_recv(client, (u8 *)buf, 4);
-
-I think this one has an endianness bug.
-
-> drivers/iio/pressure/abp060mg.c:        ret = i2c_master_send(client, (u8 *)&buf, state->mreq_len);
-
-From a quick look: mreq_len might be 1 in some cases and buf is declared
-as __be16[2]. Hmm.
-
-> drivers/iio/pressure/abp060mg.c:        ret = i2c_master_recv(client, (u8 *)&buf, sizeof(buf));
-> drivers/input/misc/ad714x-i2c.c:        error = i2c_master_send(client, (u8 *)chip->xfer_buf,
-> drivers/input/misc/ad714x-i2c.c:        error = i2c_master_send(client, (u8 *)chip->xfer_buf,
-> drivers/input/misc/ad714x-i2c.c:                error = i2c_master_recv(client, (u8 *)chip->xfer_buf,
-> drivers/input/touchscreen/sx8654.c:     len = i2c_master_recv(ts->client, (u8 *)data, readlen);
-> drivers/nfc/nfcmrvl/i2c.c:      ret = i2c_master_recv(drv_data->i2c, (u8 *)&nci_hdr, NCI_CTRL_HDR_SIZE);
-> drivers/nfc/nxp-nci/i2c.c:      r = i2c_master_recv(client, (u8 *) &header, NXP_NCI_FW_HDR_LEN);
-> drivers/nfc/nxp-nci/i2c.c:      r = i2c_master_recv(client, (u8 *) &header, NCI_CTRL_HDR_SIZE);
-> drivers/video/fbdev/ssd1307fb.c:        ret = i2c_master_send(client, (u8 *)array, len);
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Fixes: f73316482977 ("blk-cgroup: reimplement basic IO stats using cgroup rstat")
+Tested-by: Faiz Abbas <faiz_abbas@ti.com>
+> ---
+>  include/linux/blk-cgroup.h |    3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> I am pretty sure there are more that my quick grep did not catch.
+> diff --git a/include/linux/blk-cgroup.h b/include/linux/blk-cgroup.h
+> index 48a66738143d..19394c77ed99 100644
+> --- a/include/linux/blk-cgroup.h
+> +++ b/include/linux/blk-cgroup.h
+> @@ -626,7 +626,8 @@ static inline bool blkcg_bio_issue_check(struct request_queue *q,
+>  		bis->cur.ios[rwd]++;
+>  
+>  		u64_stats_update_end(&bis->sync);
+> -		cgroup_rstat_updated(blkg->blkcg->css.cgroup, cpu);
+> +		if (cgroup_subsys_on_dfl(io_cgrp_subsys))
+> +			cgroup_rstat_updated(blkg->blkcg->css.cgroup, cpu);
+>  		put_cpu();
+>  	}
+>  
 > 
-> And I agree that I2C itself is a byte-oriented protocol, but the data from the
-> point of the driver (once transfer is done) is often more structured.
 
-I think it is fine to require from a caller that they are aware that a
-byte (or byte array) must be passed to i2c functions. Given the (maybe)
-two problems I pointed out above making it a bit harder to pass non-byte
-data to these functions doesn't sound like a bad idea to me.
-
-Obviously your mileage varies, but I personally like having an explicit
-type in the API. I guess we have to agree to not agree and let Wolfram
-decide if he likes your change or not.
-
-> > > diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
-> > > index 5c2cc61b666e7..48ed76a0e83d4 100644
-> > > --- a/drivers/iio/adc/max1363.c
-> > > +++ b/drivers/iio/adc/max1363.c
-> > 
-> > This change isn't motivated in the commit log. Is this here by mistake?
-> 
-> No, it is needed as signature of i2c_master_send/recv has changed.
-
-Ah, I see, there is
-
-	st->send = i2c_master_send;
-
-in the code. I think this is worth mentioning in the commit log that it
-changes to this file don't look like a mistake as I wondered.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Thanks,
+Faiz
