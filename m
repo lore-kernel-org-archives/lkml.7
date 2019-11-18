@@ -7,63 +7,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C67C3C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 611DDC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E27A2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 372392084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:24:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="WBqyJalM"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="iW0UQYAz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfKRLYW (ORCPT
+        id S1727427AbfKRLY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:24:22 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54970 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727368AbfKRLYT (ORCPT
+        Mon, 18 Nov 2019 06:24:28 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36672 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727402AbfKRLYX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:24:19 -0500
-Received: by mail-wm1-f66.google.com with SMTP id z26so16919950wmi.4
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 03:24:17 -0800 (PST)
+        Mon, 18 Nov 2019 06:24:23 -0500
+Received: by mail-ed1-f68.google.com with SMTP id f7so13206447edq.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 03:24:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IVPif8k5ZIR6D+wGrwJyE64cs7Iq/Iy6NadbSzu369Y=;
-        b=WBqyJalM20Pe2+yF9hF7XnXsYtxzLRnMRKlU7/1VgblKEWzSrmyIVbJGD8OkiIg0Vr
-         UlmpxFxPN87KDhJ6En8fXOli2Zo44+zz6/W09vpd+Xsqljhn0yhFAzrYHuJflVOyQaS+
-         z/1qNFcET4IUJ3z1szwXb0kXhrjHW7ZaUhJrE=
+        bh=kmzEwbR7z9MB2kX6E+hxPBjMMxkrgbCI0SqbDjInDjs=;
+        b=iW0UQYAzkmH8Ll/M9PRrq939jlpUbSW0NRlVO9QY+D4clTNrJOZfMDBDFUbjyL4Cs7
+         AafHw+ZYUyVMiRkn9UVwi3pQGytY4uNU4TxcdyErLNYAINbJRSnVaWhXPyXoBkVDZ0AE
+         l3Fg7abGNnEPO4rdJFSDHZaKL7SSwwOkiiOlg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IVPif8k5ZIR6D+wGrwJyE64cs7Iq/Iy6NadbSzu369Y=;
-        b=asTC1ydbUTIFnHItViNJy6REhEkcbAvg4gIRJF9FWljPCUoHSZmbCyHpPbWjHiUtzs
-         iKnTfTN+hPeqZb3fdY/EGRIPruxP1uIlDpgnC6QCKTGbT97CkrO0vbbYkndXCvKU5CjL
-         8lub3W3mZGlalD6pB2Fm1uDmt1560bvCeU1ArijASafYzAzmCE3tdxvkATnGnDvHfzoT
-         G5NCQpo1j2Sr0UtzkRt5M2ugb+iy1NccrgSIxScHaGJxMxJpx1GtK5wVTTNHjbIDZi35
-         faoxGpgSMjD0PMJmy9EogWQ/xt0TbdobTXrl945kK4KiW8vZBpDH/K+i9edXqsvZj77C
-         VwcA==
-X-Gm-Message-State: APjAAAXOgDzdAcjIkLlRqv2w1EuExYae5UEjCKDvBCudgJqpLfTOnTdW
-        3W0sX3FfiI7pv4mMQel5nCzP4w==
-X-Google-Smtp-Source: APXvYqwSHGVqPcUA7VYXWlj6j53pgDT3YUvH8UuqMAU+wb80v+JDgc+bHai2XLBSBsbTbd8M19jYXw==
-X-Received: by 2002:a7b:c3d6:: with SMTP id t22mr29358315wmj.13.1574076256553;
-        Mon, 18 Nov 2019 03:24:16 -0800 (PST)
+        bh=kmzEwbR7z9MB2kX6E+hxPBjMMxkrgbCI0SqbDjInDjs=;
+        b=WftQ6Uf+oQob4RNRJUIO/pO+1mnnI7uGKIrcqvTntXmoBZ817VJYBHZP5SwoZ1mr0D
+         rq6En8+//qjtGsggDlW/TIUbOTFVPBhd7o4kdT6TE9WRpEp/GQPccoRslj/HBo6gFCj7
+         qkTBDxFr4pbBl2H8dG+EkBjizopkKSIqjbovq5F6gd5kPt7iqEMGxNtcTlG2vI7/GRyN
+         eC3DDqwq5Y8+/fW6fd5UND/58prWwFrSIfuWrtdSAp7xwJnIGa7L+YJC2jAUfpVjUnQs
+         bnl4+q6AEdVnhR4LV9cJSJX8UPPgi4TH3wJud6HNMbqptD+ga3iSTQJ9tSWM6gX3LSrX
+         JWvA==
+X-Gm-Message-State: APjAAAWG3x/Q6kyKNoBpM7kjToPf0z2t6ES8W6enB2XmrTAIHhmOgJwZ
+        EMX4NEj1VFUYuBmA9Rh2DtI5p6QEp5vmnA==
+X-Google-Smtp-Source: APXvYqx95kajCqCxz/PSbS8ItEnY/XM8/CDgL5w+eRk/tL2D6xJCZl9iTwQDhJviE4PdC/OwznLwrA==
+X-Received: by 2002:a5d:54c4:: with SMTP id x4mr29937876wrv.247.1574076260319;
+        Mon, 18 Nov 2019 03:24:20 -0800 (PST)
 Received: from prevas-ravi.prevas.se (ip-5-186-115-54.cgn.fibianet.dk. [5.186.115.54])
-        by smtp.gmail.com with ESMTPSA id y2sm21140815wmy.2.2019.11.18.03.24.15
+        by smtp.gmail.com with ESMTPSA id y2sm21140815wmy.2.2019.11.18.03.24.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 03:24:16 -0800 (PST)
+        Mon, 18 Nov 2019 03:24:19 -0800 (PST)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
 Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Scott Wood <oss@buserror.net>, Timur Tabi <timur@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-serial@vger.kernel.org
-Subject: [PATCH v5 34/48] serial: ucc_uart: access __be32 field using be32_to_cpu
-Date:   Mon, 18 Nov 2019 12:23:10 +0100
-Message-Id: <20191118112324.22725-35-linux@rasmusvillemoes.dk>
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: [PATCH v5 37/48] soc: fsl: qe: make cpm_muram_free() ignore a negative offset
+Date:   Mon, 18 Nov 2019 12:23:13 +0100
+Message-Id: <20191118112324.22725-38-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191118112324.22725-1-linux@rasmusvillemoes.dk>
 References: <20191118112324.22725-1-linux@rasmusvillemoes.dk>
@@ -74,45 +73,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The buf member of struct qe_bd is a __be32, so to make this work on
-little-endian hosts, use be32_to_cpu when reading it.
+This allows one to simplify callers since they can store a negative
+value as a sentinel to indicate "this was never allocated" (or store
+the -ENOMEM from an allocation failure) and then call cpm_muram_free()
+unconditionally.
 
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/tty/serial/ucc_uart.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/soc/fsl/qe/qe_common.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/tty/serial/ucc_uart.c b/drivers/tty/serial/ucc_uart.c
-index 9436b93d5cfa..afc2a5d69202 100644
---- a/drivers/tty/serial/ucc_uart.c
-+++ b/drivers/tty/serial/ucc_uart.c
-@@ -343,7 +343,7 @@ static int qe_uart_tx_pump(struct uart_qe_port *qe_port)
- 		/* Pick next descriptor and fill from buffer */
- 		bdp = qe_port->tx_cur;
+diff --git a/drivers/soc/fsl/qe/qe_common.c b/drivers/soc/fsl/qe/qe_common.c
+index 962835488f66..48c77bb92846 100644
+--- a/drivers/soc/fsl/qe/qe_common.c
++++ b/drivers/soc/fsl/qe/qe_common.c
+@@ -176,6 +176,9 @@ void cpm_muram_free(s32 offset)
+ 	int size;
+ 	struct muram_block *tmp;
  
--		p = qe2cpu_addr(bdp->buf, qe_port);
-+		p = qe2cpu_addr(be32_to_cpu(bdp->buf), qe_port);
- 
- 		*p++ = port->x_char;
- 		qe_iowrite16be(1, &bdp->length);
-@@ -371,7 +371,7 @@ static int qe_uart_tx_pump(struct uart_qe_port *qe_port)
- 	while (!(qe_ioread16be(&bdp->status) & BD_SC_READY) &&
- 	       (xmit->tail != xmit->head)) {
- 		count = 0;
--		p = qe2cpu_addr(bdp->buf, qe_port);
-+		p = qe2cpu_addr(be32_to_cpu(bdp->buf), qe_port);
- 		while (count < qe_port->tx_fifosize) {
- 			*p++ = xmit->buf[xmit->tail];
- 			xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
-@@ -491,7 +491,7 @@ static void qe_uart_int_rx(struct uart_qe_port *qe_port)
- 		}
- 
- 		/* get pointer */
--		cp = qe2cpu_addr(bdp->buf, qe_port);
-+		cp = qe2cpu_addr(be32_to_cpu(bdp->buf), qe_port);
- 
- 		/* loop through the buffer */
- 		while (i-- > 0) {
++	if (offset < 0)
++		return;
++
+ 	size = 0;
+ 	spin_lock_irqsave(&cpm_muram_lock, flags);
+ 	list_for_each_entry(tmp, &muram_block_list, head) {
 -- 
 2.23.0
 
