@@ -2,79 +2,126 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647C6C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD1BC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B17E2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:24:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574069065;
-	bh=P2SnQ+swBMLAm+pYO6ij+VDFLpl7q/D8rsBBFNOs1RE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1IP4D/53GIcHmUzG70N2AQNoCsVPqmieOS0iSn+kDjkg4ZsuRYivZ/DgyonCJSxFa
-	 YhnMHDa3ENo3DshLTVtcMtaiFqKwfxdYqI06VKHc74BXIohua2i058zRRLbhc8JNWQ
-	 PuHQT+EC+XRaPuSx2PU82T/e55oBSZnIBj5X8lcU=
+	by mail.kernel.org (Postfix) with ESMTP id 7A21720727
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:25:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbfKRJYY (ORCPT
+        id S1726748AbfKRJZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 04:24:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726460AbfKRJYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 04:24:23 -0500
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEDD320727;
-        Mon, 18 Nov 2019 09:24:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574069063;
-        bh=P2SnQ+swBMLAm+pYO6ij+VDFLpl7q/D8rsBBFNOs1RE=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=dkSYW/pMZb+0zXMT3id9QMuxzzCxE0JTWe0fnWvW2ZH1sr1IVa5//iJytNLpfsiTq
-         5bx1KJxExl3NBy2WWIr3bs+YpXDAQwgRsuoBbyC9ROxkVV5FjFsihlEqYYrn4HV5mx
-         UrDrLvsijcqIa2VG+fCvd5LWBaSHLWG7ty2obtcE=
-Date:   Mon, 18 Nov 2019 10:24:19 +0100 (CET)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Andrew Duggan <aduggan@synaptics.com>
-cc:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Federico Cerutti <federico@ceres-c.it>,
-        Christopher Heiny <Cheiny@synaptics.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] HID: rmi: Check that the RMI_STARTED bit is set before
- unregistering the RMI transport device
-In-Reply-To: <6931c116-78fb-9ad9-aab1-f15799118c82@synaptics.com>
-Message-ID: <nycvar.YFH.7.76.1911181024040.1799@cbobk.fhfr.pm>
-References: <20191023012344.20998-1-aduggan@synaptics.com> <nycvar.YFH.7.76.1911151626120.1799@cbobk.fhfr.pm> <6931c116-78fb-9ad9-aab1-f15799118c82@synaptics.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Mon, 18 Nov 2019 04:25:45 -0500
+Received: from mx2.suse.de ([195.135.220.15]:56354 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726460AbfKRJZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 04:25:45 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8A9D1AD55;
+        Mon, 18 Nov 2019 09:25:43 +0000 (UTC)
+Date:   Mon, 18 Nov 2019 10:25:42 +0100
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Linux I2C <linux-i2c@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 1/4] firmware: dmi: Remember the memory type
+Message-ID: <20191118102542.0dc43cd2@endymion>
+In-Reply-To: <20191118102410.78cd8e6e@endymion>
+References: <20191118102410.78cd8e6e@endymion>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 Nov 2019, Andrew Duggan wrote:
+Store the memory type while walking the memory slots, and provide a
+way to retrieve it later.
 
-> Since this second patch was for the input subsystem I decided to just 
-> make them separate patches instead of creating a series. However, based 
-> on Dmitry's feedback it was determined that the second patch wasn't a 
-> good idea and it won't be applied. This first patch is enough to fix the 
-> issue by preventing the call to rmi_unregister_transport_device() if the 
-> subsequent call to register failed. The only change I would make to this 
-> patch would be to remove the last sentence of the comment. If you choose 
-> to apply that patch then would this be a change you would make? Or would 
-> you prefer I submit a v2 with this update?
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+---
+ drivers/firmware/dmi_scan.c |   25 ++++++++++++++++++++++++-
+ include/linux/dmi.h         |    2 ++
+ 2 files changed, 26 insertions(+), 1 deletion(-)
 
-I've modified the changelog and applied. Thanks,
+--- linux-5.3.orig/drivers/firmware/dmi_scan.c	2019-10-08 14:27:23.783640227 +0200
++++ linux-5.3/drivers/firmware/dmi_scan.c	2019-10-08 16:35:35.442803880 +0200
+@@ -35,6 +35,7 @@ static struct dmi_memdev_info {
+ 	const char *bank;
+ 	u64 size;		/* bytes */
+ 	u16 handle;
++	u8 type;		/* DDR2, DDR3, DDR4 etc */
+ } *dmi_memdev;
+ static int dmi_memdev_nr;
+ 
+@@ -391,7 +392,7 @@ static void __init save_mem_devices(cons
+ 	u64 bytes;
+ 	u16 size;
+ 
+-	if (dm->type != DMI_ENTRY_MEM_DEVICE || dm->length < 0x12)
++	if (dm->type != DMI_ENTRY_MEM_DEVICE || dm->length < 0x13)
+ 		return;
+ 	if (nr >= dmi_memdev_nr) {
+ 		pr_warn(FW_BUG "Too many DIMM entries in SMBIOS table\n");
+@@ -400,6 +401,7 @@ static void __init save_mem_devices(cons
+ 	dmi_memdev[nr].handle = get_unaligned(&dm->handle);
+ 	dmi_memdev[nr].device = dmi_string(dm, d[0x10]);
+ 	dmi_memdev[nr].bank = dmi_string(dm, d[0x11]);
++	dmi_memdev[nr].type = d[0x12];
+ 
+ 	size = get_unaligned((u16 *)&d[0xC]);
+ 	if (size == 0)
+@@ -1128,3 +1130,24 @@ u64 dmi_memdev_size(u16 handle)
+ 	return ~0ull;
+ }
+ EXPORT_SYMBOL_GPL(dmi_memdev_size);
++
++/**
++ * dmi_memdev_type - get the memory type
++ * @handle: DMI structure handle
++ *
++ * Return the DMI memory type of the module in the slot associated with the
++ * given DMI handle, or 0x0 if no such DMI handle exists.
++ */
++u8 dmi_memdev_type(u16 handle)
++{
++	int n;
++
++	if (dmi_memdev) {
++		for (n = 0; n < dmi_memdev_nr; n++) {
++			if (handle == dmi_memdev[n].handle)
++				return dmi_memdev[n].type;
++		}
++	}
++	return 0x0;	/* Not a valid value */
++}
++EXPORT_SYMBOL_GPL(dmi_memdev_type);
+--- linux-5.3.orig/include/linux/dmi.h	2019-10-04 16:14:24.575714482 +0200
++++ linux-5.3/include/linux/dmi.h	2019-10-08 17:42:19.726907967 +0200
+@@ -113,6 +113,7 @@ extern int dmi_walk(void (*decode)(const
+ extern bool dmi_match(enum dmi_field f, const char *str);
+ extern void dmi_memdev_name(u16 handle, const char **bank, const char **device);
+ extern u64 dmi_memdev_size(u16 handle);
++extern u8 dmi_memdev_type(u16 handle);
+ 
+ #else
+ 
+@@ -142,6 +143,7 @@ static inline bool dmi_match(enum dmi_fi
+ static inline void dmi_memdev_name(u16 handle, const char **bank,
+ 		const char **device) { }
+ static inline u64 dmi_memdev_size(u16 handle) { return ~0ul; }
++static inline u8 dmi_memdev_type(u16 handle) { return 0x0; }
+ static inline const struct dmi_system_id *
+ 	dmi_first_match(const struct dmi_system_id *list) { return NULL; }
+ 
 
 -- 
-Jiri Kosina
-SUSE Labs
-
+Jean Delvare
+SUSE L3 Support
