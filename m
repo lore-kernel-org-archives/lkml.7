@@ -2,158 +2,165 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URG_BIZ autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C782C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1203C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA43217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 757AE21934
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:06:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="uAhk56qf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfKRSDs (ORCPT
+        id S1726638AbfKRSG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 13:03:48 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:65376 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbfKRSDr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 13:03:47 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-59-5dd2dd006027
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 38.49.08102.00DD2DD5; Mon, 18 Nov 2019 19:03:44 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Mon, 18 Nov 2019 19:03:43 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        Mon, 18 Nov 2019 13:06:29 -0500
+Received: from mga06.intel.com ([134.134.136.31]:52345 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726314AbfKRSG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 13:06:29 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 10:06:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,321,1569308400"; 
+   d="scan'208";a="407475149"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by fmsmga006.fm.intel.com with ESMTP; 18 Nov 2019 10:06:27 -0800
+Received: from FMSMSX109.amr.corp.intel.com (10.18.116.9) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 18 Nov 2019 10:06:27 -0800
+Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx109.amr.corp.intel.com (10.18.116.9) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 18 Nov 2019 10:06:26 -0800
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.55) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Mon, 18 Nov 2019 10:06:26 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XpQYlghIhqSJ1n4Hcf5rZwYrUz38mqs33COu8Bo/0Dg7hBVjaCbN1jWwCRVbXxnr6yMIu/Z3RDk2Z+V03U7tSRNehxwu3VgsSwIgf0WGTcbQS8Yn5soNhYMtFfRGD9tLx+YlLB5zwV1XlmDNk3vPTLSSIZivB8GfwZo5d8I0lHc1chX0RuhWPOBYYB1p3h8gQc77Q8m/O8gsUVkoMYvKw9IwvyLoeJDdWWsKKSLSVkp1viOPoYFsEE7oxyxADNGsGhfx867fnT+eB4FLgzputQPityfrXurWdPNkuu3wHs3IYOAYAUwVKurT5vQZsDY95U82F1NsGGMasrbW3WGyyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OwBdlNor/nPW2l/1Q/ce7wo0H83yO4qzz+F6N+jsUF8=;
+ b=Vsk3z2l8jrmBn0BeHzQ0oqhlu/YZWRYbRdRyEU+FcLtbz8cB0mQgSUTWqxXAvXZFPdsm2RO/Dofab5oebV6RL72z6K0TOJINw7Wf15C70DasFPCT2rJJufPnMx31ViOfl8mBP1n/wg+LUDC0bTRFnTUUQWJKD+0OZQjWeJeBWqZ7OsfgnUKuxcQGoD89RoQjv1PNoEiD4gr8aoe7SpxMuhsM1VRHe0KBetR6acy0k7tOfU8W7H+alSefuJiLzMgMo74HrPQhncl0kVGQNX8DeJjq39Y/vc/l9eGyDszPAX/sYqITLSWRHTnb1w+Zpa88cVyKj36hjbmu4FKN05KKUg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OwBdlNor/nPW2l/1Q/ce7wo0H83yO4qzz+F6N+jsUF8=;
+ b=uAhk56qfLjd/SAS1v+/+L9OPtCVcRXT0kotitD2WEblkx2qhHdq/D2IulCO9EyT0Q8fhli9KObg+qKmVY8npcIVKWZjY/6Mfoky5Iwiym/gpfDc/7/xqXLRzR76jmAiHr5swuprnn9+PBv4crmClkTFy27/y9mBbPiywxwfPNvQ=
+Received: from MN2PR11MB3711.namprd11.prod.outlook.com (20.178.254.154) by
+ MN2PR11MB4478.namprd11.prod.outlook.com (52.135.36.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.29; Mon, 18 Nov 2019 18:06:24 +0000
+Received: from MN2PR11MB3711.namprd11.prod.outlook.com
+ ([fe80::e8c0:cc46:c44f:4718]) by MN2PR11MB3711.namprd11.prod.outlook.com
+ ([fe80::e8c0:cc46:c44f:4718%7]) with mapi id 15.20.2451.029; Mon, 18 Nov 2019
+ 18:06:24 +0000
+From:   "Kammela, Gayatri" <gayatri.kammela@intel.com>
+To:     "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+CC:     "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>,
+        "dvhart@infradead.org" <dvhart@infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "hofrat@osadl.org" <hofrat@osadl.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>
-Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Thread-Topic: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Thread-Index: AQHVndzxthsd4Y8wKkm7W/92Uslk+KeRDPcAgAAbkIA=
-Date:   Mon, 18 Nov 2019 18:03:42 +0000
-Message-ID: <fd1e4e652840346bd990c769eabe2f966bda4ed6.camel@fi.rohmeurope.com>
-References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-         <d29e0eb587b764f3ea77647392e45fac67bbd757.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-         <20191118162502.GJ9761@sirena.org.uk>
-In-Reply-To: <20191118162502.GJ9761@sirena.org.uk>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
+        "Prestopine, Charles D" <charles.d.prestopine@intel.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "Liang, Kan" <kan.liang@intel.com>,
+        "Box, David E" <david.e.box@intel.com>,
+        "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>
+Subject: RE: [PATCH v3 7/7] platform/x86: Add Comet Lake (CML) platform
+ support to intel_pmc_core driver
+Thread-Topic: [PATCH v3 7/7] platform/x86: Add Comet Lake (CML) platform
+ support to intel_pmc_core driver
+Thread-Index: AQHVmw1Kujxp330EEUmsFYkvvxYyW6eLAp8AgAY6fHA=
+Date:   Mon, 18 Nov 2019 18:06:24 +0000
+Message-ID: <MN2PR11MB37116883BFC29257FD6E9647F24D0@MN2PR11MB3711.namprd11.prod.outlook.com>
+References: <cover.1573750525.git.gayatri.kammela@intel.com>
+ <d43af9c7b3c536c489cdb925adb2204256099952.1573750525.git.gayatri.kammela@intel.com>
+ <3acd91d2694c456da2af7256ed1dcf9c@AUSX13MPC105.AMER.DELL.COM>
+In-Reply-To: <3acd91d2694c456da2af7256ed1dcf9c@AUSX13MPC105.AMER.DELL.COM>
+Accept-Language: en-US
+Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [82.203.185.189]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6C4A6AAF0465DE4A9847D36F93A87E22@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2019-11-14T18:50:18.5668120Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
+ aiplabel=External Public
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNmU2M2M1MWUtZTI5ZC00N2YwLWE0MWQtNDkzYmI5YjJhODY4IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiZnZvdUVZb3d5TEV1bXFuaHh4cW5SVHlxSTBCZUVlTngwbmxnZUptZTNXNFBOdXlOVVhYUjJzTUNyS3dadFVJVSJ9
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+dlp-product: dlpe-windows
+x-ctpclassification: CTP_NT
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=gayatri.kammela@intel.com; 
+x-originating-ip: [192.55.52.214]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7a6cd924-2814-40af-a3c2-08d76c52066c
+x-ms-traffictypediagnostic: MN2PR11MB4478:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR11MB447892B21F107F4BB8C996E6F24D0@MN2PR11MB4478.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0225B0D5BC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(346002)(376002)(39860400002)(396003)(199004)(189003)(102836004)(66066001)(5660300002)(76176011)(55016002)(9686003)(7696005)(256004)(76116006)(74316002)(229853002)(86362001)(3846002)(81166006)(8936002)(478600001)(14454004)(2906002)(6436002)(8676002)(6116002)(25786009)(81156014)(26005)(4326008)(52536014)(33656002)(11346002)(446003)(2501003)(305945005)(7736002)(6246003)(316002)(186003)(6506007)(54906003)(14444005)(66556008)(71200400001)(71190400001)(64756008)(66446008)(476003)(486006)(99286004)(66946007)(66476007)(110136005)(4744005);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR11MB4478;H:MN2PR11MB3711.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tixL7u4UjZgcszkN71zMzmkqdyB7L5m0Njv2bWpwzqMZQWLlPZAWImzo2/Onh7AlpuYZhpe5JeGraOolZ78vJpTb/aEkNrbO+SODkl03tepF3INNs5/kuFngJM4Rze5Z86eyfFf59KgTDOuj+lRMij5q8U2EzeeMziX+f7/r/puM+niRx4dC/jJLLp4HQflB6N1aGMcr9DbYRC0h5UlWLzDebtqWLRJf2gYm6JoecKTFzk34TKuNK3NApCsn6VU5TE/ayLnCsp8kqHZVUw6ycbZwUxaFuky5Ql8FSktv4w0DMeRNYl4Di3uPDmfPDdNE524hitT1atQqMiIoCnaghh+ecfbVqv9UYep1WCs2u1OTmrakyiStxF8zspCVKFnKIAfilEL9j/mAIoUyCgB4qT8o/6WMQw1Uu/KrbtyhWy96NrlTWZFHB1FZHlHvxrTj
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0wTZxjH995d7w7klpcK8o6pkVuWxS3iWPbHqyGTf4jnshiTzWRhIXiM
-        G22gLbm2m7gsQRfUVoe4aaYNv+THYFAQKmboysBCN6iss4iui3YMqG6gATcZOEXdHafCX+/3
-        fb/P5/k+fzwvS+rdTDJrNNsk2SwW8nQs1dv0wLPhuchw9uveCIvrQ1cYfGD6GwbPVgYofHws
-        SuNo7wGAq/uDOnzoYqcO186c0GGH46AOXzvbTuGBM6MAj/7rB3hu5CCBjy00Evjvw7/r8Kn9
-        9RQ+U70A8OXzFTQ+e7sN4B9bRmjc2h9hcMOvIQJXNAxQeOYfB4FDgUwcCfhp/HkoTOLS7n4G
-        P7raQeGy4NaMtYK7yg2EmXApI1S5PxXOuSKMUOedJARPs4MWrl/10kJd2Vc64a/DfZQwN3SU
-        Eso6m4Fw89RpSvgp/B0hfF31HyE0tcwzwl3P2h0wa0V6rmj7+F1jvnnjW7tWGCIj43RRFb+7
-        +uIRugS4U5wghkXwTXRk4Q/aCWJZPbwCUJu/nNEuAwDVtX8LnIBlaZiOnL8xKpAAN6Dj9+sW
-        ARKejEM/BL8nVGMl3IU6b01QWpGIauYeEJrejO4MjtCqpuDL6IRvEKiag9uRt6P3SfIQQBWN
-        5xaNGPgGut3VSqoawDXIUTK92IiESchzc16njQ1RvfcXUtOJaHLi0ZN3HvX4g6Q6NAnXo9Pn
-        N2poBrrX1kVpOgUdOzTGaDPEo8GTUaocrHItS3At0a5ltGsZ7VpG1wBdM0Am0ViYL9qktFRZ
-        sqfKFoNJOT60mDxA277ZLvDYt80HCBb4wAsswSdy2zzD2frncy15xQbRasiR7YWS1QcQS/IJ
-        3PbxS9l6Lk8s3iPJlqfWiyzFJ3GvjB3N1kM1q0CSiiT5qbuaZXnE3b2mNI2XpXxp90fGQtuS
-        TbAxavPY5ASrZM6TZNFuM+SoC5JjVTZEteKU3H0qzlmLRJPyqqEB8BpbPllZS7L9lQ21pJ4y
-        W8xSchKXsV4phWqpwW5+FjQFkljAr+Sy1EZxyhd81mdKiSCUiI7WxQibuGQll4DYTf6fP+m+
-        Y9yybmiHs2Xzffhe3/7QhaLRWcflW2vebqLXNRZsXR2F1QXh9ogb5mWm0NNf+Df5Al25L6XO
-        vV+60yRRkT3X/6RL5y/05oQ/2+vt2VLTeS/THj+c5R9/OBG5tM/zQXpP8Y1oWnll994bfUHw
-        ztSXuSn8quHEloLxIT1PWQ1i2qukbBX/BxjTQ6o/BAAA
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a6cd924-2814-40af-a3c2-08d76c52066c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 18:06:24.5696
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QyRyjBP3kSH0oXdNMfLdpMpTF1LYXM5j0iqlFtODOWfrIW48KrRUdYKZxQbxQJXqwcoLDVCZ6fKOykhR424pVV5xrt15uKDwFGKuw+QONI8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4478
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gTWFyaywNCg0KSXQncyBuaWNlIHRvIGhlYXIgZnJvbSB5b3UgYWdhaW4gOikgSSBob3Bl
-IHlvdSdyZSBlbmpveWluZyBhbGwgdGhlIG5ldw0KdGhpbmdzIDopDQoNCk9uIE1vbiwgMjAxOS0x
-MS0xOCBhdCAxNjoyNSArMDAwMCwgTWFyayBCcm93biB3cm90ZToNCj4gT24gTW9uLCBOb3YgMTgs
-IDIwMTkgYXQgMDg6NTM6NTdBTSArMDIwMCwgTWF0dGkgVmFpdHRpbmVuIHdyb3RlOg0KPiANCj4g
-PiArI1N1cHBvcnRlZCBkZWZhdWx0IERWUyBzdGF0ZXM6DQo+ID4gKyNidWNrCQl8IHJ1bgkJfCBp
-ZGxlCQl8IHN1c3BlbmQJDQo+ID4gfCBscHNyDQo+ID4gKyMtLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+IC0tLS0tLS0t
-LS0tDQo+ID4gKyMxLCAyLCA2LCBhbmQgNwl8IHN1cHBvcnRlZAl8IHN1cHBvcnRlZAl8IAlzdXBw
-b3J0ZWQNCj4gPiAoKikNCj4gPiArIy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gLS0tLS0tLS0tLS0NCj4gPiArIzMs
-IDQsIGFuZCA1CXwgCQkJc3VwcG9ydGVkICgqKikNCj4gPiArIy0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gLS0tLS0t
-LS0tLS0NCj4gPiArIygqKSAgTFBTUiBhbmQgU1VTUEVORCBzdGF0ZXMgdXNlIHNhbWUgdm9sdGFn
-ZSBidXQgYm90aCBzdGF0ZXMNCj4gPiBoYXZlIG93biBlbmFibGUgLw0KPiA+ICsjICAgICBkaXNh
-YmxlIHNldHRpbmdzLiBWb2x0YWdlIDAgY2FuIGJlIHNwZWNpZmllZCBmb3IgYSBzdGF0ZSB0bw0K
-PiA+IG1ha2UgcmVndWxhdG9yDQo+ID4gKyMgICAgIGRpc2FibGVkIG9uIHRoYXQgc3RhdGUuDQo+
-ID4gKyMoKiopIEFsbCBzdGF0ZXMgdXNlIHNhbWUgdm9sdGFnZSBidXQgaGF2ZSBvd24gZW5hYmxl
-IC8gZGlzYWJsZQ0KPiA+IHNldHRpbmdzLg0KPiA+ICsjICAgICBWb2x0YWdlIDAgY2FuIGJlIHNw
-ZWNpZmllZCBmb3IgYSBzdGF0ZSB0byBtYWtlIHJlZ3VsYXRvcg0KPiA+IGRpc2FibGVkIG9uIHRo
-YXQNCj4gPiArIyAgICAgc3RhdGUuDQo+ID4gKw0KPiA+ICsgICAgICByb2htLGR2cy1ydW5sdmwt
-Y3RybDoNCj4gPiArICAgICAgICBkZXNjcmlwdGlvbjogfA0KPiA+ICsgICAgICAgICAgYnVjayBj
-b250cm9sIGlzIGRvbmUgYmFzZWQgb24gcnVuLWxldmVsLiBSZWd1bGF0b3IgaXMNCj4gPiBub3QN
-Cj4gPiArICAgICAgICAgIGluZGl2aWR1YWxseSBjb250cm9sbGFibGUuIFNlZSAuLi9tZmQvcm9o
-bSxiZDcxODI4LQ0KPiA+IHBtaWMueWFtbCBmb3INCj4gPiArICAgICAgICAgIGhvdyB0byBzcGVj
-aWZ5IHJ1bi1sZXZlbCBjb250cm9sIG1lY2hhbmlzbS4gT25seSBidWNrcw0KPiA+IDEsIDIsIDYN
-Cj4gPiArICAgICAgICAgIGFuZCA3IHN1cHBvcnQgdGhpcy4NCj4gPiArICAgICAgICB0eXBlOiBi
-b29sZWFuDQo+IA0KPiBJIGRvbid0IHRoaW5rIEkgc2F3IHRoaXMgaGF2aW5nIHRoZSBlZmZlY3Qg
-b24gc2V0X3ZvbHRhZ2UoKSB0aGF0IEknZA0KPiBoYXZlIGV4cGVjdGVkIGluIHRoZSBkcml2ZXI/
-ICANCg0KVGhlIHN1cHBvcnQgZm9yIHRoaXMgaXMgYWRkZWQgaW4gcGF0Y2ggMTIuIEkgc2hvdWxk
-J3ZlIG9yZGVyZWQgdGhlDQpwYXRjaCBzZXJpZXMgc28gdGhhdCBhbGwgcmVndWxhdG9yIHBhdGNo
-ZXMgd2VyZSBvbmUgYWZ0ZXIgYW5vdGhlci4NClNvcnJ5IGZvciB0aGF0Lg0KVGhlIHBhdGNoIDEy
-IGFkZHMgdGhlIHJ1bi1sZXZlbCBzdXBwb3J0LiBQbGVhc2Ugc2VlIHRoZSBmdW5jdGlvbnMNCmdl
-dF9ydW5jb250cm9sbGVkX2J1Y2tzX2R0KCksDQptYXJrX3JlZ3VsYXRvcl9ydW5sdmxfY29udHJv
-bGxlZCgpIChzZXRzIHRoZSBnLT5ydW5sdmwpDQphbmQgc2V0X2J1Y2tfcnVubHZsX2NvbnRyb2xs
-ZWQoKSAoY2FsbGVkIGJhc2VkIG9uIGctPnJ1bmx2bCkNCndoaWNoIGNoYW5nZXMgdGhlIG9wcyB0
-byBkaXNhbGxvdyBzZXR0ZXJzIGFuZCB0byBnZXQgdm9sdGFnZSBiYXNlZCBvbg0KY3VycmVudCBy
-dW5sZXZlbCAtIGFuZCBkaWZmZXJlbnQgb3BzIGRlcGVuZGluZyBvbiBpZiBydW5sZXZlbHMgYXJl
-DQpjb250cm9sbGVkIGJ5IEdQSU8gb3IgSTJDLiBBZGRpdGlvbmFsbHkgc2V0X2J1Y2tfcnVubHZs
-X2NvbnRyb2xsZWQoKQ0KYWRkcyBEVCBwYXJzaW5nIGNhbGwtYmFjayBmb3Igc2V0dGluZyB0aGUg
-aW5pdGlhbCB2b2x0YWdlcy4NCg0KQ29tcGxleCwgSSBrbm93LiBJJ20gb3BlbiB0byBoaW50cyx0
-aXBzIGFuZCBzdWdnZXN0aW9ucyA6KQ0KDQo+ID4gKyAgICAgIHJvaG0sZHZzLXJ1bmxldmVsLW1p
-Y3Jvdm9sdHM6DQo+ID4gKyAgICAgICAgbWluaW11bTogMA0KPiA+ICsgICAgICAgIG1heGltdW06
-IDIwMDAwMDANCj4gPiArICAgICAgICBtYXhJdGVtczogNA0KPiA+ICsgICAgICAgIGRlc2NyaXB0
-aW9uOg0KPiA+ICsgICAgICAgICAgQXJyYXkgb2Ygdm9sdGFnZXMgZm9yIHJ1bi1sZXZlbHMuIEZp
-cnN0IHZhbHVlIGlzIGZvcg0KPiA+IHJ1bi1sZXZlbCAwLA0KPiA+ICsgICAgICAgICAgc2Vjb25k
-IGZvciBydW4tbGV2ZWwgMSBldGMuIE1pY3Jvdm9sdHMuDQo+IA0KPiBXaGF0J3MgdGhlIG1hcHBp
-bmcgZnJvbSBhcnJheSBpbmRleGVzIHRvIHRoZSBuYW1lcyB1c2VkIGVsc2V3aGVyZSB0bw0KPiBz
-dXBwb3J0IHJ1bmxldmVscz8NCg0KSG1tLiBTb3JyeSBNYXJrLCBJIGRvbid0IHRoaW5rIEkgZm9s
-bG93IHlvdXIgcXVlc3Rpb24uIERvIHlvdSBtZWFuDQpuYW1lcyBsaWtlIExQU1IsIFNVU1BFTkQs
-IElETEUsIFJVTj8gSWYgc28sIHRoZW4gSSBtaWdodCBuZWVkIHRvDQpyZXBocmFzZSB0aGlzLiBU
-aGUgcnVubGV2ZWxzIHJlZmVycmVkIGhlcmUgYXJlIGRpZmZlcmVudCBmcm9tIExQU1IsDQpTVVNQ
-RU5ELCBJRExFIGV0Yy4gVGhleSBhcmUgYWN0dWFsbHkgJ3N1Yi1sZXZlbHMnIGZvciBQTUlDJ3Mg
-UlVOIHN0YXRlLg0KRWcsIGtpbmQgb2YgYSAnZmFzdCB3YXknIHRvIGNoYW5nZSB2b2x0YWdlcyBm
-b3IgbXVsdGlwbGUgcG93ZXIgcmFpbHMNCndoZW4gU29DIGlzIGF0IFJVTiBzdGF0ZS4gVGhlIG5h
-bWVzIEkgaGF2ZSBzZWVuIGFyZSBSVU4wLCBSVU4xLCBSVU4yDQphbmQgUlVOMy4gVGhhdCBtYXBw
-aW5nIGlzIGRlc2NyaWJlZCBpbiBkZXNjcmlwdGlvbiBhYm92ZS4NCg0KQnIsDQoJTWF0dGkgVmFp
-dHRpbmVuDQo=
+> >  /* Cannon Lake: PGD PFET Enable Ack Status Register(s) bitmap */
+> > static const struct pmc_bit_map cnp_pfear_map[] =3D {
+> > +	/* Reserved for Cannon Lake but valid for Comet Lake */
+> >  	{"PMC",                 BIT(0)},
+> >  	{"OPI-DMI",             BIT(1)},
+> >  	{"SPI/eSPI",            BIT(2)},
+> > @@ -879,6 +880,8 @@ static const struct x86_cpu_id intel_pmc_core_ids[]
+> =3D {
+> >  	INTEL_CPU_FAM6(TIGERLAKE_L, tgl_reg_map),
+> >  	INTEL_CPU_FAM6(TIGERLAKE, tgl_reg_map),
+> >  	INTEL_CPU_FAM6(ATOM_TREMONT, tgl_reg_map),
+> > +	INTEL_CPU_FAM6(COMETLAKE, cnp_reg_map),
+> > +	INTEL_CPU_FAM6(COMETLAKE_L, cnp_reg_map),
+> >  	{}
+> >  };
+> >
+>=20
+> Just a nit, that I'm not sure if there is a policy around.
+> Shouldn't the order of these reflect the actual order they're available t=
+o the
+> marketplace?  So CML may want to come earlier in the patch series to refl=
+ect
+> that aspect.
+ Hi Mario,  agreed! I will send this patch separately from the series as th=
+is is an urgent request from Dell.
