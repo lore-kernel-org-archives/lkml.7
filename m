@@ -2,188 +2,206 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E186C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC20FC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB0B2071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:03:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574064227;
-	bh=ljFTozo0gwpQjJFCChDl+Z9GI1FvNaVpNkYRC3JPChE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IoVYAkfWO5wq6BuxWarKsl9R4mygg4UaBN7ulIlHpfFql+o631waEvC3jbX/6HYLR
-	 jy6UW4M3L0zdsA5JAVmtdPxvjxK4iEDHay+H4nTEWTLUeednOmXxERjHAXN/1KVHmD
-	 a5HMWMmiIR/kbsCQFryfMMSaKdgCkKVeTGOdgLbA=
+	by mail.kernel.org (Postfix) with ESMTP id 7C1E820740
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:04:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmKrgC7B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfKRIDp (ORCPT
+        id S1726646AbfKRIEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 03:03:45 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33634 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726316AbfKRIDp (ORCPT
+        Mon, 18 Nov 2019 03:04:52 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:47087 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbfKRIEw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 03:03:45 -0500
-Received: by mail-wr1-f65.google.com with SMTP id w9so18246537wrr.0
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 00:03:42 -0800 (PST)
+        Mon, 18 Nov 2019 03:04:52 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 193so9974114pfc.13;
+        Mon, 18 Nov 2019 00:04:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=D8ZHyfdnNZoxlHq4H5CPfT+mJBnr0mBGZIvRSoVcmck=;
-        b=Jz243xXn8J6lOJvHL2ya9NEbeiYV3qjHIEPanTHw7g9eLN03dXgytb6PymXYfxBkvv
-         y3okdCKUR6RnrrKbBINkmJDVFj/OhzCsteu8a2g5Ik2ARr481SCsV5DEH47U+wzq3mR6
-         ulwy4SK4R+AlP4JZ7aXZwh+/4wyClLjhvUumrgVhMiRx5oLr8NQyk1pEaGncxpPcCK4a
-         v952nF9/SWkTO8rAywQpl45BYF7fQ/hQkt/uGo9NouDnHs8qdNXK5+m/IcgmR9aYikKe
-         VBk+hprh7Ni6aa8pLxbNyswIHx0gcogn8qsW4xpSeD7pI2n7m6y6OOSVuymk5833+dWO
-         jNXA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=mBaFuvSmfuzg6OcAjV0kd4lsPu24dwjhOtff7pPt818=;
+        b=LmKrgC7BiQ+3tfCg3+wiQtBuG8EFPcGDsoT1d3CrOxbfNFTYzrd5sQkfN3oIxxjFTB
+         IHq40MVq6anqRFp2ShA28YwBlirTrOdb4e+jm/Xgu4yLQdbQOhVKbKBZwwFlj8UQorY2
+         S5hOOmzN5ivCIuz8HocDN4MAqKEM+5uqktwKVfwfkpo67HFz9VE9Tc/pvRmaQt2zVT8M
+         Mf5nnqWlHJuoY3KkEUxYe+Lsirqq2qv10EauXbn0jwe9QAqsu4/b8kg3RePoeC5eriAb
+         2oCs7Hhkw/o8rBXFsn/njrMxRIB68pCJ+ffk9awlx2e8k/hydEComnjVf5eAKfZmPWNU
+         ou8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=D8ZHyfdnNZoxlHq4H5CPfT+mJBnr0mBGZIvRSoVcmck=;
-        b=gICH2jcl2ogF8poU3PAJWWHiEfr41r7Y7cjWOzomcmFsfKRsZFTaCkHRsdjmVR2oUj
-         /xVOe2C27p0F28R1DCj8mzOuG2+DRner16HJpO+YaooSilVu4IL57MZJgkirTew3yVwm
-         phI48/isx7BDEnPUgP3P1WA8ezaDFluBlkdmTV40G1RwpTrqXAbXotSUuDhg7w4BH/Rl
-         W27ZR5d5gamyBarSit15e5GUTbEeMK+909fD8pDYDYid8rqrvoWH7LCivF6uybjtIHHQ
-         4t6J55Tcm51lZISEfXkoatbM2kSCrTK8zT6oGjahkOt0zW/7brCWCW5XH/P10oGXDM94
-         yCdA==
-X-Gm-Message-State: APjAAAUqml41N1zvU0S6uGIyqn+ukh52j/l1aHCfEwrJPu0IM0M/EEOq
-        TB4cA/Je/kfdOgKiVYGN+WA=
-X-Google-Smtp-Source: APXvYqxOBfj1xQppNrVBXOHyI1/gaqhPZ155qCiihoCgpMSk4p8A2tgqQkvFmLztDE4nK2uQK5ty6A==
-X-Received: by 2002:a5d:5444:: with SMTP id w4mr27480496wrv.164.1574064221989;
-        Mon, 18 Nov 2019 00:03:41 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id d11sm22159273wrn.28.2019.11.18.00.03.40
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=mBaFuvSmfuzg6OcAjV0kd4lsPu24dwjhOtff7pPt818=;
+        b=A9lym6LOK4NUbs2GG3BpskAuY3ompgmggpggYasgEgHEIgAw63E2QCnwTPrARMjqjO
+         ansm1XVzl1J19ZqjZrL8aBSXtutqvhYPm05wnF/uCF+FnwIIZI5D8Zixnkc9mOF84uQS
+         UnqSKYpsCLERWp4jJxEJZTT122jSRS6I0c5zyWZL/OsOymY/CWKXY229YU7nBmEl/V0S
+         bZN0JD5lIdBBV9JAKkoTpjr80dC9vvhXnU9uKI2hUsiNF4y6WrY0P7RfLZnweVo5uMJ/
+         ukH/4Bxn6XG7lQMAuhtoTJ+h/+KUeupQzkroUECD/MPtUKOIDdD/Xe8+phcx38oWEgJr
+         zcIA==
+X-Gm-Message-State: APjAAAVx3I9pt1Uo42sr3O5ciBMyMlbjuNWYC7Y/5PVOUiCu4dgfDPTu
+        VfNX7UFCNhdchafT9rQ9iUw=
+X-Google-Smtp-Source: APXvYqwpuYPG15qYLuc6AEgyVFLYHGFLtK6Cj0tWJgWl3wtEuKNO8fZhogt+DpVZVM1yBsmPwdK1aQ==
+X-Received: by 2002:a62:5b83:: with SMTP id p125mr32896258pfb.237.1574064289130;
+        Mon, 18 Nov 2019 00:04:49 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id r24sm21542795pgu.36.2019.11.18.00.04.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 00:03:41 -0800 (PST)
-Date:   Mon, 18 Nov 2019 09:03:39 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] scheduler fixes
-Message-ID: <20191118080339.GA48190@gmail.com>
-References: <20191116213742.GA7450@gmail.com>
- <ab6f2b5a-57f0-6723-c62f-91a8ce6eddac@arm.com>
- <20191117094549.GB126325@gmail.com>
- <4e4b0828-abba-e27d-53f6-135df06eba1a@arm.com>
- <CAHk-=wiEz7kG8YSbmAAALdP3Vnna_f4+LY4TPM0NQczeh3mviQ@mail.gmail.com>
+        Mon, 18 Nov 2019 00:04:48 -0800 (PST)
+Date:   Mon, 18 Nov 2019 00:04:46 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-iio@vger.kernel.orgi,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] i2c: use void pointers for supplying data for
+ reads and writes
+Message-ID: <20191118080446.GB251795@dtor-ws>
+References: <20191112203132.163306-1-dmitry.torokhov@gmail.com>
+ <20191112203132.163306-2-dmitry.torokhov@gmail.com>
+ <20191118074349.ags3c4tmvapguqcp@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wiEz7kG8YSbmAAALdP3Vnna_f4+LY4TPM0NQczeh3mviQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191118074349.ags3c4tmvapguqcp@pengutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Uwe,
 
-* Linus Torvalds <torvalds@linux-foundation.org> wrote:
-
-> On Sun, Nov 17, 2019 at 2:20 AM Valentin Schneider
-> <valentin.schneider@arm.com> wrote:
-> >
-> > AFAIUI the requirement for the enum type is that it has to be an int 
-> > type that covers all its values, so I could see some funky 
-> > optimization (e.g. check the returned value is < 512 but it's assumed 
-> > the type for the enum is 8 bits so this becomes always true). Then 
-> > again we don't have any explicit check on those returned values, plus 
-> > they fit in 11 bits, so as you say it's mostly likely inconsequential 
-> > (and I didn't see any compile diff).
+On Mon, Nov 18, 2019 at 08:43:49AM +0100, Uwe Kleine-König wrote:
+> Hello Dmitry,
 > 
-> Gcc can - and does - narrow enums to smaller integer types with the 
-> '-fshort-enums' flag.
-
-Good point - but at least according to the GCC 9.2.1 documentation, 
--fshort-enums is a non-default code generation option:
-
-   Options for Code Generation Conventions
-
-       These machine-independent options control the interface 
-       conventions used in code generation.
-
-       Most of them have both positive and negative forms; the negative 
-       form of -ffoo is -fno-foo.  In the table below, only one of the 
-                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-       forms is listed---the one that is not the default.  You can figure 
-       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-       out the other form by either removing no- or adding it.
-
-   [...]
-
-       -fshort-enums
-
-           Allocate to an "enum" type only as many bytes as it needs for 
-           the declared range of possible values.  Specifically, the 
-           "enum" type is equivalent to the smallest integer type that 
-           has enough room.
-
-           Warning: the -fshort-enums switch causes GCC to generate code 
-           that is not binary compatible with code generated without that 
-           switch.  Use it to conform to a non-default application binary 
-           interface.
-
-Unless this option is used AFAIK GCC will treat enums as "int" if at 
-least one enumeration constant is negative, it's "unsigned int" 
-otherwise.
-
-The only current use reference to the non-standard -fshort-enums option 
-within the kernel source is the Hexagon arch, which (seemingly 
-unnecessarily) disables the option:
-
-  arch/hexagon/Makefile:KBUILD_CFLAGS += -fno-short-enums
-
-That flag came with the original Hexagon commits, 8 years ago:
-
-  e95bf452a9e22   (Richard Kuo    2011-10-31 18:55:58 -0500       10)# Do not use single-byte enums; these will overflow.
-  e95bf452a9e22   (Richard Kuo    2011-10-31 18:55:58 -0500       11)KBUILD_CFLAGS += -fno-short-enums
-
-Maybe they had a GCC build where it was on by default? Or GCC changed 
-this option sometime in the past? Or it's simply an unnecessary but 
-harmless code generation flag out of paranoia?
-
-Out of curiosity I searched all the historic trees, none ever made use of 
-the -f*short-enums option, so I don't think this is a GCC option we ever 
-actively utilized or ran into.
-
-> However, in practice nobody uses that, and it can cause interop 
-> problems. So I think for us, enums are always at least 'int' (they can 
-> be bigger).
-
-Yeah, the GCC documentation specifically warns that it breaks the ABI: 
-the size of structs using enums will generally change from 4 bytes to 1 
-or 2 bytes, and function call signatures will change incompatibly as 
-well.
-
-BTW., -fshort-enum looks like a bad code generation option to me, on x86 
-at least, because it will also use 16-bit width, which is generally a bad 
-idea on x86. If it limited itself to u8 and 32-bit types it could even be 
-useful.
-
-Also, I wouldn't be surprised if the kernel ABI broke if we attempted to 
-use -short-enum, I bet there's a lot of accidental reliance on 
-enum=int/uint.
-
-> That said, mixing enums and values that are bigger than the enumerated 
-> ones is just a bad idea
+> On Tue, Nov 12, 2019 at 12:31:30PM -0800, Dmitry Torokhov wrote:
+> > There is no need to force users of i2c_master_send()/i2c_master_recv()
+> > and other i2c read/write bulk data API to cast everything into u8 pointers.
+> > While everything can be considered byte stream, the drivers are usually
+> > work with more structured data.
+> > 
+> > Let's switch the APIs to accept [const] void pointers to cut amount of
+> > casting needed.
+> > 
+> > Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 > 
-> It will, for example, cause us to miss compiler warnings (eg switch 
-> statements with an enum will warn if you don't handle all cases, but 
-> the 'all cases' is based on the actual enum range, not on the 
-> _possible_ invalid values).
+> Can you give an example where you save some casts? Given that i2c is a
+> byte oriented protocol (as opposed to for example spi) I think it's a
+> good idea to expose this in the API.
 
-That's true. Will check whether we can do something about improving the 
-affected uclamp data structures.
+I see this at least:
 
-Thanks,
+dtor@dtor-ws:~/kernel/work $ git grep "i2c_master.*(u8 \*)"
+drivers/crypto/atmel-i2c.c:     ret = i2c_master_send(client, (u8 *)cmd, cmd->count + WORD_ADDR_SIZE);
+drivers/iio/common/ms_sensors/ms_sensors_i2c.c:         ret = i2c_master_recv(client, (u8 *)&buf, 3);
+drivers/iio/humidity/hdc100x.c: ret = i2c_master_recv(client, (u8 *)buf, 4);
+drivers/iio/pressure/abp060mg.c:        ret = i2c_master_send(client, (u8 *)&buf, state->mreq_len);
+drivers/iio/pressure/abp060mg.c:        ret = i2c_master_recv(client, (u8 *)&buf, sizeof(buf));
+drivers/input/misc/ad714x-i2c.c:        error = i2c_master_send(client, (u8 *)chip->xfer_buf,
+drivers/input/misc/ad714x-i2c.c:        error = i2c_master_send(client, (u8 *)chip->xfer_buf,
+drivers/input/misc/ad714x-i2c.c:                error = i2c_master_recv(client, (u8 *)chip->xfer_buf,
+drivers/input/touchscreen/sx8654.c:     len = i2c_master_recv(ts->client, (u8 *)data, readlen);
+drivers/nfc/nfcmrvl/i2c.c:      ret = i2c_master_recv(drv_data->i2c, (u8 *)&nci_hdr, NCI_CTRL_HDR_SIZE);
+drivers/nfc/nxp-nci/i2c.c:      r = i2c_master_recv(client, (u8 *) &header, NXP_NCI_FW_HDR_LEN);
+drivers/nfc/nxp-nci/i2c.c:      r = i2c_master_recv(client, (u8 *) &header, NCI_CTRL_HDR_SIZE);
+drivers/video/fbdev/ssd1307fb.c:        ret = i2c_master_send(client, (u8 *)array, len);
 
-	Ingo
+I am pretty sure there are more that my quick grep did not catch.
+
+And I agree that I2C itself is a byte-oriented protocol, but the data from the
+point of the driver (once transfer is done) is often more structured.
+
+> 
+> > diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
+> > index 5c2cc61b666e7..48ed76a0e83d4 100644
+> > --- a/drivers/iio/adc/max1363.c
+> > +++ b/drivers/iio/adc/max1363.c
+> 
+> This change isn't motivated in the commit log. Is this here by mistake?
+
+No, it is needed as signature of i2c_master_send/recv has changed.
+
+> 
+> > @@ -182,9 +182,9 @@ struct max1363_state {
+> >  	struct regulator		*vref;
+> >  	u32				vref_uv;
+> >  	int				(*send)(const struct i2c_client *client,
+> > -						const char *buf, int count);
+> > +						const void *buf, int count);
+> >  	int				(*recv)(const struct i2c_client *client,
+> > -						char *buf, int count);
+> > +						void *buf, int count);
+> >  };
+> >  
+> >  #define MAX1363_MODE_SINGLE(_num, _mask) {				\
+> > @@ -310,27 +310,29 @@ static const struct max1363_mode
+> >  	return NULL;
+> >  }
+> >  
+> > -static int max1363_smbus_send(const struct i2c_client *client, const char *buf,
+> > +static int max1363_smbus_send(const struct i2c_client *client, const void *buf,
+> >  		int count)
+> >  {
+> > +	const u8 *data = buf;
+> >  	int i, err;
+> >  
+> >  	for (i = err = 0; err == 0 && i < count; ++i)
+> > -		err = i2c_smbus_write_byte(client, buf[i]);
+> > +		err = i2c_smbus_write_byte(client, data[i]);
+> 
+> Isn't this hunk an indicator that keeping char (or u8) as type of the
+> members of buf is a good idea?
+
+Not necessarily, if you check the driver sometimes it deals with stream of
+bytes, and sometimes it sends structured data, like little-endian words. I
+did not make additional changes because I wanted to minimize amount of changes
+to this driver in this patch.
+
+
+>  
+> >  	return err ? err : count;
+> >  }
+> >  
+> > -static int max1363_smbus_recv(const struct i2c_client *client, char *buf,
+> > +static int max1363_smbus_recv(const struct i2c_client *client, void *buf,
+> >  		int count)
+> >  {
+> > +	u8 *data = buf;
+> >  	int i, ret;
+> >  
+> >  	for (i = 0; i < count; ++i) {
+> >  		ret = i2c_smbus_read_byte(client);
+> >  		if (ret < 0)
+> >  			return ret;
+> > -		buf[i] = ret;
+> > +		data[i] = ret;
+> >  	}
+> >  
+> >  	return count;
+> 
+
+Thanks.
+
+-- 
+Dmitry
