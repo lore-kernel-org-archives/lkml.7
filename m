@@ -2,113 +2,152 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A75DC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC89C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1326B20727
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:03:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574067821;
-	bh=L2vctEWSimfqbqyh4ILpDKQ+VNCS6aSm7cLbFMBKKeI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OANm5PCpF/ZpiLxChQoMhGZ9kbr/wMu5J8T0Ar7REaUm1BjfsRsp3lrMvuQwDZmBv
-	 kDoTyl5BnM0Q3y1E/GrJX5ZbGlJ2hmhXdU20HnNsSPAx76PZuCAct6dZEBQ6Jq2HLr
-	 1nUsZK1OxU+gTG8gZipX1VpNhgyhvhfS6V8wdthc=
+	by mail.kernel.org (Postfix) with ESMTP id B728F2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:08:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pw0MMj8p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfKRJDj (ORCPT
+        id S1726539AbfKRJIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 04:03:39 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43647 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbfKRJDj (ORCPT
+        Mon, 18 Nov 2019 04:08:34 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:33053 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbfKRJIe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 04:03:39 -0500
-Received: by mail-oi1-f196.google.com with SMTP id l20so14591700oie.10;
-        Mon, 18 Nov 2019 01:03:38 -0800 (PST)
+        Mon, 18 Nov 2019 04:08:34 -0500
+Received: by mail-vs1-f65.google.com with SMTP id c25so10994462vsp.0
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 01:08:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BghPULC5UyPGqCyK1zeAHOjx8ZZLIefg+Am36y5/pbE=;
+        b=Pw0MMj8p0LlnfNL5IbJOueH/jHLg1Qa/uTp/EbX9PeEYraZm4/4ucchRNkZd+JXdr5
+         5ZlPMG2O4DnKmDogObQljO1T4/UIwSo2B2d45lvJ2cECcebDcTKBuOHn6/BlYS70GzVQ
+         zT1fD1WSZc+An41joFH5Ganlb0k+izYv67b3GGueB0eohIGHtnSmIxzhe0JaTSq/Nh2K
+         PFMJuIpqKmDTi22uTsfmrjKK5MG2ugKRNofZ5BPWvy0rLbjEwkMypZkBcd1ilvyvQvpq
+         9jt8khp2Rti2CkuVZkhtj2f6ki7PtshRfQWTBhbnqC5YHd52RlAUfcB+7eA0HMxGYWhE
+         2dTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jRVAj0cF1NIKTcp+3jim6uMgDs77PK8ocSRvRnJzR94=;
-        b=AwO96G7XUA4VfSbV1oC2/a3Q/tKaQVWb9UWV4Iiw3wKK+A5adzSGD6rbXZe0ATVLpt
-         BreQ077xtWOs3U7nfKdderH46R+594p+8CYdQXBMHlFQddGXAI5rm39JZPS7KqMTvnBu
-         X5t4P3O7TEPW925vm+6Z0B9Uc2bs0+2mzP9wEMxR5ZSZT/+rcIrArz/777KXU04MbEIX
-         kGIDy5uvH+Tjg4avXv82Ag42hcIBWdE0MpT4wdEvIxfOUQSThQyX10tNmmbJALX5vfGw
-         y1KrttjjZhFHLtBQiIj4qOaQuYszutVU5fIOyqZQ7Z4qNv+mz90ewZxvGGmIRwOt0joW
-         HxjQ==
-X-Gm-Message-State: APjAAAWfMsbjQBVpYe0fGXZYrA2EXHC7yN78bZItTUpJtBf3DKhhyk91
-        /9BlQjSnyAknfkaRlRki/la0/WAN6CbzX6q1j5c=
-X-Google-Smtp-Source: APXvYqyBDTzWxnZlIn+OcEtjaknZIU05ZVRZB/B4xtaRjHOpaHd+6Vld9DL+9/LerspgASk0JbvmGCBQUNVTX+avAag=
-X-Received: by 2002:aca:d4c6:: with SMTP id l189mr18741190oig.68.1574067818299;
- Mon, 18 Nov 2019 01:03:38 -0800 (PST)
+        bh=BghPULC5UyPGqCyK1zeAHOjx8ZZLIefg+Am36y5/pbE=;
+        b=ietDaYhIUSMDGGJt3NswCtS4s6v2sjJUM0CeL8GrRHI4PzAccaEwZXQhjfmim+WCDo
+         9XbF8HPYTzokiX2E6JFjogi6tk6XSefpoHsP0n+DoJlcg6UrMColrcW3NI6Y2Ufh4r9q
+         T/i4l4dtFAH2c+GnwltT/WZBMmxgTuQ7Lz5evckSfo5MbkBSYtkNB/+WbYGp2qILAozG
+         F6fbtXosRq4ePL+0r9dhXQILSQWmjE6vc6kftK9LnzsSsfLBV0598H+Y8nwlR3W5wVHl
+         ILTJ6A5gLHtQgjnXxa2Ff5Z8snEYRA0vgKBpMlEkQGQt97NTpNKQbJ9NYYSzLtewYwCo
+         /Big==
+X-Gm-Message-State: APjAAAVZNfBdYCmkDZV8amm3XuYvbxoTfnj7O20suMahY88WBgXXA5V/
+        v8/Yge5bUcUZ5ySraalRLhKSPsDrS38JBttotGDLGw==
+X-Google-Smtp-Source: APXvYqxZ2cPOQDOOgbtbMRMPYyOPuVXbLXuf68UzKvf/TwmE5hxQYuGLkkLxzfpAHMKV3VLA+3FdtAgs3lyTtO7bPxA=
+X-Received: by 2002:a67:2087:: with SMTP id g129mr18038208vsg.191.1574068113132;
+ Mon, 18 Nov 2019 01:08:33 -0800 (PST)
 MIME-Version: 1.0
-References: <cc03ba18-4949-9244-639c-94f461f03361@huawei.com> <CAA9_cmc7BuWkBHadHRAxfch43KWovb6rSr2AR9y3bVue0M9EhQ@mail.gmail.com>
-In-Reply-To: <CAA9_cmc7BuWkBHadHRAxfch43KWovb6rSr2AR9y3bVue0M9EhQ@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 18 Nov 2019 10:03:27 +0100
-Message-ID: <CAJZ5v0g35zvSB88d7qK8n1uRGCuO5VNK11jHVQRNKwyQW4vZSQ@mail.gmail.com>
-Subject: Re: [PATCH v2] ACPI: sysfs: Change ACPI_MASKABLE_GPE_MAX to 0x100
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Yunfeng Ye <yeyunfeng@huawei.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
+References: <20191117010045.4902-1-bradleybolen@gmail.com>
+In-Reply-To: <20191117010045.4902-1-bradleybolen@gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 18 Nov 2019 10:07:57 +0100
+Message-ID: <CAPDyKFreYm3EsLO=e97RCOqaKJxkYJ+fqJcgskO7PtO15Tj4fQ@mail.gmail.com>
+Subject: Re: [PATCH v3] mmc: core: Fix size overflow for mmc partitions
+To:     Bradley Bolen <bradleybolen@gmail.com>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Hongjie Fang <hongjiefang@asrmicro.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "yinbo.zhu" <yinbo.zhu@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 16, 2019 at 9:06 PM Dan Williams <dan.j.williams@intel.com> wrote:
+On Sun, 17 Nov 2019 at 02:00, Bradley Bolen <bradleybolen@gmail.com> wrote:
 >
-> On Wed, Nov 13, 2019 at 11:17 PM Yunfeng Ye <yeyunfeng@huawei.com> wrote:
-> >
-> > The commit 0f27cff8597d ("ACPI: sysfs: Make ACPI GPE mask kernel
-> > parameter cover all GPEs") says:
-> >   "Use a bitmap of size 0xFF instead of a u64 for the GPE mask so 256
-> >    GPEs can be masked"
-> >
-> > But the masking of GPE 0xFF it not supported and the check condition
-> > "gpe > ACPI_MASKABLE_GPE_MAX" is not valid because the type of gpe is
-> > u8.
-> >
-> > So modify the macro ACPI_MASKABLE_GPE_MAX to 0x100, and drop the "gpe >
-> > ACPI_MASKABLE_GPE_MAX" check. In addition, update the docs "Format" for
-> > acpi_mask_gpe parameter.
-> >
-> > Fixes: 0f27cff8597d ("ACPI: sysfs: Make ACPI GPE mask kernel parameter cover all GPEs")
-> > Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-> > ---
-> > v1 -> v2:
-> >  - drop the "gpe > ACPI_MASKABLE_GPE_MAX" check
-> >  - update the docs "Format" from <int> to <byte> for acpi_mask_gpe parameter
-> >  - update the commit comment
-> >
-> >  Documentation/admin-guide/kernel-parameters.txt | 2 +-
-> >  drivers/acpi/sysfs.c                            | 4 ++--
-> >  2 files changed, 3 insertions(+), 3 deletions(-)
+> With large eMMC cards, it is possible to create general purpose
+> partitions that are bigger than 4GB.  The size member of the mmc_part
+> struct is only an unsigned int which overflows for gp partitions larger
+> than 4GB.  Change this to a u64 to handle the overflow.
 >
-> Bisect flags commit eb09878e1301 "ACPI: sysfs: Change
-> ACPI_MASKABLE_GPE_MAX to 0x100" in -next as the reason for a boot
-> regression in my qemu-kvm test environment. It spews:
->
-> [    1.456728] ACPI: Masking GPE 0x0.
-> ...
-> [  161.721420] ACPI: Masking GPE 0x0.
->
-> ...and then hangs.
->
-> A straight revert gets the configuration back on its feet.
->
-> qemu-system-x86_64 --version
-> QEMU emulator version 4.0.50 (v4.0.0-928-g49c6c6ac0cd8)
+> Signed-off-by: Bradley Bolen <bradleybolen@gmail.com>
 
-OK, I'll drop it then, thanks!
+Applied for next, thanks!
+
+Kind regards
+Uffe
+
+> ---
+>  drivers/mmc/core/mmc.c   | 9 ++++-----
+>  include/linux/mmc/card.h | 2 +-
+>  2 files changed, 5 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+> index c8804895595f..f6912ded652d 100644
+> --- a/drivers/mmc/core/mmc.c
+> +++ b/drivers/mmc/core/mmc.c
+> @@ -297,7 +297,7 @@ static void mmc_manage_enhanced_area(struct mmc_card *card, u8 *ext_csd)
+>         }
+>  }
+>
+> -static void mmc_part_add(struct mmc_card *card, unsigned int size,
+> +static void mmc_part_add(struct mmc_card *card, u64 size,
+>                          unsigned int part_cfg, char *name, int idx, bool ro,
+>                          int area_type)
+>  {
+> @@ -313,7 +313,7 @@ static void mmc_manage_gp_partitions(struct mmc_card *card, u8 *ext_csd)
+>  {
+>         int idx;
+>         u8 hc_erase_grp_sz, hc_wp_grp_sz;
+> -       unsigned int part_size;
+> +       u64 part_size;
+>
+>         /*
+>          * General purpose partition feature support --
+> @@ -343,8 +343,7 @@ static void mmc_manage_gp_partitions(struct mmc_card *card, u8 *ext_csd)
+>                                 (ext_csd[EXT_CSD_GP_SIZE_MULT + idx * 3 + 1]
+>                                 << 8) +
+>                                 ext_csd[EXT_CSD_GP_SIZE_MULT + idx * 3];
+> -                       part_size *= (size_t)(hc_erase_grp_sz *
+> -                               hc_wp_grp_sz);
+> +                       part_size *= (hc_erase_grp_sz * hc_wp_grp_sz);
+>                         mmc_part_add(card, part_size << 19,
+>                                 EXT_CSD_PART_CONFIG_ACC_GP0 + idx,
+>                                 "gp%d", idx, false,
+> @@ -362,7 +361,7 @@ static void mmc_manage_gp_partitions(struct mmc_card *card, u8 *ext_csd)
+>  static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
+>  {
+>         int err = 0, idx;
+> -       unsigned int part_size;
+> +       u64 part_size;
+>         struct device_node *np;
+>         bool broken_hpi = false;
+>
+> diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
+> index 9b6336ad3266..b59d35bb50ba 100644
+> --- a/include/linux/mmc/card.h
+> +++ b/include/linux/mmc/card.h
+> @@ -226,7 +226,7 @@ struct mmc_queue_req;
+>   * MMC Physical partitions
+>   */
+>  struct mmc_part {
+> -       unsigned int    size;   /* partition size (in bytes) */
+> +       u64             size;   /* partition size (in bytes) */
+>         unsigned int    part_cfg;       /* partition type */
+>         char    name[MAX_MMC_PART_NAME_LEN];
+>         bool    force_ro;       /* to make boot parts RO by default */
+> --
+> 2.17.1
+>
