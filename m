@@ -2,118 +2,177 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC42C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98E1C43141
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E52A222C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDBD0222C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:42:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VAT/N5vO"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="fwHk/WP6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfKRSlA (ORCPT
+        id S1726725AbfKRSms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 13:41:00 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:33191 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfKRSlA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 13:41:00 -0500
-Received: by mail-il1-f193.google.com with SMTP id m5so16986410ilq.0;
-        Mon, 18 Nov 2019 10:40:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=b3hv6InacuRwktmW+EoXmlffmYdwIhzVHa7KvQHpf/k=;
-        b=VAT/N5vOWN8d5YI/h51g0OFezrcoht7jZZc8sl9xFvbtM2C6MlrupQ/qvB5av3paIt
-         z2KH0SNQWWLVa6215DSLIS9MMDSxCO2MWJZ+UeOeyLH0QmPkSS9O6m6Z9y/vjB+cog5m
-         RUcNpSRD5+vfKV64YvzxnlYSvJixficmxMUgkxlQrWQEuMbq7KqP6kts0+WgLk1ldOC5
-         0INAOKuIVgO3unxwEYBw5Ur04zLYbp/u4ivU+VrcCZ8vtXRYn32uyujMPzexx276QyE6
-         dbPNtHI1jH6j5F5Llve4PnC0hSRk0j/9T5cG2pQF9zN7TDNiSTYunSnq/Nj3g+r+7NVf
-         7pbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=b3hv6InacuRwktmW+EoXmlffmYdwIhzVHa7KvQHpf/k=;
-        b=FQNUza1xIhy/yfNuc6obEafSGbgtoCPcZh+2K2A57py/vfNXJJ4RbUP7OswLMb1PU2
-         1TZiT08wBp8JLKIPuMZeIx0TO3XGy5ggsk5aqCbjaN3STmCEu8WFooqlwNHRJzYqoq9R
-         icVE//XnCy2BRvDjVM2PcxC9IishDdQfsBYwL7ZgjaUOXda81bT7ugRPsHWc7lnOqxZ6
-         fEcF2xQC23LuSuJ3dLIbKoguZSnWTMj1UBgdXVU6g9hocTZnkay4/2l3f1EK7m/7/3DZ
-         xdrdS8opb7drx0M3Mle/Q/y0G8DxqqHK2fj5RYajqy5TYteDJCbY78Z0QCAfKrvVHAxK
-         J9nw==
-X-Gm-Message-State: APjAAAVhdwgKQOMg7iojlc6FDbnsF8miCJuYND2qr9gVgETH/WYfstJw
-        uR5wQMYfrwUw+TDon7/xUyZ52iyNRau+TfMf36nEoqgJFf6sAQ==
-X-Google-Smtp-Source: APXvYqw0aClURjDebOhw3S+luQbOyqe0gZUeqf/5SEa4XVYWW4/OqDrSNeUcoVvMxuP/tAKPDr4jhrqcjaSbD+j6UyY=
-X-Received: by 2002:a92:d58e:: with SMTP id a14mr17667877iln.4.1574102458952;
- Mon, 18 Nov 2019 10:40:58 -0800 (PST)
-MIME-Version: 1.0
-References: <20191117101545.6406-1-matwey@sai.msu.ru> <1784520.t1z2W423De@phil>
-In-Reply-To: <1784520.t1z2W423De@phil>
-From:   "Matwey V. Kornilov" <matwey.kornilov@gmail.com>
-Date:   Mon, 18 Nov 2019 21:40:47 +0300
-Message-ID: <CAJs94EZPLedH4w3+5vfJA+f+1+zLETBdETpqNPytp3LG63az9Q@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: rockchip: Enable PCIe for Radxa Rock Pi 4 board
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Akash Gajjar <akash@openedev.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Rockchip SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC support" 
-        <linux-rockchip@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 18 Nov 2019 13:42:48 -0500
+Received: from mail-eopbgr150083.outbound.protection.outlook.com ([40.107.15.83]:13303
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726370AbfKRSms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 13:42:48 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mQxScN7Okw2xNf7NosFLfOBezGGdLSpKyed8h3wIKqyGjoHqo3O4QzG9c036wskafB3cZrArXLCzVubpzDrVWGvvraetFsAg4k9c5kVEaoAwln+WtM2Bo456IQIUK0s8qDNsVq4DNL5T6Lc/uad+3giJAyhOp9hIWMe/9WR19OUjQafby4Mfj8Zu9fkKMarw/TLdHIPg3j3TtU+wjYXMg3EEk9HRPUR8WS2l1dri9rttpSvRe2hAjEk9okLyUXKJmcq292FOKwd9yb8Y0KmWbjIOiPCmqhk/Q0TzkQQBe53D1qSLhBWAtfw3M4DXqUWSYq5B4Zky/MjlyaMgAveXNA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vMLpku29i5OKHjSrTDwwuTWkVK9OVoaoR5LR+jEYWc8=;
+ b=HlGfP38ocKhsRVxTDv+U0htbpn4eyDbZrmwhBZsM0aOMEq6QfGM1/IwzAAfSNGVwCWLjb7TzcV7+9LoWe4XIG7o5U5Wg/vaMZEWHuWMTsrmbkWtj9xJ+/lh9SEIyr6J0d+hPRcqjiASzldvpuK9Ke1hDcOX400wrsWIf2xEWYJ9xd436k1Jz9hOeyW+Mz/FjMCiQBdD38NE5OUHwHxeqLXp340L7QgvU8zo1yb8+xEJ4boLHPiJQ6sQFAEeGjHgYS3GA1s96kMmR75kTvuMA+smiQlP+hUq59xyaPXRhTujUvQIEVtrGJUQ5KkSY7CCtS+iRLP0aikuuolHnEbZcsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vMLpku29i5OKHjSrTDwwuTWkVK9OVoaoR5LR+jEYWc8=;
+ b=fwHk/WP6oFetwCg7hda3Iio/aqqu6/7/fq/4+OXOeQ037dm+hlUT3Hbvahndm1gDd15hS5FBJmAnepLjC5N7KJOwiVMIT8PFSvl4Pk+jSfrE/xG+0RB3D4VxR3urlCdwmbAflaJ2lh9VGosaPu2fxP1rI/O/SarUu2o/5f6livg=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB5309.eurprd05.prod.outlook.com (20.178.12.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.28; Mon, 18 Nov 2019 18:42:42 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::b179:e8bf:22d4:bf8d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::b179:e8bf:22d4:bf8d%5]) with mapi id 15.20.2451.029; Mon, 18 Nov 2019
+ 18:42:42 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+CC:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Shuah Khan <shuah@kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH v4 2/2] mm/hmm/test: add self tests for HMM
+Thread-Topic: [PATCH v4 2/2] mm/hmm/test: add self tests for HMM
+Thread-Index: AQHVk15BHkNBC+HAokukKxKzDG+3w6eHtA6AgABrzYCAACAHgIAA7DaAgAItWoCAAPuFgIAFAVAAgAAC4wA=
+Date:   Mon, 18 Nov 2019 18:42:42 +0000
+Message-ID: <20191118184238.GM3873@mellanox.com>
+References: <20191104222141.5173-1-rcampbell@nvidia.com>
+ <20191104222141.5173-3-rcampbell@nvidia.com> <20191112152521.GC12550@lst.de>
+ <07589a71-3984-b2a6-b24b-6b9a23e1b60d@nvidia.com>
+ <20191112234549.GX21728@mellanox.com> <20191113135115.GA10688@lst.de>
+ <21d6b69c-3167-e60d-eed2-65bb1f8515ae@nvidia.com>
+ <20191115140619.GC3873@mellanox.com>
+ <912f9f23-fa2a-1dd7-3f91-f7175094c2e2@nvidia.com>
+In-Reply-To: <912f9f23-fa2a-1dd7-3f91-f7175094c2e2@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BN8PR03CA0001.namprd03.prod.outlook.com
+ (2603:10b6:408:94::14) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.162.113.180]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a602b41c-3d70-49cb-1420-08d76c571887
+x-ms-traffictypediagnostic: VI1PR05MB5309:
+x-microsoft-antispam-prvs: <VI1PR05MB5309C4A657FF1768589ED8D3CF4D0@VI1PR05MB5309.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0225B0D5BC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(376002)(39860400002)(346002)(136003)(189003)(199004)(2906002)(66066001)(102836004)(486006)(386003)(53546011)(6246003)(64756008)(6506007)(25786009)(6116002)(1076003)(81166006)(4326008)(71190400001)(71200400001)(52116002)(3846002)(478600001)(186003)(6916009)(7416002)(99286004)(5660300002)(476003)(2616005)(54906003)(36756003)(446003)(11346002)(81156014)(8676002)(8936002)(86362001)(6512007)(33656002)(66476007)(66556008)(7736002)(305945005)(26005)(229853002)(76176011)(66946007)(316002)(6486002)(66446008)(256004)(14444005)(6436002)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5309;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nuWMY9qw9hHjK3xcQjTitZJB29Ck9bDohoFIGyFo7rfbBzbZK6yqm+xLxv2/rb2Waf+KtEEhdMYcbULGibdjxKOm6olIZSLQh1tZMS8qyx0s7rM7w1vOhkNQruClu9C7MyVN4mw4PMF6Kln2SiFwCiJdT3gkSXWHOSfFXHhYO6hNZnY07bM5o+AKXvh2VdJwhINuzqh6eGPIH45NCec0f75sOEdSv/DZ5Ghj2e4uuEjAMOQpC8xJF6AW7w/GZLb2VApTXv/eOX+86Wo1mKWbkmZVMtB7g4SSlQ0dlqoH/aRVBnmEioMEB50IflQAg10dtCXDWeqHgPWK12QV6DtYTojwK92cz0hnKBWipIksYbxjF1zrwX/tzb5iGU+XYdI3wPoDmA3tGf+SSj+10pb8OZnV6ZOTHTstIBG3F8gAinDIhXw1xGD2CVFfmZg8G0H6
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <C2F15A664668AA47AA0062EC11B2C81B@eurprd05.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a602b41c-3d70-49cb-1420-08d76c571887
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 18:42:42.7703
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tYAPuVNlmW3yvq1nJKfWoyZOjZkriCfra8oewrJWge1iCIy8Ydr4B6YyT3izJj3GoQKCwLS/+ICadmwXHDLH3g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5309
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=D0=BF=D0=BD, 18 =D0=BD=D0=BE=D1=8F=D0=B1. 2019 =D0=B3. =D0=B2 03:46, Heiko=
- Stuebner <heiko@sntech.de>:
->
-> Hi Matwey,
->
-> Am Sonntag, 17. November 2019, 11:15:37 CET schrieb Matwey V. Kornilov:
-> > Radxa Rock Pi 4 is equipped with M.2 PCIe slot,
-> > so enable PCIe for the board.
-> >
-> > The changes has been tested with Intel SSD 660p series device.
-> >
-> >     01:00.0 Class 0108: Device 8086:f1a8 (rev 03)
-> >
-> > Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
->
-> applied the patch, but you could do a follow-up that mimics
-> https://lore.kernel.org/linux-arm-kernel/20191117140728.917-1-linux.amoon=
-@gmail.com/
->
-> aka find out from the schematics where the 0.9 and 1.8 supplies come from=
-.
+On Mon, Nov 18, 2019 at 10:32:18AM -0800, Ralph Campbell wrote:
+>=20
+> On 11/15/19 6:06 AM, Jason Gunthorpe wrote:
+> > On Thu, Nov 14, 2019 at 03:06:05PM -0800, Ralph Campbell wrote:
+> > >=20
+> > > On 11/13/19 5:51 AM, Christoph Hellwig wrote:
+> > > > On Tue, Nov 12, 2019 at 11:45:52PM +0000, Jason Gunthorpe wrote:
+> > > > > > Well, it would mean registering for the whole process address s=
+pace.
+> > > > > > I'll give it a try.
+> > > > >=20
+> > > > > I'm not sure it makes much sense that this testing is essentially
+> > > > > modeled after nouveau's usage which is very strange compared to t=
+he
+> > > > > other drivers.
+> > > >=20
+> > > > Which means we really should make the test cases fit the proper usa=
+ge.
+> > > > Maybe defer the tests for 5.5 and just merge the first patch for no=
+w?
+> > > >=20
+> > >=20
+> > > I think this a good point to discuss.
+> > > Some devices will want to register for all changes to the process add=
+ress
+> > > space because there is no requirement to preregister regions that the
+> > > device can access verses devices like InfiniBand where a range of add=
+resses
+> > > have to be registered before the device can access those addresses.
+> >=20
+> > But this is a very bad idea to register and do HW actions for ranges
+> > that can't possibly have any pages registered. It slows down the
+> > entire application
+> >=20
+> > I think the ODP approach might be saner, when it mirrors the entire
+> > address space it chops it up into VA chunks, and once a page is
+> > registered on the HW the VA chunk goes into the interval tree.
+> >=20
+> > Presumably the GPU also has some kind of page table tree and you could
+> > set one of the levels as the VA interval when there are populated child=
+ren
+> >=20
+> > Jason
+>=20
+> I wasn't suggesting that HW invalidates happen in two places.
+> I'm suggesting the two styles of invalidates can work together.
+> For example, what if a driver calls mmu_notifier_register(mn, mm)
+> to register for address space wide invalidations, then some time
+> later there is a device page table fault and the driver calls
+> mmu_range_notifier_insert() but with a NULL ops.invalidate.
 
-Current schematics
-(https://dl.radxa.com/rockpi4/docs/hw/rockpi4/rockpi4_v13_sch_20181112.pdf)
-is controversial on 1.8 supply:
+I'm saying drivers shouldn't do that, it is a basically a hack that it
+works at all.
 
-On sheet 15 it says that 1.8 is supplied by VCC_1V8
-at the same time on sheet 3 it says that it is supplied by VCCA_1V8
+> The global invalidate() callback would get the device lock and
+> call into mm to update the sequence number of any affected ranges
+> instead of having a range invalidate callback, and then do the HW
+> invalidations.
 
->
-> Thanks
-> Heiko
->
->
+No, I just finished eliminating all the range iteration code in the
+drivers - and you can't update the sequence number from any place
+other than the interval invalidation callback anyhow.
 
-
---=20
-With best regards,
-Matwey V. Kornilov
+Jason=20
