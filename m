@@ -2,154 +2,90 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1409C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9715CC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAA7D22319
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574106490;
-	bh=CRT5AsiklE8UBnzI46KWJI+GgkLzqT65uKMX5KjaECk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=u7zNTMjct+l3j4nMjzHAdDyYNsz+Ln5IZp/vbQe9pTTyYyOyZ4mze6YD3gyYpZKPw
-	 rD0z6jpLHa2kuIodOK80Qw2wpNHviF8yS2PmOIh50xfNqJfzGkUyRD293oDDAyJYvu
-	 2ErWRJgy4HlJleplLmtE+Q67bVWRjXG369r9zICg=
+	by mail.kernel.org (Postfix) with ESMTP id 7521B2230E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:54:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dzOSmpP3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfKRTsJ (ORCPT
+        id S1726666AbfKRTys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 14:48:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58166 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbfKRTsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 14:48:09 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 181E72230F;
-        Mon, 18 Nov 2019 19:48:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574106487;
-        bh=CRT5AsiklE8UBnzI46KWJI+GgkLzqT65uKMX5KjaECk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GrNALO9sGiaUWgW5vaoFLgIbs+uGKTeIfDd0Wty3VJdsLU6RxuuZCcP/Hh8GYeCw3
-         0AcN1doOb017ByxLm4uoIygOCO9Cq8oKLyPjFv/a5SI/CiCV2pkv7N7tm/P3TO2ynZ
-         bQAUDx58pybgho4y+h4NxkT7Gqt899V3G/jjWX4I=
-Date:   Mon, 18 Nov 2019 20:48:04 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     git@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: Signal conflict on merging metadata-differing patches
-Message-ID: <20191118194804.GA662468@kroah.com>
-References: <20191118172917.GA6063@vmlxhi-102.adit-jv.com>
- <20191118173517.GA599094@kroah.com>
- <20191118184523.GA6894@vmlxhi-102.adit-jv.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191118184523.GA6894@vmlxhi-102.adit-jv.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Mon, 18 Nov 2019 14:54:48 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:32948 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbfKRTys (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 14:54:48 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAIJsK6m110830;
+        Mon, 18 Nov 2019 19:54:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id; s=corp-2019-08-05;
+ bh=j1BXwsUDklwenftg815pFd1iW2NIFhwDjT4BkXgsHYo=;
+ b=dzOSmpP3vC/mDY5UCofTguW0WlQ6foqFkUkEKkVGNiUfD0FQbac8fqegWCsvvuC7kLgP
+ adnGyljTHWvJxvIzjJxjn4Fmx/84Rv1J/VwFpyQ0/wwI90j0V3hiIYGcDtnIn7RMGmjf
+ 0AOAUjanJxH9QxUHR44LRKb6KWIZm+XQDhhE0q5Hc1wemGM08r+s74cF2c7PW86RqDs1
+ wUAgsr2g0/PHPF3WSZdo/JZ1bEO/c8SbbXeLDnjLIShmhb86NByXvulwBhsoJK6A2wzs
+ /q9xydaYIhMGXJI9xJ+rs1hXgRwcVm5Ve7tq5Z2aMot43YZVi/Mk8o9DhHL8BwX/Ocyw /Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2wa8htjk3p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Nov 2019 19:54:40 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAIJs5aF146997;
+        Mon, 18 Nov 2019 19:54:40 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 2wc09w4kyf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 18 Nov 2019 19:54:40 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id xAIJsd7I149983;
+        Mon, 18 Nov 2019 19:54:39 GMT
+Received: from ca-dev107.us.oracle.com (ca-dev107.us.oracle.com [10.129.135.36])
+        by userp3020.oracle.com with ESMTP id 2wc09w4kxp-1;
+        Mon, 18 Nov 2019 19:54:39 +0000
+From:   rao Shoaib <rao.shoaib@oracle.com>
+To:     monis@mellanox.com, dledford@redhat.com, sean.hefty@intel.com,
+        hal.rosenstock@gmail.com, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rao.shoaib@oracle.com
+Subject: [PATCH v2 0/2] rxe should use same buffer size for SGE's and inline data
+Date:   Mon, 18 Nov 2019 11:54:37 -0800
+Message-Id: <1574106879-19211-1-git-send-email-rao.shoaib@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=955 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911180170
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 07:45:23PM +0100, Eugeniu Rosca wrote:
-> On Mon, Nov 18, 2019 at 06:35:17PM +0100, Greg KH wrote:
-> > On Mon, Nov 18, 2019 at 06:29:17PM +0100, Eugeniu Rosca wrote:
-> > > Dear Git community,
-> > > 
-> > > Due to high inflow of patches which Linux maintainers carry on their
-> > > shoulders and due to occasionally intricate relationships between
-> > > consecutive revisions of the same series, it may [1] happen that two
-> > > distinct revisions of the same patch (differing only/mostly in
-> > > metadata, e.g. Author's time-stamp and commit description) may end up
-> > > being merged on the same branch, without git to complain about that.
-> > 
-> > Why would git complain about that?
-> 
-> This would help those performing the merge identify and (if needed)
-> avoid having several slightly different patches on the same branch.
+From: Rao Shoaib <rao.shoaib@oracle.com>
 
-The patches were not on the same branch to start with, they ended up on
-two different branches that got merged together at some point in time
-later on.
+I have incorportaed suggestions from Jason. There are two patches.
+Patch #1 introduces max WQE size as suggested by Jason
+Patch #2 allocates resources requested and makes sure that the buffer size
+         is same for SG entries and inline data, maximum of the two values
+	 requested is used.
 
-This happens all the time in kernel development :)
+Rao Shoaib (2):
+  Introduce maximum WQE size to check limits
+  SGE buffer and max_inline data must have same size
 
-> > > Is there any "git merge" flag available off-the-shelf which (if used)
-> > > would signal such situations?
-> > 
-> > I don't understand what you are looking for here.  Two different
-> > versions of the patch were merged to different branches and then merged
-> > together, and git did the right thing with the resolution of the code.
-> 
-> I personally care about commit metadata (i.e. Author's/Committer's names
-> and timestamps, as well as commit description) as much as (and sometimes
-> more than) the code contents of the patch.
-> 
-> If I am given multiple patches which perform the same code changes, but
-> provide different descriptions, this _already_ generates potential work
-> on my plate, since I have to make sense of those differences when I
-> stumble upon them. Which patch do I recommend to the customer (who,
-> let's say, still lives on the older v4.14 LTS), if I am asked to?
+ drivers/infiniband/sw/rxe/rxe_param.h |  3 ++-
+ drivers/infiniband/sw/rxe/rxe_qp.c    | 26 ++++++++++++++------------
+ 2 files changed, 16 insertions(+), 13 deletions(-)
 
-Welcome to my life :)
+-- 
+1.8.3.1
 
-As I said above, this happens quite frequently, and honestly, I just
-live with it.  Look at the kernel's DRM branch for the main abusers of
-this, they cherry-pick patches from their local tree to a tree to send
-to Linus today, with the sha1 in the commit message.  That means that
-Linus ends up with a commit referencing a sha1 that will not show up in
-his tree until sometime in the _future_.
-
-It causes havoc with my scripts and I hate it.
-
-But, it makes things easier for the developers and maintainers of that
-subsystem and in the end, that's what really matters.  Stable and
-backports should almost never cause developers any problems or extra
-work as that is not their responsibility.
-
-> Why should I (or anybody else) spend time doing research at all, if this
-> can be avoided by just passing an additional option to "git merge"?
-> 
-> It is the most basic requirement I can think of that the maintainers
-> select the _latest_ version of a patch series, without intertwining it
-> with a superseded version.
-
-I really don't understand what you expect to have happen here.
-
-Look at the drm tree again, what should git do sometime in the future
-when the same "logical change" gets merged into Linus's tree.  I think
-it should do what it does today, handle the merge of the code changes
-just fine and allow for perfect representation at any point in time what
-the tree looked like if you check it out then.
-
-What should git do instead?
-
-> > What more can it do here?
-> 
-> Currently Git says nothing in below merge scenarios (all of them are
-> conflict-less successful merges):
->  - Merge two commits which perform identical code changes but have
->    different metadata
->  - Merge commit "A" and commits ("B", "C", "D"), the latter being
->    subsets of "A"
-> 
-> I don't advocate for "git merge" to fail in the above scenarios. No.
-> I just say that Git could likely detect such scenarios and help people
-> like you not pushing v2 and v5 of the same patch into the main tree.
-
-But what should it do in either of those above situations?  Fail the
-merge?  No, that's not ok as those different branches were just fine on
-their own and I will never expect them to be rebased/rewritten just for
-something like this.  That's crazy.
-
-thanks,
-
-greg k-h
