@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB97C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F4FC43141
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB5A2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E06A22084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:01:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfKRMBt (ORCPT
+        id S1727128AbfKRMB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 07:01:49 -0500
-Received: from mx2.suse.de ([195.135.220.15]:37574 "EHLO mx1.suse.de"
+        Mon, 18 Nov 2019 07:01:26 -0500
+Received: from mx2.suse.de ([195.135.220.15]:37228 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726895AbfKRMB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 07:01:27 -0500
+        id S1726506AbfKRMBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 07:01:23 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E731CB061;
+        by mx1.suse.de (Postfix) with ESMTP id 956F2B021;
         Mon, 18 Nov 2019 12:01:20 +0000 (UTC)
 Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 7EC421E4B09; Mon, 18 Nov 2019 11:16:58 +0100 (CET)
-Date:   Mon, 18 Nov 2019 11:16:58 +0100
+        id 2A7271E4AF8; Mon, 18 Nov 2019 10:46:04 +0100 (CET)
+Date:   Mon, 18 Nov 2019 10:46:04 +0100
 From:   Jan Kara <jack@suse.cz>
 To:     John Hubbard <jhubbard@nvidia.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
@@ -57,100 +57,84 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
         linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 11/24] goldish_pipe: convert to pin_user_pages() and
- put_user_page()
-Message-ID: <20191118101658.GG17319@quack2.suse.cz>
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+Subject: Re: [PATCH v5 02/24] mm/gup: factor out duplicate code from four
+ routines
+Message-ID: <20191118094604.GC17319@quack2.suse.cz>
 References: <20191115055340.1825745-1-jhubbard@nvidia.com>
- <20191115055340.1825745-12-jhubbard@nvidia.com>
+ <20191115055340.1825745-3-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191115055340.1825745-12-jhubbard@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191115055340.1825745-3-jhubbard@nvidia.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 14-11-19 21:53:27, John Hubbard wrote:
-> 1. Call the new global pin_user_pages_fast(), from pin_goldfish_pages().
+On Thu 14-11-19 21:53:18, John Hubbard wrote:
+> There are four locations in gup.c that have a fair amount of code
+> duplication. This means that changing one requires making the same
+> changes in four places, not to mention reading the same code four
+> times, and wondering if there are subtle differences.
 > 
-> 2. As required by pin_user_pages(), release these pages via
-> put_user_page(). In this case, do so via put_user_pages_dirty_lock().
+> Factor out the common code into static functions, thus reducing the
+> overall line count and the code's complexity.
 > 
-> That has the side effect of calling set_page_dirty_lock(), instead
-> of set_page_dirty(). This is probably more accurate.
+> Also, take the opportunity to slightly improve the efficiency of the
+> error cases, by doing a mass subtraction of the refcount, surrounded
+> by get_page()/put_page().
 > 
-> As Christoph Hellwig put it, "set_page_dirty() is only safe if we are
-> dealing with a file backed page where we have reference on the inode it
-> hangs off." [1]
+> Also, further simplify (slightly), by waiting until the the successful
+> end of each routine, to increment *nr.
 > 
-> Another side effect is that the release code is simplified because
-> the page[] loop is now in gup.c instead of here, so just delete the
-> local release_user_pages() entirely, and call
-> put_user_pages_dirty_lock() directly, instead.
-> 
-> [1] https://lore.kernel.org/r/20190723153640.GB720@lst.de
-> 
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 > Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  mm/gup.c | 95 ++++++++++++++++++++++++--------------------------------
+>  1 file changed, 40 insertions(+), 55 deletions(-)
+> 
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 85caf76b3012..858541ea30ce 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -1969,6 +1969,29 @@ static int __gup_device_huge_pud(pud_t pud, pud_t *pudp, unsigned long addr,
+>  }
+>  #endif
+>  
+> +static int __record_subpages(struct page *page, unsigned long addr,
+> +			     unsigned long end, struct page **pages)
+> +{
+> +	int nr = 0;
+> +	int nr_recorded_pages = 0;
+> +
+> +	do {
+> +		pages[nr] = page;
+> +		nr++;
+> +		page++;
+> +		nr_recorded_pages++;
+> +	} while (addr += PAGE_SIZE, addr != end);
+> +	return nr_recorded_pages;
 
-Looks good to me. You can add:
+nr == nr_recorded_pages so no need for both... BTW, structuring this as a
+for loop would be probably more logical and shorter now:
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+	for (nr = 0; addr != end; addr += PAGE_SIZE)
+		pages[nr++] = page++;
+	return nr;
+
+The rest of the patch looks good to me.
 
 								Honza
 
-> ---
->  drivers/platform/goldfish/goldfish_pipe.c | 17 +++--------------
->  1 file changed, 3 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/platform/goldfish/goldfish_pipe.c b/drivers/platform/goldfish/goldfish_pipe.c
-> index 7ed2a21a0bac..635a8bc1b480 100644
-> --- a/drivers/platform/goldfish/goldfish_pipe.c
-> +++ b/drivers/platform/goldfish/goldfish_pipe.c
-> @@ -274,7 +274,7 @@ static int pin_goldfish_pages(unsigned long first_page,
->  		*iter_last_page_size = last_page_size;
->  	}
->  
-> -	ret = get_user_pages_fast(first_page, requested_pages,
-> +	ret = pin_user_pages_fast(first_page, requested_pages,
->  				  !is_write ? FOLL_WRITE : 0,
->  				  pages);
->  	if (ret <= 0)
-> @@ -285,18 +285,6 @@ static int pin_goldfish_pages(unsigned long first_page,
->  	return ret;
->  }
->  
-> -static void release_user_pages(struct page **pages, int pages_count,
-> -			       int is_write, s32 consumed_size)
-> -{
-> -	int i;
-> -
-> -	for (i = 0; i < pages_count; i++) {
-> -		if (!is_write && consumed_size > 0)
-> -			set_page_dirty(pages[i]);
-> -		put_page(pages[i]);
-> -	}
-> -}
-> -
->  /* Populate the call parameters, merging adjacent pages together */
->  static void populate_rw_params(struct page **pages,
->  			       int pages_count,
-> @@ -372,7 +360,8 @@ static int transfer_max_buffers(struct goldfish_pipe *pipe,
->  
->  	*consumed_size = pipe->command_buffer->rw_params.consumed_size;
->  
-> -	release_user_pages(pipe->pages, pages_count, is_write, *consumed_size);
-> +	put_user_pages_dirty_lock(pipe->pages, pages_count,
-> +				  !is_write && *consumed_size > 0);
->  
->  	mutex_unlock(&pipe->lock);
->  	return 0;
-> -- 
-> 2.24.0
-> 
 -- 
 Jan Kara <jack@suse.com>
 SUSE Labs, CR
