@@ -2,108 +2,104 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A10C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4EAC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3952084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:11:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574075511;
-	bh=8iL77Cbod2Ldiv/Kdt/qOxk6iOq/uRTCIjFxHr20nBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZfIc8dg0hZtH9QhEj6RyRYRB2qgkoVkeHvZ3qiJM+xT/t3rQ+Sf3AlPuLaMVL++jJ
-	 doENuRAIQ9ECxrncxTUM/8/TWYEnDMiwH6XTqhqxaGgMK3tz+sIFVFgHoLV2bbzvgQ
-	 X4TA5T4qc4jbX26I43KdsMZasOPpGpc6fTLy9LcE=
+	by mail.kernel.org (Postfix) with ESMTP id 337432084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:11:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="hpoz6mdZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbfKRLLu (ORCPT
+        id S1726809AbfKRLLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:11:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42892 "EHLO mail.kernel.org"
+        Mon, 18 Nov 2019 06:11:53 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:37703 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726595AbfKRLLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:11:47 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726460AbfKRLLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 06:11:48 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C790E2075E;
-        Mon, 18 Nov 2019 11:11:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574075506;
-        bh=8iL77Cbod2Ldiv/Kdt/qOxk6iOq/uRTCIjFxHr20nBg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Qq3QIkHDLBpbwRJOsBbMchPRtT1Ua8NRpKp1o1BQyYFmK0/Wxh9Vq0GZUOG6H8xxs
-         r44ljL0TDHb4sJ1TjYcMvn3e3Gv13Vwx4bZo2OwJwjwDS0jOFxpyOb/fhIvk/H+c0p
-         wurFPXM4pgNllY2K6gNcSo1iaEZpBsXU3edAjdTk=
-Date:   Mon, 18 Nov 2019 12:11:43 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 2/3] ARM: dts: sun8i: a33: add the new SecuritySystem
- compatible
-Message-ID: <20191118111143.GF4345@gilmour.lan>
-References: <20191114144812.22747-1-clabbe.montjoie@gmail.com>
- <20191114144812.22747-3-clabbe.montjoie@gmail.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47GmVm1C3vz9sPW;
+        Mon, 18 Nov 2019 22:11:44 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1574075505;
+        bh=QByUf344DbijnEcOKjXE4bov4EScyA8n8e5maydZozo=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=hpoz6mdZbL3VKo2Lz73Gfs7my5GTa4IlFeffXEBJLPoLFaqeRT4/mNgJfEfZ6PPnF
+         nrtW48n7UNoMazweZHcXu+Hz5/6qsmDT7VXwoRTblB/vNHXuoCqq2cBzolunk4gyvH
+         S8xeV3xe/3p02onu0nUjRz1B/rhuyqOnFuONi7Q2yIzFAyuMlLeS9fMi0CLzZYjsuU
+         +jE8ZkIqe3ITpz8ELVMjdH+YLwjY5elttiCPWITPTFDeIf//ymDk5bakwsq/3Bu4wC
+         0IBdwBeu1oAbW095JNG5+UKtDpPP0Yj4MsBv/JWD6CNjj9fZtmqf0mJ34ACz743r/d
+         Ew/T7s/F/ZfqA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com,
+        dja@axtens.net
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH v3 15/15] powerpc/32s: Activate CONFIG_VMAP_STACK
+In-Reply-To: <a99bdfb64e287b16b8cd3f7ec1abfdfb50c7cc64.1568106758.git.christophe.leroy@c-s.fr>
+References: <cover.1568106758.git.christophe.leroy@c-s.fr> <a99bdfb64e287b16b8cd3f7ec1abfdfb50c7cc64.1568106758.git.christophe.leroy@c-s.fr>
+Date:   Mon, 18 Nov 2019 22:11:38 +1100
+Message-ID: <87v9rhcuc5.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="p76r+0aZ/vhNbw2t"
-Content-Disposition: inline
-In-Reply-To: <20191114144812.22747-3-clabbe.montjoie@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---p76r+0aZ/vhNbw2t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Thu, Nov 14, 2019 at 03:48:11PM +0100, Corentin Labbe wrote:
-> Add the new A33 SecuritySystem compatible to the crypto node.
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> A few changes to retrieve DAR and DSISR from struct regs
+> instead of retrieving them directly, as they may have
+> changed due to a TLB miss.
 >
-> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> Also modifies hash_page() and friends to work with virtual
+> data addresses instead of physical ones.
+>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 > ---
->  arch/arm/boot/dts/sun8i-a33.dtsi | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
-> index 1532a0e59af4..5680fa1de102 100644
-> --- a/arch/arm/boot/dts/sun8i-a33.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-a33.dtsi
-> @@ -215,7 +215,8 @@
->  		};
->
->  		crypto: crypto-engine@1c15000 {
-> -			compatible = "allwinner,sun4i-a10-crypto";
-> +			compatible = "allwinner,sun8i-a33-crypto",
-> +				     "allwinner,sun4i-a10-crypto";
+>  arch/powerpc/kernel/entry_32.S         |  4 +++
+>  arch/powerpc/kernel/head_32.S          | 19 +++++++++++---
+>  arch/powerpc/kernel/head_32.h          |  4 ++-
+>  arch/powerpc/mm/book3s32/hash_low.S    | 46 +++++++++++++++++++++-------------
+>  arch/powerpc/mm/book3s32/mmu.c         |  9 +++++--
+>  arch/powerpc/platforms/Kconfig.cputype |  2 ++
+>  6 files changed, 61 insertions(+), 23 deletions(-)
 
-If some algorithms aren't working properly, we can't really fall back
-to it, we should just use the a33 compatible.
+If I build pmac32_defconfig with KVM enabled this causes a build break:
 
-Maxime
+  arch/powerpc/kernel/head_32.S: Assembler messages:
+  arch/powerpc/kernel/head_32.S:324: Error: attempt to move .org backwards
+  scripts/Makefile.build:357: recipe for target 'arch/powerpc/kernel/head_32.o' failed
+  make[2]: *** [arch/powerpc/kernel/head_32.o] Error 1
 
---p76r+0aZ/vhNbw2t
-Content-Type: application/pgp-signature; name="signature.asc"
+In the interests of getting the series merged I'm inclined to just make
+VMAP_STACK and KVM incompatible for now with:
 
------BEGIN PGP SIGNATURE-----
+diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
+index 15c9097dc4f7..5074fe77af40 100644
+--- a/arch/powerpc/platforms/Kconfig.cputype
++++ b/arch/powerpc/platforms/Kconfig.cputype
+@@ -31,7 +31,7 @@ config PPC_BOOK3S_6xx
+        select PPC_HAVE_PMU_SUPPORT
+        select PPC_HAVE_KUEP
+        select PPC_HAVE_KUAP
+-       select HAVE_ARCH_VMAP_STACK
++       select HAVE_ARCH_VMAP_STACK if !KVM_BOOK3S_32
+ 
+ config PPC_BOOK3S_601
+        bool "PowerPC 601"
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXdJ8bwAKCRDj7w1vZxhR
-xWSsAQDfuOb7pAGVgHQzg3LHHlN6b2U6D/Lbo36ifRgHXwR4yQEA0GMSVqz5xwZy
-x+K+EU4sfN71BXTin4nzbE/XEZXdQgc=
-=hnch
------END PGP SIGNATURE-----
 
---p76r+0aZ/vhNbw2t--
+Thoughts?
+
+cheers
