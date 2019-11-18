@@ -2,78 +2,140 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D63C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BADCC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF17420855
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58F6820862
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:04:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="cQph8sP/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lSF53An0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfKRPCu (ORCPT
+        id S1727208AbfKRPEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 10:02:50 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:38152 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbfKRPCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 10:02:50 -0500
-Received: from zn.tnic (p200300EC2F27B50084A11D83797EBEC7.dip0.t-ipconnect.de [IPv6:2003:ec:2f27:b500:84a1:1d83:797e:bec7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4DBD21EC0200;
-        Mon, 18 Nov 2019 16:02:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1574089365;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=XTyhnj+xSqWpU/qMZmvQCg0iRnqzVjLg7BwIhpr3zhQ=;
-        b=cQph8sP/Wq4TMZPdSE8nauihDpiKWq2+PUNTsGRyXR93blgFgGolkvH2++sCkmRy+b2k85
-        R9jTpPCiKDJ6VxsaXVlWq3pzJYGYLgzKxVmnYC55QBAYUR6YBgXkmTX6lZj4y8XvlPHo/D
-        2zykQtkHIyeZyJl7h88xvp7VAVEEIWc=
-Date:   Mon, 18 Nov 2019 16:02:40 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Xiaochen Shen <xiaochen.shen@intel.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        tony.luck@intel.com, fenghua.yu@intel.com,
-        reinette.chatre@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, pei.p.jia@intel.com
-Subject: Re: [PATCH] x86/resctrl: Fix potential lockdep warning
-Message-ID: <20191118150240.GF6363@zn.tnic>
-References: <1573079796-11713-1-git-send-email-xiaochen.shen@intel.com>
- <20191113114334.GA1647@zn.tnic>
- <ec0f21ce-17a8-5038-4e69-565a28ca041d@intel.com>
+        Mon, 18 Nov 2019 10:04:08 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36543 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbfKRPEI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 10:04:08 -0500
+Received: by mail-io1-f66.google.com with SMTP id s3so19115360ioe.3;
+        Mon, 18 Nov 2019 07:04:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+oZ6XBVVe7I1cX+s2sXIa4IM62fmxh9531yoCFXPTGM=;
+        b=lSF53An03LtCGNOi36GN9iCZ2FyJft6Lik0Rk7cyOReJNpl9VO5hN52HU9NTwc+LdP
+         dESjXptW4UJYEC/AuVVPapfonwMb3ZYrfdJZ1mvWq46f8ilQPc7NPApBJkPxhXTetZUS
+         c0/W50PPQfFqvWjcbYy1rtgjtZwWo8yeC5dp9oXmIA8T8KlVybAbIYNtnMT75Syr5i1B
+         RJiy6UXyhvXH8AoOue873uvKsH1TqguUtNpNcHJFsx5ePlpWuGexKOrMP2dRWZI9vuUX
+         VYIt6+1bu6kIH0yxCfXX/cFwEWriUvp0pQcxTHx4xUy4BJG+TMVTxL8Rbwg6gCcXtUtn
+         TAIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+oZ6XBVVe7I1cX+s2sXIa4IM62fmxh9531yoCFXPTGM=;
+        b=r5jezo/KG79KG+5BBgM2IT70Kh4qHAcTwiMciUEidn0zdl/GQH0RNddcbQxomtI/Uf
+         p9xHY2k6v3b1hPbz8Ivlkv3wojZd58Lm/4mz+O+aLSPD/Q88O8xLRpP40fIhS+rLvNOg
+         yg8QudjeB0pXWbbFUGQHklU7nKM1hRhakxCXiKTMrd0DC4GiKJBhshzrdIJaR/S0akHB
+         qqGhb06Ec1lsgWOxiypYeFHwQgX1x1wWXEqtFYqTM9oWBDDrqDvDqIRct3wWtMpkM8Ub
+         XlMm60gkRm2W6MMz2kNUCa9BgB3Vv7al9Hn55mfYm0XYoDaGoUaNcb4KlUkg8rElMr96
+         AP3Q==
+X-Gm-Message-State: APjAAAXZoSEIy0HbLjy0syHTM1fhYQ3vcH+UCbWkMDQ9czI+ZKqmIQhx
+        i2gQWC9qUdJjt1MWuDEW4kkrHXApOrNQNtiD7oJeTw==
+X-Google-Smtp-Source: APXvYqyFD76RdMxNtH9QSsm4I2faOgXkxZzcI2NcZCJGSGNQ/Z/74ydbBjpOOw5pDA4LFIo37UsslQXGhKPxptOIV78=
+X-Received: by 2002:a5d:8195:: with SMTP id u21mr13641994ion.178.1574089447316;
+ Mon, 18 Nov 2019 07:04:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ec0f21ce-17a8-5038-4e69-565a28ca041d@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191116064415.159899-1-bjorn.andersson@linaro.org>
+ <CAOCk7Nov_HvZe1Z6COd2z=VUf=mVbvqS4wjqU4Ee=F1qR_KKww@mail.gmail.com> <20191118024145.GC25371@yoga>
+In-Reply-To: <20191118024145.GC25371@yoga>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Mon, 18 Nov 2019 08:03:56 -0700
+Message-ID: <CAOCk7Np=SfjThR3mTJDsHMAKsisemYRUzKr6BawNCEy8jPPkdQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: msm8998-mtp: Add alias for blsp1_uart3
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 17, 2019 at 12:13:20AM +0800, Xiaochen Shen wrote:
-> Actually this fix covers all the cases of an audit of the calling paths
-> of rdt_last_cmd_{clear,puts,printf}(), to make sure we only have the
-> lockdep_assert_held() in places where we are sure that it must be held.
+On Sun, Nov 17, 2019 at 7:41 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Sat 16 Nov 14:24 PST 2019, Jeffrey Hugo wrote:
+>
+> > On Fri, Nov 15, 2019 at 11:44 PM Bjorn Andersson
+> > <bjorn.andersson@linaro.org> wrote:
+> > >
+> > > The msm_serial driver uses a simple counter to determine which port to
+> > > use when no alias is defined, but there's no logic to prevent this from
+> >
+> > Which port to use for what, the default console?
+> >
+>
+> The driver defines three (3) struct uart_ports (wrapped in struct
+> msm_ports), see msm_uart_port[] around line 1538 in msm_serial.c
+>
+> This means that you can have a whooping 3 instances of msm_serial in the
+> system and per the logic found in msm_serial_probe() the allocation
+> follows the serial%d aliases defined and for entries without an alias a
+> simple counter, starting at 0 is used.
 
-That's kinda what I suggested, isn't it?
+Ah.  Clearly no one needs more than 64k of memory, err 3 uart ports  :)
 
-All I meant was, not to have a
+>
+> > > not colliding with what's defined by the aliases. As a result either
+> > > none or all of the active msm_serial instances must be listed as
+> > > aliases.
+> > >
+> > > Define blsp1_uart3 as "serial1" to mitigate this problem.
+> > >
+> > > Fixes: 4cffb9f2c700 ("arm64: dts: qcom: msm8998-mtp: Enable bluetooth")
+> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> >
+> > That driver behavior seems like a strange thing to be doing.
+> >
+> > If you clarify the question above, -
+> > Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> >
+>
+> Thanks, I'll respin the message to properly document this behavior.
 
-	rdtgroup_kn_lock_live()
+Sounds good.
 
-call in the code as this function does *not* unconditionally grab the
-rdtgroup_mutex. And then call a function which unconditionally checks
-whether the mutex is held.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+>
+> Regards,
+> Bjorn
+>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> > > index 5f101a20a20a..e08fcb426bbf 100644
+> > > --- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> > > @@ -9,6 +9,7 @@
+> > >  / {
+> > >         aliases {
+> > >                 serial0 = &blsp2_uart1;
+> > > +               serial1 = &blsp1_uart3;
+> > >         };
+> > >
+> > >         chosen {
+> > > --
+> > > 2.23.0
+> > >
