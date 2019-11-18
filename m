@@ -2,257 +2,248 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA41C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76312C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E62F22302
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A61F22315
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:30:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="pCRBTvT9";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="HfwKJ95q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbfKRUaJ (ORCPT
+        id S1726977AbfKRUau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 15:30:09 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33739 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbfKRUaI (ORCPT
+        Mon, 18 Nov 2019 15:30:50 -0500
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:12944 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726647AbfKRUat (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 15:30:08 -0500
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1iWneu-0003hC-GH; Mon, 18 Nov 2019 21:30:04 +0100
-Received: from [IPv6:2a03:f580:87bc:d400:5c97:9951:c8b:93e3] (unknown [IPv6:2a03:f580:87bc:d400:5c97:9951:c8b:93e3])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id CE36647EEFC;
-        Mon, 18 Nov 2019 20:30:01 +0000 (UTC)
-To:     Oliver Hartkopp <socketcan@hartkopp.net>,
-        syzbot <syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com>,
-        davem@davemloft.net, glider@google.com, linux-can@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-References: <0000000000005c08d10597a3a05d@google.com>
- <a5f73d92-fdf2-2590-c863-39a181dca8e1@hartkopp.net>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- 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
-Subject: Re: KMSAN: uninit-value in can_receive
-Message-ID: <deedd609-6f3b-8035-47e1-252ab221faa1@pengutronix.de>
-Date:   Mon, 18 Nov 2019 21:29:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 18 Nov 2019 15:30:49 -0500
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAIKUEsE015509;
+        Mon, 18 Nov 2019 12:30:33 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=pqkl+yoOGgizyCRoltbgtN13NxYk3zG2IWaniOjq7x0=;
+ b=pCRBTvT9fX57ZAY4RKjeXnYnmjwfQxpWGfoEqLoA1ilMtLpYDjalBFzIxRC7CdbPP6rv
+ qw3pIJUiDw/KeTIFkY/vHl8dXpJswax0tzrbj/IrscNw9/SxvBjfUepOr/aCv4IPQd/y
+ fXKxgODUXC7rHP1Lvg6cRF0SuxlikqOWDgrwJXRf0ZH2DyztCz3Qr1nL5irZ8KmQUESk
+ +IrJ7uzOfwTzcJ9RydXNvv0mZZMg6wA593Pm3emj6V9a14p/+jyF0jC+gwpZP5ZdmJ5t
+ X22vvEF25JODFsjE18ToGeM8HsQQe+Q0U4e8oX+QlmmsusNriXApIiaBJ1ZrKA78BeET rg== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2wahgs7tya-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 18 Nov 2019 12:30:33 -0800
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 18 Nov
+ 2019 12:30:31 -0800
+Received: from NAM01-BN3-obe.outbound.protection.outlook.com (104.47.33.54) by
+ SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Mon, 18 Nov 2019 12:30:31 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jx44EXaqnYNeNaDJRmSBvoj5YO6VboaU2owW9fLM09QGSgMHt5ex2uC4auR/ltbWdjft66wZb9sGchgaHFbjE+7UwQNiFkfmaVdDu2E/68B5IEeZ8+UUPN7A1oV/U/yMWbZL0TyFfITrFGGzpxwmfiodKO1Dd5MwXqspcaxKisL7julX+WCXRXWcYOA3wDJtOyJG9wfVl3TyAYCWs9OnBl5osVUHUtJQmd2I2l04aQ5KHdA0lyW2ZUDCtiGRmdaBjvV7EhE2alzsR8T5msPwjLMG37O+X20VFu9Ea+9d0RO40u2QqamV6geKeRuXsJ71jziAkh/KZGLBAzd/7gnazg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pqkl+yoOGgizyCRoltbgtN13NxYk3zG2IWaniOjq7x0=;
+ b=ORcoJa23oaMe+AhyvCvSYOi/EKAKiVTcOy0sw6szdKX5tQGRTAUiEyuwkCHUv/rS/5Lw2UnHykrkrqbG+CoF+6UThTxisgedctmF6wdV0RXW3yUEhVs1h1D9DEmZTo4NKZx421NcsPPbHq6eSz3Hk0XXKGjLBKDythMFw1bEiFaAfjJKGAnWCk0SmjonNEwzzXV2cRi8OEvVxn+hpFVPznHew61gWOMS92CrFhmdpjk+I5k0rG7A0XO4DMOhFY+bd9bxJs1oqKkC1aCwP8fLScNGYjIQrkm/nij1pbzIE2NGIpMhO9AcwUenK1bE+kn+AsqpPs/XAKWho8GmL9RSDg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pqkl+yoOGgizyCRoltbgtN13NxYk3zG2IWaniOjq7x0=;
+ b=HfwKJ95q8KvL69kfVOIvOK10GcWBao5tXNfwv1K+k3E7lxPGkn2FTbZjxnqYMBfiXvrxIOv5s2/LUQFUC2KBgUmbQbNt4PZHKxTAFZgPOk+QPe6KK/t4/wXzH5pLkufz5pgsw6AEkgu85Vj6MN4JX+Tmw01+0BSe31z/Re2L5+M=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
+ MN2PR18MB2927.namprd18.prod.outlook.com (20.179.22.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.29; Mon, 18 Nov 2019 20:30:30 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::657c:6c81:859d:106]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::657c:6c81:859d:106%7]) with mapi id 15.20.2451.029; Mon, 18 Nov 2019
+ 20:30:30 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+CC:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+        "James Morse" <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 14/20] EDAC, mc: Remove per layer counters
+Thread-Topic: [PATCH v2 14/20] EDAC, mc: Remove per layer counters
+Thread-Index: AQHVlIVBBrxvjhXd+UiTNn0fviO3o6eCeQAAgA779QA=
+Date:   Mon, 18 Nov 2019 20:30:29 +0000
+Message-ID: <20191118203021.jvlerg4k645g43yn@rric.localdomain>
+References: <20191106093239.25517-1-rrichter@marvell.com>
+ <20191106093239.25517-15-rrichter@marvell.com>
+ <20191109084056.35b4b8ab@kernel.org>
+In-Reply-To: <20191109084056.35b4b8ab@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1P18901CA0012.EURP189.PROD.OUTLOOK.COM
+ (2603:10a6:3:8b::22) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:165::10)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [31.208.96.227]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8744af76-fb9d-4c86-6e28-08d76c662744
+x-ms-traffictypediagnostic: MN2PR18MB2927:
+x-microsoft-antispam-prvs: <MN2PR18MB2927F7BE4AE09A50B7395B59D94D0@MN2PR18MB2927.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0225B0D5BC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(366004)(39860400002)(136003)(189003)(199004)(76176011)(1076003)(6506007)(316002)(478600001)(4326008)(6916009)(81166006)(14454004)(81156014)(25786009)(6436002)(186003)(8936002)(476003)(26005)(6512007)(9686003)(486006)(66476007)(64756008)(66446008)(66946007)(66556008)(5660300002)(2906002)(305945005)(386003)(8676002)(446003)(11346002)(256004)(99286004)(52116002)(53546011)(6246003)(7736002)(86362001)(66066001)(3846002)(6116002)(54906003)(6486002)(102836004)(71190400001)(71200400001)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2927;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: KJAhXF/noQ2ZyMXP0epWHaLBVkWR+Hxifj+g2iqk7htAC84yUH5QZup6Ue2OvsnbIbZ8EV3rp5cYCtTlM/3Od4G11gFaROqqho7e8Da0YhMYF+3ce/a/XUP95ZIgLZawq0sAjNEBNYvRBguzn5zW8XBdVtshY4ct0erLMO2AdEsEcKxU2XFai30dr+/QBs83kEGNTOei/2uLuYVxdepisOnZZchPb33DyWrsFzsIKus5pQ6T67LAtreS64vS566v4i2hmnrNTNAdAJWDUoYYTDEmSsNk2TUo8oUIMXmhgcHG+f2pUoXZ+7kOr8sZvr8aeOfNZbYDgLNA5wXKRdeoG0YodoW/8LQpRHFMo+//Gfb8pQuwhPjY0uGI6udiBkkm87oDSCN/EZKvS0VRtjxIgnT7aPjS2OSxMOoxso7apJYJx8X5+Qm4376gsR1VVlIy
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <DC0219FD6C145C49A2EFC6B866D98E66@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <a5f73d92-fdf2-2590-c863-39a181dca8e1@hartkopp.net>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="4lfuLS5FUCQMFuAJ7EKKxq2kCUyYMXWZ8"
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8744af76-fb9d-4c86-6e28-08d76c662744
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 20:30:29.9573
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dz2514VD5y1SSYQrhGbCh+DV0CoXvKPnzu+Q02xyDyT6LsVrGO9tB6EAUHxkyUVCYNBH1Ec9kuOfHZ0x3EhB0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2927
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-18_06:2019-11-15,2019-11-18 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---4lfuLS5FUCQMFuAJ7EKKxq2kCUyYMXWZ8
-Content-Type: multipart/mixed; boundary="xcSkRBkEGR9QYePLhqRmrIc2GDGTHmLBT";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Oliver Hartkopp <socketcan@hartkopp.net>,
- syzbot <syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com>,
- davem@davemloft.net, glider@google.com, linux-can@vger.kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- syzkaller-bugs@googlegroups.com
-Message-ID: <deedd609-6f3b-8035-47e1-252ab221faa1@pengutronix.de>
-Subject: Re: KMSAN: uninit-value in can_receive
-References: <0000000000005c08d10597a3a05d@google.com>
- <a5f73d92-fdf2-2590-c863-39a181dca8e1@hartkopp.net>
-In-Reply-To: <a5f73d92-fdf2-2590-c863-39a181dca8e1@hartkopp.net>
+Hi Mauro,
 
---xcSkRBkEGR9QYePLhqRmrIc2GDGTHmLBT
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-
-On 11/18/19 9:25 PM, Oliver Hartkopp wrote:
-> On 18/11/2019 20.05, syzbot wrote:
->> Hello,
->>
->> syzbot found the following crash on:
->>
->> HEAD commit:=C2=A0=C2=A0=C2=A0 9c6a7162 kmsan: remove unneeded annotat=
-ions in bio
->> git tree:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 https://github.com/googl=
-e/kmsan.git master
->> console output: https://syzkaller.appspot.com/x/log.txt?x=3D14563416e0=
-0000
->> kernel config:=C2=A0 https://syzkaller.appspot.com/x/.config?x=3D9e324=
-dfe9c7b0360
->> dashboard link:=20
->> https://syzkaller.appspot.com/bug?extid=3Db02ff0707a97e4e79ebb
->> compiler:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clang version 9.0.0 (/ho=
-me/glider/llvm/clang=20
->> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
->>
->> Unfortunately, I don't have any reproducer for this crash yet.
->>
->> IMPORTANT: if you fix the bug, please add the following tag to the com=
-mit:
->> Reported-by: syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com
->>
->> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
->> BUG: KMSAN: uninit-value in can_receive+0x23c/0x5e0 net/can/af_can.c:6=
-49
->> CPU: 1 PID: 3490 Comm: syz-executor.2 Not tainted 5.4.0-rc5+ #0
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIO=
-S=20
->> Google 01/01/2011
->> Call Trace:
->>  =C2=A0<IRQ>
->>  =C2=A0__dump_stack lib/dump_stack.c:77 [inline]
->>  =C2=A0dump_stack+0x191/0x1f0 lib/dump_stack.c:113
->>  =C2=A0kmsan_report+0x128/0x220 mm/kmsan/kmsan_report.c:108
->>  =C2=A0__msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:245
->>  =C2=A0can_receive+0x23c/0x5e0 net/can/af_can.c:649
->>  =C2=A0can_rcv+0x188/0x3a0 net/can/af_can.c:685
+On 09.11.19 08:40:56, Mauro Carvalho Chehab wrote:
+> Em Wed, 6 Nov 2019 09:33:32 +0000
+> Robert Richter <rrichter@marvell.com> escreveu:
 >=20
-> In line 649 of 5.4.0-rc5+ we can find a while() statement:
+> > Looking at how mci->{ue,ce}_per_layer[EDAC_MAX_LAYERS] is used, it
+> > turns out that only the leaves in the memory hierarchy are consumed
+> > (in sysfs), but not the intermediate layers, e.g.:
+> >=20
+> >  count =3D dimm->mci->ce_per_layer[dimm->mci->n_layers-1][dimm->idx];
+
+first of all, this is the only user, where ce_per_layer[][] is
+accessed *readable*. Note that n_layers is a constant value per
+mci. Thus we could also convert this without any change of
+functionality to:
+
+ count =3D dimm->mci->ce_counts[dimm->idx];
+
+We can also remove the code that writes counter values to inner
+layers, those values are never read.
+
+The above is nothing else than storing the count per DIMM, which can
+be converted to the following by just adding the count to struct
+dimm_info:
+
+ count =3D dimm->ce_count;
+
+Same applies to ue_count.
+
+As we have the counts in struct dimm_info now, we no longer need to
+allocate {ue,ce}_counts arrays and can remove its allocation and
+release code including everything around.
+
+> >=20
+> > These unused counters only add complexity, remove them. The error
+> > counter values are directly stored in struct dimm_info now.
 >=20
-> while (!(can_skb_prv(skb)->skbcnt))
-> 	can_skb_prv(skb)->skbcnt =3D atomic_inc_return(&skbcounter);
+> I guess this patch will cause troubles with some memory controllers.
 >=20
-> In linux/include/linux/can/skb.h we see:
+> The problem is that, depending on the memory type and how many bits
+> are wrong, it may not be technically possible to pinpoint an error
+> to a single DIMM.
+
+If a DIMM can not be identified, the MC has one or more of the pos
+values (pos[0] to pos[mci->n_layers-1]) unset (negative values). The
+count of the outer layer (mci->ce_per_layer[mci->n_layers][index]) is
+not written then. See below in function edac_inc_ce_error().
+
 >=20
-> static inline struct can_skb_priv *can_skb_prv(struct sk_buff *skb)
-> {
-> 	return (struct can_skb_priv *)(skb->head);
-> }
+> I mean, the memory controller can be, for instance, grouping
+> DIMM1 and DIMM2. If there's just one bit errored, it is possible to
+> assign it to either DIMM1 or DIMM2, but if there are multiple bits
+> wrong, most ECC codes won't allow to pinpoint if the error ocurred
+> at DIMM1 or at DIMM2.
+
+An error would not be counted for any DIMM then.
+
 >=20
-> IMO accessing can_skb_prv(skb)->skbcnt at this point is a valid=20
-> operation which has no uninitialized value.
+> All we know is that the layer has an error.
+
+Right, but this hasn't any effect on DIMM error counters.
+
+This has only effect to csrow/channel counters. The code for this did
+not change, see edac_mc_handle_error().
+
 >=20
-> Can this probably be a false positive of KMSAN?
+> So, assigning the error to the dimm struct seems plain wrong to me.
 
-The packet is injected via the packet socket into the kernel. Where does
-skb->head point to in this case? When the skb is a proper
-kernel-generated skb containing a CAN-2.0 or CAN-FD frame skb->head is
-maybe properly initialized?
+I think this is the code in question for you:
 
->   do_softirq kernel/softirq.c:338 [inline]
->   __local_bh_enable_ip+0x184/0x1d0 kernel/softirq.c:190
->   local_bh_enable+0x36/0x40 include/linux/bottom_half.h:32
->   rcu_read_unlock_bh include/linux/rcupdate.h:688 [inline]
->   __dev_queue_xmit+0x38e8/0x4200 net/core/dev.c:3900
->   dev_queue_xmit+0x4b/0x60 net/core/dev.c:3906
->   packet_snd net/packet/af_packet.c:2959 [inline]
->   packet_sendmsg+0x82d7/0x92e0 net/packet/af_packet.c:2984
-                                 ^^^^^^^^^^^^^^^^^^^^^^
->   sock_sendmsg_nosec net/socket.c:637 [inline]
->   sock_sendmsg net/socket.c:657 [inline]
->   ___sys_sendmsg+0x14ff/0x1590 net/socket.c:2311
->   __sys_sendmsg net/socket.c:2356 [inline]
->   __do_sys_sendmsg net/socket.c:2365 [inline]
->   __se_sys_sendmsg+0x305/0x460 net/socket.c:2363
->   __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2363
->   do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
->   entry_SYSCALL_64_after_hwframe+0x63/0xe7
+> >  static void edac_inc_ce_error(struct mem_ctl_info *mci,
+> > -			      bool enable_per_layer_report,
+> >  			      const int pos[EDAC_MAX_LAYERS],
+> >  			      const u16 count)
+> >  {
+> > -	int i, index =3D 0;
+> > +	struct dimm_info *dimm =3D edac_get_dimm(mci, pos[0], pos[1], pos[2])=
+;
+> > =20
+> >  	mci->ce_mc +=3D count;
+> > =20
+> > -	if (!enable_per_layer_report) {
+> > +	if (dimm)
+> > +		dimm->ce_count +=3D count;
+> > +	else
+> >  		mci->ce_noinfo_count +=3D count;
+> > -		return;
+> > -	}
+> > -
+> > -	for (i =3D 0; i < mci->n_layers; i++) {
+> > -		if (pos[i] < 0)
+> > -			break;
+> > -		index +=3D pos[i];
+> > -		mci->ce_per_layer[i][index] +=3D count;
 
-Marc
+No value written here if pos[] < 0.
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+> > -
+> > -		if (i < mci->n_layers - 1)
+> > -			index *=3D mci->layers[i + 1].size;
+> > -	}
 
+So in an intermediate step the for loop could be converted to:
 
---xcSkRBkEGR9QYePLhqRmrIc2GDGTHmLBT--
+	dimm =3D edac_get_dimm(mci, pos[0], pos[1], pos[2]);
 
---4lfuLS5FUCQMFuAJ7EKKxq2kCUyYMXWZ8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+	if (dimm)
+		mci->ce_per_layer[mci->n_layers - 1][dimm->idx] +=3D count;
 
------BEGIN PGP SIGNATURE-----
+No change in functionality, right?
 
-iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl3S/0IACgkQWsYho5Hk
-nSBH5Qf/XueijbPhWRM7b//MP73DST/n7wReugm1aRecsNHtLPxRDiGRUkAy8UtY
-80pqOEcZHZhr+ULyK0DrBUPqt3cM0PepKYEFqvLcuvuo4JQoLiWftZusD0Ym9+BK
-4moaRf6SnspV7z92s21EMJM8epMv9EFkQRxs2+W8TjMkDSf2VyXaw8uYlB/r8fbb
-x2SfwuKkCj7hrd0+2AJ38SSXXBo375biC3kUVh3ROXPNZLpmQBZns3onZfX/AWPN
-Wo/OotqzQgMA/oMv83tSq+eAxFebf4qfxvhEfXaMlU9jtKmw/dwkq1GQ67jJicvz
-0ZfKh57N2QhgP4pXLr3WOzQ67uLJUA==
-=JaOQ
------END PGP SIGNATURE-----
+> >  }
 
---4lfuLS5FUCQMFuAJ7EKKxq2kCUyYMXWZ8--
+I hope this explains what this patch does.
+
+It looks sane to me, please review again. If you still think it is
+broken, give me an example.
+
+Thanks,
+
+-Robert
