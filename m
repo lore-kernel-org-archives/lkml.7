@@ -2,81 +2,157 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58600C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 02:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7E2C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 03:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28931206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 02:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 737FE206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 03:11:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JC38iMDq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbfKRCwr (ORCPT
+        id S1726328AbfKRDL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 21:52:47 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:45757 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726168AbfKRCwq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 21:52:46 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0TiMfBZg_1574045560;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TiMfBZg_1574045560)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 18 Nov 2019 10:52:41 +0800
-Subject: Re: [PATCH v3 2/7] mm/lruvec: add irqsave flags into lruvec struct
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Arun KS <arunks@codeaurora.org>,
-        Rong Chen <rong.a.chen@intel.com>
-References: <1573874106-23802-1-git-send-email-alex.shi@linux.alibaba.com>
- <1573874106-23802-3-git-send-email-alex.shi@linux.alibaba.com>
- <CALvZod5xuetOb8Vunhgjp69-HcrnHgGHZKKyjVBo3tmoc3WqaA@mail.gmail.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <de24def3-3593-a2f7-ab73-5ac379c1e5ca@linux.alibaba.com>
-Date:   Mon, 18 Nov 2019 10:52:40 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.1
+        Sun, 17 Nov 2019 22:11:28 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:59103 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725905AbfKRDL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 22:11:28 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47GYrT2xhNz9sQp;
+        Mon, 18 Nov 2019 14:11:21 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1574046684;
+        bh=SEYlzqdNbf6vmBSnUFPsGX308O7NYdKwivTd4OJhqbs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=JC38iMDqTiIgqQP5I8tvQo7kiqZkqd8aWAIosytyBt0tfvu24ta+LqVzqgzoar5KG
+         fhEOAyxoiQAfwGX0C0bHcPdtb8+12UG58V8u83kowEtR5UbebRhYianF+NXFqaQllT
+         AcMqycwaokFJ1RZXeYjZtQef/DYFtRcFQLDHnOrsJBn8eaT7lMuoOb2AbKlJOGr94F
+         +dZcna/GXJqWtyJYn/OY7lsjJZghSbcZ/rT+BY00gaDBS3j23mOUcTLLTgLdrITLO1
+         WlcD9oeFBansfvtQqz9bJ0oNXs8AoJwZX/dxPCoaebZaJgp2mQLtIT8hQh2x/wsN3c
+         wDrYA1G+lldwg==
+Date:   Mon, 18 Nov 2019 14:11:10 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux Crypto List <linux-crypto@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Samuel Neves <sneves@dei.uc.pt>,
+        Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Jiri Slaby <jslaby@suse.cz>
+Subject: linux-next: build failure after merge of the tip tree
+Message-ID: <20191118141110.7f971194@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <CALvZod5xuetOb8Vunhgjp69-HcrnHgGHZKKyjVBo3tmoc3WqaA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/e6VIznpNbcG9rdTzS2mMifM";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/e6VIznpNbcG9rdTzS2mMifM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-在 2019/11/16 下午2:31, Shakeel Butt 写道:
-> On Fri, Nov 15, 2019 at 7:15 PM Alex Shi <alex.shi@linux.alibaba.com> wrote:
->> We need a irqflags vaiable to save state when do irqsave action, declare
->> it here would make code more clear/clean.
->>
->> Rong Chen <rong.a.chen@intel.com> reported the 'irqflags' variable need
->> move to the tail of lruvec struct otherwise it causes 18% regressions of
->> vm-scalability testing on his machine. So add the flags and lru_lock to
->> both near struct tail, even I have no clue of this perf losing.
-> Regressions compared to what? Also no need to have a separate patch.
-> 
+After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
+failed like this:
 
-Thanks for question, Shakeel, 
-I will change the commit log and mention the original place: the head of lruvec struct.
-As to the folding, the 3rd is already toooo long. May I leave it here to relief a littel bit burden on reading?
+arch/x86/crypto/blake2s-core.S: Assembler messages:
+arch/x86/crypto/blake2s-core.S:50: Error: invalid character '(' in mnemonic
+arch/x86/crypto/blake2s-core.S:176: Error: invalid character '(' in mnemonic
+arch/x86/crypto/blake2s-core.S:180: Error: invalid character '(' in mnemonic
+arch/x86/crypto/blake2s-core.S:257: Error: invalid character '(' in mnemonic
 
-Thanks
-Alex
+Caused by commit
+
+  ed0356eda153 ("crypto: blake2s - x86_64 SIMD implementation")
+
+from the crypto tree interacting with commit
+
+  6dcc5627f6ae ("x86/asm: Change all ENTRY+ENDPROC to SYM_FUNC_*")
+
+from the tip tree.
+
+I have applied the following merge fix patch.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Mon, 18 Nov 2019 14:00:40 +1100
+Subject: [PATCH] fix up for "x86/asm: Change all ENTRY+ENDPROC to SYM_FUNC_=
+*"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ arch/x86/crypto/blake2s-core.S | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/crypto/blake2s-core.S b/arch/x86/crypto/blake2s-core.S
+index 8591938eee26..24910b766bdd 100644
+--- a/arch/x86/crypto/blake2s-core.S
++++ b/arch/x86/crypto/blake2s-core.S
+@@ -47,7 +47,7 @@ SIGMA2:
+=20
+ .text
+ #ifdef CONFIG_AS_SSSE3
+-ENTRY(blake2s_compress_ssse3)
++SYM_FUNC_START(blake2s_compress_ssse3)
+ 	testq		%rdx,%rdx
+ 	je		.Lendofloop
+ 	movdqu		(%rdi),%xmm0
+@@ -173,11 +173,11 @@ ENTRY(blake2s_compress_ssse3)
+ 	movdqu		%xmm14,0x20(%rdi)
+ .Lendofloop:
+ 	ret
+-ENDPROC(blake2s_compress_ssse3)
++SYM_FUNC_END(blake2s_compress_ssse3)
+ #endif /* CONFIG_AS_SSSE3 */
+=20
+ #ifdef CONFIG_AS_AVX512
+-ENTRY(blake2s_compress_avx512)
++SYM_FUNC_START(blake2s_compress_avx512)
+ 	vmovdqu		(%rdi),%xmm0
+ 	vmovdqu		0x10(%rdi),%xmm1
+ 	vmovdqu		0x20(%rdi),%xmm4
+@@ -254,5 +254,5 @@ ENTRY(blake2s_compress_avx512)
+ 	vmovdqu		%xmm4,0x20(%rdi)
+ 	vzeroupper
+ 	retq
+-ENDPROC(blake2s_compress_avx512)
++SYM_FUNC_END(blake2s_compress_avx512)
+ #endif /* CONFIG_AS_AVX512 */
+--=20
+2.23.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/e6VIznpNbcG9rdTzS2mMifM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3SC84ACgkQAVBC80lX
+0GwuwggAjrdpdRMH4wUYkO/wli2I9ru0JhmmfHHFRdlvhsNiNXsmQrukAZnGxI37
+mIROAM9yIE7WKY7+HYhuUPCOG6afkKRddQh6Qqwq33TNZerRwWAItYXdzCEw3rh+
++guEfjrG+Ely9t+olJQ3a4Qxky3Eu6UlsFOruCUxC2G3Nh3V2Dlq3ST0ApXs9Hbg
+Z0pX/NoYlXf2bB9s8y8PrSstKf1N0NPrRK32GXQMRxYu1OIOexIZYXMnDy6abUjz
+r1aHflypEvRgrhMgfidQkRW+4FmCT4V5aFOXWZ2zYkWapfjYgERtj2KJP13Em7Z4
+2Cc+OJF+y3U9EdsXePPcgGV7aYynqg==
+=OE+j
+-----END PGP SIGNATURE-----
+
+--Sig_/e6VIznpNbcG9rdTzS2mMifM--
