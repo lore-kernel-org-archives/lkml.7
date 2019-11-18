@@ -2,150 +2,74 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2479AC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91996C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D686722304
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 562E422303
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:29:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="cg0haprZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfKRXX5 (ORCPT
+        id S1726939AbfKRX3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 18:23:57 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53590 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726787AbfKRXX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 18:23:57 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E38B4AC81;
-        Mon, 18 Nov 2019 23:23:54 +0000 (UTC)
-Date:   Mon, 18 Nov 2019 15:19:35 -0800
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, will@kernel.org, oleg@redhat.com,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        bigeasy@linutronix.de, juri.lelli@redhat.com, williams@redhat.com,
-        bristot@redhat.com, longman@redhat.com, jack@suse.com
-Subject: Re: [PATCH 5/5] locking/percpu-rwsem: Remove the embedded rwsem
-Message-ID: <20191118231935.7wvkozof3ocubxej@linux-p48b>
-References: <20191113102115.116470462@infradead.org>
- <20191113102855.925208237@infradead.org>
- <20191118195304.b3d6fg4jmmj7kmfh@linux-p48b>
+        Mon, 18 Nov 2019 18:29:20 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:45236 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726787AbfKRX3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 18:29:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=xzBLEuBAmReKOhXVQby8OFn3Jmtd/Rt5Q7hgYK/UCWw=; b=cg0haprZrdpQKsqvln7fj76kIU
+        MX1eUaJ7SamaxwgZf5VLiBH4UYIeGLB1l+YkR0sulZPyhQXbT9okN7cB7KMIq3RZd3vXiPt43QaC3
+        i1e5/NIgG8rwB/RrX4cGKYk/ij4/wCaCWaIsjQeyHL9dHsmhE+nNAyXT/RYshWqnoJlc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iWqSG-0005oY-9m; Tue, 19 Nov 2019 00:29:12 +0100
+Date:   Tue, 19 Nov 2019 00:29:12 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Dan Murphy <dmurphy@ti.com>, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] net: phy: dp83869: fix return of uninitialized
+ variable ret
+Message-ID: <20191118232912.GC15395@lunn.ch>
+References: <20191118114835.39494-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191118195304.b3d6fg4jmmj7kmfh@linux-p48b>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191118114835.39494-1-colin.king@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 Nov 2019, Davidlohr Bueso wrote:
+On Mon, Nov 18, 2019 at 11:48:35AM +0000, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> In the case where the call to phy_interface_is_rgmii returns zero
+> the variable ret is left uninitialized and this is returned at
+> the end of the function dp83869_configure_rgmii.  Fix this by
+> returning 0 instead of the uninitialized value in ret.
+> 
+> Addresses-Coverity: ("Uninitialized scalar variable")
+> Fixes: 01db923e8377 ("net: phy: dp83869: Add TI dp83869 phy")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
->On Wed, 13 Nov 2019, Peter Zijlstra wrote:
-3>>bool __percpu_down_read(struct percpu_rw_semaphore *sem, bool try)
->>{
->>	if (__percpu_down_read_trylock(sem))
->>@@ -89,20 +156,10 @@ bool __percpu_down_read(struct percpu_rw
->>	if (try)
->>		return false;
->>
->>-	/*
->>-	 * We either call schedule() in the wait, or we'll fall through
->>-	 * and reschedule on the preempt_enable() in percpu_down_read().
->>-	 */
->>-	preempt_enable_no_resched();
->>-
->>-	/*
->>-	 * Avoid lockdep for the down/up_read() we already have them.
->>-	 */
->>-	__down_read(&sem->rw_sem);
->>-	this_cpu_inc(*sem->read_count);
->>-	__up_read(&sem->rw_sem);
->>-
->>+	preempt_enable();
->>+	percpu_rwsem_wait(sem, /* .reader = */ true );
->>	preempt_disable();
->>+
->>	return true;
->>}
->>EXPORT_SYMBOL_GPL(__percpu_down_read);
->
->Do we really need to export symbol here? This function is only called
->from percpu-rwsem.h.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Similarly, afaict we can get rid of __percpu_up_read() and put the
-slowpath all into percpu_up_read(). Also explicitly mention the
-single task nature of the writer (which is a better comment for
-the rcuwait_wake_up()).
+Dan: phy_modify_mmd() could fail. You check the return value for
+phy_read and phy_write, so it would be consistent to also check
 
-diff --git a/include/linux/percpu-rwsem.h b/include/linux/percpu-rwsem.h
-index f5ecf6a8a1dd..eda545f42fb8 100644
---- a/include/linux/percpu-rwsem.h
-+++ b/include/linux/percpu-rwsem.h
-@@ -43,7 +43,6 @@ is_static struct percpu_rw_semaphore name = {				\
- 	__DEFINE_PERCPU_RWSEM(name, static)
- 
- extern bool __percpu_down_read(struct percpu_rw_semaphore *, bool);
--extern void __percpu_up_read(struct percpu_rw_semaphore *);
- 
- static inline void percpu_down_read(struct percpu_rw_semaphore *sem)
- {
-@@ -103,10 +102,23 @@ static inline void percpu_up_read(struct percpu_rw_semaphore *sem)
- 	/*
- 	 * Same as in percpu_down_read().
- 	 */
--	if (likely(rcu_sync_is_idle(&sem->rss)))
-+	if (likely(rcu_sync_is_idle(&sem->rss))) {
- 		__this_cpu_dec(*sem->read_count);
--	else
--		__percpu_up_read(sem); /* Unconditional memory barrier */
-+		goto done;
-+	}
-+
-+	/*
-+	 * slowpath; reader will only ever wake a single blocked writer.
-+	 */
-+	smp_mb(); /* B matches C */
-+	/*
-+	 * In other words, if they see our decrement (presumably to
-+	 * aggregate zero, as that is the only time it matters) they
-+	 * will also see our critical section.
-+	 */
-+	__this_cpu_dec(*sem->read_count);
-+	rcuwait_wake_up(&sem->writer);
-+done:
- 	preempt_enable();
- }
- 
-diff --git a/kernel/locking/percpu-rwsem.c b/kernel/locking/percpu-rwsem.c
-index 851038468efb..a5150a876626 100644
---- a/kernel/locking/percpu-rwsem.c
-+++ b/kernel/locking/percpu-rwsem.c
-@@ -164,21 +164,6 @@ bool __percpu_down_read(struct percpu_rw_semaphore *sem, bool try)
- }
- EXPORT_SYMBOL_GPL(__percpu_down_read);
- 
--void __percpu_up_read(struct percpu_rw_semaphore *sem)
--{
--	smp_mb(); /* B matches C */
--	/*
--	 * In other words, if they see our decrement (presumably to aggregate
--	 * zero, as that is the only time it matters) they will also see our
--	 * critical section.
--	 */
--	__this_cpu_dec(*sem->read_count);
--
--	/* Prod writer to re-evaluate readers_active_check() */
--	rcuwait_wake_up(&sem->writer);
--}
--EXPORT_SYMBOL_GPL(__percpu_up_read);
--
- #define per_cpu_sum(var)						\
- ({									\
- 	typeof(var) __sum = 0;						\
+	 Andrew
