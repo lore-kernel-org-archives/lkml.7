@@ -2,97 +2,85 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DCDC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C084AC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5400C2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:08:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dj69PrK6"
+	by mail.kernel.org (Postfix) with ESMTP id A396A206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:09:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfKRMIV (ORCPT
+        id S1726911AbfKRMJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 07:08:21 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:51668 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfKRMIV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 07:08:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=uDdb1pDQwvx9Enh6ck9uQZEmy8t5nOmH+npUrGwmKoQ=; b=dj69PrK6hU4uhSbtILOtORwkvu
-        UAgJ+yWIn/iS73f9ZnAWCaz2MFOgeOuHEStFzo4rl7J+/wsatvvBmtKULnSF2Ejpa7ZSpaAp7ypI9
-        Vt5/5Q4kaTewk9aWxTGYMYyu7v7MhSkeiLZH+ozs5uiCNSkLZjBDQhRScA+3Xbpd333jKFOdfHRj8
-        IEgNblIgLp45dLlPRoMWLjHA4HV+lZF1iWo7wjnShIljDnlZe/ymlAdgZDscXZPwGY46pDcp0vLzz
-        BWy+4JYokBqrwj0RmN3gSnXWmKyioPvQyycQkt07R91jxw46AkvEn1mrlY02WsoGyaKUq2yvVs3l5
-        z5ZqehHA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iWfpH-0007ns-MP; Mon, 18 Nov 2019 12:08:15 +0000
-Date:   Mon, 18 Nov 2019 04:08:15 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Shakeel Butt <shakeelb@google.com>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Arun KS <arunks@codeaurora.org>
-Subject: Re: [PATCH v3 1/7] mm/lru: add per lruvec lock for memcg
-Message-ID: <20191118120815.GF20752@bombadil.infradead.org>
-References: <1573874106-23802-1-git-send-email-alex.shi@linux.alibaba.com>
- <1573874106-23802-2-git-send-email-alex.shi@linux.alibaba.com>
- <CALvZod77568+TozRXpERDDap__jbj+oJBY8zD=UBd40XNJC2zg@mail.gmail.com>
- <e707fd66-16c2-8523-dd8b-860b5b6bb11d@linux.alibaba.com>
+        Mon, 18 Nov 2019 07:09:40 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43620 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726490AbfKRMJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 07:09:39 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 33DBCB219;
+        Mon, 18 Nov 2019 12:09:38 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        "Yan, Zheng" <zyan@redhat.com>, Gregory Farnum <gfarnum@redhat.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luis Henriques <lhenriques@suse.com>
+Subject: [RFC PATCH v3] ceph: add new obj copy OSD Op 
+Date:   Mon, 18 Nov 2019 12:09:33 +0000
+Message-Id: <20191118120935.7013-1-lhenriques@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <e707fd66-16c2-8523-dd8b-860b5b6bb11d@linux.alibaba.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 10:44:57AM +0800, Alex Shi wrote:
-> 
-> 
-> 在 2019/11/16 下午2:28, Shakeel Butt 写道:
-> > On Fri, Nov 15, 2019 at 7:15 PM Alex Shi <alex.shi@linux.alibaba.com> wrote:
-> >>
-> >> Currently memcg still use per node pgdat->lru_lock to guard its lruvec.
-> >> That causes some lru_lock contention in a high container density system.
-> >>
-> >> If we can use per lruvec lock, that could relief much of the lru_lock
-> >> contention.
-> >>
-> >> The later patches will replace the pgdat->lru_lock with lruvec->lru_lock
-> >> and show the performance benefit by benchmarks.
-> > 
-> > Merge this patch with actual usage. No need to have a separate patch.
-> 
-> Thanks for comment, Shakeel!
-> 
-> Yes, but considering the 3rd, huge and un-splitable patch of actully replacing, I'd rather to pull sth out from 
-> it. Ty to make patches a bit more readable, Do you think so?
+Hi,
 
-This method of splitting the patches doesn't help with the reviewability of
-the patch series.
+Before going ahead with a pull-request for ceph I would like to make sure
+we're all on the same page regarding the final fix for this problem.
+Thus, following this email, I'm sending 2 patches: one for ceph OSDs and
+the another for the kernel client.
+
+* osd: add new 'copy-from-notrunc' operation
+  This patch shall be applied to ceph master after reverting commit
+  ba152435fd85 ("osd: add flag to prevent truncate_seq copy in copy-from
+  operation").  It adds a new operation that will be exactly the same as
+  the original 'copy-from' operation, but with the extra 2 parameters
+  (truncate_{seq,size})
+
+* ceph: switch copy_file_range to 'copy-from-notrunc' operation
+  This will make the kernel client use the new OSD op in
+  copy_file_range.  One extra thing that could probably be added is
+  changing the mount options to NOCOPYFROM if the first call to
+  ceph_osdc_copy_from() fails.
+
+Does this look good, or did I missed something from the previous
+discussion?
+
+(One advantage of this approach: the OSD patch can be easily backported!)
+
+Cheers,
+-- 
+Luis
+
+Luis Henriques (1):
+  osd: add new 'copy-from-notrunc' operation
+
+ src/include/rados.h     |  1 +
+ src/osd/OSD.cc          |  3 ++-
+ src/osd/PrimaryLogPG.cc | 24 +++++++++++++++++++-----
+ 3 files changed, 22 insertions(+), 6 deletions(-)
+
+  ceph: switch copy_file_range to 'copy-from-notrunc' operation
+
+ fs/ceph/file.c                  |  3 ++-
+ include/linux/ceph/osd_client.h |  1 +
+ include/linux/ceph/rados.h      |  1 +
+ net/ceph/osd_client.c           | 18 ++++++++++++------
+ 4 files changed, 16 insertions(+), 7 deletions(-)
+
