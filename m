@@ -2,149 +2,100 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57924C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C31C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E6D920658
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C56320692
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:26:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ts.fujitsu.com header.i=@ts.fujitsu.com header.b="KqJM0YdQ"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="zs8hejVg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfKROXn (ORCPT
+        id S1727088AbfKRO0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 09:23:43 -0500
-Received: from mail3.bemta25.messagelabs.com ([195.245.230.84]:58924 "EHLO
-        mail3.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726627AbfKROXm (ORCPT
+        Mon, 18 Nov 2019 09:26:31 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44317 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbfKRO0a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 09:23:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ts.fujitsu.com;
-        s=200619tsfj; t=1574087020; i=@ts.fujitsu.com;
-        bh=v4ugclb7Ac9tF4IOrOt6IMKMq2976QiWVp1FMkr4oPI=;
-        h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-         MIME-Version:Content-Transfer-Encoding:Content-Type;
-        b=KqJM0YdQy+mI0UAmdkgt4Cw2trosriqAuKEZOGbSaMu44rlE+BC5Yz/gjHYpF8vch
-         7CEhTtic98gkoUa1ro0adIJ5BQ4QmlJ953OOzaHsq1fSFbd0kS8NOUHTu86pU3gbAC
-         OHYp4zCZTg9N295BPktdkEnpC/ITWdaKA5vSGjOJW47V+ekj8NcQDXSlrTptc5Fm9W
-         UY8BsDNdy8XGywBj2hSampgVA16kW8+UccawKXdR7w9UyFGO+feT/ijO+Rvz5xi5tl
-         4MfgH965CharW3UUDSbXX9v95Y3DqlJalBTgnEzz58vsuFVIW8cIcaJlwLrC33IOFn
-         ABmD6OHX/edyg==
-Received: from [46.226.52.197] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-4.bemta.az-b.eu-west-1.aws.symcld.net id 7C/A5-03226-B69A2DD5; Mon, 18 Nov 2019 14:23:39 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrOIsWRWlGSWpSXmKPExsViZ8MxVTd75aV
-  Yg2uzNC2+/Wlls9iz9ySLxeVdc9gszv89zurA4rFz1l12j8+b5Dw2PXnLFMAcxZqZl5RfkcCa
-  8XPvGsaCJ4IVR4/9ZWlgPMrTxcjFISQwh1Fi/6ZpTBDOAkaJ7r+djF2MnBxsAgYSu14dYgaxR
-  QRUJXbcncgKYjMLxEpcmrQBrEZYwFni4ouNYDYLUM3O50dYQGxeAUOJvR19QEM5ODgFLCTezA
-  drFQJqffd7MiNEiaDEyZlPWCBGykt0XG6EGq8jsWD3J7YJjLyzkJTNQlI2C0nZAkbmVYwWSUW
-  Z6RkluYmZObqGBga6hoZGuoaW5kBsppdYpZukl1qqW55aXKJrqJdYXqxXXJmbnJOil5dasokR
-  GKYpBUeP7GB89/Wt3iFGSQ4mJVFeefuLsUJ8SfkplRmJxRnxRaU5qcWHGGU4OJQkeMNWXIoVE
-  ixKTU+tSMvMAcYMTFqCg0dJhFdgOVCat7ggMbc4Mx0idYpRl+P6+71LmYVY8vLzUqXEeaeBFA
-  mAFGWU5sGNgMXvJUZZKWFeRgYGBiGegtSi3MwSVPlXjOIcjErCvFYgU3gy80rgNr0COoIJ6Aj
-  tHedAjihJREhJNTDJrUrdsFTegP/ZXO7wv703N39vb4ietDRPJU47u1Yzw6JWdfPZqBvz8rkv
-  L59zcvf9lENP5fg0HnzhdKict/6Iq+DMwLa0DdOat4eF2Roaund/Dj9wb9ok2z7dr/OvSv3kP
-  DTn1tJ7n6Letufseda6tu+Nq9QT1jvbUpMXb1LRnp4RxrVTcIHrG6/sewLGB6JZnmyeHvNvKQ
-  ufyOQym4KZW++Xz3b7m/e/LcZw2+b4bz0yDGK7W47F8r98Wuw6qWpmS2I617mPIjei0s5+UFn
-  35OeE7P/PA/7kWIhFzJkdw+lr8Lw7Ircp/YzGqvy/17ZncZ2fdun3IQ7+UqXjc92enl34QO+b
-  yvacvD2vT7IxKbEUZyQaajEXFScCAKGqYH9aAwAA
-X-Env-Sender: dietmar.hahn@ts.fujitsu.com
-X-Msg-Ref: server-7.tower-285.messagelabs.com!1574087019!272990!1
-X-Originating-IP: [62.60.8.149]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.22; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 5619 invoked from network); 18 Nov 2019 14:23:39 -0000
-Received: from unknown (HELO mailhost2.uk.fujitsu.com) (62.60.8.149)
-  by server-7.tower-285.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 18 Nov 2019 14:23:39 -0000
-Received: from sanpedro.mch.fsc.net ([172.17.20.6])
-        by mailhost2.uk.fujitsu.com (8.14.5/8.14.5) with SMTP id xAIENVO9001237;
-        Mon, 18 Nov 2019 14:23:31 GMT
-Received: from amur.mch.fsc.net (unknown [10.172.102.131])
-        by sanpedro.mch.fsc.net (Postfix) with ESMTP id 460259D00892;
-        Mon, 18 Nov 2019 15:23:26 +0100 (CET)
-From:   Dietmar Hahn <dietmar.hahn@ts.fujitsu.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        dieti.hahn@gmail.com
-Subject: Re: Kernel panic because of wrong contents in core_pattern
-Date:   Mon, 18 Nov 2019 15:23:26 +0100
-Message-ID: <2513527.0IqIISzq9R@amur.mch.fsc.net>
-In-Reply-To: <20191115132740.GP26530@ZenIV.linux.org.uk>
-References: <1856804.EHpamdVGlA@amur.mch.fsc.net> <20191115132740.GP26530@ZenIV.linux.org.uk>
+        Mon, 18 Nov 2019 09:26:30 -0500
+Received: by mail-io1-f68.google.com with SMTP id j20so7893332ioo.11
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 06:26:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=du0XHpmLviazuqr3BCaTDTx0qFpy8dgUcEPCv5dSJV8=;
+        b=zs8hejVgqws+v5Gu+l9yMA4nopGmUwQZjUJnjQUVogqktbkEW14DoBX4fxmhG7BB/e
+         rbN4UCFmLnNygIsV39ni0tlA4BEAF0c/APLGD/ZTa+LkBHNC46Fe71TDJYmAFLebNyxc
+         bjaWoImPEfZG6H9WC5To7FeQBMDduWzgs+/SQjH9lBAkeDWDxYkTO3ubICGofpdVvKus
+         0b1z9986UfZvNv5urlsR3h80NV7YEjLnLNftaCkm9rwMdgd1Ag+TcSv1BI3Ew39zHT4p
+         vT2DE3u4vKl39KI8bmFDHR0/j76auj782kQxmZCHQSZQP9FsM4utTEaiaBiseC/CF4qq
+         /wbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=du0XHpmLviazuqr3BCaTDTx0qFpy8dgUcEPCv5dSJV8=;
+        b=VaIAOUuu15rofHuik41zEcZ7Sw7avTWJy5JRDbGzp/b+1dK3A9SmEaHAiS8Z7zU+hB
+         pCXXi3khvQf9j+EHAlacDuzfuYxv2saqwUkIGYWE1sIagocwStBDF54iDzjqcYL+6Rhk
+         jIEC/PBzsV8cBCd6KU0Dssil3AwznJW3XGplM4mNFA7y2bUCpPiwlhJrkQg69xZn/Swl
+         3f4lU3od1UJuE81JaK2B5VIPxoJJbtKT+/ooIlI0AlQXBOL3x8i/bmv4+vLGWgGj/4o3
+         jD22CZYmS6khkqWFQ6Sejl5udWYckcSPg7e8a1074g5JIDBVLj6VXe8CwPiVA6Tl94t8
+         eNOg==
+X-Gm-Message-State: APjAAAVT1pmmctGGDkrqk0swMrfcvvT0AN5gIviofAvn/MNga/bh2U+R
+        KnU02niI8nKH+9rFium4kOLLsW7N6pI=
+X-Google-Smtp-Source: APXvYqxho+itgdP4ffBUh8zwnHiMwlXoVhy59Svd9UMWT0O5v/ZjRugfj87x35RO8m6Uyxka3HtgRw==
+X-Received: by 2002:a5e:d716:: with SMTP id v22mr13226365iom.152.1574087187154;
+        Mon, 18 Nov 2019 06:26:27 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id e4sm4534244ilg.33.2019.11.18.06.26.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Nov 2019 06:26:26 -0800 (PST)
+Subject: Re: [PATCH] kbuild: make single target builds even faster
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild@vger.kernel.org
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+References: <20191118045247.14082-1-yamada.masahiro@socionext.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2b1ab1b1-dd20-31f7-c787-921cbd66a828@kernel.dk>
+Date:   Mon, 18 Nov 2019 07:26:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20191118045247.14082-1-yamada.masahiro@socionext.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, 15. November 2019, 14:27:40 CET schrieb Al Viro:
-> On Fri, Nov 15, 2019 at 02:01:55PM +0100, Dietmar Hahn wrote:
+On 11/17/19 9:52 PM, Masahiro Yamada wrote:
+> Commit 2dffd23f81a3 ("kbuild: make single target builds much faster")
+> made the situation much better.
 > 
-> > Later a user tool dumped with SIGSEGV and the linux system crashed.
-> > I investigated the crash dump and found the cause.
-> > 
-> > Via format_corename() in fs/coredump.c the helper_argv[] with 3 entries is
-> > created and helper_argv[0] == "" (because of the ' ' after the '|')
-> > ispipe is set to 1.
-> > Later in call_usermodehelper_setup():
-> >   sub_info->path = path;  == helper_argv[0] == ""
-> > This leads in call_usermodehelper_exec() to:
-> >   if (strlen(sub_info->path) == 0)
-> >                 goto out;
-> > with a return value of 0.
-> > But no pipe is created and thus cprm.file == NULL.
-> > This leads in file_start_write() to the panic because of dereferencing
-> >  file_inode(file)->i_mode)
-> > 
-> > I'am not sure what's the best way to fix this so I've no patch.
-> > Thanks.
+> To improve it even more, apply the similar idea to the top Makefile.
+> Trim unrelated directories from build-dirs.
 > 
-> Check in the caller of format_corename() for **argv being '\0' and fail
-> if it is?  I mean, turn that
->                 if (ispipe < 0) {
->                         printk(KERN_WARNING "format_corename failed\n");
->                         printk(KERN_WARNING "Aborting core\n");
->                         goto fail_unlock;
->                 }   
-> in there into
-> 		if (ispipe < 0 || !**argv) {
->                         printk(KERN_WARNING "format_corename failed\n");
->                         printk(KERN_WARNING "Aborting core\n");
->                         goto fail_unlock;
->                 }
+> The single build code must be moved above the 'descend' target.
 
-Unfortunately this doesn't work because argv[0] is always 0 in case of ispipe
-in format_corename():
-	if (ispipe) {
-		int argvs = sizeof(core_pattern) / 2;
-		(*argv) = kmalloc_array(argvs, sizeof(**argv), GFP_KERNEL);
-		if (!(*argv))
-			return -ENOMEM;
-		(*argv)[(*argc)++] = 0;
-		++pat_ptr;
-	}
+I tested linux-next, which does improve things a bit, and this one on
+top further improves it. We're now not THAT far off the situation
+before these changes, that's a huge win. Thanks for working on this!
 
-The manpage says: The program must be ..., and must immediately
-follow the '|' character.
-Why not check this in format_corename(), maybe:
+You can add:
 
-@@ -211,6 +211,8 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
-                        return -ENOMEM;
-                (*argv)[(*argc)++] = 0;
-                ++pat_ptr;
-+               if (isspace(*pat_ptr))
-+                       return -EINVAL;
-        }
+Tested-by: Jens Axboe <axboe@kernel.dk>
 
-Dietmar.
+to the commit, if you wish.
 
-
-
-
+-- 
+Jens Axboe
 
