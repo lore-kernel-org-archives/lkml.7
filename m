@@ -2,144 +2,149 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D868C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D589C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E00E82068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:58:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=verimatrix.com header.i=@verimatrix.com header.b="xRBKig4t"
+	by mail.kernel.org (Postfix) with ESMTP id 3F4682067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:59:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbfKRH6q (ORCPT
+        id S1726631AbfKRH67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 02:58:46 -0500
-Received: from mail-eopbgr770052.outbound.protection.outlook.com ([40.107.77.52]:10564
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726283AbfKRH6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 02:58:46 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ErTnXdwiOH32z3ozSgrk8Fgo85DBVTMRvhyBNmzRofHJ+g9q5a5Qki5skkcfSUsFWSnV3AYdkiWOMcjAF3U9yb042SsAET1AMxIedsoNojfL6+NSFnqW0EAYgnX3CHRN/6UsnZ+swtMQqvIk3WxEQXf7KoYZYCy4YBhavC4Q/OiBbx3KHl3pb8TqjuC73Hv7OdoV5ibAkE1pdTKa2X7/BZRR+HWjMvmQsLJMFpGwQJ6pDm9ZcGdrLCK98/hBsC5ifq/D/3V5AWlfG8/naH2wU0KTGrecDtVgG3SyXXs35rbj1DtNghZ+yzoqfgXefS7mIl9V9TxMQEYDKh7Oui02Og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2bZ0wN8HL0HWVhweI1tFWrPddm5erqWYC/XdhAmY/48=;
- b=aw4kYb7zvF37DcUt6H4dy/Ci5NT2hctxe8K39qrPry30BavMEnTnYHtstVYVTiozdQlmSoIsG+bS/c1IHmw/x7beLXSohqog/z863/tGqb/gwrvQABezvVuA/SmTanx6h8tudoznERvYJB1OnmKH2CnVxgm6tbijaIIrrY3Owdn7wKYP2Wa1NGLlc8V8+c1uqwSmU1ds3u3m80x057byxkG5N07bnlXa4G3H10qdStzVnjmrYbmgPMXj9plX5ZMbkVXv1Ll1axAPsDcI4NSokq6rDU3u4JZPa/5oNB9b0bQ750w7gOU0GzX8350+2ZC0daqTME8cpTosjgz0og7Dgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=verimatrix.com; dmarc=pass action=none
- header.from=verimatrix.com; dkim=pass header.d=verimatrix.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verimatrix.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2bZ0wN8HL0HWVhweI1tFWrPddm5erqWYC/XdhAmY/48=;
- b=xRBKig4t/ESKENn1wj/91eUIiZHNSsPiKKjjKULTe1BDyCWX+h++weFOffGbliiFA5Hyerz22FyEEM0WGIeP2FspaLpVNu0fjUAzCPADL7vbcr+kHNPRbCv5CCoS7wmb5ycGyDJ3EjJT6mPl8bPCwnmyXcxxEZ8XqgTu7NAhMKA=
-Received: from MN2PR20MB2973.namprd20.prod.outlook.com (52.132.172.86) by
- MN2PR20MB3277.namprd20.prod.outlook.com (52.132.175.202) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Mon, 18 Nov 2019 07:58:43 +0000
-Received: from MN2PR20MB2973.namprd20.prod.outlook.com
- ([fe80::18b4:f48a:593b:eac9]) by MN2PR20MB2973.namprd20.prod.outlook.com
- ([fe80::18b4:f48a:593b:eac9%3]) with mapi id 15.20.2451.029; Mon, 18 Nov 2019
- 07:58:43 +0000
-From:   Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto List <linux-crypto@vger.kernel.org>
-CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: linux-next: Fixes tag needs some work in the crypto tree
-Thread-Topic: linux-next: Fixes tag needs some work in the crypto tree
-Thread-Index: AQHVnAs0RpIhyjbL5UG1qmDAFZPm06eQk+WQ
-Date:   Mon, 18 Nov 2019 07:58:42 +0000
-Message-ID: <MN2PR20MB2973E1EAD50B58826FCEC763CA4D0@MN2PR20MB2973.namprd20.prod.outlook.com>
-References: <20191116101954.33672f2d@canb.auug.org.au>
-In-Reply-To: <20191116101954.33672f2d@canb.auug.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pvanleeuwen@verimatrix.com; 
-x-originating-ip: [188.204.2.113]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5de45bcd-aadd-470f-1155-08d76bfd2196
-x-ms-traffictypediagnostic: MN2PR20MB3277:
-x-microsoft-antispam-prvs: <MN2PR20MB327710EEC6AD4F889CB3EC7FCA4D0@MN2PR20MB3277.namprd20.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:454;
-x-forefront-prvs: 0225B0D5BC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(39850400004)(376002)(136003)(13464003)(53754006)(199004)(189003)(110136005)(81166006)(81156014)(256004)(71200400001)(102836004)(76116006)(66556008)(53546011)(6436002)(66476007)(66946007)(8936002)(66446008)(64756008)(71190400001)(7736002)(305945005)(14454004)(74316002)(8676002)(15974865002)(55016002)(316002)(478600001)(52536014)(99286004)(6116002)(186003)(9686003)(5660300002)(54906003)(66066001)(3846002)(486006)(446003)(26005)(2906002)(33656002)(11346002)(229853002)(25786009)(4326008)(476003)(6246003)(7696005)(76176011)(86362001)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR20MB3277;H:MN2PR20MB2973.namprd20.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: verimatrix.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: S4ZM50BmguVkKQAGFZO6bRbz5oAgsvT3LIWHipcGZqaQR62l2xE4B9z7SS5WklMPXEnO+vvcjl69v1RNZIZQLWTFtewK2ntRJeUNePjk80/2mvSCAnvZXJLFx8bNEl421RXG324GWNtUIbXq7OMsq6+9DUvz0SrCWlYD0nZN9fTwbWbqG2j16zrW/5q9EI++z8u0l+nFerDqgjVCearQyCavtqL5LJOZKotWlJ5ETcAEd/pVSLFsLZ7ST43zwneYEcZky0YS4G4bASmYICpcOLDH8RhN5YpLevf6sHzHhj9zIAgNN3naEWAwRV+4HF818W2TAWvFz9eLZHT0EFlkY+wvIXRYKygHUPkEljt3m1x42L2+yBmcENnA2huyhL1jAUCuBC29SLD5NWn8Oqj9s8TAracm1vdJax4gSQyc+LTU8luhb+hqdnLbbez6bXxD
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 18 Nov 2019 02:58:59 -0500
+Received: from mga09.intel.com ([134.134.136.24]:49378 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726283AbfKRH67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 02:58:59 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Nov 2019 23:58:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,319,1569308400"; 
+   d="scan'208";a="356706254"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 17 Nov 2019 23:58:58 -0800
+Received: from [10.226.38.242] (unknown [10.226.38.242])
+        by linux.intel.com (Postfix) with ESMTP id 095EC5804A0;
+        Sun, 17 Nov 2019 23:58:54 -0800 (PST)
+Subject: Re: [PATCH v7 2/3] dwc: PCI: intel: PCIe RC controller driver
+To:     Jingoo Han <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
+        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
+        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
+References: <cover.1573784557.git.eswara.kota@linux.intel.com>
+ <99a29f5a4ce18df26bd300ac6728433ec025631b.1573784557.git.eswara.kota@linux.intel.com>
+ <SL2P216MB01056231B6036941BEF71738AA700@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <50dabbc6-eae5-5ae5-95a0-f195c1ef7362@linux.intel.com>
+Date:   Mon, 18 Nov 2019 15:58:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: verimatrix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5de45bcd-aadd-470f-1155-08d76bfd2196
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 07:58:42.9386
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: dcb260f9-022d-4495-8602-eae51035a0d0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: c2S13AzVWoNCIWhvXz4zzrdB58pVDKXNcrnX7arChnfae9Kr+kQGzrpW1NtLiHiBltDsliGZHDIGw/1jaPdiKp2+BmbxsC7QxYmwZmB0k40=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR20MB3277
+In-Reply-To: <SL2P216MB01056231B6036941BEF71738AA700@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen, Herbert,
 
-My bad, I didn't know the Fixes tag should not be broken over
-lines (and that rather conflicted with the 75 characters per
-line rule here, which is why I did break it up).
-
-I'm willing to fix that - except that I don't know how to create
-a patch that _only_ fixes the commit description of something=20
-already pulled into the cryptodev tree?
+On 11/16/2019 4:40 AM, Jingoo Han wrote:
+> On 11/14/19, 9:31 PM, Dilip Kota wrote:
+>
+>> Add support to PCIe RC controller on Intel Gateway SoCs.
+>> PCIe controller is based of Synopsys DesignWare PCIe core.
+>>
+>> Intel PCIe driver requires Upconfigure support, Fast Training
+>> Sequence and link speed configurations. So adding the respective
+>> helper functions in the PCIe DesignWare framework.
+>> It also programs hardware autonomous speed during speed
+>> configuration so defining it in pci_regs.h.
+>>
+>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+>> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>> ---
+> [.....]
+>
+>>   drivers/pci/controller/dwc/Kconfig           |  10 +
+>>   drivers/pci/controller/dwc/Makefile          |   1 +
+>>   drivers/pci/controller/dwc/pcie-designware.c |  57 +++
+>>   drivers/pci/controller/dwc/pcie-designware.h |  12 +
+>>   drivers/pci/controller/dwc/pcie-intel-gw.c   | 542 +++++++++++++++++++++++++++
+>>   include/uapi/linux/pci_regs.h                |   1 +
+>>   6 files changed, 623 insertions(+)
+>>   create mode 100644 drivers/pci/controller/dwc/pcie-intel-gw.c
+>>
+>> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+>> index 0ba988b5b5bc..fb6d474477df 100644
+>> --- a/drivers/pci/controller/dwc/Kconfig
+>> +++ b/drivers/pci/controller/dwc/Kconfig
+>> @@ -82,6 +82,16 @@ config PCIE_DW_PLAT_EP
+>>   	  order to enable device-specific features PCI_DW_PLAT_EP must be
+>>   	  selected.
+>>   
+>> +config PCIE_INTEL_GW
+>> +	bool "Intel Gateway PCIe host controller support"
+>> +	depends on OF && (X86 || COMPILE_TEST)
+>> +	select PCIE_DW_HOST
+>> +	help
+>> +	  Say 'Y' here to enable PCIe Host controller support on Intel
+>> +	  Gateway SoCs.
+>> +	  The PCIe controller uses the DesignWare core plus Intel-specific
+>> +	  hardware wrappers.
+>> +
+> Please add this config alphabetical order!
+> So, this config should be after 'config PCI_IMX6'.
+> There is no reason to put this config at the first place.
+>
+>>   config PCI_EXYNOS
+>>   	bool "Samsung Exynos PCIe controller"
+>>   	depends on SOC_EXYNOS5440 || COMPILE_TEST
+>> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+>> index b30336181d46..99db83cd2f35 100644
+>> --- a/drivers/pci/controller/dwc/Makefile
+>> +++ b/drivers/pci/controller/dwc/Makefile
+>> @@ -3,6 +3,7 @@ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
+>>   obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
+>>   obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
+>>   obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
+>> +obj-$(CONFIG_PCIE_INTEL_GW) += pcie-intel-gw.o
+> Ditto.
+PCIE_INTEL_GW wouldnt come after PCI_IMX6, the complete Makefile and 
+Kconfig are not in order,( PCI_* and PCIE_* are not in any order). So i 
+just followed PCIE_DW and placed PCIE_INTEL_GW after PCIE_DW as I is 
+after D (and i see PCI_* immediately after the PCIE_DW*, so i placed 
+PCIE_INTEL_GW after PCIE_DW* and before PCI_*).
 
 Regards,
-Pascal van Leeuwen
-Silicon IP Architect, Multi-Protocol Engines @ Verimatrix
-www.insidesecure.com
+Dilip
 
-> -----Original Message-----
-> From: linux-crypto-owner@vger.kernel.org <linux-crypto-owner@vger.kernel.=
-org> On Behalf Of
-> Stephen Rothwell
-> Sent: Saturday, November 16, 2019 12:20 AM
-> To: Herbert Xu <herbert@gondor.apana.org.au>; Linux Crypto List <linux-cr=
-ypto@vger.kernel.org>
-> Cc: Linux Next Mailing List <linux-next@vger.kernel.org>; Linux Kernel Ma=
-iling List <linux-
-> kernel@vger.kernel.org>; Pascal van Leeuwen <pascalvanl@gmail.com>
-> Subject: linux-next: Fixes tag needs some work in the crypto tree
->=20
-> Hi all,
->=20
-> In commit
->=20
->   8c2c43a5be3d ("crypto: inside-secure - Fixed authenc w/ (3)DES fails on=
- Macchiatobin")
->=20
-> Fixes tag
->=20
->   Fixes: 13a1bb93f7b1c9 ("crypto: inside-secure - Fixed warnings on
->=20
-> has these problem(s):
->=20
->   - Subject has leading but no trailing parentheses
->   - Subject has leading but no trailing quotes
->=20
-> Please do not split Fixes tags over more than one line.
->=20
-> --
-> Cheers,
-> Stephen Rothwell
+>
+> Best regards,
+> Jingoo Han
+>
+>>   obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
+>>   obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
+>>   obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>> index 820488dfeaed..479e250695a0 100644
+> [.....]
