@@ -2,113 +2,94 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED18C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CDCC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D78AC22302
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F0D20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:39:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WPVQazv5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G5FeH2qc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfKRUfR (ORCPT
+        id S1726739AbfKRUjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 15:35:17 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:43610 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfKRUfQ (ORCPT
+        Mon, 18 Nov 2019 15:39:31 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59376 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726536AbfKRUjb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 15:35:16 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAIKY6mi144903;
-        Mon, 18 Nov 2019 20:34:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=/m3kaDVW1sMY9brAV1q+FPeUQEVlhy04QwMV4rIKN7c=;
- b=WPVQazv5GxJ695xUzInhmfhfdQ9BBih+cryPlMonblaBi5zijCQsMHi4sTTv3KgusZnf
- +LTQRuOFEYOW25I777Kk7DJRsNRGhoV/2RwHmFw/H4jiN0pVAhz+WeSHozhr5kxpo0Nv
- jKgEyoKUu4omzr7YHCfWfucZMWTqIOwJc0N794oaw4RGvXPKaqmFwjhYEbPBEKttCkPf
- UC1qDilSQUoDxGknMhIdF04BIgiq+dZF7EVnNQ3Va4CCqcpSC9K8f54MjnoTbSNiplAu
- E9wpKfdaWaORwi6SEZgybPeJmzsCWtOAwMFJ/m+4r6/gNR1o1h+WwWJAmFMm7WFYg/Yn Iw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2wa8htjsmj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 Nov 2019 20:34:52 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAIKXV65164107;
-        Mon, 18 Nov 2019 20:34:51 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2wbxm33gdx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 Nov 2019 20:34:51 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAIKYlMt006102;
-        Mon, 18 Nov 2019 20:34:47 GMT
-Received: from prakashs-mbp-2.lan (/98.248.138.49)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 18 Nov 2019 12:34:47 -0800
-Subject: Re: [RESEND RFC PATCH 0/1] CAP_SYS_NICE inside user namespace
-To:     Jann Horn <jannh@google.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Christian Brauner <christian@brauner.io>
-References: <1574096478-11520-1-git-send-email-prakash.sangappa@oracle.com>
- <CAG48ez3HfUx2aRvqR_bWnGoTshrHnUzxUNt7K6Sv7cqtPDWaWw@mail.gmail.com>
-From:   Prakash Sangappa <prakash.sangappa@oracle.com>
-Message-ID: <9a63f7ae-562e-67a6-8f40-050c58c08933@oracle.com>
-Date:   Mon, 18 Nov 2019 12:34:45 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        Mon, 18 Nov 2019 15:39:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574109570;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5HFQIq/y1ZCp71Y0vZlJywkPQZ5p4lRTYkmnopmNpHA=;
+        b=G5FeH2qcMJg2/Ie2Vxec+W9iYGUojvrd2VefkVxbnTrxKYQHE6QSP8LrJnfiJgXmMDLKjo
+        feAjEj/84Vs2ALEyEXqvczXLersTKz5sHClXZjCzn9pCzSQjZk0qTwIQRL23ODOgws26e/
+        JOp3d8aecKLm/pDbNU/UBm5kS7TRC+Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-227-1_qpRhNePniHRwJ-mdcf6A-1; Mon, 18 Nov 2019 15:39:24 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CD6E41005500;
+        Mon, 18 Nov 2019 20:39:22 +0000 (UTC)
+Received: from dhcp-25.97.bos.redhat.com (unknown [10.18.25.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 356E25090C;
+        Mon, 18 Nov 2019 20:39:21 +0000 (UTC)
+From:   Aaron Conole <aconole@redhat.com>
+To:     Pravin Shelar <pshelar@ovn.org>
+Cc:     Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>, ovs dev <dev@openvswitch.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 1/2] openvswitch: support asymmetric conntrack
+References: <20191108210714.12426-1-aconole@redhat.com>
+        <CAOrHB_B1ueESwUQSkb7BuFGCCyKKqognoWbukTHo2jTajNca6w@mail.gmail.com>
+Date:   Mon, 18 Nov 2019 15:39:20 -0500
+In-Reply-To: <CAOrHB_B1ueESwUQSkb7BuFGCCyKKqognoWbukTHo2jTajNca6w@mail.gmail.com>
+        (Pravin Shelar's message of "Sat, 9 Nov 2019 14:15:31 -0800")
+Message-ID: <f7twobwyl53.fsf@dhcp-25.97.bos.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <CAG48ez3HfUx2aRvqR_bWnGoTshrHnUzxUNt7K6Sv7cqtPDWaWw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911180177
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911180177
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: 1_qpRhNePniHRwJ-mdcf6A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Pravin Shelar <pshelar@ovn.org> writes:
 
+> On Fri, Nov 8, 2019 at 1:07 PM Aaron Conole <aconole@redhat.com> wrote:
+>>
+>> The openvswitch module shares a common conntrack and NAT infrastructure
+>> exposed via netfilter.  It's possible that a packet needs both SNAT and
+>> DNAT manipulation, due to e.g. tuple collision.  Netfilter can support
+>> this because it runs through the NAT table twice - once on ingress and
+>> again after egress.  The openvswitch module doesn't have such capability=
+.
+>>
+>> Like netfilter hook infrastructure, we should run through NAT twice to
+>> keep the symmetry.
+>>
+>> Fixes: 05752523e565 ("openvswitch: Interface with NAT.")
+>> Signed-off-by: Aaron Conole <aconole@redhat.com>
+>
+> The patch looks ok. But I am not able apply it. can you fix the encoding.
 
-On 11/18/19 11:36 AM, Jann Horn wrote:
-> On Mon, Nov 18, 2019 at 6:04 PM Prakash Sangappa
-> <prakash.sangappa@oracle.com> wrote:
->> Some of the capabilities(7) which affect system wide resources, are ineffective
->> inside user namespaces. This restriction applies even to root user( uid 0)
->> from init namespace mapped into the user namespace. One such capability
->> is CAP_SYS_NICE which is required to change process priority. As a result of
->> which the root user cannot perform operations like increase a process priority
->> using -ve nice value or set RT priority on processes inside the user namespace.
->> A workaround to deal with this restriction is to use the help of a process /
->> daemon running outside the user namespace to change process priority, which is
->> a an inconvenience.
-> What is the goal here, in the big picture? Is your goal to allow
-> container admins to control the priorities of their tasks *relative to
-> each other*, or do you actually explicitly want container A to be able
-> to decide that its current workload is more timing-sensitive than
-> container B's?
+Hrrm.  I didn't make any special changes (just used git send-email).  I
+will look at spinning a second patch.
 
-It is more the latter. Admin should be able to explicitly decide that 
-container A
-workload is to be given priority over other containers.
