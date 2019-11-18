@@ -5,67 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDFBC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 02:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E01CFC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 02:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0505B206D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 02:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5121206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 02:48:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZAHb2RK9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bJ3uOU3F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfKRCs1 (ORCPT
+        id S1726643AbfKRCsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 21:48:27 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46707 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfKRCs0 (ORCPT
+        Sun, 17 Nov 2019 21:48:42 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:38975 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726568AbfKRCsm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 21:48:26 -0500
-Received: by mail-pg1-f196.google.com with SMTP id r18so8846341pgu.13;
-        Sun, 17 Nov 2019 18:48:26 -0800 (PST)
+        Sun, 17 Nov 2019 21:48:42 -0500
+Received: by mail-pj1-f67.google.com with SMTP id t103so1033823pjb.6;
+        Sun, 17 Nov 2019 18:48:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=LJN39JvnBb2Ux5j3Tg40TBNH2WUxnDoGsfa7IupBTVI=;
-        b=ZAHb2RK9q+W6dB+/aNWg/9K49ic9zZD1IlGvjYHAq5rPESRF9FBvit+YKlhWUIPTYu
-         4mwxvn2yykpSn5B1vZIOzWZzvgnk4+dAv2Op8pZCbcQy2JkxzBVL1Y4x5glh/Ly2LaYr
-         E1AdMp6XESISya5DKuR8DgFPqq57nwqtLt0fim7WKJF8xmgA+NC/dC53QcnnWiK1m0IN
-         D7agbyVSsFvpJVxVxUikMYQz40FCPzrvA2PSJZO5NSSa5/s7xn+ASD62a6wgNb+EvOoY
-         6OXbKodt4ujIQlwkpfXBQsALoO92ddIYwpscGVN9PRnJ93bvhCGk29rdJswTdlYmKg/6
-         7zLQ==
+        bh=R6TiJnoCZMVB94Jb1OinOc0NFo4+1L3OR+Z9/bchwqM=;
+        b=bJ3uOU3FStjRGKfXMD0IgiIHyIHaHeOsqDzYk+eOwu9ZnIZmR87tv5m5kvq0Q6Uvpg
+         huY/FO82GK1T52tznbKfM/qZnz8qsJyowmri8F4ErYOAQH2g/8rJNXh8Fc/J0+5t7NbH
+         lmfQsVsM2Po8ujf/PW6IN7rc+VhY49XQEeLp3GXIFmwLYzo1lwB/vn3u8/7Tch1/TCns
+         DwwJX4dAqOlGTlDgzBAZejzUlmkJWNC4ooSUArppyyMLLLHLa8HTlZyIi/WqwlA88NuS
+         JKdjwBt4SWZqDN0b9XbqfwwIZ6SzjpiC5TMtz5myVKaOwieoXENJf+/+bpljVpesGnUT
+         OAMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=LJN39JvnBb2Ux5j3Tg40TBNH2WUxnDoGsfa7IupBTVI=;
-        b=pGPZ5M4mCOtffqyGENDoT5nPWldDMC68b3V2nHnt6FVUB34aW8MxQZayLj4TeZ04Yv
-         zLJXL8hPrBetmFCxLdrbiApuHc6fd8UxWFifNgO9krBqbXWtMj9tGZ/8R1VAzjDSjEeI
-         tdPKfSeaQlYxWpRk2GwCFf+O5KEIe/KarPlpNHDBksIdapyZsgF0uxmnnFUd7YuEJqcX
-         hmUKBZCR6rkDRzWzajVpB+Fv64gherGQuwjHC//jcLRRzQfVxxyr9Djm4WXw1pRT7okJ
-         88NCW12bqkxgt6ZqLvM6ayO+F5YORKfAJ0XBrSX3VcJskmyJ/AjeyYAFywlOX8l4N+xv
-         4PVg==
-X-Gm-Message-State: APjAAAXcG5bv72xMPAtiTEBVDiUEulFNTPOAS2NbF9RnGa8ugF4txlPV
-        61qlZTN5ZMWm7YbsZ9trrKw=
-X-Google-Smtp-Source: APXvYqxPWcFo6G0pp+6Un/9vYsChZ6XnP5zORNI+ij00omFSTq9HSpZcokYHpOLbZwUJF5JIWIH/Fg==
-X-Received: by 2002:a62:e716:: with SMTP id s22mr31429246pfh.258.1574045306003;
-        Sun, 17 Nov 2019 18:48:26 -0800 (PST)
+        bh=R6TiJnoCZMVB94Jb1OinOc0NFo4+1L3OR+Z9/bchwqM=;
+        b=DA3tLEK08FUBEfT72j6Ej85TJGtTb8xtoOuxGvEiE6YEFforSZLtC1SU+OFCIFC2vw
+         jOS+BfxmGgKRhP8eLofDqJLmJwqoCex7GTH4YgbjJED3mjo05f03Gz/kEDY/qLZWl3I5
+         3By0tUpn64yAzpcSSxRBPKfyfSEwhlFCCOeQ4BdnVAjLtKjvATiYaIdoR7x4lHlMYX3o
+         42LL6fDBqLiu9LOUnn5OFZA12PGD5TEImMhjDrhjlya7yD7XruTIyeAby5FqX14zZZoC
+         kjXDAwuWGVWrpYjv4Mo6LlB+SCykpi4J+YSHepLYsGybyLyYaNhD0daFK4kMsX+woMFl
+         j1Tg==
+X-Gm-Message-State: APjAAAVy6GnM6dp3Nv4GFAnNkPIznjTt9bmofMHGlJOf+Jpefe3x/DfD
+        s9Fptxkrftq3+YRF3SDXd90=
+X-Google-Smtp-Source: APXvYqzfon0Icl2/hJ9cVmBewveNRNDkUAlslVU/A+fF8FXFnaA5pyJIxr9wfFYHU6EJXCija+CpdA==
+X-Received: by 2002:a17:90a:9b87:: with SMTP id g7mr36305892pjp.64.1574045321552;
+        Sun, 17 Nov 2019 18:48:41 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id j5sm19018009pfe.100.2019.11.17.18.48.21
+        by smtp.gmail.com with ESMTPSA id x10sm18991935pfn.36.2019.11.17.18.48.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Nov 2019 18:48:25 -0800 (PST)
+        Sun, 17 Nov 2019 18:48:40 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Don Brace <don.brace@microsemi.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        esc.storagedev@microsemi.com, linux-scsi@vger.kernel.org,
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
         linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] scsi: smartpqi: add missed free_irq in suspend
-Date:   Mon, 18 Nov 2019 10:48:15 +0800
-Message-Id: <20191118024815.21524-1-hslester96@gmail.com>
+Subject: [PATCH] serial: ifx6x60: add missed pm_runtime_disable
+Date:   Mon, 18 Nov 2019 10:48:33 +0800
+Message-Id: <20191118024833.21587-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -75,28 +73,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver calls request_irq in resume but does not call free_irq in
-suspend.
-Add the missed call to fix it.
+The driver forgets to call pm_runtime_disable in remove.
+Add the missed calls to fix it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/scsi/smartpqi/smartpqi_init.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/tty/serial/ifx6x60.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
-index ea5409bebf57..ebe563cfc36b 100644
---- a/drivers/scsi/smartpqi/smartpqi_init.c
-+++ b/drivers/scsi/smartpqi/smartpqi_init.c
-@@ -8023,6 +8023,8 @@ static __maybe_unused int pqi_suspend(struct pci_dev *pci_dev, pm_message_t stat
- 	pqi_ctrl_wait_for_pending_io(ctrl_info, NO_TIMEOUT);
- 	pqi_stop_heartbeat_timer(ctrl_info);
- 
-+	free_irq(pci_irq_vector(pci_dev, 0), &ctrl_info->queue_groups[0]);
+diff --git a/drivers/tty/serial/ifx6x60.c b/drivers/tty/serial/ifx6x60.c
+index ffefd218761e..31033d517e82 100644
+--- a/drivers/tty/serial/ifx6x60.c
++++ b/drivers/tty/serial/ifx6x60.c
+@@ -1230,6 +1230,9 @@ static int ifx_spi_spi_remove(struct spi_device *spi)
+ 	struct ifx_spi_device *ifx_dev = spi_get_drvdata(spi);
+ 	/* stop activity */
+ 	tasklet_kill(&ifx_dev->io_work_tasklet);
 +
- 	if (state.event == PM_EVENT_FREEZE)
- 		return 0;
- 
++	pm_runtime_disable(&spi->dev);
++
+ 	/* free irq */
+ 	free_irq(gpio_to_irq(ifx_dev->gpio.reset_out), ifx_dev);
+ 	free_irq(gpio_to_irq(ifx_dev->gpio.srdy), ifx_dev);
 -- 
 2.24.0
 
