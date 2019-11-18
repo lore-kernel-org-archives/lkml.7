@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0805C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C133DC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 986D720891
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 978AA20730
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:00:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="axyw3Cad"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lqFiFGfE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbfKRLAo (ORCPT
+        id S1726983AbfKRLAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:00:44 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36343 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfKRLAm (ORCPT
+        Mon, 18 Nov 2019 06:00:48 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36873 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726898AbfKRLAp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:00:42 -0500
-Received: by mail-wr1-f65.google.com with SMTP id r10so18902478wrx.3;
-        Mon, 18 Nov 2019 03:00:41 -0800 (PST)
+        Mon, 18 Nov 2019 06:00:45 -0500
+Received: by mail-wm1-f68.google.com with SMTP id b17so18240155wmj.2;
+        Mon, 18 Nov 2019 03:00:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/r/rbSHnQ681j6w5Fd1xT+tCG0CKj+LRyHPCBVvmrlM=;
-        b=axyw3CadnYKZZ/gPWsjDxs4XIRVAbwQA2BIPtCkbInP+P5tLbFpCU451G7RuR37Z9l
-         ngNfWM+B2QlQT6ZFR4BjTiP5kgxgdwN3Fy2FBXubHDp3BVEgFsTV9E2yFVLgS3Dy5tY2
-         mtozqqdqgWFfS7FhuwMK5zdEC7a13CXKFPr7KmRQ861zPsj4CmXlqCyT3+6sEkGiDGuM
-         ZLS9Qcw35kxi4bErUZqf9Rl8lHF9jcdCQcO/mPP/rMfVUq3cQ/OhJ6GrlWCsqC0TQx5e
-         +4THiAdRNt35MiDPE2SrPRjTHjJgbwI5HHkIEb9vrQ94w/xIk7hpEwWe5eObrAXytAD/
-         PNRg==
+        bh=Z3PWy3cFb/7J+Rxg3fcaYJEk3LUN9QrWLTJanLEpmxI=;
+        b=lqFiFGfEjlOyJdMo+LwLnwc1FWulJ+c/qGY/aVFkwdUbPFOOhNeoSGjHxfUwNnzlLr
+         J5/wl/qleAx9N5DqnEw9w5udIpP9jnvnNwcYkOyjwGhSdynL52nvD3nZtNFnmvfGN+Pw
+         La92CMaO87+qeEuGskGIRTgQgPo3KHiSW8PZPRT7a2FyU+T45Sy7B4AClODYKBkk6w2O
+         zz7pPLHgOyuvryoFIeDDVX53Ljv/Hb8DLVGT8K5fcknzDMwCjf3O9SEOgVtukeNaSR/O
+         aPut4FD76o5oWhRQE6KnvIwhUTTfbe0xvqe6WPYMbQVbBpZTt+NUnWxEBd1R4aAwebVF
+         LX0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/r/rbSHnQ681j6w5Fd1xT+tCG0CKj+LRyHPCBVvmrlM=;
-        b=RbKH0MHrUsDpkvEz0/yl1AX/8sPXMU2hAYoOK7pBu/Rs9xUr4Yh9XrNZbjxl9HmksN
-         VV99EbN7myQ4ZN8sivMRNrQYdoOckbpGkCw3WPH/wBJ3y11ZLvQbrCp49hkYMquwjudG
-         m09Dzd8EX+LhFpArlstknZBpFREue96TOI5h+2/x9Q6RTSAlUjwk1BeHtpPgDOSZK6+F
-         +RdlaUPY/LHUOCoWbHp9Nh366rgFm0sjy9TgtPojnaFf0+rJGsdu/w6K4oydleLnoK2i
-         wFuYEbE2wvt8PzSyd+7TYVzhcj02mts29MMvtxiZFsnV2BpATQJ6dkDUuV1L3Pyc9Vc6
-         W/JA==
-X-Gm-Message-State: APjAAAXvGG4HIBrqGnYoQv7lsA8wJUmh/LmLtZK+ndPSb8ZHviBd3m7k
-        Z3mvf9l/2Eu/uKP0b1qHTjM=
-X-Google-Smtp-Source: APXvYqxEFAX5cEn1tc0TWYXeLTvWC45ER2bxKy0vHBbmoO46RYGcBJIFgShG/Z/M5rcmO7fKz2Repg==
-X-Received: by 2002:adf:f005:: with SMTP id j5mr28478666wro.295.1574074840489;
-        Mon, 18 Nov 2019 03:00:40 -0800 (PST)
+        bh=Z3PWy3cFb/7J+Rxg3fcaYJEk3LUN9QrWLTJanLEpmxI=;
+        b=npOj0BHIuanTL1NKXfF83/1U50v52hc5Y+ueUB7Np19m2TgyEovcbFrcgtIP410YO+
+         IUKuoJd7zXrISVkbzFgiWjiTrvb9k5g80PL2J/vg4Syqnd2+jbwTPg3yT5QsP39hs/JT
+         rT2Mwmnmt6Egmximet+4iiUICdHbK9w0oYGVZEDEl0rgZOHHdi1ziao5l1x9oobD3TqW
+         puwusUnK3uGOj6yh1Y4pwCzP5Z6tCgbrdxxaYZnsCkHVV8f7E2nWoTC41Q8KX8m55V9j
+         xndZTDHcTjEZ+c0vzcSSXvh33CGeLZ0I+tV1f+stk5BuSJNhoij+JfZkNiySBEkTvo+j
+         t70g==
+X-Gm-Message-State: APjAAAU9P+L4Xaa2qslkQkVpqd3uHNz5Cxd0/N6lXQ9NfaJl7ui3qdsu
+        bG32Z4Qr9lH6jH0UPOTM2iE=
+X-Google-Smtp-Source: APXvYqz5oI2WXuyJXr0xQbPksS/Aff1WCNMfgC+OGCxFB9b/PfDIb+Mg7WcB52n+N87+rwEgv9LqBg==
+X-Received: by 2002:a05:600c:24c9:: with SMTP id 9mr27548319wmu.137.1574074843900;
+        Mon, 18 Nov 2019 03:00:43 -0800 (PST)
 Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
-        by smtp.gmail.com with ESMTPSA id f67sm19873313wme.16.2019.11.18.03.00.39
+        by smtp.gmail.com with ESMTPSA id f67sm19873313wme.16.2019.11.18.03.00.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 03:00:40 -0800 (PST)
+        Mon, 18 Nov 2019 03:00:43 -0800 (PST)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -69,11 +69,10 @@ Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com,
         Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh@kernel.org>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v6 1/8] dt-bindings: pwm: allwinner: Add H6 PWM description
-Date:   Mon, 18 Nov 2019 12:00:27 +0100
-Message-Id: <20191118110034.19444-2-peron.clem@gmail.com>
+Subject: [PATCH v6 6/8] pwm: sun4i: Add support for H6 PWM
+Date:   Mon, 18 Nov 2019 12:00:32 +0100
+Message-Id: <20191118110034.19444-7-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191118110034.19444-1-peron.clem@gmail.com>
 References: <20191118110034.19444-1-peron.clem@gmail.com>
@@ -87,89 +86,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-H6 PWM block is basically the same as A20 PWM, except that it also has
-bus clock and reset line which needs to be handled accordingly.
+Now that sun4i PWM driver supports deasserting reset line and enabling
+bus clock, support for H6 PWM can be added.
 
-Expand Allwinner PWM binding with H6 PWM specifics.
+Note that while H6 PWM has two channels, only first one is wired to
+output pin. Second channel is used as a clock source to companion AC200
+chip which is bundled into same package.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 48 +++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ drivers/pwm/pwm-sun4i.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-index 0ac52f83a58c..1bae446febbb 100644
---- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-+++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-@@ -30,13 +30,51 @@ properties:
-       - items:
-           - const: allwinner,sun50i-h5-pwm
-           - const: allwinner,sun5i-a13-pwm
-+      - const: allwinner,sun50i-h6-pwm
+diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+index a1d8851b18f0..640f6349e36f 100644
+--- a/drivers/pwm/pwm-sun4i.c
++++ b/drivers/pwm/pwm-sun4i.c
+@@ -358,6 +358,12 @@ static const struct sun4i_pwm_data sun4i_pwm_single_bypass = {
+ 	.npwm = 1,
+ };
  
-   reg:
-     maxItems: 1
- 
-   clocks:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description: Module Clock
-+      - description: Bus Clock
++static const struct sun4i_pwm_data sun50i_h6_pwm_data = {
++	.has_prescaler_bypass = true,
++	.has_direct_mod_clk_output = true,
++	.npwm = 2,
++};
 +
-+  # Even though it only applies to subschemas under the conditionals,
-+  # not listing them here will trigger a warning because of the
-+  # additionalsProperties set to false.
-+  clock-names: true
-+
-+  resets:
-     maxItems: 1
- 
-+  if:
-+    properties:
-+      compatible:
-+        contains:
-+          const: allwinner,sun50i-h6-pwm
-+
-+  then:
-+    properties:
-+      clocks:
-+        maxItems: 2
-+
-+      clock-names:
-+        items:
-+          - const: mod
-+          - const: bus
-+
-+    required:
-+      - clock-names
-+      - resets
-+
-+  else:
-+    properties:
-+      clocks:
-+        maxItems: 1
-+
- required:
-   - "#pwm-cells"
-   - compatible
-@@ -54,4 +92,14 @@ examples:
-         #pwm-cells = <3>;
-     };
- 
-+  - |
-+    pwm@300a000 {
-+      compatible = "allwinner,sun50i-h6-pwm";
-+      reg = <0x0300a000 0x400>;
-+      clocks = <&osc24M>, <&ccu CLK_BUS_PWM>;
-+      clock-names = "mod", "bus";
-+      resets = <&ccu RST_BUS_PWM>;
-+      #pwm-cells = <3>;
-+    };
-+
- ...
+ static const struct of_device_id sun4i_pwm_dt_ids[] = {
+ 	{
+ 		.compatible = "allwinner,sun4i-a10-pwm",
+@@ -374,6 +380,9 @@ static const struct of_device_id sun4i_pwm_dt_ids[] = {
+ 	}, {
+ 		.compatible = "allwinner,sun8i-h3-pwm",
+ 		.data = &sun4i_pwm_single_bypass,
++	}, {
++		.compatible = "allwinner,sun50i-h6-pwm",
++		.data = &sun50i_h6_pwm_data,
+ 	}, {
+ 		/* sentinel */
+ 	},
 -- 
 2.20.1
 
