@@ -6,71 +6,70 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0080BC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 02:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFF0C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 02:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5907206D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 02:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EACA206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 02:34:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="YhYa/eN1"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="vRfVZ/9Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfKRCas (ORCPT
+        id S1726325AbfKRCet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 21:30:48 -0500
-Received: from mail-pf1-f177.google.com ([209.85.210.177]:39026 "EHLO
-        mail-pf1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbfKRCas (ORCPT
+        Sun, 17 Nov 2019 21:34:49 -0500
+Received: from mail-pl1-f182.google.com ([209.85.214.182]:45561 "EHLO
+        mail-pl1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfKRCes (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 21:30:48 -0500
-Received: by mail-pf1-f177.google.com with SMTP id x28so9600528pfo.6
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 18:30:46 -0800 (PST)
+        Sun, 17 Nov 2019 21:34:48 -0500
+Received: by mail-pl1-f182.google.com with SMTP id w7so8831065plz.12
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 18:34:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=v8BAWdRTBsXRM8xdSToodwMOCDg93ZmO7iNpdniRA1s=;
-        b=YhYa/eN1/0CYmCrBfLipG4tNs7hUM2OspQjH0ajp8lzwCz5POfa0zWoBz9cXGUxZdl
-         knYZhCtZe1LuBDcxRPXlQKD86u2nVIL4Pez8iFZ9e0DkoqxhruLlJUMG57SpxO5lcXnb
-         Eddw1zTtJnbFlY01xHJOZrZcdYMdNp0XEoXbvg/t8BWvt1QUQN/0yhUFS49/Kk+xSMEO
-         goQA3DcV6IZM/ts4iL94rVvIz7JirIOOohGEhvm8KNaOzJUtC+XQ9R2vdfiyW0HMtwAT
-         ulbFuhgN+QOLLUO5USyDogwsqZzM3+mGjMLJop6YV6at95DO5rsy9gMJngj4QZBvYHk3
-         97jw==
+        bh=nxeQCTFouT/2s5fT1e6V3nFQ4a6l1Cid4i4aOiaISzE=;
+        b=vRfVZ/9Q0OQ9iYI/uGlws6Bk0WXb0lrIG6WllpGzCR/3YfmPGXJRNX1o1kE+hBsNrS
+         QISpjk9kgyisEOmDFk9huwsluLKfDEmdt2Y/QsDB0AwdU3GhaBK3wvNFYOvs8Ild/GOq
+         WxFkAYV9wvlR79VA/dQqoVZ/V9/vPEI32NUlTwPBfosKNy5PZi453Bz5Yg++TlayasrT
+         D9sExeJD1rC54Ae4QeCUiXRNeJp+EkvyvzuyBFSoEhpAyJE0ufM+Uxw8J03XzvMbx6j6
+         clST7zS1dA1LYdXOWDb6q4Wc9sPLsacv6eerQDHV8i+eXLCXIkH5AhwC6CNU2/NTVyCo
+         hC2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=v8BAWdRTBsXRM8xdSToodwMOCDg93ZmO7iNpdniRA1s=;
-        b=rNH6GT69sBtSEcz0Gu6ZPw+ak+qvnJXuSHVviPHK9jla1H8hDCFLm7lsJ9e+u/WtWG
-         1Q7+r5wkHcFWotGVs6ie2NQqmnU6/ZsHQb4EXFIvY3YaJrZda3NohMq9RCQrabBO5cac
-         tE4TbfZ+FNcn3+XowTtwdx3iuiVNzHVgrpRsUkhMoe15ZErPJbPw3nCz3sHiKLoMPuG0
-         iEQ/1aZniIEB6T+ufObovtyw4/DEBqF0BBzQSFSbViC4f79Ark3YZ5E6sPiLnBFLxSTh
-         XMkfcbhaMWtlGACqGLIGjaZk8CYUtZ4mvdzH9HTboajGUP8BYQHjbadQElig4bBn8CHl
-         CBRQ==
-X-Gm-Message-State: APjAAAXujwcsPgceCFoW99O+GTX/HUFgyLD1L0oq11fz9lzfykhLIq0v
-        hn9Nv6JqAEvt+4USVv6K+TQVxVspOKk=
-X-Google-Smtp-Source: APXvYqx3pA+d8Gd38MjrEOEeopWnEcuRlRvpg9kJlJbbc+eA1td1lda41Q7Mfwbhi8fdHqf+0Ta2EA==
-X-Received: by 2002:a63:ed43:: with SMTP id m3mr12428483pgk.261.1574044245656;
-        Sun, 17 Nov 2019 18:30:45 -0800 (PST)
+        bh=nxeQCTFouT/2s5fT1e6V3nFQ4a6l1Cid4i4aOiaISzE=;
+        b=lRPq37YtL8X3eVCv785tGyGDOCt//2CFCLskRXlfQJ6d4m7dk2cc9mP07brGs+gpL+
+         u1MeJaif9le0Nvvq673dlyd7UR15+bzZpM6Bts+BrVQcfbcu03FKeUkI3Dx7lmCh6Z2k
+         S5dak8CevTC231yvaTdgiXtCxDYJH/78ymyO4vFszOcEleCk7pBPTQaic6v3ErZFlbaQ
+         /MxpEl8KOrJDqEbnSgiDdvSb/nr/LegPB8GoCrjlmgs3jNsXFGwg09b2gfB7cdmU9/9C
+         WLHJ3tqsMCyTrdD/SAToekFdwRcW98nbTqzA+xJ9XW+y08aXhkQWhvHE2lybQqNVQ9Ot
+         Z0bg==
+X-Gm-Message-State: APjAAAWmTJ2Xv2DWzoBdRkmKN2UmvHUKyaQY30O8s55SnkJ1gj4ctex9
+        9RavUXGayPe1loTw2phD7iXL8n4k5Wc=
+X-Google-Smtp-Source: APXvYqzoCcD4MZKcKt/hzJeZ34eSGd4uZVquwZDi1OIa0omZc9KytuAg6FmOthTJrsvred2sJfcdJw==
+X-Received: by 2002:a17:902:b203:: with SMTP id t3mr22878135plr.51.1574044486212;
+        Sun, 17 Nov 2019 18:34:46 -0800 (PST)
 Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id s66sm21543885pfb.38.2019.11.17.18.30.43
+        by smtp.gmail.com with ESMTPSA id e59sm21281508pjk.28.2019.11.17.18.34.44
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 17 Nov 2019 18:30:44 -0800 (PST)
-Subject: Re: building individual files in subdirectories
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190528121148.GA18162@lst.de>
- <CAK7LNAQRW+phJrdR-5NfUE9L09O-nRiimfW5rB8Y8S9POtkxCA@mail.gmail.com>
- <CAK7LNAQFy=AfJtk4GT+FL=Kzcf6Ev=keKoUz_7Le7iZOQEc90g@mail.gmail.com>
+        Sun, 17 Nov 2019 18:34:45 -0800 (PST)
+Subject: Re: Recent slowdown in single object builds
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <d60946a1-fde3-ee6f-683a-42a611768bbf@kernel.dk>
+ <CAK7LNATVHbMHqjboACJF8BbKianRfjiGhHTXjtQuJVmv2HFPUA@mail.gmail.com>
+ <8caa1edf-9c6f-15e4-218d-c266013f8e28@kernel.dk>
+ <CAK7LNARUzJx==c1gh33obme21JiRR1CrKELkGpmPJQANx0LqSw@mail.gmail.com>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <a08ab4f0-d500-331b-da70-388e6244bc67@kernel.dk>
-Date:   Sun, 17 Nov 2019 19:30:42 -0700
+Message-ID: <38007c4c-45ff-d00e-05c5-948a2df783df@kernel.dk>
+Date:   Sun, 17 Nov 2019 19:34:42 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNAQFy=AfJtk4GT+FL=Kzcf6Ev=keKoUz_7Le7iZOQEc90g@mail.gmail.com>
+In-Reply-To: <CAK7LNARUzJx==c1gh33obme21JiRR1CrKELkGpmPJQANx0LqSw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -79,21 +78,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/17/19 5:15 PM, Masahiro Yamada wrote:
-> Hi Jens,
+On 11/17/19 5:40 PM, Masahiro Yamada wrote:
+> On Sun, Nov 17, 2019 at 1:57 AM Jens Axboe <axboe@kernel.dk> wrote:
+>>
+>> On 11/16/19 12:17 AM, Masahiro Yamada wrote:
+>>> On Sat, Nov 16, 2019 at 8:10 AM Jens Axboe <axboe@kernel.dk> wrote:
+>>>>
+>>>> Hi,
+>>>>
+>>>> I've noticed that current -git is a lot slower at doing single object
+>>>> builds than earlier kernels. Here's an example, building the exact same
+>>>> file on 5.2 and -git:
+>>>>
+>>>> $ time make fs/io_uring.o
+>>>> real    0m5.953s
+>>>> user    0m5.402s
+>>>> sys     0m0.649s
+>>>>
+>>>> vs 5.2 based (with all the backports, identical file):
+>>>>
+>>>> $ time make fs/io_uring.o
+>>>> real    0m3.218s
+>>>> user    0m2.968s
+>>>> sys     0m0.520s
+>>>>
+>>>> Any idea what's going on here? It's almost twice as slow, which is
+>>>> problematic...
 > 
 > 
-> (related to  https://lkml.org/lkml/2019/11/15/1152)
+> BTW, I am using a cheap machine based on Intel Core i7-6700K.
+> I can build fs/io_uring.o (based on x86_64_defconfig) much faster.
 > 
 > 
-> I received questions about single builds not working properly
-> some times in the past.
-> 
-> For example, the following is a post from Christoph to kbuild ML,
-> and my reply to it.
+> The slowdown (1.990 sec -> 2.861 sec) is not terrible for me.
 
-I'm not saying it isn't useful, what I'm saying is that slowing
-things down by almost 100% seems excessive!
+For those of us that do single object builds all the time the slowdown
+is pretty damn terrible. Granted that your 44% slowdown isn't as bad as
+my 85% slowdown, but it's still a MASSIVE slowdown.
 
 -- 
 Jens Axboe
