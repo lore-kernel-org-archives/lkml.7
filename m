@@ -2,176 +2,123 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CE5C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 769CEC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 204F520885
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ECEA2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:52:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574092325;
+	bh=C1sfSKfJMzb+jObAbp/Ej9UFK/lDdmVb7T0qnNQ+IJ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WMcfh6Myc6L3sssB/RD8nUx4jWXX16Hl9B3tED1QQ8FiFphTdQUuY9sQJ1lZp09Ux
+	 sU4uL1zlZSxrUiBTfHeeTs9bulVxliqle9sj8rIpyj9r5lMi6zV47eT3S8XEWvbJIG
+	 dQstLWhExEzud1ZZyBSjvNcLE5qL3JPwg+nDaXVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727355AbfKRPu6 (ORCPT
+        id S1727385AbfKRPwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 10:50:58 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49829 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727010AbfKRPu6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 10:50:58 -0500
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1iWjIg-0003J5-Ix; Mon, 18 Nov 2019 16:50:50 +0100
-Message-ID: <19429ab6840292cc9b3003face918a2bff4f8b55.camel@pengutronix.de>
-Subject: Re: [PATCH v2 5/6] crypto: caam - replace DRNG with TRNG for use
- with hw_random
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        linux-crypto@vger.kernel.org
-Cc:     Chris Healy <cphealy@gmail.com>,
-        Horia =?UTF-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 18 Nov 2019 16:50:49 +0100
-In-Reply-To: <20191118153843.28136-6-andrew.smirnov@gmail.com>
-References: <20191118153843.28136-1-andrew.smirnov@gmail.com>
-         <20191118153843.28136-6-andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Mon, 18 Nov 2019 10:52:04 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58334 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726216AbfKRPwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 10:52:04 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C842AB0E6;
+        Mon, 18 Nov 2019 15:52:01 +0000 (UTC)
+Date:   Mon, 18 Nov 2019 16:52:00 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 4.19 56/81] kernel/sysctl.c: do not override max_threads
+ provided by userspace
+Message-ID: <20191118155200.GG14255@dhcp22.suse.cz>
+References: <20191016214805.727399379@linuxfoundation.org>
+ <20191016214842.621065901@linuxfoundation.org>
+ <20191017105940.GA5966@amd>
+ <20191017110516.GG24485@dhcp22.suse.cz>
+ <20191118152558.GA26236@duo.ucw.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191118152558.GA26236@duo.ucw.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mo, 2019-11-18 at 07:38 -0800, Andrey Smirnov wrote:
-> In order to give CAAM-generated random data highest quarlity
-> raiting (999), replace current code that uses DRNG with code that
-> fetches data straight out of TRNG used to seed aforementioned DRNG.
+On Mon 18-11-19 16:25:58, Pavel Machek wrote:
+> Hi!
 > 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Horia Geantă <horia.geanta@nxp.com>
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
-> Cc: linux-imx@nxp.com
-> Cc: linux-crypto@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
-[...]
-> diff --git a/drivers/crypto/caam/trng.c b/drivers/crypto/caam/trng.c
-> new file mode 100644
-> index 000000000000..ab2af786543e
-> --- /dev/null
-> +++ b/drivers/crypto/caam/trng.c
-> @@ -0,0 +1,85 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * hw_random interface for TRNG generator in CAAM RNG block
-> + *
-> + * Copyright 2019 Zoidac Inflight Innovations
-                     ^ Zodiac
+> > > > From: Michal Hocko <mhocko@suse.com>
+> > > > 
+> > > > commit b0f53dbc4bc4c371f38b14c391095a3bb8a0bb40 upstream.
+> > > > 
+> > > > Partially revert 16db3d3f1170 ("kernel/sysctl.c: threads-max observe
+> > > > limits") because the patch is causing a regression to any workload which
+> > > > needs to override the auto-tuning of the limit provided by kernel.
+> > > > 
+> > > > set_max_threads is implementing a boot time guesstimate to provide a
+> > > > sensible limit of the concurrently running threads so that runaways will
+> > > > not deplete all the memory.  This is a good thing in general but there
+> > > > are workloads which might need to increase this limit for an application
+> > > > to run (reportedly WebSpher MQ is affected) and that is simply not
+> > > > possible after the mentioned change.  It is also very dubious to
+> > > > override an admin decision by an estimation that doesn't have any direct
+> > > > relation to correctness of the kernel operation.
+> > > > 
+> > > > Fix this by dropping set_max_threads from sysctl_max_threads so any
+> > > > value is accepted as long as it fits into MAX_THREADS which is important
+> > > > to check because allowing more threads could break internal robust futex
+> > > > restriction.  While at it, do not use MIN_THREADS as the lower boundary
+> > > > because it is also only a heuristic for automatic estimation and admin
+> > > > might have a good reason to stop new threads to be created even when
+> > > > below this limit.
+> > > 
+> > > Ok, why not, but I smell followup work could be done:
+> > > 
+> > > > @@ -2635,7 +2635,7 @@ int sysctl_max_threads(struct ctl_table
+> > > >  	if (ret || !write)
+> > > >  		return ret;
+> > > >  
+> > > > -	set_max_threads(threads);
+> > > > +	max_threads = threads;
+> > > >  
+> > > 
+> > > AFAICT set_max_threads can now become __init.
+> > 
+> > Yes. Care to send a patch?
+> 
+> I'm not usually hacking in that area. Could you do that?
 
-> + *
-> + */
-> +
-> +#include <linux/hw_random.h>
-> +
-> +#include "compat.h"
-> +#include "regs.h"
-> +#include "intern.h"
-> +
-> +struct caam_trng_ctx {
-> +	struct rng4tst __iomem *r4tst;
-> +	struct hwrng rng;
-> +};
-> +
-> +static bool caam_trng_busy(struct caam_trng_ctx *ctx)
-> +{
-> +	return !(rd_reg32(&ctx->r4tst->rtmctl) & RTMCTL_ENT_VAL);
-> +}
-> +
-> +static int caam_trng_read(struct hwrng *rng, void *data, size_t max, bool wait)
-> +{
-> +	struct caam_trng_ctx *ctx = (void *)rng->priv;
-> +	u32 rtent[ARRAY_SIZE(ctx->r4tst->rtent)];
-> +	size_t residue = max;
-> +
-> +	clrsetbits_32(&ctx->r4tst->rtmctl, 0, RTMCTL_ACC);
-> +
-> +	do {
-> +		const size_t chunk = min(residue, sizeof(rtent));
-> +		unsigned int i;
-> +
-> +		while (caam_trng_busy(ctx)) {
+I can put it on my ever growing todo list. But this should be a low
+hanging fruit that doesn't really require a deep understanding of the
+specific subsystem.
 
-The CAAM needs quite a bit of time to gather the 384bits of raw
-entropy, in my testing it was almost 60ms. A busy loop (even with a
-cpu_relax) for such an extended amount of time is probably not
-appropriate, better sleep for some time here.
+> > > Plus, I don't see any locking here, should this be WRITE_ONCE() at
+> > > minimum?
+> > 
+> > Why would that matter? Do you expect several root processes race to set
+> > the value?
+> 
+> Well, for example to warn humans that this code is accessing unlocked
+> variable. Second, as is, code is not valid C and compilers are
+> allowed to do strange stuff ("undefined behaviour"). Third, there are
+> concurency checkers that will not like this one.
 
-Also in the !wait case we are almost guaranteed to leave this function
-without any entropy gathered. Maybe we should just bail out on !wait
-without even trying to enable the TRNG access?
-
-Regards,
-Lucas
-
-> +			if (wait)
-> +				cpu_relax();
-> +			else
-> +				goto out;
-> +		}
-> +
-> +		for (i = 0; i < DIV_ROUND_UP(chunk, sizeof(u32)); i++)
-> +			rtent[i] = rd_reg32(&ctx->r4tst->rtent[i]);
-> +
-> +		memcpy(data, rtent, chunk);
-> +
-> +		residue -= chunk;
-> +		data    += chunk;
-> +	} while (residue);
-> +
-> +out:
-> +	clrsetbits_32(&ctx->r4tst->rtmctl, RTMCTL_ACC, 0);
-> +	return max - residue;
-> +}
-> +
-> +int caam_trng_register(struct device *ctrldev)
-> +{
-> +	struct caam_drv_private *priv = dev_get_drvdata(ctrldev);
-> +
-> +	if (caam_has_rng(priv)) {
-> +		struct caam_trng_ctx *ctx;
-> +		int err;
-> +
-> +		ctx = devm_kzalloc(ctrldev, sizeof(*ctx), GFP_KERNEL);
-> +		if (!ctx)
-> +			return -ENOMEM;
-> +
-> +		ctx->r4tst = &priv->ctrl->r4tst[0];
-> +
-> +		ctx->rng.name = "trng-caam";
-> +		ctx->rng.read = caam_trng_read;
-> +		ctx->rng.priv = (unsigned long)ctx;
-> +		ctx->rng.quality = 999;
-> +
-> +		dev_info(ctrldev, "registering %s\n", ctx->rng.name);
-> +
-> +		err = devm_hwrng_register(ctrldev, &ctx->rng);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	return 0;
-> +}
-
+I do not see any undefined behahvior in assigning an integer in a
+lockless manner if there are no actual consistency issues. If this is
+not the case then please do describe them in a specific manner.
+-- 
+Michal Hocko
+SUSE Labs
