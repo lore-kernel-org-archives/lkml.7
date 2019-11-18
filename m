@@ -2,486 +2,175 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B0EC43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F64C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE1C721479
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DEC92229F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:11:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sMrm3sU1"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="MH3iZKyp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfKRRJA (ORCPT
+        id S1727010AbfKRRLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 12:09:00 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:43554 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726705AbfKRRI6 (ORCPT
+        Mon, 18 Nov 2019 12:11:32 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42450 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbfKRRLb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 12:08:58 -0500
-Received: by mail-ed1-f65.google.com with SMTP id w6so14223974edx.10;
-        Mon, 18 Nov 2019 09:08:55 -0800 (PST)
+        Mon, 18 Nov 2019 12:11:31 -0500
+Received: by mail-qt1-f193.google.com with SMTP id t20so21015739qtn.9
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 09:11:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V4ziVOoNx+K2hdtnfr+ccaXKTP9wOqGTyHLF1OvLIoQ=;
-        b=sMrm3sU1LGuaXPhvl/vYWNAKFhZkiMMDirTCu8+H+pK1lGUEcCDBt7XGMUivyVKJHq
-         cNjBemSApXn+R449cZXV23WTUcPae4lxvJoM3Dnd1mo64q80HCIiofwGcu5tN/dXm/X0
-         3S3ECKGUt/YKH/YbNQ9vYDwXVTf/ldGdGAk2ue/BGSsgl7OpBVwa4hLGJLZ7OR+setwZ
-         m1G7ftj3h/rEvwa96FZ4OeFptWdfLbWUq50auRhA7G5UYzvXkL3l0RN5e+k4Gq5bJDER
-         9RPvTNnDpSXoO86WRXiRrNElzhBOghh1OIqdc0rRi4RHNomQPjFsqOKP7L0/XqBGLOY6
-         UWTA==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=CLWuzn35UcCrxAH0vPUkNSjLox6KKcBRbOlrNyg/FIg=;
+        b=MH3iZKypeEMn6eJb9Ix/Otz7onqgGHRJL9afadNFwPY0KDIvW4KrX0L3JQ6qwF8/jA
+         N1oCKYAU8Dz9r6TX6rqm31mg4N1/Wvg+5Yw096OvLhzj/43uvpC2fNWILPUDBNvmTDgL
+         nvGRd6miKKmeDVZ8u3Z+HMjVMlLyJ3Ahewvbx4kx98y+GVFAgG7iDjuryjAnL8mSGvYs
+         a+olFnVuUuc4Gg94cTcPII9Sykl9gDE9dPTjmymuo9L+k+y6GyLEdzyO3AAVW6YUW1pp
+         R9lhOhRE5PqL2bcKrAjPMq1plY0/64fqqdSzd6An8Ugn8H8l9r9XN/bXU4yJQ8SNnsnV
+         dcEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V4ziVOoNx+K2hdtnfr+ccaXKTP9wOqGTyHLF1OvLIoQ=;
-        b=Md05JoF4wOi7Myj2+HoMJLv0YgJAzIY/dD4dHy+si8jXRM12dNuCgwaE03yiDOp1zO
-         3ETbd7XInOLCZsca0TMs6ZsM1CdQiqMB2Pa3mfjKKEx1YVumUQGGcuV50NON5kbIPdqX
-         w5fGa+mp8Nesm3Jmk1Vaat9q3Fzy+UCP9LFCtkY7c/6XTT3PmnnAlfjByyoyVQFf2Aet
-         oln4HRjOi3zHNBhszc0WXAhpX3yY/i+jXEoYmpzZKfZ0zS3M2Zg87EMm5vzXRQkc2/4A
-         10amPm6zpCIJj8785n8c/gMTNi0y2lX7zv4/8Wu2tiP18SoLoUHsn+cIfi3iYplDbzxf
-         oJSQ==
-X-Gm-Message-State: APjAAAXRyhzA6Nwb5qiSoSGy1Sfz2kuNxaOT+2z5pLmPN1qh+9EIyq0E
-        sixl6SCvY4o7gSclJyL5gq+Ii0amC5I0Hc0pu+s=
-X-Google-Smtp-Source: APXvYqxMR7aZfrg+1zYMqU5h6HivVBdEL2bE8ra9e/c65uT+FhwKCLr8R85yghIqUPOzJBgZ2Qiuu0SD9U5SAWCVGNk=
-X-Received: by 2002:a17:906:d143:: with SMTP id br3mr27968702ejb.215.1574096934917;
- Mon, 18 Nov 2019 09:08:54 -0800 (PST)
-MIME-Version: 1.0
-References: <1574077444-24554-1-git-send-email-kalyan_t@codeaurora.org> <1574077444-24554-2-git-send-email-kalyan_t@codeaurora.org>
-In-Reply-To: <1574077444-24554-2-git-send-email-kalyan_t@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Mon, 18 Nov 2019 09:08:43 -0800
-Message-ID: <CAF6AEGt2K54vOWRMEckYCYx2pOndT4vUePRM8SxM9T3hCn2ctQ@mail.gmail.com>
-Subject: Re: [PATCH v1] msm:disp:dpu1: setup display datapath for SC7180 target
-To:     Kalyan Thota <kalyan_t@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        dhar@codeaurora.org, Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        travitej@codeaurora.org, nganji@codeaurora.org
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CLWuzn35UcCrxAH0vPUkNSjLox6KKcBRbOlrNyg/FIg=;
+        b=QKp/SxXcoMeJT+IKe0NJYmIFlKjW35dDCS8FraLL+h2m+BQlgUZsAlnYbycIRiZE+p
+         n7iiwblP50Fq9kCLsJlSmfAaJCI5dfQFaIoYfXrrITXbnJ5OgCcmFbB5D4IDvj3LcYsV
+         d5vhOqpyU58UGKTTAv+vrXquEKDKCay4VSsYb7zIPPEaKLlrXes97SJcyqGS3WOuBWXl
+         LKCcmM/t+JxZJXKYOjX9zL1ERUkbGRNayo39rqdqz3AxohozEhOEJ8NJTY1PeWjDGcTe
+         ziqzrGAx2pk4RfVPd3Khl4hTvQ5SANc8RcirxMck7aAEKQDZN4P8W349EBlPU5N34iII
+         naMg==
+X-Gm-Message-State: APjAAAW8tH1dO8bQa5BFToxmHMX2hjKA7Vi2nY874ay2Pltamwhu9xlW
+        GAj2w8BKyRZ/eUBkX2Xzj3YqtA==
+X-Google-Smtp-Source: APXvYqzliPKDmikS4XgP3WlBwNZGz6arPLK8vRNTOmMUT5SgSVY0OZfuJoTZKIegW2snRbtqR/4JdA==
+X-Received: by 2002:ac8:6f17:: with SMTP id g23mr9774921qtv.104.1574097090195;
+        Mon, 18 Nov 2019 09:11:30 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id t24sm11012562qtc.97.2019.11.18.09.11.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Nov 2019 09:11:29 -0800 (PST)
+Message-ID: <1574097087.5937.141.camel@lca.pw>
+Subject: Re: powerpc ftrace broken due to "manual merge of the ftrace tree
+ with the arm64 tree"
+From:   Qian Cai <cai@lca.pw>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon, 18 Nov 2019 12:11:27 -0500
+In-Reply-To: <20191118101645.2f68c521@oasis.local.home>
+References: <1573849732.5937.136.camel@lca.pw>
+         <20191115160230.78871d8f@gandalf.local.home>
+         <1573851994.5937.138.camel@lca.pw>
+         <20191118095104.0daebbc3@oasis.local.home>
+         <20191118095842.546b38d8@oasis.local.home>
+         <20191118101645.2f68c521@oasis.local.home>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 3:44 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
->
-> Add changes to setup display datapath on SC7180 target
->
-> changes in v1:
-> 1) add changes to support ctl_active on SC7180 target
-> 2) while selecting the number of mixers in the topology
-> consider the interface width.
->
-> This patch has dependency on the below series
->
-> https://patchwork.kernel.org/patch/11249423/
->
-> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
-> Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
-> Signed-off-by: Raviteja Tamatam <travitej@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c        |  4 +-
->  .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c   | 21 +++++-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c     |  1 +
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c         | 84 +++++++++++++++++++++-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h         | 24 +++++++
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c        | 28 ++++++++
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h        |  6 ++
->  7 files changed, 161 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> index d82ea99..96c48a8 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> @@ -58,7 +58,7 @@
->
->  #define IDLE_SHORT_TIMEOUT     1
->
-> -#define MAX_VDISPLAY_SPLIT 1080
-> +#define MAX_HDISPLAY_SPLIT 1080
->
->  /* timeout in frames waiting for frame done */
->  #define DPU_ENCODER_FRAME_DONE_TIMEOUT_FRAMES 5
-> @@ -535,7 +535,7 @@ static struct msm_display_topology dpu_encoder_get_topology(
->                         intf_count++;
->
->         /* User split topology for width > 1080 */
-> -       topology.num_lm = (mode->vdisplay > MAX_VDISPLAY_SPLIT) ? 2 : 1;
-> +       topology.num_lm = (mode->hdisplay > MAX_HDISPLAY_SPLIT) ? 2 : 1;
+On Mon, 2019-11-18 at 10:16 -0500, Steven Rostedt wrote:
+> On Mon, 18 Nov 2019 09:58:42 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > On Mon, 18 Nov 2019 09:51:04 -0500
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> > 
+> > > > > Test this commit please: b83b43ffc6e4b514ca034a0fbdee01322e2f7022      
+> > > > 
+> > > > # git reset --hard b83b43ffc6e4b514ca034a0fbdee01322e2f7022
+> > > > 
+> > > > Yes, that one is bad.    
+> > > 
+> > > Can you see if this patch fixes the issue for you?  
+> > 
+> > Don't bother. This isn't the right fix, I know see the real issue.
+> > 
+> > New fix coming shortly.
+> > 
+> 
+> Can you try this?
 
-could you spit this fix into it's own patch (and I guess s/User/Use/
-in the comment
+Yes, it works fine.
 
-I guess width > 1080 actually works ok?  IIRC mdp5 switched to split
-at 2k.  Or is it advantages to use split path (with presumably lower
-clocks)?  I wonder if there are scenarios where we want to use split
-topology unless there is an external display connected, or depending
-on the resolution of the external display?
-
-BR,
--R
-
->         topology.num_enc = 0;
->         topology.num_intf = intf_count;
->
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-> index b9c84fb..8cc8ad12 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-> @@ -280,6 +280,14 @@ static void dpu_encoder_phys_vid_setup_timing_engine(
->         phys_enc->hw_intf->ops.setup_timing_gen(phys_enc->hw_intf,
->                         &timing_params, fmt);
->         phys_enc->hw_ctl->ops.setup_intf_cfg(phys_enc->hw_ctl, &intf_cfg);
-> +
-> +       /* setup which pp blk will connect to this intf */
-> +       if (phys_enc->hw_intf->ops.bind_pingpong_blk)
-> +               phys_enc->hw_intf->ops.bind_pingpong_blk(
-> +                               phys_enc->hw_intf,
-> +                               true,
-> +                               phys_enc->hw_pp->idx);
-> +
->         spin_unlock_irqrestore(phys_enc->enc_spinlock, lock_flags);
->
->         programmable_fetch_config(phys_enc, &timing_params);
-> @@ -435,6 +443,7 @@ static void dpu_encoder_phys_vid_enable(struct dpu_encoder_phys *phys_enc)
->  {
->         struct dpu_hw_ctl *ctl;
->         u32 flush_mask = 0;
-> +       u32 intf_flush_mask = 0;
->
->         ctl = phys_enc->hw_ctl;
->
-> @@ -459,10 +468,18 @@ static void dpu_encoder_phys_vid_enable(struct dpu_encoder_phys *phys_enc)
->         ctl->ops.get_bitmask_intf(ctl, &flush_mask, phys_enc->hw_intf->idx);
->         ctl->ops.update_pending_flush(ctl, flush_mask);
->
-> +       if (ctl->ops.get_bitmask_active_intf)
-> +               ctl->ops.get_bitmask_active_intf(ctl, &intf_flush_mask,
-> +                       phys_enc->hw_intf->idx);
-> +
-> +       if (ctl->ops.update_pending_intf_flush)
-> +               ctl->ops.update_pending_intf_flush(ctl, intf_flush_mask);
-> +
->  skip_flush:
->         DPU_DEBUG_VIDENC(phys_enc,
-> -                        "update pending flush ctl %d flush_mask %x\n",
-> -                        ctl->idx - CTL_0, flush_mask);
-> +               "update pending flush ctl %d flush_mask 0%x intf_mask 0x%x\n",
-> +               ctl->idx - CTL_0, flush_mask, intf_flush_mask);
-> +
->
->         /* ctl_flush & timing engine enable will be triggered by framework */
->         if (phys_enc->enable_state == DPU_ENC_DISABLED)
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-> index 1d2ea93..1f2ac6e 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-> @@ -374,6 +374,7 @@
->         {\
->         .name = _name, .id = _id, \
->         .base = _base, .len = 0x280, \
-> +       .features = BIT(DPU_CTL_ACTIVE_CFG), \
->         .type = _type, \
->         .controller_id = _ctrl_id, \
->         .prog_fetch_lines_worst_case = 24 \
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
-> index 179e8d5..2ce4b5a 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
-> @@ -22,11 +22,15 @@
->  #define   CTL_PREPARE                   0x0d0
->  #define   CTL_SW_RESET                  0x030
->  #define   CTL_LAYER_EXTN_OFFSET         0x40
-> +#define   CTL_INTF_ACTIVE               0x0F4
-> +#define   CTL_INTF_FLUSH                0x110
-> +#define   CTL_INTF_MASTER               0x134
->
->  #define CTL_MIXER_BORDER_OUT            BIT(24)
->  #define CTL_FLUSH_MASK_CTL              BIT(17)
->
->  #define DPU_REG_RESET_TIMEOUT_US        2000
-> +#define  INTF_IDX       31
->
->  static struct dpu_ctl_cfg *_ctl_offset(enum dpu_ctl ctl,
->                 struct dpu_mdss_cfg *m,
-> @@ -100,11 +104,27 @@ static inline void dpu_hw_ctl_update_pending_flush(struct dpu_hw_ctl *ctx,
->         ctx->pending_flush_mask |= flushbits;
->  }
->
-> +static inline void dpu_hw_ctl_update_pending_intf_flush(struct dpu_hw_ctl *ctx,
-> +               u32 flushbits)
-> +{
-> +       ctx->pending_intf_flush_mask |= flushbits;
-> +}
-> +
->  static u32 dpu_hw_ctl_get_pending_flush(struct dpu_hw_ctl *ctx)
->  {
->         return ctx->pending_flush_mask;
->  }
->
-> +static inline void dpu_hw_ctl_trigger_flush_v1(struct dpu_hw_ctl *ctx)
-> +{
-> +
-> +       if (ctx->pending_flush_mask & BIT(INTF_IDX))
-> +               DPU_REG_WRITE(&ctx->hw, CTL_INTF_FLUSH,
-> +                               ctx->pending_intf_flush_mask);
-> +
-> +       DPU_REG_WRITE(&ctx->hw, CTL_FLUSH, ctx->pending_flush_mask);
-> +}
-> +
->  static inline void dpu_hw_ctl_trigger_flush(struct dpu_hw_ctl *ctx)
->  {
->         trace_dpu_hw_ctl_trigger_pending_flush(ctx->pending_flush_mask,
-> @@ -222,6 +242,36 @@ static int dpu_hw_ctl_get_bitmask_intf(struct dpu_hw_ctl *ctx,
->         return 0;
->  }
->
-> +static int dpu_hw_ctl_get_bitmask_intf_v1(struct dpu_hw_ctl *ctx,
-> +               u32 *flushbits, enum dpu_intf intf)
-> +{
-> +       switch (intf) {
-> +       case INTF_0:
-> +       case INTF_1:
-> +               *flushbits |= BIT(31);
-> +               break;
-> +       default:
-> +               return 0;
-> +       }
-> +       return 0;
-> +}
-> +
-> +static int dpu_hw_ctl_active_get_bitmask_intf(struct dpu_hw_ctl *ctx,
-> +               u32 *flushbits, enum dpu_intf intf)
-> +{
-> +       switch (intf) {
-> +       case INTF_0:
-> +               *flushbits |= BIT(0);
-> +               break;
-> +       case INTF_1:
-> +               *flushbits |= BIT(1);
-> +               break;
-> +       default:
-> +               return 0;
-> +       }
-> +       return 0;
-> +}
-> +
->  static u32 dpu_hw_ctl_poll_reset_status(struct dpu_hw_ctl *ctx, u32 timeout_us)
->  {
->         struct dpu_hw_blk_reg_map *c = &ctx->hw;
-> @@ -422,6 +472,24 @@ static void dpu_hw_ctl_setup_blendstage(struct dpu_hw_ctl *ctx,
->         DPU_REG_WRITE(c, CTL_LAYER_EXT3(lm), mixercfg_ext3);
->  }
->
-> +
-> +static void dpu_hw_ctl_intf_cfg_v1(struct dpu_hw_ctl *ctx,
-> +               struct dpu_hw_intf_cfg *cfg)
-> +{
-> +       struct dpu_hw_blk_reg_map *c = &ctx->hw;
-> +       u32 intf_active = 0;
-> +       u32 mode_sel = 0;
-> +
-> +       if (cfg->intf_mode_sel == DPU_CTL_MODE_SEL_CMD)
-> +               mode_sel |= BIT(17);
-> +
-> +       intf_active = DPU_REG_READ(c, CTL_INTF_ACTIVE);
-> +       intf_active |= BIT(cfg->intf - INTF_0);
-> +
-> +       DPU_REG_WRITE(c, CTL_TOP, mode_sel);
-> +       DPU_REG_WRITE(c, CTL_INTF_ACTIVE, intf_active);
-> +}
-> +
->  static void dpu_hw_ctl_intf_cfg(struct dpu_hw_ctl *ctx,
->                 struct dpu_hw_intf_cfg *cfg)
->  {
-> @@ -455,21 +523,31 @@ static void dpu_hw_ctl_intf_cfg(struct dpu_hw_ctl *ctx,
->  static void _setup_ctl_ops(struct dpu_hw_ctl_ops *ops,
->                 unsigned long cap)
->  {
-> +       if (cap & BIT(DPU_CTL_ACTIVE_CFG)) {
-> +               ops->trigger_flush = dpu_hw_ctl_trigger_flush_v1;
-> +               ops->setup_intf_cfg = dpu_hw_ctl_intf_cfg_v1;
-> +               ops->get_bitmask_intf = dpu_hw_ctl_get_bitmask_intf_v1;
-> +               ops->get_bitmask_active_intf =
-> +                       dpu_hw_ctl_active_get_bitmask_intf;
-> +               ops->update_pending_intf_flush =
-> +                       dpu_hw_ctl_update_pending_intf_flush;
-> +       } else {
-> +               ops->trigger_flush = dpu_hw_ctl_trigger_flush;
-> +               ops->setup_intf_cfg = dpu_hw_ctl_intf_cfg;
-> +               ops->get_bitmask_intf = dpu_hw_ctl_get_bitmask_intf;
-> +       }
->         ops->clear_pending_flush = dpu_hw_ctl_clear_pending_flush;
->         ops->update_pending_flush = dpu_hw_ctl_update_pending_flush;
->         ops->get_pending_flush = dpu_hw_ctl_get_pending_flush;
-> -       ops->trigger_flush = dpu_hw_ctl_trigger_flush;
->         ops->get_flush_register = dpu_hw_ctl_get_flush_register;
->         ops->trigger_start = dpu_hw_ctl_trigger_start;
->         ops->trigger_pending = dpu_hw_ctl_trigger_pending;
-> -       ops->setup_intf_cfg = dpu_hw_ctl_intf_cfg;
->         ops->reset = dpu_hw_ctl_reset_control;
->         ops->wait_reset_status = dpu_hw_ctl_wait_reset_status;
->         ops->clear_all_blendstages = dpu_hw_ctl_clear_all_blendstages;
->         ops->setup_blendstage = dpu_hw_ctl_setup_blendstage;
->         ops->get_bitmask_sspp = dpu_hw_ctl_get_bitmask_sspp;
->         ops->get_bitmask_mixer = dpu_hw_ctl_get_bitmask_mixer;
-> -       ops->get_bitmask_intf = dpu_hw_ctl_get_bitmask_intf;
->  };
->
->  static struct dpu_hw_blk_ops dpu_hw_ops;
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h
-> index d3ae939..1e3973c 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h
-> @@ -91,6 +91,15 @@ struct dpu_hw_ctl_ops {
->                 u32 flushbits);
->
->         /**
-> +        * OR in the given flushbits to the cached pending_intf_flush_mask
-> +        * No effect on hardware
-> +        * @ctx       : ctl path ctx pointer
-> +        * @flushbits : module flushmask
-> +        */
-> +       void (*update_pending_intf_flush)(struct dpu_hw_ctl *ctx,
-> +               u32 flushbits);
-> +
-> +       /**
->          * Write the value of the pending_flush_mask to hardware
->          * @ctx       : ctl path ctx pointer
->          */
-> @@ -130,11 +139,24 @@ struct dpu_hw_ctl_ops {
->         uint32_t (*get_bitmask_mixer)(struct dpu_hw_ctl *ctx,
->                 enum dpu_lm blk);
->
-> +       /**
-> +        * Query the value of the intf flush mask
-> +        * No effect on hardware
-> +        * @ctx       : ctl path ctx pointer
-> +        */
->         int (*get_bitmask_intf)(struct dpu_hw_ctl *ctx,
->                 u32 *flushbits,
->                 enum dpu_intf blk);
->
->         /**
-> +        * Query the value of the intf active flush mask
-> +        * No effect on hardware
-> +        * @ctx       : ctl path ctx pointer
-> +        */
-> +       int (*get_bitmask_active_intf)(struct dpu_hw_ctl *ctx,
-> +               u32 *flushbits, enum dpu_intf blk);
-> +
-> +       /**
->          * Set all blend stages to disabled
->          * @ctx       : ctl path ctx pointer
->          */
-> @@ -159,6 +181,7 @@ struct dpu_hw_ctl_ops {
->   * @mixer_count: number of mixers
->   * @mixer_hw_caps: mixer hardware capabilities
->   * @pending_flush_mask: storage for pending ctl_flush managed via ops
-> + * @pending_intf_flush_mask: pending INTF flush
->   * @ops: operation list
+> 
+> It appears that I picked a name "ftrace_graph_stub", that was already in
+> use by powerpc. This just renames the function stub I used.
+> 
+> -- Steve
+> 
+> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> index 0f358be551cd..996db32c491b 100644
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@ -112,7 +112,7 @@
+>  #ifdef CONFIG_FTRACE_MCOUNT_RECORD
+>  #ifdef CC_USING_PATCHABLE_FUNCTION_ENTRY
+>  /*
+> - * Need to also make ftrace_graph_stub point to ftrace_stub
+> + * Need to also make ftrace_stub_graph point to ftrace_stub
+>   * so that the same stub location may have different protocols
+>   * and not mess up with C verifiers.
 >   */
->  struct dpu_hw_ctl {
-> @@ -171,6 +194,7 @@ struct dpu_hw_ctl {
->         int mixer_count;
->         const struct dpu_lm_cfg *mixer_hw_caps;
->         u32 pending_flush_mask;
-> +       u32 pending_intf_flush_mask;
->
->         /* ops */
->         struct dpu_hw_ctl_ops ops;
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
-> index dcd87cd..eff5e6a 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
-> @@ -56,6 +56,8 @@
->  #define   INTF_FRAME_COUNT              0x0AC
->  #define   INTF_LINE_COUNT               0x0B0
->
-> +#define   INTF_MUX                      0x25C
-> +
->  static struct dpu_intf_cfg *_intf_offset(enum dpu_intf intf,
->                 struct dpu_mdss_cfg *m,
->                 void __iomem *addr,
-> @@ -218,6 +220,30 @@ static void dpu_hw_intf_setup_prg_fetch(
->         DPU_REG_WRITE(c, INTF_CONFIG, fetch_enable);
->  }
->
-> +static void dpu_hw_intf_bind_pingpong_blk(
-> +               struct dpu_hw_intf *intf,
-> +               bool enable,
-> +               const enum dpu_pingpong pp)
-> +{
-> +       struct dpu_hw_blk_reg_map *c;
-> +       u32 mux_cfg;
-> +
-> +       if (!intf)
-> +               return;
-> +
-> +       c = &intf->hw;
-> +
-> +       mux_cfg = DPU_REG_READ(c, INTF_MUX);
-> +       mux_cfg &= ~0xf;
-> +
-> +       if (enable)
-> +               mux_cfg |= (pp - PINGPONG_0) & 0x7;
-> +       else
-> +               mux_cfg |= 0xf;
-> +
-> +       DPU_REG_WRITE(c, INTF_MUX, mux_cfg);
-> +}
-> +
->  static void dpu_hw_intf_get_status(
->                 struct dpu_hw_intf *intf,
->                 struct intf_status *s)
-> @@ -254,6 +280,8 @@ static void _setup_intf_ops(struct dpu_hw_intf_ops *ops,
->         ops->get_status = dpu_hw_intf_get_status;
->         ops->enable_timing = dpu_hw_intf_enable_timing_engine;
->         ops->get_line_count = dpu_hw_intf_get_line_count;
-> +       if (cap & BIT(DPU_CTL_ACTIVE_CFG))
-> +               ops->bind_pingpong_blk = dpu_hw_intf_bind_pingpong_blk;
->  }
->
->  static struct dpu_hw_blk_ops dpu_hw_ops;
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h
-> index b03acc2..a1e0ef3 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h
-> @@ -52,6 +52,8 @@ struct intf_status {
->   * @ enable_timing: enable/disable timing engine
->   * @ get_status: returns if timing engine is enabled or not
->   * @ get_line_count: reads current vertical line counter
-> + * @bind_pingpong_blk: enable/disable the connection with pingpong which will
-> + *                     feed pixels to this interface
+> @@ -120,17 +120,17 @@
+>  			__start_mcount_loc = .;			\
+>  			KEEP(*(__patchable_function_entries))	\
+>  			__stop_mcount_loc = .;			\
+> -			ftrace_graph_stub = ftrace_stub;
+> +			ftrace_stub_graph = ftrace_stub;
+>  #else
+>  #define MCOUNT_REC()	. = ALIGN(8);				\
+>  			__start_mcount_loc = .;			\
+>  			KEEP(*(__mcount_loc))			\
+>  			__stop_mcount_loc = .;			\
+> -			ftrace_graph_stub = ftrace_stub;
+> +			ftrace_stub_graph = ftrace_stub;
+>  #endif
+>  #else
+>  # ifdef CONFIG_FUNCTION_TRACER
+> -#  define MCOUNT_REC()	ftrace_graph_stub = ftrace_stub;
+> +#  define MCOUNT_REC()	ftrace_stub_graph = ftrace_stub;
+>  # else
+>  #  define MCOUNT_REC()
+>  # endif
+> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+> index fa3ce10d0405..67e0c462b059 100644
+> --- a/kernel/trace/fgraph.c
+> +++ b/kernel/trace/fgraph.c
+> @@ -336,10 +336,10 @@ int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace)
+>   * Simply points to ftrace_stub, but with the proper protocol.
+>   * Defined by the linker script in linux/vmlinux.lds.h
 >   */
->  struct dpu_hw_intf_ops {
->         void (*setup_timing_gen)(struct dpu_hw_intf *intf,
-> @@ -68,6 +70,10 @@ struct dpu_hw_intf_ops {
->                         struct intf_status *status);
->
->         u32 (*get_line_count)(struct dpu_hw_intf *intf);
-> +
-> +       void (*bind_pingpong_blk)(struct dpu_hw_intf *intf,
-> +                       bool enable,
-> +                       const enum dpu_pingpong pp);
->  };
->
->  struct dpu_hw_intf {
-> --
-> 1.9.1
->
+> -extern void ftrace_graph_stub(struct ftrace_graph_ret *);
+> +extern void ftrace_stub_graph(struct ftrace_graph_ret *);
+>  
+>  /* The callbacks that hook a function */
+> -trace_func_graph_ret_t ftrace_graph_return = ftrace_graph_stub;
+> +trace_func_graph_ret_t ftrace_graph_return = ftrace_stub_graph;
+>  trace_func_graph_ent_t ftrace_graph_entry = ftrace_graph_entry_stub;
+>  static trace_func_graph_ent_t __ftrace_graph_entry = ftrace_graph_entry_stub;
+>  
+> @@ -619,7 +619,7 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
+>  		goto out;
+>  
+>  	ftrace_graph_active--;
+> -	ftrace_graph_return = ftrace_graph_stub;
+> +	ftrace_graph_return = ftrace_stub_graph;
+>  	ftrace_graph_entry = ftrace_graph_entry_stub;
+>  	__ftrace_graph_entry = ftrace_graph_entry_stub;
+>  	ftrace_shutdown(&graph_ops, FTRACE_STOP_FUNC_RET);
