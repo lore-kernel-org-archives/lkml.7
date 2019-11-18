@@ -2,71 +2,134 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1B8C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8233C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF9A22067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A96BD2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:47:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ENmpaSVg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfKRKqz convert rfc822-to-8bit (ORCPT
+        id S1726721AbfKRKrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 05:46:55 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:49610 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfKRKqy (ORCPT
+        Mon, 18 Nov 2019 05:47:00 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:47753 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726460AbfKRKq7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 05:46:54 -0500
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iWeYG-0007zG-PF; Mon, 18 Nov 2019 11:46:36 +0100
-Date:   Mon, 18 Nov 2019 11:46:36 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Joerg Vehlow <lkml@jv-coder.de>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Tom Rix <trix@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] xfrm : lock input tasklet skb queue
-Message-ID: <20191118104636.yrt5dz2zxvpjtgkk@linutronix.de>
-References: <CACVy4SUkfn4642Vne=c1yuWhne=2cutPZQ5XeXz_QBz1g67CrA@mail.gmail.com>
- <20191024103134.GD13225@gauss3.secunet.de>
- <ad094bfc-ebb3-012b-275b-05fb5a8f86e5@jv-coder.de>
- <20191025094758.pchz4wupvo3qs6hy@linutronix.de>
- <202da67b-95c7-3355-1abc-f67a40a554e9@jv-coder.de>
- <20191025102203.zmkqvvg5tofaqfw6@linutronix.de>
- <5b45c8f6-1aa2-2e1e-9019-a140988bba80@jv-coder.de>
- <20191028151447.xwtyh6hfwfvzwmmu@linutronix.de>
- <5575bb95-b89a-727d-0587-9c462f1fddef@jv-coder.de>
+        Mon, 18 Nov 2019 05:46:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574074018;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MEYcx5JOdSU5kuiBB8VLRdEb9UL42F7wAgggAIuvnKc=;
+        b=ENmpaSVgiTCHdzm8/MqXyNKvJlTebXGsICnjAuf9KM4QSEptz4upG+KAiNDIHI4FhHQABT
+        gfT/wLe5atgGSz5SUwU0KWAQfkjeLpru34AnIIgz6Scx4d8MjKZs25y0GhwkZQ4aYmQV2g
+        ghULDGviuGgYr9botKWs25JM0zg3l98=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-95-y9bPbW_NPyO0YGR5ftI4Eg-1; Mon, 18 Nov 2019 05:46:55 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DB9CA801FCB;
+        Mon, 18 Nov 2019 10:46:53 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 4A5F61009976;
+        Mon, 18 Nov 2019 10:46:52 +0000 (UTC)
+Date:   Mon, 18 Nov 2019 11:46:51 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] perf session: fix decompression of
+ PERF_RECORD_COMPRESSED records
+Message-ID: <20191118104651.GE28372@krava>
+References: <237222f1-9765-dce1-601c-60530a7fc844@linux.intel.com>
+ <20191115151124.GA25246@krava>
+ <2f2b2421-6865-4669-7e30-918d12ae5e01@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <2f2b2421-6865-4669-7e30-918d12ae5e01@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: y9bPbW_NPyO0YGR5ftI4Eg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <5575bb95-b89a-727d-0587-9c462f1fddef@jv-coder.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-29 08:33:01 [+0100], Joerg Vehlow wrote:
-> I testes again with 5.0.19-rt10 and 5.0.19-rt11  and I am pretty sure
-> the bug wasfixed by the changes in rt11. I was able to reproduce it with
-> rt10 within secondsand unable to reproduce it at all in several minutes on
-> rt11. Will 4.19 rt patches receive anymore updates? Is it possible to
-> backport
-> the changes to softirq/BH habdling from 5.0.16-rt11 to 4.19?
+On Fri, Nov 15, 2019 at 08:09:19PM +0300, Alexey Budankov wrote:
+>=20
+> On 15.11.2019 18:11, Jiri Olsa wrote:
+> > On Fri, Nov 15, 2019 at 12:05:14PM +0300, Alexey Budankov wrote:
+> <SNIP>
+> >> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> >> index f07b8ecb91bc..3f6f812ec4ed 100644
+> >> --- a/tools/perf/util/session.c
+> >> +++ b/tools/perf/util/session.c
+> >> @@ -1957,9 +1957,31 @@ static int __perf_session__process_pipe_events(=
+struct perf_session *session)
+> >>  =09return err;
+> >>  }
+> >> =20
+> >> +static union perf_event *
+> >> +prefetch_event(char *buf, u64 head, size_t mmap_size,
+> >> +=09       bool needs_swap, union perf_event *ret);
+> >=20
+> > why not move prefetch_event definition in here?
+> > I don't see any need for the static declaration..
+>=20
+> It is just for the sake of more readable patch formatting=20
+> and, yes, could be avoided and replaced by the definition.
 
-Oh, sorry, I almost forgot about it.
-Please repost the patch, state "RT" next to "PATCH" in the subject line.
-Please state which kernels are affected (v4.19 and earlier due to BH
-rework) and how this can be tested.
-The patch/fix should be included in the affected kernels. The softirq
-changes are very intrusive and can not be backported for the RT-stable
-kernels.
+I think we're trying to avoid static declarations
 
-Sebastian
+>=20
+> >=20
+> >> +
+> >>  static union perf_event *
+> >>  fetch_mmaped_event(struct perf_session *session,
+> >>  =09=09   u64 head, size_t mmap_size, char *buf)
+> >> +{
+> >> +=09return prefetch_event(buf, head, mmap_size,
+> >> +=09=09=09      session->header.needs_swap,
+> >> +=09=09=09      ERR_PTR(-EINVAL));
+> >> +}
+> >> +
+> >> +static union perf_event *
+> >> +fetch_decomp_event(struct perf_session *session,
+> >> +=09=09   u64 head, size_t mmap_size, char *buf)
+> >> +{
+> >=20
+> > if this is decomp specific, it could take 'struct decomp*' as argument
+>=20
+> Well, it makes sense. whole session object is not required here.
+> Just session->header.needs_swap could be passed as a param.
+> Shall we make it like this?
+>=20
+> static union perf_event *=20
+> fetch_decomp_event(u64 head, size_t mmap_size, char *buf, bool needs_swap=
+)
+
+ok, I just saw the call passing all the stuff from 'struct decomp'
+so I thought it'd save some arguments if we pass the  struct itself
+instead
+
+jirka
+
