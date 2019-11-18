@@ -2,94 +2,251 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	PDS_TONAME_EQ_TOLOCAL_HDRS_LCASE,PDS_TONAME_EQ_TOLOCAL_SHORT,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7698EC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A073FC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47D81222DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:22:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eyjv0+S1"
+	by mail.kernel.org (Postfix) with ESMTP id 6EB7B22310
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:23:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574112196;
+	bh=TmiiCKUWlms/bxRkJ8Wft/BfnPyBb+LIOJaI1DUC+WY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mSe3EB5sPDLxP2sew8Bjad9gNF8wawcJC4/iYzy2aB29bOA2T0poP0oma3MxnoElz
+	 JbrjOlkB18MeHcjrjgQtzfqXYCqQi3kE7U2jlMtExfzVaSrdy3ss5Wbliv8WpAA9mm
+	 fEWCQxbtwHbUDI8X2USsjSd6TnllXYbbZ9wIUYp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbfKRVWk (ORCPT
+        id S1726977AbfKRVXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 16:22:40 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37690 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfKRVWk (ORCPT
+        Mon, 18 Nov 2019 16:23:15 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35479 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbfKRVXP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 16:22:40 -0500
-Received: by mail-pl1-f193.google.com with SMTP id bb5so10484716plb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 13:22:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=aSzFRLe2mDa0I96NWr1Lb6uvkLNDlqVI+nwWNFi/OEk=;
-        b=eyjv0+S1cjWe1v6TECX9BBS+aBKSQiJjLuO3CpsTCHblcQJ/4D2wGwYWb+bAGP8sTs
-         0ReqYhdSOr6mT5JOn3Iy3NOVROesnesfQa2xk36Tnd79QRNNfb42p4rRqI1FCO+/Brmo
-         joTkiFb/CTfaMcBAGYu0wsvXywYIYKFFe3SbGvSyVZXa2k/5df9rRFmfE0fC3rxLl0BA
-         Ki/OjjNQwbVoodENxWTblMist3V2jbx6nZofoWjcuHiINB1Qn4yXDmvKfgfMpqPxEnc+
-         /l3ZBJs6iKzuC/+4OL9Ilwiz8/g09lHipIBFtRDh8im7KN4JIPK2PmOLOZECjpyyso34
-         jyFw==
+        Mon, 18 Nov 2019 16:23:15 -0500
+Received: by mail-oi1-f195.google.com with SMTP id n16so16777316oig.2;
+        Mon, 18 Nov 2019 13:23:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=aSzFRLe2mDa0I96NWr1Lb6uvkLNDlqVI+nwWNFi/OEk=;
-        b=PNk0rbTgL3sSR1QzosG0dfZbkRuRjJ1bxbKABOBB6vl55oRF+Dfyi7wSINBTroJVMq
-         I0iMIOfnhesXkLsqI4UboqQ1gwfrrFKxqKEpwfBSQwMneX+9gYWmYCS4o5OQwBaRDDDa
-         72/vEGhUsNk7IifPrbdkdm3OgVMWWFgN8wWN3MceDLEGF3qdTslmnlccusiQJ3wXe9JL
-         2nSsLGWlAiKUwOdXN1DZBpuy8K7qaR5TIUxZqUDZBK0Dr/R0JteJoTec8eywmhFLdLp3
-         GJepf/ULGzbfMdDOsp3qhyTJ6PlVrRzUyzFyLtM3Dcq1C24UiDsMlZFLSMX5tPNE8s8F
-         roWQ==
-X-Gm-Message-State: APjAAAUt+Crk33FposvzxzBtF3Es8MB11j/XK4mMWO/WLqLsG4HQYxRQ
-        4aDLVh1oeXJuBXXKPygVqe0fzw==
-X-Google-Smtp-Source: APXvYqymUoerdhYLn0Q+giAK++AaRTfGyW+rKfYQM0polVwI6u08y0l3FMzgDkwlKyLq/t0ajER5ew==
-X-Received: by 2002:a17:90a:25a1:: with SMTP id k30mr1487308pje.9.1574112159125;
-        Mon, 18 Nov 2019 13:22:39 -0800 (PST)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id x25sm20832290pfq.73.2019.11.18.13.22.38
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aslK2Zau5UQNVUGQIY5kjkRzSDnrxpv/018CjIjj4ig=;
+        b=mv6vCotSGmRkeGWMuK2I6wjfKMKULk0bYHhARRslO8QHhQGfkccy2w7KAmmWgGVNT1
+         Ll1v+5hos8J/d9Jh8zw4bbFylN3E5o3LDr/RzD6CXtx6kcoguPDU80NqSdpx4mpiVMTa
+         zNS48DtOprhsfjKDbzkj5oessGbkvpSUbIQhWttXuB8LBytvC3rLbJ8PZ2zFTdW7SQ83
+         QBlIH5Km6DOSWoFtgEGAJybmyBnpUgh+pf2a+0jj9EqpmRFOVol7qajdm20WsMflX5pF
+         gnhUc8uPnVOFI2ucnkXRwREu/1v5e+gcKZlwunbhU2BqSFGzpIZeK8bROUZlGiP352zJ
+         MYAA==
+X-Gm-Message-State: APjAAAXkFaUepHbQ2IJxzAcLLMb0bwJRPIzaeU6ymd6wIpPf70IcqqGB
+        cnAqppCTGdaQbdiUB11M5Q==
+X-Google-Smtp-Source: APXvYqy9vLHIfptxJOZyAdofVkBHARL4vvFxl6WV3GMXs+WxxP4W8AujWNmvKD8eIz7DkSM9Gg1LIA==
+X-Received: by 2002:aca:4e88:: with SMTP id c130mr895664oib.41.1574112193960;
+        Mon, 18 Nov 2019 13:23:13 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u18sm6575789otq.31.2019.11.18.13.23.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 13:22:38 -0800 (PST)
-Date:   Mon, 18 Nov 2019 13:22:37 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     linmiaohe <linmiaohe@huawei.com>
-cc:     akpm@linux-foundation.org, richardw.yang@linux.intel.com,
-        sfr@canb.auug.org.au, rppt@linux.ibm.com, jannh@google.com,
-        steve.capper@arm.com, catalin.marinas@arm.com, aarcange@redhat.com,
-        walken@google.com, dave.hansen@linux.intel.com,
-        tiny.windzz@gmail.com, jhubbard@nvidia.com, david@redhat.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] mm: get rid of odd jump labels in
- find_mergeable_anon_vma()
-In-Reply-To: <1574079844-17493-1-git-send-email-linmiaohe@huawei.com>
-Message-ID: <alpine.DEB.2.21.1911181322250.112090@chino.kir.corp.google.com>
-References: <1574079844-17493-1-git-send-email-linmiaohe@huawei.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 18 Nov 2019 13:23:12 -0800 (PST)
+Date:   Mon, 18 Nov 2019 15:23:12 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        james.quinlan@broadcom.com, mbrugger@suse.com,
+        phil@raspberrypi.org, jeremy.linton@arm.com,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] dt-bindings: PCI: Add bindings for brcmstb's PCIe
+ device
+Message-ID: <20191118212312.GA24969@bogus>
+References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
+ <20191112155926.16476-3-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112155926.16476-3-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 Nov 2019, linmiaohe wrote:
-
-> From: Miaohe Lin <linmiaohe@huawei.com>
+On Tue, Nov 12, 2019 at 04:59:21PM +0100, Nicolas Saenz Julienne wrote:
+> From: Jim Quinlan <james.quinlan@broadcom.com>
 > 
-> The jump labels try_prev and none are not really needed
-> in find_mergeable_anon_vma(), eliminate them to improve
-> readability.
+> The DT bindings description of the brcmstb PCIe device is described.
+> This node can only be used for now on the Raspberry Pi 4.
 > 
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> 
+> ---
+> 
+> Changes since v1:
+>   - Fix commit Subject
+>   - Remove linux,pci-domain
+> 
+> This was based on Jim's original submission[1], converted to yaml and
+> adapted to the RPi4 case.
+> 
+> [1] https://patchwork.kernel.org/patch/10605937/
+> 
+>  .../bindings/pci/brcm,stb-pcie.yaml           | 110 ++++++++++++++++++
+>  1 file changed, 110 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> new file mode 100644
+> index 000000000000..4cbb18821300
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -0,0 +1,110 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Brcmstb PCIe Host Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> +
 
-Acked-by: David Rientjes <rientjes@google.com>
+I added a common PCI schema to dt-schema. You can reference it here:
+
+allOf:
+  - $ref: /schemas/pci/pci-bus.yaml#
+
+> +properties:
+> +  compatible:
+> +    const: brcm,bcm2711-pcie # The Raspberry Pi 4
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description: PCIe host controller
+> +      - description: builtin MSI controller
+> +
+> +  interrupt-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - const: pcie
+> +      - const: msi
+> +
+
+
+> +  "#address-cells":
+> +    const: 3
+> +
+> +  "#size-cells":
+> +    const: 2
+> +
+> +  "#interrupt-cells":
+> +    const: 1
+> +
+> +  interrupt-map-mask: true
+> +
+> +  interrupt-map: true
+
+Drop all these as the pci-bus.yaml will cover them.
+
+> +
+> +  ranges: true
+
+Do you know many entries, if not, you can drop it too?
+
+> +
+> +  dma-ranges: true
+
+Do you know many entries, if not, you can drop it too?
+
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: sw_pcie
+> +
+> +  msi-controller:
+> +    description: Identifies the node as an MSI controller.
+> +    type: boolean
+> +
+> +  msi-parent:
+> +    description: MSI controller the device is capable of using.
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+
+Assume these 2 have a type defined.
+
+> +
+> +  brcm,enable-ssc:
+> +    description: Indicates usage of spread-spectrum clocking.
+> +    type: boolean
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - "#interrupt-cells"
+> +  - interrupt-map-mask
+> +  - interrupt-map
+> +  - ranges
+> +  - dma-ranges
+
+You can drop ranges, #address-cells and #size-cells as they are required 
+in pci-bus.yaml.
+
+Shouldn't interrupts, interrupt-names, and msi-controller all be 
+required?
+
+> +
+> +additionalProperties: false
+
+This won't work having the commmon binding, but 
+'unevaluatedProperties: false' will (eventually when json-schema draft8 
+is supported). 
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    scb {
+> +            #address-cells = <2>;
+> +            #size-cells = <1>;
+> +            pcie0: pcie@7d500000 {
+> +                    compatible = "brcm,bcm2711-pcie";
+> +                    reg = <0x0 0x7d500000 0x9310>;
+> +                    #address-cells = <3>;
+> +                    #size-cells = <2>;
+> +                    #interrupt-cells = <1>;
+> +                    interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
+> +                                 <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+> +                    interrupt-names = "pcie", "msi";
+> +                    interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+> +                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH
+> +                                     0 0 0 2 &gicv2 GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH
+> +                                     0 0 0 3 &gicv2 GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH
+> +                                     0 0 0 4 &gicv2 GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
+
+Bracket each entry. The schema is making this stricter.
+
+Rob
