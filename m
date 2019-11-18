@@ -2,171 +2,117 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A98C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AF7C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A1820730
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBA2420857
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:38:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfKRKbn (ORCPT
+        id S1726596AbfKRKic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 05:31:43 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2107 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726536AbfKRKbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 05:31:43 -0500
-Received: from lhreml709-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id BE6B832AB0F642FAD420;
-        Mon, 18 Nov 2019 10:31:41 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml709-cah.china.huawei.com (10.201.108.32) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 18 Nov 2019 10:31:41 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 18 Nov
- 2019 10:31:41 +0000
-Subject: Re: [PATCH RFC 3/5] blk-mq: Facilitate a shared tags per tagset
-To:     Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Mon, 18 Nov 2019 05:38:32 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:50812 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbfKRKib (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 05:38:31 -0500
+X-AuditID: c0a8fbf4-183ff70000001fa6-33-5dd274a5829f
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 93.B6.08102.5A472DD5; Mon, 18 Nov 2019 11:38:29 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Mon, 18 Nov 2019 11:38:17 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "info@metux.net" <info@metux.net>
+CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "ming.lei@redhat.com" <ming.lei@redhat.com>,
-        "hare@suse.com" <hare@suse.com>,
-        "chenxiang (M)" <chenxiang66@hisilicon.com>
-References: <1573652209-163505-1-git-send-email-john.garry@huawei.com>
- <1573652209-163505-4-git-send-email-john.garry@huawei.com>
- <32880159-86e8-5c48-1532-181fdea0df96@suse.de>
- <2cbf591c-8284-8499-7804-e7078cf274d2@huawei.com>
- <02056612-a958-7b05-3c54-bb2fa69bc493@suse.de>
- <ace95bc5-7b89-9ed3-be89-8139f977984b@huawei.com>
- <42b0bcd9-f147-76eb-dfce-270f77bca818@suse.de>
- <89cd1985-39c7-2965-d25b-2ee2c183d057@huawei.com>
- <c34c0ce2-40a8-e4fc-3366-1f7b906da5a3@acm.org>
- <8e7bd2cb-1035-13ba-05db-d8e12c61df1f@huawei.com>
- <6b85f172-695c-4757-3794-455b8d55e015@acm.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <1ba51afd-cce5-f7b2-704c-06e00db027bc@huawei.com>
-Date:   Mon, 18 Nov 2019 10:31:40 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Subject: Re: [RFC PATCH 0/5] leds: Add DT node finding and parsing to core
+Thread-Topic: [RFC PATCH 0/5] leds: Add DT node finding and parsing to core
+Thread-Index: AQHVjlbfnKGQ2A80TEuw50r1eox3kqeQtb4AgAAVbAA=
+Date:   Mon, 18 Nov 2019 10:38:16 +0000
+Message-ID: <946f091e79242b9e71d5ce8ad12c899feefa22cd.camel@fi.rohmeurope.com>
+References: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
+         <ed000cda-3138-3172-1b4c-586b5bfd8d72@metux.net>
+In-Reply-To: <ed000cda-3138-3172-1b4c-586b5bfd8d72@metux.net>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B15809EE67717246A3283AB86CCE6A6D@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <6b85f172-695c-4757-3794-455b8d55e015@acm.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml710-chm.china.huawei.com (10.201.108.61) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUgUYRjmm5nd/TwmPqet/VrLaiLCJLfCH0OnP5JWA8ssgmizMSdnSXdl
+        dg0ria2QUhczqLStLNJNs9ssjzJisxu2wy6JRewClwrpwEqy5msq/TXPPMf7vPC9kOYO6c3Q
+        7nBLikPM4/WRzPWGwQsz/O7Htpn1ZxKFo51BnVB+v1kndG+/QgkvL51nhK72w3rh0vuzQPA/
+        f0QJh/13GCF076ZeKOnoNCRHWk/XnAbWNl/IYG1qLNVbK/s/6K23X7RQ1oZTAwbr56a4ZYbV
+        UfOyRfemTHuuw7JgXZQculZDFVSPKxos2WHwgE5cBiIgRkm4y/OTLgORkENPAW5s22XQfu4A
+        fCywnSoDEOrRPFzWbSABI1qLPRe/6YiHRtU0/ljV/kcYjdJwaaiC1kxLcPuPyzTJGtEcXOOV
+        Cc2gqbi0sV5HMIvScd25Zzpi4VARrqg3EToCzccnaob0BAM0AZd6PlIE08iEm94N6LSdEa67
+        +oDW8Bjc93roL8/jju+9DBlJo3h8rt2iRZPx131BoOHJeF95r0HbIAbfPfiGqQRjfSMafMNp
+        34i0b0TaNyJ9DOgaAc4X7Xm5olualahIhYmKU85XP+ud+U1Ae+wvreBXIDUAKAgCYByk+DHs
+        xIWPbNyobGfOZll0yVlKYZ7kCgAMad7Ipr96aOPYHHHzFklx/pNiIcOb2Gm9e20cIl0bJalA
+        Uv6p4yHkMbtTeWzjYhQpVyraYM9zD8sUjCDDI81Gl+TIkRSx0C1nkevIcqnnQaRotZdzqXHW
+        VSDmq6wWvQcSYGXfkeM07DziP05zjMPpkMwmNjletSJilQsd/4vCwAQBP5p9QvaIVi/+/5yw
+        WkGpFQmtQVLhFoclswekb9tRm2Jdlfos9CTotS3flhTd9T4c7umJjVtztMSfs9+WKBenNadW
+        hrbqlkYvsfTuStotZOy9tcd4dor37Qd3ZpUlyK9cE14x+Wsglh1I+RYzCClzw+I9tzfaJ32K
+        z0iImD83bMlqqz6QbmpuKS/uWBS388bJlrTi2VVeb39teAvPuGRx1nRacYm/AVkuD5auAwAA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/11/2019 17:57, Bart Van Assche wrote:
-> On 11/15/19 2:24 AM, John Garry wrote:
->> Bart Van Assche wrote:
->> > How about sharing tag sets across hardware
->> > queues, e.g. like in the (totally untested) patch below?
->>
->> So this is similar in principle what Ming Lei came up with here:
->> https://lore.kernel.org/linux-block/20190531022801.10003-1-ming.lei@redhat.com/ 
->>
->> However your implementation looks neater, which is good.
->>
->> My concern with this approach is that we can't differentiate which 
->> tags are allocated for which hctx, and sometimes we need to know that.
->>
-
-Hi Bart,
-
->> An example here was blk_mq_queue_tag_busy_iter(), which iterates the 
->> bits for each hctx. This would just be broken by that change, unless 
->> we record which bits are associated with each hctx.
-> 
-> I disagree. In bt_iter() I added " && rq->mq_hctx == hctx" such that 
-> blk_mq_queue_tag_busy_iter() only calls the callback function for 
-> matching (hctx, rq) pairs.
-
-OK, I see. I assumed that rq->mq_hctx was statically set when we 
-initially allocate the static requests per hctx; but that doesn’t appear 
-so - it's set in blk_mq_get_request()->blk_mq_rq_ctx_init().
-
-> 
->> Another example was __blk_mq_tag_idle(), which looks problematic.
-> 
-> Please elaborate.
-
-Again, this was for the same reason being that I thought we could not 
-differentiate which rqs were associated with which hctx.
-
-> 
->> For debugfs, when we examine 
->> /sys/kernel/debug/block/.../hctxX/tags_bitmap, wouldn't that be the 
->> tags for all hctx (hctx0)?
->>
->> For debugging reasons, I would say we want to know which tags are 
->> allocated for a specific hctx, as this is tightly related to the 
->> requests for that hctx.
-> 
-> That is an open issue in the patch I posted and something that needs to 
-> be addressed. One way to address this is to change the 
-> sbitmap_bitmap_show() calls into calls to a function that only shows 
-> those bits for which rq->mq_hctx == hctx.
-
-Yeah, understood.
-
-> 
->>> @@ -341,8 +341,11 @@ void blk_mq_tagset_busy_iter(struct 
->>> blk_mq_tag_set *tagset,
->>>       int i;
->>>
->>>       for (i = 0; i < tagset->nr_hw_queues; i++) {
->>> -        if (tagset->tags && tagset->tags[i])
->>> +        if (tagset->tags && tagset->tags[i]) {
->>>               blk_mq_all_tag_busy_iter(tagset->tags[i], fn, priv);
->>
->> As I mentioned earlier, wouldn't this iterate over all tags for all 
->> hctx's, when we just want the tags for hctx[i]?
->>
->> Thanks,
->> John
->>
->> [Not trimming reply for future reference]
->>
->>> +            if (tagset->share_tags)
->>> +                break;
->>> +        }
->>>       }
->>>   }
->>>   EXPORT_SYMBOL(blk_mq_tagset_busy_iter);
-> 
-> Since blk_mq_tagset_busy_iter() loops over all hardware queues all what 
-> is changed is the order in which requests are examined. I am not aware 
-> of any block driver that calls blk_mq_tagset_busy_iter() and that 
-> depends on the order of the requests passed to the callback function.
-> 
-
-OK, fine.
-
-So, to me, this approach also seems viable then.
-
-I am however not so happy with how we use blk_mq_tag_set.tags[0] for the 
-shared tags; I would like to use blk_mq_tag_set.shared_tags and make 
-blk_mq_tag_set.tags[] point at blk_mq_tag_set.shared_tags or maybe not 
-blk_mq_tag_set.tags[] at all. However maybe that change may be more 
-intrusive.
-
-And another more real concern is that we miss a check somewhere for 
-rq->mq_hctx == hctx when examining the bits on the shared tags.
-
-Thanks,
-John
+SGVsbG8gRW5yaWNvICYgQWxsLA0KDQpGaXJzdCBvZiBhbGwgLSB0aGFua3MgZm9yIHNob3dpbmcg
+dGhlIGludGVyZXN0IDpdIEkgYW0gaGFwcHkga25vd2luZw0Kc29tZW9uZSBhY3R1YWxseSB3YXMg
+aW50ZXJlc3RlZCBhYm91dCB0aGUgUkZDIDopDQoNCk9uIE1vbiwgMjAxOS0xMS0xOCBhdCAxMDoy
+MSArMDEwMCwgRW5yaWNvIFdlaWdlbHQsIG1ldHV4IElUIGNvbnN1bHQNCndyb3RlOg0KPiBIaSwN
+Cj4gDQo+IA0KPiA+IFRoZSB0aGluZyBpcyB0aGF0DQo+ID4gdGhpcyBhcHByb2FjaCByZXF1aXJl
+cyB0aGUgTEVEIGNvbnRyb2xsZXIgYmluZGluZyB0byBkaWN0YXRlDQo+ID4gYWxsb3dlZA0KPiA+
+IExFRCBub2RlIG5hbWVzIC0gd2hpY2ggbWF5IG9yIG1heSBub3QgYmUgZG9hYmxlLiBJIG5lZWQg
+eW91ciBoZWxwDQo+ID4gdG8NCj4gPiBldmFsdWF0ZSB0aGlzIGFuZCBzdWdnZXN0IGJldHRlciBv
+cHRpb25zIDopDQo+IA0KPiBldmVuIHRob3VnaCBJIGxpa2UgdGhlIGlkZWEgb2YgY29udmVudGlv
+bi1vdmVyLWNvZGUsIGJ1dCBpZiB0aGF0J3MNCj4gY2hhbmdpbmcgYWxsb3dlZCBMRUQgbmFtZXMg
+dGhhdCB3b3VsZCByaXNrIGJyZWFraW5nIHRoaW5ncywgZWc6DQo+IA0KPiBhKSBleGlzdGluZyBE
+VCdzIChpbiB0aGUgZmllbGQpIGJlY29tZSBpbmNvbXBhdGlibGUgd2l0aCBuZXdlcg0KPiAgICBr
+ZXJuZWwgdmVyc2lvbnMNCg0KVGhpcyB3YXMgbXkgbWFpbiBjb25jZXJuLiBUaGlzIG9mIGNvdXJz
+ZSB3b3VsZCBub3QgbWVhbiB0aGF0IHdlIGNvdWxkDQpub3QgdGFrZSB0aGlzIGFwcHJvYWNoIGZv
+ciBuZXcgTEVEIGNvbnRyb2xsZXIgZHJpdmVycyAtIGJ1dCB0aGF0IHdvdWxkDQoocHJvYmFibHkp
+IGxlYWQgdG8gZHVhbCBsZWQgcmVnaXN0cmF0aW9uIGludGVyZmFjZSAtIG9uZSBmb3IgY3VycmVu
+dA0KYXBwcm9hY2ggd2hlcmUgTEVEIGRyaXZlcnMgZG8gYWxsIHRoZSBkaXJ0eSB3b3JrIHRoZW1z
+ZWxmIC0gYW5kIHBhcnNlDQp0aGUgRFQgLSBvbmUgZm9yIG5ldyBkcml2ZXJzIHdoaWNoIGNvdWxk
+IGxlYXZlIERUIHBhcnNpbmcgdG8gTEVEIGNvcmUuDQoNCj4gYikgZXhpc3RpbmcgdXNlcmxhbmRz
+IHRoYXQgcmVseSBvbiBzcGVpY2lmaWMgTEVEIG5hbWVzIGJlY29tZQ0KPiAgICBpbmNvbWF0aWJs
+ZSB3aXRoIG5ld2VyIGtlcm5lbCB2ZXJzaW9ucy4NCg0KSSBkaWRuJ3QgZXZlbiB0aGluayB0aGlz
+IGZhciwgYnV0IHllcywgSSBzZWUuLi4gTEVEIG5vZGUgbmFtZSBtaWdodCBiZQ0KcmVmbGVjdGVk
+IGluIHVzZXItc3BhY2UgTEVEIG5hbWUuIEkgd29uJ3Qgc3RhcnQgYXJndWluZyBpZiB0aGlzIGlz
+IHNhbmUNCm9yIG5vdCAtIHRoaXMgaXMgd2hhdCB3ZSBzZWVtIHRvIGJlIGxpdmluZyB3aXRoIHRv
+ZGF5IDopDQoNCkFueXdheXMsIEkgZGlkIHNlbmQgb3V0IGEgTEVEIGNvcmUgY2hhbmdlIHBhdGNo
+IHdoaWNoIGFsbG93cyBvbmUgdG8gYWRkDQplaXRoZXIgdGhlIG5vZGUtbmFtZSwgb3IgYSBwcm9w
+ZXJ0eS12YWx1ZSBwYWlyIGluIGluaXRfZGF0YS4gTEVEIGNvcmUNCmNhbiB0aGVuIHVzZSBlaXRo
+ZXIgb2YgdGhlc2UgdG8gZG8gTEVEIG5vZGUgbG9va3VwLiBJZiBub25lIG9mIHRoZXNlIGlzDQpn
+aXZlbiwgdGhlbiB3ZSBjYW4gZmFsbC1iYWNrIHRvIGV4aXN0aW5nIGxvZ2ljLiBUaGF0IHdheSB3
+ZSB3b24ndA0KY2hhbmdlIGV4aXN0aW5nIHN0dWZmLg0KSGVyZToNCmh0dHBzOi8vbG9yZS5rZXJu
+ZWwub3JnL2xrbWwvMjU4YjVjOTkzNGUyYjMxYTVmNDMzYTdkYmI5MDhkZmU1ZGEzZDMwYy4xNTc0
+MDU5NjI1LmdpdC5tYXR0aS52YWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20vVC8jdQ0KDQoNCkkg
+ZGlkbid0IGludmVzdCB0b28gbXVjaCBvZiB0aW1lIG9uIHRoaXMgeWV0IC0gYnV0IGF0IGZpcnN0
+IGdsaW1wc2UgaXQNCnNlZW1lZCB0aGF0IGF0IGxlYXN0IHNvbWUgb2YgdGhlIGRyaXZlcnMgZGlk
+IHVzZSByZWcgLSBwcm9wZXJ0eSB3aXRoDQpmaXhlZCB2YWx1ZSB0byBkbyB0aGUgbWF0Y2hpbmcu
+IFRob3NlIGNvdWxkIHNldCB0aGUgcHJvcGVydHkgbmFtZSB0bw0KJ3JlZycgYW5kIHZhbHVlIHRv
+ICdYJyBhbmQgbGVhdmUgdGhlIERUIG5vZGUgbG9va3VwIGFuZCBjb21tb24gcHJvcGVydHkNCnBh
+cnNpbmcgdG8gdGhlIExFRCBjb3JlLiBJZiBteSBwYXRjaCB3b24ndCBnZXQgdG9vIGJpZyBvYmpl
+Y3Rpb24gKGFuZA0KaWYgbm8gZmF0YWwgZmxhd3MgYXJlIGZvdW5kIGZyb20gdGhlIGlkZWEpIC0g
+dGhlbiBJIG1pZ2h0IHRyeSBhbmQgZmluZA0KdGhlIHRpbWUgdG8gZG8gc29tZSBmb2xsb3ctdXAg
+cGF0Y2hlcyBzaW1wbGlmeWluZyBleGlzdGluZyBMRUQNCmRyaXZlcnMuLi4NCg0KPiANCj4gDQo+
+IA0KPiAtLW10eA0KPiANCg0K
