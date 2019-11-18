@@ -2,124 +2,88 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28693C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08661C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0609D222AD
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D18D5222A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:23:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfKRSV0 (ORCPT
+        id S1726690AbfKRSXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 13:21:26 -0500
-Received: from smtp.uniroma2.it ([160.80.6.23]:41595 "EHLO smtp.uniroma2.it"
+        Mon, 18 Nov 2019 13:23:51 -0500
+Received: from mga12.intel.com ([192.55.52.136]:23548 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726216AbfKRSV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 13:21:26 -0500
-Received: from localhost.localdomain ([160.80.103.126])
-        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id xAIIKjUB028377
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 18 Nov 2019 19:20:46 +0100
-From:   Andrea Mayer <andrea.mayer@uniroma2.it>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Lebrun <dav.lebrun@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Andrea Mayer <andrea.mayer@uniroma2.it>
-Subject: [net-next] seg6: allow local packet processing for SRv6 End.DT6 behavior
-Date:   Mon, 18 Nov 2019 19:20:26 +0100
-Message-Id: <20191118182026.2634-1-andrea.mayer@uniroma2.it>
-X-Mailer: git-send-email 2.20.1
+        id S1726216AbfKRSXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 13:23:50 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 10:23:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,321,1569308400"; 
+   d="scan'208";a="204151190"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 18 Nov 2019 10:23:47 -0800
+Received: from andy by smile with local (Exim 4.93-RC1)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1iWlgg-0006ND-VI; Mon, 18 Nov 2019 20:23:46 +0200
+Date:   Mon, 18 Nov 2019 20:23:46 +0200
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     "Kammela, Gayatri" <gayatri.kammela@intel.com>
+Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Prestopine, Charles D" <charles.d.prestopine@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
+        "Liang, Kan" <kan.liang@intel.com>,
+        "Box, David E" <david.e.box@intel.com>,
+        "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>
+Subject: Re: [PATCH v3 0/7] x86/intel_pmc_core: Add Tiger Lake, Elkhart Lake
+Message-ID: <20191118182346.GB32742@smile.fi.intel.com>
+References: <cover.1573750525.git.gayatri.kammela@intel.com>
+ <CAHp75Vfrd-BAZ7H_LuQfz32yaap1X3gEnqZ2-9EPQ+j_b0f93g@mail.gmail.com>
+ <MN2PR11MB3711EDFC967C295689E109DEF24D0@MN2PR11MB3711.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MN2PR11MB3711EDFC967C295689E109DEF24D0@MN2PR11MB3711.namprd11.prod.outlook.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-End.DT6 behavior makes use of seg6_lookup_nexthop() function which drops
-all packets that are destined to be locally processed. However, DT* should
-be able to delivery decapsulated packets that are destined to local
-addresses. Function seg6_lookup_nexthop() is also used by DX6, so in order
-to maintain compatibility I created another routing helper function which
-is called seg6_lookup_any_nexthop(). This function is able to take into
-account both packets that have to be processed locally and the ones that
-are destined to be forwarded directly to another machine. Hence,
-seg6_lookup_any_nexthop() is used in DT6 rather than seg6_lookup_nexthop()
-to allow local delivery.
+On Mon, Nov 18, 2019 at 06:11:16PM +0000, Kammela, Gayatri wrote:
+> > > All the information regarding the PCH IPs and names of IPs will be
+> > > available in Intel's Platform Controller Hub (PCH) External Design
+> > > Specification (EDS) document expected to be released in 2020 before
+> > > product launch.
+> > 
+> > Thanks, though you forgot to fix all prefixes in the mails. We have
+> > platform/x86: $DRIVER_NAME: ...
+> > 
+> Hi Andy! Sorry I think I misunderstood your comment last time. Just to make sure, the prefix should the pattern in this case
+> "platform/x86: intel_pmc_core: " and should be same for all the patches in the series right?
 
-Signed-off-by: Andrea Mayer <andrea.mayer@uniroma2.it>
----
- net/ipv6/seg6_local.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+I didn't deeply check myself, but sounds right.
 
-diff --git a/net/ipv6/seg6_local.c b/net/ipv6/seg6_local.c
-index e70567446f28..43f3c9f1b4c1 100644
---- a/net/ipv6/seg6_local.c
-+++ b/net/ipv6/seg6_local.c
-@@ -149,8 +149,9 @@ static void advance_nextseg(struct ipv6_sr_hdr *srh, struct in6_addr *daddr)
- 	*daddr = *addr;
- }
- 
--int seg6_lookup_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
--			u32 tbl_id)
-+static int
-+seg6_lookup_any_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
-+			u32 tbl_id, int local_delivery)
- {
- 	struct net *net = dev_net(skb->dev);
- 	struct ipv6hdr *hdr = ipv6_hdr(skb);
-@@ -158,6 +159,7 @@ int seg6_lookup_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
- 	struct dst_entry *dst = NULL;
- 	struct rt6_info *rt;
- 	struct flowi6 fl6;
-+	int dev_flags = 0;
- 
- 	fl6.flowi6_iif = skb->dev->ifindex;
- 	fl6.daddr = nhaddr ? *nhaddr : hdr->daddr;
-@@ -182,7 +184,13 @@ int seg6_lookup_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
- 		dst = &rt->dst;
- 	}
- 
--	if (dst && dst->dev->flags & IFF_LOOPBACK && !dst->error) {
-+	/* we want to discard traffic destined for local packet processing,
-+	 * if @local_delivery is set to false.
-+	 */
-+	if (!local_delivery)
-+		dev_flags |= IFF_LOOPBACK;
-+
-+	if (dst && (dst->dev->flags & dev_flags) && !dst->error) {
- 		dst_release(dst);
- 		dst = NULL;
- 	}
-@@ -199,6 +207,12 @@ int seg6_lookup_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
- 	return dst->error;
- }
- 
-+inline int seg6_lookup_nexthop(struct sk_buff *skb,
-+			       struct in6_addr *nhaddr, u32 tbl_id)
-+{
-+	return seg6_lookup_any_nexthop(skb, nhaddr, tbl_id, false);
-+}
-+
- /* regular endpoint function */
- static int input_action_end(struct sk_buff *skb, struct seg6_local_lwt *slwt)
- {
-@@ -396,7 +410,7 @@ static int input_action_end_dt6(struct sk_buff *skb,
- 
- 	skb_set_transport_header(skb, sizeof(struct ipv6hdr));
- 
--	seg6_lookup_nexthop(skb, NULL, slwt->table);
-+	seg6_lookup_any_nexthop(skb, NULL, slwt->table, true);
- 
- 	return dst_input(skb);
- 
+> > Also consider Mario's comment (I didn't hear back from you on it).
+> Sorry about that. I am planning on sending it a single patch excluding it from the series since we received a request from Dell. Please let me know if you think this patch should be included in the series. 
+
+I think we keep good relationship with Dell.
+
 -- 
-2.20.1
+With Best Regards,
+Andy Shevchenko
+
 
