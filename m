@@ -2,125 +2,138 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2CEC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45789C43141
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F196208CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AD2522312
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:53:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J0lCJRdg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iCjUHmgE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfKRVwi (ORCPT
+        id S1727173AbfKRVxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 16:52:38 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28590 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726647AbfKRVwh (ORCPT
+        Mon, 18 Nov 2019 16:53:10 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:40021 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbfKRVxJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 16:52:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574113956;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=37fM1KMKYNrGbiZSg07VSdDytySB2r4xXsbLO3HzSdo=;
-        b=J0lCJRdgC8PhMrgAyDwWRmhXrFgWVpNYHxg2Q4g+XiFyf9bWBGg18b4Ofx3In0uCLckhoR
-        DWuCUZj9Tobh0q3rgGVqQauk+qgQcVgmza7nvHnnF2i4PaZ3SUloFhCDdOk8LtfzsWSyDR
-        h/7uY5Yjdu0vFBsVbi2GWKyYnIJ9y0M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-286-fJFIxhqENmWVImvxdMKnew-1; Mon, 18 Nov 2019 16:52:35 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 02C4C477;
-        Mon, 18 Nov 2019 21:52:34 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 669B25DD98;
-        Mon, 18 Nov 2019 21:52:24 +0000 (UTC)
-Subject: Re: [PATCH 5/5] locking/percpu-rwsem: Remove the embedded rwsem
-To:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
-        will@kernel.org
-Cc:     oleg@redhat.com, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        bigeasy@linutronix.de, juri.lelli@redhat.com, williams@redhat.com,
-        bristot@redhat.com, dave@stgolabs.net, jack@suse.com
-References: <20191113102115.116470462@infradead.org>
- <20191113102855.925208237@infradead.org>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <7b412d15-b796-3b8d-0e98-22362377093f@redhat.com>
-Date:   Mon, 18 Nov 2019 16:52:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 18 Nov 2019 16:53:09 -0500
+Received: by mail-io1-f65.google.com with SMTP id p6so20621078iod.7;
+        Mon, 18 Nov 2019 13:53:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iJZFglUb2y0+eKAtmDZi++WhXvGn0GkCNS7gZXXGpGw=;
+        b=iCjUHmgEapJMcbC7S0VWIJ3UTVVHa02RohQkNPtxMl6//lfDJli4Vk4aLX0RDVVS36
+         oLh6n9qpVVNM3q59pjFiv8+pD3AoUGg5NoQmY817WFl8FXw7LFFGqC6O/rBtf9WD374Y
+         KUFVpLnDFApnDwVqucKrZJVl7v2nRHu+6cL9bYPvA1xw4NB0PLQaiW53bTdK+RSEU7JZ
+         GRQMYt8eAze12OYUUUbn9xZ465Gm3jzwoF3I2kJSB3/uks+8POdTJw49yiywrb+CZSz8
+         uafKY4wnLcok6OFdfCATVMv0OLvcwJk8MCY0PtZ7Xly6wW1pQRz0fK636iifC+JQmoDR
+         vtSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iJZFglUb2y0+eKAtmDZi++WhXvGn0GkCNS7gZXXGpGw=;
+        b=ElravP1YwErXhJvldlgDx0GPBw91yr4hJE5iUWZkXA9E62P2K/4BbcMvOnRusa6WSO
+         3Od4dDY6cnTYbGLKM7NyCPzD5EY3jdAuzEjNuGpzh+r6iiulO3a6P+mYJ7Io2dm+qGhE
+         oARsla12oO67SqxgBTFclQ/s591b05u0w5qJ3jRCqwzlPHOEGUhvDyTjd/gELO8gZVU/
+         8fAij7GY73vnV02qUidb27DihYn2Ssj6CNgb3+eljAqE+EwBM2haKhYCEWu5XeHhgHpb
+         5Z/akpc87SHVa+CHhA5e/gCy+N1LoZYa6u7EtBK3PYmaxEq5UkVBEv86q8+PF07ummU2
+         cxhg==
+X-Gm-Message-State: APjAAAXRgTHD6VWaO9mqSasWTDdGhiZgkDbsMcBZhaSVrYM/gvFW6pDN
+        u1SXgeVsaBQtdHt+6e8+Ufohk5zL6HhuGk76jJ0=
+X-Google-Smtp-Source: APXvYqxtxnk9ZIyHca/fFiaO8yXRxO9hoWH1FE+tO/Yo6cY7VfNvRR2T/B0gY7Xjd/7Wp7nptDDdFZgL4QDIGNDCdMY=
+X-Received: by 2002:a5e:a70e:: with SMTP id b14mr5512548iod.166.1574113989013;
+ Mon, 18 Nov 2019 13:53:09 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191113102855.925208237@infradead.org>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: fJFIxhqENmWVImvxdMKnew-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <0101016e80781930-69ece8d5-deda-4950-8cfc-da44d5955ac8-000000@us-west-2.amazonses.com>
+In-Reply-To: <0101016e80781930-69ece8d5-deda-4950-8cfc-da44d5955ac8-000000@us-west-2.amazonses.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Mon, 18 Nov 2019 14:52:58 -0700
+Message-ID: <CAOCk7NqQPY8rtQB-_K76FW+AUqp5nADtxWDsU0a50L=4G+s9cg@mail.gmail.com>
+Subject: Re: [PATCH 00/16] Add missing remoteprocs on MSM8998/SC7180/SM8150 SoCs
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mark Rutland <mark.rutland@arm.com>, p.zabel@pengutronix.de,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org,
+        DTML <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/13/19 5:21 AM, Peter Zijlstra wrote:
-> @@ -130,20 +131,12 @@ static inline void percpu_rwsem_release(
->  =09=09=09=09=09bool read, unsigned long ip)
->  {
->  =09lock_release(&sem->dep_map, ip);
-> -#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
-> -=09if (!read)
-> -=09=09atomic_long_set(&sem->rw_sem.owner, RWSEM_OWNER_UNKNOWN);
-> -#endif
->  }
-> =20
+On Mon, Nov 18, 2019 at 2:43 PM Sibi Sankar <sibis@codeaurora.org> wrote:
+>
+> The patch series adds support for the following remoteprocs:
+> * MPSS reset sequence fixup for MSM8998 (Patches 1,2)
+> * MPSS on SC7180 SoCs (Patches 3,4)
+> * ADSP, SLPI on MSM8998 SoC (Patches 8,9)
+> * ADSP, CDSP, MPSS and SLPI on SM8150 SoC (Patches 10,11,12)
+>
+> Patch 6,7 Adds support for active/proxy voting of power-domain
+> for the q6v5_pas driver.
+>
+> Jeff,
+> Please free to drop MPSS node on MSM8998 if you already
+> have something prepared and replace the xo with the
+> rpmcc xo clock. Just included patch 14 in the series for
+> completeness.
 
-This is the only place that set RWSEM_OWNER_UNKNOWN. So you may as well
-remove all references to it:
+IMO, it would be nicer if if this series was broken up by SoC.  I
+don't think the 8998 patches require the below dependency, and really,
+it would be nicer for me to review the 8998 stuff without having to
+futz about with the other, seemingly unrelated patches.
 
-diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
-index 00d6054687dd..8a418d9eeb7a 100644
---- a/include/linux/rwsem.h
-+++ b/include/linux/rwsem.h
-@@ -53,12 +53,6 @@ struct rw_semaphore {
-=C2=A0#endif
-=C2=A0};
-=C2=A0
--/*
-- * Setting all bits of the owner field except bit 0 will indicate
-- * that the rwsem is writer-owned with an unknown owner.
-- */
--#define RWSEM_OWNER_UNKNOWN=C2=A0=C2=A0=C2=A0 (-2L)
--
-=C2=A0/* In all implementations count !=3D 0 means locked */
-=C2=A0static inline int rwsem_is_locked(struct rw_semaphore *sem)
-=C2=A0{
-diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index eef04551eae7..622842754c73 100644
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -660,8 +660,6 @@ static inline bool rwsem_can_spin_on_owner(struct
-rw_semapho
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long flags;
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool ret =3D true;
-=C2=A0
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BUILD_BUG_ON(!(RWSEM_OWNER_UNKNOWN & =
-RWSEM_NONSPINNABLE));
--
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (need_resched()) {
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 lockevent_inc(rwsem_opt_fail);
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return false;
-
-Cheers,
-Longman
-
+>
+> This patch series depends on:
+> https://patchwork.kernel.org/cover/11250067/
+>
+> Sibi Sankar (16):
+>   remoteproc: q6v5-mss: fixup MSM8998 MSS out of reset sequence
+>   remoteproc: q6v5-mss: Streamline the MSS out of reset sequence
+>   dt-bindings: remoteproc: qcom: Add Q6V5 Modem PIL binding for SC7180
+>   remoteproc: mss: q6v5-mss: Add modem support on SC7180
+>   remoteproc: qcom: pas: Disable interrupt on clock enable failure
+>   dt-bindings: remoteproc: qcom: Add power-domain bindings for Q6V5 PAS
+>   remoteproc: qcom: pas: Vote for active/proxy power domains
+>   dt-bindings: remoteproc: qcom: Add ADSP and SLPI support for MSM8998
+>     SoC
+>   remoteproc: qcom: pas: Add MSM8998 ADSP and SLPI support
+>   dt-bindings: remoteproc: qcom: SM8150 Add ADSP, CDSP, MPSS and SLPI
+>     support
+>   remoteproc: qcom: pas: Add SM8150 ADSP, CDSP, Modem and SLPI support
+>   remoteproc: qcom: pas: Add auto_boot flag
+>   arm64: dts: qcom: msm8998: Update reserved memory map
+>   arm64: dts: qcom: msm8998: Add ADSP, MPSS and SLPI nodes
+>   arm64: dts: qcom: sm8150: Add ADSP, CDSP, MPSS and SLPI smp2p
+>   arm64: dts: qcom: sm8150: Add ADSP, CDSP, MPSS and SLPI remoteprocs
+>
+>  .../bindings/remoteproc/qcom,adsp.txt         |  44 +++
+>  .../bindings/remoteproc/qcom,q6v5.txt         |  23 +-
+>  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi     |   8 +
+>  arch/arm64/boot/dts/qcom/msm8998.dtsi         | 184 +++++++++++-
+>  arch/arm64/boot/dts/qcom/sm8150-mtp.dts       |  12 +
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi          | 231 +++++++++++++++
+>  drivers/remoteproc/qcom_q6v5_mss.c            | 264 +++++++++++++++---
+>  drivers/remoteproc/qcom_q6v5_pas.c            | 260 ++++++++++++++++-
+>  8 files changed, 979 insertions(+), 47 deletions(-)
+>
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
