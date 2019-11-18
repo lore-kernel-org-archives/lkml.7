@@ -2,379 +2,203 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2304CC43141
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB13C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E96352084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:49:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="bMJKhOFb"
+	by mail.kernel.org (Postfix) with ESMTP id B85912071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:49:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfKRJtS (ORCPT
+        id S1726747AbfKRJtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 04:49:18 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:17614 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726464AbfKRJtR (ORCPT
+        Mon, 18 Nov 2019 04:49:47 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34313 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726488AbfKRJtq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 04:49:17 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAI9gpsV030847;
-        Mon, 18 Nov 2019 10:48:45 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=zQW5SxfGKJ8t6I2JdL4XBTUzCtw9M6ZarVVFFakyxKk=;
- b=bMJKhOFbqI9bZ7qO1E+sc/PRvNXMDsp2+CtZvU75ezbyi0FVaZHENUA1XpbZscEtv45q
- QhPDu8VMH/v/krP8ONTFxxxsSp/47jQIEfOwdGnVguVDEcqT44qi1Cll5lD4I4Ss/w4F
- qmCFHiEEk9OeXdeOmfNJ990ngdRDaAMZDrM1VFLl21DQ4YNzjNn5Q7UwOxdk+woW5JVu
- fCz/h2x8wjxhoXF4l6TLxikT7nDv21hUbe/lu2YgrxC12YayoaShLalCvmAC+6RoEfBh
- TSUgJmLgwRoEjaFhVNEA4oCvbNIFl+UgV3TLg8P9PuDUYKoVitUJSIFLk++h3zza2nnp rQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wa9unrn34-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 Nov 2019 10:48:45 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0D50D10003B;
-        Mon, 18 Nov 2019 10:48:45 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E60FA2BC7D6;
-        Mon, 18 Nov 2019 10:48:44 +0100 (CET)
-Received: from localhost (10.75.127.47) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 18 Nov 2019 10:48:44
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <fabrice.gasnier@st.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <alexandre.torgue@st.com>,
-        <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
-        <pmeerw@pmeerw.net>, <lee.jones@linaro.org>,
-        <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2] dt-bindings: mfd: Convert stm32 low power timers bindings to json-schema
-Date:   Mon, 18 Nov 2019 10:48:42 +0100
-Message-ID: <20191118094842.20171-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Mon, 18 Nov 2019 04:49:46 -0500
+Received: by mail-wr1-f68.google.com with SMTP id e6so18631389wrw.1;
+        Mon, 18 Nov 2019 01:49:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to;
+        bh=t9rW3xazlhVCaoGmTPjVJwPHQBKcd3ozdYqgzIwnr/8=;
+        b=DCN1ocCVTucIGj7KNmA2jUUfOU1x+6+1OewOqvAlVaP/zCB/ceRh5LVZoWlr7SB3mB
+         kQeKosxVk+pggXUDU0hNnRrjlPrkQMwoqLhjOfJlvETQG865wBV2v6FUJudcK+vbi4bf
+         VS5Y1rHolM2B3pLEPZ7X/rwcx4bXO3GusFLdBl53La1rucJdiajDvoht6cN6AbC3k/z+
+         CbkGA9vcjMeMMFC3NlyptWDn9CJ1iA3nuquiU22y5OgjeAvmHDITSUp4KP7pzQdJRLfG
+         IlzxxBDWKkAeD6aOqJt2GQRETQYQnlXt0s/L/jVGbEZb1WpZUKym9EsxniTgcTL4bpI8
+         /XXA==
+X-Gm-Message-State: APjAAAWKIr+rNivbjw/mQ5p2WaQ1wWkDFEnM9MmLmQcFGElISj9oQNPH
+        2BaiauCeVGc8Oyj0kveI6fo=
+X-Google-Smtp-Source: APXvYqzZwdF7H+g/R9MVcbwaNmBPQesu+OjiQ1yhCJs+I7NnfCqwpleeYzJzDkvNeRvUnnxjzkPSyg==
+X-Received: by 2002:a5d:4608:: with SMTP id t8mr29980233wrq.91.1574070583608;
+        Mon, 18 Nov 2019 01:49:43 -0800 (PST)
+Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
+        by smtp.gmail.com with ESMTPSA id f188sm18478495wmf.3.2019.11.18.01.49.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Nov 2019 01:49:42 -0800 (PST)
+Subject: Re: linux-next: build failure after merge of the tip tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux Crypto List <linux-crypto@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Samuel Neves <sneves@dei.uc.pt>,
+        Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@suse.de>
+References: <20191118141110.7f971194@canb.auug.org.au>
+From:   Jiri Slaby <jslaby@suse.cz>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <4d2f41b1-9a8f-1528-0cc0-2730ea8e5910@suse.cz>
+Date:   Mon, 18 Nov 2019 10:49:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-18_01:2019-11-15,2019-11-17 signatures=0
+In-Reply-To: <20191118141110.7f971194@canb.auug.org.au>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="uw1gbWEREqHpoXFcHJQJeSB3SoaOJAsEV"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the STM32 low power timers binding to DT schema format using json-schema
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--uw1gbWEREqHpoXFcHJQJeSB3SoaOJAsEV
+Content-Type: multipart/mixed; boundary="gqiFj2hYAJy8MN2QAsNKEkKp6ID1wrVMu"
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
-changes in version 2:
-- improve counter function description
-- set reg maximum to 2 instead of 3
+--gqiFj2hYAJy8MN2QAsNKEkKp6ID1wrVMu
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
- .../bindings/counter/stm32-lptimer-cnt.txt         |  29 -----
- .../bindings/iio/timer/stm32-lptimer-trigger.txt   |  23 ----
- .../devicetree/bindings/mfd/st,stm32-lptimer.yaml  | 120 +++++++++++++++++++++
- .../devicetree/bindings/mfd/stm32-lptimer.txt      |  48 ---------
- .../devicetree/bindings/pwm/pwm-stm32-lp.txt       |  30 ------
- 5 files changed, 120 insertions(+), 130 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt
- delete mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
- delete mode 100644 Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
- delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
+On 18. 11. 19, 4:11, Stephen Rothwell wrote:
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Mon, 18 Nov 2019 14:00:40 +1100
+> Subject: [PATCH] fix up for "x86/asm: Change all ENTRY+ENDPROC to SYM_F=
+UNC_*"
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  arch/x86/crypto/blake2s-core.S | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/arch/x86/crypto/blake2s-core.S b/arch/x86/crypto/blake2s-c=
+ore.S
+> index 8591938eee26..24910b766bdd 100644
+> --- a/arch/x86/crypto/blake2s-core.S
+> +++ b/arch/x86/crypto/blake2s-core.S
+> @@ -47,7 +47,7 @@ SIGMA2:
+> =20
+>  .text
+>  #ifdef CONFIG_AS_SSSE3
+> -ENTRY(blake2s_compress_ssse3)
+> +SYM_FUNC_START(blake2s_compress_ssse3)
+>  	testq		%rdx,%rdx
+>  	je		.Lendofloop
+>  	movdqu		(%rdi),%xmm0
+> @@ -173,11 +173,11 @@ ENTRY(blake2s_compress_ssse3)
+>  	movdqu		%xmm14,0x20(%rdi)
+>  .Lendofloop:
+>  	ret
+> -ENDPROC(blake2s_compress_ssse3)
+> +SYM_FUNC_END(blake2s_compress_ssse3)
+>  #endif /* CONFIG_AS_SSSE3 */
+> =20
+>  #ifdef CONFIG_AS_AVX512
+> -ENTRY(blake2s_compress_avx512)
+> +SYM_FUNC_START(blake2s_compress_avx512)
+>  	vmovdqu		(%rdi),%xmm0
+>  	vmovdqu		0x10(%rdi),%xmm1
+>  	vmovdqu		0x20(%rdi),%xmm4
+> @@ -254,5 +254,5 @@ ENTRY(blake2s_compress_avx512)
+>  	vmovdqu		%xmm4,0x20(%rdi)
+>  	vzeroupper
+>  	retq
+> -ENDPROC(blake2s_compress_avx512)
+> +SYM_FUNC_END(blake2s_compress_avx512)
+>  #endif /* CONFIG_AS_AVX512 */
 
-diff --git a/Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt b/Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt
-deleted file mode 100644
-index e90bc47f752a..000000000000
---- a/Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt
-+++ /dev/null
-@@ -1,29 +0,0 @@
--STMicroelectronics STM32 Low-Power Timer quadrature encoder and counter
--
--STM32 Low-Power Timer provides several counter modes. It can be used as:
--- quadrature encoder to detect angular position and direction of rotary
--  elements, from IN1 and IN2 input signals.
--- simple counter from IN1 input signal.
--
--Must be a sub-node of an STM32 Low-Power Timer device tree node.
--See ../mfd/stm32-lptimer.txt for details about the parent node.
--
--Required properties:
--- compatible:		Must be "st,stm32-lptimer-counter".
--- pinctrl-names: 	Set to "default". An additional "sleep" state can be
--			defined to set pins in sleep state.
--- pinctrl-n: 		List of phandles pointing to pin configuration nodes,
--			to set IN1/IN2 pins in mode of operation for Low-Power
--			Timer input on external pin.
--
--Example:
--	timer@40002400 {
--		compatible = "st,stm32-lptimer";
--		...
--		counter {
--			compatible = "st,stm32-lptimer-counter";
--			pinctrl-names = "default", "sleep";
--			pinctrl-0 = <&lptim1_in_pins>;
--			pinctrl-1 = <&lptim1_sleep_in_pins>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt b/Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
-deleted file mode 100644
-index 85e6806b17d7..000000000000
---- a/Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
-+++ /dev/null
-@@ -1,23 +0,0 @@
--STMicroelectronics STM32 Low-Power Timer Trigger
--
--STM32 Low-Power Timer provides trigger source (LPTIM output) that can be used
--by STM32 internal ADC and/or DAC.
--
--Must be a sub-node of an STM32 Low-Power Timer device tree node.
--See ../mfd/stm32-lptimer.txt for details about the parent node.
--
--Required properties:
--- compatible:		Must be "st,stm32-lptimer-trigger".
--- reg:			Identify trigger hardware block. Must be 0, 1 or 2
--			respectively for lptimer1, lptimer2 or lptimer3
--			trigger output.
--
--Example:
--	timer@40002400 {
--		compatible = "st,stm32-lptimer";
--		...
--		trigger@0 {
--			compatible = "st,stm32-lptimer-trigger";
--			reg = <0>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml b/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
-new file mode 100644
-index 000000000000..1a4cc5f3fb33
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
-@@ -0,0 +1,120 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/st,stm32-lptimer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 Low-Power Timers bindings
-+
-+description: |
-+  The STM32 Low-Power Timer (LPTIM) is a 16-bit timer that provides several
-+  functions
-+   - PWM output (with programmable prescaler, configurable polarity)
-+   - Trigger source for STM32 ADC/DAC (LPTIM_OUT)
-+   - Several counter modes:
-+     - quadrature encoder to detect angular position and direction of rotary
-+       elements, from IN1 and IN2 input signals.
-+     - simple counter from IN1 input signal.
-+
-+maintainers:
-+  - Fabrice Gasnier <fabrice.gasnier@st.com>
-+
-+properties:
-+  compatible:
-+    const: st,stm32-lptimer
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: mux
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+  pwm:
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: st,stm32-pwm-lp
-+
-+      "#pwm-cells":
-+        const: 3
-+
-+    required:
-+      - "#pwm-cells"
-+      - compatible
-+
-+patternProperties:
-+  "^trigger@[0-9]+$":
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: st,stm32-lptimer-trigger
-+
-+      reg:
-+        description: Identify trigger hardware block.
-+        items:
-+         minimum: 0
-+         maximum: 2
-+
-+    required:
-+      - compatible
-+      - reg
-+
-+  counter:
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: st,stm32-lptimer-counter
-+
-+    required:
-+      - compatible
-+
-+required:
-+  - "#address-cells"
-+  - "#size-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    timer@40002400 {
-+      compatible = "st,stm32-lptimer";
-+      reg = <0x40002400 0x400>;
-+      clocks = <&timer_clk>;
-+      clock-names = "mux";
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      pwm {
-+        compatible = "st,stm32-pwm-lp";
-+        #pwm-cells = <3>;
-+      };
-+
-+      trigger@0 {
-+        compatible = "st,stm32-lptimer-trigger";
-+        reg = <0>;
-+      };
-+
-+      counter {
-+        compatible = "st,stm32-lptimer-counter";
-+      };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt b/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
-deleted file mode 100644
-index fb54e4dad5b3..000000000000
---- a/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
-+++ /dev/null
-@@ -1,48 +0,0 @@
--STMicroelectronics STM32 Low-Power Timer
--
--The STM32 Low-Power Timer (LPTIM) is a 16-bit timer that provides several
--functions:
--- PWM output (with programmable prescaler, configurable polarity)
--- Quadrature encoder, counter
--- Trigger source for STM32 ADC/DAC (LPTIM_OUT)
--
--Required properties:
--- compatible:		Must be "st,stm32-lptimer".
--- reg:			Offset and length of the device's register set.
--- clocks:		Phandle to the clock used by the LP Timer module.
--- clock-names:		Must be "mux".
--- #address-cells:	Should be '<1>'.
--- #size-cells:		Should be '<0>'.
--
--Optional subnodes:
--- pwm:			See ../pwm/pwm-stm32-lp.txt
--- counter:		See ../counter/stm32-lptimer-cnt.txt
--- trigger:		See ../iio/timer/stm32-lptimer-trigger.txt
--
--Example:
--
--	timer@40002400 {
--		compatible = "st,stm32-lptimer";
--		reg = <0x40002400 0x400>;
--		clocks = <&timer_clk>;
--		clock-names = "mux";
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		pwm {
--			compatible = "st,stm32-pwm-lp";
--			pinctrl-names = "default";
--			pinctrl-0 = <&lppwm1_pins>;
--		};
--
--		trigger@0 {
--			compatible = "st,stm32-lptimer-trigger";
--			reg = <0>;
--		};
--
--		counter {
--			compatible = "st,stm32-lptimer-counter";
--			pinctrl-names = "default";
--			pinctrl-0 = <&lptim1_in_pins>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
-deleted file mode 100644
-index 6521bc44a74e..000000000000
---- a/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
-+++ /dev/null
-@@ -1,30 +0,0 @@
--STMicroelectronics STM32 Low-Power Timer PWM
--
--STM32 Low-Power Timer provides single channel PWM.
--
--Must be a sub-node of an STM32 Low-Power Timer device tree node.
--See ../mfd/stm32-lptimer.txt for details about the parent node.
--
--Required parameters:
--- compatible:		Must be "st,stm32-pwm-lp".
--- #pwm-cells:		Should be set to 3. This PWM chip uses the default 3 cells
--			bindings defined in pwm.txt.
--
--Optional properties:
--- pinctrl-names: 	Set to "default". An additional "sleep" state can be
--			defined to set pins in sleep state when in low power.
--- pinctrl-n: 		Phandle(s) pointing to pin configuration node for PWM,
--			respectively for "default" and "sleep" states.
--
--Example:
--	timer@40002400 {
--		compatible = "st,stm32-lptimer";
--		...
--		pwm {
--			compatible = "st,stm32-pwm-lp";
--			#pwm-cells = <3>;
--			pinctrl-names = "default", "sleep";
--			pinctrl-0 = <&lppwm1_pins>;
--			pinctrl-1 = <&lppwm1_sleep_pins>;
--		};
--	};
--- 
-2.15.0
+Hi, FWIW LGTM.
 
+thanks,
+--=20
+js
+suse labs
+
+
+--gqiFj2hYAJy8MN2QAsNKEkKp6ID1wrVMu--
+
+--uw1gbWEREqHpoXFcHJQJeSB3SoaOJAsEV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE1pWBVg1LlveO4uo2vSWxBAa0cEkFAl3SaTEACgkQvSWxBAa0
+cEmq4xAAh+65kv4YO7CsHet1k8twziFh9OTGwSLT3hJgXheuJMVvJ6YgZsbRfmbv
+Nkc5+RgThtzfQSvFmgdzUEexWd64Nm0m3/0+KjFNo03+D2MssJ/cpTg76CDdRaIP
+MRN+0K7UsUv+28YdSJDgabJZqowghZUXXhsKizVZyxlqAeRJG1fS1kwnxGo7EYdB
+L81YGU8kP5tCzD3JRsplWyj7NVS/ERqbwGQO2uWGHF9eMdWn0RFWR8jFaiRwUg0o
+lBFJk76QK8tq2H35ulc1CVzd5aRQtfebEjOxiNyQUiYZHkkjClPohxpHOPMWiFIY
+M5zi0T0a1/SGZal/O/h3qQFHycBYKreYrW8vluo+XeZLe34B/eklfnYFSWrYeLJd
+fwrImxVcDuTFYeGiFZEef6rq/V9rmiid035um7fds0vjmuGcz/tSi6CGjaP6hAvt
+FxNe0HSNdXl+GS0NZ3GvLs7m3SkBlCaxSfD8eu1c/fMyJlFRYQkaXoGahtASI/y1
+owKHr736XQG9A9Ws3oN1lrg6vvXg2qjrolMBJZMdqJ7P4oteAJpcrtcqViC8SzOH
+73OGyBpOUb/8BSqa6HQsT4B+TkGA5BJygxZFm5pCO/BY/GdmUWAcsvVsrTjpBA4R
+8LKq4vS94phxFSMA0YALYIQ6qWhCqv/+rJTtWTb79sdG0Yy9kGA=
+=O84y
+-----END PGP SIGNATURE-----
+
+--uw1gbWEREqHpoXFcHJQJeSB3SoaOJAsEV--
