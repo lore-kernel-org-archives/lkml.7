@@ -2,160 +2,158 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FB6C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83154C43141
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C22B2192B
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F6D021D7A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574099345;
-	bh=xzebI7/orVj6wFtAAOMe0l0Zjs8mW4vxcT38um0hjAc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=h8qTAdVt4SUJoO7zjhgP/R/BfbAMUYPkJ24RAYKw02tDnIRknZQFiRblPwwyxWBuT
-	 S2gLACcCL9tobpVkzW+ME6INoEGf3xZy1NOPuRN08KheXxWivzCpvOZSwftftANI1B
-	 fdTXjpMkRL0ak7vdxDkV6ifn0prClLGm99agXEkY=
+	s=default; t=1574099370;
+	bh=DYKwlmeC3pvzPdhuAwx8vEQOqQjSiFtgJXHnMSifva8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N84o+JzQmZZZuDMhBvi26LHSp5WqJ8Cy3FC7HA57v9ei5T1cXFfE1KGp/pB0agllG
+	 xXKO7EszDPrm8S0T6hPGfEd8dui+C9KT5EkTUWx+VQm+cb/f8AOYc6p2fFfJ1tk2AI
+	 saqWc+IUvVlW/dD7wJgJQPxAdojLaRAMHwWxY7pI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfKRRtE (ORCPT
+        id S1727148AbfKRRt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 12:49:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:37906 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726314AbfKRRtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 12:49:03 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EE9EDA7;
-        Mon, 18 Nov 2019 09:49:03 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 72FE23F703;
-        Mon, 18 Nov 2019 09:49:02 -0800 (PST)
-Date:   Mon, 18 Nov 2019 17:49:00 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Luhua Xu <luhua.xu@mediatek.com>
-Cc:     Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <info@metux.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Leilk Liu <leilk.liu@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Applied "spi: mediatek: add SPI_CS_HIGH support" to the spi tree
-In-Reply-To: <1574053037-26721-2-git-send-email-luhua.xu@mediatek.com>
-Message-Id: <applied-1574053037-26721-2-git-send-email-luhua.xu@mediatek.com>
-X-Patchwork-Hint: ignore
+        Mon, 18 Nov 2019 12:49:29 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40938 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbfKRRt3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 12:49:29 -0500
+Received: by mail-oi1-f196.google.com with SMTP id d22so9166971oic.7;
+        Mon, 18 Nov 2019 09:49:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Y3Qx19fdBbWInRKoCFh0bqdIwNk3ZTrVmE+pGg14hpQ=;
+        b=h0noQ2FxZivlx/wTDwE1+uCTMjePxZv0zsFWaYoZmOdPyKpCci3n5rvZtRrYlJdyF5
+         CezX/ucEqF2TycneXd/LiaZ6LsBQ5G9+6Hk4FFHWshGWKf90+omkGukqQ81K6ip7Zwkp
+         e0X/FPBVbTP8wy5xdkbpifBxzcc5wS32Y40C+W9ew2i2udzfhV2/QvdIPiBgmATt1laC
+         zRNYVq9J6VmEIg73vrp0Q2Gf1HRbRMzUcIHbToUnAJnid7qwcxKJEfYQ/PcdujCY3b3Y
+         fWx6t+Q9P3DYeQAI6EVZJyul0HLKW2smWtkBO1uIBIfyLe1ZrUXSJ7kDkLyzFEcxXUxU
+         ZZZg==
+X-Gm-Message-State: APjAAAXC3fKueP7/KDkeucPhPNlwKY6uaWnvX26d/MUkwjPqQv4k9YYV
+        zZlBBVUV0jF6tSwGtijc4A==
+X-Google-Smtp-Source: APXvYqxI/5VqcHNlQb1w8L6k5hQ217PuWT8L9RUidu7eci3tR2apxY3hjBJW0goFv+jkWcaFvmY3SQ==
+X-Received: by 2002:aca:4fce:: with SMTP id d197mr147098oib.142.1574099368064;
+        Mon, 18 Nov 2019 09:49:28 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s25sm6152148oic.13.2019.11.18.09.49.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 09:49:27 -0800 (PST)
+Date:   Mon, 18 Nov 2019 11:49:26 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
+        pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, paulmck@linux.ibm.com,
+        mchehab+samsung@kernel.org, linus.walleij@linaro.org,
+        nicolas.ferre@microchip.com, biabeniamin@outlook.com
+Subject: Re: [PATCH 2/3] dt-binding: iio: Add documentation for ADM1177
+Message-ID: <20191118174926.GA19914@bogus>
+References: <20191112153552.27431-1-beniamin.bia@analog.com>
+ <20191112153552.27431-2-beniamin.bia@analog.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112153552.27431-2-beniamin.bia@analog.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Tue, Nov 12, 2019 at 05:35:51PM +0200, Beniamin Bia wrote:
+> Documentation for ADM1177 was added.
+> 
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+> ---
+>  .../bindings/iio/adc/adi,adm1177.yaml         | 60 +++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,adm1177.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,adm1177.yaml b/Documentation/devicetree/bindings/iio/adc/adi,adm1177.yaml
+> new file mode 100644
+> index 000000000000..69a0230e59f5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,adm1177.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,adm1177.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices ADM1177 Hot Swap Controller and Digital Power Monitor
+> +
+> +maintainers:
+> +  - Michael Hennerich <michael.hennerich@analog.com>
+> +  - Beniamin Bia <beniamin.bia@analog.com>
+> +
+> +description: |
+> +  Analog Devices ADM1177 Hot Swap Controller and Digital Power Monitor
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1177.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,adm1177
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  avcc-supply:
+> +    description:
+> +      Phandle to the Avcc power supply
+> +
+> +  adi,r-sense-micro-ohms:
+> +    description:
+> +      The value of curent sense resistor in microohms.
 
-   spi: mediatek: add SPI_CS_HIGH support
+s/curent/current/
 
-has been applied to the spi tree at
+Is there a range of values allowed?
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From ae7c2d342a10dbef1e054482f46498b6282a1df0 Mon Sep 17 00:00:00 2001
-From: Luhua Xu <luhua.xu@mediatek.com>
-Date: Mon, 18 Nov 2019 12:57:16 +0800
-Subject: [PATCH] spi: mediatek: add SPI_CS_HIGH support
-
-Change to use SPI_CS_HIGH to support spi CS polarity setting
-for chips support enhance_timing.
-
-Signed-off-by: Luhua Xu <luhua.xu@mediatek.com>
-Link: https://lore.kernel.org/r/1574053037-26721-2-git-send-email-luhua.xu@mediatek.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-mt65xx.c                 | 12 ++++++++++--
- include/linux/platform_data/spi-mt65xx.h |  1 -
- 2 files changed, 10 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
-index 25fe149a8d9a..6783e12c40c2 100644
---- a/drivers/spi/spi-mt65xx.c
-+++ b/drivers/spi/spi-mt65xx.c
-@@ -139,7 +139,6 @@ static const struct mtk_spi_compatible mt8183_compat = {
-  * supplies it.
-  */
- static const struct mtk_chip_config mtk_default_chip_info = {
--	.cs_pol = 0,
- 	.sample_sel = 0,
- };
- 
-@@ -230,10 +229,12 @@ static int mtk_spi_prepare_message(struct spi_master *master,
- #endif
- 
- 	if (mdata->dev_comp->enhance_timing) {
--		if (chip_config->cs_pol)
-+		/* set CS polarity */
-+		if (spi->mode & SPI_CS_HIGH)
- 			reg_val |= SPI_CMD_CS_POL;
- 		else
- 			reg_val &= ~SPI_CMD_CS_POL;
-+
- 		if (chip_config->sample_sel)
- 			reg_val |= SPI_CMD_SAMPLE_SEL;
- 		else
-@@ -264,6 +265,9 @@ static void mtk_spi_set_cs(struct spi_device *spi, bool enable)
- 	u32 reg_val;
- 	struct mtk_spi *mdata = spi_master_get_devdata(spi->master);
- 
-+	if (spi->mode & SPI_CS_HIGH)
-+		enable = !enable;
-+
- 	reg_val = readl(mdata->base + SPI_CMD_REG);
- 	if (!enable) {
- 		reg_val |= SPI_CMD_PAUSE_EN;
-@@ -646,6 +650,10 @@ static int mtk_spi_probe(struct platform_device *pdev)
- 
- 	mdata = spi_master_get_devdata(master);
- 	mdata->dev_comp = of_id->data;
-+
-+	if (mdata->dev_comp->enhance_timing)
-+		master->mode_bits |= SPI_CS_HIGH;
-+
- 	if (mdata->dev_comp->must_tx)
- 		master->flags = SPI_MASTER_MUST_TX;
- 
-diff --git a/include/linux/platform_data/spi-mt65xx.h b/include/linux/platform_data/spi-mt65xx.h
-index f0e6d6483e62..65fd5ffd257c 100644
---- a/include/linux/platform_data/spi-mt65xx.h
-+++ b/include/linux/platform_data/spi-mt65xx.h
-@@ -11,7 +11,6 @@
- 
- /* Board specific platform_data */
- struct mtk_chip_config {
--	u32 cs_pol;
- 	u32 sample_sel;
- };
- #endif
--- 
-2.20.1
-
+> +
+> +  adi,shutdown-threshold-microamp:
+> +    description:
+> +      Specifies the current level at which an over current alert occurs.
+> +    maximum: 255
+> +
+> +  adi,vrange-high-enable:
+> +    description:
+> +      Specifies which internal voltage divider to be used. A 1 selects
+> +      a 7:2 voltage divider while a 0 selects a 14:1 voltage divider.
+> +    type: boolean
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    i2c0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        adc@b4 {
+> +                compatible = "adi,adm1177";
+> +                reg = <0xb4>;
+> +        };
+> +    };
+> +...
+> -- 
+> 2.17.1
+> 
