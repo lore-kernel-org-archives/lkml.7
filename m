@@ -2,123 +2,72 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 769CEC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D892C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ECEA2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:52:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574092325;
-	bh=C1sfSKfJMzb+jObAbp/Ej9UFK/lDdmVb7T0qnNQ+IJ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WMcfh6Myc6L3sssB/RD8nUx4jWXX16Hl9B3tED1QQ8FiFphTdQUuY9sQJ1lZp09Ux
-	 sU4uL1zlZSxrUiBTfHeeTs9bulVxliqle9sj8rIpyj9r5lMi6zV47eT3S8XEWvbJIG
-	 dQstLWhExEzud1ZZyBSjvNcLE5qL3JPwg+nDaXVY=
+	by mail.kernel.org (Postfix) with ESMTP id 430B821783
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 15:53:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfKRPwE (ORCPT
+        id S1727390AbfKRPx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 10:52:04 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58334 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726216AbfKRPwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 10:52:04 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C842AB0E6;
-        Mon, 18 Nov 2019 15:52:01 +0000 (UTC)
-Date:   Mon, 18 Nov 2019 16:52:00 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 4.19 56/81] kernel/sysctl.c: do not override max_threads
- provided by userspace
-Message-ID: <20191118155200.GG14255@dhcp22.suse.cz>
-References: <20191016214805.727399379@linuxfoundation.org>
- <20191016214842.621065901@linuxfoundation.org>
- <20191017105940.GA5966@amd>
- <20191017110516.GG24485@dhcp22.suse.cz>
- <20191118152558.GA26236@duo.ucw.cz>
+        Mon, 18 Nov 2019 10:53:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59006 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726216AbfKRPx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 10:53:57 -0500
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6925214DE;
+        Mon, 18 Nov 2019 15:53:56 +0000 (UTC)
+Date:   Mon, 18 Nov 2019 10:53:55 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] sched: rt: Make RT capacity aware
+Message-ID: <20191118105355.2f822886@oasis.local.home>
+In-Reply-To: <20191118154334.tolws225robfncp6@e107158-lin.cambridge.arm.com>
+References: <20191009104611.15363-1-qais.yousef@arm.com>
+        <20191028143749.GE4114@hirez.programming.kicks-ass.net>
+        <20191028140147.036a0001@grimm.local.home>
+        <20191118154334.tolws225robfncp6@e107158-lin.cambridge.arm.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191118152558.GA26236@duo.ucw.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 18-11-19 16:25:58, Pavel Machek wrote:
-> Hi!
-> 
-> > > > From: Michal Hocko <mhocko@suse.com>
-> > > > 
-> > > > commit b0f53dbc4bc4c371f38b14c391095a3bb8a0bb40 upstream.
-> > > > 
-> > > > Partially revert 16db3d3f1170 ("kernel/sysctl.c: threads-max observe
-> > > > limits") because the patch is causing a regression to any workload which
-> > > > needs to override the auto-tuning of the limit provided by kernel.
-> > > > 
-> > > > set_max_threads is implementing a boot time guesstimate to provide a
-> > > > sensible limit of the concurrently running threads so that runaways will
-> > > > not deplete all the memory.  This is a good thing in general but there
-> > > > are workloads which might need to increase this limit for an application
-> > > > to run (reportedly WebSpher MQ is affected) and that is simply not
-> > > > possible after the mentioned change.  It is also very dubious to
-> > > > override an admin decision by an estimation that doesn't have any direct
-> > > > relation to correctness of the kernel operation.
-> > > > 
-> > > > Fix this by dropping set_max_threads from sysctl_max_threads so any
-> > > > value is accepted as long as it fits into MAX_THREADS which is important
-> > > > to check because allowing more threads could break internal robust futex
-> > > > restriction.  While at it, do not use MIN_THREADS as the lower boundary
-> > > > because it is also only a heuristic for automatic estimation and admin
-> > > > might have a good reason to stop new threads to be created even when
-> > > > below this limit.
-> > > 
-> > > Ok, why not, but I smell followup work could be done:
-> > > 
-> > > > @@ -2635,7 +2635,7 @@ int sysctl_max_threads(struct ctl_table
-> > > >  	if (ret || !write)
-> > > >  		return ret;
-> > > >  
-> > > > -	set_max_threads(threads);
-> > > > +	max_threads = threads;
-> > > >  
-> > > 
-> > > AFAICT set_max_threads can now become __init.
+On Mon, 18 Nov 2019 15:43:35 +0000
+Qais Yousef <qais.yousef@arm.com> wrote:
+
+>   
 > > 
-> > Yes. Care to send a patch?
+> > Nothing against it, but I want to take a deeper look before we accept
+> > it. Are you OK in waiting a week? I'm currently at Open Source Summit
+> > and still have two more talks to write (giving them Thursday). I wont
+> > have time to look till next week.  
 > 
-> I'm not usually hacking in that area. Could you do that?
+> Apologies if I am being too pushy. But not sure whether this is waiting for its
+> turn in the queue or slipped through the cracks, hence another gentle reminder
+> in case it's the latter :-)
 
-I can put it on my ever growing todo list. But this should be a low
-hanging fruit that doesn't really require a deep understanding of the
-specific subsystem.
+No you are not being too pushy, my apologies to you, it's been quite
+hectic lately (both from a business and personal stand point). I'll
+look at it now.
 
-> > > Plus, I don't see any locking here, should this be WRITE_ONCE() at
-> > > minimum?
-> > 
-> > Why would that matter? Do you expect several root processes race to set
-> > the value?
-> 
-> Well, for example to warn humans that this code is accessing unlocked
-> variable. Second, as is, code is not valid C and compilers are
-> allowed to do strange stuff ("undefined behaviour"). Third, there are
-> concurency checkers that will not like this one.
+Thanks, and sorry for the delay :-(
 
-I do not see any undefined behahvior in assigning an integer in a
-lockless manner if there are no actual consistency issues. If this is
-not the case then please do describe them in a specific manner.
--- 
-Michal Hocko
-SUSE Labs
+-- Steve
