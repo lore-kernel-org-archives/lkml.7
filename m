@@ -2,140 +2,177 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0675C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05BCC33CA0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2C86206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:09:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OPqaY0Sz"
+	by mail.kernel.org (Postfix) with ESMTP id B0160222A2
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfKRXJH (ORCPT
+        id S1727050AbfKRXKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 18:09:07 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48651 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726787AbfKRXJH (ORCPT
+        Mon, 18 Nov 2019 18:10:04 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:46216 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726787AbfKRXKE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 18:09:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574118546;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/mx4+qFXiC/+e+Xdl1zRsPqe4Lse+/H7aINXXZ+4oWE=;
-        b=OPqaY0SzvQjTyUSCDf8JAgVRw962FHqtCJtNuoGCd7IekVi981nzDNBz+g5mJm2qJ7PwOj
-        hcBkdkzUxwGHWmbMnQCd6rq8WkCViXLw+kxzL+9SOD88qMJEaKzQVEMxr2r5isjCzBSz8p
-        HmaikqNRmyX08NNgvaE849dq5EG+AAg=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-276-MLcVy1_GOK2ovlcJs0Rmrw-1; Mon, 18 Nov 2019 18:09:03 -0500
-Received: by mail-qt1-f198.google.com with SMTP id u23so13352733qtb.22
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 15:09:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ASVjtjtrlpOdxJBYrKpoEIu0aAE2iNvxpFL7UFyOhZI=;
-        b=kBsdSFGYC5tKyxgGzjYBzY5RNQ0fC1DRj9VdjwMCRJYyUc2AC1FCQ/coNtSqaTHXhu
-         ABiamDo0CL4Ktd1Rtzj8DG0opPhZnyiZxk5H7QdxLb2+PWPqFZYT1TdNTjVyji35Wb+5
-         vR14fXfHOTrB/WTVG4iNBPhMv7EyGytKD08j3z5BhHQhSvuYeYDYyipP2PmVWOR1O3Ql
-         wgwHLeFqBEu938+Zl0soAYhXaZZ029l08+YA2yI7h50EsomRFZw9cFlGj/FmR22cAAEe
-         XIFzSpOoOK2/Le7Ll2fEffBexnOPRBDdsj2Oz56Zu/2ar99rXZ+V1cZP/ptysNW0OXlw
-         NkAA==
-X-Gm-Message-State: APjAAAWnKbYwPbp4XT18yL3yD49qagHtqirOYKhfBUa9hODxsEGIX93O
-        VP3uOQDNpegRnB6ILDcl5tjdTLiGLb7lLL3njm9EZHM0lAL4UnSziObzGI+jWEpG8y4ZhMI7vgB
-        XakI2BCwG3V+0R4jNag0IxZ94
-X-Received: by 2002:ad4:55f0:: with SMTP id bu16mr508576qvb.80.1574118542561;
-        Mon, 18 Nov 2019 15:09:02 -0800 (PST)
-X-Google-Smtp-Source: APXvYqylfbTgxCWyt2CLVW/JdX9DrSVC+Ljy7mGozqLWbllbTB1zEStw/500ZaQBOmJKizWLC2uycg==
-X-Received: by 2002:ad4:55f0:: with SMTP id bu16mr508555qvb.80.1574118542243;
-        Mon, 18 Nov 2019 15:09:02 -0800 (PST)
-Received: from redhat.com (bzq-79-176-6-42.red.bezeqint.net. [79.176.6.42])
-        by smtp.gmail.com with ESMTPSA id y24sm9167647qki.104.2019.11.18.15.08.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 15:09:01 -0800 (PST)
-Date:   Mon, 18 Nov 2019 18:08:56 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Khazhismel Kumykov <khazhy@google.com>
-Cc:     jasowang@redhat.com, wei.w.wang@intel.com,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH 1/2] virtio_balloon: fix pages_to_free calculation
-Message-ID: <20191118175648-mutt-send-email-mst@kernel.org>
-References: <CACGdZYJoHSN3vkj_QBz6Txmec9mJMmkH66j2XtqzpUWpfpw4Tg@mail.gmail.com>
- <20191118213811.22017-1-khazhy@google.com>
+        Mon, 18 Nov 2019 18:10:04 -0500
+Received: from 79.184.253.244.ipv4.supernova.orange.pl (79.184.253.244) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 8b755d4becfa1ef3; Tue, 19 Nov 2019 00:10:02 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Len Brown <lenb@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Doug Smythies <dsmythies@telus.net>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [RFC][PATCH 1/2] cpuidle: Drop disabled field from struct cpuidle_state
+Date:   Tue, 19 Nov 2019 00:07:32 +0100
+Message-ID: <3935829.cE1St2P3cE@kreacher>
+In-Reply-To: <1688511.GgkECGP1XA@kreacher>
+References: <2717750.dCEzHT3DVQ@kreacher> <CAJZ5v0jsQG37VF3-tiSndE0pXX9jEfgucm0UyvpM0bsyoOcpuA@mail.gmail.com> <1688511.GgkECGP1XA@kreacher>
 MIME-Version: 1.0
-In-Reply-To: <20191118213811.22017-1-khazhy@google.com>
-X-MC-Unique: MLcVy1_GOK2ovlcJs0Rmrw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-So I really think we should do something like the below instead.
-Limit playing with balloon pages so we can gradually limit it to legacy.
-Testing, review would be appreciated.
+After recent cpuidle updates the disabled field in struct
+cpuidle_state is only used by two drivers (intel_idle and shmobile
+cpuidle) for marking unusable idle states, but that may as well be
+achieved with the help of a state flag, so define an "unusable" idle
+state flag, CPUIDLE_FLAG_UNUSABLE, make the drivers in question use
+it instead of the disable field and make the core set
+CPUIDLE_STATE_DISABLED_BY_DRIVER for the idle states with that flag
+set.
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+After the above changes, the disabled field in struct cpuidle_state
+is not used any more, so drop it.
 
+No intentional functional impact.
 
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloo=
-n.c
-index 226fbb995fb0..7cee05cdf3fb 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -772,6 +772,13 @@ static unsigned long shrink_free_pages(struct virtio_b=
-alloon *vb,
- =09return blocks_freed << VIRTIO_BALLOON_FREE_PAGE_ORDER;
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ arch/sh/kernel/cpu/shmobile/cpuidle.c |    8 ++++----
+ drivers/cpuidle/cpuidle.c             |    2 +-
+ drivers/cpuidle/poll_state.c          |    1 -
+ drivers/idle/intel_idle.c             |    6 +++---
+ include/linux/cpuidle.h               |    2 +-
+ 5 files changed, 9 insertions(+), 10 deletions(-)
+
+Index: linux-pm/drivers/idle/intel_idle.c
+===================================================================
+--- linux-pm.orig/drivers/idle/intel_idle.c
++++ linux-pm/drivers/idle/intel_idle.c
+@@ -1291,8 +1291,8 @@ static void sklh_idle_state_table_update
+ 			return;
+ 	}
+ 
+-	skl_cstates[5].disabled = 1;	/* C8-SKL */
+-	skl_cstates[6].disabled = 1;	/* C9-SKL */
++	skl_cstates[5].flags |= CPUIDLE_FLAG_UNUSABLE;	/* C8-SKL */
++	skl_cstates[6].flags |= CPUIDLE_FLAG_UNUSABLE;	/* C9-SKL */
  }
-=20
-+static unsigned long leak_balloon_pages(struct virtio_balloon *vb,
-+                                          unsigned long pages_to_free)
-+{
-+=09return leak_balloon(vb, pages_to_free * VIRTIO_BALLOON_PAGES_PER_PAGE) =
-/
-+=09=09VIRTIO_BALLOON_PAGES_PER_PAGE;
-+}
-+
- static unsigned long shrink_balloon_pages(struct virtio_balloon *vb,
- =09=09=09=09=09  unsigned long pages_to_free)
+ /*
+  * intel_idle_state_table_update()
+@@ -1355,7 +1355,7 @@ static void __init intel_idle_cpuidle_dr
+ 			continue;
+ 
+ 		/* if state marked as disabled, skip it */
+-		if (cpuidle_state_table[cstate].disabled != 0) {
++		if (cpuidle_state_table[cstate].flags & CPUIDLE_FLAG_UNUSABLE) {
+ 			pr_debug("state %s is disabled\n",
+ 				 cpuidle_state_table[cstate].name);
+ 			continue;
+Index: linux-pm/include/linux/cpuidle.h
+===================================================================
+--- linux-pm.orig/include/linux/cpuidle.h
++++ linux-pm/include/linux/cpuidle.h
+@@ -54,7 +54,6 @@ struct cpuidle_state {
+ 	unsigned int	exit_latency; /* in US */
+ 	int		power_usage; /* in mW */
+ 	unsigned int	target_residency; /* in US */
+-	bool		disabled; /* disabled on all CPUs */
+ 
+ 	int (*enter)	(struct cpuidle_device *dev,
+ 			struct cpuidle_driver *drv,
+@@ -77,6 +76,7 @@ struct cpuidle_state {
+ #define CPUIDLE_FLAG_POLLING	BIT(0) /* polling state */
+ #define CPUIDLE_FLAG_COUPLED	BIT(1) /* state applies to multiple cpus */
+ #define CPUIDLE_FLAG_TIMER_STOP BIT(2) /* timer is stopped on this state */
++#define CPUIDLE_FLAG_UNUSABLE	BIT(3) /* avoid using this state */
+ 
+ struct cpuidle_device_kobj;
+ struct cpuidle_state_kobj;
+Index: linux-pm/arch/sh/kernel/cpu/shmobile/cpuidle.c
+===================================================================
+--- linux-pm.orig/arch/sh/kernel/cpu/shmobile/cpuidle.c
++++ linux-pm/arch/sh/kernel/cpu/shmobile/cpuidle.c
+@@ -67,7 +67,7 @@ static struct cpuidle_driver cpuidle_dri
+ 			.enter = cpuidle_sleep_enter,
+ 			.name = "C2",
+ 			.desc = "SuperH Sleep Mode [SF]",
+-			.disabled = true,
++			.flags = CPUIDLE_FLAG_UNUSABLE,
+ 		},
+ 		{
+ 			.exit_latency = 2300,
+@@ -76,7 +76,7 @@ static struct cpuidle_driver cpuidle_dri
+ 			.enter = cpuidle_sleep_enter,
+ 			.name = "C3",
+ 			.desc = "SuperH Mobile Standby Mode [SF]",
+-			.disabled = true,
++			.flags = CPUIDLE_FLAG_UNUSABLE,
+ 		},
+ 	},
+ 	.safe_state_index = 0,
+@@ -86,10 +86,10 @@ static struct cpuidle_driver cpuidle_dri
+ int __init sh_mobile_setup_cpuidle(void)
  {
-@@ -782,11 +789,9 @@ static unsigned long shrink_balloon_pages(struct virti=
-o_balloon *vb,
- =09 * VIRTIO_BALLOON_ARRAY_PFNS_MAX balloon pages, so we call it
- =09 * multiple times to deflate pages till reaching pages_to_free.
- =09 */
--=09while (vb->num_pages && pages_to_free) {
--=09=09pages_freed +=3D leak_balloon(vb, pages_to_free) /
--=09=09=09=09=09VIRTIO_BALLOON_PAGES_PER_PAGE;
--=09=09pages_to_free -=3D pages_freed;
--=09}
-+=09while (vb->num_pages && pages_freed < pages_to_free)
-+=09=09pages_freed +=3D leak_balloon_pages(vb, pages_to_free);
-+
- =09update_balloon_size(vb);
-=20
- =09return pages_freed;
-@@ -799,7 +804,7 @@ static unsigned long virtio_balloon_shrinker_scan(struc=
-t shrinker *shrinker,
- =09struct virtio_balloon *vb =3D container_of(shrinker,
- =09=09=09=09=09struct virtio_balloon, shrinker);
-=20
--=09pages_to_free =3D sc->nr_to_scan * VIRTIO_BALLOON_PAGES_PER_PAGE;
-+=09pages_to_free =3D sc->nr_to_scan;
-=20
- =09if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
- =09=09pages_freed =3D shrink_free_pages(vb, pages_to_free);
+ 	if (sh_mobile_sleep_supported & SUSP_SH_SF)
+-		cpuidle_driver.states[1].disabled = false;
++		cpuidle_driver.states[1].flags = CPUIDLE_FLAG_NONE;
+ 
+ 	if (sh_mobile_sleep_supported & SUSP_SH_STANDBY)
+-		cpuidle_driver.states[2].disabled = false;
++		cpuidle_driver.states[2].flags = CPUIDLE_FLAG_NONE;
+ 
+ 	return cpuidle_register(&cpuidle_driver, NULL);
+ }
+Index: linux-pm/drivers/cpuidle/cpuidle.c
+===================================================================
+--- linux-pm.orig/drivers/cpuidle/cpuidle.c
++++ linux-pm/drivers/cpuidle/cpuidle.c
+@@ -570,7 +570,7 @@ static int __cpuidle_register_device(str
+ 		return -EINVAL;
+ 
+ 	for (i = 0; i < drv->state_count; i++)
+-		if (drv->states[i].disabled)
++		if (drv->states[i].flags & CPUIDLE_FLAG_UNUSABLE)
+ 			dev->states_usage[i].disable |= CPUIDLE_STATE_DISABLED_BY_DRIVER;
+ 
+ 	per_cpu(cpuidle_devices, dev->cpu) = dev;
+Index: linux-pm/drivers/cpuidle/poll_state.c
+===================================================================
+--- linux-pm.orig/drivers/cpuidle/poll_state.c
++++ linux-pm/drivers/cpuidle/poll_state.c
+@@ -53,7 +53,6 @@ void cpuidle_poll_state_init(struct cpui
+ 	state->target_residency_ns = 0;
+ 	state->power_usage = -1;
+ 	state->enter = poll_idle;
+-	state->disabled = false;
+ 	state->flags = CPUIDLE_FLAG_POLLING;
+ }
+ EXPORT_SYMBOL_GPL(cpuidle_poll_state_init);
+
+
 
