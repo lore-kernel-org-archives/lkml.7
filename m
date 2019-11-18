@@ -2,149 +2,119 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A47B1C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5707EC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 860592230D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F9C12230F
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:56:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="HY/3X4Py"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfKRU4H (ORCPT
+        id S1727106AbfKRU4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 15:56:07 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:34752 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726475AbfKRU4G (ORCPT
+        Mon, 18 Nov 2019 15:56:17 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34535 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbfKRU4Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 15:56:06 -0500
-Received: (qmail 4606 invoked by uid 2102); 18 Nov 2019 15:56:05 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 18 Nov 2019 15:56:05 -0500
-Date:   Mon, 18 Nov 2019 15:56:05 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Michael Olbrich <m.olbrich@pengutronix.de>,
-        Felipe Balbi <balbi@kernel.org>
-cc:     Peter Chen <peter.chen@nxp.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb: gadget: composite: split spinlock to avoid recursion
-In-Reply-To: <20191114132330.iw4ucbfaxofi6cfy@pengutronix.de>
-Message-ID: <Pine.LNX.4.44L0.1911181548090.1479-100000@iolanthe.rowland.org>
-MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+        Mon, 18 Nov 2019 15:56:16 -0500
+Received: by mail-qt1-f195.google.com with SMTP id i17so21888228qtq.1
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 12:56:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LpQIGKOXBuvR+dqKIe6qupfgLD1+kHFwhnlzCAXLMkI=;
+        b=HY/3X4PytVjFgVH4p0dhqrSdeoAERiXGrFMIc9EwdUR7raHTE6LMUKlReOJG86ENg9
+         oPzUflcxzhACB90GxluhmZsgJuDlUpyCn4vSplR5LH7xVzI3LL9WvKHDuDesdW020V5u
+         emwxROuaukkkd6aBerrod58/V5SgtuyM9abw7hf4/fYgknAt7HaoK1KJ9Fwx+21VlIA9
+         Nof/uztLpqUukz1fOxoYbUUwEjrhYOnas3touHBFEFFGzewi7jhXOFR9hCFm+yBurobA
+         VsWDSRfmLlWpS5/ljZHFZ9YtELyxIeDrur2kRDrkuQ6fgVF0KZqvZZsM5PVJJfXSfQDv
+         Eq8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LpQIGKOXBuvR+dqKIe6qupfgLD1+kHFwhnlzCAXLMkI=;
+        b=ISknjUgtnTyacGtXj2HKbk12lNpHrJOjBQ4YCm/b9P482R1YyNFCFDxFowIWhZpjsZ
+         dRZ4JETvs5KyLdJLeEzcgY3ba0+Kf3dcccJqN9+pCoBXxx2xn5L7mYjPuyck3r8LMqsA
+         AvbU8TFAZffVg8NiV4io4Tr5hBSuX9TIjyFFxepkTOgzQYgkEz7mE9h3Zm1/svqD7OBn
+         8219aXeKYZ0dGZwoS+efaNnqFGO0JvcjRSQTnlbDVYZYuM3cprto5i7uwG1Q5JSpPpzc
+         gzcN8k8QVZI3sYntQ5FK0/Z9iNFLfT46dQ7gjC94lCHU5vwBulZQyQOE/XhxvHGoHppH
+         rmaQ==
+X-Gm-Message-State: APjAAAV8B872D5drW3nSU4fP3I1wy7kyM9EQ+UMO818yE4RHXkmFdiQg
+        2awga/TRAMZJVOA+7onkBvZiCg==
+X-Google-Smtp-Source: APXvYqyUcizojlBpOIM92IiIW2GoXyUc6B64Y6klEWFnQe5DKB+hDbdzFEPRdgSpUEovgYzxbHDudw==
+X-Received: by 2002:ac8:608:: with SMTP id d8mr29368011qth.258.1574110575770;
+        Mon, 18 Nov 2019 12:56:15 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id w69sm9419221qkb.26.2019.11.18.12.56.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Nov 2019 12:56:15 -0800 (PST)
+Message-ID: <1574110573.5937.144.camel@lca.pw>
+Subject: Re: [PATCH -next v2] mm/vmscan: fix some -Wenum-conversion warnings
+From:   Qian Cai <cai@lca.pw>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     akpm@linux-foundation.org, surenb@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 18 Nov 2019 15:56:13 -0500
+In-Reply-To: <1574110334.5937.142.camel@lca.pw>
+References: <1573848697-29262-1-git-send-email-cai@lca.pw>
+         <20191118182547.GA372119@cmpxchg.org> <20191118182853.GC372119@cmpxchg.org>
+         <1574110334.5937.142.camel@lca.pw>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Nov 2019, Michael Olbrich wrote:
-
-> On Wed, Nov 13, 2019 at 10:36:25AM -0500, Alan Stern wrote:
-> > On Wed, 13 Nov 2019, Peter Chen wrote:
-> > > On 19-11-12 10:33:18, Michael Olbrich wrote:
-> > > > 'delayed_status' and 'deactivations' are used completely independent but
-> > > > they share the same spinlock. This can result in spinlock recursion:
+On Mon, 2019-11-18 at 15:52 -0500, Qian Cai wrote:
+> On Mon, 2019-11-18 at 13:28 -0500, Johannes Weiner wrote:
+> > On Mon, Nov 18, 2019 at 01:25:49PM -0500, Johannes Weiner wrote:
+> > > On Fri, Nov 15, 2019 at 03:11:37PM -0500, Qian Cai wrote:
+> > > > The -next commit "mm: vmscan: enforce inactive:active ratio at the
+> > > > reclaim root" [1] introduced some Clang -Wenum-conversion warnings,
 > > > > 
-> > > > BUG: spinlock recursion on CPU#1, uvc-gadget/322
-> > > >  lock: 0xffffffc0570364e0, .magic: dead4ead, .owner: uvc-gadget/322, .owner_cpu: 1
-> > > > CPU: 1 PID: 322 Comm: uvc-gadget Tainted: G         C O      5.3.0-20190916-1+ #55
-> > > > Hardware name: XXXXX (DT)
-> > > > Call trace:
-> > > >  dump_backtrace+0x0/0x178
-> > > >  show_stack+0x24/0x30
-> > > >  dump_stack+0xc0/0x104
-> > > >  spin_dump+0x90/0xa0
-> > > >  do_raw_spin_lock+0xd8/0x108
-> > > >  _raw_spin_lock_irqsave+0x40/0x50
-> > > >  composite_disconnect+0x2c/0x80
-> > > >  usb_gadget_disconnect+0x84/0x150
-> > > >  usb_gadget_deactivate+0x64/0x120
-> > > >  usb_function_deactivate+0x70/0x80
-> > > >  uvc_function_disconnect+0x20/0x58
-> > > >  uvc_v4l2_release+0x34/0x90
-> > > >  v4l2_release+0xbc/0xf0
-> > > >  __fput+0xb0/0x218
-> > > >  ____fput+0x20/0x30
-> > > >  task_work_run+0xa0/0xd0
-> > > >  do_notify_resume+0x2f4/0x340
-> > > >  work_pending+0x8/0x14
+> > > > mm/vmscan.c:2216:39: warning: implicit conversion from enumeration type
+> > > > 'enum lru_list' to different enumeration type 'enum node_stat_item'
+> > > > [-Wenum-conversion]
+> > > >         inactive = lruvec_page_state(lruvec, inactive_lru);
+> > > >                    ~~~~~~~~~~~~~~~~~         ^~~~~~~~~~~~
+> > > > mm/vmscan.c:2217:37: warning: implicit conversion from enumeration type
+> > > > 'enum lru_list' to different enumeration type 'enum node_stat_item'
+> > > > [-Wenum-conversion]
+> > > >         active = lruvec_page_state(lruvec, active_lru);
+> > > >                  ~~~~~~~~~~~~~~~~~         ^~~~~~~~~~
+> > > > mm/vmscan.c:2746:42: warning: implicit conversion from enumeration type
+> > > > 'enum lru_list' to different enumeration type 'enum node_stat_item'
+> > > > [-Wenum-conversion]
+> > > >         file = lruvec_page_state(target_lruvec, LRU_INACTIVE_FILE);
+> > > >                ~~~~~~~~~~~~~~~~~                ^~~~~~~~~~~~~~~~~
 > > > > 
-> > > > Fix this by using separate spinlocks.
+> > > > Since it guarantees the relative order between the LRU items, fix it by
+> > > > using NR_LRU_BASE for the translation.
+> > > > 
+> > > > [1] http://lkml.kernel.org/r/20191107205334.158354-4-hannes@cmpxchg.org
+> > > > 
+> > > > Signed-off-by: Qian Cai <cai@lca.pw>
 > > > 
-> > > This issue may be introduced by 0a55187a1ec8c ("USB: gadget core: Issue
-> > > ->disconnect() callback from usb_gadget_disconnect()"), which adds
-> > > gadget's disconnect at usb_gadget_disconnect. Add Alan, if he is Ok
-> > > with your patch, you may cc to stable tree.
+> > > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> > > 
+> > > Thanks Qian!
+> > > 
+> > > Andrew, this is a fix for "mm: vmscan: enforce inactive:active ratio
+> > > at the reclaim root". Could you please fold this into that?
 > > 
-> > I wasn't aware of the dual usage of that lock in the composite core 
-> > (and 0a55187a1ec8c touches only the gadget core, not composite.c).
-> > 
-> > In any case, I don't have a good feel for how the locking is supposed 
-> > to work in the composite core.  This is really something Felipe should 
-> > look at.
-> > 
-> > Would a better fix be to change usb_function_deactivate() so that it
-> > doesn't hold the lock while calling usb_gadget_deactivate()?  Maybe
-> > increment cdev->deactivations unconditionally before dropping the lock
-> > (for mutual exclusion) and then decrement it again if the call fails?
+> > nvm, I see you already picked it up. Thank you!
 > 
-> Hmm, I think, that would mean that usb_gadget_activate() may be called
-> while usb_gadget_deactivate() is still running right? That's not
-> acceptable, is it?
+> Hmm, I don't see Andrew picked it yet.
 
-It's a little tricky.  The lock in question belongs to the composite 
-core, not the UDC core, so it doesn't really apply to the 
-usb_gadget_{de}activate() routines.
-
-As for mutual exclusion of usb_gadget_activate() and
-usb_gadget_deactivate(), I don't know that anyone has ever considered
-the matter.
-
-> Anyways. Something else is needed because executing usb_gadget_deactivate()
-> under the spinlock has another problem. It's hard to reproduce, but we've
-> seen this one:
-> 
-> BUG: scheduling while atomic: pipewire/260/0x00000002
-> Modules linked in: allegro(C) regmap_mmio v4l2_mem2mem xlnx_vcu st1232 uio_pdrv_genirq
-> Preemption disabled at: [<ffffff801061dc40>] usb_function_deactivate+0x30/0x80
-> CPU: 1 PID: 260 Comm: pipewire Tainted: G         C O 5.3.0-20191112-1 #2
-> Hardware name: Wolfvision ZynqMP PF4 (DT)
-> Call trace:
->  dump_backtrace+0x0/0x178
->  show_stack+0x24/0x30
->  dump_stack+0xc0/0x104
->  __schedule_bug+0xb0/0xc0
->  __schedule+0x354/0x4d8
->  schedule+0x44/0xd8
->  schedule_timeout+0x1b4/0x380
->  wait_for_common+0xc0/0x188
->  wait_for_completion_timeout+0x2c/0x38
->  dwc3_gadget_pullup+0x90/0xb0
->  usb_gadget_disconnect+0x38/0x150
->  usb_gadget_deactivate+0x64/0x120
->  usb_function_deactivate+0x70/0x80
->  uvc_function_disconnect+0x20/0x58
->  uvc_v4l2_release+0x34/0x90
->  v4l2_release+0xbc/0xf0
->  __fput+0x90/0x208
->  ____fput+0x20/0x30
->  task_work_run+0x98/0xb8
->  do_notify_resume+0x2f4/0x340
->  work_pending+0x8/0x14
-> dwc3 fe200000.usb: timed out waiting for SETUP phase
-> 
-> Or maybe it's incorrect for dwc3_gadget_pullup() to sleep?
-
-It isn't documented, so there's no definitive answer.  My feeling is 
-that the UDC driver pullup routines should not sleep, but that's not 
-official.
-
-Of course, Felipe should have the last word on this.
-
-Alan Stern
-
+Ah, I saw it now. Too many emails, so I'll setup a filter.
