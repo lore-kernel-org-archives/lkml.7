@@ -2,60 +2,145 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12049C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 803D5C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F5620885
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 583CF20885
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574094307;
+	bh=oMYkZuMf6WhUQSXdhLctDMiyyOcrJ2SLjyrX8pyDpF8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hrW0xOEnFanypGBHKCQpHTdpJFED58w3eIpOwlzUV+LFW12sRKTHW/uNP6nwGcRuU
+	 Jrh40BYThDc7+AaPQC5undXUQT87QCLHmgUgJ7ovtRNVNJtDS2KUleyEaf9/ukdN8J
+	 ZzcyqvIik0paDQZwD4MipTxZu9APzM8cuC22e0j0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfKRQXE (ORCPT
+        id S1726774AbfKRQZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 11:23:04 -0500
-Received: from relay.sw.ru ([185.231.240.75]:57562 "EHLO relay.sw.ru"
+        Mon, 18 Nov 2019 11:25:06 -0500
+Received: from foss.arm.com ([217.140.110.172]:36762 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726322AbfKRQXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 11:23:03 -0500
-Received: from dhcp-172-16-25-5.sw.ru ([172.16.25.5])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1iWjnP-0006u4-8v; Mon, 18 Nov 2019 19:22:35 +0300
-Subject: Re: [PATCH v4 1/3] kasan: No KASAN's memmove check if archs don't
- have it.
-To:     Nick Hu <nickhu@andestech.com>, glider@google.com,
-        dvyukov@google.com, corbet@lwn.net, paul.walmsley@sifive.com,
-        palmer@sifive.com, aou@eecs.berkeley.edu, tglx@linutronix.de,
-        gregkh@linuxfoundation.org, alankao@andestech.com,
-        Anup.Patel@wdc.com, atish.patra@wdc.com,
-        kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-mm@kvack.org, green.hu@gmail.com
-References: <20191028024101.26655-1-nickhu@andestech.com>
- <20191028024101.26655-2-nickhu@andestech.com>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <73f11f1e-6df7-c217-e05d-049d04717600@virtuozzo.com>
-Date:   Mon, 18 Nov 2019 19:22:23 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1726216AbfKRQZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 11:25:06 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D16DEDA7;
+        Mon, 18 Nov 2019 08:25:04 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 12FD93F703;
+        Mon, 18 Nov 2019 08:25:04 -0800 (PST)
+Date:   Mon, 18 Nov 2019 16:25:02 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
+ regulator bindings
+Message-ID: <20191118162502.GJ9761@sirena.org.uk>
+References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+ <d29e0eb587b764f3ea77647392e45fac67bbd757.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <20191028024101.26655-2-nickhu@andestech.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="8tZVdKiiYitVG083"
+Content-Disposition: inline
+In-Reply-To: <d29e0eb587b764f3ea77647392e45fac67bbd757.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+X-Cookie: no maintenance:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/28/19 5:40 AM, Nick Hu wrote:
-> If archs don't have memmove then the C implementation from lib/string.c is used,
-> and then it's instrumented by compiler. So there is no need to add KASAN's
-> memmove to manual checks.
-> 
-> Signed-off-by: Nick Hu <nickhu@andestech.com>
-> ---
 
-Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+--8tZVdKiiYitVG083
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Nov 18, 2019 at 08:53:57AM +0200, Matti Vaittinen wrote:
+
+> +#Supported default DVS states:
+> +#buck		| run		| idle		| suspend	| lpsr
+> +#-----------------------------------------------------------------------=
+-----
+> +#1, 2, 6, and 7	| supported	| supported	| 	supported (*)
+> +#-----------------------------------------------------------------------=
+-----
+> +#3, 4, and 5	| 			supported (**)
+> +#-----------------------------------------------------------------------=
+-----
+> +#(*)  LPSR and SUSPEND states use same voltage but both states have own =
+enable /
+> +#     disable settings. Voltage 0 can be specified for a state to make r=
+egulator
+> +#     disabled on that state.
+> +#(**) All states use same voltage but have own enable / disable settings.
+> +#     Voltage 0 can be specified for a state to make regulator disabled =
+on that
+> +#     state.
+> +
+> +      rohm,dvs-runlvl-ctrl:
+> +        description: |
+> +          buck control is done based on run-level. Regulator is not
+> +          individually controllable. See ../mfd/rohm,bd71828-pmic.yaml f=
+or
+> +          how to specify run-level control mechanism. Only bucks 1, 2, 6
+> +          and 7 support this.
+> +        type: boolean
+
+I don't think I saw this having the effect on set_voltage() that I'd
+have expected in the driver? =20
+
+> +      rohm,dvs-runlevel-microvolts:
+> +        minimum: 0
+> +        maximum: 2000000
+> +        maxItems: 4
+> +        description:
+> +          Array of voltages for run-levels. First value is for run-level=
+ 0,
+> +          second for run-level 1 etc. Microvolts.
+
+What's the mapping from array indexes to the names used elsewhere to
+support runlevels?
+
+--8tZVdKiiYitVG083
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3Sxd0ACgkQJNaLcl1U
+h9CCTwf/XyyhpE5QABB0yoyT4n2JEfyYggDTfnGhWaILUDJBNnJ7inK77EpoLaGL
+ybxABHwiIONAnVzWxn+N2THjqO+fbukf7LO6DvYe8FCfoaIz8A6qgGm+P9IC1CWw
+xeWdZwGwWh63iRZ+fR422SlmmNtykgb4QHUdvwEZ9fqMhqPgRGP6YWl5RSuCnC8R
+oE9SPG2GlA/I4kadkV6O503q496yvB6hLiOgXWZ3yWJY2uYNYJvn0sNpd+k0iZK4
+H4iyzLTOIUiD3RpLgNTPrmYXn1D/wClO+l2FqRjpzgq7tDO4xVyEOY8bTH9MrFoD
+36C7jhTJbW2tecxGFK5eemuG+i4Vxg==
+=mxuN
+-----END PGP SIGNATURE-----
+
+--8tZVdKiiYitVG083--
