@@ -2,177 +2,182 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4CEC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC1FC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B5420748
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8055F206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:10:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574079034;
+	bh=ZyBDjFJ1ZiTLeQtvbqTVQDtIJNSyUKztg+ZXVh1EImw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A2PB1IsHxkaiB/kkTXSvHcOih2k738NqnWbFqUTISoe2OgnEwTU5W1RT7pO5E1Pld
+	 iyl4isfhR6EgxnKgFg3yagyLEDl56xUnpe+Q1MN9VvvRhTwKnuK0LrSC6IQS2Y5iwd
+	 MuNhy7j8MTIg582ioU4m7Wt63nYVuTeLOBtDt180=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfKRMJr (ORCPT
+        id S1727080AbfKRMKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 07:09:47 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43650 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726490AbfKRMJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 07:09:42 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id ACB0AB20F;
-        Mon, 18 Nov 2019 12:09:39 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        "Yan, Zheng" <zyan@redhat.com>, Gregory Farnum <gfarnum@redhat.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luis Henriques <lhenriques@suse.com>
-Subject: [RFC PATCH] ceph: switch copy_file_range to 'copy-from-notrunc' operation
-Date:   Mon, 18 Nov 2019 12:09:35 +0000
-Message-Id: <20191118120935.7013-3-lhenriques@suse.com>
-In-Reply-To: <20191118120935.7013-1-lhenriques@suse.com>
-References: <20191118120935.7013-1-lhenriques@suse.com>
+        Mon, 18 Nov 2019 07:10:33 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40226 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbfKRMKd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 07:10:33 -0500
+Received: by mail-wr1-f66.google.com with SMTP id q15so6368706wrw.7;
+        Mon, 18 Nov 2019 04:10:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=k6yV9Z8ApwY7EdsU9fwBTpDDY0oQNflKnyzJAyKrN9A=;
+        b=XaULrSNBJxRDurJ2O9ji9cnAlbSQB6cMNkdn6z7AxTRV7SR5JdGgKHP3BDbDMLjl00
+         SgPgYPo13Y5AtZE7R7cAK7WyRCKrXhSSZUS1EggXxWVKa2JH5taJxBWpvQaol2+keHH1
+         gBT2gmSVSllbCM1n59ck3CQ3Y4eIFRNJG2gex/5C7OKX5LfOurcglwfUzyRaoExc6Zka
+         g5QBeC3RqAdoKjx4ae0GKES+6a0IhO+kJgeXmQTbn/XEnXBk7L6STZwWo0i2RloMeQLo
+         4/yb+w25QTBcViyIYLpD0CNnIIhGiILeI/N0piDUV4gSrAeDBuT9zV/sUFRkmplKAbb2
+         ITAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=k6yV9Z8ApwY7EdsU9fwBTpDDY0oQNflKnyzJAyKrN9A=;
+        b=aoIFeSSmCPHw/40LQt2Lw+HTmgTOlClH3Ps5e0dfzP53RE3akZAMjxLOyn/y6hByod
+         D7M9QwdUB5/2r4b/bzFqSYNTINITcPECKysdMLu1jJOcKmBBSjnC6F8EVFRc4aGsr05a
+         D9yeC4VAdjtmDakZbibsvGspjVszovRR575xRKGW5cLJJy4aJYpEX5UTH1tCzDLiRQZ7
+         ekm7ZqREuXB6QOH78D9DmxSMduyZoNPt8MsFDXOs8PsnXXPkfLTomPDEFQNsb9D6DnF1
+         TBHS6ITxhxk0KiZ+XurV58P0r+SA3jPqDYL8QJy2AcVrASabsebC8yp10prrjQUpLoJp
+         YMpg==
+X-Gm-Message-State: APjAAAXaf/5X/mSfNT2zsWP1tDAu80Jr3u9WTqDNYOuMNbWs+2y2zbig
+        cP8YqbEQhuMyg+mZyGmveuvD+dzK
+X-Google-Smtp-Source: APXvYqzBkW64CN2Vhg2q+4mLjGtfV06t9zPZmiRaIQhhO+G6RgqCAD9zfZaXFIGXvX8YVZl/bc/Dpg==
+X-Received: by 2002:adf:f9c4:: with SMTP id w4mr28768586wrr.88.1574079030657;
+        Mon, 18 Nov 2019 04:10:30 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id 17sm19136604wmg.19.2019.11.18.04.10.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 04:10:29 -0800 (PST)
+Date:   Mon, 18 Nov 2019 13:10:27 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-tip-commits@vger.kernel.org,
+        Cao jin <caoj.fnst@cn.fujitsu.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        x86-ml <x86@kernel.org>, Borislav Petkov <bp@alien8.de>
+Subject: Re: [tip: x86/cleanups] x86: Fix typos in comments
+Message-ID: <20191118121027.GA74767@gmail.com>
+References: <20191118070012.27850-1-caoj.fnst@cn.fujitsu.com>
+ <157406828172.12247.4218858363680758865.tip-bot2@tip-bot2>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <157406828172.12247.4218858363680758865.tip-bot2@tip-bot2>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of using the 'copy-from' operation, switch copy_file_range to the
-new 'copy-from-notrunc' operation, which allows to send the truncate_seq
-and truncate_size parameters.
 
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
----
- fs/ceph/file.c                  |  3 ++-
- include/linux/ceph/osd_client.h |  1 +
- include/linux/ceph/rados.h      |  1 +
- net/ceph/osd_client.c           | 18 ++++++++++++------
- 4 files changed, 16 insertions(+), 7 deletions(-)
+* tip-bot2 for Cao jin <tip-bot2@linutronix.de> wrote:
 
-diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-index d277f71abe0b..4e0d70543d8b 100644
---- a/fs/ceph/file.c
-+++ b/fs/ceph/file.c
-@@ -2075,7 +2075,8 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 			CEPH_OSD_OP_FLAG_FADVISE_NOCACHE,
- 			&dst_oid, &dst_oloc,
- 			CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
--			CEPH_OSD_OP_FLAG_FADVISE_DONTNEED, 0);
-+			CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
-+			dst_ci->i_truncate_seq, dst_ci->i_truncate_size, 0);
- 		if (err) {
- 			dout("ceph_osdc_copy_from returned %d\n", err);
- 			if (!ret)
-diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
-index eaffbdddf89a..5a62dbd3f4c2 100644
---- a/include/linux/ceph/osd_client.h
-+++ b/include/linux/ceph/osd_client.h
-@@ -534,6 +534,7 @@ int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
- 			struct ceph_object_id *dst_oid,
- 			struct ceph_object_locator *dst_oloc,
- 			u32 dst_fadvise_flags,
-+			u32 truncate_seq, u64 truncate_size,
- 			u8 copy_from_flags);
- 
- /* watch/notify */
-diff --git a/include/linux/ceph/rados.h b/include/linux/ceph/rados.h
-index 3eb0e55665b4..54bc7648fd78 100644
---- a/include/linux/ceph/rados.h
-+++ b/include/linux/ceph/rados.h
-@@ -256,6 +256,7 @@ extern const char *ceph_osd_state_name(int s);
- 									    \
- 	/* tiering */							    \
- 	f(COPY_FROM,	__CEPH_OSD_OP(WR, DATA, 26),	"copy-from")	    \
-+	f(COPY_FROM_NOTRUNC, __CEPH_OSD_OP(WR, DATA, 45), "copy-from-notrunc")\
- 	f(COPY_GET_CLASSIC, __CEPH_OSD_OP(RD, DATA, 27), "copy-get-classic") \
- 	f(UNDIRTY,	__CEPH_OSD_OP(WR, DATA, 28),	"undirty")	    \
- 	f(ISDIRTY,	__CEPH_OSD_OP(RD, DATA, 29),	"isdirty")	    \
-diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
-index ba45b074a362..f43ec0f5865c 100644
---- a/net/ceph/osd_client.c
-+++ b/net/ceph/osd_client.c
-@@ -402,7 +402,7 @@ static void osd_req_op_data_release(struct ceph_osd_request *osd_req,
- 	case CEPH_OSD_OP_LIST_WATCHERS:
- 		ceph_osd_data_release(&op->list_watchers.response_data);
- 		break;
--	case CEPH_OSD_OP_COPY_FROM:
-+	case CEPH_OSD_OP_COPY_FROM_NOTRUNC:
- 		ceph_osd_data_release(&op->copy_from.osd_data);
- 		break;
- 	default:
-@@ -697,7 +697,7 @@ static void get_num_data_items(struct ceph_osd_request *req,
- 		case CEPH_OSD_OP_SETXATTR:
- 		case CEPH_OSD_OP_CMPXATTR:
- 		case CEPH_OSD_OP_NOTIFY_ACK:
--		case CEPH_OSD_OP_COPY_FROM:
-+		case CEPH_OSD_OP_COPY_FROM_NOTRUNC:
- 			*num_request_data_items += 1;
- 			break;
- 
-@@ -1029,7 +1029,7 @@ static u32 osd_req_encode_op(struct ceph_osd_op *dst,
- 	case CEPH_OSD_OP_CREATE:
- 	case CEPH_OSD_OP_DELETE:
- 		break;
--	case CEPH_OSD_OP_COPY_FROM:
-+	case CEPH_OSD_OP_COPY_FROM_NOTRUNC:
- 		dst->copy_from.snapid = cpu_to_le64(src->copy_from.snapid);
- 		dst->copy_from.src_version =
- 			cpu_to_le64(src->copy_from.src_version);
-@@ -1966,7 +1966,7 @@ static void setup_request_data(struct ceph_osd_request *req)
- 			ceph_osdc_msg_data_add(request_msg,
- 					       &op->notify_ack.request_data);
- 			break;
--		case CEPH_OSD_OP_COPY_FROM:
-+		case CEPH_OSD_OP_COPY_FROM_NOTRUNC:
- 			ceph_osdc_msg_data_add(request_msg,
- 					       &op->copy_from.osd_data);
- 			break;
-@@ -5315,6 +5315,7 @@ static int osd_req_op_copy_from_init(struct ceph_osd_request *req,
- 				     struct ceph_object_locator *src_oloc,
- 				     u32 src_fadvise_flags,
- 				     u32 dst_fadvise_flags,
-+				     u32 truncate_seq, u64 truncate_size,
- 				     u8 copy_from_flags)
- {
- 	struct ceph_osd_req_op *op;
-@@ -5325,7 +5326,8 @@ static int osd_req_op_copy_from_init(struct ceph_osd_request *req,
- 	if (IS_ERR(pages))
- 		return PTR_ERR(pages);
- 
--	op = _osd_req_op_init(req, 0, CEPH_OSD_OP_COPY_FROM, dst_fadvise_flags);
-+	op = _osd_req_op_init(req, 0, CEPH_OSD_OP_COPY_FROM_NOTRUNC,
-+			      dst_fadvise_flags);
- 	op->copy_from.snapid = src_snapid;
- 	op->copy_from.src_version = src_version;
- 	op->copy_from.flags = copy_from_flags;
-@@ -5335,6 +5337,8 @@ static int osd_req_op_copy_from_init(struct ceph_osd_request *req,
- 	end = p + PAGE_SIZE;
- 	ceph_encode_string(&p, end, src_oid->name, src_oid->name_len);
- 	encode_oloc(&p, end, src_oloc);
-+	ceph_encode_32(&p, truncate_seq);
-+	ceph_encode_64(&p, truncate_size);
- 	op->indata_len = PAGE_SIZE - (end - p);
- 
- 	ceph_osd_data_pages_init(&op->copy_from.osd_data, pages,
-@@ -5350,6 +5354,7 @@ int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
- 			struct ceph_object_id *dst_oid,
- 			struct ceph_object_locator *dst_oloc,
- 			u32 dst_fadvise_flags,
-+			u32 truncate_seq, u64 truncate_size,
- 			u8 copy_from_flags)
- {
- 	struct ceph_osd_request *req;
-@@ -5366,7 +5371,8 @@ int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
- 
- 	ret = osd_req_op_copy_from_init(req, src_snapid, src_version, src_oid,
- 					src_oloc, src_fadvise_flags,
--					dst_fadvise_flags, copy_from_flags);
-+					dst_fadvise_flags, truncate_seq,
-+					truncate_size, copy_from_flags);
- 	if (ret)
- 		goto out;
- 
+> The following commit has been merged into the x86/cleanups branch of tip:
+> 
+> Commit-ID:     11a98f37a5c11fd3cec9c7a566dfa902bceb5bde
+> Gitweb:        https://git.kernel.org/tip/11a98f37a5c11fd3cec9c7a566dfa902bceb5bde
+> Author:        Cao jin <caoj.fnst@cn.fujitsu.com>
+> AuthorDate:    Mon, 18 Nov 2019 15:00:12 +08:00
+> Committer:     Borislav Petkov <bp@suse.de>
+> CommitterDate: Mon, 18 Nov 2019 10:03:26 +01:00
+> 
+> x86: Fix typos in comments
+> 
+> BIOSen -> BIOSes; paing -> paging. Append to 640 its proper unit "Kb".
+> encomapssing -> encompassing.
+> 
+>  [ bp: Merge into a single patch, fix one more typo, massage. ]
+> 
+> Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
+> Signed-off-by: Borislav Petkov <bp@suse.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: Robert Richter <rrichter@marvell.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>
+> Cc: x86-ml <x86@kernel.org>
+> Link: https://lkml.kernel.org/r/20191118070012.27850-1-caoj.fnst@cn.fujitsu.com
+> ---
+>  arch/x86/kernel/setup.c | 6 +++---
+>  arch/x86/mm/numa.c      | 2 +-
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 77ea96b..35b3f3a 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -459,7 +459,7 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+>   * due to mapping restrictions.
+>   *
+>   * On 64bit, kdump kernel need be restricted to be under 64TB, which is
+> - * the upper limit of system RAM in 4-level paing mode. Since the kdump
+> + * the upper limit of system RAM in 4-level paging mode. Since the kdump
+>   * jumping could be from 5-level to 4-level, the jumping will fail if
+>   * kernel is put above 64TB, and there's no way to detect the paging mode
+>   * of the kernel which will be loaded for dumping during the 1st kernel
+
+Beyond the typo, this whole paragraph is hard to read and inconsistent 
+throughout.
+
+How about something like this, on top? [ Feel free to backmerge, but can 
+do a separate commit too - in which case I'll probably read the rest of 
+the file too ;-) ]
+
+Thanks,
+
+	Ingo
+
+ arch/x86/kernel/setup.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index d398afd206b8..e9fa944d4ed8 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -468,15 +468,15 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+ /*
+  * Keep the crash kernel below this limit.
+  *
+- * On 32 bits earlier kernels would limit the kernel to the low 512 MiB
++ * Earlier 32-bits kernels would limit the kernel to the low 512 MB range
+  * due to mapping restrictions.
+  *
+- * On 64bit, kdump kernel need be restricted to be under 64TB, which is
++ * 64-bit kdump kernels need to be restricted to be under 64 TB, which is
+  * the upper limit of system RAM in 4-level paging mode. Since the kdump
+- * jumping could be from 5-level to 4-level, the jumping will fail if
+- * kernel is put above 64TB, and there's no way to detect the paging mode
+- * of the kernel which will be loaded for dumping during the 1st kernel
+- * bootup.
++ * jump could be from 5-level paging to 4-level paging, the jump will fail if
++ * the kernel is put above 64 TB, and during the 1st kernel bootup there's
++ * no good way to detect the paging mode of the target kernel which will be
++ * loaded for dumping.
+  */
+ #ifdef CONFIG_X86_32
+ # define CRASH_ADDR_LOW_MAX	SZ_512M
+
