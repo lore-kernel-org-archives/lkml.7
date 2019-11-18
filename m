@@ -2,165 +2,132 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3118EC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A368C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A2862067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:48:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E5iwWBoc"
+	by mail.kernel.org (Postfix) with ESMTP id F0D7120748
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574085024;
+	bh=tkzwchr8jpVR++vWA3oOBhUr6ub34Mze8RRYVaxivZo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=J/R3OAYwg9hlvWN6Fcjmh+8Fr+spWDVmLdpgastVcvfQ4/kiXn1Ltd8Ia3+aula2+
+	 4RU+vqA+a5G7GRQ2MiTGPi0Qfw6vK+PE/Z/vUWDvBnphBTpK5ozjkxvzwRSnVUCoS7
+	 pBcUS9anyX3Sn619/Wy1vzq0J/sBMWfDoVmDWV/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbfKRNst (ORCPT
+        id S1727092AbfKRNuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 08:48:49 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52997 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726627AbfKRNss (ORCPT
+        Mon, 18 Nov 2019 08:50:22 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38899 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726627AbfKRNuW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 08:48:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574084927;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6nL3zReqpTUW9fgh7UAxDRaJZNCBMYYZqDB6RjvrCyo=;
-        b=E5iwWBoc6o/dkp+OEupv1G1888jsr1bxm449iLiDtrUJx/6WCvTV+sKte454pEz49/9bn1
-        NKliVnPrapTBuJMQo5r5F82Fro+ICmDAmSMd6lcvRAuYL7RTDMdH5dSW+BJn2yqIvzHOMw
-        wCmQ9Z0OytGymnvo0oL8RSQlpmgl9ec=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-43-PzxVuquVMeCbCp1XBvuKKQ-1; Mon, 18 Nov 2019 08:48:43 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3EB9D61180;
-        Mon, 18 Nov 2019 13:48:39 +0000 (UTC)
-Received: from [10.36.118.85] (unknown [10.36.118.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 039BD608FB;
-        Mon, 18 Nov 2019 13:48:35 +0000 (UTC)
-Subject: Re: [PATCH v4] mm: get rid of odd jump labels in
- find_mergeable_anon_vma()
-To:     linmiaohe <linmiaohe@huawei.com>, akpm@linux-foundation.org,
-        richardw.yang@linux.intel.com, sfr@canb.auug.org.au,
-        rppt@linux.ibm.com, jannh@google.com, steve.capper@arm.com,
-        catalin.marinas@arm.com, aarcange@redhat.com, walken@google.com,
-        dave.hansen@linux.intel.com, tiny.windzz@gmail.com,
-        jhubbard@nvidia.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1574079844-17493-1-git-send-email-linmiaohe@huawei.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <6bc28c72-6a84-0579-da0c-59d4fd695682@redhat.com>
-Date:   Mon, 18 Nov 2019 14:48:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 18 Nov 2019 08:50:22 -0500
+Received: by mail-wr1-f67.google.com with SMTP id i12so19575129wro.5
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 05:50:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=12v8F/PRkzbGTRl0AiBzoPYABvSYxOjYdqftHLx6SZM=;
+        b=DW0mmdA8cUnK2dAPRdOlxkqXB2vKpS8+GfGTi2UKc8VAXkFPPihnY354R7UNFf+NX0
+         CTHmtz0pODgERIUFSII5RJnYgSh7QgSm/HHxiaHa2zza7rG0ALjYVVwO/BU+nIauFTbF
+         +xTHEYIOiQZsUGwRMXoufcywWkviXcjcScpxMzIwBg09YTTVZSis8sznINGiqw2O6nKB
+         EApP16+4bpjV1FJIPofcAFuIQQHfwcTcxWgtH92R02KB4hwv4sGu8ZK8ivp1slv4nb5y
+         5ls7j6XkcbLTqKdDLRqcnFlVkZ7Ik0g7KXGXmT99zQ1RWYs5UjgpUcCkBjSBMhS/DN2n
+         sn9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=12v8F/PRkzbGTRl0AiBzoPYABvSYxOjYdqftHLx6SZM=;
+        b=BuR+QRhFfLOfnpANr77Po0ElDaHJexmekwB6dwb+f7Pk6/TXTdgbTSCT0kbh/zvOgu
+         A3aITDre5MbdagX99LpQq4IfxP+f2Ds2TbNpvv0DvqgyJCANDfeE3YMbVgjc/FiU+8iB
+         +al+TE+1a0vtvh0o17V4XCWRkol2N2iJ9QqPULasAK9kL+apE2jMBs0VODWOlXM385Ak
+         a/Syp4a9PJkZ6Dy9BaxAf8oUKuGixCe3G+GxSJQzMA1XhaYmTo6B8ygj7gmvuIs919uH
+         7IUM+lfIVgMNcqzoPb6RwNPURcR0gt5UDOhr8xNHq/91/z4r4x7Vkk1QsQ3I5jmfogE8
+         B7WA==
+X-Gm-Message-State: APjAAAUK5USyhMLR3wATBl1bwr3jPWftP3Q/YlkiASAqo4Se503zg0lb
+        ljftIwvxOxXQkC8h2eVO8SE=
+X-Google-Smtp-Source: APXvYqznlX1ehsujpPsGb5H0/Y2O4XEuJ0VLfjAgVs5HP9VuO7ob0PsZKDt9eiX5vF3VMmKW5lqhQQ==
+X-Received: by 2002:a05:6000:14e:: with SMTP id r14mr20979221wrx.165.1574085020392;
+        Mon, 18 Nov 2019 05:50:20 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id h205sm22059049wmf.35.2019.11.18.05.50.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 05:50:19 -0800 (PST)
+Date:   Mon, 18 Nov 2019 14:50:17 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org, pauld@redhat.com, valentin.schneider@arm.com,
+        srikar@linux.vnet.ibm.com, quentin.perret@arm.com,
+        dietmar.eggemann@arm.com, Morten.Rasmussen@arm.com,
+        hdanton@sina.com, parth@linux.ibm.com, riel@surriel.com
+Subject: Re: [PATCH v4 04/11] sched/fair: rework load_balance
+Message-ID: <20191118135017.GA123637@gmail.com>
+References: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
+ <1571405198-27570-5-git-send-email-vincent.guittot@linaro.org>
+ <20191030154534.GJ3016@techsingularity.net>
 MIME-Version: 1.0
-In-Reply-To: <1574079844-17493-1-git-send-email-linmiaohe@huawei.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: PzxVuquVMeCbCp1XBvuKKQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030154534.GJ3016@techsingularity.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.11.19 13:24, linmiaohe wrote:
-> From: Miaohe Lin <linmiaohe@huawei.com>
->=20
-> The jump labels try_prev and none are not really needed
-> in find_mergeable_anon_vma(), eliminate them to improve
-> readability.
->=20
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
-> -v2:
-> =09Fix commit descriptions and further simplify the code
-> =09as suggested by David Hildenbrand and John Hubbard.
-> -v3:
-> =09Rewrite patch version info. Don't show this in commit log.
-> -v4:
-> =09Get rid of var near completely as well.
-> ---
->   mm/mmap.c | 36 ++++++++++++++++--------------------
->   1 file changed, 16 insertions(+), 20 deletions(-)
->=20
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index 91d5e097a4ed..4d93bda30eac 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -1273,26 +1273,22 @@ static struct anon_vma *reusable_anon_vma(struct =
-vm_area_struct *old, struct vm_
->    */
->   struct anon_vma *find_mergeable_anon_vma(struct vm_area_struct *vma)
->   {
-> -=09struct anon_vma *anon_vma;
-> -=09struct vm_area_struct *near;
-> -
-> -=09near =3D vma->vm_next;
-> -=09if (!near)
-> -=09=09goto try_prev;
-> -
-> -=09anon_vma =3D reusable_anon_vma(near, vma, near);
-> -=09if (anon_vma)
-> -=09=09return anon_vma;
-> -try_prev:
-> -=09near =3D vma->vm_prev;
-> -=09if (!near)
-> -=09=09goto none;
-> -
-> -=09anon_vma =3D reusable_anon_vma(near, near, vma);
-> -=09if (anon_vma)
-> -=09=09return anon_vma;
-> -none:
-> +=09struct anon_vma *anon_vma =3D NULL;
-> +
-> +=09/* Try next first. */
-> +=09if (vma->vm_next) {
-> +=09=09anon_vma =3D reusable_anon_vma(vma->vm_next, vma, vma->vm_next);
-> +=09=09if (anon_vma)
-> +=09=09=09return anon_vma;
-> +=09}
-> +
-> +=09/* Try prev next. */
-> +=09if (vma->vm_prev)
-> +=09=09anon_vma =3D reusable_anon_vma(vma->vm_prev, vma->vm_prev, vma);
-> +
->   =09/*
-> +=09 * We might reach here with anon_vma =3D=3D NULL if we can't find
-> +=09 * any reusable anon_vma.
->   =09 * There's no absolute need to look only at touching neighbours:
->   =09 * we could search further afield for "compatible" anon_vmas.
->   =09 * But it would probably just be a waste of time searching,
-> @@ -1300,7 +1296,7 @@ struct anon_vma *find_mergeable_anon_vma(struct vm_=
-area_struct *vma)
->   =09 * We're trying to allow mprotect remerging later on,
->   =09 * not trying to minimize memory used for anon_vmas.
->   =09 */
-> -=09return NULL;
-> +=09return anon_vma;
->   }
->  =20
->   /*
->=20
 
-Looks much better, thanks!
+* Mel Gorman <mgorman@techsingularity.net> wrote:
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+> s/groupe_type/group_type/
+> 
+> >  enum group_type {
+> > -	group_other = 0,
+> > +	group_has_spare = 0,
+> > +	group_fully_busy,
+> >  	group_misfit_task,
+> > +	group_asym_packing,
+> >  	group_imbalanced,
+> > -	group_overloaded,
+> > +	group_overloaded
+> > +};
+> > +
+> 
+> While not your fault, it would be nice to comment on the meaning of each
+> group type. From a glance, it's not obvious to me why a misfit task should
+> be a high priority to move a task than a fully_busy (but not overloaded)
+> group given that moving the misfit task might make a group overloaded.
 
---=20
+This part of your feedback should now be addressed in the scheduler tree 
+via:
+
+  a9723389cc75: sched/fair: Add comments for group_type and balancing at SD_NUMA level
+
+> > +enum migration_type {
+> > +	migrate_load = 0,
+> > +	migrate_util,
+> > +	migrate_task,
+> > +	migrate_misfit
+> >  };
+> >  
+> 
+> Could do with a comment explaining what migration_type is for because
+> the name is unhelpful. I *think* at a glance it's related to what sort
+> of imbalance is being addressed which is partially addressed by the
+> group_type. That understanding may change as I continue reading the series
+> but now I have to figure it out which means it'll be forgotten again in
+> 6 months.
+
+Agreed. Vincent, is any patch brewing here, or should I take a stab?
 
 Thanks,
 
-David / dhildenb
-
+	Ingo
