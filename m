@@ -2,136 +2,116 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC23C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EC2C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C49D820878
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C498420878
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:25:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AbkzR/Hk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="A/QjOpbk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfKRUY3 (ORCPT
+        id S1727106AbfKRUZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 15:24:29 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37198 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726992AbfKRUY3 (ORCPT
+        Mon, 18 Nov 2019 15:25:36 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:27857 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbfKRUZg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 15:24:29 -0500
-Received: by mail-wr1-f67.google.com with SMTP id t1so21092440wrv.4
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 12:24:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1TP0OA6qAUarvzHjPaXa1q3NuiVFGsPfLMvD1RhmmCY=;
-        b=AbkzR/HkTUrIdzHZR1Hn4Mw0IXd15Hbl8V3PLYisq2ODU1nwdZ9uSlzIdR1VbZ/LVG
-         HgSmQcT3uDM15WcvVJ+/UPy8zZ8sqsKYQs1dPR8elnvEZ2/yawvQDqIplgLUwg5b+oGa
-         H++5CFDB8Djm1Oc6rX/BFY8LBBI30stVNS2SlIqCR/i8IkVg/dVGsYkHSG0QLv0bapcx
-         nTYMmGaRPh/IgaZV/xxDLCpY+UaOBCh+EXc3uH9vNLOIPhmREpWZ0SiXc7k5rZizpiqI
-         nDekWyJeZWZzxhrZpPwBm7kCnvWIrZ+IZ3OX9xfuaAALOtAo7RwMA4Xam3lhhvu4AMrV
-         TC9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1TP0OA6qAUarvzHjPaXa1q3NuiVFGsPfLMvD1RhmmCY=;
-        b=iMG/D8R8axU29egG+0ToPAWzM5G9g10Dg00/Af8JIqgz5e2HLBeKXLLneVhelvSLCf
-         nRbBaY4HJSxuxQdMewzFRUstRTg0IBdfI74MldDwiwx7QOoI23JmfSC58MbvHqyEvER3
-         dCnpNgL1AA1FBgExA6hZKJYuNM7f25MWuEdLNgHTVlXKAPVwAVl6OQXQ+Dr2wmqJmutD
-         CyBVZpT1swKKzLsQ3d6qMm8GOQsx5JPdWVfKz3RT3fQ3K//T0/Zo0ldWu1N3uQ/qrzsS
-         0USUF6WsL5E7lWiPDlIJ8IO1LOonVpc0K5iqrgD5zamu3xmeO4m3kxSiXQ4VvLXTezV/
-         ywjA==
-X-Gm-Message-State: APjAAAXIfs8sqFDkP4mef37o8BSpar8913UKwDSXgThgMRPo/E1dUZe/
-        YQVbcTfwFgKAfjjcSsDnCI4rLeIHE4gVsPctY4g=
-X-Google-Smtp-Source: APXvYqyWKIvojuyIkn9PhBUmCnA+BIbkZlyEb9tBgjPQlLDHLHnK6Mn8Li8qCQVenOtWz4sjXqxHztqmgocAHdd4TPs=
-X-Received: by 2002:adf:e444:: with SMTP id t4mr9612725wrm.50.1574108667374;
- Mon, 18 Nov 2019 12:24:27 -0800 (PST)
+        Mon, 18 Nov 2019 15:25:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574108731;
+        s=strato-dkim-0002; d=hartkopp.net;
+        h=In-Reply-To:Date:Message-ID:From:References:To:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=F0kDM7lnQGgAN875FMuKPjY93rcF9qMeT5dy/Yhy1tY=;
+        b=A/QjOpbkgSAg54YA2VcfvY9OJSi1VK8UKTJ3CLtDbf6Rynq99ENfCl5o9Rmok8ChFx
+        2DRYP3jHgQUiV04eSbF+bNxsQA0cuWnPRs9JlCrsVbvyYizBUsKQ+ba/+ieaJGdfyTHs
+        hQwEhpnhlTriebQmBloYCy3RqJR0mzTDx8vHyjhcrWzflqk7V/XWrNzJg+h5CBaPjqRy
+        X1bRxqPolN52t8WdHPA/+pIj7P4ZAuGDAvQuQVsThZtxAK9eQQ3gci9/jXdjf3XkyzOC
+        ombjwNBG9YpR76GayQS/F2lWzTtmUmadKg5oyUCxIeZ1oKJiUiMsT4FyNppt+jXPAyBI
+        fiKA==
+X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3PMaViOoLMJV8h+lCA="
+X-RZG-CLASS-ID: mo00
+Received: from [192.168.1.177]
+        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
+        with ESMTPSA id C03a03vAIKPN15S
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Mon, 18 Nov 2019 21:25:23 +0100 (CET)
+Subject: Re: KMSAN: uninit-value in can_receive
+To:     syzbot <syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com>,
+        davem@davemloft.net, glider@google.com, linux-can@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mkl@pengutronix.de,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <0000000000005c08d10597a3a05d@google.com>
+From:   Oliver Hartkopp <socketcan@hartkopp.net>
+Message-ID: <a5f73d92-fdf2-2590-c863-39a181dca8e1@hartkopp.net>
+Date:   Mon, 18 Nov 2019 21:25:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <1573875799-83572-1-git-send-email-chenwandun@huawei.com>
- <1574064214-109525-1-git-send-email-chenwandun@huawei.com> <MN2PR12MB3344BBBA7F72F9625D71329EE44D0@MN2PR12MB3344.namprd12.prod.outlook.com>
-In-Reply-To: <MN2PR12MB3344BBBA7F72F9625D71329EE44D0@MN2PR12MB3344.namprd12.prod.outlook.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 18 Nov 2019 15:24:13 -0500
-Message-ID: <CADnq5_OYLYxwDsiqmDn0tJqrvdHc119LOGPSLuG=g2ShL4_oFQ@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/amd/powerplay: return errno code to caller when
- error occur
-To:     "Quan, Evan" <Evan.Quan@amd.com>
-Cc:     Chen Wandun <chenwandun@huawei.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0000000000005c08d10597a3a05d@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  Thanks!
+On 18/11/2019 20.05, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    9c6a7162 kmsan: remove unneeded annotations in bio
+> git tree:       https://github.com/google/kmsan.git master
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14563416e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=9e324dfe9c7b0360
+> dashboard link: 
+> https://syzkaller.appspot.com/bug?extid=b02ff0707a97e4e79ebb
+> compiler:       clang version 9.0.0 (/home/glider/llvm/clang 
+> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com
+> 
+> =====================================================
+> BUG: KMSAN: uninit-value in can_receive+0x23c/0x5e0 net/can/af_can.c:649
+> CPU: 1 PID: 3490 Comm: syz-executor.2 Not tainted 5.4.0-rc5+ #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS 
+> Google 01/01/2011
+> Call Trace:
+>   <IRQ>
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+>   kmsan_report+0x128/0x220 mm/kmsan/kmsan_report.c:108
+>   __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:245
+>   can_receive+0x23c/0x5e0 net/can/af_can.c:649
+>   can_rcv+0x188/0x3a0 net/can/af_can.c:685
 
-Alex
+In line 649 of 5.4.0-rc5+ we can find a while() statement:
 
-On Mon, Nov 18, 2019 at 3:15 AM Quan, Evan <Evan.Quan@amd.com> wrote:
->
-> Reviewed-by: Evan Quan <evan.quan@amd.com>
->
-> > -----Original Message-----
-> > From: Chen Wandun <chenwandun@huawei.com>
-> > Sent: Monday, November 18, 2019 4:04 PM
-> > To: Quan, Evan <Evan.Quan@amd.com>; Deucher, Alexander
-> > <Alexander.Deucher@amd.com>; amd-gfx@lists.freedesktop.org; linux-
-> > kernel@vger.kernel.org; dri-devel@lists.freedesktop.org
-> > Cc: chenwandun@huawei.com
-> > Subject: [PATCH v2] drm/amd/powerplay: return errno code to caller when
-> > error occur
-> >
-> > return errno code to caller when error occur, and meanwhile remove gcc '-
-> > Wunused-but-set-variable' warning.
-> >
-> > drivers/gpu/drm/amd/amdgpu/../powerplay/smumgr/vegam_smumgr.c: In
-> > function vegam_populate_smc_boot_level:
-> > drivers/gpu/drm/amd/amdgpu/../powerplay/smumgr/vegam_smumgr.c:1364:
-> > 6: warning: variable result set but not used [-Wunused-but-set-variable]
-> >
-> > Signed-off-by: Chen Wandun <chenwandun@huawei.com>
-> > ---
-> >  drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
-> > b/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
-> > index 2068eb0..50896e9 100644
-> > --- a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
-> > +++ b/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
-> > @@ -1371,11 +1371,16 @@ static int vegam_populate_smc_boot_level(struct
-> > pp_hwmgr *hwmgr,
-> >       result = phm_find_boot_level(&(data->dpm_table.sclk_table),
-> >                       data->vbios_boot_state.sclk_bootup_value,
-> >                       (uint32_t *)&(table->GraphicsBootLevel));
-> > +     if (result)
-> > +             return result;
-> >
-> >       result = phm_find_boot_level(&(data->dpm_table.mclk_table),
-> >                       data->vbios_boot_state.mclk_bootup_value,
-> >                       (uint32_t *)&(table->MemoryBootLevel));
-> >
-> > +     if (result)
-> > +             return result;
-> > +
-> >       table->BootVddc  = data->vbios_boot_state.vddc_bootup_value *
-> >                       VOLTAGE_SCALE;
-> >       table->BootVddci = data->vbios_boot_state.vddci_bootup_value *
-> > --
-> > 2.7.4
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+while (!(can_skb_prv(skb)->skbcnt))
+	can_skb_prv(skb)->skbcnt = atomic_inc_return(&skbcounter);
+
+In linux/include/linux/can/skb.h we see:
+
+static inline struct can_skb_priv *can_skb_prv(struct sk_buff *skb)
+{
+	return (struct can_skb_priv *)(skb->head);
+}
+
+IMO accessing can_skb_prv(skb)->skbcnt at this point is a valid 
+operation which has no uninitialized value.
+
+Can this probably be a false positive of KMSAN?
+
+Regards,
+Oliver
