@@ -2,148 +2,146 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABA4C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB4BC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7C192186D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:40:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="G7AlxEEj";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="B2HbKvSl"
+	by mail.kernel.org (Postfix) with ESMTP id 3CE632186D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:41:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfKRRk0 (ORCPT
+        id S1727073AbfKRRlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 12:40:26 -0500
-Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:47570
-        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727456AbfKRRkY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 12:40:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574098823;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-        bh=yRG8Y0thO35IS1fcsvDGsTT2ROqP5GEJHcT8IbxpBIk=;
-        b=G7AlxEEjJf+Gaed4GAtL6n+eOweRtB85YjtKJCik4T8lVkNkwmeX28F/ejuzco9l
-        eYGq7V6onHwpM6abL9GK9UE7H3t2oOEm91if+fxa9wgxKmM26RuMd0JfPVY7gzJeN3+
-        KTCHNfQTcqcLl1Me/qpOQfj11268YXOk8yB5HNlo=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574098823;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-        bh=yRG8Y0thO35IS1fcsvDGsTT2ROqP5GEJHcT8IbxpBIk=;
-        b=B2HbKvSl+BULw0hdgjJhssHZz+lAw8HPNujpD5Wi+cdUdZ7Sln7H6Wqtp7N+BpAG
-        vUNWa+rq0Iob6D9jevondUP/6YfP1Jox5wTp1Vnprbnr2Pcl9M/9ly9K6tbNAw63kVc
-        cEu9dxL39+dJGXki30tMwwm9ehYadQc+G5H3s2Sk=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 81FEDC58C25
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        ulf.hansson@linaro.org, rnayak@codeaurora.org
-Cc:     agross@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 6/6] arm64: dts: sm8150: Add rpmh power-domain node
-Date:   Mon, 18 Nov 2019 17:40:23 +0000
-Message-ID: <0101016e7f99eab9-35efa01f-8ed3-4a77-87e1-09c381173121-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20191118173944.27043-1-sibis@codeaurora.org>
-References: <20191118173944.27043-1-sibis@codeaurora.org>
+        Mon, 18 Nov 2019 12:41:08 -0500
+Received: from ms.lwn.net ([45.79.88.28]:60096 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726475AbfKRRlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 12:41:07 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 42294378;
+        Mon, 18 Nov 2019 17:41:06 +0000 (UTC)
+Date:   Mon, 18 Nov 2019 10:41:05 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     andriy.shevchenko@intel.com, prarit@redhat.com,
+        rafael.j.wysocki@intel.co, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] admin guide/pm: Admin guide for intel-speed-select
+Message-ID: <20191118104105.11776f58@lwn.net>
+In-Reply-To: <20191115204925.55181-1-srinivas.pandruvada@linux.intel.com>
+References: <20191115204925.55181-1-srinivas.pandruvada@linux.intel.com>
+Organization: LWN.net
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SES-Outgoing: 2019.11.18-54.240.27.10
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the DT node for the rpmhpd power controller.
+On Fri, 15 Nov 2019 12:49:25 -0800
+Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com> wrote:
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 55 ++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+> Added documentation to configure servers to use Intel(R) Speed
+> Select Technology using intel-speed-select tool.
+> 
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index 8f23fcadecb89..0ac257637c2af 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -5,6 +5,7 @@
-  */
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/power/qcom-rpmpd.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
- #include <dt-bindings/clock/qcom,rpmh.h>
- 
-@@ -469,6 +470,60 @@
- 				clock-names = "xo";
- 				clocks = <&xo_board>;
- 			};
-+
-+			rpmhpd: power-controller {
-+				compatible = "qcom,sm8150-rpmhpd";
-+				#power-domain-cells = <1>;
-+				operating-points-v2 = <&rpmhpd_opp_table>;
-+
-+				rpmhpd_opp_table: opp-table {
-+					compatible = "operating-points-v2";
-+
-+					rpmhpd_opp_ret: opp1 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-+					};
-+
-+					rpmhpd_opp_min_svs: opp2 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-+					};
-+
-+					rpmhpd_opp_low_svs: opp3 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-+					};
-+
-+					rpmhpd_opp_svs: opp4 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-+					};
-+
-+					rpmhpd_opp_svs_l1: opp5 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-+					};
-+
-+					rpmhpd_opp_svs_l2: opp6 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L2>;
-+					};
-+
-+					rpmhpd_opp_nom: opp7 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-+					};
-+
-+					rpmhpd_opp_nom_l1: opp8 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-+					};
-+
-+					rpmhpd_opp_nom_l2: opp9 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
-+					};
-+
-+					rpmhpd_opp_turbo: opp10 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-+					};
-+
-+					rpmhpd_opp_turbo_l1: opp11 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
-+					};
-+				};
-+			};
- 		};
- 	};
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thanks for improving the docs!  I do have a few overall comments,
+though...  
 
+>  .../admin-guide/pm/intel-speed-select.rst     | 934 ++++++++++++++++++
+>  .../admin-guide/pm/working-state.rst          |   1 +
+>  2 files changed, 935 insertions(+)
+>  create mode 100644 Documentation/admin-guide/pm/intel-speed-select.rst
+> 
+> diff --git a/Documentation/admin-guide/pm/intel-speed-select.rst b/Documentation/admin-guide/pm/intel-speed-select.rst
+> new file mode 100644
+> index 000000000000..c2ce57ebc268
+> --- /dev/null
+> +++ b/Documentation/admin-guide/pm/intel-speed-select.rst
+> @@ -0,0 +1,934 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=========================================================
+> +Intel® Speed Select Technology (Intel® SST) : User Guide
+> +=========================================================
+
+People give me grief when I take docs patches adding non-ascii characters.
+Adding nearly 100 useless ® symbols seems likely to trigger that sort of
+unicode aversion.  Can I ask you, please, to take those out?  There are
+many occurrences of unadorned "Intel" in the kernel, and the world hasn't
+ended yet.
+
+> +The Intel® Speed Select Technology (Intel® SST) provides a powerful new
+> +collection of features that give more granular control over CPU performance.
+> +With Intel® SST, one server can be configured for power and performance for a
+> +variety of diverse workload requirements.
+> +
+> +Refer to the links below for an overview of the technology:
+> +
+> +- https://www.intel.com/content/www/us/en/architecture-and-technology/speed-select-technology-article.html
+> +- https://builders.intel.com/docs/networkbuilders/intel-speed-select-technology-base-frequency-enhancing-performance.pdf
+> +
+> +These capabilities are further enhanced in some of the newer generations of
+> +server platforms where these features can be enumerated and controlled
+> +dynamically without pre-configuring via BIOS setup options. This dynamic
+> +configuration is done via mailbox commands to the hardware. One way to enumerate
+> +and configure these features is by using the Intel® Speed Select utility.
+> +
+> +This document explains how to use the Intel® Speed Select tool to enumerate and
+> +control Intel® SST features. This document gives example commands and explains
+> +how these commands change the power and performance profile of the system under
+> +test. Using this tool as an example, customers can replicate the messaging
+> +implemented in the tool in their production software.
+> +
+> +
+> +intel-speed-select configuration tool
+> +-------------------------------------
+
+The conventions for subsection markers are documented in
+Documentation/doc-guide/sphinx.rst; this should be "========" rather than
+hyphens. 
+
+> +Most Linux distribution packages include the "intel-speed-select" tool. If not,
+> +it can be built by downloading the Linux kernel tree from kernel.org. Once
+> +downloaded, the tool can be built without building the full kernel.
+> +
+> +From the kernel tree, run the following commands:
+> +
+> +# cd tools/power/x86/intel-speed-select/
+> +
+> +# make
+> +
+> +# make install
+
+This kind of stuff isn't going to render well in the built docs.  Can you
+please change the literal text to literal blocks?  Something like:
+
+	From the kernel tree, run the following commands::
+
+		# cd tools/power/x86/intel-speed-select/
+		# make
+		# make install
+
+Note the "::" on the first line; that introduces a literal block.  It would
+be good to build the docs once you're done and be sure that you're happy
+with the results.
+
+There's a lot of these in this document.
+
+> +
+> +**Getting Help**
+
+Since this is meant to be a section header, please mark it as such;
+"------" would be the appropriate marker for a header at this level.
+
+That's enough for a first pass.
+
+Thanks,
+
+jon
