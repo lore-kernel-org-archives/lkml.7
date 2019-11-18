@@ -2,133 +2,118 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D51C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 451FEC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEEAC206F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1447F20726
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:36:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lasfj/iU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfKRHgu (ORCPT
+        id S1726980AbfKRHgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 02:36:50 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:55427 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfKRHgt (ORCPT
+        Mon, 18 Nov 2019 02:36:52 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:43838 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbfKRHgu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 02:36:49 -0500
-Received: from localhost ([185.35.208.129]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MnpP8-1i3dg71iXK-00pOvd; Mon, 18 Nov 2019 08:36:13 +0100
-Date:   Mon, 18 Nov 2019 08:36:12 +0100
-From:   Andreas Klinger <ak@it-klinger.de>
-To:     robh+dt@kernel.org, jic23@kernel.org, mark.rutland@arm.com
-Cc:     mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        gregkh@linuxfoundation.org, christophe.jaillet@wanadoo.fr,
-        tglx@linutronix.de, mchehab+samsung@kernel.org,
-        davem@davemloft.net, paulmck@linux.ibm.com,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/4] dt-bindings: add parallax ping sensors
-Message-ID: <20191118073611.pvge47kgupu6omrf@arbad>
+        Mon, 18 Nov 2019 02:36:50 -0500
+Received: by mail-pj1-f67.google.com with SMTP id a10so1234322pju.10
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 23:36:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O2pEQ/gFrO9sbquSpD0RUFiXEZPVde4Gd/3NvXvj/F8=;
+        b=lasfj/iUysHaMF/qDePjau4redMEkpAtBhX7DCWwsRWWjoMjocxy53+NEzYlRx6r+F
+         eqQDOy6M4w/kJNlBDir5GV7B2JaigQk7H0QKVPSK7M2gIomrHOwulfnCqztEEL6G/k+F
+         T7zpBu/Uw/7zNWTTExlJ4dC0NjILJUqniavbTldNu4ppTZ3oaPyO3RS7l5Y89icjrMnZ
+         /4WyzvHplHa/ygdLd2SvixPvFo1NgnVt+pk/A2J6R40uU80Zbbce2AecXSatp6LWc5c9
+         IGSnhiCXSLSiMCZlQN4f6XKPDoRRUE6jCcsxilTW/Fdw8qB5t66bpprKEK5tvlf3mB+U
+         L/MQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O2pEQ/gFrO9sbquSpD0RUFiXEZPVde4Gd/3NvXvj/F8=;
+        b=CJwMgsseIXSukl/tgFWbyE6I10/IsE3ow1eWeejYDWFHTO/yWEdxGsimShprb/TKwH
+         hwCREus7dJUWLmokp0kAmZrr5P7aHyR+1wdsfc99EI9p6n4/Lnvy3EpobZZM8hC0RB8z
+         LTZ888BVBIZ1OxXtk1In2JKcPJyjKlhugV4q6K3eMEYR1Z8KQ3/Hld9J8ujcxO9Qu7hp
+         bwh5lzaOFhX9+XIRX0k2AaWh0sbzsMNjbOtMgpImFZApZxtc5JyoKTFr0luJ7klbe27E
+         nQgk3ajzpCjelbUZhtjlgb5FrCPxB3ASXglKQXnAq3rN2sFzT/drje1paMmq6hs9BCy6
+         GOvA==
+X-Gm-Message-State: APjAAAUNGBVvRwdbQTY/ghTm9RGphEqWcPBNYTgyld2ScyB3Pn7Z1Xes
+        Tz0IV6aOX/Sy+bkLwOl/WZUx3LK6hDQ=
+X-Google-Smtp-Source: APXvYqzTxqKx8I3LrGzO+aP1mTgFtsOpNih9t3u1AhFiqfSjAM2j1hpXKU8cxdopEtymDDo+1JkzHA==
+X-Received: by 2002:a17:90a:2470:: with SMTP id h103mr39127468pje.12.1574062609419;
+        Sun, 17 Nov 2019 23:36:49 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id k13sm18597563pgl.69.2019.11.17.23.36.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Nov 2019 23:36:48 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, patches@opensource.cirrus.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] ASoC: wm2200: add missed operations in remove and probe failure
+Date:   Mon, 18 Nov 2019 15:36:33 +0800
+Message-Id: <20191118073633.28237-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Provags-ID: V03:K1:yVseu36YheWCygoGq+ft3p0e0iu8fgGoKVfl3cImcfWXq7IcQ9v
- 64IAheX8Irfb2fO312Ve/wzH2zy/MAH7M+GlZpMlrXI3zSCniIfWpiaD6/Skwy6o/TifgE9
- NzCq2LrIS+SsWfF+DB98Du8F691gjwNijTTZtEKyRkDS968omddwyzSGzj/oA2FMtBacECv
- bgNshXrgyCIa5aLeWs3+g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DYhdsw6dcKk=:NqfLp2QdMcVk0WkrnIOvz5
- b6dteCGGPpVjdM/dysyfVLmCY+HICoFmMOMYrZoXxDGp/J/4yb0IPJL0ZEaw3y3pwk5ISwM7Y
- TmkMMQzkkrCGeMlbVxfozmx3eWunPL+FrQD8DzXIagziVyl8hNOHngXhXZ7rbHKOK8JE6Sucy
- 6OcoHhP5AGR+VNi7081U3VFobDQ2/i8LKUjQ6dGtafMpkxG3KooDzfPk/h0/UJLEJIHylfy3h
- Lw3PYEpXOW67n71SdjaCAIQsvDvEO35x1CFdUbTb/+m++iLeM+jm1CMPYFq9Xr1PzXrYqubcT
- AwDF+H7rliM68BRXPl9fA3fi87mXaO3kLI6t2Fpj55UgFV7pHl+yUpU9VjsDfmbW/AYT0F8B/
- 5M+Txa4cNfii5/0mWgeIGWg9EHLS8KhAhCj0XxzxJRGiHDu13z//D7iWD2CvOmEauHS6ds4Q2
- MO6yXeYkNCJVhgXEdK3iDK69tkJj4KrhmkZijmf6rajFkBld4oo9l93TeeutCW0ymArIeHIhX
- ELQ2BJM9y/guuhu0tEUzIbRz3hQzyaGluX0eazs+eU1VRq+Fjhh96Jhfaq9E0TV7vksI0mCzl
- A6a7CF7v3n4EI+JYIRMT+ReHZT8SaH4xMnbUM3tPbLkEosIwQsYqeoMSE5Hh/yVvsJOXWOuhV
- Sz6/9BAJDH7PTeC5AifoYx8a/V+U7cdMlFcgcIhrYdF4FtJbh7J6BPfyxr5kuFK0InzLs61oU
- AnGGuwmgmfvpia25DjhMhQyrUlCF9i7CkMXd95gvL6cxP7UD5J4X+g5OF4Se+JfZK5poopbZW
- UATJ90b8bz+1fBx0tEDkjAvsWfuLupffDHKJfVILz3NjC+7QhmwbDzKWdymUHAK4pSLdCfgAu
- HkjnhzY2BC22vtP699P7YSg4hrPHPxYgHy9Lu5wE4=
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add dt-bindings for parallax PING))) and LaserPING iio sensors, which
-are used for measuring distances.
+This driver misses calls to pm_runtime_disable and regulator_bulk_disable
+in remove and a call to free_irq in probe failure.
+Add the calls to fix it.
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- .../bindings/iio/proximity/parallax-ping.yaml      | 51 ++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
+ sound/soc/codecs/wm2200.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml b/Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
-new file mode 100644
-index 000000000000..a079c9921af6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/proximity/parallax-ping.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Parallax PING))) and LaserPING range finder
-+
-+maintainers:
-+  - Andreas Klinger <ak@it-klinger.de>
-+
-+description: |
-+  Bit-banging driver using one GPIO:
-+  - ping-gpios is raised by the driver to start measurement
-+  - direction of ping-gpio is then switched into input with an interrupt
-+    for receiving distance value as PWM signal
-+
-+  Specifications about the devices can be found at:
-+  http://parallax.com/sites/default/files/downloads/28041-LaserPING-2m-Rangefinder-Guide.pdf
-+  http://parallax.com/sites/default/files/downloads/28015-PING-Documentation-v1.6.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - parallax,ping
-+      - parallax,laserping
-+
-+  ping-gpios:
-+    description:
-+      Definition of the GPIO for the triggering and echo (output and input)
-+      This GPIO is set for about 5 us by the driver to tell the device it
-+      should initiate the measurement cycle. Afterwards the GPIO is switched
-+      to input direction with an interrupt. The device sets it and the
-+      length of the input signal corresponds to the measured distance.
-+      It needs to be an GPIO which is able to deliver an interrupt because
-+      the time between two interrupts is measured in the driver.
-+      See Documentation/devicetree/bindings/gpio/gpio.txt for information
-+      on how to specify a consumer gpio.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - ping-gpios
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    proximity {
-+        compatible = "parallax,laserping";
-+        ping-gpios = <&gpio0 26 GPIO_ACTIVE_HIGH>;
-+    };
+diff --git a/sound/soc/codecs/wm2200.c b/sound/soc/codecs/wm2200.c
+index cf64e109c658..7b087d94141b 100644
+--- a/sound/soc/codecs/wm2200.c
++++ b/sound/soc/codecs/wm2200.c
+@@ -2410,6 +2410,8 @@ static int wm2200_i2c_probe(struct i2c_client *i2c,
+ 
+ err_pm_runtime:
+ 	pm_runtime_disable(&i2c->dev);
++	if (i2c->irq)
++		free_irq(i2c->irq, wm2200);
+ err_reset:
+ 	if (wm2200->pdata.reset)
+ 		gpio_set_value_cansleep(wm2200->pdata.reset, 0);
+@@ -2426,12 +2428,15 @@ static int wm2200_i2c_remove(struct i2c_client *i2c)
+ {
+ 	struct wm2200_priv *wm2200 = i2c_get_clientdata(i2c);
+ 
++	pm_runtime_disable(&i2c->dev);
+ 	if (i2c->irq)
+ 		free_irq(i2c->irq, wm2200);
+ 	if (wm2200->pdata.reset)
+ 		gpio_set_value_cansleep(wm2200->pdata.reset, 0);
+ 	if (wm2200->pdata.ldo_ena)
+ 		gpio_set_value_cansleep(wm2200->pdata.ldo_ena, 0);
++	regulator_bulk_disable(ARRAY_SIZE(wm2200->core_supplies),
++			       wm2200->core_supplies);
+ 
+ 	return 0;
+ }
 -- 
-2.11.0
+2.24.0
+
