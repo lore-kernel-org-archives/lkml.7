@@ -2,89 +2,90 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C3DC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 741A9C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E06792071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A34B20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:21:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="f3xqgl7R";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="gcKRufRt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfKRGVT (ORCPT
+        id S1726940AbfKRGVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 01:21:19 -0500
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:53851 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726479AbfKRGVT (ORCPT
+        Mon, 18 Nov 2019 01:21:50 -0500
+Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:58420
+        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726331AbfKRGVu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 01:21:19 -0500
-X-IronPort-AV: E=Sophos;i="5.68,319,1569276000"; 
-   d="scan'208";a="412230068"
-Received: from abo-228-123-68.mrs.modulonet.fr (HELO hadrien) ([85.68.123.228])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 07:21:17 +0100
-Date:   Mon, 18 Nov 2019 07:21:17 +0100 (CET)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Travis Davies <tdavies@darkphysics.net>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] net: Fix comment block per style guide
-In-Reply-To: <20191117221647.GA10337@Cheese>
-Message-ID: <alpine.DEB.2.21.1911180720340.2620@hadrien>
-References: <20191117221647.GA10337@Cheese>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 18 Nov 2019 01:21:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574058109;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=Q20iYFHFrX3HtkHcEtV6DPxTXAyu4jf2jXVw5epD7r8=;
+        b=f3xqgl7RiuTsFDdhD9p2feTRuL20IARjOu6AC5M3dQORcVzTZHS2cPJS/URhHrlP
+        NDGFj1kyD/4TYP9XbdGl2AvZ7BotGziaC88XKPBfYZotYLQzulY/umf2Mx3VBASpdgv
+        w+eUFqx6H/PYp1KrTBC1ZnfMbykeYr1FyskaW2vs=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574058109;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=Q20iYFHFrX3HtkHcEtV6DPxTXAyu4jf2jXVw5epD7r8=;
+        b=gcKRufRtI5vQsTW0hhDRrIfuvhMsHHoFZXO4vkTawo3FnnZymNem38Z9PGM0MUkJ
+        RZo1RzFKsXrsN2/GXrhDyn3msEh0TfQaNR2b6m4cHzW7Yn4IrF0F/HtAtyoOl2TDsyg
+        O6sVO1sztWCJgpT7c7wNT979ATph3MWKQf4Lcmss=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 18 Nov 2019 06:21:49 +0000
+From:   bgodavar@codeaurora.org
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     johan.hedberg@gmail.com, marcel@holtmann.org, mka@chromium.org,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        tientzu@chromium.org, seanpaul@chromium.org
+Subject: Re: [PATCH v1] Bluetooth: hci_qca: Enable clocks required for BT SOC
+In-Reply-To: <5dcd8c98.1c69fb81.4690b.49fe@mx.google.com>
+References: <20191114081430.25427-1-bgodavar@codeaurora.org>
+ <5dcd8c98.1c69fb81.4690b.49fe@mx.google.com>
+Message-ID: <0101016e7d2ca862-0ec3d2c5-c309-4d97-9221-f09480b17c02-000000@us-west-2.amazonses.com>
+X-Sender: bgodavar@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2019.11.18-54.240.27.18
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This should be v2.  Put that with the PATCH, and then explain below the
---- what changed.
+Hi Stephen,
 
-On Sun, 17 Nov 2019, Travis Davies wrote:
+On 2019-11-14 22:49, Stephen Boyd wrote:
+> Quoting Balakrishna Godavarthi (2019-11-14 00:14:30)
+>> @@ -1423,6 +1427,20 @@ static int qca_power_off(struct hci_dev *hdev)
+>>         return 0;
+>>  }
+>> 
+>> +static int qca_power_on(struct qca_serdev *qcadev)
+>> +{
+>> +       int err;
+>> +
+>> +       if (qcadev->susclk) {
+> 
+> clk_prepare_enable() shouldn't return anything besides 0 when passed a
+> NULL pointer. Please drop this if condition in addition to the one on
+> the clk_disable_unprepare().
+> 
+>> +               err = clk_prepare_enable(qcadev->susclk);
+>> +               if (err)
+>> +                       return err;
+>> +       }
 
-> This patch places /* and */ on sepperate lines for a
+[Bala]: will update.
 
-You can fix the spelling of separate at the same time.
-
-julia
-
-> multiline block comment, in order to keep code style
-> consistant with majority of blocks throughout the file.
->
-> This will prevent a checkpatch.pl warning:
-> 'Block comments use a trailing */ on a separate line'
->
-> Signed-off-by: Travis Davies <tdavies@darkphysics.net>
->
-> ---
->  include/linux/netdevice.h | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-> index c20f190b4c18..a2605e043fa2 100644
-> --- a/include/linux/netdevice.h
-> +++ b/include/linux/netdevice.h
-> @@ -95,9 +95,11 @@ void netdev_set_default_ethtool_ops(struct net_device *dev,
->  #define NET_XMIT_CN		0x02	/* congestion notification	*/
->  #define NET_XMIT_MASK		0x0f	/* qdisc flags in net/sch_generic.h */
->
-> -/* NET_XMIT_CN is special. It does not guarantee that this packet is lost. It
-> +/*
-> + * NET_XMIT_CN is special. It does not guarantee that this packet is lost. It
->   * indicates that the device will soon be dropping packets, or already drops
-> - * some packets of the same priority; prompting us to send less aggressively. */
-> + * some packets of the same priority; prompting us to send less aggressively.
-> + */
->  #define net_xmit_eval(e)	((e) == NET_XMIT_CN ? 0 : (e))
->  #define net_xmit_errno(e)	((e) != NET_XMIT_CN ? -ENOBUFS : 0)
->
-> --
-> 2.21.0
->
->
+Regards
+Balakrishna
