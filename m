@@ -2,186 +2,166 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD64AC43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAC8C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABA2420730
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83DD12084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:00:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="mZmwJ2rA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="seaSPzcW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfKRLAW (ORCPT
+        id S1726809AbfKRLAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:00:22 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:37874 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726703AbfKRLAW (ORCPT
+        Mon, 18 Nov 2019 06:00:42 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40413 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbfKRLAm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:00:22 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAIArUI8003770;
-        Mon, 18 Nov 2019 06:00:07 -0500
-Received: from nam03-dm3-obe.outbound.protection.outlook.com (mail-dm3nam03lp2059.outbound.protection.outlook.com [104.47.41.59])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2waew7fcfm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 18 Nov 2019 06:00:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a2xTFFjlN4ZejzKB7y+hnwUiJdLnujt7QonfIdFaXI82NnsM9mu9I3UyVXa2WLnhg4fMYG+dVXrTgyEFDDjbVpUg/hneg/xm8N253MSWu3LhtYsvuXxPr9AeNFBxdh4SR/ILqXJx3vOPMh4w86Op+sLgC1zh3F4URDICtAXBGJGUYVJ/2n5vOj5De6chDeLoQg8GJyv/NgM+bq5+sdjUIYvOp2fNVqCXrnYqlJ6eOkB7Q8Y0Bu5t/M6JX/vRJldioKegEvDms7yWOW2/53WkftP056XwT2QFQSf0ZZkKoL4Rc0/vVcwNLOmr1Lk/439/qml6nYwMCpdly2CJs+IBMw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kPwPBjpHpLafE87i5JRKe+KwVxwbFfJuPnIIH/uGiGE=;
- b=dfuOMki9b960DqI3MI2wJofc0x6/TC16Ued6hjucUl6vYHbiiWB/M/Vngo7E+O25Lnsqv2n/m3TQoRZEYfq4MVe65gT6VpIo89bY9DaiBEHOShntfPpxLORIH0b/v+Srxkx+MEB1xIdMWtXQjj10DWxLquCLthDdJ8frKSED4We/kS3YIyV6C/tO1SKG6zwZF+m8HjdGRtbAoklHtd7f3D0sbt8WDGFLQsVNRz2crwsA95GGSi4A2KSJF5aeIGnt0nLiwYiswk4BBS2QAJ0E4SyVsJI3JQ5hf8gKUwPI4CBocwTDRP4M6zXCm1CYEcFluUYgl5sqoEfQ+nCzyyHJNA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.57) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
+        Mon, 18 Nov 2019 06:00:42 -0500
+Received: by mail-wr1-f65.google.com with SMTP id q15so6090151wrw.7;
+        Mon, 18 Nov 2019 03:00:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kPwPBjpHpLafE87i5JRKe+KwVxwbFfJuPnIIH/uGiGE=;
- b=mZmwJ2rAVKN3X//hjgJuShUFWitu0RDCIN37l7rLKE9ewZKlLCjq5zuHjPCHb5IDwU5fVb7n2U8vObvZIDKGG5BMZg45KCWjnEkaQwznOPMbpqvFXvABS4xSWVqrYV8rHurOuGd/ZjelapSoxxw7OQkVVOerZ8Y1bFJeIQsvIYY=
-Received: from BN8PR03CA0006.namprd03.prod.outlook.com (2603:10b6:408:94::19)
- by DM6PR03MB4652.namprd03.prod.outlook.com (2603:10b6:5:18d::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.23; Mon, 18 Nov
- 2019 11:00:04 +0000
-Received: from SN1NAM02FT024.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::200) by BN8PR03CA0006.outlook.office365.com
- (2603:10b6:408:94::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.22 via Frontend
- Transport; Mon, 18 Nov 2019 10:59:58 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- SN1NAM02FT024.mail.protection.outlook.com (10.152.72.127) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2451.23
- via Frontend Transport; Mon, 18 Nov 2019 10:59:58 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id xAIAxnLx010665
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Mon, 18 Nov 2019 02:59:49 -0800
-Received: from tachici-Precision-5530.ad.analog.com (10.48.65.123) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Mon, 18 Nov 2019 05:59:57 -0500
-From:   Alexandru Tachici <alexandru.tachici@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <lars@metafoo.de>, <jic23@kernel.org>,
-        Alexandru Tachici <alexandru.tachici@analog.com>
-Subject: [PATCH v2] iio: dac: ad7303: use regulator get optional to check for ext supply
-Date:   Mon, 18 Nov 2019 12:58:07 +0200
-Message-ID: <20191118105807.6842-1-alexandru.tachici@analog.com>
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CwG2QKBTPng2ELiNtc6lBmywHFbDH68p/PbyzwMke0w=;
+        b=seaSPzcWW7pAe6mvpfNGIERNdtwFtoRJGER3FNZ3pjh5BXyy25wIBOIe1jm0Ppszfb
+         +M7hxsDAsA8Xwp0E8MLUAISuM3CF/CY5Pn4G+aerOUO2QlsVvjf/DuExFwDUSagUZ32Y
+         RAHkot59E2fxg1rzppEHTVw/Q6AI54xRVOVtB1m3fgl1hNYFB3nV1BXhutcmcDkNnWgE
+         4IV2f/zR9onY7jrj0y5x9BzMKSdUaCVVHqYWsQg4xA8ertEw/gTZFYGBbzQ4nWAB3K7y
+         1qVtTTRNXvvxQVI95tyVxxI4Xz3Vg7nbp6T1CqAA6+GiK+AaZLYynnIL7teVHqL9iEAd
+         lILQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CwG2QKBTPng2ELiNtc6lBmywHFbDH68p/PbyzwMke0w=;
+        b=oxZ4IpVYfvqwM2152QH4hdcTh1PdwvELWsC4Q9IQlYm80i3KKfFX+0pVQcDO8AG2E1
+         t5vlsW7LRlloXi0KBuh1EmWgyvDUeUjuwx7a+L7EF/7jiagSQy2ZIiK41Cr/H9FdQKv8
+         G/8BXGklP/83IRZrEjK5+8R5wRYoAYHwpKXrOq6bZOZaDOq+ftEC43Gjlymd1lPKHJXn
+         DtAvL2/WyHRRLKdCvzkoUiK3mHk45Y+KpSvftNKfI5/L6GjIzfZy1OlPhFZDOWizjRy/
+         +t6BGS6vNzoX0sRoK85nov1jFprFx1XPFAD8mndk6k52mIDMJcEHPRNR7b/YA9dCyZ2L
+         N4qw==
+X-Gm-Message-State: APjAAAUWgSVPLFAuyU+obJwEe+vLHPyKCmXcahjt7CitkIJgB/K28uRz
+        E68cpzh4ooG2EnKTAUcLnbM=
+X-Google-Smtp-Source: APXvYqy51ZqGdaG0m12s1h+XihVJJ3jXrIA+ItvBShJOBrCbxAo7ED8x2y4bje26IMScyYqPIzMP/g==
+X-Received: by 2002:adf:b608:: with SMTP id f8mr27742764wre.99.1574074839807;
+        Mon, 18 Nov 2019 03:00:39 -0800 (PST)
+Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
+        by smtp.gmail.com with ESMTPSA id f67sm19873313wme.16.2019.11.18.03.00.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 03:00:39 -0800 (PST)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v6 0/8] Add support for H6 PWM
+Date:   Mon, 18 Nov 2019 12:00:26 +0100
+Message-Id: <20191118110034.19444-1-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191113083303.2229-1-alexandru.tachici@analog.com>
-References: <20191113083303.2229-1-alexandru.tachici@analog.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(136003)(39860400002)(199004)(189003)(54534003)(8676002)(426003)(50226002)(51416003)(7696005)(4326008)(76176011)(26005)(106002)(2906002)(5660300002)(11346002)(2616005)(476003)(126002)(486006)(44832011)(107886003)(2870700001)(54906003)(86362001)(1076003)(316002)(47776003)(305945005)(8936002)(446003)(336012)(186003)(110136005)(246002)(50466002)(48376002)(356004)(6666004)(478600001)(70206006)(70586007)(36756003)(7636002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB4652;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f27751d9-c2d6-45b3-0121-08d76c1673da
-X-MS-TrafficTypeDiagnostic: DM6PR03MB4652:
-X-Microsoft-Antispam-PRVS: <DM6PR03MB46521E92DE761F0BC370CDC6904D0@DM6PR03MB4652.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
-X-Forefront-PRVS: 0225B0D5BC
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: C/s5y92F161R7gGaKrSVQpGb93qBfEUWVHlfdB+/gVDWeVvc0ApUB+XBd74Wpc7K8YpoCQ2CuiYTBHPSeGSrMgUuXoCXsf+BFBgJMNsSIAzp16WU7BMDsYXe/On59h3akFhDDcAX/xZacuA9/+oOrpppHeJ2GY/tcncit4vAW15hpu9RcfBN9hCh8KNpw//GjU/wgXjrgppS+DkdXUCW1afwXFXYOkeW+ZefG7JklGwj/kSBFf7b51cvx9zkANrpTl4vRvGox/X6mtsfxgf75w7IOeUiLrVGw5M71quc5HAdaQepR05Zob3K1fanvJZjDf4A+mC4ZDPz9oo5C8Y8vgBUNLLS/Umi4jcbHRLqTe390v9c0Wnn3Iw/j/aA1LyxiNmnRIAsvoSF05XVvQM+BMmEdoMeyZi3Mje2g08jZk2FArm0Zi4FjS5vTHXQAQT4
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2019 10:59:58.3900
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f27751d9-c2d6-45b3-0121-08d76c1673da
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4652
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-18_02:2019-11-15,2019-11-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
- bulkscore=0 lowpriorityscore=0 adultscore=0 mlxlogscore=977 spamscore=0
- malwarescore=0 priorityscore=1501 mlxscore=0 phishscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1911180099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously, the code was using the of_read_property_bool() to check if
-an external regulator was provided. However, this is redundant, as it's
-more simple/direct to just ask the regulator is provided, via a
-`devm_regulator_get_optional()` call.
+Hi,
 
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
----
-Changelog v1 -> v2:
+This is a rework of Jernej's previous work[1] taking account all the
+previous remarks.
 
-- check for -ENODEV error for devm_regulator_get_optional() call
+Bindings is still strict but probe in the driver are now optionnals.
 
- drivers/iio/dac/ad7303.c | 25 +++++++------------------
- 1 file changed, 7 insertions(+), 18 deletions(-)
+If someone could confirm that the PWM is not broken, as my board
+doesn't output it.
 
-diff --git a/drivers/iio/dac/ad7303.c b/drivers/iio/dac/ad7303.c
-index 14bbac6bee98..15af8a1cce3e 100644
---- a/drivers/iio/dac/ad7303.c
-+++ b/drivers/iio/dac/ad7303.c
-@@ -12,7 +12,6 @@
- #include <linux/slab.h>
- #include <linux/sysfs.h>
- #include <linux/regulator/consumer.h>
--#include <linux/of.h>
- 
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
-@@ -202,7 +201,6 @@ static int ad7303_probe(struct spi_device *spi)
- 	const struct spi_device_id *id = spi_get_device_id(spi);
- 	struct iio_dev *indio_dev;
- 	struct ad7303_state *st;
--	bool ext_ref;
- 	int ret;
- 
- 	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-@@ -224,24 +222,15 @@ static int ad7303_probe(struct spi_device *spi)
- 	if (ret)
- 		return ret;
- 
--	if (spi->dev.of_node) {
--		ext_ref = of_property_read_bool(spi->dev.of_node,
--				"REF-supply");
--	} else {
--		struct ad7303_platform_data *pdata = spi->dev.platform_data;
--		if (pdata && pdata->use_external_ref)
--			ext_ref = true;
--		else
--		    ext_ref = false;
--	}
--
--	if (ext_ref) {
--		st->vref_reg = devm_regulator_get(&spi->dev, "REF");
--		if (IS_ERR(st->vref_reg)) {
--			ret = PTR_ERR(st->vref_reg);
-+	st->vref_reg = devm_regulator_get_optional(&spi->dev, "REF");
-+	if (IS_ERR(st->vref_reg)) {
-+		ret = PTR_ERR(st->vref_reg);
-+		if (ret != -ENODEV)
- 			goto err_disable_vdd_reg;
--		}
-+		st->vref_reg = NULL;
-+	}
- 
-+	if (st->vref_reg) {
- 		ret = regulator_enable(st->vref_reg);
- 		if (ret)
- 			goto err_disable_vdd_reg;
+I didn't add the acked-tags as there are big changes.
+
+Thanks,
+Clément
+
+Jernej's cover:
+Allwinner H6 SoC has PWM core which is basically the same as that found
+in A20, it's just depends on additional bus clock and reset line.
+
+This series adds support for it and extends PWM driver functionality in
+a way that it's now possible to bypass whole core and output PWM source
+clock directly as a PWM signal. This functionality is needed by AC200
+chip, which is bundled in same physical package as H6 SoC, to serve as a
+clock source of 24 MHz. AC200 clock input pin is bonded internally to
+the second PWM channel.
+
+I would be grateful if anyone can test this patch series for any kind of
+regression on other SoCs.
+
+[1]: https://patchwork.kernel.org/cover/11061737/
+
+Changes in v6:
+ - Update git commit log
+ - Distinguish error message 
+
+Changes in v5:
+ - Move bypass calculation to pwm_calculate
+ - Split mod_clock fallback from bus_clk probe    
+ - Update comment
+ - Move my SoB after acked-by/reviewed-by
+
+Changes in v4:
+ - item description in correct order and add a blank line
+ - use %pe for printing PTR_ERR
+ - don't print error when it's an EPROBE_DEFER
+ - change output clock bypass formula to match PWM policy
+
+Changes in v3:
+ - Documentation update to allow one clock without name
+ - Change reset optional to shared
+ - If reset probe failed return an error
+ - Remove old clock probe
+ - Update bypass enabled formula
+
+Changes in v2:
+ - Remove allOf in Documentation
+ - Add H6 example in Documentation
+ - Change clock name from "pwm" to "mod"
+ - Change reset quirk to optional probe
+ - Change bus_clock quirk to optional probe
+ - Add limitation comment about mod_clk_output
+ - Add quirk for mod_clk_output
+ - Change bypass formula
+
+Clément Péron (2):
+  pwm: sun4i: Prefer "mod" clock to unnamed
+  [DO NOT MERGE] arm64: allwinner: h6: enable Beelink GS1 PWM
+
+Jernej Skrabec (6):
+  dt-bindings: pwm: allwinner: Add H6 PWM description
+  pwm: sun4i: Add an optional probe for reset line
+  pwm: sun4i: Add an optional probe for bus clock
+  pwm: sun4i: Add support to output source clock directly
+  pwm: sun4i: Add support for H6 PWM
+  arm64: dts: allwinner: h6: Add PWM node
+
+ .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml |  48 +++++
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |   4 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  10 +
+ drivers/pwm/pwm-sun4i.c                       | 185 +++++++++++++++---
+ 4 files changed, 215 insertions(+), 32 deletions(-)
+
 -- 
 2.20.1
 
