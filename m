@@ -2,130 +2,120 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7FFC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBE7C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A46EF2071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D90C120730
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 05:11:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pt31RvPb"
+	dkim=pass (1024-bit key) header.d=mykernel.net header.i=cgxu519@mykernel.net header.b="Jz7cAV9v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfKRFF0 (ORCPT
+        id S1726325AbfKRFLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 00:05:26 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:32675 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbfKRFFZ (ORCPT
+        Mon, 18 Nov 2019 00:11:10 -0500
+Received: from sender3-of-o52.zoho.com.cn ([124.251.121.247]:21960 "EHLO
+        sender2.zoho.com.cn" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725208AbfKRFLK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 00:05:25 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191118050523epoutp04273cab4e5cf1ed77c23cf4c19e013d9d~YKVbvSPrl0157201572epoutp04Y
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 05:05:23 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191118050523epoutp04273cab4e5cf1ed77c23cf4c19e013d9d~YKVbvSPrl0157201572epoutp04Y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1574053523;
-        bh=90XN/fh+rCaU/MawbzJrKX/j/w6gxQPViZ5zdqgY9T4=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=pt31RvPbxUzbkMetr3SiV7NPqH5ItjCS0gLVy3Hda+I/URKA7jHmg0sNw7su5JSB/
-         Xr2MMH5cRzDWTTTXdtKOKD1zdoEEyrHMLezF9oS1cAbK8ShN0JoDGRNHOtdIjXrUO6
-         xH5Q5rILIq4lxt0rQv7Lz7K764Tvp0wwGdcgiFRU=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20191118050522epcas1p3db7c50730bff7dcc3771810df782d641~YKVbV6YJj0306203062epcas1p3R;
-        Mon, 18 Nov 2019 05:05:22 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.166]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 47GcN20NQBzMqYkl; Mon, 18 Nov
-        2019 05:05:22 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        86.F5.04237.19622DD5; Mon, 18 Nov 2019 14:05:21 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191118050521epcas1p15b04db4758f806cda3c826ca9b3f90f9~YKVaJvoM21371013710epcas1p1o;
-        Mon, 18 Nov 2019 05:05:21 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191118050521epsmtrp2cef67b72a8716dffa50f6d5ba85cafed~YKVaG8uqV1065710657epsmtrp2C;
-        Mon, 18 Nov 2019 05:05:21 +0000 (GMT)
-X-AuditID: b6c32a39-913ff7000000108d-9f-5dd22691e409
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        2F.C7.03654.19622DD5; Mon, 18 Nov 2019 14:05:21 +0900 (KST)
-Received: from DONAMJAEJEO06 (unknown [10.88.104.63]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191118050521epsmtip23499ae1eee00efde746da7f619aab5a5~YKVZ7HFg-2708027080epsmtip2h;
-        Mon, 18 Nov 2019 05:05:21 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Markus Elfring'" <Markus.Elfring@web.de>
-Cc:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "'Christoph Hellwig'" <hch@lst.de>,
-        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
-        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
-        =?UTF-8?Q?'Valdis_Kl=C4=93tnieks'?= <valdis.kletnieks@vt.edu>,
-        <linkinjeon@gmail.com>, <linux-fsdevel@vger.kernel.org>
-In-Reply-To: <bb89f610-3eac-6b28-1aff-265b358d22af@web.de>
-Subject: RE: [PATCH 07/13] exfat: add bitmap operations
-Date:   Mon, 18 Nov 2019 14:05:21 +0900
-Message-ID: <00bd01d59dcd$c72058a0$556109e0$@samsung.com>
+        Mon, 18 Nov 2019 00:11:10 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574053818; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=CFiTydxXmqD9bMG7v780o3N8ddqWN6K3FCgyTdlTsez+ICLl9SEtemLlO1rFmwdlnFVn0KaMzc1ve2S2pA//ZQDSMywCMchSASZ55qhlGgITwNozY47/lo2c/INkLP4RSjDGEAEdUnzyuSWpR2MhhKkB3r8PeWHkAF6uLKrdeQw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1574053818; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=W+4d37NiUZrTVp/T//URhJAtULIpMWsOCTG3JUgcQbA=; 
+        b=SfZrHruFtbvLbpQPjNc72IC+JSlnZfJ+XGA4IFDCxatxJXqhBCbg8JNLUagIec/KDcUIuQTVBtngdQoSW3hkUMbcgLGEpH8Fm+eXwz7ARt58nKunz86ZgaxuRX//6Mv41ix92didw44LkKsvKlQgBBZdKpmg9s6dWyjCHjCQdl8=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=mykernel.net;
+        spf=pass  smtp.mailfrom=cgxu519@mykernel.net;
+        dmarc=pass header.from=<cgxu519@mykernel.net> header.from=<cgxu519@mykernel.net>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574053818;
+        s=zohomail; d=mykernel.net; i=cgxu519@mykernel.net;
+        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        l=1801; bh=W+4d37NiUZrTVp/T//URhJAtULIpMWsOCTG3JUgcQbA=;
+        b=Jz7cAV9vUe3W4KyujDLRcYQXLcQV6tl7gVqHx1v+Ljon9oHqojtRod0Rc50n5YC5
+        ZkEOZtA8Vu7ezLL5/F5sGKbob4KLpIxLDCTIwMJBQFp3pj5hakvhUeJmc/iSvEmO7Gl
+        mbdedSI3usWavsqw8+/jaZGYDbtDrn2dLYPcKTdA=
+Received: from localhost.localdomain (218.18.229.179 [218.18.229.179]) by mx.zoho.com.cn
+        with SMTPS id 157405381681740.021350625482796; Mon, 18 Nov 2019 13:10:16 +0800 (CST)
+From:   Chengguang Xu <cgxu519@mykernel.net>
+To:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org
+Cc:     darrick.wong@oracle.com, jaegeuk@kernel.org, chao@kernel.org,
+        tytso@mit.edu, adilger.kernel@dilger.ca,
+        Chengguang Xu <cgxu519@mykernel.net>
+Message-ID: <20191118050949.15629-2-cgxu519@mykernel.net>
+Subject: [RFC PATCH 2/3] f2fs: show prjquota info on statfs for a file
+Date:   Mon, 18 Nov 2019 13:09:48 +0800
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191118050949.15629-1-cgxu519@mykernel.net>
+References: <20191118050949.15629-1-cgxu519@mykernel.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQJT34xI6Pyft9P4cwvm8O1PsyfppwNHvFQQAswP5mmmYz3KkA==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0hTcRTmt7v7WLi4LauDhaxLBRabm2t6LY1exMKISUIRmN3cTa292J2v
-        jFDMHiNKg14zyzKLHmjZcvYwaVa6oDC1LMWI6MUUy+xdWpvXyP++c873nXO+34PCFF4igsqy
-        OnmHlTMzxARpfXOUSlU2pz1V8/S2hi2uqiXY8xfvSdhr3dPZrt5ujL3V6JeyHTeOE+wf9zuc
-        9Yzcxdn2Dx+li2WG6+5e0tBUcYk03HxeSBj2ey4gw1BdpMHn7ScMPW/rpUZyvTkhk+dMvEPJ
-        W9NtpixrRiKTtCZtWZo+VqNVaePZOEZp5Sx8IrN8lVG1Issc3IxR5nDm7GDKyAkCE70owWHL
-        dvLKTJvgTGR4u8ls12rsaoGzCNnWDHW6zbJAq9HE6IPMjebM8l+3SftpPG9vdRteiA7gLiSj
-        gJ4PbyoPIBeaQCnoBgRlrfUSMfiE4GhPESYGXxGUeq8EK9So5ErRZjHfiMD1eIAUgwCCWydO
-        kqG+BK2Ckd9NRAiH02o42N+Mh0gY7ZfA16oWLFSQ0Qug5ulnFMKT6Th40/ZiVCylZ8PuzhZJ
-        CMvpeBj8UUKIeBL4j72WhjBGz4Ozp/ow0YQSGh72IXHYUgh4r45xwqF8765RC0AXkzDseT1m
-        YTl4WzWidjIEWjykiCNgaKCRECkFMNg01n4PgvffEkWsg+e1l/EQBaOjoPZGtJieCdd/VSBx
-        6kQY+LIPF7vIYc8uhUiZDfvbmyUing6u3R/JUsS4x/lyj/PlHre/+/+wSiS9gKbydsGSwQta
-        u378Xdeh0Uc7N74B3X+0yodoCjFh8pe5j1MVOJcj5Ft8CCiMCZevftWWqpCbuPxtvMOW5sg2
-        84IP6YPHXoZFTEm3Bb+A1Zmm1cfodDp2fmxcrF7HTJNT34N96AzOyW/leTvv+KeTULKIQrTW
-        c/PJtYBfIxk6EvUwkH+46n5nf8HxhbPWJRS7vnd1hl3a0KGNsp3Z2hHWl+wvvfNTrj4UaZIY
-        jb0fkg/lLpHdO/fCM0O5uaKyPD/JmRed1NVa8XLkwXn/ueTt23M3Xd1Z2LclxVTiS1lXVzNT
-        qMkpqh4OUzhXxuU9KylSN8Z0bdjBSIVMTjsXcwjcX0CvAFLKAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIIsWRmVeSWpSXmKPExsWy7bCSvO5EtUuxBqtaBC2aF69ns1i5+iiT
-        xdZb0hbX795ittiz9ySLxeVdc9gs/s96zmqx5d8RVotL7z+wOHB67Jx1l91j/9w17B67bzaw
-        efRtWcXo8XmTnMeh7W/YPG4/28YSwB7FZZOSmpNZllqkb5fAlTH76gb2giPMFde2vGRrYHzM
-        1MXIwSEhYCKxsTGti5GTQ0hgN6NEz8Z0EFtCQFri2IkzzBAlwhKHDxd3MXIBlbxglPh/ZQ8L
-        SA2bgK7Evz/72UBsEQE9iUlvDrOCFDELnGeSODzhIiPc0FcnFUBsTgEriXXXvoDFhQXMJZ5e
-        uMcOYrMIqEq0XznOBGLzClhKfPzZygZhC0qcnPkEbBmzgLZE78NWRhh72cLXzBCHKkjsOPua
-        EeIIJ4lX2zdD1YtIzO5sY57AKDwLyahZSEbNQjJqFpKWBYwsqxglUwuKc9Nziw0LDPNSy/WK
-        E3OLS/PS9ZLzczcxgiNOS3MH4+Ul8YcYBTgYlXh4LaouxgqxJpYVV+YeYpTgYFYS4fV7dCFW
-        iDclsbIqtSg/vqg0J7X4EKM0B4uSOO/TvGORQgLpiSWp2ampBalFMFkmDk6pBsbqws/swYkt
-        eQ0O1lazstw1FC2DAz98akpvCTbkZjOYuXJDw6yuywr7dUv3LODln/cqYfuvv1tkf0lOCTLr
-        KSxX6pn/b/blxSWpOvkzY+vun78VdFnrtNXphnVrzqSu0s1bcih014vTjBoPyqflciiVpXHu
-        2dvmUXZ3c62ciWCYts7xBSe5q5VYijMSDbWYi4oTAZpKF8m0AgAA
-X-CMS-MailID: 20191118050521epcas1p15b04db4758f806cda3c826ca9b3f90f9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191117150120epcas4p4c9229bc184f0a299f0c7215dd473ae0a
-References: <20191113081800.7672-8-namjae.jeon@samsung.com>
-        <CGME20191117150120epcas4p4c9229bc184f0a299f0c7215dd473ae0a@epcas4p4.samsung.com>
-        <bb89f610-3eac-6b28-1aff-265b358d22af@web.de>
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> =E2=80=A6=0D=0A>=20>=20+++=20b/fs/exfat/balloc.c=0D=0A>=20=E2=80=A6=0D=0A=
->=20+int=20exfat_count_used_clusters(struct=20super_block=20*sb,=20unsigned=
-=20int=0D=0A>=20*ret_count)=0D=0A>=20+=7B=0D=0A>=20=E2=80=A6=0D=0A>=20+=09/=
-*=20FIXME=20:=20abnormal=20bitmap=20count=20should=20be=20handled=20as=20mo=
-re=20smart=20*/=0D=0A>=20+=09if=20(total_clus=20<=20count)=0D=0A>=20+=09=09=
-count=20=3D=20total_clus;=0D=0A>=20=0D=0A>=20Would=20you=20like=20to=20impr=
-ove=20any=20implementation=20details=20according=20to=20this=0D=0A>=20comme=
-nt?=0D=0AYes,=20Will=20improve=20it=20on=20V2.=0D=0A=0D=0AThanks=21=0D=0A>=
-=20=0D=0A>=20Regards,=0D=0A>=20Markus=0D=0A=0D=0A
+Currently we replace filesystem statistics using prjquota info
+on statfs when specified directory has project id inherit flag.
+However, statfs on a file(accurately non-dir) which is under the
+project quota dir(with inherit flag) still shows whole filesystem
+statistics. In container use case, it will give container user
+inconsistent experience and cause confusion about available free
+space.
+
+Detail info like below:
+We use project quota to limit disk space usage for a container
+and run df command inside container.
+
+Run df on a directory:
+
+[root /]# df -h /etc/
+Filesystem=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Size=C2=A0 Used Avail Use% Mounted=
+ on
+kataShared=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1.0G=C2=A0=C2=A0 13M 1012M=C2=A0=
+=C2=A0 2% /
+
+Run df on a file:
+
+[root /]# df -h /etc/exports
+Filesystem=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Size=C2=A0 Used Avail Use% Mounted=
+ on
+kataShared=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1.5T=C2=A0 778M=C2=A0 1.5T=C2=A0=
+=C2=A0 1% /
+
+Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
+---
+ fs/f2fs/super.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 1443cee15863..c5b9a92d606b 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1287,8 +1287,9 @@ static int f2fs_statfs(struct dentry *dentry, struct =
+kstatfs *buf)
+ =09buf->f_fsid.val[1] =3D (u32)(id >> 32);
+=20
+ #ifdef CONFIG_QUOTA
+-=09if (is_inode_flag_set(dentry->d_inode, FI_PROJ_INHERIT) &&
+-=09=09=09sb_has_quota_limits_enabled(sb, PRJQUOTA)) {
++=09if ((is_inode_flag_set(dentry->d_inode, FI_PROJ_INHERIT) ||
++=09     !S_ISDIR(dentry->d_inode->i_mode)) &&
++=09    sb_has_quota_limits_enabled(sb, PRJQUOTA)) {
+ =09=09f2fs_statfs_project(sb, F2FS_I(dentry->d_inode)->i_projid, buf);
+ =09}
+ #endif
+--=20
+2.20.1
+
+
+
