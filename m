@@ -7,63 +7,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6AAC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE42EC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F93720748
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BFED20748
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:25:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Qahpq8oC"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="ThrFryRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbfKRLZh (ORCPT
+        id S1727685AbfKRLZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:25:37 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38802 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727324AbfKRLYN (ORCPT
+        Mon, 18 Nov 2019 06:25:42 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37871 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727234AbfKRLYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:24:13 -0500
-Received: by mail-wm1-f67.google.com with SMTP id z19so18381282wmk.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 03:24:11 -0800 (PST)
+        Mon, 18 Nov 2019 06:24:09 -0500
+Received: by mail-wm1-f68.google.com with SMTP id b17so18334051wmj.2
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 03:24:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=A4Xv5WoIG3tnGwzAreyDrYqib6OrZF77Ddvl40A6T0E=;
-        b=Qahpq8oC4s5U1BprkuQwE8TaUGAI0Fgn8V+TNP81b/BISbrKjHXGW+yyn0Fz6bRUOG
-         g+R59I7cQ3XCw+8rgIW51bLHJXKVp0LYz/2FTt59HnZv+vUKgQXjFAKthQN5P1V6QPCC
-         IAyYJ4L0vvepnYg9HnhTSFAU9TNdsPN2p8B38=
+        bh=kflmqvkrnbAdjtigGqKs8mrz9iivtun3aqewA1JiMFE=;
+        b=ThrFryRpNjtPehzlcjWqSBG6CuPIjJ4vBYy7AByJEraQktmfIPDwIbkPAmYr6MuV6d
+         hvKQp24kkXI1ZzYE9YdET8RfZ6fOKkoTjuFEsSX8zR+oodtyZG3Ot8Hzx8+3zk8ORrHI
+         0dtfejkpg1+UC/hU2JqoMDjl3HPNLBqaVmy6k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=A4Xv5WoIG3tnGwzAreyDrYqib6OrZF77Ddvl40A6T0E=;
-        b=r4PA1JAwFj88Mo2H7Fo3Y8t0nBLArfyZ34/ssnNga3NszClaM30hzlZTg4ppIo7KVU
-         hwtwx8mEUY1Qm1YAk6wr2cT8RbQQG2UUODCEDh/PgcTNaYMpKVuGu9hnTeWxzz1xkMAL
-         BLW5l54e91bLdpr/LjyOpqQY0KeBUqkN9aoPPsF9v6bXq2HWWLPUI+KlutU69YVcT/LH
-         QUzyAYgc2KGMuj4tcUQ+a1MhjSohqRoFehif+nDQzfnBRvqyJ2f9cUW2P0EExLfWdggz
-         HpYFIZsQqWHWx8oXLZ90+Lvy4BjASbiNHrq4O7ZLui83W0+cDxOJgo5vjeoRUidqVCRQ
-         D+8Q==
-X-Gm-Message-State: APjAAAUKr0oda04kZACR5nQzCjAFhWmr+7u7AOB1tyB57HqJfVPyFItq
-        nepKYHONb2d/JUVNYNa5jiUnjw==
-X-Google-Smtp-Source: APXvYqyvUbkkQ8XxZkPus9p+N+Zot3n8+DhqSZvPUgg2FEMfo/qjD+uvhx9SSnu66kalV3oGv2ax1Q==
-X-Received: by 2002:a05:600c:206:: with SMTP id 6mr30491187wmi.78.1574076250492;
-        Mon, 18 Nov 2019 03:24:10 -0800 (PST)
+        bh=kflmqvkrnbAdjtigGqKs8mrz9iivtun3aqewA1JiMFE=;
+        b=Qyo7jmct2UTmUYlKLh7CE/GE3qN3xjW2gMQ3ojmJEA2G4IxdGgQojdagKXeYRfSymn
+         fJ7WyB4kMA9Z6C3qDTzWOVFso1PgQABy51wkLAZwAIRC6mCKRwVj5JEVjYfAIbjqwIdM
+         XXnlvewdFwoPFCA4EeY0mOqLQTPmd2npx75tboUXm9goEMm++ybAtF+P3sqz7IfgAMk9
+         xxHfXtv+HSL4jZnnkvSTggX+dfa2saIKLch0al2XMAgOobhNkuJew1J+8QIr/vbQutMv
+         HuJCkgA75nfippJYKCU2cuCJHZuIqikE/3doWhXOy+yEqyRhVrgJdXbd5AV0LpS3/qEx
+         xgPw==
+X-Gm-Message-State: APjAAAVBQs96mXJhXvknL2Z0Mq+WS3APS4OLbWp+w+2nDum/HKtwBIbu
+        hcWhATRpJL1yCo9jiVEorzOm4A==
+X-Google-Smtp-Source: APXvYqz/yfPEw3HBV9AjYvj1HBu6T4zcT4RBdyaS67hKA9MOTcUbKm4kt25rJapFztm168JTxA1dYA==
+X-Received: by 2002:a1c:3cc4:: with SMTP id j187mr29377777wma.95.1574076244705;
+        Mon, 18 Nov 2019 03:24:04 -0800 (PST)
 Received: from prevas-ravi.prevas.se (ip-5-186-115-54.cgn.fibianet.dk. [5.186.115.54])
-        by smtp.gmail.com with ESMTPSA id y2sm21140815wmy.2.2019.11.18.03.24.09
+        by smtp.gmail.com with ESMTPSA id y2sm21140815wmy.2.2019.11.18.03.24.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 03:24:09 -0800 (PST)
+        Mon, 18 Nov 2019 03:24:04 -0800 (PST)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
 Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Scott Wood <oss@buserror.net>, Timur Tabi <timur@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-serial@vger.kernel.org
-Subject: [PATCH v5 30/48] serial: ucc_uart: factor out soft_uart initialization
-Date:   Mon, 18 Nov 2019 12:23:06 +0100
-Message-Id: <20191118112324.22725-31-linux@rasmusvillemoes.dk>
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: [PATCH v5 26/48] soc: fsl: move cpm.h from powerpc/include/asm to include/soc/fsl
+Date:   Mon, 18 Nov 2019 12:23:02 +0100
+Message-Id: <20191118112324.22725-27-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191118112324.22725-1-linux@rasmusvillemoes.dk>
 References: <20191118112324.22725-1-linux@rasmusvillemoes.dk>
@@ -74,159 +73,372 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "soft uart" mechanism is a workaround for a silicon bug which (as
-far as I know) only affects some PPC-based SOCs.
-
-The code that determines which microcode blob to request relies on
-some powerpc-specific bits (e.g. the mfspr(SPRN_SVR) and hence also
-the asm/reg.h header). This makes it a little awkward to allow this
-driver to be built for non-PPC based SOCs with a QE, even if they are
-not affected by that silicon bug and thus don't need any of the Soft
-UART logic.
-
-There's no way around guarding those bits with some ifdeffery, so to
-keep that isolated, factor out the
-do-we-need-soft-uart-and-if-so-handle-the-firmware to a separate
-function, which we can then easily stub out for non-PPC.
+Some drivers, e.g. ucc_uart, need definitions from cpm.h. In order to
+allow building those drivers for non-ppc based SOCs, move the header
+to include/soc/fsl. For now, leave a trivial wrapper at the old
+location so drivers can be updated one by one.
 
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/tty/serial/ucc_uart.c | 110 ++++++++++++++++++----------------
- 1 file changed, 58 insertions(+), 52 deletions(-)
+ arch/powerpc/include/asm/cpm.h | 172 +--------------------------------
+ include/soc/fsl/cpm.h          | 171 ++++++++++++++++++++++++++++++++
+ 2 files changed, 172 insertions(+), 171 deletions(-)
+ create mode 100644 include/soc/fsl/cpm.h
 
-diff --git a/drivers/tty/serial/ucc_uart.c b/drivers/tty/serial/ucc_uart.c
-index 8a378ee5d34f..f286e91714cb 100644
---- a/drivers/tty/serial/ucc_uart.c
-+++ b/drivers/tty/serial/ucc_uart.c
-@@ -1183,70 +1183,76 @@ static void uart_firmware_cont(const struct firmware *fw, void *context)
- 	release_firmware(fw);
- }
- 
--static int ucc_uart_probe(struct platform_device *ofdev)
-+static int soft_uart_init(struct platform_device *ofdev)
- {
- 	struct device_node *np = ofdev->dev.of_node;
--	const unsigned int *iprop;      /* Integer OF properties */
--	const char *sprop;      /* String OF properties */
--	struct uart_qe_port *qe_port = NULL;
--	struct resource res;
-+	struct qe_firmware_info *qe_fw_info;
- 	int ret;
- 
--	/*
--	 * Determine if we need Soft-UART mode
--	 */
- 	if (of_find_property(np, "soft-uart", NULL)) {
- 		dev_dbg(&ofdev->dev, "using Soft-UART mode\n");
- 		soft_uart = 1;
-+	} else {
-+		return 0;
- 	}
- 
--	/*
--	 * If we are using Soft-UART, determine if we need to upload the
--	 * firmware, too.
--	 */
--	if (soft_uart) {
--		struct qe_firmware_info *qe_fw_info;
+diff --git a/arch/powerpc/include/asm/cpm.h b/arch/powerpc/include/asm/cpm.h
+index 4c24ea8209bb..ce483b0f8a4d 100644
+--- a/arch/powerpc/include/asm/cpm.h
++++ b/arch/powerpc/include/asm/cpm.h
+@@ -1,171 +1 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __CPM_H
+-#define __CPM_H
 -
--		qe_fw_info = qe_get_firmware_info();
+-#include <linux/compiler.h>
+-#include <linux/types.h>
+-#include <linux/errno.h>
+-#include <linux/of.h>
+-#include <soc/fsl/qe/qe.h>
 -
--		/* Check if the firmware has been uploaded. */
--		if (qe_fw_info && strstr(qe_fw_info->id, "Soft-UART")) {
--			firmware_loaded = 1;
--		} else {
--			char filename[32];
--			unsigned int soc;
--			unsigned int rev_h;
--			unsigned int rev_l;
+-/*
+- * SPI Parameter RAM common to QE and CPM.
+- */
+-struct spi_pram {
+-	__be16	rbase;	/* Rx Buffer descriptor base address */
+-	__be16	tbase;	/* Tx Buffer descriptor base address */
+-	u8	rfcr;	/* Rx function code */
+-	u8	tfcr;	/* Tx function code */
+-	__be16	mrblr;	/* Max receive buffer length */
+-	__be32	rstate;	/* Internal */
+-	__be32	rdp;	/* Internal */
+-	__be16	rbptr;	/* Internal */
+-	__be16	rbc;	/* Internal */
+-	__be32	rxtmp;	/* Internal */
+-	__be32	tstate;	/* Internal */
+-	__be32	tdp;	/* Internal */
+-	__be16	tbptr;	/* Internal */
+-	__be16	tbc;	/* Internal */
+-	__be32	txtmp;	/* Internal */
+-	__be32	res;	/* Tx temp. */
+-	__be16  rpbase;	/* Relocation pointer (CPM1 only) */
+-	__be16	res1;	/* Reserved */
+-};
 -
--			soc = soc_info(&rev_h, &rev_l);
--			if (!soc) {
--				dev_err(&ofdev->dev, "unknown CPU model\n");
--				return -ENXIO;
--			}
--			sprintf(filename, "fsl_qe_ucode_uart_%u_%u%u.bin",
--				soc, rev_h, rev_l);
+-/*
+- * USB Controller pram common to QE and CPM.
+- */
+-struct usb_ctlr {
+-	u8	usb_usmod;
+-	u8	usb_usadr;
+-	u8	usb_uscom;
+-	u8	res1[1];
+-	__be16	usb_usep[4];
+-	u8	res2[4];
+-	__be16	usb_usber;
+-	u8	res3[2];
+-	__be16	usb_usbmr;
+-	u8	res4[1];
+-	u8	usb_usbs;
+-	/* Fields down below are QE-only */
+-	__be16	usb_ussft;
+-	u8	res5[2];
+-	__be16	usb_usfrn;
+-	u8	res6[0x22];
+-} __attribute__ ((packed));
 -
--			dev_info(&ofdev->dev, "waiting for firmware %s\n",
--				filename);
-+	qe_fw_info = qe_get_firmware_info();
- 
--			/*
--			 * We call request_firmware_nowait instead of
--			 * request_firmware so that the driver can load and
--			 * initialize the ports without holding up the rest of
--			 * the kernel.  If hotplug support is enabled in the
--			 * kernel, then we use it.
--			 */
--			ret = request_firmware_nowait(THIS_MODULE,
--				FW_ACTION_HOTPLUG, filename, &ofdev->dev,
--				GFP_KERNEL, &ofdev->dev, uart_firmware_cont);
--			if (ret) {
--				dev_err(&ofdev->dev,
--					"could not load firmware %s\n",
--					filename);
--				return ret;
--			}
-+	/* Check if the firmware has been uploaded. */
-+	if (qe_fw_info && strstr(qe_fw_info->id, "Soft-UART")) {
-+		firmware_loaded = 1;
-+	} else {
-+		char filename[32];
-+		unsigned int soc;
-+		unsigned int rev_h;
-+		unsigned int rev_l;
+-/*
+- * Function code bits, usually generic to devices.
+- */
+-#ifdef CONFIG_CPM1
+-#define CPMFCR_GBL	((u_char)0x00)	/* Flag doesn't exist in CPM1 */
+-#define CPMFCR_TC2	((u_char)0x00)	/* Flag doesn't exist in CPM1 */
+-#define CPMFCR_DTB	((u_char)0x00)	/* Flag doesn't exist in CPM1 */
+-#define CPMFCR_BDB	((u_char)0x00)	/* Flag doesn't exist in CPM1 */
+-#else
+-#define CPMFCR_GBL	((u_char)0x20)	/* Set memory snooping */
+-#define CPMFCR_TC2	((u_char)0x04)	/* Transfer code 2 value */
+-#define CPMFCR_DTB	((u_char)0x02)	/* Use local bus for data when set */
+-#define CPMFCR_BDB	((u_char)0x01)	/* Use local bus for BD when set */
+-#endif
+-#define CPMFCR_EB	((u_char)0x10)	/* Set big endian byte order */
+-
+-/* Opcodes common to CPM1 and CPM2
+-*/
+-#define CPM_CR_INIT_TRX		((ushort)0x0000)
+-#define CPM_CR_INIT_RX		((ushort)0x0001)
+-#define CPM_CR_INIT_TX		((ushort)0x0002)
+-#define CPM_CR_HUNT_MODE	((ushort)0x0003)
+-#define CPM_CR_STOP_TX		((ushort)0x0004)
+-#define CPM_CR_GRA_STOP_TX	((ushort)0x0005)
+-#define CPM_CR_RESTART_TX	((ushort)0x0006)
+-#define CPM_CR_CLOSE_RX_BD	((ushort)0x0007)
+-#define CPM_CR_SET_GADDR	((ushort)0x0008)
+-#define CPM_CR_SET_TIMER	((ushort)0x0008)
+-#define CPM_CR_STOP_IDMA	((ushort)0x000b)
+-
+-/* Buffer descriptors used by many of the CPM protocols. */
+-typedef struct cpm_buf_desc {
+-	ushort	cbd_sc;		/* Status and Control */
+-	ushort	cbd_datlen;	/* Data length in buffer */
+-	uint	cbd_bufaddr;	/* Buffer address in host memory */
+-} cbd_t;
+-
+-/* Buffer descriptor control/status used by serial
+- */
+-
+-#define BD_SC_EMPTY	(0x8000)	/* Receive is empty */
+-#define BD_SC_READY	(0x8000)	/* Transmit is ready */
+-#define BD_SC_WRAP	(0x2000)	/* Last buffer descriptor */
+-#define BD_SC_INTRPT	(0x1000)	/* Interrupt on change */
+-#define BD_SC_LAST	(0x0800)	/* Last buffer in frame */
+-#define BD_SC_TC	(0x0400)	/* Transmit CRC */
+-#define BD_SC_CM	(0x0200)	/* Continuous mode */
+-#define BD_SC_ID	(0x0100)	/* Rec'd too many idles */
+-#define BD_SC_P		(0x0100)	/* xmt preamble */
+-#define BD_SC_BR	(0x0020)	/* Break received */
+-#define BD_SC_FR	(0x0010)	/* Framing error */
+-#define BD_SC_PR	(0x0008)	/* Parity error */
+-#define BD_SC_NAK	(0x0004)	/* NAK - did not respond */
+-#define BD_SC_OV	(0x0002)	/* Overrun */
+-#define BD_SC_UN	(0x0002)	/* Underrun */
+-#define BD_SC_CD	(0x0001)	/* */
+-#define BD_SC_CL	(0x0001)	/* Collision */
+-
+-/* Buffer descriptor control/status used by Ethernet receive.
+- * Common to SCC and FCC.
+- */
+-#define BD_ENET_RX_EMPTY	(0x8000)
+-#define BD_ENET_RX_WRAP		(0x2000)
+-#define BD_ENET_RX_INTR		(0x1000)
+-#define BD_ENET_RX_LAST		(0x0800)
+-#define BD_ENET_RX_FIRST	(0x0400)
+-#define BD_ENET_RX_MISS		(0x0100)
+-#define BD_ENET_RX_BC		(0x0080)	/* FCC Only */
+-#define BD_ENET_RX_MC		(0x0040)	/* FCC Only */
+-#define BD_ENET_RX_LG		(0x0020)
+-#define BD_ENET_RX_NO		(0x0010)
+-#define BD_ENET_RX_SH		(0x0008)
+-#define BD_ENET_RX_CR		(0x0004)
+-#define BD_ENET_RX_OV		(0x0002)
+-#define BD_ENET_RX_CL		(0x0001)
+-#define BD_ENET_RX_STATS	(0x01ff)	/* All status bits */
+-
+-/* Buffer descriptor control/status used by Ethernet transmit.
+- * Common to SCC and FCC.
+- */
+-#define BD_ENET_TX_READY	(0x8000)
+-#define BD_ENET_TX_PAD		(0x4000)
+-#define BD_ENET_TX_WRAP		(0x2000)
+-#define BD_ENET_TX_INTR		(0x1000)
+-#define BD_ENET_TX_LAST		(0x0800)
+-#define BD_ENET_TX_TC		(0x0400)
+-#define BD_ENET_TX_DEF		(0x0200)
+-#define BD_ENET_TX_HB		(0x0100)
+-#define BD_ENET_TX_LC		(0x0080)
+-#define BD_ENET_TX_RL		(0x0040)
+-#define BD_ENET_TX_RCMASK	(0x003c)
+-#define BD_ENET_TX_UN		(0x0002)
+-#define BD_ENET_TX_CSL		(0x0001)
+-#define BD_ENET_TX_STATS	(0x03ff)	/* All status bits */
+-
+-/* Buffer descriptor control/status used by Transparent mode SCC.
+- */
+-#define BD_SCC_TX_LAST		(0x0800)
+-
+-/* Buffer descriptor control/status used by I2C.
+- */
+-#define BD_I2C_START		(0x0400)
+-
+-#ifdef CONFIG_CPM
+-int cpm_command(u32 command, u8 opcode);
+-#else
+-static inline int cpm_command(u32 command, u8 opcode)
+-{
+-	return -ENOSYS;
+-}
+-#endif /* CONFIG_CPM */
+-
+-int cpm2_gpiochip_add32(struct device *dev);
+-
+-#endif
++#include <soc/fsl/cpm.h>
+diff --git a/include/soc/fsl/cpm.h b/include/soc/fsl/cpm.h
+new file mode 100644
+index 000000000000..4c24ea8209bb
+--- /dev/null
++++ b/include/soc/fsl/cpm.h
+@@ -0,0 +1,171 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __CPM_H
++#define __CPM_H
 +
-+		soc = soc_info(&rev_h, &rev_l);
-+		if (!soc) {
-+			dev_err(&ofdev->dev, "unknown CPU model\n");
-+			return -ENXIO;
-+		}
-+		sprintf(filename, "fsl_qe_ucode_uart_%u_%u%u.bin",
-+			soc, rev_h, rev_l);
++#include <linux/compiler.h>
++#include <linux/types.h>
++#include <linux/errno.h>
++#include <linux/of.h>
++#include <soc/fsl/qe/qe.h>
 +
-+		dev_info(&ofdev->dev, "waiting for firmware %s\n",
-+			 filename);
++/*
++ * SPI Parameter RAM common to QE and CPM.
++ */
++struct spi_pram {
++	__be16	rbase;	/* Rx Buffer descriptor base address */
++	__be16	tbase;	/* Tx Buffer descriptor base address */
++	u8	rfcr;	/* Rx function code */
++	u8	tfcr;	/* Tx function code */
++	__be16	mrblr;	/* Max receive buffer length */
++	__be32	rstate;	/* Internal */
++	__be32	rdp;	/* Internal */
++	__be16	rbptr;	/* Internal */
++	__be16	rbc;	/* Internal */
++	__be32	rxtmp;	/* Internal */
++	__be32	tstate;	/* Internal */
++	__be32	tdp;	/* Internal */
++	__be16	tbptr;	/* Internal */
++	__be16	tbc;	/* Internal */
++	__be32	txtmp;	/* Internal */
++	__be32	res;	/* Tx temp. */
++	__be16  rpbase;	/* Relocation pointer (CPM1 only) */
++	__be16	res1;	/* Reserved */
++};
 +
-+		/*
-+		 * We call request_firmware_nowait instead of
-+		 * request_firmware so that the driver can load and
-+		 * initialize the ports without holding up the rest of
-+		 * the kernel.  If hotplug support is enabled in the
-+		 * kernel, then we use it.
-+		 */
-+		ret = request_firmware_nowait(THIS_MODULE,
-+					      FW_ACTION_HOTPLUG, filename, &ofdev->dev,
-+					      GFP_KERNEL, &ofdev->dev, uart_firmware_cont);
-+		if (ret) {
-+			dev_err(&ofdev->dev,
-+				"could not load firmware %s\n",
-+				filename);
-+			return ret;
- 		}
- 	}
-+	return 0;
-+}
++/*
++ * USB Controller pram common to QE and CPM.
++ */
++struct usb_ctlr {
++	u8	usb_usmod;
++	u8	usb_usadr;
++	u8	usb_uscom;
++	u8	res1[1];
++	__be16	usb_usep[4];
++	u8	res2[4];
++	__be16	usb_usber;
++	u8	res3[2];
++	__be16	usb_usbmr;
++	u8	res4[1];
++	u8	usb_usbs;
++	/* Fields down below are QE-only */
++	__be16	usb_ussft;
++	u8	res5[2];
++	__be16	usb_usfrn;
++	u8	res6[0x22];
++} __attribute__ ((packed));
 +
-+static int ucc_uart_probe(struct platform_device *ofdev)
++/*
++ * Function code bits, usually generic to devices.
++ */
++#ifdef CONFIG_CPM1
++#define CPMFCR_GBL	((u_char)0x00)	/* Flag doesn't exist in CPM1 */
++#define CPMFCR_TC2	((u_char)0x00)	/* Flag doesn't exist in CPM1 */
++#define CPMFCR_DTB	((u_char)0x00)	/* Flag doesn't exist in CPM1 */
++#define CPMFCR_BDB	((u_char)0x00)	/* Flag doesn't exist in CPM1 */
++#else
++#define CPMFCR_GBL	((u_char)0x20)	/* Set memory snooping */
++#define CPMFCR_TC2	((u_char)0x04)	/* Transfer code 2 value */
++#define CPMFCR_DTB	((u_char)0x02)	/* Use local bus for data when set */
++#define CPMFCR_BDB	((u_char)0x01)	/* Use local bus for BD when set */
++#endif
++#define CPMFCR_EB	((u_char)0x10)	/* Set big endian byte order */
++
++/* Opcodes common to CPM1 and CPM2
++*/
++#define CPM_CR_INIT_TRX		((ushort)0x0000)
++#define CPM_CR_INIT_RX		((ushort)0x0001)
++#define CPM_CR_INIT_TX		((ushort)0x0002)
++#define CPM_CR_HUNT_MODE	((ushort)0x0003)
++#define CPM_CR_STOP_TX		((ushort)0x0004)
++#define CPM_CR_GRA_STOP_TX	((ushort)0x0005)
++#define CPM_CR_RESTART_TX	((ushort)0x0006)
++#define CPM_CR_CLOSE_RX_BD	((ushort)0x0007)
++#define CPM_CR_SET_GADDR	((ushort)0x0008)
++#define CPM_CR_SET_TIMER	((ushort)0x0008)
++#define CPM_CR_STOP_IDMA	((ushort)0x000b)
++
++/* Buffer descriptors used by many of the CPM protocols. */
++typedef struct cpm_buf_desc {
++	ushort	cbd_sc;		/* Status and Control */
++	ushort	cbd_datlen;	/* Data length in buffer */
++	uint	cbd_bufaddr;	/* Buffer address in host memory */
++} cbd_t;
++
++/* Buffer descriptor control/status used by serial
++ */
++
++#define BD_SC_EMPTY	(0x8000)	/* Receive is empty */
++#define BD_SC_READY	(0x8000)	/* Transmit is ready */
++#define BD_SC_WRAP	(0x2000)	/* Last buffer descriptor */
++#define BD_SC_INTRPT	(0x1000)	/* Interrupt on change */
++#define BD_SC_LAST	(0x0800)	/* Last buffer in frame */
++#define BD_SC_TC	(0x0400)	/* Transmit CRC */
++#define BD_SC_CM	(0x0200)	/* Continuous mode */
++#define BD_SC_ID	(0x0100)	/* Rec'd too many idles */
++#define BD_SC_P		(0x0100)	/* xmt preamble */
++#define BD_SC_BR	(0x0020)	/* Break received */
++#define BD_SC_FR	(0x0010)	/* Framing error */
++#define BD_SC_PR	(0x0008)	/* Parity error */
++#define BD_SC_NAK	(0x0004)	/* NAK - did not respond */
++#define BD_SC_OV	(0x0002)	/* Overrun */
++#define BD_SC_UN	(0x0002)	/* Underrun */
++#define BD_SC_CD	(0x0001)	/* */
++#define BD_SC_CL	(0x0001)	/* Collision */
++
++/* Buffer descriptor control/status used by Ethernet receive.
++ * Common to SCC and FCC.
++ */
++#define BD_ENET_RX_EMPTY	(0x8000)
++#define BD_ENET_RX_WRAP		(0x2000)
++#define BD_ENET_RX_INTR		(0x1000)
++#define BD_ENET_RX_LAST		(0x0800)
++#define BD_ENET_RX_FIRST	(0x0400)
++#define BD_ENET_RX_MISS		(0x0100)
++#define BD_ENET_RX_BC		(0x0080)	/* FCC Only */
++#define BD_ENET_RX_MC		(0x0040)	/* FCC Only */
++#define BD_ENET_RX_LG		(0x0020)
++#define BD_ENET_RX_NO		(0x0010)
++#define BD_ENET_RX_SH		(0x0008)
++#define BD_ENET_RX_CR		(0x0004)
++#define BD_ENET_RX_OV		(0x0002)
++#define BD_ENET_RX_CL		(0x0001)
++#define BD_ENET_RX_STATS	(0x01ff)	/* All status bits */
++
++/* Buffer descriptor control/status used by Ethernet transmit.
++ * Common to SCC and FCC.
++ */
++#define BD_ENET_TX_READY	(0x8000)
++#define BD_ENET_TX_PAD		(0x4000)
++#define BD_ENET_TX_WRAP		(0x2000)
++#define BD_ENET_TX_INTR		(0x1000)
++#define BD_ENET_TX_LAST		(0x0800)
++#define BD_ENET_TX_TC		(0x0400)
++#define BD_ENET_TX_DEF		(0x0200)
++#define BD_ENET_TX_HB		(0x0100)
++#define BD_ENET_TX_LC		(0x0080)
++#define BD_ENET_TX_RL		(0x0040)
++#define BD_ENET_TX_RCMASK	(0x003c)
++#define BD_ENET_TX_UN		(0x0002)
++#define BD_ENET_TX_CSL		(0x0001)
++#define BD_ENET_TX_STATS	(0x03ff)	/* All status bits */
++
++/* Buffer descriptor control/status used by Transparent mode SCC.
++ */
++#define BD_SCC_TX_LAST		(0x0800)
++
++/* Buffer descriptor control/status used by I2C.
++ */
++#define BD_I2C_START		(0x0400)
++
++#ifdef CONFIG_CPM
++int cpm_command(u32 command, u8 opcode);
++#else
++static inline int cpm_command(u32 command, u8 opcode)
 +{
-+	struct device_node *np = ofdev->dev.of_node;
-+	const unsigned int *iprop;      /* Integer OF properties */
-+	const char *sprop;      /* String OF properties */
-+	struct uart_qe_port *qe_port = NULL;
-+	struct resource res;
-+	int ret;
++	return -ENOSYS;
++}
++#endif /* CONFIG_CPM */
 +
-+	/*
-+	 * Determine if we need Soft-UART mode
-+	 */
-+	ret = soft_uart_init(ofdev);
-+	if (ret)
-+		return ret;
- 
- 	qe_port = kzalloc(sizeof(struct uart_qe_port), GFP_KERNEL);
- 	if (!qe_port) {
++int cpm2_gpiochip_add32(struct device *dev);
++
++#endif
 -- 
 2.23.0
 
