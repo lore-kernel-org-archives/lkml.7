@@ -2,129 +2,80 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A6AC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 02:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC1DC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 02:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 752DE206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 02:10:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6bk9r/k"
+	by mail.kernel.org (Postfix) with ESMTP id CCAAE206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 02:14:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbfKRCKq (ORCPT
+        id S1726464AbfKRCOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 21:10:46 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35442 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfKRCKq (ORCPT
+        Sun, 17 Nov 2019 21:14:02 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:46204 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbfKRCOC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 21:10:46 -0500
-Received: by mail-pj1-f66.google.com with SMTP id s8so1008942pji.2;
-        Sun, 17 Nov 2019 18:10:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:from:cc:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=X4uePLRePHS4hFCHmPpfI5ZAvCNjVU1IE4m0Ocmm4jQ=;
-        b=f6bk9r/k5TpMLqq0Ob0TJCq/7aO6+JwJpJBM0zcy4ojXPy1Aa+D5bRmtkFSkY/IhqO
-         Kd/etfVn3LqXtW8tgJfP3KS7z/F+QDMnp+7y4rUxUIgkiIK8VAQL4Y4wJBjK6BtSqfZk
-         7dAFzI+1Ojgm5GxePsbubeAcH1XETsk3WTmXVW9pS9BIs/4aDwSkBOsp7M/1RKWZhQs+
-         plnsXvkHkCS27kkPP7WD7bwjKE64ehzX/2SsDKCfsU9fMtu5X2c6snUl2OqUq7SD9Y6F
-         qE3ECERajTJ2oc0UtSMTfsqqW0fHQMNFOvBGDDW62gtnNwmYlQ6jKJkYiSdLZ5Alpdh4
-         xxzw==
+        Sun, 17 Nov 2019 21:14:02 -0500
+Received: by mail-il1-f198.google.com with SMTP id i74so15065088ild.13
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 18:14:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:cc:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=X4uePLRePHS4hFCHmPpfI5ZAvCNjVU1IE4m0Ocmm4jQ=;
-        b=BRhhCgstWk3SVs5YYGitsK9jIFMMxm3NzbaOhUxwHI7pMIu4KFSHjl9/vBTMwSOZc7
-         zuefypCrOOId3wPJbvgz92a7QG5EN9B/cEQEbeGqETTDGE/YLSt+CSHy3S2bcQU5VqJh
-         wQYdoIE92V+EyRINKshUvGliH7QixWHIKDrNo6IRiRBTn9xzWxIqMzLvPtqqS1rO0jvV
-         dydJu09af+N3HTaajr887N+7Wsj+aHZQJj9eqgKJVLL0lUtJpfngEJ38PeDDCbBjODk0
-         8KY8aeDeKPOxQlLDkdfA+E5JnjZ486Y23fhOLjZrSG0FDqngMxkWmBL2SNLg4FKbppnO
-         CZ+A==
-X-Gm-Message-State: APjAAAVLssW15D/GUt46/2c0j7C4HQ/7MAolunvjlq8Xih67mwHnH+JT
-        /fFJ5Lw66zxjgeOWSC0lCZrvwjNTsB4=
-X-Google-Smtp-Source: APXvYqz95c35KUbPSpI1G5JkO7oKQKCJL2Wdc3NZlImF8P1+3lVEgs5EVjlqzOYxjUyN0hBArkUhoQ==
-X-Received: by 2002:a17:90a:1ac8:: with SMTP id p66mr35524738pjp.24.1574043044004;
-        Sun, 17 Nov 2019 18:10:44 -0800 (PST)
-Received: from ?IPv6:2001:4898:d8:1009:d42f:7c91:4399:b8b2? ([2001:4898:80e8:7:6421:7c91:4399:b8b2])
-        by smtp.gmail.com with ESMTPSA id 8sm10976987pfc.42.2019.11.17.18.10.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 17 Nov 2019 18:10:43 -0800 (PST)
-To:     bp@alien8.de, james.morse@arm.com, robh+dt@kernel.org,
-        mark.rutland@arm.com
-From:   Shiping Ji <shiping.linux@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mchehab@kernel.org, linux-edac@vger.kernel.org, sashal@kernel.org,
-        hangl@microsoft.com, lewan@microsoft.com, ruizhao@microsoft.com,
-        scott.branden@broadcom.com, yuqing.shen@broadcom.com,
-        ray.jui@broadcom.com, shji@microsoft.com, wangglei@gmail.com
-Subject: [PATCH v7 1/2] dt-bindings: edac: arm-dmc520.txt
-Message-ID: <f947d821-8e67-dcc7-d753-5b04d099792d@gmail.com>
-Date:   Sun, 17 Nov 2019 18:10:43 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=0hJK8rPWOFUddMB0lJimGQDZPQJFXDrAgb0buhY0TvU=;
+        b=DiDh5/YbTnZ0yaPsiMRC1v6sPcBkSYzjW6THiOGzso6VPeoypYd028EQehMXbV0QEO
+         EXQTCgndkkNqDABgDHTQW7S0H1ALCWze1GIPKRjzjbGtqVCkWEN2ruwVoeufs1/LHDzY
+         8AKjl8WTp0zw0j/K9ijnj3dA+ITj3oztprYE9D3PbWjM1oDyUMIY4r43H7OFOkDPem/M
+         1el2hz/ankMgz7eYNK52ye2qYsk6Pw6SFHODmcpAniQoo6bOqQ/mUBMj8Ja/HlOiUAZi
+         hnPnwnpPtiIv+ZpZSTn3KavyNTjeS1DFktJwE5NqDVbstz3XU5KyRTvjVq0C3zsf2kaR
+         NkEg==
+X-Gm-Message-State: APjAAAVa2XUwcM7i9D5m9qZxdDOMitzsm0jjZeYyAOCbfzg+TyhpQ6ml
+        hNpX0aHC8zYoGEqgknXxF7DThptQb7h26MPJJ2h/RxSFh2Pz
+X-Google-Smtp-Source: APXvYqwZhRrNpOcp3K1jSna3NVMQ3Y9eKDGXT7VjA9/ZYXXiCNJMlXd57obKMz7tPT7gqZ5PakMzS/X78yIoSTTNHjwPUi2z8UDS
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:660e:: with SMTP id a14mr13677440ilc.235.1574043241343;
+ Sun, 17 Nov 2019 18:14:01 -0800 (PST)
+Date:   Sun, 17 Nov 2019 18:14:01 -0800
+In-Reply-To: <00000000000044cbf80576baaecd@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000042f41905979580cc@google.com>
+Subject: Re: possible deadlock in path_openat
+From:   syzbot <syzbot+a55ccfc8a853d3cff213@syzkaller.appspotmail.com>
+To:     amir73il@gmail.com, ast@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org,
+        miklos@szeredi.hu, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the device tree bindings for new EDAC driver dmc520_edac.c.
+syzbot has bisected this bug to:
 
-Signed-off-by: Lei Wang <leiwang_git@outlook.com>
-Reviewed-by: James Morse <james.morse@arm.com>
+commit 8e54cadab447dae779f80f79c87cbeaea9594f60
+Author: Al Viro <viro@zeniv.linux.org.uk>
+Date:   Sun Nov 27 01:05:42 2016 +0000
 
----
-     Changes in v7:
-         - Added arm prefix to the interrupt-config property
+     fix default_file_splice_read()
 
----
- .../devicetree/bindings/edac/arm-dmc520.txt   | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/edac/arm-dmc520.txt
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=108f4416e00000
+start commit:   6d906f99 Merge tag 'arm64-fixes' of git://git.kernel.org/p..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=128f4416e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=148f4416e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=856fc6d0fbbeede9
+dashboard link: https://syzkaller.appspot.com/bug?extid=a55ccfc8a853d3cff213
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=101767b7200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13c15013200000
 
-diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
-new file mode 100644
-index 000000000000..476cf8b76f2a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
-@@ -0,0 +1,26 @@
-+* ARM DMC-520 EDAC node
-+
-+Required properties:
-+- compatible  : "brcm,dmc-520", "arm,dmc-520".
-+- reg   : Address range of the DMC-520 registers.
-+- interrupts  : DMC-520 interrupt numbers. The example below specifies
-+     two interrupt lines for dram_ecc_errc_int and
-+     dram_ecc_errd_int.
-+- arm,interrupt-config : This is an array of interrupt masks. For each of the
-+     above interrupt line, add one interrupt mask element to
-+     it. That is, there is a 1:1 mapping from each interrupt
-+     line to an interrupt mask. An interrupt mask can represent
-+     multiple interrupts being enabled. Refer to interrupt_control
-+     register in DMC-520 TRM for interrupt mapping. In the example
-+     below, the interrupt configuration enables dram_ecc_errc_int
-+     and dram_ecc_errd_int. And each interrupt is connected to
-+     a separate interrupt line.
-+
-+Example:
-+
-+dmc0: dmc@200000 {
-+ compatible = "brcm,dmc-520", "arm,dmc-520";
-+ reg = <0x200000 0x80000>;
-+ interrupts = <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
-+ arm,interrupt-config = <0x4>, <0x8>;
-+};
--- 
-2.17.1
+Reported-by: syzbot+a55ccfc8a853d3cff213@syzkaller.appspotmail.com
+Fixes: 8e54cadab447 ("fix default_file_splice_read()")
 
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
