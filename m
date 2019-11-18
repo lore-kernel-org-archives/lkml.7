@@ -2,148 +2,127 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C169FC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B3FC33C9C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88EFB21850
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:20:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PO0SsL/c"
+	by mail.kernel.org (Postfix) with ESMTP id 79F6B21852
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:20:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574094037;
+	bh=6Z3UN5A3BW1jsMv3ltooKPY0iW5X0XuSmfVz/7SFggM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nMtOf8h0m4LYO98TpMU8jVNUQd0deU9Tc5KMDVfGf7vlJzAYvu8e4xMuvJQ2pKXbi
+	 /7Nh28zeQiOjc5R+T2sdSFNEhmkHJGOCBfEjVmJhTN50ut0P1cmlIXKIPCQDqMQu4v
+	 0z+J8XW2EDA7O139vzFIElQY8bAmIcqMCVLP2edQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfKRQUM (ORCPT
+        id S1726937AbfKRQUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 11:20:12 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38296 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726322AbfKRQUM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 11:20:12 -0500
-Received: by mail-oi1-f193.google.com with SMTP id a14so15837703oid.5
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 08:20:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vFDYWWex6iRLOgdk1JIotXQ89HmdObyXOaIPkDF429E=;
-        b=PO0SsL/cZc1EnX8IsvAlOlmSWDfgsXgUcbkWDJSbXhYQ/O16mAxzNXj7/s9qnhwllx
-         cB8Ewh+z5jAOc5AzFHvCa+ijHyMj7OczSAP/+FrRirW9+7CL/AvkyrYDQMMxuOxMko5Q
-         RCQhuC8/UpsuQOSPE76iq1xfbYUi646/9oWV6C9rB4eBNl+IxsldE7WFWM4ME32s/bgC
-         3IJlETatFKFEYl/D9o/UtRXZUQb+hZBE7rruBnb+GoQLjqce6pt1GNSg5fyq3kcmdDVT
-         x5e7jbPBVJthBahav/hfIvVeYdFq2Ez/ECRux1+0tA0uyNMbGKdnoW5JwjmuZ8NZjHX3
-         iMXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vFDYWWex6iRLOgdk1JIotXQ89HmdObyXOaIPkDF429E=;
-        b=YFszVrSl23WYbNbVNSKpxUR/D3AZUk7IEj8JlQbyIto8NPEviTHVp+KpFOEDOr5Gw8
-         +pNIsjDlIjqTikZmt3n+oYwDKaP7QPo22Uw/4DVrKIXQQzO+E07KG2nkThw1jAu+rNHv
-         WB4/851TLVX9kE2UcEnWWKq6iCACSjsT4bVn8D8nk95dWcbmy4BZ+DM+3YVk5Dpf/XIu
-         XngAVotQCQSFgWdRPKbL+ixMUHWFz5rJ6P2K3hMvr1NRwsBZqX9/euMwf/hzivl1pfRU
-         k2sJyMaDtfWd5Gw3VCtG8ttZZByx7s3yux9trb+0k0K/C3vJEakH/X5iOPeU69SEGA/k
-         6z1Q==
-X-Gm-Message-State: APjAAAUxppl50+k7Peqo4Vl+KcRdp9UJjmvPmo9brR+l7+Avyaa3J72l
-        H3M5wO/T3tixZlKZMj73TvjiI0XsZe4gRg6ONlyYMw==
-X-Google-Smtp-Source: APXvYqw+KKzzd/AE/OnyrneLv5VHUUg/59mvCFzaf/yHa5uT6qanRxc07y7qoK/vdP4xLBMcOay5oq9TfQigZrTlbB4=
-X-Received: by 2002:aca:ccd1:: with SMTP id c200mr21380309oig.157.1574094010691;
- Mon, 18 Nov 2019 08:20:10 -0800 (PST)
+        Mon, 18 Nov 2019 11:20:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:36694 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726322AbfKRQUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 11:20:35 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC2861FB;
+        Mon, 18 Nov 2019 08:20:34 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2ADEB3F703;
+        Mon, 18 Nov 2019 08:20:34 -0800 (PST)
+Date:   Mon, 18 Nov 2019 16:20:32 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v5 09/16] regulator: bd71828: Basic support for ROHM
+ bd71828 PMIC regulators
+Message-ID: <20191118162032.GI9761@sirena.org.uk>
+References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+ <ffd3ea4858f820e565aba88ccac395ce5b661538.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-References: <20191115191728.87338-1-jannh@google.com> <20191115191728.87338-2-jannh@google.com>
- <20191118142144.GC6363@zn.tnic> <CACT4Y+bCOr=du1QEg8TtiZ-X6U+8ZPR4N07rJOeSCsd5h+zO3w@mail.gmail.com>
-In-Reply-To: <CACT4Y+bCOr=du1QEg8TtiZ-X6U+8ZPR4N07rJOeSCsd5h+zO3w@mail.gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Mon, 18 Nov 2019 17:19:44 +0100
-Message-ID: <CAG48ez1AWW7FkvU31ahy=0ZiaAreSMz=FFA0u8-XkXT9hNdWKA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] x86/traps: Print non-canonical address on #GP
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="BWWlCdgt6QLN7tv3"
+Content-Disposition: inline
+In-Reply-To: <ffd3ea4858f820e565aba88ccac395ce5b661538.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+X-Cookie: no maintenance:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 5:03 PM Dmitry Vyukov <dvyukov@google.com> wrote:
-> On Mon, Nov 18, 2019 at 3:21 PM Borislav Petkov <bp@alien8.de> wrote:
-> >
-> > On Fri, Nov 15, 2019 at 08:17:27PM +0100, Jann Horn wrote:
-> > >  dotraplinkage void
-> > >  do_general_protection(struct pt_regs *regs, long error_code)
-> > >  {
-> > > @@ -547,8 +581,15 @@ do_general_protection(struct pt_regs *regs, long error_code)
-> > >                       return;
-> > >
-> > >               if (notify_die(DIE_GPF, desc, regs, error_code,
-> > > -                            X86_TRAP_GP, SIGSEGV) != NOTIFY_STOP)
-> > > -                     die(desc, regs, error_code);
-> > > +                            X86_TRAP_GP, SIGSEGV) == NOTIFY_STOP)
-> > > +                     return;
-> > > +
-> > > +             if (error_code)
-> > > +                     pr_alert("GPF is segment-related (see error code)\n");
-> > > +             else
-> > > +                     print_kernel_gp_address(regs);
-> > > +
-> > > +             die(desc, regs, error_code);
-> >
-> > Right, this way, those messages appear before the main "general
-> > protection ..." message:
-> >
-> > [    2.434372] traps: probably dereferencing non-canonical address 0xdfff000000000001
-> > [    2.442492] general protection fault: 0000 [#1] PREEMPT SMP
-> >
-> > Can we glue/merge them together? Or is this going to confuse tools too much:
-> >
-> > [    2.542218] general protection fault while derefing a non-canonical address 0xdfff000000000001: 0000 [#1] PREEMPT SMP
-> >
-> > (and that sentence could be shorter too:
-> >
-> >         "general protection fault for non-canonical address 0xdfff000000000001"
-> >
-> > looks ok to me too.)
->
-> This exact form will confuse syzkaller crash parsing for Linux kernel:
-> https://github.com/google/syzkaller/blob/1daed50ac33511e1a107228a9c3b80e5c4aebb5c/pkg/report/linux.go#L1347
-> It expects a "general protection fault:" line for these crashes.
->
-> A graceful way to update kernel crash messages would be to add more
-> tests with the new format here:
-> https://github.com/google/syzkaller/tree/1daed50ac33511e1a107228a9c3b80e5c4aebb5c/pkg/report/testdata/linux/report
-> Update parsing code. Roll out new version. Update all other testing
-> systems that detect and parse kernel crashes. Then commit kernel
-> changes.
 
-So for syzkaller, it'd be fine as long as we keep the colon there?
-Something like:
+--BWWlCdgt6QLN7tv3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-general protection fault: derefing non-canonical address
-0xdfff000000000001: 0000 [#1] PREEMPT SMP
+On Mon, Nov 18, 2019 at 08:57:57AM +0200, Matti Vaittinen wrote:
 
-And it looks like the 0day test bot doesn't have any specific pattern
-for #GP, it seems to just look for the panic triggered by
-panic-on-oops as far as I can tell (oops=panic in lkp-exec/qemu, no
-"general protection fault" in etc/dmesg-kill-pattern).
+> +static int ramp_delay_supported(struct regulator_dev *rdev)
+> +{
+> +	switch (rdev->desc->id) {
+> +	case BD71828_BUCK1:
+> +	case BD71828_BUCK2:
+> +	case BD71828_BUCK6:
+> +	case BD71828_BUCK7:
+> +		return 1;
+> +	default:
+> +		break;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int bd71828_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
+> +{
+> +	unsigned int val;
+> +
+> +	if (!ramp_delay_supported(rdev)) {
+> +		dev_err(&rdev->dev, "%s: can't set ramp-delay\n",
+> +			rdev->desc->name);
+> +		return -EINVAL;
 
-> An unfortunate consequence of offloading testing to third-party systems...
+Rather than doing this it's better to just not provide the operation for
+devices that don't support it, that makes the handling in the core
+easier.
 
-And of not having a standard way to signal "this line starts something
-that should be reported as a bug"? Maybe as a longer-term idea, it'd
-help to have some sort of extra prefix byte that the kernel can print
-to say "here comes a bug report, first line should be the subject", or
-something like that, similar to how we have loglevels...
+--BWWlCdgt6QLN7tv3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3SxM8ACgkQJNaLcl1U
+h9Aq0QgAgjb3+2lEoadTP4w8qi9OfeekF/Te3BOzBoRw/N3CEI0LRdBuZ0f+Co++
+QefQkzBXUOq8Pu7bNj+3h6eZiOVqwzPGej79fhswkmFiZGzPNHGJEegNAIQQm0Gt
+FxLz5qVqIfx2orOMrYbVMIYffkH3hHE5twc3PoUf6lTpyUoErQ1miskrOfiKdqe3
+WBlMS73mAzeN65q87QNESqie94xl+DxAY0caeTePuvbEA06Hgf6ZgHvv0uxb/38q
+7lI/AzRptAy7HJqHYy6onIRxd12cBoKYa8SsoOlghgepja3prAwDE0eQ0iXo260q
+kJTWfpuB6S3o/I5A6W0SUuKwiktIEw==
+=/GhS
+-----END PGP SIGNATURE-----
+
+--BWWlCdgt6QLN7tv3--
