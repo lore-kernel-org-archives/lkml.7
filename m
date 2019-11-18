@@ -2,140 +2,286 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E808C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15AEFC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBAD02075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:57:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="CCfCHIfJ"
+	by mail.kernel.org (Postfix) with ESMTP id DB7722075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:57:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfKRG5A (ORCPT
+        id S1727020AbfKRG5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 01:57:00 -0500
-Received: from mail-eopbgr740050.outbound.protection.outlook.com ([40.107.74.50]:18592
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726481AbfKRG5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 01:57:00 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RPLf3JsxFTb1CK4CfTzZDXNyG6s2lbZMwRyzSLQw5R/zlN22cWHLWwR7KvGQGAqWj4S15opoYpDIJFW/jwu2vRl99wbbZia/xYu/9m1wjcQI8vSEJorrrfSTwGr7SkinTwCf5Q0fbBjGKmSYFyPhuEI2GVeVY/+UoYnh2LOvZmVw4uk1WfeflbZISRfeel9C8jkY8bi47PdK86IF/oWTr2Cd5Vh1E51BXaHb2BINpGKfCiJYgn8Zn9MS80AuZDnQkyNamXSXcrFaC/p0HNItSfnDsmhIeh7IVuKtx//SjcTKscBVndw9qg1R2P93h7dJFoaXajUpXImJMesB/SDusg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+Zo3x93dycOYai4jq/z68+1Tm0SiwMlHV6u6ODxinCs=;
- b=OYy43wMbGsbGyxAYRNpWxgY1NHQBHbU6byvEyOhb2GHPZb89wihTSC50iTSjYDkcvqOIJyVDAgQsoHMd7Bq98NfrBRV4dL6o2KfP7hnl9TMNYYuf74NjirskqAmdtSWHF5MSAvi3e6ZmSUVs4+BY1xIP+gXXk3jzxTicV1DTyHljtPLkKQxZe+ftzwqzEvbZkamxib7gnpT86g5L3bJH9Oc+hZrtaJyRG9bpKuaI63+Re9qt7/tzVQNwS4pvQr+Vc6bYEMw9IljrL5NxIARqAdBQJo0XisViRzjdCuksSKqrdF6lJNBiBx1kPAG8P1exKyCO9Ci+t3NKRNFeUcpraw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+Zo3x93dycOYai4jq/z68+1Tm0SiwMlHV6u6ODxinCs=;
- b=CCfCHIfJu81wtMvDGSEzs4e0ffuckxHaHGSTxgybRUy/kGouOA0O22LzxtHRj1s6fp8o0L1FV/RGkXmVC3MqSbnYs78HDJDgRv9dc+62wzu0CWmD5kXGWCAg48rLpiRN4Z+ifq1iwLg55Qq+Fm3K77uPYrDAXmkykEwA2jyx2Hw=
-Received: from MN2PR12MB3344.namprd12.prod.outlook.com (20.178.241.74) by
- MN2PR12MB2893.namprd12.prod.outlook.com (20.179.83.213) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Mon, 18 Nov 2019 06:56:44 +0000
-Received: from MN2PR12MB3344.namprd12.prod.outlook.com
- ([fe80::5895:bbd8:c1d6:1587]) by MN2PR12MB3344.namprd12.prod.outlook.com
- ([fe80::5895:bbd8:c1d6:1587%7]) with mapi id 15.20.2451.029; Mon, 18 Nov 2019
- 06:56:44 +0000
-From:   "Quan, Evan" <Evan.Quan@amd.com>
-To:     Colin King <colin.king@canonical.com>, Rex Zhu <rex.zhu@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH][next] drm/amdgpu/powerplay: fix dereference before null
- check of pointer hwmgr
-Thread-Topic: [PATCH][next] drm/amdgpu/powerplay: fix dereference before null
- check of pointer hwmgr
-Thread-Index: AQHVm5nDtS8eL8LCskyvgcx9Z3hY8KeQgtBg
-Date:   Mon, 18 Nov 2019 06:56:43 +0000
-Message-ID: <MN2PR12MB3344F8D7498FC9DA8302AD05E44D0@MN2PR12MB3344.namprd12.prod.outlook.com>
-References: <20191115094754.40920-1-colin.king@canonical.com>
-In-Reply-To: <20191115094754.40920-1-colin.king@canonical.com>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Evan.Quan@amd.com; 
-x-originating-ip: [180.167.199.185]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 17a4f8e2-ee22-441c-b14e-08d76bf478e9
-x-ms-traffictypediagnostic: MN2PR12MB2893:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR12MB2893F6DA039DF8734B10DC8DE44D0@MN2PR12MB2893.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1850;
-x-forefront-prvs: 0225B0D5BC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(396003)(39860400002)(366004)(13464003)(199004)(189003)(6116002)(81156014)(81166006)(54906003)(55016002)(9686003)(71190400001)(71200400001)(7696005)(256004)(14444005)(26005)(3846002)(33656002)(486006)(6246003)(476003)(5660300002)(99286004)(76116006)(76176011)(11346002)(25786009)(2501003)(102836004)(6436002)(2906002)(8936002)(8676002)(229853002)(305945005)(66476007)(66556008)(6506007)(7736002)(316002)(53546011)(4326008)(110136005)(66446008)(64756008)(446003)(14454004)(52536014)(478600001)(74316002)(86362001)(66066001)(2201001)(186003)(66946007)(17423001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB2893;H:MN2PR12MB3344.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MON2f3clSE/nUMktQmAgGepG2lrPEzEobuDF7OnCu6DptbajcRnosUXN5c5ED3IL2wpqYHYyHn/WR7G2NqI6NIcspQNgUo1ocKAusA1MqyV4d+oUXyMIe+nnLrvKQQUoSrGyx6OhoIuq9EW1EON+D7F2RRgWjexvG6D+jn6GWw/PT/XPhFve6gQXpMInmNoQtEYEnTssQo1A30Lq3gSpUNvArpVgucgFZEMc397MmX5x6JL9WtA0/Cqv84qw6wBB09fzhl+JNZdsqNYLzJW53CcWlsKBwCAXqhTOit0fmdKvHmUtwKX3lzi8OMQtahNAAQOYHPE11aaczixSGgDvmYHHKXWE5+GuDXBsOwUA40Rjnxjj7wPxHnUPh2+jiN+e5+ELaTo3IYBEiDgfVBpTEjtStmbBWwDdPQy61mjzcy64S2QEKGYtPditMCIBwEy8
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 18 Nov 2019 01:57:03 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39102 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbfKRG5C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 01:57:02 -0500
+Received: by mail-lf1-f67.google.com with SMTP id f18so512829lfj.6;
+        Sun, 17 Nov 2019 22:56:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=z7kBreouU2eJhhD9VfHcZw5sKFvNEjZ4TgK798pPecU=;
+        b=Q69TMaDiq9QMZ+W5TbOzV+ez6QH9lnVh6vkG3wlRjrReVJgVYB6zlqs2nDJMZVg9kw
+         ZGUm9x8ajxUwh/K+Old3DZIv13m/YW5939UNq3v1plHViSiYAA2m7A5ocRm7CMBQ/9gz
+         U3sZhRtus6QQanil8Su31rRMxhnAbYraEcTa904NpQVb21DCqlHY4IlmBp+yGLQWId4I
+         E1og7cRmsv//kLbaA2yv0SgSnxnyZGUBOkT5hrghKtvVmak4MmLUlzDmDyOQ2ZH/6kgR
+         ywuba1SaqSr23seLcECX/LJE1WjTIkCUywjy4FcMXmxg3bbhfMPuQ7+i31XoboZ8n4vG
+         dLag==
+X-Gm-Message-State: APjAAAU2FWfh4yjYOnlZVa7mqwF+XPPnSgFCst7dl7Ohm99Q5kQpW2UC
+        aH7016+N9CCRE6OyfKPrmXQ=
+X-Google-Smtp-Source: APXvYqwu4zYC8IcAOmjvfPyiDDQZq6Wi1SOH3KwJiIITnxYK1mGrvRSRpRca46T//C+/jfsmS/UZoA==
+X-Received: by 2002:a19:3f07:: with SMTP id m7mr19971117lfa.136.1574060218336;
+        Sun, 17 Nov 2019 22:56:58 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id j10sm8508358lfc.43.2019.11.17.22.56.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Nov 2019 22:56:57 -0800 (PST)
+Date:   Mon, 18 Nov 2019 08:56:51 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: [PATCH v5 07/16] clk: bd718x7: Support ROHM BD71828 clk block
+Message-ID: <a26e1996361a3f67474303369565f4ddc2ff77b3.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 17a4f8e2-ee22-441c-b14e-08d76bf478e9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 06:56:44.0058
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nTQ13I1eE0WUMFUOhZb/RxNgROZj4SSythP2fL0Vh8KUNxbn764S6TAfG0bRBU3i
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB2893
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UmV2aWV3ZWQtYnk6IEV2YW4gUXVhbiA8ZXZhbi5xdWFuQGFtZC5jb20+DQoNCi0tLS0tT3JpZ2lu
-YWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBDb2xpbiBLaW5nIDxjb2xpbi5raW5nQGNhbm9uaWNhbC5j
-b20+IA0KU2VudDogRnJpZGF5LCBOb3ZlbWJlciAxNSwgMjAxOSA1OjQ4IFBNDQpUbzogUmV4IFpo
-dSA8cmV4LnpodUBhbWQuY29tPjsgUXVhbiwgRXZhbiA8RXZhbi5RdWFuQGFtZC5jb20+OyBEZXVj
-aGVyLCBBbGV4YW5kZXIgPEFsZXhhbmRlci5EZXVjaGVyQGFtZC5jb20+OyBLb2VuaWcsIENocmlz
-dGlhbiA8Q2hyaXN0aWFuLktvZW5pZ0BhbWQuY29tPjsgWmhvdSwgRGF2aWQoQ2h1bk1pbmcpIDxE
-YXZpZDEuWmhvdUBhbWQuY29tPjsgRGF2aWQgQWlybGllIDxhaXJsaWVkQGxpbnV4LmllPjsgRGFu
-aWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPjsgYW1kLWdmeEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmc7IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcNCkNjOiBrZXJuZWwtamFuaXRvcnNA
-dmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQpTdWJqZWN0OiBb
-UEFUQ0hdW25leHRdIGRybS9hbWRncHUvcG93ZXJwbGF5OiBmaXggZGVyZWZlcmVuY2UgYmVmb3Jl
-IG51bGwgY2hlY2sgb2YgcG9pbnRlciBod21ncg0KDQpGcm9tOiBDb2xpbiBJYW4gS2luZyA8Y29s
-aW4ua2luZ0BjYW5vbmljYWwuY29tPg0KDQpUaGUgYXNzaWdubWVudCBvZiBhZGV2IGRlcmVmZXJl
-bmNlcyBwb2ludGVyIGh3bWdyIGJlZm9yZSBod21nciBpcyBudWxsIGNoZWNrZWQsIGhlbmNlIHRo
-ZXJlIGlzIGEgcG90ZW50aWFsIG51bGwgcG9pbnRlciBkZWZlcmVuY2UgaXNzdWUuIEZpeCB0aGlz
-IGJ5IGFzc2lnbmluZyBhZGV2IGFmdGVyIHRoZSBudWxsIGNoZWNrLg0KDQpBZGRyZXNzZXMtQ292
-ZXJpdHk6ICgiRGVyZWZlcmVuY2UgYmVmb3JlIG51bGwgY2hlY2siKQ0KRml4ZXM6IDA4OTZkMmY3
-YmE0ZCAoImRybS9hbWRncHUvcG93ZXJwbGF5OiBwcm9wZXJseSBzZXQgUFBfR0ZYT0ZGX01BU0si
-KQ0KU2lnbmVkLW9mZi1ieTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNv
-bT4NCi0tLQ0KIGRyaXZlcnMvZ3B1L2RybS9hbWQvcG93ZXJwbGF5L2h3bWdyL2h3bWdyLmMgfCA0
-ICsrKy0NCiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQoN
-CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYW1kL3Bvd2VycGxheS9od21nci9od21nci5j
-IGIvZHJpdmVycy9ncHUvZHJtL2FtZC9wb3dlcnBsYXkvaHdtZ3IvaHdtZ3IuYw0KaW5kZXggNDQz
-NjI1YzgzZWM5Li5kMjkwOWM5MWQ2NWIgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYW1k
-L3Bvd2VycGxheS9od21nci9od21nci5jDQorKysgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL3Bvd2Vy
-cGxheS9od21nci9od21nci5jDQpAQCAtODEsNyArODEsNyBAQCBzdGF0aWMgdm9pZCBod21ncl9p
-bml0X3dvcmtsb2FkX3Byb3JpdHkoc3RydWN0IHBwX2h3bWdyICpod21ncikNCiANCiBpbnQgaHdt
-Z3JfZWFybHlfaW5pdChzdHJ1Y3QgcHBfaHdtZ3IgKmh3bWdyKSAgew0KLQlzdHJ1Y3QgYW1kZ3B1
-X2RldmljZSAqYWRldiA9IGh3bWdyLT5hZGV2Ow0KKwlzdHJ1Y3QgYW1kZ3B1X2RldmljZSAqYWRl
-djsNCiANCiAJaWYgKCFod21ncikNCiAJCXJldHVybiAtRUlOVkFMOw0KQEAgLTk2LDYgKzk2LDgg
-QEAgaW50IGh3bWdyX2Vhcmx5X2luaXQoc3RydWN0IHBwX2h3bWdyICpod21ncikNCiAJaHdtZ3Jf
-aW5pdF93b3JrbG9hZF9wcm9yaXR5KGh3bWdyKTsNCiAJaHdtZ3ItPmdmeG9mZl9zdGF0ZV9jaGFu
-Z2VkX2J5X3dvcmtsb2FkID0gZmFsc2U7DQogDQorCWFkZXYgPSBod21nci0+YWRldjsNCisNCiAJ
-c3dpdGNoIChod21nci0+Y2hpcF9mYW1pbHkpIHsNCiAJY2FzZSBBTURHUFVfRkFNSUxZX0NJOg0K
-IAkJYWRldi0+cG0ucHBfZmVhdHVyZSAmPSB+UFBfR0ZYT0ZGX01BU0s7DQotLQ0KMi4yMC4xDQoN
-Cg==
+BD71828GW is a single-chip power management IC for battery-powered portable
+devices. Add support for controlling BD71828 clk using bd718x7 driver.
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+
+No changes from v4
+
+ drivers/clk/Kconfig              |  6 ++---
+ drivers/clk/clk-bd718x7.c        | 38 +++++++++++++++++++++++---------
+ include/linux/mfd/rohm-bd70528.h |  6 -----
+ include/linux/mfd/rohm-bd71828.h |  4 ----
+ include/linux/mfd/rohm-bd718x7.h |  6 -----
+ 5 files changed, 31 insertions(+), 29 deletions(-)
+
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index c44247d0b83e..71c5dfdc78f4 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -293,10 +293,10 @@ config COMMON_CLK_STM32H7
+ 	  Support for stm32h7 SoC family clocks
+ 
+ config COMMON_CLK_BD718XX
+-	tristate "Clock driver for ROHM BD718x7 PMIC"
+-	depends on MFD_ROHM_BD718XX || MFD_ROHM_BD70528
++	tristate "Clock driver for 32K clk gates on ROHM PMICs"
++	depends on MFD_ROHM_BD718XX || MFD_ROHM_BD70528 || MFD_ROHM_BD71828
+ 	help
+-	  This driver supports ROHM BD71837, ROHM BD71847 and
++	  This driver supports ROHM BD71837, ROHM BD71847, ROHM BD71828 and
+ 	  ROHM BD70528 PMICs clock gates.
+ 
+ config COMMON_CLK_FIXED_MMIO
+diff --git a/drivers/clk/clk-bd718x7.c b/drivers/clk/clk-bd718x7.c
+index 1c1764f74d0a..853f484b758a 100644
+--- a/drivers/clk/clk-bd718x7.c
++++ b/drivers/clk/clk-bd718x7.c
+@@ -7,12 +7,25 @@
+ #include <linux/err.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+-#include <linux/mfd/rohm-bd718x7.h>
+-#include <linux/mfd/rohm-bd70528.h>
++#include <linux/mfd/rohm-generic.h>
+ #include <linux/clk-provider.h>
+ #include <linux/clkdev.h>
+ #include <linux/regmap.h>
+ 
++/* clk control registers */
++/* BD70528 */
++#define BD70528_REG_OUT32K	0x2c
++/* BD71828 */
++#define BD71828_REG_OUT32K	0x4B
++/* BD71837 and BD71847 */
++#define BD718XX_REG_OUT32K	0x2E
++
++/*
++ * BD71837, BD71847, BD70528 and BD71828 all use bit [0] to clk output control
++ */
++#define CLK_OUT_EN_MASK		BIT(0)
++
++
+ struct bd718xx_clk {
+ 	struct clk_hw hw;
+ 	u8 reg;
+@@ -21,10 +34,8 @@ struct bd718xx_clk {
+ 	struct rohm_regmap_dev *mfd;
+ };
+ 
+-static int bd71837_clk_set(struct clk_hw *hw, int status)
++static int bd71837_clk_set(struct bd718xx_clk *c, unsigned int status)
+ {
+-	struct bd718xx_clk *c = container_of(hw, struct bd718xx_clk, hw);
+-
+ 	return regmap_update_bits(c->mfd->regmap, c->reg, c->mask, status);
+ }
+ 
+@@ -33,14 +44,16 @@ static void bd71837_clk_disable(struct clk_hw *hw)
+ 	int rv;
+ 	struct bd718xx_clk *c = container_of(hw, struct bd718xx_clk, hw);
+ 
+-	rv = bd71837_clk_set(hw, 0);
++	rv = bd71837_clk_set(c, 0);
+ 	if (rv)
+ 		dev_dbg(&c->pdev->dev, "Failed to disable 32K clk (%d)\n", rv);
+ }
+ 
+ static int bd71837_clk_enable(struct clk_hw *hw)
+ {
+-	return bd71837_clk_set(hw, 1);
++	struct bd718xx_clk *c = container_of(hw, struct bd718xx_clk, hw);
++
++	return bd71837_clk_set(c, 0xffffffff);
+ }
+ 
+ static int bd71837_clk_is_enabled(struct clk_hw *hw)
+@@ -92,11 +105,15 @@ static int bd71837_clk_probe(struct platform_device *pdev)
+ 	case ROHM_CHIP_TYPE_BD71837:
+ 	case ROHM_CHIP_TYPE_BD71847:
+ 		c->reg = BD718XX_REG_OUT32K;
+-		c->mask = BD718XX_OUT32K_EN;
++		c->mask = CLK_OUT_EN_MASK;
++		break;
++	case ROHM_CHIP_TYPE_BD71828:
++		c->reg = BD71828_REG_OUT32K;
++		c->mask = CLK_OUT_EN_MASK;
+ 		break;
+ 	case ROHM_CHIP_TYPE_BD70528:
+-		c->reg = BD70528_REG_CLK_OUT;
+-		c->mask = BD70528_CLK_OUT_EN_MASK;
++		c->reg = BD70528_REG_OUT32K;
++		c->mask = CLK_OUT_EN_MASK;
+ 		break;
+ 	default:
+ 		dev_err(&pdev->dev, "Unknown clk chip\n");
+@@ -126,6 +143,7 @@ static const struct platform_device_id bd718x7_clk_id[] = {
+ 	{ "bd71837-clk", ROHM_CHIP_TYPE_BD71837 },
+ 	{ "bd71847-clk", ROHM_CHIP_TYPE_BD71847 },
+ 	{ "bd70528-clk", ROHM_CHIP_TYPE_BD70528 },
++	{ "bd71828-clk", ROHM_CHIP_TYPE_BD71828 },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(platform, bd718x7_clk_id);
+diff --git a/include/linux/mfd/rohm-bd70528.h b/include/linux/mfd/rohm-bd70528.h
+index 1013e60c5b25..2ad2320d0a96 100644
+--- a/include/linux/mfd/rohm-bd70528.h
++++ b/include/linux/mfd/rohm-bd70528.h
+@@ -89,10 +89,6 @@ struct bd70528_data {
+ #define BD70528_REG_GPIO3_OUT	0x52
+ #define BD70528_REG_GPIO4_OUT	0x54
+ 
+-/* clk control */
+-
+-#define BD70528_REG_CLK_OUT	0x2c
+-
+ /* RTC */
+ 
+ #define BD70528_REG_RTC_COUNT_H		0x2d
+@@ -309,8 +305,6 @@ enum {
+ 
+ #define BD70528_GPIO_IN_STATE_BASE 1
+ 
+-#define BD70528_CLK_OUT_EN_MASK 0x1
+-
+ /* RTC masks to mask out reserved bits */
+ 
+ #define BD70528_MASK_RTC_SEC		0x7f
+diff --git a/include/linux/mfd/rohm-bd71828.h b/include/linux/mfd/rohm-bd71828.h
+index eb0557eb5314..d013e03f742d 100644
+--- a/include/linux/mfd/rohm-bd71828.h
++++ b/include/linux/mfd/rohm-bd71828.h
+@@ -183,9 +183,6 @@ enum {
+ #define BD71828_REG_CHG_STATE		0x65
+ #define BD71828_REG_CHG_FULL		0xd2
+ 
+-/* CLK */
+-#define BD71828_REG_OUT32K		0x4B
+-
+ /* LEDs */
+ #define BD71828_REG_LED_CTRL		0x4A
+ #define BD71828_MASK_LED_AMBER		0x80
+@@ -417,7 +414,6 @@ enum {
+ #define BD71828_INT_RTC1_MASK				0x2
+ #define BD71828_INT_RTC2_MASK				0x4
+ 
+-#define BD71828_OUT32K_EN				0x1
+ #define BD71828_OUT_TYPE_MASK				0x2
+ #define BD71828_OUT_TYPE_OPEN_DRAIN			0x0
+ #define BD71828_OUT_TYPE_CMOS				0x2
+diff --git a/include/linux/mfd/rohm-bd718x7.h b/include/linux/mfd/rohm-bd718x7.h
+index 7f2dbde402a1..bee2474a8f9f 100644
+--- a/include/linux/mfd/rohm-bd718x7.h
++++ b/include/linux/mfd/rohm-bd718x7.h
+@@ -191,12 +191,6 @@ enum {
+ #define IRQ_ON_REQ		0x02
+ #define IRQ_STBY_REQ		0x01
+ 
+-/* BD718XX_REG_OUT32K bits */
+-#define BD718XX_OUT32K_EN	0x01
+-
+-/* BD7183XX gated clock rate */
+-#define BD718XX_CLK_RATE 32768
+-
+ /* ROHM BD718XX irqs */
+ enum {
+ 	BD718XX_INT_STBY_REQ,
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
