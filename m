@@ -2,34 +2,34 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F05AC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C13CC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC02B20748
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF51320748
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:06:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="L7316mwJ"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="a3bcOp+d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbfKROGX (ORCPT
+        id S1727215AbfKROG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 09:06:23 -0500
-Received: from mail-eopbgr740045.outbound.protection.outlook.com ([40.107.74.45]:25766
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        Mon, 18 Nov 2019 09:06:27 -0500
+Received: from mail-eopbgr820041.outbound.protection.outlook.com ([40.107.82.41]:42976
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727118AbfKROGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 09:06:22 -0500
+        id S1726627AbfKROGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 09:06:23 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z+vVg6+9Q9bksGleknDdxp7jUs2GDPUGFmlBsQYsCfK6OfkwpRRIckVnmHnb2PxW14Nh5l1oZDNGYI/NGgUO2rYbcP5nPvaDNKXteop5R2CUnQk0lOYaNQwWEa6n06AWYK9bZ4ucJt3U9EY7xLkGGGUuUed+ZC0G6aLBGqS/kpOj+chcUoCOBEWB4jWr1eIRl1dwrHfS2Zl+Y2mZuCeQcvA0x8viv6jEEwSflzgoW34mQ5ziUHmpYPHvF8DCylV7BCQvon6SIh0cDe1MswJ7bsPIrQ43bEqTGNInX7tljQZi67UZfPyg1RfQQdxl6lylpwdUJXAbhZVSHUFaNUGUsg==
+ b=H0FQXfB4vmVVpBgqqdHfA4mluo3WlmJk2nXtPlozhyIdOSz3M9rdp2mxv4DFpPA9EEsC+z42ObOdN9VoeqV+mCB7cnCVtx6JG8k8IgA545vhSHN2gZSl7m4MqjI9qDXbHADjsuQa3g8sDVUTAnJq0w7E7aLLyTwIWFZWyc6PdVCayUu43BbbuFfklad2Sc62sX5cBUhfJQlDkWW1vYs7ZHZuLTXHRJz3H2zF1kMrqjEokcuQIRuSDW+Fph+nigqVVuq3T8+LOGagfTO6TAbrIXCU4wv/zgdP2boqmk7uZp9dwh0pW0c3ARqoVMdyhqmSZD/ngsG8R2aX76lhGMkVLg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=llbNa+vbJTWN30dE0PRsoDuekUUX4yTHl6TF7Vn+9VI=;
- b=m4f9w166Bgsmy1PGgx8nyfGFhaNO1lbIFsIwd023M6n5N/j6NGz9S7MeRsNl85RATt8QR53IL993tDRHIYcGtxh2T50FQDoVcrueH5GrUa2rrnv+yX4s1Kr97e3aaeyymL/FRoBaCyu/exYYKhrPVO4dzF658Uuf2XZ941+/0d30Ow3Lw54MTZLgkLb7l9SQSmA/+HbCK8xOIvD3xQa66LrpGbRRO+SXcR0UhSOV2dsUwNrkG8V98IHzSVeWdvjaqgolGPgAvmFnJoO3LNY4CGbFls200Lda50Wt5ZXT3ND9d4mT5RWpPwuorUrOSFzI24nhL1NgmhT3wq9HttZ1Yg==
+ bh=Nd8V2NtpHfkEO0Ais6s6wkv4cdHngkDaq5ZKN2YVOJ0=;
+ b=FIL/4azxFpsRQDkqtRUhqkp1Mn+cT8T6WEA6U4cOtfxYgcSJYjd9i9rCw0cZql1e+16CINXXfdv4HXFxAqUzGfwpZl5quHPogwtCWu4pU5t/RCGsW3yfsi6gSZ0dj0DqRKnMyrH01Uc0Ibku0E2CD5oGveYpyp+JZxTUzWs7ry8jXmKVb1s+cCUMLqbRkr/sAFcjaC6DS3Y3i1ZTKgfFkgnO5R/jH97w+rTJ0OP0L2dEXPyXUwKBmFCckrQYY3JsFZc+GdjAk/Fc6Lxkxe+IIq2pW/4dj06WwtIMYM9dnmzoEfHinBVMn6lRUfU0RGUKJsDq2ihDmsh7VD5j4zwEuQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
  165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com;
  dmarc=permerror action=none header.from=amd.com; dkim=none (message not
@@ -37,34 +37,38 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=llbNa+vbJTWN30dE0PRsoDuekUUX4yTHl6TF7Vn+9VI=;
- b=L7316mwJXxTZ5TkLsXbAWB3uo1k3mb15R45XIBRMro+C1Z5VJeGl554rXbDZCd1wdNPEQl2vuzOthzQ0AKQerDQSBBNJU7vKdhnyQx56HmRSbM8Z4OoJ0uSPRifbLacWCfjdMmmY9WxSnMFjfvXprC/uZ62X+JMZhfs3qxGVKXA=
-Received: from DM3PR12CA0114.namprd12.prod.outlook.com (2603:10b6:0:55::34) by
- CY4PR1201MB0152.namprd12.prod.outlook.com (2603:10b6:910:1b::8) with
+ bh=Nd8V2NtpHfkEO0Ais6s6wkv4cdHngkDaq5ZKN2YVOJ0=;
+ b=a3bcOp+dQY1EM/Uh/IHke7nXohGzQwtysevAu7tMnngUXHNDbAwa70C5ak+BNXFynI55nUq8hXdGS5soqhNs/a4Z9od7A4rtrTeovIad4DdoZZXcq2sog7p2k0ia6dlopLj6lZHgNJsAh+YZBQdw6GGlWjWzKp9Pd5Cys4Vv9uI=
+Received: from DM6PR12CA0016.namprd12.prod.outlook.com (2603:10b6:5:1c0::29)
+ by BN6PR12MB1458.namprd12.prod.outlook.com (2603:10b6:405:d::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.29; Mon, 18 Nov
- 2019 14:06:19 +0000
-Received: from CO1NAM11FT022.eop-nam11.prod.protection.outlook.com
- (2a01:111:f400:7eab::207) by DM3PR12CA0114.outlook.office365.com
- (2603:10b6:0:55::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.22; Mon, 18 Nov
+ 2019 14:05:40 +0000
+Received: from CO1NAM11FT056.eop-nam11.prod.protection.outlook.com
+ (2a01:111:f400:7eab::207) by DM6PR12CA0016.outlook.office365.com
+ (2603:10b6:5:1c0::29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.23 via Frontend
- Transport; Mon, 18 Nov 2019 14:06:18 +0000
+ Transport; Mon, 18 Nov 2019 14:05:40 +0000
 Authentication-Results: spf=none (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; google.com; dkim=none (message not signed)
  header.d=none;google.com; dmarc=permerror action=none header.from=amd.com;
 Received-SPF: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
-Received: from SATLEXMB01.amd.com (165.204.84.17) by
- CO1NAM11FT022.mail.protection.outlook.com (10.13.175.199) with Microsoft SMTP
+Received: from SATLEXMB02.amd.com (165.204.84.17) by
+ CO1NAM11FT056.mail.protection.outlook.com (10.13.175.107) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.2451.23 via Frontend Transport; Mon, 18 Nov 2019 14:06:18 +0000
-Received: from SATLEXMB02.amd.com (10.181.40.143) by SATLEXMB01.amd.com
- (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.2451.23 via Frontend Transport; Mon, 18 Nov 2019 14:05:39 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB02.amd.com
+ (10.181.40.143) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 18 Nov
- 2019 08:06:15 -0600
+ 2019 08:05:38 -0600
+Received: from SATLEXMB02.amd.com (10.181.40.143) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 18 Nov
+ 2019 08:05:38 -0600
 Received: from vishnu-All-Series.amd.com (10.180.168.240) by
  SATLEXMB02.amd.com (10.181.40.143) with Microsoft SMTP Server id 15.1.1713.5
- via Frontend Transport; Mon, 18 Nov 2019 08:06:12 -0600
+ via Frontend Transport; Mon, 18 Nov 2019 08:05:35 -0600
 From:   Ravulapati Vishnu vardhan rao 
         <Vishnuvardhanrao.Ravulapati@amd.com>
 CC:     <Alexander.Deucher@amd.com>, <djkurtz@google.com>,
@@ -75,15 +79,13 @@ CC:     <Alexander.Deucher@amd.com>, <djkurtz@google.com>,
         Mark Brown <broonie@kernel.org>,
         Jaroslav Kysela <perex@perex.cz>,
         "Takashi Iwai" <tiwai@suse.com>,
-        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        "Kuninori Morimoto" <kuninori.morimoto.gx@renesas.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
         "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
         <alsa-devel@alsa-project.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH v7 5/6] ASoC: amd: Handle ACP3x I2S-SP Interrupts.
-Date:   Mon, 18 Nov 2019 19:34:20 +0530
-Message-ID: <1574085861-22818-6-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+Subject: [PATCH v7 1/6] ASoC: amd:Create multiple I2S platform device endpoint
+Date:   Mon, 18 Nov 2019 19:34:16 +0530
+Message-ID: <1574085861-22818-2-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1574085861-22818-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
 References: <1574085861-22818-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
@@ -91,71 +93,242 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(39860400002)(376002)(346002)(428003)(189003)(199004)(16586007)(305945005)(8676002)(51416003)(48376002)(26005)(5660300002)(478600001)(36756003)(54906003)(2906002)(316002)(70206006)(70586007)(86362001)(356004)(426003)(6666004)(2616005)(336012)(446003)(109986005)(76176011)(7696005)(47776003)(1671002)(476003)(486006)(186003)(50466002)(81166006)(8936002)(81156014)(53416004)(11346002)(126002)(50226002)(4326008)(266003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB0152;H:SATLEXMB01.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;MX:1;A:1;
+X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(396003)(376002)(428003)(199004)(189003)(86362001)(426003)(11346002)(53416004)(54906003)(476003)(336012)(126002)(2616005)(8936002)(70206006)(5660300002)(486006)(36756003)(70586007)(26005)(50226002)(186003)(81156014)(8676002)(81166006)(305945005)(478600001)(446003)(316002)(47776003)(16586007)(109986005)(50466002)(1671002)(7696005)(4326008)(51416003)(2906002)(76176011)(48376002)(356004)(6666004)(266003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR12MB1458;H:SATLEXMB02.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0272b699-c282-41b8-0378-08d76c307bd7
-X-MS-TrafficTypeDiagnostic: CY4PR1201MB0152:
-X-Microsoft-Antispam-PRVS: <CY4PR1201MB01528A8958364A97E34D49F9E74D0@CY4PR1201MB0152.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2582;
+X-MS-Office365-Filtering-Correlation-Id: 17b08e15-4d17-471a-ca0d-08d76c30648d
+X-MS-TrafficTypeDiagnostic: BN6PR12MB1458:
+X-Microsoft-Antispam-PRVS: <BN6PR12MB14582D16A3D0DA968CD01671E74D0@BN6PR12MB1458.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:182;
 X-Forefront-PRVS: 0225B0D5BC
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6rEPnNRwvWTW6v/rchKcdQfBWZTgN2Si74213E9s9bge8Xoewa1cWyf7BwkGUcpa1XAZt9HP74IaWLGH5UqqLWHtvvN3Fz4w5JGwMmB/y8xPfAauFaIS65SOXKW/37FeCDsPSPHSLbL9g//9imqW0YxUg6auZCSPn/OETE+TPIQo7YqiRF04Z/iV77tr2WByA0I1dYTzcJKRExg+UtompmeDpOYwB4Z2Jf4XPHDIOAgfZYc3JhAgCVnID0SOeRcqzaw6Lt3queg4czcfDpYk6mT9hxNzsWwLsiOeyLePySGfVKcb3RZTfSItEM79NJwW3ujUT3L2Dh0pjviyW/zhIfHvKAeG35pmEDJ3OpcUlTPz9ePYpr4AgS9nvlAiMi03uBY5EeZaKouORWtSB5cpjUeRyakctOR1wH7KUhz1CI58zKuD8gztR/TGb/Hniso6
+X-Microsoft-Antispam-Message-Info: rDzAzvAMiErGqGXHSxNFhf+qCIzgdfFVvaB9/fVeSQfWLkuabTpNN4rZBtyH8JKcuXgxj4P6GEVgxzRb7rgrurESlVhDhuCIQXzKGI0x+ntlOadSBsRnTtYkHsHhPT/Hg4DnwKPVLMCj23FPxVKrJY6wSc2TvsS3O7Q4o9RpwiNKoE+8qR+yMf5SuTjMsi6kPO/VJE9W6/MIFB/mFrvkkCqJ5J8EGM1bHZkX/Ii7eqrsEKyGINy+IvmRNKbAUdOU5Z6cVBudUOyZ5CLth6SmAdGnNMRrebRtVvGX1uU960RSGS2VRiqbJAM0CxXeAZMQbjPzl6y6dh73wk3CkfRYQrZTgzxQ0sMdSlh/x97pRUu2kI1TwPYbOJgGni2aHf5z4GFNhH4lik55hZ0JUY/yq6cIWeFJr7lPdJ7e5A/xpjAdvOM0s4jXTygrcmKZWqXG
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2019 14:06:18.6553
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2019 14:05:39.5847
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0272b699-c282-41b8-0378-08d76c307bd7
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17b08e15-4d17-471a-ca0d-08d76c30648d
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB01.amd.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB02.amd.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0152
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1458
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enabled support for I2S-SP interrupt handling.
-Previous to this implementation, driver supports only interrupts
-on BT instance.
+Creates Platform Device endpoints for multiple
+I2S instances: SP and  BT endpoints device.
+Pass PCI resources like MMIO, irq to the platform devices.
 
 Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
 ---
- sound/soc/amd/raven/acp3x-pcm-dma.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ sound/soc/amd/raven/acp3x.h     |   5 ++
+ sound/soc/amd/raven/pci-acp3x.c | 102 ++++++++++++++++++++++++++++------------
+ 2 files changed, 76 insertions(+), 31 deletions(-)
 
-diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
-index 1b8b10a..3de2e25 100644
---- a/sound/soc/amd/raven/acp3x-pcm-dma.c
-+++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
-@@ -177,6 +177,13 @@ static irqreturn_t i2s_irq_handler(int irq, void *dev_id)
- 		snd_pcm_period_elapsed(rv_i2s_data->play_stream);
- 		play_flag = 1;
- 	}
-+	if ((val & BIT(I2S_TX_THRESHOLD)) &&
-+				rv_i2s_data->i2ssp_play_stream) {
-+		rv_writel(BIT(I2S_TX_THRESHOLD),
-+			rv_i2s_data->acp3x_base	+ mmACP_EXTERNAL_INTR_STAT);
-+		snd_pcm_period_elapsed(rv_i2s_data->i2ssp_play_stream);
-+		play_flag = 1;
-+	}
+diff --git a/sound/soc/amd/raven/acp3x.h b/sound/soc/amd/raven/acp3x.h
+index 4f2cadd..2f15fe1 100644
+--- a/sound/soc/amd/raven/acp3x.h
++++ b/sound/soc/amd/raven/acp3x.h
+@@ -7,10 +7,15 @@
  
- 	if ((val & BIT(BT_RX_THRESHOLD)) && rv_i2s_data->capture_stream) {
- 		rv_writel(BIT(BT_RX_THRESHOLD), rv_i2s_data->acp3x_base +
-@@ -184,6 +191,13 @@ static irqreturn_t i2s_irq_handler(int irq, void *dev_id)
- 		snd_pcm_period_elapsed(rv_i2s_data->capture_stream);
- 		cap_flag = 1;
- 	}
-+	if ((val & BIT(I2S_RX_THRESHOLD)) &&
-+				rv_i2s_data->i2ssp_capture_stream) {
-+		rv_writel(BIT(I2S_RX_THRESHOLD),
-+			 rv_i2s_data->acp3x_base + mmACP_EXTERNAL_INTR_STAT);
-+		snd_pcm_period_elapsed(rv_i2s_data->i2ssp_capture_stream);
-+		cap_flag = 1;
-+	}
+ #include "chip_offset_byte.h"
  
- 	if (play_flag | cap_flag)
- 		return IRQ_HANDLED;
++#define ACP3x_DEVS		3
+ #define ACP3x_PHY_BASE_ADDRESS 0x1240000
+ #define	ACP3x_I2S_MODE	0
+ #define	ACP3x_REG_START	0x1240000
+ #define	ACP3x_REG_END	0x1250200
++#define ACP3x_I2STDM_REG_START	0x1242400
++#define ACP3x_I2STDM_REG_END	0x1242410
++#define ACP3x_BT_TDM_REG_START	0x1242800
++#define ACP3x_BT_TDM_REG_END	0x1242810
+ #define I2S_MODE	0x04
+ #define	BT_TX_THRESHOLD 26
+ #define	BT_RX_THRESHOLD 25
+diff --git a/sound/soc/amd/raven/pci-acp3x.c b/sound/soc/amd/raven/pci-acp3x.c
+index facec24..174adbc 100644
+--- a/sound/soc/amd/raven/pci-acp3x.c
++++ b/sound/soc/amd/raven/pci-acp3x.c
+@@ -16,17 +16,17 @@ struct acp3x_dev_data {
+ 	void __iomem *acp3x_base;
+ 	bool acp3x_audio_mode;
+ 	struct resource *res;
+-	struct platform_device *pdev;
++	struct platform_device *pdev[ACP3x_DEVS];
+ };
+ 
+ static int snd_acp3x_probe(struct pci_dev *pci,
+ 			   const struct pci_device_id *pci_id)
+ {
+-	int ret;
+-	u32 addr, val;
+ 	struct acp3x_dev_data *adata;
+-	struct platform_device_info pdevinfo;
++	struct platform_device_info pdevinfo[ACP3x_DEVS];
+ 	unsigned int irqflags;
++	int ret, val, i;
++	u32 addr;
+ 
+ 	if (pci_enable_device(pci)) {
+ 		dev_err(&pci->dev, "pci_enable_device failed\n");
+@@ -40,10 +40,10 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+ 	}
+ 
+ 	adata = devm_kzalloc(&pci->dev, sizeof(struct acp3x_dev_data),
+-			     GFP_KERNEL);
++							     GFP_KERNEL);
+ 	if (!adata) {
+ 		ret = -ENOMEM;
+-		goto release_regions;
++		goto adata_free;
+ 	}
+ 
+ 	/* check for msi interrupt support */
+@@ -56,7 +56,8 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+ 		irqflags = 0;
+ 
+ 	addr = pci_resource_start(pci, 0);
+-	adata->acp3x_base = ioremap(addr, pci_resource_len(pci, 0));
++	adata->acp3x_base = devm_ioremap(&pci->dev, addr,
++					pci_resource_len(pci, 0));
+ 	if (!adata->acp3x_base) {
+ 		ret = -ENOMEM;
+ 		goto release_regions;
+@@ -68,11 +69,11 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+ 	switch (val) {
+ 	case I2S_MODE:
+ 		adata->res = devm_kzalloc(&pci->dev,
+-					  sizeof(struct resource) * 2,
++					  sizeof(struct resource) * 4,
+ 					  GFP_KERNEL);
+ 		if (!adata->res) {
+ 			ret = -ENOMEM;
+-			goto unmap_mmio;
++			goto release_regions;
+ 		}
+ 
+ 		adata->res[0].name = "acp3x_i2s_iomem";
+@@ -80,28 +81,52 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+ 		adata->res[0].start = addr;
+ 		adata->res[0].end = addr + (ACP3x_REG_END - ACP3x_REG_START);
+ 
+-		adata->res[1].name = "acp3x_i2s_irq";
+-		adata->res[1].flags = IORESOURCE_IRQ;
+-		adata->res[1].start = pci->irq;
+-		adata->res[1].end = pci->irq;
++		adata->res[1].name = "acp3x_i2s_sp";
++		adata->res[1].flags = IORESOURCE_MEM;
++		adata->res[1].start = addr + ACP3x_I2STDM_REG_START;
++		adata->res[1].end = addr + ACP3x_I2STDM_REG_END;
++
++		adata->res[2].name = "acp3x_i2s_bt";
++		adata->res[2].flags = IORESOURCE_MEM;
++		adata->res[2].start = addr + ACP3x_BT_TDM_REG_START;
++		adata->res[2].end = addr + ACP3x_BT_TDM_REG_END;
++
++		adata->res[3].name = "acp3x_i2s_irq";
++		adata->res[3].flags = IORESOURCE_IRQ;
++		adata->res[3].start = pci->irq;
++		adata->res[3].end = adata->res[3].start;
+ 
+ 		adata->acp3x_audio_mode = ACP3x_I2S_MODE;
+ 
+ 		memset(&pdevinfo, 0, sizeof(pdevinfo));
+-		pdevinfo.name = "acp3x_rv_i2s";
+-		pdevinfo.id = 0;
+-		pdevinfo.parent = &pci->dev;
+-		pdevinfo.num_res = 2;
+-		pdevinfo.res = adata->res;
+-		pdevinfo.data = &irqflags;
+-		pdevinfo.size_data = sizeof(irqflags);
+-
+-		adata->pdev = platform_device_register_full(&pdevinfo);
+-		if (IS_ERR(adata->pdev)) {
+-			dev_err(&pci->dev, "cannot register %s device\n",
+-				pdevinfo.name);
+-			ret = PTR_ERR(adata->pdev);
+-			goto unmap_mmio;
++		pdevinfo[0].name = "acp3x_rv_i2s_dma";
++		pdevinfo[0].id = 0;
++		pdevinfo[0].parent = &pci->dev;
++		pdevinfo[0].num_res = 4;
++		pdevinfo[0].res = &adata->res[0];
++		pdevinfo[0].data = &irqflags;
++		pdevinfo[0].size_data = sizeof(irqflags);
++
++		pdevinfo[1].name = "acp3x_i2s_playcap";
++		pdevinfo[1].id = 0;
++		pdevinfo[1].parent = &pci->dev;
++		pdevinfo[1].num_res = 1;
++		pdevinfo[1].res = &adata->res[1];
++
++		pdevinfo[2].name = "acp3x_i2s_playcap";
++		pdevinfo[2].id = 1;
++		pdevinfo[2].parent = &pci->dev;
++		pdevinfo[2].num_res = 1;
++		pdevinfo[2].res = &adata->res[2];
++		for (i = 0; i < ACP3x_DEVS ; i++) {
++			adata->pdev[i] =
++				platform_device_register_full(&pdevinfo[i]);
++			if (IS_ERR(adata->pdev[i])) {
++				dev_err(&pci->dev, "cannot register %s device\n",
++					pdevinfo[i].name);
++				ret = PTR_ERR(adata->pdev[i]);
++				goto unmap_mmio;
++			}
+ 		}
+ 		break;
+ 	default:
+@@ -112,10 +137,22 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+ 	return 0;
+ 
+ unmap_mmio:
++	if (val == I2S_MODE)
++		for (i = 0 ; i < ACP3x_DEVS ; i++)
++			platform_device_unregister(adata->pdev[i]);
++	devm_kfree(&pci->dev, adata->res);
++	devm_kfree(&pci->dev, adata);
+ 	pci_disable_msi(pci);
+-	iounmap(adata->acp3x_base);
++	pci_release_regions(pci);
++	pci_disable_device(pci);
+ release_regions:
++	devm_kfree(&pci->dev, adata);
++	pci_disable_msi(pci);
+ 	pci_release_regions(pci);
++	pci_disable_device(pci);
++adata_free:
++	pci_release_regions(pci);
++	pci_disable_device(pci);
+ disable_pci:
+ 	pci_disable_device(pci);
+ 
+@@ -125,10 +162,12 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+ static void snd_acp3x_remove(struct pci_dev *pci)
+ {
+ 	struct acp3x_dev_data *adata = pci_get_drvdata(pci);
++	int i;
+ 
+-	platform_device_unregister(adata->pdev);
+-	iounmap(adata->acp3x_base);
+-
++	if (adata->acp3x_audio_mode == ACP3x_I2S_MODE) {
++		for (i = 0 ; i <  ACP3x_DEVS ; i++)
++			platform_device_unregister(adata->pdev[i]);
++	}
+ 	pci_disable_msi(pci);
+ 	pci_release_regions(pci);
+ 	pci_disable_device(pci);
+@@ -151,6 +190,7 @@ static struct pci_driver acp3x_driver  = {
+ 
+ module_pci_driver(acp3x_driver);
+ 
++MODULE_AUTHOR("Vishnuvardhanrao.Ravulapati@amd.com");
+ MODULE_AUTHOR("Maruthi.Bayyavarapu@amd.com");
+ MODULE_DESCRIPTION("AMD ACP3x PCI driver");
+ MODULE_LICENSE("GPL v2");
 -- 
 2.7.4
 
