@@ -2,127 +2,107 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F5CC43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D4BC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D629220740
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8184420740
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 08:47:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbfKRImb convert rfc822-to-8bit (ORCPT
+        id S1726708AbfKRIrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 03:42:31 -0500
-Received: from sci-ig2.spreadtrum.com ([222.66.158.135]:59226 "EHLO
-        SHSQR01.spreadtrum.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726404AbfKRIma (ORCPT
+        Mon, 18 Nov 2019 03:47:24 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:34679 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbfKRIrX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 03:42:30 -0500
-Received: from ig2.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-        by SHSQR01.spreadtrum.com with ESMTPS id xAI8flGS090700
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
-        Mon, 18 Nov 2019 16:41:47 +0800 (CST)
-        (envelope-from Orson.Zhai@unisoc.com)
-Received: from spreadtrum.com (10.0.74.112) by BJMBX01.spreadtrum.com
- (10.0.64.7) with Microsoft SMTP Server (TLS) id 15.0.847.32; Mon, 18 Nov 2019
- 16:41:47 +0800
-Date:   Mon, 18 Nov 2019 16:39:52 +0800
-From:   Orson Zhai <orson.zhai@spreadtrum.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Orson Zhai <orson.zhai@unisoc.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <kevin.tang@unisoc.com>
-Subject: Re: [PATCH 1/2] dt-bindings: Add syscon-names support
-Message-ID: <20191118083952.GB6039@spreadtrum.com>
-References: <20191114114525.12675-1-orson.zhai@unisoc.com>
- <20191114114525.12675-2-orson.zhai@unisoc.com>
- <CAK8P3a23jcNgFErik1PFr=tG6n8kc8Pj9fARw47n=ou8t8iV+Q@mail.gmail.com>
+        Mon, 18 Nov 2019 03:47:23 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iWcgo-0004FT-A3; Mon, 18 Nov 2019 09:47:18 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iWcgn-0001PK-VT; Mon, 18 Nov 2019 09:47:17 +0100
+Date:   Mon, 18 Nov 2019 09:47:17 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-iio@vger.kernel.org,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v3 3/3] i2c: smbus: switch from loops to memcpy
+Message-ID: <20191118084717.rv2f24fg523gq6dr@pengutronix.de>
+References: <20191112203132.163306-1-dmitry.torokhov@gmail.com>
+ <20191112203132.163306-4-dmitry.torokhov@gmail.com>
+ <20191118074757.edyfvz5s3pqnu67y@pengutronix.de>
+ <20191118080939.GC251795@dtor-ws>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a23jcNgFErik1PFr=tG6n8kc8Pj9fARw47n=ou8t8iV+Q@mail.gmail.com>
-X-Mailer: git-send-email 2.18.0
-X-Originating-IP: [10.0.74.112]
-X-ClientProxiedBy: shcas04.spreadtrum.com (10.29.35.89) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-Content-Transfer-Encoding: 8BIT
-X-MAIL: SHSQR01.spreadtrum.com xAI8flGS090700
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191118080939.GC251795@dtor-ws>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+On Mon, Nov 18, 2019 at 12:09:39AM -0800, Dmitry Torokhov wrote:
+> On Mon, Nov 18, 2019 at 08:47:57AM +0100, Uwe Kleine-K�nig wrote:
+> > Hello Dmitry,
+> > 
+> > On Tue, Nov 12, 2019 at 12:31:32PM -0800, Dmitry Torokhov wrote:
+> > > When copying memory from one buffer to another, instead of open-coding
+> > > loops with byte-by-byte copies let's use memcpy() which might be a bit
+> > > faster and makes intent more clear.
+> > > 
+> > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > > 
+> > > ---
+> > > 
+> > > Changes in v3:
+> > > - new patch using memcpy() for moving data around
+> > > 
+> > >  drivers/i2c/i2c-core-smbus.c | 15 +++++----------
+> > >  1 file changed, 5 insertions(+), 10 deletions(-)
+> > > 
+> > > diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
+> > > index 7b4e2270eeda1..bbafdd3b1b114 100644
+> > > --- a/drivers/i2c/i2c-core-smbus.c
+> > > +++ b/drivers/i2c/i2c-core-smbus.c
+> > > @@ -397,8 +397,7 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
+> > >  			}
+> > >  
+> > >  			i2c_smbus_try_get_dmabuf(&msg[0], command);
+> > > -			for (i = 1; i < msg[0].len; i++)
+> > > -				msg[0].buf[i] = data->block[i - 1];
+> > > +			memcpy(msg[0].buf + 1, data->block, msg[0].len - 1);
+> > 
+> > Can it happen that msg[0].len is zero?
+> 
+> No, it can not, because of the "msg[0].len = data->block[0] + 2;" line
+> above.
 
-On Fri, Nov 15, 2019 at 10:33:30AM +0100, Arnd Bergmann wrote:
-> On Thu, Nov 14, 2019 at 12:48 PM Orson Zhai <orson.zhai@unisoc.com> wrote:
-> >
-> >
-> > Make life easier when syscon consumer want to access multiple syscon
-> > nodes.
-> > Add syscon-names and relative properties to help manage complicated
-> > cases when accessing more one syscon node.
-> >
-> > Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
->
-> Hi Orson,
->
-> Can you explain why the number of cells in this binding is specific
-> to the syscon node rather than the node referencing it?
+OK, and as passing data with data->block[0] = 254 also makes the code do
+strange things already without your patch. I now also checked the other
+conversions for similar problems and didn't find any. So:
 
-The story is like this. I found there are too many global registers in
-Unisoc(former Spreadtrum) chips. Dozens of offset with dozens of modules
-were needed to be specified. So I thought the dts files would seem "horrible"
-with a big chunk of syscon-xxx (say more than 20 lines)
+Acked-by: Uwe Kleine-K�nig <u.kleine-koenig@pengutronix.de>
 
-I learned from reg-names way which might look clean to hold all these mess things.
-But to implement this, the users need to konw the cell-size if we add arguments to syscon node.
-I thought to add cell-size into every syscon consumer node is a duplicated work and
-I wanted to take advantage of of_parse_phandle_with_args.
-So the bindings were created then.
+Best regards
+Uwe
 
-
->
-> In most other bindings that follow the same scheme, the additional
-> arguments are interpreted by the subsystem that is being referenced,
-> but the syscon driver is just a simple driver with no subsystem and no
-> code to interpret those arguments.
-
-You're correct. I've realized it is narraw to pass here.
-
->
-> The way would otherwise handle the example from your binding
-> would be with two separate properties in the display node, like
->
-> syscon-enable = <&ap_apb_regs 0x4 0xf00>;
-> syscon-power = <&aon_regs 0x8>;
-
-This is an option for consumers all the time.
-Acturally my patches are not going to replace this.
-I'd like to provide another option to save people like desperate engineers in Spreadtrum :)
-
->
-> in which case, the syscon driver does not need to know anything
-
-Whould it be better if I add syscon-cells into consumer's node?
-Then I could read the cell size and use "of_parse_phandle_with_fixed_args()" instead.
-This will not involve syscon node itself at all.
-
-Best Regards,
--Orson
-> about how it's being used, and the display driver is the one making
-> sense of the arguments according to its own binding.
->
-> I assume you have some good reason for introducing the other
-> approach, but I don't understand it from your submission.
->
->        Arnd
-________________________________
- This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
-本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
+-- 
+Pengutronix e.K.                           | Uwe Kleine-K�nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
