@@ -2,130 +2,173 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3CFC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B02C7C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5BF82230F
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75F6F20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:41:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sEaJVmHX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AyNlBipn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfKRWiZ (ORCPT
+        id S1727031AbfKRWlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 17:38:25 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:50930 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbfKRWiY (ORCPT
+        Mon, 18 Nov 2019 17:41:00 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:43016 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726543AbfKRWlA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 17:38:24 -0500
-Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 4DF6D20B9C38;
-        Mon, 18 Nov 2019 14:38:24 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4DF6D20B9C38
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1574116704;
-        bh=aCNxoCA0L7XmpkLRxlLrzH7aqskgKJf03HOO2sVjKsU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sEaJVmHXIfjHnp6SHE8SeKZ5ju4EVUHjuiRSB5l4B6FyxP1H7c1Av9XkeahNg5Un7
-         ve5j9lxJoHynJokcJk61OREb7/L0lRmcuqn8Jg5wAI1aoIOoGXEnBkgQobuZ+zHOlB
-         +fVgq4PEq+bsOPYykGfBwg8k1+0FjOpfTM880EhY=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Subject: [PATCH v8 3/5] KEYS: Call the IMA hook to measure keys
-Date:   Mon, 18 Nov 2019 14:38:16 -0800
-Message-Id: <20191118223818.3353-4-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191118223818.3353-1-nramas@linux.microsoft.com>
-References: <20191118223818.3353-1-nramas@linux.microsoft.com>
+        Mon, 18 Nov 2019 17:41:00 -0500
+Received: by mail-qv1-f66.google.com with SMTP id cg2so7289864qvb.10;
+        Mon, 18 Nov 2019 14:40:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sZdC4vqQ43VNOnMIxV/dGjIpbV52hvN58hPGe7bOOWI=;
+        b=AyNlBipnz5IA0/CKWwCQWcYqz1/TsqZ2E10s9HYOf9vv+Kb0tWk12yIqAJAYwh1r6d
+         JLAfv9qig9BLvJy4AB9fKNPRFu+kbHp7NLPBfspNRljdxfrLpUchc6N/pEA1QUCF1QW4
+         U5AROxmrIr4bN5F+4SvjlaJseXwGjyXBJZEWysCi6BOMgJnkQzt3zdNvz8t07WchTdh0
+         4P9b+dVFhsVg0acFhOA59U8l8pGN2gS90bA/FDsCPwsBWZB0tzbjklp7ZBaUBJsSYBDn
+         x0SYktB2QvYK1s0a8g2r+Pk26fQfBPj1ui8W/XRyS5JY9y3bzYKU5mZVuEC93XIDlcmR
+         T+AQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sZdC4vqQ43VNOnMIxV/dGjIpbV52hvN58hPGe7bOOWI=;
+        b=TtM/uQ+kT/nXuIXPj0ZshDDHiNpAyDK0VOodTzk08Rx1iqf6I0gsdzepYjzAcKf+I9
+         bIiBm0Qz9pEZ3axPSh/eIjBK3oE6y2vYmcqkHKWYa9SveuDgKATQrIPzrkycPX/u7V+x
+         F0kLGCIRbNiBWdGG7Bm7qpRKFCfGXXNvAUqwzqknz5M2LhUw/bJK8JartWhFplaUPHTe
+         rUwkiFDglNCwdqPJX9+mvfMli/pRUYvdeI0p4Myfr+pPushwvBP2VDn4jS2Bo8vCTIr4
+         Okmj4VUz85ZuPWrRTWw5Edn6DinrRbam/IlhNS+Z27rhwJEKLQoCZ+rD3mlnTt0XgJ50
+         HDKg==
+X-Gm-Message-State: APjAAAVnzKW+5FVgUmvf44kG+U7TYHysWcz1NbBTSG9MyZdEizgbQ3vA
+        JS8+7DqbLqsUW+JA3tF26ww=
+X-Google-Smtp-Source: APXvYqyg2giaP82C5jnycov/YY7fMGLh9p2IZ6cW/LF+VLItK4d/vxgfOu1NIK7XIBV0YJUj7lhheg==
+X-Received: by 2002:a0c:c211:: with SMTP id l17mr9032327qvh.55.1574116858313;
+        Mon, 18 Nov 2019 14:40:58 -0800 (PST)
+Received: from localhost.localdomain ([2001:1284:f022:db90:e53b:1344:8965:c548])
+        by smtp.gmail.com with ESMTPSA id y24sm9134326qki.104.2019.11.18.14.40.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 14:40:57 -0800 (PST)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id EED10C4B42; Mon, 18 Nov 2019 19:40:54 -0300 (-03)
+Date:   Mon, 18 Nov 2019 19:40:54 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Aaron Conole <aconole@redhat.com>
+Cc:     netdev@vger.kernel.org, Pravin B Shelar <pshelar@ovn.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>, dev@openvswitch.org,
+        linux-kernel@vger.kernel.org, paulb@mellanox.com,
+        Florian Westphal <fw@strlen.de>
+Subject: Re: [PATCH net 2/2] act_ct: support asymmetric conntrack
+Message-ID: <20191118224054.GB388551@localhost.localdomain>
+References: <20191108210714.12426-1-aconole@redhat.com>
+ <20191108210714.12426-2-aconole@redhat.com>
+ <20191114162949.GB3419@localhost.localdomain>
+ <f7to8x8yj6k.fsf@dhcp-25.97.bos.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f7to8x8yj6k.fsf@dhcp-25.97.bos.redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Call the IMA hook from key_create_or_update function to measure
-the key when a new key is created or an existing key is updated.
+On Mon, Nov 18, 2019 at 04:21:39PM -0500, Aaron Conole wrote:
+> Marcelo Ricardo Leitner <marcelo.leitner@gmail.com> writes:
+> 
+> > On Fri, Nov 08, 2019 at 04:07:14PM -0500, Aaron Conole wrote:
+> >> The act_ct TC module shares a common conntrack and NAT infrastructure
+> >> exposed via netfilter.  It's possible that a packet needs both SNAT and
+> >> DNAT manipulation, due to e.g. tuple collision.  Netfilter can support
+> >> this because it runs through the NAT table twice - once on ingress and
+> >> again after egress.  The act_ct action doesn't have such capability.
+> >> 
+> >> Like netfilter hook infrastructure, we should run through NAT twice to
+> >> keep the symmetry.
+> >> 
+> >> Fixes: b57dc7c13ea9 ("net/sched: Introduce action ct")
+> >> 
+> >> Signed-off-by: Aaron Conole <aconole@redhat.com>
+> >> ---
+> >>  net/sched/act_ct.c | 13 ++++++++++++-
+> >>  1 file changed, 12 insertions(+), 1 deletion(-)
+> >> 
+> >> diff --git a/net/sched/act_ct.c b/net/sched/act_ct.c
+> >> index fcc46025e790..f3232a00970f 100644
+> >> --- a/net/sched/act_ct.c
+> >> +++ b/net/sched/act_ct.c
+> >> @@ -329,6 +329,7 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
+> >>  			  bool commit)
+> >>  {
+> >>  #if IS_ENABLED(CONFIG_NF_NAT)
+> >> +	int err;
+> >>  	enum nf_nat_manip_type maniptype;
+> >>  
+> >>  	if (!(ct_action & TCA_CT_ACT_NAT))
+> >> @@ -359,7 +360,17 @@ static int tcf_ct_act_nat(struct sk_buff *skb,
+> >>  		return NF_ACCEPT;
+> >>  	}
+> >>  
+> >> -	return ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+> >> +	err = ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+> >> +	if (err == NF_ACCEPT &&
+> >> +	    ct->status & IPS_SRC_NAT && ct->status & IPS_DST_NAT) {
+> >> +		if (maniptype == NF_NAT_MANIP_SRC)
+> >> +			maniptype = NF_NAT_MANIP_DST;
+> >> +		else
+> >> +			maniptype = NF_NAT_MANIP_SRC;
+> >> +
+> >> +		err = ct_nat_execute(skb, ct, ctinfo, range, maniptype);
+> >> +	}
+> >
+> > I keep thinking about this and I'm not entirely convinced that this
+> > shouldn't be simpler. More like:
+> >
+> > if (DNAT)
+> > 	DNAT
+> > if (SNAT)
+> > 	SNAT
+> >
+> > So it always does DNAT before SNAT, similarly to what iptables would
+> > do on PRE/POSTROUTING chains.
+> 
+> I can rewrite the whole function, but I wanted to start with the smaller
+> fix that worked.  I also think it needs more testing then (since it's
+> something of a rewrite of the function).
+> 
+> I guess it's not too important - do you think it gives any readability
+> to do it this way?  If so, I can respin the patch changing it like you
+> describe.
 
-This patch adds the call to the IMA hook from key_create_or_update
-function to measure the key on key create or update.
+I didn't mean a rewrite, but just to never handle SNAT before DNAT. So
+the fix here would be like:
 
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: James Morris <jamorris@linux.microsoft.com>
----
- include/linux/ima.h | 13 +++++++++++++
- security/keys/key.c |  7 +++++++
- 2 files changed, 20 insertions(+)
+-	return ct_nat_execute(skb, ct, ctinfo, range, maniptype);
++	err = ct_nat_execute(skb, ct, ctinfo, range, maniptype);
++	if (err == NF_ACCEPT && maniptype == NF_NAT_MANIP_DST &&
++	    ct->status & IPS_SRC_NAT && ct->status & IPS_DST_NAT) {
++		maniptype = NF_NAT_MANIP_SRC;
++		err = ct_nat_execute(skb, ct, ctinfo, range, maniptype);
++	}
++	return err;
 
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index 6d904754d858..6b0824b7a32f 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -25,6 +25,12 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
- extern void ima_post_path_mknod(struct dentry *dentry);
- extern void ima_kexec_cmdline(const void *buf, int size);
- 
-+#ifdef CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE
-+extern void ima_post_key_create_or_update(struct key *keyring,
-+					  struct key *key,
-+					  unsigned long flags, bool create);
-+#endif
-+
- #ifdef CONFIG_IMA_KEXEC
- extern void ima_add_kexec_buffer(struct kimage *image);
- #endif
-@@ -101,6 +107,13 @@ static inline void ima_add_kexec_buffer(struct kimage *image)
- {}
- #endif
- 
-+#ifndef CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE
-+static inline void ima_post_key_create_or_update(struct key *keyring,
-+						 struct key *key,
-+						 unsigned long flags,
-+						 bool create) {}
-+#endif
-+
- #ifdef CONFIG_IMA_APPRAISE
- extern bool is_ima_appraise_enabled(void);
- extern void ima_inode_post_setattr(struct dentry *dentry);
-diff --git a/security/keys/key.c b/security/keys/key.c
-index 764f4c57913e..a0f1e7b3b8b9 100644
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -13,6 +13,7 @@
- #include <linux/security.h>
- #include <linux/workqueue.h>
- #include <linux/random.h>
-+#include <linux/ima.h>
- #include <linux/err.h>
- #include "internal.h"
- 
-@@ -936,6 +937,8 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
- 		goto error_link_end;
- 	}
- 
-+	ima_post_key_create_or_update(keyring, key, flags, true);
-+
- 	key_ref = make_key_ref(key, is_key_possessed(keyring_ref));
- 
- error_link_end:
-@@ -965,6 +968,10 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
- 	}
- 
- 	key_ref = __key_update(key_ref, &prep);
-+
-+	if (!IS_ERR(key_ref))
-+		ima_post_key_create_or_update(keyring, key, flags, false);
-+
- 	goto error_free_prep;
- }
- EXPORT_SYMBOL(key_create_or_update);
--- 
-2.17.1
-
+> >> +	return err;
+> >>  #else
+> >>  	return NF_ACCEPT;
+> >>  #endif
+> >> -- 
+> >> 2.21.0
+> >> 
+> 
