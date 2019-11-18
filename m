@@ -2,143 +2,130 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA06AC43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A90C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 997F5222DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:43:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJu8zppi"
+	by mail.kernel.org (Postfix) with ESMTP id 7F41E222DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 23:48:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbfKRXnH (ORCPT
+        id S1726939AbfKRXsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 18:43:07 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45037 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726822AbfKRXnG (ORCPT
+        Mon, 18 Nov 2019 18:48:12 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50000 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726813AbfKRXsM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 18:43:06 -0500
-Received: by mail-pl1-f194.google.com with SMTP id az9so10662064plb.11;
-        Mon, 18 Nov 2019 15:43:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Cf8yodkoGRtKDfrnD35YQbS3qTKWlwJfxsTIImJLdbM=;
-        b=FJu8zppiMyx+omZy5bO+IVg+9qxEmoz1snhctE+l4K1z3OKnQKdim1lHw0K+pQAOs5
-         yAnrDotA2p76SHeGML+riON2n/thBPNGDCQ3YreVJFqojlwEiMCRcZBI5S4Q5scCtnnV
-         RK+98KfsTycbmuCcKgodZRzeFVKtNipyBDjZ8hx/eWi+QZkkfL8V0xiTBRIfLYy0i2qv
-         p3XCnbkpHLGRRW3RWjeBbIWaYwRJ30xxs/h2X38/66nL+t6iHpGOxcc9GxdeneSI+N70
-         4+EsFlHLglthkf+oNZttvfWbFK2of8DsBznJHxYlgJ9BvqSHMFhsdPIrmDmBCgLZK+qG
-         0vxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Cf8yodkoGRtKDfrnD35YQbS3qTKWlwJfxsTIImJLdbM=;
-        b=pAAm/l9ZqUucinc8TAARY0wt2Ykqj+vm7MlYuWJE3ZycTCUnKiNbd4RDtmmCRlxVR2
-         Dq7bF2+dCgG931tW3luI2fnUFb5IKTTq4dTl1+3iJJLKhFcEb0Al/kENdW80dtgZau7W
-         Wl+X8dzavrlortUi+TZ/pBSMb++oNxGbkQ7VSXDYwWdY4oNgEOt+DrfeCI0Wp+Oj9JIM
-         hIiwz6OVOt6yvF7YeS+/XMSmgxdlr47r/HwY8UUrfZe9kO0Mgq3swyFujBfT4xhZldZJ
-         143ottvXmvzsh/B2bFQRvZefObh8GOJYJdTTd70b4heMltOgqejn8dkqB8yUJyARU1IA
-         hUyg==
-X-Gm-Message-State: APjAAAXAXDmmEb2a+zQaMm9Yu7jOJrfM7RSHdkgocP1yenFAhV3Igm1I
-        4iRvUgYh9zdE8p+Hg33k/S0nEJEds0s=
-X-Google-Smtp-Source: APXvYqxZFe04Csp23cuMrWCkWUlksPNGgycxX0DupFxhtb/wTx95pSfOfbetmGRcuXUnRewQwkoyaw==
-X-Received: by 2002:a17:90a:353:: with SMTP id 19mr2265458pjf.128.1574120585799;
-        Mon, 18 Nov 2019 15:43:05 -0800 (PST)
-Received: from localhost ([100.118.89.215])
-        by smtp.gmail.com with ESMTPSA id t15sm23615528pgb.0.2019.11.18.15.43.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 15:43:05 -0800 (PST)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/msm/a6xx: restore previous freq on resume
-Date:   Mon, 18 Nov 2019 15:40:38 -0800
-Message-Id: <20191118234043.331542-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Mon, 18 Nov 2019 18:48:12 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAINl0pc136587
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 18:48:10 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wadmw7dvt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 18:48:10 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Mon, 18 Nov 2019 23:48:07 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 18 Nov 2019 23:48:01 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAINm0M748168994
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Nov 2019 23:48:00 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7A123A4051;
+        Mon, 18 Nov 2019 23:48:00 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 24301A4053;
+        Mon, 18 Nov 2019 23:48:00 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 18 Nov 2019 23:48:00 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id ADE67A012A;
+        Tue, 19 Nov 2019 10:47:55 +1100 (AEDT)
+Subject: Re: [PATCH 08/10] nvdimm: Add driver for OpenCAPI Storage Class
+ Memory
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>
+Cc:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org,
+        Oscar Salvador <osalvador@suse.com>,
+        Michal Hocko <mhocko@suse.com>,
+        David Hildenbrand <david@redhat.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>, Qian Cai <cai@lca.pw>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Linux MM <linux-mm@kvack.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+References: <20191025044721.16617-1-alastair@au1.ibm.com>
+ <20191025044721.16617-9-alastair@au1.ibm.com>
+ <8232c1a6-d52a-6c32-6178-de082174a92a@linux.ibm.com>
+ <CAPcyv4g9b6PyREurH9NcQf4BO2YcRGJPBZDqGKy-Vz91mBKjew@mail.gmail.com>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Date:   Tue, 19 Nov 2019 10:47:56 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPcyv4g9b6PyREurH9NcQf4BO2YcRGJPBZDqGKy-Vz91mBKjew@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19111823-0020-0000-0000-00000389E694
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19111823-0021-0000-0000-000021E00FC5
+Message-Id: <02374c9a-39fb-5693-3d9c-aa7e7674a6c1@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-18_08:2019-11-15,2019-11-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ mlxlogscore=893 impostorscore=0 mlxscore=0 clxscore=1015
+ priorityscore=1501 spamscore=0 suspectscore=0 lowpriorityscore=0
+ adultscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-1911180204
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+On 15/11/19 3:35 am, Dan Williams wrote:
+>> Have you discussed with the directory owner if it's ok to split the
+>> driver over several files?
+> 
+> My thought is to establish drivers/opencapi/ and move this and the
+> existing drivers/misc/ocxl/ bits there.
 
-Previously, if the freq were overriden (ie. via sysfs), it would get
-reset to max on resume.
+Is there any other justification for this we can think of apart from not 
+wanting to put this driver in the nvdimm directory? OpenCAPI drivers 
+aren't really a category of driver unto themselves.
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 8 ++++++--
- drivers/gpu/drm/msm/adreno/a6xx_gmu.h | 3 +++
- 2 files changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-index 2ca470eb5cb8..b64867701e5a 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-@@ -149,6 +149,8 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
- 		if (freq == gmu->gpu_freqs[perf_index])
- 			break;
- 
-+	gmu->current_perf_index = perf_index;
-+
- 	__a6xx_gmu_set_freq(gmu, perf_index);
- }
- 
-@@ -741,8 +743,8 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
- 	gmu_write(gmu, REG_A6XX_GMU_GMU2HOST_INTR_MASK, ~A6XX_HFI_IRQ_MASK);
- 	enable_irq(gmu->hfi_irq);
- 
--	/* Set the GPU to the highest power frequency */
--	__a6xx_gmu_set_freq(gmu, gmu->nr_gpu_freqs - 1);
-+	/* Set the GPU to the current freq */
-+	__a6xx_gmu_set_freq(gmu, gmu->current_perf_index);
- 
- 	/*
- 	 * "enable" the GX power domain which won't actually do anything but it
-@@ -1166,6 +1168,8 @@ static int a6xx_gmu_pwrlevels_probe(struct a6xx_gmu *gmu)
- 	gmu->nr_gpu_freqs = a6xx_gmu_build_freq_table(&gpu->pdev->dev,
- 		gmu->gpu_freqs, ARRAY_SIZE(gmu->gpu_freqs));
- 
-+	gmu->current_perf_index = gmu->nr_gpu_freqs - 1;
-+
- 	/* Build the list of RPMh votes that we'll send to the GMU */
- 	return a6xx_gmu_rpmh_votes_init(gmu);
- }
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-index 39a26dd63674..2af91ed7ed0c 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-@@ -63,6 +63,9 @@ struct a6xx_gmu {
- 	struct clk_bulk_data *clocks;
- 	struct clk *core_clk;
- 
-+	/* current performance index set externally */
-+	int current_perf_index;
-+
- 	int nr_gpu_freqs;
- 	unsigned long gpu_freqs[16];
- 	u32 gx_arc_votes[16];
 -- 
-2.23.0
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
 
