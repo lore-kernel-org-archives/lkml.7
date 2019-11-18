@@ -2,114 +2,118 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0C9C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB5DC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 284D52192B
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528BC21939
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:46:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wQrjgRzX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfKRRqA (ORCPT
+        id S1726744AbfKRRqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 12:46:00 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50804 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726336AbfKRRp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 12:45:58 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B9B64AF22;
-        Mon, 18 Nov 2019 17:45:56 +0000 (UTC)
-Message-ID: <061822b6ad80094a52d27f27f3e37594adb313c2.camel@suse.de>
-Subject: Re: [PATCH v2] ARM: dt: check MPIDR on MP devices built without SMP
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     linux-kernel@vger.kernel.org, f.fainelli@gmail.com,
-        "kernelci.org bot" <bot@kernelci.org>, wahrenst@gmx.net,
-        linux-arm-kernel@lists.infradead.org
-Date:   Mon, 18 Nov 2019 18:45:55 +0100
-In-Reply-To: <20191118125540.GW25745@shell.armlinux.org.uk>
-References: <20191004155232.17209-1-nsaenzjulienne@suse.de>
-         <5abdcb0e0e1043a101f579ea65d07a1f6b91f896.camel@suse.de>
-         <20191118125540.GW25745@shell.armlinux.org.uk>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-+YvWotUDyLir6gMkee5u"
-User-Agent: Evolution 3.34.1 
+        Mon, 18 Nov 2019 12:46:38 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39846 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfKRRqh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 12:46:37 -0500
+Received: by mail-pg1-f195.google.com with SMTP id 29so9969693pgm.6
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 09:46:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ki0H6S7cVChNwUc/0rcIcDCU3ILmIaD21XDlOPzBqM4=;
+        b=wQrjgRzXlywD442PsIejVX5AFGs8sKDlfQfJ+fk5Hp1hDGUKNcICrY95AgskVL+nR9
+         K6OXZbCSQBNHDxnqvTRhA8jTz0L0qJL8V05lBRSyTC49LtWdtrrZ3/k//rYS4CoDh0/G
+         qO3tg3Ol05+hyFSbIbQHoCQ5zS93nLICz1aBMxDh3PhKuze1yjKEq4E+XDvRJB98TioI
+         nb51eKfdfJoj3aVBdEWu76B9pWtjbJ/hWUXV5cHOmT2Z69tawaC28n88nYwknnMinrER
+         36SSR16G+lxXMj0S1wgjYkj6IPffXDb9ry2uby4HMID4QR5mlKNvnwUBC88yT/oKg8Ob
+         OKGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ki0H6S7cVChNwUc/0rcIcDCU3ILmIaD21XDlOPzBqM4=;
+        b=mudRRVpHg3rMZ/O9sUtfVAjIwsM4b+dFos9/TJ5Xo5ObZWCZt66j2gFVtsFTGTkInT
+         5sjlynbFPtHnxCBHK0q+gOSt/Mju+Q24kTNdhCKmOb7uJbJ0WL1QlRnc7CykevBfXuyu
+         1Dpu1AO/Bty66+mZK2zNb63LIxJWE6FOBOblhubvU0zzP+IaArpzB4Kxd5jBv6LxBTQW
+         3gfRi+aIx0mvjBC4oCxdtFXmXPnbbq4PEHnj2oRV8qXdJ5bMRU7xTiObjKTAaaKX7BpE
+         VfXpfeZQviN5kG1naPD8A6q4ojNPlNiwCDddauLri23v8LPN30BEHv9q0zwx8oKibN9i
+         O0pw==
+X-Gm-Message-State: APjAAAUqnkNfmHF3H1qMYh9IE2DP6JJ+XdyBX18WARrpW6e4NdHeM68w
+        JB0oMWnLtlbjoFf3cWcvyXY5fs8hfw5+qVuKKvqw9g==
+X-Google-Smtp-Source: APXvYqz229EMlTPCbxTb6aLUBwhnLeFPPHwMhClKoRcwat/R7xpkmEl3vP6rmr9BlLDfEsb2nTGtgeqTelLhDeubP7A=
+X-Received: by 2002:a63:d70e:: with SMTP id d14mr578934pgg.10.1574099194932;
+ Mon, 18 Nov 2019 09:46:34 -0800 (PST)
 MIME-Version: 1.0
+References: <CAKwvOdmSo=BWGnaVeejez6K0Tukny2niWXrr52YvOPDYnXbOsg@mail.gmail.com>
+ <20191106120629.28423-1-ilie.halip@gmail.com> <20191118143553.GD6363@zn.tnic>
+In-Reply-To: <20191118143553.GD6363@zn.tnic>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 18 Nov 2019 09:46:23 -0800
+Message-ID: <CAKwvOdmWoHqrUyZ-_ino9z7KRzizpdoY2ZL5ngUzwGy55MuZ4g@mail.gmail.com>
+Subject: Re: [PATCH V2] x86/boot: explicitly place .eh_frame after .rodata
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Ilie Halip <ilie.halip@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Nov 18, 2019 at 6:36 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Wed, Nov 06, 2019 at 02:06:28PM +0200, Ilie Halip wrote:
+> > diff --git a/arch/x86/boot/setup.ld b/arch/x86/boot/setup.ld
+> > index 0149e41d42c2..30ce52635cd0 100644
+> > --- a/arch/x86/boot/setup.ld
+> > +++ b/arch/x86/boot/setup.ld
+> > @@ -25,6 +25,7 @@ SECTIONS
+> >
+> >       . = ALIGN(16);
+> >       .rodata         : { *(.rodata*) }
+> > +     .eh_frame       : { *(.eh_frame) }
+>
+> The kernel proper linker script does
+>
+>         /DISCARD/ : {
+>                 *(.eh_frame)
+>         }
+>
+> with the .eh_frame section.
+>
+> Wouldn't that solve your issue too, if you add it to the /DISCARD/
+> section in that linker script too?
 
---=-+YvWotUDyLir6gMkee5u
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Yep. Looks like:
+- arch/x86/kernel/vmlinux.lds.S
+- arch/x86/realmode/rm/realmode.lds.S
 
-Hi Russell, thanks for the review.
+discard .eh_frame, while
+- arch/x86/entry/vdso/vdso-layout.lds.S
+- arch/x86/um/vdso/vdso-layout.lds.S
 
-On Mon, 2019-11-18 at 12:55 +0000, Russell King - ARM Linux admin wrote:
-> On Mon, Nov 18, 2019 at 12:49:04PM +0100, Nicolas Saenz Julienne wrote:
-> > On Fri, 2019-10-04 at 17:52 +0200, Nicolas Saenz Julienne wrote:
-> > > On SMP builds, in order to properly link CPU devices with their
-> > > respective DT nodes we start by matching the boot CPU. This is achiev=
-ed
-> > > by comparing the 'reg' property on each of the CPU DT nodes with the
-> > > MPIDR. The association is necessary as to validate the whole CPU logi=
-cal
-> > > map, which ultimately links CPU devices and their DT nodes.
->=20
-> No, that is not the primary purpose of the CPU logical map.  The CPU=20
-> logical map is there to map the CPU logical number to a hardware number,
-> necessary for programming hardware.
+keep it.  I assume then that just vdso code that get linked into
+userspace needs to preserve this.  This suggestion would be a
+functional change, which is why we pursued the conservative change
+preserving it.
+https://github.com/ClangBuiltLinux/linux/issues/760#issuecomment-549192213
 
-Noted.
+Ilie, would you mind sending a v3 with Boris' recommendation?
 
-> > > On setups built without SMP, no MPIDR read is performed. The only thi=
-ng
-> > > expected is for the 'reg' property in the CPU DT node to contain the
-> > > value 0x0.
-> > >=20
-> > > This causes problems on MP setups built without SMP. As their boot CP=
-U
-> > > DT node contains the relevant MPIDR as opposed to 0x0. No match is th=
-en
-> > > possible. This causes troubles further down the line as drivers are
-> > > unable to get the CPU's DT node.
->=20
-> So the DT is incorrect for the platform - it is not describing the
-> hardware.  Why can't the DT be fixed?  Clearly, it would have never
-> worked with the mainline kernel today.
-
-Sorry but I don't see any incorrect DT here. From the ARM CPU bindings I ga=
-ther
-that (at least since ARMv7) every CPU node should contain its corresponding
-MPIDR. It transpires that ARM's DT cpu map init code should take that into
-account regardles of whether the kernel supports SMP, isn't it?
-
-Regards,
-Nicolas
-
-
---=-+YvWotUDyLir6gMkee5u
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3S2NMACgkQlfZmHno8
-x/4D7gf/XdwPq75qRoHvHJjo1VIzJp33WcYC4bhmll+p0iM/2O4t/b7f8jOyNWVG
-YlxA+fal6q1N6nyrjbXydq76hDgZK8bxHy0nQWZhJKuQaTfB0YcoMniZV+sDjF/N
-NC/MvPupcRLkTbRbnW8Af0f345b62bu3r6zL7DL/AbAyVptOD3+yCGnbI4d8hVcU
-dolO9kU7i4aKrZ9aF/u/mQQbqt/rZpPL5cFNOA5F920ryW6sWLlEfqrigBxq8Oy3
-JB5+ZZXHTqJ593gIecn4dy+iRpU8ttTN0gdHEdy0TnFbmlh5xF4GbXzjwhKHpm7x
-7D+Qbqp96Qpf6ZsVySaavz/svIiLJg==
-=fulJ
------END PGP SIGNATURE-----
-
---=-+YvWotUDyLir6gMkee5u--
-
+-- 
+Thanks,
+~Nick Desaulniers
