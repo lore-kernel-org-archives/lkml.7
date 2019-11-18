@@ -2,93 +2,126 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AAAC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D10C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D997621850
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:50:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574095818;
-	bh=E5sHJhDJdLwFFcwz2rZtBR5zpGdH7iYE/jUQURsGWTA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Cz/vDw8MSe6mfKnfSF+RC30rokxC/eiG3eJjTyxLk6SJiysxl5cbt+S5OUwtL8w+r
-	 9IoXC29N+8nL4ldIOwmOlI3VSKko3hsnuQ08YOB9r0oHWP4zcyOcVQdlTeKQAfednw
-	 usVHFJP4WwcoSoL4gNlLaQxMrz1w/4DN1lG8xxZc=
+	by mail.kernel.org (Postfix) with ESMTP id 88CDE2186D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:51:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KGoCvOct"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfKRQuR (ORCPT
+        id S1726691AbfKRQve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 11:50:17 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44448 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbfKRQuQ (ORCPT
+        Mon, 18 Nov 2019 11:51:34 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40615 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbfKRQve (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 11:50:16 -0500
-Received: by mail-ot1-f68.google.com with SMTP id c19so15073396otr.11;
-        Mon, 18 Nov 2019 08:50:16 -0800 (PST)
+        Mon, 18 Nov 2019 11:51:34 -0500
+Received: by mail-lj1-f195.google.com with SMTP id q2so19785390ljg.7;
+        Mon, 18 Nov 2019 08:51:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QIcIAsn2Tf0hkT0Z0sJamAE1Kw/AvLRMcFk9OjqUWjM=;
+        b=KGoCvOctUYzAbf+D8Qeg9cKHfvolwhQwQzRbpilFEQYy0PWqIB4q7E8vSjwj1x0tdj
+         JMK54DnI1f3+q8KTswy9YJHZHjpCiWaEDLPknFKpvOGWjDNF59XAzDqkcTcfoHywy2jJ
+         4+tKZ5b6VuihC+inJ/fEOhGIhevIBrDrSynVNkHrh4Nn05WyAKg3Va7+KsPenv4Am/gW
+         TD1urnxXjcpctCruZZOnlwVfRGoEMzsk/S4azNTQU9uH9eMLRaJS4Ed0+rpgiN5F3U89
+         MagdfaXE4L5EJD2A7gBkYZf6lVcQlv8ex83NCsYKKo5QP00jaCNNd0Aa2w2qnea96AFO
+         CEcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5NYQIVzszlovCzGCoyf9SHkjEAYAPxgYWsdxQCoKIq4=;
-        b=qetaDa4Txc0EdHqZu/KXPh05PyhaIiMT9tnrxo8A5qEzuGnIXeoRnxl4KHD7+eHUWh
-         5xcidHZPQAYvwCv6Di3ct5r0F+uYvj1PzYTtHGALgBp17UtUZfQGa+QyRc8ljMz1fQ9H
-         yPmZ1BESoE32zgkJgDzwrDXJ4b/be8eTPVoTDh8moLqQjit3BrmAhe4CJZ9LsfPRIAph
-         sSwxKqUdTpmlp0iSK42WOcyK6PWfHsDXp7vMNkSwk+ocESXChDuZqKnr+r+M/Ii9pMCV
-         NY3FZbm4lwN9EHiPeIfy4DRSDGPVPiiXsjz97E4vJQKP7WaH6ldH6prJPoBuONQM3Nvb
-         BlvA==
-X-Gm-Message-State: APjAAAUy/4YuQeyTeHLvAKjZC8zppITuXUXzWrAeHHwW2+hebCS1Z85W
-        Y74HZWknrTuBTN4zRnZLXA==
-X-Google-Smtp-Source: APXvYqy5fyTYkoXXqqwQ0H9dOLJstLheW2bjF5U1SrvtNLNVH/MBfBQlyKUyfzD0Wr2bOMi5c0zc1g==
-X-Received: by 2002:a05:6830:1e4c:: with SMTP id e12mr162673otj.358.1574095815692;
-        Mon, 18 Nov 2019 08:50:15 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s133sm6229914oia.58.2019.11.18.08.50.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 08:50:15 -0800 (PST)
-Date:   Mon, 18 Nov 2019 10:50:14 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 01/11] dt-bindings: phy-mtk-tphy: add two optional
- properties for u2phy
-Message-ID: <20191118165014.GA3621@bogus>
-References: <1573547796-29566-1-git-send-email-chunfeng.yun@mediatek.com>
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QIcIAsn2Tf0hkT0Z0sJamAE1Kw/AvLRMcFk9OjqUWjM=;
+        b=SRTDu7DgSA4sO+ZimXe2cZc2SGBVshgYnEDVlW6JdNwszzKLnSgNdNZ7O5EPkmQaE5
+         P2OP6aDRqMB8u3nnBKiFNWY4d0VCuLFH5NNPwjUwjO0v2iVwFVVybw3Z/QnQ7QP6NXvn
+         1wAMrLdioiT6P/9No2s9giRFWqMaYSSe99ViwhjcXV5G5leS2vZPERJI9bGsKwrrrvnk
+         T/zzuBYsvBp00OVE6qfLtDvQCdy9ufdNzmoM3DycGfzRVE0Ge/Bz8zde7FwOFvqGsE7Z
+         sy68gfK4VJplx5Q4Eo0z17I82Cn/AuzldqnVXfjLSW2FiONFiH/P7SYYdXz5GuoNiHhX
+         faGg==
+X-Gm-Message-State: APjAAAW36naq8d9fgFEvcAGNlrueuqKF2ZERO3w2A1oSXkmQH0PXO4p2
+        1GV+R60aN4CdT5Y5m8dG9/+Sdyrw
+X-Google-Smtp-Source: APXvYqyIDIyQH+wxnyQ43wMrMEc7zy9I5q6GvixZCd4ZmGs++uwhGKLQq8Lj79Z133rV7pXJmP3mfg==
+X-Received: by 2002:a2e:9985:: with SMTP id w5mr293360lji.162.1574095891151;
+        Mon, 18 Nov 2019 08:51:31 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id t15sm4593889lff.15.2019.11.18.08.51.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Nov 2019 08:51:30 -0800 (PST)
+Subject: Re: [PATCH v5 07/11] cpufreq: dt-platdev: Blacklist NVIDIA Tegra20
+ and Tegra30 SoCs
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191118164512.8676-1-digetx@gmail.com>
+ <20191118164512.8676-8-digetx@gmail.com>
+Message-ID: <2776e3c7-999e-5e6f-3a0e-211226dc30e6@gmail.com>
+Date:   Mon, 18 Nov 2019 19:51:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573547796-29566-1-git-send-email-chunfeng.yun@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191118164512.8676-8-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Nov 2019 16:36:26 +0800, Chunfeng Yun wrote:
-> Add two optional properties, one for tuning J-K voltage by INTR,
-> another for disconnect threshold, both of them are related with
-> connect detection
+18.11.2019 19:45, Dmitry Osipenko пишет:
+> Both NVIDIA Tegra20 and Tegra30 SoCs should be blacklisted because CPU
+> OPPs use supported_hw and thus platdev isn't suitable for these SoCs.
+> Currently cpufreq-dt driver produces a bit annoying warning splats
+> during boot because valid OPPs are not found, this will be fixed once
+> tegra20-cpufreq driver will be update to support cpufreq-dt. The warnings
+> will also happen on older stable kernels using newer device-trees, thus
+> this patch should be backported to stable kernels as well.
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Cc: <stable@vger.kernel.org>
+> Reported-by: Jon Hunter <jonathanh@nvidia.com>
+> Fixes: 4053aa65c517 ("ARM: tegra: cardhu-a04: Add CPU Operating Performance Points")
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
-> v4: no changes
-> 
-> v3: change commit log
-> 
-> v2: change description
-> ---
->  Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 2 ++
+>  drivers/cpufreq/cpufreq-dt-platdev.c | 2 ++
 >  1 file changed, 2 insertions(+)
 > 
+> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+> index f1d170dcf4d3..aba591d57c67 100644
+> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
+> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+> @@ -121,6 +121,8 @@ static const struct of_device_id blacklist[] __initconst = {
+>  	{ .compatible = "mediatek,mt8176", },
+>  	{ .compatible = "mediatek,mt8183", },
+>  
+> +	{ .compatible = "nvidia,tegra20", },
+> +	{ .compatible = "nvidia,tegra30", },
+>  	{ .compatible = "nvidia,tegra124", },
+>  	{ .compatible = "nvidia,tegra210", },
+>  
+> 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Hello Viresh,
+
+Could you please pick up this patch for v5.5 fixes? Thanks in advance!
