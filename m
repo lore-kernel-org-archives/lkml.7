@@ -2,88 +2,108 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08661C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 231A8C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D18D5222A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB9CF222AA
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 18:25:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="cOjoh6P7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfKRSXv (ORCPT
+        id S1726705AbfKRSZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 13:23:51 -0500
-Received: from mga12.intel.com ([192.55.52.136]:23548 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726216AbfKRSXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 13:23:50 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 10:23:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,321,1569308400"; 
-   d="scan'208";a="204151190"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 18 Nov 2019 10:23:47 -0800
-Received: from andy by smile with local (Exim 4.93-RC1)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1iWlgg-0006ND-VI; Mon, 18 Nov 2019 20:23:46 +0200
-Date:   Mon, 18 Nov 2019 20:23:46 +0200
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     "Kammela, Gayatri" <gayatri.kammela@intel.com>
-Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Prestopine, Charles D" <charles.d.prestopine@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
-        "Liang, Kan" <kan.liang@intel.com>,
-        "Box, David E" <david.e.box@intel.com>,
-        "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>
-Subject: Re: [PATCH v3 0/7] x86/intel_pmc_core: Add Tiger Lake, Elkhart Lake
-Message-ID: <20191118182346.GB32742@smile.fi.intel.com>
-References: <cover.1573750525.git.gayatri.kammela@intel.com>
- <CAHp75Vfrd-BAZ7H_LuQfz32yaap1X3gEnqZ2-9EPQ+j_b0f93g@mail.gmail.com>
- <MN2PR11MB3711EDFC967C295689E109DEF24D0@MN2PR11MB3711.namprd11.prod.outlook.com>
+        Mon, 18 Nov 2019 13:25:50 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41711 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfKRSZu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 13:25:50 -0500
+Received: by mail-qt1-f195.google.com with SMTP id o3so21316257qtj.8
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 10:25:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=v9if5fwr3paoI1B1+7DONdTrGfIC6DUmEh53tZeqqwE=;
+        b=cOjoh6P7m4KW09CGfhiNgwSxU5Uor0QS63+fU5/Cbk0WqsjnlakOdwmfaWbalvDKqA
+         0mA8+jpUq4KjivI53/E6KseHbpUhl4S/vzgpO7lLNqo/o7qJA+gScq1avKYSn72KEQ/R
+         WJ60rA0ePyceU0fofd2Pi1BrJ9giAjU/47ZcmWs033JnlwB50bz7uhCRZ6wygaaMO+K8
+         R1Hd5+NU4dbdVbyvHlyWtwaOBu6oRSqSAumJf8OHFUjRc5n0y0WymXPH00JGmWolIwq9
+         5nC5xxHCJmlPEOT+RZ5tPhsR7Dk+XhVjN0p1YRKv7nSk2djVpyZnlJV+sJVxTwycbuvj
+         RSmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=v9if5fwr3paoI1B1+7DONdTrGfIC6DUmEh53tZeqqwE=;
+        b=OMQk98QZ0Il3qcLrTtSbUL2O/UDFRzh9oKDcyxHVZRcaarpo/EDVtMu0448NgDA4iC
+         9sUKYtU+qXRbT4aeg4+8bs0IY3mBa2U8jfktTuz28/Aob/8sB8z3iZK7l5zPXkFI7R6D
+         HZzUvqgk+t18hyoveH0zfheFsE6CJ7VX3RmQdn3IIzUp+1+uQKxadvia4gv0vKzAo686
+         H//sGnPBqdki+R8QVfXoEn0jMLA0ns7M+7GKSxKjUt1BVucOIfpU35v0nDRFvw7B+2OF
+         4wxOQyNpAEYPtU10HOhb8AKW3vS3HR5D30Kjgt/hr/4x+Bjl7kch6qlQJJO3ab58IS5d
+         SgDQ==
+X-Gm-Message-State: APjAAAXpVd7GjRy6EB27RoTCamoGzrMvpyTDS9jdXd4QL/8o1lyaobJg
+        k5DpDx2Hzy1WtuCV3V0ocYnSGg==
+X-Google-Smtp-Source: APXvYqxRzso5xx3hWxY3ZUu1X3hwkPbmHoQ5nfY4eQP7njoYmvy2X34X//IjdVFIc386hMTUM/r/Kg==
+X-Received: by 2002:aed:3702:: with SMTP id i2mr27264082qtb.312.1574101549183;
+        Mon, 18 Nov 2019 10:25:49 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::1:1113])
+        by smtp.gmail.com with ESMTPSA id y24sm8820684qki.104.2019.11.18.10.25.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 10:25:48 -0800 (PST)
+Date:   Mon, 18 Nov 2019 13:25:47 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, surenb@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next v2] mm/vmscan: fix some -Wenum-conversion warnings
+Message-ID: <20191118182547.GA372119@cmpxchg.org>
+References: <1573848697-29262-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <MN2PR11MB3711EDFC967C295689E109DEF24D0@MN2PR11MB3711.namprd11.prod.outlook.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1573848697-29262-1-git-send-email-cai@lca.pw>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 06:11:16PM +0000, Kammela, Gayatri wrote:
-> > > All the information regarding the PCH IPs and names of IPs will be
-> > > available in Intel's Platform Controller Hub (PCH) External Design
-> > > Specification (EDS) document expected to be released in 2020 before
-> > > product launch.
-> > 
-> > Thanks, though you forgot to fix all prefixes in the mails. We have
-> > platform/x86: $DRIVER_NAME: ...
-> > 
-> Hi Andy! Sorry I think I misunderstood your comment last time. Just to make sure, the prefix should the pattern in this case
-> "platform/x86: intel_pmc_core: " and should be same for all the patches in the series right?
+On Fri, Nov 15, 2019 at 03:11:37PM -0500, Qian Cai wrote:
+> The -next commit "mm: vmscan: enforce inactive:active ratio at the
+> reclaim root" [1] introduced some Clang -Wenum-conversion warnings,
+> 
+> mm/vmscan.c:2216:39: warning: implicit conversion from enumeration type
+> 'enum lru_list' to different enumeration type 'enum node_stat_item'
+> [-Wenum-conversion]
+>         inactive = lruvec_page_state(lruvec, inactive_lru);
+>                    ~~~~~~~~~~~~~~~~~         ^~~~~~~~~~~~
+> mm/vmscan.c:2217:37: warning: implicit conversion from enumeration type
+> 'enum lru_list' to different enumeration type 'enum node_stat_item'
+> [-Wenum-conversion]
+>         active = lruvec_page_state(lruvec, active_lru);
+>                  ~~~~~~~~~~~~~~~~~         ^~~~~~~~~~
+> mm/vmscan.c:2746:42: warning: implicit conversion from enumeration type
+> 'enum lru_list' to different enumeration type 'enum node_stat_item'
+> [-Wenum-conversion]
+>         file = lruvec_page_state(target_lruvec, LRU_INACTIVE_FILE);
+>                ~~~~~~~~~~~~~~~~~                ^~~~~~~~~~~~~~~~~
+> 
+> Since it guarantees the relative order between the LRU items, fix it by
+> using NR_LRU_BASE for the translation.
+> 
+> [1] http://lkml.kernel.org/r/20191107205334.158354-4-hannes@cmpxchg.org
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
-I didn't deeply check myself, but sounds right.
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 
-> > Also consider Mario's comment (I didn't hear back from you on it).
-> Sorry about that. I am planning on sending it a single patch excluding it from the series since we received a request from Dell. Please let me know if you think this patch should be included in the series. 
+Thanks Qian!
 
-I think we keep good relationship with Dell.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Andrew, this is a fix for "mm: vmscan: enforce inactive:active ratio
+at the reclaim root". Could you please fold this into that?
