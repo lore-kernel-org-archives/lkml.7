@@ -2,185 +2,249 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A95C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF35C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB9F20726
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F95D20726
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 10:04:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hgglmAIa"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oq8tqJYk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfKRKEc (ORCPT
+        id S1726809AbfKRKEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 05:04:32 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26539 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726490AbfKRKEc (ORCPT
+        Mon, 18 Nov 2019 05:04:44 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36689 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726759AbfKRKEn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 05:04:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574071470;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rIf/Elci/1PK0huoWDjxcN09AY9Hw5H1mVv9fFN249U=;
-        b=hgglmAIajjm8UfpsnrwTa1TWld3mwrdd5WiIPjGgpp2ssOe3Z1YKhX+l6CbNAuQBZF6XaZ
-        GR2zPGHh7TStPur8HL9yRKObAbhZKeG9L71o9oIUwyfKHvUx6AAEooLQRP8uS2hUcr9Bgi
-        W8Vt5YxDjRFbLrieqReuGDeMhSd7Z+8=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-176-B4PIT9ycPLuSshR2BnQHHQ-1; Mon, 18 Nov 2019 05:04:29 -0500
-Received: by mail-qt1-f199.google.com with SMTP id j18so11914914qtp.15
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 02:04:29 -0800 (PST)
+        Mon, 18 Nov 2019 05:04:43 -0500
+Received: by mail-lj1-f195.google.com with SMTP id k15so18185947lja.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 02:04:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Hvo5Jw2ZPltQxjs8EbPFo5GfrTv0JS2zLabE1PRBYSA=;
+        b=oq8tqJYkfKe496OYK6xiqh34OBWXU0P4avcI3PB3Q3yP2DcUkJJSknYUHlJH1Kn+7k
+         WXmL59zHOEQjEnnEmOZgh1QANDUtRlmMMgVV8zGtA9GvJWIDsslUgDbPxDPLr0c1wouR
+         5/0PDzIGGOigv4KRLUZyiDzQc3uAYmKUrioGNkeUaJAdt9hKqqbpPGOVGQQFKlPR9GHV
+         ItN5qxhnylTOqQbVme4r8bTkSjo5SL8tZMKKZY6kB9uaGu3heWvQznD6QlBLIVQ3268s
+         4XjB/k8uphuXBrNS0hJFcXp2ka8A3Q1NNS9X5HIrnZvbESVc04fwVqw+DIQBU2/ELCWF
+         Hm3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=rIf/Elci/1PK0huoWDjxcN09AY9Hw5H1mVv9fFN249U=;
-        b=Q4czg8P93z+oZKTyZWwsbkV5kpUa2ZYNt2zuvdirTfb4h42cVeUppGyJ4IC6bvXOvU
-         +tbiTWHkK9eQ+EkvHn824nfFqr/3LvEGjD5HBsqobDwO/lbB8NdkRWSUtdkzlhLXueor
-         Ji9pEAbM9OQst+mhlnRH2qNKrZCsBmQc/sD+kiOcpGPxtAGiVMBhH/cgtOwDfvudYP5I
-         jg9pWi7IybqlDxMAba6OXD2fSEtI4ET/MbddYs1Z8Gs/rfPDv3aPmgAufF8+wYq4gcP1
-         oX+nj0FDRycKNXhN58H18nGX0kCWQYILkF9eiffWE8onuJBBtyw/MaXE6bciVlnM2vC6
-         tT3g==
-X-Gm-Message-State: APjAAAVxyZ8dwG8wqFGPCvnH0RcgFUJnt/S0jFDP5VXsXIkB99jqzM6m
-        ph1IUZO4YgqtegBSiZ6Q4mcIRSS4AvS0NSSe2m7ejDwK166YRSBzKR3FOeIyBSkRJ3m72+SG8r2
-        KI3UrjQ0pQKgRU2LcKzZjljHL9fU/g6JTtmrq5zar
-X-Received: by 2002:ac8:1c03:: with SMTP id a3mr26210141qtk.31.1574071465159;
-        Mon, 18 Nov 2019 02:04:25 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxsgkkz8U8+oY5+uVRbEVc93nkjpCuZ7HAjhItwcXa/waH3/AbWciwFV17NEuELPUBGZ9f4PmADEh6f8dVT7bk=
-X-Received: by 2002:ac8:1c03:: with SMTP id a3mr26210122qtk.31.1574071464941;
- Mon, 18 Nov 2019 02:04:24 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=Hvo5Jw2ZPltQxjs8EbPFo5GfrTv0JS2zLabE1PRBYSA=;
+        b=MHruJR0QAAdq8PifBsuk38MXbw1qiVMUtU0o8V6vlVT6ygvlXpvMpCP9dxZKsZMuXy
+         uCQVz62jm3XilmWQscnR9Ymq50olmcobtTYrArwissa3Dvd3AlsWT3O4R0OQwfxMkXHX
+         irBwI+GR9vBuy7fi5GMLE53A11412XZzIYpW8YGne2PFRnQch0rHif6XremZjc/hCGW4
+         iCY28Ed02xeExyDXBmOtXe8ropHs6KDRsvcUbh2ApPmHFi64ZWKseqhTxgsSW5ALdR77
+         pOiJ9f9Hbak/eN/dVZIOlWd1fS4tuNt6eMrzNxpHPa/Mr7faLuuBmWivIVvrRWtmg1v6
+         hsTw==
+X-Gm-Message-State: APjAAAV4OvjQWBtcktLYgO9bIBKlDIcxnO+Xe/gGoWLUpQiYmMFLp0fW
+        BIh9UZabUyf/AICK8bSVkeLFmqCtYTyPuszQmnWKjw==
+X-Google-Smtp-Source: APXvYqy0O9Jadnrt9tHT9GICqum5MrN5gCfPfY0FAkpKeg1hArL8l4mtLws1lK2/t3y2iHRL0SevYjWooLN8kbqbA/Y=
+X-Received: by 2002:a2e:9104:: with SMTP id m4mr6254727ljg.63.1574071479813;
+ Mon, 18 Nov 2019 02:04:39 -0800 (PST)
 MIME-Version: 1.0
-References: <20191106110246.70937-1-blaz@mxxn.io> <CAO-hwJKJvkW2_Dif4+P7ebBXwb-tLk+PHqks7yqevVZ-CHyTCQ@mail.gmail.com>
- <fe67c7d0-1671-4bc4-af9f-7207d1f1a18e@www.fastmail.com>
-In-Reply-To: <fe67c7d0-1671-4bc4-af9f-7207d1f1a18e@www.fastmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Mon, 18 Nov 2019 11:04:13 +0100
-Message-ID: <CAO-hwJ+8hUGkKDiNoZtGYPD9vdPA3a64esHi1cN1E5odrOemsA@mail.gmail.com>
-Subject: Re: [PATCH] HID: Improve Windows Precision Touchpad detection.
-To:     =?UTF-8?Q?Bla=C5=BE_Hrastnik?= <blaz@mxxn.io>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-X-MC-Unique: B4PIT9ycPLuSshR2BnQHHQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <cover.1573456283.git.baolin.wang@linaro.org> <CAK8P3a1we9D5C2NOBww=cW-4L1PT3t0NnDRmknLwiLm652TmKg@mail.gmail.com>
+ <CAMz4kuK9HEuGdhNqHO_qoy9jD=ccsPPhD_dKYwNRgQyWyYwqRA@mail.gmail.com>
+ <CAK8P3a0rNhyxmUWLUV1js3FsuAESDOPX3E4b8ActtL4GRT4uTA@mail.gmail.com> <CADBw62pzV+5ZXBEbFvTQJ9essAd4cd7Xkz5j9AXB5rAQy0wLqA@mail.gmail.com>
+In-Reply-To: <CADBw62pzV+5ZXBEbFvTQJ9essAd4cd7Xkz5j9AXB5rAQy0wLqA@mail.gmail.com>
+From:   "(Exiting) Baolin Wang" <baolin.wang@linaro.org>
+Date:   Mon, 18 Nov 2019 18:04:28 +0800
+Message-ID: <CAMz4kuK_3q4JY1vNXe6zGHDNF8Ep-SkcUq6Z25r790VSz4+Bjw@mail.gmail.com>
+Subject: Re: [PATCH v6 0/4] Add MMC software queue support
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>, asutoshd@codeaurora.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        linux-block <linux-block@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 10:07 AM Bla=C5=BE Hrastnik <blaz@mxxn.io> wrote:
+Hi Arnd,
+
+On Tue, 12 Nov 2019 at 16:48, Baolin Wang <baolin.wang7@gmail.com> wrote:
 >
-> I've submitted a test containing the Surface Book 2 descriptor.
+> On Tue, Nov 12, 2019 at 12:59 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Mon, Nov 11, 2019 at 1:58 PM Baolin Wang <baolin.wang@linaro.org> wrote:
+> > > On Mon, 11 Nov 2019 at 17:28, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > On Mon, Nov 11, 2019 at 8:35 AM Baolin Wang <baolin.wang@linaro.org> wrote:
+> > > > - Removing all the context switches and workqueues from the data submission
+> > > >   path is also the right idea. As you found, there is still a workqueue inside
+> > > >   of blk_mq that is used because it may get called from atomic context but
+> > > >   the submission may get blocked in __mmc_claim_host(). This really
+> > > >   needs to be changed as well, but not in the way I originally suggested:
+> > > >   As Hannes suggested, the host interrrupt handler should always use
+> > > >   request_threaded_irq() to have its own process context, and then pass a
+> > > >   flag to blk_mq to say that we never need another workqueue there.
+> > >
+> > > So you mean we should complete the request in the host driver irq
+> > > thread context, then issue another request in this context by calling
+> > > blk_mq_run_hw_queues()?
+> >
+> > Yes. I assumed there was already code that would always run
+> > blk_mq_run_hw_queue() at I/O completion, but I can't find where
+> > that happens today.
 >
-> https://gitlab.freedesktop.org/libevdev/hid-tools/merge_requests/59
-
-Thanks.
-
-Patch is now queued in branch for-5.5/core.
-
-Cheers,
-Benjamin
-
+> OK. Now we will complete a request in block softirq, which means the
+> irq thread of host driver should call blk_mq_complete_request() to
+> complete this request (triggering the block softirq) and call
+> blk_mq_run_hw_queues() to dispatch another request in this context.
 >
-> Bla=C5=BE
+> >
+> > As I understand, the main difference to today is that
+> > __blk_mq_delay_run_hw_queue() can call into __blk_mq_run_hw_queue
+> > directly rather than using the delayed work queue once we
+> > can skip the BLK_MQ_F_BLOCKING check.
 >
-> On Thu, 7 Nov 2019, at 17:48, Benjamin Tissoires wrote:
-> > Hi Bla=C5=BE,
+> Right. Need to improve this as you suggested.
+>
 > >
-> > On Wed, Nov 6, 2019 at 12:03 PM Bla=C5=BE Hrastnik <blaz@mxxn.io> wrote=
-:
+> > > > - With that change in place calling a blocking __mmc_claim_host() is
+> > > >   still a problem, so there should still be a nonblocking mmc_try_claim_host()
+> > > >   for the submission path, leading to a BLK_STS_DEV_RESOURCE (?)
+> > > >   return code from mmc_mq_queue_rq(). Basically mmc_mq_queue_rq()
+> > > >   should always return right away, either after having queued the next I/O
+> > > >   or with an error, but not waiting for the device in any way.
 > > >
-> > > Per Microsoft spec, usage 0xC5 (page 0xFF) returns a blob containing
-> > > data used to verify the touchpad as a Windows Precision Touchpad.
-> > >
-> > >    0x85, REPORTID_PTPHQA,    //    REPORT_ID (PTPHQA)
-> > >     0x09, 0xC5,              //    USAGE (Vendor Usage 0xC5)
-> > >     0x15, 0x00,              //    LOGICAL_MINIMUM (0)
-> > >     0x26, 0xff, 0x00,        //    LOGICAL_MAXIMUM (0xff)
-> > >     0x75, 0x08,              //    REPORT_SIZE (8)
-> > >     0x96, 0x00, 0x01,        //    REPORT_COUNT (0x100 (256))
-> > >     0xb1, 0x02,              //    FEATURE (Data,Var,Abs)
-> > >
-> > > However, some devices, namely Microsoft's Surface line of products
-> > > instead implement a "segmented device certification report" (usage 0x=
-C6)
-> > > which returns the same report, but in smaller chunks.
-> > >
-> > >     0x06, 0x00, 0xff,        //     USAGE_PAGE (Vendor Defined)
-> > >     0x85, REPORTID_PTPHQA,   //     REPORT_ID (PTPHQA)
-> > >     0x09, 0xC6,              //     USAGE (Vendor usage for segment #=
-)
-> > >     0x25, 0x08,              //     LOGICAL_MAXIMUM (8)
-> > >     0x75, 0x08,              //     REPORT_SIZE (8)
-> > >     0x95, 0x01,              //     REPORT_COUNT (1)
-> > >     0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
-> > >     0x09, 0xC7,              //     USAGE (Vendor Usage)
-> > >     0x26, 0xff, 0x00,        //     LOGICAL_MAXIMUM (0xff)
-> > >     0x95, 0x20,              //     REPORT_COUNT (32)
-> > >     0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
-> > >
-> > > By expanding Win8 touchpad detection to also look for the segmented
-> > > report, all Surface touchpads are now properly recognized by
-> > > hid-multitouch.
-> > >
-> > > Signed-off-by: Bla=C5=BE Hrastnik <blaz@mxxn.io>
-> > > ---
+> > > Actually not only the mmc_claim_host() will block the MMC request
+> > > processing, in this routine, the mmc_blk_part_switch() and
+> > > mmc_retune() can also block the request processing. Moreover the part
+> > > switching and tuning should be sync operations, and we can not move
+> > > them to a work or a thread.
 > >
-> > This looks good to me.
-> > We *could* shorten the ifs and make only one conditional, but I find
-> > it this way more readable and future proof.
+> > Ok, I see.
 > >
-> > There is just one last step required before we merge this: add a
-> > regression test so we ensure we do not break it in the future.
+> > Those would also cause requests to be sent to the device or the host
+> > controller, right? Maybe we can treat them as "a non-IO request
+>
+> Right.
+>
+> > has successfully been queued to the device" events, returning
+> > busy from the mmc_mq_queue_rq() function and then running
+> > the queue again when they complete?
+>
+> Yes, seems reasonable to me.
+>
 > >
-> > It should be merely a matter of sending a MR to
-> > https://gitlab.freedesktop.org/libevdev/hid-tools.
-> > It should consist in adding the report descriptor in the same way we
-> > have
-> > https://gitlab.freedesktop.org/libevdev/hid-tools/blob/master/tests/tes=
-t_multitouch.py#L1656-1658.
-> > Then, make sure an unpatched kernel breaks the multitouch test (sudo
-> > pytest-3 -k 'multitouch and TestPTP') and that a patched kernel is
-> > fixed.
-> >
-> > Cheers,
-> > Benjamin
-> >
-> > >  drivers/hid/hid-core.c | 4 ++++
-> > >  1 file changed, 4 insertions(+)
+> > > > - For the packed requests, there is apparently a very simple way to implement
+> > > >   that without a software queue: mmc_mq_queue_rq() is allowed to look at
+> > > >   and dequeue all requests that are currently part of the request_queue,
+> > > >   so it should take out as many as it wants to submit at once and send
+> > > >   them all down to the driver together, avoiding the need for any further
+> > > >   round-trips to blk_mq or maintaining a queue in mmc.
 > > >
-> > > diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-> > > index 63fdbf09b044..2af597cd5d65 100644
-> > > --- a/drivers/hid/hid-core.c
-> > > +++ b/drivers/hid/hid-core.c
-> > > @@ -742,6 +742,10 @@ static void hid_scan_feature_usage(struct hid_pa=
-rser *parser, u32 usage)
-> > >         if (usage =3D=3D 0xff0000c5 && parser->global.report_count =
-=3D=3D 256 &&
-> > >             parser->global.report_size =3D=3D 8)
-> > >                 parser->scan_flags |=3D HID_SCAN_FLAG_MT_WIN_8;
-> > > +
-> > > +       if (usage =3D=3D 0xff0000c6 && parser->global.report_count =
-=3D=3D 1 &&
-> > > +           parser->global.report_size =3D=3D 8)
-> > > +               parser->scan_flags |=3D HID_SCAN_FLAG_MT_WIN_8;
-> > >  }
-> > >
-> > >  static void hid_scan_collection(struct hid_parser *parser, unsigned =
-type)
-> > > --
-> > > 2.23.0
-> > >
+> > > You mean we can dispatch a request directly from
+> > > elevator->type->ops.dispatch_request()?  but we still need some helper
+> > > functions to check if these requests can be packed (the package
+> > > condition), and need to invent new APIs to start a packed request (or
+> > > using cqe interfaces, which means we still need to implement some cqe
+> > > callbacks).
 > >
+> > I don't know how the dispatch_request() function fits in there,
+> > what Hannes told me is that in ->queue_rq() you can always
+> > look at the following requests that are already queued up
+> > and take the next ones off the list. Looking at bd->last
+> > tells you if there are additional requests. If there are, you can
+> > look at the next one from blk_mq_hw_ctx (not sure how, but
+> > should not be hard to find)
 > >
+> > I also see that there is a commit_rqs() callback that may
+> > go along with queue_rq(), implementing that one could make
+> > this easier as well.
+>
+> Yes, we can use queue_rq()/commit_rqs() and bd->last (now bd->last may
+> can not work well, see [1]), but like we talked before, for packed
+> request, we still need some new interfaces (for example, a interface
+> used to start a packed request, and a interface used to complete a
+> packed request), but at last we got a consensus that we should re-use
+> the CQE interfaces instead of new invention.
+>
+> [1] https://lore.kernel.org/patchwork/patch/1102897/
+>
+> >
+> > > > - The DMA management (bounce buffer, map, unmap) that is currently
+> > > >   done in mmc_blk_mq_issue_rq() should ideally be done in the
+> > > >   init_request()/exit_request()  (?) callbacks from mmc_mq_ops so this
+> > > >   can be done asynchronously, out of the critical timing path for the
+> > > >   submission. With this, there won't be any need for a software queue.
+> > >
+> > > This is not true, now the blk-mq will allocate some static request
+> > > objects (usually the static requests number should be the same with
+> > > the hardware queue depth) saved in struct blk_mq_tags. So the
+> > > init_request() is used to initialize the static requests when
+> > > allocating them, and call exit_request to free the static requests
+> > > when freeing the 'struct blk_mq_tags', such as the queue is dead. So
+> > > we can not move the DMA management into the init_request/exit_request.
+> >
+> > Ok, I must have misremembered which callback that is then, but I guess
+> > there is some other place to do it.
+>
+> I checked the 'struct blk_mq_ops', and I did not find a ops can be
+> used to do DMA management. And I also checked UFS driver, it also did
+> the DMA mapping in the queue_rq() (scsi_queue_rq() --->
+> ufshcd_queuecommand() ---> ufshcd_map_sg()). Maybe I missed something?
+>
+> Moreover like I said above, for the packed request, we still need
+> implement something (like the software queue) based on the CQE
+> interfaces to help to handle packed requests.
 
+After some investigation and offline discussion with you, I still have
+some concerns about your suggestion.
+
+1) Now blk-mq have not supplied some ops to prepare a request, which is
+used to do some DMA management asynchronously. But yes, we can
+introduce new ops for blk-mq. But there are still some remaining
+preparation in mmc_mq_queue_rq(), like mmc part switch. For software
+queue, we can prepare a request totally after issuing one.
+
+2) I wonder if it is appropriate that using the irq threaded context
+to dispatch next request, actually we will still introduce a context
+switch here. Now we will complete a request in the hard irq handler
+and kick the softirq to do time-consuming operations, like DMA
+unmapping , and will start next request in the hard irq handler
+without context switch. Moreover if we remove the BLK_MQ_F_BLOCKING in
+future like you suggested, then we can remove all context switch. And
+I think we can dispatch next request in the softirq context (actually
+the CQE already did).
+
+3) For packed request support, I did not see an example that block
+driver can dispatch a request from the IO scheduler in queue_rq() and
+no APIs supported from blk-mq. And we do not know where can dispatch a
+request in queue_rq(), from IO scheduler? from ctx? or from
+hctx->dispatch list? and if this request can not be passed to host
+now, how to do it? Seems lots of complicated things.
+
+Moreover, we still need some interfaces for the packed request
+handling, from previous discussion, we still need something like MMC
+software queue based on  the CQE to help to handle the packed request.
+
+So I think I still need to introduce the MMC software queue, on the one
+hand is that it can really improve the performance from fio data and
+avoid a long latency, on the other hand we can expand it to support
+packed request easily in future. Thanks.
+
+(Anyway I will still post the V7 to address Adrian's comments and to
+see if we can get a consensus there).
+
+-- 
+Baolin Wang
+Best Regards
