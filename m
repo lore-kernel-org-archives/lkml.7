@@ -2,128 +2,187 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E50C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0021C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B668C222DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:53:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dRJCKVEo"
+	by mail.kernel.org (Postfix) with ESMTP id BE2B62230C
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 22:55:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfKRWxE (ORCPT
+        id S1727031AbfKRWz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 17:53:04 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21950 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726705AbfKRWxE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 17:53:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574117583;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vHC8PHwBSVJlfl9mKDf+6eaQiS+n7bl9SU0M3ddw71E=;
-        b=dRJCKVEoQoGgWtfMqnejcTnuPK7GtMbn5lm+XNbQgrLif4Fv+QRQQoMJXqPa2lgAln7LUM
-        VQ4uil+tWP8/BW01Lws/gWevYApXRsAL7o5uniAIy4ObntXMXwrSq5e5wohrmCX6NplSwk
-        nzFRfZjSG5cCuCGX4KYoxD7mKWf0nBs=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-255--9ChDMr9PF27kXAqmClMKA-1; Mon, 18 Nov 2019 17:53:01 -0500
-Received: by mail-wr1-f72.google.com with SMTP id p4so16901764wrw.15
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 14:53:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kV4v0rcx7ROVmVBnnH/7D38MAqllaJgL/+IcSiWha4Y=;
-        b=GF+kTkwwssHa8ZMmzh4B66fYA9UVhxT1Rqt9P1dwxjDF6Jlo0Xu/JobwlspRdQ9KkL
-         NApFNtPtokx0vfzLg9b6Sb+QYpj4cueRmosMLoYALkW7WgLYkrRAK1lHYayOmp5fYgKA
-         OCahasi/ohfmyGnhCf2XE5oZubVVOcUOEbZkz5H9PGzOkuLGcaIEoUAgRvk0F3G9R0XA
-         SuaSvzcJRCocqQjQ/N2cbEXfrbi7/rWgApD7/Jdz3LtsMwgWfljmp+hOgv86AehVEFzS
-         L2ZH5a0R7Od0e356N4QW0SaVJ/l5gbVrxzz/8gYLantgcybKLqZ04LL0odpj6/J6rbti
-         5WBQ==
-X-Gm-Message-State: APjAAAVtMhmWuC+UjJnhtaXUDQ92IVoBCuZF5qBkIE5VlOmAVidDNxgs
-        sRcGV0UfbYsau9GOz1q4kC9fJjy0Q9dPd5IB/V2c0ruO/IbaJgtRzKfebMhW1Z0TmHVm9pYPmg7
-        BfWwck0k9GyHudDXParbAxDlU
-X-Received: by 2002:adf:e58c:: with SMTP id l12mr12079029wrm.156.1574117580796;
-        Mon, 18 Nov 2019 14:53:00 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwoa4RK68vgg9+wWmozzqJMUPDZGG+Rrs6vlWToxYLzFwmweqCNkNlr8Ji1jUXVeJjARQlyRQ==
-X-Received: by 2002:adf:e58c:: with SMTP id l12mr12079013wrm.156.1574117580573;
-        Mon, 18 Nov 2019 14:53:00 -0800 (PST)
-Received: from redhat.com (bzq-79-176-6-42.red.bezeqint.net. [79.176.6.42])
-        by smtp.gmail.com with ESMTPSA id 200sm1025334wme.32.2019.11.18.14.52.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 14:52:59 -0800 (PST)
-Date:   Mon, 18 Nov 2019 17:52:56 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Khazhismel Kumykov <khazhy@google.com>
-Cc:     jasowang@redhat.com, wei.w.wang@intel.com,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH 1/2] virtio_balloon: fix pages_to_free calculation
-Message-ID: <20191118175114-mutt-send-email-mst@kernel.org>
-References: <CACGdZYJoHSN3vkj_QBz6Txmec9mJMmkH66j2XtqzpUWpfpw4Tg@mail.gmail.com>
- <20191118213811.22017-1-khazhy@google.com>
-MIME-Version: 1.0
-In-Reply-To: <20191118213811.22017-1-khazhy@google.com>
-X-MC-Unique: -9ChDMr9PF27kXAqmClMKA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+        Mon, 18 Nov 2019 17:55:56 -0500
+Received: from mga01.intel.com ([192.55.52.88]:47353 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726705AbfKRWz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 17:55:56 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 14:55:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,321,1569308400"; 
+   d="scan'208";a="407553765"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
+  by fmsmga006.fm.intel.com with ESMTP; 18 Nov 2019 14:55:55 -0800
+Message-ID: <bc93c261f04b74f709d4d320ef2f2af7bd167552.camel@linux.intel.com>
+Subject: Re: [PATCH] admin guide/pm: Admin guide for intel-speed-select
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     andriy.shevchenko@intel.com, prarit@redhat.com,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Date:   Mon, 18 Nov 2019 14:55:55 -0800
+In-Reply-To: <20191118104105.11776f58@lwn.net>
+References: <20191115204925.55181-1-srinivas.pandruvada@linux.intel.com>
+         <20191118104105.11776f58@lwn.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 01:38:10PM -0800, Khazhismel Kumykov wrote:
-> freed_pages was accumulating total freed pages, but was also subtracted
-> on each iteration from pages_to_free, which could potentially result in
-> attempting to free fewer pages than asked for. This change also makes
-> both freed_pages and pages_to_free in terms of "balloon pages", where
-> they were mismatched before.
+On Mon, 2019-11-18 at 10:41 -0700, Jonathan Corbet wrote:
+> On Fri, 15 Nov 2019 12:49:25 -0800
+> Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com> wrote:
+> 
+> > Added documentation to configure servers to use Intel(R) Speed
+> > Select Technology using intel-speed-select tool.
+> > 
+> > Signed-off-by: Srinivas Pandruvada <
+> > srinivas.pandruvada@linux.intel.com>
+> 
+> Thanks for improving the docs!  I do have a few overall comments,
+> though...  
+Thanks for the pointers below. I will work on this and submit again.
 
-And then patch 2/2 changes it back to both be regular pages.
-Which is good, but why do we have to go back and forth
-breaking then fixing it back?
+-Srinivas
 
-
->=20
-> Fixes: 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker"=
-)
-> Cc: Wei Wang <wei.w.wang@intel.com>
-> Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
-> ---
->  drivers/virtio/virtio_balloon.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_ball=
-oon.c
-> index 226fbb995fb0..7cf9540a40b8 100644
-> --- a/drivers/virtio/virtio_balloon.c
-> +++ b/drivers/virtio/virtio_balloon.c
-> @@ -782,11 +782,8 @@ static unsigned long shrink_balloon_pages(struct vir=
-tio_balloon *vb,
->  =09 * VIRTIO_BALLOON_ARRAY_PFNS_MAX balloon pages, so we call it
->  =09 * multiple times to deflate pages till reaching pages_to_free.
->  =09 */
-> -=09while (vb->num_pages && pages_to_free) {
-> -=09=09pages_freed +=3D leak_balloon(vb, pages_to_free) /
-> -=09=09=09=09=09VIRTIO_BALLOON_PAGES_PER_PAGE;
-> -=09=09pages_to_free -=3D pages_freed;
-> -=09}
-> +=09while (vb->num_pages && pages_to_free > pages_freed)
-> +=09=09pages_freed +=3D leak_balloon(vb, pages_to_free - pages_freed);
->  =09update_balloon_size(vb);
-> =20
->  =09return pages_freed;
-> --=20
-> 2.24.0.432.g9d3f5f5b63-goog
+> 
+> >  .../admin-guide/pm/intel-speed-select.rst     | 934
+> > ++++++++++++++++++
+> >  .../admin-guide/pm/working-state.rst          |   1 +
+> >  2 files changed, 935 insertions(+)
+> >  create mode 100644 Documentation/admin-guide/pm/intel-speed-
+> > select.rst
+> > 
+> > diff --git a/Documentation/admin-guide/pm/intel-speed-select.rst
+> > b/Documentation/admin-guide/pm/intel-speed-select.rst
+> > new file mode 100644
+> > index 000000000000..c2ce57ebc268
+> > --- /dev/null
+> > +++ b/Documentation/admin-guide/pm/intel-speed-select.rst
+> > @@ -0,0 +1,934 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +=========================================================
+> > +Intel® Speed Select Technology (Intel® SST) : User Guide
+> > +=========================================================
+> 
+> People give me grief when I take docs patches adding non-ascii
+> characters.
+> Adding nearly 100 useless ® symbols seems likely to trigger that sort
+> of
+> unicode aversion.  Can I ask you, please, to take those out?  There
+> are
+> many occurrences of unadorned "Intel" in the kernel, and the world
+> hasn't
+> ended yet.
+> 
+> > +The Intel® Speed Select Technology (Intel® SST) provides a
+> > powerful new
+> > +collection of features that give more granular control over CPU
+> > performance.
+> > +With Intel® SST, one server can be configured for power and
+> > performance for a
+> > +variety of diverse workload requirements.
+> > +
+> > +Refer to the links below for an overview of the technology:
+> > +
+> > +- 
+> > https://www.intel.com/content/www/us/en/architecture-and-technology/speed-select-technology-article.html
+> > +- 
+> > https://builders.intel.com/docs/networkbuilders/intel-speed-select-technology-base-frequency-enhancing-performance.pdf
+> > +
+> > +These capabilities are further enhanced in some of the newer
+> > generations of
+> > +server platforms where these features can be enumerated and
+> > controlled
+> > +dynamically without pre-configuring via BIOS setup options. This
+> > dynamic
+> > +configuration is done via mailbox commands to the hardware. One
+> > way to enumerate
+> > +and configure these features is by using the Intel® Speed Select
+> > utility.
+> > +
+> > +This document explains how to use the Intel® Speed Select tool to
+> > enumerate and
+> > +control Intel® SST features. This document gives example commands
+> > and explains
+> > +how these commands change the power and performance profile of the
+> > system under
+> > +test. Using this tool as an example, customers can replicate the
+> > messaging
+> > +implemented in the tool in their production software.
+> > +
+> > +
+> > +intel-speed-select configuration tool
+> > +-------------------------------------
+> 
+> The conventions for subsection markers are documented in
+> Documentation/doc-guide/sphinx.rst; this should be "========" rather
+> than
+> hyphens. 
+> 
+> > +Most Linux distribution packages include the "intel-speed-select"
+> > tool. If not,
+> > +it can be built by downloading the Linux kernel tree from
+> > kernel.org. Once
+> > +downloaded, the tool can be built without building the full
+> > kernel.
+> > +
+> > +From the kernel tree, run the following commands:
+> > +
+> > +# cd tools/power/x86/intel-speed-select/
+> > +
+> > +# make
+> > +
+> > +# make install
+> 
+> This kind of stuff isn't going to render well in the built docs.  Can
+> you
+> please change the literal text to literal blocks?  Something like:
+> 
+> 	From the kernel tree, run the following commands::
+> 
+> 		# cd tools/power/x86/intel-speed-select/
+> 		# make
+> 		# make install
+> 
+> Note the "::" on the first line; that introduces a literal block.  It
+> would
+> be good to build the docs once you're done and be sure that you're
+> happy
+> with the results.
+> 
+> There's a lot of these in this document.
+> 
+> > +
+> > +**Getting Help**
+> 
+> Since this is meant to be a section header, please mark it as such;
+> "------" would be the appropriate marker for a header at this level.
+> 
+> That's enough for a first pass.
+> 
+> Thanks,
+> 
+> jon
 
