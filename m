@@ -2,127 +2,60 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B3FC33C9C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12049C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F6B21852
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:20:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574094037;
-	bh=6Z3UN5A3BW1jsMv3ltooKPY0iW5X0XuSmfVz/7SFggM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nMtOf8h0m4LYO98TpMU8jVNUQd0deU9Tc5KMDVfGf7vlJzAYvu8e4xMuvJQ2pKXbi
-	 /7Nh28zeQiOjc5R+T2sdSFNEhmkHJGOCBfEjVmJhTN50ut0P1cmlIXKIPCQDqMQu4v
-	 0z+J8XW2EDA7O139vzFIElQY8bAmIcqMCVLP2edQ=
+	by mail.kernel.org (Postfix) with ESMTP id E2F5620885
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:23:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfKRQUg (ORCPT
+        id S1726735AbfKRQXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 11:20:36 -0500
-Received: from foss.arm.com ([217.140.110.172]:36694 "EHLO foss.arm.com"
+        Mon, 18 Nov 2019 11:23:04 -0500
+Received: from relay.sw.ru ([185.231.240.75]:57562 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726322AbfKRQUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 11:20:35 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC2861FB;
-        Mon, 18 Nov 2019 08:20:34 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2ADEB3F703;
-        Mon, 18 Nov 2019 08:20:34 -0800 (PST)
-Date:   Mon, 18 Nov 2019 16:20:32 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v5 09/16] regulator: bd71828: Basic support for ROHM
- bd71828 PMIC regulators
-Message-ID: <20191118162032.GI9761@sirena.org.uk>
-References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
- <ffd3ea4858f820e565aba88ccac395ce5b661538.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+        id S1726322AbfKRQXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 11:23:03 -0500
+Received: from dhcp-172-16-25-5.sw.ru ([172.16.25.5])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1iWjnP-0006u4-8v; Mon, 18 Nov 2019 19:22:35 +0300
+Subject: Re: [PATCH v4 1/3] kasan: No KASAN's memmove check if archs don't
+ have it.
+To:     Nick Hu <nickhu@andestech.com>, glider@google.com,
+        dvyukov@google.com, corbet@lwn.net, paul.walmsley@sifive.com,
+        palmer@sifive.com, aou@eecs.berkeley.edu, tglx@linutronix.de,
+        gregkh@linuxfoundation.org, alankao@andestech.com,
+        Anup.Patel@wdc.com, atish.patra@wdc.com,
+        kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-mm@kvack.org, green.hu@gmail.com
+References: <20191028024101.26655-1-nickhu@andestech.com>
+ <20191028024101.26655-2-nickhu@andestech.com>
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+Message-ID: <73f11f1e-6df7-c217-e05d-049d04717600@virtuozzo.com>
+Date:   Mon, 18 Nov 2019 19:22:23 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="BWWlCdgt6QLN7tv3"
-Content-Disposition: inline
-In-Reply-To: <ffd3ea4858f820e565aba88ccac395ce5b661538.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-X-Cookie: no maintenance:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191028024101.26655-2-nickhu@andestech.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10/28/19 5:40 AM, Nick Hu wrote:
+> If archs don't have memmove then the C implementation from lib/string.c is used,
+> and then it's instrumented by compiler. So there is no need to add KASAN's
+> memmove to manual checks.
+> 
+> Signed-off-by: Nick Hu <nickhu@andestech.com>
+> ---
 
---BWWlCdgt6QLN7tv3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Nov 18, 2019 at 08:57:57AM +0200, Matti Vaittinen wrote:
-
-> +static int ramp_delay_supported(struct regulator_dev *rdev)
-> +{
-> +	switch (rdev->desc->id) {
-> +	case BD71828_BUCK1:
-> +	case BD71828_BUCK2:
-> +	case BD71828_BUCK6:
-> +	case BD71828_BUCK7:
-> +		return 1;
-> +	default:
-> +		break;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int bd71828_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
-> +{
-> +	unsigned int val;
-> +
-> +	if (!ramp_delay_supported(rdev)) {
-> +		dev_err(&rdev->dev, "%s: can't set ramp-delay\n",
-> +			rdev->desc->name);
-> +		return -EINVAL;
-
-Rather than doing this it's better to just not provide the operation for
-devices that don't support it, that makes the handling in the core
-easier.
-
---BWWlCdgt6QLN7tv3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3SxM8ACgkQJNaLcl1U
-h9Aq0QgAgjb3+2lEoadTP4w8qi9OfeekF/Te3BOzBoRw/N3CEI0LRdBuZ0f+Co++
-QefQkzBXUOq8Pu7bNj+3h6eZiOVqwzPGej79fhswkmFiZGzPNHGJEegNAIQQm0Gt
-FxLz5qVqIfx2orOMrYbVMIYffkH3hHE5twc3PoUf6lTpyUoErQ1miskrOfiKdqe3
-WBlMS73mAzeN65q87QNESqie94xl+DxAY0caeTePuvbEA06Hgf6ZgHvv0uxb/38q
-7lI/AzRptAy7HJqHYy6onIRxd12cBoKYa8SsoOlghgepja3prAwDE0eQ0iXo260q
-kJTWfpuB6S3o/I5A6W0SUuKwiktIEw==
-=/GhS
------END PGP SIGNATURE-----
-
---BWWlCdgt6QLN7tv3--
+Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
