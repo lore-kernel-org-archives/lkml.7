@@ -2,82 +2,121 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB37C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E1DC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEB8D20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26DC720656
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:59:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfKRG7C (ORCPT
+        id S1727050AbfKRG7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 01:59:02 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:54456 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbfKRG7B (ORCPT
+        Mon, 18 Nov 2019 01:59:17 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33267 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfKRG7Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 01:59:01 -0500
-Received: by mail-il1-f199.google.com with SMTP id t67so15502856ill.21
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 22:59:01 -0800 (PST)
+        Mon, 18 Nov 2019 01:59:16 -0500
+Received: by mail-lf1-f65.google.com with SMTP id d6so12875480lfc.0;
+        Sun, 17 Nov 2019 22:59:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=aF2hkb+uDPuWocQ0k+VDFxZ3uHqIeoh49sdaxIzLqYY=;
-        b=T9chuOthCehPQZsWmIz8FLC+M5ykW7b3d5rCID9JnbdL66cv+P/IVwflbX2mBoYwln
-         AN8ZEvSinRqwFCKgg+0JRrM71GF7yYH6fbC+hp5iWssQkwfWTe2RZZGb+nSt6sTjEN7C
-         QrfRwDdCMvOvculiqZJKCsjPzOziq3cpE7zoY6lpQI+VGsL8Jyfnvb9edDNCf4wrZZeo
-         frFgWHe9WsjNe18LRc9skny7F4B8CBJo99vMY34GfzbzuLTcpMkZWxD8sE6PI5je8OS9
-         CEgXgOTOoqQjKHi4gfXjKWnyBQjoDDHKjHJgjKMvv3QspCw3OZ0xuqn6msgblHqi5k5O
-         dwyg==
-X-Gm-Message-State: APjAAAUo9BL7KQu0IYWuBRUEDfm7v6CCjcMyChegKI0KuILK44r10z41
-        yQJ8kH3dyQ3YttEZcRbl6z3zF0lCVWcbJrpOOTJFxDkN4AGH
-X-Google-Smtp-Source: APXvYqysoNyeEKRWypMnt+cdrFAOn38eJTXWLtV2lRmkpvPHZzOvepD6Or4PJwYns/Nexla5W6HU5q/UkUKWl9GBcKEhVFpMQAml
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RVKdKnG5iMjHQu+/M/QLPFA/qXZ5FAYTgqHPWRNz/Jo=;
+        b=GyD7I2IoZCsLOwwSThc7+Ia5MdGie2xT9EUQqlmr94Ip6nS2Fbbeej7pQJ0mjgLMht
+         AP33ZaAsAmKGAeM59O4KUSc/UMe7HlayEQyQRlk0OUZOXwvzSctZ+YmNff+4f6IFBuai
+         ROcgwleIT9pHAg+anuQxwJpWHzH/Z5r53aqL/YFLEUuFXR9AGC/DJc/5hb37Esy8Eqv6
+         bN/pPKsrKXjfXw55jHtrb9SwM+U75uOsvtWN4sRI6P9AW1Jkhlf1As41fJDt0NuHzOr1
+         1ZLiCkKHBhdvjDQAI3QbzXvwH7KRQKBfXfqVcP7hmvFCPrvAAvhCNI2yb5O7SOTpDNvb
+         EwoQ==
+X-Gm-Message-State: APjAAAVV3uE0GXyJiRiH7xaPf+1rcg2OYPhEulmOlWZfOzmLlMihv53K
+        dJV6ln0qVqc7KEXMlXsSCWQ=
+X-Google-Smtp-Source: APXvYqwx7G9VcP+/z4cDuqMlpv8QELf5eGMZ7QPVskjmAQOk5ZM/OixXGXzNrVqeBtXE7ttYO2LX3A==
+X-Received: by 2002:a19:c6d6:: with SMTP id w205mr17987978lff.17.1574060351964;
+        Sun, 17 Nov 2019 22:59:11 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id v203sm8427153lfa.25.2019.11.17.22.59.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Nov 2019 22:59:11 -0800 (PST)
+Date:   Mon, 18 Nov 2019 08:59:00 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: [PATCH v5 11/16] docs: driver-model: Add missing managed GPIO array
+ get functions
+Message-ID: <b6e5a44339b297815a6ed9c1d0c0967b475cd2e9.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8854:: with SMTP id t20mr12183485ios.301.1574060340893;
- Sun, 17 Nov 2019 22:59:00 -0800 (PST)
-Date:   Sun, 17 Nov 2019 22:59:00 -0800
-In-Reply-To: <0000000000002e4a260576c1589d@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000795dd20597997b1c@google.com>
-Subject: Re: KASAN: use-after-free Read in relay_switch_subbuf
-From:   syzbot <syzbot+29093015c21333d1c46d@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, bunk@kernel.org, ebiggers@google.com,
-        gregkh@linuxfoundation.org, jannh@google.com, jrdr.linux@gmail.com,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        linux@dominikbrodowski.net, mawilcox@microsoft.com,
-        mojha@codeaurora.org, rientjes@google.com,
-        sudipm.mukherjee@gmail.com, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk, yuehaibing@huawei.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+devm_gpiod_get_array and devm_gpiod_get_array_optional were missing
+from the list. Add them.
 
-commit 21c75ad65f8e5213ec542d99c259ffe3e3671e81
-Author: YueHaibing <yuehaibing@huawei.com>
-Date:   Thu Mar 21 08:26:28 2019 +0000
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+ Documentation/driver-api/driver-model/devres.rst | 2 ++
+ 1 file changed, 2 insertions(+)
 
-     parport_cs: Fix memory leak in parport_config
+diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+index 1b8302ba405b..b60d0702412d 100644
+--- a/Documentation/driver-api/driver-model/devres.rst
++++ b/Documentation/driver-api/driver-model/devres.rst
+@@ -267,6 +267,8 @@ DRM
+ 
+ GPIO
+   devm_gpiod_get()
++  devm_gpiod_get_array()
++  devm_gpiod_get_array_optional()
+   devm_gpiod_get_index()
+   devm_gpiod_get_index_optional()
+   devm_gpiod_get_optional()
+-- 
+2.21.0
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11480c6ae00000
-start commit:   26bc6721 Merge tag 'for-linus-2019-11-05' of git://git.ker..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=13480c6ae00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=15480c6ae00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8c5e2eca3f31f9bf
-dashboard link: https://syzkaller.appspot.com/bug?extid=29093015c21333d1c46d
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=132afbcce00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=179a1f8ae00000
 
-Reported-by: syzbot+29093015c21333d1c46d@syzkaller.appspotmail.com
-Fixes: 21c75ad65f8e ("parport_cs: Fix memory leak in parport_config")
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
