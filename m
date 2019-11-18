@@ -2,140 +2,76 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27911C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58346C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF471208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:54:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="crOFSaQr"
+	by mail.kernel.org (Postfix) with ESMTP id 2AC3C21479
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:56:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfKRQy0 (ORCPT
+        id S1727116AbfKRQ4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 11:54:26 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37910 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726600AbfKRQyQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 11:54:16 -0500
-Received: by mail-qt1-f196.google.com with SMTP id p20so20980902qtq.5;
-        Mon, 18 Nov 2019 08:54:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=CMliZbMmgQlyE8GZhRLJHK4msHkdSN6JBW1TZzgnJmU=;
-        b=crOFSaQrhFuUlWzurOTc1UKlws+/tTmqNYZ1gBwFC62K429mRZJIU/esJZtyVORwo+
-         a8RnudZOOeItMHDIvp7R37i+TxqwQdM6M/ue7daeXo+/gMzmbP0kpD7cQGDzxOS0vOmw
-         S54bJZw2kKKQGs+Wurv2dLq0bYgeHyAw1jTw3/rrB0ztjtV6kgkycBEeZ/gR3aCooqvs
-         HlhAiEHS6rnDzoFSO1D1dI9hEnu68NzovYvOXL8CvVjoaG2oGVB+oEgRkIcR9w1K4axg
-         u+6cNb/ts1xjEabGMISfzCxCPz1AFsNI4slxO6MnXk9sB4llHjfn4A1Fex6ty/8vHb1c
-         Kimg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=CMliZbMmgQlyE8GZhRLJHK4msHkdSN6JBW1TZzgnJmU=;
-        b=boQcLXQqh82dr1rI/NX979I2/lOK+sapu2l0jOfjf5cEcJPQeLB8CH7vPbmEcJLrum
-         jxBkyd+t9dhV9b7Y6xv2+SjQmIIvW/xdB0czrJQQ7rdxj7ds1g+HfB0RtJN9KPWNqsL3
-         Dex0Xi2VYL0iIkshg+Un77znGPr7zCn/VuBbWaTTPXxaT5h/dX2mxmpGroz2GZUCMjF7
-         hBMS5xjLQrXWcYLs60vQZsc5oTEUeeReA7UgZjocoFQR3l6hvwdGFx4Ya/Fu6HcHP54P
-         NzN1WeV4Lc/dK0y4UYiv76LcVFtTBNhVbkeRZz7gbXfvxsDwJ2veqQJNz3oNEZHgSJet
-         fC5A==
-X-Gm-Message-State: APjAAAU522M6My+AdZ3cJxh/5lBvkOt4gM7n6AH2IOTWCvqJOh7fUpV/
-        28cnyXPtC6ADoejLkMCki0M=
-X-Google-Smtp-Source: APXvYqw/LjMWWQ4YFTX1uO13xtjiVEdOpj5myZUyTC7KbLDouKST1+jYWsaz2KjkBqr3dyFHJaWtOA==
-X-Received: by 2002:ac8:ecc:: with SMTP id w12mr28213814qti.134.1574096054850;
-        Mon, 18 Nov 2019 08:54:14 -0800 (PST)
-Received: from localhost.localdomain ([72.53.229.209])
-        by smtp.gmail.com with ESMTPSA id a3sm8634648qkf.76.2019.11.18.08.54.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 08:54:14 -0800 (PST)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Grigoryev Denis <grigoryev@fastwel.ru>,
-        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-Subject: [PATCH v1 4/4] dt-bindings: mfd: update TI tps6105x chip bindings
-Date:   Mon, 18 Nov 2019 11:54:00 -0500
-Message-Id: <20191118165400.21985-5-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191118165400.21985-1-TheSven73@gmail.com>
-References: <20191118165400.21985-1-TheSven73@gmail.com>
+        Mon, 18 Nov 2019 11:56:35 -0500
+Received: from mga18.intel.com ([134.134.136.126]:36456 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726703AbfKRQ4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 11:56:34 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 08:56:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,320,1569308400"; 
+   d="scan'208";a="231229499"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 18 Nov 2019 08:56:32 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iWkKG-0002v9-C7; Tue, 19 Nov 2019 00:56:32 +0800
+Date:   Tue, 19 Nov 2019 00:56:15 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     kbuild-all@lists.01.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH linux-next] vsock/vmci: vmci_vsock_cb_host_called can be
+ static
+Message-ID: <20191118165615.y3kx2zkulexkoqwy@4978f4969bb8>
+References: <201911190014.3ixYVAbj%lkp@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201911190014.3ixYVAbj%lkp@intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver has been extended to optionally get its operational
-mode and regulator init data from the devicetree.
 
-Tree: next-20191118
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Fixes: b1bba80a4376 ("vsock/vmci: register vmci_transport only when VMCI guest/host are active")
+Signed-off-by: kbuild test robot <lkp@intel.com>
 ---
- .../devicetree/bindings/mfd/tps6105x.txt      | 32 ++++++++++++++++++-
- 1 file changed, 31 insertions(+), 1 deletion(-)
+ vmci_driver.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/tps6105x.txt b/Documentation/devicetree/bindings/mfd/tps6105x.txt
-index 93602c7a19c8..7c690812336a 100644
---- a/Documentation/devicetree/bindings/mfd/tps6105x.txt
-+++ b/Documentation/devicetree/bindings/mfd/tps6105x.txt
-@@ -7,7 +7,21 @@ Required properties:
- - compatible:		"ti,tps61050" or "ti,tps61052"
- - reg:			Specifies the I2C slave address
+diff --git a/drivers/misc/vmw_vmci/vmci_driver.c b/drivers/misc/vmw_vmci/vmci_driver.c
+index 95fed4664a2d2..cbb706dabede9 100644
+--- a/drivers/misc/vmw_vmci/vmci_driver.c
++++ b/drivers/misc/vmw_vmci/vmci_driver.c
+@@ -30,7 +30,7 @@ static bool vmci_host_personality_initialized;
  
--Example:
-+Optional subnode:
-+
-+The subnode selects the chip's operational mode.
-+There can be at most one single subnode.
-+
-+- regulator
-+	Required properties:
-+		- compatible: "ti,tps6105x-regulator"
-+	see Documentation/devicetree/bindings/regulator/regulator.txt
-+
-+- led
-+	Required properties:
-+		- compatible: "ti,tps6105x-leds"
-+
-+Example (GPIO operation only):
+ static DEFINE_MUTEX(vmci_vsock_mutex); /* protects vmci_vsock_transport_cb */
+ static vmci_vsock_cb vmci_vsock_transport_cb;
+-bool vmci_vsock_cb_host_called;
++static bool vmci_vsock_cb_host_called;
  
- i2c0 {
- 	tps61052@33 {
-@@ -15,3 +29,19 @@ i2c0 {
- 		reg = <0x33>;
- 	};
- };
-+
-+Example (GPIO + regulator operation):
-+
-+i2c0 {
-+	tps61052@33 {
-+		compatible = "ti,tps61052";
-+		reg = <0x33>;
-+
-+		regulator {
-+			compatible = "ti,tps6105x-regulator";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			regulator-always-on;
-+		};
-+	};
-+};
--- 
-2.17.1
-
+ /*
+  * vmci_get_context_id() - Gets the current context ID.
