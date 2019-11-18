@@ -2,91 +2,82 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6ECBC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 855C9C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C36C12195D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:52:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="bz6rJuqn"
+	by mail.kernel.org (Postfix) with ESMTP id 675FA21D7A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:52:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbfKRRwd (ORCPT
+        id S1726939AbfKRRwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 12:52:33 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:33858 "EHLO mail.skyhub.de"
+        Mon, 18 Nov 2019 12:52:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726317AbfKRRwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 12:52:33 -0500
-Received: from zn.tnic (p200300EC2F27B500B4ECF45A19F4392B.dip0.t-ipconnect.de [IPv6:2003:ec:2f27:b500:b4ec:f45a:19f4:392b])
+        id S1726317AbfKRRwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 12:52:50 -0500
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3F2F71EC05DE;
-        Mon, 18 Nov 2019 18:52:27 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1574099547;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=iPwPA4kAOvYxtc6qwVWrK8VMs7ifOI7h/WCSD5jVWg0=;
-        b=bz6rJuqnrovakF9Z+eGLt3sQiqDxp1IIlYt+NtYgSD/dh24aFro0pAt/i71j/dwb8eT1/I
-        A46PUo95WzjSxySG2bhhlK5ngbMnBcrKjoS+SZrfTK8F0R06ObyHsYuGjmekGh3xD8nEOM
-        MR+wYNa00wAV3SY/YTlJfmr/lQWyJbY=
-Date:   Mon, 18 Nov 2019 18:52:23 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Ilie Halip <ilie.halip@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
+        by mail.kernel.org (Postfix) with ESMTPSA id 779222195D;
+        Mon, 18 Nov 2019 17:52:48 +0000 (UTC)
+Date:   Mon, 18 Nov 2019 12:52:46 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-tip-commits@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
         "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH V2] x86/boot: explicitly place .eh_frame after .rodata
-Message-ID: <20191118175223.GM6363@zn.tnic>
-References: <CAKwvOdmSo=BWGnaVeejez6K0Tukny2niWXrr52YvOPDYnXbOsg@mail.gmail.com>
- <20191106120629.28423-1-ilie.halip@gmail.com>
- <20191118143553.GD6363@zn.tnic>
- <CAKwvOdmWoHqrUyZ-_ino9z7KRzizpdoY2ZL5ngUzwGy55MuZ4g@mail.gmail.com>
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/ftrace: Mark ftrace_modify_code_direct() __ref
+Message-ID: <20191118125246.3eb768fa@oasis.local.home>
+In-Reply-To: <20191118173510.GK6363@zn.tnic>
+References: <20191111132457.761255803@infradead.org>
+        <157381099055.29467.10982011694493970062.tip-bot2@tip-bot2>
+        <20191116204607.GC23231@zn.tnic>
+        <20191118173510.GK6363@zn.tnic>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdmWoHqrUyZ-_ino9z7KRzizpdoY2ZL5ngUzwGy55MuZ4g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 09:46:23AM -0800, Nick Desaulniers wrote:
-> Yep. Looks like:
-> - arch/x86/kernel/vmlinux.lds.S
-> - arch/x86/realmode/rm/realmode.lds.S
-> 
-> discard .eh_frame, while
-> - arch/x86/entry/vdso/vdso-layout.lds.S
-> - arch/x86/um/vdso/vdso-layout.lds.S
-> 
-> keep it.  I assume then that just vdso code that get linked into
-> userspace needs to preserve this.
+On Mon, 18 Nov 2019 18:35:10 +0100
+Borislav Petkov <bp@alien8.de> wrote:
 
-Yap, that's what I think too. Lemme add Andy to Cc.
 
-> This suggestion would be a functional change, which is why we pursued
-> the conservative change preserving it.
+> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+> index 2a179fb35cd1..108ee96f8b66 100644
+> --- a/arch/x86/kernel/ftrace.c
+> +++ b/arch/x86/kernel/ftrace.c
+> @@ -99,7 +99,12 @@ static int ftrace_verify_code(unsigned long ip, const char *old_code)
+>  	return 0;
+>  }
+>  
+> -static int
+> +/*
+> + * Marked __ref because it calls text_poke_early() which is .init.text. That is
+> + * ok because that call will happen early, during boot, when .init sections are
+> + * still present.
+> + */
+> +static int __ref
 
-Sure but what would be the purpose of preserving the section, especially
-in the early boot code? At least I don't see one. And kernel-proper
-kills it...
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Thx.
+-- Steve
 
--- 
-Regards/Gruss,
-    Boris.
+>  ftrace_modify_code_direct(unsigned long ip, const char *old_code,
+>  			  const char *new_code)
+>  {
 
-https://people.kernel.org/tglx/notes-about-netiquette
