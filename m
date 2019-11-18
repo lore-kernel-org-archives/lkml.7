@@ -2,82 +2,146 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 877F2C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1902C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E49E21934
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C64B12192B
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 17:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574098523;
-	bh=qcAeLgwzuMVxi2KtU2+/MT6hnx1Dw0WfKZY4aTsHq70=;
+	s=default; t=1574098526;
+	bh=rasdBgcNOS8TLz0Cf3ktGT2+AVhHyYlDyNvOMI5nekE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CRz4/t2ST+Lhhwv2hIMiLJyIRufYa0//8aEmBfC4Ho3lA9aTVlPQy87PideeabSZ7
-	 d3cmwiVguLLIVp/OV7v7LYpPUeKPCgGmNOh9qorLr3o6F4fQl3AkC40rTvz67aK91Y
-	 XViEyKRLKooUZwhzTXn7igmpmNx+S5ab3M2wpPH4=
+	b=VW6bWJAMu2bp/d7tZnmZqbpGDKSEdj2GDHmbVW49l2TeJ7HLeKckyFSfgLvPcbW+A
+	 pqI2bd6E/T8wvFm4qEs2qpgYCd7BMOuQLMJbxmrWRgyMprJ1PgW9pJ70UQntg5AjbO
+	 JzZ7KKaszsLdctTLgfHGYuFXDhoJJUHN7kYFfIBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfKRRfW (ORCPT
+        id S1726970AbfKRRfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 12:35:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726322AbfKRRfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 12:35:21 -0500
-Received: from localhost (unknown [89.205.134.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A0172192B;
-        Mon, 18 Nov 2019 17:35:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574098520;
-        bh=qcAeLgwzuMVxi2KtU2+/MT6hnx1Dw0WfKZY4aTsHq70=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cbrNI1H/qHKRJpkIRyZrH3AAVHufIbELBQnzMRYHp/XwQ7xu4pjH0Hm83u8UBDRkD
-         PvFENJPgW4CHZFTvStfCGX78i11aLq/JmpAK1ARVTsixiV5R0fBGVng7ukWMSq39sA
-         32sJ7MQHlH38R+GEroarYZbjsDygKrNTDHaSezCw=
-Date:   Mon, 18 Nov 2019 18:35:17 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     git@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: Signal conflict on merging metadata-differing patches
-Message-ID: <20191118173517.GA599094@kroah.com>
-References: <20191118172917.GA6063@vmlxhi-102.adit-jv.com>
+        Mon, 18 Nov 2019 12:35:25 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34466 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfKRRfY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 12:35:24 -0500
+Received: by mail-oi1-f193.google.com with SMTP id l202so16103124oig.1;
+        Mon, 18 Nov 2019 09:35:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Jcjl+xEyXDK406FvNEw7KIB7W8gDcLzQthDaCbnKJGk=;
+        b=PfP8rW8KmIsK1t9sFuGv1qvRkRDCjxK1mJYcHvaJ9HVpLxSpK79jm6JGOowdgbdw36
+         odI0ErPdhyyT17EMjRsgsrto69kpvNMBc+jFPdIAf+iGy+RoVX3xOVMFmfMybyaWVzYC
+         OrGc4tAZCFMFrDXxWjTsuhHXIb6qG1WDNaeb34LnASB6GyYRwM2ziR5anhd4HB3uHg6p
+         X8jui/dvQdKFAUU+2WAg//OKnsJCUOgM6tVtyPg9bVt5oZoOfEowtiFQ9BNUjbqM886E
+         ytQuL5e/gAYb2yEk0XLsKyKjsoYGus/h3MreYkwzm1V396D0WNHzqosycDo8DlBHpsUx
+         j2oQ==
+X-Gm-Message-State: APjAAAX7c1c3JqxMOR0YSMgTYL/pQJGyxKi2/1vUqJ5heOEUN+SBUoLg
+        lUfv7XL/5Pb4Ua0F21btgQ==
+X-Google-Smtp-Source: APXvYqwfUzBQrNJcOeJA5zqpj+/wS2ZIsgG7m9QKMazBEknnz6EFpoefnzgkRP4MpUSzowTNdWON0g==
+X-Received: by 2002:aca:d4c6:: with SMTP id l189mr108313oig.68.1574098522296;
+        Mon, 18 Nov 2019 09:35:22 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id d3sm6409543otq.25.2019.11.18.09.35.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 09:35:21 -0800 (PST)
+Date:   Mon, 18 Nov 2019 11:35:20 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Rajan Vaja <rajan.vaja@xilinx.com>
+Cc:     sre@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com,
+        jollys@xilinx.com, tejas.patel@xilinx.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: power: reset: xilinx: Add bindings for
+ ipi mailbox
+Message-ID: <20191118173520.GA23767@bogus>
+References: <1573564851-9275-1-git-send-email-rajan.vaja@xilinx.com>
+ <1573564851-9275-2-git-send-email-rajan.vaja@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191118172917.GA6063@vmlxhi-102.adit-jv.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1573564851-9275-2-git-send-email-rajan.vaja@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 06:29:17PM +0100, Eugeniu Rosca wrote:
-> Dear Git community,
+On Tue, Nov 12, 2019 at 05:20:50AM -0800, Rajan Vaja wrote:
+> Add IPI mailbox property and its example in xilinx zynqmp-power
+> documentation.
 > 
-> Due to high inflow of patches which Linux maintainers carry on their
-> shoulders and due to occasionally intricate relationships between
-> consecutive revisions of the same series, it may [1] happen that two
-> distinct revisions of the same patch (differing only/mostly in
-> metadata, e.g. Author's time-stamp and commit description) may end up
-> being merged on the same branch, without git to complain about that.
+> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> ---
+>  .../bindings/power/reset/xlnx,zynqmp-power.txt     | 41 ++++++++++++++++++++--
+>  1 file changed, 38 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt b/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
+> index d366f1e..450f3a4 100644
+> --- a/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
+> +++ b/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
+> @@ -8,9 +8,27 @@ Required properties:
+>   - compatible:		Must contain:	"xlnx,zynqmp-power"
+>   - interrupts:		Interrupt specifier
+>  
+> --------
+> -Example
+> --------
+> +Optional properties:
+> + - mbox-names	: Name given to channels seen in the 'mboxes' property.
+> +		  "rx" - Mailbox corresponding to receive path
+> +		  "tx" - Mailbox corresponding to transmit path
 
-Why would git complain about that?
+The order here doesn't match the example. The order should be defined.
 
-> Is there any "git merge" flag available off-the-shelf which (if used)
-> would signal such situations?
+> + - mboxes	: Standard property to specify a Mailbox. Each value of
+> +		  the mboxes property should contain a phandle to the
+> +		  mailbox controller device node and an args specifier
+> +		  that will be the phandle to the intended sub-mailbox
+> +		  child node to be used for communication. See
+> +		  Documentation/devicetree/bindings/mailbox/mailbox.txt
+> +		  for more details about the generic mailbox controller
+> +		  and client driver bindings. Also see
+> +		  Documentation/devicetree/bindings/mailbox/ \
+> +		  xlnx,zynqmp-ipi-mailbox.txt for typical controller that
+> +		  is used to communicate with this System controllers.
+> +
+> +--------
+> +Examples
+> +--------
+> +
+> +Example with interrupt method:
+>  
+>  firmware {
+>  	zynqmp_firmware: zynqmp-firmware {
+> @@ -23,3 +41,20 @@ firmware {
+>  		};
+>  	};
+>  };
+> +
+> +Example with IPI mailbox method:
+> +
+> +firmware {
+> +
+> +	zynqmp_firmware: zynqmp-firmware {
+> +		compatible = "xlnx,zynqmp-firmware";
+> +		method = "smc";
+> +
+> +		zynqmp_power: zynqmp-power {
+> +			compatible = "xlnx,zynqmp-power";
+> +			mboxes = <&ipi_mailbox_pmu0 0>,
+> +				 <&ipi_mailbox_pmu0 1>;
+> +			mbox-names = "tx", "rx";
 
-I don't understand what you are looking for here.  Two different
-versions of the patch were merged to different branches and then merged
-together, and git did the right thing with the resolution of the code.
+interrupts is required.
 
-What more can it do here?
-
-thanks,
-
-greg k-h
+> +		};
+> +	};
+> +};
+> -- 
+> 2.7.4
+> 
