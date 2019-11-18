@@ -2,109 +2,113 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF32C43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED18C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2C0A22303
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:34:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574109251;
-	bh=zT5xieo5s1d7/87J92eKpsMK/gmDLcvEqHP61vKhaDg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y5NfTuCeEzsO+k9Yz22zrmycOWHbVlkHln9dct+ADjBOljQl85jNeNLBEOO/EOJSp
-	 jKNBaIXNMn/CTPhH8IZBOowOl5RQQTC0JgN2NxnHxePFODqAyIhySNv8GLMZr8XwEb
-	 GkSkl0Co5R7P7L88hZd4fDZp0uiDAgJaxJogo+k8=
+	by mail.kernel.org (Postfix) with ESMTP id D78AC22302
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:35:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WPVQazv5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfKRUeK (ORCPT
+        id S1727050AbfKRUfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 15:34:10 -0500
-Received: from foss.arm.com ([217.140.110.172]:39798 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbfKRUeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 15:34:09 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C5AE0328;
-        Mon, 18 Nov 2019 12:34:08 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 253EF3F6C4;
-        Mon, 18 Nov 2019 12:34:07 -0800 (PST)
-Date:   Mon, 18 Nov 2019 20:34:06 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Grigoryev Denis <grigoryev@fastwel.ru>,
-        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org
-Subject: Re: [PATCH v1 1/4] tps6105x: add optional devicetree support
-Message-ID: <20191118203406.GE43585@sirena.org.uk>
-References: <20191118165400.21985-1-TheSven73@gmail.com>
- <20191118165400.21985-2-TheSven73@gmail.com>
- <20191118170111.GL9761@sirena.org.uk>
- <CAGngYiW+8m4fBAY5Ya_4YmEmCTQeiiNP6=aH2mUX6d2wY1442w@mail.gmail.com>
- <20191118174550.GA43585@sirena.org.uk>
- <CAGngYiXLx8rkkKPyALYyCHFyst2Ft8bCkP4uqmzXAHHqXhUvkQ@mail.gmail.com>
+        Mon, 18 Nov 2019 15:35:17 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:43610 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfKRUfQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 15:35:16 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAIKY6mi144903;
+        Mon, 18 Nov 2019 20:34:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=/m3kaDVW1sMY9brAV1q+FPeUQEVlhy04QwMV4rIKN7c=;
+ b=WPVQazv5GxJ695xUzInhmfhfdQ9BBih+cryPlMonblaBi5zijCQsMHi4sTTv3KgusZnf
+ +LTQRuOFEYOW25I777Kk7DJRsNRGhoV/2RwHmFw/H4jiN0pVAhz+WeSHozhr5kxpo0Nv
+ jKgEyoKUu4omzr7YHCfWfucZMWTqIOwJc0N794oaw4RGvXPKaqmFwjhYEbPBEKttCkPf
+ UC1qDilSQUoDxGknMhIdF04BIgiq+dZF7EVnNQ3Va4CCqcpSC9K8f54MjnoTbSNiplAu
+ E9wpKfdaWaORwi6SEZgybPeJmzsCWtOAwMFJ/m+4r6/gNR1o1h+WwWJAmFMm7WFYg/Yn Iw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2wa8htjsmj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Nov 2019 20:34:52 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAIKXV65164107;
+        Mon, 18 Nov 2019 20:34:51 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2wbxm33gdx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Nov 2019 20:34:51 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAIKYlMt006102;
+        Mon, 18 Nov 2019 20:34:47 GMT
+Received: from prakashs-mbp-2.lan (/98.248.138.49)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 18 Nov 2019 12:34:47 -0800
+Subject: Re: [RESEND RFC PATCH 0/1] CAP_SYS_NICE inside user namespace
+To:     Jann Horn <jannh@google.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Christian Brauner <christian@brauner.io>
+References: <1574096478-11520-1-git-send-email-prakash.sangappa@oracle.com>
+ <CAG48ez3HfUx2aRvqR_bWnGoTshrHnUzxUNt7K6Sv7cqtPDWaWw@mail.gmail.com>
+From:   Prakash Sangappa <prakash.sangappa@oracle.com>
+Message-ID: <9a63f7ae-562e-67a6-8f40-050c58c08933@oracle.com>
+Date:   Mon, 18 Nov 2019 12:34:45 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wTWi5aaYRw9ix9vO"
-Content-Disposition: inline
-In-Reply-To: <CAGngYiXLx8rkkKPyALYyCHFyst2Ft8bCkP4uqmzXAHHqXhUvkQ@mail.gmail.com>
-X-Cookie: Are we live or on tape?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAG48ez3HfUx2aRvqR_bWnGoTshrHnUzxUNt7K6Sv7cqtPDWaWw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911180177
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911180177
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---wTWi5aaYRw9ix9vO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Mon, Nov 18, 2019 at 01:13:24PM -0500, Sven Van Asbroeck wrote:
+On 11/18/19 11:36 AM, Jann Horn wrote:
+> On Mon, Nov 18, 2019 at 6:04 PM Prakash Sangappa
+> <prakash.sangappa@oracle.com> wrote:
+>> Some of the capabilities(7) which affect system wide resources, are ineffective
+>> inside user namespaces. This restriction applies even to root user( uid 0)
+>> from init namespace mapped into the user namespace. One such capability
+>> is CAP_SYS_NICE which is required to change process priority. As a result of
+>> which the root user cannot perform operations like increase a process priority
+>> using -ve nice value or set RT priority on processes inside the user namespace.
+>> A workaround to deal with this restriction is to use the help of a process /
+>> daemon running outside the user namespace to change process priority, which is
+>> a an inconvenience.
+> What is the goal here, in the big picture? Is your goal to allow
+> container admins to control the priorities of their tasks *relative to
+> each other*, or do you actually explicitly want container A to be able
+> to decide that its current workload is more timing-sensitive than
+> container B's?
 
-> This mfd chip can be wired up as one of the following:
-> - gpio only
-> - gpio + regulator
-> - gpio + led
-> - gpio + flash
-
-Is the regulator bit of this perhaps a voltage regulator and a current
-regulator packaged together mainly for use powering LEDs?  That's a
-hardware design I've seen before...
-
-> in this case, there is no elegant way to specify the regulator properties in
-> the devicetree. Except by grabbing a reference to a subnode perhaps. And then
-> I'd have to somehow make sure that the sub driver's device->of_node points
-> at this subnode, which the mfd core doesn't do automatically.
-
-Just point the regulator framework at the MFD's DT node - the children
-of the MFD can look at the parent device happily, there's several
-existing MFDs do this.
-
---wTWi5aaYRw9ix9vO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3TAD0ACgkQJNaLcl1U
-h9Bqlgf8Dib7KYvT7366jnJriGkt0NV9PQ/TYCN+prAOuGPFTXGKFfvvoDwmk+Tc
-1iVLFjL50q8VMfkPpi2AbDZM0MjA7eir/yIOyg9hxutkWz+ttnnELQEUORVSdGhp
-WF+GwkGMYn3kuFysi9uhPs+yX2gLPFia6TcxxiLkR8I/nOIWT36Lc3mEpu401yUN
-MP24CU830l7Su2ip1HgyoNuuI5vfJWvnpQKSo0Kz9iBFVgVlpDhNnPGXar9d3PQO
-c3LxleG+Y+SPXdmXpPE86ENAuAmVoxHU3W03m+rs4QhouK3EX/hjwVI9mASUZxoW
-YrENReY3z5W6007+5oh7wzABjwVxZQ==
-=7W1d
------END PGP SIGNATURE-----
-
---wTWi5aaYRw9ix9vO--
+It is more the latter. Admin should be able to explicitly decide that 
+container A
+workload is to be given priority over other containers.
