@@ -2,122 +2,173 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 349DAC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 017A9C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F316A20700
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CECCA20700
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 00:17:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="fY4VifiO"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Ofs0oW5R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbfKRAP7 (ORCPT
+        id S1726463AbfKRARy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 17 Nov 2019 19:15:59 -0500
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:47071 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfKRAP6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 17 Nov 2019 19:15:58 -0500
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id xAI0Fot3021357;
-        Mon, 18 Nov 2019 09:15:51 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com xAI0Fot3021357
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1574036151;
-        bh=2fdS7kMfmR6oyNZKoCSS091Xe4zADe96xKwvxeaKDak=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fY4VifiOns06P1Ey+PAugS+QTyjD1WTe+KjIbURzNMtI5bOh6fCR1QcHycIB33zdH
-         rDzqHZTdvXKFWA0zcPqXsbv4/M5qKSRL+6qZ9DbMxc0XbFnJJeifpamKtL8obJxD1M
-         WtLjccZ4l/esCrIDVpAU6BUo9Tu2JxC4fFadxPZIWzpK5PhXFXLiEYA+OjOGagG5N5
-         749VDAr8F2TaOrkjc5xovvMQJsZIoVftfo1J8L6QhQsUiJw+DTULQPrV6fdYBvgoSO
-         4oVoQmrBubpNSfFX2SVR9WHdFrAoKIQ9ZgDRxJDhnjcmwqeLYlAdjKsGQ9TXlfNjx1
-         YCN7rHRtpxHmQ==
-X-Nifty-SrcIP: [209.85.221.173]
-Received: by mail-vk1-f173.google.com with SMTP id k24so3671303vko.7;
-        Sun, 17 Nov 2019 16:15:51 -0800 (PST)
-X-Gm-Message-State: APjAAAWR+nWVz29whKOxn/ZIAh34v+ZdkU4fAfHnK49Yhjf+a92Q9ExR
-        JcCs8fOqTJnw0NZnBq2nGwzH6R+ojBpbQ1JJIGg=
-X-Google-Smtp-Source: APXvYqyG2Pe51fyDlRjckYvMpaRTqiNxqoXQNw1oMo/NUFnv31lJiYCQua9/O34kkWJPpnuo/Djji7ILtpRKOp+nWmw=
-X-Received: by 2002:ac5:cc43:: with SMTP id l3mr6251229vkm.96.1574036150024;
- Sun, 17 Nov 2019 16:15:50 -0800 (PST)
+        Sun, 17 Nov 2019 19:17:54 -0500
+Received: from ozlabs.org ([203.11.71.1]:57057 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726284AbfKRARx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 17 Nov 2019 19:17:53 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47GV0D4LwYz9s4Y;
+        Mon, 18 Nov 2019 11:17:47 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1574036270;
+        bh=er8aQvti1hb8NEWJoT8OPqKSmOaCUydcAzCHa+4TfB0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Ofs0oW5RVGKlEy4kP4u7bfwchbS8T3x7a2ZK8nBhZUyR+W2u9RbOGNrLk8/VIGwH4
+         uiLxZZk2EwZ6Qz6SZpaZx/3UT6ckvmfhmOX0W5c3gUbZIrbygUqj5MU4iUQts6XS7I
+         4kDFMRfMHrA1leluadOoTnOy+KG3t7RxOlqM42CHUBPR3uDJELa4u6diEgKQ6j23Zi
+         XKj9G9nOcdsvOBsrH1jjXjeHAgTNUvzZXe9Znw4ZO+pP5HhgG6OPJHYrLPbaYzyAfd
+         /KCeAvxoakn+y80gk13iD8kvbDOHJ/HF/rvx9yzqBGH1AJU/2VyfO+JaeTVSzzEnfM
+         jFQyYsyZu9j+g==
+Date:   Mon, 18 Nov 2019 11:17:44 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: linux-next: manual merge of the drm tree with the kbuild tree
+Message-ID: <20191118111744.2beeb816@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190528121148.GA18162@lst.de> <CAK7LNAQRW+phJrdR-5NfUE9L09O-nRiimfW5rB8Y8S9POtkxCA@mail.gmail.com>
-In-Reply-To: <CAK7LNAQRW+phJrdR-5NfUE9L09O-nRiimfW5rB8Y8S9POtkxCA@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 18 Nov 2019 09:15:13 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQFy=AfJtk4GT+FL=Kzcf6Ev=keKoUz_7Le7iZOQEc90g@mail.gmail.com>
-Message-ID: <CAK7LNAQFy=AfJtk4GT+FL=Kzcf6Ev=keKoUz_7Le7iZOQEc90g@mail.gmail.com>
-Subject: Re: building individual files in subdirectories
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/USf9csr6sW8/Z5gDG3oHV/U";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
+--Sig_/USf9csr6sW8/Z5gDG3oHV/U
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-(related to  https://lkml.org/lkml/2019/11/15/1152)
+Today's linux-next merge of the drm tree got a conflict in:
 
+  drivers/gpu/drm/i915/Kconfig.debug
 
-I received questions about single builds not working properly
-some times in the past.
+between commit:
 
-For example, the following is a post from Christoph to kbuild ML,
-and my reply to it.
+  fcbb8461fd23 ("kbuild: remove header compile test")
 
+from the kbuild tree and commit:
 
+  d30213e533fa ("drm/i915: Fix Kconfig indentation")
 
+from the drm tree.
 
-On Wed, May 29, 2019 at 10:12 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> On Tue, May 28, 2019 at 9:12 PM Christoph Hellwig <hch@lst.de> wrote:
-> >
-> > A few kernel modules have source files in multiple subdirectories.
-> > Trying to build just a single object of a source file in such a
-> > subdirectory currently doesn't work.
-> >
-> > For example:
-> >
-> > hch@brick:~/work/xfs$ make fs/xfs/libxfs/xfs_alloc.o
-> >   CALL    scripts/checksyscalls.sh
-> >   CALL    scripts/atomic/check-atomics.sh
-> >   DESCEND  objtool
-> > scripts/Makefile.build:42: fs/xfs/libxfs/Makefile: No such file or directory
-> > make[1]: *** No rule to make target 'fs/xfs/libxfs/Makefile'.  Stop.
-> > make: *** [Makefile:1747: fs/xfs/libxfs/xfs_alloc.o] Error 2
-> >
-> > Is there any reasonably easy way to get this to work?
->
->
-> While single targets are useful,
-> they never work correctly.
-> subdir-ccflags-y from upper Makefiles
-> are not inherited.
->
-> I want to implement single targets correctly, but
-> I have never got around to it.
->
-> "make fs/xfs/" is an alternative solution
-> although it will compile much more than you want.
->
-> Another solution is to put a dummy
-> fs/xfs/libxfs/Makefile
->
-> --
-> Best Regards
-> Masahiro Yamada
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
+--=20
+Cheers,
+Stephen Rothwell
 
+diff --cc drivers/gpu/drm/i915/Kconfig.debug
+index 41c8e39a73ba,eea79125b3ea..000000000000
+--- a/drivers/gpu/drm/i915/Kconfig.debug
++++ b/drivers/gpu/drm/i915/Kconfig.debug
+@@@ -1,33 -1,34 +1,33 @@@
+  # SPDX-License-Identifier: GPL-2.0-only
+  config DRM_I915_WERROR
+-         bool "Force GCC to throw an error instead of a warning when compi=
+ling"
+-         # As this may inadvertently break the build, only allow the user
+-         # to shoot oneself in the foot iff they aim really hard
+-         depends on EXPERT
+-         # We use the dependency on !COMPILE_TEST to not be enabled in
+-         # allmodconfig or allyesconfig configurations
+-         depends on !COMPILE_TEST
+-         default n
+-         help
+-           Add -Werror to the build flags for (and only for) i915.ko.
+-           Do not enable this unless you are writing code for the i915.ko =
+module.
+-=20
+-           Recommended for driver developers only.
+-=20
+-           If in doubt, say "N".
++ 	bool "Force GCC to throw an error instead of a warning when compiling"
++ 	# As this may inadvertently break the build, only allow the user
++ 	# to shoot oneself in the foot iff they aim really hard
++ 	depends on EXPERT
++ 	# We use the dependency on !COMPILE_TEST to not be enabled in
++ 	# allmodconfig or allyesconfig configurations
++ 	depends on !COMPILE_TEST
+ -	select HEADER_TEST
++ 	default n
++ 	help
++ 	  Add -Werror to the build flags for (and only for) i915.ko.
++ 	  Do not enable this unless you are writing code for the i915.ko module.
++=20
++ 	  Recommended for driver developers only.
++=20
++ 	  If in doubt, say "N".
+ =20
+  config DRM_I915_DEBUG
+-         bool "Enable additional driver debugging"
+-         depends on DRM_I915
+-         select DEBUG_FS
+-         select PREEMPT_COUNT
+-         select REFCOUNT_FULL
+-         select I2C_CHARDEV
+-         select STACKDEPOT
+-         select DRM_DP_AUX_CHARDEV
+-         select X86_MSR # used by igt/pm_rpm
+-         select DRM_VGEM # used by igt/prime_vgem (dmabuf interop checks)
+-         select DRM_DEBUG_MM if DRM=3Dy
++ 	bool "Enable additional driver debugging"
++ 	depends on DRM_I915
++ 	select DEBUG_FS
++ 	select PREEMPT_COUNT
++ 	select REFCOUNT_FULL
++ 	select I2C_CHARDEV
++ 	select STACKDEPOT
++ 	select DRM_DP_AUX_CHARDEV
++ 	select X86_MSR # used by igt/pm_rpm
++ 	select DRM_VGEM # used by igt/prime_vgem (dmabuf interop checks)
++ 	select DRM_DEBUG_MM if DRM=3Dy
+  	select DRM_DEBUG_SELFTEST
+  	select DMABUF_SELFTESTS
+  	select SW_SYNC # signaling validation framework (igt/syncobj*)
 
--- 
-Best Regards
-Masahiro Yamada
+--Sig_/USf9csr6sW8/Z5gDG3oHV/U
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3R4ygACgkQAVBC80lX
+0GxOxAf9H6jZ6ZSXV0i9podvVHiAjJFeotvG2AUiBoYF6mS0hNJY6OcEYVbUrDeY
+Y0tw1VaB/pYzZW82K4lHA2NHoM8K6M75YvTI2Pxcn63mTZVQNTQUgy3mkxdx8qvP
+dJykv2KBy7UbtHc6hatqrExixGNQR5/t2TPN9qfp86pbS/qccbmhFQWVkMp7lQjL
+vVhnrBQ9msIq8NqDmxm5vpa+aO8fFad3fB7F/tcECRcRdW0x0wVq1CogiXzJdZwi
+z291AQxk/YwHdkbq7ZU1DsVTJ5zJv8ezXBYFvvSnJgzhGmkjc3A37ha52HGr96Y3
+u/rkrtO4NVWbSrh9+0mPhIYv8n1+9Q==
+=gNCg
+-----END PGP SIGNATURE-----
+
+--Sig_/USf9csr6sW8/Z5gDG3oHV/U--
