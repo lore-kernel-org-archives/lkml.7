@@ -2,109 +2,92 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A59ACC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C0DC43141
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D5820726
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:37:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uEywBp9R"
+	by mail.kernel.org (Postfix) with ESMTP id F12D520726
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 07:37:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfKRHhU (ORCPT
+        id S1727105AbfKRHh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 02:37:20 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:46810 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfKRHhU (ORCPT
+        Mon, 18 Nov 2019 02:37:26 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:38567 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbfKRHhZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 02:37:20 -0500
-Received: by mail-pj1-f67.google.com with SMTP id a16so1233995pjs.13
-        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 23:37:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xe+Hh36CXezhILfUXHbWAftsPx9okk6we2CTbfEFf9s=;
-        b=uEywBp9R7GGZbAzKwdAp8tFWJqgwu/JH5HVj9tW+e7xMxu2mtryi1sS83Qn0KWgBC+
-         lQDxYX+Cnfc+47KD5MeyLaWjQgPPcxnck+6F46FzQ66bkSe5D5F0x/ho0I8lGxhGPKHP
-         pyr9nhutvn48T1wCAqqwcGzEfpfaS+AF30BYjLvzn3CVSOfYk4UKpBRtA668JhpHltoM
-         F7vIpSDC/GN6dWG/X3pLxhZ5HjV9hxCHb7xyssC8cGsKmApjJrtLs4eFWbQlGnc1GtTb
-         NTq1LuL7BUNhRrsGbnja7MPBHr9MDRp8WzrX/eLwT1p/3sh1IFSMEK2rMUE2MkoY+csp
-         kN9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xe+Hh36CXezhILfUXHbWAftsPx9okk6we2CTbfEFf9s=;
-        b=s9lxdGo5GOl00+OOpr61RMUjlaAm4ub4ABbZcImKAkldL475B3WaOFt517Yveoqtor
-         siXrEBtJGht4uXuftGIkWikco3KQknJJvdmhfJTWMqPTI9OSYK5hhQJOML0tXjsfy8Qq
-         j5OKq8CYEX5jsTtH4jlOQeyg3nwF+5AxJFstBkEJvg4euqde7C5uo+TN6PgSnBmjzZHc
-         DlVE3RwcQOnLQM3UDTyP/E28RZ6nycKmFHgimV/i+geQfm6KMZp+BkskSeq12Lz4s9pG
-         h42/HRyORdm7aN6sBnaO2q8WIP6moec2KH9UaoLxfClKYvM1a1slQr0rurpPusPgPmTr
-         CCAA==
-X-Gm-Message-State: APjAAAVEo1xZdogDtZBIODVqKv8YV6TKFCMXgKbBXSas+vA4JhSkslxy
-        1Un6d+glzS4HMePjfdVzcHI=
-X-Google-Smtp-Source: APXvYqxThCkDRP6EGlQmF9R4DC4kVnMAodv4rvCLvKrIbCeIrNU4+BLtKDrzVZu6CedepBM3wRJUKA==
-X-Received: by 2002:a17:90a:ca04:: with SMTP id x4mr38341944pjt.103.1574062639600;
-        Sun, 17 Nov 2019 23:37:19 -0800 (PST)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id ay16sm23001911pjb.2.2019.11.17.23.37.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Nov 2019 23:37:18 -0800 (PST)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, patches@opensource.cirrus.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] ASoC: wm5100: add missed pm_runtime_disable
-Date:   Mon, 18 Nov 2019 15:37:07 +0800
-Message-Id: <20191118073707.28298-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 18 Nov 2019 02:37:25 -0500
+Received: from localhost ([185.35.208.129]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N9dg5-1hli4Z3cEH-015WVh; Mon, 18 Nov 2019 08:36:54 +0100
+Date:   Mon, 18 Nov 2019 08:36:50 +0100
+From:   Andreas Klinger <ak@it-klinger.de>
+To:     robh+dt@kernel.org, jic23@kernel.org, mark.rutland@arm.com
+Cc:     mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
+        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        gregkh@linuxfoundation.org, christophe.jaillet@wanadoo.fr,
+        tglx@linutronix.de, mchehab+samsung@kernel.org,
+        davem@davemloft.net, paulmck@linux.ibm.com,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 4/4] MAINTAINERS: add maintainer for ping iio sensors
+Message-ID: <20191118073648.tk4otab6alsiuzt7@arbad>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Provags-ID: V03:K1:ZISP8DP7LxxcjVaKcb0HRurcDIs/0YQTEspXlzOeNUD09UpU21I
+ A8MfWMOlgmmvZwYxEVYwbPSQsxW7yxgfzqZdQCxtLfO/MgWG2IqPZMRQR+ZzfvL9TV8tknA
+ gJpZuVuMirJ5Dk2t49/AmA/SKYp5VCeCRO1xCWcWn+i79CdlQOeLjKt/bQLFSW8nwsS4xKP
+ EHfM7FqfJrwlgsCGPfjzQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:pzWtpX5zhZA=:uAPKewFawR4cgNWUdCnfrh
+ TKb2ODE7kL5lG4bjmgtm/SMhHhx/6z7AWNU0kO0TTrbrtWe/mGBhHzw6v4VeztTj1wdC7+IJd
+ zPXNvZ4S/5LK+u4dAflENtx6btQ41SHOEGxfOZKdkhbCtpOh5Pk4pwiYmuW/IuHHMK7MRynEB
+ mCbyrd1q1B1pLmlTkhO0jMvFoWvjBCSJDejDP9B/rRGO9d4/UxOWDhyJAXzUQ1zKdeAoFmTUd
+ 6oQMPQXVMR/YG9ed9q9gGHN4uuYvCK5hRULjaSlMF6p0nSTUYXMOeFb3mc11wC54M84KSLJ7N
+ 03OVQygOfpdHXEwYLJmcPdjteyFBIvFbwGqyn7U3o3sEMCBeeQoXTaNWXK+Yzkx55P0hX7eMF
+ pl/g+auPT/EPhh6WAbyl3CGPlkJ8UOhm8csfemYYdcKGQWci7KzvtIhMhS81f5adabVCIVrNQ
+ yQGI9HvlQ0xlagOiRgCJwJoOlZJJiQV6kxDRbXccBFdf5eXG85Up9GAdabbjhCrCEe8mRUKdG
+ iINAa9dIkQS36Ugm4xXsQFH0riCfkvLQhjMTms1HW3+0w+N9zZXqT2hWZJw3McmJr+g4PFGm3
+ CrPB2jE4wd1kbIfyI1y3FiL1gp1a7qBtYNMHwhFwu9w+ocos8pn254b9Vr5Vg0aaGnbEgJFz5
+ e7T1xwEAYbGk0albCkSO/QWAIMNX/8YUqka0KfylCv//nf5+DY7mlWgiPzA2ZbP3kAPXpE4ry
+ MHbYBLBWCCJvBdIvdpxvOwDCta/quArlCp9CtIrivJXfZiWVKRtn6SHAm1/OR6S2/DRYU9gDM
+ nmP4gUGy0BSXxWSHClGa+VJ5WfsFBdGiYizWTk5YBvT/cr+KtSXKuT/6qvdBkZNk+0QLJOmbE
+ 0N0MLkHejM1mychbQr5z9VBDKKf/oY5Ld4CKzAJ1Y=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver forgets to call pm_runtime_disable in remove and
-probe failure.
-Add the calls to fix it.
+Add a maintainer for the new parallax PING))) and LaserPING IIO sensors
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 ---
- sound/soc/codecs/wm5100.c | 2 ++
- 1 file changed, 2 insertions(+)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/sound/soc/codecs/wm5100.c b/sound/soc/codecs/wm5100.c
-index 4af0e519e623..91cc63c5a51f 100644
---- a/sound/soc/codecs/wm5100.c
-+++ b/sound/soc/codecs/wm5100.c
-@@ -2617,6 +2617,7 @@ static int wm5100_i2c_probe(struct i2c_client *i2c,
- 	return ret;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c6c34d04ce95..ad469adffb99 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12264,6 +12264,13 @@ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/panasonic-laptop.c
  
- err_reset:
-+	pm_runtime_disable(&i2c->dev);
- 	if (i2c->irq)
- 		free_irq(i2c->irq, wm5100);
- 	wm5100_free_gpio(i2c);
-@@ -2640,6 +2641,7 @@ static int wm5100_i2c_remove(struct i2c_client *i2c)
- {
- 	struct wm5100_priv *wm5100 = i2c_get_clientdata(i2c);
- 
-+	pm_runtime_disable(&i2c->dev);
- 	if (i2c->irq)
- 		free_irq(i2c->irq, wm5100);
- 	wm5100_free_gpio(i2c);
++PARALLAX PING IIO SENSOR DRIVER
++M:	Andreas Klinger <ak@it-klinger.de>
++L:	linux-iio@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/iio/proximity/parallax-ping.yaml
++F:	drivers/iio/proximity/ping.c
++
+ PARALLEL LCD/KEYPAD PANEL DRIVER
+ M:	Willy Tarreau <willy@haproxy.com>
+ M:	Ksenija Stanojevic <ksenija.stanojevic@gmail.com>
 -- 
-2.24.0
-
+2.11.0
