@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA46BC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2AAC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4A3C22319
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED78B22319
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:06:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bIVfal5T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TTGoXoCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfKRUGW (ORCPT
+        id S1727521AbfKRUG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 15:06:22 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35333 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727364AbfKRUF6 (ORCPT
+        Mon, 18 Nov 2019 15:06:29 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42263 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727341AbfKRUF4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 15:05:58 -0500
-Received: by mail-lf1-f65.google.com with SMTP id q28so954488lfp.2;
-        Mon, 18 Nov 2019 12:05:55 -0800 (PST)
+        Mon, 18 Nov 2019 15:05:56 -0500
+Received: by mail-lj1-f194.google.com with SMTP id n5so20431154ljc.9;
+        Mon, 18 Nov 2019 12:05:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=rtrkjrjFdrCSY4w3UkoaopBMgCTAU9tc9NbxXmX2YTg=;
-        b=bIVfal5TVp5xBuBX6ib+z1CzBJxpz6RaF2qAdEWAm9btjqcLZW4/Ah6i/EXi+X77vV
-         PhqjrJDdznHgGQYBexXUTGuVqpa5110USfShOzHSTcvJDJH8dB/ZXVKtiL+yOUZ1fKzL
-         cgL2KKrxnCNn7k6kCsm3t0aiOzj9nywSK2bmjLqTjRUSKMsGXXfU08ZW78R/DXS+gmPx
-         DvmecJFJwWV+APIfPg+wsr+JjtYzcAw12XhS6aODRo9XLGDwpf6oVZhCCTNumEiByX+7
-         lhY03Hdk5q/mcJhFuZCuW95zlgzwzmyYfIybzyKQFm8TNVLzCOe69QultsXAnnzUIGFS
-         qBcQ==
+        bh=J2fZoY0R7IbQjoE/jwqG69vNLdHsoiOa5JN/luWf3e0=;
+        b=TTGoXoCUGYgNLTlP5iXVrRXJPwkha1zSQ5AjyRhu1bMfayjzqzarGQeoe7vELP8Nxj
+         3vI5/0aOZXaZCRmJyKUU6mmLqM86R4X7aOL5sT1vVAbpgAfvV6uUS10yDdqq0+a0/RG2
+         qb5m+2UGJGO6yVqYwWnjw7ZY98IKLQe7jnYgq6XFnTo03LBK/xV1xxyzbh+Nz4Ph2Tcp
+         tDe/CWeFPSp0CCAGOLrMX6EoX0VegVJzBS2ZaOWKq0Jhpbqv6NExUuLztuGgi8c/+YxI
+         oq0GT1+fhZC5YJ1ky6L1cBdsQRMy7lu3KZh5OE44z8QokmQbIvRQOftu6NWOReH3/V7r
+         YWnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rtrkjrjFdrCSY4w3UkoaopBMgCTAU9tc9NbxXmX2YTg=;
-        b=g/Lz1XmIsCjeEYJkTXlNUTT6GLA4YMyXyr6wFyJjQi3Higl+l9kZQnfcaFKNt2GjJN
-         6BzBjktSi5ASXqnjkCxjXDgZEeDkHnenypR1/I+uha76aj/4yuCIvNqYTTAhLLiXfUhC
-         06uDE7ij+yjKBZCPaIDNhDlkKrz42AtCCJtHYo2AioWt+LCLOPJYRzWIkIgql4qnqCkh
-         LfKPMWef+fojvr8PY8dHNZnOhUpUiENSjF9COmX1SIh+cYQUOIzqTk4X6K7egQooaCsR
-         yTWTnAQlaZg2OVmnxyTjRXmficNkikwukbjFnHY8RGZQSh60gd7AT0ayceJVqzmdueww
-         Oo/Q==
-X-Gm-Message-State: APjAAAViDhFq9vUf50BHnUcb3nymWjirl5NvHFhKyf3b2KV5PjX45pvU
-        i6RoivndbR+L5ROhQERR/4I=
-X-Google-Smtp-Source: APXvYqwvDSE0CmdElgXhtuj+X3izqvNU9SOYdSyw5i/wFKniJwWhRhcNQLraK3ba4bGSLwu1vA1bjw==
-X-Received: by 2002:a19:ac08:: with SMTP id g8mr934655lfc.112.1574107554632;
-        Mon, 18 Nov 2019 12:05:54 -0800 (PST)
+        bh=J2fZoY0R7IbQjoE/jwqG69vNLdHsoiOa5JN/luWf3e0=;
+        b=OoVUAexYKlsi8ErAwt1PU0DVVqR4xc9oDiqLtDX/RhqVGmBwXRIhnFYLmd/tndRgvC
+         zmrlX1hqzZqtzpmk4FC/xDdtr4c8e28fODDkydnTn5vPJY6DQZS4Pu4xi8584vpNmIJK
+         D0Gg55h3kprWiAtukRhzArItfoRfr6e1a7bHd2h9PYqceV+/2ZsUPf3RxHGmvHzRI7lp
+         HqIlIvaTN/5n3RNZcDW+wW1c0KxdXVIJJ6W4tDFJwTkPeH+SZm3cRy2GBIgRavt2VwIy
+         KuVP4xHrlw8I3SWeQ+mwLgFr2aC6vEhQ3pkNqCkcJo0uCpwjmoyHUSmCKM2akaFGPllC
+         AQ3g==
+X-Gm-Message-State: APjAAAX14Tvp2TEX7/+grgNv+Zd7v81Ls4qAqSwq8HQ/BnwbtDf0Bb5d
+        5tD79YYqbBEULaXBXHWm4yo=
+X-Google-Smtp-Source: APXvYqz8ghWzEWo16209Cas+BFJnfWldFab38K4eefHAlKvmnAkeVTZ//bkXMQihDlZJIBr4ukwNjg==
+X-Received: by 2002:a2e:9b06:: with SMTP id u6mr963460lji.34.1574107553665;
+        Mon, 18 Nov 2019 12:05:53 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id j23sm9166942lji.41.2019.11.18.12.05.53
+        by smtp.gmail.com with ESMTPSA id j23sm9166942lji.41.2019.11.18.12.05.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 12:05:54 -0800 (PST)
+        Mon, 18 Nov 2019 12:05:53 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -67,9 +67,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v1 24/29] drm/tegra: dc: Use devm_platform_ioremap_resource
-Date:   Mon, 18 Nov 2019 23:02:42 +0300
-Message-Id: <20191118200247.3567-25-digetx@gmail.com>
+Subject: [PATCH v1 23/29] memory: tegra124-emc: Register as interconnect provider
+Date:   Mon, 18 Nov 2019 23:02:41 +0300
+Message-Id: <20191118200247.3567-24-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191118200247.3567-1-digetx@gmail.com>
 References: <20191118200247.3567-1-digetx@gmail.com>
@@ -80,34 +80,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Utilize that relatively new helper which makes code a bit cleaner.
+EMC now provides MC with memory bandwidth using interconnect API.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpu/drm/tegra/dc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/memory/tegra/tegra124-emc.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
-index 5b1f9ff97576..14834cba5455 100644
---- a/drivers/gpu/drm/tegra/dc.c
-+++ b/drivers/gpu/drm/tegra/dc.c
-@@ -2421,7 +2421,6 @@ static int tegra_dc_couple(struct tegra_dc *dc)
+diff --git a/drivers/memory/tegra/tegra124-emc.c b/drivers/memory/tegra/tegra124-emc.c
+index 2c73260654ba..c9478dcbeece 100644
+--- a/drivers/memory/tegra/tegra124-emc.c
++++ b/drivers/memory/tegra/tegra124-emc.c
+@@ -25,6 +25,7 @@
+ #define EMC_FBIO_CFG5				0x104
+ #define	EMC_FBIO_CFG5_DRAM_TYPE_MASK		0x3
+ #define	EMC_FBIO_CFG5_DRAM_TYPE_SHIFT		0
++#define EMC_FBIO_CFG5_DRAM_WIDTH_X64		BIT(4)
  
- static int tegra_dc_probe(struct platform_device *pdev)
+ #define EMC_INTSTATUS				0x0
+ #define EMC_INTSTATUS_CLKCHANGE_COMPLETE	BIT(4)
+@@ -1080,11 +1081,28 @@ static void emc_debugfs_init(struct device *dev, struct tegra_emc *emc)
+ 		dev_err(dev, "failed to create debugfs entry\n");
+ }
+ 
++static unsigned int emc_dram_data_bus_width_bytes(struct tegra_emc *emc)
++{
++	unsigned int bus_width;
++	u32 emc_cfg;
++
++	emc_cfg = readl_relaxed(emc->regs + EMC_FBIO_CFG5);
++	if (emc_cfg & EMC_FBIO_CFG5_DRAM_WIDTH_X64)
++		bus_width = 64;
++	else
++		bus_width = 32;
++
++	dev_info(emc->dev, "DRAM data-bus width: %ubit\n", bus_width);
++
++	return bus_width / 8;
++}
++
+ static int tegra_emc_probe(struct platform_device *pdev)
  {
--	struct resource *regs;
- 	struct tegra_dc *dc;
+ 	struct platform_device *mc;
+ 	struct device_node *np;
+ 	struct tegra_emc *emc;
++	unsigned int bus_width;
+ 	u32 ram_code;
  	int err;
  
-@@ -2478,8 +2477,7 @@ static int tegra_dc_probe(struct platform_device *pdev)
- 		tegra_powergate_power_off(dc->powergate);
- 	}
+@@ -1146,6 +1164,12 @@ static int tegra_emc_probe(struct platform_device *pdev)
+ 	if (IS_ENABLED(CONFIG_DEBUG_FS))
+ 		emc_debugfs_init(&pdev->dev, emc);
  
--	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	dc->regs = devm_ioremap_resource(&pdev->dev, regs);
-+	dc->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(dc->regs))
- 		return PTR_ERR(dc->regs);
++	bus_width = emc_dram_data_bus_width_bytes(emc);
++
++	err = tegra_icc_emc_setup_interconnect(&pdev->dev, bus_width);
++	if (err)
++		dev_err(&pdev->dev, "failed to initialize ICC: %d\n", err);
++
+ 	return 0;
+ };
  
 -- 
 2.23.0
