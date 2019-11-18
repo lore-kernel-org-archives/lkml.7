@@ -2,164 +2,131 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A7AC43215
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE22C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBF320748
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4BC206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 12:18:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tvosgQaO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbfKRMQX (ORCPT
+        id S1726813AbfKRMSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 07:16:23 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:44575 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbfKRMQX (ORCPT
+        Mon, 18 Nov 2019 07:18:37 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40233 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbfKRMSh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 07:16:23 -0500
-Received: from [192.168.1.155] ([77.2.21.1]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N0G5n-1hcFmY0NEN-00xMaq; Mon, 18 Nov 2019 13:16:09 +0100
-Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, robh+dt@kernel.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        m.szyprowski@samsung.com, broonie@kernel.org, t-kristo@ti.com,
-        mripard@kernel.org, p.zabel@pengutronix.de,
-        devicetree@vger.kernel.org
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <3c384b40-f353-eaec-b1d6-ba74f5338ce1@metux.net>
-Date:   Mon, 18 Nov 2019 13:15:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 18 Nov 2019 07:18:37 -0500
+Received: by mail-pl1-f193.google.com with SMTP id e3so9715238plt.7;
+        Mon, 18 Nov 2019 04:18:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cQqjGoXTfZR1JdEd7frIlLbAs9ReexofvLueKLqlVq0=;
+        b=tvosgQaOVccJ9RwFjanBszZ08wmytTTOb+PpQNDCnUpEk8Ai4Lgy0i+jFTZZSoZduO
+         MDufK2zZMsmseJkDTWp+bHs/H7Q49c7i8fsP61KhX7dW1zpgbuOIGM+ol3UP6UFneV3y
+         YpMkedziQuRn5BvjZ2zfJjEKHwpDECYoIXsjmNqUIoG/F1VmVV+XhAew2nnoO9VnwkOk
+         mFAw4CcROxwhI1wqoeXiAfWOxo2xrON1UnuAB4Ta/7dAoo6J98ry5myeYAOYWYmnm62j
+         AaR/Yp/FrZ9po+bnKzCQOmmvHLpiZlCNPllK6txNZCUbkDjof4Za4c262gukNMRepquU
+         ergQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cQqjGoXTfZR1JdEd7frIlLbAs9ReexofvLueKLqlVq0=;
+        b=I+mU+QXb5Q1LjFwXsn0+FL+7HVycr0MdKce2VHbUHtX7KFS9IXEeO/Kxv73T8ypnws
+         7l5BVUhsg+z5UXw+vUcsyKHx4SV2tYzFqJ2Z4holppA4GRzvJESJDCntauQGWWrh1V4q
+         bw374C8AUHCcL3A0Vol2EitFMFGOkAJWfrdqunFAFb5oTPBt8cKIbHRDPxJtEn876N8Z
+         RucKUJBgSVraDCWMO8IwgcO2Z81j7yRDc+M0LyI5uA3iIvsW1sZwtCd8h+1HcY1uf82t
+         QZc3Iln5k1s6xIvCGfKsCZU0NKv9EbJUJ8OpiJMr00dk7XUoRsPw4N7mKWkFQuVvq95V
+         aCJw==
+X-Gm-Message-State: APjAAAUGi0sjYRz68y8dQH4Y3teEQEkYBw6+jegY+uMzLpJxX+5vOFA9
+        71XkL195RQGWL++Jnqc/S5A=
+X-Google-Smtp-Source: APXvYqxk2G6oTTKeLj1iGpqhA+EA3a7JneBJiwp0mvUUw1Cesa97rPZrZ8b9WiCOyj+fGOWVY5T3Tg==
+X-Received: by 2002:a17:90a:a416:: with SMTP id y22mr39978002pjp.91.1574079516546;
+        Mon, 18 Nov 2019 04:18:36 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id k66sm16514221pgk.16.2019.11.18.04.18.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 04:18:35 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Fugang Duan <fugang.duan@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH net v3] net: fec: fix clock count mis-match
+Date:   Mon, 18 Nov 2019 20:18:26 +0800
+Message-Id: <20191118121826.26353-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20191030120440.3699-1-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:VQpp2LkkGOFS32U8chMPZcvqbjQhQ4rc0tkcJc2OEzDXeYPb7ST
- ow42k80v1vJuyImw6DO3M/z0OBC3Rtgi4CV1ZmFn2ryR6JkELuOZjoa/YAFxNyIb5KkFShw
- Lh17wToVV5OzhFFAeF3uTIZZfujHBFH87yJIJxRVvUOlJl0IHM0OpoomgDBHm7pQ6SHm8AL
- ZvKAB7oOJ22vwXDNnCbJA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/ACmG4NFdI4=:I0pAr59f+vmixjhNzmC0rZ
- hzINcwOJeCyyisQoH13jRRu1oh1HGt9LJIn4tfb77oMSomT5slJuexjZAcD/bHJXc0OjKS8PF
- vTqXO5m5tye6l1CR42/92uFlxFFx0ppf8xOwKrBXvznRdoPwLeam3fztkE1MJN69V0GJcZUNs
- 8v1cLG5hdiPNPCN9bL8r9fnRcPlqpO6dKEuvnm3iCzoPmiD1GDMPeJswaHqiHgPhxtL8kZpKd
- sLecXLGCSTnY/vvdg6eW+01IMfV3EPThHJ3uHgS/T5xUnniu8qFGmVQa2c2gMk5wMcyTfz/oI
- xak6YD7TxN5Eo1/pELE3Jao3uhij+j2n5sYDZ1dhyngDiBk/AvDwDDMsg8dNqWizwNpS40Uy7
- Dhmubna2gXqlaRMZrRc9YcsDcLnk2HY5gwCYV1LQK6Jwn66xbJYCr/syfkwLYa4b41l5V7ecI
- fBLpaH1hd+tskh3r4XWGuUSj8RPR555QTWTUiXXxCv22Zw5cjvNaTI1Hw0o6kD1vYd7+rXGg3
- yuvSnpgTUDqst9vGd8yG1wbZRDOcg9rS76eyxIN937k6USvrpZAQt85C3XFv6CgFY56CzjEKX
- MvItOY6vSIJJxPWUNrydgfTVwkp/Ts4yIKBF4Ui0XFIytB06/NEyNphqtTixGJlvyBK51Pkr9
- R2CiYl1NM6653CmwieonpjSJrh31V0R9Q+Yl6HMkXWCu36hTNfYE3/4rkhSsHEn4t7F3AFoUV
- NWjmpEJTPUoXD1vtWNLML6DfWhs927ye48HE62Ixm66jfVLnLt7o8B1TKjjjHWyHmAzc2V04u
- pHuzDTM/7CdMAXxGK2uFtYMtV5Zr1+Neu7Wkw3xF2PSpLIVbpcDAx32qKZ/P403tDy3YCU48s
- rUoOJZtBxZXtyH5iRp+Q==
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.10.19 13:04, Peter Ujfalusi wrote:
+pm_runtime_put_autosuspend in probe will call suspend to disable clks
+automatically if CONFIG_PM is defined. (If CONFIG_PM is not defined,
+its implementation will be empty, then suspend will not be called.)
 
-Hi,
+Therefore, we can call pm_runtime_get_sync to resume it first to enable
+clks, which matches the suspend. (Only when CONFIG_PM is defined, otherwise
+pm_runtime_get_sync will also be empty, then resume will not be called.)
 
-> For example any device using the same GPIO as reset/enable line can
-> reset/enable other devices, which is not something the other device might like
-> or can handle.
+Then it is fine to disable clks without causing clock count mis-match.
 
-IMHO, for such cases, invidual drivers shouldn't fiddle w/ raw gpio's
-directly, but be connected to (gpio-based) reset controllers or
-regulators instead. I believe, GPIO isn't the correct abstraction layer
-for such cases: it's not even IO, just O.
+Fixes: c43eab3eddb4 ("net: fec: add missed clk_disable_unprepare in remove")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/net/ethernet/freescale/fec_main.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-Let's sit back and rethink what the driver really wants to tell in those
-cases. For the enable lines we have:
-
-a) make sure the device is enabled/powered
-b) device does not need to be enabled/powered anymore
-c) device must be powercycled
-
-You see, it's actually tristate, which gets relevant if multiple devices
-on one line.
-
-Now add reset lines:
-
-a) force device into reset state
-b) force device out of reset state
-c) allow device going into reset state (but no need to force)
-d) allow device coming out of reset state (but no need to force)
-
-It even gets more weird if a device can be reset or powercycled
-externally.
-
-
-hmm, not entirely trivial ...
-
-> For example a device needs to be configured after it is enabled, but some other
-> driver would reset it while handling the same GPIO -> the device is not
-> operational anymmore as it lost it's configuration.
-
-Yeah, at least we need some signalling to the driver, so it can do the
-necessary steps. From the driver's PoV, it's an "foreign reset".
-
-> With the gpio-shared gpiochip we can overcome this by giving the gpio-shared
-> the role of making sure that the GPIO line only changes state when it will not
-> disturb any of the clients sharing the same GPIO line.
-
-How exactly do we know when such disturbance can / cannot happen ?
-That would be depending on individual chips *and* how they're wired on
-the board. We'd end up with some logical multiplexer, that's board
-specific.
-
-<snip>
-
-> If any of the codec requests the GPIO to be high, the line will go up and will
-> only going to be low when both of them set's their shared line to low.
-
-So, if one driver request reset, all attached devices will be reset ?
-Or if all drivers request reset, all attached devices will be reset ?
-
-Doesn't look so quite non-disturbing to me :o
-
-> I have also looked at the reset framework, but again it can not be applied in a
-> generic way for GPIOs shared for other purposes 
-
-What are the exact scenarios you have in mind ?
-
-> and all existing drivers must
-> be converted to use the reset framework (and adding a linux only warpper on top
-> of reset GPIOs).
-
-Maybe a bit time consuming, but IMHO not difficult. We could add generic
-helpers for creating a reset driver on a gpio. So the drivers wouldn't
-even care about gpio itself anymore, but let the reset subsystem so it
-all (eg. look for DT node and request corresponding gpio, etc).
-
-IMHO, that's something we should do nevertheless, even if it's just for
-cleaner code.
-
-After that we could put any kind of funny logic behind the scenes (eg.
-one could connect the reset pin to a spare uart instead of gpio, etc),
-w/o ever touching the individual drivers.
-
-
---mtx
-
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index a9c386b63581..4bb30761abfc 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -3636,6 +3636,11 @@ fec_drv_remove(struct platform_device *pdev)
+ 	struct net_device *ndev = platform_get_drvdata(pdev);
+ 	struct fec_enet_private *fep = netdev_priv(ndev);
+ 	struct device_node *np = pdev->dev.of_node;
++	int ret;
++
++	ret = pm_runtime_get_sync(&pdev->dev);
++	if (ret < 0)
++		return ret;
+ 
+ 	cancel_work_sync(&fep->tx_timeout_work);
+ 	fec_ptp_stop(pdev);
+@@ -3643,15 +3648,17 @@ fec_drv_remove(struct platform_device *pdev)
+ 	fec_enet_mii_remove(fep);
+ 	if (fep->reg_phy)
+ 		regulator_disable(fep->reg_phy);
+-	pm_runtime_put(&pdev->dev);
+-	pm_runtime_disable(&pdev->dev);
+-	clk_disable_unprepare(fep->clk_ahb);
+-	clk_disable_unprepare(fep->clk_ipg);
++
+ 	if (of_phy_is_fixed_link(np))
+ 		of_phy_deregister_fixed_link(np);
+ 	of_node_put(fep->phy_node);
+ 	free_netdev(ndev);
+ 
++	clk_disable_unprepare(fep->clk_ahb);
++	clk_disable_unprepare(fep->clk_ipg);
++	pm_runtime_put_noidle(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
++
+ 	return 0;
+ }
+ 
 -- 
-Dringender Hinweis: aufgrund existenzieller Bedrohung durch "Emotet"
-sollten Sie *niemals* MS-Office-Dokumente via E-Mail annehmen/öffenen,
-selbst wenn diese von vermeintlich vertrauenswürdigen Absendern zu
-stammen scheinen. Andernfalls droht Totalschaden.
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.24.0
+
