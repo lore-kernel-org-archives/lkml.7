@@ -2,210 +2,456 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC78C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66667C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66FAC2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:23:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lyB2ZoaE"
+	by mail.kernel.org (Postfix) with ESMTP id 16C6F206D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 13:27:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbfKRNXw (ORCPT
+        id S1726691AbfKRN1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 08:23:52 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46828 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfKRNXv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 08:23:51 -0500
-Received: by mail-io1-f68.google.com with SMTP id i11so7728587iol.13;
-        Mon, 18 Nov 2019 05:23:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=op5rd6aO2/xdLRaY54P25hFvtDdUpULFrgXMiQFvOAg=;
-        b=lyB2ZoaEUVNsw5pIhq8A/M3Qf4XTcofq7KgDzHdZpm/rMYlbxqTqa1SW9AfwLBjDV0
-         +NAp7cdLLr4J/MzbeRmqpxV1kjHgDUI0GU7FrEQZj3aDsokRzU8saxKwK9gwzAhxqWWA
-         wTe8neVFFRviLugbthQcRmWZP+hgGJ/2qkBs8ANJGrQ5Q8R3XDCqu4evi/en8C1+wiMT
-         6BRtC5QqqHgdxWfT0ox00G4YpsuOXdqpkhnEyYDvEn7rZ0gNeic3M8UZvFXVN72sR87q
-         3hCO6xitjYcRNYdgBnT1M6eoEY/Ik98caOUXBYvOvXOYkZLNqxp2HI1etP97fdCGdtDQ
-         rmdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=op5rd6aO2/xdLRaY54P25hFvtDdUpULFrgXMiQFvOAg=;
-        b=GRXF9rKNgcozHdSSNujPdbb1CuJijQ4Zz7RivIReg8fDIuoMj/ao3mHwiacjxadqUR
-         LSeH3DVKDP47aDB6c8GcbDBUfk9EZeV7PDQQzvUNLdYWVW/cJIH/kBJJH3La4bA+qCuw
-         lV/2GofAgKJGTU95kkvNBM3wvj7wqs1XS7g9Bi5l9VYFW5bKzEhDKDGTxuNMryZjRajh
-         7RyCDvjxOguoPEuEjpAD0nqXMpKNxa53rMNvSg7jlMWfIpwpMt318JcRUzcM6Sp7IDsK
-         bV5U+zhXXjN2njx94fVVQk+NtFp4x19OBNSLXRdLEj2k5TjLUvRcvSpeQOG7xFTjCWtr
-         vJYw==
-X-Gm-Message-State: APjAAAUXLFKcoWg8cMbZrBNnZ6T6wHw6u5x7ttlsTnXOtLQUCNGrgqd2
-        7yBw4Q/5M/OGmnOTDr4zs89dxNgf2Hep3oRwgBeFE+6JoUY=
-X-Google-Smtp-Source: APXvYqwwesXFTHMX8XUyxZkWh41hLitS8hyv0l7BRBm77qtkF2Vxd9k8PkikJb7y37ESM/fNSi6wklRzseDLD42tLo4=
-X-Received: by 2002:a5d:9547:: with SMTP id a7mr13366391ios.198.1574083430516;
- Mon, 18 Nov 2019 05:23:50 -0800 (PST)
+        Mon, 18 Nov 2019 08:27:06 -0500
+Received: from mga11.intel.com ([192.55.52.93]:29995 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726284AbfKRN1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 08:27:05 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 05:27:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,320,1569308400"; 
+   d="scan'208";a="204197604"
+Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.13.128])
+  by fmsmga007.fm.intel.com with ESMTP; 18 Nov 2019 05:27:00 -0800
+Date:   Mon, 18 Nov 2019 21:33:52 +0800
+From:   Philip Li <philip.li@intel.com>
+To:     vishnu <vravulap@amd.com>
+Cc:     Julia Lawall <julia.lawall@lip6.fr>,
+        Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>, Alexander.Deucher@amd.com,
+        djkurtz@google.com, Akshu.Agrawal@amd.com,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        Maruthi Bayyavarapu <maruthi.bayyavarapu@amd.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Sanju R Mehta <sanju.mehta@amd.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        kbuild-all@lists.01.org
+Subject: Re: [kbuild-all] Re: [RESEND PATCH v5 6/6] ASoC: amd: Added ACP3x
+ system resume and runtime pm (fwd)
+Message-ID: <20191118133352.GA3979@intel.com>
+References: <alpine.DEB.2.21.1911171206540.2641@hadrien>
+ <a0436f74-4396-90e3-76fb-9b00abe4e925@amd.com>
 MIME-Version: 1.0
-References: <1574049061-11417-1-git-send-email-cang@qti.qualcomm.com> <1574049061-11417-5-git-send-email-cang@qti.qualcomm.com>
-In-Reply-To: <1574049061-11417-5-git-send-email-cang@qti.qualcomm.com>
-From:   Alim Akhtar <alim.akhtar@gmail.com>
-Date:   Mon, 18 Nov 2019 18:53:13 +0530
-Message-ID: <CAGOxZ53Z6je9Omuh2k=wVJrGVKZDfsfx6=mUJ-8QiRk-2q3u0g@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] scsi: ufs: Complete pending requests in host reset
- and restore path
-To:     Can Guo <cang@qti.qualcomm.com>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com,
-        Mark Salyzyn <salyzyn@google.com>,
-        Can Guo <cang@codeaurora.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a0436f74-4396-90e3-76fb-9b00abe4e925@amd.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 9:22 AM Can Guo <cang@qti.qualcomm.com> wrote:
->
-> From: Can Guo <cang@codeaurora.org>
->
-> In UFS host reset and restore path, before probe, we stop and start the
-> host controller once. After host controller is stopped, the pending
-> requests, if any, are cleared from the doorbell, but no completion IRQ
-> would be raised due to the hba is stopped.
-> These pending requests shall be completed along with the first NOP_OUT
-> command(as it is the first command which can raise a transfer completion
-> IRQ) sent during probe.
-> Since the OCSs of these pending requests are not SUCCESS(because they are
-> not yet literally finished), their UPIUs shall be dumped. When there are
-> multiple pending requests, the UPIU dump can be overwhelming and may lead
-> to stability issues because it is in atomic context.
-> Therefore, before probe, complete these pending requests right after host
-> controller is stopped and silence the UPIU dump from them.
->
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> ---
+On Mon, Nov 18, 2019 at 02:28:07PM +0530, vishnu wrote:
+> 
+> 
+> On 17/11/19 4:40 PM, Julia Lawall wrote:
+> > Line 179 needs to cleanup everything that needed to be cleaned up in the
+> > previous error handling code (line 173) as well as adding an iounmap.  But
+> > maybe you could have used a devm function to avoid the need for the
+> > iounmap.
+> > 
+> > Also functions should have blank lines between them.  That is why this
+> > report contains lots of function definitions, and not just the one with
+> > the problem.
+> > 
+> > julia
+> 
+> 
+> Hi Julia,
+> 
+> This is not latest version.I have already send V6 version.
+> The comment which you gave is for v5 old version.
+sorry Vishnu, this is kbuild side problem, we will look into it
+to see why we didn't block the report if there's new version.
 
-Tested-by: Alim Akhtar <alim.akhtar@samsung.com>
+thanks
 
-Please add all previous Ack/reviewed and tested-by tags so that we are
-aware what need to be done for this patch.
-Thanks
-
->  drivers/scsi/ufs/ufshcd.c | 24 ++++++++++--------------
->  drivers/scsi/ufs/ufshcd.h |  2 ++
->  2 files changed, 12 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index 5950a7c..b92a3f4 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -4845,7 +4845,7 @@ static void ufshcd_slave_destroy(struct scsi_device *sdev)
->                 break;
->         } /* end of switch */
->
-> -       if (host_byte(result) != DID_OK)
-> +       if ((host_byte(result) != DID_OK) && !hba->silence_err_logs)
->                 ufshcd_print_trs(hba, 1 << lrbp->task_tag, true);
->         return result;
->  }
-> @@ -5404,8 +5404,8 @@ static void ufshcd_err_handler(struct work_struct *work)
->
->         /*
->          * if host reset is required then skip clearing the pending
-> -        * transfers forcefully because they will automatically get
-> -        * cleared after link startup.
-> +        * transfers forcefully because they will get cleared during
-> +        * host reset and restore
->          */
->         if (needs_reset)
->                 goto skip_pending_xfer_clear;
-> @@ -6333,9 +6333,15 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
->         int err;
->         unsigned long flags;
->
-> -       /* Reset the host controller */
-> +       /*
-> +        * Stop the host controller and complete the requests
-> +        * cleared by h/w
-> +        */
->         spin_lock_irqsave(hba->host->host_lock, flags);
->         ufshcd_hba_stop(hba, false);
-> +       hba->silence_err_logs = true;
-> +       ufshcd_complete_requests(hba);
-> +       hba->silence_err_logs = false;
->         spin_unlock_irqrestore(hba->host->host_lock, flags);
->
->         /* scale up clocks to max frequency before full reinitialization */
-> @@ -6369,7 +6375,6 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
->  static int ufshcd_reset_and_restore(struct ufs_hba *hba)
->  {
->         int err = 0;
-> -       unsigned long flags;
->         int retries = MAX_HOST_RESET_RETRIES;
->
->         do {
-> @@ -6379,15 +6384,6 @@ static int ufshcd_reset_and_restore(struct ufs_hba *hba)
->                 err = ufshcd_host_reset_and_restore(hba);
->         } while (err && --retries);
->
-> -       /*
-> -        * After reset the door-bell might be cleared, complete
-> -        * outstanding requests in s/w here.
-> -        */
-> -       spin_lock_irqsave(hba->host->host_lock, flags);
-> -       ufshcd_transfer_req_compl(hba);
-> -       ufshcd_tmc_handler(hba);
-> -       spin_unlock_irqrestore(hba->host->host_lock, flags);
-> -
->         return err;
->  }
->
-> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-> index e0fe247..1e51034 100644
-> --- a/drivers/scsi/ufs/ufshcd.h
-> +++ b/drivers/scsi/ufs/ufshcd.h
-> @@ -513,6 +513,7 @@ struct ufs_stats {
->   * @uic_error: UFS interconnect layer error status
->   * @saved_err: sticky error mask
->   * @saved_uic_err: sticky UIC error mask
-> + * @silence_err_logs: flag to silence error logs
->   * @dev_cmd: ufs device management command information
->   * @last_dme_cmd_tstamp: time stamp of the last completed DME command
->   * @auto_bkops_enabled: to track whether bkops is enabled in device
-> @@ -670,6 +671,7 @@ struct ufs_hba {
->         u32 saved_err;
->         u32 saved_uic_err;
->         struct ufs_stats ufs_stats;
-> +       bool silence_err_logs;
->
->         /* Device management request data */
->         struct ufs_dev_cmd dev_cmd;
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
-
-
--- 
-Regards,
-Alim
+> 
+> 
+> Thanks,
+> Vishnu
+> 
+> > ---------- Forwarded message ----------
+> > Date: Sun, 17 Nov 2019 13:55:47 +0800
+> > From: kbuild test robot <lkp@intel.com>
+> > To: kbuild@lists.01.org
+> > Cc: Julia Lawall <julia.lawall@lip6.fr>
+> > Subject: Re: [RESEND PATCH v5 6/6] ASoC: amd: Added ACP3x system resume and
+> >      runtime pm
+> > 
+> > CC: kbuild-all@lists.01.org
+> > In-Reply-To: <1573629249-13272-7-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+> > References: <1573629249-13272-7-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+> > CC:
+> > 
+> > Hi Ravulapati,
+> > 
+> > Thank you for the patch! Perhaps something to improve:
+> > 
+> > [auto build test WARNING on asoc/for-next]
+> > [cannot apply to v5.4-rc7 next-20191115]
+> > [if your patch is applied to the wrong git tree, please drop us a note to help
+> > improve the system. BTW, we also suggest to use '--base' option to specify the
+> > base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> > 
+> > url:    https://github.com/0day-ci/linux/commits/Ravulapati-Vishnu-vardhan-rao/ASoC-amd-Create-multiple-I2S-platform-device-Endpoint/20191113-230604
+> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+> > :::::: branch date: 4 days ago
+> > :::::: commit date: 4 days ago
+> > 
+> > If you fix the issue, kindly add following tag
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+> > 
+> > > > sound/soc/amd/raven/pci-acp3x.c:179:2-8: ERROR: missing iounmap; ioremap on line 170 and execution via conditional on line 178
+> > 
+> > # https://github.com/0day-ci/linux/commit/bfd341330019202bd0a17caa808937c88d536e58
+> > git remote add linux-review https://github.com/0day-ci/linux
+> > git remote update linux-review
+> > git checkout bfd341330019202bd0a17caa808937c88d536e58
+> > vim +179 sound/soc/amd/raven/pci-acp3x.c
+> > 
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12   24
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   25  static int acp3x_power_on(void __iomem *acp3x_base)
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   26  {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   27  	u32 val;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   28  	u32 timeout = 0;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   29  	int ret = 0;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   30
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   31  	val = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   32
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   33  	if (val == 0)
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   34  		return val;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   35
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   36  	if (!((val & ACP_PGFSM_STATUS_MASK) ==
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   37  				ACP_POWER_ON_IN_PROGRESS))
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   38  		rv_writel(ACP_PGFSM_CNTL_POWER_ON_MASK,
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   39  			acp3x_base + mmACP_PGFSM_CONTROL);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   40  	while (++timeout < DELAY) {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   41  		val  = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   42  		if (!val)
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   43  			break;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   44  		udelay(1);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   45  		if (timeout > 500) {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   46  			pr_err("ACP is Not Powered ON\n");
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   47  			return -ETIMEDOUT;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   48  		}
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   49  	}
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   50  }
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   51  static int acp3x_power_off(void __iomem *acp3x_base)
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   52  {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   53  	u32 val;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   54  	u32 timeout = 0;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   55
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   56  	rv_writel(ACP_PGFSM_CNTL_POWER_OFF_MASK,
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   57  			acp3x_base + mmACP_PGFSM_CONTROL);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   58  	while (++timeout < DELAY) {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   59  		val  = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   60  		if ((val & ACP_PGFSM_STATUS_MASK) == ACP_POWERED_OFF)
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   61  			return 0;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   62  		udelay(1);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   63  		if (timeout > 500) {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   64  			pr_err("ACP is Not Powered OFF\n");
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   65  			return -ETIMEDOUT;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   66  		}
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   67  	}
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   68  }
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   69  static int acp3x_reset(void __iomem *acp3x_base)
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   70  {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   71  	u32 val, timeout;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   72
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   73  	rv_writel(1, acp3x_base + mmACP_SOFT_RESET);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   74  	timeout = 0;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   75  	while (++timeout < DELAY) {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   76  		val = rv_readl(acp3x_base + mmACP_SOFT_RESET);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   77  		if ((val & ACP3x_SOFT_RESET__SoftResetAudDone_MASK) ||
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   78  							timeout > 100) {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   79  			if (val & ACP3x_SOFT_RESET__SoftResetAudDone_MASK)
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   80  				break;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   81  			return -ENODEV;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   82  		}
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   83  		cpu_relax();
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   84  	}
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   85  	rv_writel(0, acp3x_base + mmACP_SOFT_RESET);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   86  	timeout = 0;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   87  	while (++timeout < DELAY) {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   88  		val = rv_readl(acp3x_base + mmACP_SOFT_RESET);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   89  		if (!val)
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   90  			break;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   91  		if (timeout > 100)
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   92  			return -ENODEV;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   93  		cpu_relax();
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   94  	}
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   95  	return 0;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   96  }
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   97  static int acp3x_init(void __iomem *acp3x_base)
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   98  {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13   99  	int ret;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  100
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  101  	/* power on */
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  102  	ret = acp3x_power_on(acp3x_base);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  103  	if (ret) {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  104  		pr_err("ACP3x power on failed\n");
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  105  		return ret;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  106  	}
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  107  	/* Reset */
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  108  	ret = acp3x_reset(acp3x_base);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  109  	if (ret) {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  110  		pr_err("ACP3x reset failed\n");
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  111  		return ret;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  112  	}
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  113  	return 0;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  114  }
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  115  static int acp3x_deinit(void __iomem *acp3x_base)
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  116  {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  117  	int ret;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  118
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  119  	/* Reset */
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  120  	ret = acp3x_reset(acp3x_base);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  121  	if (ret) {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  122  		pr_err("ACP3x reset failed\n");
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  123  		return ret;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  124  	}
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  125  	/* power off */
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  126  	ret = acp3x_power_off(acp3x_base);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  127  	if (ret) {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  128  		pr_err("ACP3x power off failed\n");
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  129  		return ret;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  130  	}
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  131  	return 0;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  132  }
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  133  static int snd_acp3x_probe(struct pci_dev *pci,
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  134  			   const struct pci_device_id *pci_id)
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  135  {
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  136  	int ret;
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  137  	u32 addr, val, i;
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  138  	struct acp3x_dev_data *adata;
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  139  	struct platform_device_info pdevinfo[ACP3x_DEVS];
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  140  	unsigned int irqflags;
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  141
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  142  	if (pci_enable_device(pci)) {
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  143  		dev_err(&pci->dev, "pci_enable_device failed\n");
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  144  		return -ENODEV;
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  145  	}
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  146
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  147  	ret = pci_request_regions(pci, "AMD ACP3x audio");
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  148  	if (ret < 0) {
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  149  		dev_err(&pci->dev, "pci_request_regions failed\n");
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  150  		goto disable_pci;
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  151  	}
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  152
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  153  	adata = devm_kzalloc(&pci->dev, sizeof(struct acp3x_dev_data),
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  154  			     GFP_KERNEL);
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  155  	if (!adata) {
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  156  		ret = -ENOMEM;
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  157  		goto release_regions;
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  158  	}
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  159
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  160  	/* check for msi interrupt support */
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  161  	ret = pci_enable_msi(pci);
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  162  	if (ret)
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  163  		/* msi is not enabled */
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  164  		irqflags = IRQF_SHARED;
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  165  	else
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  166  		/* msi is enabled */
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  167  		irqflags = 0;
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  168
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  169  	addr = pci_resource_start(pci, 0);
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12 @170  	adata->acp3x_base = ioremap(addr, pci_resource_len(pci, 0));
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  171  	if (!adata->acp3x_base) {
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  172  		ret = -ENOMEM;
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  173  		goto release_regions;
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  174  	}
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  175  	pci_set_master(pci);
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  176  	pci_set_drvdata(pci, adata);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  177  	ret = acp3x_init(adata->acp3x_base);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13 @178  	if (ret)
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13 @179  		return -ENODEV;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  180
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  181
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  182  	val = rv_readl(adata->acp3x_base + mmACP_I2S_PIN_CONFIG);
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  183  	switch (val) {
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  184  	case I2S_MODE:
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  185  		adata->res = devm_kzalloc(&pci->dev,
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  186  					  sizeof(struct resource) * 4,
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  187  					  GFP_KERNEL);
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  188  		if (!adata->res) {
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  189  			ret = -ENOMEM;
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  190  			goto unmap_mmio;
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  191  		}
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  192
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  193  		adata->res[0].name = "acp3x_i2s_iomem";
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  194  		adata->res[0].flags = IORESOURCE_MEM;
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  195  		adata->res[0].start = addr;
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  196  		adata->res[0].end = addr + (ACP3x_REG_END - ACP3x_REG_START);
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  197
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  198  		adata->res[1].name = "acp3x_i2s_sp";
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  199  		adata->res[1].flags = IORESOURCE_MEM;
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  200  		adata->res[1].start = addr + ACP3x_I2STDM_REG_START;
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  201  		adata->res[1].end = addr + ACP3x_I2STDM_REG_END;
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  202
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  203  		adata->res[2].name = "acp3x_i2s_bt";
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  204  		adata->res[2].flags = IORESOURCE_MEM;
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  205  		adata->res[2].start = addr + ACP3x_BT_TDM_REG_START;
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  206  		adata->res[2].end = addr + ACP3x_BT_TDM_REG_END;
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  207
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  208  		adata->res[3].name = "acp3x_i2s_irq";
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  209  		adata->res[3].flags = IORESOURCE_IRQ;
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  210  		adata->res[3].start = pci->irq;
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  211  		adata->res[3].end = adata->res[3].start;
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  212
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  213  		adata->acp3x_audio_mode = ACP3x_I2S_MODE;
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  214
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  215  		memset(&pdevinfo, 0, sizeof(pdevinfo));
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  216  		pdevinfo[0].name = "acp3x_rv_i2s_dma";
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  217  		pdevinfo[0].id = 0;
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  218  		pdevinfo[0].parent = &pci->dev;
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  219  		pdevinfo[0].num_res = 4;
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  220  		pdevinfo[0].res = &adata->res[0];
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  221  		pdevinfo[0].data = &irqflags;
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  222  		pdevinfo[0].size_data = sizeof(irqflags);
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  223
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  224  		pdevinfo[1].name = "acp3x_i2s_playcap";
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  225  		pdevinfo[1].id = 0;
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  226  		pdevinfo[1].parent = &pci->dev;
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  227  		pdevinfo[1].num_res = 1;
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  228  		pdevinfo[1].res = &adata->res[1];
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  229
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  230  		pdevinfo[2].name = "acp3x_i2s_playcap";
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  231  		pdevinfo[2].id = 1;
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  232  		pdevinfo[2].parent = &pci->dev;
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  233  		pdevinfo[2].num_res = 1;
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  234  		pdevinfo[2].res = &adata->res[2];
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  235  		for (i = 0; i < ACP3x_DEVS ; i++) {
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  236  			adata->pdev[i] =
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  237  				platform_device_register_full(&pdevinfo[i]);
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  238  			if (IS_ERR(adata->pdev[i])) {
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  239  				dev_err(&pci->dev, "cannot register %s device\n",
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  240  					pdevinfo[i].name);
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  241  				ret = PTR_ERR(adata->pdev[i]);
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  242  				goto unmap_mmio;
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  243  			}
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  244  		}
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  245  		break;
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  246  	default:
+> > 00347e4ea8ca4c Colin Ian King                2018-11-16  247  		dev_err(&pci->dev, "Invalid ACP audio mode : %d\n", val);
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  248  		ret = -ENODEV;
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  249  		goto unmap_mmio;
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  250  	}
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  251  	pm_runtime_set_autosuspend_delay(&pci->dev, 10000);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  252  	pm_runtime_use_autosuspend(&pci->dev);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  253  	pm_runtime_set_active(&pci->dev);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  254  	pm_runtime_put_noidle(&pci->dev);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  255  	pm_runtime_enable(&pci->dev);
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  256  	return 0;
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  257
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  258  unmap_mmio:
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  259  	ret = acp3x_deinit(adata->acp3x_base);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  260  	if (ret)
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  261  		dev_err(&pci->dev, "ACP de-init failed\n");
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  262  	else
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  263  		dev_info(&pci->dev, "ACP de-initialized\n");
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  264  	pci_disable_msi(pci);
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  265  	for (i = 0 ; i < ACP3x_DEVS ; i++)
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  266  		platform_device_unregister(adata->pdev[i]);
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  267  	kfree(adata->res);
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  268  	iounmap(adata->acp3x_base);
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  269  release_regions:
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  270  	pci_release_regions(pci);
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  271  disable_pci:
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  272  	pci_disable_device(pci);
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  273
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  274  	return ret;
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  275  }
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  276  static int  snd_acp3x_suspend(struct device *dev)
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  277  {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  278  	int status;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  279  	struct acp3x_dev_data *adata = dev_get_drvdata(dev);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  280
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  281  	status = acp3x_deinit(adata->acp3x_base);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  282  	if (status)
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  283  		dev_err(dev, "ACP de-init failed\n");
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  284  	else
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  285  		dev_info(dev, "ACP de-initialized\n");
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  286
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  287  	return 0;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  288  }
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  289  static int  snd_acp3x_resume(struct device *dev)
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  290  {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  291  	int status;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  292  	struct acp3x_dev_data *adata = dev_get_drvdata(dev);
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  293
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  294  	status = acp3x_init(adata->acp3x_base);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  295  	if (status) {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  296  		dev_err(dev, "ACP init failed\n");
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  297  		return status;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  298  	}
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  299  	return 0;
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  300  }
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  301  static const struct dev_pm_ops acp3x_pm = {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  302  	.runtime_suspend = snd_acp3x_suspend,
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  303  	.runtime_resume =  snd_acp3x_resume,
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  304  	.resume =       snd_acp3x_resume,
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  305  };
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  306  static void snd_acp3x_remove(struct pci_dev *pci)
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  307  {
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  308  	int i, ret;
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  309  	struct acp3x_dev_data *adata = pci_get_drvdata(pci);
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  310
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  311  	if (adata->acp3x_audio_mode == ACP3x_I2S_MODE) {
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  312  		for (i = 0 ; i <  ACP3x_DEVS ; i++)
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  313  			platform_device_unregister(adata->pdev[i]);
+> > 79701559637a30 Ravulapati Vishnu vardhan rao 2019-11-13  314  	}
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  315  	ret = acp3x_deinit(adata->acp3x_base);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  316  	if (ret)
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  317  		dev_err(&pci->dev, "ACP de-init failed\n");
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  318  	else
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  319  		dev_info(&pci->dev, "ACP de-initialized\n");
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  320  	iounmap(adata->acp3x_base);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  321  	pm_runtime_disable(&pci->dev);
+> > bfd34133001920 Ravulapati Vishnu vardhan rao 2019-11-13  322  	pm_runtime_get_noresume(&pci->dev);
+> > 7894a7e7ea3de6 Vijendar Mukunda              2018-11-12  323  	pci_disable_msi(pci);
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  324  	pci_release_regions(pci);
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  325  	pci_disable_device(pci);
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  326  }
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  327  static const struct pci_device_id snd_acp3x_ids[] = {
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  328  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, 0x15e2),
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  329  	.class = PCI_CLASS_MULTIMEDIA_OTHER << 8,
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  330  	.class_mask = 0xffffff },
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  331  	{ 0, },
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  332  };
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  333  MODULE_DEVICE_TABLE(pci, snd_acp3x_ids);
+> > e30d9128def6ca Maruthi Srinivas Bayyavarapu  2018-11-12  334
+> > 
+> > ---
+> > 0-DAY kernel test infrastructure                 Open Source Technology Center
+> > https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+> > 
+> _______________________________________________
+> kbuild-all mailing list -- kbuild-all@lists.01.org
+> To unsubscribe send an email to kbuild-all-leave@lists.01.org
