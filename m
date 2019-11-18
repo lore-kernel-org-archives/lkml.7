@@ -2,97 +2,96 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6606BC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA68C432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38D2F22315
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:18:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LUkhNmty"
+	by mail.kernel.org (Postfix) with ESMTP id 8940E22310
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:18:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfKRVSD (ORCPT
+        id S1727020AbfKRVSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 16:18:03 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33228 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfKRVSC (ORCPT
+        Mon, 18 Nov 2019 16:18:09 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:41523 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726272AbfKRVSJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 16:18:02 -0500
-Received: by mail-ot1-f67.google.com with SMTP id u13so15871329ote.0;
-        Mon, 18 Nov 2019 13:18:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IabCX6kBV/Mgb1XtRiYbU3GVuFyLKj7vP/odV1Askuo=;
-        b=LUkhNmtywxzw73lNFZSUTSLJvpU4SrC3SSG94jfyYW8wc2YYQFHP2xK3r0UEFQBAO/
-         fJg1OejWr58ym84pgfJn4DzUy67tOxF2Msz93xQlzBmFvYCsRuenp/H3jmOpnfl5cm53
-         aOEUSSOj1qpW+tmdxq5ZKeZ2dqgltOLm/t829Y2NfhpFka3GgqtSzCB32ha3GBtRJJUI
-         moHZr8odRU76Uu3xX1vdLiXuLFzGRNZ33jTCu8QmUbvdz8DEe0f/DrPabGpoRm2JhI7w
-         sVEdEL5zNbrveUEU3aPVcTHJiKuca6os1r/uH++1FiiG3fLl+UDBdsQ60FflhJnwRYUo
-         +DbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IabCX6kBV/Mgb1XtRiYbU3GVuFyLKj7vP/odV1Askuo=;
-        b=rdnpdYFdj1QSmzWVCTDBeMdu2Y0JfxezK+i+3Pg+aK3vyceQn0TLQdrboSp1nWGX0f
-         3dcYs4BK+jmxnn0Svat4iY9jx7AKBvLnBmjKcIQvP1Q+TFPk4R+hlbCOMCZlGAQpfAkb
-         cusELaZ40UPt48qy3ussgDsXT2TKtkgBah4RSY06pCva1Z0kpiEQQjmUwH/5p+q3V/5y
-         Bz07sk1b88r2dORlm4E3Ep1FN/oDmbyeCFKHOPz4ofuD/1fKcVzNObxAUBEXK0ZM2+jg
-         YRqhkODyNa7ARkVZHBd/i2tsm2m6vI1b8QKpR5RL9TPKc0XDM2aLB6sl6PojvOhOXKP4
-         gL4A==
-X-Gm-Message-State: APjAAAXTnNgHFPkH0SQAM06TLQ/ytYdiyppZ0SG4aUdqHsECON5BuV+i
-        Ful0mCGtLw+ePSpTUmenLLY9HdF30mAgXIKM0/Q=
-X-Google-Smtp-Source: APXvYqy5Csuu3CZ8WGvTufcihjOMe/h9Fe7votgoCqnJbEHErkBVC+bnIWRoLhCs0yChwEz+AMTol5kYrSIIX0OSmYo=
-X-Received: by 2002:a9d:6841:: with SMTP id c1mr1053825oto.224.1574111881395;
- Mon, 18 Nov 2019 13:18:01 -0800 (PST)
+        Mon, 18 Nov 2019 16:18:09 -0500
+Received: from dread.disaster.area (pa49-181-255-80.pa.nsw.optusnet.com.au [49.181.255.80])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 12C7A43F3EA;
+        Tue, 19 Nov 2019 08:18:05 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iWoPM-0005FQ-KM; Tue, 19 Nov 2019 08:18:04 +1100
+Date:   Tue, 19 Nov 2019 08:18:04 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>
+Subject: Re: single aio thread is migrated crazily by scheduler
+Message-ID: <20191118211804.GW4614@dread.disaster.area>
+References: <20191114113153.GB4213@ming.t460p>
+ <20191114235415.GL4614@dread.disaster.area>
+ <20191115010824.GC4847@ming.t460p>
+ <20191115045634.GN4614@dread.disaster.area>
+ <20191115070843.GA24246@ming.t460p>
+ <20191115234005.GO4614@dread.disaster.area>
+ <20191118162633.GC32306@linux.vnet.ibm.com>
 MIME-Version: 1.0
-References: <20191118165400.21985-1-TheSven73@gmail.com> <20191118165400.21985-2-TheSven73@gmail.com>
- <20191118170111.GL9761@sirena.org.uk> <CAGngYiW+8m4fBAY5Ya_4YmEmCTQeiiNP6=aH2mUX6d2wY1442w@mail.gmail.com>
- <20191118174550.GA43585@sirena.org.uk> <CAGngYiXLx8rkkKPyALYyCHFyst2Ft8bCkP4uqmzXAHHqXhUvkQ@mail.gmail.com>
- <20191118203406.GE43585@sirena.org.uk>
-In-Reply-To: <20191118203406.GE43585@sirena.org.uk>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Mon, 18 Nov 2019 16:17:49 -0500
-Message-ID: <CAGngYiWQixey6t_4evqPdS9Rw+VNf0M1nax8bEqaUt=nLDjEfw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/4] tps6105x: add optional devicetree support
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Grigoryev Denis <grigoryev@fastwel.ru>,
-        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191118162633.GC32306@linux.vnet.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+        a=XqaD5fcB6dAc7xyKljs8OA==:117 a=XqaD5fcB6dAc7xyKljs8OA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=MeAgGD-zjQ4A:10
+        a=7-415B0cAAAA:8 a=Zwmjrk_3-jsYGy5YB9sA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 3:34 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Mon, Nov 18, 2019 at 01:13:24PM -0500, Sven Van Asbroeck wrote:
->
-> Is the regulator bit of this perhaps a voltage regulator and a current
-> regulator packaged together mainly for use powering LEDs?  That's a
-> hardware design I've seen before...
+On Mon, Nov 18, 2019 at 09:56:33PM +0530, Srikar Dronamraju wrote:
+> * Dave Chinner <david@fromorbit.com> [2019-11-16 10:40:05]:
+> 
+> > On Fri, Nov 15, 2019 at 03:08:43PM +0800, Ming Lei wrote:
+> > > On Fri, Nov 15, 2019 at 03:56:34PM +1100, Dave Chinner wrote:
+> > > > On Fri, Nov 15, 2019 at 09:08:24AM +0800, Ming Lei wrote:
+> > > I can reproduce the issue with 4k block size on another RH system, and
+> > > the login info of that system has been shared to you in RH BZ.
+> > > 
+> > > 1)
+> > 
+> > Almost all the fio task migrations are coming from migration/X
+> > kernel threads. i.e it's the scheduler active balancing that is
+> > causing the fio thread to bounce around.
+> > 
+> 
+> Can we try with the below patch.
 
-Yes, you nailed it :)
+That makes things much, much worse.
 
->
-> Just point the regulator framework at the MFD's DT node - the children
-> of the MFD can look at the parent device happily, there's several
-> existing MFDs do this.
+$ sudo trace-cmd show |grep fio |wc -l
+4701
+$
 
-Ok, I think I get it now. Will prepare v2.
+Even when not running the fio workload (i.e. the system is largely
+idle and I'm just doing admin tasks like setting up for test runs),
+the number of task migrations that occur goes up significantly.
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
