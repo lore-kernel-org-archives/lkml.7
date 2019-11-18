@@ -2,133 +2,155 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 782F5C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1948AC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39A722063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:04:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="CFzGLpEv"
+	by mail.kernel.org (Postfix) with ESMTP id EE8A620885
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfKRTEe (ORCPT
+        id S1726739AbfKRTFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 14:04:34 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42526 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbfKRTEd (ORCPT
+        Mon, 18 Nov 2019 14:05:10 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:34708 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbfKRTFK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 14:04:33 -0500
-Received: by mail-pg1-f194.google.com with SMTP id q17so10054828pgt.9
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 11:04:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=g7UeeAiDpLXIZyawULy9LChbDuT/bywV3sjowK/21oA=;
-        b=CFzGLpEvo9h0wavIJ3BvGjj0jIxdJfl3uvMW6e/3/t2n6cMtudA+A4GFwZADhoL3E7
-         z2YU0QkdAvSVsIByFtEpc8VmgrPBUyOtNkkWDXcSgqDMLrgm/16SLQ6Qy2wg++nqoQ8u
-         voZe3/N/5SNSh94yGyJbvTZV/kWNwLyQMNDC8=
+        Mon, 18 Nov 2019 14:05:10 -0500
+Received: by mail-il1-f198.google.com with SMTP id m12so17192243ilq.1
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 11:05:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=g7UeeAiDpLXIZyawULy9LChbDuT/bywV3sjowK/21oA=;
-        b=WXhaYu67EJhXO+lX1Cx1m3ctdSxOYVD0Mv7yvg4hN6ePzRvqjN3cHNW6w+kq8HHb5r
-         3waHu0Fj2KR1RriwhM4shra6UqBtIulpoqTCgztV5/F1F+cmV4euasutx72KmZeki5gL
-         mLu/3GTs5OY62hrUd1HQ+DSbN0YwI1LodF8JbgmWV4iMNQJr5HZM2Igx8g0aZH0zwmD4
-         8MK5KmP/D7ezXl/KVo2WFCOE9seVtBzugLJEaXNtHxGisoFiMDaopk48h/xvfi3wW1z9
-         ykkUIJHTHpjg2q4Emm18SzS251xprL4NUPNYRG5GgPc/oAz93uM7YmeHDJVkZcVMKIZZ
-         E4hw==
-X-Gm-Message-State: APjAAAUeeV6lHcY+pI/QIR4mfWv6qmEcjuo2epN2wJpz8xX0Y3c+AymH
-        F5iF65DcG2qV/2ZGRRBqkJpMNGtGMhc=
-X-Google-Smtp-Source: APXvYqyN61GhWD0e4l8K0o5t6WK1hRFpzORALbbg2skfjaUQSNQ00893/Ae5TjNzrzgd5tHXUVwy3A==
-X-Received: by 2002:a63:1b4e:: with SMTP id b14mr927755pgm.280.1574103872977;
-        Mon, 18 Nov 2019 11:04:32 -0800 (PST)
-Received: from cork ([64.84.68.252])
-        by smtp.gmail.com with ESMTPSA id d187sm5272521pgc.1.2019.11.18.11.04.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 11:04:32 -0800 (PST)
-Date:   Mon, 18 Nov 2019 11:04:30 -0800
-From:   =?iso-8859-1?Q?J=F6rn?= Engel <joern@purestorage.com>
-To:     vitaly.wool@konsulko.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        ddstreet@ieee.org, akpm@linux-foundation.org, sjenning@redhat.com,
-        johannes@sipsolutions.net
-Subject: Re: [PATCH] zswap: use B-tree for search
-Message-ID: <20191118190430.GA16134@cork>
-References: <20191117185332.18998-1-vitaly.wool@konsulko.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=JN/WIzRL3xgiIAMfN7W4EDclVvEnXiBKfc2rvVhShA0=;
+        b=VMqqDIdEzRrAsIGckEF31HJ0JP+LuVrViFu2BGUbB8Cu50/MLP4s4iFit/pxSk1XSI
+         58uKjfw+0UuD20igVH1EynqvcODpB7vSJ4lao7PFBY7IKA2LtGTcHSZo9F33UoZG/QGu
+         /l9FRrL8yTiq84ykBMOpDnIEkFRyLKAeIauH8xwnXAtPCgl2OPlOHbYVyjRyKeQnORra
+         4ImGR7WGLEQnFLo4Qd+Z6ujPMTj2bzd7IkrhrK/enXhq5HgMc+SCMLluC+1g4KLBBFlI
+         x83rrX2EQEL8U+XA/MiuJHqXveTqvxuzmgAHqb9zNX1Haxg6d7C973yQVoA9fru9l3cY
+         CIlQ==
+X-Gm-Message-State: APjAAAUNjV/yVPNnnwnzerrOCvpZDwouaCjEGj1AnxSVJARRoVksXX+u
+        HMgKCBkjvvyYMDcs7qj7ddJ1LFoVSDhcae6LSMu/4e9pWgaY
+X-Google-Smtp-Source: APXvYqzQv3IIi/EFnLlvpMQdjMEXk2J9nVzgCVUHWEnLUbkGSRF3p8znLbD8SbilYWbLCnXsHJtBk7RT8Zz8xLBUcMmQ/qQ2wWkW
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191117185332.18998-1-vitaly.wool@konsulko.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a92:6611:: with SMTP id a17mr18116394ilc.208.1574103909400;
+ Mon, 18 Nov 2019 11:05:09 -0800 (PST)
+Date:   Mon, 18 Nov 2019 11:05:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005c08d10597a3a05d@google.com>
+Subject: KMSAN: uninit-value in can_receive
+From:   syzbot <syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, glider@google.com, linux-can@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mkl@pengutronix.de,
+        netdev@vger.kernel.org, socketcan@hartkopp.net,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 17, 2019 at 08:53:32PM +0200, vitaly.wool@konsulko.com wrote:
-> From: Vitaly Wool <vitaly.wool@konsulko.com>
-> 
-> The current zswap implementation uses red-black trees to store
-> entries and to perform lookups. Although this algorithm obviously
-> has complexity of O(log N) it still takes a while to complete
-> lookup (or, even more for replacement) of an entry, when the amount
-> of entries is huge (100K+).
-> 
-> B-trees are known to handle such cases more efficiently (i. e. also
-> with O(log N) complexity but with way lower coefficient) so trying
-> zswap with B-trees was worth a shot.
-> 
-> The implementation of B-trees that is currently present in Linux
-> kernel isn't really doing things in the best possible way (i. e. it
-> has recursion) but the testing I've run still shows a very
-> significant performance increase.
-> 
-> The usage pattern of B-tree here is not exactly following the
-> guidelines but it is due to the fact that pgoff_t may be both 32
-> and 64 bits long.
-> 
-> Tested on qemu-kvm (-smp 2 -m 1024) with zswap in the following
-> configuration:
-> * zpool: z3fold
-> * max_pool_percent: 100
-> and the swap size of 1G.
-> 
-> Test command:
-> $ stress-ng --io 4 --vm 4 --vm-bytes 1000M --timeout 300s --metrics
-> 
-> This, averaged over 20 runs on qemu-kvm (-smp 2 -m 1024) gives the
-> following io bogo ops:
-> * original: 73778.8
-> * btree: 393999
+Hello,
 
-Impressive results.  Was your test done with a 32bit guest?  If yes, I
-would assume results for a 64bit guess to drop to about 330k.
+syzbot found the following crash on:
 
-> +	if (sizeof(pgoff_t) == 8)
-> +		btree_pgofft_geo = &btree_geo64;
-> +	else
-> +		btree_pgofft_geo = &btree_geo32;
-> +
+HEAD commit:    9c6a7162 kmsan: remove unneeded annotations in bio
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=14563416e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9e324dfe9c7b0360
+dashboard link: https://syzkaller.appspot.com/bug?extid=b02ff0707a97e4e79ebb
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
 
-You could abuse the fact that pgoff_t is the same size as unsigned long
-and use the "l" suffix variant.  But apart from the obvious abuse, the
-"l" variant hasn't been used before and the implementation appears to be
-buggy.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-So no complaints about your use of the interface.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com
 
-Jörn
+=====================================================
+BUG: KMSAN: uninit-value in can_receive+0x23c/0x5e0 net/can/af_can.c:649
+CPU: 1 PID: 3490 Comm: syz-executor.2 Not tainted 5.4.0-rc5+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  <IRQ>
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x128/0x220 mm/kmsan/kmsan_report.c:108
+  __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:245
+  can_receive+0x23c/0x5e0 net/can/af_can.c:649
+  can_rcv+0x188/0x3a0 net/can/af_can.c:685
+  __netif_receive_skb_one_core net/core/dev.c:5010 [inline]
+  __netif_receive_skb net/core/dev.c:5124 [inline]
+  process_backlog+0x12e8/0x1410 net/core/dev.c:5955
+  napi_poll net/core/dev.c:6392 [inline]
+  net_rx_action+0x7a6/0x1aa0 net/core/dev.c:6460
+  __do_softirq+0x4a1/0x83a kernel/softirq.c:293
+  do_softirq_own_stack+0x49/0x80 arch/x86/entry/entry_64.S:1093
+  </IRQ>
+  do_softirq kernel/softirq.c:338 [inline]
+  __local_bh_enable_ip+0x184/0x1d0 kernel/softirq.c:190
+  local_bh_enable+0x36/0x40 include/linux/bottom_half.h:32
+  rcu_read_unlock_bh include/linux/rcupdate.h:688 [inline]
+  __dev_queue_xmit+0x38e8/0x4200 net/core/dev.c:3900
+  dev_queue_xmit+0x4b/0x60 net/core/dev.c:3906
+  packet_snd net/packet/af_packet.c:2959 [inline]
+  packet_sendmsg+0x82d7/0x92e0 net/packet/af_packet.c:2984
+  sock_sendmsg_nosec net/socket.c:637 [inline]
+  sock_sendmsg net/socket.c:657 [inline]
+  ___sys_sendmsg+0x14ff/0x1590 net/socket.c:2311
+  __sys_sendmsg net/socket.c:2356 [inline]
+  __do_sys_sendmsg net/socket.c:2365 [inline]
+  __se_sys_sendmsg+0x305/0x460 net/socket.c:2363
+  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2363
+  do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
+  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+RIP: 0033:0x45a639
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ff1b9c14c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a639
+RDX: 0000000000000050 RSI: 0000000020000100 RDI: 0000000000000003
+RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ff1b9c156d4
+R13: 00000000004c8acf R14: 00000000004df078 R15: 00000000ffffffff
 
---
-Cryptographic protocols should not be designed by a committee.
--- Niels Ferguson & Bruce Schneier
+Uninit was created at:
+  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:151 [inline]
+  kmsan_internal_poison_shadow+0x60/0x120 mm/kmsan/kmsan.c:134
+  kmsan_slab_alloc+0xaa/0x120 mm/kmsan/kmsan_hooks.c:88
+  slab_alloc_node mm/slub.c:2799 [inline]
+  __kmalloc_node_track_caller+0xd7b/0x1390 mm/slub.c:4407
+  __kmalloc_reserve net/core/skbuff.c:141 [inline]
+  __alloc_skb+0x306/0xa10 net/core/skbuff.c:209
+  alloc_skb include/linux/skbuff.h:1050 [inline]
+  alloc_skb_with_frags+0x18c/0xa80 net/core/skbuff.c:5662
+  sock_alloc_send_pskb+0xafd/0x10a0 net/core/sock.c:2244
+  packet_alloc_skb net/packet/af_packet.c:2807 [inline]
+  packet_snd net/packet/af_packet.c:2902 [inline]
+  packet_sendmsg+0x6785/0x92e0 net/packet/af_packet.c:2984
+  sock_sendmsg_nosec net/socket.c:637 [inline]
+  sock_sendmsg net/socket.c:657 [inline]
+  ___sys_sendmsg+0x14ff/0x1590 net/socket.c:2311
+  __sys_sendmsg net/socket.c:2356 [inline]
+  __do_sys_sendmsg net/socket.c:2365 [inline]
+  __se_sys_sendmsg+0x305/0x460 net/socket.c:2363
+  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2363
+  do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
+  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+=====================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
