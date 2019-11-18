@@ -2,173 +2,93 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB4EC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AAAC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 588082186D
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:47:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cn2Yy7WZ"
+	by mail.kernel.org (Postfix) with ESMTP id D997621850
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 16:50:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574095818;
+	bh=E5sHJhDJdLwFFcwz2rZtBR5zpGdH7iYE/jUQURsGWTA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Cz/vDw8MSe6mfKnfSF+RC30rokxC/eiG3eJjTyxLk6SJiysxl5cbt+S5OUwtL8w+r
+	 9IoXC29N+8nL4ldIOwmOlI3VSKko3hsnuQ08YOB9r0oHWP4zcyOcVQdlTeKQAfednw
+	 usVHFJP4WwcoSoL4gNlLaQxMrz1w/4DN1lG8xxZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfKRQrd (ORCPT
+        id S1726541AbfKRQuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 11:47:33 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41577 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbfKRQqv (ORCPT
+        Mon, 18 Nov 2019 11:50:17 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44448 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbfKRQuQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 11:46:51 -0500
-Received: by mail-lj1-f196.google.com with SMTP id m4so14794045ljj.8;
-        Mon, 18 Nov 2019 08:46:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pG9lXccv0oOEUJTH/gOp3aikTwBYEJL3+x/Tztb4ZXo=;
-        b=cn2Yy7WZjKpfPkxqhPZL3cm3uPcINgrwtJErnnQ1xIthJFcPBV6s5KOeuazEAwgTDd
-         CX2h5pGsAFQI+DjdtlExJNnUb5TxjP7P6XU0nJKEZ+jqqSJDthBlIXskRE+qTBSyQzq1
-         Q5fF64vTRDzbRdRz1e/kTQiUHrcDnATe2Php1nCAX8qV4COzjRi2CqSSoGpc5W6vwLao
-         HColuUwE5yi0DMA9iUBdfqud1sMI4a7pcuTkNY934C1ZG6PAQkx2weqmGv3chC50zKEP
-         Ofd7vF4MZn7tmlLaIqx45vPFexpeA+804sc7fA1M0T9rurIC2aU+LyrGOzeDrkIhW6qX
-         rDRA==
+        Mon, 18 Nov 2019 11:50:16 -0500
+Received: by mail-ot1-f68.google.com with SMTP id c19so15073396otr.11;
+        Mon, 18 Nov 2019 08:50:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pG9lXccv0oOEUJTH/gOp3aikTwBYEJL3+x/Tztb4ZXo=;
-        b=gEfNoK592Z6S579nAf/AXzjtk9dMSC4l7x4GaDcfqyVSpCsrz3LmUkO3cFaepmYZuk
-         83x3ZRHsEhbrYzgWe4FX+cBMNo3ozg9Rh/DS5VmoUrDhI3tzIwSpeJQdk+HJzL5oIc7e
-         PkUpx/an1ttl9S6BzerFZHJc2pvL/ZaeCPs/k88Az6u01sFGRBOSyRm73W1SrkU7XC2c
-         zN2zYBrapF/JsaLgdu0sScQnPhcvd/FCc7nyRIq6zKf9s7gL7EAdVlHP1G30CY3X+b9i
-         Gvu4Wsvgcgq1dNI+axtvRKYgDWC7eYN1nkwOju6yjfw68K59wLvBgomah9tF8FKHOn+B
-         +OnA==
-X-Gm-Message-State: APjAAAWzXgmL/Omlrs93tuEcmtPzsh4ntdcopH1MkZUe6rJhIngBg25G
-        I2BQyP/BcFTGbhfjhGcb+2U=
-X-Google-Smtp-Source: APXvYqxHjz3Ecs55M2sI8pU6csg3HH+jE0WDtOLSgtZDCsx+6K+r5FpqYSBI0xapTQknmPmIQ8bCww==
-X-Received: by 2002:a2e:8ed6:: with SMTP id e22mr268631ljl.3.1574095608809;
-        Mon, 18 Nov 2019 08:46:48 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id d4sm8880307lfi.32.2019.11.18.08.46.47
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5NYQIVzszlovCzGCoyf9SHkjEAYAPxgYWsdxQCoKIq4=;
+        b=qetaDa4Txc0EdHqZu/KXPh05PyhaIiMT9tnrxo8A5qEzuGnIXeoRnxl4KHD7+eHUWh
+         5xcidHZPQAYvwCv6Di3ct5r0F+uYvj1PzYTtHGALgBp17UtUZfQGa+QyRc8ljMz1fQ9H
+         yPmZ1BESoE32zgkJgDzwrDXJ4b/be8eTPVoTDh8moLqQjit3BrmAhe4CJZ9LsfPRIAph
+         sSwxKqUdTpmlp0iSK42WOcyK6PWfHsDXp7vMNkSwk+ocESXChDuZqKnr+r+M/Ii9pMCV
+         NY3FZbm4lwN9EHiPeIfy4DRSDGPVPiiXsjz97E4vJQKP7WaH6ldH6prJPoBuONQM3Nvb
+         BlvA==
+X-Gm-Message-State: APjAAAUy/4YuQeyTeHLvAKjZC8zppITuXUXzWrAeHHwW2+hebCS1Z85W
+        Y74HZWknrTuBTN4zRnZLXA==
+X-Google-Smtp-Source: APXvYqy5fyTYkoXXqqwQ0H9dOLJstLheW2bjF5U1SrvtNLNVH/MBfBQlyKUyfzD0Wr2bOMi5c0zc1g==
+X-Received: by 2002:a05:6830:1e4c:: with SMTP id e12mr162673otj.358.1574095815692;
+        Mon, 18 Nov 2019 08:50:15 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s133sm6229914oia.58.2019.11.18.08.50.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 08:46:48 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 03/11] clk: tegra: cclk: Add helpers for handling PLLX rate changes
-Date:   Mon, 18 Nov 2019 19:45:04 +0300
-Message-Id: <20191118164512.8676-4-digetx@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191118164512.8676-1-digetx@gmail.com>
-References: <20191118164512.8676-1-digetx@gmail.com>
+        Mon, 18 Nov 2019 08:50:15 -0800 (PST)
+Date:   Mon, 18 Nov 2019 10:50:14 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 01/11] dt-bindings: phy-mtk-tphy: add two optional
+ properties for u2phy
+Message-ID: <20191118165014.GA3621@bogus>
+References: <1573547796-29566-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573547796-29566-1-git-send-email-chunfeng.yun@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CCLK should be re-parented away from PLLX if PLLX's rate is changing.
-The PLLP parent is a common safe CPU parent for all Tegra SoCs, thus
-CCLK will be re-parented to PLLP before PLLX rate-change begins and then
-switched back to PLLX after the rate-change completion. This patch adds
-helper functions which perform CCLK re-parenting, these helpers will be
-utilized by further patches.
+On Tue, 12 Nov 2019 16:36:26 +0800, Chunfeng Yun wrote:
+> Add two optional properties, one for tuning J-K voltage by INTR,
+> another for disconnect threshold, both of them are related with
+> connect detection
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+> v4: no changes
+> 
+> v3: change commit log
+> 
+> v2: change description
+> ---
+>  Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/clk/tegra/clk-tegra-super-cclk.c | 34 ++++++++++++++++++++++++
- drivers/clk/tegra/clk.h                  |  2 ++
- 2 files changed, 36 insertions(+)
-
-diff --git a/drivers/clk/tegra/clk-tegra-super-cclk.c b/drivers/clk/tegra/clk-tegra-super-cclk.c
-index 7bcb9e8d0860..a03119c30456 100644
---- a/drivers/clk/tegra/clk-tegra-super-cclk.c
-+++ b/drivers/clk/tegra/clk-tegra-super-cclk.c
-@@ -25,6 +25,9 @@
- 
- #define SUPER_CDIV_ENB		BIT(31)
- 
-+static struct tegra_clk_super_mux *cclk_super;
-+static bool cclk_on_pllx;
-+
- static u8 cclk_super_get_parent(struct clk_hw *hw)
- {
- 	return tegra_clk_super_ops.get_parent(hw);
-@@ -115,6 +118,9 @@ struct clk *tegra_clk_register_super_cclk(const char *name,
- 	struct clk_init_data init;
- 	u32 val;
- 
-+	if (WARN_ON(cclk_super))
-+		return ERR_PTR(-EBUSY);
-+
- 	super = kzalloc(sizeof(*super), GFP_KERNEL);
- 	if (!super)
- 		return ERR_PTR(-ENOMEM);
-@@ -173,6 +179,34 @@ struct clk *tegra_clk_register_super_cclk(const char *name,
- 	clk = clk_register(NULL, &super->hw);
- 	if (IS_ERR(clk))
- 		kfree(super);
-+	else
-+		cclk_super = super;
- 
- 	return clk;
- }
-+
-+int tegra_cclk_pre_pllx_rate_change(void)
-+{
-+	if (IS_ERR_OR_NULL(cclk_super))
-+		return -EINVAL;
-+
-+	if (cclk_super_get_parent(&cclk_super->hw) == PLLX_INDEX)
-+		cclk_on_pllx = true;
-+	else
-+		cclk_on_pllx = false;
-+
-+	/*
-+	 * CPU needs to be temporarily re-parented away from PLLX if PLLX
-+	 * changes its rate. PLLP is a safe parent for CPU on all Tegra SoCs.
-+	 */
-+	if (cclk_on_pllx)
-+		cclk_super_set_parent(&cclk_super->hw, PLLP_INDEX);
-+
-+	return 0;
-+}
-+
-+void tegra_cclk_post_pllx_rate_change(void)
-+{
-+	if (cclk_on_pllx)
-+		cclk_super_set_parent(&cclk_super->hw, PLLX_INDEX);
-+}
-diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-index fa18bef914af..0afe28f4372b 100644
---- a/drivers/clk/tegra/clk.h
-+++ b/drivers/clk/tegra/clk.h
-@@ -771,6 +771,8 @@ struct clk *tegra_clk_register_super_cclk(const char *name,
- 		const char * const *parent_names, u8 num_parents,
- 		unsigned long flags, void __iomem *reg, u8 clk_super_flags,
- 		spinlock_t *lock);
-+int tegra_cclk_pre_pllx_rate_change(void);
-+void tegra_cclk_post_pllx_rate_change(void);
- 
- /**
-  * struct tegra_sdmmc_mux - switch divider with Low Jitter inputs for SDMMC
--- 
-2.23.0
-
+Acked-by: Rob Herring <robh@kernel.org>
