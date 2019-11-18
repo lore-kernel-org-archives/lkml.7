@@ -2,122 +2,146 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9CBC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE08EC43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F61420726
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C35EB2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:45:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ME75umwC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfKRGjP (ORCPT
+        id S1726638AbfKRGpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 01:39:15 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48032 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726331AbfKRGjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 01:39:14 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 61B1DEE64FB8E6ED1E0D;
-        Mon, 18 Nov 2019 14:39:12 +0800 (CST)
-Received: from huawei.com (10.175.105.18) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Mon, 18 Nov 2019
- 14:38:56 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <akpm@linux-foundation.org>, <richardw.yang@linux.intel.com>,
-        <sfr@canb.auug.org.au>, <rppt@linux.ibm.com>, <jannh@google.com>,
-        <steve.capper@arm.com>, <catalin.marinas@arm.com>,
-        <aarcange@redhat.com>, <chenjianhong2@huawei.com>,
-        <walken@google.com>, <dave.hansen@linux.intel.com>,
-        <tiny.windzz@gmail.com>, <jhubbard@nvidia.com>, <david@redhat.com>
-CC:     <linmiaohe@huawei.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3] mm: get rid of odd jump labels in find_mergeable_anon_vma()
-Date:   Mon, 18 Nov 2019 14:39:07 +0800
-Message-ID: <1574059147-13678-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 18 Nov 2019 01:45:09 -0500
+Received: from ozlabs.org ([203.11.71.1]:38589 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726455AbfKRGpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 01:45:09 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Gfb56XwSz9sPj;
+        Mon, 18 Nov 2019 17:45:05 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1574059506;
+        bh=r7sXskfw+I7WzRaYq+oEFXXykLljQQeZd2JcPodyWDY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ME75umwCtcE9U0v7gK+Ovx08dSVyw15A1oc1EFNU2fRDjLN5vT1GdM5eBXrGhVNwX
+         98Zni4YyuScNHqJiqHTiQ5gGG9DybTrvuNK/ppN4KBzPH1H8KLXdawJAT2J1Pl8XC8
+         2ULYmhnXzoZCMekbvQz9EKZEhp+Ya5LHz383Ive0AeEzvbuC41KZe7CpNKqmfn8WH7
+         eFWBNNv/hXC4UddClDgdMtdPTrRh0d2HxjTc4QYhEzwdaWKTYWdMdU7AC6Gl/MUTS3
+         5Exwi52ImU/cjhSh9UZktwby/tcOu0i/pecMa2t6eQmCWHnCqxb2hXfSKzZHK7Q7dq
+         Uom1U34jFYf3A==
+Date:   Mon, 18 Nov 2019 17:45:01 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christoph Hellwig <hch@lst.de>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul@pwsan.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the generic-ioremap tree with the
+ risc-v tree
+Message-ID: <20191118174501.73050c78@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.18]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/MmA=ucNM_PbkF5BIz9tamiY";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+--Sig_/MmA=ucNM_PbkF5BIz9tamiY
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The jump labels try_prev and none are not really needed
-in find_mergeable_anon_vma(), eliminate them to improve
-readability.
+Hi all,
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Today's linux-next merge of the generic-ioremap tree got a conflict in:
+
+  arch/riscv/include/asm/io.h
+
+between commit:
+
+  0c3ac28931d5 ("riscv: separate MMIO functions into their own header file")
+
+from the risc-v tree and commits:
+
+  d092a8707326 ("arch: rely on asm-generic/io.h for default ioremap_* defin=
+itions")
+  38af57825313 ("riscv: use the generic ioremap code")
+
+from the generic-ioremap tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Mon, 18 Nov 2019 17:42:04 +1100
+Subject: [PATCH] fixup for moved code in riscv
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 ---
--v2:
-	Fix commit descriptions and further simplify the code
-	as suggested by David Hildenbrand and John Hubbard.
--v3:
-	Rewrite patch version info. Don't show this in commit log.
----
- mm/mmap.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ arch/riscv/include/asm/mmio.h | 15 +--------------
+ 1 file changed, 1 insertion(+), 14 deletions(-)
 
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 4d4db76a07da..ff02c23fd375 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1276,26 +1276,25 @@ static struct anon_vma *reusable_anon_vma(struct vm_area_struct *old, struct vm_
-  */
- struct anon_vma *find_mergeable_anon_vma(struct vm_area_struct *vma)
- {
--	struct anon_vma *anon_vma;
-+	struct anon_vma *anon_vma = NULL;
- 	struct vm_area_struct *near;
- 
-+	/* Try next first. */
- 	near = vma->vm_next;
--	if (!near)
--		goto try_prev;
-+	if (near) {
-+		anon_vma = reusable_anon_vma(near, vma, near);
-+		if (anon_vma)
-+			return anon_vma;
-+	}
- 
--	anon_vma = reusable_anon_vma(near, vma, near);
--	if (anon_vma)
--		return anon_vma;
--try_prev:
-+	/* Try prev next. */
- 	near = vma->vm_prev;
--	if (!near)
--		goto none;
-+	if (near)
-+		anon_vma = reusable_anon_vma(near, near, vma);
- 
--	anon_vma = reusable_anon_vma(near, near, vma);
--	if (anon_vma)
--		return anon_vma;
--none:
- 	/*
-+	 * We might reach here with anon_vma == NULL if we can't find
-+	 * any reusable anon_vma.
- 	 * There's no absolute need to look only at touching neighbours:
- 	 * we could search further afield for "compatible" anon_vmas.
- 	 * But it would probably just be a waste of time searching,
-@@ -1303,7 +1302,7 @@ struct anon_vma *find_mergeable_anon_vma(struct vm_area_struct *vma)
- 	 * We're trying to allow mprotect remerging later on,
- 	 * not trying to minimize memory used for anon_vmas.
- 	 */
--	return NULL;
-+	return anon_vma;
- }
- 
- /*
--- 
-2.19.1
+diff --git a/arch/riscv/include/asm/mmio.h b/arch/riscv/include/asm/mmio.h
+index a297a835e402..a2c809df2733 100644
+--- a/arch/riscv/include/asm/mmio.h
++++ b/arch/riscv/include/asm/mmio.h
+@@ -14,20 +14,7 @@
+ #include <linux/types.h>
+ #include <asm/mmiowb.h>
+=20
+-#ifdef CONFIG_MMU
+-void __iomem *ioremap(phys_addr_t offset, unsigned long size);
+-
+-/*
+- * The RISC-V ISA doesn't yet specify how to query or modify PMAs, so we c=
+an't
+- * change the properties of memory regions.  This should be fixed by the
+- * upcoming platform spec.
+- */
+-#define ioremap_nocache(addr, size) ioremap((addr), (size))
+-#define ioremap_wc(addr, size) ioremap((addr), (size))
+-#define ioremap_wt(addr, size) ioremap((addr), (size))
+-
+-void iounmap(volatile void __iomem *addr);
+-#else
++#ifndef CONFIG_MMU
+ #define pgprot_noncached(x)	(x)
+ #endif /* CONFIG_MMU */
+=20
+--=20
+2.23.0
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/MmA=ucNM_PbkF5BIz9tamiY
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3SPe0ACgkQAVBC80lX
+0Gzr9gf/U7Q56bk6ZDZgxf3EDieDVYqdkb0vU1MR5brDHbwfgGkgKTWDH3KVpHI0
++i4eJY9PHk2lzecs1x9XunAdLnPKPvCC+jetF/qvlpeU+StzJm+5eK2HT9UaVE5K
+Zn1vinfNHUYZFDFE+oTRH1WmTPpSiYlADy++VRQW96ql3e8PJlNs0iRl102om1r8
+yQYqKWxRppuG9a+w140/obM4jmk63YQQzrKKJoXC723qy9mOTpXjXwy9FRc4ab4b
+OzllHAaKvX/lEoUmLZQOY+HNOqIBVuYLZ4NQ6E568Azj5u+v82GnM2gvXMLUGpe/
+NGmDj6itndtVKmuBe7C8arRTK8i4Ag==
+=xxUm
+-----END PGP SIGNATURE-----
+
+--Sig_/MmA=ucNM_PbkF5BIz9tamiY--
