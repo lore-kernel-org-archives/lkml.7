@@ -2,111 +2,159 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA694C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88412C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C3A20727
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B7EC2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:27:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574069226;
+	bh=VxT1OH3J1ZyG3/IslKgKDNPh9e6QJ7OGFhCnc6abxVs=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=qrPSKvHO8v3U7d9meUNAOG9pGGmOhhyNBBuWpxr1D4Ob25Ogx9oxHycuucw1RlahL
+	 aX5MB93jd9atHIenCnPKTZssFnLN0B96u5+UCJ+0/UGYRNqTwpEwNRanE6lR8udxej
+	 aMMMAR5yI6NRlnWY51u3jeLNBGBOqesnkXQJiDgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfKRJ0R (ORCPT
+        id S1726668AbfKRJ1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 04:26:17 -0500
-Received: from smtp2.axis.com ([195.60.68.18]:33902 "EHLO smtp2.axis.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726460AbfKRJ0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 04:26:17 -0500
-IronPort-SDR: /ZR5xX+73d/C8ro/l/i8tfrG/O4pT9ZCbVHflRFTpnylxq8+Qpgra+nV9eGfx1ngB/G5XziGfW
- +HcDcr3mGC5AwP3aDQLe3IE6pC+5SPJIqljZAymuL5qPdRWDxsJYfK2iuza5RBkvUwQM0jog6Q
- oj0/Bk42qrkA63XsowN8VcCTyFatGZhwP3Ro6O6+RvOcw99SEec6Vi9eRmVRRwUPTfYwkTSGdC
- Aqtwk9d7ETdnLJOaXRMasCWFNUeLgn058RHzk2qwwl2dtKQzxjOqkUN4S417VKPaVuLdtHg+F3
- ccU=
-X-IronPort-AV: E=Sophos;i="5.68,319,1569276000"; 
-   d="scan'208";a="2531062"
-X-Axis-User: NO
-X-Axis-NonUser: YES
-X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     linux@armlinux.org.uk, gregkh@linuxfoundation.org
-Cc:     jslaby@suse.com, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        Vincent Whitchurch <rabinv@axis.com>
-Subject: [PATCH] serial: pl011: Fix DMA ->flush_buffer()
-Date:   Mon, 18 Nov 2019 10:25:47 +0100
-Message-Id: <20191118092547.32135-1-vincent.whitchurch@axis.com>
-X-Mailer: git-send-email 2.20.0
+        Mon, 18 Nov 2019 04:27:05 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:54829 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726460AbfKRJ1E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 04:27:04 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iWdJF-0005vm-TH; Mon, 18 Nov 2019 10:27:01 +0100
+To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v3 8/8] ARM: realtek: Enable RTD1195 arch timer
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
+Date:   Mon, 18 Nov 2019 09:27:01 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <linux-realtek-soc@lists.infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        James Tai <james.tai@realtek.com>
+In-Reply-To: <7015e4c4-f999-d2e8-fd1f-e15e74a0d092@suse.de>
+References: <20191117072109.20402-1-afaerber@suse.de>
+ <20191117072109.20402-9-afaerber@suse.de> <20191117110214.6b160b2e@why>
+ <7015e4c4-f999-d2e8-fd1f-e15e74a0d092@suse.de>
+Message-ID: <e99e40d8c95147861ab600c5d5287f8f@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: afaerber@suse.de, linux-realtek-soc@lists.infradead.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, james.tai@realtek.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PL011's ->flush_buffer() implementation releases and reacquires the port
-lock.  Due to a race condition here, data can end up being added to the
-circular buffer but neither being discarded nor being sent out.  This
-leads to, for example, tcdrain(2) waiting indefinitely.
+On 2019-11-17 17:08, Andreas Färber wrote:
+> Am 17.11.19 um 12:02 schrieb Marc Zyngier:
+>> On Sun, 17 Nov 2019 08:21:09 +0100
+>> Andreas Färber <afaerber@suse.de> wrote:
+>>
+>>> Without this magic write the timer doesn't work and boot gets 
+>>> stuck.
+>>>
+>>> Signed-off-by: Andreas Färber <afaerber@suse.de>
+>>> ---
+>>>  What is the name of the register 0xff018000?
+>>>  Is 0x1 a BIT(0) write, or how are the register bits defined?
+>>>  Is this a reset or a clock gate? How should we model it in DT?
+>
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Process A                       Process B
+Sorry? Do you expect me to come up with answer to these questions?
 
-uart_flush_buffer()
- - acquire lock
- - circ_clear
- - pl011_flush_buffer()
- -- release lock
- -- dmaengine_terminate_all()
+>>>
+>>>  v2 -> v3: Unchanged
+>>>
+>>>  v2: New
+>>>
+>>>  arch/arm/mach-realtek/rtd1195.c | 16 ++++++++++++++++
+>>>  1 file changed, 16 insertions(+)
+>>>
+>>> diff --git a/arch/arm/mach-realtek/rtd1195.c 
+>>> b/arch/arm/mach-realtek/rtd1195.c
+>>> index b31a4066be87..0532379c74f5 100644
+>>> --- a/arch/arm/mach-realtek/rtd1195.c
+>>> +++ b/arch/arm/mach-realtek/rtd1195.c
+>>> @@ -5,6 +5,9 @@
+>>>   * Copyright (c) 2017-2019 Andreas Färber
+>>>   */
+>>>
+>>> +#include <linux/clk-provider.h>
+>>> +#include <linux/clocksource.h>
+>>> +#include <linux/io.h>
+>>>  #include <linux/memblock.h>
+>>>  #include <asm/mach/arch.h>
+>>>
+>>> @@ -24,6 +27,18 @@ static void __init rtd1195_reserve(void)
+>>>  	rtd1195_memblock_remove(0x18100000, 0x01000000);
+>>>  }
+>>>
+>>> +static void __init rtd1195_init_time(void)
+>>> +{
+>>> +	void __iomem *base;
+>>> +
+>>> +	base = ioremap(0xff018000, 4);
+>>> +	writel(0x1, base);
+>>> +	iounmap(base);
+>>> +
+>>> +	of_clk_init(NULL);
+>>> +	timer_probe();
+>>> +}
+>>
+>> Gawd... Why isn't this set from the bootloader? By the time the 
+>> kernel
+>> starts, everything should be up and running. What is it going to do
+>> when you kexec? Shouldn't this be a read/modify/write sequence?
+>
+> Again, I can't comment on why their BSP bootloaders don't do things 
+> the
+> expected way. The list of issues is long, and the newest U-Boot I've
+> seen for RTD1395 was v2015.07 based, still downstream and pre-EBBR.
+> And before we get a .dts merged into the kernel with all needed nodes
+> (network, eMMC, etc.), there is zero chance of a mainline U-Boot 
+> anyway.
 
-                                uart_write()
-                                - acquire lock
-                                - add chars to circ buffer
-                                - start_tx()
-                                -- start DMA
-                                - release lock
+[...]
 
- -- acquire lock
- -- turn off DMA
- -- release lock
+I certainly dispute that. If you're able to support all of this in the
+kernel, you're most probably able to do it in u-boot, and that's the 
+right
+place to do it (and that can be a pretty simple u-boot if you use the
+original one as a first-stage loader).
 
-                                // Data in circ buffer but DMA is off
+I'm not trying to undermine your effort in supporting these platforms
+in mainline. This is certainly commendable. But you're unfortunately
+pushing in a direction that we've tried hard to move away from for
+a good 8 years.
 
-According to the comment in the code, the releasing of the lock around
-dmaengine_terminate_all() is to avoid a deadlock with the DMA engine
-callback.  However, since the time this code was written, the DMA engine
-API documentation seems to have been clarified to say that
-dmaengine_terminate_all() (in the identically implemented but
-differently named dmaengine_terminate_async() variant) does not wait for
-any running complete callback to be completed and can even be called
-from a complete callback.  So there is no possibility of deadlock if the
-DMA engine driver implements this API correctly.
+Look at what we did on the Allwinner front: we got a terrible piece of
+crap, and turned it into one of the best supported platform, because
+we've put the effort where it mattered. I personally wrote PSCI support
+and HYP enablement in u-boot, addressing in one go most of the issues 
+you
+mention here. It didn't take that much time, and it is now there for 
+you
+to make use of.
 
-So we should be able to just remove this release and reacquire of the
-lock to prevent the aforementioned race condition.
+Thanks,
 
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
----
- drivers/tty/serial/amba-pl011.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-index 3a7d1a66f79c..b0b689546395 100644
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -813,10 +813,8 @@ __acquires(&uap->port.lock)
- 	if (!uap->using_tx_dma)
- 		return;
- 
--	/* Avoid deadlock with the DMA engine callback */
--	spin_unlock(&uap->port.lock);
--	dmaengine_terminate_all(uap->dmatx.chan);
--	spin_lock(&uap->port.lock);
-+	dmaengine_terminate_async(uap->dmatx.chan);
-+
- 	if (uap->dmatx.queued) {
- 		dma_unmap_sg(uap->dmatx.chan->device->dev, &uap->dmatx.sg, 1,
- 			     DMA_TO_DEVICE);
+         M.
 -- 
-2.20.0
-
+Jazz is not dead. It just smells funny...
