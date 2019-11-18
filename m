@@ -3,33 +3,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD1BC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CC6C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A21720727
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1DC220727
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:26:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbfKRJZp (ORCPT
+        id S1726776AbfKRJ0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 04:25:45 -0500
-Received: from mx2.suse.de ([195.135.220.15]:56354 "EHLO mx1.suse.de"
+        Mon, 18 Nov 2019 04:26:10 -0500
+Received: from mx2.suse.de ([195.135.220.15]:56452 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726460AbfKRJZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 04:25:45 -0500
+        id S1726460AbfKRJ0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 04:26:09 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8A9D1AD55;
-        Mon, 18 Nov 2019 09:25:43 +0000 (UTC)
-Date:   Mon, 18 Nov 2019 10:25:42 +0100
+        by mx1.suse.de (Postfix) with ESMTP id DCDD6AC4D;
+        Mon, 18 Nov 2019 09:26:07 +0000 (UTC)
+Date:   Mon, 18 Nov 2019 10:26:06 +0100
 From:   Jean Delvare <jdelvare@suse.de>
 To:     Linux I2C <linux-i2c@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 Cc:     Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 1/4] firmware: dmi: Remember the memory type
-Message-ID: <20191118102542.0dc43cd2@endymion>
+Subject: [PATCH 2/4] firmware: dmi: Add dmi_memdev_handle
+Message-ID: <20191118102606.6dbccfdf@endymion>
 In-Reply-To: <20191118102410.78cd8e6e@endymion>
 References: <20191118102410.78cd8e6e@endymion>
 Organization: SUSE Linux
@@ -42,85 +42,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Store the memory type while walking the memory slots, and provide a
-way to retrieve it later.
+Add a utility function dmi_memdev_handle() which returns the DMI
+handle associated with a given memory slot. This will allow kernel
+drivers to iterate over the memory slots.
 
 Signed-off-by: Jean Delvare <jdelvare@suse.de>
 ---
- drivers/firmware/dmi_scan.c |   25 ++++++++++++++++++++++++-
+ drivers/firmware/dmi_scan.c |   16 ++++++++++++++++
  include/linux/dmi.h         |    2 ++
- 2 files changed, 26 insertions(+), 1 deletion(-)
+ 2 files changed, 18 insertions(+)
 
---- linux-5.3.orig/drivers/firmware/dmi_scan.c	2019-10-08 14:27:23.783640227 +0200
-+++ linux-5.3/drivers/firmware/dmi_scan.c	2019-10-08 16:35:35.442803880 +0200
-@@ -35,6 +35,7 @@ static struct dmi_memdev_info {
- 	const char *bank;
- 	u64 size;		/* bytes */
- 	u16 handle;
-+	u8 type;		/* DDR2, DDR3, DDR4 etc */
- } *dmi_memdev;
- static int dmi_memdev_nr;
- 
-@@ -391,7 +392,7 @@ static void __init save_mem_devices(cons
- 	u64 bytes;
- 	u16 size;
- 
--	if (dm->type != DMI_ENTRY_MEM_DEVICE || dm->length < 0x12)
-+	if (dm->type != DMI_ENTRY_MEM_DEVICE || dm->length < 0x13)
- 		return;
- 	if (nr >= dmi_memdev_nr) {
- 		pr_warn(FW_BUG "Too many DIMM entries in SMBIOS table\n");
-@@ -400,6 +401,7 @@ static void __init save_mem_devices(cons
- 	dmi_memdev[nr].handle = get_unaligned(&dm->handle);
- 	dmi_memdev[nr].device = dmi_string(dm, d[0x10]);
- 	dmi_memdev[nr].bank = dmi_string(dm, d[0x11]);
-+	dmi_memdev[nr].type = d[0x12];
- 
- 	size = get_unaligned((u16 *)&d[0xC]);
- 	if (size == 0)
-@@ -1128,3 +1130,24 @@ u64 dmi_memdev_size(u16 handle)
- 	return ~0ull;
+--- linux-5.3.orig/drivers/firmware/dmi_scan.c	2019-10-10 11:33:02.871034637 +0200
++++ linux-5.3/drivers/firmware/dmi_scan.c	2019-10-10 11:45:37.275549638 +0200
+@@ -1151,3 +1151,19 @@ u8 dmi_memdev_type(u16 handle)
+ 	return 0x0;	/* Not a valid value */
  }
- EXPORT_SYMBOL_GPL(dmi_memdev_size);
+ EXPORT_SYMBOL_GPL(dmi_memdev_type);
 +
 +/**
-+ * dmi_memdev_type - get the memory type
-+ * @handle: DMI structure handle
++ *	dmi_memdev_handle - get the DMI handle of a memory slot
++ *	@slot: slot number
 + *
-+ * Return the DMI memory type of the module in the slot associated with the
-+ * given DMI handle, or 0x0 if no such DMI handle exists.
++ *	Return the DMI handle associated with a given memory slot, or %0xFFFF
++ *      if there is no such slot.
 + */
-+u8 dmi_memdev_type(u16 handle)
++u16 dmi_memdev_handle(int slot)
 +{
-+	int n;
++	if (dmi_memdev && slot >= 0 && slot < dmi_memdev_nr)
++		return dmi_memdev[slot].handle;
 +
-+	if (dmi_memdev) {
-+		for (n = 0; n < dmi_memdev_nr; n++) {
-+			if (handle == dmi_memdev[n].handle)
-+				return dmi_memdev[n].type;
-+		}
-+	}
-+	return 0x0;	/* Not a valid value */
++	return 0xffff;	/* Not a valid value */
 +}
-+EXPORT_SYMBOL_GPL(dmi_memdev_type);
---- linux-5.3.orig/include/linux/dmi.h	2019-10-04 16:14:24.575714482 +0200
-+++ linux-5.3/include/linux/dmi.h	2019-10-08 17:42:19.726907967 +0200
-@@ -113,6 +113,7 @@ extern int dmi_walk(void (*decode)(const
- extern bool dmi_match(enum dmi_field f, const char *str);
++EXPORT_SYMBOL_GPL(dmi_memdev_handle);
+--- linux-5.3.orig/include/linux/dmi.h	2019-10-10 11:33:02.871034637 +0200
++++ linux-5.3/include/linux/dmi.h	2019-10-10 11:34:46.146337207 +0200
+@@ -114,6 +114,7 @@ extern bool dmi_match(enum dmi_field f,
  extern void dmi_memdev_name(u16 handle, const char **bank, const char **device);
  extern u64 dmi_memdev_size(u16 handle);
-+extern u8 dmi_memdev_type(u16 handle);
+ extern u8 dmi_memdev_type(u16 handle);
++extern u16 dmi_memdev_handle(int slot);
  
  #else
  
-@@ -142,6 +143,7 @@ static inline bool dmi_match(enum dmi_fi
- static inline void dmi_memdev_name(u16 handle, const char **bank,
+@@ -144,6 +145,7 @@ static inline void dmi_memdev_name(u16 h
  		const char **device) { }
  static inline u64 dmi_memdev_size(u16 handle) { return ~0ul; }
-+static inline u8 dmi_memdev_type(u16 handle) { return 0x0; }
+ static inline u8 dmi_memdev_type(u16 handle) { return 0x0; }
++static inline u16 dmi_memdev_handle(int slot) { return 0xffff; }
  static inline const struct dmi_system_id *
  	dmi_first_match(const struct dmi_system_id *list) { return NULL; }
  
+
 
 -- 
 Jean Delvare
