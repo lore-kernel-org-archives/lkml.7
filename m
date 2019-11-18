@@ -2,191 +2,197 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EA2C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8330AC432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C49DB20659
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE7020727
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:21:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="PbmjpkhP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfKROVI (ORCPT
+        id S1727264AbfKROVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 09:21:08 -0500
-Received: from mga06.intel.com ([134.134.136.31]:37678 "EHLO mga06.intel.com"
+        Mon, 18 Nov 2019 09:21:50 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:60300 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726761AbfKROVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 09:21:08 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 06:21:07 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,320,1569308400"; 
-   d="scan'208";a="208864284"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 18 Nov 2019 06:21:07 -0800
-Received: from [10.252.10.190] (abudanko-mobl.ccr.corp.intel.com [10.252.10.190])
-        by linux.intel.com (Postfix) with ESMTP id 2AF935800FE;
-        Mon, 18 Nov 2019 06:21:04 -0800 (PST)
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v3] perf session: fix decompression of PERF_RECORD_COMPRESSED
- records
-Organization: Intel Corp.
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        id S1726627AbfKROVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 09:21:49 -0500
+Received: from zn.tnic (p200300EC2F27B50084A11D83797EBEC7.dip0.t-ipconnect.de [IPv6:2003:ec:2f27:b500:84a1:1d83:797e:bec7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 637F91EC027B;
+        Mon, 18 Nov 2019 15:21:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574086908;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Drk11FQiiBMEtrfW9/M48Q99qTus2Kx6p9Nmb9b9aEw=;
+        b=PbmjpkhPOEFMbZr6Pzx3R4wyDJywmlAym8reaS86Kpx0UpuRIsg5vNjn7xYTJHbCJSpfnU
+        h6En5/fAPDy4Rm9w+iPEInNkri8a1G11Fz+Abnyu8acE4JyTb+NRgScZqngxbyuxTb2CuT
+        3a/pX8XCszp1p12Et0oH3jM7PHDji40=
+Date:   Mon, 18 Nov 2019 15:21:44 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jann Horn <jannh@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <cf782c34-f3f8-2f9f-d6ab-145cee0d5322@linux.intel.com>
-Date:   Mon, 18 Nov 2019 17:21:03 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v2 2/3] x86/traps: Print non-canonical address on #GP
+Message-ID: <20191118142144.GC6363@zn.tnic>
+References: <20191115191728.87338-1-jannh@google.com>
+ <20191115191728.87338-2-jannh@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20191115191728.87338-2-jannh@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Nov 15, 2019 at 08:17:27PM +0100, Jann Horn wrote:
+>  dotraplinkage void
+>  do_general_protection(struct pt_regs *regs, long error_code)
+>  {
+> @@ -547,8 +581,15 @@ do_general_protection(struct pt_regs *regs, long error_code)
+>  			return;
+>  
+>  		if (notify_die(DIE_GPF, desc, regs, error_code,
+> -			       X86_TRAP_GP, SIGSEGV) != NOTIFY_STOP)
+> -			die(desc, regs, error_code);
+> +			       X86_TRAP_GP, SIGSEGV) == NOTIFY_STOP)
+> +			return;
+> +
+> +		if (error_code)
+> +			pr_alert("GPF is segment-related (see error code)\n");
+> +		else
+> +			print_kernel_gp_address(regs);
+> +
+> +		die(desc, regs, error_code);
 
-Avoid termination of trace loading in case the last record in
-the decompressed buffer partly resides in the following
-mmaped PERF_RECORD_COMPRESSED record. In this case NULL value
-returned by fetch_mmaped_event() means to proceed to the next
-mmaped record then decompress it and load compressed events.
+Right, this way, those messages appear before the main "general
+protection ..." message:
 
-The issue can be reproduced like this:
+[    2.434372] traps: probably dereferencing non-canonical address 0xdfff000000000001
+[    2.442492] general protection fault: 0000 [#1] PREEMPT SMP
 
-  $ perf record -z -- some_long_running_workload
-  $ perf report --stdio -vv
-  decomp (B): 44519 to 163000
-  decomp (B): 48119 to 174800
-  decomp (B): 65527 to 131072
-  fetch_mmaped_event: head=0x1ffe0 event->header_size=0x28, mmap_size=0x20000: fuzzed perf.data?
-  Error:
-  failed to process sample
-  ...
+Can we glue/merge them together? Or is this going to confuse tools too much:
 
-Testing:
+[    2.542218] general protection fault while derefing a non-canonical address 0xdfff000000000001: 0000 [#1] PREEMPT SMP
 
-  71: Zstd perf.data compression/decompression              : Ok
+(and that sentence could be shorter too:
 
-  $ tools/perf/perf report -vv --stdio
-  decomp (B): 59593 to 262160
-  decomp (B): 4438 to 16512
-  decomp (B): 285 to 880
-  Looking at the vmlinux_path (8 entries long)
-  Using vmlinux for symbols
-  decomp (B): 57474 to 261248
-  prefetch_event: head=0x3fc78 event->header_size=0x28, mmap_size=0x3fc80: fuzzed or compressed perf.data?
-  decomp (B): 25 to 32
-  decomp (B): 52 to 120
-  ...
+ 	"general protection fault for non-canonical address 0xdfff000000000001"
 
-Fixes: 57fc032ad643 ("perf session: Avoid infinite loop when seeing invalid header.size")
-Link: https://marc.info/?l=linux-kernel&m=156580812427554&w=2
-Co-developed-by: Jiri Olsa <jolsa@kernel.org>
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+looks ok to me too.)
+
+Here's a dirty diff together with a reproducer ontop of yours:
+
 ---
-Changes in v3:
-- extended debug message with 'fuzzed or compressed perf.data?'
-Changes in v2:
-- avoided static declaration of prefetch_event();
-- renamed 'ret' to 'error' for returning in case of split compressed 
-  or overlapping records;
-- passed only needs_swap quality into fetch_*_event() instead of 
-  the whole session object;
----
- tools/perf/util/session.c | 44 ++++++++++++++++++++++++---------------
- 1 file changed, 27 insertions(+), 17 deletions(-)
-
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index f07b8ecb91bc..8454a650146b 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1958,8 +1958,8 @@ static int __perf_session__process_pipe_events(struct perf_session *session)
- }
- 
- static union perf_event *
--fetch_mmaped_event(struct perf_session *session,
--		   u64 head, size_t mmap_size, char *buf)
-+prefetch_event(char *buf, u64 head, size_t mmap_size,
-+	       bool needs_swap, union perf_event *error)
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index bf796f8c9998..dab702ba28a6 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -515,7 +515,7 @@ dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
+  * On 64-bit, if an uncaught #GP occurs while dereferencing a non-canonical
+  * address, print that address.
+  */
+-static void print_kernel_gp_address(struct pt_regs *regs)
++static unsigned long get_kernel_gp_address(struct pt_regs *regs)
  {
- 	union perf_event *event;
+ #ifdef CONFIG_X86_64
+ 	u8 insn_bytes[MAX_INSN_SIZE];
+@@ -523,7 +523,7 @@ static void print_kernel_gp_address(struct pt_regs *regs)
+ 	unsigned long addr_ref;
  
-@@ -1971,20 +1971,32 @@ fetch_mmaped_event(struct perf_session *session,
- 		return NULL;
+ 	if (probe_kernel_read(insn_bytes, (void *)regs->ip, MAX_INSN_SIZE))
+-		return;
++		return 0;
  
- 	event = (union perf_event *)(buf + head);
-+	if (needs_swap)
-+		perf_event_header__bswap(&event->header);
+ 	kernel_insn_init(&insn, insn_bytes, MAX_INSN_SIZE);
+ 	insn_get_modrm(&insn);
+@@ -532,22 +532,22 @@ static void print_kernel_gp_address(struct pt_regs *regs)
  
--	if (session->header.needs_swap)
-+	if (head + event->header.size <= mmap_size)
-+		return event;
-+
-+	/* We're not fetching the event so swap back again */
-+	if (needs_swap)
- 		perf_event_header__bswap(&event->header);
+ 	/* Bail out if insn_get_addr_ref() failed or we got a kernel address. */
+ 	if (addr_ref >= ~__VIRTUAL_MASK)
+-		return;
++		return 0;
  
--	if (head + event->header.size > mmap_size) {
--		/* We're not fetching the event so swap back again */
--		if (session->header.needs_swap)
--			perf_event_header__bswap(&event->header);
--		pr_debug("%s: head=%#" PRIx64 " event->header_size=%#x, mmap_size=%#zx: fuzzed perf.data?\n",
--			 __func__, head, event->header.size, mmap_size);
--		return ERR_PTR(-EINVAL);
--	}
-+	pr_debug("%s: head=%#" PRIx64 " event->header_size=%#x, mmap_size=%#zx:"
-+		 " fuzzed or compressed perf.data?\n",__func__, head, event->header.size, mmap_size);
+ 	/* Bail out if the entire operand is in the canonical user half. */
+ 	if (addr_ref + insn.opnd_bytes - 1 <= __VIRTUAL_MASK)
+-		return;
++		return 0;
  
--	return event;
-+	return error;
-+}
-+
-+static union perf_event *
-+fetch_mmaped_event(u64 head, size_t mmap_size, char *buf, bool needs_swap)
-+{
-+	return prefetch_event(buf, head, mmap_size, needs_swap, ERR_PTR(-EINVAL));
-+}
-+
-+static union perf_event *
-+fetch_decomp_event(u64 head, size_t mmap_size, char *buf, bool needs_swap)
-+{
-+	return prefetch_event(buf, head, mmap_size, needs_swap, NULL);
+-	pr_alert("probably dereferencing non-canonical address 0x%016lx\n",
+-		 addr_ref);
++	return addr_ref;
+ #endif
  }
  
- static int __perf_session__process_decomp_events(struct perf_session *session)
-@@ -1997,10 +2009,8 @@ static int __perf_session__process_decomp_events(struct perf_session *session)
- 		return 0;
++#define GPFSTR "general protection fault"
+ dotraplinkage void
+ do_general_protection(struct pt_regs *regs, long error_code)
+ {
+-	const char *desc = "general protection fault";
+ 	struct task_struct *tsk;
++	char desc[90];
  
- 	while (decomp->head < decomp->size && !session_done()) {
--		union perf_event *event = fetch_mmaped_event(session, decomp->head, decomp->size, decomp->data);
--
--		if (IS_ERR(event))
--			return PTR_ERR(event);
-+		union perf_event *event = fetch_decomp_event(decomp->head, decomp->size, decomp->data,
-+							     session->header.needs_swap);
+ 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
+ 	cond_local_irq_enable(regs);
+@@ -584,12 +584,18 @@ do_general_protection(struct pt_regs *regs, long error_code)
+ 			       X86_TRAP_GP, SIGSEGV) == NOTIFY_STOP)
+ 			return;
  
- 		if (!event)
- 			break;
-@@ -2100,7 +2110,7 @@ reader__process_events(struct reader *rd, struct perf_session *session,
+-		if (error_code)
+-			pr_alert("GPF is segment-related (see error code)\n");
+-		else
+-			print_kernel_gp_address(regs);
++		if (error_code) {
++			snprintf(desc, 90, "segment-related " GPFSTR);
++		} else {
++			unsigned long addr_ref = get_kernel_gp_address(regs);
++
++			if (addr_ref)
++				snprintf(desc, 90, GPFSTR " while derefing a non-canonical address 0x%lx", addr_ref);
++			else
++				snprintf(desc, 90, GPFSTR);
++		}
+ 
+-		die(desc, regs, error_code);
++		die((const char *)desc, regs, error_code);
+ 		return;
  	}
  
- more:
--	event = fetch_mmaped_event(session, head, mmap_size, buf);
-+	event = fetch_mmaped_event(head, mmap_size, buf, session->header.needs_swap);
- 	if (IS_ERR(event))
- 		return PTR_ERR(event);
+diff --git a/init/main.c b/init/main.c
+index 91f6ebb30ef0..7acc7e660be9 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -1124,6 +1124,9 @@ static int __ref kernel_init(void *unused)
  
--- 
-2.20.1
+ 	rcu_end_inkernel_boot();
+ 
++	asm volatile("mov $0xdfff000000000001, %rax\n\t"
++		     "jmpq *%rax\n\t");
++
+ 	if (ramdisk_execute_command) {
+ 		ret = run_init_process(ramdisk_execute_command);
+ 		if (!ret)
 
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
