@@ -2,126 +2,109 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7843CC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9375C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5681220722
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A78EB20855
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 14:04:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574085849;
+	bh=av3AhznIp2gfPqs6mRCnuXdU7jr5kJV6P2YudnQ2ELk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=My5wTOuOhoAi4oE1w3LBWkn2jT+s4Ej9FIjYdtX18meRlRJzMXRzVRtH6vOIc/mlb
+	 3pReyfVEW3jVP7DGW9w4aDHczcbDYSP2Jxb6nOMjaOgUGL4y9zLxWNYrAoRCCi+2ai
+	 3cFjFbu93Aj34251AdPPed/IwWpACkS1hbMGLXn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfKROCE (ORCPT
+        id S1727102AbfKROEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 09:02:04 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:43590 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726627AbfKROCE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 09:02:04 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 7E6343C04C0;
-        Mon, 18 Nov 2019 15:02:02 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id uIyVSefni55j; Mon, 18 Nov 2019 15:01:53 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id F06A53C04C1;
-        Mon, 18 Nov 2019 15:01:51 +0100 (CET)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Mon, 18 Nov
- 2019 15:01:51 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Jiada Wang <jiada_wang@mentor.com>,
-        Mark Brown <broonie@kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>,
-        Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>
-Subject: [PATCH] ASoC: rsnd: fix DALIGN register for SSIU
-Date:   Mon, 18 Nov 2019 15:01:26 +0100
-Message-ID: <20191118140126.23596-1-erosca@de.adit-jv.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 18 Nov 2019 09:04:08 -0500
+Received: from mx2.suse.de ([195.135.220.15]:51048 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726654AbfKROEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 09:04:08 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9ECC6ADDD;
+        Mon, 18 Nov 2019 14:04:06 +0000 (UTC)
+Date:   Mon, 18 Nov 2019 15:04:05 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     linux-mm <linux-mm@kvack.org>, Rong Chen <rong.a.chen@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC v3] memcg: add memcg lru
+Message-ID: <20191118140405.GD14255@dhcp22.suse.cz>
+References: <20191118125014.11516-1-hdanton@sina.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.72.93.184]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191118125014.11516-1-hdanton@sina.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
+On Mon 18-11-19 20:50:14, Hillf Danton wrote:
+> 
+> On Mon, 18 Nov 2019 11:29:50 +0100 Michal Hocko wrote:
+> > 
+> > On Sun 17-11-19 19:35:26, Hillf Danton wrote:
+> > > 
+> > > Currently soft limit reclaim (slr) is frozen, see
+> > > Documentation/admin-guide/cgroup-v2.rst for reasons.
+> > > 
+> > > This work adds memcg hook into kswapd's logic to bypass slr, paving
+> > > a brick for its cleanup later.
+> > > 
+> > > After b23afb93d317 ("memcg: punt high overage reclaim to
+> > > return-to-userland path"), high limit breachers (hlb) are reclaimed
+> > > one after another spiraling up through the memcg hierarchy before
+> > > returning to userspace.
+> > > 
+> > > The current memcg high work helps to add the lru because we get to
+> > > collect hlb at zero price and in particular without adding changes
+> > > to the high work's behavior.
+> > > 
+> > > Then a fifo list, which is essencially a simple copy of the page lru,
+> > > is needed to facilitate queuing up hlb and ripping pages off them in
+> > > round robin once kswapd starts doing its job.
+> > > 
+> > > Finally new hook is added with slr's two problems addressed i.e.
+> > > hierarchy-unaware reclaim and overreclaim.
+> > > 
+> > > Thanks to Rong Chen for testing.
+> > 
+> Hey Michal
+> 
+> Thanks for your comments, this time and previous.
+> 
+> > You have ignored the previous review feedback again [1]. I have nacked
+> > the patch on grounds that it is completely missing any real use case
+> > scenario or any numbers suggesting there is an actual improvement.
+> > 
+> You are right though around half.
+> 
+> After another peep at your comment on v2, I think you didn't approve
+> the change added in high work to defer reclaim until kswapd becomes
+> active with good reasoning. That defer is cut in v3.
 
-The current driver only sets 0x76543210 and 0x67452301 for DALIGN.
-This doesn’t work well for TDM split and ex-split mode for all SSIU.
-This patch programs the DALIGN registers based on the SSIU number.
+OK, that part was obviously broken in the previous version. But please
+read the whole feedback I (and Johannes) have provided.
+Besides that I would consider it polite to summarize the previous
+version which received to NAKs from maintainers and explain why you
+believe the code has addressed that problem.
 
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
-Cc: Jiada Wang <jiada_wang@mentor.com>
-Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
-Fixes: a914e44693d41b ("ASoC: rsnd: more clear rsnd_get_dalign() for DALIGN")
-Signed-off-by: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
-[erosca: Adjust Fixes: tag, reformat patch description]
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
----
- sound/soc/sh/rcar/core.c | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+> The added lru will take the place of the current slr, so slr's use
+> cases apply to it with no exception, yes? Please feel free let us
+> know what use cases else you may have interests in.
 
-diff --git a/sound/soc/sh/rcar/core.c b/sound/soc/sh/rcar/core.c
-index e9596c2096cd..ae05ed08a2b3 100644
---- a/sound/soc/sh/rcar/core.c
-+++ b/sound/soc/sh/rcar/core.c
-@@ -376,6 +376,16 @@ u32 rsnd_get_adinr_bit(struct rsnd_mod *mod, struct rsnd_dai_stream *io)
-  */
- u32 rsnd_get_dalign(struct rsnd_mod *mod, struct rsnd_dai_stream *io)
- {
-+	static const u32 dalign_values[8][2] = {
-+		{0x76543210, 0x67452301},
-+		{0x00000032, 0x00000023},
-+		{0x00007654, 0x00006745},
-+		{0x00000076, 0x00000067},
-+		{0xfedcba98, 0xefcdab89},
-+		{0x000000ba, 0x000000ab},
-+		{0x0000fedc, 0x0000efcd},
-+		{0x000000fe, 0x000000ef},
-+	};
- 	struct rsnd_mod *ssiu = rsnd_io_to_mod_ssiu(io);
- 	struct rsnd_mod *target;
- 	struct snd_pcm_runtime *runtime = rsnd_io_to_runtime(io);
-@@ -413,11 +423,18 @@ u32 rsnd_get_dalign(struct rsnd_mod *mod, struct rsnd_dai_stream *io)
- 
- 	/* Non target mod or non 16bit needs normal DALIGN */
- 	if ((snd_pcm_format_width(runtime->format) != 16) ||
--	    (mod != target))
--		return 0x76543210;
-+	    (mod != target)) {
-+		if (mod == ssiu)
-+			return dalign_values[rsnd_mod_id_sub(mod)][0];
-+		else
-+			return 0x76543210;
- 	/* Target mod needs inverted DALIGN when 16bit */
--	else
--		return 0x67452301;
-+	} else {
-+		if (mod == ssiu)
-+			return dalign_values[rsnd_mod_id_sub(mod)][1];
-+		else
-+			return 0x67452301;
-+	}
- }
- 
- u32 rsnd_get_busif_shift(struct rsnd_dai_stream *io, struct rsnd_mod *mod)
+Let me ask differently. There must be a reason you have spent time on
+developing this feature. There must be a usecase you are targetting.
+Can you describe it so that we can evaluate pros and cons?
 -- 
-2.24.0
-
+Michal Hocko
+SUSE Labs
