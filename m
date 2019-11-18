@@ -2,101 +2,178 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1CBC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F14BC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 752D42071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:18:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="sS1WeYSg"
+	by mail.kernel.org (Postfix) with ESMTP id 7D62620722
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 11:19:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfKRLSt (ORCPT
+        id S1726739AbfKRLTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 06:18:49 -0500
-Received: from forward500p.mail.yandex.net ([77.88.28.110]:52954 "EHLO
-        forward500p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726460AbfKRLSt (ORCPT
+        Mon, 18 Nov 2019 06:19:40 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55793 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfKRLTj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 06:18:49 -0500
-Received: from mxback1q.mail.yandex.net (mxback1q.mail.yandex.net [IPv6:2a02:6b8:c0e:39:0:640:25b3:aea5])
-        by forward500p.mail.yandex.net (Yandex) with ESMTP id 255F594088C;
-        Mon, 18 Nov 2019 14:18:46 +0300 (MSK)
-Received: from localhost (localhost [::1])
-        by mxback1q.mail.yandex.net (mxback/Yandex) with ESMTP id cUfR7ugG27-IiB0SAiK;
-        Mon, 18 Nov 2019 14:18:44 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1574075924;
-        bh=CvsGLJ9lGUisxTAaa4tQwD8QioWNvSLyZz4c/+wP8A0=;
-        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
-        b=sS1WeYSguIkXgltogEr0miIhnsWxb/ufJBk96t+zUexWKgOVvLBKml3twgdfukLog
-         YCevvyxIwe2kMkR7E5/t9Y1Kdhsvquf/+2PRW86zqMQjsS6AgLqI6eEFBY9U5uwYLv
-         vAeQ6NqweAC7O+OKvyTOQod301g/Mw+l2nXIB1jM=
-Authentication-Results: mxback1q.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by vla3-a60e960147e7.qloud-c.yandex.net with HTTP;
-        Mon, 18 Nov 2019 14:18:44 +0300
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Envelope-From: yjx@flygoat.com
-To:     Jean Delvare <jdelvare@suse.com>
-Cc:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Yinglu Yang <yangyinglu@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>
-In-Reply-To: <123521801574075616@iva1-ef4837f8671e.qloud-c.yandex.net>
-References: <1573478985-3535-1-git-send-email-yangtiezhu@loongson.cn> <123521801574075616@iva1-ef4837f8671e.qloud-c.yandex.net>
-Subject: Re: [PATCH v2] MIPS: Scan the DMI system information
+        Mon, 18 Nov 2019 06:19:39 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iWf4B-000726-78; Mon, 18 Nov 2019 12:19:35 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iWf49-0000nC-ES; Mon, 18 Nov 2019 12:19:33 +0100
+Date:   Mon, 18 Nov 2019 12:19:33 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathieu Malaterre <malat@debian.org>,
+        Artur Rojek <contact@artur-rojek.eu>, kernel@pengutronix.de
+Subject: Re: [PATCH v2 1/3] pwm: jz4740: Use clocks from TCU driver
+Message-ID: <20191118111933.vipfycc2j7j6esb7@pengutronix.de>
+References: <20191116173613.72647-1-paul@crapouillou.net>
+ <20191116173613.72647-2-paul@crapouillou.net>
+ <20191117202028.4chgjv2kulyyq2eu@pengutronix.de>
+ <1574031523.3.0@crapouillou.net>
+ <20191118071538.46egokrswvjxdvfp@pengutronix.de>
+ <1574074556.3.0@crapouillou.net>
 MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date:   Mon, 18 Nov 2019 19:18:44 +0800
-Message-Id: <52253341574075924@vla3-a60e960147e7.qloud-c.yandex.net>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1574074556.3.0@crapouillou.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Paul,
 
+On Mon, Nov 18, 2019 at 11:55:56AM +0100, Paul Cercueil wrote:
+> Le lun., nov. 18, 2019 at 08:15, Uwe Kleine-K�nig
+> <u.kleine-koenig@pengutronix.de> a �crit :
+> > On Sun, Nov 17, 2019 at 11:58:43PM +0100, Paul Cercueil wrote:
+> > >  Le dim., nov. 17, 2019 at 21:20, Uwe Kleine-K�nig
+> > >  <u.kleine-koenig@pengutronix.de> a �crit :
+> > >  > On Sat, Nov 16, 2019 at 06:36:11PM +0100, Paul Cercueil wrote:
+> > >  > >   struct jz4740_pwm_chip {
+> > >  > >   	struct pwm_chip chip;
+> > >  > >  -	struct clk *clk;
+> > >  >
+> > >  > What is the motivation to go away from this approach to store the
+> > > clock?
+> > > 
+> > >  It's actually not the same clock. Instead of obtaining "ext" clock
+> > > from the
+> > >  probe, we obtain "timerX" clocks (X being the PWM channel) from the
+> > > request
+> > >  callback.
+> > 
+> > Before you used driver data and container_of to get it, now you used
+> > pwm_set_chip_data. I wondered why you changed the approach to store
+> > data. That the actual data is different now is another thing (and
+> > obviously ok).
+> 
+> Thierry suggested it: https://lkml.org/lkml/2019/3/4/486
 
-18.11.2019, 19:13, "Jiaxun Yang" <jiaxun.yang@flygoat.com>:
-> 11.11.2019, 21:30, "Tiezhu Yang" <yangtiezhu@loongson.cn>:
->>  Enable DMI scanning on the MIPS architecture, this setups DMI identifiers
->>  (dmi_system_id) for printing it out on task dumps and prepares DIMM entry
->>  information (dmi_memdev_info) from the SMBIOS table. With this patch, the
->>  driver can easily match various of mainboards.
->>
->>  In the SMBIOS reference specification, the table anchor string "_SM_" is
->>  present in the address range 0xF0000 to 0xFFFFF on a 16-byte boundary,
->>  but there exists a special case for Loongson platform, when call function
->>  dmi_early_remap, it should specify the start address to 0xFFFE000 due to
->>  it is reserved for SMBIOS and can be normally access in the BIOS.
->>
->>  This patch works fine on the Loongson 3A3000 platform which belongs to
->>  MIPS architecture and has no influence on the other architectures such
->>  as x86 and ARM.
->>
->>  Co-developed-by: Yinglu Yang <yangyinglu@loongson.cn>
->>  Signed-off-by: Yinglu Yang <yangyinglu@loongson.cn>
->>  [jiaxun.yang@flygoat.com: Refine definitions and Kconfig]
->>  Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->>  Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->>  ---
->
-> Hi Jane,
+If you motivate that in the commit log (preferably with a better
+rationale than "Thierry suggested it") that's fine for. (Do I claim now
+without having read the rationale :-)
 
-Sorry Jean, apologize for my typo.
+> > >  > >   static void jz4740_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+> > >  > >   {
+> > >  > >  +	struct clk *clk = pwm_get_chip_data(pwm);
+> > >  > >  +
+> > >  > >   	jz4740_timer_set_ctrl(pwm->hwpwm, 0);
+> > >  >
+> > >  > What is the purpose of this call? I would have expected that all these
+> > >  > would go away when converting to the clk stuff?!
+> > > 
+> > >  Some go away in patch [1/3] as they are clock-related, this one will go away
+> > >  in patch [2/3] when the driver is converted to use regmap.
+> > 
+> > I'd like to understand what it does. Judging from the name I expect this
+> > is somehow related to the clock stuff and so I wonder if the conversion
+> > to the clk API is as complete as it should be.
+> 
+> It clears the PWM channel's CTRL register. That's the register used for
+> instance to enable the PWM function of a TCU channel.
 
->
-> Is it fine for you?
-> If so please give a Ack.
->
-> Thanks.
-> --
-> Jiaxun Yang
+OK, so this is a register in a different register range than the PWM
+related registers to set duty and period, right? Looking at the code,
+this register has a bit to enable PWM mode and other than that bit
+fields to tune the clock feeding the PWM counters, right?
+
+This probably explains my resistance because such a setup if really hard
+to map to nice code. At least the "PWM enable" bit doesn't fit the clk
+abstraction, no good idea here. Maybe it's easier and more straight
+forward to not wrap that register in a clock driver and only use a clk
+for the parent? What is the motivation to convert this piece of hardware
+to a clk driver? Or abstract it as a proper clk and provide a function
+to enable PWM mode for channel X?
+
+> > >  > >  -	jz4740_timer_stop(pwm->hwpwm);
+> > >  > >  +	clk_disable_unprepare(clk);
+> > >  > >  +	clk_put(clk);
+> > >  > >   }
+> > >  > >
+> > >  > >   static int jz4740_pwm_enable(struct pwm_chip *chip, struct
+> > > pwm_device *pwm)
+> > >  > >  @@ -91,17 +110,21 @@ static int jz4740_pwm_apply(struct
+> > > pwm_chip *chip, struct pwm_device *pwm,
+> > >  > >   			    const struct pwm_state *state)
+> > >  > >   {
+> > >  > >   	struct jz4740_pwm_chip *jz4740 = to_jz4740(pwm->chip);
+> > >  > >  +	struct clk *clk = pwm_get_chip_data(pwm),
+> > >  > >  +		   *parent_clk = clk_get_parent(clk);
+> > >  > >  +	unsigned long rate, period, duty;
+> > >  > >   	unsigned long long tmp;
+> > >  > >  -	unsigned long period, duty;
+> > >  > >   	unsigned int prescaler = 0;
+> > >  > >   	uint16_t ctrl;
+> > >  > >
+> > >  > >  -	tmp = (unsigned long long)clk_get_rate(jz4740->clk) *
+> > > state->period;
+> > >  > >  +	rate = clk_get_rate(parent_clk);
+> > >  >
+> > >  > Why is it the parent's rate that is relevant here?
+> > > 
+> > >  We calculate the divider to be used for the "timerX" clock, so we
+> > > need to
+> > >  know the parent clock.
+> > 
+> > Then the approach here is wrong. You should not assume anything about
+> > the internal details of the clock, that's the task of the clock driver.
+> > As a consumer of the clock just request a rate (or use clk_round_rate to
+> > find a good setting first) and use that.
+> 
+> Totally agreed. I wanted to do that, but you were fighting tooth and nails
+> against my patch "Improve algorithm of clock calculation", remember?
+
+No, I don't, but I looked that up :-) And I fighted because I thought
+the clk API isn't used properly (and I think your problem is that the
+clk API as is today doesn't give you what you want, so there is more
+work to do on the clk side of the problem).
+
+The conceptual problem I see is that currently the code uses some
+internal knowledge about how this timer clock works but as soon as you
+use the clk abstraction it's wrong to use such internal knowledge.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-K�nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
