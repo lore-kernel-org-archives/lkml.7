@@ -2,172 +2,88 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF45C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC18C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F414922318
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:21:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YkiIf2B3"
+	by mail.kernel.org (Postfix) with ESMTP id 79FFC22318
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:23:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfKRTVz (ORCPT
+        id S1727110AbfKRTXL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 14:21:55 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39845 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726909AbfKRTVl (ORCPT
+        Mon, 18 Nov 2019 14:23:11 -0500
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:59451 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbfKRTXL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 14:21:41 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x28so10856811pfo.6
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 11:21:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7Vv2B0bFyN86x+8y9RduLalL/HEcvQ97xAs8bNkoqkM=;
-        b=YkiIf2B3OQussUzFcXNFRTUsy45i9XgaSTRKEeUr6P68fOeMC7WfkpxokUULDn8o2Y
-         81WOgLDOTfUaFb6KqpTEMkvOWWLjm7RxsR9FyMH0oORnxLI0mbe0ud+HZYRMVNMlrq0a
-         3Stutl0NThC6s6axuW2y0b08o+LRLu/Jqkoic=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7Vv2B0bFyN86x+8y9RduLalL/HEcvQ97xAs8bNkoqkM=;
-        b=CKAiV/6H9HJh2KpXnqqA806mI6JmiC8WgBsFj/9SCLOxKRZGkptRAAjjXat8FTrTHM
-         0tUNxnZ0MDhahGnRMNXWa/PTxmoAWynUSQprLWh/hqfF23oFBo3iHOrID5jCV+3w53DR
-         G0UJ4/n1LGdynbRCt5dTx9fBbk99OxyvO2bd/54mXUJm+IRgccQZ3qZ/i+7kCmayHHQb
-         lDg4fwziy1DTSeXizPWZKnxgwilYOXhk+H8S0nUymSeHox8u6POZRX7if4hqR/Q4URGk
-         1Kzz+nHSOzSbu3x+o7FF0OxsP0piCIlBput/2NTupsSzasVSytZr9Mgx4sV7mBNa2Z5U
-         6H2Q==
-X-Gm-Message-State: APjAAAX3HwJVD1kh8KJcszgp4xfZlV16d153MbFzz15qfaLLT4+oN6bh
-        /moW6+Z2nAPTJSsouheeBAKZRQ==
-X-Google-Smtp-Source: APXvYqyftvKH1fK0ACjlvyP+upMLpK/ORTLYCjxK+/XeKb32FV0IOsarIrAKdQQe9sSFMBw9Hv91cA==
-X-Received: by 2002:aa7:9533:: with SMTP id c19mr919367pfp.77.1574104901053;
-        Mon, 18 Nov 2019 11:21:41 -0800 (PST)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id p123sm22772633pfg.30.2019.11.18.11.21.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 11:21:39 -0800 (PST)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-bluetooth@vger.kernel.org, dianders@chromium.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        devicetree@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v6 3/4] dt-bindings: net: broadcom-bluetooth: Add pcm config
-Date:   Mon, 18 Nov 2019 11:21:22 -0800
-Message-Id: <20191118110335.v6.3.I18b06235e381accea1c73aa2f9db358645d9f201@changeid>
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-In-Reply-To: <20191118192123.82430-1-abhishekpandit@chromium.org>
-References: <20191118192123.82430-1-abhishekpandit@chromium.org>
+        Mon, 18 Nov 2019 14:23:11 -0500
+X-Originating-IP: 90.38.106.182
+Received: from xps13 (atoulouse-659-1-107-182.w90-38.abo.wanadoo.fr [90.38.106.182])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 593ED40008;
+        Mon, 18 Nov 2019 19:22:58 +0000 (UTC)
+Date:   Mon, 18 Nov 2019 20:22:57 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Richard Weinberger <richard@nod.at>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH v2] {tty: serial, nand: onenand}: samsung: rename to fix
+ build warning
+Message-ID: <20191118202257.6cfd1a7e@xps13>
+In-Reply-To: <1505628642.90849.1574081270290.JavaMail.zimbra@nod.at>
+References: <20191117202435.28127-1-sudipm.mukherjee@gmail.com>
+        <20191118114657.GA228826@kroah.com>
+        <1505628642.90849.1574081270290.JavaMail.zimbra@nod.at>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for pcm parameters.
+Hi all,
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
----
+Richard Weinberger <richard@nod.at> wrote on Mon, 18 Nov 2019 13:47:50
++0100 (CET):
 
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+> ----- Ursprüngliche Mail -----
+> >> I was not sure if this should have been two different patch, but since
+> >> this will be fixing the same problem so it seems its better to have them
+> >> in a single patch.
+> >> 
+> >>  drivers/mtd/nand/onenand/Makefile                     | 2 +-
+> >>  drivers/mtd/nand/onenand/{samsung.c => samsung_mtd.c} | 0
+> >>  drivers/tty/serial/Makefile                           | 2 +-
+> >>  drivers/tty/serial/{samsung.c => samsung_tty.c}       | 0
+> >>  4 files changed, 2 insertions(+), 2 deletions(-)
+> >>  rename drivers/mtd/nand/onenand/{samsung.c => samsung_mtd.c} (100%)
+> >>  rename drivers/tty/serial/{samsung.c => samsung_tty.c} (100%)  
+> > 
+> > I can take this in the tty tree if the mtd maintainer gives an ack for
+> > it...  
+> 
+> Acked-by: Richard Weinberger <richard@nod.at>
 
- .../bindings/net/broadcom-bluetooth.txt       | 16 ++++++++++
- include/dt-bindings/bluetooth/brcm.h          | 32 +++++++++++++++++++
- 2 files changed, 48 insertions(+)
- create mode 100644 include/dt-bindings/bluetooth/brcm.h
+If it is not too late, I am not a big fan of the new naming which is
+rather not descriptive. Files in the onenand subdirectory are:
+* onenand_<something>.c for the base files
+* <vendor>.c for the vendors files (currently: omap2.c and samsung.c).
 
-diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-index c749dc297624..8561e4684378 100644
---- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-@@ -29,10 +29,20 @@ Optional properties:
-    - "lpo": external low power 32.768 kHz clock
-  - vbat-supply: phandle to regulator supply for VBAT
-  - vddio-supply: phandle to regulator supply for VDDIO
-+ - brcm,bt-sco-routing: PCM, Transport, Codec, I2S
-+ - brcm,bt-pcm-interface-rate: 128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps
-+ - brcm,bt-pcm-frame-type: short, long
-+ - brcm,bt-pcm-sync-mode: slave, master
-+ - brcm,bt-pcm-clock-mode: slave, master
- 
-+See include/dt-bindings/bluetooth/brcm.h for SCO/PCM parameters. The default
-+value for all these values are 0 (except for brcm,bt-sco-routing which requires
-+a value) if you choose to leave it out.
- 
- Example:
- 
-+#include <dt-bindings/bluetooth/brcm.h>
-+
- &uart2 {
-        pinctrl-names = "default";
-        pinctrl-0 = <&uart2_pins>;
-@@ -40,5 +50,11 @@ Example:
-        bluetooth {
-                compatible = "brcm,bcm43438-bt";
-                max-speed = <921600>;
-+
-+               brcm,bt-sco-routing        = <BRCM_SCO_ROUTING_TRANSPORT>;
-+               brcm,bt-pcm-interface-rate = <BRCM_PCM_IF_RATE_512KBPS>;
-+               brcm,bt-pcm-frame-type     = <BRCM_PCM_FRAME_TYPE_SHORT>;
-+               brcm,bt-pcm-sync-mode      = <BRCM_PCM_SYNC_MODE_MASTER>;
-+               brcm,bt-pcm-clock-mode     = <BRCM_PCM_CLOCK_MODE_MASTER>;
-        };
- };
-diff --git a/include/dt-bindings/bluetooth/brcm.h b/include/dt-bindings/bluetooth/brcm.h
-new file mode 100644
-index 000000000000..8b86f90d7dd2
---- /dev/null
-+++ b/include/dt-bindings/bluetooth/brcm.h
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-+/*
-+ * This header provides constants for Broadcom bluetooth dt-bindings.
-+ */
-+#ifndef _DT_BINDINGS_BLUETOOTH_BRCM_H
-+#define _DT_BINDINGS_BLUETOOTH_BRCM_H
-+
-+#define BRCM_BT_SCO_ROUTING_PCM			0
-+#define BRCM_BT_SCO_ROUTING_TRANSPORT		1
-+#define BRCM_BT_SCO_ROUTING_CODEC		2
-+#define BRCM_BT_SCO_ROUTING_I2S			3
-+
-+/* Default is 128KBPs */
-+#define BRCM_BT_PCM_INTERFACE_RATE_128KBPS	0
-+#define BRCM_BT_PCM_INTERFACE_RATE_256KBPS	1
-+#define BRCM_BT_PCM_INTERFACE_RATE_512KBPS	2
-+#define BRCM_BT_PCM_INTERFACE_RATE_1024KBPS	3
-+#define BRCM_BT_PCM_INTERFACE_RATE_2048KBPS	4
-+
-+/* Default should be short */
-+#define BRCM_BT_PCM_FRAME_TYPE_SHORT		0
-+#define BRCM_BT_PCM_FRAME_TYPE_LONG		1
-+
-+/* Default should be master */
-+#define BRCM_BT_PCM_SYNC_MODE_SLAVE		0
-+#define BRCM_BT_PCM_SYNC_MODE_MASTER		1
-+
-+/* Default should be master */
-+#define BRCM_BT_PCM_CLOCK_MODE_SLAVE		0
-+#define BRCM_BT_PCM_CLOCK_MODE_MASTER		1
-+
-+#endif /* _DT_BINDINGS_BLUETOOTH_BRCM_H */
--- 
-2.24.0.432.g9d3f5f5b63-goog
+What about doing the MTD changes in a single patch and renaming both
+vendor drivers (for the same reason): onenand_omap2.c and
+onenand_samsung.c? I know it makes git blaming more difficult though.
 
+Thanks,
+Miquèl
