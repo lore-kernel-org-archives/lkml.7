@@ -2,131 +2,169 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B77E3C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B29C43215
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9303A20730
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7839214DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 20:05:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="UxPgDGEU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="APzSWzS1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfKRUDe (ORCPT
+        id S1726874AbfKRUFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 15:03:34 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46369 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbfKRUDe (ORCPT
+        Mon, 18 Nov 2019 15:05:32 -0500
+Received: from mail-lj1-f170.google.com ([209.85.208.170]:46022 "EHLO
+        mail-lj1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbfKRUFc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 15:03:34 -0500
-Received: by mail-ot1-f65.google.com with SMTP id n23so15629930otr.13
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 12:03:32 -0800 (PST)
+        Mon, 18 Nov 2019 15:05:32 -0500
+Received: by mail-lj1-f170.google.com with SMTP id n21so20392550ljg.12;
+        Mon, 18 Nov 2019 12:05:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2PDaqtIBFBkrRQtsY42nVpJi6m3lJCgdaGJOcPD9Eus=;
-        b=UxPgDGEUGSS2r8QojZ/ioqZmAmyhiiIEOQoy9RtBqwwu3kaOweSHsI8J4m2K+HhZA2
-         mjvPBHZeE6rg6BOyz/I2PnBSCrqeMEqNQ6qYLKjizgjbfQauOxWanDCnsw3hAhfcpw40
-         76vwRpGOIpHjgHlFudj72VJL3sr8VtLtvfikY=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+lYduyo7vPgxp45RLwsY0ZnQLiYVsuFTry8aLXbx4kM=;
+        b=APzSWzS1AWv0t0oARIksAL9UGz8A49gKk4636qenUrw+Td8W04Iz2y8qkPl3AHCr6m
+         l/Y7ReHNWM+fX2S6YoWckzLWIag7992BEYqUq4Gn7ppw4+46i/FfNOopAHsAijIGhjKR
+         tD7SA9PLTVi2s4wgrPZldc+6eFwRb93c5lbw3Ix93bgb7lhuXJ0PlExD9gV/yxANzVju
+         ztDiniGHZn5D2BJ4iYP8hDynklw+eD4ahvr9rBJ6wzY3kA2s+pBf2hpwaxyTKPUB/KNS
+         oCMyalrSMkpWiyay05T2MnJa3wwN2B5WySinWwolMDf4wTAKiDFgGzlR2428ByxDD+/O
+         jcJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2PDaqtIBFBkrRQtsY42nVpJi6m3lJCgdaGJOcPD9Eus=;
-        b=unilPI85LeywuNmryr1T3BhswiZWmFUXN8XXYfCWEt3oSI3APWg83eh2wiFWFCjqk6
-         p1AFGTFpXUb/FNYZ7HzrZgIsgSQZrL8U1H5W0QY9Utlm4YD2m4eO5Rn48ALFeD8aS2jZ
-         1kpG+/X//g58JGWq5U7GIPnYrZF4pr+CZN//eev5ndeBntPOmlwWkOO8BS2JgghtbqF4
-         nGRnf6HBO4xSDc1+YA3b+GN9FUDxoVONulAJeBfEw0W10FAIQOBb6v0RlMJb2JEuJDtL
-         OUm+7F63aOWI2bJnMVndNWN251RijU7fAW4v8DiEzTiaxwkdwypZRTjva1v13xECc8TQ
-         eleg==
-X-Gm-Message-State: APjAAAV8Rub+ajgKkxeK8eRbYlavxK5Okmw+iWq0wTajE1XcWyX25yfm
-        MoahI4yqVQqOiCx7Hf7KUAk2Ro0I+Ale59+WCufrRQ==
-X-Google-Smtp-Source: APXvYqxmAHc8pVLhK0Y0804VQwtyYsvapomac1UHPu9BRJmQq3WYdIqSwK6xX5pOlFN607Lp+Hp7TwzWoW9x/GPS1/Q=
-X-Received: by 2002:a05:6830:22d0:: with SMTP id q16mr849080otc.188.1574107411531;
- Mon, 18 Nov 2019 12:03:31 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+lYduyo7vPgxp45RLwsY0ZnQLiYVsuFTry8aLXbx4kM=;
+        b=AMrUuEqRyNQAn3dbqdRGGtTItKb5Fqwy8rXr3WzjZenWV+UtT10zk+EnoQkLWpjxBW
+         qUGdlehbMOQYlf1cITyuSyeOjDbZt0W26wxL5tjvnHfkl5VyTsQmRQj6JsmEJ00GFDHk
+         wpbo9+lDmAOlKtVBa77VW9e+iKzxr1RSCtnv7SGjfxQy93HGeFzTowEHaDlgDlgAo2or
+         uSmCKuMPkLnhAjPjaAqPLQ1AE+uGSRg6grlGSAqDVYTO1xOp+mXfGojAFjdI3/SdDhY/
+         uoA1F7RKuq7rirncpEBEBzDHSjWzp8uKaih9+Y81U/cAL6oUzILxSilKxhypXJEljdjC
+         BcJA==
+X-Gm-Message-State: APjAAAWPyEXjNhCZbod6A2BIvO7BmfM+DT0+MYhBcSc9JjBVzIr01DRJ
+        v7ngAjC3ipwZPWfQOhAxjck=
+X-Google-Smtp-Source: APXvYqxptZWcgvS7sdySo1sH5FxDJRVUucG9P8wDoJrg5exzZstUPyRLwr6nfSCBfGL7tbiFLrJUzA==
+X-Received: by 2002:a2e:574d:: with SMTP id r13mr934150ljd.10.1574107529313;
+        Mon, 18 Nov 2019 12:05:29 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id j23sm9166942lji.41.2019.11.18.12.05.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 12:05:28 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v1 00/29] Introduce memory interconnect for NVIDIA Tegra SoCs
+Date:   Mon, 18 Nov 2019 23:02:18 +0300
+Message-Id: <20191118200247.3567-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20191114132436.7232-1-wambui.karugax@gmail.com>
- <8736ep1hm2.fsf@intel.com> <20191118192450.GA135013@art_vandelay>
-In-Reply-To: <20191118192450.GA135013@art_vandelay>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Mon, 18 Nov 2019 21:03:20 +0100
-Message-ID: <CAKMK7uG7Tb6oocrRgRFvq5oB2Rxjy+JmyOSXQtjo6Gt_WH91+A@mail.gmail.com>
-Subject: Re: [PATCH 0/2] add new DRM_DEV_WARN macro
-To:     Sean Paul <sean@poorly.run>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Dave Airlie <airlied@linux.ie>,
-        Sandy Huang <hjc@rock-chips.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 8:24 PM Sean Paul <sean@poorly.run> wrote:
-> On Fri, Nov 15, 2019 at 01:52:53PM +0200, Jani Nikula wrote:
-> > On Thu, 14 Nov 2019, Wambui Karuga <wambui.karugax@gmail.com> wrote:
-> > > This adds a new DRM_DEV_WARN helper macro for warnings log output that include
-> > > device pointers. It also includes the use of the DRM_DEV_WARN macro in
-> > > drm/rockchip to replace dev_warn.
-> >
-> > I'm trying to solicit new struct drm_device based logging macros, and
-> > starting to convert to those. [1]
-> >
->
-> This sounds good to me, I'd much prefer the non-caps versions of these
-> functions. So let's wait for those to bubble up and then convert rockchip to
-> drm_dev_*
+Hello,
 
-Care to ack Jani's patch directly, so this is all formal?
+This series brings initial support for memory interconnect to Tegra20,
+Terga30 and Tegra124 SoCs. The interconnect provides are quite generic
+and should be suitable for all Tegra SoCs, but currently upstream kernel
+has EMC/MC drivers only for those three generations of Tegra SoCs.
 
-Jani, can you pls also add a todo.rst patch on top to adjust the
-relevant item to the new color choice?
+For the start only display controllers are getting interconnect API
+support, others could be supported later on. The display controllers
+have the biggest demand for interconnect API right now because dynamic
+memory frequency scaling can't be done safely without taking into account
+bandwidth requirement from the displays.
 
-Wambui, I guess slight change of plans, it happens ...
+Dmitry Osipenko (29):
+  dt-bindings: memory: tegra20: mc: Document new interconnect property
+  dt-bindings: memory: tegra20: emc: Document new interconnect property
+  dt-bindings: memory: tegra30: mc: Document new interconnect property
+  dt-bindings: memory: tegra30: emc: Document new interconnect property
+  dt-bindings: memory: tegra124: mc: Document new interconnect property
+  dt-bindings: memory: tegra124: emc: Document new interconnect property
+  dt-bindings: host1x: Document new interconnect properties
+  dt-bindings: interconnect: tegra: Add initial IDs
+  ARM: tegra: Add interconnect properties to Tegra20 device-tree
+  ARM: tegra: Add interconnect properties to Tegra30 device-tree
+  ARM: tegra: Add interconnect properties to Tegra124 device-tree
+  interconnect: Add memory interconnection providers for NVIDIA Tegra
+    SoCs
+  memory: tegra: Register as interconnect provider
+  memory: tegra: Add interconnect nodes for Terga20 display controllers
+  memory: tegra: Add interconnect nodes for Terga30 display controllers
+  memory: tegra: Add interconnect nodes for Terga124 display controllers
+  memory: tegra20-emc: Use devm_platform_ioremap_resource
+  memory: tegra20-emc: Continue probing if timings/IRQ are missing in
+    device-tree
+  memory: tegra20-emc: Register as interconnect provider
+  memory: tegra30-emc: Continue probing if timings are missing in
+    device-tree
+  memory: tegra30-emc: Register as interconnect provider
+  memory: tegra124-emc: Use devm_platform_ioremap_resource
+  memory: tegra124-emc: Register as interconnect provider
+  drm/tegra: dc: Use devm_platform_ioremap_resource
+  drm/tegra: dc: Release PM and RGB output when client's registration
+    fails
+  drm/tegra: dc: Support memory bandwidth management
+  ARM: tegra: Enable interconnect API in tegra_defconfig
+  ARM: multi_v7_defconfig: Enable NVIDIA Tegra interconnect providers
+  MAINTAINERS: Add maintainers for NVIDIA Tegra interconnect drivers
 
-Cheers, Daniel
-
->
-> Sean
->
-> > BR,
-> > Jani.
-> >
-> >
-> > [1] http://patchwork.freedesktop.org/patch/msgid/63d1e72b99e9c13ee5b1b362a653ff9c21e19124.1572258936.git.jani.nikula@intel.com
-> >
-> >
-> >
-> >
-> > >
-> > > Wambui Karuga (2):
-> > >   drm/print: add DRM_DEV_WARN macro
-> > >   drm/rockchip: use DRM_DEV_WARN macro in debug output
-> > >
-> > >  drivers/gpu/drm/rockchip/inno_hdmi.c | 3 ++-
-> > >  include/drm/drm_print.h              | 9 +++++++++
-> > >  2 files changed, 11 insertions(+), 1 deletion(-)
-> >
-> > --
-> > Jani Nikula, Intel Open Source Graphics Center
->
-> --
-> Sean Paul, Software Engineer, Google / Chromium OS
-
-
+ .../display/tegra/nvidia,tegra20-host1x.txt   |  67 +++++
+ .../nvidia,tegra124-emc.txt                   |   3 +
+ .../nvidia,tegra124-mc.yaml                   |   5 +
+ .../memory-controllers/nvidia,tegra20-emc.txt |   4 +
+ .../memory-controllers/nvidia,tegra20-mc.txt  |   4 +
+ .../nvidia,tegra30-emc.yaml                   |   6 +
+ .../memory-controllers/nvidia,tegra30-mc.yaml |   5 +
+ MAINTAINERS                                   |   9 +
+ arch/arm/boot/dts/tegra124.dtsi               |  10 +
+ arch/arm/boot/dts/tegra20.dtsi                |  11 +-
+ arch/arm/boot/dts/tegra30.dtsi                |  12 +-
+ arch/arm/configs/multi_v7_defconfig           |   2 +
+ arch/arm/configs/tegra_defconfig              |   2 +
+ drivers/gpu/drm/tegra/dc.c                    | 252 +++++++++++++++++-
+ drivers/gpu/drm/tegra/dc.h                    |   8 +
+ drivers/gpu/drm/tegra/drm.c                   |  18 ++
+ drivers/gpu/drm/tegra/plane.c                 |   1 +
+ drivers/gpu/drm/tegra/plane.h                 |   4 +-
+ drivers/interconnect/Kconfig                  |   1 +
+ drivers/interconnect/Makefile                 |   1 +
+ drivers/interconnect/tegra/Kconfig            |   6 +
+ drivers/interconnect/tegra/Makefile           |   4 +
+ drivers/interconnect/tegra/tegra-icc-emc.c    | 138 ++++++++++
+ drivers/interconnect/tegra/tegra-icc-mc.c     | 130 +++++++++
+ drivers/memory/tegra/mc.c                     |   4 +
+ drivers/memory/tegra/tegra124-emc.c           |  28 +-
+ drivers/memory/tegra/tegra124.c               |  16 ++
+ drivers/memory/tegra/tegra20-emc.c            |  91 ++++---
+ drivers/memory/tegra/tegra20.c                |  14 +
+ drivers/memory/tegra/tegra30-emc.c            |  34 ++-
+ drivers/memory/tegra/tegra30.c                |  14 +
+ include/dt-bindings/interconnect/tegra-icc.h  |  11 +
+ include/soc/tegra/mc.h                        |  26 ++
+ 33 files changed, 883 insertions(+), 58 deletions(-)
+ create mode 100644 drivers/interconnect/tegra/Kconfig
+ create mode 100644 drivers/interconnect/tegra/Makefile
+ create mode 100644 drivers/interconnect/tegra/tegra-icc-emc.c
+ create mode 100644 drivers/interconnect/tegra/tegra-icc-mc.c
+ create mode 100644 include/dt-bindings/interconnect/tegra-icc.h
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+2.23.0
+
