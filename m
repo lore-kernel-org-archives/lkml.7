@@ -2,125 +2,162 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CF0C432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 120C8C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A0D82071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB14520748
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 09:37:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="S4zJ//FJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FmvVPxyz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbfKRJhb (ORCPT
+        id S1726705AbfKRJhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 04:37:31 -0500
-Received: from mail-eopbgr740072.outbound.protection.outlook.com ([40.107.74.72]:53664
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726461AbfKRJha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 04:37:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PnOdRyOhtvxS/d6dyGp6YHmccTUxE+Pk1Dmy1c3lokq/Jyq+hYBKrgwm2PoUaJm8YM6PCIWSI4/dzq5Z8W+icVxVrjEyydca7bjzEC5LFjWYtnYEiwlRlwRSw7teEjv0IiADty5Y/FTzyByDHnmD3Mw4SWXWNVQBUy3B5gieIHfCE2IvLMd7FhBcrOeQgpvYssFcObf4xHbfa3YDy2OQ87Vy5pcxx7BqlF2QrjHfiWUIkYCDjBLECsY66zpi0yyuNFFbjtjkGGdNGJyAKtaaKN+Oqoukl1oI8MM+A1KJ13JnmlEHICEL2kXutUV18H8nHkYHXGqAwkycw6vXGopDOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ULOSXUSi+/EsERkJiV9n05O+86O8Cl5+5spjLv17qis=;
- b=A++Es6+9zEOeScDAvF2Am/mBgAGn6yYBfo9NJzeQX7ZMU9OIwoKBmZfn/egQHeweRxevTOww4eC6bzUh6OxKL0v4VVjTSHBU1flzKJKB2g7b+PW8/XiE0xMpz82q3aKSUQRaZeaBuACpmjL69LTfF/+KFgfxn6iMekxz1N3ywUCPeG+e92HMPmaQLzD6V2Y13XobvI/5PTrIvVfEDGvrQmhBLYH/5Oh6KLuYFzWAzWNzq+zXTwRdLpsElQkQNfqBJR3qbQ6GFsA5NzWtZ/Smus2pDZat7L+AM+0elg48tWr6hM1CQxCB/CIFHImfWFzaG0cOCKW78QKLbPXFwmBG6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
- dkim=pass header.d=micron.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ULOSXUSi+/EsERkJiV9n05O+86O8Cl5+5spjLv17qis=;
- b=S4zJ//FJUli+odNj88jSPBf9gCm4ugiEtlNybx6meg2HjYNmWcEONfULrkJOVATIhH/4F2zJQ+TCBPsJOVwwi8YV5tBudGHUqXmyZDjOiuxs/o0tOWSRu7Z/gGwfei7z6j+0Pm6BAxvSeJvz5aFICzauaopnsBjKk/VoiYh2UXg=
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.179.87) by
- BN7PR08MB4228.namprd08.prod.outlook.com (52.133.222.154) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.27; Mon, 18 Nov 2019 09:37:27 +0000
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::a91a:c2f5:c557:4285]) by BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::a91a:c2f5:c557:4285%6]) with mapi id 15.20.2451.029; Mon, 18 Nov 2019
- 09:37:27 +0000
-From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
-To:     Can Guo <cang@qti.qualcomm.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
-        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "kernel-team@android.com" <kernel-team@android.com>,
-        "saravanak@google.com" <saravanak@google.com>,
-        "salyzyn@google.com" <salyzyn@google.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>
-CC:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] [PATCH v2 3/4] scsi: ufs: Avoid messing up the
- compl_time_stamp of lrbs
-Thread-Topic: [EXT] [PATCH v2 3/4] scsi: ufs: Avoid messing up the
- compl_time_stamp of lrbs
-Thread-Index: AQHVncN0qi6outuzf0O6t+NF9bzRkKeQq7+Q
-Date:   Mon, 18 Nov 2019 09:37:27 +0000
-Message-ID: <BN7PR08MB5684C8920F081E3463B8BE90DB4D0@BN7PR08MB5684.namprd08.prod.outlook.com>
-References: <1574049061-11417-1-git-send-email-cang@qti.qualcomm.com>
- <1574049061-11417-4-git-send-email-cang@qti.qualcomm.com>
-In-Reply-To: <1574049061-11417-4-git-send-email-cang@qti.qualcomm.com>
-Accept-Language: en-150, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLTA2MzA0MmJiLTA5ZTctMTFlYS04Yjg1LWRjNzE5NjFmOWRkM1xhbWUtdGVzdFwwNjMwNDJiZC0wOWU3LTExZWEtOGI4NS1kYzcxOTYxZjlkZDNib2R5LnR4dCIgc3o9IjQyMyIgdD0iMTMyMTg1NDM0NDQ0NDUyOTkzIiBoPSJQeXU5YU5iV0k2Q2krdmo5VFphQk1nWW9LWm89IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-x-dg-rorf: true
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=beanhuo@micron.com; 
-x-originating-ip: [165.225.81.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e2525a6c-806a-4fb4-bd61-08d76c0aecc4
-x-ms-traffictypediagnostic: BN7PR08MB4228:|BN7PR08MB4228:|BN7PR08MB4228:
-x-microsoft-antispam-prvs: <BN7PR08MB4228BC8A1A3FF0E6A0BAFA3EDB4D0@BN7PR08MB4228.namprd08.prod.outlook.com>
-x-ms-exchange-transport-forked: True
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0225B0D5BC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(346002)(396003)(39860400002)(189003)(199004)(74316002)(558084003)(55016002)(4326008)(256004)(99286004)(76116006)(9686003)(229853002)(6436002)(8936002)(25786009)(81156014)(7696005)(76176011)(6246003)(81166006)(8676002)(86362001)(5660300002)(6116002)(3846002)(476003)(186003)(55236004)(66066001)(2201001)(71190400001)(71200400001)(7416002)(102836004)(6506007)(316002)(14454004)(110136005)(446003)(11346002)(54906003)(66946007)(66446008)(64756008)(66556008)(66476007)(478600001)(52536014)(33656002)(7736002)(486006)(305945005)(2906002)(26005)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB4228;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: micron.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sHV1mF+QPxkYaglTnhRSw3JFZ2ypUPwcaBviHFYOnTO6G/WYzqF57ovTiLFDTVsd7yZBiyoFI24a1joDiI/blp00skxxOhxUBO8tMnyoplWkj6l/cJFEVwdaA7DjXJQU/09G6/11ldBxcAE2r8HWNMiuca0Pz6ElA8WKEfCbN3Z2b/SJtyogRWAq06Q+7Uf79PdKKJuZqTXQSQo+qWFtuxZPvWq1XsHTyy/qn37qJFbrotrCBHu+yYptQwyDh8fZyiRIeG27IUURn0WkuYaHyW+9tBWmnED9Ozg5/TBs0j6AHm7fM8LavoDjVla2Hx4/Co7Ka+Zc8Pup2LuXAAjdDE10mlQI/+PLWA1DLMVIiv/udwDHaCLji4HZ/PfV0mIei0f4xSp98m8xzceUAZ+FRJasGur8yTqBfHq89l2bDqWSd9fmOGtzzbObRAXIzEJu
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 18 Nov 2019 04:37:45 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41068 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726461AbfKRJhp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 04:37:45 -0500
+Received: by mail-wr1-f68.google.com with SMTP id b18so17114261wrj.8;
+        Mon, 18 Nov 2019 01:37:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=j4Tb0ttRFw3t9sd1seO7iOyRmoHtxz8QiDipOLgYhfk=;
+        b=FmvVPxyz08Mlj9wlduT6LqMYYoow9iMU/3r91mZeSctNWMvPocJs0gi4Wbv6VQRbJq
+         0yZ8L+WlEbsQNvNDOSjl6zY8wE6yVLgpNE0wpTEDoQk3KsN6wpHjwYRyzhBmxCPQLByK
+         SYZlG9zAM1tWQ0DwN40kXtQMYfGhIa95qzNH+C5d7Y0h5KZyL3/wVb6YjkiHe4yvNz87
+         C71Lqiuwx6ho3IoMjZ0SIk97dDv1gIO3rwO80MOgp4lXyb4rhP1Q+6mzmuNGfKaSacO3
+         SnSQ5gSWP/wYu/9wFex2cY4Rstd6jtcbBsCiizOgKUvkqsJzB8RQgk1M45SgwpU2cWVD
+         a+Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=j4Tb0ttRFw3t9sd1seO7iOyRmoHtxz8QiDipOLgYhfk=;
+        b=DdXsprCsLW666s/Wnwe7ZCdUmNoQvYiJyuosN2pLwuscCWtGPGoLbq84iSuGLMUJYh
+         EIZJnupt2oUWMY5YEFpaIKFVdJyStreOfgQ7KszrCfvxnSE68AsOm4206EUsvVuwiS00
+         8CVo8HxI8ZhTDorwUJyn7zwsu4syZR4Q8ClkPVY7gHNnrjRb+UJ0hrri92UJZvrwAMdu
+         H6F0Ak2Nup1/+Rig5f/NQW42Ssj1ccyQopwZsXa8k2yy0CXI4EZWYROPP4LIs/t9WbFH
+         1f+Ee88Sg2mG9E3bqpxsWB1VHZIS4arKMpPtAVfvfa6Yjil8FFHb8moG5rS2g+gYPUTJ
+         bNzg==
+X-Gm-Message-State: APjAAAWO/S9ZQbNp7UQZaAAQIeUCjpxip5DGaVuE71TFIRfBmyBwzMKZ
+        OHtvUXmtQGc6P/9lo7+he20=
+X-Google-Smtp-Source: APXvYqzRNbzUzZKuGwQfxwmU1oQitUxKl4bqL0I3wGCiiaEg2GGL/i9UBvMgZ1g7TiPtHWPMnDD/+g==
+X-Received: by 2002:adf:f3c5:: with SMTP id g5mr28757517wrp.5.1574069862352;
+        Mon, 18 Nov 2019 01:37:42 -0800 (PST)
+Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
+        by smtp.gmail.com with ESMTPSA id w10sm19006687wmd.26.2019.11.18.01.37.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 01:37:41 -0800 (PST)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v5 0/8] Add support for H6 PWM
+Date:   Mon, 18 Nov 2019 10:37:19 +0100
+Message-Id: <20191118093727.21899-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e2525a6c-806a-4fb4-bd61-08d76c0aecc4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 09:37:27.2144
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: f8Eo6UAedSQqyO0ax38LY66eOYXNjCDQuViPLtAes8fbT56eCxSlqDQgSBudu9G6QpOSdahenBB1mt0vCjGdCA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB4228
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->=20
-> From: Can Guo <cang@codeaurora.org>
->=20
-> To be on the safe side, do not touch one lrb after clear its slot in the =
-lrb_in_use
-> bitmap to avoid messing up the next task which would possibly occupy this=
- lrb.
->=20
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Bean Huo <beanhuo@micron.com>
+Hi,
+
+This is a rework of Jernej's previous work[1] taking account all the
+previous remarks.
+
+Bindings is still strict but probe in the driver are now optionnals.
+
+If someone could confirm that the PWM is not broken, as my board
+doesn't output it.
+
+I didn't add the acked-tags as there are big changes.
+
+Thanks,
+Clément
+
+Jernej's cover:
+Allwinner H6 SoC has PWM core which is basically the same as that found
+in A20, it's just depends on additional bus clock and reset line.
+
+This series adds support for it and extends PWM driver functionality in
+a way that it's now possible to bypass whole core and output PWM source
+clock directly as a PWM signal. This functionality is needed by AC200
+chip, which is bundled in same physical package as H6 SoC, to serve as a
+clock source of 24 MHz. AC200 clock input pin is bonded internally to
+the second PWM channel.
+
+I would be grateful if anyone can test this patch series for any kind of
+regression on other SoCs.
+
+[1]: https://patchwork.kernel.org/cover/11061737/
+
+Changes in v5:
+ - Move bypass calculation to pwm_calculate
+ - Split mod_clock fallback from bus_clk probe    
+ - Update comment
+ - Move my SoB after acked-by/reviewed-by
+
+Changes in v4:
+ - item description in correct order and add a blank line
+ - use %pe for printing PTR_ERR
+ - don't print error when it's an EPROBE_DEFER
+ - change output clock bypass formula to match PWM policy
+
+Changes in v3:
+ - Documentation update to allow one clock without name
+ - Change reset optional to shared
+ - If reset probe failed return an error
+ - Remove old clock probe
+ - Update bypass enabled formula
+
+Changes in v2:
+ - Remove allOf in Documentation
+ - Add H6 example in Documentation
+ - Change clock name from "pwm" to "mod"
+ - Change reset quirk to optional probe
+ - Change bus_clock quirk to optional probe
+ - Add limitation comment about mod_clk_output
+ - Add quirk for mod_clk_output
+ - Change bypass formula
+
+Clément Péron (2):
+  pwm: sun4i: Prefer "mod" clock to unamed
+  [DO NOT MERGE] arm64: allwinner: h6: enable Beelink GS1 PWM
+
+Jernej Skrabec (6):
+  dt-bindings: pwm: allwinner: Add H6 PWM description
+  pwm: sun4i: Add an optional probe for reset line
+  pwm: sun4i: Add an optional probe for bus clock
+  pwm: sun4i: Add support to output source clock directly
+  pwm: sun4i: Add support for H6 PWM
+  arm64: dts: allwinner: h6: Add PWM node
+
+ .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml |  48 +++++
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |   4 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  10 +
+ drivers/pwm/pwm-sun4i.c                       | 185 +++++++++++++++---
+ 4 files changed, 215 insertions(+), 32 deletions(-)
+
+-- 
+2.20.1
+
