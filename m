@@ -2,82 +2,117 @@ Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93470C432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F75C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64F99222A7
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:40:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PU7Vz9tJ"
+	by mail.kernel.org (Postfix) with ESMTP id E3E8D22304
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 19:40:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574106018;
+	bh=lALNLNHKbLarFmQFbxabtTEuqMU5yok9zA5BXn9uNZI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oAbdc/GTvg3Ey+X2WUzKYR9M3vFPWpSoyFjAlXi9tyvirk8zL7sloQ6It8iwAZk/N
+	 /VRC8X7F/+MmQPWOKmOf+mAcbZ0zBA6OxPiTGuuvd0lUiWieUYD9LibtVekjPncFXK
+	 I8xkWgu2OS4RvaYuvMV1k8Nwki1bASD7mDGaBa1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfKRTkK (ORCPT
+        id S1726933AbfKRTkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 14:40:10 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44925 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbfKRTkK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 14:40:10 -0500
-Received: by mail-io1-f65.google.com with SMTP id j20so9122981ioo.11
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 11:40:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ga2QOfLsmfhUnk6OwFJIP/FQLzU959KChsQqy2SkK0Y=;
-        b=PU7Vz9tJaqQojCfLRboG837OeLoOtQZpwQCf8MXYQXSQ0yEub51VGxshLMUi7epDOd
-         xs+ageFwVejd8Guw1fRAXgEkqH5NWGUoacZvQfZWOkGi80u8rFvFiXygRzqdO93LGI9O
-         /MW3unwEs6/Z15UUIOpA7rZOHQ4/OQN65nOlUo7xT2tBFkRhqtgqGAOaiaWZ8tV6kExX
-         ntZIlMGXS6u7FIBlN3BkxP/gLBPtlaR5VxLFMN6yC0qEx5Igeop/GgHvvuIt9/yuJYp0
-         mN3Wtbhb2oT1mZTHHc5opIaQaFnOs2AbGTP7nWs5zvpHRMt2yHHC01KX+EMXVYsiVqHT
-         ndWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ga2QOfLsmfhUnk6OwFJIP/FQLzU959KChsQqy2SkK0Y=;
-        b=l6pcACJ1IHEPXubgaQDwZ3kBbVOVrrQ7VP3vgqQm4L5a8gPz6PVsEyoFPnYWnvBqcI
-         Nf+m3Ofph592xbrHpxhfiwdFWplKyJoN3CdldSBDiENkZkYhF78pStJSSTPHGvgZYzxO
-         KbAcIVlYAh/5NdYXhPSR38MRVyTjK6auVauEqUOdW1nlm0OLCGOB+7QrgjpdJNhkHB3+
-         8g6Zf2DgWaHdGV5ZOQxkFQRLxUx+7w3BSUao9tMc0k1e8TXgniWMoSrRoEPKwRFsTRqZ
-         JQogapc1N4ftIiPyBfWCjBJNkXi22gWvPJ+68cSsANvT+zKUfDoh37helnIf+fjYZCoH
-         D/JQ==
-X-Gm-Message-State: APjAAAVPw4KJgnduqUUj4E6xDBTtG/iZIG32VRQgN75vnxj6TjRHLr2f
-        quqQI70E/TmjFIYyLBgkSTiXtmHrosewm6Z6Vy8wkvDT
-X-Google-Smtp-Source: APXvYqw+d2zHth6qS/TxDmab4ggByifB0NaAT7RS/+ysk4DVgF/PlEVHyn1tIEWtnKHuSz1obEsITYvKNRASyR77Icc=
-X-Received: by 2002:a5d:9b08:: with SMTP id y8mr7466853ion.108.1574106008870;
- Mon, 18 Nov 2019 11:40:08 -0800 (PST)
+        Mon, 18 Nov 2019 14:40:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55380 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726922AbfKRTkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 14:40:14 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D9EA222A7;
+        Mon, 18 Nov 2019 19:40:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574106014;
+        bh=lALNLNHKbLarFmQFbxabtTEuqMU5yok9zA5BXn9uNZI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iULnfiZRncZXT1wdLSC9N/cmrBnpdDaxGz1vqxUFjhYrjG2wrBsDICJKIzKr2ah3K
+         PC7op5otsD/S+I5XTjZ6z+FAMOpQqrOpWogHC4nTNB/+r/Etv122svvoWte0CVDisG
+         TNUfFwTcOAY8On1gGQ08uZAw4lS5dEensszJNeUQ=
+Date:   Mon, 18 Nov 2019 20:40:10 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Richard Weinberger <richard@nod.at>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linux-serial <linux-serial@vger.kernel.org>
+Subject: Re: [PATCH v2] {tty: serial, nand: onenand}: samsung: rename to fix
+ build warning
+Message-ID: <20191118194010.GA606660@kroah.com>
+References: <20191117202435.28127-1-sudipm.mukherjee@gmail.com>
+ <20191118114657.GA228826@kroah.com>
+ <1505628642.90849.1574081270290.JavaMail.zimbra@nod.at>
+ <20191118202257.6cfd1a7e@xps13>
+ <884028732.91086.1574105504462.JavaMail.zimbra@nod.at>
 MIME-Version: 1.0
-References: <1574101067-5638-1-git-send-email-pbonzini@redhat.com> <1574101067-5638-2-git-send-email-pbonzini@redhat.com>
-In-Reply-To: <1574101067-5638-2-git-send-email-pbonzini@redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Mon, 18 Nov 2019 11:39:57 -0800
-Message-ID: <CALMp9eQjkp7H5oj_XrmqbTsQjrjq1LrbYfxqeNUzWfT4a_Tg8Q@mail.gmail.com>
-Subject: Re: [PATCH 1/5] KVM: x86: fix presentation of TSX feature in ARCH_CAPABILITIES
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        stable@vger.kernel.org, Aaron Lewis <aaronlewis@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <884028732.91086.1574105504462.JavaMail.zimbra@nod.at>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 10:17 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> KVM does not implement MSR_IA32_TSX_CTRL, so it must not be presented
-> to the guests.  It is also confusing to have !ARCH_CAP_TSX_CTRL_MSR &&
-> !RTM && ARCH_CAP_TAA_NO: lack of MSR_IA32_TSX_CTRL suggests TSX was not
-> hidden (it actually was), yet the value says that TSX is not vulnerable
-> to microarchitectural data sampling.  Fix both.
+On Mon, Nov 18, 2019 at 08:31:44PM +0100, Richard Weinberger wrote:
+> ----- Ursprüngliche Mail -----
+> > Von: "Miquel Raynal" <miquel.raynal@bootlin.com>
+> > An: "richard" <richard@nod.at>
+> > CC: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Sudip Mukherjee" <sudipm.mukherjee@gmail.com>, "Kyungmin Park"
+> > <kyungmin.park@samsung.com>, "Vignesh Raghavendra" <vigneshr@ti.com>, "Jiri Slaby" <jslaby@suse.com>, "linux-kernel"
+> > <linux-kernel@vger.kernel.org>, "linux-mtd" <linux-mtd@lists.infradead.org>, "linux-serial"
+> > <linux-serial@vger.kernel.org>
+> > Gesendet: Montag, 18. November 2019 20:22:57
+> > Betreff: Re: [PATCH v2] {tty: serial, nand: onenand}: samsung: rename to fix build warning
+> 
+> > Hi all,
+> > 
+> > Richard Weinberger <richard@nod.at> wrote on Mon, 18 Nov 2019 13:47:50
+> > +0100 (CET):
+> > 
+> >> ----- Ursprüngliche Mail -----
+> >> >> I was not sure if this should have been two different patch, but since
+> >> >> this will be fixing the same problem so it seems its better to have them
+> >> >> in a single patch.
+> >> >> 
+> >> >>  drivers/mtd/nand/onenand/Makefile                     | 2 +-
+> >> >>  drivers/mtd/nand/onenand/{samsung.c => samsung_mtd.c} | 0
+> >> >>  drivers/tty/serial/Makefile                           | 2 +-
+> >> >>  drivers/tty/serial/{samsung.c => samsung_tty.c}       | 0
+> >> >>  4 files changed, 2 insertions(+), 2 deletions(-)
+> >> >>  rename drivers/mtd/nand/onenand/{samsung.c => samsung_mtd.c} (100%)
+> >> >>  rename drivers/tty/serial/{samsung.c => samsung_tty.c} (100%)
+> >> > 
+> >> > I can take this in the tty tree if the mtd maintainer gives an ack for
+> >> > it...
+> >> 
+> >> Acked-by: Richard Weinberger <richard@nod.at>
+> > 
+> > If it is not too late, I am not a big fan of the new naming which is
+> > rather not descriptive. Files in the onenand subdirectory are:
+> > * onenand_<something>.c for the base files
+> > * <vendor>.c for the vendors files (currently: omap2.c and samsung.c).
+> 
+> Well, I'm fine with the naming either way. :-)
 
-I actually think kvm should virtualize IA32_TSX_CTRL for VMs that have
-exclusive use of their cores (i.e. the same VMs for which we disable
-MWAIT and HLT exiting).
+If you want to rename the mtd driver later, that's fine, I'll take this
+for now for 5.5-rc1 and you all can bikeshed it for 5.5-final :)
+
+thanks,
+
+greg k-h
