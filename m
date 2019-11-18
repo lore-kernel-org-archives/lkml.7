@@ -1,770 +1,311 @@
-Return-Path: <SRS0=4rLT=ZI=vger.kernel.org=linux-m68k-owner@kernel.org>
+Return-Path: <SRS0=CA45=ZK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0F5C432C3
-	for <linux-m68k@archiver.kernel.org>; Sat, 16 Nov 2019 00:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D87A7C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81B2B2073A
-	for <linux-m68k@archiver.kernel.org>; Sat, 16 Nov 2019 00:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92F6C2230D
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 21:31:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BUjlQnOq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfKPAcn (ORCPT <rfc822;linux-m68k@archiver.kernel.org>);
-        Fri, 15 Nov 2019 19:32:43 -0500
-Received: from mout-p-101.mailbox.org ([80.241.56.151]:31764 "EHLO
-        mout-p-101.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbfKPAcn (ORCPT
-        <rfc822;linux-m68k@lists.linux-m68k.org>);
-        Fri, 15 Nov 2019 19:32:43 -0500
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 47FGQG61QbzKmcq;
-        Sat, 16 Nov 2019 01:32:38 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id Fd7A89GNv-8X; Sat, 16 Nov 2019 01:32:33 +0100 (CET)
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        dev@opencontainers.org, containers@lists.linux-foundation.org,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        linux-alpha@vger.kernel.org, linux-api@vger.kernel.org,
-        libc-alpha@sourceware.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: [PATCH v16 10/12] open: introduce openat2(2) syscall
-Date:   Sat, 16 Nov 2019 11:28:00 +1100
-Message-Id: <20191116002802.6663-11-cyphar@cyphar.com>
-In-Reply-To: <20191116002802.6663-1-cyphar@cyphar.com>
-References: <20191116002802.6663-1-cyphar@cyphar.com>
+        id S1726922AbfKRVbA (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 18 Nov 2019 16:31:00 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36165 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfKRVbA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 16:31:00 -0500
+Received: by mail-qt1-f193.google.com with SMTP id y10so22016541qto.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 13:30:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YoDER8EbPbrxvTk20j36WpFoZykaOKsuEN5VTEnqZK8=;
+        b=BUjlQnOq0+PBXA9VrqWurlJbGZ+QwgvyTVBPOLcY49ZLygOjTAHMxSi6DNOKvCUr42
+         iwLn7z2Kc3p7oakGdhlrXmssGfL5xd6IZI34dCybA6+zhBXgH99Hwc04R322ssGhlT4y
+         pMj3xP9zJrZm/P5XKseGcDI95VM7neqgq5Q4C6x/2qMOqGTcvAHv+M/nKhcNs0TunL7H
+         IViTWyNQVm+mVxY1TYtZY55PtexDCRFl0FmxVwptXeMvTh792ws+4uO4OA9ty0Rq6VST
+         Ym2mcaJ24dgO79Qy8vL9ao7dgHPzciYwddG4jfH6qLdjvv1vxsNLjjlz+8q+1chRzchi
+         xq8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YoDER8EbPbrxvTk20j36WpFoZykaOKsuEN5VTEnqZK8=;
+        b=sV5ukWZvz6sBCn2eNMnpYSPbG/M1g/jOgkb1bk3ii3Rm/Z+rdz8v987F/7/3cyivds
+         b/zPRhu/5kGMuHfA637Gb0ypZlk+KALHSELYAJuksxUElWaXOLAoEUK+b6Q9r2szHZzi
+         1fW+2nyAHSFn+RysIzOC+WV7IQF+Y1jM1MbxrKQW2FgOymbZExVkfyhwHzYOGmut0MnE
+         xbfcfbdH+S9fuZGbaIH+17L45l9ZiFpvcmC9/yh3pqazlF18QY/SqExDYax23/LR8Azl
+         9wjZbHUCezGsSE2FdGZ04l8ppYlHKS1zgsufPiLunwTa+NBZy79NqoD+aUBnSW/xy1bD
+         Yr6Q==
+X-Gm-Message-State: APjAAAVsFcx09BjFKpGqCpsCW6sCqj63FCXkFC5iGO/UBUJ1c2sYjn/g
+        HOr6iCO9Z/aAppEgR4yiEUNTF0nbFja3lz8f8EeYKA==
+X-Google-Smtp-Source: APXvYqwpsLl/lBCxQvE6ocORN3u54tmPM5QzDZQVLpsXne2Wyc1clqsUC1R97vApkyciht8n3yq4v5JnhU5/vr2tnw0=
+X-Received: by 2002:ac8:5557:: with SMTP id o23mr23797687qtr.378.1574112657247;
+ Mon, 18 Nov 2019 13:30:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: linux-m68k-owner@vger.kernel.org
+References: <20191115225557.61847-1-khazhy@google.com> <20191118000214-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20191118000214-mutt-send-email-mst@kernel.org>
+From:   Khazhismel Kumykov <khazhy@google.com>
+Date:   Mon, 18 Nov 2019 13:30:45 -0800
+Message-ID: <CACGdZYJoHSN3vkj_QBz6Txmec9mJMmkH66j2XtqzpUWpfpw4Tg@mail.gmail.com>
+Subject: Re: [PATCH] virtio_balloon: fix shrinker pages_to_free calculation
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     jasowang@redhat.com, wei.w.wang@intel.com,
+        virtualization@lists.linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="000000000000e4f56e0597a5a9a9"
+Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
-List-ID: <linux-m68k.vger.kernel.org>
-X-Mailing-List: linux-m68k@vger.kernel.org
-Message-ID: <20191116002800.yo5ztHapzzTfObyoYLy3Ujxdu3dlgB6jXMJGb24uLTU@z>
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
 
-/* Background. */
-For a very long time, extending openat(2) with new features has been
-incredibly frustrating. This stems from the fact that openat(2) is
-possibly the most famous counter-example to the mantra "don't silently
-accept garbage from userspace" -- it doesn't check whether unknown flags
-are present[1].
+--000000000000e4f56e0597a5a9a9
+Content-Type: text/plain; charset="UTF-8"
 
-This means that (generally) the addition of new flags to openat(2) has
-been fraught with backwards-compatibility issues (O_TMPFILE has to be
-defined as __O_TMPFILE|O_DIRECTORY|[O_RDWR or O_WRONLY] to ensure old
-kernels gave errors, since it's insecure to silently ignore the
-flag[2]). All new security-related flags therefore have a tough road to
-being added to openat(2).
+On Sun, Nov 17, 2019 at 9:26 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> Question is, does all this cause any bugs?
+>
+> I'm not against cleaning this up, not at all, but we need to know the
+> impact.
+>
+> On Fri, Nov 15, 2019 at 02:55:57PM -0800, Khazhismel Kumykov wrote:
+> > To my reading, we're accumulating total freed pages in pages_freed, but
+> > subtracting it every iteration from pages_to_free, meaning we'll count
+> > earlier iterations multiple times, freeing fewer pages than expected.
+> > Just accumulate in pages_freed, and compare to pages_to_free.
+>
+> For nr to scan: yes we scan less objects but that can only happen
+> if the first pass does not free enough. And 1st pass can pass
+> 256 entries, and my reading of code in do_shrink_slab
+> is that it passes only as much as
+> #define SHRINK_BATCH 128
+>
+> so it looks like this never triggers in practice - right?
+>
 
-Userspace also has a hard time figuring out whether a particular flag is
-supported on a particular kernel. While it is now possible with
-contemporary kernels (thanks to [3]), older kernels will expose unknown
-flag bits through fcntl(F_GETFL). Giving a clear -EINVAL during
-openat(2) time matches modern syscall designs and is far more
-fool-proof.
+As far as I could tell, there wasn't any significant real impact. It
+just raised an eyebrow as I was skimming over it.
 
-In addition, the newly-added path resolution restriction LOOKUP flags
-(which we would like to expose to user-space) don't feel related to the
-pre-existing O_* flag set -- they affect all components of path lookup.
-We'd therefore like to add a new flag argument.
+SHRINK_BATCH is 128, it does look like we can override the batch size
+per shrinker if we desire, but we don't so it's 128, yeah.
 
-Adding a new syscall allows us to finally fix the flag-ignoring problem,
-and we can make it extensible enough so that we will hopefully never
-need an openat3(2).
+>
+> >
+> > There's also a unit mismatch,
+>
+> So two unrelated issues, I think we want two patches.
+>
+>
+> > where pages_to_free seems to be virtio
+> > balloon pages, and pages_freed is system pages (We divide by
+> > VIRTIO_BALLOON_PAGES_PER_PAGE), so sutracting pages_freed from
+> > pages_to_free may result in freeing too much.
+>
+> I am inclining to say we should pass in page units.
+> Free page reporting is all done in units of MAX_ORDER - 1.
+> Let's not ptopagate the crazy virtio page thing - we hopefully
+> will add a saner interface to regular balloon too.
+>
+> something like the below?
+>
+> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> index 226fbb995fb0..128440826b55 100644
+> --- a/drivers/virtio/virtio_balloon.c
+> +++ b/drivers/virtio/virtio_balloon.c
+> @@ -783,8 +783,8 @@ static unsigned long shrink_balloon_pages(struct virtio_balloon *vb,
+>          * multiple times to deflate pages till reaching pages_to_free.
+>          */
+>         while (vb->num_pages && pages_to_free) {
+> -               pages_freed += leak_balloon(vb, pages_to_free) /
+> -                                       VIRTIO_BALLOON_PAGES_PER_PAGE;
+> +               pages_freed += leak_balloon(vb, pages_to_free *
+> +                                           VIRTIO_BALLOON_PAGES_PER_PAGE);
+>                 pages_to_free -= pages_freed;
+>         }
+>         update_balloon_size(vb);
+> @@ -799,7 +799,7 @@ static unsigned long virtio_balloon_shrinker_scan(struct shrinker *shrinker,
+>         struct virtio_balloon *vb = container_of(shrinker,
+>                                         struct virtio_balloon, shrinker);
+>
+> -       pages_to_free = sc->nr_to_scan * VIRTIO_BALLOON_PAGES_PER_PAGE;
+> +       pages_to_free = sc->nr_to_scan;
+>
+>         if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+>                 pages_freed = shrink_free_pages(vb, pages_to_free);
+>
 
-/* Syscall Prototype. */
-  /*
-   * open_how is an extensible structure (similar in interface to
-   * clone3(2) or sched_setattr(2)). The size parameter must be set to
-   * sizeof(struct open_how), to allow for future extensions. All future
-   * extensions will be appended to open_how, with their zero value
-   * acting as a no-op default.
-   */
-  struct open_how { /* ... */ };
+leak_balloon returns virtio pages so this would need to actually be
+something like pages_freed += leak_balloon(vb, pages_to_free *
+PAGES_PER_PAGE) / PAGES_PER_PAGE;, which didn't particularly sit well
+with me :)
 
-  int openat2(int dfd, const char *pathname,
-              struct open_how *how, size_t size);
+since leak_balloon is used elsewhere and seems to use "virtio pages" I
+opted to have shrink_balloon accept number of "virtio pages", for
+consistency.
 
-/* Description. */
-The initial version of 'struct open_how' contains the following fields:
+>
+> > There also seems to be a mismatch between shrink_free_pages() and
+> > shrink_balloon_pages(), where in both pages_to_free is given as # of
+> > virtio pages to free, but free_pages() returns virtio pages, and
+> > balloon_pages returns system pages.
+> >
+> > (For 4K PAGE_SIZE, this mismatch wouldn't be noticed since
+> > VIRTIO_BALLOON_PAGES_PER_PAGE would be 1)
+>
+> About return value:
+> The only
+> use for count_objects I see is:
+>       freeable = shrinker->count_objects(shrinker, shrinkctl);
+>       if (freeable == 0 || freeable == SHRINK_EMPTY)
+>                 return freeable;
+>
+> so units do not matter here.
+>
+>
+> For scan objects, IIUC they are eventually propagated to
+> shrink_slab. That in turn is called at two sites.
+> One ignores the returned value. The other does:
+>
+>
+>         do {
+>                 struct mem_cgroup *memcg = NULL;
+>
+>                 freed = 0;
+>                 memcg = mem_cgroup_iter(NULL, NULL, NULL);
+>                 do {
+>                         freed += shrink_slab(GFP_KERNEL, nid, memcg, 0);
+>                 } while ((memcg = mem_cgroup_iter(NULL, memcg, NULL)) != NULL);
+>         } while (freed > 10);
+>
+> so returning a larger than real value because of
+> double accounting will just make more calls to the scan
+> function.
+>
+>
+>
+>
+> > Have both return virtio pages, and divide into system pages when
+> > returning from shrinker_scan()
+> >
+> > Fixes: 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker")
+> > Cc: Wei Wang <wei.w.wang@intel.com>
+> > Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+> > ---
+> >
+> > Tested this under memory pressure conditions and the shrinker seemed to
+> > shrink.
+>
+> And to clarify, did you manage to detect it malfunctioning without the
+> patch?
+>
+nope, just a cleanup.
 
-  flags
-    Used to specify openat(2)-style flags. However, any unknown flag
-    bits or otherwise incorrect flag combinations (like O_PATH|O_RDWR)
-    will result in -EINVAL. In addition, this field is 64-bits wide to
-    allow for more O_ flags than currently permitted with openat(2).
+I'll re-send my patches split up, but it sounds like there's some more
+incoming as well? I'll leave that to Wei.
 
-  mode
-    The file mode for O_CREAT or O_TMPFILE.
+khazhy
 
-    Must be set to zero if flags does not contain O_CREAT or O_TMPFILE.
+--000000000000e4f56e0597a5a9a9
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-  __padding
-    Must be set to all zeroes.
-
-  resolve
-    Restrict path resolution (in contrast to O_* flags they affect all
-    path components). The current set of flags are as follows (at the
-    moment, all of the RESOLVE_ flags are implemented as just passing
-    the corresponding LOOKUP_ flag).
-
-    RESOLVE_NO_XDEV       => LOOKUP_NO_XDEV
-    RESOLVE_NO_SYMLINKS   => LOOKUP_NO_SYMLINKS
-    RESOLVE_NO_MAGICLINKS => LOOKUP_NO_MAGICLINKS
-    RESOLVE_BENEATH       => LOOKUP_BENEATH
-    RESOLVE_IN_ROOT       => LOOKUP_IN_ROOT
-
-open_how does not contain an embedded size field, because it is of
-little benefit (userspace can figure out the kernel open_how size at
-runtime fairly easily without it).
-
-Note that as a result of the new how->flags handling, O_PATH|O_TMPFILE
-is no longer permitted for openat(2). As far as I can tell, this has
-always been a bug and appears to not be used by userspace (and I've not
-seen any problems on my machines by disallowing it). If it turns out
-this breaks something, we can special-case it and only permit it for
-openat(2) but not openat2(2).
-
-/* Testing. */
-In a follow-up patch there are over 200 selftests which ensure that this
-syscall has the correct semantics and will correctly handle several
-attack scenarios.
-
-In addition, I've written a userspace library[4] which provides
-convenient wrappers around openat2(RESOLVE_IN_ROOT) (this is necessary
-because no other syscalls support RESOLVE_IN_ROOT, and thus lots of care
-must be taken when using RESOLVE_IN_ROOT'd file descriptors with other
-syscalls). During the development of this patch, I've run numerous
-verification tests using libpathrs (showing that the API is reasonably
-usable by userspace).
-
-/* Future Work. */
-Additional RESOLVE_ flags have been suggested during the review period.
-These can be easily implemented separately (such as blocking auto-mount
-during resolution).
-
-Furthermore, there are some other proposed changes to the openat(2)
-interface (the most obvious example is magic-link hardening[5]) which
-would be a good opportunity to add a way for userspace to restrict how
-O_PATH file descriptors can be re-opened.
-
-[1]: https://lwn.net/Articles/588444/
-[2]: https://lore.kernel.org/lkml/CA+55aFyyxJL1LyXZeBsf2ypriraj5ut1XkNDsunRBqgVjZU_6Q@mail.gmail.com
-[3]: commit 629e014bb834 ("fs: completely ignore unknown open flags")
-[4]: https://sourceware.org/bugzilla/show_bug.cgi?id=17523
-[5]: https://lore.kernel.org/lkml/20190930183316.10190-2-cyphar@cyphar.com/
-
-Suggested-by: Christian Brauner <christian@brauner.io>
-Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
----
- CREDITS                                     |   4 +-
- arch/alpha/kernel/syscalls/syscall.tbl      |   1 +
- arch/arm/tools/syscall.tbl                  |   1 +
- arch/arm64/include/asm/unistd.h             |   2 +-
- arch/arm64/include/asm/unistd32.h           |   2 +
- arch/ia64/kernel/syscalls/syscall.tbl       |   1 +
- arch/m68k/kernel/syscalls/syscall.tbl       |   1 +
- arch/microblaze/kernel/syscalls/syscall.tbl |   1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl   |   1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl   |   1 +
- arch/mips/kernel/syscalls/syscall_o32.tbl   |   1 +
- arch/parisc/kernel/syscalls/syscall.tbl     |   1 +
- arch/powerpc/kernel/syscalls/syscall.tbl    |   1 +
- arch/s390/kernel/syscalls/syscall.tbl       |   1 +
- arch/sh/kernel/syscalls/syscall.tbl         |   1 +
- arch/sparc/kernel/syscalls/syscall.tbl      |   1 +
- arch/x86/entry/syscalls/syscall_32.tbl      |   1 +
- arch/x86/entry/syscalls/syscall_64.tbl      |   1 +
- arch/xtensa/kernel/syscalls/syscall.tbl     |   1 +
- fs/open.c                                   | 149 +++++++++++++++-----
- include/linux/fcntl.h                       |  12 +-
- include/linux/syscalls.h                    |   3 +
- include/uapi/asm-generic/unistd.h           |   5 +-
- include/uapi/linux/fcntl.h                  |  40 ++++++
- 24 files changed, 195 insertions(+), 38 deletions(-)
-
-diff --git a/CREDITS b/CREDITS
-index 031605d46b4d..a048e001d726 100644
---- a/CREDITS
-+++ b/CREDITS
-@@ -3301,7 +3301,9 @@ S: France
- N: Aleksa Sarai
- E: cyphar@cyphar.com
- W: https://www.cyphar.com/
--D: `pids` cgroup subsystem
-+D: /sys/fs/cgroup/pids
-+D: openat2(2)
-+S: Sydney, Australia
- 
- N: Dipankar Sarma
- E: dipankar@in.ibm.com
-diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-index 728fe028c02c..9f374f7d9514 100644
---- a/arch/alpha/kernel/syscalls/syscall.tbl
-+++ b/arch/alpha/kernel/syscalls/syscall.tbl
-@@ -475,3 +475,4 @@
- 543	common	fspick				sys_fspick
- 544	common	pidfd_open			sys_pidfd_open
- # 545 reserved for clone3
-+547	common	openat2				sys_openat2
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index 6da7dc4d79cc..4ba54bc7e19a 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -449,3 +449,4 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- 435	common	clone3				sys_clone3
-+437	common	openat2				sys_openat2
-diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
-index 2629a68b8724..8aa00ccb0b96 100644
---- a/arch/arm64/include/asm/unistd.h
-+++ b/arch/arm64/include/asm/unistd.h
-@@ -38,7 +38,7 @@
- #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
- #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
- 
--#define __NR_compat_syscalls		436
-+#define __NR_compat_syscalls		438
- #endif
- 
- #define __ARCH_WANT_SYS_CLONE
-diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
-index 94ab29cf4f00..57f6f592d460 100644
---- a/arch/arm64/include/asm/unistd32.h
-+++ b/arch/arm64/include/asm/unistd32.h
-@@ -879,6 +879,8 @@ __SYSCALL(__NR_fspick, sys_fspick)
- __SYSCALL(__NR_pidfd_open, sys_pidfd_open)
- #define __NR_clone3 435
- __SYSCALL(__NR_clone3, sys_clone3)
-+#define __NR_openat2 437
-+__SYSCALL(__NR_openat2, sys_openat2)
- 
- /*
-  * Please add new compat syscalls above this comment and update
-diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
-index 36d5faf4c86c..8d36f2e2dc89 100644
---- a/arch/ia64/kernel/syscalls/syscall.tbl
-+++ b/arch/ia64/kernel/syscalls/syscall.tbl
-@@ -356,3 +356,4 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- # 435 reserved for clone3
-+437	common	openat2				sys_openat2
-diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-index a88a285a0e5f..2559925f1924 100644
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@ -435,3 +435,4 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- # 435 reserved for clone3
-+437	common	openat2				sys_openat2
-diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-index 09b0cd7dab0a..c04385e60833 100644
---- a/arch/microblaze/kernel/syscalls/syscall.tbl
-+++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-@@ -441,3 +441,4 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- 435	common	clone3				sys_clone3
-+437	common	openat2				sys_openat2
-diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-index e7c5ab38e403..68c9ec06851f 100644
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@ -374,3 +374,4 @@
- 433	n32	fspick				sys_fspick
- 434	n32	pidfd_open			sys_pidfd_open
- 435	n32	clone3				__sys_clone3
-+437	n32	openat2				sys_openat2
-diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-index 13cd66581f3b..42a72d010050 100644
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@ -350,3 +350,4 @@
- 433	n64	fspick				sys_fspick
- 434	n64	pidfd_open			sys_pidfd_open
- 435	n64	clone3				__sys_clone3
-+437	n64	openat2				sys_openat2
-diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-index 353539ea4140..f114c4aed0ed 100644
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@ -423,3 +423,4 @@
- 433	o32	fspick				sys_fspick
- 434	o32	pidfd_open			sys_pidfd_open
- 435	o32	clone3				__sys_clone3
-+437	o32	openat2				sys_openat2
-diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-index 285ff516150c..b550ae9a7fea 100644
---- a/arch/parisc/kernel/syscalls/syscall.tbl
-+++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@ -433,3 +433,4 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- 435	common	clone3				sys_clone3_wrapper
-+437	common	openat2				sys_openat2
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index 43f736ed47f2..a8b5ecb5b602 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -517,3 +517,4 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- 435	nospu	clone3				ppc_clone3
-+437	common	openat2				sys_openat2
-diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-index 3054e9c035a3..16b571c06161 100644
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -438,3 +438,4 @@
- 433  common	fspick			sys_fspick			sys_fspick
- 434  common	pidfd_open		sys_pidfd_open			sys_pidfd_open
- 435  common	clone3			sys_clone3			sys_clone3
-+437  common	openat2			sys_openat2			sys_openat2
-diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-index b5ed26c4c005..a7185cc18626 100644
---- a/arch/sh/kernel/syscalls/syscall.tbl
-+++ b/arch/sh/kernel/syscalls/syscall.tbl
-@@ -438,3 +438,4 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- # 435 reserved for clone3
-+437	common	openat2				sys_openat2
-diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-index 8c8cc7537fb2..b11c19552022 100644
---- a/arch/sparc/kernel/syscalls/syscall.tbl
-+++ b/arch/sparc/kernel/syscalls/syscall.tbl
-@@ -481,3 +481,4 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- # 435 reserved for clone3
-+437	common	openat2			sys_openat2
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index 3fe02546aed3..e5c022e9a5c4 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -440,3 +440,4 @@
- 433	i386	fspick			sys_fspick			__ia32_sys_fspick
- 434	i386	pidfd_open		sys_pidfd_open			__ia32_sys_pidfd_open
- 435	i386	clone3			sys_clone3			__ia32_sys_clone3
-+437	i386	openat2			sys_openat2			__ia32_sys_openat2
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index c29976eca4a8..9035647ef236 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -357,6 +357,7 @@
- 433	common	fspick			__x64_sys_fspick
- 434	common	pidfd_open		__x64_sys_pidfd_open
- 435	common	clone3			__x64_sys_clone3/ptregs
-+437	common	openat2			__x64_sys_openat2
- 
- #
- # x32-specific system call numbers start at 512 to avoid cache impact
-diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-index 25f4de729a6d..f0a68013c038 100644
---- a/arch/xtensa/kernel/syscalls/syscall.tbl
-+++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-@@ -406,3 +406,4 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- 435	common	clone3				sys_clone3
-+437	common	openat2				sys_openat2
-diff --git a/fs/open.c b/fs/open.c
-index b62f5c0923a8..50a46501bcc9 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -955,48 +955,86 @@ struct file *open_with_fake_path(const struct path *path, int flags,
- }
- EXPORT_SYMBOL(open_with_fake_path);
- 
--static inline int build_open_flags(int flags, umode_t mode, struct open_flags *op)
-+#define WILL_CREATE(flags)	(flags & (O_CREAT | __O_TMPFILE))
-+#define O_PATH_FLAGS		(O_DIRECTORY | O_NOFOLLOW | O_PATH | O_CLOEXEC)
-+
-+static inline struct open_how build_open_how(int flags, umode_t mode)
-+{
-+	struct open_how how = {
-+		.flags = flags & VALID_OPEN_FLAGS,
-+		.mode = mode & S_IALLUGO,
-+	};
-+
-+	/* O_PATH beats everything else. */
-+	if (how.flags & O_PATH)
-+		how.flags &= O_PATH_FLAGS;
-+	/* Modes should only be set for create-like flags. */
-+	if (!WILL_CREATE(how.flags))
-+		how.mode = 0;
-+	return how;
-+}
-+
-+static inline int build_open_flags(const struct open_how *how,
-+				   struct open_flags *op)
- {
-+	int flags = how->flags;
- 	int lookup_flags = 0;
- 	int acc_mode = ACC_MODE(flags);
- 
-+	/* Must never be set by userspace */
-+	flags &= ~(FMODE_NONOTIFY | O_CLOEXEC);
-+
- 	/*
--	 * Clear out all open flags we don't know about so that we don't report
--	 * them in fcntl(F_GETFD) or similar interfaces.
-+	 * Older syscalls implicitly clear all of the invalid flags or argument
-+	 * values before calling build_open_flags(), but openat2(2) checks all
-+	 * of its arguments.
- 	 */
--	flags &= VALID_OPEN_FLAGS;
-+	if (flags & ~VALID_OPEN_FLAGS)
-+		return -EINVAL;
-+	if (how->resolve & ~VALID_RESOLVE_FLAGS)
-+		return -EINVAL;
-+	if (memchr_inv(how->__padding, 0, sizeof(how->__padding)))
-+		return -EINVAL;
- 
--	if (flags & (O_CREAT | __O_TMPFILE))
--		op->mode = (mode & S_IALLUGO) | S_IFREG;
--	else
-+	/* Deal with the mode. */
-+	if (WILL_CREATE(flags)) {
-+		if (how->mode & ~S_IALLUGO)
-+			return -EINVAL;
-+		op->mode = how->mode | S_IFREG;
-+	} else {
-+		if (how->mode != 0)
-+			return -EINVAL;
- 		op->mode = 0;
--
--	/* Must never be set by userspace */
--	flags &= ~FMODE_NONOTIFY & ~O_CLOEXEC;
-+	}
- 
- 	/*
--	 * O_SYNC is implemented as __O_SYNC|O_DSYNC.  As many places only
--	 * check for O_DSYNC if the need any syncing at all we enforce it's
--	 * always set instead of having to deal with possibly weird behaviour
--	 * for malicious applications setting only __O_SYNC.
-+	 * In order to ensure programs get explicit errors when trying to use
-+	 * O_TMPFILE on old kernels, O_TMPFILE is implemented such that it
-+	 * looks like (O_DIRECTORY|O_RDWR & ~O_CREAT) to old kernels. But we
-+	 * have to require userspace to explicitly set it.
- 	 */
--	if (flags & __O_SYNC)
--		flags |= O_DSYNC;
--
- 	if (flags & __O_TMPFILE) {
- 		if ((flags & O_TMPFILE_MASK) != O_TMPFILE)
- 			return -EINVAL;
- 		if (!(acc_mode & MAY_WRITE))
- 			return -EINVAL;
--	} else if (flags & O_PATH) {
--		/*
--		 * If we have O_PATH in the open flag. Then we
--		 * cannot have anything other than the below set of flags
--		 */
--		flags &= O_DIRECTORY | O_NOFOLLOW | O_PATH;
-+	}
-+	if (flags & O_PATH) {
-+		/* O_PATH only permits certain other flags to be set. */
-+		if (flags & ~O_PATH_FLAGS)
-+			return -EINVAL;
- 		acc_mode = 0;
- 	}
- 
-+	/*
-+	 * O_SYNC is implemented as __O_SYNC|O_DSYNC.  As many places only
-+	 * check for O_DSYNC if the need any syncing at all we enforce it's
-+	 * always set instead of having to deal with possibly weird behaviour
-+	 * for malicious applications setting only __O_SYNC.
-+	 */
-+	if (flags & __O_SYNC)
-+		flags |= O_DSYNC;
-+
- 	op->open_flag = flags;
- 
- 	/* O_TRUNC implies we need access checks for write permissions */
-@@ -1022,6 +1060,18 @@ static inline int build_open_flags(int flags, umode_t mode, struct open_flags *o
- 		lookup_flags |= LOOKUP_DIRECTORY;
- 	if (!(flags & O_NOFOLLOW))
- 		lookup_flags |= LOOKUP_FOLLOW;
-+
-+	if (how->resolve & RESOLVE_NO_XDEV)
-+		lookup_flags |= LOOKUP_NO_XDEV;
-+	if (how->resolve & RESOLVE_NO_MAGICLINKS)
-+		lookup_flags |= LOOKUP_NO_MAGICLINKS;
-+	if (how->resolve & RESOLVE_NO_SYMLINKS)
-+		lookup_flags |= LOOKUP_NO_SYMLINKS;
-+	if (how->resolve & RESOLVE_BENEATH)
-+		lookup_flags |= LOOKUP_BENEATH;
-+	if (how->resolve & RESOLVE_IN_ROOT)
-+		lookup_flags |= LOOKUP_IN_ROOT;
-+
- 	op->lookup_flags = lookup_flags;
- 	return 0;
- }
-@@ -1040,8 +1090,11 @@ static inline int build_open_flags(int flags, umode_t mode, struct open_flags *o
- struct file *file_open_name(struct filename *name, int flags, umode_t mode)
- {
- 	struct open_flags op;
--	int err = build_open_flags(flags, mode, &op);
--	return err ? ERR_PTR(err) : do_filp_open(AT_FDCWD, name, &op);
-+	struct open_how how = build_open_how(flags, mode);
-+	int err = build_open_flags(&how, &op);
-+	if (err)
-+		return ERR_PTR(err);
-+	return do_filp_open(AT_FDCWD, name, &op);
- }
- 
- /**
-@@ -1072,17 +1125,19 @@ struct file *file_open_root(struct dentry *dentry, struct vfsmount *mnt,
- 			    const char *filename, int flags, umode_t mode)
- {
- 	struct open_flags op;
--	int err = build_open_flags(flags, mode, &op);
-+	struct open_how how = build_open_how(flags, mode);
-+	int err = build_open_flags(&how, &op);
- 	if (err)
- 		return ERR_PTR(err);
- 	return do_file_open_root(dentry, mnt, filename, &op);
- }
- EXPORT_SYMBOL(file_open_root);
- 
--long do_sys_open(int dfd, const char __user *filename, int flags, umode_t mode)
-+static long do_sys_openat2(int dfd, const char __user *filename,
-+			   struct open_how *how)
- {
- 	struct open_flags op;
--	int fd = build_open_flags(flags, mode, &op);
-+	int fd = build_open_flags(how, &op);
- 	struct filename *tmp;
- 
- 	if (fd)
-@@ -1092,7 +1147,7 @@ long do_sys_open(int dfd, const char __user *filename, int flags, umode_t mode)
- 	if (IS_ERR(tmp))
- 		return PTR_ERR(tmp);
- 
--	fd = get_unused_fd_flags(flags);
-+	fd = get_unused_fd_flags(how->flags);
- 	if (fd >= 0) {
- 		struct file *f = do_filp_open(dfd, tmp, &op);
- 		if (IS_ERR(f)) {
-@@ -1107,12 +1162,16 @@ long do_sys_open(int dfd, const char __user *filename, int flags, umode_t mode)
- 	return fd;
- }
- 
--SYSCALL_DEFINE3(open, const char __user *, filename, int, flags, umode_t, mode)
-+long do_sys_open(int dfd, const char __user *filename, int flags, umode_t mode)
- {
--	if (force_o_largefile())
--		flags |= O_LARGEFILE;
-+	struct open_how how = build_open_how(flags, mode);
-+	return do_sys_openat2(dfd, filename, &how);
-+}
- 
--	return do_sys_open(AT_FDCWD, filename, flags, mode);
-+
-+SYSCALL_DEFINE3(open, const char __user *, filename, int, flags, umode_t, mode)
-+{
-+	return ksys_open(filename, flags, mode);
- }
- 
- SYSCALL_DEFINE4(openat, int, dfd, const char __user *, filename, int, flags,
-@@ -1120,10 +1179,32 @@ SYSCALL_DEFINE4(openat, int, dfd, const char __user *, filename, int, flags,
- {
- 	if (force_o_largefile())
- 		flags |= O_LARGEFILE;
--
- 	return do_sys_open(dfd, filename, flags, mode);
- }
- 
-+SYSCALL_DEFINE4(openat2, int, dfd, const char __user *, filename,
-+		struct open_how __user *, how, size_t, usize)
-+{
-+	int err;
-+	struct open_how tmp;
-+
-+	BUILD_BUG_ON(sizeof(struct open_how) < OPEN_HOW_SIZE_VER0);
-+	BUILD_BUG_ON(sizeof(struct open_how) != OPEN_HOW_SIZE_LATEST);
-+
-+	if (unlikely(usize < OPEN_HOW_SIZE_VER0))
-+		return -EINVAL;
-+
-+	err = copy_struct_from_user(&tmp, sizeof(tmp), how, usize);
-+	if (err)
-+		return err;
-+
-+	/* O_LARGEFILE is only allowed for non-O_PATH. */
-+	if (!(tmp.flags & O_PATH) && force_o_largefile())
-+		tmp.flags |= O_LARGEFILE;
-+
-+	return do_sys_openat2(dfd, filename, &tmp);
-+}
-+
- #ifdef CONFIG_COMPAT
- /*
-  * Exactly like sys_open(), except that it doesn't set the
-diff --git a/include/linux/fcntl.h b/include/linux/fcntl.h
-index d019df946cb2..f2eb05bd3af3 100644
---- a/include/linux/fcntl.h
-+++ b/include/linux/fcntl.h
-@@ -2,15 +2,25 @@
- #ifndef _LINUX_FCNTL_H
- #define _LINUX_FCNTL_H
- 
-+#include <linux/stat.h>
- #include <uapi/linux/fcntl.h>
- 
--/* list of all valid flags for the open/openat flags argument: */
-+/* List of all valid flags for the open/openat flags argument: */
- #define VALID_OPEN_FLAGS \
- 	(O_RDONLY | O_WRONLY | O_RDWR | O_CREAT | O_EXCL | O_NOCTTY | O_TRUNC | \
- 	 O_APPEND | O_NDELAY | O_NONBLOCK | O_NDELAY | __O_SYNC | O_DSYNC | \
- 	 FASYNC	| O_DIRECT | O_LARGEFILE | O_DIRECTORY | O_NOFOLLOW | \
- 	 O_NOATIME | O_CLOEXEC | O_PATH | __O_TMPFILE)
- 
-+/* List of all valid flags for the how->upgrade_mask argument: */
-+#define VALID_UPGRADE_FLAGS \
-+	(UPGRADE_NOWRITE | UPGRADE_NOREAD)
-+
-+/* List of all valid flags for the how->resolve argument: */
-+#define VALID_RESOLVE_FLAGS \
-+	(RESOLVE_NO_XDEV | RESOLVE_NO_MAGICLINKS | RESOLVE_NO_SYMLINKS | \
-+	 RESOLVE_BENEATH | RESOLVE_IN_ROOT)
-+
- #ifndef force_o_largefile
- #define force_o_largefile() (!IS_ENABLED(CONFIG_ARCH_32BIT_OFF_T))
- #endif
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index f7c561c4dcdd..808f103b7a62 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -69,6 +69,7 @@ struct rseq;
- union bpf_attr;
- struct io_uring_params;
- struct clone_args;
-+struct open_how;
- 
- #include <linux/types.h>
- #include <linux/aio_abi.h>
-@@ -439,6 +440,8 @@ asmlinkage long sys_fchownat(int dfd, const char __user *filename, uid_t user,
- asmlinkage long sys_fchown(unsigned int fd, uid_t user, gid_t group);
- asmlinkage long sys_openat(int dfd, const char __user *filename, int flags,
- 			   umode_t mode);
-+asmlinkage long sys_openat2(int dfd, const char __user *filename,
-+			    struct open_how *how, size_t size);
- asmlinkage long sys_close(unsigned int fd);
- asmlinkage long sys_vhangup(void);
- 
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index 1fc8faa6e973..d4122c091472 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -851,8 +851,11 @@ __SYSCALL(__NR_pidfd_open, sys_pidfd_open)
- __SYSCALL(__NR_clone3, sys_clone3)
- #endif
- 
-+#define __NR_openat2 437
-+__SYSCALL(__NR_openat2, sys_openat2)
-+
- #undef __NR_syscalls
--#define __NR_syscalls 436
-+#define __NR_syscalls 438
- 
- /*
-  * 32 bit systems traditionally used different
-diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
-index 1d338357df8a..6b00ad378fb7 100644
---- a/include/uapi/linux/fcntl.h
-+++ b/include/uapi/linux/fcntl.h
-@@ -93,5 +93,45 @@
- 
- #define AT_RECURSIVE		0x8000	/* Apply to the entire subtree */
- 
-+/*
-+ * Arguments for how openat2(2) should open the target path. If @resolve is
-+ * zero, then openat2(2) operates very similarly to openat(2).
-+ *
-+ * However, unlike openat(2), unknown bits in @flags result in -EINVAL rather
-+ * than being silently ignored. @mode must be zero unless one of {O_CREAT,
-+ * O_TMPFILE} are set.
-+ *
-+ * @flags: O_* flags.
-+ * @mode: O_CREAT/O_TMPFILE file mode.
-+ * @resolve: RESOLVE_* flags.
-+ */
-+struct open_how {
-+	__aligned_u64 flags;
-+	__u16 mode;
-+	__u16 __padding[3]; /* must be zeroed */
-+	__aligned_u64 resolve;
-+};
-+
-+#define OPEN_HOW_SIZE_VER0	24 /* sizeof first published struct */
-+#define OPEN_HOW_SIZE_LATEST	OPEN_HOW_SIZE_VER0
-+
-+/* how->resolve flags for openat2(2). */
-+#define RESOLVE_NO_XDEV		0x01 /* Block mount-point crossings
-+					(includes bind-mounts). */
-+#define RESOLVE_NO_MAGICLINKS	0x02 /* Block traversal through procfs-style
-+					"magic-links". */
-+#define RESOLVE_NO_SYMLINKS	0x04 /* Block traversal through all symlinks
-+					(implies OEXT_NO_MAGICLINKS) */
-+#define RESOLVE_BENEATH		0x08 /* Block "lexical" trickery like
-+					"..", symlinks, and absolute
-+					paths which escape the dirfd. */
-+#define RESOLVE_IN_ROOT		0x10 /* Make all jumps to "/" and ".."
-+					be scoped inside the dirfd
-+					(similar to chroot(2)). */
-+
-+/* how->upgrade flags for openat2(2). */
-+/* First bit is reserved for a future UPGRADE_NOEXEC flag. */
-+#define UPGRADE_NOREAD		0x02 /* Block re-opening with MAY_READ. */
-+#define UPGRADE_NOWRITE		0x04 /* Block re-opening with MAY_WRITE. */
- 
- #endif /* _UAPI_LINUX_FCNTL_H */
--- 
-2.24.0
-
+MIIS5wYJKoZIhvcNAQcCoIIS2DCCEtQCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+ghBNMIIEXDCCA0SgAwIBAgIOSBtqDm4P/739RPqw/wcwDQYJKoZIhvcNAQELBQAwZDELMAkGA1UE
+BhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExOjA4BgNVBAMTMUdsb2JhbFNpZ24gUGVy
+c29uYWxTaWduIFBhcnRuZXJzIENBIC0gU0hBMjU2IC0gRzIwHhcNMTYwNjE1MDAwMDAwWhcNMjEw
+NjE1MDAwMDAwWjBMMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTEiMCAG
+A1UEAxMZR2xvYmFsU2lnbiBIViBTL01JTUUgQ0EgMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+AQoCggEBALR23lKtjlZW/17kthzYcMHHKFgywfc4vLIjfq42NmMWbXkNUabIgS8KX4PnIFsTlD6F
+GO2fqnsTygvYPFBSMX4OCFtJXoikP2CQlEvO7WooyE94tqmqD+w0YtyP2IB5j4KvOIeNv1Gbnnes
+BIUWLFxs1ERvYDhmk+OrvW7Vd8ZfpRJj71Rb+QQsUpkyTySaqALXnyztTDp1L5d1bABJN/bJbEU3
+Hf5FLrANmognIu+Npty6GrA6p3yKELzTsilOFmYNWg7L838NS2JbFOndl+ce89gM36CW7vyhszi6
+6LqqzJL8MsmkP53GGhf11YMP9EkmawYouMDP/PwQYhIiUO0CAwEAAaOCASIwggEeMA4GA1UdDwEB
+/wQEAwIBBjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwEgYDVR0TAQH/BAgwBgEB/wIB
+ADAdBgNVHQ4EFgQUyzgSsMeZwHiSjLMhleb0JmLA4D8wHwYDVR0jBBgwFoAUJiSSix/TRK+xsBtt
+r+500ox4AAMwSwYDVR0fBEQwQjBAoD6gPIY6aHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9ncy9n
+c3BlcnNvbmFsc2lnbnB0bnJzc2hhMmcyLmNybDBMBgNVHSAERTBDMEEGCSsGAQQBoDIBKDA0MDIG
+CCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzANBgkqhkiG
+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
+BQUHMAKGNGh0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5jb20vY2FjZXJ0L2dzaHZzbWltZWNhMS5j
+cnQwHQYDVR0OBBYEFJ2Vb0jiXUWlD5ibz23a558NzWOgMB8GA1UdIwQYMBaAFMs4ErDHmcB4koyz
+IZXm9CZiwOA/MEwGA1UdIARFMEMwQQYJKwYBBAGgMgEoMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8v
+d3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMDsGA1UdHwQ0MDIwMKAuoCyGKmh0dHA6Ly9j
+cmwuZ2xvYmFsc2lnbi5jb20vZ3NodnNtaW1lY2ExLmNybDAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0l
+BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMA0GCSqGSIb3DQEBCwUAA4IBAQCk2Fht/QkHdD9YQlQ/
+/BoVlZzl+wg2oB8mPQEGNN49NfSL/ERAGoituF3/Zv+xv6owWk2Xp+sTA69OuAt2wZ4O0pXm2NNb
+yE0QS1h/jH61IgJY4dU65qPcUYmkEdBDRX3XzR1wmnDc3yelHxlYerMuJFmSM5g4dIjbdpOlHTGh
+jnWrjPPoGaT9nEbPfTxkahJTybnCIMuQbt8nl2QdV64GhBMCQWbIW1xY6Uv0FZcadQhF1vzhd/OH
+qGkK98y1Dz/54GBO4A8jOSeDFuh+l2iygTcH16xKfB0XvhoUGdrru24FTEY7p4VTKkw+eJbUvdod
+PlESVftk7+JISQWxBEYKMYICXjCCAloCAQEwXDBMMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xv
+YmFsU2lnbiBudi1zYTEiMCAGA1UEAxMZR2xvYmFsU2lnbiBIViBTL01JTUUgQ0EgMQIMROfpbOE2
+LmBNcT9PMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCAVUHNimTP93VH0+5bmnf7n
+QFH9IOpzzhVwX5BY1EPz1jAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEP
+Fw0xOTExMTgyMTMwNTlaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQB
+FjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglg
+hkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAu6/EM3HckLBzGR8MTe2hrSe/VVPFNp4OQDzoXy2U
+fbl0XgP9xfUFi3NBC6fb/fzD3G+E0ZF9wEEp08XYXqf7BtUdJVlr86DlPdnR0vYt1+Klq+96/m4a
+eCDgiYCTHTlVq0uto0kbbjmf5hYazMhWU+5N6/rtDy7ERietp9nHGiOSHuqvf4H9t+CYdHfovBbX
+T2qCOQHHO9q2DxJt6Auu27R5uUhW2IKOIt3GE796C1n9o82RKuaIRv7uFOY7g+BBfmh/5R2q6puV
+180I8WPxkhFhrLkHtfVWKwP5XRWXyiqUGt7wBAki7dOuTuAhaLrw4qEFEyygKPO1VKpgJrBACg==
+--000000000000e4f56e0597a5a9a9--
