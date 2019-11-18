@@ -7,160 +7,158 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8981BC432C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C45E9C432C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD4B20726
-	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 988DB2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 18 Nov 2019 06:12:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hrlrNkJ3";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="HHCuCMCz"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="mUbuNpug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfKRGBz (ORCPT
+        id S1726442AbfKRGM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 01:01:55 -0500
-Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:48848
-        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726140AbfKRGBy (ORCPT
+        Mon, 18 Nov 2019 01:12:57 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40230 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbfKRGM5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 01:01:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574056913;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=Yancb5dODX/2FNvCl/6xMdvPhXPIMMHBTGHGYXMnW+s=;
-        b=hrlrNkJ3nDFj/ygJSWJeIXMjQ/5t2xnKTaEUuntC6p+tKYFsMSrukzp9TDkAcIGB
-        N/l1a4k8r0u+/ZH3cAErH77XLuyMvwFSUzSRO48PIPFYTHebU9NX3o6fHyN/fG5mBY9
-        9wpiYGbiyBnCUUpjUj8AH1SPu1TEeTLvIAC8x4CA=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574056913;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=Yancb5dODX/2FNvCl/6xMdvPhXPIMMHBTGHGYXMnW+s=;
-        b=HHCuCMCzyUv3MSyoMrOUBPvvDp2xT3K34LIoDVyz1kNv/q+tUmkC162NUFqXYqRJ
-        ntUmUp1isQxpVDPsXKvHCgF4hW6j0AKGCbMtctJ6we/p3ml7rys3LUrokW8hr/ZHup0
-        VDhKxGa2rs6bzFNIb0e45VJN4ILBvPc82fA7vOfE=
+        Mon, 18 Nov 2019 01:12:57 -0500
+Received: by mail-wr1-f67.google.com with SMTP id q15so5123154wrw.7
+        for <linux-kernel@vger.kernel.org>; Sun, 17 Nov 2019 22:12:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dzhVBOMf59PHYjhcO5/bPOeyIO8A+TPlN5Z6xmX6Zfg=;
+        b=mUbuNpugZTAnDNPQd9lieNDlt85CfqQ5HxNZOSP9AmjHYAi6SjRi99kn9IidBIRO/y
+         nzWX4u6iJv3jxNH6Ebm8CnPahp9MXMG+rmb4i0k1gmRvkRsojYil4v294x+cCA73d/M1
+         Us3w7jQR2ohkELcopCpnoFTNzC3mSuK01Y9IvHC8sSVUCljzpsjr8GGit1OmpD0D+YXg
+         W/5aMm/0YbvxkVD9FrAwPdS1Y1KuysOwOlWlg7aQy/uN765LkJrx/wDzh/U+m731G2ph
+         iKLwDuP0Rk7eOLCRi+7hP1QR8HELJWzSN1tMuVxi3Cckij/mAA0xQsY65zhW6Y33o60a
+         ATGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dzhVBOMf59PHYjhcO5/bPOeyIO8A+TPlN5Z6xmX6Zfg=;
+        b=gTRnHwR574/RXUjViU2gmNfYYHpEWBk2K1nNvv29VuJUHoVD9j5FsVOc5UnDL6LcW6
+         a+CWSn/VY4Bt/14GbPPAJgN9TzWUHflJ2R8W2plD56WCux9rD+iXdiYgM8pdgNmbHOOG
+         LJ0DT8yeBnALBLj1+xjHhYP2PMSrHXtGn0OZXvTSwyMyGoY2w9AyLBUAkks00E1CWb2r
+         OE2yinuJUvfMOsOIfZuNPtY66ROqRJsV82WolbXhNsgqhwX2sXvcrgk0p1pJkuMzmmfJ
+         poFkaU33lfsvnKCpnZXK4fMhFjqvzdiz/ajtS080L95DOwNmctm7pWaNP04bPtTPfq/A
+         jV3w==
+X-Gm-Message-State: APjAAAW+naEP5FSF5S9tFRZ4IzrDSnzmq4kBx+kpVQizebf+1PMUu78n
+        8TEorCWmBKDXIlqKC6PfYS4/bA4qON0f7Xo03K56lw==
+X-Google-Smtp-Source: APXvYqyF3YsX2G6wuJDiAhQzqIEHeeH7CEoNFF0mxhQU8u7tkSKps01SW+5Q5xygjLmoJsN3EyJbGsKlbggWsNZV+yo=
+X-Received: by 2002:a05:6000:104:: with SMTP id o4mr26662567wrx.309.1574057574393;
+ Sun, 17 Nov 2019 22:12:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 18 Nov 2019 06:01:53 +0000
-From:   bgodavar@codeaurora.org
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, tientzu@chromium.org,
-        seanpaul@chromium.org
-Subject: Re: [PATCH v1] Bluetooth: hci_qca: Enable clocks required for BT SOC
-In-Reply-To: <39626995-672E-4D6A-8BD5-9E5D9272553B@holtmann.org>
-References: <20191114081430.25427-1-bgodavar@codeaurora.org>
- <39626995-672E-4D6A-8BD5-9E5D9272553B@holtmann.org>
-Message-ID: <0101016e7d1a6a67-d4af94cf-407a-4215-bd48-82d33990d5bb-000000@us-west-2.amazonses.com>
-X-Sender: bgodavar@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2019.11.18-54.240.27.188
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+References: <1574056694-28927-1-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <1574056694-28927-1-git-send-email-yash.shah@sifive.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Mon, 18 Nov 2019 11:42:43 +0530
+Message-ID: <CAAhSdy1i8i9MNnSyBud_k2sqn9mwYadh3YFgQ_42u9+C6F3VDg@mail.gmail.com>
+Subject: Re: [PATCH v2] RISC-V: Add address map dumper
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "Anup.Patel@wdc.com" <Anup.Patel@wdc.com>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "logang@deltatee.com" <logang@deltatee.com>,
+        "ren_guo@c-sky.com" <ren_guo@c-sky.com>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "wangkefeng.wang@huawei.com" <wangkefeng.wang@huawei.com>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-14 14:25, Marcel Holtmann wrote:
-> Hi Balakrishna,
-> 
->> Instead of relying on other subsytem to turn ON clocks
->> required for BT SoC to operate, voting them from the driver.
->> 
->> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
->> ---
->> drivers/bluetooth/hci_qca.c | 31 +++++++++++++++++++++++++++++--
->> 1 file changed, 29 insertions(+), 2 deletions(-)
->> 
->> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
->> index f10bdf8e1fc5..dc95e378574b 100644
->> --- a/drivers/bluetooth/hci_qca.c
->> +++ b/drivers/bluetooth/hci_qca.c
->> @@ -164,6 +164,7 @@ struct qca_serdev {
->> };
->> 
->> static int qca_regulator_enable(struct qca_serdev *qcadev);
->> +static int qca_power_on(struct qca_serdev *qcadev);
-> 
-> I really dislike forward declaration. Only use them if they are really
-> really needed. That said, this driver might actually need cleanups
-> since I just realized it has tons of forward declarations.
-> 
+On Mon, Nov 18, 2019 at 11:28 AM Yash Shah <yash.shah@sifive.com> wrote:
+>
+> Add support for dumping the kernel address space layout to the console.
+> User can enable CONFIG_DEBUG_VM to dump the virtual memory region into
+> dmesg buffer during boot-up.
+>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> ---
+> This patch is based on Linux 5.4-rc6 and tested on SiFive HiFive
+> Unleashed board.
+>
+> Changes in v2:
+> - Avoid #ifdefs inside functions
+> - Helper functions instead of macros
+> - Drop newly added CONFIG_DEBUG_VM_LAYOUT, instead use CONFIG_DEBUG_VM
+> ---
+>  arch/riscv/mm/init.c | 36 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 573463d..7828136 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -45,6 +45,41 @@ void setup_zero_page(void)
+>         memset((void *)empty_zero_page, 0, PAGE_SIZE);
+>  }
+>
+> +#ifdef CONFIG_DEBUG_VM
+> +static inline void print_mlk(char *name, unsigned long b, unsigned long t)
+> +{
+> +       pr_notice("%12s : 0x%08lx - 0x%08lx   (%4ld kB)\n", name, b, t,
+> +                 (((t) - (b)) >> 10));
+> +}
+> +
+> +static inline void print_mlm(char *name, unsigned long b, unsigned long t)
+> +{
+> +       pr_notice("%12s : 0x%08lx - 0x%08lx   (%4ld MB)\n", name, b, t,
+> +                 (((t) - (b)) >> 20));
+> +}
+> +
+> +static void print_vm_layout(void)
+> +{
+> +       pr_notice("Virtual kernel memory layout:\n");
+> +       print_mlk("fixmap", (unsigned long)FIXADDR_START,
+> +                 (unsigned long)FIXADDR_TOP);
+> +       print_mlm("vmemmap", (unsigned long)VMEMMAP_START,
+> +                 (unsigned long)VMEMMAP_END);
+> +       print_mlm("vmalloc", (unsigned long)VMALLOC_START,
+> +                 (unsigned long)VMALLOC_END);
+> +       print_mlm("lowmem", (unsigned long)PAGE_OFFSET,
+> +                 (unsigned long)high_memory);
+> +       print_mlk(".init", (unsigned long)__init_begin,
+> +                 (unsigned long)__init_end);
+> +       print_mlk(".text", (unsigned long)_text, (unsigned long)_etext);
+> +       print_mlk(".data", (unsigned long)_sdata, (unsigned long)_edata);
+> +       print_mlk(".bss", (unsigned long)__bss_start,
+> +                 (unsigned long)__bss_stop);
+> +}
+> +#else
+> +static void print_vm_layout(void) { }
+> +#endif /* CONFIG_DEBUG_VM */
+> +
+>  void __init mem_init(void)
+>  {
+>  #ifdef CONFIG_FLATMEM
+> @@ -55,6 +90,7 @@ void __init mem_init(void)
+>         memblock_free_all();
+>
+>         mem_init_print_info(NULL);
+> +       print_vm_layout();
+>  }
+>
+>  #ifdef CONFIG_BLK_DEV_INITRD
+> --
+> 2.7.4
+>
 
-[Bala]: agree, will work on this change.
+LGTM.
 
->> static void qca_regulator_disable(struct qca_serdev *qcadev);
->> static void qca_power_shutdown(struct hci_uart *hu);
->> static int qca_power_off(struct hci_dev *hdev);
->> @@ -528,7 +529,7 @@ static int qca_open(struct hci_uart *hu)
->> 		} else {
->> 			hu->init_speed = qcadev->init_speed;
->> 			hu->oper_speed = qcadev->oper_speed;
->> -			ret = qca_regulator_enable(qcadev);
->> +			ret = qca_power_on(qcadev);
->> 			if (ret) {
->> 				destroy_workqueue(qca->workqueue);
->> 				kfree_skb(qca->rx_skb);
->> @@ -1214,7 +1215,7 @@ static int qca_wcn3990_init(struct hci_uart *hu)
->> 	qcadev = serdev_device_get_drvdata(hu->serdev);
->> 	if (!qcadev->bt_power->vregs_on) {
->> 		serdev_device_close(hu->serdev);
->> -		ret = qca_regulator_enable(qcadev);
->> +		ret = qca_power_on(qcadev);
->> 		if (ret)
->> 			return ret;
->> 
->> @@ -1408,6 +1409,9 @@ static void qca_power_shutdown(struct hci_uart 
->> *hu)
->> 	host_set_baudrate(hu, 2400);
->> 	qca_send_power_pulse(hu, false);
->> 	qca_regulator_disable(qcadev);
->> +
->> +	if (qcadev->susclk)
->> +		clk_disable_unprepare(qcadev->susclk);
->> }
->> 
->> static int qca_power_off(struct hci_dev *hdev)
->> @@ -1423,6 +1427,20 @@ static int qca_power_off(struct hci_dev *hdev)
->> 	return 0;
->> }
->> 
->> +static int qca_power_on(struct qca_serdev *qcadev)
->> +{
->> +	int err;
->> +
->> +	if (qcadev->susclk) {
->> +		err = clk_prepare_enable(qcadev->susclk);
->> +		if (err)
->> +			return err;
->> +	}
->> +
->> +	qca_regulator_enable(qcadev);
->> +	return 0;
->> +}
->> +
->> static int qca_regulator_enable(struct qca_serdev *qcadev)
->> {
->> 	struct qca_power *power = qcadev->bt_power;
->> @@ -1523,6 +1541,15 @@ static int qca_serdev_probe(struct 
->> serdev_device *serdev)
->> 
->> 		qcadev->bt_power->vregs_on = false;
->> 
->> +		if (qcadev->btsoc_type == QCA_WCN3990 ||
->> +		    qcadev->btsoc_type == QCA_WCN3991) {
-> 
-> There comes a point when using a switch statement is a lot easier to
-> read. See if that has been reached and if there are other places that
-> would benefit from a cleanup patch.
-> 
+Reviewed-by: Anup Patel <anup@brainfault.org>
 
-[Bala] : will work on this.
-
-> Regards
-> 
-> Marcel
+Regards,
+Anup
