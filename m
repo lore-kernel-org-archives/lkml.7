@@ -2,127 +2,122 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89177C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D8BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D6A12230C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:37:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gtKnvXNO"
+	by mail.kernel.org (Postfix) with ESMTP id DFE3822304
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfKSJhv (ORCPT
+        id S1727403AbfKSJkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 04:37:51 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34893 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725784AbfKSJhv (ORCPT
+        Tue, 19 Nov 2019 04:40:23 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:52469 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726590AbfKSJkX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 04:37:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574156269;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fRXQm6AwweBAKs+ZK0WV5Q/2PFP544W5D+sMQayTAv8=;
-        b=gtKnvXNORKJO2eFZ7YrbYnzt42OB4h0T6HfTkd8OHfrNbnaXsNSzb6qm2nxUBj94lALBKy
-        wdEEXIoC2LvLg1gK/1ODIeIllS3iV4NgalOw0BWOmwYE4IOCjlUbExFBeCsSnveDNU8wtt
-        aA5CYG2Jm3LjO9IxJFEBC2d1VdHZqu8=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-259-bmRiM5suOUmRBO08iONfnw-1; Tue, 19 Nov 2019 04:37:46 -0500
-Received: by mail-qt1-f200.google.com with SMTP id s8so14240517qtq.17
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 01:37:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=i0dzxXcu3kZcEkcFFAvs/xGVYiism8Ya+pMy/yRvdtE=;
-        b=YCoOO7u/6HRiSedThFdauTLSTLvKHcJ0OlxCvfFB3/qnXRprf4mMZSjbmwSy59vMT1
-         42zSkq8dd8vwqgOvNas99PAHTru5aM49EB7f16WyZhptFZ+XW8a78FJ/yA+sNs95Kj06
-         pWr7Tsm4p4POpFDt5BHI4Js7DhSO3l/hjLopzUAbaiSb4w/dmnrCxqDYD7v6KJq9YFGU
-         OxzCIYjkMeTZw7PMnDaCKRImX7kGDx4WYvFJPheGTNDjuyn2E+UfHkfxYDBDtBtMNbU+
-         nTOBqwADE4STuhqhN2JJGY1zbzsHmQqjbuK0Ti39YC2mg+8wiORyGTqgvesqAc3iR+nI
-         9pyw==
-X-Gm-Message-State: APjAAAVbUaEN9jn0z5rPk3b7QKYCnWG+rKOM4tGZ5zzZXimQFVzABRO2
-        1u1gwu5zGLTrTcjzsBq00yTn5V6ZF9y7G/mNKQzs8joY9GdE/+Mr+ZtRUJthJn/cSnIsaB7tDEt
-        NxV0UNUWseAvdxWr6u2CB3lo8
-X-Received: by 2002:a05:6214:170c:: with SMTP id db12mr30011414qvb.202.1574156266084;
-        Tue, 19 Nov 2019 01:37:46 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwK7mvg1/UTFi/ReQv/8Rt9plSBa25dcfN4y7V2hWjRkBh3WMhOIhzLmTGyXjsBRGWkz36XMQ==
-X-Received: by 2002:a05:6214:170c:: with SMTP id db12mr30011390qvb.202.1574156265771;
-        Tue, 19 Nov 2019 01:37:45 -0800 (PST)
-Received: from redhat.com (bzq-79-176-6-42.red.bezeqint.net. [79.176.6.42])
-        by smtp.gmail.com with ESMTPSA id h37sm12422937qth.78.2019.11.19.01.37.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 01:37:44 -0800 (PST)
-Date:   Tue, 19 Nov 2019 04:37:39 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Wei Wang <wei.w.wang@intel.com>
-Cc:     Khazhismel Kumykov <khazhy@google.com>, jasowang@redhat.com,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH 1/2] virtio_balloon: fix pages_to_free calculation
-Message-ID: <20191119043648-mutt-send-email-mst@kernel.org>
-References: <CACGdZYJoHSN3vkj_QBz6Txmec9mJMmkH66j2XtqzpUWpfpw4Tg@mail.gmail.com>
- <20191118213811.22017-1-khazhy@google.com>
- <20191118175648-mutt-send-email-mst@kernel.org>
- <5DD37FE4.4000407@intel.com>
+        Tue, 19 Nov 2019 04:40:23 -0500
+Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N1gac-1hr5cz1Eym-01231h; Tue, 19 Nov 2019 10:40:21 +0100
+Received: by mail-qk1-f172.google.com with SMTP id d13so17189309qko.3;
+        Tue, 19 Nov 2019 01:40:21 -0800 (PST)
+X-Gm-Message-State: APjAAAUlIrFuF8q2cjVatN51ImQ6bBfnGRcqYMHIPpmECBAXDLW5g7cM
+        GI2lNt5xakJphktqtf7JPHkelkq8i8YrPYAG3f8=
+X-Google-Smtp-Source: APXvYqzpXo37eIlD5IP7Hk0pcYvx8hP1F+kNLhyoYoR1Do87qKPCr5W/ZWz5L7OkA4dZDC/iCb3rnrXQgJt5QRJtGjk=
+X-Received: by 2002:a37:4f13:: with SMTP id d19mr24499410qkb.138.1574156420062;
+ Tue, 19 Nov 2019 01:40:20 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <5DD37FE4.4000407@intel.com>
-X-MC-Unique: bmRiM5suOUmRBO08iONfnw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+References: <20191118220432.1611-1-labbott@redhat.com> <29e94219-22ca-c873-7209-64d1c357fe5c@roeck-us.net>
+In-Reply-To: <29e94219-22ca-c873-7209-64d1c357fe5c@roeck-us.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 19 Nov 2019 10:40:04 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0=3J3WHTKU7sPvd37VEwg3wOuZ5S2-xXtNYEcSQhWyHw@mail.gmail.com>
+Message-ID: <CAK8P3a0=3J3WHTKU7sPvd37VEwg3wOuZ5S2-xXtNYEcSQhWyHw@mail.gmail.com>
+Subject: Re: [PATCH] watchdog: Remove iop_wdt
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Laura Abbott <labbott@redhat.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Lennert Buytenhek <kernel@wantstofly.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:JCq97WPGR6TwJH63qeF1QLhXslOsZv3p4wX9t2Q2rMjpOxv43Pg
+ 4mXhIh8BM7FSmkl+l/3ssNG62UOz7WekfaNCVYI5xgxH0Uj6/kDfKKlCf6cFweJfKKfxAVW
+ 3L4VI+HWkjKKgBMtlo+KTT0lWyr/UAUAx8sq70qGr97XQ13k3otOL/6NGBWp/Hb9amVTDKG
+ C5GmvFfW+s+hTkdV81Cfw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sNJFmyp9qA8=:gEYXJeyNAgl2qJ5FtAlXxS
+ AJgfFwJHuNka43LIQt5Vvb+N1VW6r/fsHoPlSHrN7VdH7Ticg7hDn/FLdEvlyf1oaGlBMHzL2
+ M6pHswbskI+FdUzxydnSYO6BdSIB7Suduz5M0UlqWh0sLU7gmL1GAX9NUbwwFEff2scKd0zxs
+ UFR+J9jmDIMKFB4+GzY3qnzbF+UZLlJiBM4TyErgLmSsxtWMBB3B2qM0TgLpPsm5hdyPo8kJ4
+ CIcE0P0lVDdsdey5X7nrDum7gYFhxnOcPL4l7+awSZYZ2L0G7reKw9XtKAgtJUc76e8Wtk+Ez
+ CIo6keVl3A28ikL/m5HB1rKOL36r6heOA4b9DhSb0m2q07E5DSnLh0eqENd3Zl6y1Ycpub8ph
+ IrDe5PzPPrkHUvjUck0Rj4ZVEvXssbroUIx1XA9T7JSmr95Csn9UKBwqNhZ86npxa6WRlaVfr
+ uOCfQ+dgRHSOQmOVErEdB3+gQQi4wF1qeWT0WEleM0q3I2TIUx6+V4KFc4nmZpWoOoj4KdTG9
+ 8EQbvMlxEEZh9bvNXf7zvNTTjxXFL10mTud/OFCj82tqMfOTX8+37MAzaTUmsJQJQ6+fAEb7Q
+ pQCX1+sm/KXqBOmbnve5lQUzMc/oRl/ajge068JN3QFy07MvmdEk8eUsSy/6pS2CuUBRyaMg4
+ fvQ7YG3Id7Mj6AJLmcBdrAOfOK3SJ+EaPtoyCdJtHw0wJHdGs6OM+v6MNbKRasjYExjAryYXc
+ yE7LYjH6utfgwUdbwlwquK/2dzcmXaEHNXZ5+Fbs5N69ZMnfcjA8H8G5MHbMiyI4Cbi0BZUJ3
+ PwuTcdZ4eViOZK8m7lYhr/BQaj82YGrUWnhPVRYUbfKFVxh5GSlJkdah5wHqpveUqWPkrnpc2
+ XciPZ9xD2ywCbGLdD7Zg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 01:38:44PM +0800, Wei Wang wrote:
-> On 11/19/2019 07:08 AM, Michael S. Tsirkin wrote:
-> > So I really think we should do something like the below instead.
-> > Limit playing with balloon pages so we can gradually limit it to legacy=
-.
-> > Testing, review would be appreciated.
-> >=20
-> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> >=20
-> >=20
-> > diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_ba=
-lloon.c
-> > index 226fbb995fb0..7cee05cdf3fb 100644
-> > --- a/drivers/virtio/virtio_balloon.c
-> > +++ b/drivers/virtio/virtio_balloon.c
-> > @@ -772,6 +772,13 @@ static unsigned long shrink_free_pages(struct virt=
-io_balloon *vb,
-> >   =09return blocks_freed << VIRTIO_BALLOON_FREE_PAGE_ORDER;
-> >   }
-> > +static unsigned long leak_balloon_pages(struct virtio_balloon *vb,
-> > +                                          unsigned long pages_to_free)
-> > +{
-> > +=09return leak_balloon(vb, pages_to_free * VIRTIO_BALLOON_PAGES_PER_PA=
-GE) /
-> > +=09=09VIRTIO_BALLOON_PAGES_PER_PAGE;
-> > +}
-> > +
->=20
-> Looks good to me, too. (just a reminder that the returning type of
-> leak_balloon is "unsigned int",
+On Tue, Nov 19, 2019 at 3:08 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On 11/18/19 2:04 PM, Laura Abbott wrote:
+> >
+> > Commit 59d3ae9a5bf6 ("ARM: remove Intel iop33x and iop13xx support")
+> > removed support for some old platforms. Given this driver depends on
+> > a now removed platform, just remove the driver.
+> >
+> > Signed-off-by: Laura Abbott <labbott@redhat.com>
+> > ---
+> > Found this while reviewing config options. Not sure if this was kept
+> > around for other reasons or just missed.
+> > ---
+> >   drivers/watchdog/Kconfig   |  16 ---
+> >   drivers/watchdog/Makefile  |   1 -
+> >   drivers/watchdog/iop_wdt.c | 249 -------------------------------------
+> >   3 files changed, 266 deletions(-)
+> >   delete mode 100644 drivers/watchdog/iop_wdt.c
+> >
+> > diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> > index 58e7c100b6ad..fef9078a44b6 100644
+> > --- a/drivers/watchdog/Kconfig
+> > +++ b/drivers/watchdog/Kconfig
+> > @@ -554,22 +554,6 @@ config PNX4008_WATCHDOG
+> >
+> >         Say N if you are unsure.
+> >
+> > -config IOP_WATCHDOG
+> > -     tristate "IOP Watchdog"
+> > -     depends on ARCH_IOP13XX
+> > -     select WATCHDOG_NOWAYOUT if (ARCH_IOP32X || ARCH_IOP33X)
+>
+> This is a bit confusing, but it suggests that the watchdog may also work
+> with ARCH_IOP32X, which is still supported. I don't know anything about
+> those architectures, but I hesitate to have the driver removed unless
+> we have confirmation that it won't work with ARCH_IOP32X.
+> Maybe the dependency needs to be updated instead ?
 
-Yea that use of 32 bit integers is another problem with the existing interf=
-aces.
+See commit ec2e32ca661e ("watchdog: iop_wdt only builds for
+mach-iop13xx") from 2014: the watdog hardware exists on iop32x
+but the driver only successfully built on iop13xx, which is now gone.
 
-> we may want them to be consistent).
->=20
-> Reviewed-by: Wei Wang <wei.w.wang@intel.com>
->=20
-> Best,
-> Wei
+Adding Russell (who said he still uses iop32x hardware) and Lennert
+(who is still listed in the MAINTAINERS file, but previously said he
+does not use it any more) to Cc. If neither of them see a reason to
+keep the driver, I'd say we can remove it.
 
+It seems unlikely that anyone wants to revive the driver if they have
+not done it yet, and if they want to do it later, it is barely harder to revert
+the removal than to fix the compile-time problem.
+
+        Arnd
