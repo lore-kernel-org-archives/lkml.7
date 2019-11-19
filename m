@@ -2,247 +2,125 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 337F4C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15111C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1B4720679
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF06D222D1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:21:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="JZU5Egl9"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nnweqsnK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfKSPVE (ORCPT
+        id S1728304AbfKSPVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:21:04 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33693 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727790AbfKSPVE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 10:21:04 -0500
-Received: by mail-io1-f65.google.com with SMTP id j13so404829ioe.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 07:21:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wLB89YSfgFbBGVbXR/ZLzoyZwIzs8AJRlNKdafMUlZc=;
-        b=JZU5Egl9ZoaDwz0bdBgxNinwLYcLz3n+Hn0aSbO/AVFn/aCE1lLwcN1r/3QDejrEwj
-         6kglXsZ4RySU2HEjz8jO/+dMfP0KzreCJJzgp6h7hlw6u+wxrZj6UwrfdYtdIGDWXGiR
-         OYES5PwFK/+xSi0YVlN3UdH6klun9G6QoHg4Tc+ZnUsv6IMI/4muOABPexjk1oA0ADE5
-         b3zj+/FHbBkydFhTf4a73F5C1bOOVr937pWuybe9hb0lgDZmy5CuNokkTpHWHs08/nD+
-         f69g2JR9eA014LrlsmPjz5j30rtzeVJA7qw7ztGe066Nw7m/BfFu8Iv6+9T9ezL/N4tx
-         eaVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wLB89YSfgFbBGVbXR/ZLzoyZwIzs8AJRlNKdafMUlZc=;
-        b=Dsn9tWXxJtz9pKR/QTvbJEW8P6GethL0wxk/BktROezEExSTVRVGdEgUIriRQHnUw8
-         9amqwdcG0GVVAuKmMTQc4TOd+Ufzyy+zRcDz/AR0zlq7haaJOkHWl+5uURfVpZXJ8oi4
-         bh3vQs2fSx3wWC2TB8Y2NNSiNErQTdmc2L6EBpJpINRBs+aoLC6cnNzVHTDduymxPO8w
-         Bo9fuHu/NFNychntxlA+QzmzpQBW8VbD2ZLb8K4XvDb7pncqcDltDlIbA0mXPubUeSMi
-         RPAADfPvw0H0E9HRJ9b/GY4XLWwIOBGMq/dQLvuR/To7BeoOY18aU3+Tj0ZmvANg4PIS
-         ytNg==
-X-Gm-Message-State: APjAAAX4Rv2NmBDQYCPctKEBenBf3QqWon44ursI1UXndfbshXYMOioM
-        ADRwbY37uiTSyyydhUwZPtFxBw==
-X-Google-Smtp-Source: APXvYqxS869fK817TTK5HMeIoHO8JiLIL3F6mOGHGin+8CiL/opZQabRZ2ZaAHZYToc+OJNCCgwA+A==
-X-Received: by 2002:a02:70cb:: with SMTP id f194mr19334335jac.126.1574176861577;
-        Tue, 19 Nov 2019 07:21:01 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id t7sm4262873iog.85.2019.11.19.07.20.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Nov 2019 07:21:00 -0800 (PST)
-Subject: Re: INFO: task hung in io_wq_destroy
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     syzbot <syzbot+0f1cc17f85154f400465@syzkaller.appspotmail.com>,
-        andriy.shevchenko@linux.intel.com, davem@davemloft.net,
-        f.fainelli@gmail.com, gregkh@linuxfoundation.org,
-        idosch@mellanox.com, kimbrownkd@gmail.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, petrm@mellanox.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        viro@zeniv.linux.org.uk, wanghai26@huawei.com,
-        yuehaibing@huawei.com
-References: <000000000000f86a4f0595fdb152@google.com>
- <f1a79e81-b41f-ba48-9bf3-aeae708f73ba@kernel.dk>
- <20191119022330.GC3147@sol.localdomain>
- <bc52115c-3951-54c6-7810-86797d8c4644@kernel.dk>
- <c7b9c600-724b-6df1-84ba-b74999d6f4a6@kernel.dk>
-Message-ID: <09cdf1d6-4660-9712-e374-4bbb120d6858@kernel.dk>
-Date:   Tue, 19 Nov 2019 08:20:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <c7b9c600-724b-6df1-84ba-b74999d6f4a6@kernel.dk>
-Content-Type: text/plain; charset=utf-8
+        Tue, 19 Nov 2019 10:21:40 -0500
+Received: from mail-eopbgr20042.outbound.protection.outlook.com ([40.107.2.42]:43294
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726307AbfKSPVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 10:21:40 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M+UgQmTJmy7BDM497MhrWRT44Q99XvltIVagFhb7apbBgpiPlBQs8Sraj1ffRL8GMRkFxsnuV8+G8AkH3Suwht+HQMdrfAqKnzVIEJ8ghz88udCx/keiXpmJLgLdCBMDnP48acxfeNO8kESxN91GTsjWhyAxwe+ALSACl1fEVGX/Rb+kvv3mOAEkV2hEBE+8Un/EufKpeuphSTrRWSi1iKJfDMmlG3RAB0jwnhpIGwrJyWEan3wjJIwOOXK9RW/HgGy3mBPvTejJzMSw1iPwi8mYX/kQ7+8rG4rJUi0hQ4UgiGUit3DJtJonAQdQ94z3vlU8SscFdexJorsAco5CSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AWQ7hxpCZF/Sq19Jgy58W0aQAWfhlJjYBqa0vsaWWwY=;
+ b=mAe/C193IVIu6YxgoPMG5ABStqvGxbWfPViWk195lOYGpEbDFvX8Pg4m/E48ttIdbJxfZbMr+gqSU1uth/Ib3x9lkiyGx7CRsWB1dmwQBUt6Wlzu0KL26w2UnI7En9PKk3m7PVE/ai7qNtfkdnrXABfUiCd3yZHLL/nm68Kjn9aZXczWzTKxup325xtNnSr2oJjJ60xp4HYQkySFy5HuUX3d/ddKoVICFk/Kan8FmYyMORcfWTreL4LrZSsSIHwTWmjBZ0vxpvntQvOhgAMBW6QxQfWIH0lDfRf2b4tZk7PEB9aqsIEX16fhjZMFbavPZ1v/clENUDRPkzYe2hgv+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AWQ7hxpCZF/Sq19Jgy58W0aQAWfhlJjYBqa0vsaWWwY=;
+ b=nnweqsnKQs529QSiLGmFZHT/45wjX/Oj/mGEC5plW50mNkIh19g45Pe1C8t2HCEP9MudrtdrUH/7MV3pAI4GTKZaGI1JngfbfQ/lGz1NCUiQaFqZkYbqAKlLB06dcDF9ZwpwGftm78v2v19R/Ai/WsD/brvo4IrKu7a8K1R/QXk=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3552.eurprd04.prod.outlook.com (52.134.4.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.26; Tue, 19 Nov 2019 15:21:34 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::89e1:552e:a24d:e72]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::89e1:552e:a24d:e72%3]) with mapi id 15.20.2474.015; Tue, 19 Nov 2019
+ 15:21:34 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Gary Hook <gary.hook@amd.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 06/12] crypto: caam - change return code in
+ caam_jr_enqueue function
+Thread-Topic: [PATCH 06/12] crypto: caam - change return code in
+ caam_jr_enqueue function
+Thread-Index: AQHVnZazktuTKSk1mUevNvsTpcH2mA==
+Date:   Tue, 19 Nov 2019 15:21:34 +0000
+Message-ID: <VI1PR0402MB34859E24D0F95C9809B88901984C0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <1574029845-22796-1-git-send-email-iuliana.prodan@nxp.com>
+ <1574029845-22796-7-git-send-email-iuliana.prodan@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b5313c76-42b9-49d8-1fc2-08d76d0429b1
+x-ms-traffictypediagnostic: VI1PR0402MB3552:|VI1PR0402MB3552:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB3552FBE47302866C4794F0CB984C0@VI1PR0402MB3552.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:605;
+x-forefront-prvs: 022649CC2C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(366004)(39860400002)(396003)(346002)(199004)(189003)(4744005)(53546011)(44832011)(71190400001)(74316002)(446003)(91956017)(66556008)(64756008)(76116006)(66476007)(66946007)(66446008)(4326008)(66066001)(8676002)(6246003)(486006)(6116002)(6636002)(3846002)(14454004)(6436002)(25786009)(9686003)(52536014)(316002)(8936002)(5660300002)(55016002)(99286004)(2906002)(476003)(81166006)(14444005)(54906003)(81156014)(229853002)(110136005)(102836004)(186003)(6506007)(7736002)(256004)(86362001)(478600001)(26005)(76176011)(71200400001)(33656002)(7696005)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3552;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 46uOYyNu754Wq82F90plTmtp6cJmIGV2pUZgl9VN3SzfWKrMCUl19BX1LvJs/6AGAaD2hXLI8WCap3JTyfPGizGmvPhgWwdOkYWjtwzwbxERhMrmBewZa3dEabmJWOnJkRHWV+wRhPy5KDe2Td3PRdbLkYYs/tFjIbgGuIDQ3hkcH1damCFT4pOmUJ+7Wkz2ZOzrDF127U5Rmg1nEj/cInkH/GuMdBErPzWBklsNrAfiyPNhk757vS7BKteOLzKhBE9Bta3Uc7LHtkZHP38Ipg+L90JWFbrbxzJcJFM8ULIs9x1P7KNtSJFXby1pzQdB6NfSHpTnWQfCt0XcET6i6OSAEF6cUuwLAKgNzUxoHJgAtIhr6gAmRvTeqQsr2jy2OAgFJvnqusQ97UGgSGLkOoWfYh2R/EwfdLJz9j0xiFURMoQKeQHiiCMs+OXUYUtp
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b5313c76-42b9-49d8-1fc2-08d76d0429b1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2019 15:21:34.1835
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CqoYY+YWoUrwh6HHfLIzWIHoLS1JeSMiUx4Qsjlb/SttSNTV3U6pjdVo4Xv23LM39Meyguuq5JYRZaL1YSWUqw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3552
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/18/19 9:34 PM, Jens Axboe wrote:
-> On 11/18/19 8:15 PM, Jens Axboe wrote:
->> On 11/18/19 7:23 PM, Eric Biggers wrote:
->>> Hi Jens,
->>>
->>> On Mon, Oct 28, 2019 at 03:00:08PM -0600, Jens Axboe wrote:
->>>> This is fixed in my for-next branch for a few days at least, unfortunately
->>>> linux-next is still on the old one. Next version should be better.
->>>
->>> This is still occurring on linux-next.  Here's a report on next-20191115 from
->>> https://syzkaller.appspot.com/text?tag=CrashReport&x=16fa3d1ce00000
->>
->> Hmm, I'll take a look. Looking at the reproducer, it's got a massive
->> sleep at the end. I take it this triggers before that time actually
->> passes? Because that's around 11.5 days of sleep.
->>
->> No luck reproducing this so far, I'll try on linux-next.
-> 
-> I see what it is - if the io-wq is setup and torn down before the
-> manager thread is started, then we won't create the workers we already
-> expected. The manager thread will exit without doing anything, but
-> teardown will wait for the expected workers to exit before being
-> allowed to proceed. That never happens.
-> 
-> I've got a patch for this, but I'll test it a bit and send it out
-> tomorrow.
-
-This should fix it - wait until the manager is started and has created
-the required fixed workers, then check if it failed or not. That closes
-the gap between startup and teardown, as we have settled things before
-anyone is allowed to call io_wq_destroy().
-
-
-diff --git a/fs/io-wq.c b/fs/io-wq.c
-index 9174007ce107..1f640c489f7c 100644
---- a/fs/io-wq.c
-+++ b/fs/io-wq.c
-@@ -33,6 +33,7 @@ enum {
- enum {
- 	IO_WQ_BIT_EXIT		= 0,	/* wq exiting */
- 	IO_WQ_BIT_CANCEL	= 1,	/* cancel work on list */
-+	IO_WQ_BIT_ERROR		= 2,	/* error on setup */
- };
- 
- enum {
-@@ -562,14 +563,14 @@ void io_wq_worker_sleeping(struct task_struct *tsk)
- 	spin_unlock_irq(&wqe->lock);
- }
- 
--static void create_io_worker(struct io_wq *wq, struct io_wqe *wqe, int index)
-+static bool create_io_worker(struct io_wq *wq, struct io_wqe *wqe, int index)
- {
- 	struct io_wqe_acct *acct =&wqe->acct[index];
- 	struct io_worker *worker;
- 
- 	worker = kcalloc_node(1, sizeof(*worker), GFP_KERNEL, wqe->node);
- 	if (!worker)
--		return;
-+		return false;
- 
- 	refcount_set(&worker->ref, 1);
- 	worker->nulls_node.pprev = NULL;
-@@ -581,7 +582,7 @@ static void create_io_worker(struct io_wq *wq, struct io_wqe *wqe, int index)
- 				"io_wqe_worker-%d/%d", index, wqe->node);
- 	if (IS_ERR(worker->task)) {
- 		kfree(worker);
--		return;
-+		return false;
- 	}
- 
- 	spin_lock_irq(&wqe->lock);
-@@ -599,6 +600,7 @@ static void create_io_worker(struct io_wq *wq, struct io_wqe *wqe, int index)
- 		atomic_inc(&wq->user->processes);
- 
- 	wake_up_process(worker->task);
-+	return true;
- }
- 
- static inline bool io_wqe_need_worker(struct io_wqe *wqe, int index)
-@@ -606,9 +608,6 @@ static inline bool io_wqe_need_worker(struct io_wqe *wqe, int index)
- {
- 	struct io_wqe_acct *acct = &wqe->acct[index];
- 
--	/* always ensure we have one bounded worker */
--	if (index == IO_WQ_ACCT_BOUND && !acct->nr_workers)
--		return true;
- 	/* if we have available workers or no work, no need */
- 	if (!hlist_nulls_empty(&wqe->free_list) || !io_wqe_run_queue(wqe))
- 		return false;
-@@ -621,10 +620,19 @@ static inline bool io_wqe_need_worker(struct io_wqe *wqe, int index)
- static int io_wq_manager(void *data)
- {
- 	struct io_wq *wq = data;
-+	int i;
- 
--	while (!kthread_should_stop()) {
--		int i;
-+	/* create fixed workers */
-+	for (i = 0; i < wq->nr_wqes; i++) {
-+		if (create_io_worker(wq, wq->wqes[i], IO_WQ_ACCT_BOUND))
-+			continue;
-+		goto err;
-+	}
- 
-+	refcount_set(&wq->refs, wq->nr_wqes);
-+	complete(&wq->done);
-+
-+	while (!kthread_should_stop()) {
- 		for (i = 0; i < wq->nr_wqes; i++) {
- 			struct io_wqe *wqe = wq->wqes[i];
- 			bool fork_worker[2] = { false, false };
-@@ -644,6 +652,10 @@ static int io_wq_manager(void *data)
- 		schedule_timeout(HZ);
- 	}
- 
-+	return 0;
-+err:
-+	set_bit(IO_WQ_BIT_ERROR, &wq->state);
-+	complete(&wq->done);
- 	return 0;
- }
- 
-@@ -982,7 +994,6 @@ struct io_wq *io_wq_create(unsigned bounded, struct mm_struct *mm,
- 	wq->user = user;
- 
- 	i = 0;
--	refcount_set(&wq->refs, wq->nr_wqes);
- 	for_each_online_node(node) {
- 		struct io_wqe *wqe;
- 
-@@ -1020,6 +1031,10 @@ struct io_wq *io_wq_create(unsigned bounded, struct mm_struct *mm,
- 	wq->manager = kthread_create(io_wq_manager, wq, "io_wq_manager");
- 	if (!IS_ERR(wq->manager)) {
- 		wake_up_process(wq->manager);
-+		wait_for_completion(&wq->done);
-+		if (test_bit(IO_WQ_BIT_ERROR, &wq->state))
-+			goto err;
-+		reinit_completion(&wq->done);
- 		return wq;
- 	}
- 
-@@ -1041,10 +1056,9 @@ void io_wq_destroy(struct io_wq *wq)
- {
- 	int i;
- 
--	if (wq->manager) {
--		set_bit(IO_WQ_BIT_EXIT, &wq->state);
-+	set_bit(IO_WQ_BIT_EXIT, &wq->state);
-+	if (wq->manager)
- 		kthread_stop(wq->manager);
--	}
- 
- 	rcu_read_lock();
- 	for (i = 0; i < wq->nr_wqes; i++) {
-
--- 
-Jens Axboe
-
+On 11/18/2019 12:31 AM, Iuliana Prodan wrote:=0A=
+> Change the return code of caam_jr_enqueue function to -EINPROGRESS, in=0A=
+> case of success, -ENOSPC in case the CAAM is busy (has no space left=0A=
+> in job ring queue), -EIO if it cannot map the caller's descriptor.=0A=
+> =0A=
+> Update, also, the cases for resource-freeing for each algorithm type.=0A=
+> =0A=
+It probably would've been worth saying *why* these changes are needed.=0A=
+=0A=
+Even though the patch is part of a patch set adding "backlogging support",=
+=0A=
+this grouping won't be visible in git log.=0A=
+=0A=
+There's another reason however for the -EBUSY -> -ENOSPC change,=0A=
+i.e. commit 6b80ea389a0b ("crypto: change transient busy return code to -EN=
+OSPC")=0A=
+=0A=
+> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
+Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
