@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC706C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C634C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80644218BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4550121823
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142793;
-	bh=UwLXFne5zF+yoIN2n+oORAiSDjx98eG7FobzA3nIJFA=;
+	s=default; t=1574142801;
+	bh=SJgM5lnoSsKMqTXorMM97fCNVXFdbc3dHn/7MZUJn+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zlc8XV78X8Hg+ch8YuZjUJd0QE1nS7CsDzqBU0VwKZrWP/r68pUiZHCoGDogH1FhH
-	 zGwWU0qvn7bvXIf6VA4D3vUku4HwoghY604bkBbe1wjdF4iFoHWqiSR6KIkZ8qu6mi
-	 wdLwnn9gb2D3zzr6/tzogIeHsTObCq6xuqJmToZ4=
+	b=w+6CIscOTs8o0Y6Fo4LgkbBxAfT05qA7BzuSXKS+a6KfxyBvv//AbcDtBBPtvqa3J
+	 3saInwG5hfA+GuTNPSvThINzZ7Dfon3o45JpEDtF/c4scfEOMnPRfU6PjZjpePrHfh
+	 Vke3nGEc8NniAvBKi2cQCZ4+gAcF28wYwdu6n/Zo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730222AbfKSFxM (ORCPT
+        id S1731556AbfKSFxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:53:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51024 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:53:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731978AbfKSFxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:53:09 -0500
+        id S1731996AbfKSFxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:53:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA5A0208C3;
-        Tue, 19 Nov 2019 05:53:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0A3721783;
+        Tue, 19 Nov 2019 05:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142788;
-        bh=UwLXFne5zF+yoIN2n+oORAiSDjx98eG7FobzA3nIJFA=;
+        s=default; t=1574142797;
+        bh=SJgM5lnoSsKMqTXorMM97fCNVXFdbc3dHn/7MZUJn+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mmlmlRkvSic02u7Rm+h+an/q9XdsxAeaM9GUGpdUp6ne579gdegMUBvXpNz4av2OS
-         PlVNKMIc7/MQUchIU7ssF5BJvQH8OHXD5gp32GOHikIc594v4NstJPuUYOlRArljDI
-         XGR6Cx/fm4LBFVIiaLr9WtLzR5KOCs9VejMq48rk=
+        b=luLnF87yQ65e0h+OhShSPO8ti9WMWB0cgBRzU43RzoTGJ9wPfZfd9NFMJu6rUwGsW
+         hHX6SZxFhZuA3lVd3lXov4A0ItAkp/Nzbyy711fn3zSvqZ58BkQjz7E7ZCm0R+LhKC
+         Z2NZp2CHXEe+JduE/yEYeVgC/Ud2AK/Px2JbkyzM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gage Eads <gage.eads@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Thierry Reding <treding@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 199/239] vfio/pci: Mask buggy SR-IOV VF INTx support
-Date:   Tue, 19 Nov 2019 06:19:59 +0100
-Message-Id: <20191119051336.272393531@linuxfoundation.org>
+Subject: [PATCH 4.14 202/239] ARM: dts: tegra30: fix xcvr-setup-use-fuses
+Date:   Tue, 19 Nov 2019 06:20:02 +0100
+Message-Id: <20191119051336.583017289@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,100 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-[ Upstream commit db04264fe9bc0f2b62e036629f9afb530324b693 ]
+[ Upstream commit 564706f65cda3de52b09e51feb423a43940fe661 ]
 
-The SR-IOV spec requires that VFs must report zero for the INTx pin
-register as VFs are precluded from INTx support.  It's much easier for
-the host kernel to understand whether a device is a VF and therefore
-whether a non-zero pin register value is bogus than it is to do the
-same in userspace.  Override the INTx count for such devices and
-virtualize the pin register to provide a consistent view of the device
-to the user.
+There was a dot instead of a comma. Fix this.
 
-As this is clearly a spec violation, warn about it to support hardware
-validation, but also provide a known whitelist as it doesn't do much
-good to continue complaining if the hardware vendor doesn't plan to
-fix it.
-
-Known devices with this issue: 8086:270c
-
-Tested-by: Gage Eads <gage.eads@intel.com>
-Reviewed-by: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci.c        |  8 ++++++--
- drivers/vfio/pci/vfio_pci_config.c | 27 +++++++++++++++++++++++++++
- 2 files changed, 33 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/tegra30.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 15b1cd4ef5a77..9bd3e7911af2b 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -433,10 +433,14 @@ static int vfio_pci_get_irq_count(struct vfio_pci_device *vdev, int irq_type)
- {
- 	if (irq_type == VFIO_PCI_INTX_IRQ_INDEX) {
- 		u8 pin;
-+
-+		if (!IS_ENABLED(CONFIG_VFIO_PCI_INTX) ||
-+		    vdev->nointx || vdev->pdev->is_virtfn)
-+			return 0;
-+
- 		pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
--		if (IS_ENABLED(CONFIG_VFIO_PCI_INTX) && !vdev->nointx && pin)
--			return 1;
- 
-+		return pin ? 1 : 0;
- 	} else if (irq_type == VFIO_PCI_MSI_IRQ_INDEX) {
- 		u8 pos;
- 		u16 flags;
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index 62023b4a373b4..423ea1f98441a 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -1611,6 +1611,15 @@ static int vfio_ecap_init(struct vfio_pci_device *vdev)
- 	return 0;
- }
- 
-+/*
-+ * Nag about hardware bugs, hopefully to have vendors fix them, but at least
-+ * to collect a list of dependencies for the VF INTx pin quirk below.
-+ */
-+static const struct pci_device_id known_bogus_vf_intx_pin[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x270c) },
-+	{}
-+};
-+
- /*
-  * For each device we allocate a pci_config_map that indicates the
-  * capability occupying each dword and thus the struct perm_bits we
-@@ -1676,6 +1685,24 @@ int vfio_config_init(struct vfio_pci_device *vdev)
- 	if (pdev->is_virtfn) {
- 		*(__le16 *)&vconfig[PCI_VENDOR_ID] = cpu_to_le16(pdev->vendor);
- 		*(__le16 *)&vconfig[PCI_DEVICE_ID] = cpu_to_le16(pdev->device);
-+
-+		/*
-+		 * Per SR-IOV spec rev 1.1, 3.4.1.18 the interrupt pin register
-+		 * does not apply to VFs and VFs must implement this register
-+		 * as read-only with value zero.  Userspace is not readily able
-+		 * to identify whether a device is a VF and thus that the pin
-+		 * definition on the device is bogus should it violate this
-+		 * requirement.  We already virtualize the pin register for
-+		 * other purposes, so we simply need to replace the bogus value
-+		 * and consider VFs when we determine INTx IRQ count.
-+		 */
-+		if (vconfig[PCI_INTERRUPT_PIN] &&
-+		    !pci_match_id(known_bogus_vf_intx_pin, pdev))
-+			pci_warn(pdev,
-+				 "Hardware bug: VF reports bogus INTx pin %d\n",
-+				 vconfig[PCI_INTERRUPT_PIN]);
-+
-+		vconfig[PCI_INTERRUPT_PIN] = 0; /* Gratuitous for good VFs */
- 	}
- 
- 	if (!IS_ENABLED(CONFIG_VFIO_PCI_INTX) || vdev->nointx)
+diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+index c3e9f1e847db8..cb5b76e958131 100644
+--- a/arch/arm/boot/dts/tegra30.dtsi
++++ b/arch/arm/boot/dts/tegra30.dtsi
+@@ -840,7 +840,7 @@
+ 		nvidia,elastic-limit = <16>;
+ 		nvidia,term-range-adj = <6>;
+ 		nvidia,xcvr-setup = <51>;
+-		nvidia.xcvr-setup-use-fuses;
++		nvidia,xcvr-setup-use-fuses;
+ 		nvidia,xcvr-lsfslew = <1>;
+ 		nvidia,xcvr-lsrslew = <1>;
+ 		nvidia,xcvr-hsslew = <32>;
+@@ -877,7 +877,7 @@
+ 		nvidia,elastic-limit = <16>;
+ 		nvidia,term-range-adj = <6>;
+ 		nvidia,xcvr-setup = <51>;
+-		nvidia.xcvr-setup-use-fuses;
++		nvidia,xcvr-setup-use-fuses;
+ 		nvidia,xcvr-lsfslew = <2>;
+ 		nvidia,xcvr-lsrslew = <2>;
+ 		nvidia,xcvr-hsslew = <32>;
+@@ -913,7 +913,7 @@
+ 		nvidia,elastic-limit = <16>;
+ 		nvidia,term-range-adj = <6>;
+ 		nvidia,xcvr-setup = <51>;
+-		nvidia.xcvr-setup-use-fuses;
++		nvidia,xcvr-setup-use-fuses;
+ 		nvidia,xcvr-lsfslew = <2>;
+ 		nvidia,xcvr-lsrslew = <2>;
+ 		nvidia,xcvr-hsslew = <32>;
 -- 
 2.20.1
 
