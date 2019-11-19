@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6489AC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239A7C33C9D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D585222DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E98C2222ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142333;
-	bh=WL0IMpCa7quBzeIRrz8P0TVLQrGdpBNeXA6UnbXNdfk=;
+	s=default; t=1574142336;
+	bh=ADyp6Rzsx2MfrdWW4FOXRRHYUFvd+5cFilVBnnNmt8I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u8t2t27Fh7ipjb+3iwAw4UGqAYAQNcS1lgI3ToQ7ihjVkvY8oomBSfUOwDBf+e7sP
-	 2yHgfIsEelzdvOoPakFVxQXPteS24K+2wHdS5zYq5oUUb8Ae/Ec1x+wt0vy5Z1lzWG
-	 W4RPakGanqGNbHoWHe7gY1xO7SyF6wzPZbkyFrcY=
+	b=QfYVLzhTO72HpNrrK1v6cmqBg1YPDb9K8JeEr6QyIK0EbYkgrq4c37kFmkIq2RoVH
+	 Xl9HYxUPNJOv3ElmCdYlVc86T8zaItFuBpJlORK1UMlJY8gWF/Jf0q5PPpnmL4Hlbs
+	 XtwvzuZxYZQptixcl7KHeKfHHgqBi71f7sWyGvhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730981AbfKSFpb (ORCPT
+        id S1730972AbfKSFpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:45:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41184 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:45:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730713AbfKSFp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:45:29 -0500
+        id S1730965AbfKSFp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:45:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CA3F2084D;
-        Tue, 19 Nov 2019 05:45:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F23A221783;
+        Tue, 19 Nov 2019 05:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142329;
-        bh=WL0IMpCa7quBzeIRrz8P0TVLQrGdpBNeXA6UnbXNdfk=;
+        s=default; t=1574142326;
+        bh=ADyp6Rzsx2MfrdWW4FOXRRHYUFvd+5cFilVBnnNmt8I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yJDPPvMLSonmcDP1BabKlhzZ86zA3s+E4xXlRa+h203HzZp/fdFWjUxOVEp+rfJjI
-         ofYoc/vNfdi4+P7u4V8NTMMPffR7T3+7rOxKSFgMkZOEx9zWm+U74wB03+usKiHFyw
-         5r9uSKLGqqSDnLz9U40iJPCohXW7OzK2jw1+9amk=
+        b=aIXdjD3vnUYkZcRyrwvr8cI3OM55zXL6afdPVhATbdjnKk/sNg+Eu3aeCH59F3gaZ
+         hxxLAEayggWaYUOUNiCafPTPiMQ666njfmsOf2xGFA5HM3ppCkDL6M+bqAtfjOTOAw
+         IFqO5Vc/yWxMwWlUyu3/3xrYrp5N2zJtwjNPO+ew=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Aleksander Morgado <aleksander@aleksander.es>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        syzbot+a8d4acdad35e6bbca308@syzkaller.appspotmail.com,
+        Oliver Neukum <oneukum@suse.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 009/239] net: usb: qmi_wwan: add support for Foxconn T77W968 LTE modules
-Date:   Tue, 19 Nov 2019 06:16:49 +0100
-Message-Id: <20191119051259.555099783@linuxfoundation.org>
+Subject: [PATCH 4.14 008/239] ax88172a: fix information leak on short answers
+Date:   Tue, 19 Nov 2019 06:16:48 +0100
+Message-Id: <20191119051259.171362433@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,45 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aleksander Morgado <aleksander@aleksander.es>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 802753cb0b141cf5170ab97fe7e79f5ca10d06b0 ]
+[ Upstream commit a9a51bd727d141a67b589f375fe69d0e54c4fe22 ]
 
-These are the Foxconn-branded variants of the Dell DW5821e modules,
-same USB layout as those.
+If a malicious device gives a short MAC it can elicit up to
+5 bytes of leaked memory out of the driver. We need to check for
+ETH_ALEN instead.
 
-The QMI interface is exposed in USB configuration #1:
-
-P:  Vendor=0489 ProdID=e0b4 Rev=03.18
-S:  Manufacturer=FII
-S:  Product=T77W968 LTE
-S:  SerialNumber=0123456789ABCDEF
-C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-I:  If#=0x1 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-
-Signed-off-by: Aleksander Morgado <aleksander@aleksander.es>
-Acked-by: Bjørn Mork <bjorn@mork.no>
+Reported-by: syzbot+a8d4acdad35e6bbca308@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/qmi_wwan.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/usb/ax88172a.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1295,6 +1295,8 @@ static const struct usb_device_id produc
- 	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0191, 4)},	/* Quectel EG91 */
- 	{QMI_FIXED_INTF(0x2c7c, 0x0296, 4)},	/* Quectel BG96 */
- 	{QMI_QUIRK_SET_DTR(0x2cb7, 0x0104, 4)},	/* Fibocom NL678 series */
-+	{QMI_FIXED_INTF(0x0489, 0xe0b4, 0)},	/* Foxconn T77W968 LTE */
-+	{QMI_FIXED_INTF(0x0489, 0xe0b5, 0)},	/* Foxconn T77W968 LTE with eSIM support*/
+--- a/drivers/net/usb/ax88172a.c
++++ b/drivers/net/usb/ax88172a.c
+@@ -208,7 +208,7 @@ static int ax88172a_bind(struct usbnet *
  
- 	/* 4. Gobi 1000 devices */
- 	{QMI_GOBI1K_DEVICE(0x05c6, 0x9212)},	/* Acer Gobi Modem Device */
+ 	/* Get the MAC address */
+ 	ret = asix_read_cmd(dev, AX_CMD_READ_NODE_ID, 0, 0, ETH_ALEN, buf, 0);
+-	if (ret < 0) {
++	if (ret < ETH_ALEN) {
+ 		netdev_err(dev->net, "Failed to read MAC address: %d\n", ret);
+ 		goto free;
+ 	}
 
 
