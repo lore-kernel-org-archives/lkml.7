@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E75C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 715C2C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D83AB20672
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C91220672
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:07:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143653;
-	bh=AnQeayZI8Q5t0IuDvtp0ycef/61y+WT5LaZc9K/UZ0w=;
+	s=default; t=1574143672;
+	bh=VL9r0Csglza5UEJzSeVP/0TGRgcTmcqr5vr+D1HxZhw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m5KX1dxh7novm6RutwACos0iWg/I6FYpbxi4Rr5JxAb9zjBKrTLYd0LBnxG7Dv8nc
-	 tM3P2iAP4lY366kTXOpVvbvzpg3B4XXLB63fWaq7u22Q3ttgjGF7zyQCdwDY6DwwgK
-	 ZgwMx+I9tCvlvtS6QnxGigcTNaDRVO7yTI9+2FQE=
+	b=i0sT08GMK7zNIe7h40E7A4cgkkxa6a6yGE2M1HuokdbQDGTqRDw3gH76hNm6Gs1Mu
+	 XW736kIBfmQoN0WOF/Z37PxSPnny52wgZBdGoF1MFaqyTnYu6DktGUzPgQAz/PELLw
+	 F4Vk2VhkCFjKC7cIwy00hn5jxzeTlONE0lW7EzeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbfKSGHc (ORCPT
+        id S1728019AbfKSFcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:07:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53608 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:32:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729502AbfKSFdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:33:10 -0500
+        id S1728656AbfKSFcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:32:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C383221783;
-        Tue, 19 Nov 2019 05:33:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17ADE21783;
+        Tue, 19 Nov 2019 05:32:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141589;
-        bh=AnQeayZI8Q5t0IuDvtp0ycef/61y+WT5LaZc9K/UZ0w=;
+        s=default; t=1574141539;
+        bh=VL9r0Csglza5UEJzSeVP/0TGRgcTmcqr5vr+D1HxZhw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HOYmxRHE78vqrtjnHX+g5qo4hrWGXA/7jMAxT49hk1Q0B+dR+G0AdMv7xi8QSzcu/
-         TdcPGc1mjdk+cc7z2HXZx/EqBpQlC7o/rFXWUDcdS1D5omIW6A5SZu1jYVYGlWi79x
-         f/rINGpY7WUhH7PQYyLuryE5M+eUbM7+G4lKwhx8=
+        b=P6fjvA0JNJKSzlyZdH7JtyISbErGXHh7dRkmwzA1nL4FaL4TkNvWwwAu9x868UbWP
+         ayArhmgzpfGzb3l9ik1wtH9I4VcXsW6nM3RLR7heGS072MDa2vE3HJVhH1xzpHflSC
+         jlJ0vYgl9+nUZio+pz5DpuUy6ged+F3zDgjTPjN8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        linux-aspeed@lists.ozlabs.org, Rob Herring <robh@kernel.org>,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 211/422] ARM: dts: aspeed: Fix I2C bus warnings
-Date:   Tue, 19 Nov 2019 06:16:48 +0100
-Message-Id: <20191119051412.266011758@linuxfoundation.org>
+Subject: [PATCH 4.19 196/422] ALSA: intel8x0m: Register irq handler after register initializations
+Date:   Tue, 19 Nov 2019 06:16:33 +0100
+Message-Id: <20191119051411.271206773@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,62 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 1426d40e11f730e0c0fd3700a7048082f87b0e6e ]
+[ Upstream commit 7064f376d4a10686f51c879401a569bb4babf9c6 ]
 
-dtc has new checks for I2C buses. The ASpeed dts files have a node named
-'i2c' which causes a false positive warning. As the node is a 'simple-bus',
-correct the node name to be 'bus' to fix the warnings.
+The interrupt handler has to be acquired after the other resource
+initialization when allocated with IRQF_SHARED.  Otherwise it's
+triggered before the resource gets ready, and may lead to unpleasant
+behavior.
 
-arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dtb: Warning (i2c_bus_bridge): /ahb/apb/i2c@1e78a000: incorrect #size-cells for I2C bus
-arch/arm/boot/dts/aspeed-bmc-opp-romulus.dtb: Warning (i2c_bus_bridge): /ahb/apb/i2c@1e78a000: incorrect #size-cells for I2C bus
-arch/arm/boot/dts/aspeed-ast2500-evb.dtb: Warning (i2c_bus_bridge): /ahb/apb/i2c@1e78a000: incorrect #size-cells for I2C bus
-arch/arm/boot/dts/aspeed-bmc-arm-centriq2400-rep.dtb: Warning (i2c_bus_bridge): /ahb/apb/i2c@1e78a000: incorrect #size-cells for I2C bus
-arch/arm/boot/dts/aspeed-bmc-intel-s2600wf.dtb: Warning (i2c_bus_bridge): /ahb/apb/i2c@1e78a000: incorrect #size-cells for I2C bus
-arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dtb: Warning (i2c_bus_bridge): /ahb/apb/i2c@1e78a000: incorrect #size-cells for I2C bus
-arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dtb: Warning (i2c_bus_bridge): /ahb/apb/i2c@1e78a000: incorrect #size-cells for I2C bus
-arch/arm/boot/dts/aspeed-bmc-opp-zaius.dtb: Warning (i2c_bus_bridge): /ahb/apb/i2c@1e78a000: incorrect #size-cells for I2C bus
-arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dtb: Warning (i2c_bus_bridge): /ahb/apb/i2c@1e78a000: incorrect #size-cells for I2C bus
-arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dtb: Warning (i2c_bus_bridge): /ahb/apb/i2c@1e78a000: incorrect #size-cells for I2C bus
-
-Cc: Joel Stanley <joel@jms.id.au>
-Cc: Andrew Jeffery <andrew@aj.id.au>
-Cc: linux-aspeed@lists.ozlabs.org
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/aspeed-g4.dtsi | 2 +-
- arch/arm/boot/dts/aspeed-g5.dtsi | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ sound/pci/intel8x0m.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-index b23a983f95a53..69f6b9d2e7e7d 100644
---- a/arch/arm/boot/dts/aspeed-g4.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-@@ -350,7 +350,7 @@
- 				status = "disabled";
- 			};
+diff --git a/sound/pci/intel8x0m.c b/sound/pci/intel8x0m.c
+index 943a726b1c1b0..c84629190cbaf 100644
+--- a/sound/pci/intel8x0m.c
++++ b/sound/pci/intel8x0m.c
+@@ -1171,16 +1171,6 @@ static int snd_intel8x0m_create(struct snd_card *card,
+ 	}
  
--			i2c: i2c@1e78a000 {
-+			i2c: bus@1e78a000 {
- 				compatible = "simple-bus";
- 				#address-cells = <1>;
- 				#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index 87fdc146ff525..d107459fc0f89 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -410,7 +410,7 @@
- 				status = "disabled";
- 			};
+  port_inited:
+-	if (request_irq(pci->irq, snd_intel8x0m_interrupt, IRQF_SHARED,
+-			KBUILD_MODNAME, chip)) {
+-		dev_err(card->dev, "unable to grab IRQ %d\n", pci->irq);
+-		snd_intel8x0m_free(chip);
+-		return -EBUSY;
+-	}
+-	chip->irq = pci->irq;
+-	pci_set_master(pci);
+-	synchronize_irq(chip->irq);
+-
+ 	/* initialize offsets */
+ 	chip->bdbars_count = 2;
+ 	tbl = intel_regs;
+@@ -1224,11 +1214,21 @@ static int snd_intel8x0m_create(struct snd_card *card,
+ 	chip->int_sta_reg = ICH_REG_GLOB_STA;
+ 	chip->int_sta_mask = int_sta_masks;
  
--			i2c: i2c@1e78a000 {
-+			i2c: bus@1e78a000 {
- 				compatible = "simple-bus";
- 				#address-cells = <1>;
- 				#size-cells = <1>;
++	pci_set_master(pci);
++
+ 	if ((err = snd_intel8x0m_chip_init(chip, 1)) < 0) {
+ 		snd_intel8x0m_free(chip);
+ 		return err;
+ 	}
+ 
++	if (request_irq(pci->irq, snd_intel8x0m_interrupt, IRQF_SHARED,
++			KBUILD_MODNAME, chip)) {
++		dev_err(card->dev, "unable to grab IRQ %d\n", pci->irq);
++		snd_intel8x0m_free(chip);
++		return -EBUSY;
++	}
++	chip->irq = pci->irq;
++
+ 	if ((err = snd_device_new(card, SNDRV_DEV_LOWLEVEL, chip, &ops)) < 0) {
+ 		snd_intel8x0m_free(chip);
+ 		return err;
 -- 
 2.20.1
 
