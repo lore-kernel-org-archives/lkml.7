@@ -2,152 +2,173 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E938C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FB4C33C9F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1070921823
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:54:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="h6eODU0E"
+	by mail.kernel.org (Postfix) with ESMTP id 4487C2231D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:54:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbfKSRyK (ORCPT
+        id S1727399AbfKSRya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 12:54:10 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:50892 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbfKSRyJ (ORCPT
+        Tue, 19 Nov 2019 12:54:30 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:60094 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbfKSRy3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 12:54:09 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJHn0vv188889;
-        Tue, 19 Nov 2019 17:50:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=eGldFY/fdxBy01jg0jeU/6PLveepyeamI3FRO0lD350=;
- b=h6eODU0EJiq3o2QTXI19rr6e6AkpE9fYa6M+lDX7zDcMAnwj5cr68NDqU+6EnSEETpjP
- Jr1Dm5pKnyXSjP3KlACP23UOjPGnCdozRmA8BrtCtAqa71yK9V6pXRGF4V5xEt9qb4tn
- /fFIneEdAn75RofFjfI2Gezz9Eiow75LIjGQ+f+eNcLXG3/zaZPKvdm4289oU/+JUqiB
- aIcpb46WUOua1Z/Jw7H6B11zu8HfxjZBVZkHqSpbOu1XXzGXF3x2yscM6ElN+jw/Zb2q
- g1a5GHnSYW5JquZNrQTB59gEhHIWQoo9nyD7y1cldhQgnT9rh3WIQKflRbP3wFV3UF6p Yg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2wa8htrmke-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 17:50:18 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJHnICs049201;
-        Tue, 19 Nov 2019 17:50:18 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2wcema8sqn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 17:50:17 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAJHoFYP011014;
-        Tue, 19 Nov 2019 17:50:15 GMT
-Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 19 Nov 2019 09:50:15 -0800
-Subject: Re: Ping: [PATCH 0/2] x86/Xen/32: xen_iret_crit_fixup adjustments
-To:     Jan Beulich <jbeulich@suse.com>, Juergen Gross <jgross@suse.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-References: <d66b1da4-8096-9b77-1ca6-d6b9954b113c@suse.com>
- <09359c00-5769-0e0d-4af9-963897d3b498@suse.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
- mQINBFH8CgsBEAC0KiOi9siOvlXatK2xX99e/J3OvApoYWjieVQ9232Eb7GzCWrItCzP8FUV
- PQg8rMsSd0OzIvvjbEAvaWLlbs8wa3MtVLysHY/DfqRK9Zvr/RgrsYC6ukOB7igy2PGqZd+M
- MDnSmVzik0sPvB6xPV7QyFsykEgpnHbvdZAUy/vyys8xgT0PVYR5hyvhyf6VIfGuvqIsvJw5
- C8+P71CHI+U/IhsKrLrsiYHpAhQkw+Zvyeml6XSi5w4LXDbF+3oholKYCkPwxmGdK8MUIdkM
- d7iYdKqiP4W6FKQou/lC3jvOceGupEoDV9botSWEIIlKdtm6C4GfL45RD8V4B9iy24JHPlom
- woVWc0xBZboQguhauQqrBFooHO3roEeM1pxXjLUbDtH4t3SAI3gt4dpSyT3EvzhyNQVVIxj2
- FXnIChrYxR6S0ijSqUKO0cAduenhBrpYbz9qFcB/GyxD+ZWY7OgQKHUZMWapx5bHGQ8bUZz2
- SfjZwK+GETGhfkvNMf6zXbZkDq4kKB/ywaKvVPodS1Poa44+B9sxbUp1jMfFtlOJ3AYB0WDS
- Op3d7F2ry20CIf1Ifh0nIxkQPkTX7aX5rI92oZeu5u038dHUu/dO2EcuCjl1eDMGm5PLHDSP
- 0QUw5xzk1Y8MG1JQ56PtqReO33inBXG63yTIikJmUXFTw6lLJwARAQABtDNCb3JpcyBPc3Ry
- b3Zza3kgKFdvcmspIDxib3Jpcy5vc3Ryb3Zza3lAb3JhY2xlLmNvbT6JAjgEEwECACIFAlH8
- CgsCGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEIredpCGysGyasEP/j5xApopUf4g
- 9Fl3UxZuBx+oduuw3JHqgbGZ2siA3EA4bKwtKq8eT7ekpApn4c0HA8TWTDtgZtLSV5IdH+9z
- JimBDrhLkDI3Zsx2CafL4pMJvpUavhc5mEU8myp4dWCuIylHiWG65agvUeFZYK4P33fGqoaS
- VGx3tsQIAr7MsQxilMfRiTEoYH0WWthhE0YVQzV6kx4wj4yLGYPPBtFqnrapKKC8yFTpgjaK
- jImqWhU9CSUAXdNEs/oKVR1XlkDpMCFDl88vKAuJwugnixjbPFTVPyoC7+4Bm/FnL3iwlJVE
- qIGQRspt09r+datFzPqSbp5Fo/9m4JSvgtPp2X2+gIGgLPWp2ft1NXHHVWP19sPgEsEJXSr9
- tskM8ScxEkqAUuDs6+x/ISX8wa5Pvmo65drN+JWA8EqKOHQG6LUsUdJolFM2i4Z0k40BnFU/
- kjTARjrXW94LwokVy4x+ZYgImrnKWeKac6fMfMwH2aKpCQLlVxdO4qvJkv92SzZz4538az1T
- m+3ekJAimou89cXwXHCFb5WqJcyjDfdQF857vTn1z4qu7udYCuuV/4xDEhslUq1+GcNDjAhB
- nNYPzD+SvhWEsrjuXv+fDONdJtmLUpKs4Jtak3smGGhZsqpcNv8nQzUGDQZjuCSmDqW8vn2o
- hWwveNeRTkxh+2x1Qb3GT46uuQINBFH8CgsBEADGC/yx5ctcLQlB9hbq7KNqCDyZNoYu1HAB
- Hal3MuxPfoGKObEktawQPQaSTB5vNlDxKihezLnlT/PKjcXC2R1OjSDinlu5XNGc6mnky03q
- yymUPyiMtWhBBftezTRxWRslPaFWlg/h/Y1iDuOcklhpr7K1h1jRPCrf1yIoxbIpDbffnuyz
- kuto4AahRvBU4Js4sU7f/btU+h+e0AcLVzIhTVPIz7PM+Gk2LNzZ3/on4dnEc/qd+ZZFlOQ4
- KDN/hPqlwA/YJsKzAPX51L6Vv344pqTm6Z0f9M7YALB/11FO2nBB7zw7HAUYqJeHutCwxm7i
- BDNt0g9fhviNcJzagqJ1R7aPjtjBoYvKkbwNu5sWDpQ4idnsnck4YT6ctzN4I+6lfkU8zMzC
- gM2R4qqUXmxFIS4Bee+gnJi0Pc3KcBYBZsDK44FtM//5Cp9DrxRQOh19kNHBlxkmEb8kL/pw
- XIDcEq8MXzPBbxwHKJ3QRWRe5jPNpf8HCjnZz0XyJV0/4M1JvOua7IZftOttQ6KnM4m6WNIZ
- 2ydg7dBhDa6iv1oKdL7wdp/rCulVWn8R7+3cRK95SnWiJ0qKDlMbIN8oGMhHdin8cSRYdmHK
- kTnvSGJNlkis5a+048o0C6jI3LozQYD/W9wq7MvgChgVQw1iEOB4u/3FXDEGulRVko6xCBU4
- SQARAQABiQIfBBgBAgAJBQJR/AoLAhsMAAoJEIredpCGysGyfvMQAIywR6jTqix6/fL0Ip8G
- jpt3uk//QNxGJE3ZkUNLX6N786vnEJvc1beCu6EwqD1ezG9fJKMl7F3SEgpYaiKEcHfoKGdh
- 30B3Hsq44vOoxR6zxw2B/giADjhmWTP5tWQ9548N4VhIZMYQMQCkdqaueSL+8asp8tBNP+TJ
- PAIIANYvJaD8xA7sYUXGTzOXDh2THWSvmEWWmzok8er/u6ZKdS1YmZkUy8cfzrll/9hiGCTj
- u3qcaOM6i/m4hqtvsI1cOORMVwjJF4+IkC5ZBoeRs/xW5zIBdSUoC8L+OCyj5JETWTt40+lu
- qoqAF/AEGsNZTrwHJYu9rbHH260C0KYCNqmxDdcROUqIzJdzDKOrDmebkEVnxVeLJBIhYZUd
- t3Iq9hdjpU50TA6sQ3mZxzBdfRgg+vaj2DsJqI5Xla9QGKD+xNT6v14cZuIMZzO7w0DoojM4
- ByrabFsOQxGvE0w9Dch2BDSI2Xyk1zjPKxG1VNBQVx3flH37QDWpL2zlJikW29Ws86PHdthh
- Fm5PY8YtX576DchSP6qJC57/eAAe/9ztZdVAdesQwGb9hZHJc75B+VNm4xrh/PJO6c1THqdQ
- 19WVJ+7rDx3PhVncGlbAOiiiE3NOFPJ1OQYxPKtpBUukAlOTnkKE6QcA4zckFepUkfmBV1wM
- Jg6OxFYd01z+a+oL
-Message-ID: <40267a5b-8f1b-6463-72cd-f8f354c58bc4@oracle.com>
-Date:   Tue, 19 Nov 2019 12:50:05 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 19 Nov 2019 12:54:29 -0500
+X-AuditID: c0a8fbf4-183ff70000001fa6-55-5dd42c5123c0
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id F8.5F.08102.15C24DD5; Tue, 19 Nov 2019 18:54:25 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Tue, 19 Nov 2019 18:54:25 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+CC:     "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "hofrat@osadl.org" <hofrat@osadl.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>
+Subject: Re: [PATCH v5 10/16] gpio: devres: Add devm_gpiod_get_parent_array
+Thread-Topic: [PATCH v5 10/16] gpio: devres: Add devm_gpiod_get_parent_array
+Thread-Index: AQHVnd2XL+xAnx6QeEuZbGk0ju43uqeSgwCAgAA1PIA=
+Date:   Tue, 19 Nov 2019 17:54:24 +0000
+Message-ID: <ece1ab1418e237d6f4968fc4cf59202c35f02ba7.camel@fi.rohmeurope.com>
+References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+         <8dd9dad2765d47fd6c6fec20566326d00e48a696.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+         <CACRpkdY_2WzAnK01bQdMF69KsDvHHu9TXuyRoBcmiQMziux=eQ@mail.gmail.com>
+In-Reply-To: <CACRpkdY_2WzAnK01bQdMF69KsDvHHu9TXuyRoBcmiQMziux=eQ@mail.gmail.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [82.203.185.189]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0468ECED5D432047BC0A3EE8F832215A@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <09359c00-5769-0e0d-4af9-963897d3b498@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9446 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911190152
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9446 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911190152
+X-Brightmail-Tracker: H4sIAAAAAAAAA01TfVBUVRSf+77BffZYUW6kTq5jjGCilTM3x0xrHJ+Vjox/NOkQPeK1S8Iu
+        83bXEW2cLUNYFnekEGRjIWBRZmFDUPxgcEJcDKiQVSAkkYF2KNAgSTSKsPd8Kfx1zz2/r/PH
+        OQyu9dKRTLLRIkpGIUVHhRJNlf/Uvhi3qit+zUBFLPIEummUOXaSRvfd7QQ6PhikULApE6AS
+        fweJHN+fJVHZ+AkS2e1ZJPq5/jSBWs8MADQw2QLQg64sDOVNn8LQvZzbJCo94iHQmZJpgG40
+        FFGo/u43AF2t6qKQz99Po4qfAhgqqmgl0PiEHUOB9i2ov72FQocDvTjKuOSn0UxPLYGcHVs3
+        LeWri6sBP96bQfPF1Qf5i65+mi9vHMH4Oq+d4m/1NFJ8ufNLkv8t5wrBP/ghl+CdZ72AHy6t
+        Ifjves9jfEHxFMZXVj2k+T/rlu7kds/bkChY9u1K1htjN34wz3DqUi6W9teq/UeLb1I2EIzJ
+        BiEM5F6Bt89/SmaDUEbLdQOY01lEqZ9WAL9ouisjDENxG2D2TVoRhHOvwiutRYTCwbmjGjg1
+        mk8owALubZhxwkeppHdgYbAQU+v1MGum6rEPwa2A5T9uVtostwP22QtoNesOgBn19bTCCeHi
+        4JjjTYUDuCXQbht7bINzEbBu+CGpDs1BT+M1XK0XwpFfZv7v6+C3LR24YoNzK2FNQ6wq3QSP
+        H7lBqPUymOcYpNURwmBbYZA4Bha55iS4ZtWuOWrXHLVrjvprQHoBTBWSU/SCRVy7WhKtqyWT
+        IVV+PjSl1gF19+5fAI+atzUDjAHN4FkG0y1kbaArXjs/0ZSUbhDMhgTJmiKamwFkcF04u2Oo
+        M17LJgnpB0TJ9AR6jiF0EWzUYG68llOy9opimig9QRczjA6yU1GyaZgk6sX9HyWnWGZhjAlR
+        zEMjw82iMUmUBKvFkKCsR4JZ3g8F0si556JlOWtOE1LlriptBzHMsRF3Gc743RVluJYwmoxi
+        ZARrf0amcgrVYDU+DRoFEQzQLWCnFSONfIBPfUblCEyOqPVdVyIswiwUaQOeyx+vsHguv54P
+        /d4G/2FD1OSjuIOdvpc0L2sP/H0h7P2sQyd97tKc7T3/Vn4yHGUl7eeWwD/0uz6fSDod1rbn
+        +UCB843ozOV6W37J4qmveu+F9q0fuvXe1YtvOX5PfG2b49rOod171uXWCO867/z6wqG89M+6
+        +zau3OIeb9samEiLKdVM6gizQVgbjUtm4T9YqqrqPQQAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/19/19 7:58 AM, Jan Beulich wrote:
-> On 11.11.2019 15:30, Jan Beulich wrote:
->> The first patch here fixes another regression from 3c88c692c287
->> ("x86/stackframe/32: Provide consistent pt_regs"), besides the
->> one already addressed by
->> https://lists.xenproject.org/archives/html/xen-devel/2019-10/msg01988.html.
->> The second patch is a minimal bit of cleanup on top.
->>
->> 1: make xen_iret_crit_fixup independent of frame layout
->> 2: simplify xen_iret_crit_fixup's ring check
-> Seeing that the other regression fix has been taken into -tip,
-> what is the situation here? Should 5.4 really ship with this
-> still unfixed?
-
-
-I am still unable to boot a 32-bit guest with those patches, crashing in
-int3_exception_notify with regs->sp zero.
-
-When I revert to 3c88c692c287 the guest actually boots so my (?) problem
-was introduced somewhere in-between.
-
--boris
+SGVsbG8gTGludXMsDQoNCk9uIFR1ZSwgMjAxOS0xMS0xOSBhdCAxNTo0MyArMDEwMCwgTGludXMg
+V2FsbGVpaiB3cm90ZToNCj4gT24gTW9uLCBOb3YgMTgsIDIwMTkgYXQgNzo1OCBBTSBNYXR0aSBW
+YWl0dGluZW4NCj4gPG1hdHRpLnZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNvbT4gd3JvdGU6DQo+
+IA0KPiA+IEJ1bmNoIG9mIE1GRCBzdWItZGV2aWNlcyB3aGljaCBhcmUgaW5zdGFudGlhdGVkIGJ5
+IE1GRCBkbyBub3QgaGF2ZQ0KPiA+IG93biBkZXZpY2UtdHJlZSBub2RlcyBidXQgaGF2ZSAoZm9y
+IGV4YW1wbGUpIHRoZSBHUElPIGNvbnN1bWVyDQo+ID4gaW5mb3JtYXRpb24gaW4gcGFyZW50IGRl
+dmljZSdzIERUIG5vZGUuIEFkZCByZXNvdXJjZSBtYW5hZ2VkDQo+ID4gZGV2bV9ncGlvZF9nZXRf
+YXJyYXkoKSBmb3Igc3VjaCBkZXZpY2VzIHNvIHRoYXQgdGhleSBjYW4gZ2V0IHRoZQ0KPiA+IGNv
+bnN1bWVyIGluZm9ybWF0aW9uIGZyb20gcGFyZW50IERUIHdoaWxlIHN0aWxsIGJpbmRpbmcgdGhl
+IEdQSU8NCj4gPiByZXNlcnZhdGlvbiBsaWZlLXRpbWUgdG8gdGhpcyBzdWItZGV2aWNlIGxpZmUg
+dGltZS4NCj4gPiANCj4gPiBJZiBkZXZtX2dwaW9kX2dldF9hcnJheSBpcyB1c2VkIGFzIHN1Y2gg
+LSB0aGVuIHVubG9hZGluZyBhbmQgdGhlbg0KPiA+IHJlLWxvYWRpbmcgdGhlIGNoaWxkIGRldmlj
+ZSBmYWlscyBhcyB0aGUgR1BJT3MgcmVzZXJ2ZWQgZHVyaW5nDQo+ID4gZmlyc3QNCj4gPiBsb2Fk
+IGFyZSBub3QgZnJlZWQgd2hlbiBkcml2ZXIgZm9yIHN1Yi1kZXZpY2UgaXMgdW5sb2FkIChpZiBw
+YXJlbnQNCj4gPiBzdGF5cyB0aGVyZSkuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogTWF0dGkg
+VmFpdHRpbmVuIDxtYXR0aS52YWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20+DQo+ICguLi4pDQo+
+ID4gK3N0YXRpYyBzdHJ1Y3QgZ3Bpb19kZXNjcyAqX19tdXN0X2NoZWNrDQo+ID4gK19fZGV2bV9n
+cGlvZF9nZXRfYXJyYXkoc3RydWN0IGRldmljZSAqZ3Bpb2RldiwNCj4gPiArICAgICAgICAgICAg
+ICAgICAgICAgIHN0cnVjdCBkZXZpY2UgKm1hbmFnZWQsDQo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICBjb25zdCBjaGFyICpjb25faWQsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICBlbnVt
+IGdwaW9kX2ZsYWdzIGZsYWdzKQ0KPiANCj4gSSdtIG9wcG9zZWQgdG8gZnVuY3Rpb25zIG5hbWVk
+IF9fdW5kZXJzY29yZV9zb21ldGhpbmcoKQ0KPiBzbyBmaW5kIGEgcHJvcGVyIG5hbWUgZm9yIHRo
+aXMgZnVuY3Rpb24uDQo+IGRldm1fZ3Bpb2RfZ2V0X2FycmF5X2NvbW1vbigpIHdvcmtzIGlmIG5v
+dGhpbmcgZWxzZS4NCg0KT2suIFdlIGFsbCBoYXZlIG91ciBvd24gcGVjdWxhcml0aWUuLi4gSSBt
+ZWFuIHByZWZlcmVuY2VzIDopIEJ1dCBhcw0KdGhpcyBpcyBkZWZpbml0ZWx5IHlvdXIgdGVycml0
+b3J5IC0gSSdsbCBjaGFuZ2UgdGhlIG5hbWUgOikgTm8gcHJvYmxlbS4NCg0KPiANCj4gPiBAQCAt
+MjkyLDE5ICsyODQsNjIgQEAgc3RydWN0IGdwaW9fZGVzY3MgKl9fbXVzdF9jaGVjaw0KPiA+IGRl
+dm1fZ3Bpb2RfZ2V0X2FycmF5KHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gPiAgICAgICAgIGlmICgh
+ZHIpDQo+ID4gICAgICAgICAgICAgICAgIHJldHVybiBFUlJfUFRSKC1FTk9NRU0pOw0KPiA+IA0K
+PiA+IC0gICAgICAgZGVzY3MgPSBncGlvZF9nZXRfYXJyYXkoZGV2LCBjb25faWQsIGZsYWdzKTsN
+Cj4gPiArICAgICAgIGRlc2NzID0gZ3Bpb2RfZ2V0X2FycmF5KGdwaW9kZXYsIGNvbl9pZCwgZmxh
+Z3MpOw0KPiA+ICAgICAgICAgaWYgKElTX0VSUihkZXNjcykpIHsNCj4gPiAgICAgICAgICAgICAg
+ICAgZGV2cmVzX2ZyZWUoZHIpOw0KPiA+ICAgICAgICAgICAgICAgICByZXR1cm4gZGVzY3M7DQo+
+ID4gICAgICAgICB9DQo+ID4gDQo+ID4gICAgICAgICAqZHIgPSBkZXNjczsNCj4gPiAtICAgICAg
+IGRldnJlc19hZGQoZGV2LCBkcik7DQo+ID4gKyAgICAgICBpZiAobWFuYWdlZCkNCj4gPiArICAg
+ICAgICAgICAgICAgZGV2cmVzX2FkZChtYW5hZ2VkLCBkcik7DQo+ID4gKyAgICAgICBlbHNlDQo+
+ID4gKyAgICAgICAgICAgICAgIGRldnJlc19hZGQoZ3Bpb2RldiwgZHIpOw0KPiANCj4gU28gd2Ug
+b25seSBnZXQgbWFuYWdlZCByZXNvdXJjZXMgaWYgdGhlICJtYW5hZ2VkIiBkZXZpY2UgaXMNCj4g
+cGFzc2VkIGluLg0KDQpIbW0uIEFjdHVhbGx5LCBubyBpZiBJIGFtIG5vdCBtaXNyZWFkaW5nIHRo
+aXMuIFdlIGdldCBtYW5hZ2VkIGRldmljZXMNCmluIGFueSBjYXNlLCBidXQgdGhlIGxpZmV0aW1l
+IGlzIGVpdGhlciBib3VuZCB0byBleGl0ZW5jZSBvZiB0aGUgZ3Bpbw0KY29uc3VtZXIgZGV2aWNl
+ICh3aGljaCBpcyBzdGFuZGFyZCB3YXkpIC0gb3IgZXhpc3RlbmNlIG9mIHNwZWNpZmljDQonbWFu
+YWdlZCcgZGV2aWNlLg0KDQpJbiBjYXNlIG9mIE1GRCBzdWItZGV2aWNlIChsaWtlIEJENzE4Mjgg
+cmVndWxhdG9yIHN1YmRldikgd2hpY2ggaGFzDQpHUElPIGNvbnN1bWVyIHByb3BlcnRpZXMgaW4g
+TUZEIG5vZGUgLSB0aGUgR1BJTyBjb25zdW1lciBpbmZvcm1hdGlvbiBpcw0KaW4gcGFyZW50IGRl
+dmljZSdzIChCRDcxODI4IE1GRCBkZXZpY2UpIGRhdGEgLSBidXQgdGhlIGxpZmV0aW1lIHNob3Vs
+ZA0KYmUgYm91bmQgdG8gc3ViLWRldmljZXMgKEJENzE4MjggcmVndWxhdG9yIGRldmljZSkgbGlm
+ZXRpbWUuIFRodXMgd2UNCm5lZWQgdHdvIGRpZmZlcmVudCBkZXZpY2VzIGhlcmUuDQoNCj4gDQo+
+ID4gKy8qKg0KPiA+ICsgKiBkZXZtX2dwaW9kX2dldF9hcnJheSAtIFJlc291cmNlLW1hbmFnZWQg
+Z3Bpb2RfZ2V0X2FycmF5KCkNCj4gDQo+IEFuZCB0aGlzIGZ1bmN0aW9uIGlzIHN1cHBvc2VkIHRv
+IGJlIHJlc291cmNlIG1hbmFnZWQgZm9yIHN1cmUuDQoNClllcy4gVGhpcyBpcyB0aGUgc3RhbmRh
+cmQgY2FzZSB3aGVyZSBkZXZpY2Ugd2hpY2ggaGFzIHRoZSBjb25zdW1lciBkYXRhDQppcyBhbHNv
+IHRoZSBvbmUgd2hvICdtYW5hZ2VzJyB0aGUgR1BJTy4NCg0KPiANCj4gPiArICogQGRldjogICAg
+ICAgR1BJTyBjb25zdW1lcg0KPiA+ICsgKiBAY29uX2lkOiAgICBmdW5jdGlvbiB3aXRoaW4gdGhl
+IEdQSU8gY29uc3VtZXINCj4gPiArICogQGZsYWdzOiAgICAgb3B0aW9uYWwgR1BJTyBpbml0aWFs
+aXphdGlvbiBmbGFncw0KPiA+ICsgKg0KPiA+ICsgKiBNYW5hZ2VkIGdwaW9kX2dldF9hcnJheSgp
+LiBHUElPIGRlc2NyaXB0b3JzIHJldHVybmVkIGZyb20gdGhpcw0KPiA+IGZ1bmN0aW9uIGFyZQ0K
+PiA+ICsgKiBhdXRvbWF0aWNhbGx5IGRpc3Bvc2VkIG9uIGRyaXZlciBkZXRhY2guIFNlZSBncGlv
+ZF9nZXRfYXJyYXkoKQ0KPiA+IGZvciBkZXRhaWxlZA0KPiA+ICsgKiBpbmZvcm1hdGlvbiBhYm91
+dCBiZWhhdmlvciBhbmQgcmV0dXJuIHZhbHVlcy4NCj4gPiArICovDQo+ID4gK3N0cnVjdCBncGlv
+X2Rlc2NzICpfX211c3RfY2hlY2sgZGV2bV9ncGlvZF9nZXRfYXJyYXkoc3RydWN0IGRldmljZQ0K
+PiA+ICpkZXYsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBjb25zdCBjaGFyDQo+ID4gKmNvbl9pZCwNCj4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGVudW0NCj4gPiBncGlvZF9mbGFn
+cyBmbGFncykNCj4gPiArew0KPiA+ICsgICAgICAgcmV0dXJuIF9fZGV2bV9ncGlvZF9nZXRfYXJy
+YXkoZGV2LCBOVUxMLCBjb25faWQsIGZsYWdzKTsNCj4gDQo+IFNvIHdoYXQgaXMgdGhpcz8gTlVM
+TD8NCg0KSGVyZSB3ZSBkb24ndCBoYXZlIHNlcGFyYXRlIG1hbmFnZXIgZGV2aWNlIC0gdGh1cyB0
+aGUgbWFuYWdlciBpcyBOVUxMDQotYW5kIHRoZSBjb25zdW1lciBkZXZpY2UgKCJkZXYiIGhlcmUp
+IGlzIHdoYXQgd2UgdXNlIHRvIG1hbmFnZSBHUElPLg0KDQo+IA0KPiBEb2Vzbid0IHRoYXQgbWVh
+biB5b3UganVzdCByZW1vdmVkIGFsbCByZXNvdXJjZSBtYW5hZ2VtZW50IGZvciB0aGlzDQo+IGNh
+bGw/DQoNCk5vIDopDQoNCj4gDQo+IE9yIGFtIEkgcmVhZGluZyBpdCB3cm9uZz8NCg0KRWl0aGVy
+IHlvdSBhcmUgcmVhZGluZyBpdCB3cm9uZyBvciBJIGFtIHdyaXRpbmcgaXQgd3JvbmcgeEQuIElu
+IGFueQ0KY2FzZSB0aGlzIG1lYW5zIEkgbmVlZCB0byBkcm9wIGZldyBjb21tZW50cyBpbiBjb2Rl
+IDopIFRoYW5rcy4NCg0KQnIsDQoJTWF0dGkgVmFpdHRpbmVuDQoNCg==
