@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80019C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6B2C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B4E21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2431A21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142067;
-	bh=2bxnzyA9OA70eb6o/ISq1eO7ir0jU9NT735LvRxqyBA=;
+	s=default; t=1574142073;
+	bh=4tVHdXxnr2nmS5HAhsqoyBMeGWaB5sri6kDgiem2kdo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G6n8ZdRnh2gbWk9Df3srO4oinAnkU+g87/+CGjULS6lQRYEDU0OXhyhSgHz3sSGja
-	 Rg1ygBEmDCokKuFEexdri3UyfnLulYIK06dBykzOjEdof+/fqXy/SrGZc769G06Bqb
-	 NydSZ7Ons7xnYZDm6C5/4dcQjevezMnqNuDvGSHU=
+	b=LgT8dMsUEQGq6a1cXg1EDq3v2L6dW2YOnrgGc9LiaTioT4TxII+KOFiUh2w+czbz0
+	 MrEGrxXlfx2ntWLcte5Khuwmwn/vAjovW/BdLBFZwAE4mNEKxUHJK407zPSZTPEPbf
+	 HM0p3wIMEYrQeyuSsKv6dHpKAWnQ6vvZLHexrSVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730488AbfKSFlF (ORCPT
+        id S1727803AbfKSFlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:41:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35402 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:41:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729455AbfKSFlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:41:03 -0500
+        id S1730491AbfKSFlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:41:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1320C21939;
-        Tue, 19 Nov 2019 05:41:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDE1321783;
+        Tue, 19 Nov 2019 05:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142062;
-        bh=2bxnzyA9OA70eb6o/ISq1eO7ir0jU9NT735LvRxqyBA=;
+        s=default; t=1574142068;
+        bh=4tVHdXxnr2nmS5HAhsqoyBMeGWaB5sri6kDgiem2kdo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LoeiScXaJMpKCh+iGO7haJkrKM0svRpmiXclT8Mnox4Dn8JYMuxbo6LwHeXfZsjjA
-         DYgtoKlkj0DlqBuGpAoynzOe00oqjqq7YzsqpSUA4rAjIkNRt3E6zaf5gO/EdFeuaa
-         lKuiCaDHqKCQRIld+8VEa81ge9KRvE38bv0dR9Hk=
+        b=CV+mSzrwXKaFq1Q1/OBQ6ebuF1h/HP+s3eUAgjMrnw4dvr9ySzTdkbZ3PghAXkRi6
+         LG96M+WxiLJj1/xUMqrxTMNRiGj1SmDXL4ZST2av6668+/7JdY9V91qQ1ALuDMQ0XM
+         xgPWPG7VkupxMnfVW+QODZcy6tK3sC1wnUiSHQcA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 375/422] net: faraday: fix return type of ndo_start_xmit function
-Date:   Tue, 19 Nov 2019 06:19:32 +0100
-Message-Id: <20191119051423.326026707@linuxfoundation.org>
+Subject: [PATCH 4.19 377/422] f2fs: update i_size after DIO completion
+Date:   Tue, 19 Nov 2019 06:19:34 +0100
+Message-Id: <20191119051423.467819205@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,65 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-[ Upstream commit 0a715156656bddf4aa92d9868f850aeeb0465fd0 ]
+[ Upstream commit 0a4daae5ffea39f5015334e4d18a6a80b447cae4 ]
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, so make sure the implementation in
-this driver has returns 'netdev_tx_t' value, and change the function
-return type to netdev_tx_t.
+This is related to
+ee70daaba82d ("xfs: update i_size after unwritten conversion in dio completion")
 
-Found by coccinelle.
+If we update i_size during dio_write, dio_read can read out stale data, which
+breaks xfstests/465.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/faraday/ftgmac100.c | 4 ++--
- drivers/net/ethernet/faraday/ftmac100.c  | 7 ++++---
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ fs/f2fs/data.c | 15 +++++++--------
+ fs/f2fs/f2fs.h |  1 +
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/faraday/ftgmac100.c b/drivers/net/ethernet/faraday/ftgmac100.c
-index f6ed889bc36a2..e4fc38cbe8535 100644
---- a/drivers/net/ethernet/faraday/ftgmac100.c
-+++ b/drivers/net/ethernet/faraday/ftgmac100.c
-@@ -712,8 +712,8 @@ static bool ftgmac100_prep_tx_csum(struct sk_buff *skb, u32 *csum_vlan)
- 	return skb_checksum_help(skb) == 0;
- }
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index b4a634da1372b..3a2fd66769660 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -889,7 +889,6 @@ static int __allocate_data_block(struct dnode_of_data *dn, int seg_type)
+ 	struct f2fs_summary sum;
+ 	struct node_info ni;
+ 	block_t old_blkaddr;
+-	pgoff_t fofs;
+ 	blkcnt_t count = 1;
+ 	int err;
  
--static int ftgmac100_hard_start_xmit(struct sk_buff *skb,
--				     struct net_device *netdev)
-+static netdev_tx_t ftgmac100_hard_start_xmit(struct sk_buff *skb,
-+					     struct net_device *netdev)
- {
- 	struct ftgmac100 *priv = netdev_priv(netdev);
- 	struct ftgmac100_txdes *txdes, *first;
-diff --git a/drivers/net/ethernet/faraday/ftmac100.c b/drivers/net/ethernet/faraday/ftmac100.c
-index 9015bd911bee9..084f24daf2b5a 100644
---- a/drivers/net/ethernet/faraday/ftmac100.c
-+++ b/drivers/net/ethernet/faraday/ftmac100.c
-@@ -634,8 +634,8 @@ static void ftmac100_tx_complete(struct ftmac100 *priv)
- 		;
- }
+@@ -918,12 +917,10 @@ alloc:
+ 					old_blkaddr, old_blkaddr);
+ 	f2fs_set_data_blkaddr(dn);
  
--static int ftmac100_xmit(struct ftmac100 *priv, struct sk_buff *skb,
--			 dma_addr_t map)
-+static netdev_tx_t ftmac100_xmit(struct ftmac100 *priv, struct sk_buff *skb,
-+				 dma_addr_t map)
- {
- 	struct net_device *netdev = priv->netdev;
- 	struct ftmac100_txdes *txdes;
-@@ -1015,7 +1015,8 @@ static int ftmac100_stop(struct net_device *netdev)
+-	/* update i_size */
+-	fofs = f2fs_start_bidx_of_node(ofs_of_node(dn->node_page), dn->inode) +
+-							dn->ofs_in_node;
+-	if (i_size_read(dn->inode) < ((loff_t)(fofs + 1) << PAGE_SHIFT))
+-		f2fs_i_size_write(dn->inode,
+-				((loff_t)(fofs + 1) << PAGE_SHIFT));
++	/*
++	 * i_size will be updated by direct_IO. Otherwise, we'll get stale
++	 * data from unwritten block via dio_read.
++	 */
  	return 0;
  }
  
--static int ftmac100_hard_start_xmit(struct sk_buff *skb, struct net_device *netdev)
-+static netdev_tx_t
-+ftmac100_hard_start_xmit(struct sk_buff *skb, struct net_device *netdev)
+@@ -1089,6 +1086,8 @@ next_block:
+ 					last_ofs_in_node = dn.ofs_in_node;
+ 				}
+ 			} else {
++				WARN_ON(flag != F2FS_GET_BLOCK_PRE_DIO &&
++					flag != F2FS_GET_BLOCK_DIO);
+ 				err = __allocate_data_block(&dn,
+ 							map->m_seg_type);
+ 				if (!err)
+@@ -1268,7 +1267,7 @@ static int get_data_block_dio(struct inode *inode, sector_t iblock,
+ 			struct buffer_head *bh_result, int create)
  {
- 	struct ftmac100 *priv = netdev_priv(netdev);
- 	dma_addr_t map;
+ 	return __get_data_block(inode, iblock, bh_result, create,
+-						F2FS_GET_BLOCK_DEFAULT, NULL,
++						F2FS_GET_BLOCK_DIO, NULL,
+ 						f2fs_rw_hint_to_seg_type(
+ 							inode->i_write_hint));
+ }
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 6d361c8c61306..2dc49a5419070 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -600,6 +600,7 @@ enum {
+ 	F2FS_GET_BLOCK_DEFAULT,
+ 	F2FS_GET_BLOCK_FIEMAP,
+ 	F2FS_GET_BLOCK_BMAP,
++	F2FS_GET_BLOCK_DIO,
+ 	F2FS_GET_BLOCK_PRE_DIO,
+ 	F2FS_GET_BLOCK_PRE_AIO,
+ 	F2FS_GET_BLOCK_PRECACHE,
 -- 
 2.20.1
 
