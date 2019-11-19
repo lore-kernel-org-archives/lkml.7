@@ -2,177 +2,168 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A41D2C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5030C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BA5C222B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:33:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JfHJ2oYz"
+	by mail.kernel.org (Postfix) with ESMTP id 7CA90222A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:35:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbfKSMdX (ORCPT
+        id S1727888AbfKSMfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:33:23 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41458 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbfKSMdX (ORCPT
+        Tue, 19 Nov 2019 07:35:10 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:33160 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727351AbfKSMfK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:33:23 -0500
-Received: by mail-wr1-f68.google.com with SMTP id b18so22183156wrj.8
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 04:33:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HngwhcG+KAeo6DGQH+bLMw2e39IjD09GILs4tcsEDqg=;
-        b=JfHJ2oYzP/jkKhX5GW5kTZtPmbfxMsuJ44mQ/jjOV7p96tO8MLii2xYgvvecU87jbf
-         xDCCdr2WOehZ/M97knEEzzZIB2yWzTBKx3/BANq1IkzomqaCBDwfd8OyFpoFvEHRvHAI
-         /Ih7Ji/6Drt+nGgFcgmZyIelBqpjx/nBFB+jcwv8vpurYruXv+eovEAT9Gvibap3vW8p
-         D1HHGnn6VxZZe42T+R4tUOpu5RCcZqMyr8kvIKAkwt0v9BjdFCoFP5F2ZcjHKeOAXd9x
-         +cBOy+jeecmTLnGU7RL1AEtLZZOvHE7IDnKukkr5C+QGK3yVjWyYDu6FXXjdyP9JsrS5
-         u/jA==
+        Tue, 19 Nov 2019 07:35:10 -0500
+Received: by mail-io1-f69.google.com with SMTP id p19so15830504iog.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 04:35:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HngwhcG+KAeo6DGQH+bLMw2e39IjD09GILs4tcsEDqg=;
-        b=cbSKIxcpI7ZuvRF/6FzWxV5DTfWiwAbrtXNqkem815i2FaWUV2KBUgAh/XtVvGCCgQ
-         HZMhn4d0FjM5dt3uF1lMyP9RI8PToIsYR47f5ds2T6zjxN9g4O42frDjyQ39XyRptiLm
-         tREBaqiL8a+R6wAzsxaRDzeRsQ8/sGztiGBOCax8Y7lrK9nuLQjFb7qemVTkv72qUn4F
-         6RHbi1+0P4ALEbZnK2J4QkGt8y/TtMZwMhwUSvUXmj9ynfe6vfsLn2UMGmKkRY2xA5ms
-         HlDFKu8V4pRKB1ubQ1aw/2eJTBY2FCs4AwfxGSZINsJN8xnLP8vnMdqvpcD/6nU1xtMq
-         toVQ==
-X-Gm-Message-State: APjAAAU1N6HNVEPPv2lpovSyDLvxAkNPzMurao/dauSrzGyAg/jMZXAJ
-        iJ7paWCgc9kdqfyam813Fnb6/R7U7+GxXcnwZhA3bg==
-X-Google-Smtp-Source: APXvYqxrn8CEslDFVxIy0Jl0Mrkp/wAIi6Is+3GFHp4aP52W1APv4nRsysG2XV46LuEQeEZpL+dKjixAXooja/JuLNw=
-X-Received: by 2002:adf:b1cb:: with SMTP id r11mr545384wra.246.1574166800364;
- Tue, 19 Nov 2019 04:33:20 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=y6Aku7oJX0gIXknWTEbNW7ai/Guio2J9Sp/4M8zhwsg=;
+        b=Roe956fPJwp8PC+k15JvzkqJTHVdoExPWuRnIvj6wRjwfhICYBG1KICITGQGS7qZBH
+         TZoygy9hB2wROxN6AFqVsW2aT7tAobNEmKJcyvRNsZ1zSgJYQ83uel3MTYdA7va6DvTh
+         2P70N3WfgPMBYqtRda7TN52Hz6UMDP73FnHRaLtIt/5S18gFk5Pj9yiGyzVBH5mtmG8/
+         K6uxMQpSW8lJtA+270rfh40WKAVia13PQZuFgQ0AfJ5V9BWYRRU/GVwDBbmDDEDMgf5E
+         wGq9Nbx2nxFxKt8X22hWG8dtHhwwsjJ8iNYew8sQKVhqL15Uu5u0aJ5PAHsPH8qbK5xE
+         2Udw==
+X-Gm-Message-State: APjAAAWu/QtMZqhmdAS56aGistnzvldZO3GgZ69uVVMHtwxR0HEMCMSD
+        6DWon8Gp2I1HFxIXrAfgRiKGnGhRO7GNYCeZX5EY3SPS7rmP
+X-Google-Smtp-Source: APXvYqzhcxgq7Vwsl8zS3M2nFVJF3Ew5GOS7hyZ3meIPc/CYzLwtsco9MojsVoH9eASy8nV1W9Vj5opw2ytMlMhk+Ij4Pd1O0E2z
 MIME-Version: 1.0
-References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
- <20191119111012.GA109842@gmail.com> <CAKv+Gu9C132peF9_j2rRwRh4s+aWZBY82rgjqmwaE_X=_6y4Zw@mail.gmail.com>
- <20191119122217.GA24878@gmail.com>
-In-Reply-To: <20191119122217.GA24878@gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Tue, 19 Nov 2019 13:33:09 +0100
-Message-ID: <CAKv+Gu8XY_VCyi0bRqf2E7g_PXyHU83w-e+JvzeCBc+X1Xcrbg@mail.gmail.com>
-Subject: Re: [PATCH 00/12] treewide: break dependencies on x86's RM header
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Nadav Amit <namit@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-ia64@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pm <linux-pm@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        alsa-devel@alsa-project.org
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a6b:f60f:: with SMTP id n15mr16567480ioh.263.1574166906854;
+ Tue, 19 Nov 2019 04:35:06 -0800 (PST)
+Date:   Tue, 19 Nov 2019 04:35:06 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004ce83f0597b24bba@google.com>
+Subject: general protection fault in virtio_transport_release
+From:   syzbot <syzbot+e2e5c07bf353b2f79daa@syzkaller.appspotmail.com>
+To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        davem@davemloft.net, idosch@mellanox.com,
+        jakub.kicinski@netronome.com, jiri@mellanox.com, kafai@fb.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, songliubraving@fb.com, stefanha@redhat.com,
+        syzkaller-bugs@googlegroups.com, vadimp@mellanox.com,
+        virtualization@lists.linux-foundation.org, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Nov 2019 at 13:22, Ingo Molnar <mingo@kernel.org> wrote:
->
->
-> * Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
->
-> > On Tue, 19 Nov 2019 at 12:10, Ingo Molnar <mingo@kernel.org> wrote:
-> > >
-> > >
-> > > * Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-> > >
-> > > > x86's asm/realmode.h, which defines low level structures, variables and
-> > > > helpers used to bring up APs during SMP boot, ends up getting included in
-> > > > practically every nook and cranny of the kernel because the address used
-> > > > by ACPI for resuming from S3 also happens to be stored in the real mode
-> > > > header, and ACPI bleeds the dependency into its widely included headers.
-> > > >
-> > > > As a result, modifying realmode.h for even the most trivial change to the
-> > > > boot code triggers a full kernel rebuild, which is frustrating to say the
-> > > > least as it some of the most difficult code to get exactly right *and* is
-> > > > also some of the most functionally isolated code in the kernel.
-> > > >
-> > > > To break the kernel's widespread dependency on realmode.h, add a wrapper
-> > > > in the aforementioned ACPI S3 code to access the real mode header instead
-> > > > of derefencing the header directly in asm/acpi.h and thereby exposing it
-> > > > to the world via linux/acpi.h.
-> > > >
-> > > > Build tested on x86 with allyesconfig and allmodconfig, so hopefully there
-> > > > aren't more build issues lurking, but at this point it wouldn't surprise
-> > > > me in the least if this somehow manages to break the build.
-> > > >
-> > > > Based on tip/master, commit ceceaf1f12ba ("Merge branch 'WIP.x86/cleanups'").
-> > > >
-> > > > Patch Synopsis:
-> > > >   - Patches 01-09 fix a variety of build errors that arise when patch 12
-> > > >     drops realmode.h from asm/acpi.h.  Most of the errors are quite absurb
-> > > >     as they have no relation whatsoever to x86's RM boot code, but occur
-> > > >     because realmode.h happens to include asm/io.h.
-> > >
-> > > Yeah, these kind of parasitic header dependencies are the main driving
-> > > force behind kernel header spaghetti hell: it's super easy to add a new
-> > > header, but very hard to remove them...
-> > >
-> > > Hence they practically only accumulate.
-> > >
-> > > As a result header removal patches get priority, from me at least. :-)
-> > >
-> > > >   - Patch 10 removes a spurious include of realmode.h from an ACPI header.
-> > > >
-> > > >   - Patches 11 and 12 implement the wrapper and move it out of acpi.h.
-> > >
-> > > So if the ACPI maintainers are fine with -tip carrying patches #11 and #12
-> > > then I'd be glad to route these patches upstream.
-> > >
-> > > I've applied them to tip:WIP.core/headers as a work-in-progress tree, and
-> > > I'm testing them on randconfigs to make sure there's no broken
-> > > dependencies. I'll wait for the ACPI acks.
-> > >
-> > > I edited the title of patch 12 slightly, to:
-> > >
-> > >    c8bceb321209: x86/ACPI/sleep: Move acpi_wakeup_address() definition into sleep.c, remove <asm/realmode.h> from <asm/acpi.h>
-> > >
-> > > to make sure the big header dependency change is obvious at first sight.
-> > >
-> >
-> > I'm fine with the patches but can we drop the fixes headers please?
-> > This doesn't actually fix anything, and touching early boot stuff for
-> > no good reason should be avoided imo.
->
-> Agreed and done.
->
+Hello,
 
-Thanks Ingo
+syzbot found the following crash on:
+
+HEAD commit:    1e8795b1 mscc.c: fix semicolon.cocci warnings
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=15d77406e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e855e9c92c9474fe
+dashboard link: https://syzkaller.appspot.com/bug?extid=e2e5c07bf353b2f79daa
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1537f46ae00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11359c6ae00000
+
+The bug was bisected to:
+
+commit f366cd2a2e510b155e18b21a2d149332aa08eb61
+Author: Vadim Pasternak <vadimp@mellanox.com>
+Date:   Mon Oct 21 10:30:30 2019 +0000
+
+     mlxsw: reg: Add macro for getting QSFP module EEPROM page number
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=148945aae00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=168945aae00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=128945aae00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e2e5c07bf353b2f79daa@syzkaller.appspotmail.com
+Fixes: f366cd2a2e51 ("mlxsw: reg: Add macro for getting QSFP module EEPROM  
+page number")
+
+RDX: 0000000000000010 RSI: 00000000200000c0 RDI: 0000000000000004
+RBP: 0000000000000005 R08: 0000000000000001 R09: 00007ffd5b250031
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401e00
+R13: 0000000000401e90 R14: 0000000000000000 R15: 0000000000000000
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 8862 Comm: syz-executor079 Not tainted 5.4.0-rc6+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:virtio_transport_release+0x13b/0xcb0  
+net/vmw_vsock/virtio_transport_common.c:826
+Code: e8 aa e6 2b fa 66 41 83 fd 01 0f 84 34 02 00 00 e8 3a e5 2b fa 48 8b  
+95 30 ff ff ff 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f  
+85 22 0a 00 00 48 8b bb 98 00 00 00 48 b8 00 00 00
+RSP: 0018:ffff888092dbfaf0 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff87474aa0
+RDX: 0000000000000013 RSI: ffffffff874747d6 RDI: 0000000000000001
+RBP: ffff888092dbfc00 R08: ffff88809245a380 R09: fffffbfff1555fe1
+R10: fffffbfff1555fe0 R11: 0000000000000003 R12: ffff888092dbfbd8
+R13: 0000000000000007 R14: 0000000000000007 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000200000c4 CR3: 0000000008e6d000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  __vsock_release+0x80/0x2d0 net/vmw_vsock/af_vsock.c:733
+  vsock_release+0x35/0xa0 net/vmw_vsock/af_vsock.c:806
+  __sock_release+0xce/0x280 net/socket.c:590
+  sock_close+0x1e/0x30 net/socket.c:1268
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  exit_task_work include/linux/task_work.h:22 [inline]
+  do_exit+0x904/0x2e60 kernel/exit.c:817
+  do_group_exit+0x135/0x360 kernel/exit.c:921
+  __do_sys_exit_group kernel/exit.c:932 [inline]
+  __se_sys_exit_group kernel/exit.c:930 [inline]
+  __x64_sys_exit_group+0x44/0x50 kernel/exit.c:930
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x43f1d8
+Code: Bad RIP value.
+RSP: 002b:00007ffd5b25f838 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043f1d8
+RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+RBP: 00000000004befa8 R08: 00000000000000e7 R09: ffffffffffffffd0
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 00000000006d1180 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 4b9b883ea3ab661f ]---
+RIP: 0010:virtio_transport_release+0x13b/0xcb0  
+net/vmw_vsock/virtio_transport_common.c:826
+Code: e8 aa e6 2b fa 66 41 83 fd 01 0f 84 34 02 00 00 e8 3a e5 2b fa 48 8b  
+95 30 ff ff ff 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f  
+85 22 0a 00 00 48 8b bb 98 00 00 00 48 b8 00 00 00
+RSP: 0018:ffff888092dbfaf0 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff87474aa0
+RDX: 0000000000000013 RSI: ffffffff874747d6 RDI: 0000000000000001
+RBP: ffff888092dbfc00 R08: ffff88809245a380 R09: fffffbfff1555fe1
+R10: fffffbfff1555fe0 R11: 0000000000000003 R12: ffff888092dbfbd8
+R13: 0000000000000007 R14: 0000000000000007 R15: 0000000000000000
+FS:  00000000009db880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000043f1ae CR3: 0000000008e6d000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
