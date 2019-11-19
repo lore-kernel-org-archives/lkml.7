@@ -2,114 +2,178 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94322C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB514C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65C5C219F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B35F0208D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:25:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="ePCnXgAU"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oGT7QvMJ";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="YCT9Vit3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfKSKYE (ORCPT
+        id S1727527AbfKSKZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 05:24:04 -0500
-Received: from mail-eopbgr150124.outbound.protection.outlook.com ([40.107.15.124]:64736
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726858AbfKSKYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 05:24:04 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fnKqHR4C68k6WdjPgODraJkSGFvc7nlvCDg7xTeq081SpUL8c7QRkEM7y3cfCP0BKgUn2TqXk5mFLoeeqooo/MV2wCr15UI42pyljk6gg+4D1GbHTQ+ky2iTFKnlUfWNnKSgzB+NWk8Y/IF2NhT3c44BILCzsk9yRNILUNHfH1WCFlpcR+GhdGiworw84ZCnxC8rjDoo1Q3v2/lBwmRFFEfxx6PunfB0naSnpgr8cJpfMYnUtdcXvQPsbDWUqjrdN70gkDc4KvYwwPYTH/Pj1cC4kDD0ieXzxysJ+jryF/2f+SpnUTMpnbT10IR/NrfbVY15Ku4X/XAv+wdXzb3dzQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=elawqTr5xI5rS09nko2ixzI2cpSxG0K1tRKLByyPJSQ=;
- b=DiDzB0bwSrUJBoWTScnccpkCnwV0jVubJX9LwzvGEB2Xr0vn0PBEmZ2N1cRi7zv7P+PKyz+Jjvn9cfeJcIrOi1rhLpbwXaitDNecLQyZ1drDD69Y5SLQsMQt8MBi/MV/Ssbwl/BN7xo82ipwC2UK3bgoeQjXWC94iYYiG0Sza7zmCrv0XUnj16n6hUtw6mG8SeXdwaDMCfGT6sNzh0hTD/k8dBFMtTez5PtAzqmDYkWS/3XQxCf4S2LI2rQguM3I7o1JtwsJ4RqPt7xzb/ZtNyLTKqV7VY+QhLHPTQ3AhB8xVNlHdhDDCVu57F6raGoIDfE1zuJNPBcTuaslLItV9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=elawqTr5xI5rS09nko2ixzI2cpSxG0K1tRKLByyPJSQ=;
- b=ePCnXgAUZBGTDeG+oPiH9QF9x85r+jlSwWhpcXJPRyOmSaNRjTiMlvzfCiU1JmNLPHG6MpkjWVHOogSgnY/JUZ5StfVE0Vgft9HVhXJMWjZlmujwTQyPhcOoCo9SgWb7KvSTEzJ97ZHtNHP9Is23d+DTdae6Fjb1MTQQpsAdhwY=
-Received: from AM6PR0202MB3432.eurprd02.prod.outlook.com (52.133.11.29) by
- AM6PR0202MB3368.eurprd02.prod.outlook.com (52.133.10.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.27; Tue, 19 Nov 2019 10:24:00 +0000
-Received: from AM6PR0202MB3432.eurprd02.prod.outlook.com
- ([fe80::dc43:ed2c:945a:cd5]) by AM6PR0202MB3432.eurprd02.prod.outlook.com
- ([fe80::dc43:ed2c:945a:cd5%6]) with mapi id 15.20.2451.031; Tue, 19 Nov 2019
- 10:24:00 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Lei YU <mine260309@gmail.com>
-CC:     Wolfram Sang <wsa@the-dreams.de>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] docs: i2c: Fix return value of i2c_smbus_xxx functions
-Thread-Topic: [PATCH] docs: i2c: Fix return value of i2c_smbus_xxx functions
-Thread-Index: AQHVnrdKJrKxiOciCEaViJqC+aa9maeSS/0A///yPYCAAAs+gA==
-Date:   Tue, 19 Nov 2019 10:24:00 +0000
-Message-ID: <c8aeb189-16da-0585-db6e-ec61a87eafba@axentia.se>
-References: <1574153778-59977-1-git-send-email-mine260309@gmail.com>
- <a1444cbf-3a1d-6f17-97a9-77664a95d304@axentia.se>
- <CAARXrtmHh-7smvGi1_0J81zRfR9iiEG2+DJK2nDi_fThOKggmA@mail.gmail.com>
-In-Reply-To: <CAARXrtmHh-7smvGi1_0J81zRfR9iiEG2+DJK2nDi_fThOKggmA@mail.gmail.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR09CA0060.eurprd09.prod.outlook.com
- (2603:10a6:7:3c::28) To AM6PR0202MB3432.eurprd02.prod.outlook.com
- (2603:10a6:209:26::29)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 93699f84-4389-45c3-3fd4-08d76cda97da
-x-ms-traffictypediagnostic: AM6PR0202MB3368:
-x-microsoft-antispam-prvs: <AM6PR0202MB3368BDC01C150926018861C0BC4C0@AM6PR0202MB3368.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 022649CC2C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39830400003)(346002)(136003)(396003)(366004)(189003)(199004)(186003)(4326008)(52116002)(6486002)(26005)(1411001)(8676002)(76176011)(71190400001)(71200400001)(386003)(6506007)(53546011)(8936002)(6246003)(229853002)(66476007)(36756003)(86362001)(6916009)(31696002)(6436002)(6512007)(102836004)(81156014)(66946007)(66556008)(64756008)(66446008)(4744005)(2906002)(7736002)(305945005)(14454004)(4001150100001)(508600001)(81166006)(54906003)(58126008)(99286004)(6116002)(3846002)(316002)(25786009)(31686004)(66066001)(65806001)(65956001)(446003)(476003)(11346002)(2616005)(486006)(256004)(14444005)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR0202MB3368;H:AM6PR0202MB3432.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sYWVv+a5XxbuHZBqwZlftjvLpYzWfDWOufRfdLjA73j0CbMGWBPqMVfoThYR0/iwopyI5++LBbbszwdCjec0P54IXWjN8MCgvKRgD9crQMCLgNlIBXm+0IVVAR3ND7FKXYuedOb7jIPnIBPU60ch1j3Jls4qokt0su4kuO2pqfHHB4rXISlfJaQ/Bk/yAa/UDI3a1MYRAejdfOtBwCr8yGnv+0icw5gjIvPJYF7FYVV864yYZKxDZeJu2ZuciXc9XMP13Do60uB0/xXu+yydJZ1bv/PjIyiywmjJcFZrr04dAgwGknIcPagOocksvTuQktpZJ5bxyPAPAlJ6mbqtyLjahwjfd6A9CCF7GjPwMyp1ojqtfs8SvfHcQnRrQJiehWIAkQdTh/KnR6mo9YRrJ+KtCESup4by3BUbRIBEA9aKMXPRz6SQ5+T4g6M1G9cH
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9F5053F4363FAC45AD7B7374A1315585@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 19 Nov 2019 05:25:43 -0500
+Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:45794
+        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726000AbfKSKZm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 05:25:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574159141;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=9YsqeSDO02fgzsVWBF0WOrYBWmUnZE+aKHDib8MTuCU=;
+        b=oGT7QvMJEDaeEwQsN8dnEbdHeAtGwYHMkI/rG/QSExlTQyy0ec2yTsdTzcv+isNU
+        5D9OvPsMZE7QfHSy0gzibMTh6oVSi55wwq89FdUT6FYe+9oCRaGsvTDFps9ORUkD3xr
+        52L2spRTGSYn5S2qOpfHiaDaSoUXDFQjaaP9zPWw=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574159141;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=9YsqeSDO02fgzsVWBF0WOrYBWmUnZE+aKHDib8MTuCU=;
+        b=YCT9Vit3cRAX6HTOn/WeksC+LY+PImbaQ8YkO+zfvzCLEsNpXreuXtDzoZ1w4Lyk
+        sJruq9zXqo+mw2cPeC2LQTFBpOREHKi3vWZ5AQGlT8Vf554jAOOGg1oMxqWzOTIbkyq
+        Nm7Bp+zewsjprTIwcKh290cbfunD0ax91UhJ3L8Q=
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93699f84-4389-45c3-3fd4-08d76cda97da
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2019 10:24:00.4056
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: GKZ3ww9Zqrgi1kNPv9t/OI4GTiYXOcUAM3JI8PEQ9HZJJQmvQ05wM75RtdO9RGgD
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0202MB3368
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 19 Nov 2019 10:25:41 +0000
+From:   sibis@codeaurora.org
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
+        tsoni@codeaurora.org, agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        rnayak@codeaurora.org
+Subject: Re: [PATCH 3/3] soc: qcom: apr: Add avs/audio tracking functionality
+In-Reply-To: <20191119065325.GF18024@yoga>
+References: <20191118142728.30187-1-sibis@codeaurora.org>
+ <0101016e7ee9d8b5-9759d0ba-4acf-4fc4-a863-fac9c738397f-000000@us-west-2.amazonses.com>
+ <20191119065325.GF18024@yoga>
+Message-ID: <0101016e83324a05-f96f3ec6-445f-413e-b67e-20a226b54673-000000@us-west-2.amazonses.com>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2019.11.19-54.240.27.10
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0xMS0xOSAxMDo0MywgTGVpIFlVIHdyb3RlOg0KPiBPbiBUdWUsIE5vdiAxOSwgMjAx
-OSBhdCA1OjMzIFBNIFBldGVyIFJvc2luIDxwZWRhQGF4ZW50aWEuc2U+IHdyb3RlOg0KPj4gQW5k
-IHRoZSBsaW5lIGlzIG5vdyB0b28gbG9uZyBjb21wYXJlZCB0byB0aGUgcmVzdCBvZiB0aGUgdGV4
-dCwgc28geW91DQo+PiBuZWVkIHRvIHJld3JhcCB0aGUgcGFyYWdyYXBoLg0KPiANCj4gSW4gdGhp
-cyBwYXRjaCBpdCdzIGF0IGNvbHVtbiA3OCwgdGhhdCBzaG91bGQgYmUgT0suDQoNCk5vLCB0aGF0
-J3Mgbm90IG9rLiBJZiB0aGUgcmVzdA0Kb2YgdGhlIHBhcmFncmFwaCBpcyB3cmFwcGVkIGF0IDcy
-IChvciBzb21ldGhpbmcgc3VjaCksIGEgc2luZ2xlIGxpbmUNCmJyZWFraW5nIHRoYXQgcGF0dGVy
-biB3aWxsIGJlDQpkaXN0dXJiaW5nIHRvIHRoZSByZWFkZXIuIFRoZQ0KZmFjdCB0aGF0IHlvdSBk
-b24ndCBnZXQgc29tZQ0KY2hlY2twYXRjaCB3YXJuaW5nIGhhcyBub3RoaW5nDQp0byBkbyB3aXRo
-IHRoYXQuDQoNCkNoZWVycywNClBldGVyDQo=
+On 2019-11-19 12:23, Bjorn Andersson wrote:
+> On Mon 18 Nov 06:28 PST 2019, Sibi Sankar wrote:
+>> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+> [..]
+>> +static void of_register_apr_devices(struct device *dev, const char 
+>> *svc_path)
+>>  {
+>>  	struct apr *apr = dev_get_drvdata(dev);
+>>  	struct device_node *node;
+>> +	const char *service_path;
+>> +	int ret;
+>> 
+>>  	for_each_child_of_node(dev->of_node, node) {
+>>  		struct apr_device_id id = { {0} };
+>> 
+>> +		ret = of_property_read_string_index(node, "qcom,protection-domain",
+>> +						    1, &service_path);
+>> +		if (svc_path) {
+>> +			/* skip APR services that are PD independent */
+>> +			if (ret)
+>> +				continue;
+>> +
+>> +			/* skip APR services whose PD paths don't match */
+>> +			if (strcmp(service_path, svc_path))
+>> +				continue;
+>> +		} else {
+>> +			/* skip APR services whose PD lookups are registered*/
+> 
+> Missing space before */
+
+Thanks will add it
+
+> 
+>> +			if (ret == 0)
+>> +				continue;
+>> +		}
+>> +
+>>  		if (of_property_read_u32(node, "reg", &id.svc_id))
+>>  			continue;
+>> 
+>> @@ -318,6 +365,37 @@ static void of_register_apr_devices(struct device 
+>> *dev)
+>>  	}
+>>  }
+>> 
+>> +static int apr_remove_device(struct device *dev, void *svc_path)
+>> +{
+>> +	struct apr_device *adev = to_apr_device(dev);
+>> +
+>> +	if (svc_path) {
+>> +		if (!strcmp(adev->service_path, (char *)svc_path))
+>> +			device_unregister(&adev->dev);
+>> +	} else {
+>> +		device_unregister(&adev->dev);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int apr_pd_status(struct pdr_handle *pdr, struct pdr_service 
+>> *pds)
+> 
+> Why is the pdr status function returning an int?
+
+yes since I am not using the
+return value in pdr_helpers
+will make it void.
+
+> 
+>> +{
+>> +	struct apr *apr = container_of(pdr, struct apr, pdr);
+>> +
+>> +	switch (pds->state) {
+>> +	case SERVREG_SERVICE_STATE_UP:
+>> +		of_register_apr_devices(apr->dev, pds->service_path);
+>> +		break;
+>> +	case SERVREG_SERVICE_STATE_DOWN:
+>> +		device_for_each_child(apr->dev, pds->service_path,
+>> +				      apr_remove_device);
+>> +		break;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+> [..]
+>> @@ -343,20 +421,19 @@ static int apr_probe(struct rpmsg_device *rpdev)
+>>  		return -ENOMEM;
+>>  	}
+>>  	INIT_WORK(&apr->rx_work, apr_rxwq);
+>> +
+>> +	ret = pdr_handle_init(&apr->pdr, apr_pd_status);
+>> +	if (ret) {
+>> +		dev_err(dev, "Failed to init PDR handle\n");
+> 
+> You need to destroy apr->rxwq here as well.
+
+sry missed this
+
+> 
+>> +		return ret;
+>> +	}
+>> +
+>>  	INIT_LIST_HEAD(&apr->rx_list);
+>>  	spin_lock_init(&apr->rx_lock);
+>>  	spin_lock_init(&apr->svcs_lock);
+>>  	idr_init(&apr->svcs_idr);
+>> -	of_register_apr_devices(dev);
+>> -
+>> -	return 0;
+>> -}
+> 
+> Regards,
+> Bjorn
