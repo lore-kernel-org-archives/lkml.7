@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB37C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8E5C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9175D2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50244222C7
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143147;
-	bh=nHTNft2ct8Swzv59J+uQWEJCYKeLMnBCYuaPYwe5Hmo=;
+	s=default; t=1574143156;
+	bh=TpkzKMyFzG2aSK2ygTyId2XlAG8Nb4XPxuop5Fac2x8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CMoIw8Zlypz58O+/SycHc+iY9yU1yCh0AAN0RfIIF9ySoEXARHFWxDnIgos6R9O66
-	 PFxQ91pzayQBsn/lD6XRuyXedCMPQvBOlHdJDI2j/JRbQ/vYF18mUNQzNViX4CF17G
-	 PxjCnnIQru2u4LhRmf58DzCrN/OXQkJHa137Ily0=
+	b=v6hn6lYRE06Uv5LAt6j36qghLTcM4eC9lLKH16zbVXm5igjY12cTkX17IplAhSTW5
+	 WqvA/1QX3jOZ0nzt6fcULyyF5qxje/wFrsYViygt9NMLBn2NsL0v5ykg1KlS1YrIpR
+	 +ZBrmvMxXjLPdSZC9uPDg9GsgzylPqCM/eT/6yc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731350AbfKSFsX (ORCPT
+        id S1731894AbfKSF7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:48:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44816 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:59:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731340AbfKSFsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:48:17 -0500
+        id S1727481AbfKSFr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:47:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DF7E2071B;
-        Tue, 19 Nov 2019 05:48:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94F46218BA;
+        Tue, 19 Nov 2019 05:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142496;
-        bh=nHTNft2ct8Swzv59J+uQWEJCYKeLMnBCYuaPYwe5Hmo=;
+        s=default; t=1574142479;
+        bh=TpkzKMyFzG2aSK2ygTyId2XlAG8Nb4XPxuop5Fac2x8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GXhT/2wZCcWOuaKAy4eJyd58BNGLuO1EOOSxVbPUYcx2NaxPV8KA7hv2ySDfFVQAp
-         G1LHVKUgsdpRWEm/fSwQVB5hEBrQgL2wwbsDpcC4qsJTypzQAFKpmynw9Ti2/4nKLm
-         5vYTRF8RJxyZHlj85I9FjXTtrLdYrxHa2iFDmt5k=
+        b=vOg5sNC8qvFHJZY/3RebfCaCVpqvndz5wylxQCYQzNEKSi0H/qRxEdE/iNxCbAaN0
+         9BEGO6whB+5npCkpAjBDDns/b49ueEsOQ720/Ol5PnuKbEJxEXeshHjPPjR4sBQy0k
+         mdSFsUI3+ZJmxIRT5sTR/NE5zUypaW/gb7J3NSGc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Deepak Ukey <deepak.ukey@microchip.com>,
-        Viswas G <Viswas.G@microchip.com>,
-        Jack Wang <jinpu.wang@profitbricks.com>,
+        stable@vger.kernel.org, Quinn Tran <quinn.tran@cavium.com>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 101/239] scsi: pm80xx: Corrected dma_unmap_sg() parameter
-Date:   Tue, 19 Nov 2019 06:18:21 +0100
-Message-Id: <20191119051324.684685846@linuxfoundation.org>
+Subject: [PATCH 4.14 096/239] scsi: qla2xxx: Defer chip reset until target mode is enabled
+Date:   Tue, 19 Nov 2019 06:18:16 +0100
+Message-Id: <20191119051322.867369592@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -62,35 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Deepak Ukey <deepak.ukey@microchip.com>
+From: Quinn Tran <quinn.tran@cavium.com>
 
-[ Upstream commit 76cb25b058034d37244be6aca97a2ad52a5fbcad ]
+[ Upstream commit 93eca6135183f7a71e36acd47655a085ed11bcdc ]
 
-For the function dma_unmap_sg(), the <nents> parameter should be number of
-elements in the scatter list prior to the mapping, not after the mapping.
+For target mode, any chip reset triggered before target mode is enabled will
+be held off until user is ready to enable.  This prevents the chip from
+starting or running before it is intended.
 
-Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
-Signed-off-by: Viswas G <Viswas.G@microchip.com>
-Acked-by: Jack Wang <jinpu.wang@profitbricks.com>
+Signed-off-by: Quinn Tran <quinn.tran@cavium.com>
+Signed-off-by: Himanshu Madhani <himanshu.madhani@cavium.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/pm8001/pm8001_sas.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_os.c | 28 +++++++++++++++++++++-------
+ 1 file changed, 21 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/scsi/pm8001/pm8001_sas.c b/drivers/scsi/pm8001/pm8001_sas.c
-index ce584c31d36e5..d1fcd21f7f7dd 100644
---- a/drivers/scsi/pm8001/pm8001_sas.c
-+++ b/drivers/scsi/pm8001/pm8001_sas.c
-@@ -466,7 +466,7 @@ err_out:
- 	dev_printk(KERN_ERR, pm8001_ha->dev, "pm8001 exec failed[%d]!\n", rc);
- 	if (!sas_protocol_ata(t->task_proto))
- 		if (n_elem)
--			dma_unmap_sg(pm8001_ha->dev, t->scatter, n_elem,
-+			dma_unmap_sg(pm8001_ha->dev, t->scatter, t->num_scatter,
- 				t->data_dir);
- out_done:
- 	spin_unlock_irqrestore(&pm8001_ha->lock, flags);
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 343fbaa6d2a2d..5617bb18c2335 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -5801,12 +5801,27 @@ qla2x00_do_dpc(void *data)
+ 		if (test_and_clear_bit
+ 		    (ISP_ABORT_NEEDED, &base_vha->dpc_flags) &&
+ 		    !test_bit(UNLOADING, &base_vha->dpc_flags)) {
++			bool do_reset = true;
++
++			switch (ql2x_ini_mode) {
++			case QLA2XXX_INI_MODE_ENABLED:
++				break;
++			case QLA2XXX_INI_MODE_DISABLED:
++				if (!qla_tgt_mode_enabled(base_vha))
++					do_reset = false;
++				break;
++			case QLA2XXX_INI_MODE_DUAL:
++				if (!qla_dual_mode_enabled(base_vha))
++					do_reset = false;
++				break;
++			default:
++				break;
++			}
+ 
+-			ql_dbg(ql_dbg_dpc, base_vha, 0x4007,
+-			    "ISP abort scheduled.\n");
+-			if (!(test_and_set_bit(ABORT_ISP_ACTIVE,
++			if (do_reset && !(test_and_set_bit(ABORT_ISP_ACTIVE,
+ 			    &base_vha->dpc_flags))) {
+-
++				ql_dbg(ql_dbg_dpc, base_vha, 0x4007,
++				    "ISP abort scheduled.\n");
+ 				if (ha->isp_ops->abort_isp(base_vha)) {
+ 					/* failed. retry later */
+ 					set_bit(ISP_ABORT_NEEDED,
+@@ -5814,10 +5829,9 @@ qla2x00_do_dpc(void *data)
+ 				}
+ 				clear_bit(ABORT_ISP_ACTIVE,
+ 						&base_vha->dpc_flags);
++				ql_dbg(ql_dbg_dpc, base_vha, 0x4008,
++				    "ISP abort end.\n");
+ 			}
+-
+-			ql_dbg(ql_dbg_dpc, base_vha, 0x4008,
+-			    "ISP abort end.\n");
+ 		}
+ 
+ 		if (test_and_clear_bit(FCPORT_UPDATE_NEEDED,
 -- 
 2.20.1
 
