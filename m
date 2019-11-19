@@ -2,74 +2,53 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F21C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709D5C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6956B22315
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:09:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jjK+AcYB"
+	by mail.kernel.org (Postfix) with ESMTP id 4CA2622316
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:09:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbfKSDI7 (ORCPT
+        id S1727524AbfKSDJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 22:08:59 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:37972 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbfKSDI7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 22:08:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=tfQMF/ImpigZRzGAkXKTeqPCcjxpDrsHo/JYishAbN4=; b=jjK+AcYBafpxdbSm76WElPASc
-        5CL9L0xascrqnfvofR66yVADq8Ci80s+J8maSI+Ak8l49pefsLqqMXDUBYjwS3B4VZs+YVHs3BxyH
-        JasoWsw0ghlA2XGhw1Pq8hh7suMahQ7N3SJamv3PHLA7t8rRH4eUm+PtMnF+B900N4IILc0DGr2yN
-        K2gPxTWEBGydGvq1hQWDlVDkI3x+FaW8tSvnPZYa2CU8/idN3BmT04Kij6nNIvtKqVnN5OLDus47o
-        OO79yzaw2GEXUVu5+mpq/MMz0CMASJ9Vr615acYcx8ExboR1jfjxct8BRuSrJyPRGM7/130hGNsgw
-        wV30nRGcw==;
-Received: from [2601:1c0:6280:3f0::5a22]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iWtsh-0007Zo-MQ; Tue, 19 Nov 2019 03:08:43 +0000
-Subject: Re: [PATCH V13 1/6] mdev: make mdev bus agnostic
-To:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        gregkh@linuxfoundation.org, jgg@mellanox.com
-Cc:     netdev@vger.kernel.org, cohuck@redhat.com,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, eperezma@redhat.com,
-        lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com, hch@infradead.org, aadam@redhat.com,
-        jakub.kicinski@netronome.com, jiri@mellanox.com,
-        jeffrey.t.kirsher@intel.com
-References: <20191118105923.7991-1-jasowang@redhat.com>
- <20191118105923.7991-2-jasowang@redhat.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <61f6a20c-3492-4144-9c7c-f62200718853@infradead.org>
-Date:   Mon, 18 Nov 2019 19:08:41 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 18 Nov 2019 22:09:16 -0500
+Received: from mga02.intel.com ([134.134.136.20]:21052 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727018AbfKSDJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 22:09:15 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 19:09:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,322,1569308400"; 
+   d="scan'208";a="204265404"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga008.fm.intel.com with ESMTP; 18 Nov 2019 19:09:13 -0800
+Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v2 04/10] iommu/vt-d: Match CPU and IOMMU paging mode
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Auger Eric <eric.auger@redhat.com>
+References: <1574106153-45867-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1574106153-45867-5-git-send-email-jacob.jun.pan@linux.intel.com>
+ <601ca9c3-9f83-3d95-8d26-d4f46eee82ba@redhat.com>
+ <20191118135238.49f5d957@jacob-builder>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <ad3c3d58-dd1a-4b83-8b30-31e5be9e9c39@linux.intel.com>
+Date:   Tue, 19 Nov 2019 11:06:10 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191118105923.7991-2-jasowang@redhat.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20191118135238.49f5d957@jacob-builder>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,51 +56,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/18/19 2:59 AM, Jason Wang wrote:
-> diff --git a/drivers/vfio/mdev/Kconfig b/drivers/vfio/mdev/Kconfig
-> index 5da27f2100f9..2e07ca915a96 100644
-> --- a/drivers/vfio/mdev/Kconfig
-> +++ b/drivers/vfio/mdev/Kconfig
-> @@ -1,15 +1,24 @@
-> -# SPDX-License-Identifier: GPL-2.0-only
->  
-> -config VFIO_MDEV
-> +config MDEV
->  	tristate "Mediated device driver framework"
-> -	depends on VFIO
->  	default n
->  	help
->  	  Provides a framework to virtualize devices.
-> -	  See Documentation/driver-api/vfio-mediated-device.rst for more details.
->  
->  	  If you don't know what do here, say N.
->  
+Hi Eric and Jacob,
 
-Hi,
+On 11/19/19 5:52 AM, Jacob Pan wrote:
+> On Mon, 18 Nov 2019 21:55:03 +0100
+> Auger Eric <eric.auger@redhat.com> wrote:
+> 
+>> Hi Jacob,
+>>
+>> On 11/18/19 8:42 PM, Jacob Pan wrote:
+>>> When setting up first level page tables for sharing with CPU, we
+>>> need to ensure IOMMU can support no less than the levels supported
+>>> by the CPU.
+>>> It is not adequate, as in the current code, to set up 5-level paging
+>>> in PASID entry First Level Paging Mode(FLPM) solely based on CPU.
+>>>
+>>> Fixes: 437f35e1cd4c8 ("iommu/vt-d: Add first level page table
+>>> interface")
+>>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>>> Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+>>> ---
+>>>   drivers/iommu/intel-pasid.c | 12 ++++++++++--
+>>>   1 file changed, 10 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/iommu/intel-pasid.c
+>>> b/drivers/iommu/intel-pasid.c index 040a445be300..e7cb0b8a7332
+>>> 100644 --- a/drivers/iommu/intel-pasid.c
+>>> +++ b/drivers/iommu/intel-pasid.c
+>>> @@ -499,8 +499,16 @@ int intel_pasid_setup_first_level(struct
+>>> intel_iommu *iommu, }
+>>>   
+>>>   #ifdef CONFIG_X86
+>>> -	if (cpu_feature_enabled(X86_FEATURE_LA57))
+>>> -		pasid_set_flpm(pte, 1);
+>>> +	/* Both CPU and IOMMU paging mode need to match */
+>>> +	if (cpu_feature_enabled(X86_FEATURE_LA57)) {
+>>> +		if (cap_5lp_support(iommu->cap)) {
+>>> +			pasid_set_flpm(pte, 1);
+>>> +		} else {
+>>> +			pr_err("VT-d has no 5-level paging support
+>>> for CPU\n");
+>>> +			pasid_clear_entry(pte);
+>>> +			return -EINVAL;
+>> Can it happen? If I am not wrong intel_pasid_setup_first_level() only
+>> seems to be called from intel_svm_bind_mm which now checks the
+>> SVM_CAPABLE flag.
+>>
+> You are right, this check is not needed any more. I will drop the patch.
+>> Thanks
 
-> +config VFIO_MDEV
-> +	tristate "VFIO Mediated device driver"
-> +        depends on VFIO && MDEV
-> +        default n
+I'd suggest to keep this. This helper is not only for svm, although
+currently svm is the only caller. For first level pasid setup, let's
+set an assumption that hardware should never report mismatching paging
+modes, this is helpful especially when running vIOMMU in VM guests.
 
-The depends and default lines should be indented with tab, not spaces.
-
-> +	help
-> +	  Proivdes a mediated BUS for userspace driver through VFIO
-
-	  Provides
-
-> +	  framework. See Documentation/vfio-mediated-device.txt for
-> +	  more details.
-> +
-> +	  If you don't know what do here, say N.
-> +
-> +
->  config VFIO_MDEV_DEVICE
->  	tristate "VFIO driver for Mediated devices"
->  	depends on VFIO && VFIO_MDEV
-
-
--- 
-~Randy
-
+Best regards,
+baolu
