@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96EB5C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A4EC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68380222A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D23F21823
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141094;
-	bh=CqirFA+y3Yz1r/QLQgaj2aGsvThhGc28+10qfsOM2X8=;
+	s=default; t=1574141105;
+	bh=N175i1gxQlKG58kZd35eoA5nSyc+JAtK9XTWQzqa5sg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ET/OJS7LGDyuAApcpayKYv0aeP2pkvI7rHF0D1px7yL8MRTPCkUWVJp/TcfsfLREn
-	 clSRm1HxVVdK+vDVMfCmCf2sLg5pDs10jQNxFB4qjgPjFxt/iVJCNjhrgPufCXPvaN
-	 Be39lOEn9H8l4DA882CwUlU2WknnUztWQ4K/8wvM=
+	b=P1BdZYkFmfXLnrNRP3XS9rCDy0MhA1aqClyTJEV8wW89QoLHOfvBp0t4KKIqVIEMj
+	 3z+RMTKk2ZfLZvSSlrbyA9BFO9UqUkcUJLlXGg3hZlqTvyNfGaCMvczQh7ut7hViq/
+	 2yghNPLtjT0uaxgUWmbPSc2dvHn31v5L6QaA2s2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbfKSFYx (ORCPT
+        id S1728324AbfKSFZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:24:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41258 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:25:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728275AbfKSFYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:24:49 -0500
+        id S1728310AbfKSFZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:25:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A408121823;
-        Tue, 19 Nov 2019 05:24:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CA3921783;
+        Tue, 19 Nov 2019 05:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141089;
-        bh=CqirFA+y3Yz1r/QLQgaj2aGsvThhGc28+10qfsOM2X8=;
+        s=default; t=1574141101;
+        bh=N175i1gxQlKG58kZd35eoA5nSyc+JAtK9XTWQzqa5sg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JWH8H2XeLLx1ToF0IycgO3o8zUm7YycI1dkLPY++LNAU2ta7ed+ytkcNVUbgjiAEB
-         odMA+AOETbNIRvvn555L3QUds8cVdDXT9Eu5lYFGmQmylXw1DbDOgqyESGpT/XNsVj
-         ux98vdJ/GelqTrm7Oglf6t/RUS9vUFgn4ylivMpw=
+        b=BpfIIbuHIzqZk3EwtW28xXBi9YxHtpxl5IGbZf7wwdharnGKUpjftuXVBkcPMLK1d
+         FX1Cb1lkZH3RS7fQck0p/jT96x4DrgMpHALwitNnC0oAIoIe/qPc3gWtbzGglX+F5S
+         +lqyeQXUBmDpHw0RrKDuV4ILLisgR+kOqujGoCjU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 040/422] arm64: dts: allwinner: a64: Orange Pi Win: Fix SD card node
-Date:   Tue, 19 Nov 2019 06:13:57 +0100
-Message-Id: <20191119051402.547353516@linuxfoundation.org>
+        stable@vger.kernel.org, Aapo Vienamo <avienamo@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 044/422] soc/tegra: pmc: Fix pad voltage configuration for Tegra186
+Date:   Tue, 19 Nov 2019 06:14:01 +0100
+Message-Id: <20191119051402.764473552@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,40 +61,178 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Samuel Holland <samuel@sholland.org>
+From: Aapo Vienamo <avienamo@nvidia.com>
 
-[ Upstream commit 09b964afca14d0594b2b2f265df3d987e2f43867 ]
+[ Upstream commit 13136a47a061c01c91df78b37f7708dd5ce7035f ]
 
-The Orange Pi Win has a microSD card slot which is connected via all
-four SD data lines. As the DT was not mentioning this fact, we got the
-default single bit transfers, losing out on performance.
-Also, as microSD does not have a write protect switch, we disable this
-feature in the DT node.
+Implement support for the PMC_IMPL_E_33V_PWR register which replaces
+PMC_PWR_DET register interface of the SoC generations preceding
+Tegra186. Also add the voltage bit offsets to the tegra186_io_pads[]
+table and the AO_HV pad.
 
-Signed-off-by: Samuel Holland <samuel@sholland.org>
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/soc/tegra/pmc.c | 55 +++++++++++++++++++++++++++++------------
+ include/soc/tegra/pmc.h |  1 +
+ 2 files changed, 40 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-index 1221764f5719c..667016815cf32 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-@@ -67,7 +67,9 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins>;
- 	vmmc-supply = <&reg_dcdc1>;
--	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
-+	disable-wp;
-+	bus-width = <4>;
- 	status = "okay";
+diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+index 4b452f36f0547..f17a678154047 100644
+--- a/drivers/soc/tegra/pmc.c
++++ b/drivers/soc/tegra/pmc.c
+@@ -65,6 +65,8 @@
+ 
+ #define PWRGATE_STATUS			0x38
+ 
++#define PMC_IMPL_E_33V_PWR		0x40
++
+ #define PMC_PWR_DET			0x48
+ 
+ #define PMC_SCRATCH0_MODE_RECOVERY	BIT(31)
+@@ -154,6 +156,7 @@ struct tegra_pmc_soc {
+ 	bool has_tsense_reset;
+ 	bool has_gpu_clamps;
+ 	bool needs_mbist_war;
++	bool has_impl_33v_pwr;
+ 
+ 	const struct tegra_io_pad_soc *io_pads;
+ 	unsigned int num_io_pads;
+@@ -1067,20 +1070,31 @@ int tegra_io_pad_set_voltage(enum tegra_io_pad id,
+ 
+ 	mutex_lock(&pmc->powergates_lock);
+ 
+-	/* write-enable PMC_PWR_DET_VALUE[pad->voltage] */
+-	value = tegra_pmc_readl(PMC_PWR_DET);
+-	value |= BIT(pad->voltage);
+-	tegra_pmc_writel(value, PMC_PWR_DET);
++	if (pmc->soc->has_impl_33v_pwr) {
++		value = tegra_pmc_readl(PMC_IMPL_E_33V_PWR);
+ 
+-	/* update I/O voltage */
+-	value = tegra_pmc_readl(PMC_PWR_DET_VALUE);
++		if (voltage == TEGRA_IO_PAD_1800000UV)
++			value &= ~BIT(pad->voltage);
++		else
++			value |= BIT(pad->voltage);
+ 
+-	if (voltage == TEGRA_IO_PAD_1800000UV)
+-		value &= ~BIT(pad->voltage);
+-	else
++		tegra_pmc_writel(value, PMC_IMPL_E_33V_PWR);
++	} else {
++		/* write-enable PMC_PWR_DET_VALUE[pad->voltage] */
++		value = tegra_pmc_readl(PMC_PWR_DET);
+ 		value |= BIT(pad->voltage);
++		tegra_pmc_writel(value, PMC_PWR_DET);
++
++		/* update I/O voltage */
++		value = tegra_pmc_readl(PMC_PWR_DET_VALUE);
+ 
+-	tegra_pmc_writel(value, PMC_PWR_DET_VALUE);
++		if (voltage == TEGRA_IO_PAD_1800000UV)
++			value &= ~BIT(pad->voltage);
++		else
++			value |= BIT(pad->voltage);
++
++		tegra_pmc_writel(value, PMC_PWR_DET_VALUE);
++	}
+ 
+ 	mutex_unlock(&pmc->powergates_lock);
+ 
+@@ -1102,7 +1116,10 @@ int tegra_io_pad_get_voltage(enum tegra_io_pad id)
+ 	if (pad->voltage == UINT_MAX)
+ 		return -ENOTSUPP;
+ 
+-	value = tegra_pmc_readl(PMC_PWR_DET_VALUE);
++	if (pmc->soc->has_impl_33v_pwr)
++		value = tegra_pmc_readl(PMC_IMPL_E_33V_PWR);
++	else
++		value = tegra_pmc_readl(PMC_PWR_DET_VALUE);
+ 
+ 	if ((value & BIT(pad->voltage)) == 0)
+ 		return TEGRA_IO_PAD_1800000UV;
+@@ -1561,6 +1578,7 @@ static const struct tegra_pmc_soc tegra30_pmc_soc = {
+ 	.cpu_powergates = tegra30_cpu_powergates,
+ 	.has_tsense_reset = true,
+ 	.has_gpu_clamps = false,
++	.has_impl_33v_pwr = false,
+ 	.num_io_pads = 0,
+ 	.io_pads = NULL,
+ 	.regs = &tegra20_pmc_regs,
+@@ -1603,6 +1621,7 @@ static const struct tegra_pmc_soc tegra114_pmc_soc = {
+ 	.cpu_powergates = tegra114_cpu_powergates,
+ 	.has_tsense_reset = true,
+ 	.has_gpu_clamps = false,
++	.has_impl_33v_pwr = false,
+ 	.num_io_pads = 0,
+ 	.io_pads = NULL,
+ 	.regs = &tegra20_pmc_regs,
+@@ -1683,6 +1702,7 @@ static const struct tegra_pmc_soc tegra124_pmc_soc = {
+ 	.cpu_powergates = tegra124_cpu_powergates,
+ 	.has_tsense_reset = true,
+ 	.has_gpu_clamps = true,
++	.has_impl_33v_pwr = false,
+ 	.num_io_pads = ARRAY_SIZE(tegra124_io_pads),
+ 	.io_pads = tegra124_io_pads,
+ 	.regs = &tegra20_pmc_regs,
+@@ -1772,6 +1792,7 @@ static const struct tegra_pmc_soc tegra210_pmc_soc = {
+ 	.cpu_powergates = tegra210_cpu_powergates,
+ 	.has_tsense_reset = true,
+ 	.has_gpu_clamps = true,
++	.has_impl_33v_pwr = false,
+ 	.needs_mbist_war = true,
+ 	.num_io_pads = ARRAY_SIZE(tegra210_io_pads),
+ 	.io_pads = tegra210_io_pads,
+@@ -1800,7 +1821,7 @@ static const struct tegra_io_pad_soc tegra186_io_pads[] = {
+ 	{ .id = TEGRA_IO_PAD_HDMI_DP0, .dpd = 28, .voltage = UINT_MAX },
+ 	{ .id = TEGRA_IO_PAD_HDMI_DP1, .dpd = 29, .voltage = UINT_MAX },
+ 	{ .id = TEGRA_IO_PAD_PEX_CNTRL, .dpd = 32, .voltage = UINT_MAX },
+-	{ .id = TEGRA_IO_PAD_SDMMC2_HV, .dpd = 34, .voltage = UINT_MAX },
++	{ .id = TEGRA_IO_PAD_SDMMC2_HV, .dpd = 34, .voltage = 5 },
+ 	{ .id = TEGRA_IO_PAD_SDMMC4, .dpd = 36, .voltage = UINT_MAX },
+ 	{ .id = TEGRA_IO_PAD_CAM, .dpd = 38, .voltage = UINT_MAX },
+ 	{ .id = TEGRA_IO_PAD_DSIB, .dpd = 40, .voltage = UINT_MAX },
+@@ -1812,12 +1833,13 @@ static const struct tegra_io_pad_soc tegra186_io_pads[] = {
+ 	{ .id = TEGRA_IO_PAD_CSIF, .dpd = 46, .voltage = UINT_MAX },
+ 	{ .id = TEGRA_IO_PAD_SPI, .dpd = 47, .voltage = UINT_MAX },
+ 	{ .id = TEGRA_IO_PAD_UFS, .dpd = 49, .voltage = UINT_MAX },
+-	{ .id = TEGRA_IO_PAD_DMIC_HV, .dpd = 52, .voltage = UINT_MAX },
++	{ .id = TEGRA_IO_PAD_DMIC_HV, .dpd = 52, .voltage = 2 },
+ 	{ .id = TEGRA_IO_PAD_EDP, .dpd = 53, .voltage = UINT_MAX },
+-	{ .id = TEGRA_IO_PAD_SDMMC1_HV, .dpd = 55, .voltage = UINT_MAX },
+-	{ .id = TEGRA_IO_PAD_SDMMC3_HV, .dpd = 56, .voltage = UINT_MAX },
++	{ .id = TEGRA_IO_PAD_SDMMC1_HV, .dpd = 55, .voltage = 4 },
++	{ .id = TEGRA_IO_PAD_SDMMC3_HV, .dpd = 56, .voltage = 6 },
+ 	{ .id = TEGRA_IO_PAD_CONN, .dpd = 60, .voltage = UINT_MAX },
+-	{ .id = TEGRA_IO_PAD_AUDIO_HV, .dpd = 61, .voltage = UINT_MAX },
++	{ .id = TEGRA_IO_PAD_AUDIO_HV, .dpd = 61, .voltage = 1 },
++	{ .id = TEGRA_IO_PAD_AO_HV, .dpd = UINT_MAX, .voltage = 0 },
  };
  
+ static const struct tegra_pmc_regs tegra186_pmc_regs = {
+@@ -1870,6 +1892,7 @@ static const struct tegra_pmc_soc tegra186_pmc_soc = {
+ 	.cpu_powergates = NULL,
+ 	.has_tsense_reset = false,
+ 	.has_gpu_clamps = false,
++	.has_impl_33v_pwr = true,
+ 	.num_io_pads = ARRAY_SIZE(tegra186_io_pads),
+ 	.io_pads = tegra186_io_pads,
+ 	.regs = &tegra186_pmc_regs,
+diff --git a/include/soc/tegra/pmc.h b/include/soc/tegra/pmc.h
+index c32bf91c23e6f..445aa66514e90 100644
+--- a/include/soc/tegra/pmc.h
++++ b/include/soc/tegra/pmc.h
+@@ -134,6 +134,7 @@ enum tegra_io_pad {
+ 	TEGRA_IO_PAD_USB2,
+ 	TEGRA_IO_PAD_USB3,
+ 	TEGRA_IO_PAD_USB_BIAS,
++	TEGRA_IO_PAD_AO_HV,
+ };
+ 
+ /* deprecated, use TEGRA_IO_PAD_{HDMI,LVDS} instead */
 -- 
 2.20.1
 
