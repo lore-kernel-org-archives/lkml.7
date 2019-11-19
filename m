@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B16C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC207C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55F57206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C29B720862
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141735;
-	bh=jXkiVzZYSLUq0yhlysGpFlmVqSm2aSwxQEawDZL8+xY=;
+	s=default; t=1574141741;
+	bh=A3cExw9CqJgzdtqRXjlxgfhaTlG665RQFAEildQhG8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HUJLAThppHwGcX5nphuJemiJPEGdv+ncnHxCqMWGJKCwMnd+pFL5TqPdpaD7tNf5o
-	 v3TLmAhG2dLhqbPsnNsxKrRnonvgSUW7mk6IpGnEl91aL9RHHowXH7zrBuBXXqhuYM
-	 jsjarUKNrhmGSYo978SeV3RobMIrVwam70miN8es=
+	b=ioFyTbJADHsnBFwLichdDAL5saLsaLWUlKh3qaHk7XQc/A2S/VxmhYxJYqOv7xNcW
+	 a3rus7ZDAR27ehHCSkD7Y6SkqZvEfk7t9D89Ea2fuWeABud9h97xGmRn1eBT5UOpyv
+	 kaNrJazgyI/seoY3UIPO3/tb2nyuss/3LzPJjUfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbfKSFfe (ORCPT
+        id S1729372AbfKSFfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:35:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56454 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:35:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729817AbfKSFfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:35:30 -0500
+        id S1728314AbfKSFfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:35:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D095B20862;
-        Tue, 19 Nov 2019 05:35:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF0B1206EC;
+        Tue, 19 Nov 2019 05:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141730;
-        bh=jXkiVzZYSLUq0yhlysGpFlmVqSm2aSwxQEawDZL8+xY=;
+        s=default; t=1574141736;
+        bh=A3cExw9CqJgzdtqRXjlxgfhaTlG665RQFAEildQhG8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g8oWlJfevFGkyuuQOvCt3m2ptRut+0ojU3TgsjnFt8IVMcsUMHL6yIB3eImi190Uk
-         bpSlZMOn71yyEYAIovCVy+SQ5tsx3C7aB+++/aRkewe8gba8vDcfVZ3vrekvhl/UaM
-         L6MjJO6DE8f5SyJvEa/7h853drMLV8O9o9W550m4=
+        b=BjxQZTzoxb5/ppDO6CmUwlIPSqgElwDoEc38FooTRPsun3WN6fnFUMmFhOIUJvRcW
+         KprHZL3HrWpHDgcXt+mxf9sQA44jPhiX8Q+Qsbj6YXD5F0t9QhM44aLlNhn2c31OWw
+         hAzkBHA9afECCnGp7n1sruBsh1xWdv+6Nt28cNEQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Breno Leitao <leitao@debian.org>,
+        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 260/422] powerpc/iommu: Avoid derefence before pointer check
-Date:   Tue, 19 Nov 2019 06:17:37 +0100
-Message-Id: <20191119051415.839491019@linuxfoundation.org>
+Subject: [PATCH 4.19 262/422] powerpc/64s/hash: Fix stab_rr off by one initialization
+Date:   Tue, 19 Nov 2019 06:17:39 +0100
+Message-Id: <20191119051415.969681930@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,38 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Breno Leitao <leitao@debian.org>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit 984ecdd68de0fa1f63ce205d6c19ef5a7bc67b40 ]
+[ Upstream commit 09b4438db13fa83b6219aee5993711a2aa2a0c64 ]
 
-The tbl pointer is being derefenced by IOMMU_PAGE_SIZE prior the check
-if it is not NULL.
+This causes SLB alloation to start 1 beyond the start of the SLB.
+There is no real problem because after it wraps it stats behaving
+properly, it's just surprisig to see when looking at SLB traces.
 
-Just moving the dereference code to after the check, where there will
-be guarantee that 'tbl' will not be NULL.
-
-Signed-off-by: Breno Leitao <leitao@debian.org>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/iommu.c | 2 +-
+ arch/powerpc/mm/slb.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
-index 19b4c628f3bec..f0dc680e659af 100644
---- a/arch/powerpc/kernel/iommu.c
-+++ b/arch/powerpc/kernel/iommu.c
-@@ -785,9 +785,9 @@ dma_addr_t iommu_map_page(struct device *dev, struct iommu_table *tbl,
+diff --git a/arch/powerpc/mm/slb.c b/arch/powerpc/mm/slb.c
+index 9f574e59d1786..2f162c6e52d4f 100644
+--- a/arch/powerpc/mm/slb.c
++++ b/arch/powerpc/mm/slb.c
+@@ -355,7 +355,7 @@ void slb_initialize(void)
+ #endif
+ 	}
  
- 	vaddr = page_address(page) + offset;
- 	uaddr = (unsigned long)vaddr;
--	npages = iommu_num_pages(uaddr, size, IOMMU_PAGE_SIZE(tbl));
+-	get_paca()->stab_rr = SLB_NUM_BOLTED;
++	get_paca()->stab_rr = SLB_NUM_BOLTED - 1;
  
- 	if (tbl) {
-+		npages = iommu_num_pages(uaddr, size, IOMMU_PAGE_SIZE(tbl));
- 		align = 0;
- 		if (tbl->it_page_shift < PAGE_SHIFT && size >= PAGE_SIZE &&
- 		    ((unsigned long)vaddr & ~PAGE_MASK) == 0)
+ 	lflags = SLB_VSID_KERNEL | linear_llp;
+ 	vflags = SLB_VSID_KERNEL | vmalloc_llp;
 -- 
 2.20.1
 
