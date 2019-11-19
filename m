@@ -2,275 +2,106 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 338EBC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E813EC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C487E206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:04:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dubeyko-com.20150623.gappssmtp.com header.i=@dubeyko-com.20150623.gappssmtp.com header.b="hX/EbL39"
+	by mail.kernel.org (Postfix) with ESMTP id B71C8206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:04:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574143496;
+	bh=5UlIQR2DCq+pOvDPurmJbhIK5FNedXV0/VZEjZx8hAs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1+n4cjermbdnEpmoT4Y7vRcO0BOTbD/Hvr5NNuDfuoh/wny2crufu7xLTlCs+XE+z
+	 WrTtZ3ekwsAgwTYFKWzGFmtt9HEhUgTRwmmL32I7HT+xALqc1U5OgJUj3R4OEdTLOW
+	 iU/3TKfIkYlOEy2q4MmJN1Lh01Nwyh/q8u2LXUXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbfKSGEv (ORCPT
+        id S1727795AbfKSFhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:04:51 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46567 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728668AbfKSGEs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 01:04:48 -0500
-Received: by mail-lf1-f68.google.com with SMTP id o65so15935168lff.13
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 22:04:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dubeyko-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=7ewKZqvC8CUc66wtGLDOYVqisKvlFeFsNPqY9MuL96o=;
-        b=hX/EbL39mD2k0nNW8UYhI4Qp9jJ1yLmC9oO1hzWuq9PMeGvVigLucnJyZ9RSHStVbT
-         AWRdbmVZYwdpkeRLMwDjxluIuB4HpaHEinCGgSUyUZIzgYcsKOiFIhPQTwo9//nyPUSi
-         n7FCEIbc9l19qw0e5Erzf6S38Z1kySwWjosEJDElzebl6K26qzp6f39EEP2Vi1FG3WZT
-         2jkHpatJ1XhFI6MtYRi/cNNlBWTnJTKiPiq0495WfIa/QZDY6IyOCCnfu58KwRYjdZIz
-         QcCPEWn4tuFgp12LNZ3ia+aVvPH0xDfj1pt22cUNYsq8GMXTv8jNFnsZClhrTS7lVmUx
-         3sfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=7ewKZqvC8CUc66wtGLDOYVqisKvlFeFsNPqY9MuL96o=;
-        b=ku8LJxtWbQ1Q0NfrAuiwIILAiq7bMWl0kEBaDnvrqqY4QxdyCkvSe6iweysFwvxQTm
-         9YQ5UvahOGd9sSCkdotHbAwScSW/GvZ4HqWWsOhHGYXYLpO1zTCk5IIPGRwCNry0RCHo
-         HDx04I23iyd51pEq2fnzoRZnp0xuA/wHvjeM7XZHpe2QSzu5avjfWEcd+oC5lphhiSxP
-         Lj0cOtA8VtvRBxCSyu3QSMcDjG4yXvDPSgyZBmPzgn50OtKk9i3ZTWJgmWsRpH4CyWu4
-         FdiFTiFg0SGXMXkkQ4RNwwC288NVbhEtvbsHl9KiEBizHnPGExS682hsb11unZRw3J24
-         C9fw==
-X-Gm-Message-State: APjAAAW/ugBENdxlJf/Ns5c1SUUPVWZwNSN3Iefv1btwDddIr1gx7XHG
-        cCLSho4n9V2rIhnszUcFI2YHWg==
-X-Google-Smtp-Source: APXvYqzAtwxVE09RxvHH/0wxQPZD19ewGMFob/ES0RTzSvCVR0LiUXvrJuLbcuBNLIt+0ET+VWOitw==
-X-Received: by 2002:a05:6512:4c1:: with SMTP id w1mr2253076lfq.141.1574143485866;
-        Mon, 18 Nov 2019 22:04:45 -0800 (PST)
-Received: from ?IPv6:2a00:1370:812c:3592:a1ae:64f4:3597:26a1? ([2a00:1370:812c:3592:a1ae:64f4:3597:26a1])
-        by smtp.gmail.com with ESMTPSA id x19sm9717033ljh.14.2019.11.18.22.04.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Nov 2019 22:04:45 -0800 (PST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference at
- 00000000000000a8 in nilfs_segctor_do_construct
-From:   Viacheslav Dubeyko <slava@dubeyko.com>
-In-Reply-To: <CAKFNMo=k1wVHOwXhTLEOJ+A-nwmvJ+sN_PPa8kY8fMxrQ4R+Jw@mail.gmail.com>
-Date:   Tue, 19 Nov 2019 09:04:43 +0300
-Cc:     Tomas Hlavaty <tom@logand.com>,
-        linux-nilfs <linux-nilfs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <76887BD9-D6C4-4A89-8F55-4BEAF2828FD3@dubeyko.com>
-References: <8736emquds.fsf@logand.com>
- <CAKFNMo=k1wVHOwXhTLEOJ+A-nwmvJ+sN_PPa8kY8fMxrQ4R+Jw@mail.gmail.com>
-To:     Ryusuke Konishi <konishi.ryusuke@gmail.com>
-X-Mailer: Apple Mail (2.3601.0.10)
+        Tue, 19 Nov 2019 00:37:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59370 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729163AbfKSFhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:37:31 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8302821783;
+        Tue, 19 Nov 2019 05:37:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574141851;
+        bh=5UlIQR2DCq+pOvDPurmJbhIK5FNedXV0/VZEjZx8hAs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rhzauzkDPLi8fSoKziZfusqjjZBX1+Xq0tgdqf1zJC8vkZ3l9oXTY2wqZXNcyZYTJ
+         ZgS5IFI1nyyrmppjwIoFdjUs4bSnIWMSY9EH+sPTygBcMPgM+aAGdpVf2ddrTiOYT0
+         1bXsZy4i2NsmeCj5wOkQj26Ql8dNaMHVU7TCpXho=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 301/422] ARM: dts: ux500: Fix LCDA clock line muxing
+Date:   Tue, 19 Nov 2019 06:18:18 +0100
+Message-Id: <20191119051418.506508118@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
+References: <20191119051400.261610025@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Linus Walleij <linus.walleij@linaro.org>
+
+[ Upstream commit ecde29569e3484e1d0a032bf4074449bce4d4a03 ]
+
+The "lcdaclk_b_1" group is muxed with the function "lcd"
+but needs a separate entry to be muxed in with "lcda"
+rather than "lcd".
+
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/ste-href-family-pinctrl.dtsi | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/ste-href-family-pinctrl.dtsi b/arch/arm/boot/dts/ste-href-family-pinctrl.dtsi
+index 5c5cea232743d..1ec193b0c5065 100644
+--- a/arch/arm/boot/dts/ste-href-family-pinctrl.dtsi
++++ b/arch/arm/boot/dts/ste-href-family-pinctrl.dtsi
+@@ -607,16 +607,20 @@
+ 
+ 			mcde {
+ 				lcd_default_mode: lcd_default {
+-					default_mux {
++					default_mux1 {
+ 						/* Mux in VSI0 and all the data lines */
+ 						function = "lcd";
+ 						groups =
+ 						"lcdvsi0_a_1", /* VSI0 for LCD */
+ 						"lcd_d0_d7_a_1", /* Data lines */
+ 						"lcd_d8_d11_a_1", /* TV-out */
+-						"lcdaclk_b_1", /* Clock line for TV-out */
+ 						"lcdvsi1_a_1"; /* VSI1 for HDMI */
+ 					};
++					default_mux2 {
++						function = "lcda";
++						groups =
++						"lcdaclk_b_1"; /* Clock line for TV-out */
++					};
+ 					default_cfg1 {
+ 						pins =
+ 						"GPIO68_E1", /* VSI0 */
+-- 
+2.20.1
 
 
-> On Nov 18, 2019, at 7:51 PM, Ryusuke Konishi =
-<konishi.ryusuke@gmail.com> wrote:
->=20
-> Hi,
->=20
->> It was likely caused by improper shutdown and following nilfs2 =
-partition
->> corruption.  Now I can still read the data, but on the whole the
->> computer is not useable, because starting a process which uses the
->> corrupted file system simply crashes in kernel.
->=20
-> Thank you for reporting the issue.
-> Let me ask you a few questions:
->=20
-> 1) Is the crash reproducible in the environment ?
-> 2) Can you mount the corrupted(?) partition from a recent version of =
-kernel ?
-> 3) Does read-only mount option (-r) work to avoid the crash ?
-
-
-I believe it could be important to know more details about the partition =
-too:
-(1) the partition size?
-(2) the logical block size?
-(3) the segment size?
-(4) how the partition was created?
-(5) the version of tools that created the partition?
-(6) the amount of free space on the partition?
-
-Thanks,
-Viacheslav Dubeyko.
-
-
->=20
-> Thanks,
-> Ryusuke Konishi
->=20
-> 2019=E5=B9=B411=E6=9C=8818=E6=97=A5(=E6=9C=88) 2:34 Tomas Hlavaty =
-<tom@logand.com>:
->>=20
->> Hi Ryusuke,
->>=20
->> today I got this bug in kernel, which seems to be related to nilfs2.
->>=20
->> It was likely caused by improper shutdown and following nilfs2 =
-partition
->> corruption.  Now I can still read the data, but on the whole the
->> computer is not useable, because starting a process which uses the
->> corrupted file system simply crashes in kernel.  I am actually not =
-sure
->> if the filesystem is corrupted, as I don't know about any tool to =
-check
->> that.  The relevant parts of dmesg log are bellow.
->>=20
->> Please let me know if you are the right contact or if you need more =
-info
->> about the problem.
->>=20
->> Thank you,
->>=20
->> Tomas
->>=20
->> [    0.000000] Linux version 4.19.84 (nixbld@localhost) (gcc version =
-8.3.0 (GCC)) #1-NixOS SMP Tue Nov 12 18:21:46 UTC 2019
->> [    0.000000] Command line: =
-initrd=3D\efi\nixos\4s51zw36kd1qb0ymk0charxjg8x6k5k3-initrd-linux-4.19.84-=
-initrd.efi =
-systemConfig=3D/nix/store/gdbxhzysr929abrymjqala0b5bh2fqmv-nixos-system-us=
-hi-19.09.1258.07e66484e67 =
-init=3D/nix/store/gdbxhzysr929abrymjqala0b5bh2fqmv-nixos-system-ushi-19.09=
-.1258.07e66484e67/init loglevel=3D4
->>=20
->>=20
->>=20
->> [   37.741106] systemd-journald[470]: Received client request to =
-flush runtime journal.
->> [   37.749084] systemd-journald[470]: File =
-/var/log/journal/55a4ea9159c14c0bb8767a43819c6927/system.journal =
-corrupted or uncleanly shut down, renaming and replacing.
->> [   37.810819] audit: type=3D1130 audit(1573985039.617:3): pid=3D1 =
-uid=3D0 auid=3D4294967295 ses=3D4294967295 subj=3D=3Dunconfined =
-msg=3D'unit=3Dsystemd-udevd comm=3D"systemd" =
-exe=3D"/nix/store/v8flm2h07zcfg5k5npz56m0ayj0qm1q8-systemd-243/lib/systemd=
-/systemd" hostname=3D? addr=3D? terminal=3D? res=3Dsuccess'
->>=20
->> [   38.321561] NILFS version 2 loaded
->> [   38.323236] NILFS (dm-1): mounting unchecked fs
->>=20
->>=20
->> [   38.349185] NILFS (dm-1): recovery complete
->> [   38.353228] NILFS (dm-1): segctord starting. Construction interval =
-=3D 5 seconds, CP frequency < 30 seconds
->>=20
->> [   63.543941] systemd-journald[470]: File
->> /var/log/journal/55a4ea9159c14c0bb8767a43819c6927/user-1000.journal
->> corrupted or uncleanly shut down, renaming and replacing.
->>=20
->> [12637.085548] BUG: unable to handle kernel NULL pointer dereference =
-at 00000000000000a8
->> [12637.085558] PGD 0 P4D 0
->> [12637.085567] Oops: 0000 [#1] SMP PTI
->> [12637.085574] CPU: 0 PID: 657 Comm: segctord Not tainted 4.19.84 =
-#1-NixOS
->> [12637.085577] Hardware name: ASUSTeK COMPUTER INC. VivoBook 15_ASUS =
-Laptop X507MA_R507MA/X507MA, BIOS X507MA.301 09/14/2018
->> [12637.085589] RIP: 0010:percpu_counter_add_batch+0x4/0x60
->> [12637.085593] Code: 89 e6 89 c7 e8 dd 3b 28 00 3b 05 fb e0 b6 00 72 =
-d8 4c 89 ee 48 89 ef e8 7a 63 2a 00 48 89 d8 5b 5d 41 5c 41 5d c3 41 54 =
-55 53 <48> 8b 47 20 65 44 8b 20 49 63 ec 48 63 ca 48 01 f5 48 39 e9 7e =
-0a
->> [12637.085597] RSP: 0018:ffff9d1b00a0bd20 EFLAGS: 00010006
->> [12637.085601] RAX: 0000000000000002 RBX: 0000000000000000 RCX: =
-0000000000000018
->> [12637.085604] RDX: 0000000000000018 RSI: 0000000000000001 RDI: =
-0000000000000088
->> [12637.085608] RBP: ffff8df67a2988d0 R08: 0000000000000000 R09: =
-ffff8df66fe0cfe0
->> [12637.085611] R10: 0000000000000230 R11: 0000000000000000 R12: =
-0000000000000000
->> [12637.085614] R13: ffff8df67a298758 R14: ffff8df67a2988c8 R15: =
-ffffccd684229a80
->> [12637.085618] FS:  0000000000000000(0000) GS:ffff8df67ba00000(0000) =
-knlGS:0000000000000000
->> [12637.085621] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [12637.085624] CR2: 00000000000000a8 CR3: 000000011ac0a000 CR4: =
-0000000000340ef0
->> [12637.085628] Call Trace:
->> [12637.085640]  __test_set_page_writeback+0x37c/0x3f0
->> [12637.085663]  nilfs_segctor_do_construct+0x184e/0x2040 [nilfs2]
->> [12637.085680]  nilfs_segctor_construct+0x1f5/0x2e0 [nilfs2]
->> [12637.085693]  nilfs_segctor_thread+0x129/0x370 [nilfs2]
->> [12637.085706]  ? nilfs_segctor_construct+0x2e0/0x2e0 [nilfs2]
->> [12637.085713]  kthread+0x112/0x130
->> [12637.085719]  ? kthread_bind+0x30/0x30
->> [12637.085728]  ret_from_fork+0x1f/0x40
->> [12637.085734] Modules linked in: ctr ccm af_packet msr 8021q =
-snd_hda_codec_hdmi snd_hda_codec_realtek snd_hda_codec_generic =
-hid_multitouch arc4 ath9k ath9k_common ath9k_hw ath mac80211 snd_soc_skl =
-snd_soc_skl_ipc spi_pxa2xx_platform asus_nb_wmi snd_soc_sst_ipc =
-snd_soc_sst_dsp asus_wmi 8250_dw i2c_designware_platform sparse_keymap =
-i2c_designware_core wmi_bmof i915 snd_hda_ext_core nilfs2 =
-snd_soc_acpi_intel_match snd_soc_acpi uvcvideo videobuf2_vmalloc =
-nls_iso8859_1 videobuf2_memops videobuf2_v4l2 snd_soc_core nls_cp437 =
-rtsx_usb_ms intel_telemetry_pltdrv vfat intel_punit_ipc =
-intel_telemetry_core fat intel_pmc_ipc memstick videobuf2_common =
-snd_compress kvmgt vfio_mdev mdev ath3k vfio_iommu_type1 vfio btusb =
-ac97_bus snd_pcm_dmaengine btrtl x86_pkg_temp_thermal intel_powerclamp =
-btbcm cec coretemp btintel
->> [12637.085819]  crct10dif_pclmul crc32_pclmul videodev snd_hda_intel =
-bluetooth drm_kms_helper ghash_clmulni_intel deflate media efi_pstore =
-intel_cstate pstore intel_rapl_perf cfg80211 snd_hda_codec joydev =
-mousedev evdev wdat_wdt serio_raw mac_hid efivars drm snd_hda_core =
-snd_hwdep ecdh_generic snd_pcm snd_timer mei_me idma64 virt_dma snd =
-intel_gtt agpgart i2c_i801 i2c_algo_bit mei fb_sys_fops syscopyarea =
-soundcore rfkill processor_thermal_device sysfillrect sysimgblt =
-intel_lpss_pci intel_soc_dts_iosf thermal wmi intel_lpss i2c_hid =
-i2c_core battery tpm_crb button ac tpm_tis tpm_tis_core asus_wireless =
-video pcc_cpufreq tpm rng_core pinctrl_geminilake int3400_thermal =
-int3403_thermal pinctrl_intel int340x_thermal_zone acpi_thermal_rel =
-iptable_nat nf_nat_ipv4 nf_nat xt_conntrack nf_conntrack nf_defrag_ipv6
->> [12637.085912]  nf_defrag_ipv4 libcrc32c ip6t_rpfilter ipt_rpfilter =
-ip6table_raw iptable_raw xt_pkttype nf_log_ipv6 nf_log_ipv4 =
-nf_log_common xt_LOG xt_tcpudp ip6table_filter ip6_tables iptable_filter =
-sch_fq_codel loop cpufreq_powersave tun tap macvlan bridge stp llc =
-kvm_intel kvm irqbypass efivarfs ip_tables x_tables ipv6 crc_ccitt =
-autofs4 ext4 crc32c_generic crc16 mbcache jbd2 fscrypto dm_crypt =
-algif_skcipher af_alg rtsx_usb_sdmmc mmc_core rtsx_usb hid_generic =
-usbhid hid sd_mod input_leds led_class atkbd libps2 ahci libahci =
-xhci_pci libata xhci_hcd aesni_intel usbcore aes_x86_64 crypto_simd =
-scsi_mod cryptd glue_helper crc32c_intel usb_common rtc_cmos i8042 serio =
-dm_mod
->> [12637.086000] CR2: 00000000000000a8
->> [12637.086005] ---[ end trace ee0079180c990cd2 ]---
->> [12637.120805] RIP: 0010:percpu_counter_add_batch+0x4/0x60
->> [12637.120807] Code: 89 e6 89 c7 e8 dd 3b 28 00 3b 05 fb e0 b6 00 72 =
-d8 4c 89 ee 48 89 ef e8 7a 63 2a 00 48 89 d8 5b 5d 41 5c 41 5d c3 41 54 =
-55 53 <48> 8b 47 20 65 44 8b 20 49 63 ec 48 63 ca 48 01 f5 48 39 e9 7e =
-0a
->> [12637.120809] RSP: 0018:ffff9d1b00a0bd20 EFLAGS: 00010006
->> [12637.120811] RAX: 0000000000000002 RBX: 0000000000000000 RCX: =
-0000000000000018
->> [12637.120812] RDX: 0000000000000018 RSI: 0000000000000001 RDI: =
-0000000000000088
->> [12637.120814] RBP: ffff8df67a2988d0 R08: 0000000000000000 R09: =
-ffff8df66fe0cfe0
->> [12637.120815] R10: 0000000000000230 R11: 0000000000000000 R12: =
-0000000000000000
->> [12637.120816] R13: ffff8df67a298758 R14: ffff8df67a2988c8 R15: =
-ffffccd684229a80
->> [12637.120818] FS:  0000000000000000(0000) GS:ffff8df67ba00000(0000) =
-knlGS:0000000000000000
->> [12637.120820] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [12637.120821] CR2: 00000000000000a8 CR3: 0000000138e0a000 CR4: =
-0000000000340ef0
 
