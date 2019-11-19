@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFE9C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2F3C43141
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0662206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 458E6206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143130;
-	bh=V5q51qTV4EPWi9bzbS+1ha7/AM4Bm5f4B4JOaQOZcQg=;
+	s=default; t=1574143133;
+	bh=zgHqDerHD9mq/I9eqXtCLJJAz7f74cQc2mKojojxA2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uJD6gWOyiqa3kp9KDlWISYmxvfgIvdY6rcjnIbkDD7cDM0gkLc5Hyp9VEmUbAy2XF
-	 cfr/YnFsmKLaLHRWyO6eR1Gn2yBYOIPumwIFOznEsah+dzyG2/dM83QgBuAmwR13/d
-	 8SBvlfAnxGu/BP8ueiUTyybIMiZu8NW2zPsYpzEQ=
+	b=tsnZXPB9LJf5iJqojCUFjzlrr/ZfS9INTXW7drFAGrADtlK5C11Tfw8DPBKSl0JV6
+	 tseIXI8kXvTvZy5L+0XaR43BAnjo656jwdnKpWK4nSVhSyOTNz2yIU3O489Nil1IsU
+	 hs+KxG/qUoEpe51WZRA1/SG5u+tkkp/FPMIQ5CdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbfKSFsw (ORCPT
+        id S1731885AbfKSF6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:48:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45426 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:58:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731122AbfKSFst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:48:49 -0500
+        id S1727836AbfKSFsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:48:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F168214D9;
-        Tue, 19 Nov 2019 05:48:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2EE620862;
+        Tue, 19 Nov 2019 05:48:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142528;
-        bh=V5q51qTV4EPWi9bzbS+1ha7/AM4Bm5f4B4JOaQOZcQg=;
+        s=default; t=1574142526;
+        bh=zgHqDerHD9mq/I9eqXtCLJJAz7f74cQc2mKojojxA2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j8lkCWn9jbx3AJopO/Yy67WrhDFJ/1IstHobP4zfOKH5XHCAY6GI4nkC32YQ7RBzZ
-         teraTq7xcFq8hkAz27VFEj0XOljZF6QKSm51FcGJie2igoHusyV/DbSkybQrne4GM6
-         QtAo0UG7v/9Tl88cazSRGOWDYSHMeq3gZW+5U3Og=
+        b=PoMPCd8JSYVJlKl4E06WJ0Ucl0zFUOFUv8gvpLttcvj9r8/IUfuNGdDou7c9Ftrli
+         DZBf6vgQD9bWA6syJ0zAPmUreGxVAcW9fQLzMzgDW1c3BPHmB8Q/dfFbGbcYTnd8d5
+         6AWHW1IbnohQsRgVel0a9zLk9YVXsCtZ3ZprImtc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 111/239] pinctrl: at91-pio4: fix has_config check in atmel_pctl_dt_subnode_to_map()
-Date:   Tue, 19 Nov 2019 06:18:31 +0100
-Message-Id: <20191119051327.810303206@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 084/239] dmaengine: dma-jz4780: Dont depend on MACH_JZ4780
+Date:   Tue, 19 Nov 2019 06:18:04 +0100
+Message-Id: <20191119051316.867688057@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,68 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-[ Upstream commit b97760ae8e3dc8bb91881c13425a0bff55f2bd85 ]
+[ Upstream commit c558ecd21c852c97ff98dc6c61f715ba420ec251 ]
 
-Smatch complains about this condition:
+If we make this driver depend on MACH_JZ4780, that means it can be
+enabled only if we're building a kernel specially crafted for a
+JZ4780-based board, while most GNU/Linux distributions will want one
+generic MIPS kernel that works on multiple boards.
 
-	if (has_config && num_pins >= 1)
-
-The "has_config" variable is either uninitialized or true.  The
-"num_pins" variable is unsigned and we verified that it is non-zero on
-the lines before so we know "num_pines >= 1" is true.  Really, we could
-just check "num_configs" directly and remove the "has_config" variable.
-
-Fixes: 776180848b57 ("pinctrl: introduce driver for Atmel PIO4 controller")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-at91-pio4.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/dma/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
-index e61e2f8c91ce8..e9d7977072553 100644
---- a/drivers/pinctrl/pinctrl-at91-pio4.c
-+++ b/drivers/pinctrl/pinctrl-at91-pio4.c
-@@ -483,7 +483,6 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
- 	unsigned num_pins, num_configs, reserve;
- 	unsigned long *configs;
- 	struct property	*pins;
--	bool has_config;
- 	u32 pinfunc;
- 	int ret, i;
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index fadc4d8783bd8..79b809dbfda01 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -143,7 +143,7 @@ config DMA_JZ4740
  
-@@ -499,9 +498,6 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
- 		return ret;
- 	}
- 
--	if (num_configs)
--		has_config = true;
--
- 	num_pins = pins->length / sizeof(u32);
- 	if (!num_pins) {
- 		dev_err(pctldev->dev, "no pins found in node %pOF\n", np);
-@@ -514,7 +510,7 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
- 	 * map for each pin.
- 	 */
- 	reserve = 1;
--	if (has_config && num_pins >= 1)
-+	if (num_configs)
- 		reserve++;
- 	reserve *= num_pins;
- 	ret = pinctrl_utils_reserve_map(pctldev, map, reserved_maps, num_maps,
-@@ -537,7 +533,7 @@ static int atmel_pctl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
- 		pinctrl_utils_add_map_mux(pctldev, map, reserved_maps, num_maps,
- 					  group, func);
- 
--		if (has_config) {
-+		if (num_configs) {
- 			ret = pinctrl_utils_add_map_configs(pctldev, map,
- 					reserved_maps, num_maps, group,
- 					configs, num_configs,
+ config DMA_JZ4780
+ 	tristate "JZ4780 DMA support"
+-	depends on MACH_JZ4780 || COMPILE_TEST
++	depends on MIPS || COMPILE_TEST
+ 	select DMA_ENGINE
+ 	select DMA_VIRTUAL_CHANNELS
+ 	help
 -- 
 2.20.1
 
