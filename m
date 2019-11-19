@@ -2,80 +2,85 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D93CC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D14C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15F3D21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F0A20409
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:04:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gyMooxpP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b66DK+eq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfKSNDa (ORCPT
+        id S1727965AbfKSNEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 08:03:30 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51375 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725798AbfKSND3 (ORCPT
+        Tue, 19 Nov 2019 08:04:41 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29240 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727638AbfKSNEl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 08:03:29 -0500
+        Tue, 19 Nov 2019 08:04:41 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574168607;
+        s=mimecast20190719; t=1574168679;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=VVKdPHyNInKr1jXwID8mLSj5pIoLgSLr+NLS/+lX59s=;
-        b=gyMooxpPqqtE0lwRVVcMo99wrL0CrX79iAZ8Y4vD4dV123sBG7m1c+CLizf/WE2sj5o2m/
-        KCr9+bQyr2+ENG+uBPpwbOlGbnD02JTmyl4v0TRoJN++szUzB734PMDS/GahpNj6eOvWVU
-        +RPBUbq4ujsvE6v6LqarTRglOPCw7Sw=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-214-Vy0N39GpOD-O8Hfpc0gfmA-1; Tue, 19 Nov 2019 08:03:26 -0500
-Received: by mail-qt1-f198.google.com with SMTP id f14so9397573qto.2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 05:03:26 -0800 (PST)
+        bh=1u2WSPm0ixutLDhHPQFbAB3e6YssvhaqnOP7EqAOnTM=;
+        b=b66DK+eq2+StNfml/T+qhpItbk3H8heiQd72aVVVBrLMA/ACwbHvhUqUMSh6VEwXn//wiv
+        ZjWzBUTD7Gc4ZP192g1mQuKqZjoIU8UBvejrZ0EJRYJeB9XtchGOAYvsxRbxYpKMzEN+/o
+        GfxCpXNaqz+8HDqrF3AaHG4MmoKAzqU=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-21-5s073ncJMM-AfqiUC9Kk2g-1; Tue, 19 Nov 2019 08:04:38 -0500
+Received: by mail-qt1-f197.google.com with SMTP id v92so14530268qtd.18
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 05:04:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=U7VXEEogLZ2y/UYgVzgWhynH6YujLFzwyuHzw1/YNWU=;
-        b=eCV3sAQDofYH2Amj39qGlXKj/dAanEbNvth/XriLGisecLkBwAlVLy/4mmpLQj0Avs
-         SbRHbgZQ4TXwZOBzONVyu85bop9cN+S/qybVVbwhZYT4ZP+qOUe4CWV6Y5WZQjp10GyY
-         yGCnoBoBo5UxGDW8bUgmjNc70DOzbNz9wTuhJ3degAdp+abBTKi97UsUDeuDgpVi8weF
-         SNy7cMDByroUy7DxT0yRDbdkVgb4+Se0xPY/ZeV5iF880QmAvmfuqspSLV4pKrJOV9MS
-         xYiJ/2IzzaI0lu3RhHNqEdMBtZ3v1RD7LnBXj4BsE+GMP5GRa3sEuy8UcThvqmfjE590
-         gwSQ==
-X-Gm-Message-State: APjAAAVv7Ly7VwFgAF7Py09iQ9zACkuqq9Ukqmo/1TTptTi4YbYX2v/n
-        JobtnaVLuzyUwCZTlf0Gfh6n32+KD5M9p6G7OJOQHl/1umByzbkHp2ND/AdojL2fmOfngYKgfXG
-        RjFu1mUsQphBxq3BvrCpukUhR
-X-Received: by 2002:ae9:edc6:: with SMTP id c189mr29290246qkg.351.1574168606026;
-        Tue, 19 Nov 2019 05:03:26 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyiIfkMbDD3N5CTsf6CCSVQpQTOzwgDzZyzojxHwiP+jBWlIneB91vqUjmHw3eYsoLuHqhzZw==
-X-Received: by 2002:ae9:edc6:: with SMTP id c189mr29290210qkg.351.1574168605618;
-        Tue, 19 Nov 2019 05:03:25 -0800 (PST)
+        bh=wVazQdPSJMsHL4OK3xhjgyvdKos3XKZz6J3/eg1KCyU=;
+        b=DFkoeiKbmWOtH/QoAkYKkaqYOuqJdI3+5UoySB6GvFHwHBKZDzMuv1eeqfDPn6nuG3
+         gtg7q49lB6WYQ53enKjTFdIV+7PpjS0jOLEnPjmRZnCVp+vx5JQrqTizRAkHefxasv+/
+         l5d3fxhZzZ8ypUk5svZKuEmgB1Kk66MWrYm9owy/g/2480ENWhcjUakQ4V6lgcG2aARb
+         hwkjfKp/TJjTiZnXfmVfk9OYROPVgQ8uBOc7/ewuxUjufec3PNogG6kuDZhbHC75XMt/
+         JsG22ypS7a4mCKCCaQkveykYl3tdKdsE3AeGNSaZ1nj85KQD/rYdwQPrB4BQ04cJUWKg
+         y/9w==
+X-Gm-Message-State: APjAAAW33N7szQdetFGPINCo2wKsl3wi2D5vlJMku47cvlynPOp/GEFg
+        GzlFrGw+CT09bboNM0IU5aGV8WTcRs7EPk072Q/HsMKob+oych62+HAl8/BZWmIu32KXT08R+eb
+        ZFVn1UMFBkaUtlXGPGsgUfrMS
+X-Received: by 2002:a37:9bc2:: with SMTP id d185mr28179241qke.299.1574168677411;
+        Tue, 19 Nov 2019 05:04:37 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzFd/pD/dAXOX6+NHhk5vVmoZGCOTtkClfM8PPmjU9d3WO6EyImxneoYY7/W44Z8WPeVOogig==
+X-Received: by 2002:a37:9bc2:: with SMTP id d185mr28179213qke.299.1574168677150;
+        Tue, 19 Nov 2019 05:04:37 -0800 (PST)
 Received: from redhat.com (bzq-79-176-6-42.red.bezeqint.net. [79.176.6.42])
-        by smtp.gmail.com with ESMTPSA id 187sm10260541qkk.103.2019.11.19.05.03.21
+        by smtp.gmail.com with ESMTPSA id w30sm12605312qtc.47.2019.11.19.05.04.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 05:03:24 -0800 (PST)
-Date:   Tue, 19 Nov 2019 08:03:19 -0500
+        Tue, 19 Nov 2019 05:04:36 -0800 (PST)
+Date:   Tue, 19 Nov 2019 08:04:29 -0500
 From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Khazhismel Kumykov <khazhy@google.com>,
-        Wei Wang <wei.w.wang@intel.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH] virtio_balloon: fix shrinker scan number of pages
-Message-ID: <20191119080254-mutt-send-email-mst@kernel.org>
-References: <20191119101718.38976-1-mst@redhat.com>
- <34c84d6a-d200-c296-39bb-4770bf4517e9@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        linux-s390@vger.kernel.org, Michael Mueller <mimu@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>, Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH 1/1] virtio_ring: fix return code on DMA mapping fails
+Message-ID: <20191119080420-mutt-send-email-mst@kernel.org>
+References: <20191114124646.74790-1-pasic@linux.ibm.com>
+ <20191119121022.03aed69a.pasic@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <34c84d6a-d200-c296-39bb-4770bf4517e9@redhat.com>
-X-MC-Unique: Vy0N39GpOD-O8Hfpc0gfmA-1
+In-Reply-To: <20191119121022.03aed69a.pasic@linux.ibm.com>
+X-MC-Unique: 5s073ncJMM-AfqiUC9Kk2g-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -85,94 +90,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 12:39:51PM +0100, David Hildenbrand wrote:
-> On 19.11.19 11:17, Michael S. Tsirkin wrote:
-> > virtio_balloon_shrinker_scan should return number of system pages freed=
-,
-> > but because it's calling functions that deal with balloon pages, it get=
-s
-> > confused and sometimes returns the number of balloon pages.
-> >=20
-> > It does not matter practically as the exact number isn't
-> > used, but it seems better to be consistent in case someone
-> > starts using this API.
+Will be in the next pull request.
+
+On Tue, Nov 19, 2019 at 12:10:22PM +0100, Halil Pasic wrote:
+> ping
 >=20
-> If it doesn't matter, why cc: stable?
-
-Oh right. Sorry.
-
-> >=20
-> > Further, if we ever tried to iteratively leak pages as
-> > virtio_balloon_shrinker_scan tries to do, we'd run into issues - this i=
+> On Thu, 14 Nov 2019 13:46:46 +0100
+> Halil Pasic <pasic@linux.ibm.com> wrote:
+>=20
+> > Commit 780bc7903a32 ("virtio_ring: Support DMA APIs")  makes
+> > virtqueue_add() return -EIO when we fail to map our I/O buffers. This i=
 s
-> > because freed_pages was accumulating total freed pages, but was also
-> > subtracted on each iteration from pages_to_free, which can result in
-> > either leaking less memory than we were supposed to free, or or more if
-> > pages_to_free underruns.
+> > a very realistic scenario for guests with encrypted memory, as swiotlb
+> > may run out of space, depending on it's size and the I/O load.
 > >=20
-> > On a system with 4K pages we are lucky that we are never asked to leak
-> > more than 128 pages while we can leak up to 256 at a time,
-> > but it looks like a real issue for systems with page size !=3D 4K.
+> > The virtio-blk driver interprets -EIO form virtqueue_add() as an IO
+> > error, despite the fact that swiotlb full is in absence of bugs a
+> > recoverable condition.
 > >=20
-> > Cc: stable@vger.kernel.org
-> > Fixes: 71994620bb25 ("virtio_balloon: replace oom notifier with shrinke=
-r")
-> > Reported-by: Khazhismel Kumykov <khazhy@google.com>
-> > Reviewed-by: Wei Wang <wei.w.wang@intel.com>
-> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> > Let us change the return code to -ENOMEM, and make the block layer
+> > recover form these failures when virtio-blk encounters the condition
+> > described above.
+> >=20
+> > Fixes: 780bc7903a32 ("virtio_ring: Support DMA APIs")
+> > Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> > Tested-by: Michael Mueller <mimu@linux.ibm.com>
 > > ---
-> >   drivers/virtio/virtio_balloon.c | 17 +++++++++++------
-> >   1 file changed, 11 insertions(+), 6 deletions(-)
 > >=20
-> > diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_ba=
-lloon.c
-> > index 226fbb995fb0..7cee05cdf3fb 100644
-> > --- a/drivers/virtio/virtio_balloon.c
-> > +++ b/drivers/virtio/virtio_balloon.c
-> > @@ -772,6 +772,13 @@ static unsigned long shrink_free_pages(struct virt=
-io_balloon *vb,
-> >   =09return blocks_freed << VIRTIO_BALLOON_FREE_PAGE_ORDER;
-> >   }
-> > +static unsigned long leak_balloon_pages(struct virtio_balloon *vb,
-> > +                                          unsigned long pages_to_free)
-> > +{
-> > +=09return leak_balloon(vb, pages_to_free * VIRTIO_BALLOON_PAGES_PER_PA=
-GE) /
-> > +=09=09VIRTIO_BALLOON_PAGES_PER_PAGE;
-> > +}
-> > +
-> >   static unsigned long shrink_balloon_pages(struct virtio_balloon *vb,
-> >   =09=09=09=09=09  unsigned long pages_to_free)
-> >   {
-> > @@ -782,11 +789,9 @@ static unsigned long shrink_balloon_pages(struct v=
-irtio_balloon *vb,
-> >   =09 * VIRTIO_BALLOON_ARRAY_PFNS_MAX balloon pages, so we call it
-> >   =09 * multiple times to deflate pages till reaching pages_to_free.
-> >   =09 */
-> > -=09while (vb->num_pages && pages_to_free) {
-> > -=09=09pages_freed +=3D leak_balloon(vb, pages_to_free) /
-> > -=09=09=09=09=09VIRTIO_BALLOON_PAGES_PER_PAGE;
-> > -=09=09pages_to_free -=3D pages_freed;
-> > -=09}
-> > +=09while (vb->num_pages && pages_freed < pages_to_free)
-> > +=09=09pages_freed +=3D leak_balloon_pages(vb, pages_to_free);
-> > +
-> >   =09update_balloon_size(vb);
-> >   =09return pages_freed;
-> > @@ -799,7 +804,7 @@ static unsigned long virtio_balloon_shrinker_scan(s=
-truct shrinker *shrinker,
-> >   =09struct virtio_balloon *vb =3D container_of(shrinker,
-> >   =09=09=09=09=09struct virtio_balloon, shrinker);
-> > -=09pages_to_free =3D sc->nr_to_scan * VIRTIO_BALLOON_PAGES_PER_PAGE;
-> > +=09pages_to_free =3D sc->nr_to_scan;
-> >   =09if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
-> >   =09=09pages_freed =3D shrink_free_pages(vb, pages_to_free);
+> > Notes
+> > =3D=3D=3D=3D=3D
 > >=20
->=20
->=20
-> --=20
->=20
-> Thanks,
->=20
-> David / dhildenb
+> > * When out of descriptors (which might regarded as a similar out of
+> > resources condition) virtio uses -ENOSPC, this however seems wrong,
+> > as ENOSPC is defined as -ENOSPC. Thus I choose -ENOMEM over -ENOSPC.
+> >=20
+> > * In virtio_queue_rq() in virtio_blk.c both -ENOMEM and -ENOSPC are
+> > handled as BLK_STS_DEV_RESOURCE. Returning BLK_STS_RESOURCE however
+> > seems more appropriate for dma mapping failed as we are talking about
+> > a global, and not a device local resource. Both seem to do the trick.
+> >=20
+> > * Mimu tested the patch with virtio-blk and virtio-net (thanks!). We
+> > should look into how other virtio devices behave when DMA mapping fails=
+.
+> > ---
+> >  drivers/virtio/virtio_ring.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.=
+c
+> > index a8041e451e9e..867c7ebd3f10 100644
+> > --- a/drivers/virtio/virtio_ring.c
+> > +++ b/drivers/virtio/virtio_ring.c
+> > @@ -583,7 +583,7 @@ static inline int virtqueue_add_split(struct virtqu=
+eue *_vq,
+> >  =09=09kfree(desc);
+> > =20
+> >  =09END_USE(vq);
+> > -=09return -EIO;
+> > +=09return -ENOMEM;
+> >  }
+> > =20
+> >  static bool virtqueue_kick_prepare_split(struct virtqueue *_vq)
+> > @@ -1085,7 +1085,7 @@ static int virtqueue_add_indirect_packed(struct v=
+ring_virtqueue *vq,
+> >  =09kfree(desc);
+> > =20
+> >  =09END_USE(vq);
+> > -=09return -EIO;
+> > +=09return -ENOMEM;
+> >  }
+> > =20
+> >  static inline int virtqueue_add_packed(struct virtqueue *_vq,
 
