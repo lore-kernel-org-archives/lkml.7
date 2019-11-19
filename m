@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5161C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 822A9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E9B421783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A367208CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142415;
-	bh=9H/S9MZdf5+9c4GFaI7HTfzDZGkIWEQ1oZwuu/OMqMw=;
+	s=default; t=1574142423;
+	bh=VxBVNK0fulYKD1DbXnpRW+WbwkKSHcNlDDODLj71v08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iA0/UKcsJ10PWIfepkqZRVI9Jdf56pxBfZs1KalSKKKUd8OaLCY5GUIeCGGuvSQa0
-	 1/tN0XCkKnh1BE7gzpRDTnoeDO2d1sR8Dm8Y+lW2WdTGp5Z/NDUkTkourdC3UCHKg3
-	 AyHhWKLUzqnybnjfP1tSuewx7sEu8hLDRLPaujqA=
+	b=D72y2Dm4TtWhtoWj02MyiV7CzeQeGi/FnzfGrrrE61ztywUVQ3br13oyneWyp7vZz
+	 oDO2DwmhVVn3M7xLwBvWzB3hz0ip0yDdWEi3q30h4ALdQV2cg8G5ENgXcUfyXPxyd9
+	 hsqMuSe/TC1xQeJf4AH4WhHwrJxeZ3FECAonkN70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731168AbfKSFqy (ORCPT
+        id S1731194AbfKSFrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:46:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43086 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:47:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730637AbfKSFqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:46:52 -0500
+        id S1731182AbfKSFrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:47:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ACB0208CC;
-        Tue, 19 Nov 2019 05:46:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26D3C208CC;
+        Tue, 19 Nov 2019 05:46:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142411;
-        bh=9H/S9MZdf5+9c4GFaI7HTfzDZGkIWEQ1oZwuu/OMqMw=;
+        s=default; t=1574142420;
+        bh=VxBVNK0fulYKD1DbXnpRW+WbwkKSHcNlDDODLj71v08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o64+azAWccD9ss3YVfBKWPFbUXCkU/RJEiRPmMIMIw7M9FwCiTiUtXmX1dXgZv6iJ
-         9RVADPZkPfHspl3GELSF64AzHhdwHNC+opNEMn/sBzfW80+9/pMLor5daHpU5jYBDE
-         XWJ3p9WLjtO9L3Qb/jPoMp/zplIlgTnh3K9CAtUA=
+        b=C/afT9EZhAUoDvMKAVc61ZpejlMAInKdESunkKOi61TKWsU6gZXp6FFJSVkdODlWi
+         ALPyBkFX9z05wpVHW94DTsEsRvP4qN1/8Cv4WFS6Nma8DBsLSg4x6a+r5rGtt664QR
+         Z8X3SyeDY5A0obGDcUpN29SYI6DxhEVoMUkVHyMM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Yong Zhi <yong.zhi@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 071/239] RDMA/core: Rate limit MAD error messages
-Date:   Tue, 19 Nov 2019 06:17:51 +0100
-Message-Id: <20191119051313.267295358@linuxfoundation.org>
+Subject: [PATCH 4.14 074/239] ASoC: Intel: hdac_hdmi: Limit sampling rates at dai creation
+Date:   Tue, 19 Nov 2019 06:17:54 +0100
+Message-Id: <20191119051313.924156482@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -62,174 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Yong Zhi <yong.zhi@intel.com>
 
-[ Upstream commit f9d08f1e1939ad4d92e38bd3dee6842512f5bee6 ]
+[ Upstream commit 3b857472f34faa7d11001afa5e158833812c98d7 ]
 
-While registering a mad agent, a user space can trigger various errors
-and flood the logs.
+Playback of 44.1Khz contents with HDMI plugged returns
+"Invalid pipe config" because HDMI paths in the FW
+topology are configured to operate at 48Khz.
 
-Therefore, decrease verbosity and rate limit such error messages.
-While we are at it, use __func__ to print function name.
+This patch filters out sampling rates not supported
+at hdac_hdmi_create_dais() to let user space SRC
+to do the converting.
 
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Yong Zhi <yong.zhi@intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/mad.c | 72 ++++++++++++++++++-----------------
- 1 file changed, 37 insertions(+), 35 deletions(-)
+ sound/soc/codecs/hdac_hdmi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/infiniband/core/mad.c b/drivers/infiniband/core/mad.c
-index e4339b9e43a54..6072ac7023cb7 100644
---- a/drivers/infiniband/core/mad.c
-+++ b/drivers/infiniband/core/mad.c
-@@ -217,30 +217,30 @@ struct ib_mad_agent *ib_register_mad_agent(struct ib_device *device,
- 	/* Validate parameters */
- 	qpn = get_spl_qp_index(qp_type);
- 	if (qpn == -1) {
--		dev_notice(&device->dev,
--			   "ib_register_mad_agent: invalid QP Type %d\n",
--			   qp_type);
-+		dev_dbg_ratelimited(&device->dev, "%s: invalid QP Type %d\n",
-+				    __func__, qp_type);
- 		goto error1;
- 	}
+diff --git a/sound/soc/codecs/hdac_hdmi.c b/sound/soc/codecs/hdac_hdmi.c
+index e824d47cc22b0..1c3626347e12b 100644
+--- a/sound/soc/codecs/hdac_hdmi.c
++++ b/sound/soc/codecs/hdac_hdmi.c
+@@ -1408,6 +1408,12 @@ static int hdac_hdmi_create_dais(struct hdac_device *hdac,
+ 		if (ret)
+ 			return ret;
  
- 	if (rmpp_version && rmpp_version != IB_MGMT_RMPP_VERSION) {
--		dev_notice(&device->dev,
--			   "ib_register_mad_agent: invalid RMPP Version %u\n",
--			   rmpp_version);
-+		dev_dbg_ratelimited(&device->dev,
-+				    "%s: invalid RMPP Version %u\n",
-+				    __func__, rmpp_version);
- 		goto error1;
- 	}
- 
- 	/* Validate MAD registration request if supplied */
- 	if (mad_reg_req) {
- 		if (mad_reg_req->mgmt_class_version >= MAX_MGMT_VERSION) {
--			dev_notice(&device->dev,
--				   "ib_register_mad_agent: invalid Class Version %u\n",
--				   mad_reg_req->mgmt_class_version);
-+			dev_dbg_ratelimited(&device->dev,
-+					    "%s: invalid Class Version %u\n",
-+					    __func__,
-+					    mad_reg_req->mgmt_class_version);
- 			goto error1;
- 		}
- 		if (!recv_handler) {
--			dev_notice(&device->dev,
--				   "ib_register_mad_agent: no recv_handler\n");
-+			dev_dbg_ratelimited(&device->dev,
-+					    "%s: no recv_handler\n", __func__);
- 			goto error1;
- 		}
- 		if (mad_reg_req->mgmt_class >= MAX_MGMT_CLASS) {
-@@ -250,9 +250,9 @@ struct ib_mad_agent *ib_register_mad_agent(struct ib_device *device,
- 			 */
- 			if (mad_reg_req->mgmt_class !=
- 			    IB_MGMT_CLASS_SUBN_DIRECTED_ROUTE) {
--				dev_notice(&device->dev,
--					   "ib_register_mad_agent: Invalid Mgmt Class 0x%x\n",
--					   mad_reg_req->mgmt_class);
-+				dev_dbg_ratelimited(&device->dev,
-+					"%s: Invalid Mgmt Class 0x%x\n",
-+					__func__, mad_reg_req->mgmt_class);
- 				goto error1;
- 			}
- 		} else if (mad_reg_req->mgmt_class == 0) {
-@@ -260,8 +260,9 @@ struct ib_mad_agent *ib_register_mad_agent(struct ib_device *device,
- 			 * Class 0 is reserved in IBA and is used for
- 			 * aliasing of IB_MGMT_CLASS_SUBN_DIRECTED_ROUTE
- 			 */
--			dev_notice(&device->dev,
--				   "ib_register_mad_agent: Invalid Mgmt Class 0\n");
-+			dev_dbg_ratelimited(&device->dev,
-+					    "%s: Invalid Mgmt Class 0\n",
-+					    __func__);
- 			goto error1;
- 		} else if (is_vendor_class(mad_reg_req->mgmt_class)) {
- 			/*
-@@ -269,18 +270,19 @@ struct ib_mad_agent *ib_register_mad_agent(struct ib_device *device,
- 			 * ensure supplied OUI is not zero
- 			 */
- 			if (!is_vendor_oui(mad_reg_req->oui)) {
--				dev_notice(&device->dev,
--					   "ib_register_mad_agent: No OUI specified for class 0x%x\n",
--					   mad_reg_req->mgmt_class);
-+				dev_dbg_ratelimited(&device->dev,
-+					"%s: No OUI specified for class 0x%x\n",
-+					__func__,
-+					mad_reg_req->mgmt_class);
- 				goto error1;
- 			}
- 		}
- 		/* Make sure class supplied is consistent with RMPP */
- 		if (!ib_is_mad_class_rmpp(mad_reg_req->mgmt_class)) {
- 			if (rmpp_version) {
--				dev_notice(&device->dev,
--					   "ib_register_mad_agent: RMPP version for non-RMPP class 0x%x\n",
--					   mad_reg_req->mgmt_class);
-+				dev_dbg_ratelimited(&device->dev,
-+					"%s: RMPP version for non-RMPP class 0x%x\n",
-+					__func__, mad_reg_req->mgmt_class);
- 				goto error1;
- 			}
- 		}
-@@ -291,9 +293,9 @@ struct ib_mad_agent *ib_register_mad_agent(struct ib_device *device,
- 					IB_MGMT_CLASS_SUBN_LID_ROUTED) &&
- 			    (mad_reg_req->mgmt_class !=
- 					IB_MGMT_CLASS_SUBN_DIRECTED_ROUTE)) {
--				dev_notice(&device->dev,
--					   "ib_register_mad_agent: Invalid SM QP type: class 0x%x\n",
--					   mad_reg_req->mgmt_class);
-+				dev_dbg_ratelimited(&device->dev,
-+					"%s: Invalid SM QP type: class 0x%x\n",
-+					__func__, mad_reg_req->mgmt_class);
- 				goto error1;
- 			}
- 		} else {
-@@ -301,9 +303,9 @@ struct ib_mad_agent *ib_register_mad_agent(struct ib_device *device,
- 					IB_MGMT_CLASS_SUBN_LID_ROUTED) ||
- 			    (mad_reg_req->mgmt_class ==
- 					IB_MGMT_CLASS_SUBN_DIRECTED_ROUTE)) {
--				dev_notice(&device->dev,
--					   "ib_register_mad_agent: Invalid GS QP type: class 0x%x\n",
--					   mad_reg_req->mgmt_class);
-+				dev_dbg_ratelimited(&device->dev,
-+					"%s: Invalid GS QP type: class 0x%x\n",
-+					__func__, mad_reg_req->mgmt_class);
- 				goto error1;
- 			}
- 		}
-@@ -318,18 +320,18 @@ struct ib_mad_agent *ib_register_mad_agent(struct ib_device *device,
- 	/* Validate device and port */
- 	port_priv = ib_get_mad_port(device, port_num);
- 	if (!port_priv) {
--		dev_notice(&device->dev,
--			   "ib_register_mad_agent: Invalid port %d\n",
--			   port_num);
-+		dev_dbg_ratelimited(&device->dev, "%s: Invalid port %d\n",
-+				    __func__, port_num);
- 		ret = ERR_PTR(-ENODEV);
- 		goto error1;
- 	}
- 
--	/* Verify the QP requested is supported.  For example, Ethernet devices
--	 * will not have QP0 */
-+	/* Verify the QP requested is supported. For example, Ethernet devices
-+	 * will not have QP0.
-+	 */
- 	if (!port_priv->qp_info[qpn].qp) {
--		dev_notice(&device->dev,
--			   "ib_register_mad_agent: QP %d not supported\n", qpn);
-+		dev_dbg_ratelimited(&device->dev, "%s: QP %d not supported\n",
-+				    __func__, qpn);
- 		ret = ERR_PTR(-EPROTONOSUPPORT);
- 		goto error1;
- 	}
++		/* Filter out 44.1, 88.2 and 176.4Khz */
++		rates &= ~(SNDRV_PCM_RATE_44100 | SNDRV_PCM_RATE_88200 |
++			   SNDRV_PCM_RATE_176400);
++		if (!rates)
++			return -EINVAL;
++
+ 		sprintf(dai_name, "intel-hdmi-hifi%d", i+1);
+ 		hdmi_dais[i].name = devm_kstrdup(&hdac->dev,
+ 					dai_name, GFP_KERNEL);
 -- 
 2.20.1
 
