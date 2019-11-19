@@ -4,21 +4,20 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C410EC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0331C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB0322316
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B320022316
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:12:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbfKSDMy (ORCPT
+        id S1727588AbfKSDMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 22:12:54 -0500
+        Mon, 18 Nov 2019 22:12:55 -0500
 Received: from mga02.intel.com ([134.134.136.20]:21246 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727014AbfKSDMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727351AbfKSDMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 18 Nov 2019 22:12:54 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -26,7 +25,7 @@ Received: from orsmga002.jf.intel.com ([10.7.209.21])
   by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 19:12:42 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,322,1569308400"; 
-   d="scan'208";a="218105733"
+   d="scan'208";a="218105730"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
   by orsmga002.jf.intel.com with ESMTP; 18 Nov 2019 19:12:42 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -53,9 +52,9 @@ Cc:     "H. Peter Anvin" <hpa@zytor.com>,
         kvm@vger.kernel.org, linux-edac@vger.kernel.org,
         linux-kselftest@vger.kernel.org, Borislav Petkov <bp@suse.de>,
         Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v3 11/19] KVM: VMX: Check for full VMX support when verifying CPU compatibility
-Date:   Mon, 18 Nov 2019 19:12:32 -0800
-Message-Id: <20191119031240.7779-12-sean.j.christopherson@intel.com>
+Subject: [PATCH v3 10/19] KVM: VMX: Use VMX feature flag to query BIOS enabling
+Date:   Mon, 18 Nov 2019 19:12:31 -0800
+Message-Id: <20191119031240.7779-11-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119031240.7779-1-sean.j.christopherson@intel.com>
 References: <20191119031240.7779-1-sean.j.christopherson@intel.com>
@@ -66,32 +65,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explicitly check the current CPU's VMX feature flag when verifying
-compatibility across physical CPUs.  This effectively adds a check on
-IA32_FEATURE_CONTROL to ensure that VMX is fully enabled on all CPUs.
+Replace KVM's manual checks on IA32_FEATURE_CONTROL with a query on the
+boot CPU's VMX feature flag.  The VMX flag is now cleared during boot if
+VMX isn't fully enabled via IA32_FEATURE_CONTROL, including the case
+where IA32_FEATURE_CONTROL isn't supported.
 
 Reviewed-by: Jim Mattson <jmattson@google.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/kvm/vmx/vmx.c | 26 +-------------------------
+ 1 file changed, 1 insertion(+), 25 deletions(-)
 
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index eff28130cb54..d9bd99977464 100644
+index e9681e3fcb63..eff28130cb54 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6831,6 +6831,11 @@ static int __init vmx_check_processor_compat(void)
- 	struct vmcs_config vmcs_conf;
- 	struct vmx_capability vmx_cap;
+@@ -2192,31 +2192,7 @@ static __init int cpu_has_kvm_support(void)
  
-+	if (!this_cpu_has(X86_FEATURE_VMX)) {
-+		pr_err("kvm: VMX is disabled on CPU %d\n", smp_processor_id());
-+		return -EIO;
-+	}
-+
- 	if (setup_vmcs_config(&vmcs_conf, &vmx_cap) < 0)
- 		return -EIO;
- 	if (nested)
+ static __init int vmx_disabled_by_bios(void)
+ {
+-	u64 msr;
+-
+-	rdmsrl(MSR_IA32_FEATURE_CONTROL, msr);
+-
+-	if (WARN_ON_ONCE(!(msr & FEAT_CTL_LOCKED)))
+-		return 1;
+-
+-	/* launched w/ TXT and VMX disabled */
+-	if (!(msr & FEAT_CTL_VMX_ENABLED_INSIDE_SMX) &&
+-	    tboot_enabled())
+-		return 1;
+-	/* launched w/o TXT and VMX only enabled w/ TXT */
+-	if (!(msr & FEAT_CTL_VMX_ENABLED_OUTSIDE_SMX) &&
+-	    (msr & FEAT_CTL_VMX_ENABLED_INSIDE_SMX) &&
+-	    !tboot_enabled()) {
+-		pr_warn("kvm: disable TXT in the BIOS or "
+-			"activate TXT before enabling KVM\n");
+-		return 1;
+-	}
+-	/* launched w/o TXT and VMX disabled */
+-	if (!(msr & FEAT_CTL_VMX_ENABLED_OUTSIDE_SMX) &&
+-	    !tboot_enabled())
+-		return 1;
+-
+-	return 0;
++	return !boot_cpu_has(X86_FEATURE_VMX);
+ }
+ 
+ static void kvm_cpu_vmxon(u64 addr)
 -- 
 2.24.0
 
