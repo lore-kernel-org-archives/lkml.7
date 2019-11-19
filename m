@@ -2,139 +2,142 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B426C43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 574AFC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 737142245F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:54:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oURkgRgG"
+	by mail.kernel.org (Postfix) with ESMTP id 30E5B22444
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:57:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfKSTy1 (ORCPT
+        id S1727224AbfKST5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 14:54:27 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39627 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbfKSTy1 (ORCPT
+        Tue, 19 Nov 2019 14:57:20 -0500
+Received: from smtprelay0101.hostedemail.com ([216.40.44.101]:37360 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726722AbfKST5T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 14:54:27 -0500
-Received: by mail-ot1-f65.google.com with SMTP id w24so18570598otk.6
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 11:54:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=EhLUhFf+dWrZRS+as37pEKZIEswUZkBGb2xI++P3+j8=;
-        b=oURkgRgGWUkSxDSZ1GZcf9JKZThTVFiPnKTPYV6+NAQo4qwintbC2XWKkuqirZuVFU
-         bTYZKRscOUCeu16ZKaeZ3gXmUectwJqraAkzc8IBVgzlI8PbblowyxH6P3Ln12UZk9iO
-         Pl0kfXxMBXKjXj6d8JggILhmHIA8f4ZCcFz6nGlkz7lVmiWjRLK+0aGRrkffeyuCuNkI
-         0zslGM9F/hSRR4n8JF2dvLzZiZ64O/OcPnSgVvg+FuFKwOq/W9YtVItB909hWO3GwyqT
-         +0ZUwJKbggzqgLthIVoIszbE1Prv8ek/hgwno+wjPrrY7IKe9Gu3nZy0IvutjK5EGayQ
-         o9iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=EhLUhFf+dWrZRS+as37pEKZIEswUZkBGb2xI++P3+j8=;
-        b=ao7IzcCYn+BLe82gv3gtDL/3O8S62YhtFgQ9AWSB+Puh859cxqYFTJG7PJz9dVgtbe
-         WvUjsDv+1Wc5jdtzx4X6+wkjfgDEsPUpcfMtH+cVA6+XbYma715ipmRf9fQDKZBmxPVn
-         kgFw9H1HenNt8ROo0nivLuIR2BIyko3MAfwybKbbWTBPViOze99HkkmfzSklSL3B5l/F
-         WgHg27Zty4I1+QD8Id0YUpzcScxmEn11zDpPFICG+Dd4S1z4UZiSt7LBuL4UvwQsVhtY
-         xBQpLnHvdjEwZ8yJ2mLRpHrlfSTu61ImcYzxh4mOh9d4l2QhetWpDoMo1AaXepi6H7WN
-         DiVg==
-X-Gm-Message-State: APjAAAUZjIhJ0QhgXns9rukcZjwqLxjw98h5h2Pw/wnyVPg7H6Jq90Ni
-        B1cR/lSmDsi73FOJdC3mpTGkrQXACu9tHa4poN3fkQ==
-X-Google-Smtp-Source: APXvYqyGgnRzC/YRie64niefMvgawW6RK21yPqM0zialvJFEd4a6Z7iuhn/AjgaPZsvq+/fqUfeR5iVlCDr+6w9vWVk=
-X-Received: by 2002:a05:6830:2308:: with SMTP id u8mr5018538ote.2.1574193265740;
- Tue, 19 Nov 2019 11:54:25 -0800 (PST)
-MIME-Version: 1.0
-References: <20191114180303.66955-1-elver@google.com> <20191114180303.66955-2-elver@google.com>
- <1574191653.9585.6.camel@lca.pw>
-In-Reply-To: <1574191653.9585.6.camel@lca.pw>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 19 Nov 2019 20:54:14 +0100
-Message-ID: <CANpmjNPiKg++=QHUjD87dqiBU1pHHfZmGLAh1gOZ+4JKAQ4SAQ@mail.gmail.com>
-Subject: Re: [PATCH v4 01/10] kcsan: Add Kernel Concurrency Sanitizer infrastructure
-To:     Qian Cai <cai@lca.pw>
-Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Alexander Potapenko <glider@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Howells <dhowells@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Tue, 19 Nov 2019 14:57:19 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 41B74182CF668;
+        Tue, 19 Nov 2019 19:57:18 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: coat09_3f7cbed42d161
+X-Filterd-Recvd-Size: 7563
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 19 Nov 2019 19:57:16 +0000 (UTC)
+Message-ID: <cb41a8956be6cf11e9d25c1790eeb8c935b9ab29.camel@perches.com>
+Subject: Re: [PATCH 2/2] MAINTAINERS: Switch to Marvell addresses
+From:   Joe Perches <joe@perches.com>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, arm soc <arm@kernel.org>,
+        Jan Glauber <jglauber@marvell.com>,
+        Sunil Kovvuri Goutham <sgoutham@marvell.com>,
+        George Cherian <gcherian@marvell.com>,
+        Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>,
         Will Deacon <will@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-efi@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "soc@kernel.org" <soc@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Tue, 19 Nov 2019 11:56:53 -0800
+In-Reply-To: <20191119185012.2fekd6f5gbpflpqe@rric.localdomain>
+References: <20191119165549.14570-1-rrichter@marvell.com>
+         <20191119165549.14570-4-rrichter@marvell.com>
+         <64ace55545c028bc39b08370074aafd32e8fc5f5.camel@perches.com>
+         <20191119185012.2fekd6f5gbpflpqe@rric.localdomain>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Nov 2019 at 20:27, Qian Cai <cai@lca.pw> wrote:
->
-> On Thu, 2019-11-14 at 19:02 +0100, 'Marco Elver' via kasan-dev wrote:
->
-> > +menuconfig KCSAN
-> > +     bool "KCSAN: watchpoint-based dynamic data race detector"
-> > +     depends on HAVE_ARCH_KCSAN && !KASAN && STACKTRACE
->
-> "!KASAN" makes me sorrow. What's problem of those two?
+On Tue, 2019-11-19 at 18:50 +0000, Robert Richter wrote:
+> On 19.11.19 09:14:36, Joe Perches wrote:
+> > On Tue, 2019-11-19 at 16:56 +0000, Robert Richter wrote:
+> > >  W:	http://www.cavium.com
+> > 
+> > Might want to change these W: links too
+> 
+> Yeah, good catch, was searching only for @cavium, which did not work
+> quite well here. Fixed that.
 
-Both of them instrument memory accesses, and gcc doesn't let us
-combine '-fsanitize=3D{kernel-,}address' and '-fsanitize=3Dthread'.
+Maybe make that change globally in all the files other
+than MAINTAINERS as well eventually.
 
-> cc1: error: =E2=80=98-fsanitize=3Daddress=E2=80=99 and =E2=80=98-fsanitiz=
-e=3Dkernel-address=E2=80=99 are incompatible with =E2=80=98-fsanitize=3Dthr=
-ead=E2=80=99
+arch/arm64/mm/numa.c:6: * Author: Ganapatrao Kulkarni <gkulkarni@cavium.com>
+arch/mips/cavium-octeon/octeon-usb.c:551:MODULE_AUTHOR("David Daney <david.daney@cavium.com>");
+arch/mips/include/asm/octeon/cvmx-coremask.h:6: * Copyright (c) 2016  Cavium Inc. (support@cavium.com).
+arch/mips/include/asm/octeon/cvmx-lmcx-defs.h:4: * Contact: support@cavium.com
+arch/mips/include/asm/octeon/cvmx-rst-defs.h:4: * Contact: support@cavium.com
+drivers/ata/ahci_octeon.c:99:MODULE_AUTHOR("Cavium, Inc. <support@cavium.com>");
+drivers/crypto/cavium/cpt/cptpf_main.c:668:MODULE_AUTHOR("George Cherian <george.cherian@cavium.com>");
+drivers/crypto/cavium/cpt/cptvf_main.c:860:MODULE_AUTHOR("George Cherian <george.cherian@cavium.com>");
+drivers/crypto/cavium/nitrox/nitrox_main.c:593:MODULE_AUTHOR("Srikanth Jampala <Jampala.Srikanth@cavium.com>");
+drivers/i2c/busses/i2c-thunderx-pcidrv.c:6: *	    Jan Glauber <jglauber@cavium.com>
+drivers/mmc/host/cavium-octeon.c:336:MODULE_AUTHOR("Cavium Inc. <support@cavium.com>");
+drivers/mmc/host/cavium.c:11: *   David Daney <david.daney@cavium.com>
+drivers/mmc/host/cavium.c:12: *   Peter Swain <pswain@cavium.com>
+drivers/mmc/host/cavium.c:13: *   Steven J. Hill <steven.hill@cavium.com>
+drivers/mmc/host/cavium.c:14: *   Jan Glauber <jglauber@cavium.com>
+drivers/net/ethernet/cavium/common/cavium_ptp.c:338:MODULE_AUTHOR("Cavium Networks <support@cavium.com>");
+drivers/net/ethernet/cavium/liquidio/cn23xx_pf_device.c:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/cn23xx_pf_device.h:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/cn23xx_pf_regs.h:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/cn23xx_vf_device.c:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/cn23xx_vf_device.h:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/cn23xx_vf_regs.h:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/cn66xx_device.c:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/cn66xx_device.h:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/cn66xx_regs.h:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/cn68xx_device.c:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/cn68xx_device.h:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/cn68xx_regs.h:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/lio_core.c:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/lio_ethtool.c:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/lio_main.c:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/lio_main.c:39:MODULE_AUTHOR("Cavium Networks, <support@cavium.com>");
+drivers/net/ethernet/cavium/liquidio/lio_vf_main.c:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/lio_vf_main.c:32:MODULE_AUTHOR("Cavium Networks, <support@cavium.com>");
+drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/lio_vf_rep.h:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/liquidio_common.h:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/liquidio_image.h:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/octeon_config.h:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/octeon_console.c:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/octeon_device.c:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/octeon_device.h:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/octeon_droq.c:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/octeon_droq.h:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/octeon_iq.h:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/octeon_mailbox.c:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/octeon_mailbox.h:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/octeon_main.h:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/octeon_mem_ops.c:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/octeon_mem_ops.h:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/octeon_network.h:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/octeon_nic.c:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/octeon_nic.h:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/request_manager.c:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/response_manager.c:4: * Contact: support@cavium.com
+drivers/net/ethernet/cavium/liquidio/response_manager.h:4: * Contact: support@cavium.com
+drivers/perf/thunderx2_pmu.c:5: * Author: Ganapatrao Kulkarni <gkulkarni@cavium.com>
+drivers/perf/thunderx2_pmu.c:1054:MODULE_AUTHOR("Ganapatrao Kulkarni <gkulkarni@cavium.com>");
+drivers/spi/spi-cavium-thunderx.c:6: * Authors: Jan Glauber <jglauber@cavium.com>
+drivers/staging/octeon-usb/octeon-hcd.c:11: * Copyright (c) 2003-2010 Cavium Networks (support@cavium.com). All rights
+drivers/staging/octeon-usb/octeon-hcd.c:3736:MODULE_AUTHOR("Cavium, Inc. <support@cavium.com>");
+drivers/staging/octeon-usb/octeon-hcd.h:11: * Copyright (c) 2003-2010 Cavium Networks (support@cavium.com). All rights
+drivers/usb/storage/unusual_devs.h:2140:/* Reported-by George Cherian <george.cherian@cavium.com> */
+drivers/watchdog/octeon-wdt-main.c:607:MODULE_AUTHOR("Cavium Inc. <support@cavium.com>");
 
-In principle, it may be possible:
-- either by updating the compiler, which we want to avoid because we'd
-have to convince gcc and clang to do this; I can see this being
-infeasible because the compiler needs to become aware (somehow
-propagate in the IR) of what is ASAN inline-instrumentation and what
-is TSAN instrumentation and not emit recursive instrumentation.
-- or somehow merging the instrumentation, but, IMHO this is probably a
-really bad idea for various other reasons (complexity, performance,
-stability, etc.).
 
-Regardless of approach, my guess is that the complexity outweighs any
-benefits this may provide in the end. Not only would a hypothetical
-kernel that combines these be extremely slow, it'd also diminish the
-practical value because testing and finding bugs would also be
-impaired due to performance.
 
-Thanks,
--- Marco
+
