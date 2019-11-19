@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 889A6C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F145AC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE0E21823
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C853121D7B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:52:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142773;
-	bh=v1U9l228jWqtWhwzn9ffmWZreUwxYYHeC5kYUpJ+idU=;
+	s=default; t=1574142776;
+	bh=tTpIGXVuqGrtRoD1ab8w5sMCyys71HtQw55eRKeWIeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jiQfS9/esUt9n2Jg1Rcs3WW6gzjh6+j1pvTVZiVnI3v2MlTAR5QtTkJJUXK7wmBKc
-	 IQmo5xIhuf5TfG8Bo4HR1ftuYNfta3ebuPb253M8APXUHsXky2JHdHyefaAmgui9xe
-	 ctk/ASlMHS6khdxjKlprrAL2aJA/JpX4bl27B+Ks=
+	b=z/oojg1iUcebDlIT1+eGXxd6jyjgRYdIBDAwdczyV2FP81W5iW8OYFdmFFx+tVeAO
+	 2d+lQBnwMxrFFmbfSYUuG9OV5XvLsJXwUR3qH0UC4JKxWL0iN5dypy6sL74XcCSKvF
+	 rUTAz8qTXO5xv3HmE5CnQN0WLHZKD9+iNjhUXQQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731958AbfKSFww (ORCPT
+        id S1731965AbfKSFwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:52:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50598 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:52:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731290AbfKSFws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:52:48 -0500
+        id S1731212AbfKSFwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:52:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D03520721;
-        Tue, 19 Nov 2019 05:52:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06A8F20862;
+        Tue, 19 Nov 2019 05:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142767;
-        bh=v1U9l228jWqtWhwzn9ffmWZreUwxYYHeC5kYUpJ+idU=;
+        s=default; t=1574142770;
+        bh=tTpIGXVuqGrtRoD1ab8w5sMCyys71HtQw55eRKeWIeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0hPq5tpGOZGW5uE30QL0tIlLcOMFeqLIrireI/abJX1d3znQMOtlkJjkv0dP9gtWg
-         U2nMmDPgz592zY7aKAX0vIRQwAULTvS/YMnpExZXRZm6hzZuGqtamj5sMR5drvVYiy
-         K/cPhWvdeiROKIOOoHAg1QuPeqMnDXge1TlqicYs=
+        b=OgD03ZudjRa+rdYPP9+yILrk+ljysWemHC/Y6sRKuABd2N/hZW0TXDsFc3exPparv
+         8ksHFwM0C0oouBzumo8nuLrCkqmRhB4wBEBSjlk9CViWdWB1sG+swx5V2cTTli84sf
+         EXQp/fbrpS4ZveY1/Tr81vUCNKwzAfOmO0Sz7W1s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
+        Tomasz Nowicki <tnowicki@caviumnetworks.com>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 193/239] coresight: perf: Disable trace path upon source error
-Date:   Tue, 19 Nov 2019 06:19:53 +0100
-Message-Id: <20191119051335.791779034@linuxfoundation.org>
+Subject: [PATCH 4.14 194/239] coresight: etm4x: Configure EL2 exception level when kernel is running in HYP
+Date:   Tue, 19 Nov 2019 06:19:54 +0100
+Message-Id: <20191119051335.880239322@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,42 +61,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Tomasz Nowicki <tnowicki@caviumnetworks.com>
 
-[ Upstream commit 4f8ef21007531c3d7cb5b826e7b2c8999b65ecae ]
+[ Upstream commit b860801e3237ec4c74cf8de0be4816996757ae5c ]
 
-We enable the trace path, before activating the source.
-If we fail to enable the source, we must disable the path
-to make sure it is available for another session.
+For non-VHE systems host kernel runs at EL1 and jumps to EL2 whenever
+hypervisor code should be executed. In this case ETM4x driver must
+restrict configuration to EL1 when it setups kernel tracing.
+However, there is no separate hypervisor privilege level when VHE
+is enabled, the host kernel runs at EL2.
 
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+This patch fixes configuration of TRCACATRn register for VHE systems
+so that ETM_EXLEVEL_NS_HYP bit is used instead of ETM_EXLEVEL_NS_OS
+to on/off kernel tracing. At the same time, it moves common code
+to new helper.
+
+Signed-off-by: Tomasz Nowicki <tnowicki@caviumnetworks.com>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight-etm-perf.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/hwtracing/coresight/coresight-etm4x.c | 40 +++++++++----------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-index 99cbf5d5d1c1f..69349b93e8741 100644
---- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-+++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-@@ -317,11 +317,13 @@ static void etm_event_start(struct perf_event *event, int flags)
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+index b0141ba7b7414..fb392688281b5 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+@@ -35,6 +35,7 @@
+ #include <linux/pm_runtime.h>
+ #include <asm/sections.h>
+ #include <asm/local.h>
++#include <asm/virt.h>
  
- 	/* Finally enable the tracer */
- 	if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF))
--		goto fail_end_stop;
-+		goto fail_disable_path;
+ #include "coresight-etm4x.h"
+ #include "coresight-etm-perf.h"
+@@ -623,7 +624,7 @@ static void etm4_set_default_config(struct etmv4_config *config)
+ 	config->vinst_ctrl |= BIT(0);
+ }
  
- out:
- 	return;
+-static u64 etm4_get_access_type(struct etmv4_config *config)
++static u64 etm4_get_ns_access_type(struct etmv4_config *config)
+ {
+ 	u64 access_type = 0;
  
-+fail_disable_path:
-+	coresight_disable_path(path);
- fail_end_stop:
- 	perf_aux_output_flag(handle, PERF_AUX_FLAG_TRUNCATED);
- 	perf_aux_output_end(handle, 0);
+@@ -634,17 +635,26 @@ static u64 etm4_get_access_type(struct etmv4_config *config)
+ 	 *   Bit[13] Exception level 1 - OS
+ 	 *   Bit[14] Exception level 2 - Hypervisor
+ 	 *   Bit[15] Never implemented
+-	 *
+-	 * Always stay away from hypervisor mode.
+ 	 */
+-	access_type = ETM_EXLEVEL_NS_HYP;
+-
+-	if (config->mode & ETM_MODE_EXCL_KERN)
+-		access_type |= ETM_EXLEVEL_NS_OS;
++	if (!is_kernel_in_hyp_mode()) {
++		/* Stay away from hypervisor mode for non-VHE */
++		access_type =  ETM_EXLEVEL_NS_HYP;
++		if (config->mode & ETM_MODE_EXCL_KERN)
++			access_type |= ETM_EXLEVEL_NS_OS;
++	} else if (config->mode & ETM_MODE_EXCL_KERN) {
++		access_type = ETM_EXLEVEL_NS_HYP;
++	}
+ 
+ 	if (config->mode & ETM_MODE_EXCL_USER)
+ 		access_type |= ETM_EXLEVEL_NS_APP;
+ 
++	return access_type;
++}
++
++static u64 etm4_get_access_type(struct etmv4_config *config)
++{
++	u64 access_type = etm4_get_ns_access_type(config);
++
+ 	/*
+ 	 * EXLEVEL_S, bits[11:8], don't trace anything happening
+ 	 * in secure state.
+@@ -898,20 +908,10 @@ void etm4_config_trace_mode(struct etmv4_config *config)
+ 
+ 	addr_acc = config->addr_acc[ETM_DEFAULT_ADDR_COMP];
+ 	/* clear default config */
+-	addr_acc &= ~(ETM_EXLEVEL_NS_APP | ETM_EXLEVEL_NS_OS);
++	addr_acc &= ~(ETM_EXLEVEL_NS_APP | ETM_EXLEVEL_NS_OS |
++		      ETM_EXLEVEL_NS_HYP);
+ 
+-	/*
+-	 * EXLEVEL_NS, bits[15:12]
+-	 * The Exception levels are:
+-	 *   Bit[12] Exception level 0 - Application
+-	 *   Bit[13] Exception level 1 - OS
+-	 *   Bit[14] Exception level 2 - Hypervisor
+-	 *   Bit[15] Never implemented
+-	 */
+-	if (mode & ETM_MODE_EXCL_KERN)
+-		addr_acc |= ETM_EXLEVEL_NS_OS;
+-	else
+-		addr_acc |= ETM_EXLEVEL_NS_APP;
++	addr_acc |= etm4_get_ns_access_type(config);
+ 
+ 	config->addr_acc[ETM_DEFAULT_ADDR_COMP] = addr_acc;
+ 	config->addr_acc[ETM_DEFAULT_ADDR_COMP + 1] = addr_acc;
 -- 
 2.20.1
 
