@@ -2,402 +2,151 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E39EEC33C9D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 02:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D8EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 02:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B30222F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 02:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CAB7222A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 02:16:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s7GDGg1Q"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="D9joND5Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfKSCI5 (ORCPT
+        id S1727117AbfKSCQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 21:08:57 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34989 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbfKSCI5 (ORCPT
+        Mon, 18 Nov 2019 21:16:44 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:50598 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbfKSCQo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 21:08:57 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k32so4837409pgl.2;
-        Mon, 18 Nov 2019 18:08:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8REMzbXh3fxv2iG+QahOsmp7zlHEsluCVfb8108Xamc=;
-        b=s7GDGg1QePu2ll8zllv5p9rEn7LGMzhBXJ7ZKy1kfN/uXuF+lha1vFUucoENhb3l11
-         xeO/T9+9QOze0VellRxZJRRDusmGDG2QHjxrO4XZH+R1GZ0f1yYVRWmgaurVoWLnDpoi
-         Tu55hgssJUj/3Z9zeCv8wWauwYzVMWyi9rTluO3Vn0qmCFZg5MCXzrytN1IvPACqZJDE
-         3CqIw4eLF/pfqa49j4/T6c0qvhlMnqy8PoWgoM+KBRJ5N+gNzntrgB91BsPlKptC3d35
-         gArQ5+GfNS/sRlAkDfqXScEO7HOt0ZWomb3erWoOsLr3OcsIF4dsJG3wAbFhJgIta8Lv
-         bRCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8REMzbXh3fxv2iG+QahOsmp7zlHEsluCVfb8108Xamc=;
-        b=tPJ6yf5skcdh/3fh9iHT6UYs02YXKpJ2j46gjJONrCkjhhBRHXMI56CVXbLJTSeRJk
-         FbKaiUNuYSawbbscvqcEltju1+znB1f2DVGHvXzXxjRZdDmWU1cIy4Phiz4vRR6yENTw
-         CoROZAa3vAap2jL77sxjZx07McQEIVX8cgyFXmlMUB4o0lNj/YFpn5l8MkhtQi9i8pBZ
-         LQQAD4tKlcKuZ/3DuLNak8npx4jKCf7DhBxwzDjMZeA2LSYe2aCfMetnzpB+JnZMxY5O
-         lpboqRacvUcubyxGYWaZ/FioSDFOx/xSioxBSMLrqq2+sBHgFAms31ZuQBIgb6DCwW+h
-         1Beg==
-X-Gm-Message-State: APjAAAVuHoPGjU2QOSSzsc840NLZs1+Mnm31ZSgHBQOqAAbFfvcOxdo3
-        wjc8N/JrTA+eGoLBdCZTil4=
-X-Google-Smtp-Source: APXvYqzyGob2YWvVlZ3UbBe3STMx0MAIumm1PEfMc/KTeHafWI044oDn3I9i4/v/ozwHsUfjp8s9dw==
-X-Received: by 2002:a62:7f93:: with SMTP id a141mr2723258pfd.107.1574129336241;
-        Mon, 18 Nov 2019 18:08:56 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k5sm812799pju.14.2019.11.18.18.08.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Nov 2019 18:08:55 -0800 (PST)
-Subject: Re: [PATCH] watchdog: Remove iop_wdt
-To:     Laura Abbott <labbott@redhat.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc:     linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>
-References: <20191118220432.1611-1-labbott@redhat.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <29e94219-22ca-c873-7209-64d1c357fe5c@roeck-us.net>
-Date:   Mon, 18 Nov 2019 18:08:54 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 18 Nov 2019 21:16:44 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ29DRf193330;
+        Tue, 19 Nov 2019 02:13:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=0HzX/gxMttS4J+L6PBkjiqoj8SSAB9SSaypPZSiCkzg=;
+ b=D9joND5QO8S0RfNgqFdUhAAiwvaLvkWQx8NA14Soj4ETkg9FcnCwlVFZoVYb0oNDzxfj
+ e6xJ8dl6KGgiLyKLxboS5iS8+D3IK57Jbdd27Yi7AfaZskW+fbnvRJtvdTcmtJbNfhKr
+ QGG5Lh1c/gg2PFM7SGV68PypYf6afXGsyCqTubkd7KoV5b4ba/D7GvECWKV53hAQpMEE
+ yQPFNyn1voCxZ+OpwT2ImC6E77fNFQOItE/CQz8DbMWkD/aDPzxIDJANWgacRtvs6PyU
+ dCO9yHc16O1R2RItBSZe4NUpy/j9AyvJBFZ/ExZ3xx1P2RIyAa+gdzDsrEp/f0neprxD fw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2wa8htm0g4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 02:13:18 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ28U2E134789;
+        Tue, 19 Nov 2019 02:11:17 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2wc09wjkh2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 02:11:17 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAJ2Aw1H029693;
+        Tue, 19 Nov 2019 02:10:58 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 18 Nov 2019 18:10:57 -0800
+Date:   Mon, 18 Nov 2019 21:10:58 -0500
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH v3 3/7] mm/lru: replace pgdat lru_lock with lruvec lock
+Message-ID: <20191119021058.auxc6g7vmgf7d5gg@ca-dmjordan1.us.oracle.com>
+References: <1573874106-23802-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1573874106-23802-4-git-send-email-alex.shi@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <20191118220432.1611-1-labbott@redhat.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573874106-23802-4-git-send-email-alex.shi@linux.alibaba.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=575
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911190017
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=644 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911190017
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/18/19 2:04 PM, Laura Abbott wrote:
-> 
-> Commit 59d3ae9a5bf6 ("ARM: remove Intel iop33x and iop13xx support")
-> removed support for some old platforms. Given this driver depends on
-> a now removed platform, just remove the driver.
-> 
-> Signed-off-by: Laura Abbott <labbott@redhat.com>
-> ---
-> Found this while reviewing config options. Not sure if this was kept
-> around for other reasons or just missed.
-> ---
->   drivers/watchdog/Kconfig   |  16 ---
->   drivers/watchdog/Makefile  |   1 -
->   drivers/watchdog/iop_wdt.c | 249 -------------------------------------
->   3 files changed, 266 deletions(-)
->   delete mode 100644 drivers/watchdog/iop_wdt.c
-> 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 58e7c100b6ad..fef9078a44b6 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -554,22 +554,6 @@ config PNX4008_WATCHDOG
->   
->   	  Say N if you are unsure.
->   
-> -config IOP_WATCHDOG
-> -	tristate "IOP Watchdog"
-> -	depends on ARCH_IOP13XX
-> -	select WATCHDOG_NOWAYOUT if (ARCH_IOP32X || ARCH_IOP33X)
-
-This is a bit confusing, but it suggests that the watchdog may also work
-with ARCH_IOP32X, which is still supported. I don't know anything about
-those architectures, but I hesitate to have the driver removed unless
-we have confirmation that it won't work with ARCH_IOP32X.
-Maybe the dependency needs to be updated instead ?
-
-Thanks,
-Guenter
-
-> -	help
-> -	  Say Y here if to include support for the watchdog timer
-> -	  in the Intel IOP3XX & IOP13XX I/O Processors.  This driver can
-> -	  be built as a module by choosing M. The module will
-> -	  be called iop_wdt.
-> -
-> -	  Note: The IOP13XX watchdog does an Internal Bus Reset which will
-> -	  affect both cores and the peripherals of the IOP.  The ATU-X
-> -	  and/or ATUe configuration registers will remain intact, but if
-> -	  operating as an Root Complex and/or Central Resource, the PCI-X
-> -	  and/or PCIe busses will also be reset.  THIS IS A VERY BIG HAMMER.
-> -
->   config DAVINCI_WATCHDOG
->   	tristate "DaVinci watchdog"
->   	depends on ARCH_DAVINCI || ARCH_KEYSTONE || COMPILE_TEST
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index 2ee352bf3372..9de21f5ce909 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -55,7 +55,6 @@ obj-$(CONFIG_SAMA5D4_WATCHDOG) += sama5d4_wdt.o
->   obj-$(CONFIG_DW_WATCHDOG) += dw_wdt.o
->   obj-$(CONFIG_EP93XX_WATCHDOG) += ep93xx_wdt.o
->   obj-$(CONFIG_PNX4008_WATCHDOG) += pnx4008_wdt.o
-> -obj-$(CONFIG_IOP_WATCHDOG) += iop_wdt.o
->   obj-$(CONFIG_DAVINCI_WATCHDOG) += davinci_wdt.o
->   obj-$(CONFIG_ORION_WATCHDOG) += orion_wdt.o
->   obj-$(CONFIG_SUNXI_WATCHDOG) += sunxi_wdt.o
-> diff --git a/drivers/watchdog/iop_wdt.c b/drivers/watchdog/iop_wdt.c
-> deleted file mode 100644
-> index a9ccdb9a9159..000000000000
-> --- a/drivers/watchdog/iop_wdt.c
-> +++ /dev/null
-> @@ -1,249 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0-only
-> -/*
-> - * drivers/char/watchdog/iop_wdt.c
-> - *
-> - * WDT driver for Intel I/O Processors
-> - * Copyright (C) 2005, Intel Corporation.
-> - *
-> - * Based on ixp4xx driver, Copyright 2004 (c) MontaVista, Software, Inc.
-> - *
-> - *	Curt E Bruns <curt.e.bruns@intel.com>
-> - *	Peter Milne <peter.milne@d-tacq.com>
-> - *	Dan Williams <dan.j.williams@intel.com>
-> - */
-> -
-> -#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> -
-> -#include <linux/module.h>
-> -#include <linux/kernel.h>
-> -#include <linux/fs.h>
-> -#include <linux/init.h>
-> -#include <linux/device.h>
-> -#include <linux/miscdevice.h>
-> -#include <linux/watchdog.h>
-> -#include <linux/uaccess.h>
-> -#include <mach/hardware.h>
-> -
-> -static bool nowayout = WATCHDOG_NOWAYOUT;
-> -static unsigned long wdt_status;
-> -static unsigned long boot_status;
-> -static DEFINE_SPINLOCK(wdt_lock);
-> -
-> -#define WDT_IN_USE		0
-> -#define WDT_OK_TO_CLOSE		1
-> -#define WDT_ENABLED		2
-> -
-> -static unsigned long iop_watchdog_timeout(void)
-> -{
-> -	return (0xffffffffUL / get_iop_tick_rate());
-> -}
-> -
-> -/**
-> - * wdt_supports_disable - determine if we are accessing a iop13xx watchdog
-> - * or iop3xx by whether it has a disable command
-> - */
-> -static int wdt_supports_disable(void)
-> -{
-> -	int can_disable;
-> -
-> -	if (IOP_WDTCR_EN_ARM != IOP_WDTCR_DIS_ARM)
-> -		can_disable = 1;
-> -	else
-> -		can_disable = 0;
-> -
-> -	return can_disable;
-> -}
-> -
-> -static void wdt_enable(void)
-> -{
-> -	/* Arm and enable the Timer to starting counting down from 0xFFFF.FFFF
-> -	 * Takes approx. 10.7s to timeout
-> -	 */
-> -	spin_lock(&wdt_lock);
-> -	write_wdtcr(IOP_WDTCR_EN_ARM);
-> -	write_wdtcr(IOP_WDTCR_EN);
-> -	spin_unlock(&wdt_lock);
-> -}
-> -
-> -/* returns 0 if the timer was successfully disabled */
-> -static int wdt_disable(void)
-> -{
-> -	/* Stop Counting */
-> -	if (wdt_supports_disable()) {
-> -		spin_lock(&wdt_lock);
-> -		write_wdtcr(IOP_WDTCR_DIS_ARM);
-> -		write_wdtcr(IOP_WDTCR_DIS);
-> -		clear_bit(WDT_ENABLED, &wdt_status);
-> -		spin_unlock(&wdt_lock);
-> -		pr_info("Disabled\n");
-> -		return 0;
-> -	} else
-> -		return 1;
-> -}
-> -
-> -static int iop_wdt_open(struct inode *inode, struct file *file)
-> -{
-> -	if (test_and_set_bit(WDT_IN_USE, &wdt_status))
-> -		return -EBUSY;
-> -
-> -	clear_bit(WDT_OK_TO_CLOSE, &wdt_status);
-> -	wdt_enable();
-> -	set_bit(WDT_ENABLED, &wdt_status);
-> -	return stream_open(inode, file);
-> -}
-> -
-> -static ssize_t iop_wdt_write(struct file *file, const char *data, size_t len,
-> -		  loff_t *ppos)
-> -{
-> -	if (len) {
-> -		if (!nowayout) {
-> -			size_t i;
-> -
-> -			clear_bit(WDT_OK_TO_CLOSE, &wdt_status);
-> -
-> -			for (i = 0; i != len; i++) {
-> -				char c;
-> -
-> -				if (get_user(c, data + i))
-> -					return -EFAULT;
-> -				if (c == 'V')
-> -					set_bit(WDT_OK_TO_CLOSE, &wdt_status);
-> -			}
+On Sat, Nov 16, 2019 at 11:15:02AM +0800, Alex Shi wrote:
+> @@ -192,26 +190,17 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
+>  	void *arg)
+>  {
+>  	int i;
+> -	struct pglist_data *pgdat = NULL;
+> -	struct lruvec *lruvec;
+> -	unsigned long flags = 0;
+> +	struct lruvec *lruvec = NULL;
+>  
+>  	for (i = 0; i < pagevec_count(pvec); i++) {
+>  		struct page *page = pvec->pages[i];
+> -		struct pglist_data *pagepgdat = page_pgdat(page);
+>  
+> -		if (pagepgdat != pgdat) {
+> -			if (pgdat)
+> -				spin_unlock_irqrestore(&pgdat->lru_lock, flags);
+> -			pgdat = pagepgdat;
+> -			spin_lock_irqsave(&pgdat->lru_lock, flags);
 > -		}
-> -		wdt_enable();
-> -	}
-> -	return len;
-> -}
-> -
-> -static const struct watchdog_info ident = {
-> -	.options = WDIOF_CARDRESET | WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING,
-> -	.identity = "iop watchdog",
-> -};
-> -
-> -static long iop_wdt_ioctl(struct file *file,
-> -				unsigned int cmd, unsigned long arg)
-> -{
-> -	int options;
-> -	int ret = -ENOTTY;
-> -	int __user *argp = (int __user *)arg;
-> -
-> -	switch (cmd) {
-> -	case WDIOC_GETSUPPORT:
-> -		if (copy_to_user(argp, &ident, sizeof(ident)))
-> -			ret = -EFAULT;
-> -		else
-> -			ret = 0;
-> -		break;
-> -
-> -	case WDIOC_GETSTATUS:
-> -		ret = put_user(0, argp);
-> -		break;
-> -
-> -	case WDIOC_GETBOOTSTATUS:
-> -		ret = put_user(boot_status, argp);
-> -		break;
-> -
-> -	case WDIOC_SETOPTIONS:
-> -		if (get_user(options, (int *)arg))
-> -			return -EFAULT;
-> -
-> -		if (options & WDIOS_DISABLECARD) {
-> -			if (!nowayout) {
-> -				if (wdt_disable() == 0) {
-> -					set_bit(WDT_OK_TO_CLOSE, &wdt_status);
-> -					ret = 0;
-> -				} else
-> -					ret = -ENXIO;
-> -			} else
-> -				ret = 0;
-> -		}
-> -		if (options & WDIOS_ENABLECARD) {
-> -			wdt_enable();
-> -			ret = 0;
-> -		}
-> -		break;
-> -
-> -	case WDIOC_KEEPALIVE:
-> -		wdt_enable();
-> -		ret = 0;
-> -		break;
-> -
-> -	case WDIOC_GETTIMEOUT:
-> -		ret = put_user(iop_watchdog_timeout(), argp);
-> -		break;
-> -	}
-> -	return ret;
-> -}
-> -
-> -static int iop_wdt_release(struct inode *inode, struct file *file)
-> -{
-> -	int state = 1;
-> -	if (test_bit(WDT_OK_TO_CLOSE, &wdt_status))
-> -		if (test_bit(WDT_ENABLED, &wdt_status))
-> -			state = wdt_disable();
-> -
-> -	/* if the timer is not disabled reload and notify that we are still
-> -	 * going down
-> -	 */
-> -	if (state != 0) {
-> -		wdt_enable();
-> -		pr_crit("Device closed unexpectedly - reset in %lu seconds\n",
-> -			iop_watchdog_timeout());
-> -	}
-> -
-> -	clear_bit(WDT_IN_USE, &wdt_status);
-> -	clear_bit(WDT_OK_TO_CLOSE, &wdt_status);
-> -
-> -	return 0;
-> -}
-> -
-> -static const struct file_operations iop_wdt_fops = {
-> -	.owner = THIS_MODULE,
-> -	.llseek = no_llseek,
-> -	.write = iop_wdt_write,
-> -	.unlocked_ioctl = iop_wdt_ioctl,
-> -	.open = iop_wdt_open,
-> -	.release = iop_wdt_release,
-> -};
-> -
-> -static struct miscdevice iop_wdt_miscdev = {
-> -	.minor = WATCHDOG_MINOR,
-> -	.name = "watchdog",
-> -	.fops = &iop_wdt_fops,
-> -};
-> -
-> -static int __init iop_wdt_init(void)
-> -{
-> -	int ret;
-> -
-> -	/* check if the reset was caused by the watchdog timer */
-> -	boot_status = (read_rcsr() & IOP_RCSR_WDT) ? WDIOF_CARDRESET : 0;
-> -
-> -	/* Configure Watchdog Timeout to cause an Internal Bus (IB) Reset
-> -	 * NOTE: An IB Reset will Reset both cores in the IOP342
-> -	 */
-> -	write_wdtsr(IOP13XX_WDTCR_IB_RESET);
-> -
-> -	/* Register after we have the device set up so we cannot race
-> -	   with an open */
-> -	ret = misc_register(&iop_wdt_miscdev);
-> -	if (ret == 0)
-> -		pr_info("timeout %lu sec\n", iop_watchdog_timeout());
-> -
-> -	return ret;
-> -}
-> -
-> -static void __exit iop_wdt_exit(void)
-> -{
-> -	misc_deregister(&iop_wdt_miscdev);
-> -}
-> -
-> -module_init(iop_wdt_init);
-> -module_exit(iop_wdt_exit);
-> -
-> -module_param(nowayout, bool, 0);
-> -MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started");
-> -
-> -MODULE_AUTHOR("Curt E Bruns <curt.e.bruns@intel.com>");
-> -MODULE_DESCRIPTION("iop watchdog timer driver");
-> -MODULE_LICENSE("GPL");
-> 
+> +		lruvec = lock_page_lruvec_irqsave(page, page_pgdat(page));
+>  
+> -		lruvec = mem_cgroup_page_lruvec(page, pgdat);
+>  		(*move_fn)(page, lruvec, arg);
+> +		spin_unlock_irqrestore(&lruvec->lru_lock, lruvec->irqflags);
+>  	}
+> -	if (pgdat)
+> -		spin_unlock_irqrestore(&pgdat->lru_lock, flags);
+> +
+>  	release_pages(pvec->pages, pvec->nr);
+>  	pagevec_reinit(pvec);
+>  }
 
+Why can't you keep the locking pattern where we only drop and reacquire if the
+lruvec changes?  It'd save a lot of locks and unlocks if most pages were from
+the same memcg and node, or the memory controller were unused.
+
+
+Thanks for running the -readtwice benchmark, by the way.
