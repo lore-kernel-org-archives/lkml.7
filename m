@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD068C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 717ACC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94AFD20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39EFF20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:55:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142954;
-	bh=kiO9wqUjASzmMINbaT3sESNlTQfAAWLNzXtu9pP1MHU=;
+	s=default; t=1574142959;
+	bh=BBDr5XZmvudqT38/n9AWNa+7cdhu3U138aHUBryPFtE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sm+BLjweVUnUt5zTqPDteXk463ZyK+zVT+De5QxskLF2syNdJLgQ1bEE03GAA1bQ9
-	 QU8CA8ZjjpHZq+OpBH86gRbm06N+4aYnre6oZlFYxudEMKvQBp28noXMc51LhATRRc
-	 FAHn2sUV51n9SjYvUeHRUYpmuR6WPla5h53tH4Nk=
+	b=rzdfdUKGJ9qm4Yq8PjKacLGR41ncQyKG5wh62gqAMPkFk1ELWBvh5G9HtseKYiTg+
+	 thXTqtjNoLNlbfBtQdGafNSMESX6tzFh+dBCy/B/VgxsjfxDcQmXvUJOp9iBSDKmMS
+	 M3ZsCBj0Z4wjtbsm8RTsKgLYf/j27QTqYU+gmO6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732162AbfKSFyd (ORCPT
+        id S1732142AbfKSFy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:54:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52626 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:54:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732150AbfKSFya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:54:30 -0500
+        id S1732135AbfKSFyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:54:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6173221783;
-        Tue, 19 Nov 2019 05:54:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCF4D21D7B;
+        Tue, 19 Nov 2019 05:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142869;
-        bh=kiO9wqUjASzmMINbaT3sESNlTQfAAWLNzXtu9pP1MHU=;
+        s=default; t=1574142864;
+        bh=BBDr5XZmvudqT38/n9AWNa+7cdhu3U138aHUBryPFtE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qZO5rlO3U+JA4BbkkdmxBN12OreBpAITLcQRoqWXxwLX4amlFMMX8JBT1Kpuz8FAa
-         2p4jzdC+XcSBJL4Z2pKTdHM7AI6vZS9lr5ozGZ22/U/4A5xwgrwdFwFjnNb130H5Yc
-         hu39RJGxUYQb21Na7lx2nSIgn/v7mcloRIY6rB5A=
+        b=tBWIY5v/ix5WblnoDZTuSUzD85tfg0n0QdsBxaNosFdjYomGV+bwIQuJxiRd7NxZ1
+         jDsjMZMHlNEgY307hbRv0lgVpmxI+sTjqUftWBGs4NyQ195SUEDOp3kCN2JPa+BgED
+         pVWL4lJIqYqAdmu3vcbLv9Fp1Ab55ZoNhDSvmnfg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brijesh Singh <brijeshkumar.singh@amd.com>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 229/239] arm64: dts: amd: Fix SPI bus warnings
-Date:   Tue, 19 Nov 2019 06:20:29 +0100
-Message-Id: <20191119051341.035728139@linuxfoundation.org>
+Subject: [PATCH 4.14 227/239] scsi: NCR5380: Handle BUS FREE during reselection
+Date:   Tue, 19 Nov 2019 06:20:27 +0100
+Message-Id: <20191119051340.769442775@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -62,48 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit e9f0878c4b2004ac19581274c1ae4c61ae3ca70e ]
+[ Upstream commit ca694afad707cb3ae2fdef3b28454444d9ac726e ]
 
-dtc has new checks for SPI buses. Fix the warnings in node names.
+The X3T9.2 specification (draft) says, under "6.1.4.2 RESELECTION time-out
+procedure", that a target may assert RST or go to BUS FREE phase if the
+initiator does not respond within 200 us. Something like this has been
+observed with AztecMonster II target. When it happens, all we can do is wait
+for the target to try again.
 
-arch/arm64/boot/dts/amd/amd-overdrive.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
-arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
-arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
-
-Cc: Brijesh Singh <brijeshkumar.singh@amd.com>
-Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/NCR5380.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-index 125f4deb52fe9..b664e7af74eb3 100644
---- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-+++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-@@ -107,7 +107,7 @@
- 			clock-names = "uartclk", "apb_pclk";
- 		};
+diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+index 48f123601f575..a85c5155fcf40 100644
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -2045,6 +2045,9 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
  
--		spi0: ssp@e1020000 {
-+		spi0: spi@e1020000 {
- 			status = "disabled";
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0 0xe1020000 0 0x1000>;
-@@ -117,7 +117,7 @@
- 			clock-names = "apb_pclk";
- 		};
- 
--		spi1: ssp@e1030000 {
-+		spi1: spi@e1030000 {
- 			status = "disabled";
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0 0xe1030000 0 0x1000>;
+ 	if (NCR5380_poll_politely(hostdata,
+ 	                          STATUS_REG, SR_REQ, SR_REQ, 2 * HZ) < 0) {
++		if ((NCR5380_read(STATUS_REG) & (SR_BSY | SR_SEL)) == 0)
++			/* BUS FREE phase */
++			return;
+ 		shost_printk(KERN_ERR, instance, "reselect: REQ timeout\n");
+ 		do_abort(instance);
+ 		return;
 -- 
 2.20.1
 
