@@ -2,109 +2,163 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A60C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2793AC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83AA922309
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E84D1208CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:00:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="rqUBxFVH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FtDquBCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbfKSG6S (ORCPT
+        id S1727452AbfKSHAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:58:18 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37355 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbfKSG6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 01:58:18 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47HGqq4dKcz9sSP;
-        Tue, 19 Nov 2019 17:58:15 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1574146696;
-        bh=UJDJAAoM1z5MF3IYbIZX69JmcS9dmQDJlWRDIRsZqlY=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=rqUBxFVHDz30tTohZ/5o4s0MG6uRLUgC+jddFLvTHOI23O6RYj6iAlN8BM6F/gpYo
-         IOywwfiOTa3ViPBXLipcof5niocJACuF68pJyLl8QpMJwrdlcDTcAqModRec5sYIRl
-         507+UJ5jZMm2vfIitezy+PzkfrX9WbsX7sAXilKzyR5Uz9pvbM64sIWCDifSo7PofG
-         ugWVXffzUZp+5/GsmKgNDV6c0+ADGddw64qIMeDyZWb9gyTiUhSgwcI2hIuyPi9Ftm
-         F6pvPmWc/7DVqqn2r7/1BSOxpSJHXP3ZncO3HX0BBu9ei54wFIrBMDrmiThfuJUj0i
-         Bnhm25x1zJnuQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com,
-        dja@axtens.net
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH v3 15/15] powerpc/32s: Activate CONFIG_VMAP_STACK
-In-Reply-To: <a99bdfb64e287b16b8cd3f7ec1abfdfb50c7cc64.1568106758.git.christophe.leroy@c-s.fr>
-References: <cover.1568106758.git.christophe.leroy@c-s.fr> <a99bdfb64e287b16b8cd3f7ec1abfdfb50c7cc64.1568106758.git.christophe.leroy@c-s.fr>
-Date:   Tue, 19 Nov 2019 17:58:14 +1100
-Message-ID: <875zjgcpyx.fsf@mpe.ellerman.id.au>
+        Tue, 19 Nov 2019 02:00:24 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46651 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbfKSHAY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 02:00:24 -0500
+Received: by mail-ot1-f66.google.com with SMTP id n23so16919677otr.13;
+        Mon, 18 Nov 2019 23:00:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aHD4Xn5/sth3UNvyKlhGzuryCM9IkAIPjPJGPFbypFk=;
+        b=FtDquBCUI4NWxzSBTO8cxkAQxGRaKjbUfY/2IeLsFtnw2h6Dn/qMmmUP9OaWmje0Na
+         NVfmcpApjRmy0sGlkJZV32n3iGn1uKa4kucVCyGPPwszFs5O0sHiAuqmV7QJwKecyK0u
+         +eFBAsDZpdM8FO4sT4qC30G++jTZQ3QJWsJ44sZZWBBxfzxCMe6OrZzwiYLWtERr5ldD
+         bzetfc2Fqt2kUJpMw/5S5NyNOkfnRT/9o57i0swoSSt1AqLLzFdehXuLskzYZHm2yQqt
+         0i79kLgbdocAj9aXxPrPpSAYFVM5ET3QYevpry7LoV0CvvlRvuJ8W2FscUAJBiTD27PF
+         VKmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aHD4Xn5/sth3UNvyKlhGzuryCM9IkAIPjPJGPFbypFk=;
+        b=QNL2vtbbanhO0qsTHyS/ayNGV7RmwgzKKKy5ikanpNDAZmQp5PCYP9Oy+s5PrNGfFB
+         QOc3m5O4Z7Z3E213eYIHGa1BX1f9Vu7NBhViKXCNOChGZoVcABI3VrhARG+bRNvg+d4i
+         8ghBunCmAw7tUfTg5aqf35J+jnQB0+C2rSmVNKsaLeszjALOAEq1+6Ql5pXZXkRF9t34
+         tc02L89WnTgDGzYfFhvxYwBepQhTtq5YAhcKd79i+8xdE5UwiASq1JdDTl+yg77HjGhQ
+         Qj2Iz5NxH2XBs8uXmAeB+7S+myp4fJcnlanAu9x00Ie5/3xc4jhFd7eKbGDQnbs+/w8F
+         XH+g==
+X-Gm-Message-State: APjAAAWXDWMGpiPs64ZlUkBaH9y29tLz5ZiI7xECy9lOsV8MTPUeh2dl
+        jra/CDX9cSoUs7sGaHisztxpNxVvzKtLiO/M6GQ=
+X-Google-Smtp-Source: APXvYqwYCbILBHUmk9MyTGvu1q4QNhZ8cNqLJGxRpG5F1yFtAZ6MtPf5e1phTdRmMT13KmdjtJ5SYGgKC6TwuRx1Wnk=
+X-Received: by 2002:a9d:b83:: with SMTP id 3mr2468919oth.56.1574146821897;
+ Mon, 18 Nov 2019 23:00:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <1571829384-5309-1-git-send-email-zhenzhong.duan@oracle.com> <1571829384-5309-2-git-send-email-zhenzhong.duan@oracle.com>
+In-Reply-To: <1571829384-5309-2-git-send-email-zhenzhong.duan@oracle.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 19 Nov 2019 15:00:13 +0800
+Message-ID: <CANRm+Cyr+Gg06MiE1+6g9eKTcrN=nn9mPf6=b+5xUN5_9T0v4A@mail.gmail.com>
+Subject: Re: [PATCH v8 1/5] Revert "KVM: X86: Fix setup the virt_spin_lock_key
+ before static key get initialized"
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>, will@kernel.org,
+        linux-hyperv@vger.kernel.org, kvm <kvm@vger.kernel.org>,
+        mikelley@microsoft.com, "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> A few changes to retrieve DAR and DSISR from struct regs
-> instead of retrieving them directly, as they may have
-> changed due to a TLB miss.
+On Wed, 23 Oct 2019 at 19:20, Zhenzhong Duan <zhenzhong.duan@oracle.com> wrote:
 >
-> Also modifies hash_page() and friends to work with virtual
-> data addresses instead of physical ones.
+> This reverts commit 34226b6b70980a8f81fff3c09a2c889f77edeeff.
 >
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Commit 8990cac6e5ea ("x86/jump_label: Initialize static branching
+> early") adds jump_label_init() call in setup_arch() to make static
+> keys initialized early, so we could use the original simpler code
+> again.
+>
+> The similar change for XEN is in commit 090d54bcbc54 ("Revert
+> "x86/paravirt: Set up the virt_spin_lock_key after static keys get
+> initialized"")
+>
+> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krcmar <rkrcmar@redhat.com>
+> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Cc: Wanpeng Li <wanpengli@tencent.com>
+> Cc: Jim Mattson <jmattson@google.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+
+Reviewed-by: Wanpeng Li <wanpengli@tencent.com>
+
 > ---
->  arch/powerpc/kernel/entry_32.S         |  4 +++
->  arch/powerpc/kernel/head_32.S          | 19 +++++++++++---
->  arch/powerpc/kernel/head_32.h          |  4 ++-
->  arch/powerpc/mm/book3s32/hash_low.S    | 46 +++++++++++++++++++++-------------
->  arch/powerpc/mm/book3s32/mmu.c         |  9 +++++--
->  arch/powerpc/platforms/Kconfig.cputype |  2 ++
->  6 files changed, 61 insertions(+), 23 deletions(-)
-
-This is faulting with qemu mac99 model:
-
-  Key type id_resolver registered
-  Key type id_legacy registered
-  BUG: Unable to handle kernel data access on read at 0x2f0db684
-  Faulting instruction address: 0x00004130
-  Oops: Kernel access of bad area, sig: 11 [#1]
-  BE PAGE_SIZE=4K MMU=Hash PowerMac
-  Modules linked in:
-  CPU: 0 PID: 65 Comm: modprobe Not tainted 5.4.0-rc2-gcc49+ #63
-  NIP:  00004130 LR: 000008c8 CTR: b7eb86e0
-  REGS: f106de80 TRAP: 0300   Not tainted  (5.4.0-rc2-gcc49+)
-  MSR:  00003012 <FP,ME,DR,RI>  CR: 4106df38  XER: 20000000
-  DAR: 2f0db684 DSISR: 40000000 
-  GPR00: b7ec5d64 f106df38 00000000 bf988a70 00000000 2f0db540 b7ec3620 bf988d38 
-  GPR08: 10000880 0000d032 72656773 f106df38 b7ed10ec 00000000 b7ed3d38 b7ee8900 
-  GPR16: bf988d10 00000001 00000000 bf988d10 b7ec3620 bf988d50 b7ee76ec b7ee7320 
-  GPR24: 10000878 00000000 b7ee8900 00000000 10029f00 10000879 b7ee7ff4 bf988d30 
-  NIP [00004130] 0x4130
-  LR [000008c8] 0x8c8
-  Call Trace:
-  [f106df38] [c0016224] ret_from_syscall+0x0/0x34 (unreliable)
-  --- interrupt: c01 at 0xb7ed0f50
-      LR = 0xb7ec5d64
-  Instruction dump:
-  db8300e0 XXXXXXXX XXXXXXXX XXXXXXXX fc00048e XXXXXXXX XXXXXXXX XXXXXXXX 
-  60a52000 XXXXXXXX XXXXXXXX XXXXXXXX 80850144 XXXXXXXX XXXXXXXX XXXXXXXX 
-  ---[ end trace 265da51c6d8b86c5 ]---
-
-
-I think I'll have to drop this series for now.
-
-cheers
+>  arch/x86/kernel/kvm.c | 12 +++---------
+>  1 file changed, 3 insertions(+), 9 deletions(-)
+>
+> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> index e820568..3bc6a266 100644
+> --- a/arch/x86/kernel/kvm.c
+> +++ b/arch/x86/kernel/kvm.c
+> @@ -527,13 +527,6 @@ static void kvm_smp_send_call_func_ipi(const struct cpumask *mask)
+>         }
+>  }
+>
+> -static void __init kvm_smp_prepare_cpus(unsigned int max_cpus)
+> -{
+> -       native_smp_prepare_cpus(max_cpus);
+> -       if (kvm_para_has_hint(KVM_HINTS_REALTIME))
+> -               static_branch_disable(&virt_spin_lock_key);
+> -}
+> -
+>  static void __init kvm_smp_prepare_boot_cpu(void)
+>  {
+>         /*
+> @@ -633,7 +626,6 @@ static void __init kvm_guest_init(void)
+>                 apic_set_eoi_write(kvm_guest_apic_eoi_write);
+>
+>  #ifdef CONFIG_SMP
+> -       smp_ops.smp_prepare_cpus = kvm_smp_prepare_cpus;
+>         smp_ops.smp_prepare_boot_cpu = kvm_smp_prepare_boot_cpu;
+>         if (kvm_para_has_feature(KVM_FEATURE_PV_SCHED_YIELD) &&
+>             !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
+> @@ -835,8 +827,10 @@ void __init kvm_spinlock_init(void)
+>         if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT))
+>                 return;
+>
+> -       if (kvm_para_has_hint(KVM_HINTS_REALTIME))
+> +       if (kvm_para_has_hint(KVM_HINTS_REALTIME)) {
+> +               static_branch_disable(&virt_spin_lock_key);
+>                 return;
+> +       }
+>
+>         /* Don't use the pvqspinlock code if there is only 1 vCPU. */
+>         if (num_possible_cpus() == 1)
+> --
+> 1.8.3.1
+>
