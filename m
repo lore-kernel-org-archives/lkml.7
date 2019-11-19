@@ -2,53 +2,56 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D12C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE52C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 082FC222EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D35C2231E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:13:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AeSgyU6o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbfKSPNA (ORCPT
+        id S1728314AbfKSPNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:13:00 -0500
-Received: from foss.arm.com ([217.140.110.172]:54104 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726637AbfKSPM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 10:12:59 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D743E30E;
-        Tue, 19 Nov 2019 07:12:58 -0800 (PST)
-Received: from [10.1.33.133] (e123648.cambridge.arm.com [10.1.33.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 16D8C3F6C4;
-        Tue, 19 Nov 2019 07:12:55 -0800 (PST)
-Subject: Re: Re: [Patch v5 0/6] Introduce Thermal Pressure
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     "mingo@redhat.com" <mingo@redhat.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        Ionela Voinescu <Ionela.Voinescu@arm.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "edubezval@gmail.com" <edubezval@gmail.com>,
-        "qperret@google.com" <qperret@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "amit.kachhap@gmail.com" <amit.kachhap@gmail.com>,
-        "javi.merino@kernel.org" <javi.merino@kernel.org>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>
-References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
- <cb27d440-1421-b95e-19c3-4278dd37efda@arm.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <416e69eb-fd45-84c9-864f-d047258e02ec@arm.com>
-Date:   Tue, 19 Nov 2019 15:12:53 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 19 Nov 2019 10:13:14 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:60410 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbfKSPNO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 10:13:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5qNH0rNiKvfJDdxRh+5cWf5BX5eczgkRcY4ZPO+/TwE=; b=AeSgyU6o4dXFLLWUZleLPkNoT
+        eAzZI8/6uO1O9y77MQOs+XCcjHmi0zxAB9CrGV37e4tfw0e770USNb5cN+4i9hm+Fh3zQRkDV5lIX
+        aranSHGIniwfHvdiburKsDj209T9LGjp7NOJWeOGcBRViKjJiwBZzHi4H1f9jYpXVdTkVQjoVFANa
+        7farnFptcQCJwW4/gcij9/ORkWhAFYyof2raVQ/3R2B9E7BqeDx0GOlQLy+hlvFuNiUnnGS5jOtjL
+        VLYI0VkXeAtT/AmBgHieLmigNhEoNWWvzSa4cus8tFr/NfLFVTvy/K+Y2SSlGwYFfjQOEy3xBu4Qf
+        O6lqi5n6Q==;
+Received: from [2601:1c0:6280:3f0::5a22]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iX5Bp-0003Nl-Mu; Tue, 19 Nov 2019 15:13:13 +0000
+Subject: Re: linux-next: Tree for Nov 19 (bpf)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        bpf@vger.kernel.org,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <20191119194658.39af50d0@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <ac0b86e4-611b-81d1-ba09-e819218efe3f@infradead.org>
+Date:   Tue, 19 Nov 2019 07:13:12 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <cb27d440-1421-b95e-19c3-4278dd37efda@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191119194658.39af50d0@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,78 +59,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 11/12/19 11:21 AM, Lukasz Luba wrote:
-> Hi Thara,
+On 11/19/19 12:46 AM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> I am going to try your patch set on some different board.
-> To do that I need more information regarding your setup.
-> Please find my comments below. I need probably one hack
-> which do not fully understand.
+> Changes since 20191118:
 > 
-> On 11/5/19 6:49 PM, Thara Gopinath wrote:
->> Thermal governors can respond to an overheat event of a cpu by
->> capping the cpu's maximum possible frequency. This in turn
->> means that the maximum available compute capacity of the
->> cpu is restricted. But today in the kernel, task scheduler is
->> not notified of capping of maximum frequency of a cpu.
->> In other words, scheduler is unaware of maximum capacity
->> restrictions placed on a cpu due to thermal activity.
->> This patch series attempts to address this issue.
->> The benefits identified are better task placement among available
->> cpus in event of overheating which in turn leads to better
->> performance numbers.
->>
->> The reduction in the maximum possible capacity of a cpu due to a
->> thermal event can be considered as thermal pressure. Instantaneous
->> thermal pressure is hard to record and can sometime be erroneous
->> as there can be mismatch between the actual capping of capacity
->> and scheduler recording it. Thus solution is to have a weighted
->> average per cpu value for thermal pressure over time.
->> The weight reflects the amount of time the cpu has spent at a
->> capped maximum frequency. Since thermal pressure is recorded as
->> an average, it must be decayed periodically. Exisiting algorithm
->> in the kernel scheduler pelt framework is re-used to calculate
->> the weighted average. This patch series also defines a sysctl
->> inerface to allow for a configurable decay period.
->>
->> Regarding testing, basic build, boot and sanity testing have been
->> performed on db845c platform with debian file system.
->> Further, dhrystone and hackbench tests have been
->> run with the thermal pressure algorithm. During testing, due to
->> constraints of step wise governor in dealing with big little systems,
-> I don't understand this modification. Could you explain what was the
-> issue and if this modification did not break the original
-> thermal solution upfront? You are then comparing this modified
-> version and treat it as an 'origin', am I right?
-With Ionela's help I understood the reason for doing this hack.
 
-For those who follow: She created a 'capacity inversion' between
-big and little cores to tests if the patches really work.
-How: she starts throttling big cores at lower temperature, so earlier
-in time, thus the power is shifted towards little cores (which are more
-energy efficient and can run with higher frequency). The big cores
-run at minimum frequency and little (hopefully) at max frequency.
+on i386 or x86_64:
 
-This 'capacity inversion' is the use case which might occur in the
-real world. It is hard to trigger it in normal benchmarks, though.
-I don't know how often this 'capacity inversion' occurs and for how
-long it stays in real workloads. Based on the tests run with default
-thermal solution and results almost the same, I would say that it is
-not often (maybe 3% of the test period, otherwise I would get better
-results because this patch set solves this issue).
-I have run a few different kernels and benchmarks without this
-'capacity inversions' and I don't see the regression (and benefits
-from this solution), which is also a big plus in case of mainlining it.
+../kernel/bpf/btf.c:3466:1: error: empty enum is invalid
+ };
+ ^
 
-In case where the 'capacity inversion' is artificially introduced
-into the system for 100% time, the stress tests show huge difference.
-Please refer to Ionela's test results [1] (~30% better).
-
-Regards,
-Lukasz Luba
+when CONFIG_NET is not set/enabled.
 
 
-[1] 
-https://docs.google.com/spreadsheets/d/1ibxDSSSLTodLzihNAw6jM36eVZABuPMMnjvV-Xh4NEo/edit#gid=0
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
