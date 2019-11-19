@@ -2,54 +2,155 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1F8C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8549EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B4C222C7
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B309222C7
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:30:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MrhrrF8V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbfKSN24 (ORCPT
+        id S1727831AbfKSNaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 08:28:56 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44504 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725904AbfKSN24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 08:28:56 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9E8ECB2B8;
-        Tue, 19 Nov 2019 13:28:54 +0000 (UTC)
-Date:   Tue, 19 Nov 2019 14:28:54 +0100
-From:   Daniel Wagner <dwagner@suse.de>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: lpfc: Move work items to a stack list
-Message-ID: <20191119132854.mwkxx4fixjaoxv4w@beryllium.lan>
-References: <20191105080855.16881-1-dwagner@suse.de>
- <yq1h838pivf.fsf@oracle.com>
+        Tue, 19 Nov 2019 08:30:00 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37504 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfKSNaA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 08:30:00 -0500
+Received: by mail-pl1-f196.google.com with SMTP id bb5so11771012plb.4;
+        Tue, 19 Nov 2019 05:29:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sRIw6rp9Mc/Zdv75hs9vE0HKh/1jxjYXzfWj5KShO4o=;
+        b=MrhrrF8VKUR53os//rbTAXNlYR381za1H7vFBS2zlR43gNP9tiyijNaDdSFPm1ylZG
+         7BpsZiu0xUbFqrsK+ucimbYqFbLMaa12nDUf4kHzSThkSH6y+PteD6qYuW+oYdiiwSpg
+         bN07C1TVSW7/jx1bNm+Bi0XpYBY64QsJbMqykRhmaczEolhgAG7qci5fr/cFvTUThXVt
+         3iWjfxVJwDOZLxmacN1ZywbivHp1acfzctqa/aocOPR/NgBsqCLxWmSFXIh1OHnx91z4
+         DGpouLhOKrqJtFvGo56iGd5qkMokxcqRHj0TAZqHP58nPcJZJ7Xd0F71eOTtQ3HRZbpi
+         56kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sRIw6rp9Mc/Zdv75hs9vE0HKh/1jxjYXzfWj5KShO4o=;
+        b=Oi3cD9QeyHYAukP8wY/oPriNlVBfZc5NU1mH2+w8uwcSWVk6kMWMvJ1gvjx8ysmny2
+         Y5byh3UdogZwG1+71pKdkLNtkY4OPmNp+NUHF4jp1bqzgadHueTD44KBXZJgctROhCZ9
+         uFdCJYqKmC1bQQJQKwBX4Q8v8Ollj565+Ef7HAhqD1C8GcUUSp+5HAqKL2LF/6OLSxvg
+         9yhPp35EYQwgApMh12NMkx4k/4VErAI0JZVKplFavM2AoBSzA+2gMsKszGSAwnK5pYH3
+         TxF88jx+VIAGc70vxJYW4DrxapZFU/xDinVN3LR5K73L1tVa0dbIQ2LoAYE1rhVVoBxe
+         +8PA==
+X-Gm-Message-State: APjAAAVmvA4ShEWnrGuCcXbV1AxIPlxPgKOmuXfvTHcXq6+cpzsrnMzI
+        KF8aPQcvH+FEHuw2T4FMVz0=
+X-Google-Smtp-Source: APXvYqwZOxMxDDzJWeLUQjB+1ez46gEs7a1oggH6mczLVLdIFC0C+jm5a6Ir578tmMYcqi/cLuuIXw==
+X-Received: by 2002:a17:902:bd82:: with SMTP id q2mr35320894pls.106.1574170197473;
+        Tue, 19 Nov 2019 05:29:57 -0800 (PST)
+Received: from ?IPv6:2405:4800:58c7:fb0:3103:9cb5:5896:cd6e? ([2405:4800:58c7:fb0:3103:9cb5:5896:cd6e])
+        by smtp.gmail.com with ESMTPSA id r15sm26254360pfh.81.2019.11.19.05.29.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Nov 2019 05:29:56 -0800 (PST)
+Cc:     tranmanphong@gmail.com,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        syzbot+1234691fec1b8ceba8b1@syzkaller.appspotmail.com
+Subject: Re: [PATCH] HID: hid-lg4ff: Fix uninit-value set_autocenter_default
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+References: <20191105141807.27054-1-tranmanphong@gmail.com>
+ <CAO-hwJ+cydMPQE_otc8-67=SDKmjac5RXsLs-9x6dH4YqA+DVQ@mail.gmail.com>
+From:   Phong Tran <tranmanphong@gmail.com>
+Message-ID: <0407e8bb-bbf5-ec64-cdac-ef266f1ab391@gmail.com>
+Date:   Tue, 19 Nov 2019 20:29:49 +0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq1h838pivf.fsf@oracle.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAO-hwJ+cydMPQE_otc8-67=SDKmjac5RXsLs-9x6dH4YqA+DVQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 10:15:00PM -0500, Martin K. Petersen wrote:
-> > While trying to understand what's going on in the Oops below I figured
-> > that it could be the result of the invalid pointer access. The patch
-> > still needs testing by our customer but indepent of this I think the
-> > patch fixes a real bug.
+On 11/18/19 4:43 PM, Benjamin Tissoires wrote:
+> On Tue, Nov 5, 2019 at 3:18 PM Phong Tran <tranmanphong@gmail.com> wrote:
+>>
+>> syzbot found a problem using of uinit pointer in
+>> lg4ff_set_autocenter_default().
+>>
+>> Reported-by: syzbot+1234691fec1b8ceba8b1@syzkaller.appspotmail.com
+>>
+>> Tested by syzbot:
+>>
+>> https://groups.google.com/d/msg/syzkaller-bugs/ApnMLW6sfKE/Qq0bIHGEAQAJ
+> 
+> This seems weird to me:
+> 
+> the syzbot link above is about `hid_get_drvdata(hid)`, and, as I read
+> it, the possibility that hid might not have an initialized value.
+> 
 
-I was able to reproduce the same stack trace with this patch
-applied... That is obviously bad. The good news, I have access to this
-machine, so maybe I able to figure out what's the root cause of this
-crash.
+In the dashboard [1] shows
+BUG: KMSAN: uninit-value in dev_get_drvdata include/linux/device.h:1388 
+[inline]
+BUG: KMSAN: uninit-value in hid_get_drvdata include/linux/hid.h:628 [inline]
+BUG: KMSAN: uninit-value in lg4ff_set_autocenter_default+0x23a/0xa20 
+drivers/hid/hid-lg4ff.c:477
+base on that I did the initialization the pointer in the patch.
+
+> Here you are changing the initialized values of value, entry and
+> drv_data, all 3 are never used before their first assignment.
+> 
+> I have a feeling this particular syzbot check has already been fixed
+> upstream by d9d4b1e46d95 "HID: Fix assumption that devices have
+> inputs".
+> 
+
+I think the commit d9d4b1 fixed this report [2] by syzbot.
+
+[1] https://syzkaller.appspot.com/bug?extid=1234691fec1b8ceba8b1
+[2] https://syzkaller.appspot.com/bug?extid=403741a091bf41d4ae79
+
+regards,
+Phong.
+> Cheers,
+> Benjamin
+> 
+>>
+>> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+>> ---
+>>   drivers/hid/hid-lg4ff.c | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/hid/hid-lg4ff.c b/drivers/hid/hid-lg4ff.c
+>> index 5e6a0cef2a06..44dfd08b0c32 100644
+>> --- a/drivers/hid/hid-lg4ff.c
+>> +++ b/drivers/hid/hid-lg4ff.c
+>> @@ -468,10 +468,10 @@ static int lg4ff_play(struct input_dev *dev, void *data, struct ff_effect *effec
+>>   static void lg4ff_set_autocenter_default(struct input_dev *dev, u16 magnitude)
+>>   {
+>>          struct hid_device *hid = input_get_drvdata(dev);
+>> -       s32 *value;
+>> +       s32 *value = NULL;
+>>          u32 expand_a, expand_b;
+>> -       struct lg4ff_device_entry *entry;
+>> -       struct lg_drv_data *drv_data;
+>> +       struct lg4ff_device_entry *entry = NULL;
+>> +       struct lg_drv_data *drv_data = NULL;
+>>          unsigned long flags;
+>>
+>>          drv_data = hid_get_drvdata(hid);
+>> --
+>> 2.20.1
+>>
+> 
