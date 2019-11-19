@@ -2,146 +2,180 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4DDC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89199C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 240252231D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BDCC21823
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141359;
-	bh=8JMcbCa2WKKz+0rsNJcoxlfJyTxFxkW6Mt8zV/xTAdU=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=HLyzRLSmN6lostcn+I5E/lW1E5WQ3LhfLwNCZCXoIo6TafFg8+xlw63eO1KQycGgB
-	 7NtwG/+7KfMwzsnQKoRvAqrbZsQ0SWzD8vSxJzMX4xzI5nFmGL3DaOm3AwpmhF82j9
-	 zbkj2aGIFLl7ggbYSQvLxbNjklnQj49iSBQKz0qA=
+	s=default; t=1574141367;
+	bh=hRy+MxDLZVv/UkdR00foaWGPcN5I0PYFblmkSiDxReA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jb2HWvXxzali6HfyxHmq9cvYna5DT63MApLvnfHp8GGmVQzhJW0G3zXZqg5HOKyRy
+	 gCflYrRfLxsD0OUPloqLEMFlUX1NQru2xSe/FuphOJKZ6qwu5vrOooC1zFX2HujVmn
+	 CDugucGr97cOx6z0entp4ivWR96JV9VaHNt+xdgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbfKSF3S (ORCPT
+        id S1727345AbfKSF3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:29:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47770 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:29:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728944AbfKSF3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:29:15 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        id S1728251AbfKSF3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:29:21 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EA8421823;
-        Tue, 19 Nov 2019 05:29:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 557C921939;
+        Tue, 19 Nov 2019 05:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141354;
-        bh=8JMcbCa2WKKz+0rsNJcoxlfJyTxFxkW6Mt8zV/xTAdU=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=qabvm+IvlkJYQun3fh27xE5jpHp5kNB4XaC5w+hBEUkzXWqYOJ9RD7p4ruZVj2C+a
-         Q0g2vTvCkC2rV+GHtwbgcE92wdyNLRaiwlUeX9rV/6oQV49PegVHILWShVFQjwlt9v
-         sC35xaQOKfKinpwSGZYPN/n64Iuf4AKMwwhgB3Ww=
-Date:   Mon, 18 Nov 2019 21:29:12 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     bpf <bpf@vger.kernel.org>, netdev <netdev@vger.kernel.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        syzbot <syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: kernel panic: stack is corrupted in __lock_acquire (4)
-Message-ID: <20191119052912.GM163020@sol.localdomain>
-References: <0000000000009b3b80058af452ae@google.com>
- <0000000000000ec274059185a63e@google.com>
- <CACT4Y+aT5z65OZE6_TQieU5zUYWDvDtAogC45f6ifLkshBK2iw@mail.gmail.com>
- <20191017162505.GB726@sol.localdomain>
- <20191017163007.GC726@sol.localdomain>
+        s=default; t=1574141359;
+        bh=hRy+MxDLZVv/UkdR00foaWGPcN5I0PYFblmkSiDxReA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dx1PWXkDDmIp1gckSFPvZinDUcP56lEU9vqQMs0Nna+llzjOKT8p48IMNkLkSV7si
+         Q+pyRdYEdipPQvSIpmovfLnOqBLz4wkXlAUcUY3F6SCYXYyqa46krAfSv2LRq4PWmG
+         KZS3dNvZjBZpEW08r0TCkK0Zix79+iB3WrZSBc70=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Anatoly Trosinenko <anatoly.trosinenko@gmail.com>,
+        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 133/422] udf: Fix crash during mount
+Date:   Tue, 19 Nov 2019 06:15:30 +0100
+Message-Id: <20191119051407.485249774@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
+References: <20191119051400.261610025@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191017163007.GC726@sol.localdomain>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 09:30:07AM -0700, Eric Biggers wrote:
-> On Thu, Oct 17, 2019 at 09:25:05AM -0700, Eric Biggers wrote:
-> > On Sun, Sep 01, 2019 at 08:23:42PM -0700, 'Dmitry Vyukov' via syzkaller-bugs wrote:
-> > > On Sun, Sep 1, 2019 at 3:48 PM syzbot
-> > > <syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com> wrote:
-> > > >
-> > > > syzbot has found a reproducer for the following crash on:
-> > > >
-> > > > HEAD commit:    38320f69 Merge branch 'Minor-cleanup-in-devlink'
-> > > > git tree:       net-next
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=13d74356600000
-> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=1bbf70b6300045af
-> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=83979935eb6304f8cd46
-> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1008b232600000
-> > > 
-> > > Stack corruption + bpf maps in repro triggers some bells. +bpf mailing list.
-> > > 
-> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > Reported-by: syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com
-> > > >
-> > > > Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in:
-> > > > __lock_acquire+0x36fa/0x4c30 kernel/locking/lockdep.c:3907
-> > > > CPU: 0 PID: 8662 Comm: syz-executor.4 Not tainted 5.3.0-rc6+ #153
-> > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > > Google 01/01/2011
-> > > > Call Trace:
-> > > > Kernel Offset: disabled
-> > > > Rebooting in 86400 seconds..
-> > > >
-> > 
-> > This is still reproducible on latest net tree, but using a different kconfig I
-> > was able to get a more informative crash output.  Apparently tcp_bpf_unhash() is
-> > being called recursively.  Anyone know why this might happen?
-> > 
-> > This is using the syzkaller language reproducer linked above -- I ran it with:
-> > 
-> > 	syz-execprog -threaded=1 -collide=1 -cover=0 -repeat=0 -procs=8 -sandbox=none -enable=net_dev,net_reset,tun syz_bpf.txt
-> > 
-> > Crash report on net/master:
-> > 
-> > PANIC: double fault, error_code: 0x0
-> > CPU: 3 PID: 8328 Comm: syz-executor Not tainted 5.4.0-rc1-00118-ge497c20e2036 #31
-> > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191013_105130-anatol 04/01/2014
-> > RIP: 0010:mark_lock+0x4/0x640 kernel/locking/lockdep.c:3631
-> > Code: a2 7f 27 01 85 c0 0f 84 f3 42 00 00 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 66 66 2e 0f 1f 84 00 00 00 00 00 55 48 89 e5 <41> 57 41 56 41 55 41 54 53 48 83 ec 18 83 fa 08 76 21 44 8b 25 ab
-> > RSP: 0018:ffffc9000010d000 EFLAGS: 00010046
-> > RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000000000
-> > RDX: 0000000000000008 RSI: ffff888071f92dd8 RDI: ffff888071f92600
-> > RBP: ffffc9000010d000 R08: 0000000000000000 R09: 0000000000022023
-> > R10: 00000000000000c8 R11: 0000000000000000 R12: ffff888071f92600
-> > R13: ffff888071f92dd8 R14: 0000000000000023 R15: 0000000000000000
-> > FS:  00007ff9f7765700(0000) GS:ffff88807fd80000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: ffffc9000010cff8 CR3: 000000000221d000 CR4: 00000000003406e0
-> > Call Trace:
-> >  <IRQ>
-> >  mark_usage kernel/locking/lockdep.c:3592 [inline]
-> >  __lock_acquire+0x22f/0xf80 kernel/locking/lockdep.c:3909
-> >  lock_acquire+0x99/0x170 kernel/locking/lockdep.c:4487
-> >  rcu_lock_acquire include/linux/rcupdate.h:208 [inline]
-> >  rcu_read_lock include/linux/rcupdate.h:599 [inline]
-> >  tcp_bpf_unhash+0x33/0x1d0 net/ipv4/tcp_bpf.c:549
-> >  tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
-> >  tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
-> >  tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
-> >  tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
-> [...]
-> 
-> Recursive tcp_bpf_unhash() also showed up in
-> "BUG: unable to handle kernel paging request in tls_prots"
-> (https://lkml.kernel.org/lkml/000000000000d7bcbb058c3758a1@google.com/T/)
-> which was claimed to be fixed by
-> "bpf: sockmap/tls, close can race with map free".
-> But that fix was months ago; this crash is on latest net tree.
-> 
+From: Jan Kara <jack@suse.cz>
 
-Is anyone planning to look into this?  This is still occurring on net-next
-(4 days ago).
+[ Upstream commit b085fbe2ef7fa7489903c45271ae7b7a52b0f9ab ]
 
-- Eric
+Fix a crash during an attempt to mount a filesystem that has both
+Unallocated Space Table and Unallocated Space Bitmap. Such filesystem
+actually violates the UDF standard so we just have to properly detect
+such situation and refuse to mount such filesystem read-write. When we
+are at it, verify also other constraints on the allocation information
+mandated by the standard.
+
+Reported-by: Anatoly Trosinenko <anatoly.trosinenko@gmail.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/udf/super.c | 65 ++++++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 60 insertions(+), 5 deletions(-)
+
+diff --git a/fs/udf/super.c b/fs/udf/super.c
+index c495db7165aee..7af011dc9ae8a 100644
+--- a/fs/udf/super.c
++++ b/fs/udf/super.c
+@@ -989,12 +989,62 @@ static struct udf_bitmap *udf_sb_alloc_bitmap(struct super_block *sb, u32 index)
+ 	return bitmap;
+ }
+ 
++static int check_partition_desc(struct super_block *sb,
++				struct partitionDesc *p,
++				struct udf_part_map *map)
++{
++	bool umap, utable, fmap, ftable;
++	struct partitionHeaderDesc *phd;
++
++	switch (le32_to_cpu(p->accessType)) {
++	case PD_ACCESS_TYPE_READ_ONLY:
++	case PD_ACCESS_TYPE_WRITE_ONCE:
++	case PD_ACCESS_TYPE_REWRITABLE:
++	case PD_ACCESS_TYPE_NONE:
++		goto force_ro;
++	}
++
++	/* No Partition Header Descriptor? */
++	if (strcmp(p->partitionContents.ident, PD_PARTITION_CONTENTS_NSR02) &&
++	    strcmp(p->partitionContents.ident, PD_PARTITION_CONTENTS_NSR03))
++		goto force_ro;
++
++	phd = (struct partitionHeaderDesc *)p->partitionContentsUse;
++	utable = phd->unallocSpaceTable.extLength;
++	umap = phd->unallocSpaceBitmap.extLength;
++	ftable = phd->freedSpaceTable.extLength;
++	fmap = phd->freedSpaceBitmap.extLength;
++
++	/* No allocation info? */
++	if (!utable && !umap && !ftable && !fmap)
++		goto force_ro;
++
++	/* We don't support blocks that require erasing before overwrite */
++	if (ftable || fmap)
++		goto force_ro;
++	/* UDF 2.60: 2.3.3 - no mixing of tables & bitmaps, no VAT. */
++	if (utable && umap)
++		goto force_ro;
++
++	if (map->s_partition_type == UDF_VIRTUAL_MAP15 ||
++	    map->s_partition_type == UDF_VIRTUAL_MAP20)
++		goto force_ro;
++
++	return 0;
++force_ro:
++	if (!sb_rdonly(sb))
++		return -EACCES;
++	UDF_SET_FLAG(sb, UDF_FLAG_RW_INCOMPAT);
++	return 0;
++}
++
+ static int udf_fill_partdesc_info(struct super_block *sb,
+ 		struct partitionDesc *p, int p_index)
+ {
+ 	struct udf_part_map *map;
+ 	struct udf_sb_info *sbi = UDF_SB(sb);
+ 	struct partitionHeaderDesc *phd;
++	int err;
+ 
+ 	map = &sbi->s_partmaps[p_index];
+ 
+@@ -1014,8 +1064,16 @@ static int udf_fill_partdesc_info(struct super_block *sb,
+ 		  p_index, map->s_partition_type,
+ 		  map->s_partition_root, map->s_partition_len);
+ 
+-	if (strcmp(p->partitionContents.ident, PD_PARTITION_CONTENTS_NSR02) &&
+-	    strcmp(p->partitionContents.ident, PD_PARTITION_CONTENTS_NSR03))
++	err = check_partition_desc(sb, p, map);
++	if (err)
++		return err;
++
++	/*
++	 * Skip loading allocation info it we cannot ever write to the fs.
++	 * This is a correctness thing as we may have decided to force ro mount
++	 * to avoid allocation info we don't support.
++	 */
++	if (UDF_QUERY_FLAG(sb, UDF_FLAG_RW_INCOMPAT))
+ 		return 0;
+ 
+ 	phd = (struct partitionHeaderDesc *)p->partitionContentsUse;
+@@ -1051,9 +1109,6 @@ static int udf_fill_partdesc_info(struct super_block *sb,
+ 			  p_index, bitmap->s_extPosition);
+ 	}
+ 
+-	if (phd->partitionIntegrityTable.extLength)
+-		udf_debug("partitionIntegrityTable (part %d)\n", p_index);
+-
+ 	if (phd->freedSpaceTable.extLength) {
+ 		struct kernel_lb_addr loc = {
+ 			.logicalBlockNum = le32_to_cpu(
+-- 
+2.20.1
+
+
+
