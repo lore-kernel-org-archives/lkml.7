@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8887FC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53132C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E296214D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C4D208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142536;
-	bh=J6ZEfStz5DT4isXE9ce7olgvh3mbHLrQijoXZCL5OSk=;
+	s=default; t=1574142541;
+	bh=UJIkCko1T/uvwuZdVtUds6NrBGotpYuWsGiGTTT/KO8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cGdSiRXWmUKuPPHgE8pUQPijzmuF59nb4VgQM+y7cvIUiga+tcqeHoXrtlavAxFG6
-	 U0+TeG7f11Q7ur32b90EdOgFBwD7kXIuFV+6RpPd7Tfzl65V5m8Po1nEUFpwa6lQDn
-	 4YIYiUeNHSM+Pu/Pikhp255Unlt/WS+W/8kKlHmU=
+	b=QTl738OGseYvO8f0MBz/KSqjuIgzKMEZm3xTyu2P3NMom7C74XLagHR/h13AmTQMX
+	 0ytRq88iEocG77SuhGCNqBWC6MlwBhxfUQetKkfNXnWvUjA4AibI2Zu1AzshCQqLuO
+	 NrfP4DRuSx1fS7s4YZSlPoVEVZTSUlTTd28457pA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731420AbfKSFsy (ORCPT
+        id S1731150AbfKSFs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:48:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45488 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:48:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731414AbfKSFsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:48:52 -0500
+        id S1731414AbfKSFsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:48:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98DD020721;
-        Tue, 19 Nov 2019 05:48:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D41C20862;
+        Tue, 19 Nov 2019 05:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142532;
-        bh=J6ZEfStz5DT4isXE9ce7olgvh3mbHLrQijoXZCL5OSk=;
+        s=default; t=1574142534;
+        bh=UJIkCko1T/uvwuZdVtUds6NrBGotpYuWsGiGTTT/KO8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gDK1oibrS2sxO3gEh9Gm36slPM8G8U7SzwY/V7c9iiJ88EtgugGC9iETdrvtvqEnr
-         coxngEL8+UWd5U5PpMj3fbzoOP3aurk7Q0guXEA3AijjJUXc64XBViREEVSTcvq2nd
-         vxvAx/ft6b3u8EIyVUzNwe948HQQll6Sp9m7Tnso=
+        b=aRhnQopHcQQyDcP7+M/8tDuJ/59UVvm+pB9mvVKWInvkwiuwQ4m79s2Xw87eL9ZNL
+         lcKpejqg2r+mgCeWdKZiNoNMokNpVJsAgtj63UTmefKTsdMTsdsj4+Pn+uZf7UQYFL
+         Ukhfy/pOHhiaQyu9YDSJzjIaovtck9Sxz8xNOuJQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Andy Gross <andy.gross@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 112/239] llc: avoid blocking in llc_sap_close()
-Date:   Tue, 19 Nov 2019 06:18:32 +0100
-Message-Id: <20191119051328.074556262@linuxfoundation.org>
+Subject: [PATCH 4.14 113/239] ARM: dts: qcom: ipq4019: fix cpu0s qcom,saw2 reg value
+Date:   Tue, 19 Nov 2019 06:18:33 +0100
+Message-Id: <20191119051328.435735112@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -60,52 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-[ Upstream commit 9708d2b5b7c648e8e0a40d11e8cea12f6277f33c ]
+[ Upstream commit bd73a3dd257fb838bd456a18eeee0ef0224b7a40 ]
 
-llc_sap_close() is called by llc_sap_put() which
-could be called in BH context in llc_rcv(). We can't
-block in BH.
+while compiling an ipq4019 target, dtc will complain:
+regulator@b089000 unit address format error, expected "2089000"
 
-There is no reason to block it here, kfree_rcu() should
-be sufficient.
+The saw0 regulator reg value seems to be
+copied and pasted from qcom-ipq8064.dtsi.
 
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This patch fixes the reg value to match that of the
+unit address which in turn silences the warning.
+(There is no driver for qcom,saw2 right now.
+So this went unnoticed)
+
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: John Crispin <john@phrozen.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/llc.h  | 1 +
- net/llc/llc_core.c | 4 +---
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/qcom-ipq4019.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/llc.h b/include/net/llc.h
-index 890a87318014d..df282d9b40170 100644
---- a/include/net/llc.h
-+++ b/include/net/llc.h
-@@ -66,6 +66,7 @@ struct llc_sap {
- 	int sk_count;
- 	struct hlist_nulls_head sk_laddr_hash[LLC_SK_LADDR_HASH_ENTRIES];
- 	struct hlist_head sk_dev_hash[LLC_SK_DEV_HASH_ENTRIES];
-+	struct rcu_head rcu;
- };
+diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+index 10d112a4078ec..19156cbb60034 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -234,7 +234,7 @@
  
- static inline
-diff --git a/net/llc/llc_core.c b/net/llc/llc_core.c
-index 260b3dc1b4a2a..64d4bef04e730 100644
---- a/net/llc/llc_core.c
-+++ b/net/llc/llc_core.c
-@@ -127,9 +127,7 @@ void llc_sap_close(struct llc_sap *sap)
- 	list_del_rcu(&sap->node);
- 	spin_unlock_bh(&llc_sap_list_lock);
+                 saw0: regulator@b089000 {
+                         compatible = "qcom,saw2";
+-                        reg = <0x02089000 0x1000>, <0x0b009000 0x1000>;
++			reg = <0x0b089000 0x1000>, <0x0b009000 0x1000>;
+                         regulator;
+                 };
  
--	synchronize_rcu();
--
--	kfree(sap);
-+	kfree_rcu(sap, rcu);
- }
- 
- static struct packet_type llc_packet_type __read_mostly = {
 -- 
 2.20.1
 
