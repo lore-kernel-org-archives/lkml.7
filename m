@@ -2,118 +2,175 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BA4C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F30A1C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46795222CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C211B219F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:07:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574165225;
+	bh=q6CqzN1QbpN9JcZpT/RnwbmHtftnved8cIFRuLcu7vA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CQo6dUFoi9xLFKe8WATJliKH0TwkjUrOfUV+8IxB518oLmtkfMfw0u6Bjs0jBsTry
+	 X1Yhd4/AC5mQokLz8mnBb/7dVMRZPifXN7OhIf1OToN8I2mrTVCK2tUDvhj3gmf9BQ
+	 GTXIZmD4Gu3DyloUVWpVAzkjGO3P/0EEmrSWCklY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbfKSMHD (ORCPT
+        id S1727981AbfKSMHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 19 Nov 2019 07:07:04 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43087 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727665AbfKSMHD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Nov 2019 07:07:03 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50878 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727702AbfKSMHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:07:03 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1C85EBAF7;
-        Tue, 19 Nov 2019 12:07:01 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH net-next] net: ipconfig: Make device wait timeout configurable
-Date:   Tue, 19 Nov 2019 13:06:46 +0100
-Message-Id: <20191119120647.31547-1-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.16.4
+Received: by mail-wr1-f68.google.com with SMTP id n1so23484649wra.10;
+        Tue, 19 Nov 2019 04:06:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=iS9pe3dkEr673iYSaJKKJUNkDW4+uEgv0fqUdbRhkeY=;
+        b=PabPFLNnFg+osS4gNu3ve83xkE7uJnUNXpSrSSYdyB+wz75KRN+RYHuREBbIQnguYe
+         7McNl8SJlgKrybc85/YwRgc4iU54VnjupxbyrPZSvqhU2N1UwqgPad4GZ49FisE+IXcS
+         dkxk6uWwKwLHdOJNJUkVamniu8SPq4uYwijcBi8SUpoN4XkLfkcdFyDbBWF+vRHFTzi0
+         ffvAC9a5YNXYE0stOHRlyJ91IzRRqbeuiSypd4TWNO3YzP2jf316TViCT5omueEwu7LK
+         XjahRaErn4jd7xpk9dfhwg+rJTjhXuPMhS9eIvKeSpCFSNZiI8XlY7Kq1Mz7K1TBCWVc
+         BAPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iS9pe3dkEr673iYSaJKKJUNkDW4+uEgv0fqUdbRhkeY=;
+        b=Ts0ummNh1aSYv2xXxcK0OHuoEHZ6tzyA0CPtD4iEFcx60O3HVEsiSm4FbUJ0L6zBcJ
+         Y09L7TBz2GLrkJp3K3js9BO+16C/X17FrYQcUjaw+AsDPOk3gVdpHdcwgwO42531f8TU
+         aCXfXMZC6FJM0sLHCl761k5nYgksSb6J1WThF2MS5o5hOBohivPcUKG/R0WxHcrFQpXw
+         Cz+DNVC6rf+Hwu592VSA/ASAhlNvHuJumDEwKiOlZdgsKihzOkldAID/jfN6Qklbsna9
+         qtyKorORkpLUo2DfecXuYuiJtC7UZnetaVXQB9hsdC+v48BimZikacXwQdSEyd2GZT42
+         BrkA==
+X-Gm-Message-State: APjAAAVxxu1MPDZqIf9u1bwdRgC/nYmBKUn70ePcGuJIG72nHyiaw37P
+        jvQWpxd02r58wPp5a3/kzO4=
+X-Google-Smtp-Source: APXvYqy6/EXJc0eQicn3FQeArcMb/Ms9rjozFz8E96Loyy5wHW/D99fzz5dYrgDIkdPwH0r24aSwqA==
+X-Received: by 2002:a5d:6706:: with SMTP id o6mr16067898wru.54.1574165219202;
+        Tue, 19 Nov 2019 04:06:59 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id v184sm2965490wme.31.2019.11.19.04.06.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 04:06:58 -0800 (PST)
+Date:   Tue, 19 Nov 2019 13:06:55 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Nadav Amit <namit@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-acpi@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: [PATCH] x86/platform/intel/quark: Explicitly include linux/io.h for
+ virt_to_phys()
+Message-ID: <20191119120655.GA31444@gmail.com>
+References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
+ <20191119111012.GA109842@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191119111012.GA109842@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If network device drivers are using deferred probing it's possible
-that waiting for devices to show up in ipconfig is already over,
-when the device eventually shows up. With the new netdev_max_wait
-kernel cmdline pataremter it's now possible to extend this time.
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+* Ingo Molnar <mingo@kernel.org> wrote:
+
+> I've applied them to tip:WIP.core/headers as a work-in-progress tree, 
+> and I'm testing them on randconfigs to make sure there's no broken 
+> dependencies. I'll wait for the ACPI acks.
+
+One more fix was needed, for the intel-quark driver that is only built on 
+32-bit configs:
+
+==================>
+From: Ingo Molnar <mingo@kernel.org>
+Date: Tue, 19 Nov 2019 12:51:56 +0100
+Subject: [PATCH] x86/platform/intel/quark: Explicitly include linux/io.h for virt_to_phys()
+
+Similarly to the previous patches by Sean Christopherson:
+
+ "Through a labyrinthian sequence of includes, usage of virt_to_phys() is
+  dependent on the include of asm/io.h in x86's asm/realmode.h, which is
+  included in x86's asm/acpi.h and thus by linux/acpi.h.  Explicitly
+  include linux/io.h to break the dependency on realmode.h so that a
+  future patch can remove the realmode.h include from acpi.h without
+  breaking the build."
+
+Cc: linux-kernel@vger.kernel.org
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- Documentation/admin-guide/kernel-parameters.txt |  5 +++++
- net/ipv4/ipconfig.c                             | 22 +++++++++++++++++++---
- 2 files changed, 24 insertions(+), 3 deletions(-)
+ arch/x86/platform/intel-quark/imr.c          | 2 ++
+ arch/x86/platform/intel-quark/imr_selftest.c | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index a84a83f8881e..6083ac04f075 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2755,6 +2755,11 @@
- 			This usage is only documented in each driver source
- 			file if at all.
- 
-+	netdev_max_wait=
-+			[IP_PNP] set the maximum time in seconds to wait
-+			for net devices showing up, when doing kernel
-+			IP configuration
+diff --git a/arch/x86/platform/intel-quark/imr.c b/arch/x86/platform/intel-quark/imr.c
+index 6dd25dc5f027..e9d97d52475e 100644
+--- a/arch/x86/platform/intel-quark/imr.c
++++ b/arch/x86/platform/intel-quark/imr.c
+@@ -29,6 +29,8 @@
+ #include <asm/cpu_device_id.h>
+ #include <asm/imr.h>
+ #include <asm/iosf_mbi.h>
++#include <asm/io.h>
 +
- 	nf_conntrack.acct=
- 			[NETFILTER] Enable connection tracking flow accounting
- 			0 to disable accounting
-diff --git a/net/ipv4/ipconfig.c b/net/ipv4/ipconfig.c
-index 9bcca08efec9..851ea8239f5f 100644
---- a/net/ipv4/ipconfig.c
-+++ b/net/ipv4/ipconfig.c
-@@ -103,6 +103,9 @@
- /* Wait for carrier timeout default in seconds */
- static unsigned int carrier_timeout = 120;
- 
-+/* Wait for devices to show up in seconds */
-+static unsigned int device_max_wait = 12;
+ #include <linux/debugfs.h>
+ #include <linux/init.h>
+ #include <linux/mm.h>
+diff --git a/arch/x86/platform/intel-quark/imr_selftest.c b/arch/x86/platform/intel-quark/imr_selftest.c
+index 42f879b75f9b..4307830e1b6f 100644
+--- a/arch/x86/platform/intel-quark/imr_selftest.c
++++ b/arch/x86/platform/intel-quark/imr_selftest.c
+@@ -14,6 +14,8 @@
+ #include <asm-generic/sections.h>
+ #include <asm/cpu_device_id.h>
+ #include <asm/imr.h>
++#include <asm/io.h>
 +
- /*
-  * Public IP configuration
-  */
-@@ -1402,13 +1405,11 @@ __be32 __init root_nfs_parse_addr(char *name)
- 	return addr;
- }
- 
--#define DEVICE_WAIT_MAX		12 /* 12 seconds */
--
- static int __init wait_for_devices(void)
- {
- 	int i;
- 
--	for (i = 0; i < DEVICE_WAIT_MAX; i++) {
-+	for (i = 0; i < device_max_wait; i++) {
- 		struct net_device *dev;
- 		int found = 0;
- 
-@@ -1797,3 +1798,18 @@ static int __init set_carrier_timeout(char *str)
- 	return 1;
- }
- __setup("carrier_timeout=", set_carrier_timeout);
-+
-+static int __init set_device_max_wait(char *str)
-+{
-+	ssize_t ret;
-+
-+	if (!str)
-+		return 0;
-+
-+	ret = kstrtouint(str, 0, &device_max_wait);
-+	if (ret)
-+		return 0;
-+
-+	return 1;
-+}
-+__setup("netdev_max_wait=", set_device_max_wait);
--- 
-2.16.4
+ #include <linux/init.h>
+ #include <linux/mm.h>
+ #include <linux/types.h>
 
