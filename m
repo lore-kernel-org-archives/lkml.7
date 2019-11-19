@@ -2,102 +2,138 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E626FC33C9D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B860C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACC5C20730
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:24:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574166270;
-	bh=SSH7vaJkbgV5ugiuRokCYx/zatWjKWwhP+0/2KTvfX4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NbvdVn0MoCjBEjQe0xaF/p/O00wMu4DUj78YPX38iXZucLeD7JxoTvZuiUWerchq6
-	 zLw47Yv3QaleXO5QFRjvUIG7z4Jk7i++n18kcpWTRWi3g4SFZNr9PBbr7ToDkAtT8o
-	 uQDSc1z9sKbqVIOOW5VlrFSipeZO09vid1VF5B0Q=
+	by mail.kernel.org (Postfix) with ESMTP id 3C8F320730
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:24:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbfKSMY3 (ORCPT
+        id S1728049AbfKSMYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:24:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51266 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728055AbfKSMYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:24:21 -0500
-Received: from localhost (unknown [89.205.136.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7D00222A0;
-        Tue, 19 Nov 2019 12:24:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574166260;
-        bh=SSH7vaJkbgV5ugiuRokCYx/zatWjKWwhP+0/2KTvfX4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jM58IC6IPx6LnbGkZauR/YnYJqEcxwSm1zDA4hjoM3IR1YrFIdS+fEqh+GEcmneUo
-         gv/keV1O3l7j+gLr6f0r6SU7uTxlBKci91wHnnixUYn+ri4ktrQJgcPyS7Zttz2+tx
-         x2Q+tUGiB+3i0JRNj2Cz5YADamxtmg14W8dz2pNc=
-Date:   Tue, 19 Nov 2019 13:24:17 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 000/422] 4.19.85-stable review
-Message-ID: <20191119122417.GA1913916@kroah.com>
-References: <20191119051400.261610025@linuxfoundation.org>
- <20468dbc-5b88-f86e-9d5d-5edca4e4be2b@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20468dbc-5b88-f86e-9d5d-5edca4e4be2b@nvidia.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Tue, 19 Nov 2019 07:24:20 -0500
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:51831 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727814AbfKSMYQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 07:24:16 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=30;SR=0;TI=SMTPD_---0TiZ7z35_1574166246;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TiZ7z35_1574166246)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 19 Nov 2019 20:24:07 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        shakeelb@google.com, hannes@cmpxchg.org
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: [PATCH v4 5/9] mm/swap: only change the lru_lock iff page's lruvec is different
+Date:   Tue, 19 Nov 2019 20:23:19 +0800
+Message-Id: <1574166203-151975-6-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
+References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 09:18:03AM +0000, Jon Hunter wrote:
-> 
-> On 19/11/2019 05:13, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 4.19.85 release.
-> > There are 422 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Thu, 21 Nov 2019 05:02:35 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.85-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> > 
-> > -------------
-> 
-> ...
-> 
-> > Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> >     ARM: dts: meson8b: odroidc1: enable the SAR ADC
-> 
-> This commit is generating the following compilation error for ARM ...
-> 
-> arch/arm/boot/dts/meson8b-odroidc1.dtb: ERROR (phandle_references): /soc/cbus@c1100000/adc@8680: Reference to non-existent node or label "vcc_1v8"
-> 
-> ERROR: Input tree has errors, aborting (use -f to force output)
-> scripts/Makefile.lib:293: recipe for target 'arch/arm/boot/dts/meson8b-odroidc1.dtb' failed
-> make[1]: *** [arch/arm/boot/dts/meson8b-odroidc1.dtb] Error 2
-> arch/arm/Makefile:348: recipe for target 'dtbs' failed
-> make: *** [dtbs] Error 2
+Since we introduced relock_page_lruvec, we could use it in more place
+to reduce spin_locks.
 
-Thanks, will go remove that patch.
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: Chris Down <chris@chrisdown.name>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: swkhack <swkhack@gmail.com>
+Cc: "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Peng Fan <peng.fan@nxp.com>
+Cc: Nikolay Borisov <nborisov@suse.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: Yang Shi <yang.shi@linux.alibaba.com>
+Cc: Yafang Shao <laoar.shao@gmail.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: cgroups@vger.kernel.org
+Cc: linux-mm@kvack.org
+---
+ mm/swap.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-greg k-h
+diff --git a/mm/swap.c b/mm/swap.c
+index 05fee145e382..a023e6095bd9 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -197,11 +197,12 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
+ 	for (i = 0; i < pagevec_count(pvec); i++) {
+ 		struct page *page = pvec->pages[i];
+ 
+-		lruvec = lock_page_lruvec_irqsave(page, page_pgdat(page), &flags);
++		lruvec = relock_page_lruvec_irqsave(page, lruvec, &flags);
+ 
+ 		(*move_fn)(page, lruvec, arg);
+-		spin_unlock_irqrestore(&lruvec->lru_lock, flags);
+ 	}
++	if (lruvec)
++		spin_unlock_irqrestore(&lruvec->lru_lock, flags);
+ 
+ 	release_pages(pvec->pages, pvec->nr);
+ 	pagevec_reinit(pvec);
+@@ -820,15 +821,12 @@ void release_pages(struct page **pages, int nr)
+ 		}
+ 
+ 		if (PageLRU(page)) {
+-			struct lruvec *new_lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
++			struct lruvec *pre_lruvec = lruvec;
+ 
+-			if (new_lruvec != lruvec) {
+-				if (lruvec)
+-					spin_unlock_irqrestore(&lruvec->lru_lock, flags);
++			lruvec = relock_page_lruvec_irqsave(page, lruvec, &flags);
++			if (pre_lruvec != lruvec)
+ 				lock_batch = 0;
+-				lruvec = lock_page_lruvec_irqsave(page, page_pgdat(page), &flags);
+ 
+-			}
+ 			VM_BUG_ON_PAGE(!PageLRU(page), page);
+ 			__ClearPageLRU(page);
+ 			del_page_from_lru_list(page, lruvec, page_off_lru(page));
+-- 
+1.8.3.1
+
