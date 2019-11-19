@@ -2,177 +2,108 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B5CC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD77CC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB1CD222A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8027A22309
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:57:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GdJtIXil"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="oEzgknc7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbfKSGxa (ORCPT
+        id S1727031AbfKSG5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:53:30 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34121 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfKSGxa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 01:53:30 -0500
-Received: by mail-pl1-f195.google.com with SMTP id h13so11252161plr.1
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 22:53:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NVHXbZOZBXxiZKX3GBeHJYFk4c/WxyAtG65m0ugrmM0=;
-        b=GdJtIXil0bjIVxjoqklp3hhWfkZgjD1rVeNy17TQZy5SkISD/Z1g+IsPLZGLFGGzT0
-         j784s0fi0Chiw/MHPjGB6hFvcyu5/iOMEiLyHu5OcBeI4D6fIFnxbYV9lhiTZJpEfFRV
-         goLDEN+cRhbdRvivs649Cd05kT9pBhkr9ChwtMf1OAD0cV0ccrvJhhDAoZ3WFohLMtpu
-         VABFXugT0yLKPFPN7LLVKQp3lCNux8ddhKpcHjPBjNbPSgMZoLzNsHmozlqGJOu/sbKy
-         avMvkr99s46Obi68WjllyjZiXZBbDTiEvxrDbyeIne6MaizCHeIDpKaDcHIviEIgrd8Q
-         30dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NVHXbZOZBXxiZKX3GBeHJYFk4c/WxyAtG65m0ugrmM0=;
-        b=SGzuTKA8cKXUdMDw87RAgtMOWQbrAMRzTbj9TpxWTWnIFtqQwKQhjwnGoRlbekRt3z
-         BYWqF0TgdAfFN4ro/oLus/Hiud4f8zYNd2VUjEchNUy31OivaI3LuiAdR5he247Hg0yp
-         ZGpNGpJAvMLl2cWToQKfXp65DqZjznUOP38HRExuaHRSLDajloWTfONtuTo9OPxQkPgw
-         yplpg1/1GD0qaFUGUpZpoiH1coa62ywRfTAyhuNjsKleRK0ulWm+axhrBJf2Y4oxWsVX
-         CgXb/ijwN7SW8SN3ESsW0nBSCc+sl/FU6O5akc0RuEp1ZIEPoqQmZkG9Cy+fn+x5u4BY
-         IZAg==
-X-Gm-Message-State: APjAAAVIo+GrOsfh6IXQ06z/O/gdCHa9GgOhOHziK9eB9u8+PQeryxI9
-        xKM6IhPezaq4JhJ0jwiEeZZnMU6kkeg=
-X-Google-Smtp-Source: APXvYqyo2oK2hAMFq1/V2OO+nv/wG1IJdRPM9KNkUwYbcn2xpLbU4OZVqkHErgLpjOcExdimgLJR2g==
-X-Received: by 2002:a17:90a:b385:: with SMTP id e5mr4285353pjr.115.1574146408233;
-        Mon, 18 Nov 2019 22:53:28 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id y1sm25484599pfq.138.2019.11.18.22.53.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 22:53:27 -0800 (PST)
-Date:   Mon, 18 Nov 2019 22:53:25 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
-        tsoni@codeaurora.org, agross@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        rnayak@codeaurora.org
-Subject: Re: [PATCH 3/3] soc: qcom: apr: Add avs/audio tracking functionality
-Message-ID: <20191119065325.GF18024@yoga>
-References: <20191118142728.30187-1-sibis@codeaurora.org>
- <0101016e7ee9d8b5-9759d0ba-4acf-4fc4-a863-fac9c738397f-000000@us-west-2.amazonses.com>
+        Tue, 19 Nov 2019 01:57:11 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43989 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725536AbfKSG5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 01:57:11 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47HGpW0SZfz9sRY;
+        Tue, 19 Nov 2019 17:57:07 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1574146627;
+        bh=abFbgG1igsThhgb3dlNVPaVj97B/UnH0/Rzd5PqAH+0=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=oEzgknc7lx7h5mOjZB0zQ3OpkhQjE2o7K2yyBwiUDKIpC76o8tVULItublIoVzqSR
+         IdXlpROlMM68c7Ufy69ZgmokqgE4PAe0yrWx53/OeYK+qKsHRJHp/UkbV1I2lYoMvI
+         rb+qPgWWCxtRMW2fBV8yrPh+jL9kbZjyCD9Vvu76Ai9NolmcXQahEze5dtjpCfpj3b
+         4p3UjTem+R663qkGKc21teebtxS+C74oXnNYQ4stRAaIdu/bgqzIZ2AJbrJt3+eA1i
+         FXSlzh2Chck58Mgg45i3Fe9GR9wP7WCPyGNi2K72I1H9ILsMSqLsVgpsgyvx8k1ksv
+         yh0y5KM8NT1Qw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com,
+        dja@axtens.net
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH v3 15/15] powerpc/32s: Activate CONFIG_VMAP_STACK
+In-Reply-To: <87v9rhcuc5.fsf@mpe.ellerman.id.au>
+References: <cover.1568106758.git.christophe.leroy@c-s.fr> <a99bdfb64e287b16b8cd3f7ec1abfdfb50c7cc64.1568106758.git.christophe.leroy@c-s.fr> <87v9rhcuc5.fsf@mpe.ellerman.id.au>
+Date:   Tue, 19 Nov 2019 17:57:03 +1100
+Message-ID: <878soccq0w.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0101016e7ee9d8b5-9759d0ba-4acf-4fc4-a863-fac9c738397f-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 18 Nov 06:28 PST 2019, Sibi Sankar wrote:
-> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-[..]
-> +static void of_register_apr_devices(struct device *dev, const char *svc_path)
->  {
->  	struct apr *apr = dev_get_drvdata(dev);
->  	struct device_node *node;
-> +	const char *service_path;
-> +	int ret;
->  
->  	for_each_child_of_node(dev->of_node, node) {
->  		struct apr_device_id id = { {0} };
->  
-> +		ret = of_property_read_string_index(node, "qcom,protection-domain",
-> +						    1, &service_path);
-> +		if (svc_path) {
-> +			/* skip APR services that are PD independent */
-> +			if (ret)
-> +				continue;
-> +
-> +			/* skip APR services whose PD paths don't match */
-> +			if (strcmp(service_path, svc_path))
-> +				continue;
-> +		} else {
-> +			/* skip APR services whose PD lookups are registered*/
+Michael Ellerman <mpe@ellerman.id.au> writes:
 
-Missing space before */
+> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>> A few changes to retrieve DAR and DSISR from struct regs
+>> instead of retrieving them directly, as they may have
+>> changed due to a TLB miss.
+>>
+>> Also modifies hash_page() and friends to work with virtual
+>> data addresses instead of physical ones.
+>>
+>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>> ---
+>>  arch/powerpc/kernel/entry_32.S         |  4 +++
+>>  arch/powerpc/kernel/head_32.S          | 19 +++++++++++---
+>>  arch/powerpc/kernel/head_32.h          |  4 ++-
+>>  arch/powerpc/mm/book3s32/hash_low.S    | 46 +++++++++++++++++++++-------------
+>>  arch/powerpc/mm/book3s32/mmu.c         |  9 +++++--
+>>  arch/powerpc/platforms/Kconfig.cputype |  2 ++
+>>  6 files changed, 61 insertions(+), 23 deletions(-)
+>
+> If I build pmac32_defconfig with KVM enabled this causes a build break:
+>
+>   arch/powerpc/kernel/head_32.S: Assembler messages:
+>   arch/powerpc/kernel/head_32.S:324: Error: attempt to move .org backwards
+>   scripts/Makefile.build:357: recipe for target 'arch/powerpc/kernel/head_32.o' failed
+>   make[2]: *** [arch/powerpc/kernel/head_32.o] Error 1
+>
+> In the interests of getting the series merged I'm inclined to just make
+> VMAP_STACK and KVM incompatible for now with:
+>
+> diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
+> index 15c9097dc4f7..5074fe77af40 100644
+> --- a/arch/powerpc/platforms/Kconfig.cputype
+> +++ b/arch/powerpc/platforms/Kconfig.cputype
+> @@ -31,7 +31,7 @@ config PPC_BOOK3S_6xx
+>         select PPC_HAVE_PMU_SUPPORT
+>         select PPC_HAVE_KUEP
+>         select PPC_HAVE_KUAP
+> -       select HAVE_ARCH_VMAP_STACK
+> +       select HAVE_ARCH_VMAP_STACK if !KVM_BOOK3S_32
 
-> +			if (ret == 0)
-> +				continue;
-> +		}
-> +
->  		if (of_property_read_u32(node, "reg", &id.svc_id))
->  			continue;
->  
-> @@ -318,6 +365,37 @@ static void of_register_apr_devices(struct device *dev)
->  	}
->  }
->  
-> +static int apr_remove_device(struct device *dev, void *svc_path)
-> +{
-> +	struct apr_device *adev = to_apr_device(dev);
-> +
-> +	if (svc_path) {
-> +		if (!strcmp(adev->service_path, (char *)svc_path))
-> +			device_unregister(&adev->dev);
-> +	} else {
-> +		device_unregister(&adev->dev);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int apr_pd_status(struct pdr_handle *pdr, struct pdr_service *pds)
+For some reason this needs to be !KVM.
 
-Why is the pdr status function returning an int?
+>  config PPC_BOOK3S_601
+>         bool "PowerPC 601"
+>
+>
+> Thoughts?
 
-> +{
-> +	struct apr *apr = container_of(pdr, struct apr, pdr);
-> +
-> +	switch (pds->state) {
-> +	case SERVREG_SERVICE_STATE_UP:
-> +		of_register_apr_devices(apr->dev, pds->service_path);
-> +		break;
-> +	case SERVREG_SERVICE_STATE_DOWN:
-> +		device_for_each_child(apr->dev, pds->service_path,
-> +				      apr_remove_device);
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-[..]
-> @@ -343,20 +421,19 @@ static int apr_probe(struct rpmsg_device *rpdev)
->  		return -ENOMEM;
->  	}
->  	INIT_WORK(&apr->rx_work, apr_rxwq);
-> +
-> +	ret = pdr_handle_init(&apr->pdr, apr_pd_status);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to init PDR handle\n");
-
-You need to destroy apr->rxwq here as well.
-
-> +		return ret;
-> +	}
-> +
->  	INIT_LIST_HEAD(&apr->rx_list);
->  	spin_lock_init(&apr->rx_lock);
->  	spin_lock_init(&apr->svcs_lock);
->  	idr_init(&apr->svcs_idr);
-> -	of_register_apr_devices(dev);
-> -
-> -	return 0;
-> -}
-
-Regards,
-Bjorn
+cheers
