@@ -2,136 +2,215 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CA6C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 04:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3872CC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 04:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 668FE22318
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 04:41:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="05QWaL6g"
+	by mail.kernel.org (Postfix) with ESMTP id 09DAC22318
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 04:42:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfKSElu (ORCPT
+        id S1727117AbfKSEmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 23:41:50 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43568 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726748AbfKSElu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 23:41:50 -0500
-Received: by mail-oi1-f193.google.com with SMTP id l20so17637987oie.10
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 20:41:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m3MHq1VeKFp127FUICx04ubISK/Dg9APGUYHbc8GCeE=;
-        b=05QWaL6gVTbgGCnZuO1yjSnjhWRi3w56l7hdlFSvvB8HiMDjBUO8yQ0RvJvlVo0qrc
-         LDTYINUM5Yz7PgMGOy/bFHjxL6KJLqarZnNaOW355ivIXYFifzzcwVSAotpWlAb448cg
-         cGiHNiToS3o3BeltrXgUR8vT8b73Tsz627J+9LPszqNyQyTUj33nxl3KHG3AHLooI3Gd
-         yVTaO6OHo0EuDIIK5dpNL5RXxotYXkd8Hp4zLWlaTagZrtXbh5DsQV4EK9s/xTexTKeu
-         pm4BC3RVxJ3UeExcy4v3Sr3p2qNqBENFM83bjAQnXRlcbCyQKBclbh76qG9xPSZT8Gty
-         L9hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m3MHq1VeKFp127FUICx04ubISK/Dg9APGUYHbc8GCeE=;
-        b=ZMNQEO6JDibuq1sk6RcUZGGpal/ON3WBfRLbTrJUbET7LdGU4Vw6T4IKhTot8w/MIz
-         Gbu7qdoUIMP2nerCzZtqKSeJM/kgZeF5djylVkiiTu9L7Z0tTbjmm4F+zKXXUPhqZgRJ
-         AzwcvNA42CmsCi46Aleh2kDOA3ZkhCAVyvXRfS6hz78bbVLJ2emxC6xfm0blidjh4XU+
-         C76C+jTp7NyBasyAMUFpcji2jFdFeEl2xSGnAqkrE/xA27ZUrhSAVy2gXiV7WJJYy208
-         Jky5gRST7cJYPxH4ZiwGy2RlfDaeFS0qPwfuiu5N3wlkiRVnznkXpXLRtnAa5aBPh76w
-         UXRg==
-X-Gm-Message-State: APjAAAVJ8gdPwpREFrA/SP99L9q470/xCiVQkMNSW1pg24TuONw6fUgS
-        gkPKPY1nwbl7cz8yJRs5vPzHaCRNCqVQhptdhvwAWg==
-X-Google-Smtp-Source: APXvYqwaHXiniUcSPs62JothmUuDkzT/zx/0SnTg3vefxzqbvzTfYsTVt7fj8ADLqJF7B6/l1DhnNw4N/Z8KxZnRhnU=
-X-Received: by 2002:aca:55c1:: with SMTP id j184mr2403758oib.105.1574138509410;
- Mon, 18 Nov 2019 20:41:49 -0800 (PST)
-MIME-Version: 1.0
-References: <20191025044721.16617-1-alastair@au1.ibm.com> <20191025044721.16617-9-alastair@au1.ibm.com>
- <8232c1a6-d52a-6c32-6178-de082174a92a@linux.ibm.com> <CAPcyv4g9b6PyREurH9NcQf4BO2YcRGJPBZDqGKy-Vz91mBKjew@mail.gmail.com>
- <02374c9a-39fb-5693-3d9c-aa7e7674a6c1@linux.ibm.com> <7fd5a4571062a06da8f09f18300794b48ead5dc1.camel@au1.ibm.com>
- <33b6f6b2-5ca1-7c08-01db-6aad73f9a0ec@linux.ibm.com>
-In-Reply-To: <33b6f6b2-5ca1-7c08-01db-6aad73f9a0ec@linux.ibm.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 18 Nov 2019 20:41:37 -0800
-Message-ID: <CAPcyv4gOB3=U_0NU81qr1v8w4rd8i3AMHZuT1hs05sx287YgcA@mail.gmail.com>
-Subject: Re: [PATCH 08/10] nvdimm: Add driver for OpenCAPI Storage Class Memory
-To:     Andrew Donnellan <ajd@linux.ibm.com>
-Cc:     "Alastair D'Silva" <alastair@au1.ibm.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Ira Weiny <ira.weiny@intel.com>,
+        Mon, 18 Nov 2019 23:42:02 -0500
+Received: from mga17.intel.com ([192.55.52.151]:26569 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726647AbfKSEmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 23:42:02 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 20:42:01 -0800
+X-IronPort-AV: E=Sophos;i="5.68,322,1569308400"; 
+   d="scan'208";a="200217249"
+Received: from khuang2-desk.sh.intel.com ([10.251.27.252])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 20:41:54 -0800
+Message-ID: <17a1831a3a72fb87ce2a35689e07ff517c4bdf99.camel@linux.intel.com>
+Subject: Re: [PATCH v3 04/19] x86/intel: Initialize IA32_FEATURE_CONTROL MSR
+ at boot
+From:   Kai Huang <kai.huang@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>, Qian Cai <cai@lca.pw>,
-        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Linux MM <linux-mm@kvack.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Date:   Tue, 19 Nov 2019 17:41:49 +1300
+In-Reply-To: <20191119031240.7779-5-sean.j.christopherson@intel.com>
+References: <20191119031240.7779-1-sean.j.christopherson@intel.com>
+         <20191119031240.7779-5-sean.j.christopherson@intel.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 7:29 PM Andrew Donnellan <ajd@linux.ibm.com> wrote:
->
-> On 19/11/19 1:48 pm, Alastair D'Silva wrote:
-> > On Tue, 2019-11-19 at 10:47 +1100, Andrew Donnellan wrote:
-> >> On 15/11/19 3:35 am, Dan Williams wrote:
-> >>>> Have you discussed with the directory owner if it's ok to split
-> >>>> the
-> >>>> driver over several files?
-> >>>
-> >>> My thought is to establish drivers/opencapi/ and move this and the
-> >>> existing drivers/misc/ocxl/ bits there.
-> >>
-> >> Is there any other justification for this we can think of apart from
-> >> not
-> >> wanting to put this driver in the nvdimm directory? OpenCAPI drivers
-> >> aren't really a category of driver unto themselves.
-> >>
-> >
-> > There is a precedent for bus-based dirs, eg. drivers/(ide|w1|spi) all
-> > contain drivers for both controllers & connected devices.
-> >
-> > Fred, how do you feel about moving the generic OpenCAPI driver out of
-> > drivers/misc?
->
-> Instinctively I don't like the idea of creating a whole opencapi
-> directory, as OpenCAPI is a generic bus which is not tightly coupled to
-> any particular application area, and drivers for other OpenCAPI devices
-> are already spread throughout the tree (e.g. cxlflash in drivers/scsi).
+On Mon, 2019-11-18 at 19:12 -0800, Sean Christopherson wrote:
+> Opportunistically initialize IA32_FEATURE_CONTROL MSR to enable VMX when
+> the MSR is left unlocked by BIOS.  Configuring IA32_FEATURE_CONTROL at
+> boot time paves the way for similar enabling of other features, e.g.
+> Software Guard Extensions (SGX).
+> 
+> Temporarily leave equivalent KVM code in place in order to avoid
+> introducing a regression on Centaur and Zhaoxin CPUs, e.g. removing
+> KVM's code would leave the MSR unlocked on those CPUs and would break
+> existing functionality if people are loading kvm_intel on Centaur and/or
+> Zhaoxin.  Defer enablement of the boot-time configuration on Centaur and
+> Zhaoxin to future patches to aid bisection.
+> 
+> Note, Local Machine Check Exceptions (LMCE) are also supported by the
+> kernel and enabled via IA32_FEATURE_CONTROL, but the kernel currently
+> uses LMCE if and and only if the feature is explicitly enabled by BIOS.
+> Keep the current behavior to avoid introducing bugs, future patches can
+> opt in to opportunistic enabling if it's deemed desirable to do so.
+> 
+> Always lock IA32_FEATURE_CONTROL if it exists, even if the CPU doesn't
+> support VMX, so that other existing and future kernel code that queries
+> IA32_FEATURE_CONTROL can assume it's locked.
+> 
+> Start from a clean slate when constructing the value to write to
+> IA32_FEATURE_CONTROL, i.e. ignore whatever value BIOS left in the MSR so
+> as not to enable random features or fault on the WRMSR.
+> 
+> Suggested-by: Borislav Petkov <bp@suse.de>
+> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/Kconfig.cpu                  |  4 +++
+>  arch/x86/kernel/cpu/Makefile          |  1 +
+>  arch/x86/kernel/cpu/cpu.h             |  4 +++
+>  arch/x86/kernel/cpu/feature_control.c | 35 +++++++++++++++++++++++++++
+>  arch/x86/kernel/cpu/intel.c           |  2 ++
+>  5 files changed, 46 insertions(+)
+>  create mode 100644 arch/x86/kernel/cpu/feature_control.c
+> 
+> diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
+> index af9c967782f6..aafc14a0abf7 100644
+> --- a/arch/x86/Kconfig.cpu
+> +++ b/arch/x86/Kconfig.cpu
+> @@ -387,6 +387,10 @@ config X86_DEBUGCTLMSR
+>  	def_bool y
+>  	depends on !(MK6 || MWINCHIPC6 || MWINCHIP3D || MCYRIXIII || M586MMX ||
+> M586TSC || M586 || M486SX || M486) && !UML
+>  
+> +config X86_FEATURE_CONTROL_MSR
+> +	def_bool y
+> +	depends on CPU_SUP_INTEL
+> +
+>  menuconfig PROCESSOR_SELECT
+>  	bool "Supported processor vendors" if EXPERT
+>  	---help---
+> diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
+> index 890f60083eca..84e35e762f76 100644
+> --- a/arch/x86/kernel/cpu/Makefile
+> +++ b/arch/x86/kernel/cpu/Makefile
+> @@ -29,6 +29,7 @@ obj-y			+= umwait.o
+>  obj-$(CONFIG_PROC_FS)	+= proc.o
+>  obj-$(CONFIG_X86_FEATURE_NAMES) += capflags.o powerflags.o
+>  
+> +obj-$(CONFIG_X86_FEATURE_CONTROL_MSR) += feature_control.o
+>  ifdef CONFIG_CPU_SUP_INTEL
+>  obj-y			+= intel.o intel_pconfig.o tsx.o
+>  obj-$(CONFIG_PM)	+= intel_epb.o
+> diff --git a/arch/x86/kernel/cpu/cpu.h b/arch/x86/kernel/cpu/cpu.h
+> index 38ab6e115eac..a58e80866a3f 100644
+> --- a/arch/x86/kernel/cpu/cpu.h
+> +++ b/arch/x86/kernel/cpu/cpu.h
+> @@ -80,4 +80,8 @@ extern void x86_spec_ctrl_setup_ap(void);
+>  
+>  extern u64 x86_read_arch_cap_msr(void);
+>  
+> +#ifdef CONFIG_X86_FEATURE_CONTROL_MSR
+> +void init_feature_control_msr(struct cpuinfo_x86 *c);
+> +#endif
+> +
+>  #endif /* ARCH_X86_CPU_H */
+> diff --git a/arch/x86/kernel/cpu/feature_control.c
+> b/arch/x86/kernel/cpu/feature_control.c
+> new file mode 100644
+> index 000000000000..33c9444dda52
+> --- /dev/null
+> +++ b/arch/x86/kernel/cpu/feature_control.c
+> @@ -0,0 +1,35 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/tboot.h>
+> +
+> +#include <asm/cpufeature.h>
+> +#include <asm/msr-index.h>
+> +#include <asm/processor.h>
+> +
+> +void init_feature_control_msr(struct cpuinfo_x86 *c)
+> +{
+> +	u64 msr;
+> +
+> +	if (rdmsrl_safe(MSR_IA32_FEATURE_CONTROL, &msr))
+> +		return;
+> +
+> +	if (msr & FEAT_CTL_LOCKED)
+> +		return;
+> +
+> +	/*
+> +	 * Ignore whatever value BIOS left in the MSR to avoid enabling random
+> +	 * features or faulting on the WRMSR.
+> +	 */
+> +	msr = FEAT_CTL_LOCKED;
+> +
+> +	/*
+> +	 * Enable VMX if and only if the kernel may do VMXON at some point,
+> +	 * i.e. KVM is enabled, to avoid unnecessarily adding an attack vector
+> +	 * for the kernel, e.g. using VMX to hide malicious code.
+> +	 */
+> +	if (cpu_has(c, X86_FEATURE_VMX) && IS_ENABLED(CONFIG_KVM)) {
+> +		msr |= FEAT_CTL_VMX_ENABLED_OUTSIDE_SMX;
+> +		if (tboot_enabled())
+> +			msr |= FEAT_CTL_VMX_ENABLED_INSIDE_SMX;
+> +	}
 
-I'm not suggesting all opencapi drivers go there, nor the entirety of
-this driver, just common infrastructure. That said, it's hard to talk
-about specifics given the current state of the patch set. I have not
-even taken a deeper look past the changelog as this 3K lines-of-code
-submission needs to be broken up into smaller pieces before we settle
-on what pieces belong where.
+Why not also take this chance to enable SGX? Or it will come with SGX patch
+series?
 
-Just looking at the diffstat, at a minimum it's not appropriate for
-them to live in drivers/nvdimm/ directly, drivers/nvdimm/oxcl/ would
-be an acceptable starting point.
+> +	wrmsrl(MSR_IA32_FEATURE_CONTROL, msr);
+> +}
+> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> index 4a900804a023..b7c6ed0b40b6 100644
+> --- a/arch/x86/kernel/cpu/intel.c
+> +++ b/arch/x86/kernel/cpu/intel.c
+> @@ -755,6 +755,8 @@ static void init_intel(struct cpuinfo_x86 *c)
+>  	/* Work around errata */
+>  	srat_detect_node(c);
+>  
+> +	init_feature_control_msr(c);
+
+Will this compile if you disable CONFIG_X86_FEATURE_CONTROL_MSR?
+
+Provide an empty one in cpu.h if the config is not enabled?
+
+Thanks,
+-Kai
+> +
+>  	if (cpu_has(c, X86_FEATURE_VMX))
+>  		detect_vmx_virtcap(c);
+>  
+
