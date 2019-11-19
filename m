@@ -2,100 +2,78 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF12C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A0EC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 966F32082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:54:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GOgXevtc"
+	by mail.kernel.org (Postfix) with ESMTP id EB08722312
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:55:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574150143;
+	bh=37wJrRBfo8WY+M3jJIK/qbXrZdo+eM19U3dlEql2StE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iTlHnhuuQpWDIEfvKxqIdi70FuUKFC5VroWIopLOjBMuOsAA/szWS6GBAwyqicor7
+	 TP/bibk83kcyOL7ubwqDSvFKVzWNHSLUAZ8n8sw6kdosF/z5j+kc4/XXw0QVaJh6It
+	 31VQ63mCcoosa/2bd5wBCsiZ/v7uPB+hM0MAYqi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfKSHyL (ORCPT
+        id S1727345AbfKSHzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 02:54:11 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:35520 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbfKSHyL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 02:54:11 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ7rsp9033794;
-        Tue, 19 Nov 2019 07:53:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id; s=corp-2019-08-05;
- bh=IyCiBE5FqGw0GPcIHmU7QGVoSGyMN7SqqTP1wqihQRo=;
- b=GOgXevtc2/R5pg/O4/aIHosMydLGb31489wC/o0L+0RAAtoSbW9KasR+3jol/TGg2DWj
- YYm3WaynA1ugeQmiB3WrR9O46wieuA8UPEwejgIpLEtbNA4CQd9nAw1zVbqOBGMMkmtJ
- GdnKmQlZxLNMjlVdhj3eNtqTpoAU4DbfCG854A+Nl5haDKXxxZfDZa/BXJMZnBdOGrWF
- ESbIRH7b9iwAWoBWVMflYime/k5LN+oC5ZCF63C07HLrva5a8FA3xMDIfTYp0EXdP8PG
- X6inrZKcewuw5EuvlO+5okj7Iu8+XSlLtPGURT3ltaidIvkmQVe4NRja9Q8sykfLC2fR Tw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2wa92pn24c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 07:53:58 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ7rnqe063648;
-        Tue, 19 Nov 2019 07:53:57 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2wc0afxk2w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 07:53:56 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAJ7rt05016094;
-        Tue, 19 Nov 2019 07:53:55 GMT
-Received: from shipfan.cn.oracle.com (/10.113.210.105)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 18 Nov 2019 23:53:54 -0800
-From:   Zhu Yanjun <yanjun.zhu@oracle.com>
-To:     mchehab+samsung@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        robh@kernel.org, netdev@vger.kernel.org, yanjun.zhu@oracle.com,
-        rain.1986.08.12@gmail.com
-Subject: [PATCH 1/1] MAINTAINERS: forcedeth: Change Zhu Yanjun's email address
-Date:   Tue, 19 Nov 2019 03:03:48 -0500
-Message-Id: <1574150628-3905-1-git-send-email-yanjun.zhu@oracle.com>
-X-Mailer: git-send-email 2.7.4
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=903
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911190073
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=988 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911190073
+        Tue, 19 Nov 2019 02:55:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37426 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727217AbfKSHzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 02:55:41 -0500
+Received: from localhost (unknown [89.205.134.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D3EE2230E;
+        Tue, 19 Nov 2019 07:55:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574150140;
+        bh=37wJrRBfo8WY+M3jJIK/qbXrZdo+eM19U3dlEql2StE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=h+ueStdTmc+UKPHB1SmysVxfvOJUX/ZjqIUN9MoYlyZbCsNR4bbgiP1vNAMXBvqsY
+         /6YRoH1v9Z2+HyztQXR0JYZVjIN4U24DuK5JJcOntfxIo0bUKpoEFOPB5MdLaNQ2CS
+         3PCea2U6slNOvn59wUl95Kf9+25RTl8oqpQ1InJw=
+Date:   Tue, 19 Nov 2019 08:55:37 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Oliver Hartkopp <socketcan@hartkopp.net>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Jouni Hogander <jouni.hogander@unikie.com>
+Subject: Re: [PATCH 5.3 09/48] slip: Fix memory leak in slip_open error path
+Message-ID: <20191119075537.GA1858193@kroah.com>
+References: <20191119050946.745015350@linuxfoundation.org>
+ <20191119050955.380296035@linuxfoundation.org>
+ <eb6fcac2-abdd-cb83-0942-09878b5e4751@hartkopp.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb6fcac2-abdd-cb83-0942-09878b5e4751@hartkopp.net>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I prefer to use my personal email address for kernel related work.
+On Tue, Nov 19, 2019 at 08:43:45AM +0100, Oliver Hartkopp wrote:
+> Hello Greg,
+> 
+> thanks for taking care of the slip.c patches.
+> 
+> The original issue was reported by Jouni for "slcan.c" which is also
+> referenced in this commit message. But it was probably overlooked at
+> upstream time that it should go into stable too.
+> 
+> The slcan.c fix is here:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ed50e1600b4483c049ce76e6bd3b665a6a9300ed
 
-Signed-off-by: Zhu Yanjun <yanjun.zhu@oracle.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks, now queued up.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e4f170d..8165658 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -643,7 +643,7 @@ F:	drivers/net/ethernet/alacritech/*
- 
- FORCEDETH GIGABIT ETHERNET DRIVER
- M:	Rain River <rain.1986.08.12@gmail.com>
--M:	Zhu Yanjun <yanjun.zhu@oracle.com>
-+M:	Zhu Yanjun <zyjzyj2000@gmail.com>
- L:	netdev@vger.kernel.org
- S:	Maintained
- F:	drivers/net/ethernet/nvidia/*
--- 
-2.7.4
-
+greg k-h
