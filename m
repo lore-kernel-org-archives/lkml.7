@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B214C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFB0C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62E8B222A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BA3D20721
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142603;
-	bh=2/j4KmKRBuQKRP03CURvKCeNJQx6DOj4oH59pezYbNs=;
+	s=default; t=1574142608;
+	bh=5x+LmrqeEnbeK59deb9In/L3b8XEmOiclhXJ0kY79ls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ir0w9zeWmLP+MDj9J9j5gaLpVpxcZ40Eslb5IfsJxBPX3ql3PYb5JqZDsWYLDw/tT
-	 RLxti4ocxav5y69Fx6p4Hrcc3A8c5X0QAGgzrHMuyePK20bJXM6SN1GnEkGm41KEUg
-	 2oA6zXsUTF6X/Ljntm7eYHIOkqSxKw3icjxil8uE=
+	b=h8YhMGseLFRHnYPYEjkxe0sS7Wa5Afi8wpo1LTsz0CUkLxw5ATsoVfk6jKR5bTl6m
+	 xdBuw/9gdLfHShc/4CiZPzGTPraAm/7AYEnEsNLDaSO/1CwueaVNqzOOKL6oEyQUKh
+	 V4MlT6S6qbbmW1YvOgG3tNtzWbdI0oczcjx8zfuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731566AbfKSFuC (ORCPT
+        id S1731584AbfKSFuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:50:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46892 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:50:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730200AbfKSFt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:49:58 -0500
+        id S1729360AbfKSFuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:50:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B170208C3;
-        Tue, 19 Nov 2019 05:49:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4220420721;
+        Tue, 19 Nov 2019 05:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142597;
-        bh=2/j4KmKRBuQKRP03CURvKCeNJQx6DOj4oH59pezYbNs=;
+        s=default; t=1574142599;
+        bh=5x+LmrqeEnbeK59deb9In/L3b8XEmOiclhXJ0kY79ls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SVhC5Q4l8f7bXNgIwpmAy+uJvjCcUtFJxo2erbE4CmtaBWpBbFRLqjOs6+edF299d
-         Uf4hMcbG7bs31qw1TF9oT77ipnE0vBgCfm2/B18d3GkqscRF+6HnlRti5mGaJK+hj+
-         MvcuwCUxTVyx7Ac4uUsB+h7zv9a7hz3l94tUbt88=
+        b=HixryGg8TxajsG49XKkL9Wft2bdVBCLKY8A1Pwulw4fx3htUm5gylmj6tQGJ1+Fov
+         wRO+jNJYrZ84BUHxlCbOIriDAZY0E9fRM1u1OLlgN3Y6AmTsNO4ZFI/plllyl5twAP
+         HJ5EajW5pxEBimVg84M7Cx4nRf0cLnmiXgsoc++E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Corey Minyard <cminyard@mvista.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 136/239] spi: mediatek: Dont modify spi_transfer when transfer.
-Date:   Tue, 19 Nov 2019 06:18:56 +0100
-Message-Id: <20191119051331.103464841@linuxfoundation.org>
+Subject: [PATCH 4.14 137/239] ipmi:dmi: Ignore IPMI SMBIOS entries with a zero base address
+Date:   Tue, 19 Nov 2019 06:18:57 +0100
+Message-Id: <20191119051331.291215311@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -60,117 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Shih <pihsun@chromium.org>
+From: Corey Minyard <cminyard@mvista.com>
 
-[ Upstream commit 00bca73bfca4fb0ab089b94cad0fc83d8b49c25f ]
+[ Upstream commit 1574608f5f4204440d6d9f52b971aba967664764 ]
 
-Mediatek SPI driver modifies some fields (tx_buf, rx_buf, len, tx_dma,
-rx_dma) of the spi_transfer* passed in when doing transfer_one and in
-interrupt handler. This is somewhat unexpected, and there are some
-caller (e.g. Cr50 spi driver) that reuse the spi_transfer for multiple
-messages. Add a field to record how many bytes have been transferred,
-and calculate the right len / buffer based on it instead.
+Looking at logs from systems all over the place, it looks like tons
+of broken systems exist that set the base address to zero.  I can
+only guess that is some sort of non-standard idea to mark the
+interface as not being present.  It can't be zero, anyway, so just
+complain and ignore it.
 
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-
-Change-Id: I23e218cd964f16c0b2b26127d4a5ca6529867673
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-mt65xx.c | 37 +++++++++++++++++++++----------------
- 1 file changed, 21 insertions(+), 16 deletions(-)
+ drivers/char/ipmi/ipmi_dmi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
-index 86bf45667a040..3dc31627c6558 100644
---- a/drivers/spi/spi-mt65xx.c
-+++ b/drivers/spi/spi-mt65xx.c
-@@ -98,6 +98,7 @@ struct mtk_spi {
- 	struct clk *parent_clk, *sel_clk, *spi_clk;
- 	struct spi_transfer *cur_transfer;
- 	u32 xfer_len;
-+	u32 num_xfered;
- 	struct scatterlist *tx_sgl, *rx_sgl;
- 	u32 tx_sgl_len, rx_sgl_len;
- 	const struct mtk_spi_compatible *dev_comp;
-@@ -385,6 +386,7 @@ static int mtk_spi_fifo_transfer(struct spi_master *master,
+diff --git a/drivers/char/ipmi/ipmi_dmi.c b/drivers/char/ipmi/ipmi_dmi.c
+index c3a23ec3e76f7..a37d9794170cc 100644
+--- a/drivers/char/ipmi/ipmi_dmi.c
++++ b/drivers/char/ipmi/ipmi_dmi.c
+@@ -197,6 +197,10 @@ static void __init dmi_decode_ipmi(const struct dmi_header *dm)
+ 	slave_addr = data[DMI_IPMI_SLAVEADDR];
  
- 	mdata->cur_transfer = xfer;
- 	mdata->xfer_len = min(MTK_SPI_MAX_FIFO_SIZE, xfer->len);
-+	mdata->num_xfered = 0;
- 	mtk_spi_prepare_transfer(master, xfer);
- 	mtk_spi_setup_packet(master);
- 
-@@ -415,6 +417,7 @@ static int mtk_spi_dma_transfer(struct spi_master *master,
- 	mdata->tx_sgl_len = 0;
- 	mdata->rx_sgl_len = 0;
- 	mdata->cur_transfer = xfer;
-+	mdata->num_xfered = 0;
- 
- 	mtk_spi_prepare_transfer(master, xfer);
- 
-@@ -482,7 +485,7 @@ static int mtk_spi_setup(struct spi_device *spi)
- 
- static irqreturn_t mtk_spi_interrupt(int irq, void *dev_id)
- {
--	u32 cmd, reg_val, cnt, remainder;
-+	u32 cmd, reg_val, cnt, remainder, len;
- 	struct spi_master *master = dev_id;
- 	struct mtk_spi *mdata = spi_master_get_devdata(master);
- 	struct spi_transfer *trans = mdata->cur_transfer;
-@@ -497,36 +500,38 @@ static irqreturn_t mtk_spi_interrupt(int irq, void *dev_id)
- 		if (trans->rx_buf) {
- 			cnt = mdata->xfer_len / 4;
- 			ioread32_rep(mdata->base + SPI_RX_DATA_REG,
--				     trans->rx_buf, cnt);
-+				     trans->rx_buf + mdata->num_xfered, cnt);
- 			remainder = mdata->xfer_len % 4;
- 			if (remainder > 0) {
- 				reg_val = readl(mdata->base + SPI_RX_DATA_REG);
--				memcpy(trans->rx_buf + (cnt * 4),
--					&reg_val, remainder);
-+				memcpy(trans->rx_buf +
-+					mdata->num_xfered +
-+					(cnt * 4),
-+					&reg_val,
-+					remainder);
- 			}
- 		}
- 
--		trans->len -= mdata->xfer_len;
--		if (!trans->len) {
-+		mdata->num_xfered += mdata->xfer_len;
-+		if (mdata->num_xfered == trans->len) {
- 			spi_finalize_current_transfer(master);
- 			return IRQ_HANDLED;
- 		}
- 
--		if (trans->tx_buf)
--			trans->tx_buf += mdata->xfer_len;
--		if (trans->rx_buf)
--			trans->rx_buf += mdata->xfer_len;
--
--		mdata->xfer_len = min(MTK_SPI_MAX_FIFO_SIZE, trans->len);
-+		len = trans->len - mdata->num_xfered;
-+		mdata->xfer_len = min(MTK_SPI_MAX_FIFO_SIZE, len);
- 		mtk_spi_setup_packet(master);
- 
--		cnt = trans->len / 4;
--		iowrite32_rep(mdata->base + SPI_TX_DATA_REG, trans->tx_buf, cnt);
-+		cnt = len / 4;
-+		iowrite32_rep(mdata->base + SPI_TX_DATA_REG,
-+				trans->tx_buf + mdata->num_xfered, cnt);
- 
--		remainder = trans->len % 4;
-+		remainder = len % 4;
- 		if (remainder > 0) {
- 			reg_val = 0;
--			memcpy(&reg_val, trans->tx_buf + (cnt * 4), remainder);
-+			memcpy(&reg_val,
-+				trans->tx_buf + (cnt * 4) + mdata->num_xfered,
-+				remainder);
- 			writel(reg_val, mdata->base + SPI_TX_DATA_REG);
- 		}
- 
+ 	memcpy(&base_addr, data + DMI_IPMI_ADDR, sizeof(unsigned long));
++	if (!base_addr) {
++		pr_err("Base address is zero, assuming no IPMI interface\n");
++		return;
++	}
+ 	if (len >= DMI_IPMI_VER2_LENGTH) {
+ 		if (type == IPMI_DMI_TYPE_SSIF) {
+ 			offset = 0;
 -- 
 2.20.1
 
