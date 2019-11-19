@@ -2,162 +2,199 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85917C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9303BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B1E1222D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F29522304
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:29:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u9qIYAUd"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="o9orLdgK";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="CbS4KiD1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbfKSP23 (ORCPT
+        id S1728329AbfKSP3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:28:29 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52597 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727849AbfKSP22 (ORCPT
+        Tue, 19 Nov 2019 10:29:05 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:57310 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727849AbfKSP3E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 10:28:28 -0500
-Received: by mail-wm1-f68.google.com with SMTP id l1so3637005wme.2;
-        Tue, 19 Nov 2019 07:28:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1HYHJw8McTZ7N/6ctuIe19JHAWc7EsnLv1+FsoeRwIM=;
-        b=u9qIYAUd8t1Si1NGOg3iOzUILb8Sj+heMp9IGdkjCh+UY7kNRpR9G9p6hfjhMVjLoO
-         lgqL+iWLbCdMNDD98LutY35l7e+i0z0aW1GN4Tg/zs7QDADuBYkOWfUZNbEiwROTvC2l
-         IF8cfgQ+l2mcX9lsjGWprjfbJLYR58R0DEPhQfeE/9xMapTb+tR1DiCIBe88G5p1VZ3j
-         p9j7wgdbbClKeX9P/RyjfGM5kJvyNYcJWs5iT46psKlJb1xnipnyh6pbTkdQJt6T85mI
-         3foU2bYtcRXd2lTglnYdevNqKgbGAMtEg1JghxusgQ9xUNE0c+TWCFpfEiCkY8PRf2lq
-         /M2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1HYHJw8McTZ7N/6ctuIe19JHAWc7EsnLv1+FsoeRwIM=;
-        b=DJl9PCQN8CghbqgIhzcFC6b6Kc/GF7Do7sR86oOqIJMGNX5/R+54sifRGIiqZ2MJdN
-         joPOpo1srpNUwXRty/spM1mhFOwSqco80F0fowkOwsUPL0FPMn5TH+txqnsVbL1orPb/
-         fdCTjar1JSRNgePt1m/McibMaHzUueh+QQ/B5/U5c36mo1RrQ8Llht0lzSCcN5Y011U0
-         xxLdTFZ6vzTvAjlEAE/8kdVr+2GpawjZfqhI9qYpcCGHHNyuGDaz61fhOPKmtrN3KoTZ
-         iul09RG6bH5Tc0ziWkEvYzraAsr2svO9YF6szM8xkJ9mLjTsNY7ODdDwYp9gB34lGv7v
-         27aA==
-X-Gm-Message-State: APjAAAVdJu/S5iCr6iZySttR2KHhLY2vl+sQE5aV4UTotyGc04LP3LTC
-        5xKcxsxmciuWSEl2UyIum66zTVtEhUhTI7L0MR6urla3
-X-Google-Smtp-Source: APXvYqxak6WQm7Y4UFKZotBN9GM8x9c4GjEhTUCJ18zzE2ijWISRp4Xk0WbiEHim7BXDKJfmXHILgbrVVQ4jAJ2ennQ=
-X-Received: by 2002:a1c:e308:: with SMTP id a8mr6362852wmh.55.1574177306046;
- Tue, 19 Nov 2019 07:28:26 -0800 (PST)
-MIME-Version: 1.0
-References: <20191118153843.28136-1-andrew.smirnov@gmail.com>
- <20191118153843.28136-6-andrew.smirnov@gmail.com> <19429ab6840292cc9b3003face918a2bff4f8b55.camel@pengutronix.de>
-In-Reply-To: <19429ab6840292cc9b3003face918a2bff4f8b55.camel@pengutronix.de>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Tue, 19 Nov 2019 07:28:14 -0800
-Message-ID: <CAHQ1cqHJAS1+fNDapu9QuSs_qp6ka9zykD-VihiHyQ4m1hD_Vg@mail.gmail.com>
-Subject: Re: [PATCH v2 5/6] crypto: caam - replace DRNG with TRNG for use with hw_random
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>, Chris Healy <cphealy@gmail.com>,
-        =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 19 Nov 2019 10:29:04 -0500
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAJFSjCQ017048;
+        Tue, 19 Nov 2019 07:28:51 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=R/89fxSsfc5srHc7hY9RYm564AgIFKkRisPGI4leWAU=;
+ b=o9orLdgKwBlpg3spFkvx7LN1Ch3pCjE0XZ4n8WGAMkmRxu8aHJjuOcD1OEmLhUSrnN3b
+ nEeYWBazKRZbA9RnrHLl/DGTKJBUY5koWAJD25enU5sIhs3d9PQCcvveYVv3GRs6518Y
+ I1vRfsc791V8AqeG1l1+dsZnWcLVqaGia+8= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2wb1pwax1a-8
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 19 Nov 2019 07:28:51 -0800
+Received: from ash-exhub204.TheFacebook.com (2620:10d:c0a8:83::4) by
+ ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 19 Nov 2019 07:28:40 -0800
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 19 Nov 2019 07:28:40 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JTmH2bEnmrD2HV3Nt9TvBbEjY49OmDEoO0hGWnd/lI7hBpO9S9ccrnjHkCxFQZeiU5SsAh8/AlcSFoKb2iGfmqb/eLhhTyjZCjOjp+yjE6p7MVXybsVknZtERpv11LGdIEmQqX967C9zXWpgfNIkE0nN0R1Z/zJtFKb6wqj5lw4GLtco0TqOq/bksKwIcQAvl8G2VMTkjiupm97tCnPkds/wd9r5K7XxX59Ek1uyy2EWwdE5cdnz2Kbc2SYXy2fs9W89pVmnD5AVlCwIp9CkP9vWhlKqFjouiSe/XGwGXscps0zoRGABjHnhG/CpBL+yG40YCiaIjxP3QQPIqVjNDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R/89fxSsfc5srHc7hY9RYm564AgIFKkRisPGI4leWAU=;
+ b=fE9Cabbs3pAxpO9Qatr0Euhqfq/GzA3+tfBHk0J5YOEJudj7touHqYmpFuHsLzQXAdsJI64uudBittiZHIi/5TxVykpTTHvEher5k2qTWXNRqmmnk2hM9WUr4XUbW5ihhkFK+iM4BWzg3/czHLSqGAsoWEG0dWHT5HE/5I5uggkTcb/AAvUYoO7DZjslTNt5vX2dJKpg3m0qLS7YZ5ZSkOj2mUlo3pdmiGztodcHdT8QXqzeE21WS76yLnjMgSlT+lM6dplZqcZlBTm/1VHgDCXqrel54xeJLmsKI8oBkUDdk4laYk2YYnNjOS3Hnfyejw1XrD40OoZ+8SZYo7uw0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R/89fxSsfc5srHc7hY9RYm564AgIFKkRisPGI4leWAU=;
+ b=CbS4KiD1ZehfDane6Ls/06k5tj/90LQlk8vMzdIMgQolj3iMgRBv4PIisaXlFX5wPs8IM9zBqbqJv8UY8pUw2yznAC3gkI/9s/E9MC13HYPhfI88Ixb5u3UmumtelqTYzy5YqC/hwhwsvzOHjOUz7WywrWQQ4CVgLGgzeamNnbM=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1519.namprd15.prod.outlook.com (10.173.234.9) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.23; Tue, 19 Nov 2019 15:28:39 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::f831:d112:6187:90d9]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::f831:d112:6187:90d9%4]) with mapi id 15.20.2451.031; Tue, 19 Nov 2019
+ 15:28:39 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     open list <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+CC:     Kernel Team <Kernel-team@fb.com>,
+        David Carrillo Cisneros <davidca@fb.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v7] perf: Sharing PMU counters across compatible events
+Thread-Topic: [PATCH v7] perf: Sharing PMU counters across compatible events
+Thread-Index: AQHVnBAlgYxvir4ozkO3bLas1TlApqeSo+cA
+Date:   Tue, 19 Nov 2019 15:28:39 +0000
+Message-ID: <AB684919-5C5D-4228-BA78-54FE8F609D8E@fb.com>
+References: <20191115235504.4034879-1-songliubraving@fb.com>
+In-Reply-To: <20191115235504.4034879-1-songliubraving@fb.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3601.0.10)
+x-originating-ip: [2620:10d:c090:180::dd7a]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ccca36f0-b832-42ec-88e9-08d76d05270d
+x-ms-traffictypediagnostic: MWHPR15MB1519:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR15MB15198AE2896A83655DDBDF3EB34C0@MWHPR15MB1519.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 022649CC2C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(396003)(346002)(39860400002)(376002)(199004)(189003)(5660300002)(46003)(99286004)(229853002)(7736002)(305945005)(446003)(86362001)(6436002)(2906002)(6486002)(14444005)(256004)(76176011)(11346002)(71190400001)(76116006)(71200400001)(25786009)(4326008)(33656002)(8936002)(54906003)(2616005)(81156014)(6246003)(81166006)(50226002)(66556008)(66476007)(66946007)(36756003)(8676002)(316002)(6512007)(6116002)(476003)(486006)(66446008)(186003)(53546011)(110136005)(64756008)(6506007)(102836004)(14454004)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1519;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: VoXNQ06osGANQGCtRUrs6Xb20Dif1+/6eIMwvmCdk/VETOhpOBxT7EMp/MSoZScfoB9WIBf6iATyGXtNONw0Uf0iFBSbR+R9CUaZSbweVBOMS3ESeYe9d9E7HsT8N8ZBcs7YFVSsmu1sV6VnyOSCQ2Q23C+lYsuGzi+MIT52S3XW01DIm0QuId2MsVOIz1guw4NuEjD52EjwqPvXydYjJTS+doXWgvlFUD0mBjTwo10dBb51zaOJxz9vTvVOlzKd71S2csCLMOpYLkHAXsq8YUaOK0nMm19VKIiLmPLTFumxIw0ZN32QOwTxLqwHI6SrCkKcL/T+7rTxJj55wFdH0DzHUot07iZGlmIr3OiGSuTOjOJq7s6XBJ7da+h0DIjqf3SScpbO8FsRWv6lOvdIMmzKPKD+Fl1FCIex6BlKfTlZjmSjfWUMVPtk0KUY/fV6
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <108E7A0AAE10B44184177B3D439F9904@namprd15.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: ccca36f0-b832-42ec-88e9-08d76d05270d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2019 15:28:39.1797
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1hiPXODmSw8gOnovrEpEAhHUTALoJ9UrC/MURwx/AC8+4Rpvxj370JzmcVvVLr3w3pvsGtOlnqHKvwvpll2KQg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1519
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-19_05:2019-11-15,2019-11-19 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
+ malwarescore=0 clxscore=1011 lowpriorityscore=0 mlxlogscore=999
+ suspectscore=0 impostorscore=0 bulkscore=0 spamscore=0 mlxscore=0
+ priorityscore=1501 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-1911190140
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 7:50 AM Lucas Stach <l.stach@pengutronix.de> wrote:
->
-> On Mo, 2019-11-18 at 07:38 -0800, Andrey Smirnov wrote:
-> > In order to give CAAM-generated random data highest quarlity
-> > raiting (999), replace current code that uses DRNG with code that
-> > fetches data straight out of TRNG used to seed aforementioned DRNG.
-> >
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Horia Geant=C4=83 <horia.geanta@nxp.com>
-> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> > Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
-> > Cc: linux-imx@nxp.com
-> > Cc: linux-crypto@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> [...]
-> > diff --git a/drivers/crypto/caam/trng.c b/drivers/crypto/caam/trng.c
-> > new file mode 100644
-> > index 000000000000..ab2af786543e
-> > --- /dev/null
-> > +++ b/drivers/crypto/caam/trng.c
-> > @@ -0,0 +1,85 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * hw_random interface for TRNG generator in CAAM RNG block
-> > + *
-> > + * Copyright 2019 Zoidac Inflight Innovations
->                      ^ Zodiac
->
++ Alexander
 
-Ugh, thanks for catching this, will fix in v3
+On Nov 15, 2019, at 3:55 PM, Song Liu <songliubraving@fb.com> wrote:
+>=20
+> This patch tries to enable PMU sharing. When multiple perf_events are
+> counting the same metric, they can share the hardware PMU counter. We
+> call these events as "compatible events".
+>=20
+> The PMU sharing are limited to events within the same perf_event_context
+> (ctx). When a event is installed or enabled, search the ctx for compatibl=
+e
+> events. This is implemented in perf_event_setup_dup(). One of these
+> compatible events are picked as the master (stored in event->dup_master).
+> Similarly, when the event is removed or disabled, perf_event_remove_dup()
+> is used to clean up sharing.
+>=20
+> A new state PERF_EVENT_STATE_ENABLED is introduced for the master event.
+> This state is used when the slave event is ACTIVE, but the master event
+> is not.
+>=20
+> On the critical paths (add, del read), sharing PMU counters doesn't
+> increase the complexity. Helper functions event_pmu_[add|del|read]() are
+> introduced to cover these cases. All these functions have O(1) time
+> complexity.
+>=20
 
-> > + *
-> > + */
-> > +
-> > +#include <linux/hw_random.h>
-> > +
-> > +#include "compat.h"
-> > +#include "regs.h"
-> > +#include "intern.h"
-> > +
-> > +struct caam_trng_ctx {
-> > +     struct rng4tst __iomem *r4tst;
-> > +     struct hwrng rng;
-> > +};
-> > +
-> > +static bool caam_trng_busy(struct caam_trng_ctx *ctx)
-> > +{
-> > +     return !(rd_reg32(&ctx->r4tst->rtmctl) & RTMCTL_ENT_VAL);
-> > +}
-> > +
-> > +static int caam_trng_read(struct hwrng *rng, void *data, size_t max, b=
-ool wait)
-> > +{
-> > +     struct caam_trng_ctx *ctx =3D (void *)rng->priv;
-> > +     u32 rtent[ARRAY_SIZE(ctx->r4tst->rtent)];
-> > +     size_t residue =3D max;
-> > +
-> > +     clrsetbits_32(&ctx->r4tst->rtmctl, 0, RTMCTL_ACC);
-> > +
-> > +     do {
-> > +             const size_t chunk =3D min(residue, sizeof(rtent));
-> > +             unsigned int i;
-> > +
-> > +             while (caam_trng_busy(ctx)) {
->
-> The CAAM needs quite a bit of time to gather the 384bits of raw
-> entropy, in my testing it was almost 60ms. A busy loop (even with a
-> cpu_relax) for such an extended amount of time is probably not
-> appropriate, better sleep for some time here.
->
+[...]
 
-Good point, will fix in v3.
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index aec8dba2bea4..00b1e19e70fd 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -1657,6 +1657,139 @@ perf_event_groups_next(struct perf_event *event)
+> 		event =3D rb_entry_safe(rb_next(&event->group_node),	\
+> 				typeof(*event), group_node))
+>=20
+> +static inline bool perf_event_can_share(struct perf_event *event)
+> +{
+> +	/* only share hardware counting events */
+> +	return !is_software_event(event) && !is_sampling_event(event);
+> +}
+> +
+> +/*
+> + * Returns whether the two events can share a PMU counter.
+> + *
+> + * Note: This function does NOT check perf_event_can_share() for
+> + * the two events, they should be checked before this function
+> + */
+> +static inline bool perf_event_compatible(struct perf_event *event_a,
+> +					 struct perf_event *event_b)
+> +{
+> +	return event_a->attr.type =3D=3D event_b->attr.type &&
+> +		event_a->attr.config =3D=3D event_b->attr.config &&
+> +		event_a->attr.config1 =3D=3D event_b->attr.config1 &&
+> +		event_a->attr.config2 =3D=3D event_b->attr.config2;
 
-> Also in the !wait case we are almost guaranteed to leave this function
-> without any entropy gathered. Maybe we should just bail out on !wait
-> without even trying to enable the TRNG access?
->
+In a discussion on the IRC, Alexander highlighted that we need to=20
+compare event->hw.config as well (or something equivalent). I will=20
+fix this in the next version (will need cover a few different=20
+cases).=20
 
-Yeah, I think you're right. Will change in v3.
+Hi Peter, could you please share your feedback on this? Does the=20
+overall direction look right?
 
 Thanks,
-Andrey Smirnov
+Song
+
