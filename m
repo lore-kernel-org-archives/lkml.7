@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1642C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E75C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8948D2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23D142071B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142409;
-	bh=JMzbT0jpHdIV1pZ8eUDKVYmn7oMS7LIGuRRUm5UaNrk=;
+	s=default; t=1574142414;
+	bh=5y7jySM1EY7FEWm+rSzD2iseCEIB0/ban7fS0k4+TEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jy5ougcdh7OVK6eldTJCvnqbfWN0I4jAjZ8WbjGQE+IfNEfBam3zoj9PAC0OzW5Kk
-	 WvNPNFSb/gY4ArsVWgpKV+SubgElu/C8bl9/FyUKQG0lIcsGp8+LPu3PT8DtKdF9tq
-	 QWwFIpgfpIHF8DB8xcK074O7u24c8fcEwuUtQgIo=
+	b=zh6ZgstBeuLDkng35RFfo+9WzZrPDoypcJVwVSNprFTCHo62hpKnsOFgz/RsV32YI
+	 i70GezeG5fUiribXNIBAkSI8iT47SayZ8tppa/zN1jSe3uCNp7J00PO/xweJPWYJ8k
+	 LWNZoPhgncuEsCtVpQGU2EChjBspKms48haBdFfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731154AbfKSFqs (ORCPT
+        id S1731160AbfKSFqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:46:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42964 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:46:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731128AbfKSFqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:46:46 -0500
+        id S1730650AbfKSFqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:46:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DBD32075E;
-        Tue, 19 Nov 2019 05:46:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6628F2071B;
+        Tue, 19 Nov 2019 05:46:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142405;
-        bh=JMzbT0jpHdIV1pZ8eUDKVYmn7oMS7LIGuRRUm5UaNrk=;
+        s=default; t=1574142408;
+        bh=5y7jySM1EY7FEWm+rSzD2iseCEIB0/ban7fS0k4+TEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tJlk2pi0hfnIfS2PckIXQFdEwbLVu4k2lE2B7T79l0zgs5IBdelmm/F8WR58iKtq0
-         SfzyXz/C8AEex3yKf2f0nt32dZ+pA7MhqLBkYpp/Rwm8w+6EPSGBMGByznE5VX3++J
-         maeQV4Gv8CMpmS9StpPgK+FpievA1N0LtU2Rz6t0=
+        b=ZJm42z5BUicUjoUcBzGGuolHUVp8mX9OJLQT27wT+1bHtZVLVVvm8lVnxl912QjvH
+         sV+AkslNTWWk0tDz6SlC+7TrABnKD70hHxM0dnVWYWmtu9KGxs0vMOHu4dhjUGXUo5
+         NfzGOEjglPgjgZHJ2sIfj5GwGf2r7/6LmOewOQ7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erik Stromdahl <erik.stromdahl@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Muhammad Sammar <muhammads@mellanox.com>,
+        Feras Daoud <ferasda@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 069/239] ath10k: wmi: disable softirqs while calling ieee80211_rx
-Date:   Tue, 19 Nov 2019 06:17:49 +0100
-Message-Id: <20191119051312.930008187@linuxfoundation.org>
+Subject: [PATCH 4.14 070/239] IB/ipoib: Ensure that MTU isnt less than minimum permitted
+Date:   Tue, 19 Nov 2019 06:17:50 +0100
+Message-Id: <20191119051313.031606081@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -60,48 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erik Stromdahl <erik.stromdahl@gmail.com>
+From: Muhammad Sammar <muhammads@mellanox.com>
 
-[ Upstream commit 37f62c0d5822f631b786b29a1b1069ab714d1a28 ]
+[ Upstream commit 142a9c287613560edf5a03c8d142c8b6ebc1995b ]
 
-This is done in order not to trig the below warning in
-ieee80211_rx_napi:
+It is illegal to change MTU to a value lower than the minimum MTU
+stated in ethernet spec. In addition to that we need to add 4 bytes
+for encapsulation header (IPOIB_ENCAP_LEN).
 
-WARN_ON_ONCE(softirq_count() == 0);
+Before "ifconfig ib0 mtu 0" command, succeeds while it obviously shouldn't.
 
-ieee80211_rx_napi requires that softirq's are disabled during
-execution.
-
-The High latency bus drivers (SDIO and USB) sometimes call the wmi
-ep_rx_complete callback from non softirq context, resulting in a trigger
-of the above warning.
-
-Calling ieee80211_rx_ni with softirq's already disabled (e.g., from
-softirq context) should be safe as the local_bh_disable and
-local_bh_enable functions (called from ieee80211_rx_ni) are fully
-reentrant.
-
-Signed-off-by: Erik Stromdahl <erik.stromdahl@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Muhammad Sammar <muhammads@mellanox.com>
+Reviewed-by: Feras Daoud <ferasda@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/wmi.c | 3 ++-
+ drivers/infiniband/ulp/ipoib/ipoib_main.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
-index ab8eb9cdfda0f..4d6c2986c40dd 100644
---- a/drivers/net/wireless/ath/ath10k/wmi.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi.c
-@@ -2414,7 +2414,8 @@ int ath10k_wmi_event_mgmt_rx(struct ath10k *ar, struct sk_buff *skb)
- 		   status->freq, status->band, status->signal,
- 		   status->rate_idx);
+diff --git a/drivers/infiniband/ulp/ipoib/ipoib_main.c b/drivers/infiniband/ulp/ipoib/ipoib_main.c
+index 1a93d3d58c8a4..caae4bfab950d 100644
+--- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
++++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
+@@ -249,7 +249,8 @@ static int ipoib_change_mtu(struct net_device *dev, int new_mtu)
+ 		return 0;
+ 	}
  
--	ieee80211_rx(ar->hw, skb);
-+	ieee80211_rx_ni(ar->hw, skb);
-+
- 	return 0;
- }
+-	if (new_mtu > IPOIB_UD_MTU(priv->max_ib_mtu))
++	if (new_mtu < (ETH_MIN_MTU + IPOIB_ENCAP_LEN) ||
++	    new_mtu > IPOIB_UD_MTU(priv->max_ib_mtu))
+ 		return -EINVAL;
  
+ 	priv->admin_mtu = new_mtu;
 -- 
 2.20.1
 
