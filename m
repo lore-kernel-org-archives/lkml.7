@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C97A4C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FC1C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97EF922318
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BA2822350
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:21:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574140910;
-	bh=jiID2sZJtnAMrCFYgJZVScHSBB2UHdlChSpaNDIyjIM=;
+	s=default; t=1574140914;
+	bh=CJOh/AEurzA1JL2ub0QQllerEeJhhnzigM7uwjnATCM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VT7U4OMZzDfEidU8QwhpBySkrKf15FQaDFZHGW4OUxD4PXdMf2Fz/jS9OElUtaQtE
-	 2iLVxITAL3B2a/0uODeSidj6IQoM9JSvC59CMtBNDRnoaz+srOuSk9ybSytDOr8QkX
-	 czehFWafZJ+uN0L6bzexWourb91CHn55rsqu/1Fg=
+	b=k0fHMXC/tr9iV8IGdQb5VqGy+RmL+JcepyiQja47UYU8Iw5Y4Ann5fuTpnh9wqPNo
+	 JGRMAVgO/Cjb2EKbyFD66YTEyfY4Vc4asXi0b6nFNdVwVq2xKo1OwaSQ1gWnRmeI1Y
+	 AUOiU1BlKv4vkYS5Dkj3Skr4TqotEvpyjvYrWHBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbfKSFVt (ORCPT
+        id S1727575AbfKSFVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:21:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36770 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:21:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727468AbfKSFVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:21:39 -0500
+        id S1727539AbfKSFVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:21:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D121422318;
-        Tue, 19 Nov 2019 05:21:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8941C22317;
+        Tue, 19 Nov 2019 05:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574140899;
-        bh=jiID2sZJtnAMrCFYgJZVScHSBB2UHdlChSpaNDIyjIM=;
+        s=default; t=1574140911;
+        bh=CJOh/AEurzA1JL2ub0QQllerEeJhhnzigM7uwjnATCM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JXTyL/Stf3h3rqhdGDK9IdKYlHQhZ9RckFHQQfGas3lu6fklK2P6vQkAdvY3BFD1M
-         dnvpIktz8YQxmmrOV1rR4Q8+m4UGpJncj9abpCNXF6f5mTzzy+S92VAdD8RLCxf3X5
-         GSGl7QYGpJiVvo59Q/HIDirLuobMh6YJ49CmMPjk=
+        b=DqsOtqyLPHgzV5GXKB3ik+2ojlfedwY8MA8npKstKxV9a3Itrct7AVlhvr4hx6iO5
+         lQiSsSSrEqB31psJno5fRC5ZsKRv+xmCjNhBuiaknqZ8hcbwNz37XRf+aoerw6Qo9X
+         GbmP7Z3BJ44xYzzFwsw+ygEy4QmzYm3D6HWT/Wkc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.3 24/48] Input: synaptics-rmi4 - clear IRQ enables for F54
-Date:   Tue, 19 Nov 2019 06:19:44 +0100
-Message-Id: <20191119051007.079867425@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.3 28/48] IB/hfi1: Calculate flow weight based on QP MTU for TID RDMA
+Date:   Tue, 19 Nov 2019 06:19:48 +0100
+Message-Id: <20191119051009.905141136@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119050946.745015350@linuxfoundation.org>
 References: <20191119050946.745015350@linuxfoundation.org>
@@ -59,34 +62,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Kaike Wan <kaike.wan@intel.com>
 
-commit 549766ac2ac1f6c8bb85906bbcea759541bb19a2 upstream.
+commit c2be3865a1763c4be39574937e1aae27e917af4d upstream.
 
-The driver for F54 just polls the status and doesn't even have a IRQ
-handler registered. Make sure to disable all F54 IRQs, so we don't crash
-the kernel on a nonexistent handler.
+For a TID RDMA WRITE request, a QP on the responder side could be put into
+a queue when a hardware flow is not available. A RNR NAK will be returned
+to the requester with a RNR timeout value based on the position of the QP
+in the queue. The tid_rdma_flow_wt variable is used to calculate the
+timeout value and is determined by using a MTU of 4096 at the module
+loading time. This could reduce the timeout value by half from the desired
+value, leading to excessive RNR retries.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Link: https://lore.kernel.org/r/20191105114402.6009-1-l.stach@pengutronix.de
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+This patch fixes the issue by calculating the flow weight with the real
+MTU assigned to the QP.
+
+Fixes: 07b923701e38 ("IB/hfi1: Add functions to receive TID RDMA WRITE request")
+Link: https://lore.kernel.org/r/20191025195836.106825.77769.stgit@awfm-01.aw.intel.com
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/rmi4/rmi_f54.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/hfi1/init.c     |    1 -
+ drivers/infiniband/hw/hfi1/tid_rdma.c |   13 +++++--------
+ drivers/infiniband/hw/hfi1/tid_rdma.h |    3 +--
+ 3 files changed, 6 insertions(+), 11 deletions(-)
 
---- a/drivers/input/rmi4/rmi_f54.c
-+++ b/drivers/input/rmi4/rmi_f54.c
-@@ -601,7 +601,7 @@ static int rmi_f54_config(struct rmi_fun
- {
- 	struct rmi_driver *drv = fn->rmi_dev->driver;
+--- a/drivers/infiniband/hw/hfi1/init.c
++++ b/drivers/infiniband/hw/hfi1/init.c
+@@ -1489,7 +1489,6 @@ static int __init hfi1_mod_init(void)
+ 		goto bail_dev;
+ 	}
  
--	drv->set_irq_bits(fn->rmi_dev, fn->irq_mask);
-+	drv->clear_irq_bits(fn->rmi_dev, fn->irq_mask);
+-	hfi1_compute_tid_rdma_flow_wt();
+ 	/*
+ 	 * These must be called before the driver is registered with
+ 	 * the PCI subsystem.
+--- a/drivers/infiniband/hw/hfi1/tid_rdma.c
++++ b/drivers/infiniband/hw/hfi1/tid_rdma.c
+@@ -107,8 +107,6 @@ static u32 mask_generation(u32 a)
+  * C - Capcode
+  */
  
- 	return 0;
+-static u32 tid_rdma_flow_wt;
+-
+ static void tid_rdma_trigger_resume(struct work_struct *work);
+ static void hfi1_kern_exp_rcv_free_flows(struct tid_rdma_request *req);
+ static int hfi1_kern_exp_rcv_alloc_flows(struct tid_rdma_request *req,
+@@ -3380,18 +3378,17 @@ u32 hfi1_build_tid_rdma_write_req(struct
+ 	return sizeof(ohdr->u.tid_rdma.w_req) / sizeof(u32);
  }
+ 
+-void hfi1_compute_tid_rdma_flow_wt(void)
++static u32 hfi1_compute_tid_rdma_flow_wt(struct rvt_qp *qp)
+ {
+ 	/*
+ 	 * Heuristic for computing the RNR timeout when waiting on the flow
+ 	 * queue. Rather than a computationaly expensive exact estimate of when
+ 	 * a flow will be available, we assume that if a QP is at position N in
+ 	 * the flow queue it has to wait approximately (N + 1) * (number of
+-	 * segments between two sync points), assuming PMTU of 4K. The rationale
+-	 * for this is that flows are released and recycled at each sync point.
++	 * segments between two sync points). The rationale for this is that
++	 * flows are released and recycled at each sync point.
+ 	 */
+-	tid_rdma_flow_wt = MAX_TID_FLOW_PSN * enum_to_mtu(OPA_MTU_4096) /
+-		TID_RDMA_MAX_SEGMENT_SIZE;
++	return (MAX_TID_FLOW_PSN * qp->pmtu) >> TID_RDMA_SEGMENT_SHIFT;
+ }
+ 
+ static u32 position_in_queue(struct hfi1_qp_priv *qpriv,
+@@ -3514,7 +3511,7 @@ static void hfi1_tid_write_alloc_resourc
+ 		if (qpriv->flow_state.index >= RXE_NUM_TID_FLOWS) {
+ 			ret = hfi1_kern_setup_hw_flow(qpriv->rcd, qp);
+ 			if (ret) {
+-				to_seg = tid_rdma_flow_wt *
++				to_seg = hfi1_compute_tid_rdma_flow_wt(qp) *
+ 					position_in_queue(qpriv,
+ 							  &rcd->flow_queue);
+ 				break;
+--- a/drivers/infiniband/hw/hfi1/tid_rdma.h
++++ b/drivers/infiniband/hw/hfi1/tid_rdma.h
+@@ -17,6 +17,7 @@
+ #define TID_RDMA_MIN_SEGMENT_SIZE       BIT(18)   /* 256 KiB (for now) */
+ #define TID_RDMA_MAX_SEGMENT_SIZE       BIT(18)   /* 256 KiB (for now) */
+ #define TID_RDMA_MAX_PAGES              (BIT(18) >> PAGE_SHIFT)
++#define TID_RDMA_SEGMENT_SHIFT		18
+ 
+ /*
+  * Bit definitions for priv->s_flags.
+@@ -274,8 +275,6 @@ u32 hfi1_build_tid_rdma_write_req(struct
+ 				  struct ib_other_headers *ohdr,
+ 				  u32 *bth1, u32 *bth2, u32 *len);
+ 
+-void hfi1_compute_tid_rdma_flow_wt(void);
+-
+ void hfi1_rc_rcv_tid_rdma_write_req(struct hfi1_packet *packet);
+ 
+ u32 hfi1_build_tid_rdma_write_resp(struct rvt_qp *qp, struct rvt_ack_entry *e,
 
 
