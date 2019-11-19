@@ -2,139 +2,168 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDAEC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F04C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66ECF222A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FFD6222D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:34:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sifSK6MU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="btWLNutl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbfKSGc6 (ORCPT
+        id S1727711AbfKSGec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:32:58 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43874 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfKSGc6 (ORCPT
+        Tue, 19 Nov 2019 01:34:32 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:47000 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfKSGec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 01:32:58 -0500
-Received: by mail-io1-f66.google.com with SMTP id r2so16721554iot.10;
-        Mon, 18 Nov 2019 22:32:57 -0800 (PST)
+        Tue, 19 Nov 2019 01:34:32 -0500
+Received: by mail-wr1-f65.google.com with SMTP id b3so22351033wrs.13;
+        Mon, 18 Nov 2019 22:34:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=NXaQYQk0g4GZrnX0H+C5/sQj56d3X20l4tE5DHhQOrA=;
-        b=sifSK6MU7G+EcqYvJSuSa2S3hMP9SB6t7e29d7KHAyYYgBX4YqD7x0RtWHSqj7x64T
-         UCnhKrr5Oiz+XULwu7eB1ZzOI6VyeAHiAbd+ovtLWxxuyjZjQERBAwrzjvdoMJrtvL2X
-         OuCAUcEOqMXV21HuTt3LYU4PJ7a9/zwV0cPSFw8iKelRg6k0kRED6h1IpqHOT34kW5Dv
-         V+F06IQt2Mi5Kauqgd6BFTTPOuzVSntsEr/Hz/LVi2r7g9MduWF7OaGr1l12AxH8Pw4y
-         IkHXTj8+xHCrm+IKudRyf5hLWkkP4WKgN+znsqikOz7kNlhe0ebhtZo0RHJwK0BSQojS
-         kitQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=STYck0ldpmlPgUWK/QtmnwfKy44OyOjUVjCG3r/tKEs=;
+        b=btWLNutlP2kDY/yLaixh/BuLXocKTIXi9Ge/nc2DSdpsZX3wYLJ8Va1hZj8xQh+5ve
+         iQ7046zUAQFVSyyc9bYlRZNYXpVAhyfjVCVsoORr8Ght4Oh73ERcgnlCHKs0Is77j/Ai
+         7TLjUMW+5IDBBSYBaQoWf55T5ETIK8T5jtd3t92ndP6tm3FvbYhzQFmAHC6d12UHiRt7
+         sgy5G2u1jw8Q0iCDYYTPJAsEitOV9NWFcj7tZuzq827+rUhMNDYLN1vlJHgba2WpSZ+n
+         m3neIJRvPGUsuRaKNs6bR8d9Uuaq1s6KxKMcb7xqh1zHh/22AixIq62t39PCTiwclEi1
+         5Hig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=NXaQYQk0g4GZrnX0H+C5/sQj56d3X20l4tE5DHhQOrA=;
-        b=a2Un5RahC1mqd2Gs6JgWwjPkS0933A0sIw76uaTYsKRnOMosEW75Doel4hJgZ6SHkc
-         sshPPWg+eycp32JRw7fYxzextrOqk6EEq0P3r/uttb7y8u77BW789T68M8hb3q6AiZyk
-         8ucXosE2mxcZ0OGMys+nurGwWTuGM+T8cK4vOVxuTE9/y63lhBmU/2nNV4SGM1Wq2ydT
-         e89O7FYLSGskLp66CddIOtuw5p682MNbXEVH5AYnn18HORBAKTL1a0KDihQGj34l7ozV
-         Qlspe1RcG4yNGidNBZEIu5dMB1rFjBlefFQVHBu1S6TLwMmwRI/9bdebbEWdnhbWvUAs
-         jPbg==
-X-Gm-Message-State: APjAAAV3ERksv0YFuFjiw8s3TUzaCFY1HqJ4KkmTMqRALqyMESdwgVGi
-        C7EsFls6eHHwf0pdzuSZ3nnPI7kDIniFi5KhhRkryFsZ/56Esw==
-X-Google-Smtp-Source: APXvYqxsiN2r32tu6Vr3FT387ecd9RsbnxXZTJSYF8E4DcxZPX/OBCeKQumlgww/wRDUDEfuWrt3IfZaSkRqJ6CTjKM=
-X-Received: by 2002:a02:b48:: with SMTP id 69mr17013960jad.25.1574145177173;
- Mon, 18 Nov 2019 22:32:57 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=STYck0ldpmlPgUWK/QtmnwfKy44OyOjUVjCG3r/tKEs=;
+        b=QOCHNq3fClP1pmZXIBug+HH4NmOCCyX1j21sZWUsgoT3s2K0aOmpOArgr0ke4l2Y8Y
+         RRpGPntjfXIxmM6ksJ8zoD46sIAPYfyfTCRHv1mCHPJkNhPkdorypXuKn44WjnUi2Qcf
+         AC2I0J04AuU2rMOgjln8FcuAT+OFqh39pMQGnpTCYZIYSXPydM+HdWDBKxRtsyXFPmdX
+         KPLdjSK8cHBHkTgmJIJea8xztOf5p9QaBKAc/rA5VP8lM1O0CQUyA11qE67dl93YSk7O
+         cdWbl78Kk13RnwMXjR3Vznh0IgnHrJXEFY1BO0PgFFPU+YC9LrR+8IUD8jIZePjokXIK
+         1AeA==
+X-Gm-Message-State: APjAAAVyjzr7CoxSYIlnIys8MNLrcG3Zj3NQTNg69JT6jnk33NpQKWU7
+        PKL2sP3imv6MwORGeR1ptWU=
+X-Google-Smtp-Source: APXvYqzhNxj3/SJm0AqF0zMY4b2l3tY6B3JVFHzcm50DLbqWtLqLll98yGl8UaG/HY2uDbZ8yq8Icw==
+X-Received: by 2002:adf:f203:: with SMTP id p3mr36441140wro.2.1574145269573;
+        Mon, 18 Nov 2019 22:34:29 -0800 (PST)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id q15sm25965385wrs.91.2019.11.18.22.34.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 22:34:28 -0800 (PST)
+Date:   Tue, 19 Nov 2019 07:34:27 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v1 14/29] memory: tegra: Add interconnect nodes for
+ Terga20 display controllers
+Message-ID: <20191119063427.GG2462695@ulmo>
+References: <20191118200247.3567-1-digetx@gmail.com>
+ <20191118200247.3567-15-digetx@gmail.com>
 MIME-Version: 1.0
-References: <1573459282-26989-1-git-send-email-bhsharma@redhat.com>
- <20191113063858.GE22427@linaro.org> <CACi5LpP54d9DKW63G5W6X4euBjAm2NwkHOiM01dB7g8d60s=4w@mail.gmail.com>
- <20191115015959.GI22427@linaro.org>
-In-Reply-To: <20191115015959.GI22427@linaro.org>
-From:   Prabhakar Kushwaha <prabhakar.pkin@gmail.com>
-Date:   Tue, 19 Nov 2019 12:02:46 +0530
-Message-ID: <CAJ2QiJJOSspLKRh+jRB_o0o9nmeAsiFKzxGJ8R0pYPRM4iptmw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] Append new variables to vmcoreinfo (TCR_EL1.T1SZ
- for arm64 and MAX_PHYSMEM_BITS for all archs)
-To:     AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bhupesh SHARMA <bhupesh.linux@gmail.com>,
-        Boris Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Steve Capper <steve.capper@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Dave Anderson <anderson@redhat.com>,
-        Kazuhito Hagio <k-hagio@ab.jp.nec.com>, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        kexec mailing list <kexec@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="I3tAPq1Rm2pUxvsp"
+Content-Disposition: inline
+In-Reply-To: <20191118200247.3567-15-digetx@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Akashi,
 
-On Fri, Nov 15, 2019 at 7:29 AM AKASHI Takahiro
-<takahiro.akashi@linaro.org> wrote:
->
-> Bhupesh,
->
-> On Fri, Nov 15, 2019 at 01:24:17AM +0530, Bhupesh Sharma wrote:
-> > Hi Akashi,
-> >
-> > On Wed, Nov 13, 2019 at 12:11 PM AKASHI Takahiro
-> > <takahiro.akashi@linaro.org> wrote:
-> > >
-> > > Hi Bhupesh,
-> > >
-> > > Do you have a corresponding patch for userspace tools,
-> > > including crash util and/or makedumpfile?
-> > > Otherwise, we can't verify that a generated core file is
-> > > correctly handled.
-> >
-> > Sure. I am still working on the crash-utility related changes, but you
-> > can find the makedumpfile changes I posted a couple of days ago here
-> > (see [0]) and the github link for the makedumpfile changes can be seen
-> > via [1].
-> >
-> > I will post the crash-util changes shortly as well.
-> > Thanks for having a look at the same.
->
-> Thank you.
-> I have tested my kdump patch with a hacked version of crash
-> where VA_BITS_ACTUAL is calculated from tcr_el1_t1sz in vmcoreinfo.
->
+--I3tAPq1Rm2pUxvsp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I also did hack to calculate VA_BITS_ACTUAL is calculated from
-tcr_el1_t1sz in vmcoreinfo. Now i am getting error same as mentioned
-by you in other thread last month.
-https://www.mail-archive.com/crash-utility@redhat.com/msg07385.html
+On Mon, Nov 18, 2019 at 11:02:32PM +0300, Dmitry Osipenko wrote:
+> Add initial interconnect nodes that allow display controller driver
+> to perform memory bandwidth requests using interconnect API.
+>=20
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/memory/tegra/tegra20.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>=20
+> diff --git a/drivers/memory/tegra/tegra20.c b/drivers/memory/tegra/tegra2=
+0.c
+> index a8098bff91d9..dfcd9fdb7ce7 100644
+> --- a/drivers/memory/tegra/tegra20.c
+> +++ b/drivers/memory/tegra/tegra20.c
+> @@ -3,6 +3,7 @@
+>   * Copyright (C) 2012 NVIDIA CORPORATION.  All rights reserved.
+>   */
+> =20
+> +#include <dt-bindings/interconnect/tegra-icc.h>
+>  #include <dt-bindings/memory/tegra20-mc.h>
+> =20
+>  #include "mc.h"
+> @@ -280,6 +281,17 @@ static const struct tegra_mc_reset_ops tegra20_mc_re=
+set_ops =3D {
+>  	.reset_status =3D tegra20_mc_reset_status,
+>  };
+> =20
+> +#define TEGRA20_MC_ICC(_name)				\
+> +	{						\
+> +		.name =3D #_name,				\
+> +		.id =3D TEGRA_ICC_MC_##_name,		\
+> +	}
+> +
+> +static const struct tegra_mc_icc_node tegra20_mc_icc_nodes[] =3D {
+> +	TEGRA20_MC_ICC(DC),
+> +	TEGRA20_MC_ICC(DCB),
+> +};
+> +
+>  const struct tegra_mc_soc tegra20_mc_soc =3D {
+>  	.clients =3D tegra20_mc_clients,
+>  	.num_clients =3D ARRAY_SIZE(tegra20_mc_clients),
+> @@ -290,4 +302,6 @@ const struct tegra_mc_soc tegra20_mc_soc =3D {
+>  	.reset_ops =3D &tegra20_mc_reset_ops,
+>  	.resets =3D tegra20_mc_resets,
+>  	.num_resets =3D ARRAY_SIZE(tegra20_mc_resets),
+> +	.icc_nodes =3D tegra20_mc_icc_nodes,
+> +	.num_icc_nodes =3D ARRAY_SIZE(tegra20_mc_icc_nodes),
+>  };
 
-how this error was overcome?
+As I mentioned, we already have most (if not all) of the information
+that we need for this in the various struct tegra_mc_client tables.
+Those tables also contain some definitions for latency allowance
+registers that we are eventually going to need to do more tweaking as
+you suggested in your cover letter.
 
-I am using
- - crashkernel: https://github.com/crash-utility/crash.git  commit:
-babd7ae62d4e8fd6f93fd30b88040d9376522aa3
-and
- - Linux: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-commit: af42d3466bdc8f39806b26f593604fdc54140bcb
+Thierry
 
---pk
+--I3tAPq1Rm2pUxvsp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3TjPIACgkQ3SOs138+
+s6EdSBAAkJq6NUF8h85zOp4aN7BmEM9zr6aQU87PcpheYtxkxBSWJB3FL3ZbULKr
+uWUELJntyp3KXLEuosHFkUZTpvhzDhhyVi5pZ9r45M45uGgZqO1pMPunN9Ha1Uku
+8RzxboJvFEGLAok5/9XW9tsotQ/wjhRQKIQWgzGfxLz2jFEWF0nPc5akod1RHQTz
+dcmDT9D9gDXJqiAHJINlHxfA6O+pkTI3s7K2qr0O9C4ao+xgSOqcjWqr0yCOggw2
+GSerhri3lwwbEAQk8FMi10nIU0gD8DDOD3iVGNqnR6djOzkZMMEfG2i5RzWzHk7G
+ijkE6CnihiZwbDIUKdE9XBQGOp+fdEGnaznERMG1GWyi68u+nSmkGDnCtivJkL8j
+yur3Wdk2RoLyVii0RScej4aAndbyVNhRslgPEhu0hs1e6YNI44L1i6LcAZFck87N
+q/KQl6aiOpVajQ+7eiHgHOeYQYGXcz/GGRWToOmo9RHAu1gMqVdG03wgpAKDYkkQ
+ls3DMn/qSgfH6YeuKWPes9x4gQgXtAtx22hlXxXC3P5cSw4XWXpiQFv9YLN3I/zs
+SLrm0uaV8jsjyI0fF8dWO2RWQMlkyKj/kGQIL44ZRiYgO4iop1Rc3dIUPpn/NtYe
+bOPFW64ShM7Ex2qHSHhiHnv60kq1YqYAUo1mxFa7XE12ygIkn3s=
+=85iP
+-----END PGP SIGNATURE-----
+
+--I3tAPq1Rm2pUxvsp--
