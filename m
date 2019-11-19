@@ -2,115 +2,135 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11818C43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0670C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC9922360
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB8F32230F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:02:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574182950;
-	bh=9xlP6l6zc8LrRTuryqi4QOF5/Hg74NZf0SPlZK2mEU8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oMrF9nSUnqZYF+4Po4d49JX4rumi1pAAlYgvWogl3/C+tx/Zy7NqxTQS3ysgzsWkt
-	 XxRghne+q2Pqaqz2vljhtWoVarHCK8j90cuUY4sWMG/jXpOdzh2ODVzeonVjozf5rs
-	 EjOzhrFTMybaC5g8t90MAPxwyVCiTaR7dhTL8lHI=
+	s=default; t=1574182970;
+	bh=26SqJtwqUIdvM5q69X4Z0ZK5vY+WBJi/1p1ohl/CxeM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H54IrZnYgo8GbvDDT5aWYd0L+3dWr2sL7QteNA33b9qVYlWvmSU+IBIFp/ZEq2Rrh
+	 hEoz3OBLsWa3ccSK9zATbwyDEtdcCd+vvyUv/VX6jIfr+EC1WVRuwry1umvAwJgDrv
+	 X6JtCUxbIddI25o2LZjkOrfHiLiWDMkLIvLDftuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbfKSRC3 (ORCPT
+        id S1728673AbfKSRCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 12:02:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56396 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 12:02:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727560AbfKSRC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 12:02:29 -0500
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727560AbfKSRCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 12:02:49 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 522C222384;
-        Tue, 19 Nov 2019 17:02:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 098CC208D4;
+        Tue, 19 Nov 2019 17:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574182943;
-        bh=9xlP6l6zc8LrRTuryqi4QOF5/Hg74NZf0SPlZK2mEU8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hHdDFqFWJkwOuMKZk0NzaOxgeAE6UqGlvZAVH+WTtjEaZ3CCkLs6cDI5yFhIl9SRE
-         54T4E31B4t+satNSKMSJ+416Ec7m0NKdD49RPHEpukOMZs6k0mxIRc9AHYb5zIBbTG
-         bNPOVvg5RSncACs08sPyTJmxe1NXOpvf8io01pqY=
-Received: by mail-qk1-f179.google.com with SMTP id z16so18462574qkg.7;
-        Tue, 19 Nov 2019 09:02:23 -0800 (PST)
-X-Gm-Message-State: APjAAAWDgqNzuLMJs8sFoNhCpmKJ/NCyiGWxa3+rUuO7R+v5e5LWatrG
-        AnMysVzyQOrrnIp3ZSRcxGlXeEucbJgpgLW1ZA==
-X-Google-Smtp-Source: APXvYqxucfdWSXPgW2vd8l9633HeMvIH864eMJ/p+Bk0FhDvh444Pum/yEC+Gs6buUxeu7x2jucgvrCcmOz57phmAkg=
-X-Received: by 2002:a05:620a:205d:: with SMTP id d29mr30290391qka.152.1574182942398;
- Tue, 19 Nov 2019 09:02:22 -0800 (PST)
-MIME-Version: 1.0
-References: <20191119144315.11261-1-krzk@kernel.org>
-In-Reply-To: <20191119144315.11261-1-krzk@kernel.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 19 Nov 2019 11:02:11 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+1hHneSW5DzLNxU00AqQJ49chTyULJ0S3JR-CqfOfTgA@mail.gmail.com>
-Message-ID: <CAL_Jsq+1hHneSW5DzLNxU00AqQJ49chTyULJ0S3JR-CqfOfTgA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: power: Fix path to power-domain.txt bindings
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        s=default; t=1574182968;
+        bh=26SqJtwqUIdvM5q69X4Z0ZK5vY+WBJi/1p1ohl/CxeM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=weWl/rVlmNUOESJVshvd6j9+y2V6ybSbqVwbPWbzdoRTEMBaeRE8aJ2AnRUIl1io0
+         e7izHqdVmb6aWEHyTiqnCZaAvF9offkgUF6LxcLFEPeNqtfvUMX0Jm4JbYXeuAQB8L
+         PNpL2SKwScuvSQrxO1vW89Ynhj3Ku+HE/hhS8tQk=
+Date:   Tue, 19 Nov 2019 18:02:46 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Chris Paterson <Chris.Paterson2@renesas.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        etnaviv@lists.freedesktop.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+        "cip-dev@lists.cip-project.org" <cip-dev@lists.cip-project.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "patches@kernelci.org" <patches@kernelci.org>,
+        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 4.19 000/422] 4.19.85-stable review
+Message-ID: <20191119170246.GA2139063@kroah.com>
+References: <20191119051400.261610025@linuxfoundation.org>
+ <TYAPR01MB22854E4F20C28F3A10DA65E3B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+ <20191119122909.GC1913916@kroah.com>
+ <20191119164626.GA5739@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191119164626.GA5739@roeck-us.net>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 8:43 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> With split of power domain controller bindings to power-domain.yaml, the
-> consumer part was renamed to power-domain.txt.  Update the references in
-> other bindings.
->
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Fixes: abb4805e343a ("dt-bindings: power: Convert Samsung Exynos Power Domain bindings to json-schema")
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  Documentation/devicetree/bindings/clock/clk-exynos-audss.txt  | 2 +-
->  Documentation/devicetree/bindings/clock/exynos5433-clock.txt  | 2 +-
->  .../devicetree/bindings/clock/renesas,r8a7778-cpg-clocks.txt  | 2 +-
->  .../devicetree/bindings/clock/renesas,r8a7779-cpg-clocks.txt  | 2 +-
->  .../bindings/clock/renesas,rcar-gen2-cpg-clocks.txt           | 2 +-
->  .../devicetree/bindings/clock/renesas,rz-cpg-clocks.txt       | 2 +-
->  .../devicetree/bindings/display/etnaviv/etnaviv-drm.txt       | 2 +-
->  Documentation/devicetree/bindings/display/msm/dpu.txt         | 2 +-
->  Documentation/devicetree/bindings/display/msm/mdp5.txt        | 2 +-
->  Documentation/devicetree/bindings/dsp/fsl,dsp.yaml            | 2 +-
->  Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt    | 2 +-
->  .../devicetree/bindings/media/mediatek-jpeg-decoder.txt       | 2 +-
->  Documentation/devicetree/bindings/media/mediatek-mdp.txt      | 2 +-
->  Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt  | 2 +-
->  Documentation/devicetree/bindings/pci/pci-keystone.txt        | 2 +-
->  Documentation/devicetree/bindings/phy/ti,phy-am654-serdes.txt | 2 +-
->  Documentation/devicetree/bindings/power/qcom,rpmpd.txt        | 2 +-
->  Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt | 2 +-
->  .../devicetree/bindings/usb/nvidia,tegra124-xusb.txt          | 4 ++--
->  19 files changed, 20 insertions(+), 20 deletions(-)
+On Tue, Nov 19, 2019 at 08:46:26AM -0800, Guenter Roeck wrote:
+> On Tue, Nov 19, 2019 at 01:29:09PM +0100, Greg Kroah-Hartman wrote:
+> > On Tue, Nov 19, 2019 at 08:54:25AM +0000, Chris Paterson wrote:
+> > > Hello Greg, all,
+> > > 
+> > > > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
+> > > > Behalf Of Greg Kroah-Hartman
+> > > > Sent: 19 November 2019 05:13
+> > > > 
+> > > > This is the start of the stable review cycle for the 4.19.85 release.
+> > > > There are 422 patches in this series, all will be posted as a response
+> > > > to this one.  If anyone has any issues with these being applied, please
+> > > > let me know.
+> > > 
+> > > I'm seeing some build issues with module compilation with this release (1b1960cc Linux 4.19.85-rc1), I also saw them with the previous two versions of Linux 4.19.85-rc1 (cd21ecdb and 1fd0ac64).
+> > > 
+> > > Full log available on GitLab [0]. Build conf [1].
+> > > [0] https://gitlab.com/cip-playground/linux-stable-rc-ci/-/jobs/354591285
+> > > [1] https://gitlab.com/cip-playground/linux-stable-rc-ci/-/jobs/354591285/artifacts/file/output/4.19.85-rc1_1b1960cc7/x86/siemens_iot2000.config/config/.config
+> > > 
+> > > Main error below:
+> > > 
+> > > 3907   CC [M]  drivers/net/ethernet/mellanox/mlx4/main.o
+> > > 3908   LD [M]  fs/ntfs/ntfs.o
+> > > 3909   CC [M]  drivers/net/ethernet/intel/i40evf/i40e_txrx.o
+> > > 3910   CC [M]  drivers/usb/musb/musb_core.o
+> > > 3911   CC [M]  drivers/net/ethernet/nvidia/forcedeth.o
+> > > 3912   CC [M]  fs/udf/balloc.o
+> > > 3913   CC [M]  drivers/net/ethernet/intel/fm10k/fm10k_debugfs.o
+> > > 3914   CC [M]  fs/udf/dir.o
+> > > 3915   CC [M]  drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.o
+> > > 3916   CC [M]  drivers/net/ethernet/intel/i40e/i40e_ptp.o
+> > > 3917 drivers/net/ethernet/mellanox/mlx4/main.c: In function 'mlx4_init_one':
+> > > 3918 drivers/net/ethernet/mellanox/mlx4/main.c:3985:2: error: implicit declaration of function 'devlink_reload_enable'; did you mean 'devlink_region_create'? [-Werror=implicit-function-declaration]
+> > > 3919   devlink_reload_enable(devlink);
+> > > 3920   ^~~~~~~~~~~~~~~~~~~~~
+> > > 3921   devlink_region_create
+> > > 3922   CC [M]  drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.o
+> > > 3923 drivers/net/ethernet/mellanox/mlx4/main.c: In function 'mlx4_remove_one':
+> > > 3924 drivers/net/ethernet/mellanox/mlx4/main.c:4097:2: error: implicit declaration of function 'devlink_reload_disable'; did you mean 'devlink_region_destroy'? [-Werror=implicit-function-declaration]
+> > > 3925   devlink_reload_disable(devlink);
+> > > 3926   ^~~~~~~~~~~~~~~~~~~~~~
+> > > 3927   devlink_region_destroy
+> > > 3928   CC [M]  drivers/net/ethernet/packetengines/hamachi.o
+> > > 3929   CC [M]  fs/udf/file.o
+> > > 3930   LD [M]  drivers/net/ethernet/intel/fm10k/fm10k.o
+> > > 
+> > > I haven't tried to trace the issue further yet, sorry.
+> > 
+> > Any chance you can bisect this?  I don't see any obvious reason why this
+> > error should be happening, and it isn't showing up here :(
+> > 
+> I see the problem as well, with powerpc:defconfig.
+> 
+> Underlying issue is that devlink_reload_disable() is only declared in the
+> include file if CONFIG_NET_DEVLINK is enabled. There is no dummy otherwise.
+> The dummy declarations which still exist in 4.19 were removed with commit
+> f6b19b354d50c ("net: devlink: select NET_DEVLINK from drivers") in the
+> upstream kernel.
 
-Please no. Can you just undo the renaming back to power_domain.txt
+Ok, let me take part of that patch and backport it.  I'll push out a
+-rc3 now to hopefully resolve this issue.
 
-Rob
+thanks,
+
+greg k-h
