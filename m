@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE20C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C491C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80FC621783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D35BE21939
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142158;
-	bh=yygVleyOjciisxZxzDJdYlt1GCzmG7Mb67AoSftKq8w=;
+	s=default; t=1574142163;
+	bh=s+qDWJiCsCOtUONRrtoz3ETIwaa58Xm2dheg+889mKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ekKjX3P37AtZNCfrJDtLywKI+sDoUyvBXNB7X5X6ditWlOb032A2c+hu1utfmJMPK
-	 Uwb+reNEnxCzrvozLO7AQ1UJUAHIwwBCwF4MydwWwxHUm15qtTJURixHvWIYzYrAou
-	 BGuEw1D+tA8Kqb2kv5UQEWhufB/Eb+1mAxQnbNu8=
+	b=QDrCe5TIFjq2cIvzmvnrE83b4qHkamPBlnR4LH+2RdHPpT4/HxWvTRe1qzK/07m8b
+	 sIVwjDHmUBbeQYgEYZo0JwjJTfGd9lq+nptuRCe42bcZqFEf0mpUqzX+lSOTU35mte
+	 n6AFmPgnQBEugINoruOSsNqAdjWoo0gapP1lxlc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbfKSFmh (ORCPT
+        id S1730231AbfKSFml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:42:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37306 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:42:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728116AbfKSFmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:42:33 -0500
+        id S1728116AbfKSFmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:42:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0B0721939;
-        Tue, 19 Nov 2019 05:42:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0B64218BA;
+        Tue, 19 Nov 2019 05:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142152;
-        bh=yygVleyOjciisxZxzDJdYlt1GCzmG7Mb67AoSftKq8w=;
+        s=default; t=1574142157;
+        bh=s+qDWJiCsCOtUONRrtoz3ETIwaa58Xm2dheg+889mKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c4lCAQR3PZyWbP9V7EoIQHnSnOuiQi1lmP+Tejc42w0J5yTosq+zUX1u9oOuP809m
-         OYbB0jJmVdei6NVUO5j0cVZCEjShA9PedUGLxZd1hq5B5aeOQYBnQoa3woigtVZKwL
-         FszukquG/i6+FaPwyKiTmOa7z/atr5yHtaFYzHAg=
+        b=auywH5jV5F1vUqvXi/06Rd17RbtEzmwdfrOVDrFg6F27tPkCXk4l7gipTzpz5efUQ
+         7dGLpMkx5uBeEqs5pnYMzXIulaKQzX96j+0zHYaCPRqq3HXpQ+n7JdgQP9cuEpTPAC
+         mNPM8VEdRXDcEl2QrTVZtiOdjuRZnBcYn4DhR61A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Chanho Min <chanho.min@lge.com>,
+        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 407/422] scsi: NCR5380: Check for bus reset
-Date:   Tue, 19 Nov 2019 06:20:04 +0100
-Message-Id: <20191119051425.557008807@linuxfoundation.org>
+Subject: [PATCH 4.19 409/422] arm64: dts: lg: Fix SPI controller node names
+Date:   Tue, 19 Nov 2019 06:20:06 +0100
+Message-Id: <20191119051425.689282584@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,141 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 6b0e87a6aafe12d75c2bea6fc8e49e88b98b3083 ]
+[ Upstream commit 09bae3b64cb580c95329bd8d16f08f0a5cb81ec9 ]
 
-The SR_RST bit isn't latched. Hence, detecting a bus reset isn't reliable.
-When it is detected, the right thing to do is to drop all connected and
-disconnected commands. The code for that is already present so refactor it and
-call it when SR_RST is set.
+SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
+name enables dtc SPI bus checks.
 
-Tested-by: Michael Schmitz <schmitzmic@gmail.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: Chanho Min <chanho.min@lge.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/NCR5380.c | 74 +++++++++++++++++++++++++-----------------
- 1 file changed, 45 insertions(+), 29 deletions(-)
+ arch/arm64/boot/dts/lg/lg1312.dtsi | 4 ++--
+ arch/arm64/boot/dts/lg/lg1313.dtsi | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-index bce6c990d060a..8ec68dcc0cc4a 100644
---- a/drivers/scsi/NCR5380.c
-+++ b/drivers/scsi/NCR5380.c
-@@ -131,6 +131,7 @@
- 
- static int do_abort(struct Scsi_Host *);
- static void do_reset(struct Scsi_Host *);
-+static void bus_reset_cleanup(struct Scsi_Host *);
- 
- /**
-  * initialize_SCp - init the scsi pointer field
-@@ -885,7 +886,14 @@ static irqreturn_t __maybe_unused NCR5380_intr(int irq, void *dev_id)
- 			/* Probably Bus Reset */
- 			NCR5380_read(RESET_PARITY_INTERRUPT_REG);
- 
--			dsprintk(NDEBUG_INTR, instance, "unknown interrupt\n");
-+			if (sr & SR_RST) {
-+				/* Certainly Bus Reset */
-+				shost_printk(KERN_WARNING, instance,
-+					     "bus reset interrupt\n");
-+				bus_reset_cleanup(instance);
-+			} else {
-+				dsprintk(NDEBUG_INTR, instance, "unknown interrupt\n");
-+			}
- #ifdef SUN3_SCSI_VME
- 			dregs->csr |= CSR_DMA_ENABLE;
- #endif
-@@ -2297,31 +2305,12 @@ out:
- }
- 
- 
--/**
-- * NCR5380_host_reset - reset the SCSI host
-- * @cmd: SCSI command undergoing EH
-- *
-- * Returns SUCCESS
-- */
--
--static int NCR5380_host_reset(struct scsi_cmnd *cmd)
-+static void bus_reset_cleanup(struct Scsi_Host *instance)
- {
--	struct Scsi_Host *instance = cmd->device->host;
- 	struct NCR5380_hostdata *hostdata = shost_priv(instance);
- 	int i;
--	unsigned long flags;
- 	struct NCR5380_cmd *ncmd;
- 
--	spin_lock_irqsave(&hostdata->lock, flags);
--
--#if (NDEBUG & NDEBUG_ANY)
--	shost_printk(KERN_INFO, instance, __func__);
--#endif
--	NCR5380_dprint(NDEBUG_ANY, instance);
--	NCR5380_dprint_phase(NDEBUG_ANY, instance);
--
--	do_reset(instance);
--
- 	/* reset NCR registers */
- 	NCR5380_write(MODE_REG, MR_BASE);
- 	NCR5380_write(TARGET_COMMAND_REG, 0);
-@@ -2333,14 +2322,6 @@ static int NCR5380_host_reset(struct scsi_cmnd *cmd)
- 	 * commands!
- 	 */
- 
--	list_for_each_entry(ncmd, &hostdata->unissued, list) {
--		struct scsi_cmnd *cmd = NCR5380_to_scmd(ncmd);
--
--		cmd->result = DID_RESET << 16;
--		cmd->scsi_done(cmd);
--	}
--	INIT_LIST_HEAD(&hostdata->unissued);
--
- 	if (hostdata->selecting) {
- 		hostdata->selecting->result = DID_RESET << 16;
- 		complete_cmd(instance, hostdata->selecting);
-@@ -2374,6 +2355,41 @@ static int NCR5380_host_reset(struct scsi_cmnd *cmd)
- 
- 	queue_work(hostdata->work_q, &hostdata->main_task);
- 	maybe_release_dma_irq(instance);
-+}
-+
-+/**
-+ * NCR5380_host_reset - reset the SCSI host
-+ * @cmd: SCSI command undergoing EH
-+ *
-+ * Returns SUCCESS
-+ */
-+
-+static int NCR5380_host_reset(struct scsi_cmnd *cmd)
-+{
-+	struct Scsi_Host *instance = cmd->device->host;
-+	struct NCR5380_hostdata *hostdata = shost_priv(instance);
-+	unsigned long flags;
-+	struct NCR5380_cmd *ncmd;
-+
-+	spin_lock_irqsave(&hostdata->lock, flags);
-+
-+#if (NDEBUG & NDEBUG_ANY)
-+	shost_printk(KERN_INFO, instance, __func__);
-+#endif
-+	NCR5380_dprint(NDEBUG_ANY, instance);
-+	NCR5380_dprint_phase(NDEBUG_ANY, instance);
-+
-+	list_for_each_entry(ncmd, &hostdata->unissued, list) {
-+		struct scsi_cmnd *scmd = NCR5380_to_scmd(ncmd);
-+
-+		scmd->result = DID_RESET << 16;
-+		scmd->scsi_done(scmd);
-+	}
-+	INIT_LIST_HEAD(&hostdata->unissued);
-+
-+	do_reset(instance);
-+	bus_reset_cleanup(instance);
-+
- 	spin_unlock_irqrestore(&hostdata->lock, flags);
- 
- 	return SUCCESS;
+diff --git a/arch/arm64/boot/dts/lg/lg1312.dtsi b/arch/arm64/boot/dts/lg/lg1312.dtsi
+index 860c8fb107950..4bde7b6f2b113 100644
+--- a/arch/arm64/boot/dts/lg/lg1312.dtsi
++++ b/arch/arm64/boot/dts/lg/lg1312.dtsi
+@@ -168,14 +168,14 @@
+ 			clock-names = "apb_pclk";
+ 			status="disabled";
+ 		};
+-		spi0: ssp@fe800000 {
++		spi0: spi@fe800000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x0 0xfe800000 0x1000>;
+ 			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clk_bus>;
+ 			clock-names = "apb_pclk";
+ 		};
+-		spi1: ssp@fe900000 {
++		spi1: spi@fe900000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x0 0xfe900000 0x1000>;
+ 			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm64/boot/dts/lg/lg1313.dtsi b/arch/arm64/boot/dts/lg/lg1313.dtsi
+index 1887af654a7db..16ced1ff1ad36 100644
+--- a/arch/arm64/boot/dts/lg/lg1313.dtsi
++++ b/arch/arm64/boot/dts/lg/lg1313.dtsi
+@@ -168,14 +168,14 @@
+ 			clock-names = "apb_pclk";
+ 			status="disabled";
+ 		};
+-		spi0: ssp@fe800000 {
++		spi0: spi@fe800000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x0 0xfe800000 0x1000>;
+ 			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clk_bus>;
+ 			clock-names = "apb_pclk";
+ 		};
+-		spi1: ssp@fe900000 {
++		spi1: spi@fe900000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x0 0xfe900000 0x1000>;
+ 			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
 -- 
 2.20.1
 
