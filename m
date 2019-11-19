@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6149DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB37DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 333BD20692
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7967120692
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143824;
-	bh=LoGSwEhWqUDWuPoWcpmAiDNc+LQbBg12CiqsW0Xkyo0=;
+	s=default; t=1574143831;
+	bh=DCGoM8RFU/85m16B7mGU3/4vxVxz030aYpVZQqpMOeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RvyN/Twiu3JalnD33AoQWpw+sifZM3HqdTxjO4nWRkfkrYwm4cSGMQWCELQBAKJCa
-	 kDziG/aT8D+m7HhE8L7+ZwhAc2gs0nqjv0cg1Wb0NwiCnD89kT3OGx4a5PNBLnN4U9
-	 Jf+9AvIxonNcr2+UnMmdZSZSftUD/kQG3K16Fnp0=
+	b=sUp2mIOWEUtnBVj+zg8WZJtgo9Smv04vtBnNdlhCK6OnuwSw+g5FJfSnbGyJlnm3T
+	 /XTHZENFVZ1lSg6mTdncP7dy6E6scC8z3Hdu/OMNIQbI6Aldpj1qW3lQ7t200Foun4
+	 W4nORQBFfO6NUvV1hEWdhGkepSwGn3FlCVNx+Cwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbfKSGKX (ORCPT
+        id S1728691AbfKSGKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:10:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44572 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 01:10:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727961AbfKSF0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:26:30 -0500
+        id S1727718AbfKSF01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:26:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 392FC21823;
-        Tue, 19 Nov 2019 05:26:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96A7721939;
+        Tue, 19 Nov 2019 05:26:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141189;
-        bh=LoGSwEhWqUDWuPoWcpmAiDNc+LQbBg12CiqsW0Xkyo0=;
+        s=default; t=1574141187;
+        bh=DCGoM8RFU/85m16B7mGU3/4vxVxz030aYpVZQqpMOeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FKkmEgQG7m+I1KYi6vpBRwsSQYbckk/17PRd6BNeAo34d2DgH8dF/JhjF+aKnWBgQ
-         06mj30/kL8PuNzvadG02gmrkAY4IUn3Z6cNTvdyEqnkH9IfnUVkKPz4S6J1goBK4WH
-         f/3ipNhDRL7p4O6yH/A9EctIPvpWH7zphzzqf+0g=
+        b=SHqgLKP9KWJyB7pw9afdrVKJyX+kkXOIGCbWlBHzkaBYAXe3k44i+REB8kBUhbKBi
+         3i2Yx/58Yff07gxRbrK2nZr5k/FNRxLGJWdolrCKmIa+GDBuGmo1oDqLbawi8mlhHx
+         NrTEJSwlMleSmWT73S1nhXTSXYvcQyctY7qZp0hk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Rick Farrington <ricardo.farrington@cavium.com>,
-        Felix Manlunas <felix.manlunas@cavium.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 075/422] liquidio: fix race condition in instruction completion processing
-Date:   Tue, 19 Nov 2019 06:14:32 +0100
-Message-Id: <20191119051404.419226516@linuxfoundation.org>
+Subject: [PATCH 4.19 074/422] ARM: dts: exynos: Fix sound in Snow-rev5 Chromebook
+Date:   Tue, 19 Nov 2019 06:14:31 +0100
+Message-Id: <20191119051404.368327480@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -62,75 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rick Farrington <ricardo.farrington@cavium.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit b943f17e06493fd2c7fd00743093ad5dcdb90e7f ]
+[ Upstream commit 64858773d78e820003a94e5a7179d368213655d6 ]
 
-In lio_enable_irq, the pkt_in_done count register was being cleared to
-zero.  However, there could be some completed instructions which were not
-yet processed due to budget and limit constraints.
-So, only write this register with the number of actual completions
-that were processed.
+This patch adds missing properties to the CODEC and sound nodes, so the
+audio will work also on Snow rev5 Chromebook. This patch is an extension
+to the commit e9eefc3f8ce0 ("ARM: dts: exynos: Add missing clock and
+DAI properties to the max98095 node in Snow Chromebook")
+and commit 6ab569936d60 ("ARM: dts: exynos: Enable HDMI audio on Snow
+Chromebook").  It has been reported that such changes work fine on the
+rev5 board too.
 
-Signed-off-by: Rick Farrington <ricardo.farrington@cavium.com>
-Signed-off-by: Felix Manlunas <felix.manlunas@cavium.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+[krzk: Fixed typo in phandle to &max98090]
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cavium/liquidio/octeon_device.c   | 5 +++--
- drivers/net/ethernet/cavium/liquidio/octeon_iq.h       | 2 ++
- drivers/net/ethernet/cavium/liquidio/request_manager.c | 2 ++
- 3 files changed, 7 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/exynos5250-snow-rev5.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/net/ethernet/cavium/liquidio/octeon_device.c b/drivers/net/ethernet/cavium/liquidio/octeon_device.c
-index f878a552fef3b..d0ed6c4f9e1a2 100644
---- a/drivers/net/ethernet/cavium/liquidio/octeon_device.c
-+++ b/drivers/net/ethernet/cavium/liquidio/octeon_device.c
-@@ -1450,8 +1450,9 @@ void lio_enable_irq(struct octeon_droq *droq, struct octeon_instr_queue *iq)
- 	}
- 	if (iq) {
- 		spin_lock_bh(&iq->lock);
--		writel(iq->pkt_in_done, iq->inst_cnt_reg);
--		iq->pkt_in_done = 0;
-+		writel(iq->pkts_processed, iq->inst_cnt_reg);
-+		iq->pkt_in_done -= iq->pkts_processed;
-+		iq->pkts_processed = 0;
- 		/* this write needs to be flushed before we release the lock */
- 		mmiowb();
- 		spin_unlock_bh(&iq->lock);
-diff --git a/drivers/net/ethernet/cavium/liquidio/octeon_iq.h b/drivers/net/ethernet/cavium/liquidio/octeon_iq.h
-index 2327062e8af6b..aecd0d36d6349 100644
---- a/drivers/net/ethernet/cavium/liquidio/octeon_iq.h
-+++ b/drivers/net/ethernet/cavium/liquidio/octeon_iq.h
-@@ -94,6 +94,8 @@ struct octeon_instr_queue {
+diff --git a/arch/arm/boot/dts/exynos5250-snow-rev5.dts b/arch/arm/boot/dts/exynos5250-snow-rev5.dts
+index 0348b1c49a691..7cbfc6f1f4b8f 100644
+--- a/arch/arm/boot/dts/exynos5250-snow-rev5.dts
++++ b/arch/arm/boot/dts/exynos5250-snow-rev5.dts
+@@ -20,6 +20,14 @@
  
- 	u32 pkt_in_done;
- 
-+	u32 pkts_processed;
+ 		samsung,model = "Snow-I2S-MAX98090";
+ 		samsung,audio-codec = <&max98090>;
 +
- 	/** A spinlock to protect access to the input ring.*/
- 	spinlock_t iq_flush_running_lock;
++		cpu {
++			sound-dai = <&i2s0 0>;
++		};
++
++		codec {
++			sound-dai = <&max98090 0>, <&hdmi>;
++		};
+ 	};
+ };
  
-diff --git a/drivers/net/ethernet/cavium/liquidio/request_manager.c b/drivers/net/ethernet/cavium/liquidio/request_manager.c
-index 3deb3c07681fd..1d9ab7f4a2fef 100644
---- a/drivers/net/ethernet/cavium/liquidio/request_manager.c
-+++ b/drivers/net/ethernet/cavium/liquidio/request_manager.c
-@@ -123,6 +123,7 @@ int octeon_init_instr_queue(struct octeon_device *oct,
- 	iq->do_auto_flush = 1;
- 	iq->db_timeout = (u32)conf->db_timeout;
- 	atomic_set(&iq->instr_pending, 0);
-+	iq->pkts_processed = 0;
+@@ -31,6 +39,9 @@
+ 		interrupt-parent = <&gpx0>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&max98090_irq>;
++		clocks = <&pmu_system_controller 0>;
++		clock-names = "mclk";
++		#sound-dai-cells = <1>;
+ 	};
+ };
  
- 	/* Initialize the spinlock for this instruction queue */
- 	spin_lock_init(&iq->lock);
-@@ -497,6 +498,7 @@ octeon_flush_iq(struct octeon_device *oct, struct octeon_instr_queue *iq,
- 				lio_process_iq_request_list(oct, iq, 0);
- 
- 		if (inst_processed) {
-+			iq->pkts_processed += inst_processed;
- 			atomic_sub(inst_processed, &iq->instr_pending);
- 			iq->stats.instr_processed += inst_processed;
- 		}
 -- 
 2.20.1
 
