@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7F2C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C015C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0AB221783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 644AF21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142180;
-	bh=O3mFNZoIUng350Ipl4qr82fCz1yUrnK9uVXdJCEkPLw=;
+	s=default; t=1574142186;
+	bh=/B7P6C3sz8EfB+5MD85ITDTh140ifvbSFLrb8hBNBMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e8e38HmakNQfrEmRVv7mu3oGKVnKzmdRMm1qRQvR/WA3W6WnN/DzM2rX/4FZL0NY5
-	 25bMKuL2weeqEQs1SqZb0QNJFEZEPLO1pSR2wvcQ60NR0DarxKnGhmz7tSLef8ttBu
-	 WmCNFd0X4YXUXqRrYfGxqjLj1ClMBm/Bcu9KDb1w=
+	b=n+eS+9JGJKfjvGeo1Z2j0ygLIqB/RIb7YwIluORMsoH+5sz4pllKq7yHtHjDIte8y
+	 os9BFe0RWT+S9Of4zCvWjS1fzijy+8u+lkDYMF6ADRWocwNTQjEVu2OdpQWQxFOqun
+	 Q9i9FEsnrwtdij641dFRkzpw7q9JZ6pl42dmG4ro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730149AbfKSFm7 (ORCPT
+        id S1730699AbfKSFnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:42:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37712 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:43:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730396AbfKSFmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:42:54 -0500
+        id S1727586AbfKSFnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:43:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 573D121783;
-        Tue, 19 Nov 2019 05:42:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6960A208C3;
+        Tue, 19 Nov 2019 05:42:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142173;
-        bh=O3mFNZoIUng350Ipl4qr82fCz1yUrnK9uVXdJCEkPLw=;
+        s=default; t=1574142179;
+        bh=/B7P6C3sz8EfB+5MD85ITDTh140ifvbSFLrb8hBNBMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cUlHYLcdZjkpyH7Cv4O1iW60KZ/4x5fatrxRWUZ47MhG4vttiWyf4hEKW2xW2uxjG
-         Rbr47NdufG6DVW0MII/pZcekJa++P/teTAwcv9oWH/+zCGvZzwwftUjH+oSlcVJboN
-         WLxGGaMsXvo2wkp8UPRLJiZTPwiGt7jMZgKJTVv4=
+        b=RKSfcevbPxjHTuxegGvw9K2aDV+JAEo4D4mJPheW7DlK50RkNiDjdeTcHQh99Z7Mq
+         yncYUemf0EySSaiFbrTvt+QAJ+JAivH6VRAvxEiyJpAWBvAb9wH0MlyN8EJEOvgWEF
+         tvvkbv2w4D0sD5/BDXtP2LrVtZ6O5SFbBCHyS6iA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        stable@vger.kernel.org,
+        Guido Kiener <guido.kiener@rohde-schwarz.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 415/422] usb: xhci-mtk: fix ISOC error when interval is zero
-Date:   Tue, 19 Nov 2019 06:20:12 +0100
-Message-Id: <20191119051426.088297138@linuxfoundation.org>
+Subject: [PATCH 4.19 416/422] usb: usbtmc: uninitialized symbol actual in usbtmc_ioctl_clear
+Date:   Tue, 19 Nov 2019 06:20:13 +0100
+Message-Id: <20191119051426.152614625@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,36 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+From: Guido Kiener <guido.kiener@rohde-schwarz.com>
 
-[ Upstream commit 87173acc0d8f0987bda8827da35fff67f52ad15d ]
+[ Upstream commit 9a83190300867fb024d53f47c31088e34188efc1 ]
 
-If the interval equal zero, needn't round up to power of two
-for the number of packets in each ESIT, so fix it.
+Fix uninitialized symbol 'actual' in function usbtmc_ioctl_clear.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+When symbol 'actual' is not initialized and usb_bulk_msg() fails,
+the subsequent kernel debug message shows a random value.
+
+Signed-off-by: Guido Kiener <guido.kiener@rohde-schwarz.com>
+Fixes: dfee02ac4bce ("usb: usbtmc: Fix ioctl USBTMC_IOCTL_CLEAR")
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-mtk-sch.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/usb/class/usbtmc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/host/xhci-mtk-sch.c b/drivers/usb/host/xhci-mtk-sch.c
-index fa33d6e5b1cbd..d04fdd173ed2e 100644
---- a/drivers/usb/host/xhci-mtk-sch.c
-+++ b/drivers/usb/host/xhci-mtk-sch.c
-@@ -113,7 +113,9 @@ static void setup_sch_info(struct usb_device *udev,
- 		}
+diff --git a/drivers/usb/class/usbtmc.c b/drivers/usb/class/usbtmc.c
+index 3ce45c9e9d20d..e6a7c86b70f25 100644
+--- a/drivers/usb/class/usbtmc.c
++++ b/drivers/usb/class/usbtmc.c
+@@ -1016,6 +1016,7 @@ usbtmc_clear_check_status:
+ 		do {
+ 			dev_dbg(dev, "Reading from bulk in EP\n");
  
- 		if (ep_type == ISOC_IN_EP || ep_type == ISOC_OUT_EP) {
--			if (esit_pkts <= sch_ep->esit)
-+			if (sch_ep->esit == 1)
-+				sch_ep->pkts = esit_pkts;
-+			else if (esit_pkts <= sch_ep->esit)
- 				sch_ep->pkts = 1;
- 			else
- 				sch_ep->pkts = roundup_pow_of_two(esit_pkts)
++			actual = 0;
+ 			rv = usb_bulk_msg(data->usb_dev,
+ 					  usb_rcvbulkpipe(data->usb_dev,
+ 							  data->bulk_in),
 -- 
 2.20.1
 
