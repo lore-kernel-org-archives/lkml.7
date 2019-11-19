@@ -2,238 +2,183 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12728C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04CADC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBAD921D7F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:38:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574192311;
-	bh=x+LXJDSXbRwcDrTH4cs98Hy1yNN8huFUYkaCicbVnro=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=QPWgeUmODp9oGC1yO15PeCljvsRgeTJiI7y0LI7cy9JzdaKIwD91swj0C8kPOcT7w
-	 3XA+D0S4QeMoy49l9N6H14P3uBvtC+X2KYtO9yuP0vQqA/jlPZFUB729lj1hiOrkSe
-	 e5pY7nGfeh2E7gNYYx2NqqMOGzGergqFajRllG+o=
+	by mail.kernel.org (Postfix) with ESMTP id C6B4A2186D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:38:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aRQMODDB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbfKSTia (ORCPT
+        id S1727298AbfKSTi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 14:38:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41258 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726836AbfKSTi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 14:38:29 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24E412186D;
-        Tue, 19 Nov 2019 19:38:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574192308;
-        bh=x+LXJDSXbRwcDrTH4cs98Hy1yNN8huFUYkaCicbVnro=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=V2sF2OoRgtaO2uWvugrC84bX6d9WnU7x1dwdvdr23QvkKB7YVxK1ILU/kxI4ZWJxh
-         utE1gFOXb4YQ8zIn0uDmm4lt75QT35Ok0IRBnGkxcxse34sUcYh9Z8YBulAbm6Zv+I
-         7z5PyBIGPNCL4HW4kiNh2+xyRnR5CVOGWpfuUYp4=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 821CE3520FA7; Tue, 19 Nov 2019 11:38:27 -0800 (PST)
-Date:   Tue, 19 Nov 2019 11:38:27 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Neeraj Upadhyay <neeraju@codeaurora.org>
-Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, linux-kernel@vger.kernel.org,
-        gkohli@codeaurora.org, prsood@codeaurora.org,
-        pkondeti@codeaurora.org, rcu@vger.kernel.org
-Subject: Re: [PATCH v2] rcu: Fix missed wakeup of exp_wq waiters
-Message-ID: <20191119193827.GB2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <0101016e81a9ecb9-ce4a6425-f21d-4166-96ed-32d3700717f1-000000@us-west-2.amazonses.com>
+        Tue, 19 Nov 2019 14:38:59 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40680 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfKSTi6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 14:38:58 -0500
+Received: by mail-wm1-f67.google.com with SMTP id f3so5169674wmc.5;
+        Tue, 19 Nov 2019 11:38:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zT8W6mEipXKG5axs8jeICTD+RYdN7nx347OTkDMwt4g=;
+        b=aRQMODDBA16W9kB7qk+ABeKTbcLLAJBWnUya5g/TpV813R+3o6uYDKIVi+NR6FW+g6
+         NDdhYLcgJpvi11q621cipft3zu/unfE3TSg8Qu9GwHCeGNphe5JQZn2PTPgCpdolyuka
+         t97IIumkGvytqNE28O+91/h9Op4bNFe3Rf87iMFwscYUdIQ7uChyh/57SDuqBSBeSGez
+         4NBBEABEQbsPGyzy06TFVsM8CHD5uOOdGzBaCnYUKkz5+qajSpiid3ZH+Qfk4/wC1hJE
+         YF56h2Qbj8L8dUrEc8zNYqE2IF8X3UXo1fIRyjSNo39NinDQ2mjMCpiytgj8RoQCHXsz
+         71uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=zT8W6mEipXKG5axs8jeICTD+RYdN7nx347OTkDMwt4g=;
+        b=Y9Hjesptgks1/acbFJ4bgRz7EbqMzCPm/kzkCVZDLN+E7fuwjlIqausgIWvyvYUMqj
+         btU+Jaau9Bh0F5U8Ms2n+wZ52NZgA5pkZd4byze/8rfegt6hwppYuPrkQX69oO8hylsJ
+         WD0CaT03VflE4xXOQUVNIlOg9623LTpgrF/F/Ir0vB0ufgc7GkaGtqsqiKpOxYd8NH2A
+         ihUdIuv1YtN0/tLW2/5lc0sJRJKsu+Ln818P5hNHnXL1OkWYa40dQ5VlaZpypsNNP6OE
+         /Rq/2erBjN6nLGF/723SVaTbYaJFc/EgFDW1U70rSH26RPp9cz8d1TCdxpweZnW5+lxr
+         lAWg==
+X-Gm-Message-State: APjAAAU+Wx/o7m06SygZpPkr5A3j26VCLOiVL4oA8c6A6YvC5PMiUb+M
+        uqXU3NKzaqeiTU/Kj+Z2+BVf0mQq
+X-Google-Smtp-Source: APXvYqzZUcmlh0zsxOs0q6Os9Fm4KB9xYJA7k2vyMDDqlnHWkOS0tkk8vD5ETwDvuwpqqFd4xHANYA==
+X-Received: by 2002:a05:600c:c3:: with SMTP id u3mr7419492wmm.35.1574192334707;
+        Tue, 19 Nov 2019 11:38:54 -0800 (PST)
+Received: from [192.168.1.19] (chs184.neoplus.adsl.tpnet.pl. [83.31.16.184])
+        by smtp.gmail.com with ESMTPSA id w132sm4558068wma.6.2019.11.19.11.38.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Nov 2019 11:38:54 -0800 (PST)
+Subject: Re: [PATCH v2 4/4] dt-bindings: mfd: update TI tps6105x chip bindings
+To:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Axel Lin <axel.lin@ingics.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-leds@vger.kernel.org
+References: <20191119154611.29625-1-TheSven73@gmail.com>
+ <20191119154611.29625-5-TheSven73@gmail.com>
+ <a37d098e-12ea-af2e-22cd-cb5ec2856b6d@ti.com>
+ <CAGngYiU_8Obd6jKO9-fukK4K6hYYhFYVSjzxqVxVwwKeCmUkaw@mail.gmail.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <b2ea6130-cfce-4d41-0b35-ba076f599402@gmail.com>
+Date:   Tue, 19 Nov 2019 20:38:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0101016e81a9ecb9-ce4a6425-f21d-4166-96ed-32d3700717f1-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAGngYiU_8Obd6jKO9-fukK4K6hYYhFYVSjzxqVxVwwKeCmUkaw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 03:17:07AM +0000, Neeraj Upadhyay wrote:
-> For the tasks waiting in exp_wq inside exp_funnel_lock(),
-> there is a chance that they might be indefinitely blocked
-> in below scenario:
-> 
-> 1. There is a task waiting on exp sequence 0b'100' inside
->    exp_funnel_lock(). This task blocks at wq index 1.
-> 
->    synchronize_rcu_expedited()
->      s = 0b'100'
->      exp_funnel_lock()
->        wait_event(rnp->exp_wq[rcu_seq_ctr(s) & 0x3]
-> 
-> 2. The expedited grace period (which above task blocks for)
->    completes and task (task1) holding exp_mutex queues
->    worker and schedules out.
-> 
->    synchronize_rcu_expedited()
->      s = 0b'100'
->      queue_work(rcu_gp_wq, &rew.rew_work)
->        wake_up_worker()
->          schedule()
-> 
-> 3. kworker A picks up the queued work and completes the exp gp
->    sequence and then blocks on exp_wake_mutex, which is held
->    by another kworker, which is doing wakeups for expedited_sequence
->    0.
-> 
->    rcu_exp_wait_wake()
->      rcu_exp_wait_wake()
->        rcu_exp_gp_seq_end(rsp) // rsp->expedited_sequence is incremented
->                                // to 0b'100'
->        mutex_lock(&rcu_state.exp_wake_mutex)
-> 
-> 4. task1 does not enter wait queue, as sync_exp_work_done() returns true,
->    and releases exp_mutex.
-> 
->    wait_event(rnp->exp_wq[rcu_seq_ctr(s) & 0x3],
->      sync_exp_work_done(rsp, s));
->    mutex_unlock(&rsp->exp_mutex);
-> 
-> 5. Next exp GP completes, and sequence number is incremented:
-> 
->    rcu_exp_wait_wake()
->      rcu_exp_wait_wake()
->        rcu_exp_gp_seq_end(rsp) // rsp->expedited_sequence = 0b'200'
-> 
-> 6. kworker A acquires exp_wake_mutex. As it uses current
->    expedited_sequence, it wakes up workers from wrong wait queue
->    index - it should have worken wait queue corresponding to
->    0b'100' sequence, but wakes up the ones for 0b'200' sequence.
->    This results in task at step 1 indefinitely blocked.
-> 
->    rcu_exp_wait_wake()
->      wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rsp->expedited_sequence) & 0x3]);
-> 
-> This issue manifested as DPM device timeout during suspend, as scsi
-> device was stuck in _synchronize_rcu_expedited().
-> 
-> schedule()
-> synchronize_rcu_expedited()
-> synchronize_rcu()
-> scsi_device_quiesce()
-> scsi_bus_suspend()
-> dpm_run_callback()
-> __device_suspend()
-> 
-> Fix this by using the correct exp sequence number, the one which
-> owner of the exp_mutex initiated and passed to kworker,
-> to index the wait queue, inside rcu_exp_wait_wake().
-> 
-> Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+Hi Sven,
 
-Queued, thank you!
+On 11/19/19 8:03 PM, Sven Van Asbroeck wrote:
+> On Tue, Nov 19, 2019 at 1:37 PM Dan Murphy <dmurphy@ti.com> wrote:
+>>
+>>> +
+>>> +Example (GPIO + led operation):
+>> What part of the example is GPIO? Is that the default function?
+> 
+> The gpio function is always available by default.
+> The mfd driver always adds the gpio mfd_cell.
+> But no-one has ever implemented a mfd sub-driver for gpio.
+> 
+>>> +
+>>> +i2c0 {
+>>> +     tps61052@33 {
+>>> +             compatible = "ti,tps61052";
+>>> +             reg = <0x33>;
+>>> +
+>>> +             led {
+>>> +                     label = "tps-torch";
+>>
+>> function and color examples?
+> 
+> No function, no colour. This is a simple led control with 8 intensity
+> steps. We use it as a led torch on an industrial device.
 
-I reworked the commit message to make it easier to follow the sequence
-of events.  Please see below and let me know if I messed anything up.
+label DT property was recently deprecated. We now encourage using
+'function' and/or 'color'. Please refer to
+Documentation/devicetree/bindings/leds/common.txt.
 
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit d887fd2a66861f51ed93b5dde894b9646a5569dd
-Author: Neeraj Upadhyay <neeraju@codeaurora.org>
-Date:   Tue Nov 19 03:17:07 2019 +0000
-
-    rcu: Fix missed wakeup of exp_wq waiters
-    
-    Tasks waiting within exp_funnel_lock() for an expedited grace period to
-    elapse can be starved due to the following sequence of events:
-    
-    1.      Tasks A and B both attempt to start an expedited grace
-            period at about the same time.  This grace period will have
-            completed when the lower four bits of the rcu_state structure's
-            ->expedited_sequence field are 0b'0100', for example, when the
-            initial value of this counter is zero.  Task A wins, and thus
-            does the actual work of starting the grace period, including
-            acquiring the rcu_state structure's .exp_mutex and sets the
-            counter to 0b'0001'.
-    
-    2.      Because task B lost the race to start the grace period, it
-            waits on ->expedited_sequence to reach 0b'0100' inside of
-            exp_funnel_lock(). This task therefore blocks on the rcu_node
-            structure's ->exp_wq[1] field, keeping in mind that the
-            end-of-grace-period value of ->expedited_sequence (0b'0100')
-            is shifted down two bits before indexing the ->exp_wq[] field.
-    
-    3.      Task C attempts to start another expedited grace period,
-            but blocks on ->exp_mutex, which is still held by Task A.
-    
-    4.      The aforementioned expedited grace period completes, so that
-            ->expedited_sequence now has the value 0b'0100'.  A kworker task
-            therefore acquires the rcu_state structure's ->exp_wake_mutex
-            and starts awakening any tasks waiting for this grace period.
-    
-    5.      One of the first tasks awakened happens to be Task A.  Task A
-            therefore releases the rcu_state structure's ->exp_mutex,
-            which allows Task C to start the next expedited grace period,
-            which causes the lower four bits of the rcu_state structure's
-            ->expedited_sequence field to become 0b'0101'.
-    
-    6.      Task C's expedited grace period completes, so that the lower four
-            bits of the rcu_state structure's ->expedited_sequence field now
-            become 0b'1000'.
-    
-    7.      The kworker task from step 4 above continues its wakeups.
-            Unfortunately, the wake_up_all() refetches the rcu_state
-            structure's .expedited_sequence field:
-    
-            wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rcu_state.expedited_sequence) & 0x3]);
-    
-            This results in the wakeup being applied to the rcu_node
-            structure's ->exp_wq[2] field, which is unfortunate given that
-            Task B is instead waiting on ->exp_wq[1].
-    
-    On a busy system, no harm is done (or at least no permanent harm is done).
-    Some later expedited grace period will redo the wakeup.  But on a quiet
-    system, such as many embedded systems, it might be a good long time before
-    there was another expedited grace period.  On such embedded systems,
-    this situation could therefore result in a system hang.
-    
-    This issue manifested as DPM device timeout during suspend (which
-    usually qualifies as a quiet time) due to a SCSI device being stuck in
-    _synchronize_rcu_expedited(), with the following stack trace:
-    
-            schedule()
-            synchronize_rcu_expedited()
-            synchronize_rcu()
-            scsi_device_quiesce()
-            scsi_bus_suspend()
-            dpm_run_callback()
-            __device_suspend()
-    
-    This commit therefore prevents such delays, timeouts, and hangs by
-    making rcu_exp_wait_wake() use its "s" argument consistently instead of
-    refetching from rcu_state.expedited_sequence.
-    
-    Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-
-diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-index 6ce598d..4433d00a 100644
---- a/kernel/rcu/tree_exp.h
-+++ b/kernel/rcu/tree_exp.h
-@@ -557,7 +557,7 @@ static void rcu_exp_wait_wake(unsigned long s)
- 			spin_unlock(&rnp->exp_lock);
- 		}
- 		smp_mb(); /* All above changes before wakeup. */
--		wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rcu_state.expedited_sequence) & 0x3]);
-+		wake_up_all(&rnp->exp_wq[rcu_seq_ctr(s) & 0x3]);
- 	}
- 	trace_rcu_exp_grace_period(rcu_state.name, s, TPS("endwake"));
- 	mutex_unlock(&rcu_state.exp_wake_mutex);
+-- 
+Best regards,
+Jacek Anaszewski
