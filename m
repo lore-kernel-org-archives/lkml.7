@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D147C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 692BBC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 142B8222DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:26:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36E56222DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141164;
-	bh=xcYe53B6Y5/aBuFSE0AZhBG0EhSJ7aq0oFLt5lotR4k=;
+	s=default; t=1574141170;
+	bh=GFSVBNLPJtFDTvTDouENezti5bv31KmrpDsn995p2Sk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rO9qiPTyfZYafIqmiHbVUXogoWCS6qQXYlclJdp96cWIIcS7oAdFYnLpV6H+eYttz
-	 yu+7TeH1Claed4NjMZyGdposYB1NEDm0tBFaGiRrl8n0WYPN6+bVWGOVQnaYKSK/kT
-	 oRIKUsMr1PXIw2VVHO/jEWQlDiLyF7rmCf41eQ9w=
+	b=ZuBUtaUQEVhkk/ZHElPH/aKhMlpFJaihrd9UbT8AocAp7wVB4QKXRRhnXCCAczRr+
+	 WdIk493kq8uXELzj9T7ws7cPCe7oRuhtQspOB61TK3gGgRes8e2oBdHnWY2qbS5ri2
+	 46UwtX0NZZjalwSzLsWBE29WUx4uFuTKVhPDqd18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbfKSF0D (ORCPT
+        id S1728516AbfKSF0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:26:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43948 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:26:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727849AbfKSF0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:26:00 -0500
+        id S1727849AbfKSF0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:26:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C625E21823;
-        Tue, 19 Nov 2019 05:25:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1BC4222A2;
+        Tue, 19 Nov 2019 05:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141160;
-        bh=xcYe53B6Y5/aBuFSE0AZhBG0EhSJ7aq0oFLt5lotR4k=;
+        s=default; t=1574141166;
+        bh=GFSVBNLPJtFDTvTDouENezti5bv31KmrpDsn995p2Sk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xDwrlHoY+tdqeAOcwQwCNOGPBZrUG1xLAPJ9pWuQUvMihbyasaL/3xEl+cmOw+/Us
-         y21YjQfXdwKAlqRmiqcnlhajOea5r8deUog6+5IdHHsRkkVRVuTibACW7pp8gpIXdg
-         GLnvKo2dx/W/3ENo3k2zvl3v6Xp80g8JPsjpcRFU=
+        b=J2JSjJSQYYiFaFgJ7AJztaa/30yiJiMY1w+2Ycci5OS+k5lUNIW68r8seruIc5mTl
+         uRQmWz4nHao/qGkQEO1GNEPMa8/tt44MmxrIyeqUimaomcix3sVv8gZWppJxHU2b5c
+         q2oMwBi4YK7UhJVWNzL/ond8iUl4opsYAMelyR/c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 066/422] ASoC: dapm: Dont fail creating new DAPM control on NULL pinctrl
-Date:   Tue, 19 Nov 2019 06:14:23 +0100
-Message-Id: <20191119051403.957403191@linuxfoundation.org>
+Subject: [PATCH 4.19 068/422] ASoC: meson: axg-fifo: report interrupt request failure
+Date:   Tue, 19 Nov 2019 06:14:25 +0100
+Message-Id: <20191119051404.060509734@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,37 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit a5cd7e9cf587f51a84b86c828b4e1c7b392f448e ]
+[ Upstream commit dadfab7272b13ca441efdb9aa9117bc669680b05 ]
 
-devm_pinctrl_get will only return NULL in the case that pinctrl
-is not built into the kernel and all the pinctrl functions used
-by the DAPM core are appropriately stubbed for that case. There
-is no need to error out of snd_soc_dapm_new_control_unlocked
-if pinctrl isn't built into the kernel, so change the
-IS_ERR_OR_NULL to just an IS_ERR.
+Return value of request_irq() was irgnored. Fix this and report
+the failure if any
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Fixes: 6dc4fa179fb8 ("ASoC: meson: add axg fifo base driver")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-dapm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/meson/axg-fifo.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
-index 4ce57510b6236..ff31d9f9ecd64 100644
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -3514,7 +3514,7 @@ snd_soc_dapm_new_control_unlocked(struct snd_soc_dapm_context *dapm,
- 		break;
- 	case snd_soc_dapm_pinctrl:
- 		w->pinctrl = devm_pinctrl_get(dapm->dev);
--		if (IS_ERR_OR_NULL(w->pinctrl)) {
-+		if (IS_ERR(w->pinctrl)) {
- 			ret = PTR_ERR(w->pinctrl);
- 			if (ret == -EPROBE_DEFER)
- 				return ERR_PTR(ret);
+diff --git a/sound/soc/meson/axg-fifo.c b/sound/soc/meson/axg-fifo.c
+index 30262550e37b1..0e4f65e654c4b 100644
+--- a/sound/soc/meson/axg-fifo.c
++++ b/sound/soc/meson/axg-fifo.c
+@@ -203,6 +203,8 @@ static int axg_fifo_pcm_open(struct snd_pcm_substream *ss)
+ 
+ 	ret = request_irq(fifo->irq, axg_fifo_pcm_irq_block, 0,
+ 			  dev_name(dev), ss);
++	if (ret)
++		return ret;
+ 
+ 	/* Enable pclk to access registers and clock the fifo ip */
+ 	ret = clk_prepare_enable(fifo->pclk);
 -- 
 2.20.1
 
