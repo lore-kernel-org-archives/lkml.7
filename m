@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3E2C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A749C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1555321939
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 203F422309
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141494;
-	bh=NGdbHR2Y6ZJaJpbPKyIQqicj7ZPnG+k3WHelTDg6trs=;
+	s=default; t=1574141497;
+	bh=K8e8NwW1s5RIKSL2iUMnsiJnnSWXjjMJUSVnzL1Zgl4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m3R2ePXPGz0+8yr4UHov4fTItgoo1eEBxfUp3RyRIyWkhNDUjqBP4zsxdti/stU2f
-	 A5bPCaxeJ9cl9OnbBZ4nar2TbOVn4HCtrApox7mQAknkrTPFNFoxw3NZclceAIJC5c
-	 GzmXLyBQkpeMzZo4I4wKYs08VPcISyWCvVHym8Lg=
+	b=kcWchRP+JMaHy0Qe0zHzLqrfKw5vOQnpMP4u8DukP9jrNcbg7MWCzzBZLek2/sVzk
+	 M+d04RpH80pMe4omq+I/1d1GHKm6KpkGHNTropHJLt+2CYwyCOG/MBMdyfNmA/rY/u
+	 qF8EXVkDwoKIlWbpTJmz8hSVTX5pgw1S16PbPl7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728833AbfKSFbc (ORCPT
+        id S1729279AbfKSFbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:31:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50578 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:31:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728834AbfKSFb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:31:29 -0500
+        id S1728834AbfKSFbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:31:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC888222A2;
-        Tue, 19 Nov 2019 05:31:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0641A222A2;
+        Tue, 19 Nov 2019 05:31:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141489;
-        bh=NGdbHR2Y6ZJaJpbPKyIQqicj7ZPnG+k3WHelTDg6trs=;
+        s=default; t=1574141492;
+        bh=K8e8NwW1s5RIKSL2iUMnsiJnnSWXjjMJUSVnzL1Zgl4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A/Y4hvmEWG22lb6zrmUBfnX8LSp+2KWpndtJ8qtaL+2PADaRjfy58YzSI4/hPDlRQ
-         rGlZkFDCMG2ggQDzT7DaUjLptqf37WZUE8UEEF1GrqxogTIGwYao8hva8mdtyFSMY4
-         TGR8IzS/yUoti1itxiB53wkO2ICDNuw8l5cZWeeM=
+        b=IbGFX2KAsK00/XQvwaWb5RF2toYHijzk0rA+ZPJ3HTqJOtSRdQS8VWfAoQ4SFCJm5
+         rtP+aomZR+z3IPp1kihLlwGGQAlXxoxuX5ISXJB2rDjyXQCmKKI0gskZvNR4K/sy0a
+         zCy1T7NL7KKT+6bOsoj4K/+WuL7KYuG3eQbG03Dk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Quinn Tran <quinn.tran@cavium.com>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 177/422] scsi: qla2xxx: Fix duplicate switchs Nport ID entries
-Date:   Tue, 19 Nov 2019 06:16:14 +0100
-Message-Id: <20191119051409.909548306@linuxfoundation.org>
+Subject: [PATCH 4.19 142/422] ARM: dts: omap3-gta04: make NAND partitions compatible with recent U-Boot
+Date:   Tue, 19 Nov 2019 06:15:39 +0100
+Message-Id: <20191119051407.950158598@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,82 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <quinn.tran@cavium.com>
+From: H. Nikolaus Schaller <hns@goldelico.com>
 
-[ Upstream commit f3a03ee1102a44ccbd2c5de80a6e862ba23e9b55 ]
+[ Upstream commit fa99c21ecb3cd4021a60d0e8bf880e78b5bd0729 ]
 
-Current code relies on switch to provide a unique combination of WWPN +
-NPORTID to tract an FC port.  This patch tries to detect a case where switch
-data base can get corrupted where multiple WWPNs can have the same Nport ID.
-The 1st Nport ID on the list will be kept while the duplicate Nport ID will be
-discarded.
+Vendor defined U-Boot has changed the partition scheme a while ago:
 
-Signed-off-by: Quinn Tran <quinn.tran@cavium.com>
-Signed-off-by: Himanshu Madhani <himanshu.madhani@cavium.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+* kernel partition 6MB
+* file system partition uses the remainder up to end of the NAND
+* increased size of the environment partition (to get an OneNAND compatible base address)
+* shrink the U-Boot partition
+
+Let's be compatible (e.g. Debian kernel built from upstream).
+
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_gs.c | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/omap3-gta04.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_gs.c b/drivers/scsi/qla2xxx/qla_gs.c
-index d611cf722244c..b8d3403c3c85a 100644
---- a/drivers/scsi/qla2xxx/qla_gs.c
-+++ b/drivers/scsi/qla2xxx/qla_gs.c
-@@ -3902,9 +3902,10 @@ void qla24xx_async_gnnft_done(scsi_qla_host_t *vha, srb_t *sp)
- 	fc_port_t *fcport;
- 	u32 i, rc;
- 	bool found;
--	struct fab_scan_rp *rp;
-+	struct fab_scan_rp *rp, *trp;
- 	unsigned long flags;
- 	u8 recheck = 0;
-+	u16 dup = 0, dup_cnt = 0;
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index de873e395c05d..bb435684500fc 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -619,22 +619,22 @@
  
- 	ql_dbg(ql_dbg_disc, vha, 0xffff,
- 	    "%s enter\n", __func__);
-@@ -3935,6 +3936,7 @@ void qla24xx_async_gnnft_done(scsi_qla_host_t *vha, srb_t *sp)
+ 		bootloaders@80000 {
+ 			label = "U-Boot";
+-			reg = <0x80000 0x1e0000>;
++			reg = <0x80000 0x1c0000>;
+ 		};
  
- 	for (i = 0; i < vha->hw->max_fibre_devices; i++) {
- 		u64 wwn;
-+		int k;
+-		bootloaders_env@260000 {
++		bootloaders_env@240000 {
+ 			label = "U-Boot Env";
+-			reg = <0x260000 0x20000>;
++			reg = <0x240000 0x40000>;
+ 		};
  
- 		rp = &vha->scan.l[i];
- 		found = false;
-@@ -3943,6 +3945,20 @@ void qla24xx_async_gnnft_done(scsi_qla_host_t *vha, srb_t *sp)
- 		if (wwn == 0)
- 			continue;
+ 		kernel@280000 {
+ 			label = "Kernel";
+-			reg = <0x280000 0x400000>;
++			reg = <0x280000 0x600000>;
+ 		};
  
-+		/* Remove duplicate NPORT ID entries from switch data base */
-+		for (k = i + 1; k < vha->hw->max_fibre_devices; k++) {
-+			trp = &vha->scan.l[k];
-+			if (rp->id.b24 == trp->id.b24) {
-+				dup = 1;
-+				dup_cnt++;
-+				ql_dbg(ql_dbg_disc + ql_dbg_verbose,
-+				    vha, 0xffff,
-+				    "Detected duplicate NPORT ID from switch data base: ID %06x WWN %8phN WWN %8phN\n",
-+				    rp->id.b24, rp->port_name, trp->port_name);
-+				memset(trp, 0, sizeof(*trp));
-+			}
-+		}
-+
- 		if (!memcmp(rp->port_name, vha->port_name, WWN_SIZE))
- 			continue;
- 
-@@ -3982,6 +3998,12 @@ void qla24xx_async_gnnft_done(scsi_qla_host_t *vha, srb_t *sp)
- 		}
- 	}
- 
-+	if (dup) {
-+		ql_log(ql_log_warn, vha, 0xffff,
-+		    "Detected %d duplicate NPORT ID(s) from switch data base\n",
-+		    dup_cnt);
-+	}
-+
- 	/*
- 	 * Logout all previous fabric dev marked lost, except FCP2 devices.
- 	 */
+-		filesystem@680000 {
++		filesystem@880000 {
+ 			label = "File System";
+-			reg = <0x680000 0xf980000>;
++			reg = <0x880000 0>;	/* 0 = MTDPART_SIZ_FULL */
+ 		};
+ 	};
+ };
 -- 
 2.20.1
 
