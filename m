@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F52C43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F114C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A7C12084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 423D02084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142982;
-	bh=S8BLw9qnAgSSUKEXrYw9zZJE/vcu51H7519p3nX+zS8=;
+	s=default; t=1574142991;
+	bh=bVMv+VSCtv3ibr0RRhSJn4llcPqadPJWMmNcIO/xb9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UyULH9/M3U267/HqChEY8GwQbuxWPmuk2zGgpkU9u2p3atihTIzioVNw8zgjGza/K
-	 N8PwP6dmXz1eZHeyK+loO9Qj3fF+M/Xcvw6VaoaD/Y5AsfJ0XqDXF0aaK14YiWE+NO
-	 RuCtHhht1b67K3joHbXL/OR0ONC09kl1wciqYH+Y=
+	b=1jYmseBUEVgdx1SThA3U4VmZingy49+V5yPxHHaZPfE3wJWFpG0B1fAb3G3elRhHv
+	 UGcedj/U8/CZ745OG3IgAB3hMfmLq+mae/8hmlge/5KZ+x+bVVUjW0IPMadeWvCvAA
+	 J/kyjEEEmMI/HPz3VKHWRU3WW+lfzCYGN7TwQSdc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732042AbfKSFxj (ORCPT
+        id S1731782AbfKSF40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:53:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51540 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:56:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732025AbfKSFxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:53:36 -0500
+        id S1731434AbfKSFxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:53:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54AC321783;
-        Tue, 19 Nov 2019 05:53:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 341EE21850;
+        Tue, 19 Nov 2019 05:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142814;
-        bh=S8BLw9qnAgSSUKEXrYw9zZJE/vcu51H7519p3nX+zS8=;
+        s=default; t=1574142811;
+        bh=bVMv+VSCtv3ibr0RRhSJn4llcPqadPJWMmNcIO/xb9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IFEJO2vu71pd7Grtt476dJEyJP2Dy77Hcp2uUWyWsNCAwPJwqtkqcMHd03KZlmQXJ
-         8RskhkSwJ0BVSCJ69KPaAmm4QnKagt/epd7ci+FPkpJ76H/Qj6wkkfuhBxxui0M2jl
-         7EXQ9F4wjIoqZmAATJ0EXA1kz2VmwejvuTmn/mWQ=
+        b=gygFPFcvzQ19AamY9xxIFhffJoUYH6Fvh2zuyqbe8PuJiVvkPRcb0VjaQcF9R1utc
+         dGVlFcZ91luycb9rSWHLF9bmMbXv5uGXvO3YFGrB+HlcESNteDqdIdU1imHxXdZCBK
+         BLoKmC6pUcxoF0hdf1nSMy9Tm3P4ommWyaHo3hkE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 172/239] net: phy: mdio-bcm-unimac: Allow configuring MDIO clock divider
-Date:   Tue, 19 Nov 2019 06:19:32 +0100
-Message-Id: <20191119051334.060293214@linuxfoundation.org>
+Subject: [PATCH 4.14 207/239] f2fs: fix to recover inodes project id during POR
+Date:   Tue, 19 Nov 2019 06:20:07 +0100
+Message-Id: <20191119051337.345900093@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -60,178 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit b78ac6ecd1b6b46f8767cbafa95a7b0b51b87ad8 ]
+[ Upstream commit f4474aa6e5e901ee4af21f39f1b9115aaaaec503 ]
 
-Allow the configuration of the MDIO clock divider when the Device Tree
-contains 'clock-frequency' property (similar to I2C and SPI buses).
-Because the hardware may have lost its state during suspend/resume,
-re-apply the MDIO clock divider upon resumption.
+Testcase to reproduce this bug:
+1. mkfs.f2fs -O extra_attr -O project_quota /dev/sdd
+2. mount -t f2fs /dev/sdd /mnt/f2fs
+3. touch /mnt/f2fs/file
+4. sync
+5. chattr -p 1 /mnt/f2fs/file
+6. xfs_io -f /mnt/f2fs/file -c "fsync"
+7. godown /mnt/f2fs
+8. umount /mnt/f2fs
+9. mount -t f2fs /dev/sdd /mnt/f2fs
+10. lsattr -p /mnt/f2fs/file
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+    0 -----------------N- /mnt/f2fs/file
+
+But actually, we expect the correct result is:
+
+    1 -----------------N- /mnt/f2fs/file
+
+The reason is we didn't recover inode.i_projid field during mount,
+fix it.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../bindings/net/brcm,unimac-mdio.txt         |  3 +
- drivers/net/phy/mdio-bcm-unimac.c             | 83 ++++++++++++++++++-
- 2 files changed, 84 insertions(+), 2 deletions(-)
+ fs/f2fs/recovery.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt b/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt
-index 4648948f7c3b8..e15589f477876 100644
---- a/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt
-+++ b/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt
-@@ -19,6 +19,9 @@ Optional properties:
- - interrupt-names: must be "mdio_done_error" when there is a share interrupt fed
-   to this hardware block, or must be "mdio_done" for the first interrupt and
-   "mdio_error" for the second when there are separate interrupts
-+- clocks: A reference to the clock supplying the MDIO bus controller
-+- clock-frequency: the MDIO bus clock that must be output by the MDIO bus
-+  hardware, if absent, the default hardware values are used
- 
- Child nodes of this MDIO bus controller node are standard Ethernet PHY device
- nodes as described in Documentation/devicetree/bindings/net/phy.txt
-diff --git a/drivers/net/phy/mdio-bcm-unimac.c b/drivers/net/phy/mdio-bcm-unimac.c
-index 08e0647b85e23..f9d98a6e67bc4 100644
---- a/drivers/net/phy/mdio-bcm-unimac.c
-+++ b/drivers/net/phy/mdio-bcm-unimac.c
-@@ -16,6 +16,7 @@
- #include <linux/module.h>
- #include <linux/io.h>
- #include <linux/delay.h>
-+#include <linux/clk.h>
- 
- #include <linux/of.h>
- #include <linux/of_platform.h>
-@@ -45,6 +46,8 @@ struct unimac_mdio_priv {
- 	void __iomem		*base;
- 	int (*wait_func)	(void *wait_func_data);
- 	void			*wait_func_data;
-+	struct clk		*clk;
-+	u32			clk_freq;
- };
- 
- static inline u32 unimac_mdio_readl(struct unimac_mdio_priv *priv, u32 offset)
-@@ -189,6 +192,35 @@ static int unimac_mdio_reset(struct mii_bus *bus)
- 	return 0;
- }
- 
-+static void unimac_mdio_clk_set(struct unimac_mdio_priv *priv)
-+{
-+	unsigned long rate;
-+	u32 reg, div;
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index adbf2600c0908..87942cf2afe1f 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -203,6 +203,19 @@ static void recover_inode(struct inode *inode, struct page *page)
+ 	inode->i_mode = le16_to_cpu(raw->i_mode);
+ 	i_uid_write(inode, le32_to_cpu(raw->i_uid));
+ 	i_gid_write(inode, le32_to_cpu(raw->i_gid));
 +
-+	/* Keep the hardware default values */
-+	if (!priv->clk_freq)
-+		return;
++	if (raw->i_inline & F2FS_EXTRA_ATTR) {
++		if (f2fs_sb_has_project_quota(F2FS_I_SB(inode)->sb) &&
++			F2FS_FITS_IN_INODE(raw, le16_to_cpu(raw->i_extra_isize),
++								i_projid)) {
++			projid_t i_projid;
 +
-+	if (!priv->clk)
-+		rate = 250000000;
-+	else
-+		rate = clk_get_rate(priv->clk);
-+
-+	div = (rate / (2 * priv->clk_freq)) - 1;
-+	if (div & ~MDIO_CLK_DIV_MASK) {
-+		pr_warn("Incorrect MDIO clock frequency, ignoring\n");
-+		return;
++			i_projid = (projid_t)le32_to_cpu(raw->i_projid);
++			F2FS_I(inode)->i_projid =
++				make_kprojid(&init_user_ns, i_projid);
++		}
 +	}
 +
-+	/* The MDIO clock is the reference clock (typicaly 250Mhz) divided by
-+	 * 2 x (MDIO_CLK_DIV + 1)
-+	 */
-+	reg = unimac_mdio_readl(priv, MDIO_CFG);
-+	reg &= ~(MDIO_CLK_DIV_MASK << MDIO_CLK_DIV_SHIFT);
-+	reg |= div << MDIO_CLK_DIV_SHIFT;
-+	unimac_mdio_writel(priv, reg, MDIO_CFG);
-+}
-+
- static int unimac_mdio_probe(struct platform_device *pdev)
- {
- 	struct unimac_mdio_pdata *pdata = pdev->dev.platform_data;
-@@ -215,9 +247,26 @@ static int unimac_mdio_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
- 
-+	priv->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (PTR_ERR(priv->clk) == -EPROBE_DEFER)
-+		return PTR_ERR(priv->clk);
-+	else
-+		priv->clk = NULL;
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret)
-+		return ret;
-+
-+	if (of_property_read_u32(np, "clock-frequency", &priv->clk_freq))
-+		priv->clk_freq = 0;
-+
-+	unimac_mdio_clk_set(priv);
-+
- 	priv->mii_bus = mdiobus_alloc();
--	if (!priv->mii_bus)
--		return -ENOMEM;
-+	if (!priv->mii_bus) {
-+		ret = -ENOMEM;
-+		goto out_clk_disable;
-+	}
- 
- 	bus = priv->mii_bus;
- 	bus->priv = priv;
-@@ -251,6 +300,8 @@ static int unimac_mdio_probe(struct platform_device *pdev)
- 
- out_mdio_free:
- 	mdiobus_free(bus);
-+out_clk_disable:
-+	clk_disable_unprepare(priv->clk);
- 	return ret;
- }
- 
-@@ -260,10 +311,37 @@ static int unimac_mdio_remove(struct platform_device *pdev)
- 
- 	mdiobus_unregister(priv->mii_bus);
- 	mdiobus_free(priv->mii_bus);
-+	clk_disable_unprepare(priv->clk);
-+
-+	return 0;
-+}
-+
-+static int unimac_mdio_suspend(struct device *d)
-+{
-+	struct unimac_mdio_priv *priv = dev_get_drvdata(d);
-+
-+	clk_disable_unprepare(priv->clk);
-+
-+	return 0;
-+}
-+
-+static int unimac_mdio_resume(struct device *d)
-+{
-+	struct unimac_mdio_priv *priv = dev_get_drvdata(d);
-+	int ret;
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret)
-+		return ret;
-+
-+	unimac_mdio_clk_set(priv);
- 
- 	return 0;
- }
- 
-+static SIMPLE_DEV_PM_OPS(unimac_mdio_pm_ops,
-+			 unimac_mdio_suspend, unimac_mdio_resume);
-+
- static const struct of_device_id unimac_mdio_ids[] = {
- 	{ .compatible = "brcm,genet-mdio-v5", },
- 	{ .compatible = "brcm,genet-mdio-v4", },
-@@ -279,6 +357,7 @@ static struct platform_driver unimac_mdio_driver = {
- 	.driver = {
- 		.name = UNIMAC_MDIO_DRV_NAME,
- 		.of_match_table = unimac_mdio_ids,
-+		.pm = &unimac_mdio_pm_ops,
- 	},
- 	.probe	= unimac_mdio_probe,
- 	.remove	= unimac_mdio_remove,
+ 	f2fs_i_size_write(inode, le64_to_cpu(raw->i_size));
+ 	inode->i_atime.tv_sec = le64_to_cpu(raw->i_atime);
+ 	inode->i_ctime.tv_sec = le64_to_cpu(raw->i_ctime);
 -- 
 2.20.1
 
