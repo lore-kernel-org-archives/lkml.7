@@ -2,99 +2,131 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5FAC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0932C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 773692235D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:22:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RNYBUFvV"
+	by mail.kernel.org (Postfix) with ESMTP id 9B4252240E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:23:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574194989;
+	bh=gGqBvXglDEzCSK8thnzKNOyVmnBORJCnCuazwZu8Wmo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=TTtVbDeFRANuvDTM/kZp+vxi80L9WpWnI/sXIJi+U+VnXIGIVw85k8iuQtdAMs/Wr
+	 EGJGz7jSTFrVaR/UeZunxEaHi8v5ibemjIYtoWU1bbDz3zYsPbqhvaWcl2SCqQU7jM
+	 UwZQyF8kFf8eo5BeSeCVW+rJT0c4dqeoXspy0+b0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfKSUWj (ORCPT
+        id S1727336AbfKSUXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 15:22:39 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37667 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbfKSUWj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 15:22:39 -0500
-Received: by mail-oi1-f193.google.com with SMTP id y194so20281093oie.4;
-        Tue, 19 Nov 2019 12:22:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EaTTkxHDmEcbt3U07gxobyJb6+sGwOBuoJv50bL/JxA=;
-        b=RNYBUFvVJbWTpntO45DEDvG9rS5TKy6ZiEJVDCOo9tUG3s9Hz7h0Ve3T76zsFtyBNb
-         1Hi5fdwg9mlhLGNCYbvu//6ptLxjVt5/cZSw/aaA7jZALCUCXnNiYE7AVny+LpCVy9k8
-         LZB4SAQra2BE09vc5/a2VyQ6dTlLaEfZHBVBNKLXSD7P2BtY+bKNeJwK94GhSC9eEkla
-         8ej+cQXGIjG8Owe9M1Tq2EPKbO45KhhMQsy8KLl78dm/8NvkediEjAxSePPJ4p8WFAU6
-         iAX3bI0IF87KXPnV4tTHcP0OkN0Fb/iu1ZPGXGZfgEF6mJE/HnZtcdmnF3EhDoxc6Suy
-         GlAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EaTTkxHDmEcbt3U07gxobyJb6+sGwOBuoJv50bL/JxA=;
-        b=suTtKMO+Z9m0BEMQYrCKjYiNriQ6fI0CckoJPifVpOMtUPUIKXiJpez92q07r1m3kE
-         B6ZoRel6GH3Ag+npTz2/3Pm60Yp8O2D7pFuBl1mgKkZ6JgKQRy6XcAUwOaFfEQ1acH3z
-         LFzHqXnsD/GyfdsOHLxDiShBDDkyAEmLFwk0Zbcj6pBDDL+RJfV6a82bufoQX4ApD3Vq
-         rF7a8STXMN4proWDwbqw7jDV5hY9xcdBUbmErWSBbmbkLYTL7iFsQoq/2wfgMlfoEjPi
-         3PlFRhsrxtL5RfAiJ0i7UlvtsZNV2C7qLXFr6ApYmwzwWZNV6TiGVWk1dLgtvbqe7AUK
-         QFjA==
-X-Gm-Message-State: APjAAAUS1h9Sqc1W9UvlNKzb/GLFNsG8NEFazHGh06V2BFsEun/BZMno
-        m5P2NFShYWuj6hbV2NoNRmjc8LaO/ei3OpCJgvc=
-X-Google-Smtp-Source: APXvYqw9UESCyKM+zUzYQlWNuuB5qfg03HMHFwEnI6OGKoFwxweBxCdAijIYWCJnQxNu51CFhAfe+j5UnT4j/aOpx1Q=
-X-Received: by 2002:aca:4c57:: with SMTP id z84mr5651946oia.92.1574194956618;
- Tue, 19 Nov 2019 12:22:36 -0800 (PST)
+        Tue, 19 Nov 2019 15:23:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726711AbfKSUXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 15:23:08 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FBCD2235D;
+        Tue, 19 Nov 2019 20:23:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574194988;
+        bh=gGqBvXglDEzCSK8thnzKNOyVmnBORJCnCuazwZu8Wmo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qrsJKda4M4ryOc9ETyXtnEeKouT6QOkDTRulbKdjk20avj2s4UH5QDkaoX2uJX/Ma
+         n5V457p79EcIba3noyQ3FLcAQBBxUy9i1KvyDfxpnx8id3VHLuTBxvcXyJoKeWQblT
+         cckiTKZsqFMWpLv633GqE8wUA9KNg896rOnsGE2w=
+Date:   Tue, 19 Nov 2019 14:23:05 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Xiang Zheng <zhengxiang9@huawei.com>
+Cc:     willy@infradead.org, wangxiongfeng2@huawei.com,
+        wanghaibin.wang@huawei.com, guoheyi@huawei.com,
+        yebiaoxiang@huawei.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
+        tglx@linutronix.de, guohanjun@huawei.com, yangyingliang@huawei.com
+Subject: Re: [PATCH v2] pci: lock the pci_cfg_wait queue for the consistency
+ of data
+Message-ID: <20191119202305.GA214858@google.com>
 MIME-Version: 1.0
-References: <20191119154611.29625-1-TheSven73@gmail.com> <20191119154611.29625-5-TheSven73@gmail.com>
- <a37d098e-12ea-af2e-22cd-cb5ec2856b6d@ti.com> <CAGngYiU_8Obd6jKO9-fukK4K6hYYhFYVSjzxqVxVwwKeCmUkaw@mail.gmail.com>
- <b2ea6130-cfce-4d41-0b35-ba076f599402@gmail.com>
-In-Reply-To: <b2ea6130-cfce-4d41-0b35-ba076f599402@gmail.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Tue, 19 Nov 2019 15:22:25 -0500
-Message-ID: <CAGngYiUDPc+xMO6zzr+bN=i7-QFTUaNE0P5iP+QELjRHnfqUsw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] dt-bindings: mfd: update TI tps6105x chip bindings
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Dan Murphy <dmurphy@ti.com>, Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Grigoryev Denis <grigoryev@fastwel.ru>,
-        Axel Lin <axel.lin@ingics.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191119011545.15408-1-zhengxiang9@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 2:38 PM Jacek Anaszewski
-<jacek.anaszewski@gmail.com> wrote:
->
-> label DT property was recently deprecated. We now encourage using
-> 'function' and/or 'color'. Please refer to
-> Documentation/devicetree/bindings/leds/common.txt.
+On Tue, Nov 19, 2019 at 09:15:45AM +0800, Xiang Zheng wrote:
+> Commit "7ea7e98fd8d0" suggests that the "pci_lock" is sufficient,
+> and all the callers of pci_wait_cfg() are wrapped with the "pci_lock".
+> 
+> However, since the commit "cdcb33f98244" merged, the accesses to
+> the pci_cfg_wait queue are not safe anymore. A "pci_lock" is
+> insufficient and we need to hold an additional queue lock while
+> read/write the wait queue.
+> 
+> So let's use the add_wait_queue()/remove_wait_queue() instead of
+> __add_wait_queue()/__remove_wait_queue(). Also move the wait queue
+> functionality around the "schedule()" function to avoid reintroducing
+> the deadlock addressed by "cdcb33f98244".
 
-Ah, I see.
+Procedural nits:
 
-I'm actually back-porting this from a 4.19 vendor kernel, which I believe
-does not have function/color support. If I introduce it here, I wouldn't
-be able to test it easily, and I'd have to forward/back-port.
+  - Run "git log --oneline drivers/pci/access.c" and follow the
+    convention, e.g., starts with "PCI: " and first subsequent word is
+    capitalized.
 
-All I need is a single led in the system. So I'll just remove the 'label'
-code/description, and hard-code the led name to 'tps6105x'. If
-anyone wants to use this driver and wants named leds, they can
-always add it themselves.
+  - Use conventional commit references, e.g., 7ea7e98fd8d0 ("PCI:
+    Block on access to temporarily unavailable pci device") and
+    cdcb33f98244 ("PCI: Avoid possible deadlock on pci_lock and
+    p->pi_lock")
 
-Jacek and Dan, does that satisfy your concerns?
+  - IIRC you found that this actually caused a panic; please include
+    the lore.kernel.org URL to that report.
+
+You can wait for a while to see if there are more substantive comments
+to address before posting a v3.
+
+> Signed-off-by: Xiang Zheng <zhengxiang9@huawei.com>
+> Cc: Heyi Guo <guoheyi@huawei.com>
+> Cc: Biaoxiang Ye <yebiaoxiang@huawei.com>
+> ---
+> 
+> v2:
+>  - Move the wait queue functionality around the "schedule()" function to
+>    avoid reintroducing the deadlock addressed by "cdcb33f98244"
+> 
+> ---
+> 
+>  drivers/pci/access.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index 2fccb5762c76..09342a74e5ea 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -207,14 +207,14 @@ static noinline void pci_wait_cfg(struct pci_dev *dev)
+>  {
+>  	DECLARE_WAITQUEUE(wait, current);
+>  
+> -	__add_wait_queue(&pci_cfg_wait, &wait);
+>  	do {
+>  		set_current_state(TASK_UNINTERRUPTIBLE);
+>  		raw_spin_unlock_irq(&pci_lock);
+> +		add_wait_queue(&pci_cfg_wait, &wait);
+>  		schedule();
+> +		remove_wait_queue(&pci_cfg_wait, &wait);
+>  		raw_spin_lock_irq(&pci_lock);
+>  	} while (dev->block_cfg_access);
+> -	__remove_wait_queue(&pci_cfg_wait, &wait);
+>  }
+>  
+>  /* Returns 0 on success, negative values indicate error. */
+> -- 
+> 2.19.1
+> 
+> 
