@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E588C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16772C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4822084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBEC32084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143028;
-	bh=XSc49gLZDnT5iD6+dqt3KN9TjzN4HO4lpDf5yK9KBYU=;
+	s=default; t=1574143052;
+	bh=d999pwMigJEppsr13vUh55zksJ5+AulgB9PyRUebJXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pigGVXPH0HMXIoUj9hBR8Czv3jEXGBz/UUT1+wsaca0NdWmaqVkvQl3Iq49MrFbnR
-	 BcaLIbthLQi2Ug6UDb+9VUE8FDHZ+TajL2ELCOYMLiX7PfEHtLMpUVu0Rud2UWqGsw
-	 7YAug4+nK3tsrcWTl1pmfdV20tHH07TfXRsUGMjA=
+	b=KT8Aw8cr7JKdnIQWxm7g5cfYSfoeKQdgiQX4y766DPF/5cNI4cpsjiCEMQNTnv6iU
+	 WkfNkeyfrycspgXpNVaHlpdpOOdTcExpqIVkUC+EbNkLTHz4jWeFu//GOMWi/gWygc
+	 IcOWDKmGcrcD2N47v5E+fxXysPwXExggslwwyUqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731814AbfKSF5H (ORCPT
+        id S1731794AbfKSFv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:57:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50326 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:51:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731919AbfKSFwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:52:33 -0500
+        id S1731777AbfKSFv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:51:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3916420721;
-        Tue, 19 Nov 2019 05:52:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9B25208C3;
+        Tue, 19 Nov 2019 05:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142752;
-        bh=XSc49gLZDnT5iD6+dqt3KN9TjzN4HO4lpDf5yK9KBYU=;
+        s=default; t=1574142685;
+        bh=d999pwMigJEppsr13vUh55zksJ5+AulgB9PyRUebJXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KVeZ9wBpApyddv9d5GIwpQYVSdEkAvp2MIZJE24Kd5+3aNz4AJgjnK0NjwXMzrciF
-         EDYKGAQqxbCC4R8Xzxitk03nfzYkm9M+XxpQgmNqDM7GEf+hvQT93bwzEtIE3lYQok
-         HUS/u6q3vG6W8be7BhdOLcUmsuQxH1IZhzxPC0O4=
+        b=kcojmWkrYDGNWeZ4yHwm7pro/JmAUlc8gXLfkFgX+u5sw9tbdC5LlGkxM8AHQQAA6
+         nX65YLJB8YOi0CGlcL9if7wAJqrfeyFbCm1t/xjy72owb3XgK9S1ENIjn+K8DihMst
+         ZqxWLwzh7+r0vMyxs87Q6JFKkSrX1av2xYkVbNww=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 188/239] phy: phy-twl4030-usb: fix denied runtime access
-Date:   Tue, 19 Nov 2019 06:19:48 +0100
-Message-Id: <20191119051335.323621818@linuxfoundation.org>
+Subject: [PATCH 4.14 128/239] ACPI / LPSS: Exclude I2C busses shared with PUNIT from pmc_atom_d3_mask
+Date:   Tue, 19 Nov 2019 06:18:48 +0100
+Message-Id: <20191119051330.514529055@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -60,79 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Kemnade <andreas@kemnade.info>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 6c7103aa026094a4ee2c2708ec6977a6dfc5331d ]
+[ Upstream commit 86b62e5cd8965d3056f9e9ccdec51631c37add81 ]
 
-When runtime is not enabled, pm_runtime_get_sync() returns -EACCESS,
-the counter will be incremented but the resume callback not called,
-so enumeration and charging will not start properly.
-To avoid that happen, disable irq on suspend and recheck on resume.
+lpss_iosf_enter_d3_state() checks if all hw-blocks using the DMA
+controllers are in d3 before powering down the DMA controllers.
 
-Practically this happens when the device is woken up from suspend by
-plugging in usb.
+But on devices, where the I2C bus connected to the PMIC is shared by
+the PUNIT, the controller for that bus will never reach d3 since it has
+an effectively empty _PS3 method. Instead it appears to automatically
+power-down during S0i3 and we never see it as being in d3.
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+This causes the DMA controllers to never be powered-down on these devices,
+causing them to never reach S0i3. This commit uses the ACPI _SEM method
+to detect if an I2C bus is shared with the PUNIT and if it is, it removes
+it from the mask of devices which lpss_iosf_enter_d3_state() checks for.
+
+This fixes these devices never reaching any S0ix states.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/ti/phy-twl4030-usb.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ drivers/acpi/acpi_lpss.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/phy/ti/phy-twl4030-usb.c b/drivers/phy/ti/phy-twl4030-usb.c
-index a44680d64f9b4..c267afb68f077 100644
---- a/drivers/phy/ti/phy-twl4030-usb.c
-+++ b/drivers/phy/ti/phy-twl4030-usb.c
-@@ -144,6 +144,7 @@
- #define PMBR1				0x0D
- #define GPIO_USB_4PIN_ULPI_2430C	(3 << 0)
- 
-+static irqreturn_t twl4030_usb_irq(int irq, void *_twl);
- /*
-  * If VBUS is valid or ID is ground, then we know a
-  * cable is present and we need to be runtime-enabled
-@@ -395,6 +396,33 @@ static void __twl4030_phy_power(struct twl4030_usb *twl, int on)
- 	WARN_ON(twl4030_usb_write_verify(twl, PHY_PWR_CTRL, pwr) < 0);
- }
- 
-+static int __maybe_unused twl4030_usb_suspend(struct device *dev)
-+{
-+	struct twl4030_usb *twl = dev_get_drvdata(dev);
-+
-+	/*
-+	 * we need enabled runtime on resume,
-+	 * so turn irq off here, so we do not get it early
-+	 * note: wakeup on usb plug works independently of this
-+	 */
-+	dev_dbg(twl->dev, "%s\n", __func__);
-+	disable_irq(twl->irq);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused twl4030_usb_resume(struct device *dev)
-+{
-+	struct twl4030_usb *twl = dev_get_drvdata(dev);
-+
-+	dev_dbg(twl->dev, "%s\n", __func__);
-+	enable_irq(twl->irq);
-+	/* check whether cable status changed */
-+	twl4030_usb_irq(0, twl);
-+
-+	return 0;
-+}
-+
- static int __maybe_unused twl4030_usb_runtime_suspend(struct device *dev)
- {
- 	struct twl4030_usb *twl = dev_get_drvdata(dev);
-@@ -655,6 +683,7 @@ static const struct phy_ops ops = {
- static const struct dev_pm_ops twl4030_usb_pm_ops = {
- 	SET_RUNTIME_PM_OPS(twl4030_usb_runtime_suspend,
- 			   twl4030_usb_runtime_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(twl4030_usb_suspend, twl4030_usb_resume)
+diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
+index 51592dd45b066..1ab8d7223b252 100644
+--- a/drivers/acpi/acpi_lpss.c
++++ b/drivers/acpi/acpi_lpss.c
+@@ -98,6 +98,9 @@ struct lpss_private_data {
+ 	u32 prv_reg_ctx[LPSS_PRV_REG_COUNT];
  };
  
- static int twl4030_usb_probe(struct platform_device *pdev)
++/* Devices which need to be in D3 before lpss_iosf_enter_d3_state() proceeds */
++static u32 pmc_atom_d3_mask = 0xfe000ffe;
++
+ /* LPSS run time quirks */
+ static unsigned int lpss_quirks;
+ 
+@@ -174,6 +177,21 @@ static void byt_pwm_setup(struct lpss_private_data *pdata)
+ 
+ static void byt_i2c_setup(struct lpss_private_data *pdata)
+ {
++	const char *uid_str = acpi_device_uid(pdata->adev);
++	acpi_handle handle = pdata->adev->handle;
++	unsigned long long shared_host = 0;
++	acpi_status status;
++	long uid = 0;
++
++	/* Expected to always be true, but better safe then sorry */
++	if (uid_str)
++		uid = simple_strtol(uid_str, NULL, 10);
++
++	/* Detect I2C bus shared with PUNIT and ignore its d3 status */
++	status = acpi_evaluate_integer(handle, "_SEM", NULL, &shared_host);
++	if (ACPI_SUCCESS(status) && shared_host && uid)
++		pmc_atom_d3_mask &= ~(BIT_LPSS2_F1_I2C1 << (uid - 1));
++
+ 	lpss_deassert_reset(pdata);
+ 
+ 	if (readl(pdata->mmio_base + pdata->dev_desc->prv_offset))
+@@ -789,7 +807,7 @@ static void lpss_iosf_enter_d3_state(void)
+ 	 * Here we read the values related to LPSS power island, i.e. LPSS
+ 	 * devices, excluding both LPSS DMA controllers, along with SCC domain.
+ 	 */
+-	u32 func_dis, d3_sts_0, pmc_status, pmc_mask = 0xfe000ffe;
++	u32 func_dis, d3_sts_0, pmc_status;
+ 	int ret;
+ 
+ 	ret = pmc_atom_read(PMC_FUNC_DIS, &func_dis);
+@@ -807,7 +825,7 @@ static void lpss_iosf_enter_d3_state(void)
+ 	 * Shutdown both LPSS DMA controllers if and only if all other devices
+ 	 * are already in D3hot.
+ 	 */
+-	pmc_status = (~(d3_sts_0 | func_dis)) & pmc_mask;
++	pmc_status = (~(d3_sts_0 | func_dis)) & pmc_atom_d3_mask;
+ 	if (pmc_status)
+ 		goto exit;
+ 
 -- 
 2.20.1
 
