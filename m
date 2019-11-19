@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D967C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDD9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F12922084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA3492082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142234;
-	bh=hsKxKdwogcjR4ZHBi+71yqZ0W0LQjjJkDx0ygb3+bXU=;
+	s=default; t=1574142240;
+	bh=ImmlDRzMG4QM7y293HzEHL2Nt8F3ObbdD/6TybDalBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TkcGxWteKUOQAhbL4sETAlBcZ44Vu0M0Yc1jSG+XDs/L58Et6RrrifUkCd6ZpOxAG
-	 ex8AfVvfrdlPLa4VwRrDcoykcRUOPc954bS6yrNe54V2VNPRK7WLOm53c7FtxYku4C
-	 jfr28guHjpnkfQbHPeXjfUGuR/liP+JlX9qXivq8=
+	b=HNDln5rmQxQmJzjfnGt0Cz2beQxz5bl1RTmSxCF9L1lFMp8kRksyahPp4rduB4PDF
+	 /JJhKRcuc3E67WFhCBAdcTn7O7MLB4FzLk9DyfPJcFd5icwKZdD4mcVkqiWKie5Te6
+	 aa7Np1TmJkrSCNkPPMIN35fKLJYTYz+W7QytmTpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730780AbfKSFnw (ORCPT
+        id S1729504AbfKSFn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:43:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38750 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:43:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730237AbfKSFnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:43:47 -0500
+        id S1730787AbfKSFnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:43:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3390D2084D;
-        Tue, 19 Nov 2019 05:43:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11F7022309;
+        Tue, 19 Nov 2019 05:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142226;
-        bh=hsKxKdwogcjR4ZHBi+71yqZ0W0LQjjJkDx0ygb3+bXU=;
+        s=default; t=1574142232;
+        bh=ImmlDRzMG4QM7y293HzEHL2Nt8F3ObbdD/6TybDalBU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iDZV9sUcFQWC33rIqbA4yBpxsLmzz1pjYwaHrFirW5lTMKEoxlBbKvWS6yuHz+wW/
-         wywwbl8Se/NOHAgIE+NeTu9jHnfpuPXzIgQxmIqilsZQaDz3OgOdtb1rkyjm7Izt1k
-         g5bE+5rH9A6sRkq4uddz3fOGpnU8+xHWEE0LfLCo=
+        b=EzF74PGnAi1fNKaHsdVwMmoLKxK/FV8cwFTPb1+3IQMlW5WWOfQIR2WNxfeJqw+a4
+         BAgzj3j5AFg1MmjIGy5M61XrCoQ3EacuIXMsoIUhD+7NuZWvhgxf4/AI58u+qJWySI
+         BtDX80cullpHOT7RUbcQp+rrV1Al01PpkFNJAM/Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Jouni Hogander <jouni.hogander@unikie.com>
-Subject: [PATCH 4.14 010/239] slip: Fix memory leak in slip_open error path
-Date:   Tue, 19 Nov 2019 06:16:50 +0100
-Message-Id: <20191119051259.812944817@linuxfoundation.org>
+        stable@vger.kernel.org, Henry Lin <henryl@nvidia.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 012/239] ALSA: usb-audio: not submit urb for stopped endpoint
+Date:   Tue, 19 Nov 2019 06:16:52 +0100
+Message-Id: <20191119051300.421710143@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,55 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Hogander <jouni.hogander@unikie.com>
+From: Henry Lin <henryl@nvidia.com>
 
-[ Upstream commit 3b5a39979dafea9d0cd69c7ae06088f7a84cdafa ]
+commit 528699317dd6dc722dccc11b68800cf945109390 upstream.
 
-Driver/net/can/slcan.c is derived from slip.c. Memory leak was detected
-by Syzkaller in slcan. Same issue exists in slip.c and this patch is
-addressing the leak in slip.c.
+While output urb's snd_complete_urb() is executing, calling
+prepare_outbound_urb() may cause endpoint stopped before
+prepare_outbound_urb() returns and result in next urb submitted
+to stopped endpoint. usb-audio driver cannot re-use it afterwards as
+the urb is still hold by usb stack.
 
-Here is the slcan memory leak trace reported by Syzkaller:
+This change checks EP_FLAG_RUNNING flag after prepare_outbound_urb() again
+to let snd_complete_urb() know the endpoint already stopped and does not
+submit next urb. Below kind of error will be fixed:
 
-BUG: memory leak unreferenced object 0xffff888067f65500 (size 4096):
-  comm "syz-executor043", pid 454, jiffies 4294759719 (age 11.930s)
-  hex dump (first 32 bytes):
-    73 6c 63 61 6e 30 00 00 00 00 00 00 00 00 00 00 slcan0..........
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-  backtrace:
-    [<00000000a06eec0d>] __kmalloc+0x18b/0x2c0
-    [<0000000083306e66>] kvmalloc_node+0x3a/0xc0
-    [<000000006ac27f87>] alloc_netdev_mqs+0x17a/0x1080
-    [<0000000061a996c9>] slcan_open+0x3ae/0x9a0
-    [<000000001226f0f9>] tty_ldisc_open.isra.1+0x76/0xc0
-    [<0000000019289631>] tty_set_ldisc+0x28c/0x5f0
-    [<000000004de5a617>] tty_ioctl+0x48d/0x1590
-    [<00000000daef496f>] do_vfs_ioctl+0x1c7/0x1510
-    [<0000000059068dbc>] ksys_ioctl+0x99/0xb0
-    [<000000009a6eb334>] __x64_sys_ioctl+0x78/0xb0
-    [<0000000053d0332e>] do_syscall_64+0x16f/0x580
-    [<0000000021b83b99>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    [<000000008ea75434>] 0xfffffffffffffff
+[  213.153103] usb 1-2: timeout: still 1 active urbs on EP #1
+[  213.164121] usb 1-2: cannot submit urb 0, error -16: unknown error
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Oliver Hartkopp <socketcan@hartkopp.net>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Henry Lin <henryl@nvidia.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191113021420.13377-1-henryl@nvidia.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/slip/slip.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/drivers/net/slip/slip.c
-+++ b/drivers/net/slip/slip.c
-@@ -859,6 +859,7 @@ err_free_chan:
- 	sl->tty = NULL;
- 	tty->disc_data = NULL;
- 	clear_bit(SLF_INUSE, &sl->flags);
-+	free_netdev(sl->dev);
+---
+ sound/usb/endpoint.c |    3 +++
+ 1 file changed, 3 insertions(+)
+
+--- a/sound/usb/endpoint.c
++++ b/sound/usb/endpoint.c
+@@ -403,6 +403,9 @@ static void snd_complete_urb(struct urb
+ 		}
  
- err_exit:
- 	rtnl_unlock();
+ 		prepare_outbound_urb(ep, ctx);
++		/* can be stopped during prepare callback */
++		if (unlikely(!test_bit(EP_FLAG_RUNNING, &ep->flags)))
++			goto exit_clear;
+ 	} else {
+ 		retire_inbound_urb(ep, ctx);
+ 		/* can be stopped during retire callback */
 
 
