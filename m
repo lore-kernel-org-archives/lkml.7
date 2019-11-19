@@ -2,114 +2,100 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D1AC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89075C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 215042235E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 632D02231E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:21:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HQtUFce3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e5lESrFN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfKSSU2 (ORCPT
+        id S1727343AbfKSSVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 13:20:28 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:50720 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfKSSU2 (ORCPT
+        Tue, 19 Nov 2019 13:21:21 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34168 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbfKSSVV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 13:20:28 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJIKLao086524;
-        Tue, 19 Nov 2019 12:20:21 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574187621;
-        bh=eTOm/PJb8uxCiGpcOsOtUMdxI3VbeWStYTwBJ6g8GGA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=HQtUFce3EcVyIutPIljgCSnIEbb4mXDa6Y/ps7gBq/U6EvZIxeKRNwQmA11eXiwcm
-         MiyymsXpOcfHiGCtlgLQ/cUIwpea/NQmBDQj3HFhYa3RnaTTvCh54hYuQvuCWB55vR
-         FcqEvsbX8NtHH3lHrc2Peqbk7on1CBAqU9w0ZzWg=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAJIKLuZ083629
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 Nov 2019 12:20:21 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 19
- Nov 2019 12:20:20 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 19 Nov 2019 12:20:20 -0600
-Received: from [10.250.45.147] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJIKJCu090505;
-        Tue, 19 Nov 2019 12:20:20 -0600
-Subject: Re: [PATCH] ARM: OMAP: Use ARM SMC Calling Convention when OP-TEE is
- available
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Mark Rutland <mark.rutland@arm.com>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191118165236.22136-1-afd@ti.com>
- <20191118215759.GD35479@atomide.com>
- <b86e1d66-1566-521c-a445-4f0ae2fd95d6@ti.com>
- <20191118223128.GE35479@atomide.com>
- <29db708e-119e-8a89-7d43-e38e2a10dc07@ti.com>
- <20191119162157.GJ35479@atomide.com>
- <6e009ae3-6aa2-409b-749f-4947303940d8@ti.com>
- <20191119164227.GL35479@atomide.com> <20191119180546.GM35479@atomide.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <9e15c170-c9fa-778c-d998-bd1111a6390d@ti.com>
-Date:   Tue, 19 Nov 2019 13:20:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 19 Nov 2019 13:21:21 -0500
+Received: by mail-lf1-f66.google.com with SMTP id l28so8405609lfj.1;
+        Tue, 19 Nov 2019 10:21:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0dUXKYCswQ0fk3ChDtCHMcNLvLahQKNVxckNHbLK62U=;
+        b=e5lESrFN8MyoYepnYPws1P7yf4C1dXiYfMOkmezNqIXAiZCpH6SxlKI9ix3SlSORNf
+         /5JsXZyp1E+IjqGqwMhUYHulRiSh9QJkMf1GIFQllRE77579xVcB4EDXytX2AWhcMFvQ
+         1ksK6LpTugAMceaAYTPHCvwtSWDKN7rqeIueDTbWQtIHR4HQydG5oXkfTtYGFdaIoyjU
+         CylOl88XU0mV6aCUOh7u/8Q+Yga6rgxzX3jS4Uzen0MivFUrqkq6uYhpdWXn0ASFSQew
+         25whUzIeI6GQW/U3sk+CCl9AnoSAUrolJLK0fI3TEVzTWkTXjIjQqrrTPxWQjG7LKd5E
+         juzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0dUXKYCswQ0fk3ChDtCHMcNLvLahQKNVxckNHbLK62U=;
+        b=hFKk88AGKEQsXUJsQecvDfOHklYS+Mjvwe5VP0vgkVKiGMAUR+uuUXmifzMYyKuZGT
+         6xpaGktrvldf96Ph0gnyCPFM2uurQOlwczHQD3XoxaJtlFI5qwL71kfYqdxh3+0yXBMQ
+         EdU0UEK2fqTfyvO6Jj0fEgoBsRtoJAygewp7YnlxqEpCD+FpLEZ68Kz3wc4FW2hRV1Gw
+         4WzKy4qCYyomJ0x3OKTMpbOQTbJBdpuOnrvVvqwcyGMU941nZVm3Pwmjqozdml+QtM/s
+         HuAzObTURvwyfKZPOBKnUjMHGjxmaxrPh1nQrtMZJy2IUvZw74OLYqNQjpJct6KQGtDD
+         aDqQ==
+X-Gm-Message-State: APjAAAU3RGINO3AC5giwceh/QPBW0ZBvkK24IebAedRSNYFJIPEl0c/8
+        35o9sFfF/+3bxRxsvFBIYDciFkbXteULQv273OeJ0GNw
+X-Google-Smtp-Source: APXvYqzVzn1n+QdLBDwkgCKvCRCAJA5gUf/1Cpb09fd0k1gg5uwHXZcpoFJbgiH7FOKqOuf17TVa1Ixb5NlB5WAK620=
+X-Received: by 2002:a19:4318:: with SMTP id q24mr5172404lfa.12.1574187679050;
+ Tue, 19 Nov 2019 10:21:19 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191119180546.GM35479@atomide.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191118152518.3374263-1-adrian.ratiu@collabora.com> <20191118152518.3374263-4-adrian.ratiu@collabora.com>
+In-Reply-To: <20191118152518.3374263-4-adrian.ratiu@collabora.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 19 Nov 2019 15:21:14 -0300
+Message-ID: <CAOMZO5C5gpW6KF9d-79wd=-7ZGAbXQLAXw3kLi+_5DBW_DYrTw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] drm: imx: Add i.MX 6 MIPI DSI host driver
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-rockchip@lists.infradead.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Martyn Welch <martyn.welch@collabora.com>,
+        Sjoerd Simons <sjoerd.simons@collabora.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        NXP Linux Team <linux-imx@nxp.com>, kernel@collabora.com,
+        Emil Velikov <emil.velikov@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/19/19 1:05 PM, Tony Lindgren wrote:
-> * Tony Lindgren <tony@atomide.com> [191119 16:43]:
->> What I'd like to have though is to make arm_smccc_smc()
->> work for optee and non-optee case for mach-omap2 as it
->> already has the features necessary to do the runtime
->> patching of the code for the quirks.
-> 
-> In any case sounds like we only need the r12 quirk when
-> optee is _not_ enabled.
-> 
-> So a modified version of your earlier smccc-call.S patch
-> modified to only enable the r12 quirk when no optee is
-> loaded just might be all we need :)
-> 
+Hi Adrian,
 
+On Mon, Nov 18, 2019 at 12:25 PM Adrian Ratiu
+<adrian.ratiu@collabora.com> wrote:
 
-Doesn't change the reason the earlier patch was NAKd, we would still be
-modifying the core SMCCC call to be non-compliant.
+Some nitpicks:
 
-And doing it only when OP-TEE is not installed doesn't gain us anything,
-we already have our own SMC calls for when OP-TEE is not available, this
-patch is specifically so the OMAP2+ boot still works even when OP-TEE is
-installed.
+> +
+> +config DRM_IMX_MIPI_DSI
+> +       tristate "Freescale i.MX DRM MIPI DSI"
 
-If you can get Mark to take my old patch then we can think about moving
-more legacy SMC callers to the SMCCC, otherwise this patch is what we
-need to get OP-TEE enabled OMAP2+ platforms to boot and we will just
-stick to the custom SMC functions we already have for everything else.
+This text seems too generic as there are i.MX SoCs that use different
+MIPI DSI IP.
 
-Andrew
+Maybe "Freescale i.MX6 DRM MIPI DSI" instead?
 
+> +module_platform_driver(imx_mipi_dsi_driver);
+> +
+> +MODULE_DESCRIPTION("i.MX MIPI DSI host controller driver");
 
-> Regards,
-> 
-> Tony
-> 
+i.MX6 MIPI DSI, please.
