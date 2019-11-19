@@ -2,150 +2,294 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BC4C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B34DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 658B72240A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5113A2240C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:00:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="Lbswht9F"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="stlsn3Wv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfKSS7r (ORCPT
+        id S1727262AbfKSTAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 13:59:47 -0500
-Received: from UCOL19PA34.eemsg.mail.mil ([214.24.24.194]:54360 "EHLO
-        UCOL19PA34.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727527AbfKSS7n (ORCPT
+        Tue, 19 Nov 2019 14:00:14 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36060 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbfKSTAN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 13:59:43 -0500
-X-EEMSG-check-017: 51451598|UCOL19PA34_ESA_OUT01.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.69,219,1571702400"; 
-   d="scan'208";a="51451598"
-Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
-  by UCOL19PA34.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 19 Nov 2019 18:59:42 +0000
+        Tue, 19 Nov 2019 14:00:13 -0500
+Received: by mail-io1-f65.google.com with SMTP id s3so24492058ioe.3
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 11:00:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1574189982; x=1605725982;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=Otwbz/MfqeHzCKb0LGfOQsxR4iVvzAIFYiCKCK//gOU=;
-  b=Lbswht9F/JyV+0vNx+z+9w14M/11psdC7yAUTUzJ2zL1DqoiBI7gzblC
-   91BL0e0fTOHDgF74SSpa2ZpYNIXSPlWz/APtmXphx0YboQ6T6++eFG8Ry
-   KESotGz5FbmW4zZEopD6iyvyu3Za9L2eCE94psV5IjgevTQaYLKKqxeck
-   A/xE6gvJwIK4vMEjeF46+kF9btP5JgquVOFKDOjl74Ot+xNfgSRaDjiqS
-   t69io0fsUi2Lu2PFQoUTQ8/2tT5NJAOegSjooj3dVzvR3PNV0dPoCHExE
-   ICP2gOFNcMlGxhtxv6Fq9rN6VXAnRwPmswFIBb3Ew6W2ymWXhQ8MKPp+Q
-   A==;
-X-IronPort-AV: E=Sophos;i="5.69,219,1571702400"; 
-   d="scan'208";a="35732484"
-IronPort-PHdr: =?us-ascii?q?9a23=3AtMOERxyON7fNv4rXCy+O+j09IxM/srCxBDY+r6?=
- =?us-ascii?q?Qd2u4eIJqq85mqBkHD//Il1AaPAdyArasY26GP6vCocFdDyK7JiGoFfp1IWk?=
- =?us-ascii?q?1NouQttCtkPvS4D1bmJuXhdS0wEZcKflZk+3amLRodQ56mNBXdrXKo8DEdBA?=
- =?us-ascii?q?j0OxZrKeTpAI7SiNm82/yv95HJbAhEmTSwbalvIBi5rgjdudQajZZhJ60s1h?=
- =?us-ascii?q?bHv3xEdvhMy2h1P1yThRH85smx/J5n7Stdvu8q+tBDX6vnYak2VKRUAzs6PW?=
- =?us-ascii?q?874s3rrgTDQhCU5nQASGUWkwFHDBbD4RrnQ5r+qCr6tu562CmHIc37SK0/VD?=
- =?us-ascii?q?q+46t3ThLjlTwKPCAl/m7JlsNwjbpboBO/qBx5347Ue5yeOP5ncq/AYd8WWW?=
- =?us-ascii?q?9NU8BfWCxbBoO3cpUBAewPM+1Fq4XxvlUDoB+7CQSqGejhyCJHhmXu0KMnze?=
- =?us-ascii?q?ohHwHI0g8uEd0Av3vbrsn6OqgJXOCpzqTF1ynPY+9Y1Dr/7oXDbxAvoeuLXb?=
- =?us-ascii?q?J1acff1FUvGB3djlWQt4PlOS6e2PkIs2eB6+pgUfygim46oAx2uTig29wsh5?=
- =?us-ascii?q?LVhoMV1l/E9SJ5zJwzJd2jUkF3e9GkEJxOtyyDMYZ9X8AsQ3lwtSonxbALto?=
- =?us-ascii?q?S3cSgXxJg92RLSZOKLf5KV7h/lSe2fOy13hGh/d7K6nxuy9E+gxfDiWcSsy1?=
- =?us-ascii?q?ZKqzZFksHLtnAQyxzf8siHReV5/kemwTuPyxrc6vtFIUApjqrXMYIhw74smZ?=
- =?us-ascii?q?oTtkTPBCn2l1ntjKCKbEkk/+mo6+D/brXnoJ+TKZN0hxnjPqkhlcGzG+Q1Ph?=
- =?us-ascii?q?UUU2SF9umwyqfv8VDhTLVPlPI2k63ZsJ7AJcQco660GxRV3Zs46xukEzen0M?=
- =?us-ascii?q?gXnXkALF5ffhKHlJLmN0vBIPD/E/ezm06snytzx/DaIr3hBY3AL3bCkLfleb?=
- =?us-ascii?q?Zw8E1cxxQpzdBZ+Z1UDqsNIPXpWk/+rNbYFAM2MxSow+b7D9VwzpgeVnyLAq?=
- =?us-ascii?q?+YNqPSrFCJ6/kxI+mDeoAVoizxK/s76P70i382h1sdcbOu3ZsNZ3CyBu5mLF?=
- =?us-ascii?q?mBYXrwntcBFn8Hvg4/TOzslV2DXidfZ3WsUKIm4DE0FoamAJzdRoCinrOBxj?=
- =?us-ascii?q?23Hp5IaWBcDFCDD3Poe5+DW/cWZyLBavNmxwMFUbzpZ4Io3hao/Fvlyr5jBu?=
- =?us-ascii?q?nZ4CsVsdTkztcjo6XImBUz8yFkJ9qS3nvLTGxumG4MATgs0/NRu0t4n2yf3L?=
- =?us-ascii?q?B4jvoQLtla4/dEQ09uLpLH5/BrAND1HATad5GGT0jwEYbuOi04Ut9km4xGWE?=
- =?us-ascii?q?16Adj3y0mYjic=3D?=
-X-IPAS-Result: =?us-ascii?q?A2ASAAATO9Rd/wHyM5BlGgEBAQEBAQEBAQMBAQEBEQEBA?=
- =?us-ascii?q?QICAQEBAYFtAgEBAQELAYFzLIFAMyqEKo9aAQEBAQEBBoE2iWaRQwkBAQEBA?=
- =?us-ascii?q?QEBAQE0AQIBAYRAAoIlJDcGDgIQAQEBBAEBAQEBBQMBAWyFQ4I7KQGCbQEFI?=
- =?us-ascii?q?wQRQRALGAICJgICVwYBDAYCAQGCXz+CUyWxSH8zhU6DLoFIgQ4oAYwUGHiBB?=
- =?us-ascii?q?4E4gms+h1WCXgSND4lMRnSWFII1gjeTEgYbgj6MIosxLY4bnBgjgVgrCAIYC?=
- =?us-ascii?q?CEPgydQERSRJheOQSMDMIEFAQGOMgEB?=
-Received: from tarius.tycho.ncsc.mil ([144.51.242.1])
-  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 19 Nov 2019 18:59:41 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.tycho.ncsc.mil (8.14.4/8.14.4) with ESMTP id xAJIxedE005094;
-        Tue, 19 Nov 2019 13:59:41 -0500
-Subject: Re: [RFC PATCH 1/2] selinux: Don't call avc_compute_av() from RCU
- path walk
-To:     Will Deacon <will@kernel.org>, selinux@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20191119184057.14961-1-will@kernel.org>
- <20191119184057.14961-2-will@kernel.org>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <5e51f9a5-ba76-a42d-fc2b-9255f8544859@tycho.nsa.gov>
-Date:   Tue, 19 Nov 2019 13:59:40 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IH8fCwSBDHnTBJAn+DM+MrcmtjvxWR929IoiwqW2EuI=;
+        b=stlsn3WvzXLeFCpbDKSg/nWj/alwcHclp6NtU6nMcfLi1Xz1IgFfM/ZY23NzZTNGhO
+         7QoAJqOywe8kyDXP4RLfkXvl0sH8v0Koy5+ufBLdKxRfQaqnV4vKJ7vkBUg7eXXK6Q1m
+         Nk/Ml9Hn65lc7UPpGgVphYsdVKjNaXbNGxgEomH5oCHlH2XAVVWKMbcUNVzzvo08lhv7
+         Ue+HAmhQhpf0KnjkrQPmOCa5bI39YSv3E37VtYdoL9RfaH0rTAqINcTbw+OSgsVPs1in
+         0jEdFnTRH4rNyY1eK8xJXiOrK422lyIJOhXsCIpQp9TRHtdodUzYKPifE95B79eCBVyA
+         EoeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IH8fCwSBDHnTBJAn+DM+MrcmtjvxWR929IoiwqW2EuI=;
+        b=OOe3CT5VoM4aaDnryl8697FuZlmSn8gJoEPIIskt3CWBh2qRYd9EiTB7fUrRVPVEDh
+         KfH3gI4QphOjAobrMiZl9HlwNE5enXZL24UGiywv6TErExrdkyeSNdbO4Q1Ek9GJ++NP
+         jheX6fk2XhG+t6CBluGjFzRwecWCEQXinZ0Sn9WCqB9OY4ZmFDcrhlcgdwO17Q1viTeI
+         qZoS63eqCKuH+9u7nYzG/Pfyw3pmQd9iA92pft8J+f221M1PF4cXI7JQTtI4EE4cTAC5
+         skHMQvQmCIZ3p3qlx0+QGmifkfpGw9HDbsuVMuYZ6jarEOI4v/aVOERlZw6avSYpnj/z
+         HEBw==
+X-Gm-Message-State: APjAAAXUzRQqdMP/cK+fo0D3HmK1QraNWGEsgCtJY/utf4/3urx1Uel6
+        m1QYNNjLDucp4tYolyvuOoM7SZV9E4fC1y/Ug4S2bQ==
+X-Google-Smtp-Source: APXvYqzTL0f9N2ouTtvcOXCA7M6/SjoLQSHRwFn5FjaCMTdyZnVxq4os30nNG70TkAPWy0vzTs+dYjPI72MXK83kYe8=
+X-Received: by 2002:a02:a995:: with SMTP id q21mr20845036jam.27.1574190011787;
+ Tue, 19 Nov 2019 11:00:11 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191119184057.14961-2-will@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191119143411.3482-1-kan.liang@linux.intel.com> <20191119143411.3482-4-kan.liang@linux.intel.com>
+In-Reply-To: <20191119143411.3482-4-kan.liang@linux.intel.com>
+From:   Stephane Eranian <eranian@google.com>
+Date:   Tue, 19 Nov 2019 11:00:00 -0800
+Message-ID: <CABPqkBSkTgvbz0S_iv-F5DkUKdqA49k_dLtoh0wbE49ePQ6V=A@mail.gmail.com>
+Subject: Re: [PATCH V4 03/13] perf tools: Support new branch sample type for
+ LBR TOS
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        vitaly.slobodskoy@intel.com, pavel.gerasimov@intel.com,
+        Andi Kleen <ak@linux.intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/19/19 1:40 PM, Will Deacon wrote:
-> 'avc_compute_av()' can block, so we carefully exit the RCU read-side
-> critical section before calling it in 'avc_has_perm_noaudit()'.
-> Unfortunately, if we're calling from the VFS layer on the RCU path walk
-> via 'selinux_inode_permission()' then we're still actually in an RCU
-> read-side critical section and must not block.
-
-avc_compute_av() should never block AFAIK. The blocking concern was with 
-slow_avc_audit(), and even that appears dubious to me. That seems to be 
-more about misuse of d_find_alias in dump_common_audit_data() than anything.
-
-> 
-> 'avc_denied()' already handles this by simply returning success and
-> postponing the auditing until we're called again on the slowpath, so
-> follow the same approach here and return early if the node lookup fails
-> on the RCU walk path.
-> 
-> Signed-off-by: Will Deacon <will@kernel.org>
+On Tue, Nov 19, 2019 at 6:35 AM <kan.liang@linux.intel.com> wrote:
+>
+> From: Kan Liang <kan.liang@linux.intel.com>
+>
+> Support new branch sample type for LBR TOS.
+>
+> Enable LBR_TOS by default in LBR call stack mode.
+> If kernel doesn't support the sample type, switching it off.
+>
+> Add a new branch options "tos" for the new branch sample type.
+> The branch sample type is 64 bits. Change int to u64 for mode in
+> struct branch_mode and bit in struct bit_names.
+>
+> Set tos to -1ULL if the LBR TOS information is unavailable.
+>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 > ---
->   security/selinux/avc.c | 9 ++++++---
->   1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/security/selinux/avc.c b/security/selinux/avc.c
-> index ecd3829996aa..9c183c899e92 100644
-> --- a/security/selinux/avc.c
-> +++ b/security/selinux/avc.c
-> @@ -1159,16 +1159,19 @@ inline int avc_has_perm_noaudit(struct selinux_state *state,
->   	rcu_read_lock();
->   
->   	node = avc_lookup(state->avc, ssid, tsid, tclass);
-> -	if (unlikely(!node))
-> +	if (unlikely(!node)) {
-> +		if (flags & AVC_NONBLOCKING)
-> +			goto out;
->   		node = avc_compute_av(state, ssid, tsid, tclass, avd, &xp_node);
-> -	else
-> +	} else {
->   		memcpy(avd, &node->ae.avd, sizeof(*avd));
-> +	}
->   
->   	denied = requested & ~(avd->allowed);
->   	if (unlikely(denied))
->   		rc = avc_denied(state, ssid, tsid, tclass, requested, 0, 0,
->   				flags, avd);
-> -
-> +out:
->   	rcu_read_unlock();
->   	return rc;
->   }
-> 
+>  tools/include/uapi/linux/perf_event.h     | 16 ++++++++++++++--
+>  tools/perf/util/event.h                   |  1 +
+>  tools/perf/util/evsel.c                   | 20 +++++++++++++++++---
+>  tools/perf/util/evsel.h                   |  6 ++++++
+>  tools/perf/util/parse-branch-options.c    |  3 ++-
+>  tools/perf/util/perf_event_attr_fprintf.c |  3 ++-
+>  6 files changed, 42 insertions(+), 7 deletions(-)
+>
+> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+> index bb7b271397a6..c2da61c9ace7 100644
+> --- a/tools/include/uapi/linux/perf_event.h
+> +++ b/tools/include/uapi/linux/perf_event.h
+> @@ -180,7 +180,10 @@ enum perf_branch_sample_type_shift {
+>
+>         PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT      = 16, /* save branch type */
+>
+> -       PERF_SAMPLE_BRANCH_MAX_SHIFT            /* non-ABI */
+> +       PERF_SAMPLE_BRANCH_MAX_SHIFT            = 17, /* non-ABI */
+> +
+> +       /* PMU specific */
 
+No! You must abstract this.
+
+> +       PERF_SAMPLE_BRANCH_LBR_TOS_SHIFT        = 63, /* save LBR TOS */
+>  };
+>
+I don't like this because this is too Intel specific.
+What is the meaning of this field? You need a clear definition so it can be used
+with other PERF_SAMPLE_BRANCH_* implementations.
+
+
+>
+>  enum perf_branch_sample_type {
+> @@ -208,8 +211,13 @@ enum perf_branch_sample_type {
+>                 1U << PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT,
+>
+>         PERF_SAMPLE_BRANCH_MAX          = 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
+> +
+> +       PERF_SAMPLE_BRANCH_LBR_TOS      = 1ULL << PERF_SAMPLE_BRANCH_LBR_TOS_SHIFT,
+>  };
+>
+> +#define PERF_SAMPLE_BRANCH_MASK                ((PERF_SAMPLE_BRANCH_MAX - 1) |\
+> +                                        PERF_SAMPLE_BRANCH_LBR_TOS)
+> +
+>  /*
+>   * Common flow change classification
+>   */
+> @@ -849,7 +857,11 @@ enum perf_event_type {
+>          *        char                  data[size];}&& PERF_SAMPLE_RAW
+>          *
+>          *      { u64                   nr;
+> -        *        { u64 from, to, flags } lbr[nr];} && PERF_SAMPLE_BRANCH_STACK
+> +        *        { u64 from, to, flags } lbr[nr];
+> +        *
+> +        *        # only available if PERF_SAMPLE_BRANCH_LBR_TOS is set
+> +        *        u64                   tos;
+> +        *      } && PERF_SAMPLE_BRANCH_STACK
+>          *
+>          *      { u64                   abi; # enum perf_sample_regs_abi
+>          *        u64                   regs[weight(mask)]; } && PERF_SAMPLE_REGS_USER
+> diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+> index a0a0c91cde4a..98794758546b 100644
+> --- a/tools/perf/util/event.h
+> +++ b/tools/perf/util/event.h
+> @@ -130,6 +130,7 @@ struct perf_sample {
+>         u32 raw_size;
+>         u64 data_src;
+>         u64 phys_addr;
+> +       u64 lbr_tos;
+>         u32 flags;
+>         u16 insn_len;
+>         u8  cpumode;
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 1bf60f325608..b19669eb4437 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -712,7 +712,8 @@ static void __perf_evsel__config_callchain(struct evsel *evsel,
+>                                 attr->branch_sample_type = PERF_SAMPLE_BRANCH_USER |
+>                                                         PERF_SAMPLE_BRANCH_CALL_STACK |
+>                                                         PERF_SAMPLE_BRANCH_NO_CYCLES |
+> -                                                       PERF_SAMPLE_BRANCH_NO_FLAGS;
+> +                                                       PERF_SAMPLE_BRANCH_NO_FLAGS |
+> +                                                       PERF_SAMPLE_BRANCH_LBR_TOS;
+>                         }
+>                 } else
+>                          pr_warning("Cannot use LBR callstack with branch stack. "
+> @@ -763,7 +764,8 @@ perf_evsel__reset_callgraph(struct evsel *evsel,
+>         if (param->record_mode == CALLCHAIN_LBR) {
+>                 perf_evsel__reset_sample_bit(evsel, BRANCH_STACK);
+>                 attr->branch_sample_type &= ~(PERF_SAMPLE_BRANCH_USER |
+> -                                             PERF_SAMPLE_BRANCH_CALL_STACK);
+> +                                             PERF_SAMPLE_BRANCH_CALL_STACK |
+> +                                             PERF_SAMPLE_BRANCH_LBR_TOS);
+>         }
+>         if (param->record_mode == CALLCHAIN_DWARF) {
+>                 perf_evsel__reset_sample_bit(evsel, REGS_USER);
+> @@ -1641,6 +1643,8 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
+>                 evsel->core.attr.ksymbol = 0;
+>         if (perf_missing_features.bpf)
+>                 evsel->core.attr.bpf_event = 0;
+> +       if (perf_missing_features.lbr_tos)
+> +               evsel->core.attr.branch_sample_type &= ~PERF_SAMPLE_BRANCH_LBR_TOS;
+>  retry_sample_id:
+>         if (perf_missing_features.sample_id_all)
+>                 evsel->core.attr.sample_id_all = 0;
+> @@ -1752,7 +1756,12 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
+>          * Must probe features in the order they were added to the
+>          * perf_event_attr interface.
+>          */
+> -       if (!perf_missing_features.aux_output && evsel->core.attr.aux_output) {
+> +       if (!perf_missing_features.lbr_tos &&
+> +           (evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_LBR_TOS)) {
+> +               perf_missing_features.lbr_tos = true;
+> +               pr_debug2("switching off LBR TOS support\n");
+> +               goto fallback_missing_features;
+> +       } else if (!perf_missing_features.aux_output && evsel->core.attr.aux_output) {
+>                 perf_missing_features.aux_output = true;
+>                 pr_debug2_peo("Kernel has no attr.aux_output support, bailing out\n");
+>                 goto out_close;
+> @@ -2129,6 +2138,11 @@ int perf_evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+>                 sz = data->branch_stack->nr * sizeof(struct branch_entry);
+>                 OVERFLOW_CHECK(array, sz, max_size);
+>                 array = (void *)array + sz;
+> +
+> +               if (perf_evsel__has_lbr_tos(evsel))
+> +                       data->lbr_tos = *array++;
+> +               else
+> +                       data->lbr_tos = -1ULL;
+>         }
+>
+>         if (type & PERF_SAMPLE_REGS_USER) {
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index ddc5ee6f6592..43a9fd83f791 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -115,6 +115,7 @@ struct perf_missing_features {
+>         bool ksymbol;
+>         bool bpf;
+>         bool aux_output;
+> +       bool lbr_tos;
+>  };
+>
+>  extern struct perf_missing_features perf_missing_features;
+> @@ -377,6 +378,11 @@ for ((_evsel) = _leader;                                                   \
+>       (_evsel) && (_evsel)->leader == (_leader);                                        \
+>       (_evsel) = list_entry((_evsel)->core.node.next, struct evsel, core.node))
+>
+> +static inline bool perf_evsel__has_lbr_tos(const struct evsel *evsel)
+> +{
+> +       return evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_LBR_TOS;
+> +}
+> +
+>  static inline bool perf_evsel__has_branch_callstack(const struct evsel *evsel)
+>  {
+>         return evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_CALL_STACK;
+> diff --git a/tools/perf/util/parse-branch-options.c b/tools/perf/util/parse-branch-options.c
+> index bb4aa88c50a8..ce8b9ffc0663 100644
+> --- a/tools/perf/util/parse-branch-options.c
+> +++ b/tools/perf/util/parse-branch-options.c
+> @@ -13,7 +13,7 @@
+>
+>  struct branch_mode {
+>         const char *name;
+> -       int mode;
+> +       u64 mode;
+>  };
+>
+>  static const struct branch_mode branch_modes[] = {
+> @@ -32,6 +32,7 @@ static const struct branch_mode branch_modes[] = {
+>         BRANCH_OPT("call", PERF_SAMPLE_BRANCH_CALL),
+>         BRANCH_OPT("save_type", PERF_SAMPLE_BRANCH_TYPE_SAVE),
+>         BRANCH_OPT("stack", PERF_SAMPLE_BRANCH_CALL_STACK),
+> +       BRANCH_OPT("tos", PERF_SAMPLE_BRANCH_LBR_TOS),
+>         BRANCH_END
+>  };
+>
+> diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
+> index d4ad3f04923a..3411b67ea92a 100644
+> --- a/tools/perf/util/perf_event_attr_fprintf.c
+> +++ b/tools/perf/util/perf_event_attr_fprintf.c
+> @@ -8,7 +8,7 @@
+>  #include "util/evsel_fprintf.h"
+>
+>  struct bit_names {
+> -       int bit;
+> +       u64 bit;
+>         const char *name;
+>  };
+>
+> @@ -50,6 +50,7 @@ static void __p_branch_sample_type(char *buf, size_t size, u64 value)
+>                 bit_name(ABORT_TX), bit_name(IN_TX), bit_name(NO_TX),
+>                 bit_name(COND), bit_name(CALL_STACK), bit_name(IND_JUMP),
+>                 bit_name(CALL), bit_name(NO_FLAGS), bit_name(NO_CYCLES),
+> +               bit_name(LBR_TOS),
+>                 { .name = NULL, }
+>         };
+>  #undef bit_name
+> --
+> 2.17.1
+>
