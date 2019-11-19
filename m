@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE77C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AEAC33CA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31FA821939
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3378521850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:00:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143203;
-	bh=dEzwLHn/gns28QI/I6DAD2PkbwsGSScjoL8rw/ea1jA=;
+	s=default; t=1574143214;
+	bh=oj6ivdFfTCNKtO4RHc9SGueECtIuC8xF3bEQJgR81/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0w3qh4f8gYi47NF4ZJecFAe2Dnu2VOU6iPatFleKPULx2jbdE/kM+munFDvHIL4mB
-	 lXFJlmkQLo8l3Z/vubFJm9+iaotSk9g+qtD7V22VWIWn3SHEw2XDPQ2X954Ef7dq6m
-	 A4dgStYY25qiTyIZlFQULKirMHG69ud+T4wnPgRc=
+	b=vxS8N3H7kKy0b8vSz+UDU1gucTMa3SHkbb1bSNxBSmI+532rtaqJubYvoDJSr5Vak
+	 FgdHXUqYRBTNxPd+l904d1r9TxiTb095UGo/cwDVaqwGjeA3DIUyelqZTVzs/OHDaH
+	 1CjRigeBPGj1OBu8hP95zen6DiIL3HHPR+sHulTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbfKSGAC (ORCPT
+        id S1731061AbfKSFqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:00:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42668 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:46:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731108AbfKSFqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:46:31 -0500
+        id S1728177AbfKSFqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:46:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB8002071B;
-        Tue, 19 Nov 2019 05:46:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D94BB2075E;
+        Tue, 19 Nov 2019 05:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142391;
-        bh=dEzwLHn/gns28QI/I6DAD2PkbwsGSScjoL8rw/ea1jA=;
+        s=default; t=1574142367;
+        bh=oj6ivdFfTCNKtO4RHc9SGueECtIuC8xF3bEQJgR81/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=irUCiiCAoKZ2hefWbTUxQR3TIbKnIEEegJLRaY7wDI2nJMCYYqqgRir7Yvbj8iSFk
-         MYCKvuvGLz59ZJOU+38pys+7DDzBNCp66GlHCAN1lLOBrlwUMzwrDCNRW8bZlNXS8P
-         OTkOwikBsmHc/Z7Y8gNxL10oWxnvJjqf8NoKlz+M=
+        b=f45K8I6c2b78FNdnpVbJXswnC6ubVzoerQLyi3GnxFjuqgL8rfmOj1ABu4H+Nb2dZ
+         JUKTGbClbh0o32naCmoHNxVo9GCl+TsvJp8rJlwkj2oIJBggMehXLJKx6N8dgCEo2Z
+         y5fgMekkOehKANK0pyKaRG6KAU955XPYl2c8AvI8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
+        Rajeev Kumar Sirasanagandla <rsirasan@codeaurora.org>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 065/239] ARM: dts: meson8b: fix the clock controller register size
-Date:   Tue, 19 Nov 2019 06:17:45 +0100
-Message-Id: <20191119051311.987520432@linuxfoundation.org>
+Subject: [PATCH 4.14 040/239] cfg80211: Avoid regulatory restore when COUNTRY_IE_IGNORE is set
+Date:   Tue, 19 Nov 2019 06:17:20 +0100
+Message-Id: <20191119051305.465211794@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -62,42 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Rajeev Kumar Sirasanagandla <rsirasan@codeaurora.org>
 
-[ Upstream commit f31094fe8c16fbd2ca47921acf93b744b045aace ]
+[ Upstream commit 7417844b63d4b0dc8ab23f88259bf95de7d09b57 ]
 
-The clock controller registers are not 0x460 wide because the reset
-controller starts at CBUS 0x4404. This currently overlaps with the
-clock controller (which is at CBUS 0x4000).
+When REGULATORY_COUNTRY_IE_IGNORE is set,  __reg_process_hint_country_ie()
+ignores the country code change request from __cfg80211_connect_result()
+via regulatory_hint_country_ie().
 
-There is no public documentation available on the actual size of the
-clock controller's register area (also called "HHI"). However, in
-Amlogic's GPL kernel sources the last "HHI" register is
-HHI_HDMI_PHY_CNTL2 at CBUS + 0x43a8. 0x400 was chosen because that size
-doesn't seem unlikely.
+After Disconnect, similar to above, country code should not be reset to
+world when country IE ignore is set. But this is violated and restore of
+regulatory settings is invoked by cfg80211_disconnect_work via
+regulatory_hint_disconnect().
 
-Fixes: 4a69fcd3a10803 ("ARM: meson: Add DTS for Odroid-C1 and Tronfy MXQ boards")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+To address this, avoid regulatory restore from regulatory_hint_disconnect()
+when COUNTRY_IE_IGNORE is set.
+
+Note: Currently, restore_regulatory_settings() takes care of clearing
+beacon hints. But in the proposed change, regulatory restore is avoided.
+Therefore, explicitly clear beacon hints when DISABLE_BEACON_HINTS
+is not set.
+
+Signed-off-by: Rajeev Kumar Sirasanagandla <rsirasan@codeaurora.org>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/meson8b.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/wireless/reg.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index bc278da7df0d9..0f76da280ee76 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -121,7 +121,7 @@
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
- 		compatible = "amlogic,meson8b-clkc";
--		reg = <0x8000 0x4>, <0x4000 0x460>;
-+		reg = <0x8000 0x4>, <0x4000 0x400>;
- 	};
+diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+index b940d5c2003b0..804eac073b6b9 100644
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -2703,8 +2703,54 @@ static void restore_regulatory_settings(bool reset_user)
+ 	schedule_work(&reg_work);
+ }
  
- 	reset: reset-controller@4404 {
++static bool is_wiphy_all_set_reg_flag(enum ieee80211_regulatory_flags flag)
++{
++	struct cfg80211_registered_device *rdev;
++	struct wireless_dev *wdev;
++
++	list_for_each_entry(rdev, &cfg80211_rdev_list, list) {
++		list_for_each_entry(wdev, &rdev->wiphy.wdev_list, list) {
++			wdev_lock(wdev);
++			if (!(wdev->wiphy->regulatory_flags & flag)) {
++				wdev_unlock(wdev);
++				return false;
++			}
++			wdev_unlock(wdev);
++		}
++	}
++
++	return true;
++}
++
+ void regulatory_hint_disconnect(void)
+ {
++	/* Restore of regulatory settings is not required when wiphy(s)
++	 * ignore IE from connected access point but clearance of beacon hints
++	 * is required when wiphy(s) supports beacon hints.
++	 */
++	if (is_wiphy_all_set_reg_flag(REGULATORY_COUNTRY_IE_IGNORE)) {
++		struct reg_beacon *reg_beacon, *btmp;
++
++		if (is_wiphy_all_set_reg_flag(REGULATORY_DISABLE_BEACON_HINTS))
++			return;
++
++		spin_lock_bh(&reg_pending_beacons_lock);
++		list_for_each_entry_safe(reg_beacon, btmp,
++					 &reg_pending_beacons, list) {
++			list_del(&reg_beacon->list);
++			kfree(reg_beacon);
++		}
++		spin_unlock_bh(&reg_pending_beacons_lock);
++
++		list_for_each_entry_safe(reg_beacon, btmp,
++					 &reg_beacon_list, list) {
++			list_del(&reg_beacon->list);
++			kfree(reg_beacon);
++		}
++
++		return;
++	}
++
+ 	pr_debug("All devices are disconnected, going to restore regulatory settings\n");
+ 	restore_regulatory_settings(false);
+ }
 -- 
 2.20.1
 
