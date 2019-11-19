@@ -2,192 +2,469 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A50ADC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 696B4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 719D2222B0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:07:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="RDAaAMxs"
+	by mail.kernel.org (Postfix) with ESMTP id 224082231C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:09:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574176175;
+	bh=aEbS7gW3NoXEA3vspP+EpFKUmtxcM3nDiFVMfhs7odM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=EfmMs0unBXmBuzeDl1iPTI5kYjccwH4EV6q6bLC9YvIfWbWJJKPjZU7OPZwk9SVT0
+	 WeyhWz+bioGTR67Kc7pYFUF7Uu8/OXc2JOqrAmkSZ9OcM0gEkrKNnVjvTTZjGhfV5c
+	 dSe+INin3UR8clyEUQRPBt6pReXBhlGtIsnlwdi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbfKSPH6 (ORCPT
+        id S1728114AbfKSPJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:07:58 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38200 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727968AbfKSPH5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 10:07:57 -0500
-Received: by mail-wr1-f68.google.com with SMTP id i12so24258028wro.5
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 07:07:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=0sOGULTxKGUas/n3eXVssiq7rC3j2ItfoQLTOVZlF3A=;
-        b=RDAaAMxsitYbQpk+FHt0fm0cvrptMukdFgxDWsDiY2wP1w2/CYM2w9j4BJqkCfRYlb
-         KoMZ3anOj4QwdznIDwB2DV1/GlCykLmoeGk4wPvC5nT0BQ7gwJKiAg4x7T1Cpa69wdiL
-         5NwQYYFJaH4NRUSrjGG6Lw0cIZmnhyd6Wg/RlpLmyZNLiN/JM/JHqn6N57pY3fJ2EgaU
-         fUBKQugVQDf7rg11izajPi//DIHhRrVmiSNktVjxPKVH7lyeuK8OUyRJsOyREaAtsNqg
-         e2K0PKDnRIrYbYGTOHqLogvPzrW0P3Jp1HhNeXx9KgSXZSARQZ7bZS7ymdIpVejaOFKL
-         36Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=0sOGULTxKGUas/n3eXVssiq7rC3j2ItfoQLTOVZlF3A=;
-        b=hWxLb9U19JiqhD7uxryEcaDq2MjJOx8waSRNXj4QygM4+qwXlN/t/eja4Mjt5PJIbX
-         c2IQuG+9UMNWMa2sATpR8SSAOCXbAdMdK29nCHhkEzNOdp4Fmx6uUKp5bCU42pvnSD51
-         ahsVRwvQfjVwb+YSF7IIhiwsU/e7y2xdv6YXn34KPUtCfaIElW8gkVBLUl9VUcOCuVsE
-         JIosgui+TI0YGXGY4/mBNzKF0IdjaO2R3qV0UPkYhlylEen1ZL0PITqdtOZ+KqlQyO/s
-         lVOckNJjIL6QCgwQpfJofzsqv6Lxg5iW4vamYCEbXUOSi/yxt9lKMDd4VjMaD2onZsCd
-         GFDg==
-X-Gm-Message-State: APjAAAV6p2H0HvljmBVXHTqyGlrm65c7C+t3thh7xSDPC6H3iT4RmWGW
-        3RFpOgx6jOP9qDci3Bj6DaoYig==
-X-Google-Smtp-Source: APXvYqwOzHtK7WEaMSazsJpj5LXWd/QnPIMVNqwwEW18JZLpY/0Jbc/ZswjWAFgmJfsm9R0jzo7fQw==
-X-Received: by 2002:a5d:670a:: with SMTP id o10mr29016460wru.312.1574176073903;
-        Tue, 19 Nov 2019 07:07:53 -0800 (PST)
-Received: from [192.168.1.62] (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id 17sm3319113wmg.19.2019.11.19.07.07.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Nov 2019 07:07:53 -0800 (PST)
-Subject: Re: [PATCH] usb: dwc3: meson-g12a: add missed regulator_disable
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20191118114135.25666-1-hslester96@gmail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <cdb697db-fde4-a109-7e15-c52e7d706d67@baylibre.com>
-Date:   Tue, 19 Nov 2019 16:07:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 19 Nov 2019 10:09:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727504AbfKSPJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 10:09:33 -0500
+Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1BF1222EF;
+        Tue, 19 Nov 2019 15:09:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574176171;
+        bh=aEbS7gW3NoXEA3vspP+EpFKUmtxcM3nDiFVMfhs7odM=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=ZCbvTNv5ERPJx9VABaWfK/ShvCDLJXAF1q/n8CSIf7imiNmP0q8lfci2QwcFazHZC
+         AHBDXe1a+koFSjiwSYdlzKEaoLxQryNojGG2CpTStM6GX1NmpM2k3K7kI1DfeQANRG
+         r2+mLKAftw7sxDB34hNZvAu/sOTaBlJi4bPU4U2M=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 4C5EF3520F2F; Tue, 19 Nov 2019 07:09:31 -0800 (PST)
+Date:   Tue, 19 Nov 2019 07:09:31 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Neeraj Upadhyay <neeraju@codeaurora.org>
+Cc:     josh@joshtriplett.org, joel@joelfernandes.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        pkondeti@codeaurora.org, prsood@codeaurora.org,
+        gkohli@codeaurora.org
+Subject: Re: [PATCH] rcu: Fix missed wakeup of exp_wq waiters
+Message-ID: <20191119150931.GX2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <1573838894-23027-1-git-send-email-neeraju@codeaurora.org>
+ <20191117213624.GB2889@paulmck-ThinkPad-P72>
+ <0101016e7dd7b824-50600058-ab5e-44d8-8d24-94cf095f1783-000000@us-west-2.amazonses.com>
+ <20191118150856.GN2889@paulmck-ThinkPad-P72>
+ <0101016e7f644106-90b40f19-ba9e-4974-bdbe-1062b52222a2-000000@us-west-2.amazonses.com>
+ <20191118172401.GO2889@paulmck-ThinkPad-P72>
+ <0101016e81ba8865-028ac62b-3fcd-481b-b657-be8519c4edf5-000000@us-west-2.amazonses.com>
+ <20191119040533.GS2889@paulmck-ThinkPad-P72>
+ <0101016e8278f225-9df7f507-2b6d-45e4-9c4d-d37141a1c5c6-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-In-Reply-To: <20191118114135.25666-1-hslester96@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0101016e8278f225-9df7f507-2b6d-45e4-9c4d-d37141a1c5c6-000000@us-west-2.amazonses.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/11/2019 12:41, Chuhong Yuan wrote:
-> The driver forgets to disable the regulator in probe failure and remove.
-> Add the missed calls to fix it.
+On Tue, Nov 19, 2019 at 07:03:14AM +0000, Neeraj Upadhyay wrote:
+> Hi Paul,
 > 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-
-Fixes: f90db10779ad ("usb: dwc3: meson-g12a: Add support for IRQ based OTG switching")
-
-> ---
->  drivers/usb/dwc3/dwc3-meson-g12a.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
+> On 11/19/2019 9:35 AM, Paul E. McKenney wrote:
+> > On Tue, Nov 19, 2019 at 03:35:15AM +0000, Neeraj Upadhyay wrote:
+> > > Hi Paul,
+> > > 
+> > > On 11/18/2019 10:54 PM, Paul E. McKenney wrote:
+> > > > On Mon, Nov 18, 2019 at 04:41:47PM +0000, Neeraj Upadhyay wrote:
+> > > > > Hi Paul,
+> > > > > 
+> > > > > 
+> > > > > On 11/18/2019 8:38 PM, Paul E. McKenney wrote:
+> > > > > > On Mon, Nov 18, 2019 at 09:28:39AM +0000, Neeraj Upadhyay wrote:
+> > > > > > > Hi Paul,
+> > > > > > > 
+> > > > > > > On 11/18/2019 3:06 AM, Paul E. McKenney wrote:
+> > > > > > > > On Fri, Nov 15, 2019 at 10:58:14PM +0530, Neeraj Upadhyay wrote:
+> > > > > > > > > For the tasks waiting in exp_wq inside exp_funnel_lock(),
+> > > > > > > > > there is a chance that they might be indefinitely blocked
+> > > > > > > > > in below scenario:
+> > > > > > > > > 
+> > > > > > > > > 1. There is a task waiting on exp sequence 0b'100' inside
+> > > > > > > > >        exp_funnel_lock().
+> > > > > > > > > 
+> > > > > > > > >        _synchronize_rcu_expedited()
+> > > > > > > > 
+> > > > > > > > This symbol went away a few versions back, but let's see how this
+> > > > > > > > plays out in current -rcu.
+> > > > > > > > 
+> > > > > > > 
+> > > > > > > Sorry; for us this problem is observed on 4.19 stable version; I had
+> > > > > > > checked against the -rcu code, and the relevant portions were present
+> > > > > > > there.
+> > > > > > > 
+> > > > > > > > >          s = 0b'100
+> > > > > > > > >          exp_funnel_lock()
+> > > > > > > > >            wait_event(rnp->exp_wq[rcu_seq_ctr(s) & 0x3]
+> > > > > > > > 
+> > > > > > > > All of the above could still happen if the expedited grace
+> > > > > > > > period number was zero (or a bit less) when that task invoked
+> > > > > > > 
+> > > > > > > Yes
+> > > > > > > 
+> > > > > > > > synchronize_rcu_expedited().  What is the relation, if any,
+> > > > > > > > between this task and "task1" below?  Seems like you want them to
+> > > > > > > > be different tasks.
+> > > > > > > > 
+> > > > > > > 
+> > > > > > > This task is the one which is waiting for the expedited sequence, which
+> > > > > > > "task1" completes ("task1" holds the exp_mutex for it). "task1" would
+> > > > > > > wake up this task, on exp GP completion.
+> > > > > > > 
+> > > > > > > > Does this task actually block, or is it just getting ready
+> > > > > > > > to block?  Seems like you need it to have actually blocked.
+> > > > > > > > 
+> > > > > > > 
+> > > > > > > Yes, it actually blocked in wait queue.
+> > > > > > > 
+> > > > > > > > > 2. The Exp GP completes and task (task1) holding exp_mutex queues
+> > > > > > > > >        worker and schedules out.
+> > > > > > > > 
+> > > > > > > > "The Exp GP" being the one that was initiated when the .expedited_sequence
+> > > > > > > > counter was zero, correct?  (Looks that way below.)
+> > > > > > > > 
+> > > > > > > Yes, correct.
+> > > > > > > 
+> > > > > > > > >        _synchronize_rcu_expedited()
+> > > > > > > > >          s = 0b'100
+> > > > > > > > >          queue_work(rcu_gp_wq, &rew.rew_work)
+> > > > > > > > >            wake_up_worker()
+> > > > > > > > >              schedule()
+> > > > > > > > > 
+> > > > > > > > > 3. kworker A picks up the queued work and completes the exp gp
+> > > > > > > > >        sequence.
+> > > > > > > > > 
+> > > > > > > > >        rcu_exp_wait_wake()
+> > > > > > > > >          rcu_exp_wait_wake()
+> > > > > > > > >            rcu_exp_gp_seq_end(rsp) // rsp->expedited_sequence is incremented
+> > > > > > > > >                                    // to 0b'100'
+> > > > > > > > > 
+> > > > > > > > > 4. task1 does not enter wait queue, as sync_exp_work_done() returns true,
+> > > > > > > > >        and releases exp_mutex.
+> > > > > > > > > 
+> > > > > > > > >        wait_event(rnp->exp_wq[rcu_seq_ctr(s) & 0x3],
+> > > > > > > > >          sync_exp_work_done(rsp, s));
+> > > > > > > > >        mutex_unlock(&rsp->exp_mutex);
+> > > > > > > > 
+> > > > > > > > So task1 is the one that initiated the expedited grace period that
+> > > > > > > > started when .expedited_sequence was zero, right?
+> > > > > > > > 
+> > > > > > > 
+> > > > > > > Yes, right.
+> > > > > > > 
+> > > > > > > > > 5. Next exp GP completes, and sequence number is incremented:
+> > > > > > > > > 
+> > > > > > > > >        rcu_exp_wait_wake()
+> > > > > > > > >          rcu_exp_wait_wake()
+> > > > > > > > >            rcu_exp_gp_seq_end(rsp) // rsp->expedited_sequence = 0b'200'
+> > > > > > > > > 
+> > > > > > > > > 6. As kworker A uses current expedited_sequence, it wakes up workers
+> > > > > > > > >        from wrong wait queue index - it should have worken wait queue
+> > > > > > > > >        corresponding to 0b'100' sequence, but wakes up the ones for
+> > > > > > > > >        0b'200' sequence. This results in task at step 1 indefinitely blocked.
+> > > > > > > > > 
+> > > > > > > > >        rcu_exp_wait_wake()
+> > > > > > > > >          wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rsp->expedited_sequence) & 0x3]);
+> > > > > > > > 
+> > > > > > > > So the issue is that the next expedited RCU grace period might
+> > > > > > > > have completed before the completion of the wakeups for the previous
+> > > > > > > > expedited RCU grace period, correct?  Then expedited grace periods have
+> > > > > > > 
+> > > > > > > Yes. Actually from the ftraces, I saw that next expedited RCU grace
+> > > > > > > period completed while kworker A was in D state, while waiting for
+> > > > > > > exp_wake_mutex. This led to kworker A using sequence 2 (instead of 1) for
+> > > > > > > its wake_up_all() call; so, task (point 1) was never woken up, as it was
+> > > > > > > waiting on wq index 1.
+> > > > > > > 
+> > > > > > > > to have stopped to prevent any future wakeup from happening, correct?
+> > > > > > > > (Which would make it harder for rcutorture to trigger this, though it
+> > > > > > > > really does have code that attempts to trigger this sort of thing.)
+> > > > > > > > 
+> > > > > > > > Is this theoretical in nature, or have you actually triggered it?
+> > > > > > > > If actually triggered, what did you do to make this happen?
+> > > > > > > 
+> > > > > > > This issue, we had seen previously - 1 instance in May 2018 (on 4.9 kernel),
+> > > > > > > another instance in Nov 2018 (on 4.14 kernel), in our customer reported
+> > > > > > > issues. Both instances were in downstream drivers and we didn't have RCU
+> > > > > > > traces. Now 2 days back, it was reported on 4.19 kernel, with RCU traces
+> > > > > > > enabled, where it was observed in suspend scenario, where we are observing
+> > > > > > > "DPM device timeout" [1], as scsi device is stuck in
+> > > > > > > _synchronize_rcu_expedited().
+> > > > > > > 
+> > > > > > > schedule+0x70/0x90
+> > > > > > > _synchronize_rcu_expedited+0x590/0x5f8
+> > > > > > > synchronize_rcu+0x50/0xa0
+> > > > > > > scsi_device_quiesce+0x50/0x120
+> > > > > > > scsi_bus_suspend+0x70/0xe8
+> > > > > > > dpm_run_callback+0x148/0x388
+> > > > > > > __device_suspend+0x430/0x8a8
+> > > > > > > 
+> > > > > > > [1]
+> > > > > > > https://github.com/torvalds/linux/blob/master/drivers/base/power/main.c#L489
+> > > > > > > 
+> > > > > > > > What have you done to test the change?
+> > > > > > > > 
+> > > > > > > 
+> > > > > > > I have given this for testing; will share the results . Current analysis
+> > > > > > > and patch is based on going through ftrace and code review.
+> > > > > > 
+> > > > > > OK, very good.  Please include the failure information in the changelog
+> > > > > > of the next version of this patch.
+> > > 
+> > > Done.
+> > > 
+> > > > > > 
+> > > > > > I prefer your original patch, that just uses "s", over the one below
+> > > > > > that moves the rcu_exp_gp_seq_end().  The big advantage of your original
+> > > > > > patch is that it allow more concurrency between a consecutive pair of
+> > > > > > expedited RCU grace periods.  Plus it would not be easy to convince
+> > > > > > myself that moving rcu_exp_gp_seq_end() down is safe, so your original
+> > > > > > is also conceptually simpler with a more manageable state space.
+> > > 
+> > > The reason for highlighting the alternate approach of doing gp end inside
+> > > exp_wake_mutex is the requirement of 3 wqs. Now, this is a theoretical case;
+> > > please correct me if I am wrong here:
+> > > 
+> > > 1. task0 holds exp_wake_mutex, and is preempted.
+> > 
+> > Presumably after it has awakened the kthread that initiated the prior
+> > expedited grace period (the one with seq number = -4).
+> > 
+> > > 2. task1 initiates new GP (current seq number = 0).
+> > 
+> > Yes, this can happen.
+> > 
+> > > 3. task1 queues worker kworker1 and schedules out.
+> > 
+> > And thus still holds .exp_mutex, but yes.
+> > 
+> > > 4. kworker1 sets exp GP to 1 and waits on exp_wake_mutex
+> > 
+> > And thus cannot yet have awakened task1.
+> > 
+> > > 5. task1 releases exp mutex, w/o entering waitq.
+> > 
+> > So I do not believe that we can get to #5.  What am I missing here?
+> > 
 > 
-> diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
-> index 8a3ec1a951fe..d9723d1ad8eb 100644
-> --- a/drivers/usb/dwc3/dwc3-meson-g12a.c
-> +++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
-> @@ -458,7 +458,7 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
->  						dwc3_meson_g12a_irq_thread,
->  						IRQF_ONESHOT, pdev->name, priv);
->  		if (ret)
-> -			return ret;
-> +			goto err_regulator_disable;
->  	}
->  
->  	dwc3_meson_g12a_usb_init(priv);
-> @@ -467,7 +467,7 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
->  	for (i = 0 ; i < PHY_COUNT ; ++i) {
->  		ret = phy_init(priv->phys[i]);
->  		if (ret)
-> -			return ret;
-> +			goto err_regulator_disable;
->  	}
->  
->  	/* Set PHY Power */
-> @@ -517,7 +517,9 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
->  err_phys_exit:
->  	for (i = 0 ; i < PHY_COUNT ; ++i)
->  		phy_exit(priv->phys[i]);
-> -
-> +err_regulator_disable:
-> +	if (priv->vbus)
-> +		regulator_disable(priv->vbus);
->  	return ret;
->  }
->  
-> @@ -536,6 +538,9 @@ static int dwc3_meson_g12a_remove(struct platform_device *pdev)
->  		phy_exit(priv->phys[i]);
->  	}
->  
-> +	if (priv->vbus)
-> +		regulator_disable(priv->vbus);
-> +
->  	pm_runtime_disable(dev);
->  	pm_runtime_put_noidle(dev);
->  	pm_runtime_set_suspended(dev);
+> As mentioned in this patch, task1 could have scheduled out after queuing
+> work:
 > 
+> queue_work(rcu_gp_wq, &rew.rew_work)
+>            wake_up_worker()
+>              schedule()
+> 
+> kworker1 runs and picks up this queued work, and sets exp GP to 1 and waits
+> on exp_wake_mutex.
+> 
+> task1 gets scheduled in and checks sync_exp_work_done(rsp, s), which return
+> true and it does not enter wait queue and releases exp_mutex.
+> 
+> wait_event(rnp->exp_wq[rcu_seq_ctr(s) & 0x3],
+>          sync_exp_work_done(rsp, s));
 
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Well, I have certainly given enough people a hard time about missing the
+didn't-actually-sleep case, so good show on finding one in my code!  ;-)
+
+Which also explains why deferring the rcu_exp_gp_seq_end() is safe:
+The .exp_mutex won't be released until after it happens, and the
+next manipulation of the sequence number cannot happen until after
+.exp_mutex is next acquired.
+
+Good catch!  And keep up the good work!!!
+
+							Thanx, Paul
+
+> Thanks
+> Neeraj
+> 
+> > > 6. task2 initiates new GP (current seq number = 1).
+> > > 7. task2 queues worker kworker1 and schedules out.
+> > > 8. kworker 2 sets exp GP to 2 and waits on exp_wake_mutex.
+> > > ...
+> > > 
+> > > This sequence would break the requirement of max 3 wqs.
+> > > 
+> > > If we hold the exp_wake_mutex before exp seq end, there will be atmost three
+> > > pending GPs - 1. GP which current owner is doing wakeups for,
+> > > 2. GP which the waiter of exp_wake_mutex would complete, 3. Next GP
+> > > waiters, which started after GP @ point 2 had started. This also is inline
+> > > with the statement in [1]:
+> > > 
+> > > "he key point is that the ->exp_mutex is not released until
+> > > the first wakeup is complete, which means that the ->exp_wake_mutex
+> > > has already been acquired at that point"
+> > > 
+> > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/tree/Documentation/RCU/Design/Expedited-Grace-Periods/Expedited-Grace-Periods.rst?h=dev
+> > 
+> > And I believe that this still holds.  The task holding .exp_mutex cannot
+> > release it until it has been awakened, and it won't be awakened until after
+> > the .exp_wake_mutex has been acquired.  Again, what am I missing here?
+> > 
+> > > > > > Please also add the WARN_ON(), though at first glance your change seems
+> > > > > > to have lost the wakeup.  (But it is early, so maybe it is just that I
+> > > > > > am not yet fully awake.)
+> > > > > 
+> > > > > My bad, I posted incomplete diff in previous mail:
+> > > > > 
+> > > > >    static void rcu_exp_wait_wake(struct rcu_state *rsp, unsigned long s)
+> > > > >    {
+> > > > >    	struct rcu_node *rnp;
+> > > > > +	unsigned long exp_low;
+> > > > > +	unsigned long s_low = rcu_seq_ctr(s) & 0x3;
+> > > > > 
+> > > > >    	synchronize_sched_expedited_wait(rsp);
+> > > > >    	rcu_exp_gp_seq_end(rsp);
+> > > > > @@ -613,7 +615,9 @@ static void rcu_exp_wait_wake(struct rcu_state *rsp,
+> > > > > unsigned long s)
+> > > > >    			spin_unlock(&rnp->exp_lock);
+> > > > >    		}
+> > > > >    		smp_mb(); /* All above changes before wakeup. */
+> > > > > -		wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rsp->expedited_sequence) & 0x3]);
+> > > > > +		exp_low = rcu_seq_ctr(rsp->expedited_sequence) & 0x3;
+> > > > > +		WARN_ON(s_low != exp_low);
+> > > > > +		wake_up_all(&rnp->exp_wq[exp_low]);
+> > > > 
+> > > > Much better!
+> > > > 
+> > > > But I suggest using s_low in the wake_up_all.  This hunk is of course
+> > > > only for testing purposes, not for actual inclusion.  (My earlier email
+> > > > didn't make that clear.)
+> > > > 
+> > > > 							Thanx, Paul
+> > > > 
+> > > 
+> > > Ok sure, got it. I will share the results, once the issue is reproduced.
+> > 
+> > Sounds good!
+> > 
+> > 							Thanx, Paul
+> > 
+> > > Thanks
+> > > Neeraj
+> > > 
+> > > > >    	}
+> > > > > 
+> > > > > 
+> > > > > Thanks
+> > > > > Neeraj
+> > > > > 
+> > > > > > 
+> > > > > > 							Thanx, Paul
+> > > > > > 
+> > > > > > > I was thinking of another way of addressing this problem: Doing exp seq end
+> > > > > > > inside exp_wake_mutex. This will also ensure that, if we extend the current
+> > > > > > > scenario and there are multiple expedited GP sequence, which have completed,
+> > > > > > > before exp_wake_mutex is held, we need to preserve the requirement of 3 wq
+> > > > > > > entries [2].
+> > > > > > > 
+> > > > > > > 
+> > > > > > > [2] https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/tree/Documentation/RCU/Design/Expedited-Grace-Periods/Expedited-Grace-Periods.rst?h=dev
+> > > > > > > 
+> > > > > > > 
+> > > > > > > @@ -595,8 +595,6 @@ static void rcu_exp_wait_wake(struct rcu_state *rsp,
+> > > > > > > unsigned long s)
+> > > > > > >            struct rcu_node *rnp;
+> > > > > > > 
+> > > > > > >            synchronize_sched_expedited_wait(rsp);
+> > > > > > > -       rcu_exp_gp_seq_end(rsp);
+> > > > > > > -       trace_rcu_exp_grace_period(rsp->name, s, TPS("end"));
+> > > > > > > 
+> > > > > > >            /*
+> > > > > > >             * Switch over to wakeup mode, allowing the next GP, but -only- the
+> > > > > > > @@ -604,6 +602,9 @@ static void rcu_exp_wait_wake(struct rcu_state *rsp,
+> > > > > > > unsigned long s)
+> > > > > > >             */
+> > > > > > >            mutex_lock(&rsp->exp_wake_mutex);
+> > > > > > > 
+> > > > > > > +       rcu_exp_gp_seq_end(rsp);
+> > > > > > > +       trace_rcu_exp_grace_period(rsp->name, s, TPS("end"));
+> > > > > > > +
+> > > > > > > 
+> > > > > > > 
+> > > > > > > 
+> > > > > > > > (Using a WARN_ON() to check for the lower bits of the counter portion
+> > > > > > > > of rcu_state.expedited_sequence differing from the same bits of s
+> > > > > > > > would be one way to detect this problem.)
+> > > > > > > > 
+> > > > > > > > 							Thanx, Paul
+> > > > > > > > 
+> > > > > > > 
+> > > > > > > I have also given the patch for this, for testing:
+> > > > > > > 
+> > > > > > >     static void rcu_exp_wait_wake(struct rcu_state *rsp, unsigned long s)
+> > > > > > >     {
+> > > > > > >            struct rcu_node *rnp;
+> > > > > > > +       unsigned long exp_low;
+> > > > > > > +       unsigned long s_low = rcu_seq_ctr(s) & 0x3;
+> > > > > > > 
+> > > > > > >            synchronize_sched_expedited_wait(rsp);
+> > > > > > >            rcu_exp_gp_seq_end(rsp);
+> > > > > > > @@ -613,7 +615,9 @@ static void rcu_exp_wait_wake(struct rcu_state *rsp,
+> > > > > > > unsigned long s)
+> > > > > > >                            spin_unlock(&rnp->exp_lock);
+> > > > > > >                    }
+> > > > > > >                    smp_mb(); /* All above changes before wakeup. */
+> > > > > > > - wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rsp->expedited_sequence) & 0x3]);
+> > > > > > > +               exp_low = rcu_seq_ctr(rsp->expedited_sequence) & 0x3;
+> > > > > > > +               WARN_ON(s_low != exp_low);
+> > > > > > > +
+> > > > > > > 
+> > > > > > > Thanks
+> > > > > > > Neeraj
+> > > > > > > 
+> > > > > > > > > Fix this by using the correct sequence number for wake_up_all() inside
+> > > > > > > > > rcu_exp_wait_wake().
+> > > > > > > > > 
+> > > > > > > > > Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+> > > > > > > > > ---
+> > > > > > > > >      kernel/rcu/tree_exp.h | 2 +-
+> > > > > > > > >      1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > > > > > 
+> > > > > > > > > diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+> > > > > > > > > index e4b77d3..28979d3 100644
+> > > > > > > > > --- a/kernel/rcu/tree_exp.h
+> > > > > > > > > +++ b/kernel/rcu/tree_exp.h
+> > > > > > > > > @@ -557,7 +557,7 @@ static void rcu_exp_wait_wake(unsigned long s)
+> > > > > > > > >      			spin_unlock(&rnp->exp_lock);
+> > > > > > > > >      		}
+> > > > > > > > >      		smp_mb(); /* All above changes before wakeup. */
+> > > > > > > > > -		wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rcu_state.expedited_sequence) & 0x3]);
+> > > > > > > > > +		wake_up_all(&rnp->exp_wq[rcu_seq_ctr(s) & 0x3]);
+> > > > > > > > >      	}
+> > > > > > > > >      	trace_rcu_exp_grace_period(rcu_state.name, s, TPS("endwake"));
+> > > > > > > > >      	mutex_unlock(&rcu_state.exp_wake_mutex);
+> > > > > > > > > -- 
+> > > > > > > > > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+> > > > > > > > > member of the Code Aurora Forum, hosted by The Linux Foundation
+> > > > > > > > > 
+> > > > > > > 
+> > > > > > > -- 
+> > > > > > > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of
+> > > > > > > the Code Aurora Forum, hosted by The Linux Foundation
+> > > > > 
+> > > > > -- 
+> > > > > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of
+> > > > > the Code Aurora Forum, hosted by The Linux Foundation
+> > > 
+> > > -- 
+> > > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of
+> > > the Code Aurora Forum, hosted by The Linux Foundation
+> 
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of
+> the Code Aurora Forum, hosted by The Linux Foundation
