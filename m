@@ -2,97 +2,112 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 754A4C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF59EC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA06218A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:12:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143971;
-	bh=JmLPL/HEQWkgPTJclvHxmxL5U3PoN0BCo8F9NLWo16o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wfEkcffonzzv975kSeOQbU7qO4kIK2FO3EtSEJVWihEhSLvJI0Oo55xHyQEydg4si
-	 zzTe6U1Mps+Bhj6QxvzFpdBsKO/eIMbYO1T3QjFMng8gjQlVgDAo5zhtucIWa4Z1iS
-	 OVieB5zvitPx3TO5kVz0dEE4v7z3RvIbEFuRYLfQ=
+	by mail.kernel.org (Postfix) with ESMTP id C1F5C20692
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:14:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=brennan.io header.i=stephen@brennan.io header.b="cwmy2wB5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbfKSGMu (ORCPT
+        id S1727389AbfKSGOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:12:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727239AbfKSFVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:21:13 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AB3B22317;
-        Tue, 19 Nov 2019 05:21:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574140873;
-        bh=JmLPL/HEQWkgPTJclvHxmxL5U3PoN0BCo8F9NLWo16o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IUUyangO5VXU958PcmL/V/s0MdOge+KBSS+8FKSQxUSQUNOYHQkvgPoiyKJe0x5j7
-         0k55T3G+agQClFca9kdc0MKVjq3OoR+sEWY0j6nn4bNXsaOvwPc0XQQBTMsw3uxF8C
-         yDFhnNayuGbkezgvsmY8xT0YDkKjwQsmpPMIxfvM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Machek <pavel@denx.de>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.3 16/48] ALSA: usb-audio: Fix incorrect NULL check in create_yamaha_midi_quirk()
-Date:   Tue, 19 Nov 2019 06:19:36 +0100
-Message-Id: <20191119051001.053603583@linuxfoundation.org>
+        Tue, 19 Nov 2019 01:14:46 -0500
+Received: from sender4-of-o58.zoho.com ([136.143.188.58]:21825 "EHLO
+        sender4-of-o58.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727014AbfKSGOp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 01:14:45 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574144058; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=FDZb191bVzzsmEhPHuSDRaaVt7KFIt6KQmswEHW57HA+Cvb8V+jTzRidED3Tjz7Xm96HWmBJ7KUDXQFl/wjoCpoaPSqhcNZQRr+QI1U97jojCKx5XpR+c1FKu2C/BpuLbqkIk0+59jlaUXPiT8tqqwLVOT0XK8sQTd8miJsEwcc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574144058; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
+        bh=c7L5ybwI41MQuUShcRtA57Ge+Ip1hk0Hb3ub23HMqaQ=; 
+        b=EVXnrACu/oK4Kz7ddwHdXs5N6VnpFcWRdQG9wf0BHjbCuxoDJM7S4BjU6QO8iYXtX681eQb1ErHkAvTEanYfEATZCIxq1Wkgi6i04HB+ajTd5RHK+VyHNi62Sfs6BEwZqyDs6yUQcFAUFTfV0iDJqtna60s3e/2DS9IpQH8AMpo=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=brennan.io;
+        spf=pass  smtp.mailfrom=stephen@brennan.io;
+        dmarc=pass header.from=<stephen@brennan.io> header.from=<stephen@brennan.io>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574144058;
+        s=selector01; d=brennan.io; i=stephen@brennan.io;
+        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Transfer-Encoding:Content-Type;
+        l=1186; bh=c7L5ybwI41MQuUShcRtA57Ge+Ip1hk0Hb3ub23HMqaQ=;
+        b=cwmy2wB55tgQXK/vQOWlD0swe4jSvp7d9+e6rK8Bvpfqq1lWyISr2Q+caX1K0uKJ
+        iN4iRAVa+khnM2t8o0YWkT58iS9CLOjGLSYm89a2+NqqcvA+if0BGcX+3P3U22kjJqV
+        gaYUl4LZ9JiVjTQYu9Gxf29gt7KjG/K0mdCxuxT0=
+Received: from localhost (195.173.24.136.in-addr.arpa [136.24.173.195]) by mx.zohomail.com
+        with SMTPS id 1574144058311185.86846931854632; Mon, 18 Nov 2019 22:14:18 -0800 (PST)
+From:   Stephen Brennan <stephen@brennan.io>
+To:     stephen@brennan.io
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org
+Message-ID: <20191119061407.69911-1-stephen@brennan.io>
+Subject: [PATCH v2 0/3] Raspberry Pi 4 HWRNG Support
+Date:   Mon, 18 Nov 2019 22:14:04 -0800
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191119050946.745015350@linuxfoundation.org>
-References: <20191119050946.745015350@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+This patch series enables support for the HWRNG included on the Raspberry
+Pi 4.  It is simply a rebase of Stefan's branch [1]. I went ahead and
+tested this out on a Pi 4.  Prior to this patch series, attempting to use
+the hwrng gives:
 
-commit cc9dbfa9707868fb0ca864c05e0c42d3f4d15cf2 upstream.
+    $ head -c 2 /dev/hwrng
+    head: /dev/hwrng: Input/output error
 
-The commit 60849562a5db ("ALSA: usb-audio: Fix possible NULL
-dereference at create_yamaha_midi_quirk()") added NULL checks in
-create_yamaha_midi_quirk(), but there was an overlook.  The code
-allows one of either injd or outjd is NULL, but the second if check
-made returning -ENODEV if any of them is NULL.  Fix it in a proper
-form.
+After this series, the same command gives two random bytes.
 
-Fixes: 60849562a5db ("ALSA: usb-audio: Fix possible NULL dereference at create_yamaha_midi_quirk()")
-Reported-by: Pavel Machek <pavel@denx.de>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191113111259.24123-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Changes in v2:
+- specify the correct size for the region in the dts, refactor bcm283x rng
 
 ---
- sound/usb/quirks.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -248,8 +248,8 @@ static int create_yamaha_midi_quirk(stru
- 					NULL, USB_MS_MIDI_OUT_JACK);
- 	if (!injd && !outjd)
- 		return -ENODEV;
--	if (!(injd && snd_usb_validate_midi_desc(injd)) ||
--	    !(outjd && snd_usb_validate_midi_desc(outjd)))
-+	if ((injd && !snd_usb_validate_midi_desc(injd)) ||
-+	    (outjd && !snd_usb_validate_midi_desc(outjd)))
- 		return -ENODEV;
- 	if (injd && (injd->bLength < 5 ||
- 		     (injd->bJackType != USB_MS_EMBEDDED &&
+Stefan Wahren (2):
+  dt-bindings: rng: add BCM2711 RNG compatible
+  hwrng: iproc-rng200: Add support for BCM2711
+
+Stephen Brennan (1):
+  ARM: dts: bcm2711: Enable HWRNG support
+
+ .../devicetree/bindings/rng/brcm,iproc-rng200.txt     |  1 +
+ arch/arm/boot/dts/bcm2711.dtsi                        |  6 +++---
+ arch/arm/boot/dts/bcm2835.dtsi                        |  1 +
+ arch/arm/boot/dts/bcm2836.dtsi                        |  1 +
+ arch/arm/boot/dts/bcm2837.dtsi                        |  1 +
+ arch/arm/boot/dts/bcm283x-common.dtsi                 | 11 +++++++++++
+ arch/arm/boot/dts/bcm283x.dtsi                        |  6 ------
+ drivers/char/hw_random/Kconfig                        |  2 +-
+ drivers/char/hw_random/iproc-rng200.c                 |  1 +
+ 9 files changed, 20 insertions(+), 10 deletions(-)
+ create mode 100644 arch/arm/boot/dts/bcm283x-common.dtsi
+
+--=20
+2.24.0
+
 
 
