@@ -2,43 +2,42 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCA7C33CAD
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 08:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E1EC33CAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 08:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4AC20878
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 08:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EE7622312
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 08:18:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mhnzTiUm"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="C+1T2fhC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbfKSIRu (ORCPT
+        id S1727848AbfKSIRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 03:17:50 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:15541 "EHLO
+        Tue, 19 Nov 2019 03:17:14 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:15487 "EHLO
         hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727846AbfKSIRQ (ORCPT
+        with ESMTP id S1727735AbfKSIRJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 03:17:16 -0500
+        Tue, 19 Nov 2019 03:17:09 -0500
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dd3a50d0000>; Tue, 19 Nov 2019 00:17:17 -0800
+        id <B5dd3a5070000>; Tue, 19 Nov 2019 00:17:11 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 19 Nov 2019 00:17:14 -0800
+  Tue, 19 Nov 2019 00:17:08 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 19 Nov 2019 00:17:14 -0800
+        by hqpgpgate101.nvidia.com on Tue, 19 Nov 2019 00:17:08 -0800
 Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
  (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 Nov
- 2019 08:17:14 +0000
+ 2019 08:17:08 +0000
 Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
  (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 19 Nov 2019 08:17:13 +0000
+ Transport; Tue, 19 Nov 2019 08:17:07 +0000
 Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5dd3a5070004>; Tue, 19 Nov 2019 00:17:12 -0800
+        id <B5dd3a5010003>; Tue, 19 Nov 2019 00:17:07 -0800
 From:   John Hubbard <jhubbard@nvidia.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 CC:     Al Viro <viro@zeniv.linux.org.uk>,
@@ -69,10 +68,11 @@ CC:     Al Viro <viro@zeniv.linux.org.uk>,
         <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
         <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
         <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v6 23/24] selftests/vm: run_vmtests: invoke gup_benchmark with basic FOLL_PIN coverage
-Date:   Tue, 19 Nov 2019 00:16:42 -0800
-Message-ID: <20191119081643.1866232-24-jhubbard@nvidia.com>
+        John Hubbard <jhubbard@nvidia.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Subject: [PATCH v6 18/24] media/v4l2-core: pin_user_pages (FOLL_PIN) and put_user_page() conversion
+Date:   Tue, 19 Nov 2019 00:16:37 -0800
+Message-ID: <20191119081643.1866232-19-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119081643.1866232-1-jhubbard@nvidia.com>
 References: <20191119081643.1866232-1-jhubbard@nvidia.com>
@@ -81,81 +81,69 @@ X-NVConfidentiality: public
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574151437; bh=/x1TdCiN4AHV7riFBKV40yDsqqnISHzJ+pPbTJijsU0=;
+        t=1574151431; bh=sXkMwo6nCTbLEEe6A0fE3HZE6drkGcT2bf/xg2miV08=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:MIME-Version:X-NVConfidentiality:
          Content-Transfer-Encoding:Content-Type;
-        b=mhnzTiUm1vReBaVx2DjdfO79chpG0J7bLlzLbaGTn+loiyZsy64GAKQD/iQgF6GJa
-         O+QMl8dpYc5RH1AB6CvLggpGkJ/s6424yuXTzdntBGcBUrOlY1yfFkGuSQPgH9RMl3
-         Tpn/F/gDqhXajU+kCM9/tyGgLSlfRjSivJdKPilqVxaJtCFEmLfDgep9l+mmG7ayIF
-         zQLnqevYaYbIxHZQmmTmFx1l4vqv9p/IGGouOMzx8nVMmKwTYHfTOvKIqZ08vGZLAe
-         K+jgyp2LpTGwke5KDG75MdNmr68N+BHEqmtcFFKB4vy4nOaTpsWyeiyCcBTTWCsTcd
-         rlsSfpOCea4sw==
+        b=C+1T2fhCZx+zhLh+8QYpPP0OIT/eBxEKDR503QJfeXeDOi9GPOZD3iF8SofIg5my7
+         luIs+PyVCxhyQn7aJRQnkhXnagD3SHYQbiDsm1Jlk+QvgjbeV+kIVl2VKE5xlIDs5+
+         5fKndh9fP5rEb+CvkIg/KwZ4xZox4Vm9aa2IpZxi1lvdgpWEQUbChbFbMPsSdv8EXx
+         +WV5k/8SQWBGP5HRetMgeYNX0wpInXGPUvGr/zcvKrW+XHlVFzH3tjRZqUOy9Zdlem
+         mBi4rgr7CFn1miv+3t4vpY2uWO5H7IeV1YEb9yBrfjaxf+xK1aWBssJNgddHJvxM7g
+         QgtIOyhBrDUNw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's good to have basic unit test coverage of the new FOLL_PIN
-behavior. Fortunately, the gup_benchmark unit test is extremely
-fast (a few milliseconds), so adding it the the run_vmtests suite
-is going to cause no noticeable change in running time.
+1. Change v4l2 from get_user_pages() to pin_user_pages().
 
-So, add two new invocations to run_vmtests:
+2. Because all FOLL_PIN-acquired pages must be released via
+put_user_page(), also convert the put_page() call over to
+put_user_pages_dirty_lock().
 
-1) Run gup_benchmark with normal get_user_pages().
-
-2) Run gup_benchmark with pin_user_pages(). This is much like
-the first call, except that it sets FOLL_PIN.
-
-Running these two in quick succession also provide a visual
-comparison of the running times, which is convenient.
-
-The new invocations are fairly early in the run_vmtests script,
-because with test suites, it's usually preferable to put the
-shorter, faster tests first, all other things being equal.
-
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- tools/testing/selftests/vm/run_vmtests | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/media/v4l2-core/videobuf-dma-sg.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/tools/testing/selftests/vm/run_vmtests b/tools/testing/selftes=
-ts/vm/run_vmtests
-index 951c507a27f7..5043347397a6 100755
---- a/tools/testing/selftests/vm/run_vmtests
-+++ b/tools/testing/selftests/vm/run_vmtests
-@@ -104,6 +104,28 @@ echo "NOTE: The above hugetlb tests provide minimal co=
-verage.  Use"
- echo "      https://github.com/libhugetlbfs/libhugetlbfs.git for"
- echo "      hugetlb regression testing."
+diff --git a/drivers/media/v4l2-core/videobuf-dma-sg.c b/drivers/media/v4l2=
+-core/videobuf-dma-sg.c
+index 28262190c3ab..162a2633b1e3 100644
+--- a/drivers/media/v4l2-core/videobuf-dma-sg.c
++++ b/drivers/media/v4l2-core/videobuf-dma-sg.c
+@@ -183,12 +183,12 @@ static int videobuf_dma_init_user_locked(struct video=
+buf_dmabuf *dma,
+ 	dprintk(1, "init user [0x%lx+0x%lx =3D> %d pages]\n",
+ 		data, size, dma->nr_pages);
 =20
-+echo "--------------------------------------------"
-+echo "running 'gup_benchmark -U' (normal/slow gup)"
-+echo "--------------------------------------------"
-+./gup_benchmark -U
-+if [ $? -ne 0 ]; then
-+	echo "[FAIL]"
-+	exitcode=3D1
-+else
-+	echo "[PASS]"
-+fi
-+
-+echo "------------------------------------------"
-+echo "running gup_benchmark -b (pin_user_pages)"
-+echo "------------------------------------------"
-+./gup_benchmark -b
-+if [ $? -ne 0 ]; then
-+	echo "[FAIL]"
-+	exitcode=3D1
-+else
-+	echo "[PASS]"
-+fi
-+
- echo "-------------------"
- echo "running userfaultfd"
- echo "-------------------"
+-	err =3D get_user_pages(data & PAGE_MASK, dma->nr_pages,
++	err =3D pin_user_pages(data & PAGE_MASK, dma->nr_pages,
+ 			     flags | FOLL_LONGTERM, dma->pages, NULL);
+=20
+ 	if (err !=3D dma->nr_pages) {
+ 		dma->nr_pages =3D (err >=3D 0) ? err : 0;
+-		dprintk(1, "get_user_pages: err=3D%d [%d]\n", err,
++		dprintk(1, "pin_user_pages: err=3D%d [%d]\n", err,
+ 			dma->nr_pages);
+ 		return err < 0 ? err : -EINVAL;
+ 	}
+@@ -349,11 +349,8 @@ int videobuf_dma_free(struct videobuf_dmabuf *dma)
+ 	BUG_ON(dma->sglen);
+=20
+ 	if (dma->pages) {
+-		for (i =3D 0; i < dma->nr_pages; i++) {
+-			if (dma->direction =3D=3D DMA_FROM_DEVICE)
+-				set_page_dirty_lock(dma->pages[i]);
+-			put_page(dma->pages[i]);
+-		}
++		put_user_pages_dirty_lock(dma->pages, dma->nr_pages,
++					  dma->direction =3D=3D DMA_FROM_DEVICE);
+ 		kfree(dma->pages);
+ 		dma->pages =3D NULL;
+ 	}
 --=20
 2.24.0
 
