@@ -2,109 +2,279 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C11F9C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6A6C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 888C722303
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:35:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="HVHnmRo6"
+	by mail.kernel.org (Postfix) with ESMTP id 85F8C22303
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:35:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfKSJf3 (ORCPT
+        id S1727589AbfKSJfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 04:35:29 -0500
-Received: from mail-eopbgr50097.outbound.protection.outlook.com ([40.107.5.97]:32066
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        Tue, 19 Nov 2019 04:35:42 -0500
+Received: from mx2.suse.de ([195.135.220.15]:48824 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725798AbfKSJf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 04:35:29 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hPGroJZbNwyAn8gx68Bu6ar3ibHcXAMjm6T6uvp6RHlzf+YHnN5p2mEKPO0aimM/wsiqm3x1bsKw6t7W4faFPW9vD6PdMtxcwv9b6UOuEFosUO9akpdSuoa3iPY7uhtGkZpJy3dBvp1DhUHUBLCJ/Lv2vpGSB8yNPhnHj8SmikcqRU2WfVEUnEJ+iIVKIpWvMTisUKnjIYOcDFK1o3AbyTSxoTawNBdiR5ljQeSBjFrpiKv3fx5m0MGuskxwL/HvwJt+j3aMwyfBVgrtM9VCTjp5nM8axibA7XyqawmlAcBA+uRs2PwtuqFccBSHVEVOLZeFZek8ja62Eo/KT4mhzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SZXBWb+E+YSI2sfZpz0N0p1CigpaW7xUI/Ir01r9c88=;
- b=oANo6i5EO0Oa5DqUfrAGYyjksw8LUbFGtCboTbJUN4/RHxGLW/s2ig9fCEc2YZ+0hq+CATiUR5uklrWKWQjdoEUKJhNrOFQEejSM6/sa/ulBvo9iMWJ9SUwmG7Nb7YKxgz93mzNpoMNAUC2iIdbxhZxKfoKeJz6uMJh21jYj8h4hUL/0PV+6wwbmmDLVTTG3hzgCTsAqPYR73BV09ZvNsrCBt2in+EA5eyKoGacoLTt3tGRYhnhYJmAF8aZaTONJCw8BLdHnqqmmO6CyL7zKYuIu7m6VpekGhXB613EdwEH/QKviTeW2BKUBY17YSR9UVdpizrAulYrH+Qzs6FfBBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SZXBWb+E+YSI2sfZpz0N0p1CigpaW7xUI/Ir01r9c88=;
- b=HVHnmRo67tTmqplcgavxr24tkSMyhcGMmVlkwbWtfqJsXE1ZJa3GPyIFNzaFveqrDAfLPgL3qtUF3oih4zkOxLb3kS5/tK0KS2C9eyIYgLJR8cG/6zUFpbLMsTP535cYJ7jYlQQznwhDwn00vxaDPl+ZiEGWZxXGPpFXhrrSS2g=
-Received: from AM6PR0202MB3432.eurprd02.prod.outlook.com (52.133.11.29) by
- AM6PR0202MB3400.eurprd02.prod.outlook.com (52.133.8.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.29; Tue, 19 Nov 2019 09:35:25 +0000
-Received: from AM6PR0202MB3432.eurprd02.prod.outlook.com
- ([fe80::dc43:ed2c:945a:cd5]) by AM6PR0202MB3432.eurprd02.prod.outlook.com
- ([fe80::dc43:ed2c:945a:cd5%6]) with mapi id 15.20.2451.031; Tue, 19 Nov 2019
- 09:35:24 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Lei YU <mine260309@gmail.com>, Wolfram Sang <wsa@the-dreams.de>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] docs: i2c: Fix return value of i2c_smbus_xxx functions
-Thread-Topic: [PATCH] docs: i2c: Fix return value of i2c_smbus_xxx functions
-Thread-Index: AQHVnrdKJrKxiOciCEaViJqC+aa9maeSS/0A///v6AA=
-Date:   Tue, 19 Nov 2019 09:35:24 +0000
-Message-ID: <8feed71f-19ba-444e-3e43-b9f28914bc6b@axentia.se>
-References: <1574153778-59977-1-git-send-email-mine260309@gmail.com>
- <a1444cbf-3a1d-6f17-97a9-77664a95d304@axentia.se>
-In-Reply-To: <a1444cbf-3a1d-6f17-97a9-77664a95d304@axentia.se>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: AM4PR05CA0002.eurprd05.prod.outlook.com (2603:10a6:205::15)
- To AM6PR0202MB3432.eurprd02.prod.outlook.com (2603:10a6:209:26::29)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 13b6bd65-6cdb-4a1f-3c05-08d76cd3cd96
-x-ms-traffictypediagnostic: AM6PR0202MB3400:
-x-microsoft-antispam-prvs: <AM6PR0202MB34008A34BA5BF75406D25DF1BC4C0@AM6PR0202MB3400.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 022649CC2C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(376002)(366004)(39830400003)(396003)(189003)(199004)(25786009)(186003)(476003)(11346002)(446003)(2616005)(102836004)(53546011)(386003)(58126008)(486006)(6506007)(316002)(6512007)(110136005)(4744005)(4001150100001)(26005)(2501003)(6486002)(31686004)(5660300002)(256004)(8936002)(229853002)(6246003)(8676002)(66946007)(76176011)(66446008)(6436002)(81156014)(71190400001)(71200400001)(81166006)(508600001)(2201001)(64756008)(66556008)(66476007)(6116002)(14454004)(305945005)(99286004)(66066001)(65806001)(86362001)(2906002)(52116002)(7736002)(36756003)(3846002)(65956001)(31696002);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR0202MB3400;H:AM6PR0202MB3432.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NJeO6RsK4jiBwNoKsBxjPSP754Nj/fsIvf5gh9mq1EErNnhHMdMX+t5Wnxt1qTWsPiKY6hmpGMHaCGRLhm4ztBrpXxKL3sjltWu+KhbeViEQU2CNKTtKp5opUjV+6GRUFF2dARViGgspTTJrkJQJtOXT/sRyAbry/AXW93zXzXqhYkjdjWGFA/0Jg5AGTn/EKJ4LL3VbGqvduEplGnTRj0kixWfQgvG0YHS/c64MBVxsrTV5bQlXwpenS+eFxX/GKbzDucMP20IGOULfB4sHoT7Jb6woUlVlEcjUPLlbU4zRMbQTSouSTuSFAziMrZekvXHF26CB4p3EbB8s8GC/7Gm8yc/Gg5PK04eoJEpmOALiVnQQltc0ajbv7UX8p+yo9qOC8Xw3WIGgPUsv5w5s+ERWOVixPkafTtS7cVqXE1864PrJoqn67y5jBdV+RXT2
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <950B4DFE6B10F44C89282E0BE8DA3189@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1725798AbfKSJfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 04:35:41 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id ACA38AED6;
+        Tue, 19 Nov 2019 09:35:38 +0000 (UTC)
+Message-ID: <6c34f6a1ced09da8e9c1df6347299820947adc0c.camel@suse.de>
+Subject: Re: [PATCH v2 2/6] dt-bindings: PCI: Add bindings for brcmstb's
+ PCIe device
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Rob Herring <robh@kernel.org>
+Cc:     andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        james.quinlan@broadcom.com, mbrugger@suse.com,
+        phil@raspberrypi.org, jeremy.linton@arm.com,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org
+Date:   Tue, 19 Nov 2019 10:35:36 +0100
+In-Reply-To: <20191118212312.GA24969@bogus>
+References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
+         <20191112155926.16476-3-nsaenzjulienne@suse.de>
+         <20191118212312.GA24969@bogus>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-HfkeJ3NjhLZryLi7OGNK"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 13b6bd65-6cdb-4a1f-3c05-08d76cd3cd96
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2019 09:35:24.0378
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YRCCxYJZ8G1LubZjQZyJihZpVvelSGbWisWWkmcF8FXSoScnNTFCstSRCR6GrQ3u
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0202MB3400
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0xMS0xOSAxMDozMywgUGV0ZXIgUm9zaW4gd3JvdGU6DQo+PiAgJ3JlYWQnIHRyYW5z
-YWN0aW9ucyByZXR1cm4gdGhlIHJlYWQgdmFsdWUsIGV4Y2VwdCBmb3IgcmVhZF9ibG9jaywgd2hp
-Y2gNCj4+ICByZXR1cm5zIHRoZSBudW1iZXIgb2YgdmFsdWVzIHJlYWQuIFRoZSBibG9jayBidWZm
-ZXJzIG5lZWQgbm90IGJlIGxvbmdlcg0KPj4gIHRoYW4gMzIgYnl0ZXMuDQo+Pg0KPiANCj4gSG1t
-LCB1bnJlbGF0ZWQsIGJ1dCBzaG91bGQgdGhhdCBwZXJoYXBzIGJlICJtdXN0IG5vdCIgaW5zdGVh
-ZCBvZiAibmVlZCBub3QiPw0KDQpBaGhoLCBoaXQgJ3NlbmQnIGFuZCBpdCBhbGwgYmVjb21lcyBj
-cnlzdGFsIGNsZWFyLiBUaGUgKnJlYWQqIGJ1ZmZlcnMgbmVlZA0Kbm90IGJlIGxhcmdlciB0aGFu
-IDMyIGJ5dGVzLiBEdWghDQoNCkNoZWVycywNClBldGVyDQo=
+
+--=-HfkeJ3NjhLZryLi7OGNK
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Rob, thanks for the review.
+
+On Mon, 2019-11-18 at 15:23 -0600, Rob Herring wrote:
+> On Tue, Nov 12, 2019 at 04:59:21PM +0100, Nicolas Saenz Julienne wrote:
+> > From: Jim Quinlan <james.quinlan@broadcom.com>
+> >=20
+> > The DT bindings description of the brcmstb PCIe device is described.
+> > This node can only be used for now on the Raspberry Pi 4.
+> >=20
+> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> >=20
+> > ---
+> >=20
+> > Changes since v1:
+> >   - Fix commit Subject
+> >   - Remove linux,pci-domain
+> >=20
+> > This was based on Jim's original submission[1], converted to yaml and
+> > adapted to the RPi4 case.
+> >=20
+> > [1] https://patchwork.kernel.org/patch/10605937/
+> >=20
+> >  .../bindings/pci/brcm,stb-pcie.yaml           | 110 ++++++++++++++++++
+> >  1 file changed, 110 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie=
+.yaml
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > new file mode 100644
+> > index 000000000000..4cbb18821300
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > @@ -0,0 +1,110 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Brcmstb PCIe Host Controller Device Tree Bindings
+> > +
+> > +maintainers:
+> > +  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > +
+>=20
+> I added a common PCI schema to dt-schema. You can reference it here:
+>=20
+> allOf:
+>   - $ref: /schemas/pci/pci-bus.yaml#
+
+Thanks!
+
+> > +properties:
+> > +  compatible:
+> > +    const: brcm,bcm2711-pcie # The Raspberry Pi 4
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +    items:
+> > +      - description: PCIe host controller
+> > +      - description: builtin MSI controller
+> > +
+> > +  interrupt-names:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +    items:
+> > +      - const: pcie
+> > +      - const: msi
+> > +
+> > +  "#address-cells":
+> > +    const: 3
+> > +
+> > +  "#size-cells":
+> > +    const: 2
+> > +
+> > +  "#interrupt-cells":
+> > +    const: 1
+> > +
+> > +  interrupt-map-mask: true
+> > +
+> > +  interrupt-map: true
+>=20
+> Drop all these as the pci-bus.yaml will cover them.
+
+OK
+
+> > +
+> > +  ranges: true
+>=20
+> Do you know many entries, if not, you can drop it too?
+
+As this is only aimed at the RPi4's controller we know. Only one for now, s=
+ame
+for dma-ranges.
+
+> > +
+> > +  dma-ranges: true
+>=20
+> Do you know many entries, if not, you can drop it too?
+>=20
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: sw_pcie
+> > +
+> > +  msi-controller:
+> > +    description: Identifies the node as an MSI controller.
+> > +    type: boolean
+> > +
+> > +  msi-parent:
+> > +    description: MSI controller the device is capable of using.
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+>=20
+> Assume these 2 have a type defined.
+
+Ok
+
+> > +
+> > +  brcm,enable-ssc:
+> > +    description: Indicates usage of spread-spectrum clocking.
+> > +    type: boolean
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - "#address-cells"
+> > +  - "#size-cells"
+> > +  - "#interrupt-cells"
+> > +  - interrupt-map-mask
+> > +  - interrupt-map
+> > +  - ranges
+> > +  - dma-ranges
+>=20
+> You can drop ranges, #address-cells and #size-cells as they are required=
+=20
+> in pci-bus.yaml.
+>=20
+> Shouldn't interrupts, interrupt-names, and msi-controller all be=20
+> required?
+
+Agree, I've have doubts with msi-controller, but I guess the HW is still a
+msi-controller regardless of whether you use it so it reasonable to require=
+ it.
+
+> > +
+> > +additionalProperties: false
+>=20
+> This won't work having the commmon binding, but=20
+> 'unevaluatedProperties: false' will (eventually when json-schema draft8=
+=20
+> is supported).=20
+
+I'll change it.
+
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +
+> > +    scb {
+> > +            #address-cells =3D <2>;
+> > +            #size-cells =3D <1>;
+> > +            pcie0: pcie@7d500000 {
+> > +                    compatible =3D "brcm,bcm2711-pcie";
+> > +                    reg =3D <0x0 0x7d500000 0x9310>;
+> > +                    #address-cells =3D <3>;
+> > +                    #size-cells =3D <2>;
+> > +                    #interrupt-cells =3D <1>;
+> > +                    interrupts =3D <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                 <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+> > +                    interrupt-names =3D "pcie", "msi";
+> > +                    interrupt-map-mask =3D <0x0 0x0 0x0 0x7>;
+> > +                    interrupt-map =3D <0 0 0 1 &gicv2 GIC_SPI 143
+> > IRQ_TYPE_LEVEL_HIGH
+> > +                                     0 0 0 2 &gicv2 GIC_SPI 144
+> > IRQ_TYPE_LEVEL_HIGH
+> > +                                     0 0 0 3 &gicv2 GIC_SPI 145
+> > IRQ_TYPE_LEVEL_HIGH
+> > +                                     0 0 0 4 &gicv2 GIC_SPI 146
+> > IRQ_TYPE_LEVEL_HIGH>;
+>=20
+> Bracket each entry. The schema is making this stricter.
+
+Noted.
+
+Regards,
+Nicolas
+
+
+--=-HfkeJ3NjhLZryLi7OGNK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3Tt2gACgkQlfZmHno8
+x/50EQgAmflpS28ePnEFFCis1DjTQmqx6Z2FULtBjfe+6Xvf7jlf1mGpi3PICER8
+6BliLBP0OHeUYiwTGbYKRyaiFP4YsiCnLtzCcI5Dq994a/1oE2/MiLWUzlCX8uFk
+DYgnneZq/kY1qNBOSLFWr9hofr2gUjG5FYsJK93hbzWNCV7xiMccDNtVRPT4TG3h
+17rpSNC8tGbwVf2F+7XNWJXu8cAQM0toRozYMaiQ8kaTWxJQisdDdQm4YQaaG8jP
+0qmyi0DIVIt8rzNPwvntvXcA90VmHg4ZOJxuao8q5sehD7FeHjy+nBFpt4i13dy0
+bGb/tpgkotPmfLtoAgMlE0wivTAmmQ==
+=AyEr
+-----END PGP SIGNATURE-----
+
+--=-HfkeJ3NjhLZryLi7OGNK--
+
