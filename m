@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA84C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EF2C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D485D208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0E821783
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142089;
-	bh=6QOu04gevsHMOBxWy6PWqmiXuBC1YuqReUNHXNe1Ai4=;
+	s=default; t=1574142093;
+	bh=NW5M5tG5jivL/ewIrjwbSjVjsD2EhZihRfAaDgW/z/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A84XqI0Oopa1tYwarAYrzswU4Cn8wZWPNfhicFdJV8G6WVdDyJQduiBOAUusgrTsq
-	 MV5THNUcBzBCL2GwXZ0wUHCXXAR1S80mEMIwvTPhRnn16zuTs1hFl+eXiewSPqGY3M
-	 EgZRkUPcmUo/r67vlrQE9B3dPDLGsSD8KSTuR8D8=
+	b=mvOlmC30FEipBp+ZAG+tBpWOnn0WpD1W9JZA6/3TPCkXGXHHTncjpue9M4ElY19CP
+	 zmBrmfOooDY8c6YY3bI7SUylDCH7mlaLC/T/4UHOtSpLDqqCo2hIFK+ewY2X8Qwyo7
+	 p6efV67p03JX4cxjrYaJhCInPOIBgYpAFlQb1anI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730540AbfKSFl2 (ORCPT
+        id S1729850AbfKSFlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:41:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35924 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:41:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730526AbfKSFl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:41:26 -0500
+        id S1730526AbfKSFl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:41:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D0FE22319;
-        Tue, 19 Nov 2019 05:41:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E835208C3;
+        Tue, 19 Nov 2019 05:41:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142086;
-        bh=6QOu04gevsHMOBxWy6PWqmiXuBC1YuqReUNHXNe1Ai4=;
+        s=default; t=1574142088;
+        bh=NW5M5tG5jivL/ewIrjwbSjVjsD2EhZihRfAaDgW/z/4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YCEkv8xfM4LGYp0K8FuKBnSag7Q7pnpsF0dkhnDWnUKlDltynnaTyeSoCez1D9jWi
-         1DL5+A9/3peqTjekp6QMvISs4RH28UKx2JT5HnFQzK8wb1Vsj+Nu6eci0zddZc20Ho
-         cUvduOsFN+pfDK9/wRhQa4lb3MRtyoTjDNzOvLgg=
+        b=aC0GfEfeBVjSxwLumRx/mQieGcsx+Cd3v7HGiRNQ2AMY/xEMI7r4SZSWQGIz/+Xx5
+         Qnut76C4b/6fEsFKKBZD+F01m6UVwpciDCHcZfDZkR2PTmDunG5a9pF42Enz/CNkJQ
+         t+ZT0xbU17qRDH5k+Je4IUpQ7ZShFJG0jQe45E9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, zhong jiang <zhongjiang@huawei.com>,
+        stable@vger.kernel.org, Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 356/422] misc: genwqe: should return proper error value.
-Date:   Tue, 19 Nov 2019 06:19:13 +0100
-Message-Id: <20191119051422.087695033@linuxfoundation.org>
+Subject: [PATCH 4.19 383/422] firmware: dell_rbu: Make payload memory uncachable
+Date:   Tue, 19 Nov 2019 06:19:40 +0100
+Message-Id: <20191119051423.887664218@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -59,80 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhong jiang <zhongjiang@huawei.com>
+From: Stuart Hayes <stuart.w.hayes@gmail.com>
 
-[ Upstream commit 02241995b004faa7d9ff628e97f24056190853f8 ]
+[ Upstream commit 6aecee6ad41cf97c0270f72da032c10eef025bf0 ]
 
-The function should return -EFAULT when copy_from_user fails. Even
-though the caller does not distinguish them. but we should keep backward
-compatibility.
+The dell_rbu driver takes firmware update payloads and puts them in memory so
+the system BIOS can find them after a reboot.  This sometimes fails (though
+rarely), because the memory containing the payload is in the CPU cache but
+never gets written back to main memory before the system is rebooted (CPU
+cache contents are lost on reboot).
 
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+With this patch, the payload memory will be changed to uncachable to ensure
+that the payload is actually in main memory before the system is rebooted.
+
+Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/genwqe/card_utils.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/firmware/dell_rbu.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/misc/genwqe/card_utils.c b/drivers/misc/genwqe/card_utils.c
-index f68435df76d48..22301bba8c495 100644
---- a/drivers/misc/genwqe/card_utils.c
-+++ b/drivers/misc/genwqe/card_utils.c
-@@ -298,7 +298,7 @@ static int genwqe_sgl_size(int num_pages)
- int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
- 			  void __user *user_addr, size_t user_size, int write)
- {
--	int rc;
-+	int ret = -ENOMEM;
- 	struct pci_dev *pci_dev = cd->pci_dev;
+diff --git a/drivers/firmware/dell_rbu.c b/drivers/firmware/dell_rbu.c
+index fb8af5cb7c9bf..ccefa84f73057 100644
+--- a/drivers/firmware/dell_rbu.c
++++ b/drivers/firmware/dell_rbu.c
+@@ -45,6 +45,7 @@
+ #include <linux/moduleparam.h>
+ #include <linux/firmware.h>
+ #include <linux/dma-mapping.h>
++#include <asm/set_memory.h>
  
- 	sgl->fpage_offs = offset_in_page((unsigned long)user_addr);
-@@ -318,7 +318,7 @@ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
- 	if (get_order(sgl->sgl_size) > MAX_ORDER) {
- 		dev_err(&pci_dev->dev,
- 			"[%s] err: too much memory requested!\n", __func__);
--		return -ENOMEM;
-+		return ret;
- 	}
- 
- 	sgl->sgl = __genwqe_alloc_consistent(cd, sgl->sgl_size,
-@@ -326,7 +326,7 @@ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
- 	if (sgl->sgl == NULL) {
- 		dev_err(&pci_dev->dev,
- 			"[%s] err: no memory available!\n", __func__);
--		return -ENOMEM;
-+		return ret;
- 	}
- 
- 	/* Only use buffering on incomplete pages */
-@@ -339,7 +339,7 @@ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
- 		/* Sync with user memory */
- 		if (copy_from_user(sgl->fpage + sgl->fpage_offs,
- 				   user_addr, sgl->fpage_size)) {
--			rc = -EFAULT;
-+			ret = -EFAULT;
- 			goto err_out;
+ MODULE_AUTHOR("Abhay Salunke <abhay_salunke@dell.com>");
+ MODULE_DESCRIPTION("Driver for updating BIOS image on DELL systems");
+@@ -181,6 +182,11 @@ static int create_packet(void *data, size_t length)
+ 			packet_data_temp_buf = NULL;
  		}
  	}
-@@ -352,7 +352,7 @@ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
- 		/* Sync with user memory */
- 		if (copy_from_user(sgl->lpage, user_addr + user_size -
- 				   sgl->lpage_size, sgl->lpage_size)) {
--			rc = -EFAULT;
-+			ret = -EFAULT;
- 			goto err_out2;
- 		}
- 	}
-@@ -374,7 +374,8 @@ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
- 	sgl->sgl = NULL;
- 	sgl->sgl_dma_addr = 0;
- 	sgl->sgl_size = 0;
--	return -ENOMEM;
++	/*
++	 * set to uncachable or it may never get written back before reboot
++	 */
++	set_memory_uc((unsigned long)packet_data_temp_buf, 1 << ordernum);
 +
-+	return ret;
- }
+ 	spin_lock(&rbu_data.lock);
  
- int genwqe_setup_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
+ 	newpacket->data = packet_data_temp_buf;
+@@ -349,6 +355,8 @@ static void packet_empty_list(void)
+ 		 * to make sure there are no stale RBU packets left in memory
+ 		 */
+ 		memset(newpacket->data, 0, rbu_data.packetsize);
++		set_memory_wb((unsigned long)newpacket->data,
++			1 << newpacket->ordernum);
+ 		free_pages((unsigned long) newpacket->data,
+ 			newpacket->ordernum);
+ 		kfree(newpacket);
 -- 
 2.20.1
 
