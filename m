@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAA4C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE6DC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C92D208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B7421939
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141477;
-	bh=/NQtkOkpEuUWMY3f+/lnoDmUzsLbRI5O/I0APk7Ai9Y=;
+	s=default; t=1574141482;
+	bh=YTlxT0xhObld43kZ6Inn0eRYl+hSodKE+Pd8IjkbeNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2KP4ANm5b1WYt+6d9+AR3/CCYPNHA2zD5jULYVzKNmmbWf5rOyOX0z/NM091rNRgv
-	 tTb7JIlBqhdnhXR6JT2ctVy06bVxVhut6SKgvxEe12QhMo8yf/F9jN2z+ws84MpvGs
-	 5Sz7tvv0oQUAeydW1k+iDCkO2J/Wh6RoHI5DUNTs=
+	b=imOYH3xqzOW/qy3r7bxJVBX3Gqs5tUdP1lMdIFw/qP8idsLal4N37LP/1R3J46G5x
+	 7651VVp16opN12o4AjuXNLLgBcgCKS3xYD4g5J/pfasmZ6fSdCFsY5Y7TGpdEmMahG
+	 xnZJFJVlsmMA223HLt7/IJT44PSFBRdwlfXNAbTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729234AbfKSFbQ (ORCPT
+        id S1729249AbfKSFbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:31:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50108 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:31:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729220AbfKSFbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:31:12 -0500
+        id S1729239AbfKSFbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:31:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4537D21939;
-        Tue, 19 Nov 2019 05:31:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2776121783;
+        Tue, 19 Nov 2019 05:31:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141471;
-        bh=/NQtkOkpEuUWMY3f+/lnoDmUzsLbRI5O/I0APk7Ai9Y=;
+        s=default; t=1574141477;
+        bh=YTlxT0xhObld43kZ6Inn0eRYl+hSodKE+Pd8IjkbeNA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tiobBttRtKMFCvipOYamelyteYdCMqCVODs8rtsl4svHHu7FthcU+xIzM974xJqKE
-         ItcayawKcfM/kwjBqHQGtXuuuQwME7J+sUbFxqfaX7yrG5rHLmilfOwGcQnzjXqWFV
-         kWLHt0Eea5XBWt4ZVTf//Ebmuf0k8OaGXy5Z2BJo=
+        b=YrF4i6A0mwfzdjukKIzFgohC1+jDLrKewGvMVT9tbnGbYzkOeSEP4DBaucqniy32L
+         eIwSlOQJnGu+hvZQjCxx5HSC9EpV+PGJbRPU6NyrDfGqkyPk94cfgAMziwYZEnWF9P
+         6Ql+ilaFu/txx72cQZkFFY25xU820fj1Nisks+fM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Himanshu Madhani <himanshu.madhani@cavium.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 171/422] scsi: qla2xxx: Terminate Plogi/PRLI if WWN is 0
-Date:   Tue, 19 Nov 2019 06:16:08 +0100
-Message-Id: <20191119051409.500973773@linuxfoundation.org>
+Subject: [PATCH 4.19 173/422] scsi: qla2xxx: Increase abort timeout value
+Date:   Tue, 19 Nov 2019 06:16:10 +0100
+Message-Id: <20191119051409.638874617@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -63,37 +63,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Quinn Tran <quinn.tran@cavium.com>
 
-[ Upstream commit aa9e6d7b9643fc50a88c7b7aa1e34be8dc032749 ]
+[ Upstream commit 8bccfe0d21b5adbba6ec4fe1776160b80d09f78a ]
 
-When driver receive PLOGI/PRLI from FW, the WWPN value will be provided.  If
-it is not, then driver will terminate it.  The WWPN allows driver to locate
-the session or create a new session.
+Abort IOCB request can take up to 40s or 2 ABTS timeout.  We will wait for
+ABTS response for 20s. On a timeout, second ABTS can go out with another 20s
+timeout. On 2nd ABTS timeout FW will automatically do Logout.
 
 Signed-off-by: Quinn Tran <quinn.tran@cavium.com>
 Signed-off-by: Himanshu Madhani <himanshu.madhani@cavium.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_target.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/scsi/qla2xxx/qla_init.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
-index d6dc320f81a7a..078d124533247 100644
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -4703,6 +4703,12 @@ static int qlt_handle_login(struct scsi_qla_host *vha,
- 		sess = qlt_find_sess_invalidate_other(vha, wwn,
- 		    port_id, loop_id, &conflict_sess);
- 		spin_unlock_irqrestore(&vha->hw->tgt.sess_lock, flags);
-+	} else {
-+		ql_dbg(ql_dbg_disc, vha, 0xffff,
-+		    "%s %d Term INOT due to WWN=0 lid=%d, NportID %06X ",
-+		    __func__, __LINE__, loop_id, port_id.b24);
-+		qlt_send_term_imm_notif(vha, iocb, 1);
-+		goto out;
- 	}
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index 733a55c09b1ca..8f502505aa796 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -1789,7 +1789,8 @@ qla24xx_async_abort_cmd(srb_t *cmd_sp, bool wait)
  
- 	if (IS_SW_RESV_ADDR(port_id)) {
+ 	abt_iocb->timeout = qla24xx_abort_iocb_timeout;
+ 	init_completion(&abt_iocb->u.abt.comp);
+-	qla2x00_init_timer(sp, qla2x00_get_async_timeout(vha));
++	/* FW can send 2 x ABTS's timeout/20s */
++	qla2x00_init_timer(sp, 42);
+ 
+ 	abt_iocb->u.abt.cmd_hndl = cmd_sp->handle;
+ 	abt_iocb->u.abt.req_que_no = cpu_to_le16(cmd_sp->qpair->req->id);
 -- 
 2.20.1
 
