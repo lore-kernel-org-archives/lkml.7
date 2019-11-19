@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94219C33C9F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F4DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65CCF2071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13F5E2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142351;
-	bh=gQc1TgP91Eg1fBE2eP6CQ+0ionmH6FlDG3R33s8qABo=;
+	s=default; t=1574142357;
+	bh=Cdus/gAvNXvi3IDL1oBXL6KZRkw3aCvgjmB2QuoDHTI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mFvx59sOWOqkyv7mjd8HN7XZ+AV1hwb/sxRN+QplgXs53uHYWW2d90GDjgcI8D23I
-	 CdRWZDixL90Gv/qu6knktjot9TkDJ61JaSDItGI+LWmDWhwTLjZm9AaHrVsW9CzL66
-	 wm9lRAo7sCG13Iyh1z6/2b46BNQ/8JXYjDxRO8EY=
+	b=dMhuNtLox0F5f2z4wYcLk9YAC+aaV8lQnNO4vn5NvY/sde5sRCjZ3FPAoNznqYQol
+	 uh3tx+SRM5jfdp25fE6E5YrUe5Zu0HX3Dn/bcCaUO7hDgFcAZQCPRqC2gO14MLaBTX
+	 c8471tjC+Pv5U1ZV/jS38MJuQZ/S2klJCaWaxVtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731010AbfKSFpu (ORCPT
+        id S1731028AbfKSFp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:45:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41524 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:45:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730982AbfKSFpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:45:45 -0500
+        id S1731020AbfKSFpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:45:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B6E92082F;
-        Tue, 19 Nov 2019 05:45:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1F3F2071B;
+        Tue, 19 Nov 2019 05:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142344;
-        bh=gQc1TgP91Eg1fBE2eP6CQ+0ionmH6FlDG3R33s8qABo=;
+        s=default; t=1574142352;
+        bh=Cdus/gAvNXvi3IDL1oBXL6KZRkw3aCvgjmB2QuoDHTI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Poaom7iuWaa9vyumom/6gTe/DRAlzjpxhw+KvvkJZC/WCk2xWOB4oAXHHuVL4ibmT
-         zdFgspYoMwKc/doVtFVM305GNjfvelHluWsscj4n+j6dE3uoFF1Ejdvz4w0pVxMyY4
-         hrHOoK+0QVPPZC/i/EJBgp5TL0t9JjVjlHeSrV9g=
+        b=mZVXpYDActXtdhZNIea4FuT2t2kgXj/TVFSHtzWrUPjf8oRMqIxY8qsc8eajkjgzI
+         1prKJGExD19EhYyYzPfFm0hqYDaFvThgFA05659fbaVt/3pqebRZ7oLp4x/ZwOsBcg
+         XSo4Fex4YUkU2Ufe/O0XazxUx99z+Qz65Zwt/3pw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        =?UTF-8?q?Patryk=20Ma=C5=82ek?= <patryk.malek@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 050/239] ARM: dts: exynos: Fix regulators configuration on Peach Pi/Pit Chromebooks
-Date:   Tue, 19 Nov 2019 06:17:30 +0100
-Message-Id: <20191119051307.357970632@linuxfoundation.org>
+Subject: [PATCH 4.14 053/239] i40e: Prevent deleting MAC address from VF when set by PF
+Date:   Tue, 19 Nov 2019 06:17:33 +0100
+Message-Id: <20191119051307.969479838@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -62,84 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Patryk Małek <patryk.malek@intel.com>
 
-[ Upstream commit f8f3b7fc21b1cb59385b780acd9b9a26d04cb7b2 ]
+[ Upstream commit 5907cf6c5bbe78be2ed18b875b316c6028b20634 ]
 
-Regulators, which are marked as 'on-in-suspend' seems to be critical for
-board operation, thus they must not be disabled anytime. This can be
-only assured by marking them as 'always-on', because otherwise some
-actions of their clients might result in turning them off. This patch
-restores suspend/resume operation on Peach-Pit Chromebook board. It
-partially reverts 'always-on' property removal done by the commit
-mentioned in the Fixes tag.
+To prevent VF from deleting MAC address that was assigned by the
+PF we need to check for that scenario when we try to delete a MAC
+address from a VF.
 
-Fixes: 665c441eea3d ("ARM: dts: exynos: Remove unneded always-on for regulators on Peach boards")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Tested-by: Tomasz Figa <tfiga@chromium.org>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Patryk Małek <patryk.malek@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5420-peach-pit.dts | 3 +++
- arch/arm/boot/dts/exynos5800-peach-pi.dts  | 3 +++
- 2 files changed, 6 insertions(+)
+ drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index 7ccee2cfe4812..442161d2acd57 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -301,6 +301,7 @@
- 				regulator-name = "vdd_1v35";
- 				regulator-min-microvolt = <1350000>;
- 				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-state-mem {
- 					regulator-on-in-suspend;
-@@ -322,6 +323,7 @@
- 				regulator-name = "vdd_2v";
- 				regulator-min-microvolt = <2000000>;
- 				regulator-max-microvolt = <2000000>;
-+				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-state-mem {
- 					regulator-on-in-suspend;
-@@ -332,6 +334,7 @@
- 				regulator-name = "vdd_1v8";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-state-mem {
- 					regulator-on-in-suspend;
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index 0900b38f60b4f..58af2254e5212 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -301,6 +301,7 @@
- 				regulator-name = "vdd_1v35";
- 				regulator-min-microvolt = <1350000>;
- 				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-state-mem {
- 					regulator-on-in-suspend;
-@@ -322,6 +323,7 @@
- 				regulator-name = "vdd_2v";
- 				regulator-min-microvolt = <2000000>;
- 				regulator-max-microvolt = <2000000>;
-+				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-state-mem {
- 					regulator-on-in-suspend;
-@@ -332,6 +334,7 @@
- 				regulator-name = "vdd_1v8";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-state-mem {
- 					regulator-on-in-suspend;
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+index bdb7523216000..b3307b1b3aac1 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+@@ -2177,6 +2177,16 @@ static int i40e_vc_del_mac_addr_msg(struct i40e_vf *vf, u8 *msg, u16 msglen)
+ 			ret = I40E_ERR_INVALID_MAC_ADDR;
+ 			goto error_param;
+ 		}
++
++		if (vf->pf_set_mac &&
++		    ether_addr_equal(al->list[i].addr,
++				     vf->default_lan_addr.addr)) {
++			dev_err(&pf->pdev->dev,
++				"MAC addr %pM has been set by PF, cannot delete it for VF %d, reset VF to change MAC addr\n",
++				vf->default_lan_addr.addr, vf->vf_id);
++			ret = I40E_ERR_PARAM;
++			goto error_param;
++		}
+ 	}
+ 	vsi = pf->vsi[vf->lan_vsi_idx];
+ 
 -- 
 2.20.1
 
