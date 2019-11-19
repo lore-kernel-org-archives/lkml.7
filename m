@@ -2,60 +2,56 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1049C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0405C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73FFF2231A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A59562231A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141000;
-	bh=YDjnTWL4YHnkqEVPpcQ8dBSBHnXGv0uzgLUzmhhK8/8=;
+	s=default; t=1574141005;
+	bh=sKIeWLn1mX4A/aVFN2Vpovh/sCUJHX5zLURb9S6+bdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HVtYeTLUEn7FhCMgQ7CICTDoOKfI417QPjFRc0h+FxSz92uVAe4dskvF/kGPD2vd7
-	 AOS0CDQ4Dq5laj0Rlxl+skaUdQe5pVPv1JpX01UIO3fjp9zCXUrkgTNJU/SfXaIxY+
-	 zU658TUWzBvkqKgFribAHYG/ZnDeRNezwyhdcHAw=
+	b=y6Wtg+dFgpHQF4ABK5MOQSsDbtsUiosHRsJLHKHeMiau5dStpwgkAgBYdVMUaNWZ6
+	 WPxdPJGFWzFEtCKtFoZsot0mqt56tYDr8WMDf9Lb2iNPWIiSJTKiLTDk+qMPpSFxWl
+	 PajDWLUhsNoUVVOBeitU2bGxGs3u6LzkOL5+OvPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbfKSFXT (ORCPT
+        id S1727982AbfKSFXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:23:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38848 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:23:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727944AbfKSFXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:23:16 -0500
+        id S1727963AbfKSFXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:23:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0AE32235D;
-        Tue, 19 Nov 2019 05:23:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF7F62231A;
+        Tue, 19 Nov 2019 05:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574140995;
-        bh=YDjnTWL4YHnkqEVPpcQ8dBSBHnXGv0uzgLUzmhhK8/8=;
+        s=default; t=1574141001;
+        bh=sKIeWLn1mX4A/aVFN2Vpovh/sCUJHX5zLURb9S6+bdk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rNI1u1H+IcrYEa6lTLx/TGOgCfEZE0d4sYIcYmg6L7rCj6t9lIZpy3raiCrK/A9oh
-         Nh26++lMhmeOMkgfSaefxYKf7z++vW5kSeXACERatAtBK9VLZk6ZzpqJpaC2KBtGwM
-         UysH2B+y7d1K+bC2A2Ubvhnt+am0LXL0O5ZKlSiM=
+        b=jf46VhDUzVOQEN91L0FoUFkagEH4xMGxTMBrZpjIW3ivoqbrXXfr9b76f55hMJyuo
+         iDtX6RFj4YM3YCcu0zE6SAaWxis8UbL+ATsgdsaKI8mnh+EIxQiiQ49orB1QVpXF8f
+         I93CBkqDmXshhkmeFjLf8DV3f+7CCEZLjNYYJn9k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Lamprecht <t.lamprecht@proxmox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 001/422] KVM: x86: introduce is_pae_paging
-Date:   Tue, 19 Nov 2019 06:13:18 +0100
-Message-Id: <20191119051400.346801427@linuxfoundation.org>
+        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 003/422] scsi: core: Handle drivers which set sg_tablesize to zero
+Date:   Tue, 19 Nov 2019 06:13:20 +0100
+Message-Id: <20191119051400.455734877@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,114 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Michael Schmitz <schmitzmic@gmail.com>
 
-[ Upstream commit bf03d4f9334728bf7c8ffc7de787df48abd6340e ]
+commit 9393c8de628cf0968d81a17cc11841e42191e041 upstream.
 
-Checking for 32-bit PAE is quite common around code that fiddles with
-the PDPTRs.  Add a function to compress all checks into a single
-invocation.
+In scsi_mq_setup_tags(), cmd_size is calculated based on zero size for the
+scatter-gather list in case the low level driver uses SG_NONE in its host
+template.
 
-Moving to the common helper also fixes a subtle bug in kvm_set_cr3()
-where it fails to check is_long_mode() and results in KVM incorrectly
-attempting to load PDPTRs for a 64-bit guest.
+cmd_size is passed on to the block layer for calculation of the request
+size, and we've seen NULL pointer dereference errors from the block layer
+in drivers where SG_NONE is used and a mq IO scheduler is active,
+apparently as a consequence of this (see commit 68ab2d76e4be ("scsi:
+cxlflash: Set sg_tablesize to 1 instead of SG_NONE"), and a recent patch by
+Finn Thain converting the three m68k NFR5380 drivers to avoid setting
+SG_NONE).
 
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[sean: backport to 4.x; handle vmx.c split in 5.x, call out the bugfix]
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Tested-by: Thomas Lamprecht <t.lamprecht@proxmox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Try to avoid these errors by accounting for at least one sg list entry when
+calculating cmd_size, regardless of whether the low level driver set a zero
+sg_tablesize.
+
+Tested on 030 m68k with the atari_scsi driver - setting sg_tablesize to
+SG_NONE no longer results in a crash when loading this driver.
+
+CC: Finn Thain <fthain@telegraphics.com.au>
+Link: https://lore.kernel.org/r/1572922150-4358-1-git-send-email-schmitzmic@gmail.com
+Signed-off-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+
 ---
- arch/x86/kvm/vmx.c | 7 +++----
- arch/x86/kvm/x86.c | 8 ++++----
- arch/x86/kvm/x86.h | 5 +++++
- 3 files changed, 12 insertions(+), 8 deletions(-)
+ drivers/scsi/scsi_lib.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index 4eda2a9c234a6..1ab4bb3d6a040 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -5173,7 +5173,7 @@ static void ept_load_pdptrs(struct kvm_vcpu *vcpu)
- 		      (unsigned long *)&vcpu->arch.regs_dirty))
- 		return;
- 
--	if (is_paging(vcpu) && is_pae(vcpu) && !is_long_mode(vcpu)) {
-+	if (is_pae_paging(vcpu)) {
- 		vmcs_write64(GUEST_PDPTR0, mmu->pdptrs[0]);
- 		vmcs_write64(GUEST_PDPTR1, mmu->pdptrs[1]);
- 		vmcs_write64(GUEST_PDPTR2, mmu->pdptrs[2]);
-@@ -5185,7 +5185,7 @@ static void ept_save_pdptrs(struct kvm_vcpu *vcpu)
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -2371,7 +2371,8 @@ int scsi_mq_setup_tags(struct Scsi_Host
  {
- 	struct kvm_mmu *mmu = vcpu->arch.walk_mmu;
+ 	unsigned int cmd_size, sgl_size;
  
--	if (is_paging(vcpu) && is_pae(vcpu) && !is_long_mode(vcpu)) {
-+	if (is_pae_paging(vcpu)) {
- 		mmu->pdptrs[0] = vmcs_read64(GUEST_PDPTR0);
- 		mmu->pdptrs[1] = vmcs_read64(GUEST_PDPTR1);
- 		mmu->pdptrs[2] = vmcs_read64(GUEST_PDPTR2);
-@@ -12013,8 +12013,7 @@ static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool ne
- 		 * If PAE paging and EPT are both on, CR3 is not used by the CPU and
- 		 * must not be dereferenced.
- 		 */
--		if (!is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu) &&
--		    !nested_ept) {
-+		if (is_pae_paging(vcpu) && !nested_ept) {
- 			if (!load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3)) {
- 				*entry_failure_code = ENTRY_FAIL_PDPTE;
- 				return 1;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index e536503ac7881..6cf8af022b21d 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -634,7 +634,7 @@ bool pdptrs_changed(struct kvm_vcpu *vcpu)
- 	gfn_t gfn;
- 	int r;
- 
--	if (is_long_mode(vcpu) || !is_pae(vcpu) || !is_paging(vcpu))
-+	if (!is_pae_paging(vcpu))
- 		return false;
- 
- 	if (!test_bit(VCPU_EXREG_PDPTR,
-@@ -885,8 +885,8 @@ int kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
- 	if (is_long_mode(vcpu) &&
- 	    (cr3 & rsvd_bits(cpuid_maxphyaddr(vcpu), 63)))
- 		return 1;
--	else if (is_pae(vcpu) && is_paging(vcpu) &&
--		   !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
-+	else if (is_pae_paging(vcpu) &&
-+		 !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
- 		return 1;
- 
- 	kvm_mmu_new_cr3(vcpu, cr3, skip_tlb_flush);
-@@ -8348,7 +8348,7 @@ static int __set_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
- 		kvm_update_cpuid(vcpu);
- 
- 	idx = srcu_read_lock(&vcpu->kvm->srcu);
--	if (!is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu)) {
-+	if (is_pae_paging(vcpu)) {
- 		load_pdptrs(vcpu, vcpu->arch.walk_mmu, kvm_read_cr3(vcpu));
- 		mmu_reset_needed = 1;
- 	}
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 3a91ea760f073..608e5f8c5d0a5 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -139,6 +139,11 @@ static inline int is_paging(struct kvm_vcpu *vcpu)
- 	return likely(kvm_read_cr0_bits(vcpu, X86_CR0_PG));
- }
- 
-+static inline bool is_pae_paging(struct kvm_vcpu *vcpu)
-+{
-+	return !is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu);
-+}
-+
- static inline u32 bit(int bitno)
- {
- 	return 1 << (bitno & 31);
--- 
-2.20.1
-
+-	sgl_size = scsi_mq_sgl_size(shost);
++	sgl_size = max_t(unsigned int, sizeof(struct scatterlist),
++			scsi_mq_sgl_size(shost));
+ 	cmd_size = sizeof(struct scsi_cmnd) + shost->hostt->cmd_size + sgl_size;
+ 	if (scsi_host_get_prot(shost))
+ 		cmd_size += sizeof(struct scsi_data_buffer) + sgl_size;
 
 
