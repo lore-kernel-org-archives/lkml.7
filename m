@@ -2,132 +2,64 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E22C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E86BC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0C720885
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:17:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lcG2Jf/v"
+	by mail.kernel.org (Postfix) with ESMTP id 6B9AA222A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:17:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbfKSOR0 (ORCPT
+        id S1728273AbfKSORb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:17:26 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50576 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728181AbfKSORV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 09:17:21 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJEHKJj017670;
-        Tue, 19 Nov 2019 08:17:20 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574173040;
-        bh=Kr87n77gFeBbSKWKSZnMedn8yql6reeiLpFLg4xIjN0=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=lcG2Jf/vApwoM3krCe0PQ8uVBxi8Siyf6nDMrJm4edLzJwIok+jYM3Zc/c/9GcE1R
-         5jr4ezVFWGBUZ6tGuIJqjuXSEDHxW+FsMWQkwaMf15vzckF/WGBjiiVSvQUSrxfSeE
-         6MQn+PaaXTiolB25mMpylqTtLH5DkUznkPI3tJzk=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJEHKR4084111;
-        Tue, 19 Nov 2019 08:17:20 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 19
- Nov 2019 08:17:20 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 19 Nov 2019 08:17:20 -0600
-Received: from sokoban.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJEGvZ3027070;
-        Tue, 19 Nov 2019 08:17:18 -0600
-From:   Tero Kristo <t-kristo@ti.com>
-To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
-        <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>
-Subject: [PATCHv2 10/15] remoteproc/omap: Check for undefined mailbox messages
-Date:   Tue, 19 Nov 2019 16:16:40 +0200
-Message-ID: <20191119141645.19777-11-t-kristo@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191119141645.19777-1-t-kristo@ti.com>
-References: <20191119141645.19777-1-t-kristo@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 19 Nov 2019 09:17:31 -0500
+Received: from mx2.suse.de ([195.135.220.15]:40444 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728128AbfKSORZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 09:17:25 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6C812B34F;
+        Tue, 19 Nov 2019 14:17:23 +0000 (UTC)
+Message-ID: <1574173039.28617.13.camel@suse.com>
+Subject: Re: KASAN: use-after-free Read in wdm_int_callback
+From:   Oliver Neukum <oneukum@suse.com>
+To:     Andrey Konovalov <andreyknvl@google.com>,
+        syzbot <syzbot+1a3765ef3c0d49d36a75@syzkaller.appspotmail.com>
+Cc:     baijiaju1990@gmail.com, bigeasy@linutronix.de,
+        Colin Ian King <colin.king@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        yuehaibing@huawei.com
+Date:   Tue, 19 Nov 2019 15:17:19 +0100
+In-Reply-To: <CAAeHK+zV2TXWtdmLj8Fjpfg9DPNNWrZXnbtLJ_bEhMJUjiua9Q@mail.gmail.com>
+References: <000000000000dece03058f87bf11@google.com>
+         <00000000000091301a058fabc3f1@google.com>
+         <CAAeHK+zV2TXWtdmLj8Fjpfg9DPNNWrZXnbtLJ_bEhMJUjiua9Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+Am Dienstag, den 19.11.2019, 14:46 +0100 schrieb Andrey Konovalov:
+> 
+> #syz dup: WARNING in wdm_write/usb_submit_urb
+> 
+> https://syzkaller.appspot.com/bug?extid=d232cca6ec42c2edb3fc
 
-Add some checks in the mailbox callback function to limit
-any processing in the mailbox callback function to only
-certain currently valid messages, and drop all the remaining
-messages. A debug message is added to print any such invalid
-messages when the appropriate trace control is enabled.
+Hi,
 
-Co-developed-by: Subramaniam Chanderashekarapuram <subramaniam.ca@ti.com>
-Signed-off-by: Subramaniam Chanderashekarapuram <subramaniam.ca@ti.com>
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/remoteproc/omap_remoteproc.c | 6 ++++++
- drivers/remoteproc/omap_remoteproc.h | 7 +++++++
- 2 files changed, 13 insertions(+)
+this is a bit odd. A fix for that bug went in quite some time ago.
+Is the kernel tree these tests are running on regularly updated?
 
-diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-index 4af55d1f2702..62734eaafaad 100644
---- a/drivers/remoteproc/omap_remoteproc.c
-+++ b/drivers/remoteproc/omap_remoteproc.c
-@@ -127,6 +127,12 @@ static void omap_rproc_mbox_callback(struct mbox_client *client, void *data)
- 		dev_info(dev, "received echo reply from %s\n", name);
- 		break;
- 	default:
-+		if (msg >= RP_MBOX_READY && msg < RP_MBOX_END_MSG)
-+			return;
-+		if (msg > oproc->rproc->max_notifyid) {
-+			dev_dbg(dev, "dropping unknown message 0x%x", msg);
-+			return;
-+		}
- 		/* msg contains the index of the triggered vring */
- 		if (rproc_vq_interrupt(oproc->rproc, msg) == IRQ_NONE)
- 			dev_dbg(dev, "no message was found in vqid %d\n", msg);
-diff --git a/drivers/remoteproc/omap_remoteproc.h b/drivers/remoteproc/omap_remoteproc.h
-index 1e6fef753c4f..18f522617683 100644
---- a/drivers/remoteproc/omap_remoteproc.h
-+++ b/drivers/remoteproc/omap_remoteproc.h
-@@ -31,6 +31,12 @@
-  *
-  * @RP_MBOX_ABORT_REQUEST: a "please crash" request, used for testing the
-  * recovery mechanism (to some extent).
-+ *
-+ * Introduce new message definitions if any here.
-+ *
-+ * @RP_MBOX_END_MSG: Indicates end of known/defined messages from remote core
-+ * This should be the last definition.
-+ *
-  */
- enum omap_rp_mbox_messages {
- 	RP_MBOX_READY		= 0xFFFFFF00,
-@@ -39,6 +45,7 @@ enum omap_rp_mbox_messages {
- 	RP_MBOX_ECHO_REQUEST	= 0xFFFFFF03,
- 	RP_MBOX_ECHO_REPLY	= 0xFFFFFF04,
- 	RP_MBOX_ABORT_REQUEST	= 0xFFFFFF05,
-+	RP_MBOX_END_MSG		= 0xFFFFFF06,
- };
- 
- #endif /* _OMAP_RPMSG_H */
--- 
-2.17.1
+	Regards
+		Oliver
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
