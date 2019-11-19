@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E94C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EC4C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3A5F222DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB5CD222DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:40:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142021;
-	bh=JQk9omXxklF8VgVrkHHZjnjSyVreUFDVuykH+LeLiPA=;
+	s=default; t=1574142024;
+	bh=MxlgPNIfRZUc8+XjXZZznbftC8zjMG5AwsiChYigWyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cj7+hsTes237AmGBf25cab6P1DeCLTC8ZIOmw0iZH4r0PCNDsym0JkSKuHXzyhWqi
-	 jYFrMJ7i5YHrnAS7U8P2wUFpQ9N+/WrsVtcs80mzp6RfEpzCPziCyhTv2BHiNt3JBh
-	 Z5op7C3WqkGTNGtbeV5q541xKiVFd29psMDQtXMk=
+	b=vuur/7SZSrD1R0R2FjakoCyfn0YKo/L+m1SLH31zsHqHxeXCRMz9Fv4aGcrO5gKvG
+	 ya0Fc8X73yJ2G/XxSoIMS/EiwWlg/lH3Kg2nD+7tt7+Te9o/mHjexbelLUFWEoMnhD
+	 zrTzyi6N4NXevvUKSsLz92QEJA3m1tXWyFs+igD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730384AbfKSFkU (ORCPT
+        id S1730394AbfKSFkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:40:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34446 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:40:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730378AbfKSFkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:40:18 -0500
+        id S1730381AbfKSFkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:40:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E197222DC;
-        Tue, 19 Nov 2019 05:40:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D34B622303;
+        Tue, 19 Nov 2019 05:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142016;
-        bh=JQk9omXxklF8VgVrkHHZjnjSyVreUFDVuykH+LeLiPA=;
+        s=default; t=1574142019;
+        bh=MxlgPNIfRZUc8+XjXZZznbftC8zjMG5AwsiChYigWyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oXQaczOgG1Z/UDLt67eVROE5ZUanKhxm8qozFIJYAH96KSGyxlbMTrFAOxHwa2uPl
-         vLM4+ueIrPgef6ZVjVuQhg9DzXpJEBKGjRMPKH8inZLBouOxv+K8BocXIBksfI0nMK
-         Hs1TXxysg6WXjMCJg+HgE0K1CcXzJCDK3gSavUk0=
+        b=RtEbcoj2ho5fHqpJXUnkBSMdaor3Xlfz38s9RYm9nIOv48YL6Uk0wYt6q/ikCviS5
+         DU53C1jX3OvNgtRubmsmKZ0BndkzBCsjsaAmaCAAcK1kv/Y/6exD+pzP49ZpsFQ+3q
+         tlr/1BHmGjdSR8M9Lc7E+TVlmv/toTIlFaqyG1fk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 319/422] net: freescale: fix return type of ndo_start_xmit function
-Date:   Tue, 19 Nov 2019 06:18:36 +0100
-Message-Id: <20191119051419.663640403@linuxfoundation.org>
+Subject: [PATCH 4.19 310/422] ARM: dts: clearfog: fix sdhci supply property name
+Date:   Tue, 19 Nov 2019 06:18:27 +0100
+Message-Id: <20191119051419.086019662@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,106 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Baruch Siach <baruch@tkos.co.il>
 
-[ Upstream commit 06983aa526c759ebdf43f202d8d0491d9494e2f4 ]
+[ Upstream commit e807f0298144c06740022a2f900d86b7f115595e ]
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, so make sure the implementation in
-this driver has returns 'netdev_tx_t' value, and change the function
-return type to netdev_tx_t.
+The vmmc phandle, like all power supply property names, must have the
+'-supply' suffix.
 
-Found by coccinelle.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c        | 3 ++-
- drivers/net/ethernet/freescale/fec_mpc52xx.c          | 3 ++-
- drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c | 3 ++-
- drivers/net/ethernet/freescale/gianfar.c              | 4 ++--
- drivers/net/ethernet/freescale/ucc_geth.c             | 3 ++-
- 5 files changed, 10 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/armada-388-clearfog.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-index d7915cd68dc14..462bb8c4f80c9 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -2046,7 +2046,8 @@ static inline int dpaa_xmit(struct dpaa_priv *priv,
- 	return 0;
- }
+diff --git a/arch/arm/boot/dts/armada-388-clearfog.dtsi b/arch/arm/boot/dts/armada-388-clearfog.dtsi
+index 7c6ad2afb0947..1b0d0680c8b62 100644
+--- a/arch/arm/boot/dts/armada-388-clearfog.dtsi
++++ b/arch/arm/boot/dts/armada-388-clearfog.dtsi
+@@ -48,7 +48,7 @@
+ 					     &clearfog_sdhci_cd_pins>;
+ 				pinctrl-names = "default";
+ 				status = "okay";
+-				vmmc = <&reg_3p3v>;
++				vmmc-supply = <&reg_3p3v>;
+ 				wp-inverted;
+ 			};
  
--static int dpaa_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
-+static netdev_tx_t
-+dpaa_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
- {
- 	const int queue_mapping = skb_get_queue_mapping(skb);
- 	bool nonlinear = skb_is_nonlinear(skb);
-diff --git a/drivers/net/ethernet/freescale/fec_mpc52xx.c b/drivers/net/ethernet/freescale/fec_mpc52xx.c
-index 6d7269d87a850..b90bab72efdb3 100644
---- a/drivers/net/ethernet/freescale/fec_mpc52xx.c
-+++ b/drivers/net/ethernet/freescale/fec_mpc52xx.c
-@@ -305,7 +305,8 @@ static int mpc52xx_fec_close(struct net_device *dev)
-  * invariant will hold if you make sure that the netif_*_queue()
-  * calls are done at the proper times.
-  */
--static int mpc52xx_fec_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t
-+mpc52xx_fec_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct mpc52xx_fec_priv *priv = netdev_priv(dev);
- 	struct bcom_fec_bd *bd;
-diff --git a/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c b/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c
-index 2c2976a2dda6b..7c548ed535da5 100644
---- a/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c
-+++ b/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c
-@@ -481,7 +481,8 @@ static struct sk_buff *tx_skb_align_workaround(struct net_device *dev,
- }
- #endif
- 
--static int fs_enet_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t
-+fs_enet_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct fs_enet_private *fep = netdev_priv(dev);
- 	cbd_t __iomem *bdp;
-diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
-index f27f9bae1a4ac..c97c4edfa31bc 100644
---- a/drivers/net/ethernet/freescale/gianfar.c
-+++ b/drivers/net/ethernet/freescale/gianfar.c
-@@ -112,7 +112,7 @@
- const char gfar_driver_version[] = "2.0";
- 
- static int gfar_enet_open(struct net_device *dev);
--static int gfar_start_xmit(struct sk_buff *skb, struct net_device *dev);
-+static netdev_tx_t gfar_start_xmit(struct sk_buff *skb, struct net_device *dev);
- static void gfar_reset_task(struct work_struct *work);
- static void gfar_timeout(struct net_device *dev);
- static int gfar_close(struct net_device *dev);
-@@ -2334,7 +2334,7 @@ static inline bool gfar_csum_errata_76(struct gfar_private *priv,
- /* This is called by the kernel when a frame is ready for transmission.
-  * It is pointed to by the dev->hard_start_xmit function pointer
-  */
--static int gfar_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t gfar_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct gfar_private *priv = netdev_priv(dev);
- 	struct gfar_priv_tx_q *tx_queue = NULL;
-diff --git a/drivers/net/ethernet/freescale/ucc_geth.c b/drivers/net/ethernet/freescale/ucc_geth.c
-index 1e2b53a934fb9..a5bf02ae4bc5c 100644
---- a/drivers/net/ethernet/freescale/ucc_geth.c
-+++ b/drivers/net/ethernet/freescale/ucc_geth.c
-@@ -3085,7 +3085,8 @@ static int ucc_geth_startup(struct ucc_geth_private *ugeth)
- 
- /* This is called by the kernel when a frame is ready for transmission. */
- /* It is pointed to by the dev->hard_start_xmit function pointer */
--static int ucc_geth_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t
-+ucc_geth_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct ucc_geth_private *ugeth = netdev_priv(dev);
- #ifdef CONFIG_UGETH_TX_ON_DEMAND
 -- 
 2.20.1
 
