@@ -2,103 +2,115 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4FDC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09731C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE0F420679
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D52B822360
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:57:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="kEa7yRyF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xfdf/vrh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbfKSPw2 (ORCPT
+        id S1728194AbfKSP5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:52:28 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:53204 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728183AbfKSPw1 (ORCPT
+        Tue, 19 Nov 2019 10:57:10 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:46068 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727509AbfKSP5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 10:52:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1574178740; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3FiBXtSRFixC8yyEq7mwTAb3MQ9xzazHpSbebQErgE4=;
-        b=kEa7yRyF5p3u5qgzUTbPdi1RXF1PMPxndZjJ9Mgi2yuAWJjCnv00Nc5uLPz5svAla5DQAJ
-        nwkS7HrasfkxGwMmAVI+mz3QruUQqstX9q1NWIUP1bLqJbZBmmWVYi2TX5SzDbluhfKyfh
-        jKPfxOSlnfibV5uZDp7pl6Q1lvilUG4=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     od@zcrc.me, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 2/2] pinctrl: ingenic: Add OTG VBUS pin for the JZ4770
-Date:   Tue, 19 Nov 2019 16:52:11 +0100
-Message-Id: <20191119155211.102527-2-paul@crapouillou.net>
-In-Reply-To: <20191119155211.102527-1-paul@crapouillou.net>
-References: <20191119155211.102527-1-paul@crapouillou.net>
+        Tue, 19 Nov 2019 10:57:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=W1uhPT3svlAF0ny/aKL/GHGJkaklH1eD5N8ZBRDMDjQ=; b=Xfdf/vrhOYcquHoQNoWpTcYtN
+        kuKDO7Bj0HAO9PGeYCNBHKD8xBrQdnj0NBMreHHZsj6FewQ1lt2CJRl5hZh7TsQLGgENhL3m9Y2vg
+        hgFjZX+aDnEaE4AoEMRRRAl7sFpRoDW7RF27nGb6Djf9AI9Tj5n16mNuwfZMKDqQd48sFww3pKSoO
+        A3tzKcDLGANz00inclHZMDPUpgPNRT5lBfyG4pYvTruFLURextxyUhR1r2/NAqX65anAsLCtSBbTG
+        fcpQx31yG7SOO80NCnOArA/EM6w9iLaF4Y5dqIt2zQua0YL/9XPDRqNicbv1QzgepjAfcZST2eANh
+        LdHbfPRqw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iX5sG-0003B8-Ga; Tue, 19 Nov 2019 15:57:05 +0000
+Date:   Tue, 19 Nov 2019 07:57:04 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, shakeelb@google.com,
+        hannes@cmpxchg.org, Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH v4 3/9] mm/lru: replace pgdat lru_lock with lruvec lock
+Message-ID: <20191119155704.GP20752@bombadil.infradead.org>
+References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1574166203-151975-4-git-send-email-alex.shi@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1574166203-151975-4-git-send-email-alex.shi@linux.alibaba.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add pin mux configuration for the OTG VBUS pin of the JZ4770.
+On Tue, Nov 19, 2019 at 08:23:17PM +0800, Alex Shi wrote:
+> +static inline struct lruvec *lock_page_lruvec_irqsave(struct page *page,
+> +				struct pglist_data *pgdat, unsigned long *flags)
+> +{
+> +	struct lruvec *lruvec = mem_cgroup_page_lruvec(page, pgdat);
+> +
+> +	spin_lock_irqsave(&lruvec->lru_lock, *flags);
+> +
+> +	return lruvec;
+> +}
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/pinctrl/pinctrl-ingenic.c | 5 +++++
- 1 file changed, 5 insertions(+)
+This should be a macro, not a function.  You basically can't do this;
+spin_lock_irqsave needs to write to a variable which can then be passed
+to spin_unlock_irqrestore().  What you're doing here will dereference the
+pointer in _this_ function, but won't propagate the modified value back to
+the caller.  I suppose you could do something like this ...
 
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index dbd907ef7cf0..44f96a4eb97c 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -686,6 +686,7 @@ static int jz4770_mac_rmii_pins[] = {
- 	0xa9, 0xab, 0xaa, 0xac, 0xa5, 0xa4, 0xad, 0xae, 0xa6, 0xa8,
- };
- static int jz4770_mac_mii_pins[] = { 0xa7, 0xaf, };
-+static int jz4770_otg_pins[] = { 0x8a, };
- 
- static int jz4770_uart0_data_funcs[] = { 0, 0, };
- static int jz4770_uart0_hwflow_funcs[] = { 0, 0, };
-@@ -744,6 +745,7 @@ static int jz4770_pwm_pwm6_funcs[] = { 0, };
- static int jz4770_pwm_pwm7_funcs[] = { 0, };
- static int jz4770_mac_rmii_funcs[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
- static int jz4770_mac_mii_funcs[] = { 0, 0, };
-+static int jz4770_otg_funcs[] = { 0, };
- 
- static const struct group_desc jz4770_groups[] = {
- 	INGENIC_PIN_GROUP("uart0-data", jz4770_uart0_data),
-@@ -799,6 +801,7 @@ static const struct group_desc jz4770_groups[] = {
- 	INGENIC_PIN_GROUP("pwm7", jz4770_pwm_pwm7),
- 	INGENIC_PIN_GROUP("mac-rmii", jz4770_mac_rmii),
- 	INGENIC_PIN_GROUP("mac-mii", jz4770_mac_mii),
-+	INGENIC_PIN_GROUP("otg-vbus", jz4770_otg),
- };
- 
- static const char *jz4770_uart0_groups[] = { "uart0-data", "uart0-hwflow", };
-@@ -841,6 +844,7 @@ static const char *jz4770_pwm5_groups[] = { "pwm5", };
- static const char *jz4770_pwm6_groups[] = { "pwm6", };
- static const char *jz4770_pwm7_groups[] = { "pwm7", };
- static const char *jz4770_mac_groups[] = { "mac-rmii", "mac-mii", };
-+static const char *jz4770_otg_groups[] = { "otg-vbus", };
- 
- static const struct function_desc jz4770_functions[] = {
- 	{ "uart0", jz4770_uart0_groups, ARRAY_SIZE(jz4770_uart0_groups), },
-@@ -871,6 +875,7 @@ static const struct function_desc jz4770_functions[] = {
- 	{ "pwm6", jz4770_pwm6_groups, ARRAY_SIZE(jz4770_pwm6_groups), },
- 	{ "pwm7", jz4770_pwm7_groups, ARRAY_SIZE(jz4770_pwm7_groups), },
- 	{ "mac", jz4770_mac_groups, ARRAY_SIZE(jz4770_mac_groups), },
-+	{ "otg", jz4770_otg_groups, ARRAY_SIZE(jz4770_otg_groups), },
- };
- 
- static const struct ingenic_chip_info jz4770_chip_info = {
--- 
-2.24.0
+static inline struct lruvec *lock_page_lruvec_irqsave(struct page *page,
+			struct pglist_data *pgdat, unsigned long *flagsp)
+{
+	unsigned long flags;
+	struct lruvec *lruvec = mem_cgroup_page_lruvec(page, pgdat);
 
+	spin_lock_irqsave(&lruvec->lru_lock, flags);
+	*flagsp = flags;
+
+	return lruvec;
+}
+
+Almost certainly easier to write a macro though.
+
+You shouldn't need the two prior patches with this kind of change.
