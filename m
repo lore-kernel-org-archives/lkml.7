@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDEBC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21983C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3965F2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCDBC2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143569;
-	bh=LwqOr4I4zulBalz0R9isVxO+q7yNbwDmSBSJJrSTNSs=;
+	s=default; t=1574143574;
+	bh=ENGAVoNEsilAix5+Fhardf+5+hp2R8Zkomic5SD8fds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UTcpeddvWZQ2yl1wliWnokR4ELT06w06gCQaNKGWuwL6b3GtQBVlDlFxT6HvQuxit
-	 vL95E9cyPnjaI2bplvIy0Afuhq01fJRzP6Aux6SGx9Q87Zf360CRi8SEHECQiHbwNU
-	 xQRn48XhM0fM3XX1C2JxhxdJ3wHr7hCimnKynhnI=
+	b=bSXbdeWMa2bMNQGRgaBtQO7TT6FfhJ2ouU7kiFUmCyelrbfU/sFMLRik0efrn9B2A
+	 jWr/5VO04D9nqGnYSEiHkLJAeXJbJyWCp1Fb3zVjx6ddOk3XQoHKa+cjR0JpxokqO9
+	 Efpn/TKeEnqrD/ZtsUgafLhL2VHFIXvcCHv/uCiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728966AbfKSGGI (ORCPT
+        id S1729064AbfKSGGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:06:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56096 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 01:06:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728152AbfKSFfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:35:14 -0500
+        id S1728481AbfKSFfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:35:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3534B20672;
-        Tue, 19 Nov 2019 05:35:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D4ED21783;
+        Tue, 19 Nov 2019 05:35:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141712;
-        bh=LwqOr4I4zulBalz0R9isVxO+q7yNbwDmSBSJJrSTNSs=;
+        s=default; t=1574141710;
+        bh=ENGAVoNEsilAix5+Fhardf+5+hp2R8Zkomic5SD8fds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Llxom0+5M/sm6zAUGZwtdCzZS8MiugE3YJzlAmtZPfh0wmwsxa7kgjS3WnI03qTYc
-         rMVQs1+2rFWgsykLlG+6fVa856nuo4RM4I07S+a1KMUxT9Ie6f5A257eGTp9/+yrHW
-         42pN8JQbAlVP3UEjZR4Guq81aKDaTYOv4Z5z79Tk=
+        b=GWebbpsoxgP/FRVkGwwGArph9Q6ohqtgxMJav5EvzrbYDlZ2xHTB5TaRAndqzf0fn
+         NmCHnblhRgScupLPVjXWo0pvLaj6kCBzbDT/c5sIw1IxTum2dX+SS5hm76Ku3XApaS
+         NL/kf0Q5eIRzHA/X52EocbZLvtEn70iBsdNmhqLg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Corey Minyard <cminyard@mvista.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 254/422] ipmi_si: fix potential integer overflow on large shift
-Date:   Tue, 19 Nov 2019 06:17:31 +0100
-Message-Id: <20191119051415.447335103@linuxfoundation.org>
+        stable@vger.kernel.org, Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 227/422] kernfs: Fix range checks in kernfs_get_target_path
+Date:   Tue, 19 Nov 2019 06:17:04 +0100
+Message-Id: <20191119051413.347959671@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,38 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Bernd Edlinger <bernd.edlinger@hotmail.de>
 
-[ Upstream commit 97a103e6b584442cd848887ed8d47be2410b7e09 ]
+[ Upstream commit a75e78f21f9ad4b810868c89dbbabcc3931591ca ]
 
-Shifting unsigned char b by an int type can lead to sign-extension
-overflow. For example, if b is 0xff and the shift is 24, then top
-bit is sign-extended so the final value passed to writeq has all
-the upper 32 bits set.  Fix this by casting b to a 64 bit unsigned
-before the shift.
+The terminating NUL byte is only there because the buffer is
+allocated with kzalloc(PAGE_SIZE, GFP_KERNEL), but since the
+range-check is off-by-one, and PAGE_SIZE==PATH_MAX, the
+returned string may not be zero-terminated if it is exactly
+PATH_MAX characters long.  Furthermore also the initial loop
+may theoretically exceed PATH_MAX and cause a fault.
 
-Detected by CoverityScan, CID#1465246 ("Unintended sign extension")
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_si_mem_io.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/kernfs/symlink.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/char/ipmi/ipmi_si_mem_io.c b/drivers/char/ipmi/ipmi_si_mem_io.c
-index 638f4ab88f445..75583612ab105 100644
---- a/drivers/char/ipmi/ipmi_si_mem_io.c
-+++ b/drivers/char/ipmi/ipmi_si_mem_io.c
-@@ -51,7 +51,7 @@ static unsigned char mem_inq(const struct si_sm_io *io, unsigned int offset)
- static void mem_outq(const struct si_sm_io *io, unsigned int offset,
- 		     unsigned char b)
- {
--	writeq(b << io->regshift, (io->addr)+(offset * io->regspacing));
-+	writeq((u64)b << io->regshift, (io->addr)+(offset * io->regspacing));
- }
- #endif
+diff --git a/fs/kernfs/symlink.c b/fs/kernfs/symlink.c
+index 305b220af45d3..162f43b80c84c 100644
+--- a/fs/kernfs/symlink.c
++++ b/fs/kernfs/symlink.c
+@@ -72,6 +72,9 @@ static int kernfs_get_target_path(struct kernfs_node *parent,
+ 		if (base == kn)
+ 			break;
  
++		if ((s - path) + 3 >= PATH_MAX)
++			return -ENAMETOOLONG;
++
+ 		strcpy(s, "../");
+ 		s += 3;
+ 		base = base->parent;
+@@ -88,7 +91,7 @@ static int kernfs_get_target_path(struct kernfs_node *parent,
+ 	if (len < 2)
+ 		return -EINVAL;
+ 	len--;
+-	if ((s - path) + len > PATH_MAX)
++	if ((s - path) + len >= PATH_MAX)
+ 		return -ENAMETOOLONG;
+ 
+ 	/* reverse fillup of target string from target to base */
 -- 
 2.20.1
 
