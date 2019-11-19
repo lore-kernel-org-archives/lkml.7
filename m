@@ -2,140 +2,148 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDE1C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6BAC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E0BE206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77A302082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:04:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VY7p79J4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfKSJBF (ORCPT
+        id S1726825AbfKSJEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 04:01:05 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:60017 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbfKSJBD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 04:01:03 -0500
-Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <o.rempel@pengutronix.de>)
-        id 1iWzNa-0002sl-E9; Tue, 19 Nov 2019 10:00:58 +0100
-Subject: Re: KMSAN: uninit-value in can_receive
-To:     Oliver Hartkopp <socketcan@hartkopp.net>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        syzbot <syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com>,
-        davem@davemloft.net, glider@google.com, linux-can@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-References: <0000000000005c08d10597a3a05d@google.com>
- <a5f73d92-fdf2-2590-c863-39a181dca8e1@hartkopp.net>
- <deedd609-6f3b-8035-47e1-252ab221faa1@pengutronix.de>
- <7934bc2b-597f-0bb3-be2d-32f3b07b4de9@hartkopp.net>
- <7f5c4546-0c1a-86ae-581e-0203b5fca446@pengutronix.de>
- <1f7d6ea7-152e-ff18-549c-b196d8b5e3a7@hartkopp.net>
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-Message-ID: <d87d0751-1433-386d-48aa-d41686106ecc@pengutronix.de>
-Date:   Tue, 19 Nov 2019 10:00:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <1f7d6ea7-152e-ff18-549c-b196d8b5e3a7@hartkopp.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 19 Nov 2019 04:04:51 -0500
+Received: from mail-eopbgr00050.outbound.protection.outlook.com ([40.107.0.50]:34368
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725306AbfKSJEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 04:04:51 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c9QzmFn8LMtgOiqWC7c4pyq+ES0GRtkpGZDOXxGUhzzAZvsk4IctZPaGHnnDCQJwOCnbl5BSxsjeDSt5+QjLXZfH2zJOefHX8qnhzz8z0A32fxigbw56s5kux8drKN8eZFnDKTecIelzX52ZZKvhev6Ouz0Oh82Iw56KxopuG5ilBeXzBSXJfecRj2zzFOGQ9BvhkG8R4Visju2Sg4NyteGioIeKa7ROW3OMWArGA1dgjTWI0oP+Ju2SEc87qGzq5O4jo767qqNv256XqRPH4/PsdwAuPiAysXqLeezB7MTC1Ba4dXLcdReITPwzM+yyIWy8F73JNkx4B4UG7+6f8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m24kf1mk+kO/yaNIo1CPGxMbwLKja/PQeg67t1Y05P4=;
+ b=fYcfbhnoW10GS9EanJF7z7G+ShLMNGrXKhTbeN8P39L176WEULWw155cMTmfXiGmwGNiYC7UQMxFiPFjKOPp6d3yIr5wVO3ZagLQyvPyl1UgatTYvk/ebDVNMIvinmDIpsfqf0m71rTtpNmPHGLkcBMJ3Wd98rQMmWb7fPyConOY9FmE/cTw5zkH9MtsaST/dYJOeig+r7ACU/JpT902MI97Iy2cV+v5XOXczBUHP+Wri18hSwmLO/M20mDk9mkccZzlVkqvHqKly6tw4tTbbq3vRl4gXCXdC45XhNGBJhjjmWSj26yjxgH/Ud1c/PFI6ddCbvjxJ0AwIOTaCnZEBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m24kf1mk+kO/yaNIo1CPGxMbwLKja/PQeg67t1Y05P4=;
+ b=VY7p79J4CmDPH1g+QeWaD2XwBi0p4FGzLUCNfAZdn02zDAYKgn0XqGmQz2Uv5l4tdvF0lg/DbAfgNut9+gNXE2qqGB/srcgmE4WMIlZSzR8kHU1/UrzFMKhgUvqTVdPRs5LgsVSbxB9WBqFQx/Z3AuzWSuKrOIThaCAkZuIidwI=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4259.eurprd04.prod.outlook.com (52.134.126.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.27; Tue, 19 Nov 2019 09:04:46 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2451.031; Tue, 19 Nov 2019
+ 09:04:46 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alice Guo <alice.guo@nxp.com>, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V3 0/4] clk: imx: imx8m[x]: switch to clk_hw API
+Thread-Topic: [PATCH V3 0/4] clk: imx: imx8m[x]: switch to clk_hw API
+Thread-Index: AQHVnrhjSBoXgoVf/UaxtVvL2YWuSA==
+Date:   Tue, 19 Nov 2019 09:04:46 +0000
+Message-ID: <1574154146-8818-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
-X-SA-Exim-Mail-From: o.rempel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0PR03CA0052.apcprd03.prod.outlook.com
+ (2603:1096:203:52::16) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: cd68e53c-5f5d-4dab-4b6c-08d76ccf8635
+x-ms-traffictypediagnostic: AM0PR04MB4259:|AM0PR04MB4259:
+x-ms-exchange-purlcount: 2
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB42593B47D8219A6C5E12DCDA884C0@AM0PR04MB4259.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 022649CC2C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(39860400002)(346002)(376002)(136003)(189003)(199004)(486006)(54906003)(6306002)(36756003)(6512007)(6486002)(52116002)(6506007)(2201001)(64756008)(66556008)(66476007)(476003)(66446008)(386003)(25786009)(50226002)(2501003)(110136005)(4326008)(2906002)(316002)(6116002)(3846002)(44832011)(8936002)(6436002)(66066001)(71190400001)(71200400001)(99286004)(256004)(14444005)(186003)(14454004)(305945005)(86362001)(966005)(7736002)(2616005)(478600001)(5660300002)(8676002)(81166006)(81156014)(6636002)(102836004)(66946007)(26005)(32563001)(15585785002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4259;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Y3FEvRdQunUd1hBmF5RuvVWFx5kuty2ZhTOlrZqMilzqJtK4Uc1V1+y/yUAaJT/r0HEVMTke2XHtMkFbCF2HWxWTz8oZKq49eR6iU+xJDPFDiaOiKBLjzOeixEtCjTkH7+5peu14w9f8DkDy7xpPG6o71AdJa5md/ySrwtQuARzYXC6vonYL0elJLCLGp5QAcKLs15HO0ggAJRg07EQalaTJNpk7GAYhiTQS9SW2dDrO9ygFTlEYSmIEMEW7+VKc7hj45OBupkXg8xxaWNkwknW/N9HN5wxC0yy1wrFi1N9dOoSNWQW3rbcOq7GnRMl03ag4fQ2SSKBkU2rsCtAfD9Bmt2/5QGWh91FEYtaSdNKbSsdieXU09l0U8rHCdFT+Cjkgfk0fJgBebeDIv8PU6snSxzyHRW08dIUH6Y+C8WzkP4Yrf1siKxBMPsbxA+JYnQBQBcY3aD8bVTqIlX7TAO+E9O5EltCLlvCWrPod6xA=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd68e53c-5f5d-4dab-4b6c-08d76ccf8635
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2019 09:04:46.5432
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: M54m28aseHK4A9VmCBGd1HkWFiTcakxkofmT9mmc0fK7NmXQA41fKMHqIzLXgG/tFjqRswYfJoTf/pACILkRYg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4259
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Peng Fan <peng.fan@nxp.com>
 
-On 19.11.19 08:35, Oliver Hartkopp wrote:
-> 
-> 
-> On 18/11/2019 22.15, Marc Kleine-Budde wrote:
->> On 11/18/19 9:49 PM, Oliver Hartkopp wrote:
->>>
->>>
->>> On 18/11/2019 21.29, Marc Kleine-Budde wrote:
->>>> On 11/18/19 9:25 PM, Oliver Hartkopp wrote:
->>>
->>>>>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->>>>>> Reported-by: syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com
->>>>>>
->>>>>> =====================================================
->>>>>> BUG: KMSAN: uninit-value in can_receive+0x23c/0x5e0 net/can/af_can.c:649
->>>>>> CPU: 1 PID: 3490 Comm: syz-executor.2 Not tainted 5.4.0-rc5+ #0
->>>
->>>>>
->>>>> In line 649 of 5.4.0-rc5+ we can find a while() statement:
->>>>>
->>>>> while (!(can_skb_prv(skb)->skbcnt))
->>>>>     can_skb_prv(skb)->skbcnt = atomic_inc_return(&skbcounter);
->>>>>
->>>>> In linux/include/linux/can/skb.h we see:
->>>>>
->>>>> static inline struct can_skb_priv *can_skb_prv(struct sk_buff *skb)
->>>>> {
->>>>>     return (struct can_skb_priv *)(skb->head);
->>>>> }
->>>>>
->>>>> IMO accessing can_skb_prv(skb)->skbcnt at this point is a valid
->>>>> operation which has no uninitialized value.
->>>>>
->>>>> Can this probably be a false positive of KMSAN?
->>>>
->>>> The packet is injected via the packet socket into the kernel. Where does
->>>> skb->head point to in this case? When the skb is a proper
->>>> kernel-generated skb containing a CAN-2.0 or CAN-FD frame skb->head is
->>>> maybe properly initialized?
->>>
->>> The packet is either received via vcan or vxcan which checks via
->>> can_dropped_invalid_skb() if we have a valid ETH_P_CAN type skb.
->>
->> According to the call stack it's injected into the kernel via a packet
->> socket and not via v(x)can.
-> 
-> See ioctl$ifreq https://syzkaller.appspot.com/x/log.txt?x=14563416e00000
-> 
-> 23:11:34 executing program 2:
-> r0 = socket(0x200000000000011, 0x3, 0x0)
-> ioctl$ifreq_SIOCGIFINDEX_vcan(r0, 0x8933, &(0x7f0000000040)={'vxcan1\x00', <r1=>0x0})
-> bind$packet(r0, &(0x7f0000000300)={0x11, 0xc, r1}, 0x14)
-> sendmmsg(r0, &(0x7f0000000d00), 0x400004e, 0x0)
-> 
-> We only can receive skbs from (v(x))can devices.
-> No matter if someone wrote to them via PF_CAN or PF_PACKET.
-> We check for ETH_P_CAN(FD) type and ARPHRD_CAN dev type at rx time.
-> 
->>> We additionally might think about introducing a check whether we have a
->>> can_skb_reserve() created skbuff.
->>>
->>> But even if someone forged a skbuff without this reserved space the
->>> access to can_skb_prv(skb)->skbcnt would point into some CAN frame
->>> content - which is still no access to uninitialized content, right?
-> 
-> So this question remains still valid whether we have a false positive from KMSAN here.
+V3:
+ Rebased to linux-next to avoid conflict, not based on shawn's clk/imx
+ correct a few pll of imx8mn to imx_pll1443x_pll per Leonard's comments
+ add Abel's R-b tag
 
-It can be other incornation of this bug:
-https://github.com/linux-can/linux/issues/1
+V2:
+ Add a new patch patch 1/4 to avoid build warning for arm64
+ clk: imx: Remove __init for imx_obtain_fixed_clk_hw() API
+ https://patchwork.kernel.org/cover/11224933/
 
-The echo skd was free, because socket which send this skb was closed before it was received.
+This patchset is to Switch i.MX8MN/M/Q clk driver to clk_hw
+based API.
 
-Kind regards,
-Oleksij Rempel
+Based on linux-next branch, with [1] applied.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+[1]  clk: imx: switch to clk_hw based API
+     https://patchwork.kernel.org/cover/11217881/
+
+Peng Fan (4):
+  clk: imx: Remove __init for imx_obtain_fixed_clk_hw() API
+  clk: imx: imx8mn: Switch to clk_hw based API
+  clk: imx: imx8mm: Switch to clk_hw based API
+  clk: imx: imx8mq: Switch to clk_hw based API
+
+ drivers/clk/imx/clk-imx8mm.c | 550 +++++++++++++++++++++------------------=
+--
+ drivers/clk/imx/clk-imx8mn.c | 475 ++++++++++++++++++------------------
+ drivers/clk/imx/clk-imx8mq.c | 569 ++++++++++++++++++++++-----------------=
+----
+ drivers/clk/imx/clk.c        |   4 +-
+ 4 files changed, 819 insertions(+), 779 deletions(-)
+
+--=20
+2.16.4
+
