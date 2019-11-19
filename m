@@ -2,152 +2,299 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6BEC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE07C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57BE420708
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A867A20708
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727729AbfKSLKd (ORCPT
+        id S1727545AbfKSLNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 06:10:33 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4774 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726000AbfKSLKc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 06:10:32 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAJB7llh051686
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 06:10:31 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wcf58ghmn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 06:10:31 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Tue, 19 Nov 2019 11:10:29 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 19 Nov 2019 11:10:25 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAJBAOfh45744278
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 11:10:24 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A019DAE06C;
-        Tue, 19 Nov 2019 11:10:23 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 39272AE061;
-        Tue, 19 Nov 2019 11:10:23 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.42])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 19 Nov 2019 11:10:23 +0000 (GMT)
-Date:   Tue, 19 Nov 2019 12:10:22 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
-        Michael Mueller <mimu@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Christoph Hellwig <hch@lst.de>, Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH 1/1] virtio_ring: fix return code on DMA mapping fails
-In-Reply-To: <20191114124646.74790-1-pasic@linux.ibm.com>
-References: <20191114124646.74790-1-pasic@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Tue, 19 Nov 2019 06:13:25 -0500
+Received: from foss.arm.com ([217.140.110.172]:50826 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726170AbfKSLNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 06:13:25 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D85D51FB;
+        Tue, 19 Nov 2019 03:13:23 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4197A3F703;
+        Tue, 19 Nov 2019 03:13:23 -0800 (PST)
+Date:   Tue, 19 Nov 2019 11:13:21 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     maz@kernel.org, linux-kernel@vger.kernel.org,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        james.quinlan@broadcom.com, mbrugger@suse.com,
+        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
+        jeremy.linton@arm.com, "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v2 1/6] linux/log2.h: Add roundup/rounddown_pow_two64()
+ family of functions
+Message-ID: <20191119111320.GP43905@e119886-lin.cambridge.arm.com>
+References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
+ <20191112155926.16476-2-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19111911-0012-0000-0000-00000367F12E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111911-0013-0000-0000-000021A37ACA
-Message-Id: <20191119121022.03aed69a.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-19_03:2019-11-15,2019-11-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 impostorscore=0 lowpriorityscore=0 priorityscore=1501
- adultscore=0 clxscore=1015 bulkscore=0 spamscore=0 mlxscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1911190105
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112155926.16476-2-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping
-
-On Thu, 14 Nov 2019 13:46:46 +0100
-Halil Pasic <pasic@linux.ibm.com> wrote:
-
-> Commit 780bc7903a32 ("virtio_ring: Support DMA APIs")  makes
-> virtqueue_add() return -EIO when we fail to map our I/O buffers. This is
-> a very realistic scenario for guests with encrypted memory, as swiotlb
-> may run out of space, depending on it's size and the I/O load.
+On Tue, Nov 12, 2019 at 04:59:20PM +0100, Nicolas Saenz Julienne wrote:
+> Some users need to make sure their rounding function accepts and returns
+> 64bit long variables regardless of the architecture. Sadly
+> roundup/rounddown_pow_two() takes and returns unsigned longs. Create a
+> new generic 64bit variant of the function and cleanup rougue custom
+> implementations.
 > 
-> The virtio-blk driver interprets -EIO form virtqueue_add() as an IO
-> error, despite the fact that swiotlb full is in absence of bugs a
-> recoverable condition.
-> 
-> Let us change the return code to -ENOMEM, and make the block layer
-> recover form these failures when virtio-blk encounters the condition
-> described above.
-> 
-> Fixes: 780bc7903a32 ("virtio_ring: Support DMA APIs")
-> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-> Tested-by: Michael Mueller <mimu@linux.ibm.com>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 > ---
+>  drivers/net/ethernet/mellanox/mlx4/en_clock.c |  3 +-
+>  drivers/pci/controller/pcie-cadence-ep.c      |  7 +--
+>  drivers/pci/controller/pcie-cadence.c         |  7 +--
+>  drivers/pci/controller/pcie-rockchip-ep.c     |  9 ++--
+
+Thanks for making this change. See comments inline...
+
+>  include/linux/log2.h                          | 52 +++++++++++++++++++
+>  kernel/dma/direct.c                           |  3 +-
+>  6 files changed, 63 insertions(+), 18 deletions(-)
 > 
-> Notes
-> =====
-> 
-> * When out of descriptors (which might regarded as a similar out of
-> resources condition) virtio uses -ENOSPC, this however seems wrong,
-> as ENOSPC is defined as -ENOSPC. Thus I choose -ENOMEM over -ENOSPC.
-> 
-> * In virtio_queue_rq() in virtio_blk.c both -ENOMEM and -ENOSPC are
-> handled as BLK_STS_DEV_RESOURCE. Returning BLK_STS_RESOURCE however
-> seems more appropriate for dma mapping failed as we are talking about
-> a global, and not a device local resource. Both seem to do the trick.
-> 
-> * Mimu tested the patch with virtio-blk and virtio-net (thanks!). We
-> should look into how other virtio devices behave when DMA mapping fails.
-> ---
->  drivers/virtio/virtio_ring.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> index a8041e451e9e..867c7ebd3f10 100644
-> --- a/drivers/virtio/virtio_ring.c
-> +++ b/drivers/virtio/virtio_ring.c
-> @@ -583,7 +583,7 @@ static inline int virtqueue_add_split(struct virtqueue *_vq,
->  		kfree(desc);
+> diff --git a/drivers/net/ethernet/mellanox/mlx4/en_clock.c b/drivers/net/ethernet/mellanox/mlx4/en_clock.c
+> index 024788549c25..027bd72505e2 100644
+> --- a/drivers/net/ethernet/mellanox/mlx4/en_clock.c
+> +++ b/drivers/net/ethernet/mellanox/mlx4/en_clock.c
+> @@ -33,6 +33,7 @@
 >  
->  	END_USE(vq);
-> -	return -EIO;
-> +	return -ENOMEM;
+>  #include <linux/mlx4/device.h>
+>  #include <linux/clocksource.h>
+> +#include <linux/log2.h>
+>  
+>  #include "mlx4_en.h"
+>  
+> @@ -252,7 +253,7 @@ static u32 freq_to_shift(u16 freq)
+>  {
+>  	u32 freq_khz = freq * 1000;
+>  	u64 max_val_cycles = freq_khz * 1000 * MLX4_EN_WRAP_AROUND_SEC;
+> -	u64 max_val_cycles_rounded = 1ULL << fls64(max_val_cycles - 1);
+> +	u64 max_val_cycles_rounded = roundup_pow_of_two64(max_val_cycles);
+>  	/* calculate max possible multiplier in order to fit in 64bit */
+>  	u64 max_mul = div64_u64(ULLONG_MAX, max_val_cycles_rounded);
+>  
+> diff --git a/drivers/pci/controller/pcie-cadence-ep.c b/drivers/pci/controller/pcie-cadence-ep.c
+> index def7820cb824..26ff424b16f5 100644
+> --- a/drivers/pci/controller/pcie-cadence-ep.c
+> +++ b/drivers/pci/controller/pcie-cadence-ep.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/sizes.h>
+> +#include <linux/log2.h>
+>  
+>  #include "pcie-cadence.h"
+>  
+> @@ -90,11 +91,7 @@ static int cdns_pcie_ep_set_bar(struct pci_epc *epc, u8 fn,
+>  
+>  	/* BAR size is 2^(aperture + 7) */
+>  	sz = max_t(size_t, epf_bar->size, CDNS_PCIE_EP_MIN_APERTURE);
+> -	/*
+> -	 * roundup_pow_of_two() returns an unsigned long, which is not suited
+> -	 * for 64bit values.
+> -	 */
+> -	sz = 1ULL << fls64(sz - 1);
+> +	sz = roundup_pow_of_two64(sz);
+>  	aperture = ilog2(sz) - 7; /* 128B -> 0, 256B -> 1, 512B -> 2, ... */
+>  
+>  	if ((flags & PCI_BASE_ADDRESS_SPACE) == PCI_BASE_ADDRESS_SPACE_IO) {
+> diff --git a/drivers/pci/controller/pcie-cadence.c b/drivers/pci/controller/pcie-cadence.c
+> index cd795f6fc1e2..b2278e6b955c 100644
+> --- a/drivers/pci/controller/pcie-cadence.c
+> +++ b/drivers/pci/controller/pcie-cadence.c
+> @@ -4,6 +4,7 @@
+>  // Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+>  
+>  #include <linux/kernel.h>
+> +#include <linux/log2.h>
+>  
+>  #include "pcie-cadence.h"
+>  
+> @@ -11,11 +12,7 @@ void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 fn,
+>  				   u32 r, bool is_io,
+>  				   u64 cpu_addr, u64 pci_addr, size_t size)
+>  {
+> -	/*
+> -	 * roundup_pow_of_two() returns an unsigned long, which is not suited
+> -	 * for 64bit values.
+> -	 */
+> -	u64 sz = 1ULL << fls64(size - 1);
+> +	u64 sz = roundup_pow_of_two64(size);
+>  	int nbits = ilog2(sz);
+>  	u32 addr0, addr1, desc0, desc1;
+>  
+> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+> index d743b0a48988..ed50aaf27784 100644
+> --- a/drivers/pci/controller/pcie-rockchip-ep.c
+> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/pci-epf.h>
+>  #include <linux/sizes.h>
+> +#include <linux/log2.h>
+>  
+>  #include "pcie-rockchip.h"
+>  
+> @@ -70,7 +71,7 @@ static void rockchip_pcie_prog_ep_ob_atu(struct rockchip_pcie *rockchip, u8 fn,
+>  					 u32 r, u32 type, u64 cpu_addr,
+>  					 u64 pci_addr, size_t size)
+>  {
+> -	u64 sz = 1ULL << fls64(size - 1);
+> +	u64 sz = roundup_pow_of_two64(size);
+>  	int num_pass_bits = ilog2(sz);
+>  	u32 addr0, addr1, desc0, desc1;
+>  	bool is_nor_msg = (type == AXI_WRAPPER_NOR_MSG);
+> @@ -172,11 +173,7 @@ static int rockchip_pcie_ep_set_bar(struct pci_epc *epc, u8 fn,
+>  	/* BAR size is 2^(aperture + 7) */
+>  	sz = max_t(size_t, epf_bar->size, MIN_EP_APERTURE);
+>  
+> -	/*
+> -	 * roundup_pow_of_two() returns an unsigned long, which is not suited
+> -	 * for 64bit values.
+> -	 */
+> -	sz = 1ULL << fls64(sz - 1);
+> +	sz = roundup_pow_of_two64(sz);
+>  	aperture = ilog2(sz) - 7; /* 128B -> 0, 256B -> 1, 512B -> 2, ... */
+>  
+>  	if ((flags & PCI_BASE_ADDRESS_SPACE) == PCI_BASE_ADDRESS_SPACE_IO) {
+> diff --git a/include/linux/log2.h b/include/linux/log2.h
+> index 83a4a3ca3e8a..db12d92ab6eb 100644
+> --- a/include/linux/log2.h
+> +++ b/include/linux/log2.h
+> @@ -67,6 +67,24 @@ unsigned long __rounddown_pow_of_two(unsigned long n)
+>  	return 1UL << (fls_long(n) - 1);
 >  }
 >  
->  static bool virtqueue_kick_prepare_split(struct virtqueue *_vq)
-> @@ -1085,7 +1085,7 @@ static int virtqueue_add_indirect_packed(struct vring_virtqueue *vq,
->  	kfree(desc);
+> +/**
+> + * __roundup_pow_of_two64() - round 64bit value up to nearest power of two
+> + * @n: value to round up
+> + */
+> +static inline __attribute__((const)) __u64 __roundup_pow_of_two64(__u64 n)
+
+To be consistent with other functions in the same file (__ilog_u64) you may
+want to rename this to __roundup_pow_of_two_u64.
+
+Also do you know why u64 is used in some places and __u64 in others?
+
+> +{
+> +	return 1UL << fls64(n - 1);
+
+Does this need to be (and for the others):
+
+return 1ULL << fls64(n - 1);
+
+Notice that the PCI drivers you convert, all use 1ULL.
+
+Thanks,
+
+Andrew Murray 
+
+
+> +}
+> +
+> +/**
+> + * __rounddown_pow_of_two64() - round 64bit value down to nearest power of two
+> + * @n: value to round down
+> + */
+> +static inline __attribute__((const)) __u64 __rounddown_pow_of_two64(__u64 n)
+> +{
+> +	return 1UL << (fls64(n) - 1);
+> +}
+> +
+>  /**
+>   * const_ilog2 - log base 2 of 32-bit or a 64-bit constant unsigned value
+>   * @n: parameter
+> @@ -194,6 +212,40 @@ unsigned long __rounddown_pow_of_two(unsigned long n)
+>  	__rounddown_pow_of_two(n)		\
+>   )
 >  
->  	END_USE(vq);
-> -	return -EIO;
-> +	return -ENOMEM;
+> +/**
+> + * roundup_pow_of_two64 - round the given 64bit value up to nearest power of
+> + * two
+> + * @n: parameter
+> + *
+> + * round the given value up to the nearest power of two
+> + * - the result is undefined when n == 0
+> + * - this can be used to initialise global variables from constant data
+> + */
+> +#define roundup_pow_of_two64(n)			\
+> +(						\
+> +	__builtin_constant_p(n) ? (		\
+> +		(n == 1) ? 1 :			\
+> +		(1UL << (ilog2((n) - 1) + 1))	\
+> +				   ) :		\
+> +	__roundup_pow_of_two64(n)		\
+> +)
+> +
+> +/**
+> + * rounddown_pow_of_two64 - round the given 64bit value down to nearest power
+> + * of two
+> + * @n: parameter
+> + *
+> + * round the given value down to the nearest power of two
+> + * - the result is undefined when n == 0
+> + * - this can be used to initialise global variables from constant data
+> + */
+> +#define rounddown_pow_of_two64(n)		\
+> +(						\
+> +	__builtin_constant_p(n) ? (		\
+> +		(1UL << ilog2(n))) :		\
+> +	__rounddown_pow_of_two64(n)		\
+> +)
+> +
+>  static inline __attribute_const__
+>  int __order_base_2(unsigned long n)
+>  {
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index b9e1744999d9..a419530abd3e 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/vmalloc.h>
+>  #include <linux/set_memory.h>
+>  #include <linux/swiotlb.h>
+> +#include <linux/log2.h>
+>  
+>  /*
+>   * Most architectures use ZONE_DMA for the first 16 Megabytes, but some use it
+> @@ -53,7 +54,7 @@ u64 dma_direct_get_required_mask(struct device *dev)
+>  {
+>  	u64 max_dma = phys_to_dma_direct(dev, (max_pfn - 1) << PAGE_SHIFT);
+>  
+> -	return (1ULL << (fls64(max_dma) - 1)) * 2 - 1;
+> +	return rounddown_pow_of_two64(max_dma) * 2 - 1;
 >  }
 >  
->  static inline int virtqueue_add_packed(struct virtqueue *_vq,
-
+>  static gfp_t __dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
+> -- 
+> 2.24.0
+> 
