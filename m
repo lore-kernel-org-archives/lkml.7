@@ -2,124 +2,116 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EB9C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 04:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4E9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 04:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0951A22318
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 04:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31278222DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 04:37:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TiCzTjPT"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gy4Kg9Hx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfKSEfH (ORCPT
+        id S1727470AbfKSEh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 23:35:07 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40013 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727217AbfKSEfH (ORCPT
+        Mon, 18 Nov 2019 23:37:56 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:58032 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbfKSEhz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 23:35:07 -0500
-Received: by mail-pg1-f194.google.com with SMTP id e17so3347397pgd.7;
-        Mon, 18 Nov 2019 20:35:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1vAR9pr+zCDnA9c+fs7AWDCb/oWZcql0gVEAoledK6A=;
-        b=TiCzTjPTkxrZPTYjY++q7K5XMuc42Z2m3ZDTIE43dLkg9kuH9j/VL7P0TAun2ePnRh
-         aBiorpb7jbAqdIUQSPK1iS96wciwlNfqe7m7I2txRBUKTzD8ewXzlUc5e06WRQ5SkK+1
-         OQkiokjRiwYkepuDH6lr27tAhTAt04ohgT3vvC269qk+hWY4+QvV9pKW8ZTRtnpMfaWl
-         V3UFE2EWLFw2ZzDkNwu6MJd0bQvodnKE5st5Mnu68O8dehgnxjS8VmvNkpu46IaW/7KN
-         6MqhgG/fFd93/rBltodUFeWTwbXN6HXRuxB+dPDEx2sjUGgc3Uxf5CIasDdO4WaYqiPE
-         zbcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1vAR9pr+zCDnA9c+fs7AWDCb/oWZcql0gVEAoledK6A=;
-        b=nwXITuR6400N/BH/9wEFriaQKiRqPdMRu/y9aJf27vR/aqKNuhGaT3CAKXE/vaeOKy
-         znyC2xbwlQkYMTDyMtS05jdID/OvD3EL06GvozdM31K0IoE25M4tA87qXVuexXveXLE+
-         stk0khQuQq95TadeP8mwj/CuaYXwRmDBzKiVG30YRtlicG0X5K2wdhhmyL9enG9gyELJ
-         y2lEpN5rRzrvgpYgK9aJqPsZALEt6JocSPd4YuQJ8606xnJdaIWuy3Yky0CMJYHwDToa
-         aewG5sV2iZqWTdUBf6zy5BUrSYZyhOYp7VjXSxkub7qC7W96tzzi/f+eLI9t4tv63Bbw
-         meCQ==
-X-Gm-Message-State: APjAAAU72WWBWQZrHBbvrWHghF5AoJLBSmFc18gmiHZ2eFIy3DhzMPRh
-        j/Xy0lw5Yg32fXPI6DDrUZk=
-X-Google-Smtp-Source: APXvYqw2upkCNdRdCwE1MLHAT3ARTAwvLwXyTicefk9hMVi7ATCVZaU13dcZHDyfp+cVK7uiCyHYJw==
-X-Received: by 2002:a63:115c:: with SMTP id 28mr3287445pgr.6.1574138106592;
-        Mon, 18 Nov 2019 20:35:06 -0800 (PST)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::db2d])
-        by smtp.gmail.com with ESMTPSA id y26sm24526869pfo.76.2019.11.18.20.35.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Nov 2019 20:35:05 -0800 (PST)
-Date:   Mon, 18 Nov 2019 20:35:01 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Brian Vazquez <brianvv@google.com>
-Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Yonghong Song <yhs@fb.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH bpf-next 5/9] bpf: add batch ops to all htab bpf map
-Message-ID: <20191119042012.3wpj5porwkntpfm4@ast-mbp.dhcp.thefacebook.com>
-References: <20191119014357.98465-1-brianvv@google.com>
- <20191119014357.98465-6-brianvv@google.com>
+        Mon, 18 Nov 2019 23:37:55 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ4Xfvq083384;
+        Tue, 19 Nov 2019 04:37:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=u3YVsD1wkCGiOGWe+S9b9QJmcTwJFEXyOfczc59CBcQ=;
+ b=gy4Kg9Hxa8G5FPvXmUfJUReX9MjTRIN7rXb7ez2Xth+xw7Vjw3uI/SB+TRoZ74BW8wnD
+ VpJ/N85V8VGDTM5IMNrwSjCI+D2eXacRH0LlP+RxX90kXAR8ZjVcGmOHZ6tDCbSo24VM
+ 35l5mGoVfCYV+sSmWpKmil9FGxP0DAx1yf0P/4rkPIKx3vMl82Y4HjqqbgoKraed8h2h
+ YZwIpLewn3drNbHCyIa41qz6SfnjCedhhYUuT0pLN7Ln1nkgRL4qeRhacNlSzKPU2JfQ
+ zkcjA1Y+wdMlfo6V1S1LAlT9n9CRjLewV5di7MTZFyrKAT+jU9IzySnrKqmXmsS/gHiR DA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2wa92pmbay-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 04:37:04 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ4X8ZX117062;
+        Tue, 19 Nov 2019 04:37:04 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2wbxm3m2yx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 04:37:04 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAJ4b2eP001299;
+        Tue, 19 Nov 2019 04:37:02 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 18 Nov 2019 20:37:01 -0800
+To:     sheebab <sheebab@cadence.com>
+Cc:     <alim.akhtar@samsung.com>, <avri.altman@wdc.com>,
+        <pedrom.sousa@synopsys.com>, <vigneshr@ti.com>,
+        <linux-block@vger.kernel.org>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <stanley.chu@mediatek.com>,
+        <beanhuo@micron.com>, <yuehaibing@huawei.com>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <rafalc@cadence.com>, <mparab@cadence.com>
+Subject: Re: [PATCH RESEND 0/2] scsi: ufs: hibern8 fixes
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <1573815645-11886-1-git-send-email-sheebab@cadence.com>
+Date:   Mon, 18 Nov 2019 23:36:58 -0500
+In-Reply-To: <1573815645-11886-1-git-send-email-sheebab@cadence.com>
+        (sheebab@cadence.com's message of "Fri, 15 Nov 2019 16:30:43 +0530")
+Message-ID: <yq1eey4jxcl.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119014357.98465-6-brianvv@google.com>
-User-Agent: NeoMutt/20180223
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911190040
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911190040
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 05:43:53PM -0800, Brian Vazquez wrote:
-> From: Yonghong Song <yhs@fb.com>
-> 
-> htab can't use generic batch support due some problematic behaviours
-> inherent to the datastructre, i.e. while iterating the bpf map  a
-> concurrent program might delete the next entry that batch was about to
-> use, in this case there's no easy solution to retrieve the next entry
-> and the issua has been discussed multiple times (see [1] and [2]).
-> The only way hmap can be traversed without the problem previously
-> exposed is by making sure that the map is traversing entire buckets.
-> This commit implements those strict requirements for hmap, the
-> implementation follows the same interaction that generic support with
-> some exceptions:
-> 
->  - If keys/values buffer are not big enough to traverse a bucket,
->    ENOSPC will be returned.
->  - out_batch contains the value of the next bucket in the iteration, not
->  the next key, but this is transparent for the user since the user
->  should never use out_batch for other than bpf batch syscalls.
-> 
-> Note that only lookup and lookup_and_delete batch ops require the hmap
-> specific implementation and update/delete batch ops can be the generic
-> ones.
-> 
-> [1] https://lore.kernel.org/bpf/20190724165803.87470-1-brianvv@google.com/
-> [2] https://lore.kernel.org/bpf/20190906225434.3635421-1-yhs@fb.com/
-> 
-> Co-authored-by: Brian Vazquez <brianvv@google.com>
-> Signed-off-by: Brian Vazquez <brianvv@google.com>
-> Signed-off-by: Yonghong Song <yhs@fb.com>
 
-SOB order is not quite correct.
-If the patch was mainly developed by Yonghong it should have his 'From:'
-then his SOB and then your SOB.
-You can drop Co-authored-by field.
+sheebab,
 
-Patch 2 was also mainly done by Yonghong or not ?
-If so it should have his 'From:' field.
+> Resending this patch to include 'mailing list' which I missed in first
+> release.
+>
+> This patch set contains following patches for Cadence UFS controller
+> driver.
+>
+> 1. 0001-scsi-ufs-Enable-hibern8-interrupt-only-during-manual.patch
+>    This patch is to fix false interrupt assertion during auto hibernation.
+>    In this patch, hibern8 interrupt is Disabled during initialization
+>    and later the interrupt is Enabled/Disabled during manual hibern8
+>    Entry/Exit.
+> 2. 0002-scsi-ufs-Update-L4-attributes-on-manual-hibern8-exit.patch
+>    This patch is to update L4 attributes during manual hibern8 exit.
+>    As per JESD220C spec, L4 attributes will be reset to their reset value 
+>    during DME_HIBERNATION_EXIT. This patch will take backup of the L4 
+>    parameters before DME_HIBERNATION_ENTER and restores the L4 parameters
+>    after DME_HIBERNATION_EXIT
 
+Only the cover letter made it to the list. Please make sure patch
+submissions are sent to linux-scsi@vger.kernel.org.
+
+Thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
