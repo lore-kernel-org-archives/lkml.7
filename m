@@ -2,53 +2,53 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25067C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2D6C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1EE4222ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8328421823
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141148;
-	bh=tu0Rc8b6GxVmN+U6FBQh53szbTYC73ta5z5AP/vLPUg=;
+	s=default; t=1574141149;
+	bh=xCW/lSW1U3Vl+AVPWZpivK93tjtE9RmQzvGRaO6XjAw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DOZcgWUkLbA93npyqmup0oJlhhfHv/nM+4t/TyjZlLKbkiz9BZOaRK07HBxfGfP7Y
-	 /Ie50DBuLD17k2hzJ6BgH35kD3e1oEu7K9V4Uj3AlC4Ora9MOkGg2XxL6dEePv8Dtt
-	 /qfpfBKVLzWucD6AjulcZDMs1KiYV3sInwTSu5rA=
+	b=jhMM/vYTkAxU8A3qbW3edks+Z3eg4lgmfrtr4fQGSkXSHScA99OwiP+6CZwMvfjkz
+	 D7BQGXUgUTQc6XCkEvM0H7NWpfSjqqX7zcLlUTCYFtUmAsDsoFR1Ssy3PEl531Uskt
+	 hIm7IEWKe9I1r9hOV7M7aT+Ycij6Q6r7IsyaMSWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfKSFZq (ORCPT
+        id S1728458AbfKSFZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:25:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43526 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:25:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728435AbfKSFZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:25:43 -0500
+        id S1728444AbfKSFZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:25:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9929E222DC;
-        Tue, 19 Nov 2019 05:25:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4F7B21823;
+        Tue, 19 Nov 2019 05:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141142;
-        bh=tu0Rc8b6GxVmN+U6FBQh53szbTYC73ta5z5AP/vLPUg=;
+        s=default; t=1574141145;
+        bh=xCW/lSW1U3Vl+AVPWZpivK93tjtE9RmQzvGRaO6XjAw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D9bPvoICD1GfxaAX5Eel8+o7BzhziiJ4OYaLDrKvxwOkfa6L4BddEyX6shOZG+Wig
-         rcRthvNhIJm3ujl8RyL/dKLzvtYfnQvN7m6Ylb3WPemJR8cpoaSXug1R5msJuh21Tx
-         oPvruHbMII7v7QnGXz3bpEKgn8b9AMjqxUx7VRqM=
+        b=X5l74bYHuWmLqgx4+WBLfIY6YMdy4ouju9njjzGlQ7qJgbs8+zyhOd0LYVVnuIEZ5
+         Aj3nfRBES5QPXeLh5qpidetUWmKn3+Zqleal2VS4eJaqev4830afXOt1GjMn8QYbZ1
+         HL1Rwn112hjAHFH5uE8536vk84VQWQKpHvrYoQ2Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Jouni Hogander <jouni.hogander@unikie.com>
-Subject: [PATCH 4.19 008/422] slip: Fix memory leak in slip_open error path
-Date:   Tue, 19 Nov 2019 06:13:25 +0100
-Message-Id: <20191119051400.750600561@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Rajeev Kumar Sirasanagandla <rsirasan@codeaurora.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 053/422] cfg80211: Avoid regulatory restore when COUNTRY_IE_IGNORE is set
+Date:   Tue, 19 Nov 2019 06:14:10 +0100
+Message-Id: <20191119051403.245849688@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,55 +61,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Hogander <jouni.hogander@unikie.com>
+From: Rajeev Kumar Sirasanagandla <rsirasan@codeaurora.org>
 
-[ Upstream commit 3b5a39979dafea9d0cd69c7ae06088f7a84cdafa ]
+[ Upstream commit 7417844b63d4b0dc8ab23f88259bf95de7d09b57 ]
 
-Driver/net/can/slcan.c is derived from slip.c. Memory leak was detected
-by Syzkaller in slcan. Same issue exists in slip.c and this patch is
-addressing the leak in slip.c.
+When REGULATORY_COUNTRY_IE_IGNORE is set,  __reg_process_hint_country_ie()
+ignores the country code change request from __cfg80211_connect_result()
+via regulatory_hint_country_ie().
 
-Here is the slcan memory leak trace reported by Syzkaller:
+After Disconnect, similar to above, country code should not be reset to
+world when country IE ignore is set. But this is violated and restore of
+regulatory settings is invoked by cfg80211_disconnect_work via
+regulatory_hint_disconnect().
 
-BUG: memory leak unreferenced object 0xffff888067f65500 (size 4096):
-  comm "syz-executor043", pid 454, jiffies 4294759719 (age 11.930s)
-  hex dump (first 32 bytes):
-    73 6c 63 61 6e 30 00 00 00 00 00 00 00 00 00 00 slcan0..........
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-  backtrace:
-    [<00000000a06eec0d>] __kmalloc+0x18b/0x2c0
-    [<0000000083306e66>] kvmalloc_node+0x3a/0xc0
-    [<000000006ac27f87>] alloc_netdev_mqs+0x17a/0x1080
-    [<0000000061a996c9>] slcan_open+0x3ae/0x9a0
-    [<000000001226f0f9>] tty_ldisc_open.isra.1+0x76/0xc0
-    [<0000000019289631>] tty_set_ldisc+0x28c/0x5f0
-    [<000000004de5a617>] tty_ioctl+0x48d/0x1590
-    [<00000000daef496f>] do_vfs_ioctl+0x1c7/0x1510
-    [<0000000059068dbc>] ksys_ioctl+0x99/0xb0
-    [<000000009a6eb334>] __x64_sys_ioctl+0x78/0xb0
-    [<0000000053d0332e>] do_syscall_64+0x16f/0x580
-    [<0000000021b83b99>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    [<000000008ea75434>] 0xfffffffffffffff
+To address this, avoid regulatory restore from regulatory_hint_disconnect()
+when COUNTRY_IE_IGNORE is set.
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Oliver Hartkopp <socketcan@hartkopp.net>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Note: Currently, restore_regulatory_settings() takes care of clearing
+beacon hints. But in the proposed change, regulatory restore is avoided.
+Therefore, explicitly clear beacon hints when DISABLE_BEACON_HINTS
+is not set.
+
+Signed-off-by: Rajeev Kumar Sirasanagandla <rsirasan@codeaurora.org>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/slip/slip.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/wireless/reg.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
---- a/drivers/net/slip/slip.c
-+++ b/drivers/net/slip/slip.c
-@@ -855,6 +855,7 @@ err_free_chan:
- 	sl->tty = NULL;
- 	tty->disc_data = NULL;
- 	clear_bit(SLF_INUSE, &sl->flags);
-+	free_netdev(sl->dev);
+diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+index cccbf845079c8..68ae97ef8bf0b 100644
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -3225,8 +3225,54 @@ static void restore_regulatory_settings(bool reset_user)
+ 	schedule_work(&reg_work);
+ }
  
- err_exit:
- 	rtnl_unlock();
++static bool is_wiphy_all_set_reg_flag(enum ieee80211_regulatory_flags flag)
++{
++	struct cfg80211_registered_device *rdev;
++	struct wireless_dev *wdev;
++
++	list_for_each_entry(rdev, &cfg80211_rdev_list, list) {
++		list_for_each_entry(wdev, &rdev->wiphy.wdev_list, list) {
++			wdev_lock(wdev);
++			if (!(wdev->wiphy->regulatory_flags & flag)) {
++				wdev_unlock(wdev);
++				return false;
++			}
++			wdev_unlock(wdev);
++		}
++	}
++
++	return true;
++}
++
+ void regulatory_hint_disconnect(void)
+ {
++	/* Restore of regulatory settings is not required when wiphy(s)
++	 * ignore IE from connected access point but clearance of beacon hints
++	 * is required when wiphy(s) supports beacon hints.
++	 */
++	if (is_wiphy_all_set_reg_flag(REGULATORY_COUNTRY_IE_IGNORE)) {
++		struct reg_beacon *reg_beacon, *btmp;
++
++		if (is_wiphy_all_set_reg_flag(REGULATORY_DISABLE_BEACON_HINTS))
++			return;
++
++		spin_lock_bh(&reg_pending_beacons_lock);
++		list_for_each_entry_safe(reg_beacon, btmp,
++					 &reg_pending_beacons, list) {
++			list_del(&reg_beacon->list);
++			kfree(reg_beacon);
++		}
++		spin_unlock_bh(&reg_pending_beacons_lock);
++
++		list_for_each_entry_safe(reg_beacon, btmp,
++					 &reg_beacon_list, list) {
++			list_del(&reg_beacon->list);
++			kfree(reg_beacon);
++		}
++
++		return;
++	}
++
+ 	pr_debug("All devices are disconnected, going to restore regulatory settings\n");
+ 	restore_regulatory_settings(false);
+ }
+-- 
+2.20.1
+
 
 
