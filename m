@@ -2,219 +2,138 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5009BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A43B4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20423208CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B1BA22384
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:42:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="ADQeBXal"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rDYaNUkK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbfKSQiM (ORCPT
+        id S1728291AbfKSQmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:38:12 -0500
-Received: from mail-eopbgr1410108.outbound.protection.outlook.com ([40.107.141.108]:47533
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727991AbfKSQiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 11:38:11 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NMD+eYs2OhSlofTxDuX4O+hrIDaSZjPRJzah21pLc6fSCg7B2ziSZ2vXRMTYM8nQlBvl6RHyTmwb3VxlNSJVswJuGwVZANyJz8Crqx1XXLUJcN1aETrMY+xVsX/POX/j6DIAhXqOc72d03h/4ggn28rdVir5fleBZ1tB+wOZkfePlMXmJm0GSmJlNiINtOyRPSyJltjfhPbahnEn8m+VTqAAO6j/n5YzIhal0Rl6rFBvMFsfy0uTmyoQ9k/uFoCwA8dyAMyLSa2QIBzdaW7RopZuNzQk4ODDa4okh7tJ33PnLf/46mO6BTT27nEsPr+CKgjMOUBKQLgJX+g/VBl+Og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PjOXXziMOEoJxoqkwu+GpTVrN6I0dwAqqpuzQsAaQgc=;
- b=jwXLIhDDcsEqMX8V/TAd7ZrtHnt8wORraKTP8BS1QrCB16r1VcZg1zC7b6YpMbJQUcNHWPjjbG3EMl6/5qICeWOTo+eDr9btCOGl7PyDLdQSaNWuyCOwJ0XGeMKpKYydUVTv4yxtdpvwPBITP9+QmaFzTuvl0jAC6AGqedQDo3TmVA2vJzfn3vJGvZ0twdpeUd7ea2/06pUX+yxlkFurKx3+JGe5IvuSqhMgzDtVZ44dUBB9Z9bOpTa/qUCHU2fVnYDcUHb57KnLNXJosImSklpexQNkCD8EFY7mevg09ZGMb6feygB0grLbGow2fgqknrw6e18vV+AsNFGnMihB8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Tue, 19 Nov 2019 11:42:05 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45524 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbfKSQmF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 11:42:05 -0500
+Received: by mail-oi1-f196.google.com with SMTP id 14so19502114oir.12
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 08:42:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PjOXXziMOEoJxoqkwu+GpTVrN6I0dwAqqpuzQsAaQgc=;
- b=ADQeBXalTlFdDYk5NuRbCfiSTpRD5p3gEtC6rdWWO8IuAafBak0quxw2B2kN6V06mA0sAouR0tULHWlKnlw5UfjD3Be10kHhEUBm3eDDhBkVAcemohka+4cDBjuKFuhTRkwnSnnjMP8zWlqfWg82/0Ts1EAHR4PtPIEu4vt3t74=
-Received: from TYAPR01MB2285.jpnprd01.prod.outlook.com (52.133.177.145) by
- TYAPR01MB3390.jpnprd01.prod.outlook.com (20.178.140.86) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.16; Tue, 19 Nov 2019 16:38:07 +0000
-Received: from TYAPR01MB2285.jpnprd01.prod.outlook.com
- ([fe80::5b9:ce3e:e658:5b75]) by TYAPR01MB2285.jpnprd01.prod.outlook.com
- ([fe80::5b9:ce3e:e658:5b75%7]) with mapi id 15.20.2451.031; Tue, 19 Nov 2019
- 16:38:07 +0000
-From:   Chris Paterson <Chris.Paterson2@renesas.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cip-dev@lists.cip-project.org" <cip-dev@lists.cip-project.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "patches@kernelci.org" <patches@kernelci.org>,
-        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH 4.19 000/422] 4.19.85-stable review
-Thread-Topic: [PATCH 4.19 000/422] 4.19.85-stable review
-Thread-Index: AQHVnpmkB8jYWSq0hUGT+a8kwF1jMaeSLOoAgAA/xICAABmSgIAAHiuAgAANKBA=
-Date:   Tue, 19 Nov 2019 16:38:06 +0000
-Message-ID: <TYAPR01MB2285698B8E0F38B9EEF47128B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
-References: <20191119051400.261610025@linuxfoundation.org>
- <TYAPR01MB22854E4F20C28F3A10DA65E3B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
- <20191119122909.GC1913916@kroah.com>
- <TYAPR01MB228560FC98FFD1D449FA4EC2B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
- <20191119154839.GB1982025@kroah.com>
-In-Reply-To: <20191119154839.GB1982025@kroah.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chris.Paterson2@renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7591ad84-3f49-4cc7-921f-08d76d0edb33
-x-ms-traffictypediagnostic: TYAPR01MB3390:
-x-ms-exchange-purlcount: 4
-x-microsoft-antispam-prvs: <TYAPR01MB3390A8B187BCFDEB68D0BF85B74C0@TYAPR01MB3390.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 022649CC2C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(39860400002)(136003)(396003)(376002)(366004)(199004)(189003)(11346002)(6506007)(76176011)(4326008)(7696005)(26005)(478600001)(102836004)(66446008)(9686003)(5660300002)(6306002)(7416002)(186003)(25786009)(55016002)(14454004)(52536014)(76116006)(6436002)(486006)(7736002)(229853002)(86362001)(256004)(966005)(33656002)(66476007)(446003)(2906002)(6116002)(3846002)(476003)(81166006)(6916009)(8676002)(74316002)(81156014)(66066001)(66556008)(6246003)(99286004)(64756008)(66946007)(71200400001)(71190400001)(305945005)(8936002)(316002)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB3390;H:TYAPR01MB2285.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Rmb78PJrZAUI6xc8qZrvT94SdcbACNXcvssqunFrmULxyYiQudWxmFI/VhV3dDmvAe6Rh915LFrkH/2Rz1GxDFmGGZyGyc8lKg7qzg6UFVJXko+Lze2DO7izbGk4eOTAZBEX6YI2nviE4Dk1PQVrumAjkErw5Pa8eayCX/3hW8lV7+qCiCREIhdYTzf3wzGF9NRkAzff7Jz2WqRtqCSich4w6T/egbjMJlLXHW8NacemLr99ZAmzy0LhrmXdWIm50caVk6zMwWzOsN02PCrhcOF4U/y26hV6aFZn7YwF2HXI/xrozQR27E1OP4eIexFZk7uft1yrAupTj8tG6XovblEhSrC6ch/A+PUJad5fLsGw5NJAwsZlcGxjaAaFN9t6pdtGU2xM7jpkUn58qG0SdV0peBOXKOAaOAAOKYj7ggpciWxLNms3Ovgguz1ZCFcdXOciWyc3Dfye21d8lf9jgGnG0P1DT2A7BvLrUWbmOIw=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=A85TSNGm7K+RaBadsnUIp68Z/l71MMMOUNnCgewKA6o=;
+        b=rDYaNUkKwdtjQmvpcam2qztShQlW76Pc8zjxt/wXQAa+sN+7wq1ibiMHNVLaCA5xiG
+         bDiZxs2feFBg8/bmAz8uQd79vrNhEtMpym5aj9KMJIMWiUbScrYVkXVn8Ko3wJHaevUC
+         57WQYZC7Y5g56OuhbCzkpK3MyK2eHC5PnsNsA5V4R//hrCitv/yC/2ovRGLZgO1jhw3g
+         lMw/+8NGpmZQ32Wf64BJ/vKH8kNESrNTR7OkUBdH/B13nEqEwy1lG84J/mz9w5T7ye8X
+         G+lk2Aro1GziU8QmVGglBsE3fXSg8HtAQoVoJhIhFy/gI+GCTaqffAOpAYTYFs5+otuf
+         Lb4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=A85TSNGm7K+RaBadsnUIp68Z/l71MMMOUNnCgewKA6o=;
+        b=RNdnxWZVvVraUu25TPjgA1E9ezgKApKTt9oPvBPqCMn/yo/jIZm0N0PC/kCHQQ8OOh
+         dKQC2ytI0NDCdsyGx71hKmi4q0rALZOrcrpBs93xUYN6olq09wUmjxFDudMh5x5bHDyp
+         nIwPFaAfczDlb+z/Vp+2HmNQ3XsCAU+zyAacrJoJxmNBxbpdNzECaM9ntifoM2bSU776
+         Z0m+ies2orZBpfr9ZDE51mM3PBbQUWz4JHITrGHA50PdxrerM4kWPlaSTh/BPfs68okb
+         7HWuWcVBlx+ztLxcF7Lmkx0paPu2XeaV+Np7zq7JE1bgp9UvaAPKjf6ZGZlUnLm9DlLD
+         fTVA==
+X-Gm-Message-State: APjAAAW7vaolTWrIDaf/4Xq/Wp0Cl54cnIxPMEY4Nr9isXQF2Dr28fT9
+        7T2xVYXOngPsj+FXpVM2G0NItPKLi4IFTnfqVCnvMA==
+X-Google-Smtp-Source: APXvYqx7cskxLkBBXBA7knh9DkcCJarVIobwkve0fLSrrww5YHLowJhAvBe1oJj6wFqp95kT/WCRIqkTRDLrTMPc5L0=
+X-Received: by 2002:a05:6808:9a1:: with SMTP id e1mr5012423oig.175.1574181722495;
+ Tue, 19 Nov 2019 08:42:02 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7591ad84-3f49-4cc7-921f-08d76d0edb33
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2019 16:38:06.9015
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ijsiyy37qE+s0FapHeVEbbxIlXgngZ+ru42jDj74nBZBA3+T4AQoGqfgLMZsfbDv3NDkcSPA/QkTfWDNdv/Ym7cid77g3DFXWiKUpU6huRA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3390
+References: <1573560684-48104-1-git-send-email-yash.shah@sifive.com>
+ <1573560684-48104-4-git-send-email-yash.shah@sifive.com> <CAMpxmJWcuV7goPWxOWv_Og9GwzGrioF62SfS1LCiHf9eDX=vdw@mail.gmail.com>
+ <CH2PR13MB33680443C101511E66ECADF08C4D0@CH2PR13MB3368.namprd13.prod.outlook.com>
+ <CAMpxmJU+P=nWe9fpp45Jw=GwX3+V0sVVshRcE7AD1Kyz_F0qJQ@mail.gmail.com> <CACRpkdb9KKPsu7dkjVmHbgQcdo1Zx9uC_jtd6HFwM+RO2EA4nw@mail.gmail.com>
+In-Reply-To: <CACRpkdb9KKPsu7dkjVmHbgQcdo1Zx9uC_jtd6HFwM+RO2EA4nw@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 19 Nov 2019 17:41:51 +0100
+Message-ID: <CAMpxmJXFK4VLgJU+P0ZMNkduGfFxAeQ_NguRHtedf7cRPav7LQ@mail.gmail.com>
+Subject: Re: [PATCH 3/4] gpio: sifive: Add GPIO driver for SiFive SoCs
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Yash Shah <yash.shah@sifive.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Sent: 19 November 2019 15:49
->=20
-> On Tue, Nov 19, 2019 at 02:44:12PM +0000, Chris Paterson wrote:
-> > Hi Greg,
+wt., 19 lis 2019 o 16:03 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
+=82(a):
+>
+> On Mon, Nov 18, 2019 at 11:15 AM Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:
+> > pon., 18 lis 2019 o 11:03 Yash Shah <yash.shah@sifive.com> napisa=C5=82=
+(a):
+>
+> > > As suggested in the comments received on the RFC version of this patc=
+h[0], I am trying to use regmap MMIO by looking at gpio-mvebu.c. I got your=
+ point regarding the usage of own locks is not making any sense.
+> > > Here is what I will do in v2:
+> > > 1. drop the usage of own locks
+> > > 2. consistently use regmap_* apis for register access (replace all io=
+writes).
+> > > Does this make sense now?
 > >
-> > > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Sent: 19 November 2019 12:29
-> > >
-> > > On Tue, Nov 19, 2019 at 08:54:25AM +0000, Chris Paterson wrote:
-> > > > Hello Greg, all,
-> > > >
-> > > > > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org>
-> On
-> > > > > Behalf Of Greg Kroah-Hartman
-> > > > > Sent: 19 November 2019 05:13
-> > > > >
-> > > > > This is the start of the stable review cycle for the 4.19.85 rele=
-ase.
-> > > > > There are 422 patches in this series, all will be posted as a res=
-ponse
-> > > > > to this one.  If anyone has any issues with these being applied, =
-please
-> > > > > let me know.
-> > > >
-> > > > I'm seeing some build issues with module compilation with this rele=
-ase
-> > > (1b1960cc Linux 4.19.85-rc1), I also saw them with the previous two v=
-ersions
-> of
-> > > Linux 4.19.85-rc1 (cd21ecdb and 1fd0ac64).
-> > > >
-> > > > Full log available on GitLab [0]. Build conf [1].
-> > > > [0] https://gitlab.com/cip-playground/linux-stable-rc-ci/-/jobs/354=
-591285
-> > > > [1] https://gitlab.com/cip-playground/linux-stable-rc-ci/-
-> > > /jobs/354591285/artifacts/file/output/4.19.85-
-> > > rc1_1b1960cc7/x86/siemens_iot2000.config/config/.config
-> > > >
-> > > > Main error below:
-> > > >
-> > > > 3907   CC [M]  drivers/net/ethernet/mellanox/mlx4/main.o
-> > > > 3908   LD [M]  fs/ntfs/ntfs.o
-> > > > 3909   CC [M]  drivers/net/ethernet/intel/i40evf/i40e_txrx.o
-> > > > 3910   CC [M]  drivers/usb/musb/musb_core.o
-> > > > 3911   CC [M]  drivers/net/ethernet/nvidia/forcedeth.o
-> > > > 3912   CC [M]  fs/udf/balloc.o
-> > > > 3913   CC [M]  drivers/net/ethernet/intel/fm10k/fm10k_debugfs.o
-> > > > 3914   CC [M]  fs/udf/dir.o
-> > > > 3915   CC [M]  drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.o
-> > > > 3916   CC [M]  drivers/net/ethernet/intel/i40e/i40e_ptp.o
-> > > > 3917 drivers/net/ethernet/mellanox/mlx4/main.c: In function
-> 'mlx4_init_one':
-> > > > 3918 drivers/net/ethernet/mellanox/mlx4/main.c:3985:2: error: impli=
-cit
-> > > declaration of function 'devlink_reload_enable'; did you mean
-> > > 'devlink_region_create'? [-Werror=3Dimplicit-function-declaration]
-> > > > 3919   devlink_reload_enable(devlink);
-> > > > 3920   ^~~~~~~~~~~~~~~~~~~~~
-> > > > 3921   devlink_region_create
-> > > > 3922   CC [M]  drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.o
-> > > > 3923 drivers/net/ethernet/mellanox/mlx4/main.c: In function
-> > > 'mlx4_remove_one':
-> > > > 3924 drivers/net/ethernet/mellanox/mlx4/main.c:4097:2: error: impli=
-cit
-> > > declaration of function 'devlink_reload_disable'; did you mean
-> > > 'devlink_region_destroy'? [-Werror=3Dimplicit-function-declaration]
-> > > > 3925   devlink_reload_disable(devlink);
-> > > > 3926   ^~~~~~~~~~~~~~~~~~~~~~
-> > > > 3927   devlink_region_destroy
-> > > > 3928   CC [M]  drivers/net/ethernet/packetengines/hamachi.o
-> > > > 3929   CC [M]  fs/udf/file.o
-> > > > 3930   LD [M]  drivers/net/ethernet/intel/fm10k/fm10k.o
-> > > >
-> > > > I haven't tried to trace the issue further yet, sorry.
-> > >
-> > > Any chance you can bisect this?  I don't see any obvious reason why t=
-his
-> > > error should be happening, and it isn't showing up here :(
-> >
-> > Looking through the commit history, the issue seems to be related to:
-> > 672cf82122be ("devlink: disallow reload operation during device cleanup=
-")
-> >
-> > I've reverted this commit and Linux 4.19.85-rc2 (af1bb7db before revert=
-) will
-> build with the configuration I'm using [2].
-> > I haven't looked further yet though, sorry.
-> >
-> > [2] https://gitlab.com/cip-project/cip-kernel/cip-kernel-
-> config/raw/master/4.19.y-cip/x86/siemens_iot2000.config
->=20
-> If you add:
-> 	#include <net/devlink.h>
-> to the top of drivers/net/ethernet/mellanox/mlx4/main.c, does it fix the
-> issue for you?
+> > The thing is: the gpio-mmio code you're (correctly) reusing uses a
+> > different lock - namely: bgpio_lock in struct gpio_chip. If you want
+> > to use regmap for register operations, then you need to set
+> > disable_locking in regmap_config to true and then take this lock
+> > manually on every access.
+>
+> Is it really so? The bgpio_lock does protect the registers used
+> by regmap-mmio but unless the interrupt code is also using the
+> same registers it is fine to have a different lock for those.
+>
+> Is the interrupt code really poking into the very same registers
+> as passed to bgpio_init()?
+>
+> Of course it could be seen as a bit dirty to poke around in the
+> same memory space with regmap and the bgpio_* accessors
+> but in practice it's no problem if they never touch the same
+> things.
+>
+> Yours,
+> Linus Walleij
 
-This is already defined:
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/=
-tree/drivers/net/ethernet/mellanox/mlx4/main.c?h=3Dlinux-4.19.y#n47
+I'm wondering if it won't cause any inconsistencies when for example
+interrupts are being triggered on input lines while we're also reading
+their values? Seems to me it's just more clear to use a single lock
+for a register range. Most drivers using gpio-mmio do just that in
+their irq-related routines.
 
-Kind regards, Chris
+Anyway: even without using bgpio_lock this code is inconsistent: if
+we're using regmap for interrupt registers, we should either decide to
+rely on locking provided by regmap or disable it and use a locally
+defined lock. Also: if we're using regmap, then let's use it
+everywhere, not only when it's convenient for updating registers.
 
->=20
-> If so, I'll modify the file to have that, seems to be some sort of
-> include file mess :(
->=20
-> thanks,
->=20
-> greg k-h
+Bart
