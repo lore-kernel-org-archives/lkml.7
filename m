@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B77C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51153C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEBA5206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2936A206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:02:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143324;
-	bh=Nyd3IFEncmva4CFy6JnvNMxW1suuTboYSQorV7E3X2s=;
+	s=default; t=1574143326;
+	bh=RRoVybARuoCg+kCC3+TjStz3qLWGD7rDOiQeSGC0dmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OnJxqSIJpyCOA4HQkEar2Vl6irZY6EIFMOeX4Q3hXHOAwLn3E/K19Km8uES9z6scb
-	 RKjjCo0mmCQJqnCS7TkgoBZ9v8g3Eot5wXOwHFB0noVceVfD+FD31MTpUCT9nDbWSX
-	 oSUCDyrb5zx1tPELxXBS3T/futnTuvss8L+tI7W8=
+	b=PZuDxn/qozKFXlHe/hxJXrOJkRXcjqYF8SXxWvqSoUDSr0eU7HI6ut/kwH2ea95O9
+	 b2gfZetZT/gEgiAaPcfIySpCcHpAr+jg/VWlojUjf0kGf87VyToHcIZ5V62JBf2Neb
+	 O2UvexouLXPutbex01B4bNYkFxp5e5nHucj5G75I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730681AbfKSFm4 (ORCPT
+        id S1730673AbfKSFmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:42:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37688 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:42:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730425AbfKSFmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:42:51 -0500
+        id S1730665AbfKSFmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:42:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A3AE208C3;
-        Tue, 19 Nov 2019 05:42:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C6F3218BA;
+        Tue, 19 Nov 2019 05:42:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142170;
-        bh=Nyd3IFEncmva4CFy6JnvNMxW1suuTboYSQorV7E3X2s=;
+        s=default; t=1574142162;
+        bh=RRoVybARuoCg+kCC3+TjStz3qLWGD7rDOiQeSGC0dmE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qIeOiPlwdfWHqW0JvzDXvuPGTVKlvgqKbaMX/ZLmzF3ZutAMMUXMRQbhXpKk5gQlh
-         WjN5bzJwR40NnBvSsRdUs1dtSLSRMyQWOj2gsJfYiMwTZr9arwhEU/fMpGbWxOU083
-         uB1avqusxFRSy1hIISAy9Ba7RRuHaSUqIXTEeamk=
+        b=2Mc8EUXYwwItXCBz4DLR/kpyA5aJJQgRPme/JFwwHibMTZuICIwTb26ZO1DNu9+At
+         TG6YhcDJX/N2OvNedktu+Yzu5sDkMJqzEx319X26avCM9190e1vvBiwmvxPlo5KKCh
+         lw6aMOYtoMxH/ZXCmQuKo4Dn8QtWLeSfvHl8rv5U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tan Hu <tan.hu@zte.com.cn>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        Denis Osterland <Denis.Osterland@diehl.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 414/422] netfilter: masquerade: dont flush all conntracks if only one address deleted on device
-Date:   Tue, 19 Nov 2019 06:20:11 +0100
-Message-Id: <20191119051426.022572123@linuxfoundation.org>
+Subject: [PATCH 4.19 411/422] rtc: isl1208: avoid possible sysfs race
+Date:   Tue, 19 Nov 2019 06:20:08 +0100
+Message-Id: <20191119051425.824143266@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,124 +61,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tan Hu <tan.hu@zte.com.cn>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit 097f95d319f817e651bd51f8846aced92a55a6a1 ]
+[ Upstream commit 1b4c794fda583edabe864ac466e9cd43c707be80 ]
 
-We configured iptables as below, which only allowed incoming data on
-established connections:
+Use rtc_add_group to add the common sysfs group to avoid a possible race
+condition.
 
-iptables -t mangle -A PREROUTING -m state --state ESTABLISHED -j ACCEPT
-iptables -t mangle -P PREROUTING DROP
+[Denis.Osterland@diehl.com: use to_i2c_client(dev->parent)]
+Signed-off-by: Denis Osterland <Denis.Osterland@diehl.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-When deleting a secondary address, current masquerade implements would
-flush all conntracks on this device. All the established connections on
-primary address also be deleted, then subsequent incoming data on the
-connections would be dropped wrongly because it was identified as NEW
-connection.
+The move of atrim, dtrim usr sysfs properties from i2c device
+to rtc device require to access them via dev->parent.
+This patch also aligns timestamp0.
 
-So when an address was delete, it should only flush connections related
-with the address.
-
-Signed-off-by: Tan Hu <tan.hu@zte.com.cn>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/netfilter/nf_nat_masquerade_ipv4.c | 22 ++++++++++++++++++---
- net/ipv6/netfilter/nf_nat_masquerade_ipv6.c | 19 +++++++++++++++---
- 2 files changed, 35 insertions(+), 6 deletions(-)
+ drivers/rtc/rtc-isl1208.c | 27 ++++++++++-----------------
+ 1 file changed, 10 insertions(+), 17 deletions(-)
 
-diff --git a/net/ipv4/netfilter/nf_nat_masquerade_ipv4.c b/net/ipv4/netfilter/nf_nat_masquerade_ipv4.c
-index 4c7fcd32f8e62..41327bb990932 100644
---- a/net/ipv4/netfilter/nf_nat_masquerade_ipv4.c
-+++ b/net/ipv4/netfilter/nf_nat_masquerade_ipv4.c
-@@ -104,12 +104,26 @@ static int masq_device_event(struct notifier_block *this,
- 	return NOTIFY_DONE;
- }
- 
-+static int inet_cmp(struct nf_conn *ct, void *ptr)
-+{
-+	struct in_ifaddr *ifa = (struct in_ifaddr *)ptr;
-+	struct net_device *dev = ifa->ifa_dev->dev;
-+	struct nf_conntrack_tuple *tuple;
-+
-+	if (!device_cmp(ct, (void *)(long)dev->ifindex))
-+		return 0;
-+
-+	tuple = &ct->tuplehash[IP_CT_DIR_REPLY].tuple;
-+
-+	return ifa->ifa_address == tuple->dst.u3.ip;
-+}
-+
- static int masq_inet_event(struct notifier_block *this,
- 			   unsigned long event,
- 			   void *ptr)
+diff --git a/drivers/rtc/rtc-isl1208.c b/drivers/rtc/rtc-isl1208.c
+index ea18a8f4bce06..033f65aef5788 100644
+--- a/drivers/rtc/rtc-isl1208.c
++++ b/drivers/rtc/rtc-isl1208.c
+@@ -518,7 +518,7 @@ static ssize_t timestamp0_store(struct device *dev,
+ 				struct device_attribute *attr,
+ 				const char *buf, size_t count)
  {
- 	struct in_device *idev = ((struct in_ifaddr *)ptr)->ifa_dev;
--	struct netdev_notifier_info info;
-+	struct net *net = dev_net(idev->dev);
+-	struct i2c_client *client = dev_get_drvdata(dev);
++	struct i2c_client *client = to_i2c_client(dev->parent);
+ 	int sr;
  
- 	/* The masq_dev_notifier will catch the case of the device going
- 	 * down.  So if the inetdev is dead and being destroyed we have
-@@ -119,8 +133,10 @@ static int masq_inet_event(struct notifier_block *this,
- 	if (idev->dead)
- 		return NOTIFY_DONE;
+ 	sr = isl1208_i2c_get_sr(client);
+@@ -540,7 +540,7 @@ static ssize_t timestamp0_store(struct device *dev,
+ static ssize_t timestamp0_show(struct device *dev,
+ 			       struct device_attribute *attr, char *buf)
+ {
+-	struct i2c_client *client = dev_get_drvdata(dev);
++	struct i2c_client *client = to_i2c_client(dev->parent);
+ 	u8 regs[ISL1219_EVT_SECTION_LEN] = { 0, };
+ 	struct rtc_time tm;
+ 	int sr;
+@@ -650,7 +650,7 @@ static ssize_t
+ isl1208_sysfs_show_atrim(struct device *dev,
+ 			 struct device_attribute *attr, char *buf)
+ {
+-	int atr = isl1208_i2c_get_atr(to_i2c_client(dev));
++	int atr = isl1208_i2c_get_atr(to_i2c_client(dev->parent));
+ 	if (atr < 0)
+ 		return atr;
  
--	netdev_notifier_info_init(&info, idev->dev);
--	return masq_device_event(this, event, &info);
-+	if (event == NETDEV_DOWN)
-+		nf_ct_iterate_cleanup_net(net, inet_cmp, ptr, 0, 0);
+@@ -663,7 +663,7 @@ static ssize_t
+ isl1208_sysfs_show_dtrim(struct device *dev,
+ 			 struct device_attribute *attr, char *buf)
+ {
+-	int dtr = isl1208_i2c_get_dtr(to_i2c_client(dev));
++	int dtr = isl1208_i2c_get_dtr(to_i2c_client(dev->parent));
+ 	if (dtr < 0)
+ 		return dtr;
+ 
+@@ -676,7 +676,7 @@ static ssize_t
+ isl1208_sysfs_show_usr(struct device *dev,
+ 		       struct device_attribute *attr, char *buf)
+ {
+-	int usr = isl1208_i2c_get_usr(to_i2c_client(dev));
++	int usr = isl1208_i2c_get_usr(to_i2c_client(dev->parent));
+ 	if (usr < 0)
+ 		return usr;
+ 
+@@ -701,7 +701,10 @@ isl1208_sysfs_store_usr(struct device *dev,
+ 	if (usr < 0 || usr > 0xffff)
+ 		return -EINVAL;
+ 
+-	return isl1208_i2c_set_usr(to_i2c_client(dev), usr) ? -EIO : count;
++	if (isl1208_i2c_set_usr(to_i2c_client(dev->parent), usr))
++		return -EIO;
 +
-+	return NOTIFY_DONE;
++	return count;
  }
  
- static struct notifier_block masq_dev_notifier = {
-diff --git a/net/ipv6/netfilter/nf_nat_masquerade_ipv6.c b/net/ipv6/netfilter/nf_nat_masquerade_ipv6.c
-index 37b1d413c825b..0ad0da5a26002 100644
---- a/net/ipv6/netfilter/nf_nat_masquerade_ipv6.c
-+++ b/net/ipv6/netfilter/nf_nat_masquerade_ipv6.c
-@@ -87,18 +87,30 @@ static struct notifier_block masq_dev_notifier = {
- struct masq_dev_work {
- 	struct work_struct work;
- 	struct net *net;
-+	struct in6_addr addr;
- 	int ifindex;
+ static DEVICE_ATTR(usr, S_IRUGO | S_IWUSR, isl1208_sysfs_show_usr,
+@@ -765,7 +768,6 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	rtc->ops = &isl1208_rtc_ops;
+ 
+ 	i2c_set_clientdata(client, rtc);
+-	dev_set_drvdata(&rtc->dev, client);
+ 
+ 	rc = isl1208_i2c_get_sr(client);
+ 	if (rc < 0) {
+@@ -804,7 +806,7 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 		evdet_irq = of_irq_get_byname(np, "evdet");
+ 	}
+ 
+-	rc = sysfs_create_group(&client->dev.kobj, &isl1208_rtc_sysfs_files);
++	rc = rtc_add_group(rtc, &isl1208_rtc_sysfs_files);
+ 	if (rc)
+ 		return rc;
+ 
+@@ -821,14 +823,6 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	return rtc_register_device(rtc);
+ }
+ 
+-static int
+-isl1208_remove(struct i2c_client *client)
+-{
+-	sysfs_remove_group(&client->dev.kobj, &isl1208_rtc_sysfs_files);
+-
+-	return 0;
+-}
+-
+ static const struct i2c_device_id isl1208_id[] = {
+ 	{ "isl1208", TYPE_ISL1208 },
+ 	{ "isl1218", TYPE_ISL1218 },
+@@ -851,7 +845,6 @@ static struct i2c_driver isl1208_driver = {
+ 		.of_match_table = of_match_ptr(isl1208_of_match),
+ 	},
+ 	.probe = isl1208_probe,
+-	.remove = isl1208_remove,
+ 	.id_table = isl1208_id,
  };
  
-+static int inet_cmp(struct nf_conn *ct, void *work)
-+{
-+	struct masq_dev_work *w = (struct masq_dev_work *)work;
-+	struct nf_conntrack_tuple *tuple;
-+
-+	if (!device_cmp(ct, (void *)(long)w->ifindex))
-+		return 0;
-+
-+	tuple = &ct->tuplehash[IP_CT_DIR_REPLY].tuple;
-+
-+	return ipv6_addr_equal(&w->addr, &tuple->dst.u3.in6);
-+}
-+
- static void iterate_cleanup_work(struct work_struct *work)
- {
- 	struct masq_dev_work *w;
--	long index;
- 
- 	w = container_of(work, struct masq_dev_work, work);
- 
--	index = w->ifindex;
--	nf_ct_iterate_cleanup_net(w->net, device_cmp, (void *)index, 0, 0);
-+	nf_ct_iterate_cleanup_net(w->net, inet_cmp, (void *)w, 0, 0);
- 
- 	put_net(w->net);
- 	kfree(w);
-@@ -147,6 +159,7 @@ static int masq_inet6_event(struct notifier_block *this,
- 		INIT_WORK(&w->work, iterate_cleanup_work);
- 		w->ifindex = dev->ifindex;
- 		w->net = net;
-+		w->addr = ifa->addr;
- 		schedule_work(&w->work);
- 
- 		return NOTIFY_DONE;
 -- 
 2.20.1
 
