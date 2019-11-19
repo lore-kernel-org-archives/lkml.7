@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 229B8C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47657C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB54A20721
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14DF5218BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142746;
-	bh=1i+vQmOAwXrZq0x2DsTWc7B130SaqeQXm6f1QAqJXH0=;
+	s=default; t=1574142750;
+	bh=kTWHcQgmOh92E8ZW7W0vJ+QVMthQ0RSoHstpcaD/z3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cz4UDSEMZHNjf7/SBAYLlZ6+omzsmVxt6jlY1BPz7B+3XNcFdoWL7QGHDH67z9SQy
-	 W0p2OrubVGiPwkjNPfUk7Td307uYtbQa/Bogyrqj6b4sV7gj/MqO4WI1n00QSMfvNK
-	 cSnNCgsViEJdh1usG1NS//0m+pSd+3yiOB//fgjg=
+	b=raoA0NmJvP9kGrDtNiObO8sy82TRGLKTD3OP2Zq42QuE4FOzB2kD4CCijyJYdJFyY
+	 WebwFDHRIg/OdMZpwbkz//XDHr3GJGYWuus4GBzn0fvqebwbKjKddWnnumKQDH6Xvm
+	 bO/qF5uqF2mPMsQv4o6C9xX+u55XLgYdTdevPtmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731908AbfKSFwY (ORCPT
+        id S1731914AbfKSFw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:52:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49998 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:52:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731297AbfKSFwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:52:19 -0500
+        id S1731297AbfKSFwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:52:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA71320721;
-        Tue, 19 Nov 2019 05:52:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E6A2208C3;
+        Tue, 19 Nov 2019 05:52:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142738;
-        bh=1i+vQmOAwXrZq0x2DsTWc7B130SaqeQXm6f1QAqJXH0=;
+        s=default; t=1574142744;
+        bh=kTWHcQgmOh92E8ZW7W0vJ+QVMthQ0RSoHstpcaD/z3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WW+0H9ZD/4ecQyXXkQO/76dN09CzjnhXGqSw5rJu2DCSo9sS8EfRyK/TtF2cbu1W8
-         4mAMa+P0gdlbaDCqpWE+jGMNKiD6hFB+gVKDxcQKK41eLF4KF2PSYKu0b2BuJT1Ul8
-         8xcJUaN07s44nwhlAYSX5JTMOVSkF7qlGOfhcsmc=
+        b=gosw+WNPB7+nMafji7JJDhZUxc5pHQa3vVXyDk9ZvFwmx6utqWTELuxjAm7YSFq7c
+         BR+RETDvDXYI8Pn6HQXIauHpGPErczGUd1TRSLQRPb9R4jKqA7cOH2mL0n7yzFQ1pW
+         1VedtDFuuADynRbvMGzJfZ9iEEUJugUcX4qyHD5o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joel Pepper <joel.pepper@rwth-aachen.de>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 184/239] usb: gadget: uvc: configfs: Prevent format changes after linking header
-Date:   Tue, 19 Nov 2019 06:19:44 +0100
-Message-Id: <20191119051334.983203021@linuxfoundation.org>
+Subject: [PATCH 4.14 186/239] phy: brcm-sata: allow PHY_BRCM_SATA driver to be built for DSL SoCs
+Date:   Tue, 19 Nov 2019 06:19:46 +0100
+Message-Id: <20191119051335.200929962@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,44 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joel Pepper <joel.pepper@rwth-aachen.de>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit cb2200f7af8341aaf0c6abd7ba37e4c667c41639 ]
+[ Upstream commit 26728df4b254ae06247726a9a6e64823e39ac504 ]
 
-While checks are in place to avoid attributes and children of a format
-being manipulated after the format is linked into the streaming header,
-the linked flag was never actually set, invalidating the protections.
-Update the flag as appropriate in the header link calls.
+Broadcom ARM-based DSL SoCs (BCM63xx product line) have the same
+Broadcom SATA PHY that other SoCs are using, make it possible to select
+that driver on these platforms.
 
-Signed-off-by: Joel Pepper <joel.pepper@rwth-aachen.de>
-Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/uvc_configfs.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/phy/broadcom/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/function/uvc_configfs.c b/drivers/usb/gadget/function/uvc_configfs.c
-index fc604439b25a1..57f6e8a668cf5 100644
---- a/drivers/usb/gadget/function/uvc_configfs.c
-+++ b/drivers/usb/gadget/function/uvc_configfs.c
-@@ -765,6 +765,7 @@ static int uvcg_streaming_header_allow_link(struct config_item *src,
- 	format_ptr->fmt = target_fmt;
- 	list_add_tail(&format_ptr->entry, &src_hdr->formats);
- 	++src_hdr->num_fmt;
-+	++target_fmt->linked;
+diff --git a/drivers/phy/broadcom/Kconfig b/drivers/phy/broadcom/Kconfig
+index 64fc59c3ae6d9..181b8fde2bfe6 100644
+--- a/drivers/phy/broadcom/Kconfig
++++ b/drivers/phy/broadcom/Kconfig
+@@ -60,7 +60,8 @@ config PHY_NS2_USB_DRD
  
- out:
- 	mutex_unlock(&opts->lock);
-@@ -802,6 +803,8 @@ static void uvcg_streaming_header_drop_link(struct config_item *src,
- 			break;
- 		}
- 
-+	--target_fmt->linked;
-+
- out:
- 	mutex_unlock(&opts->lock);
- 	mutex_unlock(su_mutex);
+ config PHY_BRCM_SATA
+ 	tristate "Broadcom SATA PHY driver"
+-	depends on ARCH_BRCMSTB || ARCH_BCM_IPROC || BMIPS_GENERIC || COMPILE_TEST
++	depends on ARCH_BRCMSTB || ARCH_BCM_IPROC || BMIPS_GENERIC || \
++		   ARCH_BCM_63XX || COMPILE_TEST
+ 	depends on OF
+ 	select GENERIC_PHY
+ 	default ARCH_BCM_IPROC
 -- 
 2.20.1
 
