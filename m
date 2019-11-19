@@ -2,110 +2,100 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1931C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DEEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82197222A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F2A522317
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:07:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VYJbCCRX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfKSFDW (ORCPT
+        id S1726637AbfKSFHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:03:22 -0500
-Received: from mga14.intel.com ([192.55.52.115]:8390 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbfKSFDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:03:22 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 21:03:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,322,1569308400"; 
-   d="scan'208";a="407626283"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga006.fm.intel.com with ESMTP; 18 Nov 2019 21:03:17 -0800
-Date:   Mon, 18 Nov 2019 21:03:17 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Kai Huang <kai.huang@linux.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v3 04/19] x86/intel: Initialize IA32_FEATURE_CONTROL MSR
- at boot
-Message-ID: <20191119050317.GF23085@linux.intel.com>
-References: <20191119031240.7779-1-sean.j.christopherson@intel.com>
- <20191119031240.7779-5-sean.j.christopherson@intel.com>
- <17a1831a3a72fb87ce2a35689e07ff517c4bdf99.camel@linux.intel.com>
+        Tue, 19 Nov 2019 00:07:55 -0500
+Received: from mail-pl1-f173.google.com ([209.85.214.173]:46697 "EHLO
+        mail-pl1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfKSFHz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:07:55 -0500
+Received: by mail-pl1-f173.google.com with SMTP id l4so11074055plt.13;
+        Mon, 18 Nov 2019 21:07:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=feilDUjQ5x/59LFnxlxvW8WwQKzwk+wbXzAfXtSise0=;
+        b=VYJbCCRXBL9vm9AuHqkXrEa9kVoSz+5rrJpTVyktE6DIHKNZNFmUF2RuEvqsoK1K+O
+         X/0BlBUAgkg8j8qVtACyb176L/4yDY0JPoafHJWo3i1wNkHuTiZnRVJzl17SumxyXm7Y
+         nRArW3adCtHAiN7bgsL8EBsEp4MV2VpvLLBrd8BL3GsIo7JwhpIvNKKRAvutZaFxCJnB
+         P52VZy7Uy3c3hIs+mUN20tTlTau3zH8MnOu0SJp2WOUP9/J0y+Z5gj+YDQuS4c58Owy5
+         FmxilFWia0Y+F6/0xJ5RiLRZp48O6UqeIH/veMn71cxq1UYoLQqBoExqBaGubAv8STyt
+         t1JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=feilDUjQ5x/59LFnxlxvW8WwQKzwk+wbXzAfXtSise0=;
+        b=Cb9F/m0r9i+HbaKMLvX4k+HlmPOr91+Nv1X3zrHKI56EifwHIBBS6dJgJ4/C4/UGXf
+         8iY6JMzV2rZ0pAy8sETnlSIBNii8WS7GAIyQpTLnBvGcFai8pVPNIO/WU7RkOcwOEJpn
+         7MiHerFpl6FEBeKuoXr2AilZhNwEQrxe4cBPwcQtxaixVEM4qPEKxKkr6ahRscW7rCxG
+         zIgyZJNUtY6r2OzOV0JrrDxzTe3omfVufUnfnTa2pCvCV77N4aZ1MAEYW0QrBS6ArIeL
+         DfvVJGHRBZnCof05dE80G9fAoXhowV7rhaD1fv4SQKj+v/BswSOU6yHqlRmsHwY0yRao
+         E1qg==
+X-Gm-Message-State: APjAAAU2G6CK6B7WonWXIJneVwgaavlBtlfI2n4NaPjeXQ2Rvy4A3wtz
+        KaAeozgTzxkrNkmOgTv9LRW9CxB921wCAqJR9UkvntXT
+X-Google-Smtp-Source: APXvYqyZGR0NZQ8bv6c3yoRKpCaYYkLhmwJdhA1EWsd+QoiFfP0AuklbkWnmoMCBC/UXHcJJwGfVwZdRYzrqUElTLIU=
+X-Received: by 2002:a17:90a:2551:: with SMTP id j75mr3705887pje.122.1574140074250;
+ Mon, 18 Nov 2019 21:07:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <17a1831a3a72fb87ce2a35689e07ff517c4bdf99.camel@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+From:   Bala S <balas2380@gmail.com>
+Date:   Tue, 19 Nov 2019 10:37:44 +0530
+Message-ID: <CAJKzgVtzD7ULwCDVRSLMCmGJNaMqvx+jVO619t3xuv2oiEsPMQ@mail.gmail.com>
+Subject: Suggested Patch is not working for 22851 Bugzilla issue
+To:     mhocko@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 05:41:49PM +1300, Kai Huang wrote:
-> On Mon, 2019-11-18 at 19:12 -0800, Sean Christopherson wrote:
-> > +	/*
-> > +	 * Enable VMX if and only if the kernel may do VMXON at some point,
-> > +	 * i.e. KVM is enabled, to avoid unnecessarily adding an attack vector
-> > +	 * for the kernel, e.g. using VMX to hide malicious code.
-> > +	 */
-> > +	if (cpu_has(c, X86_FEATURE_VMX) && IS_ENABLED(CONFIG_KVM)) {
+Hi Mhocko,
 
-Hmm, this should more specifically be CONFIG_KVM_INTEL.
+https://sourceware.org/bugzilla/show_bug.cgi?id=3D22851
+For the above issue, I have found the patch.
 
-> > +		msr |= FEAT_CTL_VMX_ENABLED_OUTSIDE_SMX;
-> > +		if (tboot_enabled())
-> > +			msr |= FEAT_CTL_VMX_ENABLED_INSIDE_SMX;
-> > +	}
-> 
-> Why not also take this chance to enable SGX? Or it will come with SGX patch
-> series?
+Patch link:
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1561935.html
 
-The latter.  Similar to the KVM check, this shouldn't opt in to SGX unless
-the kernel is capable of using SGX.
+Only change i noticed is 'MAP_FIXED_NOREPLACE' is used instead of
+'MAP_FIXED_SAFE'.
 
-> > +	wrmsrl(MSR_IA32_FEATURE_CONTROL, msr);
-> > +}
-> > diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> > index 4a900804a023..b7c6ed0b40b6 100644
-> > --- a/arch/x86/kernel/cpu/intel.c
-> > +++ b/arch/x86/kernel/cpu/intel.c
-> > @@ -755,6 +755,8 @@ static void init_intel(struct cpuinfo_x86 *c)
-> >  	/* Work around errata */
-> >  	srat_detect_node(c);
-> >  
-> > +	init_feature_control_msr(c);
-> 
-> Will this compile if you disable CONFIG_X86_FEATURE_CONTROL_MSR?
-> 
-> Provide an empty one in cpu.h if the config is not enabled?
+I ran test case on the following targets with this patch:
 
-CONFIG_X86_FEATURE_CONTROL_MSR can't be disabled manually, it's selected
-by CPU_SUP_INTEL (and by Zhaoxin/Centaur for their relevant patches).
+1. For X86-64, Still i could see the reported issue( 'libevil.so' just
+runs =E2=80=98cat /etc/passwd')
+
+2. For MIPS-64, i am not seeing the malicious file content as
+reported. But =E2=80=98ldd=E2=80=99 could not found =E2=80=98libevil.so=E2=
+=80=99.
+
+root@qemumips64:~/LIN1019-1806# ldd ./main
+        linux-vdso.so.1 (0x000000fff1f20000)
+        libevil.so =3D> not found
+        libc.so.6 =3D> /lib/libc.so.6 (0x0000005e46f70000)
+        /lib/ld.so.1 (0x000000fff7888000)
+
+I am not clear why this patch is not working for X86-64? But it is
+working for MIPS-64 with some issue.
+Please let me know, if anything is pending on this patch for the reported i=
+ssue.
+
+Thanks,
+Bala
