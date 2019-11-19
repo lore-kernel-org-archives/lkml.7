@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 895F6C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1C7C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D203214DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1133020672
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141706;
-	bh=H6WRcRF4jr5TKpnkFhGUjOIpidjg4AoHJXVq/R2DmTI=;
+	s=default; t=1574141709;
+	bh=2/j4KmKRBuQKRP03CURvKCeNJQx6DOj4oH59pezYbNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=En1CKdGmSFJGJJemF1iJHenXDn63rq7GVml0IJHlc02t75OgZN29I/6ecDF52CFuT
-	 z76VRfX9z804MWIS3hqf3WqGhPd/XSbJtFu7XkWbcrmiuk/gCJjw7zP6EgH4Oih+mr
-	 iv990DdSM9a8ZThNPrsCXdIY9qArCeRT/amxw+Tg=
+	b=joeMv0HRhc2MzXIIxBUbGzz68HicuXvSpcTureGRUvQj/TKbEK+tpZzidiRTOkLKB
+	 Pj31bRRA2nf8y8b1TMXEk7dQMGQFWxxOU7BfXLjQg5nILE29mZMgzz3uLqcig+vcCa
+	 nHfUkvzJqKKn0GcmMrcwOBk5mcxKlIF83ru+fQXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729768AbfKSFfE (ORCPT
+        id S1729782AbfKSFfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:35:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55726 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:35:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728825AbfKSFez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:34:55 -0500
+        id S1729280AbfKSFfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:35:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A23C208C3;
-        Tue, 19 Nov 2019 05:34:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EC3621783;
+        Tue, 19 Nov 2019 05:35:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141695;
-        bh=H6WRcRF4jr5TKpnkFhGUjOIpidjg4AoHJXVq/R2DmTI=;
+        s=default; t=1574141700;
+        bh=2/j4KmKRBuQKRP03CURvKCeNJQx6DOj4oH59pezYbNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XZNU0lDlIf23rBGOQWZ88bNMQqAtozIgV7oJNiRTcYpWl+mQNg0SWA9Z2dLh2L5CF
-         MlEF9Pkta3R1W6TLr0ktF9pJbyHZ5mrlNOy1n3XmVzA09XG4TdrMvse0Sd5+uLe8BL
-         0MwqpnI54Cq1A+UXkkSobbWgB6nIq3AGUJaEvVwE=
+        b=MO1tDc/SwQvS8ePG4j7/w9n1VtQVtsHrreC1bN81J5jm3JVvo6SQ6VQhKml8jTuNw
+         vAS+jvdTbnuRH6CJlE2l1PTyYiMLVIamxptsO2jhV75rl3Da2bsJL/JCiruGaYscR1
+         8Wf4jvFAbhl6QGlkGh2iNlZL1FkLHTXf/0cKvJY4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonghong Song <yhs@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 249/422] samples/bpf: fix a compilation failure
-Date:   Tue, 19 Nov 2019 06:17:26 +0100
-Message-Id: <20191119051415.125922532@linuxfoundation.org>
+Subject: [PATCH 4.19 251/422] spi: mediatek: Dont modify spi_transfer when transfer.
+Date:   Tue, 19 Nov 2019 06:17:28 +0100
+Message-Id: <20191119051415.253065441@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,60 +60,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonghong Song <yhs@fb.com>
+From: Peter Shih <pihsun@chromium.org>
 
-[ Upstream commit 534e0e52bc23de588e81b5a6f75e10c8c4b189fc ]
+[ Upstream commit 00bca73bfca4fb0ab089b94cad0fc83d8b49c25f ]
 
-samples/bpf build failed with the following errors:
+Mediatek SPI driver modifies some fields (tx_buf, rx_buf, len, tx_dma,
+rx_dma) of the spi_transfer* passed in when doing transfer_one and in
+interrupt handler. This is somewhat unexpected, and there are some
+caller (e.g. Cr50 spi driver) that reuse the spi_transfer for multiple
+messages. Add a field to record how many bytes have been transferred,
+and calculate the right len / buffer based on it instead.
 
-  $ make samples/bpf/
-  ...
-  HOSTCC  samples/bpf/sockex3_user.o
-  /data/users/yhs/work/net-next/samples/bpf/sockex3_user.c:16:8: error: redefinition of ‘struct bpf_flow_keys’
-   struct bpf_flow_keys {
-          ^
-  In file included from /data/users/yhs/work/net-next/samples/bpf/sockex3_user.c:4:0:
-  ./usr/include/linux/bpf.h:2338:9: note: originally defined here
-    struct bpf_flow_keys *flow_keys;
-           ^
-  make[3]: *** [samples/bpf/sockex3_user.o] Error 1
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
 
-Commit d58e468b1112d ("flow_dissector: implements flow dissector BPF hook")
-introduced struct bpf_flow_keys in include/uapi/linux/bpf.h and hence
-caused the naming conflict with samples/bpf/sockex3_user.c.
-
-The fix is to rename struct bpf_flow_keys in samples/bpf/sockex3_user.c
-to flow_keys to avoid the conflict.
-
-Signed-off-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Change-Id: I23e218cd964f16c0b2b26127d4a5ca6529867673
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/sockex3_user.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/spi/spi-mt65xx.c | 37 +++++++++++++++++++++----------------
+ 1 file changed, 21 insertions(+), 16 deletions(-)
 
-diff --git a/samples/bpf/sockex3_user.c b/samples/bpf/sockex3_user.c
-index 5ba3ae9d180ba..22f74d0e14934 100644
---- a/samples/bpf/sockex3_user.c
-+++ b/samples/bpf/sockex3_user.c
-@@ -13,7 +13,7 @@
- #define PARSE_IP_PROG_FD (prog_fd[0])
- #define PROG_ARRAY_FD (map_fd[0])
+diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+index 86bf45667a040..3dc31627c6558 100644
+--- a/drivers/spi/spi-mt65xx.c
++++ b/drivers/spi/spi-mt65xx.c
+@@ -98,6 +98,7 @@ struct mtk_spi {
+ 	struct clk *parent_clk, *sel_clk, *spi_clk;
+ 	struct spi_transfer *cur_transfer;
+ 	u32 xfer_len;
++	u32 num_xfered;
+ 	struct scatterlist *tx_sgl, *rx_sgl;
+ 	u32 tx_sgl_len, rx_sgl_len;
+ 	const struct mtk_spi_compatible *dev_comp;
+@@ -385,6 +386,7 @@ static int mtk_spi_fifo_transfer(struct spi_master *master,
  
--struct bpf_flow_keys {
-+struct flow_keys {
- 	__be32 src;
- 	__be32 dst;
- 	union {
-@@ -64,7 +64,7 @@ int main(int argc, char **argv)
- 	(void) f;
+ 	mdata->cur_transfer = xfer;
+ 	mdata->xfer_len = min(MTK_SPI_MAX_FIFO_SIZE, xfer->len);
++	mdata->num_xfered = 0;
+ 	mtk_spi_prepare_transfer(master, xfer);
+ 	mtk_spi_setup_packet(master);
  
- 	for (i = 0; i < 5; i++) {
--		struct bpf_flow_keys key = {}, next_key;
-+		struct flow_keys key = {}, next_key;
- 		struct pair value;
+@@ -415,6 +417,7 @@ static int mtk_spi_dma_transfer(struct spi_master *master,
+ 	mdata->tx_sgl_len = 0;
+ 	mdata->rx_sgl_len = 0;
+ 	mdata->cur_transfer = xfer;
++	mdata->num_xfered = 0;
  
- 		sleep(1);
+ 	mtk_spi_prepare_transfer(master, xfer);
+ 
+@@ -482,7 +485,7 @@ static int mtk_spi_setup(struct spi_device *spi)
+ 
+ static irqreturn_t mtk_spi_interrupt(int irq, void *dev_id)
+ {
+-	u32 cmd, reg_val, cnt, remainder;
++	u32 cmd, reg_val, cnt, remainder, len;
+ 	struct spi_master *master = dev_id;
+ 	struct mtk_spi *mdata = spi_master_get_devdata(master);
+ 	struct spi_transfer *trans = mdata->cur_transfer;
+@@ -497,36 +500,38 @@ static irqreturn_t mtk_spi_interrupt(int irq, void *dev_id)
+ 		if (trans->rx_buf) {
+ 			cnt = mdata->xfer_len / 4;
+ 			ioread32_rep(mdata->base + SPI_RX_DATA_REG,
+-				     trans->rx_buf, cnt);
++				     trans->rx_buf + mdata->num_xfered, cnt);
+ 			remainder = mdata->xfer_len % 4;
+ 			if (remainder > 0) {
+ 				reg_val = readl(mdata->base + SPI_RX_DATA_REG);
+-				memcpy(trans->rx_buf + (cnt * 4),
+-					&reg_val, remainder);
++				memcpy(trans->rx_buf +
++					mdata->num_xfered +
++					(cnt * 4),
++					&reg_val,
++					remainder);
+ 			}
+ 		}
+ 
+-		trans->len -= mdata->xfer_len;
+-		if (!trans->len) {
++		mdata->num_xfered += mdata->xfer_len;
++		if (mdata->num_xfered == trans->len) {
+ 			spi_finalize_current_transfer(master);
+ 			return IRQ_HANDLED;
+ 		}
+ 
+-		if (trans->tx_buf)
+-			trans->tx_buf += mdata->xfer_len;
+-		if (trans->rx_buf)
+-			trans->rx_buf += mdata->xfer_len;
+-
+-		mdata->xfer_len = min(MTK_SPI_MAX_FIFO_SIZE, trans->len);
++		len = trans->len - mdata->num_xfered;
++		mdata->xfer_len = min(MTK_SPI_MAX_FIFO_SIZE, len);
+ 		mtk_spi_setup_packet(master);
+ 
+-		cnt = trans->len / 4;
+-		iowrite32_rep(mdata->base + SPI_TX_DATA_REG, trans->tx_buf, cnt);
++		cnt = len / 4;
++		iowrite32_rep(mdata->base + SPI_TX_DATA_REG,
++				trans->tx_buf + mdata->num_xfered, cnt);
+ 
+-		remainder = trans->len % 4;
++		remainder = len % 4;
+ 		if (remainder > 0) {
+ 			reg_val = 0;
+-			memcpy(&reg_val, trans->tx_buf + (cnt * 4), remainder);
++			memcpy(&reg_val,
++				trans->tx_buf + (cnt * 4) + mdata->num_xfered,
++				remainder);
+ 			writel(reg_val, mdata->base + SPI_TX_DATA_REG);
+ 		}
+ 
 -- 
 2.20.1
 
