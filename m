@@ -2,77 +2,93 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B47F1C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B53F1C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94A7B208A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 927FB214D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:27:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbfKSD1T (ORCPT
+        id S1727573AbfKSD1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 22:27:19 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6250 "EHLO huawei.com"
+        Mon, 18 Nov 2019 22:27:33 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48802 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727018AbfKSD1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 22:27:18 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 713B0C8CB653863E022A;
-        Tue, 19 Nov 2019 11:27:16 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 19 Nov 2019 11:27:05 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
-        <davem@davemloft.net>, <sgarzare@redhat.com>,
-        <kstewart@linuxfoundation.org>, <alexios.zavras@intel.com>,
-        <tglx@linutronix.de>, <maowenan@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "Hulk Robot" <hulkci@huawei.com>
-Subject: [PATCH -next] vsock/vmci: make vmci_vsock_cb_host_called static
-Date:   Tue, 19 Nov 2019 11:25:34 +0800
-Message-ID: <20191119032534.52090-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        id S1727018AbfKSD1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 22:27:33 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id C966391C286B9FECAB46;
+        Tue, 19 Nov 2019 11:27:30 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 19 Nov 2019
+ 11:27:21 +0800
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     <gregkh@linuxfoundation.org>, <bvanassche@acm.org>,
+        <alexander.h.duyck@linux.intel.com>, <bhelgaas@google.com>,
+        <sakari.ailus@linux.intel.com>, <linux-kernel@vger.kernel.org>,
+        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Subject: [PATCH v3] async: Let kfree() out of the critical area of the lock
+Message-ID: <89da0082-ebad-25c0-d82f-4a2feae628e6@huawei.com>
+Date:   Tue, 19 Nov 2019 11:26:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When using make C=2 drivers/misc/vmw_vmci/vmci_driver.o
-to compile, below warning can be seen:
-drivers/misc/vmw_vmci/vmci_driver.c:33:6: warning:
-symbol 'vmci_vsock_cb_host_called' was not declared. Should it be static?
+The async_lock is big global lock, and kfree() is not always cheap, it
+will increase lock contention. it's better let kfree() outside the lock
+to keep the critical area as short as possible.
 
-This patch make symbol vmci_vsock_cb_host_called static.
-
-Fixes: b1bba80a4376 ("vsock/vmci: register vmci_transport only when VMCI guest/host are active")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 ---
- drivers/misc/vmw_vmci/vmci_driver.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2 -> v3:
+ - move kfree() after wake_up(&async_done)
 
-diff --git a/drivers/misc/vmw_vmci/vmci_driver.c b/drivers/misc/vmw_vmci/vmci_driver.c
-index 95fed46..cbb706d 100644
---- a/drivers/misc/vmw_vmci/vmci_driver.c
-+++ b/drivers/misc/vmw_vmci/vmci_driver.c
-@@ -30,7 +30,7 @@ static bool vmci_host_personality_initialized;
- 
- static DEFINE_MUTEX(vmci_vsock_mutex); /* protects vmci_vsock_transport_cb */
- static vmci_vsock_cb vmci_vsock_transport_cb;
--bool vmci_vsock_cb_host_called;
-+static bool vmci_vsock_cb_host_called;
- 
- /*
-  * vmci_get_context_id() - Gets the current context ID.
+v1 -> v2:
+ - update the description
+ - add "Reviewed-by"
+
+ kernel/async.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/async.c b/kernel/async.c
+index 4f9c1d614016..d2ab75e8b1ab 100644
+--- a/kernel/async.c
++++ b/kernel/async.c
+@@ -135,14 +135,14 @@ static void async_run_entry_fn(struct work_struct *work)
+ 	list_del_init(&entry->domain_list);
+ 	list_del_init(&entry->global_list);
+
+-	/* 3) free the entry */
+-	kfree(entry);
+ 	atomic_dec(&entry_count);
+-
+ 	spin_unlock_irqrestore(&async_lock, flags);
+
+-	/* 4) wake up any waiters */
++	/* 3) wake up any waiters */
+ 	wake_up(&async_done);
++
++	/* 4) free the entry */
++	kfree(entry);
+ }
+
+ /**
 -- 
 2.7.4
 
