@@ -2,117 +2,120 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F74C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F191C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 503C622362
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C97222B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:25:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbfKSRXM convert rfc822-to-8bit (ORCPT
+        id S1728532AbfKSRZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 12:23:12 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:62135 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728060AbfKSRXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 12:23:11 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47HXht0h7hz9tyLh;
-        Tue, 19 Nov 2019 18:23:10 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 9_yGQs22jHWr; Tue, 19 Nov 2019 18:23:10 +0100 (CET)
-Received: from vm-hermes.si.c-s.fr (vm-hermes.si.c-s.fr [192.168.25.253])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47HXhs50M2z9tyLQ;
-        Tue, 19 Nov 2019 18:23:09 +0100 (CET)
-Received: by vm-hermes.si.c-s.fr (Postfix, from userid 33)
-        id A9FDCCCF; Tue, 19 Nov 2019 18:23:10 +0100 (CET)
-Received: from 37-173-93-145.coucou-networks.fr
- (37-173-93-145.coucou-networks.fr [37.173.93.145]) by messagerie.si.c-s.fr
- (Horde Framework) with HTTP; Tue, 19 Nov 2019 18:23:10 +0100
-Date:   Tue, 19 Nov 2019 18:23:10 +0100
-Message-ID: <20191119182310.Horde.k9AYj80RSVXLkAUdXVQqrQ1@messagerie.si.c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, dja@axtens.net, npiggin@gmail.com,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v3 15/15] powerpc/32s: Activate CONFIG_VMAP_STACK
-References: <cover.1568106758.git.christophe.leroy@c-s.fr>
- <a99bdfb64e287b16b8cd3f7ec1abfdfb50c7cc64.1568106758.git.christophe.leroy@c-s.fr>
- <87v9rhcuc5.fsf@mpe.ellerman.id.au>
-In-Reply-To: <87v9rhcuc5.fsf@mpe.ellerman.id.au>
-User-Agent: Internet Messaging Program (IMP) H5 (6.2.3)
-Content-Type: text/plain; charset=UTF-8; format=flowed; DelSp=Yes
+        Tue, 19 Nov 2019 12:25:22 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58448 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726985AbfKSRZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 12:25:22 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B4EA7B20B;
+        Tue, 19 Nov 2019 17:25:19 +0000 (UTC)
+Message-ID: <e3e192e178fadddcd862c2c1f4644b5a1fe3a3d0.camel@suse.de>
+Subject: Re: [PATCH v2 3/3] ARM: dts: bcm2711: Enable HWRNG support
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Stephen Brennan <stephen@brennan.io>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Scott Branden <sbranden@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>,
+        linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Matt Mackall <mpm@selenic.com>, Arnd Bergmann <arnd@arndb.de>,
+        linux-crypto@vger.kernel.org
+Date:   Tue, 19 Nov 2019 18:25:16 +0100
+In-Reply-To: <BYK1FVFPTH7J.159A75JOGITR1@pride>
+References: <BYK1FVFPTH7J.159A75JOGITR1@pride>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-Q1OudO4sDtl+ITj8Di/3"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Ellerman <mpe@ellerman.id.au> a écrit :
 
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->> A few changes to retrieve DAR and DSISR from struct regs
->> instead of retrieving them directly, as they may have
->> changed due to a TLB miss.
->>
->> Also modifies hash_page() and friends to work with virtual
->> data addresses instead of physical ones.
->>
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> ---
->>  arch/powerpc/kernel/entry_32.S         |  4 +++
->>  arch/powerpc/kernel/head_32.S          | 19 +++++++++++---
->>  arch/powerpc/kernel/head_32.h          |  4 ++-
->>  arch/powerpc/mm/book3s32/hash_low.S    | 46  
->> +++++++++++++++++++++-------------
->>  arch/powerpc/mm/book3s32/mmu.c         |  9 +++++--
->>  arch/powerpc/platforms/Kconfig.cputype |  2 ++
->>  6 files changed, 61 insertions(+), 23 deletions(-)
->
-> If I build pmac32_defconfig with KVM enabled this causes a build break:
->
->   arch/powerpc/kernel/head_32.S: Assembler messages:
->   arch/powerpc/kernel/head_32.S:324: Error: attempt to move .org backwards
->   scripts/Makefile.build:357: recipe for target  
-> 'arch/powerpc/kernel/head_32.o' failed
->   make[2]: *** [arch/powerpc/kernel/head_32.o] Error 1
->
-> In the interests of getting the series merged I'm inclined to just make
-> VMAP_STACK and KVM incompatible for now with:
->
-> diff --git a/arch/powerpc/platforms/Kconfig.cputype  
-> b/arch/powerpc/platforms/Kconfig.cputype
-> index 15c9097dc4f7..5074fe77af40 100644
-> --- a/arch/powerpc/platforms/Kconfig.cputype
-> +++ b/arch/powerpc/platforms/Kconfig.cputype
-> @@ -31,7 +31,7 @@ config PPC_BOOK3S_6xx
->         select PPC_HAVE_PMU_SUPPORT
->         select PPC_HAVE_KUEP
->         select PPC_HAVE_KUAP
-> -       select HAVE_ARCH_VMAP_STACK
-> +       select HAVE_ARCH_VMAP_STACK if !KVM_BOOK3S_32
->
->  config PPC_BOOK3S_601
->         bool "PowerPC 601"
->
->
-> Thoughts?
+--=-Q1OudO4sDtl+ITj8Di/3
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Ok, lets do it the way you propose.
+On Tue, 2019-11-19 at 09:09 -0800, Stephen Brennan wrote:
+> Hi Nicolas,
+>=20
+> On Tue Nov 19, 2019 at 11:07 AM, Nicolas Saenz Julienne wrote:
+> > Hi Stephen, thanks for the follow-up.
+> >=20
+> >=20
+> > On Mon, 2019-11-18 at 22:14 -0800, Stephen Brennan wrote:
+> > > BCM2711 features a RNG200 hardware random number generator block, whi=
+ch i=3D
+> > s
+> > > different from the BCM283x from which it inherits. Move the rng block=
+ fro=3D
+> > m
+> > > BCM283x into a separate common file, and update the rng declaration o=
+f
+> > > BCM2711.
+> > > =3D20
+> > > Signed-off-by: Stephen Brennan <stephen@brennan.io>
+> > > ---
+> >=20
+> > It's petty in this case but you should add a list of changes here too.
+>=20
+> To make sure I understand, you mean listing out the changes in each=20
+> revision of the patch series?
 
-I'll look at this problem with KVM when I'm back next week.
+What's generally expected is for the cover letter to contain an overview of=
+ the
+series changes. No need to go into specific detail. Then, every patch shoul=
+d
+list its local modifications.
 
-Thanks
-Christophe
+Also remember to add the list of changes after the '---' line in your patch=
+,
+this way they won't show up in the final commit log.
+
+If in doubt have a look at the kernel mailing lists, there are plenty of
+examples.
+
+Regards,
+Nicolas
 
 
+--=-Q1OudO4sDtl+ITj8Di/3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3UJXwACgkQlfZmHno8
+x/5J8gf/Wg/IrKzrAi1fKuJaY4CfPJSLpKvLtmOfDqcchsMm6aq0nBODopwXGT0y
+bcPiG7OOnwcDqlD8pxyBL8iBG48gsidg51JSizuSnJ6lgxPpSN6JHoD4HUi2hnS5
+y0wXzThHmoZB00Vep0o6EmBsY2hHU/URLfH1uWnSwut9CRQfC/dVJ8UhxPVuCaqJ
+HLYdPveYV3S6P1YUk0RgO95RqhjEegya1zsvT3W0pGwda042QbvweKzaUtzRERT2
+GwN2eIcP2SJ+8S/P8edIPwd3T6uL7gMLLsw7WWCp9DOQPI/ORFPm7c2dUEkdXW1l
+mAscggOyCMH1qNaOc7lVVZ7o92N1mA==
+=d9p8
+-----END PGP SIGNATURE-----
+
+--=-Q1OudO4sDtl+ITj8Di/3--
 
