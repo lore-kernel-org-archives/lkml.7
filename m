@@ -2,152 +2,145 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 566B5C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 175BDC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 269CC208CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF177208CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:46:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HX+z1mR/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OMXytIh6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbfKSQpV (ORCPT
+        id S1728482AbfKSQqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:45:21 -0500
-Received: from mail-eopbgr30086.outbound.protection.outlook.com ([40.107.3.86]:9798
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727560AbfKSQpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 11:45:20 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GW0FjHjSXmmhDlkoShLdOoVNk5WzsBJZvESCS+qM7u1H7EMIkI3q3EYamrIIL+aJFsdDduplMraVKDU4sFviP+Co3mdrkvqrbP3dCWGAf8gz30MpSzraaK2GpduaaghD/B8CO5+Xg0XbXFqHkbcwsKgfqTVGg2ly9a2r8L7iKuMIxthr+KVaqQDZg0vqewpy1yNCs5LC1cNCHn5ef6SY9hHUKc0ZrNOFPzaTPF/hGTpQCRyCxoqfJ+Y/7xfjdjUYPW4QLf61EYgRgHaPS8YtcgybdJs/QRyhYQ2h5lvDZNh6zyjQBoMFSoupRKeR0ZATREZ4NgUgK6n95PPUFQ1B9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QyLJsJu95tbbKGa3xk+HzRtM4IoVJOhm1KLwhuHReUw=;
- b=OrSDAqOpvwMOD81aPL8266CoeHE3hu/E+TU7sqdRSKGBTc1VUHceUUMVzIleMhcZWz9KhnFtV+rtCAN3FlmjNdyKYNrcl2Kat3HI19qAMMHyjCywxPzTp4ja/oqDk5VCK59aL48pH8c4E0WcfhcqXVuzV9baHP+61ie/4zvp44Uwefu8vPLok7b7CqmA7laHY+TxjWIBVbxo/SVHBCjbA8V+fGyTWoaj6bHhyfXPd/0YJUIAdZ1RsAyfg94BEXl4CBKDY5V+HtfVNicazPuQ98ntNstkK9QCN699NAplx9z9/qPkM1/JWs+cNGLcjsHnwWIX9adGQoCUOyoJjvrbRg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QyLJsJu95tbbKGa3xk+HzRtM4IoVJOhm1KLwhuHReUw=;
- b=HX+z1mR/wmYpeBd3DZjiwtRpRRVYeFfxQKQTkKHjscgfc69TiawMqT16a2I+74VNEETdJRy+OFljIJlJ60yks9zdTNtDjlKXZDS0YcG1SVli+5TtAm89aMdNrneKVqAkntNROlVvP9IWVid4EZlcGoRbT6fe2tD+E4kWP9vGAhI=
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
- VI1PR04MB4432.eurprd04.prod.outlook.com (20.177.54.80) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Tue, 19 Nov 2019 16:45:11 +0000
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::dd0c:72dc:e462:16b3]) by VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::dd0c:72dc:e462:16b3%5]) with mapi id 15.20.2451.031; Tue, 19 Nov 2019
- 16:45:11 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Peng Fan <peng.fan@nxp.com>, "sboyd@kernel.org" <sboyd@kernel.org>,
-        Abel Vesa <abel.vesa@nxp.com>
-CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
+        Tue, 19 Nov 2019 11:46:30 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34789 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726985AbfKSQq3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 11:46:29 -0500
+Received: by mail-pg1-f194.google.com with SMTP id z188so11639529pgb.1;
+        Tue, 19 Nov 2019 08:46:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=N88IvzubVsX0fszeRU54yuPiG1qCCXajzAAcBlZsZlc=;
+        b=OMXytIh62mE98rqPh2OrsrHoSOdGc+kISBXOfwcq6UCkm4i7gAZf2b8GmwJJwcBnxv
+         J9DuOiucxjKGkQPPUaXx/1LouZ6J5SydtXNUd11t7CH22P3b0p2mvlFBMiX1qbop6tVZ
+         fefyXjlG67Q2MjrQwheelFDTutJCC7lhUdOyd061BCwmvBe1mn9cAkTsZeq2HOnfZUDl
+         UOf4/iwugz2Mh55Cdu9R5dj57eWQhZLs9VShj4LJAqSTZFw5MdzeuEMgJcuDZSyIZbyH
+         +vnbMUvKqzkW5fxQaikf/AeBk++mWApk+nrBovjowLMSGPt28hb73agEczfFv6ARYWHy
+         k4Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N88IvzubVsX0fszeRU54yuPiG1qCCXajzAAcBlZsZlc=;
+        b=uVPXX0Xf3VdpJC3f4UlscD6kQ0U0itX4NSRaePLGgZK6rFQqK6rRzvi6O/Rb5SPFAM
+         Ao6ZYFzgGHu2j5C5RqnyEYBmwfgsfwBQtfilg9I4I+vkKCbdPCOS+5f8WsWXGcVkT8JG
+         V331lEeRVmjgkkCJiFEquv+o70HxwIS8oQ0YvwZ/YdSn7egtlyj4Jzo7bL6kXPF1McdR
+         3jy7eN95EIeK4B3vS0cVo3O5zdO8UgGcPHj1K7JulWvPr7zAZrqwGYkvqAP/Q40R2Ig3
+         sLOjQN+ALrnknxogcjE2HchUtvdb8hV+ds3ta6J7lkl/pwdz4diDVfbcu9vdEj8q6wYl
+         fLYQ==
+X-Gm-Message-State: APjAAAV6IKxOPXLw/BYo0qAX+uBCkuueV6EI4OyQiPFm4kaBWTOceY7g
+        2y9hi9WbZWY0foCjy/EbebLE0JVL
+X-Google-Smtp-Source: APXvYqw78SVR1Quud8+jWWUcLN56/L91kDoVI+1WrS2fDWCH0IxHeSigIZgug9d4qQLnw/eUAccIww==
+X-Received: by 2002:a63:ee4b:: with SMTP id n11mr6785861pgk.450.1574181988866;
+        Tue, 19 Nov 2019 08:46:28 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g4sm25079113pfh.172.2019.11.19.08.46.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 Nov 2019 08:46:28 -0800 (PST)
+Date:   Tue, 19 Nov 2019 08:46:26 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Chris Paterson <Chris.Paterson2@renesas.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alice Guo <alice.guo@nxp.com>
-Subject: Re: [PATCH V3 0/4] clk: imx: imx8m[x]: switch to clk_hw API
-Thread-Topic: [PATCH V3 0/4] clk: imx: imx8m[x]: switch to clk_hw API
-Thread-Index: AQHVnrhjSBoXgoVf/UaxtVvL2YWuSA==
-Date:   Tue, 19 Nov 2019 16:45:11 +0000
-Message-ID: <VI1PR04MB702313D66C0C6212FDCD9AF5EE4C0@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <1574154146-8818-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 875090e2-133c-4919-bb7e-08d76d0fd819
-x-ms-traffictypediagnostic: VI1PR04MB4432:|VI1PR04MB4432:
-x-ms-exchange-purlcount: 2
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB443279DB15662733FB1D2CBAEE4C0@VI1PR04MB4432.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 022649CC2C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(396003)(39860400002)(136003)(366004)(189003)(199004)(9686003)(6436002)(966005)(476003)(446003)(478600001)(26005)(76116006)(14454004)(33656002)(102836004)(316002)(256004)(52536014)(14444005)(2501003)(7736002)(305945005)(186003)(44832011)(486006)(6246003)(54906003)(6306002)(55016002)(229853002)(81156014)(64756008)(66556008)(66476007)(66946007)(8676002)(66066001)(25786009)(53546011)(91956017)(110136005)(86362001)(74316002)(4001150100001)(8936002)(71200400001)(6506007)(71190400001)(5660300002)(6636002)(3846002)(6116002)(4326008)(2906002)(99286004)(76176011)(66446008)(81166006)(7696005)(32563001)(15585785002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4432;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: aw+7j6QHRsAFaOqBANzFCGfU4Obn0ftICSkjq6WCzNzgXr7xQHp0cLsSBWnrAuTSuf1jYmN9zlNRwlVuipZIAG64+CV5dSvw1z8CJemgYBxNWz4jmHNOkRzuw0EFAu9E9oMgGHk3pRnPZjCKUc6qonWwyVNAnpuWXg/JiT7K7T3uCXIoLhSGebc14W+GafySF2I/LX4XfguH9UrqfT8g4kBx08ZYKWT3pMnMVkHOxgq28GBNJVDk3ZrGmIliG0kcT4f4uphNYNIlWodM2ghALD81Van5v0CQnB7407sq8TfVW1eT5vRmaFjMUhENnq49gL1F0pbsq8WtTSTS5+p0slvIB7IAEUrK2ZKbtrM3ZEg4Q+HXJYMcuJAjJHUBpLX2IfsY0DH1CtCYjD02q/df7/IKIE3V6+I9Z50IuVx9lfGhQ9phmaKXItQbMffqMUWWb/3XQTs8XfBk+2hcX4SXz9Q3jHr/AlBJ3R97PyCfIX8=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        "cip-dev@lists.cip-project.org" <cip-dev@lists.cip-project.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "patches@kernelci.org" <patches@kernelci.org>,
+        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 4.19 000/422] 4.19.85-stable review
+Message-ID: <20191119164626.GA5739@roeck-us.net>
+References: <20191119051400.261610025@linuxfoundation.org>
+ <TYAPR01MB22854E4F20C28F3A10DA65E3B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+ <20191119122909.GC1913916@kroah.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 875090e2-133c-4919-bb7e-08d76d0fd819
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2019 16:45:11.2083
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ww5mNdvvhPvI0CEuOVeaB6NNEmmz61Afo+g3v0UXKffsNs4bTFzhCsZ5fL3uar7UixS1OSjLHGR2leDjJYlzpQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4432
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191119122909.GC1913916@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-19 11:04 AM, Peng Fan wrote:=0A=
-> From: Peng Fan <peng.fan@nxp.com>=0A=
-> =0A=
-> V3:=0A=
->   Rebased to linux-next to avoid conflict, not based on shawn's clk/imx=
-=0A=
->   correct a few pll of imx8mn to imx_pll1443x_pll per Leonard's comments=
-=0A=
->   add Abel's R-b tag=0A=
-> =0A=
-> V2:=0A=
->   Add a new patch patch 1/4 to avoid build warning for arm64=0A=
->   clk: imx: Remove __init for imx_obtain_fixed_clk_hw() API=0A=
->   https://patchwork.kernel.org/cover/11224933/=0A=
-> =0A=
-> This patchset is to Switch i.MX8MN/M/Q clk driver to clk_hw=0A=
-> based API.=0A=
-> =0A=
-> Based on linux-next branch, with [1] applied.=0A=
-> =0A=
-> [1]  clk: imx: switch to clk_hw based API=0A=
->       https://patchwork.kernel.org/cover/11217881/=0A=
-=0A=
-For imx6/7 the big clks array was renamed to "hws" during the switch, =0A=
-maybe do this here as well as for consistency? Several non-imx drivers =0A=
-use the "hws" name as well.=0A=
-=0A=
-It would be nice to avoid another patch in the future that rewrites most =
-=0A=
-of the file, that kind of stuff makes it difficult to read history.=0A=
-=0A=
-> Peng Fan (4):=0A=
->    clk: imx: Remove __init for imx_obtain_fixed_clk_hw() API=0A=
->    clk: imx: imx8mn: Switch to clk_hw based API=0A=
->    clk: imx: imx8mm: Switch to clk_hw based API=0A=
->    clk: imx: imx8mq: Switch to clk_hw based API=0A=
-> =0A=
->   drivers/clk/imx/clk-imx8mm.c | 550 +++++++++++++++++++++---------------=
------=0A=
->   drivers/clk/imx/clk-imx8mn.c | 475 ++++++++++++++++++------------------=
-=0A=
->   drivers/clk/imx/clk-imx8mq.c | 569 ++++++++++++++++++++++--------------=
--------=0A=
->   drivers/clk/imx/clk.c        |   4 +-=0A=
->   4 files changed, 819 insertions(+), 779 deletions(-)=0A=
-> =0A=
-=0A=
+On Tue, Nov 19, 2019 at 01:29:09PM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Nov 19, 2019 at 08:54:25AM +0000, Chris Paterson wrote:
+> > Hello Greg, all,
+> > 
+> > > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
+> > > Behalf Of Greg Kroah-Hartman
+> > > Sent: 19 November 2019 05:13
+> > > 
+> > > This is the start of the stable review cycle for the 4.19.85 release.
+> > > There are 422 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
+> > 
+> > I'm seeing some build issues with module compilation with this release (1b1960cc Linux 4.19.85-rc1), I also saw them with the previous two versions of Linux 4.19.85-rc1 (cd21ecdb and 1fd0ac64).
+> > 
+> > Full log available on GitLab [0]. Build conf [1].
+> > [0] https://gitlab.com/cip-playground/linux-stable-rc-ci/-/jobs/354591285
+> > [1] https://gitlab.com/cip-playground/linux-stable-rc-ci/-/jobs/354591285/artifacts/file/output/4.19.85-rc1_1b1960cc7/x86/siemens_iot2000.config/config/.config
+> > 
+> > Main error below:
+> > 
+> > 3907   CC [M]  drivers/net/ethernet/mellanox/mlx4/main.o
+> > 3908   LD [M]  fs/ntfs/ntfs.o
+> > 3909   CC [M]  drivers/net/ethernet/intel/i40evf/i40e_txrx.o
+> > 3910   CC [M]  drivers/usb/musb/musb_core.o
+> > 3911   CC [M]  drivers/net/ethernet/nvidia/forcedeth.o
+> > 3912   CC [M]  fs/udf/balloc.o
+> > 3913   CC [M]  drivers/net/ethernet/intel/fm10k/fm10k_debugfs.o
+> > 3914   CC [M]  fs/udf/dir.o
+> > 3915   CC [M]  drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.o
+> > 3916   CC [M]  drivers/net/ethernet/intel/i40e/i40e_ptp.o
+> > 3917 drivers/net/ethernet/mellanox/mlx4/main.c: In function 'mlx4_init_one':
+> > 3918 drivers/net/ethernet/mellanox/mlx4/main.c:3985:2: error: implicit declaration of function 'devlink_reload_enable'; did you mean 'devlink_region_create'? [-Werror=implicit-function-declaration]
+> > 3919   devlink_reload_enable(devlink);
+> > 3920   ^~~~~~~~~~~~~~~~~~~~~
+> > 3921   devlink_region_create
+> > 3922   CC [M]  drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.o
+> > 3923 drivers/net/ethernet/mellanox/mlx4/main.c: In function 'mlx4_remove_one':
+> > 3924 drivers/net/ethernet/mellanox/mlx4/main.c:4097:2: error: implicit declaration of function 'devlink_reload_disable'; did you mean 'devlink_region_destroy'? [-Werror=implicit-function-declaration]
+> > 3925   devlink_reload_disable(devlink);
+> > 3926   ^~~~~~~~~~~~~~~~~~~~~~
+> > 3927   devlink_region_destroy
+> > 3928   CC [M]  drivers/net/ethernet/packetengines/hamachi.o
+> > 3929   CC [M]  fs/udf/file.o
+> > 3930   LD [M]  drivers/net/ethernet/intel/fm10k/fm10k.o
+> > 
+> > I haven't tried to trace the issue further yet, sorry.
+> 
+> Any chance you can bisect this?  I don't see any obvious reason why this
+> error should be happening, and it isn't showing up here :(
+> 
+I see the problem as well, with powerpc:defconfig.
+
+Underlying issue is that devlink_reload_disable() is only declared in the
+include file if CONFIG_NET_DEVLINK is enabled. There is no dummy otherwise.
+The dummy declarations which still exist in 4.19 were removed with commit
+f6b19b354d50c ("net: devlink: select NET_DEVLINK from drivers") in the
+upstream kernel.
+
+Guenter
