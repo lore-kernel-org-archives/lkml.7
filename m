@@ -2,115 +2,283 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E552C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E99BC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55FAE222DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:00:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574164859;
-	bh=LlMfLp05w06SSFAY12KsjlR8HnhXXzWsS9zyK5e+elc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zo+XG3aO0WbyO6JVdCepTkABZNL8aiRtSbe0E3RcWBK1MaECZ8POWFexJPkpTPzIh
-	 rOYh20X1v+qzQsGwgU6BwU2TBGMG6MmwpIiL5aUYZIGG8HwEg3yi5u89syBQYHLvw/
-	 theLl2g9sDhfCjnpTaePpGhOJYO28Xu4jkd2GmlE=
+	by mail.kernel.org (Postfix) with ESMTP id D06EC222DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:01:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oq69as9B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbfKSMA6 (ORCPT
+        id S1727976AbfKSMBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:00:58 -0500
-Received: from foss.arm.com ([217.140.110.172]:51472 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726351AbfKSMA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:00:56 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E8F8D30E;
-        Tue, 19 Nov 2019 04:00:55 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 37AE63F703;
-        Tue, 19 Nov 2019 04:00:55 -0800 (PST)
-Date:   Tue, 19 Nov 2019 12:00:53 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Nadav Amit <namit@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-acpi@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH 09/12] ASoC: Intel: Skylake: Explicitly include
- linux/io.h for virt_to_phys()
-Message-ID: <20191119120053.GA3634@sirena.org.uk>
-References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
- <20191119002121.4107-10-sean.j.christopherson@intel.com>
+        Tue, 19 Nov 2019 07:01:13 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36163 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbfKSMBM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 07:01:12 -0500
+Received: by mail-wm1-f66.google.com with SMTP id c22so3271769wmd.1;
+        Tue, 19 Nov 2019 04:01:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=V37VOLVC6nZ7bOtXcoSScu2fdxthYnMNkBthP1SXCPs=;
+        b=oq69as9Bc4kYOs5o6p/Kei9PC3/vXLiG+jJ+jdbilJwBHqEv3kcsXBd4/i0MNd6Zvv
+         12ajbUizUEWFqcby6z19qiihS90G3aJA0dgKJVlWq+d2bD8LuTQXfsJOHgliVO8Ixpvp
+         IARXXBa2sb50fKSYMu/5PXkmX/hQmCPe4T+rb37NIRCWru6DbMQO7VnZvL0/BdpeAWLR
+         IhSkQqgaiiGfI9LdFkTaduio6G993kaI2tIq3dtDOSFiMYGxlfmM8AgWvu1jDMdJuG+b
+         q6n30wQ8TITFwygmgknIcSg64jFY0b2Ow3pYUuVqtofIeU3GtgnpqF5qnZzKCtWeZ0xr
+         aPmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=V37VOLVC6nZ7bOtXcoSScu2fdxthYnMNkBthP1SXCPs=;
+        b=PnUxL87pEpQOqXPysT+qMYzxxKB+JwBU3S1aROAc6TPG/i/FIoDT25G99rsPI85DGe
+         Xft0ausJlWKlqOpTMEyVycY50bqGfz9oMVQsdepgan387X6DU+oxw5xr6VJo6IEDG3iV
+         RjuyeBFHzvwVtbplaRKAs3TN8Eq4oG4UcQqDlYIZKsAfIbboRuvg/27DeJeVxh3HKeON
+         yWngAgNMl1IZDl8OpZ6WIBJzdaVBT+uff9QlT6YLVfKFPylx3EX2HLQgzQ/Cxda35Z9j
+         /0EAcAY3d9VR2F8xBpoqT+Y8h568lCGLxkbH8BtHPLRAIMRP1osDSIZ2z75f2WQD62kk
+         tK1Q==
+X-Gm-Message-State: APjAAAV6cyz0HTyOkX3n/KirQBAb92IlU1/RAjAXmAfRodE8PfwFVkMQ
+        FfCBiclKTBdbC8qNGqOTJ7GpmWs2
+X-Google-Smtp-Source: APXvYqwAW3TmQO2UYSSFwUkt6G2KvRbw4MEWOoeEZbANdhbR6jPRzNUaatrNVKAZYGqvxxrNQDL7cA==
+X-Received: by 2002:a1c:dc09:: with SMTP id t9mr4964301wmg.65.1574164869407;
+        Tue, 19 Nov 2019 04:01:09 -0800 (PST)
+Received: from [192.168.2.41] ([46.227.18.67])
+        by smtp.gmail.com with ESMTPSA id y8sm10850407wru.59.2019.11.19.04.01.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Nov 2019 04:01:08 -0800 (PST)
+Subject: Re: [PATCH 4.19 150/422] tty/serial: atmel: Change the driver to work
+ under at91-usart MFD
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Radu Pirea <radu_nicolae.pirea@upb.ro>
+Cc:     "stable # 4 . 4+" <stable@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Richard Genoud <richard.genoud@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+References: <20191119051400.261610025@linuxfoundation.org>
+ <20191119051408.360814564@linuxfoundation.org>
+From:   Richard Genoud <richard.genoud@gmail.com>
+Message-ID: <86754813-17ae-46c1-f222-1635c535668e@gmail.com>
+Date:   Tue, 19 Nov 2019 13:01:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
-Content-Disposition: inline
-In-Reply-To: <20191119002121.4107-10-sean.j.christopherson@intel.com>
-X-Cookie: Beam me up, Scotty!  It ate my phaser!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191119051408.360814564@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi all,
 
---4Ckj6UjgE2iN1+kY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Le 19/11/2019 à 06:15, Greg Kroah-Hartman a écrit :
+> From: Radu Pirea <radu.pirea@microchip.com>
+> 
+> [ Upstream commit c24d25317a7c6bb3053d4c193b3cf57d1e9a3e4b ]
+> 
+> This patch modifies the place where resources and device tree properties
+> are searched.
 
-On Mon, Nov 18, 2019 at 04:21:18PM -0800, Sean Christopherson wrote:
-> Through a labyrinthian sequence of includes, usage of virt_to_phys() is
-> dependent on the include of asm/io.h in x86's asm/realmode.h, which is
-> included in x86's asm/acpi.h and thus by linux/acpi.h.  Explicitly
-> include linux/io.h to break the dependency on realmode.h so that a
-> future patch can remove the realmode.h include from acpi.h without
-> breaking the build.
+Maybe I missed something, but I don't see why this is backported to stable.
+I don't think that this patch was send with a Cc: stable (I just came
+back from holidays, so I may be wrong :))
 
-Acked-by: Mark Brown <broonie@kernel.org>
+Moreover, it's part of a series that introduce "config MFD_AT91_USART",
+but grepping MFD_AT91_USART on stable-rc/linux-4.19.y only returns:
+drivers/tty/serial/Kconfig:     select MFD_AT91_USART
 
---4Ckj6UjgE2iN1+kY
-Content-Type: application/pgp-signature; name="signature.asc"
+So I think this is a mistake (but how it got there ? it is by a bot or
+something ?)
 
------BEGIN PGP SIGNATURE-----
+regards,
+Richard
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3T2XIACgkQJNaLcl1U
-h9Ag5gf8CXRFNxgU/ospZfWpWqo31BrJS3TLJbiQogFQrYt6MzUt/rehd+5DN1bH
-rRAsHldAHpkPGu0ZDj4QRiH29Oc0G1xQAPyMbMnG3afcORJp9DkaBs8mLBd4Xh4r
-S4bPP4Lr+GeOJepjK6LOz948KigmvpZVDzgGiwqaRZfxT36f92BS3dXnTUoe3Khx
-q1z6+agCYbpIS9NtBzVBpuJ1b4opTj4/7G8POfaPbYyGxaI0Mr8mwkwMdwvtXz4V
-04C5nyfw5qQmjWqpMQuolxXEPW7DvIpobAYnFHL/qrf5DzSd9Yc5bPUx3Y61swla
-VoEhYM6CbdD6hpBeVhY8lbGgINd/1g==
-=zPtj
------END PGP SIGNATURE-----
+> 
+> Signed-off-by: Radu Pirea <radu.pirea@microchip.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Acked-by: Richard Genoud <richard.genoud@gmail.com>
+> Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/tty/serial/Kconfig        |  1 +
+>  drivers/tty/serial/atmel_serial.c | 42 ++++++++++++++++++++-----------
+>  2 files changed, 28 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index df8bd0c7b97db..32886c3046413 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -118,6 +118,7 @@ config SERIAL_ATMEL
+>  	depends on ARCH_AT91 || COMPILE_TEST
+>  	select SERIAL_CORE
+>  	select SERIAL_MCTRL_GPIO if GPIOLIB
+> +	select MFD_AT91_USART
+>  	help
+>  	  This enables the driver for the on-chip UARTs of the Atmel
+>  	  AT91 processors.
+> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+> index dd8949e8fcd7a..251f708f47f76 100644
+> --- a/drivers/tty/serial/atmel_serial.c
+> +++ b/drivers/tty/serial/atmel_serial.c
+> @@ -195,8 +195,7 @@ static struct console atmel_console;
+>  
+>  #if defined(CONFIG_OF)
+>  static const struct of_device_id atmel_serial_dt_ids[] = {
+> -	{ .compatible = "atmel,at91rm9200-usart" },
+> -	{ .compatible = "atmel,at91sam9260-usart" },
+> +	{ .compatible = "atmel,at91rm9200-usart-serial" },
+>  	{ /* sentinel */ }
+>  };
+>  #endif
+> @@ -926,6 +925,7 @@ static void atmel_tx_dma(struct uart_port *port)
+>  static int atmel_prepare_tx_dma(struct uart_port *port)
+>  {
+>  	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
+> +	struct device *mfd_dev = port->dev->parent;
+>  	dma_cap_mask_t		mask;
+>  	struct dma_slave_config config;
+>  	int ret, nent;
+> @@ -933,7 +933,7 @@ static int atmel_prepare_tx_dma(struct uart_port *port)
+>  	dma_cap_zero(mask);
+>  	dma_cap_set(DMA_SLAVE, mask);
+>  
+> -	atmel_port->chan_tx = dma_request_slave_channel(port->dev, "tx");
+> +	atmel_port->chan_tx = dma_request_slave_channel(mfd_dev, "tx");
+>  	if (atmel_port->chan_tx == NULL)
+>  		goto chan_err;
+>  	dev_info(port->dev, "using %s for tx DMA transfers\n",
+> @@ -1104,6 +1104,7 @@ static void atmel_rx_from_dma(struct uart_port *port)
+>  static int atmel_prepare_rx_dma(struct uart_port *port)
+>  {
+>  	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
+> +	struct device *mfd_dev = port->dev->parent;
+>  	struct dma_async_tx_descriptor *desc;
+>  	dma_cap_mask_t		mask;
+>  	struct dma_slave_config config;
+> @@ -1115,7 +1116,7 @@ static int atmel_prepare_rx_dma(struct uart_port *port)
+>  	dma_cap_zero(mask);
+>  	dma_cap_set(DMA_CYCLIC, mask);
+>  
+> -	atmel_port->chan_rx = dma_request_slave_channel(port->dev, "rx");
+> +	atmel_port->chan_rx = dma_request_slave_channel(mfd_dev, "rx");
+>  	if (atmel_port->chan_rx == NULL)
+>  		goto chan_err;
+>  	dev_info(port->dev, "using %s for rx DMA transfers\n",
+> @@ -2246,8 +2247,8 @@ static const char *atmel_type(struct uart_port *port)
+>   */
+>  static void atmel_release_port(struct uart_port *port)
+>  {
+> -	struct platform_device *pdev = to_platform_device(port->dev);
+> -	int size = pdev->resource[0].end - pdev->resource[0].start + 1;
+> +	struct platform_device *mpdev = to_platform_device(port->dev->parent);
+> +	int size = resource_size(mpdev->resource);
+>  
+>  	release_mem_region(port->mapbase, size);
+>  
+> @@ -2262,8 +2263,8 @@ static void atmel_release_port(struct uart_port *port)
+>   */
+>  static int atmel_request_port(struct uart_port *port)
+>  {
+> -	struct platform_device *pdev = to_platform_device(port->dev);
+> -	int size = pdev->resource[0].end - pdev->resource[0].start + 1;
+> +	struct platform_device *mpdev = to_platform_device(port->dev->parent);
+> +	int size = resource_size(mpdev->resource);
+>  
+>  	if (!request_mem_region(port->mapbase, size, "atmel_serial"))
+>  		return -EBUSY;
+> @@ -2365,27 +2366,28 @@ static int atmel_init_port(struct atmel_uart_port *atmel_port,
+>  {
+>  	int ret;
+>  	struct uart_port *port = &atmel_port->uart;
+> +	struct platform_device *mpdev = to_platform_device(pdev->dev.parent);
+>  
+>  	atmel_init_property(atmel_port, pdev);
+>  	atmel_set_ops(port);
+>  
+> -	uart_get_rs485_mode(&pdev->dev, &port->rs485);
+> +	uart_get_rs485_mode(&mpdev->dev, &port->rs485);
+>  
+>  	port->iotype		= UPIO_MEM;
+>  	port->flags		= UPF_BOOT_AUTOCONF | UPF_IOREMAP;
+>  	port->ops		= &atmel_pops;
+>  	port->fifosize		= 1;
+>  	port->dev		= &pdev->dev;
+> -	port->mapbase	= pdev->resource[0].start;
+> -	port->irq	= pdev->resource[1].start;
+> +	port->mapbase		= mpdev->resource[0].start;
+> +	port->irq		= mpdev->resource[1].start;
+>  	port->rs485_config	= atmel_config_rs485;
+> -	port->membase	= NULL;
+> +	port->membase		= NULL;
+>  
+>  	memset(&atmel_port->rx_ring, 0, sizeof(atmel_port->rx_ring));
+>  
+>  	/* for console, the clock could already be configured */
+>  	if (!atmel_port->clk) {
+> -		atmel_port->clk = clk_get(&pdev->dev, "usart");
+> +		atmel_port->clk = clk_get(&mpdev->dev, "usart");
+>  		if (IS_ERR(atmel_port->clk)) {
+>  			ret = PTR_ERR(atmel_port->clk);
+>  			atmel_port->clk = NULL;
+> @@ -2718,13 +2720,22 @@ static void atmel_serial_probe_fifos(struct atmel_uart_port *atmel_port,
+>  static int atmel_serial_probe(struct platform_device *pdev)
+>  {
+>  	struct atmel_uart_port *atmel_port;
+> -	struct device_node *np = pdev->dev.of_node;
+> +	struct device_node *np = pdev->dev.parent->of_node;
+>  	void *data;
+>  	int ret = -ENODEV;
+>  	bool rs485_enabled;
+>  
+>  	BUILD_BUG_ON(ATMEL_SERIAL_RINGSIZE & (ATMEL_SERIAL_RINGSIZE - 1));
+>  
+> +	/*
+> +	 * In device tree there is no node with "atmel,at91rm9200-usart-serial"
+> +	 * as compatible string. This driver is probed by at91-usart mfd driver
+> +	 * which is just a wrapper over the atmel_serial driver and
+> +	 * spi-at91-usart driver. All attributes needed by this driver are
+> +	 * found in of_node of parent.
+> +	 */
+> +	pdev->dev.of_node = np;
+> +
+>  	ret = of_alias_get_id(np, "serial");
+>  	if (ret < 0)
+>  		/* port id not found in platform data nor device-tree aliases:
+> @@ -2860,6 +2871,7 @@ static int atmel_serial_remove(struct platform_device *pdev)
+>  
+>  	clk_put(atmel_port->clk);
+>  	atmel_port->clk = NULL;
+> +	pdev->dev.of_node = NULL;
+>  
+>  	return ret;
+>  }
+> @@ -2870,7 +2882,7 @@ static struct platform_driver atmel_serial_driver = {
+>  	.suspend	= atmel_serial_suspend,
+>  	.resume		= atmel_serial_resume,
+>  	.driver		= {
+> -		.name			= "atmel_usart",
+> +		.name			= "atmel_usart_serial",
+>  		.of_match_table		= of_match_ptr(atmel_serial_dt_ids),
+>  	},
+>  };
+> 
 
---4Ckj6UjgE2iN1+kY--
