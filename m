@@ -2,162 +2,111 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B252C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE08C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0B2E20857
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37D8120857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:22:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqOldHL2"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SpsxFGdp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbfKSGWC (ORCPT
+        id S1727543AbfKSGWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:22:02 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39032 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbfKSGWB (ORCPT
+        Tue, 19 Nov 2019 01:22:34 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:33616 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726671AbfKSGWd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 01:22:01 -0500
-Received: by mail-wr1-f65.google.com with SMTP id l7so22324068wrp.6;
-        Mon, 18 Nov 2019 22:21:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1rucZOnyetLd94mF1aXTUSwUZpO4J9hb+NJb0ai8vFE=;
-        b=cqOldHL2Fbskf34UXRisIW8xfOKPOpcaEkt7VJOpETlRI8EiQ4v/xXBmAnZHJ02r+b
-         7linaddW0d7+9jU49067+BKYqjMGCgzLWJRAU8KfYJeNy/JXC6sSg6kS+NFQ0EzsMdAx
-         cJbzmzcyPxHaeMTbBk7KVpST2zXgyeDTGg4I+thz0wdFHUsYgYu8F9qOtkmiyO3Ar9To
-         RtH4uEfax7k1hjKqLA3+fK48l33LoZVtYzYSNY0FyDUnZJytCGq5So+XpbxBdfu9sJuq
-         zlXBbX/uWQLmJLqXWCUbJLcpSVtntvB+igtW00Ud25KD7hy4g5jLzO58gljcf6CKk/jj
-         mm3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1rucZOnyetLd94mF1aXTUSwUZpO4J9hb+NJb0ai8vFE=;
-        b=KYmPaxYqkpl9wyzT1L1ofz/dBo/7uHWqAg8SBYEfmiaM6K2Q2eY1OK0TO+NdjqLDtr
-         1zhg4cPUVRYp+6XyllgFgll9pYMU0ILVGpOa4BnQ0yRRXGkN9Y35XMeVnhs+w629jup2
-         ZRiAIe3vo8Swz03sZHe1MOz0qSm5jnLeWrMw4+9y8IZYLBjN+tZuThICVmRSPv4Zwn0E
-         VFwBB95zcUVydkYrTDtxph0QMquvWQefTslDFZVPVz6dQ6/WZHtSq4YoT8eInxlzrZF6
-         zCH2Nzk4y7aOyLQ1SXgKK0J3wTqj8zGyqc830hiwo8y/IEPKayT2OnPRvQT5ALNYSUQQ
-         psAw==
-X-Gm-Message-State: APjAAAWqgupbKQIS2D4jW9C+tzmXkvX5nyVTwBhgFqCjc5gtMv2jNydc
-        FAbdu9hjSvcX1upjQgLyTqA=
-X-Google-Smtp-Source: APXvYqwhxSs5gn497nXuCyF13nOyYh9LQMvu3SeCm3wVm8i6pXsyt6Zi+dsn8Nll6z4VgyQ3J4rHDQ==
-X-Received: by 2002:adf:f282:: with SMTP id k2mr938619wro.387.1574144518738;
-        Mon, 18 Nov 2019 22:21:58 -0800 (PST)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id v6sm26570144wrt.13.2019.11.18.22.21.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 22:21:57 -0800 (PST)
-Date:   Tue, 19 Nov 2019 07:21:56 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v1 02/29] dt-bindings: memory: tegra20: emc: Document new
- interconnect property
-Message-ID: <20191119062156.GB2462695@ulmo>
-References: <20191118200247.3567-1-digetx@gmail.com>
- <20191118200247.3567-3-digetx@gmail.com>
+        Tue, 19 Nov 2019 01:22:33 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ69GPn164783;
+        Tue, 19 Nov 2019 06:22:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=wy+lF6MYsnlvt3ZFLCMryc3CssDPfdNSh6CIREwmXoY=;
+ b=SpsxFGdpVfY67u71UbRQ99zRWPdoBJH/1+t27vsdZA6o7KqmA5dB+4ceDK2jyrRBE9nu
+ /l4bvHNZVgjFiwYbrLk2L77UBWpMhEtB+3sy7xrHv1KTqkrFOJ60MnNTXDpb4CmoSfW9
+ kcnUcf8+BB1fseU8Wp2wQ+Th37JZvm9UnuGOjHi9+kdS9FOX8LIdnUDxXGji0qYVhMWD
+ 7yoU0aoiRJx09TzYtN+FGzAh7S82KfpiRahzFK3W7ntpMtJe7Yj/PQKIcI1UVZV9j0/g
+ DsMOPASnV02zxaioYF2MOnqgivq3ibz8qadhP9OiQ9PvHJooRJEfqlATxNMXET9ZRq6u 3w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2wa8htmtqn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 06:22:27 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ68iYj034560;
+        Tue, 19 Nov 2019 06:22:26 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2wc0afu0w9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 06:22:26 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAJ6MPsM026518;
+        Tue, 19 Nov 2019 06:22:25 GMT
+Received: from kili.mountain (/41.210.141.188)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 18 Nov 2019 22:22:25 -0800
+Date:   Tue, 19 Nov 2019 09:22:16 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] io-wq: remove extra space characters
+Message-ID: <20191119062216.qhxmnrt2rdioirja@kili.mountain>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="eJnRUKwClWJh1Khz"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191118200247.3567-3-digetx@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Mailer: git-send-email haha only kidding
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=987
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911190057
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911190057
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+These lines are indented an extra space character.
 
---eJnRUKwClWJh1Khz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+We often see this where the lines after a comment are indented one
+space extra.  I don't know if it's an editor thing maybe?
 
-On Mon, Nov 18, 2019 at 11:02:20PM +0300, Dmitry Osipenko wrote:
-> External memory controller is interconnected with memory controller and
-> with external memory. Document new interconnect property which designates
-> external memory controller as interconnect provider.
->=20
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  .../bindings/memory-controllers/nvidia,tegra20-emc.txt        | 4 ++++
->  1 file changed, 4 insertions(+)
+ fs/io-wq.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Do we really want to describe this particular connection? It's pretty
-static and the only real connection here is the EMC frequency, so the
-whole interconnect infrastructure seems a bit overkill.
+diff --git a/fs/io-wq.c b/fs/io-wq.c
+index fcb6c74209da..6d8f5e6c8167 100644
+--- a/fs/io-wq.c
++++ b/fs/io-wq.c
+@@ -333,9 +333,9 @@ static void __io_worker_busy(struct io_wqe *wqe, struct io_worker *worker,
+ 	 * If worker is moving from bound to unbound (or vice versa), then
+ 	 * ensure we update the running accounting.
+ 	 */
+-	 worker_bound = (worker->flags & IO_WORKER_F_BOUND) != 0;
+-	 work_bound = (work->flags & IO_WQ_WORK_UNBOUND) == 0;
+-	 if (worker_bound != work_bound) {
++	worker_bound = (worker->flags & IO_WORKER_F_BOUND) != 0;
++	work_bound = (work->flags & IO_WQ_WORK_UNBOUND) == 0;
++	if (worker_bound != work_bound) {
+ 		io_wqe_dec_running(wqe, worker);
+ 		if (work_bound) {
+ 			worker->flags |= IO_WORKER_F_BOUND;
+-- 
+2.11.0
 
-Sounds to me like we could piggyback on top of the existing
-nvidia,memory-controller property of the EMC to make the connection.
-
-Thierry
-
->=20
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,=
-tegra20-emc.txt b/Documentation/devicetree/bindings/memory-controllers/nvid=
-ia,tegra20-emc.txt
-> index add95367640b..7566d883f921 100644
-> --- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra20=
--emc.txt
-> +++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra20=
--emc.txt
-> @@ -12,6 +12,9 @@ Properties:
->    irrespective of ram-code configuration.
->  - interrupts : Should contain EMC General interrupt.
->  - clocks : Should contain EMC clock.
-> +- #interconnect-cells : Should be 1. This cell represents external memory
-> +  interconnect. The assignments may be found in header file
-> +  <dt-bindings/interconnect/tegra-icc.h>.
-> =20
->  Child device nodes describe the memory settings for different configurat=
-ions and clock rates.
-> =20
-> @@ -20,6 +23,7 @@ Example:
->  	memory-controller@7000f400 {
->  		#address-cells =3D < 1 >;
->  		#size-cells =3D < 0 >;
-> +		#interconnect-cells =3D < 1 >;
->  		compatible =3D "nvidia,tegra20-emc";
->  		reg =3D <0x7000f4000 0x200>;
->  		interrupts =3D <0 78 0x04>;
-> --=20
-> 2.23.0
->=20
-
---eJnRUKwClWJh1Khz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3TigQACgkQ3SOs138+
-s6G61A//YQ1bHyFyTWdlNKJqA9a7DjovHIcjcT3WDnbK6wRVgBR3Tp5l7VeVBU8+
-uZrFCL1O8xk48XDUgEYlhLsdy/270Yv5dET6tw4ZnPxTsV8Npe/30cgwOpaI/jpA
-ARHft7E8Wo6wl7ND1mXH1eJAgoOOHvXfF1fqeaCC1koZSDNR+S0K4RlzjUA8Mnwq
-pL8IWCUR0j4qVKpR0W1b23EVIzdR2AGwx9eh34yFcsvofuc/JXAD/8c4L6X6gVOR
-4W5OmiM/2XKPAhMgCYskLgJd7EAXop74GWHeXk5s7eePQdiA+NRAFCCFsQeY45qK
-6ixWzORLpQeAuSVFLLBikA7wF6Qg/kHkEI/2OXuK/dKVoRqkDaOPq76lfhQEOpHn
-JMlwk09OHNTJK1jqeW5+L4S7MhWJiOM159LG6Qf4/ynfXnv+ntbak4AlpzPUmuAU
-4j2oHWHnzcCcBHSCkREHc1LvNDBrS3jXgwynxzhekpWDEEnpQl4vyiMPww8zT47j
-jbHWifgp4cGH9dqbUKjo1JwgxktQNksLGUyceuGBlQVmlnEhoP678RCyQloiluYN
-WmkMtgUU6U4IXHjLh++bsAWQ3L83B5h9aQr3mqAzlqC4nyg0hs+T4PGzVFQHKZBo
-ecnLi7yruBFGflWvgMpsO/JLBecsGZO2mS1tiH9sigxYS3FXKT8=
-=wXrm
------END PGP SIGNATURE-----
-
---eJnRUKwClWJh1Khz--
