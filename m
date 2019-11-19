@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 703FDC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F52C43141
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4929721850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A7C12084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142976;
-	bh=BpnwpGuXXtlyoebxNxuNBkJRbnnyc53jKXJmL7lQueM=;
+	s=default; t=1574142982;
+	bh=S8BLw9qnAgSSUKEXrYw9zZJE/vcu51H7519p3nX+zS8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=msJCn4Zoiz/pO0jIFby9e+86f6ImIcnLxdENUruo7+uVpGulTXxgVU8oZqxkUsJTy
-	 5pAkfif6Fuk3Ik/xLmsmIoLIXoOgipQHCnqP+UNjW/ba3hgsUloeVJSMgCclx4v440
-	 EFDXvPoMftWWgKYsKLAD3rYGJrnG+GfHpCQZBV/I=
+	b=UyULH9/M3U267/HqChEY8GwQbuxWPmuk2zGgpkU9u2p3atihTIzioVNw8zgjGza/K
+	 N8PwP6dmXz1eZHeyK+loO9Qj3fF+M/Xcvw6VaoaD/Y5AsfJ0XqDXF0aaK14YiWE+NO
+	 RuCtHhht1b67K3joHbXL/OR0ONC09kl1wciqYH+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732064AbfKSFxr (ORCPT
+        id S1732042AbfKSFxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:53:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51700 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:53:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727237AbfKSFxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:53:44 -0500
+        id S1732025AbfKSFxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:53:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7E4C21783;
-        Tue, 19 Nov 2019 05:53:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54AC321783;
+        Tue, 19 Nov 2019 05:53:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142823;
-        bh=BpnwpGuXXtlyoebxNxuNBkJRbnnyc53jKXJmL7lQueM=;
+        s=default; t=1574142814;
+        bh=S8BLw9qnAgSSUKEXrYw9zZJE/vcu51H7519p3nX+zS8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UW0nXiSB63F0V4iJuBoZCpGvyiIlGP5k6O52KBhI6oS9oe2wZtHmfCCi8QSlfBGWq
-         UpcdUTAmzFB70dosSOzJUHbiHcHgibFHL2kaDknc008IYJOEKP8B3NkOPfTEBaCDLL
-         8HcA3EoXzs/bqtEPmzL72vIpTQtPJGKJJqwtQQwQ=
+        b=IFEJO2vu71pd7Grtt476dJEyJP2Dy77Hcp2uUWyWsNCAwPJwqtkqcMHd03KZlmQXJ
+         8RskhkSwJ0BVSCJ69KPaAmm4QnKagt/epd7ci+FPkpJ76H/Qj6wkkfuhBxxui0M2jl
+         7EXQ9F4wjIoqZmAATJ0EXA1kz2VmwejvuTmn/mWQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 210/239] ARM: dts: realview: Fix SPI controller node names
-Date:   Tue, 19 Nov 2019 06:20:10 +0100
-Message-Id: <20191119051337.959920534@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 172/239] net: phy: mdio-bcm-unimac: Allow configuring MDIO clock divider
+Date:   Tue, 19 Nov 2019 06:19:32 +0100
+Message-Id: <20191119051334.060293214@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -59,90 +60,178 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 016add12977bcc30f77d7e48fc9a3a024cb46645 ]
+[ Upstream commit b78ac6ecd1b6b46f8767cbafa95a7b0b51b87ad8 ]
 
-SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
-name enables dtc SPI bus checks.
+Allow the configuration of the MDIO clock divider when the Device Tree
+contains 'clock-frequency' property (similar to I2C and SPI buses).
+Because the hardware may have lost its state during suspend/resume,
+re-apply the MDIO clock divider upon resumption.
 
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/arm-realview-eb.dtsi    | 2 +-
- arch/arm/boot/dts/arm-realview-pb1176.dts | 2 +-
- arch/arm/boot/dts/arm-realview-pb11mp.dts | 2 +-
- arch/arm/boot/dts/arm-realview-pbx.dtsi   | 2 +-
- arch/arm/boot/dts/versatile-ab.dts        | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+ .../bindings/net/brcm,unimac-mdio.txt         |  3 +
+ drivers/net/phy/mdio-bcm-unimac.c             | 83 ++++++++++++++++++-
+ 2 files changed, 84 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/arm-realview-eb.dtsi b/arch/arm/boot/dts/arm-realview-eb.dtsi
-index e2e9599596e25..05379b6c1c13b 100644
---- a/arch/arm/boot/dts/arm-realview-eb.dtsi
-+++ b/arch/arm/boot/dts/arm-realview-eb.dtsi
-@@ -334,7 +334,7 @@
- 			clock-names = "uartclk", "apb_pclk";
- 		};
+diff --git a/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt b/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt
+index 4648948f7c3b8..e15589f477876 100644
+--- a/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt
++++ b/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt
+@@ -19,6 +19,9 @@ Optional properties:
+ - interrupt-names: must be "mdio_done_error" when there is a share interrupt fed
+   to this hardware block, or must be "mdio_done" for the first interrupt and
+   "mdio_error" for the second when there are separate interrupts
++- clocks: A reference to the clock supplying the MDIO bus controller
++- clock-frequency: the MDIO bus clock that must be output by the MDIO bus
++  hardware, if absent, the default hardware values are used
  
--		ssp: ssp@1000d000 {
-+		ssp: spi@1000d000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x1000d000 0x1000>;
- 			clocks = <&sspclk>, <&pclk>;
-diff --git a/arch/arm/boot/dts/arm-realview-pb1176.dts b/arch/arm/boot/dts/arm-realview-pb1176.dts
-index c789564f28033..c1fd5615ddfe3 100644
---- a/arch/arm/boot/dts/arm-realview-pb1176.dts
-+++ b/arch/arm/boot/dts/arm-realview-pb1176.dts
-@@ -343,7 +343,7 @@
- 			clock-names = "apb_pclk";
- 		};
+ Child nodes of this MDIO bus controller node are standard Ethernet PHY device
+ nodes as described in Documentation/devicetree/bindings/net/phy.txt
+diff --git a/drivers/net/phy/mdio-bcm-unimac.c b/drivers/net/phy/mdio-bcm-unimac.c
+index 08e0647b85e23..f9d98a6e67bc4 100644
+--- a/drivers/net/phy/mdio-bcm-unimac.c
++++ b/drivers/net/phy/mdio-bcm-unimac.c
+@@ -16,6 +16,7 @@
+ #include <linux/module.h>
+ #include <linux/io.h>
+ #include <linux/delay.h>
++#include <linux/clk.h>
  
--		pb1176_ssp: ssp@1010b000 {
-+		pb1176_ssp: spi@1010b000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x1010b000 0x1000>;
- 			interrupt-parent = <&intc_dc1176>;
-diff --git a/arch/arm/boot/dts/arm-realview-pb11mp.dts b/arch/arm/boot/dts/arm-realview-pb11mp.dts
-index 3944765ac4b06..e306f1cceb4ec 100644
---- a/arch/arm/boot/dts/arm-realview-pb11mp.dts
-+++ b/arch/arm/boot/dts/arm-realview-pb11mp.dts
-@@ -480,7 +480,7 @@
- 			clock-names = "uartclk", "apb_pclk";
- 		};
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
+@@ -45,6 +46,8 @@ struct unimac_mdio_priv {
+ 	void __iomem		*base;
+ 	int (*wait_func)	(void *wait_func_data);
+ 	void			*wait_func_data;
++	struct clk		*clk;
++	u32			clk_freq;
+ };
  
--		ssp@1000d000 {
-+		spi@1000d000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x1000d000 0x1000>;
- 			interrupt-parent = <&intc_pb11mp>;
-diff --git a/arch/arm/boot/dts/arm-realview-pbx.dtsi b/arch/arm/boot/dts/arm-realview-pbx.dtsi
-index aeb49c4bd773f..2bf3958b2e6b9 100644
---- a/arch/arm/boot/dts/arm-realview-pbx.dtsi
-+++ b/arch/arm/boot/dts/arm-realview-pbx.dtsi
-@@ -318,7 +318,7 @@
- 			clock-names = "uartclk", "apb_pclk";
- 		};
+ static inline u32 unimac_mdio_readl(struct unimac_mdio_priv *priv, u32 offset)
+@@ -189,6 +192,35 @@ static int unimac_mdio_reset(struct mii_bus *bus)
+ 	return 0;
+ }
  
--		ssp: ssp@1000d000 {
-+		ssp: spi@1000d000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x1000d000 0x1000>;
- 			clocks = <&sspclk>, <&pclk>;
-diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
-index 4a51612996bc2..a9000d22b2c00 100644
---- a/arch/arm/boot/dts/versatile-ab.dts
-+++ b/arch/arm/boot/dts/versatile-ab.dts
-@@ -304,7 +304,7 @@
- 			clock-names = "apb_pclk";
- 		};
++static void unimac_mdio_clk_set(struct unimac_mdio_priv *priv)
++{
++	unsigned long rate;
++	u32 reg, div;
++
++	/* Keep the hardware default values */
++	if (!priv->clk_freq)
++		return;
++
++	if (!priv->clk)
++		rate = 250000000;
++	else
++		rate = clk_get_rate(priv->clk);
++
++	div = (rate / (2 * priv->clk_freq)) - 1;
++	if (div & ~MDIO_CLK_DIV_MASK) {
++		pr_warn("Incorrect MDIO clock frequency, ignoring\n");
++		return;
++	}
++
++	/* The MDIO clock is the reference clock (typicaly 250Mhz) divided by
++	 * 2 x (MDIO_CLK_DIV + 1)
++	 */
++	reg = unimac_mdio_readl(priv, MDIO_CFG);
++	reg &= ~(MDIO_CLK_DIV_MASK << MDIO_CLK_DIV_SHIFT);
++	reg |= div << MDIO_CLK_DIV_SHIFT;
++	unimac_mdio_writel(priv, reg, MDIO_CFG);
++}
++
+ static int unimac_mdio_probe(struct platform_device *pdev)
+ {
+ 	struct unimac_mdio_pdata *pdata = pdev->dev.platform_data;
+@@ -215,9 +247,26 @@ static int unimac_mdio_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
  
--		ssp@101f4000 {
-+		spi@101f4000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x101f4000 0x1000>;
- 			interrupts = <11>;
++	priv->clk = devm_clk_get(&pdev->dev, NULL);
++	if (PTR_ERR(priv->clk) == -EPROBE_DEFER)
++		return PTR_ERR(priv->clk);
++	else
++		priv->clk = NULL;
++
++	ret = clk_prepare_enable(priv->clk);
++	if (ret)
++		return ret;
++
++	if (of_property_read_u32(np, "clock-frequency", &priv->clk_freq))
++		priv->clk_freq = 0;
++
++	unimac_mdio_clk_set(priv);
++
+ 	priv->mii_bus = mdiobus_alloc();
+-	if (!priv->mii_bus)
+-		return -ENOMEM;
++	if (!priv->mii_bus) {
++		ret = -ENOMEM;
++		goto out_clk_disable;
++	}
+ 
+ 	bus = priv->mii_bus;
+ 	bus->priv = priv;
+@@ -251,6 +300,8 @@ static int unimac_mdio_probe(struct platform_device *pdev)
+ 
+ out_mdio_free:
+ 	mdiobus_free(bus);
++out_clk_disable:
++	clk_disable_unprepare(priv->clk);
+ 	return ret;
+ }
+ 
+@@ -260,10 +311,37 @@ static int unimac_mdio_remove(struct platform_device *pdev)
+ 
+ 	mdiobus_unregister(priv->mii_bus);
+ 	mdiobus_free(priv->mii_bus);
++	clk_disable_unprepare(priv->clk);
++
++	return 0;
++}
++
++static int unimac_mdio_suspend(struct device *d)
++{
++	struct unimac_mdio_priv *priv = dev_get_drvdata(d);
++
++	clk_disable_unprepare(priv->clk);
++
++	return 0;
++}
++
++static int unimac_mdio_resume(struct device *d)
++{
++	struct unimac_mdio_priv *priv = dev_get_drvdata(d);
++	int ret;
++
++	ret = clk_prepare_enable(priv->clk);
++	if (ret)
++		return ret;
++
++	unimac_mdio_clk_set(priv);
+ 
+ 	return 0;
+ }
+ 
++static SIMPLE_DEV_PM_OPS(unimac_mdio_pm_ops,
++			 unimac_mdio_suspend, unimac_mdio_resume);
++
+ static const struct of_device_id unimac_mdio_ids[] = {
+ 	{ .compatible = "brcm,genet-mdio-v5", },
+ 	{ .compatible = "brcm,genet-mdio-v4", },
+@@ -279,6 +357,7 @@ static struct platform_driver unimac_mdio_driver = {
+ 	.driver = {
+ 		.name = UNIMAC_MDIO_DRV_NAME,
+ 		.of_match_table = unimac_mdio_ids,
++		.pm = &unimac_mdio_pm_ops,
+ 	},
+ 	.probe	= unimac_mdio_probe,
+ 	.remove	= unimac_mdio_remove,
 -- 
 2.20.1
 
