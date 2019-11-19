@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FC8C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BD2C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 006C5222A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92F6121783
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:51:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142659;
-	bh=h/3lyAH75L97O26Qlz9BevbzGQLjmYZBXgPyGEqU2pU=;
+	s=default; t=1574142663;
+	bh=M2yOs9afGDUJ0xsdPlqgFgcEldyZBxj7OSIeQV5vXzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vOtrCRJOJg8Yvu9bwpd8s7IBP7MLYH+1Mvp3qAxXFqUd4G9NMfG+L3xyksHYICJ5u
-	 PrH4v/PvWHrfeDyrtaxhRQslXbt1OCr7QO5a/WG1KI8cpCwWBiUW1tlhD1kjR/bhQQ
-	 wAYLmop3PZ2dHIQeBBg2Gd3j60Unvga8kWdujRqE=
+	b=J2i2h5RbEm8Nn6NQ1zmgnRdTFayhFnF9at5AUrVKxWmWiPwH0col71TNvyT7IMte9
+	 XHn+t8b5F7bukSXLFdSuydW/tBfDAp8N72axv8Fr7VQoOTrOmmXFnLkoUwyjh4bIwH
+	 bEffXKUpLT17QqfJ90v2uICPKxkHm3oGmW6EnR50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731714AbfKSFu6 (ORCPT
+        id S1731721AbfKSFvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:50:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48206 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:51:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731702AbfKSFu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:50:56 -0500
+        id S1731362AbfKSFu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:50:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C35E214D9;
-        Tue, 19 Nov 2019 05:50:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11F6B20862;
+        Tue, 19 Nov 2019 05:50:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142655;
-        bh=h/3lyAH75L97O26Qlz9BevbzGQLjmYZBXgPyGEqU2pU=;
+        s=default; t=1574142658;
+        bh=M2yOs9afGDUJ0xsdPlqgFgcEldyZBxj7OSIeQV5vXzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HSGRuONXLX29+bw5JBbU4efm10Iw60kVRDzlkt77HTIhI/K0qJ4XrvgjUbS4pXQIz
-         14kIOwVhu/iCuG0m6kJID79RA+MVvLiZT9+xJYVCkKqA0fBrOmCtHsqKMwlKohPuZo
-         gsWuiiXfYZI7nNOsZvl2LlIhM3tB8w1r3I7lwpQk=
+        b=EjrftUXJ9ruN+Z11DJt1ckeNLnpySrNt3vJG8+uHCd/HKey9cJVO/O4gBpdIjOkcm
+         z8mJ6T0tS9Y6vLn0uRrtgB/H4CgcEZf/ur5wDzPBcpZ9l9lwjL97tHvGdiwZEEX7t3
+         j/hdiEkxP6OJklsksAMi4t3k9sAOOEzZQdvA89Ik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian Shen <shenjian15@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
+        stable@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 154/239] net: hns3: Fix parameter type for q_id in hclge_tm_q_to_qs_map_cfg()
-Date:   Tue, 19 Nov 2019 06:19:14 +0100
-Message-Id: <20191119051332.944840634@linuxfoundation.org>
+Subject: [PATCH 4.14 155/239] nfp: provide a better warning when ring allocation fails
+Date:   Tue, 19 Nov 2019 06:19:15 +0100
+Message-Id: <20191119051332.996563602@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -62,40 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit 32c7fbc8ffd752c6aa05d2dd7c13b0f0aa00ddaa ]
+[ Upstream commit 23d9f5531c7c28546954b0bf332134a9b8a38c0a ]
 
-So far all the places calling hclge_tm_q_to_qs_map_cfg() are assigning
-an u16 type value to "q_id", and in the processing of
-hclge_tm_q_to_qs_map_cfg(), it also converts the "q_id" to le16.
+NFP supports fairly enormous ring sizes (up to 256k descriptors).
+In commit 466271703867 ("nfp: use kvcalloc() to allocate SW buffer
+descriptor arrays") we have started using kvcalloc() functions to
+make sure the allocation of software state arrays doesn't hit
+the MAX_ORDER limit.  Unfortunately, we can't use virtual mappings
+for the DMA region holding HW descriptors.  In case this allocation
+fails instead of the generic (and fairly scary) warning/splat in
+the logs print a helpful message explaining what happened and
+suggesting how to fix it.
 
-The max tqp number for pf can be more than 256, we should use "u16" to
-store the queue id, instead of "u8", which may cause data lost.
-
-Fixes: 848440544b41 ("net: hns3: Add support of TX Scheduler & Shaper to HNS3 driver")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../net/ethernet/netronome/nfp/nfp_net_common.c  | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-index 55228b91d80b6..3799cb2548ce6 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-@@ -200,7 +200,7 @@ static int hclge_tm_qs_to_pri_map_cfg(struct hclge_dev *hdev,
- }
+diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
+index 6df2c8b2ce6f3..bffa25d6dc294 100644
+--- a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
++++ b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
+@@ -2169,9 +2169,13 @@ nfp_net_tx_ring_alloc(struct nfp_net_dp *dp, struct nfp_net_tx_ring *tx_ring)
  
- static int hclge_tm_q_to_qs_map_cfg(struct hclge_dev *hdev,
--				    u8 q_id, u16 qs_id)
-+				    u16 q_id, u16 qs_id)
- {
- 	struct hclge_nq_to_qs_link_cmd *map;
- 	struct hclge_desc desc;
+ 	tx_ring->size = sizeof(*tx_ring->txds) * tx_ring->cnt;
+ 	tx_ring->txds = dma_zalloc_coherent(dp->dev, tx_ring->size,
+-					    &tx_ring->dma, GFP_KERNEL);
+-	if (!tx_ring->txds)
++					    &tx_ring->dma,
++					    GFP_KERNEL | __GFP_NOWARN);
++	if (!tx_ring->txds) {
++		netdev_warn(dp->netdev, "failed to allocate TX descriptor ring memory, requested descriptor count: %d, consider lowering descriptor count\n",
++			    tx_ring->cnt);
+ 		goto err_alloc;
++	}
+ 
+ 	sz = sizeof(*tx_ring->txbufs) * tx_ring->cnt;
+ 	tx_ring->txbufs = kzalloc(sz, GFP_KERNEL);
+@@ -2314,9 +2318,13 @@ nfp_net_rx_ring_alloc(struct nfp_net_dp *dp, struct nfp_net_rx_ring *rx_ring)
+ 	rx_ring->cnt = dp->rxd_cnt;
+ 	rx_ring->size = sizeof(*rx_ring->rxds) * rx_ring->cnt;
+ 	rx_ring->rxds = dma_zalloc_coherent(dp->dev, rx_ring->size,
+-					    &rx_ring->dma, GFP_KERNEL);
+-	if (!rx_ring->rxds)
++					    &rx_ring->dma,
++					    GFP_KERNEL | __GFP_NOWARN);
++	if (!rx_ring->rxds) {
++		netdev_warn(dp->netdev, "failed to allocate RX descriptor ring memory, requested descriptor count: %d, consider lowering descriptor count\n",
++			    rx_ring->cnt);
+ 		goto err_alloc;
++	}
+ 
+ 	sz = sizeof(*rx_ring->rxbufs) * rx_ring->cnt;
+ 	rx_ring->rxbufs = kzalloc(sz, GFP_KERNEL);
 -- 
 2.20.1
 
