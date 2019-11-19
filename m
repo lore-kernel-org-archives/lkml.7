@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D20C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D7CC43141
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CF20222A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B24C120721
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:53:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142791;
-	bh=laLOVN9b3e7blkEA0eFOdsXXjtlukZsyKhx2FPSNf5o=;
+	s=default; t=1574142788;
+	bh=46aynxYa1blruQAizaAJje0TP9KsL3W8yOgn6Hl7da0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i5zAg98AIHfX4veZhyM5fsZH+s4lRRh+dS78efyM/JFo0m4YMU8pwdlcQbQEDsCxy
-	 u1wgCEEwafc1r0oRyFmVPnLHSMZI52YbFg1rGNoGHEhq9cxf15yZN2fDBnCeG71y6u
-	 VQ7WGYx/0ZIhYMfDHG5HjIg1HkJ5uP8T0+lntr+k=
+	b=ozSiCN8bw6MbGb1G9amaAFLamZOF+SCNgdg3ojatRqa8MfMcm2XJWwrNPMmbuVnrF
+	 f4Wkkb87zmpfn/Jlw7K8JI/aTiohULUEmq46+d/ylTylgVOs9U78FtPL9W2D8rcTnO
+	 8PYOjp1LKmLYd0m9FOiJxFM0xxsrZFxH4fC2UA3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731981AbfKSFxK (ORCPT
+        id S1731973AbfKSFxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:53:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50982 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:53:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731969AbfKSFxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:53:06 -0500
+        id S1731036AbfKSFxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:53:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AE0F20721;
-        Tue, 19 Nov 2019 05:53:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E31B921823;
+        Tue, 19 Nov 2019 05:53:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142785;
-        bh=laLOVN9b3e7blkEA0eFOdsXXjtlukZsyKhx2FPSNf5o=;
+        s=default; t=1574142782;
+        bh=46aynxYa1blruQAizaAJje0TP9KsL3W8yOgn6Hl7da0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mbW4xEkB6s/9gghrcvE0grYyGg0v+s2SoZ618RG0kxL3ngTKiXFmzL6Dj8yGkbxxU
-         qe7aKL4vPSA9d564fr/DG94cp2lSoCqQOcJxQcodlnfWOhVjY/lktum+ayH5+dkq3q
-         qGmgOyeRl+JCWKuKfZ9vq3XfsPAFNN2p1POjWdos=
+        b=Cz52qiPOPC1pdgtLuhJrUscOot2CW9PZu/qZ8ThGCjO0Vnt7pxIBnHvZTyHdjLzKs
+         UQBZQIYt+mEjgJc47l1OsGjjxS/8nJs4NLccdgMy9ZGiay4FLIYjCKcd1EUO3YJpBi
+         MvTH6/PEwITC22uYE4czGVBwsjpt/whNf9J22CfM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li Qiang <liq3ea@gmail.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org,
+        Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>,
+        Song Liu <songliubraving@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 198/239] vfio/pci: Fix potential memory leak in vfio_msi_cap_len
-Date:   Tue, 19 Nov 2019 06:19:58 +0100
-Message-Id: <20191119051336.178667019@linuxfoundation.org>
+Subject: [PATCH 4.14 171/239] samples/bpf: fix compilation failure
+Date:   Tue, 19 Nov 2019 06:19:31 +0100
+Message-Id: <20191119051333.987386908@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,36 +62,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li Qiang <liq3ea@gmail.com>
+From: Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>
 
-[ Upstream commit 30ea32ab1951c80c6113f300fce2c70cd12659e4 ]
+[ Upstream commit 32c009798385ce21080beaa87a9b95faad3acd1e ]
 
-Free allocated vdev->msi_perm in error path.
+following commit:
+commit d58e468b1112 ("flow_dissector: implements flow dissector BPF hook")
+added struct bpf_flow_keys which conflicts with the struct with
+same name in sockex2_kern.c and sockex3_kern.c
 
-Signed-off-by: Li Qiang <liq3ea@gmail.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+similar to commit:
+commit 534e0e52bc23 ("samples/bpf: fix a compilation failure")
+we tried the rename it "flow_keys" but it also conflicted with struct
+having same name in include/net/flow_dissector.h. Hence renaming the
+struct to "flow_key_record". Also, this commit doesn't fix the
+compilation error completely because the similar struct is present in
+sockex3_kern.c. Hence renaming it in both files sockex3_user.c and
+sockex3_kern.c
+
+Signed-off-by: Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>
+Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci_config.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ samples/bpf/sockex2_kern.c | 11 ++++++-----
+ samples/bpf/sockex3_kern.c |  8 ++++----
+ samples/bpf/sockex3_user.c |  4 ++--
+ 3 files changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index 115a36f6f4039..62023b4a373b4 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -1180,8 +1180,10 @@ static int vfio_msi_cap_len(struct vfio_pci_device *vdev, u8 pos)
- 		return -ENOMEM;
+diff --git a/samples/bpf/sockex2_kern.c b/samples/bpf/sockex2_kern.c
+index f58acfc925561..f2f9dbc021b0d 100644
+--- a/samples/bpf/sockex2_kern.c
++++ b/samples/bpf/sockex2_kern.c
+@@ -14,7 +14,7 @@ struct vlan_hdr {
+ 	__be16 h_vlan_encapsulated_proto;
+ };
  
- 	ret = init_pci_cap_msi_perm(vdev->msi_perm, len, flags);
--	if (ret)
-+	if (ret) {
-+		kfree(vdev->msi_perm);
- 		return ret;
-+	}
- 
- 	return len;
+-struct bpf_flow_keys {
++struct flow_key_record {
+ 	__be32 src;
+ 	__be32 dst;
+ 	union {
+@@ -59,7 +59,7 @@ static inline __u32 ipv6_addr_hash(struct __sk_buff *ctx, __u64 off)
  }
+ 
+ static inline __u64 parse_ip(struct __sk_buff *skb, __u64 nhoff, __u64 *ip_proto,
+-			     struct bpf_flow_keys *flow)
++			     struct flow_key_record *flow)
+ {
+ 	__u64 verlen;
+ 
+@@ -83,7 +83,7 @@ static inline __u64 parse_ip(struct __sk_buff *skb, __u64 nhoff, __u64 *ip_proto
+ }
+ 
+ static inline __u64 parse_ipv6(struct __sk_buff *skb, __u64 nhoff, __u64 *ip_proto,
+-			       struct bpf_flow_keys *flow)
++			       struct flow_key_record *flow)
+ {
+ 	*ip_proto = load_byte(skb,
+ 			      nhoff + offsetof(struct ipv6hdr, nexthdr));
+@@ -96,7 +96,8 @@ static inline __u64 parse_ipv6(struct __sk_buff *skb, __u64 nhoff, __u64 *ip_pro
+ 	return nhoff;
+ }
+ 
+-static inline bool flow_dissector(struct __sk_buff *skb, struct bpf_flow_keys *flow)
++static inline bool flow_dissector(struct __sk_buff *skb,
++				  struct flow_key_record *flow)
+ {
+ 	__u64 nhoff = ETH_HLEN;
+ 	__u64 ip_proto;
+@@ -198,7 +199,7 @@ struct bpf_map_def SEC("maps") hash_map = {
+ SEC("socket2")
+ int bpf_prog2(struct __sk_buff *skb)
+ {
+-	struct bpf_flow_keys flow = {};
++	struct flow_key_record flow = {};
+ 	struct pair *value;
+ 	u32 key;
+ 
+diff --git a/samples/bpf/sockex3_kern.c b/samples/bpf/sockex3_kern.c
+index 95907f8d2b17d..c527b57d3ec8a 100644
+--- a/samples/bpf/sockex3_kern.c
++++ b/samples/bpf/sockex3_kern.c
+@@ -61,7 +61,7 @@ struct vlan_hdr {
+ 	__be16 h_vlan_encapsulated_proto;
+ };
+ 
+-struct bpf_flow_keys {
++struct flow_key_record {
+ 	__be32 src;
+ 	__be32 dst;
+ 	union {
+@@ -88,7 +88,7 @@ static inline __u32 ipv6_addr_hash(struct __sk_buff *ctx, __u64 off)
+ }
+ 
+ struct globals {
+-	struct bpf_flow_keys flow;
++	struct flow_key_record flow;
+ };
+ 
+ struct bpf_map_def SEC("maps") percpu_map = {
+@@ -114,14 +114,14 @@ struct pair {
+ 
+ struct bpf_map_def SEC("maps") hash_map = {
+ 	.type = BPF_MAP_TYPE_HASH,
+-	.key_size = sizeof(struct bpf_flow_keys),
++	.key_size = sizeof(struct flow_key_record),
+ 	.value_size = sizeof(struct pair),
+ 	.max_entries = 1024,
+ };
+ 
+ static void update_stats(struct __sk_buff *skb, struct globals *g)
+ {
+-	struct bpf_flow_keys key = g->flow;
++	struct flow_key_record key = g->flow;
+ 	struct pair *value;
+ 
+ 	value = bpf_map_lookup_elem(&hash_map, &key);
+diff --git a/samples/bpf/sockex3_user.c b/samples/bpf/sockex3_user.c
+index 4d75674bee35e..741b899b693f3 100644
+--- a/samples/bpf/sockex3_user.c
++++ b/samples/bpf/sockex3_user.c
+@@ -13,7 +13,7 @@
+ #define PARSE_IP_PROG_FD (prog_fd[0])
+ #define PROG_ARRAY_FD (map_fd[0])
+ 
+-struct flow_keys {
++struct flow_key_record {
+ 	__be32 src;
+ 	__be32 dst;
+ 	union {
+@@ -64,7 +64,7 @@ int main(int argc, char **argv)
+ 	(void) f;
+ 
+ 	for (i = 0; i < 5; i++) {
+-		struct flow_keys key = {}, next_key;
++		struct flow_key_record key = {}, next_key;
+ 		struct pair value;
+ 
+ 		sleep(1);
 -- 
 2.20.1
 
