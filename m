@@ -2,87 +2,83 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C01C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8736AC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC041222B0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3B4222B0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:41:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727407AbfKSXk7 (ORCPT
+        id S1727486AbfKSXl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 18:40:59 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40716 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbfKSXk6 (ORCPT
+        Tue, 19 Nov 2019 18:41:27 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:46666 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbfKSXl1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 18:40:58 -0500
-Received: by mail-pj1-f66.google.com with SMTP id ep1so3335475pjb.7;
-        Tue, 19 Nov 2019 15:40:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LGdI8nMvJO9Yp2V4F8P1ev7tTWwm2jfSwnW1T5/k5as=;
-        b=s1Semn+6Dv5dbkdxqX9rBSd8PZOFcTn99KrRedSZLD5pyv+MYTTDWzY6ytMJ/r5UuM
-         rLeZs01qmvEZH01Zf7DodcBILb1jEBoLAOctWD69HrfpcuCocCIOkwaYLwY8oohX9nuk
-         YDCn1UHt8pOzeq+1szIdWkzmyf+3ZDOOXtew9rRGiaL1EcCf259izmykgt3viJTW1jdt
-         5DLI6n+vgbOCy6uWwCvewCrM+Kv7XeRir/xpPhksRKCIGAzA4GPHoMyrO1FuwN9kmp9T
-         mxtpaMlfWfXpE4B02sFWvlI38fZSEAIVXXb73CA1sETWB+8BUAGBIidX0YkSD/VmqiMq
-         L84Q==
-X-Gm-Message-State: APjAAAWwh/uKwrdkcf5MCS8GiZIT4Ib4ze0FBoeZOINvVkCsz+6oTcm7
-        vVCtUIIt5NG8Nc2VjdSsJrwfZnTIatU=
-X-Google-Smtp-Source: APXvYqxaqRKCdfDH6V8YoUt6s/ImovXm0GCKDyXavhCF1NO0+J23GblS0JEL8I94w3YrZSAKQMm05Q==
-X-Received: by 2002:a17:90a:bd95:: with SMTP id z21mr246817pjr.10.1574206857435;
-        Tue, 19 Nov 2019 15:40:57 -0800 (PST)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id x192sm29727552pfd.96.2019.11.19.15.40.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Nov 2019 15:40:56 -0800 (PST)
-Subject: Re: [PATCH v2] loop: avoid EAGAIN, if offset or block_size are
- changed
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org
-References: <20190518004751.18962-1-jaegeuk@kernel.org>
- <20190518005304.GA19446@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <1e1aae74-bd6b-dddb-0c88-660aac33872c@acm.org>
-Date:   Tue, 19 Nov 2019 15:40:55 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20190518005304.GA19446@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Tue, 19 Nov 2019 18:41:27 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1B950142C0151;
+        Tue, 19 Nov 2019 15:41:26 -0800 (PST)
+Date:   Tue, 19 Nov 2019 15:41:25 -0800 (PST)
+Message-Id: <20191119.154125.1492881397881625788.davem@davemloft.net>
+To:     maowenan@huawei.com
+Cc:     vladimir.oltean@nxp.com, claudiu.manoil@nxp.com, andrew@lunn.ch,
+        vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH net] net: dsa: ocelot: add dependency for
+ NET_DSA_MSCC_FELIX
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191119025128.7393-1-maowenan@huawei.com>
+References: <20191119025128.7393-1-maowenan@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 19 Nov 2019 15:41:26 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/17/19 5:53 PM, Jaegeuk Kim wrote:
-> This patch tries to avoid EAGAIN due to nrpages!=0 that was originally trying
-> to drop stale pages resulting in wrong data access.
+From: Mao Wenan <maowenan@huawei.com>
+Date: Tue, 19 Nov 2019 10:51:28 +0800
+
+> If CONFIG_NET_DSA_MSCC_FELIX=y, and CONFIG_NET_VENDOR_MICROSEMI=n,
+> below errors can be found:
+> drivers/net/dsa/ocelot/felix.o: In function `felix_vlan_del':
+> felix.c:(.text+0x26e): undefined reference to `ocelot_vlan_del'
+> drivers/net/dsa/ocelot/felix.o: In function `felix_vlan_add':
+> felix.c:(.text+0x352): undefined reference to `ocelot_vlan_add'
 > 
-> Report: https://bugs.chromium.org/p/chromium/issues/detail?id=938958#c38
+> and warning as below:
+> WARNING: unmet direct dependencies detected for MSCC_OCELOT_SWITCH
+> Depends on [n]: NETDEVICES [=y] && ETHERNET [=y] &&
+> NET_VENDOR_MICROSEMI [=n] && NET_SWITCHDEV [=y] && HAS_IOMEM [=y]
+> Selected by [y]:
+> NET_DSA_MSCC_FELIX [=y] && NETDEVICES [=y] && HAVE_NET_DSA [=y]
+> && NET_DSA [=y] && PCI [=y]
+> 
+> This patch add dependency NET_VENDOR_MICROSEMI for NET_DSA_MSCC_FELIX.
+> 
+> Fixes: 56051948773e ("net: dsa: ocelot: add driver for Felix switch family")
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
 
-Please provide a more detailed commit description. What is wrong with 
-the current implementation and why is the new behavior considered the 
-correct behavior?
+This seems more like a "select" situation, why in the world should the
+user be required to know about NET_VENDOR_MISCROSEMI at all for this
+driver?
 
-This patch moves draining code from before the following comment to 
-after that comment:
+And NET_VENDOR_MICROSEMI does _NOT_ enable any code at all, you have
+to enable the individual drivers guarded by NET_VENDOR_MICROSEMI in order
+to resolve the symbols necessary for ocelot.
 
-/* I/O need to be drained during transfer transition */
+I'm not applying this, it isn't correct.
 
-Is that comment still correct or should it perhaps be updated?
-
-Thanks,
-
-Bart.
+Thank you.
