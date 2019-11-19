@@ -4,30 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC602C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 00:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DA6C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 00:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ABF222317
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 00:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A937422315
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 00:21:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfKSAVr (ORCPT
+        id S1727451AbfKSAVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 19:21:47 -0500
+        Mon, 18 Nov 2019 19:21:53 -0500
 Received: from mga18.intel.com ([134.134.136.126]:64622 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727254AbfKSAVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 19:21:43 -0500
+        id S1727336AbfKSAVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 19:21:49 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 16:21:42 -0800
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 16:21:49 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,321,1569308400"; 
-   d="scan'208";a="215412029"
+   d="scan'208";a="215412049"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Nov 2019 16:21:41 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 18 Nov 2019 16:21:47 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -60,9 +61,9 @@ Cc:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
         linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         linux-acpi@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: [PATCH 04/12] x86/kprobes: Explicitly include vmalloc.h for set_vm_flush_reset_perms()
-Date:   Mon, 18 Nov 2019 16:21:13 -0800
-Message-Id: <20191119002121.4107-5-sean.j.christopherson@intel.com>
+Subject: [PATCH 09/12] ASoC: Intel: Skylake: Explicitly include linux/io.h for virt_to_phys()
+Date:   Mon, 18 Nov 2019 16:21:18 -0800
+Message-Id: <20191119002121.4107-10-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119002121.4107-1-sean.j.christopherson@intel.com>
 References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
@@ -73,30 +74,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The inclusion of linux/vmalloc.h, which is required for its definition
-of set_vm_flush_reset_perms(), is somehow dependent on asm/realmode.h
-being included by asm/acpi.h.  Explicitly include linux/vmalloc.h so
-that a future patch can drop the realmode.h include from asm/acpi.h
-without breaking the build.
+Through a labyrinthian sequence of includes, usage of virt_to_phys() is
+dependent on the include of asm/io.h in x86's asm/realmode.h, which is
+included in x86's asm/acpi.h and thus by linux/acpi.h.  Explicitly
+include linux/io.h to break the dependency on realmode.h so that a
+future patch can remove the realmode.h include from acpi.h without
+breaking the build.
 
-Fixes: 241a1f2238064 ("x86/kprobes: Use vmalloc special flag")
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kernel/kprobes/core.c | 1 +
+ sound/soc/intel/skylake/skl-sst-cldma.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index 4f13af7cbcdb..a0c223ab7264 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -40,6 +40,7 @@
- #include <linux/frame.h>
- #include <linux/kasan.h>
- #include <linux/moduleloader.h>
-+#include <linux/vmalloc.h>
+diff --git a/sound/soc/intel/skylake/skl-sst-cldma.c b/sound/soc/intel/skylake/skl-sst-cldma.c
+index 5a2c35f58fda..36f697c61074 100644
+--- a/sound/soc/intel/skylake/skl-sst-cldma.c
++++ b/sound/soc/intel/skylake/skl-sst-cldma.c
+@@ -8,6 +8,7 @@
+  */
  
- #include <asm/text-patching.h>
- #include <asm/cacheflush.h>
+ #include <linux/device.h>
++#include <linux/io.h>
+ #include <linux/mm.h>
+ #include <linux/delay.h>
+ #include "../common/sst-dsp.h"
 -- 
 2.24.0
 
