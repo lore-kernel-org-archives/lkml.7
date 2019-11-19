@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CCFC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FE4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E97FF206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:34:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F1A62071B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141649;
-	bh=ks2R9c+gJRIhU1kOjJzzbLPw+dP1+cZFyS4+4a0PfI0=;
+	s=default; t=1574141652;
+	bh=gCCvBVkAILAOcOS7/TzlqJcSoTC8xurVhYWiXU0UjGA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KmMI1hhkzoov+AzqwhpJlObT/QbuLL893KqRjp5dRh3dUbblh9JypGjhIt/51Y4OJ
-	 2PSrK+3UvA+mOp6j75X0hApbuH3Oz3H7zHl6om0sUq1n/WLwb6mddL0oqGlKSvIRln
-	 vDVX05H97CByxru6nufClG0S646xjN+YltCXCsBU=
+	b=xKupzgKIs7I8NEG2LJWhxsh82qH9VkCBpDCNGiCTc9Lvm7ikcjd5z6CjvPOoO2J4w
+	 4vzJ8dxaa6uE6lQJts9RyakUytAq6MqMpMeCMabQ00WylYR42amTyIKSEIJlw/Bpf3
+	 h6Tfqhq8n0Ozl3ubTK5TdgK4QJMtTPtDu39Ux1lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729609AbfKSFeH (ORCPT
+        id S1728702AbfKSFeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:34:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54710 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:34:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729129AbfKSFeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:34:02 -0500
+        id S1728873AbfKSFeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:34:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76D57206EC;
-        Tue, 19 Nov 2019 05:34:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AE652071B;
+        Tue, 19 Nov 2019 05:34:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141642;
-        bh=ks2R9c+gJRIhU1kOjJzzbLPw+dP1+cZFyS4+4a0PfI0=;
+        s=default; t=1574141645;
+        bh=gCCvBVkAILAOcOS7/TzlqJcSoTC8xurVhYWiXU0UjGA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ueyeqbxVyUMDOcmV/H5yMHIIM6+CW6Qs2b9eyopal0qXpoGpTtfOOPpJcJ3/gk/Eg
-         zxW0844oWoeYmlUXDdARFbkI32fRR0/GGMmcuCN0uPHppVoYHrxvJ/RMQMuNR2D3QI
-         /LqW2sbPsmAEInR5zy6kWXIkGAl5WS0zPFLVy1K8=
+        b=mXu0aWITzYHSIzQMTIfwVWcwTcBDQJ7XdyzeGnal6j1pQ4uhGD80Wnbt7bt6GdzjL
+         l79lmbLjtDKq8HgVCW6Cc3ip/Ndsnb3Nkvr0jF7RNH2sw1ExE1vExlR2y/Pq6NoV0w
+         sRTO4vp4ymfgEcHypHYHwWof8jfZ1vUdGoAuv09g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Matthew Wilcox <matthew.wilcox@oracle.com>,
+        George Kennedy <george.kennedy@oracle.com>,
+        Mark Kanda <mark.kanda@oracle.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 190/422] ALSA: hda: Fix implicit definition of pci_iomap() on SH
-Date:   Tue, 19 Nov 2019 06:16:27 +0100
-Message-Id: <20191119051410.833052144@linuxfoundation.org>
+Subject: [PATCH 4.19 181/422] scsi: sym53c8xx: fix NULL pointer dereference panic in sym_int_sir()
+Date:   Tue, 19 Nov 2019 06:16:18 +0100
+Message-Id: <20191119051410.195287118@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,33 +62,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Brown <broonie@kernel.org>
+From: George Kennedy <george.kennedy@oracle.com>
 
-[ Upstream commit d9b84a15892c02334ac8a5c28865ae54168d9b22 ]
+[ Upstream commit 288315e95264b6355e26609e9dec5dc4563d4ab0 ]
 
-Include asm/io.h directly so we've got a definition of pci_iomap(), the
-current set of includes do this implicitly on most architectures but not
-on SH.
+sym_int_sir() in sym_hipd.c does not check the command pointer for NULL before
+using it in debug message prints.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Suggested-by: Matthew Wilcox <matthew.wilcox@oracle.com>
+Signed-off-by: George Kennedy <george.kennedy@oracle.com>
+Reviewed-by: Mark Kanda <mark.kanda@oracle.com>
+Acked-by: Matthew Wilcox <matthew.wilcox@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_ca0132.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/sym53c8xx_2/sym_hipd.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/sound/pci/hda/patch_ca0132.c b/sound/pci/hda/patch_ca0132.c
-index 3e978b75be9ac..f2cabfdced05c 100644
---- a/sound/pci/hda/patch_ca0132.c
-+++ b/sound/pci/hda/patch_ca0132.c
-@@ -31,6 +31,7 @@
- #include <linux/types.h>
- #include <linux/io.h>
- #include <linux/pci.h>
-+#include <asm/io.h>
- #include <sound/core.h>
- #include "hda_codec.h"
- #include "hda_local.h"
+diff --git a/drivers/scsi/sym53c8xx_2/sym_hipd.c b/drivers/scsi/sym53c8xx_2/sym_hipd.c
+index bd3f6e2d68344..0a2a54517b151 100644
+--- a/drivers/scsi/sym53c8xx_2/sym_hipd.c
++++ b/drivers/scsi/sym53c8xx_2/sym_hipd.c
+@@ -4370,6 +4370,13 @@ static void sym_nego_rejected(struct sym_hcb *np, struct sym_tcb *tp, struct sym
+ 	OUTB(np, HS_PRT, HS_BUSY);
+ }
+ 
++#define sym_printk(lvl, tp, cp, fmt, v...) do { \
++	if (cp)							\
++		scmd_printk(lvl, cp->cmd, fmt, ##v);		\
++	else							\
++		starget_printk(lvl, tp->starget, fmt, ##v);	\
++} while (0)
++
+ /*
+  *  chip exception handler for programmed interrupts.
+  */
+@@ -4415,7 +4422,7 @@ static void sym_int_sir(struct sym_hcb *np)
+ 	 *  been selected with ATN.  We do not want to handle that.
+ 	 */
+ 	case SIR_SEL_ATN_NO_MSG_OUT:
+-		scmd_printk(KERN_WARNING, cp->cmd,
++		sym_printk(KERN_WARNING, tp, cp,
+ 				"No MSG OUT phase after selection with ATN\n");
+ 		goto out_stuck;
+ 	/*
+@@ -4423,7 +4430,7 @@ static void sym_int_sir(struct sym_hcb *np)
+ 	 *  having reselected the initiator.
+ 	 */
+ 	case SIR_RESEL_NO_MSG_IN:
+-		scmd_printk(KERN_WARNING, cp->cmd,
++		sym_printk(KERN_WARNING, tp, cp,
+ 				"No MSG IN phase after reselection\n");
+ 		goto out_stuck;
+ 	/*
+@@ -4431,7 +4438,7 @@ static void sym_int_sir(struct sym_hcb *np)
+ 	 *  an IDENTIFY.
+ 	 */
+ 	case SIR_RESEL_NO_IDENTIFY:
+-		scmd_printk(KERN_WARNING, cp->cmd,
++		sym_printk(KERN_WARNING, tp, cp,
+ 				"No IDENTIFY after reselection\n");
+ 		goto out_stuck;
+ 	/*
+@@ -4460,7 +4467,7 @@ static void sym_int_sir(struct sym_hcb *np)
+ 	case SIR_RESEL_ABORTED:
+ 		np->lastmsg = np->msgout[0];
+ 		np->msgout[0] = M_NOOP;
+-		scmd_printk(KERN_WARNING, cp->cmd,
++		sym_printk(KERN_WARNING, tp, cp,
+ 			"message %x sent on bad reselection\n", np->lastmsg);
+ 		goto out;
+ 	/*
 -- 
 2.20.1
 
