@@ -2,127 +2,139 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E238C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B426C43141
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83260222DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 737142245F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:54:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oURkgRgG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfKSTwd (ORCPT
+        id S1727334AbfKSTy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 14:52:33 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:35765 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbfKSTwd (ORCPT
+        Tue, 19 Nov 2019 14:54:27 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39627 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbfKSTy1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 14:52:33 -0500
-Received: from [192.168.1.155] ([77.2.113.117]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M4K6z-1iXQWt1RuD-000PFR; Tue, 19 Nov 2019 20:52:22 +0100
-Subject: Re: [RFC PATCH 0/5] leds: Add DT node finding and parsing to core
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>
-Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-References: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
- <ed000cda-3138-3172-1b4c-586b5bfd8d72@metux.net>
- <946f091e79242b9e71d5ce8ad12c899feefa22cd.camel@fi.rohmeurope.com>
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-Message-ID: <56d3a81e-f675-fd5e-06a7-8039bf02468e@metux.net>
-Date:   Tue, 19 Nov 2019 20:52:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 19 Nov 2019 14:54:27 -0500
+Received: by mail-ot1-f65.google.com with SMTP id w24so18570598otk.6
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 11:54:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=EhLUhFf+dWrZRS+as37pEKZIEswUZkBGb2xI++P3+j8=;
+        b=oURkgRgGWUkSxDSZ1GZcf9JKZThTVFiPnKTPYV6+NAQo4qwintbC2XWKkuqirZuVFU
+         bTYZKRscOUCeu16ZKaeZ3gXmUectwJqraAkzc8IBVgzlI8PbblowyxH6P3Ln12UZk9iO
+         Pl0kfXxMBXKjXj6d8JggILhmHIA8f4ZCcFz6nGlkz7lVmiWjRLK+0aGRrkffeyuCuNkI
+         0zslGM9F/hSRR4n8JF2dvLzZiZ64O/OcPnSgVvg+FuFKwOq/W9YtVItB909hWO3GwyqT
+         +0ZUwJKbggzqgLthIVoIszbE1Prv8ek/hgwno+wjPrrY7IKe9Gu3nZy0IvutjK5EGayQ
+         o9iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EhLUhFf+dWrZRS+as37pEKZIEswUZkBGb2xI++P3+j8=;
+        b=ao7IzcCYn+BLe82gv3gtDL/3O8S62YhtFgQ9AWSB+Puh859cxqYFTJG7PJz9dVgtbe
+         WvUjsDv+1Wc5jdtzx4X6+wkjfgDEsPUpcfMtH+cVA6+XbYma715ipmRf9fQDKZBmxPVn
+         kgFw9H1HenNt8ROo0nivLuIR2BIyko3MAfwybKbbWTBPViOze99HkkmfzSklSL3B5l/F
+         WgHg27Zty4I1+QD8Id0YUpzcScxmEn11zDpPFICG+Dd4S1z4UZiSt7LBuL4UvwQsVhtY
+         xBQpLnHvdjEwZ8yJ2mLRpHrlfSTu61ImcYzxh4mOh9d4l2QhetWpDoMo1AaXepi6H7WN
+         DiVg==
+X-Gm-Message-State: APjAAAUZjIhJ0QhgXns9rukcZjwqLxjw98h5h2Pw/wnyVPg7H6Jq90Ni
+        B1cR/lSmDsi73FOJdC3mpTGkrQXACu9tHa4poN3fkQ==
+X-Google-Smtp-Source: APXvYqyGgnRzC/YRie64niefMvgawW6RK21yPqM0zialvJFEd4a6Z7iuhn/AjgaPZsvq+/fqUfeR5iVlCDr+6w9vWVk=
+X-Received: by 2002:a05:6830:2308:: with SMTP id u8mr5018538ote.2.1574193265740;
+ Tue, 19 Nov 2019 11:54:25 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <946f091e79242b9e71d5ce8ad12c899feefa22cd.camel@fi.rohmeurope.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:/ybOfltbWoYQWD7R/RRDMIGGQgKlqh+QYyD9taRCRk2O02V3kvZ
- E9/vN3sOo3wS6Skj661/hkW9dAiCEIETw/9xyTe2WBXw5ddK5ptZYcSvQ+2ck9SvihCQiNb
- 2QHSTHgHviQRWbDlX8irzY62v654WcR9gbU99r3xh5weKZn0ItT2zwgfUMptJ/XfD9CXWkM
- qHCMga69n1pzM+KAvLT+g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kItjpHsCPgU=:bxcWQZPnDigH4LcM8ooFMX
- p+bvmwIv7xirPI92van9kcwtDigaBNEdCIyeEBF5L8rQAdi34f9th9qn7WIgPHSeSpxf2r3rI
- l8X/P4qNGJk1JwJlJ+tVbzClV7vCbLZityQ6x//ukZmGUc2+PWr1RbuIVHioyIwOpUQ/bAAuv
- 1Rvd1KZtMUTk+lHcSi/vXClPhZxw6bIkdtK0Lo6axv2BwV1+wWYbdKVquTN3pGcPhK362QFj/
- FD4xy+/1XaJall1kcUQ0EEqxB7ux28N6qeesbSSSo4Bqb1DLA/iWDP4weKKjhU7yHkN/yVMiV
- +16ln9oPpsRX7dcQoYTkeY25RD0TiUQUSycMcTuiR4DnbnV3qXRBtTKydCKJOC86H0QKFtUKP
- VjH+7YvboLHuGQ3GXMktcuCzBLXswLvtk0zNXT0S7L9AcfOqnh1nAimvHMtSVNsUVwtrgCHLM
- HROmb1Zii7oMyqEh9OGuUicJ2EACVK3GsfjN5HmKKvj9CyBIYFuHMAskyY4YAyn8gXquwx/j4
- DmM0y+Exa3ImM8jo7SZQCLlbeSpMRwMFGRl5bxi21XucXTFW8kppvcnMlWrCMbENU1PFZ4mEQ
- TFC87Jf+eYJXKDZ0oskmFkcFSNUCG364mDgQT1oraUP2z0FPzUOoddBc2ZCEpgaXZiPw7CSC6
- YpirCIRU3DaeFVeTg/8ui7Ax8DX5S0RAq/Uw4ohKLEOqTXjgmxkr3h8wwrjnzZpkadNsK8z8F
- lfFp2cMPhl/ONinbvPSBKeAMK6EAtVZFh0kIRsVem1xPoTTndkJQgYh8YuLSFEbAASgQqpGIA
- tMuiPDkXyJPGianirD0N1mpuiMAbLvumz/1rWDkm4Cxy1bxxWyu5PSnm4bbHVuNWax3aKkIuV
- nABSM7+IIQQgRQA2+WCQ==
+References: <20191114180303.66955-1-elver@google.com> <20191114180303.66955-2-elver@google.com>
+ <1574191653.9585.6.camel@lca.pw>
+In-Reply-To: <1574191653.9585.6.camel@lca.pw>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 19 Nov 2019 20:54:14 +0100
+Message-ID: <CANpmjNPiKg++=QHUjD87dqiBU1pHHfZmGLAh1gOZ+4JKAQ4SAQ@mail.gmail.com>
+Subject: Re: [PATCH v4 01/10] kcsan: Add Kernel Concurrency Sanitizer infrastructure
+To:     Qian Cai <cai@lca.pw>
+Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Alexander Potapenko <glider@google.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Howells <dhowells@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-efi@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.11.19 11:38, Vaittinen, Matti wrote:
+On Tue, 19 Nov 2019 at 20:27, Qian Cai <cai@lca.pw> wrote:
+>
+> On Thu, 2019-11-14 at 19:02 +0100, 'Marco Elver' via kasan-dev wrote:
+>
+> > +menuconfig KCSAN
+> > +     bool "KCSAN: watchpoint-based dynamic data race detector"
+> > +     depends on HAVE_ARCH_KCSAN && !KASAN && STACKTRACE
+>
+> "!KASAN" makes me sorrow. What's problem of those two?
 
-Hi,
+Both of them instrument memory accesses, and gcc doesn't let us
+combine '-fsanitize=3D{kernel-,}address' and '-fsanitize=3Dthread'.
 
->> a) existing DT's (in the field) become incompatible with newer
->>    kernel versions
-> 
-> This was my main concern. This of course would not mean that we could
-> not take this approach for new LED controller drivers - but that would
-> (probably) lead to dual led registration interface 
+> cc1: error: =E2=80=98-fsanitize=3Daddress=E2=80=99 and =E2=80=98-fsanitiz=
+e=3Dkernel-address=E2=80=99 are incompatible with =E2=80=98-fsanitize=3Dthr=
+ead=E2=80=99
 
-Maybe just a flag for that ? Perhaps the driver could also specify a
-list of node names for the LEDs, so led-core can do the lookup for them.
+In principle, it may be possible:
+- either by updating the compiler, which we want to avoid because we'd
+have to convince gcc and clang to do this; I can see this being
+infeasible because the compiler needs to become aware (somehow
+propagate in the IR) of what is ASAN inline-instrumentation and what
+is TSAN instrumentation and not emit recursive instrumentation.
+- or somehow merging the instrumentation, but, IMHO this is probably a
+really bad idea for various other reasons (complexity, performance,
+stability, etc.).
 
->> b) existing userlands that rely on speicific LED names become
->>    incomatible with newer kernel versions.
-> 
-> I didn't even think this far, but yes, I see... LED node name might be
-> reflected in user-space LED name. I won't start arguing if this is sane
-> or not - this is what we seem to be living with today :)
+Regardless of approach, my guess is that the complexity outweighs any
+benefits this may provide in the end. Not only would a hypothetical
+kernel that combines these be extremely slow, it'd also diminish the
+practical value because testing and finding bugs would also be
+impaired due to performance.
 
-Especially in embedded world, this can really make sense: applications
-just use a defined LED name, no matter which board it's running on.
-Convention over configuration.
-
-Personally, I also like to use LED subsystem as frontend for things like
-gpio-driven relais, etc, and assign semantically fitting names instead
-of "technical" ones,
-
-> I didn't invest too much of time on this yet - but at first glimpse it
-> seemed that at least some of the drivers did use reg - property with
-> fixed value to do the matching. Those could set the property name to
-> 'reg' and value to 'X' and leave the DT node lookup and common property
-> parsing to the LED core. If my patch won't get too big objection (and
-> if no fatal flaws are found from the idea) - then I might try and find
-> the time to do some follow-up patches simplifying existing LED
-> drivers...
-
-Sounds good :)
-
-
---mtx
-
--- 
-Dringender Hinweis: aufgrund existenzieller Bedrohung durch "Emotet"
-sollten Sie *niemals* MS-Office-Dokumente via E-Mail annehmen/öffenen,
-selbst wenn diese von vermeintlich vertrauenswürdigen Absendern zu
-stammen scheinen. Andernfalls droht Totalschaden.
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Thanks,
+-- Marco
