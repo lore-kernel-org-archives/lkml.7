@@ -2,88 +2,149 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7594C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD20C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A46D0222A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B529A222A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:00:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="E1BdrwRD"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UBaj3wm0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbfKSO7q (ORCPT
+        id S1728200AbfKSPAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:59:46 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:60720 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727066AbfKSO7q (ORCPT
+        Tue, 19 Nov 2019 10:00:07 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45020 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727066AbfKSPAH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 09:59:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1574175580; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5gzc6iuBgaTr89P05jPP8SxsIn5uFVdeznkj0sQ2nnQ=;
-        b=E1BdrwRDpKN+MwsEYzwHF0kRuB4SbnvU3CXGFguJ+1BmQSQee9EBejmp7LbqV4t2mbyzoW
-        ZMpYQyVzaQxp84UZ05pr8oIDi/B1lKC8nt8WTITMMbW0xfyQ0lFaSZwXqDpj7AzO9wYrXp
-        EdL/hCNERFMtfSSoU072p5vdNb/shlk=
-Date:   Tue, 19 Nov 2019 15:59:31 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] clk: ingenic: Allow drivers to be built with COMPILE_TEST
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Message-Id: <1574175571.3.0@crapouillou.net>
-In-Reply-To: <20191114001925.159276-1-sboyd@kernel.org>
-References: <20191114001925.159276-1-sboyd@kernel.org>
+        Tue, 19 Nov 2019 10:00:07 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJExtD8092646;
+        Tue, 19 Nov 2019 08:59:55 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574175595;
+        bh=QQxfNsCfdtef9Juk9TtmCWz6xjk1bc34hAKbo2XxMQM=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=UBaj3wm0xiGZp0+Rm94vckGfV4XmYU0useVvtp99AH1I0iOmLu+KTkwqHprZZfEHV
+         j++vlZ+OLW0BN/b7qZUEsxlZpXQxZIeO1KKjoa4cjH7d947ci0j2YPKA6PoYALGPc1
+         RGh8k/GMfoIL3bgzJVfaBHRIm6LMOkSV/mbyxRZ8=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAJExtIo119214
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 Nov 2019 08:59:55 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 19
+ Nov 2019 08:59:55 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 19 Nov 2019 08:59:55 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJExpU4069329;
+        Tue, 19 Nov 2019 08:59:52 -0600
+Subject: Re: [RFC 0/2] gpio: Support for shared GPIO lines on boards
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Grant Likely <glikely@secretlab.ca>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+References: <20191030114530.872-1-peter.ujfalusi@ti.com>
+ <CACRpkdbw9MVrQMSgVMenSqAOiti1pAy4d2LvWY-ssx9dhzWEcw@mail.gmail.com>
+ <8bd0f286-dc54-72a6-0aaf-2dc7b9972883@ti.com>
+ <CACRpkdZ-qf3OKAxsoj+36V_N6Y_gFte1LHM+66OqekXBAWxsVA@mail.gmail.com>
+ <56916577-8d39-f98f-9fd6-2fdc6e1e0023@ti.com>
+Message-ID: <df10bfc0-0ad5-36f5-ea68-9fee82cd2c5a@ti.com>
+Date:   Tue, 19 Nov 2019 17:01:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <56916577-8d39-f98f-9fd6-2fdc6e1e0023@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+Hi Linus,
+
+On 19/11/2019 10.34, Peter Ujfalusi wrote:
+>> So begin with creating a way to pull the shared handling of
+>> regulators into gpiolib with these clearly cut semantics
+>> delete the NONEXCLUSIVE thing and then when you are
+>> done with that exploit the same
+>> infrastructure for GPIO reset.
+> 
+> The logic is relatively simple, 229 lines in gpio-shared, but moving
+> that into core will explode things a bit and going to add more
+> complexity to all gpio lines.
+> For one, we must maintain a list of clients requesting the line to be
+> able to do proper refcounting and this needs to be done for all pins as
+> we don't know beforehand that the given line is going to be shared.
+> 
+> Or add gpio-shared block similar to gpio-hog to prepare a given line for
+> sharing? I think this might be a better thing to do and some of the code
+> from gpio-shared.c can be reused.
+
+I had some time today and now have a working support for shared GPIOs in
+the gpio core.
+
+Works fine with regulators and with my board which have two ocm3168a
+codec with shared reset GPIO.
+
+There are couple of things initially not going to work, like supporting
+clients with different GPIO_ACTIVE_HIGH/LOW as we have only one
+gpio_desc which got it's GPIO_ACTIVE_* form the gpio-shared child.
+
+The means that all clients has to have the same GPIO_ACTIVE_* as how the
+gpio-shared child is configured:
+
+gpio1 {
+	p00 {
+		gpio-shared;
+		/* raw level high is refcounted */
+		gpios = <0 GPIO_ACTIVE_HIGH>;
+		/* Initially set the gpio line to raw level high */
+		output-high;
+		line-name = "CODEC RESET";
+	};
+};
+
+now clients can:
+...
+enable-gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;
+...
+enable-gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;
+...
+
+I'm reusing some of the gpio-hog code for this from gpiolib-of.c
+
+For supporting different GPIO_ACTIVE_* on the client side might be
+tricky as we might need to create dummy gpio_desc for each client and
+put them on a list for the shared gpio_desc.
+
+In any case I try to clean up the patch and add some documentation and
+send it for review as RFC in couple of days.
 
 
-Le mer., nov. 13, 2019 at 16:19, Stephen Boyd <sboyd@kernel.org> a=20
-=E9crit :
-> We don't need the MIPS architecture or even a MIPS compiler to compile
-> test these drivers. Let's add a COMPILE_TEST possibility on the
-> menuconfig here so that we can build these drivers on more
-> configurations.
->=20
-> Cc: Paul Cercueil <paul@crapouillou.net>
-> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+- Péter
 
-> ---
->  drivers/clk/ingenic/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/clk/ingenic/Kconfig b/drivers/clk/ingenic/Kconfig
-> index fb7b39961703..b4555b465ea6 100644
-> --- a/drivers/clk/ingenic/Kconfig
-> +++ b/drivers/clk/ingenic/Kconfig
-> @@ -1,6 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  menu "Ingenic SoCs drivers"
-> -	depends on MIPS
-> +	depends on MIPS || COMPILE_TEST
->=20
->  config INGENIC_CGU_COMMON
->  	bool
-> --
-> Sent by a computer through tubes
->=20
-
-=
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
