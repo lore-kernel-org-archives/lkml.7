@@ -2,88 +2,132 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E9AC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34479C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78697222F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1BBA222F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:33:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Av9hiPCW"
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="SI13HTKk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbfKSJas (ORCPT
+        id S1727495AbfKSJdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 04:30:48 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41431 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725784AbfKSJas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 04:30:48 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47HLCm59gDz9sPf;
-        Tue, 19 Nov 2019 20:30:44 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1574155846;
-        bh=zPPLhVb2Bxi6Rfx1Lohy5QPjCnGLHI0POCTpRUG7kj4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Av9hiPCWWHYXlwCsgjXdzmWJ96jjz8VykjGy6kyr3oxBgzIfZ+PF431poqojcLol/
-         Wv/8Bfgzys7waZrLQM3nxxdE786kQltvWPAgs9yjiebq4NSK0AuMpjEqUNB6HLjr+F
-         9L/veboWztpqrdOcpzrGphuw3URNLq3xJG1+WjFCmo8huII1r4i/iX30sIsLuh6SUz
-         9+jxUb+OjoROfov4Mbm+WQShFTXwsVO6bxQM/WS+Q2pa0dyrVVJiZ8tJ3V39EpiROh
-         UQ3eipBC3scF5NSFWbKc2glZdKs3sAj+Klh/F3DZcHpV0dhefaCOSAVMGjYiwTx+Wy
-         sPk/m0ObDm3ag==
-Date:   Tue, 19 Nov 2019 20:30:43 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Can Guo <cang@codeaurora.org>
-Subject: linux-next: Signed-off-by missing for commit in the scsi-mkp tree
-Message-ID: <20191119203043.67cc7d32@canb.auug.org.au>
+        Tue, 19 Nov 2019 04:33:09 -0500
+Received: from mail-eopbgr50134.outbound.protection.outlook.com ([40.107.5.134]:46899
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725784AbfKSJdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 04:33:08 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oDs3+/qbrETWtfllW9ZhN9We1s9KfuD+yENM2kv3BDAt8FoOTUZfLPkjX3kEqwCbYL0fiDgb7iswNcGzqUpN+vxGjXWy6T75p1pWY1c6q3TlevbZgtuwHDSPQE9K/68hZs0ZyX4M/xDgRiNpqp5zqVRuba7AS6ex4QF/GxqqsrhrgIPtSuw0i0TS/ECmvYgDhIaKwsYxJb/VS+OVD2T7QP57usCef0UyQmNcKv79iO/LoO7QrCPKz12b9S1Cea1dNPpu+jaLZW4vekJFBLeGExLPjguWvynKQCGptSogdULEFlm2WAGJVuba7zVQXgAKO3Efr+Ielg8GYlUTVlDYhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SNjEioAx2prqwQf1AYVuUvtFgRUGS9O5eyv5PNvAakk=;
+ b=Lb1X40zxmEedfWwM1+bAIUS1/043tH1GQFTceYEtMnnWY4Ej3MrYY8fx6Aq4Vg8YdS0X29/nOxIy9fymQ9Y8e5rmc3UbfG0M00v/EdCbPcW10/0qhnSwyi//uXTLUTOKTac0A5YrplQHGR3iWhc+mh+l07kcW6doAsB2/4FPEVvae1h67rnSfuVvml29vMee4dgDQK7Yog5r+BYE9oF69R7Q24RqJEz8jBNqlO3VuMbuw6eLjgmgcKSlF7kTkGY+ZSeFjz2XbiZ3P8aHTMbR6cFpjE69sJX85X/7TaP4DorEONi/31bO7RhQmfT5fxZvSUddVCyRiBUZwdq9OEeTgQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SNjEioAx2prqwQf1AYVuUvtFgRUGS9O5eyv5PNvAakk=;
+ b=SI13HTKkvXpmnBzzj0VXqimXztdP40IdC+h3cO8jFDgpNLBuvQYLNWbGecoGnJugtrQdCh/MwArXkOVBAFOp1u63PEuocs+n+kWvfibcBZLSqDoAZlHB8la/i3M8hCAbC7LmUGfBZ592HZjx5KnGnOFkCogkacXb8p91NMVovuM=
+Received: from AM6PR0202MB3432.eurprd02.prod.outlook.com (52.133.11.29) by
+ AM6PR0202MB3400.eurprd02.prod.outlook.com (52.133.8.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.29; Tue, 19 Nov 2019 09:33:02 +0000
+Received: from AM6PR0202MB3432.eurprd02.prod.outlook.com
+ ([fe80::dc43:ed2c:945a:cd5]) by AM6PR0202MB3432.eurprd02.prod.outlook.com
+ ([fe80::dc43:ed2c:945a:cd5%6]) with mapi id 15.20.2451.031; Tue, 19 Nov 2019
+ 09:33:02 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     Lei YU <mine260309@gmail.com>, Wolfram Sang <wsa@the-dreams.de>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] docs: i2c: Fix return value of i2c_smbus_xxx functions
+Thread-Topic: [PATCH] docs: i2c: Fix return value of i2c_smbus_xxx functions
+Thread-Index: AQHVnrdKJrKxiOciCEaViJqC+aa9maeSOzkA
+Date:   Tue, 19 Nov 2019 09:33:02 +0000
+Message-ID: <a1444cbf-3a1d-6f17-97a9-77664a95d304@axentia.se>
+References: <1574153778-59977-1-git-send-email-mine260309@gmail.com>
+In-Reply-To: <1574153778-59977-1-git-send-email-mine260309@gmail.com>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1PR0402CA0020.eurprd04.prod.outlook.com
+ (2603:10a6:3:d0::30) To AM6PR0202MB3432.eurprd02.prod.outlook.com
+ (2603:10a6:209:26::29)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a364abdc-9194-457c-512a-08d76cd37930
+x-ms-traffictypediagnostic: AM6PR0202MB3400:
+x-microsoft-antispam-prvs: <AM6PR0202MB34004C1D58D112627821A1B1BC4C0@AM6PR0202MB3400.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 022649CC2C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(376002)(366004)(39830400003)(396003)(189003)(199004)(25786009)(186003)(476003)(11346002)(446003)(2616005)(102836004)(53546011)(386003)(58126008)(486006)(6506007)(316002)(6512007)(110136005)(14444005)(4001150100001)(26005)(2501003)(6486002)(31686004)(5660300002)(256004)(8936002)(229853002)(6246003)(8676002)(66946007)(76176011)(66446008)(6436002)(81156014)(71190400001)(71200400001)(81166006)(508600001)(2201001)(64756008)(66556008)(66476007)(6116002)(14454004)(305945005)(99286004)(66066001)(65806001)(86362001)(2906002)(52116002)(7736002)(36756003)(3846002)(65956001)(31696002)(21314003);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR0202MB3400;H:AM6PR0202MB3432.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: KipcN4aGC4d57Mq+V6fYFfT6sqxuGpBktIrkI+waUFLlvrdELGtauKkSvYYw62mQW1oiZyrbzlHBZHb2EQzYpMmuFDdYOGpXSQIHRzxs1etoaXnZWZWyf2prOQ8ZiPajUAy7OK2JvjBUhQQVaqdxjgqtzrG5cmFbVza0nK069f6VxT6IIJ6Aw1WAbwsKmnaZeS1HHrQNfKRBgqGhzpEBFP2T2Nj+Jh3kxn7TW2RmBxvTi3TlWwNTVLC8aJPOiKFjOtD52rq+a3f15H5/2cz1d2L0Vz3g0dXX4lEMPoYS1ZvNR/LoZn6ND0Ev7DefJh0kgCHiCgbUmn1h1Eml2nKrk4rB02jSODXEw54+R14tgsPtYCts3HUJnxQ5hCT8Cs8ZKA7psSdVQL1OeuUgu1TauS8mzT6hAIFgszmEgox95zy9XiiPpTOg7ObGSXvRBwRq
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1DFE34F3793D764FA3CF8181BD721021@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/l6UzrAwnONJx+BtY98tekbF";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: a364abdc-9194-457c-512a-08d76cd37930
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2019 09:33:02.4932
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yuc0r4x3VmepkpiuYwCzHUYtbMSi434fzojivbI5B1bim6vQgIfo8oEV6iiHh9Uv
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0202MB3400
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/l6UzrAwnONJx+BtY98tekbF
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-Commit
-
-  379c3789d023 ("scsi: ufs: Fix irq return code")
-
-is missing a Signed-off-by from its author.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/l6UzrAwnONJx+BtY98tekbF
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3TtkMACgkQAVBC80lX
-0GyQeQgAlfQ63Sq+BLZeqJadk7pwoX6rksgBjOaomS200lbDoUMyc7UnwTXEqovp
-cLsAzfW7Ww6ym2/vOSLFQyq8iP0Kn1O1nzg5Pe+/kvPqLCFh59n7KMYWsxQ2qlVh
-PSiAsUkDHNLELX2+AAySnL1b3detP11J7LYqxdaYkozyt7orcpBJNDbXcwyCyhPS
-Q388B9WjXFV3vANVcGIomcunHQqLlJdziYwYKeOpl9J5eRQhx1+OUH+c18PIgFQs
-2c7vchX55VETRnwPvO5R9/GK+CvAHDc8N5sVpFS1JVn6OAsfFIJrtM+CAd8qfsct
-7zWDTFOebl8y0rglJHO7sHn5dBwQmg==
-=PHgD
------END PGP SIGNATURE-----
-
---Sig_/l6UzrAwnONJx+BtY98tekbF--
+T24gMjAxOS0xMS0xOSAwOTo1NiwgTGVpIFlVIHdyb3RlOg0KPiBJbiBpMmMvZGV2LWludGVyZmFj
+ZS5yc3QgaXQgc2FpZA0KPiANCj4+IEFsbCB0aGVzZSB0cmFuc2FjdGlvbnMgcmV0dXJuIC0xIG9u
+IGZhaWx1cmUNCj4gDQo+IEJ1dCBhY3R1YWxseSB0aGUgaTJjX3NtYnVzX3h4eCBmdW5jdGlvbnMg
+cmV0dXJuIG5lZ2F0aXZlIGVycm9yIG51bWJlcnMNCj4gb24gZmFpbHVyZSwgaW5zdGVhZCBvZiAt
+MS4NCj4gDQo+IEZpeCB0aGUgZG9jdW1lbnQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBMZWkgWVUg
+PG1pbmUyNjAzMDlAZ21haWwuY29tPg0KPiAtLS0NCj4gIERvY3VtZW50YXRpb24vaTJjL2Rldi1p
+bnRlcmZhY2UucnN0IHwgNCArKy0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCsp
+LCAyIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vaTJjL2Rl
+di1pbnRlcmZhY2UucnN0IGIvRG9jdW1lbnRhdGlvbi9pMmMvZGV2LWludGVyZmFjZS5yc3QNCj4g
+aW5kZXggNjljMjNhMy4uNzNiNzdjMyAxMDA2NDQNCj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9pMmMv
+ZGV2LWludGVyZmFjZS5yc3QNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9pMmMvZGV2LWludGVyZmFj
+ZS5yc3QNCj4gQEAgLTE2Myw4ICsxNjMsOCBAQCBmb3IgZGV0YWlscykgdGhyb3VnaCB0aGUgZm9s
+bG93aW5nIGZ1bmN0aW9uczo6DQo+ICAgIF9fczMyIGkyY19zbWJ1c193cml0ZV9ibG9ja19kYXRh
+KGludCBmaWxlLCBfX3U4IGNvbW1hbmQsIF9fdTggbGVuZ3RoLA0KPiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBfX3U4ICp2YWx1ZXMpOw0KPiAgDQo+IC1BbGwgdGhlc2UgdHJh
+bnNhY3Rpb25zIHJldHVybiAtMSBvbiBmYWlsdXJlOyB5b3UgY2FuIHJlYWQgZXJybm8gdG8gc2Vl
+DQo+IC13aGF0IGhhcHBlbmVkLiBUaGUgJ3dyaXRlJyB0cmFuc2FjdGlvbnMgcmV0dXJuIDAgb24g
+c3VjY2VzczsgdGhlDQo+ICtBbGwgdGhlc2UgdHJhbnNhY3Rpb25zIHJldHVybiBuZWdhdGl2ZSB2
+YWx1ZSBvbiBmYWlsdXJlOyB5b3UgY2FuIHJlYWQgZXJybm8gdG8NCj4gK3NlZSB3aGF0IGhhcHBl
+bmVkLiBUaGUgJ3dyaXRlJyB0cmFuc2FjdGlvbnMgcmV0dXJuIDAgb24gc3VjY2VzczsgdGhlDQoN
+CnMvcmV0dXJuIG5lZ2F0aXZlL3JldHVybiBhIG5lZ2F0aXZlLw0KDQpBbmQgdGhlIGxpbmUgaXMg
+bm93IHRvbyBsb25nIGNvbXBhcmVkIHRvIHRoZSByZXN0IG9mIHRoZSB0ZXh0LCBzbyB5b3UNCm5l
+ZWQgdG8gcmV3cmFwIHRoZSBwYXJhZ3JhcGguDQoNCkFuZCB3aHkgZG8geW91IG5lZWQgdG8gZGln
+IGFyb3VuZCBpbiBlcnJubyBpZiB0aGUgbmVnYXRpdmUgZXJybm8gaGFzDQphbHJlYWR5IGJlZW4g
+cmV0dXJuZWQ/DQoNCj4gICdyZWFkJyB0cmFuc2FjdGlvbnMgcmV0dXJuIHRoZSByZWFkIHZhbHVl
+LCBleGNlcHQgZm9yIHJlYWRfYmxvY2ssIHdoaWNoDQo+ICByZXR1cm5zIHRoZSBudW1iZXIgb2Yg
+dmFsdWVzIHJlYWQuIFRoZSBibG9jayBidWZmZXJzIG5lZWQgbm90IGJlIGxvbmdlcg0KPiAgdGhh
+biAzMiBieXRlcy4NCj4gDQoNCkhtbSwgdW5yZWxhdGVkLCBidXQgc2hvdWxkIHRoYXQgcGVyaGFw
+cyBiZSAibXVzdCBub3QiIGluc3RlYWQgb2YgIm5lZWQgbm90Ij8NCg0KQ2hlZXJzLA0KUGV0ZXIN
+Cg==
