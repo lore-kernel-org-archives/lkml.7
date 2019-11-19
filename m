@@ -2,55 +2,53 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD3DC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 550DFC43141
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0439721939
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D04208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:44:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142257;
-	bh=Ac5B6XUO63g1mIXDroLKb2RIGZiAiNvL0SvzwLi+qa4=;
+	s=default; t=1574142262;
+	bh=yx7LKwTUSFp/Jv9bAC2z1ZvGkfcLgLukF/deIfRG3uU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NesbBxW0vqQfKYLFfpdABFVTzleBtry0KDC/dbDkYkIV8xoX2XkZuRZwF+hKRMZyu
-	 fUE9CHbX8R96Qvhb0OaNQEZR1BgoA6vaYoakeHklOsUdGZQYqB4KOAYwwfqZJrudRd
-	 78yRmZhTwvsyrWYBGjD7FychNulXSjLvUl26KUuU=
+	b=RiEKWqVkymJPFCVp+t4dy2kg3+MAbFqNcSbNcJt105cgS4MZVjL4kpf8sQEowa3ml
+	 +NHVpN5BBGgB9syvUvTqFN5H0G2pPStsaRbovWhVjuBKQV2FFJ4IZ8STCP2OqCIR7s
+	 z6bXfFt/jmBRK4ZyniM+mwgyAcVli/91rXHDnAe8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbfKSFoP (ORCPT
+        id S1730172AbfKSFoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:44:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39526 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:44:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729643AbfKSFoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:44:13 -0500
+        id S1728629AbfKSFoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:44:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 660A32075E;
-        Tue, 19 Nov 2019 05:44:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D0E52075E;
+        Tue, 19 Nov 2019 05:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142252;
-        bh=Ac5B6XUO63g1mIXDroLKb2RIGZiAiNvL0SvzwLi+qa4=;
+        s=default; t=1574142255;
+        bh=yx7LKwTUSFp/Jv9bAC2z1ZvGkfcLgLukF/deIfRG3uU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xzgrS8D9e0SLcXVDLJVPn695Pcow4DDoitYuKpUaFKzoGy7lqv+y9VY88Sh2kXzZU
-         +7swJeA7+ABgl9kMwqPwp8iMBeTgaDART9vbjt1NKphzpP4de/402gBjwoYecvZTHs
-         TGGLKFmeUomxPQ5m87bNWgZ9BymcaI3dm4TwSugk=
+        b=ph9b+x6jXAmlNztWNmftKKVdBZxTxGNLjO1/xsUKwlUiYrzALwIKkUAPiGqmP2El3
+         IlNuQahoOBeLyWY9d6msf3xAwEP3gnmIIssF6PerzrhngOH2r/CBiRMeWSTF1Vtr6X
+         0noA+kh5xr+ZyLqTOtVjhUW2qKoCKE5E6rDmL3AU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        James Erwin <james.erwin@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.14 019/239] IB/hfi1: Ensure full Gen3 speed in a Gen4 system
-Date:   Tue, 19 Nov 2019 06:16:59 +0100
-Message-Id: <20191119051301.427742030@linuxfoundation.org>
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 002/239] KVM: x86: introduce is_pae_paging
+Date:   Tue, 19 Nov 2019 06:16:42 +0100
+Message-Id: <20191119051256.559776124@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -63,47 +61,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Erwin <james.erwin@intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit a9c3c4c597704b3a1a2b9bef990e7d8a881f6533 upstream.
+[ Upstream commit bf03d4f9334728bf7c8ffc7de787df48abd6340e ]
 
-If an hfi1 card is inserted in a Gen4 systems, the driver will avoid the
-gen3 speed bump and the card will operate at half speed.
+Checking for 32-bit PAE is quite common around code that fiddles with
+the PDPTRs.  Add a function to compress all checks into a single
+invocation.
 
-This is because the driver avoids the gen3 speed bump when the parent bus
-speed isn't identical to gen3, 8.0GT/s.  This is not compatible with gen4
-and newer speeds.
+Moving to the common helper also fixes a subtle bug in kvm_set_cr3()
+where it fails to check is_long_mode() and results in KVM incorrectly
+attempting to load PDPTRs for a 64-bit guest.
 
-Fix by relaxing the test to explicitly look for the lower capability
-speeds which inherently allows for gen4 and all future speeds.
-
-Fixes: 7724105686e7 ("IB/hfi1: add driver files")
-Link: https://lore.kernel.org/r/20191101192059.106248.1699.stgit@awfm-01.aw.intel.com
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Reviewed-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: James Erwin <james.erwin@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+[sean: backport to 4.x; handle vmx.c split in 5.x, call out the bugfix]
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/pcie.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/kvm/vmx.c | 7 +++----
+ arch/x86/kvm/x86.c | 8 ++++----
+ arch/x86/kvm/x86.h | 5 +++++
+ 3 files changed, 12 insertions(+), 8 deletions(-)
 
---- a/drivers/infiniband/hw/hfi1/pcie.c
-+++ b/drivers/infiniband/hw/hfi1/pcie.c
-@@ -327,7 +327,9 @@ int pcie_speeds(struct hfi1_devdata *dd)
- 	/*
- 	 * bus->max_bus_speed is set from the bridge's linkcap Max Link Speed
- 	 */
--	if (parent && dd->pcidev->bus->max_bus_speed != PCIE_SPEED_8_0GT) {
-+	if (parent &&
-+	    (dd->pcidev->bus->max_bus_speed == PCIE_SPEED_2_5GT ||
-+	     dd->pcidev->bus->max_bus_speed == PCIE_SPEED_5_0GT)) {
- 		dd_dev_info(dd, "Parent PCIe bridge does not support Gen3\n");
- 		dd->link_gen3_capable = 0;
+diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+index cd5a8e888eb6b..ab6384efc7916 100644
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -4468,7 +4468,7 @@ static void ept_load_pdptrs(struct kvm_vcpu *vcpu)
+ 		      (unsigned long *)&vcpu->arch.regs_dirty))
+ 		return;
+ 
+-	if (is_paging(vcpu) && is_pae(vcpu) && !is_long_mode(vcpu)) {
++	if (is_pae_paging(vcpu)) {
+ 		vmcs_write64(GUEST_PDPTR0, mmu->pdptrs[0]);
+ 		vmcs_write64(GUEST_PDPTR1, mmu->pdptrs[1]);
+ 		vmcs_write64(GUEST_PDPTR2, mmu->pdptrs[2]);
+@@ -4480,7 +4480,7 @@ static void ept_save_pdptrs(struct kvm_vcpu *vcpu)
+ {
+ 	struct kvm_mmu *mmu = vcpu->arch.walk_mmu;
+ 
+-	if (is_paging(vcpu) && is_pae(vcpu) && !is_long_mode(vcpu)) {
++	if (is_pae_paging(vcpu)) {
+ 		mmu->pdptrs[0] = vmcs_read64(GUEST_PDPTR0);
+ 		mmu->pdptrs[1] = vmcs_read64(GUEST_PDPTR1);
+ 		mmu->pdptrs[2] = vmcs_read64(GUEST_PDPTR2);
+@@ -10906,8 +10906,7 @@ static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool ne
+ 		 * If PAE paging and EPT are both on, CR3 is not used by the CPU and
+ 		 * must not be dereferenced.
+ 		 */
+-		if (!is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu) &&
+-		    !nested_ept) {
++		if (is_pae_paging(vcpu) && !nested_ept) {
+ 			if (!load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3)) {
+ 				*entry_failure_code = ENTRY_FAIL_PDPTE;
+ 				return 1;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index dc1b6d5bb16d6..1f9360320a82c 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -620,7 +620,7 @@ bool pdptrs_changed(struct kvm_vcpu *vcpu)
+ 	gfn_t gfn;
+ 	int r;
+ 
+-	if (is_long_mode(vcpu) || !is_pae(vcpu) || !is_paging(vcpu))
++	if (!is_pae_paging(vcpu))
+ 		return false;
+ 
+ 	if (!test_bit(VCPU_EXREG_PDPTR,
+@@ -849,8 +849,8 @@ int kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
+ 	if (is_long_mode(vcpu) &&
+ 	    (cr3 & rsvd_bits(cpuid_maxphyaddr(vcpu), 63)))
+ 		return 1;
+-	else if (is_pae(vcpu) && is_paging(vcpu) &&
+-		   !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
++	else if (is_pae_paging(vcpu) &&
++		 !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
+ 		return 1;
+ 
+ 	vcpu->arch.cr3 = cr3;
+@@ -7787,7 +7787,7 @@ int kvm_arch_vcpu_ioctl_set_sregs(struct kvm_vcpu *vcpu,
+ 		kvm_update_cpuid(vcpu);
+ 
+ 	idx = srcu_read_lock(&vcpu->kvm->srcu);
+-	if (!is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu)) {
++	if (is_pae_paging(vcpu)) {
+ 		load_pdptrs(vcpu, vcpu->arch.walk_mmu, kvm_read_cr3(vcpu));
+ 		mmu_reset_needed = 1;
  	}
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index c88305d997b0f..68eb0d03e5fc3 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -94,6 +94,11 @@ static inline int is_paging(struct kvm_vcpu *vcpu)
+ 	return likely(kvm_read_cr0_bits(vcpu, X86_CR0_PG));
+ }
+ 
++static inline bool is_pae_paging(struct kvm_vcpu *vcpu)
++{
++	return !is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu);
++}
++
+ static inline u32 bit(int bitno)
+ {
+ 	return 1 << (bitno & 31);
+-- 
+2.20.1
+
 
 
