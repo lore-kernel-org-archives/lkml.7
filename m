@@ -2,123 +2,81 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 715C2C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BA4C43141
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C91220672
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143672;
-	bh=VL9r0Csglza5UEJzSeVP/0TGRgcTmcqr5vr+D1HxZhw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i0sT08GMK7zNIe7h40E7A4cgkkxa6a6yGE2M1HuokdbQDGTqRDw3gH76hNm6Gs1Mu
-	 XW736kIBfmQoN0WOF/Z37PxSPnny52wgZBdGoF1MFaqyTnYu6DktGUzPgQAz/PELLw
-	 F4Vk2VhkCFjKC7cIwy00hn5jxzeTlONE0lW7EzeM=
+	by mail.kernel.org (Postfix) with ESMTP id D517E206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbfKSFcY (ORCPT
+        id S1729338AbfKSFcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:32:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52606 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:32:00 -0500
+Received: from mga03.intel.com ([134.134.136.65]:42535 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728656AbfKSFcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:32:21 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17ADE21783;
-        Tue, 19 Nov 2019 05:32:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141539;
-        bh=VL9r0Csglza5UEJzSeVP/0TGRgcTmcqr5vr+D1HxZhw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P6fjvA0JNJKSzlyZdH7JtyISbErGXHh7dRkmwzA1nL4FaL4TkNvWwwAu9x868UbWP
-         ayArhmgzpfGzb3l9ik1wtH9I4VcXsW6nM3RLR7heGS072MDa2vE3HJVhH1xzpHflSC
-         jlJ0vYgl9+nUZio+pz5DpuUy6ged+F3zDgjTPjN8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 196/422] ALSA: intel8x0m: Register irq handler after register initializations
-Date:   Tue, 19 Nov 2019 06:16:33 +0100
-Message-Id: <20191119051411.271206773@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
-References: <20191119051400.261610025@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1728238AbfKSFb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:31:58 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 21:31:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,322,1569308400"; 
+   d="scan'208";a="204411168"
+Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
+  by fmsmga007.fm.intel.com with ESMTP; 18 Nov 2019 21:31:56 -0800
+Message-ID: <5DD37FE4.4000407@intel.com>
+Date:   Tue, 19 Nov 2019 13:38:44 +0800
+From:   Wei Wang <wei.w.wang@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Khazhismel Kumykov <khazhy@google.com>
+CC:     jasowang@redhat.com, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH 1/2] virtio_balloon: fix pages_to_free calculation
+References: <CACGdZYJoHSN3vkj_QBz6Txmec9mJMmkH66j2XtqzpUWpfpw4Tg@mail.gmail.com> <20191118213811.22017-1-khazhy@google.com> <20191118175648-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20191118175648-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+On 11/19/2019 07:08 AM, Michael S. Tsirkin wrote:
+> So I really think we should do something like the below instead.
+> Limit playing with balloon pages so we can gradually limit it to legacy.
+> Testing, review would be appreciated.
+>
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+>
+>
+> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> index 226fbb995fb0..7cee05cdf3fb 100644
+> --- a/drivers/virtio/virtio_balloon.c
+> +++ b/drivers/virtio/virtio_balloon.c
+> @@ -772,6 +772,13 @@ static unsigned long shrink_free_pages(struct virtio_balloon *vb,
+>   	return blocks_freed << VIRTIO_BALLOON_FREE_PAGE_ORDER;
+>   }
+>   
+> +static unsigned long leak_balloon_pages(struct virtio_balloon *vb,
+> +                                          unsigned long pages_to_free)
+> +{
+> +	return leak_balloon(vb, pages_to_free * VIRTIO_BALLOON_PAGES_PER_PAGE) /
+> +		VIRTIO_BALLOON_PAGES_PER_PAGE;
+> +}
+> +
 
-[ Upstream commit 7064f376d4a10686f51c879401a569bb4babf9c6 ]
+Looks good to me, too. (just a reminder that the returning type of 
+leak_balloon is "unsigned int",
+we may want them to be consistent).
 
-The interrupt handler has to be acquired after the other resource
-initialization when allocated with IRQF_SHARED.  Otherwise it's
-triggered before the resource gets ready, and may lead to unpleasant
-behavior.
+Reviewed-by: Wei Wang <wei.w.wang@intel.com>
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/pci/intel8x0m.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/sound/pci/intel8x0m.c b/sound/pci/intel8x0m.c
-index 943a726b1c1b0..c84629190cbaf 100644
---- a/sound/pci/intel8x0m.c
-+++ b/sound/pci/intel8x0m.c
-@@ -1171,16 +1171,6 @@ static int snd_intel8x0m_create(struct snd_card *card,
- 	}
- 
-  port_inited:
--	if (request_irq(pci->irq, snd_intel8x0m_interrupt, IRQF_SHARED,
--			KBUILD_MODNAME, chip)) {
--		dev_err(card->dev, "unable to grab IRQ %d\n", pci->irq);
--		snd_intel8x0m_free(chip);
--		return -EBUSY;
--	}
--	chip->irq = pci->irq;
--	pci_set_master(pci);
--	synchronize_irq(chip->irq);
--
- 	/* initialize offsets */
- 	chip->bdbars_count = 2;
- 	tbl = intel_regs;
-@@ -1224,11 +1214,21 @@ static int snd_intel8x0m_create(struct snd_card *card,
- 	chip->int_sta_reg = ICH_REG_GLOB_STA;
- 	chip->int_sta_mask = int_sta_masks;
- 
-+	pci_set_master(pci);
-+
- 	if ((err = snd_intel8x0m_chip_init(chip, 1)) < 0) {
- 		snd_intel8x0m_free(chip);
- 		return err;
- 	}
- 
-+	if (request_irq(pci->irq, snd_intel8x0m_interrupt, IRQF_SHARED,
-+			KBUILD_MODNAME, chip)) {
-+		dev_err(card->dev, "unable to grab IRQ %d\n", pci->irq);
-+		snd_intel8x0m_free(chip);
-+		return -EBUSY;
-+	}
-+	chip->irq = pci->irq;
-+
- 	if ((err = snd_device_new(card, SNDRV_DEV_LOWLEVEL, chip, &ops)) < 0) {
- 		snd_intel8x0m_free(chip);
- 		return err;
--- 
-2.20.1
-
-
+Best,
+Wei
 
