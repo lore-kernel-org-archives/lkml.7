@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D0BC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3392AC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ECFD208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F287B21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:28:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141332;
-	bh=UNQs/91dK9j+/CpReb4++waTjXoKNuAIztVw5SJpU20=;
+	s=default; t=1574141340;
+	bh=OAtHG/F8nBW8c4mMLCGf7zBGV5ZEDDZIMPsERjw+RGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TQfa9FB3radhkGSAxPLZpRHFsAwq0EPnMcVePaHLuAC3SFgrkl7gapRVmQ94cqwFG
-	 +ZAjIjVLGZHK55lllmrAJCxnrE/BMjRQ8GzTuiu/m3zDeP6s4eaL95/H479adijBNW
-	 7GTHmhPWE9x6agkP+D3HIP836dX9JpsBTsS2Pjfs=
+	b=dkWaZ2RWob8M0zgZ4aiYeEr4UlJudgYv7EgnECnANRG+cvadgCcpgMjHOk3AKHOOf
+	 bNrny+/V/3QTjMuUuPL7v4FO/V4fQ2qoWkXTz5k0HwftK20XL6uecnFrcQIUjCvjq5
+	 a4FMSKpJcbLTkZn/kf/U56YiP5IPc++oz5RrWN4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbfKSF2v (ORCPT
+        id S1728929AbfKSF26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:28:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47288 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:28:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728905AbfKSF2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:28:48 -0500
+        id S1728914AbfKSF2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:28:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 502AC208C3;
-        Tue, 19 Nov 2019 05:28:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59A92208C3;
+        Tue, 19 Nov 2019 05:28:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141327;
-        bh=UNQs/91dK9j+/CpReb4++waTjXoKNuAIztVw5SJpU20=;
+        s=default; t=1574141333;
+        bh=OAtHG/F8nBW8c4mMLCGf7zBGV5ZEDDZIMPsERjw+RGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V++aly+UEkxjPbkuVBz3AEBA61J91WfTSVSwwg95ayXMv+dm4qSZnrNYaOl/5U4LW
-         3mkII8/TD4EvSZuz4Zj8kc+AedwpALEI29F/+NIiIiv/0L1INBvdvwtZFageCdudxS
-         2THXXYq2FUS5lyiT3goqPEK60esH7J+9TBMIh2oc=
+        b=X1bgE57btG7SUFtk1miq8OMnW3540Z7zF6KAQj6JlOfsYdEEP9gjQZtUzsAKeep87
+         t+kuESzcmL0ixwp84RVxFf6EnUMjtaZ45OSeOBd/y1+0JM09eRBewwUsCIXfThRKMG
+         a1Wt+8x7EaLjzG5/7f0TJLRaUK8vJDMigB2CurOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, "K.T.VIJAYAKUMAAR" <vijay.bvb@samsung.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 123/422] ASoC: sgtl5000: avoid division by zero if lo_vag is zero
-Date:   Tue, 19 Nov 2019 06:15:20 +0100
-Message-Id: <20191119051406.971910930@linuxfoundation.org>
+Subject: [PATCH 4.19 124/422] ath10k: avoid possible memory access violation
+Date:   Tue, 19 Nov 2019 06:15:21 +0100
+Message-Id: <20191119051407.022963313@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,36 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: K.T.VIJAYAKUMAAR <vijay.bvb@samsung.com>
 
-[ Upstream commit 9ab708aef61f5620113269a9d1bdb1543d1207d0 ]
+[ Upstream commit 97c69a70dc2cecb2c3b96a66529e0082dabc2d2c ]
 
-In the case where lo_vag <= SGTL5000_LINE_OUT_GND_BASE, lo_vag
-is set to zero and later vol_quot is computed by dividing by
-lo_vag causing a division by zero error.  Fix this by avoiding
-a zero division and set vol_quot to zero in this specific case
-so that the lowest setting for i is correctly set.
+array "ctl_power_table" access index "pream" is initialized with -1 and
+is raised as a static analysis tool issue.
+[drivers\net\wireless\ath\ath10k\wmi.c:4719] ->
+[drivers\net\wireless\ath\ath10k\wmi.c:4730]: (error) Array index -1 is
+out of bounds.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Since the "pream" index for accessing ctl_power_table array is initialized
+with -1, there is a chance of memory access violation for the cases below.
+1) wmi_pdev_tpc_final_table_event change frequency is between 2483 and 5180
+2) pream_idx is out of the enumeration ranges of wmi_tpc_pream_2ghz,
+wmi_tpc_pream_5ghz
+
+Signed-off-by: K.T.VIJAYAKUMAAR <vijay.bvb@samsung.com>
+[kvalo@codeaurora.org: clean up the warning message]
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/sgtl5000.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/wmi.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
-index 64a52d495b1f5..896412d11a31c 100644
---- a/sound/soc/codecs/sgtl5000.c
-+++ b/sound/soc/codecs/sgtl5000.c
-@@ -1387,7 +1387,7 @@ static int sgtl5000_set_power_regs(struct snd_soc_component *component)
- 	 * Searching for a suitable index solving this formula:
- 	 * idx = 40 * log10(vag_val / lo_cagcntrl) + 15
- 	 */
--	vol_quot = (vag * 100) / lo_vag;
-+	vol_quot = lo_vag ? (vag * 100) / lo_vag : 0;
- 	lo_vol = 0;
- 	for (i = 0; i < ARRAY_SIZE(vol_quot_table); i++) {
- 		if (vol_quot >= vol_quot_table[i])
+diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
+index 9f31b9a108507..583147f00fa4e 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi.c
++++ b/drivers/net/wireless/ath/ath10k/wmi.c
+@@ -4785,6 +4785,13 @@ ath10k_wmi_tpc_final_get_rate(struct ath10k *ar,
+ 		}
+ 	}
+ 
++	if (pream == -1) {
++		ath10k_warn(ar, "unknown wmi tpc final index and frequency: %u, %u\n",
++			    pream_idx, __le32_to_cpu(ev->chan_freq));
++		tpc = 0;
++		goto out;
++	}
++
+ 	if (pream == 4)
+ 		tpc = min_t(u8, ev->rates_array[rate_idx],
+ 			    ev->max_reg_allow_pow[ch]);
 -- 
 2.20.1
 
