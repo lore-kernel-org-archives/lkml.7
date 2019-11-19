@@ -2,119 +2,139 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A614FC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDC4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75890222D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D90EA222D1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:46:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="D50jOauu"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BhooZjoG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbfKSOpm (ORCPT
+        id S1728237AbfKSOqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:45:42 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:40734 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727124AbfKSOpm (ORCPT
+        Tue, 19 Nov 2019 09:46:00 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:8891 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727255AbfKSOp7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 09:45:42 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJEdWqK177168;
-        Tue, 19 Nov 2019 14:44:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=KyULXMqBuw+BBUz3KfOuulONWiy+9k5YMKxdr3Y2jng=;
- b=D50jOauubj4oZP7fPhc5xjTiqd5rjhiK8fcjZFX7JtrtHR997ILtuMgkrvmdyMfxeAnl
- bl2kbnnyDRVPZJo39wPWkqTsuL5qQsnfqabquloo2EG6s+Zkumdhu3cQwVRqs6rbG7RR
- 74sgKNiZMjO657E+ltSzO8+mB8M+5d3wXGwyIXT6rZ1tbfkc37leZXG4qmfNNhk6J7bw
- YmN1UHwrLYWdSZmmscNkVbXLa2Mej/5PCQ7A16yuK0JKjfRFVZagXXLIEbree+WszRNE
- VdsFa1DXwFxgceJT4G4ymR5yKbfjMCdC/NXT+fwLGdk7cGn0ek3DWNtAc8uLBuBABrHF lg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2wa9rqf8aw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 14:44:34 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJEdWGT055757;
-        Tue, 19 Nov 2019 14:44:34 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2wc09xga8g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 14:44:34 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAJEiWFh031935;
-        Tue, 19 Nov 2019 14:44:32 GMT
-Received: from [192.168.1.67] (/94.61.1.144)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 19 Nov 2019 06:44:31 -0800
-Subject: Re: [PATCH v2 2/3] KVM: VMX: Do not change PID.NDST when loading a
- blocked vCPU
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     kvm <kvm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Liran Alon <liran.alon@oracle.com>,
-        Jag Raman <jag.raman@oracle.com>
-References: <20191111172012.28356-1-joao.m.martins@oracle.com>
- <20191111172012.28356-3-joao.m.martins@oracle.com>
- <CANRm+CyrbiJ068zLRH8ZMttqjnEG38qb1W1SMND+H-D=8N8tVw@mail.gmail.com>
-From:   Joao Martins <joao.m.martins@oracle.com>
-Message-ID: <6b6acdee-f080-241f-8a6e-89708f746944@oracle.com>
-Date:   Tue, 19 Nov 2019 14:44:27 +0000
+        Tue, 19 Nov 2019 09:45:59 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd400290000>; Tue, 19 Nov 2019 06:46:01 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 19 Nov 2019 06:45:59 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 19 Nov 2019 06:45:59 -0800
+Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 Nov
+ 2019 14:45:56 +0000
+Subject: Re: [PATCH 4.14 000/239] 4.14.155-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <torvalds@linux-foundation.org>,
+        <akpm@linux-foundation.org>, <linux@roeck-us.net>,
+        <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>
+References: <20191119051255.850204959@linuxfoundation.org>
+ <cc1129c8-797d-7a1d-e59b-16c826270fad@nvidia.com>
+ <20191119122535.GB1913916@kroah.com> <20191119123135.GB1948960@kroah.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <1bdb0348-7f51-1488-6246-c6cd2f74afcb@nvidia.com>
+Date:   Tue, 19 Nov 2019 14:45:54 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CANRm+CyrbiJ068zLRH8ZMttqjnEG38qb1W1SMND+H-D=8N8tVw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191119123135.GB1948960@kroah.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911190134
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911190134
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574174762; bh=tOsdNg2Z7Z+OkFmLIUtPFRoEqHmS5nfsi0rZWHffKtw=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=BhooZjoGLX4GgoIGfbV/WvEURl9nWObLPashDS4laun6EeqCGpR6ayXztPhFOHP1c
+         LW2r9+7cZWDdEgzQyI6TW0FK1e6PoNW9DSqAhnVT+jQxDlN7P4UXNHeKLIJC8nOpLI
+         q9H6tlIF3KTljOzmkb/sG7ocjP0nC/qw/6RLn5SfMzfZjmySWmdk1rbuyUrWXAGhq1
+         CUng+zC9LlOwq5G1we215+Ql4uMBKo7Rf/jsEiEzdtB0hzzFM0K6K6I0KP7Lz/9bia
+         F0HRXaPNcPJO2FYGUrfWP6/tVooCZwBZjwREo5o4mm+MqXufrTCvmhvfszaLaJWhsZ
+         PWIApfsuvfOgQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/19/19 11:36 AM, Wanpeng Li wrote:
-> On Tue, 12 Nov 2019 at 01:23, Joao Martins <joao.m.martins@oracle.com> wrote:
+
+On 19/11/2019 12:31, Greg Kroah-Hartman wrote:
+> On Tue, Nov 19, 2019 at 01:25:35PM +0100, Greg Kroah-Hartman wrote:
+>> On Tue, Nov 19, 2019 at 09:12:48AM +0000, Jon Hunter wrote:
+>>>
+>>> On 19/11/2019 05:16, Greg Kroah-Hartman wrote:
+>>>> This is the start of the stable review cycle for the 4.14.155 release.
+>>>> There are 239 patches in this series, all will be posted as a response
+>>>> to this one.  If anyone has any issues with these being applied, please
+>>>> let me know.
+>>>>
+>>>> Responses should be made by Thu, 21 Nov 2019 05:02:35 +0000.
+>>>> Anything received after that time might be too late.
+>>>>
+>>>> The whole patch series can be found in one patch at:
+>>>> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.155-rc1.gz
+>>>> or in the git tree and branch at:
+>>>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+>>>> and the diffstat can be found below.
+>>>>
+>>>> thanks,
+>>>>
+>>>> greg k-h
+>>>>
+>>>> -------------
+>>>
+>>> ...
+>>>
+>>>> Heiko Stuebner <heiko@sntech.de>
+>>>>     arm64: dts: rockchip: enable display nodes on rk3328-rock64
+>>> The above commit is causing the following build error for ARM64 ...
+>>>
+>>> Error: arch/arm64/boot/dts/rockchip/rk3328-rock64.dts:149.1-6 Label or path hdmi not found
+>>> Error: arch/arm64/boot/dts/rockchip/rk3328-rock64.dts:153.1-9 Label or path hdmiphy not found
+>>> Error: arch/arm64/boot/dts/rockchip/rk3328-rock64.dts:345.1-5 Label or path vop not found
+>>> FATAL ERROR: Syntax error parsing input tree
+>>> scripts/Makefile.lib:317: recipe for target 'arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb' failed
+>>> make[2]: *** [arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb] Error 1
+>>> scripts/Makefile.build:585: recipe for target 'arch/arm64/boot/dts/rockchip' failed
+>>> make[1]: *** [arch/arm64/boot/dts/rockchip] Error 2
+>>> arch/arm64/Makefile:138: recipe for target 'dtbs' failed
+>>> make: *** [dtbs] Error 2
 >>
->> While vCPU is blocked (in kvm_vcpu_block()), it may be preempted which
->> will cause vmx_vcpu_pi_put() to set PID.SN.  If later the vCPU will be
+>> Will go drop this, thanks.
 > 
-> How can this happen? See the prepare_to_swait_exlusive() in
-> kvm_vcpu_block(), the task will be set in TASK_INTERRUPTIBLE state,
-> kvm_sched_out will set vcpu->preempted to true iff current->state ==
-> TASK_RUNNING.
+> -rc2 is out with this patch removed, thanks.
 
-You're right.
+Thanks. This looks better!
 
-But preemption (thus setting PID.SN) can still happen before vcpu_block(), or
-otherwise scheduled out if we are already in vcpu_block() (with task in
-TASK_INTERRUPTIBLE). The right term we should have written in that sentence
-above would have been 'scheduled out' and drop the vcpu_block mention and it
-would encompass both cases. A better sentence would perhaps be:
+All tests passing for Tegra ...
 
-"While vCPU is blocked (or about to block) it may be scheduled out which will
-cause vmx_vcpu_pi_put() to be called."
+Test results for stable-v4.14:
+    8 builds:	8 pass, 0 fail
+    16 boots:	16 pass, 0 fail
+    24 tests:	24 pass, 0 fail
 
-But setting or not preempted/PID.SN doesn't change the rest and was mentioned
-for completeness.
+Linux version:	4.14.155-rc2-g086940936515
+Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
 
-	Joao
+Cheers
+Jon
+
+-- 
+nvpublic
