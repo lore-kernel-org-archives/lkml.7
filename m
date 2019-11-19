@@ -2,108 +2,200 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33EDFC43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9E3C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D677223D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:57:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VMPaO7Pm"
+	by mail.kernel.org (Postfix) with ESMTP id ACC75223D1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:57:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbfKSQ5h (ORCPT
+        id S1728839AbfKSQ5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:57:37 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42384 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728789AbfKSQ51 (ORCPT
+        Tue, 19 Nov 2019 11:57:44 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:52943 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728786AbfKSQ50 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 11:57:27 -0500
-Received: by mail-lf1-f65.google.com with SMTP id z12so17641545lfj.9;
-        Tue, 19 Nov 2019 08:57:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=53ruBaQSDnrBitdIBpjgYyR4OHZkTHQbljASTrm8H0Y=;
-        b=VMPaO7PmUawdArVnpsmpKxbhWrC0NTg3FABfGEHFT3LHle5b5rmM5crPIrtMeRre2K
-         g/bNDLnomL5iL5XfGZyxjnMPge3wlA49Dl+Wb7pBh5Yx6anjdujkIRi+4OYfI2RVSEBk
-         6w8vwwpOknSkyqZFMAdXBTSrf7lrJYhiQzu3+mxki+8cchWbt5pG6h4SWWA16Q7SKZcx
-         DRtUJz9hL7g3BgocQRAtnfG1CBB5Bxx/XBYrDvCfbHwO3YzoR9182tkUoCWYVAsWEKyh
-         Z/LHGGC8BC8NHcII+3FslAKkOFd+O0iA10sgJX3iLybWJXKohzW/fta2BFkz98oyPcUF
-         5VBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=53ruBaQSDnrBitdIBpjgYyR4OHZkTHQbljASTrm8H0Y=;
-        b=s+Q+/6MqhDDoRwPfCR2uv1p/ZvZ5gj9c6m+j229Z31tX0/OtxkIKlCgyBQSdqsA4Ne
-         nIKZh4euaQVqnoO6HrvK83cKypMklUzG9MYxP1xPi4jwTLUnyWQhQj7PVPLqr/2/KxLN
-         V5QIod+kafhu3ZjNEv2Y/atmLntYZm4UJxxQeGy064qbO+ojnsFY3LBxboBarSor0PRV
-         K19o4KSwapF3leGLNhml9yrC6cm3H2w9w+G/Nh2SgwhM+/67DlcpcyLOhc9YtYd622Hc
-         oZvamByWTKwYX5xuE0b4isdiuDwXTAdA9Bo7xIIFl95uchBt1Y4rAh+Mtu0sck3P/H80
-         ycvw==
-X-Gm-Message-State: APjAAAW/3EVL7JgtVv74IhlvlES7U+xy+Ks2ed+sg06VbKsFTaYBYwdY
-        PfodonJiGCZrZ9HTV/tjdsXddIJu
-X-Google-Smtp-Source: APXvYqzZSiDsbH+MyTiWXSb4FyjNHsOgnrf11qIbaSuRVvsJY1pHPQguNgqovNvA+wS/faGG3COv+Q==
-X-Received: by 2002:a19:a410:: with SMTP id q16mr4958560lfc.184.1574182644074;
-        Tue, 19 Nov 2019 08:57:24 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id d5sm10202535ljc.51.2019.11.19.08.57.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Nov 2019 08:57:23 -0800 (PST)
-Subject: Re: [PATCH v1 02/29] dt-bindings: memory: tegra20: emc: Document new
- interconnect property
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-References: <20191118200247.3567-1-digetx@gmail.com>
- <20191118200247.3567-3-digetx@gmail.com> <20191119062156.GB2462695@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <bbe612b6-fc07-fb7f-0f13-bca2c0864d73@gmail.com>
-Date:   Tue, 19 Nov 2019 19:57:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 19 Nov 2019 11:57:26 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iX6o4-0007Jo-KI; Tue, 19 Nov 2019 17:56:48 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 428481C19CC;
+        Tue, 19 Nov 2019 17:56:48 +0100 (CET)
+Date:   Tue, 19 Nov 2019 16:56:48 -0000
+From:   "tip-bot2 for Masami Hiramatsu" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf probe: Support multiprobe event
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <157406475010.24476.586290752591512351.stgit@devnote2>
+References: <157406475010.24476.586290752591512351.stgit@devnote2>
 MIME-Version: 1.0
-In-Reply-To: <20191119062156.GB2462695@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Message-ID: <157418260823.12247.17338863416227915427.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.11.2019 09:21, Thierry Reding пишет:
-> On Mon, Nov 18, 2019 at 11:02:20PM +0300, Dmitry Osipenko wrote:
->> External memory controller is interconnected with memory controller and
->> with external memory. Document new interconnect property which designates
->> external memory controller as interconnect provider.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  .../bindings/memory-controllers/nvidia,tegra20-emc.txt        | 4 ++++
->>  1 file changed, 4 insertions(+)
-> 
-> Do we really want to describe this particular connection? It's pretty
-> static and the only real connection here is the EMC frequency, so the
-> whole interconnect infrastructure seems a bit overkill.
-> 
-> Sounds to me like we could piggyback on top of the existing
-> nvidia,memory-controller property of the EMC to make the connection.
+The following commit has been merged into the perf/core branch of tip:
 
-Ultimately each memory client talks to EMEM through MC and EMC, although
-it should be okay to ignore the EMEM from a driver's / software perspective.
+Commit-ID:     72363540c009db5014252a1a15e149d30f88bcc3
+Gitweb:        https://git.kernel.org/tip/72363540c009db5014252a1a15e149d30f88bcc3
+Author:        Masami Hiramatsu <mhiramat@kernel.org>
+AuthorDate:    Mon, 18 Nov 2019 17:12:30 +09:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Mon, 18 Nov 2019 19:03:38 -03:00
 
-[snip]
+perf probe: Support multiprobe event
+
+Support multiprobe event if the event is based on function and lines and
+kernel supports it. In this case, perf probe creates the first probe
+with an event, and tries to append following probes on that event, since
+those probes must be on the same source code line.
+
+Before this patch;
+
+  # perf probe -a vfs_read:18
+  Added new events:
+    probe:vfs_read_L18   (on vfs_read:18)
+    probe:vfs_read_L18_1 (on vfs_read:18)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:vfs_read_L18_1 -aR sleep 1
+
+  #
+
+After this patch (on multiprobe supported kernel)
+  # perf probe -a vfs_read:18
+  Added new events:
+    probe:vfs_read_L18   (on vfs_read:18)
+    probe:vfs_read_L18   (on vfs_read:18)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:vfs_read_L18 -aR sleep 1
+
+  #
+
+Committer testing:
+
+On a kernel that doesn't support multiprobe events, after this patch:
+
+  # uname -a
+  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+  # grep append /sys/kernel/debug/tracing/README
+  	    be modified by appending '.descending' or '.ascending' to a
+  	    can be modified by appending any of the following modifiers
+  #
+  # perf probe -a vfs_read:18
+  Added new events:
+    probe:vfs_read_L18   (on vfs_read:18)
+    probe:vfs_read_L18_1 (on vfs_read:18)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:vfs_read_L18_1 -aR sleep 1
+
+  # perf probe -l
+    probe:vfs_read_L18   (on vfs_read:18@fs/read_write.c)
+    probe:vfs_read_L18_1 (on vfs_read:18@fs/read_write.c)
+  #
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
+Link: http://lore.kernel.org/lkml/157406475010.24476.586290752591512351.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/probe-event.c |  9 +++++++--
+ tools/perf/util/probe-file.c  |  7 +++++++
+ tools/perf/util/probe-file.h  |  1 +
+ 3 files changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index 5c86d2c..8f963a1 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -2738,8 +2738,13 @@ static int probe_trace_event__set_name(struct probe_trace_event *tev,
+ 	if (tev->event == NULL || tev->group == NULL)
+ 		return -ENOMEM;
+ 
+-	/* Add added event name to namelist */
+-	strlist__add(namelist, event);
++	/*
++	 * Add new event name to namelist if multiprobe event is NOT
++	 * supported, since we have to use new event name for following
++	 * probes in that case.
++	 */
++	if (!multiprobe_event_is_supported())
++		strlist__add(namelist, event);
+ 	return 0;
+ }
+ 
+diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
+index b659466..a63f1a1 100644
+--- a/tools/perf/util/probe-file.c
++++ b/tools/perf/util/probe-file.c
+@@ -1007,6 +1007,7 @@ enum ftrace_readme {
+ 	FTRACE_README_KRETPROBE_OFFSET,
+ 	FTRACE_README_UPROBE_REF_CTR,
+ 	FTRACE_README_USER_ACCESS,
++	FTRACE_README_MULTIPROBE_EVENT,
+ 	FTRACE_README_END,
+ };
+ 
+@@ -1020,6 +1021,7 @@ static struct {
+ 	DEFINE_TYPE(FTRACE_README_KRETPROBE_OFFSET, "*place (kretprobe): *"),
+ 	DEFINE_TYPE(FTRACE_README_UPROBE_REF_CTR, "*ref_ctr_offset*"),
+ 	DEFINE_TYPE(FTRACE_README_USER_ACCESS, "*[u]<offset>*"),
++	DEFINE_TYPE(FTRACE_README_MULTIPROBE_EVENT, "*Create/append/*"),
+ };
+ 
+ static bool scan_ftrace_readme(enum ftrace_readme type)
+@@ -1085,3 +1087,8 @@ bool user_access_is_supported(void)
+ {
+ 	return scan_ftrace_readme(FTRACE_README_USER_ACCESS);
+ }
++
++bool multiprobe_event_is_supported(void)
++{
++	return scan_ftrace_readme(FTRACE_README_MULTIPROBE_EVENT);
++}
+diff --git a/tools/perf/util/probe-file.h b/tools/perf/util/probe-file.h
+index 986c1c9..850d1b5 100644
+--- a/tools/perf/util/probe-file.h
++++ b/tools/perf/util/probe-file.h
+@@ -71,6 +71,7 @@ bool probe_type_is_available(enum probe_type type);
+ bool kretprobe_offset_is_supported(void);
+ bool uprobe_ref_ctr_is_supported(void);
+ bool user_access_is_supported(void);
++bool multiprobe_event_is_supported(void);
+ #else	/* ! HAVE_LIBELF_SUPPORT */
+ static inline struct probe_cache *probe_cache__new(const char *tgt __maybe_unused, struct nsinfo *nsi __maybe_unused)
+ {
