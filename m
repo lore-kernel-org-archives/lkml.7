@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 708D6C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 444DEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45DA520885
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 123B42084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:54:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142846;
-	bh=YRs4s1sjG7eJRwKwYyVft9OLeY3xfnyFEOZciMSfYyk=;
+	s=default; t=1574142850;
+	bh=fg91nLDGVt3w607YoMYtnBvNOU3I7TSwxUy5GAjZX40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uoLU46A3UQ7aKG1RCwE4oxGGulkzomUV9Kq6xVrDLWHogm+vrnRqwnKg7m4eErP5B
-	 4QK3YUu9Ri3FQPax44YoD+cT8N33eSJURHRYAF1v6DG3AmUVc1dusP+fr7Xl46vXeY
-	 MBJg02nQf89anFukwcS3gmqnGXDpi8mUk+Sp05MM=
+	b=cCzZfVnzdgLkM2l78UUvgyIp3AItnUUKSHu8JIgQZiSd7joC4dfUBHlLbdcTxmOfQ
+	 tz8XOrW+h+oW//bqSgJfq5fzzBZX4nLxTfZU1NK1Kfyby5AFTL2LfRLAzyzHIGvns+
+	 fDp0c4xl778K/2ekRzzNxUGLsyp90DWw44dExbOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731800AbfKSFyF (ORCPT
+        id S1731804AbfKSFyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:54:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52100 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:54:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729410AbfKSFyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:54:01 -0500
+        id S1732095AbfKSFyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:54:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F77B21850;
-        Tue, 19 Nov 2019 05:54:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D53A920721;
+        Tue, 19 Nov 2019 05:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142841;
-        bh=YRs4s1sjG7eJRwKwYyVft9OLeY3xfnyFEOZciMSfYyk=;
+        s=default; t=1574142844;
+        bh=fg91nLDGVt3w607YoMYtnBvNOU3I7TSwxUy5GAjZX40=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tQ2VYrdXkm6OwoV+fbXQ/I7SQOsnmRrNGI+iOT6AwdCvcAkVqs9+hOCkqi8K8z2/R
-         zyouo8RsGYR6LYrtwy8J1ok6yunHI9kJ/jpia9JoC3fxZ1bKCWDFZ8S1+cPYs+go8Y
-         rMEc+aJEuGNV+NxTUBMJfw1ZbtNZlFZHmTRixooY=
+        b=0363rzaXbWMN4P+jOxXSazyZksRlFP7sp8SM9+r+9XJcXmbn1EiQJQhANDsNxKsqI
+         BESaDELK4y0BJq0yDd1AhSmJnmIe3lrTPYnhViHaIACqv8vwFwVjUenQVLd4YsRzaQ
+         FLgwmNtmTd1cLMTZFx+VdT56I9208W4NClTzC3+8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        stable@vger.kernel.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 168/239] x86/mce-inject: Reset injection struct after injection
-Date:   Tue, 19 Nov 2019 06:19:28 +0100
-Message-Id: <20191119051333.812788327@linuxfoundation.org>
+Subject: [PATCH 4.14 212/239] Bluetooth: hci_serdev: clear HCI_UART_PROTO_READY to avoid closing proto races
+Date:   Tue, 19 Nov 2019 06:20:12 +0100
+Message-Id: <20191119051338.451348099@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -59,45 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
 
-[ Upstream commit 7401a633c34adc7aefd3edfec60074cb0475a3e8 ]
+[ Upstream commit 7cf7846d27bfc9731e449857db3eec5e0e9701ba ]
 
-Clear the MCE struct which is used for collecting the injection details
-after injection.
+Clearing HCI_UART_PROTO_READY will avoid usage of proto function pointers
+before running the proto close function pointer. There is chance of kernel
+crash, due to usage of non proto close function pointers after proto close.
 
-Also, populate it with more details from the machine.
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20180905081954.10391-1-bp@alien8.de
+Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mcheck/mce-inject.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/bluetooth/hci_serdev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/cpu/mcheck/mce-inject.c b/arch/x86/kernel/cpu/mcheck/mce-inject.c
-index 8fec687b3e44e..f12141ba9a76d 100644
---- a/arch/x86/kernel/cpu/mcheck/mce-inject.c
-+++ b/arch/x86/kernel/cpu/mcheck/mce-inject.c
-@@ -108,6 +108,9 @@ static void setup_inj_struct(struct mce *m)
- 	memset(m, 0, sizeof(struct mce));
+diff --git a/drivers/bluetooth/hci_serdev.c b/drivers/bluetooth/hci_serdev.c
+index 52e6d4d1608e3..69c00a3db5382 100644
+--- a/drivers/bluetooth/hci_serdev.c
++++ b/drivers/bluetooth/hci_serdev.c
+@@ -360,6 +360,7 @@ void hci_uart_unregister_device(struct hci_uart *hu)
+ {
+ 	struct hci_dev *hdev = hu->hdev;
  
- 	m->cpuvendor = boot_cpu_data.x86_vendor;
-+	m->time	     = ktime_get_real_seconds();
-+	m->cpuid     = cpuid_eax(1);
-+	m->microcode = boot_cpu_data.microcode;
- }
- 
- /* Update fake mce registers on current CPU. */
-@@ -576,6 +579,9 @@ static int inj_bank_set(void *data, u64 val)
- 	m->bank = val;
- 	do_inject();
- 
-+	/* Reset injection struct */
-+	setup_inj_struct(&i_mce);
-+
- 	return 0;
- }
++	clear_bit(HCI_UART_PROTO_READY, &hu->flags);
+ 	hci_unregister_dev(hdev);
+ 	hci_free_dev(hdev);
  
 -- 
 2.20.1
