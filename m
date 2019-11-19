@@ -2,139 +2,664 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0500C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF5AC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66BD5222D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B5662067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:03:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QUrwn98x"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FArqO+7W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbfKSOD2 (ORCPT
+        id S1727829AbfKSOD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:03:28 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37282 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbfKSOD1 (ORCPT
+        Tue, 19 Nov 2019 09:03:56 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46806 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727591AbfKSODz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 09:03:27 -0500
-Received: by mail-pg1-f195.google.com with SMTP id b10so2890900pgd.4;
-        Tue, 19 Nov 2019 06:03:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=t74/VpiGvMA7PufCpXnH39ozgmgIiKrUGwtvDvobjHU=;
-        b=QUrwn98xfw5nViraHFy/yKWIZZtfW6OjKCpo5CJ7HoSJib8V1EM7cmmMjUDMwXrR2+
-         2itsRlibNFA8g84Nq+UrwrHSOE9c37kxyO/bSWQ/btVOAgjTS//sBEx2jiPrSlkmAsuG
-         bNhevpNBBYY/52kldMKLTPUwAk+yxR0QmyeYfsK0p2NRLiKkFpSUO1AJsT7/EvskYjSq
-         nbxIs5nYWoU9QQEX4G/ct1Ob4z5V/mqJmG4UhlpFpGLSP40b0oefvTxTv1BbMnpzYtz3
-         rc0hbLBcq82KZHZGwnYwOvYnWXHA1+0uRJHDIgG2dhekEJnS0Hx2AZ4n+Rf0tfPJtotG
-         ipcQ==
+        Tue, 19 Nov 2019 09:03:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574172234;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gtnF2I4P9OtqsTzvchU/T19l1l/5zs1rbv+02nY6Y74=;
+        b=FArqO+7WOqWl9ymRLDXpou8PldVsP5goDCNxBZChTRGHH9UtDTcvSWeJB01UwuPB7OKCJb
+        U60UlIzd9DWnaEJ+xqghxQSpmJiHeAoE2EbCCecytTa9QmUaWPluIEpsjgGkJDeQudMTqx
+        p9NrxulOs/gDZgBQdpXCaHeo6taOfwE=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-395-sSMf7rGsPI-UW0vqJqef5A-1; Tue, 19 Nov 2019 09:03:53 -0500
+Received: by mail-wr1-f72.google.com with SMTP id b4so18276615wrn.8
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 06:03:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t74/VpiGvMA7PufCpXnH39ozgmgIiKrUGwtvDvobjHU=;
-        b=M8A47TyApxMhnFHnkKrKMe93x1YktOset0P3ODV896zTfz659EPHDsf0flbbvvnwkO
-         qemP4JuZhCZWA1BDFD50rWtropPrvrXujZBIBhVm+UhyWhNMjgAZhG6RhRDMOmkHNI27
-         yQ1wKX6A131mNgoTwol7EvzdphJjBjrBmZKnk4bwaRmXURudUez3GXMTLuAu1UheN4Q4
-         waboU4i0u7L3u6biArJKC0zYgCTsLDOt0S/ClaIv9YcYcurJfpgNDyuAmV/LHqDqL8qJ
-         XkCJG4M1QJTJjSQG0cLo0O/kc5KiK6/NPAho7F2fC5H7KAulBFDATwSgP8MMt4FMo512
-         MsKw==
-X-Gm-Message-State: APjAAAW3CEb5rdUowM9TQyCrncNQU1C8n5ggp2a6Ztznzclfkk5o0BDN
-        p99wqGC829AdYZ5siHBPSSk=
-X-Google-Smtp-Source: APXvYqxXkOy2yefLl/ia3QTBRCi/9E/3Cg3kvtnKQVls6SAtDJT+OPUnwC/ynN1QVOmO8dn+TKVQ/g==
-X-Received: by 2002:a63:7c03:: with SMTP id x3mr5953500pgc.382.1574172205640;
-        Tue, 19 Nov 2019 06:03:25 -0800 (PST)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id w27sm24538192pgc.20.2019.11.19.06.03.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 06:03:24 -0800 (PST)
-Date:   Tue, 19 Nov 2019 06:03:22 -0800
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Subject: Re: Design issue in DSA RX timestamping (Was "Re: [PATCH net-next
- 3/5] net: dsa: mv88e6xxx: Let taggers specify a can_timestamp function")
-Message-ID: <20191119140322.GA7556@localhost>
-References: <20190528235627.1315-1-olteanv@gmail.com>
- <20190528235627.1315-4-olteanv@gmail.com>
- <CA+h21hpvn-9MNUze3dc2UmVTpRHrv_Xrc_LdAzpzctCqzkE8OA@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1efGFCoQ04/i9yYZO1URcgU4/AsozMwISUCZiEggQ+o=;
+        b=HlXKNBqAJsawzlZGYBrwa6r5l7hEzfbI8jCVeiZ/JFInT/Cn9p1NBp3AIIkchESDEI
+         tTlY9HOi7EP/A1nf9DdOAmm0zrP6OwXMiu1OCrapyzDPoB+k5LKqGJtZoJL00sc9gPLi
+         o8jijvqtU5teQ+4TpxvOmG8jrTGWK0ZY8T+ftLMwNdfzGnO+OZiA/uUBr6UwGTNsWy7z
+         a4+DiEGRKrZy1goQYjnG9kk/C1CWQyMKRR6uSRtQvVyJN2sx4k9iuQLQSfCUPcnidoxO
+         yqWIyh+L4jKd1xy83LgYWmuZJg8AI/3x9x4YgmR/DEG+jGHtjksTCBqT18Xr7rgiA0S0
+         39Yw==
+X-Gm-Message-State: APjAAAVRx4zVe+VVB476k3K8L2vtJR+DtVwVIYcYSWoDs8b+SX3rcefV
+        lLzaZIgtlyxuQIo+WKgCDKoEVxu/pfhB1L0yIEM55VuwSaYk8v0IU6IrzDZKdkwVh4MHqC2CFeC
+        NBcfHAnYvll3AOKHsBrMBe3PL
+X-Received: by 2002:a7b:c207:: with SMTP id x7mr5782676wmi.40.1574172231093;
+        Tue, 19 Nov 2019 06:03:51 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx549hyaH0Ymq7Ymdj21FpecojASQirdnlnm18+8KQa3+eAI4CrAAFy80xG5VFHlxmP+/dw4g==
+X-Received: by 2002:a7b:c207:: with SMTP id x7mr5782601wmi.40.1574172230507;
+        Tue, 19 Nov 2019 06:03:50 -0800 (PST)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id w132sm3501187wma.6.2019.11.19.06.03.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Nov 2019 06:03:49 -0800 (PST)
+Subject: Re: [PATCH v8 4/8] firmware: Add new platform fallback mechanism and
+ firmware_request_platform()
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+References: <20191115153529.215244-1-hdegoede@redhat.com>
+ <20191115153529.215244-5-hdegoede@redhat.com>
+ <20191118213542.GI11244@42.do-not-panic.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <c559a739-6be3-ae3e-e641-4ae82ffe71f6@redhat.com>
+Date:   Tue, 19 Nov 2019 15:03:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+h21hpvn-9MNUze3dc2UmVTpRHrv_Xrc_LdAzpzctCqzkE8OA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191118213542.GI11244@42.do-not-panic.com>
+Content-Language: en-US
+X-MC-Unique: sSMf7rGsPI-UW0vqJqef5A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 01:35:14PM +0200, Vladimir Oltean wrote:
-> - DSA doesn't let drivers to select which frames should be
-> timestamped. It knows better.
+Hi,
 
-It time stamps the event frames.
- 
-> - To be precise, it runs the PTP BPF classifier and filters only the
-> SYNC (but not FOLLOW-UP) messages. In principle I agree, the FOLLOW-UP
-> frames are general messages and don't need to be timestamped for the
-> PTP protocol to work. But by that logic, the HWTSTAMP_FILTER_ALL
-> rx_filter shouldn't exist?
+On 18-11-2019 22:35, Luis Chamberlain wrote:
+> On Fri, Nov 15, 2019 at 04:35:25PM +0100, Hans de Goede wrote:
+>> In some cases the platform's main firmware (e.g. the UEFI fw) may contai=
+n
+>> an embedded copy of device firmware which needs to be (re)loaded into th=
+e
+>> peripheral. Normally such firmware would be part of linux-firmware, but =
+in
+>> some cases this is not feasible, for 2 reasons:
+>>
+>> 1) The firmware is customized for a specific use-case of the chipset / u=
+se
+>> with a specific hardware model, so we cannot have a single firmware file
+>> for the chipset. E.g. touchscreen controller firmwares are compiled
+>> specifically for the hardware model they are used with, as they are
+>> calibrated for a specific model digitizer.
+>>
+>> 2) Despite repeated attempts we have failed to get permission to
+>> redistribute the firmware. This is especially a problem with customized
+>> firmwares, these get created by the chip vendor for a specific ODM and t=
+he
+>> copyright may partially belong with the ODM, so the chip vendor cannot
+>> give a blanket permission to distribute these.
+>>
+>> This commit adds a new platform fallback mechanism to the firmware loade=
+r
+>> which will try to lookup a device fw copy embedded in the platform's mai=
+n
+>> firmware if direct filesystem lookup fails.
+>>
+>> Drivers which need such embedded fw copies can enable this fallback
+>> mechanism by using the new firmware_request_platform() function.
+>>
+>> Note that for now this is only supported on EFI platforms and even on
+>> these platforms firmware_fallback_platform() only works if
+>> CONFIG_EFI_EMBEDDED_FIRMWARE is enabled (this gets selected by drivers
+>> which need this), in all other cases firmware_fallback_platform() simply
+>> always returns -ENOENT.
+>>
+>> Reported-by: Dave Olsthoorn <dave@bewaar.me>
+>> Suggested-by: Peter Jones <pjones@redhat.com>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>=20
+> This looks good to me now thanks!
+>=20
+> Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+>=20
+> Just one more thing: testing. Since this requires EFI memeory, I guess
+> we can't mimic a fake firmware somehow to use to test the API on any x86
+> system? If not we'd have no test coverage through the selftests for this
+> new call at all, and so could not easily detect regressions. We could
+> perhaps *fake* an entry if a DEBUG kconfig option is enabled, which
+> would stuff the EFI fw entry *once*. What do you think?
 
-FILTER_ALL means all event frames on all transports.  It has nothing
-to do with event messages.
+We could give the found_fw_list list_head from drivers/firmware/efi/embedde=
+d-firmware.c
+a name which is better suited for exporting it and then actually export it.
+That combined with moving the struct embedded_fw type declaration into
+linux/efi_embedded_fw.h, with a note saying that it is private and should o=
+nly
+be used for the selftests.
 
-> - Because it treats SYNC and FOLLOW-UP frames differently on the RX
-> path, it gives them a chance to get reordered. It doesn't give the
-> driver a chance to avoid the reordering.
+Then a selftest can indeed simply add a fake fw entry to the list and then
+excercise the API and check that it gets the contents of its own fake
+entry back.
 
-The re-ordering will occur no matter what.  Think about the UDP/IPv4
-transport.  The event and general messages are on different ports!
-The user space PTP must deal with message re-ordering.
+Hmm, I see that the tests under tools/testing/selftests/firmware
+are doing everything through a special sysfs API, in case of testing
+the userspace fallbacks this makes sense, but in this case I
+was thinking more along the lines of writing the test itself in a
+module (or add it to the lib/test_firmware.c) module rather then doing
+this complex dance.
+
+I guess this test could just be another store method for a new sysfs
+attribute, which does not interact with any of the state/config, like the
+trigger_request test.
+
+I can try to write a follow up series which does this this weekend.
+
+Regards,
+
+Hans
 
 
-> - Without fully understanding what happens, I tried to propose better
-> logic for recovering reordered SYNC/FOLLOW-UP pairs at the application
-> level in linuxptp [1]. Needless to say, the consensus was to fix the
-> kernel. So here we are.
-> 
-> [1] https://sourceforge.net/p/linuxptp/mailman/linuxptp-devel/thread/20190928123414.9422-1-olteanv%40gmail.com/#msg36773629
 
-There was no consensus to fix the kernel.  The kernel is fine.  Your
-hardware is too slow to keep up with the very high message rate of the
-telecom profiles.  Here are a few quotes from that discussion:
+>=20
+> Look at: lib/test_firmware.c and tools/testing/selftests/firmware/
+>=20
+>    Luis
+>=20
+>> ---
+>> Changes in v8:
+>> - Only build fallback_platform.c if CONFIG_EFI_EMBEDDED_FIRMWARE is defi=
+ned,
+>>    otherwise make firmware_fallback_platform() a static inline stub
+>> - Add documentation to Documentation/driver-api/firmware/fallback-mechan=
+isms.rst
+>>    on how the boot_service_code? files exported by EFI debugfs can be us=
+ed to
+>>    check if there is an embedded firmware and to get the embedded firmwa=
+re
+>>    length and sha256sum
+>>
+>> Changes in v7:
+>> - Split drivers/firmware/efi and drivers/base/firmware_loader changes in=
+to
+>>    2 patches
+>> - Address kdoc comments from Randy Dunlap
+>> - Add new FW_OPT_FALLBACK_PLATFORM flag and firmware_request_platform()
+>>    _request_firmware() wrapper, as requested by Luis R. Rodriguez
+>> - Stop using "efi-embedded-firmware" device-property, now that drivers n=
+eed to
+>>    use the new firmware_request_platform() to enable fallback to a devic=
+e fw
+>>    copy embedded in the platform's main firmware, we no longer need a pr=
+operty
+>>    on the device to trigger this behavior
+>> - Use security_kernel_load_data instead of calling
+>>    security_kernel_read_file with a NULL file pointer argument
+>> - Move the docs to Documentation/driver-api/firmware/fallback-mechanisms=
+.rst
+>> - Document the new firmware_request_platform() function in
+>>    Documentation/driver-api/firmware/request_firmware.rst
+>>
+>> Changes in v6:
+>> - Rework code to remove casts from if (prefix =3D=3D mem) comparison
+>> - Use SHA256 hashes instead of crc32 sums
+>> - Add new READING_FIRMWARE_EFI_EMBEDDED read_file_id and use it
+>> - Call security_kernel_read_file(NULL, READING_FIRMWARE_EFI_EMBEDDED)
+>>    to check if this is allowed before looking at EFI embedded fw
+>> - Document why we are not using the UEFI PI Firmware Volume protocol
+>>
+>> Changes in v5:
+>> - Rename the EFI_BOOT_SERVICES flag to EFI_PRESERVE_BS_REGIONS
+>>
+>> Changes in v4:
+>> - Drop note in docs about EFI_FIRMWARE_VOLUME_PROTOCOL, it is not part o=
+f
+>>    UEFI proper, so the EFI maintainers don't want us referring people to=
+ it
+>> - Use new EFI_BOOT_SERVICES flag
+>> - Put the new fw_get_efi_embedded_fw() function in its own fallback_efi.=
+c
+>>    file which only gets built when EFI_EMBEDDED_FIRMWARE is selected
+>> - Define an empty stub for fw_get_efi_embedded_fw() in fallback.h hwen
+>>    EFI_EMBEDDED_FIRMWARE is not selected, to avoid the need for #ifdefs
+>>    in firmware_loader/main.c
+>> - Properly call security_kernel_post_read_file() on the firmware returne=
+d
+>>    by efi_get_embedded_fw() to make sure that we are allowed to use it
+>>
+>> Changes in v3:
+>> - Fix the docs using "efi-embedded-fw" as property name instead of
+>>    "efi-embedded-firmware"
+>>
+>> Changes in v2:
+>> - Rebased on driver-core/driver-core-next
+>> - Add documentation describing the EFI embedded firmware mechanism to:
+>>    Documentation/driver-api/firmware/request_firmware.rst
+>> - Add a new EFI_EMBEDDED_FIRMWARE Kconfig bool and only build the embedd=
+ed
+>>    fw support if this is set. This is an invisible option which should b=
+e
+>>    selected by drivers which need this
+>> - Remove the efi_embedded_fw_desc and dmi_system_id-s for known devices
+>>    from the efi-embedded-fw code, instead drivers using this are expecte=
+d to
+>>    export a dmi_system_id array, with each entries' driver_data pointing=
+ to a
+>>    efi_embedded_fw_desc struct and register this with the efi-embedded-f=
+w code
+>> - Use kmemdup to make a copy instead of efi_mem_reserve()-ing the firmwa=
+re,
+>>    this avoids us messing with the EFI memmap and avoids the need to mak=
+e
+>>    changes to efi_mem_desc_lookup()
+>> - Make the firmware-loader code only fallback to efi_get_embedded_fw() i=
+f the
+>>    passed in device has the "efi-embedded-firmware" device-property bool=
+ set
+>> - Skip usermodehelper fallback when "efi-embedded-firmware" device-prope=
+rty
+>>    is set
+>> ---
+>>   .../firmware/fallback-mechanisms.rst          | 103 ++++++++++++++++++
+>>   .../driver-api/firmware/lookup-order.rst      |   2 +
+>>   .../driver-api/firmware/request_firmware.rst  |   5 +
+>>   drivers/base/firmware_loader/Makefile         |   1 +
+>>   drivers/base/firmware_loader/fallback.h       |  10 ++
+>>   .../base/firmware_loader/fallback_platform.c  |  29 +++++
+>>   drivers/base/firmware_loader/firmware.h       |   4 +
+>>   drivers/base/firmware_loader/main.c           |  27 +++++
+>>   include/linux/firmware.h                      |   2 +
+>>   include/linux/fs.h                            |   1 +
+>>   10 files changed, 184 insertions(+)
+>>   create mode 100644 drivers/base/firmware_loader/fallback_platform.c
+>>
+>> diff --git a/Documentation/driver-api/firmware/fallback-mechanisms.rst b=
+/Documentation/driver-api/firmware/fallback-mechanisms.rst
+>> index 8b041d0ab426..036383dad6d6 100644
+>> --- a/Documentation/driver-api/firmware/fallback-mechanisms.rst
+>> +++ b/Documentation/driver-api/firmware/fallback-mechanisms.rst
+>> @@ -202,3 +202,106 @@ the following file:
+>>  =20
+>>   If you echo 0 into it means MAX_JIFFY_OFFSET will be used. The data ty=
+pe
+>>   for the timeout is an int.
+>> +
+>> +EFI embedded firmware fallback mechanism
+>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> +
+>> +On some devices the system's EFI code / ROM may contain an embedded cop=
+y
+>> +of firmware for some of the system's integrated peripheral devices and
+>> +the peripheral's Linux device-driver needs to access this firmware.
+>> +
+>> +Device drivers which need such firmware can use the
+>> +firmware_request_platform() function for this, note that this is a
+>> +separate fallback mechanism from the other fallback mechanisms and
+>> +this does not use the sysfs interface.
+>> +
+>> +A device driver which needs this can describe the firmware it needs
+>> +using an efi_embedded_fw_desc struct:
+>> +
+>> +.. kernel-doc:: include/linux/efi_embedded_fw.h
+>> +   :functions: efi_embedded_fw_desc
+>> +
+>> +The EFI embedded-fw code works by scanning all EFI_BOOT_SERVICES_CODE m=
+emory
+>> +segments for an eight byte sequence matching prefix; if the prefix is f=
+ound it
+>> +then does a sha256 over length bytes and if that matches makes a copy o=
+f length
+>> +bytes and adds that to its list with found firmwares.
+>> +
+>> +To avoid doing this somewhat expensive scan on all systems, dmi matchin=
+g is
+>> +used. Drivers are expected to export a dmi_system_id array, with each e=
+ntries'
+>> +driver_data pointing to an efi_embedded_fw_desc.
+>> +
+>> +To register this array with the efi-embedded-fw code, a driver needs to=
+:
+>> +
+>> +1. Always be builtin to the kernel or store the dmi_system_id array in =
+a
+>> +   separate object file which always gets builtin.
+>> +
+>> +2. Add an extern declaration for the dmi_system_id array to
+>> +   include/linux/efi_embedded_fw.h.
+>> +
+>> +3. Add the dmi_system_id array to the embedded_fw_table in
+>> +   drivers/firmware/efi/embedded-firmware.c wrapped in a #ifdef testing=
+ that
+>> +   the driver is being builtin.
+>> +
+>> +4. Add "select EFI_EMBEDDED_FIRMWARE if EFI_STUB" to its Kconfig entry.
+>> +
+>> +The firmware_request_platform() function will always first try to load =
+firmware
+>> +with the specified name directly from the disk, so the EFI embedded-fw =
+can
+>> +always be overridden by placing a file under /lib/firmware.
+>> +
+>> +Note that:
+>> +
+>> +1. The code scanning for EFI embedded-firmware runs near the end
+>> +   of start_kernel(), just before calling rest_init(). For normal drive=
+rs and
+>> +   subsystems using subsys_initcall() to register themselves this does =
+not
+>> +   matter. This means that code running earlier cannot use EFI
+>> +   embedded-firmware.
+>> +
+>> +2. At the moment the EFI embedded-fw code assumes that firmwares always=
+ start at
+>> +   an offset which is a multiple of 8 bytes, if this is not true for yo=
+ur case
+>> +   send in a patch to fix this.
+>> +
+>> +3. At the moment the EFI embedded-fw code only works on x86 because oth=
+er archs
+>> +   free EFI_BOOT_SERVICES_CODE before the EFI embedded-fw code gets a c=
+hance to
+>> +   scan it.
+>> +
+>> +4. The current brute-force scanning of EFI_BOOT_SERVICES_CODE is an ad-=
+hoc
+>> +   brute-force solution. There has been discussion to use the UEFI Plat=
+form
+>> +   Initialization (PI) spec's Firmware Volume protocol. This has been r=
+ejected
+>> +   because the FV Protocol relies on *internal* interfaces of the PI sp=
+ec, and:
+>> +   1. The PI spec does not define peripheral firmware at all
+>> +   2. The internal interfaces of the PI spec do not guarantee any backw=
+ard
+>> +   compatibility. Any implementation details in FV may be subject to ch=
+ange,
+>> +   and may vary system to system. Supporting the FV Protocol would be
+>> +   difficult as it is purposely ambiguous.
+>> +
+>> +Example how to check for and extract embedded firmware
+>> +------------------------------------------------------
+>> +
+>> +To check for, for example Silead touchscreen controller embedded firmwa=
+re,
+>> +do the following:
+>> +
+>> +1. Boot the system with efi=3Ddebug on the kernel commandline
+>> +
+>> +2. cp /sys/kernel/debug/efi/boot_services_code? to your home dir
+>> +
+>> +3. Open the boot_services_code? files in a hex-editor, search for the
+>> +   magic prefix for Silead firmware: F0 00 00 00 02 00 00 00, this give=
+s you
+>> +   the beginning address of the firmware inside the boot_services_code?=
+ file.
+>> +
+>> +4. The firmware has a specific pattern, it starts with a 8 byte page-ad=
+dress,
+>> +   typically F0 00 00 00 02 00 00 00 for the first page followed by 32-=
+bit
+>> +   word-address + 32-bit value pairs. With the word-address incrementin=
+g 4
+>> +   bytes (1 word) for each pair until a page is complete. A complete pa=
+ge is
+>> +   followed by a new page-address, followed by more word + value pairs.=
+ This
+>> +   leads to a very distinct pattern. Scroll down until this pattern sto=
+ps,
+>> +   this gives you the end of the firmware inside the boot_services_code=
+? file.
+>> +
+>> +5. "dd if=3Dboot_services_code? of=3Dfirmware bs=3D1 skip=3D<begin-addr=
+> count=3D<len>"
+>> +   will extract the firmware for you. Inspect the firmware file in a
+>> +   hexeditor to make sure you got the dd parameters correct.
+>> +
+>> +6. Copy it to /lib/firmware under the expected name to test it.
+>> +
+>> +7. If the extracted firmware works, you can use the found info to fill =
+an
+>> +   efi_embedded_fw_desc struct to describe it, run "sha256sum firmware"
+>> +   to get the sha256sum to put in the sha256 field.
+>> diff --git a/Documentation/driver-api/firmware/lookup-order.rst b/Docume=
+ntation/driver-api/firmware/lookup-order.rst
+>> index 88c81739683c..6064672a782e 100644
+>> --- a/Documentation/driver-api/firmware/lookup-order.rst
+>> +++ b/Documentation/driver-api/firmware/lookup-order.rst
+>> @@ -12,6 +12,8 @@ a driver issues a firmware API call.
+>>     return it immediately
+>>   * The ''Direct filesystem lookup'' is performed next, if found we
+>>     return it immediately
+>> +* The ''Platform firmware fallback'' is performed next, but only when
+>> +  firmware_request_platform() is used, if found we return it immediatel=
+y
+>>   * If no firmware has been found and the fallback mechanism was enabled
+>>     the sysfs interface is created. After this either a kobject uevent
+>>     is issued or the custom firmware loading is relied upon for firmware
+>> diff --git a/Documentation/driver-api/firmware/request_firmware.rst b/Do=
+cumentation/driver-api/firmware/request_firmware.rst
+>> index f62bdcbfed5b..cd076462d235 100644
+>> --- a/Documentation/driver-api/firmware/request_firmware.rst
+>> +++ b/Documentation/driver-api/firmware/request_firmware.rst
+>> @@ -25,6 +25,11 @@ firmware_request_nowarn
+>>   .. kernel-doc:: drivers/base/firmware_loader/main.c
+>>      :functions: firmware_request_nowarn
+>>  =20
+>> +firmware_request_platform
+>> +-------------------------
+>> +.. kernel-doc:: drivers/base/firmware_loader/main.c
+>> +   :functions: firmware_request_platform
+>> +
+>>   request_firmware_direct
+>>   -----------------------
+>>   .. kernel-doc:: drivers/base/firmware_loader/main.c
+>> diff --git a/drivers/base/firmware_loader/Makefile b/drivers/base/firmwa=
+re_loader/Makefile
+>> index 0b2dfa6259c9..e87843408fe6 100644
+>> --- a/drivers/base/firmware_loader/Makefile
+>> +++ b/drivers/base/firmware_loader/Makefile
+>> @@ -5,5 +5,6 @@ obj-$(CONFIG_FW_LOADER_USER_HELPER) +=3D fallback_table.=
+o
+>>   obj-$(CONFIG_FW_LOADER)=09+=3D firmware_class.o
+>>   firmware_class-objs :=3D main.o
+>>   firmware_class-$(CONFIG_FW_LOADER_USER_HELPER) +=3D fallback.o
+>> +firmware_class-$(CONFIG_EFI_EMBEDDED_FIRMWARE) +=3D fallback_platform.o
+>>  =20
+>>   obj-y +=3D builtin/
+>> diff --git a/drivers/base/firmware_loader/fallback.h b/drivers/base/firm=
+ware_loader/fallback.h
+>> index 21063503e4ea..06f4577733a8 100644
+>> --- a/drivers/base/firmware_loader/fallback.h
+>> +++ b/drivers/base/firmware_loader/fallback.h
+>> @@ -66,4 +66,14 @@ static inline void unregister_sysfs_loader(void)
+>>   }
+>>   #endif /* CONFIG_FW_LOADER_USER_HELPER */
+>>  =20
+>> +#ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
+>> +int firmware_fallback_platform(struct fw_priv *fw_priv, enum fw_opt opt=
+_flags);
+>> +#else
+>> +static inline int firmware_fallback_platform(struct fw_priv *fw_priv,
+>> +=09=09=09=09=09     enum fw_opt opt_flags)
+>> +{
+>> +=09return -ENOENT;
+>> +}
+>> +#endif
+>> +
+>>   #endif /* __FIRMWARE_FALLBACK_H */
+>> diff --git a/drivers/base/firmware_loader/fallback_platform.c b/drivers/=
+base/firmware_loader/fallback_platform.c
+>> new file mode 100644
+>> index 000000000000..37746efaf8e3
+>> --- /dev/null
+>> +++ b/drivers/base/firmware_loader/fallback_platform.c
+>> @@ -0,0 +1,29 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +
+>> +#include <linux/efi_embedded_fw.h>
+>> +#include <linux/property.h>
+>> +#include <linux/security.h>
+>> +#include <linux/vmalloc.h>
+>> +
+>> +#include "fallback.h"
+>> +#include "firmware.h"
+>> +
+>> +int firmware_fallback_platform(struct fw_priv *fw_priv, enum fw_opt opt=
+_flags)
+>> +{
+>> +=09int rc;
+>> +
+>> +=09if (!(opt_flags & FW_OPT_FALLBACK_PLATFORM))
+>> +=09=09return -ENOENT;
+>> +
+>> +=09rc =3D security_kernel_load_data(LOADING_FIRMWARE_EFI_EMBEDDED);
+>> +=09if (rc)
+>> +=09=09return rc;
+>> +
+>> +=09rc =3D efi_get_embedded_fw(fw_priv->fw_name, &fw_priv->data,
+>> +=09=09=09=09 &fw_priv->size);
+>> +=09if (rc)
+>> +=09=09return rc; /* rc =3D=3D -ENOENT when the fw was not found */
+>> +
+>> +=09fw_state_done(fw_priv);
+>> +=09return 0;
+>> +}
+>> diff --git a/drivers/base/firmware_loader/firmware.h b/drivers/base/firm=
+ware_loader/firmware.h
+>> index 8656e5239a80..25836a6afc9f 100644
+>> --- a/drivers/base/firmware_loader/firmware.h
+>> +++ b/drivers/base/firmware_loader/firmware.h
+>> @@ -29,6 +29,9 @@
+>>    *=09firmware caching mechanism.
+>>    * @FW_OPT_NOFALLBACK_SYSFS: Disable the sysfs fallback mechanism. Tak=
+es
+>>    *=09precedence over &FW_OPT_UEVENT and &FW_OPT_USERHELPER.
+>> + * @FW_OPT_FALLBACK_PLATFORM: Enable fallback to device fw copy embedde=
+d in
+>> + *=09the platform's main firmware. If both this fallback and the sysfs
+>> + *      fallback are enabled, then this fallback will be tried first.
+>>    */
+>>   enum fw_opt {
+>>   =09FW_OPT_UEVENT=09=09=09=3D BIT(0),
+>> @@ -37,6 +40,7 @@ enum fw_opt {
+>>   =09FW_OPT_NO_WARN=09=09=09=3D BIT(3),
+>>   =09FW_OPT_NOCACHE=09=09=09=3D BIT(4),
+>>   =09FW_OPT_NOFALLBACK_SYSFS=09=09=3D BIT(5),
+>> +=09FW_OPT_FALLBACK_PLATFORM=09=3D BIT(6),
+>>   };
+>>  =20
+>>   enum fw_status {
+>> diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware=
+_loader/main.c
+>> index 08f8995a530a..006ff71458b1 100644
+>> --- a/drivers/base/firmware_loader/main.c
+>> +++ b/drivers/base/firmware_loader/main.c
+>> @@ -775,6 +775,9 @@ _request_firmware(const struct firmware **firmware_p=
+, const char *name,
+>>   =09=09=09=09=09=09 fw_decompress_xz);
+>>   #endif
+>>  =20
+>> +=09if (ret =3D=3D -ENOENT)
+>> +=09=09ret =3D firmware_fallback_platform(fw->priv, opt_flags);
+>> +
+>>   =09if (ret) {
+>>   =09=09if (!(opt_flags & FW_OPT_NO_WARN))
+>>   =09=09=09dev_warn(device,
+>> @@ -882,6 +885,30 @@ int request_firmware_direct(const struct firmware *=
+*firmware_p,
+>>   }
+>>   EXPORT_SYMBOL_GPL(request_firmware_direct);
+>>  =20
+>> +/**
+>> + * firmware_request_platform() - request firmware with platform-fw fall=
+back
+>> + * @firmware: pointer to firmware image
+>> + * @name: name of firmware file
+>> + * @device: device for which firmware is being loaded
+>> + *
+>> + * This function is similar in behaviour to request_firmware, except th=
+at if
+>> + * direct filesystem lookup fails, it will fallback to looking for a co=
+py of the
+>> + * requested firmware embedded in the platform's main (e.g. UEFI) firmw=
+are.
+>> + **/
+>> +int firmware_request_platform(const struct firmware **firmware,
+>> +=09=09=09      const char *name, struct device *device)
+>> +{
+>> +=09int ret;
+>> +
+>> +=09/* Need to pin this module until return */
+>> +=09__module_get(THIS_MODULE);
+>> +=09ret =3D _request_firmware(firmware, name, device, NULL, 0,
+>> +=09=09=09=09FW_OPT_UEVENT | FW_OPT_FALLBACK_PLATFORM);
+>> +=09module_put(THIS_MODULE);
+>> +=09return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(firmware_request_platform);
+>> +
+>>   /**
+>>    * firmware_request_cache() - cache firmware for suspend so resume can=
+ use it
+>>    * @name: name of firmware file
+>> diff --git a/include/linux/firmware.h b/include/linux/firmware.h
+>> index 2dd566c91d44..75dbec0bcc06 100644
+>> --- a/include/linux/firmware.h
+>> +++ b/include/linux/firmware.h
+>> @@ -44,6 +44,8 @@ int request_firmware(const struct firmware **fw, const=
+ char *name,
+>>   =09=09     struct device *device);
+>>   int firmware_request_nowarn(const struct firmware **fw, const char *na=
+me,
+>>   =09=09=09    struct device *device);
+>> +int firmware_request_platform(const struct firmware **fw, const char *n=
+ame,
+>> +=09=09=09      struct device *device);
+>>   int request_firmware_nowait(
+>>   =09struct module *module, bool uevent,
+>>   =09const char *name, struct device *device, gfp_t gfp, void *context,
+>> diff --git a/include/linux/fs.h b/include/linux/fs.h
+>> index e0d909d35763..3cbc955f6a1a 100644
+>> --- a/include/linux/fs.h
+>> +++ b/include/linux/fs.h
+>> @@ -2961,6 +2961,7 @@ extern int do_pipe_flags(int *, int);
+>>   =09id(UNKNOWN, unknown)=09=09\
+>>   =09id(FIRMWARE, firmware)=09=09\
+>>   =09id(FIRMWARE_PREALLOC_BUFFER, firmware)=09\
+>> +=09id(FIRMWARE_EFI_EMBEDDED, firmware)=09\
+>>   =09id(MODULE, kernel-module)=09=09\
+>>   =09id(KEXEC_IMAGE, kexec-image)=09=09\
+>>   =09id(KEXEC_INITRAMFS, kexec-initramfs)=09\
+>> --=20
+>> 2.23.0
+>>
+>=20
 
-   ---
-   Are you saying in a local network it's expected that a PTP slave
-   receives the follow-up message one or more sync intervals after the
-   corresponding sync message, e.g. a delay of 1 second with the default
-   sync interval?
-   
-   I'd not consider such network to be suitable for PTP.
-   ---
-   I think it's expected that two messages sent within few microseconds or
-   milliseconds can be received in a wrong order and PTP slaves need to
-   handle that. But it's not expected that a message will be delayed so
-   much that it will be received after a message that was sent one or
-   more sync intervals later.
-   ---
-   I'd not expect to receive a follow-up message 30 milliseconds
-   after the corresponding sync message. If the difference was getting to
-   the millisecond range, I'd be worried that the network is so
-   overloaded or misconfigured that it might drop some PTP messages.
-   ---
-
-Thanks,
-Richard
