@@ -2,173 +2,140 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F329C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C29C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8A52223AB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:52:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574182334;
-	bh=PQE08P8cZPIQVrquCvag3YZlLtDU39GyDrviAt/PyU8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SPVXyvlONURxED60Ca3Pjx8oUpTJdZgZT4Ers57DTKdhDpVCydhO3EwMPbHnfQjKP
-	 rfiC31wYwJWYC+wa4ZJaLTJAm1TTJp5Ykj+5gYnkdwoGhQcU+SqSyv5G9XdTvJAP3g
-	 duji5HQKuNX1+bD+ZDQFoKbRlXZGYz+WPVScTJmU=
+	by mail.kernel.org (Postfix) with ESMTP id CB2D9223AB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:53:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QeA77eS6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbfKSQwN (ORCPT
+        id S1728514AbfKSQxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:52:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46680 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727560AbfKSQwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 11:52:12 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00AD2222D1;
-        Tue, 19 Nov 2019 16:52:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574182330;
-        bh=PQE08P8cZPIQVrquCvag3YZlLtDU39GyDrviAt/PyU8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e6TrI1GRBWRgsZYJFPhe9V07K6ChCrac2m7Dqfgk53XaPQoocsRZCYLjL/O5lxBb0
-         evRhJiou6r4rGj6L0bH3eguiEluzt7ujSqmxBJZtAnNvO1ZDKIhk3en01fSPE/xGs7
-         ZVPQXqU6u1WJEILKbBovdpnI5KluwM0+rCFQZs8o=
-Date:   Tue, 19 Nov 2019 17:52:07 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Chris Paterson <Chris.Paterson2@renesas.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cip-dev@lists.cip-project.org" <cip-dev@lists.cip-project.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "patches@kernelci.org" <patches@kernelci.org>,
-        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 4.19 000/422] 4.19.85-stable review
-Message-ID: <20191119165207.GA2071545@kroah.com>
-References: <20191119051400.261610025@linuxfoundation.org>
- <TYAPR01MB22854E4F20C28F3A10DA65E3B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
- <20191119122909.GC1913916@kroah.com>
- <TYAPR01MB228560FC98FFD1D449FA4EC2B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
- <20191119154839.GB1982025@kroah.com>
- <TYAPR01MB2285698B8E0F38B9EEF47128B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+        Tue, 19 Nov 2019 11:53:36 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42741 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727560AbfKSQxg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 11:53:36 -0500
+Received: by mail-pl1-f194.google.com with SMTP id j12so12046233plt.9;
+        Tue, 19 Nov 2019 08:53:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=0ikEmW1Uo4O0wTwEpbsw1vK5uaPUtxj8nWEOCJAitRY=;
+        b=QeA77eS6veKPZIsveG+jfcWwHV5debSGbGZJ1W14Wq82ggxzASoK28i/diQ7gbK4kl
+         h9Jc04PxNHmr527ewTCO94EU/wosCb3x9UXFXudKwnLMTp/v1o3tQ+0PfIbw+EXVwdbp
+         33QVUIdZPTVrDePLgB8KvLgIonuH19FhjXA31t4ZxhXtiTr7BNPCN04oelDG5pgKObTM
+         M5Toh7Q9ymkkgT6UvMoLgfC9sitLbTkDw0h78F7XvanRQtQs1Uml2zX29tQGqGA/e05d
+         WLTNWVxl8T7tHEntbz/iYGVRKDGLGhtQqYMuU4JTTYiNMmzFBniAlZIN+sbwDtpDSsbq
+         WsGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0ikEmW1Uo4O0wTwEpbsw1vK5uaPUtxj8nWEOCJAitRY=;
+        b=dBoLqCv3zXUM2clTvqnSYaQNIVNOzMD9CPBTj7pxR4LU2mBEVWyFxFzi3BqLGbyxTm
+         uJsoocevINa3RzHuquiLQPGLPpXO1/0LHCwXUzTQWhui7F8Tnv/E3WN5xaJC2zmez9NS
+         WRoapJt96ewKY8LHRLONvaW0DnIztlt1CyEfCdlNMu2zIizapWBzb0CkLhpmvr0eppYA
+         XaP7wfA6qRxKDK8U+aN33dBYO7OJdw89W16B0ksXIWQtljydPaVcF4XMe3+nZ3Vr1E5e
+         lQKlo+C5d1WkBLiWc5W3f4TNFlEHdWXXaIBZl7VrKiQQ7ALSevzpBA9zlBg8Nf8COC+9
+         hKbQ==
+X-Gm-Message-State: APjAAAVx33wjz5hxrVILoWsBJhy3ArMv3pUx38ITINItCA6q0Od6TXse
+        WdXVYeLGA+MkjYqPmq6fA8Y=
+X-Google-Smtp-Source: APXvYqygJkmb3ADs33SkUCsYqyMgEU1MYC1EWxOPKO8Eu1XEONdfouHXmzYzmNtpFSyFYX23ceHM1g==
+X-Received: by 2002:a17:90a:8401:: with SMTP id j1mr7728686pjn.39.1574182415755;
+        Tue, 19 Nov 2019 08:53:35 -0800 (PST)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id u65sm25969583pfb.35.2019.11.19.08.53.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Nov 2019 08:53:34 -0800 (PST)
+Subject: Re: KMSAN: uninit-value in can_receive
+To:     Oliver Hartkopp <socketcan@hartkopp.net>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        syzbot <syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com>,
+        davem@davemloft.net, glider@google.com, linux-can@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+References: <0000000000005c08d10597a3a05d@google.com>
+ <a5f73d92-fdf2-2590-c863-39a181dca8e1@hartkopp.net>
+ <deedd609-6f3b-8035-47e1-252ab221faa1@pengutronix.de>
+ <7934bc2b-597f-0bb3-be2d-32f3b07b4de9@hartkopp.net>
+ <7f5c4546-0c1a-86ae-581e-0203b5fca446@pengutronix.de>
+ <1f7d6ea7-152e-ff18-549c-b196d8b5e3a7@hartkopp.net>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <9e06266a-67f3-7352-7b87-2b9144c7c9a9@gmail.com>
+Date:   Tue, 19 Nov 2019 08:53:33 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <TYAPR01MB2285698B8E0F38B9EEF47128B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1f7d6ea7-152e-ff18-549c-b196d8b5e3a7@hartkopp.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 04:38:06PM +0000, Chris Paterson wrote:
-> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Sent: 19 November 2019 15:49
-> > 
-> > On Tue, Nov 19, 2019 at 02:44:12PM +0000, Chris Paterson wrote:
-> > > Hi Greg,
-> > >
-> > > > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > Sent: 19 November 2019 12:29
-> > > >
-> > > > On Tue, Nov 19, 2019 at 08:54:25AM +0000, Chris Paterson wrote:
-> > > > > Hello Greg, all,
-> > > > >
-> > > > > > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org>
-> > On
-> > > > > > Behalf Of Greg Kroah-Hartman
-> > > > > > Sent: 19 November 2019 05:13
-> > > > > >
-> > > > > > This is the start of the stable review cycle for the 4.19.85 release.
-> > > > > > There are 422 patches in this series, all will be posted as a response
-> > > > > > to this one.  If anyone has any issues with these being applied, please
-> > > > > > let me know.
-> > > > >
-> > > > > I'm seeing some build issues with module compilation with this release
-> > > > (1b1960cc Linux 4.19.85-rc1), I also saw them with the previous two versions
-> > of
-> > > > Linux 4.19.85-rc1 (cd21ecdb and 1fd0ac64).
-> > > > >
-> > > > > Full log available on GitLab [0]. Build conf [1].
-> > > > > [0] https://gitlab.com/cip-playground/linux-stable-rc-ci/-/jobs/354591285
-> > > > > [1] https://gitlab.com/cip-playground/linux-stable-rc-ci/-
-> > > > /jobs/354591285/artifacts/file/output/4.19.85-
-> > > > rc1_1b1960cc7/x86/siemens_iot2000.config/config/.config
-> > > > >
-> > > > > Main error below:
-> > > > >
-> > > > > 3907   CC [M]  drivers/net/ethernet/mellanox/mlx4/main.o
-> > > > > 3908   LD [M]  fs/ntfs/ntfs.o
-> > > > > 3909   CC [M]  drivers/net/ethernet/intel/i40evf/i40e_txrx.o
-> > > > > 3910   CC [M]  drivers/usb/musb/musb_core.o
-> > > > > 3911   CC [M]  drivers/net/ethernet/nvidia/forcedeth.o
-> > > > > 3912   CC [M]  fs/udf/balloc.o
-> > > > > 3913   CC [M]  drivers/net/ethernet/intel/fm10k/fm10k_debugfs.o
-> > > > > 3914   CC [M]  fs/udf/dir.o
-> > > > > 3915   CC [M]  drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.o
-> > > > > 3916   CC [M]  drivers/net/ethernet/intel/i40e/i40e_ptp.o
-> > > > > 3917 drivers/net/ethernet/mellanox/mlx4/main.c: In function
-> > 'mlx4_init_one':
-> > > > > 3918 drivers/net/ethernet/mellanox/mlx4/main.c:3985:2: error: implicit
-> > > > declaration of function 'devlink_reload_enable'; did you mean
-> > > > 'devlink_region_create'? [-Werror=implicit-function-declaration]
-> > > > > 3919   devlink_reload_enable(devlink);
-> > > > > 3920   ^~~~~~~~~~~~~~~~~~~~~
-> > > > > 3921   devlink_region_create
-> > > > > 3922   CC [M]  drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.o
-> > > > > 3923 drivers/net/ethernet/mellanox/mlx4/main.c: In function
-> > > > 'mlx4_remove_one':
-> > > > > 3924 drivers/net/ethernet/mellanox/mlx4/main.c:4097:2: error: implicit
-> > > > declaration of function 'devlink_reload_disable'; did you mean
-> > > > 'devlink_region_destroy'? [-Werror=implicit-function-declaration]
-> > > > > 3925   devlink_reload_disable(devlink);
-> > > > > 3926   ^~~~~~~~~~~~~~~~~~~~~~
-> > > > > 3927   devlink_region_destroy
-> > > > > 3928   CC [M]  drivers/net/ethernet/packetengines/hamachi.o
-> > > > > 3929   CC [M]  fs/udf/file.o
-> > > > > 3930   LD [M]  drivers/net/ethernet/intel/fm10k/fm10k.o
-> > > > >
-> > > > > I haven't tried to trace the issue further yet, sorry.
-> > > >
-> > > > Any chance you can bisect this?  I don't see any obvious reason why this
-> > > > error should be happening, and it isn't showing up here :(
-> > >
-> > > Looking through the commit history, the issue seems to be related to:
-> > > 672cf82122be ("devlink: disallow reload operation during device cleanup")
-> > >
-> > > I've reverted this commit and Linux 4.19.85-rc2 (af1bb7db before revert) will
-> > build with the configuration I'm using [2].
-> > > I haven't looked further yet though, sorry.
-> > >
-> > > [2] https://gitlab.com/cip-project/cip-kernel/cip-kernel-
-> > config/raw/master/4.19.y-cip/x86/siemens_iot2000.config
-> > 
-> > If you add:
-> > 	#include <net/devlink.h>
-> > to the top of drivers/net/ethernet/mellanox/mlx4/main.c, does it fix the
-> > issue for you?
+
+
+On 11/18/19 11:35 PM, Oliver Hartkopp wrote:
 > 
-> This is already defined:
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/tree/drivers/net/ethernet/mellanox/mlx4/main.c?h=linux-4.19.y#n47
 
-Ah, ok, the issue is that CONFIG_NET_DEVLINK is not enabled, the driver
-now requires this.  This was resolved by adding the dependancy to the
-driver itself, and then just punting and always enabling it over time.
+> 
+> See ioctl$ifreq https://syzkaller.appspot.com/x/log.txt?x=14563416e00000
+> 
+> 23:11:34 executing program 2:
+> r0 = socket(0x200000000000011, 0x3, 0x0)
+> ioctl$ifreq_SIOCGIFINDEX_vcan(r0, 0x8933, &(0x7f0000000040)={'vxcan1\x00', <r1=>0x0})
+> bind$packet(r0, &(0x7f0000000300)={0x11, 0xc, r1}, 0x14)
+> sendmmsg(r0, &(0x7f0000000d00), 0x400004e, 0x0)
+> 
+> We only can receive skbs from (v(x))can devices.
+> No matter if someone wrote to them via PF_CAN or PF_PACKET.
+> We check for ETH_P_CAN(FD) type and ARPHRD_CAN dev type at rx time.
 
-We can backport part of f6b19b354d50 ("net: devlink: select NET_DEVLINK
-from drivers") if you want, but that feels messy.
+And what entity sets the can_skb_prv(skb)->skbcnt to zero exactly ?
 
-For now, if you enable that option, does it build for you?
+> 
+>>> We additionally might think about introducing a check whether we have a
+>>> can_skb_reserve() created skbuff.
+>>>
+>>> But even if someone forged a skbuff without this reserved space the
+>>> access to can_skb_prv(skb)->skbcnt would point into some CAN frame
+>>> content - which is still no access to uninitialized content, right?
+> 
+> So this question remains still valid whether we have a false positive from KMSAN here.
 
-thanks,
+I do not believe it is a false positive.
 
-greg k-h
+It seems CAN relies on some properties of low level drivers using alloc_can_skb() or similar function.
+
+Why not simply fix this like that ?
+
+diff --git a/net/can/af_can.c b/net/can/af_can.c
+index 128d37a4c2e0ba5d8db69fcceec8cbd6a79380df..3e71a78d82af84caaacd0ef512b5e894efbf4852 100644
+--- a/net/can/af_can.c
++++ b/net/can/af_can.c
+@@ -647,8 +647,9 @@ static void can_receive(struct sk_buff *skb, struct net_device *dev)
+        pkg_stats->rx_frames_delta++;
+ 
+        /* create non-zero unique skb identifier together with *skb */
+-       while (!(can_skb_prv(skb)->skbcnt))
++       do {
+                can_skb_prv(skb)->skbcnt = atomic_inc_return(&skbcounter);
++       } while (!(can_skb_prv(skb)->skbcnt));
+ 
+        rcu_read_lock();
+ 
+
+
