@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EADC43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC21AC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 884212075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D762082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142360;
-	bh=82XU3aU5ABFzGlRmWBE0XT+9t7AA0CAjUdCcZDInlf8=;
+	s=default; t=1574142364;
+	bh=RloCVusTu2nmMd+17/acGPUt6gZueL7/1blIIxEjGAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pBSmX2EsEXYWUYpI5ricJXCd+OGwQAKZhr5sSGQ+RbZbb6NAi0ELe5VwrvLL8Dqey
-	 slKOKVOqsQIOaH74bTvqc9ov6zPmd/M6nmdXBo5e6shOz5NeqE4KjuK9x1i7CL5rcN
-	 K+T72zZ/mO98cYdGXTUv+3mDE+YB6I33BGk/jJXA=
+	b=inA3YGjSXzKaqj5c7e81Iotbgc56K27MrF3jUlIhCJpf1EsvfLVBGupBXpWkVnrlZ
+	 K61UYrpUNWoK4khZN1zuQHxyq2PnElq9ejniihqbRYdRd93C1xx3ooZPFBkWaGESMZ
+	 XDmJttZM8nI/MGaQmIapFJAtRiVHIswdJstjgPyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731035AbfKSFp7 (ORCPT
+        id S1731052AbfKSFqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:45:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41824 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:46:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731026AbfKSFp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:45:56 -0500
+        id S1730774AbfKSFqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:46:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35F932075E;
-        Tue, 19 Nov 2019 05:45:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3FFF2075E;
+        Tue, 19 Nov 2019 05:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142355;
-        bh=82XU3aU5ABFzGlRmWBE0XT+9t7AA0CAjUdCcZDInlf8=;
+        s=default; t=1574142361;
+        bh=RloCVusTu2nmMd+17/acGPUt6gZueL7/1blIIxEjGAg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=piXoLK6WL/Dd7d2edNnIgOoVA+ShTzaC/EwozeRS0R4bNOYHrIxIi6gxsvGnQZXzZ
-         UgWj2Zp5ykil885niXpgLQPR8+E3VPh6rdKIj4N4ZNSJjAQ1xjBUvR8tbV4N2cZER5
-         TJPIFdvRnWq+sie42Cy0ilr2PHsrbPsjWYi674nk=
+        b=vhcu/bIeyMVMXdpCmqYlfsTZu4/9GN0p4Z63787gvJodfezXhWjajORTN5MZJ3K6i
+         z8kBh7Kb2lUxJbNWlwaGS+OmJokNHRa3an0KTyS2tR6enlBuqdVcK5i1sG6hR3df0h
+         jcVUEFKFfkLmVb1HAH5/LsV/1THhh5ZghVBDYAvQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vijay Immanuel <vijayi@attalasystems.com>,
-        Doug Ledford <dledford@redhat.com>,
+        stable@vger.kernel.org, Sara Sharon <sara.sharon@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 054/239] IB/rxe: fixes for rdma read retry
-Date:   Tue, 19 Nov 2019 06:17:34 +0100
-Message-Id: <20191119051308.130440267@linuxfoundation.org>
+Subject: [PATCH 4.14 056/239] iwlwifi: mvm: avoid sending too many BARs
+Date:   Tue, 19 Nov 2019 06:17:36 +0100
+Message-Id: <20191119051308.895668289@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -60,125 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vijay Immanuel <vijayi@attalasystems.com>
+From: Sara Sharon <sara.sharon@intel.com>
 
-[ Upstream commit 030e46e495af855a13964a0aab9753ea82a96edc ]
+[ Upstream commit 1a19c139be18ed4d6d681049cc48586fae070120 ]
 
-When a read request is retried for the remaining partial
-data, the response may restart from read response first
-or read response only. So support those cases.
+When we receive TX response, we may release a few packets
+due to a hole that was closed in the transmission window.
 
-Do not advance the comp psn beyond the current wqe's last_psn
-as that could skip over an entire read wqe and will cause the
-req_retry() logic to set an incorrect req psn.
-An example sequence is as follows:
-Write        PSN 40 -- this is the current WQE.
-Read request PSN 41
-Write        PSN 42
-Receive ACK  PSN 42 -- this will complete the current WQE
-for PSN 40, and set the comp psn to 42 which is a problem
-because the read request at PSN 41 has been skipped over.
-So when req_retry() tries to retransmit the read request,
-it sets the req psn to 42 which is incorrect.
+However, if that frame failed, we will mark all the released
+frames as failed and will send multiple BARs.
 
-When retrying a read request, calculate the number of psns
-completed based on the dma resid instead of the wqe first_psn.
-The wqe first_psn could have moved if the read request was
-retried multiple times.
+This affects statistics badly, and cause unnecessary frames
+transmission.
 
-Set the reth length to the dma resid to handle read retries for
-the remaining partial data.
+Instead, mark all the following packets as success, with the
+desired result of sending a bar for the failed frame only.
 
-Signed-off-by: Vijay Immanuel <vijayi@attalasystems.com>
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: Sara Sharon <sara.sharon@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_comp.c | 21 ++++++++++++++++-----
- drivers/infiniband/sw/rxe/rxe_req.c  | 15 +++++++++------
- 2 files changed, 25 insertions(+), 11 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/tx.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_comp.c b/drivers/infiniband/sw/rxe/rxe_comp.c
-index 83cfe44f070ec..fd9ce03dbd292 100644
---- a/drivers/infiniband/sw/rxe/rxe_comp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_comp.c
-@@ -253,6 +253,17 @@ static inline enum comp_state check_ack(struct rxe_qp *qp,
- 	case IB_OPCODE_RC_RDMA_READ_RESPONSE_MIDDLE:
- 		if (pkt->opcode != IB_OPCODE_RC_RDMA_READ_RESPONSE_MIDDLE &&
- 		    pkt->opcode != IB_OPCODE_RC_RDMA_READ_RESPONSE_LAST) {
-+			/* read retries of partial data may restart from
-+			 * read response first or response only.
-+			 */
-+			if ((pkt->psn == wqe->first_psn &&
-+			     pkt->opcode ==
-+			     IB_OPCODE_RC_RDMA_READ_RESPONSE_FIRST) ||
-+			    (wqe->first_psn == wqe->last_psn &&
-+			     pkt->opcode ==
-+			     IB_OPCODE_RC_RDMA_READ_RESPONSE_ONLY))
-+				break;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+index efef28012a6b9..ac1e05b93a9ad 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+@@ -1378,6 +1378,14 @@ static void iwl_mvm_rx_tx_cmd_single(struct iwl_mvm *mvm,
+ 			break;
+ 		}
+ 
++		/*
++		 * If we are freeing multiple frames, mark all the frames
++		 * but the first one as acked, since they were acknowledged
++		 * before
++		 * */
++		if (skb_freed > 1)
++			info->flags |= IEEE80211_TX_STAT_ACK;
 +
- 			return COMPST_ERROR;
- 		}
- 		break;
-@@ -501,11 +512,11 @@ static inline enum comp_state complete_wqe(struct rxe_qp *qp,
- 					   struct rxe_pkt_info *pkt,
- 					   struct rxe_send_wqe *wqe)
- {
--	qp->comp.opcode = -1;
--
--	if (pkt) {
--		if (psn_compare(pkt->psn, qp->comp.psn) >= 0)
--			qp->comp.psn = (pkt->psn + 1) & BTH_PSN_MASK;
-+	if (pkt && wqe->state == wqe_state_pending) {
-+		if (psn_compare(wqe->last_psn, qp->comp.psn) >= 0) {
-+			qp->comp.psn = (wqe->last_psn + 1) & BTH_PSN_MASK;
-+			qp->comp.opcode = -1;
-+		}
+ 		iwl_mvm_tx_status_check_trigger(mvm, status);
  
- 		if (qp->req.wait_psn) {
- 			qp->req.wait_psn = 0;
-diff --git a/drivers/infiniband/sw/rxe/rxe_req.c b/drivers/infiniband/sw/rxe/rxe_req.c
-index 08ae4f3a6a379..9fd4f04df3b33 100644
---- a/drivers/infiniband/sw/rxe/rxe_req.c
-+++ b/drivers/infiniband/sw/rxe/rxe_req.c
-@@ -73,9 +73,6 @@ static void req_retry(struct rxe_qp *qp)
- 	int npsn;
- 	int first = 1;
- 
--	wqe = queue_head(qp->sq.queue);
--	npsn = (qp->comp.psn - wqe->first_psn) & BTH_PSN_MASK;
--
- 	qp->req.wqe_index	= consumer_index(qp->sq.queue);
- 	qp->req.psn		= qp->comp.psn;
- 	qp->req.opcode		= -1;
-@@ -107,11 +104,17 @@ static void req_retry(struct rxe_qp *qp)
- 		if (first) {
- 			first = 0;
- 
--			if (mask & WR_WRITE_OR_SEND_MASK)
-+			if (mask & WR_WRITE_OR_SEND_MASK) {
-+				npsn = (qp->comp.psn - wqe->first_psn) &
-+					BTH_PSN_MASK;
- 				retry_first_write_send(qp, wqe, mask, npsn);
-+			}
- 
--			if (mask & WR_READ_MASK)
-+			if (mask & WR_READ_MASK) {
-+				npsn = (wqe->dma.length - wqe->dma.resid) /
-+					qp->mtu;
- 				wqe->iova += npsn * qp->mtu;
-+			}
- 		}
- 
- 		wqe->state = wqe_state_posted;
-@@ -435,7 +438,7 @@ static struct sk_buff *init_req_packet(struct rxe_qp *qp,
- 	if (pkt->mask & RXE_RETH_MASK) {
- 		reth_set_rkey(pkt, ibwr->wr.rdma.rkey);
- 		reth_set_va(pkt, wqe->iova);
--		reth_set_len(pkt, wqe->dma.length);
-+		reth_set_len(pkt, wqe->dma.resid);
- 	}
- 
- 	if (pkt->mask & RXE_IMMDT_MASK)
+ 		info->status.rates[0].count = tx_resp->failure_frame + 1;
 -- 
 2.20.1
 
