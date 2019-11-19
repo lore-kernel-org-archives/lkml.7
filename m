@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFC4C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93040C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCF31206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62C0B206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143604;
-	bh=Qd/xuIspfGELkLAKANspg6whBWC/YOasqt+zS66jQBw=;
+	s=default; t=1574143613;
+	bh=18dVWm/wEIRtihKE9lAL+lo/DFqAd/bDk7eVPtCVrsI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jdfQanjUf6cxiTPi6VsD1j0YZgdh+AwDTEGRAcgxwHZ8FI6zhXoBZJyR+Z4+NdDq1
-	 gTTtcrb2/VNEnSLmWbSelMDoMPOPr9Z251KV4yKOF2vIEoxIABRlrGfRswqRrxAX4C
-	 tBnbgB4MWGMBKc/ISV2RIX/JfIyS+hnjcnI4pwG4=
+	b=cb9y1cuOFGHxMWNQxCwS4E/hhqtgCvn5G/3wDjDHb5nkRBSxhOiQd6fHEcOHwYld7
+	 n1QqMZx/uSkJlU7xzdDZ8YIhaSllwBiTQGCYTSDxOWgdieM+xYsyKNlbn/ez1yLIEt
+	 q2DwKbkWr0ExPe1MGOm5A0WIsBcm8cGGcOaRweK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729656AbfKSFeZ (ORCPT
+        id S1729024AbfKSGGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:34:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55130 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 01:06:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729641AbfKSFeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:34:22 -0500
+        id S1729142AbfKSFeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:34:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 922682071B;
-        Tue, 19 Nov 2019 05:34:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DFC320672;
+        Tue, 19 Nov 2019 05:34:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141662;
-        bh=Qd/xuIspfGELkLAKANspg6whBWC/YOasqt+zS66jQBw=;
+        s=default; t=1574141653;
+        bh=18dVWm/wEIRtihKE9lAL+lo/DFqAd/bDk7eVPtCVrsI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UtoweNwgEiVotIvL6M6HW8OoV9o/PIUhbcpWKuYo2hVsTB8P/utKmlwVIwDuOOXXi
-         /Slih44J1ZVmmmg//3WRMbmfawjaBswV94C73x0q6U9SA2S9n4toSRIOXSTsiB/MVU
-         6FY05oGtlWmZCD70w3DzFDGdLdCUc//ryFWxCrw8=
+        b=R65GibuoAJjl+aiaewxxS44j7QDE0GphIOO60Zfwl3fw7kHWaGT3kGBPMvChxWSco
+         bChIy2HDn148lmw0fE26hROrnNQfTMjEX4vd1byfoEUtvkj3WrG5hjR3lmX2nWKJ0O
+         ZgykZCkyEJHCEaA8RatovWcuTr2whHyw8D26VWng=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 238/422] media: vsp1: Fix YCbCr planar formats pitch calculation
-Date:   Tue, 19 Nov 2019 06:17:15 +0100
-Message-Id: <20191119051414.480175473@linuxfoundation.org>
+Subject: [PATCH 4.19 235/422] s390/qeth: uninstall IRQ handler on device removal
+Date:   Tue, 19 Nov 2019 06:17:12 +0100
+Message-Id: <20191119051414.324891589@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -63,73 +60,184 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit 9b2798d5b71c50f64c41a40f0cbcae47c3fbd067 ]
+[ Upstream commit 121ca39aa5585def682a2c8592983442438b84dc ]
 
-YCbCr planar formats can have different pitch values for the luma and
-chroma planes. This isn't taken into account in the driver. Fix it.
+When setting up, qeth installs its IRQ handler on the ccw devices. But
+the IRQ handler is not cleared on removal - so even after qeth yields
+control of the ccw devices, spurious interrupts would still be presented
+to us.
 
-Based on a BSP patch from Koji Matsuoka <koji.matsuoka.xm@renesas.com>.
+Make (de-)installation of the IRQ handler part of the ccw channel
+setup/removal helpers, and while at it also add the appropriate locking.
+Shift around qeth_setup_channel() to avoid a forward declaration for
+qeth_irq().
 
-Fixes: 7863ac504bc5 ("drm: rcar-du: Add tri-planar memory formats support")
-[Updated documentation of the struct vsp1_du_atomic_config pitch field]
-
-Signed-off-by: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/vsp1/vsp1_drm.c | 11 ++++++++++-
- include/media/vsp1.h                   |  2 +-
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ drivers/s390/net/qeth_core_main.c | 102 ++++++++++++++++--------------
+ 1 file changed, 54 insertions(+), 48 deletions(-)
 
-diff --git a/drivers/media/platform/vsp1/vsp1_drm.c b/drivers/media/platform/vsp1/vsp1_drm.c
-index b9c0f695d002b..8d86f618ec776 100644
---- a/drivers/media/platform/vsp1/vsp1_drm.c
-+++ b/drivers/media/platform/vsp1/vsp1_drm.c
-@@ -770,6 +770,7 @@ int vsp1_du_atomic_update(struct device *dev, unsigned int pipe_index,
- 	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
- 	struct vsp1_drm_pipeline *drm_pipe = &vsp1->drm->pipe[pipe_index];
- 	const struct vsp1_format_info *fmtinfo;
-+	unsigned int chroma_hsub;
- 	struct vsp1_rwpf *rpf;
+diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+index 461afc276db72..81e2c591acb0b 100644
+--- a/drivers/s390/net/qeth_core_main.c
++++ b/drivers/s390/net/qeth_core_main.c
+@@ -901,44 +901,6 @@ out:
+ 	qeth_release_buffer(channel, iob);
+ }
  
- 	if (rpf_index >= vsp1->info->rpf_count)
-@@ -810,10 +811,18 @@ int vsp1_du_atomic_update(struct device *dev, unsigned int pipe_index,
- 		return -EINVAL;
+-static int qeth_setup_channel(struct qeth_channel *channel, bool alloc_buffers)
+-{
+-	int cnt;
+-
+-	QETH_DBF_TEXT(SETUP, 2, "setupch");
+-
+-	channel->ccw = kmalloc(sizeof(struct ccw1), GFP_KERNEL | GFP_DMA);
+-	if (!channel->ccw)
+-		return -ENOMEM;
+-	channel->state = CH_STATE_DOWN;
+-	atomic_set(&channel->irq_pending, 0);
+-	init_waitqueue_head(&channel->wait_q);
+-
+-	if (!alloc_buffers)
+-		return 0;
+-
+-	for (cnt = 0; cnt < QETH_CMD_BUFFER_NO; cnt++) {
+-		channel->iob[cnt].data =
+-			kzalloc(QETH_BUFSIZE, GFP_DMA|GFP_KERNEL);
+-		if (channel->iob[cnt].data == NULL)
+-			break;
+-		channel->iob[cnt].state = BUF_STATE_FREE;
+-		channel->iob[cnt].channel = channel;
+-		channel->iob[cnt].callback = qeth_send_control_data_cb;
+-		channel->iob[cnt].rc = 0;
+-	}
+-	if (cnt < QETH_CMD_BUFFER_NO) {
+-		kfree(channel->ccw);
+-		while (cnt-- > 0)
+-			kfree(channel->iob[cnt].data);
+-		return -ENOMEM;
+-	}
+-	channel->io_buf_no = 0;
+-	spin_lock_init(&channel->iob_lock);
+-
+-	return 0;
+-}
+-
+ static int qeth_set_thread_start_bit(struct qeth_card *card,
+ 		unsigned long thread)
+ {
+@@ -1339,14 +1301,61 @@ static void qeth_free_buffer_pool(struct qeth_card *card)
+ 
+ static void qeth_clean_channel(struct qeth_channel *channel)
+ {
++	struct ccw_device *cdev = channel->ccwdev;
+ 	int cnt;
+ 
+ 	QETH_DBF_TEXT(SETUP, 2, "freech");
++
++	spin_lock_irq(get_ccwdev_lock(cdev));
++	cdev->handler = NULL;
++	spin_unlock_irq(get_ccwdev_lock(cdev));
++
+ 	for (cnt = 0; cnt < QETH_CMD_BUFFER_NO; cnt++)
+ 		kfree(channel->iob[cnt].data);
+ 	kfree(channel->ccw);
+ }
+ 
++static int qeth_setup_channel(struct qeth_channel *channel, bool alloc_buffers)
++{
++	struct ccw_device *cdev = channel->ccwdev;
++	int cnt;
++
++	QETH_DBF_TEXT(SETUP, 2, "setupch");
++
++	channel->ccw = kmalloc(sizeof(struct ccw1), GFP_KERNEL | GFP_DMA);
++	if (!channel->ccw)
++		return -ENOMEM;
++	channel->state = CH_STATE_DOWN;
++	atomic_set(&channel->irq_pending, 0);
++	init_waitqueue_head(&channel->wait_q);
++
++	spin_lock_irq(get_ccwdev_lock(cdev));
++	cdev->handler = qeth_irq;
++	spin_unlock_irq(get_ccwdev_lock(cdev));
++
++	if (!alloc_buffers)
++		return 0;
++
++	for (cnt = 0; cnt < QETH_CMD_BUFFER_NO; cnt++) {
++		channel->iob[cnt].data =
++			kzalloc(QETH_BUFSIZE, GFP_DMA|GFP_KERNEL);
++		if (channel->iob[cnt].data == NULL)
++			break;
++		channel->iob[cnt].state = BUF_STATE_FREE;
++		channel->iob[cnt].channel = channel;
++		channel->iob[cnt].callback = qeth_send_control_data_cb;
++		channel->iob[cnt].rc = 0;
++	}
++	if (cnt < QETH_CMD_BUFFER_NO) {
++		qeth_clean_channel(channel);
++		return -ENOMEM;
++	}
++	channel->io_buf_no = 0;
++	spin_lock_init(&channel->iob_lock);
++
++	return 0;
++}
++
+ static void qeth_set_single_write_queues(struct qeth_card *card)
+ {
+ 	if ((atomic_read(&card->qdio.state) != QETH_QDIO_UNINITIALIZED) &&
+@@ -1498,7 +1507,7 @@ static void qeth_core_sl_print(struct seq_file *m, struct service_level *slr)
+ 			CARD_BUS_ID(card), card->info.mcl_level);
+ }
+ 
+-static struct qeth_card *qeth_alloc_card(void)
++static struct qeth_card *qeth_alloc_card(struct ccwgroup_device *gdev)
+ {
+ 	struct qeth_card *card;
+ 
+@@ -1507,6 +1516,11 @@ static struct qeth_card *qeth_alloc_card(void)
+ 	if (!card)
+ 		goto out;
+ 	QETH_DBF_HEX(SETUP, 2, &card, sizeof(void *));
++
++	card->gdev = gdev;
++	CARD_RDEV(card) = gdev->cdev[0];
++	CARD_WDEV(card) = gdev->cdev[1];
++	CARD_DDEV(card) = gdev->cdev[2];
+ 	if (qeth_setup_channel(&card->read, true))
+ 		goto out_ip;
+ 	if (qeth_setup_channel(&card->write, true))
+@@ -5745,7 +5759,7 @@ static int qeth_core_probe_device(struct ccwgroup_device *gdev)
+ 
+ 	QETH_DBF_TEXT_(SETUP, 2, "%s", dev_name(&gdev->dev));
+ 
+-	card = qeth_alloc_card();
++	card = qeth_alloc_card(gdev);
+ 	if (!card) {
+ 		QETH_DBF_TEXT_(SETUP, 2, "1err%d", -ENOMEM);
+ 		rc = -ENOMEM;
+@@ -5761,15 +5775,7 @@ static int qeth_core_probe_device(struct ccwgroup_device *gdev)
+ 			goto err_card;
  	}
  
-+	/*
-+	 * Only formats with three planes can affect the chroma planes pitch.
-+	 * All formats with two planes have a horizontal subsampling value of 2,
-+	 * but combine U and V in a single chroma plane, which thus results in
-+	 * the luma plane and chroma plane having the same pitch.
-+	 */
-+	chroma_hsub = (fmtinfo->planes == 3) ? fmtinfo->hsub : 1;
-+
- 	rpf->fmtinfo = fmtinfo;
- 	rpf->format.num_planes = fmtinfo->planes;
- 	rpf->format.plane_fmt[0].bytesperline = cfg->pitch;
--	rpf->format.plane_fmt[1].bytesperline = cfg->pitch;
-+	rpf->format.plane_fmt[1].bytesperline = cfg->pitch / chroma_hsub;
- 	rpf->alpha = cfg->alpha;
- 
- 	rpf->mem.addr[0] = cfg->mem[0];
-diff --git a/include/media/vsp1.h b/include/media/vsp1.h
-index 3093b9cb9067e..5b383d01c84a0 100644
---- a/include/media/vsp1.h
-+++ b/include/media/vsp1.h
-@@ -46,7 +46,7 @@ int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
- /**
-  * struct vsp1_du_atomic_config - VSP atomic configuration parameters
-  * @pixelformat: plane pixel format (V4L2 4CC)
-- * @pitch: line pitch in bytes, for all planes
-+ * @pitch: line pitch in bytes for the first plane
-  * @mem: DMA memory address for each plane of the frame buffer
-  * @src: source rectangle in the frame buffer (integer coordinates)
-  * @dst: destination rectangle on the display (integer coordinates)
+-	card->read.ccwdev  = gdev->cdev[0];
+-	card->write.ccwdev = gdev->cdev[1];
+-	card->data.ccwdev  = gdev->cdev[2];
+ 	dev_set_drvdata(&gdev->dev, card);
+-	card->gdev = gdev;
+-	gdev->cdev[0]->handler = qeth_irq;
+-	gdev->cdev[1]->handler = qeth_irq;
+-	gdev->cdev[2]->handler = qeth_irq;
+-
+ 	qeth_setup_card(card);
+ 	rc = qeth_update_from_chp_desc(card);
+ 	if (rc)
 -- 
 2.20.1
 
