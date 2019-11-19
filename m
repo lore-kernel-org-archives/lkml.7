@@ -2,148 +2,156 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79455C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 674BBC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37469222B0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:30:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="BeQiadmu"
+	by mail.kernel.org (Postfix) with ESMTP id 431A4222B0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:31:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbfKSOan (ORCPT
+        id S1728104AbfKSObM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:30:43 -0500
-Received: from sender4-pp-o98.zoho.com ([136.143.188.98]:25845 "EHLO
-        sender4-pp-o98.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726409AbfKSOam (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 09:30:42 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1574173772; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=haNrHXmZ8f5gKg7Aqd56b9lZvE3/LWraVNamsBfZoS8jPJpkFaOs0er1j2Mu4/PoqEJ/sYA6Kl9/7GGNxs1E7s19QErXrQsgA+Je4xf92OE0/VQf12p1wYWpzOCS9QFqNu/xEcWhk/itJMQn6XeJJMxh3Ofgq1jcpVfdZULEVP8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1574173772; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
-        bh=K3eeJlCStJlagedwM9bTo7SweAVG0wRCc805HZD/FBs=; 
-        b=MbNEHtCntZuO+9TwjZwLtaFw7zaAeOCVmsMwG+Vvb2N+O1oD/JZVqEDsdMCdQm3OebGeBzLL1njTsuHpUUyr9d+OLxmGwmLU/+iYzzubHiJR/9FQP+BVO10sfvoMT5db5wRbGRrDcxlinr7bdyMljpFfMdPpG51ewU9TK92b2LE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
-  b=T8f/CLB8BgSro3xqmKC80DFGsPE/+fTpkUE/V24jOrguijNYAB8KiQmA5WWm/SSdbaZC61BBsfzV
-    aXzzVeLfcjlqD4l1d8Yeid/W77hhTugcBE7PGKZE8ekvhlQbOEO+  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574173772;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        l=2889; bh=K3eeJlCStJlagedwM9bTo7SweAVG0wRCc805HZD/FBs=;
-        b=BeQiadmuk4U9Fs7d1JA24clkREYJ5QChKsuds4mHdVkjFIIbneUI3YCvpdijTejS
-        HwxzOJ7/MM6vofFbDtgE2n9o+EN1dVGkYl2WUk/JQXmDV5SveskYOUxKlXv6btEVi2t
-        PsVMrxxgjr+XDyAa07BeMCOycCPY8F12D0750I/I=
-Received: from zhouyanjie-virtual-machine.localdomain (171.221.113.24 [171.221.113.24]) by mx.zohomail.com
-        with SMTPS id 1574173771482827.3018728700847; Tue, 19 Nov 2019 06:29:31 -0800 (PST)
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, ralf@linux-mips.org,
-        paulburton@kernel.org, jhogan@kernel.org, paul@crapouillou.net,
-        jiaxun.yang@flygoat.com, gregkh@linuxfoundation.org,
-        malat@debian.org, tglx@linutronix.de, chenhc@lemote.com
-Subject: [PATCH 2/2 v3] MIPS: Ingenic: Disable abandoned HPTLB function.
-Date:   Tue, 19 Nov 2019 22:28:47 +0800
-Message-Id: <1574173727-123321-3-git-send-email-zhouyanjie@zoho.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1574173727-123321-1-git-send-email-zhouyanjie@zoho.com>
-References: <1571909341-10108-1-git-send-email-zhouyanjie@zoho.com>
- <1574173727-123321-1-git-send-email-zhouyanjie@zoho.com>
-X-ZohoMailClient: External
+        Tue, 19 Nov 2019 09:31:12 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60944 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726409AbfKSObL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 09:31:11 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id DF7F7B3FAB60CB90DDF5;
+        Tue, 19 Nov 2019 22:31:08 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 19 Nov 2019 22:30:58 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <ming.lei@redhat.com>,
+        <hare@suse.com>, <bvanassche@acm.org>, <chenxiang66@hisilicon.com>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH RFC v2 1/5] blk-mq: Remove some unused function arguments
+Date:   Tue, 19 Nov 2019 22:27:34 +0800
+Message-ID: <1574173658-76818-2-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1574173658-76818-1-git-send-email-john.garry@huawei.com>
+References: <1574173658-76818-1-git-send-email-john.garry@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-JZ4760/JZ4770/JZ4775/X1000/X1500 has an abandoned huge page tlb,
-this mode is not compatible with the MIPS standard, it will cause
-tlbmiss and into an infinite loop (line 21 in the tlb-funcs.S)
-when starting the init process. write 0xa9000000 to cp0 register 5
-sel 4 to disable this function to prevent getting stuck. Confirmed
-by Ingenic, this operation will not adversely affect processors
-without HPTLB function.
+The struct blk_mq_hw_ctx * argument in blk_mq_put_tag(),
+blk_mq_poll_nsecs(), and blk_mq_poll_hybrid_sleep() is unused, so remove
+it.
 
-Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- arch/mips/include/asm/mipsregs.h |  6 ++++++
- arch/mips/kernel/cpu-probe.c     | 21 +++++++++++++++++++--
- 2 files changed, 25 insertions(+), 2 deletions(-)
+ block/blk-mq-tag.c |  4 ++--
+ block/blk-mq-tag.h |  3 +--
+ block/blk-mq.c     | 10 ++++------
+ block/blk-mq.h     |  2 +-
+ 4 files changed, 8 insertions(+), 11 deletions(-)
 
-diff --git a/arch/mips/include/asm/mipsregs.h b/arch/mips/include/asm/mipsregs.h
-index bdbdc19..0d5a309 100644
---- a/arch/mips/include/asm/mipsregs.h
-+++ b/arch/mips/include/asm/mipsregs.h
-@@ -689,6 +689,9 @@
- #define MIPS_CONF7_IAR		(_ULCAST_(1) << 10)
- #define MIPS_CONF7_AR		(_ULCAST_(1) << 16)
- 
-+/* Ingenic HPTLB off bits */
-+#define XBURST_PAGECTRL_HPTLB_DIS 0xa9000000
-+
- /* Ingenic Config7 bits */
- #define MIPS_CONF7_BTB_LOOP_EN	(_ULCAST_(1) << 4)
- 
-@@ -1971,6 +1974,9 @@ do {									\
- #define read_c0_brcm_sleepcount()	__read_32bit_c0_register($22, 7)
- #define write_c0_brcm_sleepcount(val)	__write_32bit_c0_register($22, 7, val)
- 
-+/* Ingenic page ctrl register */
-+#define write_c0_page_ctrl(val)	__write_32bit_c0_register($5, 4, val)
-+
- /*
-  * Macros to access the guest system control coprocessor
-  */
-diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-index 7a0e33c..3b5f4fb 100644
---- a/arch/mips/kernel/cpu-probe.c
-+++ b/arch/mips/kernel/cpu-probe.c
-@@ -1965,13 +1965,30 @@ static inline void cpu_probe_ingenic(struct cpuinfo_mips *c, unsigned int cpu)
- 		break;
- 	}
- 
-+	switch (c->processor_id & PRID_COMP_MASK) {
-+	/*
-+	 * The config0 register in the XBurst CPUs with a processor ID of
-+	 * PRID_COMP_INGENIC_D1 has an abandoned huge page tlb mode, this
-+	 * mode is not compatible with the MIPS standard, it will cause
-+	 * tlbmiss and into an infinite loop (line 21 in the tlb-funcs.S)
-+	 * when starting the init process. After chip reset, the default
-+	 * is HPTLB mode, Write 0xa9000000 to cp0 register 5 sel 4 to
-+	 * switch back to VTLB mode to prevent getting stuck.
-+	 */
-+	case PRID_COMP_INGENIC_D1:
-+		write_c0_page_ctrl(XBURST_PAGECTRL_HPTLB_DIS);
-+		break;
- 	/*
--	 * The config0 register in the Xburst CPUs with a processor ID of
-+	 * The config0 register in the XBurst CPUs with a processor ID of
- 	 * PRID_COMP_INGENIC_D0 report themselves as MIPS32r2 compatible,
- 	 * but they don't actually support this ISA.
- 	 */
--	if ((c->processor_id & PRID_COMP_MASK) == PRID_COMP_INGENIC_D0)
-+	case PRID_COMP_INGENIC_D0:
- 		c->isa_level &= ~MIPS_CPU_ISA_M32R2;
-+		break;
-+	default:
-+		break;
-+	}
+diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
+index fbacde454718..586c9d6e904a 100644
+--- a/block/blk-mq-tag.c
++++ b/block/blk-mq-tag.c
+@@ -183,8 +183,8 @@ unsigned int blk_mq_get_tag(struct blk_mq_alloc_data *data)
+ 	return tag + tag_offset;
  }
  
- static inline void cpu_probe_netlogic(struct cpuinfo_mips *c, int cpu)
+-void blk_mq_put_tag(struct blk_mq_hw_ctx *hctx, struct blk_mq_tags *tags,
+-		    struct blk_mq_ctx *ctx, unsigned int tag)
++void blk_mq_put_tag(struct blk_mq_tags *tags, struct blk_mq_ctx *ctx,
++		    unsigned int tag)
+ {
+ 	if (!blk_mq_tag_is_reserved(tags, tag)) {
+ 		const int real_tag = tag - tags->nr_reserved_tags;
+diff --git a/block/blk-mq-tag.h b/block/blk-mq-tag.h
+index 15bc74acb57e..d0c10d043891 100644
+--- a/block/blk-mq-tag.h
++++ b/block/blk-mq-tag.h
+@@ -26,8 +26,7 @@ extern struct blk_mq_tags *blk_mq_init_tags(unsigned int nr_tags, unsigned int r
+ extern void blk_mq_free_tags(struct blk_mq_tags *tags);
+ 
+ extern unsigned int blk_mq_get_tag(struct blk_mq_alloc_data *data);
+-extern void blk_mq_put_tag(struct blk_mq_hw_ctx *hctx, struct blk_mq_tags *tags,
+-			   struct blk_mq_ctx *ctx, unsigned int tag);
++extern void blk_mq_put_tag(struct blk_mq_tags *tags, struct blk_mq_ctx *ctx, unsigned int tag);
+ extern int blk_mq_tag_update_depth(struct blk_mq_hw_ctx *hctx,
+ 					struct blk_mq_tags **tags,
+ 					unsigned int depth, bool can_grow);
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 75228d282fc3..20c498fce4dd 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -493,9 +493,9 @@ static void __blk_mq_free_request(struct request *rq)
+ 	blk_pm_mark_last_busy(rq);
+ 	rq->mq_hctx = NULL;
+ 	if (rq->tag != -1)
+-		blk_mq_put_tag(hctx, hctx->tags, ctx, rq->tag);
++		blk_mq_put_tag(hctx->tags, ctx, rq->tag);
+ 	if (sched_tag != -1)
+-		blk_mq_put_tag(hctx, hctx->sched_tags, ctx, sched_tag);
++		blk_mq_put_tag(hctx->sched_tags, ctx, sched_tag);
+ 	blk_mq_sched_restart(hctx);
+ 	blk_queue_exit(q);
+ }
+@@ -3354,7 +3354,6 @@ static void blk_mq_poll_stats_fn(struct blk_stat_callback *cb)
+ }
+ 
+ static unsigned long blk_mq_poll_nsecs(struct request_queue *q,
+-				       struct blk_mq_hw_ctx *hctx,
+ 				       struct request *rq)
+ {
+ 	unsigned long ret = 0;
+@@ -3387,7 +3386,6 @@ static unsigned long blk_mq_poll_nsecs(struct request_queue *q,
+ }
+ 
+ static bool blk_mq_poll_hybrid_sleep(struct request_queue *q,
+-				     struct blk_mq_hw_ctx *hctx,
+ 				     struct request *rq)
+ {
+ 	struct hrtimer_sleeper hs;
+@@ -3407,7 +3405,7 @@ static bool blk_mq_poll_hybrid_sleep(struct request_queue *q,
+ 	if (q->poll_nsec > 0)
+ 		nsecs = q->poll_nsec;
+ 	else
+-		nsecs = blk_mq_poll_nsecs(q, hctx, rq);
++		nsecs = blk_mq_poll_nsecs(q, rq);
+ 
+ 	if (!nsecs)
+ 		return false;
+@@ -3462,7 +3460,7 @@ static bool blk_mq_poll_hybrid(struct request_queue *q,
+ 			return false;
+ 	}
+ 
+-	return blk_mq_poll_hybrid_sleep(q, hctx, rq);
++	return blk_mq_poll_hybrid_sleep(q, rq);
+ }
+ 
+ /**
+diff --git a/block/blk-mq.h b/block/blk-mq.h
+index 32c62c64e6c2..78d38b5f2793 100644
+--- a/block/blk-mq.h
++++ b/block/blk-mq.h
+@@ -208,7 +208,7 @@ static inline bool blk_mq_get_dispatch_budget(struct blk_mq_hw_ctx *hctx)
+ static inline void __blk_mq_put_driver_tag(struct blk_mq_hw_ctx *hctx,
+ 					   struct request *rq)
+ {
+-	blk_mq_put_tag(hctx, hctx->tags, rq->mq_ctx, rq->tag);
++	blk_mq_put_tag(hctx->tags, rq->mq_ctx, rq->tag);
+ 	rq->tag = -1;
+ 
+ 	if (rq->rq_flags & RQF_MQ_INFLIGHT) {
 -- 
-2.7.4
-
+2.17.1
 
