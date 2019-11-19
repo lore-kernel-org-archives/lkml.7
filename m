@@ -2,56 +2,110 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3532C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 08:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37789C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 08:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C59A02075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 08:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FCAA206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 08:55:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CxR33jRj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbfKSIsp convert rfc822-to-8bit (ORCPT
+        id S1726948AbfKSIzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 03:48:45 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:51612 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727662AbfKSIso (ORCPT
+        Tue, 19 Nov 2019 03:55:22 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22350 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726722AbfKSIzV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 03:48:44 -0500
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iWzBf-0000Gj-5N; Tue, 19 Nov 2019 09:48:39 +0100
-Date:   Tue, 19 Nov 2019 09:48:39 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     Mike Snitzer <msnitzer@redhat.com>,
-        Nikos Tsironis <ntsironis@arrikto.com>,
-        Scott Wood <swood@redhat.com>,
-        Ilias Tsitsimpis <iliastsi@arrikto.com>, dm-devel@redhat.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Daniel Wagner <dwagner@suse.de>,
-        linux-rt-users@vger.kernel.org, tglx@linutronix.de
-Subject: Re: [PATCH RT 1/2 v2] dm-snapshot: fix crash with the realtime kernel
-Message-ID: <20191119084839.dvzfettd6vbvqd4w@linutronix.de>
-References: <alpine.LRH.2.02.1911121057490.12815@file01.intranet.prod.int.rdu2.redhat.com>
+        Tue, 19 Nov 2019 03:55:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574153720;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=e8OB6fCB1y6zlTa1uYexcpvgkBoKI6v48iGviwUiQTo=;
+        b=CxR33jRjXFZR3YL/3fECcI30ZotdW68OFRMbJI+tLPk7j59FKzBhRGPoY13KTnKopD1yKB
+        SsEa9wAIJkoMu9JGG9/cJLudHHLH+BfGdsNnxUc0vB6D8K0vbRxSgU8VK6ymgzG4qxOQtn
+        xWeo6CfPhRYr9Lmedr6xgh/K5K4oPec=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-335-imTtDVtfOrmhV9elyPYRGw-1; Tue, 19 Nov 2019 03:55:17 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 48BB1DB61;
+        Tue, 19 Nov 2019 08:55:15 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-32.pek2.redhat.com [10.72.8.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 532532AF82;
+        Tue, 19 Nov 2019 08:54:56 +0000 (UTC)
+Date:   Tue, 19 Nov 2019 16:54:52 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>
+Subject: Re: single aio thread is migrated crazily by scheduler
+Message-ID: <20191119085452.GA8252@ming.t460p>
+References: <20191114113153.GB4213@ming.t460p>
+ <20191114235415.GL4614@dread.disaster.area>
+ <20191115010824.GC4847@ming.t460p>
+ <20191115045634.GN4614@dread.disaster.area>
+ <20191115070843.GA24246@ming.t460p>
+ <20191115234005.GO4614@dread.disaster.area>
+ <20191118162633.GC32306@linux.vnet.ibm.com>
+ <20191118211804.GW4614@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191118211804.GW4614@dread.disaster.area>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: imTtDVtfOrmhV9elyPYRGw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <alpine.LRH.2.02.1911121057490.12815@file01.intranet.prod.int.rdu2.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-12 11:09:51 [-0500], Mikulas Patocka wrote:
-> Snapshot doesn't work with realtime kernels since the commit f79ae415b64c.
-> hlist_bl is implemented as a raw spinlock and the code takes two non-raw
-> spinlocks while holding hlist_bl (non-raw spinlocks are blocking mutexes
-> in the realtime kernel).
+On Tue, Nov 19, 2019 at 08:18:04AM +1100, Dave Chinner wrote:
+> On Mon, Nov 18, 2019 at 09:56:33PM +0530, Srikar Dronamraju wrote:
+> > * Dave Chinner <david@fromorbit.com> [2019-11-16 10:40:05]:
+> >=20
+> > > On Fri, Nov 15, 2019 at 03:08:43PM +0800, Ming Lei wrote:
+> > > > On Fri, Nov 15, 2019 at 03:56:34PM +1100, Dave Chinner wrote:
+> > > > > On Fri, Nov 15, 2019 at 09:08:24AM +0800, Ming Lei wrote:
+> > > > I can reproduce the issue with 4k block size on another RH system, =
+and
+> > > > the login info of that system has been shared to you in RH BZ.
+> > > >=20
+> > > > 1)
+> > >=20
+> > > Almost all the fio task migrations are coming from migration/X
+> > > kernel threads. i.e it's the scheduler active balancing that is
+> > > causing the fio thread to bounce around.
+> > >=20
+> >=20
+> > Can we try with the below patch.
+>=20
+> That makes things much, much worse.
 
-this series is still on the list of things for me to look at…
+Yeah, it is same with my test result, basically the fio io thread
+migration counts is increased from 5k to 8k.
 
-Sebastian
+Thanks,
+Ming
+
