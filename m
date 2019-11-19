@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D248EC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A142C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4F0C2186D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17FC8222A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:24:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbfKSMYQ (ORCPT
+        id S1728133AbfKSMYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:24:16 -0500
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:46067 "EHLO
+        Tue, 19 Nov 2019 07:24:45 -0500
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:34299 "EHLO
         out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727829AbfKSMYO (ORCPT
+        by vger.kernel.org with ESMTP id S1727888AbfKSMYP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:24:14 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=30;SR=0;TI=SMTPD_---0TiZ35.N_1574166246;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TiZ35.N_1574166246)
+        Tue, 19 Nov 2019 07:24:15 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R711e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=24;SR=0;TI=SMTPD_---0TiYlW0P_1574166247;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TiYlW0P_1574166247)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 19 Nov 2019 20:24:06 +0800
+          Tue, 19 Nov 2019 20:24:07 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mm@kvack.org, akpm@linux-foundation.org,
@@ -33,25 +33,19 @@ To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         yang.shi@linux.alibaba.com, willy@infradead.org,
         shakeelb@google.com, hannes@cmpxchg.org
 Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
         Vlastimil Babka <vbabka@suse.cz>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: [PATCH v4 4/9] mm/mlock: only change the lru_lock iff page's lruvec is different
-Date:   Tue, 19 Nov 2019 20:23:18 +0800
-Message-Id: <1574166203-151975-5-git-send-email-alex.shi@linux.alibaba.com>
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Arun KS <arunks@codeaurora.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Alexander Potapenko <glider@google.com>
+Subject: [PATCH v4 7/9] mm/pgdat: remove pgdat lru_lock
+Date:   Tue, 19 Nov 2019 20:23:21 +0800
+Message-Id: <1574166203-151975-8-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
 References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
@@ -60,160 +54,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During the pagevec locking, a new page's lruvec is may same as
-previous one. Thus we could save a re-locking, and only
-change lock iff lruvec is new.
+Now pgdat.lru_lock was replaced by lruvec lock. It's not used anymore.
 
-Function named relock_page_lruvec following Hugh Dickins patch.
-
-The first version of this patch used rcu_read_lock to guard
-lruvec assign and comparsion with locked_lruvev in relock_page_lruvec.
-But Rong Chen <rong.a.chen@intel.com> report a regression with
-PROVE_LOCKING config. The rcu_read locking causes qspinlock waiting to
-be locked for too long.
-
-Since we had hold a spinlock, rcu_read locking isn't necessary.
-
-[lkp@intel.com: Fix RCU-related regression reported by LKP robot]
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: Chris Down <chris@chrisdown.name>
-Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: swkhack <swkhack@gmail.com>
-Cc: "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Peng Fan <peng.fan@nxp.com>
-Cc: Nikolay Borisov <nborisov@suse.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc: Yang Shi <yang.shi@linux.alibaba.com>
-Cc: Yafang Shao <laoar.shao@gmail.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Michal Hocko <mhocko@suse.com>
 Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Cc: Arun KS <arunks@codeaurora.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Alexander Potapenko <glider@google.com>
 Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 Cc: Hugh Dickins <hughd@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
 Cc: Tejun Heo <tj@kernel.org>
+Cc: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org
 Cc: cgroups@vger.kernel.org
-Cc: linux-mm@kvack.org
 ---
- include/linux/memcontrol.h | 44 ++++++++++++++++++++++++++++++++++++++++++++
- mm/mlock.c                 | 16 +++++++++-------
- 2 files changed, 53 insertions(+), 7 deletions(-)
+ include/linux/mmzone.h | 1 -
+ mm/page_alloc.c        | 1 -
+ 2 files changed, 2 deletions(-)
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 9538253998a6..19ff453e2822 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -1291,6 +1291,50 @@ static inline void dec_lruvec_page_state(struct page *page,
- 	mod_lruvec_page_state(page, idx, -1);
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index a13b8a602ee5..a9334c8d42c8 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -734,7 +734,6 @@ struct deferred_split {
+ 
+ 	/* Write-intensive fields used by page reclaim */
+ 	ZONE_PADDING(_pad1_)
+-	spinlock_t		lru_lock;
+ 
+ #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
+ 	/*
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index f5ecbacb0e04..e8f2c8f755f4 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -6803,7 +6803,6 @@ static void __meminit pgdat_init_internals(struct pglist_data *pgdat)
+ 	init_waitqueue_head(&pgdat->pfmemalloc_wait);
+ 
+ 	pgdat_page_ext_init(pgdat);
+-	spin_lock_init(&pgdat->lru_lock);
+ 	lruvec_init(&pgdat->__lruvec);
  }
  
-+/* Don't lock again iff page's lruvec locked */
-+static inline struct lruvec *relock_page_lruvec_irq(struct page *page,
-+					struct lruvec *locked_lruvec)
-+{
-+	struct pglist_data *pgdat = page_pgdat(page);
-+	struct lruvec *lruvec;
-+
-+	if (!locked_lruvec)
-+		goto lock;
-+
-+	lruvec = mem_cgroup_page_lruvec(page, pgdat);
-+
-+	if (locked_lruvec == lruvec)
-+		return lruvec;
-+
-+	spin_unlock_irq(&locked_lruvec->lru_lock);
-+
-+lock:
-+	lruvec = lock_page_lruvec_irq(page, pgdat);
-+	return lruvec;
-+}
-+
-+/* Don't lock again iff page's lruvec locked */
-+static inline struct lruvec *relock_page_lruvec_irqsave(struct page *page,
-+			struct lruvec *locked_lruvec, unsigned long *flags)
-+{
-+	struct pglist_data *pgdat = page_pgdat(page);
-+	struct lruvec *lruvec;
-+
-+	if (!locked_lruvec)
-+		goto lock;
-+
-+	lruvec = mem_cgroup_page_lruvec(page, pgdat);
-+
-+	if (locked_lruvec == lruvec)
-+		return lruvec;
-+
-+	spin_unlock_irqrestore(&locked_lruvec->lru_lock, *flags);
-+
-+lock:
-+	lruvec = lock_page_lruvec_irqsave(page, pgdat, flags);
-+	return lruvec;
-+}
-+
- #ifdef CONFIG_CGROUP_WRITEBACK
- 
- struct wb_domain *mem_cgroup_wb_domain(struct bdi_writeback *wb);
-diff --git a/mm/mlock.c b/mm/mlock.c
-index b509b80b8513..8b3a97b62c0a 100644
---- a/mm/mlock.c
-+++ b/mm/mlock.c
-@@ -290,6 +290,7 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
- {
- 	int i;
- 	int nr = pagevec_count(pvec);
-+	int delta_munlocked = -nr;
- 	struct pagevec pvec_putback;
- 	struct lruvec *lruvec = NULL;
- 	int pgrescued = 0;
-@@ -300,20 +301,19 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
- 	for (i = 0; i < nr; i++) {
- 		struct page *page = pvec->pages[i];
- 
--		lruvec = lock_page_lruvec_irq(page, page_pgdat(page));
-+		lruvec = relock_page_lruvec_irq(page, lruvec);
- 
- 		if (TestClearPageMlocked(page)) {
- 			/*
- 			 * We already have pin from follow_page_mask()
- 			 * so we can spare the get_page() here.
- 			 */
--			if (__munlock_isolate_lru_page(page, lruvec, false)) {
--				__mod_zone_page_state(zone, NR_MLOCK,  -1);
--				spin_unlock_irq(&lruvec->lru_lock);
-+			if (__munlock_isolate_lru_page(page, lruvec, false))
- 				continue;
--			} else
-+			else
- 				__munlock_isolation_failed(page);
--		}
-+		} else
-+			delta_munlocked++;
- 
- 		/*
- 		 * We won't be munlocking this page in the next phase
-@@ -323,8 +323,10 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
- 		 */
- 		pagevec_add(&pvec_putback, pvec->pages[i]);
- 		pvec->pages[i] = NULL;
--		spin_unlock_irq(&lruvec->lru_lock);
- 	}
-+	__mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
-+	if (lruvec)
-+		spin_unlock_irq(&lruvec->lru_lock);
- 
- 	/* Now we can release pins of pages that we are not munlocking */
- 	pagevec_release(&pvec_putback);
 -- 
 1.8.3.1
 
