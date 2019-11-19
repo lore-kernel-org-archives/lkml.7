@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F87C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4402EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDD1322463
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1077522463
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574205753;
-	bh=H8HtSGNAQ900oeRZJCgFJhnZwsSdeBNF/x9JzVyBVZM=;
+	s=default; t=1574205757;
+	bh=AKcwRzH4TgveT6g3oTNB2ZueA/+QcdjFZeuwHsg7rKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tFyFurwiG72VAxrQz2QxV5fxlpzQfns7vlHtuJawMNQq5QTlMhi8H1INbT2CaEAE5
-	 2vvgYYwbj2AzZRxr7ej/E7d+tD2O1VyT6IuBsAUJL4pJJx/R3eS9kZx5CM/NRtrHiG
-	 oZdfOuv97rjzq1f9kxVu/GvV5IGNUdVoRYRwzYw8=
+	b=gYREFF69HCWJWxWM4tpl+ps5tiiwRDlzAAJQ2btBbqqB5ia1WfqmH6j1M8SNw+R/y
+	 5JOOMM7RBYYjS1lwh5wjjnKLZt1miuGizrAfVWVXknRFsYlLKpcog9nMzT3nkjKmWi
+	 7StHSPXEBl3pQk80KVIiiocO8sDzKT02g0aCzVwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbfKSXWb (ORCPT
+        id S1727500AbfKSXWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 18:22:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59608 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 18:22:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727389AbfKSXWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 18:22:30 -0500
+        id S1727362AbfKSXWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 18:22:33 -0500
 Received: from lenoir.home (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AEFD2245C;
-        Tue, 19 Nov 2019 23:22:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B13B22460;
+        Tue, 19 Nov 2019 23:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574205749;
-        bh=H8HtSGNAQ900oeRZJCgFJhnZwsSdeBNF/x9JzVyBVZM=;
+        s=default; t=1574205752;
+        bh=AKcwRzH4TgveT6g3oTNB2ZueA/+QcdjFZeuwHsg7rKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iGRBn6b32/8KqEqGTZf2oiPO1bpSvzfY/My3fY9yDCe/MEYwGqnFi1COeYOC/MpnT
-         DrXlapSG0KgCLcU1FhxsP+SUhjl3QDooFvHZULiXMEMYqNAlECxsp6pFYGB+JZPlya
-         aUzgjqHu32xNo7BHbpKb0Lqzanava7Wi6GvCrP6g=
+        b=cZ3KB8OscaJLdx0zb5cCdA1+QAn5rYLZfGMW1kor+cBKt9j2rjkrk4I1bkYBkBoXQ
+         yFYaj30zpFCwrzeE91H3h3jyzxPbVHjnhFYRvbghEsrRoEzqY5MRPfpZo5jkxBHN6y
+         ajAauzo2wDtFcIrcWpUiCIhp//AnzNdFudJiSMSo=
 From:   Frederic Weisbecker <frederic@kernel.org>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>
@@ -53,9 +53,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
         Viresh Kumar <viresh.kumar@linaro.org>,
         Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH 1/6] sched/cputime: Support other fields on kcpustat_field()
-Date:   Wed, 20 Nov 2019 00:22:13 +0100
-Message-Id: <20191119232218.4206-2-frederic@kernel.org>
+Subject: [PATCH 2/6] sched/vtime: Bring all-in-one kcpustat accessor for vtime fields
+Date:   Wed, 20 Nov 2019 00:22:14 +0100
+Message-Id: <20191119232218.4206-3-frederic@kernel.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191119232218.4206-1-frederic@kernel.org>
 References: <20191119232218.4206-1-frederic@kernel.org>
@@ -66,18 +66,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide support for user, nice, guest and guest_nice fields through
-kcpustat_field().
+Many callsites want to fetch the values of system, user, user_nice, guest
+or guest_nice kcpustat fields altogether or at least a pair of these.
 
-Whether we account the delta to a nice or not nice field is decided on
-top of the nice value snapshot taken at the time we call kcpustat_field().
-If the nice value of the task has been changed since the last vtime
-update, we may have inacurrate distribution of the nice VS unnice
-cputime.
+In that case calling kcpustat_field() for each requested field brings
+unecessary overhead when we could fetch all of them in a row.
 
-However this is considered as a minor issue compared to the proper fix
-that would involve interrupting the target on nice updates, which is
-undesired on nohz_full CPUs.
+So provide kcpustat_cputime() that fetches all vtime sensitive fields
+under the same RCU and seqcount block.
 
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 Cc: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
@@ -87,102 +83,215 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Wanpeng Li <wanpengli@tencent.com>
 Cc: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/cputime.c | 53 +++++++++++++++++++++++++++++++++---------
- 1 file changed, 42 insertions(+), 11 deletions(-)
+ include/linux/kernel_stat.h |  23 ++++++
+ kernel/sched/cputime.c      | 139 ++++++++++++++++++++++++++++++------
+ 2 files changed, 142 insertions(+), 20 deletions(-)
 
+diff --git a/include/linux/kernel_stat.h b/include/linux/kernel_stat.h
+index 79781196eb25..6bd70e464c61 100644
+--- a/include/linux/kernel_stat.h
++++ b/include/linux/kernel_stat.h
+@@ -78,15 +78,38 @@ static inline unsigned int kstat_cpu_irqs_sum(unsigned int cpu)
+ 	return kstat_cpu(cpu).irqs_sum;
+ }
+ 
++
++static inline void kcpustat_cputime_raw(u64 *cpustat, u64 *user, u64 *nice,
++					u64 *system, u64 *guest, u64 *guest_nice)
++{
++	*user = cpustat[CPUTIME_USER];
++	*nice = cpustat[CPUTIME_NICE];
++	*system = cpustat[CPUTIME_SYSTEM];
++	*guest = cpustat[CPUTIME_GUEST];
++	*guest_nice = cpustat[CPUTIME_GUEST_NICE];
++}
++
+ #ifdef CONFIG_VIRT_CPU_ACCOUNTING_GEN
+ extern u64 kcpustat_field(struct kernel_cpustat *kcpustat,
+ 			  enum cpu_usage_stat usage, int cpu);
++extern void kcpustat_cputime(struct kernel_cpustat *kcpustat, int cpu,
++			     u64 *user, u64 *nice, u64 *system,
++			     u64 *guest, u64 *guest_nice);
+ #else
+ static inline u64 kcpustat_field(struct kernel_cpustat *kcpustat,
+ 				 enum cpu_usage_stat usage, int cpu)
+ {
+ 	return kcpustat->cpustat[usage];
+ }
++
++static inline void kcpustat_cputime(struct kernel_cpustat *kcpustat, int cpu,
++				    u64 *user, u64 *nice, u64 *system,
++				    u64 *guest, u64 *guest_nice)
++{
++	kcpustat_cputime_raw(kcpustat->cpustat, user, nice,
++			     system, guest, guest_nice);
++}
++
+ #endif
+ 
+ extern void account_user_time(struct task_struct *, u64);
 diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-index e0cd20693ef5..b2cf544e2109 100644
+index b2cf544e2109..f576bbb1f4ee 100644
 --- a/kernel/sched/cputime.c
 +++ b/kernel/sched/cputime.c
-@@ -912,11 +912,21 @@ void task_cputime(struct task_struct *t, u64 *utime, u64 *stime)
+@@ -912,6 +912,30 @@ void task_cputime(struct task_struct *t, u64 *utime, u64 *stime)
  	} while (read_seqcount_retry(&vtime->seqcount, seq));
  }
  
-+static u64 kcpustat_user_vtime(struct vtime *vtime)
++static int vtime_state_check(struct vtime *vtime, int cpu)
 +{
-+	if (vtime->state == VTIME_USER)
-+		return vtime->utime + vtime_delta(vtime);
-+	else if (vtime->state == VTIME_GUEST)
-+		return vtime->gtime + vtime_delta(vtime);
++	/*
++	 * We raced against context switch, fetch the
++	 * kcpustat task again.
++	 */
++	if (vtime->cpu != cpu && vtime->cpu != -1)
++		return -EAGAIN;
++
++	/*
++	 * Two possible things here:
++	 * 1) We are seeing the scheduling out task (prev) or any past one.
++	 * 2) We are seeing the scheduling in task (next) but it hasn't
++	 *    passed though vtime_task_switch() yet so the pending
++	 *    cputime of the prev task may not be flushed yet.
++	 *
++	 * Case 1) is ok but 2) is not. So wait for a safe VTIME state.
++	 */
++	if (vtime->state == VTIME_INACTIVE)
++		return -EAGAIN;
++
 +	return 0;
 +}
 +
- static int kcpustat_field_vtime(u64 *cpustat,
--				struct vtime *vtime,
-+				struct task_struct *tsk,
- 				enum cpu_usage_stat usage,
- 				int cpu, u64 *val)
+ static u64 kcpustat_user_vtime(struct vtime *vtime)
  {
-+	struct vtime *vtime = &tsk->vtime;
- 	unsigned int seq;
- 	int err;
+ 	if (vtime->state == VTIME_USER)
+@@ -933,26 +957,9 @@ static int kcpustat_field_vtime(u64 *cpustat,
+ 	do {
+ 		seq = read_seqcount_begin(&vtime->seqcount);
  
-@@ -946,9 +956,36 @@ static int kcpustat_field_vtime(u64 *cpustat,
+-		/*
+-		 * We raced against context switch, fetch the
+-		 * kcpustat task again.
+-		 */
+-		if (vtime->cpu != cpu && vtime->cpu != -1)
+-			return -EAGAIN;
+-
+-		/*
+-		 * Two possible things here:
+-		 * 1) We are seeing the scheduling out task (prev) or any past one.
+-		 * 2) We are seeing the scheduling in task (next) but it hasn't
+-		 *    passed though vtime_task_switch() yet so the pending
+-		 *    cputime of the prev task may not be flushed yet.
+-		 *
+-		 * Case 1) is ok but 2) is not. So wait for a safe VTIME state.
+-		 */
+-		if (vtime->state == VTIME_INACTIVE)
+-			return -EAGAIN;
+-
+-		err = 0;
++		err = vtime_state_check(vtime, cpu);
++		if (err < 0)
++			return err;
  
  		*val = cpustat[usage];
  
--		if (vtime->state == VTIME_SYS)
--			*val += vtime->stime + vtime_delta(vtime);
--
+@@ -1024,4 +1031,96 @@ u64 kcpustat_field(struct kernel_cpustat *kcpustat,
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(kcpustat_field);
++
++static int kcpustat_cputime_vtime(u64 *cpustat, struct task_struct *tsk,
++				  int cpu, u64 *user, u64 *nice,
++				  u64 *system, u64 *guest, u64 *guest_nice)
++{
++	struct vtime *vtime = &tsk->vtime;
++	unsigned int seq;
++	u64 delta;
++	int err;
++
++	do {
++		seq = read_seqcount_begin(&vtime->seqcount);
++
++		err = vtime_state_check(vtime, cpu);
++		if (err < 0)
++			return err;
++
++		kcpustat_cputime_raw(cpustat, user, nice,
++				     system, guest, guest_nice);
++
++		/* Task is sleeping, dead or idle, nothing to add */
++		if (vtime->state < VTIME_SYS)
++			continue;
++
++		delta = vtime_delta(vtime);
++
 +		/*
-+		 * Nice VS unnice cputime accounting may be inaccurate if
-+		 * the nice value has changed since the last vtime update.
-+		 * But proper fix would involve interrupting target on nice
-+		 * updates which is a no go on nohz_full.
++		 * Task runs either in user (including guest) or kernel space,
++		 * add pending nohz time to the right place.
 +		 */
-+		switch (usage) {
-+		case CPUTIME_SYSTEM:
-+			if (vtime->state == VTIME_SYS)
-+				*val += vtime->stime + vtime_delta(vtime);
-+			break;
-+		case CPUTIME_USER:
-+			if (task_nice(tsk) <= 0)
-+				*val += kcpustat_user_vtime(vtime);
-+			break;
-+		case CPUTIME_NICE:
++		if (vtime->state == VTIME_SYS) {
++			*system += vtime->stime + delta;
++		} else if (vtime->state == VTIME_USER) {
 +			if (task_nice(tsk) > 0)
-+				*val += kcpustat_user_vtime(vtime);
-+			break;
-+		case CPUTIME_GUEST:
-+			if (vtime->state == VTIME_GUEST && task_nice(tsk) <= 0)
-+				*val += vtime->gtime + vtime_delta(vtime);
-+			break;
-+		case CPUTIME_GUEST_NICE:
-+			if (vtime->state == VTIME_GUEST && task_nice(tsk) > 0)
-+				*val += vtime->gtime + vtime_delta(vtime);
-+			break;
-+		default:
-+			break;
++				*nice += vtime->utime + delta;
++			else
++				*user += vtime->utime + delta;
++		} else {
++			WARN_ON_ONCE(vtime->state != VTIME_GUEST);
++			if (task_nice(tsk) > 0) {
++				*guest_nice += vtime->gtime + delta;
++				*nice += vtime->gtime + delta;
++			} else {
++				*guest += vtime->gtime + delta;
++				*user += vtime->gtime + delta;
++			}
 +		}
- 	} while (read_seqcount_retry(&vtime->seqcount, seq));
- 
- 	return 0;
-@@ -965,15 +1002,10 @@ u64 kcpustat_field(struct kernel_cpustat *kcpustat,
- 	if (!vtime_accounting_enabled_cpu(cpu))
- 		return cpustat[usage];
- 
--	/* Only support sys vtime for now */
--	if (usage != CPUTIME_SYSTEM)
--		return cpustat[usage];
--
- 	rq = cpu_rq(cpu);
- 
- 	for (;;) {
- 		struct task_struct *curr;
--		struct vtime *vtime;
- 
- 		rcu_read_lock();
- 		curr = rcu_dereference(rq->curr);
-@@ -982,8 +1014,7 @@ u64 kcpustat_field(struct kernel_cpustat *kcpustat,
- 			return cpustat[usage];
- 		}
- 
--		vtime = &curr->vtime;
--		err = kcpustat_field_vtime(cpustat, vtime, usage, cpu, &val);
-+		err = kcpustat_field_vtime(cpustat, curr, usage, cpu, &val);
- 		rcu_read_unlock();
- 
- 		if (!err)
++	} while (read_seqcount_retry(&vtime->seqcount, seq));
++
++	return err;
++}
++
++void kcpustat_cputime(struct kernel_cpustat *kcpustat, int cpu,
++		      u64 *user, u64 *nice, u64 *system,
++		      u64 *guest, u64 *guest_nice)
++{
++	u64 *cpustat = kcpustat->cpustat;
++	struct rq *rq;
++	int err;
++
++	if (!vtime_accounting_enabled_cpu(cpu)) {
++		kcpustat_cputime_raw(cpustat, user, nice,
++				     system, guest, guest_nice);
++		return;
++	}
++
++	rq = cpu_rq(cpu);
++
++	for (;;) {
++		struct task_struct *curr;
++
++		rcu_read_lock();
++		curr = rcu_dereference(rq->curr);
++		if (WARN_ON_ONCE(!curr)) {
++			rcu_read_unlock();
++			kcpustat_cputime_raw(cpustat, user, nice,
++					     system, guest, guest_nice);
++			return;
++		}
++
++		err = kcpustat_cputime_vtime(cpustat, curr, cpu, user,
++					     nice, system, guest, guest_nice);
++		rcu_read_unlock();
++
++		if (!err)
++			return;
++
++		cpu_relax();
++	}
++}
++EXPORT_SYMBOL_GPL(kcpustat_cputime);
++
+ #endif /* CONFIG_VIRT_CPU_ACCOUNTING_GEN */
 -- 
 2.23.0
 
