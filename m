@@ -2,103 +2,160 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF15C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 342C8C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA21D2245D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FC7C2245B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:30:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="cOwJdQ3Q"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AQhhVmFW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbfKST1i (ORCPT
+        id S1727202AbfKSTaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 14:27:38 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45094 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbfKST1i (ORCPT
+        Tue, 19 Nov 2019 14:30:46 -0500
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:53832 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfKSTap (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 14:27:38 -0500
-Received: by mail-qt1-f195.google.com with SMTP id 30so25914720qtz.12
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 11:27:38 -0800 (PST)
+        Tue, 19 Nov 2019 14:30:45 -0500
+Received: by mail-pf1-f201.google.com with SMTP id h2so17479901pfr.20
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 11:30:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wWke+FPRS6Ykc0nO40qrsc1dQ72uzYDMM9s/rffQgXo=;
-        b=cOwJdQ3QaoC1ghWuL5cDionr9lVRVE7w0E6xB29suEcWQZJDbarxSfoUMmuspYbOvs
-         foTc3R4N1YA6vsxpIjJbpSttqpBQ3dDDQi4PwvY4v0Tei1oeHkTXBrFblLAZtKjFSVZT
-         k6iJPky6g4ughqLuVvoeuzEMq/7B1gpdHqjeEKLzSldt+RKr3YKXU3JvPlzO5+msV6uZ
-         6v3vYAlWY89i/LBzOxKeer2saajdLI87BirnkGA6ad3ouHDNIw5STroNQNgNVW12VIMO
-         YBsvns+jHm88LTfB94IIPjtkpMzbROhq16RxFtaOcBoM1QlTB/1om5GndImlFebJg1IB
-         mGiA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=C47Ki3HabBbaxKIHhsS43LGLmAjUHPP9alFct2tZKio=;
+        b=AQhhVmFWnFPcXgEc/Fk9f4e4x5ge44nDIJoAhq06dkr8uxhVWVodJBcAw6jHJBnHSv
+         XVLDjEH6hlcjYJCj8rmlXhSI/MzVybNW+HRETZq0VCQE23W/K10hRk2FBE0iUcwF4eF9
+         pocSqz04vLq6s74RaiVdieK/1p1PXI3RWfzPnp2NwquFVjrOT0w/+XdF+FmKOFzDDZfy
+         nVFpwnL1fjbAmDA3yMmCu6c0GSj2cuTtbUtJhIZPof7fXdPVAkhiXCYs5FAvRIja2vNE
+         y/33W28eNuTi/lhOFQG1DbNU/ICiItg7jIV1B243hN15HdPLDo6YW7tXTQXzBdHtFWrU
+         /q2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wWke+FPRS6Ykc0nO40qrsc1dQ72uzYDMM9s/rffQgXo=;
-        b=pm8SjGfT8Xent7QUpSYoZuvVtfSPNjBlnjZ8a8fYKZ1rxgHFUVTalTsyUe3QTXgVba
-         22V8jY26HJhBLvmYKQzy3XHFD3auUm+ZEfEjtnww822pCfxJnLhZd/XCUosstEKXAhYK
-         3s9QCvkoxmBJrqxw4I/YItMqJCyjmE7B4NhAG4c1lYijYtX+JsQl9jLUsUKqL9YTGM7o
-         +vPN45L88dsjJybtAMqnt3JcsikxAFH21SVlLT0oE1rckToKMmS3+x59hkoCQswm2jr8
-         mngMV5o8M5f1P4lp/vcTR+9GaanpNU45E5jbl5EjYV63s585CTSl1+bK2jE0toEhROHl
-         e2Fw==
-X-Gm-Message-State: APjAAAX3opvp700fv4VpHHRhlsnZTXDh6f1jjX2m2blv0eKEug2+9VU9
-        cjhONOK9zHT27cQ0WmyCJ5YHDQ==
-X-Google-Smtp-Source: APXvYqwqqbIYdbA/gvquqIqz/2jzv9H8hpK3t4AE1C7xJadrM0qWrSPiW0jc/PVgaAG39wcWgRtWhw==
-X-Received: by 2002:ac8:244e:: with SMTP id d14mr35262717qtd.388.1574191657402;
-        Tue, 19 Nov 2019 11:27:37 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id 134sm10319529qkn.24.2019.11.19.11.27.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Nov 2019 11:27:36 -0800 (PST)
-Message-ID: <1574191653.9585.6.camel@lca.pw>
-Subject: Re: [PATCH v4 01/10] kcsan: Add Kernel Concurrency Sanitizer
- infrastructure
-From:   Qian Cai <cai@lca.pw>
-To:     Marco Elver <elver@google.com>
-Cc:     akiyks@gmail.com, stern@rowland.harvard.edu, glider@google.com,
-        parri.andrea@gmail.com, andreyknvl@google.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, arnd@arndb.de, boqun.feng@gmail.com,
-        bp@alien8.de, dja@axtens.net, dlustig@nvidia.com,
-        dave.hansen@linux.intel.com, dhowells@redhat.com,
-        dvyukov@google.com, hpa@zytor.com, mingo@redhat.com,
-        j.alglave@ucl.ac.uk, joel@joelfernandes.org, corbet@lwn.net,
-        jpoimboe@redhat.com, luc.maranget@inria.fr, mark.rutland@arm.com,
-        npiggin@gmail.com, paulmck@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de, will@kernel.org, edumazet@google.com,
-        kasan-dev@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, x86@kernel.org
-Date:   Tue, 19 Nov 2019 14:27:33 -0500
-In-Reply-To: <20191114180303.66955-2-elver@google.com>
-References: <20191114180303.66955-1-elver@google.com>
-         <20191114180303.66955-2-elver@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=C47Ki3HabBbaxKIHhsS43LGLmAjUHPP9alFct2tZKio=;
+        b=aQzhIKdxtQTUW2dwtL3lOagEjWdOoyEFbqaLvHGN3ILnMKad99clrhZwRa7Hbu5cTw
+         BXxAq60kUHC1MfMf+dCnmhEavEy7VJFJBu3G0Sq8TBp8z4uO+DnRj69awMw2H/+mCC6i
+         BJNGQqy37Y3Mwq/t+9nVGruJdnyM+3aMeqZ0Q404rnzn4vQyuYqoZVPPhrbwSSaSARhr
+         OllP/gkde66Hqtbzb3ZdvGfgNi1sFYHUNhdYTlgNCTXtqzm2sZlHDFGcLo8lUp6DjBq7
+         td2hn/ybAk7UMUtCxtg6TLukoHZwbJURLpWsefi5auELbyziAiiYVyA8vjwJpVWnRJl5
+         dWGA==
+X-Gm-Message-State: APjAAAU8h8MUy/RDTZqtio6IJfBBZnOW1bgKXM4EljKzlRxqONn9Gw5G
+        dFYt9BYQYsaiF6JzVU+XtW1ZR1q+QMiR
+X-Google-Smtp-Source: APXvYqzNIz68u9dcwE5s1aVXZ2ZnlnOhQePgjaRrwKXmA62Rg/x1cqHffWrblYFqeoJW0i+OdYASh4loV7Gh
+X-Received: by 2002:a63:a34e:: with SMTP id v14mr7487127pgn.58.1574191842857;
+ Tue, 19 Nov 2019 11:30:42 -0800 (PST)
+Date:   Tue, 19 Nov 2019 11:30:27 -0800
+Message-Id: <20191119193036.92831-1-brianvv@google.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+Subject: [PATCH v2 bpf-next 0/9] add bpf batch ops to process more than 1 elem
+From:   Brian Vazquez <brianvv@google.com>
+To:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     Yonghong Song <yhs@fb.com>, Stanislav Fomichev <sdf@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Brian Vazquez <brianvv@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-11-14 at 19:02 +0100, 'Marco Elver' via kasan-dev wrote:
+This patch series introduce batch ops that can be added to bpf maps to
+lookup/lookup_and_delete/update/delete more than 1 element at the time,
+this is specially useful when syscall overhead is a problem and in case
+of hmap it will provide a reliable way of traversing them.
 
-> +menuconfig KCSAN
-> +	bool "KCSAN: watchpoint-based dynamic data race detector"
-> +	depends on HAVE_ARCH_KCSAN && !KASAN && STACKTRACE
+The implementation inclues a generic approach that could potentially be
+used by any bpf map and adds it to arraymap, it also includes the specific
+implementation of hashmaps which are traversed using buckets instead
+of keys.
 
-"!KASAN" makes me sorrow. What's problem of those two?
+The bpf syscall subcommands introduced are:
 
-> +	default n
-> +	help
-> +	  Kernel Concurrency Sanitizer is a dynamic data race detector, which
-> +	  uses a watchpoint-based sampling approach to detect races. See
-> +	  <file:Documentation/dev-tools/kcsan.rst> for more details.
-> +
+  BPF_MAP_LOOKUP_BATCH
+  BPF_MAP_LOOKUP_AND_DELETE_BATCH
+  BPF_MAP_UPDATE_BATCH
+  BPF_MAP_DELETE_BATCH
+
+The UAPI attribute is:
+
+  struct { /* struct used by BPF_MAP_*_BATCH commands */
+         __aligned_u64   in_batch;       /* start batch,
+                                          * NULL to start from beginning
+                                          */
+         __aligned_u64   out_batch;      /* output: next start batch */
+         __aligned_u64   keys;
+         __aligned_u64   values;
+         __u32           count;          /* input/output:
+                                          * input: # of key/value
+                                          * elements
+                                          * output: # of filled elements
+                                          */
+         __u32           map_fd;
+         __u64           elem_flags;
+         __u64           flags;
+  } batch;
+
+
+in_batch and out_batch are only used for lookup and lookup_and_delete since
+those are the only two operations that attempt to traverse the map.
+
+update/delete batch ops should provide the keys/values that user wants
+to modify.
+
+Here are the previous discussions on the batch processing:
+ - https://lore.kernel.org/bpf/20190724165803.87470-1-brianvv@google.com/
+ - https://lore.kernel.org/bpf/20190829064502.2750303-1-yhs@fb.com/
+ - https://lore.kernel.org/bpf/20190906225434.3635421-1-yhs@fb.com/
+
+Changelog since v1:
+ - Fix SOB ordering and remove Co-authored-by tag (Alexei)
+
+Changelog since RFC:
+ - Change batch to in_batch and out_batch to support more flexible opaque
+   values to iterate the bpf maps.
+ - Remove update/delete specific batch ops for htab and use the generic
+   implementations instead.
+
+Brian Vazquez (5):
+  bpf: add bpf_map_{value_size,update_value,map_copy_value} functions
+  bpf: add generic support for lookup and lookup_and_delete batch ops
+  bpf: add generic support for update and delete batch ops
+  bpf: add lookup and updated batch ops to arraymap
+  selftests/bpf: add batch ops testing to array bpf map
+
+Yonghong Song (4):
+  bpf: add batch ops to all htab bpf map
+  tools/bpf: sync uapi header bpf.h
+  libbpf: add libbpf support to batch ops
+  selftests/bpf: add batch ops testing for hmap and hmap_percpu
+
+ include/linux/bpf.h                           |  21 +
+ include/uapi/linux/bpf.h                      |  21 +
+ kernel/bpf/arraymap.c                         |   2 +
+ kernel/bpf/hashtab.c                          | 244 ++++++++
+ kernel/bpf/syscall.c                          | 571 ++++++++++++++----
+ tools/include/uapi/linux/bpf.h                |  21 +
+ tools/lib/bpf/bpf.c                           |  61 ++
+ tools/lib/bpf/bpf.h                           |  14 +
+ tools/lib/bpf/libbpf.map                      |   4 +
+ .../map_lookup_and_delete_batch_array.c       | 119 ++++
+ .../map_lookup_and_delete_batch_htab.c        | 257 ++++++++
+ 11 files changed, 1215 insertions(+), 120 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/map_tests/map_lookup_and_delete_batch_array.c
+ create mode 100644 tools/testing/selftests/bpf/map_tests/map_lookup_and_delete_batch_htab.c
+
+-- 
+2.24.0.432.g9d3f5f5b63-goog
 
