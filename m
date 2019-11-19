@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B5FC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FC8C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4D9021783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 006C5222A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142657;
-	bh=F0f1DFQic3UsgOCXhcyyXPEfDgitzNZkVWAjT/PbzZY=;
+	s=default; t=1574142659;
+	bh=h/3lyAH75L97O26Qlz9BevbzGQLjmYZBXgPyGEqU2pU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1eO3oVn++QGyHsC6yVH3yU65MSVz5jNQ5uVHj9db/8TkCfM3E0y4JkrWoHz9JO1vA
-	 CqQKLPtFmYbWAppkkZS2cEp/sR3hF7rS9tbWWwXLi+2I9NaTUCl6x4RvYSfGLzwJ9Q
-	 v4ROl1+fLodXRl7Fu76oy79qZVjILMLWUNyGpGNA=
+	b=vOtrCRJOJg8Yvu9bwpd8s7IBP7MLYH+1Mvp3qAxXFqUd4G9NMfG+L3xyksHYICJ5u
+	 PrH4v/PvWHrfeDyrtaxhRQslXbt1OCr7QO5a/WG1KI8cpCwWBiUW1tlhD1kjR/bhQQ
+	 wAYLmop3PZ2dHIQeBBg2Gd3j60Unvga8kWdujRqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731704AbfKSFu5 (ORCPT
+        id S1731714AbfKSFu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:50:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48154 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:50:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731693AbfKSFux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:50:53 -0500
+        id S1731702AbfKSFu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:50:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E33A20862;
-        Tue, 19 Nov 2019 05:50:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C35E214D9;
+        Tue, 19 Nov 2019 05:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142652;
-        bh=F0f1DFQic3UsgOCXhcyyXPEfDgitzNZkVWAjT/PbzZY=;
+        s=default; t=1574142655;
+        bh=h/3lyAH75L97O26Qlz9BevbzGQLjmYZBXgPyGEqU2pU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WGh+PI6lCV3mqCjsmoByJ/PxeTVrSrKzZ1muIOtQ576rsaSCa/IgjRQKY5vh6Hd1e
-         XP1F1pFrrgaMRpHFFrIJWNBNcu2cXCct3rG9cBQodI9Vc9PQ6VEaY4GlVXH0Qwo8iD
-         JMn82u5I3XaNAt5SVtQCnsN9p2b0h6GsGCVXGGD0=
+        b=HSGRuONXLX29+bw5JBbU4efm10Iw60kVRDzlkt77HTIhI/K0qJ4XrvgjUbS4pXQIz
+         14kIOwVhu/iCuG0m6kJID79RA+MVvLiZT9+xJYVCkKqA0fBrOmCtHsqKMwlKohPuZo
+         gsWuiiXfYZI7nNOsZvl2LlIhM3tB8w1r3I7lwpQk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org, Rob Herring <robh@kernel.org>,
+        stable@vger.kernel.org, Jian Shen <shenjian15@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 127/239] ARM: dts: rockchip: Fix erroneous SPI bus dtc warnings on rk3036
-Date:   Tue, 19 Nov 2019 06:18:47 +0100
-Message-Id: <20191119051330.458418476@linuxfoundation.org>
+Subject: [PATCH 4.14 154/239] net: hns3: Fix parameter type for q_id in hclge_tm_q_to_qs_map_cfg()
+Date:   Tue, 19 Nov 2019 06:19:14 +0100
+Message-Id: <20191119051332.944840634@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -60,41 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Jian Shen <shenjian15@huawei.com>
 
-[ Upstream commit 131c3eb428ccd5f0c784b9edb4f72ec296a045d2 ]
+[ Upstream commit 32c7fbc8ffd752c6aa05d2dd7c13b0f0aa00ddaa ]
 
-dtc has new checks for SPI buses. The rk3036 dts file has a node named
-spi' which causes false positive warnings. As the node is a pinctrl child
-node, change the node name to be 'spi-pins' to fix the warnings.
+So far all the places calling hclge_tm_q_to_qs_map_cfg() are assigning
+an u16 type value to "q_id", and in the processing of
+hclge_tm_q_to_qs_map_cfg(), it also converts the "q_id" to le16.
 
-arch/arm/boot/dts/rk3036-evb.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #address-cells for SPI bus
-arch/arm/boot/dts/rk3036-kylin.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #address-cells for SPI bus
-arch/arm/boot/dts/rk3036-evb.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #size-cells for SPI bus
-arch/arm/boot/dts/rk3036-kylin.dtb: Warning (spi_bus_bridge): /pinctrl/spi: incorrect #size-cells for SPI bus
+The max tqp number for pf can be more than 256, we should use "u16" to
+store the queue id, instead of "u8", which may cause data lost.
 
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Fixes: 848440544b41 ("net: hns3: Add support of TX Scheduler & Shaper to HNS3 driver")
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3036.dtsi | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index 5c0a76493d22a..03cf0c84ac0aa 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -750,7 +750,7 @@
- 			/* no rts / cts for uart2 */
- 		};
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+index 55228b91d80b6..3799cb2548ce6 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+@@ -200,7 +200,7 @@ static int hclge_tm_qs_to_pri_map_cfg(struct hclge_dev *hdev,
+ }
  
--		spi {
-+		spi-pins {
- 			spi_txd:spi-txd {
- 				rockchip,pins = <1 29 RK_FUNC_3 &pcfg_pull_default>;
- 			};
+ static int hclge_tm_q_to_qs_map_cfg(struct hclge_dev *hdev,
+-				    u8 q_id, u16 qs_id)
++				    u16 q_id, u16 qs_id)
+ {
+ 	struct hclge_nq_to_qs_link_cmd *map;
+ 	struct hclge_desc desc;
 -- 
 2.20.1
 
