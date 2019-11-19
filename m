@@ -2,54 +2,98 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76484C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 487FDC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50A80222A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16AEC222A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:23:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YCWenkjt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbfKSQWb (ORCPT
+        id S1728525AbfKSQW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:22:31 -0500
-Received: from Chamillionaire.breakpoint.cc ([193.142.43.52]:42948 "EHLO
-        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726307AbfKSQWb (ORCPT
+        Tue, 19 Nov 2019 11:22:59 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:22167 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727560AbfKSQW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 11:22:31 -0500
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-        (envelope-from <fw@strlen.de>)
-        id 1iX6Gk-00070c-D1; Tue, 19 Nov 2019 17:22:22 +0100
-Date:   Tue, 19 Nov 2019 17:22:22 +0100
-From:   Florian Westphal <fw@strlen.de>
-To:     Byron Stanoszek <gandalf@winds.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: Kernel 5.4 regression - memory leak in network layer
-Message-ID: <20191119162222.GA20235@breakpoint.cc>
-References: <alpine.LNX.2.21.1.1911191047410.30058@winds.org>
+        Tue, 19 Nov 2019 11:22:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574180577;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9dqMi9w8FGMz0iOTrsEVSdaPR96qMxP3SmDt20AyNaA=;
+        b=YCWenkjtBbg6mjmkweV+uhkNdCoBHEnmrjPdbMPNvlyGm3B75Z7/8WnTX3MH1PzzpIHrnH
+        WZmcZTHTaispbmJfczfFgnocKi6FyO9owHYE/hR61jJnDcxjo48EWnrZO10igBrtx/y8kB
+        VENF2wwtYEGcFAS15T4vW2U/ti7nQBw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-168-UanJR99WNNSuLTN67p4xeQ-1; Tue, 19 Nov 2019 11:22:54 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1E3338018A1;
+        Tue, 19 Nov 2019 16:22:53 +0000 (UTC)
+Received: from [10.10.121.199] (ovpn-121-199.rdu2.redhat.com [10.10.121.199])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 361F55E243;
+        Tue, 19 Nov 2019 16:22:52 +0000 (UTC)
+Subject: Re: [v2] nbd:fix memory leak in nbd_get_socket()
+To:     Sun Ke <sunke32@huawei.com>, josef@toxicpanda.com, axboe@kernel.dk,
+        linux-block@vger.kernel.org, nbd@other.debian.org,
+        linux-kernel@vger.kernel.org
+References: <1574143751-138680-1-git-send-email-sunke32@huawei.com>
+Cc:     stable@vger.kernel.org
+From:   Mike Christie <mchristi@redhat.com>
+Message-ID: <5DD416DB.1040302@redhat.com>
+Date:   Tue, 19 Nov 2019 10:22:51 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LNX.2.21.1.1911191047410.30058@winds.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1574143751-138680-1-git-send-email-sunke32@huawei.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: UanJR99WNNSuLTN67p4xeQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Byron Stanoszek <gandalf@winds.org> wrote:
-> unreferenced object 0xffff88821a48a180 (size 64):
->   comm "softirq", pid 0, jiffies 4294709480 (age 192.558s)
->   hex dump (first 32 bytes):
->     01 00 00 00 01 06 ff ff 00 00 00 00 00 00 00 00  ................
->     00 20 72 3d 82 88 ff ff 00 00 00 00 00 00 00 00  . r=............
->   backtrace:
->     [<00000000edf73c5e>] skb_ext_add+0xc0/0xf0
->     [<00000000ca960770>] br_nf_pre_routing+0x171/0x489
->     [<0000000063a55d83>] br_handle_frame+0x171/0x300
+On 11/19/2019 12:09 AM, Sun Ke wrote:
+> Before return NULL,put the sock first.
+>=20
+> Cc: stable@vger.kernel.org
+> Fixes: cf1b2326b734 ("nbd: verify socket is supported during setup")
+> Signed-off-by: Sun Ke <sunke32@huawei.com>
+> ---
+> v2: add cc:stable tag
+> ---
+>  drivers/block/nbd.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+> index a94ee45..19e7599 100644
+> --- a/drivers/block/nbd.c
+> +++ b/drivers/block/nbd.c
+> @@ -993,6 +993,7 @@ static struct socket *nbd_get_socket(struct nbd_devic=
+e *nbd, unsigned long fd,
+>  =09if (sock->ops->shutdown =3D=3D sock_no_shutdown) {
+>  =09=09dev_err(disk_to_dev(nbd->disk), "Unsupported socket: shutdown call=
+out must be supported.\n");
+>  =09=09*err =3D -EINVAL;
+> +=09=09sockfd_put(sock);
+>  =09=09return NULL;
+>  =09}
+> =20
+>=20
 
-Brnf related, I will have a look.
+Reviewed-by: Mike Christie <mchristi@redhat.com>
+
