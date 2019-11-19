@@ -2,96 +2,143 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7CDC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 144FDC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCA9D2230B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D888020409
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:37:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ERpzotDS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbfKSNf7 (ORCPT
+        id S1727726AbfKSNhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 08:35:59 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47754 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725798AbfKSNf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 08:35:59 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 35F11B1D3;
-        Tue, 19 Nov 2019 13:35:57 +0000 (UTC)
-Message-ID: <1574170553.28617.10.camel@suse.com>
-Subject: Re: WARNING in ath6kl_htc_pipe_rx_complete
-From:   Oliver Neukum <oneukum@suse.com>
-To:     syzbot <syzbot+555908813b2ea35dae9a@syzkaller.appspotmail.com>,
-        andreyknvl@google.com, davem@davemloft.net, kvalo@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Date:   Tue, 19 Nov 2019 14:35:53 +0100
-In-Reply-To: <0000000000008123610596c36579@google.com>
-References: <0000000000008123610596c36579@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 19 Nov 2019 08:37:13 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:37574 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbfKSNhN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 08:37:13 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJDYJsw142439;
+        Tue, 19 Nov 2019 13:34:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=zeT1T5F4u/9t9rqf7pRcWtmarJGMaGO5YjAnx2eEqyo=;
+ b=ERpzotDSLHZmw2HCw7RKqcEvDqjcLJRsdk7QizAlNvOKi0LhoStogrFjvgiyf//iMCeR
+ pU98NNr39sva/nm9BsKBfmUQqTqQAUwUshf/SrB/Q+tkuU11pNEEUykOCVKxbYedLVbq
+ 6I7G/wqLRC1vtPUPaLV7MRyg60gpJxMlJ2uF8dHVuplQGImtoxOlUMzFfIVcANf0gkb5
+ T4vKCvgWcxD2svCxH3OSOWXMa3ix52480yQto2fyxkFEZrRf0SdhixWXysHTqOtqIqex
+ a8SeLc7rUmnu68q/Jj/1lzYEOaa/kY4buLqBG5d5RkLkcR0KTNeloZptD6SuFbmzxInM 9w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2wa8htpxbt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 13:34:45 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJDVkE7105282;
+        Tue, 19 Nov 2019 13:34:44 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2wc0agdf4g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 13:34:44 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAJDYbd0020028;
+        Tue, 19 Nov 2019 13:34:37 GMT
+Received: from kadam (/41.210.141.188)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 19 Nov 2019 05:34:35 -0800
+Date:   Tue, 19 Nov 2019 16:34:16 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     vishnu <vravulap@amd.com>
+Cc:     Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>, Alexander.Deucher@amd.com,
+        djkurtz@google.com, Akshu.Agrawal@amd.com,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [RESEND PATCH v9 6/6] ASoC: amd: Added ACP3x system resume and
+ runtime pm
+Message-ID: <20191119133416.GB30789@kadam>
+References: <1574165476-24987-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+ <1574165476-24987-7-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+ <20191119123531.GA30789@kadam>
+ <3321478e-de8f-2eb6-6e6f-6eb621b8434b@amd.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3321478e-de8f-2eb6-6e6f-6eb621b8434b@amd.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911190124
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911190125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, den 07.11.2019, 07:34 -0800 schrieb syzbot:
-> Hello,
+On Tue, Nov 19, 2019 at 06:26:17PM +0530, vishnu wrote:
 > 
-> syzbot found the following crash on:
 > 
-> HEAD commit:    d60bbfea usb: raw: add raw-gadget interface
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1029829ae00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=79de80330003b5f7
-> dashboard link: https://syzkaller.appspot.com/bug?extid=555908813b2ea35dae9a
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1388a2aae00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13aa35dce00000
+> On 19/11/19 6:05 PM, Dan Carpenter wrote:
+> > I can't apply this because I'm not CC'd on patches 2-5.
+> > 
+> > On Tue, Nov 19, 2019 at 05:41:16PM +0530, Ravulapati Vishnu vardhan rao wrote:
+> > > +static int acp3x_power_on(void __iomem *acp3x_base)
+> > > +{
+> > > +	u32 val;
+> > > +	u32 timeout;
+> > > +
+> > > +	timeout = 0;
+> > > +	val = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
+> > > +
+> > > +	if (val == 0)
+> > > +		return val;
+> > > +
+> > > +	if (!((val & ACP_PGFSM_STATUS_MASK) ==
+> > > +				ACP_POWER_ON_IN_PROGRESS))
+> > > +		rv_writel(ACP_PGFSM_CNTL_POWER_ON_MASK,
+> > > +			acp3x_base + mmACP_PGFSM_CONTROL);
+> > > +	while (++timeout) {
+> > 
+> > while (++timeout < 500)
+> > 
 > 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+555908813b2ea35dae9a@syzkaller.appspotmail.com
+> If I check with timeout<500 and in next condition i have
+> if(timeout >500) this never happens.
 
-#syz test: https://github.com/google/kasan.git d60bbfea
+I was maybe not clear enough.  Please don't write:
 
-From d289a4973b869117a5a7f70297b0cecffceb8289 Mon Sep 17 00:00:00 2001
-From: Oliver Neukum <oneukum@suse.com>
-Date: Mon, 18 Nov 2019 19:23:25 +0100
-Subject: [PATCH] ath6kl: reduce WARN to dev_dbg() in callback
+	while (++timeout) {
 
-The warn is triggered on a known race condition
-that is correctly handled. Using WARN() hinders automated
-testing. Reducing severity.
+That doesn't make sense as a loop.  It looks like you are trying to
+loop UINT_MAX times.  Put the ++ and the limit on the same line.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
----
- drivers/net/wireless/ath/ath6kl/htc_pipe.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+There is only one real bug in my review but there is just a lot of clean
+up left.  Can you have a co-worker review your patch before resending?
+The patch 1/6 looks pretty good now but I haven't seen patches 2-5 so
+I'm worried there is a lot of cleanup left to do.
 
-diff --git a/drivers/net/wireless/ath/ath6kl/htc_pipe.c b/drivers/net/wireless/ath/ath6kl/htc_pipe.c
-index c68848819a52..9b88d96bfe96 100644
---- a/drivers/net/wireless/ath/ath6kl/htc_pipe.c
-+++ b/drivers/net/wireless/ath/ath6kl/htc_pipe.c
-@@ -960,8 +960,8 @@ static int ath6kl_htc_pipe_rx_complete(struct ath6kl *ar, struct sk_buff *skb,
- 	 * Thus the possibility of ar->htc_target being NULL
- 	 * via ath6kl_recv_complete -> ath6kl_usb_io_comp_work.
- 	 */
--	if (WARN_ON_ONCE(!target)) {
--		ath6kl_err("Target not yet initialized\n");
-+	if (!target) {
-+		ath6kl_dbg(ATH6KL_DBG_HTC, "Target not yet initialized\n");
- 		status = -EINVAL;
- 		goto free_skb;
- 	}
--- 
-2.16.4
+regards,
+dan carpenter
 
