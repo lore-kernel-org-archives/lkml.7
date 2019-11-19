@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1B7C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3026BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F2DC206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32E320872
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143389;
-	bh=UjqVqgdhztbhUdrL+ufrQI7PcTgq8W31OFAvib2seIo=;
+	s=default; t=1574143398;
+	bh=xOH+ix3LhRxkW9EZ3qVwZJdXRhikzraxle2sk20ZrZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YGVmJ8k9k3RY7t4xbE6XiCpGDRk/mH8VskIsjbgIP44FtpT/twqKl32cyLVOEjDhn
-	 5QDjyQ8zQUyffHoNXVOFTt/dzSEiPm1QQglO4jYx3xEQBUipNQrCFpojSeqERBE1B9
-	 OTm4xt9X4/dgm5f6qdEIdrMCBBbxy2tsmUPsJ9fQ=
+	b=iQr34hPMu2tk29G0uEUK6vqfKGttdrSvpd7sOaru7fJO76aUELs+XFkNYnkLQj0mV
+	 6K+PjoujCrgRVPgQDPzDgl24B9fwWfSmYz0wERKIEtTMJk0b36l1N1gSqQBwTiP+d9
+	 iPc6+fQ2DVqVVNWdo76UV12/xdMYrT8NspLDOmic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729535AbfKSGDI (ORCPT
+        id S1730412AbfKSFk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:03:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35038 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:40:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729217AbfKSFks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:40:48 -0500
+        id S1730396AbfKSFkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:40:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23F7821823;
-        Tue, 19 Nov 2019 05:40:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27C6921783;
+        Tue, 19 Nov 2019 05:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142047;
-        bh=UjqVqgdhztbhUdrL+ufrQI7PcTgq8W31OFAvib2seIo=;
+        s=default; t=1574142024;
+        bh=xOH+ix3LhRxkW9EZ3qVwZJdXRhikzraxle2sk20ZrZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=johXGKMIVsEE84b+pivyZ6NQxdGT22Znsy1TagDzYXM8csHJTbmM+WuS2Cx4ra05I
-         kX94MQ5pHu5ykhVS/CxyM9uSrEmQ6A9PQDMAsrQe/eSfbDnWybT546CpMtydCkJvbs
-         LRgVdA2teMNKaNCzRWPROrBM286/f5BdGH/+5V3k=
+        b=f4/sahUQh1cYIIy5Gyd5rl/KnzqLLTOME9723y83ScRNSrkEI1H06JtnCLVwzFXg5
+         UejOvl62ArptLlJbTpgIIxBa6fHLefP7bwKfqKLETfqGmbjJv7Q/YDdohI1fUbzGAc
+         WU60vqIFzjBzMVvSNQPEEwf8FCs6A45NGOlAjEeA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 371/422] ARM: tegra: apalis_t30: fix mcp2515 can controller interrupt polarity
-Date:   Tue, 19 Nov 2019 06:19:28 +0100
-Message-Id: <20191119051423.052842944@linuxfoundation.org>
+Subject: [PATCH 4.19 363/422] phy: lantiq: Fix compile warning
+Date:   Tue, 19 Nov 2019 06:19:20 +0100
+Message-Id: <20191119051422.538015251@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,42 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+From: Hauke Mehrtens <hauke@hauke-m.de>
 
-[ Upstream commit b38f6aa4b60a1fcc41f5c469981f8f62d6070ee3 ]
+[ Upstream commit 3a00dae006623d799266d85f28b5f76ef07d6b6c ]
 
-Fix the MCP2515 SPI CAN controller interrupt polarity which according
-to its datasheet defaults to low-active aka falling edge.
+This local variable is unused, remove it.
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Fixes: dea54fbad332 ("phy: Add an USB PHY driver for the Lantiq SoCs using the RCU module")
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/tegra30-apalis.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/phy/lantiq/phy-lantiq-rcu-usb2.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
-index e749e047db7ab..f810bbf8212bd 100644
---- a/arch/arm/boot/dts/tegra30-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
-@@ -659,7 +659,7 @@
- 			reg = <1>;
- 			clocks = <&clk16m>;
- 			interrupt-parent = <&gpio>;
--			interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_EDGE_RISING>;
-+			interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_EDGE_FALLING>;
- 			spi-max-frequency = <10000000>;
- 		};
- 	};
-@@ -674,7 +674,7 @@
- 			reg = <0>;
- 			clocks = <&clk16m>;
- 			interrupt-parent = <&gpio>;
--			interrupts = <TEGRA_GPIO(W, 2) IRQ_TYPE_EDGE_RISING>;
-+			interrupts = <TEGRA_GPIO(W, 2) IRQ_TYPE_EDGE_FALLING>;
- 			spi-max-frequency = <10000000>;
- 		};
- 	};
+diff --git a/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c b/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c
+index 986224fca9e91..5a180f71d8d4d 100644
+--- a/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c
++++ b/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c
+@@ -156,7 +156,6 @@ static int ltq_rcu_usb2_of_parse(struct ltq_rcu_usb2_priv *priv,
+ {
+ 	struct device *dev = priv->dev;
+ 	const __be32 *offset;
+-	int ret;
+ 
+ 	priv->reg_bits = of_device_get_match_data(dev);
+ 
 -- 
 2.20.1
 
