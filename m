@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F016EC33C9D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 754A4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C03D121850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CA06218A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143961;
-	bh=SmWTtC00I/W3MBF24Muk28GmlRgpglXRziTfV6MQVLc=;
+	s=default; t=1574143971;
+	bh=JmLPL/HEQWkgPTJclvHxmxL5U3PoN0BCo8F9NLWo16o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RB3JEYlRS1ZtJPbbyxlDuTXEeD3RqEQfD2ivUazPOgr8+7o2aAgtVKQuyPPGfNcku
-	 vw3BWPfQ9C8jqDbOGuICEzbDeWx3UtmpKrsrH3xrZe1tNPGgVE5JICE4NVHgeWFHPb
-	 uZ7SwaYgWvcWxDsjto1HwU+j57r37CEK51qO2wl0=
+	b=wfEkcffonzzv975kSeOQbU7qO4kIK2FO3EtSEJVWihEhSLvJI0Oo55xHyQEydg4si
+	 zzTe6U1Mps+Bhj6QxvzFpdBsKO/eIMbYO1T3QjFMng8gjQlVgDAo5zhtucIWa4Z1iS
+	 OVieB5zvitPx3TO5kVz0dEE4v7z3RvIbEFuRYLfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbfKSFVs (ORCPT
+        id S1727936AbfKSGMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:21:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36902 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 01:12:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727453AbfKSFVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:21:46 -0500
+        id S1727239AbfKSFVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:21:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEC722231E;
-        Tue, 19 Nov 2019 05:21:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AB3B22317;
+        Tue, 19 Nov 2019 05:21:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574140905;
-        bh=SmWTtC00I/W3MBF24Muk28GmlRgpglXRziTfV6MQVLc=;
+        s=default; t=1574140873;
+        bh=JmLPL/HEQWkgPTJclvHxmxL5U3PoN0BCo8F9NLWo16o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dM7B0qggBh++rcDiolTIzW8ChjrfHcCsMC0pMmEqyOeMFkOTckYcpoovtJ5HzSBZF
-         5mWgzxAuWIBcxI7uRct3mjci09cZmLvJ6tUNu9oHhq6ee4ffUg4cl5NlAYliQofC/6
-         SUhqkFF6PwEGbdngljIW2ZFH16sJzGnZqawvX9oo=
+        b=IUUyangO5VXU958PcmL/V/s0MdOge+KBSS+8FKSQxUSQUNOYHQkvgPoiyKJe0x5j7
+         0k55T3G+agQClFca9kdc0MKVjq3OoR+sEWY0j6nn4bNXsaOvwPc0XQQBTMsw3uxF8C
+         yDFhnNayuGbkezgvsmY8xT0YDkKjwQsmpPMIxfvM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Borowski <kilobyte@angband.pl>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: [PATCH 5.3 26/48] KVM: MMU: Do not treat ZONE_DEVICE pages as being reserved
-Date:   Tue, 19 Nov 2019 06:19:46 +0100
-Message-Id: <20191119051008.145283241@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Machek <pavel@denx.de>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.3 16/48] ALSA: usb-audio: Fix incorrect NULL check in create_yamaha_midi_quirk()
+Date:   Tue, 19 Nov 2019 06:19:36 +0100
+Message-Id: <20191119051001.053603583@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119050946.745015350@linuxfoundation.org>
 References: <20191119050946.745015350@linuxfoundation.org>
@@ -62,133 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit a78986aae9b2988f8493f9f65a587ee433e83bc3 upstream.
+commit cc9dbfa9707868fb0ca864c05e0c42d3f4d15cf2 upstream.
 
-Explicitly exempt ZONE_DEVICE pages from kvm_is_reserved_pfn() and
-instead manually handle ZONE_DEVICE on a case-by-case basis.  For things
-like page refcounts, KVM needs to treat ZONE_DEVICE pages like normal
-pages, e.g. put pages grabbed via gup().  But for flows such as setting
-A/D bits or shifting refcounts for transparent huge pages, KVM needs to
-to avoid processing ZONE_DEVICE pages as the flows in question lack the
-underlying machinery for proper handling of ZONE_DEVICE pages.
+The commit 60849562a5db ("ALSA: usb-audio: Fix possible NULL
+dereference at create_yamaha_midi_quirk()") added NULL checks in
+create_yamaha_midi_quirk(), but there was an overlook.  The code
+allows one of either injd or outjd is NULL, but the second if check
+made returning -ENODEV if any of them is NULL.  Fix it in a proper
+form.
 
-This fixes a hang reported by Adam Borowski[*] in dev_pagemap_cleanup()
-when running a KVM guest backed with /dev/dax memory, as KVM straight up
-doesn't put any references to ZONE_DEVICE pages acquired by gup().
-
-Note, Dan Williams proposed an alternative solution of doing put_page()
-on ZONE_DEVICE pages immediately after gup() in order to simplify the
-auditing needed to ensure is_zone_device_page() is called if and only if
-the backing device is pinned (via gup()).  But that approach would break
-kvm_vcpu_{un}map() as KVM requires the page to be pinned from map() 'til
-unmap() when accessing guest memory, unlike KVM's secondary MMU, which
-coordinates with mmu_notifier invalidations to avoid creating stale
-page references, i.e. doesn't rely on pages being pinned.
-
-[*] http://lkml.kernel.org/r/20190919115547.GA17963@angband.pl
-
-Reported-by: Adam Borowski <kilobyte@angband.pl>
-Analyzed-by: David Hildenbrand <david@redhat.com>
-Acked-by: Dan Williams <dan.j.williams@intel.com>
-Cc: stable@vger.kernel.org
-Fixes: 3565fce3a659 ("mm, x86: get_user_pages() for dax mappings")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: 60849562a5db ("ALSA: usb-audio: Fix possible NULL dereference at create_yamaha_midi_quirk()")
+Reported-by: Pavel Machek <pavel@denx.de>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191113111259.24123-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/mmu.c       |    8 ++++----
- include/linux/kvm_host.h |    1 +
- virt/kvm/kvm_main.c      |   26 +++++++++++++++++++++++---
- 3 files changed, 28 insertions(+), 7 deletions(-)
+ sound/usb/quirks.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -3352,7 +3352,7 @@ static void transparent_hugepage_adjust(
- 	 * here.
- 	 */
- 	if (!is_error_noslot_pfn(pfn) && !kvm_is_reserved_pfn(pfn) &&
--	    level == PT_PAGE_TABLE_LEVEL &&
-+	    !kvm_is_zone_device_pfn(pfn) && level == PT_PAGE_TABLE_LEVEL &&
- 	    PageTransCompoundMap(pfn_to_page(pfn)) &&
- 	    !mmu_gfn_lpage_is_disallowed(vcpu, gfn, PT_DIRECTORY_LEVEL)) {
- 		unsigned long mask;
-@@ -5961,9 +5961,9 @@ restart:
- 		 * the guest, and the guest page table is using 4K page size
- 		 * mapping if the indirect sp has level = 1.
- 		 */
--		if (sp->role.direct &&
--			!kvm_is_reserved_pfn(pfn) &&
--			PageTransCompoundMap(pfn_to_page(pfn))) {
-+		if (sp->role.direct && !kvm_is_reserved_pfn(pfn) &&
-+		    !kvm_is_zone_device_pfn(pfn) &&
-+		    PageTransCompoundMap(pfn_to_page(pfn))) {
- 			pte_list_remove(rmap_head, sptep);
- 
- 			if (kvm_available_flush_tlb_with_range())
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -966,6 +966,7 @@ int kvm_cpu_has_pending_timer(struct kvm
- void kvm_vcpu_kick(struct kvm_vcpu *vcpu);
- 
- bool kvm_is_reserved_pfn(kvm_pfn_t pfn);
-+bool kvm_is_zone_device_pfn(kvm_pfn_t pfn);
- 
- struct kvm_irq_ack_notifier {
- 	struct hlist_node link;
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -150,10 +150,30 @@ __weak int kvm_arch_mmu_notifier_invalid
- 	return 0;
- }
- 
-+bool kvm_is_zone_device_pfn(kvm_pfn_t pfn)
-+{
-+	/*
-+	 * The metadata used by is_zone_device_page() to determine whether or
-+	 * not a page is ZONE_DEVICE is guaranteed to be valid if and only if
-+	 * the device has been pinned, e.g. by get_user_pages().  WARN if the
-+	 * page_count() is zero to help detect bad usage of this helper.
-+	 */
-+	if (!pfn_valid(pfn) || WARN_ON_ONCE(!page_count(pfn_to_page(pfn))))
-+		return false;
-+
-+	return is_zone_device_page(pfn_to_page(pfn));
-+}
-+
- bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
- {
-+	/*
-+	 * ZONE_DEVICE pages currently set PG_reserved, but from a refcounting
-+	 * perspective they are "normal" pages, albeit with slightly different
-+	 * usage rules.
-+	 */
- 	if (pfn_valid(pfn))
--		return PageReserved(pfn_to_page(pfn));
-+		return PageReserved(pfn_to_page(pfn)) &&
-+		       !kvm_is_zone_device_pfn(pfn);
- 
- 	return true;
- }
-@@ -1882,7 +1902,7 @@ EXPORT_SYMBOL_GPL(kvm_release_pfn_dirty)
- 
- void kvm_set_pfn_dirty(kvm_pfn_t pfn)
- {
--	if (!kvm_is_reserved_pfn(pfn)) {
-+	if (!kvm_is_reserved_pfn(pfn) && !kvm_is_zone_device_pfn(pfn)) {
- 		struct page *page = pfn_to_page(pfn);
- 
- 		SetPageDirty(page);
-@@ -1892,7 +1912,7 @@ EXPORT_SYMBOL_GPL(kvm_set_pfn_dirty);
- 
- void kvm_set_pfn_accessed(kvm_pfn_t pfn)
- {
--	if (!kvm_is_reserved_pfn(pfn))
-+	if (!kvm_is_reserved_pfn(pfn) && !kvm_is_zone_device_pfn(pfn))
- 		mark_page_accessed(pfn_to_page(pfn));
- }
- EXPORT_SYMBOL_GPL(kvm_set_pfn_accessed);
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -248,8 +248,8 @@ static int create_yamaha_midi_quirk(stru
+ 					NULL, USB_MS_MIDI_OUT_JACK);
+ 	if (!injd && !outjd)
+ 		return -ENODEV;
+-	if (!(injd && snd_usb_validate_midi_desc(injd)) ||
+-	    !(outjd && snd_usb_validate_midi_desc(outjd)))
++	if ((injd && !snd_usb_validate_midi_desc(injd)) ||
++	    (outjd && !snd_usb_validate_midi_desc(outjd)))
+ 		return -ENODEV;
+ 	if (injd && (injd->bLength < 5 ||
+ 		     (injd->bJackType != USB_MS_EMBEDDED &&
 
 
