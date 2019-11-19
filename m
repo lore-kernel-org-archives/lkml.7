@@ -2,122 +2,154 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 141A3C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 00:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3357FC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 00:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB3B5222F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 00:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2DE2222F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 00:04:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="OwqIclI3"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OMBtJutS";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="d2U1XrFe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfKSAEU (ORCPT
+        id S1727050AbfKSAEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 19:04:20 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33572 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbfKSAET (ORCPT
+        Mon, 18 Nov 2019 19:04:45 -0500
+Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:45786
+        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726809AbfKSAEo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 19:04:19 -0500
-Received: by mail-oi1-f193.google.com with SMTP id m193so17185893oig.0
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 16:04:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZtbvKjjnscKy4A6MuNeD3a3NFthr68OtKoL8RB+WxNo=;
-        b=OwqIclI3keeY7VHTJMp42XcFMnSTpvkqGJgi1VHbv9P05zsqk7I4qEew1vlPCtyxE6
-         NtIAzveBsEu4kp70hWM+c+0r8DFE2JfAuqsFbN0yMpKcYrac8GPNaBuUxFR2EypImxtG
-         TbR3Gp8qoV/FATMkEKzlAggAnAqeHJJgJMZccBlQX3YSC1H5g1ptRg934gVSvL4odkQm
-         wN0l/Z3VtNzyskVviilqa+8hpfN1DGw5KiJZiWyXEP/sX3mSW9PujfWr8BAiH/OJoUMU
-         BEXRq1HBY8xK18/ZQAcIxHS4HLunPih16a070i5KPwuvbR2SMnxCy8MdUDiXvgBRovMR
-         2nUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZtbvKjjnscKy4A6MuNeD3a3NFthr68OtKoL8RB+WxNo=;
-        b=NdUJkSZFqZyACpOVKWfriYrTw3r1uJxA5sDAFxQ98BQXoGnAujgY85VCCAHpHhaiJO
-         msTPGOtCcP6xCDtdyA+2kDF9L1pzZbKPfYIUsPrvryIWs58ru51fuFA/sSOiPxMGnVxL
-         UJf7lpnOlVahv/z0uO5W76mwl6Uzgrk6iLvGJz/tvnjUDdOqIyovOqy0zwUM5ddRMgvA
-         RKltlTEThmxv9JheOnNzAlJsBRnw09A8GPWYvGmSUxjjVJxwyz7wgrxdvAqwwM164Nhs
-         /KOi9jwh3dSLBMax5+yt4UzjG0S38yl/YQEYztDpwZuEaSPAvXyAUzUqPuXJ+8suz/3U
-         w53w==
-X-Gm-Message-State: APjAAAUn+rOYEse4jkMmpGezuE10dvSa9ufXuqjASJGiLAR8whbx8Ysn
-        C5VL3ft1oXQMxIRVGeeY6Tg6LEGqyH9OKxnG+v8uaA==
-X-Google-Smtp-Source: APXvYqyHTRHOCdWxsyyF+07+0YV81ecwmO5E2eDEN7/DauYrZtLt+iJnkG3Op6xVtOT1jIhYYt8wSLdsK2pfoAPRMRw=
-X-Received: by 2002:aca:ea57:: with SMTP id i84mr1382576oih.73.1574121858711;
- Mon, 18 Nov 2019 16:04:18 -0800 (PST)
+        Mon, 18 Nov 2019 19:04:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574121883;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
+        bh=OlbgppkuQo/Y6oDZ30f1NHoNLeu2B2S5yJCvYaZxH5Q=;
+        b=OMBtJutSJiYIJAqMax/vXP1EFpvpiwZSbr3e18U+odRGZqZKuNuKx0z+dt6+paQ/
+        qtcLbV+TTeLI505kd9h0dX+Gfc8BFGAmc5rADllI+ssl+aUBOBBdNaMPk6KOk/fiSbs
+        8efg8rutwvlsUg9FqJtWYyz7FvhIawX+fAjLEC4k=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574121883;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Feedback-ID;
+        bh=OlbgppkuQo/Y6oDZ30f1NHoNLeu2B2S5yJCvYaZxH5Q=;
+        b=d2U1XrFewAIOHFPiORdZsrW4oawqMz2xbTVhm2f9JVZVyjqNdg1ezqFd1uIgYsTy
+        D4sf4wm9ZPQFb7qfZSHSR00NA9CB3HfCwTC16vNKdlvVpbEgnzHSLGp1A0hQBBR++mJ
+        csX/1JXZ8feVN+9pbPAah3v6H5ANPMOoEgxdYP4A=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5295AC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Tue, 19 Nov 2019 00:04:43 +0000
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <freedreno@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/msm/a6xx: restore previous freq on resume
+Message-ID: <0101016e80f9c77a-4b58f055-0911-4d98-887d-0f1df32cdbc8-000000@us-west-2.amazonses.com>
+Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
+        dri-devel@lists.freedesktop.org, Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <freedreno@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191118234043.331542-1-robdclark@gmail.com>
 MIME-Version: 1.0
-References: <20191025044721.16617-1-alastair@au1.ibm.com> <20191025044721.16617-9-alastair@au1.ibm.com>
- <8232c1a6-d52a-6c32-6178-de082174a92a@linux.ibm.com> <CAPcyv4g9b6PyREurH9NcQf4BO2YcRGJPBZDqGKy-Vz91mBKjew@mail.gmail.com>
- <02374c9a-39fb-5693-3d9c-aa7e7674a6c1@linux.ibm.com>
-In-Reply-To: <02374c9a-39fb-5693-3d9c-aa7e7674a6c1@linux.ibm.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 18 Nov 2019 16:04:07 -0800
-Message-ID: <CAPcyv4hDxeJo-i9FG=JBhaK3awjm3cN_MNvdO_7Z=9bJT9wsGw@mail.gmail.com>
-Subject: Re: [PATCH 08/10] nvdimm: Add driver for OpenCAPI Storage Class Memory
-To:     Andrew Donnellan <ajd@linux.ibm.com>
-Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
-        "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org,
-        Oscar Salvador <osalvador@suse.com>,
-        Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>, Qian Cai <cai@lca.pw>,
-        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Linux MM <linux-mm@kvack.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191118234043.331542-1-robdclark@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-SES-Outgoing: 2019.11.19-54.240.27.11
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 3:48 PM Andrew Donnellan <ajd@linux.ibm.com> wrote:
->
-> On 15/11/19 3:35 am, Dan Williams wrote:
-> >> Have you discussed with the directory owner if it's ok to split the
-> >> driver over several files?
-> >
-> > My thought is to establish drivers/opencapi/ and move this and the
-> > existing drivers/misc/ocxl/ bits there.
->
-> Is there any other justification for this we can think of apart from not
-> wanting to put this driver in the nvdimm directory? OpenCAPI drivers
-> aren't really a category of driver unto themselves.
+On Mon, Nov 18, 2019 at 03:40:38PM -0800, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> Previously, if the freq were overriden (ie. via sysfs), it would get
+> reset to max on resume.
 
-The concern is less about adding to drivers/nvdimm/ and more about the
-proper location to house opencapi specific transport and enumeration
-details. The organization I'm looking for is to group platform
-transport and enumeration code together similar to how drivers/pci/
-exists independent of all pci drivers that use that common core. For
-libnvdimm the enumeration is platform specific and calls into the
-nvdimm core. This is why the x86 platform persistent memory bus driver
-lives under drivers/acpi/nfit/ instead of drivers/nvdimm/. The nfit
-driver is an ACPI extension that translates ACPI details into
-libnvdimm core objects.
+Devfreq goes to sleep assuming that the hardware will still be at the same
+frequency when it wakes up but the GMU sneaks out in the middle of the night
+and takes the hardware for a joyride.
 
-The usage of "ocxl" in the source leads me to think part of this
-driver belongs in a directory that has other opencapi specific
-considerations.
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 8 ++++++--
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.h | 3 +++
+>  2 files changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> index 2ca470eb5cb8..b64867701e5a 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> @@ -149,6 +149,8 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
+>  		if (freq == gmu->gpu_freqs[perf_index])
+>  			break;
+>  
+> +	gmu->current_perf_index = perf_index;
+> +
+>  	__a6xx_gmu_set_freq(gmu, perf_index);
+>  }
+>  
+> @@ -741,8 +743,8 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
+>  	gmu_write(gmu, REG_A6XX_GMU_GMU2HOST_INTR_MASK, ~A6XX_HFI_IRQ_MASK);
+>  	enable_irq(gmu->hfi_irq);
+>  
+> -	/* Set the GPU to the highest power frequency */
+> -	__a6xx_gmu_set_freq(gmu, gmu->nr_gpu_freqs - 1);
+> +	/* Set the GPU to the current freq */
+> +	__a6xx_gmu_set_freq(gmu, gmu->current_perf_index);
+>  
+>  	/*
+>  	 * "enable" the GX power domain which won't actually do anything but it
+> @@ -1166,6 +1168,8 @@ static int a6xx_gmu_pwrlevels_probe(struct a6xx_gmu *gmu)
+>  	gmu->nr_gpu_freqs = a6xx_gmu_build_freq_table(&gpu->pdev->dev,
+>  		gmu->gpu_freqs, ARRAY_SIZE(gmu->gpu_freqs));
+>  
+> +	gmu->current_perf_index = gmu->nr_gpu_freqs - 1;
+> +
+>  	/* Build the list of RPMh votes that we'll send to the GMU */
+>  	return a6xx_gmu_rpmh_votes_init(gmu);
+>  }
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> index 39a26dd63674..2af91ed7ed0c 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> @@ -63,6 +63,9 @@ struct a6xx_gmu {
+>  	struct clk_bulk_data *clocks;
+>  	struct clk *core_clk;
+>  
+> +	/* current performance index set externally */
+> +	int current_perf_index;
+> +
+>  	int nr_gpu_freqs;
+>  	unsigned long gpu_freqs[16];
+>  	u32 gx_arc_votes[16];
+> -- 
+> 2.23.0
+> 
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
