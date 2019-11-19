@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D167C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68029C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73368218BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3959B218BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142633;
-	bh=Xty7iWILayDsbcoONT7/PYhnmYTucCABnBcNNL2l8eU=;
+	s=default; t=1574142631;
+	bh=yd/2s7NgD5N/H4tCXDGVVAgmUhkj7AtVXMSL9P/ctck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u3K4W3mYGVv0whBvEN2b0RhYTj6Vp8/cYViry1dE5aEeGGugC36qCkWmPmCLP94gu
-	 FZ1AtdSCszcMxQobv+O8Nxsy+W3t23JrhVk4poBUQkqF5JkJz3Bsyy63l6P00NLmdt
-	 +26KENJboRDCTeXUn3Y6c/+WcilGt54oIJvhfyq4=
+	b=SyOO1VDeWyDqVq+9QCqAyCHrc/jghYlpmvazgMylopNVomyDvxXC9HRRNSWjW26Ia
+	 hci6vmuEjuXdRu/NShHLNOnyuoOMSOV39SAyrzlgtFDIyrvHFrzIdM6RdW+uLs55Rd
+	 5CS3W4FgCo3KgewmJ5GfNvZrVjkGo4OTrVWDLrhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731644AbfKSFuc (ORCPT
+        id S1731636AbfKSFua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:50:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731635AbfKSFua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Nov 2019 00:50:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47476 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731626AbfKSFu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:50:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CA1C21783;
-        Tue, 19 Nov 2019 05:50:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8136B214D9;
+        Tue, 19 Nov 2019 05:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142629;
-        bh=Xty7iWILayDsbcoONT7/PYhnmYTucCABnBcNNL2l8eU=;
+        s=default; t=1574142627;
+        bh=yd/2s7NgD5N/H4tCXDGVVAgmUhkj7AtVXMSL9P/ctck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dyRqyMXcnbhi/H6V/Fd2rE/uqZNCWxYEguPSeoxJLEVahOWFEnJ7+psImzlqearr3
-         A0k4Cp3jrmGT0nXomirWiGb1/TGMw9aU7egs9hat8e+msZ47I3V+dLYLGQNGfYGwQE
-         qinjxEg9iVaJiL8Iq2BTwbhtR5puw9jFe/0+WZF4=
+        b=BuQc1BM1I8/yu19XBJ4e9NwFPz2Etwu7iOf0sPt/oW+xKZ90hVBnV48nUzW8kFmin
+         0c7SRzTHRoeAUFP646uukjTgWH4xjRlKu/FBdzwEn4bdSVfN22y1NLL/VPj2ZgqbJK
+         1IxppL7+D6W6jWYWeM6NZmNh48EoG560b5Eoi3uI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        stable@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, Rob Herring <robh@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 146/239] power: supply: twl4030_charger: fix charging current out-of-bounds
-Date:   Tue, 19 Nov 2019 06:19:06 +0100
-Message-Id: <20191119051332.337633058@linuxfoundation.org>
+Subject: [PATCH 4.14 145/239] libfdt: Ensure INT_MAX is defined in libfdt_env.h
+Date:   Tue, 19 Nov 2019 06:19:05 +0100
+Message-Id: <20191119051332.226062838@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -60,36 +64,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Kemnade <andreas@kemnade.info>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 8314c212f995bc0d06b54ad02ef0ab4089781540 ]
+[ Upstream commit 53dd9dce6979bc54d64a3a09a2fb20187a025be7 ]
 
-the charging current uses unsigned int variables, if we step back
-if the current is still low, we would run into negative which
-means setting the target to a huge value.
-Better add checks here.
+The next update of libfdt has a new dependency on INT_MAX. Update the
+instances of libfdt_env.h in the kernel to either include the necessary
+header with the definition or define it locally.
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/twl4030_charger.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/compressed/libfdt_env.h | 2 ++
+ arch/powerpc/boot/libfdt_env.h        | 2 ++
+ include/linux/libfdt_env.h            | 1 +
+ 3 files changed, 5 insertions(+)
 
-diff --git a/drivers/power/supply/twl4030_charger.c b/drivers/power/supply/twl4030_charger.c
-index 0cc12bfe7b020..d3cba954bab54 100644
---- a/drivers/power/supply/twl4030_charger.c
-+++ b/drivers/power/supply/twl4030_charger.c
-@@ -420,7 +420,8 @@ static void twl4030_current_worker(struct work_struct *data)
+diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
+index 07437816e0986..b36c0289a308e 100644
+--- a/arch/arm/boot/compressed/libfdt_env.h
++++ b/arch/arm/boot/compressed/libfdt_env.h
+@@ -6,6 +6,8 @@
+ #include <linux/string.h>
+ #include <asm/byteorder.h>
  
- 	if (v < USB_MIN_VOLT) {
- 		/* Back up and stop adjusting. */
--		bci->usb_cur -= USB_CUR_STEP;
-+		if (bci->usb_cur >= USB_CUR_STEP)
-+			bci->usb_cur -= USB_CUR_STEP;
- 		bci->usb_cur_target = bci->usb_cur;
- 	} else if (bci->usb_cur >= bci->usb_cur_target ||
- 		   bci->usb_cur + USB_CUR_STEP > USB_MAX_CURRENT) {
++#define INT_MAX			((int)(~0U>>1))
++
+ typedef __be16 fdt16_t;
+ typedef __be32 fdt32_t;
+ typedef __be64 fdt64_t;
+diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
+index f52c31b1f48fa..39155d3b2cefa 100644
+--- a/arch/powerpc/boot/libfdt_env.h
++++ b/arch/powerpc/boot/libfdt_env.h
+@@ -5,6 +5,8 @@
+ #include <types.h>
+ #include <string.h>
+ 
++#define INT_MAX			((int)(~0U>>1))
++
+ #include "of.h"
+ 
+ typedef u32 uint32_t;
+diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+index 14997285e53d3..1aa707ab19bbf 100644
+--- a/include/linux/libfdt_env.h
++++ b/include/linux/libfdt_env.h
+@@ -2,6 +2,7 @@
+ #ifndef _LIBFDT_ENV_H
+ #define _LIBFDT_ENV_H
+ 
++#include <linux/kernel.h>	/* For INT_MAX */
+ #include <linux/string.h>
+ 
+ #include <asm/byteorder.h>
 -- 
 2.20.1
 
