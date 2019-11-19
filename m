@@ -2,68 +2,226 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C284DC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38872C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A67A2223B0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D6E5222AB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:33:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V6SuhijJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfKSSdF (ORCPT
+        id S1727254AbfKSSd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 13:33:05 -0500
-Received: from utopia.booyaka.com ([74.50.51.50]:49355 "EHLO
-        utopia.booyaka.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfKSSdE (ORCPT
+        Tue, 19 Nov 2019 13:33:57 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:43648 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbfKSSd4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 13:33:04 -0500
-Received: (qmail 16630 invoked by uid 1019); 19 Nov 2019 18:33:03 -0000
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 19 Nov 2019 18:33:03 -0000
-Date:   Tue, 19 Nov 2019 18:33:03 +0000 (UTC)
-From:   Paul Walmsley <paul@pwsan.com>
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Palmer Dabbelt <palmer@dabbelt.com>, paul.walmsley@sifive.com,
-        linux-riscv@lists.infradead.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the generic-ioremap tree with the
- risc-v tree
-In-Reply-To: <20191118065149.GA4850@lst.de>
-Message-ID: <alpine.DEB.2.21.999.1911191806040.13729@utopia.booyaka.com>
-References: <20191118174501.73050c78@canb.auug.org.au> <20191118065149.GA4850@lst.de>
-User-Agent: Alpine 2.21.999 (DEB 260 2018-02-26)
+        Tue, 19 Nov 2019 13:33:56 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJIXgds037810;
+        Tue, 19 Nov 2019 12:33:42 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574188422;
+        bh=8pK3SXLXjYCxY82v7l4ZX3F1pn7se04Pm/vVlaxoCso=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=V6SuhijJgP4JlwdJ1DVfiviwwoS40GyKCK0Wn/5rQWdlzTx/wGOVlGB/NGnHJqcOQ
+         07b6VGs8ChQo3Lc3xww+nFTehMSQK7bq23Q8s9a3iA0aKOWTPn+ChogmVCHRHpCqwt
+         Bwn3TkaYNHbkn0C5rhb43DWypnoQcN7f4b5myp2Q=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAJIXgH4103677
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 Nov 2019 12:33:42 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 19
+ Nov 2019 12:33:42 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 19 Nov 2019 12:33:42 -0600
+Received: from [10.250.33.226] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJIXfXh105615;
+        Tue, 19 Nov 2019 12:33:42 -0600
+Subject: Re: [PATCH v2 3/4] leds: tps6105x: add driver for mfd chip led mode
+To:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Axel Lin <axel.lin@ingics.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>
+References: <20191119154611.29625-1-TheSven73@gmail.com>
+ <20191119154611.29625-4-TheSven73@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <23217b5b-90f4-748a-c008-9ae7ef82c6dd@ti.com>
+Date:   Tue, 19 Nov 2019 12:32:05 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191119154611.29625-4-TheSven73@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christoph,
+Sven
 
-On Mon, 18 Nov 2019, Christoph Hellwig wrote:
+On 11/19/19 9:46 AM, Sven Van Asbroeck wrote:
+> This driver adds support for the led operational mode of the
+> tps6105x mfd device.
+How many LEDs does this device support?
+>
+> Example usage, devicetree:
+>
+> i2c0 {
+> 	tps61052@33 {
+> 		compatible = "ti,tps61052";
+> 		reg = <0x33>;
+>
+> 		led {
+> 			label = "tps-led";
+> 		};
+> 	};
+> };
+>
+> Example usage, platform data in machine layer:
+>
+>   #include <linux/mfd/tps6105x.h>
+>
+>   struct tps6105x_platform_data pdata = {
+>           .mode = TPS6105X_MODE_TORCH,
+>           .led_label = "tps-led",
+>   };
+>
+> Tree: next-20191118
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> ---
+>   drivers/leds/Kconfig         | 10 +++++
+>   drivers/leds/Makefile        |  1 +
+>   drivers/leds/leds-tps6105x.c | 87 ++++++++++++++++++++++++++++++++++++
+>   include/linux/mfd/tps6105x.h |  1 +
+>   4 files changed, 99 insertions(+)
+>   create mode 100644 drivers/leds/leds-tps6105x.c
+>
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index 4b68520ac251..7c7ceaa824a2 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -836,6 +836,16 @@ config LEDS_LM36274
+>   	  Say Y to enable the LM36274 LED driver for TI LMU devices.
+>   	  This supports the LED device LM36274.
+>   
+> +config LEDS_TPS6105X
+> +	tristate "LED support for TI TPS6105X"
+> +	depends on LEDS_CLASS
+> +	depends on TPS6105X
+> +	default y if TPS6105X
+> +	help
+> +	  This driver supports TPS61050/TPS61052 led chips.
+> +	  It is a single boost converter primarily for white LEDs and
+> +	  audio amplifiers.
+> +
+>   comment "LED Triggers"
+>   source "drivers/leds/trigger/Kconfig"
+>   
+> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> index 2da39e896ce8..d7e1107753fb 100644
+> --- a/drivers/leds/Makefile
+> +++ b/drivers/leds/Makefile
+> @@ -85,6 +85,7 @@ obj-$(CONFIG_LEDS_LM3601X)		+= leds-lm3601x.o
+>   obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= leds-ti-lmu-common.o
+>   obj-$(CONFIG_LEDS_LM3697)		+= leds-lm3697.o
+>   obj-$(CONFIG_LEDS_LM36274)		+= leds-lm36274.o
+> +obj-$(CONFIG_LEDS_TPS6105X)		+= leds-tps6105x.o
+>   
+>   # LED SPI Drivers
+>   obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
+> diff --git a/drivers/leds/leds-tps6105x.c b/drivers/leds/leds-tps6105x.c
+> new file mode 100644
+> index 000000000000..87dbe4846df6
+> --- /dev/null
+> +++ b/drivers/leds/leds-tps6105x.c
+> @@ -0,0 +1,87 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +
+> +#include <linux/leds.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/mfd/tps6105x.h>
+> +#include <linux/regmap.h>
+> +
+> +struct tps6105x_priv {
+> +	struct regmap *regmap;
+> +	struct led_classdev cdev;
+> +};
+> +
+> +static int tps6105x_brightness_set(struct led_classdev *cdev,
+> +				  enum led_brightness brightness)
+> +{
+> +	struct tps6105x_priv *priv = container_of(cdev, struct tps6105x_priv,
+> +							cdev);
+> +
+> +	return regmap_update_bits(priv->regmap, TPS6105X_REG_0,
+> +		TPS6105X_REG0_TORCHC_MASK,
+> +		brightness << TPS6105X_REG0_TORCHC_SHIFT);
+> +}
+> +
+> +static const char *label_from_dt(struct device *dev)
+> +{
+> +	struct device_node *led =
+> +		of_get_child_by_name(dev->parent->of_node, "led");
+Prefer device_* calls as opposed to of_* calls.
+> +	const char *label;
+> +
+> +	if (!led) {
+> +		dev_err(dev, "led node not found");
+> +		return NULL;
+> +	}
+> +	if (of_property_read_string(led, "label", &label))
+same as above
+> +		label = NULL;
+> +	of_node_put(led);
+> +
+> +	return label;
+> +}
+> +
+> +static int tps6105x_led_probe(struct platform_device *pdev)
+> +{
+> +	struct tps6105x *tps6105x = dev_get_platdata(&pdev->dev);
+> +	struct tps6105x_platform_data *pdata = tps6105x->pdata;
+> +	struct tps6105x_priv *priv;
+> +	const char *label;
+> +	int ret;
+> +
+> +	/* This instance is not set for torch mode so bail out */
+> +	if (pdata->mode != TPS6105X_MODE_TORCH) {
+> +		dev_info(&pdev->dev,
+> +			"chip not in torch mode, exit probe");
+> +		return -EINVAL;
+> +	}
+> +
+> +	label = pdata->led_label ?: label_from_dt(&pdev->dev);
 
-> On Mon, Nov 18, 2019 at 05:45:01PM +1100, Stephen Rothwell wrote:
-> >   0c3ac28931d5 ("riscv: separate MMIO functions into their own header file")
-> 
-> As already mentioned in reply to this patch when it was posted I think
-> this kinda of split is a very bad idea.  
+Since this is a new driver do we really have to continue to use the 
+pdata for the init
 
-Unless I missed a followup from you, you mentioned that you thought there 
-might be a better way to implement it, but you didn't highlight any 
-problems with it:
+data?  Can't we just get the label from the DT node now like other drivers?
 
-   https://lore.kernel.org/linux-riscv/20191031155608.GB7270@lst.de/
-
-If you think there's something critically wrong with the patch that can be 
-fixed in time for the merge window, I'm happy to take a look at a 
-proposal.  Otherwise I think we'll need to drop the nommu set from the 
-v5.5 queue.
+Dan
 
 
-- Paul
