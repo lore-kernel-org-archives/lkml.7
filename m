@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB886C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64505C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F76721739
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C8B4208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141025;
-	bh=sm1EhOKQK1y+CCqUuavqqCwAKgiFTi6pmR57AvcYe98=;
+	s=default; t=1574141033;
+	bh=lJqKMzsQM394exQ/gOIojX+fRwIsFX9ervvaWqFiaVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dGrgUqHJxxdnrLdVUdO0i+FZJEsQlaWumrwRSNk+7t+2pl3E/Z47X8I1HOdeqUSwc
-	 MaOMy/ba9iTSC6BqLR907UYTk7ODmcXhD4JXRjWZtS28kVmhYLYTjHyxTCZ6pci5ij
-	 ERVo1d3L+lt6L8G7nnoP+Z/Hh1m4Qi7ZePQEFUrY=
+	b=AzoDZ4Uj4sk5JzYkkWEUtbzcG1BIBBMtnNg8JRTy658vbLwjR/RcscmV77KbI2uP7
+	 jrvvt/b9RcPlsbXZGPvnklqkv25PZiT1okA6j9yZApKY3rEQMDxzzT4yON13umBzch
+	 72xHdvrl9J2NM62qP3H/pwx9zoZFgbXqAS1uctwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbfKSFXo (ORCPT
+        id S1728083AbfKSFXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:23:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39420 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:23:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728028AbfKSFXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:23:41 -0500
+        id S1728066AbfKSFXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:23:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEC822231D;
-        Tue, 19 Nov 2019 05:23:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99370208C3;
+        Tue, 19 Nov 2019 05:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141020;
-        bh=sm1EhOKQK1y+CCqUuavqqCwAKgiFTi6pmR57AvcYe98=;
+        s=default; t=1574141028;
+        bh=lJqKMzsQM394exQ/gOIojX+fRwIsFX9ervvaWqFiaVI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wpBjIXQ4Cs5+7mAW6odIIEcIGNbxURHHBMqKbMrYc71maZQb0gr11akmD/R1dARvg
-         Y/adMphrF7eOFg4wI6gO+qMpgNjnRwO/bVvO/b1I2jAIG6+Zz//o9NUrXqsusfeBQZ
-         mD447KO4IWReAB6bYEv2AJZNzvsgkbRkYGmU3Y6I=
+        b=ICzB/SE9HB7N6d7yKXDD/QcQLXVdgoQeo18jfKTgkg0wWOlgbQxOfbh57UXabLkTT
+         FviQZ1EIkW6ms0B/JsgPto9gf6gsPom4JT+Ed0zqzxGCAHXbSPt2tB4FarP6HfVHfc
+         WLJf3XuxrfWO42MwdRPBQHWPaHbVeVHJDOPhJjeg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Duggan <aduggan@synaptics.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.19 018/422] Input: synaptics-rmi4 - do not consume more data than we have (F11, F12)
-Date:   Tue, 19 Nov 2019 06:13:35 +0100
-Message-Id: <20191119051401.297643776@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        James Erwin <james.erwin@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.19 021/422] IB/hfi1: Ensure full Gen3 speed in a Gen4 system
+Date:   Tue, 19 Nov 2019 06:13:38 +0100
+Message-Id: <20191119051401.474331011@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -59,53 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Duggan <aduggan@synaptics.com>
+From: James Erwin <james.erwin@intel.com>
 
-commit 5d40d95e7e64756cc30606c2ba169271704d47cb upstream.
+commit a9c3c4c597704b3a1a2b9bef990e7d8a881f6533 upstream.
 
-Currently, rmi_f11_attention() and rmi_f12_attention() functions update
-the attn_data data pointer and size based on the size of the expected
-size of the attention data. However, if the actual valid data in the
-attn buffer is less then the expected value then the updated data
-pointer will point to memory beyond the end of the attn buffer. Using
-the calculated valid_bytes instead will prevent this from happening.
+If an hfi1 card is inserted in a Gen4 systems, the driver will avoid the
+gen3 speed bump and the card will operate at half speed.
 
-Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191025002527.3189-3-aduggan@synaptics.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+This is because the driver avoids the gen3 speed bump when the parent bus
+speed isn't identical to gen3, 8.0GT/s.  This is not compatible with gen4
+and newer speeds.
+
+Fix by relaxing the test to explicitly look for the lower capability
+speeds which inherently allows for gen4 and all future speeds.
+
+Fixes: 7724105686e7 ("IB/hfi1: add driver files")
+Link: https://lore.kernel.org/r/20191101192059.106248.1699.stgit@awfm-01.aw.intel.com
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Reviewed-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: James Erwin <james.erwin@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/rmi4/rmi_f11.c |    4 ++--
- drivers/input/rmi4/rmi_f12.c |    4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/infiniband/hw/hfi1/pcie.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/input/rmi4/rmi_f11.c
-+++ b/drivers/input/rmi4/rmi_f11.c
-@@ -1287,8 +1287,8 @@ static irqreturn_t rmi_f11_attention(int
- 			valid_bytes = f11->sensor.attn_size;
- 		memcpy(f11->sensor.data_pkt, drvdata->attn_data.data,
- 			valid_bytes);
--		drvdata->attn_data.data += f11->sensor.attn_size;
--		drvdata->attn_data.size -= f11->sensor.attn_size;
-+		drvdata->attn_data.data += valid_bytes;
-+		drvdata->attn_data.size -= valid_bytes;
- 	} else {
- 		error = rmi_read_block(rmi_dev,
- 				data_base_addr, f11->sensor.data_pkt,
---- a/drivers/input/rmi4/rmi_f12.c
-+++ b/drivers/input/rmi4/rmi_f12.c
-@@ -217,8 +217,8 @@ static irqreturn_t rmi_f12_attention(int
- 			valid_bytes = sensor->attn_size;
- 		memcpy(sensor->data_pkt, drvdata->attn_data.data,
- 			valid_bytes);
--		drvdata->attn_data.data += sensor->attn_size;
--		drvdata->attn_data.size -= sensor->attn_size;
-+		drvdata->attn_data.data += valid_bytes;
-+		drvdata->attn_data.size -= valid_bytes;
- 	} else {
- 		retval = rmi_read_block(rmi_dev, f12->data_addr,
- 					sensor->data_pkt, sensor->pkt_size);
+--- a/drivers/infiniband/hw/hfi1/pcie.c
++++ b/drivers/infiniband/hw/hfi1/pcie.c
+@@ -331,7 +331,9 @@ int pcie_speeds(struct hfi1_devdata *dd)
+ 	/*
+ 	 * bus->max_bus_speed is set from the bridge's linkcap Max Link Speed
+ 	 */
+-	if (parent && dd->pcidev->bus->max_bus_speed != PCIE_SPEED_8_0GT) {
++	if (parent &&
++	    (dd->pcidev->bus->max_bus_speed == PCIE_SPEED_2_5GT ||
++	     dd->pcidev->bus->max_bus_speed == PCIE_SPEED_5_0GT)) {
+ 		dd_dev_info(dd, "Parent PCIe bridge does not support Gen3\n");
+ 		dd->link_gen3_capable = 0;
+ 	}
 
 
