@@ -2,62 +2,94 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8F0C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD37DC43141
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FCF1222B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE96E222B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:19:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbfKSNSR (ORCPT
+        id S1727825AbfKSNT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 08:18:17 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39940 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725904AbfKSNSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 08:18:17 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 210A3B03A;
-        Tue, 19 Nov 2019 13:18:16 +0000 (UTC)
-Subject: Re: [PATCH 2/2] x86/Xen/32: simplify xen_iret_crit_fixup's ring check
-To:     Jan Beulich <jbeulich@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-References: <d66b1da4-8096-9b77-1ca6-d6b9954b113c@suse.com>
- <a5986837-01eb-7bf8-bf42-4d3084d6a1f5@suse.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <fcfc2cc3-4f98-882d-ed14-d6e2e4d8731d@suse.com>
-Date:   Tue, 19 Nov 2019 14:18:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 19 Nov 2019 08:19:26 -0500
+Received: from relay.sw.ru ([185.231.240.75]:37432 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726378AbfKSNT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 08:19:26 -0500
+Received: from dhcp-172-16-25-5.sw.ru ([172.16.25.5] helo=i7.sw.ru)
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1iX3PT-0007Sl-0S; Tue, 19 Nov 2019 16:19:11 +0300
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Hugh Dickins <hughd@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] mm/ksm: Don't WARN if page is still mapped in remove_stable_node()
+Date:   Tue, 19 Nov 2019 16:18:50 +0300
+Message-Id: <20191119131850.5675-1-aryabinin@virtuozzo.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <a5986837-01eb-7bf8-bf42-4d3084d6a1f5@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.11.19 15:32, Jan Beulich wrote:
-> This can be had with two instead of six insns, by just checking the high
-> CS.RPL bit.
-> 
-> Also adjust the comment - there would be no #GP in the mentioned cases,
-> as there's no segment limit violation or alike. Instead there'd be #PF,
-> but that one reports the target EIP of said branch, not the address of
-> the branch insn itself.
-> 
-> Signed-off-by: Jan Beulich <jbeulich@suse.com>
+It's possible to hit the WARN_ON_ONCE(page_mapped(page)) in
+remove_stable_node() when it races with __mmput() and squeezes
+in between ksm_exit() and exit_mmap().
 
-Reviewed-by: Juergen Gross <jgross@suse.com>
+ WARNING: CPU: 0 PID: 3295 at mm/ksm.c:888 remove_stable_node+0x10c/0x150
 
+ Call Trace:
+  remove_all_stable_nodes+0x12b/0x330
+  run_store+0x4ef/0x7b0
+  kernfs_fop_write+0x200/0x420
+  vfs_write+0x154/0x450
+  ksys_write+0xf9/0x1d0
+  do_syscall_64+0x99/0x510
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Juergen
+Remove the warning as there is nothing scary going on.
+
+Fixes: cbf86cfe04a6 ("ksm: remove old stable nodes more thoroughly")
+Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: <stable@vger.kernel.org>
+---
+ mm/ksm.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/mm/ksm.c b/mm/ksm.c
+index dbee2eb4dd05..7905934cd3ad 100644
+--- a/mm/ksm.c
++++ b/mm/ksm.c
+@@ -885,13 +885,13 @@ static int remove_stable_node(struct stable_node *stable_node)
+ 		return 0;
+ 	}
+ 
+-	if (WARN_ON_ONCE(page_mapped(page))) {
+-		/*
+-		 * This should not happen: but if it does, just refuse to let
+-		 * merge_across_nodes be switched - there is no need to panic.
+-		 */
+-		err = -EBUSY;
+-	} else {
++	/*
++	 * Page could be still mapped if this races with __mmput() running in
++	 * between ksm_exit() and exit_mmap(). Just refuse to let
++	 * merge_across_nodes/max_page_sharing be switched.
++	 */
++	err = -EBUSY;
++	if (!page_mapped(page)) {
+ 		/*
+ 		 * The stable node did not yet appear stale to get_ksm_page(),
+ 		 * since that allows for an unmapped ksm page to be recognized
+-- 
+2.23.0
+
