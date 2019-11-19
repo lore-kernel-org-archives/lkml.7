@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52315C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6637EC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DF9E208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37BC021783
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142554;
-	bh=2UhFLBsOtNLWkKSg9OQa1ADu0rYZXbSSRK1EzggFSac=;
+	s=default; t=1574142557;
+	bh=XTKduqN7mHhES6KQ6cLQz/6SZSC+gMKdX1Jkj9OtVMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s3wrFe7MqTVBSlpNe8OtOmX2A0SBoQX1PtYwm6VB2RGV/Fu5Jz6ALc04VabcYLA7p
-	 +G0neRiGVUkJ+GwVCnVe4l64sdIYMQ1ozag5kqFQ1kPaQCjhiWl8ankh2rtOgwO2RL
-	 6gJCz1lkhEC9d+pn8M1A+Bzgxur/K1d+jfy1a4qs=
+	b=OjJZHQeE+3Z1WRPUErjjg4u6LKLoXXdTr6FYhGg+3nv9l2knb7eei0R0qPYVQ5jWs
+	 46aRbRH5f7UItXe82FXIjRviWGcW2jWoJuea5YPu27kzdewgIUkdmDxxvb2yDZPJfp
+	 D4sFIGcWG3cA5FWtZcXAYogtTUR/y5+F+rlQoD6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731460AbfKSFtM (ORCPT
+        id S1731466AbfKSFtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:49:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45828 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:49:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730779AbfKSFtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:49:10 -0500
+        id S1730779AbfKSFtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:49:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A67EF20721;
-        Tue, 19 Nov 2019 05:49:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58A37208C3;
+        Tue, 19 Nov 2019 05:49:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142550;
-        bh=2UhFLBsOtNLWkKSg9OQa1ADu0rYZXbSSRK1EzggFSac=;
+        s=default; t=1574142552;
+        bh=XTKduqN7mHhES6KQ6cLQz/6SZSC+gMKdX1Jkj9OtVMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NY1h7S0LJLom4J5p8nbNIT6KljhqmppY7NGvewg4GQ6i5gJVowSiSxJH0pRg4Qssz
-         iIHpTJuu6zX70UNBTF9thgkb04Iy8B/h2jqi6CGgvMzzMiq3nDIwlAmHY8dFHbcFiq
-         EpXPxDuqWWRF4u0MoTP3SjCu+hinjblaRAQklhKI=
+        b=RBygYwKIw7oruLMZG0sFuS1arLj77J93Rn387YR6+nBDs+gytXaX053q8K6oGZYi4
+         T/kufXkaCqS/GdsSnO3QvFjlTpeVvh6QHWvGlaAMI3XN6G4jjdFP8geXYIwXoV5FKQ
+         se9agfvqfDlycFArCuU/Ehz93dhcQQWCQ/p4LWb0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Ganesh Goudar <ganeshgr@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 118/239] cxgb4: Fix endianness issue in t4_fwcache()
-Date:   Tue, 19 Nov 2019 06:18:38 +0100
-Message-Id: <20191119051329.386570360@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 119/239] blok, bfq: do not plug I/O if all queues are weight-raised
+Date:   Tue, 19 Nov 2019 06:18:39 +0100
+Message-Id: <20191119051329.460723697@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,33 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ganesh Goudar <ganeshgr@chelsio.com>
+From: Paolo Valente <paolo.valente@linaro.org>
 
-[ Upstream commit 0dc235afc59a226d951352b0adf4a89b532a9d13 ]
+[ Upstream commit c8765de0adfcaaf4ffb2d951e07444f00ffa9453 ]
 
-Do not put host-endian 0 or 1 into big endian feild.
+To reduce latency for interactive and soft real-time applications, bfq
+privileges the bfq_queues containing the I/O of these
+applications. These privileged queues, referred-to as weight-raised
+queues, get a much higher share of the device throughput
+w.r.t. non-privileged queues. To preserve this higher share, the I/O
+of any non-weight-raised queue must be plugged whenever a sync
+weight-raised queue, while being served, remains temporarily empty. To
+attain this goal, bfq simply plugs any I/O (from any queue), if a sync
+weight-raised queue remains empty while in service.
 
-Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Ganesh Goudar <ganeshgr@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Unfortunately, this plugging typically lowers throughput with random
+I/O, on devices with internal queueing (because it reduces the filling
+level of the internal queues of the device).
+
+This commit addresses this issue by restricting the cases where
+plugging is performed: if a sync weight-raised queue remains empty
+while in service, then I/O plugging is performed only if some of the
+active bfq_queues are *not* weight-raised (which is actually the only
+circumstance where plugging is needed to preserve the higher share of
+the throughput of weight-raised queues). This restriction proved able
+to boost throughput in really many use cases needing only maximum
+throughput.
+
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/t4_hw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/bfq-iosched.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-index 1802debbd3c7e..39bcf27902e4b 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-@@ -3750,7 +3750,7 @@ int t4_fwcache(struct adapter *adap, enum fw_params_param_dev_fwcache op)
- 	c.param[0].mnem =
- 		cpu_to_be32(FW_PARAMS_MNEM_V(FW_PARAMS_MNEM_DEV) |
- 			    FW_PARAMS_PARAM_X_V(FW_PARAMS_PARAM_DEV_FWCACHE));
--	c.param[0].val = (__force __be32)op;
-+	c.param[0].val = cpu_to_be32(op);
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index e65b0da1007b4..93863c6173e66 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -3314,7 +3314,12 @@ static bool bfq_bfqq_may_idle(struct bfq_queue *bfqq)
+ 	 * whether bfqq is being weight-raised, because
+ 	 * bfq_symmetric_scenario() does not take into account also
+ 	 * weight-raised queues (see comments on
+-	 * bfq_weights_tree_add()).
++	 * bfq_weights_tree_add()). In particular, if bfqq is being
++	 * weight-raised, it is important to idle only if there are
++	 * other, non-weight-raised queues that may steal throughput
++	 * to bfqq. Actually, we should be even more precise, and
++	 * differentiate between interactive weight raising and
++	 * soft real-time weight raising.
+ 	 *
+ 	 * As a side note, it is worth considering that the above
+ 	 * device-idling countermeasures may however fail in the
+@@ -3326,7 +3331,8 @@ static bool bfq_bfqq_may_idle(struct bfq_queue *bfqq)
+ 	 * to let requests be served in the desired order until all
+ 	 * the requests already queued in the device have been served.
+ 	 */
+-	asymmetric_scenario = bfqq->wr_coeff > 1 ||
++	asymmetric_scenario = (bfqq->wr_coeff > 1 &&
++			       bfqd->wr_busy_queues < bfqd->busy_queues) ||
+ 		!bfq_symmetric_scenario(bfqd);
  
- 	return t4_wr_mbox(adap, adap->mbox, &c, sizeof(c), NULL);
- }
+ 	/*
 -- 
 2.20.1
 
