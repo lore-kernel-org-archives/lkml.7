@@ -2,169 +2,152 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9049EC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6BEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6153020708
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:10:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574161822;
-	bh=f3XQOuzoJIC7/XNIzVgs+bvJ6qDl3730SSg9uI/Eii0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hfhjVBUulGuTnSLOMscDm+qV6d/kAN6RQZPeuM+QRksmg45ATqV1RQ0e7vUezYpn5
-	 9VJOxNtJm6SoYZB+ofRXF7IncJdZf5P3r2IoikMOEPUeNmWpLvBBGDcZ9DuV1DXx3t
-	 1bXsp2ManQjsuZvSDtbyPWRraHJEwXTi5DCNAffo=
+	by mail.kernel.org (Postfix) with ESMTP id 57BE420708
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:10:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbfKSLKV (ORCPT
+        id S1727729AbfKSLKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 06:10:21 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39805 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbfKSLKU (ORCPT
+        Tue, 19 Nov 2019 06:10:33 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4774 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726000AbfKSLKc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 06:10:20 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t26so3051969wmi.4;
-        Tue, 19 Nov 2019 03:10:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NYWeXLuQGLvOPwK8pHNuzurveHjA/E4XL3deYT2CQ6Q=;
-        b=skdJ1UEHu5PJl89Mkk9VRRqLagIUdwLLzIvfE7qxc79DduSNiquwoFXzoJXVUbZ9zw
-         g1cNgucakgJrNBfc9PtJPQUQH7hiPIbQNdvm4HfPAxaPqEE5yDoU/Fm0WZrr770x6z9Z
-         1mV4N6EIFIO+H5heFTgopWe3ElCwZHNDP6TrB6ZxXDF+BVJoJCgzBj9WZ81yUaCLfyGK
-         QBfOV9xXA4+nU1SmqoIng5FZDcMYQif9wRQNWBuakBreDAgwkdsGdC6lPo7bjUeRutEb
-         FqwSvcrmf/LrgaSpoIWvYSkunbCfPVklaj+EQbJw7jUcxpmgoRV0aJoU4yUuzBudNnyu
-         7iYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NYWeXLuQGLvOPwK8pHNuzurveHjA/E4XL3deYT2CQ6Q=;
-        b=hZmXTyiyx7aVpTe+a8ydQ0G4XT+90owkQ5cxH1ixfdTTwdvTgb0r4PkMJeqhvjlpV5
-         vZWknw9yZOszz1sQUHUC/AzaE74Vwxy9ZhC1/zSmm2vinDq19hphlDcM4QQCshQe6CU+
-         HJXBERLE6vh7N0to9kNRNm/mr1mYY47a0dJ+LE2uwVZCltntBE2ZVUjDA55HdUVxlONc
-         JnKUEqVZUxEZ5DsRLjLe5yLoSHBIh8umj3Rgk58xywo86ikHpsoBkyQza/nD/LFsYnZH
-         k/YAIO/ro2U8w205N0idlkMnzyDb5qGSlou/o67wPxA1ItWynr5d6ProFXaSuYhB4WiW
-         nwSw==
-X-Gm-Message-State: APjAAAURyIdLbu0gCAqW4G/EW90ZQ3Rrmta4rIEKzEu/L9lVmkJfbXdL
-        aQYaC6TW1B09T3/3NR/mxoA=
-X-Google-Smtp-Source: APXvYqxkMDs2asP+vgJXKZTaN6ik3+6S/o6ZGiHDU8XukZ5zzOg6DqoFabjwqzDackICD1Kv7aubiw==
-X-Received: by 2002:a7b:cb4a:: with SMTP id v10mr4628412wmj.106.1574161816817;
-        Tue, 19 Nov 2019 03:10:16 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id z4sm2754237wmf.36.2019.11.19.03.10.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 03:10:15 -0800 (PST)
-Date:   Tue, 19 Nov 2019 12:10:12 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Nadav Amit <namit@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-acpi@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH 00/12] treewide: break dependencies on x86's RM header
-Message-ID: <20191119111012.GA109842@gmail.com>
-References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
+        Tue, 19 Nov 2019 06:10:32 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAJB7llh051686
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 06:10:31 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wcf58ghmn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 06:10:31 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Tue, 19 Nov 2019 11:10:29 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 19 Nov 2019 11:10:25 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAJBAOfh45744278
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 11:10:24 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A019DAE06C;
+        Tue, 19 Nov 2019 11:10:23 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 39272AE061;
+        Tue, 19 Nov 2019 11:10:23 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.42])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 19 Nov 2019 11:10:23 +0000 (GMT)
+Date:   Tue, 19 Nov 2019 12:10:22 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
+        Michael Mueller <mimu@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>, Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH 1/1] virtio_ring: fix return code on DMA mapping fails
+In-Reply-To: <20191114124646.74790-1-pasic@linux.ibm.com>
+References: <20191114124646.74790-1-pasic@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119002121.4107-1-sean.j.christopherson@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19111911-0012-0000-0000-00000367F12E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19111911-0013-0000-0000-000021A37ACA
+Message-Id: <20191119121022.03aed69a.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-19_03:2019-11-15,2019-11-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 impostorscore=0 lowpriorityscore=0 priorityscore=1501
+ adultscore=0 clxscore=1015 bulkscore=0 spamscore=0 mlxscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1911190105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+ping
 
-* Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+On Thu, 14 Nov 2019 13:46:46 +0100
+Halil Pasic <pasic@linux.ibm.com> wrote:
 
-> x86's asm/realmode.h, which defines low level structures, variables and
-> helpers used to bring up APs during SMP boot, ends up getting included in
-> practically every nook and cranny of the kernel because the address used
-> by ACPI for resuming from S3 also happens to be stored in the real mode
-> header, and ACPI bleeds the dependency into its widely included headers.
+> Commit 780bc7903a32 ("virtio_ring: Support DMA APIs")  makes
+> virtqueue_add() return -EIO when we fail to map our I/O buffers. This is
+> a very realistic scenario for guests with encrypted memory, as swiotlb
+> may run out of space, depending on it's size and the I/O load.
 > 
-> As a result, modifying realmode.h for even the most trivial change to the
-> boot code triggers a full kernel rebuild, which is frustrating to say the
-> least as it some of the most difficult code to get exactly right *and* is
-> also some of the most functionally isolated code in the kernel.
+> The virtio-blk driver interprets -EIO form virtqueue_add() as an IO
+> error, despite the fact that swiotlb full is in absence of bugs a
+> recoverable condition.
 > 
-> To break the kernel's widespread dependency on realmode.h, add a wrapper
-> in the aforementioned ACPI S3 code to access the real mode header instead
-> of derefencing the header directly in asm/acpi.h and thereby exposing it
-> to the world via linux/acpi.h.
+> Let us change the return code to -ENOMEM, and make the block layer
+> recover form these failures when virtio-blk encounters the condition
+> described above.
 > 
-> Build tested on x86 with allyesconfig and allmodconfig, so hopefully there
-> aren't more build issues lurking, but at this point it wouldn't surprise
-> me in the least if this somehow manages to break the build.
+> Fixes: 780bc7903a32 ("virtio_ring: Support DMA APIs")
+> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> Tested-by: Michael Mueller <mimu@linux.ibm.com>
+> ---
 > 
-> Based on tip/master, commit ceceaf1f12ba ("Merge branch 'WIP.x86/cleanups'").
+> Notes
+> =====
 > 
-> Patch Synopsis:
->   - Patches 01-09 fix a variety of build errors that arise when patch 12
->     drops realmode.h from asm/acpi.h.  Most of the errors are quite absurb
->     as they have no relation whatsoever to x86's RM boot code, but occur
->     because realmode.h happens to include asm/io.h.
-
-Yeah, these kind of parasitic header dependencies are the main driving 
-force behind kernel header spaghetti hell: it's super easy to add a new 
-header, but very hard to remove them...
-
-Hence they practically only accumulate.
-
-As a result header removal patches get priority, from me at least. :-)
-
->   - Patch 10 removes a spurious include of realmode.h from an ACPI header.
+> * When out of descriptors (which might regarded as a similar out of
+> resources condition) virtio uses -ENOSPC, this however seems wrong,
+> as ENOSPC is defined as -ENOSPC. Thus I choose -ENOMEM over -ENOSPC.
 > 
->   - Patches 11 and 12 implement the wrapper and move it out of acpi.h.
+> * In virtio_queue_rq() in virtio_blk.c both -ENOMEM and -ENOSPC are
+> handled as BLK_STS_DEV_RESOURCE. Returning BLK_STS_RESOURCE however
+> seems more appropriate for dma mapping failed as we are talking about
+> a global, and not a device local resource. Both seem to do the trick.
+> 
+> * Mimu tested the patch with virtio-blk and virtio-net (thanks!). We
+> should look into how other virtio devices behave when DMA mapping fails.
+> ---
+>  drivers/virtio/virtio_ring.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> index a8041e451e9e..867c7ebd3f10 100644
+> --- a/drivers/virtio/virtio_ring.c
+> +++ b/drivers/virtio/virtio_ring.c
+> @@ -583,7 +583,7 @@ static inline int virtqueue_add_split(struct virtqueue *_vq,
+>  		kfree(desc);
+>  
+>  	END_USE(vq);
+> -	return -EIO;
+> +	return -ENOMEM;
+>  }
+>  
+>  static bool virtqueue_kick_prepare_split(struct virtqueue *_vq)
+> @@ -1085,7 +1085,7 @@ static int virtqueue_add_indirect_packed(struct vring_virtqueue *vq,
+>  	kfree(desc);
+>  
+>  	END_USE(vq);
+> -	return -EIO;
+> +	return -ENOMEM;
+>  }
+>  
+>  static inline int virtqueue_add_packed(struct virtqueue *_vq,
 
-So if the ACPI maintainers are fine with -tip carrying patches #11 and #12
-then I'd be glad to route these patches upstream.
-
-I've applied them to tip:WIP.core/headers as a work-in-progress tree, and 
-I'm testing them on randconfigs to make sure there's no broken 
-dependencies. I'll wait for the ACPI acks.
-
-I edited the title of patch 12 slightly, to:
-
-   c8bceb321209: x86/ACPI/sleep: Move acpi_wakeup_address() definition into sleep.c, remove <asm/realmode.h> from <asm/acpi.h>
-
-to make sure the big header dependency change is obvious at first sight.
-
-Thanks,
-
-	Ingo
