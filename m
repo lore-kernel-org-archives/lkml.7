@@ -2,88 +2,115 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6509BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7280CC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 283F5206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44647206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143265;
-	bh=UwBJZoz9GrgalpPxw28oDcIL0daCumvlEcO2T7STbEs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y3+w4jPCz9jJObOrtdPepDk9hpftVumPgecFUiA8at3nrPyvGIcjBWudJvLOJNc6y
-	 N0HmsYCPOvHwp8DrNr7J7KdJZ9rLOcq13+V22xAPcMwiTm93T1hHZk96JqnC2OV2uj
-	 nKpWOmpJFq6NdhBkGIPA8lbqiIju08D7pJfyQPXg=
+	s=default; t=1574143269;
+	bh=jHCaCThgU4X31QvfveZ85LoX6zHx6CKBd0KHw9g/OJs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DzYaH1b/5EaE2upS7jbHaGJSOGxFHr2Zgwm/QlKEp7y2Nak7Nl9O04SyYjxcthVZf
+	 wmgEAUel7HCp5vt1qx1+FrH9hDzZnUJ787cbxYLGFHy9liEzZQW+oXSOMVEXXJCR73
+	 9+2rPpKoN+WQ3mr4Wq7+jMifwYolb7I4tpgTwdik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730354AbfKSFob (ORCPT
+        id S1728834AbfKSGBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:44:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39802 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 01:01:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730000AbfKSFo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:44:27 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        id S1730375AbfKSFo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:44:28 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B201D21939;
-        Tue, 19 Nov 2019 05:44:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C3B42230F;
+        Tue, 19 Nov 2019 05:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1574142267;
-        bh=UwBJZoz9GrgalpPxw28oDcIL0daCumvlEcO2T7STbEs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0FVUZTd4avgbrAMuNCS1RvWbmrPLVm430fPw6jrJTMwXh7Mhzvx3lFj6EYWkNOFV3
-         EhJTOw1z7fSvtDvvHvlfRIZFvJSX94aTuKrTkuphj/KsKCdi3XXzGHTZe+tZQmrO1l
-         g908XS9+zNWTs1gmM2q+w+zXmTAbmRrFZEjg2DC8=
-Date:   Mon, 18 Nov 2019 21:44:25 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     syzbot <syzbot+787bcbef9b5fec61944b@syzkaller.appspotmail.com>
-Cc:     alexander.levin@microsoft.com, davem@davemloft.net,
-        devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
-        paulmck@linux.ibm.com, syzkaller-bugs@googlegroups.com,
-        valdis.kletnieks@vt.edu
-Subject: Re: WARNING in bdev_read
-Message-ID: <20191119054425.GO163020@sol.localdomain>
-References: <00000000000073309e05951e2dc1@google.com>
+        bh=jHCaCThgU4X31QvfveZ85LoX6zHx6CKBd0KHw9g/OJs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Ew/FEdC1eVTc+yFXbbQp2e1stPCCCWrsA8o1Q/uV5mXjcO2ytqLv+2DJyRGx6R/ys
+         51JMfCpOx5BlKBqCdfxGPy3GxCYSwPChJJ98X9cSj+APPtbSwRCjZa8PtzlgSMnaPQ
+         0+8y87YTpCSiBGhJV0tnRoCcPMPRVK7JdlWodrU4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 4.14 023/239] ecryptfs_lookup_interpose(): lower_dentry->d_parent is not stable either
+Date:   Tue, 19 Nov 2019 06:17:03 +0100
+Message-Id: <20191119051302.099601261@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
+References: <20191119051255.850204959@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <00000000000073309e05951e2dc1@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 10:02:07AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    bc88f85c kthread: make __kthread_queue_delayed_work static
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14e25608e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=e0ac4d9b35046343
-> dashboard link: https://syzkaller.appspot.com/bug?extid=787bcbef9b5fec61944b
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=159fd353600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17e82173600000
-> 
-> The bug was bisected to:
-> 
-> commit c48c9f7ff32b8b3965a08e40eb6763682d905b5d
-> Author: Valdis Klētnieks <valdis.kletnieks@vt.edu>
-> Date:   Wed Aug 28 16:08:17 2019 +0000
-> 
->     staging: exfat: add exfat filesystem code to staging
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-This bisection looks correct.
+commit 762c69685ff7ad5ad7fee0656671e20a0c9c864d upstream.
 
-On a related topic: it seems the exfat filesystem is missing a mailing list.
+We need to get the underlying dentry of parent; sure, absent the races
+it is the parent of underlying dentry, but there's nothing to prevent
+losing a timeslice to preemtion in the middle of evaluation of
+lower_dentry->d_parent->d_inode, having another process move lower_dentry
+around and have its (ex)parent not pinned anymore and freed on memory
+pressure.  Then we regain CPU and try to fetch ->d_inode from memory
+that is freed by that point.
 
-- Eric
+dentry->d_parent *is* stable here - it's an argument of ->lookup() and
+we are guaranteed that it won't be moved anywhere until we feed it
+to d_add/d_splice_alias.  So we safely go that way to get to its
+underlying dentry.
+
+Cc: stable@vger.kernel.org # since 2009 or so
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/ecryptfs/inode.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+--- a/fs/ecryptfs/inode.c
++++ b/fs/ecryptfs/inode.c
+@@ -326,9 +326,9 @@ static int ecryptfs_i_size_read(struct d
+ static struct dentry *ecryptfs_lookup_interpose(struct dentry *dentry,
+ 				     struct dentry *lower_dentry)
+ {
++	struct path *path = ecryptfs_dentry_to_lower_path(dentry->d_parent);
+ 	struct inode *inode, *lower_inode;
+ 	struct ecryptfs_dentry_info *dentry_info;
+-	struct vfsmount *lower_mnt;
+ 	int rc = 0;
+ 
+ 	dentry_info = kmem_cache_alloc(ecryptfs_dentry_info_cache, GFP_KERNEL);
+@@ -340,13 +340,12 @@ static struct dentry *ecryptfs_lookup_in
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+ 
+-	lower_mnt = mntget(ecryptfs_dentry_to_lower_mnt(dentry->d_parent));
+ 	fsstack_copy_attr_atime(d_inode(dentry->d_parent),
+-				d_inode(lower_dentry->d_parent));
++				d_inode(path->dentry));
+ 	BUG_ON(!d_count(lower_dentry));
+ 
+ 	ecryptfs_set_dentry_private(dentry, dentry_info);
+-	dentry_info->lower_path.mnt = lower_mnt;
++	dentry_info->lower_path.mnt = mntget(path->mnt);
+ 	dentry_info->lower_path.dentry = lower_dentry;
+ 
+ 	/*
+
+
