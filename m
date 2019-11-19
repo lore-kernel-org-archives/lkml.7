@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C753C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAD8C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9A3421783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 203DA21823
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141073;
-	bh=fUrFUQ0VcsIJkVEdn4DWVyWlVpEN5y6KkxK0GRYbpqI=;
+	s=default; t=1574141078;
+	bh=Fg5pM85VZ8gc9IacEwwS48xCug5JBY0OJ95DuXzajTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I7E5C1l7BdUG6RGm0yJ29Rb6ecfPgAG2wx/qMEextEnfDgfiVke+2/QD88rBiD209
-	 z/80aBvlAAV+vSUDVZDp0wPHKB9HOFDMSa5P6/VfR5AMWTF7Ov2JNjHuxRVT4C5eJk
-	 Aswsu1lTgeHnlw8qwgD77lo4D2lqCnfN0bBdQOOA=
+	b=Xx33Rk6ra39UzMKKnpXiYlPiDxsjvomDjEXRuwrYotSuI9dZoezsqgmRW9jfYsE1E
+	 +d1XlZ5CMnLnl1qkI8ZwbfKpoG64BvV+VloJe13UkQo8c3XIYMQlFVG5noq7ZvGgCb
+	 zhEYVBBb3Pn4aYBscqBfVW3kFpiWLyiTQO5caVIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbfKSFYb (ORCPT
+        id S1728225AbfKSFYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:24:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40596 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:24:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728195AbfKSFY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:24:26 -0500
+        id S1728208AbfKSFYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:24:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 571CA222ED;
-        Tue, 19 Nov 2019 05:24:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B63221783;
+        Tue, 19 Nov 2019 05:24:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141065;
-        bh=fUrFUQ0VcsIJkVEdn4DWVyWlVpEN5y6KkxK0GRYbpqI=;
+        s=default; t=1574141071;
+        bh=Fg5pM85VZ8gc9IacEwwS48xCug5JBY0OJ95DuXzajTs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cu8iCPhuX5/FpqzfpuJLyiIypDrD1jiVbMk/mtGj5a1EuTJSQ0GiormOhWmKPmtUV
-         x3A9O+Td1hwx4EgOYTZ7JPwdzcDS5VqZRUA0MCIkHKU23nuRvWa/rVG23ik7su7iHm
-         vNfYyaWgxSBLjqVWnd5M/rbddrarIV2DxJBLu1k4=
+        b=Czd+Bj8UXGBwt5NLdSTjw2wAiYQJul4DQojhW9bChmb7OScbJWcvhVH1MTIV0HpqK
+         Ozm5UK7/0+lI708Tps62YBq68DhG2AXUMKQVvmcJ09dVgUmQv2MHxmnrLrqX3yINEV
+         ZhpfLLU9JBtaF6yMyJXcKuw8uE6f9uwEaNaYtRXY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Tamizh chelvam <tamizhr@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 033/422] iio: adc: max9611: explicitly cast gain_selectors
-Date:   Tue, 19 Nov 2019 06:13:50 +0100
-Message-Id: <20191119051402.157233793@linuxfoundation.org>
+Subject: [PATCH 4.19 035/422] ath10k: fix kernel panic by moving pci flush after napi_disable
+Date:   Tue, 19 Nov 2019 06:13:52 +0100
+Message-Id: <20191119051402.278430212@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,40 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Agner <stefan@agner.ch>
+From: Tamizh chelvam <tamizhr@codeaurora.org>
 
-[ Upstream commit b1ec0802503820ccbc894aadfd2a44da20232f5e ]
+[ Upstream commit bd1d395070cca4f42a93e520b0597274789274a4 ]
 
-After finding a reasonable gain, the function converts the configured
-gain to a gain configuration option selector enum max9611_csa_gain.
-Make the conversion clearly visible by using an explicit cast. This
-also avoids a warning seen with clang:
-  drivers/iio/adc/max9611.c:292:16: warning: implicit conversion from
-      enumeration type 'enum max9611_conf_ids' to different enumeration
-      type 'enum max9611_csa_gain' [-Wenum-conversion]
-                        *csa_gain = gain_selectors[i];
-                                  ~ ^~~~~~~~~~~~~~~~~
+When continuously running wifi up/down sequence, the napi poll
+can be scheduled after the CE buffers being freed by ath10k_pci_flush
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Steps:
+  In a certain condition, during wifi down below scenario might occur.
+
+ath10k_stop->ath10k_hif_stop->napi_schedule->ath10k_pci_flush->napi_poll(napi_synchronize).
+
+In the above scenario, CE buffer entries will be freed up and become NULL in
+ath10k_pci_flush. And the napi_poll has been invoked after the flush process
+and it will try to get the skb from the CE buffer entry and perform some action on that.
+Since the CE buffer already cleaned by pci flush this action will create NULL
+pointer dereference and trigger below kernel panic.
+
+Unable to handle kernel NULL pointer dereference at virtual address 0000005c
+PC is at ath10k_pci_htt_rx_cb+0x64/0x3ec [ath10k_pci]
+ath10k_pci_htt_rx_cb [ath10k_pci]
+ath10k_ce_per_engine_service+0x74/0xc4 [ath10k_pci]
+ath10k_ce_per_engine_service [ath10k_pci]
+ath10k_ce_per_engine_service_any+0x74/0x80 [ath10k_pci]
+ath10k_ce_per_engine_service_any [ath10k_pci]
+ath10k_pci_napi_poll+0x48/0xec [ath10k_pci]
+ath10k_pci_napi_poll [ath10k_pci]
+net_rx_action+0xac/0x160
+net_rx_action
+__do_softirq+0xdc/0x208
+__do_softirq
+irq_exit+0x84/0xe0
+irq_exit
+__handle_domain_irq+0x80/0xa0
+__handle_domain_irq
+gic_handle_irq+0x38/0x5c
+gic_handle_irq
+__irq_usr+0x44/0x60
+
+Tested on QCA4019 and firmware version 10.4.3.2.1.1-00010
+
+Signed-off-by: Tamizh chelvam <tamizhr@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/max9611.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/ahb.c | 4 ++--
+ drivers/net/wireless/ath/ath10k/pci.c | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
-index 49c1956e6a674..0884435eec68d 100644
---- a/drivers/iio/adc/max9611.c
-+++ b/drivers/iio/adc/max9611.c
-@@ -289,7 +289,7 @@ static int max9611_read_csa_voltage(struct max9611_dev *max9611,
- 			return ret;
+diff --git a/drivers/net/wireless/ath/ath10k/ahb.c b/drivers/net/wireless/ath/ath10k/ahb.c
+index c9bd0e2b5db7e..be90c9e9e5bc1 100644
+--- a/drivers/net/wireless/ath/ath10k/ahb.c
++++ b/drivers/net/wireless/ath/ath10k/ahb.c
+@@ -655,10 +655,10 @@ static void ath10k_ahb_hif_stop(struct ath10k *ar)
+ 	ath10k_ahb_irq_disable(ar);
+ 	synchronize_irq(ar_ahb->irq);
  
- 		if (*adc_raw > 0) {
--			*csa_gain = gain_selectors[i];
-+			*csa_gain = (enum max9611_csa_gain)gain_selectors[i];
- 			return 0;
- 		}
- 	}
+-	ath10k_pci_flush(ar);
+-
+ 	napi_synchronize(&ar->napi);
+ 	napi_disable(&ar->napi);
++
++	ath10k_pci_flush(ar);
+ }
+ 
+ static int ath10k_ahb_hif_power_up(struct ath10k *ar)
+diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
+index af2cf55c4c1e6..97fa5c74f2fe7 100644
+--- a/drivers/net/wireless/ath/ath10k/pci.c
++++ b/drivers/net/wireless/ath/ath10k/pci.c
+@@ -2068,9 +2068,9 @@ static void ath10k_pci_hif_stop(struct ath10k *ar)
+ 
+ 	ath10k_pci_irq_disable(ar);
+ 	ath10k_pci_irq_sync(ar);
+-	ath10k_pci_flush(ar);
+ 	napi_synchronize(&ar->napi);
+ 	napi_disable(&ar->napi);
++	ath10k_pci_flush(ar);
+ 
+ 	spin_lock_irqsave(&ar_pci->ps_lock, flags);
+ 	WARN_ON(ar_pci->ps_wake_refcount > 0);
 -- 
 2.20.1
 
