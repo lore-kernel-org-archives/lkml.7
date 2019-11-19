@@ -2,275 +2,140 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C5DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6F4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B57F21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141593;
-	bh=iooMRrUzKpZwG98xHGVPX3V+QQnKKnXvvoq8CkKhwqI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NNkhofeVUpIYTwcBNcXqPec8WsJXhXy7lMlDGcR6LJQXg4w5a0emNUNlp+c+zpbH0
-	 ciXHqpkjFVkmV1OcMg78VC5hKM+4DH+lXdGol/ovGUwO3+PzckymaEo4fgbRTswNg3
-	 DqOKqLsbxPqAsoWyVEvggPZUYuY18Vvr35CAjmCs=
+	by mail.kernel.org (Postfix) with ESMTP id DAF6421823
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Eg57Xk7D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfKSFdM (ORCPT
+        id S1729516AbfKSFdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 19 Nov 2019 00:33:15 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:43106 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729504AbfKSFdM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Nov 2019 00:33:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728992AbfKSFdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:33:07 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 272E7222DC;
-        Tue, 19 Nov 2019 05:33:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141586;
-        bh=iooMRrUzKpZwG98xHGVPX3V+QQnKKnXvvoq8CkKhwqI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dQm6ZP3VSGGqYBRj6jqgTcZJ3yN8EiC3un/lw3edF1OuW4h6mAkSq2R4GflLlCJ1M
-         hE6MFAYhxSV6WSkHTtgnculFMFoP27oZeK6URlRHSKHOQOYENjilLZTxLDOPe5qrrz
-         W9try5hAhzIJpcxbc8/krU1xI1uXoE2o7gifjcMk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Deepak Ukey <deepak.ukey@microchip.com>,
-        Viswas G <Viswas.G@microchip.com>,
-        Jack Wang <jinpu.wang@profitbricks.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 184/422] scsi: pm80xx: Fixed system hang issue during kexec boot
-Date:   Tue, 19 Nov 2019 06:16:21 +0100
-Message-Id: <20191119051410.402709569@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
-References: <20191119051400.261610025@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ5TF0E134981;
+        Tue, 19 Nov 2019 05:32:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=X+d/DvKGRe+3ht5uGLcFVUVOi2MtdYAju2LrusN0PB8=;
+ b=Eg57Xk7Dlr+oDb9WxKzCghU3rGfM/tKiWrrIlOnoMFTkUEIMtm2GGkDhwqr7QmVhvDmn
+ I7xE5Ge7ycQseksjeyn1gKpChkowEZK6oI+Gx9G0L7SmSNoNWsTeAYg7EBwH/pTOtPpu
+ lFmk56hCZGESru2ZgZWw05LkwxyF/dEiyQ1y9CJepKXRJycnt2iYW76Eqzj5C5J9b3gF
+ DxSWY0Ui5q694tSUhsZwX0Sr7NOuWM0h5bRgAMPnp2ZlaP+RyW0FucXNGedoojmzEcAx
+ nBVnBv7Is9MTP68ucX8p5W75u2uJ49PLjVXt7qjuNl4KaJHn95UB4/Wra2iYi4H+RvXU EA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2wa8htmkds-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 05:32:52 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ5SNWL016943;
+        Tue, 19 Nov 2019 05:32:51 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2wbxm3nx20-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 05:32:51 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAJ5Wo7G012724;
+        Tue, 19 Nov 2019 05:32:50 GMT
+Received: from kadam (/41.210.141.188)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 18 Nov 2019 21:32:47 -0800
+Date:   Tue, 19 Nov 2019 08:32:30 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        security@kernel.org, ben.dooks@codethink.co.uk
+Subject: Re: [PATCH] exec: warn if process starts with executable stack
+Message-ID: <20191119053230.GC5626@kadam>
+References: <20191118145114.GA9228@avx2>
+ <20191118125457.778e44dfd4740d24795484c7@linux-foundation.org>
+ <20191118215227.GA24536@avx2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191118215227.GA24536@avx2>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=587
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911190050
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=714 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911190050
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Deepak Ukey <deepak.ukey@microchip.com>
+On Tue, Nov 19, 2019 at 12:52:27AM +0300, Alexey Dobriyan wrote:
+> There were few episodes of silent downgrade to an executable stack:
+> 
+> 1) linking innocent looking assembly file
+> 
+> 	$ cat f.S
+> 	.intel_syntax noprefix
+> 	.text
+> 	.globl f
+> 	f:
+> 	        ret
+> 
+> 	$ cat main.c
+> 	void f(void);
+> 	int main(void)
+> 	{
+> 	        f();
+> 	        return 0;
+> 	}
+> 
+> 	$ gcc main.c f.S
+> 	$ readelf -l ./a.out
+> 	  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
+>                          0x0000000000000000 0x0000000000000000  RWE    0x10
+> 
+> 2) converting C99 nested function into a closure
+> https://nullprogram.com/blog/2019/11/15/
+> 
+> 	void intsort2(int *base, size_t nmemb, _Bool invert)
+> 	{
+> 	    int cmp(const void *a, const void *b)
+> 	    {
+> 	        int r = *(int *)a - *(int *)b;
+> 	        return invert ? -r : r;
+> 	    }
+> 	    qsort(base, nmemb, sizeof(*base), cmp);
+> 	}
+> 
+> will silently require stack trampolines while non-closure version will not.
+> 
+> While without a double this behaviour is documented somewhere, add a warning
+                  ^^^^^^
+doubt
 
-[ Upstream commit 72349b62a571effd6faadd0600b8e657dd87afbf ]
+> so that developers and users can at least notice. After so many years of x86_64
+> having proper executable stack support it should not cause too much problems.
+> 
+> If the system is old or CPU is old, then there will be an early warning
+> against init and/or support personnel will write that "uh-oh, our Enterprise
+> Software absolutely requires executable stack" and close tickets and customers
+> will nod heads and life moves on.
+> 
 
-When the firmware is not responding, execution of kexec boot causes a system
-hang. When firmware assertion happened, driver get notified with interrupt
-vector updated in MPI configuration table. Then, the driver will read
-scratchpad register and set controller_fatal_error flag to true.
-
-Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
-Signed-off-by: Viswas G <Viswas.G@microchip.com>
-Acked-by: Jack Wang <jinpu.wang@profitbricks.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/pm8001/pm8001_hwi.c |  6 +++
- drivers/scsi/pm8001/pm8001_sas.c |  7 +++
- drivers/scsi/pm8001/pm8001_sas.h |  1 +
- drivers/scsi/pm8001/pm80xx_hwi.c | 80 +++++++++++++++++++++++++++++---
- drivers/scsi/pm8001/pm80xx_hwi.h |  3 ++
- 5 files changed, 91 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/scsi/pm8001/pm8001_hwi.c b/drivers/scsi/pm8001/pm8001_hwi.c
-index 4dd6cad330e8e..3e814c0469fbd 100644
---- a/drivers/scsi/pm8001/pm8001_hwi.c
-+++ b/drivers/scsi/pm8001/pm8001_hwi.c
-@@ -1479,6 +1479,12 @@ u32 pm8001_mpi_msg_consume(struct pm8001_hba_info *pm8001_ha,
- 		} else {
- 			u32 producer_index;
- 			void *pi_virt = circularQ->pi_virt;
-+			/* spurious interrupt during setup if
-+			 * kexec-ing and driver doing a doorbell access
-+			 * with the pre-kexec oq interrupt setup
-+			 */
-+			if (!pi_virt)
-+				break;
- 			/* Update the producer index from SPC */
- 			producer_index = pm8001_read_32(pi_virt);
- 			circularQ->producer_index = cpu_to_le32(producer_index);
-diff --git a/drivers/scsi/pm8001/pm8001_sas.c b/drivers/scsi/pm8001/pm8001_sas.c
-index 576a0f091933b..59feda261e088 100644
---- a/drivers/scsi/pm8001/pm8001_sas.c
-+++ b/drivers/scsi/pm8001/pm8001_sas.c
-@@ -374,6 +374,13 @@ static int pm8001_task_exec(struct sas_task *task,
- 		return 0;
- 	}
- 	pm8001_ha = pm8001_find_ha_by_dev(task->dev);
-+	if (pm8001_ha->controller_fatal_error) {
-+		struct task_status_struct *ts = &t->task_status;
-+
-+		ts->resp = SAS_TASK_UNDELIVERED;
-+		t->task_done(t);
-+		return 0;
-+	}
- 	PM8001_IO_DBG(pm8001_ha, pm8001_printk("pm8001_task_exec device \n "));
- 	spin_lock_irqsave(&pm8001_ha->lock, flags);
- 	do {
-diff --git a/drivers/scsi/pm8001/pm8001_sas.h b/drivers/scsi/pm8001/pm8001_sas.h
-index 80b4dd6df0c25..1816e351071fa 100644
---- a/drivers/scsi/pm8001/pm8001_sas.h
-+++ b/drivers/scsi/pm8001/pm8001_sas.h
-@@ -538,6 +538,7 @@ struct pm8001_hba_info {
- 	u32			logging_level;
- 	u32			fw_status;
- 	u32			smp_exp_mode;
-+	bool			controller_fatal_error;
- 	const struct firmware 	*fw_image;
- 	struct isr_param irq_vector[PM8001_MAX_MSIX_VEC];
- 	u32			reset_in_progress;
-diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
-index 42f0405601ad1..5021aed87f33a 100644
---- a/drivers/scsi/pm8001/pm80xx_hwi.c
-+++ b/drivers/scsi/pm8001/pm80xx_hwi.c
-@@ -577,6 +577,9 @@ static void update_main_config_table(struct pm8001_hba_info *pm8001_ha)
- 		pm8001_ha->main_cfg_tbl.pm80xx_tbl.pcs_event_log_size);
- 	pm8001_mw32(address, MAIN_PCS_EVENT_LOG_OPTION,
- 		pm8001_ha->main_cfg_tbl.pm80xx_tbl.pcs_event_log_severity);
-+	/* Update Fatal error interrupt vector */
-+	pm8001_ha->main_cfg_tbl.pm80xx_tbl.fatal_err_interrupt |=
-+					((pm8001_ha->number_of_intr - 1) << 8);
- 	pm8001_mw32(address, MAIN_FATAL_ERROR_INTERRUPT,
- 		pm8001_ha->main_cfg_tbl.pm80xx_tbl.fatal_err_interrupt);
- 	pm8001_mw32(address, MAIN_EVENT_CRC_CHECK,
-@@ -1110,6 +1113,9 @@ static int pm80xx_chip_init(struct pm8001_hba_info *pm8001_ha)
- 		return -EBUSY;
- 	}
- 
-+	/* Initialize the controller fatal error flag */
-+	pm8001_ha->controller_fatal_error = false;
-+
- 	/* Initialize pci space address eg: mpi offset */
- 	init_pci_device_addresses(pm8001_ha);
- 	init_default_table_values(pm8001_ha);
-@@ -1218,13 +1224,17 @@ pm80xx_chip_soft_rst(struct pm8001_hba_info *pm8001_ha)
- 	u32 bootloader_state;
- 	u32 ibutton0, ibutton1;
- 
--	/* Check if MPI is in ready state to reset */
--	if (mpi_uninit_check(pm8001_ha) != 0) {
--		PM8001_FAIL_DBG(pm8001_ha,
--			pm8001_printk("MPI state is not ready\n"));
--		return -1;
-+	/* Process MPI table uninitialization only if FW is ready */
-+	if (!pm8001_ha->controller_fatal_error) {
-+		/* Check if MPI is in ready state to reset */
-+		if (mpi_uninit_check(pm8001_ha) != 0) {
-+			regval = pm8001_cr32(pm8001_ha, 0, MSGU_SCRATCH_PAD_1);
-+			PM8001_FAIL_DBG(pm8001_ha, pm8001_printk(
-+				"MPI state is not ready scratch1 :0x%x\n",
-+				regval));
-+			return -1;
-+		}
- 	}
--
- 	/* checked for reset register normal state; 0x0 */
- 	regval = pm8001_cr32(pm8001_ha, 0, SPC_REG_SOFT_RESET);
- 	PM8001_INIT_DBG(pm8001_ha,
-@@ -3752,6 +3762,46 @@ static void process_one_iomb(struct pm8001_hba_info *pm8001_ha, void *piomb)
- 	}
- }
- 
-+static void print_scratchpad_registers(struct pm8001_hba_info *pm8001_ha)
-+{
-+	PM8001_FAIL_DBG(pm8001_ha,
-+		pm8001_printk("MSGU_SCRATCH_PAD_0: 0x%x\n",
-+			pm8001_cr32(pm8001_ha, 0, MSGU_SCRATCH_PAD_0)));
-+	PM8001_FAIL_DBG(pm8001_ha,
-+		pm8001_printk("MSGU_SCRATCH_PAD_1:0x%x\n",
-+			pm8001_cr32(pm8001_ha, 0, MSGU_SCRATCH_PAD_1)));
-+	PM8001_FAIL_DBG(pm8001_ha,
-+		pm8001_printk("MSGU_SCRATCH_PAD_2: 0x%x\n",
-+			pm8001_cr32(pm8001_ha, 0, MSGU_SCRATCH_PAD_2)));
-+	PM8001_FAIL_DBG(pm8001_ha,
-+		pm8001_printk("MSGU_SCRATCH_PAD_3: 0x%x\n",
-+			pm8001_cr32(pm8001_ha, 0, MSGU_SCRATCH_PAD_3)));
-+	PM8001_FAIL_DBG(pm8001_ha,
-+		pm8001_printk("MSGU_HOST_SCRATCH_PAD_0: 0x%x\n",
-+			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_0)));
-+	PM8001_FAIL_DBG(pm8001_ha,
-+		pm8001_printk("MSGU_HOST_SCRATCH_PAD_1: 0x%x\n",
-+			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_1)));
-+	PM8001_FAIL_DBG(pm8001_ha,
-+		pm8001_printk("MSGU_HOST_SCRATCH_PAD_2: 0x%x\n",
-+			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_2)));
-+	PM8001_FAIL_DBG(pm8001_ha,
-+		pm8001_printk("MSGU_HOST_SCRATCH_PAD_3: 0x%x\n",
-+			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_3)));
-+	PM8001_FAIL_DBG(pm8001_ha,
-+		pm8001_printk("MSGU_HOST_SCRATCH_PAD_4: 0x%x\n",
-+			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_4)));
-+	PM8001_FAIL_DBG(pm8001_ha,
-+		pm8001_printk("MSGU_HOST_SCRATCH_PAD_5: 0x%x\n",
-+			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_5)));
-+	PM8001_FAIL_DBG(pm8001_ha,
-+		pm8001_printk("MSGU_RSVD_SCRATCH_PAD_0: 0x%x\n",
-+			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_6)));
-+	PM8001_FAIL_DBG(pm8001_ha,
-+		pm8001_printk("MSGU_RSVD_SCRATCH_PAD_1: 0x%x\n",
-+			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_7)));
-+}
-+
- static int process_oq(struct pm8001_hba_info *pm8001_ha, u8 vec)
- {
- 	struct outbound_queue_table *circularQ;
-@@ -3759,10 +3809,28 @@ static int process_oq(struct pm8001_hba_info *pm8001_ha, u8 vec)
- 	u8 uninitialized_var(bc);
- 	u32 ret = MPI_IO_STATUS_FAIL;
- 	unsigned long flags;
-+	u32 regval;
- 
-+	if (vec == (pm8001_ha->number_of_intr - 1)) {
-+		regval = pm8001_cr32(pm8001_ha, 0, MSGU_SCRATCH_PAD_1);
-+		if ((regval & SCRATCH_PAD_MIPSALL_READY) !=
-+					SCRATCH_PAD_MIPSALL_READY) {
-+			pm8001_ha->controller_fatal_error = true;
-+			PM8001_FAIL_DBG(pm8001_ha, pm8001_printk(
-+				"Firmware Fatal error! Regval:0x%x\n", regval));
-+			print_scratchpad_registers(pm8001_ha);
-+			return ret;
-+		}
-+	}
- 	spin_lock_irqsave(&pm8001_ha->lock, flags);
- 	circularQ = &pm8001_ha->outbnd_q_tbl[vec];
- 	do {
-+		/* spurious interrupt during setup if kexec-ing and
-+		 * driver doing a doorbell access w/ the pre-kexec oq
-+		 * interrupt setup.
-+		 */
-+		if (!circularQ->pi_virt)
-+			break;
- 		ret = pm8001_mpi_msg_consume(pm8001_ha, circularQ, &pMsg1, &bc);
- 		if (MPI_IO_STATUS_SUCCESS == ret) {
- 			/* process the outbound message */
-diff --git a/drivers/scsi/pm8001/pm80xx_hwi.h b/drivers/scsi/pm8001/pm80xx_hwi.h
-index 889e69ce3689b..7dd2699d0efb5 100644
---- a/drivers/scsi/pm8001/pm80xx_hwi.h
-+++ b/drivers/scsi/pm8001/pm80xx_hwi.h
-@@ -1384,6 +1384,9 @@ typedef struct SASProtocolTimerConfig SASProtocolTimerConfig_t;
- #define SCRATCH_PAD_BOOT_LOAD_SUCCESS	0x0
- #define SCRATCH_PAD_IOP0_READY		0xC00
- #define SCRATCH_PAD_IOP1_READY		0x3000
-+#define SCRATCH_PAD_MIPSALL_READY	(SCRATCH_PAD_IOP1_READY | \
-+					SCRATCH_PAD_IOP0_READY | \
-+					SCRATCH_PAD_RAAE_READY)
- 
- /* boot loader state */
- #define SCRATCH_PAD1_BOOTSTATE_MASK		0x70	/* Bit 4-6 */
--- 
-2.20.1
-
-
-
+regards,
+dan carpenter
