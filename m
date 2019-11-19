@@ -2,151 +2,130 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D8EC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 02:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C72D7C33CA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 02:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CAB7222A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 02:16:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="D9joND5Q"
+	by mail.kernel.org (Postfix) with ESMTP id A938822311
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 02:19:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbfKSCQo (ORCPT
+        id S1727237AbfKSCTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 21:16:44 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:50598 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbfKSCQo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 21:16:44 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ29DRf193330;
-        Tue, 19 Nov 2019 02:13:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=0HzX/gxMttS4J+L6PBkjiqoj8SSAB9SSaypPZSiCkzg=;
- b=D9joND5QO8S0RfNgqFdUhAAiwvaLvkWQx8NA14Soj4ETkg9FcnCwlVFZoVYb0oNDzxfj
- e6xJ8dl6KGgiLyKLxboS5iS8+D3IK57Jbdd27Yi7AfaZskW+fbnvRJtvdTcmtJbNfhKr
- QGG5Lh1c/gg2PFM7SGV68PypYf6afXGsyCqTubkd7KoV5b4ba/D7GvECWKV53hAQpMEE
- yQPFNyn1voCxZ+OpwT2ImC6E77fNFQOItE/CQz8DbMWkD/aDPzxIDJANWgacRtvs6PyU
- dCO9yHc16O1R2RItBSZe4NUpy/j9AyvJBFZ/ExZ3xx1P2RIyAa+gdzDsrEp/f0neprxD fw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2wa8htm0g4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 02:13:18 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ28U2E134789;
-        Tue, 19 Nov 2019 02:11:17 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2wc09wjkh2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 02:11:17 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAJ2Aw1H029693;
-        Tue, 19 Nov 2019 02:10:58 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 18 Nov 2019 18:10:57 -0800
-Date:   Mon, 18 Nov 2019 21:10:58 -0500
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
+        Mon, 18 Nov 2019 21:19:24 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57960 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726761AbfKSCTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 21:19:24 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 765C4AD94;
+        Tue, 19 Nov 2019 02:19:22 +0000 (UTC)
+From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+To:     linux-realtek-soc@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH v3 3/7] mm/lru: replace pgdat lru_lock with lruvec lock
-Message-ID: <20191119021058.auxc6g7vmgf7d5gg@ca-dmjordan1.us.oracle.com>
-References: <1573874106-23802-1-git-send-email-alex.shi@linux.alibaba.com>
- <1573874106-23802-4-git-send-email-alex.shi@linux.alibaba.com>
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: [PATCH v4 1/8] dt-bindings: interrupt-controller: Add Realtek RTD1195/RTD1295 mux
+Date:   Tue, 19 Nov 2019 03:19:10 +0100
+Message-Id: <20191119021917.15917-2-afaerber@suse.de>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20191119021917.15917-1-afaerber@suse.de>
+References: <20191119021917.15917-1-afaerber@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573874106-23802-4-git-send-email-alex.shi@linux.alibaba.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=575
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911190017
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=644 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911190017
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 16, 2019 at 11:15:02AM +0800, Alex Shi wrote:
-> @@ -192,26 +190,17 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
->  	void *arg)
->  {
->  	int i;
-> -	struct pglist_data *pgdat = NULL;
-> -	struct lruvec *lruvec;
-> -	unsigned long flags = 0;
-> +	struct lruvec *lruvec = NULL;
->  
->  	for (i = 0; i < pagevec_count(pvec); i++) {
->  		struct page *page = pvec->pages[i];
-> -		struct pglist_data *pagepgdat = page_pgdat(page);
->  
-> -		if (pagepgdat != pgdat) {
-> -			if (pgdat)
-> -				spin_unlock_irqrestore(&pgdat->lru_lock, flags);
-> -			pgdat = pagepgdat;
-> -			spin_lock_irqsave(&pgdat->lru_lock, flags);
-> -		}
-> +		lruvec = lock_page_lruvec_irqsave(page, page_pgdat(page));
->  
-> -		lruvec = mem_cgroup_page_lruvec(page, pgdat);
->  		(*move_fn)(page, lruvec, arg);
-> +		spin_unlock_irqrestore(&lruvec->lru_lock, lruvec->irqflags);
->  	}
-> -	if (pgdat)
-> -		spin_unlock_irqrestore(&pgdat->lru_lock, flags);
-> +
->  	release_pages(pvec->pages, pvec->nr);
->  	pagevec_reinit(pvec);
->  }
+Add binding for Realtek RTD1295 and RTD1195 IRQ mux.
 
-Why can't you keep the locking pattern where we only drop and reacquire if the
-lruvec changes?  It'd save a lot of locks and unlocks if most pages were from
-the same memcg and node, or the memory controller were unused.
+Acked-by: Rob Herring <robh@kernel.org>
+[AF: Converted to YAML schema]
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ v3 -> v4:
+ * Squashed RTD1195
+ * Converted to YAML schema
+ * Renamed file from realtek,rtd119x-mux to realtek,rtd1195-mux
+ 
+ v2 -> v3:
+ * Renamed non-iso irq mux to "misc" for clarity
 
+ v1 -> v2:
+ * Dropped reference to common interrupt.txt bindings (Rob)
+ 
+ .../interrupt-controller/realtek,rtd1195-mux.yaml  | 53 ++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/realtek,rtd1195-mux.yaml
 
-Thanks for running the -readtwice benchmark, by the way.
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd1195-mux.yaml b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd1195-mux.yaml
+new file mode 100644
+index 000000000000..5cf3a28cedba
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd1195-mux.yaml
+@@ -0,0 +1,53 @@
++# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interrupt-controller/realtek,rtd1195-mux.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Realtek RTD1195/1295 IRQ Mux Controller
++
++maintainers:
++  - Andreas Färber <afaerber@suse.de>
++
++allOf:
++  - $ref: /schemas/interrupt-controller.yaml#
++
++properties:
++  compatible:
++    enum:
++      - realtek,rtd1195-misc-irq-mux
++      - realtek,rtd1195-iso-irq-mux
++      - realtek,rtd1295-misc-irq-mux
++      - realtek,rtd1295-iso-irq-mux
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description: Specifies the interrupt line which is mux'ed.
++    maxItems: 1
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-controller
++  - "#interrupt-cells"
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    interrupt-controller@98007000 {
++        compatible = "realtek,rtd1295-iso-irq-mux";
++        reg = <0x98007000 0x100>;
++        interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-controller;
++        #interrupt-cells = <1>;
++    };
++...
+-- 
+2.16.4
+
