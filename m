@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 065A8C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94924C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C832F21823
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66F66208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141975;
-	bh=omwOzQ1GYBx3czjCUu721WovaJfWUuozGWizC3g46PU=;
+	s=default; t=1574141982;
+	bh=Rfmjqkau+tjt9cLR5sKx6mt50z1XkyNZEX7X5G4NvvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TeVmXDUbbFA54mHgd4pwZ/fMQ0nkN7M0SaSKrZ3/ux1snNJ+eYZHyBIRLliV/jdOF
-	 c+lG4H75Uu5v7CaXODKicM+zYD8/3XhvXjmlcRHXhKm0Gh+f6UQCArTaDopQhGxevC
-	 b8Odpr0I7hOWD2SDlWPcEhbi/aC1hkd43sgFiOOg=
+	b=bxX8baP67VbDv0aem+hcDH7+XxAIWWT9ojgnrSFJpqlScAkMzkTfMw+4tyjzAjbmM
+	 bwIlhGbi335p4+lpuhijcLL8uDvPPr9eSnAj1yZZKlw9fXwicjsLlDWT91JMAr/j/d
+	 n6DW26eOaTDmVZgbVJJpVduC3ojxjSnXbokifDQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730305AbfKSFjf (ORCPT
+        id S1730310AbfKSFjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:39:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33640 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:39:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728530AbfKSFjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:39:32 -0500
+        id S1729634AbfKSFji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:39:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B915218BA;
-        Tue, 19 Nov 2019 05:39:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DEB521823;
+        Tue, 19 Nov 2019 05:39:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141971;
-        bh=omwOzQ1GYBx3czjCUu721WovaJfWUuozGWizC3g46PU=;
+        s=default; t=1574141977;
+        bh=Rfmjqkau+tjt9cLR5sKx6mt50z1XkyNZEX7X5G4NvvI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YkmjMdIHjzN1YBA1KfRnwFpr6vg+SmmULkiKFAxTzt6fvO7nU4Pvc3vdA9IzUzU+2
-         e+j6XKL9BOFdfYwRChgx22wV+iRdueS/RY8tmkDXwFZhhfW3yOWSxD8TjR7dNx2XBP
-         YnOt0agb/SY2RtcAexVv7KPkXITLjQ2EaVq66wY8=
+        b=a/x+0mW43pb4lG4OXokW59IeLZZZk6hUzoEMXxWP1XSWC0tKmzqmBqcXdCb4p583z
+         iE0YvbA8+CH9MfReSIMV3UP8VxJ2PHqNwXkKjKPnDLHzQUPIz1W8R03N0sWBF9CjeG
+         W+0w7tA+2FNi/AbhAOWUDqXQ/utqiaDXOiSqCEOM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Paul Elder <paul.elder@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        stable@vger.kernel.org, zhong jiang <zhongjiang@huawei.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 342/422] usb: gadget: uvc: Factor out video USB request queueing
-Date:   Tue, 19 Nov 2019 06:18:59 +0100
-Message-Id: <20191119051421.176956317@linuxfoundation.org>
+Subject: [PATCH 4.19 344/422] coresight: Use ERR_CAST instead of ERR_PTR
+Date:   Tue, 19 Nov 2019 06:19:01 +0100
+Message-Id: <20191119051421.305408356@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -62,85 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: zhong jiang <zhongjiang@huawei.com>
 
-[ Upstream commit 9d1ff5dcb3cd3390b1e56f1c24ae42c72257c4a3 ]
+[ Upstream commit bbd35ba6fab5419e58e96f35f1431f13bdc14f98 ]
 
-USB requests for video data are queued from two different locations in
-the driver, with the same code block occurring twice. Factor it out to a
-function.
+Use ERR_CAT inlined function to replace the ERR_PTR(PTR_ERR). It
+make the code more concise.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Paul Elder <paul.elder@ideasonboard.com>
-Tested-by: Paul Elder <paul.elder@ideasonboard.com>
-Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/uvc_video.c | 30 ++++++++++++++++---------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+ drivers/hwtracing/coresight/coresight-tmc-etr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/function/uvc_video.c b/drivers/usb/gadget/function/uvc_video.c
-index d3567b90343a4..a95c8e2364edc 100644
---- a/drivers/usb/gadget/function/uvc_video.c
-+++ b/drivers/usb/gadget/function/uvc_video.c
-@@ -125,6 +125,19 @@ uvc_video_encode_isoc(struct usb_request *req, struct uvc_video *video,
-  * Request handling
-  */
- 
-+static int uvcg_video_ep_queue(struct uvc_video *video, struct usb_request *req)
-+{
-+	int ret;
-+
-+	ret = usb_ep_queue(video->ep, req, GFP_ATOMIC);
-+	if (ret < 0) {
-+		printk(KERN_INFO "Failed to queue request (%d).\n", ret);
-+		usb_ep_set_halt(video->ep);
-+	}
-+
-+	return ret;
-+}
-+
- /*
-  * I somehow feel that synchronisation won't be easy to achieve here. We have
-  * three events that control USB requests submission:
-@@ -189,14 +202,13 @@ uvc_video_complete(struct usb_ep *ep, struct usb_request *req)
- 
- 	video->encode(req, video, buf);
- 
--	if ((ret = usb_ep_queue(ep, req, GFP_ATOMIC)) < 0) {
--		printk(KERN_INFO "Failed to queue request (%d).\n", ret);
--		usb_ep_set_halt(ep);
--		spin_unlock_irqrestore(&video->queue.irqlock, flags);
-+	ret = uvcg_video_ep_queue(video, req);
-+	spin_unlock_irqrestore(&video->queue.irqlock, flags);
-+
-+	if (ret < 0) {
- 		uvcg_queue_cancel(queue, 0);
- 		goto requeue;
- 	}
--	spin_unlock_irqrestore(&video->queue.irqlock, flags);
- 
- 	return;
- 
-@@ -316,15 +328,13 @@ int uvcg_video_pump(struct uvc_video *video)
- 		video->encode(req, video, buf);
- 
- 		/* Queue the USB request */
--		ret = usb_ep_queue(video->ep, req, GFP_ATOMIC);
-+		ret = uvcg_video_ep_queue(video, req);
-+		spin_unlock_irqrestore(&queue->irqlock, flags);
-+
- 		if (ret < 0) {
--			printk(KERN_INFO "Failed to queue request (%d)\n", ret);
--			usb_ep_set_halt(video->ep);
--			spin_unlock_irqrestore(&queue->irqlock, flags);
- 			uvcg_queue_cancel(queue, 0);
- 			break;
- 		}
--		spin_unlock_irqrestore(&queue->irqlock, flags);
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+index 2eda5de304c20..11963647e19ae 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -536,7 +536,7 @@ tmc_init_etr_sg_table(struct device *dev, int node,
+ 	sg_table = tmc_alloc_sg_table(dev, node, nr_tpages, nr_dpages, pages);
+ 	if (IS_ERR(sg_table)) {
+ 		kfree(etr_table);
+-		return ERR_PTR(PTR_ERR(sg_table));
++		return ERR_CAST(sg_table);
  	}
  
- 	spin_lock_irqsave(&video->req_lock, flags);
+ 	etr_table->sg_table = sg_table;
 -- 
 2.20.1
 
