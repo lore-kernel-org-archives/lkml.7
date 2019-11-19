@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED80C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 997B4C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21400223D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB902240B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:58:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbfKSQ55 (ORCPT
+        id S1728748AbfKSQ5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:57:57 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:52940 "EHLO
+        Tue, 19 Nov 2019 11:57:17 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:52903 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728775AbfKSQ5X (ORCPT
+        with ESMTP id S1728676AbfKSQ5L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 11:57:23 -0500
+        Tue, 19 Nov 2019 11:57:11 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iX6o9-0007Jn-EY; Tue, 19 Nov 2019 17:56:53 +0100
+        id 1iX6o2-0007JA-QA; Tue, 19 Nov 2019 17:56:47 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 23CA61C19CB;
-        Tue, 19 Nov 2019 17:56:48 +0100 (CET)
-Date:   Tue, 19 Nov 2019 16:56:48 -0000
-From:   "tip-bot2 for Masami Hiramatsu" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 668341C19CB;
+        Tue, 19 Nov 2019 17:56:46 +0100 (CET)
+Date:   Tue, 19 Nov 2019 16:56:46 -0000
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf probe: Support DW_AT_const_value constant value
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+Subject: [tip: core/kprobes] x86/kprobe: Add comments to arch_{,un}optimize_kprobes()
+Cc:     Alexei Starovoitov <ast@kernel.org>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <157406476012.24476.16096289871757175775.stgit@devnote2>
-References: <157406476012.24476.16096289871757175775.stgit@devnote2>
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Brian Gerst <brgerst@gmail.com>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191111132458.401696663@infradead.org>
+References: <20191111132458.401696663@infradead.org>
 MIME-Version: 1.0
-Message-ID: <157418260811.12247.2839838800252497811.tip-bot2@tip-bot2>
+Message-ID: <157418260634.12247.3206870563865681175.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,93 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
+The following commit has been merged into the core/kprobes branch of tip:
 
-Commit-ID:     66f69b2197167cb99330c77a550da50f1f597abc
-Gitweb:        https://git.kernel.org/tip/66f69b2197167cb99330c77a550da50f1f597abc
-Author:        Masami Hiramatsu <mhiramat@kernel.org>
-AuthorDate:    Mon, 18 Nov 2019 17:12:40 +09:00
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Mon, 18 Nov 2019 19:08:02 -03:00
+Commit-ID:     654920255149b034ad5a8aee6b02cfa16e65e9c0
+Gitweb:        https://git.kernel.org/tip/654920255149b034ad5a8aee6b02cfa16e65e9c0
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Mon, 11 Nov 2019 14:02:10 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 19 Nov 2019 13:13:08 +01:00
 
-perf probe: Support DW_AT_const_value constant value
+x86/kprobe: Add comments to arch_{,un}optimize_kprobes()
 
-Support DW_AT_const_value for variable assignment instead of location.
-Note that this requires ftrace supporting immediate value.
+Add a few words describing how it is safe to overwrite the 4 bytes
+after a kprobe. In specific it is possible the JMP.d32 required for
+the optimized kprobe overwrites multiple instructions.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
-Link: http://lore.kernel.org/lkml/157406476012.24476.16096289871757175775.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Alexei Starovoitov <ast@kernel.org>
+Tested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Alexei Starovoitov <ast@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20191111132458.401696663@infradead.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- tools/perf/util/probe-file.c   |  7 +++++++
- tools/perf/util/probe-file.h   |  1 +
- tools/perf/util/probe-finder.c | 11 +++++++++++
- 3 files changed, 19 insertions(+)
+ arch/x86/kernel/kprobes/opt.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-index a63f1a1..5003ba4 100644
---- a/tools/perf/util/probe-file.c
-+++ b/tools/perf/util/probe-file.c
-@@ -1008,6 +1008,7 @@ enum ftrace_readme {
- 	FTRACE_README_UPROBE_REF_CTR,
- 	FTRACE_README_USER_ACCESS,
- 	FTRACE_README_MULTIPROBE_EVENT,
-+	FTRACE_README_IMMEDIATE_VALUE,
- 	FTRACE_README_END,
- };
- 
-@@ -1022,6 +1023,7 @@ static struct {
- 	DEFINE_TYPE(FTRACE_README_UPROBE_REF_CTR, "*ref_ctr_offset*"),
- 	DEFINE_TYPE(FTRACE_README_USER_ACCESS, "*[u]<offset>*"),
- 	DEFINE_TYPE(FTRACE_README_MULTIPROBE_EVENT, "*Create/append/*"),
-+	DEFINE_TYPE(FTRACE_README_IMMEDIATE_VALUE, "*\\imm-value,*"),
- };
- 
- static bool scan_ftrace_readme(enum ftrace_readme type)
-@@ -1092,3 +1094,8 @@ bool multiprobe_event_is_supported(void)
- {
- 	return scan_ftrace_readme(FTRACE_README_MULTIPROBE_EVENT);
+diff --git a/arch/x86/kernel/kprobes/opt.c b/arch/x86/kernel/kprobes/opt.c
+index 26e0d6c..3f45b5c 100644
+--- a/arch/x86/kernel/kprobes/opt.c
++++ b/arch/x86/kernel/kprobes/opt.c
+@@ -414,8 +414,12 @@ err:
  }
-+
-+bool immediate_value_is_supported(void)
-+{
-+	return scan_ftrace_readme(FTRACE_README_IMMEDIATE_VALUE);
-+}
-diff --git a/tools/perf/util/probe-file.h b/tools/perf/util/probe-file.h
-index 850d1b5..0dba88c 100644
---- a/tools/perf/util/probe-file.h
-+++ b/tools/perf/util/probe-file.h
-@@ -72,6 +72,7 @@ bool kretprobe_offset_is_supported(void);
- bool uprobe_ref_ctr_is_supported(void);
- bool user_access_is_supported(void);
- bool multiprobe_event_is_supported(void);
-+bool immediate_value_is_supported(void);
- #else	/* ! HAVE_LIBELF_SUPPORT */
- static inline struct probe_cache *probe_cache__new(const char *tgt __maybe_unused, struct nsinfo *nsi __maybe_unused)
- {
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index f12ad50..33e9005 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -177,6 +177,17 @@ static int convert_variable_location(Dwarf_Die *vr_die, Dwarf_Addr addr,
- 	if (dwarf_attr(vr_die, DW_AT_external, &attr) != NULL)
- 		goto static_var;
  
-+	/* Constant value */
-+	if (dwarf_attr(vr_die, DW_AT_const_value, &attr) &&
-+	    immediate_value_is_supported()) {
-+		Dwarf_Sword snum;
-+
-+		dwarf_formsdata(&attr, &snum);
-+		ret = asprintf(&tvar->value, "\\%ld", (long)snum);
-+
-+		return ret < 0 ? -ENOMEM : 0;
-+	}
-+
- 	/* TODO: handle more than 1 exprs */
- 	if (dwarf_attr(vr_die, DW_AT_location, &attr) == NULL)
- 		return -EINVAL;	/* Broken DIE ? */
+ /*
+- * Replace breakpoints (int3) with relative jumps.
++ * Replace breakpoints (INT3) with relative jumps (JMP.d32).
+  * Caller must call with locking kprobe_mutex and text_mutex.
++ *
++ * The caller will have installed a regular kprobe and after that issued
++ * syncrhonize_rcu_tasks(), this ensures that the instruction(s) that live in
++ * the 4 bytes after the INT3 are unused and can now be overwritten.
+  */
+ void arch_optimize_kprobes(struct list_head *oplist)
+ {
+@@ -441,7 +445,13 @@ void arch_optimize_kprobes(struct list_head *oplist)
+ 	}
+ }
+ 
+-/* Replace a relative jump with a breakpoint (int3).  */
++/*
++ * Replace a relative jump (JMP.d32) with a breakpoint (INT3).
++ *
++ * After that, we can restore the 4 bytes after the INT3 to undo what
++ * arch_optimize_kprobes() scribbled. This is safe since those bytes will be
++ * unused once the INT3 lands.
++ */
+ void arch_unoptimize_kprobe(struct optimized_kprobe *op)
+ {
+ 	arch_arm_kprobe(&op->kp);
