@@ -2,111 +2,159 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0861C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B0FC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFBF022317
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9738422317
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:04:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cbaw02DW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbfKSDBu (ORCPT
+        id S1727440AbfKSDEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 22:01:50 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7141 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727014AbfKSDBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 22:01:50 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 2DFEACDE6268824CF66A;
-        Tue, 19 Nov 2019 11:01:48 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 19 Nov 2019
- 11:01:39 +0800
-Subject: Re: [PATCH v2] async: Let kfree() out of the critical area of the
- lock
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     Bart Van Assche <bvanassche@acm.org>, <dsterba@suse.cz>,
-        <bhelgaas@google.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        <sakari.ailus@linux.intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        David Sterba <dsterba@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>
-References: <ae3b790d-9883-0ec0-425d-5ac9b32c2d0f@huawei.com>
- <9bfecf17-3c1b-414e-b271-4fd2d884faa3@huawei.com>
- <alpine.DEB.2.21.1911151931420.28787@nanos.tec.linutronix.de>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Message-ID: <d44b91fb-95d9-fadb-535f-898cca512bf4@huawei.com>
-Date:   Tue, 19 Nov 2019 11:01:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 18 Nov 2019 22:04:16 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24747 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727112AbfKSDEQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 22:04:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574132655;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Tw7bahIrBk8OAceM0I9m2c95R3hrLEe1uz2ktfeXfwY=;
+        b=Cbaw02DWHNQqXwRceHRFNI+ssBZfcSPRELXaij/a5VSsN9y1bXu4CPCIZiWVs1cR7XO0yD
+        mqr8AYBGN0ks3I79ubKj8IYDUY8MLvD7sToGTMlsWH4xlS8eVUWGcza0gZbufwWFbKmxny
+        2DlYyUrsVwgC0aDbVibzyhQ6DJ5AxGU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-245-LlTJOq6nOt2ciNwHvotXvw-1; Mon, 18 Nov 2019 22:04:13 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6EF1C593A2;
+        Tue, 19 Nov 2019 03:04:08 +0000 (UTC)
+Received: from [10.72.12.132] (ovpn-12-132.pek2.redhat.com [10.72.12.132])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 51BFBA7F0;
+        Tue, 19 Nov 2019 03:03:40 +0000 (UTC)
+Subject: Re: [PATCH V13 6/6] docs: sample driver to demonstrate how to
+ implement virtio-mdev framework
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        jgg@mellanox.com, netdev@vger.kernel.org, cohuck@redhat.com,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, eperezma@redhat.com,
+        lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com, rdunlap@infradead.org, hch@infradead.org,
+        aadam@redhat.com, jakub.kicinski@netronome.com, jiri@mellanox.com,
+        jeffrey.t.kirsher@intel.com
+References: <20191118105923.7991-1-jasowang@redhat.com>
+ <20191118105923.7991-7-jasowang@redhat.com>
+ <20191118151706.GA371978@kroah.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <4fed1e7e-9d27-d441-f0a1-0eb6f15e90b1@redhat.com>
+Date:   Tue, 19 Nov 2019 11:03:39 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1911151931420.28787@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191118151706.GA371978@kroah.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: LlTJOq6nOt2ciNwHvotXvw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 2019/11/18 =E4=B8=8B=E5=8D=8811:17, Greg KH wrote:
+> On Mon, Nov 18, 2019 at 06:59:23PM +0800, Jason Wang wrote:
+>> +static void mvnet_device_release(struct device *dev)
+>> +{
+>> +=09dev_dbg(dev, "mvnet: released\n");
+>> +}
+> We used to have documentation in the kernel source tree that said that
+> whenever anyone did this, I got to make fun of them.  Unfortunately that
+> has been removed.
+>
+> Think about what you did right here.  You silenced a kernel runtime
+> warning that said something like "ERROR! NO RELEASE FUNCTION FOUND!" by
+> doing the above because "I am smarter than the kernel, I will silence it
+> by putting an empty release function in there."
+>
+> {sigh}
+>
+> Did you ever think _why_ we took the time and effort to add that warning
+> there?  It wasn't just so that people can circumvent it, it is to
+> PREVENT A MAJOR BUG IN YOUR DESIGN!  We are trying to be nice here and
+> give people a _chance_ to get things right instead of having you just
+> live with a silent memory leak.
+>
+> After 13 versions of this series, basic things like this are still here?
+> Who is reviewing this thing?
 
-On 2019/11/16 2:32, Thomas Gleixner wrote:
-> 
-> 
-> On Fri, 11 Oct 2019, Yunfeng Ye wrote:
-> 
->> The async_lock is big global lock, and kfree() is not always cheap, it
->> will increase lock contention. it's better let kfree() outside the lock
->> to keep the critical area as short as possible.
->>
->> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
->> Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
->> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
->> ---
->> v1 -> v2:
->>  - update the description
->>  - add "Reviewed-by"
->>
->>  kernel/async.c | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/kernel/async.c b/kernel/async.c
->> index 4f9c1d6..1de270d 100644
->> --- a/kernel/async.c
->> +++ b/kernel/async.c
->> @@ -135,12 +135,12 @@ static void async_run_entry_fn(struct work_struct *work)
->>  	list_del_init(&entry->domain_list);
->>  	list_del_init(&entry->global_list);
->>
->> -	/* 3) free the entry */
->> -	kfree(entry);
->>  	atomic_dec(&entry_count);
->> -
->>  	spin_unlock_irqrestore(&async_lock, flags);
->>
->> +	/* 3) free the entry */
->> +	kfree(entry);
->> +
->>  	/* 4) wake up any waiters */
->>  	wake_up(&async_done);
-> 
-> The wakeup should happen before the kfree() for the very same reasons.
-> 
-ok, I will modify as your suggest, thanks.
 
-> Thanks,
-> 
-> 	tglx
-> 
-> .
-> 
+Apologize that static structure is used here, will fix them with dynamic=20
+one. I just borrow the codes from other vfio-mdev samples without too=20
+much thought here ...
+
+
+>
+> {ugh}
+>
+> Also, see the other conversations we are having about a "virtual" bus
+> and devices.  I do not want to have two different ways of doing the same
+> thing in the kernel at the same time please.  Please work together with
+> the Intel developers to solve this in a unified way, as you both
+> need/want the same thing here.
+
+
+Sure, some functions looks similar, but the "virtual" bus does not=20
+contain a management interface and it's not clear that how it can be=20
+used by userspace driver. For this series, sysfs/GUID based management=20
+interface is reused and we had a concrete example of how it would be=20
+used by userspace driver[1] and a real hardware driver implementation[2].
+
+[1] https://lkml.org/lkml/2019/11/7/62
+[2] https://lkml.org/lkml/2019/11/12/215
+
+
+>
+> Neither this, nor the other proposal can be accepted until you all agree
+> on the design and implementation.
+
+
+Yes.
+
+Thanks
+
+
+>
+> /me goes off to find a nice fruity drink with an umbrella.
+>
+> greg k-h
+>
 
