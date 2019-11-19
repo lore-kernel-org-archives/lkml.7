@@ -2,134 +2,119 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35F6C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A614FC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 772B2222D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75890222D1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:45:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tmFnzR8K"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="D50jOauu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbfKSOpY (ORCPT
+        id S1728271AbfKSOpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:45:24 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43776 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728114AbfKSOpX (ORCPT
+        Tue, 19 Nov 2019 09:45:42 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:40734 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727124AbfKSOpm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 09:45:23 -0500
-Received: by mail-lj1-f195.google.com with SMTP id y23so23614082ljh.10
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 06:45:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XQaroAqPBTv3cn0AH8FgZ1yA4zFjMEz2UzMs9ENgnOY=;
-        b=tmFnzR8KAYYT2cz8AM2wpk1wEy0sDjU3EzQf4HEBut+VQLxsepLk3/6/8cpc0VKxLq
-         UfBrdhDT0xWQNkjBUnKRlzyypOt/BY5REJAP9S/LmH6jD8CWEHzFu3yh/QI7rrH9c82e
-         iOt7YT8gMCBns69s891at8X4YmHIMz2VpY9I1lQAe/X3WWXGwq823m2aLhnBu4X3O85I
-         WByjYcsMltQgesQBh6DEP72LIobgzQSZGowIUlSYGAJVCNg2J146FEQgsxz9eta1yCFC
-         CTo26Eu8TPrW1IcY/Qsml+CosSfQYjV/nsh+d789DkAOExNjaGSuq32wAlu8OnexIfOF
-         2V5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XQaroAqPBTv3cn0AH8FgZ1yA4zFjMEz2UzMs9ENgnOY=;
-        b=QxkJlJYPGiKIBtwXjdGgvHhW5igyIpHgG14q1vM6Y8zpVTBcsTjo7pqhSBkVj+g5HN
-         PvWgLKCP5T9q9STRvO5D/mduMiAb5l9TbjEHBzm9TyQ9bcvrvHK0Oqo7KBNQcqujGofH
-         IS6L/1yPc/wH+JSbdbaLDdmrByu92GF3BONIbkrkHX2PkjEWTsnVDUlDpWsuF50CvkVX
-         XwhsZlXlwvoICePkJG8/L3tO0Xq7yQiODiLXxIzoAPZ/a94/L6DnFJ/Xld8J6fIrDg3R
-         47q7qkxbbf8qBD0+tlnO5kQFEJf4sE/+9jAf4ArsuXbBQg3nOGD+Qi1AbgJadDdoqsF3
-         6zkg==
-X-Gm-Message-State: APjAAAV/l+7qFzr0c8a/zNpTbU9X6ZbMg0tVWC1SAm0BlOUzJ/Y8V1Xl
-        x4f8by/ot6n6KMlRMT/7nxKEhw==
-X-Google-Smtp-Source: APXvYqy0eb5ynSNYwUa8gfy7iZEtLluEz02LdKIzvGkrxBilNLqPeX629CLSfKICOpAV0jkH6KffEQ==
-X-Received: by 2002:a2e:974a:: with SMTP id f10mr1615866ljj.25.1574174720904;
-        Tue, 19 Nov 2019 06:45:20 -0800 (PST)
-Received: from centauri.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id z20sm11772338ljj.85.2019.11.19.06.45.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 06:45:20 -0800 (PST)
-Date:   Tue, 19 Nov 2019 15:45:18 +0100
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        amit.kucheria@linaro.org, sboyd@kernel.org, vireshk@kernel.org,
-        bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 5/5] arm64: defconfig: enable
- CONFIG_ARM_QCOM_CPUFREQ_NVMEM
-Message-ID: <20191119144518.GA17086@centauri.ideon.se>
-References: <20191115121544.2339036-1-niklas.cassel@linaro.org>
- <20191115121544.2339036-6-niklas.cassel@linaro.org>
- <aed0bac0-ca9d-febd-ac57-120e60e99e0d@linaro.org>
+        Tue, 19 Nov 2019 09:45:42 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJEdWqK177168;
+        Tue, 19 Nov 2019 14:44:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=KyULXMqBuw+BBUz3KfOuulONWiy+9k5YMKxdr3Y2jng=;
+ b=D50jOauubj4oZP7fPhc5xjTiqd5rjhiK8fcjZFX7JtrtHR997ILtuMgkrvmdyMfxeAnl
+ bl2kbnnyDRVPZJo39wPWkqTsuL5qQsnfqabquloo2EG6s+Zkumdhu3cQwVRqs6rbG7RR
+ 74sgKNiZMjO657E+ltSzO8+mB8M+5d3wXGwyIXT6rZ1tbfkc37leZXG4qmfNNhk6J7bw
+ YmN1UHwrLYWdSZmmscNkVbXLa2Mej/5PCQ7A16yuK0JKjfRFVZagXXLIEbree+WszRNE
+ VdsFa1DXwFxgceJT4G4ymR5yKbfjMCdC/NXT+fwLGdk7cGn0ek3DWNtAc8uLBuBABrHF lg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2wa9rqf8aw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 14:44:34 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJEdWGT055757;
+        Tue, 19 Nov 2019 14:44:34 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2wc09xga8g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 14:44:34 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAJEiWFh031935;
+        Tue, 19 Nov 2019 14:44:32 GMT
+Received: from [192.168.1.67] (/94.61.1.144)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 19 Nov 2019 06:44:31 -0800
+Subject: Re: [PATCH v2 2/3] KVM: VMX: Do not change PID.NDST when loading a
+ blocked vCPU
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     kvm <kvm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Liran Alon <liran.alon@oracle.com>,
+        Jag Raman <jag.raman@oracle.com>
+References: <20191111172012.28356-1-joao.m.martins@oracle.com>
+ <20191111172012.28356-3-joao.m.martins@oracle.com>
+ <CANRm+CyrbiJ068zLRH8ZMttqjnEG38qb1W1SMND+H-D=8N8tVw@mail.gmail.com>
+From:   Joao Martins <joao.m.martins@oracle.com>
+Message-ID: <6b6acdee-f080-241f-8a6e-89708f746944@oracle.com>
+Date:   Tue, 19 Nov 2019 14:44:27 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aed0bac0-ca9d-febd-ac57-120e60e99e0d@linaro.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CANRm+CyrbiJ068zLRH8ZMttqjnEG38qb1W1SMND+H-D=8N8tVw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911190134
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911190134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 02:44:03PM +0200, Stanimir Varbanov wrote:
-> Hi Niklas,
+On 11/19/19 11:36 AM, Wanpeng Li wrote:
+> On Tue, 12 Nov 2019 at 01:23, Joao Martins <joao.m.martins@oracle.com> wrote:
+>>
+>> While vCPU is blocked (in kvm_vcpu_block()), it may be preempted which
+>> will cause vmx_vcpu_pi_put() to set PID.SN.  If later the vCPU will be
 > 
-> On 11/15/19 2:15 PM, Niklas Cassel wrote:
-> > Enable CONFIG_ARM_QCOM_CPUFREQ_NVMEM.
-> 
-> Shouldn't this be selected from qcom-cpr.c Kconfig ?
+> How can this happen? See the prepare_to_swait_exlusive() in
+> kvm_vcpu_block(), the task will be set in TASK_INTERRUPTIBLE state,
+> kvm_sched_out will set vcpu->preempted to true iff current->state ==
+> TASK_RUNNING.
 
-Hello Stan,
+You're right.
 
-I can see where this is coming from.
+But preemption (thus setting PID.SN) can still happen before vcpu_block(), or
+otherwise scheduled out if we are already in vcpu_block() (with task in
+TASK_INTERRUPTIBLE). The right term we should have written in that sentence
+above would have been 'scheduled out' and drop the vcpu_block mention and it
+would encompass both cases. A better sentence would perhaps be:
 
-If e.g. CONFIG_ARM_QCOM_CPUFREQ_NVMEM is selected but
-CONFIG_QCOM_CPR is not, then the cpufreq driver will
-return -EPROBE_DEFER, and will never probe successfully.
+"While vCPU is blocked (or about to block) it may be scheduled out which will
+cause vmx_vcpu_pi_put() to be called."
 
-However, I don't really see a difference to any other
-driver using a framework that the user has not enabled.
-The driver will then use that framework's stubs, which
-usually only return -ENODEV or similar.
+But setting or not preempted/PID.SN doesn't change the rest and was mentioned
+for completeness.
 
-So even though these both need to be enabled to work as
-intended, they can be compiled/build tested separately.
-
-
-Kind regards,
-Niklas
-
-> 
-> > 
-> > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> > ---
-> >  arch/arm64/configs/defconfig | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> > index 4385033c0a34..09aaffd473a0 100644
-> > --- a/arch/arm64/configs/defconfig
-> > +++ b/arch/arm64/configs/defconfig
-> > @@ -88,6 +88,7 @@ CONFIG_ACPI_CPPC_CPUFREQ=m
-> >  CONFIG_ARM_ARMADA_37XX_CPUFREQ=y
-> >  CONFIG_ARM_SCPI_CPUFREQ=y
-> >  CONFIG_ARM_IMX_CPUFREQ_DT=m
-> > +CONFIG_ARM_QCOM_CPUFREQ_NVMEM=y
-> >  CONFIG_ARM_QCOM_CPUFREQ_HW=y
-> >  CONFIG_ARM_RASPBERRYPI_CPUFREQ=m
-> >  CONFIG_ARM_TEGRA186_CPUFREQ=y
-> > 
-> 
-> -- 
-> regards,
-> Stan
+	Joao
