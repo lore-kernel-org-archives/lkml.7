@@ -2,87 +2,95 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FABDC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EC5C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E85AF2231E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFC662241B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:56:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbfKSSxO (ORCPT
+        id S1727239AbfKSS4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 13:53:14 -0500
-Received: from mga09.intel.com ([134.134.136.24]:38884 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727007AbfKSSxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 13:53:13 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 10:53:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,219,1571727600"; 
-   d="scan'208";a="200452249"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by orsmga008.jf.intel.com with ESMTP; 19 Nov 2019 10:53:12 -0800
-Received: from fmsmsx120.amr.corp.intel.com (10.18.124.208) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 19 Nov 2019 10:53:12 -0800
-Received: from fmsmsx117.amr.corp.intel.com ([169.254.3.27]) by
- fmsmsx120.amr.corp.intel.com ([169.254.15.106]) with mapi id 14.03.0439.000;
- Tue, 19 Nov 2019 10:53:12 -0800
-From:   "Souza, Jose" <jose.souza@intel.com>
-To:     "benjamin.gaignard@st.com" <benjamin.gaignard@st.com>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "mripard@kernel.org" <mripard@kernel.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "sean@poorly.run" <sean@poorly.run>
-CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/crtc-helper: drm_connector_get_single_encoder
- prototype is missing
-Thread-Topic: [PATCH] drm/crtc-helper: drm_connector_get_single_encoder
- prototype is missing
-Thread-Index: AQHVntkEouhMu4wV4EmGG0RqgiHpJqeTXZiA
-Date:   Tue, 19 Nov 2019 18:53:11 +0000
-Message-ID: <f6f32b4d8d8e271953f887c50793f9d64d48e7b3.camel@intel.com>
-References: <20191119125805.4266-1-benjamin.gaignard@st.com>
-In-Reply-To: <20191119125805.4266-1-benjamin.gaignard@st.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.24.9.135]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <02A80DBA1E3FBC4DA3F514E8370B1733@intel.com>
-Content-Transfer-Encoding: base64
+        Tue, 19 Nov 2019 13:56:05 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42558 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbfKSS4F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 13:56:05 -0500
+Received: by mail-ot1-f68.google.com with SMTP id b16so18855818otk.9;
+        Tue, 19 Nov 2019 10:56:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CCMimOxx1V+1wuiFXabtOOmc4F+FlW5VrFGeJkEeb3g=;
+        b=WU1aFvI96hM19+44aW8xWwhcFV+VkO2FaTZ3uvCD27r1LUKpWEDyf1yGPotkI04iXN
+         oNyYacW2JY+SfP1HYc7Kl80zpQVgSlvXwgQfNGlsbeyd1jpTUsu5h0GiPwFMsODOcN0Y
+         rFrafl2QQYOemVJgvUdjFycGnj3V0/bK0gUjlFm50I8ozVDDgqJRIZvEoE+VNEubJmTf
+         +aY79/rc4k1cwjzSBG6I2KgOFrGff44FedjAk6KVaW3k/6mBT19XOfRxCBN81+jy1RDV
+         +Vn3cv7dV/IqxYupuw5WPiQPOYjnbn2E05UpywBZilGvX3uBXuuh92wpNnZk+n4BvjZV
+         Akyg==
+X-Gm-Message-State: APjAAAWRMWOWL8YAuNzq/kefTSi0ThdW0F9peTufJIxeJeS0xoEsGKxm
+        lB041ecFtv6LQlXceQriXnMR+EH0IsWy89bmsUc=
+X-Google-Smtp-Source: APXvYqx9RerZ121T3Eq7XBfWuQsji+hUcMrbDd/mvJJNzps0Zuxlx3QL2Akjf/eIrhg+NcOQ2gFiiv9G2SJxxaTwvN8=
+X-Received: by 2002:a9d:5511:: with SMTP id l17mr4972413oth.145.1574189764218;
+ Tue, 19 Nov 2019 10:56:04 -0800 (PST)
 MIME-Version: 1.0
+References: <20191119112524.24841-1-geert+renesas@glider.be> <1afede33-897b-8718-d977-351357dffe4f@gmail.com>
+In-Reply-To: <1afede33-897b-8718-d977-351357dffe4f@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 19 Nov 2019 19:55:53 +0100
+Message-ID: <CAMuHMdW+Lkj1VRbS-1Qw8YsbPYueFrM770eBRv=e_sTg8vbiVg@mail.gmail.com>
+Subject: Re: [PATCH] mdio_bus: Fix init if CONFIG_RESET_CONTROLLER=n
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTExLTE5IGF0IDEzOjU4ICswMTAwLCBCZW5qYW1pbiBHYWlnbmFyZCB3cm90
-ZToNCj4gSW5jbHVkZSBkcm1fY3J0Y19oZWxwZXJfaW50ZXJuYWwuaCB0byBwcm92aWRlDQo+IGRy
-bV9jb25uZWN0b3JfZ2V0X3NpbmdsZV9lbmNvZGVyDQo+IHByb3RvdHlwZS4NCj4gDQo+IEZpeGVz
-OiBhOTI0NjJkNmJmNDkzICgiZHJtL2Nvbm5lY3RvcjogU2hhcmUgd2l0aCBub24tYXRvbWljIGRy
-aXZlcnMNCj4gdGhlIGZ1bmN0aW9uIHRvIGdldCB0aGUgc2luZ2xlIGVuY29kZXIiKQ0KDQpkcm1f
-Y29ubmVjdG9yX2dldF9zaW5nbGVfZW5jb2RlcigpIGlzIGltcGxlbWVudGVkIGJlZm9yZSB0aGUg
-dXNlIGluDQp0aGlzIGZpbGUgc28gaXQgaXMgbm90IGJyb2tlbiwgbm8gbmVlZCBvZiBhIGZpeGVz
-IHRhZy4NCg0KUmV2aWV3ZWQtYnk6IEpvc8OpIFJvYmVydG8gZGUgU291emEgPGpvc2Uuc291emFA
-aW50ZWwuY29tPg0KDQo+IA0KPiBDYzogSm9zw6kgUm9iZXJ0byBkZSBTb3V6YSA8am9zZS5zb3V6
-YUBpbnRlbC5jb20+DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBCZW5qYW1pbiBHYWlnbmFyZCA8YmVu
-amFtaW4uZ2FpZ25hcmRAc3QuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9kcm1fY3J0
-Y19oZWxwZXIuYyB8IDIgKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykNCj4g
-DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZHJtX2NydGNfaGVscGVyLmMNCj4gYi9k
-cml2ZXJzL2dwdS9kcm0vZHJtX2NydGNfaGVscGVyLmMNCj4gaW5kZXggNDk5YjA1YWFjY2ZjLi45
-M2E0ZWVjNDI5ZTggMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fY3J0Y19oZWxw
-ZXIuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vZHJtX2NydGNfaGVscGVyLmMNCj4gQEAgLTQ4
-LDYgKzQ4LDggQEANCj4gICNpbmNsdWRlIDxkcm0vZHJtX3ByaW50Lmg+DQo+ICAjaW5jbHVkZSA8
-ZHJtL2RybV92YmxhbmsuaD4NCj4gIA0KPiArI2luY2x1ZGUgImRybV9jcnRjX2hlbHBlcl9pbnRl
-cm5hbC5oIg0KPiArDQo+ICAvKioNCj4gICAqIERPQzogb3ZlcnZpZXcNCj4gICAqDQo=
+Hi Florian,
+
+On Tue, Nov 19, 2019 at 7:05 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+> On 11/19/19 3:25 AM, Geert Uytterhoeven wrote:
+> > Commit 1d4639567d970de0 ("mdio_bus: Fix PTR_ERR applied after
+> > initialization to constant") accidentally changed a check from -ENOTSUPP
+> > to -ENOSYS, causing failures if reset controller support is not enabled.
+> > E.g. on r7s72100/rskrza1:
+> >
+> >     sh-eth e8203000.ethernet: MDIO init failed: -524
+> >     sh-eth: probe of e8203000.ethernet failed with error -524
+> >
+> > Fixes: 1d4639567d970de0 ("mdio_bus: Fix PTR_ERR applied after initialization to constant")
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> This has been fixed in the "net" tree with:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git/commit/?id=075e238d12c21c8bde700d21fb48be7a3aa80194
+
+Ah, hadn't seen that one.
+
+However, that one (a) keeps the unneeded check for -ENOSYS, and (b)
+carries a wrong Fixes tag.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
