@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85429C43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE211C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 543EB222DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94980222A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141264;
-	bh=FHM4HVtZVOGP6VKYw1QKxuyGGkLfTjwkJEWM9cdaLps=;
+	s=default; t=1574141267;
+	bh=cdrS8Uc5C1CK0pynDXTy5DUwfd0d+1/Gvdh+qg1pCMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jd/DRtEhpaFj4ua3OZoOd4blJgWCi9RHvjzL5TPpGjFYEfz8rWVoPE6H3nHzyBly3
-	 w3yV2P+PrUk1VuvQvkpON/3+z0eyxPO9vAcBWywPAbp26kY28A0Lou6qPQwrje8dWP
-	 OBBOOJdyZNuu1P+qWXqhOQ9/Hz+wbxjzwS0ISKQo=
+	b=xOs3Sbd3BjoVK4GLVCGz5tu0wc15GJVNmlvGTFIFks3o0panKRTPTxYILzYYu2fQA
+	 vHAWHvX4T3Wo5xyezLw+eglMTAANnP6CgNnl2JKyY8k5YIevScU/RoYCapPtGUFTam
+	 0SUfy7bXqNJrJBdjzXpMgJ62I8bUT+t3317Khb0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbfKSF1m (ORCPT
+        id S1727773AbfKSF1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:27:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45996 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:27:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbfKSF1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:27:41 -0500
+        id S1726170AbfKSF1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:27:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B83C821939;
-        Tue, 19 Nov 2019 05:27:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAAAE21939;
+        Tue, 19 Nov 2019 05:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141260;
-        bh=FHM4HVtZVOGP6VKYw1QKxuyGGkLfTjwkJEWM9cdaLps=;
+        s=default; t=1574141263;
+        bh=cdrS8Uc5C1CK0pynDXTy5DUwfd0d+1/Gvdh+qg1pCMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fBGwZ3GOJLbNDxHFTqsWJg2xjJHGzbziIKFvpaS26XdSYf4SppoFQnzgk6mKmhWoX
-         EH6HZGDPx2ukwwEZ0vgIj07ucLi7P0aUN9YUZy6FjUW3TPrf2G1KgbCb+RzlUUqDk0
-         o1Wr8VUK+lK9PSZQbaQAuoqn6vpQEOIPwEYUM5E4=
+        b=XFneYoDQjM/do6KtcVg9yxSiHUbBtuoMXjn2YlhM892qNjGTWZgZO662qm4YTS9nP
+         Ksaci90fZVzySdbjxBarRiYUrewnRwPPTsRIV11isTg5PCkrUxl1JDm4F4YiQ4p5GS
+         G2WS39wUqBu0/dRGif8FsndLi13LClqNn4JhIn8s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sven Eckelmann <sven.eckelmann@openmesh.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 061/422] ath10k: limit available channels via DT ieee80211-freq-limit
-Date:   Tue, 19 Nov 2019 06:14:18 +0100
-Message-Id: <20191119051403.673771582@linuxfoundation.org>
+Subject: [PATCH 4.19 052/422] extcon: cht-wc: Return from default case to avoid warnings
+Date:   Tue, 19 Nov 2019 06:14:09 +0100
+Message-Id: <20191119051403.191773560@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,46 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven.eckelmann@openmesh.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 34d5629d2ca89d847b7040762b87964c696c14da ]
+[ Upstream commit 962341b54b99965ebec5f70c8d39f1c382eea833 ]
 
-Tri-band devices (1x 2.4GHz + 2x 5GHz) often incorporate special filters in
-the RX and TX path. These filtered channel can in theory still be used by
-the hardware but the signal strength is reduced so much that it makes no
-sense.
+When we have first case to fall through it's not enough to put
+single comment there to satisfy compiler. Instead of doing that,
+return fall back value directly from default case.
 
-There is already a DT property to limit the available channels but ath10k
-has to manually call this functionality to limit the currrently set wiphy
-channels further.
+This to avoid following warnings:
 
-Signed-off-by: Sven Eckelmann <sven.eckelmann@openmesh.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+drivers/extcon/extcon-intel-cht-wc.c: In function ‘cht_wc_extcon_get_charger’:
+include/linux/device.h:1420:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  _dev_warn(dev, dev_fmt(fmt), ##__VA_ARGS__)
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/extcon/extcon-intel-cht-wc.c:148:3: note: in expansion of macro ‘dev_warn’
+   dev_warn(ext->dev,
+   ^~~~~~~~
+drivers/extcon/extcon-intel-cht-wc.c:152:2: note: here
+  case CHT_WC_USBSRC_TYPE_SDP:
+  ^~~~
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/mac.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/extcon/extcon-intel-cht-wc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index 1419f9d1505fe..9d033da46ec2e 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -18,6 +18,7 @@
- 
- #include "mac.h"
- 
-+#include <net/cfg80211.h>
- #include <net/mac80211.h>
- #include <linux/etherdevice.h>
- #include <linux/acpi.h>
-@@ -8363,6 +8364,7 @@ int ath10k_mac_register(struct ath10k *ar)
- 		ar->hw->wiphy->bands[NL80211_BAND_5GHZ] = band;
- 	}
- 
-+	wiphy_read_of_freq_limits(ar->hw->wiphy);
- 	ath10k_mac_setup_ht_vht_cap(ar);
- 
- 	ar->hw->wiphy->interface_modes =
+diff --git a/drivers/extcon/extcon-intel-cht-wc.c b/drivers/extcon/extcon-intel-cht-wc.c
+index 5e1dd27722781..bdb67878179ed 100644
+--- a/drivers/extcon/extcon-intel-cht-wc.c
++++ b/drivers/extcon/extcon-intel-cht-wc.c
+@@ -156,7 +156,7 @@ static int cht_wc_extcon_get_charger(struct cht_wc_extcon_data *ext,
+ 		dev_warn(ext->dev,
+ 			"Unhandled charger type %d, defaulting to SDP\n",
+ 			 ret);
+-		/* Fall through, treat as SDP */
++		return EXTCON_CHG_USB_SDP;
+ 	case CHT_WC_USBSRC_TYPE_SDP:
+ 	case CHT_WC_USBSRC_TYPE_FLOAT_DP_DN:
+ 	case CHT_WC_USBSRC_TYPE_OTHER:
 -- 
 2.20.1
 
