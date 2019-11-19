@@ -2,125 +2,187 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B49C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0346C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06E94222DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858E4222F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:48:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="pMNRPe/v"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="V5mI8M5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbfKSKrm (ORCPT
+        id S1727521AbfKSKsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 05:47:42 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38663 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfKSKrl (ORCPT
+        Tue, 19 Nov 2019 05:48:55 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:30305 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbfKSKsz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 05:47:41 -0500
-Received: by mail-lj1-f195.google.com with SMTP id v8so22773905ljh.5
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 02:47:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZeUoRBlonDBywzKfeqqP13/zDfclITwdseqORXN8Cf8=;
-        b=pMNRPe/vbBEEGmwaWUdl00xTZ6wQoousS+UdFgtJC/pWhowy4zMVZjnDPZzrqVJYEt
-         2r7GEZ5b7/mdzlTO/V40zTu6h8qStWZhGLBixdIGD6kwhWmF9jDvcZLLYDp8MqlAUHdT
-         SjoXj+PFJjsZ78X9Q0cgmJnvpJ5hozipVsRpquAxLPa4riHqYPI/CMOpe69EKjcnvRwH
-         52O/pK47K2Soaj9dAvkuJUQvDPJvczfcEHjQQFqyMoZ7b2ZFRHWU5/tmmapT3h+HOsrk
-         g/F+vEIOLx3FuFst6FtA/lsnuYlfuj8if3dqxvP19cFFSrcWXtgYHR+GEOsQCvXau6QR
-         S5Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZeUoRBlonDBywzKfeqqP13/zDfclITwdseqORXN8Cf8=;
-        b=B2JnC+bkKj91w928o3tkwTzmOODtVi7dcna5NHbTqwBEPGsH3o18sbW+Co4SHiIOrw
-         8BFAPuE7Og99czmdX8S8T/vDSJKutMHOtKN3WSPTDmqZK+OxEG+3L6W4XgK60hOlMnwe
-         rK9R3xxz9vDW8VmW3X055ICUe29c3JOxpYPcELMeMKjvc6rS9n30/bJaltmvpoea2Gqy
-         IkPNznfxwa2LvN13mc4D6PWKFcjJU9xbwIIlyra4EPORIO2G0DbiGw4HsxjTajwWsgqY
-         AtTmBkuTaVuMQg0K4U0L6+/71c7sx7AzW6ho0BQoMdmNYoERGdcHBh1qfVIyUaj1DldS
-         M9Kw==
-X-Gm-Message-State: APjAAAVFH6ptHewx8uSWz49FvoZsTn/L0YpdnGUOIr5SmSQfah6yWzp0
-        GMz6j39k1B9UIkkPOAdKlFXfWN9pGBM=
-X-Google-Smtp-Source: APXvYqwjTgl8vU2jVXehL8zImk0x1eHm3t2yMg3AUBp9OVxqwasqP3PbsJyzfhvWoMG3Zt2ugIMwpw==
-X-Received: by 2002:a2e:970a:: with SMTP id r10mr3366384lji.142.1574160459559;
-        Tue, 19 Nov 2019 02:47:39 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id c80sm786601lfg.81.2019.11.19.02.47.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 02:47:38 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id F354C100F52; Tue, 19 Nov 2019 13:47:41 +0300 (+03)
-Date:   Tue, 19 Nov 2019 13:47:41 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Rafael Aquini <aquini@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: kconfig: make Transparent Hugepage Support sysfs
- defaults to match the documentation
-Message-ID: <20191119104741.rtjc7awl4k57boyu@box>
-References: <20191119030102.27559-1-aquini@redhat.com>
+        Tue, 19 Nov 2019 05:48:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574160530;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=gPjxvO5Rr/ZhzjVabnFPel2PR7oXPN4jAOJIkIfrL3w=;
+        b=V5mI8M5g/zcmQMfBuQScL5pLLfo2BcTLYpDkE8qc0aS3ZflQGszP+JFBsRJL3wYH6O
+        qsBI4Lsf0O26+2t2ARyJP1VanbNf8UulxP347HJnpRl2LyVbqzQSV/V+afYDIpD7QT+H
+        qOlyMfp8A4fAw7SqfG+SXnwZ9mVEdUYJppfQG00vvX6F3JzVXf08mLSDOv6BDkxLmrqN
+        n5+JdwnSf5/YkBVV6tgPqj6ARtTHBoM4gPjDVomVTjYXzb/tttvhZRFf9K/Y2uJEHxba
+        VP5WzIEIwpd6LW4v0fMmB+qYpvI7O6hz7Z43r5NOMuKRvGFq7N403cc4X7scCMQrG+RC
+        0H8A==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9zT8DNpa83PTIPmLqL6mXsiNby0r49Q+bn6Gzw6e9E9jMEY/jj9Sk"
+X-RZG-CLASS-ID: mo00
+Received: from tauon.chronox.de
+        by smtp.strato.de (RZmta 44.29.0 AUTH)
+        with ESMTPSA id N09a57vAJAkqepr
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Tue, 19 Nov 2019 11:46:52 +0100 (CET)
+From:   Stephan Mueller <smueller@chronox.de>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>
+Subject: Re: [PATCH v25 10/12] LRNG - add TRNG support
+Date:   Tue, 19 Nov 2019 11:46:51 +0100
+Message-ID: <25235737.Vo4cOZQZay@tauon.chronox.de>
+In-Reply-To: <CALCETrUKDO1LSMnHNcPiAFQh2ri6saRiRBi9b5e699cm1_Mgsw@mail.gmail.com>
+References: <5390778.VeFRgus4bQ@positron.chronox.de> <3159012.PsEOTp9LqO@positron.chronox.de> <CALCETrUKDO1LSMnHNcPiAFQh2ri6saRiRBi9b5e699cm1_Mgsw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119030102.27559-1-aquini@redhat.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 10:01:02PM -0500, Rafael Aquini wrote:
-> Documentation/admin-guide/mm/transhuge.rst (originally in Documentation/vm/transhuge.txt)
-> states that TRANSPARENT_HUGEPAGE_MADVISE is the default option for THP config:
-> 
-> "
-> madvise
->         will enter direct reclaim like ``always`` but only for regions
->         that are have used madvise(MADV_HUGEPAGE). This is the default
->         behaviour.
-> "
-> 
-> This patch changes mm/Kconfig to reflect that fact, accordingly.
+Am Dienstag, 19. November 2019, 11:07:40 CET schrieb Andy Lutomirski:
 
-No. You've read it incorrectly.
+Hi Andy,
 
-The documentation describes default behaviour wrt defragmentaton ("defrag"
-file), not page fault ("enabled" file). We don't have any Kconfig option
-to set default behaviour for "defrag".
+> On Sun, Nov 17, 2019 at 3:11 AM Stephan M=C3=BCller <smueller@chronox.de>=
+ wrote:
+> > Am Samstag, 16. November 2019, 17:09:09 CET schrieb Andy Lutomirski:
+> >=20
+> > Hi Andy,
+> >=20
+> > > > On Nov 16, 2019, at 1:40 AM, Stephan M=C3=BCller <smueller@chronox.=
+de>
+> > > > wrote:
+> > > >=20
+> > > > =EF=BB=BFThe True Random Number Generator (TRNG) provides a random =
+number
+> > > > generator with prediction resistance (SP800-90A terminology) or an
+> > > > NTG.1
+> > > > (AIS 31 terminology).
+> > >=20
+> > > ...
+> > >=20
+> > > > The secondary DRNGs seed from the TRNG if it is present. In additio=
+n,
+> > > > the /dev/random device accesses the TRNG.
+> > > >=20
+> > > > If the TRNG is disabled, the secondary DRNGs seed from the entropy
+> > > > pool
+> > > > and /dev/random behaves like getrandom(2).
+> > >=20
+> > > As mentioned before, I don=E2=80=99t like this API.  An application t=
+hat, for
+> > > some
+> > > reason, needs a TRNG, should have an API by which it either gets a TR=
+NG
+> > > or
+> > > an error. Similarly, an application that wants cryptographically secu=
+re
+> > > random numbers efficiently should have an API that does that.  With y=
+our
+> > > design, /dev/random tries to cater to both use cases, but one of the =
+use
+> > > cases fails depending on kernel config.
+> > >=20
+> > > I think /dev/random should wait for enough entropy to initialize the
+> > > system
+> > > but should not block after that. A TRNG should have an entirely new A=
+PI
+> > > that is better than /dev/random.
+> >=20
+> > I apologize for the misunderstanding. I assumed we would introduce such
+> > /dev/ true_random at a later stage.
+> >=20
+> > If you agree, I can certainly add /dev/true_random right now that links
+> > with the TRNG and make /dev/random behave as discussed, i.e. behave
+> > exactly like getrandom(..., 0);
+>=20
+> Given that your series is already a decently large ABI change, I think
+> it would be polite to users to make all the anticipated changes all at
+> once to reduce the amount of churn everyone needs to deal with.
 
-> Besides keeping consistency between documentation and the code behavior,
-> other reasons to perform this minor adjustment are noted at:
-> https://bugzilla.redhat.com/show_bug.cgi?id=1772133
-> 
-> Signed-off-by: Rafael Aquini <aquini@redhat.com>
-> ---
->  mm/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index a5dae9a7eb51..c12a559aa1e5 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -385,7 +385,7 @@ config TRANSPARENT_HUGEPAGE
->  choice
->  	prompt "Transparent Hugepage Support sysfs defaults"
->  	depends on TRANSPARENT_HUGEPAGE
-> -	default TRANSPARENT_HUGEPAGE_ALWAYS
-> +	default TRANSPARENT_HUGEPAGE_MADVISE
->  	help
->  	  Selects the sysfs defaults for Transparent Hugepage Support.
->  
-> -- 
-> 2.17.2
-> 
-> 
+I fully agree with that. This is the reason for my question to ask for how =
+to=20
+approach adding such additional interface for the TRNG. Considering that th=
+ere=20
+are use cases for the blocking interfaces, I would like to have it present=
+=20
+from the start.
 
--- 
- Kirill A. Shutemov
+That said, are you planning to keep the blocking_pool considering our=20
+discussion?
+
+But may I ask why you say that there are ABI changes? The LRNG set tries to=
+ be=20
+100% API and ABI compliant to the existing random.c interfaces.
+
+The only change is the runtime-behavior (e.g. time when something is seeded=
+),=20
+performance of the interrupt handling and the kernel/user interfaces that m=
+ay=20
+be noticeable by users. I.e. there are timing changes, but no technical=20
+changes.
+
+The LRNG though would add one optional interface for kernel internal use an=
+d=20
+then the discussed /dev/true_random interface.
+>=20
+> > As this would introduce a new device file now, is there a special proce=
+ss
+> > that I need to follow or do I need to copy? Which major/minor number
+> > should I use?
+> >=20
+> > Looking into static const struct memdev devlist[] I see
+> >=20
+> >          [8] =3D { "random", 0666, &random_fops, 0 },
+> >          [9] =3D { "urandom", 0666, &urandom_fops, 0 },
+> >=20
+> > Shall a true_random be added here with [10]?
+>=20
+> I am not at all an expert on chardevs, but this sounds generally
+> reasonable.  gregkh is probably the real authority here.
+
+Thank you for the hint. Then I would like to wait for Greg on this.
+
+Ciao
+Stephan
+
+
