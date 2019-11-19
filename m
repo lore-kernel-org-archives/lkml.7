@@ -2,608 +2,333 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D15AC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3EEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1912084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:10:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="vekeoBFX"
+	by mail.kernel.org (Postfix) with ESMTP id DC6B62084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:11:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbfKSOKu (ORCPT
+        id S1727946AbfKSOL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:10:50 -0500
-Received: from mail-eopbgr820045.outbound.protection.outlook.com ([40.107.82.45]:60480
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726185AbfKSOKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 09:10:49 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gLDO3qPJl9xjX6FRaGjN/UZqwzFmTB0bXcCOdlrFyNef1IXUCi9oNCtFrUl9CJTljn1hvEpQnk4WEiyToWsZngNLiSVRapUvIUeDMw6v9CoX2nLrq3D4Ttqv+zSPdRHUAzHemZKtmN5qQSYa9awK80Rib8BGuTod84bB5NneYJDVlMqMzodTzMR4L9wGdS/GHmO6DQd1Od9yoxNFHCNFLJPDWr7tA/WLU4wI7jT3VCq5yxVQ0Q9Zip5Zv31dENaWbcu4ZZiK3b3AQLx2QEbvTyJNJTeoo/rzGYtgN15agr+HfHGJrv2HjX2HifYDRKNx3p1AOPXMulaARABrMVcgHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fgQk9Dop0aXSIE3fs8JzHBMRFuXWnW9a33p5mO0ZRlY=;
- b=DsPocDxwPsQLoytSP2jkZJGR3IhIb2vx26v4hv81nHaQeTcUGQL992NLqUwHRcXy6c6oYpw010mjEGr+EAAxhFjlpgKGPdMwgp9cMV7J4InMaBRE1Qk6p9TooyKvGkjkIGJ+6QblJuc4QHG85BGEydhJiiD6w3omTEcho6ZSvEisTFC1afa7MIEJ0duCpgyy24dh22ZQzxHJh55fBg5fBAXB1TSfO0YC/9VVMzd2qTww731p/LisudN4zJHs01VNrso5dSSLH0kfUCWvXMcCqvC38PJp4B27EskdtKBSMrjGTBJ5H3/EXcz3dBLS8cT/dcTn7ntS3H2VxjwbpAqz/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com;
- dmarc=permerror action=none header.from=amd.com; dkim=none (message not
- signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fgQk9Dop0aXSIE3fs8JzHBMRFuXWnW9a33p5mO0ZRlY=;
- b=vekeoBFX68gyyviN9+SYrsHa1nKcHqNNt747FrWrsT6bcG1OWjfiKHwh9C4Qujf1YjC4vAe6NN7kANi6BQkSoFZW4nGRSl+8VzadaXNubcLNj8A2L8WkTXPZdzxlETJiddwdxhd5rpN9hVpjT2/lXFbICSQ3qobQefELmWdbmHQ=
-Received: from BN4PR12CA0021.namprd12.prod.outlook.com (2603:10b6:403:2::31)
- by CH2PR12MB3927.namprd12.prod.outlook.com (2603:10b6:610:2d::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.30; Tue, 19 Nov
- 2019 14:10:43 +0000
-Received: from DM6NAM11FT010.eop-nam11.prod.protection.outlook.com
- (2a01:111:f400:7eaa::208) by BN4PR12CA0021.outlook.office365.com
- (2603:10b6:403:2::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2451.23 via Frontend
- Transport; Tue, 19 Nov 2019 14:10:43 +0000
-Authentication-Results: spf=none (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=permerror action=none header.from=amd.com;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-Received: from SATLEXMB01.amd.com (165.204.84.17) by
- DM6NAM11FT010.mail.protection.outlook.com (10.13.172.222) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.20.2451.23 via Frontend Transport; Tue, 19 Nov 2019 14:10:43 +0000
-Received: from SATLEXMB02.amd.com (10.181.40.143) by SATLEXMB01.amd.com
- (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 19 Nov
- 2019 08:10:20 -0600
-Received: from vishnu-All-Series.amd.com (10.180.168.240) by
- SATLEXMB02.amd.com (10.181.40.143) with Microsoft SMTP Server id 15.1.1713.5
- via Frontend Transport; Tue, 19 Nov 2019 08:10:16 -0600
-From:   Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-CC:     <Alexander.Deucher@amd.com>, <djkurtz@google.com>,
-        <Akshu.Agrawal@amd.com>,
-        Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        "Takashi Iwai" <tiwai@suse.com>,
-        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH v10 6/6] ASoC: amd: Added ACP3x system resume and runtime pm
-Date:   Tue, 19 Nov 2019 19:38:28 +0530
-Message-ID: <1574172508-26546-7-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1574172508-26546-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-References: <1574172508-26546-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+        Tue, 19 Nov 2019 09:11:56 -0500
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:43765 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726378AbfKSOLz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 09:11:55 -0500
+X-Originating-IP: 86.206.246.123
+Received: from aptenodytes (lfbn-tou-1-421-123.w86-206.abo.wanadoo.fr [86.206.246.123])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 069CF2001E;
+        Tue, 19 Nov 2019 14:11:51 +0000 (UTC)
+Date:   Tue, 19 Nov 2019 15:11:51 +0100
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        James Hilliard <james.hilliard1@gmail.com>
+Subject: Re: [PATCH] drm/gma500: Fixup fbdev stolen size usage evaluation
+Message-ID: <20191119141151.GB2001@aptenodytes>
+References: <20191107153048.843881-1-paul.kocialkowski@bootlin.com>
+ <CAMeQTsYG+YvXqQqvJvsxT1h0z5zZJbdCtc5wPjUossvwidV=cA@mail.gmail.com>
+ <20191112151157.GD4506@aptenodytes>
+ <20191112155012.GE4506@aptenodytes>
+ <CAMeQTsb0+Tc9Gij_1zMH=mPSbDAjMkMEFatvZrfjLvVsQGwVgA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(39860400002)(396003)(376002)(428003)(23433003)(199004)(189003)(486006)(47776003)(16586007)(5660300002)(446003)(48376002)(186003)(336012)(54906003)(7696005)(51416003)(356004)(7416002)(36756003)(426003)(26005)(30864003)(86362001)(478600001)(4326008)(53416004)(1671002)(76176011)(126002)(109986005)(476003)(11346002)(2616005)(8676002)(81156014)(81166006)(14444005)(305945005)(316002)(50466002)(70586007)(50226002)(70206006)(8936002)(6666004)(2906002)(266003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR12MB3927;H:SATLEXMB01.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f8d3a32f-14c4-4c24-261d-08d76cfa4406
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3927:
-X-Microsoft-Antispam-PRVS: <CH2PR12MB39270696AE526ECE31950D63E74C0@CH2PR12MB3927.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:17;
-X-Forefront-PRVS: 022649CC2C
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: LlHVNR3nd8n4IOHlij1lldFhm82BUI6VQ7jbxqlnfNJz3DtvnBCJ+Kyz71drrb5PqxG3oWMey06p0anWJBQuKlI/iUt6dx6E7T01hupsRpnBoJ+NrR5u0+PGY1S9Iuby6t97LVpNO8q2PIQ5kGjz5/IQqu9kqXprk6qwXnpv12Y3VzX/aZice1NbNl1z7TsgaCbECsRbFhkWj/xWG8TSAGSvGtAhOXXf0PUvfvCfJC1Lw0cIMhVBhEM2+lnYMZVxxl4XlzhUkdtQ9JQIHvOWzaPCIJ2jDmjnMyC4FvDc3UG4LevfQPduj3KhsCqHov98OKnoMTidMBlAaQiTL4Ux98wIJQcaU3j2WrWGJNr0JQcjj9yPNkY7fttYfEgsYGUJmBvyDwz9QS4ZrmzEHFvuDe6Tr0PSBAbrhg9Hv47II7agsaSjPAjS2NBjY3OnuK3X
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2019 14:10:43.4240
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f8d3a32f-14c4-4c24-261d-08d76cfa4406
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB01.amd.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB3927
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="H+4ONPRPur6+Ovig"
+Content-Disposition: inline
+In-Reply-To: <CAMeQTsb0+Tc9Gij_1zMH=mPSbDAjMkMEFatvZrfjLvVsQGwVgA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When system wide suspend happens, ACP will be powered off
-and when system resumes,for audio usecase to continue,all
-the runtime configuration data needs to be programmed again.
-Added resume pm call back to ACP pm ops and also added runtime
-PM operations for ACP3x PCM platform device.
-Device will enter into D3 state when there is no activity
-on audio I2S lines.
 
-Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
----
- sound/soc/amd/raven/acp3x-pcm-dma.c | 144 +-----------------------------
- sound/soc/amd/raven/acp3x.h         |   7 ++
- sound/soc/amd/raven/pci-acp3x.c     | 173 ++++++++++++++++++++++++++++++++++--
- 3 files changed, 177 insertions(+), 147 deletions(-)
+--H+4ONPRPur6+Ovig
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
-index 819ec3a..cae1a0f 100644
---- a/sound/soc/amd/raven/acp3x-pcm-dma.c
-+++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
-@@ -58,106 +58,6 @@ static const struct snd_pcm_hardware acp3x_pcm_hardware_capture = {
- 	.periods_max = CAPTURE_MAX_NUM_PERIODS,
- };
- 
--static int acp3x_power_on(void __iomem *acp3x_base, bool on)
--{
--	u16 val, mask;
--	u32 timeout;
--
--	if (on == true) {
--		val = 1;
--		mask = ACP3x_POWER_ON;
--	} else {
--		val = 0;
--		mask = ACP3x_POWER_OFF;
--	}
--
--	rv_writel(val, acp3x_base + mmACP_PGFSM_CONTROL);
--	timeout = 0;
--	while (true) {
--		val = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
--		if ((val & ACP3x_POWER_OFF_IN_PROGRESS) == mask)
--			break;
--		if (timeout > 100) {
--			pr_err("ACP3x power state change failure\n");
--			return -ENODEV;
--		}
--		timeout++;
--		cpu_relax();
--	}
--	return 0;
--}
--
--static int acp3x_reset(void __iomem *acp3x_base)
--{
--	u32 val, timeout;
--
--	rv_writel(1, acp3x_base + mmACP_SOFT_RESET);
--	timeout = 0;
--	while (true) {
--		val = rv_readl(acp3x_base + mmACP_SOFT_RESET);
--		if ((val & ACP3x_SOFT_RESET__SoftResetAudDone_MASK) ||
--		     timeout > 100) {
--			if (val & ACP3x_SOFT_RESET__SoftResetAudDone_MASK)
--				break;
--			return -ENODEV;
--		}
--		timeout++;
--		cpu_relax();
--	}
--
--	rv_writel(0, acp3x_base + mmACP_SOFT_RESET);
--	timeout = 0;
--	while (true) {
--		val = rv_readl(acp3x_base + mmACP_SOFT_RESET);
--		if (!val || timeout > 100) {
--			if (!val)
--				break;
--			return -ENODEV;
--		}
--		timeout++;
--		cpu_relax();
--	}
--	return 0;
--}
--
--static int acp3x_init(void __iomem *acp3x_base)
--{
--	int ret;
--
--	/* power on */
--	ret = acp3x_power_on(acp3x_base, true);
--	if (ret) {
--		pr_err("ACP3x power on failed\n");
--		return ret;
--	}
--	/* Reset */
--	ret = acp3x_reset(acp3x_base);
--	if (ret) {
--		pr_err("ACP3x reset failed\n");
--		return ret;
--	}
--	return 0;
--}
--
--static int acp3x_deinit(void __iomem *acp3x_base)
--{
--	int ret;
--
--	/* Reset */
--	ret = acp3x_reset(acp3x_base);
--	if (ret) {
--		pr_err("ACP3x reset failed\n");
--		return ret;
--	}
--	/* power off */
--	ret = acp3x_power_on(acp3x_base, false);
--	if (ret) {
--		pr_err("ACP3x power off failed\n");
--		return ret;
--	}
--	return 0;
--}
--
- static irqreturn_t i2s_irq_handler(int irq, void *dev_id)
- {
- 	struct i2s_dev_data *rv_i2s_data;
-@@ -535,53 +435,28 @@ static int acp3x_audio_probe(struct platform_device *pdev)
- 	adata->i2s_irq = res->start;
- 
- 	dev_set_drvdata(&pdev->dev, adata);
--	/* Initialize ACP */
--	status = acp3x_init(adata->acp3x_base);
--	if (status)
--		return -ENODEV;
--
- 	status = devm_snd_soc_register_component(&pdev->dev,
- 						 &acp3x_i2s_component,
- 						 NULL, 0);
- 	if (status) {
- 		dev_err(&pdev->dev, "Fail to register acp i2s component\n");
--		ret = -ENODEV;
--		goto dev_err;
-+		return -ENODEV;
- 	}
- 	status = devm_request_irq(&pdev->dev, adata->i2s_irq, i2s_irq_handler,
- 				  irqflags, "ACP3x_I2S_IRQ", adata);
- 	if (status) {
- 		dev_err(&pdev->dev, "ACP3x I2S IRQ request failed\n");
--		ret = -ENODEV;
--		goto dev_err;
-+		return -ENODEV;
- 	}
- 
- 	pm_runtime_set_autosuspend_delay(&pdev->dev, 5000);
- 	pm_runtime_use_autosuspend(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 	return 0;
--
--dev_err:
--	status = acp3x_deinit(adata->acp3x_base);
--	if (status)
--		dev_err(&pdev->dev, "ACP de-init failed\n");
--	else
--		dev_dbg(&pdev->dev, "ACP de-initialized\n");
--	return ret;
- }
- 
- static int acp3x_audio_remove(struct platform_device *pdev)
- {
--	struct i2s_dev_data *adata;
--	int ret;
--
--	adata = dev_get_drvdata(&pdev->dev);
--	ret = acp3x_deinit(adata->acp3x_base);
--	if (ret)
--		dev_err(&pdev->dev, "ACP de-init failed\n");
--	else
--		dev_dbg(&pdev->dev, "ACP de-initialized\n");
--
- 	pm_runtime_disable(&pdev->dev);
- 	return 0;
- }
-@@ -589,13 +464,9 @@ static int acp3x_audio_remove(struct platform_device *pdev)
- static int acp3x_resume(struct device *dev)
- {
- 	struct i2s_dev_data *adata;
--	int status;
- 	u32 val;
- 
- 	adata = dev_get_drvdata(dev);
--	status = acp3x_init(adata->acp3x_base);
--	if (status)
--		return -ENODEV;
- 
- 	if (adata->play_stream && adata->play_stream->runtime) {
- 		struct i2s_stream_instance *rtd =
-@@ -642,14 +513,8 @@ static int acp3x_resume(struct device *dev)
- static int acp3x_pcm_runtime_suspend(struct device *dev)
- {
- 	struct i2s_dev_data *adata;
--	int status;
- 
- 	adata = dev_get_drvdata(dev);
--	status = acp3x_deinit(adata->acp3x_base);
--	if (status)
--		dev_err(dev, "ACP de-init failed\n");
--	else
--		dev_dbg(dev, "ACP de-initialized\n");
- 
- 	rv_writel(0, adata->acp3x_base + mmACP_EXTERNAL_INTR_ENB);
- 
-@@ -659,12 +524,9 @@ static int acp3x_pcm_runtime_suspend(struct device *dev)
- static int acp3x_pcm_runtime_resume(struct device *dev)
- {
- 	struct i2s_dev_data *adata;
--	int status;
- 
- 	adata = dev_get_drvdata(dev);
--	status = acp3x_init(adata->acp3x_base);
--	if (status)
--		return -ENODEV;
-+
- 	rv_writel(1, adata->acp3x_base + mmACP_EXTERNAL_INTR_ENB);
- 	return 0;
- }
-diff --git a/sound/soc/amd/raven/acp3x.h b/sound/soc/amd/raven/acp3x.h
-index 01b283a..cf16ceb 100644
---- a/sound/soc/amd/raven/acp3x.h
-+++ b/sound/soc/amd/raven/acp3x.h
-@@ -65,6 +65,13 @@
- #define SLOT_WIDTH_16 0x10
- #define SLOT_WIDTH_24 0x18
- #define SLOT_WIDTH_32 0x20
-+#define ACP_PGFSM_CNTL_POWER_ON_MASK	0x01
-+#define ACP_PGFSM_CNTL_POWER_OFF_MASK	0x00
-+#define ACP_PGFSM_STATUS_MASK		0x03
-+#define ACP_POWERED_ON			0x00
-+#define ACP_POWER_ON_IN_PROGRESS	0x01
-+#define ACP_POWERED_OFF			0x02
-+#define ACP_POWER_OFF_IN_PROGRESS	0x03
- 
- struct acp3x_platform_info {
- 	u16 play_i2s_instance;
-diff --git a/sound/soc/amd/raven/pci-acp3x.c b/sound/soc/amd/raven/pci-acp3x.c
-index 94f5f21..d46a6d6 100644
---- a/sound/soc/amd/raven/pci-acp3x.c
-+++ b/sound/soc/amd/raven/pci-acp3x.c
-@@ -9,6 +9,9 @@
- #include <linux/io.h>
- #include <linux/platform_device.h>
- #include <linux/interrupt.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/delay.h>
-+#include <sound/pcm.h>
- 
- #include "acp3x.h"
- 
-@@ -19,6 +22,109 @@ struct acp3x_dev_data {
- 	struct platform_device *pdev[ACP3x_DEVS];
- };
- 
-+static int acp3x_power_on(void __iomem *acp3x_base)
-+{
-+	u32 val;
-+	int timeout;
-+
-+	val = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
-+
-+	if (val == 0)
-+		return val;
-+
-+	if (!((val & ACP_PGFSM_STATUS_MASK) ==
-+				ACP_POWER_ON_IN_PROGRESS))
-+		rv_writel(ACP_PGFSM_CNTL_POWER_ON_MASK,
-+			acp3x_base + mmACP_PGFSM_CONTROL);
-+	timeout = 0;
-+	while (++timeout < 500) {
-+		val = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
-+		if (!val)
-+			return 0;
-+		udelay(1);
-+	}
-+	return -ETIMEDOUT;
-+}
-+
-+static int acp3x_power_off(void __iomem *acp3x_base)
-+{
-+	u32 val;
-+	int timeout;
-+
-+	rv_writel(ACP_PGFSM_CNTL_POWER_OFF_MASK,
-+			acp3x_base + mmACP_PGFSM_CONTROL);
-+	timeout = 0;
-+	while (++timeout < 500) {
-+		val = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
-+		if ((val & ACP_PGFSM_STATUS_MASK) == ACP_POWERED_OFF)
-+			return 0;
-+		udelay(1);
-+	}
-+	return -ETIMEDOUT;
-+}
-+
-+static int acp3x_reset(void __iomem *acp3x_base)
-+{
-+	u32 val;
-+	int timeout;
-+
-+	rv_writel(1, acp3x_base + mmACP_SOFT_RESET);
-+	timeout = 0;
-+	while (++timeout < 500) {
-+		val = rv_readl(acp3x_base + mmACP_SOFT_RESET);
-+		if (val & ACP3x_SOFT_RESET__SoftResetAudDone_MASK)
-+			return 0;
-+		cpu_relax();
-+	}
-+	rv_writel(0, acp3x_base + mmACP_SOFT_RESET);
-+	timeout = 0;
-+	while (++timeout < 500) {
-+		val = rv_readl(acp3x_base + mmACP_SOFT_RESET);
-+		if (!val)
-+			return 0;
-+		cpu_relax();
-+	}
-+	return -ETIMEDOUT;
-+}
-+
-+static int acp3x_init(void __iomem *acp3x_base)
-+{
-+	int ret;
-+
-+	/* power on */
-+	ret = acp3x_power_on(acp3x_base);
-+	if (ret) {
-+		pr_err("ACP3x power on failed\n");
-+		return ret;
-+	}
-+	/* Reset */
-+	ret = acp3x_reset(acp3x_base);
-+	if (ret) {
-+		pr_err("ACP3x reset failed\n");
-+		return ret;
-+	}
-+	return 0;
-+}
-+
-+static int acp3x_deinit(void __iomem *acp3x_base)
-+{
-+	int ret;
-+
-+	/* Reset */
-+	ret = acp3x_reset(acp3x_base);
-+	if (ret) {
-+		pr_err("ACP3x reset failed\n");
-+		return ret;
-+	}
-+	/* power off */
-+	ret = acp3x_power_off(acp3x_base);
-+	if (ret) {
-+		pr_err("ACP3x power off failed\n");
-+		return ret;
-+	}
-+	return 0;
-+}
-+
- static int snd_acp3x_probe(struct pci_dev *pci,
- 			   const struct pci_device_id *pci_id)
- {
-@@ -64,6 +170,9 @@ static int snd_acp3x_probe(struct pci_dev *pci,
- 	}
- 	pci_set_master(pci);
- 	pci_set_drvdata(pci, adata);
-+	ret = acp3x_init(adata->acp3x_base);
-+	if (ret)
-+		goto disable_msi;
- 
- 	val = rv_readl(adata->acp3x_base + mmACP_I2S_PIN_CONFIG);
- 	switch (val) {
-@@ -73,7 +182,7 @@ static int snd_acp3x_probe(struct pci_dev *pci,
- 					  GFP_KERNEL);
- 		if (!adata->res) {
- 			ret = -ENOMEM;
--			goto disable_msi;
-+			goto de_init;
- 		}
- 
- 		adata->res[0].name = "acp3x_i2s_iomem";
-@@ -118,7 +227,7 @@ static int snd_acp3x_probe(struct pci_dev *pci,
- 		pdevinfo[2].parent = &pci->dev;
- 		pdevinfo[2].num_res = 1;
- 		pdevinfo[2].res = &adata->res[2];
--		for (i = 0; i < ACP3x_DEVS ; i++) {
-+		for (i = 0; i < ACP3x_DEVS; i++) {
- 			adata->pdev[i] =
- 				platform_device_register_full(&pdevinfo[i]);
- 			if (IS_ERR(adata->pdev[i])) {
-@@ -134,12 +243,20 @@ static int snd_acp3x_probe(struct pci_dev *pci,
- 		ret = -ENODEV;
- 		goto disable_msi;
- 	}
-+	pm_runtime_set_autosuspend_delay(&pci->dev, 5000);
-+	pm_runtime_use_autosuspend(&pci->dev);
-+	pm_runtime_set_active(&pci->dev);
-+	pm_runtime_put_noidle(&pci->dev);
-+	pm_runtime_enable(&pci->dev);
- 	return 0;
- 
- unregister_devs:
- 	if (val == I2S_MODE)
--		for (i = 0 ; i < ACP3x_DEVS ; i++)
-+		for (i = 0; i < ACP3x_DEVS; i++)
- 			platform_device_unregister(adata->pdev[i]);
-+de_init:
-+	if (acp3x_deinit(adata->acp3x_base))
-+		dev_err(&pci->dev, "ACP de-init failed\n");
- disable_msi:
- 	pci_disable_msi(pci);
- release_regions:
-@@ -150,15 +267,56 @@ static int snd_acp3x_probe(struct pci_dev *pci,
- 	return ret;
- }
- 
-+static int snd_acp3x_suspend(struct device *dev)
-+{
-+	int ret;
-+	struct acp3x_dev_data *adata;
-+
-+	adata = dev_get_drvdata(dev);
-+	ret = acp3x_deinit(adata->acp3x_base);
-+	if (ret)
-+		dev_err(dev, "ACP de-init failed\n");
-+	else
-+		dev_dbg(dev, "ACP de-initialized\n");
-+
-+	return 0;
-+}
-+
-+static int snd_acp3x_resume(struct device *dev)
-+{
-+	int ret;
-+	struct acp3x_dev_data *adata;
-+
-+	adata = dev_get_drvdata(dev);
-+	ret = acp3x_init(adata->acp3x_base);
-+	if (ret) {
-+		dev_err(dev, "ACP init failed\n");
-+		return ret;
-+	}
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops acp3x_pm = {
-+	.runtime_suspend = snd_acp3x_suspend,
-+	.runtime_resume =  snd_acp3x_resume,
-+	.resume =	snd_acp3x_resume,
-+};
-+
- static void snd_acp3x_remove(struct pci_dev *pci)
- {
--	struct acp3x_dev_data *adata = pci_get_drvdata(pci);
--	int i;
-+	struct acp3x_dev_data *adata;
-+	int i, ret;
- 
-+	adata = pci_get_drvdata(pci);
- 	if (adata->acp3x_audio_mode == ACP3x_I2S_MODE) {
--		for (i = 0 ; i <  ACP3x_DEVS ; i++)
-+		for (i = 0; i < ACP3x_DEVS; i++)
- 			platform_device_unregister(adata->pdev[i]);
- 	}
-+	ret = acp3x_deinit(adata->acp3x_base);
-+	if (ret)
-+		dev_err(&pci->dev, "ACP de-init failed\n");
-+	pm_runtime_disable(&pci->dev);
-+	pm_runtime_get_noresume(&pci->dev);
- 	pci_disable_msi(pci);
- 	pci_release_regions(pci);
- 	pci_disable_device(pci);
-@@ -177,6 +335,9 @@ static struct pci_driver acp3x_driver  = {
- 	.id_table = snd_acp3x_ids,
- 	.probe = snd_acp3x_probe,
- 	.remove = snd_acp3x_remove,
-+	.driver = {
-+		.pm = &acp3x_pm,
-+	}
- };
- 
- module_pci_driver(acp3x_driver);
--- 
-2.7.4
+Hi,
 
+On Wed 13 Nov 19, 11:04, Patrik Jakobsson wrote:
+> On Tue, Nov 12, 2019 at 4:50 PM Paul Kocialkowski
+> <paul.kocialkowski@bootlin.com> wrote:
+> >
+> > Hi,
+> >
+> > On Tue 12 Nov 19, 16:11, Paul Kocialkowski wrote:
+> > > Hi,
+> > >
+> > > On Tue 12 Nov 19, 11:20, Patrik Jakobsson wrote:
+> > > > On Thu, Nov 7, 2019 at 4:30 PM Paul Kocialkowski
+> > > > <paul.kocialkowski@bootlin.com> wrote:
+> > > > >
+> > > > > psbfb_probe performs an evaluation of the required size from the =
+stolen
+> > > > > GTT memory, but gets it wrong in two distinct ways:
+> > > > > - The resulting size must be page-size-aligned;
+> > > > > - The size to allocate is derived from the surface dimensions, no=
+t the fb
+> > > > >   dimensions.
+> > > > >
+> > > > > When two connectors are connected with different modes, the small=
+est will
+> > > > > be stored in the fb dimensions, but the size that needs to be all=
+ocated must
+> > > > > match the largest (surface) dimensions. This is what is used in t=
+he actual
+> > > > > allocation code.
+> > > > >
+> > > > > Fix this by correcting the evaluation to conform to the two point=
+s above.
+> > > > > It allows correctly switching to 16bpp when one connector is e.g.=
+ 1920x1080
+> > > > > and the other is 1024x768.
+> > > > >
+> > > > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > > > ---
+> > > > >  drivers/gpu/drm/gma500/framebuffer.c | 8 ++++++--
+> > > > >  1 file changed, 6 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/gpu/drm/gma500/framebuffer.c b/drivers/gpu/d=
+rm/gma500/framebuffer.c
+> > > > > index 218f3bb15276..90237abee088 100644
+> > > > > --- a/drivers/gpu/drm/gma500/framebuffer.c
+> > > > > +++ b/drivers/gpu/drm/gma500/framebuffer.c
+> > > > > @@ -462,6 +462,7 @@ static int psbfb_probe(struct drm_fb_helper *=
+helper,
+> > > > >                 container_of(helper, struct psb_fbdev, psb_fb_hel=
+per);
+> > > > >         struct drm_device *dev =3D psb_fbdev->psb_fb_helper.dev;
+> > > > >         struct drm_psb_private *dev_priv =3D dev->dev_private;
+> > > > > +       unsigned int fb_size;
+> > > > >         int bytespp;
+> > > > >
+> > > > >         bytespp =3D sizes->surface_bpp / 8;
+> > > > > @@ -471,8 +472,11 @@ static int psbfb_probe(struct drm_fb_helper =
+*helper,
+> > > > >         /* If the mode will not fit in 32bit then switch to 16bit=
+ to get
+> > > > >            a console on full resolution. The X mode setting serve=
+r will
+> > > > >            allocate its own 32bit GEM framebuffer */
+> > > > > -       if (ALIGN(sizes->fb_width * bytespp, 64) * sizes->fb_heig=
+ht >
+> > > > > -                       dev_priv->vram_stolen_size) {
+> > > > > +       fb_size =3D ALIGN(sizes->surface_width * bytespp, 64) *
+> > > > > +                 sizes->surface_height;
+> > > > > +       fb_size =3D ALIGN(fb_size, PAGE_SIZE);
+> > > > > +
+> > > > > +       if (fb_size > dev_priv->vram_stolen_size) {
+> > > >
+> > > > psb_gtt_alloc_range() already aligns by PAGE_SIZE for us. Looks like
+> > > > we align a couple of times extra for luck. This needs cleaning up
+> > > > instead of adding even more aligns.
+> > >
+> > > I'm not sure this is really for luck. As far as I can see, we need to=
+ do it
+> > > properly for this size estimation since it's the final size that will=
+ be
+> > > allocated (and thus needs to be available in whole).
+>=20
+> Ok now I understand what you meant. Actually vram_stolen_size is
+> always page aligned so fb_size doesn't need any page alignment here.
+
+I'm a bit confused here, what about the case where:
+unaligned fb_size < dev_priv->vram_stolen_size but
+aligned fb_size > dev_priv->vram_stolen_size ?
+
+Granted, it's a corner case, but I don't follow the logic of comparing alig=
+ned
+and unaligned sizes: it feels a bit like comparing two values of different
+units.
+
+> There is also no need to align for psbfb_create() since it also takes
+> care of this.
+>=20
+> > >
+> > > For the other times there is explicit alignment, they seem justified =
+too:
+> > > - in psb_gem_create: it is common to pass the aligned size when creat=
+ing the
+> > >   associated GEM object with drm_gem_object_init, even though it's pr=
+obably not
+> > >   crucial given that this is not where allocation actually happens;
+> > > - in psbfb_create: the full size is apparently only really used to me=
+mset 0
+> > >   the allocated buffer. I think this makes sense for security reasons=
+ (and not
+> > >   leak previous contents in the additional space required for alignme=
+nt).
+>=20
+> What I would prefer is to have a single place where the alignment is
+> made so any hardware requirements would be transparent to the rest of
+> the code.
+
+Mhh, I thought that psbfb_create needs to be aware of the alignment in the
+form of the pitch_lines variable to decide which 2d accel method can be use=
+d or
+not (depending on associated alignment requirements). I guess this makes for
+another reason to ditch the accelerated 2d accel support.
+
+> Best would be if alignment is only made in psb_gtt_alloc_range() and
+> then store the actual size in struct gtt_range. That way we can just
+> pass along that value to memset() and drm_gem_object_init() without
+> caring about how it is adjusted.
+>=20
+> > >
+> > > What strikes me however is that each call to psb_gtt_alloc_range take=
+s the
+> > > alignment as a parameter when it's really always PAGE_SIZE, so it sho=
+uld
+> > > probably just be hardcoded in the call to allocate_resource.
+>=20
+> This is a remnant from trying to add support for 2D and/or overlay
+> planes (don't really remember). Doesn't matter if it stays or goes
+> away.
+>=20
+> > >
+> > > What do you think?
+>=20
+> I suppose most of this is outside the scope of what you're trying to
+> do so we can just leave it as is and I can clean it up later.
+
+I guess my main change here was to switch from sizes->fb_width/height to
+sizes->surface_width/height anyway, yes. I can totally live without the
+final PAGE_SIZE align for fb_size too (even though I think it makes sense).
+
+Feel free to let me know what you'd like to receive as a v2 here and I'll do
+that :)
+
+> > >
+> > > > Your size calculation looks correct and indeed makes my 1024x600 +
+> > > > 1920x1080 setup actually display something, but for some reason I g=
+et
+> > > > an incorrect panning on the smaller screen and stale data on the
+> > > > surface only visible by the larger CRTC. Any idea what's going on?
+> > >
+> > > I'm not seeing this immediately, but I definitely have something stra=
+nge
+> > > after having printed more lines than the smallest display can handle =
+or
+> > > scrolling, where more than the actual size of the fb is used.
+> > >
+> > > Maybe this is related to using the PowerVR-accelerated fb ops, that a=
+ren't
+> > > quite ready for this use case?
+> > >
+> > > I'll give it a try with psbfb_roll_ops and psbfb_unaccel_ops instead =
+to see
+> > > if it changes something for me. Maybe it would help for you too?
+> >
+> > Some quick feedback about that:
+> > - psbfb_unaccel_ops gives a correct result where the scrolling area is =
+bound
+> >   to the smallest display;
+>=20
+> Yes, this also works correctly for me.
+>=20
+> > - psbfb_roll_ops gives a working scrolling but bound to the largest dis=
+play
+> >   (so the current shell line becomes invisible on the smallest one even=
+tually);
+>=20
+> It's not panning at all for me. I never really found gtt rolling to be
+> useful. It's a neat trick but I didn't have a problem with console
+> scrolling speed to begin with. I might just remove it.
+
+Yeah, I also don't understand what the hype of accelerating fbdev ops is ab=
+out.
+I guess it could have been useful back when there were serious users of fbd=
+ev in
+userspace (aka directfb) but that's not really where things are going today.
+For console usage, I also find the software method fast enough.
+
+> > - psbfb_ops gives the same issue as above and seems to add artifacts on=
+ top.
+>=20
+> Did you try this on CDV? There's only 2D acceleration on Poulsbo and Oakt=
+rail.
+
+I tried this one on Poulsbo (the other gma500 platform I have around).
+
+> >
+> > There's probably limited interest in working on that aspect on our side=
+ though.
+> > I'd be interested to know if it affects the issue you're seeing though.
+>=20
+> Focus on your requirements and I'll look at the rest.
+
+Sounds good to me, thanks a lot! I'll do according to what you'd like for a=
+ v2.
+
+Cheers,
+
+Paul
+
+> -Patrik
+>=20
+> >
+> > Cheers,
+> >
+> > Paul
+> >
+> > > I suspect that the generic implementation is already bullet-proof for=
+ these
+> > > kinds of use case.
+> > >
+> > > Cheers and thanks for the feedback,
+> > >
+> > > Paul
+> > >
+> > > >
+> > > > >                  sizes->surface_bpp =3D 16;
+> > > > >                  sizes->surface_depth =3D 16;
+> > > > >          }
+> > > > > --
+> > > > > 2.23.0
+> > > > >
+> > >
+> > > --
+> > > Paul Kocialkowski, Bootlin
+> > > Embedded Linux and kernel engineering
+> > > https://bootlin.com
+> >
+> >
+> >
+> > --
+> > Paul Kocialkowski, Bootlin
+> > Embedded Linux and kernel engineering
+> > https://bootlin.com
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--H+4ONPRPur6+Ovig
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl3T+CcACgkQ3cLmz3+f
+v9GsNAf+MBPTP0JagiRtHK/vSkT+9jkSRuPhedDQhFNolghWPXL4cCItsheQPgQX
+mWRT1sNJvjvNW4CZ/wOdG0vHHOHPEc+AgUjgO2Ytelk5B06rYZ9DMSFGVb36NOz+
++RmNyalQXX7BTkURzDHOKxzgm9L4rjc20BhtbRKzps6nlfgwxaIbupi4M3SrKSEg
+243H+T3pp2M4Jw6TDSkhtiijJGlTuDl2GTii8mjC9WRd1z+lG/FFBRr8i/KXv61j
+AEEJRZTA5tvVzHeBDcSMbEQcZf9AkyB8oyXY0S/g1iCeXsvI1/+IXNZsYRomCyOV
+SxQ+jn8vAtRvWYJW5WfUllbWQmVmQQ==
+=aKYq
+-----END PGP SIGNATURE-----
+
+--H+4ONPRPur6+Ovig--
