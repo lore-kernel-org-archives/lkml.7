@@ -2,67 +2,84 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3E8C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A614C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3C322313
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6899D22313
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:58:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="URjvum6c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfKSB6W (ORCPT
+        id S1727205AbfKSB6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 20:58:22 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:52718 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbfKSB6W (ORCPT
+        Mon, 18 Nov 2019 20:58:36 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:40258 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbfKSB6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 20:58:22 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 36CB415102289;
-        Mon, 18 Nov 2019 17:58:21 -0800 (PST)
-Date:   Mon, 18 Nov 2019 17:58:18 -0800 (PST)
-Message-Id: <20191118.175818.1172073606217291260.davem@davemloft.net>
-To:     jtoppins@redhat.com
-Cc:     netdev@vger.kernel.org, aelior@marvell.com, skalluru@marvell.com,
-        GR-everest-linux-l2@marvell.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] bnx2x: initialize ethtool info->fw_version
- before use
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <f40bcf8cd93677c12bca1f06e74385c9a5f49819.1574096873.git.jtoppins@redhat.com>
-References: <f40bcf8cd93677c12bca1f06e74385c9a5f49819.1574096873.git.jtoppins@redhat.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Mon, 18 Nov 2019 20:58:36 -0500
+Received: from [10.137.112.108] (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 3DA9620B7185;
+        Mon, 18 Nov 2019 17:58:35 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3DA9620B7185
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1574128715;
+        bh=EwLJ7dZnO9M0Zss7YO2y+ACD+pEYvTL9jIyrqCdm21A=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=URjvum6crfCT/b3wwOqFy+MLioPfsTptUmwCO36GWRB5BNxPuTCSOUViryIRPdBMW
+         o5MYK9Vop/WfRJxhuVYaKmDWU5yohWb0R9QZN+6LRwi5gVQpjDwuuElExwYCPnLAQX
+         KPV6Vori20PMqmRi1hwhnukbMOk3oF5AZXmYlxwo=
+Subject: Re: [PATCH v8 3/5] KEYS: Call the IMA hook to measure keys
+To:     Eric Snowberg <eric.snowberg@oracle.com>
+Cc:     zohar@linux.ibm.com, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+References: <20191118223818.3353-1-nramas@linux.microsoft.com>
+ <20191118223818.3353-4-nramas@linux.microsoft.com>
+ <886A71DC-B2B9-4C25-90D6-511E86F2CA19@oracle.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <3e051f5c-927e-cba6-7714-388e0216974a@linux.microsoft.com>
+Date:   Mon, 18 Nov 2019 17:58:30 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <886A71DC-B2B9-4C25-90D6-511E86F2CA19@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 18 Nov 2019 17:58:21 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Toppins <jtoppins@redhat.com>
-Date: Mon, 18 Nov 2019 12:07:53 -0500
+On 11/18/19 5:18 PM, Eric Snowberg wrote:
 
->     probe begin { printf("net-info  version 01.01\n")}
+>> +#ifdef CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE
+>> +extern void ima_post_key_create_or_update(struct key *keyring,
+>> +					  struct key *key,
+>> +					  unsigned long flags, bool create);
+>> +#endif
 > 
->     function memset(msg:long) %{
->     	memset((char*)STAP_ARG_msg,-1,196);
->     %}
+> The extern void ima_post_key_create_or_update will only be defined if CONFIG_IMA=y.
 > 
->     probe module("bnx2x").function("bnx2x_get_drvinfo")
->     {
->       printf("In function\n");
->       memset(register("rsi"));
 
-This makes no sense.
+> 
+> This will cause a compile error if CONFIG_IMA is not defined and CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE=y.
+> 
+> security/keys/key.c: In function 'key_create_or_update':
+> security/keys/key.c:940:2: error: implicit declaration of function 'ima_post_key_create_or_update'; did you mean 'key_create_or_update'? [-Werror=implicit-function-declaration]
+>    ima_post_key_create_or_update(keyring, key, flags, true);
+>    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>    key_create_or_update
+> cc1: some warnings being treated as errors
 
-This function is called with the buffer cleared to zero.
+You are right - Thanks for catching this error.
+I'll fix this and send an update.
 
-You're scrambling something to simulate a "bug", but that will never
-be scrambled in reality.
+thanks,
+  -lakshmi
+
