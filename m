@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E43C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 340ABC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4957721783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 047EC208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142192;
-	bh=Nie++jwXeETwcFQqwwHJgPZbDbLErfmYmKOCTZHw8QM=;
+	s=default; t=1574142196;
+	bh=H7Djb+n3qjxbE2dVJgW6kUOuIo0sOoojYsnEGEwGFNE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wMZQmmP9BtblIcHdQNR0psKldJC3b5FOGEJ7AVq2XSXadBKqLv+8juGHoWBdNxGdp
-	 NfhQVBK85g5DYM5CYk1zUGiNEFLbLBNxWXRdXd8mbEYrAdMCpHu5IL5sNxau01Gbrd
-	 wKu4jsOmC7d0QhwL/eveWP6AkcoyX/XEYw4Rf8E0=
+	b=tPXquGugz6q0/1zMs64GxYTI9aYr5yUwSeh8HgAOBPKlKVyOz0DtGU3NDtEdB1YI8
+	 Luoy93Q51yKxzdFyMqfTK88Yf6X+jGUJqHv2usvkkkJoGSHhMsi30NHeXOhgyb8vna
+	 +Kb1ZclweyFYc1LolkAQteoqpa70zgBdjNeWkbg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730159AbfKSFnC (ORCPT
+        id S1730112AbfKSFnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:43:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37768 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:43:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730684AbfKSFm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:42:56 -0500
+        id S1730477AbfKSFnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:43:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 072DC21783;
-        Tue, 19 Nov 2019 05:42:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3F6021783;
+        Tue, 19 Nov 2019 05:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142176;
-        bh=Nie++jwXeETwcFQqwwHJgPZbDbLErfmYmKOCTZHw8QM=;
+        s=default; t=1574142188;
+        bh=H7Djb+n3qjxbE2dVJgW6kUOuIo0sOoojYsnEGEwGFNE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eK+NUhx0JeBjhMAa7PRxcBCcj7/FvTzy8wBP1HtdXOZpWJfD/Cy+JT7OcnlxeRStB
-         i35ovO/v3qvbBdG91USHiRiA46QCRMq+ylOhpcLk7gILcAl7YBvOHRM5fqIbJdkRP+
-         p03eG2otv3cSK2i4bHN+tEvbAi0Lhh8pYRXtWSa8=
+        b=hrt6b5X5bLf8QEOHXkhqIgWg3gkYInukgtxbShITANVUjqkS6+K1rADunt62MErpB
+         AsPxeXS99ThsXO6McXUEz5nv2DkBJ0FlsGny2FctMditcy/6wfOd3oCCBTsqH0UIL/
+         Qf8T6zM4KT9bZ/vjTnGtItZSnxrRm04z++N6JciY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilan Peer <ilan.peer@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+        stable@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 398/422] iwlwifi: mvm: Allow TKIP for AP mode
-Date:   Tue, 19 Nov 2019 06:19:55 +0100
-Message-Id: <20191119051424.925088372@linuxfoundation.org>
+Subject: [PATCH 4.19 419/422] media: ov2680: fix null dereference at power on
+Date:   Tue, 19 Nov 2019 06:20:16 +0100
+Message-Id: <20191119051426.345896171@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,36 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilan Peer <ilan.peer@intel.com>
+From: Rui Miguel Silva <rui.silva@linaro.org>
 
-[ Upstream commit 6f3df8c1192c873a6ad9a76328920f6f85af90a8 ]
+[ Upstream commit c45fbdf24c61a7b7a37f1b3bbd46f054637a3627 ]
 
-Support for setting keys for TKIP cipher suite was mistakenly removed
-for AP mode. Fix this.
+Swapping the order between v4l2 subdevice registration and checking chip
+id in b7a417628abf ("media: ov2680: don't register the v4l2 subdevice
+before checking chip ID") makes the mode restore to use the sensor
+controls before they are set, so move the mode restore call to s_power
+after the handler setup for controls is done.
 
-Fixes: 85aeb58cec1a ("iwlwifi: mvm: Enable security on new TX API")
-Signed-off-by: Ilan Peer <ilan.peer@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+This remove also the need for the error code path in power on function.
+
+Fixes: b7a417628abf ("media: ov2680: don't register the v4l2 subdevice before checking chip ID")
+
+Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/sta.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/media/i2c/ov2680.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-index 18db1ed92d9b0..04ea516bddcc0 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-@@ -3133,10 +3133,6 @@ static int __iwl_mvm_set_sta_key(struct iwl_mvm *mvm,
+diff --git a/drivers/media/i2c/ov2680.c b/drivers/media/i2c/ov2680.c
+index 3ccd584568fb5..d8798fb714ba8 100644
+--- a/drivers/media/i2c/ov2680.c
++++ b/drivers/media/i2c/ov2680.c
+@@ -568,10 +568,6 @@ static int ov2680_power_on(struct ov2680_dev *sensor)
+ 	if (ret < 0)
+ 		return ret;
  
- 	switch (keyconf->cipher) {
- 	case WLAN_CIPHER_SUITE_TKIP:
--		if (vif->type == NL80211_IFTYPE_AP) {
--			ret = -EINVAL;
--			break;
--		}
- 		addr = iwl_mvm_get_mac_addr(mvm, vif, sta);
- 		/* get phase 1 key from mac80211 */
- 		ieee80211_get_key_rx_seq(keyconf, 0, &seq);
+-	ret = ov2680_mode_restore(sensor);
+-	if (ret < 0)
+-		goto disable;
+-
+ 	sensor->is_enabled = true;
+ 
+ 	/* Set clock lane into LP-11 state */
+@@ -580,12 +576,6 @@ static int ov2680_power_on(struct ov2680_dev *sensor)
+ 	ov2680_stream_disable(sensor);
+ 
+ 	return 0;
+-
+-disable:
+-	dev_err(dev, "failed to enable sensor: %d\n", ret);
+-	ov2680_power_off(sensor);
+-
+-	return ret;
+ }
+ 
+ static int ov2680_s_power(struct v4l2_subdev *sd, int on)
+@@ -606,6 +596,8 @@ static int ov2680_s_power(struct v4l2_subdev *sd, int on)
+ 		ret = v4l2_ctrl_handler_setup(&sensor->ctrls.handler);
+ 		if (ret < 0)
+ 			return ret;
++
++		ret = ov2680_mode_restore(sensor);
+ 	}
+ 
+ 	return ret;
 -- 
 2.20.1
 
