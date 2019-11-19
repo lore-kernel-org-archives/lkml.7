@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D88CC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2966C43141
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C07E218BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9479B20862
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141777;
-	bh=TWMtyGoTPlsTVwTgBV9Um9JUDKWHvmdAk1nWhp7XC/0=;
+	s=default; t=1574141779;
+	bh=VHiTryP+MU+PLdWreCOV2vP2vxJ3anEvXl6BhTjOKbg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SMLdJvgxpAwLZh8cEPxPwfh8x+jcMSCjxHKWFt6+aV1CwovCENgXlPwrYb9kBhorb
-	 qCi6Ek/Evg1EdLbfqpBGg71tEWzo27xqMCAAfFSyHRQbq4lBM0x/eS8LRGhtM9/QDV
-	 URqiLMKX57a6YKiFlnbAPyCU/1zc/FlI/kmZGDpM=
+	b=KcA31tAdGfyFZUTxgGbedMor2/mjiP/20zk/pqbunGVRtBVv5WULKHCuGweVU5fVo
+	 FBHpKFYKXLoiMPrdRWiV/kBtfaJZJcWVWzkpf+fxbIIicI0buXi02GOSDqgqXpPkXD
+	 C056Q9YC7jneoQghmj0PbWYuQe+9YeUiazxh/DF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729942AbfKSFgQ (ORCPT
+        id S1729932AbfKSFgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:36:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57430 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729931AbfKSFgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Nov 2019 00:36:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728721AbfKSFgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:36:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3249620862;
-        Tue, 19 Nov 2019 05:36:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F28B120672;
+        Tue, 19 Nov 2019 05:36:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141774;
-        bh=TWMtyGoTPlsTVwTgBV9Um9JUDKWHvmdAk1nWhp7XC/0=;
+        s=default; t=1574141771;
+        bh=VHiTryP+MU+PLdWreCOV2vP2vxJ3anEvXl6BhTjOKbg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oUAW1IwaqReMWhgjs4QlqE/XZQnK4KWZh+5qzkeJhAm/c2Ybg6O5p8wQPqT3QoTSK
-         2W6txk1Y3MOa/pjnsoMAU6VsznHWvqnyeTig+xnA0XB0RoWQoV1QB7OuwHupG7y9ac
-         onxlUICsBvJDrnyXAeO6EEoR4ud3tXlZg/5jHk8A=
+        b=kYDdGyr/+NZ+3R8azNnnZS6Sgq8T7Ne4J4Jqyqre0ZzdvCAfPMwY01AccgLOn4/K1
+         IrJsSv75YXnfbY5UBhORVmk3+8oSRjtWo0y1feM7Dkp+Sd1a9ryKelIXERzPqhUw2Y
+         03nsUkKMmDmRuu5XEj06H/8/4VlBCoUhYQ6q0LeM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 277/422] net: broadcom: fix return type of ndo_start_xmit function
-Date:   Tue, 19 Nov 2019 06:17:54 +0100
-Message-Id: <20191119051416.936428380@linuxfoundation.org>
+Subject: [PATCH 4.19 268/422] OPP: Protect dev_list with opp_table lock
+Date:   Tue, 19 Nov 2019 06:17:45 +0100
+Message-Id: <20191119051416.355082371@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,67 +60,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-[ Upstream commit 0c13b8d1aee87c35a2fbc1d85a1f766227cf54b5 ]
+[ Upstream commit 3d2556992a878a2210d3be498416aee39e0c32aa ]
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, so make sure the implementation in
-this driver has returns 'netdev_tx_t' value, and change the function
-return type to netdev_tx_t.
+The dev_list needs to be protected with a lock, else we may have
+simultaneous access (addition/removal) to it and that would be racy.
+Extend scope of the opp_table lock to protect dev_list as well.
 
-Found by coccinelle.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Tested-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bcm63xx_enet.c | 5 +++--
- drivers/net/ethernet/broadcom/sb1250-mac.c   | 4 ++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ drivers/opp/core.c | 21 +++++++++++++++++++--
+ drivers/opp/cpu.c  |  2 ++
+ drivers/opp/opp.h  |  2 +-
+ 3 files changed, 22 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-index 897302adc38ec..50f8a377596e1 100644
---- a/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-+++ b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-@@ -568,12 +568,13 @@ static irqreturn_t bcm_enet_isr_dma(int irq, void *dev_id)
- /*
-  * tx request callback
-  */
--static int bcm_enet_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t
-+bcm_enet_start_xmit(struct sk_buff *skb, struct net_device *dev)
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index f3433bf47b100..14d4ef5943741 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -48,9 +48,14 @@ static struct opp_device *_find_opp_dev(const struct device *dev,
+ static struct opp_table *_find_opp_table_unlocked(struct device *dev)
  {
- 	struct bcm_enet_priv *priv;
- 	struct bcm_enet_desc *desc;
- 	u32 len_stat;
--	int ret;
-+	netdev_tx_t ret;
+ 	struct opp_table *opp_table;
++	bool found;
  
- 	priv = netdev_priv(dev);
+ 	list_for_each_entry(opp_table, &opp_tables, node) {
+-		if (_find_opp_dev(dev, opp_table)) {
++		mutex_lock(&opp_table->lock);
++		found = !!_find_opp_dev(dev, opp_table);
++		mutex_unlock(&opp_table->lock);
++
++		if (found) {
+ 			_get_opp_table_kref(opp_table);
  
-diff --git a/drivers/net/ethernet/broadcom/sb1250-mac.c b/drivers/net/ethernet/broadcom/sb1250-mac.c
-index ef4a0c326736d..7e3f9642ba6c5 100644
---- a/drivers/net/ethernet/broadcom/sb1250-mac.c
-+++ b/drivers/net/ethernet/broadcom/sb1250-mac.c
-@@ -299,7 +299,7 @@ static enum sbmac_state sbmac_set_channel_state(struct sbmac_softc *,
- static void sbmac_promiscuous_mode(struct sbmac_softc *sc, int onoff);
- static uint64_t sbmac_addr2reg(unsigned char *ptr);
- static irqreturn_t sbmac_intr(int irq, void *dev_instance);
--static int sbmac_start_tx(struct sk_buff *skb, struct net_device *dev);
-+static netdev_tx_t sbmac_start_tx(struct sk_buff *skb, struct net_device *dev);
- static void sbmac_setmulti(struct sbmac_softc *sc);
- static int sbmac_init(struct platform_device *pldev, long long base);
- static int sbmac_set_speed(struct sbmac_softc *s, enum sbmac_speed speed);
-@@ -2028,7 +2028,7 @@ static irqreturn_t sbmac_intr(int irq,void *dev_instance)
-  *  Return value:
-  *  	   nothing
-  ********************************************************************* */
--static int sbmac_start_tx(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t sbmac_start_tx(struct sk_buff *skb, struct net_device *dev)
+ 			return opp_table;
+@@ -766,6 +771,8 @@ struct opp_device *_add_opp_dev(const struct device *dev,
+ 
+ 	/* Initialize opp-dev */
+ 	opp_dev->dev = dev;
++
++	mutex_lock(&opp_table->lock);
+ 	list_add(&opp_dev->node, &opp_table->dev_list);
+ 
+ 	/* Create debugfs entries for the opp_table */
+@@ -773,6 +780,7 @@ struct opp_device *_add_opp_dev(const struct device *dev,
+ 	if (ret)
+ 		dev_err(dev, "%s: Failed to register opp debugfs (%d)\n",
+ 			__func__, ret);
++	mutex_unlock(&opp_table->lock);
+ 
+ 	return opp_dev;
+ }
+@@ -791,6 +799,7 @@ static struct opp_table *_allocate_opp_table(struct device *dev)
+ 	if (!opp_table)
+ 		return NULL;
+ 
++	mutex_init(&opp_table->lock);
+ 	INIT_LIST_HEAD(&opp_table->dev_list);
+ 
+ 	opp_dev = _add_opp_dev(dev, opp_table);
+@@ -812,7 +821,6 @@ static struct opp_table *_allocate_opp_table(struct device *dev)
+ 
+ 	BLOCKING_INIT_NOTIFIER_HEAD(&opp_table->head);
+ 	INIT_LIST_HEAD(&opp_table->opp_list);
+-	mutex_init(&opp_table->lock);
+ 	kref_init(&opp_table->kref);
+ 
+ 	/* Secure the device table modification */
+@@ -854,6 +862,10 @@ static void _opp_table_kref_release(struct kref *kref)
+ 	if (!IS_ERR(opp_table->clk))
+ 		clk_put(opp_table->clk);
+ 
++	/*
++	 * No need to take opp_table->lock here as we are guaranteed that no
++	 * references to the OPP table are taken at this point.
++	 */
+ 	opp_dev = list_first_entry(&opp_table->dev_list, struct opp_device,
+ 				   node);
+ 
+@@ -1719,6 +1731,9 @@ void _dev_pm_opp_remove_table(struct opp_table *opp_table, struct device *dev,
  {
- 	struct sbmac_softc *sc = netdev_priv(dev);
- 	unsigned long flags;
+ 	struct dev_pm_opp *opp, *tmp;
+ 
++	/* Protect dev_list */
++	mutex_lock(&opp_table->lock);
++
+ 	/* Find if opp_table manages a single device */
+ 	if (list_is_singular(&opp_table->dev_list)) {
+ 		/* Free static OPPs */
+@@ -1736,6 +1751,8 @@ void _dev_pm_opp_remove_table(struct opp_table *opp_table, struct device *dev,
+ 	} else {
+ 		_remove_opp_dev(_find_opp_dev(dev, opp_table), opp_table);
+ 	}
++
++	mutex_unlock(&opp_table->lock);
+ }
+ 
+ void _dev_pm_opp_find_and_remove_table(struct device *dev, bool remove_all)
+diff --git a/drivers/opp/cpu.c b/drivers/opp/cpu.c
+index 0c09107094350..2868a022a0407 100644
+--- a/drivers/opp/cpu.c
++++ b/drivers/opp/cpu.c
+@@ -222,8 +222,10 @@ int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask)
+ 	cpumask_clear(cpumask);
+ 
+ 	if (opp_table->shared_opp == OPP_TABLE_ACCESS_SHARED) {
++		mutex_lock(&opp_table->lock);
+ 		list_for_each_entry(opp_dev, &opp_table->dev_list, node)
+ 			cpumask_set_cpu(opp_dev->dev->id, cpumask);
++		mutex_unlock(&opp_table->lock);
+ 	} else {
+ 		cpumask_set_cpu(cpu_dev->id, cpumask);
+ 	}
+diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
+index 7c540fd063b2d..e0866b1c1f1b2 100644
+--- a/drivers/opp/opp.h
++++ b/drivers/opp/opp.h
+@@ -126,7 +126,7 @@ enum opp_table_access {
+  * @dev_list:	list of devices that share these OPPs
+  * @opp_list:	table of opps
+  * @kref:	for reference count of the table.
+- * @lock:	mutex protecting the opp_list.
++ * @lock:	mutex protecting the opp_list and dev_list.
+  * @np:		struct device_node pointer for opp's DT node.
+  * @clock_latency_ns_max: Max clock latency in nanoseconds.
+  * @shared_opp: OPP is shared between multiple devices.
 -- 
 2.20.1
 
