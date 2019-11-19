@@ -2,101 +2,101 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B390C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC95C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEC98208A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9664222B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:31:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FHa8q0Ak"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ArmFHtCF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728611AbfKSR3Z (ORCPT
+        id S1728527AbfKSRbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 12:29:25 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44686 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728141AbfKSR3Y (ORCPT
+        Tue, 19 Nov 2019 12:31:20 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44750 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728128AbfKSRbU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 12:29:24 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJHTG3L069131;
-        Tue, 19 Nov 2019 11:29:16 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574184556;
-        bh=r/cBAHM8oY922P/6C8P9pt6goo9s2PX5XRBXQYR1CPs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=FHa8q0AkaQO/TTYzSCJp+gu59qGkDHoWhpifhhJKOVXbe/7yw1YNPIQ+Zmioo5Fb7
-         b2ZSb14bLzq+rRZx3GI8MukkkMcDhVLWLnTt2daCpnOBJhLMQlctIbLuySr/DNx+FL
-         UjWrquOZJbvuC5FhShxZEwsyCQytFg7kpXUUXSv0=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAJHTGsr005655
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 Nov 2019 11:29:16 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 19
- Nov 2019 11:29:16 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 19 Nov 2019 11:29:16 -0600
-Received: from [10.250.33.226] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJHTGpj083047;
-        Tue, 19 Nov 2019 11:29:16 -0600
-Subject: Re: [PATCH][next] net: phy: dp83869: fix return of uninitialized
- variable ret
-To:     Andrew Lunn <andrew@lunn.ch>, Colin King <colin.king@canonical.com>
-CC:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191118114835.39494-1-colin.king@canonical.com>
- <20191118232912.GC15395@lunn.ch>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <1346c899-2114-875a-68a7-4ce0c08307dc@ti.com>
-Date:   Tue, 19 Nov 2019 11:27:45 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 19 Nov 2019 12:31:20 -0500
+Received: by mail-io1-f66.google.com with SMTP id j20so13093001ioo.11
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 09:31:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZKXb08mLw7/gYPbvXLPbBkWtw4UGYUMyffgZIZI+HT0=;
+        b=ArmFHtCFR79K59IBtCbRQ9YtpK4dcS1SQ2DILybT8VpuW5oSI+0/OjIkU1lxFXj90/
+         g67wwarVmSXF/YEiLI36TyOFoIjfqE27lCCfVjunx2J7PwQuhJWt3gDvFtjUCpYKxgh9
+         oVBJkz7zllCUtHe+zYEkA35bMlpX/+bt76IY68FDbH/jA6+he9MBGIXzPgjDy2onhxbt
+         MmWvCZG+IUqmlnJ/v5MdvtENnsgyvXm6+Q+U4kXbHucQ25VneEvlZXYpMb/i6Pwua1OF
+         iBgGyPJ+pmIvLIBTRt8nvMFDyfyP6H8g7fFrfjUeeOMyL36jz0L55jJ7g10/Y6oDX1NK
+         nTKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZKXb08mLw7/gYPbvXLPbBkWtw4UGYUMyffgZIZI+HT0=;
+        b=e/xRls++CWG83MJDMU/A04NY2Zo0VqT1WxM4GdZ7XsOxwS6rJ9kpg9zZeW2A09NTv0
+         YYvK552vKJu/nbNC7oRgHmmwWPOvnDHGFvgrJ3zbB3cIYhevPZdf0Fs1e0xlgoaNw6lu
+         IXPmVPLmFshzJ6sJ7aaYwW0Fhr3VIe3WUq420jsYoq307Ho23vQuE3fzLOs1MbqVNoq7
+         lvxL+c3T3z6CA43o8LPHIRtJd2V45HqL7BkiMYz1XYEr68ZIXPGad1KC/l15jMIfVDUB
+         n6b7967Z10TAUVIeIN068Nn93iG5avHlT6NOIOOvZalh6qwA39QhUqulZ7rfR6YmbZSB
+         vwMw==
+X-Gm-Message-State: APjAAAUX5T8hJz1bd0JjJ+HlBO+ZLmr7VKGZ1khn0jOBdRKIBNIrdHG4
+        hmRCiDU0/afscqvwP0l7i5wRvdcma1p+PxjGyJ1vlw==
+X-Google-Smtp-Source: APXvYqxuSx88S96OihGrrKgtsaBcR+slNCHyQEu+C35JJbv7CvdH9n0vVrz2XW8a5TUK1UWZLn2OBnY3pHUXCiSjiq8=
+X-Received: by 2002:a6b:14ca:: with SMTP id 193mr19398156iou.140.1574184677951;
+ Tue, 19 Nov 2019 09:31:17 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191118232912.GC15395@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191119141645.19777-1-t-kristo@ti.com>
+In-Reply-To: <20191119141645.19777-1-t-kristo@ti.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Tue, 19 Nov 2019 10:31:06 -0700
+Message-ID: <CANLsYkwyLMHzKkm-6X+OgQ+khRYJshMJsxdst7+c7n+hX4nLpQ@mail.gmail.com>
+Subject: Re: [PATCHv2 00/15] Remoteproc: updates for OMAP remoteproc support
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-remoteproc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap@vger.kernel.org, Suman Anna <s-anna@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew
-
-On 11/18/19 5:29 PM, Andrew Lunn wrote:
-> On Mon, Nov 18, 2019 at 11:48:35AM +0000, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> In the case where the call to phy_interface_is_rgmii returns zero
->> the variable ret is left uninitialized and this is returned at
->> the end of the function dp83869_configure_rgmii.  Fix this by
->> returning 0 instead of the uninitialized value in ret.
->>
->> Addresses-Coverity: ("Uninitialized scalar variable")
->> Fixes: 01db923e8377 ("net: phy: dp83869: Add TI dp83869 phy")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+On Tue, 19 Nov 2019 at 07:17, Tero Kristo <t-kristo@ti.com> wrote:
 >
-> Dan: phy_modify_mmd() could fail. You check the return value for
-> phy_read and phy_write, so it would be consistent to also check
+> Hi,
+>
+> This is v2 of the series [1], addressing comments from Bjorn and Rob.
+> Bindings patch is funnily v2.5, as I posted v2 already and wanted to
+> keep this somehow in sync. Individual patches contain comments about the
+> changes, or Reviewed-by tags provided if there are no changes.
+>
+> I also dropped the conversion patch to SPDX licensing until I can
+> confirm the license we want to use. Lets just keep the existing in place
+> until that.
+>
+> This series still depends on the reset + clock patches posted earlier,
+> but both of those dependencies are in linux-next now.
 
-Thanks for the heads up on this.
+I tried to apply your set to today's linux-next (next-20191119) but it
+fails at patch 13.
 
-I need to check the set/clear_mmd bits too.
+Mathieu
 
-Dan
-
-
-> 	 Andrew
+>
+> -Tero
+>
+> [1] https://patchwork.kernel.org/cover/11215421/
+>
+>
+>
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
