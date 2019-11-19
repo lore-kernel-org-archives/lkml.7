@@ -2,122 +2,165 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C4BC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F42C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED8AE22460
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:17:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574198277;
-	bh=zBB0gG7s7w7EHPTR1+9i6C+WQkP2VFc4jg7B+kLpJ3Q=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=0IMVaVe3E9YZqV/Dva99owmcdiO1ZmE8q9BsK+Rx2oUTY9K/jRQZiLa2DAJLlZ5Q0
-	 aUS++ZPn9dY68yNBzWQB3xiKfCrqSvBRboXeag8ZjYZM4iUkTa5T4Ptr3t+onRhup8
-	 oy81wL5o4dm8YDTMb5bxcfLLT/pNWDUizpKv//iY=
+	by mail.kernel.org (Postfix) with ESMTP id 62DE62245F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:18:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfKSVR4 (ORCPT
+        id S1727394AbfKSVSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 16:17:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726911AbfKSVRz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 16:17:55 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.135])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02BCE2245F;
-        Tue, 19 Nov 2019 21:17:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574198275;
-        bh=zBB0gG7s7w7EHPTR1+9i6C+WQkP2VFc4jg7B+kLpJ3Q=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=HCoLX8+85dKCSjN+i505BLTozj6SdkZSXyclgcvdWxxPHteoesHkdcEfsXeseVEDa
-         yc27cEKLvcbpHMRg7gKXWqTa9HR6+LORezFOI1KpZYl1G0qXGbe/YCYodWO/z74otI
-         MJ+yz0G39YU6SRXDvLkVW67eChZV9Wt8BAfQ64u8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 90BA83520FA7; Tue, 19 Nov 2019 13:17:54 -0800 (PST)
-Date:   Tue, 19 Nov 2019 13:17:54 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Marco Elver <elver@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH -next] kcsan, ubsan: Make KCSAN+UBSAN work together
-Message-ID: <20191119211754.GI2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191119194658.39af50d0@canb.auug.org.au>
- <e75be639-110a-c615-3ec7-a107318b7746@infradead.org>
- <CANpmjNMpnY54kDdGwOPOD84UDf=Fzqtu62ifTds2vZn4t4YigQ@mail.gmail.com>
- <fb7e25d8-aba4-3dcf-7761-cb7ecb3ebb71@infradead.org>
- <20191119183407.GA68739@google.com>
- <20191119185742.GB68739@google.com>
- <3b8e1707-4e46-560d-a1ea-22e336655ba6@infradead.org>
+        Tue, 19 Nov 2019 16:18:42 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:56796 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726711AbfKSVSl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 16:18:41 -0500
+Received: from dread.disaster.area (pa49-181-255-80.pa.nsw.optusnet.com.au [49.181.255.80])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 836237E9C39;
+        Wed, 20 Nov 2019 08:18:37 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iXAtO-0007v2-C9; Wed, 20 Nov 2019 08:18:34 +1100
+Date:   Wed, 20 Nov 2019 08:18:34 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 28/28] xfs: rework unreferenced inode lookups
+Message-ID: <20191119211834.GA4614@dread.disaster.area>
+References: <20191031234618.15403-1-david@fromorbit.com>
+ <20191031234618.15403-29-david@fromorbit.com>
+ <20191106221846.GE37080@bfoster>
+ <20191114221602.GJ4614@dread.disaster.area>
+ <20191115172600.GC55854@bfoster>
+ <20191118010047.GS4614@dread.disaster.area>
+ <20191119151344.GD10763@bfoster>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3b8e1707-4e46-560d-a1ea-22e336655ba6@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191119151344.GD10763@bfoster>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+        a=XqaD5fcB6dAc7xyKljs8OA==:117 a=XqaD5fcB6dAc7xyKljs8OA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=MeAgGD-zjQ4A:10
+        a=7-415B0cAAAA:8 a=6g2m8KwY7f5AaauT50oA:9 a=kN7pVA4lhFw_-KmI:21
+        a=bRrQUF9rowBlmQs9:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 01:07:43PM -0800, Randy Dunlap wrote:
-> On 11/19/19 10:57 AM, Marco Elver wrote:
-> > Context:
-> > http://lkml.kernel.org/r/fb7e25d8-aba4-3dcf-7761-cb7ecb3ebb71@infradead.org
+On Tue, Nov 19, 2019 at 10:13:44AM -0500, Brian Foster wrote:
+> On Mon, Nov 18, 2019 at 12:00:47PM +1100, Dave Chinner wrote:
+> > On Fri, Nov 15, 2019 at 12:26:00PM -0500, Brian Foster wrote:
+> > > On Fri, Nov 15, 2019 at 09:16:02AM +1100, Dave Chinner wrote:
+> > > > On Wed, Nov 06, 2019 at 05:18:46PM -0500, Brian Foster wrote:
+> > > > If so, most of this patch will go away....
+> > > > 
+> > > > > > +	 * attached to the buffer so we don't need to do anything more here.
+> > > > > >  	 */
+> > > > > > -	if (ip != free_ip) {
+> > > > > > -		if (!xfs_ilock_nowait(ip, XFS_ILOCK_EXCL)) {
+> > > > > > -			rcu_read_unlock();
+> > > > > > -			delay(1);
+> > > > > > -			goto retry;
+> > > > > > -		}
+> > > > > > -
+> > > > > > -		/*
+> > > > > > -		 * Check the inode number again in case we're racing with
+> > > > > > -		 * freeing in xfs_reclaim_inode().  See the comments in that
+> > > > > > -		 * function for more information as to why the initial check is
+> > > > > > -		 * not sufficient.
+> > > > > > -		 */
+> > > > > > -		if (ip->i_ino != inum) {
+> > > > > > +	if (__xfs_iflags_test(ip, XFS_ISTALE)) {
+> > > > > 
+> > > > > Is there a correctness reason for why we move the stale check to under
+> > > > > ilock (in both iflush/ifree)?
+> > > > 
+> > > > It's under the i_flags_lock, and so I moved it up under the lookup
+> > > > hold of the i_flags_lock so we don't need to cycle it again.
+> > > > 
+> > > 
+> > > Yeah, but in both cases it looks like it moved to under the ilock as
+> > > well, which comes after i_flags_lock. IOW, why grab ilock for stale
+> > > inodes when we're just going to skip them?
 > > 
-> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> > Signed-off-by: Marco Elver <elver@google.com>
-> 
-> Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-
-Applied, thank you both!
-
-							Thanx, Paul
-
-> Thanks.
-> 
-> > ---
-> >  kernel/kcsan/Makefile | 1 +
-> >  lib/Makefile          | 1 +
-> >  2 files changed, 2 insertions(+)
-> > 
-> > diff --git a/kernel/kcsan/Makefile b/kernel/kcsan/Makefile
-> > index dd15b62ec0b5..df6b7799e492 100644
-> > --- a/kernel/kcsan/Makefile
-> > +++ b/kernel/kcsan/Makefile
-> > @@ -1,6 +1,7 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  KCSAN_SANITIZE := n
-> >  KCOV_INSTRUMENT := n
-> > +UBSAN_SANITIZE := n
-> >  
-> >  CFLAGS_REMOVE_core.o = $(CC_FLAGS_FTRACE)
-> >  
-> > diff --git a/lib/Makefile b/lib/Makefile
-> > index 778ab704e3ad..9d5bda950f5f 100644
-> > --- a/lib/Makefile
-> > +++ b/lib/Makefile
-> > @@ -279,6 +279,7 @@ obj-$(CONFIG_UBSAN) += ubsan.o
-> >  
-> >  UBSAN_SANITIZE_ubsan.o := n
-> >  KASAN_SANITIZE_ubsan.o := n
-> > +KCSAN_SANITIZE_ubsan.o := n
-> >  CFLAGS_ubsan.o := $(call cc-option, -fno-stack-protector) $(DISABLE_STACKLEAK_PLUGIN)
-> >  
-> >  obj-$(CONFIG_SBITMAP) += sbitmap.o
+> > Because I was worrying about serialising against reclaim before
+> > changing the state of the inode. i.e. if the inode has already been
+> > isolated by not yet disposed of, we shouldn't touch the inode state
+> > at all. Serialisation against reclaim in this patch is via the
+> > ILOCK, hence we need to do that before setting ISTALE....
 > > 
 > 
+> Yeah, I think my question still isn't clear... I'm not talking about
+> setting ISTALE. The code I referenced above is where we test for it and
+> skip the inode if it is already set. For example, the code referenced
+> above in xfs_ifree_get_one_inode() currently does the following with
+> respect to i_flags_lock, ILOCK and XFS_ISTALE:
 > 
-> -- 
-> ~Randy
+> 	...
+> 	spin_lock(i_flags_lock)
+> 	xfs_ilock_nowait(XFS_ILOCK_EXCL)
+> 	if !XFS_ISTALE
+> 		skip
+> 	set XFS_ISTALE
+> 	...
+
+There is another place in xfs_ifree_cluster that sets ISTALE without
+the ILOCK held, so the ILOCK is being used here for a different
+purpose...
+
+> The reclaim isolate code does this, however:
+> 
+> 	spin_trylock(i_flags_lock)
+> 	if !XFS_ISTALE
+> 		skip
+> 	xfs_ilock(XFS_ILOCK_EXCL)
+> 	...	
+
+Which is fine, because we're not trying to avoid racing with reclaim
+here. :) i.e. all we need is the i_flags lock to check the ISTALE
+flag safely.
+
+> So my question is why not do something like the following in the
+> _get_one_inode() case?
+> 
+> 	...
+> 	spin_lock(i_flags_lock)
+> 	if !XFS_ISTALE
+> 		skip
+> 	xfs_ilock_nowait(XFS_ILOCK_EXCL)
+> 	set XFS_ISTALE
+> 	...
+
+Because, like I said, I focussed on the lookup racing with reclaim
+first. The above code could be used, but it puts object internal
+state checks before we really know whether the object is safe to
+access and whether we can trust it.
+
+I'm just following a basic RCU/lockless lookup principle here:
+don't try to use object state before you've fully validated that the
+object is live and guaranteed that it can be safely referenced.
+
+> IOW, what is the need, if any, to acquire ilock in the iflush/ifree
+> paths before testing for XFS_ISTALE? Is there some specific intermediate
+> state I'm missing or is this just unintentional?
+
+It's entirely intentional - validate and claim the object we've
+found in the lockless lookup, then run the code that checks/changes
+the object state. Smashing state checks and lockless lookup
+validation together is a nasty landmine to leave behind...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
