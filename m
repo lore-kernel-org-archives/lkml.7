@@ -4,53 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95646C43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FEBC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF3722350
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DEA02231C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574140980;
-	bh=ynaErUTl8+VKC74rImywBO6Po3jc/xm37V2gxxiQ00c=;
+	s=default; t=1574140985;
+	bh=FxKPO7jAChxQpNp61sriPsywXO1Z/3Nf73A8Tln1LT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=REiwSdt5uAFGXsB+J5eAW5AlIB49/UdLwjNNTbbGr966ybeykh61I6ZyN85M1oO55
-	 YmFdwWiK483p1kkfLqTqREZd9gOs7ggY2vuKP3LIJnHuU690NudCEQ9kyLOTnoY3wa
-	 6/geV48mN7p51cjRAq9ZxUrI+r7gZunjeqbIt/Yo=
+	b=ERUC/j/1ionwW48zr+/UILOHPQkT95Ze4U7Sy05biqB+Su+spyUKMsgN5Lhv6iaoV
+	 BjWy3sA64FgPPSwOfuKFzANHz5kfOQxgORnSjPmHLDIaP5299LCTHr35k96kAQn7rf
+	 TetipbcuHgxBOArmF2LgkST3X0ye24f4g9tbBnYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbfKSFW7 (ORCPT
+        id S1727909AbfKSFXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:22:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38408 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:23:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727881AbfKSFW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:22:58 -0500
+        id S1726905AbfKSFXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:23:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E52F2231C;
-        Tue, 19 Nov 2019 05:22:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABD0222350;
+        Tue, 19 Nov 2019 05:23:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574140978;
-        bh=ynaErUTl8+VKC74rImywBO6Po3jc/xm37V2gxxiQ00c=;
+        s=default; t=1574140981;
+        bh=FxKPO7jAChxQpNp61sriPsywXO1Z/3Nf73A8Tln1LT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S++svdIWqDP1Akajrj2MLVCNhoySxCsZCQuuvpX1K7dhfl7ENqKBInL/Gn5Xcw7DW
-         Tz9d2TSPvzZ60EzLNOSInN5Rar4K23r1pVuXHED31W4jYQbKuedbgFkud0S5SzOkQM
-         Ygw9jDfVp00g6Gz84D4XpalQWd5zNVckQC2AW7V0=
+        b=zmNSN6CHrEAOwhSHSQavCOJXAtJOZVQ19qkesBGqgBc//J1zVJgLyLV6vrnHlrGgY
+         6efvw9s/oJunn2ARQaPtK4MTl+ID4v4FL3f2G1wvPLZeH3y8X20SmM/5fzaHgy/l2C
+         nhMBkz4Q3uETQMprYMX2JB1YAPQ2h9oslCtfg+fY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, Shakeel Butt <shakeelb@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
+        stable@vger.kernel.org, Laura Abbott <labbott@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
+        David Rientjes <rientjes@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vlastimil Babka <vbabka@suse.cz>, clipos@ssi.gouv.fr,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.3 44/48] mm: hugetlb: switch to css_tryget() in hugetlb_cgroup_charge_cgroup()
-Date:   Tue, 19 Nov 2019 06:20:04 +0100
-Message-Id: <20191119051027.304353417@linuxfoundation.org>
+Subject: [PATCH 5.3 45/48] mm: slub: really fix slab walking for init_on_free
+Date:   Tue, 19 Nov 2019 06:20:05 +0100
+Message-Id: <20191119051028.131345484@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119050946.745015350@linuxfoundation.org>
 References: <20191119050946.745015350@linuxfoundation.org>
@@ -63,49 +69,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Gushchin <guro@fb.com>
+From: Laura Abbott <labbott@redhat.com>
 
-commit 0362f326d86c645b5e96b7dbc3ee515986ed019d upstream.
+commit aea4df4c53f754cc229edde6c5465e481311cc49 upstream.
 
-An exiting task might belong to an offline cgroup.  In this case an
-attempt to grab a cgroup reference from the task can end up with an
-infinite loop in hugetlb_cgroup_charge_cgroup(), because neither the
-cgroup will become online, neither the task will be migrated to a live
-cgroup.
+Commit 1b7e816fc80e ("mm: slub: Fix slab walking for init_on_free")
+fixed one problem with the slab walking but missed a key detail: When
+walking the list, the head and tail pointers need to be updated since we
+end up reversing the list as a result.  Without doing this, bulk free is
+broken.
 
-Fix this by switching over to css_tryget().  As css_tryget_online()
-can't guarantee that the cgroup won't go offline, in most cases the
-check doesn't make sense.  In this particular case users of
-hugetlb_cgroup_charge_cgroup() are not affected by this change.
+One way this is exposed is a NULL pointer with slub_debug=F:
 
-A similar problem is described by commit 18fa84a2db0e ("cgroup: Use
-css_tryget() instead of css_tryget_online() in task_get_css()").
+  =============================================================================
+  BUG skbuff_head_cache (Tainted: G                T): Object already free
+  -----------------------------------------------------------------------------
 
-Link: http://lkml.kernel.org/r/20191106225131.3543616-2-guro@fb.com
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Acked-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Cc: Michal Hocko <mhocko@kernel.org>
+  INFO: Slab 0x000000000d2d2f8f objects=16 used=3 fp=0x0000000064309071 flags=0x3fff00000000201
+  BUG: kernel NULL pointer dereference, address: 0000000000000000
+  Oops: 0000 [#1] PREEMPT SMP PTI
+  RIP: 0010:print_trailer+0x70/0x1d5
+  Call Trace:
+   <IRQ>
+   free_debug_processing.cold.37+0xc9/0x149
+   __slab_free+0x22a/0x3d0
+   kmem_cache_free_bulk+0x415/0x420
+   __kfree_skb_flush+0x30/0x40
+   net_rx_action+0x2dd/0x480
+   __do_softirq+0xf0/0x246
+   irq_exit+0x93/0xb0
+   do_IRQ+0xa0/0x110
+   common_interrupt+0xf/0xf
+   </IRQ>
+
+Given we're now almost identical to the existing debugging code which
+correctly walks the list, combine with that.
+
+Link: https://lkml.kernel.org/r/20191104170303.GA50361@gandi.net
+Link: http://lkml.kernel.org/r/20191106222208.26815-1-labbott@redhat.com
+Fixes: 1b7e816fc80e ("mm: slub: Fix slab walking for init_on_free")
+Signed-off-by: Laura Abbott <labbott@redhat.com>
+Reported-by: Thibaut Sautereau <thibaut.sautereau@clip-os.org>
+Acked-by: David Rientjes <rientjes@google.com>
+Tested-by: Alexander Potapenko <glider@google.com>
+Acked-by: Alexander Potapenko <glider@google.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: <clipos@ssi.gouv.fr>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/hugetlb_cgroup.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/slub.c |   39 +++++++++------------------------------
+ 1 file changed, 9 insertions(+), 30 deletions(-)
 
---- a/mm/hugetlb_cgroup.c
-+++ b/mm/hugetlb_cgroup.c
-@@ -196,7 +196,7 @@ int hugetlb_cgroup_charge_cgroup(int idx
- again:
- 	rcu_read_lock();
- 	h_cg = hugetlb_cgroup_from_task(current);
--	if (!css_tryget_online(&h_cg->css)) {
-+	if (!css_tryget(&h_cg->css)) {
- 		rcu_read_unlock();
- 		goto again;
- 	}
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -1432,12 +1432,15 @@ static inline bool slab_free_freelist_ho
+ 	void *old_tail = *tail ? *tail : *head;
+ 	int rsize;
+ 
+-	if (slab_want_init_on_free(s)) {
+-		void *p = NULL;
++	/* Head and tail of the reconstructed freelist */
++	*head = NULL;
++	*tail = NULL;
++
++	do {
++		object = next;
++		next = get_freepointer(s, object);
+ 
+-		do {
+-			object = next;
+-			next = get_freepointer(s, object);
++		if (slab_want_init_on_free(s)) {
+ 			/*
+ 			 * Clear the object and the metadata, but don't touch
+ 			 * the redzone.
+@@ -1447,29 +1450,8 @@ static inline bool slab_free_freelist_ho
+ 							   : 0;
+ 			memset((char *)object + s->inuse, 0,
+ 			       s->size - s->inuse - rsize);
+-			set_freepointer(s, object, p);
+-			p = object;
+-		} while (object != old_tail);
+-	}
+-
+-/*
+- * Compiler cannot detect this function can be removed if slab_free_hook()
+- * evaluates to nothing.  Thus, catch all relevant config debug options here.
+- */
+-#if defined(CONFIG_LOCKDEP)	||		\
+-	defined(CONFIG_DEBUG_KMEMLEAK) ||	\
+-	defined(CONFIG_DEBUG_OBJECTS_FREE) ||	\
+-	defined(CONFIG_KASAN)
+-
+-	next = *head;
+ 
+-	/* Head and tail of the reconstructed freelist */
+-	*head = NULL;
+-	*tail = NULL;
+-
+-	do {
+-		object = next;
+-		next = get_freepointer(s, object);
++		}
+ 		/* If object's reuse doesn't have to be delayed */
+ 		if (!slab_free_hook(s, object)) {
+ 			/* Move object to the new freelist */
+@@ -1484,9 +1466,6 @@ static inline bool slab_free_freelist_ho
+ 		*tail = NULL;
+ 
+ 	return *head != NULL;
+-#else
+-	return true;
+-#endif
+ }
+ 
+ static void *setup_object(struct kmem_cache *s, struct page *page,
 
 
