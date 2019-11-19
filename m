@@ -2,110 +2,114 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF4BC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C48DC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F2C0223AB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 036C7223AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:13:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ClXF5T0Q"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Y5yP5yxk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbfKSQM3 (ORCPT
+        id S1728486AbfKSQNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:12:29 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44466 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727728AbfKSQM3 (ORCPT
+        Tue, 19 Nov 2019 11:13:38 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33970 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727509AbfKSQNh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 11:12:29 -0500
-Received: by mail-ot1-f65.google.com with SMTP id c19so18316867otr.11
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 08:12:28 -0800 (PST)
+        Tue, 19 Nov 2019 11:13:37 -0500
+Received: by mail-io1-f67.google.com with SMTP id q83so23895279iod.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 08:13:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=93xPAx0kr8oA76/KRE4IYmxNgzvAosH5EkrlivRRC2U=;
-        b=ClXF5T0QxswAmDjTXcrbHV0f5l5bHz9bFxuqQNGTRVsW8inASFtA15n5Q0gITA42Of
-         WgZN0aHjFmC6TN6uc8Gib2Pd1f01ywaANFiRL7pkzhH3jBHjqPKLbp6v+zlMlV1Ec3XN
-         oRRrF7om7Wdk9uZtEojsxLcJ61ZUtzGYbriIOnJP4/9zx44D0YJ9RfxA+RjXf8MLdLDx
-         yqRapjPsXz/Q+H56teNhxpYtQHXNVs2YDiNfANeT3MsEeYYBfn6Ws5BdP15QGgT5R5aT
-         5ryXoz2JRGvyekdRsLNFqq7IaU0O0IUd7jjMqDgDzF9lxfNQvNOb1DzOyxZYm46JPxsZ
-         r0nA==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CuQtXznqoyz5kssTjNmYau458WwEA/pCkBJj2OVVqhw=;
+        b=Y5yP5yxkELILFBRuBu782FQosIibbXWrJ8k7FKQ7MfRe6h15lWXrRvR/RpmAanLRyb
+         sOHSEKJc89xwSjmr0aegjdhW95nfNpI0UBLLh/Dod62dh7jjr0LmY5JpGhIWiQFzl4TD
+         TqqIeS4cy8gEAvmpofDPnro5dCnkUcrWaIFQ5SNWHTKLsb1snDYcJaA15KuscmjBbAis
+         aU3lD8Ws7FIG/mm/iqeJvgZaE3kh+ku6pu5ubn37PAFNRkVs9omWdk3Txfk8JteJpZBr
+         keK4Ips74YC+7A92ul65nGHBp+l0JtVT6IBmXKVW70OM9pqqrn0Pf4YuMMHNaOcwr9kj
+         3/gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=93xPAx0kr8oA76/KRE4IYmxNgzvAosH5EkrlivRRC2U=;
-        b=ZIPeuDMn1UmDlD+Bova19G2U1tvpvQnE+HxlfHZj5Z4mVY88YmwF2mNCzMSeil/nlO
-         gvLvVIAdQADxD62dWvRW1vCY67+xIee7o94UPV+fhid+s3ATvxS/vhuEzFJqhUKMfMO/
-         ehCup2HjC8zMQq8a+FF0t2XATKu/GZoumYjNs+kLEexwZnZcpeXPr4+M3cEKmzzzLzb0
-         ydsxaRCz9n8ghTxcModt5OdBxnueIfe4iQwoOSvV6KPZafyYOWBQG7Jy7RCRYd3qA497
-         b/S6axQFjdvCO+GGklmKc0NJnKQo24E+S6juYtmBZDIPAJ6+5s7oCWJYkoEl6l22aQOa
-         7Vug==
-X-Gm-Message-State: APjAAAVJljQIL63MbRkAxd2Qd4uBn2bhOwvxbrhTas/BN5cK4HSuwlsl
-        lffXUgxCWsY5+aRvuFGFmdW0qPBNAZ/NzFYdKepInw==
-X-Google-Smtp-Source: APXvYqyNp6UfNZXhM0FdbL81rw15qBOyGaU0VI2pZSScFreylKhSOdolblkQZ/c92fphjqt26+PkucVplQLTOd86c1c=
-X-Received: by 2002:a9d:69cf:: with SMTP id v15mr4108901oto.251.1574179947889;
- Tue, 19 Nov 2019 08:12:27 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CuQtXznqoyz5kssTjNmYau458WwEA/pCkBJj2OVVqhw=;
+        b=FqN6smmmnA9F90PrEV9bM8JQ4w5a3MT8vs0n7pJ92NZyX5Xq+tB47q9oJLze6XOulk
+         W5zedVe8VCDPgsf+ZFOAu/b9bUoqTFfj/m8SPyqLETAzPRENeIrZObbSgxJeX38G0Sl4
+         3eNuL2EttCt6mif+5ls6vHrVuvnErJuEXLRvUwS1YkAapfYoLCN5YK739NBTV6Jg6oI8
+         ZueoM24xldJUDNWJqY1PdJjeXPI9D8Nk2taREDk/l1Q3JlVpcHZ0k/MFGUvLM+HCgTEZ
+         j/RoMOoImN0eq9tv+yeAaRXB1dJJvQLdyAQCsf2MJxi+5JScJ9mu0TzMz7ku8O+pMyH+
+         I+fw==
+X-Gm-Message-State: APjAAAXOOn08MXwKbZbWpchTFKX1Qvl2tZcjfeN7V5+RRjXDjGk1ZEFo
+        vZcQXSv6yCR80ArdtUpjlsRxvQ==
+X-Google-Smtp-Source: APXvYqyrsEqORsYQXRnAbGvk2VKAQluxp4RFlBrdGsPXjw9zQza5QmSohcjFAyNMdDM3atBr+47PwQ==
+X-Received: by 2002:a05:6602:251a:: with SMTP id i26mr18935296ioe.302.1574180016622;
+        Tue, 19 Nov 2019 08:13:36 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id t11sm5546611ild.38.2019.11.19.08.13.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Nov 2019 08:13:35 -0800 (PST)
+Subject: Re: [v2] nbd:fix memory leak in nbd_get_socket()
+To:     Sun Ke <sunke32@huawei.com>, josef@toxicpanda.com,
+        linux-block@vger.kernel.org, nbd@other.debian.org,
+        linux-kernel@vger.kernel.org
+Cc:     Mike Christie <mchristi@redhat.com>
+References: <1574143751-138680-1-git-send-email-sunke32@huawei.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <d68d17be-0c4e-1286-4327-0e3ba6600eca@kernel.dk>
+Date:   Tue, 19 Nov 2019 09:13:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191119194658.39af50d0@canb.auug.org.au> <e75be639-110a-c615-3ec7-a107318b7746@infradead.org>
-In-Reply-To: <e75be639-110a-c615-3ec7-a107318b7746@infradead.org>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 19 Nov 2019 17:12:16 +0100
-Message-ID: <CANpmjNMpnY54kDdGwOPOD84UDf=Fzqtu62ifTds2vZn4t4YigQ@mail.gmail.com>
-Subject: Re: linux-next: Tree for Nov 19 (kcsan)
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1574143751-138680-1-git-send-email-sunke32@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Nov 2019 at 16:11, Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 11/19/19 12:46 AM, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > Changes since 20191118:
-> >
->
-> on x86_64:
->
-> It seems that this function can already be known by the compiler as a
-> builtin:
->
-> ../kernel/kcsan/core.c:619:6: warning: conflicting types for built-in fun=
-ction =E2=80=98__tsan_func_exit=E2=80=99 [-Wbuiltin-declaration-mismatch]
->  void __tsan_func_exit(void)
->       ^~~~~~~~~~~~~~~~
->
->
-> $ gcc --version
-> gcc (SUSE Linux) 7.4.1 20190905 [gcc-7-branch revision 275407]
+On 11/18/19 11:09 PM, Sun Ke wrote:
+> Before return NULL,put the sock first.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: cf1b2326b734 ("nbd: verify socket is supported during setup")
+> Signed-off-by: Sun Ke <sunke32@huawei.com>
 
-Interesting. Could you share the .config? So far I haven't been able
-to reproduce.
+Please always CC the author of the patch you're fixing.
 
-I can get the warning if I manually add -fsanitize=3Dthread to flags for
-kcsan/core.c (but normally disabled via KCSAN_SANITIZE :=3D n). If
-possible could you also share the output of `make V=3D1` for
-kcsan/core.c?
+Mike, Josef - we probably need to get this upstream ASAP.
 
-Thanks,
--- Marco
+> ---
+> v2: add cc:stable tag
+> ---
+>   drivers/block/nbd.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+> index a94ee45..19e7599 100644
+> --- a/drivers/block/nbd.c
+> +++ b/drivers/block/nbd.c
+> @@ -993,6 +993,7 @@ static struct socket *nbd_get_socket(struct nbd_device *nbd, unsigned long fd,
+>   	if (sock->ops->shutdown == sock_no_shutdown) {
+>   		dev_err(disk_to_dev(nbd->disk), "Unsupported socket: shutdown callout must be supported.\n");
+>   		*err = -EINVAL;
+> +		sockfd_put(sock);
+>   		return NULL;
+>   	}
+>   
+> 
 
-> --
-> ~Randy
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+
+-- 
+Jens Axboe
+
