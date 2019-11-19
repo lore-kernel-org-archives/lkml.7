@@ -2,95 +2,204 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3A3C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 157F6C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2D952068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E35C3206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:48:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TwQ2CbjF"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cv2L1PtA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfKSUrp (ORCPT
+        id S1727398AbfKSUsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 15:47:45 -0500
-Received: from ozlabs.org ([203.11.71.1]:59503 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726948AbfKSUrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 15:47:45 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47HdDv0yNjz9sPK;
-        Wed, 20 Nov 2019 07:47:43 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1574196463;
-        bh=Ke5WXaPKNAtXqFKGduS6+4QQd2mg4E2I+wN2Yf+4lO4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=TwQ2CbjFq8B5PuQP+PdwysK7/NhhUvm+JUbpzS7VzRpiWpNpWoPEDzmEz0KHDnJua
-         JLc7DO/QE6V0eJ9TfLEcWH9685h4q3PY3pNSFYWoyOwQWS9BEfbjmeby/l9I6+7LnS
-         RilCuj0s1ERCyHNdqOhpA4k5YrwgAs9kU+KbmwzhgHbdMx83szrmCKB9gmKfIoeHMM
-         pWLiHdXYhczBLbBd4WtYA0Wv5jUnPQooFK4rYaUftl3XBWayLSh5gfbimwZ89Iefcw
-         itJVQShLz7yDGhRkIsaKzan13/UIjKvYmyD3ync4hewKTZNk5pDctlu/NlmZQtOwjC
-         njlYz09EdEAEw==
-Date:   Wed, 20 Nov 2019 07:47:35 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Trond Myklebust <trondmy@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Subject: linux-next: Fixes tag needs some work in the nfs tree
-Message-ID: <20191120074724.2df85f4a@canb.auug.org.au>
+        Tue, 19 Nov 2019 15:48:54 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38444 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbfKSUsx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 15:48:53 -0500
+Received: by mail-qk1-f193.google.com with SMTP id e2so19187537qkn.5
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 12:48:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c788r5NW2qmkzzpVNhlK5wHnib53Ht136kdc4fIJn1U=;
+        b=cv2L1PtAFjVVnPC9D4PdLdlDDET6/xRguA93Y3P+533wbzAeR+AMXMUGS8yo5DV0IP
+         ZnVUqAjsrUIx9EBobNeEMRAWcDGV5vIp+1AGc8hkg+zl4CE/AFKOWfPkdnnyb4yJ9R4j
+         aOBPlQFD+5sp80J1gLzm96SrtJKnAAKCiAvyQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c788r5NW2qmkzzpVNhlK5wHnib53Ht136kdc4fIJn1U=;
+        b=KuAgDvm2+0Gvyzk63sncjEgcYQygruwNvGsrA6ATLEn9GD6QVIczjiMzgpUW3lYbap
+         aWPzZ/IMbPC55zmTEm0PHKB+yr9e5iZdIZHYqw7YkUgXvUVM202FDwVtepae6oQhAQL0
+         m6tT1PLXoPY+MyCEyyIWYacbW14e25/flqkOqgU+eBaShbvVARYzXRN1shkXDLuqcg+p
+         AFpmx71jxc9Pw811K8ziTmpw1rstVqxmSexrpZlgCXUWpmCg0ccgcblvFEy0ja2PD7HL
+         uu3aMNPhar1z8q7Fm2S1sGrLmpJ1SdqAsOiqWXYwgZa4kKpf4OwyBgZQ2UX8jK1eaY/D
+         szuw==
+X-Gm-Message-State: APjAAAX8k0VJd5APUFjNwJikVThf7Oewv85eAZK1nJCQLjsqdj8OzKgo
+        HfU/loyDWL4BHJe4SjO7WBxO4vcusQsZWEldL5jsjg==
+X-Google-Smtp-Source: APXvYqx2FAmsLofOin4X6ZxdtxDqBpTxUaLASXaljwcG7oNUFmRwIFPwuYggh3ck8q/SZwFfFoh0kD2NRkYTdCUT2hU=
+X-Received: by 2002:a37:d91:: with SMTP id 139mr28574128qkn.79.1574196530821;
+ Tue, 19 Nov 2019 12:48:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/upZn3dqREk.f+Aq/IYEFQok";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20191118192123.82430-1-abhishekpandit@chromium.org>
+ <20191118110335.v6.2.I2a9640407d375f20c7c8f4afd1607db143ff0246@changeid> <989EE002-F3F4-441B-BD9B-B460D8B09708@holtmann.org>
+In-Reply-To: <989EE002-F3F4-441B-BD9B-B460D8B09708@holtmann.org>
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date:   Tue, 19 Nov 2019 12:48:40 -0800
+Message-ID: <CANFp7mWUQFvk=gL5D9N6Fzd8wmfub5O8RF9CcWqwGr03oLJKkw@mail.gmail.com>
+Subject: Re: [PATCH v6 2/4] Bluetooth: btbcm: Support pcm configuration
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-bluetooth@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/upZn3dqREk.f+Aq/IYEFQok
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Nov 18, 2019 at 9:35 PM Marcel Holtmann <marcel@holtmann.org> wrote:
+>
+> Hi Abhishek,
+>
+> > Add BCM vendor specific command to configure PCM parameters. The new
+> > vendor opcode allows us to set the sco routing, the pcm interface rate,
+> > and a few other pcm specific options (frame sync, sync mode, and clock
+> > mode). See broadcom-bluetooth.txt in Documentation for more information
+> > about valid values for those settings.
+> >
+> > Here is an example trace where this opcode was used to configure
+> > a BCM4354:
+> >
+> >        < HCI Command: Vendor (0x3f|0x001c) plen 5
+> >                01 02 00 01 01
+> >> HCI Event: Command Complete (0x0e) plen 4
+> >        Vendor (0x3f|0x001c) ncmd 1
+> >                Status: Success (0x00)
+> >
+> > We can read back the values as well with ocf 0x001d to confirm the
+> > values that were set:
+> >        $ hcitool cmd 0x3f 0x001d
+> >        < HCI Command: ogf 0x3f, ocf 0x001d, plen 0
+> >> HCI Event: 0x0e plen 9
+> >        01 1D FC 00 01 02 00 01 01
+> >
+> > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> > ---
+> >
+> > Changes in v6: None
+> > Changes in v5: None
+> > Changes in v4: None
+> > Changes in v3: None
+> > Changes in v2: None
+> >
+> > drivers/bluetooth/btbcm.c | 47 +++++++++++++++++++++++++++++++++++++++
+> > drivers/bluetooth/btbcm.h | 16 +++++++++++++
+> > 2 files changed, 63 insertions(+)
+> >
+> > diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
+> > index 2d2e6d862068..df90841d29c5 100644
+> > --- a/drivers/bluetooth/btbcm.c
+> > +++ b/drivers/bluetooth/btbcm.c
+> > @@ -105,6 +105,53 @@ int btbcm_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr)
+> > }
+> > EXPORT_SYMBOL_GPL(btbcm_set_bdaddr);
+> >
+> > +int btbcm_read_pcm_int_params(struct hci_dev *hdev,
+> > +                           struct bcm_set_pcm_int_params *int_params)
+> > +{
+>
+> the name should be _param and not _params since if I remember correctly that is how Broadcom specified it. Also just use param as variable name.
 
-Hi all,
+Technically, you are configuring multiple PCM params :)
 
-In commit
+>
+> > +     struct sk_buff *skb;
+> > +     int err = 0;
+> > +
+> > +     skb = __hci_cmd_sync(hdev, 0xfc1d, 5, int_params, HCI_INIT_TIMEOUT);
+> > +     if (IS_ERR(skb)) {
+> > +             err = PTR_ERR(skb);
+> > +             bt_dev_err(hdev, "BCM: Read PCM int params failed (%d)", err);
+> > +             return err;
+> > +     }
+> > +
+> > +     if (!skb->data[0] && skb->len == sizeof(*int_params) + 1) {
+> > +             memcpy(int_params, &skb->data[1], sizeof(*int_params));
+> > +     } else {
+> > +             bt_dev_err(hdev,
+> > +                        "BCM: Read PCM int params failed (%d), Length (%d)",
+> > +                        skb->data[0], skb->len);
+> > +             err = -EINVAL;
+> > +     }
+> > +
+> > +     kfree_skb(skb);
+>
+> I find these harder to read actually and it can be still fault at data[0] access.
+>
+>         if (skb->len != sizeof(*param) || skb->data[0]) {
+>                 bt_dev_err(hdev, "BCM: Read SCO PCM int parameter failure");
+>                 kfree_skb(skb);
+>                 return -EIO;
+>         }
+>
+>         memcpy(param, skb->data + 1, sizeof(*param));
+>         kfree_skb(skb);
+>         return 0;
+> }
+>
 
-  e8d70b321ecc ("SUNRPC: Fix another issue with MIC buffer space")
+Sure. skb->len should be sizeof(*param) + 1 because there's an extra
+byte for the status as well.
 
-Fixes tag
+> > +
+> > +     return err;
+> > +}
+> > +EXPORT_SYMBOL_GPL(btbcm_read_pcm_int_params);
+> > +
+> > +int btbcm_write_pcm_int_params(struct hci_dev *hdev,
+> > +                            const struct bcm_set_pcm_int_params *int_params)
+> > +{
+> > +     struct sk_buff *skb;
+> > +     int err;
+> > +
+> > +     /* Vendor ocf 0x001c sets the pcm parameters and 0x001d reads it */
+>
+> Scrap this comment.
+>
+> > +     skb = __hci_cmd_sync(hdev, 0xfc1c, 5, int_params, HCI_INIT_TIMEOUT);
+> > +     if (IS_ERR(skb)) {
+> > +             err = PTR_ERR(skb);
+> > +             bt_dev_err(hdev, "BCM: Write PCM int params failed (%d)", err);
+> > +             return err;
+> > +     }
+> > +     kfree_skb(skb);
+> > +
+> > +     return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(btbcm_write_pcm_int_params);
+> > +
+> > int btbcm_patchram(struct hci_dev *hdev, const struct firmware *fw)
+> > {
+>
+> Otherwise this looks good.
+>
+> Regards
+>
+> Marcel
+>
 
-  Fixes: 5f1bc39979d ("SUNRPC: Fix buffer handling of GSS MIC ... ")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/upZn3dqREk.f+Aq/IYEFQok
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3UVOcACgkQAVBC80lX
-0Gzs/QgAncDIUim/UbMG4DcTHDknxif5zPHTxRAf4okAv35IQrY1xP9c8ES2StrL
-ijE5tTeF5H3PDnraNK+C/IH4vW0fJZsdAc9RNY/IhYnjJuzINR0x+ojbikFAPeOr
-7vtJtOhI2/OY83UHLyzOm3KAPbR/UH9csQlLHKwKe9efDGNvIHvt9bGK5pWlg0/T
-Y7di9Yx96WXqlTIRpMdMHqyd8TyxARo/8wOit04PN7DF7tQKDhGRx6WetzsLJlaF
-BjlrzRtok6BlJjeV63vhY9KOd/Iz3ZxESGowDJtMKpnK01rAeiO1MO8pmjbOjH6z
-HYOSMbncMKlRgYOol6nRau3l611I8w==
-=0n8X
------END PGP SIGNATURE-----
-
---Sig_/upZn3dqREk.f+Aq/IYEFQok--
+So generally, I've done a whole new patch series with every change.
+Would you prefer to see singular updates on the same email thread or
+should I keep doing new patch series?
