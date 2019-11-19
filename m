@@ -7,51 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57167C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 220EEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0D1208D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 047082230F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:59:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbfKSQ7A (ORCPT
+        id S1729013AbfKSQ7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:59:00 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:52875 "EHLO
+        Tue, 19 Nov 2019 11:59:03 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:52871 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728658AbfKSQ5I (ORCPT
+        with ESMTP id S1728654AbfKSQ5I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Nov 2019 11:57:08 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iX6o3-0007JZ-ME; Tue, 19 Nov 2019 17:56:47 +0100
+        id 1iX6oE-0007U6-5Z; Tue, 19 Nov 2019 17:56:58 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 49A921C19CB;
-        Tue, 19 Nov 2019 17:56:47 +0100 (CET)
-Date:   Tue, 19 Nov 2019 16:56:47 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E75AD1C19CE;
+        Tue, 19 Nov 2019 17:56:49 +0100 (CET)
+Date:   Tue, 19 Nov 2019 16:56:49 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/kprobes] x86/kprobes: Fix ordering while text-patching
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Brian Gerst <brgerst@gmail.com>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191111132458.162172862@infradead.org>
-References: <20191111132458.162172862@infradead.org>
+Subject: [tip: perf/core] perf machine: No need to check if kernel module maps
+ pre-exist
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <tip-gnzjg2hhuz6jnrw91m35059y@git.kernel.org>
+References: <tip-gnzjg2hhuz6jnrw91m35059y@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157418260724.12247.15762944350271345143.tip-bot2@tip-bot2>
+Message-ID: <157418260988.12247.10814494424697377296.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -65,179 +58,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/kprobes branch of tip:
+The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     5b8ad1c9bc4466c3c16ffde3ba0edac523e34652
-Gitweb:        https://git.kernel.org/tip/5b8ad1c9bc4466c3c16ffde3ba0edac523e34652
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Wed, 09 Oct 2019 21:15:28 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 19 Nov 2019 13:13:05 +01:00
+Commit-ID:     a94ab91a54c63b9101715b03171219279cc0ee26
+Gitweb:        https://git.kernel.org/tip/a94ab91a54c63b9101715b03171219279cc0ee26
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Thu, 14 Nov 2019 12:28:41 -03:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Mon, 18 Nov 2019 13:01:50 -03:00
 
-x86/kprobes: Fix ordering while text-patching
+perf machine: No need to check if kernel module maps pre-exist
 
-Kprobes does something like:
+We'only populating maps for kernel modules either from perf.data file
+PERF_RECORD_MMAP records or when parsing /proc/modules, so there is no
+need to first look if we already have those module maps in the list,
+that would mean the kernel has duplicate entries.
 
-register:
-	arch_arm_kprobe()
-	  text_poke(INT3)
-          /* guarantees nothing, INT3 will become visible at some point, maybe */
+So ditch one use of looking up maps by name.
 
-        kprobe_optimizer()
-	  /* guarantees the bytes after INT3 are unused */
-	  synchronize_rcu_tasks();
-	  text_poke_bp(JMP32);
-	  /* implies IPI-sync, kprobe really is enabled */
-
-unregister:
-	__disarm_kprobe()
-	  unoptimize_kprobe()
-	    text_poke_bp(INT3 + tail);
-	    /* implies IPI-sync, so tail is guaranteed visible */
-          arch_disarm_kprobe()
-            text_poke(old);
-	    /* guarantees nothing, old will maybe become visible */
-
-	synchronize_rcu()
-
-        free-stuff
-
-Now the problem is that on register, the synchronize_rcu_tasks() does
-not imply sufficient to guarantee all CPUs have already observed INT3
-(although in practice this is exceedingly unlikely not to have
-happened) (similar to how MEMBARRIER_CMD_PRIVATE_EXPEDITED does not
-imply MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE).
-
-Worse, even if it did, we'd have to do 2 synchronize calls to provide
-the guarantee we're looking for, the first to ensure INT3 is visible,
-the second to guarantee nobody is then still using the instruction
-bytes after INT3.
-
-Similar on unregister; the synchronize_rcu() between
-__unregister_kprobe_top() and __unregister_kprobe_bottom() does not
-guarantee all CPUs are free of the INT3 (and observe the old text).
-
-Therefore, sprinkle some IPI-sync love around. This guarantees that
-all CPUs agree on the text and RCU once again provides the required
-guaranteed.
-
-Tested-by: Alexei Starovoitov <ast@kernel.org>
-Tested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191111132458.162172862@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-gnzjg2hhuz6jnrw91m35059y@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- arch/x86/include/asm/text-patching.h |  1 +
- arch/x86/kernel/alternative.c        | 11 ++++++++---
- arch/x86/kernel/kprobes/core.c       |  2 ++
- arch/x86/kernel/kprobes/opt.c        | 12 ++++--------
- 4 files changed, 15 insertions(+), 11 deletions(-)
+ tools/perf/util/machine.c | 16 ++++++----------
+ tools/perf/util/machine.h |  2 --
+ tools/perf/util/symbol.c  |  2 +-
+ 3 files changed, 7 insertions(+), 13 deletions(-)
 
-diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
-index 4c09f42..67315fa 100644
---- a/arch/x86/include/asm/text-patching.h
-+++ b/arch/x86/include/asm/text-patching.h
-@@ -42,6 +42,7 @@ extern void text_poke_early(void *addr, const void *opcode, size_t len);
-  * an inconsistent instruction while you patch.
-  */
- extern void *text_poke(void *addr, const void *opcode, size_t len);
-+extern void text_poke_sync(void);
- extern void *text_poke_kgdb(void *addr, const void *opcode, size_t len);
- extern int poke_int3_handler(struct pt_regs *regs);
- extern void text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate);
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 526cc5f..6455902 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -936,6 +936,11 @@ static void do_sync_core(void *info)
- 	sync_core();
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 6804c82..7d2e211 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -772,20 +772,16 @@ int machine__process_ksymbol(struct machine *machine __maybe_unused,
+ 	return machine__process_ksymbol_register(machine, event, sample);
  }
  
-+void text_poke_sync(void)
-+{
-+	on_each_cpu(do_sync_core, NULL, 1);
-+}
-+
- struct text_poke_loc {
- 	s32 rel_addr; /* addr := _stext + rel_addr */
- 	s32 rel32;
-@@ -1085,7 +1090,7 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
- 	for (i = 0; i < nr_entries; i++)
- 		text_poke(text_poke_addr(&tp[i]), &int3, sizeof(int3));
+-struct map *machine__findnew_module_map(struct machine *machine, u64 start,
+-					const char *filename)
++static struct map *machine__addnew_module_map(struct machine *machine, u64 start,
++					      const char *filename)
+ {
+ 	struct map *map = NULL;
+-	struct dso *dso = NULL;
+ 	struct kmod_path m;
++	struct dso *dso;
  
--	on_each_cpu(do_sync_core, NULL, 1);
-+	text_poke_sync();
+ 	if (kmod_path__parse_name(&m, filename))
+ 		return NULL;
  
- 	/*
- 	 * Second step: update all but the first byte of the patched range.
-@@ -1107,7 +1112,7 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
- 		 * not necessary and we'd be safe even without it. But
- 		 * better safe than sorry (plus there's not only Intel).
+-	map = map_groups__find_by_name(&machine->kmaps, m.name);
+-	if (map)
+-		goto out;
+-
+ 	dso = machine__findnew_module_dso(machine, &m, filename);
+ 	if (dso == NULL)
+ 		goto out;
+@@ -1384,7 +1380,7 @@ static int machine__create_module(void *arg, const char *name, u64 start,
+ 	if (arch__fix_module_text_start(&start, &size, name) < 0)
+ 		return -1;
+ 
+-	map = machine__findnew_module_map(machine, start, name);
++	map = machine__addnew_module_map(machine, start, name);
+ 	if (map == NULL)
+ 		return -1;
+ 	map->end = start + size;
+@@ -1559,8 +1555,8 @@ static int machine__process_kernel_mmap_event(struct machine *machine,
+ 				strlen(machine->mmap_name) - 1) == 0;
+ 	if (event->mmap.filename[0] == '/' ||
+ 	    (!is_kernel_mmap && event->mmap.filename[0] == '[')) {
+-		map = machine__findnew_module_map(machine, event->mmap.start,
+-						  event->mmap.filename);
++		map = machine__addnew_module_map(machine, event->mmap.start,
++						 event->mmap.filename);
+ 		if (map == NULL)
+ 			goto out_problem;
+ 
+diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+index 18e13c0..1016978 100644
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -221,8 +221,6 @@ struct symbol *machine__find_kernel_symbol_by_name(struct machine *machine,
+ 	return map_groups__find_symbol_by_name(&machine->kmaps, name, mapp);
+ }
+ 
+-struct map *machine__findnew_module_map(struct machine *machine, u64 start,
+-					const char *filename);
+ int arch__fix_module_text_start(u64 *start, u64 *size, const char *name);
+ 
+ int machine__load_kallsyms(struct machine *machine, const char *filename);
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index b146d87..b5ae82a 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1530,7 +1530,7 @@ static bool dso__is_compatible_symtab_type(struct dso *dso, bool kmod,
+ 	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP:
+ 		/*
+ 		 * kernel modules know their symtab type - it's set when
+-		 * creating a module dso in machine__findnew_module_map().
++		 * creating a module dso in machine__addnew_module_map().
  		 */
--		on_each_cpu(do_sync_core, NULL, 1);
-+		text_poke_sync();
- 	}
+ 		return kmod && dso->symtab_type == type;
  
- 	/*
-@@ -1123,7 +1128,7 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
- 	}
- 
- 	if (do_sync)
--		on_each_cpu(do_sync_core, NULL, 1);
-+		text_poke_sync();
- 
- 	/*
- 	 * sync_core() implies an smp_mb() and orders this store against
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index 4689f35..63e4ab1 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -498,11 +498,13 @@ int arch_prepare_kprobe(struct kprobe *p)
- void arch_arm_kprobe(struct kprobe *p)
- {
- 	text_poke(p->addr, ((unsigned char []){INT3_INSN_OPCODE}), 1);
-+	text_poke_sync();
- }
- 
- void arch_disarm_kprobe(struct kprobe *p)
- {
- 	text_poke(p->addr, &p->opcode, 1);
-+	text_poke_sync();
- }
- 
- void arch_remove_kprobe(struct kprobe *p)
-diff --git a/arch/x86/kernel/kprobes/opt.c b/arch/x86/kernel/kprobes/opt.c
-index 0d9ea48..26e0d6c 100644
---- a/arch/x86/kernel/kprobes/opt.c
-+++ b/arch/x86/kernel/kprobes/opt.c
-@@ -444,14 +444,10 @@ void arch_optimize_kprobes(struct list_head *oplist)
- /* Replace a relative jump with a breakpoint (int3).  */
- void arch_unoptimize_kprobe(struct optimized_kprobe *op)
- {
--	u8 insn_buff[JMP32_INSN_SIZE];
--
--	/* Set int3 to first byte for kprobes */
--	insn_buff[0] = INT3_INSN_OPCODE;
--	memcpy(insn_buff + 1, op->optinsn.copied_insn, DISP32_SIZE);
--
--	text_poke_bp(op->kp.addr, insn_buff, JMP32_INSN_SIZE,
--		     text_gen_insn(JMP32_INSN_OPCODE, op->kp.addr, op->optinsn.insn));
-+	arch_arm_kprobe(&op->kp);
-+	text_poke(op->kp.addr + INT3_INSN_SIZE,
-+		  op->optinsn.copied_insn, DISP32_SIZE);
-+	text_poke_sync();
- }
- 
- /*
