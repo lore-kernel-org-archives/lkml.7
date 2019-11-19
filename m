@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA24C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7E6C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6BA20672
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DA4320862
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141717;
-	bh=mzQmq4oJQVKcMHvyvWtxQ3TSswoR90o9R63qzljJswI=;
+	s=default; t=1574141720;
+	bh=+mucMr6A/hRINmaccGje7YrhL8FrsBd+/9b1Se5ecYw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wqPjWInHJcSiKPbIlDyungyXu7lPfPVALIoh3bkdLj8FXOhBe+P4AWiR5N2UmFV+h
-	 9SgunpWIBd4o/CUmMOpogGq5mI1K745nqrW849ASy7jIlEquocOWb+1PAJZ9x20pdM
-	 3LDjY5Him+9jmoGBUYerpZ0ZYdmCOcXoOm8QN9Rg=
+	b=JELx9ItM+nB4xkcnC8iSsrmaVYp1xzjdlPNHOErLIcmA9VjR9/VorIWiV4lNJXLqQ
+	 AvJ/oJoo+3riebiWgpKJFP9LTqK6Q17voxAEtsrJg7cOJwtLORcK3Yt320EB2bRUnc
+	 Y3rGZGcR3waxO3QynZqwOSYswbaLOQpw6QfVKPD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729291AbfKSFfQ (ORCPT
+        id S1729800AbfKSFfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:35:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55930 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:35:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729774AbfKSFfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:35:04 -0500
+        id S1728251AbfKSFfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:35:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B61E21783;
-        Tue, 19 Nov 2019 05:35:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59DC721783;
+        Tue, 19 Nov 2019 05:35:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141704;
-        bh=mzQmq4oJQVKcMHvyvWtxQ3TSswoR90o9R63qzljJswI=;
+        s=default; t=1574141715;
+        bh=+mucMr6A/hRINmaccGje7YrhL8FrsBd+/9b1Se5ecYw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UNFevKfwBhrEfK+5KOK9rrGcBkY63i4MSMJNVpPh5P8LkjUcq9W4XTjW5V6dpT/Ka
-         zUk9yGUL77w7eB+/FdQukLCkf3wq3XCTCoijIfPwNFozHq3wdTMGNxUs6Sg0IMDzP+
-         MEFLFLUWbxkoqRGGcLm7snsFJ95fjwU7fD4vJPWE=
+        b=T4PPQ0NzvEVUXgGeKpCFMyCsshLP0lNawGRLinKoSFoF2plkvMKjcV4hpLJLs1Rdj
+         R+LZwzs3TrvF5MN1p7EfXr/BzhImkI771QMCkrmdJfLVvqAvr7yz8FSsyAcIAKkQbI
+         kpgbWR/53xOLN3mtHm2HxqXD2MXHhuNnTcsuO+Ig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shuming Fan <shumingf@realtek.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Corey Minyard <cminyard@mvista.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 252/422] ASoC: rt5682: Fix the boost volume at the begining of playback
-Date:   Tue, 19 Nov 2019 06:17:29 +0100
-Message-Id: <20191119051415.318432600@linuxfoundation.org>
+Subject: [PATCH 4.19 255/422] ipmi:dmi: Ignore IPMI SMBIOS entries with a zero base address
+Date:   Tue, 19 Nov 2019 06:17:32 +0100
+Message-Id: <20191119051415.511427735@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,50 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shuming Fan <shumingf@realtek.com>
+From: Corey Minyard <cminyard@mvista.com>
 
-[ Upstream commit 28b20dde5e1c943ab899549a655ac4935cffccbb ]
+[ Upstream commit 1574608f5f4204440d6d9f52b971aba967664764 ]
 
-This patch fixed the boost volume at the begining of playback
-while DAC volume set to lower level.
+Looking at logs from systems all over the place, it looks like tons
+of broken systems exist that set the base address to zero.  I can
+only guess that is some sort of non-standard idea to mark the
+interface as not being present.  It can't be zero, anyway, so just
+complain and ignore it.
 
-Signed-off-by: Shuming Fan <shumingf@realtek.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/rt5682.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/char/ipmi/ipmi_dmi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/soc/codecs/rt5682.c b/sound/soc/codecs/rt5682.c
-index 21e7c430baf7f..7a78bb00f874d 100644
---- a/sound/soc/codecs/rt5682.c
-+++ b/sound/soc/codecs/rt5682.c
-@@ -68,6 +68,7 @@ struct rt5682_priv {
+diff --git a/drivers/char/ipmi/ipmi_dmi.c b/drivers/char/ipmi/ipmi_dmi.c
+index e2c143861b1e5..28dbd5529188a 100644
+--- a/drivers/char/ipmi/ipmi_dmi.c
++++ b/drivers/char/ipmi/ipmi_dmi.c
+@@ -217,6 +217,10 @@ static void __init dmi_decode_ipmi(const struct dmi_header *dm)
+ 	slave_addr = data[DMI_IPMI_SLAVEADDR];
  
- static const struct reg_sequence patch_list[] = {
- 	{0x01c1, 0x1000},
-+	{RT5682_DAC_ADC_DIG_VOL1, 0xa020},
- };
- 
- static const struct reg_default rt5682_reg[] = {
-@@ -1457,6 +1458,8 @@ static int rt5682_hp_event(struct snd_soc_dapm_widget *w,
- 			RT5682_NG2_EN_MASK, RT5682_NG2_EN);
- 		snd_soc_component_update_bits(component,
- 			RT5682_DEPOP_1, 0x60, 0x60);
-+		snd_soc_component_update_bits(component,
-+			RT5682_DAC_ADC_DIG_VOL1, 0x00c0, 0x0080);
- 		break;
- 
- 	case SND_SOC_DAPM_POST_PMD:
-@@ -1464,6 +1467,8 @@ static int rt5682_hp_event(struct snd_soc_dapm_widget *w,
- 			RT5682_DEPOP_1, 0x60, 0x0);
- 		snd_soc_component_write(component,
- 			RT5682_HP_CTRL_2, 0x0000);
-+		snd_soc_component_update_bits(component,
-+			RT5682_DAC_ADC_DIG_VOL1, 0x00c0, 0x0000);
- 		break;
- 
- 	default:
+ 	memcpy(&base_addr, data + DMI_IPMI_ADDR, sizeof(unsigned long));
++	if (!base_addr) {
++		pr_err("Base address is zero, assuming no IPMI interface\n");
++		return;
++	}
+ 	if (len >= DMI_IPMI_VER2_LENGTH) {
+ 		if (type == IPMI_DMI_TYPE_SSIF) {
+ 			offset = 0;
 -- 
 2.20.1
 
