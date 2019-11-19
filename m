@@ -2,96 +2,84 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2854CC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615E2C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE9CA219F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:16:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lzvzJ6j5"
+	by mail.kernel.org (Postfix) with ESMTP id 2989122319
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:16:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574133391;
+	bh=6w+hmrvX3cmERk62aB4MJXEcf8Z+Q7jruLYEJi9Lous=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=t7yZw3aRH6XFwrVhYt3s9lOzb46GMKJTNhLT9gly7bVcUWaQlFT79Y7FTukVRTLWI
+	 QaoDp0+t/ZYL6+FDTmwosLfMNwL/s7tT4odhjuR0owd+ZWk79FFqjs0GcmpSrl7LUH
+	 QLD6uTVBamANjVYZXH+C3bsmgioloMDXgUSBlMJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbfKSDQA (ORCPT
+        id S1727674AbfKSDQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 22:16:00 -0500
-Received: from ozlabs.org ([203.11.71.1]:58617 "EHLO ozlabs.org"
+        Mon, 18 Nov 2019 22:16:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727467AbfKSDP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 22:15:59 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727298AbfKSDQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 22:16:30 -0500
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47H9vJ6FZBz9sP4;
-        Tue, 19 Nov 2019 14:15:56 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1574133356;
-        bh=nqs3F2umAdBtQfpxikLR763VjtYUfxsa34h8onrr2w8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lzvzJ6j5h8Wkql08SGoI6FEKF8PYmeBAGOjU8LQzUqz6Khl+xkQl0HmWwekRDBLj0
-         ikp4F5+oyu/LrhSRsTn8MhlsI9JXN11ty9g53kYPLINTRMJBHLTxutnYwScvj18Uc9
-         9bK4/udF6PWaAofShtU/ZwvEh9QaJOP630UQEMWScwvKhn9SjBYgiLnsDISn6ww5Un
-         NVrVooJ+g3X/bCJ0/Pd9GDpLzcP9dv7KQsGzPRvvtW6uq/BN7tQhPaSp8nI1F4Ckly
-         EHeXCMbdWKD5U8SIkxFRX8goL9+rJTMjtD2xMrjNWFuqzwRobEg2KOMPFYoLJur0Pl
-         4pcNvB/r09I2Q==
-Date:   Tue, 19 Nov 2019 14:15:55 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: linux-next: build failure after merge of the sound-asoc-fixes
- tree
-Message-ID: <20191119141555.1c2e2270@canb.auug.org.au>
-In-Reply-To: <20191118155852.GG9761@sirena.org.uk>
-References: <20191113081035.7e7f9bc2@canb.auug.org.au>
-        <20191115093410.4a7938f5@canb.auug.org.au>
-        <20191118155852.GG9761@sirena.org.uk>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C886219F6;
+        Tue, 19 Nov 2019 03:16:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574133389;
+        bh=6w+hmrvX3cmERk62aB4MJXEcf8Z+Q7jruLYEJi9Lous=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sev8G4IL/HOaHin4JdR9dY1l+RywQcWd5hoLPRtpdQ0LX70NemWq9tQTgC7dKfQu3
+         IcaSNHGoCXlHAkcU/8vDxW5D+cMzznrffKxCgTTRE1Yr+PAVc7rH6TouqEEIFzdjKO
+         qjgQGXw7kZtLxdoo2R432rBU0U0tg5Cc8Y5onUN8=
+Date:   Mon, 18 Nov 2019 19:16:27 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     syzbot <syzbot+9567fda428fba259deba@syzkaller.appspotmail.com>
+Cc:     adilger.kernel@dilger.ca, jack@suse.cz, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, riteshh@linux.ibm.com,
+        syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Subject: Re: general protection fault in ext4_writepages
+Message-ID: <20191119031627.GJ3147@sol.localdomain>
+References: <20191111182417.GB5165@mit.edu>
+ <00000000000079c18b059717166e@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/GvQ8HB9ZfOE6x1bgnoHM38L";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00000000000079c18b059717166e@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/GvQ8HB9ZfOE6x1bgnoHM38L
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Nov 11, 2019 at 11:25:00AM -0800, syzbot wrote:
+> Hello,
+> 
+> syzbot has tested the proposed patch and the reproducer did not trigger
+> crash:
+> 
+> Reported-and-tested-by:
+> syzbot+9567fda428fba259deba@syzkaller.appspotmail.com
+> 
+> Tested on:
+> 
+> commit:         4d06bfb9 ext4: Add error handling for io_end_vec struct al..
+> git tree:
+> https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git test
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=2cc209e226c8fbbd
+> dashboard link: https://syzkaller.appspot.com/bug?extid=9567fda428fba259deba
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Note: testing is done by a robot and is best-effort only.
+> 
 
-Hi Mark,
+Marking this fixed for syzbot.
 
-On Mon, 18 Nov 2019 15:58:52 +0000 Mark Brown <broonie@kernel.org> wrote:
->
-> I've reverted the commit, I was a bit disappointed that none of the
-> Intel people responded but I see you didn't CC Pierre who sent the
-> commit so he won't have seen your report - I missed that due to the CC
-> to Liam who was also in the chain.
-
-Sorry about that, I usually manage to CC everyone involved.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/GvQ8HB9ZfOE6x1bgnoHM38L
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3TXmsACgkQAVBC80lX
-0GwMjgf7BXYpr5BOvi6MgINE7o72hyepwlXTjv7I3+lafY35yeQ3UDJKR0v1/4al
-B8uFyDGgO31IFVsAnZdOmwEVA9zP9FhNRKpQJuoFf5P6UXSCi2cpfPun+/0mVbqM
-v7IKGrYZmYy9lZzhjxJp3Ml/9BZ47MJh4B/r1OZ0vz8Qi3MJyVTONXTxE50AefQO
-rEWsJqBVgClNg3lYRIfPZhiBvcLSFhZf8zNBVgkA5IiwVXAQpDQHTN/QWgcyUYdw
-91TK7FYlsU9tjafy4BT/c+NZhxOmzOMzblpUZZ6v496DA3IoWSlWeikJ5fQisv6a
-BHuh7J5enmyTQb7W5CpmVe/qUmLlzQ==
-=w3vo
------END PGP SIGNATURE-----
-
---Sig_/GvQ8HB9ZfOE6x1bgnoHM38L--
+#syz fix: ext4: Add error handling for io_end_vec struct allocation
