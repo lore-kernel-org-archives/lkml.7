@@ -2,115 +2,120 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F398BC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5589C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC37F20730
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:28:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bYkKWHKv"
+	by mail.kernel.org (Postfix) with ESMTP id 7E7112186D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:29:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574166555;
+	bh=fa8w+T5Wyaa5V6DllY/j75qaxswUsqWcgN3Yu1YQPnc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NdrMQUDp9eLHE+P2L88zijnuy2jVN8lAQEP+gBkexBEWOZky2QTCeXKWkZPTNkabp
+	 INGEb8x7TpjvRHcc60+TsiFIAuiWSwL2EsrNeL7W5BLL3tVsx6wHdhopx1lx++Vg7b
+	 pvCtjr3dRX6B0Xde7/uz4p3RXcxh0+lVsX5jhhqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbfKSM2j (ORCPT
+        id S1727928AbfKSM3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:28:39 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:58694 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727805AbfKSM2i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:28:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574166517;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5/Tpur5Jg0w8dOS4DWpqDeh25xiVTStCvikKzJwd37M=;
-        b=bYkKWHKvdQaIgFH/Uq56HDtPtBSUKPzUrpAz5Z4/7Y3MC0oZsJsfGeGC0AeI8hvi2ImnGP
-        mpwu9//EwulMLc2ftyGv6/WUa4ryv1nvSZlmBTLEmwI8WpgJ2BD++eEGVh6DTWZ0ZDFqtl
-        BXvPev84KEiZed/E7almc3n/4VAP6GU=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-325-2dvqYbAkOFWfXXkIR-9kaQ-1; Tue, 19 Nov 2019 07:28:35 -0500
-Received: by mail-wr1-f69.google.com with SMTP id f8so18197246wrq.6
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 04:28:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=tbeowhQzRKjB6uF0t4WazsD0mnFA+By287e2iOh8qGc=;
-        b=aFGiVULo+kqajLIpQAXEETK+CLoUG11te8xJ+P/JbuHN56zA0jOhy9jUZNkeOMp1kp
-         u7NFRiI16IDgyDD6dWR1g5nwcqJDhB9BJ391jNGLpBP/U3+oLQ9dCnZTsPhDmRNxwPAs
-         wvWRcwWA+L8M21MHPbt7L9b2/VyEzmPuPNoej+uSoiHXIt8rwxPm3Wp618NUaslDJALI
-         zkJXkTlkJmwX5uP6VyZd3hObcqu+37HrMZSluNT2owEY9clUMrHFCv+IkxTGnDswc3u3
-         yqeJs6lXAP/Z9S6fNd2VS6R4omYPmtjFVQbpesQ4QJh5uUQwebNKOum+B0s0ExTHiCB8
-         1oYw==
-X-Gm-Message-State: APjAAAVU1diKotWoRw6PmyTDZHYSVEGKBTbLQMbdpbtgKjeI4jhmyqjO
-        qmE+t4IdwUnTnhlNqN4hbi9GxXr6DbaM7aOWWN51xjWQwQ2mDlrcz2Hq8t5bF6repz7nTOnPg1a
-        w93WSwYFwNHZNL/OAL/oM50A8
-X-Received: by 2002:adf:f10d:: with SMTP id r13mr34941141wro.173.1574166514820;
-        Tue, 19 Nov 2019 04:28:34 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyNbb0ckuHE7IWjv7bqXQZrlL7jwUoHv2U/gZjQfxbd5CUks+dI0LHAyXvstzObqiu1EB+nTQ==
-X-Received: by 2002:adf:f10d:: with SMTP id r13mr34941123wro.173.1574166514611;
-        Tue, 19 Nov 2019 04:28:34 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id i71sm29755065wri.68.2019.11.19.04.28.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 04:28:33 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Mao Wenan <maowenan@huawei.com>, pbonzini@redhat.com,
-        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] KVM: x86: remove set but not used variable 'called'
-In-Reply-To: <20191119121423.GB5604@kadam>
-References: <20191119030640.25097-1-maowenan@huawei.com> <87o8x8gjr5.fsf@vitty.brq.redhat.com> <20191119121423.GB5604@kadam>
-Date:   Tue, 19 Nov 2019 13:28:32 +0100
-Message-ID: <87imnggidr.fsf@vitty.brq.redhat.com>
+        Tue, 19 Nov 2019 07:29:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727066AbfKSM3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 07:29:14 -0500
+Received: from localhost (unknown [89.205.136.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A55321850;
+        Tue, 19 Nov 2019 12:29:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574166553;
+        bh=fa8w+T5Wyaa5V6DllY/j75qaxswUsqWcgN3Yu1YQPnc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z3ZvLrWXKT7aidC/R6E+2Z3mk+c5PlZttZ8SckjerU/qy7qfMJtXWbXmDOuexXqXZ
+         Bm3B61BJovl5mDZ/j6QJzVIJJt0W3vLssLtopShuFgxIgF/KQ9NCMs8NWxjgGFZ2ft
+         +p9T4cKFrnm5N24P0w8YEWCoW4A+XFpzLW0KzIgI=
+Date:   Tue, 19 Nov 2019 13:29:09 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Chris Paterson <Chris.Paterson2@renesas.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cip-dev@lists.cip-project.org" <cip-dev@lists.cip-project.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "patches@kernelci.org" <patches@kernelci.org>,
+        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 4.19 000/422] 4.19.85-stable review
+Message-ID: <20191119122909.GC1913916@kroah.com>
+References: <20191119051400.261610025@linuxfoundation.org>
+ <TYAPR01MB22854E4F20C28F3A10DA65E3B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-X-MC-Unique: 2dvqYbAkOFWfXXkIR-9kaQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TYAPR01MB22854E4F20C28F3A10DA65E3B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Carpenter <dan.carpenter@oracle.com> writes:
+On Tue, Nov 19, 2019 at 08:54:25AM +0000, Chris Paterson wrote:
+> Hello Greg, all,
+> 
+> > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
+> > Behalf Of Greg Kroah-Hartman
+> > Sent: 19 November 2019 05:13
+> > 
+> > This is the start of the stable review cycle for the 4.19.85 release.
+> > There are 422 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> 
+> I'm seeing some build issues with module compilation with this release (1b1960cc Linux 4.19.85-rc1), I also saw them with the previous two versions of Linux 4.19.85-rc1 (cd21ecdb and 1fd0ac64).
+> 
+> Full log available on GitLab [0]. Build conf [1].
+> [0] https://gitlab.com/cip-playground/linux-stable-rc-ci/-/jobs/354591285
+> [1] https://gitlab.com/cip-playground/linux-stable-rc-ci/-/jobs/354591285/artifacts/file/output/4.19.85-rc1_1b1960cc7/x86/siemens_iot2000.config/config/.config
+> 
+> Main error below:
+> 
+> 3907   CC [M]  drivers/net/ethernet/mellanox/mlx4/main.o
+> 3908   LD [M]  fs/ntfs/ntfs.o
+> 3909   CC [M]  drivers/net/ethernet/intel/i40evf/i40e_txrx.o
+> 3910   CC [M]  drivers/usb/musb/musb_core.o
+> 3911   CC [M]  drivers/net/ethernet/nvidia/forcedeth.o
+> 3912   CC [M]  fs/udf/balloc.o
+> 3913   CC [M]  drivers/net/ethernet/intel/fm10k/fm10k_debugfs.o
+> 3914   CC [M]  fs/udf/dir.o
+> 3915   CC [M]  drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.o
+> 3916   CC [M]  drivers/net/ethernet/intel/i40e/i40e_ptp.o
+> 3917 drivers/net/ethernet/mellanox/mlx4/main.c: In function 'mlx4_init_one':
+> 3918 drivers/net/ethernet/mellanox/mlx4/main.c:3985:2: error: implicit declaration of function 'devlink_reload_enable'; did you mean 'devlink_region_create'? [-Werror=implicit-function-declaration]
+> 3919   devlink_reload_enable(devlink);
+> 3920   ^~~~~~~~~~~~~~~~~~~~~
+> 3921   devlink_region_create
+> 3922   CC [M]  drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.o
+> 3923 drivers/net/ethernet/mellanox/mlx4/main.c: In function 'mlx4_remove_one':
+> 3924 drivers/net/ethernet/mellanox/mlx4/main.c:4097:2: error: implicit declaration of function 'devlink_reload_disable'; did you mean 'devlink_region_destroy'? [-Werror=implicit-function-declaration]
+> 3925   devlink_reload_disable(devlink);
+> 3926   ^~~~~~~~~~~~~~~~~~~~~~
+> 3927   devlink_region_destroy
+> 3928   CC [M]  drivers/net/ethernet/packetengines/hamachi.o
+> 3929   CC [M]  fs/udf/file.o
+> 3930   LD [M]  drivers/net/ethernet/intel/fm10k/fm10k.o
+> 
+> I haven't tried to trace the issue further yet, sorry.
 
-> On Tue, Nov 19, 2019 at 12:58:54PM +0100, Vitaly Kuznetsov wrote:
->> Mao Wenan <maowenan@huawei.com> writes:
->>=20
->> > Fixes gcc '-Wunused-but-set-variable' warning:
->> >
->> > arch/x86/kvm/x86.c: In function kvm_make_scan_ioapic_request_mask:
->> > arch/x86/kvm/x86.c:7911:7: warning: variable called set but not
->> > used [-Wunused-but-set-variable]
->> >
->> > It is not used since commit 7ee30bc132c6 ("KVM: x86: deliver KVM
->> > IOAPIC scan request to target vCPUs")
->>=20
->> Better expressed as=20
->>=20
->> Fixes: 7ee30bc132c6 ("KVM: x86: deliver KVM IOAPIC scan request to targe=
-t vCPUs")
->>=20
->
-> There is sort of a debate about this whether the Fixes tag should be
-> used if it's only a cleanup.
->
+Any chance you can bisect this?  I don't see any obvious reason why this
+error should be happening, and it isn't showing up here :(
 
-I have to admit I'm involved in doing backporting sometimes and I really
-appreciate Fixes: tags. Just so you know on which side of the debate I
-am :-)
+thanks,
 
---=20
-Vitaly
-
+greg k-h
