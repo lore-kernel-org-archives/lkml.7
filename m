@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE98C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFEBC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E54E3214D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E632420862
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:52:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142760;
-	bh=olP18mzLHEq5aeklcBEE1+hOx3ydda638HvyajAvQIc=;
+	s=default; t=1574142768;
+	bh=cj5u95BnEoI4lNCshidUefaPX9ljRH1R6f9BmPwhev4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=avm1LUpEJdvdTa4IXja5BQLKTbyHSEwx75IVIz95pabsmy/bBAzTbMjK0Z39y1Lxh
-	 vhnpkxsFfoFLefKxPVeu01ex3AVlP7CjIBYgtEr923qzIykcL54JeCUI6QepnJtyY0
-	 UKRsHaUXqKu33daorJpyDbRExYg+RCQj7gT0P1Ec=
+	b=h398zKuk5U+UEQxhT3ARgLPEg4KoaXi6jt8C47g1AxgyMcd/AL94wdEEhLYAx8p0S
+	 TMG2KhECFXtYz3+1Xs5iJSC1vdNjnqK9EaB9rUs0qGpvGNiqIf05Nt0fULzk777yCZ
+	 JQrsT2A6F/lF7BBHmYcwDfNUcpSLLWC+88h6HW1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731927AbfKSFwi (ORCPT
+        id S1731947AbfKSFwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:52:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50258 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:52:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731596AbfKSFwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:52:30 -0500
+        id S1731006AbfKSFwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:52:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8235621783;
-        Tue, 19 Nov 2019 05:52:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DCE620721;
+        Tue, 19 Nov 2019 05:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142750;
-        bh=olP18mzLHEq5aeklcBEE1+hOx3ydda638HvyajAvQIc=;
+        s=default; t=1574142761;
+        bh=cj5u95BnEoI4lNCshidUefaPX9ljRH1R6f9BmPwhev4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IJ9y+yEw8B0iQVJ+abhUwU9kuTytHprlXgRj2Ga+KK9T24UjbOUXCETs/7EF4eJOT
-         hEODsEP44n5M2NWhZW1wAiIOcMHb70aLtPbgn01tI3o14K0G7U8f99B+pgdwmLd1WB
-         ZjXLYblG1cMz45vHTzw6CrryTb9Qa7xLmMVK5wLU=
+        b=EhNpAR/tFnLXSMXYn4Ahhg8jr5cGJSjVOizRfW6uflPHuFvWt4ex0i/dx3co79eZN
+         5XD0nwHjt4pkjk2UTjdInE6cjUc+GtKhWI0HkZZmHTyBbCHWsKSp3/J9X1rIPxVETs
+         PICLHXwEeXM+t99+h89ex9/SK8wXdu9+2F1GbjMw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shahed Shaikh <Shahed.Shaikh@cavium.com>,
-        Ariel Elior <ariel.elior@cavium.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 170/239] bnx2x: Ignore bandwidth attention in single function mode
-Date:   Tue, 19 Nov 2019 06:19:30 +0100
-Message-Id: <20191119051333.925320107@linuxfoundation.org>
+Subject: [PATCH 4.14 191/239] coresight: Fix handling of sinks
+Date:   Tue, 19 Nov 2019 06:19:51 +0100
+Message-Id: <20191119051335.581613698@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,45 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shahed Shaikh <Shahed.Shaikh@cavium.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit 75a110a1783ef8324ffd763b24f4ac268253cbca ]
+[ Upstream commit c71369de02b285d9da526a526d8f2affc7b17c59 ]
 
-This is a workaround for FW bug -
-MFW generates bandwidth attention in single function mode, which
-is only expected to be generated in multi function mode.
-This undesired attention in SF mode results in incorrect HW
-configuration and resulting into Tx timeout.
+The coresight components could be operated either in sysfs mode or in perf
+mode. For some of the components, the mode of operation doesn't matter as
+they simply relay the data to the next component in the trace path. But for
+sinks, they need to be able to provide the trace data back to the user.
+Thus we need to make sure that "mode" is handled appropriately. e.g,
+the sysfs mode could have multiple sources driving the trace data, while
+perf mode doesn't allow sharing the sink.
 
-Signed-off-by: Shahed Shaikh <Shahed.Shaikh@cavium.com>
-Signed-off-by: Ariel Elior <ariel.elior@cavium.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The coresight_enable_sink() however doesn't really allow this check to
+trigger as it skips the "enable_sink" callback if the component is
+already enabled, irrespective of the mode. This could cause mixing
+of data from different modes or even same mode (in perf), if the
+sources are different. Also, if we fail to enable the sink while
+enabling a path (where sink is the first component enabled),
+we could end up in disabling the components in the "entire"
+path which were not enabled in this trial, causing disruptions
+in the existing trace paths.
+
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/hwtracing/coresight/coresight.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-index 8f0c9f6de893d..dbe8feec456c2 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-@@ -3540,6 +3540,16 @@ static void bnx2x_drv_info_iscsi_stat(struct bnx2x *bp)
-  */
- static void bnx2x_config_mf_bw(struct bnx2x *bp)
+diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
+index e571e4010dff0..366c1d493af35 100644
+--- a/drivers/hwtracing/coresight/coresight.c
++++ b/drivers/hwtracing/coresight/coresight.c
+@@ -140,12 +140,14 @@ static int coresight_enable_sink(struct coresight_device *csdev, u32 mode)
  {
-+	/* Workaround for MFW bug.
-+	 * MFW is not supposed to generate BW attention in
-+	 * single function mode.
+ 	int ret;
+ 
+-	if (!csdev->enable) {
+-		if (sink_ops(csdev)->enable) {
+-			ret = sink_ops(csdev)->enable(csdev, mode);
+-			if (ret)
+-				return ret;
+-		}
++	/*
++	 * We need to make sure the "new" session is compatible with the
++	 * existing "mode" of operation.
 +	 */
-+	if (!IS_MF(bp)) {
-+		DP(BNX2X_MSG_MCP,
-+		   "Ignoring MF BW config in single function mode\n");
-+		return;
-+	}
-+
- 	if (bp->link_vars.link_up) {
- 		bnx2x_cmng_fns_init(bp, true, CMNG_FNS_MINMAX);
- 		bnx2x_link_sync_notify(bp);
++	if (sink_ops(csdev)->enable) {
++		ret = sink_ops(csdev)->enable(csdev, mode);
++		if (ret)
++			return ret;
+ 		csdev->enable = true;
+ 	}
+ 
+@@ -347,8 +349,14 @@ int coresight_enable_path(struct list_head *path, u32 mode)
+ 		switch (type) {
+ 		case CORESIGHT_DEV_TYPE_SINK:
+ 			ret = coresight_enable_sink(csdev, mode);
++			/*
++			 * Sink is the first component turned on. If we
++			 * failed to enable the sink, there are no components
++			 * that need disabling. Disabling the path here
++			 * would mean we could disrupt an existing session.
++			 */
+ 			if (ret)
+-				goto err;
++				goto out;
+ 			break;
+ 		case CORESIGHT_DEV_TYPE_SOURCE:
+ 			/* sources are enabled from either sysFS or Perf */
 -- 
 2.20.1
 
