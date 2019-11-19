@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F025AC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DCDC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8D2220721
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB2E320857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:53:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142822;
-	bh=zruDnVJMljDs/bDjpZySQhScOXxkBULXSigdRF4c80A=;
+	s=default; t=1574142826;
+	bh=UupwU4breSByp96+YTz2uZ3ED3NUHaAkfOoof3kWAeI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cMv/Xl1GuYeeZMOUZlvfkFQEd5dPYAmggNEc+J8t/bjsVnf/vFEwdG/59/hrnJJ0Q
-	 xt3JEH0AdzAQk60Z4JuIUNpE9Y+tTJNvh6cBE6BGmeitByAIPgW5rpGK9NY/FcC/J3
-	 191L2//EgKM1/mgIoC2Jqo86JhSJ7swI8uU5jlYE=
+	b=IrA0/YEep+UjLf5P/Bp0NRmTRpea8CqjyWmu7WlTGya+cmmr/hUW024DSZ7kjbn5k
+	 tnRSRUR/yV5Mo7jWztxqQP4DGlisBxShsLxF9Dc7qi57gE4gjgSCQj2TwFhmGO28d5
+	 ooDMwyVwVqryo1lbHR9wLwjYjRIYekFAPmwTSyks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732048AbfKSFxl (ORCPT
+        id S1732045AbfKSFxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:53:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51596 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:53:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731387AbfKSFxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:53:37 -0500
+        id S1727888AbfKSFxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:53:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02F4F21783;
-        Tue, 19 Nov 2019 05:53:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 451EF21783;
+        Tue, 19 Nov 2019 05:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142817;
-        bh=zruDnVJMljDs/bDjpZySQhScOXxkBULXSigdRF4c80A=;
+        s=default; t=1574142820;
+        bh=UupwU4breSByp96+YTz2uZ3ED3NUHaAkfOoof3kWAeI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jTMfnJntCb8HUAhZdMqO30+fgQwC0jCMJQHBy+JwgSLOdUTgnrKV/iVhLcoamQjXH
-         NW5VKtF8TO+1ucwVfhfm+x0VLh/Fch1Uj/PdmdeEaMzb4b3XR/Ani3ueeXw3nRxGV2
-         TAIqK+8vDvK4HF5bbEsAk7cXvjEzm0Y78hGnXXuA=
+        b=tPR8l6KIhQSdak79Qr/RjEVkNj1gw229oW0EJAFYQbuEc3zLfNBpC+8h7qHP7Xzxg
+         6gAEXypwdJCHH6n4xVv7jFwANYFWvthfATY/FaxHFpmSN2Ipn9eda8IXLMccp5BYqL
+         NdzDkvTYVovAJJs1dxDiSwIHz0IWv7KQ6pD/Hdf8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 208/239] f2fs: mark inode dirty explicitly in recover_inode()
-Date:   Tue, 19 Nov 2019 06:20:08 +0100
-Message-Id: <20191119051337.619888748@linuxfoundation.org>
+        stable@vger.kernel.org, Justin Ernst <justin.ernst@hpe.com>,
+        Borislav Petkov <bp@suse.de>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 209/239] EDAC: Raise the maximum number of memory controllers
+Date:   Tue, 19 Nov 2019 06:20:09 +0100
+Message-Id: <20191119051337.711593264@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -60,33 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Justin Ernst <justin.ernst@hpe.com>
 
-[ Upstream commit 4a1728cad6340bfbe17bd17fd158b2165cd99508 ]
+[ Upstream commit 6b58859419554fb824e09cfdd73151a195473cbc ]
 
-Mark inode dirty explicitly in the end of recover_inode() to make sure
-that all recoverable fields can be persisted later.
+We observe an oops in the skx_edac module during boot:
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+  EDAC MC0: Giving out device to module skx_edac controller Skylake Socket#0 IMC#0
+  EDAC MC1: Giving out device to module skx_edac controller Skylake Socket#0 IMC#1
+  EDAC MC2: Giving out device to module skx_edac controller Skylake Socket#1 IMC#0
+  ...
+  EDAC MC13: Giving out device to module skx_edac controller Skylake Socket#0 IMC#1
+  EDAC MC14: Giving out device to module skx_edac controller Skylake Socket#1 IMC#0
+  EDAC MC15: Giving out device to module skx_edac controller Skylake Socket#1 IMC#1
+  Too many memory controllers: 16
+  EDAC MC: Removed device 0 for skx_edac Skylake Socket#0 IMC#0
+
+We observe there are two memory controllers per socket, with a limit
+of 16. Raise the maximum number of memory controllers from 16 to 2 *
+MAX_NUMNODES (1024).
+
+[ bp: This is just a band-aid fix until we've sorted out the whole issue
+  with the bus_type association and handling in EDAC and can get rid of
+  this arbitrary limit. ]
+
+Signed-off-by: Justin Ernst <justin.ernst@hpe.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Russ Anderson <russ.anderson@hpe.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-edac@vger.kernel.org
+Link: https://lkml.kernel.org/r/20180925143449.284634-1-justin.ernst@hpe.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/recovery.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/edac.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index 87942cf2afe1f..2eef266b656b5 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -227,6 +227,8 @@ static void recover_inode(struct inode *inode, struct page *page)
- 	F2FS_I(inode)->i_advise = raw->i_advise;
- 	F2FS_I(inode)->i_flags = le32_to_cpu(raw->i_flags);
+diff --git a/include/linux/edac.h b/include/linux/edac.h
+index cd75c173fd00b..90f72336aea66 100644
+--- a/include/linux/edac.h
++++ b/include/linux/edac.h
+@@ -17,6 +17,7 @@
+ #include <linux/completion.h>
+ #include <linux/workqueue.h>
+ #include <linux/debugfs.h>
++#include <linux/numa.h>
  
-+	f2fs_mark_inode_dirty_sync(inode, true);
-+
- 	if (file_enc_name(inode))
- 		name = "<encrypted>";
- 	else
+ #define EDAC_DEVICE_NAME_LEN	31
+ 
+@@ -667,6 +668,6 @@ struct mem_ctl_info {
+ /*
+  * Maximum number of memory controllers in the coherent fabric.
+  */
+-#define EDAC_MAX_MCS	16
++#define EDAC_MAX_MCS	2 * MAX_NUMNODES
+ 
+ #endif
 -- 
 2.20.1
 
