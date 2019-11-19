@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602B7C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE44C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E921222A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 560E12186D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574166608;
-	bh=xbXGX4nqf/NeS7GY0babqBdxPSbz16Iv3iweVqaVKOc=;
+	s=default; t=1574166700;
+	bh=suleGU26LasQIuk8ZpGMdVt4ahrryeM6TkKbLCDXnCQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kge6H6LsJUB1U+a5Jnu7UKS2Yg0upbg50FlOKR79wMjK80MrhsQUqip+MwoHEUmWX
-	 zb6kfq7DleCEXjlv6Fs+vI1T1qRnBk4ErkFZOdWEBXkXP3GMGdsZ2JTn15zXn7XHle
-	 G/ZTlt8vqdAs6UKAwkF21UuebX/EAmqnBIc95D0I=
+	b=CYtyExPfTnZ4V5dGnUvvhUD+FvJbCtl7uagQtsCXpF5i1gnDEvdHrT63b7l7/nLas
+	 PAmp7OcmSJKCfsBcSVXogR8pPP6j/d7zrlrNTkozfVYoRJ6gBt113K3kwji1+Ju3bi
+	 /fXwJH/zRdWHUpJ+9wmPM2KhOy/CQBd9t9/cKKWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbfKSMaH (ORCPT
+        id S1727898AbfKSMbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:30:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55150 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 07:31:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726351AbfKSMaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:30:07 -0500
+        id S1725280AbfKSMbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 07:31:39 -0500
 Received: from localhost (unknown [89.205.136.181])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B2872186D;
-        Tue, 19 Nov 2019 12:30:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABE0821850;
+        Tue, 19 Nov 2019 12:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574166605;
-        bh=xbXGX4nqf/NeS7GY0babqBdxPSbz16Iv3iweVqaVKOc=;
+        s=default; t=1574166698;
+        bh=suleGU26LasQIuk8ZpGMdVt4ahrryeM6TkKbLCDXnCQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KRTWK1DXmMFRaa+Z4BCWcgMiknMllo0WiNi/wvr3Cd5M/OUrjkcgTcXgIORsliyPt
-         SZm5tLNZ/Yii7TljN1opl+sQFvxaoHqrnbAAwYr2o2SomM7jfXIn9tzpAeZ6OCaOxQ
-         GVV590n74vJj4r5Lq4qXa/OYXI0yJuWAzi8/a8YQ=
-Date:   Tue, 19 Nov 2019 13:30:03 +0100
+        b=eGrxSmamKx10CISUmldmHYdUnHUTBTLm6odNglLwPPATu1TuV5OuXq9JN+TXhJfQ2
+         msFlKPInq3XWyVcbgLmDfYUDFTTNensMIO3eyucfpvh5l3aecmIJHBPQ1csLQgRc2O
+         jCVvOB5PMHvH0cbr8NM2D93/xdU0kDY55pN1F/aM=
+Date:   Tue, 19 Nov 2019 13:31:35 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     Jon Hunter <jonathanh@nvidia.com>
 Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
         akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
         patches@kernelci.org, ben.hutchings@codethink.co.uk,
         lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 000/422] 4.19.85-stable review
-Message-ID: <20191119123003.GA1948960@kroah.com>
-References: <20191119051400.261610025@linuxfoundation.org>
- <20468dbc-5b88-f86e-9d5d-5edca4e4be2b@nvidia.com>
- <20191119122417.GA1913916@kroah.com>
+Subject: Re: [PATCH 4.14 000/239] 4.14.155-stable review
+Message-ID: <20191119123135.GB1948960@kroah.com>
+References: <20191119051255.850204959@linuxfoundation.org>
+ <cc1129c8-797d-7a1d-e59b-16c826270fad@nvidia.com>
+ <20191119122535.GB1913916@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191119122417.GA1913916@kroah.com>
+In-Reply-To: <20191119122535.GB1913916@kroah.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 01:24:17PM +0100, Greg Kroah-Hartman wrote:
-> On Tue, Nov 19, 2019 at 09:18:03AM +0000, Jon Hunter wrote:
+On Tue, Nov 19, 2019 at 01:25:35PM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Nov 19, 2019 at 09:12:48AM +0000, Jon Hunter wrote:
 > > 
-> > On 19/11/2019 05:13, Greg Kroah-Hartman wrote:
-> > > This is the start of the stable review cycle for the 4.19.85 release.
-> > > There are 422 patches in this series, all will be posted as a response
+> > On 19/11/2019 05:16, Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 4.14.155 release.
+> > > There are 239 patches in this series, all will be posted as a response
 > > > to this one.  If anyone has any issues with these being applied, please
 > > > let me know.
 > > > 
@@ -74,9 +74,9 @@ On Tue, Nov 19, 2019 at 01:24:17PM +0100, Greg Kroah-Hartman wrote:
 > > > Anything received after that time might be too late.
 > > > 
 > > > The whole patch series can be found in one patch at:
-> > > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.85-rc1.gz
+> > > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.155-rc1.gz
 > > > or in the git tree and branch at:
-> > > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> > > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
 > > > and the diffstat can be found below.
 > > > 
 > > > thanks,
@@ -87,23 +87,23 @@ On Tue, Nov 19, 2019 at 01:24:17PM +0100, Greg Kroah-Hartman wrote:
 > > 
 > > ...
 > > 
-> > > Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > >     ARM: dts: meson8b: odroidc1: enable the SAR ADC
+> > > Heiko Stuebner <heiko@sntech.de>
+> > >     arm64: dts: rockchip: enable display nodes on rk3328-rock64
+> > The above commit is causing the following build error for ARM64 ...
 > > 
-> > This commit is generating the following compilation error for ARM ...
-> > 
-> > arch/arm/boot/dts/meson8b-odroidc1.dtb: ERROR (phandle_references): /soc/cbus@c1100000/adc@8680: Reference to non-existent node or label "vcc_1v8"
-> > 
-> > ERROR: Input tree has errors, aborting (use -f to force output)
-> > scripts/Makefile.lib:293: recipe for target 'arch/arm/boot/dts/meson8b-odroidc1.dtb' failed
-> > make[1]: *** [arch/arm/boot/dts/meson8b-odroidc1.dtb] Error 2
-> > arch/arm/Makefile:348: recipe for target 'dtbs' failed
+> > Error: arch/arm64/boot/dts/rockchip/rk3328-rock64.dts:149.1-6 Label or path hdmi not found
+> > Error: arch/arm64/boot/dts/rockchip/rk3328-rock64.dts:153.1-9 Label or path hdmiphy not found
+> > Error: arch/arm64/boot/dts/rockchip/rk3328-rock64.dts:345.1-5 Label or path vop not found
+> > FATAL ERROR: Syntax error parsing input tree
+> > scripts/Makefile.lib:317: recipe for target 'arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb' failed
+> > make[2]: *** [arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb] Error 1
+> > scripts/Makefile.build:585: recipe for target 'arch/arm64/boot/dts/rockchip' failed
+> > make[1]: *** [arch/arm64/boot/dts/rockchip] Error 2
+> > arch/arm64/Makefile:138: recipe for target 'dtbs' failed
 > > make: *** [dtbs] Error 2
 > 
-> Thanks, will go remove that patch.
+> Will go drop this, thanks.
 
--rc2 is out with that patch removed.
-
-thanks,
+-rc2 is out with this patch removed, thanks.
 
 greg k-h
