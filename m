@@ -2,106 +2,110 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37680C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1931C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 049B222318
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:02:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574139743;
-	bh=rFN7FtR8VY7lJ+xyujHLbuOglcKaHGGxuJ28YM4gUNs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K8QYODtQLnsdUfupPFnxr/hIlXy+m/oyqoqXG9BJFdRwWKyZUxTe0bQhQdJ0TWSgv
-	 3QZ+iGPZatmFyeal7nVffgPzRvr4VZ1GWRvjXfmiizJ601/qiQnFeEQT0fbcUWrnBk
-	 7M/z6m1ajhvutXdgYiuOjcrFf658R6H80T6WvXmg=
+	by mail.kernel.org (Postfix) with ESMTP id 82197222A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:03:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726023AbfKSFCW (ORCPT
+        id S1726722AbfKSFDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:02:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45088 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:03:22 -0500
+Received: from mga14.intel.com ([192.55.52.115]:8390 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbfKSFCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:02:21 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC23F222A4;
-        Tue, 19 Nov 2019 05:02:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574139741;
-        bh=rFN7FtR8VY7lJ+xyujHLbuOglcKaHGGxuJ28YM4gUNs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ojsaZnLlamg5M40NlAuVcaTjr7CPLYi1ITJd+IkMMsh1Ho7BWttf16bwMuQzO3HVq
-         /5FO5hwSTSJDTbHlaBTiz0Y4rTYdy++/U5YeVox+z7vm0CTCoQYTiwRBl55Ds31zw2
-         MmWwBSonhiXqsH0TBSO947VdYDFXUzD8ZXPUWb/g=
-Date:   Mon, 18 Nov 2019 21:02:19 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+ce541a23cf58c1f6b1b1@syzkaller.appspotmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        yeyunfeng@huawei.com, Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: linux-next boot error: can't ssh into the instance (3)
-Message-ID: <20191119050219.GJ163020@sol.localdomain>
-References: <000000000000ee674f0597a18709@google.com>
- <CACT4Y+aHkU46kF26a6afuQ+UO3N3W9Ur898dFBa+mQ2q6QzoQQ@mail.gmail.com>
- <CAHp75Vf6hfh0+MxX7G5=skcTx+_37ypz_KMi-NYLGB7wW5zs5g@mail.gmail.com>
+        id S1726170AbfKSFDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:03:22 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 21:03:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,322,1569308400"; 
+   d="scan'208";a="407626283"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga006.fm.intel.com with ESMTP; 18 Nov 2019 21:03:17 -0800
+Date:   Mon, 18 Nov 2019 21:03:17 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Kai Huang <kai.huang@linux.intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v3 04/19] x86/intel: Initialize IA32_FEATURE_CONTROL MSR
+ at boot
+Message-ID: <20191119050317.GF23085@linux.intel.com>
+References: <20191119031240.7779-1-sean.j.christopherson@intel.com>
+ <20191119031240.7779-5-sean.j.christopherson@intel.com>
+ <17a1831a3a72fb87ce2a35689e07ff517c4bdf99.camel@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vf6hfh0+MxX7G5=skcTx+_37ypz_KMi-NYLGB7wW5zs5g@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <17a1831a3a72fb87ce2a35689e07ff517c4bdf99.camel@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 07:37:27PM +0200, Andy Shevchenko wrote:
-> On Mon, Nov 18, 2019 at 7:16 PM Dmitry Vyukov <dvyukov@google.com> wrote:
-> >
-> > On Mon, Nov 18, 2019 at 5:35 PM syzbot
-> > <syzbot+ce541a23cf58c1f6b1b1@syzkaller.appspotmail.com> wrote:
-> > >
-> > > Hello,
-> > >
-> > > syzbot found the following crash on:
-> > >
-> > > HEAD commit:    519ead8f Add linux-next specific files for 20191118
-> > > git tree:       linux-next
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=14653416e00000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=652dd3906d691711
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=ce541a23cf58c1f6b1b1
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > >
-> > > Unfortunately, I don't have any reproducer for this crash yet.
-> > >
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+ce541a23cf58c1f6b1b1@syzkaller.appspotmail.com
-> >
-> >
-> > Looks at the console output, this seems to be related to:
-> >
-> > commit eb09878e13013f0faee0a97562da557c4026b8a1
-> > Author: Yunfeng Ye <yeyunfeng@huawei.com>
-> > Date:   Thu Nov 14 15:16:24 2019 +0800
-> >
-> >     ACPI: sysfs: Change ACPI_MASKABLE_GPE_MAX to 0x100
-> >
-> > +drivers/acpi/sysfs.c maintainers
+On Tue, Nov 19, 2019 at 05:41:49PM +1300, Kai Huang wrote:
+> On Mon, 2019-11-18 at 19:12 -0800, Sean Christopherson wrote:
+> > +	/*
+> > +	 * Enable VMX if and only if the kernel may do VMXON at some point,
+> > +	 * i.e. KVM is enabled, to avoid unnecessarily adding an attack vector
+> > +	 * for the kernel, e.g. using VMX to hide malicious code.
+> > +	 */
+> > +	if (cpu_has(c, X86_FEATURE_VMX) && IS_ENABLED(CONFIG_KVM)) {
+
+Hmm, this should more specifically be CONFIG_KVM_INTEL.
+
+> > +		msr |= FEAT_CTL_VMX_ENABLED_OUTSIDE_SMX;
+> > +		if (tboot_enabled())
+> > +			msr |= FEAT_CTL_VMX_ENABLED_INSIDE_SMX;
+> > +	}
 > 
-> Just bisected to the same
+> Why not also take this chance to enable SGX? Or it will come with SGX patch
+> series?
+
+The latter.  Similar to the KVM check, this shouldn't opt in to SGX unless
+the kernel is capable of using SGX.
+
+> > +	wrmsrl(MSR_IA32_FEATURE_CONTROL, msr);
+> > +}
+> > diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> > index 4a900804a023..b7c6ed0b40b6 100644
+> > --- a/arch/x86/kernel/cpu/intel.c
+> > +++ b/arch/x86/kernel/cpu/intel.c
+> > @@ -755,6 +755,8 @@ static void init_intel(struct cpuinfo_x86 *c)
+> >  	/* Work around errata */
+> >  	srat_detect_node(c);
+> >  
+> > +	init_feature_control_msr(c);
 > 
+> Will this compile if you disable CONFIG_X86_FEATURE_CONTROL_MSR?
+> 
+> Provide an empty one in cpu.h if the config is not enabled?
 
-I had to revert this in order to boot linux-next as well.  Rafael, can this
-please be reverted?
-
-Thanks,
-
-- Eric
+CONFIG_X86_FEATURE_CONTROL_MSR can't be disabled manually, it's selected
+by CPU_SUP_INTEL (and by Zhaoxin/Centaur for their relevant patches).
