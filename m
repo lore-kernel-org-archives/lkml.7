@@ -2,403 +2,129 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E99C2C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 08:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1327C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 08:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B74BC222C7
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 08:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 894DC20878
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 08:11:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zxl2RCMJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfKSIIS (ORCPT
+        id S1727073AbfKSILU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 03:08:18 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:52548 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfKSIIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 03:08:17 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C1EEC1A0407;
-        Tue, 19 Nov 2019 09:08:13 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 60C3E1A0421;
-        Tue, 19 Nov 2019 09:08:09 +0100 (CET)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 52A6B402B3;
-        Tue, 19 Nov 2019 16:08:03 +0800 (SGT)
-From:   Wen He <wen.he_1@nxp.com>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Li Yang <leoyang.li@nxp.com>, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Wen He <wen.he_1@nxp.com>
-Subject: [v9 2/2] clk: ls1028a: Add clock driver for Display output interface
-Date:   Tue, 19 Nov 2019 16:07:47 +0800
-Message-Id: <20191119080747.35250-2-wen.he_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191119080747.35250-1-wen.he_1@nxp.com>
-References: <20191119080747.35250-1-wen.he_1@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 19 Nov 2019 03:11:20 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58148 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726980AbfKSILT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 03:11:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574151079;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=iYpGRqlZ79gShGcxr9nZMiDNSw56rOuWXuGDiw1tjtA=;
+        b=Zxl2RCMJQVSUSyXv2F7ti1Q8IGtLPjaZwnbOy9BkQWC+2lhcHvfaEY9AVriyVomyn/zeOG
+        fWBnAcU6rwYlm8NiwStn/t9r2nZtXIAptV7QnmLA+pR4fCxLRiU+WeCb8nlDP/r0VwmE3E
+        imo67bY7xT97YXk3cgyZdnpylTTnFDA=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-125-n6iUxUVqNeSlZj1pmddBpg-1; Tue, 19 Nov 2019 03:11:15 -0500
+Received: by mail-wr1-f70.google.com with SMTP id h7so17902846wrb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 00:11:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TbCjg00ROYqbcfn2fYTagiY6x5F8HKQPvmZOtUZA9LU=;
+        b=V35SW2GPRVK7+bJBHShEPujx/7bDxdwH3E61aDiKiVRojgsJcUulJcWhJY8QTDhbsB
+         znIAoOs6OepXXg2eYZYZ/H1lmwnXXTuhxkO1d1ip10+yNp+9NQ4SObV+N/qAjYww11/o
+         2gTjqjtSVDmGdDGK8tpr2VyUOsBOkrNW2NFX2glEt4ofH0TP+HtQ0Xl+1o23KFUMhLVU
+         9KwTC79idSHEzOo5/FLrsTcOyEqbOVU54nemi+JH3MYiTssTrBuZ2FA/KoWKoW40Po4L
+         2yYPmQ2HioTiXs1vUbFuhCNIEOOKiayLWjD+VzYUFgmwKYbv1E/0NVWHNrJQK6R0dPKt
+         5Drw==
+X-Gm-Message-State: APjAAAW18Z4RBBQm9JthVX3vk07hNCLO30uJCfwQ++1SplvzBiXczo1v
+        /q+GquEFfGiEeyUOS8DnbbvNJ9bPbFP2h8jXDjkwjdsDDciDX9wjrzA/0lf+WrIBz9Cc1y8kgq0
+        Xzt8iPDuYm5wp2/MW8vhJ6yVG
+X-Received: by 2002:a5d:51c9:: with SMTP id n9mr18635222wrv.6.1574151074702;
+        Tue, 19 Nov 2019 00:11:14 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy1WdmEcZgq8Ru42cFxmubo9c0srM3mEX5+ycGUtl1ZXlAfcMSdDjHH7HPd2t/AWy6rw2SZ+w==
+X-Received: by 2002:a5d:51c9:: with SMTP id n9mr18635200wrv.6.1574151074490;
+        Tue, 19 Nov 2019 00:11:14 -0800 (PST)
+Received: from steredhat.homenet.telecomitalia.it (a-nu5-32.tin.it. [212.216.181.31])
+        by smtp.gmail.com with ESMTPSA id y2sm2318028wmy.2.2019.11.19.00.11.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 00:11:13 -0800 (PST)
+Date:   Tue, 19 Nov 2019 09:11:11 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Mao Wenan <maowenan@huawei.com>, netdev@vger.kernel.org,
+        davem@davemloft.net
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        kstewart@linuxfoundation.org, alexios.zavras@intel.com,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH -next] vsock/vmci: make vmci_vsock_cb_host_called static
+Message-ID: <20191119081111.gz2adojvsdcukvwk@steredhat.homenet.telecomitalia.it>
+References: <20191119032534.52090-1-maowenan@huawei.com>
+MIME-Version: 1.0
+In-Reply-To: <20191119032534.52090-1-maowenan@huawei.com>
+X-MC-Unique: n6iUxUVqNeSlZj1pmddBpg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add clock driver for QorIQ LS1028A Display output interfaces(LCD, DPHY),
-as implemented in TSMC CLN28HPM PLL, this PLL supports the programmable
-integer division and range of the display output pixel clock's 27-594MHz.
+On Tue, Nov 19, 2019 at 11:25:34AM +0800, Mao Wenan wrote:
+> When using make C=3D2 drivers/misc/vmw_vmci/vmci_driver.o
+> to compile, below warning can be seen:
+> drivers/misc/vmw_vmci/vmci_driver.c:33:6: warning:
+> symbol 'vmci_vsock_cb_host_called' was not declared. Should it be static?
+>=20
+> This patch make symbol vmci_vsock_cb_host_called static.
+>=20
+> Fixes: b1bba80a4376 ("vsock/vmci: register vmci_transport only when VMCI =
+guest/host are active")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> ---
+>  drivers/misc/vmw_vmci/vmci_driver.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/misc/vmw_vmci/vmci_driver.c b/drivers/misc/vmw_vmci/=
+vmci_driver.c
+> index 95fed46..cbb706d 100644
+> --- a/drivers/misc/vmw_vmci/vmci_driver.c
+> +++ b/drivers/misc/vmw_vmci/vmci_driver.c
+> @@ -30,7 +30,7 @@ static bool vmci_host_personality_initialized;
+> =20
+>  static DEFINE_MUTEX(vmci_vsock_mutex); /* protects vmci_vsock_transport_=
+cb */
+>  static vmci_vsock_cb vmci_vsock_transport_cb;
+> -bool vmci_vsock_cb_host_called;
+> +static bool vmci_vsock_cb_host_called;
+> =20
+>  /*
+>   * vmci_get_context_id() - Gets the current context ID.
+> --=20
+> 2.7.4
+>=20
 
-Signed-off-by: Wen He <wen.he_1@nxp.com>
----
-change in v9:
-	- Use the fixed mfd in plldig_set_rate 
+Same patch already sent by "kbuild test robot" <lkp@intel.com>
+https://lkml.org/lkml/2019/11/18/609
 
- drivers/clk/Kconfig      |  10 ++
- drivers/clk/Makefile     |   1 +
- drivers/clk/clk-plldig.c | 297 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 308 insertions(+)
- create mode 100644 drivers/clk/clk-plldig.c
+If we want to merge this, maybe we can also add:
+Reported-by: kbuild test robot <lkp@intel.com>
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 0530bebfc25a..9f6b0196c604 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -218,6 +218,16 @@ config CLK_QORIQ
- 	  This adds the clock driver support for Freescale QorIQ platforms
- 	  using common clock framework.
- 
-+config CLK_LS1028A_PLLDIG
-+        tristate "Clock driver for LS1028A Display output"
-+        depends on ARCH_LAYERSCAPE || COMPILE_TEST
-+        default ARCH_LAYERSCAPE
-+        help
-+          This driver support the Display output interfaces(LCD, DPHY) pixel clocks
-+          of the QorIQ Layerscape LS1028A, as implemented TSMC CLN28HPM PLL. Not all
-+          features of the PLL are currently supported by the driver. By default,
-+          configured bypass mode with this PLL.
-+
- config COMMON_CLK_XGENE
- 	bool "Clock driver for APM XGene SoC"
- 	default ARCH_XGENE
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index 0138fb14e6f8..97d1e5bc6de5 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -43,6 +43,7 @@ obj-$(CONFIG_ARCH_NPCM7XX)	    	+= clk-npcm7xx.o
- obj-$(CONFIG_ARCH_NSPIRE)		+= clk-nspire.o
- obj-$(CONFIG_COMMON_CLK_OXNAS)		+= clk-oxnas.o
- obj-$(CONFIG_COMMON_CLK_PALMAS)		+= clk-palmas.o
-+obj-$(CONFIG_CLK_LS1028A_PLLDIG)	+= clk-plldig.o
- obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
- obj-$(CONFIG_CLK_QORIQ)			+= clk-qoriq.o
- obj-$(CONFIG_COMMON_CLK_RK808)		+= clk-rk808.o
-diff --git a/drivers/clk/clk-plldig.c b/drivers/clk/clk-plldig.c
-new file mode 100644
-index 000000000000..f940a9d3d011
---- /dev/null
-+++ b/drivers/clk/clk-plldig.c
-@@ -0,0 +1,297 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 NXP
-+ *
-+ * Clock driver for LS1028A Display output interfaces(LCD, DPHY).
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/bitfield.h>
-+
-+/* PLLDIG register offsets and bit masks */
-+#define PLLDIG_REG_PLLSR            0x24
-+#define PLLDIG_REG_PLLDV            0x28
-+#define PLLDIG_REG_PLLFM            0x2c
-+#define PLLDIG_REG_PLLFD            0x30
-+#define PLLDIG_REG_PLLCAL1          0x38
-+#define PLLDIG_REG_PLLCAL2          0x3c
-+#define PLLDIG_LOCK_MASK            BIT(2)
-+#define PLLDIG_REG_FIELD_SSCGBYP    BIT(30)
-+#define PLLDIG_REG_FIELD_FDEN       BIT(30)
-+#define PLLDIG_REG_FIELD_DTHDIS     GENMASK(17, 16)
-+#define PLLDIG_REG_FIELD_MULT       GENMASK(7, 0)
-+#define PLLDIG_REG_FIELD_RFDPHI1    GENMASK(30, 25)
-+
-+/* Minimum output clock frequency, in Hz */
-+#define PHI1_MIN_FREQ 27000000
-+
-+/* Maximum output clock frequency, in Hz */
-+#define PHI1_MAX_FREQ 600000000
-+
-+/* Maximum of the divider */
-+#define MAX_RFDPHI1          63
-+
-+/*
-+ * Clock configuration relationship between the PHI1 frequency(fpll_phi) and
-+ * the output frequency of the PLL is determined by the PLLDV, according to
-+ * the following equation:
-+ * fpll_phi = (pll_ref * mfd) / div_rfdphi1
-+ */
-+struct plldig_phi1_param {
-+	unsigned long rate;
-+	unsigned int rfdphi1;
-+	unsigned int mfd;
-+};
-+
-+static const struct clk_parent_data parent_data[] = {
-+	{.index = 0},
-+};
-+
-+struct clk_plldig {
-+	struct clk_hw hw;
-+	void __iomem *regs;
-+	unsigned int mfd;
-+};
-+
-+#define to_clk_plldig(_hw)	container_of(_hw, struct clk_plldig, hw)
-+
-+static int plldig_enable(struct clk_hw *hw)
-+{
-+	struct clk_plldig *data = to_clk_plldig(hw);
-+	u32 val;
-+
-+	val = readl(data->regs + PLLDIG_REG_PLLFM);
-+	/*
-+	 * Use Bypass mode with PLL off by default, the frequency overshoot
-+	 * detector output was disable. SSCG Bypass mode should be enable.
-+	 */
-+	val |= PLLDIG_REG_FIELD_SSCGBYP;
-+	writel(val, data->regs + PLLDIG_REG_PLLFM);
-+
-+	val = readl(data->regs + PLLDIG_REG_PLLFD);
-+	/* Disable dither and Sigma delta modulation in bypass mode */
-+	val |= FIELD_PREP(PLLDIG_REG_FIELD_FDEN, 0x1) |
-+	       FIELD_PREP(PLLDIG_REG_FIELD_DTHDIS, 0x3);
-+
-+	writel(val, data->regs + PLLDIG_REG_PLLFD);
-+
-+	return 0;
-+}
-+
-+static void plldig_disable(struct clk_hw *hw)
-+{
-+	struct clk_plldig *data = to_clk_plldig(hw);
-+	u32 val;
-+
-+	val = readl(data->regs + PLLDIG_REG_PLLFM);
-+
-+	val &= ~PLLDIG_REG_FIELD_SSCGBYP;
-+	val |= FIELD_PREP(PLLDIG_REG_FIELD_SSCGBYP, 0x0);
-+
-+	writel(val, data->regs + PLLDIG_REG_PLLFM);
-+}
-+
-+static int plldig_is_enabled(struct clk_hw *hw)
-+{
-+	struct clk_plldig *data = to_clk_plldig(hw);
-+
-+	return (readl(data->regs + PLLDIG_REG_PLLFM) &
-+			      PLLDIG_REG_FIELD_SSCGBYP);
-+}
-+
-+static unsigned long plldig_recalc_rate(struct clk_hw *hw,
-+		unsigned long parent_rate)
-+{
-+	struct clk_plldig *data = to_clk_plldig(hw);
-+	u32 mult, div, val;
-+
-+	val = readl(data->regs + PLLDIG_REG_PLLDV);
-+
-+	/* Check if PLL is bypassed */
-+	if (val & PLLDIG_REG_FIELD_SSCGBYP)
-+		return parent_rate;
-+
-+	/* Checkout multiplication factor divider value */
-+	mult = FIELD_GET(PLLDIG_REG_FIELD_MULT, val);
-+
-+	/* Checkout divider value of the output frequency */
-+	div = FIELD_GET(PLLDIG_REG_FIELD_RFDPHI1, val);
-+
-+	return (parent_rate * mult) / div;
-+}
-+
-+static int plldig_calc_target_rate(unsigned long target_rate,
-+				   unsigned long parent_rate,
-+				   struct plldig_phi1_param *phi1)
-+{
-+	unsigned int div, ret;
-+	unsigned long round_rate;
-+
-+	/* Range limitation of the request target rate */
-+	if (target_rate > PHI1_MAX_FREQ)
-+		target_rate = PHI1_MAX_FREQ;
-+	else if (target_rate < PHI1_MIN_FREQ)
-+		target_rate = PHI1_MIN_FREQ;
-+
-+	/*
-+	 * Firstly, check the request target rate whether is divisible
-+	 * by the best VCO frequency.
-+	 */
-+	round_rate = parent_rate * phi1->mfd;
-+	div = round_rate / target_rate;
-+	if (!div || div > MAX_RFDPHI1)
-+		return -EINVAL;
-+
-+	ret = round_rate % target_rate;
-+	if (ret) {
-+		/*
-+		 * Rounded down the request target rate, VESA specifies
-+		 * 0.5% pixel clock tolerance, therefore this algorithm
-+		 * can able to compatible a lot of request rates within
-+		 * range of the tolerance.
-+		 */
-+		round_rate += (target_rate / 2);
-+		div = round_rate / target_rate;
-+		if (!div || div > MAX_RFDPHI1)
-+			return -EINVAL;
-+	}
-+
-+	phi1->rfdphi1 = div;
-+	phi1->rate = target_rate;
-+
-+	return 0;
-+}
-+
-+static int plldig_determine_rate(struct clk_hw *hw,
-+				 struct clk_rate_request *req)
-+{
-+	int ret;
-+	unsigned long parent_rate;
-+	struct clk_hw *parent;
-+	struct plldig_phi1_param phi1_param;
-+	struct clk_plldig *data = to_clk_plldig(hw);
-+
-+	if (!req->rate)
-+		return -ERANGE;
-+
-+	phi1_param.mfd = data->mfd;
-+	parent = clk_hw_get_parent(hw);
-+	parent_rate = clk_hw_get_rate(parent);
-+
-+	ret = plldig_calc_target_rate(req->rate, parent_rate, &phi1_param);
-+	if (ret)
-+		return ret;
-+
-+	req->rate = phi1_param.rate;
-+
-+	return 0;
-+}
-+
-+static int plldig_set_rate(struct clk_hw *hw, unsigned long rate,
-+		unsigned long parent_rate)
-+{
-+	struct clk_plldig *data = to_clk_plldig(hw);
-+	struct plldig_phi1_param phi1_param;
-+	unsigned int val, cond;
-+	int ret;
-+
-+	phi1_param.mfd = data->mfd;
-+	ret = plldig_calc_target_rate(rate, parent_rate, &phi1_param);
-+	if (ret)
-+		return ret;
-+
-+	val = readl(data->regs + PLLDIG_REG_PLLDV);
-+	val = FIELD_PREP(PLLDIG_REG_FIELD_MULT, phi1_param.mfd) |
-+	      FIELD_PREP(PLLDIG_REG_FIELD_RFDPHI1, phi1_param.rfdphi1);
-+
-+	writel(val, data->regs + PLLDIG_REG_PLLDV);
-+
-+	/* delay 200us make sure that old lock state is cleared */
-+	udelay(200);
-+
-+	/* Wait until PLL is locked or timeout (maximum 1000 usecs) */
-+	return readl_poll_timeout_atomic(data->regs + PLLDIG_REG_PLLSR, cond,
-+					 cond & PLLDIG_LOCK_MASK, 0,
-+					 USEC_PER_MSEC);
-+}
-+
-+static const struct clk_ops plldig_clk_ops = {
-+	.enable = plldig_enable,
-+	.disable = plldig_disable,
-+	.is_enabled = plldig_is_enabled,
-+	.recalc_rate = plldig_recalc_rate,
-+	.determine_rate = plldig_determine_rate,
-+	.set_rate = plldig_set_rate,
-+};
-+
-+static int plldig_clk_probe(struct platform_device *pdev)
-+{
-+	struct clk_plldig *data;
-+	struct resource *mem;
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	data->regs = devm_ioremap_resource(dev, mem);
-+	if (IS_ERR(data->regs))
-+		return PTR_ERR(data->regs);
-+
-+	 /*
-+	  * Support to get the best loop multiplication divider value
-+	  * from DTS file, since this PLL can't changed this value on
-+	  * the fly, write the fixed value.
-+	  */
-+	ret = of_property_read_u32(dev->of_node, "best-mfd", &data->mfd);
-+	if (ret)
-+		data->mfd = 0x2c;
-+
-+	writel(data->mfd, data->regs + PLLDIG_REG_PLLDV);
-+
-+	data->hw.init = CLK_HW_INIT_PARENTS_DATA("dpclk",
-+						 parent_data,
-+						 &plldig_clk_ops,
-+						 0);
-+
-+	ret = devm_clk_hw_register(dev, &data->hw);
-+	if (ret) {
-+		dev_err(dev, "failed to register %s clock\n",
-+						dev->of_node->name);
-+		return ret;
-+	}
-+
-+	return devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get,
-+					   &data->hw);
-+}
-+
-+static const struct of_device_id plldig_clk_id[] = {
-+	{ .compatible = "fsl,ls1028a-plldig"},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, plldig_clk_id);
-+
-+static struct platform_driver plldig_clk_driver = {
-+	.driver = {
-+		.name = "plldig-clock",
-+		.of_match_table = plldig_clk_id,
-+	},
-+	.probe = plldig_clk_probe,
-+};
-+module_platform_driver(plldig_clk_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Wen He <wen.he_1@nxp.com>");
-+MODULE_DESCRIPTION("LS1028A Display output interface pixel clock driver");
--- 
-2.17.1
+Anyway, it is my fault:
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 
