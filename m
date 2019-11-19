@@ -2,81 +2,84 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A3EC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BCEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E096223CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D88F223CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:51:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbfKSWux (ORCPT
+        id S1727472AbfKSWvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 17:50:53 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:46166 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbfKSWuw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 17:50:52 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id EC2671423DA68;
-        Tue, 19 Nov 2019 14:50:51 -0800 (PST)
-Date:   Tue, 19 Nov 2019 14:50:48 -0800 (PST)
-Message-Id: <20191119.145048.487849503145486152.davem@davemloft.net>
-To:     anders.roxell@linaro.org
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, paulmck@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: ipmr: fix suspicious RCU warning
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191118090925.2474-1-anders.roxell@linaro.org>
-References: <20191118090925.2474-1-anders.roxell@linaro.org>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 19 Nov 2019 14:50:52 -0800 (PST)
+        Tue, 19 Nov 2019 17:51:06 -0500
+Received: from foss.arm.com ([217.140.110.172]:59232 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726025AbfKSWvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 17:51:06 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81E911FB;
+        Tue, 19 Nov 2019 14:51:05 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 41E2B3F52E;
+        Tue, 19 Nov 2019 14:51:03 -0800 (PST)
+Date:   Tue, 19 Nov 2019 22:51:00 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Steve Capper <steve.capper@arm.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/12] arm64: hibernate.c: create a new function to
+ handle cpu_up(sleep_cpu)
+Message-ID: <20191119225100.gqiiiwoyt3yntdoj@e107158-lin.cambridge.arm.com>
+References: <20191030153837.18107-1-qais.yousef@arm.com>
+ <20191030153837.18107-2-qais.yousef@arm.com>
+ <alpine.DEB.2.21.1911192326120.6731@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1911192326120.6731@nanos.tec.linutronix.de>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anders Roxell <anders.roxell@linaro.org>
-Date: Mon, 18 Nov 2019 10:09:25 +0100
+On 11/19/19 23:31, Thomas Gleixner wrote:
+> On Wed, 30 Oct 2019, Qais Yousef wrote:
+> >  
+> > +int hibernation_bringup_sleep_cpu(unsigned int sleep_cpu)
+> 
+> That function name is horrible. Aside of that I really have to ask how you
+> end up hibernating on an offline CPU?
 
-> @@ -108,9 +108,18 @@ static void igmpmsg_netlink_event(struct mr_table *mrt, struct sk_buff *pkt);
->  static void mroute_clean_tables(struct mr_table *mrt, int flags);
->  static void ipmr_expire_process(struct timer_list *t);
->  
-> +#ifdef CONFIG_PROVE_LOCKING
-> +int ip_mr_initialized;
-> +void ip_mr_now_initialized(void) { ip_mr_initialized = 1; }
-> +#else
-> +const int ip_mr_initialized = 1;
-> +void ip_mr_now_initialized(void) { }
-> +#endif
+James Morse can probably explain better.
 
-This seems excessive and a bit not so pretty.
+But AFAIU we could sleep on any CPU, but on the next cold boot that CPU could
+become offline as a side effect of using maxcpus= for example.
 
-> +
->  #ifdef CONFIG_IP_MROUTE_MULTIPLE_TABLES
->  #define ipmr_for_each_table(mrt, net) \
-> -	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list)
-> +	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list, \
-> +			(lockdep_rtnl_is_held() || !ip_mr_initialized))
->  
->  static struct mr_table *ipmr_mr_table_iter(struct net *net,
->  					   struct mr_table *mrt)
+How about bringup_hibernate_cpu() as a name? I could add the above as an
+explanation of why we need this call too.
 
-The problematic code path is ipmr_rules_init() done during ipmr_net_init().
+It does seem to me that this is a generic problem that we might be able to
+handle generically, but I'm not sure how.
 
-You can just wrap this call around RCU locking or take the RTNL mutex.
+Thanks
 
-That way you don't need to rediculous ip_mr_initialized knob which frankly
-doesn't even seem accurate to me.  It's a centralized global variable
-which is holding state about multiple network namespace objects which makes
-absolutely no sense at all, it's wrong.
+--
+Qais Yousef
