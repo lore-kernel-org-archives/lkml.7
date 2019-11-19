@@ -7,44 +7,50 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A9AC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDD4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB0752241E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A81152241E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728923AbfKSQ6Y (ORCPT
+        id S1728726AbfKSQ5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:58:24 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:52923 "EHLO
+        Tue, 19 Nov 2019 11:57:14 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:52870 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728718AbfKSQ5P (ORCPT
+        with ESMTP id S1728653AbfKSQ5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 11:57:15 -0500
+        Tue, 19 Nov 2019 11:57:09 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iX6oL-0007WI-EU; Tue, 19 Nov 2019 17:57:05 +0100
+        id 1iX6o3-0007JT-8X; Tue, 19 Nov 2019 17:56:47 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D07F01C19DC;
-        Tue, 19 Nov 2019 17:56:50 +0100 (CET)
-Date:   Tue, 19 Nov 2019 16:56:50 -0000
-From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E1D8F1C19CD;
+        Tue, 19 Nov 2019 17:56:46 +0100 (CET)
+Date:   Tue, 19 Nov 2019 16:56:46 -0000
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf maps: Purge the entries from maps->names in
- __maps__purge()
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <tip-ps0nrio8pydyo23rr2s696ue@git.kernel.org>
-References: <tip-ps0nrio8pydyo23rr2s696ue@git.kernel.org>
+Subject: [tip: core/kprobes] module: Remove set_all_modules_text_*()
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Brian Gerst <brgerst@gmail.com>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jessica Yu <jeyu@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191111132458.284298307@infradead.org>
+References: <20191111132458.284298307@infradead.org>
 MIME-Version: 1.0
-Message-ID: <157418261074.12247.14398818002410876760.tip-bot2@tip-bot2>
+Message-ID: <157418260683.12247.12563595642371037554.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,109 +64,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
+The following commit has been merged into the core/kprobes branch of tip:
 
-Commit-ID:     bcb8af5c46e452018de9b58db1fd0ffd94b5d96c
-Gitweb:        https://git.kernel.org/tip/bcb8af5c46e452018de9b58db1fd0ffd94b5d96c
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Wed, 13 Nov 2019 16:06:28 -03:00
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Wed, 13 Nov 2019 16:06:28 -03:00
+Commit-ID:     0e05d89d72e200f4c5129a6a80090dabf8c45a10
+Gitweb:        https://git.kernel.org/tip/0e05d89d72e200f4c5129a6a80090dabf8c45a10
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Tue, 15 Oct 2019 21:07:31 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 19 Nov 2019 13:13:07 +01:00
 
-perf maps: Purge the entries from maps->names in __maps__purge()
+module: Remove set_all_modules_text_*()
 
-No need to iterate via the ->names rbtree, as all the entries there
-as in maps->entries as well, reuse __maps__purge() for that.
+Now that there are no users of set_all_modules_text_*() left, remove
+it.
 
-Doing it this way we can kill maps__for_each_entry_by_name(),
-maps__for_each_entry_by_name_safe(), maps__{first,next}_by_name().
+While it appears nds32 uses it, it does not have STRICT_MODULE_RWX and
+therefore ends up with the NOP stubs.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-ps0nrio8pydyo23rr2s696ue@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Alexei Starovoitov <ast@kernel.org>
+Tested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Alexei Starovoitov <ast@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: Greentime Hu <green.hu@gmail.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vincent Chen <deanbo422@gmail.com>
+Link: https://lkml.kernel.org/r/20191111132458.284298307@infradead.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- tools/perf/util/map.c        | 34 +---------------------------------
- tools/perf/util/map_groups.h |  8 --------
- 2 files changed, 1 insertion(+), 41 deletions(-)
+ arch/nds32/kernel/ftrace.c | 12 +----------
+ include/linux/module.h     |  4 +---
+ kernel/module.c            | 43 +-------------------------------------
+ 3 files changed, 59 deletions(-)
 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 3598468..69b9e9b 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -589,15 +589,7 @@ static void __maps__purge(struct maps *maps)
- 	maps__for_each_entry_safe(maps, pos, next) {
- 		rb_erase_init(&pos->rb_node,  &maps->entries);
- 		map__put(pos);
+diff --git a/arch/nds32/kernel/ftrace.c b/arch/nds32/kernel/ftrace.c
+index fd2a54b..22ab77e 100644
+--- a/arch/nds32/kernel/ftrace.c
++++ b/arch/nds32/kernel/ftrace.c
+@@ -89,18 +89,6 @@ int __init ftrace_dyn_arch_init(void)
+ 	return 0;
+ }
+ 
+-int ftrace_arch_code_modify_prepare(void)
+-{
+-	set_all_modules_text_rw();
+-	return 0;
+-}
+-
+-int ftrace_arch_code_modify_post_process(void)
+-{
+-	set_all_modules_text_ro();
+-	return 0;
+-}
+-
+ static unsigned long gen_sethi_insn(unsigned long addr)
+ {
+ 	unsigned long opcode = 0x46000000;
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 6d20895..daae847 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -846,13 +846,9 @@ extern int module_sysfs_initialized;
+ #define __MODULE_STRING(x) __stringify(x)
+ 
+ #ifdef CONFIG_STRICT_MODULE_RWX
+-extern void set_all_modules_text_rw(void);
+-extern void set_all_modules_text_ro(void);
+ extern void module_enable_ro(const struct module *mod, bool after_init);
+ extern void module_disable_ro(const struct module *mod);
+ #else
+-static inline void set_all_modules_text_rw(void) { }
+-static inline void set_all_modules_text_ro(void) { }
+ static inline void module_enable_ro(const struct module *mod, bool after_init) { }
+ static inline void module_disable_ro(const struct module *mod) { }
+ #endif
+diff --git a/kernel/module.c b/kernel/module.c
+index ff2d735..62a6245 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -2029,49 +2029,6 @@ static void module_enable_nx(const struct module *mod)
+ 	frob_writable_data(&mod->init_layout, set_memory_nx);
+ }
+ 
+-/* Iterate through all modules and set each module's text as RW */
+-void set_all_modules_text_rw(void)
+-{
+-	struct module *mod;
+-
+-	if (!rodata_enabled)
+-		return;
+-
+-	mutex_lock(&module_mutex);
+-	list_for_each_entry_rcu(mod, &modules, list) {
+-		if (mod->state == MODULE_STATE_UNFORMED)
+-			continue;
+-
+-		frob_text(&mod->core_layout, set_memory_rw);
+-		frob_text(&mod->init_layout, set_memory_rw);
 -	}
+-	mutex_unlock(&module_mutex);
 -}
 -
--static void __maps__purge_names(struct maps *maps)
+-/* Iterate through all modules and set each module's text as RO */
+-void set_all_modules_text_ro(void)
 -{
--	struct map *pos, *next;
+-	struct module *mod;
 -
--	maps__for_each_entry_by_name_safe(maps, pos, next) {
--		rb_erase_init(&pos->rb_node_name,  &maps->names);
-+		rb_erase_init(&pos->rb_node_name, &maps->names);
- 		map__put(pos);
- 	}
- }
-@@ -606,7 +598,6 @@ static void maps__exit(struct maps *maps)
- {
- 	down_write(&maps->lock);
- 	__maps__purge(maps);
--	__maps__purge_names(maps);
- 	up_write(&maps->lock);
- }
- 
-@@ -994,29 +985,6 @@ struct map *map__next(struct map *map)
- 	return map ? __map__next(map) : NULL;
- }
- 
--struct map *maps__first_by_name(struct maps *maps)
--{
--	struct rb_node *first = rb_first(&maps->names);
+-	if (!rodata_enabled)
+-		return;
 -
--	if (first)
--		return rb_entry(first, struct map, rb_node_name);
--	return NULL;
+-	mutex_lock(&module_mutex);
+-	list_for_each_entry_rcu(mod, &modules, list) {
+-		/*
+-		 * Ignore going modules since it's possible that ro
+-		 * protection has already been disabled, otherwise we'll
+-		 * run into protection faults at module deallocation.
+-		 */
+-		if (mod->state == MODULE_STATE_UNFORMED ||
+-			mod->state == MODULE_STATE_GOING)
+-			continue;
+-
+-		frob_text(&mod->core_layout, set_memory_ro);
+-		frob_text(&mod->init_layout, set_memory_ro);
+-	}
+-	mutex_unlock(&module_mutex);
 -}
--
--static struct map *__map__next_by_name(struct map *map)
--{
--	struct rb_node *next = rb_next(&map->rb_node_name);
--
--	if (next)
--		return rb_entry(next, struct map, rb_node_name);
--	return NULL;
--}
--
--struct map *map__next_by_name(struct map *map)
--{
--	return map ? __map__next_by_name(map) : NULL;
--}
--
- struct kmap *__map__kmap(struct map *map)
- {
- 	if (!map->dso || !map->dso->kernel)
-diff --git a/tools/perf/util/map_groups.h b/tools/perf/util/map_groups.h
-index 99cb810..3f36140 100644
---- a/tools/perf/util/map_groups.h
-+++ b/tools/perf/util/map_groups.h
-@@ -33,14 +33,6 @@ struct map *map__next(struct map *map);
- 	for (map = maps__first(maps), next = map__next(map); map; map = next, next = map__next(map))
- 
- struct symbol *maps__find_symbol_by_name(struct maps *maps, const char *name, struct map **mapp);
--struct map *maps__first_by_name(struct maps *maps);
--struct map *map__next_by_name(struct map *map);
--
--#define maps__for_each_entry_by_name(maps, map) \
--	for (map = maps__first_by_name(maps); map; map = map__next_by_name(map))
--
--#define maps__for_each_entry_by_name_safe(maps, map, next) \
--	for (map = maps__first_by_name(maps), next = map__next_by_name(map); map; map = next, next = map__next_by_name(map))
- 
- struct map_groups {
- 	struct maps	 maps;
+ #else /* !CONFIG_STRICT_MODULE_RWX */
+ static void module_enable_nx(const struct module *mod) { }
+ #endif /*  CONFIG_STRICT_MODULE_RWX */
