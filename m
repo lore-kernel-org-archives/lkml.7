@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DCDC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF47C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB2E320857
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 345B220721
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142826;
-	bh=UupwU4breSByp96+YTz2uZ3ED3NUHaAkfOoof3kWAeI=;
+	s=default; t=1574142830;
+	bh=0xP/MOoAKXcaQQTqV9loT+h+o7/1XLjhl0hPNSQytDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IrA0/YEep+UjLf5P/Bp0NRmTRpea8CqjyWmu7WlTGya+cmmr/hUW024DSZ7kjbn5k
-	 tnRSRUR/yV5Mo7jWztxqQP4DGlisBxShsLxF9Dc7qi57gE4gjgSCQj2TwFhmGO28d5
-	 ooDMwyVwVqryo1lbHR9wLwjYjRIYekFAPmwTSyks=
+	b=rrHYBDokkHFNWvNYBU3Gt8Kd4AllXkVOA7qddr9WLUoPwtk4K+2Te07SfiIegBEli
+	 LKUxPkunbUqRL3jzo5YinekNpeGbezv3+Widq47LD6HYO/CulLaGMIj7H8rAKpH199
+	 ufM6dUdv2IpFUKBCIEJ+yW1kVK5Kcw5GC+pP0AN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732045AbfKSFxp (ORCPT
+        id S1732072AbfKSFxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:53:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51644 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:53:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727888AbfKSFxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:53:41 -0500
+        id S1732058AbfKSFxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:53:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 451EF21783;
-        Tue, 19 Nov 2019 05:53:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15EC920721;
+        Tue, 19 Nov 2019 05:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142820;
-        bh=UupwU4breSByp96+YTz2uZ3ED3NUHaAkfOoof3kWAeI=;
+        s=default; t=1574142826;
+        bh=0xP/MOoAKXcaQQTqV9loT+h+o7/1XLjhl0hPNSQytDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tPR8l6KIhQSdak79Qr/RjEVkNj1gw229oW0EJAFYQbuEc3zLfNBpC+8h7qHP7Xzxg
-         6gAEXypwdJCHH6n4xVv7jFwANYFWvthfATY/FaxHFpmSN2Ipn9eda8IXLMccp5BYqL
-         NdzDkvTYVovAJJs1dxDiSwIHz0IWv7KQ6pD/Hdf8=
+        b=tzGby+D80CBq9RcZqZqpDSLkn7iEcxc0eMS7TsgSwZB785j1lY4wtYRQ+4EdoO5em
+         t84Xl6jhXVXyjvv3QKLf977i5aJ8Fvg+yECGGPHo8wlS1eAu5FLMsTRTSlnf9qEa4+
+         EeWm9+LUbN1y82czmefw2vVQSTWRDOCmQ6GRL7co=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Justin Ernst <justin.ernst@hpe.com>,
-        Borislav Petkov <bp@suse.de>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 209/239] EDAC: Raise the maximum number of memory controllers
-Date:   Tue, 19 Nov 2019 06:20:09 +0100
-Message-Id: <20191119051337.711593264@linuxfoundation.org>
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 173/239] net: micrel: fix return type of ndo_start_xmit function
+Date:   Tue, 19 Nov 2019 06:19:33 +0100
+Message-Id: <20191119051334.123408377@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -62,61 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Justin Ernst <justin.ernst@hpe.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 6b58859419554fb824e09cfdd73151a195473cbc ]
+[ Upstream commit 2b49117a5abee8478b0470cba46ac74f93b4a479 ]
 
-We observe an oops in the skx_edac module during boot:
+The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+which is a typedef for an enum type, so make sure the implementation in
+this driver has returns 'netdev_tx_t' value, and change the function
+return type to netdev_tx_t.
 
-  EDAC MC0: Giving out device to module skx_edac controller Skylake Socket#0 IMC#0
-  EDAC MC1: Giving out device to module skx_edac controller Skylake Socket#0 IMC#1
-  EDAC MC2: Giving out device to module skx_edac controller Skylake Socket#1 IMC#0
-  ...
-  EDAC MC13: Giving out device to module skx_edac controller Skylake Socket#0 IMC#1
-  EDAC MC14: Giving out device to module skx_edac controller Skylake Socket#1 IMC#0
-  EDAC MC15: Giving out device to module skx_edac controller Skylake Socket#1 IMC#1
-  Too many memory controllers: 16
-  EDAC MC: Removed device 0 for skx_edac Skylake Socket#0 IMC#0
+Found by coccinelle.
 
-We observe there are two memory controllers per socket, with a limit
-of 16. Raise the maximum number of memory controllers from 16 to 2 *
-MAX_NUMNODES (1024).
-
-[ bp: This is just a band-aid fix until we've sorted out the whole issue
-  with the bus_type association and handling in EDAC and can get rid of
-  this arbitrary limit. ]
-
-Signed-off-by: Justin Ernst <justin.ernst@hpe.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Russ Anderson <russ.anderson@hpe.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-edac@vger.kernel.org
-Link: https://lkml.kernel.org/r/20180925143449.284634-1-justin.ernst@hpe.com
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/edac.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/micrel/ks8695net.c  | 2 +-
+ drivers/net/ethernet/micrel/ks8851_mll.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/edac.h b/include/linux/edac.h
-index cd75c173fd00b..90f72336aea66 100644
---- a/include/linux/edac.h
-+++ b/include/linux/edac.h
-@@ -17,6 +17,7 @@
- #include <linux/completion.h>
- #include <linux/workqueue.h>
- #include <linux/debugfs.h>
-+#include <linux/numa.h>
- 
- #define EDAC_DEVICE_NAME_LEN	31
- 
-@@ -667,6 +668,6 @@ struct mem_ctl_info {
- /*
-  * Maximum number of memory controllers in the coherent fabric.
+diff --git a/drivers/net/ethernet/micrel/ks8695net.c b/drivers/net/ethernet/micrel/ks8695net.c
+index bd51e057e9150..b881f5d4a7f9e 100644
+--- a/drivers/net/ethernet/micrel/ks8695net.c
++++ b/drivers/net/ethernet/micrel/ks8695net.c
+@@ -1164,7 +1164,7 @@ ks8695_timeout(struct net_device *ndev)
+  *	sk_buff and adds it to the TX ring. It then kicks the TX DMA
+  *	engine to ensure transmission begins.
   */
--#define EDAC_MAX_MCS	16
-+#define EDAC_MAX_MCS	2 * MAX_NUMNODES
+-static int
++static netdev_tx_t
+ ks8695_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ {
+ 	struct ks8695_priv *ksp = netdev_priv(ndev);
+diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
+index f3e9dd47b56f0..adbe0a6fe0db9 100644
+--- a/drivers/net/ethernet/micrel/ks8851_mll.c
++++ b/drivers/net/ethernet/micrel/ks8851_mll.c
+@@ -1020,9 +1020,9 @@ static void ks_write_qmu(struct ks_net *ks, u8 *pdata, u16 len)
+  * spin_lock_irqsave is required because tx and rx should be mutual exclusive.
+  * So while tx is in-progress, prevent IRQ interrupt from happenning.
+  */
+-static int ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
++static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
+ {
+-	int retv = NETDEV_TX_OK;
++	netdev_tx_t retv = NETDEV_TX_OK;
+ 	struct ks_net *ks = netdev_priv(netdev);
  
- #endif
+ 	disable_irq(netdev->irq);
 -- 
 2.20.1
 
