@@ -2,104 +2,62 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6937AC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C684BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4294E222AB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A94D3208CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbfKSM6Z (ORCPT
+        id S1728098AbfKSM62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 19 Nov 2019 07:58:28 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53346 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727255AbfKSM6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Nov 2019 07:58:25 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:43765 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727702AbfKSM6Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:58:25 -0500
-Received: by mail-yb1-f194.google.com with SMTP id r201so8696886ybc.10;
-        Tue, 19 Nov 2019 04:58:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iGUreshl/jUKAV7h3ePAhyfmas1/gCvv6uy3G++925w=;
-        b=XlpXoafkmE7SY7C/5S3OE1/qgzqiFQaJQVKtYoKnU65JQYXwyXiVY6h9XulsLfZUV6
-         B0lDQ6KvPfEkYzUF12R9JY0pQSrwibQA5oSpZ+dKuQ01+EGDaqG1UuNV9BSSv2bZ9Q/r
-         NB9YOtFRcwqLQBiaDyvgMHY/5tqCqXP5JGdLtDIElrS8kMR0XrKYf1fURGX4QMpRZluN
-         bhgap1sWXqBIlViDK3vpCzFruisl5Uoxp/seRGsc6DJmFH6yH3RR+cyk1mnI13kb+wTh
-         X5y2evAZuKfS9j0aF7K2MceJdAolNPA4zMrJM8OJ9uJzFuUuI/KTheyo0G1fS/z75cO/
-         BS+g==
-X-Gm-Message-State: APjAAAUWNq+zEXKpIaGBMGc8dRPEOxeN6Agy1yiMnnmwXVVigbwK4TR3
-        jKMmpstTj/InPK68cN4TUFFTL4x1rW0gUlz+SbQ=
-X-Google-Smtp-Source: APXvYqxQ2NP8UE+oe01b4UUlC7hZnTSSxNpqCcNRNJakRNjLijISk7RWnwspQrGrEpJONJTektvmRaXS1kTYu7iJUgg=
-X-Received: by 2002:a25:a0d3:: with SMTP id i19mr27854070ybm.14.1574168303987;
- Tue, 19 Nov 2019 04:58:23 -0800 (PST)
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AF8BFB1DC;
+        Tue, 19 Nov 2019 12:58:23 +0000 (UTC)
+Subject: Ping: [PATCH 0/2] x86/Xen/32: xen_iret_crit_fixup adjustments
+From:   Jan Beulich <jbeulich@suse.com>
+To:     Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+References: <d66b1da4-8096-9b77-1ca6-d6b9954b113c@suse.com>
+Message-ID: <09359c00-5769-0e0d-4af9-963897d3b498@suse.com>
+Date:   Tue, 19 Nov 2019 13:58:23 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <20191111071347.21712-1-yuehaibing@huawei.com>
-In-Reply-To: <20191111071347.21712-1-yuehaibing@huawei.com>
-From:   Harini Katakam <harinik@xilinx.com>
-Date:   Tue, 19 Nov 2019 18:28:12 +0530
-Message-ID: <CAFcVECJQH15y78YPurq_m2bDigQ6EzSCZHZMROHRFe-rJKw88g@mail.gmail.com>
-Subject: Re: [PATCH] mdio_bus: Fix PTR_ERR applied after initialization to constant
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        David Miller <davem@davemloft.net>, mail@david-bauer.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michal Simek <michal.simek@xilinx.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d66b1da4-8096-9b77-1ca6-d6b9954b113c@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 12:53 PM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> Fix coccinelle warning:
->
-> ./drivers/net/phy/mdio_bus.c:67:5-12: ERROR: PTR_ERR applied after initialization to constant on line 62
-> ./drivers/net/phy/mdio_bus.c:68:5-12: ERROR: PTR_ERR applied after initialization to constant on line 62
->
-> Fix this by using IS_ERR before PTR_ERR
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 71dd6c0dff51 ("net: phy: add support for reset-controller")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/net/phy/mdio_bus.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-> index 2e29ab8..3587656 100644
-> --- a/drivers/net/phy/mdio_bus.c
-> +++ b/drivers/net/phy/mdio_bus.c
-> @@ -64,11 +64,12 @@ static int mdiobus_register_reset(struct mdio_device *mdiodev)
->         if (mdiodev->dev.of_node)
->                 reset = devm_reset_control_get_exclusive(&mdiodev->dev,
->                                                          "phy");
-> -       if (PTR_ERR(reset) == -ENOENT ||
-> -           PTR_ERR(reset) == -ENOTSUPP)
-> -               reset = NULL;
-> -       else if (IS_ERR(reset))
-> -               return PTR_ERR(reset);
-> +       if (IS_ERR(reset)) {
-> +               if (PTR_ERR(reset) == -ENOENT || PTR_ERR(reset) == -ENOSYS)
-> +                       reset = NULL;
-> +               else
-> +                       return PTR_ERR(reset);
-> +       }
->
->         mdiodev->reset_ctrl = reset;
->
+On 11.11.2019 15:30, Jan Beulich wrote:
+> The first patch here fixes another regression from 3c88c692c287
+> ("x86/stackframe/32: Provide consistent pt_regs"), besides the
+> one already addressed by
+> https://lists.xenproject.org/archives/html/xen-devel/2019-10/msg01988.html.
+> The second patch is a minimal bit of cleanup on top.
+> 
+> 1: make xen_iret_crit_fixup independent of frame layout
+> 2: simplify xen_iret_crit_fixup's ring check
 
-Adding Michal Simek to add some test comments.
+Seeing that the other regression fix has been taken into -tip,
+what is the situation here? Should 5.4 really ship with this
+still unfixed?
 
-> --
-> 2.7.4
->
->
+Jan
