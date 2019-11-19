@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 891FCC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E621C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE53206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9873206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143476;
-	bh=ThFLDZe1hOaFdWIq1h+j+kEKwDv0hoNIwX9dEIFPTjM=;
+	s=default; t=1574143483;
+	bh=UI1J+tDPK+dDqNQkuwW+1DwMI88CGJiKXEB/ID8jN98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WKZYypRXEtJIgMCcsfmy7MEw6ZqKF8nao62Eyr4cAZClAbAzqgov5Tmx1+ePACQGR
-	 uaRay57b+KTFZ2bw7CTrXLltE86P85isyuvorclIkbtM/VB6oqPaxlFZctQ8vG6L2p
-	 AkeN+KABr2VBgfjg1M5Jw9bUcML7zQorgVrej2qs=
+	b=hyI8KUYoeZj8UwntSLgWTo7n68So3hmd4NY/0lVDIds3CeViI2AZ+SyvOuyUvN0Nb
+	 Rdqur4u3XcLVpak7alMFrlDVV/MWVM/mY6a1Zo+/1qlTR2xPXK58kI2bm/EKbnEAW1
+	 3lN5Syf06mvJqS+gvI3VlL55/4Posj6VTE4duEr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729925AbfKSGEe (ORCPT
+        id S1729681AbfKSFht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:04:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60148 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:37:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729447AbfKSFiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:38:13 -0500
+        id S1729673AbfKSFhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:37:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BBD6206EC;
-        Tue, 19 Nov 2019 05:38:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1D22206EC;
+        Tue, 19 Nov 2019 05:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141892;
-        bh=ThFLDZe1hOaFdWIq1h+j+kEKwDv0hoNIwX9dEIFPTjM=;
+        s=default; t=1574141865;
+        bh=UI1J+tDPK+dDqNQkuwW+1DwMI88CGJiKXEB/ID8jN98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wgVUox8mVMlHWPXNtK09LCRrPkeMIMaFy7UAJ9FdZKbS3qJxU5zHNe6xXL0akin6O
-         LsZfCkmrjZpTzK3c7HOwJvOuOVA9t5n1dgDY7ZyE96WQ8tmh8oLHcuYLYuPhPayiYP
-         qa3qnNQ/sgwIBdAahC5y/WzVkT4PHxeWs07xHHEw=
+        b=X1trF26yzpdlINHSiqygi6TLN4r4sVT/FMvAfKRhVBVw4JTclE2VJd7jsMKGFuIX/
+         rxO7rBSXvnqhk0s/c3qGi8ewWQuSakMWKeJAIX43YqAxPBz8PoCJ95yPXL8+S/D6YG
+         bqeIvEFm4hvNJL2lGfvgkmzlWq1ttt6p0YB3U0DI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 276/422] net: xilinx: fix return type of ndo_start_xmit function
-Date:   Tue, 19 Nov 2019 06:17:53 +0100
-Message-Id: <20191119051416.872729645@linuxfoundation.org>
+Subject: [PATCH 4.19 306/422] crypto: arm/crc32 - avoid warning when compiling with Clang
+Date:   Tue, 19 Nov 2019 06:18:23 +0100
+Message-Id: <20191119051418.829007409@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,89 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Stefan Agner <stefan@agner.ch>
 
-[ Upstream commit 81255af8d9d5565004792c295dde49344df450ca ]
+[ Upstream commit cd560235d8f9ddd94aa51e1c4dabdf3212b9b241 ]
 
-The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
-which is a typedef for an enum type, so make sure the implementation in
-this driver has returns 'netdev_tx_t' value, and change the function
-return type to netdev_tx_t.
+The table id (second) argument to MODULE_DEVICE_TABLE is often
+referenced otherwise. This is not the case for CPU features. This
+leads to a warning when building the kernel with Clang:
+  arch/arm/crypto/crc32-ce-glue.c:239:33: warning: variable
+    'crc32_cpu_feature' is not needed and will not be emitted
+    [-Wunneeded-internal-declaration]
+  static const struct cpu_feature crc32_cpu_feature[] = {
+                                  ^
 
-Found by coccinelle.
+Avoid warnings by using __maybe_unused, similar to commit 1f318a8bafcf
+("modules: mark __inittest/__exittest as __maybe_unused").
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2a9faf8b7e43 ("crypto: arm/crc32 - enable module autoloading based on CPU feature bits")
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/xilinx/ll_temac_main.c       | 3 ++-
- drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 3 ++-
- drivers/net/ethernet/xilinx/xilinx_emaclite.c     | 9 +++++----
- 3 files changed, 9 insertions(+), 6 deletions(-)
+ arch/arm/crypto/crc32-ce-glue.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-index 60abc9250f56a..2241f98970926 100644
---- a/drivers/net/ethernet/xilinx/ll_temac_main.c
-+++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-@@ -674,7 +674,8 @@ static inline int temac_check_tx_bd_space(struct temac_local *lp, int num_frag)
- 	return 0;
+diff --git a/arch/arm/crypto/crc32-ce-glue.c b/arch/arm/crypto/crc32-ce-glue.c
+index 96e62ec105d06..cd9e93b46c2dd 100644
+--- a/arch/arm/crypto/crc32-ce-glue.c
++++ b/arch/arm/crypto/crc32-ce-glue.c
+@@ -236,7 +236,7 @@ static void __exit crc32_pmull_mod_exit(void)
+ 				  ARRAY_SIZE(crc32_pmull_algs));
  }
  
--static int temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-+static netdev_tx_t
-+temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- {
- 	struct temac_local *lp = netdev_priv(ndev);
- 	struct cdmac_bd *cur_p;
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index 66b30ebd45ee8..28764268a44f8 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -657,7 +657,8 @@ static inline int axienet_check_tx_bd_space(struct axienet_local *lp,
-  * start the transmission. Additionally if checksum offloading is supported,
-  * it populates AXI Stream Control fields with appropriate values.
-  */
--static int axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-+static netdev_tx_t
-+axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- {
- 	u32 ii;
- 	u32 num_frag;
-diff --git a/drivers/net/ethernet/xilinx/xilinx_emaclite.c b/drivers/net/ethernet/xilinx/xilinx_emaclite.c
-index 42f1f518dad69..c77c81eb7ab3b 100644
---- a/drivers/net/ethernet/xilinx/xilinx_emaclite.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_emaclite.c
-@@ -1020,9 +1020,10 @@ static int xemaclite_close(struct net_device *dev)
-  * deferred and the Tx queue is stopped so that the deferred socket buffer can
-  * be transmitted when the Emaclite device is free to transmit data.
-  *
-- * Return:	0, always.
-+ * Return:	NETDEV_TX_OK, always.
-  */
--static int xemaclite_send(struct sk_buff *orig_skb, struct net_device *dev)
-+static netdev_tx_t
-+xemaclite_send(struct sk_buff *orig_skb, struct net_device *dev)
- {
- 	struct net_local *lp = netdev_priv(dev);
- 	struct sk_buff *new_skb;
-@@ -1044,7 +1045,7 @@ static int xemaclite_send(struct sk_buff *orig_skb, struct net_device *dev)
- 		/* Take the time stamp now, since we can't do this in an ISR. */
- 		skb_tx_timestamp(new_skb);
- 		spin_unlock_irqrestore(&lp->reset_lock, flags);
--		return 0;
-+		return NETDEV_TX_OK;
- 	}
- 	spin_unlock_irqrestore(&lp->reset_lock, flags);
- 
-@@ -1053,7 +1054,7 @@ static int xemaclite_send(struct sk_buff *orig_skb, struct net_device *dev)
- 	dev->stats.tx_bytes += len;
- 	dev_consume_skb_any(new_skb);
- 
--	return 0;
-+	return NETDEV_TX_OK;
- }
- 
- /**
+-static const struct cpu_feature crc32_cpu_feature[] = {
++static const struct cpu_feature __maybe_unused crc32_cpu_feature[] = {
+ 	{ cpu_feature(CRC32) }, { cpu_feature(PMULL) }, { }
+ };
+ MODULE_DEVICE_TABLE(cpu, crc32_cpu_feature);
 -- 
 2.20.1
 
