@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBB5C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1F9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F22512071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E31D2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141935;
-	bh=38A7lZnLtnGmRLXkDKXv2Syi9AZbbMf5E6dfb84ep1s=;
+	s=default; t=1574141940;
+	bh=ZPjfq3pUDu+AsWiU2zu9iZRPXobWVshwV8XGX7wGb6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PeE7lx+ke72q8k7ldbwiF+ZlQRzt/0H1JpwGwj3pfc6SNC7l85f8Kxv7zw55O2b0/
-	 i2BEpMZixNe8TC7iSewDDgrReQyspvK2/rwAXhfGh6xytLPIQGGxQTRnx1Dcmv9+pZ
-	 5wPhuHA5e6oCbZZWVFK+QZpZnDMqMAvrs9hbyB1E=
+	b=Au6qcfBBqrjKd5XiGTwOpEJz2Ft5bkiQOE+ftEjZVC8bhCW4OQRq4lm1K6T/CIWOD
+	 NUyte63LcaDyoWezsJjo7yrgIap+LSvCR3oCTFG/T55mumZ/HuDcfXleQZFE1pltVK
+	 q7o8rTimbMbzydeFFT9WhB3ysNMoxaCf8WOyixCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730226AbfKSFix (ORCPT
+        id S1730229AbfKSFi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:38:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32776 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:38:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730217AbfKSFiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:38:50 -0500
+        id S1729113AbfKSFiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:38:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7478B21823;
-        Tue, 19 Nov 2019 05:38:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C146720721;
+        Tue, 19 Nov 2019 05:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141930;
-        bh=38A7lZnLtnGmRLXkDKXv2Syi9AZbbMf5E6dfb84ep1s=;
+        s=default; t=1574141933;
+        bh=ZPjfq3pUDu+AsWiU2zu9iZRPXobWVshwV8XGX7wGb6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O6nwwdBSSVnL5eiGnb7w4WKjjLy7wxFNVHicuIg4SEpMC8MIybAu1mpGMn+6TShn4
-         zcDkHOfb/L1+s0CpFh0+NS6AfooFARQYslgaFMpCR8391oVDxU6SGDMTMB7fCPLQAh
-         0hqT6qbwmSjZPZkMaLSiB1vJD0mGwfTdNSOX8b08=
+        b=SVyNcVHuQZ8wVHiROT40+wMeVOIMchaJEQf7f8mhfZWQTEaffLL8PYx/FZHhkoIFy
+         i+1CN8a7rFSx3Bq49ujGPFP7h1gqpUvv8lBTUWwVjj+lQYobNSA9I9CA03YenydFEi
+         t91wAOfMNgJo8cl5IKE8YXZbJE9MOlLHhY2j5C8E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shahed Shaikh <Shahed.Shaikh@cavium.com>,
-        Ariel Elior <ariel.elior@cavium.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 312/422] bnx2x: Ignore bandwidth attention in single function mode
-Date:   Tue, 19 Nov 2019 06:18:29 +0100
-Message-Id: <20191119051419.213854472@linuxfoundation.org>
+Subject: [PATCH 4.19 330/422] ARM: dts: rockchip: explicitly set vcc_sd0 pin to gpio on rk3188-radxarock
+Date:   Tue, 19 Nov 2019 06:18:47 +0100
+Message-Id: <20191119051420.401740360@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,45 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shahed Shaikh <Shahed.Shaikh@cavium.com>
+From: Heiko Stuebner <heiko@sntech.de>
 
-[ Upstream commit 75a110a1783ef8324ffd763b24f4ac268253cbca ]
+[ Upstream commit a2df0984e73fd9e1dad5fc3f1c307ec3de395e30 ]
 
-This is a workaround for FW bug -
-MFW generates bandwidth attention in single function mode, which
-is only expected to be generated in multi function mode.
-This undesired attention in SF mode results in incorrect HW
-configuration and resulting into Tx timeout.
+It is good practice to make the setting of gpio-pinctrls explicitly in the
+devicetree, and in this case even necessary.
+Rockchip boards start with iomux settings set to gpio for most pins and
+while the linux pinctrl driver also implicitly sets the gpio function if
+a pin is requested as gpio that is not necessarily true for other drivers.
 
-Signed-off-by: Shahed Shaikh <Shahed.Shaikh@cavium.com>
-Signed-off-by: Ariel Elior <ariel.elior@cavium.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The issue in question stems from uboot, where the sdmmc_pwr pin is set
+to function 1 (sdmmc-power) by the bootrom when reading the 1st-stage
+loader. The regulator controlled by the pin is active-low though, so
+when the dwmmc hw-block sets its enabled bit, it actually disables the
+regulator. By changing the pin back to gpio we fix that behaviour.
+
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/rk3188-radxarock.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-index 68c62e32e8820..af57568c922eb 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-@@ -3540,6 +3540,16 @@ static void bnx2x_drv_info_iscsi_stat(struct bnx2x *bp)
-  */
- static void bnx2x_config_mf_bw(struct bnx2x *bp)
- {
-+	/* Workaround for MFW bug.
-+	 * MFW is not supposed to generate BW attention in
-+	 * single function mode.
-+	 */
-+	if (!IS_MF(bp)) {
-+		DP(BNX2X_MSG_MCP,
-+		   "Ignoring MF BW config in single function mode\n");
-+		return;
-+	}
+diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts b/arch/arm/boot/dts/rk3188-radxarock.dts
+index 45fd2b302dda1..4a2890618f6fc 100644
+--- a/arch/arm/boot/dts/rk3188-radxarock.dts
++++ b/arch/arm/boot/dts/rk3188-radxarock.dts
+@@ -93,6 +93,8 @@
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+ 		gpio = <&gpio3 RK_PA1 GPIO_ACTIVE_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&sdmmc_pwr>;
+ 		startup-delay-us = <100000>;
+ 		vin-supply = <&vcc_io>;
+ 	};
+@@ -315,6 +317,12 @@
+ 		};
+ 	};
+ 
++	sd0 {
++		sdmmc_pwr: sdmmc-pwr {
++			rockchip,pins = <RK_GPIO3 1 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
 +
- 	if (bp->link_vars.link_up) {
- 		bnx2x_cmng_fns_init(bp, true, CMNG_FNS_MINMAX);
- 		bnx2x_link_sync_notify(bp);
+ 	usb {
+ 		host_vbus_drv: host-vbus-drv {
+ 			rockchip,pins = <0 3 RK_FUNC_GPIO &pcfg_pull_none>;
 -- 
 2.20.1
 
