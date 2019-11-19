@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A412C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC558C43141
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0436B21939
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1B862173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141052;
-	bh=AJsarcifRohcimIWiMh67gZvdu7tSwxIN9SW71hbwYo=;
+	s=default; t=1574141053;
+	bh=fEdbkL9uYuspgoCHF7lff4gZbCjmziYMNUUD7McSOZ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HYoLEO3qR+R7osUe4PEQooijwL0ctH95LrL6xkL9aFuhkbjgdBPRbz8VI7M3iygPz
-	 kHl7ttyi7qg4Q2aWyYmdt7OdUWy2KQ72SyGiLdKFm/AI6ji+VELod79oZG9WGkqM2n
-	 iT+dWJwYU+W+vCPmL42a3likzDIx+J3wLqcdae5s=
+	b=0zadO799NknfJpyl1QaJCoTKXcKBU+416yL07/vHq6mCa4UAeJAZjJTsBMyDFc+ev
+	 WOOsYIG08GfOVlHWUSnEZrJByDcyDoYZ7KMtVo+GddN8wb7aOb5lrs1AE1OanaTcZS
+	 e7jnPieOdRx/KDtyYOFiJfQSqHOGDs/UzCMACLNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727382AbfKSFYK (ORCPT
+        id S1728157AbfKSFYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:24:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39994 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:24:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728135AbfKSFYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:24:06 -0500
+        id S1728145AbfKSFYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:24:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C03521939;
-        Tue, 19 Nov 2019 05:24:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8F5921939;
+        Tue, 19 Nov 2019 05:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141045;
-        bh=AJsarcifRohcimIWiMh67gZvdu7tSwxIN9SW71hbwYo=;
+        s=default; t=1574141048;
+        bh=fEdbkL9uYuspgoCHF7lff4gZbCjmziYMNUUD7McSOZ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JknPbTVrrUDdDlbPeFn6NALqgAwqQm1P9bURVeUkJg/RrDtbhuDcCd1tIkmU5g/73
-         8h/wi2j/fJt33ZhMroS6ZZuSX5wN3taCQUhIJfSwsXYxOYxoxa1d8JqYZopEG8dG3N
-         NemV5lNGo3/zTlgDPtvVRvY7PK3aWVosZUqGKUSU=
+        b=IjDy+K4P6OWF396+CzROTrN5zHL2Ox5I0U59T5AqPbDNImLkOuT5ULFWN2vmAHG0j
+         4fLjdx8HwhWObVFf2vqSvcnnXmHMEAIb+0jblozhIE+ogKAbtd8NdGIjFTiM/HoPCR
+         bqbufoHFdVlJ/rc+LDTQYkpEn1TnZBcCC+NWdkfk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 027/422] net: ethernet: dwmac-sun8i: Use the correct function in exit path
-Date:   Tue, 19 Nov 2019 06:13:44 +0100
-Message-Id: <20191119051401.831309962@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        syzbot+abe1ab7afc62c6bb6377@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 010/422] ALSA: usb-audio: Fix missing error check at mixer resolution test
+Date:   Tue, 19 Nov 2019 06:13:27 +0100
+Message-Id: <20191119051400.856985620@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -59,39 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corentin Labbe <clabbe@baylibre.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 40a1dcee2d1846a24619fe9ca45c661ca0db7dda upstream.
+commit 167beb1756791e0806365a3f86a0da10d7a327ee upstream.
 
-When PHY is not powered, the probe function fail and some resource are
-still unallocated.
-Furthermore some BUG happens:
-dwmac-sun8i 5020000.ethernet: EMAC reset timeout
-------------[ cut here ]------------
-kernel BUG at /linux-next/net/core/dev.c:9844!
+A check of the return value from get_cur_mix_raw() is missing at the
+resolution test code in get_min_max_with_quirks(), which may leave the
+variable untouched, leading to a random uninitialized value, as
+detected by syzkaller fuzzer.
 
-So let's use the right function (stmmac_pltfr_remove) in the error path.
+Add the missing return error check for fixing that.
 
-Fixes: 9f93ac8d4085 ("net-next: stmmac: Add dwmac-sun8i")
-Cc: <stable@vger.kernel.org> # v4.15+
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-and-tested-by: syzbot+abe1ab7afc62c6bb6377@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191109181658.30368-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/usb/mixer.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -1199,7 +1199,7 @@ static int sun8i_dwmac_probe(struct plat
- dwmac_mux:
- 	sun8i_dwmac_unset_syscon(gmac);
- dwmac_exit:
--	sun8i_dwmac_exit(pdev, plat_dat->bsp_priv);
-+	stmmac_pltfr_remove(pdev);
- return ret;
- }
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -1244,7 +1244,8 @@ static int get_min_max_with_quirks(struc
+ 		if (cval->min + cval->res < cval->max) {
+ 			int last_valid_res = cval->res;
+ 			int saved, test, check;
+-			get_cur_mix_raw(cval, minchn, &saved);
++			if (get_cur_mix_raw(cval, minchn, &saved) < 0)
++				goto no_res_check;
+ 			for (;;) {
+ 				test = saved;
+ 				if (test < cval->max)
+@@ -1264,6 +1265,7 @@ static int get_min_max_with_quirks(struc
+ 			snd_usb_set_cur_mix_value(cval, minchn, 0, saved);
+ 		}
+ 
++no_res_check:
+ 		cval->initialized = 1;
+ 	}
  
 
 
