@@ -2,105 +2,111 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4D5C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA3AC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E24322440
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD1DB2245F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:24:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LO2dRHCy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfKSTUe (ORCPT
+        id S1727117AbfKSTYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 14:20:34 -0500
-Received: from muru.com ([72.249.23.125]:42964 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726555AbfKSTUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 14:20:33 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id CE0E0809B;
-        Tue, 19 Nov 2019 19:21:09 +0000 (UTC)
-Date:   Tue, 19 Nov 2019 11:20:29 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org,
+        Tue, 19 Nov 2019 14:24:15 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:44236 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbfKSTYP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 14:24:15 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJJJBoP072724;
+        Tue, 19 Nov 2019 19:24:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=QxgcqLxoGjB8tiiHLUzk3bvI2hEG7GG+c6sd93JVxAE=;
+ b=LO2dRHCyRmYOfZlnkSFpTudygOdKoIXFYUlzaOU+k/zAwyqxK9wZ0FqSjLQfvpa+2b4u
+ VQc6RDJdqRZaJMX1Si5+Xs6oiVCw/JmUuVRDedNlVVlrZ6LOYxFYR73HTPTlqyVgLdGN
+ o8x6kxeowdy1Cvxbh8sluYiMj9/fb6bSSZl26s1sRjXf4UBBDkqQNyxYpict6sjr32Fn
+ Q2Gc+hE4vm6RGNEyPeUipHatR0onaYfKsUyy566GsWfU4vv6TU4Bs2jUgUMPfj8uAzyd
+ p1AoUS3IITiP58zJ3HQMjL4YzfkuUpTuo8Byn4s2UCEXUOH2IuajUluzzkbHnRYHFXAx aw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2wa8hts5u4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 19:24:05 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJJN8uh170689;
+        Tue, 19 Nov 2019 19:24:05 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2wbxm4s9c3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 19:24:04 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAJJO3Qu019812;
+        Tue, 19 Nov 2019 19:24:03 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 19 Nov 2019 11:24:03 -0800
+Date:   Tue, 19 Nov 2019 14:24:05 -0500
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: OMAP: Use ARM SMC Calling Convention when OP-TEE is
- available
-Message-ID: <20191119192029.GP35479@atomide.com>
-References: <29db708e-119e-8a89-7d43-e38e2a10dc07@ti.com>
- <20191119162157.GJ35479@atomide.com>
- <6e009ae3-6aa2-409b-749f-4947303940d8@ti.com>
- <20191119164227.GL35479@atomide.com>
- <20191119180546.GM35479@atomide.com>
- <9e15c170-c9fa-778c-d998-bd1111a6390d@ti.com>
- <20191119183247.GN35479@atomide.com>
- <a351461a-f6a1-334b-6bdd-a56626914fb3@ti.com>
- <20191119190721.GO35479@atomide.com>
- <7fa11037-8d33-2274-c8cc-80e9630b38b0@ti.com>
+Subject: Re: [PATCH] padata: Remove broken queue flushing
+Message-ID: <20191119192405.imfi6q4u3g2zgstc@ca-dmjordan1.us.oracle.com>
+References: <20191119051731.yev6dcsp2znjaagz@gondor.apana.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7fa11037-8d33-2274-c8cc-80e9630b38b0@ti.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191119051731.yev6dcsp2znjaagz@gondor.apana.org.au>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9446 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911190160
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9446 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911190160
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Andrew F. Davis <afd@ti.com> [191119 19:13]:
-> On 11/19/19 2:07 PM, Tony Lindgren wrote:
-> > * Andrew F. Davis <afd@ti.com> [191119 18:51]:
-> >> On 11/19/19 1:32 PM, Tony Lindgren wrote:
-> >>> It would allow us to completely change over to using
-> >>> arm_smccc_smc() and forget the custom calls.
-> >>
-> >> We would need more than just the r12 quirk to replace all our custom SMC
-> >> handlers, we would need quirks for omap_smc2 which puts process ID in r1
-> >> and puts #0xff in r6, and omap_smc3 that uses smc #1. All of our legacy
-> >> SMC calls also trash r4-r11, that is very non SMCCC complaint as only
-> >> r4-r7 need be caller saved. I don't see arm_smccc_smc() working with
-> >> legacy ROM no matter how much we hack at it :(
-> > 
-> > We would just have omap_smc2() call arm_smccc_smc() and in that
-> > case. And omap_smc2() would still deal with saving and restoring
-> > the registers.
+On Tue, Nov 19, 2019 at 01:17:31PM +0800, Herbert Xu wrote:
+> The function padata_flush_queues is fundamentally broken because
+> it cannot force padata users to complete the request that is
+> underway.  IOW padata has to passively wait for the completion
+> of any outstanding work.
 > 
-> Then why call arm_smccc_smc()? omap_smc2() is already an assembly
-> function, all it needs to do after loading the registers and saving the
-> right ones is issue an "smc #0" instruction, why would we want to
-> instead call into some other function to re-save registers and issue the
-> exact same instruction?
+> As it stands flushing is used in two places.  Its use in padata_stop
+> is simply unnecessary because nothing depends on the queues to
+> be flushed afterwards.
+> 
+> The other use in padata_replace is more substantial as we depend
+> on it to free the old pd structure.  This patch instead uses the
+> pd->refcnt to dynamically free the pd structure once all requests
+> are complete.
 
-To use Linux generic API for smc calls where possible.
+__padata_free unconditionally frees pd, so a padata job might choke on it
+later.  padata_do_parallel calls seem safe because they use RCU, but it seems
+possible that a job could call padata_do_serial after the instance is gone.
 
-> > Certainly the wrapper functions calling arm_smccc_smc() can deal
-> > with r12 too if the r12-quirk version and the plain version are
-> > never needed the same time on a booted SoC.
-> > 
-> > Are they ever needed the same time on a booted SoC or not?
+Best idea I can think of now is to indicate the instance has been freed in the
+pd before dropping the initial pd ref in __padata_free, and use that to bail
+out early from places that touch the instance or its data (workqueues say).
+Will think more on this.
 
-   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Sorry but maybe check the font size on your screen. I'm trying to
-get your attention again for the second time above to answer a
-question I asked.
-
-> >> I can make OP-TEE also compatible with the r12 quirk, which is what I
-> >> used to do. That way we didn't need to do any detection. The issue was
-> >> that non-standard SMC calls should not go through the common SMCCC
-> >> handler (unless you are QCOM for some reason..).
-> > 
-> > Sounds like for optee nothing must be done for r12 :)
-
-> Unless all our calls use the r12 hack, then we would need to fixup
-> OP-TEE to accept that also.
-
-No idea about that that part, but sounds like r12 use is up to
-the caller in the optee case.
-
-Regards,
-
-Tony
+(By the way, I was on leave longer than anticipated, so thanks for picking up
+my slack on this patch.  I plan to repost my other padata fixes soon.)
