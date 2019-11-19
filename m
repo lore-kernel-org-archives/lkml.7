@@ -2,144 +2,153 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1303AC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A55EDC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E60E0222A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D058222CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:48:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574178523;
+	bh=kcA2P8vKFoTMbflqHG8Tbx8oh+/xVrVVvWbHcEx7O9k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ark8vCPaosF4dwvdcOZwfrAIwxoaynqARi53tJCTZIkJBxL1+c/T6zdfbgao43xtq
+	 SAu0bNJPyJdpYVeODrAan7vVNkwSMt8lo08rDyFbTLvXMA30GhxjvbO5RvLy+NaQHG
+	 gAKqVXJKLSgkEVlV6DgAmK/dd7ys4pVs7meqJwjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728554AbfKSPrZ (ORCPT
+        id S1728372AbfKSPsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:47:25 -0500
-Received: from mga12.intel.com ([192.55.52.136]:27077 "EHLO mga12.intel.com"
+        Tue, 19 Nov 2019 10:48:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727910AbfKSPrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 10:47:24 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 07:47:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,324,1569308400"; 
-   d="scan'208";a="209453942"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by orsmga006.jf.intel.com with SMTP; 19 Nov 2019 07:47:18 -0800
-Received: by stinkbox (sSMTP sendmail emulation); Tue, 19 Nov 2019 17:47:17 +0200
-Date:   Tue, 19 Nov 2019 17:47:17 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lee Jones <lee.jones@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] drm/i915: DSI: select correct PWM controller to use
- based on the VBT
-Message-ID: <20191119154717.GA1208@intel.com>
-References: <20191119151818.67531-1-hdegoede@redhat.com>
- <20191119151818.67531-4-hdegoede@redhat.com>
+        id S1727937AbfKSPsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 10:48:42 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CB7A222A2;
+        Tue, 19 Nov 2019 15:48:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574178521;
+        bh=kcA2P8vKFoTMbflqHG8Tbx8oh+/xVrVVvWbHcEx7O9k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cAzfSPD2h/BLkljt3q9zERzLdZxeQ6I1oABOjgAPnvJtcsqj4FTCDTKgmVdycJyQk
+         I/xXUAXvllzwNM9KKjcH8t42XLXD5idNFpuxPX2fbaYcB4qCItvVkzErgKyJ64rGRr
+         6O8uyw1flgb9TRMaDeWGLKeNqaRzmnhNMJ+qx8ho=
+Date:   Tue, 19 Nov 2019 16:48:39 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Chris Paterson <Chris.Paterson2@renesas.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cip-dev@lists.cip-project.org" <cip-dev@lists.cip-project.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "patches@kernelci.org" <patches@kernelci.org>,
+        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 4.19 000/422] 4.19.85-stable review
+Message-ID: <20191119154839.GB1982025@kroah.com>
+References: <20191119051400.261610025@linuxfoundation.org>
+ <TYAPR01MB22854E4F20C28F3A10DA65E3B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+ <20191119122909.GC1913916@kroah.com>
+ <TYAPR01MB228560FC98FFD1D449FA4EC2B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191119151818.67531-4-hdegoede@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <TYAPR01MB228560FC98FFD1D449FA4EC2B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 04:18:18PM +0100, Hans de Goede wrote:
-> At least Bay Trail (BYT) and Cherry Trail (CHT) devices can use 1 of 2
-> different PWM controllers for controlling the LCD's backlight brightness.
-> Either the one integrated into the PMIC or the one integrated into the
-> SoC (the 1st LPSS PWM controller).
+On Tue, Nov 19, 2019 at 02:44:12PM +0000, Chris Paterson wrote:
+> Hi Greg,
 > 
-> So far in the LPSS code on BYT we have skipped registering the LPSS PWM
-> controller "pwm_backlight" lookup entry when a Crystal Cove PMIC is
-> present, assuming that in this case the PMIC PWM controller will be used.
+> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Sent: 19 November 2019 12:29
+> > 
+> > On Tue, Nov 19, 2019 at 08:54:25AM +0000, Chris Paterson wrote:
+> > > Hello Greg, all,
+> > >
+> > > > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
+> > > > Behalf Of Greg Kroah-Hartman
+> > > > Sent: 19 November 2019 05:13
+> > > >
+> > > > This is the start of the stable review cycle for the 4.19.85 release.
+> > > > There are 422 patches in this series, all will be posted as a response
+> > > > to this one.  If anyone has any issues with these being applied, please
+> > > > let me know.
+> > >
+> > > I'm seeing some build issues with module compilation with this release
+> > (1b1960cc Linux 4.19.85-rc1), I also saw them with the previous two versions of
+> > Linux 4.19.85-rc1 (cd21ecdb and 1fd0ac64).
+> > >
+> > > Full log available on GitLab [0]. Build conf [1].
+> > > [0] https://gitlab.com/cip-playground/linux-stable-rc-ci/-/jobs/354591285
+> > > [1] https://gitlab.com/cip-playground/linux-stable-rc-ci/-
+> > /jobs/354591285/artifacts/file/output/4.19.85-
+> > rc1_1b1960cc7/x86/siemens_iot2000.config/config/.config
+> > >
+> > > Main error below:
+> > >
+> > > 3907   CC [M]  drivers/net/ethernet/mellanox/mlx4/main.o
+> > > 3908   LD [M]  fs/ntfs/ntfs.o
+> > > 3909   CC [M]  drivers/net/ethernet/intel/i40evf/i40e_txrx.o
+> > > 3910   CC [M]  drivers/usb/musb/musb_core.o
+> > > 3911   CC [M]  drivers/net/ethernet/nvidia/forcedeth.o
+> > > 3912   CC [M]  fs/udf/balloc.o
+> > > 3913   CC [M]  drivers/net/ethernet/intel/fm10k/fm10k_debugfs.o
+> > > 3914   CC [M]  fs/udf/dir.o
+> > > 3915   CC [M]  drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.o
+> > > 3916   CC [M]  drivers/net/ethernet/intel/i40e/i40e_ptp.o
+> > > 3917 drivers/net/ethernet/mellanox/mlx4/main.c: In function 'mlx4_init_one':
+> > > 3918 drivers/net/ethernet/mellanox/mlx4/main.c:3985:2: error: implicit
+> > declaration of function 'devlink_reload_enable'; did you mean
+> > 'devlink_region_create'? [-Werror=implicit-function-declaration]
+> > > 3919   devlink_reload_enable(devlink);
+> > > 3920   ^~~~~~~~~~~~~~~~~~~~~
+> > > 3921   devlink_region_create
+> > > 3922   CC [M]  drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.o
+> > > 3923 drivers/net/ethernet/mellanox/mlx4/main.c: In function
+> > 'mlx4_remove_one':
+> > > 3924 drivers/net/ethernet/mellanox/mlx4/main.c:4097:2: error: implicit
+> > declaration of function 'devlink_reload_disable'; did you mean
+> > 'devlink_region_destroy'? [-Werror=implicit-function-declaration]
+> > > 3925   devlink_reload_disable(devlink);
+> > > 3926   ^~~~~~~~~~~~~~~~~~~~~~
+> > > 3927   devlink_region_destroy
+> > > 3928   CC [M]  drivers/net/ethernet/packetengines/hamachi.o
+> > > 3929   CC [M]  fs/udf/file.o
+> > > 3930   LD [M]  drivers/net/ethernet/intel/fm10k/fm10k.o
+> > >
+> > > I haven't tried to trace the issue further yet, sorry.
+> > 
+> > Any chance you can bisect this?  I don't see any obvious reason why this
+> > error should be happening, and it isn't showing up here :(
 > 
-> On CHT we have been relying on only 1 of the 2 PWM controllers being
-> enabled in the DSDT at the same time; and always registered the lookup.
+> Looking through the commit history, the issue seems to be related to:
+> 672cf82122be ("devlink: disallow reload operation during device cleanup")
 > 
-> So far this has been working, but the correct way to determine which PWM
-> controller needs to be used is by checking a bit in the VBT table and
-> recently I've learned about 2 different BYT devices:
-> Point of View MOBII TAB-P800W
-> Acer Switch 10 SW5-012
+> I've reverted this commit and Linux 4.19.85-rc2 (af1bb7db before revert) will build with the configuration I'm using [2].
+> I haven't looked further yet though, sorry.
 > 
-> Which use a Crystal Cove PMIC, yet the LCD is connected to the SoC/LPSS
-> PWM controller (and the VBT correctly indicates this), so here our old
-> heuristics fail.
-> 
-> This commit fixes using the wrong PWM controller on these devices by
-> calling pwm_get() for the right PWM controller based on the
-> VBT dsi.config.pwm_blc bit.
-> 
-> Note this is part of a series which contains 2 other patches which renames
-> the PWM lookup for the 1st SoC/LPSS PWM from "pwm_backlight" to
-> "pwm_pmic_backlight" and the PWM lookup for the Crystal Cove PMIC PWM
-> from "pwm_backlight" to "pwm_pmic_backlight".
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/gpu/drm/i915/display/intel_panel.c | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/display/intel_panel.c b/drivers/gpu/drm/i915/display/intel_panel.c
-> index bc14e9c0285a..ddcf311d1114 100644
-> --- a/drivers/gpu/drm/i915/display/intel_panel.c
-> +++ b/drivers/gpu/drm/i915/display/intel_panel.c
-> @@ -1840,13 +1840,22 @@ static int pwm_setup_backlight(struct intel_connector *connector,
->  			       enum pipe pipe)
->  {
->  	struct drm_device *dev = connector->base.dev;
-> +	struct drm_i915_private *dev_priv = to_i915(dev);
->  	struct intel_panel *panel = &connector->panel;
-> +	const char *desc;
->  	int retval;
->  
-> -	/* Get the PWM chip for backlight control */
-> -	panel->backlight.pwm = pwm_get(dev->dev, "pwm_backlight");
-> +	/* Get the right PWM chip for DSI backlight according to VBT */
-> +	if (dev_priv->vbt.dsi.config->pwm_blc == PPS_BLC_PMIC) {
-> +		panel->backlight.pwm = pwm_get(dev->dev, "pwm_pmic_backlight");
-> +		desc = "PMIC";
-> +	} else {
-> +		panel->backlight.pwm = pwm_get(dev->dev, "pwm_soc_backlight");
-> +		desc = "SoC";
-> +	}
+> [2] https://gitlab.com/cip-project/cip-kernel/cip-kernel-config/raw/master/4.19.y-cip/x86/siemens_iot2000.config
 
-Might we want the same thing for the panel enable gpio?
+If you add:
+	#include <net/devlink.h>
+to the top of drivers/net/ethernet/mellanox/mlx4/main.c, does it fix the
+issue for you?
 
-> +
->  	if (IS_ERR(panel->backlight.pwm)) {
-> -		DRM_ERROR("Failed to own the pwm chip\n");
-> +		DRM_ERROR("Failed to get the %s PWM chip\n", desc);
->  		panel->backlight.pwm = NULL;
->  		return -ENODEV;
->  	}
-> @@ -1873,6 +1882,7 @@ static int pwm_setup_backlight(struct intel_connector *connector,
->  				 CRC_PMIC_PWM_PERIOD_NS);
->  	panel->backlight.enabled = panel->backlight.level != 0;
->  
-> +	DRM_INFO("Using %s PWM for LCD backlight control\n", desc);
->  	return 0;
->  }
->  
-> -- 
-> 2.23.0
+If so, I'll modify the file to have that, seems to be some sort of
+include file mess :(
 
--- 
-Ville Syrjälä
-Intel
+thanks,
+
+greg k-h
