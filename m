@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDD4C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE1CC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A81152241E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16A0722400
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:58:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728726AbfKSQ5O (ORCPT
+        id S1728712AbfKSQ5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:57:14 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:52870 "EHLO
+        Tue, 19 Nov 2019 11:57:13 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:52874 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728653AbfKSQ5J (ORCPT
+        with ESMTP id S1728657AbfKSQ5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Nov 2019 11:57:09 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iX6o3-0007JT-8X; Tue, 19 Nov 2019 17:56:47 +0100
+        id 1iX6o9-0007P8-Fj; Tue, 19 Nov 2019 17:56:53 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E1D8F1C19CD;
-        Tue, 19 Nov 2019 17:56:46 +0100 (CET)
-Date:   Tue, 19 Nov 2019 16:56:46 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CB1C51C19D1;
+        Tue, 19 Nov 2019 17:56:48 +0100 (CET)
+Date:   Tue, 19 Nov 2019 16:56:48 -0000
+From:   "tip-bot2 for Masami Hiramatsu" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/kprobes] module: Remove set_all_modules_text_*()
-Cc:     Alexei Starovoitov <ast@kernel.org>,
+Subject: [tip: perf/core] perf probe: Show correct statement line number by
+ perf probe -l
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Brian Gerst <brgerst@gmail.com>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jessica Yu <jeyu@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191111132458.284298307@infradead.org>
-References: <20191111132458.284298307@infradead.org>
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <157406471067.24476.17463149618465494448.stgit@devnote2>
+References: <157406471067.24476.17463149618465494448.stgit@devnote2>
 MIME-Version: 1.0
-Message-ID: <157418260683.12247.12563595642371037554.tip-bot2@tip-bot2>
+Message-ID: <157418260878.12247.9502844079335473718.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -64,138 +60,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/kprobes branch of tip:
+The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     0e05d89d72e200f4c5129a6a80090dabf8c45a10
-Gitweb:        https://git.kernel.org/tip/0e05d89d72e200f4c5129a6a80090dabf8c45a10
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Tue, 15 Oct 2019 21:07:31 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 19 Nov 2019 13:13:07 +01:00
+Commit-ID:     57f95bf5f88295612871c36cb0de5069e50570f8
+Gitweb:        https://git.kernel.org/tip/57f95bf5f88295612871c36cb0de5069e50570f8
+Author:        Masami Hiramatsu <mhiramat@kernel.org>
+AuthorDate:    Mon, 18 Nov 2019 17:11:50 +09:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Mon, 18 Nov 2019 18:56:27 -03:00
 
-module: Remove set_all_modules_text_*()
+perf probe: Show correct statement line number by perf probe -l
 
-Now that there are no users of set_all_modules_text_*() left, remove
-it.
+The dwarf_getsrc_die() can return the line which is not a statement nor
+the least line number among the lines which shares same address.
 
-While it appears nds32 uses it, it does not have STRICT_MODULE_RWX and
-therefore ends up with the NOP stubs.
+This can lead perf probe --list shows incorrect line number for probed
+address.
 
-Tested-by: Alexei Starovoitov <ast@kernel.org>
-Tested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: Greentime Hu <green.hu@gmail.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vincent Chen <deanbo422@gmail.com>
-Link: https://lkml.kernel.org/r/20191111132458.284298307@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+To fix this, this introduces cu_getsrc_die() which returns only a
+statement line and which is the least line number (we call it the
+representive line for an address), and use it in cu_find_lineinfo().
+
+Also, if the given address is the entry address of a real function,
+cu_find_lineinfo() returns the function declared line number instead of
+the start line number of the function body.
+
+For example, without this change perf probe -l shows incorrect line as
+below.
+
+  # perf probe -a kernel_read:2
+  Added new event:
+    probe:kernel_read    (on kernel_read:2)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:kernel_read -aR sleep 1
+
+  # perf probe -l
+    probe:kernel_read    (on kernel_read:1@linux-5.0.0/fs/read_write.c)
+
+With this fix, it shows correct line number as below;
+
+  # perf probe -l
+    probe:kernel_read    (on kernel_read:2@linux-5.0.0/fs/read_write.c)
+
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
+Link: http://lore.kernel.org/lkml/157406471067.24476.17463149618465494448.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- arch/nds32/kernel/ftrace.c | 12 +----------
- include/linux/module.h     |  4 +---
- kernel/module.c            | 43 +-------------------------------------
- 3 files changed, 59 deletions(-)
+ tools/perf/util/dwarf-aux.c | 62 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 58 insertions(+), 4 deletions(-)
 
-diff --git a/arch/nds32/kernel/ftrace.c b/arch/nds32/kernel/ftrace.c
-index fd2a54b..22ab77e 100644
---- a/arch/nds32/kernel/ftrace.c
-+++ b/arch/nds32/kernel/ftrace.c
-@@ -89,18 +89,6 @@ int __init ftrace_dyn_arch_init(void)
- 	return 0;
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 5544bfb..aa89801 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -59,6 +59,51 @@ const char *cu_get_comp_dir(Dwarf_Die *cu_die)
+ 	return dwarf_formstring(&attr);
  }
  
--int ftrace_arch_code_modify_prepare(void)
--{
--	set_all_modules_text_rw();
--	return 0;
--}
--
--int ftrace_arch_code_modify_post_process(void)
--{
--	set_all_modules_text_ro();
--	return 0;
--}
--
- static unsigned long gen_sethi_insn(unsigned long addr)
++/* Unlike dwarf_getsrc_die(), cu_getsrc_die() only returns statement line */
++static Dwarf_Line *cu_getsrc_die(Dwarf_Die *cu_die, Dwarf_Addr addr)
++{
++	Dwarf_Addr laddr;
++	Dwarf_Lines *lines;
++	Dwarf_Line *line;
++	size_t nlines, l, u, n;
++	bool flag;
++
++	if (dwarf_getsrclines(cu_die, &lines, &nlines) != 0 ||
++	    nlines == 0)
++		return NULL;
++
++	/* Lines are sorted by address, use binary search */
++	l = 0; u = nlines - 1;
++	while (l < u) {
++		n = u - (u - l) / 2;
++		line = dwarf_onesrcline(lines, n);
++		if (!line || dwarf_lineaddr(line, &laddr) != 0)
++			return NULL;
++		if (addr < laddr)
++			u = n - 1;
++		else
++			l = n;
++	}
++	/* Going backward to find the lowest line */
++	do {
++		line = dwarf_onesrcline(lines, --l);
++		if (!line || dwarf_lineaddr(line, &laddr) != 0)
++			return NULL;
++	} while (laddr == addr);
++	l++;
++	/* Going foward to find the statement line */
++	do {
++		line = dwarf_onesrcline(lines, l++);
++		if (!line || dwarf_lineaddr(line, &laddr) != 0 ||
++		    dwarf_linebeginstatement(line, &flag) != 0)
++			return NULL;
++		if (laddr > addr)
++			return NULL;
++	} while (!flag);
++
++	return line;
++}
++
+ /**
+  * cu_find_lineinfo - Get a line number and file name for given address
+  * @cu_die: a CU DIE
+@@ -72,17 +117,26 @@ int cu_find_lineinfo(Dwarf_Die *cu_die, unsigned long addr,
+ 		    const char **fname, int *lineno)
  {
- 	unsigned long opcode = 0x46000000;
-diff --git a/include/linux/module.h b/include/linux/module.h
-index 6d20895..daae847 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -846,13 +846,9 @@ extern int module_sysfs_initialized;
- #define __MODULE_STRING(x) __stringify(x)
+ 	Dwarf_Line *line;
+-	Dwarf_Addr laddr;
++	Dwarf_Die die_mem;
++	Dwarf_Addr faddr;
  
- #ifdef CONFIG_STRICT_MODULE_RWX
--extern void set_all_modules_text_rw(void);
--extern void set_all_modules_text_ro(void);
- extern void module_enable_ro(const struct module *mod, bool after_init);
- extern void module_disable_ro(const struct module *mod);
- #else
--static inline void set_all_modules_text_rw(void) { }
--static inline void set_all_modules_text_ro(void) { }
- static inline void module_enable_ro(const struct module *mod, bool after_init) { }
- static inline void module_disable_ro(const struct module *mod) { }
- #endif
-diff --git a/kernel/module.c b/kernel/module.c
-index ff2d735..62a6245 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -2029,49 +2029,6 @@ static void module_enable_nx(const struct module *mod)
- 	frob_writable_data(&mod->init_layout, set_memory_nx);
+-	line = dwarf_getsrc_die(cu_die, (Dwarf_Addr)addr);
+-	if (line && dwarf_lineaddr(line, &laddr) == 0 &&
+-	    addr == (unsigned long)laddr && dwarf_lineno(line, lineno) == 0) {
++	if (die_find_realfunc(cu_die, (Dwarf_Addr)addr, &die_mem)
++	    && die_entrypc(&die_mem, &faddr) == 0 &&
++	    faddr == addr) {
++		*fname = dwarf_decl_file(&die_mem);
++		dwarf_decl_line(&die_mem, lineno);
++		goto out;
++	}
++
++	line = cu_getsrc_die(cu_die, (Dwarf_Addr)addr);
++	if (line && dwarf_lineno(line, lineno) == 0) {
+ 		*fname = dwarf_linesrc(line, NULL, NULL);
+ 		if (!*fname)
+ 			/* line number is useless without filename */
+ 			*lineno = 0;
+ 	}
+ 
++out:
+ 	return *lineno ?: -ENOENT;
  }
  
--/* Iterate through all modules and set each module's text as RW */
--void set_all_modules_text_rw(void)
--{
--	struct module *mod;
--
--	if (!rodata_enabled)
--		return;
--
--	mutex_lock(&module_mutex);
--	list_for_each_entry_rcu(mod, &modules, list) {
--		if (mod->state == MODULE_STATE_UNFORMED)
--			continue;
--
--		frob_text(&mod->core_layout, set_memory_rw);
--		frob_text(&mod->init_layout, set_memory_rw);
--	}
--	mutex_unlock(&module_mutex);
--}
--
--/* Iterate through all modules and set each module's text as RO */
--void set_all_modules_text_ro(void)
--{
--	struct module *mod;
--
--	if (!rodata_enabled)
--		return;
--
--	mutex_lock(&module_mutex);
--	list_for_each_entry_rcu(mod, &modules, list) {
--		/*
--		 * Ignore going modules since it's possible that ro
--		 * protection has already been disabled, otherwise we'll
--		 * run into protection faults at module deallocation.
--		 */
--		if (mod->state == MODULE_STATE_UNFORMED ||
--			mod->state == MODULE_STATE_GOING)
--			continue;
--
--		frob_text(&mod->core_layout, set_memory_ro);
--		frob_text(&mod->init_layout, set_memory_ro);
--	}
--	mutex_unlock(&module_mutex);
--}
- #else /* !CONFIG_STRICT_MODULE_RWX */
- static void module_enable_nx(const struct module *mod) { }
- #endif /*  CONFIG_STRICT_MODULE_RWX */
