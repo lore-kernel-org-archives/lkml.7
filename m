@@ -2,186 +2,102 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 632D7C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF34C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36BEB2231E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9944D2231E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:19:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574187384;
-	bh=yUCETfyVN5xc/2se3q53OR75yWv2RfkA9h9g6kT8hng=;
+	s=default; t=1574187574;
+	bh=Ke5+v8YZHAT8xyxZWhg6SyQsCREdJm9kePCdyBvjixo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YbObbC75RD5WxOHLp1uaBsPjDLn07F9ga7I9PUQkFWdYWucp3YYguEXrzfAEkape6
-	 pgaQs4ujJwLYxTl0PJ+Xwk7QHoXzXhY3ovE6TciINrZ6ktiYsDThcEx2ctYU+GSoy4
-	 VUt/amOwgoxTFZD7pLoIbZQVvtBsUd23+l3epqY4=
+	b=eoXi9YPMoa2cfKYasyyEC73Rk4bSHqYhIkCiAOrBHxtCnFYwJTD0NDCElwdOhYMjh
+	 NvZT4jh3ETz8fPL8Gra+JKh2rZnk5sFv/1+RbhzQEBcJnBmyOkltbv/fgdOZ1OVUqP
+	 ExKTs47feE15ln4OEKJJiC2DXy2xyIKn9oEHIr2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbfKSSQX (ORCPT
+        id S1727014AbfKSSTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 13:16:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39324 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 13:19:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:56552 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbfKSSQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 13:16:23 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C9F32231A;
-        Tue, 19 Nov 2019 18:16:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574187381;
-        bh=yUCETfyVN5xc/2se3q53OR75yWv2RfkA9h9g6kT8hng=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B0d+mRkKuflugNuRJZkMewaUYPK9RR6o8UF22vWWnfT1U+KO2+PGLFbW6wqkOrFKr
-         e2MxmRwF8jrNMD0jPZPgvS146jyCjkP54xH+luNRqbuq4OVw3Xoo6WbdqAepCTJnoG
-         gwUL/aI2m2248UlvG1jANVYRbssGs0L9DCA4hx1U=
-Date:   Tue, 19 Nov 2019 19:16:19 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Chris Paterson <Chris.Paterson2@renesas.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cip-dev@lists.cip-project.org" <cip-dev@lists.cip-project.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "patches@kernelci.org" <patches@kernelci.org>,
-        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 4.19 000/422] 4.19.85-stable review
-Message-ID: <20191119181619.GB2283647@kroah.com>
-References: <20191119051400.261610025@linuxfoundation.org>
- <TYAPR01MB22854E4F20C28F3A10DA65E3B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
- <20191119122909.GC1913916@kroah.com>
- <TYAPR01MB228560FC98FFD1D449FA4EC2B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
- <20191119154839.GB1982025@kroah.com>
- <TYAPR01MB2285698B8E0F38B9EEF47128B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
- <20191119165207.GA2071545@kroah.com>
- <20191119180002.GA17608@roeck-us.net>
+        id S1726510AbfKSSTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 13:19:33 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C8C891FB;
+        Tue, 19 Nov 2019 10:19:32 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3585B3F703;
+        Tue, 19 Nov 2019 10:19:32 -0800 (PST)
+Date:   Tue, 19 Nov 2019 18:19:30 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Luhua Xu <luhua.xu@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Leilk Liu <leilk.liu@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] spi: mediatek: add cs timing configuration support
+Message-ID: <20191119181930.GF3634@sirena.org.uk>
+Mail-Followup-To: Luhua Xu <luhua.xu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Leilk Liu <leilk.liu@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-spi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1574053037-26721-1-git-send-email-luhua.xu@mediatek.com>
+ <1574053037-26721-3-git-send-email-luhua.xu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="XIiC+We3v3zHqZ6Z"
 Content-Disposition: inline
-In-Reply-To: <20191119180002.GA17608@roeck-us.net>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1574053037-26721-3-git-send-email-luhua.xu@mediatek.com>
+X-Cookie: Beam me up, Scotty!  It ate my phaser!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 10:00:02AM -0800, Guenter Roeck wrote:
-> On Tue, Nov 19, 2019 at 05:52:07PM +0100, Greg Kroah-Hartman wrote:
-> > On Tue, Nov 19, 2019 at 04:38:06PM +0000, Chris Paterson wrote:
-> > > > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > Sent: 19 November 2019 15:49
-> > > > 
-> > > > On Tue, Nov 19, 2019 at 02:44:12PM +0000, Chris Paterson wrote:
-> > > > > Hi Greg,
-> > > > >
-> > > > > > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > > > Sent: 19 November 2019 12:29
-> > > > > >
-> > > > > > On Tue, Nov 19, 2019 at 08:54:25AM +0000, Chris Paterson wrote:
-> > > > > > > Hello Greg, all,
-> > > > > > >
-> > > > > > > > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org>
-> > > > On
-> > > > > > > > Behalf Of Greg Kroah-Hartman
-> > > > > > > > Sent: 19 November 2019 05:13
-> > > > > > > >
-> > > > > > > > This is the start of the stable review cycle for the 4.19.85 release.
-> > > > > > > > There are 422 patches in this series, all will be posted as a response
-> > > > > > > > to this one.  If anyone has any issues with these being applied, please
-> > > > > > > > let me know.
-> > > > > > >
-> > > > > > > I'm seeing some build issues with module compilation with this release
-> > > > > > (1b1960cc Linux 4.19.85-rc1), I also saw them with the previous two versions
-> > > > of
-> > > > > > Linux 4.19.85-rc1 (cd21ecdb and 1fd0ac64).
-> > > > > > >
-> > > > > > > Full log available on GitLab [0]. Build conf [1].
-> > > > > > > [0] https://gitlab.com/cip-playground/linux-stable-rc-ci/-/jobs/354591285
-> > > > > > > [1] https://gitlab.com/cip-playground/linux-stable-rc-ci/-
-> > > > > > /jobs/354591285/artifacts/file/output/4.19.85-
-> > > > > > rc1_1b1960cc7/x86/siemens_iot2000.config/config/.config
-> > > > > > >
-> > > > > > > Main error below:
-> > > > > > >
-> > > > > > > 3907   CC [M]  drivers/net/ethernet/mellanox/mlx4/main.o
-> > > > > > > 3908   LD [M]  fs/ntfs/ntfs.o
-> > > > > > > 3909   CC [M]  drivers/net/ethernet/intel/i40evf/i40e_txrx.o
-> > > > > > > 3910   CC [M]  drivers/usb/musb/musb_core.o
-> > > > > > > 3911   CC [M]  drivers/net/ethernet/nvidia/forcedeth.o
-> > > > > > > 3912   CC [M]  fs/udf/balloc.o
-> > > > > > > 3913   CC [M]  drivers/net/ethernet/intel/fm10k/fm10k_debugfs.o
-> > > > > > > 3914   CC [M]  fs/udf/dir.o
-> > > > > > > 3915   CC [M]  drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.o
-> > > > > > > 3916   CC [M]  drivers/net/ethernet/intel/i40e/i40e_ptp.o
-> > > > > > > 3917 drivers/net/ethernet/mellanox/mlx4/main.c: In function
-> > > > 'mlx4_init_one':
-> > > > > > > 3918 drivers/net/ethernet/mellanox/mlx4/main.c:3985:2: error: implicit
-> > > > > > declaration of function 'devlink_reload_enable'; did you mean
-> > > > > > 'devlink_region_create'? [-Werror=implicit-function-declaration]
-> > > > > > > 3919   devlink_reload_enable(devlink);
-> > > > > > > 3920   ^~~~~~~~~~~~~~~~~~~~~
-> > > > > > > 3921   devlink_region_create
-> > > > > > > 3922   CC [M]  drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.o
-> > > > > > > 3923 drivers/net/ethernet/mellanox/mlx4/main.c: In function
-> > > > > > 'mlx4_remove_one':
-> > > > > > > 3924 drivers/net/ethernet/mellanox/mlx4/main.c:4097:2: error: implicit
-> > > > > > declaration of function 'devlink_reload_disable'; did you mean
-> > > > > > 'devlink_region_destroy'? [-Werror=implicit-function-declaration]
-> > > > > > > 3925   devlink_reload_disable(devlink);
-> > > > > > > 3926   ^~~~~~~~~~~~~~~~~~~~~~
-> > > > > > > 3927   devlink_region_destroy
-> > > > > > > 3928   CC [M]  drivers/net/ethernet/packetengines/hamachi.o
-> > > > > > > 3929   CC [M]  fs/udf/file.o
-> > > > > > > 3930   LD [M]  drivers/net/ethernet/intel/fm10k/fm10k.o
-> > > > > > >
-> > > > > > > I haven't tried to trace the issue further yet, sorry.
-> > > > > >
-> > > > > > Any chance you can bisect this?  I don't see any obvious reason why this
-> > > > > > error should be happening, and it isn't showing up here :(
-> > > > >
-> > > > > Looking through the commit history, the issue seems to be related to:
-> > > > > 672cf82122be ("devlink: disallow reload operation during device cleanup")
-> > > > >
-> > > > > I've reverted this commit and Linux 4.19.85-rc2 (af1bb7db before revert) will
-> > > > build with the configuration I'm using [2].
-> > > > > I haven't looked further yet though, sorry.
-> > > > >
-> > > > > [2] https://gitlab.com/cip-project/cip-kernel/cip-kernel-
-> > > > config/raw/master/4.19.y-cip/x86/siemens_iot2000.config
-> > > > 
-> > > > If you add:
-> > > > 	#include <net/devlink.h>
-> > > > to the top of drivers/net/ethernet/mellanox/mlx4/main.c, does it fix the
-> > > > issue for you?
-> > > 
-> > > This is already defined:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/tree/drivers/net/ethernet/mellanox/mlx4/main.c?h=linux-4.19.y#n47
-> > 
-> > Ah, ok, the issue is that CONFIG_NET_DEVLINK is not enabled, the driver
-> > now requires this.  This was resolved by adding the dependancy to the
-> > driver itself, and then just punting and always enabling it over time.
-> > 
-> > We can backport part of f6b19b354d50 ("net: devlink: select NET_DEVLINK
-> > from drivers") if you want, but that feels messy.
-> > 
-> > For now, if you enable that option, does it build for you?
-> > 
-> 
-> Selecting NET_DEVLINK manually fixes the problem, but at least for my part
-> I was unable to find a means to define the dependency in the Kconfig file.
-> I either get a recursive dependency or unmet direct dependencies.
-> 
-> FWIW, reverting the devlink patch fixes the compile problem.
 
-Ok, I've now done just that, and pushed out a -rc4.
+--XIiC+We3v3zHqZ6Z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-thanks,
+On Mon, Nov 18, 2019 at 12:57:17PM +0800, Luhua Xu wrote:
+> Add configure SPI CS setup/hold/idle delays in terms
+> of clk count support, and use one period of current
+> spi speed as default if setup/hold/idle not indicated.
 
-greg k-h
+We have added a generic way to specify delays like this via the
+set_cs_timing() operation and related fields in the spi_device struct
+which operate in terms of spi_delay - Alexandru Ardelean added them
+recently.  This supports both times and clock cycles as units so should
+fit with what your hardware can do, the interface is new though so there
+may be soem rough edges to worry about.
+
+--XIiC+We3v3zHqZ6Z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3UMjEACgkQJNaLcl1U
+h9DuYQf/Sh6DLOmgyjnIubrb27dh7rENm3ubM+wQws2RYtpLpn81Y+QeCeuFmG+5
+qab+os+aGjg82VyLmLMU07NqDkCLfu4JVFUudK3M5ZLCZcQQ0VPhQ2CUSya+gSkr
+cDrncou8L/Q7E1HlRwY+b3/S1qLxrMGYA5JkaivmCTC/RRhtUDb+6JORzIpVER15
+XrgH6cJM79jkEfUWoz5AQITORtrebZnKDsYDxWzbcjLE0SleAK8AJ55zPf1QNzMz
+qX3dpdyEDPfMWEiCitAOHRNzwpVdBKwOCN5vXJdbPXRJN7DhkDwWigDSaz+9uL0m
+f8lMvtoliW5cyEX0Q/O+WEvR9vdvjA==
+=vdlB
+-----END PGP SIGNATURE-----
+
+--XIiC+We3v3zHqZ6Z--
