@@ -2,247 +2,161 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B15CFC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2354EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C28122304
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E929322303
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:17:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zak8ug59"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BnbaaP7N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbfKSKRD (ORCPT
+        id S1727518AbfKSKRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 05:17:03 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46110 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfKSKRD (ORCPT
+        Tue, 19 Nov 2019 05:17:37 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45033 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725798AbfKSKRg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 05:17:03 -0500
-Received: by mail-ed1-f66.google.com with SMTP id t11so10565650eds.13;
-        Tue, 19 Nov 2019 02:17:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9hbii1rvXe3OjAU+9EET7g3kuyKDkNC5l9tGGg3Rr0w=;
-        b=Zak8ug59k2O1p0roRgoyW1n9sY288ZxRAFM6l3LASPNE2bU1tEjWuX/tkz4flnMmAu
-         N0deW1GLG9hcW5axTEBU/FSyf5vpihs92jZkxdcOnP2Bs18i6UXzaVoL22WNrxgopVFh
-         /eCKelOOPTL7GpSotCpSbTckD9pen8uMfHdorYfpqLBBbUhtSk8DvuBqkAc6tEW713Jn
-         QIomHlDALijSRIvcJDh5PLwBesumZ8L9GG7AgVe0UObwBRt8Sb3VtH1Gd8ev3Z8X0uxU
-         ZLbm60b4pdgJw593iGuqzjlXul3EkyHy8SUUMD4LBbJnpmJ55onltqIei/mu27INlGOh
-         yy8A==
+        Tue, 19 Nov 2019 05:17:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574158656;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=0AOHcP3c9sS8PxErrT8l0/ogvBo+AjMH4hXjQihxI48=;
+        b=BnbaaP7NWVrCXMBx2JQguw2C/772WZVbpFw/umkDoe+Tgl3iPQ/iTGUDDOFImtE2dogj0+
+        +WU0I4XRo/xsOGYUBV2cN0DuABILBOgOmIA/MZlssghXKXkG2dKHSIW8dGSLhmSUe13ebZ
+        lUgK1MM+RGg0NbsxTMUR+3CVRpk6cU0=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-133-vTASHznTPGC9ziE-chtozw-1; Tue, 19 Nov 2019 05:17:35 -0500
+Received: by mail-qk1-f199.google.com with SMTP id a13so13270055qkc.17
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 02:17:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9hbii1rvXe3OjAU+9EET7g3kuyKDkNC5l9tGGg3Rr0w=;
-        b=ZVWt3tPE1MuLvA6JNneodKvZvH44+cu+YTkQowi6B1b21+3/TJr3EEMJMEz8a+4fXM
-         bMYd5IVuqtkkmGGge+mWIFalgdyM292cqaYjiQksCkk9HnvD5xNWCLMQgLxzmPa5lLKP
-         FGy10upRBXPh7VJZYdkoIDDWqqjhRxkkh162cw5+ZYaYQylC9ksbxK+HmXXoBews351Q
-         xCVTDYwYVvrhJqYcc4dpUwnHydFTTbSEeW0Ij6TtHCJTDW/HvZ0GaP3ENx0II2BhcqcV
-         5eOvmfdYnN/WpGTW9vwca6S8FjQRRQSPzRF0IHbxLKPodJQmiiUKyoQ46arDMaRH9FhM
-         fPjw==
-X-Gm-Message-State: APjAAAUy/L1Pfc+cOPzgerNm4v1CNkRTyh1OF+xu4HdzUySaJN/qKSAW
-        Go1PLGYjt3+dKa1mi5Qqg6FFtXVxR4IPTeFEZ8w=
-X-Google-Smtp-Source: APXvYqwkJxMqmg7ZsnrggMatLowQzCcmg0Qlbo3LHEuSiv/RFL5kc0e6TZc+eBNriQcNnlF72ydXy+R3Gn5WHvKUDNg=
-X-Received: by 2002:a17:906:6b01:: with SMTP id q1mr34046962ejr.162.1574158620629;
- Tue, 19 Nov 2019 02:17:00 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=C3HkNm0+qQCyAC+XqSx4v/T4ymH2FW2P53DRSUplgxI=;
+        b=F0l7oyNiKD5MONYWpGKncN/R5lFUUurSfwGNBKM4XqLr/6+P3IfXVkpfTbtrSuijaw
+         JVKXWHLed4KPCh6HvY86shL7TKgnJXmOqOdfe5Q1/UwM+9gGDL08ItB/GWcRdBFIVHRh
+         tM0otgoJ0Ox9wlf20Dm2ZsIVrtX1Gbo1WFo7hGSuXXQibhPIicWpp0sPo9A3j87E24Wh
+         5aLAPs/8gSugqGEGD0PC6ozuEDqxLIuo0DN1d8VFZPBjoAHm3NjOOOcyEJEwkLuNv8fY
+         HZMsn7M4BXc18ziz97usyfzz9f6/Pm0iQqVV44+yuUMmaJUrGDeY2OqM50Yr3BkVSqqR
+         0dWw==
+X-Gm-Message-State: APjAAAV92deHj5OhRNeuuqVCloBVPfU//vEjYGMLD2sLV5JrpTBhIh65
+        BU5uOv7eDzhyMn6RC3PIdjNuRGhpkh6TIhbwmHEXCpGzmIvlM12workakV2RhGXGxPpgvRkx9dX
+        LUyhRLud7cnG5boBTPd0v9Rb3
+X-Received: by 2002:a05:620a:1011:: with SMTP id z17mr28468361qkj.39.1574158653941;
+        Tue, 19 Nov 2019 02:17:33 -0800 (PST)
+X-Google-Smtp-Source: APXvYqySINoqX1Sr8Hk/5Eicx5OQ3SzUok/k0A0P8yPzqN+DDvTxHFFHeaMwsTVFb7bvD7eMWcSBZA==
+X-Received: by 2002:a05:620a:1011:: with SMTP id z17mr28468353qkj.39.1574158653599;
+        Tue, 19 Nov 2019 02:17:33 -0800 (PST)
+Received: from redhat.com (bzq-79-176-6-42.red.bezeqint.net. [79.176.6.42])
+        by smtp.gmail.com with ESMTPSA id f35sm11988511qtd.35.2019.11.19.02.17.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 02:17:32 -0800 (PST)
+Date:   Tue, 19 Nov 2019 05:17:28 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, Khazhismel Kumykov <khazhy@google.com>,
+        Wei Wang <wei.w.wang@intel.com>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH] virtio_balloon: fix shrinker scan number of pages
+Message-ID: <20191119101718.38976-1-mst@redhat.com>
 MIME-Version: 1.0
-References: <20191114051242.14651-1-helen.koike@collabora.com>
- <20191114051242.14651-3-helen.koike@collabora.com> <09d4f683-d03d-46c9-e9d2-b8cceb72446e@xs4all.nl>
- <9cb116f6-64f4-1510-b128-8657d6d4889b@collabora.com>
-In-Reply-To: <9cb116f6-64f4-1510-b128-8657d6d4889b@collabora.com>
-From:   Jacob Chen <jacobchen110@gmail.com>
-Date:   Tue, 19 Nov 2019 18:16:49 +0800
-Message-ID: <CAFLEztRQfYE_Mssiq4KxK-QyJEe+KT4eTsvnLZQK5T=uVADUqA@mail.gmail.com>
-Subject: Re: [PATCH v11 02/11] media: staging: rkisp1: add document for rkisp1
- meta buffer format
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        Eddie Cai <eddie.cai.linux@gmail.com>, kernel@collabora.com,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jacob Chen <jacob-chen@rock-chips.com>,
-        gregkh@linuxfoundation.org, Jeffy Chen <jeffy.chen@rock-chips.com>,
-        =?UTF-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>,
-        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
-        robh+dt@kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Shunqian Zheng <zhengsq@rock-chips.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        ezequiel@collabora.com, linux-arm-kernel@lists.infradead.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Mailer: git-send-email 2.22.0.678.g13338e74b8
+X-Mutt-Fcc: =sent
+X-MC-Unique: vTASHznTPGC9ziE-chtozw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Helen ,
+virtio_balloon_shrinker_scan should return number of system pages freed,
+but because it's calling functions that deal with balloon pages, it gets
+confused and sometimes returns the number of balloon pages.
 
-Helen Koike <helen.koike@collabora.com> =E4=BA=8E2019=E5=B9=B411=E6=9C=8814=
-=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=886:59=E5=86=99=E9=81=93=EF=BC=
-=9A
->
->
->
-> On 11/14/19 6:21 AM, Hans Verkuil wrote:
-> > On 11/14/19 6:12 AM, Helen Koike wrote:
-> >> From: Jacob Chen <jacob2.chen@rock-chips.com>
-> >>
-> >> This commit add document for rkisp1 meta buffer format
-> >>
-> >> Signed-off-by: Jacob Chen <jacob-chen@rock-chips.com>
-> >> [refactored for upstream]
-> >> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> >
-> > checkpatch gives me:
-> >
-> > WARNING: Missing Signed-off-by: line by nominal patch author 'Jacob Che=
-n <jacob2.chen@rock-chips.com>'
-> >
-> > Looking at this series I see duplicate Signed-off-by entries for Jacob =
-Chen and a total
-> > of three different email addresses:
-> >
-> > jacob2.chen@rock-chips.com
-> > jacob-chen@rock-chips.com
-> > cc@rock-chips.com
->
-> And I see a name in the Maintainers file as Jacob Chen <jacob-chen@iotwrt=
-.com>.
-> I was wondering if I could replace the email by jacob-chen@iotwrt.com, or=
- if I should
-> keep the original ones.
->
-> Helen
->
+It does not matter practically as the exact number isn't
+used, but it seems better to be consistent in case someone
+starts using this API.
 
-"jacob2.chen@rock-chips.com"/"jacob-chen@rock-chips.com" is me and
-"cc@rock-chips.com" is another one.
-' jacob-chen@rock-chips.com' is invalid now,  so you could replace the
-email by 'jacob-chen@iotwrt.com'.
+Further, if we ever tried to iteratively leak pages as
+virtio_balloon_shrinker_scan tries to do, we'd run into issues - this is
+because freed_pages was accumulating total freed pages, but was also
+subtracted on each iteration from pages_to_free, which can result in
+either leaking less memory than we were supposed to free, or or more if
+pages_to_free underruns.
 
-> >
-> > It's confusing.
-> >
-> > Regards,
-> >
-> >       Hans
-> >
-> >>
-> >> ---
-> >>
-> >> Changes in v11: None
-> >> Changes in v10:
-> >> - unsquash
-> >>
-> >> Changes in v9:
-> >> - squash
-> >> - migrate to staging
-> >> - remove meta-formats.rst update
-> >>
-> >> Changes in v8:
-> >> - Add SPDX in the header
-> >> - Remove emacs configs
-> >> - Fix doc style
-> >>
-> >> Changes in v7:
-> >> - s/correspond/corresponding
-> >> - s/use/uses
-> >> - s/docuemnt/document
-> >>
-> >>  .../uapi/v4l/pixfmt-meta-rkisp1-params.rst    | 23 ++++++++++++++++++=
+On a system with 4K pages we are lucky that we are never asked to leak
+more than 128 pages while we can leak up to 256 at a time,
+but it looks like a real issue for systems with page size !=3D 4K.
+
+Cc: stable@vger.kernel.org
+Fixes: 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker")
+Reported-by: Khazhismel Kumykov <khazhy@google.com>
+Reviewed-by: Wei Wang <wei.w.wang@intel.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
+ drivers/virtio/virtio_balloon.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloo=
+n.c
+index 226fbb995fb0..7cee05cdf3fb 100644
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -772,6 +772,13 @@ static unsigned long shrink_free_pages(struct virtio_b=
+alloon *vb,
+ =09return blocks_freed << VIRTIO_BALLOON_FREE_PAGE_ORDER;
+ }
+=20
++static unsigned long leak_balloon_pages(struct virtio_balloon *vb,
++                                          unsigned long pages_to_free)
++{
++=09return leak_balloon(vb, pages_to_free * VIRTIO_BALLOON_PAGES_PER_PAGE) =
+/
++=09=09VIRTIO_BALLOON_PAGES_PER_PAGE;
++}
 +
-> >>  .../uapi/v4l/pixfmt-meta-rkisp1-stat.rst      | 22 ++++++++++++++++++
-> >>  2 files changed, 45 insertions(+)
-> >>  create mode 100644 drivers/staging/media/rkisp1/Documentation/media/u=
-api/v4l/pixfmt-meta-rkisp1-params.rst
-> >>  create mode 100644 drivers/staging/media/rkisp1/Documentation/media/u=
-api/v4l/pixfmt-meta-rkisp1-stat.rst
-> >>
-> >> diff --git a/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l=
-/pixfmt-meta-rkisp1-params.rst b/drivers/staging/media/rkisp1/Documentation=
-/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
-> >> new file mode 100644
-> >> index 000000000000..103b5cb79b7c
-> >> --- /dev/null
-> >> +++ b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt=
--meta-rkisp1-params.rst
-> >> @@ -0,0 +1,23 @@
-> >> +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> >> +
-> >> +.. _v4l2-meta-fmt-rkisp1-params:
-> >> +
-> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> >> +V4L2_META_FMT_RK_ISP1_PARAMS
-> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> >> +
-> >> +Rockchip ISP1 Parameters Data
-> >> +
-> >> +Description
-> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >> +
-> >> +This format describes input parameters for the Rockchip ISP1.
-> >> +
-> >> +It uses c-struct :c:type:`rkisp1_isp_params_cfg`, which is defined in
-> >> +the ``linux/rkisp1-config.h`` header file.
-> >> +
-> >> +The parameters consist of multiple modules.
-> >> +The module won't be updated if the corresponding bit was not set in m=
-odule_*_update.
-> >> +
-> >> +.. kernel-doc:: include/uapi/linux/rkisp1-config.h
-> >> +   :functions: rkisp1_isp_params_cfg
-> >> diff --git a/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l=
-/pixfmt-meta-rkisp1-stat.rst b/drivers/staging/media/rkisp1/Documentation/m=
-edia/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
-> >> new file mode 100644
-> >> index 000000000000..4ad303f96421
-> >> --- /dev/null
-> >> +++ b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt=
--meta-rkisp1-stat.rst
-> >> @@ -0,0 +1,22 @@
-> >> +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> >> +
-> >> +.. _v4l2-meta-fmt-rkisp1-stat:
-> >> +
-> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-> >> +V4L2_META_FMT_RK_ISP1_STAT_3A
-> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-> >> +
-> >> +
-> >> +Rockchip ISP1 Statistics Data
-> >> +
-> >> +Description
-> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >> +
-> >> +This format describes image color statistics information generated by=
- the Rockchip
-> >> +ISP1.
-> >> +
-> >> +It uses c-struct :c:type:`rkisp1_stat_buffer`, which is defined in
-> >> +the ``linux/rkisp1-config.h`` header file.
-> >> +
-> >> +.. kernel-doc:: include/uapi/linux/rkisp1-config.h
-> >> +   :functions: rkisp1_stat_buffer
-> >>
-> >
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+ static unsigned long shrink_balloon_pages(struct virtio_balloon *vb,
+ =09=09=09=09=09  unsigned long pages_to_free)
+ {
+@@ -782,11 +789,9 @@ static unsigned long shrink_balloon_pages(struct virti=
+o_balloon *vb,
+ =09 * VIRTIO_BALLOON_ARRAY_PFNS_MAX balloon pages, so we call it
+ =09 * multiple times to deflate pages till reaching pages_to_free.
+ =09 */
+-=09while (vb->num_pages && pages_to_free) {
+-=09=09pages_freed +=3D leak_balloon(vb, pages_to_free) /
+-=09=09=09=09=09VIRTIO_BALLOON_PAGES_PER_PAGE;
+-=09=09pages_to_free -=3D pages_freed;
+-=09}
++=09while (vb->num_pages && pages_freed < pages_to_free)
++=09=09pages_freed +=3D leak_balloon_pages(vb, pages_to_free);
++
+ =09update_balloon_size(vb);
+=20
+ =09return pages_freed;
+@@ -799,7 +804,7 @@ static unsigned long virtio_balloon_shrinker_scan(struc=
+t shrinker *shrinker,
+ =09struct virtio_balloon *vb =3D container_of(shrinker,
+ =09=09=09=09=09struct virtio_balloon, shrinker);
+=20
+-=09pages_to_free =3D sc->nr_to_scan * VIRTIO_BALLOON_PAGES_PER_PAGE;
++=09pages_to_free =3D sc->nr_to_scan;
+=20
+ =09if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+ =09=09pages_freed =3D shrink_free_pages(vb, pages_to_free);
+--=20
+MST
+
