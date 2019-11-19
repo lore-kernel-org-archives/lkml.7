@@ -2,181 +2,68 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDE6C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E69F7C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFEFA21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:09:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b6eiXfq4"
+	by mail.kernel.org (Postfix) with ESMTP id C4C3A21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:14:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbfKSNJr (ORCPT
+        id S1727522AbfKSNOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 08:09:47 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39027 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfKSNJr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 08:09:47 -0500
-Received: by mail-ed1-f68.google.com with SMTP id l25so17004836edt.6
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 05:09:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=VEavlwL1+rDzs+L+hM6nx0dnrMPSn2yWoKd3exKBnKI=;
-        b=b6eiXfq4vDKE47zZ4PvxoN61Q1BY37X7wcxDr/SiVmRRP0VtNsmCMMkrX3qi2LrRtu
-         P92lSpOaIxSROrtWuDJJ0XrRgaTiZBAJJ6z6l46VSE06O0MjhbBzsnYdD72zjhau3pF3
-         WCNJR5qHibROyv1OB4bctwVa86YYWorAOoycA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VEavlwL1+rDzs+L+hM6nx0dnrMPSn2yWoKd3exKBnKI=;
-        b=bSaTH8JezjGVGGbTfzDrveN/YK/3aGFfgj9CdC5u5q3PqjGgrW/ESOW6IsvHUiFvkz
-         VxZ8Oyb8dwhXihccr01im0xbWn+MsT8Xfd0KsdEqTjHMqC3Hyy8a4cGECg4BqP+MUa0U
-         4KlCz2CgOJKuMy2IGPOfyrYPSWPiavLu2PVEAx6rsmUuA6yJWdLUw9mbUU9km90aCvF7
-         P8/spX/4AspnfAm6iwMl4f85XD5ABIMc5yITJ7OP6VLeu2jKH6BmTq9OJ4UOHDgWaFMq
-         gfwdRtSQXNC6lL7rXDpr2BT0yFYH3NBLZ84n9BKx4HRyBUkvI5ZRDJfo3bv2oVu6pRhe
-         9Mtw==
-X-Gm-Message-State: APjAAAWFt1zhxTy5gxogdD7jME3o29pbo5lDe0+4POp9Bbkw85OV2Qv/
-        Ax1fBujkXaXKE8xkcC+UNu1HvNH9qdcLdA==
-X-Google-Smtp-Source: APXvYqyi7VyGF04nrp0FD7XxKIMU7peUyxddHM2uVH/F4ypmOHUZQ3/qB/XqrN3ZnYv9ZSibZci55w==
-X-Received: by 2002:a17:906:b80f:: with SMTP id dv15mr35974432ejb.188.1574168983486;
-        Tue, 19 Nov 2019 05:09:43 -0800 (PST)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
-        by smtp.gmail.com with ESMTPSA id e19sm557254eds.71.2019.11.19.05.09.43
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Nov 2019 05:09:43 -0800 (PST)
-Received: by mail-wr1-f51.google.com with SMTP id e6so23805464wrw.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 05:09:43 -0800 (PST)
-X-Received: by 2002:adf:e505:: with SMTP id j5mr33584239wrm.46.1574168650324;
- Tue, 19 Nov 2019 05:04:10 -0800 (PST)
+        Tue, 19 Nov 2019 08:14:45 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7143 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725280AbfKSNOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 08:14:45 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 5757D396F74BACAF5382;
+        Tue, 19 Nov 2019 21:14:41 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 19 Nov 2019
+ 21:14:38 +0800
+Subject: Re: [GIT] Networking
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        David Miller <davem@davemloft.net>
+References: <20191116.133321.709008936600873428.davem@davemloft.net>
+ <CAMuHMdX8Fi1PDEcrPJ3frsg+LG04hCN2vbgJ=+NyEArnqmcb1Q@mail.gmail.com>
+CC:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        netdev <netdev@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <32c02bd4-6c6a-5e55-7a47-1a42d2c9c1af@huawei.com>
+Date:   Tue, 19 Nov 2019 21:14:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-References: <20191114051242.14651-1-helen.koike@collabora.com>
- <20191114051242.14651-3-helen.koike@collabora.com> <09d4f683-d03d-46c9-e9d2-b8cceb72446e@xs4all.nl>
- <9cb116f6-64f4-1510-b128-8657d6d4889b@collabora.com> <CAFLEztRQfYE_Mssiq4KxK-QyJEe+KT4eTsvnLZQK5T=uVADUqA@mail.gmail.com>
- <4135d35cd581b31d08b547852ac43e959957abf5.camel@collabora.com>
-In-Reply-To: <4135d35cd581b31d08b547852ac43e959957abf5.camel@collabora.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Tue, 19 Nov 2019 22:03:59 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5BPwSnY51vJboCB6Hr2Yz4jMqt4VWLNNLTpiwenGo_Wew@mail.gmail.com>
-Message-ID: <CAAFQd5BPwSnY51vJboCB6Hr2Yz4jMqt4VWLNNLTpiwenGo_Wew@mail.gmail.com>
-Subject: Re: [PATCH v11 02/11] media: staging: rkisp1: add document for rkisp1
- meta buffer format
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     Jacob Chen <jacobchen110@gmail.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Eddie Cai <eddie.cai.linux@gmail.com>, kernel@collabora.com,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jacob Chen <jacob-chen@rock-chips.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        =?UTF-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Shunqian Zheng <zhengsq@rock-chips.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAMuHMdX8Fi1PDEcrPJ3frsg+LG04hCN2vbgJ=+NyEArnqmcb1Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 9:56 PM Ezequiel Garcia <ezequiel@collabora.com> wr=
-ote:
->
-> Hello Jacob,
->
-> Thanks for the insight.
->
-> On Tue, 2019-11-19 at 18:16 +0800, Jacob Chen wrote:
-> > Hi Helen ,
-> >
-> > Helen Koike <helen.koike@collabora.com> =E4=BA=8E2019=E5=B9=B411=E6=9C=
-=8814=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=886:59=E5=86=99=E9=81=93=
-=EF=BC=9A
-> > >
-> > >
-> > > On 11/14/19 6:21 AM, Hans Verkuil wrote:
-> > > > On 11/14/19 6:12 AM, Helen Koike wrote:
-> > > > > From: Jacob Chen <jacob2.chen@rock-chips.com>
-> > > > >
-> > > > > This commit add document for rkisp1 meta buffer format
-> > > > >
-> > > > > Signed-off-by: Jacob Chen <jacob-chen@rock-chips.com>
-> > > > > [refactored for upstream]
-> > > > > Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> > > >
-> > > > checkpatch gives me:
-> > > >
-> > > > WARNING: Missing Signed-off-by: line by nominal patch author 'Jacob=
- Chen <jacob2.chen@rock-chips.com>'
-> > > >
-> > > > Looking at this series I see duplicate Signed-off-by entries for Ja=
-cob Chen and a total
-> > > > of three different email addresses:
-> > > >
-> > > > jacob2.chen@rock-chips.com
-> > > > jacob-chen@rock-chips.com
-> > > > cc@rock-chips.com
-> > >
-> > > And I see a name in the Maintainers file as Jacob Chen <jacob-chen@io=
-twrt.com>.
-> > > I was wondering if I could replace the email by jacob-chen@iotwrt.com=
-, or if I should
-> > > keep the original ones.
-> > >
-> > > Helen
-> > >
-> >
-> > "jacob2.chen@rock-chips.com"/"jacob-chen@rock-chips.com" is me and
-> > "cc@rock-chips.com" is another one.
-> > ' jacob-chen@rock-chips.com' is invalid now,  so you could replace the
-> > email by 'jacob-chen@iotwrt.com'.
-> >
->
-> Authorship and SOB can't be changed freely, the original must be retained=
-,
-> because this gives proper credit to the company that sponsored the work.
->
-> I.e. if your mail used to be jacob2.chen at rock-chips.com, then I think
-> we can use that. And if cc at rock-chips.com is a different engineer,
-> also named Jacob Chen, perhaps we can mention that somewhere to reduce th=
-e
-> confusion.
+On 2019/11/19 21:01, Geert Uytterhoeven wrote:
+> On Sat, Nov 16, 2019 at 10:37 PM David Miller <davem@davemloft.net> wrote:
+>> YueHaibing (1):
+>>       mdio_bus: Fix PTR_ERR applied after initialization to constant
+> 
+> FTR, this causes a boot regression if CONFIG_RESET_CONTROLLER=n.
+> Patch sent
+> https://lore.kernel.org/lkml/20191119112524.24841-1-geert+renesas@glider.be/
 
-Some patches have been developed by Jacob <jacob2.chen at
-rock-chips.com>, some by Jacob <cc at rock-chips.com> and some by
-both.
+Sorry for this.
 
-Some patches have been also re-posted by Jacob after leaving Rockchip
-AFAIR, from the <jacob-chen at iotwrt.com> address. Those should have
-<jacob2.chen at rock-chips.com> as From: and include sign-offs from
-both <jacob2.chen at rock-chips.com> and <jacob-chen at iotwrt.com>.
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
 
-So the conclusion is that the original sign-offs should be retained
-+/- typos fixed.
-
-For typos, was <jacob-chen at rock-chips.com> a typo of <jacob2.chen
-at rock-chips.com> or a typo of <jacob-chen at iotwrt.com>?
-
-Best regards,
-Tomasz
