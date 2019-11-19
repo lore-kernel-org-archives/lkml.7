@@ -2,115 +2,138 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09731C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96435C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D52B822360
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 676D922363
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:58:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xfdf/vrh"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="q0/4rbRZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbfKSP5K (ORCPT
+        id S1728325AbfKSP6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:57:10 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:46068 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727509AbfKSP5J (ORCPT
+        Tue, 19 Nov 2019 10:58:32 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:37733 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727591AbfKSP6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 10:57:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=W1uhPT3svlAF0ny/aKL/GHGJkaklH1eD5N8ZBRDMDjQ=; b=Xfdf/vrhOYcquHoQNoWpTcYtN
-        kuKDO7Bj0HAO9PGeYCNBHKD8xBrQdnj0NBMreHHZsj6FewQ1lt2CJRl5hZh7TsQLGgENhL3m9Y2vg
-        hgFjZX+aDnEaE4AoEMRRRAl7sFpRoDW7RF27nGb6Djf9AI9Tj5n16mNuwfZMKDqQd48sFww3pKSoO
-        A3tzKcDLGANz00inclHZMDPUpgPNRT5lBfyG4pYvTruFLURextxyUhR1r2/NAqX65anAsLCtSBbTG
-        fcpQx31yG7SOO80NCnOArA/EM6w9iLaF4Y5dqIt2zQua0YL/9XPDRqNicbv1QzgepjAfcZST2eANh
-        LdHbfPRqw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iX5sG-0003B8-Ga; Tue, 19 Nov 2019 15:57:05 +0000
-Date:   Tue, 19 Nov 2019 07:57:04 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, shakeelb@google.com,
-        hannes@cmpxchg.org, Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH v4 3/9] mm/lru: replace pgdat lru_lock with lruvec lock
-Message-ID: <20191119155704.GP20752@bombadil.infradead.org>
-References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
- <1574166203-151975-4-git-send-email-alex.shi@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1574166203-151975-4-git-send-email-alex.shi@linux.alibaba.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Tue, 19 Nov 2019 10:58:31 -0500
+Received: by mail-qv1-f66.google.com with SMTP id s18so8332781qvr.4
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 07:58:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1z5z/i+3LcTUqYQxh88HeAp06C7NWtljha+VhmnIoik=;
+        b=q0/4rbRZzWyL2IQLLIRg9XxI7yVsxFhM0SqLGtUDlDWUnV4Cx9fQki4nQnyOu4FNdz
+         MgQNxzZhvmeNQ4vxKWKJtCQDbUTdNBQ/xV4ZzzAuYYpG7kI4kzg88KFEjKB1OOop5/MM
+         dmXWHVVk0f4IFEfTzJxC6wcIumqRKUt94xq2t5M1QrFtdREOzai+F5k09z+z/k7Jqu2c
+         BbEiwmnIPaHiEI7Zt/2/+6F59OuFSlOgnOLvgDI/i2RqODvIB0JSGBdy0iHPtmZxlA3s
+         3kg9/g+NZCqZF2g4heUVMqHBqHVmvfVaEeVCQXYnhyuzSasBKFdARpAUYdnI1+guGW/u
+         oDwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1z5z/i+3LcTUqYQxh88HeAp06C7NWtljha+VhmnIoik=;
+        b=tdKUSODQcGqhNqUvt1Tp6cz18uxQVoBXsA54hCB1oO3a0gqXU+l8V18cZQVlnlgSEU
+         hQ4ASaUNyEcMxkcc46tn+APrLMJSCoXPK3YAOe7A0FFt1sFmSbDpXIVBRpfyL8h1kAsO
+         1handpEjmCePdrxc0cxe7oR85HECupqK/z2dZQcpzjDFLInlxjsgjRW2mdqCDlvas588
+         GrAPpNseQHbr+CvXvenpHwr5ywg7viWrHCVq2YElW7EXXu36QsZKNWpfcefCbpdDzbyE
+         dbtheReNOittmBMIkxdXYtPTmK9Fam2XkTFe/JBMHn40UQzoK36Y3wPTUXjlG0Jkk99W
+         sdKg==
+X-Gm-Message-State: APjAAAVtxm37I6w3sKNaopRmkIgBBaVQyJ69qu6rDpCTGdc5EPUNe1ep
+        tNsnpyr/lFHYjT0gxViUwg77CA9qQPw=
+X-Google-Smtp-Source: APXvYqzQs4PHJxtGOjF5LF5GaxORkXbZEPYtAW8Ec/ZJQGupHFmldpVxF1PjfxTctBnYnLVlTTelSQ==
+X-Received: by 2002:ad4:4dce:: with SMTP id cw14mr20727040qvb.185.1574179109802;
+        Tue, 19 Nov 2019 07:58:29 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id i10sm11536583qtj.19.2019.11.19.07.58.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Nov 2019 07:58:29 -0800 (PST)
+Message-ID: <1574179107.9585.1.camel@lca.pw>
+Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
+From:   Qian Cai <cai@lca.pw>
+To:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 19 Nov 2019 10:58:27 -0500
+In-Reply-To: <20191119094134.6hzbjc7l5ite6bpg@pathway.suse.cz>
+References: <20190904065455.GE3838@dhcp22.suse.cz>
+         <20190904071911.GB11968@jagdpanzerIV> <20190904074312.GA25744@jagdpanzerIV>
+         <1567599263.5576.72.camel@lca.pw>
+         <20190904144850.GA8296@tigerII.localdomain>
+         <1567629737.5576.87.camel@lca.pw> <20190905113208.GA521@jagdpanzerIV>
+         <1573751570.5937.122.camel@lca.pw>
+         <20191118152738.az364dczadskgimc@pathway.suse.cz>
+         <20191119004119.GC208047@google.com>
+         <20191119094134.6hzbjc7l5ite6bpg@pathway.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 08:23:17PM +0800, Alex Shi wrote:
-> +static inline struct lruvec *lock_page_lruvec_irqsave(struct page *page,
-> +				struct pglist_data *pgdat, unsigned long *flags)
-> +{
-> +	struct lruvec *lruvec = mem_cgroup_page_lruvec(page, pgdat);
-> +
-> +	spin_lock_irqsave(&lruvec->lru_lock, *flags);
-> +
-> +	return lruvec;
-> +}
+On Tue, 2019-11-19 at 10:41 +0100, Petr Mladek wrote:
+> On Tue 2019-11-19 09:41:19, Sergey Senozhatsky wrote:
+> > On (19/11/18 16:27), Petr Mladek wrote:
+> > > > > @@ -2027,8 +2027,11 @@ asmlinkage int vprintk_emit(int facility, int level,
+> > > > >  	pending_output = (curr_log_seq != log_next_seq);
+> > > > >  	logbuf_unlock_irqrestore(flags);
+> > > > >  
+> > > > > +	if (!pending_output)
+> > > > > +		return printed_len;
+> > > > > +
+> > > > >  	/* If called from the scheduler, we can not call up(). */
+> > > > > -	if (!in_sched && pending_output) {
+> > > > > +	if (!in_sched) {
+> > > > >  		/*
+> > > > >  		 * Disable preemption to avoid being preempted while holding
+> > > > >  		 * console_sem which would prevent anyone from printing to
+> > > > > @@ -2043,10 +2046,11 @@ asmlinkage int vprintk_emit(int facility, int level,
+> > > > >  		if (console_trylock_spinning())
+> > > > >  			console_unlock();
+> > > > >  		preempt_enable();
+> > > > > -	}
+> > > > >  
+> > > > > -	if (pending_output)
+> > > > > +		wake_up_interruptible(&log_wait);
+> > > 
+> > > I do not like this. As a result, normal printk() will always deadlock
+> > > in the scheduler code, including WARN() calls. The chance of the
+> > > deadlock is small now. It happens only when there is another
+> > > process waiting for console_sem.
+> > 
+> > Why would it *always* deadlock? If this is the case, why we don't *always*
+> > deadlock doing the very same wake_up_process() from console_unlock()?
+> 
+> I speak about _normal_ printk() and not about printk_deferred().
+> 
+> wake_up_process() is called in console_unlock() only when
+> sem->wait_list is not empty, see up() in kernel/locking/semaphore.c.
+> printk() itself uses console_trylock() and does not wait.
+> 
+> I believe that this is the rason why printk_sched() was added
+> so late in 2012. It was more than 10 years after adding
+> the semaphore into console_unlock(). IMHO, the deadlock
+> was rare. Of course, it was also hard to debug but it
+> would not take 10 years.
 
-This should be a macro, not a function.  You basically can't do this;
-spin_lock_irqsave needs to write to a variable which can then be passed
-to spin_unlock_irqrestore().  What you're doing here will dereference the
-pointer in _this_ function, but won't propagate the modified value back to
-the caller.  I suppose you could do something like this ...
-
-static inline struct lruvec *lock_page_lruvec_irqsave(struct page *page,
-			struct pglist_data *pgdat, unsigned long *flagsp)
-{
-	unsigned long flags;
-	struct lruvec *lruvec = mem_cgroup_page_lruvec(page, pgdat);
-
-	spin_lock_irqsave(&lruvec->lru_lock, flags);
-	*flagsp = flags;
-
-	return lruvec;
-}
-
-Almost certainly easier to write a macro though.
-
-You shouldn't need the two prior patches with this kind of change.
+I would not be surprise that those potential deadlocks have been existed even
+for 10 years. Not only that it is difficult to debug, but also when eventually
+someone had reported them, subsystem developers could still "kick balls" like
+where it had been observed for the last a few months, and no progress could be
+done for those as eventually life is too short and the reporters have to give
+up.
