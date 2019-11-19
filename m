@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B786C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D967C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ADD52071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F12922084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142237;
-	bh=LqMI0tEsXsqQ8LnuUkkaJDxRVpqdAujD1Vwxg1ehTU8=;
+	s=default; t=1574142234;
+	bh=hsKxKdwogcjR4ZHBi+71yqZ0W0LQjjJkDx0ygb3+bXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2chUYlJ9+3oamXNhMpY10c7JI/TKb5GhCnzJF21YgePGzGr5PiirQGjEs+zpur7km
-	 PXHb5/xxw/CRDvUeJFa/P1mN4ULYEK0EKZkDm0l6QKjWQQq2asN8uNmG5tJRN/Ik21
-	 91wEZyzN4TwdF6lmo18J7XeOUuCJWQ0ljm9QgZoo=
+	b=TkcGxWteKUOQAhbL4sETAlBcZ44Vu0M0Yc1jSG+XDs/L58Et6RrrifUkCd6ZpOxAG
+	 ex8AfVvfrdlPLa4VwRrDcoykcRUOPc954bS6yrNe54V2VNPRK7WLOm53c7FtxYku4C
+	 jfr28guHjpnkfQbHPeXjfUGuR/liP+JlX9qXivq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730794AbfKSFn4 (ORCPT
+        id S1730780AbfKSFnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:43:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38818 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:43:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730778AbfKSFnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:43:49 -0500
+        id S1730237AbfKSFnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:43:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D40EF2075E;
-        Tue, 19 Nov 2019 05:43:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3390D2084D;
+        Tue, 19 Nov 2019 05:43:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142229;
-        bh=LqMI0tEsXsqQ8LnuUkkaJDxRVpqdAujD1Vwxg1ehTU8=;
+        s=default; t=1574142226;
+        bh=hsKxKdwogcjR4ZHBi+71yqZ0W0LQjjJkDx0ygb3+bXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1ZwJTZnD5+mXEn5favhqAXtViNw/7MAz3z/VVBWiOzeMeHY0gDvOrWeMUhz2aDIrS
-         uQXnl741MsCIgVRu+iiuam12fZw3iWvjIoiidYkliVeq+NG/iLoBQkV3+OfGbsCqVG
-         487kEKschL+y68xbpaG/1HBekDzL6o8gk08fb3DM=
+        b=iDZV9sUcFQWC33rIqbA4yBpxsLmzz1pjYwaHrFirW5lTMKEoxlBbKvWS6yuHz+wW/
+         wywwbl8Se/NOHAgIE+NeTu9jHnfpuPXzIgQxmIqilsZQaDz3OgOdtb1rkyjm7Izt1k
+         g5bE+5rH9A6sRkq4uddz3fOGpnU8+xHWEE0LfLCo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        syzbot+abe1ab7afc62c6bb6377@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 011/239] ALSA: usb-audio: Fix missing error check at mixer resolution test
-Date:   Tue, 19 Nov 2019 06:16:51 +0100
-Message-Id: <20191119051300.187161524@linuxfoundation.org>
+        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Jouni Hogander <jouni.hogander@unikie.com>
+Subject: [PATCH 4.14 010/239] slip: Fix memory leak in slip_open error path
+Date:   Tue, 19 Nov 2019 06:16:50 +0100
+Message-Id: <20191119051259.812944817@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -59,46 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Jouni Hogander <jouni.hogander@unikie.com>
 
-commit 167beb1756791e0806365a3f86a0da10d7a327ee upstream.
+[ Upstream commit 3b5a39979dafea9d0cd69c7ae06088f7a84cdafa ]
 
-A check of the return value from get_cur_mix_raw() is missing at the
-resolution test code in get_min_max_with_quirks(), which may leave the
-variable untouched, leading to a random uninitialized value, as
-detected by syzkaller fuzzer.
+Driver/net/can/slcan.c is derived from slip.c. Memory leak was detected
+by Syzkaller in slcan. Same issue exists in slip.c and this patch is
+addressing the leak in slip.c.
 
-Add the missing return error check for fixing that.
+Here is the slcan memory leak trace reported by Syzkaller:
 
-Reported-and-tested-by: syzbot+abe1ab7afc62c6bb6377@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191109181658.30368-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+BUG: memory leak unreferenced object 0xffff888067f65500 (size 4096):
+  comm "syz-executor043", pid 454, jiffies 4294759719 (age 11.930s)
+  hex dump (first 32 bytes):
+    73 6c 63 61 6e 30 00 00 00 00 00 00 00 00 00 00 slcan0..........
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+  backtrace:
+    [<00000000a06eec0d>] __kmalloc+0x18b/0x2c0
+    [<0000000083306e66>] kvmalloc_node+0x3a/0xc0
+    [<000000006ac27f87>] alloc_netdev_mqs+0x17a/0x1080
+    [<0000000061a996c9>] slcan_open+0x3ae/0x9a0
+    [<000000001226f0f9>] tty_ldisc_open.isra.1+0x76/0xc0
+    [<0000000019289631>] tty_set_ldisc+0x28c/0x5f0
+    [<000000004de5a617>] tty_ioctl+0x48d/0x1590
+    [<00000000daef496f>] do_vfs_ioctl+0x1c7/0x1510
+    [<0000000059068dbc>] ksys_ioctl+0x99/0xb0
+    [<000000009a6eb334>] __x64_sys_ioctl+0x78/0xb0
+    [<0000000053d0332e>] do_syscall_64+0x16f/0x580
+    [<0000000021b83b99>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+    [<000000008ea75434>] 0xfffffffffffffff
+
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Oliver Hartkopp <socketcan@hartkopp.net>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/usb/mixer.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/slip/slip.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -1052,7 +1052,8 @@ static int get_min_max_with_quirks(struc
- 		if (cval->min + cval->res < cval->max) {
- 			int last_valid_res = cval->res;
- 			int saved, test, check;
--			get_cur_mix_raw(cval, minchn, &saved);
-+			if (get_cur_mix_raw(cval, minchn, &saved) < 0)
-+				goto no_res_check;
- 			for (;;) {
- 				test = saved;
- 				if (test < cval->max)
-@@ -1072,6 +1073,7 @@ static int get_min_max_with_quirks(struc
- 			snd_usb_set_cur_mix_value(cval, minchn, 0, saved);
- 		}
+--- a/drivers/net/slip/slip.c
++++ b/drivers/net/slip/slip.c
+@@ -859,6 +859,7 @@ err_free_chan:
+ 	sl->tty = NULL;
+ 	tty->disc_data = NULL;
+ 	clear_bit(SLF_INUSE, &sl->flags);
++	free_netdev(sl->dev);
  
-+no_res_check:
- 		cval->initialized = 1;
- 	}
- 
+ err_exit:
+ 	rtnl_unlock();
 
 
