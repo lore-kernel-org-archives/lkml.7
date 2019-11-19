@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBD6C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A01C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2B8222DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1E1821823
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141137;
-	bh=n0hSoyCt+a7Qwm0d+IWQ9s8PCzkBt2QJMIFcCIC1V2o=;
+	s=default; t=1574141144;
+	bh=REIs9+LyYR7y8sibPigLGmZ+hJQIkXoAUMr0uv4Ra1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CogCmgwP4ya9wOARGEte659hbtEHSZzOMzbbrcw3uqHOcIJHCZwBWogkDgGuFCLFA
-	 KfrRXkPLm3XZ50g8hmlT0CAZ5iVwIIt1WQIMfPiqHtSWW0j2xr670UdZk5/up6zT2Z
-	 9RPhWxalY42ad9i3fdWn/lu8oI/UzKkjPHWJp/m0=
+	b=z3HqByd0guu2iVaiRje6mRkr+H8uB2k4KYFoGTCEyngt8LHpPuAW5jGHK69zkfjzE
+	 7cSaetLRDvFIPhTjw1L0iGpolAmibQj9ccKd6fEWvmX2P9tcmZ6med+bpPXVHVn7Qw
+	 dtmia8IBuEfXOxSIu0sDnUBfTdTFbuUVi9PvxWAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbfKSFZg (ORCPT
+        id S1728440AbfKSFZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:25:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43184 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:25:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728409AbfKSFZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:25:34 -0500
+        id S1727535AbfKSFZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:25:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09255208C3;
-        Tue, 19 Nov 2019 05:25:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E533E21939;
+        Tue, 19 Nov 2019 05:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141133;
-        bh=n0hSoyCt+a7Qwm0d+IWQ9s8PCzkBt2QJMIFcCIC1V2o=;
+        s=default; t=1574141139;
+        bh=REIs9+LyYR7y8sibPigLGmZ+hJQIkXoAUMr0uv4Ra1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FfbS68UqA4jZm56XtvdI2IPrMDbZo9opi4rVaoWWBND2/iHuOMjX4LgnYpQdfNsLe
-         6z0CMMTOt4vTDrmJAu1SGW5FlGPKGMrkuQFD44f6MioeaLdlE2Y3aO0cnef0oAhmzL
-         61079krbf9cCDI7PqZBT1q5iKljYyJoM2+SZZujs=
+        b=UpMOYLi2bKf2mh2idc6zbZLRngeACo8jNrhp3NedtCfHwTSeigwIaWiJSUpeIZePz
+         J0I0zdwO2x1PfivmZ551I40v6QC2Y/XjL4yWW3lvLgPQxNEW8s9AixjqoqKGObrBfj
+         4pCPmnQiG8t2+2dppMzZhH6M8blAT9kBWpCUENM0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        syzbot+b6c55daa701fc389e286@syzkaller.appspotmail.com
-Subject: [PATCH 4.19 015/422] Input: ff-memless - kill timer in destroy()
-Date:   Tue, 19 Nov 2019 06:13:32 +0100
-Message-Id: <20191119051401.126739322@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Duggan <aduggan@synaptics.com>,
+        Simon Wood <simon@mungewell.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.19 017/422] Input: synaptics-rmi4 - disable the relative position IRQ in the F12 driver
+Date:   Tue, 19 Nov 2019 06:13:34 +0100
+Message-Id: <20191119051401.242112610@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,40 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Andrew Duggan <aduggan@synaptics.com>
 
-commit fa3a5a1880c91bb92594ad42dfe9eedad7996b86 upstream.
+commit f6aabe1ff1d9d7bad0879253011216438bdb2530 upstream.
 
-No timer must be left running when the device goes away.
+This patch fixes an issue seen on HID touchpads which report finger
+positions using RMI4 Function 12. The issue manifests itself as
+spurious button presses as described in:
+https://www.spinics.net/lists/linux-input/msg58618.html
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Reported-and-tested-by: syzbot+b6c55daa701fc389e286@syzkaller.appspotmail.com
+Commit 24d28e4f1271 ("Input: synaptics-rmi4 - convert irq distribution
+to irq_domain") switched the RMI4 driver to using an irq_domain to handle
+RMI4 function interrupts. Functions with more then one interrupt now have
+each interrupt mapped to their own IRQ and IRQ handler. The result of
+this change is that the F12 IRQ handler was now getting called twice. Once
+for the absolute data interrupt and once for the relative data interrupt.
+For HID devices, calling rmi_f12_attention() a second time causes the
+attn_data data pointer and size to be set incorrectly. When the touchpad
+button is pressed, F30 will generate an interrupt and attempt to read the
+F30 data from the invalid attn_data data pointer and report incorrect
+button events.
+
+This patch disables the F12 relative interrupt which prevents
+rmi_f12_attention() from being called twice.
+
+Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
+Reported-by: Simon Wood <simon@mungewell.org>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/1573726121.17351.3.camel@suse.com
+Link: https://lore.kernel.org/r/20191025002527.3189-2-aduggan@synaptics.com
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/ff-memless.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/input/rmi4/rmi_f12.c |   28 ++++++++++++++++++++++++++--
+ 1 file changed, 26 insertions(+), 2 deletions(-)
 
---- a/drivers/input/ff-memless.c
-+++ b/drivers/input/ff-memless.c
-@@ -501,6 +501,15 @@ static void ml_ff_destroy(struct ff_devi
- {
- 	struct ml_device *ml = ff->private;
+--- a/drivers/input/rmi4/rmi_f12.c
++++ b/drivers/input/rmi4/rmi_f12.c
+@@ -58,6 +58,9 @@ struct f12_data {
  
-+	/*
-+	 * Even though we stop all playing effects when tearing down
-+	 * an input device (via input_device_flush() that calls into
-+	 * input_ff_flush() that stops and erases all effects), we
-+	 * do not actually stop the timer, and therefore we should
-+	 * do it here.
-+	 */
-+	del_timer_sync(&ml->timer);
+ 	const struct rmi_register_desc_item *data15;
+ 	u16 data15_offset;
 +
- 	kfree(ml->private);
- }
++	unsigned long *abs_mask;
++	unsigned long *rel_mask;
+ };
  
+ static int rmi_f12_read_sensor_tuning(struct f12_data *f12)
+@@ -296,9 +299,18 @@ static int rmi_f12_write_control_regs(st
+ static int rmi_f12_config(struct rmi_function *fn)
+ {
+ 	struct rmi_driver *drv = fn->rmi_dev->driver;
++	struct f12_data *f12 = dev_get_drvdata(&fn->dev);
++	struct rmi_2d_sensor *sensor;
+ 	int ret;
+ 
+-	drv->set_irq_bits(fn->rmi_dev, fn->irq_mask);
++	sensor = &f12->sensor;
++
++	if (!sensor->report_abs)
++		drv->clear_irq_bits(fn->rmi_dev, f12->abs_mask);
++	else
++		drv->set_irq_bits(fn->rmi_dev, f12->abs_mask);
++
++	drv->clear_irq_bits(fn->rmi_dev, f12->rel_mask);
+ 
+ 	ret = rmi_f12_write_control_regs(fn);
+ 	if (ret)
+@@ -320,9 +332,12 @@ static int rmi_f12_probe(struct rmi_func
+ 	struct rmi_device_platform_data *pdata = rmi_get_platform_data(rmi_dev);
+ 	struct rmi_driver_data *drvdata = dev_get_drvdata(&rmi_dev->dev);
+ 	u16 data_offset = 0;
++	int mask_size;
+ 
+ 	rmi_dbg(RMI_DEBUG_FN, &fn->dev, "%s\n", __func__);
+ 
++	mask_size = BITS_TO_LONGS(drvdata->irq_count) * sizeof(unsigned long);
++
+ 	ret = rmi_read(fn->rmi_dev, query_addr, &buf);
+ 	if (ret < 0) {
+ 		dev_err(&fn->dev, "Failed to read general info register: %d\n",
+@@ -337,10 +352,19 @@ static int rmi_f12_probe(struct rmi_func
+ 		return -ENODEV;
+ 	}
+ 
+-	f12 = devm_kzalloc(&fn->dev, sizeof(struct f12_data), GFP_KERNEL);
++	f12 = devm_kzalloc(&fn->dev, sizeof(struct f12_data) + mask_size * 2,
++			GFP_KERNEL);
+ 	if (!f12)
+ 		return -ENOMEM;
+ 
++	f12->abs_mask = (unsigned long *)((char *)f12
++			+ sizeof(struct f12_data));
++	f12->rel_mask = (unsigned long *)((char *)f12
++			+ sizeof(struct f12_data) + mask_size);
++
++	set_bit(fn->irq_pos, f12->abs_mask);
++	set_bit(fn->irq_pos + 1, f12->rel_mask);
++
+ 	f12->has_dribble = !!(buf & BIT(3));
+ 
+ 	if (fn->dev.of_node) {
 
 
