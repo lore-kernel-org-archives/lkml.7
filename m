@@ -2,139 +2,113 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E126C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D221C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A05821850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05DB321850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:39:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="UaXrKEQd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bEgICEq7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbfKSHiv (ORCPT
+        id S1727453AbfKSHj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 02:38:51 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:24437 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfKSHiu (ORCPT
+        Tue, 19 Nov 2019 02:39:29 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39043 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfKSHj3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 02:38:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574149129;
-        s=strato-dkim-0002; d=hartkopp.net;
-        h=In-Reply-To:Date:Message-ID:From:References:To:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=NpOIjRJnqmN7G5qwAWt8nG3TxC9QZhn3+hpNnkE7dVE=;
-        b=UaXrKEQd4lY4nkEI3B+phzkbu2o4+5jWDu4TLCKkR1Ns8i9+zkk+c0QMnljT425qOq
-        mVS60eKq2nGMVrQPAG52AuTDUwqF7PDi2amWochTG4OtdA+TXxW3isC8tPXgLZuEmB3H
-        ncAMcLRqbNeqQ7jCgmKsaID4ZawonTC32w/HLYKAAAtTI+IeoBkx8iZHy8KyYeM6OCxj
-        Xcogw9s+T7V27I0Jp1lgyi62F6MUIOkfob6+yPUOT4dyGLmEyWtp0ZKUXylScBkUvqpP
-        bjgB2iJYka77s/pm0PrWZwKQkKml49SUyDgwTrempWic+oCA1DPxkVWS0aoCu90zZqOS
-        JLOA==
-X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3PMaViOoLMJVch5l0xf"
-X-RZG-CLASS-ID: mo00
-Received: from [192.168.1.177]
-        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
-        with ESMTPSA id C03a03vAJ7Zk28J
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Tue, 19 Nov 2019 08:35:46 +0100 (CET)
-Subject: Re: KMSAN: uninit-value in can_receive
-To:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        syzbot <syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com>,
-        davem@davemloft.net, glider@google.com, linux-can@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-References: <0000000000005c08d10597a3a05d@google.com>
- <a5f73d92-fdf2-2590-c863-39a181dca8e1@hartkopp.net>
- <deedd609-6f3b-8035-47e1-252ab221faa1@pengutronix.de>
- <7934bc2b-597f-0bb3-be2d-32f3b07b4de9@hartkopp.net>
- <7f5c4546-0c1a-86ae-581e-0203b5fca446@pengutronix.de>
-From:   Oliver Hartkopp <socketcan@hartkopp.net>
-Message-ID: <1f7d6ea7-152e-ff18-549c-b196d8b5e3a7@hartkopp.net>
-Date:   Tue, 19 Nov 2019 08:35:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 19 Nov 2019 02:39:29 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t26so2240745wmi.4;
+        Mon, 18 Nov 2019 23:39:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hh4VbnNsZd0cQjCcxR1lcKBnthPXIf0SZTjvhg2Wu+o=;
+        b=bEgICEq769u8g2rEZbD8dQT+znw/d/3WiyLyxRoRw2phf9OfSNgEj8y7rBFWslHOfR
+         CiDX77/A2ElzxR1iC6wn+xj3FwhUSO1TYld/LPBHJisQ26P/zTwkIc2faQKEab7S9K5B
+         HsH8dMCSHs/jsDlCzwdlZl8P42r0ysTzoTlKPEhcOd/U6WJ8NYaSCsSwPONBhtWibdVU
+         SaHbl7L/aToxU7ObEv/bZMg9vy9ctB82/goQrJvUIEM+ALSx/ebIDGYx97nXEBsoQ5WG
+         b3wj/0dg22lPqwiTsNcqSgc9D20S/yZXLdypRwgJ4EhsEqTuwdOdADXw1Nm8sCNBDoAQ
+         ySOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hh4VbnNsZd0cQjCcxR1lcKBnthPXIf0SZTjvhg2Wu+o=;
+        b=qsE8YujaLHU1tTa7hnLuScZ5jvQpKiJcEQ8C+XMVQCIWPCab7mxcMnCMuqyPAuFAkX
+         m7oyX5Vk/qi0NbVbKcnR3tkTChAOAa4jsSAZ8p0rS/WO3OF30vIL6YtcvQI0PGnqZRfU
+         eZ7tFGhzV4I9xVnBXPXDiN4QYDzg4+fX+SEPg9os2U54f/qaO7vAlFJIyCnM7OXpa23G
+         XR6q2jfDVtmsGRE9M1J/MGybRfmwYEWILpMoFR+v7AniTmpdsVqR26uUuUCxF3YKBJ/b
+         wAY+bT8HuTHzaqqXXSJLoweKoiOHpeM8/eMaH3sFqRNwRuw23U9sha3Bpj9gcxLm1Z/4
+         go0Q==
+X-Gm-Message-State: APjAAAUz5EGHvtok/Oz9gRVlYnQADcyusy2Rn+0HYLrggxLKmVTLARnF
+        ec43VyUfMlseUn4RhXeYmzOXY4HE
+X-Google-Smtp-Source: APXvYqz0gH537B8rU2w00QiT/qNEHBVmoinFUpSwuRNgUqOSFjcLDQplIaEzENzq42pnIhByD4QFUw==
+X-Received: by 2002:a05:600c:22c1:: with SMTP id 1mr3946744wmg.142.1574149166955;
+        Mon, 18 Nov 2019 23:39:26 -0800 (PST)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id k125sm2206895wmf.2.2019.11.18.23.39.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 23:39:26 -0800 (PST)
+Date:   Tue, 19 Nov 2019 08:39:24 +0100
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 2/3] ARM: dts: sun8i: a33: add the new SecuritySystem
+ compatible
+Message-ID: <20191119073924.GA32060@Red>
+References: <20191114144812.22747-1-clabbe.montjoie@gmail.com>
+ <20191114144812.22747-3-clabbe.montjoie@gmail.com>
+ <20191118111143.GF4345@gilmour.lan>
 MIME-Version: 1.0
-In-Reply-To: <7f5c4546-0c1a-86ae-581e-0203b5fca446@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191118111143.GF4345@gilmour.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 18/11/2019 22.15, Marc Kleine-Budde wrote:
-> On 11/18/19 9:49 PM, Oliver Hartkopp wrote:
->>
->>
->> On 18/11/2019 21.29, Marc Kleine-Budde wrote:
->>> On 11/18/19 9:25 PM, Oliver Hartkopp wrote:
->>
->>>>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->>>>> Reported-by: syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com
->>>>>
->>>>> =====================================================
->>>>> BUG: KMSAN: uninit-value in can_receive+0x23c/0x5e0 net/can/af_can.c:649
->>>>> CPU: 1 PID: 3490 Comm: syz-executor.2 Not tainted 5.4.0-rc5+ #0
->>
->>>>
->>>> In line 649 of 5.4.0-rc5+ we can find a while() statement:
->>>>
->>>> while (!(can_skb_prv(skb)->skbcnt))
->>>> 	can_skb_prv(skb)->skbcnt = atomic_inc_return(&skbcounter);
->>>>
->>>> In linux/include/linux/can/skb.h we see:
->>>>
->>>> static inline struct can_skb_priv *can_skb_prv(struct sk_buff *skb)
->>>> {
->>>> 	return (struct can_skb_priv *)(skb->head);
->>>> }
->>>>
->>>> IMO accessing can_skb_prv(skb)->skbcnt at this point is a valid
->>>> operation which has no uninitialized value.
->>>>
->>>> Can this probably be a false positive of KMSAN?
->>>
->>> The packet is injected via the packet socket into the kernel. Where does
->>> skb->head point to in this case? When the skb is a proper
->>> kernel-generated skb containing a CAN-2.0 or CAN-FD frame skb->head is
->>> maybe properly initialized?
->>
->> The packet is either received via vcan or vxcan which checks via
->> can_dropped_invalid_skb() if we have a valid ETH_P_CAN type skb.
+On Mon, Nov 18, 2019 at 12:11:43PM +0100, Maxime Ripard wrote:
+> Hi,
 > 
-> According to the call stack it's injected into the kernel via a packet
-> socket and not via v(x)can.
+> On Thu, Nov 14, 2019 at 03:48:11PM +0100, Corentin Labbe wrote:
+> > Add the new A33 SecuritySystem compatible to the crypto node.
+> >
+> > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> > ---
+> >  arch/arm/boot/dts/sun8i-a33.dtsi | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
+> > index 1532a0e59af4..5680fa1de102 100644
+> > --- a/arch/arm/boot/dts/sun8i-a33.dtsi
+> > +++ b/arch/arm/boot/dts/sun8i-a33.dtsi
+> > @@ -215,7 +215,8 @@
+> >  		};
+> >
+> >  		crypto: crypto-engine@1c15000 {
+> > -			compatible = "allwinner,sun4i-a10-crypto";
+> > +			compatible = "allwinner,sun8i-a33-crypto",
+> > +				     "allwinner,sun4i-a10-crypto";
+> 
+> If some algorithms aren't working properly, we can't really fall back
+> to it, we should just use the a33 compatible.
+> 
 
-See ioctl$ifreq https://syzkaller.appspot.com/x/log.txt?x=14563416e00000
+Since crypto selftest detect the problem, the fallback could be used and SS will just be in degraded mode (no sha1).
+But since nobody reported this problem since 4 years (when SS was added in a33 dts), the absence of sha1 is clearly not an issue.
 
-23:11:34 executing program 2:
-r0 = socket(0x200000000000011, 0x3, 0x0)
-ioctl$ifreq_SIOCGIFINDEX_vcan(r0, 0x8933, 
-&(0x7f0000000040)={'vxcan1\x00', <r1=>0x0})
-bind$packet(r0, &(0x7f0000000300)={0x11, 0xc, r1}, 0x14)
-sendmmsg(r0, &(0x7f0000000d00), 0x400004e, 0x0)
-
-We only can receive skbs from (v(x))can devices.
-No matter if someone wrote to them via PF_CAN or PF_PACKET.
-We check for ETH_P_CAN(FD) type and ARPHRD_CAN dev type at rx time.
-
->> We additionally might think about introducing a check whether we have a
->> can_skb_reserve() created skbuff.
->>
->> But even if someone forged a skbuff without this reserved space the
->> access to can_skb_prv(skb)->skbcnt would point into some CAN frame
->> content - which is still no access to uninitialized content, right?
-
-So this question remains still valid whether we have a false positive 
-from KMSAN here.
-
-Regards,
-Oliver
-
+Regards
