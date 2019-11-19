@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C290AC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC752C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7AC21850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9846321850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143837;
-	bh=Y4FdlwIm9c/henSoa6RBnUIlwhJJ7s4sawtG84K2ywg=;
+	s=default; t=1574143846;
+	bh=XNLzB284cpGHfHfz5gqLU1Vm8NUPYzDzyp/DCxDsOQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IQlF9yZLczZ7vaOSsDWyo+wmUneQIRIU22vOoyXqYPH8u7H8kF6NpB1jc+vqhDYqu
-	 szt4rldB09L7I1tasbswF2w0aYbCD0f6VrM99Po1s34QlN0JTrisXsTPsGPw9VIT5b
-	 UIFE1xwC7tOU2A0XLK2ahmUpgahlqlQj9jpnOnXM=
+	b=pj9meKa3D1SiZ7LCGBikCWcvHF653vX0bcQR3eqqe4nesDdH7Ftvbl6+DmgvOevNI
+	 l3Z6e0j+sAVYxkHt+rd/z0yqONAydIjMmQ8i149+X2ksaNfn1f6I/gvZbHwhhDwrTD
+	 /JPxRsOO89YzV9yZrDZi499yl378OpaRwPUk7iOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728503AbfKSF0H (ORCPT
+        id S1728406AbfKSGKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:26:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44024 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 01:10:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727665AbfKSF0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:26:04 -0500
+        id S1727841AbfKSFZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:25:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BFF321823;
-        Tue, 19 Nov 2019 05:26:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACF5B21823;
+        Tue, 19 Nov 2019 05:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141163;
-        bh=Y4FdlwIm9c/henSoa6RBnUIlwhJJ7s4sawtG84K2ywg=;
+        s=default; t=1574141151;
+        bh=XNLzB284cpGHfHfz5gqLU1Vm8NUPYzDzyp/DCxDsOQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yWOyx+D80HFH6vmI/3FSOvjoh1ThdR6+5tCWViYchFhGkQM2uZ5c1781I1KzvrZq+
-         BtxqFfJZwvEi9g8elAfiT6ETDqcDQeefRSXgrWZWToVuWKd8L058NtgVbsFQz9WlkY
-         8PtY6hQYAjuny8GfuXUqSrmFbarVxmbhlwhHTYq4=
+        b=law7ipEqKmmCYlA0Y4n4OVkavXGwa/Sjp1yLOHN5FgQGbgwILXC4I7kCU4tEpwLjL
+         IvLU+foauMJ+M6Gnpye/abJSIpIoOl2LriT4Bifd5LW+tOy09tqMlOPKyAIV/t49ob
+         OQTbBFveEsoJbQCYVB0bAGU36KpgHOrUG4wakAwc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
+        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
+        Tony Brelinski <tonyx.brelinski@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 067/422] ASoC: dpcm: Properly initialise hw->rate_max
-Date:   Tue, 19 Nov 2019 06:14:24 +0100
-Message-Id: <20191119051404.009279032@linuxfoundation.org>
+Subject: [PATCH 4.19 063/422] ice: Prevent control queue operations during reset
+Date:   Tue, 19 Nov 2019 06:14:20 +0100
+Message-Id: <20191119051403.783565468@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,40 +62,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
 
-[ Upstream commit e33ffbd9cd39da09831ce62c11025d830bf78d9e ]
+[ Upstream commit fd2a981777d911b2e94cdec50779c85c58a0dec9 ]
 
-If the CPU DAI does not initialise rate_max, say if using
-using KNOT or CONTINUOUS, then the rate_max field will be
-initialised to 0. A value of zero in the rate_max field of
-the hardware runtime will cause the sound card to support no
-sample rates at all. Obviously this is not desired, just a
-different mechanism is being used to apply the constraints. As
-such update the setting of rate_max in dpcm_init_runtime_hw
-to be consistent with the non-DPCM cases and set rate_max to
-UINT_MAX if nothing is defined on the CPU DAI.
+Once reset is issued, the driver loses all control queue interfaces.
+Exercising control queue operations during reset is incorrect and
+may result in long timeouts.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This patch introduces a new field 'reset_ongoing' in the hw structure.
+This is set to 1 by the core driver when it receives a reset interrupt.
+ice_sq_send_cmd checks reset_ongoing before actually issuing the control
+queue operation. If a reset is in progress, it returns a soft error code
+(ICE_ERR_RESET_PENDING) to the caller. The caller may or may not have to
+take any action based on this return. Once the driver knows that the
+reset is done, it has to set reset_ongoing back to 0. This will allow
+control queue operations to be posted to the hardware again.
+
+This "bail out" logic was specifically added to ice_sq_send_cmd (which
+is pretty low level function) so that we have one solution in one place
+that applies to all types of control queues.
+
+Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
+Tested-by: Tony Brelinski <tonyx.brelinski@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-pcm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/intel/ice/ice_controlq.c |  3 ++
+ drivers/net/ethernet/intel/ice/ice_main.c     | 34 ++++++++++++++++---
+ drivers/net/ethernet/intel/ice/ice_status.h   |  1 +
+ drivers/net/ethernet/intel/ice/ice_type.h     |  1 +
+ 4 files changed, 34 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-index 6566c8831a965..551bfc581fc12 100644
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -1683,7 +1683,7 @@ static void dpcm_init_runtime_hw(struct snd_pcm_runtime *runtime,
- 				 struct snd_soc_pcm_stream *stream)
- {
- 	runtime->hw.rate_min = stream->rate_min;
--	runtime->hw.rate_max = stream->rate_max;
-+	runtime->hw.rate_max = min_not_zero(stream->rate_max, UINT_MAX);
- 	runtime->hw.channels_min = stream->channels_min;
- 	runtime->hw.channels_max = stream->channels_max;
- 	if (runtime->hw.formats)
+diff --git a/drivers/net/ethernet/intel/ice/ice_controlq.c b/drivers/net/ethernet/intel/ice/ice_controlq.c
+index e783976c401d8..89f18fe18fe36 100644
+--- a/drivers/net/ethernet/intel/ice/ice_controlq.c
++++ b/drivers/net/ethernet/intel/ice/ice_controlq.c
+@@ -814,6 +814,9 @@ ice_sq_send_cmd(struct ice_hw *hw, struct ice_ctl_q_info *cq,
+ 	u16 retval = 0;
+ 	u32 val = 0;
+ 
++	/* if reset is in progress return a soft error */
++	if (hw->reset_ongoing)
++		return ICE_ERR_RESET_ONGOING;
+ 	mutex_lock(&cq->sq_lock);
+ 
+ 	cq->sq_last_status = ICE_AQ_RC_OK;
+diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
+index 875f97aba6e0d..e1f95e7a51393 100644
+--- a/drivers/net/ethernet/intel/ice/ice_main.c
++++ b/drivers/net/ethernet/intel/ice/ice_main.c
+@@ -535,10 +535,13 @@ static void ice_reset_subtask(struct ice_pf *pf)
+ 		ice_prepare_for_reset(pf);
+ 
+ 		/* make sure we are ready to rebuild */
+-		if (ice_check_reset(&pf->hw))
++		if (ice_check_reset(&pf->hw)) {
+ 			set_bit(__ICE_RESET_FAILED, pf->state);
+-		else
++		} else {
++			/* done with reset. start rebuild */
++			pf->hw.reset_ongoing = false;
+ 			ice_rebuild(pf);
++		}
+ 		clear_bit(__ICE_RESET_RECOVERY_PENDING, pf->state);
+ 		goto unlock;
+ 	}
+@@ -1757,7 +1760,8 @@ static irqreturn_t ice_misc_intr(int __always_unused irq, void *data)
+ 		 * We also make note of which reset happened so that peer
+ 		 * devices/drivers can be informed.
+ 		 */
+-		if (!test_bit(__ICE_RESET_RECOVERY_PENDING, pf->state)) {
++		if (!test_and_set_bit(__ICE_RESET_RECOVERY_PENDING,
++				      pf->state)) {
+ 			if (reset == ICE_RESET_CORER)
+ 				set_bit(__ICE_CORER_RECV, pf->state);
+ 			else if (reset == ICE_RESET_GLOBR)
+@@ -1765,7 +1769,20 @@ static irqreturn_t ice_misc_intr(int __always_unused irq, void *data)
+ 			else
+ 				set_bit(__ICE_EMPR_RECV, pf->state);
+ 
+-			set_bit(__ICE_RESET_RECOVERY_PENDING, pf->state);
++			/* There are couple of different bits at play here.
++			 * hw->reset_ongoing indicates whether the hardware is
++			 * in reset. This is set to true when a reset interrupt
++			 * is received and set back to false after the driver
++			 * has determined that the hardware is out of reset.
++			 *
++			 * __ICE_RESET_RECOVERY_PENDING in pf->state indicates
++			 * that a post reset rebuild is required before the
++			 * driver is operational again. This is set above.
++			 *
++			 * As this is the start of the reset/rebuild cycle, set
++			 * both to indicate that.
++			 */
++			hw->reset_ongoing = true;
+ 		}
+ 	}
+ 
+@@ -4188,7 +4205,14 @@ static int ice_vsi_stop_tx_rings(struct ice_vsi *vsi)
+ 	}
+ 	status = ice_dis_vsi_txq(vsi->port_info, vsi->num_txq, q_ids, q_teids,
+ 				 NULL);
+-	if (status) {
++	/* if the disable queue command was exercised during an active reset
++	 * flow, ICE_ERR_RESET_ONGOING is returned. This is not an error as
++	 * the reset operation disables queues at the hardware level anyway.
++	 */
++	if (status == ICE_ERR_RESET_ONGOING) {
++		dev_dbg(&pf->pdev->dev,
++			"Reset in progress. LAN Tx queues already disabled\n");
++	} else if (status) {
+ 		dev_err(&pf->pdev->dev,
+ 			"Failed to disable LAN Tx queues, error: %d\n",
+ 			status);
+diff --git a/drivers/net/ethernet/intel/ice/ice_status.h b/drivers/net/ethernet/intel/ice/ice_status.h
+index 9a95c4ffd7d79..d2dae913d81e0 100644
+--- a/drivers/net/ethernet/intel/ice/ice_status.h
++++ b/drivers/net/ethernet/intel/ice/ice_status.h
+@@ -20,6 +20,7 @@ enum ice_status {
+ 	ICE_ERR_ALREADY_EXISTS			= -14,
+ 	ICE_ERR_DOES_NOT_EXIST			= -15,
+ 	ICE_ERR_MAX_LIMIT			= -17,
++	ICE_ERR_RESET_ONGOING			= -18,
+ 	ICE_ERR_BUF_TOO_SHORT			= -52,
+ 	ICE_ERR_NVM_BLANK_MODE			= -53,
+ 	ICE_ERR_AQ_ERROR			= -100,
+diff --git a/drivers/net/ethernet/intel/ice/ice_type.h b/drivers/net/ethernet/intel/ice/ice_type.h
+index a509fe5f1e543..5ca9d684429d1 100644
+--- a/drivers/net/ethernet/intel/ice/ice_type.h
++++ b/drivers/net/ethernet/intel/ice/ice_type.h
+@@ -293,6 +293,7 @@ struct ice_hw {
+ 	u8 sw_entry_point_layer;
+ 
+ 	u8 evb_veb;		/* true for VEB, false for VEPA */
++	u8 reset_ongoing;	/* true if hw is in reset, false otherwise */
+ 	struct ice_bus_info bus;
+ 	struct ice_nvm_info nvm;
+ 	struct ice_hw_dev_caps dev_caps;	/* device capabilities */
 -- 
 2.20.1
 
