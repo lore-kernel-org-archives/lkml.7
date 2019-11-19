@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02462C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE20C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C942422304
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80FC621783
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:42:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142151;
-	bh=9YlaCXaWA3dweQyNoIt/1+CUs8RUr1Fzrhp45ngREL0=;
+	s=default; t=1574142158;
+	bh=yygVleyOjciisxZxzDJdYlt1GCzmG7Mb67AoSftKq8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2fqKD0XLf203VNTCk+fav5MgFhPoNr2p2f4nquSX4w9E+AjAo+EgEOUZpgRu+fKPy
-	 qKscsA6Z2b+OG3q4lSUZ1Q9iCa9FFrpKJc7xxaNSdQkIBCsid/2bN+AX/L9gPH9K/P
-	 y3Eq5XT5aSJkt3jMpZ7GlQL5qX0S1npFJWPGw+VQ=
+	b=ekKjX3P37AtZNCfrJDtLywKI+sDoUyvBXNB7X5X6ditWlOb032A2c+hu1utfmJMPK
+	 Uwb+reNEnxCzrvozLO7AQ1UJUAHIwwBCwF4MydwWwxHUm15qtTJURixHvWIYzYrAou
+	 BGuEw1D+tA8Kqb2kv5UQEWhufB/Eb+1mAxQnbNu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbfKSFma (ORCPT
+        id S1728117AbfKSFmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:42:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37188 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:42:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729307AbfKSFm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:42:28 -0500
+        id S1728116AbfKSFmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:42:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 715FC21783;
-        Tue, 19 Nov 2019 05:42:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0B0721939;
+        Tue, 19 Nov 2019 05:42:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142146;
-        bh=9YlaCXaWA3dweQyNoIt/1+CUs8RUr1Fzrhp45ngREL0=;
+        s=default; t=1574142152;
+        bh=yygVleyOjciisxZxzDJdYlt1GCzmG7Mb67AoSftKq8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oFbx/34kIXkm0azgE9K2zFel3E9TI8taWWE8fczg9APueNF3okwy/v4vKDvvN2XBe
-         FplWwa17TCGeLZnIYEGFnZqYp3hMUlJj/4EpXhFR/2NIkykhK7dlMzZc4/iuD+/YkL
-         o2TeIWIFLo0MODW1NldMlx2lbvnQ+22mnERYexoc=
+        b=c4lCAQR3PZyWbP9V7EoIQHnSnOuiQi1lmP+Tejc42w0J5yTosq+zUX1u9oOuP809m
+         OYbB0jJmVdei6NVUO5j0cVZCEjShA9PedUGLxZd1hq5B5aeOQYBnQoa3woigtVZKwL
+         FszukquG/i6+FaPwyKiTmOa7z/atr5yHtaFYzHAg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sara Sharon <sara.sharon@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 397/422] iwlwifi: mvm: use correct FIFO length
-Date:   Tue, 19 Nov 2019 06:19:54 +0100
-Message-Id: <20191119051424.858935021@linuxfoundation.org>
+Subject: [PATCH 4.19 407/422] scsi: NCR5380: Check for bus reset
+Date:   Tue, 19 Nov 2019 06:20:04 +0100
+Message-Id: <20191119051425.557008807@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,110 +61,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sara Sharon <sara.sharon@intel.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit 7126b6f2bbdf8e25f85e7ca6d91d49ea4ce9f6a6 ]
+[ Upstream commit 6b0e87a6aafe12d75c2bea6fc8e49e88b98b3083 ]
 
-Current FIFO size calculation is wrong for two reasons:
-- We access lmac 0 by default
-- We don't take 11ax into consideration.
-Fix both.
+The SR_RST bit isn't latched. Hence, detecting a bus reset isn't reliable.
+When it is detected, the right thing to do is to drop all connected and
+disconnected commands. The code for that is already present so refactor it and
+call it when SR_RST is set.
 
-Signed-off-by: Sara Sharon <sara.sharon@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/intel/iwlwifi/mvm/mac-ctxt.c |  4 ++
- drivers/net/wireless/intel/iwlwifi/mvm/tx.c   | 47 +++++++++++++------
- 2 files changed, 36 insertions(+), 15 deletions(-)
+ drivers/scsi/NCR5380.c | 74 +++++++++++++++++++++++++-----------------
+ 1 file changed, 45 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
-index b3fd20502abb3..d90d58309bf0e 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
-@@ -85,6 +85,10 @@ const u8 iwl_mvm_ac_to_gen2_tx_fifo[] = {
- 	IWL_GEN2_EDCA_TX_FIFO_VI,
- 	IWL_GEN2_EDCA_TX_FIFO_BE,
- 	IWL_GEN2_EDCA_TX_FIFO_BK,
-+	IWL_GEN2_TRIG_TX_FIFO_VO,
-+	IWL_GEN2_TRIG_TX_FIFO_VI,
-+	IWL_GEN2_TRIG_TX_FIFO_BE,
-+	IWL_GEN2_TRIG_TX_FIFO_BK,
- };
+diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+index bce6c990d060a..8ec68dcc0cc4a 100644
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -131,6 +131,7 @@
  
- struct iwl_mvm_mac_iface_iterator_data {
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-index cb2e52e7f46c9..449e3d32811a6 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-@@ -778,6 +778,36 @@ iwl_mvm_tx_tso_segment(struct sk_buff *skb, unsigned int num_subframes,
- 	return 0;
+ static int do_abort(struct Scsi_Host *);
+ static void do_reset(struct Scsi_Host *);
++static void bus_reset_cleanup(struct Scsi_Host *);
+ 
+ /**
+  * initialize_SCp - init the scsi pointer field
+@@ -885,7 +886,14 @@ static irqreturn_t __maybe_unused NCR5380_intr(int irq, void *dev_id)
+ 			/* Probably Bus Reset */
+ 			NCR5380_read(RESET_PARITY_INTERRUPT_REG);
+ 
+-			dsprintk(NDEBUG_INTR, instance, "unknown interrupt\n");
++			if (sr & SR_RST) {
++				/* Certainly Bus Reset */
++				shost_printk(KERN_WARNING, instance,
++					     "bus reset interrupt\n");
++				bus_reset_cleanup(instance);
++			} else {
++				dsprintk(NDEBUG_INTR, instance, "unknown interrupt\n");
++			}
+ #ifdef SUN3_SCSI_VME
+ 			dregs->csr |= CSR_DMA_ENABLE;
+ #endif
+@@ -2297,31 +2305,12 @@ out:
  }
  
-+static unsigned int iwl_mvm_max_amsdu_size(struct iwl_mvm *mvm,
-+					   struct ieee80211_sta *sta,
-+					   unsigned int tid)
-+{
-+	struct iwl_mvm_sta *mvmsta = iwl_mvm_sta_from_mac80211(sta);
-+	enum nl80211_band band = mvmsta->vif->bss_conf.chandef.chan->band;
-+	u8 ac = tid_to_mac80211_ac[tid];
-+	unsigned int txf;
-+	int lmac = IWL_LMAC_24G_INDEX;
-+
-+	if (iwl_mvm_is_cdb_supported(mvm) &&
-+	    band == NL80211_BAND_5GHZ)
-+		lmac = IWL_LMAC_5G_INDEX;
-+
-+	/* For HE redirect to trigger based fifos */
-+	if (sta->he_cap.has_he && !WARN_ON(!iwl_mvm_has_new_tx_api(mvm)))
-+		ac += 4;
-+
-+	txf = iwl_mvm_mac_ac_to_tx_fifo(mvm, ac);
-+
-+	/*
-+	 * Don't send an AMSDU that will be longer than the TXF.
-+	 * Add a security margin of 256 for the TX command + headers.
-+	 * We also want to have the start of the next packet inside the
-+	 * fifo to be able to send bursts.
-+	 */
-+	return min_t(unsigned int, mvmsta->max_amsdu_len,
-+		     mvm->fwrt.smem_cfg.lmac[lmac].txfifo_size[txf] - 256);
+ 
+-/**
+- * NCR5380_host_reset - reset the SCSI host
+- * @cmd: SCSI command undergoing EH
+- *
+- * Returns SUCCESS
+- */
+-
+-static int NCR5380_host_reset(struct scsi_cmnd *cmd)
++static void bus_reset_cleanup(struct Scsi_Host *instance)
+ {
+-	struct Scsi_Host *instance = cmd->device->host;
+ 	struct NCR5380_hostdata *hostdata = shost_priv(instance);
+ 	int i;
+-	unsigned long flags;
+ 	struct NCR5380_cmd *ncmd;
+ 
+-	spin_lock_irqsave(&hostdata->lock, flags);
+-
+-#if (NDEBUG & NDEBUG_ANY)
+-	shost_printk(KERN_INFO, instance, __func__);
+-#endif
+-	NCR5380_dprint(NDEBUG_ANY, instance);
+-	NCR5380_dprint_phase(NDEBUG_ANY, instance);
+-
+-	do_reset(instance);
+-
+ 	/* reset NCR registers */
+ 	NCR5380_write(MODE_REG, MR_BASE);
+ 	NCR5380_write(TARGET_COMMAND_REG, 0);
+@@ -2333,14 +2322,6 @@ static int NCR5380_host_reset(struct scsi_cmnd *cmd)
+ 	 * commands!
+ 	 */
+ 
+-	list_for_each_entry(ncmd, &hostdata->unissued, list) {
+-		struct scsi_cmnd *cmd = NCR5380_to_scmd(ncmd);
+-
+-		cmd->result = DID_RESET << 16;
+-		cmd->scsi_done(cmd);
+-	}
+-	INIT_LIST_HEAD(&hostdata->unissued);
+-
+ 	if (hostdata->selecting) {
+ 		hostdata->selecting->result = DID_RESET << 16;
+ 		complete_cmd(instance, hostdata->selecting);
+@@ -2374,6 +2355,41 @@ static int NCR5380_host_reset(struct scsi_cmnd *cmd)
+ 
+ 	queue_work(hostdata->work_q, &hostdata->main_task);
+ 	maybe_release_dma_irq(instance);
 +}
 +
- static int iwl_mvm_tx_tso(struct iwl_mvm *mvm, struct sk_buff *skb,
- 			  struct ieee80211_tx_info *info,
- 			  struct ieee80211_sta *sta,
-@@ -790,7 +820,7 @@ static int iwl_mvm_tx_tso(struct iwl_mvm *mvm, struct sk_buff *skb,
- 	u16 snap_ip_tcp, pad;
- 	unsigned int dbg_max_amsdu_len;
- 	netdev_features_t netdev_flags = NETIF_F_CSUM_MASK | NETIF_F_SG;
--	u8 tid, txf;
-+	u8 tid;
++/**
++ * NCR5380_host_reset - reset the SCSI host
++ * @cmd: SCSI command undergoing EH
++ *
++ * Returns SUCCESS
++ */
++
++static int NCR5380_host_reset(struct scsi_cmnd *cmd)
++{
++	struct Scsi_Host *instance = cmd->device->host;
++	struct NCR5380_hostdata *hostdata = shost_priv(instance);
++	unsigned long flags;
++	struct NCR5380_cmd *ncmd;
++
++	spin_lock_irqsave(&hostdata->lock, flags);
++
++#if (NDEBUG & NDEBUG_ANY)
++	shost_printk(KERN_INFO, instance, __func__);
++#endif
++	NCR5380_dprint(NDEBUG_ANY, instance);
++	NCR5380_dprint_phase(NDEBUG_ANY, instance);
++
++	list_for_each_entry(ncmd, &hostdata->unissued, list) {
++		struct scsi_cmnd *scmd = NCR5380_to_scmd(ncmd);
++
++		scmd->result = DID_RESET << 16;
++		scmd->scsi_done(scmd);
++	}
++	INIT_LIST_HEAD(&hostdata->unissued);
++
++	do_reset(instance);
++	bus_reset_cleanup(instance);
++
+ 	spin_unlock_irqrestore(&hostdata->lock, flags);
  
- 	snap_ip_tcp = 8 + skb_transport_header(skb) - skb_network_header(skb) +
- 		tcp_hdrlen(skb);
-@@ -829,20 +859,7 @@ static int iwl_mvm_tx_tso(struct iwl_mvm *mvm, struct sk_buff *skb,
- 	    !(mvmsta->amsdu_enabled & BIT(tid)))
- 		return iwl_mvm_tx_tso_segment(skb, 1, netdev_flags, mpdus_skb);
- 
--	max_amsdu_len = mvmsta->max_amsdu_len;
--
--	/* the Tx FIFO to which this A-MSDU will be routed */
--	txf = iwl_mvm_mac_ac_to_tx_fifo(mvm, tid_to_mac80211_ac[tid]);
--
--	/*
--	 * Don't send an AMSDU that will be longer than the TXF.
--	 * Add a security margin of 256 for the TX command + headers.
--	 * We also want to have the start of the next packet inside the
--	 * fifo to be able to send bursts.
--	 */
--	max_amsdu_len = min_t(unsigned int, max_amsdu_len,
--			      mvm->fwrt.smem_cfg.lmac[0].txfifo_size[txf] -
--			      256);
-+	max_amsdu_len = iwl_mvm_max_amsdu_size(mvm, sta, tid);
- 
- 	if (unlikely(dbg_max_amsdu_len))
- 		max_amsdu_len = min_t(unsigned int, max_amsdu_len,
+ 	return SUCCESS;
 -- 
 2.20.1
 
