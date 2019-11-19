@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360D4C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3266BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08CDD218BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A72C218BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142469;
-	bh=RvVTYuH6J/bWSf35l6x4RJtqEASHSYMDdLh47axTfxE=;
+	s=default; t=1574142473;
+	bh=paYbxFJhwWi5rUZFJYNrk3e0i0/3tdHI35nXxRrVAuE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0xnyFa5wmBVCpC4gZwi9KRo7UF9HivtuJ6rtfzU2leKYGsv/PmIbBRmbGY+YYu2wC
-	 x50UmUXJ8IS95bt2zcXjLtVZcwCfRtIVZ6zpDsx4OPJhJF0sKjPpHwwP1hZNBTrnJu
-	 RjjC0KmTLDDa8QPfQwtA1AB0bRead4zEhk0wLIrE=
+	b=rsdfu2GPNPXg1dZ2I/W5uJgW4EzzgA9shBBjXIVT4G/YXVs43w8ZHQZrAyCiZQovc
+	 ulUHdduayLQ103UVrT6N0c35JWnJU4OIAQVz3dEiy6xvjU3R+hEPIXb8LkwZ3XLb/3
+	 NAGjKKsmBtZDKKKsp6ZtNRF+LhEZr4OI6qd6/Xcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731275AbfKSFrs (ORCPT
+        id S1731283AbfKSFrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:47:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44006 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:47:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731258AbfKSFrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:47:39 -0500
+        id S1730881AbfKSFrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:47:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA05B2071B;
-        Tue, 19 Nov 2019 05:47:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 172112071B;
+        Tue, 19 Nov 2019 05:47:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142458;
-        bh=RvVTYuH6J/bWSf35l6x4RJtqEASHSYMDdLh47axTfxE=;
+        s=default; t=1574142461;
+        bh=paYbxFJhwWi5rUZFJYNrk3e0i0/3tdHI35nXxRrVAuE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZFsyKyuv6OfzvUHGnlpC/NqsqFODo7e/38MScJU0UsOUijV/eqrk16NaNMo5SKj4i
-         0cqFDGu6f2sifX4/qcXNtpK6VbQ3pN4XG3MGXdKd1zhJ8VaNnBwOHUbqNpS5KqybDK
-         /6GlU1jKCO2eeD5MOROoBpMiJljUlL1YJiOzbMlQ=
+        b=EvvX5xKSKR5Pqi65FcTxa1V3One8IcGsToGo1s7F7MLbb7DvZ0vdGtWqFbALyko95
+         L7aDml/Qb10fiZg9CoPULXS/piKknqWU0iJ1JlM0ro/ZGRr+1WdjR2l57uKPWH64vU
+         wEes0ENlTNqL5ifI67RK/U9NhbBV9Hh6UTJmlT7g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suman Anna <s-anna@ti.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 038/239] remoteproc/davinci: Use %zx for formating size_t
-Date:   Tue, 19 Nov 2019 06:17:18 +0100
-Message-Id: <20191119051304.990573093@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>, kernel@pengutronix.de,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 082/239] sched/debug: Use symbolic names for task state constants
+Date:   Tue, 19 Nov 2019 06:18:02 +0100
+Message-Id: <20191119051315.892771273@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,34 +65,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit 1e28dbbeced6152b9ea7c417ff8cef3f7dcf0f19 ]
+[ Upstream commit ff28915fd31ccafc0d38e6f84b66df280ed9e86a ]
 
-da8xx_rproc_mem size is of type size_t, so use %zx to format the debug
-print of it to avoid a compile warning.
+include/trace/events/sched.h includes <linux/sched.h> (via
+<linux/sched/numa_balancing.h>) and so knows about the TASK_* constants
+used to interpret .prev_state. So instead of duplicating the magic
+numbers make use of the defined macros to ease understanding the
+mapping from state bits to letters which isn't completely intuitive for
+an outsider.
 
-Acked-by: Suman Anna <s-anna@ti.com>
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: kernel@pengutronix.de
+Link: http://lkml.kernel.org/r/20180905093636.24068-1-u.kleine-koenig@pengutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/da8xx_remoteproc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/trace/events/sched.h | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/remoteproc/da8xx_remoteproc.c b/drivers/remoteproc/da8xx_remoteproc.c
-index bf3b9034c319e..a127d2ccd7ca5 100644
---- a/drivers/remoteproc/da8xx_remoteproc.c
-+++ b/drivers/remoteproc/da8xx_remoteproc.c
-@@ -207,7 +207,7 @@ static int da8xx_rproc_get_internal_memories(struct platform_device *pdev,
- 				res->start & DA8XX_RPROC_LOCAL_ADDRESS_MASK;
- 		drproc->mem[i].size = resource_size(res);
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 6e692a52936c7..18197e0bb5108 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -169,9 +169,14 @@ TRACE_EVENT(sched_switch,
  
--		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%x va %p da 0x%x\n",
-+		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%zx va %p da 0x%x\n",
- 			mem_names[i], &drproc->mem[i].bus_addr,
- 			drproc->mem[i].size, drproc->mem[i].cpu_addr,
- 			drproc->mem[i].dev_addr);
+ 		(__entry->prev_state & (TASK_REPORT_MAX - 1)) ?
+ 		  __print_flags(__entry->prev_state & (TASK_REPORT_MAX - 1), "|",
+-				{ 0x01, "S" }, { 0x02, "D" }, { 0x04, "T" },
+-				{ 0x08, "t" }, { 0x10, "X" }, { 0x20, "Z" },
+-				{ 0x40, "P" }, { 0x80, "I" }) :
++				{ TASK_INTERRUPTIBLE, "S" },
++				{ TASK_UNINTERRUPTIBLE, "D" },
++				{ __TASK_STOPPED, "T" },
++				{ __TASK_TRACED, "t" },
++				{ EXIT_DEAD, "X" },
++				{ EXIT_ZOMBIE, "Z" },
++				{ TASK_PARKED, "P" },
++				{ TASK_DEAD, "I" }) :
+ 		  "R",
+ 
+ 		__entry->prev_state & TASK_REPORT_MAX ? "+" : "",
 -- 
 2.20.1
 
