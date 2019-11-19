@@ -2,110 +2,100 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2558C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6164C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB2A42230B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:08:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="gwzlq8t0"
+	by mail.kernel.org (Postfix) with ESMTP id B88A622303
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:08:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727629AbfKSKID (ORCPT
+        id S1727662AbfKSKIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 05:08:03 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:40012 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbfKSKIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 05:08:02 -0500
-Received: from zn.tnic (p200300EC2F0EDC005592EDCF9C877480.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:dc00:5592:edcf:9c87:7480])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4458B1EC0C98;
-        Tue, 19 Nov 2019 11:07:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1574158077;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Ila9OqBBhoMf/cQ8rlDHnWD68xbWOecYwqrJXXsjQ2M=;
-        b=gwzlq8t0TWpH0T/KA2xwbyDcLJZXKjADYgqwQIpAjccXpbSy21Gi2zlq+1pxhdvbD2NhsH
-        CEU8lUpFW2uttEinixMhFShVoiHlUDm71dp1VC7wuCF1wKwjera9eyi+5gwTfaTb8tn7gV
-        Ng/9s/5NOjfwIbrTQJxCr/4aYK/T4Mo=
-Date:   Tue, 19 Nov 2019 11:07:53 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        tyhicks@canonical.com, colin.king@canonical.com,
-        linux-security-module@vger.kernel.org,
-        Matthew Garrett <mjg59@google.com>
-Subject: Re: [PATCH] x86/mtrr: Require CAP_SYS_ADMIN for all access
-Message-ID: <20191119100753.GA27787@zn.tnic>
-References: <201911181308.63F06502A1@keescook>
+        Tue, 19 Nov 2019 05:08:16 -0500
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:57831 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726510AbfKSKIQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 05:08:16 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R481e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=38;SR=0;TI=SMTPD_---0TiYQdSY_1574158084;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TiYQdSY_1574158084)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 19 Nov 2019 18:08:05 +0800
+Subject: Re: [PATCH v3 3/7] mm/lru: replace pgdat lru_lock with lruvec lock
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+References: <1573874106-23802-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1573874106-23802-4-git-send-email-alex.shi@linux.alibaba.com>
+ <CALvZod7oUmUCk96ATrRwYvrROFNqL1gPGt7fy949M8TMwCQrWA@mail.gmail.com>
+ <3f179d84-85e2-bace-2dbc-e77f73883c71@linux.alibaba.com>
+ <20191118123138.GL20752@bombadil.infradead.org>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <fc4716ae-a49e-68f0-98da-9318ff1f4138@linux.alibaba.com>
+Date:   Tue, 19 Nov 2019 18:08:04 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.1
 MIME-Version: 1.0
+In-Reply-To: <20191118123138.GL20752@bombadil.infradead.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <201911181308.63F06502A1@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 01:09:21PM -0800, Kees Cook wrote:
-> Zhang Xiaoxu noted that physical address locations for MTRR were
-> visible to non-root users, which could be considered an information
-> leak. In discussing[1] the options for solving this, it sounded like
-> just moving the capable check into open() was the first step. If this
-> breaks userspace, then we will have a test case for the more conservative
-> approaches discussed in the thread. In summary:
+
+
+在 2019/11/18 下午8:31, Matthew Wilcox 写道:
+>> Thanks for comments, Shakeel.
+>>
+>> lruvec lifetime is same as memcg, which allocted in mem_cgroup_alloc()->alloc_mem_cgroup_per_node_info()
+>> I have read Hugh's patchset, even not every lines. But what's point of you here?
+> I believe Shakeel's point is that here:
 > 
-> - MTRR should check capabilities at open time (or retain the
->   checks on the opener's permissions for later checks).
+> struct lruvec *mem_cgroup_page_lruvec(struct page *page, struct pglist_data *pgdat)
+> {
+> ...
+>         memcg = page->mem_cgroup;
 > 
-> - changing the DAC permissions might break something that expects to
->   open mtrr when not uid 0.
-> 
-> - if we leave the DAC permissions alone and just move the capable check
->   to the opener, we should get the desired protection. (i.e. check
->   against CAP_SYS_ADMIN not just the wider uid 0.)
-> 
-> - if that still breaks things, as in userspace expects to be able to
->   read other parts of the file as non-uid-0 and non-CAP_SYS_ADMIN, then
->   we need to censor the contents using the opener's permissions. For
->   example, as done in other /proc cases, like commit 51d7b120418e
->   ("/proc/iomem: only expose physical resource addresses to privileged
->   users").
-> 
-> [1] https://lore.kernel.org/lkml/201911110934.AC5BA313@keescook/
-> 
-> Reported-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/x86/kernel/cpu/mtrr/if.c | 21 ++-------------------
->  1 file changed, 2 insertions(+), 19 deletions(-)
+> there is nothing pinning the memcg, and it could be freed before
+> dereferencing memcg->nodeinfo in mem_cgroup_page_nodeinfo().
 
-Yap, LGTM, thanks!
-
-Reviewed-by: Borislav Petkov <bp@suse.de>
-
-However, as it has a user-visible impact and it is not an urgent thing
-to have in the tree, I'd not queue this now but after the merge window
-is done so that we have a maximum time of exposure in linux-next and we
-can have ample time to addres fallout.
-
-/me puts it on the list for after the merge window.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+That's right! I will send the fix patches for review. 
+Thanks a lot!
