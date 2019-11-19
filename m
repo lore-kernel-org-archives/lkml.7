@@ -2,442 +2,283 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C1FC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB61C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88C4B22304
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:18:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fbMr32Z+";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="hs7mA+a4"
+	by mail.kernel.org (Postfix) with ESMTP id 244B422304
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:19:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbfKSKSl (ORCPT
+        id S1727697AbfKSKTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 05:18:41 -0500
-Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:42210
-        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725798AbfKSKSl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 05:18:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574158719;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=tNouUf24fwWMn7xrLtC0xiqQw6My/pamIPrS/CwXCVU=;
-        b=fbMr32Z+2KOctSQxn1IaK1Ka7KZNdTfhC5ESuQ4mWuxQ9oCSv+ZCQjmUj9tLIDqt
-        s0NMJeN6B/HAUL3+krpAdsLbg5J9CeLIZNP1N68za3hmCi63aJkTpGTBQ7SLWSXArZN
-        dZ3SejiiYzGJzr5D/PxovAZBJi7PItxHIQOK/AiQ=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574158719;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=tNouUf24fwWMn7xrLtC0xiqQw6My/pamIPrS/CwXCVU=;
-        b=hs7mA+a4C5cotjT834fm0Ml304cFi4gseeut889PyMq00j0qQ0L/KVKtg/R4MsZx
-        tsdbgYPaZPiJfKIHBFRrKbERzdSNUOa0+tKtP0k+oNWXVq8UGq8pZnFIpVRgsGGUxs+
-        o48dvKiX8KajwzC95bV5CstZFB/TRPZR/7ytk+l0=
+        Tue, 19 Nov 2019 05:19:19 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49868 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726555AbfKSKTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 05:19:18 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 737CFAE87;
+        Tue, 19 Nov 2019 10:19:13 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id D586A1E47E5; Tue, 19 Nov 2019 11:19:10 +0100 (CET)
+Date:   Tue, 19 Nov 2019 11:19:10 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+Subject: Re: [PATCH v6 02/24] mm/gup: factor out duplicate code from four
+ routines
+Message-ID: <20191119101910.GC25605@quack2.suse.cz>
+References: <20191119081643.1866232-1-jhubbard@nvidia.com>
+ <20191119081643.1866232-3-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 19 Nov 2019 10:18:39 +0000
-From:   sibis@codeaurora.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
-        tsoni@codeaurora.org, agross@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        rnayak@codeaurora.org
-Subject: Re: [PATCH 1/3] soc: qcom: Introduce Protection Domain Restart
- helpers
-In-Reply-To: <20191119064026.GE18024@yoga>
-References: <20191118142728.30187-1-sibis@codeaurora.org>
- <0101016e7ee9be5e-1d6bbe06-4bab-434d-9040-ebfa3918b213-000000@us-west-2.amazonses.com>
- <20191119064026.GE18024@yoga>
-Message-ID: <0101016e832bd805-a23a4f93-58ea-4a5f-94f7-d2d1d32b9d25-000000@us-west-2.amazonses.com>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2019.11.19-54.240.27.11
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191119081643.1866232-3-jhubbard@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Bjorn,
-Thanks for taking the time to
-review the series :)
+On Tue 19-11-19 00:16:21, John Hubbard wrote:
+> There are four locations in gup.c that have a fair amount of code
+> duplication. This means that changing one requires making the same
+> changes in four places, not to mention reading the same code four
+> times, and wondering if there are subtle differences.
+> 
+> Factor out the common code into static functions, thus reducing the
+> overall line count and the code's complexity.
+> 
+> Also, take the opportunity to slightly improve the efficiency of the
+> error cases, by doing a mass subtraction of the refcount, surrounded
+> by get_page()/put_page().
+> 
+> Also, further simplify (slightly), by waiting until the the successful
+> end of each routine, to increment *nr.
+> 
+> Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
-On 2019-11-19 12:10, Bjorn Andersson wrote:
-> On Mon 18 Nov 06:27 PST 2019, Sibi Sankar wrote:
->> diff --git a/drivers/soc/qcom/pdr_interface.c 
->> b/drivers/soc/qcom/pdr_interface.c
-> [..]
->> +static void pdr_indack_work(struct work_struct *work)
->> +{
->> +	struct pdr_handle *pdr = container_of(work, struct pdr_handle,
->> +					      indack_work);
->> +	struct pdr_list_node *ind, *tmp;
->> +	struct pdr_service *pds;
->> +
->> +	list_for_each_entry_safe(ind, tmp, &pdr->indack_list, node) {
->> +		pds = ind->pds;
->> +		pdr_send_indack_msg(pdr, pds, ind->transaction_id);
-> 
-> So when we et a ind_cb with the new status, we need to send an ack
-> request, which will result in a response, just to confirm that we got
-> the event?
-> 
-> Seems like we should fix the qmi code to make it possible to send a
-> request from the indication handler and then we could simply ignore the
+Looks good to me now! You can add:
 
-yeah maybe having a provision
-to send custom requests back on
-indication would be the way
-to go. Not all indication need
-to be services with requests.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-> response. Or do we need to not pdr->status() until we get the response
-> for some reason?
+								Honza
 
-adsp waits on the ack response for
-a fixed duration and seems to throw
-a fatal err is the ack is not
-serviced. Hence holding back pd->status
-till we service the ack here.
-
+> ---
+>  mm/gup.c | 91 ++++++++++++++++++++++----------------------------------
+>  1 file changed, 36 insertions(+), 55 deletions(-)
 > 
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 85caf76b3012..f3c7d6625817 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -1969,6 +1969,25 @@ static int __gup_device_huge_pud(pud_t pud, pud_t *pudp, unsigned long addr,
+>  }
+>  #endif
+>  
+> +static int __record_subpages(struct page *page, unsigned long addr,
+> +			     unsigned long end, struct page **pages)
+> +{
+> +	int nr;
+> +
+> +	for (nr = 0; addr != end; addr += PAGE_SIZE)
+> +		pages[nr++] = page++;
+> +
+> +	return nr;
+> +}
+> +
+> +static void put_compound_head(struct page *page, int refs)
+> +{
+> +	/* Do a get_page() first, in case refs == page->_refcount */
+> +	get_page(page);
+> +	page_ref_sub(page, refs);
+> +	put_page(page);
+> +}
+> +
+>  #ifdef CONFIG_ARCH_HAS_HUGEPD
+>  static unsigned long hugepte_addr_end(unsigned long addr, unsigned long end,
+>  				      unsigned long sz)
+> @@ -1998,32 +2017,20 @@ static int gup_hugepte(pte_t *ptep, unsigned long sz, unsigned long addr,
+>  	/* hugepages are never "special" */
+>  	VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
+>  
+> -	refs = 0;
+>  	head = pte_page(pte);
+> -
+>  	page = head + ((addr & (sz-1)) >> PAGE_SHIFT);
+> -	do {
+> -		VM_BUG_ON(compound_head(page) != head);
+> -		pages[*nr] = page;
+> -		(*nr)++;
+> -		page++;
+> -		refs++;
+> -	} while (addr += PAGE_SIZE, addr != end);
+> +	refs = __record_subpages(page, addr, end, pages + *nr);
+>  
+>  	head = try_get_compound_head(head, refs);
+> -	if (!head) {
+> -		*nr -= refs;
+> +	if (!head)
+>  		return 0;
+> -	}
+>  
+>  	if (unlikely(pte_val(pte) != pte_val(*ptep))) {
+> -		/* Could be optimized better */
+> -		*nr -= refs;
+> -		while (refs--)
+> -			put_page(head);
+> +		put_compound_head(head, refs);
+>  		return 0;
+>  	}
+>  
+> +	*nr += refs;
+>  	SetPageReferenced(head);
+>  	return 1;
+>  }
+> @@ -2071,28 +2078,19 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+>  					     pages, nr);
+>  	}
+>  
+> -	refs = 0;
+>  	page = pmd_page(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
+> -	do {
+> -		pages[*nr] = page;
+> -		(*nr)++;
+> -		page++;
+> -		refs++;
+> -	} while (addr += PAGE_SIZE, addr != end);
+> +	refs = __record_subpages(page, addr, end, pages + *nr);
+>  
+>  	head = try_get_compound_head(pmd_page(orig), refs);
+> -	if (!head) {
+> -		*nr -= refs;
+> +	if (!head)
+>  		return 0;
+> -	}
+>  
+>  	if (unlikely(pmd_val(orig) != pmd_val(*pmdp))) {
+> -		*nr -= refs;
+> -		while (refs--)
+> -			put_page(head);
+> +		put_compound_head(head, refs);
+>  		return 0;
+>  	}
+>  
+> +	*nr += refs;
+>  	SetPageReferenced(head);
+>  	return 1;
+>  }
+> @@ -2114,28 +2112,19 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+>  					     pages, nr);
+>  	}
+>  
+> -	refs = 0;
+>  	page = pud_page(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
+> -	do {
+> -		pages[*nr] = page;
+> -		(*nr)++;
+> -		page++;
+> -		refs++;
+> -	} while (addr += PAGE_SIZE, addr != end);
+> +	refs = __record_subpages(page, addr, end, pages + *nr);
+>  
+>  	head = try_get_compound_head(pud_page(orig), refs);
+> -	if (!head) {
+> -		*nr -= refs;
+> +	if (!head)
+>  		return 0;
+> -	}
+>  
+>  	if (unlikely(pud_val(orig) != pud_val(*pudp))) {
+> -		*nr -= refs;
+> -		while (refs--)
+> -			put_page(head);
+> +		put_compound_head(head, refs);
+>  		return 0;
+>  	}
+>  
+> +	*nr += refs;
+>  	SetPageReferenced(head);
+>  	return 1;
+>  }
+> @@ -2151,28 +2140,20 @@ static int gup_huge_pgd(pgd_t orig, pgd_t *pgdp, unsigned long addr,
+>  		return 0;
+>  
+>  	BUILD_BUG_ON(pgd_devmap(orig));
+> -	refs = 0;
+> +
+>  	page = pgd_page(orig) + ((addr & ~PGDIR_MASK) >> PAGE_SHIFT);
+> -	do {
+> -		pages[*nr] = page;
+> -		(*nr)++;
+> -		page++;
+> -		refs++;
+> -	} while (addr += PAGE_SIZE, addr != end);
+> +	refs = __record_subpages(page, addr, end, pages + *nr);
+>  
+>  	head = try_get_compound_head(pgd_page(orig), refs);
+> -	if (!head) {
+> -		*nr -= refs;
+> +	if (!head)
+>  		return 0;
+> -	}
+>  
+>  	if (unlikely(pgd_val(orig) != pgd_val(*pgdp))) {
+> -		*nr -= refs;
+> -		while (refs--)
+> -			put_page(head);
+> +		put_compound_head(head, refs);
+>  		return 0;
+>  	}
+>  
+> +	*nr += refs;
+>  	SetPageReferenced(head);
+>  	return 1;
+>  }
+> -- 
+> 2.24.0
 > 
-> Regardless, I'm fine with scheduling this for now...
-> 
->> +		pdr->status(pdr, pds);
->> +		list_del(&ind->node);
->> +		kfree(ind);
->> +	}
->> +}
->> +
->> +static void pdr_servreg_ind_cb(struct qmi_handle *qmi,
->> +			       struct sockaddr_qrtr *sq,
->> +			       struct qmi_txn *txn, const void *data)
->> +{
->> +	struct pdr_handle *pdr = container_of(qmi, struct pdr_handle,
->> +					      servreg_client);
->> +	const struct servreg_state_updated_ind *ind_msg = data;
->> +	struct pdr_list_node *ind;
->> +	struct pdr_service *pds;
->> +
->> +	if (!ind_msg || !ind_msg->service_path ||
->> +	    strlen(ind_msg->service_path) > (SERVREG_NAME_LENGTH + 1))
->> +		return;
->> +
->> +	list_for_each_entry(pds, &pdr->lookups, node) {
->> +		if (!strcmp(pds->service_path, ind_msg->service_path))
->> +			goto found;
->> +	}
->> +	return;
->> +
->> +found:
->> +	pds->state = ind_msg->curr_state;
->> +
->> +	ind = kzalloc(sizeof(*ind), GFP_KERNEL);
->> +	if (!ind)
->> +		return;
->> +
->> +	pr_info("PDR: Indication received from %s, state: 0x%x, trans-id: 
->> %d\n",
->> +		ind_msg->service_path, ind_msg->curr_state,
->> +		ind_msg->transaction_id);
->> +
->> +	ind->transaction_id = ind_msg->transaction_id;
->> +	ind->pds = pds;
->> +
->> +	mutex_lock(&pdr->list_lock);
->> +	list_add_tail(&ind->node, &pdr->indack_list);
->> +	mutex_unlock(&pdr->list_lock);
->> +
->> +	queue_work(pdr->indack_wq, &pdr->indack_work);
->> +}
->> +
->> +static struct qmi_msg_handler qmi_indication_handler[] = {
->> +	{
->> +		.type = QMI_INDICATION,
->> +		.msg_id = SERVREG_STATE_UPDATED_IND_ID,
->> +		.ei = servreg_state_updated_ind_ei,
->> +		.decoded_size = sizeof(struct servreg_state_updated_ind),
->> +		.fn = pdr_servreg_ind_cb,
->> +	},
->> +	{}
->> +};
->> +
->> +static int pdr_get_domain_list(struct servreg_get_domain_list_req 
->> *req,
->> +			       struct servreg_get_domain_list_resp *resp,
->> +			       struct pdr_handle *pdr)
->> +{
->> +	struct qmi_txn txn;
->> +	int ret;
->> +
->> +	ret = qmi_txn_init(&pdr->servloc_client, &txn,
->> +			   servreg_get_domain_list_resp_ei, resp);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	ret = qmi_send_request(&pdr->servloc_client,
->> +			       &pdr->servloc_addr,
->> +			       &txn, SERVREG_GET_DOMAIN_LIST_REQ,
->> +			       SERVREG_GET_DOMAIN_LIST_REQ_MAX_LEN,
->> +			       servreg_get_domain_list_req_ei,
->> +			       req);
->> +	if (ret < 0) {
->> +		qmi_txn_cancel(&txn);
->> +		return ret;
->> +	}
->> +
->> +	ret = qmi_txn_wait(&txn, 5 * HZ);
->> +	if (ret < 0) {
->> +		pr_err("PDR: %s get domain list txn wait failed: %d\n",
->> +		       req->service_name, ret);
->> +		return ret;
->> +	}
->> +
->> +	/* Check the response */
->> +	if (resp->resp.result != QMI_RESULT_SUCCESS_V01) {
->> +		pr_err("PDR: %s get domain list failed: 0x%x\n",
->> +		       req->service_name, resp->resp.error);
->> +		return -EREMOTEIO;
->> +	}
->> +
->> +	return ret;
-> 
-> ret here will be the number of bytes decoded, but you really only care
-> about if this was an error or not. So I would suggest that you just
-> return 0 here.
-
-yeah will return 0
-
-> 
->> +}
->> +
->> +static int pdr_locate_service(struct pdr_handle *pdr, struct 
->> pdr_service *pds)
->> +{
->> +	struct servreg_get_domain_list_resp *resp = NULL;
->> +	struct servreg_get_domain_list_req req;
->> +	int db_rev_count = 0, domains_read = 0;
->> +	struct servreg_location_entry *entry;
->> +	int ret, i;
->> +
->> +	resp = kzalloc(sizeof(*resp), GFP_KERNEL);
->> +	if (!resp)
->> +		return -ENOMEM;
->> +
->> +	/* Prepare req message */
->> +	strcpy(req.service_name, pds->service_name);
->> +	req.domain_offset_valid = true;
->> +	req.domain_offset = 0;
->> +
->> +	do {
->> +		req.domain_offset = domains_read;
->> +		ret = pdr_get_domain_list(&req, resp, pdr);
->> +		if (ret < 0)
->> +			goto out;
->> +
->> +		if (!domains_read)
->> +			db_rev_count = resp->db_rev_count;
->> +
->> +		if (db_rev_count != resp->db_rev_count) {
->> +			ret = -EAGAIN;
->> +			goto out;
->> +		}
->> +
->> +		for (i = domains_read; i < resp->domain_list_len; i++) {
->> +			entry = &resp->domain_list[i];
->> +
->> +			if (strlen(entry->name) > (SERVREG_NAME_LENGTH + 1))
-> 
-> In the event that the incoming string isn't NUL-terminated this will 
-> run
-> off the array.
-> 
-> if (strnlen(entry->name, SERVREG_NAME_LENGTH + 1) == 
-> SERVREG_NAME_LENGTH + 1)
-> 
-> or perhaps, relying on sizeof instead of duplicating the knowledge that
-> it is SERVREG_NAME_LENGTH + 1:
-> 
-> if (strnlen(entry->name, sizeof(entry->name)) == sizeof(entry->name))
-
-yeah I'll use ^^ then or maybe switch
-to a strncpy to further simplify things.
-
-> 
->> +				continue;
->> +
->> +			if (!strcmp(entry->name, pds->service_path)) {
->> +				pds->service_data_valid = entry->service_data_valid;
->> +				pds->service_data = entry->service_data;
->> +				pds->instance = entry->instance;
->> +				goto out;
->> +			}
->> +		}
->> +
->> +		/* Update ret to indicate that the service is not yet found */
->> +		ret = -EINVAL;
->> +
->> +		/* Always read total_domains from the response msg */
->> +		if (resp->domain_list_len >  resp->total_domains)
-> 
-> Double space after '>'
-
-thanks for catching this
-
-> 
->> +			resp->domain_list_len = resp->total_domains;
->> +
->> +		domains_read += resp->domain_list_len;
->> +	} while (domains_read < resp->total_domains);
->> +out:
->> +	kfree(resp);
->> +	return ret;
->> +}
->> +
->> +static void pdr_servloc_work(struct work_struct *work)
->> +{
->> +	struct pdr_handle *pdr = container_of(work, struct pdr_handle,
->> +					      servloc_work);
->> +	struct pdr_list_node *servloc, *tmp;
->> +	struct pdr_service *pds;
->> +	int ret;
->> +
->> +	list_for_each_entry_safe(servloc, tmp, &pdr->servloc_list, node) {
->> +		pds = servloc->pds;
->> +
->> +		/* wait for PD Mapper to come up */
->> +		ret = wait_for_completion_timeout(&pdr->locator_available, 10 * 
->> HZ);
-> 
-> Afaict this means that we will only look for the locator during the 10
-> seconds that follows a pdr_add_lookup().
-> 
-> How about changing this so that you bail before the loop if the locator
-> hasn't showed up yet and schedule this worker when the locator is
-> registered?
-
-yes makes sense, will do that.
-But by doing this the client
-will have to track timeouts
-for lookups.
-
-> 
->> +		if (!ret) {
->> +			pr_err("PDR: SERVICE LOCATOR service wait failed\n");
->> +			ret = -ETIMEDOUT;
->> +			goto err;
->> +		}
->> +
->> +		ret = pdr_locate_service(pdr, pds);
->> +		if (ret < 0) {
->> +			pr_err("PDR: service lookup for %s failed: %d\n",
->> +			       pds->service_name, ret);
->> +			goto err;
->> +		}
->> +
->> +		qmi_add_lookup(&pdr->servreg_client, pds->service, 1,
->> +			       pds->instance);
->> +err:
->> +		list_del(&servloc->node);
->> +		kfree(servloc);
->> +
->> +		/* cleanup pds on error */
->> +		if (ret < 0) {
->> +			pds->state = SERVREG_LOCATOR_ERR;
->> +			pdr->status(pdr, pds);
->> +			list_del(&pds->node);
->> +			kfree(pds);
->> +		}
->> +	}
->> +}
-> [..]
->> +int pdr_add_lookup(struct pdr_handle *pdr, const char *service_name,
->> +		   const char *service_path)
->> +{
->> +	struct pdr_service *pds, *pds_iter, *tmp;
->> +	struct pdr_list_node *servloc;
->> +	int ret;
->> +
->> +	if (!service_name || strlen(service_name) > (SERVREG_NAME_LENGTH + 
->> 1) ||
->> +	    !service_path || strlen(service_path) > (SERVREG_NAME_LENGTH + 
->> 1))
-> 
-> When strlen(x) == SERVREG_NAME_LENGTH + 1 your strcpy below would write
-> SERVREG_NAME_LENGTH + 2 bytes to service_name and service_path, so drop
-> the + 1 from the comparisons.
-
-yes will do that
-
-> 
->> +		return -EINVAL;
->> +
->> +	servloc = kzalloc(sizeof(*servloc), GFP_KERNEL);
->> +	if (!servloc)
->> +		return -ENOMEM;
->> +
->> +	pds = kzalloc(sizeof(*pds), GFP_KERNEL);
->> +	if (!pds) {
->> +		ret = -ENOMEM;
->> +		goto err;
->> +	}
->> +
->> +	pds->service = SERVREG_NOTIFIER_SERVICE;
->> +	strcpy(pds->service_name, service_name);
->> +	strcpy(pds->service_path, service_path);
-> [..]
->> +int pdr_restart_pd(struct pdr_handle *pdr, const char *service_path)
->> +{
->> +	struct servreg_restart_pd_req req;
->> +	struct servreg_restart_pd_resp resp;
->> +	struct pdr_service *pds = NULL, *pds_iter, *tmp;
->> +	struct qmi_txn txn;
->> +	int ret;
->> +
->> +	if (!service_path || strlen(service_path) > (SERVREG_NAME_LENGTH + 
->> 1))
-> 
-> As above, drop the + 1
-
-ditto
-
-> 
->> +		return -EINVAL;
->> +
-> [..]
->> +int pdr_handle_init(struct pdr_handle *pdr,
->> +		    int (*status)(struct pdr_handle *pdr,
->> +				  struct pdr_service *pds))
->> +{
-> [..]
->> +	pdr->servreg_wq = create_singlethread_workqueue("pdr_servreg_wq");
->> +	if (!pdr->servreg_wq)
->> +		return -ENOMEM;
->> +
->> +	pdr->indack_wq = alloc_ordered_workqueue("pdr_indack_wq", 
->> WQ_HIGHPRI);
-> 
-> The two workqueues means that we should be able to call pdr->status()
-> rom two concurrent contexts, I don't think our clients will expect 
-> that.
-> 
-
-would creating another ordered wq to
-relay all the pd->status make sense?
-
->> +	if (!pdr->indack_wq) {
->> +		ret = -ENOMEM;
->> +		goto destroy_servreg;
->> +	}
->> +
-> 
-> Regards,
-> Bjorn
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
