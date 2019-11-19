@@ -2,110 +2,103 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9DFC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA9EC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B711F20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:31:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eWt1VHPn"
+	by mail.kernel.org (Postfix) with ESMTP id 9780620674
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:33:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfKSXbH (ORCPT
+        id S1727385AbfKSXdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 18:31:07 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56096 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbfKSXbH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 18:31:07 -0500
-Received: by mail-wm1-f68.google.com with SMTP id b11so5085998wmb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 15:31:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mP+0iqiXj77eONbT81jP0IEP9HdwZqjxx63AWCIxHNA=;
-        b=eWt1VHPn8CeyEJkHh8wfdDoWw5EBwvsVv+ooqf2AO/Zbwx52j4WyMuZ5MnEbfn+4Gi
-         KfL/jdy4ujXa0lrrB4mryex1DzfBRrRNcJJzcXW+RNbKutYVCpwkXIY0pylxxMgWm3Ht
-         M8VIf2ub0+jN+0s3ZGOz+lYWhR8yH/TtZfTuSaO9asxRMqzuDXYlks/kEkTgE/S/P53S
-         m5fYO4xeerkaV2wpfwkPh1m2WbLZs3cvqOti+OCNs09c0s4sHlZt4JrvGQ4JXuXf5oAH
-         EiOeSSVac8ZaFvRrrRNj9ba26sS3QxpitGEk2F+ZU+USScUYVseseeZx10PO67zMRmXt
-         SLsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mP+0iqiXj77eONbT81jP0IEP9HdwZqjxx63AWCIxHNA=;
-        b=Am+HlLcTdr5tl4BHYMfin1vHWUroKwaxMciaxuGmL7OsY0FDwLGdBNJreBHkp5bR8u
-         QN6Dpnat5e1/nemPTMLI0kuFt4yaSzy9/wRdYXKLmaEWGFQkEF7AMikTAHCJID8Mvb4G
-         saKpyCYM0dm0gD4+urNxeUoqY+bPWNiS2thLQDbOQ8eLFBTVPAV3VXgyd6jh6pEBP+wG
-         Qdnr4udMZgOub6tbCvGI8LyLxcY/QezNFg+z8OyCEnPJO0lkCs55uAOzrDuZuj1T/BQi
-         wM0mn8EKc+/+mxCnyqcRuGC0CmSNqtAY6BYk787qs50Rt6qEMKyAtW7Qa6ZLXYI112CC
-         +T6Q==
-X-Gm-Message-State: APjAAAVyXhFg847arK3sg4aoRioIyOfpaSRW7xHpIOSI4Lm/NDFL8CE5
-        cgKhvyhE61cX9uEtsml3bYnYQTJjpWcEqZymaHTqFw==
-X-Google-Smtp-Source: APXvYqwRIvQ8PKVNdixUgQnuXSHFcZZKFRs7eXQkjHRIkNkDAd3sCFPQ/jj3utQ2CUNuE+/QqniO8zwM2uAD7sAvFhM=
-X-Received: by 2002:a05:600c:295:: with SMTP id 21mr369402wmk.43.1574206263262;
- Tue, 19 Nov 2019 15:31:03 -0800 (PST)
+        Tue, 19 Nov 2019 18:33:31 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35866 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726874AbfKSXdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 18:33:31 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 84DA0B1F5;
+        Tue, 19 Nov 2019 23:33:29 +0000 (UTC)
+Subject: Re: [PATCH v4 2/8] irqchip: Add Realtek RTD1295 mux driver
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Aleix Roca Nonell <kernelrocks@gmail.com>,
+        James Tai <james.tai@realtek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+References: <20191119021917.15917-1-afaerber@suse.de>
+ <20191119021917.15917-3-afaerber@suse.de>
+ <a34e00cac16899b53d0b6445f0e81f4c@www.loen.fr>
+ <e98364c5-a859-7981-8ccf-f8e5b5069379@suse.de> <20191119222956.23665e5d@why>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <d7416bdb-e20a-42e1-daff-c61369f359fa@suse.de>
+Date:   Wed, 20 Nov 2019 00:33:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <20191119213834.175992-1-brendanhiggins@google.com>
-In-Reply-To: <20191119213834.175992-1-brendanhiggins@google.com>
-From:   David Gow <davidgow@google.com>
-Date:   Tue, 19 Nov 2019 15:30:51 -0800
-Message-ID: <CABVgOSn6bc=Rq50Y_Av+0gXTjyHuV+UaULNHicz16hp_uRmDsg@mail.gmail.com>
-Subject: Re: [PATCH linux-kselftest/test v1] Documentation: kunit: fix typos
- and gramatical errors
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Shuah Khan <shuah@kernel.org>, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, linux-doc@vger.kernel.org,
-        corbet@lwn.net, heidifahim@google.com,
-        Patricia Alfonso <trishalfonso@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191119222956.23665e5d@why>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 1:39 PM 'Brendan Higgins' via KUnit
-Development <kunit-dev@googlegroups.com> wrote:
->
-> Fix typos and gramatical errors in the Getting Started and Usage guide
-> for KUnit.
->
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Link: https://patchwork.kernel.org/patch/11156481/
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> ---
->  Documentation/dev-tools/kunit/start.rst |  6 +++---
->  Documentation/dev-tools/kunit/usage.rst | 22 +++++++++++-----------
->  2 files changed, 14 insertions(+), 14 deletions(-)
->
+Am 19.11.19 um 23:29 schrieb Marc Zyngier:
+> On Tue, 19 Nov 2019 21:56:48 +0100
+> Andreas Färber <afaerber@suse.de> wrote:
+>> Am 19.11.19 um 13:01 schrieb Marc Zyngier:
+>>> On 2019-11-19 02:19, Andreas Färber wrote:  
+>>>> +static void rtd1195_mux_enable_irq(struct irq_data *data)
+>>>> +{
+>>>> +    struct rtd1195_irq_mux_data *mux_data =
+>>>> irq_data_get_irq_chip_data(data);
+>>>> +    unsigned long flags;
+>>>> +    u32 mask;
+>>>> +
+>>>> +    mask = mux_data->info->isr_to_int_en_mask[data->hwirq];
+>>>> +    if (!mask)
+>>>> +        return;  
+>>>
+>>> How can this happen? You've mapped the interrupt, so it exists.
+>>> I can't see how you can decide to fail such enable.  
+>>
+>> The [UMSK_]ISR bits and the SCPU_INT_EN bits are not (all) the same.
+>>
+>> My ..._isr_to_scpu_int_en[] arrays have 32 entries for O(1) lookup, but
+>> are sparsely populated. So there are circumstances such as WDOG_NMI as
+>> well as reserved bits that we cannot enable.
+> 
+> But the you should have failed the map. The moment you allow the
+> mapping to occur, you have accepted the contract that this interrupt is
+> usable.
+> 
+>> This check should be
+>> identical to v3; the equivalent mask check inside the interrupt handler
+>> was extended with "mask &&" to do the same in this v4.
+> 
+> Spurious interrupts are a different matter. What I'm objecting to here
+> is a simple question of logic, whether or not you are allowed to fail
+> enabling an interrupt that you've otherwise allowed to be populated.
 
-Reviewed-by: David Gow <davidgow@google.com>
-
-These changes look good to me.
-
-
-> diff --git a/Documentation/dev-tools/kunit/start.rst b/Documentation/dev-tools/kunit/start.rst
-> index f4d9a4fa914f8..db146c7d77490 100644
-> --- a/Documentation/dev-tools/kunit/start.rst
-> +++ b/Documentation/dev-tools/kunit/start.rst
-
-Could you also fix the kunit.py invocation on line 162, which should
-have "run" passed as an argument?
-See:
-https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/tree/Documentation/dev-tools/kunit/start.rst?h=test#n162
-
-It should read "/tools/testing/kunit/kunit.py run".
+Then what are you suggesting instead? I don't see how my array map
+lookup could fail other than returning a zero value, given its static
+initialization. Check for a zero mask in rtd1195_mux_irq_domain_map()?
+Then we wouldn't be able to use the mentioned WDOG_NMI. Add another
+per-mux info field for which interrupts are valid to map?
 
 Thanks,
--- David
+Andreas
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
