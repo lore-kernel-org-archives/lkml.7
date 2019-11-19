@@ -2,132 +2,324 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34479C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA71C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1BBA222F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C91C322302
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:34:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="SI13HTKk"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="jIt+zi6X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfKSJdJ (ORCPT
+        id S1727234AbfKSJeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 04:33:09 -0500
-Received: from mail-eopbgr50134.outbound.protection.outlook.com ([40.107.5.134]:46899
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        Tue, 19 Nov 2019 04:34:12 -0500
+Received: from mail-eopbgr690084.outbound.protection.outlook.com ([40.107.69.84]:24446
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725784AbfKSJdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 04:33:08 -0500
+        id S1725784AbfKSJeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 04:34:12 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oDs3+/qbrETWtfllW9ZhN9We1s9KfuD+yENM2kv3BDAt8FoOTUZfLPkjX3kEqwCbYL0fiDgb7iswNcGzqUpN+vxGjXWy6T75p1pWY1c6q3TlevbZgtuwHDSPQE9K/68hZs0ZyX4M/xDgRiNpqp5zqVRuba7AS6ex4QF/GxqqsrhrgIPtSuw0i0TS/ECmvYgDhIaKwsYxJb/VS+OVD2T7QP57usCef0UyQmNcKv79iO/LoO7QrCPKz12b9S1Cea1dNPpu+jaLZW4vekJFBLeGExLPjguWvynKQCGptSogdULEFlm2WAGJVuba7zVQXgAKO3Efr+Ielg8GYlUTVlDYhA==
+ b=UsBCS9DSVV6tlF7Vi1KZBS8wvriUC8qlGUN3T7+zbH2ctRUMj6W2rEEwIE2JHOpVORuuVy5MspZ9EaPizftGI0fYMoh/dH0V3rJK88Zmy6FRBT5n5VZoEm1vQ6RBMSDS8ZTakVBj1cZzN3IkJ0LCLknu52Gusqx/RwBea6Jhvhq7fbSpKEbGwj3GIfAl5F4HY4cQjB16tarM+t9avWXXlGbd5IiyrJFvQVN96SJz4H2mPXDYgu/MdFSRLN0ejdUYS7qG0J3kRtwidoYJZVgXARHpwId1GN4NaiJvlwqfQ8fNf5cCEHJj1FzFOB4wXPsYr89HDkhw22tItliNE2qmTg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SNjEioAx2prqwQf1AYVuUvtFgRUGS9O5eyv5PNvAakk=;
- b=Lb1X40zxmEedfWwM1+bAIUS1/043tH1GQFTceYEtMnnWY4Ej3MrYY8fx6Aq4Vg8YdS0X29/nOxIy9fymQ9Y8e5rmc3UbfG0M00v/EdCbPcW10/0qhnSwyi//uXTLUTOKTac0A5YrplQHGR3iWhc+mh+l07kcW6doAsB2/4FPEVvae1h67rnSfuVvml29vMee4dgDQK7Yog5r+BYE9oF69R7Q24RqJEz8jBNqlO3VuMbuw6eLjgmgcKSlF7kTkGY+ZSeFjz2XbiZ3P8aHTMbR6cFpjE69sJX85X/7TaP4DorEONi/31bO7RhQmfT5fxZvSUddVCyRiBUZwdq9OEeTgQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
+ bh=mgojnpA9IFKWOtV2KydtCWmKhWX5z9dvrfmrRKWWgXk=;
+ b=huk4Igx8hR2P8Pdp0LsejlOzlhYHPgSqIgTXZPJzd003+QSt43flLeXZ5WvM49xFZhISKVpF75FkXbdCig40GJZa/SnjRKfCcj1vOR4ES0+bXDiEu7ZmjKXw5Hpu0cvE3yGkbknjwqJcg1TT+XiaNPpHP3ofjcc3VpaOpX6cHFwWrvYmvjSBHgMFls2BvORa3iE/QBWrQ2SE64vzF9UAda4iKCRTDe7G+z0Cvs3Wzfx0mRMeFyIxZ+9i1pS50LoVxLv2mFJ+nveinakBTShi3OrgGsjaCW8hB1ueBA7k5WLjzWfqtBX4+HCYdls6cB3sbCqc6cdZJQxjgdcxtpL6oQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com;
+ dmarc=permerror action=none header.from=amd.com; dkim=none (message not
+ signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SNjEioAx2prqwQf1AYVuUvtFgRUGS9O5eyv5PNvAakk=;
- b=SI13HTKkvXpmnBzzj0VXqimXztdP40IdC+h3cO8jFDgpNLBuvQYLNWbGecoGnJugtrQdCh/MwArXkOVBAFOp1u63PEuocs+n+kWvfibcBZLSqDoAZlHB8la/i3M8hCAbC7LmUGfBZ592HZjx5KnGnOFkCogkacXb8p91NMVovuM=
-Received: from AM6PR0202MB3432.eurprd02.prod.outlook.com (52.133.11.29) by
- AM6PR0202MB3400.eurprd02.prod.outlook.com (52.133.8.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.29; Tue, 19 Nov 2019 09:33:02 +0000
-Received: from AM6PR0202MB3432.eurprd02.prod.outlook.com
- ([fe80::dc43:ed2c:945a:cd5]) by AM6PR0202MB3432.eurprd02.prod.outlook.com
- ([fe80::dc43:ed2c:945a:cd5%6]) with mapi id 15.20.2451.031; Tue, 19 Nov 2019
- 09:33:02 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Lei YU <mine260309@gmail.com>, Wolfram Sang <wsa@the-dreams.de>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] docs: i2c: Fix return value of i2c_smbus_xxx functions
-Thread-Topic: [PATCH] docs: i2c: Fix return value of i2c_smbus_xxx functions
-Thread-Index: AQHVnrdKJrKxiOciCEaViJqC+aa9maeSOzkA
-Date:   Tue, 19 Nov 2019 09:33:02 +0000
-Message-ID: <a1444cbf-3a1d-6f17-97a9-77664a95d304@axentia.se>
-References: <1574153778-59977-1-git-send-email-mine260309@gmail.com>
-In-Reply-To: <1574153778-59977-1-git-send-email-mine260309@gmail.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR0402CA0020.eurprd04.prod.outlook.com
- (2603:10a6:3:d0::30) To AM6PR0202MB3432.eurprd02.prod.outlook.com
- (2603:10a6:209:26::29)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a364abdc-9194-457c-512a-08d76cd37930
-x-ms-traffictypediagnostic: AM6PR0202MB3400:
-x-microsoft-antispam-prvs: <AM6PR0202MB34004C1D58D112627821A1B1BC4C0@AM6PR0202MB3400.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 022649CC2C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(376002)(366004)(39830400003)(396003)(189003)(199004)(25786009)(186003)(476003)(11346002)(446003)(2616005)(102836004)(53546011)(386003)(58126008)(486006)(6506007)(316002)(6512007)(110136005)(14444005)(4001150100001)(26005)(2501003)(6486002)(31686004)(5660300002)(256004)(8936002)(229853002)(6246003)(8676002)(66946007)(76176011)(66446008)(6436002)(81156014)(71190400001)(71200400001)(81166006)(508600001)(2201001)(64756008)(66556008)(66476007)(6116002)(14454004)(305945005)(99286004)(66066001)(65806001)(86362001)(2906002)(52116002)(7736002)(36756003)(3846002)(65956001)(31696002)(21314003);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR0202MB3400;H:AM6PR0202MB3432.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
+ bh=mgojnpA9IFKWOtV2KydtCWmKhWX5z9dvrfmrRKWWgXk=;
+ b=jIt+zi6Xj/50spE8QXt19uwUqpsUtTnGE4++FDPu6OFFETHTShXrSPTDrNJ5htDRnIRxy4ZvSRngFq6fIob/UVuIeYU5S70+ljQt3I5tcUVFIeqQZIeG22QbTV50cfP69aHoAXEHXyNRQd5ysfwZmLwmjU53JO6M/fSMttb1o3I=
+Received: from DM6PR12CA0022.namprd12.prod.outlook.com (2603:10b6:5:1c0::35)
+ by BY5PR12MB4259.namprd12.prod.outlook.com (2603:10b6:a03:202::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.23; Tue, 19 Nov
+ 2019 09:34:07 +0000
+Received: from CO1NAM11FT049.eop-nam11.prod.protection.outlook.com
+ (2a01:111:f400:7eab::207) by DM6PR12CA0022.outlook.office365.com
+ (2603:10b6:5:1c0::35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.24 via Frontend
+ Transport; Tue, 19 Nov 2019 09:34:07 +0000
+Authentication-Results: spf=none (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=permerror action=none header.from=amd.com;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KipcN4aGC4d57Mq+V6fYFfT6sqxuGpBktIrkI+waUFLlvrdELGtauKkSvYYw62mQW1oiZyrbzlHBZHb2EQzYpMmuFDdYOGpXSQIHRzxs1etoaXnZWZWyf2prOQ8ZiPajUAy7OK2JvjBUhQQVaqdxjgqtzrG5cmFbVza0nK069f6VxT6IIJ6Aw1WAbwsKmnaZeS1HHrQNfKRBgqGhzpEBFP2T2Nj+Jh3kxn7TW2RmBxvTi3TlWwNTVLC8aJPOiKFjOtD52rq+a3f15H5/2cz1d2L0Vz3g0dXX4lEMPoYS1ZvNR/LoZn6ND0Ev7DefJh0kgCHiCgbUmn1h1Eml2nKrk4rB02jSODXEw54+R14tgsPtYCts3HUJnxQ5hCT8Cs8ZKA7psSdVQL1OeuUgu1TauS8mzT6hAIFgszmEgox95zy9XiiPpTOg7ObGSXvRBwRq
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1DFE34F3793D764FA3CF8181BD721021@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Received: from SATLEXMB01.amd.com (165.204.84.17) by
+ CO1NAM11FT049.mail.protection.outlook.com (10.13.175.50) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.2451.23 via Frontend Transport; Tue, 19 Nov 2019 09:34:07 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB01.amd.com
+ (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 19 Nov
+ 2019 03:34:06 -0600
+Received: from SATLEXMB02.amd.com (10.181.40.143) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 19 Nov
+ 2019 03:34:05 -0600
+Received: from vishnu-All-Series.amd.com (10.180.168.240) by
+ SATLEXMB02.amd.com (10.181.40.143) with Microsoft SMTP Server id 15.1.1713.5
+ via Frontend Transport; Tue, 19 Nov 2019 03:34:02 -0600
+From:   Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+CC:     <Alexander.Deucher@amd.com>, <djkurtz@google.com>,
+        <Akshu.Agrawal@amd.com>,
+        Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        "Takashi Iwai" <tiwai@suse.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH v8 1/6] ASoC: amd:Create multiple I2S platform device endpoint
+Date:   Tue, 19 Nov 2019 15:02:42 +0530
+Message-ID: <1574155967-1315-2-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1574155967-1315-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+References: <1574155967-1315-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: a364abdc-9194-457c-512a-08d76cd37930
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2019 09:33:02.4932
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(136003)(39860400002)(396003)(428003)(189003)(199004)(2616005)(8936002)(109986005)(70206006)(86362001)(70586007)(53416004)(305945005)(16586007)(36756003)(316002)(1671002)(4326008)(54906003)(48376002)(50466002)(478600001)(5660300002)(6666004)(336012)(446003)(50226002)(76176011)(26005)(486006)(476003)(81156014)(126002)(8676002)(81166006)(2906002)(186003)(47776003)(426003)(356004)(7696005)(11346002)(51416003)(266003);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR12MB4259;H:SATLEXMB01.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1c200e92-e8c6-4c81-79af-08d76cd3a010
+X-MS-TrafficTypeDiagnostic: BY5PR12MB4259:
+X-Microsoft-Antispam-PRVS: <BY5PR12MB4259201658ACF014CE626D92E74C0@BY5PR12MB4259.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:182;
+X-Forefront-PRVS: 022649CC2C
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: bb8SGPuSx1NP4/aaHSwFgzvMVxk9btyiEavIMAKVeoTju0jnQtinVwm4T2lr9bP2BcPfNICA6gWMtZkGRy28HJDaQ839XisiBAonnoRAbCuAGaeW7AAu7pkDb+REkG1CHTlrFP22bU5LviPqIphzZAdB0b7PRemp5zCYGGYA04rBID9mmBXfYNT9fhkMZqBvqZStL7JSjtAO6+N0KdodHa8+FZ828XhQpQ+1kGA7SRxMJyjS8ZqTfUnKlCGIAL0DwtMwV34ztYMsxk5FjpXJQZsGO4AVybZ3689EYNxb5cNoy8yEtPbchYnC4L56cxGN0zI/UeVXT1USNrGJLidQk1pBjkg/cfrWv3OKqQ1GFDUvHrMGcGqGFhXJFvXGZdb253Xu0K4YirBIbbTkDULYM4+xhAdULtt3ZxRH5SQFy7iC5BcWx8Kh0dsLODZlvkmW
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2019 09:34:07.1795
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yuc0r4x3VmepkpiuYwCzHUYtbMSi434fzojivbI5B1bim6vQgIfo8oEV6iiHh9Uv
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0202MB3400
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1c200e92-e8c6-4c81-79af-08d76cd3a010
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB01.amd.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4259
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0xMS0xOSAwOTo1NiwgTGVpIFlVIHdyb3RlOg0KPiBJbiBpMmMvZGV2LWludGVyZmFj
-ZS5yc3QgaXQgc2FpZA0KPiANCj4+IEFsbCB0aGVzZSB0cmFuc2FjdGlvbnMgcmV0dXJuIC0xIG9u
-IGZhaWx1cmUNCj4gDQo+IEJ1dCBhY3R1YWxseSB0aGUgaTJjX3NtYnVzX3h4eCBmdW5jdGlvbnMg
-cmV0dXJuIG5lZ2F0aXZlIGVycm9yIG51bWJlcnMNCj4gb24gZmFpbHVyZSwgaW5zdGVhZCBvZiAt
-MS4NCj4gDQo+IEZpeCB0aGUgZG9jdW1lbnQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBMZWkgWVUg
-PG1pbmUyNjAzMDlAZ21haWwuY29tPg0KPiAtLS0NCj4gIERvY3VtZW50YXRpb24vaTJjL2Rldi1p
-bnRlcmZhY2UucnN0IHwgNCArKy0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCsp
-LCAyIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vaTJjL2Rl
-di1pbnRlcmZhY2UucnN0IGIvRG9jdW1lbnRhdGlvbi9pMmMvZGV2LWludGVyZmFjZS5yc3QNCj4g
-aW5kZXggNjljMjNhMy4uNzNiNzdjMyAxMDA2NDQNCj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9pMmMv
-ZGV2LWludGVyZmFjZS5yc3QNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9pMmMvZGV2LWludGVyZmFj
-ZS5yc3QNCj4gQEAgLTE2Myw4ICsxNjMsOCBAQCBmb3IgZGV0YWlscykgdGhyb3VnaCB0aGUgZm9s
-bG93aW5nIGZ1bmN0aW9uczo6DQo+ICAgIF9fczMyIGkyY19zbWJ1c193cml0ZV9ibG9ja19kYXRh
-KGludCBmaWxlLCBfX3U4IGNvbW1hbmQsIF9fdTggbGVuZ3RoLA0KPiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBfX3U4ICp2YWx1ZXMpOw0KPiAgDQo+IC1BbGwgdGhlc2UgdHJh
-bnNhY3Rpb25zIHJldHVybiAtMSBvbiBmYWlsdXJlOyB5b3UgY2FuIHJlYWQgZXJybm8gdG8gc2Vl
-DQo+IC13aGF0IGhhcHBlbmVkLiBUaGUgJ3dyaXRlJyB0cmFuc2FjdGlvbnMgcmV0dXJuIDAgb24g
-c3VjY2VzczsgdGhlDQo+ICtBbGwgdGhlc2UgdHJhbnNhY3Rpb25zIHJldHVybiBuZWdhdGl2ZSB2
-YWx1ZSBvbiBmYWlsdXJlOyB5b3UgY2FuIHJlYWQgZXJybm8gdG8NCj4gK3NlZSB3aGF0IGhhcHBl
-bmVkLiBUaGUgJ3dyaXRlJyB0cmFuc2FjdGlvbnMgcmV0dXJuIDAgb24gc3VjY2VzczsgdGhlDQoN
-CnMvcmV0dXJuIG5lZ2F0aXZlL3JldHVybiBhIG5lZ2F0aXZlLw0KDQpBbmQgdGhlIGxpbmUgaXMg
-bm93IHRvbyBsb25nIGNvbXBhcmVkIHRvIHRoZSByZXN0IG9mIHRoZSB0ZXh0LCBzbyB5b3UNCm5l
-ZWQgdG8gcmV3cmFwIHRoZSBwYXJhZ3JhcGguDQoNCkFuZCB3aHkgZG8geW91IG5lZWQgdG8gZGln
-IGFyb3VuZCBpbiBlcnJubyBpZiB0aGUgbmVnYXRpdmUgZXJybm8gaGFzDQphbHJlYWR5IGJlZW4g
-cmV0dXJuZWQ/DQoNCj4gICdyZWFkJyB0cmFuc2FjdGlvbnMgcmV0dXJuIHRoZSByZWFkIHZhbHVl
-LCBleGNlcHQgZm9yIHJlYWRfYmxvY2ssIHdoaWNoDQo+ICByZXR1cm5zIHRoZSBudW1iZXIgb2Yg
-dmFsdWVzIHJlYWQuIFRoZSBibG9jayBidWZmZXJzIG5lZWQgbm90IGJlIGxvbmdlcg0KPiAgdGhh
-biAzMiBieXRlcy4NCj4gDQoNCkhtbSwgdW5yZWxhdGVkLCBidXQgc2hvdWxkIHRoYXQgcGVyaGFw
-cyBiZSAibXVzdCBub3QiIGluc3RlYWQgb2YgIm5lZWQgbm90Ij8NCg0KQ2hlZXJzLA0KUGV0ZXIN
-Cg==
+Creates Platform Device endpoints for multiple
+I2S instances: SP and  BT endpoints device.
+Pass PCI resources like MMIO, irq to the platform devices.
+
+Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
+---
+ sound/soc/amd/raven/acp3x.h     |  5 +++
+ sound/soc/amd/raven/pci-acp3x.c | 95 +++++++++++++++++++++++++++--------------
+ 2 files changed, 68 insertions(+), 32 deletions(-)
+
+diff --git a/sound/soc/amd/raven/acp3x.h b/sound/soc/amd/raven/acp3x.h
+index 4f2cadd..2f15fe1 100644
+--- a/sound/soc/amd/raven/acp3x.h
++++ b/sound/soc/amd/raven/acp3x.h
+@@ -7,10 +7,15 @@
+ 
+ #include "chip_offset_byte.h"
+ 
++#define ACP3x_DEVS		3
+ #define ACP3x_PHY_BASE_ADDRESS 0x1240000
+ #define	ACP3x_I2S_MODE	0
+ #define	ACP3x_REG_START	0x1240000
+ #define	ACP3x_REG_END	0x1250200
++#define ACP3x_I2STDM_REG_START	0x1242400
++#define ACP3x_I2STDM_REG_END	0x1242410
++#define ACP3x_BT_TDM_REG_START	0x1242800
++#define ACP3x_BT_TDM_REG_END	0x1242810
+ #define I2S_MODE	0x04
+ #define	BT_TX_THRESHOLD 26
+ #define	BT_RX_THRESHOLD 25
+diff --git a/sound/soc/amd/raven/pci-acp3x.c b/sound/soc/amd/raven/pci-acp3x.c
+index facec24..be2670f 100644
+--- a/sound/soc/amd/raven/pci-acp3x.c
++++ b/sound/soc/amd/raven/pci-acp3x.c
+@@ -16,17 +16,17 @@ struct acp3x_dev_data {
+ 	void __iomem *acp3x_base;
+ 	bool acp3x_audio_mode;
+ 	struct resource *res;
+-	struct platform_device *pdev;
++	struct platform_device *pdev[ACP3x_DEVS];
+ };
+ 
+ static int snd_acp3x_probe(struct pci_dev *pci,
+ 			   const struct pci_device_id *pci_id)
+ {
+-	int ret;
+-	u32 addr, val;
+ 	struct acp3x_dev_data *adata;
+-	struct platform_device_info pdevinfo;
++	struct platform_device_info pdevinfo[ACP3x_DEVS];
+ 	unsigned int irqflags;
++	int ret, val, i;
++	u32 addr;
+ 
+ 	if (pci_enable_device(pci)) {
+ 		dev_err(&pci->dev, "pci_enable_device failed\n");
+@@ -43,7 +43,7 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+ 			     GFP_KERNEL);
+ 	if (!adata) {
+ 		ret = -ENOMEM;
+-		goto release_regions;
++		goto adata_free;
+ 	}
+ 
+ 	/* check for msi interrupt support */
+@@ -56,7 +56,8 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+ 		irqflags = 0;
+ 
+ 	addr = pci_resource_start(pci, 0);
+-	adata->acp3x_base = ioremap(addr, pci_resource_len(pci, 0));
++	adata->acp3x_base = devm_ioremap(&pci->dev, addr,
++					pci_resource_len(pci, 0));
+ 	if (!adata->acp3x_base) {
+ 		ret = -ENOMEM;
+ 		goto release_regions;
+@@ -68,11 +69,11 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+ 	switch (val) {
+ 	case I2S_MODE:
+ 		adata->res = devm_kzalloc(&pci->dev,
+-					  sizeof(struct resource) * 2,
++					  sizeof(struct resource) * 4,
+ 					  GFP_KERNEL);
+ 		if (!adata->res) {
+ 			ret = -ENOMEM;
+-			goto unmap_mmio;
++			goto release_regions;
+ 		}
+ 
+ 		adata->res[0].name = "acp3x_i2s_iomem";
+@@ -80,41 +81,68 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+ 		adata->res[0].start = addr;
+ 		adata->res[0].end = addr + (ACP3x_REG_END - ACP3x_REG_START);
+ 
+-		adata->res[1].name = "acp3x_i2s_irq";
+-		adata->res[1].flags = IORESOURCE_IRQ;
+-		adata->res[1].start = pci->irq;
+-		adata->res[1].end = pci->irq;
++		adata->res[1].name = "acp3x_i2s_sp";
++		adata->res[1].flags = IORESOURCE_MEM;
++		adata->res[1].start = addr + ACP3x_I2STDM_REG_START;
++		adata->res[1].end = addr + ACP3x_I2STDM_REG_END;
++
++		adata->res[2].name = "acp3x_i2s_bt";
++		adata->res[2].flags = IORESOURCE_MEM;
++		adata->res[2].start = addr + ACP3x_BT_TDM_REG_START;
++		adata->res[2].end = addr + ACP3x_BT_TDM_REG_END;
++
++		adata->res[3].name = "acp3x_i2s_irq";
++		adata->res[3].flags = IORESOURCE_IRQ;
++		adata->res[3].start = pci->irq;
++		adata->res[3].end = adata->res[3].start;
+ 
+ 		adata->acp3x_audio_mode = ACP3x_I2S_MODE;
+ 
+ 		memset(&pdevinfo, 0, sizeof(pdevinfo));
+-		pdevinfo.name = "acp3x_rv_i2s";
+-		pdevinfo.id = 0;
+-		pdevinfo.parent = &pci->dev;
+-		pdevinfo.num_res = 2;
+-		pdevinfo.res = adata->res;
+-		pdevinfo.data = &irqflags;
+-		pdevinfo.size_data = sizeof(irqflags);
+-
+-		adata->pdev = platform_device_register_full(&pdevinfo);
+-		if (IS_ERR(adata->pdev)) {
+-			dev_err(&pci->dev, "cannot register %s device\n",
+-				pdevinfo.name);
+-			ret = PTR_ERR(adata->pdev);
+-			goto unmap_mmio;
++		pdevinfo[0].name = "acp3x_rv_i2s_dma";
++		pdevinfo[0].id = 0;
++		pdevinfo[0].parent = &pci->dev;
++		pdevinfo[0].num_res = 4;
++		pdevinfo[0].res = &adata->res[0];
++		pdevinfo[0].data = &irqflags;
++		pdevinfo[0].size_data = sizeof(irqflags);
++
++		pdevinfo[1].name = "acp3x_i2s_playcap";
++		pdevinfo[1].id = 0;
++		pdevinfo[1].parent = &pci->dev;
++		pdevinfo[1].num_res = 1;
++		pdevinfo[1].res = &adata->res[1];
++
++		pdevinfo[2].name = "acp3x_i2s_playcap";
++		pdevinfo[2].id = 1;
++		pdevinfo[2].parent = &pci->dev;
++		pdevinfo[2].num_res = 1;
++		pdevinfo[2].res = &adata->res[2];
++		for (i = 0; i < ACP3x_DEVS ; i++) {
++			adata->pdev[i] =
++				platform_device_register_full(&pdevinfo[i]);
++			if (IS_ERR(adata->pdev[i])) {
++				dev_err(&pci->dev, "cannot register %s device\n",
++					pdevinfo[i].name);
++				ret = PTR_ERR(adata->pdev[i]);
++				goto unmap_mmio;
++			}
+ 		}
+ 		break;
+ 	default:
+ 		dev_err(&pci->dev, "Invalid ACP audio mode : %d\n", val);
+ 		ret = -ENODEV;
+-		goto unmap_mmio;
++		goto release_regions;
+ 	}
+ 	return 0;
+ 
+ unmap_mmio:
+-	pci_disable_msi(pci);
+-	iounmap(adata->acp3x_base);
++	if (val == I2S_MODE)
++		for (i = 0 ; i < ACP3x_DEVS ; i++)
++			platform_device_unregister(adata->pdev[i]);
+ release_regions:
++	pci_disable_msi(pci);
++adata_free:
+ 	pci_release_regions(pci);
+ disable_pci:
+ 	pci_disable_device(pci);
+@@ -125,10 +153,12 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+ static void snd_acp3x_remove(struct pci_dev *pci)
+ {
+ 	struct acp3x_dev_data *adata = pci_get_drvdata(pci);
++	int i;
+ 
+-	platform_device_unregister(adata->pdev);
+-	iounmap(adata->acp3x_base);
+-
++	if (adata->acp3x_audio_mode == ACP3x_I2S_MODE) {
++		for (i = 0 ; i <  ACP3x_DEVS ; i++)
++			platform_device_unregister(adata->pdev[i]);
++	}
+ 	pci_disable_msi(pci);
+ 	pci_release_regions(pci);
+ 	pci_disable_device(pci);
+@@ -151,6 +181,7 @@ static struct pci_driver acp3x_driver  = {
+ 
+ module_pci_driver(acp3x_driver);
+ 
++MODULE_AUTHOR("Vishnuvardhanrao.Ravulapati@amd.com");
+ MODULE_AUTHOR("Maruthi.Bayyavarapu@amd.com");
+ MODULE_DESCRIPTION("AMD ACP3x PCI driver");
+ MODULE_LICENSE("GPL v2");
+-- 
+2.7.4
+
