@@ -2,128 +2,88 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E655C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7594C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48CC1222A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A46D0222A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:59:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="E1BdrwRD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbfKSO7H (ORCPT
+        id S1728143AbfKSO7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:59:07 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46130 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727066AbfKSO7G (ORCPT
+        Tue, 19 Nov 2019 09:59:46 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:60720 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727066AbfKSO7q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 09:59:06 -0500
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iX4y8-0005vn-1X; Tue, 19 Nov 2019 14:59:04 +0000
-Received: from ben by deadeye with local (Exim 4.93-RC1)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iX4y7-0007ii-Kc; Tue, 19 Nov 2019 14:59:03 +0000
-Message-ID: <13b0e0ced6e9420dc91242dbe85cdf96c06fb645.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 000/132] 3.16.74-rc1 review
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Denis Kirjanov <kda@linux-powerpc.org>
-Date:   Tue, 19 Nov 2019 14:58:58 +0000
-In-Reply-To: <CANiq72mYYzH1oS4h9GTODMP1ckZn2GnGTGirue1VLU1aw+Qo2A@mail.gmail.com>
-References: <lsq.1568989414.954567518@decadent.org.uk>
-         <20190920200423.GA26056@roeck-us.net>
-         <8dbced01558cd8d4a1d4f058010e7d63e5f6810e.camel@decadent.org.uk>
-         <CANiq72mYYzH1oS4h9GTODMP1ckZn2GnGTGirue1VLU1aw+Qo2A@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-CCLje6oWa7qQ32vv3ncu"
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 19 Nov 2019 09:59:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1574175580; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5gzc6iuBgaTr89P05jPP8SxsIn5uFVdeznkj0sQ2nnQ=;
+        b=E1BdrwRDpKN+MwsEYzwHF0kRuB4SbnvU3CXGFguJ+1BmQSQee9EBejmp7LbqV4t2mbyzoW
+        ZMpYQyVzaQxp84UZ05pr8oIDi/B1lKC8nt8WTITMMbW0xfyQ0lFaSZwXqDpj7AzO9wYrXp
+        EdL/hCNERFMtfSSoU072p5vdNb/shlk=
+Date:   Tue, 19 Nov 2019 15:59:31 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] clk: ingenic: Allow drivers to be built with COMPILE_TEST
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Message-Id: <1574175571.3.0@crapouillou.net>
+In-Reply-To: <20191114001925.159276-1-sboyd@kernel.org>
+References: <20191114001925.159276-1-sboyd@kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Stephen,
 
---=-CCLje6oWa7qQ32vv3ncu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, 2019-09-22 at 21:26 +0200, Miguel Ojeda wrote:
-> On Sun, Sep 22, 2019 at 9:04 PM Ben Hutchings <ben@decadent.org.uk> wrote=
-:
-> > It looks like this is triggered by you switching arm builds from gcc 8
-> > to 9, rather than by any code change.
-> >=20
-> > Does it actually make sense to try to support building Linux 3.16 with
-> > gcc 9?  If so, I suppose I'll need to add:
-> >=20
-> > commit edc966de8725f9186cc9358214da89d335f0e0bd
-> > Author: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-> > Date:   Fri Aug 2 12:37:56 2019 +0200
-> >=20
-> >     Backport minimal compiler_attributes.h to support GCC 9
-> >=20
-> > commit a6e60d84989fa0e91db7f236eda40453b0e44afa
-> > Author: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-> > Date:   Sat Jan 19 20:59:34 2019 +0100
-> >=20
-> >     include/linux/module.h: copy __init/__exit attrs to init/cleanup_mo=
-dule
+Le mer., nov. 13, 2019 at 16:19, Stephen Boyd <sboyd@kernel.org> a=20
+=E9crit :
+> We don't need the MIPS architecture or even a MIPS compiler to compile
+> test these drivers. Let's add a COMPILE_TEST possibility on the
+> menuconfig here so that we can build these drivers on more
+> configurations.
 >=20
-> Yeah, those should fix it.
+> Cc: Paul Cercueil <paul@crapouillou.net>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 
-A week or two back I tried building 3.16 for x86_64 with gcc 8, which
-produced some warnings but did succeed (and I know Guenter successfully
-build-tests 3.16 with gcc 8 for many architectures).  However, the
-kernel didn't boot on a test system, while the same code built with gcc
-4.9 (if I remember correctly) did boot.
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
 
-While I'm not about to remove support for gcc 8, this makes me think
-that there are some not-so-obvious fixes required to make 3.16 properly
-compatible with recent gcc versions.  So I would rather not continue
-adding superficial support for them, that may lead to people wasting
-time building broken kernels.
+> ---
+>  drivers/clk/ingenic/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/clk/ingenic/Kconfig b/drivers/clk/ingenic/Kconfig
+> index fb7b39961703..b4555b465ea6 100644
+> --- a/drivers/clk/ingenic/Kconfig
+> +++ b/drivers/clk/ingenic/Kconfig
+> @@ -1,6 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  menu "Ingenic SoCs drivers"
+> -	depends on MIPS
+> +	depends on MIPS || COMPILE_TEST
+>=20
+>  config INGENIC_CGU_COMMON
+>  	bool
+> --
+> Sent by a computer through tubes
+>=20
 
-Ben.
+=
 
---=20
-Ben Hutchings
-Theory and practice are closer in theory than in practice - John Levine
-
-
-
---=-CCLje6oWa7qQ32vv3ncu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl3UAzIACgkQ57/I7JWG
-EQlxLBAAt4lSvhoJrHinIE6LimmHJMxhZWsXzdpWWEbO7b7HEd5zu7hvyN0D1wQ0
-RU4uLLamyXyNBckUOpgzbdODIjLJIZN+EOQlbaC766A0b7VE/Gq5Qbb8ckzGOhtU
-I/Dr3rjzoGU1+0kQ4RewvdHubmp8MQjtSoz4fZ4SL9lWK2Hm9P5YHhpVfM2t3b8r
-dEfMycHR7+mS5Lu1hwkglyFWlqmmfVlAjkLmNe8NVD/BiThGCo2cN0sm4kB2mMkL
-QsE70l6QQzQt63zMivqrUcFlCKFP3KGPnuJBsww4n3BKvhT9+fzl0OA8VVhp8+0d
-j3h3FbzHXrWV6nU7/wMMj67Zmc5qQMT3tOlmRWgdWcrNgOx6tyJ38DrajAyBZPwt
-9Uv12k4WTIlDeLf0u7ah4dPaua4y7OQpFPbUP+G3QV2gIXnKG2Z7h39/jakdPMXH
-s4/4e1FaqQmGvsYPAYZWkrpU3SzyslRp2KG7WNVw5ElluccDuxsPlEZgjnVnk1dX
-6qrTi7R/JGqycyo9QW2Qr7iZVzuh7BhisXp1CSr2KXCyY/51LOtCAvCaC4h97QR6
-+6SYUQZiGs01Dswf5hFnP8RslGynMDUgsxO9+ugGddSY8TyahsWZ08/Tv/O+tSCR
-E+KQ5yopcSxAAXo/wcrinJrKHl29y6Eo3r0iEXP1ahWj3Ti6lIc=
-=CpbM
------END PGP SIGNATURE-----
-
---=-CCLje6oWa7qQ32vv3ncu--
