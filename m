@@ -2,83 +2,203 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8736AC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CCAC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3B4222B0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65292222B0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:42:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfKSXl1 (ORCPT
+        id S1727472AbfKSXm6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 18:41:27 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:46666 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbfKSXl1 (ORCPT
+        Tue, 19 Nov 2019 18:42:58 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:59321 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727140AbfKSXm5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 18:41:27 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1B950142C0151;
-        Tue, 19 Nov 2019 15:41:26 -0800 (PST)
-Date:   Tue, 19 Nov 2019 15:41:25 -0800 (PST)
-Message-Id: <20191119.154125.1492881397881625788.davem@davemloft.net>
-To:     maowenan@huawei.com
-Cc:     vladimir.oltean@nxp.com, claudiu.manoil@nxp.com, andrew@lunn.ch,
-        vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH net] net: dsa: ocelot: add dependency for
- NET_DSA_MSCC_FELIX
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191119025128.7393-1-maowenan@huawei.com>
-References: <20191119025128.7393-1-maowenan@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 19 Nov 2019 15:41:26 -0800 (PST)
+        Tue, 19 Nov 2019 18:42:57 -0500
+Received: from marcel-macbook.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
+        by mail.holtmann.org (Postfix) with ESMTPSA id BD161CECFA;
+        Wed, 20 Nov 2019 00:52:02 +0100 (CET)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [PATCH v6 4/4] Bluetooth: hci_bcm: Support pcm params in dts
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <CANFp7mX8zsFBjQ4pYyBnG4KbTv-0m004LPmYAtLmGRm3rkfoRA@mail.gmail.com>
+Date:   Wed, 20 Nov 2019 00:42:55 +0100
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-bluetooth@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <A98BB7FA-064A-4824-81F1-E5C8F204BBD0@holtmann.org>
+References: <20191118192123.82430-1-abhishekpandit@chromium.org>
+ <20191118110335.v6.4.I3e900de9478b68e5e4475e747d1c46fdd28313fa@changeid>
+ <963EC7CC-B81D-4667-A681-2CE49D17CB1E@holtmann.org>
+ <CANFp7mX8zsFBjQ4pYyBnG4KbTv-0m004LPmYAtLmGRm3rkfoRA@mail.gmail.com>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
-Date: Tue, 19 Nov 2019 10:51:28 +0800
+Hi Abhishek,
 
-> If CONFIG_NET_DSA_MSCC_FELIX=y, and CONFIG_NET_VENDOR_MICROSEMI=n,
-> below errors can be found:
-> drivers/net/dsa/ocelot/felix.o: In function `felix_vlan_del':
-> felix.c:(.text+0x26e): undefined reference to `ocelot_vlan_del'
-> drivers/net/dsa/ocelot/felix.o: In function `felix_vlan_add':
-> felix.c:(.text+0x352): undefined reference to `ocelot_vlan_add'
+>>> BCM chips may require configuration of PCM to operate correctly and
+>>> there is a vendor specific HCI command to do this. Add support in the
+>>> hci_bcm driver to parse this from devicetree and configure the chip.
+>>> 
+>>> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+>>> ---
+>>> 
+>>> Changes in v6:
+>>> - Added btbcm_read_pcm_int_params and change pcm params to first read
+>>> the pcm params before setting it
+>>> 
+>>> Changes in v5:
+>>> - Rename parameters to bt-* and read as integer instead of bytestring
+>>> - Update documentation with defaults and put values in header
+>>> - Changed patch order
+>>> 
+>>> Changes in v4:
+>>> - Fix incorrect function name in hci_bcm
+>>> 
+>>> Changes in v3:
+>>> - Change disallow baudrate setting to return -EBUSY if called before
+>>> ready. bcm_proto is no longer modified and is back to being const.
+>>> - Changed btbcm_set_pcm_params to btbcm_set_pcm_int_params
+>>> - Changed brcm,sco-routing to brcm,bt-sco-routing
+>>> 
+>>> Changes in v2:
+>>> - Use match data to disallow baudrate setting
+>>> - Parse pcm parameters by name instead of as a byte string
+>>> - Fix prefix for dt-bindings commit
+>>> 
+>>> drivers/bluetooth/hci_bcm.c | 57 +++++++++++++++++++++++++++++++++++++
+>>> 1 file changed, 57 insertions(+)
+>>> 
+>>> diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
+>>> index ee40003008d8..2ce3fac2c5dd 100644
+>>> --- a/drivers/bluetooth/hci_bcm.c
+>>> +++ b/drivers/bluetooth/hci_bcm.c
+>>> @@ -25,6 +25,7 @@
+>>> #include <linux/pm_runtime.h>
+>>> #include <linux/serdev.h>
+>>> 
+>>> +#include <dt-bindings/bluetooth/brcm.h>
+>>> #include <net/bluetooth/bluetooth.h>
+>>> #include <net/bluetooth/hci_core.h>
+>>> 
+>>> @@ -88,6 +89,7 @@ struct bcm_device_data {
+>>> *    used to disable flow control during runtime suspend and system sleep
+>>> * @is_suspended: whether flow control is currently disabled
+>>> * @no_early_set_baudrate: don't set_baudrate before setup()
+>>> + * @pcm_params: PCM and routing parameters
+>>> */
+>>> struct bcm_device {
+>>>      /* Must be the first member, hci_serdev.c expects this. */
+>>> @@ -122,6 +124,8 @@ struct bcm_device {
+>>>      bool                    is_suspended;
+>>> #endif
+>>>      bool                    no_early_set_baudrate;
+>>> +
+>>> +     struct bcm_set_pcm_int_params   pcm_params;
+>>> };
+>>> 
+>>> /* generic bcm uart resources */
+>>> @@ -541,6 +545,7 @@ static int bcm_flush(struct hci_uart *hu)
+>>> static int bcm_setup(struct hci_uart *hu)
+>>> {
+>>>      struct bcm_data *bcm = hu->priv;
+>>> +     struct bcm_set_pcm_int_params p;
+>>>      char fw_name[64];
+>>>      const struct firmware *fw;
+>>>      unsigned int speed;
+>>> @@ -594,6 +599,31 @@ static int bcm_setup(struct hci_uart *hu)
+>>>                      host_set_baudrate(hu, speed);
+>>>      }
+>>> 
+>>> +     /* PCM parameters if any*/
+>>> +     err = btbcm_read_pcm_int_params(hu->hdev, &p);
+>>> +     if (!err) {
+>>> +             if (bcm->dev->pcm_params.routing == 0xff)
+>>> +                     bcm->dev->pcm_params.routing = p.routing;
+>>> +             if (bcm->dev->pcm_params.rate == 0xff)
+>>> +                     bcm->dev->pcm_params.rate = p.rate;
+>>> +             if (bcm->dev->pcm_params.frame_sync == 0xff)
+>>> +                     bcm->dev->pcm_params.frame_sync = p.frame_sync;
+>>> +             if (bcm->dev->pcm_params.sync_mode == 0xff)
+>>> +                     bcm->dev->pcm_params.sync_mode = p.sync_mode;
+>>> +             if (bcm->dev->pcm_params.clock_mode == 0xff)
+>>> +                     bcm->dev->pcm_params.clock_mode = p.clock_mode;
+>> 
+>> Frankly, I wouldn’t bother here. If the read HCI command failed, then we abort bcm_setup and fail the whole procedure. These commands have been around the first Broadcom chips and you can assume they are present. And if at some point they do fail, I want to know about it.
+> Ok -- will change to return error if it fails.
 > 
-> and warning as below:
-> WARNING: unmet direct dependencies detected for MSCC_OCELOT_SWITCH
-> Depends on [n]: NETDEVICES [=y] && ETHERNET [=y] &&
-> NET_VENDOR_MICROSEMI [=n] && NET_SWITCHDEV [=y] && HAS_IOMEM [=y]
-> Selected by [y]:
-> NET_DSA_MSCC_FELIX [=y] && NETDEVICES [=y] && HAVE_NET_DSA [=y]
-> && NET_DSA [=y] && PCI [=y]
+>> 
+>>> +
+>>> +             /* Write only when there are changes */
+>>> +             if (memcmp(&p, &bcm->dev->pcm_params, sizeof(p)))
+>>> +                     err = btbcm_write_pcm_int_params(hu->hdev,
+>>> +                                                      &bcm->dev->pcm_params);
+>>> +
+>>> +             if (err)
+>>> +                     bt_dev_warn(hu->hdev, "BCM: Write pcm params failed (%d)",
+>>> +                                 err);
+>>> +     } else
+>>> +             bt_dev_warn(hu->hdev, "BCM: Read pcm params failed (%d)", err);
+>>> +
+>>> finalize:
+>>>      release_firmware(fw);
+>>> 
+>>> @@ -1128,9 +1158,36 @@ static int bcm_acpi_probe(struct bcm_device *dev)
+>>> }
+>>> #endif /* CONFIG_ACPI */
+>>> 
+>>> +static int property_read_u8(struct device *dev, const char *prop, u8 *value)
+>>> +{
+>>> +     int err;
+>>> +     u32 tmp;
+>>> +
+>>> +     err = device_property_read_u32(dev, prop, &tmp);
+>>> +
+>>> +     if (!err)
+>>> +             *value = (u8)tmp;
+>>> +
+>>> +     return err;
+>>> +}
+>> 
+>> I think this really needs to be done in the generic property code if this is wanted.
+> Yes, this should be device_property_read_u8. For some reason, I
+> thought that wasn't working before (I'll have to retest it with
+> straight integer values).
 > 
-> This patch add dependency NET_VENDOR_MICROSEMI for NET_DSA_MSCC_FELIX.
+>> 
+>>> +
+>>> static int bcm_of_probe(struct bcm_device *bdev)
+>>> {
+>>>      device_property_read_u32(bdev->dev, "max-speed", &bdev->oper_speed);
+>>> +
+>>> +     memset(&bdev->pcm_params, 0xff, sizeof(bdev->pcm_params));
+>> 
+>> Scrap this memset. We will read the values first.
 > 
-> Fixes: 56051948773e ("net: dsa: ocelot: add driver for Felix switch family")
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> I added this memset is bcm_of_probe occurs before patchram and without
+> setting some magic value in the pcm_params, we don't know which values
+> are valid (since 0 has some meaning in the params).
+> It doesn't make sense to me to read pcm params outside setup (I want
+> patchram to complete first) and it doesn't make sense to do property
+> reads inside setup.
 
-This seems more like a "select" situation, why in the world should the
-user be required to know about NET_VENDOR_MISCROSEMI at all for this
-driver?
+I wonder if we should just fail if bt-sco-routing is PCM and not all values are provided in the DT. Looks like there is no clean way of doing this gracefully otherwise.
 
-And NET_VENDOR_MICROSEMI does _NOT_ enable any code at all, you have
-to enable the individual drivers guarded by NET_VENDOR_MICROSEMI in order
-to resolve the symbols necessary for ocelot.
+Regards
 
-I'm not applying this, it isn't correct.
+Marcel
 
-Thank you.
