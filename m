@@ -2,143 +2,124 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA46C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4263C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32717222A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7549A222A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:41:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="VsYVAiTx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mIh147tK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbfKSOkf (ORCPT
+        id S1728110AbfKSOld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:40:35 -0500
-Received: from mout.web.de ([212.227.17.11]:33701 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727351AbfKSOkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 09:40:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1574174419;
-        bh=JxsUoMHheXU/KdGBNnEpaHryq9RrGzadPVe4yz26uNM=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=VsYVAiTx2UVbJEFVx04DUML3XkXoAfWhKOIyLw/7tgJoKOImy91w07thHIEFBdZTw
-         ryfTcb6JhJKyDuRdOMFBdy20OImaO0wM6PfRu0IgUpf8WRDfb0857zNhCVWkOZj3L8
-         uCNKxtYTg3FLbj5ReRRvnuhga33c+jguvGpDUIqw=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([2.243.93.164]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LoHcD-1hvEss1DIH-00gIgs; Tue, 19
- Nov 2019 15:40:19 +0100
-Subject: Re: [PATCH v3 08/13] exfat: add exfat cache
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Daniel Wagner <dwagner@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        linkinjeon@gmail.com
-References: <20191119093718.3501-1-namjae.jeon@samsung.com>
- <CGME20191119094024epcas1p1be385d521ef64ae0e62da3f6f9bf3401@epcas1p1.samsung.com>
- <20191119093718.3501-9-namjae.jeon@samsung.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <c1db28a9-7905-be5e-68fa-21e23400b4a5@web.de>
-Date:   Tue, 19 Nov 2019 15:40:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 19 Nov 2019 09:41:33 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:45263 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfKSOlc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 09:41:32 -0500
+Received: by mail-pj1-f65.google.com with SMTP id m71so2728287pjb.12
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 06:41:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=OSYfTpCeLoiCz6ar4Y5YCkx3V+95c+mgOu5iGHlEmLs=;
+        b=mIh147tKxoB5iHq6Sr1ixvt392/H81YC4txurdUXGO4fdsuRJsZfRNmzjoYizdd6rX
+         nGc7h+zlPVktQFpLiQCQMN3PAFS85Dc7P9Kxb0HSfmfILyTZUvPAs1NQw4Y8IvKGbRvP
+         u8vGOxhGMWYqNB7ep+7hpo7JbeAgD6vTzGFYgpT+zXXPXmS2m7UdGtylxU5Gl12pacO/
+         vdh65ZlWJk3w/TT+waRzqqrvSRtVQ7nq+jLQa2pND8LEO5bvL03GQhgZuqOoxWWukfrS
+         5ZYiJKH1QsdRlqIi3oHjLKCdCUPhkRQKuvHk0iQbmgwAHmdIzHXBYH1YE9Ne1xMF16gz
+         oXCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=OSYfTpCeLoiCz6ar4Y5YCkx3V+95c+mgOu5iGHlEmLs=;
+        b=kRO+iMic4TU4w/nGbEAWG1ZejZ22nvukCcRJDtbHiolyV6B/Cq4Ukm72FAFmIqVcBy
+         Spt/dnk9cDnEyychlL9as+CtEjMTshWO1yigo6xfvyjJAklhgKYwjDyNDX2avWt5Hn8w
+         IfO3Rlcnvt/7RZgH3tYI1jRSIJUcbDl0abehb1N77PRTYQOADnl3oXbMnaM1z1cFIxHm
+         NgmgDvMpkHc03pD2ypHdTckUOerHc7dTCh+8/HYQYEk4vLkIlqIubC6Rlv5pG3u58b9d
+         2Wt1XQxk1XZp089d7JQUdYkM8wxXHQ9q+shRvvWPDR1Z1QqP5lz8f4zPmJyJrFRBR2EH
+         gS0w==
+X-Gm-Message-State: APjAAAWxIz96Uab83YeLrSkbHxgV1cvEXgvpJbNb+y19sncrIy630h+2
+        uGi8ZbAfOW35oEFaoI3WcVsa/2nLAaVd9jA3cyOToA==
+X-Google-Smtp-Source: APXvYqwNT/0sPHSivxokIq2Ao+cp8Lh+ljvm77BDSPn8sYnI3sbqDNPMhQ1jWCaHD21W7sfzidfYsTd4IcmvXsUCiK0=
+X-Received: by 2002:a17:902:9682:: with SMTP id n2mr31713409plp.336.1574174491437;
+ Tue, 19 Nov 2019 06:41:31 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191119093718.3501-9-namjae.jeon@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+References: <000000000000d5795d0596acbc93@google.com>
+In-Reply-To: <000000000000d5795d0596acbc93@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 19 Nov 2019 15:41:19 +0100
+Message-ID: <CAAeHK+w599vgUcfDMtK+HDfQRw6Xnt-RzaVzeqGKJuoLf81_EA@mail.gmail.com>
+Subject: Re: BUG: bad host security descriptor; not enough data (2 vs 5 left)
+To:     syzbot <syzbot+8a8429a8b80280ff1c80@syzkaller.appspotmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:JEkbcMI3twANPqjwWQAeufGCc0HTvD4tuO7TVhn8Oa374e1bn63
- zsbJbNjxvrIu3mNyyvRUiwI7FFU4EIs1w7MJ42Y79BepxSQ11gka78Lvya9HJLHW2pREuuQ
- nHBqMJ8jd3qyc9LVHeVl4hY+1cYPgAvqpfGJmjCjrKv3de/+zLXkD4UywSDYVEsq3hRZaFS
- iUGCWvfwPll2RpgpbMfaA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:hr07JeH+9i0=:jrHSJRRtxMIwEoCTW5S3++
- rvUFmYULeDdbKli3zRS+PZfLVV36xCo1wgT6CvBdTaduV13bq9Msh57ZTRfOqstHgmozkDqp0
- L+Mdvl/HSnBMz0MmeQGFpbVtseBr2R4mh1aAkU2bvCy/gz/waDzHjwAtezMk8I7q4z8q14KmT
- tCxNeQCy57HVB7u/zaCX6feCumG80zJ8hjYn4UJGhAVVfM0qORSkvcNu4Ipzv3ffhETuxaQEX
- D6d19YZXFnIcApGMuwIDPBxZw+UEhuOle4ej7tCessBHVMBRISL3s4bGWYEU2tyujdnbb8zGa
- uIAYaJsKpMkDOmE3XGMeH2sdFz+9gqnXzQQkLO9tNo0PmJo/lWbPlVqFkzol6sehE2zoqnUQu
- ZkJb4R6XWN/eRQ85bVhvwfpfQlMPVrP5QLFLfvXNFAyvH7K/legySCcWvW/Yz3xVD8PqhGMek
- o0WGsYOMmGnsR/Pbsqw2c21lYqmWgfgEoGtt595W48JSbhTdi8NMcVVKiwi7kyJl0od4IQrSq
- P/w8TqfTtOiFgYuyqNC+uOD8uNtOi/tY2R+fHbwJ1flHbmpTFEOjXZz8lzO3Via6iSionLqSE
- kyErlrqG3sDUb+SBIHBorcotpoqdkpvIEKUPSb3ioinp6EHHpeLSbb9vjLdybKJ3n9Phyn0WM
- 09alF6Mr+qbPJxqLVOuA80Zw3/cJ5guYacPIouGIxjBrA5DiN2i47mq3aiRCACNNd8/QXDo0R
- UO3CyTRWmXZDPIksZW11+hVVA/t21K9zaxh7gxEqy00eQlznmWhEzD7Uprh629oHHtZDV51U0
- vcLR/AbKBR/HXGrxoDdSZKIKiaeIUFXOqxQdXISpS6SmUFIyIfqZIfN7ElvmYR11EcmQDh2tX
- MsjIP9k6Hsm/42caRY/+HLL/N9RthmtGTTRBip/lXdn6c2ShDMw6n3k2WXOXjgYAchX8e2Ih4
- vRL7h4iKSkmbo+x+CV/KiNtFul+86NRWqxpusizmvRHc52uOXLIP/uT1JAGoImT7vpeCYvOoQ
- kqOm8fNQSVxAnh0LA8iFt0TEh9dhrAOKlLRHQiqSy6HDm9oUgrlsg3wAAwgy3511VH7CBTfCa
- nsxdiYzYVVyO2HVfNOxqrg63eGULLJ8IhaQX87jVvk3QDJ8fO11yU7/oM0aGCUDmeRpEAgOiM
- LWGm+OCEtgcWkufKRn8QL+4fPbQ5MP0Yp/DR/OZGscqveErUe++sxiso7iHiV3PeX4/q/Mi0I
- eadh0oLMiTy68UVuv7BG4e1WZEDJcmhAIe28JQzN6OJ4T81Sy8KDHtvQ8IJ0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> +++ b/fs/exfat/cache.c
-=E2=80=A6
-> +static void exfat_cache_add(struct inode *inode,
-> +		struct exfat_cache_id *new)
-> +{
-=E2=80=A6
-> +out:
-> +	spin_unlock(&ei->cache_lru_lock);
-=E2=80=A6
+On Wed, Nov 6, 2019 at 1:32 PM syzbot
+<syzbot+8a8429a8b80280ff1c80@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    b1aa9d83 usb: raw: add raw-gadget interface
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D153a1f8ae0000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D79de80330003b=
+5f7
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3D8a8429a8b80280f=
+f1c80
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D10893fcce00=
+000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D15bbaa62e0000=
+0
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit=
+:
+> Reported-by: syzbot+8a8429a8b80280ff1c80@syzkaller.appspotmail.com
+>
+> usb 1-1: config 0 interface 0 altsetting 0 has 3 endpoint descriptors,
+> different from the interface descriptor's value: 4
+> usb 1-1: New USB device found, idVendor=3D13dc, idProduct=3D5611,
+> bcdDevice=3D40.15
+> usb 1-1: New USB device strings: Mfr=3D0, Product=3D0, SerialNumber=3D0
+> usb 1-1: config 0 descriptor??
+> hwa-hc 1-1:0.0: Wire Adapter v106.52 newer than groked v1.0
+> hwa-hc 1-1:0.0: FIXME: USB_MAXCHILDREN too low for WUSB adapter (194 port=
+s)
+> usb 1-1: BUG: bad host security descriptor; not enough data (2 vs 5 left)
+> usb 1-1: supported encryption types: =EF=BF=BD=EF=BF=BD=CF=81=EF=BF=BD=EF=
+=BF=BD=EF=BF=BD|=EF=BF=BD=EF=BF=BD=CF=81=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=
+=BD=EF=BF=BD=EF=BF=BD=CF=81=EF=BF=BD=EF=BF=BD=EF=BF=BD
+> usb 1-1: E: host doesn't support CCM-1 crypto
+> hwa-hc 1-1:0.0: Cannot initialize internals: -19
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
 
-Can the label =E2=80=9Cunlock=E2=80=9D be more helpful?
-
-Regards,
-Markus
+#syz dup: BUG: bad host security descriptor; not enough data (4 vs 5 left)
